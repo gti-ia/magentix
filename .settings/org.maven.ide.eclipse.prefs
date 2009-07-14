@@ -1,0 +1,10 @@
+#Thu Jul 09 09:54:21 CEST 2009
+activeProfiles=
+eclipse.preferences.version=1
+fullBuildGoals=process-test-resources
+includeModules=false
+instance/org.eclipse.core.net/org.eclipse.core.net.hasMigrated=true
+resolveWorkspaceProjects=false
+resourceFilterGoals=process-resources resources\:testResources
+skipCompilerPlugin=true
+version=1
