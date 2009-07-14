@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="InformRoleProfiles" targetNamespace="http://wtp" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://wtp" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://wtp">
+      <xsd:element name="InformRoleProfiles">
+        <xsd:complexType>
+          <xsd:sequence>
+             <xsd:element name="RoleID" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="InformRoleProfilesResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+          	<xsd:element name="Status" type="xsd:string"/>
+          	<xsd:element name="ProfileList" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="InformRoleProfilesResponse">
+    <wsdl:part name="parameters" element="tns:InformRoleProfilesResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="InformRoleProfilesMessage">
+    <wsdl:part name="parameters" element="tns:InformRoleProfiles">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="InformRoleProfilesPortType">
+    <wsdl:operation name="InformRoleProfiles">
+      <wsdl:input message="tns:InformRoleProfilesMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:InformRoleProfilesResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="InformRoleProfilesSOAP" type="tns:InformRoleProfilesPortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="InformRoleProfiles">
+      <soap:operation soapAction="http://wtp"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="InformRoleProfiles">
+    <wsdl:port name="InformRoleProfilesSOAP" binding="tns:InformRoleProfilesSOAP">
+      <soap:address location="http://localhost:8080/omsservices/services/InformRoleProfiles"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

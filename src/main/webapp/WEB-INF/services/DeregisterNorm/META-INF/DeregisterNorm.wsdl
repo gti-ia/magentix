@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="RegisterRole" targetNamespace="http://wtp" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://wtp" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://wtp">
+      <xsd:element name="DeregisterNorm">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="NormID" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="DeregisterNormResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+          	<xsd:element name="Status" type="xsd:string"/>
+          	<xsd:element name="ErrorValue" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="DeregisterNormMessage">
+    <wsdl:part name="parameters" element="tns:DeregisterNorm">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="DeregisterNormResponse">
+    <wsdl:part name="parameters" element="tns:DeregisterNormResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="DeregisterNormPortType">
+    <wsdl:operation name="DeregisterNorm">
+      <wsdl:input message="tns:DeregisterNormMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:DeregisterNormResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="DeregisterNormSOAP" type="tns:DeregisterNormPortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="DeregisterNorm">
+      <soap:operation soapAction="http://wtp"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="DeregisterNorm">
+    <wsdl:port name="DeregisterNormSOAP" binding="tns:DeregisterNormSOAP">
+      <soap:address location="http://localhost:8080/DeregisterNorm/services/DeregisterNorm"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

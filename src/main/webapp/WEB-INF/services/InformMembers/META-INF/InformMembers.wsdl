@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="InformMembers" targetNamespace="http://wtp" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://wtp" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://wtp">
+      <xsd:element name="InformMembers">
+        <xsd:complexType>
+          <xsd:sequence>
+             <xsd:element name="UnitID" type="xsd:string"/>
+             <xsd:element name="RoleID" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="InformMembersResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+          	<xsd:element name="Status" type="xsd:string"/>
+          	<xsd:element name="ErrorValue" type="xsd:string"/>
+          	<xsd:element name="EntityRoleList" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="InformMembersMessage">
+    <wsdl:part name="parameters" element="tns:InformMembers">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="InformMembersResponse">
+    <wsdl:part name="parameters" element="tns:InformMembersResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="InformMembersPortType">
+    <wsdl:operation name="InformMembers">
+      <wsdl:input message="tns:InformMembersMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:InformMembersResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="InformMembersSOAP" type="tns:InformMembersPortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="InformMembers">
+      <soap:operation soapAction="http://wtp"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="InformMembers">
+    <wsdl:port name="InformMembersSOAP" binding="tns:InformMembersSOAP">
+      <soap:address location="http://localhost:8080/omsservices/services/InformMembers"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

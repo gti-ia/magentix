@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="InformUnit" targetNamespace="http://wtp" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://wtp" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://wtp">
+      <xsd:element name="InformUnit">
+        <xsd:complexType>
+          <xsd:sequence>
+             <xsd:element name="UnitID" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="InformUnitResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+          	<xsd:element name="Status" type="xsd:string"/>
+          	<xsd:element name="ErrorValue" type="xsd:string"/>
+          	<xsd:element name="UnitType" type="xsd:string"/>
+          	<xsd:element name="UnitGoal" type="xsd:string"/>
+          	<xsd:element name="ParentID" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="InformUnitResponse">
+    <wsdl:part name="parameters" element="tns:InformUnitResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="InformUnitMessage">
+    <wsdl:part name="parameters" element="tns:InformUnit">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="InformUnitPortType">
+    <wsdl:operation name="InformUnit">
+      <wsdl:input message="tns:InformUnitMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:InformUnitResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="InformUnitSOAP" type="tns:InformUnitPortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="InformUnit">
+      <soap:operation soapAction="http://wtp"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="InformUnit">
+    <wsdl:port name="InformUnitSOAP" binding="tns:InformUnitSOAP">
+      <soap:address location="http://localhost:8080/omsservices/services/InformUnit"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
