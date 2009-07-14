@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="GetProcess" targetNamespace="http://wtp" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://wtp" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://wtp">
+      <xsd:element name="GetProcess">
+        <xsd:complexType>
+          <xsd:sequence>
+             <xsd:element name="ServiceID" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="GetProcessResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+          	<xsd:element name="return" type="xsd:int"/>
+            <xsd:element name="ProcessList" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="GetProcessResponse">
+    <wsdl:part name="parameters" element="tns:GetProcessResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="GetProcessMessage">
+    <wsdl:part name="parameters" element="tns:GetProcess">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="GetProcessPortType">
+    <wsdl:operation name="GetProcess">
+      <wsdl:input message="tns:GetProcessMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:GetProcessResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="GetProcessSOAP" type="tns:GetProcessPortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="GetProcess">
+      <soap:operation soapAction="http://wtp"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="GetProcess">
+    <wsdl:port name="GetProcessSOAP" binding="tns:GetProcessSOAP">
+      <soap:address location="http://localhost:8080/sfservices/services/GetProcess"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

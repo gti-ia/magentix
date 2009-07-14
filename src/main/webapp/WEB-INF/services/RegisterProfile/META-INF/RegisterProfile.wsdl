@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="RegisterProfile" targetNamespace="http://wtp" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://wtp" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://wtp">
+
+	<xsd:element name="RegisterProfile">
+
+	<xsd:complexType>
+
+	<xsd:sequence>
+<xsd:element name="ServiceGoal" type="xsd:string"/>
+<xsd:element name="ServiceProfile" type="xsd:string"/>
+</xsd:sequence>
+</xsd:complexType>
+</xsd:element>
+
+	<xsd:element name="RegisterProfileResponse">
+
+	<xsd:complexType>
+
+	<xsd:sequence>
+<xsd:element name="return" type="xsd:int"/>
+<xsd:element name="ServiceID" type="xsd:string"/>
+</xsd:sequence>
+</xsd:complexType>
+</xsd:element>
+</xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="RegisterProfileMessage">
+    <wsdl:part name="parameters" element="tns:RegisterProfile">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="RegisterProfileResponse">
+    <wsdl:part name="parameters" element="tns:RegisterProfileResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="RegisterProfilePortType">
+    <wsdl:operation name="RegisterProfile">
+      <wsdl:input message="tns:RegisterProfileMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:RegisterProfileResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="RegisterProfileSOAP" type="tns:RegisterProfilePortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="RegisterProfile">
+      <soap:operation soapAction="http://wtp"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="RegisterProfile">
+    <wsdl:port name="RegisterProfileSOAP" binding="tns:RegisterProfileSOAP">
+      <soap:address location="http://localhost:8080/sfservices/services/RegisterProfile"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

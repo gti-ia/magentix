@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="DeregisterProfile" targetNamespace="http://wtp" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://wtp" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://wtp">
+
+			<xsd:element name="DeregisterProfile">
+
+				<xsd:complexType>
+
+					<xsd:sequence>
+						<xsd:element name="ServiceID" type="xsd:string"/>
+
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="DeregisterProfileResponse">
+
+				<xsd:complexType>
+
+					<xsd:sequence>
+						<xsd:element name="return" type="xsd:int"/>
+
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="DeregisterProfileMessage">
+    <wsdl:part name="parameters" element="tns:DeregisterProfile">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="DeregisterProfileResponse">
+    <wsdl:part name="parameters" element="tns:DeregisterProfileResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="DeregisterProfilePortType">
+    <wsdl:operation name="DeregisterProfile">
+      <wsdl:input message="tns:DeregisterProfileMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:DeregisterProfileResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="DeregisterProfileSOAP" type="tns:DeregisterProfilePortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="DeregisterProfile">
+      <soap:operation soapAction="http://wtp"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="DeregisterProfile">
+    <wsdl:port name="DeregisterProfileSOAP" binding="tns:DeregisterProfileSOAP">
+      <soap:address location="http://localhost:8080/sfservices/services/DeregisterProfile"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

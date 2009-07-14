@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="ModifyProfile" targetNamespace="http://wtp" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://wtp" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://wtp">
+
+	<xsd:element name="ModifyProfile">
+
+	<xsd:complexType>
+
+	<xsd:sequence>
+<xsd:element name="ServiceID" type="xsd:string"/>
+<xsd:element name="ServiceGoal" type="xsd:string"/>
+<xsd:element name="ServiceProfile" type="xsd:string"/>
+</xsd:sequence>
+</xsd:complexType>
+</xsd:element>
+
+	<xsd:element name="ModifyProfileResponse">
+
+	<xsd:complexType>
+
+	<xsd:sequence>
+<xsd:element name="return" type="xsd:int"/>
+</xsd:sequence>
+</xsd:complexType>
+</xsd:element>
+</xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="ModifyProfileResponse">
+    <wsdl:part name="parameters" element="tns:ModifyProfileResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="ModifyProfileMessage">
+    <wsdl:part name="parameters" element="tns:ModifyProfile">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="ModifyProfilePortType">
+    <wsdl:operation name="ModifyProfile">
+      <wsdl:input message="tns:ModifyProfileMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:ModifyProfileResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="ModifyProfileSOAP" type="tns:ModifyProfilePortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="ModifyProfile">
+      <soap:operation soapAction="http://wtp"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ModifyProfile">
+    <wsdl:port name="ModifyProfileSOAP" binding="tns:ModifyProfileSOAP">
+      <soap:address location="http://localhost:8080/sfservices/services/ModifyProfile"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

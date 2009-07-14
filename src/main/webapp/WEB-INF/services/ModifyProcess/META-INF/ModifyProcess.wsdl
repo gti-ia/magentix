@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="ModifyProcess" targetNamespace="http://wtp" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://wtp" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://wtp">
+
+	<xsd:element name="ModifyProcess">
+
+	<xsd:complexType>
+
+	<xsd:sequence>
+<xsd:element name="ServiceImplementationID" type="xsd:string"/>
+<xsd:element name="ServiceModel" type="xsd:string"/>
+<xsd:element name="ServiceGrounding" type="xsd:string"/>
+</xsd:sequence>
+</xsd:complexType>
+</xsd:element>
+
+	<xsd:element name="ModifyProcessResponse">
+
+	<xsd:complexType>
+
+	<xsd:sequence>
+<xsd:element name="return" type="xsd:int"/>
+</xsd:sequence>
+</xsd:complexType>
+</xsd:element>
+</xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="ModifyProcessMessage">
+    <wsdl:part name="parameters" element="tns:ModifyProcess">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="ModifyProcessResponse">
+    <wsdl:part name="parameters" element="tns:ModifyProcessResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="ModifyProcessPortType">
+    <wsdl:operation name="ModifyProcess">
+      <wsdl:input message="tns:ModifyProcessMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:ModifyProcessResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="ModifyProcessSOAP" type="tns:ModifyProcessPortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="ModifyProcess">
+      <soap:operation soapAction="http://wtp"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ModifyProcess">
+    <wsdl:port name="ModifyProcessSOAP" binding="tns:ModifyProcessSOAP">
+      <soap:address location="http://localhost:8080/sfservices/services/ModifyProcess"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
