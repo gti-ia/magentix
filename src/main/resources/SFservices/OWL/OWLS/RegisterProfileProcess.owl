@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+
+<!DOCTYPE uridef [
+  <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#">
+  <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <!ENTITY owl "http://www.w3.org/2002/07/owl#">
+  <!ENTITY service "http://www.daml.org/services/owl-s/1.1/Service.owl#">
+  <!ENTITY profile "http://www.daml.org/services/owl-s/1.1/Profile.owl#">
+  <!ENTITY process "http://www.daml.org/services/owl-s/1.1/Process.owl#">
+  <!ENTITY grounding "http://www.daml.org/services/owl-s/1.1/Grounding.owl#">
+  <!ENTITY xsd "http://www.w3.org/2001/XMLSchema">
+  <!ENTITY mind "http://localhost:8080/services/SFservices/OWL/OWLS/RegisterProfileProcess.owl">
+  <!ENTITY dir "http://localhost:8080/sfservices/services/RegisterProfile?wsdl">
+<!ENTITY actor "http://www.daml.org/services/owl-s/1.1/ActorDefault.owl#">
+]>
+
+<rdf:RDF xmlns:rdf="&rdf;" xmlns:rdfs="&rdfs;" xmlns:owl="&owl;" xmlns:xsd="&xsd;#" 
+   xmlns:service="&service;" xmlns:process="&process;" xmlns:profile="&profile;" xmlns:grounding="&grounding;" xmlns:actor="&actor;"
+   xmlns:mind="&mind;#"      
+   xml:base="http://localhost:8080/services/SFservices/OWL/OWLS/RegisterProfileProcess.owl">
+
+<service:Service rdf:ID="RegisterProfileService">
+        <service:presents rdf:resource="http://localhost:8080/services/SFservices/OWL/OWLS/RegisterProfileProfile.owl#RegisterProfileProfile"/>
+        <service:describedBy rdf:resource="#RegisterProfileProcess"/>
+	<service:supports rdf:resource="#RegisterProfileGrounding"/>
+</service:Service>
+
+
+<process:AtomicProcess rdf:ID="RegisterProfileProcess"> 
+	<service:describes rdf:resource="#RegisterProfileService"/>  	
+   	<process:hasInput rdf:resource="#RegisterProfileInputServiceGoal"/>
+	<process:hasInput rdf:resource="#RegisterProfileInputServiceProfile"/>
+   	<process:hasOutput rdf:resource="#RegisterProfileOutputServiceStatus"/>
+	<process:hasOutput rdf:resource="#RegisterProfileOutputServiceID"/>
+</process:AtomicProcess>
+
+<process:Input rdf:ID="RegisterProfileInputServiceGoal">
+     <rdfs:label>InputServiceGoal</rdfs:label>
+     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
+</process:Input> 
+
+<process:Input rdf:ID="RegisterProfileInputServiceProfile">
+     <rdfs:label>InputServiceProfile</rdfs:label>
+     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
+</process:Input>
+
+<process:Output rdf:ID="RegisterProfileOutputServiceStatus">
+    <rdfs:label>OutputServiceStatus</rdfs:label>
+    <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#integer</process:parameterType>
+</process:Output>  
+
+<process:Output rdf:ID="RegisterProfileOutputServiceID">
+    <rdfs:label>OutputServiceID</rdfs:label>
+    <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
+</process:Output>         
+
+
+
+<grounding:WsdlGrounding rdf:ID="RegisterProfileGrounding">
+	<service:supportedBy rdf:resource="#RegisterProfileService"/>
+	<grounding:hasAtomicProcessGrounding rdf:resource="#RegisterProfileWsdlAtomicProcessGrounding"/>
+</grounding:WsdlGrounding>
+
+<grounding:WsdlAtomicProcessGrounding rdf:ID="RegisterProfileWsdlAtomicProcessGrounding">
+	<grounding:owlsProcess rdf:resource="#RegisterProfileProcess"/>
+	<grounding:wsdlDocument rdf:datatype="&xsd;anyURI">http://localhost:8080/sfservices/services/RegisterProfile?wsdl</grounding:wsdlDocument>
+	<grounding:wsdlOperation>
+            <grounding:WsdlOperationRef>
+                <grounding:portType rdf:datatype="&xsd;#anyURI">http://localhost:8080/sfservices/services/RegisterProfilePortType</grounding:portType>
+                <grounding:operation rdf:datatype="&xsd;#anyURI">http://localhost:8080/sfservices/services/RegisterProfile</grounding:operation>
+            </grounding:WsdlOperationRef>
+        </grounding:wsdlOperation>
+
+	<grounding:wsdlInputMessage rdf:datatype="&xsd;anyURI">http://localhost:8080/sfservices/services/RegisterProfileMessage</grounding:wsdlInputMessage>
+        <grounding:wsdlOutputMessage rdf:datatype="&xsd;anyURI">http://localhost:8080/sfservices/services/RegisterProfileResponse</grounding:wsdlOutputMessage>
+    
+	<grounding:wsdlInput>
+                  <grounding:WsdlInputMessageMap>
+                    <grounding:owlsParameter rdf:resource="#RegisterProfileInputServiceGoal"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/sfservices/services/ServiceGoal</grounding:wsdlMessagePart>
+                  </grounding:WsdlInputMessageMap>
+        </grounding:wsdlInput>
+
+
+	<grounding:wsdlInput>
+                  <grounding:WsdlInputMessageMap>
+                    <grounding:owlsParameter rdf:resource="#RegisterProfileInputServiceProfile"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/sfservices/services/ServiceProfile</grounding:wsdlMessagePart>
+                  </grounding:WsdlInputMessageMap>
+        </grounding:wsdlInput>
+
+       <grounding:wsdlOutput>
+                  <grounding:WsdlOutputMessageMap>
+		    <grounding:owlsParameter rdf:resource="#RegisterProfileOutputServiceStatus"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/sfservices/services/return</grounding:wsdlMessagePart>
+                  </grounding:WsdlOutputMessageMap>
+        </grounding:wsdlOutput>
+
+	<grounding:wsdlOutput>
+                  <grounding:WsdlOutputMessageMap>
+		    <grounding:owlsParameter rdf:resource="#RegisterProfileOutputServiceID"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/sfservices/services/ServiceID</grounding:wsdlMessagePart>
+                  </grounding:WsdlOutputMessageMap>
+        </grounding:wsdlOutput>
+
+</grounding:WsdlAtomicProcessGrounding>
+
+</rdf:RDF> 

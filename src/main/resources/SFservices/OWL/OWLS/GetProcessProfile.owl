@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+
+<!DOCTYPE uridef [
+  <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#">
+  <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <!ENTITY owl "http://www.w3.org/2002/07/owl#">
+  <!ENTITY service "http://www.daml.org/services/owl-s/1.1/Service.owl#">
+  <!ENTITY profile "http://www.daml.org/services/owl-s/1.1/Profile.owl#">
+  <!ENTITY process "http://www.daml.org/services/owl-s/1.1/Process.owl#">
+  <!ENTITY grounding "http://www.daml.org/services/owl-s/1.1/Grounding.owl#">
+  <!ENTITY xsd "http://www.w3.org/2001/XMLSchema">
+  <!ENTITY mind "http://localhost:8080/services/SFservices/OWL/OWLS/GetProcessProfile.owl">
+  <!ENTITY dir "http://localhost:8080/sfservices/services/GetProcess?wsdl">
+]>
+
+
+<rdf:RDF xmlns:rdf="&rdf;" xmlns:rdfs="&rdfs;" xmlns:owl="&owl;" xmlns:xsd="&xsd;#" 
+   xmlns:service="&service;" xmlns:process="&process;" xmlns:profile="&profile;" xmlns:grounding="&grounding;" 
+   xmlns:mind="&mind;#"      
+   xml:base="http://localhost:8080/services/SFservices/OWL/OWLS/GetProcessProfile.owl">
+
+
+
+
+
+
+       
+
+<profile:Profile rdf:ID="GetProcessProfile">
+    <service:isPresentedBy rdf:resource="#GetProcessService"/>
+    <profile:serviceName xml:lang="en">GetProcess</profile:serviceName>
+    <profile:hasInput rdf:resource="#GetProcessInputServiceID"/>
+    <profile:hasOutput rdf:resource="#GetProcessOutputServiceStatus"/>
+    <profile:hasOutput rdf:resource="#GetProcessOutputProcessList"/>
+</profile:Profile>
+
+<service:Service rdf:ID="GetProcessService">
+        <service:presents rdf:resource="#GetProcessProfile"/>
+</service:Service>
+
+
+</rdf:RDF> 

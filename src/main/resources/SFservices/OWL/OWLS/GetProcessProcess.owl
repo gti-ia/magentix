@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+
+<!DOCTYPE uridef [
+  <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#">
+  <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <!ENTITY owl "http://www.w3.org/2002/07/owl#">
+  <!ENTITY service "http://www.daml.org/services/owl-s/1.1/Service.owl#">
+  <!ENTITY profile "http://www.daml.org/services/owl-s/1.1/Profile.owl#">
+  <!ENTITY process "http://www.daml.org/services/owl-s/1.1/Process.owl#">
+  <!ENTITY grounding "http://www.daml.org/services/owl-s/1.1/Grounding.owl#">
+  <!ENTITY xsd "http://www.w3.org/2001/XMLSchema">
+  <!ENTITY mind "http://localhost:8080/services/SFservices/OWL/OWLS/GetProcessProcess.owl">
+  <!ENTITY dir "http://localhost:8080/sfservices/services/GetProcess?wsdl">
+<!ENTITY actor "http://www.daml.org/services/owl-s/1.1/ActorDefault.owl#">
+]>
+
+
+<rdf:RDF xmlns:rdf="&rdf;" xmlns:rdfs="&rdfs;" xmlns:owl="&owl;" xmlns:xsd="&xsd;#" 
+   xmlns:service="&service;" xmlns:process="&process;" xmlns:profile="&profile;" xmlns:grounding="&grounding;" xmlns:actor="&actor;"
+   xmlns:mind="&mind;#"      
+   xml:base="http://localhost:8080/services/SFservices/OWL/OWLS/GetProcessProcess.owl">
+
+
+<service:Service rdf:ID="GetProcessService">
+        <service:presents rdf:resource="http://localhost:8080/services/SFservices/OWL/OWLS/GetProcessProfile.owl#GetProcessProfile"/>
+        <service:describedBy rdf:resource="#GetProcessProcess"/>
+	<service:supports rdf:resource="#GetProcessGrounding"/>
+</service:Service>
+
+
+
+<process:AtomicProcess rdf:ID="GetProcessProcess">
+	<service:describes rdf:resource="#GetProcessService"/>
+     	<process:hasInput rdf:resource="#GetProcessInputServiceID"/>
+   	<process:hasOutput rdf:resource="#GetProcessOutputServiceStatus"/>
+	<process:hasOutput rdf:resource="#GetProcessOutputProcessList"/>
+</process:AtomicProcess>
+
+
+<process:Input rdf:ID="GetProcessInputServiceID">
+     <rdfs:label>InputServiceID</rdfs:label>
+     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
+</process:Input>
+
+<process:Output rdf:ID="GetProcessOutputServiceStatus">
+    <rdfs:label>OutputServiceStatus</rdfs:label>
+    <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#integer</process:parameterType>
+</process:Output> 
+     
+<process:Output rdf:ID="GetProcessOutputProcessList">
+    <rdfs:label>OutputProcessList</rdfs:label>
+    <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
+</process:Output>         
+
+<grounding:WsdlGrounding rdf:ID="GetProcessGrounding">
+	<service:supportedBy rdf:resource="#GetProcessService"/>
+	<grounding:hasAtomicProcessGrounding rdf:resource="#GetProcessWsdlAtomicProcessGrounding"/>
+</grounding:WsdlGrounding>
+
+<grounding:WsdlAtomicProcessGrounding rdf:ID="GetProcessWsdlAtomicProcessGrounding">
+	<grounding:owlsProcess rdf:resource="#GetProcessProcess"/>
+	<grounding:wsdlDocument rdf:datatype="&xsd;anyURI">http://localhost:8080/sfservices/services/GetProcess?wsdl</grounding:wsdlDocument>
+	<grounding:wsdlOperation>
+            <grounding:WsdlOperationRef>
+                <grounding:portType rdf:datatype="&xsd;#anyURI">http://localhost:8080/sfservices/services/GetProcessOperationsPortType</grounding:portType>
+                <grounding:operation rdf:datatype="&xsd;#anyURI">http://localhost:8080/sfservices/services/GetProcess</grounding:operation>
+            </grounding:WsdlOperationRef>
+        </grounding:wsdlOperation>
+
+	<grounding:wsdlInputMessage rdf:datatype="&xsd;anyURI">http://localhost:8080/sfservices/services/GetProcessMessage</grounding:wsdlInputMessage>
+        <grounding:wsdlOutputMessage rdf:datatype="&xsd;anyURI">http://localhost:8080/sfservices/services/GetProcessResponse</grounding:wsdlOutputMessage>
+       
+	<grounding:wsdlInput>
+                  <grounding:WsdlInputMessageMap>
+                    <grounding:owlsParameter rdf:resource="#GetProcessInputServiceID"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/sfservices/services/ServiceID</grounding:wsdlMessagePart>
+                  </grounding:WsdlInputMessageMap>
+        </grounding:wsdlInput>
+	
+
+       <grounding:wsdlOutput>
+                  <grounding:WsdlOutputMessageMap>
+		    <grounding:owlsParameter rdf:resource="#GetProcessOutputServiceStatus"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/sfservices/services/return</grounding:wsdlMessagePart>
+                  </grounding:WsdlOutputMessageMap>
+        </grounding:wsdlOutput>
+	<grounding:wsdlOutput>
+                  <grounding:WsdlOutputMessageMap>
+		    <grounding:owlsParameter rdf:resource="#GetProcessOutputProcessList"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/sfservices/services/ProcessList</grounding:wsdlMessagePart>
+                  </grounding:WsdlOutputMessageMap>
+        </grounding:wsdlOutput>
+</grounding:WsdlAtomicProcessGrounding>
+
+</rdf:RDF> 

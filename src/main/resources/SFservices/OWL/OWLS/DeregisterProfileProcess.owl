@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+
+<!DOCTYPE uridef [
+  <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#">
+  <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <!ENTITY owl "http://www.w3.org/2002/07/owl#">
+  <!ENTITY service "http://www.daml.org/services/owl-s/1.1/Service.owl#">
+  <!ENTITY profile "http://www.daml.org/services/owl-s/1.1/Profile.owl#">
+  <!ENTITY process "http://www.daml.org/services/owl-s/1.1/Process.owl#">
+  <!ENTITY grounding "http://www.daml.org/services/owl-s/1.1/Grounding.owl#">
+  <!ENTITY xsd "http://www.w3.org/2001/XMLSchema">
+  <!ENTITY mind "http://localhost:8080/services/SFservices/OWL/OWLS/DeregisterProfileProcess.owl">
+  <!ENTITY dir "http://localhost:8080/sfservices/services/DeregisterProfile?wsdl">
+<!ENTITY actor "http://www.daml.org/services/owl-s/1.1/ActorDefault.owl#">
+]>
+
+
+<rdf:RDF xmlns:rdf="&rdf;" xmlns:rdfs="&rdfs;" xmlns:owl="&owl;" xmlns:xsd="&xsd;#" 
+   xmlns:service="&service;" xmlns:process="&process;" xmlns:profile="&profile;" xmlns:grounding="&grounding;" xmlns:actor="&actor;"
+   xmlns:mind="&mind;#"      
+   xml:base="http://localhost:8080/services/SFservices/OWL/OWLS/DeregisterProfileProcess.owl">
+
+
+<owl:Ontology>
+    <owl:imports rdf:resource="&service;"/>
+    <owl:imports rdf:resource="&profile;"/>
+    <owl:imports rdf:resource="&process;"/>
+    <owl:imports rdf:resource="&grounding;"/> 
+    <owl:imports rdf:resource="&actor;"/>
+</owl:Ontology>
+
+<service:Service rdf:about="http://localhost:8080/services/SFservices/OWL/OWLS/DeregisterProfileProfile.owl#DeregisterProfileService">
+        <service:presents rdf:resource="http://localhost:8080/services/SFservices/OWL/OWLS/DeregisterProfileProfile.owl#DeregisterProfileProfile"/>
+        <service:describedBy rdf:resource="#DeregisterProfileProcess"/>
+	<service:supports rdf:resource="#DeregisterProfileGrounding"/>
+</service:Service>
+
+
+
+<process:AtomicProcess rdf:ID="DeregisterProfileProcess">
+	<service:describes rdf:resource="http://localhost:8080/services/SFservices/OWL/OWLS/DeregisterProfileProfile.owl#DeregisterProfileService"/>
+     	<process:hasOutput rdf:resource="#DeregisterProfileOutputServiceStatus"/>
+     	<process:hasInput rdf:resource="#DeregisterProfileInputServiceID"/>
+</process:AtomicProcess>
+
+<process:Input rdf:ID="DeregisterProfileInputServiceID">
+     <rdfs:label>InputServiceID</rdfs:label>
+     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
+</process:Input>
+<process:Output rdf:ID="DeregisterProfileOutputServiceStatus">
+    <rdfs:label>OutputServiceStatus</rdfs:label>
+    <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#integer</process:parameterType>
+</process:Output>         
+
+<grounding:WsdlGrounding rdf:ID="DeregisterProfileGrounding">
+	<service:supportedBy rdf:resource="#DeregisterProfileService"/>
+	<grounding:hasAtomicProcessGrounding rdf:resource="#DeregisterProfileWsdlAtomicProcessGrounding"/>
+</grounding:WsdlGrounding>
+
+<grounding:WsdlAtomicProcessGrounding rdf:ID="DeregisterProfileWsdlAtomicProcessGrounding">
+	<grounding:owlsProcess rdf:resource="#DeregisterProfileProcess"/>
+	<grounding:wsdlDocument rdf:datatype="&xsd;anyURI">http://localhost:8080/sfservices/services/DeregisterProfile?wsdl</grounding:wsdlDocument>
+	<grounding:wsdlOperation>
+            <grounding:WsdlOperationRef>
+                <grounding:portType rdf:datatype="&xsd;#anyURI">http://localhost:8080/sfservices/services/DeregisterProfileOperationsPortType</grounding:portType>
+                <grounding:operation rdf:datatype="&xsd;#anyURI">http://localhost:8080/sfservices/services/DeregisterProfile</grounding:operation>
+            </grounding:WsdlOperationRef>
+        </grounding:wsdlOperation>
+
+	<grounding:wsdlInputMessage rdf:datatype="&xsd;anyURI">http://localhost:8080/sfservices/services/DeregisterProfileMessage</grounding:wsdlInputMessage>
+        <grounding:wsdlOutputMessage rdf:datatype="&xsd;anyURI">http://localhost:8080/sfservices/services/DeregisterProfileResponse</grounding:wsdlOutputMessage>
+       
+	<grounding:wsdlInput>
+                  <grounding:WsdlInputMessageMap>
+                    <grounding:owlsParameter rdf:resource="#DeregisterProfileInputServiceID"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/sfservices/services/ServiceID</grounding:wsdlMessagePart>
+                  </grounding:WsdlInputMessageMap>
+        </grounding:wsdlInput>
+
+       <grounding:wsdlOutput>
+                  <grounding:WsdlOutputMessageMap>
+		    <grounding:owlsParameter rdf:resource="#DeregisterProfileOutputServiceStatus"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/sfservices/services/return</grounding:wsdlMessagePart>
+                  </grounding:WsdlOutputMessageMap>
+        </grounding:wsdlOutput>
+</grounding:WsdlAtomicProcessGrounding>
+
+</rdf:RDF> 

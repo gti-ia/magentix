@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+
+<!DOCTYPE uridef [
+  <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#">
+  <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <!ENTITY owl "http://www.w3.org/2002/07/owl#">
+  <!ENTITY service "http://www.daml.org/services/owl-s/1.1/Service.owl#">
+  <!ENTITY profile "http://www.daml.org/services/owl-s/1.1/Profile.owl#">
+  <!ENTITY process "http://www.daml.org/services/owl-s/1.1/Process.owl#">
+  <!ENTITY grounding "http://www.daml.org/services/owl-s/1.1/Grounding.owl#">
+  <!ENTITY xsd "http://www.w3.org/2001/XMLSchema">
+  <!ENTITY mind "http://localhost:8080/services/SFservices/OWL/OWLS/SearchServiceProcess.owl">
+  <!ENTITY dir "http://localhost:8080/sfservices/services/SearchService?wsdl">
+]>
+
+
+<rdf:RDF xmlns:rdf="&rdf;" xmlns:rdfs="&rdfs;" xmlns:owl="&owl;" xmlns:xsd="&xsd;#" 
+   xmlns:service="&service;" xmlns:process="&process;" xmlns:profile="&profile;" xmlns:grounding="&grounding;"
+   xmlns:mind="&mind;#"      
+   xml:base="http://localhost:8080/services/SFservices/OWL/OWLS/SearchServiceProcess.owl">
+
+
+<service:Service rdf:about="http://localhost:8080/services/SFservices/OWL/OWLS/SearchServiceProfile.owl#SearchServiceService">
+        <service:presents rdf:resource="http://localhost:8080/services/SFservices/OWL/OWLS/SearchServiceProfile.owl#SearchServiceProfile"/>
+        <service:describedBy rdf:resource="#SearchServiceProcess"/>
+	<service:supports rdf:resource="#SearchServiceGrounding"/>
+</service:Service>
+
+
+<process:AtomicProcess rdf:ID="SearchServiceProcess">
+	<service:describes rdf:resource="http://localhost:8080/services/SFservices/OWL/OWLS/SearchServiceProfile.owl#SearchServiceService"/>
+     	<process:hasInput rdf:resource="#SearchServiceInputServicePurpose"/>
+    	<process:hasOutput rdf:resource="#SearchServiceOutputServiceStatus"/>
+	<process:hasOutput rdf:resource="#SearchServiceOutputServicesList"/>
+</process:AtomicProcess>
+
+<process:Input rdf:ID="SearchServiceInputServicePurpose">
+     <rdfs:label>InputServicePurpose</rdfs:label>
+     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
+</process:Input>
+
+<process:Output rdf:ID="SearchServiceOutputServiceStatus">
+    <rdfs:label>OutputServiceStatus</rdfs:label>
+    <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#integer</process:parameterType>
+</process:Output>         
+
+<process:Output rdf:ID="SearchServiceOutputServicesList">
+    <rdfs:label>OutputServiceList</rdfs:label>
+    <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
+</process:Output>    
+
+<grounding:WsdlGrounding rdf:ID="SearchServiceGrounding">
+	<service:supportedBy rdf:resource="http://localhost:8080/services/SFservices/OWL/OWLS/SearchServiceProfile.owl#SearchServiceService"/>
+	<grounding:hasAtomicProcessGrounding rdf:resource="#SearchServiceWsdlAtomicProcessGrounding"/>
+</grounding:WsdlGrounding>
+
+<grounding:WsdlAtomicProcessGrounding rdf:ID="SearchServiceWsdlAtomicProcessGrounding">
+	<grounding:owlsProcess rdf:resource="#SearchServiceProcess"/>
+	<grounding:wsdlDocument rdf:datatype="&xsd;anyURI">http://localhost:8080/sfservices/services/SearchService?wsdl</grounding:wsdlDocument>
+	<grounding:wsdlOperation>
+            <grounding:WsdlOperationRef>
+                <grounding:portType rdf:datatype="&xsd;#anyURI">http://localhost:8080/sfservices/services/SearchServiceOperationsPortType</grounding:portType>
+                <grounding:operation rdf:datatype="&xsd;#anyURI">http://localhost:8080/sfservices/services/SearchService</grounding:operation>
+            </grounding:WsdlOperationRef>
+        </grounding:wsdlOperation>
+
+	<grounding:wsdlInputMessage rdf:datatype="&xsd;anyURI">http://localhost:8080/sfservices/services/SearchServiceMessage</grounding:wsdlInputMessage>
+        <grounding:wsdlOutputMessage rdf:datatype="&xsd;anyURI">http://localhost:8080/sfservices/services/SearchServiceResponse</grounding:wsdlOutputMessage>
+	  
+	<grounding:wsdlInput>
+                  <grounding:WsdlInputMessageMap>
+                    <grounding:owlsParameter rdf:resource="#SearchServiceInputServicePurpose"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/sfservices/services/ServicePurpose</grounding:wsdlMessagePart>
+                  </grounding:WsdlInputMessageMap>
+        </grounding:wsdlInput>
+	
+       <grounding:wsdlOutput>
+                  <grounding:WsdlOutputMessageMap>
+		    <grounding:owlsParameter rdf:resource="#SearchServiceOutputServiceStatus"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/sfservices/services/return</grounding:wsdlMessagePart>
+                  </grounding:WsdlOutputMessageMap>
+        </grounding:wsdlOutput>
+
+	<grounding:wsdlOutput>
+                  <grounding:WsdlOutputMessageMap>
+		    <grounding:owlsParameter rdf:resource="#SearchServiceOutputServicesList"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/sfservices/services/ServicesList</grounding:wsdlMessagePart>
+                  </grounding:WsdlOutputMessageMap>
+        </grounding:wsdlOutput>
+
+</grounding:WsdlAtomicProcessGrounding>
+
+</rdf:RDF> 
