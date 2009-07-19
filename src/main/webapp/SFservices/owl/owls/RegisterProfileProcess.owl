@@ -11,7 +11,7 @@
   <!ENTITY process "http://www.daml.org/services/owl-s/1.1/Process.owl#">
   <!ENTITY grounding "http://www.daml.org/services/owl-s/1.1/Grounding.owl#">
   <!ENTITY xsd "http://www.w3.org/2001/XMLSchema">
-  <!ENTITY mind "http://localhost:8080/services/SFservices/OWL/OWLS/RegisterProfileProcess.owl">
+  <!ENTITY mind "http://localhost:8080/sfservices/SFservices/owl/owls/RegisterProfileProcess.owl">
   <!ENTITY dir "http://localhost:8080/sfservices/services/RegisterProfile?wsdl">
 <!ENTITY actor "http://www.daml.org/services/owl-s/1.1/ActorDefault.owl#">
 ]>
@@ -19,10 +19,10 @@
 <rdf:RDF xmlns:rdf="&rdf;" xmlns:rdfs="&rdfs;" xmlns:owl="&owl;" xmlns:xsd="&xsd;#" 
    xmlns:service="&service;" xmlns:process="&process;" xmlns:profile="&profile;" xmlns:grounding="&grounding;" xmlns:actor="&actor;"
    xmlns:mind="&mind;#"      
-   xml:base="http://localhost:8080/services/SFservices/OWL/OWLS/RegisterProfileProcess.owl">
+   xml:base="http://localhost:8080/sfservices/SFservices/owl/owls/RegisterProfileProcess.owl">
 
 <service:Service rdf:ID="RegisterProfileService">
-        <service:presents rdf:resource="http://localhost:8080/services/SFservices/OWL/OWLS/RegisterProfileProfile.owl#RegisterProfileProfile"/>
+        <service:presents rdf:resource="http://localhost:8080/sfservices/SFservices/owl/owls/RegisterProfileProfile.owl#RegisterProfileProfile"/>
         <service:describedBy rdf:resource="#RegisterProfileProcess"/>
 	<service:supports rdf:resource="#RegisterProfileGrounding"/>
 </service:Service>

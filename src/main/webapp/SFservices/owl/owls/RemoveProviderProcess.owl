@@ -11,7 +11,7 @@
   <!ENTITY process "http://www.daml.org/services/owl-s/1.1/Process.owl#">
   <!ENTITY grounding "http://www.daml.org/services/owl-s/1.1/Grounding.owl#">
   <!ENTITY xsd "http://www.w3.org/2001/XMLSchema">
-  <!ENTITY mind "http://localhost:8080/services/SFservices/OWL/OWLS/RemoveProviderProcess.owl">
+  <!ENTITY mind "http://localhost:8080/sfservices/SFservices/owl/owls/RemoveProviderProcess.owl">
   <!ENTITY dir "http://localhost:8080/sfservices/services/RemoveProvider?wsdl">
   <!ENTITY actor "http://www.daml.org/services/owl-s/1.1/ActorDefault.owl#">
 ]>
@@ -20,7 +20,7 @@
 <rdf:RDF xmlns:rdf="&rdf;" xmlns:rdfs="&rdfs;" xmlns:owl="&owl;" xmlns:xsd="&xsd;#" 
    xmlns:service="&service;" xmlns:process="&process;" xmlns:profile="&profile;" xmlns:grounding="&grounding;" xmlns:actor="&actor;"
    xmlns:mind="&mind;#"      
-   xml:base="http://localhost:8080/services/SFservices/OWL/OWLS/RemoveProviderProcess.owl">
+   xml:base="http://localhost:8080/sfservices/SFservices/owl/owls/RemoveProviderProcess.owl">
 
 
 <owl:Ontology>
@@ -31,8 +31,8 @@
     <owl:imports rdf:resource="&actor;"/>
 </owl:Ontology>
 
-<service:Service rdf:about="http://localhost:8080/services/SFservices/OWL/OWLS/RemoveProviderProfile.owl#RemoveProviderService">
-        <service:presents rdf:resource="http://localhost:8080/services/SFservices/OWL/OWLS/RemoveProviderProfile.owl#RemoveProviderProfile"/>
+<service:Service rdf:about="http://localhost:8080/sfservices/SFservices/owl/owls/RemoveProviderProfile.owl#RemoveProviderService">
+        <service:presents rdf:resource="http://localhost:8080/sfservices/SFservices/owl/owls/RemoveProviderProfile.owl#RemoveProviderProfile"/>
       	<service:describedBy rdf:resource="#RemoveProviderProcess"/>
 	<service:supports rdf:resource="#RemoveProviderGrounding"/>
 </service:Service>
@@ -40,7 +40,7 @@
 
 
 <process:AtomicProcess rdf:ID="RemoveProviderProcess">
-	<service:describes rdf:resource="http://localhost:8080/services/SFservices/OWL/OWLS/RemoveProviderProfile.owl#RemoveProviderService"/>
+	<service:describes rdf:resource="http://localhost:8080/sfservices/SFservices/owl/owls/RemoveProviderProfile.owl#RemoveProviderService"/>
      	<process:hasOutput rdf:resource="#RemoveProviderOutputServiceStatus"/>
      	<process:hasInput rdf:resource="#RemoveProviderInputServiceImplementationID"/>
 	<process:hasInput rdf:resource="#RemoveProviderInputProviderID"/>
@@ -61,7 +61,7 @@
 </process:Output>         
 
 <grounding:WsdlGrounding rdf:ID="RemoveProviderGrounding">
-	<service:supportedBy rdf:resource="http://localhost:8080/services/SFservices/OWL/OWLS/RemoveProviderProfile.owl#RemoveProviderService"/>
+	<service:supportedBy rdf:resource="http://localhost:8080/sfservices/SFservices/owl/owls/RemoveProviderProfile.owl#RemoveProviderService"/>
 	<grounding:hasAtomicProcessGrounding rdf:resource="#RemoveProviderWsdlAtomicProcessGrounding"/>
 </grounding:WsdlGrounding>
 

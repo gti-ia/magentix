@@ -218,7 +218,7 @@ import wtp.PlannerStub;
 			qeSearchProcess.close();
 	
 			try {
-            
+			
 				PlannerStub stub = new PlannerStub();
 				wtp.PlannerStub.Planner planner = new wtp.PlannerStub.Planner();
 				
@@ -229,8 +229,8 @@ import wtp.PlannerStub;
 				*/
 				
 				//other example
-				planner.setGoal("http://localhost:8080/services/THservices/OWL/OWLS/TH_GoalOntology.owl");
-				planner.setInit("http://localhost:8080/services/THservices/OWL/OWLS/TH_InitialOntology.owl");
+				planner.setGoal("http://localhost:8080/sfservices/THservices/owl/owls/TH_GoalOntology.owl");
+				planner.setInit("http://localhost:8080/services/THservices/owl/owls/TH_InitialOntology.owl");
 				planner.setServices(processList);
 				
 				

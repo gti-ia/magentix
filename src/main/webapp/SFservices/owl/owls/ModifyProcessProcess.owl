@@ -11,7 +11,7 @@
   <!ENTITY process "http://www.daml.org/services/owl-s/1.1/Process.owl#">
   <!ENTITY grounding "http://www.daml.org/services/owl-s/1.1/Grounding.owl#">
   <!ENTITY xsd "http://www.w3.org/2001/XMLSchema">
-  <!ENTITY mind "http://localhost:8080/services/SFservices/OWL/OWLS/ModifyProcessProcess.owl">
+  <!ENTITY mind "http://localhost:8080/sfservices/SFservices/owl/owls/ModifyProcessProcess.owl">
   <!ENTITY dir "http://localhost:8080/sfservices/services/ModifyProcess?wsdl">
 <!ENTITY actor "http://www.daml.org/services/owl-s/1.1/ActorDefault.owl#">
 ]>
@@ -20,11 +20,11 @@
 <rdf:RDF xmlns:rdf="&rdf;" xmlns:rdfs="&rdfs;" xmlns:owl="&owl;" xmlns:xsd="&xsd;#" 
    xmlns:service="&service;" xmlns:process="&process;" xmlns:profile="&profile;" xmlns:grounding="&grounding;" xmlns:actor="&actor;"
    xmlns:mind="&mind;#"      
-   xml:base="http://localhost:8080/services/SFservices/OWL/OWLS/ModifyProcessProcess.owl">
+   xml:base="http://localhost:8080/sfservices/SFservices/owl/owls/ModifyProcessProcess.owl">
 
 
-<service:Service rdf:about="http://localhost:8080/services/SFservices/OWL/OWLS/ModifyProcessProfile.owl#ModifyProcessService">
-        <service:presents rdf:resource="http://localhost:8080/services/SFservices/OWL/OWLS/ModifyProcessProfile.owl#ModifyProcessProfile"/>
+<service:Service rdf:about="http://localhost:8080/sfservices/SFservices/owl/owls/ModifyProcessProfile.owl#ModifyProcessService">
+        <service:presents rdf:resource="http://localhost:8080/sfservices/SFservices/owl/owls/ModifyProcessProfile.owl#ModifyProcessProfile"/>
         <service:describedBy rdf:resource="#ModifyProcessProcess"/>
 	<service:supports rdf:resource="#ModifyProcessGrounding"/>
 </service:Service>
@@ -33,7 +33,7 @@
 
 
 <process:AtomicProcess rdf:ID="ModifyProcessProcess">
-	<service:describes rdf:resource="http://localhost:8080/services/SFservices/OWL/OWLS/ModifyProcessProfile.owl#ModifyProcessService"/>
+	<service:describes rdf:resource="http://localhost:8080/sfservices/SFservices/owl/owls/ModifyProcessProfile.owl#ModifyProcessService"/>
      	<process:hasInput rdf:resource="#ModifyProcessInputServiceImplementationID"/>
     	<process:hasInput rdf:resource="#ModifyProcessInputServiceModel"/>
     	<process:hasInput rdf:resource="#ModifyProcessInputServiceGrounding"/>
@@ -62,7 +62,7 @@
 
 
 <grounding:WsdlGrounding rdf:ID="ModifyProcessGrounding">
-	<service:supportedBy rdf:resource="http://localhost:8080/services/SFservices/OWL/OWLS/ModifyProcessProfile.owl#ModifyProcessService"/>
+	<service:supportedBy rdf:resource="http://localhost:8080/sfservices/SFservices/owl/owls/ModifyProcessProfile.owl#ModifyProcessService"/>
 	<grounding:hasAtomicProcessGrounding rdf:resource="#ModifyProcessWsdlAtomicProcessGrounding"/>
 </grounding:WsdlGrounding>
 

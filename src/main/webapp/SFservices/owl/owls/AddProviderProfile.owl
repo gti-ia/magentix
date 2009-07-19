@@ -11,15 +11,15 @@
   <!ENTITY process "http://www.daml.org/services/owl-s/1.1/Process.owl#">
   <!ENTITY grounding "http://www.daml.org/services/owl-s/1.1/Grounding.owl#">
   <!ENTITY xsd "http://www.w3.org/2001/XMLSchema">
-  <!ENTITY mind "http://localhost:8080/services/SFservices/OWL/OWLS/DeregisterProfileProfile.owl">
-  <!ENTITY dir "http://localhost:8080/sfservices/services/DeregisterProfile?wsdl">
+  <!ENTITY mind "http://localhost:8080/sfservices/SFservices/owl/owls/AddProviderProfile.owl">
+  <!ENTITY dir "http://paracetamol.dsic.upv.es:8080/AddProvider/services/AddProvider?wsdl">
 ]>
 
 
 <rdf:RDF xmlns:rdf="&rdf;" xmlns:rdfs="&rdfs;" xmlns:owl="&owl;" xmlns:xsd="&xsd;#" 
    xmlns:service="&service;" xmlns:process="&process;" xmlns:profile="&profile;" xmlns:grounding="&grounding;"
    xmlns:mind="&mind;#"      
-   xml:base="http://localhost:8080/services/SFservices/OWL/OWLS/DeregisterProfileProfile.owl">
+   xml:base="http://localhost:8080/sfservices/SFservices/owl/owls/AddProviderProfile.owl">
 
 
 <owl:Ontology>
@@ -29,18 +29,16 @@
     <owl:imports rdf:resource="&grounding;"/> 
 </owl:Ontology>
 
-<service:Service rdf:ID="DeregisterProfileService">
-        <service:presents rdf:resource="#DeregisterProfileProfile"/>
+<service:Service rdf:ID="AddProviderService">
+        <service:presents rdf:resource="#AddProviderProfile"/>
 </service:Service>
 
-
-       
-
-<profile:Profile rdf:ID="DeregisterProfileProfile">
-    <service:isPresentedBy rdf:resource="#DeregisterProfileService"/>
-    <profile:serviceName xml:lang="en">DeregisterProfile</profile:serviceName>
-    <profile:hasInput rdf:resource="#DeregisterProfileInputServiceID"/>
-    <profile:hasOutput rdf:resource="#DeregisterProfileOutputServiceStatus"/>
+<profile:Profile rdf:ID="AddProviderProfile">
+    <service:isPresentedBy rdf:resource="#AddProviderService"/>
+    <profile:serviceName xml:lang="en">AddProvider</profile:serviceName>
+    <profile:hasInput rdf:resource="#AddProviderInputServiceProcessID"/>
+    <profile:hasInput rdf:resource="#AddProviderInputProviderID"/>
+    <profile:hasOutput rdf:resource="#AddProviderOutputServiceStatus"/>
 </profile:Profile>
 
-</rdf:RDF> 
+</rdf:RDF>

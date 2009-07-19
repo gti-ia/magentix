@@ -11,26 +11,30 @@
   <!ENTITY process "http://www.daml.org/services/owl-s/1.1/Process.owl#">
   <!ENTITY grounding "http://www.daml.org/services/owl-s/1.1/Grounding.owl#">
   <!ENTITY xsd "http://www.w3.org/2001/XMLSchema">
-  <!ENTITY mind "http://localhost:8080/services/SFservices/OWL/OWLS/SearchServiceProfile.owl">
-  <!ENTITY dir "http://localhost:8080/sfservices/services/SearchService?wsdl">
+  <!ENTITY mind "http://localhost:8080/sfservices/SFservices/owl/owls/ModifyProfileProfile.owl">
+  <!ENTITY dir "http://localhost:8080/sfservices/services/ModifyProfile?wsdl">
 ]>
 
 
 <rdf:RDF xmlns:rdf="&rdf;" xmlns:rdfs="&rdfs;" xmlns:owl="&owl;" xmlns:xsd="&xsd;#" 
    xmlns:service="&service;" xmlns:process="&process;" xmlns:profile="&profile;" xmlns:grounding="&grounding;"
    xmlns:mind="&mind;#"      
-   xml:base="http://localhost:8080/services/SFservices/OWL/OWLS/SearchServiceProfile.owl">
+   xml:base="http://localhost:8080/sfservices/SFservices/owl/owls/ModifyProfileProfile.owl">
 
 
-<service:Service rdf:ID="SearchServiceService">
-        <service:presents rdf:resource="#SSearchServiceProfile"/>
+
+<service:Service rdf:ID="ModifyProfileService">
+        <service:presents rdf:resource="#ModifyProfileProfile"/>
 </service:Service>
 
-<profile:Profile rdf:ID="SearchServiceProfile">
-    <service:isPresentedBy rdf:resource="#SearchServiceService"/>
-    <profile:serviceName xml:lang="en">SearchService</profile:serviceName>
-    <profile:hasInput rdf:resource="#SearchServiceInputServicePurpose"/>
-    <profile:hasOutput rdf:resource="#SearchServiceOutputServiceStatus"/>
-    <profile:hasOutput rdf:resource="#SearchServiceOutputServicesList"/>
+<profile:Profile rdf:ID="ModifyProfileProfile">
+    <service:isPresentedBy rdf:resource="#ModifyProfileService"/>
+    <profile:serviceName xml:lang="en">ModifyProfile</profile:serviceName>
+    <profile:hasInput rdf:resource="#ModifyProfileInputServiceID"/>
+    <profile:hasInput rdf:resource="#ModifyProfileInputServiceGoal"/>
+    <profile:hasInput rdf:resource="#ModifyProfileInputServiceProfile"/>
+    <profile:hasOutput rdf:resource="#ModifyProfileOutputServiceStatus"/>  
 </profile:Profile>
+
+
 </rdf:RDF> 

@@ -11,7 +11,7 @@
   <!ENTITY process "http://www.daml.org/services/owl-s/1.1/Process.owl#">
   <!ENTITY grounding "http://www.daml.org/services/owl-s/1.1/Grounding.owl#">
   <!ENTITY xsd "http://www.w3.org/2001/XMLSchema">
-  <!ENTITY mind "http://localhost:8080/services/SFservices/OWL/OWLS/SearchServiceProcess.owl">
+  <!ENTITY mind "http://localhost:8080/sfservices/SFservices/owl/owls/SearchServiceProcess.owl">
   <!ENTITY dir "http://localhost:8080/sfservices/services/SearchService?wsdl">
 ]>
 
@@ -19,18 +19,18 @@
 <rdf:RDF xmlns:rdf="&rdf;" xmlns:rdfs="&rdfs;" xmlns:owl="&owl;" xmlns:xsd="&xsd;#" 
    xmlns:service="&service;" xmlns:process="&process;" xmlns:profile="&profile;" xmlns:grounding="&grounding;"
    xmlns:mind="&mind;#"      
-   xml:base="http://localhost:8080/services/SFservices/OWL/OWLS/SearchServiceProcess.owl">
+   xml:base="http://localhost:8080/sfservices/SFservices/owl/owls/SearchServiceProcess.owl">
 
 
-<service:Service rdf:about="http://localhost:8080/services/SFservices/OWL/OWLS/SearchServiceProfile.owl#SearchServiceService">
-        <service:presents rdf:resource="http://localhost:8080/services/SFservices/OWL/OWLS/SearchServiceProfile.owl#SearchServiceProfile"/>
+<service:Service rdf:about="http://localhost:8080/sfservices/SFservices/owl/owls/SearchServiceProfile.owl#SearchServiceService">
+        <service:presents rdf:resource="http://localhost:8080/sfservices/SFservices/owl/owls/SearchServiceProfile.owl#SearchServiceProfile"/>
         <service:describedBy rdf:resource="#SearchServiceProcess"/>
 	<service:supports rdf:resource="#SearchServiceGrounding"/>
 </service:Service>
 
 
 <process:AtomicProcess rdf:ID="SearchServiceProcess">
-	<service:describes rdf:resource="http://localhost:8080/services/SFservices/OWL/OWLS/SearchServiceProfile.owl#SearchServiceService"/>
+	<service:describes rdf:resource="http://localhost:8080/sfservices/SFservices/owl/owls/SearchServiceProfile.owl#SearchServiceService"/>
      	<process:hasInput rdf:resource="#SearchServiceInputServicePurpose"/>
     	<process:hasOutput rdf:resource="#SearchServiceOutputServiceStatus"/>
 	<process:hasOutput rdf:resource="#SearchServiceOutputServicesList"/>
@@ -52,7 +52,7 @@
 </process:Output>    
 
 <grounding:WsdlGrounding rdf:ID="SearchServiceGrounding">
-	<service:supportedBy rdf:resource="http://localhost:8080/services/SFservices/OWL/OWLS/SearchServiceProfile.owl#SearchServiceService"/>
+	<service:supportedBy rdf:resource="http://localhost:8080/sfservices/SFservices/owl/owls/SearchServiceProfile.owl#SearchServiceService"/>
 	<grounding:hasAtomicProcessGrounding rdf:resource="#SearchServiceWsdlAtomicProcessGrounding"/>
 </grounding:WsdlGrounding>
 

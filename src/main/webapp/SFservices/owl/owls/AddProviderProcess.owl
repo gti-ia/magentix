@@ -11,7 +11,7 @@
   <!ENTITY process "http://www.daml.org/services/owl-s/1.1/Process.owl#">
   <!ENTITY grounding "http://www.daml.org/services/owl-s/1.1/Grounding.owl#">
   <!ENTITY xsd "http://www.w3.org/2001/XMLSchema">
-  <!ENTITY mind "http://localhost:8080/services/SFservices/OWL/OWLS/AddProviderProcess.owl">
+  <!ENTITY mind "http://localhost:8080/sfservices/SFservices/owl/owls/AddProviderProcess.owl">
   <!ENTITY dir "http://paracetamol.dsic.upv.es:8080/AddProvider/services/AddProvider?wsdl">
   <!ENTITY actor "http://www.daml.org/services/owl-s/1.1/ActorDefault.owl#">
   <!ENTITY expr "http://www.daml.org/services/owl-s/1.1/generic/Expression.owl#">
@@ -22,7 +22,7 @@
 <rdf:RDF xmlns:rdf="&rdf;" xmlns:rdfs="&rdfs;" xmlns:owl="&owl;" xmlns:xsd="&xsd;#" 
    xmlns:service="&service;" xmlns:process="&process;" xmlns:profile="&profile;" xmlns:grounding="&grounding;" xmlns:actor="&actor;"
    xmlns:mind="&mind;#" xmlns:duration="&duration;" xmlns:expr="&expr;" xmlns:Duration_param="&Duration_param;" xmlns:pddxml="&pddxml;"     
-   xml:base="http://localhost:8080/services/SFservices/OWL/OWLS/AddProviderProcess.owl">
+   xml:base="http://localhost:8080/sfservices/SFservices/owl/owls/AddProviderProcess.owl">
 
 
 <owl:Ontology>
@@ -33,15 +33,15 @@
     <owl:imports rdf:resource="&actor;"/>
 </owl:Ontology>
 
-<service:Service rdf:about="http://localhost:8080/services/SFservices/OWL/OWLS/AddProviderProfile.owl#AddProviderService">
-        <service:presents rdf:resource="http://localhost:8080/services/SFservices/OWL/OWLS/AddProviderProfile.owl#AddProviderProfile"/>
+<service:Service rdf:about="http://localhost:8080/sfservices/SFservices/owl/owls/AddProviderProfile.owl#AddProviderService">
+        <service:presents rdf:resource="http://localhost:8080/sfservices/SFservices/owl/owls/AddProviderProfile.owl#AddProviderProfile"/>
       	<service:describedBy rdf:resource="#AddProviderProcess"/>
 	<service:supports rdf:resource="#AddProviderGrounding"/>
 </service:Service>
 
 
 <process:AtomicProcess rdf:ID="AddProviderProcess">
-	<service:describes rdf:resource="http://localhost:8080/services/SFservices/OWL/OWLS/AddProviderProfile.owl#AddProviderService"/>
+	<service:describes rdf:resource="http://localhost:8080/sfservices/SFservices/owl/owls/AddProviderProfile.owl#AddProviderService"/>
      	<process:hasOutput rdf:resource="#AddProviderOutputServiceStatus"/>
      	<process:hasInput rdf:resource="#AddProviderInputServiceImplementationID"/>
 	<process:hasInput rdf:resource="#AddProviderInputProviderID"/>
@@ -63,7 +63,7 @@
 </process:Output>         
 
 <grounding:WsdlGrounding rdf:ID="AddProviderGrounding">
-	<service:supportedBy rdf:resource="http://localhost:8080/services/SFservices/OWL/OWLS/AddProviderProfile.owl#AddProviderService"/>
+	<service:supportedBy rdf:resource="http://localhost:8080/sfservices/SFservices/owl/owls/AddProviderProfile.owl#AddProviderService"/>
 	<grounding:hasAtomicProcessGrounding rdf:resource="#AddProviderWsdlAtomicProcessGrounding"/>
 </grounding:WsdlGrounding>
 
