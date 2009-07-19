@@ -1,18 +1,20 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>es.upv.dsic.gti-ia</groupId>
-  <artifactId>omsservices</artifactId>
-  <packaging>war</packaging>
-  <version>0.3</version>
-  <name>omsservices Maven Webapp</name>
-  <url>http://maven.apache.org</url>
-    	<parent>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>es.upv.dsic.gti-ia</groupId>
+	<artifactId>omsservices</artifactId>
+	<packaging>war</packaging>
+	<version>0.3</version>
+	<name>omsservices Maven Webapp</name>
+	<url>http://maven.apache.org</url>
+	<!-- Indica de que proyecto desciende, heredaremos su configuración, librerías, plugins ... -->
+	<parent>
 		<artifactId>thomas</artifactId>
 		<groupId>es.upv.dsic.gti-ia</groupId>
 		<version>0.3</version>
 	</parent>
-  <build>
-    <finalName>omsservices</finalName>
-  </build>
+	<build>
+		<finalName>omsservices</finalName>
+	</build>
 </project>
