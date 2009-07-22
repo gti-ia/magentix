@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>Propiedades de configuración de THOMAS</comment>
+<entry key="DB_URL">jdbc:mysql://localhost/thomas</entry>
+<entry key="DB_USER">thomas</entry>
+<entry key="DB_PASSWD">thomas</entry>
+<entry key="DB">MySQL</entry>
+<entry key="DB_DRIVER">com.mysql.jdbc.Driver</entry>
+</properties>

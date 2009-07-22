@@ -22,26 +22,25 @@
     import com.hp.hpl.jena.rdf.model.ModelMaker;
     import com.hp.hpl.jena.ontology.OntModelSpec;
     import java.util.*; 
+
     import com.hp.hpl.jena.update.*;
+import java.io.*;
+    
     
     /**
      *  RemoveProviderSkeleton java skeleton for the axisService
      */
     public class RemoveProviderSkeleton{
         
-    	public static final String DB_URL = "jdbc:mysql://localhost/thomas";
-    	public static final String DB_USER = "thomas";
-    	public static final String DB_PASSWD = "thomas";
-    	public static final String DB = "MySQL";
-    	public static final String DB_DRIVER = "com.mysql.jdbc.Driver";
+
     	public static final Boolean DEBUG = true;
 
     	// database connection parameters, with defaults
-    	private static String s_dbURL = DB_URL;
-    	private static String s_dbUser = DB_USER;
-    	private static String s_dbPw = DB_PASSWD;
-    	private static String s_dbType = DB;
-    	private static String s_dbDriver = DB_DRIVER;
+    	private static String s_dbURL;
+    	private static String s_dbUser;
+    	private static String s_dbPw;
+    	private static String s_dbType;
+    	private static String s_dbDriver;
     	
     	 /**
          * RemoveProvider
@@ -53,6 +52,42 @@
          {
         	wtp.RemoveProviderResponse response = new wtp.RemoveProviderResponse();
         	IDBConnection conn = null;
+        	
+        	Properties properties = new Properties();
+    		
+    		
+  		  
+  		  try {
+  			   properties.loadFromXML(RemoveProviderSkeleton.class.getResourceAsStream("/"+"THOMASDemoConfiguration.xml"));
+  				for (Enumeration e = properties.keys(); e.hasMoreElements() ; ) {
+  				    // Obtenemos el objeto
+  				    Object obj = e.nextElement();
+  				    if (obj.toString().equalsIgnoreCase("DB_URL"))
+  				    {
+  				    	s_dbURL= properties.getProperty(obj.toString());	
+  				    }
+  				    else if (obj.toString().equalsIgnoreCase("DB_USER"))
+  				    {
+  				    	s_dbUser = properties.getProperty(obj.toString());
+  				    }
+  				    else    if (obj.toString().equalsIgnoreCase("DB_PASSWD"))
+  				    {
+  				    	s_dbPw = properties.getProperty(obj.toString());
+  				    }
+  				    else    if (obj.toString().equalsIgnoreCase("DB"))
+  				    {
+  				    	s_dbType = properties.getProperty(obj.toString());
+  				    }
+  				    else    if (obj.toString().equalsIgnoreCase("DB_DRIVER"))
+  				    {
+  				    	s_dbDriver = properties.getProperty(obj.toString());
+  				    }
+  				}
+
+  		    } catch (IOException e) {
+  		    	System.out.print(e);
+  		    }
+      	
            	
            	if (DEBUG) {
            		System.out.println("RemoveProvider Service :");
