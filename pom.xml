@@ -6,6 +6,75 @@
 	<artifactId>thomas</artifactId>
 	<packaging>pom</packaging>
 	<name>THOMAS</name>
+	<url>http://www.thomas-tin.org/</url>
+	<contributors>
+		<contributor>
+			<name>Vicent Botti</name>
+			<email>vbotti@dsic.upv.es</email>
+			<roles>
+				<role>Head</role>
+			</roles>
+		</contributor>
+		<contributor>
+			<name>Vicente Julian</name>
+			<email>vinglada@dsic.upv.es</email>
+			<roles>
+				<role>Faculty</role>
+			</roles>
+		</contributor>
+	</contributors>
+	<description>
+		Technological evolution over recent years (Internet, www,
+		electronic commerce, wireless connection etc.) has led to a new
+		paradigm of computing as interaction. Under this paradigm,
+		computing is something that is carried out through the
+		communication between computational entities. In this sense,
+		computing is an inherently social activity rather than solitary,
+		leading to new forms of conceiving, designing, developing and
+		managing computational systems. One example of the influence of
+		this viewpoint is the emerging model of software as a service,
+		for example in service-oriented architectures. The technology of
+		agents/multiagent systems is particularly promising as a support
+		for this new computing as interaction paradigm. Dynamic agent
+		organisations that self-adjust in order to make the most of
+		their current environment are increasingly important. These
+		organisations could appear in dynamic or emerging societies of
+		agents such as Grid domains, peer-to-peer networks, or other
+		environments in which the agents coordinate in a dynamic way in
+		order to offer composite services. The social factors in the
+		organisation of multi-agent systems are also increasingly
+		important for structuring interactions in dynamic open worlds.
+		The aim of the present project is to advance and contribute
+		solutions in these areas, principally in the aspects related to
+		organisational structures. In this sense, the following is
+		proposed: to develop a multiagent system architecture that is
+		suitable for the generation of virtual organisations in open
+		environments, as well as a support platform that will allow
+		these systems to be implemented. to design a method for
+		developing open multiagent systems which is orientated towards
+		the concept of organisation, and which will cover the complete
+		life cycle of an open system, allowing the suitable management
+		of large scale complex systems and giving specific support in
+		order to meet the possible needs of these types of systems. to
+		develop a model of agents capable of taking decisions
+		autonomously, equipped with learning mechanisms and able to
+		respond to events, planning and replanning within runtime. to
+		develop intelligent service coordination techniques/methods
+		within open, decentralised multiagent systems: intelligent
+		service location (directory services, syntactic and semantic
+		comparison techniques for services) and generation and
+		adaptation of composed services. to develop mechanisms based on
+		organisational structures and virtual organisations that
+		optimise and regulate the coordination of services in open
+		multiagent systems. to define the mechanisms that allow the
+		interaction between agents in open distributed wireless systems
+		in which problems of communication and security may occur. to
+		develop and implement the necessary security and privacy
+		policies. to develop various prototypes in order to validate the
+		proposed architecture in collaboration with companies interested
+		in the proposal and in the results that are obtained from the
+		project.
+	</description>
 	<version>0.3</version>
 	<licenses>
 		<license>
@@ -21,20 +90,69 @@
 		<developer>
 			<name>Natalia Criado</name>
 			<email>ncriado@dsic.upv.es</email>
+			<roles>
+				<role>Researcher</role>
+				<role>Software Developer</role>
+			</roles>
 		</developer>
 		<developer>
 			<name>Elena del Val Noguera</name>
 			<email>edelval@dsic.upv.es</email>
+			<roles>
+				<role>Researcher</role>
+				<role>Software Developer</role>
+			</roles>
+		</developer>
+		<developer>
+			<name>Alberto Palomares</name>
+			<email>apalomares@dsic.upv.es</email>
+			<roles>
+				<role>Researcher</role>
+				<role>Project Manager</role>
+			</roles>
 		</developer>
 		<developer>
 			<name>Joan Bellver</name>
 			<email>jbellver@dsic.upv.es</email>
+			<roles>
+				<role>Software Developer</role>
+			</roles>
 		</developer>
 		<developer>
 			<name>Sergio Pajares</name>
 			<email>spajares@dsic.upv.es</email>
+			<roles>
+				<role>Software Developer</role>
+			</roles>
 		</developer>
 	</developers>
+	<mailingLists>
+		<mailingList>
+			<name>GTI-IA mailing List</name>
+			<post>gti@dsic.upv.es</post>
+		</mailingList>
+	</mailingLists>
+	<scm>
+		<developerConnection>
+			scm:svm:https://gti-ia.dsic.upv.es/svn/thomas
+		</developerConnection>
+	</scm>
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<configuration>
+					<minmemory>128m</minmemory>
+					<maxmemory>1g</maxmemory>
+				</configuration>
+			</plugin>
+			<plugin>
+			<groupId>org.codehaus.mojo</groupId>
+			<artifactId>jxr-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</reporting>
 	<!-- Que proyectos son submodulos.-->
 	<modules>
 		<module>../sfservices</module><!-- ../ indica que están al mismo nivel,lo haremos asi para adpatarnos a las estructuras del eclipse. -->
