@@ -6,8 +6,8 @@
 	<artifactId>sfservices</artifactId>
 	<packaging>war</packaging>
 	<version>0.3</version>
-	<name>sfservices Maven Webapp</name>
-	<url>http://maven.apache.org</url>
+	<name>SFSERVICES</name>
+	<url>${basedir}/target/site</url>
 	<!-- Indica de que proyecto desciende, heredaremos su configuración, librerías, plugins ... -->
 	<parent>
 		<artifactId>thomas</artifactId>
@@ -17,4 +17,18 @@
 	<build>
 		<finalName>sfservices</finalName>
 	</build>
+	<!-- 
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<configuration>
+					<minmemory>128m</minmemory>
+					<maxmemory>1g</maxmemory>
+				</configuration>
+			</plugin>
+		</plugins>
+	</reporting>
+	 -->
 </project>
