@@ -18,6 +18,6 @@ public class AgenteConsumidor extends SingleAgent{
 	public void execute(){
 		System.out.println("Arranco, soy "+getName());
 		ACLMessage msg = receiveACLMessage();
-		System.out.println(msg.getContent());
+		System.out.println(msg.getContent() + " Language "+msg.getLanguage());
 	}
 }

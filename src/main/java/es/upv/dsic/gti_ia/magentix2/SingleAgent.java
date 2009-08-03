@@ -87,7 +87,7 @@ public abstract class SingleAgent extends BaseAgent {
         }
         indice1 = indice2 + 1 + tam;
         indice2 = body.indexOf('#', indice1);
-        tam = Integer.parseInt(body.substring(indice1, indice2));        
+        tam = Integer.parseInt(body.substring(indice1, indice2));  
         //language
         msg.setLanguage(body.substring(indice2 + 1, indice2 + 1 +tam));
         
@@ -107,7 +107,7 @@ public abstract class SingleAgent extends BaseAgent {
         indice2 = body.indexOf('#', indice1);
         tam = Integer.parseInt(body.substring(indice1, indice2));        
         //Protocol
-        msg.setLanguage(body.substring(indice2 + 1, indice2 + 1 +tam));
+        msg.setProtocol(body.substring(indice2 + 1, indice2 + 1 +tam));
         
         indice1 = indice2 + 1 + tam;
         indice2 = body.indexOf('#', indice1);
@@ -139,7 +139,7 @@ public abstract class SingleAgent extends BaseAgent {
         tam = Integer.parseInt(body.substring(indice1, indice2));        
         //Content
         msg.setContent(body.substring(indice2 + 1, indice2 + 1 +tam));
-                
+        
         return msg;
     }
 

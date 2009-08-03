@@ -168,7 +168,6 @@ public class BaseAgent implements Runnable{
         //in reply to
         body = body + msg.getInReplyTo().length() + "#" + msg.getInReplyTo();
         //reply by
-        System.out.println(body);
         body = body + msg.getReplyBy().length() + "#" + msg.getReplyBy();
         //content
         body = body + msg.getContent().length() + "#" + msg.getContent();
