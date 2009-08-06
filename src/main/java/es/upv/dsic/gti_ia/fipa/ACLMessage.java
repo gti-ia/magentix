@@ -113,6 +113,15 @@ public class ACLMessage implements Serializable{
 		this.performative = performative;
 	}
 	
+	public void setPerformative(String performative){
+		for(int i=0; i< performatives.length; i++){
+			if(performative.compareTo(performatives[i]) == 0 ){
+				this.performative = i;
+				break;
+			}
+		}
+	}
+	
 	public String getPerformative(){
 		try {
 			return performatives[performative];

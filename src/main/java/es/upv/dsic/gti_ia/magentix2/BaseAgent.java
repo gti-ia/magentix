@@ -131,7 +131,7 @@ public class BaseAgent implements Runnable{
 		
 		//decidimos si el mensaje es interno o va al exterior dependiendo de su protocolo
 		if(msg.getReceiver().protocol != "qpid")
-			xfr.destination("pasarela");
+			xfr.destination("BridgeAgentInOut");
 		else
 			xfr.destination(msg.getReceiver().name);
 		
