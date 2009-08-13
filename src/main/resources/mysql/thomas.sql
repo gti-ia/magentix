@@ -22,6 +22,32 @@ CREATE DATABASE IF NOT EXISTS thomas;
 USE thomas;
 
 --
+-- Definition of table `serviceProfileID`
+--
+DROP TABLE IF EXISTS `serviceprofileid`;
+CREATE TABLE `thomas`.`serviceprofileid` (
+  `serviceprofileid` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+  `urlprofile` TEXT  NOT NULL,
+	`profilename` TEXT  NOT NULL,
+  PRIMARY KEY (`serviceprofileid`)
+)
+ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Definition of table `serviceProcessID`
+--
+DROP TABLE IF EXISTS `serviceprocessid`;
+CREATE TABLE `thomas`.`serviceprocessid` (
+  `serviceprocessid` TEXT  NOT NULL,
+  `urlprocess` TEXT  NOT NULL,
+  `servicenumid` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+`serviceprofileid` TEXT  NOT NULL,
+`processname` TEXT  NOT NULL,
+  PRIMARY KEY (`servicenumid`)
+)
+ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
 -- Definition of table `entity`
 --
 
