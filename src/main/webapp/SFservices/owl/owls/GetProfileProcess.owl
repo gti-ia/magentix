@@ -34,6 +34,7 @@
 <process:AtomicProcess rdf:ID="GetProfileProcess">
 	<service:describes rdf:resource="http://localhost:8080/sfservices/SFservices/owl/owls/GetProfileProfile.owl#GetProfileService"/>
      	<process:hasInput rdf:resource="#GetProfileInputServiceID"/>
+	<process:hasInput rdf:resource="#GetProfileInputAgentID"/>
    	<process:hasOutput rdf:resource="#GetProfileOutputServiceStatus"/>
 	<process:hasOutput rdf:resource="#GetProfileOutputServiceProfile"/>
 	<process:hasOutput rdf:resource="#GetProfileOutputGoal"/>
@@ -42,6 +43,11 @@
 
 <process:Input rdf:ID="GetProfileInputServiceID">
      <rdfs:label>InputServiceID</rdfs:label>
+     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
+</process:Input>
+
+<process:Input rdf:ID="GetProfileInputAgentID">
+     <rdfs:label>InputAgentID</rdfs:label>
      <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
 </process:Input>
 
@@ -85,6 +91,12 @@
                   </grounding:WsdlInputMessageMap>
         </grounding:wsdlInput>
 	
+	<grounding:wsdlInput>
+                  <grounding:WsdlInputMessageMap>
+                    <grounding:owlsParameter rdf:resource="#GetProfileInputAgentID"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/sfservices/services/AgentID</grounding:wsdlMessagePart>
+                  </grounding:WsdlInputMessageMap>
+        </grounding:wsdlInput>
 
        <grounding:wsdlOutput>
                   <grounding:WsdlOutputMessageMap>

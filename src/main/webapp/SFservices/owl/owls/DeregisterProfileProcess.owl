@@ -43,12 +43,19 @@
 	<service:describes rdf:resource="http://localhost:8080/sfservices/SFservices/owl/owls/DeregisterProfileProfile.owl#DeregisterProfileService"/>
      	<process:hasOutput rdf:resource="#DeregisterProfileOutputServiceStatus"/>
      	<process:hasInput rdf:resource="#DeregisterProfileInputServiceID"/>
+	<process:hasInput rdf:resource="#DeregisterProfileInputAgentID"/>
 </process:AtomicProcess>
 
 <process:Input rdf:ID="DeregisterProfileInputServiceID">
      <rdfs:label>InputServiceID</rdfs:label>
      <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
 </process:Input>
+
+<process:Input rdf:ID="DeregisterProfileInputAgentID">
+     <rdfs:label>InputAgentID</rdfs:label>
+     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
+</process:Input>
+
 <process:Output rdf:ID="DeregisterProfileOutputServiceStatus">
     <rdfs:label>OutputServiceStatus</rdfs:label>
     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#integer</process:parameterType>
@@ -78,6 +85,15 @@
                     <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/sfservices/services/ServiceID</grounding:wsdlMessagePart>
                   </grounding:WsdlInputMessageMap>
         </grounding:wsdlInput>
+
+
+	<grounding:wsdlInput>
+                  <grounding:WsdlInputMessageMap>
+                    <grounding:owlsParameter rdf:resource="#DeregisterProfileInputAgentID"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/sfservices/services/AgentID</grounding:wsdlMessagePart>
+                  </grounding:WsdlInputMessageMap>
+        </grounding:wsdlInput>
+
 
        <grounding:wsdlOutput>
                   <grounding:WsdlOutputMessageMap>

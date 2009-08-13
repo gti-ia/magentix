@@ -31,6 +31,7 @@
 <process:AtomicProcess rdf:ID="RegisterProfileProcess"> 
 	<service:describes rdf:resource="#RegisterProfileService"/>  	
    	<process:hasInput rdf:resource="#RegisterProfileInputServiceGoal"/>
+<process:hasInput rdf:resource="#RegisterProfileInputAgentID"/>
 	<process:hasInput rdf:resource="#RegisterProfileInputServiceProfile"/>
    	<process:hasOutput rdf:resource="#RegisterProfileOutputServiceStatus"/>
 	<process:hasOutput rdf:resource="#RegisterProfileOutputServiceID"/>
@@ -38,6 +39,10 @@
 
 <process:Input rdf:ID="RegisterProfileInputServiceGoal">
      <rdfs:label>InputServiceGoal</rdfs:label>
+     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
+</process:Input> 
+<process:Input rdf:ID="RegisterProfileInputAgentID">
+     <rdfs:label>InputAgentID</rdfs:label>
      <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
 </process:Input> 
 
@@ -80,6 +85,13 @@
                   <grounding:WsdlInputMessageMap>
                     <grounding:owlsParameter rdf:resource="#RegisterProfileInputServiceGoal"/>
                     <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/sfservices/services/ServiceGoal</grounding:wsdlMessagePart>
+                  </grounding:WsdlInputMessageMap>
+        </grounding:wsdlInput>
+
+<grounding:wsdlInput>
+                  <grounding:WsdlInputMessageMap>
+                    <grounding:owlsParameter rdf:resource="#RegisterProfileInputAgentID"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/sfservices/services/AgentID</grounding:wsdlMessagePart>
                   </grounding:WsdlInputMessageMap>
         </grounding:wsdlInput>
 

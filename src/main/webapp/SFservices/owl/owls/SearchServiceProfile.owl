@@ -30,6 +30,7 @@
     <service:isPresentedBy rdf:resource="#SearchServiceService"/>
     <profile:serviceName xml:lang="en">SearchService</profile:serviceName>
     <profile:hasInput rdf:resource="#SearchServiceInputServicePurpose"/>
+<profile:hasInput rdf:resource="#SearchServiceInputAgentID"/>
     <profile:hasOutput rdf:resource="#SearchServiceOutputServiceStatus"/>
     <profile:hasOutput rdf:resource="#SearchServiceOutputServicesList"/>
 </profile:Profile>

@@ -10,19 +10,19 @@
     xmlns:daml="http://www.daml.org/2001/03/daml+oil#"
     xmlns:dc="http://purl.org/dc/elements/1.1/"
     xmlns:process="http://www.daml.org/services/owl-s/1.2/Process.owl"
-    xmlns:duration="http://localhost:8080/sfservices/THservices/owl/owls/duration.owl#"
-    xml:base="http://localhost:8080/sfservices/THservices/owl/owls/duration_param.owl">
+    xmlns:role="http://localhost:8080/sfservices/THservices/owl/owls/role.owl#"
+    xml:base="http://localhost:8080/sfservices/THservices/owl/owls/role_param.owl">
   
   <owl:Ontology rdf:about="">
-    <owl:imports rdf:resource="http://localhost:8080/sfservices/THservices/owl/owls/duration.owl"/>
+    <owl:imports rdf:resource="http://localhost:8080/sfservices/THservices/owl/owls/role.owl"/>
   </owl:Ontology>
 
-<owl:Class rdf:ID="Duration_param">
+<owl:Class rdf:ID="role_param">
   <rdfs:subClassOf rdf:resource="http://www.daml.org/services/owl-s/1.2/Process.owl#Local"/>
   <rdfs:subClassOf>
     <owl:Restriction>
       <rdfs:domain rdf:resource="http://www.daml.org/services/owl-s/1.2/Process.owl#Parameter"/>
-      <rdfs:range rdf:resource="&duration;#Duration-Expression"/>
+      <rdfs:range rdf:resource="&role;#role"/>
     </owl:Restriction>
   </rdfs:subClassOf>
 </owl:Class>

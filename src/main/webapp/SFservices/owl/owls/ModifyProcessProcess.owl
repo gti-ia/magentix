@@ -37,6 +37,7 @@
      	<process:hasInput rdf:resource="#ModifyProcessInputServiceImplementationID"/>
     	<process:hasInput rdf:resource="#ModifyProcessInputServiceModel"/>
     	<process:hasInput rdf:resource="#ModifyProcessInputServiceGrounding"/>
+	<process:hasInput rdf:resource="#ModifyProcessInputAgentID"/>
    	<process:hasOutput rdf:resource="#ModifyProcessOutputServiceStatus"/>
 	
 </process:AtomicProcess>
@@ -54,7 +55,10 @@
      <rdfs:label>InputServiceGrounding</rdfs:label>
      <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
 </process:Input>
-
+<process:Input rdf:ID="ModifyProcessInputAgentID">
+     <rdfs:label>InputAgentID</rdfs:label>
+     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
+</process:Input>
 <process:Output rdf:ID="ModifyProcessOutputServiceStatus">
     <rdfs:label>OutputServiceStatus</rdfs:label>
     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#integer</process:parameterType>
@@ -95,6 +99,12 @@
                   <grounding:WsdlInputMessageMap>
                     <grounding:owlsParameter rdf:resource="#ModifyProcessInputServiceGrounding"/>
                     <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/sfservices/services/ServiceGrounding</grounding:wsdlMessagePart>
+                  </grounding:WsdlInputMessageMap>
+        </grounding:wsdlInput>
+	<grounding:wsdlInput>
+                  <grounding:WsdlInputMessageMap>
+                    <grounding:owlsParameter rdf:resource="#ModifyProcessInputAgentID"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/sfservices/services/AgentID</grounding:wsdlMessagePart>
                   </grounding:WsdlInputMessageMap>
         </grounding:wsdlInput>
 

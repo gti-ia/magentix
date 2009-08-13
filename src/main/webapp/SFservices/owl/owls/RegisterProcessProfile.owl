@@ -25,6 +25,7 @@
 <profile:Profile rdf:ID="RegisterProcessProfile">
     <profile:serviceName xml:lang="en">RegisterProcess</profile:serviceName>
     <profile:hasInput rdf:resource="#RegisterProcessInputServiceID"/>
+<profile:hasInput rdf:resource="#RegisterProcessInputAgentID"/>
     <profile:hasInput rdf:resource="#RegisterProcessInputServiceModel"/>
     <profile:hasOutput rdf:resource="#RegisterProcessOutputServiceModelID"/>
     <profile:hasOutput rdf:resource="#RegisterProcessOutputServiceStatus"/>

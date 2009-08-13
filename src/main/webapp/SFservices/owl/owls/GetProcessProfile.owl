@@ -32,6 +32,7 @@
     <service:isPresentedBy rdf:resource="#GetProcessService"/>
     <profile:serviceName xml:lang="en">GetProcess</profile:serviceName>
     <profile:hasInput rdf:resource="#GetProcessInputServiceID"/>
+    <profile:hasInput rdf:resource="#GetProcessInputAgentID"/>
     <profile:hasOutput rdf:resource="#GetProcessOutputServiceStatus"/>
     <profile:hasOutput rdf:resource="#GetProcessOutputProcessList"/>
 </profile:Profile>

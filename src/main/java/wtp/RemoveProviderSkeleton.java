@@ -1,202 +1,222 @@
 
     /**
-     * RemoveProviderSkeleton.java
-     *
-     * This file was auto-generated from WSDL
-     * by the Apache Axis2 version: 1.2 Apr 27, 2007 (04:35:37 IST)
-     */
-    package wtp;
-    
-    import com.hp.hpl.jena.db.DBConnection;
-    import com.hp.hpl.jena.db.IDBConnection;
-    import com.hp.hpl.jena.ontology.OntModel;
-    import com.hp.hpl.jena.query.Query;
-    import com.hp.hpl.jena.query.QueryExecution;
-    import com.hp.hpl.jena.query.QueryExecutionFactory;
-    import com.hp.hpl.jena.query.QueryFactory;
-    import com.hp.hpl.jena.query.QuerySolution;
-    import com.hp.hpl.jena.query.QuerySolutionMap;
-    import com.hp.hpl.jena.query.ResultSet;
-    import com.hp.hpl.jena.rdf.model.Model;
-    import com.hp.hpl.jena.rdf.model.ModelFactory;
-    import com.hp.hpl.jena.rdf.model.ModelMaker;
-    import com.hp.hpl.jena.ontology.OntModelSpec;
-    import java.util.*; 
+ * RemoveProviderSkeleton.java
+ *
+ * This file was auto-generated from WSDL
+ * by the Apache Axis2 version: 1.2 Apr 27, 2007 (04:35:37 IST)
+ */
+package wtp;
 
-    import com.hp.hpl.jena.update.*;
+import com.hp.hpl.jena.db.DBConnection;
+import com.hp.hpl.jena.db.IDBConnection;
+import com.hp.hpl.jena.ontology.OntModel;
+import com.hp.hpl.jena.query.Query;
+import com.hp.hpl.jena.query.QueryExecution;
+import com.hp.hpl.jena.query.QueryExecutionFactory;
+import com.hp.hpl.jena.query.QueryFactory;
+import com.hp.hpl.jena.query.QuerySolution;
+import com.hp.hpl.jena.query.QuerySolutionMap;
+import com.hp.hpl.jena.query.ResultSet;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.ModelMaker;
+import com.hp.hpl.jena.ontology.OntModelSpec;
+import java.util.*;
+
+import com.hp.hpl.jena.update.*;
 import java.io.*;
-    
-    
-    /**
-     *  RemoveProviderSkeleton java skeleton for the axisService
-     */
-    public class RemoveProviderSkeleton{
-        
 
-    	public static final Boolean DEBUG = true;
+import persistence.DataBaseInterface;
 
-    	// database connection parameters, with defaults
-    	private static String s_dbURL;
-    	private static String s_dbUser;
-    	private static String s_dbPw;
-    	private static String s_dbType;
-    	private static String s_dbDriver;
-    	
-    	 /**
-         * RemoveProvider
-         * @param removeProvider contains the service implementation ID and the provider ID
-         * @return response 1:OK otherwise 0
-         * @throws
-         */
-         public wtp.RemoveProviderResponse RemoveProvider( wtp.RemoveProvider removeProvider )
-         {
-        	wtp.RemoveProviderResponse response = new wtp.RemoveProviderResponse();
-        	IDBConnection conn = null;
-        	
-        	Properties properties = new Properties();
-    		
-    		
-  		  
-  		  try {
-  			   properties.loadFromXML(RemoveProviderSkeleton.class.getResourceAsStream("/"+"THOMASDemoConfiguration.xml"));
-  				for (Enumeration e = properties.keys(); e.hasMoreElements() ; ) {
-  				    // Obtenemos el objeto
-  				    Object obj = e.nextElement();
-  				    if (obj.toString().equalsIgnoreCase("DB_URL"))
-  				    {
-  				    	s_dbURL= properties.getProperty(obj.toString());	
-  				    }
-  				    else if (obj.toString().equalsIgnoreCase("DB_USER"))
-  				    {
-  				    	s_dbUser = properties.getProperty(obj.toString());
-  				    }
-  				    else    if (obj.toString().equalsIgnoreCase("DB_PASSWD"))
-  				    {
-  				    	s_dbPw = properties.getProperty(obj.toString());
-  				    }
-  				    else    if (obj.toString().equalsIgnoreCase("DB"))
-  				    {
-  				    	s_dbType = properties.getProperty(obj.toString());
-  				    }
-  				    else    if (obj.toString().equalsIgnoreCase("DB_DRIVER"))
-  				    {
-  				    	s_dbDriver = properties.getProperty(obj.toString());
-  				    }
-  				}
 
-  		    } catch (IOException e) {
-  		    	System.out.print(e);
-  		    }
-      	
-           	
-           	if (DEBUG) {
-           		System.out.println("RemoveProvider Service :");
-           		System.out.println("***ProviderID..."+ removeProvider.getProviderID());
-           		System.out.println("***ServiceImplementationID... "	+ removeProvider.getServiceImplementationID());
-           	}
-           		
-           	// ensure the JDBC driver class is loaded
-           	try {
-           		Class.forName(s_dbDriver);
-           	} catch (Exception e) {
-           		System.err.println("Failed to load the driver for the database: " + e.getMessage());
-           		System.err.println("Have you got the CLASSPATH set correctly?");
-           	}
 
-           	// Create database connection
-           	try {
-           		conn = new DBConnection(s_dbURL, s_dbUser, s_dbPw, s_dbType);
-           	} catch (Exception e) {
-           		e.printStackTrace();
-           		System.exit(1);
-           	}
+/**
+ * RemoveProviderSkeleton java skeleton for the axisService
+ */
+public class RemoveProviderSkeleton {
 
-           	ModelMaker maker = ModelFactory.createModelRDBMaker(conn);
-       		Model base = maker.createModel("http://example.org/ontologias");
-       		OntModel m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
-           		
-       		String url = removeProvider.getProviderID();
-           	StringTokenizer Tok = new StringTokenizer(url);
-           	// Get the owl document where the provider is described
-    		String urldoc = Tok.nextToken("#");
-    		// Get the provider ID
-    		String providerName = Tok.nextToken();
-    			
-    		String process = removeProvider.getServiceImplementationID();
-           	Tok = new StringTokenizer(process);
-    		// Get the owl process document
-           	String urlProcessDoc = Tok.nextToken("#");
-           	// Get the name of the process
-    		String processName = Tok.nextToken();
-    			
-    		// Get the url profile # service name
-    		String urlProfileService = GetServiceProfile(urlProcessDoc, processName, m);
-    			
-           	if (DEBUG) {
-           		System.out.println("URL process: "+ urlProcessDoc);
-           		System.out.println("Process name: "+ processName);
-           		System.out.println("URL profile#service: "+ urlProfileService);
-           		System.out.println("Provider ID: "+ providerName);
-           	}
-           		
-           	// Query to get the service profile name
-      		String queryStringServiceProfileName =
-      				"prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
-      						+ "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>"
-      						+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
-      						+ "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
-      						+ "select ?x " 
-      						+ "where {" 
-      						+ urlProfileService +" service:presents ?x"
-      						+ "}";
+	public static final Boolean DEBUG = true;
 
-      		Query queryServiceProfileName = QueryFactory.create(queryStringServiceProfileName);
+	// database connection parameters, with defaults
+	private static String s_dbURL;
+	private static String s_dbUser;
+	private static String s_dbPw;
+	private static String s_dbType;
+	private static String s_dbDriver;
 
-       		// Execute the query 
-   			QueryExecution qeServiceProfileName = QueryExecutionFactory.create(queryServiceProfileName, m);
-   			ResultSet resultsServiceProfileName = qeServiceProfileName.execSelect();
-      			
-    		// To get the url profile # profile name
-  			String result = resultsServiceProfileName.next().toString();
-    		Tok = new StringTokenizer(result);
-    		String ServiceProfileResult = Tok.nextToken("=");
-    		String Profile = Tok.nextToken();
-    		Profile = Profile.replace(")", "");
-           	    		
-    		RemoveProvider(urlProcessDoc, providerName, processName, m);
-			RemoveProcess(urlProcessDoc, processName, urlProfileService, Profile, m);
-			
-			m.commit();	
-			response.set_return(1);
-        	 
-			if (DEBUG) {
-        		 m.write(System.out, "N3");
+	/**
+	 * RemoveProvider
+	 * 
+	 * @param removeProvider
+	 *  service implementation ID: serviceprofileid@agentid 
+	 *  provider ID
+	 *  agent ID
+	 * @return response 1:OK otherwise 0
+	 * @throws
+	 */
+	public wtp.RemoveProviderResponse RemoveProvider(wtp.RemoveProvider removeProvider) {
+
+		wtp.RemoveProviderResponse response = new wtp.RemoveProviderResponse();
+
+		if (DEBUG) {
+			System.out.println("RemoveProvider Service :");
+			System.out.println("***ProviderID..."+ removeProvider.getProviderID());
+			System.out.println("***AgentID..."+ removeProvider.getAgentID());
+			System.out.println("***ServiceImplementationID... "	+ removeProvider.getServiceImplementationID());
+		}
+
+		// Get the service process 
+		persistence.DataBaseInterface thomasBD = new DataBaseInterface();
+		String serviceprocess = thomasBD.GetServiceProcessFromProcessID(removeProvider.getServiceImplementationID());
+
+		if (thomasBD.DeleteProcess(removeProvider.getServiceImplementationID())) {
+
+			////////////
+			////JENA////
+			////////////
+
+			IDBConnection conn = null;
+			Properties properties = new Properties();
+
+			try {
+				properties.loadFromXML(RemoveProviderSkeleton.class
+						.getResourceAsStream("/"
+								+ "THOMASDemoConfiguration.xml"));
+				for (Enumeration e = properties.keys(); e.hasMoreElements();) {
+					// Obtenemos el objeto
+					Object obj = e.nextElement();
+					if (obj.toString().equalsIgnoreCase("DB_URL")) {
+						s_dbURL = properties.getProperty(obj.toString());
+					} else if (obj.toString().equalsIgnoreCase("DB_USER")) {
+						s_dbUser = properties.getProperty(obj.toString());
+					} else if (obj.toString().equalsIgnoreCase("DB_PASSWD")) {
+						s_dbPw = properties.getProperty(obj.toString());
+					} else if (obj.toString().equalsIgnoreCase("DB")) {
+						s_dbType = properties.getProperty(obj.toString());
+					} else if (obj.toString().equalsIgnoreCase("DB_DRIVER")) {
+						s_dbDriver = properties.getProperty(obj.toString());
+					}
+				}
+
+			} catch (IOException e) {
+				System.out.print(e);
 			}
-				
+
+			// ensure the JDBC driver class is loaded
+			try {
+				Class.forName(s_dbDriver);
+			} catch (Exception e) {
+				System.err
+						.println("Failed to load the driver for the database: "
+								+ e.getMessage());
+				System.err.println("Have you got the CLASSPATH set correctly?");
+			}
+
+			// Create database connection
+			try {
+				conn = new DBConnection(s_dbURL, s_dbUser, s_dbPw, s_dbType);
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.exit(1);
+			}
+
+			ModelMaker maker = ModelFactory.createModelRDBMaker(conn);
+			Model base = maker.createModel("http://example.org/ontologias");
+			OntModel m = ModelFactory.createOntologyModel(getModelSpec(maker),base);
+
+			/*
+			 * String url = removeProvider.getProviderID(); StringTokenizer Tok =
+			 * new StringTokenizer(url); // Get the owl document where the
+			 * provider is described String urldoc = Tok.nextToken("#"); // Get
+			 * the provider ID String providerName = Tok.nextToken();
+			 */
+
+			StringTokenizer Tok = new StringTokenizer(serviceprocess);
+			// Get the owl process document
+			String urlProcessDoc = Tok.nextToken("#");
+			// Get the name of the process
+			String processName = Tok.nextToken();
+
+			System.out.println("urlProcessDoc " + urlProcessDoc);
+			System.out.println("processname " + processName);
+
+			// Get the url profile # service name
+			m.write(System.out, "N3");
+			String urlProfileService = GetServiceProfile(urlProcessDoc,
+					processName, m);
+
+			if (DEBUG) {
+				System.out.println("URL process: " + urlProcessDoc);
+				System.out.println("Process name: " + processName);
+				System.out.println("URL profile#service: " + urlProfileService);
+				// System.out.println("Provider ID: "+ providerName);
+			}
+
+			// Query to get the service profile name
+			String queryStringServiceProfileName = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
+					+ "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>"
+					+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
+					+ "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
+					+ "select ?x "
+					+ "where {"
+					+ urlProfileService
+					+ " service:presents ?x" + "}";
+
+			Query queryServiceProfileName = QueryFactory.create(queryStringServiceProfileName);
+
+			// Execute the query
+			QueryExecution qeServiceProfileName = QueryExecutionFactory.create(	queryServiceProfileName, m);
+			ResultSet resultsServiceProfileName = qeServiceProfileName.execSelect();
+
+			// To get the url profile # profile name
+			String result = resultsServiceProfileName.next().toString();
+			Tok = new StringTokenizer(result);
+			String ServiceProfileResult = Tok.nextToken("=");
+			String Profile = Tok.nextToken();
+			Profile = Profile.replace(")", "");
+
+			// RemoveProvider(urlProcessDoc, providerName, processName, m);
+			RemoveProcess(urlProcessDoc, processName, urlProfileService,
+					Profile, m);
+
+			m.commit();
+			response.set_return(1);
+
+			if (DEBUG) {
+				m.write(System.out, "N3");
+			}
+
 			m.close();
-	            
-            try {
-     			if (DEBUG) {
-     				System.out.println("Closing DB connection...");
-     			}
-   			conn.close();
-     		} catch (Exception e) {
-    			e.printStackTrace();
-     			System.exit(1);
-     		}
-	     		
-			return(response);
-        }// end RemoveProvider
+
+			try {
+				if (DEBUG) {
+					System.out.println("Closing DB connection...");
+				}
+				conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.exit(1);
+			}
+			
+		} else {
+			System.out.println("[Error] Service process id does not exist");
+			response.set_return(0);
+
+		}
+		
+		return (response);
+	}// end RemoveProvider
      
   
          /**
-          * RemoveProcess
-          * @param urlProcessDoc
-          * @param urlProfileService
-          * @param Profile
-          * @param m
-          * @return
-          */
+			 * RemoveProcess
+			 * 
+			 * @param urlProcessDoc
+			 * @param urlProfileService
+			 * @param Profile
+			 * @param m
+			 * @return
+			 */
          public int RemoveProcess(String urlProcessDoc, String processname, String urlProfileService, String Profile, OntModel m){
         	 
         	   if (DEBUG) {
@@ -218,7 +238,7 @@ import java.io.*;
 
     			Query queryServiceProcess = QueryFactory.create(queryStringServiceProcess);
 
-         		// Execute the query 
+         		// Execute the query
     			QueryExecution qeServiceProcess = QueryExecutionFactory.create(queryServiceProcess, m);
     			ResultSet resultsServiceProcess = qeServiceProcess.execSelect();
     			

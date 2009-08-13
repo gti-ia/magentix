@@ -1,4 +1,4 @@
-
+  
 /**
  * RegisterProfileMessageReceiverInOut.java
  *
@@ -10,14 +10,14 @@
         /**
         *  RegisterProfileMessageReceiverInOut message receiver
         */
-
+ 
         public class RegisterProfileMessageReceiverInOut extends org.apache.axis2.receivers.AbstractInOutMessageReceiver{
-
+ 
 
         public void invokeBusinessLogic(org.apache.axis2.context.MessageContext msgContext, org.apache.axis2.context.MessageContext newMsgContext)
         throws org.apache.axis2.AxisFault{
 
-        try {
+        try { 
 
         // get the implementation class for the Web Service
         Object obj = getTheImplementationObject(msgContext);

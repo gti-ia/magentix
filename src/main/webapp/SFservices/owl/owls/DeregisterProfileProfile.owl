@@ -40,6 +40,7 @@
     <service:isPresentedBy rdf:resource="#DeregisterProfileService"/>
     <profile:serviceName xml:lang="en">DeregisterProfile</profile:serviceName>
     <profile:hasInput rdf:resource="#DeregisterProfileInputServiceID"/>
+    <profile:hasInput rdf:resource="#DeregisterProfileInputAgentID"/>
     <profile:hasOutput rdf:resource="#DeregisterProfileOutputServiceStatus"/>
 </profile:Profile>
 

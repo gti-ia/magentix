@@ -31,6 +31,7 @@
     <service:isPresentedBy rdf:resource="#ModifyProfileService"/>
     <profile:serviceName xml:lang="en">ModifyProfile</profile:serviceName>
     <profile:hasInput rdf:resource="#ModifyProfileInputServiceID"/>
+    <profile:hasInput rdf:resource="#ModifyProfileInputAgentID"/>
     <profile:hasInput rdf:resource="#ModifyProfileInputServiceGoal"/>
     <profile:hasInput rdf:resource="#ModifyProfileInputServiceProfile"/>
     <profile:hasOutput rdf:resource="#ModifyProfileOutputServiceStatus"/>  

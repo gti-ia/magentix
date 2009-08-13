@@ -1,4 +1,4 @@
-/**
+ /**
  * RegisterProcessSkeleton.java
  *
  * This file was auto-generated from WSDL
@@ -29,6 +29,8 @@ import com.hp.hpl.jena.query.*;
 
 import java.util.*;
 
+import persistence.DataBaseInterface;
+
 
 /**
  * RegisterProcessSkeleton java skeleton for the axisService
@@ -48,278 +50,135 @@ public class RegisterProcessSkeleton {
 
 	/**
 	 * RegisterProcess
-	 * @param registerProcess contains the service Id and the service process and grounding
-	 * @return response contains 1:OK otherwise 0
+	 * @param registerProcess:
+	 *  service id: string, serviceprofileid
+	 *  service model: string, urlprocess
+	 *  agent id: string
+	 * @return 
+	 * 	flag: 1:ok , 0: bad news
+	 *  service implementation id: serviceprofileid@agentid
 	 */
 	public wtp.RegisterProcessResponse RegisterProcess(wtp.RegisterProcess registerProcess) {
 
+		
 		wtp.RegisterProcessResponse response = new wtp.RegisterProcessResponse();
-		IDBConnection conn = null;
-		OntModel m = null;
-		
-		Properties properties = new Properties();
-		
-		
-		  
-		  try {
-			   properties.loadFromXML(RegisterProcessSkeleton.class.getResourceAsStream("/"+"THOMASDemoConfiguration.xml"));
-				for (Enumeration e = properties.keys(); e.hasMoreElements() ; ) {
-				    // Obtenemos el objeto
-				    Object obj = e.nextElement();
-				    if (obj.toString().equalsIgnoreCase("DB_URL"))
-				    {
-				    	s_dbURL= properties.getProperty(obj.toString());	
-				    }
-				    else if (obj.toString().equalsIgnoreCase("DB_USER"))
-				    {
-				    	s_dbUser = properties.getProperty(obj.toString());
-				    }
-				    else    if (obj.toString().equalsIgnoreCase("DB_PASSWD"))
-				    {
-				    	s_dbPw = properties.getProperty(obj.toString());
-				    }
-				    else    if (obj.toString().equalsIgnoreCase("DB"))
-				    {
-				    	s_dbType = properties.getProperty(obj.toString());
-				    }
-				    else    if (obj.toString().equalsIgnoreCase("DB_DRIVER"))
-				    {
-				    	s_dbDriver = properties.getProperty(obj.toString());
-				    }
-				}
 
-		    } catch (IOException e) {
-		    	System.out.print(e);
-		    }
-  	
-		
 		if (DEBUG) {
 			System.out.println("RegisterProcess Service :");
+			System.out.println("***AgentID... " + registerProcess.getAgentID());
 			System.out.println("***ServiceID... "+ registerProcess.getServiceID());
 			System.out.println("***ServiceModel... "+ registerProcess.getServiceModel());
 		}
-		
-		// ensure the JDBC driver class is loaded
-		try {
-			Class.forName(s_dbDriver);
-		} catch (Exception e) {
-			System.err.println("Failed to load the driver for the database: "+ e.getMessage());
-			System.err.println("Have you got the CLASSPATH set correctly?");
-		}
 
-		// Create database connection
-		try {
-			conn = new DBConnection(s_dbURL, s_dbUser, s_dbPw, s_dbType);
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.exit(1);
-		}
+		// Register de serviceimplementationid in the DB
+		persistence.DataBaseInterface thomasBD = new DataBaseInterface();
+		String serviceprocessid = thomasBD.AddNewProcess(registerProcess.getServiceModel(), registerProcess.getServiceID(),registerProcess.getAgentID());
+		
+		 
+		if (serviceprocessid != null) {
 
-		StringTokenizer Tok = new StringTokenizer(registerProcess.getServiceID());
-		String profile = Tok.nextToken("#");
-		
-		if (DEBUG) {
-			System.out.println("Profile " + profile);
-		}
-		
-		/*ConcatFiles(registerProcess.getServiceModel(),profile);
-		
-		wtp.OWLSValidatorStub.OWLSValidator validator= null;
-		int validationResult=0;
-		try{
-			OWLSValidatorStub stub = new OWLSValidatorStub();
-			validator = new wtp.OWLSValidatorStub.OWLSValidator();
-			validator.setURL("file:///home/usuario/Escritorio/ThomasSF/RegisterProcess/merge.owl");
-			validationResult = stub.OWLSValidator(validator).get_return();	
-		}catch(RemoteException e) {
-			e.printStackTrace();
-		}
-		
-		if(validationResult == 1){
-		*/
+			/////////////
+			////JENA/////
+			/////////////
+			IDBConnection conn = null;
+			OntModel m = null;
+
+			Properties properties = new Properties();
+
+			try {
+				properties.loadFromXML(RegisterProcessSkeleton.class.getResourceAsStream("/"+"THOMASDemoConfiguration.xml"));
+				for (Enumeration e = properties.keys(); e.hasMoreElements();) {
+					// Obtenemos el objeto
+					Object obj = e.nextElement();
+					if (obj.toString().equalsIgnoreCase("DB_URL")) {
+						s_dbURL = properties.getProperty(obj.toString());
+					} else if (obj.toString().equalsIgnoreCase("DB_USER")) {
+						s_dbUser = properties.getProperty(obj.toString());
+					} else if (obj.toString().equalsIgnoreCase("DB_PASSWD")) {
+						s_dbPw = properties.getProperty(obj.toString());
+					} else if (obj.toString().equalsIgnoreCase("DB")) {
+						s_dbType = properties.getProperty(obj.toString());
+					} else if (obj.toString().equalsIgnoreCase("DB_DRIVER")) {
+						s_dbDriver = properties.getProperty(obj.toString());
+					}
+				}
+
+			} catch (IOException e) {
+				System.out.print(e);
+			}
+
+			// ensure the JDBC driver class is loaded
+			try {
+				Class.forName(s_dbDriver);
+			} catch (Exception e) {
+				System.err.println("Failed to load the driver for the database: "+ e.getMessage());
+				System.err.println("Have you got the CLASSPATH set correctly?");
+			}
+
+			// Create database connection
+			try {
+				conn = new DBConnection(s_dbURL, s_dbUser, s_dbPw, s_dbType);
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.exit(1);
+			}
+
 			ModelMaker maker = ModelFactory.createModelRDBMaker(conn);
 			ModelRDB model = (ModelRDB) maker.openModel("http://example.org/ontologias");
 
-			// use the model maker to get the base model as a persistent model 
-			// strict=false, so we get an existing model by that name if it exists
+			// use the model maker to get the base model as a persistent model
+			// strict=false, so we get an existing model by that name if it
+			// exists
 			// or create a new one
+			String urlprocess = registerProcess.getServiceModel();
+			StringTokenizer Tok = new StringTokenizer(urlprocess);
+			urlprocess = Tok.nextToken("#");
+			String processname = Tok.nextToken();
+
+			
+				System.out.println("URL profile: "+ urlprocess);
+				System.out.println("profile name: "+ processname);
 			if (DEBUG) {
-				System.out.println("File to load... "
-					+ registerProcess.getServiceModel());
+				System.out.println("File to load... "+ urlprocess);
 			}
 
 			// now we plug that base model into an ontology model that also uses
 			// the given model maker to create storage for imported models
 			OntModelSpec spec = new OntModelSpec(OntModelSpec.OWL_MEM);
 			spec.setImportModelMaker(maker);
-		    m = ModelFactory.createOntologyModel(spec, model);
-		
+			m = ModelFactory.createOntologyModel(spec, model);
+
 			m.read(registerProcess.getServiceModel());
 			m.commit();
-			
+
 			if (DEBUG) {
 				m.write(System.out, "N3");
 			}
-			
-			//Query to get the service name
-			String queryStringProcessID ="prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
-				+ "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>"
-				+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
-				+ "prefix prof: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
-				+ "prefix actor: <http://www.daml.org/services/owl-s/1.1/ActorDefault.owl#>"
-				+ "select ?x " 
-				+ "where {" 
-				+ "    ?x a       process:AtomicProcess  "
-				+ "      }";
-		
-			Query queryProcess = QueryFactory.create(queryStringProcessID);
-		
-			// Execute the query and obtain results
-			QueryExecution qeProcess = QueryExecutionFactory.create(queryProcess, m);
-			ResultSet ProcessResults = qeProcess.execSelect();
-		
-		
-			//Scan the list of Profiles
-			for (Iterator j = ProcessResults; ProcessResults.hasNext();) {
 
-				String result = ProcessResults.next().toString();
-				Tok = new StringTokenizer(result);
-				Tok.nextToken("<");
-				String ModelID = Tok.nextToken(">");
-				ModelID = ModelID.replace("<", "");
+			try {
 				if (DEBUG) {
-					System.out.println("ModelID: " + ModelID);
+					System.out.println("Closing DB connection...");
 				}
-			
-				Tok = new StringTokenizer(result);
-				Tok.nextToken("<");
-				String process = Tok.nextToken("#");
-				process = process.replace("<","");
-				
-				if (DEBUG) {
-					System.out.println("Process " + process);
-				}
-			
-				//If the Name of the Service profile owl document is equal to the profile founded
-				//we get its serviceID
-				if (process.equals(registerProcess.getServiceModel())) {
-					response.setServiceModelID(ModelID);
-					response.set_return(1);
-				}
+				conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.exit(1);
 			}
-			// close the query
-			qeProcess.close();
-		//}//end if validation
-		/*else{
-			
+
+			// Close the model
+			m.close();
+			response.setServiceModelID(serviceprocessid);
+			response.set_return(1);
+
+		} else {
+			response.setServiceModelID("[Error]: the service profile does not exists");
 			response.set_return(0);
-			response.setServiceModelID("");
-			System.err.println("[ERROR]: the process is not valid");
-		}*/
-			
-	
-		try {
-			if (DEBUG) {
-				System.out.println("Closing DB connection...");
-			}
-			conn.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.exit(1);
-		}	
-		
-		//Close the model 
-		m.close();
+		}
+
 		return (response);
 
 	}
 	
 
-	/**
-	 * ConcatFiles
-	 * @param process contains the service process URL
-	 * @param profile contains the service profile URL
-	 * @return 
-	 * @throws IOException
-	 */
-	void ConcatFiles(String process, String profile){
-	
-		try {
-
-			// service process and profile URLs
-			URL urlProcess = new URL(process);
-			URL urlProfile = new URL(profile);
-		
-			// Buffers 
-			BufferedReader in = null;
-			BufferedWriter out = new BufferedWriter(new FileWriter("/home/usuario/Escritorio/ThomasSF/RegisterProcess/merge.owl"));
-		
-			try {
-				//PROCESS
-				// read the process and put it in the buffer
-				in = new BufferedReader(new InputStreamReader(urlProcess.openStream()));
-			} catch(Throwable t){}
-			
-	
-			// Transform the buffer content into a text
-			String inputLine;
-			String inputText="";
-
-			// Analyze the lines in the bufferReader
-			// and transform them into string lines
-			while ((inputLine = in.readLine()) != null){
-				if(!inputLine.contains("</rdf:RDF>")/*&& (!inputLine.contains("<process:hasServer"))*/ )                 
-					/*if (inputLine.contains("<process:hasParticipant")){//<process:hasParticipant rdf:ID="SearchCheapHotelAgentA">
-						in.readLine();//<rdfs:label>Agente A es el provider</rdfs:label>
-						in.readLine();//<process:parameterType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.w3.org/2001/XMLSchema#string</process:parameterType>
-						in.readLine();//</process:hasParticipant>
-					}
-					else*/ if (inputLine.contains("<service:presents")){
-						StringTokenizer Tok = new StringTokenizer(inputLine);
-						String serviceProfile= Tok.nextToken("#");
-						serviceProfile=Tok.nextToken("\"/>");
-						inputText = inputText + "<service:presents rdf:resource=\""+serviceProfile+"\"/>";
-					}
-					else
-						inputText = inputText + inputLine;
-			}
-
-			// Show the URL content
-			if(DEBUG){
-				System.out.println("El contenido de la URL es: " + inputText);
-			}
-			
-			
-			//PROFILE
-			// read the process and put it in the buffer
-			try {
-				in = new BufferedReader(new InputStreamReader(urlProfile.openStream()));
-			} catch(Throwable t){}
-      
-			// Analyze the lines in the bufferReader
-			// and transform them into string lines 
-			while ((inputLine = in.readLine()) != null){
-				if (inputLine.contains("<profile:")||inputLine.contains("</profile:"))
-					inputText = inputText + inputLine;
-				else if(inputLine.contains("<service:"))
-					inputText = inputText + inputLine;
-					
-			}
-			
-			// Show the URL content
-			inputText = inputText +"</rdf:RDF> ";
-			if(DEBUG){
-				System.out.println("El contenido de la URL es: " + inputText);
-			}
-			
-			out.write(inputText);
-		    out.close();
-			in.close();
-				
-		} catch (IOException ioe) {
-			System.err.println("[ERROR] IO");
-		}
-    
-	}//end concatFiles
 
 }

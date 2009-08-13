@@ -9,7 +9,7 @@
 
 					<xsd:sequence>
 						<xsd:element name="ServiceID" type="xsd:string"/>
-
+						<xsd:element name="AgentID" type="xsd:string"/>
 					</xsd:sequence>
 				</xsd:complexType>
 			</xsd:element>

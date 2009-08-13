@@ -34,6 +34,7 @@
     <service:isPresentedBy rdf:resource="#GetProfileService"/>
     <profile:serviceName xml:lang="en">GetProfile</profile:serviceName>
     <profile:hasInput rdf:resource="#GetProfileInputServiceID"/>
+<profile:hasInput rdf:resource="#GetProfileInputAgentID"/>
     <profile:hasOutput rdf:resource="#GetProfileOutputServiceStatus"/>
     <profile:hasOutput rdf:resource="#GetProfileOutputServiceProfile"/>
     <profile:hasOutput rdf:resource="#GetProfileOutputGoal"/>

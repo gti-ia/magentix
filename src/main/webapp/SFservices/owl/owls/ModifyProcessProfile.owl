@@ -36,6 +36,7 @@
     <profile:hasInput rdf:resource="#ModifyProcessInputServiceImplementationID"/>
     <profile:hasInput rdf:resource="#ModifyProcessInputServiceModel"/>
     <profile:hasInput rdf:resource="#ModifyProcessInputServiceGrounding"/>
+<profile:hasInput rdf:resource="#ModifyProcessInputAgentID"/>
    
     <profile:hasOutput rdf:resource="#ModifyProcessOutputServiceStatus"/>
    

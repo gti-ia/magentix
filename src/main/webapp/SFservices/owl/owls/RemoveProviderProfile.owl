@@ -38,6 +38,7 @@
     <profile:serviceName xml:lang="en">RemoveProvider</profile:serviceName>
     <profile:hasInput rdf:resource="#RemoveProviderInputServiceImplementationID"/>
     <profile:hasInput rdf:resource="#RemoveProviderInputProviderID"/>
+<profile:hasInput rdf:resource="#RemoveProviderInputAgentID"/>
     <profile:hasOutput rdf:resource="#RemoveProviderOutputServiceStatus"/>
 </profile:Profile>
 

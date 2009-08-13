@@ -28,6 +28,7 @@
     
     <profile:serviceName xml:lang="en">RegisterProfile</profile:serviceName>
     <profile:hasInput rdf:resource="#RegisterProfileInputServiceGoal"/>
+<profile:hasInput rdf:resource="#RegisterProfileInputAgentID"/>
     <profile:hasInput rdf:resource="#RegisterProfileInputServiceProfile"/>
     <profile:hasOutput rdf:resource="#RegisterProfileOutputServiceStatus"/>  
     <profile:hasOutput rdf:resource="#RegisterProfileOutputServiceID"/>

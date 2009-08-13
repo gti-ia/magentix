@@ -9,6 +9,7 @@
 
 	<xsd:sequence>
 <xsd:element name="ServiceImplementationID" type="xsd:string"/>
+<xsd:element name="AgentID" type="xsd:string"/>
 <xsd:element name="ServiceModel" type="xsd:string"/>
 <xsd:element name="ServiceGrounding" type="xsd:string"/>
 </xsd:sequence>
