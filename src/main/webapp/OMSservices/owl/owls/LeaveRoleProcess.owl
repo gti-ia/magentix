@@ -11,7 +11,7 @@
   <!ENTITY process "http://www.daml.org/services/owl-s/1.1/Process.owl#">
   <!ENTITY grounding "http://www.daml.org/services/owl-s/1.1/Grounding.owl#">
   <!ENTITY xsd "http://www.w3.org/2001/XMLSchema">
-  <!ENTITY mind "http://localhost:8080/LeaveRole/OWLS/LeaveRole.owl">
+  <!ENTITY mind "http://localhost:8080/OMS/OWLS/LeaveRole.owl">
   <!ENTITY dir "http://localhost:8080/omsservices/services/LeaveRole?wsdl">
 ]>
 
@@ -19,7 +19,7 @@
 <rdf:RDF xmlns:rdf="&rdf;" xmlns:rdfs="&rdfs;" xmlns:owl="&owl;" xmlns:xsd="&xsd;#" 
    xmlns:service="&service;" xmlns:process="&process;" xmlns:profile="&profile;" xmlns:grounding="&grounding;"
    xmlns:mind="&mind;#"      
-   xml:base="http://localhost:8080/LeaveRole/OWLS/LeaveRole.owl">
+   xml:base="http://localhost:8080/OMS/OWLS/LeaveRole.owl">
 
 
 <owl:Ontology>
@@ -43,7 +43,7 @@
     <profile:serviceName xml:lang="en">LeaveRole</profile:serviceName>
 
 
-	<profile:hasInput rdf:resource="#AgentID"/>
+    <profile:hasInput rdf:resource="#AgentID"/>
     <profile:hasInput rdf:resource="#UnitID"/>
     <profile:hasInput rdf:resource="#RoleID"/>
     <profile:hasOutput rdf:resource="#Status"/>
@@ -121,7 +121,7 @@
                     <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/LeaveRole/AgentID</grounding:wsdlMessagePart>
                   </grounding:WsdlInputMessageMap>
         </grounding:wsdlInput>
-        
+  
        <grounding:wsdlOutput>
                   <grounding:WsdlOutputMessageMap>
 		    <grounding:owlsParameter rdf:resource="#Status"/>

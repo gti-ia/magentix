@@ -21,7 +21,7 @@ public class NormativeManager {
 				return true;
 			else	
 				throw e;
-/*		if(normInfo[0].equalsIgnoreCase("SimpleRequestNorm"))
+		/*if(normInfo[0].equalsIgnoreCase("SimpleRequestNorm"))
 			if(SimpleRequestNorm(normInfo,normID))
 				return true;
 			else
@@ -29,12 +29,12 @@ public class NormativeManager {
 		return false;
 		
 	}
-/*	private boolean SimpleRequestNorm(String[] normInfo, Integer normID) {
+	private boolean SimpleRequestNorm(String[] normInfo, Integer normID) {
 		if(thomasDB.CheckSimpleRequestNorm(normInfo[1],normInfo[2],normInfo[3]))
 			return thomasDB.AddNewSimpleRequestNorm(normInfo[1],normInfo[2],normInfo[3],normID);
 		else return false;
 		
-	}*/
+	}
 	private boolean RegisterIncompatiblityNorm(String[] normInfo, Integer normID) {
 		if(thomasDB.CheckIncompatiblityNorm(normInfo[1],normInfo[2]))
 			return thomasDB.AddNewIncompatiblityNorm(normInfo[1],normInfo[2],normID);
@@ -67,6 +67,15 @@ public class NormativeManager {
 		}
 		return true;
 	}
-	
-
+/*	
+	public boolean checkSimpleRequestNorms(String agentID,String serviceID) {
+		List <String[]> norms=thomasDB.GetSimpleRequestNorms("fordibidden",roleID,serviceID);
+		//Cuando se contemplen normas de cardinlidad generales hbra que comprobar si el agente juega el rol secundario
+		for(int i=0;i<norms.size();i++){int card=thomasDB.GetRoleCardinality(norms.get(i)[0]);
+			if(card>=Integer.parseInt(norms.get(i)[1]))
+					return false;
+		}
+		return true;
+	}
+*/
 }

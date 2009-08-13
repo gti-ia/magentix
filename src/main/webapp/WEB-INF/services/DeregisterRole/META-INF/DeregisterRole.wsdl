@@ -7,6 +7,7 @@
           <xsd:sequence>
             <xsd:element name="RoleID" type="xsd:string"/>
             <xsd:element name="UnitID" type="xsd:string"/>
+            <xsd:element name="AgentID" type="xsd:string"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
@@ -50,7 +51,7 @@
   </wsdl:binding>
   <wsdl:service name="DeregisterRole">
     <wsdl:port name="DeregisterRoleSOAP" binding="tns:DeregisterRoleSOAP">
-      <soap:address location="http://localhost:8080/omsservices/services/DeregisterRole"/>
+      <soap:address location="http://localhost:8080/OMS/services/DeregisterRole"/>
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

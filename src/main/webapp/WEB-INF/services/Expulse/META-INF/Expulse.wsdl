@@ -5,9 +5,10 @@
       <xsd:element name="Expulse">
         <xsd:complexType>
           <xsd:sequence>
-          	 <xsd:element name="AgentID" type="xsd:string"/>
+          	 <xsd:element name="ExpulsedAgentID" type="xsd:string"/>
              <xsd:element name="UnitID" type="xsd:string"/>
              <xsd:element name="RoleID" type="xsd:string"/>
+             <xsd:element name="AgentID" type="xsd:string"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
@@ -51,7 +52,7 @@
   </wsdl:binding>
   <wsdl:service name="Expulse">
     <wsdl:port name="ExpulseSOAP" binding="tns:ExpulseSOAP">
-      <soap:address location="http://localhost:8080/omsservices/services/Expulse"/>
+      <soap:address location="http://localhost:8080/OMS/services/Expulse"/>
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

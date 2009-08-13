@@ -7,12 +7,14 @@
      */
     package wtp;
 
+import java.util.List;
+
 import persistence.DataBaseInterface;
     /**
      *  DeregisterRoleSkeleton java skeleton for the axisService
      */
     public class DeregisterRoleSkeleton{
-        
+    	persistence.DataBaseInterface thomasBD=new DataBaseInterface();
          
         /**
          * Auto generated method signature
@@ -36,7 +38,7 @@ import persistence.DataBaseInterface;
                          res.setStatus("Error");
                          return res;
                      }
-                     persistence.DataBaseInterface thomasBD=new DataBaseInterface();
+                     
                      if(!thomasBD.CheckExistsRoleInUnit(deregisterRole.getRoleID(),deregisterRole.getUnitID())){
                      	res.setErrorValue("NotFound");
                          res.setStatus("Error"); 
@@ -53,6 +55,12 @@ import persistence.DataBaseInterface;
                          res.setStatus("ErrorPlayed"); 
                          return res;
                      }
+                     //role based control
+                     if(!roleBasedControl(deregisterRole.getAgentID(),deregisterRole.getUnitID()))	
+                     {	res.setErrorValue("Not-Allowed");
+                  		res.setStatus("Error"); 
+                  		return res;
+                  	}
                      if(!thomasBD.DeleteRole(deregisterRole.getRoleID(),deregisterRole.getUnitID())){
                      	res.setErrorValue("Invalid");
                          res.setStatus("Error"); 
@@ -60,6 +68,24 @@ import persistence.DataBaseInterface;
                      }
                      return res;
              }
-     
+         		private boolean roleBasedControl(String agentID, String unitID) {
+        			if(unitID.equalsIgnoreCase("virtual")) return false;
+        			if(!thomasBD.CheckExistsAgent(agentID)) return false;
+        			String unitType=thomasBD.GetUnitType(unitID);
+        			if(unitType.equalsIgnoreCase("flat")) return true;
+        			if(unitType.equalsIgnoreCase("team")) {
+        				if(thomasBD.CheckAgentPlaysRoleInUnit(unitID, agentID)) return true;
+        				else return false;
+        			}
+        			List<String> positions;
+        			try {
+        				positions = thomasBD.GetAgentPosition(agentID, unitID);
+        				for(int i=0;i<positions.size();i++)
+        					if(positions.get(i).equalsIgnoreCase("supervisor"))
+        						return true;
+        			} catch (Exception e) {
+        			}
+        			return false;
+        		}
     }
     

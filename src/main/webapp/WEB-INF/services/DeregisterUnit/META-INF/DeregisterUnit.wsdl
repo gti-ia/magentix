@@ -6,6 +6,7 @@
         <xsd:complexType>
           <xsd:sequence>
             <xsd:element name="UnitID" type="xsd:string"/>
+            <xsd:element name="AgentID" type="xsd:string"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
@@ -49,7 +50,7 @@
   </wsdl:binding>
   <wsdl:service name="DeregisterUnit">
     <wsdl:port name="DeregisterUnitSOAP" binding="tns:DeregisterUnitSOAP">
-      <soap:address location="http://localhost:8080/omsservices/services/DeregisterUnit"/>
+      <soap:address location="http://localhost:8080/OMS/services/DeregisterUnit"/>
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

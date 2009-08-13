@@ -7,12 +7,14 @@
      */
     package wtp;
 
+import java.util.List;
+
 import persistence.DataBaseInterface;
     /**
      *  ExpulseSkeleton java skeleton for the axisService
      */
     public class ExpulseSkeleton{
-        
+    	persistence.DataBaseInterface thomasBD=new DataBaseInterface();
          
         /**
          * Auto generated method signature
@@ -27,7 +29,7 @@ import persistence.DataBaseInterface;
                   wtp.Expulse expulse
                   )
             {
-                     {
+                     
                     	 wtp.ExpulseResponse res=new ExpulseResponse();
                     	 res.setStatus("Ok");
                     	 res.setErrorValue("");
@@ -57,13 +59,32 @@ import persistence.DataBaseInterface;
                            		res.setStatus("Error"); 
                                 return res;                      
                           }
+                          if(!roleBasedControl(expulse.getAgentID(),expulse.getUnitID()))	
+                          {	res.setErrorValue("Not-Allowed");
+                       		res.setStatus("Error"); 
+                       		return res;
+                       	  }
                           if(!thomasBD.DeleteAgentPlaysRole(expulse.getRoleID(),expulse.getUnitID(),expulse.getAgentID())){
                        		res.setErrorValue("Invalid");
                          		res.setStatus("Error"); 
                               return res;                      
                           }
                           return res;
-                          }}
-     
+                          }
+           		private boolean roleBasedControl(String agentID, String unitID) {
+        			if(unitID.equalsIgnoreCase("virtual")) return true;
+        			if(!thomasBD.CheckExistsAgent(agentID)) return false;
+        			String unitType=thomasBD.GetUnitType(unitID);
+        			if(unitType.equalsIgnoreCase("flat")) return false;
+        			List<String> positions;
+        			try {
+        				positions = thomasBD.GetAgentPosition(agentID, unitID);
+        				for(int i=0;i<positions.size();i++)
+        					if(positions.get(i).equalsIgnoreCase("supervisor"))
+        						return true;
+        			} catch (Exception e) {
+        			}
+        			return false;
+        		}
     }
     

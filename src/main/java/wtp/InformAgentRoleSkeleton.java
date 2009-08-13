@@ -43,6 +43,12 @@ import persistence.DataBaseInterface;
                           res.setStatus("Error"); 
                           return res;                	
                       }
+                     //role based control
+                     if(!informAgentRole.getAgentID().equalsIgnoreCase(informAgentRole.getRequestedAgentID()))	
+                     {	res.setErrorValue("Not-Allowed");
+                  		res.setStatus("Error"); 
+                  		return res;
+                  	}
                      res.setRoleUnitList(thomasBD.GetRoleUnitList(informAgentRole.getAgentID()).toString());
                      return res;
                      }

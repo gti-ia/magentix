@@ -6,10 +6,10 @@
 
 cd $1;
 templates=$(ls *.owl);
-
+echo $1
 for tpl in $templates; 
 do
-
+echo $tpl
 cat $tpl | sed "s@$2@$3@g" > $tpl.prueba;
 mv $tpl.prueba $tpl;
 

@@ -14,7 +14,7 @@ import persistence.DataBaseInterface;
      *  DeregisterNormSkeleton java skeleton for the axisService
      */
     public class DeregisterNormSkeleton{
-        
+    	persistence.DataBaseInterface thomasBD=new DataBaseInterface();
          
         /**
          * Auto generated method signature
@@ -38,15 +38,17 @@ import persistence.DataBaseInterface;
                          res.setStatus("Error");
                          return res;
                      }
-                     persistence.DataBaseInterface thomasBD=new DataBaseInterface();
+                     
                      if(!thomasBD.CheckExistsNorm(deregisterNorm.getNormID())){
                       	res.setErrorValue("NotFound");
                           res.setStatus("Error"); 
                           return res;                	
                       }
-                     //Control acceso basado en roles
-
-
+                     if(!roleBasedControl(deregisterNorm.getAgentID()))	
+                     {	res.setErrorValue("Not-Allowed");
+                  		res.setStatus("Error"); 
+                  		return res;
+                  	}
                      //Falta comprobar si es el isssuer
                      if(!thomasBD.DeleteNorm(deregisterNorm.getNormID())){
                     	 res.setErrorValue("Invalid");
@@ -55,6 +57,10 @@ import persistence.DataBaseInterface;
                      }
                      return res;
             }
+           		private boolean roleBasedControl(String agentID) {
+        			if(thomasBD.CheckExistsAgent(agentID)) return true;
+        			return false;
+        		}
      
     }
     

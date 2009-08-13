@@ -6,6 +6,7 @@
         <xsd:complexType>
           <xsd:sequence>
             <xsd:element name="NormID" type="xsd:string"/>
+            <xsd:element name="AgentID" type="xsd:string"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
@@ -49,7 +50,7 @@
   </wsdl:binding>
   <wsdl:service name="DeregisterNorm">
     <wsdl:port name="DeregisterNormSOAP" binding="tns:DeregisterNormSOAP">
-      <soap:address location="http://localhost:8080/DeregisterNorm/services/DeregisterNorm"/>
+      <soap:address location="http://localhost:8080/OMS/services/DeregisterNorm"/>
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

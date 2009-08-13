@@ -51,7 +51,7 @@
   </wsdl:binding>
   <wsdl:service name="LeaveRole">
     <wsdl:port name="LeaveRoleSOAP" binding="tns:LeaveRoleSOAP">
-      <soap:address location="http://localhost:8080/omsservices/services/LeaveRole"/>
+      <soap:address location="http://apolo.dsic.upv.es:8080/OMS/services/LeaveRole"/>
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

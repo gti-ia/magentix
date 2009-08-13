@@ -62,6 +62,36 @@
                                }
                             
 
+                        /**
+                        * field for RequestedAgentID
+                        */
+
+                        
+                                    protected java.lang.String localRequestedAgentID ;
+                                
+
+                           /**
+                           * Auto generated getter method
+                           * @return java.lang.String
+                           */
+                           public  java.lang.String getRequestedAgentID(){
+                               return localRequestedAgentID;
+                           }
+
+                           
+                        
+                            /**
+                               * Auto generated setter method
+                               * @param param RequestedAgentID
+                               */
+                               public void setRequestedAgentID(java.lang.String param){
+                            
+                                            this.localRequestedAgentID=param;
+                                    
+
+                               }
+                            
+
      /**
      * isReaderMTOMAware
      * @return true if the reader supports MTOM
@@ -188,6 +218,40 @@
 
                                         
                                                    xmlWriter.writeCharacters(localAgentID);
+                                            
+                                          }
+                                    
+                                   xmlWriter.writeEndElement();
+                             
+                                    namespace = "";
+                                    if (! namespace.equals("")) {
+                                        prefix = xmlWriter.getPrefix(namespace);
+
+                                        if (prefix == null) {
+                                            prefix = generatePrefix(namespace);
+
+                                            xmlWriter.writeStartElement(prefix,"RequestedAgentID", namespace);
+                                            xmlWriter.writeNamespace(prefix, namespace);
+                                            xmlWriter.setPrefix(prefix, namespace);
+
+                                        } else {
+                                            xmlWriter.writeStartElement(namespace,"RequestedAgentID");
+                                        }
+
+                                    } else {
+                                        xmlWriter.writeStartElement("RequestedAgentID");
+                                    }
+                                
+
+                                          if (localRequestedAgentID==null){
+                                              // write the nil attribute
+                                              
+                                                     throw new org.apache.axis2.databinding.ADBException("RequestedAgentID cannot be null!!");
+                                                  
+                                          }else{
+
+                                        
+                                                   xmlWriter.writeCharacters(localRequestedAgentID);
                                             
                                           }
                                     
@@ -364,6 +428,15 @@
                                            throw new org.apache.axis2.databinding.ADBException("AgentID cannot be null!!");
                                         }
                                     
+                                      elementList.add(new javax.xml.namespace.QName("",
+                                                                      "RequestedAgentID"));
+                                 
+                                        if (localRequestedAgentID != null){
+                                            elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localRequestedAgentID));
+                                        } else {
+                                           throw new org.apache.axis2.databinding.ADBException("RequestedAgentID cannot be null!!");
+                                        }
+                                    
 
                 return new org.apache.axis2.databinding.utils.reader.ADBXMLStreamReaderImpl(qName, elementList.toArray(), attribList.toArray());
             
@@ -447,6 +520,25 @@
                                     java.lang.String content = reader.getElementText();
                                     
                                               object.setAgentID(
+                                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToString(content));
+                                              
+                                        reader.next();
+                                    
+                              }  // End of if for expected property start element
+                                
+                                else{
+                                    // A start element we are not expecting indicates an invalid parameter was passed
+                                    throw new org.apache.axis2.databinding.ADBException("Unexpected subelement " + reader.getLocalName());
+                                }
+                            
+                                    
+                                    while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
+                                
+                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","RequestedAgentID").equals(reader.getName())){
+                                
+                                    java.lang.String content = reader.getElementText();
+                                    
+                                              object.setRequestedAgentID(
                                                     org.apache.axis2.databinding.utils.ConverterUtil.convertToString(content));
                                               
                                         reader.next();

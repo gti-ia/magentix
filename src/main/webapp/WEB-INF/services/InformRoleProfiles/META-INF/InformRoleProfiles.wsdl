@@ -6,6 +6,7 @@
         <xsd:complexType>
           <xsd:sequence>
              <xsd:element name="RoleID" type="xsd:string"/>
+             <xsd:element name="AgentID" type="xsd:string"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
@@ -49,7 +50,7 @@
   </wsdl:binding>
   <wsdl:service name="InformRoleProfiles">
     <wsdl:port name="InformRoleProfilesSOAP" binding="tns:InformRoleProfilesSOAP">
-      <soap:address location="http://localhost:8080/omsservices/services/InformRoleProfiles"/>
+      <soap:address location="http://localhost:8080/OMS/services/InformRoleProfiles"/>
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

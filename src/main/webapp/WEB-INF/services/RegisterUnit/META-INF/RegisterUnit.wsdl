@@ -9,6 +9,7 @@
              <xsd:element name="Type" type="xsd:string"/>
              <xsd:element name="Goal" type="xsd:string"/>
              <xsd:element name="ParentUnitID" type="xsd:string"/>
+             <xsd:element name="AgentID" type="xsd:string"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
@@ -52,7 +53,7 @@
   </wsdl:binding>
   <wsdl:service name="RegisterUnit">
     <wsdl:port name="RegisterUnitSOAP" binding="tns:RegisterUnitSOAP">
-      <soap:address location="http://localhost:8080/omsservices/services/RegisterUnit"/>
+      <soap:address location="http://localhost:8080/OMS/services/RegisterUnit"/>
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

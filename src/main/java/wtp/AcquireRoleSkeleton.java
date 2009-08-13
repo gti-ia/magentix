@@ -73,6 +73,11 @@ import persistence.DataBaseInterface;
                      		res.setStatus("Error"); 
                           return res;                      
                       }
+                     /* if(!normManager.(acquireRole.getAgentID())){
+                     		res.setErrorValue("Normative-Not-Allowed");
+                       		res.setStatus("Error"); 
+                            return res;                      
+                        }*/
                       if(!thomasBD.AddNewAgentPlaysRole(acquireRole.getRoleID(),acquireRole.getUnitID(),acquireRole.getAgentID())){
                    		res.setErrorValue("Invalid");
                      		res.setStatus("Error"); 

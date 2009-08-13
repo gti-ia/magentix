@@ -7,12 +7,14 @@
      */
     package wtp;
 
+import java.util.List;
+
 import persistence.DataBaseInterface;
     /**
      *  InformRoleNormsSkeleton java skeleton for the axisService
      */
     public class InformRoleNormsSkeleton{
-        
+    	persistence.DataBaseInterface thomasBD=new DataBaseInterface();
          
         /**
          * Auto generated method signature
@@ -42,9 +44,18 @@ import persistence.DataBaseInterface;
                           res.setStatus("Error"); 
                           return res;                	
                       }
+                     //role based control
+                     if(!roleBasedControl(informRoleNorms.getAgentID()))	
+                     {	res.setErrorValue("Not-Allowed");
+                  		res.setStatus("Error"); 
+                  		return res;
+                  	}
                      res.setNormList(thomasBD.GetRoleNormsList(informRoleNorms.getRoleID()).toString());
                      return res;
                      } 
-     
+            		private boolean roleBasedControl(String agentID) {
+            			if(thomasBD.CheckExistsAgent(agentID)) return true;
+            			return false;
+            		}
     }
     

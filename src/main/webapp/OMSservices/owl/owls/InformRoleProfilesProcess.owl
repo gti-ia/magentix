@@ -11,7 +11,7 @@
   <!ENTITY process "http://www.daml.org/services/owl-s/1.1/Process.owl#">
   <!ENTITY grounding "http://www.daml.org/services/owl-s/1.1/Grounding.owl#">
   <!ENTITY xsd "http://www.w3.org/2001/XMLSchema">
-  <!ENTITY mind "http://localhost:8080/InformRoleProfiles/OWLS/InformRoleProfiles.owl">
+  <!ENTITY mind "http://localhost:8080/OMS/OWLS/InformRoleProfiles.owl">
   <!ENTITY dir "http://localhost:8080/omsservices/services/InformRoleProfiles?wsdl">
 ]>
 
@@ -19,7 +19,7 @@
 <rdf:RDF xmlns:rdf="&rdf;" xmlns:rdfs="&rdfs;" xmlns:owl="&owl;" xmlns:xsd="&xsd;#" 
    xmlns:service="&service;" xmlns:process="&process;" xmlns:profile="&profile;" xmlns:grounding="&grounding;"
    xmlns:mind="&mind;#"      
-   xml:base="http://localhost:8080/InformRoleProfiles/OWLS/InformRoleProfiles.owl">
+   xml:base="http://localhost:8080/OMS/OWLS/InformRoleProfiles.owl">
 
 
 <owl:Ontology>
@@ -45,6 +45,7 @@
 
 
     <profile:hasInput rdf:resource="#UnitID"/>
+    <profile:hasInput rdf:resource="#AgentID"/>
     <profile:hasOutput rdf:resource="#Status"/>
     <profile:hasOutput rdf:resource="#ErrorValue"/>   
     <profile:hasOutput rdf:resource="#ProfileList"/> 
@@ -53,7 +54,7 @@
 
 <process:AtomicProcess rdf:ID="InformRoleProfilesProcess">
 	<service:describes rdf:resource="#InformRoleProfilesService"/>  	
-
+    <process:hasInput rdf:resource="#AgentID"/>
       <process:hasInput rdf:resource="#UnitID"/>
 	<process:hasOutput rdf:resource="#Status"/>
 	<process:hasOutput rdf:resource="#ErrorValue"/>
@@ -64,6 +65,10 @@
 
 <process:Input rdf:ID="UnitID">
      <rdfs:label>UnitID</rdfs:label>
+     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
+</process:Input>
+<process:Input rdf:ID="AgentID">
+     <rdfs:label>AgentID</rdfs:label>
      <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
 </process:Input>
 
@@ -102,6 +107,12 @@
                   <grounding:WsdlInputMessageMap>
                     <grounding:owlsParameter rdf:resource="#UnitID"/>
                     <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/InformRoleProfiles/UnitID</grounding:wsdlMessagePart>
+                  </grounding:WsdlInputMessageMap>
+        </grounding:wsdlInput>
+	<grounding:wsdlInput>
+                  <grounding:WsdlInputMessageMap>
+                    <grounding:owlsParameter rdf:resource="#AgentID"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/InformRoleProfiles/AgentID</grounding:wsdlMessagePart>
                   </grounding:WsdlInputMessageMap>
         </grounding:wsdlInput>
 

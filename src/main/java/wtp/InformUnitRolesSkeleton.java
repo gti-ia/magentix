@@ -7,12 +7,14 @@
      */
     package wtp;
 
+import java.util.List;
+
 import persistence.DataBaseInterface;
     /**
      *  InformUnitRolesSkeleton java skeleton for the axisService
      */
     public class InformUnitRolesSkeleton{
-        
+    	persistence.DataBaseInterface thomasBD=new DataBaseInterface();
          
         /**
          * Auto generated method signature
@@ -36,15 +38,30 @@ import persistence.DataBaseInterface;
                          res.setStatus("Error");
                          return res;
                      }
-                     persistence.DataBaseInterface thomasBD=new DataBaseInterface();
+                     
                      if(!thomasBD.CheckExistsUnit(informUnitRoles.getUnitID())){
                       	res.setErrorValue("NotFound");
                           res.setStatus("Error"); 
                           return res;                	
                       }
+                   //role based control
+                     if(!roleBasedControl(informUnitRoles.getAgentID(),informUnitRoles.getUnitID()))	
+                     {	res.setErrorValue("Not-Allowed");
+                  		res.setStatus("Error"); 
+                  		return res;
+                  	}
                      res.setRoleList(thomasBD.GetRoleList(informUnitRoles.getUnitID()).toString());
                      return res;
                      } 
+           		private boolean roleBasedControl(String agentID, String unitID) {
+        			if(unitID.equalsIgnoreCase("virtual")) return true;
+        			if(!thomasBD.CheckExistsAgent(agentID)) return false;
+        			String unitType=thomasBD.GetUnitType(unitID);
+        			if(unitType.equalsIgnoreCase("flat")) return true;
+        			String parentUnitID=thomasBD.GetParentUnitID(unitID);
+        			if(thomasBD.CheckAgentPlaysRoleInUnit(parentUnitID, agentID)) return true;
+        			else return false;
+        		}
      
     }
     

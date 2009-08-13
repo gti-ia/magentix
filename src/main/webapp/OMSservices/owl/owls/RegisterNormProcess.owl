@@ -11,15 +11,15 @@
   <!ENTITY process "http://www.daml.org/services/owl-s/1.1/Process.owl#">
   <!ENTITY grounding "http://www.daml.org/services/owl-s/1.1/Grounding.owl#">
   <!ENTITY xsd "http://www.w3.org/2001/XMLSchema">
-  <!ENTITY mind "http://localhost:8080/RegisterNorm/OWLS/RegisterNorm.owl">
-  <!ENTITY dir "http://localhost:8080/omsservices/services/RegisterNorm?wsdl">
+  <!ENTITY mind "http://localhost:8080/OMS/OWLS/RegisterNorm.owl">
+  <!ENTITY dir "http://localhost:8080/RegisterNorm/services/RegisterNorm?wsdl">
 ]>
 
 
 <rdf:RDF xmlns:rdf="&rdf;" xmlns:rdfs="&rdfs;" xmlns:owl="&owl;" xmlns:xsd="&xsd;#" 
    xmlns:service="&service;" xmlns:process="&process;" xmlns:profile="&profile;" xmlns:grounding="&grounding;"
    xmlns:mind="&mind;#"      
-   xml:base="http://localhost:8080/RegisterNorm/OWLS/RegisterNorm.owl">
+   xml:base="http://localhost:8080/OMS/OWLS/RegisterNorm.owl">
 
 
 <owl:Ontology>
@@ -44,13 +44,17 @@
 
 
     <profile:hasInput rdf:resource="#NormID"/>
-    <profile:hasInput rdf:resource="#NormContent"/>   
+    <profile:hasInput rdf:resource="#NormContent"/>  
+    <profile:hasInput rdf:resource="#AgentID"/> 
+    <profile:hasOutput rdf:resource="#RegisterProfileOutputStatus"/>
+    <profile:hasOutput rdf:resource="#RegisterProfileOutputErrorValue"/>
 </profile:Profile>
 
 <process:AtomicProcess rdf:ID="RegisterNormProcess">
 	<service:describes rdf:resource="#RegisterNormService"/>  	
     <process:hasInput rdf:resource="#NormID"/>
     <process:hasInput rdf:resource="#NormContent"/>
+    <process:hasInput rdf:resource="#AgentID"/> 
    		<process:hasOutput rdf:resource="#RegisterProfileOutputStatus"/>
 	<process:hasOutput rdf:resource="#RegisterProfileOutputErrorValue"/>
 </process:AtomicProcess>
@@ -61,6 +65,10 @@
 </process:Input> 
 <process:Input rdf:ID="NormContent">
      <rdfs:label>NormContent</rdfs:label>
+     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
+</process:Input>
+<process:Input rdf:ID="AgentID">
+     <rdfs:label>AgentID</rdfs:label>
      <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
 </process:Input>
 
@@ -101,6 +109,12 @@
                   <grounding:WsdlInputMessageMap>
                     <grounding:owlsParameter rdf:resource="#NormContent"/>
                     <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/RegisterNorm/NormContent</grounding:wsdlMessagePart>
+                  </grounding:WsdlInputMessageMap>
+        </grounding:wsdlInput>
+	<grounding:wsdlInput>
+                  <grounding:WsdlInputMessageMap>
+                    <grounding:owlsParameter rdf:resource="#AgentID"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/RegisterNorm/AgentID</grounding:wsdlMessagePart>
                   </grounding:WsdlInputMessageMap>
         </grounding:wsdlInput>
    

@@ -11,7 +11,7 @@
   <!ENTITY process "http://www.daml.org/services/owl-s/1.1/Process.owl#">
   <!ENTITY grounding "http://www.daml.org/services/owl-s/1.1/Grounding.owl#">
   <!ENTITY xsd "http://www.w3.org/2001/XMLSchema">
-  <!ENTITY mind "http://localhost:8080/RegisterUnit/OWLS/RegisterUnit.owl">
+  <!ENTITY mind "http://localhost:8080/OMS/OWLS/RegisterUnit.owl">
   <!ENTITY dir "http://localhost:8080/omsservices/services/RegisterUnit?wsdl">
 ]>
 
@@ -19,7 +19,7 @@
 <rdf:RDF xmlns:rdf="&rdf;" xmlns:rdfs="&rdfs;" xmlns:owl="&owl;" xmlns:xsd="&xsd;#" 
    xmlns:service="&service;" xmlns:process="&process;" xmlns:profile="&profile;" xmlns:grounding="&grounding;"
    xmlns:mind="&mind;#"      
-   xml:base="http://localhost:8080/RegisterUnit/OWLS/RegisterUnit.owl">
+   xml:base="http://localhost:8080/OMS/OWLS/RegisterUnit.owl">
 
 
 <owl:Ontology>
@@ -48,6 +48,7 @@
     <profile:hasInput rdf:resource="#Type"/>
     <profile:hasInput rdf:resource="#Goal"/>
     <profile:hasInput rdf:resource="#ParentUnitID"/>
+    <profile:hasInput rdf:resource="#AgentID"/>
     <profile:hasOutput rdf:resource="#Status"/>
     <profile:hasOutput rdf:resource="#ErrorValue"/>   
 
@@ -60,6 +61,7 @@
       <process:hasInput rdf:resource="#Type"/>
       <process:hasInput rdf:resource="#Goal"/>
       <process:hasInput rdf:resource="#ParentUnitID"/>
+    <process:hasInput rdf:resource="#AgentID"/>
 	<process:hasOutput rdf:resource="#Status"/>
 	<process:hasOutput rdf:resource="#ErrorValue"/>
 </process:AtomicProcess>
@@ -79,6 +81,10 @@
 </process:Input>
 <process:Input rdf:ID="ParentUnitID">
      <rdfs:label>ParentUnitID</rdfs:label>
+     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
+</process:Input>
+<process:Input rdf:ID="AgentID">
+     <rdfs:label>AgentID</rdfs:label>
      <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
 </process:Input>
 
@@ -132,7 +138,13 @@
                     <grounding:owlsParameter rdf:resource="#ParentUnitID"/>
                     <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/RegisterUnit/ParentUnitID</grounding:wsdlMessagePart>
                   </grounding:WsdlInputMessageMap>
-        </grounding:wsdlInput>        
+        </grounding:wsdlInput>    
+	<grounding:wsdlInput>
+                  <grounding:WsdlInputMessageMap>
+                    <grounding:owlsParameter rdf:resource="#AgentID"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/RegisterUnit/AgentID</grounding:wsdlMessagePart>
+                  </grounding:WsdlInputMessageMap>
+        </grounding:wsdlInput>      
         
        <grounding:wsdlOutput>
                   <grounding:WsdlOutputMessageMap>

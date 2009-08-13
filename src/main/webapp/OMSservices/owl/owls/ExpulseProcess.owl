@@ -11,7 +11,7 @@
   <!ENTITY process "http://www.daml.org/services/owl-s/1.1/Process.owl#">
   <!ENTITY grounding "http://www.daml.org/services/owl-s/1.1/Grounding.owl#">
   <!ENTITY xsd "http://www.w3.org/2001/XMLSchema">
-  <!ENTITY mind "http://localhost:8080/Expulse/OWLS/Expulse.owl">
+  <!ENTITY mind "http://localhost:8080/OMS/OWLS/Expulse.owl">
   <!ENTITY dir "http://localhost:8080/omsservices/services/Expulse?wsdl">
 ]>
 
@@ -19,7 +19,7 @@
 <rdf:RDF xmlns:rdf="&rdf;" xmlns:rdfs="&rdfs;" xmlns:owl="&owl;" xmlns:xsd="&xsd;#" 
    xmlns:service="&service;" xmlns:process="&process;" xmlns:profile="&profile;" xmlns:grounding="&grounding;"
    xmlns:mind="&mind;#"      
-   xml:base="http://localhost:8080/Expulse/OWLS/Expulse.owl">
+   xml:base="http://localhost:8080/OMS/OWLS/Expulse.owl">
 
 
 <owl:Ontology>
@@ -46,6 +46,7 @@
 	<profile:hasInput rdf:resource="#AgentID"/>
     <profile:hasInput rdf:resource="#UnitID"/>
     <profile:hasInput rdf:resource="#RoleID"/>
+    <profile:hasInput rdf:resource="#ExpulsedAgentID"/>
     <profile:hasOutput rdf:resource="#Status"/>
     <profile:hasOutput rdf:resource="#ErrorValue"/>   
 
@@ -57,6 +58,7 @@
 	<process:hasInput rdf:resource="#AgentID"/>
     <process:hasInput rdf:resource="#UnitID"/>
     <process:hasInput rdf:resource="#RoleID"/>
+    <process:hasInput rdf:resource="#ExpulsedAgentID"/>
 	<process:hasOutput rdf:resource="#Status"/>
 	<process:hasOutput rdf:resource="#ErrorValue"/>
 	<process:hasOutput rdf:resource="#EntityRoleList"/>
@@ -73,6 +75,10 @@
 </process:Input>
 <process:Input rdf:ID="RoleID">
      <rdfs:label>RoleID</rdfs:label>
+     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
+</process:Input>
+<process:Input rdf:ID="RoleID">
+     <rdfs:label>ExpulsedAgentID</rdfs:label>
      <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
 </process:Input>
 
@@ -121,7 +127,13 @@
                     <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/Expulse/AgentID</grounding:wsdlMessagePart>
                   </grounding:WsdlInputMessageMap>
         </grounding:wsdlInput>
-        
+       <grounding:wsdlInput>
+                  <grounding:WsdlInputMessageMap>
+                    <grounding:owlsParameter rdf:resource="#ExpulsedAgentID"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/Expulse/ExpulsedAgentID</grounding:wsdlMessagePart>
+                  </grounding:WsdlInputMessageMap>
+        </grounding:wsdlInput>
+    
        <grounding:wsdlOutput>
                   <grounding:WsdlOutputMessageMap>
 		    <grounding:owlsParameter rdf:resource="#Status"/>

@@ -51,7 +51,7 @@
   </wsdl:binding>
   <wsdl:service name="AcquireRole">
     <wsdl:port name="AcquireRoleSOAP" binding="tns:AcquireRoleSOAP">
-      <soap:address location="http://localhost:8080/omsservices/services/AcquireRole"/>
+      <soap:address location="http://localhost:8080/OMS/services/AcquireRole"/>
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

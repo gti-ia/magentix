@@ -11,6 +11,7 @@
              <xsd:element name="Accessibility" type="xsd:string"/>
              <xsd:element name="Visibility" type="xsd:string"/>
              <xsd:element name="Inheritance" type="xsd:string"/>
+             <xsd:element name="AgentID" type="xsd:string"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
@@ -54,7 +55,7 @@
   </wsdl:binding>
   <wsdl:service name="RegisterRole">
     <wsdl:port name="RegisterRoleSOAP" binding="tns:RegisterRoleSOAP">
-      <soap:address location="http://localhost:8080/omsservices/services/RegisterRole"/>
+      <soap:address location="http://localhost:8080/OMS/services/RegisterRole"/>
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

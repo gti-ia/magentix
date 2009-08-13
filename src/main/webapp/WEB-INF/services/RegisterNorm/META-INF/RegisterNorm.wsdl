@@ -7,6 +7,7 @@
           <xsd:sequence>
             <xsd:element name="NormID" type="xsd:string"/>
              <xsd:element name="NormContent" type="xsd:string"/>
+             <xsd:element name="AgentID" type="xsd:string"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
@@ -50,7 +51,7 @@
   </wsdl:binding>
   <wsdl:service name="RegisterNorm">
     <wsdl:port name="RegisterNormSOAP" binding="tns:RegisterNormSOAP">
-      <soap:address location="http://localhost:8080/omsservices/services/RegisterNorm"/>
+      <soap:address location="http://localhost:8080/OMS/services/RegisterNorm"/>
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

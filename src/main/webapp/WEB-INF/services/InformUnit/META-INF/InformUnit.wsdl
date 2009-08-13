@@ -6,6 +6,7 @@
         <xsd:complexType>
           <xsd:sequence>
              <xsd:element name="UnitID" type="xsd:string"/>
+             <xsd:element name="AgentID" type="xsd:string"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
@@ -52,7 +53,7 @@
   </wsdl:binding>
   <wsdl:service name="InformUnit">
     <wsdl:port name="InformUnitSOAP" binding="tns:InformUnitSOAP">
-      <soap:address location="http://localhost:8080/omsservices/services/InformUnit"/>
+      <soap:address location="http://localhost:8080/OMS/services/InformUnit"/>
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

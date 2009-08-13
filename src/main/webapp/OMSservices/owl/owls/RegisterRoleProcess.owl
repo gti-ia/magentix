@@ -11,7 +11,7 @@
   <!ENTITY process "http://www.daml.org/services/owl-s/1.1/Process.owl#">
   <!ENTITY grounding "http://www.daml.org/services/owl-s/1.1/Grounding.owl#">
   <!ENTITY xsd "http://www.w3.org/2001/XMLSchema">
-  <!ENTITY mind "http://localhost:8080/RegisterRole/OWLS/RegisterRole.owl">
+  <!ENTITY mind "http://localhost:8080/OMS/OWLS/RegisterRole.owl">
   <!ENTITY dir "http://localhost:8080/omsservices/services/RegisterRole?wsdl">
 ]>
 
@@ -19,7 +19,7 @@
 <rdf:RDF xmlns:rdf="&rdf;" xmlns:rdfs="&rdfs;" xmlns:owl="&owl;" xmlns:xsd="&xsd;#" 
    xmlns:service="&service;" xmlns:process="&process;" xmlns:profile="&profile;" xmlns:grounding="&grounding;"
    xmlns:mind="&mind;#"      
-   xml:base="http://localhost:8080/RegisterRole/OWLS/RegisterRole.owl">
+   xml:base="http://localhost:8080/OMS/OWLS/RegisterRole.owl">
 
 
 <owl:Ontology>
@@ -49,6 +49,7 @@
     <profile:hasInput rdf:resource="#Position"/>
     <profile:hasInput rdf:resource="#Visibility"/>
     <profile:hasInput rdf:resource="#Inheritance"/>
+    <profile:hasInput rdf:resource="#AgentID"/>
     <profile:hasOutput rdf:resource="#Status"/>
     <profile:hasOutput rdf:resource="#ErrorValue"/>   
 
@@ -58,11 +59,12 @@
 	<service:describes rdf:resource="#RegisterRoleService"/>  	
 
    	<process:hasInput rdf:resource="#RoleID"/>
-    <process:hasInput rdf:resource="#UnitID"/>
-    <process:hasInput rdf:resource="#Accessibility"/>
-    <process:hasInput rdf:resource="#Position"/>
-    <process:hasInput rdf:resource="#Visibility"/>
-    <process:hasInput rdf:resource="#Inheritance"/>
+    	<process:hasInput rdf:resource="#UnitID"/>
+   	 <process:hasInput rdf:resource="#Accessibility"/>
+    	<process:hasInput rdf:resource="#Position"/>
+    	<process:hasInput rdf:resource="#Visibility"/>
+    	<process:hasInput rdf:resource="#Inheritance"/>
+    	<process:hasInput rdf:resource="#AgentID"/>
 	<process:hasOutput rdf:resource="#RegisterProfileOutputStatus"/>
 	<process:hasOutput rdf:resource="#RegisterProfileOutputErrorValue"/>
 </process:AtomicProcess>
@@ -75,6 +77,11 @@
      <rdfs:label>InputUnitID</rdfs:label>
      <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
 </process:Input>
+<process:Input rdf:ID="AgentID">
+     <rdfs:label>AgentID</rdfs:label>
+     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
+</process:Input>
+
 <process:Input rdf:ID="Accessibility">
      <rdfs:label>InputAccessibility</rdfs:label>
      <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
@@ -153,6 +160,12 @@
                   <grounding:WsdlInputMessageMap>
                     <grounding:owlsParameter rdf:resource="#Inheritance"/>
                     <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/RegisterRole/Inheritance</grounding:wsdlMessagePart>
+                  </grounding:WsdlInputMessageMap>
+        </grounding:wsdlInput>
+	<grounding:wsdlInput>
+                  <grounding:WsdlInputMessageMap>
+                    <grounding:owlsParameter rdf:resource="#AgentID"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/RegisterRole/AgentID</grounding:wsdlMessagePart>
                   </grounding:WsdlInputMessageMap>
         </grounding:wsdlInput>
         

@@ -489,7 +489,7 @@ public class DataBaseInterface {
 		}
 	}	
 	
-/*	public boolean CheckSimpleRequestNorm(String deonticConcept, String roleID,
+	public boolean CheckSimpleRequestNorm(String deonticConcept, String roleID,
 			String serviceName) {
 		try {
 			Statement stmt = db.connection.createStatement();
@@ -511,7 +511,7 @@ public class DataBaseInterface {
 	}
 
 
-*/
+
 
 	public List<String> GetAgentPosition(String AgentName, String UnitName) throws Exception{
 		List<String> positionList= new ArrayList <String>();
@@ -530,7 +530,7 @@ public class DataBaseInterface {
 	}catch(Exception e){throw e;}
 	}
 	
-/*	public boolean AddNewSimpleRequestNorm(String deonticConcept,String role, String service, Integer normID) {
+	public boolean AddNewSimpleRequestNorm(String deonticConcept,String role, String service, Integer normID) {
 		try {
 			Statement stmt = db.connection.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM role WHERE roleid='"+role.toLowerCase()+"'");
@@ -550,7 +550,7 @@ public class DataBaseInterface {
 			return false;
 			}
 	return true;
-}*/
+}
 	public boolean AddNewIncompatiblityNorm(String role1, String role2, Integer normID) {
 		try {
 				Statement stmt = db.connection.createStatement();
@@ -754,5 +754,18 @@ public class DataBaseInterface {
 			return list;
 		}
 	}
+	public boolean CheckAgentPlaysRoleInUnit(String unitID, String agentID) {
+			boolean exists=false;
+			try {
+				Statement stmt = db.connection.createStatement();
+				String sql="SELECT * FROM (((EntityPlayList EPR  JOIN Role R ON R.ID=EPR.ROLE) JOIN Entity E ON E.ID=EPR.ENTITY) JOIN Unit U ON U.ID=EPR.UNIT) WHERE  U.UNitID='"+unitID.toLowerCase()+"' AND E.EntityID='"+agentID.toLowerCase()+"'";
+				ResultSet r = stmt.executeQuery(sql.toLowerCase());
+				if(r.next()){
+					exists=true;
+				}
+			}catch(Exception e){}
+			
+			return exists;
+		}
 
 }
