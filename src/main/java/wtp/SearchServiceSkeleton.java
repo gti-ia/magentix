@@ -188,7 +188,7 @@ import wtp.PlannerStub;
 				}
 
 				//Service Ranking is not implemented, always is 5
-				servicesList = servicesList + " " + ServiceID + ", 5 ;";
+				servicesList = servicesList + " " + ServiceID + ": 5 ;";
 			}//end for 
 		}//end if
 			
