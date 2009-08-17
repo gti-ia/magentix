@@ -61,8 +61,8 @@ public class GetProcessSkeleton {
                 	 persistence.DataBaseInterface thomasBD = new DataBaseInterface();
               		 String profileurl = thomasBD.GetServiceProfileURL(getProcess.getServiceID());
 
-                	 
-               //////JENA//////
+                	 ////////////////
+              		 //////JENA//////
                 	 ////////////////
                 	 
          			IDBConnection conn = null;
@@ -175,7 +175,7 @@ public class GetProcessSkeleton {
              		}
              		else{
              			response.setProcessList("[Error] The service id does not exist");
-             			response.set_return(1);
+             			response.set_return(0);
              		}
              		return (response);
         }

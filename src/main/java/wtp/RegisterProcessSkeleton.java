@@ -199,7 +199,23 @@ public class RegisterProcessSkeleton {
 			}
 			
 			System.out.println("Role list: "+roleList);
+			
 			//LLAMADA AL OMS
+			try{
+			InformAgentRoleStub stub = new InformAgentRoleStub();
+			wtp.InformAgentRoleStub.InformAgentRole agentrole = new wtp.InformAgentRoleStub.InformAgentRole();
+			agentrole.setAgentID(registerProcess.getAgentID());
+			agentrole.setRequestedAgentID(registerProcess.getAgentID());
+			
+			wtp.InformAgentRoleStub.InformAgentRoleResponse res = new  wtp.InformAgentRoleStub.InformAgentRoleResponse();
+			res.localRoleUnitList = stub.InformAgentRole(agentrole).getRoleUnitList();
+			res.localStatus = "OK";
+			res.localErrorValue = "";
+			System.out.println("Role Unit List: "+res.localRoleUnitList);
+			}catch(Exception e){
+				
+			}
+			
 
 			// Register de serviceimplementationid in the DB
 			String serviceprocessid = thomasBD.AddNewProcess(registerProcess.getServiceModel(), registerProcess.getServiceID(),registerProcess.getAgentID());
