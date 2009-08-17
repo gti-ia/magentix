@@ -7,21 +7,237 @@
     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
     xmlns:owl="http://www.w3.org/2002/07/owl#"
     xmlns:daml="http://www.daml.org/2001/03/daml+oil#"
+    xmlns:list="http://www.daml.org/services/owl-s/1.2/generic/ObjectList.owl#"
+    xmlns:swrl="http://www.w3.org/2003/11/swrl#"
     xmlns:dc="http://purl.org/dc/elements/1.1/"
-    xml:base="http://localhost:8080/sfservices/THservices/owl/owls/role.owl">
+    xml:base="http://localhost:8080/sfservices/THservices/owl/owls/owl.owl">
 
  
   
-  
+  <owl:Ontology rdf:about="">
+    
+  </owl:Ontology>
 
-  <owl:Class rdf:ID="Role">
-	
-      <rdfs:subClassOf rdf:resource="#provider"/>
-<rdfs:subClassOf rdf:resource="#provider"/>
-      
-   </rdfs:Class>
-
-
+  <owl:Class rdf:ID="role_list">
+        <rdfs:subClassOf rdf:resource="#DomainList"/>
+        <rdfs:subClassOf>
+                <owl:Restriction>
+                        <owl:allValuesFrom>
+                                <owl:Class rdf:ID="role_atom"/>
+                        </owl:allValuesFrom>
+                        <owl:onProperty rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#first"/>
+                </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#List"/>
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2003/11/swrl#Atom"/>
+        <rdfs:subClassOf>
+                <owl:Restriction>
+                        <owl:onProperty rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#rest"/>
+                        <owl:allValuesFrom rdf:resource="#role_atom"/>
+                </owl:Restriction>
+        </rdfs:subClassOf>
   </owl:Class>
 
+  <owl:Class rdf:about="#role_atom">
+    <rdfs:subClassOf rdf:ID="DomainList"/>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2003/11/swrl#Atom"/>
+  </owl:Class>
+
+<!-- Class Values Restrictions -->
+
+    <SubClassOf>
+        <Class URI="&role;client"/>
+        <ObjectSomeValuesFrom>
+            <ObjectProperty URI="&role;playsRole"/>
+            <Class URI="&role;role"/>
+        </ObjectSomeValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class URI="&role;organization"/>
+        <ObjectSomeValuesFrom>
+            <ObjectProperty URI="&role;hasRole"/>
+            <Class URI="&role;role"/>
+        </ObjectSomeValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class URI="&role;provider"/>
+        <ObjectSomeValuesFrom>
+            <ObjectProperty URI="&role;playsRole"/>
+            <Class URI="&role;role"/>
+        </ObjectSomeValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class URI="&role;role"/>
+        <ObjectSomeValuesFrom>
+            <ObjectProperty URI="&role;isDefinedIn"/>
+            <Class URI="&role;organization"/>
+        </ObjectSomeValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class URI="&role;organization"/>
+        <Class URI="&owl;Thing"/>
+    </SubClassOf>    
+
+
+<!-- Disjoint Class definition -->
+
+    <DisjointClasses>
+        <Class URI="&role;organization"/>
+        <Class URI="&role;role"/>
+    </DisjointClasses>
+    <DisjointClasses>
+        <Class URI="&role;client"/>
+        <Class URI="&role;role"/>
+    </DisjointClasses>
+    <DisjointClasses>
+        <Class URI="&role;provider"/>
+        <Class URI="&role;role"/>
+    </DisjointClasses>
+
+<!-- Class definition -->
+    <Declaration>
+        <Class URI="&role;client"/>
+    </Declaration>
+    <Declaration>
+        <Class URI="&role;provider"/>
+    </Declaration>    
+    <Declaration>
+        <Class URI="&role;organization"/>
+    </Declaration>
+    <Declaration>
+        <Class URI="&role;role"/>
+    </Declaration>
+
+<!-- Object Properties definition -->
+
+    <Declaration>
+        <ObjectProperty URI="&role;hasRole"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty URI="&role;isDefinedIn"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty URI="&role;playsRole"/>
+    </Declaration>
+
+    <InverseObjectProperties>
+        <ObjectProperty URI="&role;isDefinedIn"/>
+        <ObjectProperty URI="&role;hasRole"/>
+    </InverseObjectProperties>
+
+<!-- Object Property Domain-Range definition -->
+    <ObjectPropertyDomain>
+        <ObjectProperty URI="&role;hasRole"/>
+        <Class URI="&role;organization"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyRange>
+        <ObjectProperty URI="&role;hasRole"/>
+        <Class URI="&role;role"/>
+    </ObjectPropertyRange>
+
+    <ObjectPropertyDomain>
+        <ObjectProperty URI="&role;isDefinedIn"/>
+        <Class URI="&role;role"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyRange>
+        <ObjectProperty URI="&role;isDefinedIn"/>
+        <Class URI="&role;organization"/>
+    </ObjectPropertyRange>
+
+    <ObjectPropertyRange>
+        <ObjectProperty URI="&role;playsRole"/>
+        <Class URI="&role;role"/>
+    </ObjectPropertyRange>    
+    <ObjectPropertyDomain>
+        <ObjectProperty URI="&role;playsRole"/>
+        <Class URI="&role;client"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty URI="&role;playsRole"/>
+        <Class URI="&role;provider"/>
+    </ObjectPropertyDomain>
+
+
+<!-- Individual definition -->
+    <Declaration>
+        <Individual URI="&role;ClientParameter"/>
+    </Declaration>
+    <Declaration>
+        <Individual URI="&role;ProviderParameter"/>
+    </Declaration>
+ 
+    <Declaration>
+        <Individual URI="&role;Agency"/>
+    </Declaration>   
+    <Declaration>
+        <Individual URI="&role;Traveller"/>
+    </Declaration>
+
+    <Declaration>
+        <Individual URI="&role;Unit1"/>
+    </Declaration>
+
+<!-- Individual - Class -->
+    
+    <ClassAssertion>
+        <Class URI="&role;client"/>
+        <Individual URI="&role;ClientParameter"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class URI="&role;provider"/>
+        <Individual URI="&role;ProviderParameter"/>
+    </ClassAssertion>
+    
+    <ClassAssertion>
+        <Class URI="&role;role"/>
+        <Individual URI="&role;Agency"/>
+    </ClassAssertion>
+        <ClassAssertion>
+        <Class URI="&role;role"/>
+        <Individual URI="&role;Traveller"/>
+    </ClassAssertion>
+    
+    <ClassAssertion>
+        <Class URI="&role;organization"/>
+        <Individual URI="&role;Unit1"/>
+    </ClassAssertion>
+<!-- Individual - Property -->
+
+    <ObjectPropertyAssertion>
+        <ObjectProperty URI="&role;isDefinedIn"/>
+        <Individual URI="&role;Agency"/>
+        <Individual URI="&role;Unit1"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty URI="&role;isDefinedIn"/>
+        <Individual URI="&role;Traveller"/>
+        <Individual URI="&role;Unit1"/>
+    </ObjectPropertyAssertion>
+
+
+    <ObjectPropertyAssertion>
+        <ObjectProperty URI="&role;hasRole"/>
+        <Individual URI="&role;Unit1"/>
+        <Individual URI="&role;Agency"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty URI="&role;hasRole"/>
+        <Individual URI="&role;Unit1"/>
+        <Individual URI="&role;Traveller"/>
+    </ObjectPropertyAssertion>
+
+
+    <ObjectPropertyAssertion>
+        <ObjectProperty URI="&role;hasRole"/>
+        <Individual URI="&role;ClientParameter"/>
+        <Individual URI="&role;Traveller"/>
+    </ObjectPropertyAssertion>    
+    <ObjectPropertyAssertion>
+        <ObjectProperty URI="&role;hasRole"/>
+        <Individual URI="&role;ProviderParameter"/>
+        <Individual URI="&role;Agency"/>
+    </ObjectPropertyAssertion>
+
+
 </rdf:RDF>
+

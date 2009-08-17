@@ -48,16 +48,12 @@ import  persistence.DataBaseInterface;
     	private static String s_dbDriver;
          
         /**
-         * Auto generated method signature
-         * @param modifyProfile:
-         * 	service id: serviceprofileid
-         * 	service goal
-         * 	agent id
-         * @return response 
-         * 	1:OK 
-         * 	0: there are providers which implement the profile 
-         * 	-1: the service id is not valid
-         * @throws
+         * ModifyProfile
+         * @param ModifyProfile contains four elements: service id (is a string: service profile id), service
+         * goal (currently is not in use), agent id (is a string) and service profile ( is a string 
+         * urlprofile#profilename).
+         * @return ModifyProfileResponse contains return which indicates if a problem occurs (1: ok, 0: there
+         * are provider which implement the profile, -1: the service id is not valid). 
          */
          public wtp.ModifyProfileResponse ModifyProfile(wtp.ModifyProfile modifyProfile){
         	 
@@ -158,6 +154,64 @@ import  persistence.DataBaseInterface;
 					System.out.println("URL profile: "+ urlprofile);
 					System.out.println("profile name: "+ profilename);
 				}
+				
+				// Query to get the set of allowed provider roles
+				String queryStringServiceRoles = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
+						+ "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>"
+						+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
+						+ "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
+						+ "prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>" 
+						+ "prefix actor: <http://www.daml.org/services/owl-s/1.1/ActorDefault.owl#>"
+						+ "select ?x "
+						+ "where {"
+						+ "      ?x rdf:subject <"+ urlprofile + "#provider_list"+">" + "      }";
+
+				Query queryServiceRoles = QueryFactory.create(queryStringServiceRoles);
+
+				if (DEBUG) {
+					System.out.println(queryServiceRoles.toString());
+				}
+
+				// Execute the query and obtain results
+				QueryExecution qeService = QueryExecutionFactory.create( queryServiceRoles, m);
+				ResultSet resultServiceRoles = qeService.execSelect();
+				String roleList=null;
+				
+				if (resultServiceRoles != null) {
+					int controws=0;
+					
+					
+					for (Iterator j = resultServiceRoles; resultServiceRoles.hasNext();) {
+						controws++;
+						String result = resultServiceRoles.next().toString();
+						if (DEBUG) {
+							System.out.println("Role: " + result);
+						}
+	        	 
+					    Tok = new StringTokenizer(result);
+						String url = Tok.nextToken("<");
+						url= Tok.nextToken("#");
+						String role = Tok.nextToken(">");
+						role = role.replace("#", "");
+
+						if (DEBUG) {
+							System.out.println("Role: " + role);
+						}
+						
+						
+						if(controws==1){
+							roleList = role; 
+						}
+						else{
+							roleList = roleList+", "+role;
+						}
+				
+					}
+				}
+				
+				System.out.println("Role list: "+roleList);
+				
+				//LLAMADA AL OMS
    		
 				//Delete profile tuples where the property is profile
 				String update= 

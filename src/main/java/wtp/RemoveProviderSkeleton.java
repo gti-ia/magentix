@@ -46,13 +46,11 @@ public class RemoveProviderSkeleton {
 
 	/**
 	 * RemoveProvider
-	 * 
-	 * @param removeProvider
-	 *  service implementation ID: serviceprofileid@agentid 
-	 *  provider ID
-	 *  agent ID
-	 * @return response 1:OK otherwise 0
-	 * @throws
+	 * @param RemoveProvider contains three elements: service implementation id (is a string:
+	 * serviceprofileid@servicenumidagentid), provider ID (currently it is not in use) and
+	 * agent id (is a string).
+	 * @return RemoveProviderResponse contains an element: return which indicates if an error
+	 * occurs (1:OK otherwise 0).
 	 */
 	public wtp.RemoveProviderResponse RemoveProvider(wtp.RemoveProvider removeProvider) {
 
@@ -142,8 +140,7 @@ public class RemoveProviderSkeleton {
 
 			// Get the url profile # service name
 			m.write(System.out, "N3");
-			String urlProfileService = GetServiceProfile(urlProcessDoc,
-					processName, m);
+			String urlProfileService = GetServiceProfile(urlProcessDoc,processName, m);
 
 			if (DEBUG) {
 				System.out.println("URL process: " + urlProcessDoc);
@@ -176,8 +173,7 @@ public class RemoveProviderSkeleton {
 			Profile = Profile.replace(")", "");
 
 			// RemoveProvider(urlProcessDoc, providerName, processName, m);
-			RemoveProcess(urlProcessDoc, processName, urlProfileService,
-					Profile, m);
+			RemoveProcess(urlProcessDoc, processName, urlProfileService,Profile, m);
 
 			m.commit();
 			response.set_return(1);

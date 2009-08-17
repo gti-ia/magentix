@@ -11,6 +11,8 @@
     xmlns:dc="http://purl.org/dc/elements/1.1/"
     xmlns:process="http://www.daml.org/services/owl-s/1.2/Process.owl"
     xmlns:role="http://localhost:8080/sfservices/THservices/owl/owls/role.owl#"
+    xmlns:list="http://www.daml.org/services/owl-s/1.2/generic/ObjectList.owl#"
+    xmlns:swrl="http://www.w3.org/2003/11/swrl#"
     xml:base="http://localhost:8080/sfservices/THservices/owl/owls/role_param.owl">
   
   <owl:Ontology rdf:about="">
@@ -22,7 +24,7 @@
   <rdfs:subClassOf>
     <owl:Restriction>
       <rdfs:domain rdf:resource="http://www.daml.org/services/owl-s/1.2/Process.owl#Parameter"/>
-      <rdfs:range rdf:resource="&role;#role"/>
+      <rdfs:range rdf:resource="&role;#role_list"/>
     </owl:Restriction>
   </rdfs:subClassOf>
 </owl:Class>

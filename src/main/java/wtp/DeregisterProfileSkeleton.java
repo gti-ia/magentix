@@ -44,10 +44,11 @@ import persistence.DataBaseInterface;
     	
     	
         /**
-         * Auto generated method signature
-         * @param deregisterProfile
-         * 	Service ID: serviceprofileid
-         * 	Agent ID
+         * DeregisterProfile
+         * @param DeregisterProfile contains two elements: service id (is a string: service profile id) 
+         * and agent id (is a string).
+         * @return DeregisterProfileResponse contains an element: return indicates if an error occurs (
+         * 0: ok, 1:error).
          */
          public wtp.DeregisterProfileResponse DeregisterProfile ( wtp.DeregisterProfile deregisterProfile )
          {
@@ -64,7 +65,8 @@ import persistence.DataBaseInterface;
         	 
         	 String urlprofile = thomasBD.GetServiceProfileURL(deregisterProfile.getServiceID());
         	 String profilename = thomasBD.GetServiceProfileName(deregisterProfile.getServiceID());
-             if (urlprofile!=null && profilename!=null) {
+        	 Boolean hasProcess = thomasBD.CheckIfProfileHasProcess(deregisterProfile.getServiceID());
+             if (urlprofile!=null && profilename!=null && !hasProcess) {
 	 
         		 // Cargamos los valores desde un archivo .xml
         		 Properties properties = new Properties();

@@ -23,11 +23,13 @@ public class GetProfileSkeleton {
 
 	/**
 	 * GetProfile
-	 *
-	 * @param getProfile contains the service ID
-	 * @return response contains the profile URL
-	 * @throws
+	 * @param GetProfile contains two elements: the service ID (is a string: service profile id) and the 
+	 * agent id (is a string).
+	 * @return GetProfileResponse contains three elements: service profile (is a string: the url profile), 
+	 * the goal of the profile (currently is not in use) and the return (is an integer) which indicates if
+	 * an error occurs. 
 	 */
+	
 	 public wtp.GetProfileResponse GetProfile(wtp.GetProfile getProfile) {
 		
 		GetProfileResponse response = new GetProfileResponse();

@@ -50,14 +50,13 @@ public class RegisterProcessSkeleton {
 
 	/**
 	 * RegisterProcess
-	 * @param registerProcess:
-	 *  service id: string, serviceprofileid
-	 *  service model: string, urlprocess
-	 *  agent id: string
-	 * @return 
-	 * 	flag: 1:ok , 0: bad news
-	 *  service implementation id: serviceprofileid@agentid
+	 * @param RegisterProcess. This parameter contains three elements: service id (is a string), service
+	 * model (is a string: urlprocess#urlprocessname) and agent id (is a string).
+	 * @return RegisterProcessResponse. This parameter contains two elements: service implementation id )
+	 * serviceprofileid@servicenumidagentid) and return which indicates if an error occurs (1:ok , 0: bad news).
 	 */
+	
+	
 	public wtp.RegisterProcessResponse RegisterProcess(wtp.RegisterProcess registerProcess) {
 
 		
@@ -70,12 +69,6 @@ public class RegisterProcessSkeleton {
 			System.out.println("***ServiceModel... "+ registerProcess.getServiceModel());
 		}
 
-		// Register de serviceimplementationid in the DB
-		persistence.DataBaseInterface thomasBD = new DataBaseInterface();
-		String serviceprocessid = thomasBD.AddNewProcess(registerProcess.getServiceModel(), registerProcess.getServiceID(),registerProcess.getAgentID());
-		
-		 
-		if (serviceprocessid != null) {
 
 			/////////////
 			////JENA/////
@@ -135,10 +128,9 @@ public class RegisterProcessSkeleton {
 			urlprocess = Tok.nextToken("#");
 			String processname = Tok.nextToken();
 
-			
-				System.out.println("URL profile: "+ urlprocess);
-				System.out.println("profile name: "+ processname);
 			if (DEBUG) {
+				System.out.println("URL process: "+ urlprocess);
+				System.out.println("process name: "+ processname);
 				System.out.println("File to load... "+ urlprocess);
 			}
 
@@ -148,6 +140,76 @@ public class RegisterProcessSkeleton {
 			spec.setImportModelMaker(maker);
 			m = ModelFactory.createOntologyModel(spec, model);
 
+			
+			persistence.DataBaseInterface thomasBD = new DataBaseInterface();
+			String urlprofile=thomasBD.GetServiceProfileURL(registerProcess.getServiceID());
+			
+			// Query to get the set of allowed provider roles
+			String queryStringServiceRoles = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
+					+ "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>"
+					+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
+					+ "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
+					+ "prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>" 
+					+ "prefix actor: <http://www.daml.org/services/owl-s/1.1/ActorDefault.owl#>"
+					+ "select ?x "
+					+ "where {"
+					+ "      ?x rdf:subject <"+ urlprofile + "#provider_list"+">" + "      }";
+
+			Query queryServiceRoles = QueryFactory.create(queryStringServiceRoles);
+
+			if (DEBUG) {
+				System.out.println(queryServiceRoles.toString());
+			}
+
+			// Execute the query and obtain results
+			QueryExecution qeService = QueryExecutionFactory.create( queryServiceRoles, m);
+			ResultSet resultServiceRoles = qeService.execSelect();
+			String roleList=null;
+			
+			if (resultServiceRoles != null) {
+				int controws=0;
+				
+				
+				for (Iterator j = resultServiceRoles; resultServiceRoles.hasNext();) {
+					controws++;
+					String result = resultServiceRoles.next().toString();
+					if (DEBUG) {
+						System.out.println("Role: " + result);
+					}
+        	 
+				    Tok = new StringTokenizer(result);
+					String url = Tok.nextToken("<");
+					url= Tok.nextToken("#");
+					String role = Tok.nextToken(">");
+					role = role.replace("#", "");
+
+					if (DEBUG) {
+						System.out.println("Role: " + role);
+					}
+					
+					
+					if(controws==1){
+						roleList = role; 
+					}
+					else{
+						roleList = roleList+", "+role;
+					}
+			
+				}
+			}
+			
+			System.out.println("Role list: "+roleList);
+			//LLAMADA AL OMS
+
+			// Register de serviceimplementationid in the DB
+			String serviceprocessid = thomasBD.AddNewProcess(registerProcess.getServiceModel(), registerProcess.getServiceID(),registerProcess.getAgentID());
+			
+			/////////// 
+			///JENA////
+			///////////
+			
+			if (serviceprocessid != null) {
+			
 			m.read(registerProcess.getServiceModel());
 			m.commit();
 
@@ -171,7 +233,7 @@ public class RegisterProcessSkeleton {
 			response.set_return(1);
 
 		} else {
-			response.setServiceModelID("[Error]: the service profile does not exists");
+			response.setServiceModelID("[Error]: the service profile does not exist or the process is already registered");
 			response.set_return(0);
 		}
 

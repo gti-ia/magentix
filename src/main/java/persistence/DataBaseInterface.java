@@ -72,6 +72,36 @@ public class DataBaseInterface {
 		return (serviceprofileid);
 	}
 	
+	
+	public Boolean CheckIfProfileHasProcess(String serviceprofileid){
+		System.out.println("Start CheckIfProfilehasProcess");
+		Statement stmt = null;
+		ResultSet rs = null;
+		 
+		try{
+			
+			stmt = db.connection.createStatement();
+			rs = stmt.executeQuery("select urlprocess from serviceprocessid where serviceprofileid='"+serviceprofileid+"'");
+   	 		if(rs.next()){
+   
+   	 			System.out.println("The serviceidprofile "+ serviceprofileid+ " has associated process");
+   	 		}
+   	 		else{
+   	 			
+   	 			System.out.println("The profile does have associated process ");
+   	 			return(false);
+   	 		}
+   	 		
+   	 		return(true);
+		
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		System.out.println("End CheckServiceProfileID");
+		
+	 	return(true);
+		
+	}
 	 
 	public Boolean CheckServiceProfileID(String serviceprofileid){
 		System.out.println("Start CheckServiceProfileID");
@@ -135,6 +165,38 @@ public String GetServiceProfileURL(String serviceprofileid){
 	}
 	
 
+public String GetServiceProfileID(String urlprofile){
+	System.out.println("Start GetServiceProfileID");
+		Statement stmt = null;
+		ResultSet rs = null;
+		String serviceprofileid = null;
+		 
+		try{
+			
+			stmt = db.connection.createStatement();
+			rs = stmt.executeQuery("select serviceprofileid from serviceprofileid where urlprofile='"+urlprofile+"'");
+   	 		if(rs.next()){
+   	 			serviceprofileid = rs.getString("serviceprofileid");
+   	 			System.out.println("serviceprofileid "+ serviceprofileid);
+   	 		}
+   	 		else{
+   	 			
+   	 			System.out.println("The urlprofile does not exit ");
+   	 			
+   	 		}
+   	 		
+   	 		
+		
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		System.out.println("End GetServiceProfileID");
+		
+	 	return(serviceprofileid);
+		
+	}
+
+
 public String GetServiceProfileName(String serviceprofileid){
 	System.out.println("Start GetServiceProfileName");
 	
@@ -170,6 +232,7 @@ public String GetServiceProfileName(String serviceprofileid){
 	public String AddNewProcess(String urlprocess, String serviceprofileid, String agentid){
 		System.out.println("Start AddNewProcess");
 		String serviceprocessid=null;
+		int servicenumid;
 		try {
 			Statement stmt = db.connection.createStatement();
 			ResultSet rs = null;
@@ -182,32 +245,79 @@ public String GetServiceProfileName(String serviceprofileid){
 				System.out.println("URL process: "+ urlprocess);
 				System.out.println("process name: "+ processname);
 			//si existe el profile y no se ha registrado anteriormente el process, insertamos el process
-			if(CheckServiceProfileID(serviceprofileid)&& !CheckServiceProcessID(serviceprofileid+"@"+agentid)){
+			if(CheckServiceProfileID(serviceprofileid)&& !CheckServiceProcessUrl(urlprocess)){
 				
 				
 					// Add new process
-					String sql = "insert into serviceprocessid (serviceprocessid,urlprocess,serviceprofileid, processname)values('"+serviceprofileid+"@"+agentid+"','"+urlprocess+"','"+serviceprofileid+"','"+processname+"')";
+					String sql = "insert into serviceprocessid (serviceprocessid,urlprocess,serviceprofileid, processname, providername)values('"+serviceprofileid+"@"+agentid+"','"+urlprocess+"','"+serviceprofileid+"','"+processname+"','"+agentid+"')";
 					
-	        
+	 
 					// Execute the insert statement
 					stmt.executeUpdate(sql);
-	        
+			       					
 					//recuperamos el id del process
 					rs = stmt.executeQuery("select * from serviceprocessid where urlprocess='"+urlprocess+"'");
 					rs.next();
 					serviceprocessid=rs.getString("serviceprocessid");
+					servicenumid=rs.getInt("servicenumid");
+			       
 					
-				
+					System.out.println("urlprocess "+urlprocess);
+					// Update serviceprocessid
+					stmt.executeUpdate("update serviceprocessid set serviceprocessid='"+serviceprofileid+"@"+servicenumid+agentid+"' where urlprocess='"+urlprocess+"'");
+			        System.out.println("4");
+					//recuperamos el id del process
+					rs = stmt.executeQuery("select * from serviceprocessid where urlprocess='"+urlprocess+"'");
+					rs.next();
+					serviceprocessid=rs.getString("serviceprocessid");
+					servicenumid=rs.getInt("servicenumid");
+					System.out.println("The service process id is "+serviceprocessid);
+					
 			}
 			
 			}catch(Exception e){
 				e.printStackTrace(); 
 			
 		}
-			System.out.println("Start GetServiceProfileName");
+			System.out.println("End AddNewProcess");
 		return (serviceprocessid);
 	}
 	
+public Boolean CheckServiceProvider(String AgentID, String ServiceProcessId){
+	System.out.println("Start CheckServiceProvider");
+		Statement stmt = null;
+		ResultSet rs = null;
+		Boolean exist = false;
+		try{
+			
+			stmt = db.connection.createStatement();
+			rs = stmt.executeQuery("select providername from serviceprocessid where serviceprocessid='"+ServiceProcessId+"'");
+   	 		if(rs.next()){
+   	 			if(rs.getString("providername").equals(AgentID)){
+   	 			
+   	 				System.out.println("Provider name "+ rs.getString("providername")+ "matchs with "+ AgentID); 
+   	 				exist= true;
+   	 			}
+   	 			else{
+   	 			System.out.println("Provider name "+ rs.getString("providername")+ "does not match with "+ AgentID); 
+   	 				exist = false;
+   	 			}
+   	 		}
+   	 		else{
+   	 			System.out.println("The process does not exist ");
+   	 			exist = false;
+   	 		}
+   	 		
+		
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		System.out.println("End CheckServiceProvider");
+		return(exist);
+	 	
+	}
+
+
 public Boolean CheckServiceProcessID(String serviceprocessid){
 	System.out.println("Start CheckServiceProcessID");
 		Statement stmt = null;
@@ -236,6 +346,33 @@ public Boolean CheckServiceProcessID(String serviceprocessid){
 	 	
 	}
 
+public Boolean CheckServiceProcessUrl(String urlprocess){
+	System.out.println("Start CheckServiceProcessUrl");
+		Statement stmt = null;
+		ResultSet rs = null;
+		Boolean exist = false;
+		try{
+			
+			stmt = db.connection.createStatement();
+			rs = stmt.executeQuery("select urlprocess from serviceprocessid where urlprocess='"+urlprocess+"'");
+   	 		if(rs.next()){
+   
+   	 			System.out.println("The urlprocess "+ urlprocess+ " exists"); 
+   	 		    exist= true;
+   	 		}
+   	 		else{
+   	 			System.out.println("The urlprocess does not exist");
+   	 			exist = false;
+   	 		}
+   	 		
+		
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		System.out.println("End CheckServiceProcessUrl");
+		return(exist);
+	 	
+	}
 
 public String GetServiceProcessFromProfile(String serviceprofileid){
 	System.out.println("Start GetServiceProcessFromProfile");
@@ -247,14 +384,22 @@ public String GetServiceProcessFromProfile(String serviceprofileid){
 		if(CheckServiceProfileID(serviceprofileid))
 		stmt = db.connection.createStatement();
 		rs = stmt.executeQuery("select * from serviceprocessid where serviceprofileid='"+serviceprofileid+"'");
-	 		if(rs.next()){
-	 			processlist= processlist + " , " +rs.getString("serviceprocessid")+" "+rs.getString("urlprocess");
-	 		}
-	 		else{
+			int numrow=0;
+	 		while(rs.next()){
+	 			numrow++;
+	 			if (numrow == 1){
+	 				processlist="";
+	 				processlist= rs.getString("serviceprocessid")+" "+rs.getString("urlprocess");
+	 			}
+	 			else{
+	 				processlist= processlist + " , " +rs.getString("serviceprocessid")+" "+rs.getString("urlprocess");
 	 		
+	 			}
+	 		}
+	 		if(processlist==null)
 	 			System.out.println("There are not process associated with the profile id "+serviceprofileid);
 	 			
-	 		}
+	 		
 	 	
 	 		
 	}catch(Exception e){

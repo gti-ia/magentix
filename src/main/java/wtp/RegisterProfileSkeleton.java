@@ -33,13 +33,11 @@ public class RegisterProfileSkeleton {
 	private static String s_dbDriver;
 
 	/**
-	 * RegisterProfile 
-	 * @param RegisterProfile: 
-	 * 	service goal: string
-	 * 	service profile: string -> urlprofile#profilename
-	 * 	agent id: string
-	 * @return response contains serviceID (the service profile id) and a control parameter
-	 * @throws RemoteException
+	 * RegisterProfile.  
+	 * @param RegisterProfile. This parameter contains three elements: service goal ( is a string ),
+	 * service profile ( is a string: urlprofile#profilename ) and agent id ( is a string ).
+	 * @return RegisterProfileResponse. This parameter contains two elements: service id (the service 
+	 * profile id which is an integer) and return which indicates if an error occurs.
 	 */
    
 	public wtp.RegisterProfileResponse RegisterProfile(wtp.RegisterProfile registerProfile) {
@@ -53,15 +51,7 @@ public class RegisterProfileSkeleton {
 			System.out.println("***ServiceProfile... "+ registerProfile.getServiceProfile());
 		}
 
-		//Register in de DB the serviceprofileid
-		persistence.DataBaseInterface thomasBD = new DataBaseInterface();
-		String serviceprofileid = thomasBD.AddNewProfile(registerProfile.getServiceProfile());
 		
-		if (serviceprofileid != null) {
-			
-			if (DEBUG) {
-				System.out.println("The serviceprofileid is: " + serviceprofileid);
-			}
 			 
 			/////////////
 			////JENA/////
@@ -125,6 +115,83 @@ public class RegisterProfileSkeleton {
 			spec.setImportModelMaker(maker);
 			m = ModelFactory.createOntologyModel(spec, base);
 
+			
+			// Query to get the set of allowed provider roles
+			String queryStringServiceRoles = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
+					+ "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>"
+					+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
+					+ "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
+					+ "prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>" 
+					+ "prefix actor: <http://www.daml.org/services/owl-s/1.1/ActorDefault.owl#>"
+					+ "select ?x "
+					+ "where {"
+					+ "      ?x rdf:subject <"+ urlprofile + "#provider_list"+">" + "      }";
+
+			Query queryServiceRoles = QueryFactory.create(queryStringServiceRoles);
+
+			if (DEBUG) {
+				System.out.println(queryServiceRoles.toString());
+			}
+
+			// Execute the query and obtain results
+			QueryExecution qeService = QueryExecutionFactory.create( queryServiceRoles, m);
+			ResultSet resultServiceRoles = qeService.execSelect();
+			String roleList=null;
+			
+			if (resultServiceRoles != null) {
+				int controws=0;
+				
+				
+				for (Iterator j = resultServiceRoles; resultServiceRoles.hasNext();) {
+					controws++;
+					String result = resultServiceRoles.next().toString();
+					if (DEBUG) {
+						System.out.println("Role: " + result);
+					}
+        	 
+				    Tok = new StringTokenizer(result);
+					String url = Tok.nextToken("<");
+					url= Tok.nextToken("#");
+					String role = Tok.nextToken(">");
+					role = role.replace("#", "");
+
+					if (DEBUG) {
+						System.out.println("Role: " + role);
+					}
+					
+					
+					if(controws==1){
+						roleList = role; 
+					}
+					else{
+						roleList = roleList+", "+role;
+					}
+			
+				}
+			}
+			
+			System.out.println("Role list: "+roleList);
+			
+			//LLAMADA AL OMS
+			//wtp.InformAgentRoleStub.InformAgentRoleResponse res = new  wtp.InformAgentRoleStub.InformAgentRoleResponse();
+			//InformAgentRoleStub stub = new InformAgentRoleStub();
+			//wtp.InformAgentRoleStub.InformAgentRole agentrole = new wtp.InformAgentRoleStub.InformAgentRole();
+			//agentrole.setAgentID(registerProfile.getAgentID());
+			//res.setRoleUnitList = stub.InformAgentRole(agentrole).getRoleUnitList();
+			//res.setStatus = "OK";
+			//res.setErrorValue = "";
+			
+			
+			//Register in de DB the serviceprofileid
+			persistence.DataBaseInterface thomasBD = new DataBaseInterface();
+			String serviceprofileid = thomasBD.AddNewProfile(registerProfile.getServiceProfile());
+			
+			if (serviceprofileid != null) {
+				
+				if (DEBUG) {
+					System.out.println("The serviceprofileid is: " + serviceprofileid);
+				}
+				
 			//load the service profile in the database
 			m.read(registerProfile.getServiceProfile());
 			m.commit();

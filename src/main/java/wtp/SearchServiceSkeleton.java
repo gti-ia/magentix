@@ -16,6 +16,8 @@ import java.util.*;
 import java.io.*;
 import java.rmi.RemoteException;
 
+import persistence.DataBaseInterface;
+
 import wtp.PlannerStub;
 
 
@@ -36,18 +38,24 @@ import wtp.PlannerStub;
        
     /**
      * Auto generated method signature
-     * @param searchService contains the client purpose
-     * @return response a list of <service ID, ranking> or <service Composition, ranking>
+     * @param SearchService contains an element: service purpose (is a string: the service description).
+     * @return SearchServiceResponse contains an element: services list (is a list of 
+     * <service profile id, ranking: service profile id, ranking: ...>  and return which indicates if an
+     * error occurs. 
     */
      public wtp.SearchServiceResponse SearchService(wtp.SearchService searchService) {
     	 
+    	if (DEBUG) {
+ 			System.out.println("Servicio SearchService:");
+ 			System.out.println("***ServicePurpose... "+ searchService.getServicePurpose());
+ 			System.out.println("***AgentID... "+ searchService.getAgentID());
+ 		}
+    	
     	// answer
  		wtp.SearchServiceResponse response = new wtp.SearchServiceResponse();
  		
  		Properties properties = new Properties();
-		
-		
-		  
+  
 		  try {
 			   properties.loadFromXML(SearchServiceSkeleton.class.getResourceAsStream("/"+"THOMASDemoConfiguration.xml"));
 				for (Enumeration e = properties.keys(); e.hasMoreElements() ; ) {
@@ -79,12 +87,6 @@ import wtp.PlannerStub;
 		    	System.out.print(e);
 		    }
   	
- 		
-		if (DEBUG) {
-			System.out.println("Servicio SearchService:");
-			System.out.println("***ServicePurpose... "+ searchService.getServicePurpose());
-		}
-
 		IDBConnection conn = null;
 
 		// ensure the JDBC driver class is loaded
@@ -108,8 +110,8 @@ import wtp.PlannerStub;
 		OntModel m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
 	
 		// Answer
-		response.set_return(1);
-		response.setServicesList(SearchByServiceName(m,searchService.getServicePurpose()));
+	
+		String serviceList = SearchByServiceName(m,searchService.getServicePurpose());
 		//response.setServicesList(planningComposition(m));
 		
 		try {
@@ -123,6 +125,15 @@ import wtp.PlannerStub;
 		}
 
 		m.close();
+		
+		if(serviceList!=null){
+			response.set_return(1);
+			response.setServicesList(serviceList);
+		}
+		else{
+			response.set_return(0);
+			response.setServicesList("There are not profiles with the goal: "+searchService.getServicePurpose());
+		}
 		return (response);
 
 	}// end SearchService
@@ -148,7 +159,7 @@ import wtp.PlannerStub;
 	public String SearchByServiceName(OntModel m, String ServicePurpose){
 		
 		String ServiceID = null;
-		String servicesList = " ";
+		String servicesList =null;
 		String queryStringSearchName =
 					"prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
 					+ "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>"
@@ -169,15 +180,17 @@ import wtp.PlannerStub;
 		ResultSet resultsSearchName = qeSearchName.execSelect();
 
 		if (resultsSearchName != null) {
+			int controws=0;
 			
 			for (Iterator j = resultsSearchName; resultsSearchName.hasNext();) {
+				controws++;
 				String result = resultsSearchName.next().toString();
 				StringTokenizer Tok = new StringTokenizer(result);
 				String profile = Tok.nextToken("<");
 				ServiceID = Tok.nextToken(">");
 				ServiceID = ServiceID.replace("<", "");
 				if (DEBUG) {
-					System.out.println("ServiceID: " + ServiceID);
+					System.out.println("Service profile: " + ServiceID);
 				}
 				Tok = new StringTokenizer(result);
 				profile = Tok.nextToken("<");
@@ -186,16 +199,27 @@ import wtp.PlannerStub;
 				if (DEBUG) {
 					System.out.println("Profile " + profile);
 				}
+				
+				persistence.DataBaseInterface thomasBD = new DataBaseInterface();
+         		ServiceID = thomasBD.GetServiceProfileID(profile);
 
-				//Service Ranking is not implemented, always is 5
-				servicesList = servicesList + " " + ServiceID + ": 5 ;";
+				//Service Ranking is not implemented, ranking is always 5
+				if(controws==1){
+					servicesList = ServiceID + ", 5 "; 
+				}
+				else{
+					servicesList = servicesList + ":" + ServiceID + ", 5";
+				}
+				
 			}//end for 
 		}//end if
 			
 		// close the query
 		qeSearchName.close();
 		
+		
 		return(servicesList);
+		
 			
 	}//end SearchByServiceName
 	

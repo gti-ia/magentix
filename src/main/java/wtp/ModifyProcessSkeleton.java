@@ -58,13 +58,11 @@ import persistence.DataBaseInterface;
     	
         /**
          * ModifyProcess
-         * @param modifyProcess 
-         * 	service implementation ID: serviceprofile@agent
-         * 	service model: urlprocess#processname
-         * 	service grounding: is not in use
-         * 	agent ID
-         * @return response 1:OK otherwise 0
-         * @throws
+         * @param ModifyProcess contains three elements: service implementation ID (is a string: 
+         * serviceprofile@servicenumdidagent), service model (is a string: urlprocess#processname),
+         * service grounding (currently is not in use) and agent ID (is a string).
+         * @return ModifyProcessResponse contains return which indicates if an error occurs (1:OK,
+         * otherwise 0).
          */
         public wtp.ModifyProcessResponse ModifyProcess(
 			wtp.ModifyProcess modifyProcess) {
@@ -80,7 +78,7 @@ import persistence.DataBaseInterface;
 
 		persistence.DataBaseInterface thomasBD = new DataBaseInterface();
 		
-		if (thomasBD.CheckServiceProcessID(modifyProcess.getServiceImplementationID())) {
+		if (thomasBD.CheckServiceProcessID(modifyProcess.getServiceImplementationID()) && thomasBD.CheckServiceProvider(modifyProcess.getAgentID(), modifyProcess.getServiceImplementationID())) {
 			
 			/////////////
 			////JENA/////
@@ -187,8 +185,7 @@ import persistence.DataBaseInterface;
 			}
 
 			// Execute the query and obtain results
-			QueryExecution qeProfile = QueryExecutionFactory.create(
-					queryProfile, m);
+			QueryExecution qeProfile = QueryExecutionFactory.create(queryProfile, m);
 			ResultSet resultProfile = qeProfile.execSelect();
 
 			result = resultProfile.next().toString();

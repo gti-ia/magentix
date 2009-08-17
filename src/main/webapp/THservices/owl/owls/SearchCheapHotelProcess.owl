@@ -13,8 +13,10 @@
   <!ENTITY dir "http://localhost:8080/SearchCheapHotel/services/SearchCheapHotel?wsdl">
   <!ENTITY pddxml "http://www2.dfki.de/~babla/cascom/pddxml.owl#">
   <!ENTITY expr "http://www.daml.org/services/owl-s/1.1/generic/Expression.owl#">
-  <!ENTITY duration "http://localhost:8080/sfservices/THservices/owl/owls/duration.owl">
-  <!ENTITY Duration_param "http://localhost:8080/sfservices/THservices/owl/owls/duration_param.owl#">
+  <!ENTITY role "http://localhost:8080/sfservices/THservices/owl/owls/role.owl">
+  <!ENTITY list "http://www.daml.org/services/owl-s/1.2/generic/ObjectList.owl#">
+  <!ENTITY swrl "http://www.w3.org/2003/11/swrl#">
+  <!ENTITY role_param "http://localhost:8080/sfservices/THservices/owl/owls/role_param.owl#">
   <!ENTITY serv "http://localhost:8080/sfservices/THservices/owl/owls/ServiceOntology.owl">
 ]>
 
@@ -29,9 +31,11 @@
    	xmlns:profile="&profile;" 
    	xmlns:grounding="&grounding;" 
    	xmlns:mind="&mind;#" 
-   	xmlns:duration="&duration;#" 
+   	xmlns:role="&role;#" 
    	xmlns:expr="&expr;" 
-   	xmlns:Duration_param="&Duration_param;" 
+	xmlns:list="&list;"
+	xmlns:swrl="&swrl;"   	
+	xmlns:role_param="&role_param;" 
    	xmlns:pddxml="&pddxml;"    
    	xml:base="http://localhost:8080/sfservices/THservices/owl/owls/SearchCheapHotelProcess.owl">
 
@@ -56,12 +60,9 @@
 
 
 
-<Duration_param:hasLocal>
-    	  <duration:Duration-Expression rdf:ID="PDDXML-Duration">
-            <expr:expressionBody rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
-           	>&lt;and>&lt;equals>&lt;variable name="j">&lt;var type="object">?duration&lt;/var>&lt;/variable>&lt;constant name="k">&lt;const type="int">4&lt;/const>&lt;/constant>&lt;/equals>&lt;/and></expr:expressionBody>
-          </duration:Duration-Expression>
-        </Duration_param:hasLocal>
+
+
+
 
 </process:AtomicProcess>
 
