@@ -13,10 +13,9 @@ import persistence.DataBaseInterface;
     /**
      *  RegisterRoleSkeleton java skeleton for the axisService
      */
-
     public class RegisterRoleSkeleton{
     	persistence.DataBaseInterface thomasBD=new DataBaseInterface();
-         
+    	public static final Boolean DEBUG=true; 
         /**
          * Auto generated method signature
          
@@ -32,6 +31,17 @@ import persistence.DataBaseInterface;
             {
                 //Todo fill this with the necessary business logic
                 wtp.RegisterRoleResponse res=new RegisterRoleResponse();
+                if (DEBUG) {
+           			System.out.println("RegisterRole :");
+           			System.out.println("***AgentID..."+ registerRole.getAgentID());
+           			System.out.println("***UnitID..."+ registerRole.getUnitID());
+           			System.out.println("***RoleID..."+ registerRole.getRoleID());
+           			System.out.println("***Accessibility..."+ registerRole.getAccessibility());
+           			System.out.println("***Inheritance..."+ registerRole.getInheritance());
+           			System.out.println("***Position..."+ registerRole.getPosition());
+           			System.out.println("***Visibility..."+ registerRole.getVisibility());
+                     	  
+              	 }
                 res.setErrorValue("");
                 res.setStatus("Ok");
                 if(registerRole.getAccessibility()==""){

@@ -51,7 +51,7 @@
   </wsdl:binding>
   <wsdl:service name="InformAgentRole">
     <wsdl:port name="InformAgentRoleSOAP" binding="tns:InformAgentRoleSOAP">
-      <soap:address location="http://localhost:8080/OMS/services/InformAgentRole"/>
+      <soap:address location="http://localhost:8080/omsservices/services/InformAgentRole"/>
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

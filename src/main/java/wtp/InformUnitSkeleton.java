@@ -13,9 +13,10 @@ import persistence.DataBaseInterface;
     /**
      *  InformUnitSkeleton java skeleton for the axisService
      */
+
     public class InformUnitSkeleton{
     	persistence.DataBaseInterface thomasBD=new DataBaseInterface();
-         
+    	public static final Boolean DEBUG=true; 
         /**
          * Auto generated method signature
          
@@ -30,7 +31,15 @@ import persistence.DataBaseInterface;
                   )
             {
                 	 wtp.InformUnitResponse res=new InformUnitResponse();
-                     res.setErrorValue("");
+                     
+                	 if (DEBUG) {
+              			System.out.println("InformUnit :");
+              			System.out.println("***AgentID..."+ informUnit.getAgentID());
+              			System.out.println("***UnitID()..."+ informUnit.getUnitID());
+                        	  
+                 	 }
+                	 
+                	 res.setErrorValue("");
                      res.setStatus("Ok");
                      res.setParentID("");
                      res.setUnitGoal("");

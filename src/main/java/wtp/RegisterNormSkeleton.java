@@ -13,11 +13,12 @@ import NormativeManagement.NormativeManager;
     /**
      *  RegisterNormSkeleton java skeleton for the axisService
      */
+
     public class RegisterNormSkeleton{
     	private static NormativeChecker normCheck = new NormativeChecker();
     	private static DataBaseInterface thomasBD = new DataBaseInterface();
     	private static NormativeManager normManager = new NormativeManager();        
-         
+    	public static final Boolean DEBUG=true; 
         /**
          * Auto generated method signature
          
@@ -31,42 +32,51 @@ import NormativeManagement.NormativeManager;
                   wtp.RegisterNorm registerNorm
                   )
             {		wtp.RegisterNormResponse res = new RegisterNormResponse();
-    		res.setErrorValue("");
-    		res.setStatus("Ok");
-    		if (registerNorm.getNormID() == "" || registerNorm.getNormContent()=="") {
-    			res.setErrorValue("Invalid");
-    			res.setStatus("Error");
-    			return res;
-    		}
-    		registerNorm.setNormContent(registerNorm.getNormContent().replace('_', ' '));
-    		Integer normID = addNewNorm(registerNorm.getNormID(), registerNorm
-    				.getNormContent());
-    		if (normID == -1) {
-    			res.setErrorValue("Invalid");
-    			res.setStatus("Error");
-    			return res;
-    		}
-
-    		try {
-    			String[] typeNorm = normCheck.analyzeNorm(registerNorm.getNormContent());
-    			if (normManager.ManageNorm(typeNorm, normID))
-    				return res;
-    		} catch (Exception e) {
-    			res.setErrorValue("Invalid");
-    			res.setStatus("Error");
-    			e.printStackTrace();
-    			/* Eliminamos la norma que habiamos insertado */
-    			thomasBD.DeleteNorm(registerNorm.getNormID());
-    			return res;
-    		}
-
-    		/*
-    		 * if(!addNewNorm(registerNorm.getNormID(),registerNorm.getAddressedRoleID(),)){
-    		 * res.setErrorValue("Invalid"); res.setStatus("Error"); return res; }
-    		 */
-    		res.setErrorValue("NotReconigsed");
-    		res.setStatus("Ok");
-    		return res;
+		            if (DEBUG) {
+		      			System.out.println("RegisterNorm :");
+		      			System.out.println("***AgentID..."+ registerNorm.getAgentID());
+		      			System.out.println("***NormID..."+ registerNorm.getNormID());
+		      			System.out.println("***NormContent..."+ registerNorm.getNormContent());
+		                	  
+		         	 }
+            
+            
+            		res.setErrorValue("");
+		    		res.setStatus("Ok");
+		    		if (registerNorm.getNormID() == "" || registerNorm.getNormContent()=="") {
+		    			res.setErrorValue("Invalid");
+		    			res.setStatus("Error");
+		    			return res;
+		    		}
+		    		registerNorm.setNormContent(registerNorm.getNormContent().replace('_', ' '));
+		    		Integer normID = addNewNorm(registerNorm.getNormID(), registerNorm
+		    				.getNormContent());
+		    		if (normID == -1) {
+		    			res.setErrorValue("Invalid");
+		    			res.setStatus("Error");
+		    			return res;
+		    		}
+		
+		    		try {
+		    			String[] typeNorm = normCheck.analyzeNorm(registerNorm.getNormContent());
+		    			if (normManager.ManageNorm(typeNorm, normID))
+		    				return res;
+		    		} catch (Exception e) {
+		    			res.setErrorValue("Invalid");
+		    			res.setStatus("Error");
+		    			e.printStackTrace();
+		    			/* Eliminamos la norma que habiamos insertado */
+		    			thomasBD.DeleteNorm(registerNorm.getNormID());
+		    			return res;
+		    		}
+		
+		    		/*
+		    		 * if(!addNewNorm(registerNorm.getNormID(),registerNorm.getAddressedRoleID(),)){
+		    		 * res.setErrorValue("Invalid"); res.setStatus("Error"); return res; }
+		    		 */
+		    		res.setErrorValue("NotReconigsed");
+		    		res.setStatus("Ok");
+		    		return res;
     	}
 
     	private Integer addNewNorm(String normID, String normContent) {

@@ -15,7 +15,7 @@ import persistence.DataBaseInterface;
      */
     public class ExpulseSkeleton{
     	persistence.DataBaseInterface thomasBD=new DataBaseInterface();
-         
+        public static final Boolean DEBUG=true; 
         /**
          * Auto generated method signature
          
@@ -31,6 +31,12 @@ import persistence.DataBaseInterface;
             {
                      
                     	 wtp.ExpulseResponse res=new ExpulseResponse();
+                    	 if (DEBUG) {
+                  			System.out.println("Expulse :");
+                  			System.out.println("***AgentID..."+ expulse.getAgentID());
+                  			System.out.println("*** RoleID()..."+ expulse.getRoleID());
+                  			System.out.println("*** UnitID()..."+ expulse.getUnitID());
+                     	 }
                     	 res.setStatus("Ok");
                     	 res.setErrorValue("");
                     	 if(expulse.getAgentID()=="" || expulse.getRoleID()=="" || expulse.getUnitID()==""){
@@ -70,7 +76,8 @@ import persistence.DataBaseInterface;
                               return res;                      
                           }
                           return res;
-                          }
+                }
+                 
            		private boolean roleBasedControl(String agentID, String unitID) {
         			if(unitID.equalsIgnoreCase("virtual")) return true;
         			if(!thomasBD.CheckExistsAgent(agentID)) return false;

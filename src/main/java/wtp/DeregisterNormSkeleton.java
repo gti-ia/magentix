@@ -14,8 +14,9 @@ import persistence.DataBaseInterface;
      *  DeregisterNormSkeleton java skeleton for the axisService
      */
     public class DeregisterNormSkeleton{
+    	public static final Boolean DEBUG = true;
     	persistence.DataBaseInterface thomasBD=new DataBaseInterface();
-         
+        
         /**
          * Auto generated method signature
          
@@ -30,7 +31,12 @@ import persistence.DataBaseInterface;
                   )
             {
                 	 wtp.DeregisterNormResponse res=new DeregisterNormResponse();
-                     res.setErrorValue("");
+                	 if (DEBUG) {
+               			System.out.println("DeregisterNorm :");
+               			System.out.println("***AgentID..."+ deregisterNorm.getAgentID());
+               			System.out.println("*** NormID()..."+ deregisterNorm.getNormID());
+               			}
+                	 res.setErrorValue("");
                      res.setStatus("Ok");
 
                      if(deregisterNorm.getNormID()==""){
@@ -49,7 +55,7 @@ import persistence.DataBaseInterface;
                   		res.setStatus("Error"); 
                   		return res;
                   	}
-                     //Falta comprobar si es el isssuer
+                     //Falta comprobar si es el issuer
                      if(!thomasBD.DeleteNorm(deregisterNorm.getNormID())){
                     	 res.setErrorValue("Invalid");
                          res.setStatus("Error"); 

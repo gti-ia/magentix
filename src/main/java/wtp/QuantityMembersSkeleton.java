@@ -14,9 +14,10 @@ import persistence.DataBaseInterface;
     /**
      *  QuantityMembersSkeleton java skeleton for the axisService
      */
+
     public class QuantityMembersSkeleton{
         persistence.DataBaseInterface thomasBD=new DataBaseInterface();
-         
+        public static final Boolean DEBUG=true; 
         /**
          * Auto generated method signature
          
@@ -31,7 +32,13 @@ import persistence.DataBaseInterface;
                   )
             {
                 	 wtp.QuantityMembersResponse res=new QuantityMembersResponse();
-                     res.setErrorValue("");
+                	 if (DEBUG) {
+                			System.out.println("QuantityMembers :");
+                			System.out.println("***AgentID..."+ quantityMembers.getAgentID());
+                			System.out.println("***UnitID..."+ quantityMembers.getUnitID());
+                			System.out.println("***RoleID..."+ quantityMembers.getRoleID());
+                		}
+                	 res.setErrorValue("");
                      res.setStatus("Ok");
                      java.math.BigInteger quantity=BigInteger.valueOf(0);
                      res.setQuantity(quantity);

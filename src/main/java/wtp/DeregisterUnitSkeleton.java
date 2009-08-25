@@ -15,7 +15,7 @@ import persistence.DataBaseInterface;
      */
     public class DeregisterUnitSkeleton{
     	persistence.DataBaseInterface thomasBD=new DataBaseInterface();
-         
+        public static final Boolean DEBUG=true;
         /**
          * Auto generated method signature
          
@@ -30,7 +30,14 @@ import persistence.DataBaseInterface;
                   )
             {
                 	 wtp.DeregisterUnitResponse res=new DeregisterUnitResponse();
-                     res.setErrorValue("");
+                     
+                	 if (DEBUG) {
+             			System.out.println("DeregisterUnit :");
+             			System.out.println("***AgentID..."+ deregisterUnit.getAgentID());
+             			System.out.println("*** UnitID()..."+ deregisterUnit.getUnitID());
+                	 }
+                	 
+                	 res.setErrorValue("");
                      res.setStatus("Ok");
 
                      if(deregisterUnit.getUnitID()=="" || deregisterUnit.getUnitID().equalsIgnoreCase("virtual")){
@@ -71,7 +78,8 @@ import persistence.DataBaseInterface;
                          return res; 
                      }
                      return res;
-                 }
+                }
+                 
           		private boolean roleBasedControl(String agentID, String unitID) {
         			if(unitID.equalsIgnoreCase("virtual")) return false;
         			if(!thomasBD.CheckExistsAgent(agentID)) return false;

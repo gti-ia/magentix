@@ -14,8 +14,9 @@ import persistence.DataBaseInterface;
      *  DeregisterRoleSkeleton java skeleton for the axisService
      */
     public class DeregisterRoleSkeleton{
+    	public static final Boolean DEBUG=true;
     	persistence.DataBaseInterface thomasBD=new DataBaseInterface();
-         
+        
         /**
          * Auto generated method signature
          
@@ -30,7 +31,15 @@ import persistence.DataBaseInterface;
                   )
             {
                 	 wtp.DeregisterRoleResponse res=new DeregisterRoleResponse();
-                     res.setErrorValue("");
+                	 if (DEBUG) {
+                			System.out.println("DeregisterRole :");
+                			System.out.println("***AgentID..."+ deregisterRole.getAgentID());
+                			System.out.println("*** RoleID()..."+ deregisterRole.getRoleID());
+                			System.out.println("*** UnitID()..."+ deregisterRole.getUnitID());
+                	 }
+                	 
+                	 
+                	 res.setErrorValue("");
                      res.setStatus("Ok");
 
                      if(deregisterRole.getRoleID()=="" || deregisterRole.getRoleID().equalsIgnoreCase("member") || deregisterRole.getUnitID()==""){

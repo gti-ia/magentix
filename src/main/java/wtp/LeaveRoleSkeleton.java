@@ -11,9 +11,10 @@ import persistence.DataBaseInterface;
     /**
      *  LeaveRoleSkeleton java skeleton for the axisService
      */
+
     public class LeaveRoleSkeleton{
         
-         
+    	public static final Boolean DEBUG=true;
         /**
          * Auto generated method signature
          
@@ -28,6 +29,13 @@ import persistence.DataBaseInterface;
                   )
             {
                 	 wtp.LeaveRoleResponse res=new LeaveRoleResponse();
+                	 if (DEBUG) {
+               			System.out.println("LeaveRole :");
+               			System.out.println("***AgentID..."+ leaveRole.getAgentID());
+               			System.out.println("***UnitID()..."+ leaveRole.getUnitID());
+               			System.out.println("***RoleID()..."+ leaveRole.getRoleID());
+                         	  
+                  	 }
                 	 res.setStatus("Ok");
                 	 res.setErrorValue("");
                 	 if(leaveRole.getAgentID()=="" || leaveRole.getRoleID()=="" || leaveRole.getUnitID()==""){

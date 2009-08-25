@@ -13,9 +13,10 @@ import persistence.DataBaseInterface;
     /**
      *  InformUnitRolesSkeleton java skeleton for the axisService
      */
+
     public class InformUnitRolesSkeleton{
     	persistence.DataBaseInterface thomasBD=new DataBaseInterface();
-         
+        public static final Boolean DEBUG=true;  
         /**
          * Auto generated method signature
          
@@ -30,7 +31,15 @@ import persistence.DataBaseInterface;
                   )
             {
                 	 wtp.InformUnitRolesResponse res=new InformUnitRolesResponse();
-                     res.setErrorValue("");
+                     
+                	 if (DEBUG) {
+             			System.out.println("InformUnitRoles :");
+             			System.out.println("***AgentID..."+ informUnitRoles.getAgentID());
+             			System.out.println("***UnitID()..."+ informUnitRoles.getUnitID());
+                       	  
+                	 }
+                	 
+                	 res.setErrorValue("");
                      res.setStatus("Ok");
                      res.setRoleList("");
                      if(informUnitRoles.getUnitID()==""){

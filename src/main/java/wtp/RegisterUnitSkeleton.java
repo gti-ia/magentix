@@ -23,14 +23,25 @@ import persistence.DataBaseInterface;
                                      * @param registerUnit
          */
     	persistence.DataBaseInterface thomasBD=new DataBaseInterface();
-
+    	public static final Boolean DEBUG=true;
                  public wtp.RegisterUnitResponse RegisterUnit
                   (
                   wtp.RegisterUnit registerUnit
                   )
             {
                 	 wtp.RegisterUnitResponse res=new RegisterUnitResponse();
-                     res.setErrorValue("");
+                	 if (DEBUG) {
+               			System.out.println("RegisterUnit :");
+               			System.out.println("***AgentID..."+ registerUnit.getAgentID());
+               			System.out.println("***UnitID..."+ registerUnit.getUnitID());
+               			System.out.println("***ParentUnitID..."+ registerUnit.getParentUnitID());
+               			System.out.println("***Goal..."+ registerUnit.getGoal());
+               			System.out.println("***Type..."+ registerUnit.getType());
+                         	  
+                  	 }
+                	 
+                	 
+                	 res.setErrorValue("");
                      res.setStatus("Ok");
                    
                      if(registerUnit.getUnitID()=="" || registerUnit.getGoal()==""){

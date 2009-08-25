@@ -11,7 +11,8 @@ import persistence.DataBaseInterface;
     /**
      *  InformRoleProfilesSkeleton java skeleton for the axisService
      */
-    public class InformRoleProfilesSkeleton{
+    
+	public class InformRoleProfilesSkeleton{
     	persistence.DataBaseInterface thomasBD=new DataBaseInterface();
          
         /**
