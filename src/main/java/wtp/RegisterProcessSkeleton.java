@@ -27,6 +27,16 @@ import com.hp.hpl.jena.db.*;
 import com.hp.hpl.jena.ontology.OntModelSpec;
 import com.hp.hpl.jena.query.*;
 
+
+import org.mindswap.owl.EntityFactory;
+import org.mindswap.owl.OWLFactory;
+import org.mindswap.owl.OWLKnowledgeBase;
+import org.mindswap.owls.OWLSFactory;
+import org.mindswap.owls.process.Process;
+import org.mindswap.owls.process.execution.ProcessExecutionEngine;
+import org.mindswap.owls.service.Service;
+import org.mindswap.query.ValueMap;
+
 import java.util.*;
 
 import persistence.DataBaseInterface;
@@ -216,6 +226,39 @@ public class RegisterProcessSkeleton {
 				
 			}
 			
+			/*System.out.println("Call to InformAgentRole ...");
+			
+			try{
+				
+				// create a kb
+				OWLKnowledgeBase kbomsquery = OWLFactory.createKB();
+				
+				// create an execution engine
+				ProcessExecutionEngine exec = OWLSFactory.createExecutionEngine();
+				
+				Service InformAgentRoleService = kbomsquery.readService("http://localhost:8080/omsservices/OMSservices/owl/owls/InformAgentRoleProcess.owl");		
+			
+				//get the process for the server
+				Process InformAgentRoleProcess = InformAgentRoleService.getProcess();
+				
+				//initialize the input values to be empty
+				ValueMap values = new ValueMap();
+		
+				//get the input values
+				values.setDataValue(InformAgentRoleProcess.getInput("AgentID"),registerProcess.getAgentID() );
+				values.setDataValue(InformAgentRoleProcess.getInput("RequestedAgentID"), registerProcess.getAgentID());
+				
+				System.out.println("Executing... "+values.getValues().toString());
+				values = exec.execute(InformAgentRoleProcess, values);
+				System.out.println("Values obtained... :"+values.toString());
+		
+                        
+            }catch(Exception e){
+            	e.printStackTrace();
+            	
+            }
+			
+			*/
 
 			// Register de serviceimplementationid in the DB
 			String serviceprocessid = thomasBD.AddNewProcess(registerProcess.getServiceModel(), registerProcess.getServiceID(),registerProcess.getAgentID());

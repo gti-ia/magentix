@@ -105,7 +105,7 @@
      */
     public InformAgentRoleStub(org.apache.axis2.context.ConfigurationContext configurationContext) throws org.apache.axis2.AxisFault {
         
-                    this(configurationContext,"http://localhost:8080/omsservices/services/AcquireRole" );
+                    this(configurationContext,"http://localhost:8080/omsservices/services/InformAgentRole" );
                 
     }
 
@@ -114,7 +114,7 @@
      */
     public InformAgentRoleStub() throws org.apache.axis2.AxisFault {
         
-                    this("http://localhost:8080/omsservices/services/AcquireRole" );
+                    this("http://localhost:8080/omsservices/services/InformAgentRole" );
                 
     }
 
@@ -424,7 +424,7 @@
         }
         return false;
     }
-     //http://localhost:8080/omsservices/services/AcquireRole
+     //http://localhost:8080/omsservices/services/InformAgentRole
         public static class ExtensionMapper{
 
           public static java.lang.Object getTypeObject(java.lang.String namespaceURI,
