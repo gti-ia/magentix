@@ -43,6 +43,7 @@ CREATE TABLE `thomas`.`serviceprocessid` (
   `servicenumid` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
 `serviceprofileid` TEXT  NOT NULL,
 `processname` TEXT  NOT NULL,
+`providername` TEXT  NOT NULL,
   PRIMARY KEY (`servicenumid`)
 )
 ENGINE=InnoDB DEFAULT CHARSET=latin1;
