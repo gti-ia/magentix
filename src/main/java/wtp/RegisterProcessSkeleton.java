@@ -71,7 +71,8 @@ public class RegisterProcessSkeleton {
 
 		
 		wtp.RegisterProcessResponse response = new wtp.RegisterProcessResponse();
-
+		boolean hasRole = false;
+		
 		if (DEBUG) {
 			System.out.println("RegisterProcess Service :");
 			System.out.println("***AgentID... " + registerProcess.getAgentID());
@@ -202,7 +203,7 @@ public class RegisterProcessSkeleton {
 						roleList = role; 
 					}
 					else{
-						roleList = roleList+", "+role;
+						roleList = roleList+" "+role;
 					}
 			
 				}
@@ -212,89 +213,97 @@ public class RegisterProcessSkeleton {
 			
 			//LLAMADA AL OMS
 			try{
-			InformAgentRoleStub stub = new InformAgentRoleStub();
-			wtp.InformAgentRoleStub.InformAgentRole agentrole = new wtp.InformAgentRoleStub.InformAgentRole();
-			agentrole.setAgentID(registerProcess.getAgentID());
-			agentrole.setRequestedAgentID(registerProcess.getAgentID());
+				InformAgentRoleStub stub = new InformAgentRoleStub();
+				wtp.InformAgentRoleStub.InformAgentRole agentrole = new wtp.InformAgentRoleStub.InformAgentRole();
+				agentrole.setAgentID(registerProcess.getAgentID());
+				agentrole.setRequestedAgentID(registerProcess.getAgentID());
 			
-			wtp.InformAgentRoleStub.InformAgentRoleResponse res = new  wtp.InformAgentRoleStub.InformAgentRoleResponse();
-			res.localRoleUnitList = stub.InformAgentRole(agentrole).getRoleUnitList();
-			res.localStatus = "OK";
-			res.localErrorValue = "";
-			System.out.println("Role Unit List: "+res.localRoleUnitList);
+				wtp.InformAgentRoleStub.InformAgentRoleResponse res = new  wtp.InformAgentRoleStub.InformAgentRoleResponse();
+				res.localRoleUnitList = stub.InformAgentRole(agentrole).getRoleUnitList();
+				res.localStatus = "OK";
+				res.localErrorValue = "";
+				
+				System.out.println("OMS Role Unit List: "+res.localRoleUnitList);
+				String OmsRoleList = "";
+				
+				String list = res.localRoleUnitList.replace("[", "");
+				list = list.replace("]", "");
+				StringTokenizer Token = new StringTokenizer(list);
+				String unitandrole = Token.nextToken(")");
+				System.out.println("unitandrole: "+unitandrole);
+				
+				StringTokenizer Tokenrole = new StringTokenizer(unitandrole);
+				String role = Tokenrole.nextToken(",");
+				
+				role = role.replace("(", "");
+				System.out.println("role: "+role);
+				
+				OmsRoleList = role;
+				
+				while(Token.hasMoreTokens()){
+					
+					unitandrole = Token.nextToken();
+					System.out.println("unitandrole: "+unitandrole);
+					
+					Tokenrole = new StringTokenizer(unitandrole);
+					role = Tokenrole.nextToken(",");
+					//role = Tokenrole.nextToken();
+					role = role.replace("(", "");
+					System.out.println("role: "+role);
+					OmsRoleList = OmsRoleList+" "+role;
+					if(roleList.contains(role)){
+						hasRole=true;
+					}
+						
+				}
+				
+				
 			}catch(Exception e){
 				
 			}
 			
-			/*System.out.println("Call to InformAgentRole ...");
-			
-			try{
-				
-				// create a kb
-				OWLKnowledgeBase kbomsquery = OWLFactory.createKB();
-				
-				// create an execution engine
-				ProcessExecutionEngine exec = OWLSFactory.createExecutionEngine();
-				
-				Service InformAgentRoleService = kbomsquery.readService("http://localhost:8080/omsservices/OMSservices/owl/owls/InformAgentRoleProcess.owl");		
-			
-				//get the process for the server
-				Process InformAgentRoleProcess = InformAgentRoleService.getProcess();
-				
-				//initialize the input values to be empty
-				ValueMap values = new ValueMap();
-		
-				//get the input values
-				values.setDataValue(InformAgentRoleProcess.getInput("AgentID"),registerProcess.getAgentID() );
-				values.setDataValue(InformAgentRoleProcess.getInput("RequestedAgentID"), registerProcess.getAgentID());
-				
-				System.out.println("Executing... "+values.getValues().toString());
-				values = exec.execute(InformAgentRoleProcess, values);
-				System.out.println("Values obtained... :"+values.toString());
-		
-                        
-            }catch(Exception e){
-            	e.printStackTrace();
-            	
-            }
-			
-			*/
+			if(hasRole){
 
-			// Register de serviceimplementationid in the DB
-			String serviceprocessid = thomasBD.AddNewProcess(registerProcess.getServiceModel(), registerProcess.getServiceID(),registerProcess.getAgentID());
+				// Register de serviceimplementationid in the DB
+				String serviceprocessid = thomasBD.AddNewProcess(registerProcess.getServiceModel(), registerProcess.getServiceID(),registerProcess.getAgentID());
 			
-			/////////// 
-			///JENA////
-			///////////
+				/////////// 
+				///JENA////
+				///////////
 			
-			if (serviceprocessid != null) {
+				if (serviceprocessid != null) {
 			
-			m.read(registerProcess.getServiceModel());
-			m.commit();
+					m.read(registerProcess.getServiceModel());
+					m.commit();
 
-			if (DEBUG) {
-				m.write(System.out, "N3");
-			}
+					if (DEBUG) {
+						m.write(System.out, "N3");
+					}
 
-			try {
-				if (DEBUG) {
-					System.out.println("Closing DB connection...");
+					try {
+						if (DEBUG) {
+							System.out.println("Closing DB connection...");
+						}
+						conn.close();
+					} catch (Exception e) {
+						e.printStackTrace();
+						System.exit(1);
+					}
+
+					// Close the model
+					m.close();
+					response.setServiceModelID(serviceprocessid);
+					response.set_return(1);
+				
+				} else {
+					response.setServiceModelID("[Error]: the service profile does not exist or the process is already registered");
+					response.set_return(0);
 				}
-				conn.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-				System.exit(1);
+			
+			} else {
+				response.setServiceModelID("[Error]: the agent does not have the appropiated role");
+				response.set_return(0);
 			}
-
-			// Close the model
-			m.close();
-			response.setServiceModelID(serviceprocessid);
-			response.set_return(1);
-
-		} else {
-			response.setServiceModelID("[Error]: the service profile does not exist or the process is already registered");
-			response.set_return(0);
-		}
 
 		return (response);
 
