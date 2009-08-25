@@ -205,10 +205,10 @@ import wtp.PlannerStub;
 
 				//Service Ranking is not implemented, ranking is always 5
 				if(controws==1){
-					servicesList = ServiceID + ", 5 "; 
+					servicesList = ServiceID + " 5 "; 
 				}
 				else{
-					servicesList = servicesList + ":" + ServiceID + ", 5";
+					servicesList = servicesList + ":" + ServiceID + " 5";
 				}
 				
 			}//end for 
