@@ -33,16 +33,29 @@
     <profile:hasOutput rdf:resource="#SearchCheapHotelOutputHotel"/>
 <role_param:hasLocal>
    <role:role_list rdf:ID="provider_list">
-            <role:role_atom rdf:ID="Agency"/>  
-	    <role:role_atom rdf:ID="TravelProvider"/>  	
-	    <role:role_atom rdf:ID="TourProvider"/>   
+   		<role:role_atom rdf:ID="provider">
+			<role:isDefinedIn rdf:ID="travelagency"/>
+		</role:role_atom>
+        <role:role_atom rdf:ID="Agency">
+			<role:isDefinedIn rdf:ID="UnitOne"/>
+		</role:role_atom>
+		<role:role_atom rdf:ID="TourProvider">
+			<role:isDefinedIn rdf:ID="UnitOne"/>
+		</role:role_atom>
+		<role:role_atom rdf:ID="TravelProvider">
+			<role:isDefinedIn rdf:ID="UnitOne"/>
+		</role:role_atom> 
 </role:role_list>
 </role_param:hasLocal>
 
 <role_param:hasLocal>
    <role:role_list rdf:ID="client_list">
-            <role:role_atom rdf:ID="Tourist"/>  
-	    <role:role_atom rdf:ID="Traveler"/>  	   
+   		<role:role_atom rdf:ID="Tourist">
+			<role:isDefinedIn rdf:ID="UnitOne"/>
+		</role:role_atom> 
+		<role:role_atom rdf:ID="Traveler">
+			<role:isDefinedIn rdf:ID="UnitOne"/>
+		</role:role_atom> 	   
 </role:role_list>
 </role_param:hasLocal>
 </profile:Profile>

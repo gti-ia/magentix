@@ -58,8 +58,7 @@ public class GetProcessSkeleton {
              			System.out.println("***AgentID... " + getProcess.getAgentID());
              		}
          
-                	 persistence.DataBaseInterface thomasBD = new DataBaseInterface();
-              		 String profileurl = thomasBD.GetServiceProfileURL(getProcess.getServiceID());
+                	 
 
                 	 ////////////////
               		 //////JENA//////
@@ -110,74 +109,28 @@ public class GetProcessSkeleton {
         			Model base = maker.createModel("http://example.org/ontologias");
         			OntModel m = ModelFactory.createOntologyModel(getModelSpec(maker),base);
 
-        			// Query to get the set of allowed roles
-        			String queryStringServiceRoles = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
-        					+ "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>"
-        					+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
-        					+ "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
-        					+ "prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>" 
-        					+ "prefix actor: <http://www.daml.org/services/owl-s/1.1/ActorDefault.owl#>"
-        					+ "select ?x "
-        					+ "where {"
-        					+ "      ?x rdf:subject <"+ profileurl + "#client_list"+">" + "      }";
-
-        			Query queryServiceRoles = QueryFactory.create(queryStringServiceRoles);
-
-        			if (DEBUG) {
-        				System.out.println(queryServiceRoles.toString());
-        			}
-
-        			// Execute the query and obtain results
-        			QueryExecution qeService = QueryExecutionFactory.create( queryServiceRoles, m);
-        			ResultSet resultServiceRoles = qeService.execSelect();
-        			String roleList=null;
+        			persistence.DataBaseInterface thomasBD = new DataBaseInterface();
+             		String urlprofile = thomasBD.GetServiceProfileURL(getProcess.getServiceID());
+        			String roleList = getProfileRoles(urlprofile, m);
+        			boolean hasRole = checkRole(getProcess.getAgentID(), getProcess.getAgentID(), roleList);
         			
-        			if (resultServiceRoles != null) {
-        				int controws=0;
-        				
-        				
-        				for (Iterator j = resultServiceRoles; resultServiceRoles.hasNext();) {
-        					controws++;
-        					String result = resultServiceRoles.next().toString();
-        					if (DEBUG) {
-        						System.out.println("Role: " + result);
-        					}
-                	 
-        					StringTokenizer Tok = new StringTokenizer(result);
-        					String url = Tok.nextToken("<");
-        					url= Tok.nextToken("#");
-        					String role = Tok.nextToken(">");
-        					role = role.replace("#", "");
-
-        					if (DEBUG) {
-        						System.out.println("Role: " + role);
-        					}
-        					
-        				
-        					if(controws==1){
-        						roleList = role; 
-        					}
-        					else{
-        						roleList = roleList+", "+role;
-        					}
-        			
+        			if(hasRole){
+        				String processlist = thomasBD.GetServiceProcessFromProfile(getProcess.getServiceID());
+        				if(processlist!=null){
+        					response.setProcessList(processlist);
+        					response.set_return(1);
+        				}
+        				else{
+        					response.setProcessList("[Error] The service id does not exist");
+        					response.set_return(0);
         				}
         			}
+        			else{
+        				response.setProcessList("[Error]: the agent does not have the appropiated role");
+    					response.set_return(0);
+        			}
         			
-        			System.out.println("Role list: "+roleList);
-        			//LLAMADA AL OMS
-        			
-        			
-        			String processlist = thomasBD.GetServiceProcessFromProfile(getProcess.getServiceID());
-             		if(processlist!=null){
-             			response.setProcessList(processlist);
-             			response.set_return(1);
-             		}
-             		else{
-             			response.setProcessList("[Error] The service id does not exist");
-             			response.set_return(0);
-             		}
-             		return (response);
+        			return (response);
         }
      
  	public OntModelSpec getModelSpec(ModelMaker maker) {
@@ -189,6 +142,145 @@ public class GetProcessSkeleton {
 
 		return spec;
 	}
+ 	
+ 	
+ 	String getProfileRoles(String urlprofile, OntModel m){
+ 		
+ 		// Query to get the set of allowed provider roles
+ 		String queryStringServiceRoles = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
+ 				+ "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>"
+ 				+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
+ 				+ "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
+ 				+ "prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>" 
+ 				+ "prefix actor: <http://www.daml.org/services/owl-s/1.1/ActorDefault.owl#>"
+ 				+ "select ?x "
+ 				+ "where {"
+ 				+ "      ?x rdf:subject <"+ urlprofile + "#provider_list"+">" + "      }";
+
+ 		Query queryServiceRoles = QueryFactory.create(queryStringServiceRoles);
+
+ 		if (DEBUG) {
+ 			System.out.println(queryServiceRoles.toString());
+ 		}
+
+ 		// Execute the query and obtain results
+ 		QueryExecution qeService = QueryExecutionFactory.create( queryServiceRoles, m);
+ 		ResultSet resultServiceRoles = qeService.execSelect();
+ 		String roleList=null;
+ 		String organizationList=null;
+ 		
+ 		if (resultServiceRoles != null) {
+ 			int controws=0;
+ 			
+ 			
+ 			for (Iterator j = resultServiceRoles; resultServiceRoles.hasNext();) {
+ 				controws++;
+ 				String result = resultServiceRoles.next().toString();
+ 				if (DEBUG) {
+ 					System.out.println("Role: " + result);
+ 				}
+ 		 
+ 				StringTokenizer Tok = new StringTokenizer(result);
+ 				String url = Tok.nextToken("<");
+ 				url= Tok.nextToken("#");
+ 				String role = Tok.nextToken(">");
+ 				role = role.replace("#", "");
+
+ 				if (DEBUG) {
+ 					System.out.println("Role: " + role);
+ 				}
+ 				
+ 				// Query to get the set of allowed provider roles
+ 				String queryStringOrganization = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
+ 						+ "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>"
+ 						+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
+ 						+ "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
+ 						+ "prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>" 
+ 						+ "prefix actor: <http://www.daml.org/services/owl-s/1.1/ActorDefault.owl#>"
+ 						+ "select ?x "
+ 						+ "where {"
+ 						+ "      <"+ urlprofile + "#"+role+">" + " rdf:object "+ "?x}";
+
+ 				Query queryOrganization = QueryFactory.create(queryStringOrganization);
+
+ 				if (DEBUG) {
+ 					System.out.println(queryOrganization.toString());
+ 				}
+
+ 				// Execute the query and obtain results
+ 				QueryExecution qeOrganization = QueryExecutionFactory.create( queryOrganization, m);
+ 				ResultSet resultOrganization = qeOrganization.execSelect();
+ 				String resultOrg = resultOrganization.next().toString();
+ 				
+ 				StringTokenizer TokOrg = new StringTokenizer(resultOrg);
+ 				String urlOrg = TokOrg.nextToken("<");
+ 				urlOrg= TokOrg.nextToken("#");
+ 				String org = TokOrg.nextToken(">");
+ 				org = org.replace("#", "");
+
+ 				if (DEBUG) {
+ 					System.out.println("Organization: " + org);
+ 				}
+ 				
+ 				if(controws==1){
+ 					roleList = "("+role+","+org+")"; 
+ 					
+ 				}
+ 				else{
+ 					roleList = roleList+" "+"("+role+","+org+")";
+ 				}
+ 		
+ 			}
+ 		}
+ 		
+ 		System.out.println("Role list: "+roleList);
+ 		return(roleList);
+ 	}
+ 		
+ 		boolean checkRole(String AgentID, String RequestedAgentID, String roleList){
+ 			
+ 			boolean hasRole = false;
+ 			try {
+ 				InformAgentRoleStub stub = new InformAgentRoleStub();
+ 				wtp.InformAgentRoleStub.InformAgentRole agentrole = new wtp.InformAgentRoleStub.InformAgentRole();
+ 				agentrole.setAgentID(AgentID);
+ 				agentrole.setRequestedAgentID(RequestedAgentID);
+
+ 				wtp.InformAgentRoleStub.InformAgentRoleResponse res = new wtp.InformAgentRoleStub.InformAgentRoleResponse();
+ 				res.localRoleUnitList = stub.InformAgentRole(agentrole)
+ 						.getRoleUnitList();
+ 				res.localStatus = "OK";
+ 				res.localErrorValue = "";
+
+ 				System.out.println("OMS Role Unit List: " + res.localRoleUnitList);
+ 			
+ 				String omslist = res.localRoleUnitList.replace("[", "");
+ 				omslist = omslist.replace("]", "");
+ 				
+ 				StringTokenizer Token = new StringTokenizer(roleList);
+ 				String unitandrole;
+
+ 				
+ 				while (Token.hasMoreTokens()) {
+
+ 					unitandrole = Token.nextToken(")");
+ 					unitandrole = unitandrole.concat(")");
+ 					System.out.println("unitandrole: " + unitandrole);
+
+ 					
+ 					if (omslist.contains(unitandrole)) {
+ 						hasRole = true;
+ 					}
+
+ 				}
+ 				
+ 				
+ 			} catch (Exception e) {
+ 				e.printStackTrace();
+ 			}
+
+ 			return (hasRole);
+ 		}
      
     }
     

@@ -160,16 +160,7 @@ public class RegisterProfileSkeleton {
 			}
 			response.setServiceID("[Error] the service profile exists");
 			response.set_return(0);
-		}
-		
-		
-		
-		
-		
-		
-		
-		
-		
+		}	
 		
 		return (response);
 	

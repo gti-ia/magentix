@@ -20,10 +20,6 @@
 <rdf:RDF xmlns:rdf="&rdf;" xmlns:rdfs="&rdfs;" xmlns:owl="&owl;" xmlns:xsd="&xsd;#" 
    xmlns:service="&service;" xmlns:process="&process;" xmlns:profile="&profile;" xmlns:grounding="&grounding;" xmlns:role="&role;#" xmlns:actor="&actor;" xmlns:list="&list;" xmlns:swrl="&swrl;" xmlns:role_param="&role_param;" xmlns:mind="&mind;#" >
 
-<owl:Ontology rdf:about="">
-	<owl:imports rdf:resource="http://localhost:8080/sfservices/THservices/owl/owls/role_param.owl"/>
-	<owl:imports rdf:resource="http://localhost:8080/sfservices/THservices/owl/owls/role.owl"/>
-</owl:Ontology>
 
 <profile:Profile rdf:ID="SearchCheapHotelProfile">
     <service:presentedBy rdf:resource="#SearchCheapHotelService"/>
@@ -37,17 +33,29 @@
     <profile:hasOutput rdf:resource="#SearchCheapHotelOutputHotel"/>
 <role_param:hasLocal>
    <role:role_list rdf:ID="provider_list">
-            <role:role_atom rdf:ID="Agency"/>  
-	    <role:role_atom rdf:ID="TravelProvider"/>  	
-	    <role:role_atom rdf:ID="TourProvider"/> 
-	    <role:role_atom rdf:ID="provider"/>   
+   		<role:role_atom rdf:ID="provider">
+			<role:isDefinedIn rdf:ID="travelagency"/>
+		</role:role_atom>
+        <role:role_atom rdf:ID="Agency">
+			<role:isDefinedIn rdf:ID="UnitOne"/>
+		</role:role_atom>
+		<role:role_atom rdf:ID="TourProvider">
+			<role:isDefinedIn rdf:ID="UnitOne"/>
+		</role:role_atom>
+		<role:role_atom rdf:ID="TravelProvider">
+			<role:isDefinedIn rdf:ID="UnitOne"/>
+		</role:role_atom> 
 </role:role_list>
 </role_param:hasLocal>
 
 <role_param:hasLocal>
    <role:role_list rdf:ID="client_list">
-            <role:role_atom rdf:ID="Tourist"/>  
-	    <role:role_atom rdf:ID="Traveler"/>  	   
+   		<role:role_atom rdf:ID="Tourist">
+			<role:isDefinedIn rdf:ID="UnitOne"/>
+		</role:role_atom> 
+		<role:role_atom rdf:ID="Traveler">
+			<role:isDefinedIn rdf:ID="UnitOne"/>
+		</role:role_atom> 	   
 </role:role_list>
 </role_param:hasLocal>
 </profile:Profile>

@@ -72,6 +72,7 @@ public class RegisterProcessSkeleton {
 		
 		wtp.RegisterProcessResponse response = new wtp.RegisterProcessResponse();
 		boolean hasRole = false;
+		String roleList;
 		
 		if (DEBUG) {
 			System.out.println("RegisterProcess Service :");
@@ -79,7 +80,6 @@ public class RegisterProcessSkeleton {
 			System.out.println("***ServiceID... "+ registerProcess.getServiceID());
 			System.out.println("***ServiceModel... "+ registerProcess.getServiceModel());
 		}
-
 
 			/////////////
 			////JENA/////
@@ -126,14 +126,14 @@ public class RegisterProcessSkeleton {
 				e.printStackTrace();
 				System.exit(1);
 			}
-
+			
+			// use the model maker to get the base model as a persistent model
+			// strict=false, so we get an existing model by that name if it
+			// exists or create a new one
 			ModelMaker maker = ModelFactory.createModelRDBMaker(conn);
 			ModelRDB model = (ModelRDB) maker.openModel("http://example.org/ontologias");
 
-			// use the model maker to get the base model as a persistent model
-			// strict=false, so we get an existing model by that name if it
-			// exists
-			// or create a new one
+			
 			String urlprocess = registerProcess.getServiceModel();
 			StringTokenizer Tok = new StringTokenizer(urlprocess);
 			urlprocess = Tok.nextToken("#");
@@ -150,117 +150,11 @@ public class RegisterProcessSkeleton {
 			OntModelSpec spec = new OntModelSpec(OntModelSpec.OWL_MEM);
 			spec.setImportModelMaker(maker);
 			m = ModelFactory.createOntologyModel(spec, model);
-
 			
 			persistence.DataBaseInterface thomasBD = new DataBaseInterface();
 			String urlprofile=thomasBD.GetServiceProfileURL(registerProcess.getServiceID());
-			
-			// Query to get the set of allowed provider roles
-			String queryStringServiceRoles = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
-					+ "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>"
-					+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
-					+ "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
-					+ "prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>" 
-					+ "prefix actor: <http://www.daml.org/services/owl-s/1.1/ActorDefault.owl#>"
-					+ "select ?x "
-					+ "where {"
-					+ "      ?x rdf:subject <"+ urlprofile + "#provider_list"+">" + "      }";
-
-			Query queryServiceRoles = QueryFactory.create(queryStringServiceRoles);
-
-			if (DEBUG) {
-				System.out.println(queryServiceRoles.toString());
-			}
-
-			// Execute the query and obtain results
-			QueryExecution qeService = QueryExecutionFactory.create( queryServiceRoles, m);
-			ResultSet resultServiceRoles = qeService.execSelect();
-			String roleList=null;
-			
-			if (resultServiceRoles != null) {
-				int controws=0;
-				
-				
-				for (Iterator j = resultServiceRoles; resultServiceRoles.hasNext();) {
-					controws++;
-					String result = resultServiceRoles.next().toString();
-					if (DEBUG) {
-						System.out.println("Role: " + result);
-					}
-        	 
-				    Tok = new StringTokenizer(result);
-					String url = Tok.nextToken("<");
-					url= Tok.nextToken("#");
-					String role = Tok.nextToken(">");
-					role = role.replace("#", "");
-
-					if (DEBUG) {
-						System.out.println("Role: " + role);
-					}
-					
-					
-					if(controws==1){
-						roleList = role; 
-					}
-					else{
-						roleList = roleList+" "+role;
-					}
-			
-				}
-			}
-			
-			System.out.println("Role list: "+roleList);
-			
-			//LLAMADA AL OMS
-			try{
-				InformAgentRoleStub stub = new InformAgentRoleStub();
-				wtp.InformAgentRoleStub.InformAgentRole agentrole = new wtp.InformAgentRoleStub.InformAgentRole();
-				agentrole.setAgentID(registerProcess.getAgentID());
-				agentrole.setRequestedAgentID(registerProcess.getAgentID());
-			
-				wtp.InformAgentRoleStub.InformAgentRoleResponse res = new  wtp.InformAgentRoleStub.InformAgentRoleResponse();
-				res.localRoleUnitList = stub.InformAgentRole(agentrole).getRoleUnitList();
-				res.localStatus = "OK";
-				res.localErrorValue = "";
-				
-				System.out.println("OMS Role Unit List: "+res.localRoleUnitList);
-				String OmsRoleList = "";
-				
-				String list = res.localRoleUnitList.replace("[", "");
-				list = list.replace("]", "");
-				StringTokenizer Token = new StringTokenizer(list);
-				String unitandrole = Token.nextToken(")");
-				System.out.println("unitandrole: "+unitandrole);
-				
-				StringTokenizer Tokenrole = new StringTokenizer(unitandrole);
-				String role = Tokenrole.nextToken(",");
-				
-				role = role.replace("(", "");
-				System.out.println("role: "+role);
-				
-				OmsRoleList = role;
-				
-				while(Token.hasMoreTokens()){
-					
-					unitandrole = Token.nextToken();
-					System.out.println("unitandrole: "+unitandrole);
-					
-					Tokenrole = new StringTokenizer(unitandrole);
-					role = Tokenrole.nextToken(",");
-					//role = Tokenrole.nextToken();
-					role = role.replace("(", "");
-					System.out.println("role: "+role);
-					OmsRoleList = OmsRoleList+" "+role;
-					if(roleList.contains(role)){
-						hasRole=true;
-					}
-						
-				}
-				
-				
-			}catch(Exception e){
-				
-			}
+			roleList = getProfileRoles(urlprofile, m);
+			hasRole = checkRole(registerProcess.getAgentID(), registerProcess.getAgentID(), roleList);
 			
 			if(hasRole){
 
@@ -309,6 +203,144 @@ public class RegisterProcessSkeleton {
 
 	}
 	
+	
+String getProfileRoles(String urlprofile, OntModel m){
+	
+	// Query to get the set of allowed provider roles
+	String queryStringServiceRoles = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
+			+ "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>"
+			+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
+			+ "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
+			+ "prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>" 
+			+ "prefix actor: <http://www.daml.org/services/owl-s/1.1/ActorDefault.owl#>"
+			+ "select ?x "
+			+ "where {"
+			+ "      ?x rdf:subject <"+ urlprofile + "#provider_list"+">" + "      }";
 
+	Query queryServiceRoles = QueryFactory.create(queryStringServiceRoles);
 
+	if (DEBUG) {
+		System.out.println(queryServiceRoles.toString());
+	}
+
+	// Execute the query and obtain results
+	QueryExecution qeService = QueryExecutionFactory.create( queryServiceRoles, m);
+	ResultSet resultServiceRoles = qeService.execSelect();
+	String roleList=null;
+	String organizationList=null;
+	
+	if (resultServiceRoles != null) {
+		int controws=0;
+		
+		
+		for (Iterator j = resultServiceRoles; resultServiceRoles.hasNext();) {
+			controws++;
+			String result = resultServiceRoles.next().toString();
+			if (DEBUG) {
+				System.out.println("Role: " + result);
+			}
+	 
+			StringTokenizer Tok = new StringTokenizer(result);
+			String url = Tok.nextToken("<");
+			url= Tok.nextToken("#");
+			String role = Tok.nextToken(">");
+			role = role.replace("#", "");
+
+			if (DEBUG) {
+				System.out.println("Role: " + role);
+			}
+			
+			// Query to get the set of allowed provider roles
+			String queryStringOrganization = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
+					+ "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>"
+					+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
+					+ "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
+					+ "prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>" 
+					+ "prefix actor: <http://www.daml.org/services/owl-s/1.1/ActorDefault.owl#>"
+					+ "select ?x "
+					+ "where {"
+					+ "      <"+ urlprofile + "#"+role+">" + " rdf:object "+ "?x}";
+
+			Query queryOrganization = QueryFactory.create(queryStringOrganization);
+
+			if (DEBUG) {
+				System.out.println(queryOrganization.toString());
+			}
+
+			// Execute the query and obtain results
+			QueryExecution qeOrganization = QueryExecutionFactory.create( queryOrganization, m);
+			ResultSet resultOrganization = qeOrganization.execSelect();
+			String resultOrg = resultOrganization.next().toString();
+			
+			StringTokenizer TokOrg = new StringTokenizer(resultOrg);
+			String urlOrg = TokOrg.nextToken("<");
+			urlOrg= TokOrg.nextToken("#");
+			String org = TokOrg.nextToken(">");
+			org = org.replace("#", "");
+
+			if (DEBUG) {
+				System.out.println("Organization: " + org);
+			}
+			
+			if(controws==1){
+				roleList = "("+role+","+org+")"; 
+				
+			}
+			else{
+				roleList = roleList+" "+"("+role+","+org+")";
+			}
+	
+		}
+	}
+	
+	System.out.println("Role list: "+roleList);
+	return(roleList);
+}
+	
+	boolean checkRole(String AgentID, String RequestedAgentID, String roleList){
+		
+		boolean hasRole = false;
+		try {
+			InformAgentRoleStub stub = new InformAgentRoleStub();
+			wtp.InformAgentRoleStub.InformAgentRole agentrole = new wtp.InformAgentRoleStub.InformAgentRole();
+			agentrole.setAgentID(AgentID);
+			agentrole.setRequestedAgentID(RequestedAgentID);
+
+			wtp.InformAgentRoleStub.InformAgentRoleResponse res = new wtp.InformAgentRoleStub.InformAgentRoleResponse();
+			res.localRoleUnitList = stub.InformAgentRole(agentrole)
+					.getRoleUnitList();
+			res.localStatus = "OK";
+			res.localErrorValue = "";
+
+			System.out.println("OMS Role Unit List: " + res.localRoleUnitList);
+		
+			String omslist = res.localRoleUnitList.replace("[", "");
+			omslist = omslist.replace("]", "");
+			
+			StringTokenizer Token = new StringTokenizer(roleList);
+			String unitandrole;
+
+			
+			while (Token.hasMoreTokens()) {
+
+				unitandrole = Token.nextToken(")");
+				unitandrole = unitandrole.concat(")");
+				System.out.println("unitandrole: " + unitandrole);
+
+				
+				if (omslist.contains(unitandrole)) {
+					hasRole = true;
+				}
+
+			}
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return (hasRole);
+	}
+
+	
 }
