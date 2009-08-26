@@ -51,9 +51,12 @@
 	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
   </owl:ObjectProperty>
   
-  <owl:Class rdf:ID="organization"/>
+  <owl:Class rdf:ID="organization">
+ 	 <rdf:type rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  </owl:ObjectProperty>
   
-  
+  <organization rdf:ID="travelagency"/>
+  <organization rdf:ID="UnitOne"/>
 
 </rdf:RDF>
 

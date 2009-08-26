@@ -34,16 +34,16 @@
 <role_param:hasLocal>
    <role:role_list rdf:ID="provider_list">
    		<role:role_atom rdf:ID="provider">
-			<role:isDefinedIn rdf:ID="travelagency"/>
+			<role:isDefinedIn rdf:about="http://localhost:8080/sfservices/THservices/owl/owls/role.owl#travelagency"/>
 		</role:role_atom>
         <role:role_atom rdf:ID="Agency">
-			<role:isDefinedIn rdf:ID="UnitOne"/>
+			<role:isDefinedIn rdf:about="http://localhost:8080/sfservices/THservices/owl/owls/role.owl#UnitOne"/>
 		</role:role_atom>
 		<role:role_atom rdf:ID="TourProvider">
-			<role:isDefinedIn rdf:ID="UnitOne"/>
+			<role:isDefinedIn rdf:about="http://localhost:8080/sfservices/THservices/owl/owls/role.owl#UnitOne"/>
 		</role:role_atom>
 		<role:role_atom rdf:ID="TravelProvider">
-			<role:isDefinedIn rdf:ID="UnitOne"/>
+			<role:isDefinedIn rdf:about="http://localhost:8080/sfservices/THservices/owl/owls/role.owl#UnitOne"/>
 		</role:role_atom> 
 </role:role_list>
 </role_param:hasLocal>
@@ -51,10 +51,10 @@
 <role_param:hasLocal>
    <role:role_list rdf:ID="client_list">
    		<role:role_atom rdf:ID="Tourist">
-			<role:isDefinedIn rdf:ID="UnitOne"/>
+			<role:isDefinedIn rdf:about="http://localhost:8080/sfservices/THservices/owl/owls/role.owl#UnitOne"/>
 		</role:role_atom> 
 		<role:role_atom rdf:ID="Traveler">
-			<role:isDefinedIn rdf:ID="UnitOne"/>
+			<role:isDefinedIn rdf:about="http://localhost:8080/sfservices/THservices/owl/owls/role.owl#UnitOne"/>
 		</role:role_atom> 	   
 </role:role_list>
 </role_param:hasLocal>
