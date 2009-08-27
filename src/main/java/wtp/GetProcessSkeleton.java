@@ -155,7 +155,7 @@ public class GetProcessSkeleton {
  				+ "prefix actor: <http://www.daml.org/services/owl-s/1.1/ActorDefault.owl#>"
  				+ "select ?x "
  				+ "where {"
- 				+ "      ?x rdf:subject <"+ urlprofile + "#provider_list"+">" + "      }";
+ 				+ "      ?x rdf:subject <"+ urlprofile + "#client_list"+">" + "      }";
 
  		Query queryServiceRoles = QueryFactory.create(queryStringServiceRoles);
 
