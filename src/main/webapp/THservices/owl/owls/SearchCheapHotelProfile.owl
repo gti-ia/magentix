@@ -56,6 +56,9 @@
 		<role:role_atom rdf:ID="Traveler">
 			<role:isDefinedIn rdf:about="http://localhost:8080/sfservices/THservices/owl/owls/role.owl#UnitOne"/>
 		</role:role_atom> 	   
+		<role:role_atom rdf:ID="customer">
+			<role:isDefinedIn rdf:about="http://localhost:8080/sfservices/THservices/owl/owls/role.owl#travelagency"/>
+		</role:role_atom> 
 </role:role_list>
 </role_param:hasLocal>
 </profile:Profile>
