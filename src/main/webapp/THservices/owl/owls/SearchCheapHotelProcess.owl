@@ -56,37 +56,30 @@
     	<process:hasInput rdf:resource="#SearchCheapHotelInputCity"/>
    	<process:hasOutput rdf:resource="#SearchCheapHotelOutputHotelCompany"/>
 	<process:hasOutput rdf:resource="#SearchCheapHotelOutputHotel"/>
-	
-
-
-
-
-
-
 
 </process:AtomicProcess>
 
 
 <process:Input rdf:ID="SearchCheapHotelInputCategory">
      <rdfs:label>InputCategory</rdfs:label>
-     <process:parameterType rdf:datatype="&xsd;#anyURI">&serv;#SearchCheapHotelInputCategoryOnt</process:parameterType>
+     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
 </process:Input>
 <process:Input rdf:ID="SearchCheapHotelInputCountry">
      <rdfs:label>InputCountry</rdfs:label>
-     <process:parameterType rdf:datatype="&xsd;#anyURI">&serv;#SearchCheapHotelInputCountryOnt</process:parameterType>
+     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
 </process:Input>
 <process:Input rdf:ID="SearchCheapHotelInputCity">
      <rdfs:label>InputCity</rdfs:label>
-     <process:parameterType rdf:datatype="&xsd;#anyURI">&serv;#SearchCheapHotelInputCityOnt</process:parameterType>
+     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
 </process:Input>
         
 <process:Output rdf:ID="SearchCheapHotelOutputHotelCompany">
     <rdfs:label>OutputHotelCompany</rdfs:label>
-    <process:parameterType rdf:datatype="&xsd;#anyURI">&serv;#SearchCheapHotelOutputHotelCompanyOnt</process:parameterType>
+    <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
 </process:Output>      
 <process:Output rdf:ID="SearchCheapHotelOutputHotel">
     <rdfs:label>OutputHotel</rdfs:label>
-    <process:parameterType rdf:datatype="&xsd;#anyURI">&serv;#SearchCheapHotelOutputHotelOnt</process:parameterType>
+    <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
 </process:Output> 
 
 <grounding:WsdlGrounding rdf:ID="SearchCheapHotelGrounding">

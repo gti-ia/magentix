@@ -1,28 +1,20 @@
 <?xml version="1.0"?>
 <rdf:RDF
     xmlns:expr="http://www.daml.org/services/owl-s/1.1/generic/Expression.owl#"
-    xmlns="http://www2.dfki.de/~babla/cascom/pddxml.owl#"
     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
     xmlns:owl="http://www.w3.org/2002/07/owl#"
-    xmlns:daml="http://www.daml.org/2001/03/daml+oil#"
     xmlns:list="http://www.daml.org/services/owl-s/1.2/generic/ObjectList.owl#"
     xmlns:swrl="http://www.w3.org/2003/11/swrl#"
-    xmlns:dc="http://purl.org/dc/elements/1.1/"
-    xml:base="http://localhost:8080/sfservices/THservices/owl/owls/owl.owl">
+    xml:base="http://localhost:8080/sfservices/THservices/owl/owls/role.owl">
 
- 
-  
-  <owl:Ontology rdf:about="">
-    
-  </owl:Ontology>
 
   <owl:Class rdf:ID="role_list">
         <rdfs:subClassOf>
                 <owl:Restriction>
                         <owl:allValuesFrom>
-                                <owl:Class rdf:ID="role_atom"/>
+                                <owl:Class rdf:about="#role_atom"/>
                         </owl:allValuesFrom>
                         <owl:onProperty rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#first"/>
                 </owl:Restriction>
@@ -37,26 +29,26 @@
         </rdfs:subClassOf>
   </owl:Class>
 
-  <owl:Class rdf:about="#role_atom">
+  <owl:Class rdf:ID="role_atom">
     <rdfs:subClassOf rdf:resource="http://www.w3.org/2003/11/swrl#Atom"/>
 	<rdfs:subClassOf>
 		<owl:Restriction>
 			<owl:onProperty rdf:resource="#isDefinedIn"/>
-			<owl:allValuesFrom rdf:resource="#organization"/>
+			<owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
 		</owl:Restriction>
 	</rdfs:subClassOf>
   </owl:Class>
+ 
+  <owl:Class rdf:ID="organization"/>
   
   <owl:ObjectProperty rdf:ID="isDefinedIn">
-	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+	<rdfs:domain rdf:resource="#role_atom"/>
+	<rdfs:range rdf:resource="#organization"/>
   </owl:ObjectProperty>
   
-  <owl:Class rdf:ID="organization">
- 	 <rdf:type rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
-  </owl:ObjectProperty>
+ 
+  <organization rdf:ID="travelagency">
   
-  <organization rdf:ID="travelagency"/>
-  <organization rdf:ID="UnitOne"/>
+  </organization>
 
 </rdf:RDF>
-
