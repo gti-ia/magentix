@@ -3,7 +3,7 @@ package es.upv.dsic.gti_ia.fipa;
 import java.io.Serializable;
 import java.util.Date;
 
-public class ACLMessage implements Serializable{
+public class ACLMessage implements Serializable, Cloneable{
 	/**
 	 * 
 	 */
@@ -232,4 +232,46 @@ public class ACLMessage implements Serializable{
 		else
 			return "";
 	}
+	
+	public Date getReplyByDate() {
+		if(reply_byInMillisec != 0)
+			return new Date(reply_byInMillisec);
+		else
+			return null;
+	}
+	
+	public synchronized Object clone() {
+		ACLMessage result;
+		
+		try{
+			result = (ACLMessage)super.clone();
+			
+		}catch(CloneNotSupportedException cnse) {
+			throw new InternalError(); // This should never happen
+		}
+		
+		return result;
+	}
+	
+	
+	public ACLMessage createReply() {
+		ACLMessage m = (ACLMessage)clone();
+		
+		m.setReceiver(getSender());
+		m.setLanguage(getLanguage());
+		m.setOntology(getOntology());
+		m.setProtocol(getProtocol());
+		m.setSender(null);
+		m.setInReplyTo(getReplyWith());
+		m.setConversationId(getConversationId());
+		m.setReplyByDate(null);
+		m.setContent("");
+		m.setEncoding("");
+		//#CUSTOM_EXCLUDE_BEGIN
+		//Set the Aclrepresentation of the reply message to the aclrepresentation of the sent message 
+	
+		//#CUSTOM_EXCLUDE_END
+		return m;
+	}
+	
 }
