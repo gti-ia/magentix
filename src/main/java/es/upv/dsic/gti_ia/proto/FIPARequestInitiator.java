@@ -37,11 +37,12 @@ public class FIPARequestInitiator {
 	
 	
 	
-	public FIPARequestInitiator(QueueAgent agent, ACLMessage msg, Sincro _sin)
+	public FIPARequestInitiator(QueueAgent agent, ACLMessage msg)//, Sincro _sin)
 	{
 		myAgent = agent;
 		requestmsg = msg;
-		this.sin = _sin;
+		//this.sin = _sin;
+		this.sin = agent.getSincro();
 		
 	}
 	
