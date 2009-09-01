@@ -6,7 +6,7 @@ import java.util.Date;
 
 
 @SuppressWarnings("unchecked")
-public class ACLMessage implements Serializable {
+public class ACLMessage implements Serializable, Cloneable {
 	/**
 	 * 
 	 */
@@ -244,7 +244,7 @@ public class ACLMessage implements Serializable {
 		}
 	}
 	/**
-	 * Añade un receiver a la lista. Útil para hacer multiples envios.
+	 * Aï¿½ade un receiver a la lista. ï¿½til para hacer multiples envios.
 	 * @param r
 	 * Devuelve -1, si el receiver ya estaba en la lista. 1 en caso contrario
 	 */
@@ -307,5 +307,40 @@ public class ACLMessage implements Serializable {
 
 	public void setReply_byInMillisec(long reply_byInMillisec) {
 		this.reply_byInMillisec = reply_byInMillisec;
+	}
+	
+
+	public synchronized Object clone() {
+		ACLMessage result;
+		
+		try{
+			result = (ACLMessage)super.clone();
+			
+		}catch(CloneNotSupportedException cnse) {
+			throw new InternalError(); // This should never happen
+		}
+		
+		return result;
+	}
+	
+	
+	public ACLMessage createReply() {
+		ACLMessage m = (ACLMessage)clone();
+		
+		m.setReceiver(getSender());
+		m.setLanguage(getLanguage());
+		m.setOntology(getOntology());
+		m.setProtocol(getProtocol());
+		m.setSender(null);
+		m.setInReplyTo(getReplyWith());
+		m.setConversationId(getConversationId());
+		m.setReplyByDate(null);
+		m.setContent("");
+		m.setEncoding("");
+		//#CUSTOM_EXCLUDE_BEGIN
+		//Set the Aclrepresentation of the reply message to the aclrepresentation of the sent message 
+	
+		//#CUSTOM_EXCLUDE_END
+		return m;
 	}
 }
