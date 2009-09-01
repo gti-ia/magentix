@@ -126,14 +126,24 @@ public class BaseAgent implements Runnable{
          
 	}
 	
-	protected void send(ACLMessage msg){
+	public void send(ACLMessage msg){
 		MessageTransfer xfr = new MessageTransfer();
 		
 		//decidimos si el mensaje es interno o va al exterior dependiendo de su protocolo
-		if(msg.getReceiver().protocol != "qpid")
+		
+		
+		if(!msg.getReceiver().protocol.equals("qpid"))
+		{
+			
 			xfr.destination("BridgeAgentInOut");
+			
+		}
 		else
+		{
+			
 			xfr.destination(msg.getReceiver().name);
+		}
+			
 		
 		xfr.acceptMode(MessageAcceptMode.EXPLICIT);
         xfr.acquireMode(MessageAcquireMode.PRE_ACQUIRED);
@@ -164,7 +174,7 @@ public class BaseAgent implements Runnable{
         //conversation id
         body = body + msg.getConversationId().length() + "#" + msg.getConversationId();
         //reply with
-        body = body + msg.getReplyWith().length() + "#" + msg.getConversationId();
+        body = body + msg.getReplyWith().length() + "#" + msg.getReplyWith();
         //in reply to
         body = body + msg.getInReplyTo().length() + "#" + msg.getInReplyTo();
         //reply by
@@ -191,7 +201,7 @@ public class BaseAgent implements Runnable{
 	}
 	
 	//codigo de terminacion del agente
-	protected void terminate(){
+	public void terminate(){
 		session.exchangeDelete(aid.name);
 		session.queueDelete(aid.name);
 		session.close();
@@ -206,4 +216,11 @@ public class BaseAgent implements Runnable{
 	public void start(){
 		myThread.start();
 	}
+	
+
+	   public AgentID getAid()
+	   {
+	       return this.aid;
+	   }
+	
 }

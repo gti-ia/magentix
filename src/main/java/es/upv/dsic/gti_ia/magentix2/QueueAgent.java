@@ -19,12 +19,12 @@ import es.upv.dsic.gti_ia.proto.Sincro;;
 public class QueueAgent extends BaseAgent{
 	
 	ArrayList<ACLMessage> messageList = new ArrayList<ACLMessage>();
-	LinkedBlockingQueue<MessageTransfer> internalQueue;
+	//LinkedBlockingQueue<MessageTransfer> internalQueue;
 	private AgentID aid = null;
 	private Sincro sin;
 	public QueueAgent(AgentID aid, Connection connection) {
 		super(aid, connection);
-		internalQueue = new LinkedBlockingQueue<MessageTransfer>();
+		//internalQueue = new LinkedBlockingQueue<MessageTransfer>();
 		this.aid = aid;
 		this.sin = new Sincro();
 	}
@@ -150,10 +150,13 @@ public class QueueAgent extends BaseAgent{
         return msg;
     }
 	
+
 	public final void onMessage(Session ssn, MessageTransfer xfr) {
-		internalQueue.add(xfr);
+		//internalQueue.add(xfr);
         messageList.add(MessageTransfertoACLMessage(xfr));
         this.sin.dar();
+        
+        
         
       
         

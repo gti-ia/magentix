@@ -30,11 +30,12 @@ public class FIPARequestResponder{
 
 	
 	
-	public FIPARequestResponder(QueueAgent _agent, MessageTemplate _template, Sincro _sin)
+	public FIPARequestResponder(QueueAgent _agent, MessageTemplate _template)//, Sincro _sin)
 	{
 		myAgent = _agent;
 		template = _template;
-		this.sin = _sin;
+		//this.sin = _sin;
+		this.sin = _agent.getSincro();
 		
 	}
 	
