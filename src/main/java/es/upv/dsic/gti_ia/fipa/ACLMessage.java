@@ -1,9 +1,12 @@
 package es.upv.dsic.gti_ia.fipa;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 
-public class ACLMessage implements Serializable, Cloneable{
+
+@SuppressWarnings("unchecked")
+public class ACLMessage implements Serializable {
 	/**
 	 * 
 	 */
@@ -87,6 +90,14 @@ public class ACLMessage implements Serializable, Cloneable{
 	private int performative;
 	private AgentID sender = new AgentID();
 	private AgentID receiver = new AgentID();
+	
+	/*
+	 * List of receivers to enable Multi-Cast
+	 */
+	
+	@SuppressWarnings("unused")
+	private ArrayList<AgentID> receiver_list = new ArrayList();
+	
 	private AgentID reply_to = new AgentID();
 	private String content = "";
 	private String language = "";
@@ -111,15 +122,6 @@ public class ACLMessage implements Serializable, Cloneable{
 	
 	public void setPerformative(int performative){
 		this.performative = performative;
-	}
-	
-	public void setPerformative(String performative){
-		for(int i=0; i< performatives.length; i++){
-			if(performative.compareTo(performatives[i]) == 0 ){
-				this.performative = i;
-				break;
-			}
-		}
 	}
 	
 	public String getPerformative(){
@@ -233,45 +235,77 @@ public class ACLMessage implements Serializable, Cloneable{
 			return "";
 	}
 	
-	public Date getReplyByDate() {
-		if(reply_byInMillisec != 0)
-			return new Date(reply_byInMillisec);
-		else
-			return null;
-	}
-	
-	public synchronized Object clone() {
-		ACLMessage result;
-		
-		try{
-			result = (ACLMessage)super.clone();
-			
-		}catch(CloneNotSupportedException cnse) {
-			throw new InternalError(); // This should never happen
+	public void setPerformative(String performative){
+		for(int i=0; i< performatives.length; i++){
+			if(performative.compareTo(performatives[i]) == 0){
+				this.performative = i;
+				break;
+			}
 		}
-		
-		return result;
 	}
-	
-	
-	public ACLMessage createReply() {
-		ACLMessage m = (ACLMessage)clone();
-		
-		m.setReceiver(getSender());
-		m.setLanguage(getLanguage());
-		m.setOntology(getOntology());
-		m.setProtocol(getProtocol());
-		m.setSender(null);
-		m.setInReplyTo(getReplyWith());
-		m.setConversationId(getConversationId());
-		m.setReplyByDate(null);
-		m.setContent("");
-		m.setEncoding("");
-		//#CUSTOM_EXCLUDE_BEGIN
-		//Set the Aclrepresentation of the reply message to the aclrepresentation of the sent message 
-	
-		//#CUSTOM_EXCLUDE_END
-		return m;
+	/**
+	 * Añade un receiver a la lista. Útil para hacer multiples envios.
+	 * @param r
+	 * Devuelve -1, si el receiver ya estaba en la lista. 1 en caso contrario
+	 */
+	public int add_receiver(AgentID r)
+	{
+		for(int i = 0; i<receiver_list.size(); i++)
+		{
+			if( receiver_list.get(i).name.equals(r.name) && receiver_list.get(i).host.equals(r.host) 
+				&& receiver_list.get(i).port.equals(r.port) && receiver_list.get(i).protocol.equals(r.protocol))
+				{
+					return -1;
+				}
+		}
+		receiver_list.add(r);
+		return 1;
 	}
-	
+	public ArrayList<AgentID> getReceiver_list() {
+		return receiver_list;
+	}
+
+	public void setReceiver_list(ArrayList<AgentID> receiver_list) {
+		this.receiver_list = receiver_list;
+	}
+
+	public AgentID getReply_to() {
+		return reply_to;
+	}
+
+	public void setReply_to(AgentID reply_to) {
+		this.reply_to = reply_to;
+	}
+
+	public String getConversation_id() {
+		return conversation_id;
+	}
+
+	public void setConversation_id(String conversation_id) {
+		this.conversation_id = conversation_id;
+	}
+
+	public String getReply_with() {
+		return reply_with;
+	}
+
+	public void setReply_with(String reply_with) {
+		this.reply_with = reply_with;
+	}
+
+	public String getIn_reply_to() {
+		return in_reply_to;
+	}
+
+	public void setIn_reply_to(String in_reply_to) {
+		this.in_reply_to = in_reply_to;
+	}
+
+	public long getReply_byInMillisec() {
+		return reply_byInMillisec;
+	}
+
+	public void setReply_byInMillisec(long reply_byInMillisec) {
+		this.reply_byInMillisec = reply_byInMillisec;
+	}
 }
