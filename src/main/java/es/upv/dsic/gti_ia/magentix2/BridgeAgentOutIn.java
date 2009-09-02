@@ -247,6 +247,7 @@ public class BridgeAgentOutIn extends SingleAgent{
 		    	e.printStackTrace();
 		    }
 		    //enviamos el mensaje
+		    msg.getReceiver().protocol="qpid";
 		    send(msg);
 		}
 	}
