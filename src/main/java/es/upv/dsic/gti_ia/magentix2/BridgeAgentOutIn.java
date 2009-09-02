@@ -3,7 +3,6 @@ package es.upv.dsic.gti_ia.magentix2;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -59,11 +58,10 @@ public class BridgeAgentOutIn extends SingleAgent{
 	                "\nContenido:\n\t" + new String( recibirPaquete.getData(), 
 	                   0, recibirPaquete.getLength() ) );
 	 
-	             ACLMessage sms = httpToACL( stringToInputStream(new String( recibirPaquete.getData() )) ); // enviar paquete al cliente
-	            sms.getReceiver().protocol = "qpid";
-	             send(sms);
+	             //creamos nuevo hilo encargado de enviar el mensaje
+	             httpToACL hilo = new httpToACL(stringToInputStream(new String(recibirPaquete.getData())));
+	             hilo.run();
 	             
-	          
 	          }
 	 
 	          // procesar los problemas que pueden ocurrir al manipular el paquete
@@ -74,180 +72,183 @@ public class BridgeAgentOutIn extends SingleAgent{
 		}
 	}
 	
-	public ACLMessage httpToACL(InputStream httpmessage){
-		ACLMessage msg = new ACLMessage(-1);
-		AgentID sender = new AgentID();
-		AgentID receiver = new AgentID();
-		//parseamos las cabeceras html, y obtenemos las diferentes partes del mensaje
-		BufferedInputStream bis = null;
-	    BufferedReader dis = null;
-
-	    try {
-	    	// Here BufferedInputStream is added for fast reading.
-	    	bis = new BufferedInputStream(httpmessage);
-	    	dis = new BufferedReader(new InputStreamReader(bis));
-	    	
-	    	
-
-	    	//leemos las cuatro primeras lineas que no nos interesan y nos quedamos con la quinta
-	    	String cadena = dis.readLine();
-	    	
-	    
-	    	int cont = 0;
-	    	while (cadena != null && cont <4){
-	    		// this statement reads the line from the file and print it to
-	    		// the console.
-	    		System.out.println(cadena);
-	    		cadena = dis.readLine();
-	    		cont++;
-	    	}
-	    	//buscamos el boundary
-	    	int indexboundary = cadena.indexOf("boundary=\"");
-	    	String boundary = cadena.substring(indexboundary+10, cadena.indexOf("\"", indexboundary + 10));
-	    	//leemos hasta encontrar el boundary, donde empieza el envelope
-	    	do
-	    		cadena = dis.readLine();
-	    	while (cadena != null && cadena.indexOf(boundary) == -1);
-	    	//la primera linea nos indica el content type
-	    	cadena = dis.readLine();
-	    	//linea en blanco
-	    	cadena = dis.readLine();
-	    	//version xml
-	    	cadena = dis.readLine();
-	    	//envelope
-	    	cadena = dis.readLine();
-	    	System.out.println(cadena);
-	    	//parseamos contenido XML
-	    	Xml envelope = new Xml(stringToInputStream(cadena),"envelope");			
-
-			Xml params = envelope.child("params");
-			System.out.println("index: "+params.integer("index"));
-			
-			int index = 0;
-			//Agente destino
-			System.out.println("Datos agente destino");
-			Xml to = params.child("to");
-			Xml agent_indentifier = to.child("agent-identifier");
-			
-			int index2 = agent_indentifier.child("name").content().indexOf('@');
-			
-			
-			receiver.name = agent_indentifier.child("name").content().substring(0, index2);
-			System.out.println("Nombre agente: "+ receiver.name);
-			Xml adresses = agent_indentifier.child("addresses");
-			for(Xml url:adresses.children("url")){
-				index = url.content().indexOf(':');
-				receiver.protocol = url.content().substring(0,index);
-				receiver.host = url.content().substring(index+3,url.content().indexOf(":", index+1));
-				index = url.content().indexOf(":", index+1);
-				receiver.port = url.content().substring(index+1);
-				System.out.println("Adress: "+receiver.toString());
-			}
-			
-			msg.setReceiver(receiver);
-			
-			//Agente remitente
-			System.out.println("Datos agente remitente");
-			Xml from = params.child("from");
-			agent_indentifier = from.child("agent-identifier");
-			
-			index2 = agent_indentifier.child("name").content().indexOf('@');
-			sender.name = agent_indentifier.child("name").content().substring(0, index2);
-			System.out.println("Nombre agente: "+ sender.name);
-			adresses = agent_indentifier.child("addresses");
-			
-			for(Xml url:adresses.children("url")){
-				index = url.content().indexOf(':');
-				sender.protocol = url.content().substring(0,index);
-				sender.host = url.content().substring(index+3,url.content().indexOf(":", index+1));
-				index = url.content().indexOf(":", index+1);
-				sender.port = url.content().substring(index+1);
-				System.out.println("Sender: "+sender.toString());
-			}
-			msg.setSender(sender);
-			
-			//volvemos a buscar el boundary
-			do
+	public class httpToACL extends Thread{
+		InputStream httpmessage;
+		
+		public httpToACL(InputStream message){
+			httpmessage = message;
+		}
+		
+		public void run(){
+			ACLMessage msg = new ACLMessage(-1);
+			AgentID sender = new AgentID();
+			AgentID receiver = new AgentID();
+			//parseamos las cabeceras html, y obtenemos las diferentes partes del mensaje
+			BufferedInputStream bis = null;
+		    BufferedReader dis = null;
+	
+		    try {
+		    	// Here BufferedInputStream is added for fast reading.
+		    	bis = new BufferedInputStream(httpmessage);
+		    	dis = new BufferedReader(new InputStreamReader(bis));		    	
+	
+		    	//leemos las cuatro primeras lineas que no nos interesan y nos quedamos con la quinta
+		    	String cadena = dis.readLine();		    	
+		    
+		    	int cont = 0;
+		    	while (cadena != null && cont <4){
+		    		// this statement reads the line from the file and print it to
+		    		// the console.
+		    		System.out.println(cadena);
+		    		cadena = dis.readLine();
+		    		cont++;
+		    	}
+		    	//buscamos el boundary
+		    	int indexboundary = cadena.indexOf("boundary=\"");
+		    	String boundary = cadena.substring(indexboundary+10, cadena.indexOf("\"", indexboundary + 10));
+		    	//leemos hasta encontrar el boundary, donde empieza el envelope
+		    	do
+		    		cadena = dis.readLine();
+		    	while (cadena != null && cadena.indexOf(boundary) == -1);
+		    	//la primera linea nos indica el content type
+		    	cadena = dis.readLine();
+		    	//linea en blanco
+		    	cadena = dis.readLine();
+		    	//version xml
+		    	cadena = dis.readLine();
+		    	//envelope
+		    	cadena = dis.readLine();
+		    	System.out.println(cadena);
+		    	//parseamos contenido XML
+		    	Xml envelope = new Xml(stringToInputStream(cadena),"envelope");	
+	
+				Xml params = envelope.child("params");
+				System.out.println("index: "+params.integer("index"));
+				
+				int index = 0;
+				//Agente destino
+				System.out.println("Datos agente destino");
+				Xml to = params.child("to");
+				Xml agent_indentifier = to.child("agent-identifier");
+				
+				int index2 = agent_indentifier.child("name").content().indexOf('@');
+				
+				
+				receiver.name = agent_indentifier.child("name").content().substring(0, index2);
+				System.out.println("Nombre agente: "+ receiver.name);
+				Xml adresses = agent_indentifier.child("addresses");
+				for(Xml url:adresses.children("url")){
+					index = url.content().indexOf(':');
+					receiver.protocol = url.content().substring(0,index);
+					receiver.host = url.content().substring(index+3,url.content().indexOf(":", index+1));
+					index = url.content().indexOf(":", index+1);
+					receiver.port = url.content().substring(index+1);
+					System.out.println("Adress: "+receiver.toString());
+				}
+				
+				msg.setReceiver(receiver);
+				
+				//Agente remitente
+				System.out.println("Datos agente remitente");
+				Xml from = params.child("from");
+				agent_indentifier = from.child("agent-identifier");
+				
+				index2 = agent_indentifier.child("name").content().indexOf('@');
+				sender.name = agent_indentifier.child("name").content().substring(0, index2);
+				System.out.println("Nombre agente: "+ sender.name);
+				adresses = agent_indentifier.child("addresses");
+				
+				for(Xml url:adresses.children("url")){
+					index = url.content().indexOf(':');
+					sender.protocol = url.content().substring(0,index);
+					sender.host = url.content().substring(index+3,url.content().indexOf(":", index+1));
+					index = url.content().indexOf(":", index+1);
+					sender.port = url.content().substring(index+1);
+					System.out.println("Sender: "+sender.toString());
+				}
+				msg.setSender(sender);
+				
+				//volvemos a buscar el boundary
+				do
+					cadena = dis.readLine();
+				while(cadena != null && cadena.indexOf(boundary) == -1);
+				//tipo contenido
 				cadena = dis.readLine();
-			while(cadena != null && cadena.indexOf(boundary) == -1);
-			//tipo contenido
-			cadena = dis.readLine();
-			//linea en blanco
-			cadena = dis.readLine();
-			//performativa
-			cadena = dis.readLine();
-			String performative = cadena.substring(1).trim();
-			msg.setPerformative(performative);
-			System.out.println(msg.getPerformative());
-			//agente remitente, ya tenemos sus datos
-			cadena = dis.readLine();
-			//agente receptor, ya tenemos sus datos
-			cadena = dis.readLine();
-			//content
-			cadena = dis.readLine();
-			int indexcontent = cadena.indexOf('"');
-			String content = "";
-			boolean seguir = true;
-			int pos;
-			content = content + cadena.substring(indexcontent + 1);
-			pos = cadena.length();
-			while(cadena.charAt(pos-1) == ' ')
-				pos--;
-			if(cadena.charAt(pos-1) == '"' && cadena.charAt(pos-2) != '\\')
-				seguir = false;
-			while(seguir){				
+				//linea en blanco
 				cadena = dis.readLine();
-				content = content + cadena;
+				//performativa
+				cadena = dis.readLine();
+				String performative = cadena.substring(1).trim();
+				msg.setPerformative(performative);
+				System.out.println(msg.getPerformative());
+				//agente remitente, ya tenemos sus datos
+				cadena = dis.readLine();
+				//agente receptor, ya tenemos sus datos
+				cadena = dis.readLine();
+				//content
+				cadena = dis.readLine();
+				int indexcontent = cadena.indexOf('"');
+				String content = "";
+				boolean seguir = true;
+				int pos;
+				content = content + cadena.substring(indexcontent + 1);
 				pos = cadena.length();
 				while(cadena.charAt(pos-1) == ' ')
 					pos--;
 				if(cadena.charAt(pos-1) == '"' && cadena.charAt(pos-2) != '\\')
 					seguir = false;
-			}
-			content = content.substring(0, content.length()-1);
-			msg.setContent(content);
-			System.out.println("content "+content);
-			
-			//language
-			String lang = "";
-			cadena = dis.readLine();
-			while(cadena.indexOf(":language")+9 < 0 && cadena != null)
+				while(seguir){				
+					cadena = dis.readLine();
+					content = content + cadena;
+					pos = cadena.length();
+					while(cadena.charAt(pos-1) == ' ')
+						pos--;
+					if(cadena.charAt(pos-1) == '"' && cadena.charAt(pos-2) != '\\')
+						seguir = false;
+				}
+				content = content.substring(0, content.length()-1);
+				msg.setContent(content);
+				System.out.println("content "+content);
+				
+				//language
+				String lang = "";
 				cadena = dis.readLine();
-			
-			cadena = cadena.substring(cadena.indexOf(":language")+9);
-			//eliminamos espacios en blanco
-			int k = 0;
-			while(cadena.charAt(k) == ' ')
-				k++;
-			//mientras deje de ser blanco
-			while(cadena.charAt(k) != ' '){
-				lang = lang + cadena.charAt(k);
-				k++;
-			}
-			msg.setLanguage(lang);
-						
-			//ontology
-			String ontology = "";
-			while(cadena.indexOf(":ontology")+9 < 0 && cadena != null)
-				cadena = dis.readLine();
-			cadena = cadena.substring(cadena.indexOf(":ontology")+9);
-			//eliminamos espacios en blanco
-			k = 0;
-			while(cadena.charAt(k) == ' ')
-				k++;
-			//mientras deje de ser blanco
-			while(cadena.charAt(k) != ' '){
-				ontology = ontology + cadena.charAt(k);
-				k++;
-			}			
-			msg.setOntology(ontology);   
-//				    	
-	    } catch (FileNotFoundException e) {
-	    	e.printStackTrace();
-	    } catch (IOException e) {
-	    	e.printStackTrace();
-	    }
-	    return msg;
+				while(cadena.indexOf(":language")+9 < 0 && cadena != null)
+					cadena = dis.readLine();
+				
+				cadena = cadena.substring(cadena.indexOf(":language")+9);
+				//eliminamos espacios en blanco
+				int k = 0;
+				while(cadena.charAt(k) == ' ')
+					k++;
+				//mientras deje de ser blanco
+				while(cadena.charAt(k) != ' '){
+					lang = lang + cadena.charAt(k);
+					k++;
+				}
+				msg.setLanguage(lang);
+							
+				//ontology
+				String ontology = "";
+				while(cadena.indexOf(":ontology")+9 < 0 && cadena != null)
+					cadena = dis.readLine();
+				cadena = cadena.substring(cadena.indexOf(":ontology")+9);
+				//eliminamos espacios en blanco
+				k = 0;
+				while(cadena.charAt(k) == ' ')
+					k++;
+				//mientras deje de ser blanco
+				while(cadena.charAt(k) != ' '){
+					ontology = ontology + cadena.charAt(k);
+					k++;
+				}			
+				msg.setOntology(ontology);   
+		    } catch (IOException e) {
+		    	e.printStackTrace();
+		    }
+		    //enviamos el mensaje
+		    send(msg);
+		}
 	}
 	
 	public static InputStream stringToInputStream(String cadena){
