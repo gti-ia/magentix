@@ -25,6 +25,8 @@ public class EmisorBenchmark1 extends SingleAgent {
 		msgcont.setReceiver(controlador);
 		msgcont.setSender(this.getAid());
 		
+		send(msgcont); //sergio
+		
 		
 		receiveACLMessage();			//esperem missatge Start des d'el controlador
 		
