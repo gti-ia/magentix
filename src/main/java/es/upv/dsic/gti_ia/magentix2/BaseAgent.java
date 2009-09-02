@@ -278,5 +278,41 @@ public class BaseAgent implements Runnable{
 	   {
 	       return this.aid;
 	   }
+
+	public Connection getConnection() {
+		return connection;
+	}
+
+	public void setConnection(Connection connection) {
+		this.connection = connection;
+	}
+
+	public Session getSession() {
+		return session;
+	}
+
+	public void setSession(Session session) {
+		this.session = session;
+	}
+
+	public Thread getMyThread() {
+		return myThread;
+	}
+
+	public void setMyThread(Thread myThread) {
+		this.myThread = myThread;
+	}
+
+	public Listener getListener() {
+		return listener;
+	}
+
+	public void setListener(Listener listener) {
+		this.listener = listener;
+	}
+
+	public void setAid(AgentID aid) {
+		this.aid = aid;
+	}
 	
 }
