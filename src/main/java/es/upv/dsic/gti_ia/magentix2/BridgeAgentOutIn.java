@@ -13,8 +13,6 @@ import org.apache.qpid.transport.Connection;
 import org.apache.qpid.transport.MessageTransfer;
 import org.apache.qpid.transport.Session;
 
-import parser.Xml;
-
 import es.upv.dsic.gti_ia.fipa.ACLMessage;
 import es.upv.dsic.gti_ia.fipa.AgentID;
 
