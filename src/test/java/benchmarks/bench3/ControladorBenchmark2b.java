@@ -1,4 +1,4 @@
-package benchmarks.bench2b;
+package benchmarks.bench3;
 
 import java.util.concurrent.LinkedBlockingQueue;
 

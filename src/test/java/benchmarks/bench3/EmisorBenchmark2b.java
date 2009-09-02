@@ -1,4 +1,4 @@
-package benchmarks.bench2b;
+package benchmarks.bench3;
 
 import org.apache.qpid.transport.Connection;
 import es.upv.dsic.gti_ia.fipa.ACLMessage;
@@ -11,9 +11,11 @@ public class EmisorBenchmark2b extends SingleAgent {
 	int tmsg;		//tamany del missatge
     int ntotal=0;	//nombre total d'agents
     int nemisor;	//nombre del agent
-    int nreceptor;	//nombre del primer destinatari
+    int nreceptor = Integer.parseInt(this.getName().substring(6)); //nombre d'agent
     int nmsg=0;
     long t1,t2,tot=0;
+    
+
 
 
     
