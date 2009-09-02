@@ -2,8 +2,6 @@ package es.upv.dsic.gti_ia.magentix2;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.concurrent.LinkedBlockingQueue;
-
 import org.apache.qpid.transport.Connection;
 import org.apache.qpid.transport.MessageTransfer;
 import org.apache.qpid.transport.Session;
@@ -217,7 +215,7 @@ public class QueueAgent extends BaseAgent{
 					
 			}
 		}
-		if (msgselect==null)//no hay ningún mensaje
+		if (msgselect==null)//no hay ningï¿½n mensaje
 		{
 			if (i==0)//solo esperaremos una vez
 				try
@@ -281,7 +279,7 @@ public class QueueAgent extends BaseAgent{
 			//System.out.println("Paso 1");
 		for(ACLMessage msg : messageList){
 			
-			//comparamos los campos  protocol, idcoversación y sender
+			//comparamos los campos  protocol, idcoversaciï¿½n y sender
 			if (template.getProtocol().equals(msg.getProtocol()))
 				{
 				
