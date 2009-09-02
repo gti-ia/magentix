@@ -21,14 +21,9 @@ public class AgenteSergio extends BaseAgent {
 		receiver.name = "agenteconsumidor";
 		receiver.host = "localhost";
 		receiver.port = "5000";
-		AgentID sender = new AgentID();
-		sender.name = getName();
-		sender.protocol = "qpid";
-		sender.host = "localhost";
-		sender.port = "5001";
 		ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
 		msg.setReceiver(receiver);
-		msg.setSender(sender);
+		msg.setSender(this.getAid());
 		msg.setLanguage("ACL");
 		msg.setContent("Hola, soy agente "+ getName());
 		send(msg);

@@ -20,14 +20,9 @@ public class AgenteHola extends BaseAgent {
 		receiver.protocol = "qpid";
 		receiver.name = "agenteconsumidor";
 		receiver.host = "localhost";
-		AgentID sender = new AgentID();
-		sender.name = getName();
-		sender.protocol = "qpid";
-		sender.host = "localhost";
-		sender.port = "";
 		ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
 		msg.setReceiver(receiver);
-		msg.setSender(sender);
+		msg.setSender(this.getAid());
 		msg.setLanguage("ACL");
 		msg.setContent("Hola, soy agente "+ getName());
 		send(msg);
