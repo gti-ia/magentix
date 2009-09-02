@@ -309,4 +309,8 @@ public class QueueAgent extends BaseAgent{
 		return msgselect;
 	}
 
+	public void send(ACLMessage msg){
+		this.send(msg);
+	}
+	
 }

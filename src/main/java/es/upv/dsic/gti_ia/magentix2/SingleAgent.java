@@ -143,7 +143,7 @@ public abstract class SingleAgent extends BaseAgent {
         return msg;
     }
 
-    public final void onMessage(Session ssn, MessageTransfer xfr) {
+    public void onMessage(Session ssn, MessageTransfer xfr) {
         internalQueue.add(xfr);
     }
 }

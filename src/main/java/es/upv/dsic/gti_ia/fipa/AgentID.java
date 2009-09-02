@@ -24,6 +24,21 @@ public final class AgentID implements Serializable{
     	String cadena = protocol + "://" + name + "@" + host + ":" + port;
     	return cadena;
     }
+    public String name_all()
+    {
+    	String cadena = name + "@" + host + ":" + port; //+"/JADE";
+    	return cadena;
+    }
+    public String addresses_all()
+    {
+    	String cadena = protocol + "://" +host + ":" + port;
+    	return cadena;
+    }
+    public String addresses_single()
+    {
+    	String cadena = host+ ":" + port;;
+    	return cadena;
+    }
 	public String getLocalName() {
 		int atPos = name.lastIndexOf('@');
 		if(atPos == -1)
