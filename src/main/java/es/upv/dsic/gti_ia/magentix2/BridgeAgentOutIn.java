@@ -8,32 +8,71 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.SocketException;
 
 import org.apache.qpid.transport.Connection;
-import org.apache.qpid.transport.MessageTransfer;
-import org.apache.qpid.transport.Session;
-
 import es.upv.dsic.gti_ia.fipa.ACLMessage;
 import es.upv.dsic.gti_ia.fipa.AgentID;
 
-public class BridgeAgentOutIn extends BaseAgent{
+public class BridgeAgentOutIn extends SingleAgent{
+	
+	private DatagramSocket socket;
 
 	public BridgeAgentOutIn(AgentID aid, Connection connection) {
 		super(aid, connection);
-		// TODO Auto-generated constructor stub
+		
+		  // crear objeto DatagramSocket para enviar y recibir paquetes
+	       try {
+	          socket = new DatagramSocket( 5000 );
+	       }
+	 
+	       // procesar los problemas que pueden ocurrir al crear el objeto DatagramSocket
+	       catch( SocketException excepcionSocket ) {
+	          excepcionSocket.printStackTrace();
+	          System.exit( 1 );
+	       }
+		
 	}
 	
 	public void execute(){
 		while(true){
 			//Escuchar por protocolo http y enviar a quien corresponda
+			 // recibir paquete, mostrar su contenido
+	          try {
+	 
+	             // establecer el paquete
+	             byte datos[] = new byte[ 2000 ];
+	             DatagramPacket recibirPaquete = 
+	                new DatagramPacket( datos, datos.length );
+	 
+	             socket.receive( recibirPaquete ); // esperar el paquete
+	             
+	             System.out.println("Recibido en PasarelaOutIn: "+new String( recibirPaquete.getData()));
+	 
+	             // mostrar la información del paquete recibido 
+	             System.out.println( "\nPaquete recibido:" + 
+	                "\nDel host: " + recibirPaquete.getAddress() + 
+	                "\nPuerto del host: " + recibirPaquete.getPort() + 
+	                "\nLongitud: " + recibirPaquete.getLength() + 
+	                "\nContenido:\n\t" + new String( recibirPaquete.getData(), 
+	                   0, recibirPaquete.getLength() ) );
+	 
+	             ACLMessage sms = httpToACL( stringToInputStream(new String( recibirPaquete.getData() )) ); // enviar paquete al cliente
+	            sms.getReceiver().protocol = "qpid";
+	             send(sms);
+	             
+	          
+	          }
+	 
+	          // procesar los problemas que pueden ocurrir al manipular el paquete
+	          catch( IOException excepcionES ) {
+	             System.out.println( excepcionES.toString() + "\n" );
+	            excepcionES.printStackTrace();
+	          }
 		}
 	}
-
-	public void onMessage(Session ssn, MessageTransfer xfr)
-    {
-    	//No hacemos nada para los mensajes entrantes
-		return;    	
-    }
 	
 	public ACLMessage httpToACL(InputStream httpmessage){
 		ACLMessage msg = new ACLMessage(-1);
@@ -47,9 +86,13 @@ public class BridgeAgentOutIn extends BaseAgent{
 	    	// Here BufferedInputStream is added for fast reading.
 	    	bis = new BufferedInputStream(httpmessage);
 	    	dis = new BufferedReader(new InputStreamReader(bis));
+	    	
+	    	
 
 	    	//leemos las cuatro primeras lineas que no nos interesan y nos quedamos con la quinta
 	    	String cadena = dis.readLine();
+	    	
+	    
 	    	int cont = 0;
 	    	while (cadena != null && cont <4){
 	    		// this statement reads the line from the file and print it to
@@ -85,8 +128,12 @@ public class BridgeAgentOutIn extends BaseAgent{
 			System.out.println("Datos agente destino");
 			Xml to = params.child("to");
 			Xml agent_indentifier = to.child("agent-identifier");
-			receiver.name = agent_indentifier.child("name").content();
-			System.out.println("Nombre agente: "+ agent_indentifier.child("name").content());
+			
+			int index2 = agent_indentifier.child("name").content().indexOf('@');
+			
+			
+			receiver.name = agent_indentifier.child("name").content().substring(0, index2);
+			System.out.println("Nombre agente: "+ receiver.name);
 			Xml adresses = agent_indentifier.child("addresses");
 			for(Xml url:adresses.children("url")){
 				index = url.content().indexOf(':');
@@ -97,11 +144,15 @@ public class BridgeAgentOutIn extends BaseAgent{
 				System.out.println("Adress: "+receiver.toString());
 			}
 			
+			msg.setReceiver(receiver);
+			
 			//Agente remitente
 			System.out.println("Datos agente remitente");
 			Xml from = params.child("from");
 			agent_indentifier = from.child("agent-identifier");
-			sender.name = agent_indentifier.child("name").content();
+			
+			index2 = agent_indentifier.child("name").content().indexOf('@');
+			sender.name = agent_indentifier.child("name").content().substring(0, index2);
 			System.out.println("Nombre agente: "+ sender.name);
 			adresses = agent_indentifier.child("addresses");
 			
@@ -113,6 +164,7 @@ public class BridgeAgentOutIn extends BaseAgent{
 				sender.port = url.content().substring(index+1);
 				System.out.println("Sender: "+sender.toString());
 			}
+			msg.setSender(sender);
 			
 			//volvemos a buscar el boundary
 			do
@@ -152,19 +204,44 @@ public class BridgeAgentOutIn extends BaseAgent{
 				if(cadena.charAt(pos-1) == '"' && cadena.charAt(pos-2) != '\\')
 					seguir = false;
 			}
-			content = content.substring(0, content.length()-2);
+			content = content.substring(0, content.length()-1);
 			msg.setContent(content);
 			System.out.println("content "+content);
 			
 			//language
+			String lang = "";
 			cadena = dis.readLine();
-			msg.setLanguage(cadena.substring(cadena.indexOf(":language")+9, cadena.indexOf(":ontology") - 1).trim());
-			System.out.println(msg.getLanguage());
+			while(cadena.indexOf(":language")+9 < 0 && cadena != null)
+				cadena = dis.readLine();
 			
+			cadena = cadena.substring(cadena.indexOf(":language")+9);
+			//eliminamos espacios en blanco
+			int k = 0;
+			while(cadena.charAt(k) == ' ')
+				k++;
+			//mientras deje de ser blanco
+			while(cadena.charAt(k) != ' '){
+				lang = lang + cadena.charAt(k);
+				k++;
+			}
+			msg.setLanguage(lang);
+						
 			//ontology
-			msg.setOntology(cadena.substring(cadena.indexOf(":ontology")+9, cadena.indexOf(")") - 1).trim());
-			System.out.println(msg.getOntology());
-				    	
+			String ontology = "";
+			while(cadena.indexOf(":ontology")+9 < 0 && cadena != null)
+				cadena = dis.readLine();
+			cadena = cadena.substring(cadena.indexOf(":ontology")+9);
+			//eliminamos espacios en blanco
+			k = 0;
+			while(cadena.charAt(k) == ' ')
+				k++;
+			//mientras deje de ser blanco
+			while(cadena.charAt(k) != ' '){
+				ontology = ontology + cadena.charAt(k);
+				k++;
+			}			
+			msg.setOntology(ontology);   
+//				    	
 	    } catch (FileNotFoundException e) {
 	    	e.printStackTrace();
 	    } catch (IOException e) {
