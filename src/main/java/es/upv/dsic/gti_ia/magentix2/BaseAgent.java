@@ -185,6 +185,62 @@ public class BaseAgent implements Runnable{
         xfr.setBody(body);
         session.messageTransfer(xfr.getDestination(), xfr.getAcceptMode(), xfr.getAcquireMode(), xfr.getHeader(), xfr.getBodyString());
 	}
+	
+	protected void send_multicast(ACLMessage msg){
+		int i = 0;
+		while(i<msg.getReceiver_list().size())
+		{
+			MessageTransfer xfr = new MessageTransfer();
+			
+			//decidimos si el mensaje es interno o va al exterior dependiendo de su protocolo
+			
+			if(msg.getReceiver().protocol != "qpid")
+				xfr.destination("agentepasarelaInOut");
+			else
+				xfr.destination(msg.getReceiver().name);
+			
+			xfr.acceptMode(MessageAcceptMode.EXPLICIT);
+	        xfr.acquireMode(MessageAcquireMode.PRE_ACQUIRED);
+	        
+	        //No es necesario especificar una routing_key ya que el exchange es del tipo fanout, lo pongo por completitud
+			DeliveryProperties deliveryProps = new DeliveryProperties();
+	        deliveryProps.setRoutingKey("routing_key");
+	        xfr.header(new Header(deliveryProps));
+	        
+	        //Creamos el cuerpo del mensaje serializando el mensaje ACL a una cadena
+	        String body;
+	        //Performative
+	        body = msg.getPerformativeInt() + "#";
+	        //Sender
+	        body = body + msg.getSender().toString().length() + "#" + msg.getSender().toString();
+	        //receiver
+	        body = body + msg.getReceiver().toString().length() + "#" + msg.getReceiver().toString();
+	        //reply to
+	        body = body + msg.getReplyTo().toString().length() + "#" + msg.getReplyTo().toString();
+	        //language
+	        body = body + msg.getLanguage().length() + "#" + msg.getLanguage();
+	        //encoding
+	        body = body + msg.getEncoding().length() + "#" + msg.getEncoding();
+	        //ontology
+	        body = body + msg.getOntology().length() + "#" + msg.getOntology();
+	        //protocol
+	        body = body + msg.getProtocol().length() + "#" + msg.getProtocol();
+	        //conversation id
+	        body = body + msg.getConversationId().length() + "#" + msg.getConversationId();
+	        //reply with
+	        body = body + msg.getReplyWith().length() + "#" + msg.getConversationId();
+	        //in reply to
+	        body = body + msg.getInReplyTo().length() + "#" + msg.getInReplyTo();
+	        //reply by
+	       // System.out.println(body);
+	        body = body + msg.getReplyBy().length() + "#" + msg.getReplyBy();
+	        //content
+	        body = body + msg.getContent().length() + "#" + msg.getContent();
+	        
+	        xfr.setBody(body);
+	        session.messageTransfer(xfr.getDestination(), xfr.getAcceptMode(), xfr.getAcquireMode(), xfr.getHeader(), xfr.getBodyString());
+		}
+	}
 			
 	public String getName(){
 		return aid.name;
