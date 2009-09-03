@@ -42,7 +42,7 @@ public class ClonadorBenchmark3 extends SingleAgent {
         	  agenteReceptor.start();
 
           }
-          catch(Exception e){System.out.println("Error, en la clonación de agentes receivers");}
+          catch(Exception e){System.out.println("Error ClonadorBenchmarks3, en la clonación de agentes receivers");}
 
         }
 	}
