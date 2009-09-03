@@ -13,8 +13,16 @@ public class EmisorBenchmark1 extends SingleAgent {
     int nemisor;	//nombre del agent
     int nreceptor;	//nombre del primer destinatari
     
-	public EmisorBenchmark1(AgentID aid, Connection connection) {
+	public EmisorBenchmark1(AgentID aid, Connection connection, int nmsgtot, int tmsg, int ntotal, int nemisor, int nreceptor)
+     {
 		super(aid, connection);
+		this.nmsgtot = nmsgtot;	
+		this.tmsg = tmsg;		
+		this.ntotal = ntotal;	
+		this.nemisor = nemisor;	
+		this.nreceptor = nreceptor;	
+	    
+		
 	}
 	
 	public void execute(){
