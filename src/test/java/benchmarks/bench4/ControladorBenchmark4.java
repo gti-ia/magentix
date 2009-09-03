@@ -3,11 +3,7 @@ package benchmarks.bench4;
 
 import java.util.Iterator;
 import java.util.Vector;
-import java.util.concurrent.LinkedBlockingQueue;
-
 import org.apache.qpid.transport.Connection;
-import org.apache.qpid.transport.MessageTransfer;
-
 import es.upv.dsic.gti_ia.fipa.ACLMessage;
 import es.upv.dsic.gti_ia.fipa.AgentID;
 import es.upv.dsic.gti_ia.magentix2.SingleAgent;
@@ -15,7 +11,6 @@ import es.upv.dsic.gti_ia.magentix2.SingleAgent;
 public class ControladorBenchmark4 extends SingleAgent {
 	
     ACLMessage msg,msg2;
-	LinkedBlockingQueue<MessageTransfer> internalQueue;
 	int ntotal, nagents=0, nacabats = 0;
 	Vector<String> agents = new Vector<String>();
 	long t1,t2;
@@ -30,10 +25,8 @@ public class ControladorBenchmark4 extends SingleAgent {
 		while(nagents < ntotal){
 			msg = this.receiveACLMessage();
 			
-			try{
-				
-				agents.addElement(msg.getSender().name);
-		
+			try{	
+				agents.addElement(msg.getSender().name);	
 			}catch(java.lang.NullPointerException e){System.out.println("No s'ha pogut afegir el Sender");}
 
 			nagents++;
