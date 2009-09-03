@@ -14,11 +14,11 @@ import es.upv.dsic.gti_ia.magentix2.SingleAgent;
  * FALTA PERMITIR INVOCAR A NUESTROS AGENTES CON UN ARGUMENTO !!!
  *
  */
-public class ClonadorBenchmark2b extends SingleAgent {
+public class ClonadorBenchmark3 extends SingleAgent {
 	
 	int nagents;
 	
-	public ClonadorBenchmark2b(AgentID aid, Connection connection, int nagents) {
+	public ClonadorBenchmark3(AgentID aid, Connection connection, int nagents) {
 		super(aid, connection);
 		this.nagents = nagents;
 	}
@@ -37,7 +37,7 @@ public class ClonadorBenchmark2b extends SingleAgent {
     for(int i=1;i<=nagents;i++)
         {
           try{
-        	  ReceptorBenchmark2b agenteReceptor = new ReceptorBenchmark2b(new AgentID(classe + i, this.getAid().protocol, this.getAid().host,this.getAid().port+1),this.getConnection());
+        	  ReceptorBenchmark3 agenteReceptor = new ReceptorBenchmark3(new AgentID(classe + i, this.getAid().protocol, this.getAid().host,this.getAid().port+1),this.getConnection());
              
         	  agenteReceptor.start();
 

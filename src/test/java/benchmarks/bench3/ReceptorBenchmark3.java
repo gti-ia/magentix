@@ -8,11 +8,11 @@ import es.upv.dsic.gti_ia.fipa.ACLMessage;
 import es.upv.dsic.gti_ia.fipa.AgentID;
 import es.upv.dsic.gti_ia.magentix2.SingleAgent;
 
-public class ReceptorBenchmark2b extends SingleAgent{
+public class ReceptorBenchmark3 extends SingleAgent{
 	
 	LinkedBlockingQueue<MessageTransfer> internalQueue;
 	
-	public ReceptorBenchmark2b(AgentID aid, Connection connection) {
+	public ReceptorBenchmark3(AgentID aid, Connection connection) {
 		super(aid, connection);
 	}
 	

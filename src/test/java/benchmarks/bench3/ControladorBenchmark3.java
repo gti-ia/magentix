@@ -9,13 +9,13 @@ import es.upv.dsic.gti_ia.fipa.ACLMessage;
 import es.upv.dsic.gti_ia.fipa.AgentID;
 import es.upv.dsic.gti_ia.magentix2.SingleAgent;
 
-public class ControladorBenchmark2b extends SingleAgent {
+public class ControladorBenchmark3 extends SingleAgent {
 	
 	LinkedBlockingQueue<MessageTransfer> internalQueue;
 	int ntotal, nagents=0, nacabats = 0;
 	long t1,t2;
 	
-	public ControladorBenchmark2b(AgentID aid, Connection connection) {
+	public ControladorBenchmark3(AgentID aid, Connection connection) {
 		super(aid, connection);
 	}
 	
