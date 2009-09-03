@@ -20,6 +20,14 @@ public final class AgentID implements Serializable{
 		port = __port;
 		host = __host;
     }
+    //constructor a partir de una sola cadena del tipo http://nombreagente@localhost:8080
+    public AgentID(String id){
+    	protocol = id.substring(0, id.indexOf(':'));
+    	name = id.substring(id.indexOf(':')+3, id.indexOf('@'));
+    	host = id.substring(id.indexOf('@')+1, id.indexOf(':', id.indexOf('@')+1));
+    	port = id.substring(id.indexOf(':', id.indexOf('@'))+1);
+    }
+    
     public String toString(){
     	String cadena = protocol + "://" + name + "@" + host + ":" + port;
     	return cadena;
