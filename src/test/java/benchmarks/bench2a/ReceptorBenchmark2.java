@@ -1,18 +1,13 @@
 package benchmarks.bench2a;
 
-import java.util.concurrent.LinkedBlockingQueue;
 import org.apache.qpid.transport.Connection;
-import org.apache.qpid.transport.MessageTransfer;
-
 import es.upv.dsic.gti_ia.fipa.ACLMessage;
 import es.upv.dsic.gti_ia.fipa.AgentID;
 import es.upv.dsic.gti_ia.magentix2.SingleAgent;
 
-public class ReceptorBenchmark2a extends SingleAgent{
-	
-	LinkedBlockingQueue<MessageTransfer> internalQueue;
-	
-	public ReceptorBenchmark2a(AgentID aid, Connection connection) {
+public class ReceptorBenchmark2 extends SingleAgent{
+		
+	public ReceptorBenchmark2(AgentID aid, Connection connection) {
 		super(aid, connection);
 	}
 	

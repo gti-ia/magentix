@@ -5,7 +5,7 @@ import es.upv.dsic.gti_ia.fipa.ACLMessage;
 import es.upv.dsic.gti_ia.fipa.AgentID;
 import es.upv.dsic.gti_ia.magentix2.SingleAgent;
 
-public class EmisorBenchmark2a extends SingleAgent {
+public class EmisorBenchmark2 extends SingleAgent {
 	int nmsgtot;	//nombre total de missatges a enviar
 	int completat=0;
 	int tmsg;		//tamany del missatge
@@ -17,9 +17,13 @@ public class EmisorBenchmark2a extends SingleAgent {
 
 
     
-	public EmisorBenchmark2a(AgentID aid, Connection connection) {
+	public EmisorBenchmark2(AgentID aid, Connection connection, int nmsgtot, int tmsg, int ntotal, int nemisor, int nreceptor) {
 		super(aid, connection);
-		nmsgtot = 10;
+		this.nmsgtot = nmsgtot;	
+		this.tmsg = tmsg;		
+		this.ntotal = ntotal;	
+		this.nemisor = nemisor;	
+		this.nreceptor = nreceptor;	
 	}
 	
 	public void execute(){

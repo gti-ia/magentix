@@ -1,22 +1,18 @@
 package benchmarks.bench2a;
 
-import java.util.concurrent.LinkedBlockingQueue;
-
 import org.apache.qpid.transport.Connection;
-import org.apache.qpid.transport.MessageTransfer;
-
 import es.upv.dsic.gti_ia.fipa.ACLMessage;
 import es.upv.dsic.gti_ia.fipa.AgentID;
 import es.upv.dsic.gti_ia.magentix2.SingleAgent;
 
-public class ControladorBenchmark2a extends SingleAgent {
-	
-	LinkedBlockingQueue<MessageTransfer> internalQueue;
+public class ControladorBenchmark2 extends SingleAgent {
+
 	int ntotal, nagents=0, nacabats = 0;
 	long t1,t2;
 	
-	public ControladorBenchmark2a(AgentID aid, Connection connection) {
+	public ControladorBenchmark2(AgentID aid, Connection connection, int ntotal) {
 		super(aid, connection);
+		this.ntotal = ntotal;
 	}
 	
 	public void execute(){
