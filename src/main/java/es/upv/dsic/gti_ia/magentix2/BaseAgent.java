@@ -194,10 +194,10 @@ public class BaseAgent implements Runnable{
 			
 			//decidimos si el mensaje es interno o va al exterior dependiendo de su protocolo
 			
-			if(msg.getReceiver().protocol != "qpid")
+			if(!msg.getReceiver_list().get(i).protocol.equals("qpid"))
 				xfr.destination("agentepasarelaInOut");
 			else
-				xfr.destination(msg.getReceiver().name);
+				xfr.destination(msg.getReceiver_list().get(i).name);
 			
 			xfr.acceptMode(MessageAcceptMode.EXPLICIT);
 	        xfr.acquireMode(MessageAcquireMode.PRE_ACQUIRED);
