@@ -19,13 +19,12 @@ public class EmisorBenchmark3 extends SingleAgent {
 
 
     
-	public EmisorBenchmark3(AgentID aid, Connection connection, int nmsgtot, int tmsg, int ntotal, int nemisor, int nreceptor) {
+	public EmisorBenchmark3(AgentID aid, Connection connection, int nmsgtot, int tmsg, int ntotal, int nemisor) {
 		super(aid, connection);
 		this.nmsgtot = nmsgtot;	
 		this.tmsg = tmsg;		
 		this.ntotal = ntotal;	
 		this.nemisor = nemisor;	
-		this.nreceptor = nreceptor;	
 	}
 	
 	public void execute(){
@@ -47,7 +46,7 @@ public class EmisorBenchmark3 extends SingleAgent {
 		receiveACLMessage();			
 		
 		/*
-		 * Construcción del mensaje
+		 * Construcciï¿½n del mensaje
 		 */
 		String cadena = "";
 		ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
@@ -68,7 +67,7 @@ public class EmisorBenchmark3 extends SingleAgent {
 			send(msg);					//enviem missatge
 			receiveACLMessage();		//esperem a la resposta del receptor
 			
-			if(completat < nmsg) tot = tot + t2 - t1; //només agafarem estadÃ­stiques dels primers nmsg missatges
+			if(completat < nmsg) tot = tot + t2 - t1; //nomï¿½s agafarem estadÃ­stiques dels primers nmsg missatges
 			completat++;
 		}		
 		System.out.println("Mitjana RTT: "+ (float) tot/nmsg+" ms");
