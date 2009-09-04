@@ -24,7 +24,6 @@ public class Lanzadera {
 		tmsg,		//tamany del missatge   <------ 4
     	ntotal,	//nombre total d'agents   <------ 5
     	nemisor,	//nombre del agent   <------ 6
-    	nreceptor,	//nombre del primer destinatari   <------ 7
     	 *
     	 */
 	
@@ -41,7 +40,7 @@ public class Lanzadera {
 	 * "1 o 2 o 3 o 4" (Tipo de Benchamrk),   <------ 0
 	 * "Controlador" ,   <------ 1
     	    	nombre completo 2
-    	ntotal,	//nombre total d'agents   <------ 2
+    	ntotal,	//nombre total d'agents   <------ 3
 
     	 *
     	 */
@@ -60,19 +59,19 @@ public class Lanzadera {
 		{
 			switch ( Integer.valueOf(args[0].toString()) ) {
 		      case 1:
-		    	  EmisorBenchmark1 a1 = new EmisorBenchmark1(agent, con, Integer.valueOf(args[3]),Integer.valueOf(args[4]),Integer.valueOf(args[5]), Integer.valueOf(args[6]),Integer.valueOf(args[7]) );
+		    	  EmisorBenchmark1 a1 = new EmisorBenchmark1(agent, con, Integer.valueOf(args[3]),Integer.valueOf(args[4]),Integer.valueOf(args[5]), Integer.valueOf(args[6]));
 		    	  a1.start();
 		    	  break;
 		      case 2:
-		    	  EmisorBenchmark2 a2 = new EmisorBenchmark2(agent, con, Integer.valueOf(args[3]),Integer.valueOf(args[4]),Integer.valueOf(args[5]), Integer.valueOf(args[6]),Integer.valueOf(args[7]) );
+		    	  EmisorBenchmark2 a2 = new EmisorBenchmark2(agent, con, Integer.valueOf(args[3]),Integer.valueOf(args[4]),Integer.valueOf(args[5]), Integer.valueOf(args[6]));
 		    	  a2.start(); 
 		    	  break;
 		      case 3:
-		    	  EmisorBenchmark3 a3 = new EmisorBenchmark3(agent, con, Integer.valueOf(args[3]),Integer.valueOf(args[4]),Integer.valueOf(args[5]), Integer.valueOf(args[6]),Integer.valueOf(args[7]) );
+		    	  EmisorBenchmark3 a3 = new EmisorBenchmark3(agent, con, Integer.valueOf(args[3]),Integer.valueOf(args[4]),Integer.valueOf(args[5]), Integer.valueOf(args[6]));
 		    	  a3.start(); 
 		    	  break;
 		      case 4:
-		    	  EmisorBenchmark4 a4 = new EmisorBenchmark4(agent, con, Integer.valueOf(args[3]),Integer.valueOf(args[4]),Integer.valueOf(args[5]), Integer.valueOf(args[6]),Integer.valueOf(args[7]) );
+		    	  EmisorBenchmark4 a4 = new EmisorBenchmark4(agent, con, Integer.valueOf(args[3]),Integer.valueOf(args[4]),Integer.valueOf(args[5]), Integer.valueOf(args[6]));
 		    	  a4.start(); 
 		    	  break;
 		      default:
@@ -108,19 +107,19 @@ public class Lanzadera {
 		{
 			switch ( Integer.valueOf(args[0].toString()) ) {
 		      case 1:
-		    	  ControladorBenchmark1 a1 = new ControladorBenchmark1(agent, con, Integer.valueOf(args[2]));
+		    	  ControladorBenchmark1 a1 = new ControladorBenchmark1(agent, con, Integer.valueOf(args[3]));
 		    	  a1.start(); 
 		    	  break;
 		      case 2:
-		    	  ControladorBenchmark2 a2 = new ControladorBenchmark2(agent, con, Integer.valueOf(args[2]));
+		    	  ControladorBenchmark2 a2 = new ControladorBenchmark2(agent, con, Integer.valueOf(args[3]));
 		    	  a2.start(); 
 		    	  break;
 		      case 3:
-		    	  ControladorBenchmark3 a3 = new ControladorBenchmark3(agent, con, Integer.valueOf(args[2] ));
+		    	  ControladorBenchmark3 a3 = new ControladorBenchmark3(agent, con, Integer.valueOf(args[3]));
 		    	  a3.start(); 
 		    	  break;
 		      case 4:
-		    	  ControladorBenchmark4 a4 = new ControladorBenchmark4(agent, con, Integer.valueOf(args[2]));
+		    	  ControladorBenchmark4 a4 = new ControladorBenchmark4(agent, con, Integer.valueOf(args[3]));
 		    	  a4.start(); 
 		    	  break;
 		      default:
