@@ -13,26 +13,28 @@ public class EmisorBenchmark1 extends SingleAgent {
     int nemisor;	//nombre del agent
     int nreceptor;	//nombre del primer destinatari
     
-	public EmisorBenchmark1(AgentID aid, Connection connection, int nmsgtot, int tmsg, int ntotal, int nemisor, int nreceptor)
+	public EmisorBenchmark1(AgentID aid, Connection connection, int nmsgtot, int tmsg, int ntotal, int nemisor)
      {
 		super(aid, connection);
 		this.nmsgtot = nmsgtot;	
 		this.tmsg = tmsg;		
 		this.ntotal = ntotal;	
-		this.nemisor = nemisor;	
-		this.nreceptor = nreceptor;	
-	    
-		
+		this.nemisor = nemisor;		
 	}
 	
 	public void execute(){
+		System.out.println("");
+		System.out.println("Soy "+this.getName()+". Arranco");
+		System.out.println("");
 		//Enviem missatge de Ready al agent controlador
-		AgentID controlador = new AgentID("controlador", "http", "localhost", "8080");
+		AgentID controlador = new AgentID("controlador", "qpid", "localhost", "8080");
 		ACLMessage msgcont = new ACLMessage(ACLMessage.REQUEST);
 		msgcont.setContent("Ready");
 		msgcont.setReceiver(controlador);
 		msgcont.setSender(this.getAid());
-		
+		System.out.println("");
+		System.out.println("Soy "+this.getName()+". Envio mensaje a controlador");
+		System.out.println("");
 		send(msgcont); //sergio
 		
 		
@@ -46,11 +48,13 @@ public class EmisorBenchmark1 extends SingleAgent {
 		msg.setContent(cadena);
 		//destinatari
 		AgentID receiver = new AgentID();
-		receiver.protocol = "http";
+		receiver.protocol = "qpid";
 		receiver.port = "8080";
 		nreceptor = (nemisor % ntotal) + 1;
 		receiver.name = "receptor"+nreceptor;
 		receiver.host = "host"+nreceptor;
+		msg.setReceiver(receiver);
+		msg.setSender(this.getAid());
 		while(completat < nmsgtot){
 			send(msg);					//enviem missatge
 			receiveACLMessage();		//esperem a la resposta del receptor

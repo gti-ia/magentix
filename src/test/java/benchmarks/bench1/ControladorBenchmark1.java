@@ -16,6 +16,9 @@ public class ControladorBenchmark1 extends SingleAgent {
 	}
 	
 	public void execute(){
+		System.out.println("");
+		System.out.println("Soy "+this.getName()+". Arranco");
+		System.out.println("");
 		//Esperem a rebre el Ready de tots els agents emisors
 		while(nagents < ntotal){
 			this.receiveACLMessage();
@@ -27,15 +30,19 @@ public class ControladorBenchmark1 extends SingleAgent {
 		msg.setContent("Start!");
 		msg.setSender(this.getAid());
 		AgentID receiver = new AgentID();
-		receiver.protocol = "http";
+		receiver.protocol = "qpid";
 		receiver.port = "8080";
 		//enviem un missatge a cada emisor per a que comencen a emetre missatges
-		for(int i=0; i < ntotal; i++){
+		for(int i=1; i <= ntotal; i++){
 			receiver.host = "host"+i;
 			receiver.name = "emisor"+i;
-			msg.add_receiver(receiver);
+			msg.setReceiver(receiver);
+			send(msg);
 		}
-		this.send_multicast(msg);
+		System.out.println("");
+		System.out.println("Soy "+this.getName()+".Mensajes enviados a receptores");
+		System.out.println("");
+		//this.send_multicast(msg);
 		
 		//esperem a que ens responguen tots amb ok
 		while(nacabats < ntotal){
@@ -44,7 +51,9 @@ public class ControladorBenchmark1 extends SingleAgent {
 		}
 		
 		//Mostrem resultat per pantalla
+		System.out.println("");
 		System.out.println("Prova acabada!");
+		System.out.println("");
 		t2 = System.currentTimeMillis();
 		System.out.println("Bench Time (s): "+ (float) (t2 - t1)/1000);
 	}
