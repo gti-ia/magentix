@@ -1,8 +1,20 @@
+
+
+/**
+ * La clase Adviser permite controlar las suspenciones de los agentes.
+ * 
+ * @author  Joan Bellver Faus, GTI-IA, DSIC, UPV
+ * @version 2009.9.07
+ */
+
 package es.upv.dsic.gti_ia.proto;
 
 public class Adviser {
 
 	
+    /**
+     * Suspende el proceso
+     */
 	public synchronized void esperar()
 	{
 		
@@ -15,6 +27,11 @@ public class Adviser {
 			}
 	}
 	
+	  /**
+     * Suspende el proceso un tiempo
+     * 
+     * @param  timeout tiempo de espera.
+     */
 	public synchronized void esperar(long timeout)
 	{
 		
@@ -27,6 +44,9 @@ public class Adviser {
 			}
 	}
 	
+    /**
+     * Reactiva el proceso
+     */
 	public synchronized void dar()
 	{
 		try{

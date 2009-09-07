@@ -27,6 +27,8 @@ public class FIPARequestInitiator {
 	private ACLMessage resNofificationmsg;
 	
 	private Adviser sin=null;
+	
+	private boolean finish=false;
 
 	
 	
@@ -35,21 +37,24 @@ public class FIPARequestInitiator {
 	private  Logger logger = Logger.getLogger(this.getClass().getName());
 	
 	
+    /**
+     * Create a FIPARequestInitiator.
+     * @param agent    agente que crear el inicio del protocolo
+     * @param msg    mensaje que quiere enviar.
+     */
 	
-	
-	public FIPARequestInitiator(QueueAgent agent, ACLMessage msg)//, Sincro _sin)
+	public FIPARequestInitiator(QueueAgent agent, ACLMessage msg)
 	{
 		myAgent = agent;
 		requestmsg = msg;
-		//this.sin = _sin;
 		agent.setAdviserIni(new Adviser());
 		this.sin = agent.getAdviserIni();
 		
 	}
 	
-	public int getEstado()
+	public boolean finalizado()
 	{
-	return this.state;	
+	return this.finish;	
 	}
 	
 	public  void action()
@@ -70,6 +75,7 @@ public class FIPARequestInitiator {
 			if (request==null)
 			{
 				//finalización del protocolo
+				this.finish = true;
 				break;
 			}
 			else
@@ -189,14 +195,13 @@ public class FIPARequestInitiator {
 			}
 		}
 		case ALL_REPLIES_RECEIVED_STATE:{
-			myAgent.setAdviserIni(null);
-			state = PREPARE_MSG_STATE;
+			state = ALL_RESULT_NOTIFICATION_RECEIVED_STATE;
 			break;
 		}
 		case ALL_RESULT_NOTIFICATION_RECEIVED_STATE:{
 
 			myAgent.setAdviserIni(null);
-            state = PREPARE_MSG_STATE;
+            this.finish = true;
 			this.requestmsg = null;
 			this.resNofificationmsg = null;
 			this.resNofificationmsg = null;
