@@ -1,7 +1,7 @@
 
 
 /**
- * La clase Adviser permite controlar las suspenciones de los agentes.
+ * La clase Adviser permite controlar el estado de un agente (ejecutando, suspendido).
  * 
  * @author  Joan Bellver Faus, GTI-IA, DSIC, UPV
  * @version 2009.9.07

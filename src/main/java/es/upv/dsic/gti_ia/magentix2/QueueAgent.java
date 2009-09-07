@@ -1,3 +1,12 @@
+
+/**
+ * La clase QueueAgent crea un nuevo agente.
+ * 
+ * @author  Joan Bellver Faus, GTI-IA, DSIC, UPV
+ * @version 2009.9.07
+ */
+
+
 package es.upv.dsic.gti_ia.magentix2;
 
 import java.util.ArrayList;
@@ -23,6 +32,14 @@ public class QueueAgent extends BaseAgent{
 	private AgentID aid = null;
 	private Adviser advRes = null;
 	private Adviser advIni = null;
+	
+	
+    /**
+     * Create a QueueAgent.
+     * @param aid   agent ID.
+     * @param connection conexión con el broker.
+     */
+	
 	public QueueAgent(AgentID aid, Connection connection) {
 		super(aid, connection);
 		//internalQueue = new LinkedBlockingQueue<MessageTransfer>();

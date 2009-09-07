@@ -1,3 +1,13 @@
+
+
+/**
+ * La clase messageTemplate crea una plantilla para poder compara los mensajes.
+ * 
+ * @author  Joan Bellver Faus, GTI-IA, DSIC, UPV
+ * @version 2009.9.07
+ */
+
+
 package es.upv.dsic.gti_ia.proto;
 
 import java.util.Date;
@@ -102,6 +112,13 @@ public class MessageTemplate {
 	/*public ACLMessage(){
 		performative = UNKNOWN;
 	}*/
+	
+	
+	
+    /**
+     * Create a FIPARequestInitiator.
+     * @param iprotocol    protocolo (FIPA_REQUEST, FIPA_QUERY)
+     */
 	
 	public MessageTemplate(String iprotocol)
 	{

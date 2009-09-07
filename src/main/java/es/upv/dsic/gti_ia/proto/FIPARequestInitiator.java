@@ -1,3 +1,11 @@
+
+/**
+ * La clase FIPARequestInitiator permite ejecutar el protocolo FIPA-REQUEST por la parte del iniciador.
+ * 
+ * @author  Joan Bellver Faus, GTI-IA, DSIC, UPV
+ * @version 2009.9.07
+ */
+
 package es.upv.dsic.gti_ia.proto;
 
 

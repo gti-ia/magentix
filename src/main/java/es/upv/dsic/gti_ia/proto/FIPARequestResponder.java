@@ -1,3 +1,11 @@
+
+/**
+ * La clase FIPARequestResponder permite ejecutar el protocolo FIPA-REQUEST por la parte del responder.
+ * 
+ * @author  Joan Bellver Faus, GTI-IA, DSIC, UPV
+ * @version 2009.9.07
+ */
+
 package es.upv.dsic.gti_ia.proto;
 
 
@@ -28,7 +36,11 @@ public class FIPARequestResponder{
 	private Adviser sin=null;
 	
 
-	
+    /**
+     * Create a FIPARequestInitiator.
+     * @param agent    agente que crear el inicio del protocolo
+     * @param template    plantilla para en la que el agente comparara los mensajes.
+     */
 	
 	public FIPARequestResponder(QueueAgent _agent, MessageTemplate _template)//, Sincro _sin)
 	{
