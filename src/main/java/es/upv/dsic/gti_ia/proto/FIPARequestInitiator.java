@@ -100,14 +100,7 @@ public class FIPARequestInitiator {
 		}
 		case RECEIVE_REPLY_STATE:{
 			
-			//try{
-				//this.wait(2000);
-			//System.out.printf("Espero mensaje");
-				//sin.esperar();
-				//System.out.printf("Ha llegado un mensaje\n\n\n");
-			
-			
-			
+	
 			ACLMessage firstReply = myAgent.receiveACLMessageI(template);
 			
 			
@@ -143,7 +136,7 @@ public class FIPARequestInitiator {
 					
 				}
 				default:{
-					//nos llega el segundo mensaje, habido problemas con el segundo mensaje
+					//nos llega el segundo mensaje, habido problemas con el primer mensaje
 					state = RECEIVE_REPLY_STATE;
 					handleOutOfSequence(firstReply);
 					break;
