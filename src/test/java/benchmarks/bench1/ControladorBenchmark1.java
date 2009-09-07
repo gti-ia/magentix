@@ -39,9 +39,9 @@ public class ControladorBenchmark1 extends SingleAgent {
 			msg.setReceiver(receiver);
 			send(msg);
 		}
-		System.out.println("");
-		System.out.println("Soy "+this.getName()+".Mensajes enviados a receptores");
-		System.out.println("");
+//		System.out.println("");
+//		System.out.println("Soy "+this.getName()+".Mensajes enviados a receptores");
+//		System.out.println("");
 		//this.send_multicast(msg);
 		
 		//esperem a que ens responguen tots amb ok

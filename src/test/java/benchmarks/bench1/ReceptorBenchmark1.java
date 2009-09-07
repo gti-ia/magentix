@@ -15,16 +15,15 @@ public class ReceptorBenchmark1 extends SingleAgent{
 		System.out.println("");
 		System.out.println("Soy "+this.getName()+". Arranco");
 		System.out.println("");
-		while(true)
-		{			
-			ACLMessage msg = receiveACLMessage();	//esperem missatge des de'l emisor
-			AgentID sender = msg.getReceiver();		//tornem el missatge al emisor
-			msg.setReceiver(msg.getSender());
-			msg.setSender(sender);
-			System.out.println("");
-			System.out.println("Soy "+this.getName()+". He recibido y paso a responder");
-			System.out.println("");
-			send(msg);
-		}
+				
+		ACLMessage msg = receiveACLMessage();	//esperem missatge des de'l emisor
+		AgentID sender = msg.getReceiver();		//tornem el missatge al emisor
+		msg.setReceiver(msg.getSender());
+		msg.setSender(sender);
+//		System.out.println("");
+//		System.out.println("Soy "+this.getName()+". He recibido y paso a responder");
+//		System.out.println("");
+		send(msg);
+		
 	}
 }
