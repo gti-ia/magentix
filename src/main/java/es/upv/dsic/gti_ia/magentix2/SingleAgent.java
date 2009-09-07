@@ -48,7 +48,7 @@ public abstract class SingleAgent extends BaseAgent {
         
         indice2 = body.indexOf('#', indice1);
         ACLMessage msg = new ACLMessage(Integer.parseInt(body.substring(indice1, indice2)));        
-        System.out.println("performative "+ msg.getPerformative());
+        //System.out.println("performative "+ msg.getPerformative());
         
         //deserializamos los diferentes AgentesID (Sender, Receiver, ReplyTo)
         for(int i=0; i<3 ; i++){
