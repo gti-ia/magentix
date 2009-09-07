@@ -110,7 +110,7 @@ public class FIPARequestInitiator {
 			
 			ACLMessage firstReply = myAgent.receiveACLMessageI(template);
 			
-			//System.out.println("\n el valor de firstReply es: "+firstReply +"su performativa es "+ firstReply.getPerformative());
+			
 			if (firstReply!=null){
 				
 				switch(firstReply.getPerformativeInt()){
@@ -143,6 +143,7 @@ public class FIPARequestInitiator {
 					
 				}
 				default:{
+					//nos llega el segundo mensaje, habido problemas con el segundo mensaje
 					state = RECEIVE_REPLY_STATE;
 					handleOutOfSequence(firstReply);
 					break;
@@ -153,15 +154,12 @@ public class FIPARequestInitiator {
 			}
 			else
 			{
-			
+				this.sin.esperar();
 				 state = RECEIVE_REPLY_STATE;// state = ALL_REPLIES_RECEIVED_STATE;
 				 break;
 			}
 		}
 		case RECEIVE_2ND_REPLY_STATE:{
-			//if (myAgent.getNMensajes()==0) //si aun no ha llegado el segundo mensaje
-			//sin.esperar();
-			//despues de recibir un mensaje con performative AGREE
 			ACLMessage secondReply = myAgent.receiveACLMessageI(template);
 			
 			
@@ -181,6 +179,7 @@ public class FIPARequestInitiator {
 					
 				}
 				default:{
+					
 					//state = RECEIVE_REPLY_STATE;
 					state = ALL_RESULT_NOTIFICATION_RECEIVED_STATE;
 					handleOutOfSequence(secondReply);
@@ -191,6 +190,7 @@ public class FIPARequestInitiator {
 			}
 			else
 			{
+				this.sin.esperar();
 				state = RECEIVE_2ND_REPLY_STATE;
 				break;
 			}
