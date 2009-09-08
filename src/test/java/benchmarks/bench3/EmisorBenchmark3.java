@@ -14,9 +14,6 @@ public class EmisorBenchmark3 extends SingleAgent {
     int nreceptor = Integer.parseInt(this.getName().substring(6)); //nombre d'agent
     int nmsg=0;
     long t1,t2,tot=0;
-    
-
-
 
     
 	public EmisorBenchmark3(AgentID aid, Connection connection, int nmsgtot, int tmsg, int ntotal, int nemisor) {
@@ -55,9 +52,9 @@ public class EmisorBenchmark3 extends SingleAgent {
 		msg.setContent(cadena);
 		//destinatari
 		AgentID receiver = new AgentID();
-		receiver.protocol = "http";
+		receiver.protocol = "qpid";
 		receiver.port = "8080";
-		nreceptor = (nemisor % ntotal) + 1;
+		nreceptor = nemisor;
 		receiver.name = "receptor"+nreceptor;
 		receiver.host = "host"+nreceptor;
 		/*

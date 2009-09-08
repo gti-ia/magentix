@@ -30,12 +30,12 @@ public class ControladorBenchmark3 extends SingleAgent {
 		receiver.protocol = "http";
 		receiver.port = "8080";
 		//enviem un missatge a cada emisor per a que comencen a emetre missatges
-		for(int i=0; i < ntotal; i++){
+		for(int i=1; i <= ntotal; i++){
 			receiver.host = "host"+i;
 			receiver.name = "emisor"+i;
-			msg.add_receiver(receiver);
+			msg.setReceiver(receiver);
+			send(msg);
 		}
-		this.send_multicast(msg);
 		
 		//esperem a que ens responguen tots amb ok
 		while(nacabats < ntotal){
