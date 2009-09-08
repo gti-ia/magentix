@@ -26,7 +26,7 @@ public class EmisorBenchmark4 extends SingleAgent {
 	
 	public void execute(){
 		//Enviem missatge de Ready al agent controlador
-		AgentID controlador = new AgentID("controlador", "http", "localhost", "8080");
+		AgentID controlador = new AgentID("controlador", "qpid", "localhost", "8080");
 		ACLMessage msgcont = new ACLMessage(ACLMessage.REQUEST);
 		msgcont.setContent("Ready");
 		msgcont.setReceiver(controlador);
