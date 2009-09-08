@@ -16,9 +16,7 @@ public class ControladorBenchmark1 extends SingleAgent {
 	}
 	
 	public void execute(){
-		System.out.println("");
 		System.out.println("Soy "+this.getName()+". Arranco");
-		System.out.println("");
 		//Esperem a rebre el Ready de tots els agents emisors
 		while(nagents < ntotal){
 			this.receiveACLMessage();
@@ -51,9 +49,7 @@ public class ControladorBenchmark1 extends SingleAgent {
 		}
 		
 		//Mostrem resultat per pantalla
-		System.out.println("");
 		System.out.println("Prova acabada!");
-		System.out.println("");
 		t2 = System.currentTimeMillis();
 		System.out.println("Bench Time (s): "+ (float) (t2 - t1)/1000);
 	}

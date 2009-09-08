@@ -6,6 +6,7 @@ import es.upv.dsic.gti_ia.fipa.AgentID;
 import es.upv.dsic.gti_ia.magentix2.SingleAgent;
 
 public class ReceptorBenchmark1 extends SingleAgent{
+	public int nemisores;
 	
 	public ReceptorBenchmark1(AgentID aid, Connection connection) {
 		super(aid, connection);
@@ -15,7 +16,7 @@ public class ReceptorBenchmark1 extends SingleAgent{
 		System.out.println("");
 		System.out.println("Soy "+this.getName()+". Arranco");
 		System.out.println("");
-		
+		int ntotal = 0;
 		while(true){
 			ACLMessage msg = receiveACLMessage();	//esperem missatge des de'l emisor
 			AgentID sender = msg.getReceiver();		//tornem el missatge al emisor
@@ -25,6 +26,7 @@ public class ReceptorBenchmark1 extends SingleAgent{
 	//		System.out.println("Soy "+this.getName()+". He recibido y paso a responder");
 	//		System.out.println("");
 			send(msg);
+			ntotal++;
 		}
 		
 	}

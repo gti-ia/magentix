@@ -23,18 +23,14 @@ public class EmisorBenchmark1 extends SingleAgent {
 	}
 	
 	public void execute(){
-		System.out.println("");
 		System.out.println("Soy "+this.getName()+". Arranco");
-		System.out.println("");
 		//Enviem missatge de Ready al agent controlador
 		AgentID controlador = new AgentID("controlador", "qpid", "localhost", "8080");
 		ACLMessage msgcont = new ACLMessage(ACLMessage.REQUEST);
 		msgcont.setContent("Ready");
 		msgcont.setReceiver(controlador);
 		msgcont.setSender(this.getAid());
-		System.out.println("");
 		System.out.println("Soy "+this.getName()+". Envio mensaje a controlador");
-		System.out.println("");
 		send(msgcont); //sergio
 		
 		
