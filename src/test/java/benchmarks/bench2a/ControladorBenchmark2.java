@@ -47,9 +47,7 @@ public class ControladorBenchmark2 extends SingleAgent {
 		//Mostrem resultat per pantalla
 		System.out.println("Prova acabada!");
 		t2 = System.currentTimeMillis();
-		System.out.println("Bench Time (s): "+ (float) (t2 - t1)/1000);
-		
-		
+		System.out.println("Bench Time (s): "+ (float) (t2 - t1)/1000);		
 		
 	}
 }
