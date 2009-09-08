@@ -22,13 +22,18 @@ public class ControladorBenchmark4 extends SingleAgent {
 	
 	public void execute(){
 		//Esperem a rebre el Ready de tots els agents emisors
-		while(nagents < ntotal){
+		/*while(nagents < ntotal){
 			msg = this.receiveACLMessage();
 			
 			try{	
 				agents.addElement(msg.getSender().name);	
 			}catch(java.lang.NullPointerException e){System.out.println("No s'ha pogut afegir el Sender");}
 
+			nagents++;
+		}*/
+		
+		while(nagents < ntotal){
+			this.receiveACLMessage();
 			nagents++;
 		}
 		
@@ -37,17 +42,25 @@ public class ControladorBenchmark4 extends SingleAgent {
 		msg.setContent("Start!");
 		msg.setSender(this.getAid());
 		AgentID receiver = new AgentID();
-		receiver.protocol = "http";
+		receiver.protocol = "qpid";
 		receiver.port = "8080";
+		for(int i=1; i <= ntotal; i++){
+			receiver.host = "host"+i;
+			receiver.name = "emisor"+i;
+			msg.setReceiver(receiver);
+			send(msg);
+		}
 		//enviem un missatge a cada emisor per a que comencen a emetre missatges
-		Iterator<String> iterator=agents.iterator();
+		/*Iterator<String> iterator=agents.iterator();
 
 		while(iterator.hasNext())
 			receiver.name = iterator.next();
 		    msg2.add_receiver(receiver);
 
 
-		this.send_multicast(msg);
+		this.send_multicast(msg);*/
+		//enviem un missatge a cada emisor per a que comencen a emetre missatges
+		
 				
 		
 		//esperem a que ens responguen tots amb ok

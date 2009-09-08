@@ -52,9 +52,9 @@ public class EmisorBenchmark4 extends SingleAgent {
 		msg.setContent(cadena);
 		//destinatari
 		AgentID receiver = new AgentID();
-		receiver.protocol = "http";
+		receiver.protocol = "qpid";
 		receiver.port = "8080";
-		nreceptor = (ntotal-nemisor) + 1;
+		nreceptor = nemisor;
 		receiver.name = "receptor"+nreceptor;
 		receiver.host = "host"+nreceptor;
 		/*
