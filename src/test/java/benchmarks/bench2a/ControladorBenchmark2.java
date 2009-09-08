@@ -1,3 +1,4 @@
+
 package benchmarks.bench2a;
 
 import org.apache.qpid.transport.Connection;
