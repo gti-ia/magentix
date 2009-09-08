@@ -53,9 +53,10 @@ public class EmisorBenchmark2 extends SingleAgent {
 		msg.setContent(cadena);
 		//destinatari
 		AgentID receiver = new AgentID();
-		receiver.protocol = "http";
+		receiver.protocol = "qpid";
 		receiver.port = "8080";
-		nreceptor = (nemisor % ntotal) + 1;
+		//nreceptor = (nemisor % ntotal) + 1;
+		nreceptor = 1; //sols hi ha un receptor
 		receiver.name = "receptor"+nreceptor;
 		receiver.host = "host"+nreceptor;
 		/*
