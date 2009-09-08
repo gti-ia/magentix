@@ -27,7 +27,7 @@ public class ControladorBenchmark3 extends SingleAgent {
 		msg.setContent("Start!");
 		msg.setSender(this.getAid());
 		AgentID receiver = new AgentID();
-		receiver.protocol = "http";
+		receiver.protocol = "qpid";
 		receiver.port = "8080";
 		//enviem un missatge a cada emisor per a que comencen a emetre missatges
 		for(int i=1; i <= ntotal; i++){
