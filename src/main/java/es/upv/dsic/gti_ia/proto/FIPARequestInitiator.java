@@ -55,7 +55,10 @@ public class FIPARequestInitiator {
 	{
 		myAgent = agent;
 		requestmsg = msg;
+		if (agent.getAdviserIni()==null)
+		{
 		agent.setAdviserIni(new Adviser());
+		}
 		this.sin = agent.getAdviserIni();
 		
 	}
@@ -104,7 +107,6 @@ public class FIPARequestInitiator {
 				template.setSender(request.getReceiver());
 				
 
-
 				myAgent.send(request);
 				state = RECEIVE_REPLY_STATE;
 						
@@ -122,6 +124,7 @@ public class FIPARequestInitiator {
 				
 				switch(firstReply.getPerformativeInt()){
 				case ACLMessage.AGREE:{
+					System.out.println("Recibo 1");
 					state = RECEIVE_2ND_REPLY_STATE;
 					handleAgree(firstReply);
 					break;
@@ -173,6 +176,7 @@ public class FIPARequestInitiator {
 			if (secondReply!=null){
 				switch(secondReply.getPerformativeInt()){
 				case ACLMessage.INFORM:{
+					System.out.println("Recibo 2");
 					state = ALL_RESULT_NOTIFICATION_RECEIVED_STATE;
 					handleInform(secondReply);
 					break;
@@ -208,7 +212,6 @@ public class FIPARequestInitiator {
 		}
 		case ALL_RESULT_NOTIFICATION_RECEIVED_STATE:{
 
-			myAgent.setAdviserIni(null);
             this.finish = true;
 			this.requestmsg = null;
 			this.resNofificationmsg = null;

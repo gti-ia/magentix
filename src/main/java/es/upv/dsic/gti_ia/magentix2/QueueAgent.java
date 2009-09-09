@@ -37,7 +37,7 @@ public class QueueAgent extends BaseAgent{
     /**
      * Create a QueueAgent.
      * @param aid   agent ID.
-     * @param connection conexión con el broker.
+     * @param connection conexion con el broker.
      */
 	
 	public QueueAgent(AgentID aid, Connection connection) {
@@ -185,7 +185,7 @@ public class QueueAgent extends BaseAgent{
 		//internalQueue.add(xfr);
 	
         messageList.add(MessageTransfertoACLMessage(xfr));
-        
+        //clase encargada de despertar al agente, puede ser del rol responder o del rol iniciator
         if (advRes!=null)
         this.advRes.dar();
         if (advIni!=null)
@@ -312,14 +312,7 @@ public class QueueAgent extends BaseAgent{
 	public final ACLMessage receiveACLMessageI(MessageTemplate template)
 	{//comparacion del template para el initiator
 		ACLMessage msgselect = null;
-		
-		if (this.messageList.size() > 0 )
-		{
-		System.out.println("Numero de mensajes : "+ this.messageList.size());
-		
-		//boolean condicion = true;
-	//	do{
-			//System.out.println("Paso 1");
+
 		for(ACLMessage msg : messageList){
 			
 			//comparamos los campos  protocol, idcoversaciï¿½n y sender
@@ -345,7 +338,7 @@ public class QueueAgent extends BaseAgent{
 		
 			
 		}
-		}
+		
 		/*
         Iterator itera = this.messageList.iterator();
 
