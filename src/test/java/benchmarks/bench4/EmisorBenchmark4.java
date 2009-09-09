@@ -58,6 +58,7 @@ public class EmisorBenchmark4 extends SingleAgent {
 		receiver.name = "receptor"+nreceptor;
 		receiver.host = "host"+nreceptor;
 		msg.setReceiver(receiver);
+		msg.setSender(this.getAid());
 		/*
 		 * Cuando se han enviado todos los mensajes se acaba
 		 */
