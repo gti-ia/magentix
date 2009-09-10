@@ -17,6 +17,8 @@ import org.apache.qpid.transport.Connection;
 import org.apache.qpid.transport.MessageTransfer;
 import org.apache.qpid.transport.Session;
 
+import es.upv.dsic.gti_ia.proto.FIPARequestResponder;
+import es.upv.dsic.gti_ia.proto.FIPARequestInitiator;
 import es.upv.dsic.gti_ia.fipa.ACLMessage;
 import es.upv.dsic.gti_ia.fipa.AgentID;
 import es.upv.dsic.gti_ia.proto.MessageTemplate;
@@ -195,6 +197,26 @@ public class QueueAgent extends BaseAgent{
       
         
     }
+	
+	public void setTarea(Object obj)
+	{
+		
+	
+		
+		
+		if(obj.getClass().getSuperclass().getName().equals("es.upv.dsic.gti_ia.proto.FIPARequestInitiator"))
+		{
+			HiloIni h = new HiloIni((FIPARequestInitiator)obj);
+	        h.start();
+		}
+		else
+		{
+			HiloRes h = new HiloRes((FIPARequestResponder)obj);
+	        h.start();
+		}
+		
+        
+	}
 	
 	public int getNMensajes()
 	{
@@ -381,5 +403,54 @@ public class QueueAgent extends BaseAgent{
 		
 		return msgselect;
 	}
+	
+	 public class HiloIni extends Thread
+	 {
+	 
+		 FIPARequestInitiator iniciador ;
+		 int i;
+	
+		 
+		 public HiloIni(FIPARequestInitiator in)
+		 {
+			
+			 iniciador = in; 
+			 
+		 }
+		 public void run()
+		 {
+			 
+			    do{
+			    
+			    	iniciador.action();
+
+		         }while(!iniciador.finalizado()); 
+			
+		 }
+	 }
+	 
+	 public class HiloRes extends Thread
+	 {
+	 
+		 FIPARequestResponder responder ;
+
+	
+		 
+		 public HiloRes(FIPARequestResponder res)
+		 {
+			
+			 responder = res; 
+			 
+		 }
+		 public void run()
+		 {
+			    do{
+			    
+			    	responder.action();
+
+		         }while(true); 
+			
+		 }
+	 }
 
 }

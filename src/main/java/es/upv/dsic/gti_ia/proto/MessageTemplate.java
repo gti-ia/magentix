@@ -130,8 +130,8 @@ public class MessageTemplate {
 		else
 			if (iprotocol == InteractionProtocol.FIPA_QUERY)
 			{
-				this.performative =  ACLMessage.QUERY_IF;
-				this.protocol = InteractionProtocol.FIPA_QUERY;
+				this.protocol =  InteractionProtocol.FIPA_QUERY;
+				
 			}		
 		
 	}

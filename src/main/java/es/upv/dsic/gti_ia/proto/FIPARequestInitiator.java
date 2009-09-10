@@ -63,6 +63,7 @@ public class FIPARequestInitiator {
 		
 	}
 	
+	
 	public boolean finalizado()
 	{
 	return this.finish;	
@@ -124,7 +125,6 @@ public class FIPARequestInitiator {
 				
 				switch(firstReply.getPerformativeInt()){
 				case ACLMessage.AGREE:{
-					System.out.println("Recibo 1");
 					state = RECEIVE_2ND_REPLY_STATE;
 					handleAgree(firstReply);
 					break;
@@ -176,7 +176,6 @@ public class FIPARequestInitiator {
 			if (secondReply!=null){
 				switch(secondReply.getPerformativeInt()){
 				case ACLMessage.INFORM:{
-					System.out.println("Recibo 2");
 					state = ALL_RESULT_NOTIFICATION_RECEIVED_STATE;
 					handleInform(secondReply);
 					break;
