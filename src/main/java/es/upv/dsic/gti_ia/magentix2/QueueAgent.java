@@ -23,7 +23,9 @@ import es.upv.dsic.gti_ia.fipa.ACLMessage;
 import es.upv.dsic.gti_ia.fipa.AgentID;
 import es.upv.dsic.gti_ia.proto.MessageTemplate;
 
-import es.upv.dsic.gti_ia.proto.Adviser;;
+import es.upv.dsic.gti_ia.proto.Adviser;
+import es.upv.dsic.gti_ia.proto.FIPAQueryResponder;
+import es.upv.dsic.gti_ia.proto.FIPAQueryInitiator;
 
 
 
@@ -34,7 +36,7 @@ public class QueueAgent extends BaseAgent{
 	private AgentID aid = null;
 	private Adviser advRes = null;
 	private Adviser advIni = null;
-	
+	private ArrayList<String> listaConversacionesActivas = new ArrayList<String>(); 
 	
     /**
      * Create a QueueAgent.
@@ -46,6 +48,25 @@ public class QueueAgent extends BaseAgent{
 		super(aid, connection);
 		//internalQueue = new LinkedBlockingQueue<MessageTransfer>();
 		this.aid = aid;
+	}
+	
+	public void setConversacionActiva(String conversacion)
+	{
+		this.listaConversacionesActivas.add(conversacion);
+		
+	}
+	
+	public void deleteConversacionActivas(String conversacion)
+	{
+		for(String conv : this.listaConversacionesActivas){
+			if (conv.equals(conversacion))
+			{
+				this.listaConversacionesActivas.remove(conversacion);
+				break;
+			}
+			
+		}
+		
 	}
 	
 
@@ -198,6 +219,8 @@ public class QueueAgent extends BaseAgent{
         
     }
 	
+	
+	
 	public void setTarea(Object obj)
 	{
 		
@@ -205,16 +228,30 @@ public class QueueAgent extends BaseAgent{
 		
 		
 		if(obj.getClass().getSuperclass().getName().equals("es.upv.dsic.gti_ia.proto.FIPARequestInitiator"))
+			
 		{
-			HiloIni h = new HiloIni((FIPARequestInitiator)obj);
+			
+			HiloIni h = new HiloIni(obj,1);
 	        h.start();
 		}
-		else
+		else if (obj.getClass().getSuperclass().getName().equals("es.upv.dsic.gti_ia.proto.FIPARequestResponder"))
 		{
-			HiloRes h = new HiloRes((FIPARequestResponder)obj);
+			
+			HiloRes h = new HiloRes(obj,1);
 	        h.start();
 		}
-		
+		if(obj.getClass().getSuperclass().getName().equals("es.upv.dsic.gti_ia.proto.FIPAQueryInitiator"))
+		{
+			
+			HiloIni h = new HiloIni(obj,2);
+	        h.start();
+		}
+		else if (obj.getClass().getSuperclass().getName().equals("es.upv.dsic.gti_ia.proto.FIPAQueryResponder"))
+		{
+			
+			HiloRes h = new HiloRes(obj,2);
+	        h.start();
+		}
         
 	}
 	
@@ -225,27 +262,41 @@ public class QueueAgent extends BaseAgent{
 	
 	public final ACLMessage receiveACLMessage(MessageTemplate template){
 		ACLMessage msgselect = null;
+		boolean pasar = true;
 		
 		
 		//System.out.println("Numero de mensajes:" + messageList.size());
 		for(ACLMessage msg : messageList){
+		
+			//comparamos los campos performative y protocol
 			
-			//comparamos los campos performative y protocol 
-			if(template.getPerformative().equals(msg.getPerformative()))
-			{
-				
-				if (template.getProtocol().equals(msg.getProtocol()))
-				{
+			
 
+			if (template.getProtocol().equals(msg.getProtocol()))
+				{
+				//comprobar que sea una conversacion nueva, que no este en la lista de conversaciones activas
+				for(String conv : this.listaConversacionesActivas)
+				{
+					//si existe, entonces debera trartalo el rol de iniciador
+					if (conv.equals(msg.getConversationId()) )
+					{
+						pasar = false;
+						break;
+					}
+					
+				}
+				
+				if (pasar)
+				{
 						msgselect = msg;
 						messageList.remove(msg);
 							//TODO recuperar quan es igual al template i esborrar de la llista de missatges
 							break;
-			
 				}
 			
-					
-			}
+				}
+		
+			
 		}
 		return msgselect;
 	}
@@ -404,27 +455,44 @@ public class QueueAgent extends BaseAgent{
 		return msgselect;
 	}
 	
-	 public class HiloIni extends Thread
+	public class HiloIni extends Thread
 	 {
 	 
-		 FIPARequestInitiator iniciador ;
-		 int i;
+		 Object iniciador ;
+		 int tipo;
 	
-		 
-		 public HiloIni(FIPARequestInitiator in)
+
+		 public HiloIni(Object in, int tipo)
 		 {
 			
 			 iniciador = in; 
+			 this.tipo = tipo;
 			 
 		 }
 		 public void run()
 		 {
 			 
-			    do{
-			    
-			    	iniciador.action();
+			 switch(tipo)
+			 {
+			 case 1:{
+				 
+				    do{
 
-		         }while(!iniciador.finalizado()); 
+				    	((FIPARequestInitiator)iniciador).action();
+
+			         }while(!((FIPARequestInitiator)iniciador).finalizado()); 
+				 
+				 break;}
+			 case 2:{
+				 
+				    do{
+					  
+				    	((FIPAQueryInitiator)iniciador).action();
+
+			         }while(!((FIPAQueryInitiator)iniciador).finalizado()); 
+				 break;}
+			 }
+		
 			
 		 }
 	 }
@@ -432,25 +500,44 @@ public class QueueAgent extends BaseAgent{
 	 public class HiloRes extends Thread
 	 {
 	 
-		 FIPARequestResponder responder ;
-
-	
+		 Object responder ;
+		 int tipo;
 		 
-		 public HiloRes(FIPARequestResponder res)
+		 
+		 public HiloRes(Object res, int tipo)
 		 {
 			
 			 responder = res; 
+			 this.tipo = tipo;
 			 
 		 }
 		 public void run()
 		 {
-			    do{
+			 
 			    
-			    	responder.action();
+				 switch(tipo)
+				 {
+				 case 1:{
+					    do{
+					    	
+					    	((FIPARequestResponder)responder).action();
 
-		         }while(true); 
+				         }while(true); 
+			
+					 }
+				 case 2:{
+					 
+					    do{
+						    
+					    	((FIPAQueryResponder)responder).action();
+
+				         }while(true);
+			
+				 }
 			
 		 }
+		 }
 	 }
+
 
 }
