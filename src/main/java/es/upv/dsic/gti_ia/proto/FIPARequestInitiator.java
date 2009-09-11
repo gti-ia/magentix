@@ -37,6 +37,7 @@ public class FIPARequestInitiator {
 	private Adviser sin=null;
 	
 	private boolean finish=false;
+	String conversationID = null;
 
 	
 	
@@ -82,7 +83,7 @@ public class FIPARequestInitiator {
 		}
 		case SEND_MSG_STATE:{
 			
-			String conversationID = null;
+			
 			ACLMessage request = this.requestsentmsg;
 			if (request==null)
 			{
@@ -107,6 +108,7 @@ public class FIPARequestInitiator {
 				template.setConversationId(conversationID);
 				template.setSender(request.getReceiver());
 				
+				myAgent.setConversacionActiva(conversationID);
 
 				myAgent.send(request);
 				state = RECEIVE_REPLY_STATE;
@@ -215,6 +217,7 @@ public class FIPARequestInitiator {
 			this.requestmsg = null;
 			this.resNofificationmsg = null;
 			this.resNofificationmsg = null;
+			myAgent.deleteConversacionActivas(conversationID);
 			break;
 		}
 		

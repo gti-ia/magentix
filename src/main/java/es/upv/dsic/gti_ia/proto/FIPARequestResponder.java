@@ -60,36 +60,17 @@ public class FIPARequestResponder{
 		
 		switch(state)
 		{
-		case WAITING_MSG_STATE:{
-			boolean puerta = true;
-			
-			do{
-				
+		case WAITING_MSG_STATE:{	
 			ACLMessage request = myAgent.receiveACLMessage(template);
-			
-				if(request != null)
-				{
+			if(request != null)
+			{
 					this.requestmsg = request;
-					state = PREPARE_RESPONSE_STATE;
-					puerta=false;
-				
+					state = PREPARE_RESPONSE_STATE;	
 			}
-			
 			else
 			{
-				
-				
-				
-
 				sin.esperar();//me espero a que llegue un mensaje.
-
-				
-				
 			}
-		
-				
-				
-			}while(puerta);
 			break;
 		}
 		case PREPARE_RESPONSE_STATE:{
