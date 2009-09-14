@@ -228,11 +228,11 @@ public class ACLMessage implements Serializable, Cloneable {
 		reply_byInMillisec = (date==null?0:date.getTime());
 	}
 	
-	public String getReplyBy() {
+	public Date getReplyByDate() {
 		if(reply_byInMillisec != 0)
-			return new Date(reply_byInMillisec).toString();
+			return new Date(reply_byInMillisec);
 		else
-			return "";
+			return null;
 	}
 	
 	public void setPerformative(String performative){
