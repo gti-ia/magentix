@@ -235,6 +235,14 @@ public class ACLMessage implements Serializable, Cloneable {
 			return null;
 	}
 	
+	
+	public String getReplyBy() {
+		if(reply_byInMillisec != 0)
+			return new Date(reply_byInMillisec).toString();
+		else
+			return "";
+	}
+	
 	public void setPerformative(String performative){
 		for(int i=0; i< performatives.length; i++){
 			if(performative.compareTo(performatives[i]) == 0){
