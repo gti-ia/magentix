@@ -10,6 +10,7 @@
 
 package es.upv.dsic.gti_ia.proto;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import es.upv.dsic.gti_ia.proto.FIPANames.InteractionProtocol;
@@ -107,6 +108,9 @@ public class MessageTemplate {
 	private String in_reply_to = "";
 	private long reply_byInMillisec = 0;
 	
+	private ArrayList<AgentID> receiver_list = new ArrayList<AgentID>();
+	private ArrayList<String> listaConversaciones = new ArrayList<String>(); 
+	
 	
 	//constructores
 	/*public ACLMessage(){
@@ -134,6 +138,66 @@ public class MessageTemplate {
 				
 			}		
 		
+	}
+	
+	
+	public ArrayList<String> getList_Conversaciones()
+	{
+		
+		return this.listaConversaciones;
+	}
+	public void addConversacion(String conversacion)
+	{
+		this.listaConversaciones.add(conversacion);
+		
+	}
+	
+	public void deleteConversacion(String conversacion)
+	{
+		for(String conv : this.listaConversaciones){
+			if (conv.equals(conversacion))
+			{
+				this.listaConversaciones.remove(conversacion);
+				break;
+			}
+			
+		}
+		
+	}
+	
+	public int add_receiver(AgentID r)
+	{
+		for(int i = 0; i<receiver_list.size(); i++)
+		{
+			if( receiver_list.get(i).name.equals(r.name) && receiver_list.get(i).host.equals(r.host) 
+				&& receiver_list.get(i).port.equals(r.port) && receiver_list.get(i).protocol.equals(r.protocol))
+				{
+					return -1;
+				}
+		}
+		receiver_list.add(r);
+		return 1;
+	}
+	
+	
+	public boolean existeReceiver(AgentID r)
+	{
+		for(int i = 0; i<receiver_list.size(); i++)
+		{
+			if( receiver_list.get(i).name.equals(r.name) && receiver_list.get(i).host.equals(r.host) 
+				&& receiver_list.get(i).port.equals(r.port) && receiver_list.get(i).protocol.equals(r.protocol))
+				{
+					return true;
+				}
+		}
+		return false;
+	}
+	public ArrayList<AgentID> getReceiver_list() {
+		return receiver_list;
+	}
+
+	public void setReceiver_list(ArrayList<AgentID> receiver_list) {
+		this.receiver_list = receiver_list;
 	}
 	
 	public void setPerformative(int performative){

@@ -39,6 +39,9 @@ public class FIPAQueryInitiator {
 	private boolean finish=false;
 	String conversationID = null;
 	
+	private long timeout = -1;
+	private long endingtime = 0;
+	
 	
 	
 	
@@ -104,10 +107,23 @@ public class FIPAQueryInitiator {
 				//configuramos el template
 				template = new MessageTemplate(InteractionProtocol.FIPA_QUERY);
 				
-				template.setConversationId(conversationID);
-				template.setSender(request.getReceiver());
+				//template.setConversationId(conversationID);
+
+				template.addConversacion(conversationID);
+				template.add_receiver(request.getReceiver());
+
 				
 				myAgent.setConversacionActiva(conversationID);
+				
+				
+				//fijamos el el timeout del mensaje
+				Date d = request.getReplyByDate();
+				if (d!=null)
+						timeout = d.getTime() - (new Date()).getTime();
+				else
+						timeout = -1;
+				endingtime = System.currentTimeMillis() + timeout;
+				
 				myAgent.send(request);
 				state = RECEIVE_REPLY_STATE;
 						
@@ -164,9 +180,23 @@ public class FIPAQueryInitiator {
 			}
 			else
 			{
+				
+				
+				if (timeout>0)
+				{
+					long blocktime = endingtime - System.currentTimeMillis();
+					
+					if (blocktime <=0)
+						state = ALL_REPLIES_RECEIVED_STATE;
+					else
+						this.sin.esperar(blocktime);
+				}
+				else
+				{
 				this.sin.esperar();
 				 state = RECEIVE_REPLY_STATE;// state = ALL_REPLIES_RECEIVED_STATE;
 				 break;
+				}
 			}
 		}
 		case RECEIVE_2ND_REPLY_STATE:{
