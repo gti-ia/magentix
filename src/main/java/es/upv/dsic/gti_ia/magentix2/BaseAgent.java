@@ -64,12 +64,12 @@ public class BaseAgent implements Runnable{
 	
 	//Creamos intercambiador para el agente
 	private void createExchange(){
-		this.session.exchangeDeclare(aid.name, "fanout", null, null, Option.DURABLE);
+		this.session.exchangeDeclare(aid.name, "fanout", null, null, Option.AUTO_DELETE);
 	}
 	
 	//Creamos cola para el agente
 	private void createQueue(){
-		this.session.queueDeclare(aid.name, null, null);
+		this.session.queueDeclare(aid.name, null, null, Option.AUTO_DELETE);
 	}
 	
 	//Vinculamos cola e intercambiador del agente
