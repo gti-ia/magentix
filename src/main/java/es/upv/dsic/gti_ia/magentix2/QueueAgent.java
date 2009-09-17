@@ -259,8 +259,8 @@ public class QueueAgent extends BaseAgent {
 			h.start();
 		}
 		
-		   es.upv.dsic.gti_ia.proto.Adviser adv = new Adviser();
-           adv.esperar();
+	//	   es.upv.dsic.gti_ia.proto.Adviser adv = new Adviser();
+      //     adv.esperar();
 
 	}
 
