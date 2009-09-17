@@ -113,12 +113,9 @@ public class FIPAQueryResponder{
 		
 					
 				ACLMessage receivedMsg = this.requestmsg;
-				
-				
-				
+
 				response = arrangeMessage(receivedMsg, response);
-				
-				System.out.println("Le voy a enviar mensaje a\n\n\n");
+	
 				myAgent.send(response);
 		
 				
