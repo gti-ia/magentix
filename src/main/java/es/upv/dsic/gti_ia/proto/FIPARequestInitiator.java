@@ -251,7 +251,7 @@ public class FIPARequestInitiator {
             this.finish = true;
 			this.requestmsg = null;
 			this.resNofificationmsg = null;
-			this.resNofificationmsg = null;
+			this.requestsentmsg = null;
 			myAgent.deleteConversacionActivas(conversationID);
 			break;
 		}

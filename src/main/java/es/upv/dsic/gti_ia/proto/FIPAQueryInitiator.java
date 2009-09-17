@@ -244,7 +244,7 @@ public class FIPAQueryInitiator {
             this.finish = true;
 			this.requestmsg = null;
 			this.resNofificationmsg = null;
-			this.resNofificationmsg = null;
+			this.requestsentmsg = null;
 			this.myAgent.deleteConversacionActivas(conversationID);
 			break;
 		}

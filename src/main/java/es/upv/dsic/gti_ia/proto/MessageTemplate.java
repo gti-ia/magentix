@@ -132,11 +132,11 @@ public class MessageTemplate {
 			this.protocol = InteractionProtocol.FIPA_REQUEST;
 		}
 		else
-			if (iprotocol == InteractionProtocol.FIPA_QUERY)
-			{
-				this.protocol =  InteractionProtocol.FIPA_QUERY;
+			this.protocol =  iprotocol;
 				
-			}		
+		
+		
+		
 		
 	}
 	
@@ -152,7 +152,17 @@ public class MessageTemplate {
 		
 	}
 	
-	public void deleteConversacion(String conversacion)
+	public boolean deleteAllConversation()
+	{
+		this.listaConversaciones.clear();
+		if (this.listaConversaciones.size()==0)
+			return true;
+		else
+			return false;
+		
+	}
+	
+	public void deleteConversation(String conversacion)
 	{
 		for(String conv : this.listaConversaciones){
 			if (conv.equals(conversacion))
@@ -192,6 +202,18 @@ public class MessageTemplate {
 		}
 		return false;
 	}
+	
+	
+	public boolean deleteAllReceiver()
+	{
+		this.receiver_list.clear();
+		if (this.receiver_list.size()==0)
+			return true;
+		else
+			return false;
+	}
+	
+	
 	public ArrayList<AgentID> getReceiver_list() {
 		return receiver_list;
 	}

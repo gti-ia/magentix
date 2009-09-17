@@ -5,6 +5,12 @@ import java.util.ArrayList;
 import java.util.Date;
 
 
+import es.upv.dsic.gti_ia.fipa.ISO8601;
+
+
+
+
+
 @SuppressWarnings("unchecked")
 public class ACLMessage implements Serializable, Cloneable {
 	/**
@@ -238,7 +244,7 @@ public class ACLMessage implements Serializable, Cloneable {
 	
 	public String getReplyBy() {
 		if(reply_byInMillisec != 0)
-			return new Date(reply_byInMillisec).toString();
+			return ISO8601.toString(new Date(reply_byInMillisec));
 		else
 			return "";
 	}
@@ -251,6 +257,11 @@ public class ACLMessage implements Serializable, Cloneable {
 			}
 		}
 	}
+	
+	public void clearAllReceiver() {
+		this.receiver_list.clear();
+	}
+	
 	/**
 	 * A�ade un receiver a la lista. �til para hacer multiples envios.
 	 * @param r
@@ -334,6 +345,9 @@ public class ACLMessage implements Serializable, Cloneable {
 	
 	public ACLMessage createReply() {
 		ACLMessage m = (ACLMessage)clone();
+		
+		m.clearAllReceiver();
+		
 		
 		m.setReceiver(getSender());
 		m.setLanguage(getLanguage());

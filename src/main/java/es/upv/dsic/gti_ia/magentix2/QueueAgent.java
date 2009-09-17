@@ -11,9 +11,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.Iterator;
+
+
 import org.apache.qpid.transport.Connection;
 import org.apache.qpid.transport.MessageTransfer;
 import org.apache.qpid.transport.Session;
+
 
 import es.upv.dsic.gti_ia.proto.FIPARequestResponder;
 import es.upv.dsic.gti_ia.proto.FIPARequestInitiator;
@@ -24,6 +27,8 @@ import es.upv.dsic.gti_ia.proto.MessageTemplate;
 import es.upv.dsic.gti_ia.proto.Adviser;
 import es.upv.dsic.gti_ia.proto.FIPAQueryResponder;
 import es.upv.dsic.gti_ia.proto.FIPAQueryInitiator;
+import es.upv.dsic.gti_ia.proto.FIPAContractNetInitiator;
+import es.upv.dsic.gti_ia.proto.FIPAContractNetResponder;
 
 public class QueueAgent extends BaseAgent {
 
@@ -60,8 +65,15 @@ public class QueueAgent extends BaseAgent {
 				this.listaConversacionesActivas.remove(conversacion);
 				break;
 			}
-
 		}
+	}
+
+	public boolean deleteTodasConversacionActivas() {
+		this.listaConversacionesActivas.clear();
+		if (this.listaConversacionesActivas.size() == 0)
+			return true;
+		else
+			return false;
 
 	}
 
@@ -181,9 +193,10 @@ public class QueueAgent extends BaseAgent {
 		indice2 = body.indexOf('#', indice1);
 		tam = Integer.parseInt(body.substring(indice1, indice2));
 		// reply by
+		
 		if (tam != 0)
-			msg.setReplyByDate(new Date(Integer.parseInt(body.substring(
-					indice2 + 1, indice2 + 1 + tam))));
+			msg.setReplyByDate( new Date(Integer.parseInt(body.substring(
+					indice2 + 10, indice2  + tam))));
 
 		indice1 = indice2 + 1 + tam;
 		indice2 = body.indexOf('#', indice1);
@@ -200,6 +213,7 @@ public class QueueAgent extends BaseAgent {
 		messageList.add(MessageTransfertoACLMessage(xfr));
 		// clase encargada de despertar al agente, puede ser del rol responder o
 		// del rol iniciator
+
 		if (advRes != null)
 			this.advRes.dar();
 		if (advIni != null)
@@ -233,6 +247,20 @@ public class QueueAgent extends BaseAgent {
 			HiloRes h = new HiloRes(obj, 2);
 			h.start();
 		}
+		if (obj.getClass().getSuperclass().getName().equals(
+				"es.upv.dsic.gti_ia.proto.FIPAContractNetInitiator")) {
+
+			HiloIni h = new HiloIni(obj, 3);
+			h.start();
+		} else if (obj.getClass().getSuperclass().getName().equals(
+				"es.upv.dsic.gti_ia.proto.FIPAContractNetResponder")) {
+
+			HiloRes h = new HiloRes(obj, 3);
+			h.start();
+		}
+		
+		   es.upv.dsic.gti_ia.proto.Adviser adv = new Adviser();
+           adv.esperar();
 
 	}
 
@@ -246,7 +274,6 @@ public class QueueAgent extends BaseAgent {
 
 		// System.out.println("Numero de mensajes:" + messageList.size());
 		for (ACLMessage msg : messageList) {
-
 			// comparamos los campos protocol y conversaciónID (para asegurarnos
 			// que no es una conversacion existente)00
 
@@ -358,34 +385,34 @@ public class QueueAgent extends BaseAgent {
 
 		for (ACLMessage msg : messageList) {
 
-
+			
+			
+			
 			// comparamos los campos protocol, idcoversaciï¿½n y sender
 			if (template.getProtocol().equals(msg.getProtocol())) {
 
 				// miramos dentro de las conversaciones que tenemos
 				for (String conversacion : template.getList_Conversaciones())
 					if (conversacion.equals(msg.getConversationId())) {
+
 						// miramos si pertenece algun agente
 
-						
+						if (template.existeReceiver(msg.getSender())) {
 							
-							if (template.existeReceiver(msg.getSender())) {
+							msgselect = msg;
+							messageList.remove(msg);
+							// condicion = false;
+							break;
 
-								msgselect = msg;
-								messageList.remove(msg);
-								// condicion = false;
-								break;
+						}
+	
 
-							}
-						
 					}
-				
 
 			}
-			if (msgselect!=null)
+			if (msgselect != null)
 				break;
 		}
-
 
 		return msgselect;
 	}
@@ -424,6 +451,15 @@ public class QueueAgent extends BaseAgent {
 				} while (!((FIPAQueryInitiator) iniciador).finalizado());
 				break;
 			}
+			case 3: {
+
+				do {
+
+					((FIPAContractNetInitiator) iniciador).action();
+
+				} while (!((FIPAContractNetInitiator) iniciador).finalizado());
+				break;
+			}
 			}
 
 		}
@@ -457,6 +493,15 @@ public class QueueAgent extends BaseAgent {
 				do {
 
 					((FIPAQueryResponder) responder).action();
+
+				} while (true);
+
+			}
+			case 3: {
+
+				do {
+
+					((FIPAContractNetResponder) responder).action();
 
 				} while (true);
 
