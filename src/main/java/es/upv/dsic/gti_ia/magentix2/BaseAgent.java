@@ -20,7 +20,7 @@ public class BaseAgent implements Runnable{
 	/*Atributos*/
 	private AgentID aid;
 	private Connection connection;
-	private Session session;
+	protected Session session;
 	private Thread myThread;
 	
 	private class Listener implements SessionListener{
@@ -50,7 +50,7 @@ public class BaseAgent implements Runnable{
 		this.session = createSession();
 		this.listener = new Listener();
 		myThread = new Thread(this);
-		createExchange();
+		//createExchange();
 		createQueue();
 		createBind();
 		createSubscription();
@@ -74,7 +74,8 @@ public class BaseAgent implements Runnable{
 	
 	//Vinculamos cola e intercambiador del agente
 	private void createBind(){
-		this.session.exchangeBind(aid.name, aid.name, null, null);
+		//this.session.exchangeBind(aid.name, aid.name, null, null);
+		this.session.exchangeBind(aid.name, "amq.direct", aid.name,null);
 	}
 	
 	//Creamos la subscripcion del listener del agente
@@ -131,8 +132,10 @@ public class BaseAgent implements Runnable{
 		
 		//decidimos si el mensaje es interno o va al exterior dependiendo de su protocolo
 		
+		xfr.destination("amq.direct");
 		
-		if(!msg.getReceiver().protocol.equals("qpid"))
+		/* De moment no fem un exchange per cua
+		 * if(!msg.getReceiver().protocol.equals("qpid"))
 		{
 			
 			xfr.destination("BridgeAgentInOut");
@@ -140,19 +143,14 @@ public class BaseAgent implements Runnable{
 		}
 		else
 		{
-			
-			xfr.destination(msg.getReceiver().name);
-		}
-			
-		
+			xfr.destination(msg.getReceiver().name); original			
+		}*/
+				
 		xfr.acceptMode(MessageAcceptMode.EXPLICIT);
-        xfr.acquireMode(MessageAcquireMode.PRE_ACQUIRED);
+		xfr.acquireMode(MessageAcquireMode.PRE_ACQUIRED);
         
-        //No es necesario especificar una routing_key ya que el exchange es del tipo fanout, lo pongo por completitud
-		DeliveryProperties deliveryProps = new DeliveryProperties();
-        deliveryProps.setRoutingKey("routing_key");
-        xfr.header(new Header(deliveryProps));
-        
+        DeliveryProperties deliveryProps = new DeliveryProperties();
+	            
         //Creamos el cuerpo del mensaje serializando el mensaje ACL a una cadena
         String body;
         //Performative
@@ -183,65 +181,18 @@ public class BaseAgent implements Runnable{
         body = body + msg.getContent().length() + "#" + msg.getContent();
         
         xfr.setBody(body);
-        session.messageTransfer(xfr.getDestination(), xfr.getAcceptMode(), xfr.getAcquireMode(), xfr.getHeader(), xfr.getBodyString());
-	}
-	
-	protected void send_multicast(ACLMessage msg){
-		int i = 0;
-		while(i<msg.getReceiver_list().size())
-		{
-			MessageTransfer xfr = new MessageTransfer();
-			
-			//decidimos si el mensaje es interno o va al exterior dependiendo de su protocolo
-			
-			if(!msg.getReceiver_list().get(i).protocol.equals("qpid"))
-				xfr.destination("agentepasarelaInOut");
-			else
-				xfr.destination(msg.getReceiver_list().get(i).name);
-			
-			xfr.acceptMode(MessageAcceptMode.EXPLICIT);
-	        xfr.acquireMode(MessageAcquireMode.PRE_ACQUIRED);
-	        
-	        //No es necesario especificar una routing_key ya que el exchange es del tipo fanout, lo pongo por completitud
-			DeliveryProperties deliveryProps = new DeliveryProperties();
-	        deliveryProps.setRoutingKey("routing_key");
-	        xfr.header(new Header(deliveryProps));
-	        
-	        //Creamos el cuerpo del mensaje serializando el mensaje ACL a una cadena
-	        String body;
-	        //Performative
-	        body = msg.getPerformativeInt() + "#";
-	        //Sender
-	        body = body + msg.getSender().toString().length() + "#" + msg.getSender().toString();
-	        //receiver
-	        body = body + msg.getReceiver().toString().length() + "#" + msg.getReceiver().toString();
-	        //reply to
-	        body = body + msg.getReplyTo().toString().length() + "#" + msg.getReplyTo().toString();
-	        //language
-	        body = body + msg.getLanguage().length() + "#" + msg.getLanguage();
-	        //encoding
-	        body = body + msg.getEncoding().length() + "#" + msg.getEncoding();
-	        //ontology
-	        body = body + msg.getOntology().length() + "#" + msg.getOntology();
-	        //protocol
-	        body = body + msg.getProtocol().length() + "#" + msg.getProtocol();
-	        //conversation id
-	        body = body + msg.getConversationId().length() + "#" + msg.getConversationId();
-	        //reply with
-	        body = body + msg.getReplyWith().length() + "#" + msg.getConversationId();
-	        //in reply to
-	        body = body + msg.getInReplyTo().length() + "#" + msg.getInReplyTo();
-	        //reply by
-	       // System.out.println(body);
-	        body = body + msg.getReplyBy().length() + "#" + msg.getReplyBy();
-	        //content
-	        body = body + msg.getContent().length() + "#" + msg.getContent();
-	        
-	        xfr.setBody(body);
+		for(int i=0; i< msg.getTotalReceivers(); i++){
+			if(!msg.getReceiver(i).protocol.equals("qpid")){			
+	        	deliveryProps.setRoutingKey("BridgeAgentInOut");			
+			}
+			else{
+				deliveryProps.setRoutingKey(msg.getReceiver(i).name);			
+			}
+	        xfr.header(new Header(deliveryProps));	     
 	        session.messageTransfer(xfr.getDestination(), xfr.getAcceptMode(), xfr.getAcquireMode(), xfr.getHeader(), xfr.getBodyString());
 		}
 	}
-			
+				
 	public String getName(){
 		return aid.name;
 	}
@@ -258,7 +209,7 @@ public class BaseAgent implements Runnable{
 	
 	//codigo de terminacion del agente
 	public void terminate(){
-		session.exchangeDelete(aid.name);
+		//session.exchangeDelete(aid.name);
 		session.queueDelete(aid.name);
 		session.close();
 	}
