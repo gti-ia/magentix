@@ -9,8 +9,6 @@ import es.upv.dsic.gti_ia.fipa.ISO8601;
 
 
 
-
-
 @SuppressWarnings("unchecked")
 public class ACLMessage implements Serializable, Cloneable {
 	/**
@@ -95,14 +93,13 @@ public class ACLMessage implements Serializable, Cloneable {
 	
 	private int performative;
 	private AgentID sender = new AgentID();
-	private AgentID receiver = new AgentID();
+	//private AgentID receiver = new AgentID();
 	
 	/*
 	 * List of receivers to enable Multi-Cast
 	 */
 	
-	@SuppressWarnings("unused")
-	private ArrayList<AgentID> receiver_list = new ArrayList();
+	private ArrayList<AgentID> receiver = new ArrayList();
 	
 	private AgentID reply_to = new AgentID();
 	private String content = "";
@@ -151,11 +148,16 @@ public class ACLMessage implements Serializable, Cloneable {
 	}
 	
 	public void setReceiver(AgentID receiver){
-		this.receiver = receiver;
+		this.receiver.clear();
+		this.receiver.add(receiver);
 	}
 	
 	public AgentID getReceiver(){
-		return receiver;
+		return receiver.get(0);
+	}
+	
+	public AgentID getReceiver(int index){
+		return receiver.get(index);
 	}
 	
 	public void setReplyTo(AgentID reply){
@@ -259,7 +261,7 @@ public class ACLMessage implements Serializable, Cloneable {
 	}
 	
 	public void clearAllReceiver() {
-		this.receiver_list.clear();
+		this.receiver.clear();
 	}
 	
 	/**
@@ -267,25 +269,35 @@ public class ACLMessage implements Serializable, Cloneable {
 	 * @param r
 	 * Devuelve -1, si el receiver ya estaba en la lista. 1 en caso contrario
 	 */
-	public int add_receiver(AgentID r)
+	/**
+	 * A�ade un receiver a la lista. �til para hacer multiples envios.
+	 * @param r
+	 * Devuelve -1, si el receiver ya estaba en la lista. 1 en caso contrario
+	 */
+	public int addReceiver(AgentID r)
 	{
-		for(int i = 0; i<receiver_list.size(); i++)
+		//Comprovem si existeix l'agent, si existeix tornem -1
+		for(int i = 0; i<receiver.size(); i++)
 		{
-			if( receiver_list.get(i).name.equals(r.name) && receiver_list.get(i).host.equals(r.host) 
-				&& receiver_list.get(i).port.equals(r.port) && receiver_list.get(i).protocol.equals(r.protocol))
+			if( receiver.get(i).name.equals(r.name) && receiver.get(i).host.equals(r.host) 
+				&& receiver.get(i).port.equals(r.port) && receiver.get(i).protocol.equals(r.protocol))
 				{
 					return -1;
 				}
 		}
-		receiver_list.add(r);
+		receiver.add(r);
 		return 1;
 	}
-	public ArrayList<AgentID> getReceiver_list() {
+	
+	/*public ArrayList<AgentID> getReceiver_list() {
 		return receiver_list;
 	}
 
 	public void setReceiver_list(ArrayList<AgentID> receiver_list) {
 		this.receiver_list = receiver_list;
+	}*/
+	public int getTotalReceivers(){
+		return receiver.size();
 	}
 
 	public AgentID getReply_to() {
