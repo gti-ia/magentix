@@ -289,11 +289,11 @@ public class ACLMessage implements Serializable, Cloneable {
 		return 1;
 	}
 	
-	/*public ArrayList<AgentID> getReceiver_list() {
-		return receiver_list;
+	public ArrayList<AgentID> getReceiverList() {
+		return receiver;
 	}
 
-	public void setReceiver_list(ArrayList<AgentID> receiver_list) {
+	/*public void setReceiver_list(ArrayList<AgentID> receiver_list) {
 		this.receiver_list = receiver_list;
 	}*/
 	public int getTotalReceivers(){
