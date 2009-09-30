@@ -140,13 +140,13 @@ public class FIPARequestInitiator {
 		}
 		case RECEIVE_REPLY_STATE:{
 			
-			System.out.println("Espero primer mensaje soy "+ myAgent.getAid().name);
+	
 			
 			ACLMessage firstReply = myAgent.receiveACLMessageI(template);
 			
 			
 			if (firstReply!=null){
-				System.out.println("Recibo primer mensaje soy "+ myAgent.getAid().name);	
+
 				switch(firstReply.getPerformativeInt()){
 				case ACLMessage.AGREE:{
 					state = RECEIVE_2ND_REPLY_STATE;
@@ -209,13 +209,13 @@ public class FIPARequestInitiator {
 		}
 		case RECEIVE_2ND_REPLY_STATE:{
 			
-			System.out.println("Espero segundo mensaje soy "+ myAgent.getAid().name);
+
 			ACLMessage secondReply = myAgent.receiveACLMessageI(template);
 			
 			
 			if (secondReply!=null){
 				
-				System.out.println("Recibo segundo mensaje soy "+ myAgent.getAid().name);
+	
 				switch(secondReply.getPerformativeInt()){
 				case ACLMessage.INFORM:{
 					state = ALL_RESULT_NOTIFICATION_RECEIVED_STATE;
