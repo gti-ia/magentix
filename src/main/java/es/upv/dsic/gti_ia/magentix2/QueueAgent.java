@@ -11,12 +11,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.Iterator;
-
+import java.util.Dictionary;
+import java.util.HashMap;
 
 import org.apache.qpid.transport.Connection;
 import org.apache.qpid.transport.MessageTransfer;
 import org.apache.qpid.transport.Session;
-
 
 import es.upv.dsic.gti_ia.proto.FIPARequestResponder;
 import es.upv.dsic.gti_ia.proto.FIPARequestInitiator;
@@ -37,7 +37,9 @@ public class QueueAgent extends BaseAgent {
 	private AgentID aid = null;
 	private Adviser advRes = null;
 	private Adviser advIni = null;
+	private Adviser advAux = null;
 	private ArrayList<String> listaConversacionesActivas = new ArrayList<String>();
+	private HashMap<String, String> tablaIDProfile = new HashMap<String, String>();
 
 	/**
 	 * Create a QueueAgent.
@@ -52,13 +54,58 @@ public class QueueAgent extends BaseAgent {
 		super(aid, connection);
 		// internalQueue = new LinkedBlockingQueue<MessageTransfer>();
 		this.aid = aid;
+
 	}
 
+	/**
+	 * Inserta el ID del profile del servicio
+	 * 
+	 * @param id
+	 *            id devuelto por el SF al registrar el servicio
+	 * @param profilename
+	 *            nombre del pfofile
+	 */
+
+	public void setIDProfile(String profilename, String id) {
+		this.tablaIDProfile.put(profilename, id);
+	}
+
+	/**
+	 * 
+	 * @return tablaIDProfile
+	 */
+	public String getIDProfile(String serviceGoal) {
+		return this.tablaIDProfile.get(serviceGoal);
+	}
+
+	/**
+	 * 
+	 * @return tablaIDProfile
+	 */
+	public String DeleteIDProfile(String serviceGoal) {
+		return this.tablaIDProfile.remove(serviceGoal);
+	}
+	
+	public HashMap<String,String> getTableIDProfile()
+	{
+		return this.tablaIDProfile;
+	}
+
+	/**
+	 * Inserta el id de una conversacion que tengamos activa
+	 * 
+	 * @param conversacion
+	 */
 	public void setConversacionActiva(String conversacion) {
 		this.listaConversacionesActivas.add(conversacion);
 
 	}
 
+	/**
+	 * Elimina la conversacion de la lista de activas
+	 * 
+	 * @param conversacion
+	 */
 	public void deleteConversacionActivas(String conversacion) {
 		for (String conv : this.listaConversacionesActivas) {
 			if (conv.equals(conversacion)) {
@@ -68,6 +115,11 @@ public class QueueAgent extends BaseAgent {
 		}
 	}
 
+	/**
+	 * Elimina todas la conversaciones
+	 * 
+	 * @return
+	 */
 	public boolean deleteTodasConversacionActivas() {
 		this.listaConversacionesActivas.clear();
 		if (this.listaConversacionesActivas.size() == 0)
@@ -77,10 +129,19 @@ public class QueueAgent extends BaseAgent {
 
 	}
 
+	/**
+	 * Añade un avisador para el rol de responder
+	 * 
+	 * @param adv
+	 */
 	public void setAdviserRes(Adviser adv) {
 		this.advRes = adv;
 	}
 
+	/**
+	 * 
+	 * @param adv
+	 */
 	public void setAdviserIni(Adviser adv) {
 		this.advIni = adv;
 	}
@@ -193,10 +254,10 @@ public class QueueAgent extends BaseAgent {
 		indice2 = body.indexOf('#', indice1);
 		tam = Integer.parseInt(body.substring(indice1, indice2));
 		// reply by
-		
+
 		if (tam != 0)
-			msg.setReplyByDate( new Date(Integer.parseInt(body.substring(
-					indice2 + 10, indice2  + tam))));
+			msg.setReplyByDate(new Date(Integer.parseInt(body.substring(
+					indice2 + 10, indice2 + tam))));
 
 		indice1 = indice2 + 1 + tam;
 		indice2 = body.indexOf('#', indice1);
@@ -218,6 +279,8 @@ public class QueueAgent extends BaseAgent {
 			this.advRes.dar();
 		if (advIni != null)
 			this.advIni.dar();
+		if (advAux != null)
+			this.advAux.dar();
 
 	}
 
@@ -258,9 +321,9 @@ public class QueueAgent extends BaseAgent {
 			HiloRes h = new HiloRes(obj, 3);
 			h.start();
 		}
-		
-	//	   es.upv.dsic.gti_ia.proto.Adviser adv = new Adviser();
-      //     adv.esperar();
+
+		// es.upv.dsic.gti_ia.proto.Adviser adv = new Adviser();
+		// adv.esperar();
 
 	}
 
@@ -270,36 +333,34 @@ public class QueueAgent extends BaseAgent {
 
 	public final ACLMessage receiveACLMessage(MessageTemplate template) {
 		ACLMessage msgselect = null;
-		boolean pasar = true;
 
 		// System.out.println("Numero de mensajes:" + messageList.size());
-		for (ACLMessage msg : messageList) {
+		ArrayList<ACLMessage> messageListAux = (ArrayList<ACLMessage>)messageList.clone();
+		
+		
+		
+		for (ACLMessage msg : messageListAux) {
 			// comparamos los campos protocol y conversaciónID (para asegurarnos
 			// que no es una conversacion existente)00
 
 			if (template.getProtocol().equals(msg.getProtocol())) {
 				// comprobar que sea una conversacion nueva, que no este en la
 				// lista de conversaciones activas
+				msgselect = msg;
 				for (String conv : this.listaConversacionesActivas) {
 					// si existe, entonces debera trartalo el rol de iniciador
 					if (conv.equals(msg.getConversationId())) {
-						pasar = false;
+						msgselect = null;
 						break;
 					}
-
 				}
-
-				if (pasar) {
-					msgselect = msg;
-					messageList.remove(msg);
-					// TODO recuperar quan es igual al template i esborrar de la
-					// llista de missatges
-					break;
-				}
-
 			}
 
 		}
+
+		if (msgselect != null)
+			messageList.remove(msgselect);
+
 		return msgselect;
 	}
 
@@ -340,38 +401,55 @@ public class QueueAgent extends BaseAgent {
 		return msgselect;
 	}
 
-	public synchronized final ACLMessage receiveACLMessageB(
+	public final ACLMessage receiveACLMessageB(
 			MessageTemplate template) {
+		
+		if (this.advAux == null)
+			this.advAux = new Adviser();
+		
 		ACLMessage msgselect = null;
 		boolean b = true;
 
-		do {
-			for (ACLMessage msg : messageList) {
+		//Evitamos un acceso concurrente cuando nos llega un mensaje
+		ArrayList<ACLMessage> messageListAux = (ArrayList<ACLMessage>)messageList.clone();
 
-				// comparamos los campos performative y protocol
-				if (template.getPerformative().equals(msg.getPerformative())) {
+		do{
+			
+			
+			for (ACLMessage msg : messageListAux) {
+				
+	
+				
+			// comparamos los campos protocol y conversaciónID (para asegurarnos
+			// que no es una conversacion existente)00
 
-					if (template.getProtocol().equals(msg.getProtocol())) {
-
-						msgselect = msg;
-						messageList.remove(msg);
-
-						b = false;
-						// TODO recuperar quan es igual al template i esborrar
-						// de la llista de missatges
-						break;
-
-					}
-
+				if (template.getProtocol().equals(msg.getProtocol())) {
+				// comprobar que sea una conversacion nueva, que no este en la
+				// lista de conversaciones activas
+					msgselect = msg;
+					for (String conv : this.listaConversacionesActivas) {
+						// si existe, entonces debera trartalo el rol de iniciador
+						if (conv.equals(msg.getConversationId())) {
+							msgselect = null;
+							break;
+						}
+					}	
 				}
+		
 			}
-			try {
-
-				this.advIni.wait();
-
-			} catch (InterruptedException e) {
+		
+			if (msgselect!=null)
+			{
+				b = false;
+				messageList.remove(msgselect);
 			}
-		} while (b);
+			else
+			{
+			this.advAux.esperar();	
+			}
+		}while(b);
+		
+		
 		return msgselect;
 	}
 
@@ -382,11 +460,11 @@ public class QueueAgent extends BaseAgent {
 		// el
 		// initiator
 		ACLMessage msgselect = null;
+		
+		//Evitamos un acceso concurrente cuando nos llega un mensaje
+		ArrayList<ACLMessage> messageListAux = (ArrayList<ACLMessage>)messageList.clone();
 
-		for (ACLMessage msg : messageList) {
-
-			
-			
+		for (ACLMessage msg : messageListAux) {
 			
 			// comparamos los campos protocol, idcoversaciï¿½n y sender
 			if (template.getProtocol().equals(msg.getProtocol())) {
@@ -398,21 +476,24 @@ public class QueueAgent extends BaseAgent {
 						// miramos si pertenece algun agente
 
 						if (template.existeReceiver(msg.getSender())) {
-							
+
 							msgselect = msg;
-							messageList.remove(msg);
-							// condicion = false;
 							break;
 
 						}
-	
 
 					}
+				
 
 			}
 			if (msgselect != null)
 				break;
 		}
+			if (msgselect != null)
+			{
+				messageList.remove(msgselect);
+			}
+		
 
 		return msgselect;
 	}
