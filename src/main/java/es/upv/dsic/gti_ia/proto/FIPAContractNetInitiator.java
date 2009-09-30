@@ -11,6 +11,7 @@ import java.util.Vector;
 import java.util.Date;
 import java.util.logging.*;
 
+import es.upv.dsic.gti_ia.fipa.AgentID;
 import es.upv.dsic.gti_ia.proto.FIPANames.InteractionProtocol;
 import es.upv.dsic.gti_ia.magentix2.QueueAgent;
 
@@ -81,13 +82,16 @@ public class FIPAContractNetInitiator {
 			} else {
 				// añadir el agentId que lo envia, lo hacemos tranparente al
 				// usuario
-
+				
+				//guardar temporalmente los agentes a enviar
+				
+				ArrayList<AgentID> agentes = (ArrayList)request.getReceiverList().clone();
 				request.setSender(myAgent.getAid());
 				// recorrer todos lo receivers
-				template = new MessageTemplate(
-						InteractionProtocol.FIPA_CONTRACT_NET);
-				for (es.upv.dsic.gti_ia.fipa.AgentID agent : requestsentmsg
-						.getReceiver_list()) {
+				template = new MessageTemplate(InteractionProtocol.FIPA_CONTRACT_NET);
+				for (es.upv.dsic.gti_ia.fipa.AgentID agent : agentes) {
+					
+		
 					// por cada agente que enviamos creamos una idconversacion
 					conversationID = "C" + hashCode() + "_"
 							+ System.currentTimeMillis();
@@ -99,11 +103,13 @@ public class FIPAContractNetInitiator {
 
 					request.setReceiver(agent);
 					myAgent.send(request);
+				
 
 				}
 
-				this.nEnviados = requestsentmsg.getReceiver_list().size();
+				this.nEnviados = agentes.size();
 
+				System.out.println("Numero de enviados "+ this.nEnviados);
 				// fijamos el el timeout del mensaje
 				Date d = request.getReplyByDate();
 				if (d != null)

@@ -42,11 +42,10 @@ public class FIPAQueryResponder{
      * @param template    plantilla para en la que el agente comparara los mensajes.
      */
 	
-	public FIPAQueryResponder(QueueAgent _agent, MessageTemplate _template)//, Sincro _sin)
+	public FIPAQueryResponder(QueueAgent _agent, MessageTemplate _template)
 	{
 		myAgent = _agent;
 		template = _template;
-		//this.sin = _sin;
 		_agent.setAdviserRes(new Adviser());
 		this.sin = _agent.getAdviserRes();
 		
@@ -115,7 +114,7 @@ public class FIPAQueryResponder{
 				ACLMessage receivedMsg = this.requestmsg;
 
 				response = arrangeMessage(receivedMsg, response);
-	
+				response.setSender(myAgent.getAid());
 				myAgent.send(response);
 		
 				
@@ -166,8 +165,9 @@ public class FIPAQueryResponder{
 			if (resNotification != null)
 			{
 				
-				ACLMessage receiveMsg = this.requestmsg;
-				myAgent.send(arrangeMessage(receiveMsg,resNotification));
+				ACLMessage receiveMsg = arrangeMessage(this.requestmsg,resNotification);
+				receiveMsg.setSender(myAgent.getAid());
+				myAgent.send(receiveMsg);
 			}
 			
 			break;
@@ -192,7 +192,7 @@ public class FIPAQueryResponder{
 		reply.setInReplyTo(request.getReplyWith());
 		reply.setProtocol(request.getProtocol());
 		reply.setReceiver(request.getSender());
-		reply.setSender(request.getReceiver());
+		
 		
 		return reply;
 	}

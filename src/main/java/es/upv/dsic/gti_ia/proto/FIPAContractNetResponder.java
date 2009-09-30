@@ -112,8 +112,10 @@ public class FIPAContractNetResponder{
 			if (response != null)
 			{
 		
-				ACLMessage receivedMsg = this.cfp;
-				response = arrangeMessage(receivedMsg, response);
+				
+				
+				response = arrangeMessage(this.cfp,response);
+				response.setSender(myAgent.getAid());
 				
 				myAgent.send(response);
 				if (response.getPerformativeInt() == ACLMessage.PROPOSE)
@@ -191,8 +193,11 @@ public class FIPAContractNetResponder{
 			if (resNotification != null)
 			{
 				
-				ACLMessage receiveMsg = this.accept;
-				myAgent.send(arrangeMessage(receiveMsg,resNotification));
+				ACLMessage receiveMsg = arrangeMessage(this.accept,resNotification);
+				receiveMsg.setSender(myAgent.getAid());
+				myAgent.send(receiveMsg);
+				
+
 			}
 			
 			break;
@@ -220,11 +225,11 @@ public class FIPAContractNetResponder{
 		reply.setInReplyTo(request.getReplyWith());
 		reply.setProtocol(request.getProtocol());
 		reply.setReceiver(request.getSender());
-		reply.setSender(request.getReceiver());
+		//reply.setSender(request.getReceiver());
 		
 		//set the receivers
 		
-			reply.add_receiver(request.getSender());
+
 		
 		
 		

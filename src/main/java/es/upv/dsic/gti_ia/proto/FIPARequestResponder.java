@@ -113,6 +113,9 @@ public class FIPARequestResponder{
 				
 				response = arrangeMessage(receivedMsg, response);
 				
+
+				response.setSender(myAgent.getAid());
+				
 				
 				myAgent.send(response);
 		
@@ -164,8 +167,9 @@ public class FIPARequestResponder{
 			if (resNotification != null)
 			{
 				
-				ACLMessage receiveMsg = this.requestmsg;
-				myAgent.send(arrangeMessage(receiveMsg,resNotification));
+				ACLMessage receiveMsg = arrangeMessage(this.requestmsg,resNotification);
+				receiveMsg.setSender(myAgent.getAid());
+				myAgent.send(receiveMsg);
 			}
 			
 			break;
@@ -189,8 +193,9 @@ public class FIPARequestResponder{
 		reply.setConversationId(request.getConversationId());
 		reply.setInReplyTo(request.getReplyWith());
 		reply.setProtocol(request.getProtocol());
+
 		reply.setReceiver(request.getSender());
-		reply.setSender(request.getReceiver());
+		
 		
 		return reply;
 	}
