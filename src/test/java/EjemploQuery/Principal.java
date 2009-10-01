@@ -23,7 +23,7 @@ public class Principal {
         Aeropuerto aeropuerto = new Aeropuerto(new AgentID("aeropuerto1","qpid","localhost",""),con);
         aeropuerto.start();
         
-        Viajante viajante = new Viajante(new AgentID("Viajerooooooooooooooooooooooooooooooooo","qpid","localhost",""),con);
+        Viajante viajante = new Viajante(new AgentID("Viajero","qpid","localhost",""),con);
         viajante.start();
 
 	}

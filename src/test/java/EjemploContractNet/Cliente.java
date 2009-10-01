@@ -36,9 +36,18 @@ public class Cliente extends QueueAgent {
                                   //Creamos el mensaje CFP(Call For Proposal) cumplimentando sus parámetros
                     ACLMessage mensajeCFP = new ACLMessage(ACLMessage.CFP);
                     
-                    mensajeCFP.add_receiver(new AgentID("Concesionario","qpid","localhost",""));
-                    mensajeCFP.add_receiver(new AgentID("Concesionario1","qpid","localhost",""));
+                    mensajeCFP.addReceiver(new AgentID("Concesionario","qpid","localhost",""));
+                    mensajeCFP.addReceiver(new AgentID("Concesionario1","qpid","localhost",""));
+                    mensajeCFP.addReceiver(new AgentID("Concesionario10","qpid","localhost",""));
+                    mensajeCFP.addReceiver(new AgentID("Concesionario11","qpid","localhost",""));
+                    mensajeCFP.addReceiver(new AgentID("Concesionario12","qpid","localhost",""));
+                    mensajeCFP.addReceiver(new AgentID("Concesionario13","qpid","localhost",""));
+                    mensajeCFP.addReceiver(new AgentID("Concesionario14","qpid","localhost",""));
+                    mensajeCFP.addReceiver(new AgentID("Concesionario15","qpid","localhost",""));
+                    mensajeCFP.addReceiver(new AgentID("Concesionario16","qpid","localhost",""));
+                    mensajeCFP.addReceiver(new AgentID("Concesionario17","qpid","localhost",""));
                     
+                    System.out.println("Numero de agentes a los que voy a enviar:"+ mensajeCFP.getReceiverList().size());
             //Protocolo que vamos a utilizar
                     mensajeCFP.setProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET);
                     mensajeCFP.setContent("Busco coche, ¿proponeis precios?");

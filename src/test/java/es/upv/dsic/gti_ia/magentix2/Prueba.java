@@ -10,7 +10,7 @@ public class Prueba {
 	 */
 	public static void main(String[] args) {
 		Connection con = new Connection();
-        con.connect("rilpefo.dsic.upv.es", 5672, "test", "guest", "guest",false);
+        con.connect("gtiiaprojects.dsic.upv.es", 5672, "test", "guest", "guest",false);
 		AgenteHola agente = new AgenteHola(new AgentID("agentehola", "qpid", "localhost","8080"),con);
 		AgenteConsumidor agente2 = new AgenteConsumidor(new AgentID("agenteconsumidor", "qpid", "localhost","8080"),con);
 		agente2.start();
