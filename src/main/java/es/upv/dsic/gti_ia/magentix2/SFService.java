@@ -322,8 +322,8 @@ public class SFService {
 
 			// TODO si ejecutamos el registerProcess
 
-			if (patron.equals("RegisterProfileProcess")) {
-				if (arg2.equals("1"))
+			if (patron.equals("RegisterProcessProcess")) {
+				if (arg1.equals("1"))
 					this.sf.setSalida(true);
 				else
 					this.sf.setSalida(false);
@@ -377,6 +377,9 @@ public class SFService {
 				} else {
 					agen = arg1.split(",");
 
+					for (String s : agen)
+						
+					
 					this.sf.setSalida(true);
 					for (String a : agen) {
 						arg1 = a.substring(0, arg1.indexOf(" "));
@@ -385,7 +388,7 @@ public class SFService {
 
 						// TODO tenemos que controlar si existe 0, 1 o mas
 						// proveedores.
-
+				
 						if (!arg1.equals("null"))// si existe algun provideer
 						{
 
@@ -394,7 +397,7 @@ public class SFService {
 							this.sf.agentes.add(new AgentID(arg1));
 						}
 						
-						System.out.println("He añadido: " + arg1 + "\n");
+
 					}
 
 				}
@@ -407,7 +410,7 @@ public class SFService {
 				arg1 = arg1.substring(0, arg1.indexOf(" "));
 				//this.sf.getProcess(agent, arg1);
 				
-				this.sf.getProfile(agent, arg1);
+				this.sf.getProcess(agent, arg1);
 
 			}
 
@@ -422,9 +425,10 @@ public class SFService {
 					this.sf.registerProcess(agent, this.sf.descripcion, arg2);
 				} else {
 					this.sf.setSalida(false);
-					this.sf.adv.dar();
+					
 
 				}
+				this.sf.adv.dar();
 			}
 			// this.sf.setID(Integer.parseInt(id));
 

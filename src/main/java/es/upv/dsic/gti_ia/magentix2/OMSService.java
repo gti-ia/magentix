@@ -49,7 +49,7 @@ public class OMSService {
 	    
 		
 		
-		String call =  configuration +"AcquireRoleProcess.owl RoleID="+ descripcion.getRolID() +" UnitID="+descripcion.getUnitID()+" AgentID="+agente.getName();
+		String call =  configuration +"AcquireRoleProcess.owl RoleID="+ descripcion.getRolID() +" UnitID="+descripcion.getUnitID();
 		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
 		requestMsg.setSender(agente.getAid());
 		requestMsg.setContent(call);
