@@ -12,7 +12,6 @@ import es.upv.dsic.gti_ia.proto.FIPARequestInitiator;
 import es.upv.dsic.gti_ia.proto.FIPANames.InteractionProtocol;
 import es.upv.dsic.gti_ia.proto.*;
 
-
 public class SFService {
 
 	private String SFServiceDesciptionLocation;
@@ -67,6 +66,16 @@ public class SFService {
 		this.SFServiceDesciptionLocation = SFServiceDesciptionLocation;
 		this.THServiceDesciptionLocation = THServiceDesciptionLocation;
 	}
+	
+	public void setTHServicesDescriptionLocation(String descripcion)
+	{
+		this.THServiceDesciptionLocation = descripcion;
+	}
+	
+	public String getTHServicesDescriptionLocation()
+	{
+		return this.THServiceDesciptionLocation;
+	}
 
 	public void search(QueueAgent agente, SFAgentDescription descripcion) {
 		this.searchService(agente, descripcion);
@@ -113,23 +122,55 @@ public class SFService {
 		this.salidaString = valor;
 	}
 
-	public boolean ModifyProfile(QueueAgent agente,SFAgentDescription descripcion ) {
+	//TODO falta modificar
+	/*
+	public boolean ModifyProcess(QueueAgent agente,SFAgentDescription descripcion, String Id )
 
-		if (agent.getTableIDProfile().containsKey(descripcion.getServiceGoal())) // si contiene
-																// // la clave,
+	{
+		String call = SFServiceDesciptionLocation
+				+ "RegisterProcessProcess.owl"
+				+ " ModifyProcessInputServiceImplementationID=" + //TODO esto nose q es
+				+ " RegisterProcessInputServiceModel="
+				+ THServiceDesciptionLocation + descripcion.getServiceGoal()
+				+ ".owl#" + descripcion.getServiceGoal();
+
+		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
+		requestMsg.setSender(agente.getAid());
+		requestMsg.setContent(call);
+		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
+		requestMsg.setReceiver(new AgentID("SF", "qpid", "localhost", ""));
+
+		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
+		System.out.println("[QueryAgent]Sending... ");
+		// send(requestMsg);
+
+		// crear un fil en el fipa request initiator
+		agente.setTarea(new TestAgentClient(agente, requestMsg, this));
+
+		// registar el agente en la plataforma
+		this.adv.esperar();
+
+		return salida;
+	}
+*/
+	public boolean ModifyProfile(QueueAgent agente,
+			SFAgentDescription descripcion) {
+
+		if (agent.getTableIDProfile().containsKey(descripcion.getServiceGoal())) // si
+																					// contiene
+		// // la clave,
 		// sino error
 		{
 
-			
 			String call = SFServiceDesciptionLocation
-			+ "ModifyProfileProcess.owl "
-			+ "ModifyProfileInputServiceID="
-			+ agent.getIDProfile(descripcion.getServiceGoal())
-			+ " ModifyProfileInputServiceGoal="
-			+ " "
-			+ " ModifyProfileInputServiceProfile="
-			+ THServiceDesciptionLocation + descripcion.getNewServiceGoal()
-			+ "Profile.owl#" + descripcion.getNewServiceGoal();
+					+ "ModifyProfileProcess.owl "
+					+ "ModifyProfileInputServiceID="
+					+ agent.getIDProfile(descripcion.getServiceGoal())
+					+ " ModifyProfileInputServiceGoal=" + " "
+					+ " ModifyProfileInputServiceProfile="
+					+ THServiceDesciptionLocation
+					+ descripcion.getNewServiceGoal() + ".owl#"
+					+ descripcion.getNewServiceGoal();
 
 			ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
 			requestMsg.setSender(agent.getAid());
@@ -147,7 +188,8 @@ public class SFService {
 			this.adv.esperar();
 
 		} else {
-			System.out.println("El servicio " + descripcion.getServiceGoal() + " no existe.");
+			System.out.println("El servicio " + descripcion.getServiceGoal()
+					+ " no existe.");
 			salida = false;
 		}
 
@@ -162,7 +204,7 @@ public class SFService {
 		// eliminar el servicio de la tabla de servicios de el agente
 
 		if (agent.getTableIDProfile().containsKey(serviceGoal)) // si contiene
-																// // la clave,
+		// // la clave,
 		// sino error
 		{
 
@@ -253,7 +295,7 @@ public class SFService {
 				+ descripcion.getServiceGoal()
 				+ " RegisterProfileInputServiceProfile="
 				+ THServiceDesciptionLocation + descripcion.getServiceGoal()
-				+ "Profile.owl#" + descripcion.getServiceGoal();
+				+ ".owl#" + descripcion.getServiceGoal();
 
 		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
 		requestMsg.setSender(agent.getAid());
@@ -282,7 +324,7 @@ public class SFService {
 				+ " RegisterProcessInputServiceID=" + Id
 				+ " RegisterProcessInputServiceModel="
 				+ THServiceDesciptionLocation + descripcion.getServiceGoal()
-				+ "Process.owl#" + descripcion.getServiceGoal();
+				+ ".owl#" + descripcion.getServiceGoal();
 
 		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
 		requestMsg.setSender(agente.getAid());
@@ -299,7 +341,7 @@ public class SFService {
 
 		// registar el agente en la plataforma
 		this.adv.esperar();
-		
+
 		return salida;
 	}
 
@@ -322,7 +364,7 @@ public class SFService {
 			System.out.println(myAgent.getName() + ": OOH! "
 					+ msg.getSender().getLocalName()
 					+ " Has agreed to excute the service!");
-	
+
 		}
 
 		protected void handleRefuse(ACLMessage msg) {
@@ -346,7 +388,7 @@ public class SFService {
 
 			// primer argumento si es un DeregisterProfileProcess no sacaremos
 			// el arg1
-			if (!patron.equals("DeregisterProfileProcess")) {
+			if (!patron.equals("DeregisterProfileProcess") || !patron.equals("ModifyProfileProcess")) {
 				arg1 = msg.getContent().substring(
 						msg.getContent().indexOf("=") + 1,
 						msg.getContent().length());
@@ -362,7 +404,7 @@ public class SFService {
 			System.out.println("ARG1: " + arg1);
 			System.out.println("ARG2: " + arg2);
 
-			//  si ejecutamos el registerProcess
+			// si ejecutamos el registerProcess
 
 			if (patron.equals("RegisterProcessProcess")) {
 				if (arg2.equals("1"))
@@ -373,7 +415,7 @@ public class SFService {
 				this.sf.adv.dar();
 			}
 
-			//  si ejecutamos el GetProfile
+			// si ejecutamos el GetProfile
 			if (patron.equals("GetProfileProcess")) {
 				arg2 = msg.getContent().substring(
 						msg.getContent().indexOf(",") + 1,
@@ -392,7 +434,7 @@ public class SFService {
 
 			}
 
-			//  si ejecutamos el DeregisterProfile
+			// si ejecutamos el DeregisterProfile
 			if (patron.equals("DeregisterProfileProcess")) {
 
 				if (arg2.equals("1"))// ha ido bien
@@ -405,7 +447,7 @@ public class SFService {
 				this.sf.adv.dar();
 
 			}
-			//  si ejecutamos el GetProcess
+			// si ejecutamos el GetProcess
 			if (patron.equals("GetProcessProcess")) {
 
 				if (arg2.equals("0")) {
@@ -423,7 +465,7 @@ public class SFService {
 						arg1 = arg1.substring(arg1.indexOf("-") + 1, arg1
 								.length());
 
-						//  tenemos que controlar si existe 0, 1 o mas
+						// tenemos que controlar si existe 0, 1 o mas
 						// proveedores.
 
 						if (!arg1.equals("null"))// si existe algun provideer
@@ -440,7 +482,7 @@ public class SFService {
 
 				this.sf.adv.dar();
 			}
-			//  si ejecutamos el searchService
+			// si ejecutamos el searchService
 			if (patron.equals("SearchServiceProcess")) {
 
 				arg1 = arg1.substring(0, arg1.indexOf(" "));
@@ -458,7 +500,8 @@ public class SFService {
 					this.agent.setIDProfile(this.sf.getDescription()
 							.getServiceGoal(), arg2);
 					// coger el segundo argumento i passar-lo a getProcess
-					//this.sf.registerProcess(agent, this.sf.descripcion, arg2);
+					// this.sf.registerProcess(agent, this.sf.descripcion,
+					// arg2);
 				} else {
 					this.sf.setSalida(false);
 
@@ -467,26 +510,25 @@ public class SFService {
 			}
 			// this.sf.setID(Integer.parseInt(id));
 
-			//Si ejecutamos el ModifyProfile
-			
-			if (patron.equals("ModifyProfileProcess"))
-			{
-				if (arg2.equals("1"))//ha hido todo bien
+			// Si ejecutamos el ModifyProfile
+
+			if (patron.equals("ModifyProfileProcess")) {
+				if (arg2.equals("1"))// ha hido todo bien
 				{
 					this.sf.setSalida(true);
-				}
-				else if(arg2.equals("0"))//existen profile ligados a este process, por tanto no puede modificar-lo
+				} else if (arg2.equals("0"))// existen profile ligados a este
+											// process, por tanto no puede
+											// modificar-lo
 				{
 					this.sf.setSalida(false);
-				}
-				else//el id del servicio no es valido
+				} else// el id del servicio no es valido
 				{
 					this.sf.setSalida(false);
 				}
 				this.sf.adv.dar();
-				
+
 			}
-			
+
 		}
 
 		protected void handleNotUnderstood(ACLMessage msg) {
