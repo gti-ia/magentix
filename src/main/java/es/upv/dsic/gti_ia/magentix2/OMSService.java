@@ -31,7 +31,29 @@ public class OMSService {
 	public boolean RegisterNorm(QueueAgent agente, OMSAgentDescription descripcion)
 	{
 	//	suggestedServiceCalls[2]=configuration+"RegisterNormProcess.owl NormID=norma1 normContent=FORBIDDEN_Member_REQUEST_acquireRole_MESSAGE(CONTENT(ROLE_'Payee'))";
-		return salida;
+		
+		String call =  configuration +"LeaveRoleProcess.owl RoleID="+ descripcion.getRolID() +" UnitID="+descripcion.getUnitID();
+		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
+		requestMsg.setSender(agente.getAid());
+		requestMsg.setContent(call);
+		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
+		requestMsg.setReceiver(new AgentID("OMS","qpid","localhost",""));
+		
+		
+		System.out.println("Destinatario del mensaje: " + requestMsg.getReceiver().toString());
+		
+		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
+		System.out.println("[QueryAgent]Sending... ");
+		//send(requestMsg);
+		
+		//crear un fil en el fipa request initiator
+	     agente.setTarea(new TestAgentClient(agente,requestMsg,this));
+		
+	     
+	     this.adv.esperar();
+	     
+	     return this.salida;
+
 	}
 	
 	
@@ -99,6 +121,8 @@ public class OMSService {
                 System.out.println(myAgent.getName()  + ": Oh no! " + 
                 msg.getSender().getLocalName() + 
                 " has rejected my proposal.");
+                this.oms.setValor(false);
+    			this.oms.adv.dar();
         }
         
         protected  void   handleInform(ACLMessage msg) {
@@ -127,6 +151,19 @@ public class OMSService {
                 
                 	this.oms.adv.dar();
                 }
+                
+                if (patron.equals("LeaveRoleProcess"))
+                {
+                    //si ha salido bien despierto al agente
+                    if 	(arg1.equals("Ok"))
+                    {
+                    	this.oms.setValor(true);
+                    }
+                    else
+                    	this.oms.setValor(false);
+                    
+                    	this.oms.adv.dar();
+                }
                 	
                 
         }
@@ -135,6 +172,8 @@ public class OMSService {
                 System.out.println(myAgent.getName()  + ":"
                 + msg.getSender().getLocalName() + 
                 " has indicated that they didn't understand.");
+                this.oms.setValor(false);
+    			this.oms.adv.dar();
         }
         
         protected  void  handleOutOfSequence(ACLMessage msg) {
@@ -142,6 +181,8 @@ public class OMSService {
                 + msg.getSender().getLocalName() + 
                 " has send me a message which i wasn't" + 
                 " expecting in this conversation");
+                this.oms.setValor(false);
+    			this.oms.adv.dar();
         }}
 
 }

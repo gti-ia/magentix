@@ -166,7 +166,7 @@ public class QueueAgent extends BaseAgent {
 		String aidString;
 		String body = xfr.getBodyString();
 
-		System.out.println("BODY: " + body);
+		//System.out.println("BODY: " + body);
 
 		indice2 = body.indexOf('#', indice1);
 		ACLMessage msg = new ACLMessage(Integer.parseInt(body.substring(

@@ -38,8 +38,8 @@ public class FIPARequestResponder{
 
     /**
      * Create a FIPARequestInitiator.
-     * @param agent    agente que crear el inicio del protocolo
-     * @param template    plantilla para en la que el agente comparara los mensajes.
+     * @param agent    agente con el que se hara el rol de iniciador
+     * @param template    plantilla para comparara los mensajes que le lleguen.
      */
 	
 	public FIPARequestResponder(QueueAgent _agent, MessageTemplate _template)//, Sincro _sin)

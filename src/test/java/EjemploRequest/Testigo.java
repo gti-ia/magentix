@@ -64,7 +64,7 @@ import es.upv.dsic.gti_ia.magentix2.QueueAgent;
 	            msg.setContent("accidente a "+frame.getTextField().getText()+" kms");
 	            msg.setSender(this.getAid());
          
-	            this.setTarea( new ManejadorInitiator(this,msg));
+	            this.setTarea( new ManejadorInitiator(this,msg,i));
 	
 	    }
 	    
@@ -90,57 +90,59 @@ import es.upv.dsic.gti_ia.magentix2.QueueAgent;
 	    
 	    class ManejadorInitiator extends FIPARequestInitiator
 	    {
-	        public ManejadorInitiator(QueueAgent a,ACLMessage msg) {
+	    	int i;
+	        public ManejadorInitiator(QueueAgent a,ACLMessage msg, int aux) {
 	            super(a,msg);
+	            this.i=aux;
 	        }
 	 
 	        protected void handleAgree(ACLMessage agree)
 	        {
 	        	
-                frame.getTextArea(2).append("Hospital " + agree.getSender().getLocalName()
+                frame.getTextArea(2).append(i+" Hospital " + agree.getSender().getLocalName()
 	                    + " informa que han salido a atender el accidente.\n");
-	            System.out.println("!!!!Hospital " + agree.getSender().getLocalName()
+	            System.out.println(i +" !!!!Hospital " + agree.getSender().getLocalName()
 	                    + " informa que han salido a atender el accidente.");
 	        }
 	 
 	        protected void handleRefuse(ACLMessage refuse)
 	        {
-                                frame.getTextArea(2).append("Hospital " + refuse.getSender().getLocalName()
+                                frame.getTextArea(2).append(i+" Hospital " + refuse.getSender().getLocalName()
 	                    + " responde que el accidente esta fuera de su radio de accion. No llegaremos a tiempo!!!\n");
 
-	            System.out.println("!!!!Hospital " + refuse.getSender().getLocalName()
+	            System.out.println(i+" !!!!Hospital " + refuse.getSender().getLocalName()
 	                    + " responde que el accidente esta fuera de su radio de accion. No llegaremos a tiempo!!!");
 	        }
 	 
 	        protected void handleNotUnderstood(ACLMessage notUnderstood)
 	        {
-                                frame.getTextArea(2).append("Hospital " + notUnderstood.getSender().getLocalName()
+                                frame.getTextArea(2).append(i+" Hospital " + notUnderstood.getSender().getLocalName()
 	                    + " no puede entender el mensaje.\n");
 
-	            System.out.println("!!!!Hospital " + notUnderstood.getSender().getLocalName()
+	            System.out.println(i+" !!!!Hospital " + notUnderstood.getSender().getLocalName()
 	                    + " no puede entender el mensaje.");
 	        }
 	 
 	        protected void handleInform(ACLMessage inform)
 	        {
-                                frame.getTextArea(2).append("Hospital " + inform.getSender().getLocalName()
+                                frame.getTextArea(2).append(i+" Hospital " + inform.getSender().getLocalName()
 	                    + " informa que han atendido el accidente.\n");
 
-	            System.out.println("!!!!!!Hospital " + inform.getSender().getLocalName()
+	            System.out.println(i+" !!!!!!Hospital " + inform.getSender().getLocalName()
 	                    + " informa que han atendido el accidente.");
 	        }
 	 
 	        protected void handleFailure(ACLMessage fallo)
 	        {
 	            if (fallo.getSender().name.equals(myAgent.getName())) {
-                                    frame.getTextArea(2).append("Alguna de los hospitales no existe\n");
-	                System.out.println("Alguna de los hospitales no existe");
+                                    frame.getTextArea(2).append(i+" Alguna de los hospitales no existe\n");
+	                System.out.println(i+" Alguna de los hospitales no existe");
 	            }
 	            else
 	            {
-                                    frame.getTextArea(2).append("Fallo en el hospital " + fallo.getSender().getLocalName()
+                                    frame.getTextArea(2).append(i+" Fallo en el hospital " + fallo.getSender().getLocalName()
 	                        + ": " + fallo.getContent().substring(0, fallo.getContent().length())+".\n");
-	                System.out.println("Fallo en el hospital " + fallo.getSender().getLocalName()
+	                System.out.println(i+" Fallo en el hospital " + fallo.getSender().getLocalName()
 	                        + ": " + fallo.getContent().substring(0, fallo.getContent().length()));
 	            }
 	        }

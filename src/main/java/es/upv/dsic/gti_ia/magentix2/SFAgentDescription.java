@@ -4,9 +4,15 @@ public class SFAgentDescription {
 
 	private String goalprofile;
 	private String urlprofile;
+	private String newgoalprofile;
 	
 	
-	
+	public  SFAgentDescription()
+	{
+		this.goalprofile="";
+		this.urlprofile="";
+		this.newgoalprofile="";
+	}
 	
   public String getServiceGoal()
 	{
@@ -18,6 +24,17 @@ public class SFAgentDescription {
   {
 	  this.goalprofile = goalProfile; 
   }
+  
+  public String getNewServiceGoal()
+  {
+	return this.newgoalprofile;  
+  }
+  
+  public void setNewServiceGoal(String newgoalProfile)
+  {
+	  this.newgoalprofile = newgoalProfile;
+  }
+  
 	
 
     
