@@ -126,7 +126,7 @@ import  persistence.DataBaseInterface;
 			OntModel m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
    		
 			//Query to get the reference to the set of service process that the service profile has (...owl#...)
-			String queryStringProcess = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
+			/*String queryStringProcess = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
 				+ "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>"
 				+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
 				+ "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
@@ -145,9 +145,10 @@ import  persistence.DataBaseInterface;
 			// Execute the query and obtain results
 			QueryExecution qeProcess = QueryExecutionFactory.create(queryProcess, m);
 			ResultSet resultsProcess = qeProcess.execSelect();
-		
-			if(!resultsProcess.hasNext()){
-   		
+		    */
+			//if(!resultsProcess.hasNext()){
+			
+			if(thomasBD.GetServiceProcessFromProfile(modifyProfile.getServiceID())==null){
 				
 		
 				if (DEBUG) {
