@@ -388,7 +388,7 @@ public class SFService {
 
 			// primer argumento si es un DeregisterProfileProcess no sacaremos
 			// el arg1
-			if (!patron.equals("DeregisterProfileProcess") || !patron.equals("ModifyProfileProcess")) {
+			if (!patron.equals("DeregisterProfileProcess") && !patron.equals("ModifyProfileProcess")) {
 				arg1 = msg.getContent().substring(
 						msg.getContent().indexOf("=") + 1,
 						msg.getContent().length());
