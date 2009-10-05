@@ -39,7 +39,7 @@ public class QueueAgent extends BaseAgent {
 	private Adviser advIni = null;
 	private Adviser advAux = null;
 	private ArrayList<String> listaConversacionesActivas = new ArrayList<String>();
-	private HashMap<String, String> tablaIDProfile = new HashMap<String, String>();
+	private ArrayList<SFAgentDescription> DescripcionesAgentes = new ArrayList<SFAgentDescription>();
 
 	/**
 	 * Create a QueueAgent.
@@ -57,38 +57,22 @@ public class QueueAgent extends BaseAgent {
 
 	}
 
-	/**
-	 * Inserta el ID del profile del servicio
-	 * 
-	 * @param id
-	 *            id devuelto por el SF al registrar el servicio
-	 * @param profilename
-	 *            nombre del pfofile
-	 */
-
-	public void setIDProfile(String profilename, String id) {
-		this.tablaIDProfile.put(profilename, id);
-	}
-
-	/**
-	 * 
-	 * @return tablaIDProfile
-	 */
-	public String getIDProfile(String serviceGoal) {
-		return this.tablaIDProfile.get(serviceGoal);
-	}
-
-	/**
-	 * 
-	 * @return tablaIDProfile
-	 */
-	public String DeleteIDProfile(String serviceGoal) {
-		return this.tablaIDProfile.remove(serviceGoal);
+	
+	public ArrayList<SFAgentDescription> getArraySFAgentDescription()
+	{
+		return this.DescripcionesAgentes;
 	}
 	
-	public HashMap<String,String> getTableIDProfile()
+	public void setSFAgentDescription(SFAgentDescription sfa)
 	{
-		return this.tablaIDProfile;
+		//comprobar que no exista
+		if (!this.DescripcionesAgentes.contains(sfa))
+			this.DescripcionesAgentes.add(sfa);
+		else //si existe quitamos primero uno y ponemos luego el otro
+		{
+			this.DescripcionesAgentes.remove(sfa);
+			this.DescripcionesAgentes.add(sfa);
+		}
 	}
 
 	/**

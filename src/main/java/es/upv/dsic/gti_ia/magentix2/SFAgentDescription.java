@@ -3,40 +3,67 @@ package es.upv.dsic.gti_ia.magentix2;
 public class SFAgentDescription {
 
 	private String goalprofile;
-	private String urlprofile;
+	private String ID;
+	private String ImplementationID;
 	private String newgoalprofile;
+	private String URLProfile;
+	private String URLProcess;
+
+	public SFAgentDescription(String URLProcess, String URLProfile) {
+		this.goalprofile = "";
+		this.ID = "";
+		this.ImplementationID = "";
+		this.URLProcess=URLProcess;
+		this.URLProfile =URLProfile;
+		
+		
+	}
+
 	
-	
-	public  SFAgentDescription()
+	public void setURLProcess(String url)
 	{
-		this.goalprofile="";
-		this.urlprofile="";
-		this.newgoalprofile="";
+		this.URLProcess = url;
 	}
 	
-  public String getServiceGoal()
+	public String getURIProcess()
 	{
+		return this.URLProcess;
+	}
+	
+	public void setURLProfile(String url)
+	{
+		this.URLProfile = url;
+	}
+	
+	public String getURIProfile()
+	{
+		return this.URLProfile;
+	}
+	
+	public void setID(String id) {
+		this.ID = id;
+	}
+
+	public String getID() {
+		return this.ID;
+	}
+
+	public void setImplementationID(String im) {
+		this.ImplementationID = im;
+	}
+
+	public String getImplementationID() {
+		return this.ImplementationID;
+
+	}
+
+	public String getServiceGoal() {
 		return this.goalprofile;
 	}
-	
-  
-  public void setServiceGoal(String goalProfile)
-  {
-	  this.goalprofile = goalProfile; 
-  }
-  
-  public String getNewServiceGoal()
-  {
-	return this.newgoalprofile;  
-  }
-  
-  public void setNewServiceGoal(String newgoalProfile)
-  {
-	  this.newgoalprofile = newgoalProfile;
-  }
-  
-	
 
-    
-		
+	public void setServiceGoal(String goalProfile) {
+		this.goalprofile = goalProfile;
+	}
+
+
 }
