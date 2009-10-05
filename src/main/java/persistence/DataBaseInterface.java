@@ -251,6 +251,7 @@ public String GetServiceProfileName(String serviceprofileid){
 					// Add new process
 					String sql = "insert into serviceprocessid (serviceprocessid,urlprocess,serviceprofileid, processname, providername)values('"+serviceprofileid+"@"+agentid+"','"+urlprocess+"','"+serviceprofileid+"','"+processname+"','"+agentid+"')";
 					
+					System.out.println("CONSULTAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA:"+ sql );
 	 
 					// Execute the insert statement
 					stmt.executeUpdate(sql);
@@ -264,7 +265,7 @@ public String GetServiceProfileName(String serviceprofileid){
 					
 					System.out.println("urlprocess "+urlprocess);
 					// Update serviceprocessid
-					stmt.executeUpdate("update serviceprocessid set serviceprocessid='"+serviceprofileid+"@"+servicenumid+agentid+"' where urlprocess='"+urlprocess+"'");
+					stmt.executeUpdate("update serviceprocessid set serviceprocessid='"+serviceprofileid+"@"+servicenumid+"-"+agentid+"' where urlprocess='"+urlprocess+"'");
 			        System.out.println("4");
 					//recuperamos el id del process
 					rs = stmt.executeQuery("select * from serviceprocessid where urlprocess='"+urlprocess+"'");
