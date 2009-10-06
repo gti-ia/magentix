@@ -34,7 +34,7 @@ public class FIPARequestInitiator {
 	private ACLMessage requestsentmsg;
 	private ACLMessage resNofificationmsg;
 	
-	private Adviser sin=null;
+	private Monitor sin=null;
 	
 	private boolean finish=false;
 	String conversationID = null;
@@ -58,11 +58,11 @@ public class FIPARequestInitiator {
 	{
 		myAgent = agent;
 		requestmsg = msg;
-		if (agent.getAdviserIni()==null)
+		/*if (agent.getAdviserIni()==null)
 		{
-		agent.setAdviserIni(new Adviser());
-		}
-		this.sin = agent.getAdviserIni();
+		agent.setAdviserIni(new Monitor());
+		}*/
+		this.sin = myAgent.AñadirMonitor();
 		
 	}
 	
@@ -257,6 +257,8 @@ public class FIPARequestInitiator {
 			this.requestmsg = null;
 			this.resNofificationmsg = null;
 			this.requestsentmsg = null;
+			//si somos los ultimos desactivamos el monitor
+			this.myAgent.quitarMonitor();
 			myAgent.deleteConversacionActivas(conversationID);
 			break;
 		}

@@ -34,7 +34,7 @@ public class FIPAQueryInitiator {
 	private ACLMessage requestsentmsg;
 	private ACLMessage resNofificationmsg;
 	
-	private Adviser sin=null;
+	private Monitor sin=null;
 	
 	private boolean finish=false;
 	String conversationID = null;
@@ -58,11 +58,7 @@ public class FIPAQueryInitiator {
 	{
 		myAgent = agent;
 		requestmsg = msg;
-		if (agent.getAdviserIni()==null)
-		{
-		agent.setAdviserIni(new Adviser());
-		}
-		this.sin = agent.getAdviserIni();
+		this.sin = myAgent.AñadirMonitor();
 		
 	}
 	
@@ -245,6 +241,7 @@ public class FIPAQueryInitiator {
 			this.requestmsg = null;
 			this.resNofificationmsg = null;
 			this.requestsentmsg = null;
+			this.myAgent.quitarMonitor();
 			this.myAgent.deleteConversacionActivas(conversationID);
 			break;
 		}

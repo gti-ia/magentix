@@ -21,7 +21,7 @@ import java.util.*;
 
 public class FIPAContractNetInitiator {
 
-	private Adviser sin = null;
+	private Monitor sin = null;
 
 	private final static int PREPARE_MSG_STATE = 0;
 	private final static int SEND_MSG_STATE = 1;
@@ -51,10 +51,7 @@ public class FIPAContractNetInitiator {
 	public FIPAContractNetInitiator(QueueAgent agent, ACLMessage msg) {
 		myAgent = agent;
 		requestmsg = msg;
-		if (agent.getAdviserIni() == null) {
-			agent.setAdviserIni(new Adviser());
-		}
-		this.sin = agent.getAdviserIni();
+		this.sin = myAgent.AñadirMonitor();
 
 	}
 
@@ -343,6 +340,7 @@ public class FIPAContractNetInitiator {
 
 			this.finish = true;
 			this.requestmsg = null;
+			this.myAgent.quitarMonitor();
 			this.myAgent.deleteTodasConversacionActivas();
 			break;
 		}

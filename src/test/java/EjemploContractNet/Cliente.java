@@ -4,7 +4,7 @@ import org.apache.qpid.transport.Connection;
 
 
 import es.upv.dsic.gti_ia.magentix2.QueueAgent;
-import es.upv.dsic.gti_ia.proto.Adviser;
+import es.upv.dsic.gti_ia.proto.Monitor;
 import es.upv.dsic.gti_ia.fipa.*;
 import es.upv.dsic.gti_ia.proto.FIPANames;
 import es.upv.dsic.gti_ia.proto.*;
@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 public class Cliente extends QueueAgent {
 
-	private Adviser adv= new Adviser();
+	private Monitor adv= new Monitor();
 	private int precionMaximo;
 	private int numeroDeOfertas=0;
     public Cliente(AgentID aid, Connection connection)
@@ -59,7 +59,7 @@ public class Cliente extends QueueAgent {
                     
                     this.setTarea(new ManejoOpciones(this, mensajeCFP));
                  
-                    es.upv.dsic.gti_ia.proto.Adviser adv = new Adviser();
+                    es.upv.dsic.gti_ia.proto.Monitor adv = new Monitor();
                     adv.esperar();
  
              

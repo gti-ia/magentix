@@ -9,7 +9,7 @@
 
 package es.upv.dsic.gti_ia.proto;
 
-public class Adviser {
+public class Monitor {
 
 	
     /**

@@ -9,7 +9,7 @@ import es.upv.dsic.gti_ia.proto.*;
 
 public class Viajante extends QueueAgent {
 
-	private Adviser adv= new Adviser();
+	private Monitor adv= new Monitor();
     public Viajante(AgentID aid, Connection connection)
     {
 

@@ -21,7 +21,7 @@ public class SFService {
 	private ArrayList<AgentID> agentes = new ArrayList<AgentID>();
 	//
 	private HashMap<String, String> tablaSearchServiceProfile = new HashMap<String, String>();
-	private Adviser adv = new Adviser();
+	private Monitor adv = new Monitor();
 	private boolean salida = true;
 	private String salidaString = null;
 

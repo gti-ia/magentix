@@ -11,7 +11,7 @@ package es.upv.dsic.gti_ia.proto;
 
 import es.upv.dsic.gti_ia.magentix2.QueueAgent;
 import es.upv.dsic.gti_ia.proto.FIPANames.InteractionProtocol;
-import es.upv.dsic.gti_ia.proto.Adviser;
+import es.upv.dsic.gti_ia.proto.Monitor;
 import es.upv.dsic.gti_ia.fipa.ACLMessage;
 
 
@@ -37,7 +37,7 @@ public class FIPAContractNetResponder{
 	private ACLMessage resNofificationmsg;
 
 	
-	private Adviser sin=null;
+	private Monitor sin=null;
 	
 
     /**
@@ -50,8 +50,7 @@ public class FIPAContractNetResponder{
 	{
 		myAgent = _agent;
 		template = _template;
-		_agent.setAdviserRes(new Adviser());
-		this.sin = _agent.getAdviserRes();
+		this.sin = myAgent.AñadirMonitor();
 		
 	
 		

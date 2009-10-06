@@ -24,7 +24,7 @@ import es.upv.dsic.gti_ia.fipa.ACLMessage;
 import es.upv.dsic.gti_ia.fipa.AgentID;
 import es.upv.dsic.gti_ia.proto.MessageTemplate;
 
-import es.upv.dsic.gti_ia.proto.Adviser;
+import es.upv.dsic.gti_ia.proto.Monitor;
 import es.upv.dsic.gti_ia.proto.FIPAQueryResponder;
 import es.upv.dsic.gti_ia.proto.FIPAQueryInitiator;
 import es.upv.dsic.gti_ia.proto.FIPAContractNetInitiator;
@@ -34,11 +34,14 @@ public class QueueAgent extends BaseAgent {
 
 	ArrayList<ACLMessage> messageList = new ArrayList<ACLMessage>();
 	// LinkedBlockingQueue<MessageTransfer> internalQueue;
-	private AgentID aid = null;
-	private Adviser advRes = null;
-	private Adviser advIni = null;
-	private Adviser advAux = null;
+	//private AgentID aid = null;
+	private Monitor monitor = null;
+	private Monitor monitorAux = null;
+	
+	private int nRoles = 0;
+	//para poder diferenciar cuando nos llega una conversació nueva
 	private ArrayList<String> listaConversacionesActivas = new ArrayList<String>();
+	//almacena la informacion de les servicios en thomas
 	private ArrayList<SFAgentDescription> DescripcionesAgentes = new ArrayList<SFAgentDescription>();
 
 	/**
@@ -53,16 +56,56 @@ public class QueueAgent extends BaseAgent {
 	public QueueAgent(AgentID aid, Connection connection) {
 		super(aid, connection);
 		// internalQueue = new LinkedBlockingQueue<MessageTransfer>();
-		this.aid = aid;
+
 
 	}
 
+	public int AñadirRole()
+	{
+		this.nRoles++;
+		return this.nRoles;
+	}
 	
+	public int quitarRole()
+	{
+		this.nRoles--;
+		return this.nRoles;
+	}
+	
+	public int getnRole()
+	{
+		return this.nRoles;
+	}
+	
+	
+	public Monitor AñadirMonitor()
+	{
+		this.AñadirRole();
+		if (this.monitor==null)
+			this.monitor = new Monitor();
+		return monitor;
+	}
+	
+	public void quitarMonitor()
+	{
+		this.quitarRole();
+		if(this.nRoles == 0)
+		this.monitor = null;
+	}
+	
+	/**
+	 * Devuelve el array de servicios 
+	 * @return
+	 */
 	public ArrayList<SFAgentDescription> getArraySFAgentDescription()
 	{
 		return this.DescripcionesAgentes;
 	}
 	
+	/**
+	 * Añade una nueva descripcion del servicio al arraylist
+	 * @param sfa
+	 */
 	public void setSFAgentDescription(SFAgentDescription sfa)
 	{
 		//comprobar que no exista
@@ -113,30 +156,13 @@ public class QueueAgent extends BaseAgent {
 
 	}
 
-	/**
-	 * Añade un avisador para el rol de responder
-	 * 
-	 * @param adv
-	 */
-	public void setAdviserRes(Adviser adv) {
-		this.advRes = adv;
+
+
+	public Monitor getMonitor() {
+		return this.monitor;
 	}
 
-	/**
-	 * 
-	 * @param adv
-	 */
-	public void setAdviserIni(Adviser adv) {
-		this.advIni = adv;
-	}
 
-	public Adviser getAdviserRes() {
-		return this.advRes;
-	}
-
-	public Adviser getAdviserIni() {
-		return this.advIni;
-	}
 
 	public final ACLMessage MessageTransfertoACLMessage(MessageTransfer xfr) {
 
@@ -259,17 +285,20 @@ public class QueueAgent extends BaseAgent {
 		// clase encargada de despertar al agente, puede ser del rol responder o
 		// del rol iniciator
 
-		if (advRes != null)
-			this.advRes.dar();
-		if (advIni != null)
-			this.advIni.dar();
-		if (advAux != null)
-			this.advAux.dar();
+		if (monitor != null)
+			this.monitor.dar();
+		if (monitorAux != null)
+			this.monitorAux.dar();
 
 	}
-
+	/**
+	 * Añade una nueva tarea (protocolo FIPA) al agente, creara un nuevo hilo
+	 * @param obj objecto de tipo protocolo FIPA
+	 */
 	public void setTarea(Object obj) {
 
+	
+		
 		if (obj.getClass().getSuperclass().getName().equals(
 				"es.upv.dsic.gti_ia.proto.FIPARequestInitiator"))
 
@@ -277,6 +306,7 @@ public class QueueAgent extends BaseAgent {
 
 			HiloIni h = new HiloIni(obj, 1);
 			h.start();
+			
 		} else if (obj.getClass().getSuperclass().getName().equals(
 				"es.upv.dsic.gti_ia.proto.FIPARequestResponder")) {
 
@@ -315,6 +345,11 @@ public class QueueAgent extends BaseAgent {
 		return messageList.size();
 	}
 
+	/**
+	 * Busca un mensaje dado un template
+	 * @param template
+	 * @return msg 
+	 */
 	public final ACLMessage receiveACLMessage(MessageTemplate template) {
 		ACLMessage msgselect = null;
 
@@ -348,6 +383,7 @@ public class QueueAgent extends BaseAgent {
 		return msgselect;
 	}
 
+	
 	public final ACLMessage receiveACLMessageT(MessageTemplate template,
 			long timeout) {
 		ACLMessage msgselect = null;
@@ -385,11 +421,16 @@ public class QueueAgent extends BaseAgent {
 		return msgselect;
 	}
 
+	/**
+	 * Busqueda bloqueante, bloquea el agente hasta que llegue el mensaje
+	 * @param template
+	 * @return
+	 */
 	public final ACLMessage receiveACLMessageB(
 			MessageTemplate template) {
 		
-		if (this.advAux == null)
-			this.advAux = new Adviser();
+		if (this.monitorAux == null)
+			this.monitorAux = new Monitor();
 		
 		ACLMessage msgselect = null;
 		boolean b = true;
@@ -429,13 +470,14 @@ public class QueueAgent extends BaseAgent {
 			}
 			else
 			{
-			this.advAux.esperar();	
+			this.monitorAux.esperar();	
 			}
 		}while(b);
 		
 		
 		return msgselect;
 	}
+
 
 	public final ACLMessage receiveACLMessageI(MessageTemplate template) {// comparacion
 		// del
@@ -504,7 +546,8 @@ public class QueueAgent extends BaseAgent {
 					((FIPARequestInitiator) iniciador).action();
 
 				} while (!((FIPARequestInitiator) iniciador).finalizado());
-
+	
+				
 				break;
 			}
 			case 2: {

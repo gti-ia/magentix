@@ -1,7 +1,7 @@
 package es.upv.dsic.gti_ia.magentix2;
 
 import es.upv.dsic.gti_ia.fipa.*;
-import es.upv.dsic.gti_ia.proto.Adviser;
+import es.upv.dsic.gti_ia.proto.Monitor;
 import es.upv.dsic.gti_ia.proto.FIPARequestInitiator;
 import es.upv.dsic.gti_ia.proto.FIPANames.InteractionProtocol;
 public class OMSService {
@@ -9,7 +9,7 @@ public class OMSService {
 
 	private String configuration;
 	private String conection;
-	private Adviser adv = new Adviser();
+	private Monitor adv = new Monitor();
 	private boolean salida = true;
 	
 	public OMSService(String OMSServiceDesciptionLocation)
