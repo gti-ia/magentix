@@ -247,8 +247,7 @@ public class GetProcessSkeleton {
  				agentrole.setRequestedAgentID(RequestedAgentID);
 
  				wtp.InformAgentRoleStub.InformAgentRoleResponse res = new wtp.InformAgentRoleStub.InformAgentRoleResponse();
- 				res.localRoleUnitList = stub.InformAgentRole(agentrole)
- 						.getRoleUnitList();
+ 				res.localRoleUnitList = stub.InformAgentRole(agentrole).getRoleUnitList();
  				res.localStatus = "OK";
  				res.localErrorValue = "";
 

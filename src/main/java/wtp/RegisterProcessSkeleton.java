@@ -301,16 +301,21 @@ String getProfileRoles(String urlprofile, OntModel m){
 		
 		boolean hasRole = false;
 		try {
+			
 			InformAgentRoleStub stub = new InformAgentRoleStub();
+			
+			//structure to invoke
 			wtp.InformAgentRoleStub.InformAgentRole agentrole = new wtp.InformAgentRoleStub.InformAgentRole();
 			agentrole.setAgentID(AgentID);
 			agentrole.setRequestedAgentID(RequestedAgentID);
-
+			
+			System.out.println("Antes de llamar al servicio Inform Role del OMS");
+			System.out.println("agentrole->agentID: "+AgentID);
+			System.out.println("agentrole->RequestedagentID: "+RequestedAgentID);
+			//structure response
 			wtp.InformAgentRoleStub.InformAgentRoleResponse res = new wtp.InformAgentRoleStub.InformAgentRoleResponse();
-			res.localRoleUnitList = stub.InformAgentRole(agentrole)
-					.getRoleUnitList();
-			res.localStatus = "OK";
-			res.localErrorValue = "";
+		
+			res = stub.InformAgentRole(agentrole);
 
 			System.out.println("OMS Role Unit List: " + res.localRoleUnitList);
 		
