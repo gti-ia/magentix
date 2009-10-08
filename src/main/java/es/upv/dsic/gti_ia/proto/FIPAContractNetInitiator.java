@@ -51,7 +51,7 @@ public class FIPAContractNetInitiator {
 	public FIPAContractNetInitiator(QueueAgent agent, ACLMessage msg) {
 		myAgent = agent;
 		requestmsg = msg;
-		this.sin = myAgent.AñadirMonitor();
+		this.sin = myAgent.addMonitor();
 
 	}
 
@@ -96,7 +96,7 @@ public class FIPAContractNetInitiator {
 					template.add_receiver(agent);// TODO, esto esta
 													// modificado
 					template.addConversacion(conversationID);
-					myAgent.setConversacionActiva(conversationID);
+					myAgent.setActiveConversation(conversationID);
 
 					request.setReceiver(agent);
 					myAgent.send(request);
@@ -209,7 +209,7 @@ public class FIPAContractNetInitiator {
 						// compruebo que aun quedan mensajes por leer
 						if (this.nEnviados > this.respuestas.size()) {
 
-							this.sin.esperar();
+							this.sin.waiting();
 							state = RECEIVE_REPLY_STATE;
 
 							break;
@@ -231,7 +231,7 @@ public class FIPAContractNetInitiator {
 															// llegada de un
 															// nuevo mensaje
 					{
-						this.sin.esperar();
+						this.sin.waiting();
 						state = RECEIVE_REPLY_STATE;// state =
 													// ALL_REPLIES_RECEIVED_STATE;
 						break;
@@ -255,7 +255,7 @@ public class FIPAContractNetInitiator {
 			template.deleteAllReceiver();
 			// borramos las conversaciones activas
 
-			myAgent.deleteTodasConversacionActivas();
+			myAgent.deleteAllActiveConversation();
 
 			// recorremos el vector de aceptados y lo enviamos
 			for (ACLMessage mensaje : aceptados) {
@@ -270,7 +270,7 @@ public class FIPAContractNetInitiator {
 
 				template.add_receiver(mensaje.getReceiver());
 				template.addConversacion(conversationID);
-				myAgent.setConversacionActiva(conversationID);
+				myAgent.setActiveConversation(conversationID);
 
 				mensaje.setSender(myAgent.getAid());
 
@@ -322,7 +322,7 @@ public class FIPAContractNetInitiator {
 																	// están
 																	// todos
 						{
-							this.sin.esperar();
+							this.sin.waiting();
 							state = RECEIVE_2ND_REPLY_STATE;
 							break;
 						} else {
@@ -340,8 +340,8 @@ public class FIPAContractNetInitiator {
 
 			this.finish = true;
 			this.requestmsg = null;
-			this.myAgent.quitarMonitor();
-			this.myAgent.deleteTodasConversacionActivas();
+			this.myAgent.deleteMonitor();
+			this.myAgent.deleteAllActiveConversation();
 			break;
 		}
 		}

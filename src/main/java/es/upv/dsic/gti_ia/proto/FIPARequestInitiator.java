@@ -62,7 +62,7 @@ public class FIPARequestInitiator {
 		{
 		agent.setAdviserIni(new Monitor());
 		}*/
-		this.sin = myAgent.AñadirMonitor();
+		this.sin = myAgent.addMonitor();
 		
 	}
 	
@@ -113,7 +113,7 @@ public class FIPARequestInitiator {
 				template.add_receiver(request.getReceiver());
 
 				
-				myAgent.setConversacionActiva(conversationID);
+				myAgent.setActiveConversation(conversationID);
 
 				
 				
@@ -197,11 +197,11 @@ public class FIPARequestInitiator {
 					if (blocktime <=0)
 						state = ALL_REPLIES_RECEIVED_STATE;
 					else
-						this.sin.esperar(blocktime);
+						this.sin.waiting(blocktime);
 				}
 				else
 				{
-				this.sin.esperar();
+				this.sin.waiting();
 				 state = RECEIVE_REPLY_STATE;// state = ALL_REPLIES_RECEIVED_STATE;
 				 break;
 				}
@@ -242,7 +242,7 @@ public class FIPARequestInitiator {
 			}
 			else
 			{
-				this.sin.esperar();
+				this.sin.waiting();
 				state = RECEIVE_2ND_REPLY_STATE;
 				break;
 			}
@@ -258,8 +258,8 @@ public class FIPARequestInitiator {
 			this.resNofificationmsg = null;
 			this.requestsentmsg = null;
 			//si somos los ultimos desactivamos el monitor
-			this.myAgent.quitarMonitor();
-			myAgent.deleteConversacionActivas(conversationID);
+			this.myAgent.deleteMonitor();
+			myAgent.deleteActiveConversation(conversationID);
 			break;
 		}
 		

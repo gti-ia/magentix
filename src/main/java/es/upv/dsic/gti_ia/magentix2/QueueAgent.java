@@ -60,13 +60,13 @@ public class QueueAgent extends BaseAgent {
 
 	}
 
-	public int AñadirRole()
+	public int addRole()
 	{
 		this.nRoles++;
 		return this.nRoles;
 	}
 	
-	public int quitarRole()
+	public int removeRole()
 	{
 		this.nRoles--;
 		return this.nRoles;
@@ -78,17 +78,17 @@ public class QueueAgent extends BaseAgent {
 	}
 	
 	
-	public Monitor AñadirMonitor()
+	public Monitor addMonitor()
 	{
-		this.AñadirRole();
+		this.addRole();
 		if (this.monitor==null)
 			this.monitor = new Monitor();
 		return monitor;
 	}
 	
-	public void quitarMonitor()
+	public void deleteMonitor()
 	{
-		this.quitarRole();
+		this.removeRole();
 		if(this.nRoles == 0)
 		this.monitor = null;
 	}
@@ -123,7 +123,7 @@ public class QueueAgent extends BaseAgent {
 	 * 
 	 * @param conversacion
 	 */
-	public void setConversacionActiva(String conversacion) {
+	public void setActiveConversation(String conversacion) {
 		this.listaConversacionesActivas.add(conversacion);
 
 	}
@@ -133,7 +133,7 @@ public class QueueAgent extends BaseAgent {
 	 * 
 	 * @param conversacion
 	 */
-	public void deleteConversacionActivas(String conversacion) {
+	public void deleteActiveConversation(String conversacion) {
 		for (String conv : this.listaConversacionesActivas) {
 			if (conv.equals(conversacion)) {
 				this.listaConversacionesActivas.remove(conversacion);
@@ -147,7 +147,7 @@ public class QueueAgent extends BaseAgent {
 	 * 
 	 * @return
 	 */
-	public boolean deleteTodasConversacionActivas() {
+	public boolean deleteAllActiveConversation() {
 		this.listaConversacionesActivas.clear();
 		if (this.listaConversacionesActivas.size() == 0)
 			return true;
@@ -286,16 +286,16 @@ public class QueueAgent extends BaseAgent {
 		// del rol iniciator
 
 		if (monitor != null)
-			this.monitor.dar();
+			this.monitor.advise();
 		if (monitorAux != null)
-			this.monitorAux.dar();
+			this.monitorAux.advise();
 
 	}
 	/**
 	 * Añade una nueva tarea (protocolo FIPA) al agente, creara un nuevo hilo
 	 * @param obj objecto de tipo protocolo FIPA
 	 */
-	public void setTarea(Object obj) {
+	public void setTask(Object obj) {
 
 	
 		
@@ -470,7 +470,7 @@ public class QueueAgent extends BaseAgent {
 			}
 			else
 			{
-			this.monitorAux.esperar();	
+			this.monitorAux.waiting();	
 			}
 		}while(b);
 		

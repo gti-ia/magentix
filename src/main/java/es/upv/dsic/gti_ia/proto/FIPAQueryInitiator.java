@@ -58,7 +58,7 @@ public class FIPAQueryInitiator {
 	{
 		myAgent = agent;
 		requestmsg = msg;
-		this.sin = myAgent.AñadirMonitor();
+		this.sin = myAgent.addMonitor();
 		
 	}
 	
@@ -109,7 +109,7 @@ public class FIPAQueryInitiator {
 				template.add_receiver(request.getReceiver());
 
 				
-				myAgent.setConversacionActiva(conversationID);
+				myAgent.setActiveConversation(conversationID);
 				
 				
 				//fijamos el el timeout del mensaje
@@ -185,11 +185,11 @@ public class FIPAQueryInitiator {
 					if (blocktime <=0)
 						state = ALL_REPLIES_RECEIVED_STATE;
 					else
-						this.sin.esperar(blocktime);
+						this.sin.waiting(blocktime);
 				}
 				else
 				{
-				this.sin.esperar();
+				this.sin.waiting();
 				 state = RECEIVE_REPLY_STATE;// state = ALL_REPLIES_RECEIVED_STATE;
 				 break;
 				}
@@ -226,7 +226,7 @@ public class FIPAQueryInitiator {
 			}
 			else
 			{
-				this.sin.esperar();
+				this.sin.waiting();
 				state = RECEIVE_2ND_REPLY_STATE;
 				break;
 			}
@@ -241,8 +241,8 @@ public class FIPAQueryInitiator {
 			this.requestmsg = null;
 			this.resNofificationmsg = null;
 			this.requestsentmsg = null;
-			this.myAgent.quitarMonitor();
-			this.myAgent.deleteConversacionActivas(conversationID);
+			this.myAgent.deleteMonitor();
+			this.myAgent.deleteActiveConversation(conversationID);
 			break;
 		}
 		

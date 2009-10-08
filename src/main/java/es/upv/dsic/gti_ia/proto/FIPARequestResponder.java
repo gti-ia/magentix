@@ -50,7 +50,7 @@ public class FIPARequestResponder{
 
 	
 		
-		this.sin = myAgent.AñadirMonitor();
+		this.sin = myAgent.addMonitor();
 		
 
 	
@@ -72,7 +72,7 @@ public class FIPARequestResponder{
 			}
 			else
 			{
-				sin.esperar();//me espero a que llegue un mensaje.
+				sin.waiting();//me espero a que llegue un mensaje.
 			}
 			break;
 		}

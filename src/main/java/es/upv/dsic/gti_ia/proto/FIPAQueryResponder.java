@@ -46,7 +46,7 @@ public class FIPAQueryResponder{
 	{
 		myAgent = _agent;
 		template = _template;
-		this.sin = myAgent.AñadirMonitor();
+		this.sin = myAgent.addMonitor();
 		
 	
 		
@@ -71,7 +71,7 @@ public class FIPAQueryResponder{
 			else
 			{
 
-			sin.esperar();//me espero a que llegue un mensaje.
+			sin.waiting();//me espero a que llegue un mensaje.
 
 			}
 			break;

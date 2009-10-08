@@ -50,7 +50,7 @@ public class FIPAContractNetResponder{
 	{
 		myAgent = _agent;
 		template = _template;
-		this.sin = myAgent.AñadirMonitor();
+		this.sin = myAgent.addMonitor();
 		
 	
 		
@@ -74,7 +74,7 @@ public class FIPAContractNetResponder{
 			else
 			{
 
-				sin.esperar();//me espero a que llegue un mensaje.
+				sin.waiting();//me espero a que llegue un mensaje.
 
 			}
 			break;
@@ -160,7 +160,7 @@ public class FIPAContractNetResponder{
 			}
 			else
 			{
-				this.sin.esperar();
+				this.sin.waiting();
 				state = RECEIVE_MSG_STATE;
 				break;
 			}

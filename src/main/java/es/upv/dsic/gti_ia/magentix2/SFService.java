@@ -91,11 +91,11 @@ public class SFService {
 
 		// crear un fil en el fipa request initiator
 
-		agent.setTarea(new TestAgentClient(agent, requestMsg, this));
+		agent.setTask(new TestAgentClient(agent, requestMsg, this));
 
 		// esperar a que se completen la busqueda de agentes
 
-		adv.esperar();
+		adv.waiting();
 
 		return salida;
 	}
@@ -122,11 +122,11 @@ public class SFService {
 
 		// crear un fil en el fipa request initiator
 
-		agent.setTarea(new TestAgentClient(agent, requestMsg, this));
+		agent.setTask(new TestAgentClient(agent, requestMsg, this));
 
 		// esperar a que se completen la busqueda de agentes
 
-		adv.esperar();
+		adv.waiting();
 
 		return this.agentes;
 
@@ -165,10 +165,10 @@ public class SFService {
 		// send(requestMsg);
 
 		// crear un fil en el fipa request initiator
-		agente.setTarea(new TestAgentClient(agente, requestMsg, this));
+		agente.setTask(new TestAgentClient(agente, requestMsg, this));
 
 		// registar el agente en la plataforma
-		this.adv.esperar();
+		this.adv.waiting();
 
 		return salida;
 	}
@@ -197,9 +197,9 @@ public class SFService {
 		System.out.println("[QueryAgent]Sending... ");
 
 		// crear un fil en el fipa request initiator
-		agent.setTarea(new TestAgentClient(agent, requestMsg, this));
+		agent.setTask(new TestAgentClient(agent, requestMsg, this));
 
-		this.adv.esperar();
+		this.adv.waiting();
 
 		return salida;
 
@@ -227,9 +227,9 @@ public class SFService {
 		System.out.println("[QueryAgent]Sending... ");
 
 		// crear un fil en el fipa request initiator
-		agent.setTarea(new TestAgentClient(agent, requestMsg, this));
+		agent.setTask(new TestAgentClient(agent, requestMsg, this));
 
-		this.adv.esperar();
+		this.adv.waiting();
 
 		return salida;
 
@@ -254,7 +254,7 @@ public class SFService {
 		System.out.println("[QueryAgent]Sending... ");
 
 		// crear un fil en el fipa request initiator
-		agent.setTarea(new TestAgentClient(agent, requestMsg, this));
+		agent.setTask(new TestAgentClient(agent, requestMsg, this));
 
 	}
 
@@ -278,9 +278,9 @@ public class SFService {
 		System.out.println("[QueryAgent]Sending... ");
 
 		// crear un fil en el fipa request initiator
-		agent.setTarea(new TestAgentClient(agent, requestMsg, this));
+		agent.setTask(new TestAgentClient(agent, requestMsg, this));
 
-		this.adv.esperar();
+		this.adv.waiting();
 
 		return salidaString;
 	}
@@ -311,9 +311,9 @@ public class SFService {
 		System.out.println("[QueryAgent]Sending... ");
 
 		// crear un fil en el fipa request initiator
-		agent.setTarea(new TestAgentClient(agent, requestMsg, this));
+		agent.setTask(new TestAgentClient(agent, requestMsg, this));
 
-		this.adv.esperar();
+		this.adv.waiting();
 		return salida;
 
 	}
@@ -345,10 +345,10 @@ public class SFService {
 		// send(requestMsg);
 
 		// crear un fil en el fipa request initiator
-		agente.setTarea(new TestAgentClient(agente, requestMsg, this));
+		agente.setTask(new TestAgentClient(agente, requestMsg, this));
 
 		// registar el agente en la plataforma
-		this.adv.esperar();
+		this.adv.waiting();
 
 		return salida;
 	}
@@ -380,7 +380,7 @@ public class SFService {
 					+ msg.getSender().getLocalName()
 					+ " has rejected my proposal.");
 			this.sf.setSalida(false);
-			this.sf.adv.dar();
+			this.sf.adv.advise();
 		}
 
 		protected void handleInform(ACLMessage msg) {
@@ -425,7 +425,7 @@ public class SFService {
 				} else
 					this.sf.setSalida(false);
 
-				this.sf.adv.dar();
+				this.sf.adv.advise();
 			}
 
 			// si ejecutamos el GetProfile
@@ -442,7 +442,7 @@ public class SFService {
 					this.sf.setSalidaString(null);
 				}
 
-				this.sf.adv.dar();
+				this.sf.adv.advise();
 				System.out.println("ARG2: " + arg2);
 
 			}
@@ -460,7 +460,7 @@ public class SFService {
 				{
 					this.sf.setSalida(false);
 				}
-				this.sf.adv.dar();
+				this.sf.adv.advise();
 
 			}
 			// si ejecutamos el GetProcess
@@ -496,7 +496,7 @@ public class SFService {
 
 				}
 
-				this.sf.adv.dar();
+				this.sf.adv.advise();
 			}
 			// si ejecutamos el searchService
 			if (patron.equals("SearchServiceProcess")) {
@@ -527,7 +527,7 @@ public class SFService {
 					this.sf.setSalida(false);
 
 				}
-				this.sf.adv.dar();
+				this.sf.adv.advise();
 			}
 			// this.sf.setID(Integer.parseInt(id));
 
@@ -546,7 +546,7 @@ public class SFService {
 				{
 					this.sf.setSalida(false);
 				}
-				this.sf.adv.dar();
+				this.sf.adv.advise();
 
 			}
 			if (patron.equals("ModifyProcessProcess")) {
@@ -556,7 +556,7 @@ public class SFService {
 				} else if (arg2.equals("0")) {
 					this.sf.setSalida(false);
 				}
-				this.sf.adv.dar();
+				this.sf.adv.advise();
 
 			}
 
@@ -567,7 +567,7 @@ public class SFService {
 					+ msg.getSender().getLocalName()
 					+ " has indicated that they didn't understand.");
 			this.sf.setSalida(false);
-			this.sf.adv.dar();
+			this.sf.adv.advise();
 		}
 
 		protected void handleOutOfSequence(ACLMessage msg) {
@@ -576,7 +576,7 @@ public class SFService {
 					+ " has send me a message which i wasn't"
 					+ " expecting in this conversation");
 			this.sf.setSalida(false);
-			this.sf.adv.dar();
+			this.sf.adv.advise();
 		}
 	}
 

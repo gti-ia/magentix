@@ -64,7 +64,7 @@ import es.upv.dsic.gti_ia.magentix2.QueueAgent;
 	            msg.setContent("accidente a "+frame.getTextField().getText()+" kms");
 	            msg.setSender(this.getAid());
          
-	            this.setTarea( new ManejadorInitiator(this,msg,i));
+	            this.setTask( new ManejadorInitiator(this,msg,i));
 	
 	    }
 	    

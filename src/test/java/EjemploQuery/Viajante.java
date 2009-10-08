@@ -29,8 +29,8 @@ public class Viajante extends QueueAgent {
         mensaje.setReceiver(new AgentID("aeropuerto1","qpid","localhost",""));
         
         //Añadimos el comportamiento de la consulta.
-        this.setTarea(new ComprobarInitiator(this, mensaje)); 
-        adv.esperar();
+        this.setTask(new ComprobarInitiator(this, mensaje)); 
+        adv.waiting();
         
     }
  

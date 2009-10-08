@@ -57,10 +57,10 @@ public class Cliente extends QueueAgent {
  
                     //Se añade el comportamiento que manejará las ofertas.
                     
-                    this.setTarea(new ManejoOpciones(this, mensajeCFP));
+                    this.setTask(new ManejoOpciones(this, mensajeCFP));
                  
                     es.upv.dsic.gti_ia.proto.Monitor adv = new Monitor();
-                    adv.esperar();
+                    adv.waiting();
  
              
 

@@ -28,6 +28,7 @@ public class OMSService {
 	}
 	
 	
+	
 	public boolean RegisterNorm(QueueAgent agente, OMSAgentDescription descripcion)
 	{
 	//	suggestedServiceCalls[2]=configuration+"RegisterNormProcess.owl NormID=norma1 normContent=FORBIDDEN_Member_REQUEST_acquireRole_MESSAGE(CONTENT(ROLE_'Payee'))";
@@ -47,10 +48,10 @@ public class OMSService {
 		//send(requestMsg);
 		
 		//crear un fil en el fipa request initiator
-	     agente.setTarea(new TestAgentClient(agente,requestMsg,this));
+	     agente.setTask(new TestAgentClient(agente,requestMsg,this));
 		
 	     
-	     this.adv.esperar();
+	     this.adv.waiting();
 	     
 	     return this.salida;
 
@@ -64,7 +65,7 @@ public class OMSService {
 	 * @param descripcion inidica que rol y en que organizacion entrara el agente
 	 * @return
 	 */
-	public boolean register(QueueAgent agente, OMSAgentDescription descripcion)
+	public boolean AcquireRole(QueueAgent agente, OMSAgentDescription descripcion)
 	{
 		//montar string de conexion 
 		//Enviamos el mensaje
@@ -86,10 +87,10 @@ public class OMSService {
 		//send(requestMsg);
 		
 		//crear un fil en el fipa request initiator
-	     agente.setTarea(new TestAgentClient(agente,requestMsg,this));
+	     agente.setTask(new TestAgentClient(agente,requestMsg,this));
 		
 	     
-	     this.adv.esperar();
+	     this.adv.waiting();
 	     
 	     return this.salida;
 		//registar el agente en la plataforma
@@ -122,7 +123,7 @@ public class OMSService {
                 msg.getSender().getLocalName() + 
                 " has rejected my proposal.");
                 this.oms.setValor(false);
-    			this.oms.adv.dar();
+    			this.oms.adv.advise();
         }
         
         protected  void   handleInform(ACLMessage msg) {
@@ -149,7 +150,7 @@ public class OMSService {
                 else
                 	this.oms.setValor(false);
                 
-                	this.oms.adv.dar();
+                	this.oms.adv.advise();
                 }
                 
                 if (patron.equals("LeaveRoleProcess"))
@@ -162,7 +163,7 @@ public class OMSService {
                     else
                     	this.oms.setValor(false);
                     
-                    	this.oms.adv.dar();
+                    	this.oms.adv.advise();
                 }
                 	
                 
@@ -173,7 +174,7 @@ public class OMSService {
                 + msg.getSender().getLocalName() + 
                 " has indicated that they didn't understand.");
                 this.oms.setValor(false);
-    			this.oms.adv.dar();
+    			this.oms.adv.advise();
         }
         
         protected  void  handleOutOfSequence(ACLMessage msg) {
@@ -182,7 +183,7 @@ public class OMSService {
                 " has send me a message which i wasn't" + 
                 " expecting in this conversation");
                 this.oms.setValor(false);
-    			this.oms.adv.dar();
+    			this.oms.adv.advise();
         }}
 
 }

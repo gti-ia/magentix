@@ -2,14 +2,15 @@ package EjemploContractNet;
 
 import org.apache.qpid.transport.Connection;
 
-import EjemploRequest.Principal_Grafico;
+
 
 import es.upv.dsic.gti_ia.proto.*;
 import es.upv.dsic.gti_ia.fipa.AgentID;
 import es.upv.dsic.gti_ia.magentix2.QueueAgent;
 import es.upv.dsic.gti_ia.proto.MessageTemplate;
-import es.upv.dsic.gti_ia.proto.FIPANames.InteractionProtocol;
 import es.upv.dsic.gti_ia.fipa.*;
+
+import es.upv.dsic.gti_ia.proto.Monitor;
 
 public class Concesionario extends QueueAgent {
 
@@ -22,6 +23,8 @@ public class Concesionario extends QueueAgent {
 	public void execute()
     {
     
+		
+	Monitor m = new Monitor();
     System.out.printf("Autos %s: A la espera de clientes...\n", this.getName());
     
 
@@ -32,11 +35,14 @@ public class Concesionario extends QueueAgent {
     // Añadimos los comportamientos ante mensajes recibidos
     CrearOferta oferta = new CrearOferta(this, template);
     
+    this.setTask(oferta);
+    m.waiting();
+    /*
     do
     {
     	oferta.action();
     	
-    }while(true);
+    }while(true);*/
     
 }
 

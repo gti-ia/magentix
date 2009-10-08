@@ -15,7 +15,7 @@ public class Monitor {
     /**
      * Suspende el proceso
      */
-	public synchronized void esperar()
+	public synchronized void waiting()
 	{
 		
         try{	
@@ -32,7 +32,7 @@ public class Monitor {
      * 
      * @param  timeout tiempo de espera.
      */
-	public synchronized void esperar(long timeout)
+	public synchronized void waiting(long timeout)
 	{
 		
         try{	
@@ -47,7 +47,7 @@ public class Monitor {
     /**
      * Reactiva el proceso
      */
-	public synchronized void dar()
+	public synchronized void advise()
 	{
 		try{
 		notifyAll();
