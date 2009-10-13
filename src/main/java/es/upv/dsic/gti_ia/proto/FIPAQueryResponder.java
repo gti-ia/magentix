@@ -60,7 +60,7 @@ public class FIPAQueryResponder{
 		{
 		case WAITING_MSG_STATE:{
 
-			ACLMessage request = myAgent.receiveACLMessage(template);
+			ACLMessage request = myAgent.receiveACLMessage(template,1);
 			
 				if(request != null)
 				{

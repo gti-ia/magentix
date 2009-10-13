@@ -63,7 +63,7 @@ public class FIPAContractNetResponder{
 		switch(state)
 		{
 		case WAITING_MSG_STATE:{	
-			ACLMessage request = myAgent.receiveACLMessage(template);
+			ACLMessage request = myAgent.receiveACLMessage(template,1);
 			
 			if(request != null)
 			{
@@ -133,7 +133,7 @@ public class FIPAContractNetResponder{
 			MessageTemplate template2 = new MessageTemplate(InteractionProtocol.FIPA_CONTRACT_NET);
 			template2.addConversacion(this.propose.getConversationId());
 			template2.add_receiver(this.propose.getReceiver());
-			ACLMessage secondReply = myAgent.receiveACLMessageI(template2);
+			ACLMessage secondReply = myAgent.receiveACLMessage(template2,0);
 			
 
 			

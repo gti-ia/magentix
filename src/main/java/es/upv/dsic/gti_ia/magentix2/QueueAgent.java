@@ -37,6 +37,8 @@ public class QueueAgent extends BaseAgent {
 	//private AgentID aid = null;
 	private Monitor monitor = null;
 	private Monitor monitorAux = null;
+	private Monitor readQueue = new Monitor();
+	private volatile boolean stopThread = true;
 	
 	private int nRoles = 0;
 	//para poder diferenciar cuando nos llega una conversació nueva
@@ -281,10 +283,12 @@ public class QueueAgent extends BaseAgent {
 	public final void onMessage(Session ssn, MessageTransfer xfr) {
 		// internalQueue.add(xfr);
 
+		
 		messageList.add(MessageTransfertoACLMessage(xfr));
 		// clase encargada de despertar al agente, puede ser del rol responder o
 		// del rol iniciator
 
+		
 		if (monitor != null)
 			this.monitor.advise();
 		if (monitorAux != null)
@@ -298,7 +302,6 @@ public class QueueAgent extends BaseAgent {
 	public void setTask(Object obj) {
 
 	
-		
 		if (obj.getClass().getSuperclass().getName().equals(
 				"es.upv.dsic.gti_ia.proto.FIPARequestInitiator"))
 
@@ -345,19 +348,30 @@ public class QueueAgent extends BaseAgent {
 		return messageList.size();
 	}
 
+	
+
+	
+    
+	
 	/**
 	 * Busca un mensaje dado un template
 	 * @param template
 	 * @return msg 
 	 */
-	public final ACLMessage receiveACLMessage(MessageTemplate template) {
+	public synchronized ACLMessage receiveACLMessage(MessageTemplate template, int tipo) {
 		ACLMessage msgselect = null;
-
+		boolean condition = false;
 		// System.out.println("Numero de mensajes:" + messageList.size());
-		ArrayList<ACLMessage> messageListAux = (ArrayList<ACLMessage>)messageList.clone();
 		
 		
 		
+		
+	    
+		do{
+			
+	   ArrayList<ACLMessage> messageListAux = (ArrayList<ACLMessage>)messageList.clone();
+		if (tipo == 1)
+		{
 		for (ACLMessage msg : messageListAux) {
 			// comparamos los campos protocol y conversaciónID (para asegurarnos
 			// que no es una conversacion existente)00
@@ -376,9 +390,53 @@ public class QueueAgent extends BaseAgent {
 			}
 
 		}
+		}
+		else
+		{
+			for (ACLMessage msg : messageListAux) {
+				
+				// comparamos los campos protocol, idcoversaciï¿½n y sender
+				if (template.getProtocol().equals(msg.getProtocol())) {
 
-		if (msgselect != null)
+					// miramos dentro de las conversaciones que tenemos
+					for (String conversacion : template.getList_Conversaciones())
+						if (conversacion.equals(msg.getConversationId())) {
+
+							// miramos si pertenece algun agente
+
+							if (template.existeReceiver(msg.getSender())) {
+
+								msgselect = msg;
+								break;
+
+							}
+
+						}
+					
+
+				}
+				if (msgselect != null)
+					break;
+			}
+		}
+
+		if (msgselect == null)
+		{
+			
+			
+			if ((messageList.size() != messageListAux.size()))
+			{
+				condition = true;
+			}
+				
+		}
+		else
+		{
 			messageList.remove(msgselect);
+			condition = false;
+		}
+		
+	}while(condition);
 
 		return msgselect;
 	}
@@ -478,8 +536,10 @@ public class QueueAgent extends BaseAgent {
 		return msgselect;
 	}
 
+	
 
-	public final ACLMessage receiveACLMessageI(MessageTemplate template) {// comparacion
+
+	public synchronized ACLMessage receiveACLMessageIAUX(MessageTemplate template) {// comparacion
 		// del
 		// template
 		// para
@@ -488,9 +548,11 @@ public class QueueAgent extends BaseAgent {
 		ACLMessage msgselect = null;
 		
 		//Evitamos un acceso concurrente cuando nos llega un mensaje
-		ArrayList<ACLMessage> messageListAux = (ArrayList<ACLMessage>)messageList.clone();
+		//ArrayList<ACLMessage> messageListAux = (ArrayList<ACLMessage>)messageList.clone();
 
-		for (ACLMessage msg : messageListAux) {
+		
+		
+		for (ACLMessage msg : messageList) {
 			
 			// comparamos los campos protocol, idcoversaciï¿½n y sender
 			if (template.getProtocol().equals(msg.getProtocol())) {
@@ -541,7 +603,9 @@ public class QueueAgent extends BaseAgent {
 			switch (tipo) {
 			case 1: {
 
+
 				do {
+
 
 					((FIPARequestInitiator) iniciador).action();
 
@@ -590,8 +654,9 @@ public class QueueAgent extends BaseAgent {
 			switch (tipo) {
 			case 1: {
 				do {
-
+			
 					((FIPARequestResponder) responder).action();
+				
 
 				} while (true);
 
@@ -608,8 +673,10 @@ public class QueueAgent extends BaseAgent {
 			case 3: {
 
 				do {
-
+					
+			
 					((FIPAContractNetResponder) responder).action();
+				
 
 				} while (true);
 

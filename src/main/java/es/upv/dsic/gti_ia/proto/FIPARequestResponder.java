@@ -32,6 +32,7 @@ public class FIPARequestResponder{
 	private ACLMessage  requestmsg;
 	private ACLMessage responsemsg;
 	private ACLMessage resNofificationmsg;
+	private boolean finish=false;
 	
 	private Monitor sin=null;
 	
@@ -57,6 +58,11 @@ public class FIPARequestResponder{
 		
 	}
 	
+	public boolean finish()
+	{
+	return this.finish;	
+	}
+	
 	public  void action()
 	{
 		
@@ -64,7 +70,7 @@ public class FIPARequestResponder{
 		switch(state)
 		{
 		case WAITING_MSG_STATE:{	
-			ACLMessage request = myAgent.receiveACLMessage(template);
+			ACLMessage request = myAgent.receiveACLMessage(template,1);
 			if(request != null)
 			{
 					this.requestmsg = request;
@@ -181,6 +187,7 @@ public class FIPARequestResponder{
 		case RESET_STATE:{
 			
 			state = WAITING_MSG_STATE;
+			this.finish = true;
 			this.requestmsg = null;
 			this.resNofificationmsg = null;
 			this.responsemsg = null;

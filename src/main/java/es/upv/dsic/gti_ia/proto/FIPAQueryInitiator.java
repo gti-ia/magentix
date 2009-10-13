@@ -130,7 +130,7 @@ public class FIPAQueryInitiator {
 		case RECEIVE_REPLY_STATE:{
 			
 	
-			ACLMessage firstReply = myAgent.receiveACLMessageI(template);
+			ACLMessage firstReply = myAgent.receiveACLMessage(template,0);
 			
 			
 			if (firstReply!=null){
@@ -196,7 +196,7 @@ public class FIPAQueryInitiator {
 			}
 		}
 		case RECEIVE_2ND_REPLY_STATE:{
-			ACLMessage secondReply = myAgent.receiveACLMessageI(template);
+			ACLMessage secondReply = myAgent.receiveACLMessage(template,0);
 			
 			
 			if (secondReply!=null){

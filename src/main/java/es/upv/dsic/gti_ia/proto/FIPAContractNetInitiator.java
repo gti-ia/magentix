@@ -130,7 +130,7 @@ public class FIPAContractNetInitiator {
 			// de un agent en concreto, //lo del agente lo podemos poner para
 			// que no se envie un idconversacion y no sea alguno de los que
 			// enviado
-			ACLMessage firstReply = myAgent.receiveACLMessageI(template);
+			ACLMessage firstReply = myAgent.receiveACLMessage(template,0);
 
 
 
@@ -294,7 +294,7 @@ public class FIPAContractNetInitiator {
 				state = ALL_RESULT_NOTIFICATION_RECEIVED_STATE;
 			else {
 					ACLMessage secondReply = myAgent
-							.receiveACLMessageI(template);
+							.receiveACLMessage(template,0);
 
 					if (secondReply != null) {
 						this.nLeidos++;

@@ -4,7 +4,10 @@ public class OMSAgentDescription {
 	
 	private String RolID;
 	private String UnitID;
-	private String norma;
+	private String normID;
+	private String NomContent;
+	
+	
 	
 	
 	

@@ -411,9 +411,6 @@ public class SFService {
 			arg2 = arg2.substring((arg2.lastIndexOf("=")) + 1,
 					arg2.length() - 1);
 
-			System.out.println("PATRON: " + patron);
-			System.out.println("ARG1: " + arg1);
-			System.out.println("ARG2: " + arg2);
 
 			// si ejecutamos el registerProcess
 

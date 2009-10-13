@@ -5,7 +5,6 @@ public class SFAgentDescription {
 	private String goalprofile;
 	private String ID;
 	private String ImplementationID;
-	private String newgoalprofile;
 	private String URLProfile;
 	private String URLProcess;
 
