@@ -536,56 +536,6 @@ public class QueueAgent extends BaseAgent {
 		return msgselect;
 	}
 
-	
-
-
-	public synchronized ACLMessage receiveACLMessageIAUX(MessageTemplate template) {// comparacion
-		// del
-		// template
-		// para
-		// el
-		// initiator
-		ACLMessage msgselect = null;
-		
-		//Evitamos un acceso concurrente cuando nos llega un mensaje
-		//ArrayList<ACLMessage> messageListAux = (ArrayList<ACLMessage>)messageList.clone();
-
-		
-		
-		for (ACLMessage msg : messageList) {
-			
-			// comparamos los campos protocol, idcoversaci�n y sender
-			if (template.getProtocol().equals(msg.getProtocol())) {
-
-				// miramos dentro de las conversaciones que tenemos
-				for (String conversacion : template.getList_Conversaciones())
-					if (conversacion.equals(msg.getConversationId())) {
-
-						// miramos si pertenece algun agente
-
-						if (template.existeReceiver(msg.getSender())) {
-
-							msgselect = msg;
-							break;
-
-						}
-
-					}
-				
-
-			}
-			if (msgselect != null)
-				break;
-		}
-			if (msgselect != null)
-			{
-				messageList.remove(msgselect);
-			}
-		
-
-		return msgselect;
-	}
-
 	public class HiloIni extends Thread {
 
 		Object iniciador;
