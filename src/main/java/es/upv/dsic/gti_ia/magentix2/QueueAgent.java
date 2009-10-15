@@ -9,10 +9,7 @@ package es.upv.dsic.gti_ia.magentix2;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.Iterator;
-import java.util.Dictionary;
-import java.util.HashMap;
+
 
 import org.apache.qpid.transport.Connection;
 import org.apache.qpid.transport.MessageTransfer;
@@ -37,13 +34,12 @@ public class QueueAgent extends BaseAgent {
 	//private AgentID aid = null;
 	private Monitor monitor = null;
 	private Monitor monitorAux = null;
-	private Monitor readQueue = new Monitor();
 	private volatile boolean stopThread = true;
 	
 	private int nRoles = 0;
 	//para poder diferenciar cuando nos llega una conversació nueva
 	private ArrayList<String> listaConversacionesActivas = new ArrayList<String>();
-	//almacena la informacion de les servicios en thomas
+	//almacena la informacion de los servicios en thomas
 	private ArrayList<SFAgentDescription> DescripcionesAgentes = new ArrayList<SFAgentDescription>();
 
 	/**
@@ -58,10 +54,9 @@ public class QueueAgent extends BaseAgent {
 	public QueueAgent(AgentID aid, Connection connection) {
 		super(aid, connection);
 		// internalQueue = new LinkedBlockingQueue<MessageTransfer>();
-
-
 	}
 
+	
 	public int addRole()
 	{
 		this.nRoles++;
