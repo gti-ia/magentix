@@ -65,6 +65,11 @@ import persistence.DataBaseInterface;
                        		res.setStatus("Error"); 
                             return res;                      
                       }
+                      if(!acquireRole.getUnitID().equalsIgnoreCase("virtual")&!thomasBD.CheckAgentPlaysRoleInUnit(thomasBD.GetParentUnitID(acquireRole.getUnitID()), acquireRole.getAgentID())){
+                   		res.setErrorValue("Invalid");
+                     		res.setStatus("Error"); 
+                          return res;                      
+                    }
                       //COMPROBACION DE LAS NORMAS
                       if(!normManager.checkMaxCardinalityNorms(acquireRole.getRoleID(),acquireRole.getAgentID())){
                      		res.setErrorValue("MaxCardinalityConstraint");

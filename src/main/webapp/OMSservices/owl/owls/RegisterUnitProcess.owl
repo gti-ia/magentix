@@ -36,23 +36,7 @@
 </service:Service>
 
 
-       
-
-<profile:Profile rdf:ID="RegisterUnitProfile">
-    <service:isPresentedBy rdf:resource="#RegisterUnitService"/>
-    <profile:serviceName xml:lang="en">RegisterUnit</profile:serviceName>
-
-
-
-    <profile:hasInput rdf:resource="#UnitID"/>
-    <profile:hasInput rdf:resource="#Type"/>
-    <profile:hasInput rdf:resource="#Goal"/>
-    <profile:hasInput rdf:resource="#ParentUnitID"/>
-    <profile:hasInput rdf:resource="#AgentID"/>
-    <profile:hasOutput rdf:resource="#Status"/>
-    <profile:hasOutput rdf:resource="#ErrorValue"/>   
-
-</profile:Profile>
+      
 
 <process:AtomicProcess rdf:ID="RegisterUnitProcess">
 	<service:describes rdf:resource="#RegisterUnitService"/>  	

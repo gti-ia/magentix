@@ -34,7 +34,7 @@ import persistence.DataBaseInterface;
                 	 if (DEBUG) {
              			System.out.println("InformRoleNorms :");
              			System.out.println("***AgentID..."+ informRoleNorms.getAgentID());
-             			System.out.println("***ROleID()..."+ informRoleNorms.getRoleID());
+             			System.out.println("***RoleID()..."+ informRoleNorms.getRoleID());
                        	  
              	 }
                 	 
@@ -42,23 +42,35 @@ import persistence.DataBaseInterface;
                      res.setStatus("Ok");
                      res.setNormList("");
                      if(informRoleNorms.getRoleID()==""){
-                     	res.setErrorValue("Invalid");
+                    	 res.setErrorValue("Invalid");
                          res.setStatus("Error");
+                         if (DEBUG){ System.out.println("***NormList..."+res.getNormList());
+                         System.out.println("***ErrorValue..."+res.getErrorValue());
+                         System.out.println("***Status..."+res.getStatus());}
                          return res;
                      }
                      persistence.DataBaseInterface thomasBD=new DataBaseInterface();
                      if(!thomasBD.CheckExistsRole(informRoleNorms.getRoleID())){
-                      	res.setErrorValue("NotFound");
-                          res.setStatus("Error"); 
-                          return res;                	
+                    	res.setErrorValue("NotFound");
+                        res.setStatus("Error"); 
+                        if (DEBUG){ System.out.println("***NormList..."+res.getNormList());
+                        System.out.println("***ErrorValue..."+res.getErrorValue());
+                        System.out.println("***Status..."+res.getStatus());}
+                        return res;                	
                       }
                      //role based control
                      if(!roleBasedControl(informRoleNorms.getAgentID()))	
                      {	res.setErrorValue("Not-Allowed");
                   		res.setStatus("Error"); 
-                  		return res;
+                  		if (DEBUG){ System.out.println("***NormList..."+res.getNormList());
+                        System.out.println("***ErrorValue..."+res.getErrorValue());
+                        System.out.println("***Status..."+res.getStatus());}
+                        return res;
                   	}
                      res.setNormList(thomasBD.GetRoleNormsList(informRoleNorms.getRoleID()).toString());
+                     if (DEBUG){ System.out.println("***NormList..."+res.getNormList());
+                     System.out.println("***ErrorValue..."+res.getErrorValue());
+                     System.out.println("***Status..."+res.getStatus());}
                      return res;
                      } 
             		private boolean roleBasedControl(String agentID) {

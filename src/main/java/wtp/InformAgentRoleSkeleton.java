@@ -57,6 +57,10 @@ import persistence.DataBaseInterface;
                   		return res;
                   	}
                      res.setRoleUnitList(thomasBD.GetRoleUnitList(informAgentRole.getAgentID()).toString());
+                     if (DEBUG) {
+                			System.out.println("InformAgentRole :");
+                			System.out.println("***Result..."+ res.getRoleUnitList().toString());
+                	}
                      return res;
                      }
      

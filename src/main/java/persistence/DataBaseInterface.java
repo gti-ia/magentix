@@ -338,7 +338,10 @@ public class DataBaseInterface {
 			ResultSet r = stmt.executeQuery("SELECT * FROM role WHERE roleid='"+roleID.toLowerCase()+"'");
 			if(r.next()){
 				stmt = db.connection.createStatement();
-				ResultSet rs = stmt.executeQuery("SELECT * FROM norm WHERE addressedrole="+r.getString("id"));
+				ResultSet rs = stmt.executeQuery("SELECT * FROM (((norm N left join maxcardinalitynorm MC on N.id=MC.normid)" +
+						"left join incompatibilitynorm IC on N.id=IC.normid)" +
+						"left join simplerequestnorm SR on N.id=SR.normid)" +
+						"where MC.role1id="+r.getString("ID")+" OR IC.role1id="+r.getString("ID")+" OR SR.roleid="+r.getString("ID"));
 		        while (rs.next()) {
 		        	normList.add(rs.getString("normid"));
 		        }

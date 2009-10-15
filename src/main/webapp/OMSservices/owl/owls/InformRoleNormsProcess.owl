@@ -48,7 +48,7 @@
     <profile:hasInput rdf:resource="#AgentID"/>
     <profile:hasOutput rdf:resource="#Status"/>
     <profile:hasOutput rdf:resource="#ErrorValue"/>   
-    <profile:hasOutput rdf:resource="#NormsList"/> 
+    <profile:hasOutput rdf:resource="#NormList"/> 
 
 </profile:Profile>
 
@@ -59,7 +59,7 @@
     <process:hasInput rdf:resource="#AgentID"/>
 	<process:hasOutput rdf:resource="#Status"/>
 	<process:hasOutput rdf:resource="#ErrorValue"/>
-	<process:hasOutput rdf:resource="#NormsList"/>
+	<process:hasOutput rdf:resource="#NormList"/>
 	
 </process:AtomicProcess>
 
@@ -81,8 +81,8 @@
     <rdfs:label>ErrorValue</rdfs:label>
     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
 </process:Output>    
-<process:Output rdf:ID="NormsList">
-    <rdfs:label>NormsList</rdfs:label>
+<process:Output rdf:ID="NormList">
+    <rdfs:label>NormList</rdfs:label>
     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
 </process:Output>      
 
@@ -132,8 +132,8 @@
         </grounding:wsdlOutput>
         <grounding:wsdlOutput>
                   <grounding:WsdlOutputMessageMap>
-		    <grounding:owlsParameter rdf:resource="#NormsList"/>
-                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/InformRoleNorms/NormsList</grounding:wsdlMessagePart>
+		    <grounding:owlsParameter rdf:resource="#NormList"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/InformRoleNorms/NormList</grounding:wsdlMessagePart>
                   </grounding:WsdlOutputMessageMap>
         </grounding:wsdlOutput>
         
