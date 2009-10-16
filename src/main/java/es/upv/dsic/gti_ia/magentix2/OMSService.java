@@ -1,22 +1,22 @@
 package es.upv.dsic.gti_ia.magentix2;
 
-import es.upv.dsic.gti_ia.fipa.*;
+import es.upv.dsic.gti_ia.fipa.ACLMessage;
+import es.upv.dsic.gti_ia.fipa.AgentID;
 import es.upv.dsic.gti_ia.proto.Monitor;
 import es.upv.dsic.gti_ia.proto.FIPARequestInitiator;
 import es.upv.dsic.gti_ia.proto.FIPANames.InteractionProtocol;
 import java.util.ArrayList;
-
 
 public class OMSService {
 
 	private String configuration;
 	private String conection;
 	private Monitor adv = new Monitor();
-	private String salida = "";
-	int cantidad;
-	ArrayList<String> lista = new ArrayList<String>();
+	private String value = "";
+	private int Quantity;
+	private ArrayList<String> list = new ArrayList<String>();
 
-	public OMSService(String OMSServiceDesciptionLocation) {
+	public  OMSService(String OMSServiceDesciptionLocation) {
 
 		this.configuration = OMSServiceDesciptionLocation;
 	}
@@ -26,10 +26,31 @@ public class OMSService {
 	 * 
 	 * @param valor
 	 */
-	public void setValor(String valor) {
-		this.salida = valor;
+	public void setValor(String value) {
+		this.value = value;
 	}
 
+	
+	public void addElementToList(String element)
+	{
+		this.list.add(element);
+	}
+	
+	public ArrayList<String> getList()
+	{
+		return this.list;
+		
+	}
+	public void setQuantity(int Quantity)
+	{
+		this.Quantity = Quantity;
+	}
+	
+	public int getQuantity()
+	{
+		return this.Quantity;
+	}
+	
 	public String LeaveRole(QueueAgent agente, String AgentID, String RoleID,
 			String UnitID) {
 		// suggestedServiceCalls[2]=configuration+"RegisterNormProcess.owl
@@ -53,7 +74,7 @@ public class OMSService {
 
 		this.adv.waiting();
 
-		return this.salida;
+		return this.value;
 
 	}
 
@@ -62,7 +83,9 @@ public class OMSService {
 		// NormID=norma1
 		// normContent=FORBIDDEN_Member_REQUEST_acquireRole_MESSAGE(CONTENT(ROLE_'Payee'))";
 
-		String call = configuration + "InformAgentRoleProcess.owl AgentID="
+		this.list.clear();
+		
+		String call = configuration + "InformAgentRoleProcess.owl RequestedAgentID="
 				+ AgentID;
 		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
 		requestMsg.setSender(agente.getAid());
@@ -79,15 +102,18 @@ public class OMSService {
 
 		this.adv.waiting();
 
-		return this.lista;
+		return this.list;
 
 	}
 
-	public ArrayList<String> InformMembers(QueueAgent agente, String RoleID, String UnitID) {
+	public ArrayList<String> InformMembers(QueueAgent agente, String RoleID,
+			String UnitID) {
 		// suggestedServiceCalls[2]=configuration+"RegisterNormProcess.owl
 		// NormID=norma1
 		// normContent=FORBIDDEN_Member_REQUEST_acquireRole_MESSAGE(CONTENT(ROLE_'Payee'))";
 
+		this.list.clear();
+		
 		String call = configuration + "InformMembersProcess.owl RoleID="
 				+ RoleID + " UnitID=" + UnitID;
 		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
@@ -104,8 +130,10 @@ public class OMSService {
 		agente.setTask(new TestAgentClient(agente, requestMsg, this));
 
 		this.adv.waiting();
+		
+		System.out.println("Lista vale: "+ this.list.size());
 
-		return this.lista;
+		return this.list;
 
 	}
 
@@ -114,6 +142,8 @@ public class OMSService {
 		// NormID=norma1
 		// normContent=FORBIDDEN_Member_REQUEST_acquireRole_MESSAGE(CONTENT(ROLE_'Payee'))";
 
+		this.list.clear();
+		
 		String call = configuration + "InformRoleNormsProcess.owl RoleID="
 				+ RoleID;
 		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
@@ -131,7 +161,7 @@ public class OMSService {
 
 		this.adv.waiting();
 
-		return this.lista;
+		return this.list;
 
 	}
 
@@ -140,6 +170,8 @@ public class OMSService {
 		// NormID=norma1
 		// normContent=FORBIDDEN_Member_REQUEST_acquireRole_MESSAGE(CONTENT(ROLE_'Payee'))";
 
+		this.list.clear();
+		
 		String call = configuration + "InformRoleProfilesProcess.owl UnitID="
 				+ UnitID;
 		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
@@ -157,7 +189,7 @@ public class OMSService {
 
 		this.adv.waiting();
 
-		return this.lista;
+		return this.list;
 
 	}
 
@@ -166,6 +198,8 @@ public class OMSService {
 		// NormID=norma1
 		// normContent=FORBIDDEN_Member_REQUEST_acquireRole_MESSAGE(CONTENT(ROLE_'Payee'))";
 
+		this.list.clear();
+		
 		String call = configuration + "InformUnitProcess.owl UnitID=" + UnitID;
 		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
 		requestMsg.setSender(agente.getAid());
@@ -182,7 +216,7 @@ public class OMSService {
 
 		this.adv.waiting();
 
-		return this.lista;
+		return this.list;
 
 	}
 
@@ -191,6 +225,8 @@ public class OMSService {
 		// NormID=norma1
 		// normContent=FORBIDDEN_Member_REQUEST_acquireRole_MESSAGE(CONTENT(ROLE_'Payee'))";
 
+		this.list.clear();
+		
 		String call = configuration + "InformUnitRolesProcess.owl UnitID="
 				+ UnitID;
 		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
@@ -208,12 +244,11 @@ public class OMSService {
 
 		this.adv.waiting();
 
-		return this.lista;
+		return this.list;
 
 	}
 
-	public int QuantityMembers(QueueAgent agente, String RoleID,
-			String UnitID) {
+	public int QuantityMembers(QueueAgent agente, String RoleID, String UnitID) {
 		// suggestedServiceCalls[2]=configuration+"RegisterNormProcess.owl
 		// NormID=norma1
 		// normContent=FORBIDDEN_Member_REQUEST_acquireRole_MESSAGE(CONTENT(ROLE_'Payee'))";
@@ -235,7 +270,7 @@ public class OMSService {
 
 		this.adv.waiting();
 
-		return this.cantidad;
+		return this.Quantity;
 
 	}
 
@@ -262,7 +297,7 @@ public class OMSService {
 
 		this.adv.waiting();
 
-		return this.salida;
+		return this.value;
 
 	}
 
@@ -294,7 +329,7 @@ public class OMSService {
 
 		this.adv.waiting();
 
-		return this.salida;
+		return this.value;
 
 	}
 
@@ -322,7 +357,7 @@ public class OMSService {
 
 		this.adv.waiting();
 
-		return this.salida;
+		return this.value;
 
 	}
 
@@ -348,7 +383,7 @@ public class OMSService {
 
 		this.adv.waiting();
 
-		return this.salida;
+		return this.value;
 
 	}
 
@@ -374,7 +409,7 @@ public class OMSService {
 
 		this.adv.waiting();
 
-		return this.salida;
+		return this.value;
 
 	}
 
@@ -400,7 +435,7 @@ public class OMSService {
 
 		this.adv.waiting();
 
-		return this.salida;
+		return this.value;
 
 	}
 
@@ -430,7 +465,7 @@ public class OMSService {
 
 		this.adv.waiting();
 
-		return this.salida;
+		return this.value;
 
 	}
 
@@ -467,7 +502,7 @@ public class OMSService {
 
 		this.adv.waiting();
 
-		return this.salida;
+		return this.value;
 		// registar el agente en la plataforma
 
 	}
@@ -512,107 +547,172 @@ public class OMSService {
 
 			String patron = msg.getContent().substring(0,
 					msg.getContent().indexOf("="));
-			
-			
-			
-			if (patron.equals("InformUnitProcess"))
-			{
+
+			if (patron.equals("InformUnitProcess")) {
 				String arg;
 				String argAux;
-			//Desglosar el UnitType, UnitGoal, y ParentID
-				//ParentID
-				
-				
-				
-				arg = msg.getContent().substring(msg.getContent().indexOf("ParentID")+9,msg.getContent().indexOf(","));
-				this.oms.lista.add(arg);
-				argAux = msg.getContent().substring(msg.getContent().indexOf("UnitGoal"),msg.getContent().length());	
-				arg = argAux.substring(argAux.indexOf("UnitGoal")+9,argAux.indexOf(","));
-				this.oms.lista.add(arg);
-				argAux = argAux.substring(argAux.indexOf("UnitType"),argAux.length());
-				arg = argAux.substring(argAux.indexOf("UnitType")+9,argAux.indexOf("}"));
-				this.oms.lista.add(arg);
-		
+				// Desglosar el UnitType, UnitGoal, y ParentID
+				// ParentID
+
+				arg = msg.getContent().substring(
+						msg.getContent().indexOf("ParentID") + 9,
+						msg.getContent().indexOf(","));
+				this.oms.addElementToList(arg);
+				argAux = msg.getContent().substring(
+						msg.getContent().indexOf("UnitGoal"),
+						msg.getContent().length());
+				arg = argAux.substring(argAux.indexOf("UnitGoal") + 9, argAux
+						.indexOf(","));
+				this.oms.addElementToList(arg);
+				argAux = argAux.substring(argAux.indexOf("UnitType"), argAux
+						.length());
+				arg = argAux.substring(argAux.indexOf("UnitType") + 9, argAux
+						.indexOf("}"));
+				this.oms.addElementToList(arg);
+
+			}
+
+			//sacamos el Status
+			String status = "";
+
+			
+			int n =  msg.getContent().indexOf(",") - msg.getContent().indexOf("Status");
+			
+			
+			
+			
+			if (n>0)
+			{
+			status = msg.getContent().substring(
+					msg.getContent().indexOf("Status") + 7,
+					msg.getContent().indexOf(","));
+			}
+			else
+			{
+				status = msg.getContent().substring(
+						msg.getContent().indexOf("Status") + 7,
+						msg.getContent().indexOf("}"));	
 				
 			}
-			
-			
-			String arg1 = "";
-			
-			
-			arg1 = msg.getContent().substring(
-					msg.getContent().indexOf("=") + 1,
-					msg.getContent().length());
-			arg1 = arg1.substring(arg1.indexOf("=") + 1, arg1.indexOf(","));
-	
 
 			
 			
 
-			
 			if (patron.equals("InformAgentRoleProcess")
 					|| patron.equals("InformMembersProcess")
 					|| patron.equals("InformRoleNormsProcess")
 					|| patron.equals("InformRoleProfilesProcess")
 					|| patron.equals("InformUnitRolesProcess")) {
-	
 
 				// recorrer el vector
 				String argAux;
-		
 
 				
-				if (!arg1.equals("Ok")) {
-					
-					this.oms.lista.add("EMPTY");
-				} else {
+				//para los servicios informativos
+			
 
-					String arg3 = msg.getContent().substring(
-							msg.getContent().indexOf(",") + 1,
-							msg.getContent().length());
-					arg3 = arg3.substring(arg3.indexOf("(") + 1, arg3.indexOf("]"));
-					
-					System.out.println("El valor de arg3:" + arg3);
-					
-					elements = arg3.split(",");
-					
-					int paridad = 0;
+					// diferenciamos entre los que tienen tuplas y los que no
+					// son tuplas
 
-					for (String e : elements){
-						System.out.println("Resultados: "+e);
-						if ((paridad % 2) == 0)// es par
-						{
-						argAux = e.substring(0, e.length());
+					if (patron.equals("InformAgentRoleProcess")
+							|| patron.equals("InformMembersProcess")) {
 						
+						if (!status.equals("Ok")) {
+							this.oms.addElementToList("EMPTY");
 						}
 						else
 						{
-						argAux = e.substring(0,e.indexOf(")"));	
+						String arg3 = msg.getContent().substring(
+								msg.getContent().indexOf(",")+1,
+								msg.getContent().length());
+						arg3 = arg3.substring(arg3.indexOf("("), arg3
+								.indexOf("]"));
+
+						elements = arg3.split(",");
+
+						int paridad = 0;
+
+						for (String e : elements) {
+							if ((paridad % 2) == 0)// es par
+							{
+								argAux = e.substring(e.indexOf("(")+1, e.length());
+
+							} else {
+								argAux = e.substring(0, e.indexOf(")"));
+							}
+							this.oms.addElementToList(argAux);
+							paridad++;
 						}
-						this.oms.lista.add(argAux);
-						paridad++;
+						}
+					}
+					else
+					{
+						if (!status.equals("Ok")) {
+
+							this.oms.addElementToList("EMPTY");
+						}
+						else
+						{
+						String arg3 = msg.getContent().substring(
+								msg.getContent().indexOf("[") + 1,
+								msg.getContent().indexOf("]"));
+						
+
+						elements = arg3.split(",");
+
+					
+
+						for (String e : elements) {
+							this.oms.addElementToList(e);
+					
+						}
+						}
+						
 					}
 				}
 
+			
+
+			String ErrorValue = msg.getContent();
+			
+			 n =  msg.getContent().indexOf(",") - msg.getContent().indexOf("ErrorValue");
+			
+			
+			
+			
+			if (n>0)
+			{
+				ErrorValue = msg.getContent().substring(
+					msg.getContent().indexOf("ErrorValue") + 11,
+					msg.getContent().indexOf(","));
+			}
+			else
+			{
+				ErrorValue = msg.getContent().substring(
+						msg.getContent().indexOf("ErrorValue") + 11,
+						msg.getContent().indexOf("}"));	
+				
 			}
 
-			String arg2 = msg.getContent();
-			arg2 = arg2.substring((arg2.lastIndexOf("=")) + 1,
-					arg2.length() - 1);
+			
+
 
 			// si ha salido bien despierto al agente
-			if (arg1.equals("Ok")) {
-				
-				if (patron.equals("QuantityMembersProcess"))
-				{
-				this.oms.cantidad = Integer.parseInt(arg2);	
+			if (status.equals("Ok")) {
+
+				if (patron.equals("QuantityMembersProcess")) {
+					
+					String quantity  = msg.getContent().substring(msg.getContent().indexOf("Quantity=") + 9,
+							msg.getContent().indexOf("}"));	
+					this.oms.setQuantity(Integer.parseInt(quantity));
 				}
 
-				this.oms.setValor(arg1);
+				this.oms.setValor(status);
 			} else {
 				// vemos que tipo de error
-				this.oms.setValor(arg1 + " " + arg2);
+				this.oms.setValor(status + " " + ErrorValue);
 			}
+
 
 			this.oms.adv.advise();
 

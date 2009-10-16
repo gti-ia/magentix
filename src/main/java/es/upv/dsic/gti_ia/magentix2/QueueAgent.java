@@ -57,6 +57,11 @@ public class QueueAgent extends BaseAgent {
 	}
 
 	
+	
+	public String getAllName()
+	{
+		return this.getAid().toString();
+	}
 	public int addRole()
 	{
 		this.nRoles++;
