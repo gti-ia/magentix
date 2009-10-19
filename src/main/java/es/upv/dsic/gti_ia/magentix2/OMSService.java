@@ -23,7 +23,7 @@ public class OMSService {
 	
 	/**
 	 * This class gives us the support to accede to the services of the OMS
-	 * @param OMSServiceDesciptionLocation
+	 * @param OMSServiceDesciptionLocation  The URL where the owl's document  is located.
 	 */
 	public  OMSService(String OMSServiceDesciptionLocation) {
 
