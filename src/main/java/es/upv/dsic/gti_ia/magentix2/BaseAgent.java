@@ -15,12 +15,28 @@ import org.apache.qpid.transport.SessionListener;
 import es.upv.dsic.gti_ia.fipa.ACLMessage;
 import es.upv.dsic.gti_ia.fipa.AgentID;
 
+/**
+ * @author  Ricard Lopez Fogues
+ */
 public class BaseAgent implements Runnable{
 
 	/*Atributos*/
+	/**
+	 * @uml.property  name="aid"
+	 * @uml.associationEnd  
+	 */
 	private AgentID aid;
+	/**
+	 * @uml.property  name="connection"
+	 */
 	private Connection connection;
+	/**
+	 * @uml.property  name="session"
+	 */
 	protected Session session;
+	/**
+	 * @uml.property  name="myThread"
+	 */
 	private Thread myThread;
 	
 	private class Listener implements SessionListener{
@@ -41,117 +57,89 @@ public class BaseAgent implements Runnable{
 	
 	    public void closed(Session ssn) {}	
 	}	
+	/**
+	 * @uml.property  name="listener"
+	 * @uml.associationEnd  
+	 */
 	private Listener listener;
 	
-	/*Metodos*/
-	public BaseAgent(AgentID aid, Connection connection){
-		this.aid = aid;
+	/**
+	 * Creates a new agent
+	 * @param aid Agent identification for the new agent, it has to be unique on the platform
+	 * @param connection Connection that the agent will use
+	 * @throws Exception If Agent ID already exists on the platform
+	 */
+	public BaseAgent(AgentID aid, Connection connection) throws Exception{
 		this.connection = connection;
 		this.session = createSession();
-		this.listener = new Listener();
-		myThread = new Thread(this);
-		//createExchange();
-		createQueue();
-		createBind();
-		createSubscription();
+		if(this.existAgent(aid)){
+			session.close();
+			throw new Exception("Agent ID already exists on the platform");
+		}
+		else{
+			this.aid = aid;			
+			this.listener = new Listener();
+			myThread = new Thread(this);
+			createQueue();
+			createBind();
+			createSubscription();
+		}
 	}
 		
-	//Creamos la sesion para el agente
+	/**
+	 * Creates the exclusive session the agent will use
+	 * @return The new Session
+	 */
 	private Session createSession(){
 		 Session session = this.connection.createSession(0);
 		 return session;
 	}
-	
-	//Creamos intercambiador para el agente
-	private void createExchange(){
-		this.session.exchangeDeclare(aid.name, "fanout", null, null, Option.AUTO_DELETE);
-	}
-	
-	//Creamos cola para el agente
+		
+	/**
+	 * Creates de queue the agent will listen to for messages	 * 
+	 */
 	private void createQueue(){
 		this.session.queueDeclare(aid.name, null, null, Option.AUTO_DELETE);
 	}
 	
-	//Vinculamos cola e intercambiador del agente
+	/**
+	 * Binds the exchange and the agent queue
+	 */
 	private void createBind(){
 		//this.session.exchangeBind(aid.name, aid.name, null, null);
 		this.session.exchangeBind(aid.name, "amq.direct", aid.name,null);
 	}
 	
-	//Creamos la subscripcion del listener del agente
+	/**
+	 * Creates the subscription through the agent listener will get the message from the queue
+	 */
 	private void createSubscription(){
 		this.session.setSessionListener(this.listener);
 
-        // create a subscription
-		this.session.messageSubscribe(aid.name,
+       this.session.messageSubscribe(aid.name,
                                  "listener_destination",
                                  MessageAcceptMode.NONE,
                                  MessageAcquireMode.PRE_ACQUIRED,
                                  null, 0, null);
 		
-		//Declaramos un credito ilimitado tanto para el numero de bytes que recibe la sesion como para el numero de mensajes
 		this.session.messageFlow("listener_destination", MessageCreditUnit.BYTE, Session.UNLIMITED_CREDIT);
         this.session.messageFlow("listener_destination", MessageCreditUnit.MESSAGE, Session.UNLIMITED_CREDIT);
 	}
 	
-	//Enviamos el mensaje msg al agente destination
-	protected void send(Message msg){
-		//Recuperamos el destinatario de las cabeceras del mensaje, si no está especificado devolvemos error
-		if(msg.getHeader("destination") == null){
-			System.out.println("Error, no ha especificado destinatario. Mensaje: "+msg.toString());
-			return;
-		}
-		
-		if(msg.getHeader("type") == null){
-			System.out.println("Error, no ha especificado tipo de mensaje. Mensaje: "+msg.toString());
-			return;
-		}
-					
-		//No es necesario especificar una routing_key ya que el exchange es del tipo fanout, lo pongo por completitud
-		DeliveryProperties deliveryProps = new DeliveryProperties();
-        deliveryProps.setRoutingKey("routing_key");
-        
-        MessageTransfer xfr = new MessageTransfer();
-        xfr.destination(msg.getHeader("destination"));
-        xfr.acceptMode(MessageAcceptMode.EXPLICIT);
-        xfr.acquireMode(MessageAcquireMode.PRE_ACQUIRED);
-        xfr.header(new Header(deliveryProps));
-        if(msg.getHeader("type") == "String"){
-        	xfr.setBody(msg.body);
-        	session.messageTransfer(xfr.getDestination(), xfr.getAcceptMode(), xfr.getAcquireMode(), xfr.getHeader(), xfr.getBodyString());
-        }
-        else{
-        	xfr.setBody(msg.buffer);
-        	session.messageTransfer(xfr.getDestination(), xfr.getAcceptMode(), xfr.getAcquireMode(), xfr.getHeader(), xfr.getBody());
-        }
-         
-	}
-	
+	/**
+	 * Sends an ACLMessage to the message's receivers
+	 * @param msg Message to be sent
+	 */
 	public void send(ACLMessage msg){
 		MessageTransfer xfr = new MessageTransfer();
-		
-		//decidimos si el mensaje es interno o va al exterior dependiendo de su protocolo
-		
+			
 		xfr.destination("amq.direct");
-		
-		/* De moment no fem un exchange per cua
-		 * if(!msg.getReceiver().protocol.equals("qpid"))
-		{
-			
-			xfr.destination("BridgeAgentInOut");
-			
-		}
-		else
-		{
-			xfr.destination(msg.getReceiver().name); original			
-		}*/
-				
 		xfr.acceptMode(MessageAcceptMode.EXPLICIT);
 		xfr.acquireMode(MessageAcquireMode.PRE_ACQUIRED);
         
         DeliveryProperties deliveryProps = new DeliveryProperties();
 	            
-        //Creamos el cuerpo del mensaje serializando el mensaje ACL a una cadena
+        //Serialize message content
         String body;
         //Performative
         body = msg.getPerformativeInt() + "#";
@@ -182,88 +170,157 @@ public class BaseAgent implements Runnable{
         
         xfr.setBody(body);
 		for(int i=0; i< msg.getTotalReceivers(); i++){
+			//If protocol is not qpid then the message goes outside the platform
 			if(!msg.getReceiver(i).protocol.equals("qpid")){			
 	        	deliveryProps.setRoutingKey("BridgeAgentInOut");			
 			}
 			else{
 				deliveryProps.setRoutingKey(msg.getReceiver(i).name);			
 			}
-	        xfr.header(new Header(deliveryProps));	     
-	        session.messageTransfer(xfr.getDestination(), xfr.getAcceptMode(), xfr.getAcquireMode(), xfr.getHeader(), xfr.getBodyString());
+			xfr.header(new Header(deliveryProps));	     
+			session.messageTransfer(xfr.getDestination(), xfr.getAcceptMode(), xfr.getAcquireMode(), xfr.getHeader(), xfr.getBodyString());
 		}
 	}
-				
+	
+	/**
+	 * Gets agent name
+	 * @return Agent name
+	 */
 	public String getName(){
 		return aid.name;
 	}
 	
-	//codigo que ejecutará el agente, a rellenar por el usuario
+	/**
+	 * Function that will be executed by the agent when it starts
+	 * The user has to write his/her code here
+	 */
 	protected void execute(){
 		
 	}
 	
-	//codigo que ejecutará el agente cuando reciba un mensaje, a rellenar por el usuario
+	/**
+	 * Function that will be executed when the agent gets a message
+	 * The user has to write his/her code here
+	 * @param ssn
+	 * @param xfr
+	 */
 	protected void onMessage(Session ssn, MessageTransfer xfr){
 			
 	}
 	
-	//codigo de terminacion del agente
+	/**
+	 * Function that will be executed when the agent terminates
+	 */
 	public void terminate(){
-		//session.exchangeDelete(aid.name);
 		session.queueDelete(aid.name);
 		session.close();
 	}
 	
-	//hilo del agente
+	/**
+	 * Runs Agent's thread
+	 */
 	public void run(){
 		execute();
 		terminate();
 	}
 	
+	/**
+	 * Starts the agent
+	 */
 	public void start(){
 		myThread.start();
 	}
 	
 
-	   public AgentID getAid()
+	/**
+	 * @return agent ID
+	 * @uml.property  name="aid"
+	 */
+	public AgentID getAid()
 	   {
 	       return this.aid;
 	   }
 
+	/**
+	 * @return agent connection
+	 * @uml.property  name="connection"
+	 */
 	public Connection getConnection() {
 		return connection;
 	}
 
+	/**
+	 * Set a diferent connection for the agent
+	 * @param connection
+	 * @uml.property  name="connection"
+	 */
 	public void setConnection(Connection connection) {
 		this.connection = connection;
 	}
 
+	/**
+	 * @return Agent's session
+	 * @uml.property  name="session"
+	 */
 	public Session getSession() {
 		return session;
 	}
 
+	/**
+	 * @param session
+	 * @uml.property  name="session"
+	 */
 	public void setSession(Session session) {
 		this.session = session;
 	}
 
+	/**
+	 * @return Agent's Thread
+	 * @uml.property  name="myThread"
+	 */
 	public Thread getMyThread() {
 		return myThread;
 	}
 
+	/**
+	 * @param myThread
+	 * @uml.property  name="myThread"
+	 */
 	public void setMyThread(Thread myThread) {
 		this.myThread = myThread;
 	}
 
+	/**
+	 * @return Agent's listener
+	 * @uml.property  name="listener"
+	 */
 	public Listener getListener() {
 		return listener;
 	}
 
+	/**
+	 * @param listener
+	 * @uml.property  name="listener"
+	 */
 	public void setListener(Listener listener) {
 		this.listener = listener;
 	}
 
+	/**
+	 * @param aid
+	 * @uml.property //hilo del agente name="aid"
+	 */
 	public void setAid(AgentID aid) {
 		this.aid = aid;
+	}
+	
+	/**
+	 * Returns true if an agent exists on the platform, false otherwise
+	 * @param aid Agent ID to look for
+	 * @return True if agent exists, false otherwise
+	 */
+	public boolean existAgent(AgentID aid){
+		return session.queueQuery(aid.name).get().getQueue() != null;
 	}
 	
 }
