@@ -10,25 +10,29 @@ import es.upv.dsic.gti_ia.fipa.AgentID;
 
 import java.util.concurrent.LinkedBlockingQueue;
 
+/**
+ * @author  Ricard Lopez Fogues
+ */
+
 public abstract class SingleAgent extends BaseAgent {
 
     LinkedBlockingQueue<MessageTransfer> internalQueue;
 
-    public SingleAgent(AgentID aid, Connection connection) {
+    /**
+     * Creates a new SingleAgent
+     * @param aid Agent Id 
+     * @param connection Connection the agent will use
+     * @throws Exception if agent id already exists on the platform
+     */
+    public SingleAgent(AgentID aid, Connection connection) throws Exception {
         super(aid, connection);
         internalQueue = new LinkedBlockingQueue<MessageTransfer>();
     }
-
-    public final MessageTransfer receive() {
-        MessageTransfer xfr = new MessageTransfer();
-        try {
-            xfr = internalQueue.take();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        return xfr;
-    }
-    //Propuesta
+    
+    /**
+     * Method to receive a magentix2 AclMessage
+     * @return an ACLMessage
+     */
     public final ACLMessage receiveACLMessage(){
     	MessageTransfer xfr = new MessageTransfer();
     	try {
@@ -36,8 +40,7 @@ public abstract class SingleAgent extends BaseAgent {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        //des-serializamos el mensaje
-        //inicializaciones
+        
         int indice1 = 0;
         int indice2 = 0;
         int aidindice1 = 0;
@@ -48,9 +51,7 @@ public abstract class SingleAgent extends BaseAgent {
         
         indice2 = body.indexOf('#', indice1);
         ACLMessage msg = new ACLMessage(Integer.parseInt(body.substring(indice1, indice2)));        
-        //System.out.println("performative "+ msg.getPerformative());
-        
-        //deserializamos los diferentes AgentesID (Sender, Receiver, ReplyTo)
+                
         for(int i=0; i<3 ; i++){
         	AgentID aid = new AgentID();
         	aidindice1 = 0;
