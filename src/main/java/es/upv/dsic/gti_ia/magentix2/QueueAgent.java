@@ -27,8 +27,15 @@ import es.upv.dsic.gti_ia.proto.FIPAQueryInitiator;
 import es.upv.dsic.gti_ia.proto.FIPAContractNetInitiator;
 import es.upv.dsic.gti_ia.proto.FIPAContractNetResponder;
 
+/**
+ * Class QueueAgent extends BaseAgent
+ * @author jbellver
+ *
+ */
+
 public class QueueAgent extends BaseAgent {
 
+	
 	ArrayList<ACLMessage> messageList = new ArrayList<ACLMessage>();
 	// LinkedBlockingQueue<MessageTransfer> internalQueue;
 	//private AgentID aid = null;
@@ -48,7 +55,7 @@ public class QueueAgent extends BaseAgent {
 	 * @param aid
 	 *            agent ID.
 	 * @param connection
-	 *            conexion con el broker.
+	 *            connection whith the broker.
 	 */
 
 	public QueueAgent(AgentID aid, Connection connection) {
@@ -96,7 +103,7 @@ public class QueueAgent extends BaseAgent {
 	}
 	
 	/**
-	 * Devuelve el array de servicios 
+	 * Return an array of SF services. 
 	 * @return
 	 */
 	public ArrayList<SFAgentDescription> getArraySFAgentDescription()
@@ -105,49 +112,49 @@ public class QueueAgent extends BaseAgent {
 	}
 	
 	/**
-	 * Añade una nueva descripcion del servicio al arraylist
-	 * @param sfa
+	 * Adds a new description of the service to the arraylis
+	 * @param SFAgent
 	 */
-	public void setSFAgentDescription(SFAgentDescription sfa)
+	public void setSFAgentDescription(SFAgentDescription SFAgent)
 	{
 		//comprobar que no exista
-		if (!this.DescripcionesAgentes.contains(sfa))
-			this.DescripcionesAgentes.add(sfa);
+		if (!this.DescripcionesAgentes.contains(SFAgent))
+			this.DescripcionesAgentes.add(SFAgent);
 		else //si existe quitamos primero uno y ponemos luego el otro
 		{
-			this.DescripcionesAgentes.remove(sfa);
-			this.DescripcionesAgentes.add(sfa);
+			this.DescripcionesAgentes.remove(SFAgent);
+			this.DescripcionesAgentes.add(SFAgent);
 		}
 	}
 
 	/**
-	 * Inserta el id de una conversacion que tengamos activa
+	 * Inserts a new agentID in the array of active conversations. 
 	 * 
-	 * @param conversacion
+	 * @param agentID
 	 */
-	public void setActiveConversation(String conversacion) {
-		this.listaConversacionesActivas.add(conversacion);
+	public void setActiveConversation(String agentID) {
+		this.listaConversacionesActivas.add(agentID);
 
 	}
 
 	/**
-	 * Elimina la conversacion de la lista de activas
+	 * Remove a agentID of the array of the active conversations. 
 	 * 
-	 * @param conversacion
+	 * @param agentID
 	 */
-	public void deleteActiveConversation(String conversacion) {
+	public void deleteActiveConversation(String agentID) {
 		for (String conv : this.listaConversacionesActivas) {
-			if (conv.equals(conversacion)) {
-				this.listaConversacionesActivas.remove(conversacion);
+			if (conv.equals(agentID)) {
+				this.listaConversacionesActivas.remove(agentID);
 				break;
 			}
 		}
 	}
 
 	/**
-	 * Elimina todas la conversaciones
+	 * Remove all active conversations.
 	 * 
-	 * @return
+	 * @return boolean value 
 	 */
 	public boolean deleteAllActiveConversation() {
 		this.listaConversacionesActivas.clear();
@@ -160,11 +167,20 @@ public class QueueAgent extends BaseAgent {
 
 
 
+	/**
+	 *  Return the monitor 
+	 * @return Monitor 
+	 */
 	public Monitor getMonitor() {
 		return this.monitor;
 	}
 
 
+	/**
+	 * Transforms the message to ACLMessage
+	 * @param xfr MessageTransfer
+	 * @return ACLMessage
+	 */
 
 	public final ACLMessage MessageTransfertoACLMessage(MessageTransfer xfr) {
 
@@ -287,7 +303,6 @@ public class QueueAgent extends BaseAgent {
 		messageList.add(MessageTransfertoACLMessage(xfr));
 		// clase encargada de despertar al agente, puede ser del rol responder o
 		// del rol iniciator
-
 		
 		if (monitor != null)
 			this.monitor.advise();
@@ -296,8 +311,8 @@ public class QueueAgent extends BaseAgent {
 
 	}
 	/**
-	 * Añade una nueva tarea (protocolo FIPA) al agente, creara un nuevo hilo
-	 * @param obj objecto de tipo protocolo FIPA
+	 * Adds a new task (FIPA protocol) to the agent,was creating a new thread
+	 * @param obj object of type FIPA protocol
 	 */
 	public void setTask(Object obj) {
 
@@ -344,6 +359,10 @@ public class QueueAgent extends BaseAgent {
 
 	}
 
+	/**
+	 * Return a number of messages of the queue
+	 * @return int number of messages
+	 */
 	public int getNMensajes() {
 		return messageList.size();
 	}
@@ -361,82 +380,68 @@ public class QueueAgent extends BaseAgent {
 	public synchronized ACLMessage receiveACLMessage(MessageTemplate template, int tipo) {
 		ACLMessage msgselect = null;
 		boolean condition = false;
-		// System.out.println("Numero de mensajes:" + messageList.size());
-		
-		
-		
-		
-	    
-		do{
+
+			ArrayList<ACLMessage> messageListAux = (ArrayList<ACLMessage>)messageList.clone();
 			
-	   ArrayList<ACLMessage> messageListAux = (ArrayList<ACLMessage>)messageList.clone();
-		if (tipo == 1)
-		{
-		for (ACLMessage msg : messageListAux) {
+			if (tipo == 1)
+			{
+				for (ACLMessage msg : messageListAux) {
 			// comparamos los campos protocol y conversaciónID (para asegurarnos
 			// que no es una conversacion existente)00
 
-			if (template.getProtocol().equals(msg.getProtocol())) {
+				if (template.getProtocol().equals(msg.getProtocol())) {
 				// comprobar que sea una conversacion nueva, que no este en la
 				// lista de conversaciones activas
-				msgselect = msg;
-				for (String conv : this.listaConversacionesActivas) {
+					msgselect = msg;
+					for (String conv : this.listaConversacionesActivas) {
 					// si existe, entonces debera trartalo el rol de iniciador
-					if (conv.equals(msg.getConversationId())) {
-						msgselect = null;
-						break;
+						if (conv.equals(msg.getConversationId())) {
+							msgselect = null;
+							break;
+						}
 					}
 				}
-			}
 
-		}
-		}
-		else
-		{
-			for (ACLMessage msg : messageListAux) {
+				}
+			}
+			else
+			{
+				for (ACLMessage msg : messageListAux) {
 				
 				// comparamos los campos protocol, idcoversaciï¿½n y sender
-				if (template.getProtocol().equals(msg.getProtocol())) {
+					if (template.getProtocol().equals(msg.getProtocol())) {
 
 					// miramos dentro de las conversaciones que tenemos
-					for (String conversacion : template.getList_Conversaciones())
-						if (conversacion.equals(msg.getConversationId())) {
+						for (String conversacion : template.getList_Conversaciones())
+							if (conversacion.equals(msg.getConversationId())) {
 
 							// miramos si pertenece algun agente
 
-							if (template.existeReceiver(msg.getSender())) {
+								if (template.existeReceiver(msg.getSender())) {
 
-								msgselect = msg;
-								break;
+									msgselect = msg;
+									break;
+
+								}
 
 							}
-
-						}
 					
 
+					   }
+					if (msgselect != null)
+						break;
 				}
-				if (msgselect != null)
-					break;
 			}
-		}
 
-		if (msgselect == null)
-		{
-			
-			
-			if ((messageList.size() != messageListAux.size()))
+			if (msgselect != null)
 			{
-				condition = true;
-			}
 				
-		}
-		else
-		{
-			messageList.remove(msgselect);
-			condition = false;
-		}
+				
+				messageList.remove(msgselect);
+				
+			}
 		
-	}while(condition);
+		
 
 		return msgselect;
 	}
