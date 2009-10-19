@@ -296,7 +296,7 @@ public class ACLMessage implements Serializable, Cloneable {
 	}
 	
 	/**
-	 * @return
+	 * @return encoding
 	 * @uml.property  name="encoding"
 	 */
 	public String getEncoding(){
@@ -312,7 +312,7 @@ public class ACLMessage implements Serializable, Cloneable {
 	}
 	
 	/**
-	 * @return
+	 * @return ontology
 	 * @uml.property  name="ontology"
 	 */
 	public String getOntology(){
@@ -328,41 +328,73 @@ public class ACLMessage implements Serializable, Cloneable {
 	}
 	
 	/**
-	 * @return
+	 * @return protocol
 	 * @uml.property  name="protocol"
 	 */
 	public String getProtocol(){
 		return protocol;
 	}
 	
+	/**
+	 * 
+	 * @param id
+	 */
 	public void setConversationId(String id){
 		conversation_id = id;
 	}
 	
+	/**
+	 * 
+	 * @return conversation id
+	 */
 	public String getConversationId(){
 		return conversation_id;
 	}
 	
+	/**
+	 * 
+	 * @param reply With
+	 */
 	public void setReplyWith(String rw){
 		reply_with = rw;
 	}
 	
+	/**
+	 * 
+	 * @return reply with
+	 */
 	public String getReplyWith(){
 		return reply_with;
 	}
 	
+	/**
+	 * 
+	 * @param in reply to
+	 */
 	public void setInReplyTo(String irt){
 		in_reply_to = irt;
 	}
 	
+	/**
+	 * 
+	 * @return in reply to
+	 */
 	public String getInReplyTo(){
 		return in_reply_to;
 	}
 	
+	/**
+	 * Default value date.getTime()
+	 * @param date
+	 */
 	public void setReplyByDate(Date date) {
 		reply_byInMillisec = (date==null?0:date.getTime());
 	}
 	
+	/**
+	 * 
+	 * @return reply by time in date format
+	 */
 	public Date getReplyByDate() {
 		if(reply_byInMillisec != 0)
 			return new Date(reply_byInMillisec);
@@ -371,6 +403,10 @@ public class ACLMessage implements Serializable, Cloneable {
 	}
 	
 	
+	/**
+	 * 
+	 * @return reply by time in string format
+	 */
 	public String getReplyBy() {
 		if(reply_byInMillisec != 0)
 			return ISO8601.toString(new Date(reply_byInMillisec));
@@ -378,6 +414,10 @@ public class ACLMessage implements Serializable, Cloneable {
 			return "";
 	}
 	
+	/**
+	 * 
+	 * @param performative
+	 */
 	public void setPerformative(String performative){
 		for(int i=0; i< performatives.length; i++){
 			if(performative.compareTo(performatives[i]) == 0){
@@ -387,19 +427,17 @@ public class ACLMessage implements Serializable, Cloneable {
 		}
 	}
 	
+	/**
+	 * Clears receivers list
+	 */
 	public void clearAllReceiver() {
 		this.receiver.clear();
 	}
 	
 	/**
-	 * A�ade un receiver a la lista. �til para hacer multiples envios.
-	 * @param r
-	 * Devuelve -1, si el receiver ya estaba en la lista. 1 en caso contrario
-	 */
-	/**
-	 * A�ade un receiver a la lista. �til para hacer multiples envios.
-	 * @param r
-	 * Devuelve -1, si el receiver ya estaba en la lista. 1 en caso contrario
+	 * Adds a receiver to the receivers list
+	 * @param receiver
+	 * @return -1 if the agent already exists in the list, 1 otherwise
 	 */
 	public int addReceiver(AgentID r)
 	{
@@ -416,98 +454,26 @@ public class ACLMessage implements Serializable, Cloneable {
 		return 1;
 	}
 	
+	/**
+	 * 
+	 * @return receivers list
+	 */
 	public ArrayList<AgentID> getReceiverList() {
 		return receiver;
 	}
 
-	/*public void setReceiver_list(ArrayList<AgentID> receiver_list) {
-		this.receiver_list = receiver_list;
-	}*/
+	/**
+	 * 
+	 * @return total number of receivers
+	 */
 	public int getTotalReceivers(){
 		return receiver.size();
-	}
+	}	
 
 	/**
-	 * @return
-	 * @uml.property  name="reply_to"
+	 * Clones Message
+	 * @return Another ACLMessage that is a clone from this one
 	 */
-	public AgentID getReply_to() {
-		return reply_to;
-	}
-
-	/**
-	 * @param reply_to
-	 * @uml.property  name="reply_to"
-	 */
-	public void setReply_to(AgentID reply_to) {
-		this.reply_to = reply_to;
-	}
-
-	/**
-	 * @return
-	 * @uml.property  name="conversation_id"
-	 */
-	public String getConversation_id() {
-		return conversation_id;
-	}
-
-	/**
-	 * @param conversation_id
-	 * @uml.property  name="conversation_id"
-	 */
-	public void setConversation_id(String conversation_id) {
-		this.conversation_id = conversation_id;
-	}
-
-	/**
-	 * @return
-	 * @uml.property  name="reply_with"
-	 */
-	public String getReply_with() {
-		return reply_with;
-	}
-
-	/**
-	 * @param reply_with
-	 * @uml.property  name="reply_with"
-	 */
-	public void setReply_with(String reply_with) {
-		this.reply_with = reply_with;
-	}
-
-	/**
-	 * @return
-	 * @uml.property  name="in_reply_to"
-	 */
-	public String getIn_reply_to() {
-		return in_reply_to;
-	}
-
-	/**
-	 * @param in_reply_to
-	 * @uml.property  name="in_reply_to"
-	 */
-	public void setIn_reply_to(String in_reply_to) {
-		this.in_reply_to = in_reply_to;
-	}
-
-	/**
-	 * @return
-	 * @uml.property  name="reply_byInMillisec"
-	 */
-	public long getReply_byInMillisec() {
-		return reply_byInMillisec;
-	}
-
-	/**
-	 * @param reply_byInMillisec
-	 * @uml.property  name="reply_byInMillisec"
-	 */
-	public void setReply_byInMillisec(long reply_byInMillisec) {
-		this.reply_byInMillisec = reply_byInMillisec;
-	}
-	
-
 	public synchronized Object clone() {
 		ACLMessage result;
 		
@@ -522,6 +488,10 @@ public class ACLMessage implements Serializable, Cloneable {
 	}
 	
 	
+	/**
+	 * Creates an ACLMessage that is a reply to this one
+	 * @return ACLMessage that is a reply to this one
+	 */
 	public ACLMessage createReply() {
 		ACLMessage m = (ACLMessage)clone();
 		
