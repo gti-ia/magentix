@@ -16,8 +16,20 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+/**
+ * An XML parser
+ * @author ricard
+ *
+ */
+
 public class Xml
 {
+	/**
+	 * Returns the root element of an XML file
+	 * @param filename route to the file
+	 * @param rootName name of the root element
+	 * @return rootElement of the XML file
+	 */
 	private static Element rootElement(String filename, String rootName)
 	{
 		FileInputStream fileInputStream = null;
@@ -52,6 +64,12 @@ public class Xml
 		}
 	}
 	
+	/**
+	 * Returns the root element of an XML file
+	 * @param is InputStream with an XML file
+	 * @param rootName name of the root element
+	 * @return rootElement of the XML file
+	 */
 	private static Element rootElement(InputStream is, String rootName)
 	{
 		FileInputStream fileInputStream = null;
@@ -85,15 +103,29 @@ public class Xml
 		}
 	}
 	
+	/**
+	 * Creates an XML parser
+	 * @param filename route to the XML file
+	 * @param rootName
+	 */
 	public Xml(String filename, String rootName)
 	{
 		this(rootElement(filename,rootName));
 	}
 	
+	/**
+	 * Creates an XML parser
+	 * @param is InputStream with an XML file
+	 * @param rootName
+	 */
 	public Xml(InputStream is, String rootName){
 		this(rootElement(is, rootName));
 	}
 	
+	/**
+	 * Creates an XML parser
+	 * @param element XML element
+	 */
 	private Xml(Element element)
 	{
 		this.name = element.getNodeName();
@@ -116,11 +148,21 @@ public class Xml
 	    }
 	}
 	
+	/**
+	 * Ads an atribute to the root element
+	 * @param name
+	 * @param value
+	 */
 	private void addAttribute(String name, String value)
 	{
 		nameAttributes.put(name,value);
 	}
 	
+	/**
+	 * Ads a child to the root element
+	 * @param name
+	 * @param child
+	 */
 	private void addChild(String name, Xml child)
 	{
 		List<Xml> children = nameChildren.get(name);
@@ -132,16 +174,29 @@ public class Xml
 		children.add(child);
 	}
 	
+	/**
+	 * Returns root element's name
+	 * @return root element's name
+	 */
 	public String name()
 	{
 		return name;
 	}
 	
+	/**
+	 * Returns root element's content
+	 * @return root element's content
+	 */
 	public String content()
 	{
 		return content;
 	}
 	
+	/**
+	 * Returns a child of the root element
+	 * @param name Child's name
+	 * @return Child
+	 */
 	public Xml child(String name)
 	{
 		List<Xml> children = children(name);
@@ -149,12 +204,22 @@ public class Xml
 		return children.get(0);
 	}
 	
+	/**
+	 * Returns a List of children of the root element
+	 * @param name children's name
+	 * @return List of children
+	 */
 	public List<Xml> children(String name)
 	{
 		List<Xml> children = nameChildren.get(name);
 		return children==null ? new ArrayList<Xml>() : children;			
 	}
 	
+	/**
+	 * Returns a string value of an attribute
+	 * @param name of the attribute
+	 * @return attribute's value
+	 */
 	public String string(String name)
 	{
 		String value = nameAttributes.get(name);
@@ -162,6 +227,11 @@ public class Xml
 		return value;
 	}
 	
+	/**
+	* Returns an integer value of an attribute
+	 * @param name of the attribute
+	 * @return attribute's value
+	 */
 	public int integer(String name)
 	{
 		return Integer.parseInt(string(name)); 
