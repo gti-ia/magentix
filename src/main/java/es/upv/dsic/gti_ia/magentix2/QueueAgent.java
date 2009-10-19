@@ -1,5 +1,5 @@
 /**
- * La clase QueueAgent crea un nuevo agente.
+ * Create a new QueueAgent.
  * 
  * @author  Joan Bellver Faus, GTI-IA, DSIC, UPV
  * @version 2009.9.07
@@ -36,6 +36,7 @@ import es.upv.dsic.gti_ia.proto.FIPAContractNetResponder;
 public class QueueAgent extends BaseAgent {
 
 	
+
 	private ArrayList<ACLMessage> messageList = new ArrayList<ACLMessage>();
 	// LinkedBlockingQueue<MessageTransfer> internalQueue;
 	//private AgentID aid = null;
@@ -50,129 +51,16 @@ public class QueueAgent extends BaseAgent {
 	private ArrayList<SFAgentDescription> DescripcionesAgentes = new ArrayList<SFAgentDescription>();
 
 	/**
-	 * Create a QueueAgent.
+	 * Create a new QueueAgent.
 	 * 
 	 * @param aid
 	 *            agent ID.
 	 * @param connection
-	 *            connection whith the broker.
+	 *            connection with the broker.
 	 */
 
-	public QueueAgent(AgentID aid, Connection connection) {
+	public QueueAgent(AgentID aid, Connection connection) throws Exception{
 		super(aid, connection);	
-	}
-
-	
-	
-	public String getAllName()
-	{
-		return this.getAid().toString();
-	}
-	
-	public synchronized int addRole()
-	{
-		this.nRoles++;
-		return this.nRoles;
-	}
-	
-	public synchronized int removeRole()
-	{
-		this.nRoles--;
-		return this.nRoles;
-	}
-	
-	public synchronized int getnRole()
-	{
-		return this.nRoles;
-	}
-	
-	
-	public synchronized Monitor addMonitor()
-	{
-		this.addRole();
-		if (this.monitor==null)
-			this.monitor = new Monitor();
-		return monitor;
-	}
-	
-	public synchronized void deleteMonitor()
-	{
-		this.removeRole();
-		if(this.nRoles == 0)
-		this.monitor = null;
-	}
-	
-	/**
-	 * Return an array of SF services. 
-	 * @return
-	 */
-	public synchronized ArrayList<SFAgentDescription> getArraySFAgentDescription()
-	{
-		return this.DescripcionesAgentes;
-	}
-	
-	/**
-	 * Adds a new description of the service to the arraylis
-	 * @param SFAgent
-	 */
-	public synchronized void setSFAgentDescription(SFAgentDescription SFAgent)
-	{
-		//comprobar que no exista
-		if (!this.DescripcionesAgentes.contains(SFAgent))
-			this.DescripcionesAgentes.add(SFAgent);
-		else //si existe quitamos primero uno y ponemos luego el otro
-		{
-			this.DescripcionesAgentes.remove(SFAgent);
-			this.DescripcionesAgentes.add(SFAgent);
-		}
-	}
-
-	/**
-	 * Inserts a new agentID in the array of active conversations. 
-	 * 
-	 * @param agentID
-	 */
-	public synchronized void setActiveConversation(String agentID) {
-		this.listaConversacionesActivas.add(agentID);
-
-	}
-
-	/**
-	 * Remove a agentID of the array of the active conversations. 
-	 * 
-	 * @param agentID
-	 */
-	public synchronized void deleteActiveConversation(String agentID) {
-		for (String conv : this.listaConversacionesActivas) {
-			if (conv.equals(agentID)) {
-				this.listaConversacionesActivas.remove(agentID);
-				break;
-			}
-		}
-	}
-
-	/**
-	 * Remove all active conversations.
-	 * 
-	 * @return boolean value 
-	 */
-	public synchronized boolean deleteAllActiveConversation() {
-		this.listaConversacionesActivas.clear();
-		if (this.listaConversacionesActivas.size() == 0)
-			return true;
-		else
-			return false;
-
-	}
-
-
-
-	/**
-	 *  Return the monitor 
-	 * @return Monitor 
-	 */
-	public synchronized Monitor getMonitor() {
-		return this.monitor;
 	}
 
 
@@ -297,11 +185,12 @@ public class QueueAgent extends BaseAgent {
 	}
 
 	
-	public synchronized void writeQueue(MessageTransfer xfr)
-	{
-		messageList.add(MessageTransfertoACLMessage(xfr));
-	}
 
+	/**
+	 * Function that will be executed when the agent gets a message
+	 * @param ssn
+	 * @param xfr
+	 */
 	public final void onMessage(Session ssn, MessageTransfer xfr) {
 		// internalQueue.add(xfr);
 
@@ -317,73 +206,22 @@ public class QueueAgent extends BaseAgent {
 			this.monitorAux.advise();
 
 	}
-	/**
-	 * Adds a new task (FIPA protocol) to the agent,was creating a new thread
-	 * @param obj object of type FIPA protocol
-	 */
-	public void setTask(Object obj) {
-
 	
-		if (obj.getClass().getSuperclass().getName().equals(
-				"es.upv.dsic.gti_ia.proto.FIPARequestInitiator"))
-
-		{
-
-			HiloIni h = new HiloIni(obj, 1);
-			h.start();
-			
-		} else if (obj.getClass().getSuperclass().getName().equals(
-				"es.upv.dsic.gti_ia.proto.FIPARequestResponder")) {
-
-			HiloRes h = new HiloRes(obj, 1);
-			h.start();
-		}
-		if (obj.getClass().getSuperclass().getName().equals(
-				"es.upv.dsic.gti_ia.proto.FIPAQueryInitiator")) {
-
-			HiloIni h = new HiloIni(obj, 2);
-			h.start();
-		} else if (obj.getClass().getSuperclass().getName().equals(
-				"es.upv.dsic.gti_ia.proto.FIPAQueryResponder")) {
-
-			HiloRes h = new HiloRes(obj, 2);
-			h.start();
-		}
-		if (obj.getClass().getSuperclass().getName().equals(
-				"es.upv.dsic.gti_ia.proto.FIPAContractNetInitiator")) {
-
-			HiloIni h = new HiloIni(obj, 3);
-			h.start();
-		} else if (obj.getClass().getSuperclass().getName().equals(
-				"es.upv.dsic.gti_ia.proto.FIPAContractNetResponder")) {
-
-			HiloRes h = new HiloRes(obj, 3);
-			h.start();
-		}
-
-		// es.upv.dsic.gti_ia.proto.Adviser adv = new Adviser();
-		// adv.esperar();
-
-	}
-
-	/**
-	 * Return a number of messages of the queue
-	 * @return int number of messages
-	 */
-	public synchronized int getNMensajes() {
-		return messageList.size();
-	}
-
 	
-
+	
+	public synchronized void writeQueue(MessageTransfer xfr)
+	{
+		messageList.add(MessageTransfertoACLMessage(xfr));
+	}
 	
     
 	
-	/**
-	 * Busca un mensaje dado un template
-	 * @param template
-	 * @return msg 
-	 */
+    /**
+     * Method to receive a magentix2 AclMessage 
+     * @param template 
+     * @param tipo 1 = rol responder other = rol iniciador
+     * @return an ACLMessage
+     */
 	public synchronized ACLMessage receiveACLMessage(MessageTemplate template, int tipo) {
 		ACLMessage msgselect = null;
 		
@@ -435,12 +273,18 @@ public class QueueAgent extends BaseAgent {
 		return msgselect;
 	}
 
+    /**
+     * Method to receive a magentix2 AclMessage 
+     * @param template 
+     * @param timeout 
+     * @return an ACLMessage
+     */
 	
-	public final ACLMessage receiveACLMessageT(MessageTemplate template,
+	public synchronized ACLMessage receiveACLMessageT(MessageTemplate template,
 			long timeout) {
 		ACLMessage msgselect = null;
 		int i = 0;
-		// System.out.println("Numero de mensajes:" + messageList.size());
+		
 		do {
 			for (ACLMessage msg : messageList) {
 
@@ -474,11 +318,11 @@ public class QueueAgent extends BaseAgent {
 	}
 
 	/**
-	 * Busqueda bloqueante, bloquea el agente hasta que llegue el mensaje
+	 * Method to receive a magentix2 AclMessage , The agent blocks.
 	 * @param template
-	 * @return
+	 * @return an ACLMessage
 	 */
-	public final ACLMessage receiveACLMessageB(
+	public synchronized final ACLMessage receiveACLMessageB(
 			MessageTemplate template) {
 		
 		if (this.monitorAux == null)
@@ -487,11 +331,10 @@ public class QueueAgent extends BaseAgent {
 		ACLMessage msgselect = null;
 		boolean b = true;
 
-		//Evitamos un acceso concurrente cuando nos llega un mensaje
-		ArrayList<ACLMessage> messageListAux = (ArrayList<ACLMessage>)messageList.clone();
+
 
 		do{
-			for (ACLMessage msg : messageListAux) {		
+			for (ACLMessage msg : messageList) {		
 			// comparamos los campos protocol y conversaciónID (para asegurarnos
 			// que no es una conversacion existente)00
 				if (template.getProtocol().equals(msg.getProtocol())) {
@@ -521,7 +364,192 @@ public class QueueAgent extends BaseAgent {
 		return msgselect;
 	}
 	
+	
+	/**
+	 * Return a number of messages of the queue
+	 * @return int number of messages
+	 */
+	public synchronized int getNMensajes() {
+		return messageList.size();
+	}
+	
+	/**
+	 * 
+	 * @return String name 
+	 */
+	public String getAllName()
+	{
+		return this.getAid().toString();
+	}
+	
+	/**
+	 * 
+	 * @return int number of roles 
+	 */
+	public synchronized int addRole()
+	{
+		this.nRoles++;
+		return this.nRoles;
+	}
+	
+	/**
+	 * 
+	 * @return int remove a role
+	 */
+	public synchronized int removeRole()
+	{
+		this.nRoles--;
+		return this.nRoles;
+	}
+	
+	/**
+	 * 
+	 * @return int number of roles
+	 */
+	public synchronized int getnRole()
+	{
+		return this.nRoles;
+	}
+	
+	/**
+	 * 
+	 * @return Monitor
+	 */
+	public synchronized Monitor addMonitor()
+	{
+		this.addRole();
+		if (this.monitor==null)
+			this.monitor = new Monitor();
+		return monitor;
+	}
 
+	public synchronized void deleteMonitor()
+	{
+		this.removeRole();
+		if(this.nRoles == 0)
+		this.monitor = null;
+	}
+	
+	/**
+	 * Return an array of SF services. 
+	 * @return
+	 */
+	public synchronized ArrayList<SFAgentDescription> getArraySFAgentDescription()
+	{
+		return this.DescripcionesAgentes;
+	}
+	
+	/**
+	 * Adds a new description of the service to the arraylis
+	 * @param SFAgent
+	 */
+	public synchronized void setSFAgentDescription(SFAgentDescription SFAgent)
+	{
+		//comprobar que no exista
+		if (!this.DescripcionesAgentes.contains(SFAgent))
+			this.DescripcionesAgentes.add(SFAgent);
+		else //si existe quitamos primero uno y ponemos luego el otro
+		{
+			this.DescripcionesAgentes.remove(SFAgent);
+			this.DescripcionesAgentes.add(SFAgent);
+		}
+	}
+
+	/**
+	 * Inserts a new agentID in the array of active conversations. 
+	 * 
+	 * @param agentID
+	 */
+	public synchronized void setActiveConversation(String agentID) {
+		this.listaConversacionesActivas.add(agentID);
+
+	}
+
+	/**
+	 * Remove a agentID of the array of the active conversations. 
+	 * 
+	 * @param agentID
+	 */
+	public synchronized void deleteActiveConversation(String agentID) {
+		for (String conv : this.listaConversacionesActivas) {
+			if (conv.equals(agentID)) {
+				this.listaConversacionesActivas.remove(agentID);
+				break;
+			}
+		}
+	}
+
+	/**
+	 * Remove all active conversations.
+	 * 
+	 * @return boolean value 
+	 */
+	public synchronized boolean deleteAllActiveConversation() {
+		this.listaConversacionesActivas.clear();
+		if (this.listaConversacionesActivas.size() == 0)
+			return true;
+		else
+			return false;
+
+	}
+
+
+
+	/**
+	 *  Return the monitor 
+	 * @return Monitor 
+	 */
+	public synchronized Monitor getMonitor() {
+		return this.monitor;
+	}
+	/**
+	 * Adds a new task (FIPA protocol) to the agent,was creating a new thread
+	 * @param obj object of type FIPA protocol
+	 */
+	public void setTask(Object obj) {
+
+	
+		if (obj.getClass().getSuperclass().getName().equals(
+				"es.upv.dsic.gti_ia.proto.FIPARequestInitiator"))
+
+		{
+
+			HiloIni h = new HiloIni(obj, 1);
+			h.start();
+			
+		} else if (obj.getClass().getSuperclass().getName().equals(
+				"es.upv.dsic.gti_ia.proto.FIPARequestResponder")) {
+
+			HiloRes h = new HiloRes(obj, 1);
+			h.start();
+		}
+		if (obj.getClass().getSuperclass().getName().equals(
+				"es.upv.dsic.gti_ia.proto.FIPAQueryInitiator")) {
+
+			HiloIni h = new HiloIni(obj, 2);
+			h.start();
+		} else if (obj.getClass().getSuperclass().getName().equals(
+				"es.upv.dsic.gti_ia.proto.FIPAQueryResponder")) {
+
+			HiloRes h = new HiloRes(obj, 2);
+			h.start();
+		}
+		if (obj.getClass().getSuperclass().getName().equals(
+				"es.upv.dsic.gti_ia.proto.FIPAContractNetInitiator")) {
+
+			HiloIni h = new HiloIni(obj, 3);
+			h.start();
+		} else if (obj.getClass().getSuperclass().getName().equals(
+				"es.upv.dsic.gti_ia.proto.FIPAContractNetResponder")) {
+
+			HiloRes h = new HiloRes(obj, 3);
+			h.start();
+		}
+
+		// es.upv.dsic.gti_ia.proto.Adviser adv = new Adviser();
+		// adv.esperar();
+
+	}
 	public class HiloIni extends Thread {
 
 		Object iniciador;
@@ -555,6 +583,7 @@ public class QueueAgent extends BaseAgent {
 			}
 		}
 	}
+
 
 	public class HiloRes extends Thread {
 
