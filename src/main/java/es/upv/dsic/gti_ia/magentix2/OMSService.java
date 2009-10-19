@@ -7,25 +7,33 @@ import es.upv.dsic.gti_ia.proto.FIPARequestInitiator;
 import es.upv.dsic.gti_ia.proto.FIPANames.InteractionProtocol;
 import java.util.ArrayList;
 
+/**
+ * This class gives us the support to accede to the services of the OMS 
+ * @author jbellver
+ *
+ */
 public class OMSService {
 
 	private String configuration;
-	private String conection;
-	private Monitor adv = new Monitor();
+	private Monitor monitor = new Monitor();
 	private String value = "";
 	private int Quantity;
 	private ArrayList<String> list = new ArrayList<String>();
 
+	
+	/**
+	 * This class gives us the support to accede to the services of the OMS
+	 * @param OMSServiceDesciptionLocation
+	 */
 	public  OMSService(String OMSServiceDesciptionLocation) {
 
 		this.configuration = OMSServiceDesciptionLocation;
 	}
 
-	/**
-	 * Asigna el tipo de resultado de la salida, true o false
-	 * 
-	 * @param valor
-	 */
+/**
+ * 
+ * @param value
+ */
 	public void setValor(String value) {
 		this.value = value;
 	}
@@ -41,6 +49,7 @@ public class OMSService {
 		return this.list;
 		
 	}
+	
 	public void setQuantity(int Quantity)
 	{
 		this.Quantity = Quantity;
@@ -51,85 +60,93 @@ public class OMSService {
 		return this.Quantity;
 	}
 	
-	public String LeaveRole(QueueAgent agente, String AgentID, String RoleID,
+	
+	/**
+	 * Leave role agent inside the organization
+	 * @param agent
+	 * @param AgentID
+	 * @param RoleID
+	 * @param UnitID
+	 * @return String Status ErrorValue
+	 */
+	public String LeaveRole(QueueAgent agent, String AgentID, String RoleID,
 			String UnitID) {
-		// suggestedServiceCalls[2]=configuration+"RegisterNormProcess.owl
-		// NormID=norma1
-		// normContent=FORBIDDEN_Member_REQUEST_acquireRole_MESSAGE(CONTENT(ROLE_'Payee'))";
 
 		String call = configuration + "LeaveRoleProcess.owl AgentID=" + AgentID
 				+ " RoleID=" + RoleID + " UnitID=" + UnitID;
 		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
-		requestMsg.setSender(agente.getAid());
+		requestMsg.setSender(agent.getAid());
 		requestMsg.setContent(call);
 		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
 		requestMsg.setReceiver(new AgentID("OMS", "qpid", "localhost", ""));
 
 		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
 		System.out.println("[QueryAgent]Sending... ");
-		// send(requestMsg);
 
-		// crear un fil en el fipa request initiator
-		agente.setTask(new TestAgentClient(agente, requestMsg, this));
 
-		this.adv.waiting();
+		agent.setTask(new TestAgentClient(agent, requestMsg, this));
+
+		//bloquea el agente
+		this.monitor.waiting();
 
 		return this.value;
 
 	}
+	/**
+	 * Inform agent role inside the organization
+	 * @param agent
+	 * @param AgentID
+	 * @return ArrayList RoleUnitList
+	 */
+	public ArrayList<String> InformAgentRole(QueueAgent agent, String AgentID) {
 
-	public ArrayList<String> InformAgentRole(QueueAgent agente, String AgentID) {
-		// suggestedServiceCalls[2]=configuration+"RegisterNormProcess.owl
-		// NormID=norma1
-		// normContent=FORBIDDEN_Member_REQUEST_acquireRole_MESSAGE(CONTENT(ROLE_'Payee'))";
 
 		this.list.clear();
 		
 		String call = configuration + "InformAgentRoleProcess.owl RequestedAgentID="
 				+ AgentID;
 		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
-		requestMsg.setSender(agente.getAid());
+		requestMsg.setSender(agent.getAid());
 		requestMsg.setContent(call);
 		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
 		requestMsg.setReceiver(new AgentID("OMS", "qpid", "localhost", ""));
 
 		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
 		System.out.println("[QueryAgent]Sending... ");
-		// send(requestMsg);
 
-		// crear un fil en el fipa request initiator
-		agente.setTask(new TestAgentClient(agente, requestMsg, this));
+		agent.setTask(new TestAgentClient(agent, requestMsg, this));
 
-		this.adv.waiting();
+		this.monitor.waiting();
 
 		return this.list;
 
 	}
-
-	public ArrayList<String> InformMembers(QueueAgent agente, String RoleID,
+	/**
+	 * Inform of the members of the organization with one veer role and a unit
+	 * @param agent
+	 * @param RoleID
+	 * @param UnitID
+	 * @return ArrayList EntityRoleList
+	 */
+	public ArrayList<String> InformMembers(QueueAgent agent, String RoleID,
 			String UnitID) {
-		// suggestedServiceCalls[2]=configuration+"RegisterNormProcess.owl
-		// NormID=norma1
-		// normContent=FORBIDDEN_Member_REQUEST_acquireRole_MESSAGE(CONTENT(ROLE_'Payee'))";
 
 		this.list.clear();
 		
 		String call = configuration + "InformMembersProcess.owl RoleID="
 				+ RoleID + " UnitID=" + UnitID;
 		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
-		requestMsg.setSender(agente.getAid());
+		requestMsg.setSender(agent.getAid());
 		requestMsg.setContent(call);
 		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
 		requestMsg.setReceiver(new AgentID("OMS", "qpid", "localhost", ""));
 
 		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
 		System.out.println("[QueryAgent]Sending... ");
-		// send(requestMsg);
 
-		// crear un fil en el fipa request initiator
-		agente.setTask(new TestAgentClient(agente, requestMsg, this));
+		agent.setTask(new TestAgentClient(agent, requestMsg, this));
 
-		this.adv.waiting();
+		this.monitor.waiting();
 		
 		System.out.println("Lista vale: "+ this.list.size());
 
@@ -137,177 +154,193 @@ public class OMSService {
 
 	}
 
-	public ArrayList<String> InformRoleNorms(QueueAgent agente, String RoleID) {
-		// suggestedServiceCalls[2]=configuration+"RegisterNormProcess.owl
-		// NormID=norma1
-		// normContent=FORBIDDEN_Member_REQUEST_acquireRole_MESSAGE(CONTENT(ROLE_'Payee'))";
+	/**
+	 * Inform norm list
+	 * @param agent
+	 * @param RoleID
+	 * @return ArrayList NormList
+	 */
+	public ArrayList<String> InformRoleNorms(QueueAgent agent, String RoleID) {
 
 		this.list.clear();
 		
 		String call = configuration + "InformRoleNormsProcess.owl RoleID="
 				+ RoleID;
 		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
-		requestMsg.setSender(agente.getAid());
+		requestMsg.setSender(agent.getAid());
 		requestMsg.setContent(call);
 		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
 		requestMsg.setReceiver(new AgentID("OMS", "qpid", "localhost", ""));
 
 		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
 		System.out.println("[QueryAgent]Sending... ");
-		// send(requestMsg);
 
-		// crear un fil en el fipa request initiator
-		agente.setTask(new TestAgentClient(agente, requestMsg, this));
+		agent.setTask(new TestAgentClient(agent, requestMsg, this));
 
-		this.adv.waiting();
+		this.monitor.waiting();
 
 		return this.list;
 
 	}
 
-	public ArrayList<String> InformRoleProfiles(QueueAgent agente, String UnitID) {
-		// suggestedServiceCalls[2]=configuration+"RegisterNormProcess.owl
-		// NormID=norma1
-		// normContent=FORBIDDEN_Member_REQUEST_acquireRole_MESSAGE(CONTENT(ROLE_'Payee'))";
+	/**
+	 * Inform role profiles
+	 * @param agent
+	 * @param UnitID
+	 * @return ArrayList ProfileList
+	 */
+	public ArrayList<String> InformRoleProfiles(QueueAgent agent, String UnitID) {
 
 		this.list.clear();
 		
 		String call = configuration + "InformRoleProfilesProcess.owl UnitID="
 				+ UnitID;
 		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
-		requestMsg.setSender(agente.getAid());
+		requestMsg.setSender(agent.getAid());
 		requestMsg.setContent(call);
 		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
 		requestMsg.setReceiver(new AgentID("OMS", "qpid", "localhost", ""));
 
 		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
 		System.out.println("[QueryAgent]Sending... ");
-		// send(requestMsg);
 
-		// crear un fil en el fipa request initiator
-		agente.setTask(new TestAgentClient(agente, requestMsg, this));
+		agent.setTask(new TestAgentClient(agent, requestMsg, this));
 
-		this.adv.waiting();
+		this.monitor.waiting();
 
 		return this.list;
 
 	}
 
-	public ArrayList<String> InformUnit(QueueAgent agente, String UnitID) {
-		// suggestedServiceCalls[2]=configuration+"RegisterNormProcess.owl
-		// NormID=norma1
-		// normContent=FORBIDDEN_Member_REQUEST_acquireRole_MESSAGE(CONTENT(ROLE_'Payee'))";
+	/**
+	 * Inform unit
+	 * @param agent
+	 * @param UnitID
+	 * @return ArrayList UnitType UnitGoal ParentID
+	 */
+	public ArrayList<String> InformUnit(QueueAgent agent, String UnitID) {
 
 		this.list.clear();
 		
 		String call = configuration + "InformUnitProcess.owl UnitID=" + UnitID;
 		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
-		requestMsg.setSender(agente.getAid());
+		requestMsg.setSender(agent.getAid());
 		requestMsg.setContent(call);
 		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
 		requestMsg.setReceiver(new AgentID("OMS", "qpid", "localhost", ""));
 
 		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
 		System.out.println("[QueryAgent]Sending... ");
-		// send(requestMsg);
 
-		// crear un fil en el fipa request initiator
-		agente.setTask(new TestAgentClient(agente, requestMsg, this));
+		agent.setTask(new TestAgentClient(agent, requestMsg, this));
 
-		this.adv.waiting();
+		this.monitor.waiting();
 
 		return this.list;
 
 	}
-
-	public ArrayList<String> InformUnitRoles(QueueAgent agente, String UnitID) {
-		// suggestedServiceCalls[2]=configuration+"RegisterNormProcess.owl
-		// NormID=norma1
-		// normContent=FORBIDDEN_Member_REQUEST_acquireRole_MESSAGE(CONTENT(ROLE_'Payee'))";
+/**
+ * Inform unit roles
+ * @param agent
+ * @param UnitID
+ * @return ArrayList RoleList
+ */
+	public ArrayList<String> InformUnitRoles(QueueAgent agent, String UnitID) {
 
 		this.list.clear();
 		
 		String call = configuration + "InformUnitRolesProcess.owl UnitID="
 				+ UnitID;
 		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
-		requestMsg.setSender(agente.getAid());
+		requestMsg.setSender(agent.getAid());
 		requestMsg.setContent(call);
 		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
 		requestMsg.setReceiver(new AgentID("OMS", "qpid", "localhost", ""));
 
 		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
 		System.out.println("[QueryAgent]Sending... ");
-		// send(requestMsg);
 
-		// crear un fil en el fipa request initiator
-		agente.setTask(new TestAgentClient(agente, requestMsg, this));
+		agent.setTask(new TestAgentClient(agent, requestMsg, this));
 
-		this.adv.waiting();
+		this.monitor.waiting();
 
 		return this.list;
 
 	}
+	/**
+	 * Agents quantity in the organization with a role and a unit 
+	 * @param agent
+	 * @param RoleID
+	 * @param UnitID
+	 * @return int Quantity
+	 */
+	public int QuantityMembers(QueueAgent agent, String RoleID, String UnitID) {
 
-	public int QuantityMembers(QueueAgent agente, String RoleID, String UnitID) {
-		// suggestedServiceCalls[2]=configuration+"RegisterNormProcess.owl
-		// NormID=norma1
-		// normContent=FORBIDDEN_Member_REQUEST_acquireRole_MESSAGE(CONTENT(ROLE_'Payee'))";
 
 		String call = configuration + "QuantityMembersProcess.owl RoleID="
 				+ RoleID + " UnitID=" + UnitID;
 		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
-		requestMsg.setSender(agente.getAid());
+		requestMsg.setSender(agent.getAid());
 		requestMsg.setContent(call);
 		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
 		requestMsg.setReceiver(new AgentID("OMS", "qpid", "localhost", ""));
 
 		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
 		System.out.println("[QueryAgent]Sending... ");
-		// send(requestMsg);
 
-		// crear un fil en el fipa request initiator
-		agente.setTask(new TestAgentClient(agente, requestMsg, this));
+		agent.setTask(new TestAgentClient(agent, requestMsg, this));
 
-		this.adv.waiting();
+		this.monitor.waiting();
 
 		return this.Quantity;
 
 	}
 
-	public String RegisterNorm(QueueAgent agente, String NormID,
+	/**
+	 * Register a new norm in the organization
+	 * @param agent
+	 * @param NormID
+	 * @param NormContent
+	 * @return String Status ErrorValue
+	 */
+	public String RegisterNorm(QueueAgent agent, String NormID,
 			String NormContent) {
-		// suggestedServiceCalls[2]=configuration+"RegisterNormProcess.owl
-		// NormID=norma1
-		// normContent=FORBIDDEN_Member_REQUEST_acquireRole_MESSAGE(CONTENT(ROLE_'Payee'))";
+
 
 		String call = configuration + "RegisterNormProcess.owl NormID="
 				+ NormID + " NormContent=" + NormContent;
 		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
-		requestMsg.setSender(agente.getAid());
+		requestMsg.setSender(agent.getAid());
 		requestMsg.setContent(call);
 		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
 		requestMsg.setReceiver(new AgentID("OMS", "qpid", "localhost", ""));
 
 		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
 		System.out.println("[QueryAgent]Sending... ");
-		// send(requestMsg);
 
-		// crear un fil en el fipa request initiator
-		agente.setTask(new TestAgentClient(agente, requestMsg, this));
+		agent.setTask(new TestAgentClient(agent, requestMsg, this));
 
-		this.adv.waiting();
+		this.monitor.waiting();
 
 		return this.value;
 
 	}
-
-	public String RegisterRole(QueueAgent agente,
+	/**
+	 * Register a new role in the organization
+	 * @param agent
+	 * @param RegisterRoleInputRoleID
+	 * @param UnitID
+	 * @param Accessibility
+	 * @param Position
+	 * @param Visibility
+	 * @param Inheritance
+	 * @return String Status ErroValue
+	 */
+	public String RegisterRole(QueueAgent agent,
 			String RegisterRoleInputRoleID, String UnitID,
 			String Accessibility, String Position, String Visibility,
 			String Inheritance) {
-		// suggestedServiceCalls[2]=configuration+"RegisterNormProcess.owl
-		// NormID=norma1
-		// normContent=FORBIDDEN_Member_REQUEST_acquireRole_MESSAGE(CONTENT(ROLE_'Payee'))";
+
 
 		String call = configuration
 				+ "RegisterRoleProcess.owl RegisterRoleInputRoleID="
@@ -315,140 +348,152 @@ public class OMSService {
 				+ " Accessibility=" + Accessibility + " Position=" + Position
 				+ " Visibility=" + Visibility + " Inheritance=" + Inheritance;
 		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
-		requestMsg.setSender(agente.getAid());
+		requestMsg.setSender(agent.getAid());
 		requestMsg.setContent(call);
 		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
 		requestMsg.setReceiver(new AgentID("OMS", "qpid", "localhost", ""));
 
 		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
 		System.out.println("[QueryAgent]Sending... ");
-		// send(requestMsg);
 
-		// crear un fil en el fipa request initiator
-		agente.setTask(new TestAgentClient(agente, requestMsg, this));
+		agent.setTask(new TestAgentClient(agent, requestMsg, this));
 
-		this.adv.waiting();
+		this.monitor.waiting();
 
 		return this.value;
 
 	}
-
-	public String RegisterUnit(QueueAgent agente, String UnitID, String Type,
+	/**
+	 * Register a new unit in the organization
+	 * @param agent
+	 * @param UnitID
+	 * @param Type
+	 * @param Goal
+	 * @param ParentUnitID
+	 * @return String Status ErrorValue
+	 */
+	public String RegisterUnit(QueueAgent agent, String UnitID, String Type,
 			String Goal, String ParentUnitID) {
-		// suggestedServiceCalls[2]=configuration+"RegisterNormProcess.owl
-		// NormID=norma1
-		// normContent=FORBIDDEN_Member_REQUEST_acquireRole_MESSAGE(CONTENT(ROLE_'Payee'))";
+
 
 		String call = configuration + "RegisterUnitProcess.owl  UnitID="
 				+ UnitID + " Type=" + Type + " Goal=" + Goal + " ParentUnitID="
 				+ ParentUnitID;
 		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
-		requestMsg.setSender(agente.getAid());
+		requestMsg.setSender(agent.getAid());
 		requestMsg.setContent(call);
 		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
 		requestMsg.setReceiver(new AgentID("OMS", "qpid", "localhost", ""));
 
 		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
 		System.out.println("[QueryAgent]Sending... ");
-		// send(requestMsg);
 
-		// crear un fil en el fipa request initiator
-		agente.setTask(new TestAgentClient(agente, requestMsg, this));
+		agent.setTask(new TestAgentClient(agent, requestMsg, this));
 
-		this.adv.waiting();
+		this.monitor.waiting();
 
 		return this.value;
 
 	}
+	/**
+	 * Deregister norm
+	 * @param agent
+	 * @param NormID
+	 * @return String Status ErrorValue
+	 */
+	public String DeregisterNorm(QueueAgent agent, String NormID) {
 
-	public String DeregisterNorm(QueueAgent agente, String NormID) {
-		// suggestedServiceCalls[2]=configuration+"RegisterNormProcess.owl
-		// NormID=norma1
-		// normContent=FORBIDDEN_Member_REQUEST_acquireRole_MESSAGE(CONTENT(ROLE_'Payee'))";
 
 		String call = configuration + "DeregisterNormProcess.owl  NormID="
 				+ NormID;
 		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
-		requestMsg.setSender(agente.getAid());
+		requestMsg.setSender(agent.getAid());
 		requestMsg.setContent(call);
 		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
 		requestMsg.setReceiver(new AgentID("OMS", "qpid", "localhost", ""));
 
 		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
 		System.out.println("[QueryAgent]Sending... ");
-		// send(requestMsg);
 
-		// crear un fil en el fipa request initiator
-		agente.setTask(new TestAgentClient(agente, requestMsg, this));
+		agent.setTask(new TestAgentClient(agent, requestMsg, this));
 
-		this.adv.waiting();
+		this.monitor.waiting();
 
 		return this.value;
 
 	}
+	/**
+	 * Deregister role
+	 * @param agent
+	 * @param RoleID
+	 * @param UnitID
+	 * @return String Status ErrorValue
+	 */
+	public String DeregisterRole(QueueAgent agent, String RoleID, String UnitID) {
 
-	public String DeregisterRole(QueueAgent agente, String RoleID, String UnitID) {
-		// suggestedServiceCalls[2]=configuration+"RegisterNormProcess.owl
-		// NormID=norma1
-		// normContent=FORBIDDEN_Member_REQUEST_acquireRole_MESSAGE(CONTENT(ROLE_'Payee'))";
 
 		String call = configuration + "DeregisterRoleProcess.owl  RoleID="
 				+ RoleID + " UnitID=" + UnitID;
 		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
-		requestMsg.setSender(agente.getAid());
+		requestMsg.setSender(agent.getAid());
 		requestMsg.setContent(call);
 		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
 		requestMsg.setReceiver(new AgentID("OMS", "qpid", "localhost", ""));
 
 		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
 		System.out.println("[QueryAgent]Sending... ");
-		// send(requestMsg);
 
-		// crear un fil en el fipa request initiator
-		agente.setTask(new TestAgentClient(agente, requestMsg, this));
+		agent.setTask(new TestAgentClient(agent, requestMsg, this));
 
-		this.adv.waiting();
+		this.monitor.waiting();
 
 		return this.value;
 
 	}
+	/**
+	 * Deregister unit
+	 * @param agent
+	 * @param UnitID
+	 * @return String Status ErrorValue
+	 */
+	public String DeregisterUnit(QueueAgent agent, String UnitID) {
 
-	public String DeregisterUnit(QueueAgent agente, String UnitID) {
-		// suggestedServiceCalls[2]=configuration+"RegisterNormProcess.owl
-		// NormID=norma1
-		// normContent=FORBIDDEN_Member_REQUEST_acquireRole_MESSAGE(CONTENT(ROLE_'Payee'))";
 
 		String call = configuration + "DeregisterNormProcess.owl  UnitID="
 				+ UnitID;
 		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
-		requestMsg.setSender(agente.getAid());
+		requestMsg.setSender(agent.getAid());
 		requestMsg.setContent(call);
 		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
 		requestMsg.setReceiver(new AgentID("OMS", "qpid", "localhost", ""));
 
 		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
 		System.out.println("[QueryAgent]Sending... ");
-		// send(requestMsg);
 
-		// crear un fil en el fipa request initiator
-		agente.setTask(new TestAgentClient(agente, requestMsg, this));
+		agent.setTask(new TestAgentClient(agent, requestMsg, this));
 
-		this.adv.waiting();
+		this.monitor.waiting();
 
 		return this.value;
 
 	}
 
-	public String Expulse(QueueAgent agente, String AgentID, String RoleID,
+	/**
+	 * Expulse an agent of the organization
+	 * @param agent
+	 * @param AgentID
+	 * @param RoleID
+	 * @param UnitID
+	 * @return String Status ErrorValue
+	 */
+	public String Expulse(QueueAgent agent, String AgentID, String RoleID,
 			String UnitID) {
-		// suggestedServiceCalls[2]=configuration+"RegisterNormProcess.owl
-		// NormID=norma1
-		// normContent=FORBIDDEN_Member_REQUEST_acquireRole_MESSAGE(CONTENT(ROLE_'Payee'))";
+
 
 		String call = configuration + "ExpulseProcess.owl AgentID=" + AgentID
 				+ " RoleID=" + RoleID + " UnitID=" + UnitID;
 		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
-		requestMsg.setSender(agente.getAid());
+		requestMsg.setSender(agent.getAid());
 		requestMsg.setContent(call);
 		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
 		requestMsg.setReceiver(new AgentID("OMS", "qpid", "localhost", ""));
@@ -458,34 +503,30 @@ public class OMSService {
 
 		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
 		System.out.println("[QueryAgent]Sending... ");
-		// send(requestMsg);
 
-		// crear un fil en el fipa request initiator
-		agente.setTask(new TestAgentClient(agente, requestMsg, this));
+		agent.setTask(new TestAgentClient(agent, requestMsg, this));
 
-		this.adv.waiting();
+		this.monitor.waiting();
 
 		return this.value;
 
 	}
 
 	/**
-	 * Registra un agente en la organizacion
+	 * Register a new agent in the organization
 	 * 
 	 * @param agente
-	 *            agente a registrar
 	 * @param descripcion
-	 *            inidica que rol y en que organizacion entrara el agente
-	 * @return
+	 * @return String Status ErrorValue
 	 */
-	public String AcquireRole(QueueAgent agente, String RoleID, String UnitID) {
+	public String AcquireRole(QueueAgent agent, String RoleID, String UnitID) {
 		// montar string de conexion
 		// Enviamos el mensaje
 
 		String call = configuration + "AcquireRoleProcess.owl RoleID=" + RoleID
 				+ " UnitID=" + UnitID;
 		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
-		requestMsg.setSender(agente.getAid());
+		requestMsg.setSender(agent.getAid());
 		requestMsg.setContent(call);
 		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
 		requestMsg.setReceiver(new AgentID("OMS", "qpid", "localhost", ""));
@@ -495,20 +536,18 @@ public class OMSService {
 
 		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
 		System.out.println("[QueryAgent]Sending... ");
-		// send(requestMsg);
 
-		// crear un fil en el fipa request initiator
-		agente.setTask(new TestAgentClient(agente, requestMsg, this));
+		agent.setTask(new TestAgentClient(agent, requestMsg, this));
 
-		this.adv.waiting();
+		this.monitor.waiting();
 
 		return this.value;
-		// registar el agente en la plataforma
+
 
 	}
 
 	/**
-	 * TestAgentClient handles the messages received from the SF
+	 * TestAgentClient handles the messages received from the OMS
 	 */
 	static class TestAgentClient extends FIPARequestInitiator {
 		QueueAgent agent;
@@ -536,7 +575,7 @@ public class OMSService {
 			this.oms.setValor(myAgent.getName() + ": Oh no! "
 					+ msg.getSender().getLocalName()
 					+ " has rejected my proposal.");
-			this.oms.adv.advise();
+			this.oms.monitor.advise();
 		}
 
 		protected void handleInform(ACLMessage msg) {
@@ -714,7 +753,7 @@ public class OMSService {
 			}
 
 
-			this.oms.adv.advise();
+			this.oms.monitor.advise();
 
 		}
 
@@ -725,7 +764,7 @@ public class OMSService {
 			this.oms.setValor(myAgent.getName() + ":"
 					+ msg.getSender().getLocalName()
 					+ " has indicated that they didn't understand.");
-			this.oms.adv.advise();
+			this.oms.monitor.advise();
 		}
 
 		protected void handleOutOfSequence(ACLMessage msg) {
@@ -737,7 +776,7 @@ public class OMSService {
 					+ msg.getSender().getLocalName()
 					+ " has send me a message which i wasn't"
 					+ " expecting in this conversation");
-			this.oms.adv.advise();
+			this.oms.monitor.advise();
 		}
 	}
 
