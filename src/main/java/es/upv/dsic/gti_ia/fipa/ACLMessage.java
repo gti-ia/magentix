@@ -9,6 +9,9 @@ import es.upv.dsic.gti_ia.fipa.ISO8601;
 
 
 
+/**
+ * @author  Ricard Lopez Fogues
+ */
 @SuppressWarnings("unchecked")
 public class ACLMessage implements Serializable, Cloneable {
 	/**
@@ -91,7 +94,14 @@ public class ACLMessage implements Serializable, Cloneable {
 	}
 	
 	
+	/**
+	 * @uml.property  name="performative"
+	 */
 	private int performative;
+	/**
+	 * @uml.property  name="sender"
+	 * @uml.associationEnd  
+	 */
 	private AgentID sender = new AgentID();
 	//private AgentID receiver = new AgentID();
 	
@@ -99,17 +109,51 @@ public class ACLMessage implements Serializable, Cloneable {
 	 * List of receivers to enable Multi-Cast
 	 */
 	
+	/**
+	 * @uml.property  name="receiver"
+	 */
 	private ArrayList<AgentID> receiver = new ArrayList();
 	
+	/**
+	 * @uml.property  name="reply_to"
+	 * @uml.associationEnd  
+	 */
 	private AgentID reply_to = new AgentID();
+	/**
+	 * @uml.property  name="content"
+	 */
 	private String content = "";
+	/**
+	 * @uml.property  name="language"
+	 */
 	private String language = "";
+	/**
+	 * @uml.property  name="encoding"
+	 */
 	private String encoding = "";
+	/**
+	 * @uml.property  name="ontology"
+	 */
 	private String ontology = "";
+	/**
+	 * @uml.property  name="protocol"
+	 */
 	private String protocol = "";
+	/**
+	 * @uml.property  name="conversation_id"
+	 */
 	private String conversation_id = "";
+	/**
+	 * @uml.property  name="reply_with"
+	 */
 	private String reply_with = "";
+	/**
+	 * @uml.property  name="in_reply_to"
+	 */
 	private String in_reply_to = "";
+	/**
+	 * @uml.property  name="reply_byInMillisec"
+	 */
 	private long reply_byInMillisec = 0;
 	
 	
@@ -123,10 +167,19 @@ public class ACLMessage implements Serializable, Cloneable {
 		this.performative = performative;		
 	}
 	
+	/**
+	 * Sets performative type
+	 * @param performative
+	 * @uml.property  name="performative"
+	 */
 	public void setPerformative(int performative){
 		this.performative = performative;
 	}
 	
+	/**
+	 * @return Performative type
+	 * @uml.property  name="performative"
+	 */
 	public String getPerformative(){
 		try {
 			return performatives[performative];
@@ -139,71 +192,145 @@ public class ACLMessage implements Serializable, Cloneable {
 		return performative;
 	}
 	
+	/**
+	 * Set sender
+	 * @param sender
+	 * @uml.property  name="sender"
+	 */
 	public void setSender(AgentID sender){
 		this.sender = sender;
 	}
 	
+	/**
+	 * @return sender
+	 * @uml.property  name="sender"
+	 */
 	public AgentID getSender(){
 		return sender;
 	}
 	
+	/**
+	 * Set the receiver. It deletes the receivers list and creates a new one with
+	 * the new receiver
+	 * @param receiver
+	 */
 	public void setReceiver(AgentID receiver){
 		this.receiver.clear();
 		this.receiver.add(receiver);
 	}
 	
+	/**
+	 * @return First receiver in receivers list
+	 * @uml.property  name="receiver"
+	 */
 	public AgentID getReceiver(){
 		return receiver.get(0);
 	}
 	
+	/**
+	 * Returns receiver in index position in receivers list
+	 * @param index
+	 * @return receiver
+	 */
 	public AgentID getReceiver(int index){
 		return receiver.get(index);
 	}
 	
+	/**
+	 * Sets ReplyTo field
+	 * @param reply
+	 */
 	public void setReplyTo(AgentID reply){
 		reply_to = reply;
 	}
 	
+	/**
+	 * Sets ReplyTo field
+	 * @return
+	 */
 	public AgentID getReplyTo(){
 		return reply_to;
 	}
 	
+	/**
+	 * Sets content field.
+	 * @param cont
+	 * @uml.property  name="content"
+	 */
 	public void setContent(String cont){
 		content = cont;
 	}
 	
+	/**
+	 * @return Content of content field
+	 * @uml.property  name="content"
+	 */
 	public String getContent(){
 		return content;
 	}
 	
+	/**
+	 * Sets languange field
+	 * @param lang
+	 * @uml.property  name="language"
+	 */
 	public void setLanguage(String lang){
 		language = lang;
 	}
 	
+	/**
+	 * @return content of languange field
+	 * @uml.property  name="language"
+	 */
 	public String getLanguage(){
 		return language;
 	}
 	
+	/**
+	 * Set encoding of the message
+	 * @param encoding
+	 * @uml.property  name="encoding"
+	 */
 	public void setEncoding(String encoding){
 		this.encoding = encoding;
 	}
 	
+	/**
+	 * @return
+	 * @uml.property  name="encoding"
+	 */
 	public String getEncoding(){
 		return encoding;
 	}
 	
+	/**
+	 * @param ontology
+	 * @uml.property  name="ontology"
+	 */
 	public void setOntology(String ontology){
 		this.ontology = ontology;
 	}
 	
+	/**
+	 * @return
+	 * @uml.property  name="ontology"
+	 */
 	public String getOntology(){
 		return ontology;
 	}
 	
+	/**
+	 * @param protocol
+	 * @uml.property  name="protocol"
+	 */
 	public void setProtocol(String protocol){
 		this.protocol = protocol;
 	}
 	
+	/**
+	 * @return
+	 * @uml.property  name="protocol"
+	 */
 	public String getProtocol(){
 		return protocol;
 	}
@@ -300,42 +427,82 @@ public class ACLMessage implements Serializable, Cloneable {
 		return receiver.size();
 	}
 
+	/**
+	 * @return
+	 * @uml.property  name="reply_to"
+	 */
 	public AgentID getReply_to() {
 		return reply_to;
 	}
 
+	/**
+	 * @param reply_to
+	 * @uml.property  name="reply_to"
+	 */
 	public void setReply_to(AgentID reply_to) {
 		this.reply_to = reply_to;
 	}
 
+	/**
+	 * @return
+	 * @uml.property  name="conversation_id"
+	 */
 	public String getConversation_id() {
 		return conversation_id;
 	}
 
+	/**
+	 * @param conversation_id
+	 * @uml.property  name="conversation_id"
+	 */
 	public void setConversation_id(String conversation_id) {
 		this.conversation_id = conversation_id;
 	}
 
+	/**
+	 * @return
+	 * @uml.property  name="reply_with"
+	 */
 	public String getReply_with() {
 		return reply_with;
 	}
 
+	/**
+	 * @param reply_with
+	 * @uml.property  name="reply_with"
+	 */
 	public void setReply_with(String reply_with) {
 		this.reply_with = reply_with;
 	}
 
+	/**
+	 * @return
+	 * @uml.property  name="in_reply_to"
+	 */
 	public String getIn_reply_to() {
 		return in_reply_to;
 	}
 
+	/**
+	 * @param in_reply_to
+	 * @uml.property  name="in_reply_to"
+	 */
 	public void setIn_reply_to(String in_reply_to) {
 		this.in_reply_to = in_reply_to;
 	}
 
+	/**
+	 * @return
+	 * @uml.property  name="reply_byInMillisec"
+	 */
 	public long getReply_byInMillisec() {
 		return reply_byInMillisec;
 	}
 
+	/**
+	 * @param reply_byInMillisec
+	 * @uml.property  name="reply_byInMillisec"
+	 */
 	public void setReply_byInMillisec(long reply_byInMillisec) {
 		this.reply_byInMillisec = reply_byInMillisec;
 	}
