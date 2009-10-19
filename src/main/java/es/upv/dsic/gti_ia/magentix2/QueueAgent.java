@@ -36,7 +36,7 @@ import es.upv.dsic.gti_ia.proto.FIPAContractNetResponder;
 public class QueueAgent extends BaseAgent {
 
 	
-	ArrayList<ACLMessage> messageList = new ArrayList<ACLMessage>();
+	private ArrayList<ACLMessage> messageList = new ArrayList<ACLMessage>();
 	// LinkedBlockingQueue<MessageTransfer> internalQueue;
 	//private AgentID aid = null;
 	private Monitor monitor = null;
@@ -59,8 +59,7 @@ public class QueueAgent extends BaseAgent {
 	 */
 
 	public QueueAgent(AgentID aid, Connection connection) {
-		super(aid, connection);
-		// internalQueue = new LinkedBlockingQueue<MessageTransfer>();
+		super(aid, connection);	
 	}
 
 	
@@ -69,25 +68,26 @@ public class QueueAgent extends BaseAgent {
 	{
 		return this.getAid().toString();
 	}
-	public int addRole()
+	
+	public synchronized int addRole()
 	{
 		this.nRoles++;
 		return this.nRoles;
 	}
 	
-	public int removeRole()
+	public synchronized int removeRole()
 	{
 		this.nRoles--;
 		return this.nRoles;
 	}
 	
-	public int getnRole()
+	public synchronized int getnRole()
 	{
 		return this.nRoles;
 	}
 	
 	
-	public Monitor addMonitor()
+	public synchronized Monitor addMonitor()
 	{
 		this.addRole();
 		if (this.monitor==null)
@@ -95,7 +95,7 @@ public class QueueAgent extends BaseAgent {
 		return monitor;
 	}
 	
-	public void deleteMonitor()
+	public synchronized void deleteMonitor()
 	{
 		this.removeRole();
 		if(this.nRoles == 0)
@@ -106,7 +106,7 @@ public class QueueAgent extends BaseAgent {
 	 * Return an array of SF services. 
 	 * @return
 	 */
-	public ArrayList<SFAgentDescription> getArraySFAgentDescription()
+	public synchronized ArrayList<SFAgentDescription> getArraySFAgentDescription()
 	{
 		return this.DescripcionesAgentes;
 	}
@@ -115,7 +115,7 @@ public class QueueAgent extends BaseAgent {
 	 * Adds a new description of the service to the arraylis
 	 * @param SFAgent
 	 */
-	public void setSFAgentDescription(SFAgentDescription SFAgent)
+	public synchronized void setSFAgentDescription(SFAgentDescription SFAgent)
 	{
 		//comprobar que no exista
 		if (!this.DescripcionesAgentes.contains(SFAgent))
@@ -132,7 +132,7 @@ public class QueueAgent extends BaseAgent {
 	 * 
 	 * @param agentID
 	 */
-	public void setActiveConversation(String agentID) {
+	public synchronized void setActiveConversation(String agentID) {
 		this.listaConversacionesActivas.add(agentID);
 
 	}
@@ -142,7 +142,7 @@ public class QueueAgent extends BaseAgent {
 	 * 
 	 * @param agentID
 	 */
-	public void deleteActiveConversation(String agentID) {
+	public synchronized void deleteActiveConversation(String agentID) {
 		for (String conv : this.listaConversacionesActivas) {
 			if (conv.equals(agentID)) {
 				this.listaConversacionesActivas.remove(agentID);
@@ -156,7 +156,7 @@ public class QueueAgent extends BaseAgent {
 	 * 
 	 * @return boolean value 
 	 */
-	public boolean deleteAllActiveConversation() {
+	public synchronized boolean deleteAllActiveConversation() {
 		this.listaConversacionesActivas.clear();
 		if (this.listaConversacionesActivas.size() == 0)
 			return true;
@@ -171,7 +171,7 @@ public class QueueAgent extends BaseAgent {
 	 *  Return the monitor 
 	 * @return Monitor 
 	 */
-	public Monitor getMonitor() {
+	public synchronized Monitor getMonitor() {
 		return this.monitor;
 	}
 
@@ -296,11 +296,18 @@ public class QueueAgent extends BaseAgent {
 		return msg;
 	}
 
+	
+	public synchronized void writeQueue(MessageTransfer xfr)
+	{
+		messageList.add(MessageTransfertoACLMessage(xfr));
+	}
+
 	public final void onMessage(Session ssn, MessageTransfer xfr) {
 		// internalQueue.add(xfr);
 
 		
-		messageList.add(MessageTransfertoACLMessage(xfr));
+		this.writeQueue(xfr);
+		//messageList.add(MessageTransfertoACLMessage(xfr));
 		// clase encargada de despertar al agente, puede ser del rol responder o
 		// del rol iniciator
 		
@@ -363,7 +370,7 @@ public class QueueAgent extends BaseAgent {
 	 * Return a number of messages of the queue
 	 * @return int number of messages
 	 */
-	public int getNMensajes() {
+	public synchronized int getNMensajes() {
 		return messageList.size();
 	}
 
@@ -379,13 +386,11 @@ public class QueueAgent extends BaseAgent {
 	 */
 	public synchronized ACLMessage receiveACLMessage(MessageTemplate template, int tipo) {
 		ACLMessage msgselect = null;
-		boolean condition = false;
-
-			ArrayList<ACLMessage> messageListAux = (ArrayList<ACLMessage>)messageList.clone();
+		
 			
 			if (tipo == 1)
 			{
-				for (ACLMessage msg : messageListAux) {
+				for (ACLMessage msg : messageList) {
 			// comparamos los campos protocol y conversaciónID (para asegurarnos
 			// que no es una conversacion existente)00
 
@@ -406,43 +411,27 @@ public class QueueAgent extends BaseAgent {
 			}
 			else
 			{
-				for (ACLMessage msg : messageListAux) {
-				
+				for (ACLMessage msg : messageList) {
 				// comparamos los campos protocol, idcoversaciï¿½n y sender
 					if (template.getProtocol().equals(msg.getProtocol())) {
-
 					// miramos dentro de las conversaciones que tenemos
 						for (String conversacion : template.getList_Conversaciones())
 							if (conversacion.equals(msg.getConversationId())) {
-
 							// miramos si pertenece algun agente
-
 								if (template.existeReceiver(msg.getSender())) {
-
 									msgselect = msg;
 									break;
-
 								}
-
 							}
-					
-
 					   }
 					if (msgselect != null)
 						break;
 				}
 			}
-
 			if (msgselect != null)
-			{
-				
-				
-				messageList.remove(msgselect);
-				
+			{	
+				messageList.remove(msgselect);	
 			}
-		
-		
-
 		return msgselect;
 	}
 
@@ -502,15 +491,9 @@ public class QueueAgent extends BaseAgent {
 		ArrayList<ACLMessage> messageListAux = (ArrayList<ACLMessage>)messageList.clone();
 
 		do{
-			
-			
-			for (ACLMessage msg : messageListAux) {
-				
-	
-				
+			for (ACLMessage msg : messageListAux) {		
 			// comparamos los campos protocol y conversaciónID (para asegurarnos
 			// que no es una conversacion existente)00
-
 				if (template.getProtocol().equals(msg.getProtocol())) {
 				// comprobar que sea una conversacion nueva, que no este en la
 				// lista de conversaciones activas
@@ -525,7 +508,6 @@ public class QueueAgent extends BaseAgent {
 				}
 		
 			}
-		
 			if (msgselect!=null)
 			{
 				b = false;
@@ -536,10 +518,9 @@ public class QueueAgent extends BaseAgent {
 			this.monitorAux.waiting();	
 			}
 		}while(b);
-		
-		
 		return msgselect;
 	}
+	
 
 	public class HiloIni extends Thread {
 
@@ -547,48 +528,31 @@ public class QueueAgent extends BaseAgent {
 		int tipo;
 
 		public HiloIni(Object in, int tipo) {
-
 			iniciador = in;
 			this.tipo = tipo;
-
 		}
 
 		public void run() {
-
 			switch (tipo) {
 			case 1: {
-
-
 				do {
-
-
 					((FIPARequestInitiator) iniciador).action();
-
 				} while (!((FIPARequestInitiator) iniciador).finalizado());
-	
-				
 				break;
 			}
 			case 2: {
-
 				do {
-
 					((FIPAQueryInitiator) iniciador).action();
-
 				} while (!((FIPAQueryInitiator) iniciador).finalizado());
 				break;
 			}
 			case 3: {
-
 				do {
-
 					((FIPAContractNetInitiator) iniciador).action();
-
 				} while (!((FIPAContractNetInitiator) iniciador).finalizado());
 				break;
 			}
 			}
-
 		}
 	}
 
@@ -598,43 +562,27 @@ public class QueueAgent extends BaseAgent {
 		int tipo;
 
 		public HiloRes(Object res, int tipo) {
-
 			responder = res;
 			this.tipo = tipo;
-
 		}
 
 		public void run() {
-
 			switch (tipo) {
 			case 1: {
 				do {
-			
 					((FIPARequestResponder) responder).action();
-				
-
 				} while (true);
 
 			}
 			case 2: {
-
 				do {
-
 					((FIPAQueryResponder) responder).action();
-
 				} while (true);
-
 			}
 			case 3: {
-
 				do {
-					
-			
 					((FIPAContractNetResponder) responder).action();
-				
-
 				} while (true);
-
 			}
 
 			}
