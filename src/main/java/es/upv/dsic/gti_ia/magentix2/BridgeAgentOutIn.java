@@ -15,11 +15,23 @@ import org.apache.qpid.transport.Connection;
 import es.upv.dsic.gti_ia.fipa.ACLMessage;
 import es.upv.dsic.gti_ia.fipa.AgentID;
 
+/**
+ * This agent routes messages from inside the platform to outside the platform.
+ * It converts ACLMessages into ACLJadeMessages
+ * @author  Ricard Lopez Fogues
+ */
+
 public class BridgeAgentOutIn extends SingleAgent{
 	
 	private DatagramSocket socket;
 
-	public BridgeAgentOutIn(AgentID aid, Connection connection) {
+	/**
+	 * Creates a new BrideAgentOutIn
+	 * @param aid
+	 * @param connection
+	 * @throws Exception
+	 */
+	public BridgeAgentOutIn(AgentID aid, Connection connection) throws Exception {
 		super(aid, connection);
 		
 		  // crear objeto DatagramSocket para enviar y recibir paquetes
@@ -217,11 +229,11 @@ public class BridgeAgentOutIn extends SingleAgent{
 					cadena = dis.readLine();
 				
 				cadena = cadena.substring(cadena.indexOf(":language")+9);
-				//eliminamos espacios en blanco
+				
 				int k = 0;
 				while(cadena.charAt(k) == ' ')
 					k++;
-				//mientras deje de ser blanco
+				
 				while(cadena.charAt(k) != ' '){
 					lang = lang + cadena.charAt(k);
 					k++;
@@ -233,11 +245,11 @@ public class BridgeAgentOutIn extends SingleAgent{
 				while(cadena.indexOf(":ontology")+9 < 0 && cadena != null)
 					cadena = dis.readLine();
 				cadena = cadena.substring(cadena.indexOf(":ontology")+9);
-				//eliminamos espacios en blanco
+				
 				k = 0;
 				while(cadena.charAt(k) == ' ')
 					k++;
-				//mientras deje de ser blanco
+				
 				while(cadena.charAt(k) != ' '){
 					ontology = ontology + cadena.charAt(k);
 					k++;
@@ -246,7 +258,7 @@ public class BridgeAgentOutIn extends SingleAgent{
 		    } catch (IOException e) {
 		    	e.printStackTrace();
 		    }
-		    //enviamos el mensaje
+		    
 		    msg.getReceiver().protocol="qpid";
 		    send(msg);
 		}
