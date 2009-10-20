@@ -255,7 +255,7 @@ public class QueueAgent extends BaseAgent {
 						for (String conversacion : template.getList_Conversaciones())
 							if (conversacion.equals(msg.getConversationId())) {
 							// miramos si pertenece algun agente
-								if (template.existeReceiver(msg.getSender())) {
+								if (template.existReceiver(msg.getSender())) {
 									msgselect = msg;
 									break;
 								}
@@ -566,19 +566,19 @@ public class QueueAgent extends BaseAgent {
 			case 1: {
 				do {
 					((FIPARequestInitiator) iniciador).action();
-				} while (!((FIPARequestInitiator) iniciador).finalizado());
+				} while (!((FIPARequestInitiator) iniciador).finished());
 				break;
 			}
 			case 2: {
 				do {
 					((FIPAQueryInitiator) iniciador).action();
-				} while (!((FIPAQueryInitiator) iniciador).finalizado());
+				} while (!((FIPAQueryInitiator) iniciador).finished());
 				break;
 			}
 			case 3: {
 				do {
 					((FIPAContractNetInitiator) iniciador).action();
-				} while (!((FIPAContractNetInitiator) iniciador).finalizado());
+				} while (!((FIPAContractNetInitiator) iniciador).finished());
 				break;
 			}
 			}
