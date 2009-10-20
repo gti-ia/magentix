@@ -100,8 +100,7 @@ public class FIPAContractNetInitiator {
 					conversationID = "C" + hashCode() + "_"
 							+ System.currentTimeMillis();
 					request.setConversationId(conversationID);
-					template.add_receiver(agent);// TODO, esto esta
-													// modificado
+					template.add_receiver(agent);
 					template.addConversacion(conversationID);
 					myAgent.setActiveConversation(conversationID);
 
