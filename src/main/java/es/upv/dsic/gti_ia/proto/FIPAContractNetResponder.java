@@ -42,8 +42,8 @@ public class FIPAContractNetResponder{
 
     /**
      * Create a FIPARequestInitiator.
-     * @param agent    
-     * @param template 
+     * @param agent agent is the reference to the Agent Object 
+	 * @param msg initial message
      */
 	
 	public FIPAContractNetResponder(QueueAgent _agent, MessageTemplate _template)
