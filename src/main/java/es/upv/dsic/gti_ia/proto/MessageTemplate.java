@@ -151,7 +151,7 @@ public class MessageTemplate {
 	}
 	
 	/**
-	 * 
+	 * Add new conversation id in the list of conversations
 	 * @param conversacion
 	 */
 	public void addConversation(String conversacion)
@@ -160,7 +160,7 @@ public class MessageTemplate {
 		
 	}
 	/**
-	 * 
+	 * Delete all conversations in the list of conversations
 	 * @return
 	 */
 	public boolean deleteAllConversation()
@@ -174,15 +174,15 @@ public class MessageTemplate {
 	}
 	
 	/**
-	 * 
+	 * Delete a conversation id in the list of conversations
 	 * @param conversacion
 	 */
-	public void deleteConversation(String conversacion)
+	public void deleteConversation(String conversation)
 	{
 		for(String conv : this.listaConversaciones){
-			if (conv.equals(conversacion))
+			if (conv.equals(conversation))
 			{
-				this.listaConversaciones.remove(conversacion);
+				this.listaConversaciones.remove(conversation);
 				break;
 			}
 			
@@ -191,35 +191,35 @@ public class MessageTemplate {
 	}
 	
 	/**
-	 * 
-	 * @param r
-	 * @return
+	 * Add a new receiver
+	 * @param a AgentID
+	 * @return status 1: OK -1: error
 	 */
-	public int add_receiver(AgentID r)
+	public int add_receiver(AgentID a)
 	{
 		for(int i = 0; i<receiver_list.size(); i++)
 		{
-			if( receiver_list.get(i).name.equals(r.name) && receiver_list.get(i).host.equals(r.host) 
-				&& receiver_list.get(i).port.equals(r.port) && receiver_list.get(i).protocol.equals(r.protocol))
+			if( receiver_list.get(i).name.equals(a.name) && receiver_list.get(i).host.equals(a.host) 
+				&& receiver_list.get(i).port.equals(a.port) && receiver_list.get(i).protocol.equals(a.protocol))
 				{
 					return -1;
 				}
 		}
-		receiver_list.add(r);
+		receiver_list.add(a);
 		return 1;
 	}
 	
 	/**
-	 * 
-	 * @param r
+	 * Indicates if a receiver exists in the list of receivers
+	 * @param a AgentID
 	 * @return
 	 */
-	public boolean existReceiver(AgentID r)
+	public boolean existReceiver(AgentID a)
 	{
 		for(int i = 0; i<receiver_list.size(); i++)
 		{
-			if( receiver_list.get(i).name.equals(r.name) && receiver_list.get(i).host.equals(r.host) 
-				&& receiver_list.get(i).port.equals(r.port) && receiver_list.get(i).protocol.equals(r.protocol))
+			if( receiver_list.get(i).name.equals(a.name) && receiver_list.get(i).host.equals(a.host) 
+				&& receiver_list.get(i).port.equals(a.port) && receiver_list.get(i).protocol.equals(a.protocol))
 				{
 					return true;
 				}
@@ -228,7 +228,7 @@ public class MessageTemplate {
 	}
 	
 	/**
-	 * 
+	 * Delete all receivers in the list of receivers
 	 * @return
 	 */
 	public boolean deleteAllReceiver()
@@ -248,14 +248,26 @@ public class MessageTemplate {
 		return receiver_list;
 	}
 
+	/**
+	 * Set a new receiver list
+	 * @param receiver_list
+	 */
 	public void setReceiver_list(ArrayList<AgentID> receiver_list) {
 		this.receiver_list = receiver_list;
 	}
 	
+	/**
+	 * Set a new performative
+	 * @param performative 
+	 */
 	public void setPerformative(int performative){
 		this.performative = performative;
 	}
 	
+	/**
+	 * Set a new performative 
+	 * @param performative 
+	 */
 	public void setPerformative(String performative){
 		for(int i=0; i< performatives.length; i++){
 			if(performative.compareTo(performatives[i]) == 0 ){
@@ -265,6 +277,10 @@ public class MessageTemplate {
 		}
 	}
 	
+	/**
+	 * 
+	 * @return performative
+	 */
 	public String getPerformative(){
 		try {
 			return performatives[performative];
@@ -273,102 +289,200 @@ public class MessageTemplate {
 		}
 	}
 	
+	/**
+	 * 
+	 * @return performative
+	 */
 	public int getPerformativeInt(){
 		return performative;
 	}
 	
+	/**
+	 * 
+	 * @param sender
+	 */
 	public void setSender(AgentID sender){
 		this.sender = sender;
 	}
 	
+	/**
+	 * 
+	 * @return sender 
+	 */
 	public AgentID getSender(){
 		return sender;
 	}
 	
+	/**
+	 * 
+	 * @param receiver
+	 */
 	public void setReceiver(AgentID receiver){
 		this.receiver = receiver;
 	}
 	
+	/**
+	 * 
+	 * @return receiver 
+	 */
 	public AgentID getReceiver(){
 		return receiver;
 	}
 	
+	/**
+	 * 
+	 * @param reply 
+	 */
 	public void setReplyTo(AgentID reply){
 		reply_to = reply;
 	}
 	
+	/**
+	 * 
+	 * @return reply_to
+	 */
 	public AgentID getReplyTo(){
 		return reply_to;
 	}
 	
+	/**
+	 * 
+	 * @param content
+	 */
 	public void setContent(String cont){
 		content = cont;
 	}
 	
+	/**
+	 * 
+	 * @return content 
+	 */
 	public String getContent(){
 		return content;
 	}
 	
+	/**
+	 * 
+	 * @param language 
+	 */
 	public void setLanguage(String lang){
 		language = lang;
 	}
 	
+	/**
+	 * 
+	 * @return language 
+	 */
 	public String getLanguage(){
 		return language;
 	}
 	
+	/**
+	 * 
+	 * @param encoding 
+	 */
 	public void setEncoding(String encoding){
 		this.encoding = encoding;
 	}
 	
+	/**
+	 * 
+	 * @return encoding 
+	 */
 	public String getEncoding(){
 		return encoding;
 	}
 	
+	/**
+	 * 
+	 * @param ontology 
+	 */
 	public void setOntology(String ontology){
 		this.ontology = ontology;
 	}
 	
+	/**
+	 * 
+	 * @return ontology 
+	 */
 	public String getOntology(){
 		return ontology;
 	}
 	
+	/**
+	 * 
+	 * @param protocol 
+	 */
 	public void setProtocol(String protocol){
 		this.protocol = protocol;
 	}
 	
+	/**
+	 * 
+	 * @return protocol
+	 */
 	public String getProtocol(){
 		return protocol;
 	}
 	
+	/**
+	 * 
+	 * @param conversation id
+	 */
 	public void setConversationId(String id){
 		conversation_id = id;
 	}
 	
+	/**
+	 * 
+	 * @return conversation id
+	 */
 	public String getConversationId(){
 		return conversation_id;
 	}
-	
+	/**
+	 * 
+	 * @param reply with
+	 */
 	public void setReplyWith(String rw){
 		reply_with = rw;
 	}
-	
+	/**
+	 * 
+	 * @return reply_with
+	 */
 	public String getReplyWith(){
 		return reply_with;
 	}
 	
+	/**
+	 * 
+	 * @param irt in reply to
+	 */
 	public void setInReplyTo(String irt){
 		in_reply_to = irt;
 	}
 	
+	/**
+	 * 
+	 * @return in_reply_tp
+	 */
 	public String getInReplyTo(){
 		return in_reply_to;
 	}
 	
+	/**
+	 * 
+	 * @param date
+	 */
 	public void setReplyByDate(Date date) {
 		reply_byInMillisec = (date==null?0:date.getTime());
 	}
 	
+	/**
+	 * 
+	 * @return date
+	 */
 	public String getReplyBy() {
 		if(reply_byInMillisec != 0)
 			return new Date(reply_byInMillisec).toString();
@@ -376,6 +490,10 @@ public class MessageTemplate {
 			return "";
 	}
 	
+	/**
+	 * 
+	 * @return date
+	 */
 	public Date getReplyByDate() {
 		if(reply_byInMillisec != 0)
 			return new Date(reply_byInMillisec);
