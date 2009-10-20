@@ -1,5 +1,5 @@
 /**
- * La clase FIPAContractNetInitiator permite ejecutar el protocolo FIPA-CONTRACT-NET por la parte del iniciador.
+ * This class implements the Fipa-Contract-Net interaction protocol
  * 
  * @author  Joan Bellver Faus, GTI-IA, DSIC, UPV
  * @version 2009.9.07
@@ -7,17 +7,16 @@
 
 package es.upv.dsic.gti_ia.proto;
 
-import java.util.Vector;
+
 import java.util.Date;
-import java.util.logging.*;
+import java.util.*;
 
 import es.upv.dsic.gti_ia.fipa.AgentID;
 import es.upv.dsic.gti_ia.proto.FIPANames.InteractionProtocol;
 import es.upv.dsic.gti_ia.magentix2.QueueAgent;
-
 import es.upv.dsic.gti_ia.fipa.ACLMessage;
 
-import java.util.*;
+
 
 public class FIPAContractNetInitiator {
 
@@ -48,13 +47,21 @@ public class FIPAContractNetInitiator {
 	private int nEnviados = 0;
 	private int nLeidos = 0;
 
+	/**
+	 * Create a new FIPA-Contract-Net interaction protocol
+	 * @param agent
+	 * @param msg
+	 */
 	public FIPAContractNetInitiator(QueueAgent agent, ACLMessage msg) {
 		myAgent = agent;
 		requestmsg = msg;
 		this.sin = myAgent.addMonitor();
 
 	}
-
+/**
+ * We will be able to know if it has finished the protocol
+ * @return value a boolean value is returned, true: the protocol has finished, false: the protocol even has not finished
+ */
 	public boolean finalizado() {
 		return this.finish;
 	}
@@ -106,7 +113,7 @@ public class FIPAContractNetInitiator {
 
 				this.nEnviados = agentes.size();
 
-				System.out.println("Numero de enviados "+ this.nEnviados);
+
 				// fijamos el el timeout del mensaje
 				Date d = request.getReplyByDate();
 				if (d != null)
@@ -223,7 +230,7 @@ public class FIPAContractNetInitiator {
 
 					}
 
-				} else {// TODO sino ha puesto tiempo esperaremos la llegada de
+				} else {
 						// todos los mensajes.
 					if (this.nEnviados < respuestas.size())// si aun quedan por
 															// leer nos
@@ -363,29 +370,52 @@ public class FIPAContractNetInitiator {
 		return msg;
 	}
 
+	/**
+	 * This method is called when a propose message is received.
+	 * @param msg the received propose message.
+	 * @param accepted the list of ACCEPT/REJECT_PROPOSAL to be sent back.
+	 */
 	protected void handlePropose(ACLMessage msg, ArrayList accepted) {
 	}
-
+ 
+	/**
+	 * This method is called when a refuse message is received.
+	 * @param msg the received refuse message
+	 */
 	protected void handleRefuse(ACLMessage msg) {
-
 	}
-
+	/**
+	 * This method is called when a NotUnderstood message is received.
+	 * @param msg the received NotUnderstood message
+	 */
 	protected void handleNotUnderstood(ACLMessage msg) {
 
 	}
-
+	/**
+	 * This method is called when a inform message is received.
+	 * @param msg the received inform message
+	 */
 	protected void handleInform(ACLMessage msg) {
 
 	}
-
+	/**
+	 * This method is called when a failure message is received.
+	 * @param msg the received failure message
+	 */
 	protected void handleFailure(ACLMessage msg) {
 
 	}
-
+	/**
+	 * This method is called when a  message is received.
+	 * @param msg the received message
+	 */
 	protected void handleOutOfSequence(ACLMessage msg) {
 
 	}
-
+	/**
+	 * This method is called when all the responses have been collected or when the timeout is expired
+	 * @param msg the received refuse message
+	 */
 	protected void handleAllResponses(ArrayList responses, ArrayList accepted) {
 
 	}
