@@ -38,8 +38,7 @@ public class QueueAgent extends BaseAgent {
 	
 
 	private ArrayList<ACLMessage> messageList = new ArrayList<ACLMessage>();
-	// LinkedBlockingQueue<MessageTransfer> internalQueue;
-	//private AgentID aid = null;
+	
 	private Monitor monitor = null;
 	private Monitor monitorAux = null;
 	private volatile boolean stopThread = true;
@@ -219,7 +218,7 @@ public class QueueAgent extends BaseAgent {
     /**
      * Method to receive a magentix2 AclMessage 
      * @param template 
-     * @param tipo 1 = rol responder other = rol iniciador
+     * @param tipo 1 = rol responder other = rol initiator
      * @return an ACLMessage
      */
 	public synchronized ACLMessage receiveACLMessage(MessageTemplate template, int tipo) {
@@ -550,6 +549,8 @@ public class QueueAgent extends BaseAgent {
 		// adv.esperar();
 
 	}
+	
+	//#APIDOC_EXCLUDE_BEGIN
 	public class HiloIni extends Thread {
 
 		Object iniciador;
@@ -617,5 +618,7 @@ public class QueueAgent extends BaseAgent {
 			}
 		}
 	}
+	
+	//#APIDOC_EXCLUDE_END
 
 }
