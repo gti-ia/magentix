@@ -1,6 +1,6 @@
 
 /**
- * La clase FIPAQueryResponder permite ejecutar el protocolo FIPA-QUERY por la parte del responder.
+ * This class implements the FIPA-Query interaction protocol, Role Responder.
  * 
  * @author  Joan Bellver Faus, GTI-IA, DSIC, UPV
  * @version 2009.9.07
@@ -8,7 +8,7 @@
 
 package es.upv.dsic.gti_ia.proto;
 
-
+//TODO FALTA ACABAR DE LIMPIAR Y JAVADOC
 import es.upv.dsic.gti_ia.magentix2.QueueAgent;
 import es.upv.dsic.gti_ia.proto.FIPANames.InteractionProtocol;
 import es.upv.dsic.gti_ia.proto.Monitor;
@@ -145,6 +145,10 @@ public class FIPAQueryResponder{
 			
 			try{
 				resNotification = prepareResultNotification(request, response);
+				
+			//TODO	ACLMessage.INFORM_IF
+				
+				
 				
 			}
 			catch(FailureException fe){

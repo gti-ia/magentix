@@ -8,7 +8,7 @@
 
 package es.upv.dsic.gti_ia.proto;
 
-
+//TODO FALTA ACABAR DE LIMPIAR Y JAVADOC
 
 import java.util.Date;
 import java.util.logging.*;
@@ -110,7 +110,7 @@ public class FIPAQueryInitiator {
 				
 				//template.setConversationId(conversationID);
 
-				template.addConversacion(conversationID);
+				template.addConversation(conversationID);
 				template.add_receiver(request.getReceiver());
 
 				
