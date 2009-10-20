@@ -1,6 +1,6 @@
 
 /**
- * La clase FIPAContractNetResponder permite ejecutar el protocolo FIPA-CONTRACT-NET por la parte del responder.
+ * This class implements the Fipa-Contract-Net interaction protocol, Role Responder
  * 
  * @author  Joan Bellver Faus, GTI-IA, DSIC, UPV
  * @version 2009.9.07
@@ -42,8 +42,8 @@ public class FIPAContractNetResponder{
 
     /**
      * Create a FIPARequestInitiator.
-     * @param agent    agente que crear el inicio del protocolo
-     * @param template    plantilla para en la que el agente comparara los mensajes.
+     * @param agent    
+     * @param template 
      */
 	
 	public FIPAContractNetResponder(QueueAgent _agent, MessageTemplate _template)
@@ -55,7 +55,7 @@ public class FIPAContractNetResponder{
 	
 		
 	}
-	
+	//#APIDOC_EXCLUDE_BEGIN
 	public  void action()
 	{
 		
@@ -151,6 +151,7 @@ public class FIPAContractNetResponder{
 				case ACLMessage.ACCEPT_PROPOSAL:{
 					this.accept = secondReply;
 					state = PREPARE_RES_NOT_STATE;
+					handleAcceptProposal(this.cfp,this.propose,this.accept);
 					break;
 					
 					
@@ -217,6 +218,10 @@ public class FIPAContractNetResponder{
 		
 	}
 	
+	//#APIDOC_EXCLUDE_END
+
+	
+	
 	private ACLMessage arrangeMessage(ACLMessage request, ACLMessage reply)
 	{
 		
@@ -224,30 +229,52 @@ public class FIPAContractNetResponder{
 		reply.setInReplyTo(request.getReplyWith());
 		reply.setProtocol(request.getProtocol());
 		reply.setReceiver(request.getSender());
-		//reply.setSender(request.getReceiver());
-		
-		//set the receivers
-		
-
-		
-		
-		
-		
 		return reply;
 	}
 	
 	
+	/**
+	 * This method is called when the initiator's message is received that matches the message template passed in the constructor.
+	 * @param cfp initial CFP message
+	 * @return 
+	 * @throws NotUnderstoodException
+	 * @throws RefuseException
+	 */
 	protected ACLMessage prepareResponse(ACLMessage cfp) throws NotUnderstoodException, RefuseException
 	{
 		return null;
 	}
 	
+	/**
+	 * This method is called after the response has been sent and only when one of the following two cases arise:
+	 * the response was an agree message OR no response message was sent. 
+	 * @param cfp initial CFP message
+	 * @param propose propose message
+	 * @param accept accept message
+	 * @return
+	 * @throws FailureException
+	 */
 	protected ACLMessage prepareResultNotification(ACLMessage cfp, ACLMessage propose, ACLMessage accept) throws FailureException
 	{
 		return null;
 	}
-	
+	/**
+	 * This method is called when REJECT-PROPOSAL is received from the initiator.
+	 * @param cfp initial CFP message
+	 * @param propose the PROPOSE message sent back as reply to the initial CFP message
+	 * @param reject the received REJECT_PROPOSAL message
+	 */
 	protected void handleRejectProposal(ACLMessage cfp, ACLMessage propose, ACLMessage reject){
+		
+	}
+	
+	/**
+	 * This method is called when ACCEPT-PROPOSAL is received from the initiator.
+	 * @param cfp initial CFP message
+	 * @param propose the PROPOSE message sent back as reply to the initial CFP message
+	 * @param accept the received ACCEPT_PROPOSAL message.
+	 */
+	protected void handleAcceptProposal(ACLMessage cfp, ACLMessage propose, ACLMessage accept){
 		
 	}
 	
