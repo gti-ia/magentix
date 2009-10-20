@@ -252,7 +252,7 @@ public class QueueAgent extends BaseAgent {
 				// comparamos los campos protocol, idcoversaci�n y sender
 					if (template.getProtocol().equals(msg.getProtocol())) {
 					// miramos dentro de las conversaciones que tenemos
-						for (String conversacion : template.getList_Conversaciones())
+						for (String conversacion : template.getList_Conversation())
 							if (conversacion.equals(msg.getConversationId())) {
 							// miramos si pertenece algun agente
 								if (template.existReceiver(msg.getSender())) {

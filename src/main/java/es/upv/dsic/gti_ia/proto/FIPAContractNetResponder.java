@@ -131,7 +131,7 @@ public class FIPAContractNetResponder{
 		{
 			//configuramos un nuevo template para esperar solo al que le hemos enviado la contrapuesta.
 			MessageTemplate template2 = new MessageTemplate(InteractionProtocol.FIPA_CONTRACT_NET);
-			template2.addConversacion(this.propose.getConversationId());
+			template2.addConversation(this.propose.getConversationId());
 			template2.add_receiver(this.propose.getReceiver());
 			ACLMessage secondReply = myAgent.receiveACLMessage(template2,0);
 			

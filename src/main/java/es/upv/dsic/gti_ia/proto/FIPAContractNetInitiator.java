@@ -101,7 +101,7 @@ public class FIPAContractNetInitiator {
 							+ System.currentTimeMillis();
 					request.setConversationId(conversationID);
 					template.add_receiver(agent);
-					template.addConversacion(conversationID);
+					template.addConversation(conversationID);
 					myAgent.setActiveConversation(conversationID);
 
 					request.setReceiver(agent);
@@ -275,7 +275,7 @@ public class FIPAContractNetInitiator {
 				}
 
 				template.add_receiver(mensaje.getReceiver());
-				template.addConversacion(conversationID);
+				template.addConversation(conversationID);
 				myAgent.setActiveConversation(conversationID);
 
 				mensaje.setSender(myAgent.getAid());

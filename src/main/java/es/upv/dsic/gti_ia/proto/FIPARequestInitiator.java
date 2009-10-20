@@ -105,7 +105,7 @@ public class FIPARequestInitiator {
 				
 				//configuramos el template
 				template = new MessageTemplate(InteractionProtocol.FIPA_REQUEST);	
-				template.addConversacion(conversationID);
+				template.addConversation(conversationID);
 				template.add_receiver(request.getReceiver());
 
 				
