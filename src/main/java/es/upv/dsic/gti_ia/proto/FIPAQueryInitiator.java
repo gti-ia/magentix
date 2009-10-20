@@ -1,6 +1,6 @@
 
 /**
- * La clase FIPAQueryInitiator permite ejecutar el protocolo FIPA-QUERY por la parte del rol iniciador.
+ *  This class implements the FIPA-Query interaction protocol, Role Initiator
  * 
  * @author  Joan Bellver Faus, GTI-IA, DSIC, UPV
  * @version 2009.9.07
@@ -9,7 +9,7 @@
 package es.upv.dsic.gti_ia.proto;
 
 
-import java.util.Vector;
+
 import java.util.Date;
 import java.util.logging.*;
 
@@ -32,7 +32,7 @@ public class FIPAQueryInitiator {
 	protected QueueAgent myAgent;
 	private ACLMessage  requestmsg;
 	private ACLMessage requestsentmsg;
-	private ACLMessage resNofificationmsg;
+
 	
 	private Monitor sin=null;
 	
@@ -50,8 +50,8 @@ public class FIPAQueryInitiator {
 	
     /**
      * Create a FIPARequestInitiator.
-     * @param agent    agente que crear el inicio del protocolo
-     * @param msg    mensaje que quiere enviar.
+     * @param agent   agent is the reference to the Agent Object 
+     * @param msg    initial message
      */
 	
 	public FIPAQueryInitiator(QueueAgent agent, ACLMessage msg)
@@ -62,12 +62,17 @@ public class FIPAQueryInitiator {
 		
 	}
 	
-	
-	public boolean finalizado()
+	/**
+	 * We will be able to know if it has finished the protocol
+	 * @return value a boolean value is returned, true: the protocol has finished, false: the protocol even has not finished
+	 */
+	public boolean finished()
 	{
 	return this.finish;	
 	}
 	
+	
+	//#APIDOC_EXCLUDE_BEGIN
 	public  void action()
 	{
 		switch(state)
@@ -239,7 +244,6 @@ public class FIPAQueryInitiator {
 
             this.finish = true;
 			this.requestmsg = null;
-			this.resNofificationmsg = null;
 			this.requestsentmsg = null;
 			this.myAgent.deleteMonitor();
 			this.myAgent.deleteActiveConversation(conversationID);
@@ -252,6 +256,7 @@ public class FIPAQueryInitiator {
 		
 	}
 	
+	//#APIDOC_EXCLUDE_END
     /**
      * This method must return the ACLMessage to be sent.
      * This default implementation just return the ACLMessage object passed in the constructor.
@@ -264,36 +269,56 @@ public class FIPAQueryInitiator {
 	return msg;
     }
     
+	/**
+	 * This method is called when a agree message is received.
+	 * @param msg the received agree message.
+	 */
     protected void handleAgree(ACLMessage msg)
     {
     	if(logger.isLoggable(Level.FINE))
 			logger.log(Level.FINE,"in HandleAgree: " + msg.toString());
     }
-    
+    /**
+	 * This method is called when a refuse message is received.
+	 * @param msg the received refuse message.
+	 */
     protected void handleRefuse(ACLMessage msg){
 		if(logger.isLoggable(Level.FINE))
 			logger.log(Level.FINE,"in HandleRefuse: " + msg.toString());
     }
 
-
+    /**
+	 * This method is called when a NotUnderstood message is received.
+	 * @param msg the received NotUnderstood message.
+	 */
     protected void handleNotUnderstood(ACLMessage msg){
 		if(logger.isLoggable(Level.FINE))
 			logger.log(Level.FINE,"in HandleNotUnderstood: " + msg.toString());
     }
 
-
+    /**
+	 * This method is called when a Inform message is received.
+	 * @param msg the received Inform message.
+	 */
     protected void handleInform(ACLMessage msg){
 	if(logger.isLoggable(Level.FINE))
 		logger.log(Level.FINE,"in HandleInform: " + msg.toString());
     }
 
-
+   
+    /**
+	 * This method is called when a Failure message is received.
+	 * @param msg the received Failure message.
+	 */
     protected void handleFailure(ACLMessage msg){
 	if(logger.isLoggable(Level.FINEST))
 		logger.log(Level.FINEST,"in HandleFailure: " + msg.toString());
     }
 
-
+	/**
+	 * This method is called when a  message is received.
+	 * @param msg the received message
+	 */
     protected void handleOutOfSequence(ACLMessage msg){
 	if(logger.isLoggable(Level.FINEST))
 		logger.log(Level.FINEST,"in HandleOutOfSequence: " + msg.toString());
