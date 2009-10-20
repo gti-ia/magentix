@@ -1,13 +1,11 @@
 package es.upv.dsic.gti_ia.magentix2;
 
-import java.util.Hashtable;
+
 import java.util.HashMap;
 import java.util.ArrayList;
-import java.util.*;
 
 import es.upv.dsic.gti_ia.fipa.ACLMessage;
 import es.upv.dsic.gti_ia.fipa.AgentID;
-import es.upv.dsic.gti_ia.magentix2.OMSService.TestAgentClient;
 import es.upv.dsic.gti_ia.proto.FIPARequestInitiator;
 import es.upv.dsic.gti_ia.proto.FIPANames.InteractionProtocol;
 import es.upv.dsic.gti_ia.proto.*;
@@ -15,7 +13,6 @@ import es.upv.dsic.gti_ia.proto.*;
 public class SFService {
 
 	private String SFServiceDesciptionLocation;
-	private String conection;
 	private QueueAgent agent;
 	private SFAgentDescription descripcion;
 	private ArrayList<AgentID> agentes = new ArrayList<AgentID>();
@@ -24,7 +21,29 @@ public class SFService {
 	private Monitor adv = new Monitor();
 	private boolean salida = true;
 	private String salidaString = null;
+	private ArrayList<String> idsSearchService = new ArrayList<String>();
 
+	
+
+	/**
+	 * 
+	 * @param SFServiceDesciptionLocation URLProcess The URL where the owl's document is located.
+	 */
+	public SFService(String SFServiceDesciptionLocation) {
+
+		this.SFServiceDesciptionLocation = SFServiceDesciptionLocation;
+
+	}
+
+	
+	
+	public void addIDSearchService(String id)
+	{
+		
+		this.idsSearchService.add(id);
+	}
+	
+	
 	/**
 	 * 
 	 * @return agent
@@ -35,12 +54,11 @@ public class SFService {
 	}
 
 	/**
-	 * Inserta el service profile ID devuelto por el searchService
+	 * Inserts the service profile id returned by the searchService
 	 * 
-	 * @param id
-	 *            id devuelto por el SF al registrar el servicio
-	 * @param profilename
-	 *            nombre del pfofile
+	 * @param id  returned by the SF when the service register
+	 * @param profilename 
+	 * name of the profile 
 	 */
 
 	public void setSearchServiceProfile(String profilename, String ranking) {
@@ -48,32 +66,33 @@ public class SFService {
 	}
 
 	/**
-	 * 
-	 * @return
+	 * Return Service Profile
+	 * @param serviceGoal
+	 * @return ServiceProfile
 	 */
 	public String getSearchServiceProfile(String serviceGoal) {
 		return this.tablaSearchServiceProfile.get(serviceGoal);
 	}
 
+	/**
+	 * 
+	 * @return SFAgentDescription
+	 */
 	public SFAgentDescription getDescription() {
 		return this.descripcion;
 	}
-
-	public SFService(String SFServiceDesciptionLocation) {
-
-		this.SFServiceDesciptionLocation = SFServiceDesciptionLocation;
-
-	}
-
-	public void search(QueueAgent agente, SFAgentDescription descripcion) {
-		this.searchService(agente, descripcion);
-
-	}
-
-	public boolean removeProvider(QueueAgent agente,
-			SFAgentDescription descripcion) {
-		this.descripcion = descripcion;
-		this.agent = agente;
+	
+	/**
+	 * Remove provider agent
+	 * @param agent
+	 * @param sfAgentdescription
+	 * @return Status
+	 */
+	
+	public boolean removeProvider(QueueAgent agent,
+			SFAgentDescription sfAgentdescription) {
+		this.descripcion = sfAgentdescription;
+		this.agent = agent;
 
 		String call = SFServiceDesciptionLocation
 				+ "RemoveProviderProcess.owl "+
@@ -99,17 +118,23 @@ public class SFService {
 
 		return salida;
 	}
+	/**
+	 * Return a service list
+	 * @param agent
+	 * @param sfAgentdescription
+	 * @return ArrayList service list
+	 */
+	public ArrayList<String> searchService(QueueAgent agent,
+			String serviceGoal) {
 
-	public ArrayList<AgentID> searchService(QueueAgent agente,
-			SFAgentDescription descripcion) {
 
-		this.descripcion = descripcion;
-		this.agent = agente;
+		this.agent = agent;
+		this.idsSearchService.clear();
 
 		this.agentes.clear();
 		String call = SFServiceDesciptionLocation
 				+ "SearchServiceProcess.owl SearchServiceInputServicePurpose="
-				+ descripcion.getServiceGoal();
+				+ serviceGoal;
 
 		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
 		requestMsg.setSender(agent.getAid());
@@ -128,34 +153,33 @@ public class SFService {
 
 		adv.waiting();
 
-		return this.agentes;
+		return this.idsSearchService;
 
 	}
 
-	public void setSalida(boolean valor) {
-		this.salida = valor;
-	}
-
-	public void setSalidaString(String valor) {
-		this.salidaString = valor;
-	}
-
-	// TODO falta modificar
-
-	public boolean ModifyProcess(QueueAgent agente,
-			SFAgentDescription descripcion)
+	/**
+	 * Modify Process
+	 * @param agent
+	 * @param sfAgentdescription
+	 * @return Status
+	 */
+	public boolean ModifyProcess(QueueAgent agent,
+			SFAgentDescription sfAgentdescription)
 
 	{
+		this.descripcion = sfAgentdescription;
+		this.agent = agent;
+		
 		String call = SFServiceDesciptionLocation + "ModifyProcessProcess.owl"
 				+ " ModifyProcessInputServiceGrounding= "
 				+ " ModifyProcessInputServiceImplementationID="
 				+ descripcion.getImplementationID()
 				+ " ModifyProcessInputServiceModel="
-				+ descripcion.getURIProcess() + descripcion.getServiceGoal()
+				+ descripcion.getURLProcess() + descripcion.getServiceGoal()
 				+ ".owl#" + descripcion.getServiceGoal();
 
 		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
-		requestMsg.setSender(agente.getAid());
+		requestMsg.setSender(agent.getAid());
 		requestMsg.setContent(call);
 		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
 		requestMsg.setReceiver(new AgentID("SF", "qpid", "localhost", ""));
@@ -165,19 +189,24 @@ public class SFService {
 		// send(requestMsg);
 
 		// crear un fil en el fipa request initiator
-		agente.setTask(new TestAgentClient(agente, requestMsg, this));
+		agent.setTask(new TestAgentClient(agent, requestMsg, this));
 
 		// registar el agente en la plataforma
 		this.adv.waiting();
 
 		return salida;
 	}
+	/**
+	 * Modify Profile
+	 * @param agent
+	 * @param sfAgentdescription
+	 * @return Status
+	 */
+	public boolean ModifyProfile(QueueAgent agent,
+			SFAgentDescription sfAgentdescription) {
 
-	public boolean ModifyProfile(QueueAgent agente,
-			SFAgentDescription descripcion) {
-
-		this.descripcion = descripcion;
-		this.agent = agente;
+		this.descripcion = sfAgentdescription;
+		this.agent = agent;
 
 		String call = SFServiceDesciptionLocation + "ModifyProfileProcess.owl "
 				+ "ModifyProfileInputServiceID=" + descripcion.getID()
@@ -205,11 +234,17 @@ public class SFService {
 
 	}
 
-	public boolean DeregisterProfile(QueueAgent agente,
-			SFAgentDescription descripcion) {
+	/**
+	 * Deregister Profile
+	 * @param agent
+	 * @param sfAgentdescription
+	 * @return Status
+	 */
+	public boolean DeregisterProfile(QueueAgent agent,
+			SFAgentDescription sfAgentdescription) {
 
-		this.agent = agente;
-		this.descripcion = descripcion;
+		this.agent = agent;
+		this.descripcion = sfAgentdescription;
 
 		// eliminar el servicio de la tabla de servicios de el agente
 
@@ -234,15 +269,22 @@ public class SFService {
 		return salida;
 
 	}
+	
+	/**
+	 * Return provider list
+	 * @param agent
+	 * @param id
+	 * @return agents provider list 
+	 */
 
-	public void getProcess(QueueAgent agente, SFAgentDescription descripcion) {
+	public ArrayList<AgentID> getProcess(QueueAgent agent,String id) {
 
-		this.descripcion = descripcion;
-		this.agent = agente;
-
+		this.agent = agent;
+		this.agentes.clear();
+		
 		String call = SFServiceDesciptionLocation
 				+ "GetProcessProcess.owl GetProcessInputServiceID="
-				+ descripcion.getID();
+				+ id;
 
 		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
 		requestMsg.setSender(agent.getAid());
@@ -255,14 +297,24 @@ public class SFService {
 
 		// crear un fil en el fipa request initiator
 		agent.setTask(new TestAgentClient(agent, requestMsg, this));
+		
+		this.adv.waiting();
+
+		return this.agentes;
+		
 
 	}
 
-	// Devuelve un string con la direccion o null si algo ha ido mal
-	public String getProfile(QueueAgent agente, SFAgentDescription descripcion)// 
+	/**
+	 * Return service profile ( the URL profile)
+	 * @param agent
+	 * @param sfAgentdescription
+	 * @return Status
+	 */
+	public String getProfile(QueueAgent agent, SFAgentDescription sfAgentdescription)
 	{
-		this.descripcion = descripcion;
-		this.agent = agente;
+		this.descripcion = sfAgentdescription;
+		this.agent = agent;
 
 		String call = SFServiceDesciptionLocation
 				+ "GetProfileProcess.owl GetProfileInputServiceID="
@@ -285,12 +337,20 @@ public class SFService {
 		return salidaString;
 	}
 
-	// Devuelve el ID para poder modificar luego el servicio
-	public boolean registerProfile(QueueAgent agente,
-			SFAgentDescription descripcion) {
+	// Devuelve el ID para poder modificar luego el servicioç
+	
+	/**
+	 * 
+	 * Register profile
+	 * @param agent
+	 * @param sfAgentDescription
+	 * @return Status
+	 */
+	public boolean registerProfile(QueueAgent agent,
+			SFAgentDescription sfAgentdescription) {
 
-		this.descripcion = descripcion;
-		this.agent = agente;
+		this.descripcion = sfAgentdescription;
+		this.agent = agent;
 
 		String call = SFServiceDesciptionLocation
 				+ "RegisterProfileProcess.owl "
@@ -318,24 +378,30 @@ public class SFService {
 
 	}
 
-	public boolean registerProcess(QueueAgent agente,
-			SFAgentDescription descripcion) {
+	/**
+	 * Register Process
+	 * @param agent
+	 * @param sfAgentdescription
+	 * @return Status
+	 */
+	public boolean registerProcess(QueueAgent agent,
+			SFAgentDescription sfAgentdescription) {
 		// montar string de conexion
 		// Enviamos el mensaje
 
-		this.descripcion = descripcion;
-		this.agent = agente;
+		this.descripcion = sfAgentdescription;
+		this.agent = agent;
 
 		String call = SFServiceDesciptionLocation
 				+ "RegisterProcessProcess.owl"
 				+ " RegisterProcessInputServiceID=" + descripcion.getID()
 				+ " RegisterProcessInputServiceModel="
-				+ this.descripcion.getURIProcess()
+				+ this.descripcion.getURLProcess()
 				+ descripcion.getServiceGoal() + ".owl#"
 				+ descripcion.getServiceGoal();
 
 		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
-		requestMsg.setSender(agente.getAid());
+		requestMsg.setSender(agent.getAid());
 		requestMsg.setContent(call);
 		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
 		requestMsg.setReceiver(new AgentID("SF", "qpid", "localhost", ""));
@@ -345,7 +411,7 @@ public class SFService {
 		// send(requestMsg);
 
 		// crear un fil en el fipa request initiator
-		agente.setTask(new TestAgentClient(agente, requestMsg, this));
+		agent.setTask(new TestAgentClient(agent, requestMsg, this));
 
 		// registar el agente en la plataforma
 		this.adv.waiting();
@@ -353,6 +419,13 @@ public class SFService {
 		return salida;
 	}
 
+	public void setSalida(boolean valor) {
+		this.salida = valor;
+	}
+
+	public void setSalidaString(String valor) {
+		this.salidaString = valor;
+	}
 	/**
 	 * TestAgentClient handles the messages received from the SF
 	 */
@@ -360,6 +433,8 @@ public class SFService {
 		QueueAgent agent;
 		SFService sf;
 		String[] agen;
+		
+		
 
 		protected TestAgentClient(QueueAgent agent, ACLMessage msg, SFService sf) {
 			super(agent, msg);
@@ -463,16 +538,13 @@ public class SFService {
 			// si ejecutamos el GetProcess
 			if (patron.equals("GetProcessProcess")) {
 
+				agen = null;
 				if (arg2.equals("0")) {
 
 					this.sf.setSalida(false);
 
 				} else {
 					agen = arg1.split(",");
-
-					for (String s : agen)
-
-						this.sf.setSalida(true);
 					for (String a : agen) {
 						arg1 = a.substring(0, arg1.indexOf(" "));
 						arg1 = arg1.substring(arg1.indexOf("-") + 1, arg1
@@ -481,6 +553,7 @@ public class SFService {
 						// tenemos que controlar si existe 0, 1 o mas
 						// proveedores.
 
+	
 						if (!arg1.equals("null"))// si existe algun provideer
 						{
 
@@ -498,12 +571,27 @@ public class SFService {
 			// si ejecutamos el searchService
 			if (patron.equals("SearchServiceProcess")) {
 
-				arg1 = arg1.substring(0, arg1.indexOf(" "));
-				this.sf.descripcion.setID(arg1);
-				this.sf.agent.setSFAgentDescription(this.sf.descripcion);
-				// this.sf.getProcess(agent, arg1);
+				agen = null;
+				
+				
+				if (arg2.equals("0")) {
 
-				this.sf.getProcess(agent, this.sf.descripcion);
+					this.sf.setSalida(false);
+
+				}
+				else
+				{
+				this.agen = arg1.split(",");
+				
+				for (String a : agen)
+				{
+					a = a.substring(0, arg1.indexOf(" "));
+					this.sf.addIDSearchService(a);
+				}
+				}
+				
+				this.sf.adv.advise();
+				//this.sf.getProcess(agent, this.sf.descripcion);
 
 			}
 
