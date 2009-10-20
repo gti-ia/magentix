@@ -1,7 +1,7 @@
 
 
 /**
- * La clase messageTemplate crea una plantilla para poder compara los mensajes.
+ * The class messageTemplate create a new template to compare messages.
  * 
  * @author  Joan Bellver Faus, GTI-IA, DSIC, UPV
  * @version 2009.9.07
@@ -121,12 +121,12 @@ public class MessageTemplate {
 	
     /**
      * Create a FIPARequestInitiator.
-     * @param iprotocol    protocolo (FIPA_REQUEST, FIPA_QUERY)
+     * @param iprotocol    
      */
 	
 	public MessageTemplate(String iprotocol)
 	{
-		if (iprotocol == InteractionProtocol.FIPA_REQUEST)
+		if (iprotocol.equals(InteractionProtocol.FIPA_REQUEST))
 		{
 			this.performative = ACLMessage.REQUEST;
 			this.protocol = InteractionProtocol.FIPA_REQUEST;
@@ -140,18 +140,29 @@ public class MessageTemplate {
 		
 	}
 	
-	
-	public ArrayList<String> getList_Conversaciones()
+	/**
+	 * Return Conversations list
+	 * @return
+	 */
+	public ArrayList<String> getList_Conversation()
 	{
 		
 		return this.listaConversaciones;
 	}
-	public void addConversacion(String conversacion)
+	
+	/**
+	 * 
+	 * @param conversacion
+	 */
+	public void addConversation(String conversacion)
 	{
 		this.listaConversaciones.add(conversacion);
 		
 	}
-	
+	/**
+	 * 
+	 * @return
+	 */
 	public boolean deleteAllConversation()
 	{
 		this.listaConversaciones.clear();
@@ -162,6 +173,10 @@ public class MessageTemplate {
 		
 	}
 	
+	/**
+	 * 
+	 * @param conversacion
+	 */
 	public void deleteConversation(String conversacion)
 	{
 		for(String conv : this.listaConversaciones){
@@ -175,6 +190,11 @@ public class MessageTemplate {
 		
 	}
 	
+	/**
+	 * 
+	 * @param r
+	 * @return
+	 */
 	public int add_receiver(AgentID r)
 	{
 		for(int i = 0; i<receiver_list.size(); i++)
@@ -189,8 +209,12 @@ public class MessageTemplate {
 		return 1;
 	}
 	
-	
-	public boolean existeReceiver(AgentID r)
+	/**
+	 * 
+	 * @param r
+	 * @return
+	 */
+	public boolean existReceiver(AgentID r)
 	{
 		for(int i = 0; i<receiver_list.size(); i++)
 		{
@@ -203,7 +227,10 @@ public class MessageTemplate {
 		return false;
 	}
 	
-	
+	/**
+	 * 
+	 * @return
+	 */
 	public boolean deleteAllReceiver()
 	{
 		this.receiver_list.clear();
@@ -213,7 +240,10 @@ public class MessageTemplate {
 			return false;
 	}
 	
-	
+	/**
+	 * Return Receiver list
+	 * @return
+	 */
 	public ArrayList<AgentID> getReceiver_list() {
 		return receiver_list;
 	}
