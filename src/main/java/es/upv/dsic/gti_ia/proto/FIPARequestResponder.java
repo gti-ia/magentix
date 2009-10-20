@@ -1,6 +1,6 @@
 
 /**
- * La clase FIPARequestResponder permite ejecutar el protocolo FIPA-REQUEST por la parte del responder.
+ * This class implements the FIPA-Request interaction protocol, Role Responder.
  * 
  * @author  Joan Bellver Faus, GTI-IA, DSIC, UPV
  * @version 2009.9.07
@@ -10,7 +10,6 @@ package es.upv.dsic.gti_ia.proto;
 
 
 import es.upv.dsic.gti_ia.magentix2.QueueAgent;
-import es.upv.dsic.gti_ia.proto.FIPANames.InteractionProtocol;
 import es.upv.dsic.gti_ia.proto.Monitor;
 import es.upv.dsic.gti_ia.fipa.ACLMessage;
 
@@ -32,41 +31,26 @@ public class FIPARequestResponder{
 	private ACLMessage  requestmsg;
 	private ACLMessage responsemsg;
 	private ACLMessage resNofificationmsg;
-	private boolean finish=false;
 	
 	private Monitor sin=null;
 	
 
     /**
-     * Create a FIPARequestInitiator.
-     * @param agent    agente con el que se hara el rol de iniciador
-     * @param template    plantilla para comparara los mensajes que le lleguen.
+     * Create a FIPARequestResponder.
+     * @param agent agent is the reference to the Agent Object. 
+     * @param template
      */
 	
-	public FIPARequestResponder(QueueAgent _agent, MessageTemplate _template)//, Sincro _sin)
+	public FIPARequestResponder(QueueAgent _agent, MessageTemplate _template)
 	{
 		myAgent = _agent;
 		template = _template;
-		//this.sin = _sin;
-
-	
-		
-		this.sin = myAgent.addMonitor();
-		
-
-	
-		
+		this.sin = myAgent.addMonitor();	
 	}
 	
-	public boolean finish()
-	{
-	return this.finish;	
-	}
-	
+	//#APIDOC_EXCLUDE_BEGIN
 	public  void action()
 	{
-		
-		
 		switch(state)
 		{
 		case WAITING_MSG_STATE:{	
@@ -112,39 +96,26 @@ public class FIPARequestResponder{
 			ACLMessage response  = this.responsemsg;
 			
 			if (response != null)
-			{
-			
-		
-					
+			{				
 				ACLMessage receivedMsg = this.requestmsg;
-				
-				
-				
-				response = arrangeMessage(receivedMsg, response);
-				
 
+				response = arrangeMessage(receivedMsg, response);
+			
 				response.setSender(myAgent.getAid());
-				
 				
 				myAgent.send(response);
 		
-				
 				if (response.getPerformativeInt() == ACLMessage.AGREE)
 					state = PREPARE_RES_NOT_STATE;
 				else
 				{
-					
 					state = RESET_STATE;
 				}
-				
-				
 			}
 			else
 			{
-				
 				state = PREPARE_RES_NOT_STATE;
 			}
-		
 			break;
 			
 		}
@@ -175,7 +146,6 @@ public class FIPARequestResponder{
 			ACLMessage resNotification = this.resNofificationmsg;
 			if (resNotification != null)
 			{
-				
 				ACLMessage receiveMsg = arrangeMessage(this.requestmsg,resNotification);
 				receiveMsg.setSender(myAgent.getAid());
 				myAgent.send(receiveMsg);
@@ -187,7 +157,6 @@ public class FIPARequestResponder{
 		case RESET_STATE:{
 			
 			state = WAITING_MSG_STATE;
-			this.finish = true;
 			this.requestmsg = null;
 			this.resNofificationmsg = null;
 			this.responsemsg = null;
@@ -197,6 +166,8 @@ public class FIPARequestResponder{
 		}
 		
 	}
+	
+	//#APIDOC_EXCLUDE_END
 	
 	private ACLMessage arrangeMessage(ACLMessage request, ACLMessage reply)
 	{
@@ -211,11 +182,26 @@ public class FIPARequestResponder{
 	}
 	
 	
+	/**
+	 * This method is called when the initiator's message is received that matches the message template passed in the constructor.
+	 * @param request initial message
+	 * @return
+	 * @throws NotUnderstoodException
+	 * @throws RefuseException
+	 */
 	protected ACLMessage prepareResponse(ACLMessage request) throws NotUnderstoodException, RefuseException
 	{
 		return null;
 	}
-	
+	/**
+	 * This method is called after the response has been sent and only when one of the following two cases arise:
+	 * the response was an agree message OR no response message was sent. 
+	 * 
+	 * @param request
+	 * @param responder
+	 * @return
+	 * @throws FailureException
+	 */
 	protected ACLMessage prepareResultNotification(ACLMessage request, ACLMessage responder) throws FailureException
 	{
 		return null;
