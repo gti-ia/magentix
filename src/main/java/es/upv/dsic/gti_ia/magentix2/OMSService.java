@@ -30,10 +30,8 @@ public class OMSService {
 		this.configuration = OMSServiceDesciptionLocation;
 	}
 
-/**
- * 
- * @param value
- */
+
+	//#APIDOC_EXCLUDE_BEGIN
 	public void setValor(String value) {
 		this.value = value;
 	}
@@ -60,7 +58,7 @@ public class OMSService {
 		return this.Quantity;
 	}
 	
-	
+	//#APIDOC_EXCLUDE_END
 	/**
 	 * Leave role agent inside the organization
 	 * @param agent
