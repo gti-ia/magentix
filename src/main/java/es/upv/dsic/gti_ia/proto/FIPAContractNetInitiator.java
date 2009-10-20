@@ -49,8 +49,8 @@ public class FIPAContractNetInitiator {
 
 	/**
 	 * Create a new FIPA-Contract-Net interaction protocol
-	 * @param agent
-	 * @param msg
+	 * @param agent agent is the reference to the Agent Object 
+	 * @param msg initial message
 	 */
 	public FIPAContractNetInitiator(QueueAgent agent, ACLMessage msg) {
 		myAgent = agent;
@@ -62,7 +62,7 @@ public class FIPAContractNetInitiator {
  * We will be able to know if it has finished the protocol
  * @return value a boolean value is returned, true: the protocol has finished, false: the protocol even has not finished
  */
-	public boolean finalizado() {
+	public boolean finished() {
 		return this.finish;
 	}
 
