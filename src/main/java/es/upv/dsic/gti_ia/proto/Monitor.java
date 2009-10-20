@@ -1,7 +1,9 @@
 
 
 /**
- * La clase Adviser permite controlar el estado de un agente (ejecutando, suspendido).
+ * 
+ *  
+ * The class Adviser allows to control the state of an agent (executing, suspended).
  * 
  * @author  Joan Bellver Faus, GTI-IA, DSIC, UPV
  * @version 2009.9.07
@@ -9,11 +11,12 @@
 
 package es.upv.dsic.gti_ia.proto;
 
+
 public class Monitor {
 
 	
     /**
-     * Suspende el proceso
+     * suspends the process
      */
 	public synchronized void waiting()
 	{
@@ -28,9 +31,9 @@ public class Monitor {
 	}
 	
 	  /**
-     * Suspende el proceso un tiempo
+     * suspends the process a time
      * 
-     * @param  timeout tiempo de espera.
+     * @param  timeout Time of wait.
      */
 	public synchronized void waiting(long timeout)
 	{
@@ -45,7 +48,7 @@ public class Monitor {
 	}
 	
     /**
-     * Reactiva el proceso
+     * reactivates the process
      */
 	public synchronized void advise()
 	{
@@ -53,8 +56,13 @@ public class Monitor {
 		notifyAll();
 		}catch(Exception e)
 		{
-			System.out.println("Mensaje :"+ e.getMessage());
+			System.out.println("ERROR :"+ e.getMessage());
 		}
 		
 	}
+	
+	
+
+	
+	
 }
