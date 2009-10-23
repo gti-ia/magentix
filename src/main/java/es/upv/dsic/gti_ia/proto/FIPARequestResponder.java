@@ -62,7 +62,7 @@ public class FIPARequestResponder{
 			}
 			else
 			{
-				sin.waiting();//me espero a que llegue un mensaje.
+				sin.waiting();//waiting a message.
 			}
 			break;
 		}
