@@ -30,6 +30,11 @@ public class OMSService {
 		this.configuration = OMSServiceDesciptionLocation;
 	}
 
+	
+	public  OMSService() {
+
+		this.configuration = "http://localhost:8080/omsservices/OMSservices/owl/owls/";
+	}
 
 	//#APIDOC_EXCLUDE_BEGIN
 	public void setValor(String value) {
@@ -82,10 +87,12 @@ public class OMSService {
 		System.out.println("[QueryAgent]Sending... ");
 
 
-		agent.setTask(new TestAgentClient(agent, requestMsg, this));
+		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
 
-		//bloquea el agente
-		this.monitor.waiting();
+		do {
+			test.action();
+		} while (!test.finished());
+	
 
 		return this.value;
 
@@ -112,9 +119,11 @@ public class OMSService {
 		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
 		System.out.println("[QueryAgent]Sending... ");
 
-		agent.setTask(new TestAgentClient(agent, requestMsg, this));
+		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
 
-		this.monitor.waiting();
+		do {
+			test.action();
+		} while (!test.finished());
 
 		return this.list;
 
@@ -142,11 +151,11 @@ public class OMSService {
 		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
 		System.out.println("[QueryAgent]Sending... ");
 
-		agent.setTask(new TestAgentClient(agent, requestMsg, this));
+		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
 
-		this.monitor.waiting();
-		
-		System.out.println("Lista vale: "+ this.list.size());
+		do {
+			test.action();
+		} while (!test.finished());
 
 		return this.list;
 
@@ -173,9 +182,11 @@ public class OMSService {
 		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
 		System.out.println("[QueryAgent]Sending... ");
 
-		agent.setTask(new TestAgentClient(agent, requestMsg, this));
+		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
 
-		this.monitor.waiting();
+		do {
+			test.action();
+		} while (!test.finished());
 
 		return this.list;
 
@@ -202,9 +213,11 @@ public class OMSService {
 		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
 		System.out.println("[QueryAgent]Sending... ");
 
-		agent.setTask(new TestAgentClient(agent, requestMsg, this));
+		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
 
-		this.monitor.waiting();
+		do {
+			test.action();
+		} while (!test.finished());
 
 		return this.list;
 
@@ -230,9 +243,11 @@ public class OMSService {
 		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
 		System.out.println("[QueryAgent]Sending... ");
 
-		agent.setTask(new TestAgentClient(agent, requestMsg, this));
+		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
 
-		this.monitor.waiting();
+		do {
+			test.action();
+		} while (!test.finished());
 
 		return this.list;
 
@@ -258,9 +273,11 @@ public class OMSService {
 		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
 		System.out.println("[QueryAgent]Sending... ");
 
-		agent.setTask(new TestAgentClient(agent, requestMsg, this));
+		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
 
-		this.monitor.waiting();
+		do {
+			test.action();
+		} while (!test.finished());
 
 		return this.list;
 
@@ -286,9 +303,11 @@ public class OMSService {
 		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
 		System.out.println("[QueryAgent]Sending... ");
 
-		agent.setTask(new TestAgentClient(agent, requestMsg, this));
+		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
 
-		this.monitor.waiting();
+		do {
+			test.action();
+		} while (!test.finished());
 
 		return this.Quantity;
 
@@ -316,9 +335,11 @@ public class OMSService {
 		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
 		System.out.println("[QueryAgent]Sending... ");
 
-		agent.setTask(new TestAgentClient(agent, requestMsg, this));
+		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
 
-		this.monitor.waiting();
+		do {
+			test.action();
+		} while (!test.finished());
 
 		return this.value;
 
@@ -354,9 +375,11 @@ public class OMSService {
 		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
 		System.out.println("[QueryAgent]Sending... ");
 
-		agent.setTask(new TestAgentClient(agent, requestMsg, this));
+		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
 
-		this.monitor.waiting();
+		do {
+			test.action();
+		} while (!test.finished());
 
 		return this.value;
 
@@ -386,9 +409,11 @@ public class OMSService {
 		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
 		System.out.println("[QueryAgent]Sending... ");
 
-		agent.setTask(new TestAgentClient(agent, requestMsg, this));
+		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
 
-		this.monitor.waiting();
+		do {
+			test.action();
+		} while (!test.finished());
 
 		return this.value;
 
@@ -413,9 +438,11 @@ public class OMSService {
 		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
 		System.out.println("[QueryAgent]Sending... ");
 
-		agent.setTask(new TestAgentClient(agent, requestMsg, this));
+		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
 
-		this.monitor.waiting();
+		do {
+			test.action();
+		} while (!test.finished());
 
 		return this.value;
 
@@ -441,9 +468,11 @@ public class OMSService {
 		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
 		System.out.println("[QueryAgent]Sending... ");
 
-		agent.setTask(new TestAgentClient(agent, requestMsg, this));
+		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
 
-		this.monitor.waiting();
+		do {
+			test.action();
+		} while (!test.finished());
 
 		return this.value;
 
@@ -468,9 +497,11 @@ public class OMSService {
 		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
 		System.out.println("[QueryAgent]Sending... ");
 
-		agent.setTask(new TestAgentClient(agent, requestMsg, this));
+		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
 
-		this.monitor.waiting();
+		do {
+			test.action();
+		} while (!test.finished());
 
 		return this.value;
 
@@ -496,15 +527,15 @@ public class OMSService {
 		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
 		requestMsg.setReceiver(new AgentID("OMS", "qpid", "localhost", ""));
 
-		System.out.println("Destinatario del mensaje: "
-				+ requestMsg.getReceiver().toString());
 
 		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
 		System.out.println("[QueryAgent]Sending... ");
 
-		agent.setTask(new TestAgentClient(agent, requestMsg, this));
+		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
 
-		this.monitor.waiting();
+		do {
+			test.action();
+		} while (!test.finished());
 
 		return this.value;
 
@@ -529,15 +560,17 @@ public class OMSService {
 		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
 		requestMsg.setReceiver(new AgentID("OMS", "qpid", "localhost", ""));
 
-		System.out.println("Destinatario del mensaje: "
-				+ requestMsg.getReceiver().toString());
 
 		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
 		System.out.println("[QueryAgent]Sending... ");
 
-		agent.setTask(new TestAgentClient(agent, requestMsg, this));
-
-		this.monitor.waiting();
+		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
+		
+		do {
+			test.action();
+		} while (!test.finished());
+		//bloquea el agente
+		//this.monitor.waiting();
 
 		return this.value;
 
@@ -573,7 +606,7 @@ public class OMSService {
 			this.oms.setValor(myAgent.getName() + ": Oh no! "
 					+ msg.getSender().getLocalName()
 					+ " has rejected my proposal.");
-			this.oms.monitor.advise();
+
 		}
 
 		protected void handleInform(ACLMessage msg) {
@@ -751,7 +784,7 @@ public class OMSService {
 			}
 
 
-			this.oms.monitor.advise();
+			//this.oms.monitor.advise();
 
 		}
 
@@ -762,7 +795,7 @@ public class OMSService {
 			this.oms.setValor(myAgent.getName() + ":"
 					+ msg.getSender().getLocalName()
 					+ " has indicated that they didn't understand.");
-			this.oms.monitor.advise();
+		
 		}
 
 		protected void handleOutOfSequence(ACLMessage msg) {
@@ -774,7 +807,7 @@ public class OMSService {
 					+ msg.getSender().getLocalName()
 					+ " has send me a message which i wasn't"
 					+ " expecting in this conversation");
-			this.oms.monitor.advise();
+	
 		}
 	}
 
