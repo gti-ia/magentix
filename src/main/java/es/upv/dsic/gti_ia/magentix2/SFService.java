@@ -46,7 +46,7 @@ public class SFService {
 	}
 	
 	
-	public void addIDSearchService(String id)
+	private void addIDSearchService(String id)
 	{
 		
 		this.idsSearchService.add(id);
@@ -132,7 +132,7 @@ public class SFService {
 	 * @return ArrayList service list
 	 */
 	public ArrayList<String> searchService(QueueAgent agent,
-			String serviceGoal) {
+			SFAgentDescription sfagentDescription) {
 
 
 		this.agent = agent;
@@ -141,7 +141,7 @@ public class SFService {
 		this.agentes.clear();
 		String call = SFServiceDesciptionLocation
 				+ "SearchServiceProcess.owl SearchServiceInputServicePurpose="
-				+ serviceGoal;
+				+ sfagentDescription.getServiceGoal();
 
 		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
 		requestMsg.setSender(agent.getAid());
@@ -215,7 +215,7 @@ public class SFService {
 				+ "ModifyProfileInputServiceID=" + descripcion.getID()
 				+ " ModifyProfileInputServiceGoal=" + " "
 				+ " ModifyProfileInputServiceProfile="
-				+ this.descripcion.getURIProfile()
+				+ this.descripcion.getURLProfile()
 				+ descripcion.getServiceGoal() + ".owl#"
 				+ descripcion.getServiceGoal();
 
@@ -254,6 +254,9 @@ public class SFService {
 
 		String call = SFServiceDesciptionLocation
 				+ "DeregisterProfileProcess.owl GetProcessInputServiceID="
+				+ sfAgentdescription.getURLProfile()
+				+ descripcion.getID()
+				+ ".owl#"
 				+ descripcion.getID();
 
 		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
@@ -281,15 +284,22 @@ public class SFService {
 	 * @return agents provider list 
 	 */
 
-	public ArrayList<AgentID> getProcess(QueueAgent agent,String id) {
+	public ArrayList<AgentID> getProcess(QueueAgent agent,SFAgentDescription sfAgentdescription) {
 
 		this.agent = agent;
 		this.agentes.clear();
 		
+		
+		
 		String call = SFServiceDesciptionLocation
 				+ "GetProcessProcess.owl GetProcessInputServiceID="
-				+ id;
-
+				+ descripcion.getID();
+				/*
+				+ sfAgentdescription.getURLProfile()
+				+ descripcion.getID()
+				+ ".owl#"
+				+ descripcion.getID();
+				 */
 		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
 		requestMsg.setSender(agent.getAid());
 		requestMsg.setContent(call);
@@ -323,7 +333,11 @@ public class SFService {
 
 		String call = SFServiceDesciptionLocation
 				+ "GetProfileProcess.owl GetProfileInputServiceID="
-				+ descripcion.getID();
+				+ sfAgentdescription.getID();
+				//+ sfAgentdescription.getURLProfile()
+			/*	+ descripcion.getID()
+				+ ".owl#"
+				+ descripcion.getID();*/
 
 		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
 		requestMsg.setSender(agent.getAid());
@@ -363,9 +377,7 @@ public class SFService {
 				+ "RegisterProfileInputServiceGoal="
 				+ descripcion.getServiceGoal()
 				+ " RegisterProfileInputServiceProfile="
-				+ this.descripcion.getURIProfile()
-				+ descripcion.getServiceGoal() + ".owl#"
-				+ descripcion.getServiceGoal();
+				+ descripcion.getServiceProfile();
 
 		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
 		requestMsg.setSender(agent.getAid());
@@ -401,11 +413,10 @@ public class SFService {
 
 		String call = SFServiceDesciptionLocation
 				+ "RegisterProcessProcess.owl"
-				+ " RegisterProcessInputServiceID=" + descripcion.getID()
+				+ " RegisterProcessInputServiceID=" 
+				+ descripcion.getServiceProfile()
 				+ " RegisterProcessInputServiceModel="
-				+ this.descripcion.getURLProcess()
-				+ descripcion.getServiceGoal() + ".owl#"
-				+ descripcion.getServiceGoal();
+				+ descripcion.getServiceModel();
 
 		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
 		requestMsg.setSender(agent.getAid());
