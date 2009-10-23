@@ -5,6 +5,8 @@ public class SFAgentDescription {
 	private String goalprofile;
 	private String ID;
 	private String ImplementationID;
+	private String servicemodel;
+	private String serviceprofile;
 	private String URLProfile;
 	private String URLProcess;
 
@@ -17,12 +19,25 @@ public class SFAgentDescription {
 		this.goalprofile = "";
 		this.ID = "";
 		this.ImplementationID = "";
+		this.serviceprofile = URLProfile;
+		this.servicemodel = URLProcess;
 		this.URLProcess=URLProcess;
 		this.URLProfile =URLProfile;
 		
 		
 	}
 
+	
+	public String getServiceModel()
+	{
+		return this.servicemodel;
+	}
+	
+	public String getServiceProfile()
+	{
+		return this.serviceprofile;
+		
+	}
 	/**
 	 * Change The URL where the owl's document (related with service process) is located.
 	 * @param url
@@ -52,7 +67,7 @@ public class SFAgentDescription {
 	 * Return the URL where the owl's document (related with service profile) is located.
 	 * @return
 	 */
-	public String getURIProfile()
+	public String getURLProfile()
 	{
 		return this.URLProfile;
 	}
@@ -90,6 +105,7 @@ public class SFAgentDescription {
 	 * @return
 	 */
 	public String getServiceGoal() {
+		
 		return this.goalprofile;
 	}
 	/**
@@ -97,6 +113,10 @@ public class SFAgentDescription {
 	 * @param goalProfile
 	 */
 	public void setServiceGoal(String goalProfile) {
+		
+		this.servicemodel = this.servicemodel + goalProfile+"Process.owl#"+goalProfile;
+		this.serviceprofile = this.serviceprofile + goalProfile+"Profile.owl#"+goalProfile;
+		
 		this.goalprofile = goalProfile;
 	}
 
