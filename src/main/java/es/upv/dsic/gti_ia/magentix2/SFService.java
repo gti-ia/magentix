@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import es.upv.dsic.gti_ia.fipa.ACLMessage;
 import es.upv.dsic.gti_ia.fipa.AgentID;
+import es.upv.dsic.gti_ia.magentix2.OMSService.TestAgentClient;
 import es.upv.dsic.gti_ia.proto.FIPARequestInitiator;
 import es.upv.dsic.gti_ia.proto.FIPANames.InteractionProtocol;
 import es.upv.dsic.gti_ia.proto.*;
@@ -35,6 +36,14 @@ public class SFService {
 
 	}
 
+
+	
+		
+	public SFService() {
+
+		this.SFServiceDesciptionLocation = 	"http://localhost:8080/sfservices/SFservices/owl/owls/";
+
+	}
 	
 	
 	public void addIDSearchService(String id)
@@ -108,13 +117,11 @@ public class SFService {
 		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
 		System.out.println("[QueryAgent]Sending... ");
 
-		// crear un fil en el fipa request initiator
+		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
 
-		agent.setTask(new TestAgentClient(agent, requestMsg, this));
-
-		// esperar a que se completen la busqueda de agentes
-
-		adv.waiting();
+		do {
+			test.action();
+		} while (!test.finished());
 
 		return salida;
 	}
@@ -145,13 +152,11 @@ public class SFService {
 		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
 		System.out.println("[QueryAgent]Sending... ");
 
-		// crear un fil en el fipa request initiator
+		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
 
-		agent.setTask(new TestAgentClient(agent, requestMsg, this));
-
-		// esperar a que se completen la busqueda de agentes
-
-		adv.waiting();
+		do {
+			test.action();
+		} while (!test.finished());
 
 		return this.idsSearchService;
 
@@ -186,13 +191,11 @@ public class SFService {
 
 		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
 		System.out.println("[QueryAgent]Sending... ");
-		// send(requestMsg);
+		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
 
-		// crear un fil en el fipa request initiator
-		agent.setTask(new TestAgentClient(agent, requestMsg, this));
-
-		// registar el agente en la plataforma
-		this.adv.waiting();
+		do {
+			test.action();
+		} while (!test.finished());
 
 		return salida;
 	}
@@ -225,10 +228,11 @@ public class SFService {
 		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
 		System.out.println("[QueryAgent]Sending... ");
 
-		// crear un fil en el fipa request initiator
-		agent.setTask(new TestAgentClient(agent, requestMsg, this));
+		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
 
-		this.adv.waiting();
+		do {
+			test.action();
+		} while (!test.finished());
 
 		return salida;
 
@@ -261,11 +265,11 @@ public class SFService {
 		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
 		System.out.println("[QueryAgent]Sending... ");
 
-		// crear un fil en el fipa request initiator
-		agent.setTask(new TestAgentClient(agent, requestMsg, this));
+		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
 
-		this.adv.waiting();
-
+		do {
+			test.action();
+		} while (!test.finished());
 		return salida;
 
 	}
@@ -295,10 +299,11 @@ public class SFService {
 		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
 		System.out.println("[QueryAgent]Sending... ");
 
-		// crear un fil en el fipa request initiator
-		agent.setTask(new TestAgentClient(agent, requestMsg, this));
-		
-		this.adv.waiting();
+		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
+
+		do {
+			test.action();
+		} while (!test.finished());
 
 		return this.agentes;
 		
@@ -329,10 +334,11 @@ public class SFService {
 		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
 		System.out.println("[QueryAgent]Sending... ");
 
-		// crear un fil en el fipa request initiator
-		agent.setTask(new TestAgentClient(agent, requestMsg, this));
+		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
 
-		this.adv.waiting();
+		do {
+			test.action();
+		} while (!test.finished());
 
 		return salidaString;
 	}
@@ -370,10 +376,11 @@ public class SFService {
 		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
 		System.out.println("[QueryAgent]Sending... ");
 
-		// crear un fil en el fipa request initiator
-		agent.setTask(new TestAgentClient(agent, requestMsg, this));
+		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
 
-		this.adv.waiting();
+		do {
+			test.action();
+		} while (!test.finished());
 		return salida;
 
 	}
@@ -410,11 +417,11 @@ public class SFService {
 		System.out.println("[QueryAgent]Sending... ");
 		// send(requestMsg);
 
-		// crear un fil en el fipa request initiator
-		agent.setTask(new TestAgentClient(agent, requestMsg, this));
+		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
 
-		// registar el agente en la plataforma
-		this.adv.waiting();
+		do {
+			test.action();
+		} while (!test.finished());
 
 		return salida;
 	}
@@ -455,7 +462,7 @@ public class SFService {
 					+ msg.getSender().getLocalName()
 					+ " has rejected my proposal.");
 			this.sf.setSalida(false);
-			this.sf.adv.advise();
+	
 		}
 
 		protected void handleInform(ACLMessage msg) {
@@ -497,7 +504,7 @@ public class SFService {
 				} else
 					this.sf.setSalida(false);
 
-				this.sf.adv.advise();
+		
 			}
 
 			// si ejecutamos el GetProfile
@@ -514,8 +521,6 @@ public class SFService {
 					this.sf.setSalidaString(null);
 				}
 
-				this.sf.adv.advise();
-				System.out.println("ARG2: " + arg2);
 
 			}
 
@@ -532,7 +537,6 @@ public class SFService {
 				{
 					this.sf.setSalida(false);
 				}
-				this.sf.adv.advise();
 
 			}
 			// si ejecutamos el GetProcess
@@ -566,7 +570,7 @@ public class SFService {
 
 				}
 
-				this.sf.adv.advise();
+			
 			}
 			// si ejecutamos el searchService
 			if (patron.equals("SearchServiceProcess")) {
@@ -577,7 +581,7 @@ public class SFService {
 				if (arg2.equals("0")) {
 
 					this.sf.setSalida(false);
-
+					this.sf.addIDSearchService(arg1);
 				}
 				else
 				{
@@ -590,8 +594,7 @@ public class SFService {
 				}
 				}
 				
-				this.sf.adv.advise();
-				//this.sf.getProcess(agent, this.sf.descripcion);
+
 
 			}
 
@@ -612,7 +615,7 @@ public class SFService {
 					this.sf.setSalida(false);
 
 				}
-				this.sf.adv.advise();
+		
 			}
 			// this.sf.setID(Integer.parseInt(id));
 
@@ -631,7 +634,7 @@ public class SFService {
 				{
 					this.sf.setSalida(false);
 				}
-				this.sf.adv.advise();
+
 
 			}
 			if (patron.equals("ModifyProcessProcess")) {
@@ -641,7 +644,7 @@ public class SFService {
 				} else if (arg2.equals("0")) {
 					this.sf.setSalida(false);
 				}
-				this.sf.adv.advise();
+	
 
 			}
 
@@ -652,7 +655,6 @@ public class SFService {
 					+ msg.getSender().getLocalName()
 					+ " has indicated that they didn't understand.");
 			this.sf.setSalida(false);
-			this.sf.adv.advise();
 		}
 
 		protected void handleOutOfSequence(ACLMessage msg) {
@@ -661,7 +663,6 @@ public class SFService {
 					+ " has send me a message which i wasn't"
 					+ " expecting in this conversation");
 			this.sf.setSalida(false);
-			this.sf.adv.advise();
 		}
 	}
 
