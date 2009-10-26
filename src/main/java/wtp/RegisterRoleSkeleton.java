@@ -94,11 +94,11 @@ import persistence.DataBaseInterface;
                     return res;                	
                 }
                 //role based control
-                if(!roleBasedControl(registerRole.getAgentID(),registerRole.getUnitID()))	
+                /*if(!roleBasedControl(registerRole.getAgentID(),registerRole.getUnitID()))	
                 {	res.setErrorValue("Not-Allowed");
              		res.setStatus("Error"); 
              		return res;
-             	}
+             	}*/
                 if(!thomasBD.AddNewRole(registerRole.getRoleID(),registerRole.getUnitID(),registerRole.getVisibility(),registerRole.getAccessibility(),registerRole.getInheritance(),registerRole.getPosition())){
                 	res.setErrorValue("Invalid");
                     res.setStatus("Error"); 
