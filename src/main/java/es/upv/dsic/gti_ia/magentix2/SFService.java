@@ -6,10 +6,8 @@ import java.util.ArrayList;
 
 import es.upv.dsic.gti_ia.fipa.ACLMessage;
 import es.upv.dsic.gti_ia.fipa.AgentID;
-import es.upv.dsic.gti_ia.magentix2.OMSService.TestAgentClient;
 import es.upv.dsic.gti_ia.proto.FIPARequestInitiator;
 import es.upv.dsic.gti_ia.proto.FIPANames.InteractionProtocol;
-import es.upv.dsic.gti_ia.proto.*;
 
 public class SFService {
 
@@ -17,9 +15,8 @@ public class SFService {
 	private QueueAgent agent;
 	private SFAgentDescription descripcion;
 	private ArrayList<AgentID> agentes = new ArrayList<AgentID>();
-	//
+	
 	private HashMap<String, String> tablaSearchServiceProfile = new HashMap<String, String>();
-	private Monitor adv = new Monitor();
 	private boolean salida = true;
 	private String salidaString = null;
 	private ArrayList<String> idsSearchService = new ArrayList<String>();
@@ -38,7 +35,9 @@ public class SFService {
 
 
 	
-		
+	/**
+	 * 
+	 */	
 	public SFService() {
 
 		this.SFServiceDesciptionLocation = 	"http://localhost:8080/sfservices/SFservices/owl/owls/";
@@ -132,7 +131,7 @@ public class SFService {
 	 * @return ArrayList service list
 	 */
 	public ArrayList<String> searchService(QueueAgent agent,
-			SFAgentDescription sfagentDescription) {
+			String serviceGoal) {
 
 
 		this.agent = agent;
@@ -141,7 +140,7 @@ public class SFService {
 		this.agentes.clear();
 		String call = SFServiceDesciptionLocation
 				+ "SearchServiceProcess.owl SearchServiceInputServicePurpose="
-				+ sfagentDescription.getServiceGoal();
+				+ serviceGoal;
 
 		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
 		requestMsg.setSender(agent.getAid());
@@ -284,7 +283,7 @@ public class SFService {
 	 * @return agents provider list 
 	 */
 
-	public ArrayList<AgentID> getProcess(QueueAgent agent,SFAgentDescription sfAgentdescription) {
+	public ArrayList<AgentID> getProcess(QueueAgent agent,String serviceID) {
 
 		this.agent = agent;
 		this.agentes.clear();
@@ -293,7 +292,7 @@ public class SFService {
 		
 		String call = SFServiceDesciptionLocation
 				+ "GetProcessProcess.owl GetProcessInputServiceID="
-				+ descripcion.getID();
+				+ serviceID;
 				/*
 				+ sfAgentdescription.getURLProfile()
 				+ descripcion.getID()
@@ -414,7 +413,7 @@ public class SFService {
 		String call = SFServiceDesciptionLocation
 				+ "RegisterProcessProcess.owl"
 				+ " RegisterProcessInputServiceID=" 
-				+ descripcion.getServiceProfile()
+				+ descripcion.getID()
 				+ " RegisterProcessInputServiceModel="
 				+ descripcion.getServiceModel();
 
@@ -437,11 +436,11 @@ public class SFService {
 		return salida;
 	}
 
-	public void setSalida(boolean valor) {
+	private void setSalida(boolean valor) {
 		this.salida = valor;
 	}
 
-	public void setSalidaString(String valor) {
+	private void setSalidaString(String valor) {
 		this.salidaString = valor;
 	}
 	/**

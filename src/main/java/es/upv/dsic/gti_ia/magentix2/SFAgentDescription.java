@@ -27,12 +27,18 @@ public class SFAgentDescription {
 		
 	}
 
-	
+	/**
+	 * Returns the service model
+	 * @return serviceModel : URLProcess + goalProfile+Process.owl#+goalProfile;
+	 */
 	public String getServiceModel()
 	{
 		return this.servicemodel;
 	}
-	
+	/**
+	 * Returns the service profile
+	 * @return serviceprofile : URLProfile + goalProfile + Profile.owl#+goalProfile
+	 */
 	public String getServiceProfile()
 	{
 		return this.serviceprofile;

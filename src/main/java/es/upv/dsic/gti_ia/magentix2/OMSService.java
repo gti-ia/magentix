@@ -2,7 +2,6 @@ package es.upv.dsic.gti_ia.magentix2;
 
 import es.upv.dsic.gti_ia.fipa.ACLMessage;
 import es.upv.dsic.gti_ia.fipa.AgentID;
-import es.upv.dsic.gti_ia.proto.Monitor;
 import es.upv.dsic.gti_ia.proto.FIPARequestInitiator;
 import es.upv.dsic.gti_ia.proto.FIPANames.InteractionProtocol;
 import java.util.ArrayList;
@@ -15,7 +14,6 @@ import java.util.ArrayList;
 public class OMSService {
 
 	private String configuration;
-	private Monitor monitor = new Monitor();
 	private String value = "";
 	private int Quantity;
 	private ArrayList<String> list = new ArrayList<String>();
@@ -30,40 +28,42 @@ public class OMSService {
 		this.configuration = OMSServiceDesciptionLocation;
 	}
 
-	
+	/**
+	 * 
+	 */
 	public  OMSService() {
 
 		this.configuration = "http://localhost:8080/omsservices/OMSservices/owl/owls/";
 	}
 
-	//#APIDOC_EXCLUDE_BEGIN
-	public void setValor(String value) {
+
+	private void setValor(String value) {
 		this.value = value;
 	}
 
 	
-	public void addElementToList(String element)
+	private void addElementToList(String element)
 	{
 		this.list.add(element);
 	}
 	
-	public ArrayList<String> getList()
+	private ArrayList<String> getList()
 	{
 		return this.list;
 		
 	}
 	
-	public void setQuantity(int Quantity)
+	private void setQuantity(int Quantity)
 	{
 		this.Quantity = Quantity;
 	}
 	
-	public int getQuantity()
+	private int getQuantity()
 	{
 		return this.Quantity;
 	}
 	
-	//#APIDOC_EXCLUDE_END
+
 	/**
 	 * Leave role agent inside the organization
 	 * @param agent
@@ -362,7 +362,7 @@ public class OMSService {
 
 
 		String call = configuration
-				+ "RegisterRoleProcess.owl RegisterRoleInputRoleID="
+				+ "RegisterRoleProcess.owl RoleID="
 				+ RegisterRoleInputRoleID + " UnitID=" + UnitID
 				+ " Accessibility=" + Accessibility + " Position=" + Position
 				+ " Visibility=" + Visibility + " Inheritance=" + Inheritance;
