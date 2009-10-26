@@ -68,7 +68,7 @@ import persistence.DataBaseInterface;
                   		res.setStatus("Error"); 
                   		return res;
                   	}
-                     if(!thomasBD.AddNewUnit(registerUnit.getUnitID(), registerUnit.getType(), registerUnit.getGoal(), registerUnit.getParentUnitID()))
+                     if(!thomasBD.AddNewUnit(registerUnit.getUnitID(), registerUnit.getType(), registerUnit.getGoal(), registerUnit.getParentUnitID(),registerUnit.getAgentID()))
                      {	res.setErrorValue("Invalid");
                      	res.setStatus("Error"); 
                      	return res;
@@ -77,6 +77,7 @@ import persistence.DataBaseInterface;
             }
 
 		private boolean roleBasedControl(String agentID, String parentUnitID) {
+			if(!thomasBD.CheckExistsAgent(agentID)) return false;
 			if(parentUnitID.equalsIgnoreCase("virtual")) return true;
 			String parentUnitType=thomasBD.GetUnitType(parentUnitID);
 			if(parentUnitType.equalsIgnoreCase("flat")) return true;

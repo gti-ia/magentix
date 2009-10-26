@@ -72,7 +72,7 @@ public class DataBaseInterface {
 	}	catch(Exception e){e.printStackTrace(); return false;}
     return true;
 }
-	public boolean AddNewUnit(String UnitID, String Type,String Goal,String ParentUnitID){
+	public boolean AddNewUnit(String UnitID, String Type,String Goal,String ParentUnitID, String AgentID){
 		try {
 			String parentUnit;
 			//search unitID
@@ -85,10 +85,10 @@ public class DataBaseInterface {
 	        stmt = db.connection.createStatement();
 	        String sql = "INSERT INTO unit (unitid,type,goal,parentunit)VALUES('"+UnitID.toLowerCase()+"','"+Type.toLowerCase()+"','"+Goal.toLowerCase()+"',"+parentUnit+")";
 	        sql=sql.toLowerCase();
-	        
-	        // Execute the insert statement
 	        stmt.executeUpdate(sql);
-	}	catch(Exception e){e.printStackTrace(); return false;}
+	        this.AddNewRole("creator", UnitID, "hidden", "private", "member", "supervisor");
+	        this.AddNewAgentPlaysRole("creator", UnitID, AgentID);
+		}	catch(Exception e){e.printStackTrace(); return false;}
     return true;
 }
 	public boolean DeleteRole(String RoleID, String UnitID){
@@ -189,6 +189,8 @@ public class DataBaseInterface {
 		try {
 			Statement stmt = db.connection.createStatement();
 	    	stmt.executeUpdate("DELETE FROM unit WHERE unitid='"+unitID.toLowerCase()+"'");
+	    	this.DeleteRole("creator", unitID);
+	    	this.DeleteAgentPlaysRole("creator", unitID);
 	    	return true;
 		}catch(Exception e){}
 		return false;
@@ -442,6 +444,27 @@ public class DataBaseInterface {
 		        sql = "DELETE FROM entityplaylist WHERE UNIT="+unit+" AND ENTITY="+entity+" AND Role="+role;
 		        sql=sql.toLowerCase();
 		        stmt.executeUpdate(sql);}
+	}	catch(Exception e){e.printStackTrace(); return false;}
+    return true;}
+	public boolean DeleteAgentPlaysRole(String roleID, String unitID) {
+		try {
+			
+				Statement stmt = db.connection.createStatement();
+				String sql="SELECT * FROM UNIT WHERE UNITID='"+unitID.toLowerCase()+"'";
+				sql=sql.toLowerCase();
+				ResultSet rs = stmt.executeQuery(sql);
+		        if (!rs.next()) return false;
+		        String unit = rs.getString("id");
+		        stmt = db.connection.createStatement();
+				sql="SELECT * FROM Role WHERE RoleID='"+roleID.toLowerCase()+"'";
+				sql=sql.toLowerCase();
+				rs = stmt.executeQuery(sql);
+		        if (!rs.next()) return false;
+		        String role = rs.getString("id");
+		        stmt = db.connection.createStatement();
+		        sql = "DELETE FROM entityplaylist WHERE UNIT="+unit+" AND Role="+role;
+		        sql=sql.toLowerCase();
+		        stmt.executeUpdate(sql);
 	}	catch(Exception e){e.printStackTrace(); return false;}
     return true;}
 	//A�adido
