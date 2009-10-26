@@ -11,13 +11,17 @@ public class Prueba {
 	public static void main(String[] args) {
 		Connection con = new Connection();
         con.connect("gtiiaprojects.dsic.upv.es", 5672, "test", "guest", "guest",false);
-		AgenteHola agente = new AgenteHola(new AgentID("agentehola", "qpid", "localhost","8080"),con);
+		try{
+        AgenteHola agente = new AgenteHola(new AgentID("agentehola", "qpid", "localhost","8080"),con);
 		AgenteConsumidor agente2 = new AgenteConsumidor(new AgentID("agenteconsumidor", "qpid", "localhost","8080"),con);
 		agente2.start();
 		agente.start();
+		}catch(Exception e){
+			System.out.println("Error");
+		}
 		
 		
-		CopyOfAgenteHola agente3 = new CopyOfAgenteHola(new AgentID("agtente3", "http", "localhost","8080"),con);
-		agente3.start();
+	//	CopyOfAgenteHola agente3 = new CopyOfAgenteHola(new AgentID("agtente3", "http", "localhost","8080"),con);
+	//	agente3.start();
 	}
 }

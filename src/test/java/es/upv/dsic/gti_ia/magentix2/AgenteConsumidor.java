@@ -11,7 +11,7 @@ public class AgenteConsumidor extends SingleAgent{
 	
 	LinkedBlockingQueue<MessageTransfer> internalQueue;
 	
-	public AgenteConsumidor(AgentID aid, Connection connection) {
+	public AgenteConsumidor(AgentID aid, Connection connection) throws Exception {
 		super(aid, connection);
 	}
 	

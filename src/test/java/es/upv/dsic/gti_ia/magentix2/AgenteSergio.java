@@ -10,7 +10,7 @@ import es.upv.dsic.gti_ia.magentix2.BaseAgent;
 
 public class AgenteSergio extends BaseAgent {
 	
-	public AgenteSergio(AgentID aid, Connection connection) {
+	public AgenteSergio(AgentID aid, Connection connection) throws Exception {
 		super(aid, connection);
 	}
 	

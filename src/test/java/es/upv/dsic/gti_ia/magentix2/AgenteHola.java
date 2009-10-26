@@ -10,7 +10,7 @@ import es.upv.dsic.gti_ia.magentix2.BaseAgent;
 
 public class AgenteHola extends BaseAgent {
 	
-	public AgenteHola(AgentID aid, Connection connection) {
+	public AgenteHola(AgentID aid, Connection connection) throws Exception {
 		super(aid, connection);
 	}
 	

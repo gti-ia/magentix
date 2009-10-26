@@ -13,7 +13,8 @@ public class PruebaPasarela2 {
 		Connection con = new Connection();
         con.connect("rilpefo.dsic.upv.es", 5672, "test", "guest", "guest",false);
         //http por que el agente va a enviar un mensaje hacia el exterior
-        BridgeAgentInOut agenteInOut = new BridgeAgentInOut(new AgentID("BridgeAgentInOut", "qpid", "localhost","8080"),con);
+  try{
+	  BridgeAgentInOut agenteInOut = new BridgeAgentInOut(new AgentID("BridgeAgentInOut", "qpid", "localhost","8080"),con);
        /*
         * agenteInOut interactua con agenteOutIn
         */
@@ -28,10 +29,14 @@ public class PruebaPasarela2 {
         */
         AgenteConsumidor agente2 = new AgenteConsumidor(new AgentID("agenteconsumidor", "qpid", "localhost","8080"),con);
    
+
         agenteInOut.start();
         agenteOutIn.start();
 		
         agente2.start();
         agente1.start();
+	}catch(Exception e){
+		System.out.println("Error");
+	}
 	}
 }
