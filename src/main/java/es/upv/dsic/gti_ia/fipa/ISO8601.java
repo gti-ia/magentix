@@ -30,6 +30,8 @@ import java.util.Date;
 import java.util.Calendar;
 import java.util.TimeZone;
 
+import org.apache.log4j.Logger;
+
 /**
  * This class contains a set of static methods that convert
  * to/from the Date Time format adopted by FIPA.
@@ -66,6 +68,7 @@ public class ISO8601 {
     
     private static Calendar localCal = Calendar.getInstance();
     private static Calendar utcCal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+    static Logger logger = Logger.getLogger(ISO8601.class);
 
     /**
      * parse a date time token in UTC format (i.e. ending with a Z)
@@ -165,9 +168,9 @@ public synchronized static Date toDate(String dateTimeToken) throws Exception {
 	  Long.parseLong(dateTimeToken.substring(10, 12)) * hour +
 	  Long.parseLong(dateTimeToken.substring(12, 14)) * minute +
 	  Long.parseLong(dateTimeToken.substring(14, 16)) * sec;
-	System.out.println("sign="+sign+" millisec="+millisec);
-	System.out.println(year+" "+month+" "+day+" "+hour);
-	System.out.println("currentTime="+System.currentTimeMillis());
+	logger.debug("sign="+sign+" millisec="+millisec);
+	logger.debug(year+" "+month+" "+day+" "+hour);
+	logger.debug("currentTime="+System.currentTimeMillis());
 	millisec = System.currentTimeMillis() + (sign == plus ? millisec : (-millisec));
 	return(new Date(millisec));
     }        
@@ -288,33 +291,33 @@ private static String zeroPaddingNumber(long value, int digits) {
    */
 public static void main(String argv[]) {
 
-    System.out.println(localCal);
+    logger.debug(localCal);
 
-    System.out.println("USAGE: java ISO8601 DateTimetoken");
-    System.out.println(argv[0]);
+    logger.debug("USAGE: java ISO8601 DateTimetoken");
+    logger.debug(argv[0]);
     try {
-        System.out.println("Testing default behaviour (using UTC DateTime):");
-        System.out.println("  ISO8601.toDate("+argv[0]+") returns:" + ISO8601.toDate(argv[0]));
-        System.out.println("  converting that back to a string gives:" + ISO8601.toString(ISO8601.toDate(argv[0])));
+        logger.debug("Testing default behaviour (using UTC DateTime):");
+        logger.debug("  ISO8601.toDate("+argv[0]+") returns:" + ISO8601.toDate(argv[0]));
+        logger.debug("  converting that back to a string gives:" + ISO8601.toString(ISO8601.toDate(argv[0])));
         Date d1 = new Date();
-        System.out.println("  ISO8601.toString( new Date() ) returns:" + ISO8601.toString(d1));
-        System.out.println("  converting that back to a date gives:" + ISO8601.toDate(ISO8601.toString(d1)));
+        logger.debug("  ISO8601.toString( new Date() ) returns:" + ISO8601.toString(d1));
+        logger.debug("  converting that back to a date gives:" + ISO8601.toDate(ISO8601.toString(d1)));
         
-        System.out.println("Testing local time (for backwards compatability):");
+        logger.debug("Testing local time (for backwards compatability):");
         // ISO8601.useUTCtime = false;
-        System.out.println("  ISO8601.toDate("+argv[0]+") returns:" + ISO8601.toDate(argv[0]));
-        System.out.println("  converting that back to a string gives:" + ISO8601.toString(ISO8601.toDate(argv[0]), false));
-        System.out.println("  ISO8601.toString( new Date(), false ) returns:" + ISO8601.toString(d1, false));
-        System.out.println("  converting that back to a date gives:" + ISO8601.toDate(ISO8601.toString(d1, false)));
+        logger.debug("  ISO8601.toDate("+argv[0]+") returns:" + ISO8601.toDate(argv[0]));
+        logger.debug("  converting that back to a string gives:" + ISO8601.toString(ISO8601.toDate(argv[0]), false));
+        logger.debug("  ISO8601.toString( new Date(), false ) returns:" + ISO8601.toString(d1, false));
+        logger.debug("  converting that back to a date gives:" + ISO8601.toDate(ISO8601.toString(d1, false)));
     } catch (Exception e) {
         e.printStackTrace();
     }
     
     try {
-        System.out.println("ISO8601.toRelativeTimeString("+argv[0]+") returns:" + ISO8601.toRelativeTimeString(Long.parseLong(argv[0])));
+        logger.debug("ISO8601.toRelativeTimeString("+argv[0]+") returns:" + ISO8601.toRelativeTimeString(Long.parseLong(argv[0])));
         
         Date d = new Date(Integer.parseInt(argv[0]));
-        System.out.println("ISO8601.toString("+d+", false) returns:" + ISO8601.toString(d, false));
+        logger.debug("ISO8601.toString("+d+", false) returns:" + ISO8601.toString(d, false));
     } catch (Exception e1) {
     }
     

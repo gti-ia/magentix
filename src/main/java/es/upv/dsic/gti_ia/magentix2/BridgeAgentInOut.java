@@ -9,6 +9,7 @@ import java.net.UnknownHostException;
 import java.util.Calendar;
 import java.util.concurrent.LinkedBlockingQueue;
 
+
 import org.apache.qpid.transport.Connection;
 import org.apache.qpid.transport.MessageTransfer;
 
@@ -16,8 +17,9 @@ import es.upv.dsic.gti_ia.fipa.ACLMessage;
 import es.upv.dsic.gti_ia.fipa.AgentID;
 
 /**
- * PasarelaInOut, le llega un mensaje de tipo ACLMessage y es capaz de ...
- * @author Sergio
+ * This agent routes messages from inside the platform to outside the platform.
+ * It converts ACLMessages into ACLJadeMessages
+ * @author Sergio Pajares
  *
  */
 public class BridgeAgentInOut extends SingleAgent{
@@ -27,6 +29,7 @@ public class BridgeAgentInOut extends SingleAgent{
 	String message;
 	private DatagramSocket socket;
 	LinkedBlockingQueue<MessageTransfer> internalQueue;
+
 	
 	
 	
@@ -42,7 +45,7 @@ public class BridgeAgentInOut extends SingleAgent{
 	      // atrapar los problemas que pueden ocurrir al crear objeto DatagramSocket
 	      catch( SocketException excepcionSocket ) {
 	         excepcionSocket.printStackTrace();
-	         System.out.println("Error!");
+	         logger.error("Error creating DatagramSocket instance, see more in BridgeAgentInOut constructor");
 	         System.exit( 1 );
 	      }
 	      
@@ -337,9 +340,9 @@ public class BridgeAgentInOut extends SingleAgent{
 	          Paquete.getData(), Paquete.getLength(), 
 	          Paquete.getAddress(), Paquete.getPort() );
 	       
-	       System.out.println( "AQUI "+Paquete.getData().length);
+	       logger.debug( "Length in enviarPaqueteAExterior"+Paquete.getData().length);
 	       
-	   //    System.out.println("Estoy en enviarPaqueteAExterior: "Paquete.);
+	   //    logger.debug("Estoy en enviarPaqueteAExterior: "Paquete.);
 	 
 	       socket.send( enviarPaquete ); // enviar el paquete
 	       mostrarMensaje( "Paquete enviado\n" );
@@ -360,7 +363,7 @@ public class BridgeAgentInOut extends SingleAgent{
         DatagramPacket enviarPaquete = new DatagramPacket( datos, 
         		datos.length, InetAddress.getByName(ACLsms.getReceiver().host), Integer.valueOf(ACLsms.getReceiver().port) );
        
-        System.out.println("LONGITUD!!!"+datos.length);
+        logger.debug("LONGITUD!!!"+datos.length);
         enviarPaqueteAExterior(enviarPaquete);
 		
         return true;
@@ -376,7 +379,7 @@ public class BridgeAgentInOut extends SingleAgent{
 	  */
     private void mostrarMensaje( final String mensajeAMostrar )
     {
-    	 System.out.println( mensajeAMostrar );
+    	logger.info( mensajeAMostrar );
     }
  // esperar a que lleguen los paquetes, mostrar los datos y repetir el paquete al cliente
     
@@ -385,12 +388,12 @@ public class BridgeAgentInOut extends SingleAgent{
     public void execute(){
        while ( true ) { // iterar infinitamente
     	   
-    	   System.out.println("Soy el Agente Pasarela InOut, y estoy esperando peticiones ....");
+    	   logger.info("I'm BridgeAgentInOut, waiting request....");
  
               
              ACLMessage mensaje = receiveACLMessage();
              
-             System.out.println("Recibido en PasarelaInOut: "+mensaje.getContent());
+             logger.info("Message was received in BridgeAgentInOut: "+mensaje.getContent());
 /* 
              // mostrar la información del paquete recibido 
              mostrarMensaje( "\nPaquete recibido:" + 
@@ -446,7 +449,7 @@ public class BridgeAgentInOut extends SingleAgent{
 		
 		InetAddress hostDestiny = InetAddress.getByName( msg.getReceiver().host );
 		int portDestiny = Integer.valueOf(msg.getReceiver().port);
-	//	System.out.println(hostDestiny.getHostAddress()+"---"+portDestiny);
+	//	logger.debug(hostDestiny.getHostAddress()+"---"+portDestiny);
 		
 		
 		String boundary = "a36869921a26b9d812878a42b8fc2cd";
@@ -469,7 +472,7 @@ public class BridgeAgentInOut extends SingleAgent{
 		httpheader += "Connection: Keep-Alive\r\n";
 		httpheader += "\r\n";
 		
-	//	System.out.println(httpheader);
+	//	logger.debug(httpheader);
 		
 		String content = "This is not part of the MIME multipart encoded message.\r\n";
 		content += "--" + boundary + "\r\n";
@@ -689,6 +692,6 @@ String acl;
 		content += "\r\n--" + boundary + "--\r\n";
 		content += "\r\n\r\n";
 		
-		System.out.println(httpheader + content);
+		logger.debug(httpheader + content);
 	}
 }

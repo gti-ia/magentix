@@ -13,7 +13,7 @@
 </layout>
 </appender>
 <root>
-<priority value ="debug" />
+<priority value ="error" />
 <appender-ref ref="Consola" />
 <appender-ref ref="Fichero" />
 </root>

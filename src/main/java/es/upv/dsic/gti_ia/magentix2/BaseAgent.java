@@ -1,5 +1,6 @@
 package es.upv.dsic.gti_ia.magentix2;
 
+import org.apache.log4j.Logger;
 import org.apache.qpid.transport.Connection;
 import org.apache.qpid.transport.DeliveryProperties;
 import org.apache.qpid.transport.Header;
@@ -19,6 +20,11 @@ import es.upv.dsic.gti_ia.fipa.AgentID;
  * @author  Ricard Lopez Fogues
  */
 public class BaseAgent implements Runnable{
+	
+	/**
+	 * To enable log4j in Qpid agents
+	 */
+	static Logger logger = Logger.getLogger(BaseAgent.class);
 
 	/*Atributos*/
 	/**

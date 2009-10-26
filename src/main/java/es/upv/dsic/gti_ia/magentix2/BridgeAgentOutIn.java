@@ -60,14 +60,14 @@ public class BridgeAgentOutIn extends SingleAgent{
 	 
 	             socket.receive( recibirPaquete ); // esperar el paquete
 	             
-	             System.out.println("Recibido en PasarelaOutIn: "+new String( recibirPaquete.getData()));
+	             logger.info("Received on BridgeAgentOutIn: "+new String( recibirPaquete.getData()));
 	 
 	             // mostrar la información del paquete recibido 
-	             System.out.println( "\nPaquete recibido:" + 
-	                "\nDel host: " + recibirPaquete.getAddress() + 
-	                "\nPuerto del host: " + recibirPaquete.getPort() + 
-	                "\nLongitud: " + recibirPaquete.getLength() + 
-	                "\nContenido:\n\t" + new String( recibirPaquete.getData(), 
+	             logger.info( "\nPackage received:" + 
+	                "\nfrom host: " + recibirPaquete.getAddress() + 
+	                "\nPort of the host: " + recibirPaquete.getPort() + 
+	                "\nLenght: " + recibirPaquete.getLength() + 
+	                "\nContent:\n\t" + new String( recibirPaquete.getData(), 
 	                   0, recibirPaquete.getLength() ) );
 	 
 	             //creamos nuevo hilo encargado de enviar el mensaje
@@ -78,7 +78,7 @@ public class BridgeAgentOutIn extends SingleAgent{
 	 
 	          // procesar los problemas que pueden ocurrir al manipular el paquete
 	          catch( IOException excepcionES ) {
-	             System.out.println( excepcionES.toString() + "\n" );
+	            logger.error( "Error on BridgeAgentOutIn, "+excepcionES.toString() + "\n" );
 	            excepcionES.printStackTrace();
 	          }
 		}
@@ -111,7 +111,7 @@ public class BridgeAgentOutIn extends SingleAgent{
 		    	while (cadena != null && cont <4){
 		    		// this statement reads the line from the file and print it to
 		    		// the console.
-		    		System.out.println(cadena);
+		    		logger.info(cadena);
 		    		cadena = dis.readLine();
 		    		cont++;
 		    	}
@@ -130,16 +130,16 @@ public class BridgeAgentOutIn extends SingleAgent{
 		    	cadena = dis.readLine();
 		    	//envelope
 		    	cadena = dis.readLine();
-		    	System.out.println(cadena);
+		    	logger.info(cadena);
 		    	//parseamos contenido XML
 		    	Xml envelope = new Xml(stringToInputStream(cadena),"envelope");	
 	
 				Xml params = envelope.child("params");
-				System.out.println("index: "+params.integer("index"));
+				logger.debug("index: "+params.integer("index"));
 				
 				int index = 0;
 				//Agente destino
-				System.out.println("Datos agente destino");
+				logger.debug("Agent Details destination");
 				Xml to = params.child("to");
 				Xml agent_indentifier = to.child("agent-identifier");
 				
@@ -147,7 +147,7 @@ public class BridgeAgentOutIn extends SingleAgent{
 				
 				
 				receiver.name = agent_indentifier.child("name").content().substring(0, index2);
-				System.out.println("Nombre agente: "+ receiver.name);
+				logger.debug("Agent Name: "+ receiver.name);
 				Xml adresses = agent_indentifier.child("addresses");
 				for(Xml url:adresses.children("url")){
 					index = url.content().indexOf(':');
@@ -155,19 +155,19 @@ public class BridgeAgentOutIn extends SingleAgent{
 					receiver.host = url.content().substring(index+3,url.content().indexOf(":", index+1));
 					index = url.content().indexOf(":", index+1);
 					receiver.port = url.content().substring(index+1);
-					System.out.println("Adress: "+receiver.toString());
+					logger.debug("Adress: "+receiver.toString());
 				}
 				
 				msg.setReceiver(receiver);
 				
 				//Agente remitente
-				System.out.println("Datos agente remitente");
+				logger.debug("Details sender agent");
 				Xml from = params.child("from");
 				agent_indentifier = from.child("agent-identifier");
 				
 				index2 = agent_indentifier.child("name").content().indexOf('@');
 				sender.name = agent_indentifier.child("name").content().substring(0, index2);
-				System.out.println("Nombre agente: "+ sender.name);
+				logger.debug("Agent name: "+ sender.name);
 				adresses = agent_indentifier.child("addresses");
 				
 				for(Xml url:adresses.children("url")){
@@ -176,7 +176,7 @@ public class BridgeAgentOutIn extends SingleAgent{
 					sender.host = url.content().substring(index+3,url.content().indexOf(":", index+1));
 					index = url.content().indexOf(":", index+1);
 					sender.port = url.content().substring(index+1);
-					System.out.println("Sender: "+sender.toString());
+					logger.debug("Sender: "+sender.toString());
 				}
 				msg.setSender(sender);
 				
@@ -192,7 +192,7 @@ public class BridgeAgentOutIn extends SingleAgent{
 				cadena = dis.readLine();
 				String performative = cadena.substring(1).trim();
 				msg.setPerformative(performative);
-				System.out.println(msg.getPerformative());
+				logger.debug("Performative: "+msg.getPerformative());
 				//agente remitente, ya tenemos sus datos
 				cadena = dis.readLine();
 				//agente receptor, ya tenemos sus datos
@@ -220,7 +220,7 @@ public class BridgeAgentOutIn extends SingleAgent{
 				}
 				content = content.substring(0, content.length()-1);
 				msg.setContent(content);
-				System.out.println("content "+content);
+				logger.debug("content "+content);
 				
 				//language
 				String lang = "";
