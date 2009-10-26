@@ -6,6 +6,8 @@ import es.upv.dsic.gti_ia.proto.FIPARequestInitiator;
 import es.upv.dsic.gti_ia.proto.FIPANames.InteractionProtocol;
 import java.util.ArrayList;
 
+import org.apache.log4j.Logger;
+
 /**
  * This class gives us the support to accede to the services of the OMS 
  * @author jbellver
@@ -17,6 +19,7 @@ public class OMSService {
 	private String value = "";
 	private int Quantity;
 	private ArrayList<String> list = new ArrayList<String>();
+	static Logger logger = Logger.getLogger(OMSService.class);
 
 	
 	/**
@@ -83,8 +86,8 @@ public class OMSService {
 		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
 		requestMsg.setReceiver(new AgentID("OMS", "qpid", "localhost", ""));
 
-		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
-		System.out.println("[QueryAgent]Sending... ");
+		logger.debug("[QueryAgent]Sms to send: " + requestMsg.toString());
+		logger.debug("[QueryAgent]Sending... ");
 
 
 		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
@@ -116,8 +119,8 @@ public class OMSService {
 		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
 		requestMsg.setReceiver(new AgentID("OMS", "qpid", "localhost", ""));
 
-		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
-		System.out.println("[QueryAgent]Sending... ");
+		logger.debug("[QueryAgent]Sms to send: " + requestMsg.toString());
+		logger.debug("[QueryAgent]Sending... ");
 
 		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
 
@@ -148,8 +151,8 @@ public class OMSService {
 		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
 		requestMsg.setReceiver(new AgentID("OMS", "qpid", "localhost", ""));
 
-		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
-		System.out.println("[QueryAgent]Sending... ");
+		logger.debug("[QueryAgent]Sms to send: " + requestMsg.toString());
+		logger.debug("[QueryAgent]Sending... ");
 
 		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
 
@@ -179,8 +182,8 @@ public class OMSService {
 		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
 		requestMsg.setReceiver(new AgentID("OMS", "qpid", "localhost", ""));
 
-		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
-		System.out.println("[QueryAgent]Sending... ");
+		logger.debug("[QueryAgent]Sms to send: " + requestMsg.toString());
+		logger.debug("[QueryAgent]Sending... ");
 
 		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
 
@@ -210,8 +213,8 @@ public class OMSService {
 		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
 		requestMsg.setReceiver(new AgentID("OMS", "qpid", "localhost", ""));
 
-		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
-		System.out.println("[QueryAgent]Sending... ");
+		logger.debug("[QueryAgent]Sms to send: " + requestMsg.toString());
+		logger.debug("[QueryAgent]Sending... ");
 
 		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
 
@@ -240,8 +243,8 @@ public class OMSService {
 		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
 		requestMsg.setReceiver(new AgentID("OMS", "qpid", "localhost", ""));
 
-		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
-		System.out.println("[QueryAgent]Sending... ");
+		logger.debug("[QueryAgent]Sms to send: " + requestMsg.toString());
+		logger.debug("[QueryAgent]Sending... ");
 
 		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
 
@@ -270,8 +273,8 @@ public class OMSService {
 		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
 		requestMsg.setReceiver(new AgentID("OMS", "qpid", "localhost", ""));
 
-		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
-		System.out.println("[QueryAgent]Sending... ");
+		logger.debug("[QueryAgent]Sms to send: " + requestMsg.toString());
+		logger.debug("[QueryAgent]Sending... ");
 
 		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
 
@@ -300,8 +303,8 @@ public class OMSService {
 		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
 		requestMsg.setReceiver(new AgentID("OMS", "qpid", "localhost", ""));
 
-		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
-		System.out.println("[QueryAgent]Sending... ");
+		logger.debug("[QueryAgent]Sms to send: " + requestMsg.toString());
+		logger.debug("[QueryAgent]Sending... ");
 
 		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
 
@@ -332,8 +335,8 @@ public class OMSService {
 		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
 		requestMsg.setReceiver(new AgentID("OMS", "qpid", "localhost", ""));
 
-		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
-		System.out.println("[QueryAgent]Sending... ");
+		logger.debug("[QueryAgent]Sms to send: " + requestMsg.toString());
+		logger.debug("[QueryAgent]Sending... ");
 
 		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
 
@@ -372,8 +375,8 @@ public class OMSService {
 		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
 		requestMsg.setReceiver(new AgentID("OMS", "qpid", "localhost", ""));
 
-		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
-		System.out.println("[QueryAgent]Sending... ");
+		logger.debug("[QueryAgent]Sms to send: " + requestMsg.toString());
+		logger.debug("[QueryAgent]Sending... ");
 
 		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
 
@@ -406,8 +409,8 @@ public class OMSService {
 		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
 		requestMsg.setReceiver(new AgentID("OMS", "qpid", "localhost", ""));
 
-		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
-		System.out.println("[QueryAgent]Sending... ");
+		logger.debug("[QueryAgent]Sms to send: " + requestMsg.toString());
+		logger.debug("[QueryAgent]Sending... ");
 
 		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
 
@@ -435,8 +438,8 @@ public class OMSService {
 		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
 		requestMsg.setReceiver(new AgentID("OMS", "qpid", "localhost", ""));
 
-		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
-		System.out.println("[QueryAgent]Sending... ");
+		logger.debug("[QueryAgent]Sms to send: " + requestMsg.toString());
+		logger.debug("[QueryAgent]Sending... ");
 
 		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
 
@@ -465,8 +468,8 @@ public class OMSService {
 		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
 		requestMsg.setReceiver(new AgentID("OMS", "qpid", "localhost", ""));
 
-		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
-		System.out.println("[QueryAgent]Sending... ");
+		logger.debug("[QueryAgent]Sms to send: " + requestMsg.toString());
+		logger.debug("[QueryAgent]Sending... ");
 
 		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
 
@@ -494,8 +497,8 @@ public class OMSService {
 		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
 		requestMsg.setReceiver(new AgentID("OMS", "qpid", "localhost", ""));
 
-		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
-		System.out.println("[QueryAgent]Sending... ");
+		logger.debug("[QueryAgent]Sms to send: " + requestMsg.toString());
+		logger.debug("[QueryAgent]Sending... ");
 
 		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
 
@@ -528,8 +531,8 @@ public class OMSService {
 		requestMsg.setReceiver(new AgentID("OMS", "qpid", "localhost", ""));
 
 
-		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
-		System.out.println("[QueryAgent]Sending... ");
+		logger.debug("[QueryAgent]Sms to send: " + requestMsg.toString());
+		logger.debug("[QueryAgent]Sending... ");
 
 		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
 
@@ -561,8 +564,8 @@ public class OMSService {
 		requestMsg.setReceiver(new AgentID("OMS", "qpid", "localhost", ""));
 
 
-		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
-		System.out.println("[QueryAgent]Sending... ");
+		logger.debug("[QueryAgent]Sms to send: " + requestMsg.toString());
+		logger.debug("[QueryAgent]Sending... ");
 
 		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
 		
@@ -594,13 +597,13 @@ public class OMSService {
 		}
 
 		protected void handleAgree(ACLMessage msg) {
-			System.out.println(myAgent.getName() + ": OOH! "
+			logger.debug(myAgent.getName() + ": OOH! "
 					+ msg.getSender().getLocalName()
 					+ " Has agreed to excute the service!");
 		}
 
 		protected void handleRefuse(ACLMessage msg) {
-			System.out.println(myAgent.getName() + ": Oh no! "
+			logger.debug(myAgent.getName() + ": Oh no! "
 					+ msg.getSender().getLocalName()
 					+ " has rejected my proposal.");
 			this.oms.setValor(myAgent.getName() + ": Oh no! "
@@ -610,7 +613,7 @@ public class OMSService {
 		}
 
 		protected void handleInform(ACLMessage msg) {
-			System.out.println(myAgent.getName() + ":"
+			logger.debug(myAgent.getName() + ":"
 					+ msg.getSender().getLocalName()
 					+ " has informed me of the status of my request."
 					+ " They said : " + msg.getContent());
@@ -789,7 +792,7 @@ public class OMSService {
 		}
 
 		protected void handleNotUnderstood(ACLMessage msg) {
-			System.out.println(myAgent.getName() + ":"
+			logger.info(myAgent.getName() + ":"
 					+ msg.getSender().getLocalName()
 					+ " has indicated that they didn't understand.");
 			this.oms.setValor(myAgent.getName() + ":"
@@ -799,7 +802,7 @@ public class OMSService {
 		}
 
 		protected void handleOutOfSequence(ACLMessage msg) {
-			System.out.println(myAgent.getName() + ":"
+			logger.info(myAgent.getName() + ":"
 					+ msg.getSender().getLocalName()
 					+ " has send me a message which i wasn't"
 					+ " expecting in this conversation");

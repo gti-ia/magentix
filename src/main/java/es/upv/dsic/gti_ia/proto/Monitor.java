@@ -11,9 +11,15 @@
 
 package es.upv.dsic.gti_ia.proto;
 
+import org.apache.log4j.Logger;
+
+import es.upv.dsic.gti_ia.fipa.ISO8601;
+
 
 public class Monitor {
 
+	
+	 static Logger logger = Logger.getLogger(Monitor.class);
 	
     /**
      * suspends the process
@@ -26,7 +32,7 @@ public class Monitor {
 
      	}catch(InterruptedException e){
 				
-				System.out.println("ERROR: " + e.getMessage());
+				logger.info("Error on Monitor Class: " + e.getMessage());
 			}
 	}
 	
@@ -43,7 +49,7 @@ public class Monitor {
 
      	}catch(InterruptedException e){
 				
-				System.out.println("ERROR: " + e.getMessage());
+     		logger.info("Error on Monitor Class: " + e.getMessage());
 			}
 	}
 	
@@ -56,7 +62,7 @@ public class Monitor {
 		notifyAll();
 		}catch(Exception e)
 		{
-			System.out.println("ERROR :"+ e.getMessage());
+			logger.info("Error on Monitor Class: "+ e.getMessage());
 		}
 		
 	}

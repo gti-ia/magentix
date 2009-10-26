@@ -4,8 +4,11 @@ package es.upv.dsic.gti_ia.magentix2;
 import java.util.HashMap;
 import java.util.ArrayList;
 
+import org.apache.log4j.Logger;
+
 import es.upv.dsic.gti_ia.fipa.ACLMessage;
 import es.upv.dsic.gti_ia.fipa.AgentID;
+import es.upv.dsic.gti_ia.fipa.ISO8601;
 import es.upv.dsic.gti_ia.proto.FIPARequestInitiator;
 import es.upv.dsic.gti_ia.proto.FIPANames.InteractionProtocol;
 
@@ -20,6 +23,7 @@ public class SFService {
 	private boolean salida = true;
 	private String salidaString = null;
 	private ArrayList<String> idsSearchService = new ArrayList<String>();
+	static Logger logger = Logger.getLogger(SFService.class);
 
 	
 
@@ -113,8 +117,8 @@ public class SFService {
 		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
 		requestMsg.setReceiver(new AgentID("SF", "qpid", "localhost", ""));
 
-		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
-		System.out.println("[QueryAgent]Sending... ");
+		logger.debug("[QueryAgent]Sms to send: " + requestMsg.toString());
+		logger.debug("[QueryAgent]Sending... ");
 
 		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
 
@@ -148,8 +152,8 @@ public class SFService {
 		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
 		requestMsg.setReceiver(new AgentID("SF", "qpid", "localhost", ""));
 
-		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
-		System.out.println("[QueryAgent]Sending... ");
+		logger.debug("[QueryAgent]Sms to send: " + requestMsg.toString());
+		logger.debug("[QueryAgent]Sending... ");
 
 		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
 
@@ -188,8 +192,8 @@ public class SFService {
 		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
 		requestMsg.setReceiver(new AgentID("SF", "qpid", "localhost", ""));
 
-		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
-		System.out.println("[QueryAgent]Sending... ");
+		logger.debug("[QueryAgent]Sms to send: " + requestMsg.toString());
+		logger.debug("[QueryAgent]Sending... ");
 		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
 
 		do {
@@ -224,8 +228,8 @@ public class SFService {
 		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
 		requestMsg.setReceiver(new AgentID("SF", "qpid", "localhost", ""));
 
-		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
-		System.out.println("[QueryAgent]Sending... ");
+		logger.debug("[QueryAgent]Sms to send: " + requestMsg.toString());
+		logger.debug("[QueryAgent]Sending... ");
 
 		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
 
@@ -264,8 +268,8 @@ public class SFService {
 		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
 		requestMsg.setReceiver(new AgentID("SF", "qpid", "localhost", ""));
 
-		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
-		System.out.println("[QueryAgent]Sending... ");
+		logger.debug("[QueryAgent]Sms to send: " + requestMsg.toString());
+		logger.debug("[QueryAgent]Sending... ");
 
 		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
 
@@ -305,8 +309,8 @@ public class SFService {
 		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
 		requestMsg.setReceiver(new AgentID("SF", "qpid", "localhost", ""));
 
-		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
-		System.out.println("[QueryAgent]Sending... ");
+		logger.debug("[QueryAgent]Sms to send: " + requestMsg.toString());
+		logger.debug("[QueryAgent]Sending... ");
 
 		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
 
@@ -344,8 +348,8 @@ public class SFService {
 		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
 		requestMsg.setReceiver(new AgentID("SF", "qpid", "localhost", ""));
 
-		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
-		System.out.println("[QueryAgent]Sending... ");
+		logger.debug("[QueryAgent]Sms to send: " + requestMsg.toString());
+		logger.debug("[QueryAgent]Sending... ");
 
 		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
 
@@ -384,8 +388,8 @@ public class SFService {
 		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
 		requestMsg.setReceiver(new AgentID("SF", "qpid", "localhost", ""));
 
-		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
-		System.out.println("[QueryAgent]Sending... ");
+		logger.debug("[QueryAgent]Sms to send: " + requestMsg.toString());
+		logger.debug("[QueryAgent]Sending... ");
 
 		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
 
@@ -423,8 +427,8 @@ public class SFService {
 		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
 		requestMsg.setReceiver(new AgentID("SF", "qpid", "localhost", ""));
 
-		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
-		System.out.println("[QueryAgent]Sending... ");
+		logger.debug("[QueryAgent]Sms to send: " + requestMsg.toString());
+		logger.debug("[QueryAgent]Sending... ");
 		// send(requestMsg);
 
 		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
@@ -461,14 +465,14 @@ public class SFService {
 		}
 
 		protected void handleAgree(ACLMessage msg) {
-			System.out.println(myAgent.getName() + ": OOH! "
+			logger.debug(myAgent.getName() + ": OOH! "
 					+ msg.getSender().getLocalName()
 					+ " Has agreed to excute the service!");
 
 		}
 
 		protected void handleRefuse(ACLMessage msg) {
-			System.out.println(myAgent.getName() + ": Oh no! "
+			logger.debug(myAgent.getName() + ": Oh no! "
 					+ msg.getSender().getLocalName()
 					+ " has rejected my proposal.");
 			this.sf.setSalida(false);
@@ -476,7 +480,7 @@ public class SFService {
 		}
 
 		protected void handleInform(ACLMessage msg) {
-			System.out.println(myAgent.getName() + ":"
+			logger.debug(myAgent.getName() + ":"
 					+ msg.getSender().getLocalName()
 					+ " has informed me of the status of my request."
 					+ " They said : " + msg.getContent());
@@ -661,14 +665,14 @@ public class SFService {
 		}
 
 		protected void handleNotUnderstood(ACLMessage msg) {
-			System.out.println(myAgent.getName() + ":"
+			logger.info(myAgent.getName() + ":"
 					+ msg.getSender().getLocalName()
 					+ " has indicated that they didn't understand.");
 			this.sf.setSalida(false);
 		}
 
 		protected void handleOutOfSequence(ACLMessage msg) {
-			System.out.println(myAgent.getName() + ":"
+			logger.info(myAgent.getName() + ":"
 					+ msg.getSender().getLocalName()
 					+ " has send me a message which i wasn't"
 					+ " expecting in this conversation");
