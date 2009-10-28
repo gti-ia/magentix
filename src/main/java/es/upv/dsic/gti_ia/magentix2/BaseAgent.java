@@ -217,7 +217,7 @@ public class BaseAgent implements Runnable{
 	/**
 	 * Function that will be executed when the agent terminates
 	 */
-	public void terminate(){
+	protected void terminate(){
 		session.queueDelete(aid.name);
 		session.close();
 	}
