@@ -22,8 +22,8 @@ import es.upv.dsic.gti_ia.architecture.MessageTemplate;
 import es.upv.dsic.gti_ia.architecture.Monitor;
 import es.upv.dsic.gti_ia.architecture.QueueAgent;
 import es.upv.dsic.gti_ia.architecture.FIPANames.InteractionProtocol;
-import es.upv.dsic.gti_ia.fipa.ACLMessage;
-import es.upv.dsic.gti_ia.fipa.AgentID;
+import es.upv.dsic.gti_ia.core.ACLMessage;
+import es.upv.dsic.gti_ia.core.AgentID;
 
 import org.apache.qpid.transport.Connection;
 
@@ -392,13 +392,13 @@ public class OMS extends QueueAgent {
 						if(exists){
                 
 							System.out.println("AGREE");
-							response.setPerformative(es.upv.dsic.gti_ia.fipa.ACLMessage.AGREE);
+							response.setPerformative(es.upv.dsic.gti_ia.core.ACLMessage.AGREE);
 							response.setContent("=Agree");
 							
 						}else{
                            
 							System.out.println("REFUSE");
-							response.setPerformative(es.upv.dsic.gti_ia.fipa.ACLMessage.REFUSE);
+							response.setPerformative(es.upv.dsic.gti_ia.core.ACLMessage.REFUSE);
 							response.setContent("=Refuse");
 						}
 						
@@ -415,7 +415,7 @@ public class OMS extends QueueAgent {
 				}else{
                    
 					System.out.println("NOTUNDERSTOOD");
-					response.setPerformative(es.upv.dsic.gti_ia.fipa.ACLMessage.NOT_UNDERSTOOD);
+					response.setPerformative(es.upv.dsic.gti_ia.core.ACLMessage.NOT_UNDERSTOOD);
 					response.setContent("NotUnderstood");
 				}
 

@@ -3,8 +3,8 @@ package es.upv.dsic.gti_ia.organization;
 import es.upv.dsic.gti_ia.architecture.FIPARequestInitiator;
 import es.upv.dsic.gti_ia.architecture.QueueAgent;
 import es.upv.dsic.gti_ia.architecture.FIPANames.InteractionProtocol;
-import es.upv.dsic.gti_ia.fipa.ACLMessage;
-import es.upv.dsic.gti_ia.fipa.AgentID;
+import es.upv.dsic.gti_ia.core.ACLMessage;
+import es.upv.dsic.gti_ia.core.AgentID;
 
 import java.util.ArrayList;
 

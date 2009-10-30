@@ -22,6 +22,8 @@ import org.mindswap.query.ValueMap;
 
 import es.upv.dsic.gti_ia.architecture.*;
 import es.upv.dsic.gti_ia.architecture.FIPANames.InteractionProtocol;
+import es.upv.dsic.gti_ia.core.ACLMessage;
+import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.fipa.*;
 
 
@@ -329,13 +331,13 @@ public class SF extends QueueAgent {
 								){
 				
 							System.out.println("AGREE");
-							response.setPerformative(es.upv.dsic.gti_ia.fipa.ACLMessage.AGREE);
+							response.setPerformative(es.upv.dsic.gti_ia.core.ACLMessage.AGREE);
 							response.setContent(aProcess.getLocalName()+"=Agree");
 							
 						}else{
 					
 							System.out.println("REFUSE");
-							response.setPerformative(es.upv.dsic.gti_ia.fipa.ACLMessage.REFUSE);
+							response.setPerformative(es.upv.dsic.gti_ia.core.ACLMessage.REFUSE);
 							response.setContent(aProcess.getLocalName()+"=Refuse");
 						}
 						
@@ -351,7 +353,7 @@ public class SF extends QueueAgent {
 				}else{
 			
 					System.out.println("NOTUNDERSTOOD");
-					response.setPerformative(es.upv.dsic.gti_ia.fipa.ACLMessage.NOT_UNDERSTOOD);
+					response.setPerformative(es.upv.dsic.gti_ia.core.ACLMessage.NOT_UNDERSTOOD);
 					response.setContent("NotUnderstood");
 				}
 			
@@ -426,7 +428,7 @@ public class SF extends QueueAgent {
 
 					System.out.println("[SF]Creating inform message to send...");
 				
-					msg.setPerformative(es.upv.dsic.gti_ia.fipa.ACLMessage.INFORM);
+					msg.setPerformative(es.upv.dsic.gti_ia.core.ACLMessage.INFORM);
 
 					System.out.println("[SF]Before set message content...");
 					msg.setContent(aProcess.getLocalName()+"="+values.toString());
