@@ -16,7 +16,7 @@ import java.util.logging.*;
 
 
 import es.upv.dsic.gti_ia.architecture.FIPANames.InteractionProtocol;
-import es.upv.dsic.gti_ia.fipa.ACLMessage;
+import es.upv.dsic.gti_ia.core.ACLMessage;
 
 public class FIPARequestInitiator {
 	private final static int PREPARE_MSG_STATE=0;

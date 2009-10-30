@@ -15,9 +15,9 @@ import org.apache.qpid.transport.Connection;
 import org.apache.qpid.transport.MessageTransfer;
 import org.apache.qpid.transport.Session;
 
-import es.upv.dsic.gti_ia.magentix2.BaseAgent;
-import es.upv.dsic.gti_ia.fipa.ACLMessage;
-import es.upv.dsic.gti_ia.fipa.AgentID;
+import es.upv.dsic.gti_ia.core.ACLMessage;
+import es.upv.dsic.gti_ia.core.AgentID;
+import es.upv.dsic.gti_ia.core.BaseAgent;
 
 
 

@@ -11,7 +11,7 @@ package es.upv.dsic.gti_ia.architecture;
 //TODO FALTA ACABAR DE LIMPIAR Y JAVADOC
 import es.upv.dsic.gti_ia.architecture.Monitor;
 import es.upv.dsic.gti_ia.architecture.FIPANames.InteractionProtocol;
-import es.upv.dsic.gti_ia.fipa.ACLMessage;
+import es.upv.dsic.gti_ia.core.ACLMessage;
 
 
 public class FIPAQueryResponder{

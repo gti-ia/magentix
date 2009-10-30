@@ -15,8 +15,8 @@ import java.util.Date;
 
 
 import es.upv.dsic.gti_ia.architecture.FIPANames.InteractionProtocol;
-import es.upv.dsic.gti_ia.fipa.AgentID;
-import es.upv.dsic.gti_ia.fipa.ACLMessage;
+import es.upv.dsic.gti_ia.core.ACLMessage;
+import es.upv.dsic.gti_ia.core.AgentID;
 
 public class MessageTemplate {
 	

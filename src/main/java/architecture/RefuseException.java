@@ -25,7 +25,7 @@ Boston, MA  02111-1307, USA.
 package es.upv.dsic.gti_ia.architecture;
 
 
-import es.upv.dsic.gti_ia.fipa.ACLMessage;
+import es.upv.dsic.gti_ia.core.ACLMessage;
 
 /**
 This class represents a generic RefuseException 

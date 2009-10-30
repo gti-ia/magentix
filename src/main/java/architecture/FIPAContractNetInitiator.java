@@ -12,8 +12,8 @@ import java.util.*;
 
 
 import es.upv.dsic.gti_ia.architecture.FIPANames.InteractionProtocol;
-import es.upv.dsic.gti_ia.fipa.AgentID;
-import es.upv.dsic.gti_ia.fipa.ACLMessage;
+import es.upv.dsic.gti_ia.core.ACLMessage;
+import es.upv.dsic.gti_ia.core.AgentID;
 
 
 
@@ -95,7 +95,7 @@ public class FIPAContractNetInitiator {
 				request.setSender(myAgent.getAid());
 				// recorrer todos lo receivers
 				template = new MessageTemplate(InteractionProtocol.FIPA_CONTRACT_NET);
-				for (es.upv.dsic.gti_ia.fipa.AgentID agent : agentes) {
+				for (es.upv.dsic.gti_ia.core.AgentID agent : agentes) {
 					
 		
 					// por cada agente que enviamos creamos una idconversacion
