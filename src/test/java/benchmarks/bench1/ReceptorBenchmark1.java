@@ -1,14 +1,14 @@
 package benchmarks.bench1;
 
 import org.apache.qpid.transport.Connection;
-import es.upv.dsic.gti_ia.fipa.ACLMessage;
-import es.upv.dsic.gti_ia.fipa.AgentID;
-import es.upv.dsic.gti_ia.magentix2.SingleAgent;
+import es.upv.dsic.gti_ia.core.ACLMessage;
+import es.upv.dsic.gti_ia.core.AgentID;
+import es.upv.dsic.gti_ia.core.SingleAgent;
 
 public class ReceptorBenchmark1 extends SingleAgent{
 	public int nemisores;
 	
-	public ReceptorBenchmark1(AgentID aid, Connection connection) {
+	public ReceptorBenchmark1(AgentID aid, Connection connection) throws Exception {
 		super(aid, connection);
 	}
 	

@@ -1,9 +1,9 @@
 package benchmarks.bench1;
 
 import org.apache.qpid.transport.Connection;
-import es.upv.dsic.gti_ia.fipa.ACLMessage;
-import es.upv.dsic.gti_ia.fipa.AgentID;
-import es.upv.dsic.gti_ia.magentix2.SingleAgent;
+import es.upv.dsic.gti_ia.core.ACLMessage;
+import es.upv.dsic.gti_ia.core.AgentID;
+import es.upv.dsic.gti_ia.core.SingleAgent;
 
 public class EmisorBenchmark1 extends SingleAgent {
 	int nmsgtot;	//nombre total de missatges a enviar
@@ -13,7 +13,7 @@ public class EmisorBenchmark1 extends SingleAgent {
     int nemisor;	//nombre del agent
     int nreceptor;	//nombre del primer destinatari
     
-	public EmisorBenchmark1(AgentID aid, Connection connection, int nmsgtot, int tmsg, int ntotal, int nemisor)
+	public EmisorBenchmark1(AgentID aid, Connection connection, int nmsgtot, int tmsg, int ntotal, int nemisor)throws Exception
      {
 		super(aid, connection);
 		this.nmsgtot = nmsgtot;	
