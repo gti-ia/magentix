@@ -8,12 +8,12 @@
 package es.upv.dsic.gti_ia.architecture;
 
 import java.util.ArrayList;
-import java.util.Date;
+
+
 
 
 import org.apache.qpid.transport.Connection;
-import org.apache.qpid.transport.MessageTransfer;
-import org.apache.qpid.transport.Session;
+
 
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
@@ -58,136 +58,15 @@ public class QueueAgent extends BaseAgent {
 	}
 
 
-	/**
-	 * Transforms the message to ACLMessage
-	 * @param xfr MessageTransfer
-	 * @return ACLMessage
-	 */
-
-	public final ACLMessage MessageTransfertoACLMessage(MessageTransfer xfr) {
-
-		// des-serializamos el mensaje
-		// inicializaciones
-		int indice1 = 0;
-		int indice2 = 0;
-		int aidindice1 = 0;
-		int aidindice2 = 0;
-		int tam = 0;
-		String aidString;
-		String body = xfr.getBodyString();
-
-		//System.out.println("BODY: " + body);
-
-		indice2 = body.indexOf('#', indice1);
-		ACLMessage msg = new ACLMessage(Integer.parseInt(body.substring(
-				indice1, indice2)));
-
-		// deserializamos los diferentes AgentesID (Sender, Receiver, ReplyTo)
-		for (int i = 0; i < 3; i++) {
-			AgentID aid = new AgentID();
-			aidindice1 = 0;
-			aidindice2 = 0;
-			indice1 = indice2 + 1 + tam;
-			indice2 = body.indexOf('#', indice1);
-			tam = Integer.parseInt(body.substring(indice1, indice2));
-			aidString = body.substring(indice2 + 1, indice2 + 1 + tam);
-			aidindice2 = aidString.indexOf(':');
-			if (aidindice2 - aidindice1 <= 0)
-				aid.protocol = "";
-			else
-				aid.protocol = aidString.substring(aidindice1, aidindice2);
-			aidindice1 = aidindice2 + 3;
-			aidindice2 = aidString.indexOf('@', aidindice1);
-			if (aidindice2 - aidindice1 <= 0)
-				aid.name = "";
-			else
-				aid.name = aidString.substring(aidindice1, aidindice2);
-			aidindice1 = aidindice2 + 1;
-			aidindice2 = aidString.indexOf(':', aidindice1);
-			if (aidindice2 - aidindice1 <= 0)
-				aid.host = "";
-			else
-				aid.host = aidString.substring(aidindice1, aidindice2);
-			aid.port = aidString.substring(aidindice2 + 1);
-
-			if (i == 0)
-				msg.setSender(aid);
-			if (i == 1)
-				msg.setReceiver(aid);
-			if (i == 2)
-				msg.setReplyTo(aid);
-		}
-		indice1 = indice2 + 1 + tam;
-		indice2 = body.indexOf('#', indice1);
-		tam = Integer.parseInt(body.substring(indice1, indice2));
-		// language
-		msg.setLanguage(body.substring(indice2 + 1, indice2 + 1 + tam));
-
-		indice1 = indice2 + 1 + tam;
-		indice2 = body.indexOf('#', indice1);
-		tam = Integer.parseInt(body.substring(indice1, indice2));
-		// encoding
-		msg.setEncoding(body.substring(indice2 + 1, indice2 + 1 + tam));
-
-		indice1 = indice2 + 1 + tam;
-		indice2 = body.indexOf('#', indice1);
-		tam = Integer.parseInt(body.substring(indice1, indice2));
-		// ontologyencodingACLMessage template
-		msg.setOntology(body.substring(indice2 + 1, indice2 + 1 + tam));
-
-		indice1 = indice2 + 1 + tam;
-		indice2 = body.indexOf('#', indice1);
-		tam = Integer.parseInt(body.substring(indice1, indice2));
-		// Protocol
-		msg.setProtocol(body.substring(indice2 + 1, indice2 + 1 + tam));
-
-		indice1 = indice2 + 1 + tam;
-		indice2 = body.indexOf('#', indice1);
-		tam = Integer.parseInt(body.substring(indice1, indice2));
-		// Conversation id
-		msg.setConversationId(body.substring(indice2 + 1, indice2 + 1 + tam));
-
-		indice1 = indice2 + 1 + tam;
-		indice2 = body.indexOf('#', indice1);
-		tam = Integer.parseInt(body.substring(indice1, indice2));
-		// Reply with
-		msg.setReplyWith(body.substring(indice2 + 1, indice2 + 1 + tam));
-
-		indice1 = indice2 + 1 + tam;
-		indice2 = body.indexOf("#", indice1);
-
-		tam = Integer.parseInt(body.substring(indice1, indice2));
-		// In reply to
-		msg.setInReplyTo(body.substring(indice2 + 1, indice2 + 1 + tam));
-
-		indice1 = indice2 + 1 + tam;
-		indice2 = body.indexOf('#', indice1);
-		tam = Integer.parseInt(body.substring(indice1, indice2));
-		// reply by
-
-		if (tam != 0)
-			msg.setReplyByDate(new Date(Integer.parseInt(body.substring(
-					indice2 + 10, indice2 + tam))));
-
-		indice1 = indice2 + 1 + tam;
-		indice2 = body.indexOf('#', indice1);
-		tam = Integer.parseInt(body.substring(indice1, indice2));
-		// Content
-		msg.setContent(body.substring(indice2 + 1, indice2 + 1 + tam));
-
-		return msg;
-	}
-
 	
 
 	/**
 	 * Function that will be executed when the agent gets a message
-	 * @param ssn
-	 * @param xfr
+	 * @param msg
 	 */
-	public final void onMessage(Session ssn, MessageTransfer xfr) {
+	protected void onMessage(ACLMessage msg) {
 		
-		this.writeQueue(xfr);
+		this.writeQueue(msg);
 		
 		// clase encargada de despertar al agente, puede ser del rol responder o
 		// del rol iniciator
@@ -200,9 +79,9 @@ public class QueueAgent extends BaseAgent {
 	
 	
 	
-	private synchronized void writeQueue(MessageTransfer xfr)
+	private synchronized void writeQueue(ACLMessage msg)
 	{
-		messageList.add(MessageTransfertoACLMessage(xfr));
+		messageList.add(msg);
 	}
 	
     /**
@@ -292,59 +171,6 @@ public class QueueAgent extends BaseAgent {
 		return msgselect;
 	}
 
-    /**
-     * Method to receive a magentix2 AclMessage 
-     * @param template 
-     * @param timeout 
-     * @return an ACLMessage
-     */
-	
-	public synchronized ACLMessage receiveACLMessageT(MessageTemplate template,
-			long timeout) throws Exception{
-		ACLMessage msgselect = null;
-		int i = 0;
-		
-		if (template.getProtocol()=="")
-			//TODO traducir a ingles
-			throw new Exception("The protocol field is empty");
-
-		
-		do {
-
-			for (ACLMessage msg : messageList) {
-
-				// comparamos los campos performative y protocol
-				
-
-					if (template.getProtocol().equals(msg.getProtocol())) {
-
-						msgselect = msg;
-						messageList.remove(msg);
-		
-						// de la llista de missatges
-						break;
-
-					}
-
-				
-			}
-			if (msgselect == null)// no hay ning�n mensaje
-			{
-				if (i == 0)// solo esperaremos una vez
-					try {
-						this.wait(timeout);
-					} catch (InterruptedException e) {
-					}
-			} else
-				i = 2;
-			i++;
-		} while (i < 2);
-		return msgselect;
-	}
-
-
-		
-	//}
 	
 	/**
 	 * 
