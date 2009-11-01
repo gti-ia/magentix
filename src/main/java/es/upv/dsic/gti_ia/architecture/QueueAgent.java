@@ -12,6 +12,7 @@ import java.util.ArrayList;
 
 
 
+import org.apache.log4j.Logger;
 import org.apache.qpid.transport.Connection;
 
 
@@ -31,13 +32,15 @@ import es.upv.dsic.gti_ia.core.BaseAgent;
 public class QueueAgent extends BaseAgent {
 
 	
+	
+	static Logger logger = Logger.getLogger(QueueAgent.class);
 
 	private ArrayList<ACLMessage> messageList = new ArrayList<ACLMessage>();
 	
 	private Monitor monitor = null;
 	
 	
-	//para poder diferenciar cuando nos llega una conversació nueva
+	//para poder diferenciar cuando nos llega una conversaciï¿½ nueva
 	private ArrayList<String> activeConversationsList = new ArrayList<String>();
 	//almacena la informacion de los servicios en thomas
 	//private ArrayList<SFAgentDescription> agentDescriptions = new ArrayList<SFAgentDescription>();
@@ -97,7 +100,7 @@ public class QueueAgent extends BaseAgent {
 
 		
 		for (ACLMessage msg : messageList) {		
-			// comparamos los campos protocol y conversaciónID (para asegurarnos
+			// comparamos los campos protocol y conversaciï¿½nID (para asegurarnos
 			// que no es una conversacion existente)00
 				if (template.getProtocol().equals(msg.getProtocol())) {
 				// comprobar que sea una conversacion nueva, que no este en la
@@ -127,7 +130,7 @@ public class QueueAgent extends BaseAgent {
 			if (tipo == 1)
 			{
 				for (ACLMessage msg : messageList) {
-			// comparamos los campos protocol y conversaciónID (para asegurarnos
+			// comparamos los campos protocol y conversaciï¿½nID (para asegurarnos
 			// que no es una conversacion existente)00
 
 				if (template.getProtocol().equals(msg.getProtocol())) {
@@ -291,7 +294,7 @@ public class QueueAgent extends BaseAgent {
 		this.finalize();
 		
 		if (this.getnRole()==0)
-			System.out.println("Ternmino, no hay roles");
+			logger.info("Finish ,active roles do not exist");
 		else
 		{
 			
@@ -306,38 +309,36 @@ public class QueueAgent extends BaseAgent {
 						"FIPARequestInitiator"))
 
 				{
-					//TODO aqui deberiamos controlar en que estado esta y finalizar
-					System.out.println("Estamos en estado: "+ ((FIPARequestInitiator) obj).getState());
+					logger.info("Finish with role Resquest Initiator, state:  "+((FIPARequestInitiator) obj).getState());
+					
 					
 				} else if (patron.equals(
 						"FIPARequestResponder")) {
 
-					System.out.println("Estamos en estado: "+ ((FIPARequestResponder) obj).getState());
+					logger.info("Finish with role Responder, protocol:Request, state:  "+((FIPARequestResponder) obj).getState());
 				}
 				if (patron.equals(
 						"FIPAQueryInitiator")) {
 
-					System.out.println("Estamos en estado: "+ ((FIPAQueryInitiator) obj).getState());
+					logger.info("Finish with role Initiator, protocol:Query, state:  "+((FIPAQueryInitiator) obj).getState());
 				} else if (patron.equals(
 						"FIPAQueryResponder")) {
 
-					System.out.println("Estamos en estado: "+ ((FIPAQueryInitiator) obj).getState());
+					logger.info("Finish with role Responder, protocol:Query, state:  "+((FIPAQueryResponder) obj).getState());
 				}
 				if (patron.equals(
 						"FIPAContractNetInitiator")) {
 
-					System.out.println("Estamos en estado: "+ ((FIPAContractNetInitiator) obj).getState());
+					logger.info("Finish with role Initiator, protocol:Contract-Net state:  "+((FIPAContractNetInitiator) obj).getState());
 				} else if (patron.equals(
 						"FIPAContractNetResponder")) {
 
-					System.out.println("Estamos en estado: "+ ((FIPAContractNetInitiator) obj).getState());
+					logger.info("Finish with role Responder, protocol:Contract-Net state:  "+((FIPAContractNetResponder) obj).getState());
 				}
 				
 				
 
 			}
-				
-			System.out.println("Ternmino, pero hay roles");
 		}
 		
 		super.terminate();
