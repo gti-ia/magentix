@@ -70,6 +70,16 @@ public class FIPARequestInitiator {
 	return this.finish;	
 	}
 	
+	
+	/**
+	 * 
+	 * @return conversationID
+	 */
+	public String getIdConversation()
+	{
+		return this.conversationID;
+		
+	}
 	/**
 	 * 
 	 * @return
