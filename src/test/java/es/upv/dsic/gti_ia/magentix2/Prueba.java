@@ -14,12 +14,13 @@ public class Prueba {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		
+			
 		DOMConfigurator.configure("loggin.xml");
-		AgentsConecction con;
-        AgentsConecction.connect("gtiiaprojects.dsic.upv.es");
+		AgentsConecction.connect("gtiiaprojects.dsic.upv.es");
 		try{
-        AgenteHola agente = new AgenteHola(new AgentID("agentehola", "qpid", "localhost","8080"));
-		AgenteConsumidor agente2 = new AgenteConsumidor(new AgentID("agenteconsumidor", "qpid", "localhost","8080"));
+        AgenteHola agente = new AgenteHola(new AgentID("qpid://agentehola@localhost:8080"));//, "qpid", "localhost","8080"));
+		AgenteConsumidor agente2 = new AgenteConsumidor(new AgentID("agenteconsumidor"));
 		agente2.start();
 		agente.start();
 		}catch(Exception e){
