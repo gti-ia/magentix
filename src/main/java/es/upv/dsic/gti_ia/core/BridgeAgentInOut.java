@@ -73,7 +73,7 @@ public class BridgeAgentInOut extends SingleAgent{
 		httpheader += " HTTP/1.1\r\n";
 		httpheader += "Cache-Control: no-cache\r\n";
 		httpheader += "Mime-Version: 1.0\r\n";
-		//tosend += "Host: serpafer.dsic.upv.es:7778\r\n";
+		//tosend += "Host: \r\n";
 		httpheader += "Host: ";
 		httpheader += hostDestiny.getHostAddress() + ":" + portDestiny + "\r\n";
 
