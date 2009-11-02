@@ -12,8 +12,8 @@ import es.upv.dsic.gti_ia.core.BaseAgent;
 
 public class AgenteHola extends BaseAgent {
 	
-	public AgenteHola(AgentID aid, Connection connection) throws Exception {
-		super(aid, connection);
+	public AgenteHola(AgentID aid) throws Exception {
+		super(aid);
 	}
 	
 	public void execute(){
@@ -30,7 +30,7 @@ public class AgenteHola extends BaseAgent {
 		send(msg);
 	}
 	
-	public void onMessage(Session ssn, MessageTransfer xfr){
-		System.out.println("Mensaje: " + xfr);	
+	public void onMessage(ACLMessage msg){
+		System.out.println("Mensaje: " + msg.getContent());	
 	}
 }
