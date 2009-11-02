@@ -3,6 +3,7 @@ package es.upv.dsic.gti_ia.core;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
+import org.apache.log4j.xml.DOMConfigurator;
 import org.apache.qpid.transport.Connection;
 import org.apache.qpid.transport.DeliveryProperties;
 import org.apache.qpid.transport.Header;
@@ -25,6 +26,7 @@ public class BaseAgent implements Runnable{
 	 * To enable log4j in Qpid agents
 	 */
 	static Logger logger = Logger.getLogger(BaseAgent.class);
+
 
 	/*Atributos*/
 	/**
@@ -203,9 +205,41 @@ public class BaseAgent implements Runnable{
 	 * @param connection Connection that the agent will use
 	 * @throws Exception If Agent ID already exists on the platform
 	 */
+	public BaseAgent(AgentID aid) throws Exception{
+		if(AgentsConecction.connection == null)
+		{
+			logger.error("Before create a agent, the qpid broker connection is necesary");
+			throw new Exception("Error doesn't work the broken connection");
+		}
+		else{
+			this.connection = AgentsConecction.connection;
+		}
+		
+		
+		this.session = createSession();
+		if(this.existAgent(aid)){
+			session.close();
+			throw new Exception("Agent ID already exists on the platform");
+		}
+		else{
+			this.aid = aid;			
+			this.listener = new Listener();
+			myThread = new Thread(this);
+			createQueue();
+			createBind();
+			createSubscription();
+		}
+	}
+	/**
+	 * Creates a new agent with a specific connection
+	 * @param aid Agent identification for the new agent, it has to be unique on the platform
+	 * @param connection Connection that the agent will use
+	 * @throws Exception If Agent ID already exists on the platform
+	 */
 	public BaseAgent(AgentID aid, Connection connection) throws Exception{
 		this.connection = connection;
 		this.session = createSession();
+		
 		if(this.existAgent(aid)){
 			session.close();
 			throw new Exception("Agent ID already exists on the platform");
@@ -328,9 +362,16 @@ public class BaseAgent implements Runnable{
 	 * Function that will be executed by the agent when it starts
 	 * The user has to write his/her code here
 	 */
-	protected void execute(){
+	
+	protected void init()
+	{
 		
 	}
+	protected void execute()
+	{
+		
+	}
+	
 	
 	/**
 	 * Function that will be executed when the agent gets a message
@@ -375,71 +416,6 @@ public class BaseAgent implements Runnable{
 	   {
 	       return this.aid;
 	   }
-
-	/**
-	 * @return agent connection
-	 * @uml.property  name="connection"
-	 */
-	public Connection getConnection() {
-		return connection;
-	}
-
-	/**
-	 * Set a diferent connection for the agent
-	 * @param connection
-	 * @uml.property  name="connection"
-	 */
-	public void setConnection(Connection connection) {
-		this.connection = connection;
-	}
-
-	/**
-	 * @return Agent's session
-	 * @uml.property  name="session"
-	 */
-	public Session getSession() {
-		return session;
-	}
-
-	/**
-	 * @param session
-	 * @uml.property  name="session"
-	 */
-	public void setSession(Session session) {
-		this.session = session;
-	}
-
-	/**
-	 * @return Agent's Thread
-	 * @uml.property  name="myThread"
-	 */
-	public Thread getMyThread() {
-		return myThread;
-	}
-
-	/**
-	 * @param myThread
-	 * @uml.property  name="myThread"
-	 */
-	public void setMyThread(Thread myThread) {
-		this.myThread = myThread;
-	}
-
-	/**
-	 * @return Agent's listener
-	 * @uml.property  name="listener"
-	 */
-	public Listener getListener() {
-		return listener;
-	}
-
-	/**
-	 * @param listener
-	 * @uml.property  name="listener"
-	 */
-	public void setListener(Listener listener) {
-		this.listener = listener;
-	}
 
 	/**
 	 * @param aid
