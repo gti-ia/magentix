@@ -20,15 +20,30 @@ public final class AgentID implements Serializable{
 		port = __port;
 		host = __host;
     }
-    //constructor a partir de una sola cadena del tipo http://nombreagente@localhost:8080
+    /**
+     * Constructor allow a input like http://nombreagente@localhost:8080
+     * or a input like AgentName, in this case there are defaults options,
+     * like protocol = "qpid", host="localhost", port="8080".
+     * @param id
+     */
     public AgentID(String id){
-    	protocol = id.substring(0, id.indexOf(':'));
-    	name = id.substring(id.indexOf(':')+3, id.indexOf('@'));
-    	host = id.substring(id.indexOf('@')+1, id.indexOf(':', id.indexOf('@')+1));
-    	port = id.substring(id.indexOf(':', id.indexOf('@'))+1);
+    	try{
+    		protocol = id.substring(0, id.indexOf(':'));
+        	name = id.substring(id.indexOf(':')+3, id.indexOf('@'));
+        	host = id.substring(id.indexOf('@')+1, id.indexOf(':', id.indexOf('@')+1));
+        	port = id.substring(id.indexOf(':', id.indexOf('@'))+1);
+    	}catch( StringIndexOutOfBoundsException e)
+    	{
+    		protocol = "qpid";
+    		name = id;
+    		host = "localhost";
+    		port = "8080";
+    	}
+    	
     	
   
     }
+   
     
     public String toString(){
     	String cadena = protocol + "://" + name + "@" + host + ":" + port;
