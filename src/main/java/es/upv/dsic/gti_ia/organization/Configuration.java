@@ -26,7 +26,7 @@ public class Configuration {
 
 	   try {
 		   properties.loadFromXML(Configuration.class.getResourceAsStream("/"+"THOMASDemoConfiguration.xml"));
-			for (Enumeration e = properties.keys(); e.hasMoreElements() ; ) {
+			for (Enumeration<Object> e = properties.keys(); e.hasMoreElements() ; ) {
 			    // Obtenemos el objeto
 			    Object obj = e.nextElement();
 			    if (obj.toString().equalsIgnoreCase("serverName"))
