@@ -1,7 +1,9 @@
 package es.upv.dsic.gti_ia.magentix2;
 import org.apache.qpid.transport.Connection;
 
-import es.upv.dsic.gti_ia.fipa.AgentID;
+import es.upv.dsic.gti_ia.core.AgentID;
+
+
 
 public class Prueba {
 
