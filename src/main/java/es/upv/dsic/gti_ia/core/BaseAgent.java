@@ -58,7 +58,9 @@ public class BaseAgent implements Runnable{
 	
 	    public void message(Session ssn, MessageTransfer xfr)
 	    {
-	    	onMessage(ssn, xfr);
+	    	internalQueue.add(xfr);
+	    	ACLMessage msg = MessageTransfertoACLMessage(xfr);
+	    	onMessage(msg);
 	    }
 	
 	    public void exception(Session ssn, SessionException exc)
@@ -495,8 +497,8 @@ public class BaseAgent implements Runnable{
 	 * @param ssn
 	 * @param xfr
 	 */
-	  private void onMessage(Session ssn, MessageTransfer xfr) {
-	        internalQueue.add(xfr);
+	  protected void onMessage(ACLMessage msg) {
+	      
 	    }
 	
 	/**
