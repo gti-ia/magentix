@@ -69,6 +69,8 @@ public class QueueAgent extends BaseAgent {
 	 */
 	protected void onMessage(ACLMessage msg) {
 		
+	
+		
 		this.writeQueue(msg);
 		
 		// clase encargada de despertar al agente, puede ser del rol responder o
