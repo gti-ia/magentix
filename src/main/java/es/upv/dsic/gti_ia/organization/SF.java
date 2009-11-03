@@ -187,7 +187,7 @@ public class SF extends QueueAgent {
 	    public SF(AgentID aid, Connection connection)throws Exception{
 	    
 
-	    	super(aid, connection);
+	    	super(aid);
 	
 	    }
 	    

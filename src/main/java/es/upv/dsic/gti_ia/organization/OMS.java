@@ -231,7 +231,7 @@ public class OMS extends QueueAgent {
      * @throws Exception
      */
 	public OMS(AgentID aid, Connection connection)throws Exception{
-    	super(aid, connection);
+    	super(aid);
     }
    
 	/**
