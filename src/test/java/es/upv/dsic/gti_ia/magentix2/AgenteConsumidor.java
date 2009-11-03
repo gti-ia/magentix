@@ -25,16 +25,16 @@ public class AgenteConsumidor extends BaseAgent{
 		
 	while(true)
 	{
-		System.out.println("Arranco, soy "+getName());
-		ACLMessage msg = receive();
+		//System.out.println("Arranco, soy "+getName());
+	//	ACLMessage msg = receive();
 	//	System.out.println("Mensaje: " + msg.getContent());	
 		
-		System.out.println("Recibido en Consumidor:"+msg.getContent());
+//		System.out.println("Recibido en Consumidor:"+msg.getContent());
 	}
 		//System.out.println(msg.getContent() + " Language "+msg.getLanguage());
 	}
-/*	public void onMessage(ACLMessage msg){
+	public void onMessage(ACLMessage msg){
 		System.out.println("Mensaje: " + msg.getContent());	
 	}
-*/	
+	
 }

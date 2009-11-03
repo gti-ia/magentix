@@ -28,6 +28,7 @@ public class AgenteHola extends BaseAgent {
 		msg.setLanguage("ACL");
 		msg.setContent("Hola, soy agente "+ getName());
 		send(msg);
+		send(msg);
 	}
 	
 	

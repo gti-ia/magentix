@@ -17,7 +17,7 @@ public class Prueba {
 		
 			
 		DOMConfigurator.configure("loggin.xml");
-		AgentsConecction.connect("gtiiaprojects.dsic.upv.es");
+		AgentsConecction.connect("gtiiaprojects2.dsic.upv.es");
 		try{
         AgenteHola agente = new AgenteHola(new AgentID("qpid://agentehola@localhost:8080"));//, "qpid", "localhost","8080"));
 		AgenteConsumidor agente2 = new AgenteConsumidor(new AgentID("agenteconsumidor"));
