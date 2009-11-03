@@ -10,6 +10,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * @author  Ricard Lopez Fogues
+ * @author  Sergio Pajares Ferrando
+ * @author  Joan Bellver Faus
  */
 
 public abstract class SingleAgent extends BaseAgent {
