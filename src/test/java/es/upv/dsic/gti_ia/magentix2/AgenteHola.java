@@ -30,7 +30,5 @@ public class AgenteHola extends BaseAgent {
 		send(msg);
 	}
 	
-	public void onMessage(ACLMessage msg){
-		System.out.println("Mensaje: " + msg.getContent());	
-	}
+	
 }
