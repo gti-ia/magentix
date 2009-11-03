@@ -5,8 +5,11 @@ import es.upv.dsic.gti_ia.architecture.QueueAgent;
 import es.upv.dsic.gti_ia.architecture.FIPANames.InteractionProtocol;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
+import es.upv.dsic.gti_ia.core.BaseAgent;
 
 import java.util.ArrayList;
+
+import org.apache.log4j.Logger;
 
 
 /**
@@ -20,8 +23,9 @@ public class OMSService {
 	private String value = "";
 	private int Quantity;
 	private ArrayList<String> list = new ArrayList<String>();
+	static Logger logger = Logger.getLogger(OMSService.class);
 
-	
+	Configuration c = new Configuration();
 	/**
 	 * This class gives us the support to accede to the services of the OMS
 	 * @param OMSServiceDesciptionLocation  The URL where the owl's document  is located.
@@ -36,7 +40,7 @@ public class OMSService {
 	 */
 	public  OMSService() {
 
-		this.configuration = "http://localhost:8080/omsservices/OMSservices/owl/owls/";
+		this.configuration =  c.OMSServiceDesciptionLocation;
 	}
 
 
@@ -57,7 +61,26 @@ public class OMSService {
 	}
 	
 	
+	private void sendInform(QueueAgent agent, String call)
+	{
+		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
+		requestMsg.setSender(agent.getAid());
+		requestMsg.setContent(call);
+		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
+		requestMsg.setReceiver(new AgentID("OMS"));
 
+		logger.info("[QueryAgent]Sms to send: " + requestMsg.getContent());
+		logger.info("[QueryAgent]Sending... ");
+		
+
+
+		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
+
+		do {
+			test.action();
+		} while (!test.finished());
+	}
+	
 	/**
 	 * Leave role agent inside the organization
 	 * @param agent
@@ -73,23 +96,8 @@ public class OMSService {
 
 		String call = configuration + "LeaveRoleProcess.owl AgentID=" + AgentID
 				+ " RoleID=" + RoleID + " UnitID=" + UnitID;
-		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
-		requestMsg.setSender(agent.getAid());
-		requestMsg.setContent(call);
-		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
-		requestMsg.setReceiver(new AgentID("OMS", "qpid", "localhost", ""));
-
-		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
-		System.out.println("[QueryAgent]Sending... ");
-
-
-		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
-
-		do {
-			test.action();
-		} while (!test.finished());
-	
-
+		
+		this.sendInform(agent, call);
 		return this.value;
 
 	}
@@ -106,20 +114,7 @@ public class OMSService {
 		
 		String call = configuration + "InformAgentRoleProcess.owl RequestedAgentID="
 				+ AgentID;
-		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
-		requestMsg.setSender(agent.getAid());
-		requestMsg.setContent(call);
-		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
-		requestMsg.setReceiver(new AgentID("OMS", "qpid", "localhost", ""));
-
-		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
-		System.out.println("[QueryAgent]Sending... ");
-
-		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
-
-		do {
-			test.action();
-		} while (!test.finished());
+		this.sendInform(agent, call);
 
 		return this.list;
 
@@ -138,20 +133,7 @@ public class OMSService {
 		
 		String call = configuration + "InformMembersProcess.owl RoleID="
 				+ RoleID + " UnitID=" + UnitID;
-		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
-		requestMsg.setSender(agent.getAid());
-		requestMsg.setContent(call);
-		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
-		requestMsg.setReceiver(new AgentID("OMS", "qpid", "localhost", ""));
-
-		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
-		System.out.println("[QueryAgent]Sending... ");
-
-		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
-
-		do {
-			test.action();
-		} while (!test.finished());
+		this.sendInform(agent, call);
 
 		return this.list;
 
@@ -169,20 +151,7 @@ public class OMSService {
 		
 		String call = configuration + "InformRoleNormsProcess.owl RoleID="
 				+ RoleID;
-		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
-		requestMsg.setSender(agent.getAid());
-		requestMsg.setContent(call);
-		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
-		requestMsg.setReceiver(new AgentID("OMS", "qpid", "localhost", ""));
-
-		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
-		System.out.println("[QueryAgent]Sending... ");
-
-		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
-
-		do {
-			test.action();
-		} while (!test.finished());
+		this.sendInform(agent, call);
 
 		return this.list;
 
@@ -200,20 +169,7 @@ public class OMSService {
 		
 		String call = configuration + "InformRoleProfilesProcess.owl UnitID="
 				+ UnitID;
-		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
-		requestMsg.setSender(agent.getAid());
-		requestMsg.setContent(call);
-		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
-		requestMsg.setReceiver(new AgentID("OMS", "qpid", "localhost", ""));
-
-		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
-		System.out.println("[QueryAgent]Sending... ");
-
-		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
-
-		do {
-			test.action();
-		} while (!test.finished());
+		this.sendInform(agent, call);
 
 		return this.list;
 
@@ -230,20 +186,7 @@ public class OMSService {
 		this.list.clear();
 		
 		String call = configuration + "InformUnitProcess.owl UnitID=" + UnitID;
-		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
-		requestMsg.setSender(agent.getAid());
-		requestMsg.setContent(call);
-		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
-		requestMsg.setReceiver(new AgentID("OMS", "qpid", "localhost", ""));
-
-		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
-		System.out.println("[QueryAgent]Sending... ");
-
-		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
-
-		do {
-			test.action();
-		} while (!test.finished());
+		this.sendInform(agent, call);
 
 		return this.list;
 
@@ -260,20 +203,7 @@ public class OMSService {
 		
 		String call = configuration + "InformUnitRolesProcess.owl UnitID="
 				+ UnitID;
-		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
-		requestMsg.setSender(agent.getAid());
-		requestMsg.setContent(call);
-		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
-		requestMsg.setReceiver(new AgentID("OMS", "qpid", "localhost", ""));
-
-		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
-		System.out.println("[QueryAgent]Sending... ");
-
-		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
-
-		do {
-			test.action();
-		} while (!test.finished());
+		this.sendInform(agent, call);
 
 		return this.list;
 
@@ -290,20 +220,7 @@ public class OMSService {
 
 		String call = configuration + "QuantityMembersProcess.owl RoleID="
 				+ RoleID + " UnitID=" + UnitID;
-		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
-		requestMsg.setSender(agent.getAid());
-		requestMsg.setContent(call);
-		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
-		requestMsg.setReceiver(new AgentID("OMS", "qpid", "localhost", ""));
-
-		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
-		System.out.println("[QueryAgent]Sending... ");
-
-		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
-
-		do {
-			test.action();
-		} while (!test.finished());
+		this.sendInform(agent, call);
 
 		return this.Quantity;
 
@@ -322,20 +239,7 @@ public class OMSService {
 
 		String call = configuration + "RegisterNormProcess.owl NormID="
 				+ NormID + " NormContent=" + NormContent;
-		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
-		requestMsg.setSender(agent.getAid());
-		requestMsg.setContent(call);
-		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
-		requestMsg.setReceiver(new AgentID("OMS", "qpid", "localhost", ""));
-
-		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
-		System.out.println("[QueryAgent]Sending... ");
-
-		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
-
-		do {
-			test.action();
-		} while (!test.finished());
+		this.sendInform(agent, call);
 
 		return this.value;
 
@@ -362,20 +266,7 @@ public class OMSService {
 				+ RegisterRoleInputRoleID + " UnitID=" + UnitID
 				+ " Accessibility=" + Accessibility + " Position=" + Position
 				+ " Visibility=" + Visibility + " Inheritance=" + Inheritance;
-		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
-		requestMsg.setSender(agent.getAid());
-		requestMsg.setContent(call);
-		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
-		requestMsg.setReceiver(new AgentID("OMS", "qpid", "localhost", ""));
-
-		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
-		System.out.println("[QueryAgent]Sending... ");
-
-		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
-
-		do {
-			test.action();
-		} while (!test.finished());
+		this.sendInform(agent, call);
 
 		return this.value;
 
@@ -396,20 +287,7 @@ public class OMSService {
 		String call = configuration + "RegisterUnitProcess.owl  UnitID="
 				+ UnitID + " Type=" + Type + " Goal=" + Goal + " ParentUnitID="
 				+ ParentUnitID;
-		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
-		requestMsg.setSender(agent.getAid());
-		requestMsg.setContent(call);
-		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
-		requestMsg.setReceiver(new AgentID("OMS", "qpid", "localhost", ""));
-
-		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
-		System.out.println("[QueryAgent]Sending... ");
-
-		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
-
-		do {
-			test.action();
-		} while (!test.finished());
+		this.sendInform(agent, call);
 
 		return this.value;
 
@@ -425,20 +303,7 @@ public class OMSService {
 
 		String call = configuration + "DeregisterNormProcess.owl  NormID="
 				+ NormID;
-		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
-		requestMsg.setSender(agent.getAid());
-		requestMsg.setContent(call);
-		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
-		requestMsg.setReceiver(new AgentID("OMS", "qpid", "localhost", ""));
-
-		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
-		System.out.println("[QueryAgent]Sending... ");
-
-		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
-
-		do {
-			test.action();
-		} while (!test.finished());
+		this.sendInform(agent, call);
 
 		return this.value;
 
@@ -455,21 +320,7 @@ public class OMSService {
 
 		String call = configuration + "DeregisterRoleProcess.owl  RoleID="
 				+ RoleID + " UnitID=" + UnitID;
-		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
-		requestMsg.setSender(agent.getAid());
-		requestMsg.setContent(call);
-		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
-		requestMsg.setReceiver(new AgentID("OMS", "qpid", "localhost", ""));
-
-		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
-		System.out.println("[QueryAgent]Sending... ");
-
-		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
-
-		do {
-			test.action();
-		} while (!test.finished());
-
+		this.sendInform(agent, call);
 		return this.value;
 
 	}
@@ -484,20 +335,7 @@ public class OMSService {
 
 		String call = configuration + "DeregisterNormProcess.owl  UnitID="
 				+ UnitID;
-		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
-		requestMsg.setSender(agent.getAid());
-		requestMsg.setContent(call);
-		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
-		requestMsg.setReceiver(new AgentID("OMS", "qpid", "localhost", ""));
-
-		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
-		System.out.println("[QueryAgent]Sending... ");
-
-		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
-
-		do {
-			test.action();
-		} while (!test.finished());
+		this.sendInform(agent, call);
 
 		return this.value;
 
@@ -517,21 +355,7 @@ public class OMSService {
 
 		String call = configuration + "ExpulseProcess.owl AgentID=" + AgentID
 				+ " RoleID=" + RoleID + " UnitID=" + UnitID;
-		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
-		requestMsg.setSender(agent.getAid());
-		requestMsg.setContent(call);
-		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
-		requestMsg.setReceiver(new AgentID("OMS", "qpid", "localhost", ""));
-
-
-		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
-		System.out.println("[QueryAgent]Sending... ");
-
-		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
-
-		do {
-			test.action();
-		} while (!test.finished());
+		this.sendInform(agent, call);
 
 		return this.value;
 
@@ -550,23 +374,7 @@ public class OMSService {
 
 		String call = configuration + "AcquireRoleProcess.owl RoleID=" + RoleID
 				+ " UnitID=" + UnitID;
-		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
-		requestMsg.setSender(agent.getAid());
-		requestMsg.setContent(call);
-		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
-		requestMsg.setReceiver(new AgentID("OMS", "qpid", "localhost", ""));
-
-
-		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
-		System.out.println("[QueryAgent]Sending... ");
-
-		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
-		
-		do {
-			test.action();
-		} while (!test.finished());
-		//bloquea el agente
-		//this.monitor.waiting();
+		this.sendInform(agent, call);
 
 		return this.value;
 
@@ -590,14 +398,14 @@ public class OMSService {
 		}
 
 		protected void handleAgree(ACLMessage msg) {
-			System.out.println(myAgent.getName() + ": OOH! "
+			logger.info(myAgent.getName() + ": OOH! "
 					+ msg.getSender().getLocalName()
 					+ " Has agreed to excute the service!");
 			
 		}
 
 		protected void handleRefuse(ACLMessage msg) {
-			System.out.println(myAgent.getName() + ": Oh no! "
+			logger.info(myAgent.getName() + ": Oh no! "
 					+ msg.getSender().getLocalName()
 					+ " has rejected my proposal.");
 			this.oms.setValor(myAgent.getName() + ": Oh no! "
@@ -608,7 +416,7 @@ public class OMSService {
 		}
 
 		protected void handleInform(ACLMessage msg) {
-			System.out.println(myAgent.getName() + ":"
+			logger.info(myAgent.getName() + ":"
 					+ msg.getSender().getLocalName()
 					+ " has informed me of the status of my request."
 					+ " They said : " + msg.getContent());
@@ -784,7 +592,7 @@ public class OMSService {
 		}
 
 		protected void handleNotUnderstood(ACLMessage msg) {
-			System.out.println(myAgent.getName() + ":"
+			logger.info(myAgent.getName() + ":"
 					+ msg.getSender().getLocalName()
 					+ " has indicated that they didn't understand.");
 			this.oms.setValor(myAgent.getName() + ":"
@@ -794,7 +602,7 @@ public class OMSService {
 		}
 
 		protected void handleOutOfSequence(ACLMessage msg) {
-			System.out.println(myAgent.getName() + ":"
+			logger.info(myAgent.getName() + ":"
 					+ msg.getSender().getLocalName()
 					+ " has send me a message which i wasn't"
 					+ " expecting in this conversation");
