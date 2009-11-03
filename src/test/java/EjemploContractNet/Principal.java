@@ -2,7 +2,7 @@ package EjemploContractNet;
 
 import org.apache.qpid.transport.Connection;
 
-import es.upv.dsic.gti_ia.fipa.AgentID;
+import es.upv.dsic.gti_ia.core.AgentID;
 
 public class Principal {
 
@@ -19,7 +19,7 @@ public class Principal {
         Connection con = new Connection();
         con.connect("gtiiaprojects.dsic.upv.es", 5672, "test", "guest", "guest",false);        // TODO add your handling code here:
         
-        
+        try{
         Concesionario concesionario = new Concesionario(new AgentID("Concesionario","qpid","localhost",""),con);
         concesionario.start();
         
@@ -52,6 +52,7 @@ public class Principal {
         
         Cliente cliente = new Cliente(new AgentID("cliente","qpid","localhost",""),con);
         cliente.start();
+        }catch(Exception e){}
 
 	}
 

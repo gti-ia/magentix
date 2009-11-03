@@ -4,17 +4,23 @@ import org.apache.qpid.transport.Connection;
 
 
 
-import es.upv.dsic.gti_ia.proto.*;
-import es.upv.dsic.gti_ia.fipa.AgentID;
-import es.upv.dsic.gti_ia.magentix2.QueueAgent;
-import es.upv.dsic.gti_ia.proto.MessageTemplate;
-import es.upv.dsic.gti_ia.fipa.*;
+import org.apache.qpid.transport.Connection;
 
-import es.upv.dsic.gti_ia.proto.Monitor;
+import es.upv.dsic.gti_ia.architecture.FIPAContractNetInitiator;
+import es.upv.dsic.gti_ia.architecture.FIPAContractNetResponder;
+import es.upv.dsic.gti_ia.architecture.FIPANames;
+import es.upv.dsic.gti_ia.architecture.FailureException;
+import es.upv.dsic.gti_ia.architecture.MessageTemplate;
+import es.upv.dsic.gti_ia.architecture.Monitor;
+import es.upv.dsic.gti_ia.architecture.NotUnderstoodException;
+import es.upv.dsic.gti_ia.architecture.QueueAgent;
+import es.upv.dsic.gti_ia.architecture.RefuseException;
+import es.upv.dsic.gti_ia.core.ACLMessage;
+import es.upv.dsic.gti_ia.core.AgentID;
 
 public class Concesionario extends QueueAgent {
 
-	public Concesionario(AgentID aid, Connection connection) {
+	public Concesionario(AgentID aid, Connection connection) throws Exception {
 
 		super(aid, connection);
 

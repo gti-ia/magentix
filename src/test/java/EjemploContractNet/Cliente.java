@@ -2,12 +2,15 @@ package EjemploContractNet;
 
 import org.apache.qpid.transport.Connection;
 
+import es.upv.dsic.gti_ia.architecture.FIPAContractNetInitiator;
+import es.upv.dsic.gti_ia.architecture.FIPANames;
+import es.upv.dsic.gti_ia.architecture.Monitor;
+import es.upv.dsic.gti_ia.architecture.QueueAgent;
+import es.upv.dsic.gti_ia.core.ACLMessage;
+import es.upv.dsic.gti_ia.core.AgentID;
 
-import es.upv.dsic.gti_ia.magentix2.QueueAgent;
-import es.upv.dsic.gti_ia.proto.Monitor;
-import es.upv.dsic.gti_ia.fipa.*;
-import es.upv.dsic.gti_ia.proto.FIPANames;
-import es.upv.dsic.gti_ia.proto.*;
+
+
 import java.util.Date;
 import java.util.ArrayList;
 
@@ -16,7 +19,7 @@ public class Cliente extends QueueAgent {
 	private Monitor adv= new Monitor();
 	private int precionMaximo;
 	private int numeroDeOfertas=0;
-    public Cliente(AgentID aid, Connection connection)
+    public Cliente(AgentID aid, Connection connection) throws Exception
     {
 
     	super(aid, connection);
@@ -59,7 +62,7 @@ public class Cliente extends QueueAgent {
                     
                     this.setTask(new ManejoOpciones(this, mensajeCFP));
                  
-                    es.upv.dsic.gti_ia.proto.Monitor adv = new Monitor();
+                    Monitor adv = new Monitor();
                     adv.waiting();
  
              
