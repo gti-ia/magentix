@@ -11,9 +11,9 @@ public class Configuration {
 	public String databaseName;
 	public String userName;
 	public String password;
-	public static String OMSServiceDesciptionLocation;
-	public static String SFServiceDesciptionLocation;
-	public static String THServiceDesciptionLocation;
+	public  String OMSServiceDesciptionLocation;
+	public  String SFServiceDesciptionLocation;
+	public  String THServiceDesciptionLocation;
 	
 
 
@@ -25,7 +25,8 @@ public class Configuration {
 	Properties properties = new Properties();
 
 	   try {
-		   properties.loadFromXML(Configuration.class.getResourceAsStream("/"+"THOMASDemoConfiguration.xml"));
+		   properties.loadFromXML(Configuration.class.getResourceAsStream("/"+"ThomasSettings.xml"));
+		   
 			for (Enumeration<Object> e = properties.keys(); e.hasMoreElements() ; ) {
 			    // Obtenemos el objeto
 			    Object obj = e.nextElement();
@@ -65,5 +66,7 @@ public class Configuration {
 
 	
 }
+	
+
 
 }
