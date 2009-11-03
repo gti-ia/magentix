@@ -3,16 +3,16 @@ package EjemploRequest;
 
 import org.apache.qpid.transport.Connection;
 
+import _BaseAgent_Example.*;
+
+
 
 import es.upv.dsic.gti_ia.fipa.AgentID;
-import es.upv.dsic.gti_ia.magentix2.*;
 
 import es.upv.dsic.gti_ia.fipa.ACLMessage;
 
 import es.upv.dsic.gti_ia.proto.FIPARequestResponder;
-import es.upv.dsic.gti_ia.magentix2.QueueAgent;
 import es.upv.dsic.gti_ia.proto.FIPANames.InteractionProtocol;
-import es.upv.dsic.gti_ia.proto.MessageTemplate;
 import es.upv.dsic.gti_ia.proto.*;
 import java.util.StringTokenizer;
 

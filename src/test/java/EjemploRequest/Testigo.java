@@ -6,13 +6,15 @@ import org.apache.qpid.transport.Connection;
 
 import org.apache.qpid.transport.Connection;
 
+import _BaseAgent_Example.QueueAgent;
+
+
 
 
 import es.upv.dsic.gti_ia.fipa.ACLMessage;
 import es.upv.dsic.gti_ia.fipa.AgentID;
 import es.upv.dsic.gti_ia.proto.FIPANames.InteractionProtocol;
 import es.upv.dsic.gti_ia.proto.FIPARequestInitiator;
-import es.upv.dsic.gti_ia.magentix2.QueueAgent;
 
 
 

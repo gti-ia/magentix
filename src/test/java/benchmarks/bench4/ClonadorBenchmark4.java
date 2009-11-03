@@ -3,9 +3,11 @@ package benchmarks.bench4;
 
 import org.apache.qpid.transport.Connection;
 
+import _BaseAgent_Example.BridgeAgentInOut;
+import _BaseAgent_Example.SingleAgent;
+
+
 import es.upv.dsic.gti_ia.fipa.AgentID;
-import es.upv.dsic.gti_ia.magentix2.BridgeAgentInOut;
-import es.upv.dsic.gti_ia.magentix2.SingleAgent;
 
 /**
  * This class is responsible for creating receiver's agents like the first one.

@@ -2,8 +2,9 @@ package EjemploQuery;
 
 import org.apache.qpid.transport.Connection;
 
-import es.upv.dsic.gti_ia.fipa.AgentID;
-import es.upv.dsic.gti_ia.magentix2.QueueAgent;
+import _BaseAgent_Example.QueueAgent;
+
+
 import es.upv.dsic.gti_ia.fipa.*;
 import es.upv.dsic.gti_ia.proto.*;
 

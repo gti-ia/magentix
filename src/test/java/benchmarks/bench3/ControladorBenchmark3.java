@@ -1,9 +1,12 @@
 package benchmarks.bench3;
 
 import org.apache.qpid.transport.Connection;
+
+import _BaseAgent_Example.SingleAgent;
+
+
 import es.upv.dsic.gti_ia.fipa.ACLMessage;
 import es.upv.dsic.gti_ia.fipa.AgentID;
-import es.upv.dsic.gti_ia.magentix2.SingleAgent;
 
 public class ControladorBenchmark3 extends SingleAgent {
 	

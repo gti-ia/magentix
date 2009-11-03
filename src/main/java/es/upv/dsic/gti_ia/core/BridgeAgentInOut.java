@@ -32,10 +32,10 @@ public class BridgeAgentInOut extends SingleAgent{
 	
 	
 
-	public BridgeAgentInOut(AgentID aid, Connection connection) throws Exception
+	public BridgeAgentInOut(AgentID aid) throws Exception
 
 	{
-		super(aid, connection);
+		super(aid);
 	      // crear objeto DatagramSocket para enviar y recibir paquetes
 	      try {
 	    	  
@@ -389,13 +389,24 @@ public class BridgeAgentInOut extends SingleAgent{
        while ( true ) { // iterar infinitamente
     	   
     	   logger.info("I'm BridgeAgentInOut, waiting request....");
- 
+    	   ACLMessage mensaje;
+    	   try{
               
-             ACLMessage mensaje = receiveACLMessage();
-             
+             mensaje = receiveACLMessage();
              logger.info("Message was received in BridgeAgentInOut: "+mensaje.getContent());
+             
+             
+             /*
+              * AQUI LO IDEAL SERIA CREAR UN HILO Y QUE SE OCUPE ESE HILO DE TODA LA FAENA,
+              * MIESTRAS YO ESPERO OTRA PETICIÓN
+              */
+               send_Exterior( mensaje ); // Send packacge to out
+             
+    	   }catch(Exception e){}
+             
+             
 /* 
-             // mostrar la información del paquete recibido 
+             // mostrar la informacion del paquete recibido 
              mostrarMensaje( "\nPaquete recibido:" + 
                 "\nDel host: " + recibirPaquete.getAddress() + 
                 "\nPuerto del host: " + recibirPaquete.getPort() + 
@@ -403,13 +414,9 @@ public class BridgeAgentInOut extends SingleAgent{
                 "\nContenido:\n\t" + new String( recibirPaquete.getData(), 
                    0, recibirPaquete.getLength() ) );
 */
- /*
-  * AQUI LO IDEAL SERIA CREAR UN HILO Y QUE SE OCUPE ESE HILO DE TODA LA FAENA,
-  * MIESTRAS YO ESPERO OTRA PETICIÓN
-  */
-             send_Exterior( mensaje ); // enviar paquete al agente exterior
+
           
-       } // fin de instrucción while
+       } 
  
    }  
 

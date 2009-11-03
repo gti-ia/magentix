@@ -31,8 +31,8 @@ public class BridgeAgentOutIn extends SingleAgent{
 	 * @param connection
 	 * @throws Exception
 	 */
-	public BridgeAgentOutIn(AgentID aid, Connection connection) throws Exception {
-		super(aid, connection);
+	public BridgeAgentOutIn(AgentID aid) throws Exception {
+		super(aid);
 		
 		  // crear objeto DatagramSocket para enviar y recibir paquetes
 	       try {

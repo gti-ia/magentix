@@ -18,6 +18,7 @@ import org.apache.qpid.transport.Connection;
 
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
+import es.upv.dsic.gti_ia.core.AgentsConecction;
 import es.upv.dsic.gti_ia.core.BaseAgent;
 
 
@@ -56,8 +57,9 @@ public class QueueAgent extends BaseAgent {
 	 *            connection with the broker.
 	 */
 
-	public QueueAgent(AgentID aid, Connection connection) throws Exception{
-		super(aid, connection);	
+	public QueueAgent(AgentID aid) throws Exception{
+		super(aid);	
+		
 	}
 
 
