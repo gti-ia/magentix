@@ -24,7 +24,7 @@ public class Prueba {
 		agente2.start();
 		agente.start();
 		}catch(Exception e){
-			System.out.println("Error");
+			System.out.println("Error: "+e.getMessage());
 		}
 		
 		

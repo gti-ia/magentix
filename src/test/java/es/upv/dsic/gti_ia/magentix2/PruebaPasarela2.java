@@ -30,7 +30,7 @@ public class PruebaPasarela2 {
        /*
         * agente2 interactua con agenteOutIn
         */
-        AgenteConsumidor agente2 = new AgenteConsumidor(new AgentID("agenteconsumidor", "qpid", "localhost","8080"),con);
+        AgenteConsumidor agente2 = new AgenteConsumidor(new AgentID("agenteconsumidor", "qpid", "localhost","8080"));
    
 
         agenteInOut.start();

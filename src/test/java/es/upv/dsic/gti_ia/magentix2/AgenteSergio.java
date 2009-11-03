@@ -13,7 +13,7 @@ import es.upv.dsic.gti_ia.core.BaseAgent;
 public class AgenteSergio extends BaseAgent {
 	
 	public AgenteSergio(AgentID aid, Connection connection) throws Exception {
-		super(aid, connection);
+		super(aid);
 	}
 	
 	public void execute(){
