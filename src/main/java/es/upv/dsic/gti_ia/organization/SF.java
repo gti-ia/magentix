@@ -1,14 +1,12 @@
 package es.upv.dsic.gti_ia.organization;
-/**
- * SF.java
- * @version 2.0
- */
+
 
 
 import java.net.URI;
 import java.util.*;
 
-import org.apache.qpid.transport.Connection;
+
+import org.apache.log4j.Logger;
 import org.mindswap.owl.EntityFactory;
 import org.mindswap.owl.OWLFactory;
 import org.mindswap.owl.OWLKnowledgeBase;
@@ -29,6 +27,9 @@ import es.upv.dsic.gti_ia.core.AgentID;
 
 
 
+
+
+
 /**
  * SF agent is responsible for managing all the request messages from other entities
  * SF agent follows a FIPA-Request protocol
@@ -37,7 +38,12 @@ public class SF extends QueueAgent {
 
 	
 	private Monitor mon = new Monitor();
-	private String SFServiceDesciptionLocation="http://localhost:8080/sfservices/SFservices/owl/owls/";
+	
+	Configuration c = new Configuration();
+	
+	private String SFServiceDesciptionLocation = c.SFServiceDesciptionLocation;
+	
+	static Logger logger = Logger.getLogger(SF.class);
 	// create a kb
 	OWLKnowledgeBase kb = OWLFactory.createKB();
 	OWLKnowledgeBase kbaux = OWLFactory.createKB();
@@ -184,7 +190,7 @@ public class SF extends QueueAgent {
     
 
 		
-	    public SF(AgentID aid, Connection connection)throws Exception{
+	    public SF(AgentID aid)throws Exception{
 	    
 
 	    	super(aid);
@@ -227,10 +233,10 @@ public class SF extends QueueAgent {
 				values.setDataValue(RegisterProfileProcess.getInput("RegisterProfileInputServiceProfile"),SFServicesProfiles[k].toString() );
 				values.setDataValue(RegisterProfileProcess.getInput("RegisterProfileInputServiceGoal"),SFServicesGoals[k].toString() );
 
-				System.out.println("[SF]Executing... "+values.getValues().toString());
+				logger.info("[SF]Executing... "+values.getValues().toString());
 				values = exec.execute(RegisterProfileProcess, values);
 
-				System.out.println("[SF]Values obtained... :"+values.toString());
+				logger.info("[SF]Values obtained... :"+values.toString());
 				
 			}//for k
 		}catch(Exception e){
@@ -266,10 +272,10 @@ public class SF extends QueueAgent {
 				values.setDataValue(RegisterProcessProcess.getInput("RegisterProcessInputProviderID"),SFServicesProviderID[k].toString() );
 				
 
-				System.out.println("[SF]Executing... "+values.getValues().toString());
+				logger.info("[SF]Executing... "+values.getValues().toString());
 				values = exec.execute(RegisterProcessProcess, values);
 
-				System.out.println("[SF]Values obtained... :"+values.toString());
+				logger.info("[SF]Values obtained... :"+values.toString());
 			
 			}//for k
 		}catch(Exception e){
@@ -311,7 +317,7 @@ public class SF extends QueueAgent {
 						//read in the service description
 						String token_process = Tok.nextElement().toString();
 
-						System.out.println("[SF]Doc OWL-S: " + token_process);
+						logger.info("[SF]Doc OWL-S: " + token_process);
 						Service aService = kb.readService(token_process);		
 					
 						//get the process for the server
@@ -330,20 +336,20 @@ public class SF extends QueueAgent {
 								||token_process.equals(SFServicesProcess[9].toString())
 								){
 				
-							System.out.println("AGREE");
+							logger.info("AGREE");
 							response.setPerformative(es.upv.dsic.gti_ia.core.ACLMessage.AGREE);
 							response.setContent(aProcess.getLocalName()+"=Agree");
 							
 						}else{
 					
-							System.out.println("REFUSE");
+							logger.error("REFUSE");
 							response.setPerformative(es.upv.dsic.gti_ia.core.ACLMessage.REFUSE);
 							response.setContent(aProcess.getLocalName()+"=Refuse");
 						}
 						
 					}catch(Exception e){
 		
-						System.out.println("EXCEPTION");
+						logger.error("EXCEPTION");
 						System.out.println(e);
 						e.printStackTrace();
 						throw new RuntimeException(e.getMessage());
@@ -352,13 +358,13 @@ public class SF extends QueueAgent {
 						
 				}else{
 			
-					System.out.println("NOTUNDERSTOOD");
+					logger.info("NOTUNDERSTOOD");
 					response.setPerformative(es.upv.dsic.gti_ia.core.ACLMessage.NOT_UNDERSTOOD);
 					response.setContent("NotUnderstood");
 				}
 			
 			
-				System.out.println("[SF]Sending First message:"+ response);
+				logger.info("[SF]Sending First message:"+ response);
 			
 				return(response);
 		
@@ -389,7 +395,7 @@ public class SF extends QueueAgent {
 				//read in the service description
 				String token_process = Tok.nextElement().toString();
 	
-				System.out.println("[SF]Doc OWL-S: " + token_process);
+				logger.info("[SF]Doc OWL-S: " + token_process);
 				
 				try{
 					Service aService = kb.readService(token_process);		
@@ -421,16 +427,16 @@ public class SF extends QueueAgent {
 					}//end while   
 					
 					//execute the service
-					System.out.println("[SF]Executing... "+values.getValues().toString());
+					logger.info("[SF]Executing... "+values.getValues().toString());
 					values = exec.execute(aProcess, values);
 
-					System.out.println("[SF]Values obtained... ");
+					logger.info("[SF]Values obtained... ");
 
-					System.out.println("[SF]Creating inform message to send...");
+					logger.info("[SF]Creating inform message to send...");
 				
 					msg.setPerformative(es.upv.dsic.gti_ia.core.ACLMessage.INFORM);
 
-					System.out.println("[SF]Before set message content...");
+					logger.info("[SF]Before set message content...");
 					msg.setContent(aProcess.getLocalName()+"="+values.toString());
 	                        
 	            }catch(Exception e){
@@ -452,7 +458,7 @@ public class SF extends QueueAgent {
 		//RegisterOMSServiceProfiles();
 		//RegisterOMSServiceProcess();
 
-		System.out.println("Agent SF");
+		logger.info("Agent SF active");
 		
 		SFResponder responder = new SFResponder(this);
 

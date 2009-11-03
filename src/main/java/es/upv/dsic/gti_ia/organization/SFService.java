@@ -1,8 +1,11 @@
 package es.upv.dsic.gti_ia.organization;
 
 
+
 import java.util.HashMap;
 import java.util.ArrayList;
+
+import org.apache.log4j.Logger;
 
 
 import es.upv.dsic.gti_ia.architecture.FIPARequestInitiator;
@@ -22,8 +25,10 @@ public class SFService {
 	private boolean salida = true;
 	private String salidaString = null;
 	private ArrayList<String> idsSearchService = new ArrayList<String>();
-
 	
+	static Logger logger = Logger.getLogger(SFService.class);
+
+	Configuration c = new Configuration();
 
 	/**
 	 * 
@@ -31,7 +36,7 @@ public class SFService {
 	 */
 	public SFService(String SFServiceDesciptionLocation) {
 
-		this.SFServiceDesciptionLocation = SFServiceDesciptionLocation;
+		this.SFServiceDesciptionLocation = c.SFServiceDesciptionLocation;
 
 	}
 
@@ -92,6 +97,25 @@ public class SFService {
 		return this.descripcion;
 	}
 	
+	private void sendInfo(QueueAgent agent, String call)
+	{
+		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
+		requestMsg.setSender(agent.getAid());
+		requestMsg.setContent(call);
+		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
+		requestMsg.setReceiver(new AgentID("SF"));
+
+		logger.info("[QueryAgent]Sms to send: " + requestMsg.getContent());
+		logger.info("[QueryAgent]Sending... ");
+
+		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
+
+		do {
+			test.action();
+		} while (!test.finished());
+
+	}
+	
 	/**
 	 * Remove provider agent
 	 * @param agent
@@ -110,21 +134,8 @@ public class SFService {
 				"RemoveProviderInputServiceImplementationID="
 				+ descripcion.getImplementationID();
 
-		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
-		requestMsg.setSender(agent.getAid());
-		requestMsg.setContent(call);
-		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
-		requestMsg.setReceiver(new AgentID("SF", "qpid", "localhost", ""));
-
-		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
-		System.out.println("[QueryAgent]Sending... ");
-
-		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
-
-		do {
-			test.action();
-		} while (!test.finished());
-
+		this.sendInfo(agent, call);
+		
 		
 		
 		return salida;
@@ -149,21 +160,7 @@ public class SFService {
 				+ "SearchServiceProcess.owl SearchServiceInputServicePurpose="
 				+ serviceGoal;
 
-		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
-		requestMsg.setSender(agent.getAid());
-		requestMsg.setContent(call);
-		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
-		requestMsg.setReceiver(new AgentID("SF", "qpid", "localhost", ""));
-
-		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
-		System.out.println("[QueryAgent]Sending... ");
-
-		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
-
-		do {
-			test.action();
-		} while (!test.finished());
-		
+		this.sendInfo(agent, call);
 		return this.idsSearchService;
 
 	}
@@ -191,19 +188,7 @@ public class SFService {
 				+ descripcion.getURLProcess() + descripcion.getServiceGoal()
 				+ ".owl#" + descripcion.getServiceGoal();
 
-		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
-		requestMsg.setSender(agent.getAid());
-		requestMsg.setContent(call);
-		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
-		requestMsg.setReceiver(new AgentID("SF", "qpid", "localhost", ""));
-
-		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
-		System.out.println("[QueryAgent]Sending... ");
-		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
-
-		do {
-			test.action();
-		} while (!test.finished());
+		this.sendInfo(agent, call);
 		
 		return salida;
 	}
@@ -229,20 +214,7 @@ public class SFService {
 				+ descripcion.getServiceGoal() + ".owl#"
 				+ descripcion.getServiceGoal();
 
-		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
-		requestMsg.setSender(agent.getAid());
-		requestMsg.setContent(call);
-		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
-		requestMsg.setReceiver(new AgentID("SF", "qpid", "localhost", ""));
-
-		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
-		System.out.println("[QueryAgent]Sending... ");
-
-		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
-
-		do {
-			test.action();
-		} while (!test.finished());
+		this.sendInfo(agent, call);
 		
 		return salida;
 
@@ -272,21 +244,7 @@ public class SFService {
 				+ ".owl#"
 				+ descripcion.getID();
 
-		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
-		requestMsg.setSender(agent.getAid());
-		requestMsg.setContent(call);
-		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
-		requestMsg.setReceiver(new AgentID("SF", "qpid", "localhost", ""));
-
-		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
-		System.out.println("[QueryAgent]Sending... ");
-
-		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
-
-		do {
-			test.action();
-		} while (!test.finished());
-		
+		this.sendInfo(agent, call);
 		return salida;
 
 	}
@@ -315,21 +273,7 @@ public class SFService {
 				+ ".owl#"
 				+ descripcion.getID();
 				 */
-		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
-		requestMsg.setSender(agent.getAid());
-		requestMsg.setContent(call);
-		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
-		requestMsg.setReceiver(new AgentID("SF", "qpid", "localhost", ""));
-
-		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
-		System.out.println("[QueryAgent]Sending... ");
-
-		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
-
-		do {
-			test.action();
-		} while (!test.finished());
-	
+		this.sendInfo(agent, call);
 		return this.agentes;
 		
 
@@ -357,20 +301,7 @@ public class SFService {
 				+ ".owl#"
 				+ descripcion.getID();*/
 
-		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
-		requestMsg.setSender(agent.getAid());
-		requestMsg.setContent(call);
-		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
-		requestMsg.setReceiver(new AgentID("SF", "qpid", "localhost", ""));
-
-		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
-		System.out.println("[QueryAgent]Sending... ");
-
-		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
-
-		do {
-			test.action();
-		} while (!test.finished());
+		this.sendInfo(agent, call);
 		
 		return salidaString;
 	}
@@ -399,20 +330,7 @@ public class SFService {
 				+ " RegisterProfileInputServiceProfile="
 				+ descripcion.getServiceProfile();
 
-		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
-		requestMsg.setSender(agent.getAid());
-		requestMsg.setContent(call);
-		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
-		requestMsg.setReceiver(new AgentID("SF", "qpid", "localhost", ""));
-
-		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
-		System.out.println("[QueryAgent]Sending... ");
-
-		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
-
-		do {
-			test.action();
-		} while (!test.finished());
+		this.sendInfo(agent, call);
 		
 		return salida;
 
@@ -442,21 +360,7 @@ public class SFService {
 				+ " RegisterProcessInputServiceModel="
 				+ descripcion.getServiceModel();
 
-		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
-		requestMsg.setSender(agent.getAid());
-		requestMsg.setContent(call);
-		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
-		requestMsg.setReceiver(new AgentID("SF", "qpid", "localhost", ""));
-
-		System.out.println("[QueryAgent]Sms to send: " + requestMsg.toString());
-		System.out.println("[QueryAgent]Sending... ");
-		// send(requestMsg);
-
-		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
-
-		do {
-			test.action();
-		} while (!test.finished());
+		this.sendInfo(agent, call);
 		
 		return salida;
 	}
@@ -486,14 +390,14 @@ public class SFService {
 		}
 
 		protected void handleAgree(ACLMessage msg) {
-			System.out.println(myAgent.getName() + ": OOH! "
+			logger.info(myAgent.getName() + ": OOH! "
 					+ msg.getSender().getLocalName()
 					+ " Has agreed to excute the service!");
 
 		}
 
 		protected void handleRefuse(ACLMessage msg) {
-			System.out.println(myAgent.getName() + ": Oh no! "
+			logger.info(myAgent.getName() + ": Oh no! "
 					+ msg.getSender().getLocalName()
 					+ " has rejected my proposal.");
 			this.sf.setSalida(false);
@@ -501,7 +405,7 @@ public class SFService {
 		}
 
 		protected void handleInform(ACLMessage msg) {
-			System.out.println(myAgent.getName() + ":"
+			logger.info(myAgent.getName() + ":"
 					+ msg.getSender().getLocalName()
 					+ " has informed me of the status of my request."
 					+ " They said : " + msg.getContent());
@@ -686,14 +590,14 @@ public class SFService {
 		}
 
 		protected void handleNotUnderstood(ACLMessage msg) {
-			System.out.println(myAgent.getName() + ":"
+			logger.info(myAgent.getName() + ":"
 					+ msg.getSender().getLocalName()
 					+ " has indicated that they didn't understand.");
 			this.sf.setSalida(false);
 		}
 
 		protected void handleOutOfSequence(ACLMessage msg) {
-			System.out.println(myAgent.getName() + ":"
+			logger.info(myAgent.getName() + ":"
 					+ msg.getSender().getLocalName()
 					+ " has send me a message which i wasn't"
 					+ " expecting in this conversation");

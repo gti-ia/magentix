@@ -1,5 +1,6 @@
 package es.upv.dsic.gti_ia.organization;
 
+
 /**
  * OMS.java
  * 
@@ -25,10 +26,9 @@ import es.upv.dsic.gti_ia.architecture.FIPANames.InteractionProtocol;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 
-import org.apache.qpid.transport.Connection;
 
 
-
+import org.apache.log4j.Logger;
 import org.mindswap.owl.EntityFactory;
 import org.mindswap.owl.OWLFactory;
 import org.mindswap.owl.OWLKnowledgeBase;
@@ -50,8 +50,13 @@ import org.mindswap.query.ValueMap;
 public class OMS extends QueueAgent {
 
 	
-	 	private String OMSServiceDesciptionLocation = "http://localhost:8080/omsservices/OMSservices/owl/owls/";
-	 	private String SFServiceDesciptionLocation = "http://localhost:8080/sfservices/SFservices/owl/owls/";
+		Configuration configuration = new Configuration();
+		
+	 	private String OMSServiceDesciptionLocation = configuration.OMSServiceDesciptionLocation;
+	 	private String SFServiceDesciptionLocation = configuration.SFServiceDesciptionLocation;
+	 	
+		static Logger logger = Logger.getLogger(OMS.class);
+		
 	 	private Monitor mon  = new Monitor();
 	// create a kb
 		OWLKnowledgeBase kb = OWLFactory.createKB();
@@ -230,7 +235,7 @@ public class OMS extends QueueAgent {
      * @param SFServiceDesciptionLocation
      * @throws Exception
      */
-	public OMS(AgentID aid, Connection connection)throws Exception{
+	public OMS(AgentID aid)throws Exception{
     	super(aid);
     }
    
@@ -296,10 +301,10 @@ public class OMS extends QueueAgent {
 				values.setDataValue(RegisterProfileProcess.getInput("RegisterProfileInputServiceProfile"),OMSServicesProfiles[k].toString());
 				values.setDataValue(RegisterProfileProcess.getInput("RegisterProfileInputServiceGoal"),OMSServicesGoals[k].toString());
 				values.setDataValue(RegisterProfileProcess.getInput("RegisterProfileInputAgentID"),"OMS");
-				if(DEBUG) System.out.println("[OMS]Executing... "+values.getValues().toString());
+				if(DEBUG) logger.info("[OMS]Executing... "+values.getValues().toString());
 				values = exec.execute(RegisterProfileProcess, values);
-				if(DEBUG) System.out.println("[OMS]Values obtained... :"+values.toString());
-				if(DEBUG) System.out.println("[OMS]ServiceID... :"+values.getValue("RegisterProfileOutputServiceID").toString());
+				if(DEBUG) logger.info("[OMS]Values obtained... :"+values.toString());
+				if(DEBUG) logger.info("[OMS]ServiceID... :"+values.getValue("RegisterProfileOutputServiceID").toString());
 				OMSServicesIDs[k]=URI.create(values.getValue("RegisterProfileOutputServiceID").toString());
 			}//for k
 		}catch(Exception e){
@@ -331,9 +336,9 @@ public class OMS extends QueueAgent {
 				values.setDataValue(RegisterProcessProcess.getInput("RegisterProcessInputServiceID"),OMSServicesIDs[k].toString() );
 				values.setDataValue(RegisterProcessProcess.getInput("RegisterProcessInputServiceModel"),OMSServicesProcess[k].toString() );
 				values.setDataValue(RegisterProcessProcess.getInput("RegisterProcessInputAgentID"),"OMS");
-				if(DEBUG) System.out.println("[OMS]Executing... "+values.getValues().toString());
+				if(DEBUG) logger.info("[OMS]Executing... "+values.getValues().toString());
 				values = exec.execute(RegisterProcessProcess, values);
-				if(DEBUG) System.out.println("[OMS]Values obtained... :"+values.toString());
+				if(DEBUG) logger.info("[OMS]Values obtained... :"+values.toString());
 				
 		
 			
@@ -391,20 +396,20 @@ public class OMS extends QueueAgent {
 				
 						if(exists){
                 
-							System.out.println("AGREE");
+							logger.info("AGREE");
 							response.setPerformative(es.upv.dsic.gti_ia.core.ACLMessage.AGREE);
 							response.setContent("=Agree");
 							
 						}else{
                            
-							System.out.println("REFUSE");
+							logger.error("REFUSE");
 							response.setPerformative(es.upv.dsic.gti_ia.core.ACLMessage.REFUSE);
 							response.setContent("=Refuse");
 						}
 						
 					}catch(Exception e){
                        
-						System.out.println("EXCEPTION");
+						logger.error("EXCEPTION");
                        
 						System.out.println(e);
 						e.printStackTrace();
@@ -414,13 +419,13 @@ public class OMS extends QueueAgent {
 						
 				}else{
                    
-					System.out.println("NOTUNDERSTOOD");
+					logger.error("NOTUNDERSTOOD");
 					response.setPerformative(es.upv.dsic.gti_ia.core.ACLMessage.NOT_UNDERSTOOD);
 					response.setContent("NotUnderstood");
 				}
 
                
-				System.out.println("[OMS]Sending First message:"+ response);
+				logger.info("[OMS]Sending First message:"+ response);
 				return(response);
 		
 		} //end prepareResponse
@@ -452,7 +457,7 @@ public class OMS extends QueueAgent {
 			if(DEBUG)
 			{
 				
-				System.out.println("[OMS]Doc OWL-S: " + token_process);
+				logger.info("[OMS]Doc OWL-S: " + token_process);
 			}
 			
 			try{
@@ -488,26 +493,26 @@ public class OMS extends QueueAgent {
 				if(DEBUG)
 				{
 				
-					System.out.println("[OMS]Executing... "+values.getValues().toString());
+					logger.info("[OMS]Executing... "+values.getValues().toString());
 				}
 				values = exec.execute(aProcess, values);
 				if(DEBUG)
 				{
 					
-					System.out.println("[OMS]Values obtained... "+values.toString());
+					logger.info("[OMS]Values obtained... "+values.toString());
 				}
 				if(DEBUG) 
 				{
 					
-					System.out.println("[OMS]Creating inform message to send...");
+					logger.info("[OMS]Creating inform message to send...");
 				}
 			
 				msg.setPerformative(ACLMessage.INFORM);
 				if(DEBUG)
 				{
 					
-					System.out.println("[OMS]Before set message content...");
-					System.out.println("*-*-*El mensaje"+ aProcess.getLocalName()+"="+values.toString());
+					logger.info("[OMS]Before set message content...");
+					
 				}
 				msg.setContent(aProcess.getLocalName()+"="+values.toString());
 				
@@ -516,7 +521,7 @@ public class OMS extends QueueAgent {
             	if(DEBUG)
             	{
             		
-            		System.out.println(e.toString());
+            		logger.error(e.toString());
             	}
             	msg.setPerformative(ACLMessage.FAILURE);
             }
@@ -535,7 +540,7 @@ public class OMS extends QueueAgent {
 protected void execute() {
 	//RegisterOMSServiceProfiles();
 	//RegisterOMSServiceProcess();
-	System.out.println("Agent OMS");
+	logger.info("Agent OMS active");
 	OMSResponder responder = new OMSResponder(this);
   
 	this.setTask(responder);
