@@ -2,6 +2,8 @@ package benchmarks.lanzadera;
 
 import org.apache.qpid.transport.Connection;
 
+import es.upv.dsic.gti_ia.core.AgentID;
+
 import benchmarks.bench1.ControladorBenchmark1;
 import benchmarks.bench1.EmisorBenchmark1;
 import benchmarks.bench1.ReceptorBenchmark1;
@@ -12,7 +14,7 @@ import benchmarks.bench3.EmisorBenchmark3;
 import benchmarks.bench4.ControladorBenchmark4;
 import benchmarks.bench4.EmisorBenchmark4;
 
-import es.upv.dsic.gti_ia.fipa.AgentID;
+
 
 public class Lanzadera {
 	/*
