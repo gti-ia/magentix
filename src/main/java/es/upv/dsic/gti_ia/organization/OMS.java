@@ -402,14 +402,14 @@ public class OMS extends QueueAgent {
 							
 						}else{
                            
-							logger.error("REFUSE");
+							logger.info("REFUSE");
 							response.setPerformative(es.upv.dsic.gti_ia.core.ACLMessage.REFUSE);
 							response.setContent("=Refuse");
 						}
 						
 					}catch(Exception e){
                        
-						logger.error("EXCEPTION");
+						logger.info("EXCEPTION");
                        
 						System.out.println(e);
 						e.printStackTrace();
@@ -419,7 +419,7 @@ public class OMS extends QueueAgent {
 						
 				}else{
                    
-					logger.error("NOTUNDERSTOOD");
+					logger.info("NOTUNDERSTOOD");
 					response.setPerformative(es.upv.dsic.gti_ia.core.ACLMessage.NOT_UNDERSTOOD);
 					response.setContent("NotUnderstood");
 				}

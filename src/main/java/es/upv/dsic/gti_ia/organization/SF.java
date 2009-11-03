@@ -342,14 +342,14 @@ public class SF extends QueueAgent {
 							
 						}else{
 					
-							logger.error("REFUSE");
+							logger.info("REFUSE");
 							response.setPerformative(es.upv.dsic.gti_ia.core.ACLMessage.REFUSE);
 							response.setContent(aProcess.getLocalName()+"=Refuse");
 						}
 						
 					}catch(Exception e){
 		
-						logger.error("EXCEPTION");
+						logger.info("EXCEPTION");
 						System.out.println(e);
 						e.printStackTrace();
 						throw new RuntimeException(e.getMessage());
