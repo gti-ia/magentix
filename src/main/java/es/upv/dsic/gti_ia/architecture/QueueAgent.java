@@ -284,10 +284,7 @@ public class QueueAgent extends BaseAgent {
 		return this.monitor;
 	}
 	
-	protected void finalize()
-	{
-		
-	}
+	
 	
 	protected void terminate()
 	{
