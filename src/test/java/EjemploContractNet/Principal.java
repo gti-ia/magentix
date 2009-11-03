@@ -17,7 +17,7 @@ public class Principal {
 		
 		
         Connection con = new Connection();
-        con.connect("gtiiaprojects.dsic.upv.es", 5672, "test", "guest", "guest",false);        // TODO add your handling code here:
+        con.connect("gtiiaprojects2.dsic.upv.es", 5672, "test", "guest", "guest",false);        // TODO add your handling code here:
         
         try{
         Concesionario concesionario = new Concesionario(new AgentID("Concesionario","qpid","localhost",""),con);
