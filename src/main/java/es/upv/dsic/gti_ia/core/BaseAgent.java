@@ -29,7 +29,7 @@ public class BaseAgent implements Runnable{
 	 * To enable log4j in Qpid agents
 	 */
 	static Logger logger = Logger.getLogger(BaseAgent.class);
-	LinkedBlockingQueue<MessageTransfer> internalQueue;
+
 
 
 
@@ -58,7 +58,6 @@ public class BaseAgent implements Runnable{
 	
 	    public void message(Session ssn, MessageTransfer xfr)
 	    {
-	    	internalQueue.add(xfr);
 	    	ACLMessage msg = MessageTransfertoACLMessage(xfr);
 	    	onMessage(msg);
 	    }
@@ -208,7 +207,6 @@ public class BaseAgent implements Runnable{
 	 */
 	public BaseAgent(AgentID aid) throws Exception{
 		
-		internalQueue = new LinkedBlockingQueue<MessageTransfer>();
 		if(AgentsConecction.connection == null)
 		{
 			logger.error("Before create a agent, the qpid broker connection is necesary");
@@ -240,7 +238,6 @@ public class BaseAgent implements Runnable{
 	 * @throws Exception If Agent ID already exists on the platform
 	 */
 	public BaseAgent(AgentID aid, Connection connection) throws Exception{
-		internalQueue = new LinkedBlockingQueue<MessageTransfer>();
 		this.connection = connection;
 		this.session = createSession();
 		
@@ -354,120 +351,7 @@ public class BaseAgent implements Runnable{
 		}
 	}
 	
-	 /**
-     * Method to receive a magentix2 ACLMessage
-     * @return an ACLMessage
-     */
-    public final ACLMessage receive(){
-    	MessageTransfer xfr = new MessageTransfer();
-    	try {
-            xfr = internalQueue.take();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        
-        int indice1 = 0;
-        int indice2 = 0;
-        int aidindice1 = 0;
-        int aidindice2 = 0;
-        int tam = 0;
-        String aidString;
-        String body = xfr.getBodyString();
-        
-        indice2 = body.indexOf('#', indice1);
-        ACLMessage msg = new ACLMessage(Integer.parseInt(body.substring(indice1, indice2)));        
-                
-        for(int i=0; i<3 ; i++){
-        	AgentID aid = new AgentID();
-        	aidindice1 = 0;
-        	aidindice2 = 0;
-        	indice1 = indice2 + 1 + tam;
-        	indice2 = body.indexOf('#', indice1);
-        	tam = Integer.parseInt(body.substring(indice1, indice2));
-            aidString = body.substring(indice2 + 1, indice2 + 1 + tam);
-            aidindice2 = aidString.indexOf(':');
-	        if(aidindice2 - aidindice1 <= 0)
-	        	aid.protocol = "";
-	        else
-	        	aid.protocol = aidString.substring(aidindice1, aidindice2);
-	        aidindice1 = aidindice2 + 3;
-	        aidindice2 = aidString.indexOf('@', aidindice1);
-	        if(aidindice2 - aidindice1 <= 0)
-	        	aid.name = "";
-	        else
-	        	aid.name = aidString.substring(aidindice1, aidindice2);
-	        aidindice1 = aidindice2 + 1;
-	        aidindice2 = aidString.indexOf(':', aidindice1);
-	        if(aidindice2 - aidindice1 <= 0)
-	        	aid.host = "";
-	        else
-	        	aid.host = aidString.substring(aidindice1, aidindice2);
-	        aid.port = aidString.substring(aidindice2 + 1);
-	                	        	        
-	        if(i == 0)
-	        	msg.setSender(aid);
-	        if(i == 1)
-	        	msg.setReceiver(aid);
-	        if(i == 2)
-	        	msg.setReplyTo(aid);
-        }
-        indice1 = indice2 + 1 + tam;
-        indice2 = body.indexOf('#', indice1);
-        tam = Integer.parseInt(body.substring(indice1, indice2));  
-        //language
-        msg.setLanguage(body.substring(indice2 + 1, indice2 + 1 +tam));
-        
-        indice1 = indice2 + 1 + tam;
-        indice2 = body.indexOf('#', indice1);
-        tam = Integer.parseInt(body.substring(indice1, indice2));        
-        //encoding
-        msg.setEncoding(body.substring(indice2 + 1, indice2 + 1 +tam)); 
-        
-        indice1 = indice2 + 1 + tam;
-        indice2 = body.indexOf('#', indice1);
-        tam = Integer.parseInt(body.substring(indice1, indice2));        
-        //ontologyencoding
-        msg.setOntology(body.substring(indice2 + 1, indice2 + 1 +tam));
-        
-        indice1 = indice2 + 1 + tam;
-        indice2 = body.indexOf('#', indice1);
-        tam = Integer.parseInt(body.substring(indice1, indice2));        
-        //Protocol
-        msg.setProtocol(body.substring(indice2 + 1, indice2 + 1 +tam));
-        
-        indice1 = indice2 + 1 + tam;
-        indice2 = body.indexOf('#', indice1);
-        tam = Integer.parseInt(body.substring(indice1, indice2));        
-        //Conversation id
-        msg.setConversationId(body.substring(indice2 + 1, indice2 + 1 +tam));
-        
-        indice1 = indice2 + 1 + tam;
-        indice2 = body.indexOf('#', indice1);
-        tam = Integer.parseInt(body.substring(indice1, indice2));        
-        //Reply with
-        msg.setReplyWith(body.substring(indice2 + 1, indice2 + 1 +tam));
-        
-        indice1 = indice2 + 1 + tam;
-        indice2 = body.indexOf("#", indice1);
-        tam = Integer.parseInt(body.substring(indice1, indice2));        
-        //In reply to
-        msg.setInReplyTo(body.substring(indice2 + 1, indice2 + 1 +tam));
-        
-        indice1 = indice2 + 1 + tam;
-        indice2 = body.indexOf('#', indice1);
-        tam = Integer.parseInt(body.substring(indice1, indice2));        
-        //reply by
-        if(tam != 0)
-        	msg.setReplyByDate(new Date(Integer.parseInt(body.substring(indice2 + 1, indice2 + 1 +tam))));
-        
-        indice1 = indice2 + 1 + tam;
-        indice2 = body.indexOf('#', indice1);
-        tam = Integer.parseInt(body.substring(indice1, indice2));        
-        //Content
-        msg.setContent(body.substring(indice2 + 1, indice2 + 1 +tam));
-        
-        return msg;
-    }
+	
 	/**
 	 * Gets agent name
 	 * @return Agent name
@@ -486,6 +370,10 @@ public class BaseAgent implements Runnable{
 		
 	}
 	protected void execute()
+	{
+		
+	}
+	public void finalize()
 	{
 		
 	}
@@ -514,7 +402,9 @@ public class BaseAgent implements Runnable{
 	 * Runs Agent's thread
 	 */
 	public void run(){
+		init();
 		execute();
+		finalize();
 		terminate();
 	}
 	
@@ -524,11 +414,13 @@ public class BaseAgent implements Runnable{
 	public void start(){
 		myThread.start();
 	}
+	
+	
 
     /* *********************************************
      *              CONSULTATION METHODS
-     * *********************************************/
-
+     * *********************************************/	
+	
 	/**
 	 * @return agent ID
 	 * @uml.property  name="aid"
@@ -537,15 +429,6 @@ public class BaseAgent implements Runnable{
 	   {
 	       return this.aid;
 	   }
-
-	/**
-	 * @param aid
-	 * @uml.property //hilo del agente name="aid"
-	 */
-	public void setAid(AgentID aid) {
-		this.aid = aid;
-	}
-	
 	/**
 	 * Returns true if an agent exists on the platform, false otherwise
 	 * @param aid Agent ID to look for
