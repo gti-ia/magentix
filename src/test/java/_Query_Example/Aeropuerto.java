@@ -2,15 +2,19 @@ package _Query_Example;
 
 import org.apache.qpid.transport.Connection;
 
+import s.dsic.gti_ia.fipa.*;
+import s.dsic.gti_ia.proto.*;
+import s.dsic.gti_ia.proto.FIPANames.InteractionProtocol;
+
 import _BaseAgent_Example.QueueAgent;
 import _Request_Example.Principal_Grafico;
 
 
-import es.upv.dsic.gti_ia.proto.*;
-import es.upv.dsic.gti_ia.fipa.AgentID;
-import es.upv.dsic.gti_ia.proto.MessageTemplate;
-import es.upv.dsic.gti_ia.proto.FIPANames.InteractionProtocol;
-import es.upv.dsic.gti_ia.fipa.*;
+import es.upv.ACLMessage;
+import es.upv.FIPAQueryResponder;
+import es.upv.FailureException;
+import es.upv.NotUnderstoodException;
+import es.upv.RefuseException;
 
 public class Aeropuerto extends QueueAgent {
 

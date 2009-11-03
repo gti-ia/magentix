@@ -19,8 +19,9 @@ import java.util.ArrayList;
 
 import org.apache.qpid.transport.Connection;
 
-import es.upv.dsic.gti_ia.fipa.ACLMessage;
-import es.upv.dsic.gti_ia.fipa.AgentID;
+import s.dsic.gti_ia.fipa.ACLMessage;
+import s.dsic.gti_ia.fipa.AgentID;
+
 
 public class Principal_Grafico extends javax.swing.JFrame {
 

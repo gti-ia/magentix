@@ -3,17 +3,22 @@ package _Request_Example;
 
 import org.apache.qpid.transport.Connection;
 
+import s.dsic.gti_ia.fipa.ACLMessage;
+import s.dsic.gti_ia.fipa.AgentID;
+import s.dsic.gti_ia.proto.*;
+import s.dsic.gti_ia.proto.FIPANames.InteractionProtocol;
+
 import _BaseAgent_Example.*;
 
 
 
-import es.upv.dsic.gti_ia.fipa.AgentID;
+import es.upv.FailureException;
+import es.upv.MessageTemplate;
+import es.upv.NotUnderstoodException;
+import es.upv.QueueAgent;
+import es.upv.RefuseException;
 
-import es.upv.dsic.gti_ia.fipa.ACLMessage;
 
-import es.upv.dsic.gti_ia.proto.FIPARequestResponder;
-import es.upv.dsic.gti_ia.proto.FIPANames.InteractionProtocol;
-import es.upv.dsic.gti_ia.proto.*;
 import java.util.StringTokenizer;
 
 //import Pruebas.AgenteOMS.OMSResponder;

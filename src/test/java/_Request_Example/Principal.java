@@ -2,7 +2,9 @@ package _Request_Example;
 
 import org.apache.qpid.transport.Connection;
 
-import es.upv.dsic.gti_ia.fipa.*;
+import s.dsic.gti_ia.fipa.*;
+
+import es.upv.AgentID;
 
 public class Principal {
 

@@ -2,11 +2,17 @@ package _Query_Example;
 
 import org.apache.qpid.transport.Connection;
 
+import s.dsic.gti_ia.fipa.*;
+import s.dsic.gti_ia.proto.*;
+
 import _BaseAgent_Example.QueueAgent;
 
 
-import es.upv.dsic.gti_ia.fipa.*;
-import es.upv.dsic.gti_ia.proto.*;
+import es.upv.ACLMessage;
+import es.upv.AgentID;
+import es.upv.FIPANames;
+import es.upv.FIPAQueryInitiator;
+import es.upv.Monitor;
 
 public class Viajante extends QueueAgent {
 

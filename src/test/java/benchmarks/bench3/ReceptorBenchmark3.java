@@ -2,11 +2,12 @@ package benchmarks.bench3;
 
 import org.apache.qpid.transport.Connection;
 
+import s.dsic.gti_ia.fipa.ACLMessage;
+import s.dsic.gti_ia.fipa.AgentID;
+
 import _BaseAgent_Example.SingleAgent;
 
 
-import es.upv.dsic.gti_ia.fipa.ACLMessage;
-import es.upv.dsic.gti_ia.fipa.AgentID;
 
 public class ReceptorBenchmark3 extends SingleAgent{
 	
