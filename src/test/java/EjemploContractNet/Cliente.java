@@ -19,10 +19,10 @@ public class Cliente extends QueueAgent {
 	private Monitor adv= new Monitor();
 	private int precionMaximo;
 	private int numeroDeOfertas=0;
-    public Cliente(AgentID aid, Connection connection) throws Exception
+    public Cliente(AgentID aid) throws Exception
     {
 
-    	super(aid, connection);
+    	super(aid);
         
     
     }

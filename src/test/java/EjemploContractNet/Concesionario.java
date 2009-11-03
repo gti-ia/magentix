@@ -20,9 +20,9 @@ import es.upv.dsic.gti_ia.core.AgentID;
 
 public class Concesionario extends QueueAgent {
 
-	public Concesionario(AgentID aid, Connection connection) throws Exception {
+	public Concesionario(AgentID aid) throws Exception {
 
-		super(aid, connection);
+		super(aid);
 
 	}
 
