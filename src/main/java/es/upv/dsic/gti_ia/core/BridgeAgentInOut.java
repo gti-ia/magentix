@@ -8,9 +8,6 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Calendar;
 import java.util.concurrent.LinkedBlockingQueue;
-
-
-import org.apache.qpid.transport.Connection;
 import org.apache.qpid.transport.MessageTransfer;
 
 
@@ -440,7 +437,7 @@ public class BridgeAgentInOut extends SingleAgent{
 		sender.host = "localhost";
 		sender.port = "8000";
 		
-		AgentID pasarela = new AgentID();
+//		AgentID pasarela = new AgentID();
 		receiver.protocol = "http";
 		receiver.name = "agentepasarela";
 		receiver.host = "localhost";
@@ -454,8 +451,8 @@ public class BridgeAgentInOut extends SingleAgent{
 		msg.setContent("Hola, Holaaa");
 	//	String todo = new AgentePasarela(pasarela,con).generate_all(msg);
 		
-		InetAddress hostDestiny = InetAddress.getByName( msg.getReceiver().host );
-		int portDestiny = Integer.valueOf(msg.getReceiver().port);
+//		InetAddress hostDestiny = InetAddress.getByName( msg.getReceiver().host );
+//		int portDestiny = Integer.valueOf(msg.getReceiver().port);
 	//	logger.debug(hostDestiny.getHostAddress()+"---"+portDestiny);
 		
 		

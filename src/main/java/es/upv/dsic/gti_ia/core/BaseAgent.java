@@ -1,10 +1,7 @@
 package es.upv.dsic.gti_ia.core;
 
 import java.util.Date;
-import java.util.concurrent.LinkedBlockingQueue;
-
 import org.apache.log4j.Logger;
-import org.apache.log4j.xml.DOMConfigurator;
 import org.apache.qpid.transport.Connection;
 import org.apache.qpid.transport.DeliveryProperties;
 import org.apache.qpid.transport.Header;

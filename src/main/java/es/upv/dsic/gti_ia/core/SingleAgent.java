@@ -1,14 +1,8 @@
 package es.upv.dsic.gti_ia.core;
 
-import org.apache.qpid.transport.Connection;
-import org.apache.qpid.transport.MessageTransfer;
-import org.apache.qpid.transport.Session;
 
 import java.util.ArrayList;
-import java.util.Date;
 
-
-import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * @author  Ricard Lopez Fogues
