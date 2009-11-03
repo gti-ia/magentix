@@ -8,17 +8,9 @@
 package es.upv.dsic.gti_ia.architecture;
 
 import java.util.ArrayList;
-
-
-
-
 import org.apache.log4j.Logger;
-import org.apache.qpid.transport.Connection;
-
-
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
-import es.upv.dsic.gti_ia.core.AgentsConecction;
 import es.upv.dsic.gti_ia.core.BaseAgent;
 
 
