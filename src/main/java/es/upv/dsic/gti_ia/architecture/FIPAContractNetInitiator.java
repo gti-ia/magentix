@@ -1,17 +1,15 @@
-/**
- * This class implements the Fipa-Contract-Net interaction protocol, Role Initiator
- * 
- * @author  Joan Bellver Faus, GTI-IA, DSIC, UPV
- * @version 2009.9.07
- */
-
 package es.upv.dsic.gti_ia.architecture;
 
+
+
 import java.util.*;
+
 
 import es.upv.dsic.gti_ia.architecture.FIPANames.InteractionProtocol;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
+
+
 
 public class FIPAContractNetInitiator {
 
@@ -44,11 +42,8 @@ public class FIPAContractNetInitiator {
 
 	/**
 	 * Create a new FIPA-Contract-Net interaction protocol
-	 * 
-	 * @param agent
-	 *            agent is the reference to the Agent Object
-	 * @param msg
-	 *            initial message
+	 * @param agent agent is the reference to the Agent Object 
+	 * @param msg initial message
 	 */
 	public FIPAContractNetInitiator(QueueAgent agent, ACLMessage msg) {
 		myAgent = agent;
@@ -56,21 +51,18 @@ public class FIPAContractNetInitiator {
 		this.monitor = myAgent.addMonitor(this);
 
 	}
-
-	/**
-	 * We will be able to know if it has finished the protocol
-	 * 
-	 * @return value a boolean value is returned, true: the protocol has
-	 *         finished, false: the protocol even has not finished
-	 */
+/**
+ * We will be able to know if it has finished the protocol
+ * @return value a boolean value is returned, true: the protocol has finished, false: the protocol even has not finished
+ */
 	public boolean finished() {
 		return this.finish;
 	}
-
-	public int getState() {
+	public int getState()
+	{
 		return this.state;
 	}
-
+	@SuppressWarnings("unchecked")
 	public void action() {
 
 		switch (state) {
@@ -91,17 +83,16 @@ public class FIPAContractNetInitiator {
 			} else {
 				// añadir el agentId que lo envia, lo hacemos tranparente al
 				// usuario
-
-				// guardar temporalmente los agentes a enviar
-
-				ArrayList<AgentID> agentes = (ArrayList<AgentID>) request
-						.getReceiverList().clone();
+				
+				//guardar temporalmente los agentes a enviar
+				
+				ArrayList<AgentID> agentes = (ArrayList<AgentID>)request.getReceiverList().clone();
 				request.setSender(myAgent.getAid());
 				// recorrer todos lo receivers
-				template = new MessageTemplate(
-						InteractionProtocol.FIPA_CONTRACT_NET);
+				template = new MessageTemplate(InteractionProtocol.FIPA_CONTRACT_NET);
 				for (es.upv.dsic.gti_ia.core.AgentID agent : agentes) {
-
+					
+		
 					// por cada agente que enviamos creamos una idconversacion
 					conversationID = "C" + hashCode() + "_"
 							+ System.currentTimeMillis();
@@ -112,10 +103,12 @@ public class FIPAContractNetInitiator {
 
 					request.setReceiver(agent);
 					myAgent.send(request);
+				
 
 				}
 
 				this.nEnviados = agentes.size();
+
 
 				// fijamos el el timeout del mensaje
 				Date d = request.getReplyByDate();
@@ -140,7 +133,9 @@ public class FIPAContractNetInitiator {
 			// de un agent en concreto, //lo del agente lo podemos poner para
 			// que no se envie un idconversacion y no sea alguno de los que
 			// enviado
-			ACLMessage firstReply = myAgent.receiveACLMessage(template, 0);
+			ACLMessage firstReply = myAgent.receiveACLMessage(template,0);
+
+
 
 			if (firstReply != null) {
 
@@ -205,8 +200,9 @@ public class FIPAContractNetInitiator {
 					long blocktime = endingtime - System.currentTimeMillis();
 
 					if (blocktime <= 0)// dejamos de leer mensajes, ha
-					// terminado el timeout
+										// terminado el timeout
 					{
+	
 
 						handleAllResponses(respuestas, aceptados);
 						state = SEND_2ND_REPLY_STATE;
@@ -222,7 +218,7 @@ public class FIPAContractNetInitiator {
 							break;
 						} else// sino, ya hemos leido todos los mensajes.
 						{
-
+	
 							handleAllResponses(respuestas, aceptados);
 							state = SEND_2ND_REPLY_STATE;
 							break;
@@ -231,23 +227,23 @@ public class FIPAContractNetInitiator {
 					}
 
 				} else {
-					// todos los mensajes.
+						// todos los mensajes.
 					if (this.nEnviados < respuestas.size())// si aun quedan por
-					// leer nos
-					// esperaremos la
-					// llegada de un
-					// nuevo mensaje
+															// leer nos
+															// esperaremos la
+															// llegada de un
+															// nuevo mensaje
 					{
 						this.monitor.waiting();
 						state = RECEIVE_REPLY_STATE;// state =
-						// ALL_REPLIES_RECEIVED_STATE;
+													// ALL_REPLIES_RECEIVED_STATE;
 						break;
 					} else// si hemos leido todos los mensajes pasamos de
-					// estado
+							// estado
 					{
 						handleAllResponses(respuestas, aceptados);
 						state = SEND_2ND_REPLY_STATE;// state =
-						// ALL_REPLIES_RECEIVED_STATE;
+														// ALL_REPLIES_RECEIVED_STATE;
 						break;
 					}
 				}
@@ -300,42 +296,43 @@ public class FIPAContractNetInitiator {
 			if (this.aceptados.size() == 0)
 				state = ALL_RESULT_NOTIFICATION_RECEIVED_STATE;
 			else {
-				ACLMessage secondReply = myAgent.receiveACLMessage(template, 0);
+					ACLMessage secondReply = myAgent
+							.receiveACLMessage(template,0);
 
-				if (secondReply != null) {
-					this.nLeidos++;
-					switch (secondReply.getPerformativeInt()) {
-					case ACLMessage.INFORM: {
-						handleInform(secondReply);
-						break;
+					if (secondReply != null) {
+						this.nLeidos++;
+						switch (secondReply.getPerformativeInt()) {
+						case ACLMessage.INFORM: {
+							handleInform(secondReply);
+							break;
 
-					}
-					case ACLMessage.FAILURE: {
-						handleFailure(secondReply);
-						break;
+						}
+						case ACLMessage.FAILURE: {
+							handleFailure(secondReply);
+							break;
 
-					}
-					default: {
-						handleOutOfSequence(secondReply);
-						break;
-					}
-					}
-					break;
-				} else {
-					// tendremos que esperar a que nos lleguen todas las
-					// propuestas
-					if (this.nLeidos < this.aceptados.size())// si aun no
-					// están
-					// todos
-					{
-						this.monitor.waiting();
-						state = RECEIVE_2ND_REPLY_STATE;
+						}
+						default: {
+							handleOutOfSequence(secondReply);
+							break;
+						}
+						}
 						break;
 					} else {
-						state = ALL_RESULT_NOTIFICATION_RECEIVED_STATE;
+						// tendremos que esperar a que nos lleguen todas las
+						// propuestas
+						if (this.nLeidos < this.aceptados.size())// si aun no
+																	// están
+																	// todos
+						{
+							this.monitor.waiting();
+							state = RECEIVE_2ND_REPLY_STATE;
+							break;
+						} else {
+							state = ALL_RESULT_NOTIFICATION_RECEIVED_STATE;
+						}
 					}
-				}
-
+				
 			}
 		}
 		case ALL_REPLIES_RECEIVED_STATE: {
@@ -347,10 +344,10 @@ public class FIPAContractNetInitiator {
 			this.finish = true;
 			this.requestmsg = null;
 			this.myAgent.deleteMonitor(this);
-			// this.myAgent.deleteAllActiveConversation();
+			//this.myAgent.deleteAllActiveConversation();
 			for (String conversation : this.template.getList_Conversation())
 				this.myAgent.deleteActiveConversation(conversation);
-
+			
 			break;
 		}
 		}
@@ -374,72 +371,51 @@ public class FIPAContractNetInitiator {
 
 	/**
 	 * This method is called when a propose message is received.
-	 * 
-	 * @param msg
-	 *            the received propose message.
-	 * @param accepted
-	 *            the list of ACCEPT/REJECT_PROPOSAL to be sent back.
+	 * @param msg the received propose message.
+	 * @param accepted the list of ACCEPT/REJECT_PROPOSAL to be sent back.
 	 */
-	protected void handlePropose(ACLMessage msg, ArrayList accepted) {
+	protected void handlePropose(ACLMessage msg, ArrayList<ACLMessage> accepted) {
 	}
-
+ 
 	/**
 	 * This method is called when a refuse message is received.
-	 * 
-	 * @param msg
-	 *            the received refuse message
+	 * @param msg the received refuse message
 	 */
 	protected void handleRefuse(ACLMessage msg) {
 	}
-
 	/**
 	 * This method is called when a NotUnderstood message is received.
-	 * 
-	 * @param msg
-	 *            the received NotUnderstood message
+	 * @param msg the received NotUnderstood message
 	 */
 	protected void handleNotUnderstood(ACLMessage msg) {
 
 	}
-
 	/**
 	 * This method is called when a inform message is received.
-	 * 
-	 * @param msg
-	 *            the received inform message
+	 * @param msg the received inform message
 	 */
 	protected void handleInform(ACLMessage msg) {
 
 	}
-
 	/**
 	 * This method is called when a failure message is received.
-	 * 
-	 * @param msg
-	 *            the received failure message
+	 * @param msg the received failure message
 	 */
 	protected void handleFailure(ACLMessage msg) {
 
 	}
-
 	/**
-	 * This method is called when a message is received.
-	 * 
-	 * @param msg
-	 *            the received message
+	 * This method is called when a  message is received.
+	 * @param msg the received message
 	 */
 	protected void handleOutOfSequence(ACLMessage msg) {
 
 	}
-
 	/**
-	 * This method is called when all the responses have been collected or when
-	 * the timeout is expired
-	 * 
-	 * @param msg
-	 *            the received refuse message
+	 * This method is called when all the responses have been collected or when the timeout is expired
+	 * @param msg the received refuse message
 	 */
-	protected void handleAllResponses(ArrayList responses, ArrayList accepted) {
+	protected void handleAllResponses(ArrayList<ACLMessage> responses, ArrayList<ACLMessage> accepted) {
 
 	}
 

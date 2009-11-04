@@ -7,6 +7,7 @@
 
 package es.upv.dsic.gti_ia.architecture;
 
+
 import java.util.ArrayList;
 import org.apache.log4j.Logger;
 import es.upv.dsic.gti_ia.core.ACLMessage;
