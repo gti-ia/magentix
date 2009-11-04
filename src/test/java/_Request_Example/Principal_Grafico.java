@@ -15,11 +15,12 @@ package _Request_Example;
  * 
  * @author joan
  */
-import java.util.ArrayList;
+
 
 import org.apache.qpid.transport.Connection;
 
 import es.upv.dsic.gti_ia.core.AgentID;
+import es.upv.dsic.gti_ia.core.AgentsConecction;
 
 
 
@@ -385,7 +386,7 @@ public class Principal_Grafico extends javax.swing.JFrame {
 
 		try{
 		if (AgenteHospital == null) {
-			AgenteHospital = new Hospital(new AgentID("OMS"), this);
+			AgenteHospital = new Hospital(new AgentID("Hospital"), this);
 			AgenteHospital.start();
 			this.jTextArea1
 					.append("Agente Hospital creado satisfactoriamente.\n");
@@ -401,9 +402,9 @@ public class Principal_Grafico extends javax.swing.JFrame {
 	private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton4ActionPerformed
 
 		if (con == null) {
-			con = new Connection();
-			con.connect("gtiiaprojects.dsic.upv.es", 5672, "test", "guest",
-					"guest", false); // TODO add your handling code here:
+			
+			
+			AgentsConecction.connect("gtiiaprojects2.dsic.upv.es");
 			this.jTextArea1.append("Conexión creada satisfactoriamente.\n");
 
 		} else {

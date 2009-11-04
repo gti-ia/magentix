@@ -49,7 +49,7 @@ public class Testigo extends QueueAgent {
 
 		ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
 		// for (int i = 0; i < args.length; ++i)
-		msg.setReceiver(new AgentID("OMS", "qpid", "localhost", ""));
+		msg.setReceiver(new AgentID("Hospital"));
 		msg.setProtocol(InteractionProtocol.FIPA_REQUEST);
 		msg
 				.setContent("accidente a " + frame.getTextField().getText()
