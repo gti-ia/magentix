@@ -1,10 +1,11 @@
 package _Request_Example;
 
-import org.apache.qpid.transport.Connection;
+import es.upv.dsic.gti_ia.core.AgentID;
+import es.upv.dsic.gti_ia.core.AgentsConecction;
 
-import s.dsic.gti_ia.fipa.*;
 
-import es.upv.AgentID;
+
+
 
 public class Principal {
 
@@ -14,17 +15,19 @@ public class Principal {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
-		Connection con = new Connection();
-		con.connect("localhost", 5672, "test", "guest", "guest", false);
 
+		try{
+	        AgentsConecction.connect("gtiiaprojects2.dsic.upv.es");
+	        
 		Hospital hos = new Hospital(
-				new AgentID("OMS", "qpid", "localhost", ""), con);
+				new AgentID("Hospital"));
 		hos.start();
 
-		Testigo tes = new Testigo(new AgentID("Testigo", "qpid", "localhost",
-				""), con);
+		Testigo tes = new Testigo(new AgentID("Testigo"));
 
 		tes.start();
+		
+		}catch(Exception e){}
 
 	}
 

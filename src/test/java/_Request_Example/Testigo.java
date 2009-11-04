@@ -1,15 +1,13 @@
 package _Request_Example;
 
-import org.apache.qpid.transport.Connection;
+import es.upv.dsic.gti_ia.architecture.FIPARequestInitiator;
+import es.upv.dsic.gti_ia.architecture.QueueAgent;
+import es.upv.dsic.gti_ia.architecture.FIPANames.InteractionProtocol;
+import es.upv.dsic.gti_ia.core.ACLMessage;
+import es.upv.dsic.gti_ia.core.AgentID;
 
-import org.apache.qpid.transport.Connection;
 
-import s.dsic.gti_ia.fipa.ACLMessage;
-import s.dsic.gti_ia.fipa.AgentID;
-import s.dsic.gti_ia.proto.FIPARequestInitiator;
-import s.dsic.gti_ia.proto.FIPANames.InteractionProtocol;
 
-import _BaseAgent_Example.QueueAgent;
 
 public class Testigo extends QueueAgent {
 
@@ -20,19 +18,19 @@ public class Testigo extends QueueAgent {
 
 	// private ManejadorInitiator iniciador = null;
 
-	public Testigo(AgentID aid, Connection connection,
-			Principal_Grafico _frame, Llamadas _llamada) {
+	public Testigo(AgentID aid,
+			Principal_Grafico _frame, Llamadas _llamada) throws Exception {
 
-		super(aid, connection);
+		super(aid);
 
 		this.frame = _frame;
 		this.llamada = _llamada;
 
 	}
 
-	public Testigo(AgentID aid, Connection connection) {
+	public Testigo(AgentID aid) throws Exception {
 
-		super(aid, connection);
+		super(aid);
 
 	}
 

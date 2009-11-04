@@ -1,41 +1,49 @@
 package _Request_Example;
 
-import org.apache.qpid.transport.Connection;
 
-import s.dsic.gti_ia.fipa.ACLMessage;
-import s.dsic.gti_ia.fipa.AgentID;
-import s.dsic.gti_ia.proto.*;
-import s.dsic.gti_ia.proto.FIPANames.InteractionProtocol;
 
-import _BaseAgent_Example.*;
 
-import es.upv.FailureException;
-import es.upv.MessageTemplate;
-import es.upv.NotUnderstoodException;
-import es.upv.QueueAgent;
-import es.upv.RefuseException;
 
 import java.util.StringTokenizer;
+
+import es.upv.dsic.gti_ia.architecture.FIPARequestResponder;
+import es.upv.dsic.gti_ia.architecture.FailureException;
+import es.upv.dsic.gti_ia.architecture.MessageTemplate;
+import es.upv.dsic.gti_ia.architecture.NotUnderstoodException;
+import es.upv.dsic.gti_ia.architecture.QueueAgent;
+import es.upv.dsic.gti_ia.architecture.RefuseException;
+import es.upv.dsic.gti_ia.architecture.FIPANames.InteractionProtocol;
+import es.upv.dsic.gti_ia.core.ACLMessage;
+import es.upv.dsic.gti_ia.core.AgentID;
 
 //import Pruebas.AgenteOMS.OMSResponder;
 
 public class Hospital extends QueueAgent {
 
+	
+	
+
+    
+
 	public double DISTANCIA_MAX;
-	private Principal_Grafico frame;
+	Principal_Grafico frame;
+    
+	public Hospital(AgentID aid, Principal_Grafico frame)throws Exception {
 
-	public Hospital(AgentID aid, Connection connection, Principal_Grafico frame) {
 
-		super(aid, connection);
+		super(aid);
 		this.frame = frame;
 
 	}
 
-	public Hospital(AgentID aid, Connection connection) {
+	public Hospital(AgentID aid)throws Exception {
 
-		super(aid, connection);
+		super(aid);
 
 	}
+	
+
+
 
 	protected void execute() {
 		DISTANCIA_MAX = (Math.random() * 10);

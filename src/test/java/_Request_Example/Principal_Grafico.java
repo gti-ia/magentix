@@ -19,8 +19,9 @@ import java.util.ArrayList;
 
 import org.apache.qpid.transport.Connection;
 
-import s.dsic.gti_ia.fipa.ACLMessage;
-import s.dsic.gti_ia.fipa.AgentID;
+import es.upv.dsic.gti_ia.core.AgentID;
+
+
 
 public class Principal_Grafico extends javax.swing.JFrame {
 
@@ -28,7 +29,7 @@ public class Principal_Grafico extends javax.swing.JFrame {
 	private Hospital AgenteHospital;
 	private Testigo AgenteTestigo;
 	private Llamadas llamada = new Llamadas();;
-	private int nagentes = 0;
+
 
 	/** Creates new form Principal */
 	public Principal_Grafico() {
@@ -382,15 +383,17 @@ public class Principal_Grafico extends javax.swing.JFrame {
 
 	private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton1ActionPerformed
 
+		try{
 		if (AgenteHospital == null) {
-			AgenteHospital = new Hospital(new AgentID("OMS", "qpid",
-					"localhost", ""), con, this);
+			AgenteHospital = new Hospital(new AgentID("OMS"), this);
 			AgenteHospital.start();
 			this.jTextArea1
 					.append("Agente Hospital creado satisfactoriamente.\n");
 		} else {
 			System.out.println("Agente Hospital creado anteriormente");
 		}
+		
+		}catch(Exception e){}
 		// TODO add your handling code here:
 
 	}// GEN-LAST:event_jButton1ActionPerformed
@@ -411,15 +414,16 @@ public class Principal_Grafico extends javax.swing.JFrame {
 	private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton2ActionPerformed
 
 		// TODO add your handling code here:
+		try{
 		if (AgenteTestigo == null) {
 
-			AgenteTestigo = new Testigo(new AgentID("Testigo", "qpid",
-					"localhost", ""), con, this, llamada);
+			AgenteTestigo = new Testigo(new AgentID("Testigo"), this, llamada);
 
 			AgenteTestigo.start();
 		} else {
 			System.out.println("Agente Testigo  creado anteriormente");
 		}
+		}catch(Exception e){}
 
 	}// GEN-LAST:event_jButton2ActionPerformed
 
@@ -463,12 +467,12 @@ public class Principal_Grafico extends javax.swing.JFrame {
 	private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton9ActionPerformed
 		// TODO add your handling code here:
 
-		ArrayList<Testigo> agentsList = new ArrayList<Testigo>();
-
-		Testigo Agente$nagentes = new Testigo(new AgentID("Testigo", "qpid",
-				"localhost", ""), con, this, llamada);
-		String nagentes = "C" + hashCode() + "_" + System.currentTimeMillis();
+		//ArrayList<Testigo> agentsList = new ArrayList<Testigo>();
+		try{
+		Testigo Agente$nagentes = new Testigo(new AgentID("Testigo"), this, llamada);
+		//String nagentes = "C" + hashCode() + "_" + System.currentTimeMillis();
 		Agente$nagentes.start();
+		}catch(Exception e){}
 
 	}// GEN-LAST:event_jButton9ActionPerformed
 
