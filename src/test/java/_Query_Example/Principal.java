@@ -1,9 +1,10 @@
 package _Query_Example;
 
 
-import org.apache.qpid.transport.Connection;
+
 
 import es.upv.dsic.gti_ia.core.AgentID;
+import es.upv.dsic.gti_ia.core.AgentsConecction;
 
 
 
@@ -19,11 +20,10 @@ public class Principal {
 		// TODO Auto-generated method stub
 		
 		
-		
-        Connection con = new Connection();
-        con.connect("gtiiaprojects.dsic.upv.es", 5672, "test", "guest", "guest",false);        // TODO add your handling code here:
+		try{
+	        AgentsConecction.connect("gtiiaprojects2.dsic.upv.es");       // TODO add your handling code here:
         
-        try{
+   
         	
       
         Aeropuerto aeropuerto = new Aeropuerto(new AgentID("aeropuerto1"));
