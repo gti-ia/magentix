@@ -31,9 +31,7 @@ public class QueueAgent extends BaseAgent {
 
 	// para poder diferenciar cuando nos llega una conversaci� nueva
 	private ArrayList<String> activeConversationsList = new ArrayList<String>();
-	// almacena la informacion de los servicios en thomas
-	// private ArrayList<SFAgentDescription> agentDescriptions = new
-	// ArrayList<SFAgentDescription>();
+
 
 	private ArrayList<Object> roles = new ArrayList<Object>();
 
