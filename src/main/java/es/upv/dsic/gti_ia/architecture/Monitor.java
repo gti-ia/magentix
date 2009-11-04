@@ -10,8 +10,16 @@
 
 package es.upv.dsic.gti_ia.architecture;
 
+import org.apache.log4j.Logger;
+
+import es.upv.dsic.gti_ia.organization.OMS;
+
+
+
 public class Monitor {
 
+	static Logger logger = Logger.getLogger(OMS.class);
+	
 	/**
 	 * suspends the process
 	 */
@@ -22,7 +30,7 @@ public class Monitor {
 
 		} catch (InterruptedException e) {
 
-			System.out.println("ERROR: " + e.getMessage());
+			logger.error("ERROR: " + e.getMessage());
 		}
 	}
 
@@ -39,7 +47,7 @@ public class Monitor {
 
 		} catch (InterruptedException e) {
 
-			System.out.println("ERROR: " + e.getMessage());
+			logger.error("ERROR: " + e.getMessage());
 		}
 	}
 
@@ -50,7 +58,7 @@ public class Monitor {
 		try {
 			notifyAll();
 		} catch (Exception e) {
-			System.out.println("ERROR :" + e.getMessage());
+			logger.error("ERROR :" + e.getMessage());
 		}
 
 	}
