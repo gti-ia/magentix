@@ -21,32 +21,32 @@ Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
  *****************************************************************/
 
-
 package es.upv.dsic.gti_ia.architecture;
-
 
 import es.upv.dsic.gti_ia.core.ACLMessage;
 
 /**
-This class represents a generic RefuseException 
-@author Fabio Bellifemine - CSELT S.p.A. 
-@version $Date: 2009-03-03 15:02:51 +0100 (mar, 03 mar 2009) $ $Revision: 6097 $
+ * This class represents a generic RefuseException
+ * 
+ * @author Fabio Bellifemine - CSELT S.p.A.
+ * @version $Date: 2009-03-03 15:02:51 +0100 (mar, 03 mar 2009) $ $Revision:
+ *          6097 $
  */
 public class RefuseException extends FIPAException {
 
 	public RefuseException(String message) {
-		super(message); 
+		super(message);
 	}
 
 	public RefuseException(ACLMessage refuse) {
-		super(refuse); 
+		super(refuse);
 	}
 
 	public ACLMessage getACLMessage() {
 		if (msg == null) {
 			msg = new ACLMessage(ACLMessage.REFUSE);
-			msg.setContent(getMessage()); 
-		} 
+			msg.setContent(getMessage());
+		}
 		return msg;
 	}
 }

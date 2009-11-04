@@ -1,12 +1,9 @@
 package es.upv.dsic.gti_ia.organization;
 
-
-
 import java.util.HashMap;
 import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
-
 
 import es.upv.dsic.gti_ia.architecture.FIPARequestInitiator;
 import es.upv.dsic.gti_ia.architecture.QueueAgent;
@@ -20,19 +17,20 @@ public class SFService {
 	private QueueAgent agent;
 	private SFAgentDescription descripcion;
 	private ArrayList<AgentID> agentes = new ArrayList<AgentID>();
-	
+
 	private HashMap<String, String> tablaSearchServiceProfile = new HashMap<String, String>();
 	private boolean salida = true;
 	private String salidaString = null;
 	private ArrayList<String> idsSearchService = new ArrayList<String>();
-	
+
 	static Logger logger = Logger.getLogger(SFService.class);
 
 	Configuration c = new Configuration();
 
 	/**
 	 * 
-	 * @param SFServiceDesciptionLocation URLProcess The URL where the owl's document is located.
+	 * @param SFServiceDesciptionLocation
+	 *            URLProcess The URL where the owl's document is located.
 	 */
 	public SFService(String SFServiceDesciptionLocation) {
 
@@ -40,25 +38,20 @@ public class SFService {
 
 	}
 
-
-	
 	/**
 	 * 
-	 */	
+	 */
 	public SFService() {
 
-		this.SFServiceDesciptionLocation = 	"http://localhost:8080/sfservices/SFservices/owl/owls/";
+		this.SFServiceDesciptionLocation = "http://localhost:8080/sfservices/SFservices/owl/owls/";
 
 	}
-	
-	
-	private void addIDSearchService(String id)
-	{
-		
+
+	private void addIDSearchService(String id) {
+
 		this.idsSearchService.add(id);
 	}
-	
-	
+
 	/**
 	 * 
 	 * @return agent
@@ -71,9 +64,10 @@ public class SFService {
 	/**
 	 * Inserts the service profile id returned by the searchService
 	 * 
-	 * @param id  returned by the SF when the service register
-	 * @param profilename 
-	 * name of the profile 
+	 * @param id
+	 *            returned by the SF when the service register
+	 * @param profilename
+	 *            name of the profile
 	 */
 
 	void setSearchServiceProfile(String profilename, String ranking) {
@@ -82,6 +76,7 @@ public class SFService {
 
 	/**
 	 * Return Service Profile
+	 * 
 	 * @param serviceGoal
 	 * @return ServiceProfile
 	 */
@@ -96,9 +91,8 @@ public class SFService {
 	SFAgentDescription getDescription() {
 		return this.descripcion;
 	}
-	
-	private void sendInfo(QueueAgent agent, String call)
-	{
+
+	private void sendInfo(QueueAgent agent, String call) {
 		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
 		requestMsg.setSender(agent.getAid());
 		requestMsg.setContent(call);
@@ -115,46 +109,44 @@ public class SFService {
 		} while (!test.finished());
 
 	}
-	
+
 	/**
 	 * Remove provider agent
+	 * 
 	 * @param agent
 	 * @param sfAgentdescription
 	 * @return Status
-	 * @throws Exception 
+	 * @throws Exception
 	 */
-	
+
 	public boolean removeProvider(QueueAgent agent,
-			SFAgentDescription sfAgentdescription)  {
+			SFAgentDescription sfAgentdescription) {
 		this.descripcion = sfAgentdescription;
 		this.agent = agent;
 
 		String call = SFServiceDesciptionLocation
-				+ "RemoveProviderProcess.owl "+
-				"RemoveProviderInputServiceImplementationID="
+				+ "RemoveProviderProcess.owl "
+				+ "RemoveProviderInputServiceImplementationID="
 				+ descripcion.getImplementationID();
 
 		this.sendInfo(agent, call);
-		
-		
-		
+
 		return salida;
-}
+	}
+
 	/**
 	 * Return a service list
+	 * 
 	 * @param agent
 	 * @param sfAgentdescription
 	 * @return ArrayList service list
-	 * @throws Exception 
+	 * @throws Exception
 	 */
-	public ArrayList<String> searchService(QueueAgent agent,
-			String serviceGoal) {
-
+	public ArrayList<String> searchService(QueueAgent agent, String serviceGoal) {
 
 		this.agent = agent;
 		this.idsSearchService.clear();
 
-	
 		this.agentes.clear();
 		String call = SFServiceDesciptionLocation
 				+ "SearchServiceProcess.owl SearchServiceInputServicePurpose="
@@ -167,18 +159,18 @@ public class SFService {
 
 	/**
 	 * Modify Process
+	 * 
 	 * @param agent
 	 * @param sfAgentdescription
 	 * @return Status
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public boolean ModifyProcess(QueueAgent agent,
-			SFAgentDescription sfAgentdescription) 
+			SFAgentDescription sfAgentdescription)
 
 	{
 		this.descripcion = sfAgentdescription;
 		this.agent = agent;
-		
 
 		String call = SFServiceDesciptionLocation + "ModifyProcessProcess.owl"
 				+ " ModifyProcessInputServiceGrounding= "
@@ -189,23 +181,24 @@ public class SFService {
 				+ ".owl#" + descripcion.getServiceGoal();
 
 		this.sendInfo(agent, call);
-		
+
 		return salida;
 	}
+
 	/**
 	 * Modify Profile
+	 * 
 	 * @param agent
 	 * @param sfAgentdescription
 	 * @return Status
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public boolean ModifyProfile(QueueAgent agent,
-			SFAgentDescription sfAgentdescription)  {
+			SFAgentDescription sfAgentdescription) {
 
 		this.descripcion = sfAgentdescription;
 		this.agent = agent;
 
-	
 		String call = SFServiceDesciptionLocation + "ModifyProfileProcess.owl "
 				+ "ModifyProfileInputServiceID=" + descripcion.getID()
 				+ " ModifyProfileInputServiceGoal=" + " "
@@ -215,17 +208,18 @@ public class SFService {
 				+ descripcion.getServiceGoal();
 
 		this.sendInfo(agent, call);
-		
+
 		return salida;
 
 	}
 
 	/**
 	 * Deregister Profile
+	 * 
 	 * @param agent
 	 * @param sfAgentdescription
 	 * @return Status
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public boolean DeregisterProfile(QueueAgent agent,
 			SFAgentDescription sfAgentdescription) {
@@ -233,95 +227,85 @@ public class SFService {
 		this.agent = agent;
 		this.descripcion = sfAgentdescription;
 
-		
-
 		// eliminar el servicio de la tabla de servicios de el agente
 
 		String call = SFServiceDesciptionLocation
 				+ "DeregisterProfileProcess.owl GetProcessInputServiceID="
-				+ sfAgentdescription.getURLProfile()
-				+ descripcion.getID()
-				+ ".owl#"
-				+ descripcion.getID();
+				+ sfAgentdescription.getURLProfile() + descripcion.getID()
+				+ ".owl#" + descripcion.getID();
 
 		this.sendInfo(agent, call);
 		return salida;
 
 	}
-	
+
 	/**
 	 * Return provider list
+	 * 
 	 * @param agent
 	 * @param id
-	 * @return agents provider list 
-	 * @throws Exception 
+	 * @return agents provider list
+	 * @throws Exception
 	 */
 
-	public ArrayList<AgentID> getProcess(QueueAgent agent,String serviceID)  {
+	public ArrayList<AgentID> getProcess(QueueAgent agent, String serviceID) {
 
 		this.agent = agent;
 		this.agentes.clear();
-		
-		
 
 		String call = SFServiceDesciptionLocation
-				+ "GetProcessProcess.owl GetProcessInputServiceID="
-				+ serviceID;
-				/*
-				+ sfAgentdescription.getURLProfile()
-				+ descripcion.getID()
-				+ ".owl#"
-				+ descripcion.getID();
-				 */
+				+ "GetProcessProcess.owl GetProcessInputServiceID=" + serviceID;
+		/*
+		 * + sfAgentdescription.getURLProfile() + descripcion.getID() + ".owl#" +
+		 * descripcion.getID();
+		 */
 		this.sendInfo(agent, call);
 		return this.agentes;
-		
 
 	}
 
 	/**
 	 * Return service profile ( the URL profile)
+	 * 
 	 * @param agent
 	 * @param sfAgentdescription
 	 * @return Status
-	 * @throws Exception 
+	 * @throws Exception
 	 */
-	public String getProfile(QueueAgent agent, SFAgentDescription sfAgentdescription) 
-	{
+	public String getProfile(QueueAgent agent,
+			SFAgentDescription sfAgentdescription) {
 		this.descripcion = sfAgentdescription;
 		this.agent = agent;
-
-		
 
 		String call = SFServiceDesciptionLocation
 				+ "GetProfileProcess.owl GetProfileInputServiceID="
 				+ sfAgentdescription.getID();
-				//+ sfAgentdescription.getURLProfile()
-			/*	+ descripcion.getID()
-				+ ".owl#"
-				+ descripcion.getID();*/
+		// + sfAgentdescription.getURLProfile()
+		/*
+		 * + descripcion.getID() + ".owl#" + descripcion.getID();
+		 */
 
 		this.sendInfo(agent, call);
-		
+
 		return salidaString;
 	}
 
 	// Devuelve el ID para poder modificar luego el servicioç
-	
+
 	/**
 	 * 
 	 * Register profile
+	 * 
 	 * @param agent
 	 * @param sfAgentDescription
 	 * @return Status
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public boolean registerProfile(QueueAgent agent,
-			SFAgentDescription sfAgentdescription){
+			SFAgentDescription sfAgentdescription) {
 
 		this.descripcion = sfAgentdescription;
 		this.agent = agent;
-
 
 		String call = SFServiceDesciptionLocation
 				+ "RegisterProfileProcess.owl "
@@ -331,17 +315,18 @@ public class SFService {
 				+ descripcion.getServiceProfile();
 
 		this.sendInfo(agent, call);
-		
+
 		return salida;
 
 	}
 
 	/**
 	 * Register Process
+	 * 
 	 * @param agent
 	 * @param sfAgentdescription
 	 * @return Status
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public boolean registerProcess(QueueAgent agent,
 			SFAgentDescription sfAgentdescription) {
@@ -351,17 +336,14 @@ public class SFService {
 		this.descripcion = sfAgentdescription;
 		this.agent = agent;
 
-		
-
 		String call = SFServiceDesciptionLocation
 				+ "RegisterProcessProcess.owl"
-				+ " RegisterProcessInputServiceID=" 
-				+ descripcion.getID()
+				+ " RegisterProcessInputServiceID=" + descripcion.getID()
 				+ " RegisterProcessInputServiceModel="
 				+ descripcion.getServiceModel();
 
 		this.sendInfo(agent, call);
-		
+
 		return salida;
 	}
 
@@ -372,6 +354,7 @@ public class SFService {
 	private void setSalidaString(String valor) {
 		this.salidaString = valor;
 	}
+
 	/**
 	 * TestAgentClient handles the messages received from the SF
 	 */
@@ -379,8 +362,6 @@ public class SFService {
 		QueueAgent agent;
 		SFService sf;
 		String[] agen;
-		
-		
 
 		protected TestAgentClient(QueueAgent agent, ACLMessage msg, SFService sf) {
 			super(agent, msg);
@@ -401,7 +382,7 @@ public class SFService {
 					+ msg.getSender().getLocalName()
 					+ " has rejected my proposal.");
 			this.sf.setSalida(false);
-	
+
 		}
 
 		protected void handleInform(ACLMessage msg) {
@@ -432,18 +413,16 @@ public class SFService {
 			arg2 = arg2.substring((arg2.lastIndexOf("=")) + 1,
 					arg2.length() - 1);
 
-
 			// si ejecutamos el registerProcess
 
 			if (patron.equals("RegisterProcessProcess")) {
 				if (arg2.equals("1")) {
 					this.sf.descripcion.setImplementationID(arg1);
-					//this.sf.agent.setSFAgentDescription(this.sf.descripcion);
+					// this.sf.agent.setSFAgentDescription(this.sf.descripcion);
 					this.sf.setSalida(true);
 				} else
 					this.sf.setSalida(false);
 
-		
 			}
 
 			// si ejecutamos el GetProfile
@@ -460,7 +439,6 @@ public class SFService {
 					this.sf.setSalidaString(null);
 				}
 
-
 			}
 
 			// si ejecutamos el DeregisterProfile
@@ -469,8 +447,8 @@ public class SFService {
 				if (arg2.equals("1"))// ha ido bien
 				{
 					// elimino del arrayList
-					//this.sf.agent.getArraySFAgentDescription().remove(
-						//	this.sf.descripcion);
+					// this.sf.agent.getArraySFAgentDescription().remove(
+					// this.sf.descripcion);
 					this.sf.setSalida(true);
 				} else // ha ido mal
 				{
@@ -496,7 +474,6 @@ public class SFService {
 						// tenemos que controlar si existe 0, 1 o mas
 						// proveedores.
 
-	
 						if (!arg1.equals("null"))// si existe algun provideer
 						{
 
@@ -509,31 +486,24 @@ public class SFService {
 
 				}
 
-			
 			}
 			// si ejecutamos el searchService
 			if (patron.equals("SearchServiceProcess")) {
 
 				agen = null;
-				
-				
+
 				if (arg2.equals("0")) {
 
 					this.sf.setSalida(false);
 					this.sf.addIDSearchService(arg1);
-				}
-				else
-				{
-				this.agen = arg1.split(",");
-				
-				for (String a : agen)
-				{
-					a = a.substring(0, arg1.indexOf(" "));
-					this.sf.addIDSearchService(a);
-				}
-				}
-				
+				} else {
+					this.agen = arg1.split(",");
 
+					for (String a : agen) {
+						a = a.substring(0, arg1.indexOf(" "));
+						this.sf.addIDSearchService(a);
+					}
+				}
 
 			}
 
@@ -543,7 +513,7 @@ public class SFService {
 					// para guardar nuestros ID para poder modificar
 					// posteriormente nuestro servicio
 					this.sf.descripcion.setID(arg2);
-					//this.sf.agent.setSFAgentDescription(this.sf.descripcion);
+					// this.sf.agent.setSFAgentDescription(this.sf.descripcion);
 					this.sf.setSalida(true);
 					// this.agent.setIDProfile(this.sf.getDescription()
 					// .getServiceGoal(), arg2);
@@ -554,7 +524,7 @@ public class SFService {
 					this.sf.setSalida(false);
 
 				}
-		
+
 			}
 			// this.sf.setID(Integer.parseInt(id));
 
@@ -574,16 +544,13 @@ public class SFService {
 					this.sf.setSalida(false);
 				}
 
-
 			}
 			if (patron.equals("ModifyProcessProcess")) {
-				if (arg2.equals("1"))
-				{
+				if (arg2.equals("1")) {
 					this.sf.setSalida(true);
 				} else if (arg2.equals("0")) {
 					this.sf.setSalida(false);
 				}
-	
 
 			}
 

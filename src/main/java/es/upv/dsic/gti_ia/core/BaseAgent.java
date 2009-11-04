@@ -14,98 +14,90 @@ import org.apache.qpid.transport.Session;
 import org.apache.qpid.transport.SessionException;
 import org.apache.qpid.transport.SessionListener;
 
-
 /**
- * @author  Ricard Lopez Fogues
- * @author  Sergio Pajares Ferrando
- * @author  Joan Bellver Faus
+ * @author Ricard Lopez Fogues
+ * @author Sergio Pajares Ferrando
+ * @author Joan Bellver Faus
  */
-public class BaseAgent implements Runnable{
-	
+public class BaseAgent implements Runnable {
+
 	/**
 	 * To enable log4j in Qpid agents
 	 */
 	static Logger logger = Logger.getLogger(BaseAgent.class);
 
-	
-
-
-
 	/**
-	 * @uml.property  name="aid"
-	 * @uml.associationEnd  
+	 * @uml.property name="aid"
+	 * @uml.associationEnd
 	 */
 	private AgentID aid;
 	/**
-	 * @uml.property  name="connection"
+	 * @uml.property name="connection"
 	 */
 	private Connection connection;
 	/**
-	 * @uml.property  name="session"
+	 * @uml.property name="session"
 	 */
 	protected Session session;
 	/**
-	 * @uml.property  name="myThread"
+	 * @uml.property name="myThread"
 	 */
 	private Thread myThread;
-	
-	private class Listener implements SessionListener{
-		public void opened(Session ssn) {}
-	
-	    public void resumed(Session ssn) {}
-	
-	    public void message(Session ssn, MessageTransfer xfr)
-	    {
-	    	ACLMessage msg = MessageTransfertoACLMessage(xfr);
-	    	onMessage(msg);
-	    }
-	
-	    public void exception(Session ssn, SessionException exc)
-	    {
-	        exc.printStackTrace();
-	    }
-	
-	    public void closed(Session ssn) {}
-	    
-	    
-	    
-	    
-	
+
+	private class Listener implements SessionListener {
+		public void opened(Session ssn) {
+		}
+
+		public void resumed(Session ssn) {
+		}
+
+		public void message(Session ssn, MessageTransfer xfr) {
+			ACLMessage msg = MessageTransfertoACLMessage(xfr);
+			onMessage(msg);
+		}
+
+		public void exception(Session ssn, SessionException exc) {
+			exc.printStackTrace();
+		}
+
+		public void closed(Session ssn) {
+		}
+
 	}
-	
-	
-	
+
 	/**
-	 * @uml.property  name="listener"
-	 * @uml.associationEnd  
+	 * @uml.property name="listener"
+	 * @uml.associationEnd
 	 */
 	private Listener listener;
-	
+
 	/**
 	 * Creates a new agent in an open broker connection
-	 * @param aid Agent identification for the new agent, it has to be unique on the platform
-	 * @param connection Connection that the agent will use
-	 * @throws Exception If Agent ID already exists on the platform
+	 * 
+	 * @param aid
+	 *            Agent identification for the new agent, it has to be unique on
+	 *            the platform
+	 * @param connection
+	 *            Connection that the agent will use
+	 * @throws Exception
+	 *             If Agent ID already exists on the platform
 	 */
-	public BaseAgent(AgentID aid) throws Exception{
-		
-		if(AgentsConecction.connection == null)
-		{
-			logger.error("Before create a agent, the qpid broker connection is necesary");
+	public BaseAgent(AgentID aid) throws Exception {
+
+		if (AgentsConecction.connection == null) {
+			logger
+					.error("Before create a agent, the qpid broker connection is necesary");
 			throw new Exception("Error doesn't work the broken connection");
-		}
-		else{
+		} else {
 			this.connection = AgentsConecction.connection;
 		}
-		
-		
+
 		this.session = createSession();
-		if(this.existAgent(aid)){
+		if (this.existAgent(aid)) {
 			session.close();
 			throw new Exception("Agent ID already exists on the platform");
-		}
-		else{
-			this.aid = aid;			
+		} else {
+			this.aid = aid;
 			this.listener = new Listener();
 			myThread = new Thread(this);
 			createQueue();
@@ -113,192 +105,203 @@ public class BaseAgent implements Runnable{
 			createSubscription();
 		}
 	}
-	
+
 	/**
 	 * Creates the exclusive session the agent will use
+	 * 
 	 * @return The new Session
 	 */
-	private Session createSession(){
-		 Session session = this.connection.createSession(0);
-		 return session;
+	private Session createSession() {
+		Session session = this.connection.createSession(0);
+		return session;
 	}
-		
+
 	/**
-	 * Creates queue the agent will listen to for messages	 * 
+	 * Creates queue the agent will listen to for messages *
 	 */
-	private void createQueue(){
+	private void createQueue() {
 		this.session.queueDeclare(aid.name, null, null, Option.AUTO_DELETE);
 	}
-	
+
 	/**
 	 * Binds the exchange and the agent queue
 	 */
-	private void createBind(){
-		//this.session.exchangeBind(aid.name, aid.name, null, null);
-		this.session.exchangeBind(aid.name, "amq.direct", aid.name,null);
+	private void createBind() {
+		// this.session.exchangeBind(aid.name, aid.name, null, null);
+		this.session.exchangeBind(aid.name, "amq.direct", aid.name, null);
 	}
-	
+
 	/**
-	 * Creates the subscription through the agent listener will get the message from the queue
+	 * Creates the subscription through the agent listener will get the message
+	 * from the queue
 	 */
-	private void createSubscription(){
+	private void createSubscription() {
 		this.session.setSessionListener(this.listener);
 
-       this.session.messageSubscribe(aid.name,
-                                 "listener_destination",
-                                 MessageAcceptMode.NONE,
-                                 MessageAcquireMode.PRE_ACQUIRED,
-                                 null, 0, null);
-		
-		this.session.messageFlow("listener_destination", MessageCreditUnit.BYTE, Session.UNLIMITED_CREDIT);
-        this.session.messageFlow("listener_destination", MessageCreditUnit.MESSAGE, Session.UNLIMITED_CREDIT);
+		this.session.messageSubscribe(aid.name, "listener_destination",
+				MessageAcceptMode.NONE, MessageAcquireMode.PRE_ACQUIRED, null,
+				0, null);
+
+		this.session.messageFlow("listener_destination",
+				MessageCreditUnit.BYTE, Session.UNLIMITED_CREDIT);
+		this.session.messageFlow("listener_destination",
+				MessageCreditUnit.MESSAGE, Session.UNLIMITED_CREDIT);
 	}
-	
+
 	/**
 	 * Sends an ACLMessage to the message's receivers
-	 * @param msg Message to be sent
+	 * 
+	 * @param msg
+	 *            Message to be sent
 	 */
-	public void send(ACLMessage msg){
+	public void send(ACLMessage msg) {
 		MessageTransfer xfr = new MessageTransfer();
-			
+
 		xfr.destination("amq.direct");
 		xfr.acceptMode(MessageAcceptMode.EXPLICIT);
 		xfr.acquireMode(MessageAcquireMode.PRE_ACQUIRED);
-        
-        DeliveryProperties deliveryProps = new DeliveryProperties();
-	            
-        //Serialize message content
-        String body;
-        //Performative
-        body = msg.getPerformativeInt() + "#";
-        //Sender
-        body = body + msg.getSender().toString().length() + "#" + msg.getSender().toString();
-        //receiver
-        body = body + msg.getReceiver().toString().length() + "#" + msg.getReceiver().toString();
-        //reply to
-        body = body + msg.getReplyTo().toString().length() + "#" + msg.getReplyTo().toString();
-        //language
-        body = body + msg.getLanguage().length() + "#" + msg.getLanguage();
-        //encoding
-        body = body + msg.getEncoding().length() + "#" + msg.getEncoding();
-        //ontology
-        body = body + msg.getOntology().length() + "#" + msg.getOntology();
-        //protocol
-        body = body + msg.getProtocol().length() + "#" + msg.getProtocol();
-        //conversation id
-        body = body + msg.getConversationId().length() + "#" + msg.getConversationId();
-        //reply with
-        body = body + msg.getReplyWith().length() + "#" + msg.getReplyWith();
-        //in reply to
-        body = body + msg.getInReplyTo().length() + "#" + msg.getInReplyTo();
-        //reply by
-        body = body + msg.getReplyBy().length() + "#" + msg.getReplyBy();
-        //content
-        body = body + msg.getContent().length() + "#" + msg.getContent();
-        
-        xfr.setBody(body);
-		for(int i=0; i< msg.getTotalReceivers(); i++){
-			//If protocol is not qpid then the message goes outside the platform
-			if(!msg.getReceiver(i).protocol.equals("qpid")){			
-	        	deliveryProps.setRoutingKey("BridgeAgentInOut");			
+
+		DeliveryProperties deliveryProps = new DeliveryProperties();
+
+		// Serialize message content
+		String body;
+		// Performative
+		body = msg.getPerformativeInt() + "#";
+		// Sender
+		body = body + msg.getSender().toString().length() + "#"
+				+ msg.getSender().toString();
+		// receiver
+		body = body + msg.getReceiver().toString().length() + "#"
+				+ msg.getReceiver().toString();
+		// reply to
+		body = body + msg.getReplyTo().toString().length() + "#"
+				+ msg.getReplyTo().toString();
+		// language
+		body = body + msg.getLanguage().length() + "#" + msg.getLanguage();
+		// encoding
+		body = body + msg.getEncoding().length() + "#" + msg.getEncoding();
+		// ontology
+		body = body + msg.getOntology().length() + "#" + msg.getOntology();
+		// protocol
+		body = body + msg.getProtocol().length() + "#" + msg.getProtocol();
+		// conversation id
+		body = body + msg.getConversationId().length() + "#"
+				+ msg.getConversationId();
+		// reply with
+		body = body + msg.getReplyWith().length() + "#" + msg.getReplyWith();
+		// in reply to
+		body = body + msg.getInReplyTo().length() + "#" + msg.getInReplyTo();
+		// reply by
+		body = body + msg.getReplyBy().length() + "#" + msg.getReplyBy();
+		// content
+		body = body + msg.getContent().length() + "#" + msg.getContent();
+
+		xfr.setBody(body);
+		for (int i = 0; i < msg.getTotalReceivers(); i++) {
+			// If protocol is not qpid then the message goes outside the
+			// platform
+			if (!msg.getReceiver(i).protocol.equals("qpid")) {
+				deliveryProps.setRoutingKey("BridgeAgentInOut");
+			} else {
+				deliveryProps.setRoutingKey(msg.getReceiver(i).name);
 			}
-			else{
-				deliveryProps.setRoutingKey(msg.getReceiver(i).name);			
-			}
-			xfr.header(new Header(deliveryProps));	     
-			session.messageTransfer(xfr.getDestination(), xfr.getAcceptMode(), xfr.getAcquireMode(), xfr.getHeader(), xfr.getBodyString());
+			xfr.header(new Header(deliveryProps));
+			session.messageTransfer(xfr.getDestination(), xfr.getAcceptMode(),
+					xfr.getAcquireMode(), xfr.getHeader(), xfr.getBodyString());
 		}
 	}
-	
-	
+
 	/**
 	 * Gets agent name
+	 * 
 	 * @return Agent name
 	 */
-	public String getName(){
+	public String getName() {
 		return aid.name;
 	}
-	
+
 	/**
-	 * Function that will be executed by the agent when it starts
-	 * The user has to write his/her code here
+	 * Function that will be executed by the agent when it starts The user has
+	 * to write his/her code here
 	 */
-	
-	protected void init()
-	{
-		
+
+	protected void init() {
+
 	}
-	protected void execute()
-	{
-		
+
+	protected void execute() {
+
 	}
-	public void finalize()
-	{
-		
+
+	public void finalize() {
+
 	}
-	
-	
+
 	/**
-	 * Function that will be executed when the agent gets a message
-	 * The user has to write his/her code here
+	 * Function that will be executed when the agent gets a message The user has
+	 * to write his/her code here
+	 * 
 	 * @param ssn
 	 * @param xfr
 	 */
-	  protected void onMessage(ACLMessage msg) {
-	      
-	    }
-	
+	protected void onMessage(ACLMessage msg) {
+
+	}
+
 	/**
 	 * Function that will be executed when the agent terminates
 	 */
-	protected void terminate(){
+	protected void terminate() {
 		session.queueDelete(aid.name);
 		session.close();
-	
+
 	}
-	
+
 	/**
 	 * Runs Agent's thread
 	 */
-	public void run(){
+	public void run() {
 		init();
 		execute();
 		finalize();
 		terminate();
 	}
-	
+
 	/**
 	 * Starts the agent
 	 */
-	public void start(){
+	public void start() {
 		myThread.start();
 	}
-	
-	
 
-    /* *********************************************
-     *              CONSULTATION METHODS
-     * *********************************************/	
-	
+	/***************************************************************************
+	 * CONSULTATION METHODS
+	 **************************************************************************/
+
 	/**
 	 * @return agent ID
-	 * @uml.property  name="aid"
+	 * @uml.property name="aid"
 	 */
-	public AgentID getAid()
-	   {
-	       return this.aid;
-	   }
+	public AgentID getAid() {
+		return this.aid;
+	}
+
 	/**
 	 * Returns true if an agent exists on the platform, false otherwise
-	 * @param aid Agent ID to look for
+	 * 
+	 * @param aid
+	 *            Agent ID to look for
 	 * @return True if agent exists, false otherwise
 	 */
-	public boolean existAgent(AgentID aid){
+	public boolean existAgent(AgentID aid) {
 		return session.queueQuery(aid.name).get().getQueue() != null;
 	}
+
 	/**
 	 * Transforms the message to ACLMessage
-	 * @param xfr MessageTransfer
+	 * 
+	 * @param xfr
+	 *            MessageTransfer
 	 * @return ACLMessage
 	 */
 	public final ACLMessage MessageTransfertoACLMessage(MessageTransfer xfr) {
@@ -313,7 +316,7 @@ public class BaseAgent implements Runnable{
 		String aidString;
 		String body = xfr.getBodyString();
 
-		//System.out.println("BODY: " + body);
+		// System.out.println("BODY: " + body);
 
 		indice2 = body.indexOf('#', indice1);
 		ACLMessage msg = new ACLMessage(Integer.parseInt(body.substring(
@@ -414,7 +417,5 @@ public class BaseAgent implements Runnable{
 
 		return msg;
 	}
-	
 
-	
 }

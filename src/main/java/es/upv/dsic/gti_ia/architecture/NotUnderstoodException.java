@@ -21,19 +21,17 @@ Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
  *****************************************************************/
 
-
 package es.upv.dsic.gti_ia.architecture;
 
 import es.upv.dsic.gti_ia.core.ACLMessage;
 
-/** 
+/**
  * 
  * @see jade.domain.FIPAAgentManagement.FIPAManagementOntology
  * @author Fabio Bellifemine - CSELT S.p.A.
- * @version $Date: 2008-10-06 16:36:33 +0200 (lun, 06 ott 2008) $ $Revision: 6048 $
+ * @version $Date: 2008-10-06 16:36:33 +0200 (lun, 06 ott 2008) $ $Revision:
+ *          6048 $
  */
-
-
 
 public class NotUnderstoodException extends FIPAException {
 
@@ -42,7 +40,7 @@ public class NotUnderstoodException extends FIPAException {
 	}
 
 	public NotUnderstoodException(ACLMessage notUnderstood) {
-		super(notUnderstood); 
+		super(notUnderstood);
 	}
 
 }

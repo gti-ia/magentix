@@ -6,33 +6,33 @@ import java.util.Map;
 import com.bubble.serializer.SerializationContext;
 import com.bubble.serializer.DeserializationContext;
 
-public class Message{	
+public class Message {
 	public String body;
 	public ByteBuffer buffer;
 	Map<String, String> messageHeaders = new HashMap<String, String>();
-	
-	public void setHeader(String headerName, String value){
+
+	public void setHeader(String headerName, String value) {
 		messageHeaders.put(headerName, value);
 	}
-	
-	public String getHeader(String headerName){
+
+	public String getHeader(String headerName) {
 		return messageHeaders.get(headerName);
 	}
-	
-	public String toString(){
-		return "Body: "+body + " Headers: "+messageHeaders.toString();
+
+	public String toString() {
+		return "Body: " + body + " Headers: " + messageHeaders.toString();
 	}
-	
-	public void setByteBuffer(Object obj, int size){
+
+	public void setByteBuffer(Object obj, int size) {
 		SerializationContext context = new SerializationContext();
-        buffer = ByteBuffer.allocate(size);
-        context.serialize(obj, buffer);
-        buffer.flip();
+		buffer = ByteBuffer.allocate(size);
+		context.serialize(obj, buffer);
+		buffer.flip();
 	}
-	
-	public Object getByteBuffer(){
+
+	public Object getByteBuffer() {
 		DeserializationContext context = new DeserializationContext();
-		Object obj = (Object)context.deserialize(buffer);
+		Object obj = (Object) context.deserialize(buffer);
 		return obj;
 	}
 }

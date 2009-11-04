@@ -1,22 +1,20 @@
 package es.upv.dsic.gti_ia.organization;
 
-
 import es.upv.dsic.gti_ia.architecture.FIPARequestInitiator;
 import es.upv.dsic.gti_ia.architecture.QueueAgent;
 import es.upv.dsic.gti_ia.architecture.FIPANames.InteractionProtocol;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 
-
 import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
 
-
 /**
- * This class gives us the support to accede to the services of the OMS 
+ * This class gives us the support to accede to the services of the OMS
+ * 
  * @author jbellver
- *
+ * 
  */
 public class OMSService {
 
@@ -27,11 +25,14 @@ public class OMSService {
 	static Logger logger = Logger.getLogger(OMSService.class);
 
 	Configuration c = new Configuration();
+
 	/**
 	 * This class gives us the support to accede to the services of the OMS
-	 * @param OMSServiceDesciptionLocation  The URL where the owl's document  is located.
+	 * 
+	 * @param OMSServiceDesciptionLocation
+	 *            The URL where the owl's document is located.
 	 */
-	public  OMSService(String OMSServiceDesciptionLocation) {
+	public OMSService(String OMSServiceDesciptionLocation) {
 
 		this.configuration = OMSServiceDesciptionLocation;
 	}
@@ -39,31 +40,24 @@ public class OMSService {
 	/**
 	 * 
 	 */
-	public  OMSService() {
+	public OMSService() {
 
-		this.configuration =  c.OMSServiceDesciptionLocation;
+		this.configuration = c.OMSServiceDesciptionLocation;
 	}
-
 
 	private void setValor(String value) {
 		this.value = value;
 	}
 
-	
-	private void addElementToList(String element)
-	{
+	private void addElementToList(String element) {
 		this.list.add(element);
 	}
-	
-	
-	private void setQuantity(int Quantity)
-	{
+
+	private void setQuantity(int Quantity) {
 		this.Quantity = Quantity;
 	}
-	
-	
-	private void sendInform(QueueAgent agent, String call)
-	{
+
+	private void sendInform(QueueAgent agent, String call) {
 		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
 		requestMsg.setSender(agent.getAid());
 		requestMsg.setContent(call);
@@ -72,8 +66,6 @@ public class OMSService {
 
 		logger.info("[QueryAgent]Sms to send: " + requestMsg.getContent());
 		logger.info("[QueryAgent]Sending... ");
-		
-
 
 		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
 
@@ -81,9 +73,10 @@ public class OMSService {
 			test.action();
 		} while (!test.finished());
 	}
-	
+
 	/**
 	 * Leave role agent inside the organization
+	 * 
 	 * @param agent
 	 * @param AgentID
 	 * @param RoleID
@@ -93,35 +86,36 @@ public class OMSService {
 	public String LeaveRole(QueueAgent agent, String AgentID, String RoleID,
 			String UnitID) {
 
-		
-
 		String call = configuration + "LeaveRoleProcess.owl AgentID=" + AgentID
 				+ " RoleID=" + RoleID + " UnitID=" + UnitID;
-		
+
 		this.sendInform(agent, call);
 		return this.value;
 
 	}
+
 	/**
 	 * Inform agent role inside the organization
+	 * 
 	 * @param agent
 	 * @param AgentID
 	 * @return ArrayList RoleUnitList
 	 */
 	public ArrayList<String> InformAgentRole(QueueAgent agent, String AgentID) {
 
-
 		this.list.clear();
-		
-		String call = configuration + "InformAgentRoleProcess.owl RequestedAgentID="
-				+ AgentID;
+
+		String call = configuration
+				+ "InformAgentRoleProcess.owl RequestedAgentID=" + AgentID;
 		this.sendInform(agent, call);
 
 		return this.list;
 
 	}
+
 	/**
 	 * Inform of the members of the organization with one veer role and a unit
+	 * 
 	 * @param agent
 	 * @param RoleID
 	 * @param UnitID
@@ -131,7 +125,7 @@ public class OMSService {
 			String UnitID) {
 
 		this.list.clear();
-		
+
 		String call = configuration + "InformMembersProcess.owl RoleID="
 				+ RoleID + " UnitID=" + UnitID;
 		this.sendInform(agent, call);
@@ -142,6 +136,7 @@ public class OMSService {
 
 	/**
 	 * Inform norm list
+	 * 
 	 * @param agent
 	 * @param RoleID
 	 * @return ArrayList NormList
@@ -149,7 +144,7 @@ public class OMSService {
 	public ArrayList<String> InformRoleNorms(QueueAgent agent, String RoleID) {
 
 		this.list.clear();
-		
+
 		String call = configuration + "InformRoleNormsProcess.owl RoleID="
 				+ RoleID;
 		this.sendInform(agent, call);
@@ -160,6 +155,7 @@ public class OMSService {
 
 	/**
 	 * Inform role profiles
+	 * 
 	 * @param agent
 	 * @param UnitID
 	 * @return ArrayList ProfileList
@@ -167,7 +163,7 @@ public class OMSService {
 	public ArrayList<String> InformRoleProfiles(QueueAgent agent, String UnitID) {
 
 		this.list.clear();
-		
+
 		String call = configuration + "InformRoleProfilesProcess.owl UnitID="
 				+ UnitID;
 		this.sendInform(agent, call);
@@ -178,6 +174,7 @@ public class OMSService {
 
 	/**
 	 * Inform unit
+	 * 
 	 * @param agent
 	 * @param UnitID
 	 * @return ArrayList UnitType UnitGoal ParentID
@@ -185,23 +182,25 @@ public class OMSService {
 	public ArrayList<String> InformUnit(QueueAgent agent, String UnitID) {
 
 		this.list.clear();
-		
+
 		String call = configuration + "InformUnitProcess.owl UnitID=" + UnitID;
 		this.sendInform(agent, call);
 
 		return this.list;
 
 	}
-/**
- * Inform unit roles
- * @param agent
- * @param UnitID
- * @return ArrayList RoleList
- */
+
+	/**
+	 * Inform unit roles
+	 * 
+	 * @param agent
+	 * @param UnitID
+	 * @return ArrayList RoleList
+	 */
 	public ArrayList<String> InformUnitRoles(QueueAgent agent, String UnitID) {
 
 		this.list.clear();
-		
+
 		String call = configuration + "InformUnitRolesProcess.owl UnitID="
 				+ UnitID;
 		this.sendInform(agent, call);
@@ -209,15 +208,16 @@ public class OMSService {
 		return this.list;
 
 	}
+
 	/**
-	 * Agents quantity in the organization with a role and a unit 
+	 * Agents quantity in the organization with a role and a unit
+	 * 
 	 * @param agent
 	 * @param RoleID
 	 * @param UnitID
 	 * @return int Quantity
 	 */
 	public int QuantityMembers(QueueAgent agent, String RoleID, String UnitID) {
-
 
 		String call = configuration + "QuantityMembersProcess.owl RoleID="
 				+ RoleID + " UnitID=" + UnitID;
@@ -229,6 +229,7 @@ public class OMSService {
 
 	/**
 	 * Register a new norm in the organization
+	 * 
 	 * @param agent
 	 * @param NormID
 	 * @param NormContent
@@ -237,7 +238,6 @@ public class OMSService {
 	public String RegisterNorm(QueueAgent agent, String NormID,
 			String NormContent) {
 
-
 		String call = configuration + "RegisterNormProcess.owl NormID="
 				+ NormID + " NormContent=" + NormContent;
 		this.sendInform(agent, call);
@@ -245,8 +245,10 @@ public class OMSService {
 		return this.value;
 
 	}
+
 	/**
 	 * Register a new role in the organization
+	 * 
 	 * @param agent
 	 * @param RegisterRoleInputRoleID
 	 * @param UnitID
@@ -261,9 +263,7 @@ public class OMSService {
 			String Accessibility, String Position, String Visibility,
 			String Inheritance) {
 
-
-		String call = configuration
-				+ "RegisterRoleProcess.owl RoleID="
+		String call = configuration + "RegisterRoleProcess.owl RoleID="
 				+ RegisterRoleInputRoleID + " UnitID=" + UnitID
 				+ " Accessibility=" + Accessibility + " Position=" + Position
 				+ " Visibility=" + Visibility + " Inheritance=" + Inheritance;
@@ -272,8 +272,10 @@ public class OMSService {
 		return this.value;
 
 	}
+
 	/**
 	 * Register a new unit in the organization
+	 * 
 	 * @param agent
 	 * @param UnitID
 	 * @param Type
@@ -284,7 +286,6 @@ public class OMSService {
 	public String RegisterUnit(QueueAgent agent, String UnitID, String Type,
 			String Goal, String ParentUnitID) {
 
-
 		String call = configuration + "RegisterUnitProcess.owl  UnitID="
 				+ UnitID + " Type=" + Type + " Goal=" + Goal + " ParentUnitID="
 				+ ParentUnitID;
@@ -293,14 +294,15 @@ public class OMSService {
 		return this.value;
 
 	}
+
 	/**
 	 * Deregister norm
+	 * 
 	 * @param agent
 	 * @param NormID
 	 * @return String Status ErrorValue
 	 */
 	public String DeregisterNorm(QueueAgent agent, String NormID) {
-
 
 		String call = configuration + "DeregisterNormProcess.owl  NormID="
 				+ NormID;
@@ -309,8 +311,10 @@ public class OMSService {
 		return this.value;
 
 	}
+
 	/**
 	 * Deregister role
+	 * 
 	 * @param agent
 	 * @param RoleID
 	 * @param UnitID
@@ -318,21 +322,21 @@ public class OMSService {
 	 */
 	public String DeregisterRole(QueueAgent agent, String RoleID, String UnitID) {
 
-
 		String call = configuration + "DeregisterRoleProcess.owl  RoleID="
 				+ RoleID + " UnitID=" + UnitID;
 		this.sendInform(agent, call);
 		return this.value;
 
 	}
+
 	/**
 	 * Deregister unit
+	 * 
 	 * @param agent
 	 * @param UnitID
 	 * @return String Status ErrorValue
 	 */
 	public String DeregisterUnit(QueueAgent agent, String UnitID) {
-
 
 		String call = configuration + "DeregisterNormProcess.owl  UnitID="
 				+ UnitID;
@@ -344,6 +348,7 @@ public class OMSService {
 
 	/**
 	 * Expulse an agent of the organization
+	 * 
 	 * @param agent
 	 * @param AgentID
 	 * @param RoleID
@@ -352,7 +357,6 @@ public class OMSService {
 	 */
 	public String Expulse(QueueAgent agent, String AgentID, String RoleID,
 			String UnitID) {
-
 
 		String call = configuration + "ExpulseProcess.owl AgentID=" + AgentID
 				+ " RoleID=" + RoleID + " UnitID=" + UnitID;
@@ -379,7 +383,6 @@ public class OMSService {
 
 		return this.value;
 
-
 	}
 
 	/**
@@ -402,7 +405,7 @@ public class OMSService {
 			logger.info(myAgent.getName() + ": OOH! "
 					+ msg.getSender().getLocalName()
 					+ " Has agreed to excute the service!");
-			
+
 		}
 
 		protected void handleRefuse(ACLMessage msg) {
@@ -412,7 +415,6 @@ public class OMSService {
 			this.oms.setValor(myAgent.getName() + ": Oh no! "
 					+ msg.getSender().getLocalName()
 					+ " has rejected my proposal.");
-			
 
 		}
 
@@ -449,31 +451,22 @@ public class OMSService {
 
 			}
 
-			//sacamos el Status
+			// sacamos el Status
 			String status = "";
 
-			
-			int n =  msg.getContent().indexOf(",") - msg.getContent().indexOf("Status");
-			
-			
-			
-			
-			if (n>0)
-			{
-			status = msg.getContent().substring(
-					msg.getContent().indexOf("Status") + 7,
-					msg.getContent().indexOf(","));
-			}
-			else
-			{
+			int n = msg.getContent().indexOf(",")
+					- msg.getContent().indexOf("Status");
+
+			if (n > 0) {
 				status = msg.getContent().substring(
 						msg.getContent().indexOf("Status") + 7,
-						msg.getContent().indexOf("}"));	
-				
-			}
+						msg.getContent().indexOf(","));
+			} else {
+				status = msg.getContent().substring(
+						msg.getContent().indexOf("Status") + 7,
+						msg.getContent().indexOf("}"));
 
-			
-			
+			}
 
 			if (patron.equals("InformAgentRoleProcess")
 					|| patron.equals("InformMembersProcess")
@@ -484,23 +477,19 @@ public class OMSService {
 				// recorrer el vector
 				String argAux;
 
-				
-				//para los servicios informativos
-			
+				// para los servicios informativos
 
-					// diferenciamos entre los que tienen tuplas y los que no
-					// son tuplas
+				// diferenciamos entre los que tienen tuplas y los que no
+				// son tuplas
 
-					if (patron.equals("InformAgentRoleProcess")
-							|| patron.equals("InformMembersProcess")) {
-						
-						if (!status.equals("Ok")) {
-							this.oms.addElementToList("EMPTY");
-						}
-						else
-						{
+				if (patron.equals("InformAgentRoleProcess")
+						|| patron.equals("InformMembersProcess")) {
+
+					if (!status.equals("Ok")) {
+						this.oms.addElementToList("EMPTY");
+					} else {
 						String arg3 = msg.getContent().substring(
-								msg.getContent().indexOf(",")+1,
+								msg.getContent().indexOf(",") + 1,
 								msg.getContent().length());
 						arg3 = arg3.substring(arg3.indexOf("("), arg3
 								.indexOf("]"));
@@ -512,7 +501,8 @@ public class OMSService {
 						for (String e : elements) {
 							if ((paridad % 2) == 0)// es par
 							{
-								argAux = e.substring(e.indexOf("(")+1, e.length());
+								argAux = e.substring(e.indexOf("(") + 1, e
+										.length());
 
 							} else {
 								argAux = e.substring(0, e.indexOf(")"));
@@ -520,67 +510,51 @@ public class OMSService {
 							this.oms.addElementToList(argAux);
 							paridad++;
 						}
-						}
 					}
-					else
-					{
-						if (!status.equals("Ok")) {
+				} else {
+					if (!status.equals("Ok")) {
 
-							this.oms.addElementToList("EMPTY");
-						}
-						else
-						{
+						this.oms.addElementToList("EMPTY");
+					} else {
 						String arg3 = msg.getContent().substring(
 								msg.getContent().indexOf("[") + 1,
 								msg.getContent().indexOf("]"));
-						
 
 						elements = arg3.split(",");
 
-					
-
 						for (String e : elements) {
 							this.oms.addElementToList(e);
-					
-						}
-						}
-						
-					}
-				}
 
-			
+						}
+					}
+
+				}
+			}
 
 			String ErrorValue = msg.getContent();
-			
-			 n =  msg.getContent().indexOf(",") - msg.getContent().indexOf("ErrorValue");
-			
-			
-			
-			
-			if (n>0)
-			{
-				ErrorValue = msg.getContent().substring(
-					msg.getContent().indexOf("ErrorValue") + 11,
-					msg.getContent().indexOf(","));
-			}
-			else
-			{
+
+			n = msg.getContent().indexOf(",")
+					- msg.getContent().indexOf("ErrorValue");
+
+			if (n > 0) {
 				ErrorValue = msg.getContent().substring(
 						msg.getContent().indexOf("ErrorValue") + 11,
-						msg.getContent().indexOf("}"));	
-				
+						msg.getContent().indexOf(","));
+			} else {
+				ErrorValue = msg.getContent().substring(
+						msg.getContent().indexOf("ErrorValue") + 11,
+						msg.getContent().indexOf("}"));
+
 			}
-
-			
-
 
 			// si ha salido bien despierto al agente
 			if (status.equals("Ok")) {
 
 				if (patron.equals("QuantityMembersProcess")) {
-					
-					String quantity  = msg.getContent().substring(msg.getContent().indexOf("Quantity=") + 9,
-							msg.getContent().indexOf("}"));	
+
+					String quantity = msg.getContent().substring(
+							msg.getContent().indexOf("Quantity=") + 9,
+							msg.getContent().indexOf("}"));
 					this.oms.setQuantity(Integer.parseInt(quantity));
 				}
 
@@ -599,7 +573,7 @@ public class OMSService {
 			this.oms.setValor(myAgent.getName() + ":"
 					+ msg.getSender().getLocalName()
 					+ " has indicated that they didn't understand.");
-		
+
 		}
 
 		protected void handleOutOfSequence(ACLMessage msg) {
@@ -611,7 +585,7 @@ public class OMSService {
 					+ msg.getSender().getLocalName()
 					+ " has send me a message which i wasn't"
 					+ " expecting in this conversation");
-	
+
 		}
 	}
 

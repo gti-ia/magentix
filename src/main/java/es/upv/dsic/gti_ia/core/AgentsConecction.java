@@ -1,16 +1,20 @@
 package es.upv.dsic.gti_ia.core;
+
 import org.apache.qpid.transport.Connection;
+
 /**
- * This class work to open a Qpid broker connection,
- * will be used in each constuctor of a new agent.
+ * This class work to open a Qpid broker connection, will be used in each
+ * constuctor of a new agent.
+ * 
  * @author Sergio Pajares
- *
+ * 
  */
 public class AgentsConecction {
 	public static org.apache.qpid.transport.Connection connection;
-	
+
 	/**
 	 * Connect with a apid broker
+	 * 
 	 * @param url
 	 * @param port
 	 * @param p1
@@ -18,23 +22,21 @@ public class AgentsConecction {
 	 * @param p3
 	 * @param b
 	 */
-	public static void connect(String url, int port, String p1, String p2, String p3, boolean b)
-	{
+	public static void connect(String url, int port, String p1, String p2,
+			String p3, boolean b) {
 		connection = new Connection();
-		connection.connect(url, port, p1 , p2, p3, b);
+		connection.connect(url, port, p1, p2, p3, b);
 	}
+
 	/**
-	 * Connect with a broker located in url, 
-	 * with the default settings of a Qpid broker installation 
+	 * Connect with a broker located in url, with the default settings of a Qpid
+	 * broker installation
+	 * 
 	 * @param url
 	 */
-	public static void connect(String url)
-	{
+	public static void connect(String url) {
 		connection = new Connection();
-		connection.connect(url, 5672, "test", "guest", "guest",false);
+		connection.connect(url, 5672, "test", "guest", "guest", false);
 	}
-	
-	
-    
 
 }

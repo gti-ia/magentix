@@ -1,5 +1,4 @@
 
-
 /**
  * 
  *  
@@ -11,58 +10,49 @@
 
 package es.upv.dsic.gti_ia.architecture;
 
-
 public class Monitor {
 
-	
-    /**
-     * suspends the process
-     */
-	public synchronized void waiting()
-	{
-		
-        try{	
+	/**
+	 * suspends the process
+	 */
+	public synchronized void waiting() {
+
+		try {
 			this.wait();
 
-     	}catch(InterruptedException e){
-				
-				System.out.println("ERROR: " + e.getMessage());
-			}
+		} catch (InterruptedException e) {
+
+			System.out.println("ERROR: " + e.getMessage());
+		}
 	}
-	
-	  /**
-     * suspends the process a time
-     * 
-     * @param  timeout Time of wait.
-     */
-	public synchronized void waiting(long timeout)
-	{
-		
-        try{	
+
+	/**
+	 * suspends the process a time
+	 * 
+	 * @param timeout
+	 *            Time of wait.
+	 */
+	public synchronized void waiting(long timeout) {
+
+		try {
 			this.wait(timeout);
 
-     	}catch(InterruptedException e){
-				
-				System.out.println("ERROR: " + e.getMessage());
-			}
-	}
-	
-    /**
-     * reactivates the process
-     */
-	public synchronized void advise()
-	{
-		try{
-		notifyAll();
-		}catch(Exception e)
-		{
-			System.out.println("ERROR :"+ e.getMessage());
-		}
-		
-	}
-	
-	
+		} catch (InterruptedException e) {
 
-	
-	
+			System.out.println("ERROR: " + e.getMessage());
+		}
+	}
+
+	/**
+	 * reactivates the process
+	 */
+	public synchronized void advise() {
+		try {
+			notifyAll();
+		} catch (Exception e) {
+			System.out.println("ERROR :" + e.getMessage());
+		}
+
+	}
+
 }
