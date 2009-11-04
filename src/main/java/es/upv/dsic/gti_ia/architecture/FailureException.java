@@ -34,6 +34,11 @@ import es.upv.dsic.gti_ia.core.ACLMessage;
  */
 public class FailureException extends FIPAException {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public FailureException(String msg) {
 		super(msg);
 	}
