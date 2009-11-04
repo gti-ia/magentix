@@ -1,141 +1,144 @@
 package _Others_Examples;
 
-	import java.io.*;
-	import java.net.*;
-	import java.awt.*;
-	import java.awt.event.*;
-	import javax.swing.*;
+import java.io.*;
+import java.net.*;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
 
-	public class httpclient extends JFrame {
-	   private JTextField campoIntroducir;
-	   private JTextArea areaPantalla;
-	   private DatagramSocket socket;
+public class httpclient extends JFrame {
+	private JTextField campoIntroducir;
+	private JTextArea areaPantalla;
+	private DatagramSocket socket;
 
-	   // configurar GUI y DatagramSocket
-	   public httpclient()
-	   {
-	      super( "Cliente" );
+	// configurar GUI y DatagramSocket
+	public httpclient() {
+		super("Cliente");
 
-	      Container contenedor = getContentPane();
+		Container contenedor = getContentPane();
 
-	      campoIntroducir = new JTextField( "Escriba aquí el mensaje" );
-	      campoIntroducir.addActionListener(
-	         new ActionListener() { 
-	            public void actionPerformed( ActionEvent evento )
-	            {
-	               // crear y enviar el paquete
-	               try {
-	                  areaPantalla.append( "\nEnviando paquete que contiene: " +
-	                     evento.getActionCommand() + "\n" );
+		campoIntroducir = new JTextField("Escriba aquí el mensaje");
+		campoIntroducir.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent evento) {
+				// crear y enviar el paquete
+				try {
+					areaPantalla.append("\nEnviando paquete que contiene: "
+							+ evento.getActionCommand() + "\n");
 
-	                  // obtener mensaje del campo de texto y convertirlo en arreglo byte
-	                  String mensaje = evento.getActionCommand();
-	                  byte datos[] = mensaje.getBytes();
-	         
-	                  // crear enviarPaquete
-	                  DatagramPacket enviarPaquete = new DatagramPacket( datos, 
-	                     datos.length, InetAddress.getLocalHost(), 5000 );
+					// obtener mensaje del campo de texto y convertirlo en
+					// arreglo byte
+					String mensaje = evento.getActionCommand();
+					byte datos[] = mensaje.getBytes();
 
-	                  socket.send( enviarPaquete ); // enviar paquete
-	                  areaPantalla.append( "Paquete enviado\n" );
-	                  areaPantalla.setCaretPosition( 
-	                     areaPantalla.getText().length() );
-	               }
+					// crear enviarPaquete
+					DatagramPacket enviarPaquete = new DatagramPacket(datos,
+							datos.length, InetAddress.getLocalHost(), 5000);
 
-	               // procesar los problemas que pueden ocurrir al crear o enviar el paquete
-	               catch ( IOException excepcionES ) {
-	                  mostrarMensaje( excepcionES.toString() + "\n" );
-	                  excepcionES.printStackTrace();
-	               }
+					socket.send(enviarPaquete); // enviar paquete
+					areaPantalla.append("Paquete enviado\n");
+					areaPantalla.setCaretPosition(areaPantalla.getText()
+							.length());
+				}
 
-	            } // fin de actionPerformed
+				// procesar los problemas que pueden ocurrir al crear o enviar
+				// el paquete
+				catch (IOException excepcionES) {
+					mostrarMensaje(excepcionES.toString() + "\n");
+					excepcionES.printStackTrace();
+				}
 
-	         } // fin de la clase interna
+			} // fin de actionPerformed
 
-	      ); // fin de la llamada a addActionListener
+		} // fin de la clase interna
 
-	      contenedor.add( campoIntroducir, BorderLayout.NORTH );
+				); // fin de la llamada a addActionListener
 
-	      areaPantalla = new JTextArea();
-	      contenedor.add( new JScrollPane( areaPantalla ),
-	         BorderLayout.CENTER );
+		contenedor.add(campoIntroducir, BorderLayout.NORTH);
 
-	      setSize( 400, 300 );
-	      setVisible( true );
+		areaPantalla = new JTextArea();
+		contenedor.add(new JScrollPane(areaPantalla), BorderLayout.CENTER);
 
-	      // crear objeto DatagramSocket para enviar y recibir paquetes
-	      try {
-	         socket = new DatagramSocket();
-	      }
+		setSize(400, 300);
+		setVisible(true);
 
-	      // atrapar los problemas que pueden ocurrir al crear objeto DatagramSocket
-	      catch( SocketException excepcionSocket ) {
-	         excepcionSocket.printStackTrace();
-	         System.exit( 1 );
-	      }
+		// crear objeto DatagramSocket para enviar y recibir paquetes
+		try {
+			socket = new DatagramSocket();
+		}
 
-	   } // fin del constructor de Cliente
+		// atrapar los problemas que pueden ocurrir al crear objeto
+		// DatagramSocket
+		catch (SocketException excepcionSocket) {
+			excepcionSocket.printStackTrace();
+			System.exit(1);
+		}
 
-	   // esperar a que lleguen los paquetes del Servidor, mostrar el contenido de los paquetes
-	   private void esperarPaquetes()
-	   {
-	      while ( true ) { // iterar infinitamente
+	} // fin del constructor de Cliente
 
-	         // recibir el paquete y mostrar su contenido
-	         try {
+	// esperar a que lleguen los paquetes del Servidor, mostrar el contenido de
+	// los paquetes
+	private void esperarPaquetes() {
+		while (true) { // iterar infinitamente
 
-	            // establecer el paquete
-	            byte datos[] = new byte[ 100 ];
-	            DatagramPacket recibirPaquete = new DatagramPacket( 
-	               datos, datos.length );
+			// recibir el paquete y mostrar su contenido
+			try {
 
-	            socket.receive( recibirPaquete ); // esperar un paquete
+				// establecer el paquete
+				byte datos[] = new byte[100];
+				DatagramPacket recibirPaquete = new DatagramPacket(datos,
+						datos.length);
 
-	            // mostrar el contenido del paquete
-	            mostrarMensaje( "\nPaquete recibido:" + 
-	               "\nDel host: " + recibirPaquete.getAddress() + 
-	               "\nPuerto del host: " + recibirPaquete.getPort() + 
-	               "\nLongitud: " + recibirPaquete.getLength() + 
-	               "\nContenido:\n\t" + new String( recibirPaquete.getData(), 
-	                  0, recibirPaquete.getLength() ) );
-	         }
-	 
-	         // procesar los problemas que pueden ocurrir al recibir o mostrar el paquete
-	         catch( IOException excepcion ) {
-	            mostrarMensaje( excepcion.toString() + "\n" );
-	            excepcion.printStackTrace();
-	         }
+				socket.receive(recibirPaquete); // esperar un paquete
 
-	      } // fin de instrucción while
+				// mostrar el contenido del paquete
+				mostrarMensaje("\nPaquete recibido:"
+						+ "\nDel host: "
+						+ recibirPaquete.getAddress()
+						+ "\nPuerto del host: "
+						+ recibirPaquete.getPort()
+						+ "\nLongitud: "
+						+ recibirPaquete.getLength()
+						+ "\nContenido:\n\t"
+						+ new String(recibirPaquete.getData(), 0,
+								recibirPaquete.getLength()));
+			}
 
-	   } // fin del método esperarPaquetes
+			// procesar los problemas que pueden ocurrir al recibir o mostrar el
+			// paquete
+			catch (IOException excepcion) {
+				mostrarMensaje(excepcion.toString() + "\n");
+				excepcion.printStackTrace();
+			}
 
-	   // método utilitario que es llamado desde otros subprocesos para manipular a
-	   // areaPantalla en el subproceso despachador de eventos
-	   private void mostrarMensaje( final String mensajeAMostrar )
-	   {
-	      // mostrar mensaje del subproceso de ejecución despachador de eventos
-	      SwingUtilities.invokeLater(
-	         new Runnable() {  // clase interna para asegurar que la GUI se actualice apropiadamente
+		} // fin de instrucción while
 
-	            public void run() // actualiza areaPantalla
-	            {
-	               areaPantalla.append( mensajeAMostrar );
-	               areaPantalla.setCaretPosition( 
-	                  areaPantalla.getText().length() );
-	            }
+	} // fin del método esperarPaquetes
 
-	         }  // fin de la clase interna
+	// método utilitario que es llamado desde otros subprocesos para manipular a
+	// areaPantalla en el subproceso despachador de eventos
+	private void mostrarMensaje(final String mensajeAMostrar) {
+		// mostrar mensaje del subproceso de ejecución despachador de eventos
+		SwingUtilities.invokeLater(new Runnable() { // clase interna para
+													// asegurar que la GUI se
+													// actualice apropiadamente
 
-	      ); // fin de la llamada a SwingUtilities.invokeLater
-	   }
+					public void run() // actualiza areaPantalla
+					{
+						areaPantalla.append(mensajeAMostrar);
+						areaPantalla.setCaretPosition(areaPantalla.getText()
+								.length());
+					}
 
-	   public static void main( String args[] )
-	   {
-		   httpclient aplicacion = new httpclient();
-	      aplicacion.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
-	      aplicacion.esperarPaquetes();
-	   }
+				} // fin de la clase interna
 
-	}  // fin de la clase Cliente
+				); // fin de la llamada a SwingUtilities.invokeLater
+	}
+
+	public static void main(String args[]) {
+		httpclient aplicacion = new httpclient();
+		aplicacion.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		aplicacion.esperarPaquetes();
+	}
+
+} // fin de la clase Cliente
 

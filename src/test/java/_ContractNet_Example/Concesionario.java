@@ -2,8 +2,6 @@ package _ContractNet_Example;
 
 import org.apache.qpid.transport.Connection;
 
-
-
 import org.apache.qpid.transport.Connection;
 
 import es.upv.dsic.gti_ia.architecture.FIPAContractNetInitiator;
@@ -26,31 +24,28 @@ public class Concesionario extends QueueAgent {
 
 	}
 
-	public void execute()
-    {
-    
-		
-	Monitor m = new Monitor();
-    System.out.printf("Autos %s: A la espera de clientes...\n", this.getName());
-    
+	public void execute() {
 
+		Monitor m = new Monitor();
+		System.out.printf("Autos %s: A la espera de clientes...\n", this
+				.getName());
 
-    // Se crea una plantilla que filtre los mensajes a recibir.
-    MessageTemplate template = new MessageTemplate(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET);
+		// Se crea una plantilla que filtre los mensajes a recibir.
+		MessageTemplate template = new MessageTemplate(
+				FIPANames.InteractionProtocol.FIPA_CONTRACT_NET);
 
-    // Añadimos los comportamientos ante mensajes recibidos
-    CrearOferta oferta = new CrearOferta(this, template);
-    
-    this.setTask(oferta);
-    m.waiting();
-    /*
-    do
-    {
-    	oferta.action();
-    	
-    }while(true);*/
-    
-}
+		// Añadimos los comportamientos ante mensajes recibidos
+		CrearOferta oferta = new CrearOferta(this, template);
+
+		this.setTask(oferta);
+		m.waiting();
+		/*
+		 * do { oferta.action();
+		 * 
+		 * }while(true);
+		 */
+
+	}
 
 	// Hacemos una simulación para que pueda dar que existe o no coche (sobre un
 	// 80% probab).
@@ -76,10 +71,8 @@ public class Concesionario extends QueueAgent {
 
 		protected ACLMessage prepareResponse(ACLMessage cfp)
 				throws NotUnderstoodException, RefuseException {
-			System.out
-					.printf("Autos %s: Peticion de oferta recibida de %s.\n",
-							getName(), cfp.getSender()
-									.getLocalName());
+			System.out.printf("Autos %s: Peticion de oferta recibida de %s.\n",
+					getName(), cfp.getSender().getLocalName());
 
 			// Comprobamos si existen ofertas disponibles
 			if (Concesionario.this.existeCoche()) {
@@ -106,13 +99,11 @@ public class Concesionario extends QueueAgent {
 				ACLMessage propose, ACLMessage accept) throws FailureException {
 			// Hemos recibido una aceptación de nuestra oferta, enviamos el
 			// albarán
-			System.out.printf("Autos %s: Hay una posible oferta.\n",
-					getName());
+			System.out.printf("Autos %s: Hay una posible oferta.\n", getName());
 
 			if (devolverPrecio()) {
 				System.out.printf("Autos %s: Enviando contrato de compra.\n",
 						getName());
-			
 
 				ACLMessage inform = accept.createReply();
 
