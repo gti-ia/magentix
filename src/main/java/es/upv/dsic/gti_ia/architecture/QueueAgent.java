@@ -107,7 +107,7 @@ public class QueueAgent extends BaseAgent {
 	 * @param template
 	 * @param tipo
 	 *            1 = rol responder other = rol initiator
-	 * @return an ACLMessage
+	 * @return msg ACLMessage
 	 */
 	synchronized ACLMessage receiveACLMessage(MessageTemplate template, int tipo) {
 		ACLMessage msgselect = null;
