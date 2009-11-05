@@ -37,9 +37,9 @@ public class Configuration {
 		   
 		   InputStream is = new FileInputStream("configuration/"+fileName);
 		   
-		   //InputStream is = this.getClass().getClassLoader().getResourceAsStream("configuration/"+fileName);
 		   
-		  properties.loadFromXML(is);// .loadFromXML(Configuration.class.getResourceAsStream("./configurations/ThomasSettings.xml"));
+		   
+		  properties.loadFromXML(is);
 		   
 			for (Enumeration<Object> e = properties.keys(); e.hasMoreElements() ; ) {
 			    // Obtenemos el objeto
