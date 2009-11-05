@@ -79,16 +79,18 @@ public class Configuration {
 		   
 		   
 		   
-		   String fileName = "Settings.xml";
+		   //String fileName = "Settings.xml";
 		   
 		   //InputStream is = new FileInputStream("configuration/"+fileName);
 		   
-		   InputStream is = new FileInputStream(fileName);
-		   
-		   
-		   
-		  properties.loadFromXML(is);
-		   
+		   //InputStream is = new FileInputStream(fileName);
+
+			  
+			  properties.loadFromXML(Configuration.class.getResourceAsStream("/"+"Settings.xml"));	  
+			  
+
+		 
+		  
 			for (Enumeration<Object> e = properties.keys(); e.hasMoreElements() ; ) {
 			    // Obtenemos el objeto
 			    Object obj = e.nextElement();
