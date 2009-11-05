@@ -116,7 +116,7 @@ public class FIPAQueryResponder {
 			try {
 				resNotification = prepareResultNotification(request, response);
 
-				// TODO ACLMessage.INFORM_IF
+			
 
 			} catch (FailureException fe) {
 

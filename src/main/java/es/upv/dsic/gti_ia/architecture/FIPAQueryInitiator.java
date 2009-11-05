@@ -7,7 +7,6 @@
 
 package es.upv.dsic.gti_ia.architecture;
 
-// TODO FALTA ACABAR DE LIMPIAR Y JAVADOC
 
 import java.util.Date;
 import java.util.logging.*;
