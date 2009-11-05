@@ -79,7 +79,7 @@ public class Configuration {
 		   
 		   
 		   
-		   String fileName = "ThomasSettings.xml";
+		   String fileName = "Settings.xml";
 		   
 		   InputStream is = new FileInputStream("configuration/"+fileName);
 		   
