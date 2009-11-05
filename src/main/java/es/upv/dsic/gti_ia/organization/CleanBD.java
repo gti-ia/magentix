@@ -56,18 +56,7 @@ public class CleanBD {
 			s = bd.conexion.createStatement();
 			s.executeUpdate("Delete from serviceprocessid");
 			s = bd.conexion.createStatement();
-			/*
-			 * s.executeUpdate("DROP TABLE jena_g1t0_reif"); s =
-			 * bd.conexion.createStatement(); s.executeUpdate("DROP TABLE
-			 * jena_g1t1_stmt"); s = bd.conexion.createStatement();
-			 * s.executeUpdate("DROP TABLE jena_graph"); s =
-			 * bd.conexion.createStatement(); s.executeUpdate("DROP TABLE
-			 * jena_long_lit"); s = bd.conexion.createStatement();
-			 * s.executeUpdate("DROP TABLE jena_long_uri"); s =
-			 * bd.conexion.createStatement(); s.executeUpdate("DROP TABLE
-			 * jena_prefix"); s = bd.conexion.createStatement();
-			 * s.executeUpdate("DROP TABLE jena_sys_stmt");
-			 */
+
 
 			bd.cierraConexion();
 		} catch (Exception e) {
