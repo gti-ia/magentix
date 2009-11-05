@@ -7,7 +7,6 @@
 
 package es.upv.dsic.gti_ia.architecture;
 
-
 import java.util.ArrayList;
 import org.apache.log4j.Logger;
 import es.upv.dsic.gti_ia.core.ACLMessage;
@@ -31,7 +30,6 @@ public class QueueAgent extends BaseAgent {
 
 	// para poder diferenciar cuando nos llega una conversaci� nueva
 	private ArrayList<String> activeConversationsList = new ArrayList<String>();
-
 
 	private ArrayList<Object> roles = new ArrayList<Object>();
 
@@ -259,7 +257,6 @@ public class QueueAgent extends BaseAgent {
 	}
 
 	protected void terminate() {
-		// mirar todos los roles activos
 
 		this.finalize();
 
