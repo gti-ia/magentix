@@ -28,6 +28,8 @@ public class SF extends QueueAgent {
 
 	Configuration c = new Configuration();
 
+	
+	private static SF sf = null;
 	private String SFServiceDesciptionLocation = c.SFServiceDesciptionLocation;
 
 	static Logger logger = Logger.getLogger(SF.class);
@@ -197,6 +199,43 @@ public class SF extends QueueAgent {
 			SF_MODIFYPROCESS_PROVIDER, SF_MODIFYPROFILE_PROVIDER,
 			SF_SEARCHSERVICE_PROVIDER };
 
+	
+	
+	
+	/**
+	 * 
+	 * @param agent
+	 * @return sf
+	 */
+	static public SF getSF(AgentID agent)
+	{
+		if (sf == null)
+		try
+		{
+			sf = new SF(agent);
+	     }catch(Exception e){logger.error(e);}
+		return sf;
+		
+		
+	}
+	
+	/**
+	 * 
+	 * @return sf
+	 */
+	static public SF getSF()
+	{
+		if (sf == null)
+		try
+		{
+			sf = new SF(new AgentID("SF"));
+	     }catch(Exception e){logger.error(e);}
+		return sf;
+		
+		
+	}
+	
+	
 	/**
 	 * Initial registration of the SF service profiles
 	 * 
@@ -204,7 +243,7 @@ public class SF extends QueueAgent {
 	 * @throws RuntimeException
 	 */
 
-	public SF(AgentID aid) throws Exception {
+	private SF(AgentID aid) throws Exception {
 
 		super(aid);
 

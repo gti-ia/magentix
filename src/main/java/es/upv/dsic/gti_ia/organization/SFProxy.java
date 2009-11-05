@@ -11,7 +11,7 @@ import es.upv.dsic.gti_ia.architecture.FIPANames.InteractionProtocol;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 
-public class SFService {
+public class SFProxy {
 
 	private String SFServiceDesciptionLocation;
 	private QueueAgent agent;
@@ -23,7 +23,7 @@ public class SFService {
 	private String salidaString = null;
 	private ArrayList<String> idsSearchService = new ArrayList<String>();
 
-	static Logger logger = Logger.getLogger(SFService.class);
+	static Logger logger = Logger.getLogger(SFProxy.class);
 
 	Configuration c = new Configuration();
 
@@ -32,7 +32,7 @@ public class SFService {
 	 * @param SFServiceDesciptionLocation
 	 *            URLProcess The URL where the owl's document is located.
 	 */
-	public SFService(String SFServiceDesciptionLocation) {
+	public SFProxy(String SFServiceDesciptionLocation) {
 
 		this.SFServiceDesciptionLocation = c.SFServiceDesciptionLocation;
 
@@ -41,7 +41,7 @@ public class SFService {
 	/**
 	 * 
 	 */
-	public SFService() {
+	public SFProxy() {
 
 		this.SFServiceDesciptionLocation = "http://localhost:8080/sfservices/SFservices/owl/owls/";
 
@@ -360,10 +360,10 @@ public class SFService {
 	 */
 	static class TestAgentClient extends FIPARequestInitiator {
 		QueueAgent agent;
-		SFService sf;
+		SFProxy sf;
 		String[] agen;
 
-		protected TestAgentClient(QueueAgent agent, ACLMessage msg, SFService sf) {
+		protected TestAgentClient(QueueAgent agent, ACLMessage msg, SFProxy sf) {
 			super(agent, msg);
 			this.agent = agent;
 			this.sf = sf;

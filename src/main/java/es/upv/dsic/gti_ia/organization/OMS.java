@@ -53,6 +53,8 @@ public class OMS extends QueueAgent {
 	
 		Configuration configuration = new Configuration();
 		
+		static private OMS oms = null;
+		
 	 	private String OMSServiceDesciptionLocation = configuration.OMSServiceDesciptionLocation;
 	 	private String SFServiceDesciptionLocation = configuration.SFServiceDesciptionLocation;
 	 	
@@ -227,6 +229,37 @@ public class OMS extends QueueAgent {
 						};
 
 			
+	    
+	 /**
+	  * 
+	  * @param agent
+	  * @return oms
+	  */ 
+	 static public OMS getOMS(AgentID agent)
+	 {
+		if (oms == null)
+		{
+			try{
+			oms = new OMS(agent);
+			}catch(Exception e){logger.error(e);}
+		}
+		 return oms;
+	 }
+	 /**
+	  * 
+	  * @return oms
+	  */
+	 static public OMS getOMS()
+	 {
+		if (oms == null)
+		{
+			try{
+			oms = new OMS(new AgentID("OMS"));
+			}catch(Exception e){logger.error(e);}
+		}
+		 return oms;
+	 }
+	
 	
     /**
      * 
@@ -236,7 +269,7 @@ public class OMS extends QueueAgent {
      * @param SFServiceDesciptionLocation
      * @throws Exception
      */
-	public OMS(AgentID aid)throws Exception{
+	private OMS(AgentID aid)throws Exception{
     	super(aid);
     }
    

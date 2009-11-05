@@ -16,13 +16,13 @@ import org.apache.log4j.Logger;
  * @author jbellver
  * 
  */
-public class OMSService {
+public class OMSProxy {
 
 	private String configuration;
 	private String value = "";
 	private int Quantity;
 	private ArrayList<String> list = new ArrayList<String>();
-	static Logger logger = Logger.getLogger(OMSService.class);
+	static Logger logger = Logger.getLogger(OMSProxy.class);
 
 	Configuration c = new Configuration();
 
@@ -32,7 +32,7 @@ public class OMSService {
 	 * @param OMSServiceDesciptionLocation
 	 *            The URL where the owl's document is located.
 	 */
-	public OMSService(String OMSServiceDesciptionLocation) {
+	public OMSProxy(String OMSServiceDesciptionLocation) {
 
 		this.configuration = OMSServiceDesciptionLocation;
 	}
@@ -40,7 +40,7 @@ public class OMSService {
 	/**
 	 * 
 	 */
-	public OMSService() {
+	public OMSProxy() {
 
 		this.configuration = c.OMSServiceDesciptionLocation;
 	}
@@ -390,11 +390,11 @@ public class OMSService {
 	 */
 	static class TestAgentClient extends FIPARequestInitiator {
 		QueueAgent agent;
-		OMSService oms;
+		OMSProxy oms;
 		String[] elements;
 
 		protected TestAgentClient(QueueAgent agent, ACLMessage msg,
-				OMSService oms) {
+				OMSProxy oms) {
 			super(agent, msg);
 			this.agent = agent;
 			this.oms = oms;
