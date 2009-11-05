@@ -10,23 +10,69 @@ import java.io.InputStream;
 public class Configuration {
 	
 	
-	public String serverName;
-	public String databaseName;
-	public String userName;
-	public String password;
-	public  String OMSServiceDesciptionLocation;
-	public  String SFServiceDesciptionLocation;
-	public  String THServiceDesciptionLocation;
+	private String serverName;
+	private String databaseName;
+	private String userName;
+	private String password;
+	private  String OMSServiceDesciptionLocation;
+	private  String SFServiceDesciptionLocation;
+	private  String THServiceDesciptionLocation;
+	private String connection;
+	private static Configuration configuration = null;
 	
 
-	
 
-
-	public Configuration()
+	private Configuration()
 	{
-
-
-	//Cargamos los valores desde un archivo .xml 
+		this.cargar();
+	}
+	
+	public String getServerName()
+	{
+		return this.serverName;
+	}
+	public String getdatabaseName()
+	{
+		return this.databaseName;
+	}
+	public String getuserName()
+	{
+		return this.userName;
+	}
+	public String getpassword()
+	{
+		return this.password;
+	}
+	public String getOMSServiceDesciptionLocation()
+	{
+		return this.OMSServiceDesciptionLocation;
+	}
+	public String getSFServiceDesciptionLocation()
+	{
+		return this.SFServiceDesciptionLocation;
+	}
+	public String getTHServiceDesciptionLocation()
+	{
+		return this.THServiceDesciptionLocation;
+	}
+	public String getConnection()
+	{
+		return this.connection;
+	}
+	
+	public static Configuration getConfiguration(){
+		
+		if (configuration == null)
+			configuration = new Configuration();
+		return configuration;
+		
+	}
+	
+	
+	
+	public void cargar()
+	{
+		//Cargamos los valores desde un archivo .xml 
 		Properties properties = new Properties();
 
 	   try {
@@ -70,16 +116,18 @@ public class Configuration {
 			    }else    if (obj.toString().equalsIgnoreCase("THServiceDesciptionLocation"))
 			    {
 			    	THServiceDesciptionLocation= properties.getProperty(obj.toString()); 	
+			    }else    if (obj.toString().equalsIgnoreCase("connection"))
+			    {
+			    	connection= properties.getProperty(obj.toString()); 	
 			    }
+			    
+			    
 			}
 
 	    } catch (IOException e) {
 	    	System.out.print(e);
 	    }
-	  
-
-	
-}
+	}
 	
 
 

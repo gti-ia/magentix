@@ -25,7 +25,7 @@ public class SFProxy {
 
 	static Logger logger = Logger.getLogger(SFProxy.class);
 
-	Configuration c = new Configuration();
+	Configuration c = Configuration.getConfiguration();
 
 	/**
 	 * 
@@ -34,7 +34,7 @@ public class SFProxy {
 	 */
 	public SFProxy(String SFServiceDesciptionLocation) {
 
-		this.SFServiceDesciptionLocation = c.SFServiceDesciptionLocation;
+		this.SFServiceDesciptionLocation = c.getSFServiceDesciptionLocation();
 
 	}
 

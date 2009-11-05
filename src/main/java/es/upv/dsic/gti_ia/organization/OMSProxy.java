@@ -24,7 +24,7 @@ public class OMSProxy {
 	private ArrayList<String> list = new ArrayList<String>();
 	static Logger logger = Logger.getLogger(OMSProxy.class);
 
-	Configuration c = new Configuration();
+	Configuration c = Configuration.getConfiguration();
 
 	/**
 	 * This class gives us the support to accede to the services of the OMS
@@ -42,7 +42,7 @@ public class OMSProxy {
 	 */
 	public OMSProxy() {
 
-		this.configuration = c.OMSServiceDesciptionLocation;
+		this.configuration = c.getOMSServiceDesciptionLocation();
 	}
 
 	private void setValor(String value) {

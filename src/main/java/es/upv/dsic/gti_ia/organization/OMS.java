@@ -51,12 +51,12 @@ import org.mindswap.query.ValueMap;
 public class OMS extends QueueAgent {
 
 	
-		Configuration configuration = new Configuration();
+		Configuration configuration = Configuration.getConfiguration();
 		
 		static private OMS oms = null;
 		
-	 	private String OMSServiceDesciptionLocation = configuration.OMSServiceDesciptionLocation;
-	 	private String SFServiceDesciptionLocation = configuration.SFServiceDesciptionLocation;
+	 	private String OMSServiceDesciptionLocation = configuration.getOMSServiceDesciptionLocation();
+	 	private String SFServiceDesciptionLocation = configuration.getSFServiceDesciptionLocation();
 	 	
 		static Logger logger = Logger.getLogger(OMS.class);
 		

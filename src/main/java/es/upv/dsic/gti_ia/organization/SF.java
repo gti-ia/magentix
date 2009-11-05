@@ -26,11 +26,11 @@ public class SF extends QueueAgent {
 
 	private Monitor mon = new Monitor();
 
-	Configuration c = new Configuration();
+	Configuration configuration = Configuration.getConfiguration();
 
 	
 	private static SF sf = null;
-	private String SFServiceDesciptionLocation = c.SFServiceDesciptionLocation;
+	private String SFServiceDesciptionLocation = configuration.getSFServiceDesciptionLocation();
 
 	static Logger logger = Logger.getLogger(SF.class);
 	// create a kb

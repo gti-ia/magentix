@@ -34,14 +34,14 @@ public class BaseDeDatos {
 			// Se obtiene una conexi�n con la base de datos. Hay que
 			// cambiar el usuario "usuario" y la clave "" por las
 			// adecuadas a la base de datos que estemos usando.
-			Configuration c = new Configuration();
-			String serverName = c.serverName;
-			String mydatabase = c.databaseName;
+			Configuration c = Configuration.getConfiguration();
+			String serverName = c.getServerName();
+			String mydatabase = c.getdatabaseName();
 			String url = "jdbc:mysql://" + serverName + "/" + mydatabase; // a
 																			// JDBC
 																			// url
-			String username = c.userName;
-			String password = c.password;
+			String username = c.getuserName();
+			String password = c.getpassword();
 			conexion = DriverManager.getConnection(url, username, password);
 		} catch (Exception e) {
 			e.printStackTrace();
