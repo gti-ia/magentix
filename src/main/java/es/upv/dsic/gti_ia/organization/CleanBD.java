@@ -9,7 +9,7 @@ public class CleanBD {
 	 * @param args
 	 */
 
-	public void limpiar() {
+	public void clean_database() {
 		try {
 			BaseDeDatos bd = new BaseDeDatos();
 			bd.estableceConexion();
