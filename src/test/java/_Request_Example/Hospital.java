@@ -16,7 +16,6 @@ import es.upv.dsic.gti_ia.architecture.FIPANames.InteractionProtocol;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 
-//import Pruebas.AgenteOMS.OMSResponder;
 
 public class Hospital extends QueueAgent {
 
@@ -53,16 +52,14 @@ public class Hospital extends QueueAgent {
 
 		ManejadorResponder responder = new ManejadorResponder(this, plantilla);
 
-		frame.getTextArea(1).append(
-				"Hospital " + this.getName() + ": Esperando avisos...\n");
 
 		System.out.println("Hospital " + this.getName()
 				+ ": Esperando avisos...");
 
-		do {
-			responder.action();
-
-		} while (true);
+		this.addTask(responder);
+		
+		
+		
 	}
 
 	class ManejadorResponder extends FIPARequestResponder {

@@ -56,7 +56,7 @@ public class Testigo extends QueueAgent {
 						+ " kms");
 		msg.setSender(this.getAid());
 
-		this.setTask(new ManejadorInitiator(this, msg, i));
+		this.addTask(new ManejadorInitiator(this, msg, i));
 
 	}
 

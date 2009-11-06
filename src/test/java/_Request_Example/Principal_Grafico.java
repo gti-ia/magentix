@@ -26,6 +26,10 @@ import es.upv.dsic.gti_ia.core.AgentsConecction;
 
 public class Principal_Grafico extends javax.swing.JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Connection con;
 	private Hospital AgenteHospital;
 	private Testigo AgenteTestigo;
@@ -60,6 +64,7 @@ public class Principal_Grafico extends javax.swing.JFrame {
 	// @SuppressWarnings("unchecked")
 	// <editor-fold defaultstate="collapsed" desc="Generated
 	// Code">//GEN-BEGIN:initComponents
+	@SuppressWarnings("deprecation")
 	private void initComponents() {
 
 		jScrollPane1 = new javax.swing.JScrollPane();
@@ -83,6 +88,10 @@ public class Principal_Grafico extends javax.swing.JFrame {
 		jButton9 = new javax.swing.JButton();
 
 		jList1.setModel(new javax.swing.AbstractListModel() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
 			String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4",
 					"Item 5" };
 
