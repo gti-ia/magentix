@@ -77,6 +77,21 @@ public class FIPARequestInitiator {
 	public int getState() {
 		return this.state;
 	}
+	
+	
+	 void finish()
+	 {
+		 //Send a CANCEL Message for  active conversation
+		 
+		 
+		 this.requestmsg.setPerformative(ACLMessage.CANCEL);
+		 this.myAgent.send(requestmsg);
+
+		 this.state = ALL_RESULT_NOTIFICATION_RECEIVED_STATE;
+		 
+	 }
+	 
+	 
 
 	// #APIDOC_EXCLUDE_BEGIN
 	public void action() {
@@ -160,6 +175,12 @@ public class FIPARequestInitiator {
 					handleInform(firstReply);
 					break;
 
+				}
+				case ACLMessage.CANCEL:{
+					
+					state = ALL_RESULT_NOTIFICATION_RECEIVED_STATE;
+					handleOutOfSequence(firstReply);
+					break;
 				}
 				default: {
 					// nos llega el segundo mensaje, habido problemas con el
