@@ -36,7 +36,7 @@ public class Concesionario extends QueueAgent {
     // Añadimos los comportamientos ante mensajes recibidos
     CrearOferta oferta = new CrearOferta(this, template);
     
-    this.setTask(oferta);
+    this.addTask(oferta);
     m.waiting();
     /*
     do

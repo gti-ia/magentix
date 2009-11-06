@@ -55,7 +55,7 @@ public class Cliente extends QueueAgent {
  
                     //Se añade el comportamiento que manejará las ofertas.
                     
-                    this.setTask(new ManejoOpciones(this, mensajeCFP));
+                    this.addTask(new ManejoOpciones(this, mensajeCFP));
                  
                     Monitor adv = new Monitor();
                     adv.waiting();

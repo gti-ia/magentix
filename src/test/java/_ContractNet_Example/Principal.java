@@ -16,6 +16,7 @@ public class Principal {
 
         
         try{
+        //AgentsConecction.connect();	
         AgentsConecction.connect("gtiiaprojects2.dsic.upv.es");
         
         
