@@ -123,7 +123,7 @@ public class RegisterProfileSkeleton {
 			persistence.DataBaseInterface thomasBD = new DataBaseInterface();
 			String serviceprofileid = thomasBD.AddNewProfile(registerProfile.getServiceProfile());
 			
-			if (serviceprofileid != null) {
+			if (Integer.parseInt(serviceprofileid) > 0) {
 				
 				if (DEBUG) {
 					System.out.println("The serviceprofileid is: " + serviceprofileid);
@@ -158,7 +158,8 @@ public class RegisterProfileSkeleton {
 			if (DEBUG) {
 				System.out.println("[Error] the service profile exists");
 			}
-			response.setServiceID("[Error] the service profile exists");
+			Integer id = Integer.parseInt(serviceprofileid)*(-1);
+			response.setServiceID(id.toString());
 			response.set_return(0);
 		}	
 		
