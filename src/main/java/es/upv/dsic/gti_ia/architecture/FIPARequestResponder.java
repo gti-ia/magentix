@@ -8,6 +8,7 @@
 package es.upv.dsic.gti_ia.architecture;
 
 import es.upv.dsic.gti_ia.architecture.Monitor;
+import es.upv.dsic.gti_ia.architecture.FIPANames.InteractionProtocol;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 
 public class FIPARequestResponder {
@@ -18,6 +19,7 @@ public class FIPARequestResponder {
 	private final static int PREPARE_RES_NOT_STATE = 3;
 	private final static int SEND_RESULT_NOTIFICATION_STATE = 4;
 	private final static int RESET_STATE = 5;
+	private final static int FINISH_STATE = -1;
 
 	private MessageTemplate template;
 	private int state = WAITING_MSG_STATE;
@@ -25,7 +27,8 @@ public class FIPARequestResponder {
 	private ACLMessage requestmsg;
 	private ACLMessage responsemsg;
 	private ACLMessage resNofificationmsg;
-
+	private MessageTemplate template_cancel;
+	private ACLMessage  send_cancel;
 	private Monitor monitor = null;
 
 	/**
@@ -42,10 +45,25 @@ public class FIPARequestResponder {
 		this.monitor = myAgent.addMonitor(this);
 	}
 
-	public int getState() {
+	
+	 int getState() {
 		return this.state;
 	}
 
+	 void finish()
+	 {
+		 //Send a CANCEL Message for  active conversation
+		 
+		 if (this.requestmsg!=null)
+		 {
+		 arrangeMessage(this.requestmsg,send_cancel);
+		 this.send_cancel.setPerformative(ACLMessage.CANCEL);
+		 this.myAgent.send(send_cancel);
+		 }
+		 this.state = FINISH_STATE;
+		 
+	 }
+	
 	// #APIDOC_EXCLUDE_BEGIN
 	public void action() {
 		switch (state) {
@@ -54,14 +72,36 @@ public class FIPARequestResponder {
 			if (request != null) {
 				this.requestmsg = request;
 				state = PREPARE_RESPONSE_STATE;
+				//configuramos el template del cancel
+				template_cancel = new MessageTemplate(InteractionProtocol.FIPA_REQUEST);
+				template_cancel.addConversation(request.getConversationId());
+				template_cancel.add_receiver(request.getReceiver());
+				
 			} else {
 				monitor.waiting();// waiting a message.
 			}
+			
+			//comprobar que no me llega un mensaje CANCEL de la conversacion activa
+			
+	
 			break;
+			
 		}
 		case PREPARE_RESPONSE_STATE: {
+			
+			send_cancel = myAgent.receiveACLMessage(template_cancel, 0);
+			
+		
+			if (send_cancel != null)
+			{
+			if (send_cancel.getPerformativeInt() == ACLMessage.CANCEL)
+				this.state = FINISH_STATE;
+			}
+			else
+			{
 			ACLMessage request = this.requestmsg;
 			ACLMessage response = null;
+			
 			state = SEND_RESPONSE_STATE;
 			try {
 				response = prepareResponse(request);
@@ -79,9 +119,20 @@ public class FIPARequestResponder {
 			}
 
 			this.responsemsg = response;
+			}
 			break;
 		}
 		case SEND_RESPONSE_STATE: {
+			
+			send_cancel = myAgent.receiveACLMessage(template_cancel, 0);
+	
+			if (send_cancel != null)
+			{
+			if (send_cancel.getPerformativeInt() == ACLMessage.CANCEL)
+				this.state = FINISH_STATE;
+			}
+			else
+			{
 			ACLMessage response = this.responsemsg;
 
 			if (response != null) {
@@ -101,10 +152,21 @@ public class FIPARequestResponder {
 			} else {
 				state = PREPARE_RES_NOT_STATE;
 			}
+			}
 			break;
 
 		}
 		case PREPARE_RES_NOT_STATE: {
+			
+			send_cancel = myAgent.receiveACLMessage(template_cancel, 0);
+	
+			if (send_cancel != null)
+			{
+			if (send_cancel.getPerformativeInt() == ACLMessage.CANCEL)
+				this.state = FINISH_STATE;
+			}
+			else
+			{
 
 			state = SEND_RESULT_NOTIFICATION_STATE;
 			ACLMessage request = this.requestmsg;
@@ -123,9 +185,19 @@ public class FIPARequestResponder {
 			}
 
 			this.resNofificationmsg = resNotification;
+			}
 			break;
 		}
 		case SEND_RESULT_NOTIFICATION_STATE: {
+			send_cancel = myAgent.receiveACLMessage(template_cancel, 0);
+	
+			if (send_cancel != null)
+			{
+			if (send_cancel.getPerformativeInt() == ACLMessage.CANCEL)
+				this.state = FINISH_STATE;
+			}
+			else
+			{
 			state = RESET_STATE;
 			ACLMessage resNotification = this.resNofificationmsg;
 			if (resNotification != null) {
@@ -136,6 +208,7 @@ public class FIPARequestResponder {
 			}
 
 			break;
+			}
 
 		}
 		case RESET_STATE: {
@@ -144,6 +217,7 @@ public class FIPARequestResponder {
 			this.requestmsg = null;
 			this.resNofificationmsg = null;
 			this.responsemsg = null;
+			this.template_cancel = null;
 			break;
 		}
 
