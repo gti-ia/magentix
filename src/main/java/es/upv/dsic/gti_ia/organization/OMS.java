@@ -578,7 +578,7 @@ protected void execute() {
 	logger.info("Agent OMS active");
 	OMSResponder responder = new OMSResponder(this);
   
-	this.setTask(responder);
+	this.addTask(responder);
 	mon.waiting();
 					
 }// end setup
