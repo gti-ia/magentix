@@ -14,9 +14,9 @@ public class Configuration {
 	private String databaseName;
 	private String userName;
 	private String password;
-	private  String OMSServiceDesciptionLocation;
-	private  String SFServiceDesciptionLocation;
-	private  String THServiceDesciptionLocation;
+	private String OMSServiceDesciptionLocation;
+	private String SFServiceDesciptionLocation;
+	private String THServiceDesciptionLocation;
 	private String connection;
 	private static Configuration configuration = null;
 	
@@ -24,7 +24,7 @@ public class Configuration {
 
 	private Configuration()
 	{
-		this.cargar();
+		this.load();
 	}
 	
 	public String getServerName()
@@ -70,7 +70,7 @@ public class Configuration {
 	
 	
 	
-	public void cargar()
+	public void load()
 	{
 		//Cargamos los valores desde un archivo .xml 
 		Properties properties = new Properties();
@@ -79,14 +79,14 @@ public class Configuration {
 		   
 		   
 		   
-		   //String fileName = "Settings.xml";
+		   String fileName = "Settings.xml";
 		   
-		   //InputStream is = new FileInputStream("configuration/"+fileName);
+		   InputStream is = new FileInputStream("configuration/"+fileName);
 		   
-		   //InputStream is = new FileInputStream(fileName);
 
-			  
-			  properties.loadFromXML(Configuration.class.getResourceAsStream("/"+"Settings.xml"));	  
+
+			  properties.loadFromXML(is);
+			 // properties.loadFromXML(Configuration.class.getResourceAsStream("/"+"Settings.xml"));	  
 			  
 
 		 
