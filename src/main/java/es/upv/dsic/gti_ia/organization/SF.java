@@ -556,7 +556,7 @@ public class SF extends QueueAgent {
 
 		SFResponder responder = new SFResponder(this);
 
-		this.setTask(responder);
+		this.addTask(responder);
 		mon.waiting();
 
 	}// end execute
