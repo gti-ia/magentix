@@ -258,12 +258,13 @@ public class QueueAgent extends BaseAgent {
 
 	protected void terminate() {
 
+
 		this.finalize();
 
+		
 		if (this.getnRole() == 0)
 			logger.info("Finish ,active roles do not exist");
 		else {
-
 			for (Object obj : this.roles) {
 
 				String patron;
@@ -276,11 +277,13 @@ public class QueueAgent extends BaseAgent {
 				if (patron.equals("FIPARequestInitiator"))
 
 				{
+					((FIPARequestInitiator) obj).finish();
 					logger.info("Finish with role Resquest Initiator, state:  "
 							+ ((FIPARequestInitiator) obj).getState());
 
 				} else if (patron.equals("FIPARequestResponder")) {
-
+					
+					((FIPARequestResponder) obj).finish();
 					logger
 							.info("Finish with role Responder, protocol:Request, state:  "
 									+ ((FIPARequestResponder) obj).getState());
@@ -323,7 +326,7 @@ public class QueueAgent extends BaseAgent {
 	 * @param obj
 	 *            object of type FIPA protocol
 	 */
-	public void setTask(Object obj) {
+	public void addTask(Object obj) {
 
 		String patron;
 
@@ -413,7 +416,7 @@ public class QueueAgent extends BaseAgent {
 			case 1: {
 				do {
 					((FIPARequestResponder) responder).action();
-				} while (true);
+				} while (((FIPARequestResponder) responder).getState() != -1);
 
 			}
 			case 2: {
