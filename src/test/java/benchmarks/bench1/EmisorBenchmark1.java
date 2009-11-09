@@ -15,7 +15,7 @@ public class EmisorBenchmark1 extends SingleAgent {
 
 	public EmisorBenchmark1(AgentID aid, Connection connection, int nmsgtot,
 			int tmsg, int ntotal, int nemisor) throws Exception {
-		super(aid, connection);
+		super(aid);
 		this.nmsgtot = nmsgtot;
 		this.tmsg = tmsg;
 		this.ntotal = ntotal;
@@ -33,9 +33,11 @@ public class EmisorBenchmark1 extends SingleAgent {
 		msgcont.setSender(this.getAid());
 		System.out.println("Soy " + this.getName()
 				+ ". Envio mensaje a controlador");
-		send(msgcont); // sergio
+		send(msgcont);
 
-		receiveACLMessage(); // esperem missatge Start des d'el controlador
+			this.receiveACLMessage();
+//			nagents++;
+			 // esperem missatge Start des d'el controlador
 
 		// creem missatge i contingut
 		String cadena = "";

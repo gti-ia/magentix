@@ -49,11 +49,10 @@ public class ControladorBenchmark1 extends SingleAgent {
 
 		// esperem a que ens responguen tots amb ok
 		while (nacabats < ntotal) {
-			try{
+		
 				this.receiveACLMessage();
 				nagents++;
-			}catch(Exception e){System.out.println("Error on receiveACLMessage, ControladorBenchmark1");}
-		
+			
 			nacabats++;
 		}
 

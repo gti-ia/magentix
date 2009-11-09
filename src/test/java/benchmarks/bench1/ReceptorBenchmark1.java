@@ -10,7 +10,7 @@ public class ReceptorBenchmark1 extends SingleAgent {
 
 	public ReceptorBenchmark1(AgentID aid, Connection connection)
 			throws Exception {
-		super(aid, connection);
+		super(aid);
 	}
 
 	public void execute() {
