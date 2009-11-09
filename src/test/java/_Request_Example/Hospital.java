@@ -17,6 +17,7 @@ import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 
 
+
 public class Hospital extends QueueAgent {
 
 	
@@ -24,22 +25,18 @@ public class Hospital extends QueueAgent {
 
     
 
+	
 	public double DISTANCIA_MAX;
-	Principal_Grafico frame;
+
     
-	public Hospital(AgentID aid, Principal_Grafico frame)throws Exception {
-
-
-		super(aid);
-		this.frame = frame;
-
-	}
-
 	public Hospital(AgentID aid)throws Exception {
 
+
 		super(aid);
 
+
 	}
+
 	
 
 
@@ -54,9 +51,11 @@ public class Hospital extends QueueAgent {
 
 
 		System.out.println("Hospital " + this.getName()
-				+ ": Esperando avisos...");
+				+ ": Waiting for notices ...");
 
 		this.addTask(responder);
+		
+		while(true){}
 		
 		
 		
@@ -69,68 +68,48 @@ public class Hospital extends QueueAgent {
 
 		protected ACLMessage prepareResponse(ACLMessage request)
 				throws NotUnderstoodException, RefuseException {
-			frame.getTextArea(1).append(
-					"Hospital " + getName()
-							+ ": Hemos recibido una llamada de "
-							+ request.getSender().name
-							+ " diciendo que ha visto un accidente.\n");
 			System.out.println("Hospital " + getName()
-					+ ": Hemos recibido una llamada de "
+					+ ": We have received a call of "
 					+ request.getSender().name
-					+ " diciendo que ha visto un accidente.");
+					+ " Saying that it has seen an accident.");
 			StringTokenizer st = new StringTokenizer(request.getContent());
 			String contenido = st.nextToken();
-			if (contenido.equalsIgnoreCase("accidente")) {
+			if (contenido.equalsIgnoreCase("accident")) {
 				st.nextToken();
 				int distancia = Integer.parseInt(st.nextToken());
 				if (distancia < DISTANCIA_MAX) {
-					frame.getTextArea(1).append(
-							"Hospital " + getName()
-									+ ": Vamos echando chispas!!!\n");
 					System.out.println("Hospital " + getName()
-							+ ": Vamos echando chispas!!!");
+							+ ": We go at once!!!");
 					ACLMessage agree = request.createReply();
 					agree.setPerformative(ACLMessage.AGREE);
 					return agree;
 				} else {
-					frame
-							.getTextArea(1)
-							.append(
-									"Hospital "
-											+ getName()
-											+ ": Accidente fuera de nuestro radio de accion. No llegaremos a tiempo!!!\n");
+				
 					System.out
 							.println("Hospital "
 									+ getName()
-									+ ": Accidente fuera de nuestro radio de accion. No llegaremos a tiempo!!!");
-					throw new RefuseException("Accidente demasiado lejos");
+									+ ": Accident out of our radius of action. We will not come in time!!!");
+					throw new RefuseException("Accident too far");
 				}
 			} else
 				throw new NotUnderstoodException(
-						"Hospital manda un mensaje que no puedo entender.");
+						"Hospital orders a message that I cannot understand.");
 		}
 
 		protected ACLMessage prepareResultNotification(ACLMessage request,
 				ACLMessage response) throws FailureException {
 			if (Math.random() > 0.2) {
-				frame.getTextArea(1).append(
-						"Hospital " + getName()
-								+ ": Han vuelto de atender el accidente.\n");
+			
 				System.out.println("Hospital " + getName()
-						+ ": Han vuelto de atender el accidente.");
+						+ ": They have returned of attending to the accident.");
 				ACLMessage inform = request.createReply();
 				inform.setPerformative(ACLMessage.INFORM);
 				return inform;
 			} else {
-				frame
-						.getTextArea(1)
-						.append(
-								"Hospital "
-										+ getName()
-										+ ": Han hecho todo lo posible, lo sentimos.\n");
+				
 				System.out.println("Hospital " + getName()
-						+ ": Han hecho todo lo posible, lo sentimos.");
-				throw new FailureException("Han hecho todo lo posible");
+						+ ": They have done everything possible, we feel it.");
+				throw new FailureException("They have done everything possible");
 			}
 		}
 	}

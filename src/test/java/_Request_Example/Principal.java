@@ -16,15 +16,15 @@ public class Principal {
 		// TODO Auto-generated method stub
 
 
+		
 		try{
-	        AgentsConecction.connect("gtiiaprojects2.dsic.upv.es");
+			
+	    AgentsConecction.connect();
 	        
-		Hospital hos = new Hospital(
-				new AgentID("Hospital"));
+		Hospital hos = new Hospital(new AgentID("HospitalAgent"));
 		hos.start();
 
-		Testigo tes = new Testigo(new AgentID("Testigo"));
-
+		witness tes = new witness(new AgentID("witnesAgent"));
 		tes.start();
 		
 		}catch(Exception e){}
