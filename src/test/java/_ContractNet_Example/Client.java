@@ -15,12 +15,12 @@ import es.upv.dsic.gti_ia.core.AgentID;
 import java.util.Date;
 import java.util.ArrayList;
 
-public class Cliente extends QueueAgent {
+public class Client extends QueueAgent {
 
 
 	private int precionMaximo;
 	private int numeroDeOfertas=0;
-    public Cliente(AgentID aid) throws Exception
+    public Client(AgentID aid) throws Exception
     {
 
     	super(aid);
@@ -45,10 +45,10 @@ public class Cliente extends QueueAgent {
                     mensajeCFP.addReceiver(new AgentID("Concesionario"+i));
                     }
                     
-                    System.out.println("Numero de agentes a los que voy a enviar:"+ mensajeCFP.getReceiverList().size());
-            //Protocolo que vamos a utilizar
+                    
+                    //Protocolo que vamos a utilizar
                     mensajeCFP.setProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET);
-                    mensajeCFP.setContent("Busco coche, ¿proponeis precios?");
+                    mensajeCFP.setContent("I look for car, do you propose to prices?");
                     //mensajeCFP.setSender(getAid());
                     //Indicamos el tiempo que esperaremos por las ofertas.
                     mensajeCFP.setReplyByDate(new Date(System.currentTimeMillis() + 1500000));
@@ -73,13 +73,13 @@ public class Cliente extends QueueAgent {
  
         //Manejador de proposiciones.
         protected void handlePropose(ACLMessage propuesta, ArrayList<ACLMessage> aceptadas) {
-            System.out.printf("%s: Recibida oferta de autos %s. Ofrece un coche por %s euros.\n",
+            System.out.printf("%s: Received offer of cars %s. A car offers for %s Euros.\n",
                 this.myAgent.getName(), propuesta.getSender().getLocalName(), propuesta.getContent());
         }
  
         //Manejador de rechazos de proposiciones.
         protected void handleRefuse(ACLMessage rechazo) {
-            System.out.printf("%s: Autos %s no tiene coches que ofrecer.\n",
+            System.out.printf("%s: Cars %s does not have cars that to offer.\n",
                 this.myAgent.getName(), rechazo.getSender().getLocalName());
         }
  
@@ -88,13 +88,13 @@ public class Cliente extends QueueAgent {
           //  if (fallo.getSender().equals(myAgent.getAMS())) {
  
         //Esta notificacion viene del entorno de ejecución JADE (no existe el receptor)
-                System.out.println("AMS: Esta venta de autos no existe o no es accesible");
+                System.out.println("AMS: This sale of cars does not exist or is accessible");
             //} else {
-                System.out.printf("%s: Autos %s ha sufrido un fallo.\n",
+                System.out.printf("%s: Cars %s has been a failure.\n",
                     this.myAgent.getName(), fallo.getSender().getLocalName());
             //}
             //Falló, por lo tanto, no recibiremos respuesta desde ese agente
-            Cliente.this.numeroDeOfertas--;
+            Client.this.numeroDeOfertas--;
         }
  
         //Método colectivo llamado tras finalizar el tiempo de espera o recibir todas las propuestas.
@@ -102,8 +102,8 @@ public class Cliente extends QueueAgent {
  
         //Se comprueba si una venta de autos se pasó del plazo de envío de ofertas.
             if (respuestas.size() < numeroDeOfertas) {
-                System.out.printf("%s: %d ventas de autos llegan tarde.\n",
-                    this.myAgent.getName(), Cliente.this.numeroDeOfertas - respuestas.size());
+                System.out.printf("%s: %d Car sales are late.\n",
+                    this.myAgent.getName(), Client.this.numeroDeOfertas - respuestas.size());
             }
  
             //Escogemos la mejor oferta
@@ -130,7 +130,7 @@ public class Cliente extends QueueAgent {
  
             //Si hay una oferta aceptada se modifica su performativa.
             if (aceptado != null) {
-                System.out.printf("%s: Decidido!!! Compro el coche de Autos %s\n",
+                System.out.printf("%s: Determined! Sell Car of the %s\n",
                     this.myAgent.getName(), mejorAutos.getLocalName());
                 aceptado.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
             }
@@ -138,7 +138,7 @@ public class Cliente extends QueueAgent {
  
         //Manejador de los mensajes inform.
         protected void handleInform(ACLMessage inform) {
-            System.out.printf("%s: Autos %s te ha enviado el contrato.\n",
+            System.out.printf("%s: %s has sent the contract.\n",
                 this.myAgent.getName(), inform.getSender().getLocalName());
         }
     }

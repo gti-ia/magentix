@@ -17,14 +17,14 @@ public class Principal {
         
         try{
         //AgentsConecction.connect();	
-        AgentsConecction.connect("gtiiaprojects2.dsic.upv.es");
+        AgentsConecction.connect();
         
         
         for(int i=0;i<200;i++)
         {
         Concesionario concesionario = new Concesionario(new AgentID("Concesionario"+i));
         concesionario.start();
-        }        Cliente cliente = new Cliente(new AgentID("cliente"));
+        }        Client cliente = new Client(new AgentID("Client"));
         cliente.start();
         }catch(Exception e){}
 

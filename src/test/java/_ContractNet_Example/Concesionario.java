@@ -26,7 +26,7 @@ public class Concesionario extends QueueAgent {
     
 		
 	Monitor m = new Monitor();
-    System.out.printf("Autos %s: A la espera de clientes...\n", this.getName());
+    System.out.printf("%s: Waiting for customers...\n", this.getName());
     
 
 
@@ -72,7 +72,7 @@ public class Concesionario extends QueueAgent {
 		protected ACLMessage prepareResponse(ACLMessage cfp)
 				throws NotUnderstoodException, RefuseException {
 			System.out
-					.printf("Autos %s: Peticion de oferta recibida de %s.\n",
+					.printf("%s: Request offer received from %s.\n",
 							getName(), cfp.getSender()
 									.getLocalName());
 
@@ -80,7 +80,7 @@ public class Concesionario extends QueueAgent {
 			if (Concesionario.this.existeCoche()) {
 				// Proporcionamos la información necesaria
 				int precio = Concesionario.this.obtenerPrecio();
-				System.out.printf("Autos %s: Preparando oferta (%d euros).\n",
+				System.out.printf("%s: Preparing Offer (%d euros).\n",
 						getName(), precio);
 
 				// Se crea el mensaje
@@ -91,9 +91,9 @@ public class Concesionario extends QueueAgent {
 			} else {
 				// Si no hay ofertas disponibles rechazamos el propose
 				System.out.printf(
-						"Autos %s: No tenemos ofertas disponibles.\n",
+						"%s: We have no offers available.\n",
 						getName());
-				throw new RefuseException("Fallo en la evaluación.");
+				throw new RefuseException("I fail in the evaluation.");
 			}
 		}
 
@@ -101,11 +101,11 @@ public class Concesionario extends QueueAgent {
 				ACLMessage propose, ACLMessage accept) throws FailureException {
 			// Hemos recibido una aceptación de nuestra oferta, enviamos el
 			// albarán
-			System.out.printf("Autos %s: Hay una posible oferta.\n",
+			System.out.printf("%s: There is a possible offer.\n",
 					getName());
 
 			if (devolverPrecio()) {
-				System.out.printf("Autos %s: Enviando contrato de compra.\n",
+				System.out.printf("%s: Sending purchase contract.\n",
 						getName());
 			
 
@@ -115,7 +115,7 @@ public class Concesionario extends QueueAgent {
 				return inform;
 			} else {
 				System.out.printf(
-						"Autos %s: Vaya!, ha fallado al enviar el contrato.\n",
+						"%s: OHH!, has failed to send the contract.\n",
 						getName());
 				throw new FailureException("Error al enviar contrato.");
 			}
@@ -125,7 +125,7 @@ public class Concesionario extends QueueAgent {
 				ACLMessage reject) {
 			// Nuestra oferta por el coche ha sido rechazada
 			System.out.printf(
-					"Autos %s: Oferta rechazada por su excesivo precio.\n",
+					"%s: Offer rejected by his excessive price.\n",
 					getName());
 		}
 	}
