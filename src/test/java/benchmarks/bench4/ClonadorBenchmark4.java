@@ -1,11 +1,9 @@
 package benchmarks.bench4;
 
-import org.apache.qpid.transport.Connection;
+import es.upv.dsic.gti_ia.core.AgentID;
+import es.upv.dsic.gti_ia.core.SingleAgent;
 
-import s.dsic.gti_ia.fipa.AgentID;
 
-import _BaseAgent_Example.BridgeAgentInOut;
-import _BaseAgent_Example.SingleAgent;
 
 /**
  * This class is responsible for creating receiver's agents like the first one.
@@ -24,10 +22,10 @@ public class ClonadorBenchmark4 extends SingleAgent {
 	int inici;
 	int nagentstot;
 
-	public ClonadorBenchmark4(AgentID aid, Connection connection,
+	public ClonadorBenchmark4(AgentID aid,
 			String classe, int nagents, int nagentslocals, int nmsg,
-			int nmsgtot, int tmsg) {
-		super(aid, connection);
+			int nmsgtot, int tmsg) throws Exception {
+		super(aid);
 		this.nagents = nagents;
 		classe1 = classe;
 		nagent = Integer.parseInt(this.getAid().name.substring(8));
@@ -60,7 +58,7 @@ public class ClonadorBenchmark4 extends SingleAgent {
 				ReceptorBenchmark4 agenteReceptor = new ReceptorBenchmark4(
 						new AgentID(classe1 + (inici + i),
 								this.getAid().protocol, this.getAid().host,
-								this.getAid().port + 1), this.getConnection());
+								this.getAid().port + 1));
 
 				agenteReceptor.start();
 

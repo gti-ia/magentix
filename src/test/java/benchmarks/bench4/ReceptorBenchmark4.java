@@ -1,16 +1,15 @@
 package benchmarks.bench4;
 
-import org.apache.qpid.transport.Connection;
+import es.upv.dsic.gti_ia.core.ACLMessage;
+import es.upv.dsic.gti_ia.core.AgentID;
+import es.upv.dsic.gti_ia.core.SingleAgent;
 
-import s.dsic.gti_ia.fipa.ACLMessage;
-import s.dsic.gti_ia.fipa.AgentID;
 
-import _BaseAgent_Example.SingleAgent;
 
 public class ReceptorBenchmark4 extends SingleAgent {
 
-	public ReceptorBenchmark4(AgentID aid, Connection connection) {
-		super(aid, connection);
+	public ReceptorBenchmark4(AgentID aid) throws Exception {
+		super(aid);
 	}
 
 	public void execute() {

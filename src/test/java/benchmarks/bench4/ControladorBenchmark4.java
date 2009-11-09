@@ -2,12 +2,11 @@ package benchmarks.bench4;
 
 import java.util.Iterator;
 import java.util.Vector;
-import org.apache.qpid.transport.Connection;
 
-import s.dsic.gti_ia.fipa.ACLMessage;
-import s.dsic.gti_ia.fipa.AgentID;
+import es.upv.dsic.gti_ia.core.ACLMessage;
+import es.upv.dsic.gti_ia.core.AgentID;
+import es.upv.dsic.gti_ia.core.SingleAgent;
 
-import _BaseAgent_Example.SingleAgent;
 
 public class ControladorBenchmark4 extends SingleAgent {
 
@@ -16,8 +15,8 @@ public class ControladorBenchmark4 extends SingleAgent {
 	Vector<String> agents = new Vector<String>();
 	long t1, t2;
 
-	public ControladorBenchmark4(AgentID aid, Connection connection, int ntotal) {
-		super(aid, connection);
+	public ControladorBenchmark4(AgentID aid, int ntotal) throws Exception {
+		super(aid);
 		this.ntotal = ntotal;
 	}
 
