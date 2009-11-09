@@ -1,4 +1,4 @@
-package _Others_Examples;
+package Others_Examples;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;

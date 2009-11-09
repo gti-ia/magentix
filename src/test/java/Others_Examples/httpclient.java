@@ -1,4 +1,4 @@
-package _Others_Examples;
+package Others_Examples;
 
 import java.io.*;
 import java.net.*;
