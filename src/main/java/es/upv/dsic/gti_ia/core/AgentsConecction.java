@@ -13,7 +13,7 @@ import es.upv.dsic.gti_ia.organization.Configuration;
  */
 public class AgentsConecction {
 	public static org.apache.qpid.transport.Connection connection;
-	private static Configuration c = Configuration.getConfiguration();
+	private static Configuration c = null;
 
 	/**
 	 * Connect with a apid broker
@@ -26,7 +26,7 @@ public class AgentsConecction {
 	 * @param b
 	 */
 	public static void connect() {
-		
+		c =  Configuration.getConfiguration();
 		connection = new Connection();
 		connection.connect(c.getConnection(),5672,  "test", "guest", "guest", false);
 	}
@@ -44,9 +44,8 @@ public class AgentsConecction {
 	 */
 	public static void connect(String url, int port, String p1, String p2,
 			String p3, boolean b) {
-		
 		connection = new Connection();
-		connection.connect(c.getConnection(), port, p1, p2, p3, b);
+		connection.connect(url, port, p1, p2, p3, b);
 	}
 	
 	/**
