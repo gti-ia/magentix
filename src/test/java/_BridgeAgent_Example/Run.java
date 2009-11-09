@@ -1,7 +1,8 @@
 package _BridgeAgent_Example;
 
 import org.apache.log4j.xml.DOMConfigurator;
-import _BaseAgent_Example.AgenteConsumidor;
+
+import BaseAgent_Example.ConsumerAgent;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConecction;
 import es.upv.dsic.gti_ia.core.BridgeAgentInOut;
@@ -11,7 +12,7 @@ import es.upv.dsic.gti_ia.core.BridgeAgentOutIn;
  * @author Ricard, Sergio
  * 
  */
-public class PruebaPasarela2 {
+public class Run {
 
 	public static void main(String[] args) {
 		// Connection con = new Connection();
@@ -33,12 +34,12 @@ public class PruebaPasarela2 {
 			/*
 			 * agente1 interactua con el agenteInOut
 			 */
-			AgenteSergio agente1 = new AgenteSergio(new AgentID("agentehola",
+			EmisorAgent agente1 = new EmisorAgent(new AgentID("agentehola",
 					"qpid", "localhost", "8080"));
 			/*
 			 * agente2 interactua con agenteOutIn
 			 */
-			AgenteConsumidor agente2 = new AgenteConsumidor(new AgentID(
+			ConsumerAgent agente2 = new ConsumerAgent(new AgentID(
 					"agenteconsumidor", "qpid", "localhost", "8080"));
 
 			agenteInOut.start();

@@ -8,11 +8,11 @@ import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.SingleAgent;
 
-public class AgenteConsumidor extends SingleAgent {
+public class ConsumerAgent extends SingleAgent {
 
 	LinkedBlockingQueue<MessageTransfer> internalQueue;
 
-	public AgenteConsumidor(AgentID aid) throws Exception {
+	public ConsumerAgent(AgentID aid) throws Exception {
 		super(aid);
 	}
 

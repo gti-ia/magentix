@@ -18,7 +18,7 @@ public class PruebaPasarela {
 		try {
 			BridgeAgentInOut agente2 = new BridgeAgentInOut(new AgentID(
 					"agentepasarela", "qpid", "localhost", "8080"));
-			AgenteSergio agente = new AgenteSergio(new AgentID("agentehola",
+			EmisorAgent agente = new EmisorAgent(new AgentID("agentehola",
 					"qpid", "localhost", "8080"));
 
 			agente2.start();

@@ -6,9 +6,9 @@ import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.BaseAgent;
 
-public class AgenteSergio extends BaseAgent {
+public class EmisorAgent extends BaseAgent {
 
-	public AgenteSergio(AgentID aid) throws Exception {
+	public EmisorAgent(AgentID aid) throws Exception {
 		super(aid);
 	}
 
