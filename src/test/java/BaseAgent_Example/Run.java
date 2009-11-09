@@ -12,7 +12,7 @@ public class Run {
 	public static void main(String[] args) {
 
 		DOMConfigurator.configure("loggin.xml");
-		AgentsConecction.connect("gtiiaprojects2.dsic.upv.es");
+		AgentsConecction.connect("gtiiaprojects2");
 		try {
 			EmisorAgent agente = new EmisorAgent(new AgentID(
 					"qpid://agentehola@localhost:8080"));// , "qpid",
