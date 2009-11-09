@@ -2,10 +2,10 @@ package benchmarks.bench2a;
 
 import org.apache.qpid.transport.Connection;
 
-import s.dsic.gti_ia.fipa.ACLMessage;
-import s.dsic.gti_ia.fipa.AgentID;
+import es.upv.dsic.gti_ia.core.ACLMessage;
+import es.upv.dsic.gti_ia.core.AgentID;
+import es.upv.dsic.gti_ia.core.SingleAgent;
 
-import _BaseAgent_Example.SingleAgent;
 
 public class EmisorBenchmark2 extends SingleAgent {
 	int nmsgtot; // nombre total de missatges a enviar
@@ -18,8 +18,8 @@ public class EmisorBenchmark2 extends SingleAgent {
 	long t1, t2, tot = 0;
 
 	public EmisorBenchmark2(AgentID aid, Connection connection, int nmsgtot,
-			int tmsg, int ntotal, int nemisor) {
-		super(aid, connection);
+			int tmsg, int ntotal, int nemisor) throws Exception {
+		super(aid);
 		this.nmsgtot = nmsgtot;
 		this.tmsg = tmsg;
 		this.ntotal = ntotal;
