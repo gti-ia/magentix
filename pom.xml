@@ -7,7 +7,7 @@
 	<packaging>jar</packaging>
 	<version>1.0</version>
 	<name>magentix2</name>
-	<url>http://users.dsic.upv.es/grupos/ia/ia.html</url>
+	<url>http://maven.apache.org</url>
 	<contributors>
 		<contributor>
 			<name>Vicent Botti</name>
@@ -17,7 +17,7 @@
 			</roles>
 		</contributor>
 		<contributor>
-			<name>Agustin Espinosa</name>
+			<name>Agust�n Espinosa</name>
 			<email>aespinosa@dsic.upv.es</email>
 			<roles>
 				<role>Faculty</role>
@@ -207,6 +207,11 @@
 			<artifactId>mina-core</artifactId>
 			<version>1.0.0</version>
 			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-nop</artifactId>
+			<version>1.5.8</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.ant</groupId>
