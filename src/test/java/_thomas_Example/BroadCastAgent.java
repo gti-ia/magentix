@@ -1,6 +1,6 @@
 package _thomas_Example;
 
-import org.apache.qpid.transport.Connection;
+
 
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.architecture.*;
