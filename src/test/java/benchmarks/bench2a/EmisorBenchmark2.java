@@ -1,7 +1,5 @@
 package benchmarks.bench2a;
 
-import org.apache.qpid.transport.Connection;
-
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.SingleAgent;
@@ -17,7 +15,7 @@ public class EmisorBenchmark2 extends SingleAgent {
 	int nmsg = 0;
 	long t1, t2, tot = 0;
 
-	public EmisorBenchmark2(AgentID aid, Connection connection, int nmsgtot,
+	public EmisorBenchmark2(AgentID aid, int nmsgtot,
 			int tmsg, int ntotal, int nemisor) throws Exception {
 		super(aid);
 		this.nmsgtot = nmsgtot;
