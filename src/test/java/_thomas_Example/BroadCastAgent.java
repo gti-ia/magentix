@@ -20,37 +20,23 @@ public class BroadCastAgent extends QueueAgent {
     {
 		OMSProxy serviciosOMS = new OMSProxy();
 		
-		String resultado;
+		String result;
 		
 		SFProxy sfservice = new SFProxy();
 		
 		SFAgentDescription sfAgentDescription = new SFAgentDescription("http://localhost:8080/broadcastservices/owl/owls/","http://localhost:8080/broadcastservices/owl/owls/");
 		
-		/**
-		suggestedServiceCalls[0]=OMSLocation+"AcquireRoleProcess.owl RoleID= UnitID=virtual AgentID=BroadcasterAgent";	    
-		suggestedServiceCalls[1]=SFLocation+"SearchServiceProcess.owl SearchServiceInputServicePurpose=BroadcastWS";
-		suggestedServiceCalls[2]=SFLocation+"GetProfileProcess.owl GetProfileInputServiceID=http://localhost:8080/broadcastservices/owl/owls/BroadcastWSProfile.owl#BroadcastWSProfile";
-		suggestedServiceCalls[3]=OMSLocation+"RegisterUnitProcess.owl UnitID=news Type=congregation Goal=receivenews ParentUnitID=virtual";
-		suggestedServiceCalls[4]=OMSLocation+"RegisterRoleProcess.owl RoleID=broadcaster Accessibility=external Position=member Visibility=public Inheritance=member UnitID=news";
-		suggestedServiceCalls[5]=OMSLocation+"AcquireRoleProcess.owl RoleID=broadcaster UnitID=news AgentID=BroadcasterAgent";
-		suggestedServiceCalls[6]=SFLocation+"RegisterProfileProcess.owl RegisterProfileInputServiceGoal=BroadcastWS RegisterProfileInputServiceProfile=http://localhost:8080/broadcastservices/owl/owls/BroadcastWSProfile.owl";
-		suggestedServiceCalls[7]=SFLocation+"RegisterProcessProcess.owl RegisterProcessInputServiceID=http://localhost:8080/broadcastservices/owl/owls/BroadcastWSProfile.owl#BroadcastWSProfile RegisterProcessInputServiceModel=http://localhost:8080/broadcastservices/owl/owls/BroadcastWSProcess.owl";
-		**/
+		result = serviciosOMS.AcquireRole(this, "member","virtual");
 		
-		resultado = serviciosOMS.AcquireRole(this, "member","virtual");
-		
-		System.out.println("Resultado"+resultado);
+		System.out.println("Resultado"+result);
 		
 	    //****************** RegisterUnit *************************
         serviciosOMS.RegisterUnit(this, "news", "congregation", "receivenews", "virtual");
-        
         //*********************************************************
         
         
         
 		//****************** RegisterRole ***************
-		 
-		//serviciosOMS.RegisterRole(agent, RegisterRoleInputRoleID, UnitID, Accessibility, Position, Visibility, Inheritance);
 		serviciosOMS.RegisterRole(this, "broadcaster","news" , "external", "member", "public", "member");
 		//*********************************************
    
