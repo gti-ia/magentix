@@ -1,6 +1,6 @@
 package benchmarks.bench4;
 
-import java.util.Iterator;
+
 import java.util.Vector;
 
 import es.upv.dsic.gti_ia.core.ACLMessage;

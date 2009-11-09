@@ -50,7 +50,7 @@ public class ClonadorBenchmark4 extends SingleAgent {
 		 * if(args.length != 1) { System.out.println("Error, Debe invocar la
 		 * clase así: clonador\"(\" nreceptores \")\""); System.exit(1); }
 		 */
-		String classe = "receptor";
+	//	String classe = "receptor";
 		// int nagents = Integer.parseInt(args[0].toString());
 
 		for (int i = 1; i <= nagents; i++) {
