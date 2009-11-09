@@ -29,24 +29,28 @@ public abstract class SingleAgent extends BaseAgent {
 
 	/**
 	 * Method to receive a magentix2 AclMessage
-	 * 
+	 * Blocker receiver, waiting a message
 	 * @return an ACLMessage
 	 * @throws Exception
 	 */
-	public final ACLMessage receiveACLMessage() throws Exception {
+	public final ACLMessage receiveACLMessage() {
 
-		for (int i = 0; i < messageList.size(); i++) {
+		boolean condition = false;
+		ACLMessage msg = new ACLMessage(0);
+		int i = 0;
+		
+		while(!condition) {
 
-			ACLMessage msg = messageList.get(i);
+			msg = messageList.get(i);
 
 			if (msg != null) {
-				messageList.remove(msg);
-				return msg;
+					condition = true;
 			}
-
 		}
-		logger.debug("messageList empty on receiveACLMessage");
-		throw new Exception("messageList empty on receiveACLMessage");
+		messageList.remove(msg);
+		return msg;
+//		logger.debug("messageList empty on receiveACLMessage");
+//		throw new Exception("messageList empty on receiveACLMessage");
 
 		// MessageTransfer xfr = new MessageTransfer();
 		// try {
