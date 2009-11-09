@@ -12,7 +12,7 @@ public class ControladorBenchmark1 extends SingleAgent {
 
 	public ControladorBenchmark1(AgentID aid, Connection connection, int ntotal)
 			throws Exception {
-		super(aid, connection);
+		super(aid);
 		this.ntotal = ntotal;
 	}
 
@@ -20,8 +20,10 @@ public class ControladorBenchmark1 extends SingleAgent {
 		System.out.println("Soy " + this.getName() + ". Arranco");
 		// Esperem a rebre el Ready de tots els agents emisors
 		while (nagents < ntotal) {
-			this.receiveACLMessage();
-			nagents++;
+			try{
+				this.receiveACLMessage();
+				nagents++;
+			}catch(Exception e){System.out.println("Error on receiveACLMessage, ControladorBenchmark1");}
 		}
 
 		t1 = System.currentTimeMillis();
@@ -47,7 +49,11 @@ public class ControladorBenchmark1 extends SingleAgent {
 
 		// esperem a que ens responguen tots amb ok
 		while (nacabats < ntotal) {
-			receiveACLMessage();
+			try{
+				this.receiveACLMessage();
+				nagents++;
+			}catch(Exception e){System.out.println("Error on receiveACLMessage, ControladorBenchmark1");}
+		
 			nacabats++;
 		}
 
