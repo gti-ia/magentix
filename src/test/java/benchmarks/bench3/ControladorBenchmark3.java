@@ -1,19 +1,18 @@
 package benchmarks.bench3;
 
-import org.apache.qpid.transport.Connection;
+import es.upv.dsic.gti_ia.core.ACLMessage;
+import es.upv.dsic.gti_ia.core.AgentID;
+import es.upv.dsic.gti_ia.core.SingleAgent;
 
-import s.dsic.gti_ia.fipa.ACLMessage;
-import s.dsic.gti_ia.fipa.AgentID;
 
-import _BaseAgent_Example.SingleAgent;
 
 public class ControladorBenchmark3 extends SingleAgent {
 
 	int ntotal, nagents = 0, nacabats = 0;
 	long t1, t2;
 
-	public ControladorBenchmark3(AgentID aid, Connection connection, int ntotal) {
-		super(aid, connection);
+	public ControladorBenchmark3(AgentID aid, int ntotal) throws Exception {
+		super(aid);
 		this.ntotal = ntotal;
 	}
 
