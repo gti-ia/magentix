@@ -93,7 +93,7 @@ public class BroadCastAgent extends QueueAgent {
 	        agentes = sfservice.getProcess(this,valores.get(0));
 
 	        for(AgentID agent : agentes)
-	        System.out.println("Agentes que tiene ese servicio: "+ agent.protocol);
+	        System.out.println("Agentes que tiene ese servicio: "+ agent.name);
 		
 		
 		
