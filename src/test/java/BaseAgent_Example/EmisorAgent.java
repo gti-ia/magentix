@@ -5,7 +5,7 @@ import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.BaseAgent;
 /**
- * EmisorAgent class define the structure of a sender agent
+ * EmisorAgent class define the structure of a sender BaseAgent
  * 
  * @author Sergio Pajares - spajares@dsic.upv.es
  * @author Joan Bellver - jbellver@dsic.upv.es

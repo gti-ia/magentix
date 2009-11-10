@@ -6,8 +6,8 @@ import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConecction;
 /**
  * Run class is the typical example of the issuer/consumer. 
- * The sender agent builds and sends a ACLMessage to the consumer agent.
- * When the ACLMessage arrives, the consumer agent displays the message on screen. 
+ * The sender BaseAgent builds and sends a ACLMessage to the consumer BaseAgent.
+ * When the ACLMessage arrives, the consumer BaseAgent displays the message on screen. 
  * 
  * @author Sergio Pajares - spajares@dsic.upv.es
  * @author Joan Bellver - jbellver@dsic.upv.es

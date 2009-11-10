@@ -7,7 +7,7 @@ import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.BaseAgent;
 /**
- * ConsumerAgent class define the structure of a consumer agent
+ * ConsumerAgent class define the structure of a consumer BaseAgent
  * 
  * @author Sergio Pajares - spajares@dsic.upv.es
  * @author Joan Bellver - jbellver@dsic.upv.es
