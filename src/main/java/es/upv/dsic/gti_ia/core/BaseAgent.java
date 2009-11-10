@@ -24,7 +24,7 @@ public class BaseAgent implements Runnable {
 	/**
 	 * To enable log4j in Qpid agents
 	 */
-	static Logger logger = Logger.getLogger(BaseAgent.class);
+	protected Logger logger = Logger.getLogger(BaseAgent.class);
 
 	/**
 	 * @uml.property name="aid"
@@ -416,6 +416,10 @@ public class BaseAgent implements Runnable {
 		msg.setContent(body.substring(indice2 + 1, indice2 + 1 + tam));
 
 		return msg;
+	}
+
+	public Logger getLogger() {
+		return logger;
 	}
 
 }
