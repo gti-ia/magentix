@@ -117,7 +117,7 @@ public class Concesionario extends QueueAgent {
 				System.out.printf(
 						"%s: OHH!, has failed to send the contract.\n",
 						getName());
-				throw new FailureException("Error al enviar contrato.");
+				throw new FailureException("Error on having sent contract.");
 			}
 		}
 
