@@ -37,6 +37,7 @@ public class ConsumerAgent extends SingleAgent {
 				logger.info("Mensaje received in " + this.getName()
 						+ " agent, by receiveACLMessage: " + msg.getContent());
 			} catch (Exception e) {
+				logger.error(e.getMessage());
 			}
 
 		}

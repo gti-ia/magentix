@@ -36,7 +36,7 @@ public class Run {
 			/**
 			 * Instantiating a sender agent
 			 */
-			EmisorAgent agente = new EmisorAgent(new AgentID(
+			SenderAgent agente = new SenderAgent(new AgentID(
 					"qpid://emisor@localhost:8080"));
 
 			/**

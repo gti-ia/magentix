@@ -10,9 +10,9 @@ import es.upv.dsic.gti_ia.core.BaseAgent;
  * @author Sergio Pajares - spajares@dsic.upv.es
  * @author Joan Bellver - jbellver@dsic.upv.es
  */
-public class EmisorAgent extends BaseAgent {
+public class SenderAgent extends BaseAgent {
 
-	public EmisorAgent(AgentID aid) throws Exception {
+	public SenderAgent(AgentID aid) throws Exception {
 		super(aid);
 	}
 
