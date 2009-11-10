@@ -22,30 +22,32 @@ public class Prueba {
 	
 	public static void main(String[] args) {
 
-	     OMS agenteOMS;
-	     SF agenteSF;
-	     
-	     DOMConfigurator.configure("loggin.xml");
+	     DOMConfigurator.configure("configuration/loggin.xml");
 	     
 	     
 	     CleanBD limpiar = new CleanBD();
 	     limpiar.clean_database();
 	 	
 		//creamos conexion
-	     AgentsConecction.connect();       // TODO add your handling code here:
+	     
+	     //AgentsConecction.connect("gtiiaprojects2.dsic.upv.es");
+	     
+	     AgentsConecction.connect();       
         
         
-      //creamos el oms 
+      
         try
         {
-        	
-        agenteOMS = OMS.getOMS();
+        
+        //We launch the agents OMS and SF
+        OMS agenteOMS = OMS.getOMS();
         agenteOMS.start();
       
   
-        agenteSF = SF.getSF();
+        SF agenteSF = SF.getSF();
         agenteSF.start();
 	
+        //We launch our agent
         BroadCastAgent agent = new BroadCastAgent(new AgentID("BroadCastAgent"));
         agent.start();
     
