@@ -21,6 +21,7 @@ public class ConsumerAgent extends BaseAgent {
 	}
 
 	public void execute() {
+		logger.info("Executing, I'm " + getName());
 		/**
 		 * This agent has no definite work. Wait infinitely the arrival of new messages.
 		 */
