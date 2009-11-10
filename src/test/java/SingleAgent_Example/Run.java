@@ -1,10 +1,19 @@
 package SingleAgent_Example;
 
+import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
-
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConecction;
 
+/**
+ * Run class is the typical example of the issuer/consumer. The sender
+ * SingleAgent builds and sends a ACLMessage to the consumer SingleAgent. When
+ * the ACLMessage arrives, the consumer SingleAgent displays the message on
+ * screen.
+ * 
+ * @author Sergio Pajares - spajares@dsic.upv.es
+ * @author Joan Bellver - jbellver@dsic.upv.es
+ */
 public class Run {
 
 	/**
@@ -12,37 +21,38 @@ public class Run {
 	 */
 	public static void main(String[] args) {
 
+		/**
+		 * Setting the Logger
+		 */
 		DOMConfigurator.configure("loggin.xml");
+		Logger logger = Logger.getLogger(Run.class);
+
+		/**
+		 * Connecting to Qpid Broker
+		 */
 		AgentsConecction.connect("gtiiaprojects2");
+
 		try {
+			/**
+			 * Instantiating a sender agent
+			 */
 			EmisorAgent agente = new EmisorAgent(new AgentID(
-					"qpid://agentehola@localhost:8080"));// , "qpid",
-															// "localhost","8080"));
-			ConsumerAgent agente2 = new ConsumerAgent(new AgentID(
-					"agenteconsumidor"));
+					"qpid://emisor@localhost:8080"));
+
+			/**
+			 * Instantiating a consumer agent
+			 */
+			ConsumerAgent agente2 = new ConsumerAgent(new AgentID("consumer"));
+
+			/**
+			 * Execute the agents
+			 */
 			agente2.start();
 			agente.start();
-		} catch (Exception e) {
-			System.out.println("Error: " + e.getMessage());
-		}
 
-		// CopyOfAgenteHola agente3 = new CopyOfAgenteHola(new
-		// AgentID("agtente3", "http", "localhost","8080"),con);
-		// agente3.start();
+		} catch (Exception e) {
+			logger.error("Error  " + e.getMessage());
+		}
 	}
 
-	// public static void main(String[] args) {
-	// Connection con = new Connection();
-	// con.connect("gtiiaprojects.dsic.upv.es", 5672, "test", "guest",
-	// "guest",false);
-	// try{
-	// AgenteHola agente = new AgenteHola(new AgentID("agentehola", "qpid",
-	// "localhost","8080"),con);
-	// AgenteConsumidor agente2 = new AgenteConsumidor(new
-	// AgentID("agenteconsumidor", "qpid", "localhost","8080"),con);
-	// agente2.start();
-	// agente.start();
-	// }catch(Exception e){
-	// System.out.println("Error");
-	// }
 }

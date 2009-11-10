@@ -6,6 +6,12 @@ import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.SingleAgent;
 
+/**
+ * ConsumerAgent class define the structure of a consumer SingleAgent
+ * 
+ * @author Sergio Pajares - spajares@dsic.upv.es
+ * @author Joan Bellver - jbellver@dsic.upv.es
+ */
 public class ConsumerAgent extends SingleAgent {
 
 	LinkedBlockingQueue<MessageTransfer> internalQueue;
@@ -15,20 +21,25 @@ public class ConsumerAgent extends SingleAgent {
 	}
 
 	public void execute() {
-
+		logger.info("Executing, I'm " + getName());
 		while (true) {
-			// System.out.println("Arranco, soy "+getName());
+			/**
+			 * This agent has no definite work. Wait infinitely the arrival of
+			 * new messages.
+			 */
+
 			try {
+				/**
+				 * receiveACLMessage is a blocking function. its waiting a new
+				 * ACLMessage
+				 */
 				ACLMessage msg = receiveACLMessage();
-				System.out.println("Mensaje recibido de receiveACLMessage: "
-						+ msg.getContent());
+				logger.info("Mensaje received in " + this.getName()
+						+ " agent, by receiveACLMessage: " + msg.getContent());
 			} catch (Exception e) {
 			}
 
-			// System.out.println("Recibido en Consumidor:"+msg.getContent());
 		}
-		// System.out.println(msg.getContent() + " Language
-		// "+msg.getLanguage());
-	}
 
+	}
 }

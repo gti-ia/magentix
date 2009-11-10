@@ -4,6 +4,12 @@ import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.BaseAgent;
 
+/**
+ * EmisorAgent class define the structure of a sender SingleAgent
+ * 
+ * @author Sergio Pajares - spajares@dsic.upv.es
+ * @author Joan Bellver - jbellver@dsic.upv.es
+ */
 public class EmisorAgent extends BaseAgent {
 
 	public EmisorAgent(AgentID aid) throws Exception {
@@ -11,17 +17,20 @@ public class EmisorAgent extends BaseAgent {
 	}
 
 	public void execute() {
-		System.out.println("Arranco, soy " + getName());
-		AgentID receiver = new AgentID();
-		receiver.protocol = "qpid";
-		receiver.name = "agenteconsumidor";
-		receiver.host = "localhost";
+		logger.info("Executing, I'm " + getName());
+		AgentID receiver = new AgentID("consumer");
+
+		/**
+		 * Building a ACLMessage
+		 */
 		ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
 		msg.setReceiver(receiver);
 		msg.setSender(this.getAid());
 		msg.setLanguage("ACL");
-		msg.setContent("Hola, soy agente " + getName());
-		send(msg);
+		msg.setContent("Hello, I'm " + getName());
+		/**
+		 * Sending a ACLMessage
+		 */
 		send(msg);
 	}
 
