@@ -18,23 +18,21 @@ public class ConsumerAgent extends SingleAgent {
 
 	public void execute() {
 
+		logger.info("Executing, I'm " + getName());
 		while (true) {
-			// System.out.println("Arranco, soy "+getName());
+			
 			try {
 				ACLMessage msg = receiveACLMessage();
-				System.out.println("Mensaje recibido de receiveACLMessage: "
-						+ msg.getContent());
+				logger.info("Mensaje received in " + this.getName()
+						+ " agent, by receiveACLMessage: " + msg.getContent());
 			} catch (Exception e) {
+				logger.error(e.getMessage());
 			}
 
-			// System.out.println("Recibido en Consumidor:"+msg.getContent());
+	
 		}
-		// System.out.println(msg.getContent() + " Language
-		// "+msg.getLanguage());
+	
 	}
 
-	public void onMessage(ACLMessage msg) {
-		System.out.println("Mensaje onMessage: " + msg.getContent());
-	}
 
 }
