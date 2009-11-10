@@ -5,7 +5,7 @@ import org.apache.log4j.xml.DOMConfigurator;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConecction;
 /**
- * This is the typical example of the issuer/consumer. 
+ * Run class is the typical example of the issuer/consumer. 
  * The sender agent builds and sends a ACLMessage to the consumer agent.
  * When the ACLMessage arrives, the consumer agent displays the message on screen. 
  * 
