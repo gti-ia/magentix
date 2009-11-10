@@ -273,13 +273,13 @@ public class SFProxy {
 	 * @throws Exception
 	 */
 	public String getProfile(QueueAgent agent,
-			SFAgentDescription sfAgentdescription) {
-		this.descripcion = sfAgentdescription;
+			String serviceID) {
+	
 		this.agent = agent;
 
 		String call = SFServiceDesciptionLocation
 				+ "GetProfileProcess.owl GetProfileInputServiceID="
-				+ sfAgentdescription.getID();
+				+ serviceID;
 		// + sfAgentdescription.getURLProfile()
 		/*
 		 * + descripcion.getID() + ".owl#" + descripcion.getID();
