@@ -23,7 +23,7 @@ public class ConsumerAgent extends BaseAgent {
 	}
 
 	public void onMessage(ACLMessage msg) {
-		System.out.println("Mensaje received by onMessage: " + msg.getContent());
+		System.out.println("Mensaje received in" +this.getName()+", by onMessage: " + msg.getContent());
 	}
 
 }
