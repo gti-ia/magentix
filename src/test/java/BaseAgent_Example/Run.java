@@ -1,8 +1,10 @@
 package BaseAgent_Example;
 
+import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConecction;
+import es.upv.dsic.gti_ia.core.BaseAgent;
 
 public class Run {
 
@@ -13,16 +15,17 @@ public class Run {
 
 		DOMConfigurator.configure("loggin.xml");
 		AgentsConecction.connect("gtiiaprojects2");
+		Logger logger = Logger.getLogger(Run.class);
 		try {
 			EmisorAgent agente = new EmisorAgent(new AgentID(
-					"qpid://agentehola@localhost:8080"));// , "qpid",
-															// "localhost","8080"));
+					"qpid://emisor@localhost:8080"));
+														
 			ConsumerAgent agente2 = new ConsumerAgent(new AgentID(
-					"agenteconsumidor"));
+					"consumer"));
 			agente2.start();
 			agente.start();
 		} catch (Exception e) {
-			System.out.println("Error: " + e.getMessage());
+			logger.error("Error  " + e.getMessage());
 		}
 	}
 
