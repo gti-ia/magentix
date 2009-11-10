@@ -279,18 +279,18 @@ public class BridgeAgentInOut extends SingleAgent {
 	 * @throws IOException
 	 */
 	private void SendOut(DatagramPacket p) throws IOException {
-		PrintMessage("\nEnviando datos al agente exterior...");
+		PrintMessage("\n Redirecting package to BridgeAgentOutIn external agent");
 
-		// crear paquete a enviar
+		
 		DatagramPacket enviarPaquete = new DatagramPacket(p.getData(), p
 				.getLength(), p.getAddress(), p.getPort());
 
-		logger.debug("Length in enviarPaqueteAExterior" + p.getData().length);
+	//	logger.debug("Length in enviarPaqueteAExterior" + p.getData().length);
 
-		logger.debug("Sending on enviarPaqueteAExterior: ");
+	//	logger.debug("Sending on enviarPaqueteAExterior: ");
 
-		socket.send(enviarPaquete); // enviar el paquete
-		PrintMessage("Paquete enviado\n");
+		socket.send(enviarPaquete);
+		PrintMessage("The package was sent\n");
 	}
 
 	/**
@@ -301,7 +301,7 @@ public class BridgeAgentInOut extends SingleAgent {
 			String message = Generate_All(ACLsms);
 			byte datos[] = message.getBytes();
 
-			// crear enviarPaquete
+			
 			DatagramPacket enviarPaquete = new DatagramPacket(datos,
 					datos.length, InetAddress
 							.getByName(ACLsms.getReceiver().host), Integer
@@ -330,7 +330,7 @@ public class BridgeAgentInOut extends SingleAgent {
 	public void execute() {
 		while (true) {
 
-			logger.info("I'm BridgeAgentInOut, waiting request....");
+		
 			ACLMessage mensaje;
 			try {
 
@@ -348,7 +348,7 @@ public class BridgeAgentInOut extends SingleAgent {
 			}
 
 			/*
-			 * // mostrar la informacion del paquete recibido mostrarMensaje(
+			 * 
 			 * "\nPaquete recibido:" + "\nDel host: " +
 			 * recibirPaquete.getAddress() + "\nPuerto del host: " +
 			 * recibirPaquete.getPort() + "\nLongitud: " +
@@ -591,6 +591,6 @@ public class BridgeAgentInOut extends SingleAgent {
 		content += "\r\n--" + boundary + "--\r\n";
 		content += "\r\n\r\n";
 
-		logger.debug(httpheader + content);
+	//	logger.debug(httpheader + content);
 	}
 }
