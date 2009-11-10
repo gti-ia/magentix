@@ -11,16 +11,16 @@ public class EmisorAgent extends BaseAgent {
 	}
 
 	public void execute() {
-		System.out.println("Arranco, soy " + getName());
+		System.out.println("Executing, I'm " + getName());
 		AgentID receiver = new AgentID();
 		receiver.protocol = "qpid";
-		receiver.name = "agenteconsumidor";
+		receiver.name = "consumer";
 		receiver.host = "localhost";
 		ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
 		msg.setReceiver(receiver);
 		msg.setSender(this.getAid());
 		msg.setLanguage("ACL");
-		msg.setContent("Hola, soy agente " + getName());
+		msg.setContent("Hello, I'm " + getName());
 		send(msg);
 		send(msg);
 	}
