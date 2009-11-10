@@ -1,9 +1,9 @@
 package BaseAgent_Example;
 
-
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.BaseAgent;
+
 /**
  * EmisorAgent class define the structure of a sender BaseAgent
  * 
@@ -12,7 +12,6 @@ import es.upv.dsic.gti_ia.core.BaseAgent;
  */
 public class EmisorAgent extends BaseAgent {
 
-	
 	public EmisorAgent(AgentID aid) throws Exception {
 		super(aid);
 	}
@@ -20,7 +19,7 @@ public class EmisorAgent extends BaseAgent {
 	public void execute() {
 		logger.info("Executing, I'm " + getName());
 		AgentID receiver = new AgentID("consumer");
-		
+
 		/**
 		 * Building a ACLMessage
 		 */

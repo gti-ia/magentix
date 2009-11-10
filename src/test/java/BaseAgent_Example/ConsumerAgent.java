@@ -6,6 +6,7 @@ import org.apache.qpid.transport.MessageTransfer;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.BaseAgent;
+
 /**
  * ConsumerAgent class define the structure of a consumer BaseAgent
  * 
@@ -23,10 +24,11 @@ public class ConsumerAgent extends BaseAgent {
 	public void execute() {
 		logger.info("Executing, I'm " + getName());
 		/**
-		 * This agent has no definite work. Wait infinitely the arrival of new messages.
+		 * This agent has no definite work. Wait infinitely the arrival of new
+		 * messages.
 		 */
 		while (true) {
-	
+
 		}
 	}
 
@@ -34,7 +36,8 @@ public class ConsumerAgent extends BaseAgent {
 		/**
 		 * When a message arrives, its shows on screen
 		 */
-		logger.info("Mensaje received in " +this.getName()+" agent, by onMessage: " + msg.getContent());
+		logger.info("Mensaje received in " + this.getName()
+				+ " agent, by onMessage: " + msg.getContent());
 	}
 
 }
