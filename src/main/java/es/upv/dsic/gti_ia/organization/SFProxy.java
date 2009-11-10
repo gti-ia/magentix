@@ -268,7 +268,7 @@ public class SFProxy {
 	 * Return service profile ( the URL profile)
 	 * 
 	 * @param agent
-	 * @param sfAgentdescription
+	 * @param serviceID
 	 * @return Status
 	 * @throws Exception
 	 */
