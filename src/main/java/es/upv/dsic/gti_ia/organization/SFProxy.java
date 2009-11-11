@@ -1,5 +1,7 @@
 package es.upv.dsic.gti_ia.organization;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.ArrayList;
 
@@ -93,12 +95,54 @@ public class SFProxy {
 	}
 
 	
-	public ArrayList<String> genericService(String URLProfile, ArrayList<String> arguments)
+	public ArrayList<String> genericService(QueueAgent agent,AgentID agentProvider, String URLProfile, ArrayList<String> ArrayArguments)
 	{
 	   ArrayList<String> list = new ArrayList<String>();
+	   this.agent = agent;
 	   
+	   URL profile;
+		try {
+			 profile = new URL(URLProfile);
+		} catch (MalformedURLException e) {						
+			System.out.println("ERROR: Profile URL Malformed!");
+			e.printStackTrace();
+			return list;
+		}
+	   Oracle oracle = new Oracle(profile);
 	   
+	 //Get inputs
+		ArrayList<String> inputs = oracle.getInputs();
+		//ArrayList<String> outputs = oracle.getOutputs();
 		
+		//Build call arguments
+		String arguments ="";
+		int i=0;
+		for(String s : inputs){
+			//arguments.concat(" ").concat(s).concat("=").concat(this.getAID().getLocalName());
+			//s = s.substring(1, s.length());
+			if (i <ArrayArguments.size())
+				arguments = arguments +" " + s + "=" + ArrayArguments.get(i);
+			i++;
+		}
+		
+		
+		//build the message to service provider
+		String call = "http://localhost:8080/sfservices/THservices/owl/owls/SearchCheapHotelProcess.owl" + arguments;
+		
+		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
+		requestMsg.setSender(agent.getAid());
+		requestMsg.setContent(call);
+		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
+		requestMsg.setReceiver(agentProvider);
+
+		logger.info("[QueryAgent]Sms to send: " + requestMsg.getContent());
+		logger.info("[QueryAgent]Sending... ");
+
+		TestAgentClient test = new TestAgentClient(agent, requestMsg, this);
+
+		do {
+			test.action();
+		} while (!test.finished());
 		
 		
 		return list;
@@ -132,8 +176,8 @@ public class SFProxy {
 	 * @throws Exception
 	 */
 
-	public boolean removeProvider(QueueAgent agent,
-			SFServiceDescription sfAgentdescription) {
+	public void removeProvider(QueueAgent agent,
+			SFServiceDescription sfAgentdescription)throws Exception {
 		this.descripcion = sfAgentdescription;
 		this.agent = agent;
 
@@ -144,7 +188,8 @@ public class SFProxy {
 
 		this.sendInfo(agent, call);
 
-		return salida;
+		if (salida)
+			throw new Exception(this.salidaString);
 	}
 
 	/**
@@ -178,8 +223,8 @@ public class SFProxy {
 	 * @return Status
 	 * @throws Exception
 	 */
-	public boolean ModifyProcess(QueueAgent agent,
-			SFServiceDescription sfAgentdescription)
+	public void ModifyProcess(QueueAgent agent,
+			SFServiceDescription sfAgentdescription)throws Exception
 
 	{
 		this.descripcion = sfAgentdescription;
@@ -194,8 +239,8 @@ public class SFProxy {
 				+ ".owl#" + descripcion.getServiceGoal();
 
 		this.sendInfo(agent, call);
-
-		return salida;
+		if (salida)
+			throw new Exception(this.salidaString);
 	}
 
 	/**
@@ -206,8 +251,8 @@ public class SFProxy {
 	 * @return Status
 	 * @throws Exception
 	 */
-	public boolean ModifyProfile(QueueAgent agent,
-			SFServiceDescription sfAgentdescription) {
+	public void ModifyProfile(QueueAgent agent,
+			SFServiceDescription sfAgentdescription)throws Exception {
 
 		this.descripcion = sfAgentdescription;
 		this.agent = agent;
@@ -222,7 +267,8 @@ public class SFProxy {
 
 		this.sendInfo(agent, call);
 
-		return salida;
+		if (salida)
+			throw new Exception(this.salidaString);
 
 	}
 
@@ -234,8 +280,8 @@ public class SFProxy {
 	 * @return Status
 	 * @throws Exception
 	 */
-	public boolean DeregisterProfile(QueueAgent agent,
-			SFServiceDescription sfAgentdescription) {
+	public void DeregisterProfile(QueueAgent agent,
+			SFServiceDescription sfAgentdescription)throws Exception {
 
 		this.agent = agent;
 		this.descripcion = sfAgentdescription;
@@ -248,7 +294,9 @@ public class SFProxy {
 				+ ".owl#" + descripcion.getID();
 
 		this.sendInfo(agent, call);
-		return salida;
+		
+		if (salida)
+			throw new Exception(this.salidaString);
 
 	}
 
@@ -314,8 +362,8 @@ public class SFProxy {
 	 * @return Status
 	 * @throws Exception
 	 */
-	public boolean registerProfile(QueueAgent agent,
-			SFServiceDescription sfAgentdescription) {
+	public void registerProfile(QueueAgent agent,
+			SFServiceDescription sfAgentdescription) throws Exception{
 
 		this.descripcion = sfAgentdescription;
 		this.agent = agent;
@@ -328,8 +376,9 @@ public class SFProxy {
 				+ descripcion.getServiceProfile();
 
 		this.sendInfo(agent, call);
-
-		return salida;
+		
+		if (salida)
+			throw new Exception(this.salidaString);
 
 	}
 
@@ -341,8 +390,8 @@ public class SFProxy {
 	 * @return Status
 	 * @throws Exception
 	 */
-	public boolean registerProcess(QueueAgent agent,
-			SFServiceDescription sfAgentdescription) {
+	public void registerProcess(QueueAgent agent,
+			SFServiceDescription sfAgentdescription)throws Exception {
 		// montar string de conexion
 		// Enviamos el mensaje
 
@@ -357,7 +406,8 @@ public class SFProxy {
 
 		this.sendInfo(agent, call);
 
-		return salida;
+		if (salida)
+			throw new Exception(this.salidaString);
 	}
 
 	private void setSalida(boolean valor) {
@@ -407,7 +457,7 @@ public class SFProxy {
 			// Sacamos el patron
 			String patron = msg.getContent().substring(0,
 					msg.getContent().indexOf("="));
-			String arg1 = "";
+			String arg1 = "Check the error log file";
 
 			// primer argumento si es un DeregisterProfileProcess no sacaremos
 			// el arg1
@@ -434,7 +484,10 @@ public class SFProxy {
 					// this.sf.agent.setSFAgentDescription(this.sf.descripcion);
 					this.sf.setSalida(true);
 				} else
+				{
+					this.sf.salidaString = arg1;
 					this.sf.setSalida(false);
+				}
 
 			}
 
@@ -449,6 +502,7 @@ public class SFProxy {
 				{
 					this.sf.setSalidaString(arg1);
 				} else {
+					
 					this.sf.setSalidaString(null);
 				}
 
@@ -465,6 +519,7 @@ public class SFProxy {
 					this.sf.setSalida(true);
 				} else // ha ido mal
 				{
+					this.sf.salidaString = arg1;
 					this.sf.setSalida(false);
 				}
 
@@ -526,16 +581,11 @@ public class SFProxy {
 					// para guardar nuestros ID para poder modificar
 					// posteriormente nuestro servicio
 					this.sf.descripcion.setID(arg2);
-					// this.sf.agent.setSFAgentDescription(this.sf.descripcion);
 					this.sf.setSalida(true);
-					// this.agent.setIDProfile(this.sf.getDescription()
-					// .getServiceGoal(), arg2);
-					// coger el segundo argumento i passar-lo a getProcess
-					// this.sf.registerProcess(agent, this.sf.descripcion,
-					// arg2);
+					
 				} else {
+					this.sf.salidaString = arg2;
 					this.sf.setSalida(false);
-
 				}
 
 			}
@@ -554,6 +604,7 @@ public class SFProxy {
 					this.sf.setSalida(false);
 				} else// el id del servicio no es valido
 				{
+					this.sf.salidaString = arg1;
 					this.sf.setSalida(false);
 				}
 
