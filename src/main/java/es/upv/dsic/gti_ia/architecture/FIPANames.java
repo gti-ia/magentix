@@ -1,4 +1,3 @@
-
 package es.upv.dsic.gti_ia.architecture;
 
 /**
