@@ -28,10 +28,9 @@ public class Prueba {
 	     CleanBD limpiar = new CleanBD();
 	     limpiar.clean_database();
 	 	
-		//creamos conexion
+	
 	     
 	     //AgentsConecction.connect("gtiiaprojects2.dsic.upv.es");
-	     
 	     AgentsConecction.connect();       
         
         
@@ -47,9 +46,13 @@ public class Prueba {
         SF agenteSF = SF.getSF();
         agenteSF.start();
 	
+        
         //We launch our agent
         BroadCastAgent agent = new BroadCastAgent(new AgentID("BroadCastAgent"));
         agent.start();
+
+        ClientAgent agentClient = new ClientAgent(new AgentID("ClientAgent"));
+        agentClient.start();
     
     	}catch(Exception e){}     
 
