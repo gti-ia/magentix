@@ -62,7 +62,7 @@ public class ClientAgent extends QueueAgent {
 		arg.add("ola3");
 		
 		
-		sfservice.genericService(this,agents.get(0),res, arg);
+		//sfservice.genericService(this,agents.get(0),res, arg);
 		
 		
 		
