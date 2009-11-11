@@ -130,6 +130,7 @@ public class Configuration {
 
 	    } catch (IOException e) {
 	    	System.out.print(e);
+	    	return;
 	    }
 	}
 	

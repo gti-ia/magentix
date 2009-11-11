@@ -61,6 +61,7 @@ public class CleanBD {
 			bd.cierraConexion();
 		} catch (Exception e) {
 			e.printStackTrace();
+			return;
 		}
 	}
 

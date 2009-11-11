@@ -15,7 +15,7 @@ public class SFProxy {
 
 	private String SFServiceDesciptionLocation;
 	private QueueAgent agent;
-	private SFAgentDescription descripcion;
+	private SFServiceDescription descripcion;
 	private ArrayList<AgentID> agentes = new ArrayList<AgentID>();
 
 	private HashMap<String, String> tablaSearchServiceProfile = new HashMap<String, String>();
@@ -88,10 +88,23 @@ public class SFProxy {
 	 * 
 	 * @return SFAgentDescription
 	 */
-	SFAgentDescription getDescription() {
+	SFServiceDescription getDescription() {
 		return this.descripcion;
 	}
 
+	
+	public ArrayList<String> genericService(String URLProfile, ArrayList<String> arguments)
+	{
+	   ArrayList<String> list = new ArrayList<String>();
+	   
+	   
+		
+		
+		
+		return list;
+		
+	}
+	
 	private void sendInfo(QueueAgent agent, String call) {
 		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
 		requestMsg.setSender(agent.getAid());
@@ -120,7 +133,7 @@ public class SFProxy {
 	 */
 
 	public boolean removeProvider(QueueAgent agent,
-			SFAgentDescription sfAgentdescription) {
+			SFServiceDescription sfAgentdescription) {
 		this.descripcion = sfAgentdescription;
 		this.agent = agent;
 
@@ -166,7 +179,7 @@ public class SFProxy {
 	 * @throws Exception
 	 */
 	public boolean ModifyProcess(QueueAgent agent,
-			SFAgentDescription sfAgentdescription)
+			SFServiceDescription sfAgentdescription)
 
 	{
 		this.descripcion = sfAgentdescription;
@@ -194,7 +207,7 @@ public class SFProxy {
 	 * @throws Exception
 	 */
 	public boolean ModifyProfile(QueueAgent agent,
-			SFAgentDescription sfAgentdescription) {
+			SFServiceDescription sfAgentdescription) {
 
 		this.descripcion = sfAgentdescription;
 		this.agent = agent;
@@ -222,7 +235,7 @@ public class SFProxy {
 	 * @throws Exception
 	 */
 	public boolean DeregisterProfile(QueueAgent agent,
-			SFAgentDescription sfAgentdescription) {
+			SFServiceDescription sfAgentdescription) {
 
 		this.agent = agent;
 		this.descripcion = sfAgentdescription;
@@ -302,7 +315,7 @@ public class SFProxy {
 	 * @throws Exception
 	 */
 	public boolean registerProfile(QueueAgent agent,
-			SFAgentDescription sfAgentdescription) {
+			SFServiceDescription sfAgentdescription) {
 
 		this.descripcion = sfAgentdescription;
 		this.agent = agent;
@@ -329,7 +342,7 @@ public class SFProxy {
 	 * @throws Exception
 	 */
 	public boolean registerProcess(QueueAgent agent,
-			SFAgentDescription sfAgentdescription) {
+			SFServiceDescription sfAgentdescription) {
 		// montar string de conexion
 		// Enviamos el mensaje
 

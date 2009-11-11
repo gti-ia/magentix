@@ -1,6 +1,6 @@
 package es.upv.dsic.gti_ia.organization;
 
-public class SFAgentDescription {
+public class SFServiceDescription {
 
 	private String goalprofile;
 	private String ID;
@@ -19,7 +19,7 @@ public class SFAgentDescription {
 	 *            The URL where the owl's document (related with service
 	 *            profile) is located.
 	 */
-	public SFAgentDescription(String URLProcess, String URLProfile) {
+	public SFServiceDescription(String URLProcess, String URLProfile) {
 		this.goalprofile = "";
 		this.ID = "";
 		this.ImplementationID = "";
