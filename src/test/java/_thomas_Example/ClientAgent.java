@@ -49,22 +49,21 @@ public class ClientAgent extends QueueAgent {
 
 		for (AgentID agent : agents)
 			System.out
-					.println("Soy "+this.getAid().name+" y los agentes que tiene el servicio SearchCheapHotel: "
+					.println(this.getAid().name+" agents who have the service SearchCheapHotel: "
 							+ agent.name);
 
 		String res = sfservice.getProfile(this,results.get(0));
 		
-		System.out.println("El get profile me duelve: "+ res);
+		
 		
 		ArrayList<String> arg = new ArrayList<String>();
 		
-		arg.add("ola1");
-		arg.add("ola2");
-		arg.add("ola3");
+		arg.add("One");
+		arg.add("Two");
+		arg.add("Three");
 		
 		
 		sfservice.genericService(this,agents.get(0),res,"http://localhost:8080/sfservices/THservices/owl/owls/SearchCheapHotelProcess.owl", arg);
-		
 		
 		
 		}catch(Exception e){

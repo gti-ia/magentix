@@ -96,14 +96,16 @@ public class BroadCastAgent extends QueueAgent {
 	        
 	        valores = sfservice.searchService(this, "BroadcastWS");
 	        
-	        System.out.println("Valores devueltos: "+ valores.get(0));
+	        for(String v : valores)
+	        	System.out.println("Returns value: "+ v);
+	        
 	        
 	        
 	        agentes = sfservice.getProcess(this, valores.get(0));
 	        
 	        for (AgentID agent : agentes)
 				System.out
-						.println("Agentes que tiene el servicio BroadCast: "
+						.println("Agents who has the broadcast service: "
 								+ agent.name);
 	        
 	        //************************************************
@@ -111,37 +113,26 @@ public class BroadCastAgent extends QueueAgent {
 
 	        
 	        //************ GetProfile *****************
-	       
-	        
 
-
-	        
-		
-		
-		
-	        //intento registrar el searchCheapHotel con un rol q no es el adecuado
-	        
-	        
-	        
-	        
-	        
 	    	sfservice.registerProfile(this,servicio2);
-				System.out.println("El register Profile nos ha devuelto: "+  servicio2.getID());
+				System.out.println("Register Profile return: "+  servicio2.getID());
 	    	
 	    
 	    	serviciosOMS.AcquireRole(this,"provider", "travelagency");
 	        
-	       sfservice.registerProcess(this, servicio2);
+	        sfservice.registerProcess(this, servicio2);
 	        
-	        	System.out.println("Register Porcess ok : Result: "+ servicio2.getImplementationID());
+	        	System.out.println("Register Porcess return: "+ servicio2.getImplementationID());
 	        	
 	        
-	        
+	        //Rol responder
 	    	Responder responder = new Responder(this);
 			
 			this.addTask(responder);
+			
 			es.upv.dsic.gti_ia.architecture.Monitor mon = new es.upv.dsic.gti_ia.architecture.Monitor();
 		    mon.waiting();
+		    
 		}catch(Exception e){
 			System.out.println("Error: "+ e.getMessage());
 			
