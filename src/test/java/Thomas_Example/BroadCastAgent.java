@@ -37,9 +37,13 @@ public class BroadCastAgent extends QueueAgent {
 	
 	public void execute()
     {
+		//We create the class that will make us the agent proxy oms, facilite facilitates access to the methods of the OMS
 		OMSProxy serviciosOMS = new OMSProxy();
+		
+		//We create the class that will make us the agent proxy sf, facilite facilitates access to the methods of the SF
 		SFProxy sfservice = new SFProxy();
 		
+		//We create a SFServiceDescription, one for service that we have
 		SFServiceDescription servicio1 = new SFServiceDescription("http://localhost:8080/broadcastservices/owl/owls/","http://localhost:8080/broadcastservices/owl/owls/");
 		SFServiceDescription servicio2 = new SFServiceDescription("http://localhost:8080/sfservices/THservices/owl/owls/","http://localhost:8080/sfservices/THservices/owl/owls/");
 		
