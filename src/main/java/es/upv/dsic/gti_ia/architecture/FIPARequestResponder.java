@@ -81,7 +81,7 @@ public class FIPARequestResponder {
 				monitor.waiting();// waiting a message.
 			}
 			
-			//comprobar que no me llega un mensaje CANCEL de la conversacion activa
+			
 			
 	
 			break;
