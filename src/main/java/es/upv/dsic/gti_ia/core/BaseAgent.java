@@ -84,12 +84,12 @@ public class BaseAgent implements Runnable {
 	 */
 	public BaseAgent(AgentID aid) throws Exception {
 
-		if (AgentsConecction.connection == null) {
+		if (AgentsConnection.connection == null) {
 			logger
 					.error("Before create a agent, the qpid broker connection is necesary");
 			throw new Exception("Error doesn't work the broken connection");
 		} else {
-			this.connection = AgentsConecction.connection;
+			this.connection = AgentsConnection.connection;
 		}
 
 		this.session = createSession();
