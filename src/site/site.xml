@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<project name="SO2MAS">
+<project name="Magentix2">
    <bannerLeft>
 	<name>Grupo GTI-IA</name>
       <src>
@@ -26,24 +26,23 @@
       </links>
 
 
-      <menu name="SO2MAS">
-         <item name="Descripción" href="project-summary.html" />
-         <item name="Descarga" href="Descarga.html" />
-         <item name="Codigo" href="Codigo.html" />
+      <menu name="Magentix2">
+         <item name="Project Summary" href="project-summary.html" />
+         <item name="Download" href="Descarga.html" />
+         <item name="Code" href="Codigo.html" />
       </menu>
 
-      <menu name="Informacion">
-         <item name="Licencia" href="license.html" />
-         <item name="Desarrolladores" href="team-list.html" />
+      <menu name="Information">
+         <item name="License" href="license.html" />
+         <item name="Developers" href="team-list.html" />
+         <item name="Plugins" href="plugins.html" />
+         <item name="Project Inform" href="project-info.html" />
+         <item name="Mail - list" href="mail-lists.html" />
+         <item name="Plugin - Managament" href="plugin-management.html" />
+          <item name="Dependencies" href="dependencies.html" />
       </menu>
 
-      <menu name="Informes">
-<!--
-         <item name="CheckStyle" href="checkstyle.html" />
-         <item name="Cobertura" href="cobertura/index.html" />
-   
-         <item name="Fuentes" href="xref/index.html" />
--->
+      <menu name="Reports">
       <item name="Javadoc" href="apidocs/index.html" />
       </menu>
    </body>
