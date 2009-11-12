@@ -141,7 +141,7 @@
 				<configuration>
 					<descriptorRefs>
 						<descriptorRef>
-							jar-with-dependencies
+							with-dependencies
 						</descriptorRef>
 					</descriptorRefs>
 				</configuration>
