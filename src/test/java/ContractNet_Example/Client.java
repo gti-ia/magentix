@@ -29,31 +29,30 @@ public class Client extends QueueAgent {
     }
     
     protected void execute() {
-        //El precio máximo se recibirá como argumento de entrada.
-        
- 
-        
             this.precionMaximo = 20000000;
  
-            //Búsqueda del servicio de venta de coches en las páginas amarillas.
+           
               
-                                  //Creamos el mensaje CFP(Call For Proposal) cumplimentando sus parámetros
+                    //Create the message CFP (Call For Proposal) by completing its parameters
                     ACLMessage mensajeCFP = new ACLMessage(ACLMessage.CFP);
                     
-                    for(int i=0;i<200;i++)
+                    for(int i=0;i<20;i++)
                     {
-                    mensajeCFP.addReceiver(new AgentID("Concesionario"+i));
+                    //Send message to twenty agents that offer the service	
+                    mensajeCFP.addReceiver(new AgentID("Autos"+i));
                     }
                     
                     
-                    //Protocolo que vamos a utilizar
+                    //Protocol that we will use
                     mensajeCFP.setProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET);
                     mensajeCFP.setContent("I look for car, do you propose to prices?");
-                    //mensajeCFP.setSender(getAid());
-                    //Indicamos el tiempo que esperaremos por las ofertas.
+                   
+                    
+                    
+                    //Indicates how long we will wait for offers
                     mensajeCFP.setReplyByDate(new Date(System.currentTimeMillis() + 1500000));
  
-                    //Se añade el comportamiento que manejará las ofertas.
+                    //Behavior is added to handle the bids
                     
                     this.addTask(new ManejoOpciones(this, mensajeCFP));
                  
@@ -63,50 +62,49 @@ public class Client extends QueueAgent {
              
 
  
-    } // Fin del setup
- 
+    } 
     private class ManejoOpciones extends FIPAContractNetInitiator {
  
         public ManejoOpciones(QueueAgent agente, ACLMessage plantilla) {
             super(agente, plantilla);
         }
  
-        //Manejador de proposiciones.
+        //handle of propositions.
         protected void handlePropose(ACLMessage propuesta, ArrayList<ACLMessage> aceptadas) {
             System.out.printf("%s: Received offer of cars %s. A car offers for %s Euros.\n",
                 this.myAgent.getName(), propuesta.getSender().getLocalName(), propuesta.getContent());
         }
  
-        //Manejador de rechazos de proposiciones.
+        //handel of rejections of propositions.
         protected void handleRefuse(ACLMessage rechazo) {
             System.out.printf("%s: Cars %s does not have cars that to offer.\n",
                 this.myAgent.getName(), rechazo.getSender().getLocalName());
         }
  
-        //Manejador de respuestas de fallo.
+        //Handle failure replies
         protected void handleFailure(ACLMessage fallo) {
-          //  if (fallo.getSender().equals(myAgent.getAMS())) {
+         
  
-        //Esta notificacion viene del entorno de ejecución JADE (no existe el receptor)
+       
                 System.out.println("AMS: This sale of cars does not exist or is accessible");
-            //} else {
+       
                 System.out.printf("%s: Cars %s has been a failure.\n",
                     this.myAgent.getName(), fallo.getSender().getLocalName());
-            //}
-            //Falló, por lo tanto, no recibiremos respuesta desde ese agente
+       
+            //He failed, therefore, receive no response from this agent
             Client.this.numeroDeOfertas--;
         }
  
-        //Método colectivo llamado tras finalizar el tiempo de espera o recibir todas las propuestas.
+        //Method collective called after end timeout or receive all proposals
         protected void handleAllResponses(ArrayList<ACLMessage>  respuestas, ArrayList<ACLMessage>  aceptados) {
  
-        //Se comprueba si una venta de autos se pasó del plazo de envío de ofertas.
+        //Check if a sale of cars passed the deadline for submission of tenders.
             if (respuestas.size() < numeroDeOfertas) {
                 System.out.printf("%s: %d Car sales are late.\n",
                     this.myAgent.getName(), Client.this.numeroDeOfertas - respuestas.size());
             }
  
-            //Escogemos la mejor oferta
+            //We choose the best offer
             int mejorOferta = Integer.MAX_VALUE;
             AgentID mejorAutos = null;
             ACLMessage aceptado = null;
@@ -117,8 +115,8 @@ public class Client extends QueueAgent {
                     respuesta.setPerformative(ACLMessage.REJECT_PROPOSAL);
                     aceptados.add(respuesta);
  
-                    //Si la oferta es la mejor (inferior a todas las otras)
-                    //Se almacena su precio y el AID de la venta de autos que la hizo.
+                    //If the offer is the best (lower than all others) 
+                    //It stores its price and the AID of the sale of cars that made it.
                     int oferta = Integer.parseInt(mensaje.getContent());
                     if (oferta <= precionMaximo && oferta <= mejorOferta) {
                         mejorOferta = oferta;
@@ -128,7 +126,7 @@ public class Client extends QueueAgent {
                 }
             }
  
-            //Si hay una oferta aceptada se modifica su performativa.
+            //If there is an accepted offer his performative is modified.
             if (aceptado != null) {
                 System.out.printf("%s: Determined! Sell Car of the %s\n",
                     this.myAgent.getName(), mejorAutos.getLocalName());
@@ -136,7 +134,7 @@ public class Client extends QueueAgent {
             }
         }
  
-        //Manejador de los mensajes inform.
+        //Manager of information messages.
         protected void handleInform(ACLMessage inform) {
             System.out.printf("%s: %s has sent the contract.\n",
                 this.myAgent.getName(), inform.getSender().getLocalName());
