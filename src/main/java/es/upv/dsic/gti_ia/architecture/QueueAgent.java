@@ -28,7 +28,7 @@ public class QueueAgent extends BaseAgent {
 
 	private Monitor monitor = null;
 
-	// para poder diferenciar cuando nos llega una conversaci� nueva
+	
 	private ArrayList<String> activeConversationsList = new ArrayList<String>();
 
 	private ArrayList<Object> roles = new ArrayList<Object>();
@@ -56,8 +56,7 @@ public class QueueAgent extends BaseAgent {
 
 		this.writeQueue(msg);
 
-		// clase encargada de despertar al agente, puede ser del rol responder o
-		// del rol iniciator
+		// responsible for waking the class agent, may be the responder role or the role iniciator
 
 		if (monitor != null)
 			this.monitor.advise();
