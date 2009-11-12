@@ -189,7 +189,7 @@ public class SFProxy {
 		this.sendInfo(agent, call);
 
 		if (!salida)
-			throw new Exception(this.salidaString);
+			throw new Exception("Remove Provider: "+ this.salidaString);
 	}
 
 	/**
@@ -240,7 +240,7 @@ public class SFProxy {
 
 		this.sendInfo(agent, call);
 		if (!salida)
-			throw new Exception(this.salidaString);
+			throw new Exception("Modify Process: "+this.salidaString);
 	}
 
 	/**
@@ -268,7 +268,7 @@ public class SFProxy {
 		this.sendInfo(agent, call);
 
 		if (!salida)
-			throw new Exception(this.salidaString);
+			throw new Exception("Modify Profile: "+this.salidaString);
 
 	}
 
@@ -296,7 +296,7 @@ public class SFProxy {
 		this.sendInfo(agent, call);
 		
 		if (!salida)
-			throw new Exception(this.salidaString);
+			throw new Exception("Deregister Profile: "+this.salidaString);
 
 	}
 
@@ -341,10 +341,6 @@ public class SFProxy {
 		String call = SFServiceDesciptionLocation
 				+ "GetProfileProcess.owl GetProfileInputServiceID="
 				+ serviceID;
-		// + sfAgentdescription.getURLProfile()
-		/*
-		 * + descripcion.getID() + ".owl#" + descripcion.getID();
-		 */
 
 		this.sendInfo(agent, call);
 
@@ -378,7 +374,7 @@ public class SFProxy {
 		this.sendInfo(agent, call);
 		
 		if (!salida)
-			throw new Exception(this.salidaString);
+			throw new Exception("Register Profile: "+this.salidaString);
 
 	}
 
@@ -407,7 +403,7 @@ public class SFProxy {
 		this.sendInfo(agent, call);
 
 		if (!salida)
-			throw new Exception(this.salidaString);
+			throw new Exception("Register Process: "+this.salidaString);
 	}
 
 	private void setSalida(boolean valor) {
