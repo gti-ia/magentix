@@ -72,6 +72,7 @@ public class OMSProxy {
 		do {
 			test.action();
 		} while (!test.finished());
+		
 	}
 
 	/**
@@ -84,13 +85,19 @@ public class OMSProxy {
 	 * @return String Status ErrorValue
 	 */
 	public String LeaveRole(QueueAgent agent, String AgentID, String RoleID,
-			String UnitID) {
+			String UnitID) throws Exception{
 
 		String call = configuration + "LeaveRoleProcess.owl AgentID=" + AgentID
 				+ " RoleID=" + RoleID + " UnitID=" + UnitID;
 
 		this.sendInform(agent, call);
-		return this.value;
+		
+		if (!this.value.equals("Ok"))
+		{
+			throw new Exception("Leave Role "+ this.value);
+		}
+		else
+			return this.value;
 
 	}
 
@@ -100,16 +107,22 @@ public class OMSProxy {
 	 * @param agent
 	 * @param AgentID
 	 * @return ArrayList RoleUnitList
+	 * @throws Exception 
 	 */
-	public ArrayList<String> InformAgentRole(QueueAgent agent, String AgentID) {
+	public ArrayList<String> InformAgentRole(QueueAgent agent, String AgentID) throws Exception {
 
 		this.list.clear();
 
 		String call = configuration
 				+ "InformAgentRoleProcess.owl RequestedAgentID=" + AgentID;
 		this.sendInform(agent, call);
-
-		return this.list;
+         
+		if (!this.value.equals("Ok"))
+		{
+			throw new Exception("Leave Role "+ this.value);
+		}
+		else
+			return this.list;
 
 	}
 
@@ -120,9 +133,10 @@ public class OMSProxy {
 	 * @param RoleID
 	 * @param UnitID
 	 * @return ArrayList EntityRoleList
+	 * @throws Exception 
 	 */
 	public ArrayList<String> InformMembers(QueueAgent agent, String RoleID,
-			String UnitID) {
+			String UnitID) throws Exception {
 
 		this.list.clear();
 
@@ -130,6 +144,11 @@ public class OMSProxy {
 				+ RoleID + " UnitID=" + UnitID;
 		this.sendInform(agent, call);
 
+		if (!this.value.equals("Ok"))
+		{
+			throw new Exception("Leave Role "+ this.value);
+		}
+		else
 		return this.list;
 
 	}
@@ -140,15 +159,21 @@ public class OMSProxy {
 	 * @param agent
 	 * @param RoleID
 	 * @return ArrayList NormList
+	 * @throws Exception 
 	 */
-	public ArrayList<String> InformRoleNorms(QueueAgent agent, String RoleID) {
+	public ArrayList<String> InformRoleNorms(QueueAgent agent, String RoleID) throws Exception {
 
 		this.list.clear();
 
 		String call = configuration + "InformRoleNormsProcess.owl RoleID="
 				+ RoleID;
 		this.sendInform(agent, call);
-
+		
+		if (!this.value.equals("Ok"))
+		{
+			throw new Exception("Leave Role "+ this.value);
+		}
+		else
 		return this.list;
 
 	}
@@ -159,15 +184,21 @@ public class OMSProxy {
 	 * @param agent
 	 * @param UnitID
 	 * @return ArrayList ProfileList
+	 * @throws Exception 
 	 */
-	public ArrayList<String> InformRoleProfiles(QueueAgent agent, String UnitID) {
+	public ArrayList<String> InformRoleProfiles(QueueAgent agent, String UnitID) throws Exception {
 
 		this.list.clear();
 
 		String call = configuration + "InformRoleProfilesProcess.owl UnitID="
 				+ UnitID;
 		this.sendInform(agent, call);
-
+		
+		if (!this.value.equals("Ok"))
+		{
+			throw new Exception("Leave Role "+ this.value);
+		}
+		else
 		return this.list;
 
 	}
@@ -178,14 +209,20 @@ public class OMSProxy {
 	 * @param agent
 	 * @param UnitID
 	 * @return ArrayList UnitType UnitGoal ParentID
+	 * @throws Exception 
 	 */
-	public ArrayList<String> InformUnit(QueueAgent agent, String UnitID) {
+	public ArrayList<String> InformUnit(QueueAgent agent, String UnitID) throws Exception {
 
 		this.list.clear();
 
 		String call = configuration + "InformUnitProcess.owl UnitID=" + UnitID;
 		this.sendInform(agent, call);
-
+		
+		if (!this.value.equals("Ok"))
+		{
+			throw new Exception("Leave Role "+ this.value);
+		}
+		else
 		return this.list;
 
 	}
@@ -196,15 +233,20 @@ public class OMSProxy {
 	 * @param agent
 	 * @param UnitID
 	 * @return ArrayList RoleList
+	 * @throws Exception 
 	 */
-	public ArrayList<String> InformUnitRoles(QueueAgent agent, String UnitID) {
+	public ArrayList<String> InformUnitRoles(QueueAgent agent, String UnitID) throws Exception {
 
 		this.list.clear();
 
 		String call = configuration + "InformUnitRolesProcess.owl UnitID="
 				+ UnitID;
 		this.sendInform(agent, call);
-
+		if (!this.value.equals("Ok"))
+		{
+			throw new Exception("Leave Role "+ this.value);
+		}
+		else
 		return this.list;
 
 	}
@@ -216,13 +258,18 @@ public class OMSProxy {
 	 * @param RoleID
 	 * @param UnitID
 	 * @return int Quantity
+	 * @throws Exception 
 	 */
-	public int QuantityMembers(QueueAgent agent, String RoleID, String UnitID) {
+	public int QuantityMembers(QueueAgent agent, String RoleID, String UnitID) throws Exception {
 
 		String call = configuration + "QuantityMembersProcess.owl RoleID="
 				+ RoleID + " UnitID=" + UnitID;
 		this.sendInform(agent, call);
-
+		if (!this.value.equals("Ok"))
+		{
+			throw new Exception("Leave Role "+ this.value);
+		}
+		else
 		return this.Quantity;
 
 	}
@@ -234,14 +281,19 @@ public class OMSProxy {
 	 * @param NormID
 	 * @param NormContent
 	 * @return String Status ErrorValue
+	 * @throws Exception 
 	 */
 	public String RegisterNorm(QueueAgent agent, String NormID,
-			String NormContent) {
+			String NormContent) throws Exception {
 
 		String call = configuration + "RegisterNormProcess.owl NormID="
 				+ NormID + " NormContent=" + NormContent;
 		this.sendInform(agent, call);
-
+		if (!this.value.equals("Ok"))
+		{
+			throw new Exception("Leave Role "+ this.value);
+		}
+		else
 		return this.value;
 
 	}
@@ -257,18 +309,23 @@ public class OMSProxy {
 	 * @param Visibility
 	 * @param Inheritance
 	 * @return String Status ErroValue
+	 * @throws Exception 
 	 */
 	public String RegisterRole(QueueAgent agent,
 			String RegisterRoleInputRoleID, String UnitID,
 			String Accessibility, String Position, String Visibility,
-			String Inheritance) {
+			String Inheritance) throws Exception {
 
 		String call = configuration + "RegisterRoleProcess.owl RoleID="
 				+ RegisterRoleInputRoleID + " UnitID=" + UnitID
 				+ " Accessibility=" + Accessibility + " Position=" + Position
 				+ " Visibility=" + Visibility + " Inheritance=" + Inheritance;
 		this.sendInform(agent, call);
-
+		if (!this.value.equals("Ok"))
+		{
+			throw new Exception("Leave Role "+ this.value);
+		}
+		else
 		return this.value;
 
 	}
@@ -282,15 +339,20 @@ public class OMSProxy {
 	 * @param Goal
 	 * @param ParentUnitID
 	 * @return String Status ErrorValue
+	 * @throws Exception 
 	 */
 	public String RegisterUnit(QueueAgent agent, String UnitID, String Type,
-			String Goal, String ParentUnitID) {
+			String Goal, String ParentUnitID) throws Exception {
 
 		String call = configuration + "RegisterUnitProcess.owl  UnitID="
 				+ UnitID + " Type=" + Type + " Goal=" + Goal + " ParentUnitID="
 				+ ParentUnitID;
 		this.sendInform(agent, call);
-
+		if (!this.value.equals("Ok"))
+		{
+			throw new Exception("Leave Role "+ this.value);
+		}
+		else
 		return this.value;
 
 	}
@@ -301,13 +363,18 @@ public class OMSProxy {
 	 * @param agent
 	 * @param NormID
 	 * @return String Status ErrorValue
+	 * @throws Exception 
 	 */
-	public String DeregisterNorm(QueueAgent agent, String NormID) {
+	public String DeregisterNorm(QueueAgent agent, String NormID) throws Exception {
 
 		String call = configuration + "DeregisterNormProcess.owl  NormID="
 				+ NormID;
 		this.sendInform(agent, call);
-
+		if (!this.value.equals("Ok"))
+		{
+			throw new Exception("Leave Role "+ this.value);
+		}
+		else
 		return this.value;
 
 	}
@@ -319,12 +386,18 @@ public class OMSProxy {
 	 * @param RoleID
 	 * @param UnitID
 	 * @return String Status ErrorValue
+	 * @throws Exception 
 	 */
-	public String DeregisterRole(QueueAgent agent, String RoleID, String UnitID) {
+	public String DeregisterRole(QueueAgent agent, String RoleID, String UnitID) throws Exception {
 
 		String call = configuration + "DeregisterRoleProcess.owl  RoleID="
 				+ RoleID + " UnitID=" + UnitID;
 		this.sendInform(agent, call);
+		if (!this.value.equals("Ok"))
+		{
+			throw new Exception("Leave Role "+ this.value);
+		}
+		else
 		return this.value;
 
 	}
@@ -335,13 +408,18 @@ public class OMSProxy {
 	 * @param agent
 	 * @param UnitID
 	 * @return String Status ErrorValue
+	 * @throws Exception 
 	 */
-	public String DeregisterUnit(QueueAgent agent, String UnitID) {
+	public String DeregisterUnit(QueueAgent agent, String UnitID) throws Exception {
 
 		String call = configuration + "DeregisterNormProcess.owl  UnitID="
 				+ UnitID;
 		this.sendInform(agent, call);
-
+		if (!this.value.equals("Ok"))
+		{
+			throw new Exception("Leave Role "+ this.value);
+		}
+		else
 		return this.value;
 
 	}
@@ -354,14 +432,19 @@ public class OMSProxy {
 	 * @param RoleID
 	 * @param UnitID
 	 * @return String Status ErrorValue
+	 * @throws Exception 
 	 */
 	public String Expulse(QueueAgent agent, String AgentID, String RoleID,
-			String UnitID) {
+			String UnitID) throws Exception {
 
 		String call = configuration + "ExpulseProcess.owl AgentID=" + AgentID
 				+ " RoleID=" + RoleID + " UnitID=" + UnitID;
 		this.sendInform(agent, call);
-
+		if (!this.value.equals("Ok"))
+		{
+			throw new Exception("Leave Role "+ this.value);
+		}
+		else
 		return this.value;
 
 	}
@@ -372,15 +455,20 @@ public class OMSProxy {
 	 * @param agente
 	 * @param descripcion
 	 * @return String Status ErrorValue
+	 * @throws Exception 
 	 */
-	public String AcquireRole(QueueAgent agent, String RoleID, String UnitID) {
+	public String AcquireRole(QueueAgent agent, String RoleID, String UnitID) throws Exception {
 		// montar string de conexion
 		// Enviamos el mensaje
 
 		String call = configuration + "AcquireRoleProcess.owl RoleID=" + RoleID
 				+ " UnitID=" + UnitID;
 		this.sendInform(agent, call);
-
+		if (!this.value.equals("Ok"))
+		{
+			throw new Exception("Leave Role "+ this.value);
+		}
+		else
 		return this.value;
 
 	}
@@ -547,7 +635,7 @@ public class OMSProxy {
 
 			}
 
-			// si ha salido bien despierto al agente
+			
 			if (status.equals("Ok")) {
 
 				if (patron.equals("QuantityMembersProcess")) {
