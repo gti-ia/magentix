@@ -30,36 +30,29 @@ public class Concessionaire extends QueueAgent {
     
 
 
-    // Se crea una plantilla que filtre los mensajes a recibir.
+    // It creates a template that filters the messages to receive.
     MessageTemplate template = new MessageTemplate(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET);
 
-    // Añadimos los comportamientos ante mensajes recibidos
+    // We add behaviors to messages received
     CrearOferta oferta = new CrearOferta(this, template);
     
     this.addTask(oferta);
     m.waiting();
-    /*
-    do
-    {
-    	oferta.action();
-    	
-    }while(true);*/
     
 }
 
-	// Hacemos una simulación para que pueda dar que existe o no coche (sobre un
+	// We make a simulation in order to give that car or not (about
 	// 80% probab).
 	private boolean existeCoche() {
 		return (Math.random() * 100 > 20);
 	}
 
-	// Calculamos un precio para el coche aleatoriamente (estará entre 8000 y
-	// 30000).
+	// We estimate a price for the car at random (it will be between 8000 and 30000).
 	private int obtenerPrecio() {
 		return (int) (Math.random() * 22000) + 8000;
 	}
 
-	// Simula fallos en el cálculo de precios.
+	// Simulate failures in the calculation of prices.
 	private boolean devolverPrecio() {
 		return (int) (Math.random() * 10) > 1;
 	}
@@ -76,20 +69,20 @@ public class Concessionaire extends QueueAgent {
 							getName(), cfp.getSender()
 									.getLocalName());
 
-			// Comprobamos si existen ofertas disponibles
+			// We check for available offers
 			if (Concessionaire.this.existeCoche()) {
-				// Proporcionamos la información necesaria
+				// We provide the information necessary
 				int precio = Concessionaire.this.obtenerPrecio();
 				System.out.printf("%s: Preparing Offer (%d euros).\n",
 						getName(), precio);
 
-				// Se crea el mensaje
+				// You create the message
 				ACLMessage oferta = cfp.createReply();
 				oferta.setPerformative(ACLMessage.PROPOSE);
 				oferta.setContent(String.valueOf(precio));
 				return oferta;
 			} else {
-				// Si no hay ofertas disponibles rechazamos el propose
+				// Please no offers reject the propose
 				System.out.printf(
 						"%s: We have no offers available.\n",
 						getName());
@@ -99,8 +92,7 @@ public class Concessionaire extends QueueAgent {
 
 		protected ACLMessage prepareResultNotification(ACLMessage cfp,
 				ACLMessage propose, ACLMessage accept) throws FailureException {
-			// Hemos recibido una aceptación de nuestra oferta, enviamos el
-			// albarán
+			// We have received an acceptance of our offer, we send the delivery note
 			System.out.printf("%s: There is a possible offer.\n",
 					getName());
 
@@ -123,7 +115,7 @@ public class Concessionaire extends QueueAgent {
 
 		protected void handleRejectProposal(ACLMessage cfp, ACLMessage propose,
 				ACLMessage reject) {
-			// Nuestra oferta por el coche ha sido rechazada
+			// Our offer for the car has been rejected
 			System.out.printf(
 					"%s: Offer rejected by his excessive price.\n",
 					getName());
