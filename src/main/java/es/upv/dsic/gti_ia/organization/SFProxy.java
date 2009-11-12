@@ -95,7 +95,7 @@ public class SFProxy {
 	}
 
 	
-	public ArrayList<String> genericService(QueueAgent agent,AgentID agentProvider, String URLProfile, ArrayList<String> ArrayArguments)
+	public ArrayList<String> genericService(QueueAgent agent,AgentID agentProvider, String URLProfile, String URLProcess, ArrayList<String> ArrayArguments)
 	{
 	   ArrayList<String> list = new ArrayList<String>();
 	   this.agent = agent;
@@ -127,7 +127,7 @@ public class SFProxy {
 		
 		
 		//build the message to service provider
-		String call = "http://localhost:8080/sfservices/THservices/owl/owls/SearchCheapHotelProcess.owl" + arguments;
+		String call = URLProcess + arguments;
 		
 		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
 		requestMsg.setSender(agent.getAid());
