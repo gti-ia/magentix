@@ -44,7 +44,7 @@ public class BroadCastAgent extends QueueAgent {
 		SFServiceDescription servicio2 = new SFServiceDescription("http://localhost:8080/sfservices/THservices/owl/owls/","http://localhost:8080/sfservices/THservices/owl/owls/");
 		
 		String result;
-		ArrayList<String> resultados;
+
         ArrayList<AgentID> agentes;
         
         
@@ -52,17 +52,19 @@ public class BroadCastAgent extends QueueAgent {
 		
 		result = serviciosOMS.AcquireRole(this, "member","virtual");
 		
-		System.out.println("Resul: "+result);
+		System.out.println("Acquire Role result: "+result);
 		
 	    //****************** RegisterUnit *************************
-        serviciosOMS.RegisterUnit(this, "news", "congregation", "receivenews", "virtual");
+        result = serviciosOMS.RegisterUnit(this, "news", "congregation", "receivenews", "virtual");
         //*********************************************************
                 
+        System.out.println("Register Unit result: "+result);
         
 		//****************** RegisterRole ***************
-		serviciosOMS.RegisterRole(this, "broadcaster","news" , "external", "member", "public", "member");
+		result = serviciosOMS.RegisterRole(this, "broadcaster","news" , "external", "member", "public", "member");
 		//*********************************************
    
+		System.out.println("Register Role result: "+result);
 		
 		System.out.println("BroadCastAgent conencted with rol customer: "+ serviciosOMS.AcquireRole(this, "broadcaster", "news"));
 		
