@@ -188,7 +188,7 @@ public class SFProxy {
 
 		this.sendInfo(agent, call);
 
-		if (salida)
+		if (!salida)
 			throw new Exception(this.salidaString);
 	}
 
@@ -239,7 +239,7 @@ public class SFProxy {
 				+ ".owl#" + descripcion.getServiceGoal();
 
 		this.sendInfo(agent, call);
-		if (salida)
+		if (!salida)
 			throw new Exception(this.salidaString);
 	}
 
@@ -267,7 +267,7 @@ public class SFProxy {
 
 		this.sendInfo(agent, call);
 
-		if (salida)
+		if (!salida)
 			throw new Exception(this.salidaString);
 
 	}
@@ -295,7 +295,7 @@ public class SFProxy {
 
 		this.sendInfo(agent, call);
 		
-		if (salida)
+		if (!salida)
 			throw new Exception(this.salidaString);
 
 	}
@@ -377,7 +377,7 @@ public class SFProxy {
 
 		this.sendInfo(agent, call);
 		
-		if (salida)
+		if (!salida)
 			throw new Exception(this.salidaString);
 
 	}
@@ -406,7 +406,7 @@ public class SFProxy {
 
 		this.sendInfo(agent, call);
 
-		if (salida)
+		if (!salida)
 			throw new Exception(this.salidaString);
 	}
 
