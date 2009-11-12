@@ -94,7 +94,15 @@ public class SFProxy {
 		return this.descripcion;
 	}
 
-	
+	/**
+	 * When the service is not SF or OMS service
+	 * @param agent
+	 * @param agentProvider
+	 * @param URLProfile
+	 * @param URLProcess
+	 * @param ArrayArguments
+	 * @return
+	 */
 	public ArrayList<String> genericService(QueueAgent agent,AgentID agentProvider, String URLProfile, String URLProcess, ArrayList<String> ArrayArguments)
 	{
 	   ArrayList<String> list = new ArrayList<String>();
