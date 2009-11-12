@@ -8,9 +8,19 @@ import es.upv.dsic.gti_ia.organization.CleanBD;
 
 
 import es.upv.dsic.gti_ia.core.AgentID;
-import es.upv.dsic.gti_ia.core.AgentsConecction;
+import es.upv.dsic.gti_ia.core.AgentsConnection;
 import es.upv.dsic.gti_ia.organization.OMS;
 import es.upv.dsic.gti_ia.organization.SF;
+
+/**
+*Run class is an example of an agents that connection to thomas organization.
+*
+* 
+* 
+* @author Joan Bellver - jbellver@dsic.upv.es
+* @author Sergio Pajares - spajares@dsic.upv.es
+*
+*/
 
 
 
@@ -25,20 +35,25 @@ public class Run {
 	     DOMConfigurator.configure("configuration/loggin.xml");
 	     
 	     
+	     
 	     CleanBD limpiar = new CleanBD();
 	     limpiar.clean_database();
 	 	
 	
 	     
-	     //AgentsConecction.connect("gtiiaprojects2.dsic.upv.es");
-	     AgentsConecction.connect();       
+	 	/**
+			 * Connecting to Qpid Broker, default localhost.
+			 */	
+	     AgentsConnection.connect();       
         
         
       
         try
         {
         
-        //We launch the agents OMS and SF
+        /**
+    	* Instantiating a OMS and FS agent's
+    	*/
         OMS agenteOMS = OMS.getOMS();
         agenteOMS.start();
       
@@ -47,12 +62,22 @@ public class Run {
         agenteSF.start();
 	
         
-        //We launch our agent
-        BroadCastAgent agent = new BroadCastAgent(new AgentID("BroadCastAgent"));
-        agent.start();
-
-        ClientAgent agentClient = new ClientAgent(new AgentID("ClientAgent"));
-        agentClient.start();
+        /**
+		 * Instantiating a BroadCast agent
+		 */
+        BroadCastAgent broadCastagent = new BroadCastAgent(new AgentID("BroadCastAgent"));
+        
+        /**
+		 * Instantiating a ClientAgent agent
+		 */
+        ClientAgent clientAgent = new ClientAgent(new AgentID("ClientAgent"));
+        
+        /**
+		 * Execute the agents
+		 */
+        
+        broadCastagent.start();
+        clientAgent.start();
     
     	}catch(Exception e){}     
 
