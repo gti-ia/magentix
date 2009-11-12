@@ -24,6 +24,7 @@ public class ClientAgent extends QueueAgent {
 		ArrayList<String> results = new ArrayList<String>();
 		ArrayList<AgentID> agents = new ArrayList<AgentID>();
 
+		try{
 		
 		result = serviciosOMS.AcquireRole(this, "member", "virtual");
 
@@ -66,7 +67,10 @@ public class ClientAgent extends QueueAgent {
 		
 		
 		
-		
+		}catch(Exception e){
+			
+			System.out.println("Error:"+ e.getMessage());
+		}
 		
 		
 

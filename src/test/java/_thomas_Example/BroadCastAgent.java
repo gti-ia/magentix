@@ -49,7 +49,9 @@ public class BroadCastAgent extends QueueAgent {
         
         
         
-		
+        try
+		{
+        	
 		result = serviciosOMS.AcquireRole(this, "member","virtual");
 		
 		System.out.println("Acquire Role result: "+result);
@@ -70,18 +72,19 @@ public class BroadCastAgent extends QueueAgent {
 		
 		
 		
-        //************ RegisterProfile *****************
+        //Initializing services
+		
+		//Service one
         servicio1.setServiceGoal("BroadcastWS");
+        //Service two
 		servicio2.setServiceGoal("SearchCheapHotel");
 		
-		try
-		{
+		
 			sfservice.registerProfile(this,servicio1);
 			System.out.println("The operation getProfile return: "+  servicio1.getID());
 		
-		
-        
-		sfservice.registerProcess(this, servicio1);
+       
+		    sfservice.registerProcess(this, servicio1);
 			System.out.println("The operation getProcess return: "+  servicio1.getImplementationID());
 		
 		
@@ -139,7 +142,10 @@ public class BroadCastAgent extends QueueAgent {
 			this.addTask(responder);
 			es.upv.dsic.gti_ia.architecture.Monitor mon = new es.upv.dsic.gti_ia.architecture.Monitor();
 		    mon.waiting();
-		}catch(Exception e){}
+		}catch(Exception e){
+			System.out.println("Error: "+ e.getMessage());
+			
+		}
 	       
 	        
 	        
