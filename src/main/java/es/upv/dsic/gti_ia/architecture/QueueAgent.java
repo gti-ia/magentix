@@ -257,10 +257,6 @@ public class QueueAgent extends BaseAgent {
 
 	protected void terminate() {
 
-
-		this.finalize();
-
-		
 		if (this.getnRole() == 0)
 			logger.info("Finish ,active roles do not exist");
 		else {
