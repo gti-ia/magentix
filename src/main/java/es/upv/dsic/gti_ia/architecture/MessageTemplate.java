@@ -108,13 +108,10 @@ public class MessageTemplate {
 	private ArrayList<AgentID> receiver_list = new ArrayList<AgentID>();
 	private ArrayList<String> listaConversaciones = new ArrayList<String>();
 
-	// constructores
-	/*
-	 * public ACLMessage(){ performative = UNKNOWN; }
-	 */
+
 
 	/**
-	 * Create a FIPARequestInitiator.
+	 * Create a new MessageTemplate. This messageTemplate helps us to compare messages that we receive.
 	 * 
 	 * @param iprotocol
 	 */
