@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="SO2MAS">
+   <bannerLeft>
+	<name>Grupo GTI-IA</name>
+      <src>
+ 	images/logo6.gif
+      </src>
+      <href>
+         http://users.dsic.upv.es/grupos/ia/ia.html
+      </href>
+   </bannerLeft>
+
+   <bannerRight>
+
+      <name>Grupo GTI-IA</name>
+      <src>images/logo5.jpg</src>
+      <href>http://users.dsic.upv.es/grupos/ia/ia.html</href>
+   </bannerRight>
+
+   <body>
+      <links>
+	 <item name="Inicio"
+            href="index.html" />
+         <item name="SO2MAS"
+            href="project-summary.html" />
+      </links>
+
+
+      <menu name="SO2MAS">
+         <item name="Descripción" href="project-summary.html" />
+         <item name="Descarga" href="Descarga.html" />
+         <item name="Codigo" href="Codigo.html" />
+      </menu>
+
+      <menu name="Informacion">
+         <item name="Licencia" href="license.html" />
+         <item name="Desarrolladores" href="team-list.html" />
+      </menu>
+
+      <menu name="Informes">
+<!--
+         <item name="CheckStyle" href="checkstyle.html" />
+         <item name="Cobertura" href="cobertura/index.html" />
+   
+         <item name="Fuentes" href="xref/index.html" />
+-->
+      <item name="Javadoc" href="apidocs/index.html" />
+      </menu>
+   </body>
+</project>
