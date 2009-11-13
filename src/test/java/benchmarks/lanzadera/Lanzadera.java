@@ -2,7 +2,7 @@ package benchmarks.lanzadera;
 
 import org.apache.log4j.xml.DOMConfigurator;
 import es.upv.dsic.gti_ia.core.AgentID;
-import es.upv.dsic.gti_ia.core.AgentsConecction;
+import es.upv.dsic.gti_ia.core.AgentsConnection;
 import benchmarks.bench1.ControladorBenchmark1;
 import benchmarks.bench1.EmisorBenchmark1;
 import benchmarks.bench1.ReceptorBenchmark1;
@@ -44,7 +44,7 @@ public class Lanzadera {
 				false);
 */	
 		DOMConfigurator.configure("loggin.xml");
-		AgentsConecction.connect("gtiiaprojects2.dsic.upv.es");
+		AgentsConnection.connect("gtiiaprojects2.dsic.upv.es");
 		
 		
 
