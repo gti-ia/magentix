@@ -27,39 +27,74 @@ public class Configuration {
 		this.load();
 	}
 	
+	/**
+	 * 
+	 * @return serverName 
+	 */
 	public String getServerName()
 	{
 		return this.serverName;
 	}
+	/**
+	 * 
+	 * @return databaseName
+	 */
 	public String getdatabaseName()
 	{
 		return this.databaseName;
 	}
+	/**
+	 * 
+	 * @return userName
+	 */
 	public String getuserName()
 	{
 		return this.userName;
 	}
+	/**
+	 * 
+	 * @return password
+	 */
 	public String getpassword()
 	{
 		return this.password;
 	}
+	/**
+	 * 
+	 * @return OMSServiceDescriptionLocation
+	 */
 	public String getOMSServiceDesciptionLocation()
 	{
 		return this.OMSServiceDesciptionLocation;
 	}
+	/**
+	 * 
+	 * @return SFServiceDesciptionLocation
+	 */
 	public String getSFServiceDesciptionLocation()
 	{
 		return this.SFServiceDesciptionLocation;
 	}
+	/**
+	 * 
+	 * @return THServiceDesciptionLocation
+	 */
 	public String getTHServiceDesciptionLocation()
 	{
 		return this.THServiceDesciptionLocation;
 	}
+	/**
+	 * 
+	 * @return connection
+	 */
 	public String getConnection()
 	{
 		return this.connection;
 	}
-	
+	/**
+	 * This method returns the  instance configuration using singleton
+	 * @return configuration
+	 */
 	public static Configuration getConfiguration(){
 		
 		if (configuration == null)
@@ -69,8 +104,8 @@ public class Configuration {
 	}
 	
 	
-	
-	public void load()
+
+	private void load()
 	{
 		//Cargamos los valores desde un archivo .xml 
 		Properties properties = new Properties();
