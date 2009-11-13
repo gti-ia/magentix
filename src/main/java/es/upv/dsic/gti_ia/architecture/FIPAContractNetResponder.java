@@ -51,7 +51,7 @@ public class FIPAContractNetResponder {
 		return this.state;
 	}
 
-	// #APIDOC_EXCLUDE_BEGIN
+
 	public void action() {
 
 		switch (state) {
@@ -197,7 +197,7 @@ public class FIPAContractNetResponder {
 
 	}
 
-	// #APIDOC_EXCLUDE_END
+
 
 	private ACLMessage arrangeMessage(ACLMessage request, ACLMessage reply) {
 

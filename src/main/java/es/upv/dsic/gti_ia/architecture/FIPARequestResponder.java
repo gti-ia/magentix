@@ -64,7 +64,7 @@ public class FIPARequestResponder {
 		 
 	 }
 	
-	// #APIDOC_EXCLUDE_BEGIN
+
 	public void action() {
 		switch (state) {
 		case WAITING_MSG_STATE: {
@@ -225,7 +225,7 @@ public class FIPARequestResponder {
 
 	}
 
-	// #APIDOC_EXCLUDE_END
+
 
 	private ACLMessage arrangeMessage(ACLMessage request, ACLMessage reply) {
 		reply.setConversationId(request.getConversationId());

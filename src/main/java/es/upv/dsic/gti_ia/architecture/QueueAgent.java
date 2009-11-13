@@ -361,7 +361,7 @@ public class QueueAgent extends BaseAgent {
 
 	}
 
-	// #APIDOC_EXCLUDE_BEGIN
+
 	public class ThreadInitiator extends Thread {
 
 		Object iniciador;
@@ -428,6 +428,6 @@ public class QueueAgent extends BaseAgent {
 			}
 		}
 	}
-	// #APIDOC_EXCLUDE_END
+
 
 }

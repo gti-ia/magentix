@@ -69,7 +69,7 @@ public class FIPAQueryInitiator {
 		return this.state;
 	}
 
-	// #APIDOC_EXCLUDE_BEGIN
+
 	public void action() {
 		switch (state) {
 		case PREPARE_MSG_STATE: {
@@ -232,7 +232,7 @@ public class FIPAQueryInitiator {
 
 	}
 
-	// #APIDOC_EXCLUDE_END
+
 	/**
 	 * This method must return the ACLMessage to be sent. This default
 	 * implementation just return the ACLMessage object passed in the
