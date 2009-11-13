@@ -15,8 +15,13 @@ public class ClientAgent extends QueueAgent {
 
 	}
 
+	
+	//We create the class that will make us the agent proxy oms, facilite facilitates access to the methods of the OMS
 	OMSProxy serviciosOMS = new OMSProxy();
+	
+	//We create the class that will make us the agent proxy sf, facilite facilitates access to the methods of the SF
 	SFProxy sfservice = new SFProxy();
+	
 	public String result;
 
 	public void execute() {
@@ -26,6 +31,7 @@ public class ClientAgent extends QueueAgent {
 
 		try{
 		
+		//acquired the member role at the organization
 		result = serviciosOMS.AcquireRole(this, "member", "virtual");
 
 		result = serviciosOMS.AcquireRole(this,"customer", "travelagency");
@@ -68,7 +74,7 @@ public class ClientAgent extends QueueAgent {
 		
 		}catch(Exception e){
 			
-			System.out.println("Error:"+ e.getMessage());
+			System.out.println(e.getMessage());
 		}
 		
 		

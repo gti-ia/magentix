@@ -138,7 +138,7 @@ public class BroadCastAgent extends QueueAgent {
 		    mon.waiting();
 		    
 		}catch(Exception e){
-			System.out.println("Error: "+ e.getMessage());
+			System.out.println(e.getMessage());
 			
 		}
 	       
