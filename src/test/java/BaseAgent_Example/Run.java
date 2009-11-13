@@ -3,7 +3,7 @@ package BaseAgent_Example;
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 import es.upv.dsic.gti_ia.core.AgentID;
-import es.upv.dsic.gti_ia.core.AgentsConecction;
+import es.upv.dsic.gti_ia.core.AgentsConnection;
 
 /**
  * Run class is the typical example of the issuer/consumer. The sender BaseAgent
@@ -29,7 +29,7 @@ public class Run {
 		/**
 		 * Connecting to Qpid Broker
 		 */
-		AgentsConecction.connect("gtiiaprojects2");
+		AgentsConnection.connect("gtiiaprojects2");
 
 		try {
 			/**
