@@ -4,7 +4,7 @@ package _Query_Example;
 
 
 import es.upv.dsic.gti_ia.core.AgentID;
-import es.upv.dsic.gti_ia.core.AgentsConecction;
+import es.upv.dsic.gti_ia.core.AgentsConnection;
 
 
 
@@ -21,7 +21,7 @@ public class Principal {
 		
 		
 		try{
-	        AgentsConecction.connect("gtiiaprojects2.dsic.upv.es");       // TODO add your handling code here:
+	        AgentsConnection.connect("gtiiaprojects2.dsic.upv.es");       // TODO add your handling code here:
         
    
         	
