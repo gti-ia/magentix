@@ -17,13 +17,13 @@ import java.sql.Statement;
  * @author Chuidiang
  * 
  */
-public class BaseDeDatos {
+public class DataBaseAcces {
 	/** La conexion con la base de datos */
-	public Connection conexion = null;
+	public Connection conection = null;
 
 	/** Se establece la conexion con la base de datos */
-	public void estableceConexion() {
-		if (conexion != null)
+	public void connect() {
+		if (conection != null)
 			return;
 
 		try {
@@ -42,7 +42,7 @@ public class BaseDeDatos {
 																			// url
 			String username = c.getuserName();
 			String password = c.getpassword();
-			conexion = DriverManager.getConnection(url, username, password);
+			conection = DriverManager.getConnection(url, username, password);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -54,11 +54,11 @@ public class BaseDeDatos {
 	 * 
 	 * @return El resultado de la consulta
 	 */
-	public ResultSet dameListaUnidades() {
+	public ResultSet getUnitList() {
 		ResultSet rs = null;
 		try {
 			// Se crea un Statement, para realizar la consulta
-			Statement s = conexion.createStatement();
+			Statement s = conection.createStatement();
 
 			// Se realiza la consulta. Los resultados se guardan en el
 			// ResultSet rs
@@ -71,11 +71,11 @@ public class BaseDeDatos {
 		return rs;
 	}
 
-	public ResultSet dameListaRoles() {
+	public ResultSet getRoleList() {
 		ResultSet rs = null;
 		try {
 			// Se crea un Statement, para realizar la consulta
-			Statement s = conexion.createStatement();
+			Statement s = conection.createStatement();
 
 			// Se realiza la consulta. Los resultados se guardan en el
 			// ResultSet rs
@@ -89,19 +89,19 @@ public class BaseDeDatos {
 	}
 
 	/** Cierra la conexi�n con la base de datos */
-	public void cierraConexion() {
+	public void closeConnection() {
 		try {
-			conexion.close();
+			conection.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	public ResultSet dameListaNormas() {
+	public ResultSet getListNorms() {
 		ResultSet rs = null;
 		try {
 			// Se crea un Statement, para realizar la consulta
-			Statement s = conexion.createStatement();
+			Statement s = conection.createStatement();
 
 			// Se realiza la consulta. Los resultados se guardan en el
 			// ResultSet rs
@@ -112,11 +112,11 @@ public class BaseDeDatos {
 		return rs;
 	}
 
-	public ResultSet dameListaEntityPlay() {
+	public ResultSet getListEntityPlay() {
 		ResultSet rs = null;
 		try {
 			// Se crea un Statement, para realizar la consulta
-			Statement s = conexion.createStatement();
+			Statement s = conection.createStatement();
 
 			// Se realiza la consulta. Los resultados se guardan en el
 			// ResultSet rs
@@ -135,11 +135,11 @@ public class BaseDeDatos {
 	 * 
 	 * @return El resultado de la consulta
 	 */
-	public ResultSet dameListaProfileId() {
+	public ResultSet getListProfileId() {
 		ResultSet rs = null;
 		try {
 			// Se crea un Statement, para realizar la consulta
-			Statement s = conexion.createStatement();
+			Statement s = conection.createStatement();
 
 			// Se realiza la consulta. Los resultados se guardan en el
 			// ResultSet rs
