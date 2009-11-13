@@ -16,7 +16,7 @@ public class AgentsConecction {
 	private static Configuration c = null;
 
 	/**
-	 * Connect with a apid broker
+	 * Connect with a Qpid broker
 	 * 
 	 * @param url
 	 * @param port
