@@ -6,7 +6,7 @@ import org.apache.log4j.xml.DOMConfigurator;
 
 import BaseAgent_Example.ConsumerAgent;
 import es.upv.dsic.gti_ia.core.AgentID;
-import es.upv.dsic.gti_ia.core.AgentsConecction;
+import es.upv.dsic.gti_ia.core.AgentsConnection;
 import es.upv.dsic.gti_ia.core.BridgeAgentInOut;
 import es.upv.dsic.gti_ia.core.BridgeAgentOutIn;
 
@@ -22,7 +22,7 @@ public class Run {
 
 	public static void main(String[] args) {
 		DOMConfigurator.configure("loggin.xml");
-		AgentsConecction.connect("gtiiaprojects2.dsic.upv.es");
+		AgentsConnection.connect("gtiiaprojects2.dsic.upv.es");
 		Logger logger = Logger.getLogger(Run.class);
 		
 		
