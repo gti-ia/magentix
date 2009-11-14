@@ -1,5 +1,7 @@
 package Request_Example;
 
+import org.apache.log4j.xml.DOMConfigurator;
+
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
 
@@ -21,7 +23,7 @@ public class Run {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
-
+		DOMConfigurator.configure("configuration/loggin.xml");
 		
 		try{
 		
