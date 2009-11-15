@@ -8,7 +8,6 @@
 package es.upv.dsic.gti_ia.architecture;
 
 import java.util.ArrayList;
-import org.apache.log4j.Logger;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.BaseAgent;
@@ -22,7 +21,7 @@ import es.upv.dsic.gti_ia.core.BaseAgent;
 
 public class QueueAgent extends BaseAgent {
 
-	static Logger logger = Logger.getLogger(QueueAgent.class);
+	
 
 	private ArrayList<ACLMessage> messageList = new ArrayList<ACLMessage>();
 
