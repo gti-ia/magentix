@@ -35,9 +35,11 @@ public class Run {
 	     DOMConfigurator.configure("configuration/loggin.xml");
 	     
 	     
-	     
-	     CleanBD limpiar = new CleanBD();
-	     limpiar.clean_database();
+	     /**
+	      * Clean database 
+	      */
+	     CleanBD clean = new CleanBD();
+	     clean.clean_database();
 	 	
 	
 	     
