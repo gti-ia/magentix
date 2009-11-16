@@ -22,7 +22,7 @@ public class AgentsConnection {
 	public static void connect() {
 		c =  Configuration.getConfiguration();
 		connection = new Connection();
-		connection.connect(c.getConnection(),5672,  "test", "guest", "guest", false);
+		connection.connect(c.getqpidHost(),c.getqpidPort(), c.getqpidVhost(),c.getqpidUser(),c.getqpidPassword(),c.getqpidSSL());
 	}
 
 	
