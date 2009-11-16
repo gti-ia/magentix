@@ -10,14 +10,19 @@ import java.io.InputStream;
 public class Configuration {
 	
 	
-	private String serverName;
+	private String databaseServer;
 	private String databaseName;
-	private String userName;
-	private String password;
+	private String databaseUser;
+	private String databasePassword;
 	private String OMSServiceDesciptionLocation;
 	private String SFServiceDesciptionLocation;
 	private String THServiceDesciptionLocation;
-	private String connection;
+	private String qpidHost;
+	private String qpidPort;
+	private String qpidVhost;
+	private String qpidUser;
+	private String qpidPassword;
+	private String qpidSsl;
 	private static Configuration configuration = null;
 	
 
@@ -25,15 +30,16 @@ public class Configuration {
 	private Configuration()
 	{
 		this.load();
+
 	}
 	
 	/**
 	 * 
 	 * @return serverName 
 	 */
-	public String getServerName()
+	public String getdatabaseServer()
 	{
-		return this.serverName;
+		return this.databaseServer;
 	}
 	/**
 	 * 
@@ -47,17 +53,17 @@ public class Configuration {
 	 * 
 	 * @return userName
 	 */
-	public String getuserName()
+	public String getdatabaseUser()
 	{
-		return this.userName;
+		return this.databaseUser;
 	}
 	/**
 	 * 
 	 * @return password
 	 */
-	public String getpassword()
+	public String getdatabasePassword()
 	{
-		return this.password;
+		return this.databasePassword;
 	}
 	/**
 	 * 
@@ -87,9 +93,9 @@ public class Configuration {
 	 * 
 	 * @return connection
 	 */
-	public String getConnection()
+	public String getqpidHost()
 	{
-		return this.connection;
+		return this.qpidHost;
 	}
 	/**
 	 * This method returns the  instance configuration using singleton
@@ -100,6 +106,36 @@ public class Configuration {
 		if (configuration == null)
 			configuration = new Configuration();
 		return configuration;
+		
+	}
+	
+	
+	public int getqpidPort()
+	{
+
+		return Integer.parseInt(this.qpidPort);
+		
+	}
+	public String getqpidVhost()
+	{
+		return this.qpidVhost;
+	}
+	
+	public String getqpidUser()
+	{
+		return this.qpidUser;
+	}
+	
+	public String getqpidPassword()
+	{
+		return this.qpidPassword;
+	}
+	public boolean getqpidSSL()
+	{
+		if (this.qpidSsl.equals("true"))
+			return true;
+		else
+			return false;
 		
 	}
 	
@@ -131,7 +167,7 @@ public class Configuration {
 			    Object obj = e.nextElement();
 			    if (obj.toString().equalsIgnoreCase("serverName"))
 			    {
-			    	serverName= properties.getProperty(obj.toString());	
+			    	this.databaseServer= properties.getProperty(obj.toString());	
 			    }
 			    else if (obj.toString().equalsIgnoreCase("databaseName"))
 			    {
@@ -139,11 +175,11 @@ public class Configuration {
 			    }
 			    else    if (obj.toString().equalsIgnoreCase("userName"))
 			    {
-			    	userName= properties.getProperty(obj.toString());
+			    	this.databaseUser= properties.getProperty(obj.toString());
 			    }
 			    else    if (obj.toString().equalsIgnoreCase("password"))
 			    {
-			    	password= properties.getProperty(obj.toString());
+			    	this.databasePassword= properties.getProperty(obj.toString());
 			    }
 			    else    if (obj.toString().equalsIgnoreCase("OMSServiceDesciptionLocation"))
 			    {
@@ -155,9 +191,31 @@ public class Configuration {
 			    }else    if (obj.toString().equalsIgnoreCase("THServiceDesciptionLocation"))
 			    {
 			    	THServiceDesciptionLocation= properties.getProperty(obj.toString()); 	
-			    }else    if (obj.toString().equalsIgnoreCase("connection"))
+			    }else    if (obj.toString().equalsIgnoreCase("host"))
 			    {
-			    	connection= properties.getProperty(obj.toString()); 	
+	
+			    	this.qpidHost= properties.getProperty(obj.toString()); 	
+			    }
+			    else    if (obj.toString().equalsIgnoreCase("port"))
+			    {
+			    	
+			    	this.qpidPort= properties.getProperty(obj.toString()); 	
+			    }
+			    else    if (obj.toString().equalsIgnoreCase("vhost"))
+			    {
+			    	this.qpidVhost= properties.getProperty(obj.toString()); 	
+			    }
+			    else    if (obj.toString().equalsIgnoreCase("user"))
+			    {
+			    	this.qpidUser = properties.getProperty(obj.toString()); 	
+			    }
+			    else    if (obj.toString().equalsIgnoreCase("pass"))
+			    {
+			    	this.qpidPassword= properties.getProperty(obj.toString()); 	
+			    }
+			    else    if (obj.toString().equalsIgnoreCase("ssl"))
+			    {
+			    	this.qpidSsl = properties.getProperty(obj.toString()); 	
 			    }
 			    
 			    

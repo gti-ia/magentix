@@ -35,13 +35,13 @@ public class DataBaseAcces {
 			// cambiar el usuario "usuario" y la clave "" por las
 			// adecuadas a la base de datos que estemos usando.
 			Configuration c = Configuration.getConfiguration();
-			String serverName = c.getServerName();
+			String serverName = c.getdatabaseServer();
 			String mydatabase = c.getdatabaseName();
 			String url = "jdbc:mysql://" + serverName + "/" + mydatabase; // a
 																			// JDBC
 																			// url
-			String username = c.getuserName();
-			String password = c.getpassword();
+			String username = c.getdatabaseUser();
+			String password = c.getdatabasePassword();
 			conection = DriverManager.getConnection(url, username, password);
 		} catch (Exception e) {
 			e.printStackTrace();
