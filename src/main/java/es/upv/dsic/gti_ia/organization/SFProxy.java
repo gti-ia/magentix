@@ -1,5 +1,14 @@
 package es.upv.dsic.gti_ia.organization;
 
+
+
+/**
+ *This class provides access to methods that implements the SF agent
+ * 
+ * @author Joan Bellver Faus GTI-IA.DSIC.UPV
+ */
+
+
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;

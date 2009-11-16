@@ -13,7 +13,7 @@ import org.apache.log4j.Logger;
 /**
  * This class gives us the support to accede to the services of the OMS
  * 
- * @author jbellver
+ * @author Joan Bellver Faus GTI-IA.DSIC.UPV
  * 
  */
 public class OMSProxy {
