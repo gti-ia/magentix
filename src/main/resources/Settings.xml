@@ -4,17 +4,30 @@
 <comment>Propiedades de configuración</comment>
 
 
+<!-- Properties thomas -->
 <entry key="OMSServiceDesciptionLocation">http://localhost:8080/omsservices/OMSservices/owl/owls/</entry>
 <entry key="SFServiceDesciptionLocation">http://localhost:8080/sfservices/SFservices/owl/owls/</entry>
 <entry key="THServiceDesciptionLocation">http://localhost:8080/sfservices/THservices/owl/owls/</entry>
 
 
+<!-- Properties mysql -->
 <entry key="serverName">localhost</entry>
 <entry key="databaseName">thomas</entry>
 <entry key="userName">thomas</entry>
 <entry key="password">thomas</entry>
 
 
-<entry key="connection">localhost</entry>
+
+<!-- Properties qpid broker -->
+<entry key="host">localhost</entry>
+<entry key="port">5672</entry>
+<entry key="vhost">test</entry>
+<entry key="user">guest</entry>
+<entry key="password">guest</entry>
+<entry key="ssl">false</entry>
+
+
+
+
 
 </properties>
