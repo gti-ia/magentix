@@ -28,12 +28,12 @@ public class AgentsConecction {
 	public static void connect() {
 		c =  Configuration.getConfiguration();
 		connection = new Connection();
-		connection.connect(c.getConnection(),5672,  "test", "guest", "guest", false);
+		connection.connect(c.getqpidHost(),c.getqpidPort(),  c.getqpidVhost(), c.getqpidUser(), c.getqpidPassword(), c.getqpidSSL());
 	}
 
 	
 	/**
-	 * Connect with a apid broker
+	 * Connect with a Qpid broker
 	 * 
 	 * @param url
 	 * @param port
@@ -56,7 +56,7 @@ public class AgentsConecction {
 	 */
 	public static void connect(String url) {
 		connection = new Connection();
-		connection.connect(url, 5672, "test", "guest", "guest", false);
+		connection.connect(url, c.getqpidPort(),  c.getqpidVhost(), c.getqpidUser(), c.getqpidPassword(), c.getqpidSSL());
 	}
 	
 
