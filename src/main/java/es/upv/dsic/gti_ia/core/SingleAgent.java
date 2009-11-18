@@ -6,6 +6,8 @@ import java.util.ArrayList;
  * @author Ricard Lopez Fogues
  * @author Sergio Pajares Ferrando
  * @author Joan Bellver Faus
+ * 
+ * This class implements an new agents template.
  */
 
 public abstract class SingleAgent extends BaseAgent {
@@ -28,8 +30,7 @@ public abstract class SingleAgent extends BaseAgent {
 	}
 
 	/**
-	 * Method to receive a magentix2 AclMessage
-	 * Blocker receiver, waiting a message
+	 * Receives a AclMessage taking into account a blocking reception
 	 * @return an ACLMessage
 	 * @throws Exception
 	 */
@@ -49,17 +50,7 @@ public abstract class SingleAgent extends BaseAgent {
 		}
 		messageList.remove(msg);
 		return msg;
-//		logger.debug("messageList empty on receiveACLMessage");
-//		throw new Exception("messageList empty on receiveACLMessage");
 
-		// MessageTransfer xfr = new MessageTransfer();
-		// try {
-		// xfr = internalQueue.take();
-		// } catch (InterruptedException e) {
-		// e.printStackTrace();
-		// }
-		//        
-		// return MessageTransfertoACLMessage(xfr);
 
 	}
 
