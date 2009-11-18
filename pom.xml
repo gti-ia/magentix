@@ -34,29 +34,7 @@
 		defines the server's semantics because interoperability demands
 		the same semantics for any server implementation. To enable
 		technology-neutral interoperability, AMQP defines an efficient
-		wire-level format with modern features. So, AMQP, es un estándar
-		de mensajería, y que hace uso de un protocolo binario
-		extremadamente eficiente, a diferencia de otras aproximaciones
-		anteriores que trabajaban con XML. Se basa en un modelo
-		caracterizado por "routing exchanges" y "queues", las cuales
-		permiten interacción con cualquier escenario que haga uso de las
-		apis de mensajería. La idea fundamental, es en primer lugar, que
-		cualquier conjunto de bytes colocados en un lado de la tubería,
-		se pueden leer de igual manera en el otro lado, actuando esta
-		tubería como parte de un middleware. En segundo lugar se
-		soluciona el problema de las "Buddy Lists". En lugar de tener un
-		directorio centralizado de contactos, se hacen uso de "queues" y
-		"exchanges". Además como ya hemos dicho, dicho middleware de
-		comunicación, actúa de intermediador en la comunicación entre
-		agentes implementados en diferentes lenguajes de programación.
-		Tres son las implementaciones destacadas para este estándar:
-		OpenAMQ, Apache Qpid y RabbitMQ, todas ellas open source. Nos
-		basaremos en Apache Qpid. En primer lugar detallaremos como ha
-		sido diseñado un nuevo modelo de agentes. En el segundo
-		apartado, contaremos aspectos relacionados con la comunicación
-		entre nuestros agentes. Por último demostraremos por medio de
-		diferentes benchmarks, el rendimiento obtenido para esta
-		plataforma.
+		wire-level format with modern features.
 	</description>
 	<licenses>
 		<license>
