@@ -17,51 +17,51 @@ public class ACLMessage implements Serializable, Cloneable {
 	private static final long serialVersionUID = 1L;
 
 	// miembros
-	/** constant identifying the FIPA performative * */
+	/** constant identifying the FIPA performative */
 	public static final int ACCEPT_PROPOSAL = 0;
-	/** constant identifying the FIPA performative * */
+	/** constant identifying the FIPA performative */
 	public static final int AGREE = 1;
-	/** constant identifying the FIPA performative * */
+	/** constant identifying the FIPA performative */
 	public static final int CANCEL = 2;
-	/** constant identifying the FIPA performative * */
+	/** constant identifying the FIPA performative */
 	public static final int CFP = 3;
-	/** constant identifying the FIPA performative * */
+	/** constant identifying the FIPA performative */
 	public static final int CONFIRM = 4;
-	/** constant identifying the FIPA performative * */
+	/** constant identifying the FIPA performative */
 	public static final int DISCONFIRM = 5;
-	/** constant identifying the FIPA performative * */
+	/** constant identifying the FIPA performative */
 	public static final int FAILURE = 6;
-	/** constant identifying the FIPA performative * */
+	/** constant identifying the FIPA performative */
 	public static final int INFORM = 7;
-	/** constant identifying the FIPA performative * */
+	/** constant identifying the FIPA performative */
 	public static final int INFORM_IF = 8;
-	/** constant identifying the FIPA performative * */
+	/** constant identifying the FIPA performative */
 	public static final int INFORM_REF = 9;
-	/** constant identifying the FIPA performative * */
+	/** constant identifying the FIPA performative */
 	public static final int NOT_UNDERSTOOD = 10;
-	/** constant identifying the FIPA performative * */
+	/** constant identifying the FIPA performative */
 	public static final int PROPOSE = 11;
-	/** constant identifying the FIPA performative * */
+	/** constant identifying the FIPA performative */
 	public static final int QUERY_IF = 12;
-	/** constant identifying the FIPA performative * */
+	/** constant identifying the FIPA performative */
 	public static final int QUERY_REF = 13;
-	/** constant identifying the FIPA performative * */
+	/** constant identifying the FIPA performative */
 	public static final int REFUSE = 14;
-	/** constant identifying the FIPA performative * */
+	/** constant identifying the FIPA performative */
 	public static final int REJECT_PROPOSAL = 15;
-	/** constant identifying the FIPA performative * */
+	/** constant identifying the FIPA performative */
 	public static final int REQUEST = 16;
-	/** constant identifying the FIPA performative * */
+	/** constant identifying the FIPA performative */
 	public static final int REQUEST_WHEN = 17;
-	/** constant identifying the FIPA performative * */
+	/** constant identifying the FIPA performative */
 	public static final int REQUEST_WHENEVER = 18;
-	/** constant identifying the FIPA performative * */
+	/** constant identifying the FIPA performative */
 	public static final int SUBSCRIBE = 19;
-	/** constant identifying the FIPA performative * */
+	/** constant identifying the FIPA performative */
 	public static final int PROXY = 20;
-	/** constant identifying the FIPA performative * */
+	/** constant identifying the FIPA performative */
 	public static final int PROPAGATE = 21;
-	/** constant identifying an unknown performative * */
+	/** constant identifying an unknown performative */
 	public static final int UNKNOWN = -1;
 
 	private static final String[] performatives = new String[22];
