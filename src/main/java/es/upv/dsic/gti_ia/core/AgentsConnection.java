@@ -5,18 +5,15 @@ import org.apache.qpid.transport.Connection;
 import es.upv.dsic.gti_ia.organization.Configuration;
 
 /**
- * This class work to open a Qpid broker connection, will be used in each
- * constuctor of a new agent.
- * 
+ * This class work to open a Qpid broker connection.
  * @author Sergio Pajares
- * 
  */
 public class AgentsConnection {
 	public static org.apache.qpid.transport.Connection connection;
 	private static Configuration c = null;
 
 	/**
-	 * Connect with a Qpid broker, take  the connection from the file settings.xml.
+	 * Connects with a Qpid broker taking the input connection parameters from the settings.xml file.
 	 * 
 	 */
 	public static void connect() {
@@ -27,30 +24,30 @@ public class AgentsConnection {
 
 	
 	/**
-	 * Connect with a Qpid broker
-	 * 
-	 * @param url
-	 * @param port
-	 * @param p1
-	 * @param p2
-	 * @param p3
-	 * @param b
+	 * Connects to Qpid broker taking into account all the parameters specified as input.
+	 * @param qpidHost
+	 * @param qpidPort
+	 * @param qpidVhost
+	 * @param qpdidUser
+	 * @param qpidPassword
+	 * @param qpidSSL
 	 */
-	public static void connect(String url, int port, String p1, String p2,
-			String p3, boolean b) {
+	public static void connect(String qpidHost, int qpidPort, String qpidVhost, String qpdidUser,
+			String qpidPassword, boolean qpidSSL) {
 		connection = new Connection();
-		connection.connect(url, port, p1, p2, p3, b);
+		connection.connect(qpidHost, qpidPort, qpidVhost, qpdidUser, qpidPassword, qpidSSL);
 	}
 	
+
+	
 	/**
-	 * Connect with a broker located in url, with the default settings of a Qpid
+	 * Connects to Qpid broker taking into account the qpidhost parameter and considering the rest as defaults parameters.
 	 * broker installation
-	 * 
-	 * @param url
+	 * @param qpidHost
 	 */
-	public static void connect(String url) {
+	public static void connect(String qpidHost) {
 		connection = new Connection();
-		connection.connect(url, c.getqpidPort(),  c.getqpidVhost(), c.getqpidUser(), c.getqpidPassword(), c.getqpidSSL());
+		connection.connect(qpidHost, c.getqpidPort(),  c.getqpidVhost(), c.getqpidUser(), c.getqpidPassword(), c.getqpidSSL());
 	}
 	
 
