@@ -7,7 +7,7 @@ import java.util.ArrayList;
  * @author Sergio Pajares Ferrando
  * @author Joan Bellver Faus
  * 
- * This class defines an new agents template, extending of BaseAgent
+ * This class defines an new agents template, extending of BaseAgent.
  */
 
 public abstract class SingleAgent extends BaseAgent {
