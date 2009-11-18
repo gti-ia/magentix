@@ -4,7 +4,7 @@
  *  
  * The class Adviser allows to control the state of an agent (executing, suspended).
  * 
- * @author  Joan Bellver Faus, GTI-IA, DSIC, UPV
+ * @author  Joan Bellver Faus
  * @version 2009.9.07
  */
 
