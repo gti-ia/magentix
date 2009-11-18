@@ -21,7 +21,7 @@ import es.upv.dsic.gti_ia.core.BridgeAgentOutIn;
 public class Run {
 
 	public static void main(String[] args) {
-		DOMConfigurator.configure("loggin.xml");
+		DOMConfigurator.configure("configuration/loggin.xml");
 		AgentsConnection.connect("gtiiaprojects2.dsic.upv.es");
 		Logger logger = Logger.getLogger(Run.class);
 		
