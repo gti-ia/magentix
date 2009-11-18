@@ -149,10 +149,10 @@ public class BaseAgent implements Runnable {
 	}
 
 	/**
-	 * Sends an ACLMessage to the message's receivers
 	 * 
+	 * Sends a ACLMessage to all specified recipients agents. If a message destination having another platform, this will be forwarded to BridgeAgentInOut agent.
 	 * @param msg
-	 *            Message to be sent
+	 *         
 	 */
 	public void send(ACLMessage msg) {
 		MessageTransfer xfr = new MessageTransfer();
@@ -212,7 +212,7 @@ public class BaseAgent implements Runnable {
 	}
 
 	/**
-	 * Gets agent name
+	 * Returns the agent name
 	 * 
 	 * @return Agent name
 	 */
@@ -220,19 +220,24 @@ public class BaseAgent implements Runnable {
 		return aid.name;
 	}
 
-	/**
-	 * Function that will be executed by the agent when it starts The user has
-	 * to write his/her code here
+	/**Define activities such as initialization resources, and every task necessary before execution of execute procedure.
+	 * It will be executed when the agent will be launched and may be defined by the user.
+	 * 
 	 */
 
 	protected void init() {
 
 	}
-
+	/**
+	 * Method that defines all the logic and behavior of the agent.
+	 * This method necessarily must be defined.
+	 */
 	protected void execute() {
 
 	}
-
+	/**
+	 * 
+	 */
 	public void finalize() {
 
 	}
@@ -279,6 +284,7 @@ public class BaseAgent implements Runnable {
 	 **************************************************************************/
 
 	/**
+	 *Returns a structure as the Agent Identificator formed by the name, protocol, host and port Agent.
 	 * @return agent ID
 	 * @uml.property name="aid"
 	 */
@@ -416,10 +422,6 @@ public class BaseAgent implements Runnable {
 		msg.setContent(body.substring(indice2 + 1, indice2 + 1 + tam));
 
 		return msg;
-	}
-
-	public Logger getLogger() {
-		return logger;
 	}
 
 }
