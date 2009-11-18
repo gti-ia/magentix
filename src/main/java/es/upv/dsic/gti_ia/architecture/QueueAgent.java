@@ -155,7 +155,7 @@ public class QueueAgent extends BaseAgent {
 	}
 
 	/**
-	 * 
+	 * Return name of agent.
 	 * @return String name
 	 */
 	public String getAllName() {
