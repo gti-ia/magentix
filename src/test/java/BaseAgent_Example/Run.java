@@ -23,7 +23,7 @@ public class Run {
 		/**
 		 * Setting the Logger
 		 */
-		DOMConfigurator.configure("loggin.xml");
+		DOMConfigurator.configure("configuration/loggin.xml");
 		Logger logger = Logger.getLogger(Run.class);
 
 		/**
