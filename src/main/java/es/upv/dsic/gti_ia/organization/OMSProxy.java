@@ -38,7 +38,9 @@ public class OMSProxy {
 	}
 
 	/**
+	 * This class gives us the support to accede to the services of the OMS
 	 * 
+	 *
 	 */
 	public OMSProxy() {
 

@@ -39,6 +39,7 @@ public class SFProxy {
 	Configuration c = Configuration.getConfiguration();
 
 	/**
+	 * This class gives us the support to accede to the services of the SF
 	 * 
 	 * @param SFServiceDesciptionLocation
 	 *            URLProcess The URL where the owl's document is located.
@@ -50,7 +51,7 @@ public class SFProxy {
 	}
 
 	/**
-	 * 
+	 * This class gives us the support to accede to the services of the SF
 	 */
 	public SFProxy() {
 
