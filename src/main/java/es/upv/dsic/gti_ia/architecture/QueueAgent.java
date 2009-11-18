@@ -13,7 +13,9 @@ import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.BaseAgent;
 
 /**
- * Class QueueAgent extends BaseAgent.This type of agent's implements the protocols and interaction with agents in the thomas organization
+ * 
+ * This class defines an new agents template, extending of BaseAgent.
+ * This type of agent's implements the protocols and interaction with agents in the thomas organization
  * 
  * @author Joan Bellver Faus 
  * 
