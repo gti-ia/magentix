@@ -47,7 +47,7 @@ public class AgentsConnection {
 	 */
 	public static void connect(String qpidHost) {
 		connection = new Connection();
-		connection.connect(qpidHost, c.getqpidPort(),  c.getqpidVhost(), c.getqpidUser(), c.getqpidPassword(), c.getqpidSSL());
+		connection.connect(qpidHost, 5672,  "test", "guest", "guest", false);
 	}
 	
 
