@@ -22,7 +22,7 @@ import org.apache.qpid.transport.SessionListener;
 public class BaseAgent implements Runnable {
 
 	/**
-	 * To enable log4j in Qpid agents
+	 * The logger variable considers to print any event that occurs by the agent
 	 */
 	protected Logger logger = Logger.getLogger(BaseAgent.class);
 
