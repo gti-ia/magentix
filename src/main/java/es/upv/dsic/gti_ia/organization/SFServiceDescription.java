@@ -3,7 +3,7 @@ package es.upv.dsic.gti_ia.organization;
 /**
  * This class is used to store the complete description of a service to publish in the organization
  * 
- * @author Joan Bellver Faus GTI-IA.DSIC.UPV
+ * @author Joan Bellver Faus 
  */
 
 public class SFServiceDescription {
