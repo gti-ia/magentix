@@ -24,9 +24,7 @@ http://jena.sourceforge.net/license.html
 GNU LGPL v3: JADE
 http://www.opensource.org/licenses/lgpl-3.0.html
 
-MySQL Community Edition is a freely downloadable version of the world's most popular open source database that is supported by an active community of open source developers and enthusiasts. No cost, freely available under the GPL License
-
- 
 Magentix2 “fipa agent management exceptions” source code is a derivative work directly based on the corresponding JADE source code for this task. 
 Specifically classes FIPAException FailureException, NotUnderstoodException and RefuseException in Magentix2 are basically equal to the corresponding classes in JADE framework. 
+Also class "ISO8601.java" is a copy of the corresponding JADE source code.
 JADE is covered by GNU LGPL v3 license that not restrict modification and use of this library if we give prominent notice with each copy of the combined work that the Library is used in it and that the library and its use are covered by this License.
