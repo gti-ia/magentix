@@ -50,7 +50,7 @@ public class AgentsConnection {
 	 */
 	public static void connect(String url) {
 		connection = new Connection();
-		connection.connect(url, 5672, "test", "guest", "guest", false);
+		connection.connect(url, c.getqpidPort(),  c.getqpidVhost(), c.getqpidUser(), c.getqpidPassword(), c.getqpidSSL());
 	}
 	
 
