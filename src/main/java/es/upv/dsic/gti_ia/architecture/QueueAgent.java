@@ -101,14 +101,14 @@ public class QueueAgent extends BaseAgent {
 	 * Method to receive a magentix2 AclMessage
 	 * 
 	 * @param template
-	 * @param tipo
+	 * @param type
 	 *            1 = rol responder other = rol initiator
 	 * @return msg ACLMessage
 	 */
-	synchronized ACLMessage receiveACLMessage(MessageTemplate template, int tipo) {
+	synchronized ACLMessage receiveACLMessage(MessageTemplate template, int type) {
 		ACLMessage msgselect = null;
 
-		if (tipo == 1) {
+		if (type == 1) {
 			for (ACLMessage msg : messageList) {
 				// comparamos los campos protocol y conversaci�nID (para
 				// asegurarnos
