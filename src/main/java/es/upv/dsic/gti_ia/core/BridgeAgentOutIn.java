@@ -13,7 +13,6 @@ import java.net.SocketException;
 
 /**
  * This agent routes messages from inside the platform to outside the platform.
- * It converts ACLMessages into ACLJadeMessages
  * 
  * @author Ricard Lopez Fogues
  */
@@ -280,7 +279,7 @@ public class BridgeAgentOutIn extends SingleAgent {
 		}
 	}
 
-	public static InputStream stringToInputStream(String cadena) {
+	private static InputStream stringToInputStream(String cadena) {
 		InputStream is = null;
 		try {
 			is = new ByteArrayInputStream(cadena.getBytes("UTF-8"));
