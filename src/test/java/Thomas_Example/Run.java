@@ -13,7 +13,7 @@ import es.upv.dsic.gti_ia.organization.OMS;
 import es.upv.dsic.gti_ia.organization.SF;
 
 /**
-*Run class is an example of an agents that connection to thomas organization.
+*Run class is an example of agent that access to Thomas SF and OMS web services.
 *
 * 
 * 
