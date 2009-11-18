@@ -2,7 +2,7 @@
 <!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
 <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
 <appender name="Fichero" class="org.apache.log4j.FileAppender">
-<param name="File" value="A2.log"/>
+<param name="File" value="logs/Magentix2.log"/>
 <layout class="org.apache.log4j.PatternLayout">
 <param name="ConversionPattern" value="%t %-5p %c{2} - %m%n"/>
 </layout>
