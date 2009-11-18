@@ -206,7 +206,7 @@ public class ACLMessage implements Serializable, Cloneable {
 	}
 
 	/**
-	 * Set the receiver. It deletes the receivers list and creates a new one
+	 * Sets the receiver. It deletes the receivers list and creates a new one
 	 * with the new receiver
 	 * 
 	 * @param receiver
