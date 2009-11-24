@@ -309,21 +309,22 @@ import  persistence.DataBaseInterface;
 	       
 				m.close();
 	    	
-				try {
-					if (DEBUG) {
-						System.out.println("Closing DB connection...");
-					}
-					conn.close();
-				} catch (Exception e) {
-					e.printStackTrace();
-					System.exit(1);
-				}
+				
 			
 			}else{
 				response.set_return(0);
 				System.err.println("[ERROR]The profile can not be modify. There are providers which implement it");
 			}
-
+			
+			try {
+				if (DEBUG) {
+					System.out.println("Closing DB connection...");
+				}
+				conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.exit(1);
+			}
 	
 		} else {
 			response.set_return(-1);

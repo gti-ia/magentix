@@ -213,6 +213,10 @@ import persistence.DataBaseInterface;
         		 m.commit();
         		 m.close();
 
+        		
+        		 
+        		 thomasBD.DeleteProfile(deregisterProfile.getServiceID());
+        		 response.set_return(1);
         		 try {
         			 if (DEBUG) {
         				 System.out.println("Closing DB connection...");
@@ -222,9 +226,6 @@ import persistence.DataBaseInterface;
         			 e.printStackTrace();
         			 System.exit(1);
         		 }
-        		 
-        		 thomasBD.DeleteProfile(deregisterProfile.getServiceID());
-        		 response.set_return(1);
         		 return (response);
         	 } else {
         		 response.set_return(0);

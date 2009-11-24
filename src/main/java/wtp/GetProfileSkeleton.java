@@ -53,6 +53,8 @@ public class GetProfileSkeleton {
 			response.set_return(0);
 			response.setGoal("");
 		}
+		
+		
 		return(response);
 
 	 

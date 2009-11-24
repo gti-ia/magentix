@@ -241,7 +241,7 @@ import persistence.DataBaseInterface;
 			}
 
 			m.close();
-
+			response.set_return(1);
 			try {
 				if (DEBUG) {
 					System.out.println("Closing DB connection...");
@@ -251,8 +251,6 @@ import persistence.DataBaseInterface;
 				e.printStackTrace();
 				System.exit(1);
 			}
-			
-			response.set_return(1);
 			
 		} else {
 			

@@ -174,16 +174,7 @@ public class RegisterProcessSkeleton {
 						m.write(System.out, "N3");
 					}
 
-					try {
-						if (DEBUG) {
-							System.out.println("Closing DB connection...");
-						}
-						conn.close();
-					} catch (Exception e) {
-						e.printStackTrace();
-						System.exit(1);
-					}
-
+					
 					// Close the model
 					m.close();
 					response.setServiceModelID(serviceprocessid);
@@ -197,6 +188,16 @@ public class RegisterProcessSkeleton {
 			} else {
 				response.setServiceModelID("[Error]: the agent does not have the appropiated role");
 				response.set_return(0);
+			}
+
+			try {
+				if (DEBUG) {
+					System.out.println("Closing DB connection...");
+				}
+				conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.exit(1);
 			}
 
 		return (response);
