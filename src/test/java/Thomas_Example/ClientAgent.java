@@ -17,10 +17,10 @@ public class ClientAgent extends QueueAgent {
 
 	
 	//We create the class that will make us the agent proxy oms, facilitates access to the methods of the OMS
-	OMSProxy serviciosOMS = new OMSProxy();
+	OMSProxy OMSservices = new OMSProxy();
 	
 	//We create the class that will make us the agent proxy sf,  facilitates access to the methods of the SF
-	SFProxy sfservice = new SFProxy();
+	SFProxy SFservices = new SFProxy();
 	
 	public String result;
 
@@ -32,30 +32,30 @@ public class ClientAgent extends QueueAgent {
 		try{
 		
 		//acquired the member role at the organization
-		result = serviciosOMS.AcquireRole(this, "member", "virtual");
-
-		result = serviciosOMS.AcquireRole(this,"customer", "travelagency");
-		
+		result = OMSservices.AcquireRole(this, "member", "virtual");
+		System.out.println("[ClientAgent]Acquire Role member return: "+result+"\n");
+		result = OMSservices.AcquireRole(this,"customer", "travelagency");
+		System.out.println("[ClientAgent]Acquire Role customer return: "+result+"\n");
 		
 		
 		
 		//waiting that the agentBroadcast registered service SearchCheapHotel
 		do{
-			results = sfservice.searchService(this, "SearchCheapHotel");	
+			results = SFservices.searchService(this, "SearchCheapHotel");	
 		}while(results.get(0).equals("null"));
 
 		
 		
 		
-		agents = sfservice.getProcess(this, results.get(0));
-
+		agents = SFservices.getProcess(this, results.get(0));
+		System.out.println("[ClientAgent]agents that offered SearchCheapHotel service: "+ agents.size()+"\n");
 		for (AgentID agent : agents)
 			System.out
-					.println(this.getAid().name+" agents who have the service SearchCheapHotel: "
-							+ agent.name);
+					.println("[ClientAgent] agents who have the service SearchCheapHotel: "
+							+ agent.name+"\n");
 
-		String agentProvider = sfservice.getProfile(this,results.get(0));
-		
+		String agentProvider = SFservices.getProfile(this,results.get(0));
+		System.out.println("[ClientAgent]get Profile return: "+ agentProvider+"\n");
 		
 		
 		ArrayList<String> arg = new ArrayList<String>();
@@ -66,7 +66,7 @@ public class ClientAgent extends QueueAgent {
 		
 		
 		//call the service SearchCheapHotel
-		sfservice.genericService(this,agents.get(0),agentProvider,"http://localhost:8080/sfservices/THservices/owl/owls/SearchCheapHotelProcess.owl", arg);
+		SFservices.genericService(this,agents.get(0),agentProvider,"http://localhost:8080/sfservices/THservices/owl/owls/SearchCheapHotelProcess.owl", arg);
 		
 		
 		}catch(Exception e){

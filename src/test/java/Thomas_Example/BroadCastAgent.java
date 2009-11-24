@@ -37,81 +37,77 @@ public class BroadCastAgent extends QueueAgent {
 	
 	public void execute()
     {
-		//We create the class that will make us the agent proxy oms, facilite facilitates access to the methods of the OMS
-		OMSProxy serviciosOMS = new OMSProxy();
+		//We create the class that will make us the agent proxy oms,facilitates access to the methods of the OMS
+		OMSProxy OMSservices = new OMSProxy();
 		
-		//We create the class that will make us the agent proxy sf, facilite facilitates access to the methods of the SF
-		SFProxy sfservice = new SFProxy();
+		//We create the class that will make us the agent proxy sf,facilitates access to the methods of the SF
+		SFProxy SFservices = new SFProxy();
 		
 		//We create a SFServiceDescription, one for service that we have
-		SFServiceDescription servicio1 = new SFServiceDescription("http://localhost:8080/broadcastservices/owl/owls/","http://localhost:8080/broadcastservices/owl/owls/");
-		SFServiceDescription servicio2 = new SFServiceDescription("http://localhost:8080/sfservices/THservices/owl/owls/","http://localhost:8080/sfservices/THservices/owl/owls/");
+		SFServiceDescription serviceOne = new SFServiceDescription("http://localhost:8080/broadcastservices/owl/owls/","http://localhost:8080/broadcastservices/owl/owls/");
+		SFServiceDescription serviceTwo = new SFServiceDescription("http://localhost:8080/sfservices/THservices/owl/owls/","http://localhost:8080/sfservices/THservices/owl/owls/");
 		
 		String result;
 
-        ArrayList<AgentID> agentes;
+        ArrayList<AgentID> agents;
         
         
         
         try
 		{
         	
-		result = serviciosOMS.AcquireRole(this, "member","virtual");
+		result = OMSservices.AcquireRole(this, "member","virtual");
 		
-		System.out.println("Acquire Role result: "+result);
+		System.out.println("[BroadCastAgent]Acquire Role result: "+result+"\n");
 		
 	    //****************** RegisterUnit *************************
-        result = serviciosOMS.RegisterUnit(this, "news", "congregation", "receivenews", "virtual");
+        result = OMSservices.RegisterUnit(this, "news", "congregation", "receivenews", "virtual");
         //*********************************************************
                 
-        System.out.println("Register Unit result: "+result);
+        System.out.println("[BroadCastAgent]Register Unit result: "+result+"\n");
         
 		//****************** RegisterRole ***************
-		result = serviciosOMS.RegisterRole(this, "broadcaster","news" , "external", "member", "public", "member");
+		result = OMSservices.RegisterRole(this, "broadcaster","news" , "external", "member", "public", "member");
 		//*********************************************
    
-		System.out.println("Register Role result: "+result);
+		System.out.println("[BroadCastAgent]Register Role result: "+result+"\n");
 		
-		System.out.println("BroadCastAgent conencted with rol customer: "+ serviciosOMS.AcquireRole(this, "broadcaster", "news"));
+		System.out.println("[BroadCastAgent] conencted with rol customer: "+ OMSservices.AcquireRole(this, "broadcaster", "news"));
 		
 		
 		
         //Initializing services
 		
 		//Service one
-        servicio1.setServiceGoal("BroadcastWS");
+        serviceOne.setServiceGoal("BroadcastWS");
         //Service two
-		servicio2.setServiceGoal("SearchCheapHotel");
+		serviceTwo.setServiceGoal("SearchCheapHotel");
 		
 		
-			sfservice.registerProfile(this,servicio1);
-			System.out.println("The operation getProfile return: "+  servicio1.getID());
+			SFservices.registerProfile(this,serviceOne);
+			System.out.println("[BroadCastAgent]The operation getProfile return: "+  serviceOne.getID()+"\n");
 		
        
-		    sfservice.registerProcess(this, servicio1);
-			System.out.println("The operation getProcess return: "+  servicio1.getImplementationID());
+		    SFservices.registerProcess(this, serviceOne);
+			System.out.println("[BroadCastAgent]The operation getProcess return: "+  serviceOne.getImplementationID()+"\n");
 		
 		
-			serviciosOMS.RegisterRole(this, "subscriptor","news" , "external", "member", "public", "member");
+			OMSservices.RegisterRole(this, "subscriptor","news" , "external", "member", "public", "member");
 		
-			serviciosOMS.AcquireRole(this,"subscriptor", "news");
+			OMSservices.AcquireRole(this,"subscriptor", "news");
 			
 	        //************ SearchService *****************
 	        ArrayList<String> serviceProfile = new ArrayList<String>();
 	        
-	        serviceProfile = sfservice.searchService(this, "BroadcastWS");
+	        serviceProfile = SFservices.searchService(this, "BroadcastWS");
+	           
 	        
-	        for(String sP : serviceProfile)
-	        	System.out.println("Returns value: "+ sP);
+	        agents = SFservices.getProcess(this, serviceProfile.get(0));
 	        
-	        
-	        
-	        agentes = sfservice.getProcess(this, serviceProfile.get(0));
-	        
-	        for (AgentID agent : agentes)
+	        for (AgentID agent : agents)
 				System.out
-						.println("Agents who has the broadcast service: "
-								+ agent.name);
+						.println("[BroadCastAgent]Agents who has the broadcast service: "
+								+ agent.name+"\n");
 	        
 	        //************************************************
 
@@ -119,15 +115,15 @@ public class BroadCastAgent extends QueueAgent {
 	        
 	        //************ GetProfile *****************
 
-	    	sfservice.registerProfile(this,servicio2);
-				System.out.println("Register Profile return: "+  servicio2.getID());
+	    	SFservices.registerProfile(this,serviceTwo);
+				System.out.println("[BroadCastAgent]Register Profile return: "+  serviceTwo.getID()+"\n");
 	    	
 	    
-	    	serviciosOMS.AcquireRole(this,"provider", "travelagency");
+	    	OMSservices.AcquireRole(this,"provider", "travelagency");
 	        
-	        sfservice.registerProcess(this, servicio2);
+	        SFservices.registerProcess(this, serviceTwo);
 	        
-	        	System.out.println("Register Porcess return: "+ servicio2.getImplementationID());
+	        	System.out.println("[BroadCastAgent]Register Porcess return: "+ serviceTwo.getImplementationID()+"\n");
 	        	
 	        
 	        //Rol responder

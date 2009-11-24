@@ -5,7 +5,6 @@ import org.apache.log4j.xml.DOMConfigurator;
 
 
 
-
 import es.upv.dsic.gti_ia.organization.CleanBD;
 
 
@@ -16,7 +15,7 @@ import es.upv.dsic.gti_ia.organization.OMS;
 import es.upv.dsic.gti_ia.organization.SF;
 
 /**
-*Run class is an example of agent that access to Thomas SF and OMS web services.
+*Run class is an example of an agents that connection to thomas organization.
 *
 * 
 * 
@@ -37,6 +36,7 @@ public class Run {
 
 	     DOMConfigurator.configure("configuration/loggin.xml");
 	     Logger logger = Logger.getLogger(Run.class);
+
 	     
 	     /**
 	      * Clean database 
@@ -85,8 +85,8 @@ public class Run {
         clientAgent.start();
     
     	}catch(Exception e){
+    		logger.error(e.getMessage());
     		
-    		logger.error("Error  " + e.getMessage());	
     	}     
 
 	}
