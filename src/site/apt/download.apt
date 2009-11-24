@@ -6,17 +6,28 @@
 
 Download Magentix2
 
+* Magentix2
 
  [[1]] Magentix2.zip  {{{./download/Magentix2.zip}download}}.
-
- [[2]] Document "install qpid broker c++ in ubuntu" {{{./docs/install qpid broker c++ in ubuntu.pdf}download}}.
-
- [[3]] Document "Magentinx2 Developer guide" {{{./docs/Magentix2 Developer guide.pdf}download}}.
  
- [[4]] Image Magentinx2 Architecture {{{./images/Magentix2-Architecture.jpg}download}}.
+ [[2]] Document "Magentinx2 Developer guide" {{{./docs/Magentix2 Developer guide.pdf}download}}.
  
- [[5]] Image Magentinx2 + Thomas Architecture  {{{./images/Magentix2-Thomas-Architecture.jpg}download}}.
+ [[3]] Image Magentinx2 Architecture {{{./images/Magentix2-Architecture.jpg}download}}.
+ 
+ [[4]] Image Magentinx2 + Thomas Architecture  {{{./images/Magentix2-Thomas-Architecture.jpg}download}}.
+ 
 
+* QPID
+
+ [[5]] Document "install qpid broker c++ in ubuntu" {{{./docs/install qpid broker c++ in ubuntu.pdf}download}}.
+ 
+ [[6]] Patch  {{{./download/patch}download}}.
+ 
+ [[7]] Apache qpid  {{{http://qpid.apache.org/download.html}download}}.
+
+
+ 
+ 
 
 
 
