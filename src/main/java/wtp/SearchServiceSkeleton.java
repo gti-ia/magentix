@@ -114,15 +114,7 @@ import wtp.PlannerStub;
 		String serviceList = SearchByServiceName(m,searchService.getServicePurpose());
 		//response.setServicesList(planningComposition(m));
 		
-		try {
-			if (DEBUG) {
-				System.out.println("Closing DB connection...");
-			}
-			conn.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.exit(1);
-		}
+		
 
 		m.close();
 		
@@ -134,6 +126,19 @@ import wtp.PlannerStub;
 			response.set_return(0);
 			response.setServicesList("There are not profiles with the goal: "+searchService.getServicePurpose());
 		}
+		
+		
+		
+		try {
+			if (DEBUG) {
+				System.out.println("Closing DB connection...");
+			}
+			conn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.exit(1);
+		}
+		
 		return (response);
 
 	}// end SearchService
