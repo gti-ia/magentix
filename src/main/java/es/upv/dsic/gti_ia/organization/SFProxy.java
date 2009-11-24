@@ -218,7 +218,7 @@ public class SFProxy {
 	 * @return ArrayList service list
 	 * @throws Exception
 	 */
-	public ArrayList<String> searchService(QueueAgent agent, String serviceGoal) {
+	public ArrayList<String> searchService(QueueAgent agent, String serviceGoal)throws Exception {
 
 		this.agent = agent;
 		this.idsSearchService.clear();
@@ -229,7 +229,11 @@ public class SFProxy {
 				+ serviceGoal;
 
 		this.sendInfo(agent, call);
-		return this.idsSearchService;
+		if (!salida)
+			throw new Exception("searchService: "+ this.salidaString);
+			
+		else
+			return this.idsSearchService;
 
 	}
 
@@ -324,10 +328,11 @@ public class SFProxy {
 	 * @param agent
 	 * @param id
 	 * @return agents provider list
+
 	 * @throws Exception
 	 */
 
-	public ArrayList<AgentID> getProcess(QueueAgent agent, String serviceID) {
+	public ArrayList<AgentID> getProcess(QueueAgent agent, String serviceID) throws Exception {
 
 		this.agent = agent;
 		this.agentes.clear();
@@ -339,6 +344,10 @@ public class SFProxy {
 		 * descripcion.getID();
 		 */
 		this.sendInfo(agent, call);
+		if (!salida)
+			throw new Exception("GetProcess: "+ this.salidaString);
+			
+		else
 		return this.agentes;
 
 	}
@@ -348,11 +357,11 @@ public class SFProxy {
 	 * 
 	 * @param agent
 	 * @param serviceID
-	 * @return Status
+	 * @return Status 
 	 * @throws Exception
 	 */
 	public String getProfile(QueueAgent agent,
-			String serviceID) {
+			String serviceID) throws Exception {
 	
 		this.agent = agent;
 
@@ -361,11 +370,15 @@ public class SFProxy {
 				+ serviceID;
 
 		this.sendInfo(agent, call);
-
+		
+		if (!salida)
+			throw new Exception("GetProfile: "+ this.salidaString);
+			
+		else
 		return salidaString;
 	}
 
-	// Devuelve el ID para poder modificar luego el servicioç
+	// Devuelve el ID para poder modificar luego el servicioï¿½
 
 	/**
 	 * 
@@ -514,9 +527,10 @@ public class SFProxy {
 
 				if (arg2.equals("1"))// ha ido bien
 				{
+					this.sf.setSalida(true);
 					this.sf.setSalidaString(arg1);
 				} else {
-					
+					this.sf.setSalida(false);
 					this.sf.setSalidaString(null);
 				}
 
@@ -543,10 +557,11 @@ public class SFProxy {
 
 				agen = null;
 				if (arg2.equals("0")) {
-
+					this.sf.salidaString = arg1;
 					this.sf.setSalida(false);
 
 				} else {
+					this.sf.setSalida(true);
 					agen = arg1.split(",");
 					for (String a : agen) {
 						arg1 = a.substring(0, arg1.indexOf(" "));
@@ -559,7 +574,7 @@ public class SFProxy {
 						if (!arg1.equals("null"))// si existe algun provideer
 						{
 
-							// añadimos tantos agentes proveedores como nos
+							// aï¿½adimos tantos agentes proveedores como nos
 							// devuelva
 							this.sf.agentes.add(new AgentID(arg1));
 						}
@@ -579,6 +594,7 @@ public class SFProxy {
 					this.sf.setSalida(false);
 					this.sf.addIDSearchService(arg1);
 				} else {
+					this.sf.setSalida(true);
 					this.agen = arg1.split(",");
 
 					for (String a : agen) {
