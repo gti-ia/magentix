@@ -1,20 +1,33 @@
 package es.upv.dsic.gti_ia.organization;
 
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.Enumeration;
+import java.util.Properties;
+import java.util.StringTokenizer;
+import com.hp.hpl.jena.db.*;
+
 
 public class CleanBD {
+	// database connection parameters, with defaults
+	private static String s_dbURL;
+	private static String s_dbUser;
+	private static String s_dbPw;
+	private static String s_dbType;
+	private static String s_dbDriver;
 
 	/**
 	 * @param args
 	 */
 
-	public void clean_database() {
+	public void clean_database() throws IOException {
 		try {
 			DataBaseAcces bd = new DataBaseAcces();
 			bd.connect();
 			// Borramos
 			Statement s = bd.conection.createStatement();
+	
 			s.executeUpdate("Delete from unit where id<>1");
 			s = bd.conection.createStatement();
 			s.executeUpdate("Delete from role where id<>1");
@@ -63,6 +76,46 @@ public class CleanBD {
 			e.printStackTrace();
 			return;
 		}
+		/////////////
+		////JENA/////
+		/////////////
+		IDBConnection conn = null;
+	
+		Configuration c;
+		c =  Configuration.getConfiguration();
+		s_dbURL = "jdbc:mysql://localhost/thomas";
+
+		s_dbUser = "thomas";
+
+		s_dbPw = "thomas";
+
+		s_dbType = "MySQL";
+
+		s_dbDriver = "com.mysql.jdbc.Driver";
+
+		// ensure the JDBC driver class is loaded
+		try {
+			Class.forName(s_dbDriver);
+		} catch (Exception e) {
+			System.err.println("Failed to load the driver for the database: "+ e.getMessage());
+			System.err.println("Have you got the CLASSPATH set correctly?");
+		}
+
+		
+	
+		
+		
+		
+
+		// Create database connection
+		try {
+			conn = new DBConnection(s_dbURL, s_dbUser, s_dbPw, s_dbType);
+			conn.cleanDB();
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.exit(1);
+		}
+		
 	}
 
 }
