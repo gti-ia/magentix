@@ -3,9 +3,7 @@ package es.upv.dsic.gti_ia.organization;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.Enumeration;
-import java.util.Properties;
-import java.util.StringTokenizer;
+
 import com.hp.hpl.jena.db.*;
 
 
