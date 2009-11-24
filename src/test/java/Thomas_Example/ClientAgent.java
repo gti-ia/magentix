@@ -43,22 +43,7 @@ public class ClientAgent extends QueueAgent {
 			results = SFservices.searchService(this, "SearchCheapHotel");
 		}while(results.get(0).equals("null"));
 
-		/*
-		boolean b= false;
-		do{
-			b=false;
-			try{
-			results = SFservices.searchService(this, "SearchCheapHotel");
 
-			}catch(Exception e)
-			{
-		
-				b=true;
-			}
-			System.out.println("passa");
-		}while(b && results.get(0)=="null");
-	*/
-		
 
 		
 		
