@@ -81,8 +81,7 @@ public class CleanBD {
 		/////////////
 		IDBConnection conn = null;
 	
-		Configuration c;
-		c =  Configuration.getConfiguration();
+
 		s_dbURL = "jdbc:mysql://localhost/thomas";
 
 		s_dbUser = "thomas";
