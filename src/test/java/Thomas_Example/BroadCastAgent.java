@@ -87,12 +87,12 @@ public class BroadCastAgent extends QueueAgent {
 		
 		
 			SFservices.registerProfile(this,serviceOne);
-			System.out.println("[BroadCastAgent]The operation getProfile return: "+  serviceOne.getID()+"\n");
+			System.out.println("[BroadCastAgent]The operation register Profile return: "+  serviceOne.getID()+"\n");
 		
 			serviceOne.setServiceGoal("BroadcastWS");
 			
 		    SFservices.registerProcess(this, serviceOne);
-			System.out.println("[BroadCastAgent]The operation getProcess return: "+  serviceOne.getImplementationID()+"\n");
+			System.out.println("[BroadCastAgent]The operation register Process return: "+  serviceOne.getImplementationID()+"\n");
 		
 		
 			OMSservices.RegisterRole(this, "subscriptor","news" , "external", "member", "public", "member");

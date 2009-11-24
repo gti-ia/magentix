@@ -40,19 +40,10 @@ public class ClientAgent extends QueueAgent {
 		
 		//waiting that the agentBroadcast registered service SearchCheapHotel
 
-		boolean b= false;
+		//waiting that the agentBroadcast registered service SearchCheapHotel
 		do{
-			b=false;
-			try{
 			results = SFservices.searchService(this, "SearchCheapHotel");
-
-			}catch(Exception e)
-			{
-		
-				b=true;
-			}
-
-		}while(b);
+		}while(results.get(0).equals("null"));
 	
 		
 

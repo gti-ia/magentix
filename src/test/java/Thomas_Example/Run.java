@@ -44,12 +44,9 @@ public class Run {
 	      * Clean database 
 	      */
 	     CleanBD clean = new CleanBD();
-	     try {
+	
 			clean.clean_database();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+	
 	 	
 	
 	     
