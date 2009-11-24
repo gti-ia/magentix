@@ -13,6 +13,7 @@ import es.upv.dsic.gti_ia.organization.OMSProxy;
 import es.upv.dsic.gti_ia.organization.SFServiceDescription;
 import es.upv.dsic.gti_ia.organization.SFProxy;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
@@ -88,7 +89,8 @@ public class BroadCastAgent extends QueueAgent {
 			SFservices.registerProfile(this,serviceOne);
 			System.out.println("[BroadCastAgent]The operation getProfile return: "+  serviceOne.getID()+"\n");
 		
-       
+			serviceOne.setServiceGoal("BroadcastWS");
+			
 		    SFservices.registerProcess(this, serviceOne);
 			System.out.println("[BroadCastAgent]The operation getProcess return: "+  serviceOne.getImplementationID()+"\n");
 		
@@ -131,9 +133,10 @@ public class BroadCastAgent extends QueueAgent {
 	    	Responder responder = new Responder(this);
 			
 			this.addTask(responder);
-			
+				
 			//when we do not have to create more roles we await the expiration of the other roles
 	
+			
 			es.upv.dsic.gti_ia.architecture.Monitor mon = new es.upv.dsic.gti_ia.architecture.Monitor();
 		    mon.waiting();
 		    

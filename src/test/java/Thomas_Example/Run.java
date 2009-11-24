@@ -1,5 +1,7 @@
 package Thomas_Example;
 
+import java.io.IOException;
+
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 
@@ -42,7 +44,12 @@ public class Run {
 	      * Clean database 
 	      */
 	     CleanBD clean = new CleanBD();
-	     clean.clean_database();
+	     try {
+			clean.clean_database();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	 	
 	
 	     
