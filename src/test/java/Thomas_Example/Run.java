@@ -83,11 +83,13 @@ public class Run {
         
         broadCastagent.start();
         clientAgent.start();
+     
     
     	}catch(Exception e){
     		logger.error(e.getMessage());
     		
     	}     
+    	
 
 	}
 	

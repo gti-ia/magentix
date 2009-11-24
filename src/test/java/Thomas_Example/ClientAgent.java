@@ -36,15 +36,30 @@ public class ClientAgent extends QueueAgent {
 		System.out.println("[ClientAgent]Acquire Role member return: "+result+"\n");
 		result = OMSservices.AcquireRole(this,"customer", "travelagency");
 		System.out.println("[ClientAgent]Acquire Role customer return: "+result+"\n");
-		
-		
+
 		
 		//waiting that the agentBroadcast registered service SearchCheapHotel
 		do{
-			results = SFservices.searchService(this, "SearchCheapHotel");	
+			results = SFservices.searchService(this, "SearchCheapHotel");
 		}while(results.get(0).equals("null"));
 
+		/*
+		boolean b= false;
+		do{
+			b=false;
+			try{
+			results = SFservices.searchService(this, "SearchCheapHotel");
+
+			}catch(Exception e)
+			{
 		
+				b=true;
+			}
+			System.out.println("passa");
+		}while(b && results.get(0)=="null");
+	*/
+		
+
 		
 		
 		agents = SFservices.getProcess(this, results.get(0));
