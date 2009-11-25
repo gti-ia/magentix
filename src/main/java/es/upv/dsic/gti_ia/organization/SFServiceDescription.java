@@ -106,7 +106,7 @@ public class SFServiceDescription {
 	}
 
 	/**
-	 * Return an ID of the SFAgentDescription
+	 * Return an ID of the SFServiceDescription
 	 * 
 	 * @return
 	 */
