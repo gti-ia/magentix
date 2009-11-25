@@ -2,7 +2,10 @@ package ContractNet_Example;
 
 
 
+import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
+
+
 
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
@@ -26,7 +29,7 @@ public class Run {
 	public static void main(String[] args) {
 	
 		DOMConfigurator.configure("configuration/loggin.xml");
-
+		Logger logger = Logger.getLogger(Run.class);
         
         try{
         	
@@ -56,7 +59,10 @@ public class Run {
 		 * Execute the agents
 		 */
         cliente.start();
-        }catch(Exception e){}
+        }catch(Exception e){
+        	
+        	logger.error(e.getMessage());
+        }
 
 	}
 
