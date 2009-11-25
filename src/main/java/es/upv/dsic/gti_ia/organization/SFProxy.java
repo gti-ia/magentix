@@ -228,8 +228,10 @@ public class SFProxy {
 				+ "SearchServiceProcess.owl SearchServiceInputServicePurpose="
 				+ serviceGoal;
 
-		this.sendInfo(agent, call);
+		this.sendInfo(agent, call); 
 		return this.idsSearchService;
+	
+
 
 	}
 
@@ -365,7 +367,7 @@ public class SFProxy {
 		return salidaString;
 	}
 
-	// Devuelve el ID para poder modificar luego el servicioç
+	// Devuelve el ID para poder modificar luego el servicioï¿½
 
 	/**
 	 * 
@@ -517,7 +519,7 @@ public class SFProxy {
 					this.sf.setSalidaString(arg1);
 				} else {
 					
-					this.sf.setSalidaString(null);
+					this.sf.setSalidaString(arg2);
 				}
 
 			}
@@ -559,7 +561,7 @@ public class SFProxy {
 						if (!arg1.equals("null"))// si existe algun provideer
 						{
 
-							// añadimos tantos agentes proveedores como nos
+							// aï¿½adimos tantos agentes proveedores como nos
 							// devuelva
 							this.sf.agentes.add(new AgentID(arg1));
 						}
@@ -573,11 +575,10 @@ public class SFProxy {
 			if (patron.equals("SearchServiceProcess")) {
 
 				agen = null;
-
+				
 				if (arg2.equals("0")) {
 
-					this.sf.setSalida(false);
-					this.sf.addIDSearchService(arg1);
+					//this.sf.addIDSearchService(arg2);
 				} else {
 					this.agen = arg1.split(",");
 
@@ -586,6 +587,7 @@ public class SFProxy {
 						this.sf.addIDSearchService(a);
 					}
 				}
+
 
 			}
 

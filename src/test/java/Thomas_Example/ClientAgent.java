@@ -43,7 +43,7 @@ public class ClientAgent extends QueueAgent {
 		//waiting that the agentBroadcast registered service SearchCheapHotel
 		do{
 			results = SFservices.searchService(this, "SearchCheapHotel");
-		}while(results.get(0).equals("null"));
+		}while(results.size()==0);
 	
 		
 
