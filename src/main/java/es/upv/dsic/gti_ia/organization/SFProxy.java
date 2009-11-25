@@ -243,7 +243,7 @@ public class SFProxy {
 	 * @return Status
 	 * @throws Exception
 	 */
-	public void ModifyProcess(QueueAgent agent,
+	public void modifyProcess(QueueAgent agent,
 			SFServiceDescription sfAgentdescription)throws Exception
 
 	{
@@ -271,7 +271,7 @@ public class SFProxy {
 	 * @return Status
 	 * @throws Exception
 	 */
-	public void ModifyProfile(QueueAgent agent,
+	public void modifyProfile(QueueAgent agent,
 			SFServiceDescription sfAgentdescription)throws Exception {
 
 		this.descripcion = sfAgentdescription;
@@ -300,7 +300,7 @@ public class SFProxy {
 	 * @return Status
 	 * @throws Exception
 	 */
-	public void DeregisterProfile(QueueAgent agent,
+	public void deregisterProfile(QueueAgent agent,
 			SFServiceDescription sfAgentdescription)throws Exception {
 
 		this.agent = agent;

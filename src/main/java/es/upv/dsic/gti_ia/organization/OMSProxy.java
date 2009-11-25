@@ -86,7 +86,7 @@ public class OMSProxy {
 	 * @param UnitID
 	 * @return String Status ErrorValue
 	 */
-	public String LeaveRole(QueueAgent agent, String AgentID, String RoleID,
+	public String leaveRole(QueueAgent agent, String AgentID, String RoleID,
 			String UnitID) throws Exception{
 
 		String call = configuration + "LeaveRoleProcess.owl AgentID=" + AgentID
@@ -111,7 +111,7 @@ public class OMSProxy {
 	 * @return ArrayList RoleUnitList
 	 * @throws Exception 
 	 */
-	public ArrayList<String> InformAgentRole(QueueAgent agent, String AgentID) throws Exception {
+	public ArrayList<String> informAgentRole(QueueAgent agent, String AgentID) throws Exception {
 
 		this.list.clear();
 
@@ -137,7 +137,7 @@ public class OMSProxy {
 	 * @return ArrayList EntityRoleList
 	 * @throws Exception 
 	 */
-	public ArrayList<String> InformMembers(QueueAgent agent, String RoleID,
+	public ArrayList<String> informMembers(QueueAgent agent, String RoleID,
 			String UnitID) throws Exception {
 
 		this.list.clear();
@@ -163,7 +163,7 @@ public class OMSProxy {
 	 * @return ArrayList NormList
 	 * @throws Exception 
 	 */
-	public ArrayList<String> InformRoleNorms(QueueAgent agent, String RoleID) throws Exception {
+	public ArrayList<String> informRoleNorms(QueueAgent agent, String RoleID) throws Exception {
 
 		this.list.clear();
 
@@ -188,7 +188,7 @@ public class OMSProxy {
 	 * @return ArrayList ProfileList
 	 * @throws Exception 
 	 */
-	public ArrayList<String> InformRoleProfiles(QueueAgent agent, String UnitID) throws Exception {
+	public ArrayList<String> informRoleProfiles(QueueAgent agent, String UnitID) throws Exception {
 
 		this.list.clear();
 
@@ -213,7 +213,7 @@ public class OMSProxy {
 	 * @return ArrayList UnitType UnitGoal ParentID
 	 * @throws Exception 
 	 */
-	public ArrayList<String> InformUnit(QueueAgent agent, String UnitID) throws Exception {
+	public ArrayList<String> informUnit(QueueAgent agent, String UnitID) throws Exception {
 
 		this.list.clear();
 
@@ -237,7 +237,7 @@ public class OMSProxy {
 	 * @return ArrayList RoleList
 	 * @throws Exception 
 	 */
-	public ArrayList<String> InformUnitRoles(QueueAgent agent, String UnitID) throws Exception {
+	public ArrayList<String> informUnitRoles(QueueAgent agent, String UnitID) throws Exception {
 
 		this.list.clear();
 
@@ -262,7 +262,7 @@ public class OMSProxy {
 	 * @return int Quantity
 	 * @throws Exception 
 	 */
-	public int QuantityMembers(QueueAgent agent, String RoleID, String UnitID) throws Exception {
+	public int quantityMembers(QueueAgent agent, String RoleID, String UnitID) throws Exception {
 
 		String call = configuration + "QuantityMembersProcess.owl RoleID="
 				+ RoleID + " UnitID=" + UnitID;
@@ -285,7 +285,7 @@ public class OMSProxy {
 	 * @return String Status ErrorValue
 	 * @throws Exception 
 	 */
-	public String RegisterNorm(QueueAgent agent, String NormID,
+	public String registerNorm(QueueAgent agent, String NormID,
 			String NormContent) throws Exception {
 
 		String call = configuration + "RegisterNormProcess.owl NormID="
@@ -313,7 +313,7 @@ public class OMSProxy {
 	 * @return String Status ErroValue
 	 * @throws Exception 
 	 */
-	public String RegisterRole(QueueAgent agent,
+	public String registerRole(QueueAgent agent,
 			String RegisterRoleInputRoleID, String UnitID,
 			String Accessibility, String Position, String Visibility,
 			String Inheritance) throws Exception {
@@ -343,7 +343,7 @@ public class OMSProxy {
 	 * @return String Status ErrorValue
 	 * @throws Exception 
 	 */
-	public String RegisterUnit(QueueAgent agent, String UnitID, String Type,
+	public String registerUnit(QueueAgent agent, String UnitID, String Type,
 			String Goal, String ParentUnitID) throws Exception {
 
 		String call = configuration + "RegisterUnitProcess.owl  UnitID="
@@ -367,7 +367,7 @@ public class OMSProxy {
 	 * @return String Status ErrorValue
 	 * @throws Exception 
 	 */
-	public String DeregisterNorm(QueueAgent agent, String NormID) throws Exception {
+	public String deregisterNorm(QueueAgent agent, String NormID) throws Exception {
 
 		String call = configuration + "DeregisterNormProcess.owl  NormID="
 				+ NormID;
@@ -390,7 +390,7 @@ public class OMSProxy {
 	 * @return String Status ErrorValue
 	 * @throws Exception 
 	 */
-	public String DeregisterRole(QueueAgent agent, String RoleID, String UnitID) throws Exception {
+	public String deregisterRole(QueueAgent agent, String RoleID, String UnitID) throws Exception {
 
 		String call = configuration + "DeregisterRoleProcess.owl  RoleID="
 				+ RoleID + " UnitID=" + UnitID;
@@ -412,7 +412,7 @@ public class OMSProxy {
 	 * @return String Status ErrorValue
 	 * @throws Exception 
 	 */
-	public String DeregisterUnit(QueueAgent agent, String UnitID) throws Exception {
+	public String deregisterUnit(QueueAgent agent, String UnitID) throws Exception {
 
 		String call = configuration + "DeregisterNormProcess.owl  UnitID="
 				+ UnitID;
@@ -436,7 +436,7 @@ public class OMSProxy {
 	 * @return String Status ErrorValue
 	 * @throws Exception 
 	 */
-	public String Expulse(QueueAgent agent, String AgentID, String RoleID,
+	public String expulse(QueueAgent agent, String AgentID, String RoleID,
 			String UnitID) throws Exception {
 
 		String call = configuration + "ExpulseProcess.owl AgentID=" + AgentID
@@ -459,7 +459,7 @@ public class OMSProxy {
 	 * @return String Status ErrorValue
 	 * @throws Exception 
 	 */
-	public String AcquireRole(QueueAgent agent, String RoleID, String UnitID) throws Exception {
+	public String acquireRole(QueueAgent agent, String RoleID, String UnitID) throws Exception {
 		// montar string de conexion
 		// Enviamos el mensaje
 
