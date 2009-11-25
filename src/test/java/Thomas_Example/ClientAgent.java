@@ -56,8 +56,8 @@ public class ClientAgent extends QueueAgent {
 					.println("[ClientAgent] agents who have the service SearchCheapHotel: "
 							+ agent.name+"\n");
 
-		String agentProvider = SFservices.getProfile(this,results.get(0));
-		System.out.println("[ClientAgent]get Profile return: "+ agentProvider+"\n");
+		String profile = SFservices.getProfile(this,results.get(0));
+		System.out.println("[ClientAgent]get Profile return: "+ profile+"\n");
 		
 		
 		ArrayList<String> arg = new ArrayList<String>();
@@ -68,7 +68,7 @@ public class ClientAgent extends QueueAgent {
 		
 		
 		//call the service SearchCheapHotel
-		SFservices.genericService(this,agents.get(0),agentProvider,"http://localhost:8080/sfservices/THservices/owl/owls/SearchCheapHotelProcess.owl", arg);
+		SFservices.genericService(this,agents.get(0),profile,"http://localhost:8080/sfservices/THservices/owl/owls/SearchCheapHotelProcess.owl", arg);
 		
 		
 		}catch(Exception e){
