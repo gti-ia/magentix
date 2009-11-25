@@ -189,14 +189,14 @@ public class SFProxy {
 	 * Remove provider agent
 	 * 
 	 * @param agent
-	 * @param sfAgentdescription
+	 * @param SFServiceDescription
 	 * @return Status
 	 * @throws Exception
 	 */
 
 	public void removeProvider(QueueAgent agent,
-			SFServiceDescription sfAgentdescription)throws Exception {
-		this.descripcion = sfAgentdescription;
+			SFServiceDescription SFServiceDescription)throws Exception {
+		this.descripcion = SFServiceDescription;
 		this.agent = agent;
 
 		String call = SFServiceDesciptionLocation
@@ -239,15 +239,15 @@ public class SFProxy {
 	 * Modify Process
 	 * 
 	 * @param agent
-	 * @param sfAgentdescription
+	 * @param SFServiceDescription
 	 * @return Status
 	 * @throws Exception
 	 */
 	public void modifyProcess(QueueAgent agent,
-			SFServiceDescription sfAgentdescription)throws Exception
+			SFServiceDescription SFServiceDescription)throws Exception
 
 	{
-		this.descripcion = sfAgentdescription;
+		this.descripcion = SFServiceDescription;
 		this.agent = agent;
 
 		String call = SFServiceDesciptionLocation + "ModifyProcessProcess.owl"
@@ -267,14 +267,14 @@ public class SFProxy {
 	 * Modify Profile
 	 * 
 	 * @param agent
-	 * @param sfAgentdescription
+	 * @param SFServiceDescription
 	 * @return Status
 	 * @throws Exception
 	 */
 	public void modifyProfile(QueueAgent agent,
-			SFServiceDescription sfAgentdescription)throws Exception {
+			SFServiceDescription SFServiceDescription)throws Exception {
 
-		this.descripcion = sfAgentdescription;
+		this.descripcion = SFServiceDescription;
 		this.agent = agent;
 
 		String call = SFServiceDesciptionLocation + "ModifyProfileProcess.owl "
@@ -296,21 +296,21 @@ public class SFProxy {
 	 * Deregister Profile
 	 * 
 	 * @param agent
-	 * @param sfAgentdescription
+	 * @param SFServiceDescription
 	 * @return Status
 	 * @throws Exception
 	 */
 	public void deregisterProfile(QueueAgent agent,
-			SFServiceDescription sfAgentdescription)throws Exception {
+			SFServiceDescription SFServiceDescription)throws Exception {
 
 		this.agent = agent;
-		this.descripcion = sfAgentdescription;
+		this.descripcion = SFServiceDescription;
 
 		// eliminar el servicio de la tabla de servicios de el agente
 
 		String call = SFServiceDesciptionLocation
 				+ "DeregisterProfileProcess.owl GetProcessInputServiceID="
-				+ sfAgentdescription.getURLProfile() + descripcion.getID()
+				+ SFServiceDescription.getURLProfile() + descripcion.getID()
 				+ ".owl#" + descripcion.getID();
 
 		this.sendInfo(agent, call);
@@ -374,14 +374,14 @@ public class SFProxy {
 	 * Register profile
 	 * 
 	 * @param agent
-	 * @param sfAgentDescription
+	 * @param SFServiceDescription
 	 * @return Status
 	 * @throws Exception
 	 */
 	public void registerProfile(QueueAgent agent,
-			SFServiceDescription sfAgentdescription) throws Exception{
+			SFServiceDescription SFServiceDescription) throws Exception{
 
-		this.descripcion = sfAgentdescription;
+		this.descripcion = SFServiceDescription;
 		this.agent = agent;
 
 		String call = SFServiceDesciptionLocation
@@ -402,16 +402,16 @@ public class SFProxy {
 	 * Register Process
 	 * 
 	 * @param agent
-	 * @param sfAgentdescription
+	 * @param SFServiceDescription
 	 * @return Status
 	 * @throws Exception
 	 */
 	public void registerProcess(QueueAgent agent,
-			SFServiceDescription sfAgentdescription)throws Exception {
+			SFServiceDescription SFServiceDescription)throws Exception {
 		// montar string de conexion
 		// Enviamos el mensaje
 
-		this.descripcion = sfAgentdescription;
+		this.descripcion = SFServiceDescription;
 		this.agent = agent;
 
 		String call = SFServiceDesciptionLocation
