@@ -40,11 +40,11 @@ xmlns:mind="http://localhost:8080/sfservices/THservices/owl/owls/SearchCheapHote
     <profile:serviceName xml:lang="en">SearchCheapHotel</profile:serviceName>
     <profile:textDescription rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
     >Searchs a Hotel</profile:textDescription>
-    <profile:hasInput rdf:resource="#SearchCheapHotelInputCategory"/>
-    <profile:hasInput rdf:resource="#SearchCheapHotelInputCountry"/>
-    <profile:hasInput rdf:resource="#SearchCheapHotelInputCity"/>
-    <profile:hasOutput rdf:resource="#SearchCheapHotelOutputHotelCompany"/>
-    <profile:hasOutput rdf:resource="#SearchCheapHotelOutputHotel"/>
+    <profile:hasInput rdf:resource="SearchCheapHotelInputCategory"/>
+    <profile:hasInput rdf:resource="SearchCheapHotelInputCountry"/>
+    <profile:hasInput rdf:resource="SearchCheapHotelInputCity"/>
+    <profile:hasOutput rdf:resource="SearchCheapHotelOutputHotelCompany"/>
+    <profile:hasOutput rdf:resource="SearchCheapHotelOutputHotel"/>
 <role_param:hasLocal>
    <role:role_list rdf:ID="provider_list">
    		<role:role_atom rdf:ID="provider">
