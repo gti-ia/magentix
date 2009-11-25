@@ -576,10 +576,11 @@ public class SFProxy {
 
 				agen = null;
 				
-				if (arg2.equals("0")) {
+			
+				if (arg2.equals("1")) {
 
 					//this.sf.addIDSearchService(arg2);
-				} else {
+				//} else {
 					this.agen = arg1.split(",");
 
 					for (String a : agen) {
