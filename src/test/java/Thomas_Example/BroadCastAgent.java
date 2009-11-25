@@ -8,12 +8,12 @@ import es.upv.dsic.gti_ia.architecture.QueueAgent;
 import es.upv.dsic.gti_ia.architecture.FIPANames.InteractionProtocol;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
-import es.upv.dsic.gti_ia.organization.CleanBD;
+
 import es.upv.dsic.gti_ia.organization.OMSProxy;
 import es.upv.dsic.gti_ia.organization.SFServiceDescription;
 import es.upv.dsic.gti_ia.organization.SFProxy;
 
-import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
