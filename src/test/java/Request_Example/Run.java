@@ -1,6 +1,9 @@
 package Request_Example;
 
+import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
+
+
 
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
@@ -24,6 +27,7 @@ public class Run {
 		// TODO Auto-generated method stub
 
 		DOMConfigurator.configure("configuration/loggin.xml");
+		Logger logger = Logger.getLogger(Run.class);
 		
 		try{
 		
@@ -50,7 +54,10 @@ public class Run {
 		hos.start();
 		tes.start();
 		
-		}catch(Exception e){}
+		}catch(Exception e){
+			
+			logger.error(e.getMessage());
+		}
 
 	}
 
