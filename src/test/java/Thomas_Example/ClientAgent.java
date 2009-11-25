@@ -32,9 +32,9 @@ public class ClientAgent extends QueueAgent {
 		try{
 		
 		//acquired the member role at the organization
-		result = OMSservices.AcquireRole(this, "member", "virtual");
+		result = OMSservices.acquireRole(this, "member", "virtual");
 		System.out.println("[ClientAgent]Acquire Role member return: "+result+"\n");
-		result = OMSservices.AcquireRole(this,"customer", "travelagency");
+		result = OMSservices.acquireRole(this,"customer", "travelagency");
 		System.out.println("[ClientAgent]Acquire Role customer return: "+result+"\n");
 
 		

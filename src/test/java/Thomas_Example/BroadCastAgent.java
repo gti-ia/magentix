@@ -58,23 +58,23 @@ public class BroadCastAgent extends QueueAgent {
         try
 		{
         	
-		result = OMSservices.AcquireRole(this, "member","virtual");
+		result = OMSservices.acquireRole(this, "member","virtual");
 		
 		System.out.println("[BroadCastAgent]Acquire Role result: "+result+"\n");
 		
 	    //****************** RegisterUnit *************************
-        result = OMSservices.RegisterUnit(this, "news", "congregation", "receivenews", "virtual");
+        result = OMSservices.registerUnit(this, "news", "congregation", "receivenews", "virtual");
         //*********************************************************
                 
         System.out.println("[BroadCastAgent]Register Unit result: "+result+"\n");
         
 		//****************** RegisterRole ***************
-		result = OMSservices.RegisterRole(this, "broadcaster","news" , "external", "member", "public", "member");
+		result = OMSservices.registerRole(this, "broadcaster","news" , "external", "member", "public", "member");
 		//*********************************************
    
 		System.out.println("[BroadCastAgent]Register Role result: "+result+"\n");
 		
-		System.out.println("[BroadCastAgent] conencted with rol customer: "+ OMSservices.AcquireRole(this, "broadcaster", "news"));
+		System.out.println("[BroadCastAgent] conencted with rol customer: "+ OMSservices.acquireRole(this, "broadcaster", "news"));
 		
 		
 		
@@ -95,9 +95,9 @@ public class BroadCastAgent extends QueueAgent {
 			System.out.println("[BroadCastAgent]The operation register Process return: "+  serviceOne.getImplementationID()+"\n");
 		
 		
-			OMSservices.RegisterRole(this, "subscriptor","news" , "external", "member", "public", "member");
+			OMSservices.registerRole(this, "subscriptor","news" , "external", "member", "public", "member");
 		
-			OMSservices.AcquireRole(this,"subscriptor", "news");
+			OMSservices.acquireRole(this,"subscriptor", "news");
 			
 	        //************ SearchService *****************
 	        ArrayList<String> serviceProfile = new ArrayList<String>();
@@ -122,7 +122,7 @@ public class BroadCastAgent extends QueueAgent {
 				System.out.println("[BroadCastAgent]Register Profile return: "+  serviceTwo.getID()+"\n");
 	    	
 	    
-	    	OMSservices.AcquireRole(this,"provider", "travelagency");
+	    	OMSservices.acquireRole(this,"provider", "travelagency");
 	        
 	        SFservices.registerProcess(this, serviceTwo);
 	        
