@@ -7,7 +7,6 @@ import java.util.Enumeration;
 
 import java.util.Hashtable;
 
-import org.apache.log4j.xml.DOMConfigurator;
 
 import es.upv.dsic.gti_ia.architecture.QueueAgent;
 import es.upv.dsic.gti_ia.core.AgentID;

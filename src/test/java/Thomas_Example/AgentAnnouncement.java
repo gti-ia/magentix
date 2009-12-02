@@ -1,13 +1,10 @@
 package Thomas_Example;
 
-import java.util.ArrayList;
 
-import org.apache.log4j.xml.DOMConfigurator;
 
 import es.upv.dsic.gti_ia.architecture.QueueAgent;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.organization.OMSProxy;
-import es.upv.dsic.gti_ia.organization.SFProcessDescription;
 import es.upv.dsic.gti_ia.organization.SFProfileDescription;
 import es.upv.dsic.gti_ia.organization.SFProxy;
 
