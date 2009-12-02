@@ -36,7 +36,7 @@ public class AgentProvider extends QueueAgent {
 
     private Oracle oracle;
 
-    SFProcessDescription process = new SFProcessDescription(
+    SFProcessDescription processDescription = new SFProcessDescription(
 	    "http://localhost:8080/sfservices/THservices/owl/owls/SearchCheapHotelProcess.owl",
 	    "SearchCheapHotel");
 
@@ -55,17 +55,7 @@ public class AgentProvider extends QueueAgent {
 	}
     }
 
-    public void escenario2() {
-	try {
 
-	    omsProxy.acquireRole(this, "payee", "travelagency");
-	    omsProxy.registerNorm(this, "norma1",
-		    "FORBIDDEN_Member_REQUEST_acquireRole_MESSAGE(CONTENT(ROLE_'Payee'))");
-	} catch (Exception e) {
-	    logger.error(e.getMessage());
-	}
-
-    }
 
     public void escenario3() {
 
@@ -89,7 +79,7 @@ public class AgentProvider extends QueueAgent {
 		    e.printStackTrace();
 		}
 
-		oracle.getProviderList();
+	
 		omsProxy.acquireRole(this, oracle.getProviderList().get(0), "travelagency");
 
 	    }
@@ -102,9 +92,9 @@ public class AgentProvider extends QueueAgent {
     public void escenario4() {
 	try {
 
-	    process.setProfileID(results.get(0));
+	    processDescription.setProfileID(results.get(0));
 
-	    sfProxy.registerProcess(this, process);
+	    sfProxy.registerProcess(this, processDescription);
 
 	} catch (Exception e) {
 	    logger.error(e.getMessage());
@@ -112,7 +102,16 @@ public class AgentProvider extends QueueAgent {
 
     }
 
-    public void escenario5() {
+    public void escenario5(){
+	try{
+	omsProxy.acquireRole(this,"payee", "travelagency");
+	
+	}catch(Exception e)
+	{
+	    logger.error(e.getMessage());
+	}
+    }
+    public void escenario6() {
 	// Rol responder
 	Responder responder = new Responder(this);
 
@@ -121,14 +120,15 @@ public class AgentProvider extends QueueAgent {
 
     public void execute() {
 
-	logger.info("Executing, I'm " + getName());
 	DOMConfigurator.configure("configuration/loggin.xml");
+	logger.info("Executing, I'm " + getName());
+	
 
 	this.escenario1();
-	this.escenario2();
 	this.escenario3();
 	this.escenario4();
 	this.escenario5();
+	this.escenario6();
 
 	// when we do not have to create more roles we await the expiration
 	// of the other roles

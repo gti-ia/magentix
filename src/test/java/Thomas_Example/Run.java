@@ -59,6 +59,8 @@ public class Run {
 	     * Execute the agents
 	     */
 
+	    AgentPayee payeeAgent = new AgentPayee(new AgentID("agentPayee"));
+	    
 	    AgentProvider providerAgent = new AgentProvider(new AgentID("providerAgent"));
 
 	    AgentAnnouncement registerAgent = new AgentAnnouncement(new AgentID("registerAgent"));
@@ -66,7 +68,8 @@ public class Run {
 	    AgentClient clientAgent = new AgentClient(new AgentID("clientAgent"));
 
 	    registerAgent.start();
-
+	    payeeAgent.start();
+	    
 	    Monitor m = new Monitor();
 	    m.waiting(10 * 1000);
 	    providerAgent.start();
