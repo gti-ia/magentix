@@ -24,8 +24,8 @@ public class SFProxy {
 
     
     private String SFServiceDesciptionLocation;
-    private SFProcessDescription processDescripcion;
-    private SFProfileDescription profileDescription;
+    private ProcessDescription processDescripcion;
+    private ProfileDescription profileDescription;
     
     private Hashtable<AgentID, String> agentes = new Hashtable<AgentID, String>();
     private HashMap<String, String> tablaSearchServiceProfile = new HashMap<String, String>();
@@ -95,11 +95,11 @@ public class SFProxy {
      * 
      * @return SFAgentDescription
      */
-    SFProfileDescription getProfileDescription() {
+    ProfileDescription getProfileDescription() {
 	return this.profileDescription;
     }
     
-    SFProcessDescription getProcessDescription(){
+    ProcessDescription getProcessDescription(){
 	
 	return this.processDescripcion;
     }
@@ -200,7 +200,7 @@ public class SFProxy {
      * @throws Exception
      */
 
-    public String removeProvider(QueueAgent agent, SFProcessDescription SFProcessDescription)
+    public String removeProvider(QueueAgent agent, ProcessDescription SFProcessDescription)
 	    throws Exception {
 	this.processDescripcion = SFProcessDescription;
 
@@ -256,7 +256,7 @@ public class SFProxy {
      *
      * @throws Exception
      */
-    public String modifyProcess(QueueAgent agent, SFProcessDescription SFProcessDescription)
+    public String modifyProcess(QueueAgent agent, ProcessDescription SFProcessDescription)
 	    throws Exception
 
     {
@@ -291,7 +291,7 @@ public class SFProxy {
          * are provider which implement the profile, -1: the service id is not valid).
      * @throws Exception
      */
-    public String modifyProfile(QueueAgent agent, SFProfileDescription SFProfileDescription)
+    public String modifyProfile(QueueAgent agent, ProfileDescription SFProfileDescription)
 	    throws Exception {
 
 	this.profileDescription = SFProfileDescription;
@@ -325,7 +325,7 @@ public class SFProxy {
          * 0: ok, 1:error).
      * @throws Exception
      */
-    public String deregisterProfile(QueueAgent agent, SFProfileDescription SFProfileDescription)
+    public String deregisterProfile(QueueAgent agent, ProfileDescription SFProfileDescription)
 	    throws Exception {
 
 	this.profileDescription = SFProfileDescription;
@@ -413,7 +413,7 @@ public class SFProxy {
      * @return Status indicates if an error occurs.
      * @throws Exception
      */
-    public String registerProfile(QueueAgent agent, SFProfileDescription SFProfileDescription)
+    public String registerProfile(QueueAgent agent, ProfileDescription SFProfileDescription)
 	    throws Exception {
 
 	this.profileDescription = SFProfileDescription;
@@ -446,7 +446,7 @@ public class SFProxy {
 	 * @return status  indicates if an error occurs (1:ok , 0: bad news).
      * @throws Exception
      */
-    public String registerProcess(QueueAgent agent, SFProcessDescription SFProcessDescription)
+    public String registerProcess(QueueAgent agent, ProcessDescription SFProcessDescription)
 	    throws Exception {
 	// montar string de conexion
 	// Enviamos el mensaje

@@ -6,7 +6,7 @@ package es.upv.dsic.gti_ia.organization;
  * @author Joan Bellver Faus 
  */
 
-public class SFProfileDescription {
+public class ProfileDescription {
 	private String serviceGoal;
 	
 	private String serviceID;
@@ -25,7 +25,7 @@ public class SFProfileDescription {
 	 * @param profileName
 	 *            
 	 */
-	public SFProfileDescription(String URLProfile, String serviceGoal, String profileName) {
+	public ProfileDescription(String URLProfile, String serviceGoal, String profileName) {
 	    
 	    	this.serviceGoal= serviceGoal;
 		this.serviceID = "";
