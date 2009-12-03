@@ -3,17 +3,16 @@ package Thomas_Example;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.StringTokenizer;
+
 
 import org.apache.log4j.xml.DOMConfigurator;
-import org.mindswap.owl.EntityFactory;
-import org.mindswap.owl.OWLFactory;
-import org.mindswap.owl.OWLKnowledgeBase;
+
+
 import org.mindswap.owls.OWLSFactory;
 import org.mindswap.owls.process.Process;
 import org.mindswap.owls.process.execution.ProcessExecutionEngine;
-import org.mindswap.owls.service.Service;
 import org.mindswap.query.ValueMap;
+
 
 import es.upv.dsic.gti_ia.architecture.FIPARequestResponder;
 import es.upv.dsic.gti_ia.architecture.MessageTemplate;
@@ -23,7 +22,7 @@ import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.organization.OMSProxy;
 import es.upv.dsic.gti_ia.organization.Oracle;
-import es.upv.dsic.gti_ia.organization.SFProcessDescription;
+import es.upv.dsic.gti_ia.organization.ProcessDescription;
 import es.upv.dsic.gti_ia.organization.SFProxy;
 
 public class AgentProvider extends QueueAgent {
@@ -36,7 +35,7 @@ public class AgentProvider extends QueueAgent {
 
     private Oracle oracle;
 
-    SFProcessDescription processDescription = new SFProcessDescription(
+    ProcessDescription processDescription = new ProcessDescription(
 	    "http://localhost:8080/sfservices/THservices/owl/owls/SearchCheapHotelProcess.owl",
 	    "SearchCheapHotel");
 
@@ -143,7 +142,7 @@ public class AgentProvider extends QueueAgent {
      */
     public class Responder extends FIPARequestResponder {
 
-	OWLKnowledgeBase kb = OWLFactory.createKB();
+
 
 	public Responder(QueueAgent agent) {
 	    super(agent, new MessageTemplate(InteractionProtocol.FIPA_REQUEST));
@@ -166,28 +165,12 @@ public class AgentProvider extends QueueAgent {
 
 		try {
 
-		    // read msg content
-		    StringTokenizer Tok = new StringTokenizer(msg.getContent());
 
-		    // read in the service description
-		    String token_process = Tok.nextElement().toString();
-
-		    System.out.println("[Provider]Doc OWL-S: " + token_process);
-		    Service aService = kb.readService(token_process);
-
-		    // get the process for the server
-		    Process aProcess = aService.getProcess();
-
+		    Process aProcess = processDescription.getProcess(msg);
 		    System.out.println("AGREE");
 		    response.setPerformative(ACLMessage.AGREE);
 		    response.setContent(aProcess.getLocalName() + "=Agree");
 
-		    /*
-		     * }else{ System.out.println("REFUSE");
-		     * response.setPerformative
-		     * (jade.lang.acl.ACLMessage.REFUSE);
-		     * response.setContent(aProcess.getLocalName()+"=Refuse"); }
-		     */
 
 		} catch (Exception e) {
 
@@ -223,53 +206,25 @@ public class AgentProvider extends QueueAgent {
 	 */
 	protected ACLMessage prepareResultNotification(ACLMessage inmsg, ACLMessage outmsg) {
 
+	    
+	   
+	    
 	    ACLMessage msg = inmsg.createReply();
-
+	
+	    
 	    // create an execution engine
 	    ProcessExecutionEngine exec = OWLSFactory.createExecutionEngine();
-
-	    // read msg content
-	    StringTokenizer Tok = new StringTokenizer(inmsg.getContent());
-
-	    // read in the service description
-	    String token_process = Tok.nextElement().toString();
-
-	    System.out.println("[Provider]Doc OWL-S: " + token_process);
-
+	    
 	    try {
-		Service aService = kb.readService(token_process);
+		Process aProcess = processDescription.getProcess(inmsg);
 
-		// get the process for the server
-		Process aProcess = aService.getProcess();
+		
 		// initialize the input values to be empty
 		ValueMap values = new ValueMap();
-
-		// get the input values
-		// int n = 0;
-
-		// int tokenCount = Tok.countTokens();
-		for (int i = 0; i < aProcess.getInputs().size(); i++)
-		    values.setValue(aProcess.getInputs().inputAt(i), EntityFactory
-			    .createDataValue(""));
-		while (Tok.hasMoreElements()) {
-		    String token = Tok.nextElement().toString();
-		    for (int i = 0; i < aProcess.getInputs().size(); i++) {
-			String paramName = aProcess.getInputs().inputAt(i).getLocalName()
-				.toLowerCase();
-			if (paramName.equalsIgnoreCase(token.split("=")[0].toLowerCase())) {
-			    if (token.split("=").length >= 2)
-				values.setValue(aProcess.getInputs().inputAt(i), EntityFactory
-					.createDataValue(token.split("=")[1]));
-			    else
-				values.setValue(aProcess.getInputs().inputAt(i), EntityFactory
-					.createDataValue(""));
-			    break;
-			}
-		    }
-		}// end while
-
-		// execute the service
-
+		
+		values = processDescription.getServiceRequestValues(inmsg);
+		
+		
 		System.out.println("[Provider]Executing... " + values.getValues().toString());
 		values = exec.execute(aProcess, values);
 

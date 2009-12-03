@@ -5,7 +5,7 @@ package Thomas_Example;
 import es.upv.dsic.gti_ia.architecture.QueueAgent;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.organization.OMSProxy;
-import es.upv.dsic.gti_ia.organization.SFProfileDescription;
+import es.upv.dsic.gti_ia.organization.ProfileDescription;
 import es.upv.dsic.gti_ia.organization.SFProxy;
 
 public class AgentAnnouncement extends QueueAgent {
@@ -24,7 +24,7 @@ public class AgentAnnouncement extends QueueAgent {
     // access to the methods of the SF
     SFProxy SFservices = new SFProxy();
 
-    SFProfileDescription profile = new SFProfileDescription(
+    ProfileDescription profile = new ProfileDescription(
 	    "http://localhost:8080/sfservices/THservices/owl/owls/SearchCheapHotelProfile.owl",
 	    "SearchCheapHotel", "SearchCheapHotel");
 
