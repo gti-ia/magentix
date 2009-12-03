@@ -138,8 +138,7 @@ public class SFProxy {
 	String arguments = "";
 	int i = 0;
 	for (String s : inputs) {
-	    // arguments.concat(" ").concat(s).concat("=").concat(this.getAID().getLocalName());
-	    // s = s.substring(1, s.length());
+	
 	    if (i < ArrayArguments.size())
 		arguments = arguments + " " + s + "=" + ArrayArguments.get(i);
 	    i++;

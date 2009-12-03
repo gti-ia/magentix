@@ -23,6 +23,11 @@ public class Configuration {
 	private String qpidUser;
 	private String qpidPassword;
 	private String qpidSsl;
+	private String jenadbURL;
+	private String jenadbUser;
+	private String jenadbPw;
+	private String jenadbType;
+	private String jenadbDriver;
 	private static Configuration configuration = null;
 	
 
@@ -109,27 +114,47 @@ public class Configuration {
 		
 	}
 	
-	
+	/**
+	 * 
+	 * @return port
+	 */
 	public int getqpidPort()
 	{
 
 		return Integer.parseInt(this.qpidPort);
 		
 	}
+	/**
+	 * 
+	 * @return Virtual host
+	 */
 	public String getqpidVhost()
 	{
 		return this.qpidVhost;
 	}
 	
+	/**
+	 * 
+	 * @return user
+	 */
 	public String getqpidUser()
 	{
 		return this.qpidUser;
 	}
 	
+	/**
+	 * 
+	 * @return password
+	 */
 	public String getqpidPassword()
 	{
 		return this.qpidPassword;
 	}
+	
+	/**
+	 * 
+	 * @return SSl
+	 */
 	public boolean getqpidSSL()
 	{
 		if (this.qpidSsl.equals("true"))
@@ -139,8 +164,49 @@ public class Configuration {
 		
 	}
 	
+	/**
+	 * 
+	 * @return URL
+	 */
+	public String getjenadbURL()
+	{
+	    return this.jenadbURL;
+	}
 	
+	/**
+	 * 
+	 * @return User
+	 */
+	public String getjenadbUser()
+	{
+	    return this.jenadbUser;
+	}
+	
+	/**
+	 * 
+	 * @return password
+	 */
+	public String getjenadbPW(){
+	    return this.jenadbPw;
+	}
+	
+	/**
+	 * 
+	 * @return type
+	 */
+	public String getjenadbType()
+	{
+	    return this.jenadbType;
+	}
 
+	/**
+	 * 
+	 * @return driver
+	 */
+	public String getjenadbDriver()
+	{
+	    return this.jenadbDriver;
+	}
 	private void load()
 	{
 		//Cargamos los valores desde un archivo .xml 
@@ -217,8 +283,27 @@ public class Configuration {
 			    {
 			    	this.qpidSsl = properties.getProperty(obj.toString()); 	
 			    }
-			    
-			    
+			    else    if (obj.toString().equalsIgnoreCase("dbURL"))
+			    {
+			    	this.jenadbURL = properties.getProperty(obj.toString()); 	
+			    }
+			    else    if (obj.toString().equalsIgnoreCase("dbUser"))
+			    {
+			    	this.jenadbUser = properties.getProperty(obj.toString()); 	
+			    }
+			    else    if (obj.toString().equalsIgnoreCase("dbPw"))
+			    {
+			    	this.jenadbPw = properties.getProperty(obj.toString()); 	
+			    }
+			    else    if (obj.toString().equalsIgnoreCase("dbType"))
+			    {
+			    	this.jenadbType = properties.getProperty(obj.toString()); 	
+			    }
+			    else    if (obj.toString().equalsIgnoreCase("dbDriver"))
+			    {
+			    	this.jenadbDriver = properties.getProperty(obj.toString()); 	
+			    }
+	
 			}
 
 	    } catch (IOException e) {

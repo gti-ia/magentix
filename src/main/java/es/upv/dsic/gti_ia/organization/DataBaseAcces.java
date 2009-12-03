@@ -27,14 +27,15 @@ public class DataBaseAcces {
 			return;
 
 		try {
+		    	Configuration c = Configuration.getConfiguration();
 			// Se registra el Driver de MySQL
-			String driverName = "com.mysql.jdbc.Driver"; // MySQL MM JDBC
+			String driverName = c.getjenadbDriver(); // MySQL MM JDBC
 															// driver
 			Class.forName(driverName);
 			// Se obtiene una conexi�n con la base de datos. Hay que
 			// cambiar el usuario "usuario" y la clave "" por las
 			// adecuadas a la base de datos que estemos usando.
-			Configuration c = Configuration.getConfiguration();
+			
 			String serverName = c.getdatabaseServer();
 			String mydatabase = c.getdatabaseName();
 			String url = "jdbc:mysql://" + serverName + "/" + mydatabase; // a

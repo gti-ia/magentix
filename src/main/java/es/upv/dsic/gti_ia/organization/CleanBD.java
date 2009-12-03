@@ -12,11 +12,7 @@ public class CleanBD {
 	 * @param args
 	 */
 	
-	private static String s_dbURL;
-	private static String s_dbUser;
-	private static String s_dbPw;
-	private static String s_dbType;
-	private static String s_dbDriver;
+    private Configuration c;
 
 	public void clean_database() {
 		try {
@@ -77,21 +73,12 @@ public class CleanBD {
 		/////////////
 		IDBConnection conn = null;
 		
+		c = Configuration.getConfiguration();
 
-
-		s_dbURL = "jdbc:mysql://localhost/thomas";
-
-		s_dbUser = "thomas";
-
-		s_dbPw = "thomas";
-
-		s_dbType = "MySQL";
-
-		s_dbDriver = "com.mysql.jdbc.Driver";
 
 		// ensure the JDBC driver class is loaded
 		try {
-			Class.forName(s_dbDriver);
+			Class.forName(c.getjenadbDriver());
 		} catch (Exception e) {
 			System.err.println("Failed to load the driver for the database: "+ e.getMessage());
 			System.err.println("Have you got the CLASSPATH set correctly?");
@@ -105,7 +92,7 @@ public class CleanBD {
 
 		// Create database connection
 		try {
-			conn = new DBConnection(s_dbURL, s_dbUser, s_dbPw, s_dbType);
+			conn = new DBConnection(c.getjenadbURL(),c.getjenadbUser(),c.getjenadbPW(),c.getjenadbType());
 			conn.cleanDB();
 		} catch (Exception e) {
 			e.printStackTrace();
