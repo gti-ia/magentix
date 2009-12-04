@@ -36,7 +36,7 @@ public class AgentProvider extends QueueAgent {
     private Oracle oracle;
 
     ProcessDescription processDescription = new ProcessDescription(
-	    "http://localhost:8080/sfservices/THservices/owl/owls/SearchCheapHotelProcess.owl",
+	    "http://localhost:8080/SearchCheapHotel/owl/owls/SearchCheapHotelProcess.owl",
 	    "SearchCheapHotel");
 
     public AgentProvider(AgentID aid) throws Exception {

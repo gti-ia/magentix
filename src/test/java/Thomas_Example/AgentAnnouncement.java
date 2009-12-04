@@ -25,7 +25,7 @@ public class AgentAnnouncement extends QueueAgent {
     SFProxy SFservices = new SFProxy();
 
     ProfileDescription profile = new ProfileDescription(
-	    "http://localhost:8080/sfservices/THservices/owl/owls/SearchCheapHotelProfile.owl",
+	    "http://localhost:8080/SearchCheapHotel/owl/owls/SearchCheapHotelProfile.owl",
 	    "SearchCheapHotel", "SearchCheapHotel");
 
     public void execute() {
