@@ -24,8 +24,6 @@ public class Configuration {
 	private String qpidPassword;
 	private String qpidSsl;
 	private String jenadbURL;
-	private String jenadbUser;
-	private String jenadbPw;
 	private String jenadbType;
 	private String jenadbDriver;
 	private static Configuration configuration = null;
@@ -173,22 +171,7 @@ public class Configuration {
 	    return this.jenadbURL;
 	}
 	
-	/**
-	 * 
-	 * @return User
-	 */
-	public String getjenadbUser()
-	{
-	    return this.jenadbUser;
-	}
-	
-	/**
-	 * 
-	 * @return password
-	 */
-	public String getjenadbPW(){
-	    return this.jenadbPw;
-	}
+
 	
 	/**
 	 * 
@@ -287,14 +270,7 @@ public class Configuration {
 			    {
 			    	this.jenadbURL = properties.getProperty(obj.toString()); 	
 			    }
-			    else    if (obj.toString().equalsIgnoreCase("dbUser"))
-			    {
-			    	this.jenadbUser = properties.getProperty(obj.toString()); 	
-			    }
-			    else    if (obj.toString().equalsIgnoreCase("dbPw"))
-			    {
-			    	this.jenadbPw = properties.getProperty(obj.toString()); 	
-			    }
+	
 			    else    if (obj.toString().equalsIgnoreCase("dbType"))
 			    {
 			    	this.jenadbType = properties.getProperty(obj.toString()); 	

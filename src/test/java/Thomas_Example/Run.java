@@ -58,6 +58,8 @@ public class Run {
 	    /**
 	     * Execute the agents
 	     */
+	    
+	    
 
 	    AgentPayee payeeAgent = new AgentPayee(new AgentID("agentPayee"));
 	    
@@ -75,6 +77,7 @@ public class Run {
 	    providerAgent.start();
 	    m.waiting(10 * 1000);
 	    clientAgent.start();
+	    
 
 	} catch (Exception e) {
 	    logger.error(e.getMessage());

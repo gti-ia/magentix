@@ -29,8 +29,6 @@
 
 <!-- Properties jena -->
 <entry key="dbURL">jdbc:mysql://localhost/thomas</entry>
-<entry key="dbUser">thomas</entry>
-<entry key="dbPw">thomas</entry>
 <entry key="dbType">MySQL</entry>
 <entry key="dbDriver">com.mysql.jdbc.Driver</entry>
 

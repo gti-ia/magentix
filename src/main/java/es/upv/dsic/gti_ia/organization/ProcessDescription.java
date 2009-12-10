@@ -138,6 +138,13 @@ public class ProcessDescription {
 	}
 
     }
+    
+    /**
+     * 
+     * @param inmsg
+     * @return ValueMap 
+     * @throws Exception
+     */
 
     public ValueMap getServiceRequestValues(ACLMessage inmsg) throws Exception {
 

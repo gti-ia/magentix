@@ -92,7 +92,7 @@ public class CleanBD {
 
 		// Create database connection
 		try {
-			conn = new DBConnection(c.getjenadbURL(),c.getjenadbUser(),c.getjenadbPW(),c.getjenadbType());
+			conn = new DBConnection(c.getjenadbURL(),c.getdatabaseUser(),c.getdatabasePassword(),c.getjenadbType());
 			conn.cleanDB();
 		} catch (Exception e) {
 			e.printStackTrace();

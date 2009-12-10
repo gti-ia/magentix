@@ -40,7 +40,7 @@ public class SFProxy {
     private Hashtable<String, String> list = new Hashtable<String, String>();
     private boolean isgenericSerice = false;
 
-    Configuration c = Configuration.getConfiguration();
+    Configuration c;
 
     /**
      * This class gives us the support to accede to the services of the SF
@@ -55,10 +55,12 @@ public class SFProxy {
     }
 
     /**
-     * This class gives us the support to accede to the services of the SF
+     * This class gives us the support to accede to the services of the SF, We must configure the path in the configuration file.
+     * 
      */
     public SFProxy() {
-
+	
+	 c = Configuration.getConfiguration();
 	this.SFServiceDesciptionLocation = c.getSFServiceDesciptionLocation();
 
     }
