@@ -16,7 +16,6 @@ public class Configuration {
 	private String databasePassword;
 	private String OMSServiceDesciptionLocation;
 	private String SFServiceDesciptionLocation;
-	private String THServiceDesciptionLocation;
 	private String qpidHost;
 	private String qpidPort;
 	private String qpidVhost;
@@ -84,14 +83,7 @@ public class Configuration {
 	{
 		return this.SFServiceDesciptionLocation;
 	}
-	/**
-	 * 
-	 * @return THServiceDesciptionLocation
-	 */
-	public String getTHServiceDesciptionLocation()
-	{
-		return this.THServiceDesciptionLocation;
-	}
+
 	/**
 	 * 
 	 * @return connection
@@ -237,9 +229,6 @@ public class Configuration {
 			    else    if (obj.toString().equalsIgnoreCase("SFServiceDesciptionLocation"))
 			    {
 			    	SFServiceDesciptionLocation= properties.getProperty(obj.toString()); 	
-			    }else    if (obj.toString().equalsIgnoreCase("THServiceDesciptionLocation"))
-			    {
-			    	THServiceDesciptionLocation= properties.getProperty(obj.toString()); 	
 			    }else    if (obj.toString().equalsIgnoreCase("host"))
 			    {
 	
