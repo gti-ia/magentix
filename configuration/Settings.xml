@@ -7,7 +7,7 @@
 <!-- Properties thomas -->
 <entry key="OMSServiceDesciptionLocation">http://localhost:8080/omsservices/OMSservices/owl/owls/</entry>
 <entry key="SFServiceDesciptionLocation">http://localhost:8080/sfservices/SFservices/owl/owls/</entry>
-<entry key="THServiceDesciptionLocation">http://localhost:8080/sfservices/THservices/owl/owls/</entry>
+
 
 
 <!-- Properties mysql -->
