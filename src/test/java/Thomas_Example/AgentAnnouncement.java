@@ -26,7 +26,7 @@ public class AgentAnnouncement extends QueueAgent {
 
     ProfileDescription profile = new ProfileDescription(
 	    "http://localhost:8080/SearchCheapHotel/owl/owls/SearchCheapHotelProfile.owl",
-	    "SearchCheapHotel", "SearchCheapHotel");
+	    "SearchCheapHotel");
 
     public void execute() {
 

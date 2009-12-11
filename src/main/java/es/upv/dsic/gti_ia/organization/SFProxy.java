@@ -410,7 +410,7 @@ public class SFProxy {
      * Register profile
      * 
      * @param agent
-     * @param SFProfileDescription This parameter contains two elements: service goal ( is a string ),
+     * @param SFProfileDescription This parameter contains one element:
 	 * service profile ( is a string: urlprofile#profilename )
      * @return Status indicates if an error occurs.
      * @throws Exception
@@ -420,14 +420,15 @@ public class SFProxy {
 
 	this.profileDescription = SFProfileDescription;
 
-	if (SFProfileDescription.getServiceProfile().equals("") || SFProfileDescription.getServiceGoal().equals(""))
+	if (SFProfileDescription.getServiceProfile().equals(""))
 	{
 	    throw new Exception("Service Profile or Service Goal is  empty");
 	    
 	}
 	
+	//
 	String call = SFServiceDesciptionLocation + "RegisterProfileProcess.owl "
-		+ "RegisterProfileInputServiceGoal=" + this.profileDescription.getServiceGoal()
+		+ "RegisterProfileInputServiceGoal= " 
 		+ " RegisterProfileInputServiceProfile=" + this.profileDescription.getServiceProfile();
 
 	this.sendInfo(agent, call);
@@ -440,7 +441,7 @@ public class SFProxy {
     }
 
     /**
-     * Register Process
+     * Register Process: This service registers the process of a service in the sf's database.
      * 
      * @param agent
         *@param SFProfileDescription. This parameter contains two elements: service id (is a string), and service

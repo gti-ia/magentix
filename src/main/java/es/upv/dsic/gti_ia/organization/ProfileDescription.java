@@ -7,8 +7,8 @@ package es.upv.dsic.gti_ia.organization;
  */
 
 public class ProfileDescription {
-	private String serviceGoal;
 	
+    
 	private String serviceID;
 	
 	private String serviceprofile;
@@ -25,9 +25,9 @@ public class ProfileDescription {
 	 * @param profileName
 	 *            
 	 */
-	public ProfileDescription(String URLProfile, String serviceGoal, String profileName) {
+	public ProfileDescription(String URLProfile,String profileName) {
 	    
-	    	this.serviceGoal= serviceGoal;
+	    	
 		this.serviceID = "";
 		this.URLProfile = URLProfile;
 		this.serviceprofile = this.URLProfile+"#"+ profileName;
@@ -92,29 +92,4 @@ public class ProfileDescription {
 	public String getServiceID() {
 		return this.serviceID;
 	}
-
-
-
-
-
-	/**
-	 * Return Service Goal
-	 * 
-	 * @return
-	 */
-	public String getServiceGoal() {
-
-		return this.serviceGoal;
-	}
-
-	/**
-	 * Return Profile goal
-	 * 
-	 * @param goalProfile
-	 */
-	public void setServiceGoal(String goalProfile) {
-
-		this.serviceGoal = goalProfile;
-	}
-
 }
