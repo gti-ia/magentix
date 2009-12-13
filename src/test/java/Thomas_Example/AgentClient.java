@@ -123,7 +123,7 @@ public class AgentClient extends QueueAgent {
 
     public void execute() {
 
-	logger.info("Executing, I'm " + getName());
+	logger.info("Executing, I'm " + this.getName());
 	this.escenario1();
 	this.escenario2();
 
