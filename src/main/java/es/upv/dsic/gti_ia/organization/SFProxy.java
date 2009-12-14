@@ -134,7 +134,7 @@ public class SFProxy {
 
 	// Get inputs
 	ArrayList<String> inputs = oracle.getInputs();
-	// ArrayList<String> outputs = oracle.getOutputs();
+
 
 	// Build call arguments
 	String arguments = "";
@@ -194,7 +194,7 @@ public class SFProxy {
     }
 
     /**
-     * Remove provider agent
+     * This service deletes the service process registrated in the sf database. 
      * 
      * @param agent
      * @param SFProcessDescription
@@ -223,7 +223,9 @@ public class SFProxy {
     }
 
     /**
-     * Return a service list
+     * His service searchs in the sf database the services which has the goal required by the client.
+     * Currently this service makes a query to the database seaching the services whose service description 
+     * field mathc with the client requirements (the input service purpose).
      * 
      * @param agent
      * @param serviceGoal service purpose (is a string: the service description).
@@ -248,7 +250,7 @@ public class SFProxy {
     }
 
     /**
-     * Modify Process
+     * This service deletes the service process kept in the sf database and inserts the new process
      * 
      * @param agent
      * @param SFProcessDescription  contains two elements: service implementation ID (is a string: 
@@ -283,7 +285,7 @@ public class SFProxy {
     }
 
     /**
-     * Modify Profile
+     * This service deletes the service profile kept in the sf database and inserts the new profile.
      * 
      * @param agent
      * @param SFProfileDescription contains three elements: service id (is a string: service profile id), service
@@ -319,7 +321,7 @@ public class SFProxy {
     }
 
     /**
-     * Deregister Profile
+     * This service deletes the profile in the sf database.
      * 
      * @param agent
      * @param SFProfileDescription contains one element: service id (is a string: service profile id)
@@ -354,7 +356,7 @@ public class SFProxy {
     }
 
     /**
-     * Return provider list
+     * This service returns the providers which implements the required profile.
      * 
      * @param agent
      * @param id the service ID (is a string: service profile id) and the 
@@ -382,7 +384,7 @@ public class SFProxy {
     }
 
     /**
-     * Return service profile ( the URL profile)
+     * This service returns the url of the required profile.
      * 
      * @param agent
      * @param serviceID the service ID (is a string: service profile id)
@@ -407,7 +409,7 @@ public class SFProxy {
 
     /**
      * 
-     * Register profile
+     *  This service registers the profile of a service in the sf's database.
      * 
      * @param agent
      * @param SFProfileDescription This parameter contains one element:
@@ -441,7 +443,7 @@ public class SFProxy {
     }
 
     /**
-     * Register Process: This service registers the process of a service in the sf's database.
+     * This service registers the process of a service in the sf's database.
      * 
      * @param agent
         *@param SFProfileDescription. This parameter contains two elements: service id (is a string), and service
