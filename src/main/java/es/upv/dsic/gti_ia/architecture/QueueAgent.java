@@ -72,9 +72,9 @@ public class QueueAgent extends BaseAgent {
 	 * Method to receive a magentix2 AclMessage
 	 * 
 	 * @param template
-	 * @return an ACLMessage
+	 * @return msg ACLMessage
 	 */
-	public synchronized ACLMessage receiveACLMessageSimple(
+	public synchronized ACLMessage receiveACLMessage(
 			MessageTemplate template) throws Exception {
 		ACLMessage msgselect = null;
 
