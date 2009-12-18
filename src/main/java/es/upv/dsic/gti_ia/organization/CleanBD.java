@@ -14,6 +14,9 @@ public class CleanBD {
 	
     private Configuration c;
 
+    	/**
+    	 * Clean DataBase thomas and remove jena tables.
+    	 */
 	public void clean_database() {
 		try {
 			DataBaseAcces bd = new DataBaseAcces();

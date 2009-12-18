@@ -320,7 +320,8 @@ public class QueueAgent extends BaseAgent {
 	 * Adds a new task (FIPA protocol) to the agent,was creating a new thread
 	 * 
 	 * @param obj
-	 *            object of type FIPA protocol
+	 *            object of type FIPA protocol. ej: FIPARequestInitiator, FIPARequestResponder, 
+	 *            FIPAQueryResponder, FIPAQueryInitiator, FIPAContractNetResponder, FIPAContractNetInitiator.
 	 */
 	public void addTask(Object obj) {
 
@@ -363,7 +364,7 @@ public class QueueAgent extends BaseAgent {
 	}
 
 
-	public class ThreadInitiator extends Thread {
+	private class ThreadInitiator extends Thread {
 
 		Object iniciador;
 		int tipo;
@@ -398,7 +399,7 @@ public class QueueAgent extends BaseAgent {
 		}
 	}
 
-	public class ThreadResponder extends Thread {
+	private class ThreadResponder extends Thread {
 		Object responder;
 		int tipo;
 
