@@ -12,11 +12,10 @@ Download Magentix2
  
  [[2]] Document "Magentinx2  guide" {{{./docs/Magentix2 guide.pdf}download}}.
  
- [[3]] Document "Develop agents for Magentix2" {{{./docs/Develop agents for Magentix2.pdf}download}}.
+ [[3]] Document "Develop agents for Magentix2 and Thomas" {{{./docs/Magentix2AndThomas.pdf}download}}.
  
- [[4]] Image Magentinx2 Architecture {{{./images/Magentix2-Architecture.jpg}download}}.
+ [[4]] Document "Magentix2 core" {{{./docs/CoreQpid.pdf}download}}.
  
- [[5]] Image Magentinx2 + Thomas Architecture  {{{./images/Magentix2-Thomas-Architecture.jpg}download}}.
  
 
 * QPID
@@ -27,6 +26,20 @@ Download Magentix2
  
  [[7]] Apache qpid  {{{http://qpid.apache.org/download.html}download}}.
 
+
+* THOMAS
+
+ [[8]] Document "Clasificacion servicios thomas" {{{./docs/clasificacion servicios thomas.pdf}download}}.
+ 
+ [[9]] SQL configuration file  {{{./download/thomas.sql}download}}.
+ 
+ [[10]] OMS.war  {{{./download/omsservices.war}download}}.
+ 
+ [[11]] SF.war  {{{./download/sfservices.war}download}}.
+ 
+ [[11]] SearchCheapHotel.war  {{{./download/SearchCheapHotel.war}download}}.
+ 
+ 
 
  
  
