@@ -334,7 +334,7 @@ public class FIPARequestInitiator {
 	}
 
 	/**
-	 * This method is called when a message is received.
+	 *	This method is called when a unexpected message is received.
 	 * 
 	 * @param msg
 	 *            the received message

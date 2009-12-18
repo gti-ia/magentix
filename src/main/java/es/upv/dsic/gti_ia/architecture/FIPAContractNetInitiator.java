@@ -89,7 +89,7 @@ public class FIPAContractNetInitiator {
 				this.finish = true;
 				break;
 			} else {
-				// añadir el agentId que lo envia, lo hacemos tranparente al
+				// aï¿½adir el agentId que lo envia, lo hacemos tranparente al
 				// usuario
 				
 				//guardar temporalmente los agentes a enviar
@@ -203,7 +203,7 @@ public class FIPAContractNetInitiator {
 				break;
 			} else {
 
-				// si hemos añadido un timeout
+				// si hemos aï¿½adido un timeout
 				if (timeout > 0) {
 					long blocktime = endingtime - System.currentTimeMillis();
 
@@ -330,7 +330,7 @@ public class FIPAContractNetInitiator {
 						// tendremos que esperar a que nos lleguen todas las
 						// propuestas
 						if (this.nLeidos < this.aceptados.size())// si aun no
-																	// están
+																	// estï¿½n
 																	// todos
 						{
 							this.monitor.waiting();
@@ -413,7 +413,7 @@ public class FIPAContractNetInitiator {
 
 	}
 	/**
-	 * This method is called when a  message is received.
+	 * This method is called when a unexpected message is received.
 	 * @param msg the received message
 	 */
 	protected void handleOutOfSequence(ACLMessage msg) {
