@@ -39,8 +39,6 @@ public class QueueAgent extends BaseAgent {
 	 * 
 	 * @param aid
 	 *            agent ID.
-	 * @param connection
-	 *            connection with the broker.
 	 */
 
 	public QueueAgent(AgentID aid) throws Exception {
