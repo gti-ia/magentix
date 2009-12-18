@@ -1,20 +1,15 @@
 package ContractNet_Example;
 
-
-
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
-
-
 
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
 
-
-
 /**
- * Run class is an example of an agent that implements the FIPA Contract-Net protocol.
- *
+ * Run class is an example of an agent that implements the FIPA Contract-Net
+ * protocol.
+ * 
  * 
  * 
  * @author Joan Bellver - jbellver@dsic.upv.es
@@ -23,47 +18,45 @@ import es.upv.dsic.gti_ia.core.AgentsConnection;
 
 public class Run {
 
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-	
-		DOMConfigurator.configure("configuration/loggin.xml");
-		Logger logger = Logger.getLogger(Run.class);
-        
-        try{
-        	
-        /**
-		* Connecting to Qpid Broker, default localhost.
-		*/	
-        AgentsConnection.connect();
-        
-        
-        for(int i=0;i<20;i++)
-        {
-        /**
+    /**
+     * @param args
+     */
+    public static void main(String[] args) {
+
+	DOMConfigurator.configure("configuration/loggin.xml");
+	Logger logger = Logger.getLogger(Run.class);
+
+	try {
+
+	    /**
+	     * Connecting to Qpid Broker, default localhost.
+	     */
+	    AgentsConnection.connect();
+
+	    for (int i = 0; i < 20; i++) {
+		/**
 		 * Instantiating a consumer agent
 		 */
-        Concessionaire concesionario = new Concessionaire(new AgentID("Autos"+i));
-        /**
+		Concessionaire concesionario = new Concessionaire(new AgentID("Autos" + i));
+		/**
 		 * Execute the agents
 		 */
-        concesionario.start();
-        }      
-        
-    	/**
-		 * Instantiating a sender agent
-		 */
-        Client cliente = new Client(new AgentID("Client"));
-        /**
-		 * Execute the agents
-		 */
-        cliente.start();
-        }catch(Exception e){
-        	
-        	logger.error(e.getMessage());
-        }
+		concesionario.start();
+	    }
 
+	    /**
+	     * Instantiating a sender agent
+	     */
+	    Client cliente = new Client(new AgentID("Client"));
+	    /**
+	     * Execute the agents
+	     */
+	    cliente.start();
+	} catch (Exception e) {
+
+	    logger.error(e.getMessage());
 	}
+
+    }
 
 }
