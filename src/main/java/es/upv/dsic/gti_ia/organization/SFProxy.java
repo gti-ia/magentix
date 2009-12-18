@@ -55,7 +55,8 @@ public class SFProxy {
     }
 
     /**
-     * This class gives us the support to accede to the services of the SF, We must configure the path in the configuration file.
+     * This class gives us the support to accede to the services of the SF, checked that the data contained in the file settings.xml is the URL 
+     * SFServiceDescriptionLocation is not empty and is the correct path.
      * 
      */
     public SFProxy() {

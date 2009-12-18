@@ -39,7 +39,8 @@ public class OMSProxy {
     }
 
     /**
-     * This class gives us the support to accede to the services of the OMS
+     * This class gives us the support to accede to the services of the OMS, checked that the data contained in the file settings.xml is the URL 
+     * SFServiceDescriptionLocation is not empty and is the correct path.
      * 
      * 
      * 
