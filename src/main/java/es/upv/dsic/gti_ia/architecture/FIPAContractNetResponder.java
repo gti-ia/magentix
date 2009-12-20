@@ -47,11 +47,14 @@ public class FIPAContractNetResponder {
 
 	}
 
-	public int getState() {
+	 int getState() {
 		return this.state;
 	}
 
 
+	 /**
+	  *  Run the state machine with the communication protocol
+	  */
 	public void action() {
 
 		switch (state) {

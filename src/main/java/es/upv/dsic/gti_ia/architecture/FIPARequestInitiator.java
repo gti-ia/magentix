@@ -62,7 +62,7 @@ public class FIPARequestInitiator {
 	}
 
 	/**
-	 * 
+	 * returns the id of the message used in communication protocol
 	 * @return conversationID
 	 */
 	public String getIdConversation() {
@@ -70,16 +70,15 @@ public class FIPARequestInitiator {
 
 	}
 
-	/**
-	 * 
-	 * @return
-	 */
-	public int getState() {
+
+	int getState() {
 		return this.state;
 	}
 	
-	
-	 void finish()
+	 /**
+	  *  Send a CANCEL Message for  active conversation and and terminates the protocol
+	  */
+	public void finish()
 	 {
 		 //Send a CANCEL Message for  active conversation
 		 
@@ -93,7 +92,9 @@ public class FIPARequestInitiator {
 	 
 	 
 
-
+	 /**
+	  *  Run the state machine with the communication protocol
+	  */
 	public void action() {
 		switch (state) {
 		case PREPARE_MSG_STATE: {

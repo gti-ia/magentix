@@ -50,7 +50,10 @@ public class FIPARequestResponder {
 		return this.state;
 	}
 
-	 void finish()
+	 /**
+	  *  Send a CANCEL Message for  active conversation and and terminates the protocol
+	  */
+	 public void finish()
 	 {
 		 //Send a CANCEL Message for  active conversation
 		 
@@ -64,8 +67,10 @@ public class FIPARequestResponder {
 		 
 	 }
 	
-
-	public void action() {
+	 /**
+	  *  Run the state machine with the communication protocol
+	  */
+	 public void action() {
 		switch (state) {
 		case WAITING_MSG_STATE: {
 			ACLMessage request = myAgent.receiveACLMessage(template, 1);

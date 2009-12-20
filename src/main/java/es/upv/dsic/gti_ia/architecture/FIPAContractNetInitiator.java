@@ -66,11 +66,15 @@ public class FIPAContractNetInitiator {
 	public boolean finished() {
 		return this.finish;
 	}
-	public int getState()
+	int getState()
 	{
 		return this.state;
 	}
 	@SuppressWarnings("unchecked")
+	
+	 /**
+	  *  Run the state machine with the communication protocol
+	  */
 	public void action() {
 
 		switch (state) {

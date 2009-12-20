@@ -65,11 +65,22 @@ public class FIPAQueryInitiator {
 		return this.finish;
 	}
 
-	public int getState() {
+	int getState() {
 		return this.state;
+	}
+	
+	/**
+	 * returns the id of the message used in communication protocol
+	 * @return conversationID
+	 */
+	public String getIdConversation() {
+		return this.conversationID;
 	}
 
 
+	 /**
+	  *  Run the state machine with the communication protocol
+	  */
 	public void action() {
 		switch (state) {
 		case PREPARE_MSG_STATE: {
