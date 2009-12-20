@@ -71,12 +71,12 @@ public class OMS extends QueueAgent {
 		// URI where the SF service descriptions are located 
 
 	    
-	    public final URI OWL_S_OMS_SERVICES = URI.create(OMSServiceDesciptionLocation);    
-	    public final URI OWL_S_SF_SERVICES = URI.create(SFServiceDesciptionLocation);    
+	    private final URI OWL_S_OMS_SERVICES = URI.create(OMSServiceDesciptionLocation);    
+	    private final URI OWL_S_SF_SERVICES = URI.create(SFServiceDesciptionLocation);    
 	    
 	    // URI of each SF services description parameters are located 
-	    public final URI SF_REGISTERPROFILE_PROCESS = URI.create(OWL_S_SF_SERVICES + "RegisterProfileProcess.owl");
-	    public final URI SF_REGISTERPROCESS_PROCESS = URI.create(OWL_S_SF_SERVICES + "RegisterProcessProcess.owl");
+	    private final URI SF_REGISTERPROFILE_PROCESS = URI.create(OWL_S_SF_SERVICES + "RegisterProfileProcess.owl");
+	    private final URI SF_REGISTERPROCESS_PROCESS = URI.create(OWL_S_SF_SERVICES + "RegisterProcessProcess.owl");
 	    
 	    //STRUCTURAL SERVICES
 	    public  final URI OMS_REGISTERUNIT_PROFILE = URI.create(OWL_S_OMS_SERVICES + "RegisterUnitProfile.owl");
@@ -231,8 +231,8 @@ public class OMS extends QueueAgent {
 			
 	    
 	 /**
-	  * 
-	  * @param agent
+	  * Returns an instance of the agents OMS
+	  * @param agent a new Agent ID
 	  * @return oms
 	  */ 
 	 static public OMS getOMS(AgentID agent)
@@ -246,7 +246,7 @@ public class OMS extends QueueAgent {
 		 return oms;
 	 }
 	 /**
-	  * 
+	  * Returns an instance of the agents OMS
 	  * @return oms
 	  */
 	 static public OMS getOMS()
@@ -260,21 +260,18 @@ public class OMS extends QueueAgent {
 		 return oms;
 	 }
 	
-	
-    /**
-     * 
-     * @param aid
-     * @param connection
-     * @param OMSServiceDesciptionLocation
-     * @param SFServiceDesciptionLocation
-     * @throws Exception
-     */
+	/**
+	 * Returns an instance of the agents OMS
+	 * @param aid new AgentID
+	 * @throws Exception
+	 */
 	private OMS(AgentID aid)throws Exception{
     	super(aid);
     }
    
 	/**
-	 * 
+	 * Change the URL where the owl's document is
+	 * located.
 	 * @param OMSUrl
 	 */
 	public void setOMSServiceDesciptionLocation(String OMSUrl)
@@ -284,7 +281,8 @@ public class OMS extends QueueAgent {
 	}
 	
 	/**
-	 * 
+	 * Change the URL where the owl's document is
+	 * located.
 	 * @param SFUrl
 	 */
 	public void setSFServiceDesciptionLocation(String SFUrl)
@@ -293,7 +291,8 @@ public class OMS extends QueueAgent {
     }
 
 	/**
-	 * 
+	 * Get the URL where the owl's document is
+	 * located.
 	 * @param OMSUrl
 	 */
 	public String getOMSServiceDesciptionLocation()
@@ -303,7 +302,8 @@ public class OMS extends QueueAgent {
 	}
 	
 	/**
-	 * 
+	 * Get the URL where the owl's document is
+	 * located.
 	 * @param SFUrl
 	 */
 	public String getSFServiceDesciptionLocation()

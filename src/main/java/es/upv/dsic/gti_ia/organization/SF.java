@@ -203,7 +203,7 @@ public class SF extends QueueAgent {
 	
 	
 	/**
-	 * 
+	  * Returns an instance of the agents SF
 	 * @param agent
 	 * @return sf
 	 */
@@ -220,7 +220,7 @@ public class SF extends QueueAgent {
 	}
 	
 	/**
-	 * 
+	 * * Returns an instance of the agents SF
 	 * @return sf
 	 */
 	static public SF getSF()
@@ -250,7 +250,8 @@ public class SF extends QueueAgent {
 	}
 
 	/**
-	 * 
+	 * Change the URL where the owl's document is
+	 * located.
 	 * @param SFUrl
 	 */
 	public void setSFServiceDesciptionLocation(String SFUrl) {
@@ -258,13 +259,17 @@ public class SF extends QueueAgent {
 	}
 
 	/**
-	 * 
+	 * get the URL where the owl's document is
+	 * located.
 	 * @param SFUrl
 	 */
 	public String getSFServiceDesciptionLocation() {
 		return this.SFServiceDesciptionLocation;
 	}
 
+	/**
+	 * Initial registration of the SF service profile
+	 */
 	public void RegisterSFServiceProfiles() {
 
 		// create an execution engine
