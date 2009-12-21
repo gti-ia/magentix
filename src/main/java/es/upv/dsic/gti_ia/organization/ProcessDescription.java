@@ -32,6 +32,7 @@ public class ProcessDescription {
      *            The URL where the owl's document (related with service
      *            process) is located.
      * @param proccessName
+     * 		Name to the service process description document.
      * 
      */
     public ProcessDescription(String URLProcess, String processName) {
@@ -82,7 +83,7 @@ public class ProcessDescription {
     }
 
     /**
-     * Change ID of the SFAgentDescription
+     * Change ID of the ProcessDescription
      * 
      * @param id
      */
@@ -91,7 +92,7 @@ public class ProcessDescription {
     }
 
     /**
-     * Return an ID of the SFServiceDescription
+     * Return an ID of the ProcessDescription
      * 
      * @return
      */

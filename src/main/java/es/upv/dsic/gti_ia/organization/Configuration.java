@@ -36,15 +36,15 @@ public class Configuration {
 	}
 	
 	/**
-	 * 
-	 * @return serverName 
+	 * Name of the database server
+	 * @return serverName ej. localhost 
 	 */
 	public String getdatabaseServer()
 	{
 		return this.databaseServer;
 	}
 	/**
-	 * 
+	 * Name of the database 
 	 * @return databaseName
 	 */
 	public String getdatabaseName()
@@ -52,7 +52,7 @@ public class Configuration {
 		return this.databaseName;
 	}
 	/**
-	 * 
+	 * User name of the database 
 	 * @return userName
 	 */
 	public String getdatabaseUser()
@@ -60,7 +60,7 @@ public class Configuration {
 		return this.databaseUser;
 	}
 	/**
-	 * 
+	 * Password  user of the database
 	 * @return password
 	 */
 	public String getdatabasePassword()
@@ -85,8 +85,8 @@ public class Configuration {
 	}
 
 	/**
-	 * 
-	 * @return connection
+	 * Qpid host
+	 * @return qpidHost
 	 */
 	public String getqpidHost()
 	{
@@ -105,7 +105,7 @@ public class Configuration {
 	}
 	
 	/**
-	 * 
+	 * Qpid port
 	 * @return port
 	 */
 	public int getqpidPort()
@@ -115,7 +115,7 @@ public class Configuration {
 		
 	}
 	/**
-	 * 
+	 * Virtual qpid host
 	 * @return Virtual host
 	 */
 	public String getqpidVhost()
@@ -124,7 +124,7 @@ public class Configuration {
 	}
 	
 	/**
-	 * 
+	 * Qpid user
 	 * @return user
 	 */
 	public String getqpidUser()
@@ -133,7 +133,7 @@ public class Configuration {
 	}
 	
 	/**
-	 * 
+	 * Qpid user password
 	 * @return password
 	 */
 	public String getqpidPassword()
@@ -142,7 +142,7 @@ public class Configuration {
 	}
 	
 	/**
-	 * 
+	 * Qpid ssl
 	 * @return SSl
 	 */
 	public boolean getqpidSSL()
@@ -155,7 +155,7 @@ public class Configuration {
 	}
 	
 	/**
-	 * 
+	 * jena database URL
 	 * @return URL
 	 */
 	public String getjenadbURL()
@@ -166,7 +166,7 @@ public class Configuration {
 
 	
 	/**
-	 * 
+	 * type of jena database
 	 * @return type
 	 */
 	public String getjenadbType()
@@ -175,13 +175,14 @@ public class Configuration {
 	}
 
 	/**
-	 * 
+	 * diver of jena database
 	 * @return driver
 	 */
 	public String getjenadbDriver()
 	{
 	    return this.jenadbDriver;
 	}
+	
 	private void load()
 	{
 		//Cargamos los valores desde un archivo .xml 

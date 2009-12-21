@@ -39,6 +39,7 @@ public class QueueAgent extends BaseAgent {
 	 * 
 	 * @param aid
 	 *            agent ID.
+	 * @throws Exception if agent id already exists on the platform
 	 */
 
 	public QueueAgent(AgentID aid) throws Exception {

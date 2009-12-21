@@ -79,122 +79,183 @@ public class OMS extends QueueAgent {
 	    private final URI SF_REGISTERPROCESS_PROCESS = URI.create(OWL_S_SF_SERVICES + "RegisterProcessProcess.owl");
 	    
 	    //STRUCTURAL SERVICES
-	    public  final URI OMS_REGISTERUNIT_PROFILE = URI.create(OWL_S_OMS_SERVICES + "RegisterUnitProfile.owl");
-	    public  final URI OMS_REGISTERUNIT_PROCESS = URI.create(OWL_S_OMS_SERVICES + "RegisterUnitProcess.owl");
-	    public  final URI OMS_REGISTERUNIT_ID = URI.create(OWL_S_OMS_SERVICES + "RegisterUnitProfile.owl");
-	    public  final URI OMS_REGISTERUNIT_GOAL = URI.create("RegisterUnit");
+	    private  final URI OMS_REGISTERUNIT_PROFILE = URI.create(OWL_S_OMS_SERVICES + "RegisterUnitProfile.owl");
+	    private  final URI OMS_REGISTERUNIT_PROCESS = URI.create(OWL_S_OMS_SERVICES + "RegisterUnitProcess.owl");
+	    private  final URI OMS_REGISTERUNIT_ID = URI.create(OWL_S_OMS_SERVICES + "RegisterUnitProfile.owl");
+	    private  final URI OMS_REGISTERUNIT_GOAL = URI.create("RegisterUnit");
 	    
-	    public  final URI OMS_REGISTERNORM_PROFILE = URI.create(OWL_S_OMS_SERVICES + "RegisterNormProfile.owl");
-	    public  final URI OMS_REGISTERNORM_PROCESS = URI.create(OWL_S_OMS_SERVICES + "RegisterNormProcess.owl");
-	    public  final URI OMS_REGISTERNORM_GROUNDING = URI.create(OWL_S_OMS_SERVICES + "RegisterNormGrounding.owl");
-	    public  final URI OMS_REGISTERNORM_ID = URI.create(OWL_S_OMS_SERVICES + "RegisterNormProfile.owl#RegisterNormProfile");
-	    public  final URI OMS_REGISTERNORM_GOAL = URI.create("RegisterNorm");
-	    public  final URI OMS_REGISTERNORM_PROVIDER = URI.create("Provider");    
+	    @SuppressWarnings("unused")
+	    private  final URI OMS_REGISTERNORM_PROFILE = URI.create(OWL_S_OMS_SERVICES + "RegisterNormProfile.owl");
+	    private  final URI OMS_REGISTERNORM_PROCESS = URI.create(OWL_S_OMS_SERVICES + "RegisterNormProcess.owl");
+	    @SuppressWarnings("unused")
+	    private  final URI OMS_REGISTERNORM_GROUNDING = URI.create(OWL_S_OMS_SERVICES + "RegisterNormGrounding.owl");
+	    @SuppressWarnings("unused")
+	    private  final URI OMS_REGISTERNORM_ID = URI.create(OWL_S_OMS_SERVICES + "RegisterNormProfile.owl#RegisterNormProfile");
+	    @SuppressWarnings("unused")
+	    private  final URI OMS_REGISTERNORM_GOAL = URI.create("RegisterNorm");
+	    @SuppressWarnings("unused")
+	    private  final URI OMS_REGISTERNORM_PROVIDER = URI.create("Provider");    
 	    
-	    public  final URI OMS_REGISTERROLE_PROFILE = URI.create(OWL_S_OMS_SERVICES + "RegisterRoleProfile.owl");
-	    public  final URI OMS_REGISTERROLE_PROCESS = URI.create(OWL_S_OMS_SERVICES + "RegisterRoleProcess.owl");
-	    public  final URI OMS_REGISTERROLE_GROUNDING = URI.create(OWL_S_OMS_SERVICES + "RegisterRoleGrounding.owl");
-	    public  final URI OMS_REGISTERROLE_ID = URI.create(OWL_S_OMS_SERVICES + "RegisterRoleProfile.owl#RegisterRoleProfile");
-	    public  final URI OMS_REGISTERROLE_GOAL = URI.create("RegisterRole");
-	    public  final URI OMS_REGISTERROLE_PROVIDER = URI.create("Provider"); 
-
-	    public  final URI OMS_DEREGISTERUNIT_PROFILE = URI.create(OWL_S_OMS_SERVICES + "DeregisterUnitProfile.owl");
-	    public  final URI OMS_DEREGISTERUNIT_PROCESS = URI.create(OWL_S_OMS_SERVICES + "DeregisterUnitProcess.owl");
-	    public  final URI OMS_DEREGISTERUNIT_GROUNDING = URI.create(OWL_S_OMS_SERVICES + "DeregisterUnitGrounding.owl");
-	    public  final URI OMS_DEREGISTERUNIT_ID = URI.create(OWL_S_OMS_SERVICES + "DeregisterUnitProfile.owl#DeregisterUnitProfile");
-	    public  final URI OMS_DEREGISTERUNIT_GOAL = URI.create("DeregisterUnit");
-	    public  final URI OMS_DEREGISTERUNIT_PROVIDER = URI.create("Provider");
+	    @SuppressWarnings("unused")
+	    private  final URI OMS_REGISTERROLE_PROFILE = URI.create(OWL_S_OMS_SERVICES + "RegisterRoleProfile.owl");
+	    private  final URI OMS_REGISTERROLE_PROCESS = URI.create(OWL_S_OMS_SERVICES + "RegisterRoleProcess.owl");
+	    @SuppressWarnings("unused")
+	    private  final URI OMS_REGISTERROLE_GROUNDING = URI.create(OWL_S_OMS_SERVICES + "RegisterRoleGrounding.owl");
+	    @SuppressWarnings("unused")
+	    private  final URI OMS_REGISTERROLE_ID = URI.create(OWL_S_OMS_SERVICES + "RegisterRoleProfile.owl#RegisterRoleProfile");
+	    @SuppressWarnings("unused")
+	    private  final URI OMS_REGISTERROLE_GOAL = URI.create("RegisterRole");
+	    @SuppressWarnings("unused")
+	    private  final URI OMS_REGISTERROLE_PROVIDER = URI.create("Provider"); 
+	    @SuppressWarnings("unused")
+	    private  final URI OMS_DEREGISTERUNIT_PROFILE = URI.create(OWL_S_OMS_SERVICES + "DeregisterUnitProfile.owl");
+	    private  final URI OMS_DEREGISTERUNIT_PROCESS = URI.create(OWL_S_OMS_SERVICES + "DeregisterUnitProcess.owl");
+	    @SuppressWarnings("unused")
+	    private  final URI OMS_DEREGISTERUNIT_GROUNDING = URI.create(OWL_S_OMS_SERVICES + "DeregisterUnitGrounding.owl");
+	    @SuppressWarnings("unused")
+	    private  final URI OMS_DEREGISTERUNIT_ID = URI.create(OWL_S_OMS_SERVICES + "DeregisterUnitProfile.owl#DeregisterUnitProfile");
+	    @SuppressWarnings("unused")
+	    private  final URI OMS_DEREGISTERUNIT_GOAL = URI.create("DeregisterUnit");
+	    @SuppressWarnings("unused")
+	    private  final URI OMS_DEREGISTERUNIT_PROVIDER = URI.create("Provider");
+	    @SuppressWarnings("unused")
+	    private  final URI OMS_DEREGISTERNORM_PROFILE = URI.create(OWL_S_OMS_SERVICES + "DeregisterNormProfile.owl");
+	    private  final URI OMS_DEREGISTERNORM_PROCESS = URI.create(OWL_S_OMS_SERVICES + "DeregisterNormProcess.owl");
+	    @SuppressWarnings("unused")
+	    private  final URI OMS_DEREGISTERNORM_GROUNDING = URI.create(OWL_S_OMS_SERVICES + "DeregisterNormGrounding.owl");
+	    @SuppressWarnings("unused")
+	    private  final URI OMS_DEREGISTERNORM_ID = URI.create(OWL_S_OMS_SERVICES + "DeregisterNormProfile.owl#DeregisterNormProfile");
+	    @SuppressWarnings("unused")
+	    private  final URI OMS_DEREGISTERNORM_GOAL = URI.create("DeregisterNorm");
+	    @SuppressWarnings("unused")
+	    private  final URI OMS_DEREGISTERNORM_PROVIDER = URI.create("Provider");    
+	    @SuppressWarnings("unused")
+	    private  final URI OMS_DEREGISTERROLE_PROFILE = URI.create(OWL_S_OMS_SERVICES + "DeregisterRoleProfile.owl");
 	    
-	    public  final URI OMS_DEREGISTERNORM_PROFILE = URI.create(OWL_S_OMS_SERVICES + "DeregisterNormProfile.owl");
-	    public  final URI OMS_DEREGISTERNORM_PROCESS = URI.create(OWL_S_OMS_SERVICES + "DeregisterNormProcess.owl");
-	    public  final URI OMS_DEREGISTERNORM_GROUNDING = URI.create(OWL_S_OMS_SERVICES + "DeregisterNormGrounding.owl");
-	    public  final URI OMS_DEREGISTERNORM_ID = URI.create(OWL_S_OMS_SERVICES + "DeregisterNormProfile.owl#DeregisterNormProfile");
-	    public  final URI OMS_DEREGISTERNORM_GOAL = URI.create("DeregisterNorm");
-	    public  final URI OMS_DEREGISTERNORM_PROVIDER = URI.create("Provider");    
-	    
-	    public  final URI OMS_DEREGISTERROLE_PROFILE = URI.create(OWL_S_OMS_SERVICES + "DeregisterRoleProfile.owl");
-	    public  final URI OMS_DEREGISTERROLE_PROCESS = URI.create(OWL_S_OMS_SERVICES + "DeregisterRoleProcess.owl");
-	    public  final URI OMS_DEREGISTERROLE_GROUNDING = URI.create(OWL_S_OMS_SERVICES + "DeregisterRoleGrounding.owl");
-	    public  final URI OMS_DEREGISTERROLE_ID = URI.create(OWL_S_OMS_SERVICES + "DeregisterRoleProfile.owl#DeregisterRoleProfile");
-	    public  final URI OMS_DEREGISTERROLE_GOAL = URI.create("DeregisterRole");
-	    public  final URI OMS_DEREGISTERROLE_PROVIDER = URI.create("Provider"); 
+	    private  final URI OMS_DEREGISTERROLE_PROCESS = URI.create(OWL_S_OMS_SERVICES + "DeregisterRoleProcess.owl");
+	    @SuppressWarnings("unused")
+	    private  final URI OMS_DEREGISTERROLE_GROUNDING = URI.create(OWL_S_OMS_SERVICES + "DeregisterRoleGrounding.owl");
+	    @SuppressWarnings("unused")
+	    private  final URI OMS_DEREGISTERROLE_ID = URI.create(OWL_S_OMS_SERVICES + "DeregisterRoleProfile.owl#DeregisterRoleProfile");
+	    @SuppressWarnings("unused")
+	    private  final URI OMS_DEREGISTERROLE_GOAL = URI.create("DeregisterRole");
+	    @SuppressWarnings("unused")
+	    private  final URI OMS_DEREGISTERROLE_PROVIDER = URI.create("Provider"); 
 	    //DYNAMIC SERVICES
-	    public  final URI OMS_ACQUIREROLE_PROFILE = URI.create(OWL_S_OMS_SERVICES + "AcquireRoleProfile.owl");
-	    public  final URI OMS_ACQUIREROLE_PROCESS = URI.create(OWL_S_OMS_SERVICES + "AcquireRoleProcess.owl");
-	    public  final URI OMS_ACQUIREROLE_GROUNDING = URI.create(OWL_S_OMS_SERVICES + "AcquireRoleGrounding.owl");
-	    public  final URI OMS_ACQUIREROLE_ID = URI.create(OWL_S_OMS_SERVICES + "AcquireRoleProfile.owl#AcquireRoleProfile");
-	    public  final URI OMS_ACQUIREROLE_GOAL = URI.create("AcquireRole");
-	    public  final URI OMS_ACQUIREROLE_PROVIDER = URI.create("Provider");
-	    
-	    public  final URI OMS_LEAVEROLE_PROFILE = URI.create(OWL_S_OMS_SERVICES + "LeaveRoleProfile.owl");
-	    public  final URI OMS_LEAVEROLE_PROCESS = URI.create(OWL_S_OMS_SERVICES + "LeaveRoleProcess.owl");
-	    public  final URI OMS_LEAVEROLE_GROUNDING = URI.create(OWL_S_OMS_SERVICES + "LeaveRoleGrounding.owl");
-	    public  final URI OMS_LEAVEROLE_ID = URI.create(OWL_S_OMS_SERVICES + "LeaveRoleProfile.owl#LeaveRoleProfile");
-	    public  final URI OMS_LEAVEROLE_GOAL = URI.create("LeaveRole");
-	    public  final URI OMS_LEAVEROLE_PROVIDER = URI.create("Provider");
-	    
-	    public  final URI OMS_EXPULSE_PROFILE = URI.create(OWL_S_OMS_SERVICES + "ExpulseProfile.owl");
-	    public  final URI OMS_EXPULSE_PROCESS = URI.create(OWL_S_OMS_SERVICES + "ExpulseProcess.owl");
-	    public  final URI OMS_EXPULSE_GROUNDING = URI.create(OWL_S_OMS_SERVICES + "ExpulseGrounding.owl");
-	    public  final URI OMS_EXPULSE_ID = URI.create(OWL_S_OMS_SERVICES + "ExpulseProfile.owl#ExpulseProfile");
-	    public  final URI OMS_EXPULSE_GOAL = URI.create("Expulse");
-	    public  final URI OMS_EXPULSE_PROVIDER = URI.create("Provider");
+	    @SuppressWarnings("unused")
+	    private  final URI OMS_ACQUIREROLE_PROFILE = URI.create(OWL_S_OMS_SERVICES + "AcquireRoleProfile.owl");
+	    private  final URI OMS_ACQUIREROLE_PROCESS = URI.create(OWL_S_OMS_SERVICES + "AcquireRoleProcess.owl");
+	    @SuppressWarnings("unused")
+	    private  final URI OMS_ACQUIREROLE_GROUNDING = URI.create(OWL_S_OMS_SERVICES + "AcquireRoleGrounding.owl");
+	    @SuppressWarnings("unused")
+	    private  final URI OMS_ACQUIREROLE_ID = URI.create(OWL_S_OMS_SERVICES + "AcquireRoleProfile.owl#AcquireRoleProfile");
+	    @SuppressWarnings("unused")
+	    private  final URI OMS_ACQUIREROLE_GOAL = URI.create("AcquireRole");
+	    @SuppressWarnings("unused")
+	    private  final URI OMS_ACQUIREROLE_PROVIDER = URI.create("Provider");
+	    @SuppressWarnings("unused")
+	    private  final URI OMS_LEAVEROLE_PROFILE = URI.create(OWL_S_OMS_SERVICES + "LeaveRoleProfile.owl");
+	    private  final URI OMS_LEAVEROLE_PROCESS = URI.create(OWL_S_OMS_SERVICES + "LeaveRoleProcess.owl");
+	    @SuppressWarnings("unused")
+	    private  final URI OMS_LEAVEROLE_GROUNDING = URI.create(OWL_S_OMS_SERVICES + "LeaveRoleGrounding.owl");
+	    @SuppressWarnings("unused")
+	    private  final URI OMS_LEAVEROLE_ID = URI.create(OWL_S_OMS_SERVICES + "LeaveRoleProfile.owl#LeaveRoleProfile");
+	    @SuppressWarnings("unused")
+	    private  final URI OMS_LEAVEROLE_GOAL = URI.create("LeaveRole");
+	    @SuppressWarnings("unused")
+	    private  final URI OMS_LEAVEROLE_PROVIDER = URI.create("Provider");
+	    @SuppressWarnings("unused")
+	    private  final URI OMS_EXPULSE_PROFILE = URI.create(OWL_S_OMS_SERVICES + "ExpulseProfile.owl");
+	    private  final URI OMS_EXPULSE_PROCESS = URI.create(OWL_S_OMS_SERVICES + "ExpulseProcess.owl");
+	    @SuppressWarnings("unused")
+	    private  final URI OMS_EXPULSE_GROUNDING = URI.create(OWL_S_OMS_SERVICES + "ExpulseGrounding.owl");
+	    @SuppressWarnings("unused")
+	    private  final URI OMS_EXPULSE_ID = URI.create(OWL_S_OMS_SERVICES + "ExpulseProfile.owl#ExpulseProfile");
+	    @SuppressWarnings("unused")
+	    private  final URI OMS_EXPULSE_GOAL = URI.create("Expulse");
+	    @SuppressWarnings("unused")
+	    private  final URI OMS_EXPULSE_PROVIDER = URI.create("Provider");
 	  //INFORMATIVE SERVICES
-	    public  final URI OMS_INFORMUNIT_PROFILE = URI.create(OWL_S_OMS_SERVICES + "InformUnitProfile.owl");
-	    public  final URI OMS_INFORMUNIT_PROCESS = URI.create(OWL_S_OMS_SERVICES + "InformUnitProcess.owl");
-	    public  final URI OMS_INFORMUNIT_GROUNDING = URI.create(OWL_S_OMS_SERVICES + "InformUnitGrounding.owl");
-	    public  final URI OMS_INFORMUNIT_ID = URI.create(OWL_S_OMS_SERVICES + "InformUnitProfile.owl#InformUnitProfile");
-	    public  final URI OMS_INFORMUNIT_GOAL = URI.create("InformUnit");
-	    public  final URI OMS_INFORMUNIT_PROVIDER = URI.create("Provider");   
+	    @SuppressWarnings("unused")
+	    private  final URI OMS_INFORMUNIT_PROFILE = URI.create(OWL_S_OMS_SERVICES + "InformUnitProfile.owl");
+	    private  final URI OMS_INFORMUNIT_PROCESS = URI.create(OWL_S_OMS_SERVICES + "InformUnitProcess.owl");
+	    @SuppressWarnings("unused")
+	    private  final URI OMS_INFORMUNIT_GROUNDING = URI.create(OWL_S_OMS_SERVICES + "InformUnitGrounding.owl");
+	    @SuppressWarnings("unused")
+	    private  final URI OMS_INFORMUNIT_ID = URI.create(OWL_S_OMS_SERVICES + "InformUnitProfile.owl#InformUnitProfile");
+	    @SuppressWarnings("unused")
+	    private  final URI OMS_INFORMUNIT_GOAL = URI.create("InformUnit");
+	    @SuppressWarnings("unused")
+	    private  final URI OMS_INFORMUNIT_PROVIDER = URI.create("Provider");   
 	    
-	    public  final URI OMS_INFORMROLE_PROFILE = URI.create(OWL_S_OMS_SERVICES + "InformRoleProfile.owl");
-	    public  final URI OMS_INFORMROLE_PROCESS = URI.create(OWL_S_OMS_SERVICES + "InformRoleProcess.owl");
-	    public  final URI OMS_INFORMROLE_GROUNDING = URI.create(OWL_S_OMS_SERVICES + "InformRoleGrounding.owl");
-	    public  final URI OMS_INFORMROLE_ID = URI.create(OWL_S_OMS_SERVICES + "InformRoleProfile.owl#InformRoleProfile");
-	    public  final URI OMS_INFORMROLE_GOAL = URI.create("InformRole");
-	    public  final URI OMS_INFORMROLE_PROVIDER = URI.create("Provider");   
+	    @SuppressWarnings("unused")
+	    private  final URI OMS_INFORMROLE_PROFILE = URI.create(OWL_S_OMS_SERVICES + "InformRoleProfile.owl");
+	    private  final URI OMS_INFORMROLE_PROCESS = URI.create(OWL_S_OMS_SERVICES + "InformRoleProcess.owl");
+	    @SuppressWarnings("unused")
+	    private  final URI OMS_INFORMROLE_GROUNDING = URI.create(OWL_S_OMS_SERVICES + "InformRoleGrounding.owl");
+	    @SuppressWarnings("unused")
+	    private  final URI OMS_INFORMROLE_ID = URI.create(OWL_S_OMS_SERVICES + "InformRoleProfile.owl#InformRoleProfile");
+	    @SuppressWarnings("unused")
+	    private  final URI OMS_INFORMROLE_GOAL = URI.create("InformRole");
+	    @SuppressWarnings("unused")
+	    private  final URI OMS_INFORMROLE_PROVIDER = URI.create("Provider");   
 	    
-	    public  final URI OMS_INFORMAGENTROLE_PROFILE = URI.create(OWL_S_OMS_SERVICES + "InformAgentRoleProfile.owl");
-	    public  final URI OMS_INFORMAGENTROLE_PROCESS = URI.create(OWL_S_OMS_SERVICES + "InformAgentRoleProcess.owl");
-	    public  final URI OMS_INFORMAGENTROLE_GROUNDING = URI.create(OWL_S_OMS_SERVICES + "InformAgentRoleGrounding.owl");
-	    public  final URI OMS_INFORMAGENTROLE_ID = URI.create(OWL_S_OMS_SERVICES + "InformAgentRoleProfile.owl#InformAgentRoleProfile");
-	    public  final URI OMS_INFORMAGENTROLE_GOAL = URI.create("InformAgentRole");
-	    public  final URI OMS_INFORMAGENTROLE_PROVIDER = URI.create("Provider");  
+	    @SuppressWarnings("unused")
+	    private  final URI OMS_INFORMAGENTROLE_PROFILE = URI.create(OWL_S_OMS_SERVICES + "InformAgentRoleProfile.owl");
+	    private  final URI OMS_INFORMAGENTROLE_PROCESS = URI.create(OWL_S_OMS_SERVICES + "InformAgentRoleProcess.owl");
+	    @SuppressWarnings("unused")
+	    private  final URI OMS_INFORMAGENTROLE_GROUNDING = URI.create(OWL_S_OMS_SERVICES + "InformAgentRoleGrounding.owl");
+	    @SuppressWarnings("unused")
+	    private  final URI OMS_INFORMAGENTROLE_ID = URI.create(OWL_S_OMS_SERVICES + "InformAgentRoleProfile.owl#InformAgentRoleProfile");
+	    @SuppressWarnings("unused")
+	    private  final URI OMS_INFORMAGENTROLE_GOAL = URI.create("InformAgentRole");
+	    @SuppressWarnings("unused")
+	    private  final URI OMS_INFORMAGENTROLE_PROVIDER = URI.create("Provider");  
+	    @SuppressWarnings("unused")
+	    private  final URI OMS_INFORMMEMBERS_PROFILE = URI.create(OWL_S_OMS_SERVICES + "InformMembersProfile.owl");
+	    private  final URI OMS_INFORMMEMBERS_PROCESS = URI.create(OWL_S_OMS_SERVICES + "InformMembersProcess.owl");
+	    @SuppressWarnings("unused")
+	    private  final URI OMS_INFORMMEMBERS_GROUNDING = URI.create(OWL_S_OMS_SERVICES + "InformMembersGrounding.owl");
+	    @SuppressWarnings("unused")
+	    private  final URI OMS_INFORMMEMBERS_ID = URI.create(OWL_S_OMS_SERVICES + "InformMembersProfile.owl#InformMembersProfile");
+	    @SuppressWarnings("unused")
+	    private  final URI OMS_INFORMMEMBERS_GOAL = URI.create("InformMembers");
+	    @SuppressWarnings("unused")
+	    private  final URI OMS_INFORMMEMBERS_PROVIDER = URI.create("Provider"); 
 	    
-	    public  final URI OMS_INFORMMEMBERS_PROFILE = URI.create(OWL_S_OMS_SERVICES + "InformMembersProfile.owl");
-	    public  final URI OMS_INFORMMEMBERS_PROCESS = URI.create(OWL_S_OMS_SERVICES + "InformMembersProcess.owl");
-	    public  final URI OMS_INFORMMEMBERS_GROUNDING = URI.create(OWL_S_OMS_SERVICES + "InformMembersGrounding.owl");
-	    public  final URI OMS_INFORMMEMBERS_ID = URI.create(OWL_S_OMS_SERVICES + "InformMembersProfile.owl#InformMembersProfile");
-	    public  final URI OMS_INFORMMEMBERS_GOAL = URI.create("InformMembers");
-	    public  final URI OMS_INFORMMEMBERS_PROVIDER = URI.create("Provider"); 
+	    @SuppressWarnings("unused")
+	    private  final URI OMS_INFORMROLENORMS_PROFILE = URI.create(OWL_S_OMS_SERVICES + "InformRoleNormsProfile.owl");
+	    private  final URI OMS_INFORMROLENORMS_PROCESS = URI.create(OWL_S_OMS_SERVICES + "InformRoleNormsProcess.owl");
+	    @SuppressWarnings("unused")
+	    private  final URI OMS_INFORMROLENORMS_GROUNDING = URI.create(OWL_S_OMS_SERVICES + "InformRoleNormsGrounding.owl");
+	    @SuppressWarnings("unused")
+	    private  final URI OMS_INFORMROLENORMS_ID = URI.create(OWL_S_OMS_SERVICES + "InformRoleNormsProfile.owl#InformRoleNormsProfile");
+	    @SuppressWarnings("unused")
+	    private  final URI OMS_INFORMROLENORMS_GOAL = URI.create("InformRoleNorms");
+	    @SuppressWarnings("unused")
+	    private  final URI OMS_INFORMROLENORMS_PROVIDER = URI.create("Provider"); 
+	    @SuppressWarnings("unused")
+	    private  final URI OMS_INFORMROLEPROFILES_PROFILE = URI.create(OWL_S_OMS_SERVICES + "InformRoleProfilesProfile.owl");
+	    @SuppressWarnings("unused")
+	    private  final URI OMS_INFORMROLEPROFILES_PROCESS = URI.create(OWL_S_OMS_SERVICES + "InformRoleProfilesProcess.owl");@SuppressWarnings("unused")
+	    private  final URI OMS_INFORMROLEPROFILES_GROUNDING = URI.create(OWL_S_OMS_SERVICES + "InformRoleProfilesGrounding.owl");@SuppressWarnings("unused")
+	    private  final URI OMS_INFORMROLEPROFILES_ID = URI.create(OWL_S_OMS_SERVICES + "InformRoleProfilesProfile.owl#InformRoleProfilesProfile");@SuppressWarnings("unused")
+	    private  final URI OMS_INFORMROLEPROFILES_GOAL = URI.create("InformRoleProfiles");@SuppressWarnings("unused")
+	    private  final URI OMS_INFORMROLEPROFILES_PROVIDER = URI.create("Provider");@SuppressWarnings("unused")
 	    
-	    public  final URI OMS_INFORMROLENORMS_PROFILE = URI.create(OWL_S_OMS_SERVICES + "InformRoleNormsProfile.owl");
-	    public  final URI OMS_INFORMROLENORMS_PROCESS = URI.create(OWL_S_OMS_SERVICES + "InformRoleNormsProcess.owl");
-	    public  final URI OMS_INFORMROLENORMS_GROUNDING = URI.create(OWL_S_OMS_SERVICES + "InformRoleNormsGrounding.owl");
-	    public  final URI OMS_INFORMROLENORMS_ID = URI.create(OWL_S_OMS_SERVICES + "InformRoleNormsProfile.owl#InformRoleNormsProfile");
-	    public  final URI OMS_INFORMROLENORMS_GOAL = URI.create("InformRoleNorms");
-	    public  final URI OMS_INFORMROLENORMS_PROVIDER = URI.create("Provider"); 
+	    private  final URI OMS_INFORMUNITROLES_PROFILE = URI.create(OWL_S_OMS_SERVICES + "InformUnitRolesProfile.owl");
+	    private  final URI OMS_INFORMUNITROLES_PROCESS = URI.create(OWL_S_OMS_SERVICES + "InformUnitRolesProcess.owl");@SuppressWarnings("unused")
+	    private  final URI OMS_INFORMUNITROLES_GROUNDING = URI.create(OWL_S_OMS_SERVICES + "InformUnitRolesGrounding.owl");@SuppressWarnings("unused")
+	    private  final URI OMS_INFORMUNITROLES_ID = URI.create(OWL_S_OMS_SERVICES + "InformUnitRolesProfile.owl#InformUnitRolesProfile");@SuppressWarnings("unused")
+	    private  final URI OMS_INFORMUNITROLES_GOAL = URI.create("InformUnitRoles");@SuppressWarnings("unused")
+	    private  final URI OMS_INFORMUNITROLES_PROVIDER = URI.create("Provider"); @SuppressWarnings("unused")
 	    
-	    public  final URI OMS_INFORMROLEPROFILES_PROFILE = URI.create(OWL_S_OMS_SERVICES + "InformRoleProfilesProfile.owl");
-	    public  final URI OMS_INFORMROLEPROFILES_PROCESS = URI.create(OWL_S_OMS_SERVICES + "InformRoleProfilesProcess.owl");
-	    public  final URI OMS_INFORMROLEPROFILES_GROUNDING = URI.create(OWL_S_OMS_SERVICES + "InformRoleProfilesGrounding.owl");
-	    public  final URI OMS_INFORMROLEPROFILES_ID = URI.create(OWL_S_OMS_SERVICES + "InformRoleProfilesProfile.owl#InformRoleProfilesProfile");
-	    public  final URI OMS_INFORMROLEPROFILES_GOAL = URI.create("InformRoleProfiles");
-	    public  final URI OMS_INFORMROLEPROFILES_PROVIDER = URI.create("Provider"); 
-	    
-	    public  final URI OMS_INFORMUNITROLES_PROFILE = URI.create(OWL_S_OMS_SERVICES + "InformUnitRolesProfile.owl");
-	    public  final URI OMS_INFORMUNITROLES_PROCESS = URI.create(OWL_S_OMS_SERVICES + "InformUnitRolesProcess.owl");
-	    public  final URI OMS_INFORMUNITROLES_GROUNDING = URI.create(OWL_S_OMS_SERVICES + "InformUnitRolesGrounding.owl");
-	    public  final URI OMS_INFORMUNITROLES_ID = URI.create(OWL_S_OMS_SERVICES + "InformUnitRolesProfile.owl#InformUnitRolesProfile");
-	    public  final URI OMS_INFORMUNITROLES_GOAL = URI.create("InformUnitRoles");
-	    public  final URI OMS_INFORMUNITROLES_PROVIDER = URI.create("Provider"); 
-	    
-	    public  final URI OMS_QUANTITYMEMBERS_PROFILE = URI.create(OWL_S_OMS_SERVICES + "QuantityMembersProfile.owl");
-	    public  final URI OMS_QUANTITYMEMBERS_PROCESS = URI.create(OWL_S_OMS_SERVICES + "QuantityMembersProcess.owl");
-	    public  final URI OMS_QUANTITYMEMBERS_GROUNDING = URI.create(OWL_S_OMS_SERVICES + "QuantityMembersGrounding.owl");
-	    public  final URI OMS_QUANTITYMEMBERS_ID = URI.create(OWL_S_OMS_SERVICES + "QuantityMembersProfile.owl#QuantityMembersProfile");
-	    public  final URI OMS_QUANTITYMEMBERS_GOAL = URI.create("QuantityMembers");
-	    public  final URI OMS_QUANTITYMEMBERS_PROVIDER = URI.create("Provider"); 
+	    private  final URI OMS_QUANTITYMEMBERS_PROFILE = URI.create(OWL_S_OMS_SERVICES + "QuantityMembersProfile.owl");
+	    private  final URI OMS_QUANTITYMEMBERS_PROCESS = URI.create(OWL_S_OMS_SERVICES + "QuantityMembersProcess.owl");@SuppressWarnings("unused")
+	    private  final URI OMS_QUANTITYMEMBERS_GROUNDING = URI.create(OWL_S_OMS_SERVICES + "QuantityMembersGrounding.owl");@SuppressWarnings("unused")
+	    private  final URI OMS_QUANTITYMEMBERS_ID = URI.create(OWL_S_OMS_SERVICES + "QuantityMembersProfile.owl#QuantityMembersProfile");@SuppressWarnings("unused")
+	    private  final URI OMS_QUANTITYMEMBERS_GOAL = URI.create("QuantityMembers");@SuppressWarnings("unused")
+	    private  final URI OMS_QUANTITYMEMBERS_PROVIDER = URI.create("Provider"); 
 	    
 	    // array with the OMS processes related with registration
 	   URI[] OMSServicesProfiles = {OMS_REGISTERUNIT_PROFILE/*,OMS_REGISTERROLE_PROFILE,OMS_REGISTERNORM_PROFILE,

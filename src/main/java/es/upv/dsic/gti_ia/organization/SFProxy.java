@@ -1,3 +1,6 @@
+/**
+ * This package contains the definition of the classes for the interaction with the thomas organization
+ */
 package es.upv.dsic.gti_ia.organization;
 
 /**
@@ -110,12 +113,13 @@ public class SFProxy {
     /**
      * When the service is not SF or OMS service
      * 
-     * @param agent 
+     * @param agent  QueueAgent
      * @param agentProvider The agent who offers the service
      * @param URLProfile The address this where the profile of the service 
      * @param URLProcess The address this where the process of the service
      * @param ArrayArguments Input arguments  of the service
      * @return outputs
+     * @throws Exception 
      */
     public Hashtable<String, String> genericService(QueueAgent agent, AgentID agentProvider,
 	    String URLProfile, String URLProcess, ArrayList<String> ArrayArguments)
@@ -198,16 +202,16 @@ public class SFProxy {
      * This service deletes the service process registrated in the sf database. 
      * 
      * @param agent
-     * @param SFProcessDescription
+     * @param ProcessDescription Must have at least completed the field Implementation ID
      * @return status RemoveProviderResponse contains an element: return which indicates if an error occurs (1:OK otherwise 0)
      * @throws Exception
      */
 
-    public String removeProvider(QueueAgent agent, ProcessDescription SFProcessDescription)
+    public String removeProvider(QueueAgent agent, ProcessDescription ProcessDescription)
 	    throws Exception {
-	this.processDescripcion = SFProcessDescription;
+	this.processDescripcion = ProcessDescription;
 
-	if (SFProcessDescription.getImplementationID().equals(""))
+	if (ProcessDescription.getImplementationID().equals(""))
 	{
 	    throw new Exception("ImplementationID is empty");
 	    
@@ -228,10 +232,9 @@ public class SFProxy {
      * Currently this service makes a query to the database seaching the services whose service description 
      * field mathc with the client requirements (the input service purpose).
      * 
-     * @param agent
+     * @param agent QueueAgent
      * @param serviceGoal service purpose (is a string: the service description).
-     * @return services list (is a list of 
-     * <service profile id, ranking: service profile id, ranking: ...>
+     * @return services list (is a list of <service profile id, ranking: service profile id, ranking: ...>
      */
     public ArrayList<String> searchService(QueueAgent agent, String serviceGoal) throws Exception{
 
@@ -253,21 +256,21 @@ public class SFProxy {
     /**
      * This service deletes the service process kept in the sf database and inserts the new process
      * 
-     * @param agent
-     * @param SFProcessDescription  contains two elements: service implementation ID (is a string: 
+     * @param agent QueueAgent
+     * @param ProcessDescription  contains two elements: service implementation ID (is a string: 
      * serviceprofile@servicenumdidagent), service model (is a string: urlprocess#processname).
      * @return ModifyProcessResponse contains return which indicates if an error occurs (1:OK,
      * otherwise 0).
      *
      * @throws Exception
      */
-    public String modifyProcess(QueueAgent agent, ProcessDescription SFProcessDescription)
+    public String modifyProcess(QueueAgent agent, ProcessDescription ProcessDescription)
 	    throws Exception
 
     {
-	this.processDescripcion = SFProcessDescription;
+	this.processDescripcion = ProcessDescription;
 
-	if (SFProcessDescription.getImplementationID().equals("") || SFProcessDescription.getServiceModel().equals(""))
+	if (ProcessDescription.getImplementationID().equals("") || ProcessDescription.getServiceModel().equals(""))
 	{
 	    throw new Exception("ImplementationID or Service Goal is  empty");
 	    
@@ -288,20 +291,20 @@ public class SFProxy {
     /**
      * This service deletes the service profile kept in the sf database and inserts the new profile.
      * 
-     * @param agent
-     * @param SFProfileDescription contains three elements: service id (is a string: service profile id), service
+     * @param agent QueueAgent
+     * @param ProfileDescription contains three elements: service id (is a string: service profile id), service
          * goal (currently is not in use),and service profile ( is a string 
          * urlprofile#profilename)
      * @return Status return which indicates if a problem occurs (1: ok, 0: there
          * are provider which implement the profile, -1: the service id is not valid).
      * @throws Exception
      */
-    public String modifyProfile(QueueAgent agent, ProfileDescription SFProfileDescription)
+    public String modifyProfile(QueueAgent agent, ProfileDescription ProfileDescription)
 	    throws Exception {
 
-	this.profileDescription = SFProfileDescription;
+	this.profileDescription = ProfileDescription;
 
-	if (SFProfileDescription.getServiceID().equals("") || SFProfileDescription.getServiceProfile().equals(""))
+	if (ProfileDescription.getServiceID().equals("") || ProfileDescription.getServiceProfile().equals(""))
 	{
 	    throw new Exception("ID or Service Goal is  empty");
 	    
@@ -324,18 +327,18 @@ public class SFProxy {
     /**
      * This service deletes the profile in the sf database.
      * 
-     * @param agent
-     * @param SFProfileDescription contains one element: service id (is a string: service profile id)
+     * @param agent QueueAgent
+     * @param ProfileDescription contains one element: service id (is a string: service profile id)
      * @return Status DeregisterProfileResponse contains an element: return indicates if an error occurs (
          * 0: ok, 1:error).
-     * @throws Exception
+     * @throws Exception if 
      */
-    public String deregisterProfile(QueueAgent agent, ProfileDescription SFProfileDescription)
+    public String deregisterProfile(QueueAgent agent, ProfileDescription ProfileDescription)
 	    throws Exception {
 
-	this.profileDescription = SFProfileDescription;
+	this.profileDescription = ProfileDescription;
 
-	if (SFProfileDescription.getServiceID().equals(""))
+	if (ProfileDescription.getServiceID().equals(""))
 	{
 	    throw new Exception("ID is  empty");
 	    
@@ -359,11 +362,12 @@ public class SFProxy {
     /**
      * This service returns the providers which implements the required profile.
      * 
-     * @param agent
+     * @param agent QueueAgent
      * @param id the service ID (is a string: service profile id) and the 
 	 * agent id (is a string).
      * @return provider list (is a string with the next template:
 	 * [service implementation id urlprocess, service implementation id urlproces, ... ] 
+	 * @throws Exception
      */
 
     public Hashtable<AgentID, String> getProcess(QueueAgent agent, String serviceID) throws Exception{
@@ -387,11 +391,12 @@ public class SFProxy {
     /**
      * This service returns the url of the required profile.
      * 
-     * @param agent
+     * @param agent QueueAgent
      * @param serviceID the service ID (is a string: service profile id)
      * @return Status contains three elements: service profile (is a string: the url profile), 
 	 * the goal of the profile (currently is not in use) and the return (is an integer) which indicates if
 	 * an error occurs. 
+	 * @throws Exception
      */
     public String getProfile(QueueAgent agent, String serviceID) throws Exception{
 
@@ -412,18 +417,18 @@ public class SFProxy {
      * 
      *  This service registers the profile of a service in the sf's database.
      * 
-     * @param agent
+     * @param agent QueueAgent
      * @param SFProfileDescription This parameter contains one element:
 	 * service profile ( is a string: urlprofile#profilename )
      * @return Status indicates if an error occurs.
      * @throws Exception
      */
-    public String registerProfile(QueueAgent agent, ProfileDescription SFProfileDescription)
+    public String registerProfile(QueueAgent agent, ProfileDescription ProfileDescription)
 	    throws Exception {
 
-	this.profileDescription = SFProfileDescription;
+	this.profileDescription = ProfileDescription;
 
-	if (SFProfileDescription.getServiceProfile().equals(""))
+	if (ProfileDescription.getServiceProfile().equals(""))
 	{
 	    throw new Exception("Service Profile or Service Goal is  empty");
 	    
@@ -446,18 +451,18 @@ public class SFProxy {
     /**
      * This service registers the process of a service in the sf's database.
      * 
-     * @param agent
-        *@param SFProfileDescription. This parameter contains two elements: service id (is a string), and service
+     * @param agent QueueAgent
+        *@param ProfileDescription. This parameter contains two elements: service id (is a string), and service
 	 * model (is a string: urlprocess#urlprocessname).
 	 * @return status  indicates if an error occurs (1:ok , 0: bad news).
      * @throws Exception
      */
-    public String registerProcess(QueueAgent agent, ProcessDescription SFProcessDescription)
+    public String registerProcess(QueueAgent agent, ProcessDescription ProcessDescription)
 	    throws Exception {
 	// montar string de conexion
 	// Enviamos el mensaje
 
-	this.processDescripcion= SFProcessDescription;
+	this.processDescripcion= ProcessDescription;
 
 	if (this.processDescripcion.getProfileID().equals("") || this.processDescripcion.getServiceModel().equals(""))
 	{

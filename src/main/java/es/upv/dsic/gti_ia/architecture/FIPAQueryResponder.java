@@ -29,12 +29,12 @@ public class FIPAQueryResponder {
 	private Monitor monitor = null;
 
 	/**
-	 * Create a FIPARequestInitiator.
+	 * Create a new FIPA-Query interaction protocol, rol responder.
 	 * 
 	 * @param agent
-	 *            agente que crear el inicio del protocolo
+	 *            is the reference to the Agent Object
 	 * @param template
-	 *            plantilla para en la que el agente comparara los mensajes.
+	 *            is a MessageTemplate, will serve as a filter for receiving the right message
 	 */
 
 	public FIPAQueryResponder(QueueAgent _agent, MessageTemplate _template) {
@@ -189,8 +189,8 @@ public class FIPAQueryResponder {
 	 * of the following two cases arise: the response was an agree message OR no
 	 * response message was sent.
 	 * 
-	 * @param request
-	 * @param responder
+	 * @param request request message
+	 * @param responder responder message
 	 * @return message
 	 * @throws FailureException
 	 */

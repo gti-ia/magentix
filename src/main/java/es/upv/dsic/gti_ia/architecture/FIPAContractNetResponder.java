@@ -33,11 +33,11 @@ public class FIPAContractNetResponder {
 	private Monitor monitor = null;
 
 	/**
-	 * Create a FIPARequestInitiator.
+	 * Create a new FIPA-Contract-Net interaction protocol, rol responder.
 	 * 
 	 * @param agent
-	 *            agent is the reference to the Agent Object
-	 * @param template
+	 *             is the reference to the Agent Object
+	 * @param template is a MessageTemplate, will serve as a filter for receiving the right message
 	 */
 
 	public FIPAContractNetResponder(QueueAgent _agent, MessageTemplate _template) {

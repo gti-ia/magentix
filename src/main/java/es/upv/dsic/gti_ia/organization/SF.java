@@ -38,124 +38,124 @@ public class SF extends QueueAgent {
 	OWLKnowledgeBase kbaux = OWLFactory.createKB();
 
 	// Debug
-	public final Boolean DEBUG = true;
+	//private final Boolean DEBUG = true;
 
 	// URI where the SF service descriptions are located
 
-	public final URI OWL_S_SF_SERVICES = URI
+	private final URI OWL_S_SF_SERVICES = URI
 			.create(SFServiceDesciptionLocation);
 
 	// URI of each SF services description parameters are located
-	public final URI SF_ADDPROVIDER_PROFILE = URI.create(OWL_S_SF_SERVICES
+	private final URI SF_ADDPROVIDER_PROFILE = URI.create(OWL_S_SF_SERVICES
 			+ "AddProviderProfile.owl");
-	public final URI SF_ADDPROVIDER_PROCESS = URI.create(OWL_S_SF_SERVICES
+	private final URI SF_ADDPROVIDER_PROCESS = URI.create(OWL_S_SF_SERVICES
 			+ "AddProviderProcess.owl");
-	public final URI SF_ADDPROVIDER_GROUNDING = URI.create(OWL_S_SF_SERVICES
+	private final URI SF_ADDPROVIDER_GROUNDING = URI.create(OWL_S_SF_SERVICES
 			+ "AddProviderGrounding.owl");
-	public final URI SF_ADDPROVIDER_ID = URI.create(OWL_S_SF_SERVICES
+	private final URI SF_ADDPROVIDER_ID = URI.create(OWL_S_SF_SERVICES
 			+ "AddProviderProfile.owl#AddProviderProfile");
-	public final URI SF_ADDPROVIDER_GOAL = URI.create("AddProvider");
-	public final URI SF_ADDPROVIDER_PROVIDER = URI.create("Provider");
+	private final URI SF_ADDPROVIDER_GOAL = URI.create("AddProvider");
+	private final URI SF_ADDPROVIDER_PROVIDER = URI.create("Provider");
 
-	public final URI SF_REMOVEPROVIDER_PROFILE = URI.create(OWL_S_SF_SERVICES
+	private final URI SF_REMOVEPROVIDER_PROFILE = URI.create(OWL_S_SF_SERVICES
 			+ "RemoveProviderProfile.owl");
-	public final URI SF_REMOVEPROVIDER_PROCESS = URI.create(OWL_S_SF_SERVICES
+	private final URI SF_REMOVEPROVIDER_PROCESS = URI.create(OWL_S_SF_SERVICES
 			+ "RemoveProviderProcess.owl");
-	public final URI SF_REMOVEPROVIDER_GROUNDING = URI.create(OWL_S_SF_SERVICES
+	private final URI SF_REMOVEPROVIDER_GROUNDING = URI.create(OWL_S_SF_SERVICES
 			+ "RemoveProviderGrounding.owl");
-	public final URI SF_REMOVEPROVIDER_ID = URI.create(OWL_S_SF_SERVICES
+	private final URI SF_REMOVEPROVIDER_ID = URI.create(OWL_S_SF_SERVICES
 			+ "RemoveProviderProfile.owl#RemoveProviderProfile");
-	public final URI SF_REMOVEPROVIDER_GOAL = URI.create("RemoveProvider");
-	public final URI SF_REMOVEPROVIDER_PROVIDER = URI.create("Provider");
+	private final URI SF_REMOVEPROVIDER_GOAL = URI.create("RemoveProvider");
+	private final URI SF_REMOVEPROVIDER_PROVIDER = URI.create("Provider");
 
-	public final URI SF_REGISTERPROFILE_PROFILE = URI.create(OWL_S_SF_SERVICES
+	private final URI SF_REGISTERPROFILE_PROFILE = URI.create(OWL_S_SF_SERVICES
 			+ "RegisterProfileProfile.owl");
-	public final URI SF_REGISTERPROFILE_PROCESS = URI.create(OWL_S_SF_SERVICES
+	private final URI SF_REGISTERPROFILE_PROCESS = URI.create(OWL_S_SF_SERVICES
 			+ "RegisterProfileProcess.owl");
-	public final URI SF_REGISTERPROFILE_GROUNDING = URI
+	private final URI SF_REGISTERPROFILE_GROUNDING = URI
 			.create(OWL_S_SF_SERVICES + "RegisterProfileGrounding.owl");
-	public final URI SF_REGISTERPROFILE_ID = URI.create(OWL_S_SF_SERVICES
+	private final URI SF_REGISTERPROFILE_ID = URI.create(OWL_S_SF_SERVICES
 			+ "RegisterProfileProfile.owl#RegisterProfileProfile");
-	public final URI SF_REGISTERPROFILE_GOAL = URI.create("RegisterProfile");
-	public final URI SF_REGISTERPROFILE_PROVIDER = URI.create("Provider");
+	private final URI SF_REGISTERPROFILE_GOAL = URI.create("RegisterProfile");
+	private final URI SF_REGISTERPROFILE_PROVIDER = URI.create("Provider");
 
-	public final URI SF_DEREGISTERPROFILE_PROFILE = URI
+	private final URI SF_DEREGISTERPROFILE_PROFILE = URI
 			.create(OWL_S_SF_SERVICES + "DeregisterProfileProfile.owl");
-	public final URI SF_DEREGISTERPROFILE_PROCESS = URI
+	private final URI SF_DEREGISTERPROFILE_PROCESS = URI
 			.create(OWL_S_SF_SERVICES + "DeregisterProfileProcess.owl");
-	public final URI SF_DEREGISTERPROFILE_GROUNDING = URI
+	private final URI SF_DEREGISTERPROFILE_GROUNDING = URI
 			.create(OWL_S_SF_SERVICES + "DeregisterProfileGrounding.owl");
-	public final URI SF_DEREGISTERPROFILE_ID = URI.create(OWL_S_SF_SERVICES
+	private final URI SF_DEREGISTERPROFILE_ID = URI.create(OWL_S_SF_SERVICES
 			+ "DeregisterProfileProfile.owl#DeregisterProfileProfile");
-	public final URI SF_DEREGISTERPROFILE_GOAL = URI
+	private final URI SF_DEREGISTERPROFILE_GOAL = URI
 			.create("DeregisterProfile");
-	public final URI SF_DEREGISTERPROFILE_PROVIDER = URI.create("Provider");
+	private final URI SF_DEREGISTERPROFILE_PROVIDER = URI.create("Provider");
 
-	public final URI SF_REGISTERPROCESS_PROFILE = URI.create(OWL_S_SF_SERVICES
+	private final URI SF_REGISTERPROCESS_PROFILE = URI.create(OWL_S_SF_SERVICES
 			+ "RegisterProcessProfile.owl");
-	public final URI SF_REGISTERPROCESS_PROCESS = URI.create(OWL_S_SF_SERVICES
+	private final URI SF_REGISTERPROCESS_PROCESS = URI.create(OWL_S_SF_SERVICES
 			+ "RegisterProcessProcess.owl");
-	public final URI SF_REGISTERPROCESS_GROUNDING = URI
+	private final URI SF_REGISTERPROCESS_GROUNDING = URI
 			.create(OWL_S_SF_SERVICES + "RegisterProcessGrounding.owl");
-	public final URI SF_REGISTERPROCESS_ID = URI.create(OWL_S_SF_SERVICES
+	private final URI SF_REGISTERPROCESS_ID = URI.create(OWL_S_SF_SERVICES
 			+ "RegisterProcessProfile.owl#RegisterProcessProfile");
-	public final URI SF_REGISTERPROCESS_GOAL = URI.create("RegisterProcess");
-	public final URI SF_REGISTERPROCESS_PROVIDER = URI.create("Provider");
+	private final URI SF_REGISTERPROCESS_GOAL = URI.create("RegisterProcess");
+	private final URI SF_REGISTERPROCESS_PROVIDER = URI.create("Provider");
 
-	public final URI SF_GETPROCESS_PROFILE = URI.create(OWL_S_SF_SERVICES
+	private final URI SF_GETPROCESS_PROFILE = URI.create(OWL_S_SF_SERVICES
 			+ "GetProcessProfile.owl");
-	public final URI SF_GETPROCESS_PROCESS = URI.create(OWL_S_SF_SERVICES
+	private final URI SF_GETPROCESS_PROCESS = URI.create(OWL_S_SF_SERVICES
 			+ "GetProcessProcess.owl");
-	public final URI SF_GETPROCESS_GROUNDING = URI.create(OWL_S_SF_SERVICES
+	private final URI SF_GETPROCESS_GROUNDING = URI.create(OWL_S_SF_SERVICES
 			+ "GetProcessGrounding.owl");
-	public final URI SF_GETPROCESS_ID = URI.create(OWL_S_SF_SERVICES
+	private final URI SF_GETPROCESS_ID = URI.create(OWL_S_SF_SERVICES
 			+ "GetProcessProfile.owl#GetProcessProfile");
-	public final URI SF_GETPROCESS_GOAL = URI.create("GetProcess");
-	public final URI SF_GETPROCESS_PROVIDER = URI.create("Provider");
+	private final URI SF_GETPROCESS_GOAL = URI.create("GetProcess");
+	private final URI SF_GETPROCESS_PROVIDER = URI.create("Provider");
 
-	public final URI SF_GETPROFILE_PROFILE = URI.create(OWL_S_SF_SERVICES
+	private final URI SF_GETPROFILE_PROFILE = URI.create(OWL_S_SF_SERVICES
 			+ "GetProfileProfile.owl");
-	public final URI SF_GETPROFILE_PROCESS = URI.create(OWL_S_SF_SERVICES
+	private final URI SF_GETPROFILE_PROCESS = URI.create(OWL_S_SF_SERVICES
 			+ "GetProfileProcess.owl");
-	public final URI SF_GETPROFILE_GROUNDING = URI.create(OWL_S_SF_SERVICES
+	private final URI SF_GETPROFILE_GROUNDING = URI.create(OWL_S_SF_SERVICES
 			+ "GetProfileGrounding.owl");
-	public final URI SF_GETPROFILE_ID = URI.create(OWL_S_SF_SERVICES
+	private final URI SF_GETPROFILE_ID = URI.create(OWL_S_SF_SERVICES
 			+ "GetProfileProfile.owl#GetProfileProfile.owl");
-	public final URI SF_GETPROFILE_GOAL = URI.create("GetProfile");
-	public final URI SF_GETPROFILE_PROVIDER = URI.create("Provider");
+	private final URI SF_GETPROFILE_GOAL = URI.create("GetProfile");
+	private final URI SF_GETPROFILE_PROVIDER = URI.create("Provider");
 
-	public final URI SF_MODIFYPROCESS_PROFILE = URI.create(OWL_S_SF_SERVICES
+	private final URI SF_MODIFYPROCESS_PROFILE = URI.create(OWL_S_SF_SERVICES
 			+ "ModifyProcessProfile.owl");
-	public final URI SF_MODIFYPROCESS_PROCESS = URI.create(OWL_S_SF_SERVICES
+	private final URI SF_MODIFYPROCESS_PROCESS = URI.create(OWL_S_SF_SERVICES
 			+ "ModifyProcessProcess.owl");
-	public final URI SF_MODIFYPROCESS_GROUNDING = URI.create(OWL_S_SF_SERVICES
+	private final URI SF_MODIFYPROCESS_GROUNDING = URI.create(OWL_S_SF_SERVICES
 			+ "ModifyProcessGrounding.owl");
-	public final URI SF_MODIFYPROCESS_ID = URI.create(OWL_S_SF_SERVICES
+	private final URI SF_MODIFYPROCESS_ID = URI.create(OWL_S_SF_SERVICES
 			+ "ModifyProcessProfile.owl#ModifyProcessProfile.owl");
-	public final URI SF_MODIFYPROCESS_GOAL = URI.create("ModifyProcess");
-	public final URI SF_MODIFYPROCESS_PROVIDER = URI.create("Provider");
+	private final URI SF_MODIFYPROCESS_GOAL = URI.create("ModifyProcess");
+	private final URI SF_MODIFYPROCESS_PROVIDER = URI.create("Provider");
 
-	public final URI SF_MODIFYPROFILE_PROFILE = URI.create(OWL_S_SF_SERVICES
+	private final URI SF_MODIFYPROFILE_PROFILE = URI.create(OWL_S_SF_SERVICES
 			+ "ModifyProfileProfile.owl");
-	public final URI SF_MODIFYPROFILE_PROCESS = URI.create(OWL_S_SF_SERVICES
+	private final URI SF_MODIFYPROFILE_PROCESS = URI.create(OWL_S_SF_SERVICES
 			+ "ModifyProfileProcess.owl");
-	public final URI SF_MODIFYPROFILE_GROUNDING = URI.create(OWL_S_SF_SERVICES
+	private final URI SF_MODIFYPROFILE_GROUNDING = URI.create(OWL_S_SF_SERVICES
 			+ "ModifyProfileGrounding.owl");
-	public final URI SF_MODIFYPROFILE_ID = URI.create(OWL_S_SF_SERVICES
+	private final URI SF_MODIFYPROFILE_ID = URI.create(OWL_S_SF_SERVICES
 			+ "ModifyProfileProfile.owl#ModifyProfileProfile");
-	public final URI SF_MODIFYPROFILE_GOAL = URI.create("ModifyProfile");
-	public final URI SF_MODIFYPROFILE_PROVIDER = URI.create("Provider");
+	private final URI SF_MODIFYPROFILE_GOAL = URI.create("ModifyProfile");
+	private final URI SF_MODIFYPROFILE_PROVIDER = URI.create("Provider");
 
-	public final URI SF_SEARCHSERVICE_PROFILE = URI.create(OWL_S_SF_SERVICES
+	private final URI SF_SEARCHSERVICE_PROFILE = URI.create(OWL_S_SF_SERVICES
 			+ "SearchServiceProfile.owl");
-	public final URI SF_SEARCHSERVICE_PROCESS = URI.create(OWL_S_SF_SERVICES
+	private final URI SF_SEARCHSERVICE_PROCESS = URI.create(OWL_S_SF_SERVICES
 			+ "SearchServiceProcess.owl");
-	public final URI SF_SEARCHSERVICE_GROUNDING = URI.create(OWL_S_SF_SERVICES
+	private final URI SF_SEARCHSERVICE_GROUNDING = URI.create(OWL_S_SF_SERVICES
 			+ "SearchServiceGrounding.owl");
-	public final URI SF_SEARCHSERVICE_ID = URI.create(OWL_S_SF_SERVICES
+	private final URI SF_SEARCHSERVICE_ID = URI.create(OWL_S_SF_SERVICES
 			+ "SearchServiceProfile.owl#SearchServiceProfile");
-	public final URI SF_SEARCHSERVICE_GOAL = URI.create("SearchService");
-	public final URI SF_SEARCHSERVICE_PROVIDER = URI.create("Provider");
+	private final URI SF_SEARCHSERVICE_GOAL = URI.create("SearchService");
+	private final URI SF_SEARCHSERVICE_PROVIDER = URI.create("Provider");
 
 	// array with the SF processes related with registration
 	URI[] SFInitServices = { SF_REGISTERPROFILE_PROCESS,
@@ -556,7 +556,6 @@ public class SF extends QueueAgent {
 	protected void execute() {
 		// RegisterOMSServiceProfiles();
 		// RegisterOMSServiceProcess();
-
 		logger.info("Agent SF active");
 
 		SFResponder responder = new SFResponder(this);

@@ -49,7 +49,7 @@ public class FIPAContractNetInitiator {
 	private int nLeidos = 0;
 
 	/**
-	 * Create a new FIPA-Contract-Net interaction protocol
+	 * Create a new FIPA-Contract-Net interaction protocol, rol initiator.
 	 * @param agent agent is the reference to the Agent Object 
 	 * @param msg initial message
 	 */
@@ -72,9 +72,9 @@ public class FIPAContractNetInitiator {
 	}
 	@SuppressWarnings("unchecked")
 	
-	 /**
-	  *  Run the state machine with the communication protocol
-	  */
+	/**
+	*  Run the state machine with the communication protocol
+	*/
 	public void action() {
 
 		switch (state) {

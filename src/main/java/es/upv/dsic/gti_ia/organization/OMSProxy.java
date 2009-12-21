@@ -397,12 +397,12 @@ public class OMSProxy {
     /**
      * Expulse an agent of the organization
      * 
-     * @param agent
-     * @param AgentID
+     * @param agent QueueAgent
+     * @param AgentID Agent that we will expulse of the organization
      * @param RoleID
      * @param UnitID
      * @return String Status ErrorValue
-     * @throws Exception
+     * @throws Exception if 
      */
     public String expulse(QueueAgent agent, String AgentID, String RoleID, String UnitID)
 	    throws Exception {
@@ -420,7 +420,7 @@ public class OMSProxy {
     /**
      * Register a new agent in the organization
      * 
-     * @param agent Agent that we will register in the organization
+     * @param agent Agent that we will register in the organization, is a QueueAgent
      * @param roleID Role that the agent acquires inside the organization
      * @param unitID Unit of which the agent was forming a part with the previous role
      * @return String Status ErrorValue

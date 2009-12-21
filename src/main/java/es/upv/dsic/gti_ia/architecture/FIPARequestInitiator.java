@@ -37,7 +37,7 @@ public class FIPARequestInitiator {
 	private Logger logger = Logger.getLogger(this.getClass().getName());
 
 	/**
-	 * Create a FIPARequestInitiator.
+	 * Create a new FIPA-Request interaction protocol, rol initiator.
 	 * 
 	 * @param agent
 	 *            agent is the reference to the Agent Object

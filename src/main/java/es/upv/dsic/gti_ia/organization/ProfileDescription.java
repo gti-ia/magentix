@@ -18,12 +18,11 @@ public class ProfileDescription {
 
 	/**
 	 * 
-	 * @param URLProcess
-	 *            The URL where the owl's document (related with service
-	 *            process) is located.
-	 * @param serviceGoal
+	 * @param URLProfile
+	 *            The URL where the profile owl document is located
+	 * 		
 	 * @param profileName
-	 *            
+	 *            Name to the service profile description document.
 	 */
 	public ProfileDescription(String URLProfile,String profileName) {
 	    
@@ -50,7 +49,7 @@ public class ProfileDescription {
 	
 	/**
 	 * Change a url which makes reference to the service profile description document 
-	 * @param profilename
+	 * @param profilename URLProfile + # + profilename
 	 */
 	public void setServiceProfile(String profilename){
 	    
@@ -82,7 +81,7 @@ public class ProfileDescription {
 	/**
 	 * Change ID of the service
 	 * 
-	 * @param id
+	 * @param id is generated automatically by the database.
 	 */
 	public void setServiceID(String id) {
 		this.serviceID = id;
@@ -91,7 +90,7 @@ public class ProfileDescription {
 	/**
 	 * Return an ID of the service
 	 * 
-	 * @return
+	 * @return String 
 	 */
 	public String getServiceID() {
 		return this.serviceID;

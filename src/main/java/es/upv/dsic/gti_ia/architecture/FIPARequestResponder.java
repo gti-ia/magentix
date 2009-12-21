@@ -23,7 +23,7 @@ public class FIPARequestResponder {
 
 	private MessageTemplate template;
 	private int state = WAITING_MSG_STATE;
-	private QueueAgent myAgent;
+	protected QueueAgent myAgent;
 	private ACLMessage requestmsg;
 	private ACLMessage responsemsg;
 	private ACLMessage resNofificationmsg;
@@ -32,12 +32,12 @@ public class FIPARequestResponder {
 	private Monitor monitor = null;
 
 	/**
-	 * Create a FIPARequestResponder.
+	 * Create a new FIPA-Request interaction protocol, rol responder.
 	 * 
 	 * @param agent
 	 *            agent is the reference to the Agent Object.
-	 * @param template
-	 */
+	 * @param template is a MessageTemplate, will serve as a filter for receiving the right message
+	 */		
 
 	public FIPARequestResponder(QueueAgent _agent, MessageTemplate _template) {
 		myAgent = _agent;
@@ -248,7 +248,7 @@ public class FIPARequestResponder {
 	 * 
 	 * @param request
 	 *            initial message
-	 * @return
+	 * @return ACLMessage 
 	 * @throws NotUnderstoodException
 	 * @throws RefuseException
 	 */
@@ -262,9 +262,9 @@ public class FIPARequestResponder {
 	 * of the following two cases arise: the response was an agree message OR no
 	 * response message was sent.
 	 * 
-	 * @param request
-	 * @param responder
-	 * @return
+	 * @param request ACLMessage
+	 * @param responder ACLMessage
+	 * @return ACLMessage
 	 * @throws FailureException
 	 */
 	protected ACLMessage prepareResultNotification(ACLMessage request,
