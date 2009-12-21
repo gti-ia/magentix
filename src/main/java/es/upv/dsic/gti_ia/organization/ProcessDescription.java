@@ -119,7 +119,7 @@ public class ProcessDescription {
     }
 
     /**
-     * Return a process
+     * Returns a org.mindswap.owls.process.Process   to use him to the execution of a service. 
      * @param inmsg
      * @return Process is a mindswap.owls.process.Process;
      * @throws Exception
@@ -150,7 +150,7 @@ public class ProcessDescription {
     }
     
     /**
-     * 
+     * Returns a ValueMap with the name of the field and the value that there gives us the client who calls to the service.
      * @param inmsg
      * @return ValueMap 
      * @throws Exception
