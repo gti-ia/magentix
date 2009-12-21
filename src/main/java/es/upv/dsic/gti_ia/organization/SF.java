@@ -203,7 +203,7 @@ public class SF extends QueueAgent {
 	
 	
 	/**
-	  * Returns an instance of the agents SF
+	 * Returns an instance of the agents SF
 	 * @param agent
 	 * @return sf
 	 */
@@ -220,7 +220,7 @@ public class SF extends QueueAgent {
 	}
 	
 	/**
-	 * * Returns an instance of the agents SF
+	 *  Returns an instance of the agents SF
 	 * @return sf
 	 */
 	static public SF getSF()

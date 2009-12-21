@@ -44,7 +44,7 @@ public class ProcessDescription {
     }
 
     /**
-     * Returns the service model
+     * Returns a url which makes reference to the service process description document. 
      * 
      * @return serviceModel : URLProcess + goalProfile+Process.owl#+goalProfile;
      */
@@ -52,6 +52,10 @@ public class ProcessDescription {
 	return this.servicemodel;
     }
 
+    /**
+     * Change a url which makes reference to the service process description document. 
+     * @param processName
+     */
     public void setServiceModel(String processName) {
 
 	this.servicemodel = this.URLProcess + "#" + processName;
@@ -114,6 +118,12 @@ public class ProcessDescription {
 
     }
 
+    /**
+     * Return a process
+     * @param inmsg
+     * @return Process is a mindswap.owls.process.Process;
+     * @throws Exception
+     */
     public Process getProcess(ACLMessage inmsg) throws Exception {
 
 	// read msg content

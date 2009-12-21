@@ -37,7 +37,7 @@ public class ProfileDescription {
 
 
 	/**
-	 * Returns the service profile
+	 * Returns the url which makes reference to the service profile description document
 	 * 
 	 * @return serviceprofile : URLProfile
 	 *         #+profileName
@@ -48,6 +48,10 @@ public class ProfileDescription {
 	}
 	
 	
+	/**
+	 * Change a url which makes reference to the service profile description document 
+	 * @param profilename
+	 */
 	public void setServiceProfile(String profilename){
 	    
 	    this.serviceprofile = this.URLProfile+"#"+ profilename;
@@ -76,7 +80,7 @@ public class ProfileDescription {
 	}
 
 	/**
-	 * Change ID of the SFAgentDescription
+	 * Change ID of the service
 	 * 
 	 * @param id
 	 */
@@ -85,7 +89,7 @@ public class ProfileDescription {
 	}
 
 	/**
-	 * Return an ID of the SFServiceDescription
+	 * Return an ID of the service
 	 * 
 	 * @return
 	 */
