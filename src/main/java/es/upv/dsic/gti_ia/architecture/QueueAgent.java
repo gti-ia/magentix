@@ -49,7 +49,7 @@ public class QueueAgent extends BaseAgent {
 	/**
 	 * Function that will be executed when the agent gets a message
 	 * 
-	 * @param msg
+	 * @param msg ACLMessage
 	 */
 	protected void onMessage(ACLMessage msg) {
 
@@ -69,7 +69,7 @@ public class QueueAgent extends BaseAgent {
 	/**
 	 * Method to receive a magentix2 AclMessage
 	 * 
-	 * @param template
+	 * @param template is a MessageTemplate
 	 * @return msg ACLMessage
 	 */
 	public synchronized ACLMessage receiveACLMessage(
@@ -100,7 +100,7 @@ public class QueueAgent extends BaseAgent {
 	/**
 	 * Method to receive a magentix2 AclMessage
 	 * 
-	 * @param template
+	 * @param template is a MessageTemplate
 	 * @param type
 	 *            1 = rol responder other = rol initiator
 	 * @return msg ACLMessage
