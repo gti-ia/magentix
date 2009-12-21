@@ -70,7 +70,7 @@ public class QueueAgent extends BaseAgent {
 	/**
 	 * Method to receive a magentix2 AclMessage
 	 * 
-	 * @param template is a MessageTemplate
+	 * @param template is a MessageTemplate, will serve as a filter for receiving the right message
 	 * @return msg ACLMessage
 	 */
 	public synchronized ACLMessage receiveACLMessage(
@@ -159,9 +159,9 @@ public class QueueAgent extends BaseAgent {
 	 * Return name of agent.
 	 * @return String name
 	 */
-	public String getAllName() {
-		return this.getAid().toString();
-	}
+	//public String getAllName() {
+	//	return this.getAid().toString();
+	//}
 
 	/**
 	 * 
