@@ -1,27 +1,21 @@
 package es.upv.dsic.gti_ia.organization;
 
-/**
- * Javier Abell�n, 31 Mayo 2006
- * 
- * Ejemplo para meter, de forma autom�tica, un ResultSet en un JTable
- */
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
 /**
- * Clase encargada de conexi�n y consultas a base de datos.
+ * Class responsible for connection and database queries.
  * 
- * @author Chuidiang
- * 
+
  */
 public class DataBaseAcces {
-	/** La conexion con la base de datos */
+    
+	/** The connection to the database */
 	public Connection conection = null;
 
-	/** Se establece la conexion con la base de datos */
+	/** Establishing the connection with the database  */
 	public void connect() {
 		if (conection != null)
 			return;
@@ -50,10 +44,9 @@ public class DataBaseAcces {
 	}
 
 	/**
-	 * Realiza la consulta de personas en la tabla y devuelve el ResultSet
-	 * correspondiente.
+	 * Make the query of the units in the table and returns the corresponding ResultSet.
 	 * 
-	 * @return El resultado de la consulta
+	 * @return The result of the consultation 
 	 */
 	public ResultSet getUnitList() {
 		ResultSet rs = null;
@@ -72,6 +65,10 @@ public class DataBaseAcces {
 		return rs;
 	}
 
+	/**
+	 * Make the query of the roles in the table and returns the corresponding ResultSet.
+	 * @return The result of the consultation
+	 */
 	public ResultSet getRoleList() {
 		ResultSet rs = null;
 		try {
@@ -89,7 +86,7 @@ public class DataBaseAcces {
 		return rs;
 	}
 
-	/** Cierra la conexi�n con la base de datos */
+	/** Closes the connection with the database  */
 	public void closeConnection() {
 		try {
 			conection.close();
@@ -98,6 +95,10 @@ public class DataBaseAcces {
 		}
 	}
 
+	/**
+	 * Return a list of norms in the Thomas organization
+	 * @return The result of the consultation
+	 */
 	public ResultSet getListNorms() {
 		ResultSet rs = null;
 		try {
@@ -113,6 +114,10 @@ public class DataBaseAcces {
 		return rs;
 	}
 
+	/**
+	 * Return a list of entity play in the Thomas organization
+	 * @return The result of the consultation
+	 */
 	public ResultSet getListEntityPlay() {
 		ResultSet rs = null;
 		try {
@@ -131,10 +136,8 @@ public class DataBaseAcces {
 	}
 
 	/**
-	 * Realiza la consulta de personas en la tabla y devuelve el ResultSet
-	 * correspondiente.
-	 * 
-	 * @return El resultado de la consulta
+	 * Return a list of profile id in the Thomas organization
+	 * @return The result of the consultation
 	 */
 	public ResultSet getListProfileId() {
 		ResultSet rs = null;
