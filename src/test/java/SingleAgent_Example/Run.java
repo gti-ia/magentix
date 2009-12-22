@@ -1,6 +1,5 @@
 package SingleAgent_Example;
 
-import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
@@ -25,7 +24,7 @@ public class Run {
 		 * Setting the Logger
 		 */
 		DOMConfigurator.configure("configuration/loggin.xml");
-		Logger logger = Logger.getLogger(Run.class);
+		//Logger logger = Logger.getLogger(Run.class);
 
 		/**
 		 * Connecting to Qpid Broker
