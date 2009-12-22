@@ -13,7 +13,7 @@ public class Conversaciones{
 		/**
 		 * Connecting to Qpid Broker
 		 */
-		AgentsConnection.connect("127.0.0.1");
+		AgentsConnection.connect("gtiiaprojects2");
 				
 		Agente2 agenteIni1 = new Agente2(new AgentID("agenteIni1"));
 		Agente2 agenteIni2 = new Agente2(new AgentID("agenteIni2"));
