@@ -10,15 +10,16 @@ import es.upv.dsic.gti_ia.core.BaseAgent;
  * @author Sergio Pajares - spajares@dsic.upv.es
  * @author Joan Bellver - jbellver@dsic.upv.es
  */
-public class SenderAgent extends BaseAgent {
+public class SenderAgent2 extends BaseAgent {
 
-	public SenderAgent(AgentID aid) throws Exception {
+	public SenderAgent2(AgentID aid) throws Exception {
 		super(aid);
 	}
 
 	public void execute() {
 		logger.info("Executing, I'm " + getName());
-		AgentID receiver = new AgentID("consumer");
+		System.out.println("Executing, I'm " + getName());
+		AgentID receiver = new AgentID("Ricardconsumer");
 
 		/**
 		 * Building a ACLMessage
@@ -28,6 +29,7 @@ public class SenderAgent extends BaseAgent {
 		msg.setSender(this.getAid());
 		msg.setLanguage("ACL");
 		msg.setContent("Hello, I'm " + getName());
+		msg.addHeader("Purpose", "Chorra");
 		/**
 		 * Sending a ACLMessage
 		 */
