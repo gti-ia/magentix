@@ -1,0 +1,30 @@
+The project Magentix2 includes different software packages which have been developed by different organizations under different licensing terms. Redistribution and use in source and binary forms of these packages, with or without modification, are permitted provided that the following license statement applies:
+
+ICU License: ICU4J
+http://source.icu-project.org/repos/icu/icu/trunk/license.html
+
+Common Public License Version 1.0: JUnit
+http://junit.sourceforge.net/cpl-v10.html
+
+The Apache Software License, Version 2.0: Qpid, Axis, IO, Logging, core, fam, mina-core, log4j
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+MIT license: SLF4J, OWL-S
+http://www.mindswap.org/2004/owl-s/api/license.shtml
+
+AGPL license v3: Pellet (only for open source applications). 
+http://www.opensource.org/licenses/agpl-v3.html
+
+For proprietary or closed source applications, Pellet is available under alternative license terms (http://clarkparsia.com/pellet)
+
+Jena License: jena is available under the terms of the terms of Jena license
+http://jena.sourceforge.net/license.html
+
+GNU LGPL v3: JADE
+http://www.opensource.org/licenses/lgpl-3.0.html
+
+Magentix2 “fipa agent management exceptions” source code is a derivative work directly based on the corresponding JADE source code for this task. 
+Specifically classes FIPAException FailureException, NotUnderstoodException and RefuseException in Magentix2 are basically equal to the corresponding classes in JADE framework. 
+Also class "ISO8601.java" is a copy of the corresponding JADE source code.
+JADE is covered by GNU LGPL v3 license that not restrict modification and use of this library if we give prominent notice with each copy of the combined work that the Library is used in it and that the library and its use are covered by this License.
