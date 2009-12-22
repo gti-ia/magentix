@@ -29,7 +29,7 @@ public class SenderAgent2 extends BaseAgent {
 		msg.setSender(this.getAid());
 		msg.setLanguage("ACL");
 		msg.setContent("Hello, I'm " + getName());
-		msg.addHeader("Purpose", "Chorra");
+		msg.setHeader("Purpose", "Chorra");
 		/**
 		 * Sending a ACLMessage
 		 */
