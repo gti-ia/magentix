@@ -8,15 +8,14 @@ Download Magentix2
 
 * Magentix2
 
- [[1]] Magentix2.zip  {{{./download/Magentix2.zip}download}}.
+ [[1]] Distribution Magentix2.zip  {{{./download/Magentix2.zip}download}}.
  
  [[2]] Source code  {{{./download/magentix2-1.0-src.zip}download}}.
  
  [[3]] Document "Magentinx2  guide" {{{./docs/Magentix2 guide.pdf}download}}.
  
- [[4]] Document "Develop agents for Magentix2 and Thomas" {{{./docs/Magentix2AndThomas.pdf}download}}.
+ [[4]] Document "Develop agents for Magentix2" {{{./docs/DevelopmentGuide.pdf}download}}.
  
- [[5]] Document "Magentix2 core" {{{./docs/CoreQpid.pdf}download}}.
  
  
 
@@ -31,7 +30,7 @@ Download Magentix2
 
 * THOMAS
 
- [[8]] Document "Clasificacion servicios thomas" {{{./docs/clasificacion servicios thomas.pdf}download}}.
+ [[8]] Document "Thomas service classification" {{{./docs/thomas service classification.pdf}download}}.
  
  [[9]] SQL configuration file  {{{./download/thomas.sql}download}}.
  
