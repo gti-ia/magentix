@@ -3,6 +3,9 @@ package es.upv.dsic.gti_ia.core;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import es.upv.dsic.gti_ia.core.ISO8601;
 
@@ -148,10 +151,11 @@ public class ACLMessage implements Serializable, Cloneable {
 	 */
 	private String in_reply_to = "";
 	/**
-	 * @uml.property name="reply_byInMillisec"
+	 * @uml.property name="reply_byInMillu isec"
 	 */
 	private long reply_byInMillisec = 0;
 
+	private Map<String, String> headers = new HashMap<String, String>();
 	// constructores
 	/*
 	 * public ACLMessage(){ performative = UNKNOWN; }
@@ -159,6 +163,7 @@ public class ACLMessage implements Serializable, Cloneable {
 
 	public ACLMessage(int performative) {
 		this.performative = performative;
+		headers.put("ERROR", "");
 	}
 
 	/**
@@ -519,5 +524,29 @@ public class ACLMessage implements Serializable, Cloneable {
 
 		// #CUSTOM_EXCLUDE_END
 		return m;
+	}
+	
+	public void setHeader(String key, String value){
+		headers.put(key, value);
+	}
+	
+	public String getHeaderValue(String key){
+		return headers.get(key);
+	}
+	
+	public Map<String, String> getHeaders(){
+		return headers;
+	}
+	
+	public boolean headersAreEqual(ACLMessage msg){
+		Iterator<String> itr = headers.keySet().iterator();
+		//iterate through HashMap values iterator
+		String key1;
+		while(itr.hasNext()){
+			key1 = itr.next();
+			if(!key1.equals("ERROR") && !headers.get(key1).equals(msg.getHeaderValue(key1)))
+				return false;
+		}
+		return true;
 	}
 }

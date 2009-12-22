@@ -1,6 +1,10 @@
 package es.upv.dsic.gti_ia.core;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
 import org.apache.log4j.Logger;
 import org.apache.qpid.transport.Connection;
 import org.apache.qpid.transport.DeliveryProperties;
@@ -155,6 +159,8 @@ public class BaseAgent implements Runnable {
 	 *         
 	 */
 	public void send(ACLMessage msg) {
+		System.out.println("Agente: "+getName()+"SendMethod conversationID "+msg.getConversationId()+
+				" remitente "+msg.getSender()+" destino "+msg.getReceiver());
 		MessageTransfer xfr = new MessageTransfer();
 
 		xfr.destination("amq.direct");
@@ -195,7 +201,19 @@ public class BaseAgent implements Runnable {
 		body = body + msg.getReplyBy().length() + "#" + msg.getReplyBy();
 		// content
 		body = body + msg.getContent().length() + "#" + msg.getContent();
-
+		// serialize message headers, it looks like: number of headers#key.length#key|value.length#value
+		//number of headers
+		body = body + String.valueOf(msg.getHeaders().size()) + "#";
+		Map<String, String> headers = new HashMap<String, String>(msg.getHeaders());
+		Iterator<String> itr = headers.keySet().iterator();
+		String key;
+		//iterate through HashMap values iterator
+		while(itr.hasNext()){
+			key = itr.next();
+			body = body + key.length() + "#" + key;
+			body = body + headers.get(key).length() + "#" + headers.get(key);		 
+		}
+				
 		xfr.setBody(body);
 		for (int i = 0; i < msg.getTotalReceivers(); i++) {
 			// If protocol is not qpid then the message goes outside the
@@ -263,9 +281,9 @@ public class BaseAgent implements Runnable {
 	}
 
 	/**
-	 * Runs Agent's thread
+	 * Runs Agent's thread 
 	 */
-	public void run() {
+	public void run(){
 		init();
 		execute();
 		finalize();
@@ -420,8 +438,36 @@ public class BaseAgent implements Runnable {
 		tam = Integer.parseInt(body.substring(indice1, indice2));
 		// Content
 		msg.setContent(body.substring(indice2 + 1, indice2 + 1 + tam));
+				
+		indice1 = indice2 + 1 + tam;
+		indice2 = body.indexOf('#', indice1);
+		//headers
+		int numberOfHeaders = Integer.valueOf(body.substring(indice1, indice2));
+		String key;
+		String value;
+		tam = 0;
+		int copy = numberOfHeaders / 10;
+		//find out how many ciphers numberOfHeaders has
+		while(copy > 0){
+			tam++;
+			copy /= 10;
+		}
+		for(int i=0; i< numberOfHeaders; i++){
+			//key
+			indice1 = indice2 + 1 + tam;
+			indice2 = body.indexOf('#', indice1);
+			tam = Integer.parseInt(body.substring(indice1, indice2));	
+			key = body.substring(indice2 + 1, indice2 + 1 + tam);
+					
+			//value
+			indice1 = indice2 + 1 + tam;
+			indice2 = body.indexOf('#', indice1);
+			tam = Integer.parseInt(body.substring(indice1, indice2));			
+			value = body.substring(indice2 + 1, indice2 + 1 + tam);
+			
+			msg.setHeader(key, value);			
+		}		
 
 		return msg;
 	}
-
 }
