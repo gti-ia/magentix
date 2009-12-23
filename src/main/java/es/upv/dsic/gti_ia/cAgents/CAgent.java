@@ -32,12 +32,12 @@ public abstract class CAgent extends BaseAgent {
 		messageList = new LinkedBlockingQueue<ACLMessage>();
 	}	
 	
-	private void createDefaultFactory(){
+	private CProcessorFactory createDefaultFactory(){
 		CProcessorFactory defaultFactory = new CProcessorFactory("DefaultFactory", new ACLMessage(ACLMessage.UNKNOWN), 1000);
 		defaultFactory.getCProcessor().registerFirstState(new DefaultBeginState("defaultBeginState"));
 		defaultFactory.getCProcessor().registerState(new DefaultFinalState("defaultFinalState"));
 		defaultFactory.getCProcessor().addTransition("defaultBeginState", "defaultFinalState");
-		this.addFactory(defaultFactory);
+		return defaultFactory;
 	}
 	
 	class DefaultBeginState extends BeginState{
@@ -175,7 +175,7 @@ public abstract class CAgent extends BaseAgent {
 	protected abstract void setFactories();
 	
 	protected final void execute(){
-		this.createDefaultFactory();
+		addFactory(createDefaultFactory());
 		setFactories();
 		//if a starting factory is set, then we force it to start
 		ACLMessage startingMessage = new ACLMessage(ACLMessage.INFORM);
