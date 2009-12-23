@@ -172,7 +172,7 @@ public class CProcessor implements Runnable, Cloneable{
 						}
 						break;
 					case State.WAIT:
-						//WaitState waitState = (WaitState) states.get(currentState);
+						WaitState waitState = (WaitState) states.get(currentState);
 						if(messageQueue.size() > 0){
 							ACLMessage retrievedMessage = messageQueue.remove();
 							//check if message queue contains an exception message
@@ -227,6 +227,7 @@ public class CProcessor implements Runnable, Cloneable{
 						else{ //queueMessage is empty
 							System.out.println("Cola vacia");
 							idle = true;
+							myAgent.addTimer(conversationID, waitState.getTimeOut());
 							//no es correcto, pero el return provoca interbloqueo si no se libera antes una conversación
 							//myAgent.endConversation(factoryArrayIndex);
 							return;

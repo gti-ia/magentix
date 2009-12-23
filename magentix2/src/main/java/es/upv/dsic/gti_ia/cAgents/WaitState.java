@@ -3,7 +3,7 @@ package es.upv.dsic.gti_ia.cAgents;
 public class WaitState extends State{
 	private long timeOut;
 	
-	public WaitState(String n, int timeOut) {
+	public WaitState(String n, long timeOut) {
 		super(n);
 		type = State.WAIT;
 		this.timeOut = timeOut;
