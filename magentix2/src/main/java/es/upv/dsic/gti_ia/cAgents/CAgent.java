@@ -30,18 +30,7 @@ public abstract class CAgent extends BaseAgent {
 		super(aid);
 		exec =  Executors.newCachedThreadPool();
 		messageList = new LinkedBlockingQueue<ACLMessage>();
-	}
-	
-	protected CProcessorFactory createWelcomeFactory(){
-		ACLMessage welcomeMessage = new ACLMessage(ACLMessage.INFORM);
-		welcomeMessage.setHeader("Purpose", "Welcome");
-		CProcessorFactory welcomeFactory = new CProcessorFactory("WelcomeFactory", welcomeMessage, 1);
-		welcomeFactory = new CProcessorFactory("welcomeFactory", welcomeMessage , 1);
-		welcomeFactory.getCProcessor().registerFirstState(new DefaultBeginState("defaultBeginState"));
-		welcomeFactory.getCProcessor().registerState(new DefaultFinalState("defaultFinalState"));
-		welcomeFactory.getCProcessor().addTransition("defaultBeginState", "defaultFinalState");
-		return welcomeFactory;
-	}
+	}	
 	
 	private void createDefaultFactory(){
 		CProcessorFactory defaultFactory = new CProcessorFactory("DefaultFactory", new ACLMessage(ACLMessage.UNKNOWN), 1000);
