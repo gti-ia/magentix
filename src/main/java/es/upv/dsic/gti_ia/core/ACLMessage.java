@@ -531,7 +531,10 @@ public class ACLMessage implements Serializable, Cloneable {
 	}
 	
 	public String getHeaderValue(String key){
-		return headers.get(key);
+		if(headers.get(key)!= null)
+			return headers.get(key);
+		else
+			return "";
 	}
 	
 	public Map<String, String> getHeaders(){
