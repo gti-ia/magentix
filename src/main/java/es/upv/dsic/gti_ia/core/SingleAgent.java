@@ -1,6 +1,5 @@
 package es.upv.dsic.gti_ia.core;
 
-import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
 
 
