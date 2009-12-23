@@ -42,7 +42,7 @@ public class Agente2 extends CAgent{
 		factory.getCProcessor().addTransition("beginState", "sendState0");
 		
 		//wait
-		factory.getCProcessor().registerState(new WaitState("waitState",10));
+		factory.getCProcessor().registerState(new WaitState("waitState",1000000000));
 		factory.getCProcessor().addTransition("sendState0", "waitState");
 		
 		//receive
@@ -53,7 +53,6 @@ public class Agente2 extends CAgent{
 		factory.getCProcessor().registerState(receiveState);
 		factory.getCProcessor().addTransition("waitState", "receiveState");
 		
-		//send
 		SendState1 sendState = new SendState1("sendState");
 		ACLMessage sendTemplate = new ACLMessage(ACLMessage.REQUEST);
 		sendTemplate.setHeader("Purpose", "AnimicState");
@@ -64,7 +63,7 @@ public class Agente2 extends CAgent{
 		factory.getCProcessor().addTransition("receiveState", "sendState");
 		
 		//wait
-		factory.getCProcessor().registerState(new WaitState("waitState2",10));
+		factory.getCProcessor().registerState(new WaitState("waitState2",1000000000));
 		factory.getCProcessor().addTransition("sendState", "waitState2");
 		
 		//receive happy
@@ -138,6 +137,13 @@ public class Agente2 extends CAgent{
 			System.out.println("Contenido messageTemplate "+this.messageTemplate.getContent());
 			this.messageTemplate.setConversationId(myProcessor.getConversationID());
 			this.messageTemplate.setSender(myProcessor.getMyAgent().getAid());
+			//send
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			return this.messageTemplate;
 		}
 

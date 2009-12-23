@@ -34,6 +34,14 @@ public class Agente1 extends CAgent{
 		factoriaRes.getCProcessor().registerState(new WaitState("waitState",10));
 		factoriaRes.getCProcessor().addTransition("beginState", "waitState");
 		
+		//receive wait1
+		ReceiveState1 receiveWaitState = new ReceiveState1("receiveWaitState1");
+		ACLMessage receiveWaitFilter = new ACLMessage(ACLMessage.INFORM);
+		receiveWaitFilter.setHeader("Purpose", "WaitMessage");
+		receiveWaitState.setAcceptFilter(receiveWaitFilter);
+		factoriaRes.getCProcessor().registerState(receiveWaitState);
+		factoriaRes.getCProcessor().addTransition("waitState", "receiveWaitState1");
+		
 		//receive
 		ReceiveState1 receiveState = new ReceiveState1("receiveState");
 		ACLMessage receiveFilter = new ACLMessage(ACLMessage.REQUEST);
@@ -54,6 +62,15 @@ public class Agente1 extends CAgent{
 		//wait2
 		factoriaRes.getCProcessor().registerState(new WaitState("waitState2",10));
 		factoriaRes.getCProcessor().addTransition("sendState", "waitState2");
+		
+		//receive wait2
+		ReceiveState1 receiveWaitState2 = new ReceiveState1("receiveWaitState2");
+		ACLMessage receiveWaitFilter2 = new ACLMessage(ACLMessage.INFORM);
+		receiveWaitFilter2.setHeader("Purpose", "WaitMessage");
+		receiveWaitState2.setAcceptFilter(receiveWaitFilter2);
+		factoriaRes.getCProcessor().registerState(receiveWaitState2);
+		factoriaRes.getCProcessor().addTransition("waitState2", "receiveWaitState2");
+		factoriaRes.getCProcessor().addTransition("receiveWaitState2", "waitState2");
 		
 		//receive2
 		ReceiveState1 receiveState2 = new ReceiveState1("receiveState2");
