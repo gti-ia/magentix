@@ -1,8 +1,11 @@
 package es.upv.dsic.gti_ia.cAgents;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -21,6 +24,7 @@ public abstract class CAgent extends BaseAgent {
 	protected final Semaphore availableSends = new Semaphore(1, true);
 	private int startingFactoryIndex = -1;
 	private String startingFactoryConversationId = "";
+	private Map<String, Timer> timers = new HashMap<String, Timer>();
 	
 	public CAgent(AgentID aid) throws Exception {
 		super(aid);
@@ -130,6 +134,36 @@ public abstract class CAgent extends BaseAgent {
 				System.out.println("Agente: "+this.getName()+" Mensaje a tratar por la DefaultFactory");
 				factories.get(0).startConversation(msg,0);
 			}
+		}
+	}
+	
+	protected int addTimer(final String conversationId, int milliseconds){
+		if(this.timers.get(conversationId) == null){
+			Date timeToRun = new Date(System.currentTimeMillis()+milliseconds);
+			Timer timer = new Timer();
+	    
+			timer.schedule(new TimerTask() {
+	            public void run() {
+	               ACLMessage waitMessage = new ACLMessage(ACLMessage.INFORM);
+	               waitMessage.setHeader("Purpose", "WaitMessage");
+	               waitMessage.setConversationId(conversationId);
+	               processMessage(waitMessage);
+	            }
+			}, timeToRun);
+			this.timers.put(conversationId, timer);
+			return 1;
+		}
+		else
+			return 0;
+	}
+	
+	protected int removeTimer(String conversationId){
+		if(this.timers.get(conversationId) == null)
+			return 0;
+		else{
+			this.timers.get(conversationId).cancel();
+			this.timers.remove(conversationId);
+			return 1;
 		}
 	}
 	
