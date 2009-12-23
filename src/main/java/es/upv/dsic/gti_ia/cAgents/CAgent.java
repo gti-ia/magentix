@@ -108,6 +108,9 @@ public abstract class CAgent extends BaseAgent {
 			processors.get(msg.getConversationId()).addMessage(msg);
 			if(auxProcessor.isIdle()){
 				auxProcessor.setIdle(false);
+				if(!msg.getHeaderValue("Purpose").equals("WaitMessage"))
+					if(removeTimer(msg.getConversationId()))
+						System.out.println("Timer cancelado");
 				exec.execute(auxProcessor);
 			}
 		}			
@@ -126,7 +129,7 @@ public abstract class CAgent extends BaseAgent {
 		}
 	}
 	
-	protected int addTimer(final String conversationId, int milliseconds){
+	protected synchronized boolean addTimer(final String conversationId, long milliseconds){
 		if(this.timers.get(conversationId) == null){
 			Date timeToRun = new Date(System.currentTimeMillis()+milliseconds);
 			Timer timer = new Timer();
@@ -135,24 +138,25 @@ public abstract class CAgent extends BaseAgent {
 	            public void run() {
 	               ACLMessage waitMessage = new ACLMessage(ACLMessage.INFORM);
 	               waitMessage.setHeader("Purpose", "WaitMessage");
+	               waitMessage.setContent("Límite temporal alcanzado");
 	               waitMessage.setConversationId(conversationId);
 	               processMessage(waitMessage);
 	            }
 			}, timeToRun);
 			this.timers.put(conversationId, timer);
-			return 1;
+			return true;
 		}
 		else
-			return 0;
+			return false;
 	}
 	
-	protected int removeTimer(String conversationId){
+	protected synchronized boolean removeTimer(String conversationId){
 		if(this.timers.get(conversationId) == null)
-			return 0;
+			return false;
 		else{
 			this.timers.get(conversationId).cancel();
 			this.timers.remove(conversationId);
-			return 1;
+			return true;
 		}
 	}
 	
