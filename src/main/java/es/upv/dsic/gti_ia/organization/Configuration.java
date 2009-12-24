@@ -6,7 +6,11 @@ import java.io.*;
 import java.io.InputStream;
 
 
-
+/**
+ * This class reads the contents of settings.xml file found in the configuration directory
+ *
+ *
+ */
 public class Configuration {
 	
 	
@@ -68,7 +72,7 @@ public class Configuration {
 		return this.databasePassword;
 	}
 	/**
-	 * 
+	 * Full path where are the owl's deployed the services of the OMS 
 	 * @return OMSServiceDescriptionLocation
 	 */
 	public String getOMSServiceDesciptionLocation()
@@ -76,7 +80,7 @@ public class Configuration {
 		return this.OMSServiceDesciptionLocation;
 	}
 	/**
-	 * 
+	 * Full path where are the owl's deployed the services of the SF
 	 * @return SFServiceDesciptionLocation
 	 */
 	public String getSFServiceDesciptionLocation()

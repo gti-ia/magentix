@@ -12,10 +12,15 @@ import java.sql.Statement;
  */
 public class DataBaseAcces {
     
-	/** The connection to the database */
+	/** 
+	 * 
+	 * The connection to the database 
+	 * */
 	public Connection conection = null;
 
-	/** Establishing the connection with the database  */
+	/** 
+	 * Establishing the connection with the database  
+	 * */
 	public void connect() {
 		if (conection != null)
 			return;

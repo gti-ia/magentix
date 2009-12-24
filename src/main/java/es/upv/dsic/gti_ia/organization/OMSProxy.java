@@ -11,7 +11,10 @@ import java.util.ArrayList;
 import org.apache.log4j.Logger;
 
 /**
- * This class gives us the support to accede to the services of the OMS
+ * The OMS provides a group of services for registering or deregistering
+structural components, specific roles, norms and units. It also offers services for
+reporting on these components.
+	This class gives us the support to accede to the services of the OMS
  * 
  * @author Joan Bellver Faus
  * 
@@ -82,7 +85,7 @@ public class OMSProxy {
     }
 
     /**
-     * Leave role agent inside the organization
+     * Requests to leave a role
      * 
      * @param agent
      * @param AgentID
@@ -107,7 +110,7 @@ public class OMSProxy {
     }
 
     /**
-     * Inform agent role inside the organization
+     * Indicates roles adopted by an agent
      * 
      * @param agent
      * @param AgentID
@@ -129,7 +132,7 @@ public class OMSProxy {
     }
 
     /**
-     * Inform of the members of the organization with one veer role and a unit
+     * Indicates entities that are members of a specific unit
      * 
      * @param agent
      * @param RoleID
@@ -154,7 +157,7 @@ public class OMSProxy {
     }
 
     /**
-     * Inform norm list
+     * Provides all norms addressed to a specific role
      * 
      * @param agent
      * @param RoleID
@@ -176,7 +179,7 @@ public class OMSProxy {
     }
 
     /**
-     * Inform role profiles
+     * Indicates all profiles associated to a specific role
      * 
      * @param agent
      * @param UnitID
@@ -198,7 +201,7 @@ public class OMSProxy {
     }
 
     /**
-     * Inform unit
+     * Provides unit description
      * 
      * @param agent
      * @param UnitID
@@ -220,7 +223,8 @@ public class OMSProxy {
     }
 
     /**
-     * Inform unit roles
+     * Indicates which roles are the ones defined within a
+specific unit
      * 
      * @param agent
      * @param UnitID
@@ -241,7 +245,7 @@ public class OMSProxy {
     }
 
     /**
-     * Agents quantity in the organization with a role and a unit
+     * Provides the number of current members of a specific unit
      * 
      * @param agent
      * @param RoleID
@@ -262,7 +266,7 @@ public class OMSProxy {
     }
 
     /**
-     * Register a new norm in the organization
+     * Includes a new norm within a unit
      * 
      * @param agent
      * @param NormID
@@ -284,7 +288,7 @@ public class OMSProxy {
     }
 
     /**
-     * Register a new role in the organization
+     * Creates a new role within a unit
      * 
      * @param agent
      * @param RegisterRoleInputRoleID
@@ -312,7 +316,7 @@ public class OMSProxy {
     }
 
     /**
-     * Register a new unit in the organization
+     * Creates a new unit within a specific organization
      * 
      * @param agent
      * @param UnitID
@@ -336,7 +340,7 @@ public class OMSProxy {
     }
 
     /**
-     * Deregister norm
+     * Removes a specific norm description
      * 
      * @param agent
      * @param NormID
@@ -355,7 +359,7 @@ public class OMSProxy {
     }
 
     /**
-     * Deregister role
+     * Removes a specific role description from a unit
      * 
      * @param agent
      * @param RoleID
@@ -376,7 +380,7 @@ public class OMSProxy {
     }
 
     /**
-     * Deregister unit
+     * Removes a unit from an organization
      * 
      * @param agent
      * @param UnitID
@@ -395,7 +399,7 @@ public class OMSProxy {
     }
 
     /**
-     * Expulse an agent of the organization
+     * Forces an agent to leave a specific role
      * 
      * @param agent QueueAgent
      * @param AgentID Agent that we will expulse of the organization
@@ -418,7 +422,7 @@ public class OMSProxy {
     }
 
     /**
-     * Register a new agent in the organization
+     * Requests the adoption of a specific role within a unit
      * 
      * @param agent Agent that we will register in the organization, is a QueueAgent
      * @param roleID Role that the agent acquires inside the organization

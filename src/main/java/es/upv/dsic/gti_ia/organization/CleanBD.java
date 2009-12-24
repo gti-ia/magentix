@@ -6,17 +6,18 @@ import java.sql.Statement;
 import com.hp.hpl.jena.db.DBConnection;
 import com.hp.hpl.jena.db.IDBConnection;
 
+/**
+ * Clean DataBase thomas and remove jena tables.
+ */
 public class CleanBD {
 
-	/**
-	 * @param args
-	 */
+
 	
     private Configuration c;
 
-    	/**
-    	 * Clean DataBase thomas and remove jena tables.
-    	 */
+  /**
+   * This class clean the entire contents of the tables in the database thomas, including tables that are created within jena, it is important that we make use of this method at the beginning or end of the initialization of our projects, we must be careful configure the settings.xml file with data from the database.
+   */
 	public void clean_database() {
 		try {
 			DataBaseAcces bd = new DataBaseAcces();
