@@ -38,8 +38,8 @@ public class ProfileDescription {
 	/**
 	 * Returns the url which makes reference to the service profile description document
 	 * 
-	 * @return serviceprofile : URLProfile
-	 *         #+profileName
+	 * @return serviceprofile 
+	 *         
 	 */
 	public String getServiceProfile() {
 		return this.serviceprofile;
@@ -49,7 +49,7 @@ public class ProfileDescription {
 	
 	/**
 	 * Change a url which makes reference to the service profile description document 
-	 * @param profilename URLProfile + # + profilename
+	 * @param profilename 
 	 */
 	public void setServiceProfile(String profilename){
 	    
