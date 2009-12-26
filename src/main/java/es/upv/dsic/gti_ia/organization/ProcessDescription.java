@@ -47,7 +47,7 @@ public class ProcessDescription {
     /**
      * Returns a url which makes reference to the service process description document. 
      * 
-     * @return serviceModel : URLProcess + goalProfile+Process.owl#+goalProfile;
+     * @return serviceModel 
      */
     public String getServiceModel() {
 	return this.servicemodel;
