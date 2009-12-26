@@ -70,7 +70,7 @@ public class FIPAContractNetInitiator {
 	{
 		return this.state;
 	}
-	@SuppressWarnings("unchecked")
+
 	
 	/**
 	*  Run the state machine with the communication protocol
@@ -97,7 +97,7 @@ public class FIPAContractNetInitiator {
 				// usuario
 				
 				//guardar temporalmente los agentes a enviar
-				
+				@SuppressWarnings("unchecked")
 				ArrayList<AgentID> agentes = (ArrayList<AgentID>)request.getReceiverList().clone();
 				request.setSender(myAgent.getAid());
 				// recorrer todos lo receivers
