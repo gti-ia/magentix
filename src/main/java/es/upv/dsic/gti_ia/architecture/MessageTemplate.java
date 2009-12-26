@@ -1,11 +1,3 @@
-
-/**
- * The class messageTemplate create a new template to compare messages.
- * 
- * @author  Joan Bellver Faus, GTI-IA, DSIC, UPV
- * @version 2009.9.07
- */
-
 package es.upv.dsic.gti_ia.architecture;
 
 import java.util.ArrayList;
@@ -15,6 +7,11 @@ import es.upv.dsic.gti_ia.architecture.FIPANames.InteractionProtocol;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 
+
+
+/**
+ * The class messageTemplate create a new template to compare messages.
+ */
 public class MessageTemplate {
 
 	// miembros

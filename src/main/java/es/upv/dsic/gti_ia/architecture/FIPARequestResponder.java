@@ -23,7 +23,7 @@ public class FIPARequestResponder {
 
 	private MessageTemplate template;
 	private int state = WAITING_MSG_STATE;
-	protected QueueAgent myAgent;
+	private QueueAgent myAgent;
 	private ACLMessage requestmsg;
 	private ACLMessage responsemsg;
 	private ACLMessage resNofificationmsg;
