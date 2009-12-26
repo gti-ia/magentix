@@ -201,7 +201,7 @@ public class SFProxy {
     /**
      * This service deletes the service process registrated in the sf database. 
      * 
-     * @param agent
+     * @param agent is a QueueAgent, this agent implemented the  communication protocol
      * @param ProcessDescription Must have at least completed the field Implementation ID
      * @return status RemoveProviderResponse contains an element: return which indicates if an error occurs (1:OK otherwise 0)
      * @throws Exception
@@ -232,7 +232,7 @@ public class SFProxy {
      * Currently this service makes a query to the database seaching the services whose service description 
      * field mathc with the client requirements (the input service purpose).
      * 
-     * @param agent QueueAgent
+     * @param agent is a QueueAgent, this agent implemented the  communication protocol
      * @param serviceGoal service purpose (is a string: the service description).
      * @return services list (is a list of <service profile id, ranking: service profile id, ranking: ...>
      */
@@ -256,7 +256,7 @@ public class SFProxy {
     /**
      * This service deletes the service process kept in the sf database and inserts the new process
      * 
-     * @param agent QueueAgent
+     * @param agent is a QueueAgent, this agent implemented the  communication protocol
      * @param ProcessDescription  contains two elements: service implementation ID (is a string: 
      * serviceprofile@servicenumdidagent), service model (is a string: urlprocess#processname).
      * @return ModifyProcessResponse contains return which indicates if an error occurs (1:OK,
@@ -291,7 +291,7 @@ public class SFProxy {
     /**
      * This service deletes the service profile kept in the sf database and inserts the new profile.
      * 
-     * @param agent QueueAgent
+     * @param agent is a QueueAgent, this agent implemented the  communication protocol
      * @param ProfileDescription contains three elements: service id (is a string: service profile id), service
          * goal (currently is not in use),and service profile ( is a string 
          * urlprofile#profilename)
@@ -327,7 +327,7 @@ public class SFProxy {
     /**
      * This service deletes the profile in the sf database.
      * 
-     * @param agent QueueAgent
+     * @param agent is a QueueAgent, this agent implemented the  communication protocol
      * @param ProfileDescription contains one element: service id (is a string: service profile id)
      * @return Status DeregisterProfileResponse contains an element: return indicates if an error occurs (
          * 0: ok, 1:error).
@@ -362,7 +362,7 @@ public class SFProxy {
     /**
      * This service returns the providers which implements the required profile.
      * 
-     * @param agent QueueAgent
+     * @param agent is a QueueAgent, this agent implemented the  communication protocol
      * @param id the service ID (is a string: service profile id) and the 
 	 * agent id (is a string).
      * @return provider list (is a string with the next template:
@@ -391,7 +391,7 @@ public class SFProxy {
     /**
      * This service returns the url of the required profile.
      * 
-     * @param agent QueueAgent
+     * @param agent is a QueueAgent, this agent implemented the  communication protocol
      * @param serviceID the service ID (is a string: service profile id)
      * @return Status contains three elements: service profile (is a string: the url profile), 
 	 * the goal of the profile (currently is not in use) and the return (is an integer) which indicates if
@@ -417,7 +417,7 @@ public class SFProxy {
      * 
      *  This service registers the profile of a service in the sf's database.
      * 
-     * @param agent QueueAgent
+     * @param agent is a QueueAgent, this agent implemented the  communication protocol
      * @param SFProfileDescription This parameter contains one element:
 	 * service profile ( is a string: urlprofile#profilename )
      * @return Status indicates if an error occurs.
@@ -451,8 +451,8 @@ public class SFProxy {
     /**
      * This service registers the process of a service in the sf's database.
      * 
-     * @param agent QueueAgent
-        *@param ProfileDescription. This parameter contains two elements: service id (is a string), and service
+     * @param agent is a QueueAgent, this agent implemented the  communication protocol
+     *@param ProfileDescription. This parameter contains two elements: service id (is a string), and service
 	 * model (is a string: urlprocess#urlprocessname).
 	 * @return status  indicates if an error occurs (1:ok , 0: bad news).
      * @throws Exception

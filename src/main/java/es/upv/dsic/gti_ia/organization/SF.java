@@ -204,8 +204,8 @@ public class SF extends QueueAgent {
 	
 	/**
 	 * Returns an instance of the agents SF
-	 * @param agent
-	 * @return sf
+	 * @param agent a new Agent ID
+	  * @return SFagent SF
 	 */
 	static public SF getSF(AgentID agent)
 	{
@@ -220,8 +220,8 @@ public class SF extends QueueAgent {
 	}
 	
 	/**
-	 *  Returns an instance of the agents SF
-	 * @return sf
+	 * Returns an instance of the agents SF, the agentID of the agent is AgentID("SF")
+	  * @return SF agent SF
 	 */
 	static public SF getSF()
 	{
@@ -252,7 +252,7 @@ public class SF extends QueueAgent {
 	/**
 	 * Change the URL where the owl's document is
 	 * located.
-	 * @param SFUrl
+	 * @param SFUrl ej. http://localhost:8080/sfservices/SFservices/owl/owls/
 	 */
 	public void setSFServiceDesciptionLocation(String SFUrl) {
 		this.SFServiceDesciptionLocation = SFUrl;
@@ -261,7 +261,7 @@ public class SF extends QueueAgent {
 	/**
 	 * get the URL where the owl's document is
 	 * located.
-	 * @param SFUrl
+	 * @param SFUrl ej. http://localhost:8080/sfservices/SFservices/owl/owls/
 	 */
 	public String getSFServiceDesciptionLocation() {
 		return this.SFServiceDesciptionLocation;
@@ -313,9 +313,7 @@ public class SF extends QueueAgent {
 	/**
 	 * Initial registration of the SF service process
 	 * 
-	 * @param
-	 * @throws RuntimeException
-	 */
+	 * 	 */
 	public void RegisterSFServiceProcess() {
 		// create an execution engine
 		ProcessExecutionEngine exec = OWLSFactory.createExecutionEngine();
@@ -376,7 +374,7 @@ public class SF extends QueueAgent {
 		 * invoke the service. After the service invocation, the SF gets the
 		 * answer and sends it to the requester agent.
 		 * 
-		 * @param
+		 * @param msg ACLMessage
 		 * @throws RuntimeException
 		 */
 		protected ACLMessage prepareResponse(ACLMessage msg) {
@@ -463,8 +461,9 @@ public class SF extends QueueAgent {
 		 * the SF has to inform the other agent that what they have asked is now
 		 * complete (or if it failed)
 		 * 
-		 * @param inmsg
-		 * @param outmsg
+		 * @param inmsg  Message messages sent by the initiator
+		 * @param outmsg Message which we will send to the initiator with the notification 
+		 
 		 * @throws RuntimeException
 		 */
 		protected ACLMessage prepareResultNotification(ACLMessage inmsg,
@@ -549,9 +548,6 @@ public class SF extends QueueAgent {
 	/**
 	 * Starts the SF agent and registers all the SF services (process, profile,
 	 * grounding)
-	 * 
-	 * @param
-	 * @throws
 	 */
 	protected void execute() {
 		// RegisterOMSServiceProfiles();

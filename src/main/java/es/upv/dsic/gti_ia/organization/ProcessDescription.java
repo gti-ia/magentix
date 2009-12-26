@@ -121,7 +121,7 @@ public class ProcessDescription {
 
     /**
      * Returns a org.mindswap.owls.process.Process   to use him to the execution of a service. 
-     * @param inmsg
+     * @param inmsg This message is sent by the client agent wants to make use of service, in the message content is the path of the service process
      * @return Process is a mindswap.owls.process.Process;
      * @throws Exception
      */
@@ -152,7 +152,7 @@ public class ProcessDescription {
     
     /**
      * Returns a ValueMap with the name of the field and the value that there gives us the client who calls to the service.
-     * @param inmsg
+     * @param inmsg This message is sent by the client agent wants to make use of service, in the message content ara input values.
      * @return ValueMap 
      * @throws Exception
      */

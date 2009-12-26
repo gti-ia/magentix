@@ -87,10 +87,10 @@ public class OMSProxy {
     /**
      * Requests to leave a role
      * 
-     * @param agent
-     * @param AgentID
-     * @param RoleID
-     * @param UnitID
+     * @param agent is a QueueAgent, this agent implemented the  communication protocol
+     * @param AgentID entity 
+     * @param RoleID  represent all required functionality needed in order to achieve the unit goal.
+     * @param UnitID organizational units (OUs), which represent groups of entities (agents or other units)
      * @return String Status ErrorValue
      */
     public String leaveRole(QueueAgent agent, String AgentID, String RoleID, String UnitID)
@@ -112,8 +112,8 @@ public class OMSProxy {
     /**
      * Indicates roles adopted by an agent
      * 
-     * @param agent
-     * @param AgentID
+   @param agent is a QueueAgent, this agent implemented the  communication protocol
+     * @param AgentID entity 
      * @return ArrayList RoleUnitList
      * @throws Exception
      */
@@ -134,9 +134,9 @@ public class OMSProxy {
     /**
      * Indicates entities that are members of a specific unit
      * 
-     * @param agent
-     * @param RoleID
-     * @param UnitID
+     * @param agent is a QueueAgent, this agent implemented the  communication protocol 
+     * @param RoleID  represent all required functionality needed in order to achieve the unit goal.
+     * @param UnitID organizational units (OUs), which represent groups of entities (agents or other units)
      * @return ArrayList EntityRoleList
      * @throws Exception
      */
@@ -159,8 +159,10 @@ public class OMSProxy {
     /**
      * Provides all norms addressed to a specific role
      * 
-     * @param agent
-     * @param RoleID
+     * @param agent is a QueueAgent, this agent implemented the  communication protocol
+      
+     * @param RoleID  represent all required functionality needed in order to achieve the unit goal.
+     
      * @return ArrayList NormList
      * @throws Exception
      */
@@ -180,9 +182,8 @@ public class OMSProxy {
 
     /**
      * Indicates all profiles associated to a specific role
-     * 
-     * @param agent
-     * @param UnitID
+     * @param agent is a QueueAgent, this agent implemented the  communication protocol
+     * @param UnitID organizational units (OUs), which represent groups of entities (agents or other units)
      * @return ArrayList ProfileList
      * @throws Exception
      */
@@ -202,9 +203,8 @@ public class OMSProxy {
 
     /**
      * Provides unit description
-     * 
-     * @param agent
-     * @param UnitID
+     * @param agent is a QueueAgent, this agent implemented the  communication protocol
+     * @param UnitID organizational units (OUs), which represent groups of entities (agents or other units)
      * @return ArrayList UnitType UnitGoal ParentID
      * @throws Exception
      */
@@ -226,8 +226,10 @@ public class OMSProxy {
      * Indicates which roles are the ones defined within a
 specific unit
      * 
-     * @param agent
-     * @param UnitID
+    * @param agent is a QueueAgent, this agent implemented the  communication protocol
+     
+     * @param UnitID organizational units (OUs), which represent groups of entities (agents or other units)
+     
      * @return ArrayList RoleList
      * @throws Exception
      */
@@ -247,9 +249,11 @@ specific unit
     /**
      * Provides the number of current members of a specific unit
      * 
-     * @param agent
-     * @param RoleID
-     * @param UnitID
+     * @param agent is a QueueAgent, this agent implemented the  communication protocol
+      
+     * @param RoleID  represent all required functionality needed in order to achieve the unit goal.
+     * @param UnitID organizational units (OUs), which represent groups of entities (agents or other units)
+     
      * @return int Quantity
      * @throws Exception
      */
@@ -268,9 +272,13 @@ specific unit
     /**
      * Includes a new norm within a unit
      * 
-     * @param agent
-     * @param NormID
-     * @param NormContent
+     * @param agent is a QueueAgent, this agent implemented the  communication protocol
+     * @param NormID norm for controlling role actions
+     * @param NormContent The syntax of the rules of incompatibility is the following:
+	 *			FORBIDDEN role1 REQUEST AcquireRole
+     * MESSAGE (CONTENT (role 'role2ID'))
+	 *	Applications for registration of a rule is necessary to replace the spaces between the
+	 *	different words for "_".
      * @return String Status ErrorValue
      * @throws Exception
      */
@@ -290,7 +298,7 @@ specific unit
     /**
      * Creates a new role within a unit
      * 
-     * @param agent
+     * @param agent is a QueueAgent, this agent implemented the  communication protocol
      * @param RegisterRoleInputRoleID
      * @param UnitID
      * @param Accessibility
@@ -318,7 +326,7 @@ specific unit
     /**
      * Creates a new unit within a specific organization
      * 
-     * @param agent
+    * @param agent is a QueueAgent, this agent implemented the  communication protocol
      * @param UnitID
      * @param Type
      * @param Goal
@@ -342,8 +350,8 @@ specific unit
     /**
      * Removes a specific norm description
      * 
-     * @param agent
-     * @param NormID
+     * @param agent is a QueueAgent, this agent implemented the  communication protocol
+     * @param NormID norm for controlling role actions
      * @return String Status ErrorValue
      * @throws Exception
      */
@@ -361,9 +369,9 @@ specific unit
     /**
      * Removes a specific role description from a unit
      * 
-     * @param agent
-     * @param RoleID
-     * @param UnitID
+     * @param agent is a QueueAgent, this agent implemented the  communication protocol
+     * @param RoleID  represent all required functionality needed in order to achieve the unit goal.
+     * @param UnitID organizational units (OUs), which represent groups of entities (agents or other units)
      * @return String Status ErrorValue
      * @throws Exception
      */
@@ -382,8 +390,8 @@ specific unit
     /**
      * Removes a unit from an organization
      * 
-     * @param agent
-     * @param UnitID
+     * @param agent is a QueueAgent, this agent implemented the  communication protocol
+     * @param UnitID organizational units (OUs), which represent groups of entities (agents or other units)
      * @return String Status ErrorValue
      * @throws Exception
      */
@@ -401,10 +409,10 @@ specific unit
     /**
      * Forces an agent to leave a specific role
      * 
-     * @param agent QueueAgent
+     * @param agent is a QueueAgent, this agent implemented the  communication protocol
      * @param AgentID Agent that we will expulse of the organization
-     * @param RoleID
-     * @param UnitID
+     * @param RoleID  represent all required functionality needed in order to achieve the unit goal.
+     * @param UnitID organizational units (OUs), which represent groups of entities (agents or other units)
      * @return String Status ErrorValue
      * @throws Exception if 
      */

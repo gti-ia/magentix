@@ -294,7 +294,7 @@ public class OMS extends QueueAgent {
 	 /**
 	  * Returns an instance of the agents OMS
 	  * @param agent a new Agent ID
-	  * @return oms
+	  * @return oms agent OMS
 	  */ 
 	 static public OMS getOMS(AgentID agent)
 	 {
@@ -307,8 +307,8 @@ public class OMS extends QueueAgent {
 		 return oms;
 	 }
 	 /**
-	  * Returns an instance of the agents OMS
-	  * @return oms
+	  * Returns an instance of the agents OMS, the agentID of the agent is AgentID("OMS")
+	  * @return oms agent OMS
 	  */
 	 static public OMS getOMS()
 	 {
@@ -344,7 +344,7 @@ public class OMS extends QueueAgent {
 	/**
 	 * Change the URL where the owl's document is
 	 * located.
-	 * @param SFUrl
+	 * @param SFUrl ej. http://localhost:8080/sfservices/SFservices/owl/owls/
 	 */
 	public void setSFServiceDesciptionLocation(String SFUrl)
 	{
@@ -354,7 +354,7 @@ public class OMS extends QueueAgent {
 	/**
 	 * Get the URL where the owl's document is
 	 * located.
-	 * @param OMSUrl
+	 * @param OMSUrl ej. http://localhost:8080/omsservices/OMSservices/owl/owls/
 	 */
 	public String getOMSServiceDesciptionLocation()
 	{
@@ -365,7 +365,7 @@ public class OMS extends QueueAgent {
 	/**
 	 * Get the URL where the owl's document is
 	 * located.
-	 * @param SFUrl
+	 * @param SFUrl ej. http://localhost:8080/sfservices/SFservices/owl/owls/
 	 */
 	public String getSFServiceDesciptionLocation()
 	{
@@ -376,8 +376,6 @@ public class OMS extends QueueAgent {
     /**
 	 * Initial registration of the OMS service profiles
 	 *
-	 * @param 
-	 * @throws RuntimeException
 	 */
 	public void RegisterOMSServiceProfiles(){
 		
@@ -410,9 +408,6 @@ public class OMS extends QueueAgent {
 		
 	/**
 	 * Initial registration of the OMS service process
-	 *
-	 * @param 
-	 * @throws RuntimeException
 	 */
 	public void RegisterOMSServiceProcess(){
 		// create an execution engine
@@ -534,8 +529,8 @@ public class OMS extends QueueAgent {
 		 * if the OMS has agreed to supply the service, the OMS has to inform the other agent that 
 		 * what they have asked is now complete (or if it failed)
 		 *
-		 * @param inmsg 
-		 * @param outmsg
+		 * @param inmsg  Message messages sent by the initiator
+		 * @param outmsg Message which we will send to the initiator with the notification 
 		 * @throws RuntimeException
 		 */
 		protected  ACLMessage   prepareResultNotification(ACLMessage inmsg,ACLMessage outmsg) {
@@ -629,9 +624,7 @@ public class OMS extends QueueAgent {
 	
 /**
 * Starts the OMS agent and registers all the OMS services (process, profile, grounding)
-*
-* @param 
-* @throws 
+
 */
 protected void execute() {
 	//RegisterOMSServiceProfiles();

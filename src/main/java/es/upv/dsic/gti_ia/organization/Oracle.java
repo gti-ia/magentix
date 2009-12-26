@@ -29,28 +29,32 @@ public class Oracle {
 	 */
 	
 	/**
-	 * @return Returns the input parameters of owls file parsed
+	 * Returns the input parameters of owls file parsed
+	 * @return list
 	 */
 	public ArrayList<String> getInputs() {
 		return inputs;
 	}
 
 	/**
-	 * @return Returns the output parameters of owls file parsed
+	 * Returns the output parameters of owls file parsed
+	 * @return list
 	 */
 	public ArrayList<String> getOutputs() {
 		return outputs;
 	}
 
 	/**
-	 * @return Returns the list of roles available to provide the service
+	 * Returns the list of roles available to provide the service
+	 * @return list 
 	 */
 	public ArrayList<String> getProviderList() {
 		return providerList;
 	}
 
 	/**
-	 * @return Returns the list of roles required to use the service
+	 * Returns the list of roles required to use the service
+	 * @return list
 	 */
 	public ArrayList<String> getClientList() {
 		return clientList;
@@ -168,6 +172,7 @@ public class Oracle {
 		}
 	}
 
+	
 	public Document parserXML(File file) throws SAXException, IOException, ParserConfigurationException {
 		return DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(file);
 	}

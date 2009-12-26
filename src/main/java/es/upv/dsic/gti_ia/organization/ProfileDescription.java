@@ -72,7 +72,7 @@ public class ProfileDescription {
 	 * Return the URL where the owl's document (related with service profile) is
 	 * located.
 	 * 
-	 * @return
+	 * @return URLProfile
 	 */
 	public String getURLProfile() {
 		return this.URLProfile;
@@ -90,7 +90,7 @@ public class ProfileDescription {
 	/**
 	 * Return an ID of the service
 	 * 
-	 * @return String 
+	 * @return serviceID
 	 */
 	public String getServiceID() {
 		return this.serviceID;

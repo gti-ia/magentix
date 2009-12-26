@@ -64,7 +64,7 @@ public class Configuration {
 		return this.databaseUser;
 	}
 	/**
-	 * Password  user of the database
+	 * User password of the database
 	 * @return password
 	 */
 	public String getdatabasePassword()
@@ -159,7 +159,7 @@ public class Configuration {
 	}
 	
 	/**
-	 * jena database URL
+	 * Jena database URL
 	 * @return URL
 	 */
 	public String getjenadbURL()
@@ -170,7 +170,7 @@ public class Configuration {
 
 	
 	/**
-	 * type of jena database
+	 * Type of jena database
 	 * @return type
 	 */
 	public String getjenadbType()
@@ -179,7 +179,7 @@ public class Configuration {
 	}
 
 	/**
-	 * diver of jena database
+	 * Diver of jena database
 	 * @return driver
 	 */
 	public String getjenadbDriver()
