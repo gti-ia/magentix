@@ -1,10 +1,3 @@
-/**
- *  This class implements the FIPA-Query interaction protocol, Role Initiator
- * 
- * @author  Joan Bellver Faus, GTI-IA, DSIC, UPV
- * @version 2009.9.07
- */
-
 package es.upv.dsic.gti_ia.architecture;
 
 
@@ -14,6 +7,12 @@ import java.util.logging.*;
 import es.upv.dsic.gti_ia.architecture.FIPANames.InteractionProtocol;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 
+/**
+ *  This class implements the FIPA-Query interaction protocol, Role Initiator
+ * 
+ * @author  Joan Bellver Faus, GTI-IA, DSIC, UPV
+ * @version 2009.9.07
+ */
 public class FIPAQueryInitiator {
 
 	private final static int PREPARE_MSG_STATE = 0;

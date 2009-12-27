@@ -1,11 +1,3 @@
-
-/**
- * This class implements the Fipa-Contract-Net interaction protocol, Role Initiator
- * 
- * @author  Joan Bellver Faus, GTI-IA, DSIC, UPV
- * @version 2009.9.07
- */
-
 package es.upv.dsic.gti_ia.architecture;
 
 
@@ -19,6 +11,12 @@ import es.upv.dsic.gti_ia.core.AgentID;
 
 
 
+/**
+ * This class implements the Fipa-Contract-Net interaction protocol, Role Initiator
+ * 
+ * @author  Joan Bellver Faus, GTI-IA, DSIC, UPV
+ * @version 2009.9.07
+ */
 public class FIPAContractNetInitiator {
 
 	private Monitor monitor = null;

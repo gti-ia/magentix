@@ -3,11 +3,7 @@
  */
 package es.upv.dsic.gti_ia.organization;
 
-/**
- *This class provides access to methods that implements the SF agent
- * 
- * @author Joan Bellver Faus GTI-IA.DSIC.UPV
- */
+
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -23,6 +19,11 @@ import es.upv.dsic.gti_ia.architecture.FIPANames.InteractionProtocol;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 
+/**
+ *This class provides access to methods that implements the SF agent
+ * 
+ * @author Joan Bellver Faus GTI-IA.DSIC.UPV
+ */
 public class SFProxy {
 
     

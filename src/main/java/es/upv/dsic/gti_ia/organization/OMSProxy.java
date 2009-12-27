@@ -11,10 +11,11 @@ import java.util.ArrayList;
 import org.apache.log4j.Logger;
 
 /**
+ * This class gives us the support to accede to the services of the OMS.
  * The OMS provides a group of services for registering or deregistering
 structural components, specific roles, norms and units. It also offers services for
 reporting on these components.
-	This class gives us the support to accede to the services of the OMS
+	
  * 
  * @author Joan Bellver Faus
  * 

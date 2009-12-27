@@ -1,15 +1,14 @@
+package es.upv.dsic.gti_ia.architecture;
+
+import es.upv.dsic.gti_ia.architecture.Monitor;
+import es.upv.dsic.gti_ia.core.ACLMessage;
+
 /**
  * This class implements the FIPA-Query interaction protocol, Role Responder.
  * 
  * @author  Joan Bellver Faus, GTI-IA, DSIC, UPV
  * @version 2009.9.07
  */
-
-package es.upv.dsic.gti_ia.architecture;
-
-import es.upv.dsic.gti_ia.architecture.Monitor;
-import es.upv.dsic.gti_ia.core.ACLMessage;
-
 public class FIPAQueryResponder {
 
 	private final static int WAITING_MSG_STATE = 0;

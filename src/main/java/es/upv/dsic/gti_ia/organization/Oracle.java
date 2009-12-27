@@ -13,6 +13,10 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+/**
+ * This class allows us to parse a profile in order to extract relevant information, such as service inputs, outputs, list of roles for both providers, such as customers.
+ *
+ */
 public class Oracle {
 
 	/*
