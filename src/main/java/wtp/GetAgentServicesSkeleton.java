@@ -34,6 +34,19 @@ import persistence.DataBaseInterface;
              		}
                 	 
                 	 persistence.DataBaseInterface thomasBD = new DataBaseInterface();
+                	 String list = null;
+                	 list = thomasBD.DameServiciosDelAgente(getAgentServices.getAgentID());
+                	 response.setServicesList(list);
+                	 if(list!= null){
+                		 response.set_return(1);
+                		 response.setServicesList(list);
+                	 }
+                	 else{
+                		 response.set_return(0);
+                		 response.setServicesList("");
+                	 }
+                	 
+                	 return(response);
                 	 
             }
      
