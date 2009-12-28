@@ -235,7 +235,7 @@ public class SFProxy {
      * 
      * @param agent is a QueueAgent, this agent implemented the  communication protocol
      * @param serviceGoal service purpose (is a string: the service description).
-     * @return services list (is a list of <service profile id, ranking: service profile id, ranking: ...>
+     * @return services list (is a list of service profile id, ranking: service profile id, ranking: ...)
      * @exception Exception 
      */
     public ArrayList<String> searchService(QueueAgent agent, String serviceGoal) throws Exception{
