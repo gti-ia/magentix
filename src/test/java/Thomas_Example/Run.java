@@ -73,9 +73,9 @@ public class Run {
 	    payeeAgent.start();
 	    
 	    Monitor m = new Monitor();
-	    m.waiting(10 * 1000);
+	    m.waiting(25 * 1000);
 	    providerAgent.start();
-	    m.waiting(10 * 1000);
+	    m.waiting(5 * 1000);
 	    clientAgent.start();
 	    
 
