@@ -205,7 +205,7 @@ public class SFProxy {
      * @param agent is a QueueAgent, this agent implemented the  communication protocol
      * @param ProcessDescription Must have at least completed the field Implementation ID
      * @return status RemoveProviderResponse contains an element: return which indicates if an error occurs (1:OK otherwise 0)
-     * @throws Exception
+     * @throws Exception if Implementation ID is empty
      */
 
     public String removeProvider(QueueAgent agent, ProcessDescription ProcessDescription)
@@ -236,12 +236,13 @@ public class SFProxy {
      * @param agent is a QueueAgent, this agent implemented the  communication protocol
      * @param serviceGoal service purpose (is a string: the service description).
      * @return services list (is a list of <service profile id, ranking: service profile id, ranking: ...>
+     * @exception Exception 
      */
     public ArrayList<String> searchService(QueueAgent agent, String serviceGoal) throws Exception{
 
 	this.idsSearchService.clear();
-
 	this.agentes.clear();
+
 	String call = SFServiceDesciptionLocation
 		+ "SearchServiceProcess.owl SearchServiceInputServicePurpose=" + serviceGoal;
 
@@ -263,7 +264,7 @@ public class SFProxy {
      * @return ModifyProcessResponse contains return which indicates if an error occurs (1:OK,
      * otherwise 0).
      *
-     * @throws Exception
+     * @throws Exception if ImplementationID or ServiceGoal is empty
      */
     public String modifyProcess(QueueAgent agent, ProcessDescription ProcessDescription)
 	    throws Exception
@@ -298,7 +299,7 @@ public class SFProxy {
          * urlprofile#profilename)
      * @return Status return which indicates if a problem occurs (1: ok, 0: there
          * are provider which implement the profile, -1: the service id is not valid).
-     * @throws Exception
+     * @throws Exception if ServiceID or Service Goal is empty
      */
     public String modifyProfile(QueueAgent agent, ProfileDescription ProfileDescription)
 	    throws Exception {
@@ -332,7 +333,7 @@ public class SFProxy {
      * @param ProfileDescription contains one element: service id (is a string: service profile id)
      * @return Status DeregisterProfileResponse contains an element: return indicates if an error occurs (
          * 0: ok, 1:error).
-     * @throws Exception if 
+     * @throws Exception if ServiceID is empty
      */
     public String deregisterProfile(QueueAgent agent, ProfileDescription ProfileDescription)
 	    throws Exception {
