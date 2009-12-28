@@ -31,16 +31,13 @@
 
 <process:AtomicProcess rdf:ID="GetAgentServicesProcess">
 	<service:describes rdf:resource="http://localhost:8080/sfservices/SFservices/owl/owls/GetAgentServicesProfile.owl#GetAgentServicesService"/>
-     	<process:hasInput rdf:resource="#GetAgentServicesInputServicePurpose"/>
+ 
 <process:hasInput rdf:resource="#GetAgentServicesInputAgentID"/>
     	<process:hasOutput rdf:resource="#GetAgentServicesOutputServiceStatus"/>
 	<process:hasOutput rdf:resource="#GetAgentServicesOutputServicesList"/>
 </process:AtomicProcess>
 
-<process:Input rdf:ID="GetAgentServicesInputServicePurpose">
-     <rdfs:label>InputServicePurpose</rdfs:label>
-     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
-</process:Input>
+
 
 <process:Input rdf:ID="GetAgentServicesInputAgentID">
      <rdfs:label>InputAgentID</rdfs:label>
@@ -75,12 +72,7 @@
 	<grounding:wsdlInputMessage rdf:datatype="&xsd;anyURI">http://localhost:8080/sfservices/services/GetAgentServicesMessage</grounding:wsdlInputMessage>
         <grounding:wsdlOutputMessage rdf:datatype="&xsd;anyURI">http://localhost:8080/sfservices/services/GetAgentServicesResponse</grounding:wsdlOutputMessage>
 	  
-	<grounding:wsdlInput>
-                  <grounding:WsdlInputMessageMap>
-                    <grounding:owlsParameter rdf:resource="#GetAgentServicesInputServicePurpose"/>
-                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/sfservices/services/ServicePurpose</grounding:wsdlMessagePart>
-                  </grounding:WsdlInputMessageMap>
-        </grounding:wsdlInput>
+
 	<grounding:wsdlInput>
                   <grounding:WsdlInputMessageMap>
                     <grounding:owlsParameter rdf:resource="#GetAgentServicesInputAgentID"/>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="GetAgentServices" targetNamespace="http://wtp" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://wtp" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://wtp">
+      <xsd:element name="GetAgentServices">
+        <xsd:complexType>
+          <xsd:sequence>
+            
+            <xsd:element name="AgentID" type="xsd:string"/>
+           
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="GetAgentServicesResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+          	<xsd:element name="return" type="xsd:int"/>
+            <xsd:element name="ServicesList" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="GetAgentServicesResponse">
+    <wsdl:part name="parameters" element="tns:GetAgentServicesResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="GetAgentServicesMessage">
+    <wsdl:part name="parameters" element="tns:GetAgentServices">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="GetAgentServicesPortType">
+    <wsdl:operation name="GetAgentServices">
+      <wsdl:input message="tns:GetAgentServicesMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:GetAgentServicesResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="GetAgentServicesSOAP" type="tns:GetAgentServicesPortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="GetAgentServices">
+      <soap:operation soapAction="http://wtp"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="GetAgentServices">
+    <wsdl:port name="GetAgentServicesSOAP" binding="tns:GetAgentServicesSOAP">
+      <soap:address location="http://localhost:8080/sfservices/services/GetAgentServices"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

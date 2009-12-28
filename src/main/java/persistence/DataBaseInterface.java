@@ -284,6 +284,9 @@ public String GetServiceProfileName(String serviceprofileid){
 		return (serviceprocessid);
 	}
 	
+	
+	
+	
 public Boolean CheckServiceProvider(String AgentID, String ServiceProcessId){
 	System.out.println("Start CheckServiceProvider");
 		Statement stmt = null;
@@ -470,6 +473,30 @@ public String GetServiceProcessFromProcessID(String serviceprocessid){
 		}
 		System.out.println("End DeleteProcess");
 		return true;	
+	}
+	
+	public String DameServiciosDelAgente(String agentID){
+		String serviceList = "";
+		try{
+			
+			
+			Statement stmt = db.connection.createStatement();
+			ResultSet rs = stmt.executeQuery("select * from serviceprocessid where providername ='"+agentID+"'");
+		 		if(rs.next()){
+		 	
+		 			String processname= rs.getString("processname");
+		 			serviceList = serviceList + " "+processname;
+		 			
+		 			
+		 			
+		 		}
+		 		
+		 		
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return(serviceList);
 	}
 	
 }

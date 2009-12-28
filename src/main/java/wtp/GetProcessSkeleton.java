@@ -241,12 +241,17 @@ public class GetProcessSkeleton {
  			
  			boolean hasRole = false;
  			try {
+ 				//stub para hacer la llamada
  				InformAgentRoleStub stub = new InformAgentRoleStub();
+ 				
+ 				//objeto input
  				wtp.InformAgentRoleStub.InformAgentRole agentrole = new wtp.InformAgentRoleStub.InformAgentRole();
  				agentrole.setAgentID(AgentID);
  				agentrole.setRequestedAgentID(RequestedAgentID);
-
+ 				
+ 				//objeto output
  				wtp.InformAgentRoleStub.InformAgentRoleResponse res = new wtp.InformAgentRoleStub.InformAgentRoleResponse();
+ 				
  				res.localRoleUnitList = stub.InformAgentRole(agentrole).getRoleUnitList();
  				res.localStatus = "OK";
  				res.localErrorValue = "";
