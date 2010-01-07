@@ -4,6 +4,12 @@ import java.util.concurrent.Semaphore;
 
 import es.upv.dsic.gti_ia.core.ACLMessage;
 
+/**
+ * 
+ * @author Ricard Lopez Fogues
+ *
+ */
+
 public class CProcessorFactory{
 	private ACLMessage template;
 	public String name;

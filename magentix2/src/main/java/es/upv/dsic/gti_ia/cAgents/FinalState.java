@@ -1,5 +1,11 @@
 package es.upv.dsic.gti_ia.cAgents;
 
+/**
+ * 
+ * @author Ricard Lopez Fogues
+ *
+ */
+
 public abstract class FinalState extends State{
 
 	public FinalState(String n) {

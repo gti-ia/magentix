@@ -9,6 +9,12 @@ import java.util.Set;
 
 import es.upv.dsic.gti_ia.core.ACLMessage;
 
+/**
+ * 
+ * @author Ricard Lopez Fogues
+ *
+ */
+
 public class CProcessor implements Runnable, Cloneable{	
 	private String conversationID;
 	protected CAgent myAgent;

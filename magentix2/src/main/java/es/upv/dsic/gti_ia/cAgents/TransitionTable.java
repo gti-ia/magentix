@@ -5,6 +5,12 @@ import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Set;
 
+/**
+ * 
+ * @author Ricard Lopez Fogues
+ *
+ */
+
 public class TransitionTable implements Cloneable{
 	private Hashtable<String,Set<String>> transitions = new Hashtable<String,Set<String>>();
 	

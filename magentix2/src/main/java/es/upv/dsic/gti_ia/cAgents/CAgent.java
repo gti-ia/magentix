@@ -15,6 +15,12 @@ import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.BaseAgent;
 
+/**
+ * 
+ * @author Ricard Lopez Fogues
+ * 
+ */
+
 public abstract class CAgent extends BaseAgent {
 
 	private LinkedBlockingQueue<ACLMessage> messageList;
