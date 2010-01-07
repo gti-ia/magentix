@@ -1,5 +1,11 @@
 package es.upv.dsic.gti_ia.cAgents;
 
+/**
+ * 
+ * @author Ricard Lopez Fogues
+ *
+ */
+
 public abstract class State implements Cloneable{
 	public final static int ACTION = 0;
 	public final static int BEGIN = 1;

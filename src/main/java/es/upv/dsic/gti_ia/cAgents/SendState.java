@@ -2,6 +2,12 @@ package es.upv.dsic.gti_ia.cAgents;
 
 import es.upv.dsic.gti_ia.core.ACLMessage;
 
+/**
+ * 
+ * @author Ricard Lopez Fogues
+ *
+ */
+
 public abstract class SendState extends State{
 	public SendState(String n) {
 		super(n);
