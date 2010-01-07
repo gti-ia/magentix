@@ -365,8 +365,7 @@ public class SFProxy {
      * This service returns the providers which implements the required profile.
      * 
      * @param agent is a QueueAgent, this agent implemented the  communication protocol
-     * @param id the service ID (is a string: service profile id) and the 
-	 * agent id (is a string).
+     * @param serviceID the service ID (is a string: service profile id).
      * @return provider list (is a string with the next template:
 	 * [service implementation id urlprocess, service implementation id urlproces, ... ] 
 	 * @throws Exception
