@@ -260,7 +260,7 @@ public class SFProxy {
      * 
      * @param agent is a QueueAgent, this agent implemented the  communication protocol
      * @param ProcessDescription  contains two elements: service implementation ID (is a string: 
-     * serviceprofile@servicenumdidagent), service model (is a string: urlprocess#processname).
+     * serviceprofile@servicenumdidagent), service model (is a string: urlprocess#processname, this parameter is entered when creating the instance of ProcessDescription)).
      * @return ModifyProcessResponse contains return which indicates if an error occurs (1:OK,
      * otherwise 0).
      *
@@ -296,7 +296,7 @@ public class SFProxy {
      * @param agent is a QueueAgent, this agent implemented the  communication protocol
      * @param ProfileDescription contains three elements: service id (is a string: service profile id), service
          * goal (currently is not in use),and service profile ( is a string 
-         * urlprofile#profilename)
+         * urlprofile#profilename,  this parameter is entered when creating the instance of ProfileDescription))
      * @return Status return which indicates if a problem occurs (1: ok, 0: there
          * are provider which implement the profile, -1: the service id is not valid).
      * @throws Exception if ServiceID or Service Goal is empty
@@ -417,11 +417,11 @@ public class SFProxy {
 
     /**
      * 
-     *  This service registers the profile of a service in the sf's database.
+     *  This service registers the profile of a service in the sf's database. This method assigns an Id to the structure ProfileDescription
      * 
      * @param agent is a QueueAgent, this agent implemented the  communication protocol
-     * @param SFProfileDescription This parameter contains one element:
-	 * service profile ( is a string: urlprofile#profilename )
+     * @param ProfileDescription This parameter contains one element:
+	 * service profile ( is a string: urlprofile#profilename,  this parameter is entered when creating the instance of ProfileDescription) )
      * @return Status indicates if an error occurs.
      * @throws Exception
      */
@@ -451,11 +451,11 @@ public class SFProxy {
     }
 
     /**
-     * This service registers the process of a service in the sf's database.
+     * This service registers the process of a service in the sf's database. This method assigns an ImplementationId to the structure ProcessDescription
      * 
      * @param agent is a QueueAgent, this agent implemented the  communication protocol
-     *@param ProfileDescription. This parameter contains two elements: service id (is a string), and service
-	 * model (is a string: urlprocess#urlprocessname).
+     *@param ProcessDescription. This parameter contains two elements: service profile id (is a string, this param is returned when we call the method serarchService), and service
+	 * model (is a string, this parameter is entered when creating the instance of ProcessDescription).
 	 * @return status  indicates if an error occurs (1:ok , 0: bad news).
      * @throws Exception
      */

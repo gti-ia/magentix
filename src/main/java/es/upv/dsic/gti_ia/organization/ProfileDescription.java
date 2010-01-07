@@ -81,7 +81,7 @@ public class ProfileDescription {
 	/**
 	 * Change ID of the service
 	 * 
-	 * @param id is generated automatically by the database.
+	 * @param id is generated automatically by the database.this parameter is automatically assigned when the method  registerProfile is called.
 	 */
 	public void setServiceID(String id) {
 		this.serviceID = id;

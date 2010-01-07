@@ -83,16 +83,16 @@ public class ProcessDescription {
     }
 
     /**
-     * Change ID of the ProcessDescription
+     * Change ID of the profile which is associated the process
      * 
-     * @param id
+     * @param id this param is returned when we call the method searchService.
      */
     public void setProfileID(String id) {
 	this.ServiceID = id;
     }
 
     /**
-     * Return an ID of the ProcessDescription
+     * Returns the id of the profile which is associated the process
      * 
      * @return
      */
@@ -103,7 +103,7 @@ public class ProcessDescription {
     /**
      * Add the implementationID
      * 
-     * @param im
+     * @param im , this parameter is automatically assigned when the method  registerProcess is called.
      */
     public void setImplementationID(String im) {
 	this.ImplementationID = im;

@@ -44,7 +44,7 @@ public class OMSProxy {
 
     /**
      * This class gives us the support to accede to the services of the OMS, checked that the data contained in the file settings.xml is the URL 
-     * SFServiceDescriptionLocation is not empty and is the correct path.
+     * OMSServiceDescriptionLocation is not empty and is the correct path.
      * 
      * 
      * 
@@ -300,20 +300,20 @@ specific unit
      * Creates a new role within a unit
      * 
      * @param agent is a QueueAgent, this agent implemented the  communication protocol
-     * @param RegisterRoleInputRoleID
-     * @param UnitID
-     * @param Accessibility
-     * @param Position
-     * @param Visibility
-     * @param Inheritance
+	 * @param RoleID   is the identifier of the new role
+     * @param UnitID   is the identifier of the organizational unit in which the new role is defined
+     * @param Accessibility  considers two types of roles: (a) internal roles, which are assigned to internal agents of the system platform; and (b) external roles, which can be enacted by any agent.
+     * @param Position determines its structural position inside the unit, such as supervisor or subordinate
+     * @param Visibility  indicates whether agents can obtain information of this role from outside the unit in which this role is defined (public) or from inside (private).
+     * @param Inheritance  is the identifier of the parent role in the role hierarchy
      * @return String Status ErroValue
      * @throws Exception
      */
-    public String registerRole(QueueAgent agent, String RegisterRoleInputRoleID, String UnitID,
+    public String registerRole(QueueAgent agent, String RoleID, String UnitID,
 	    String Accessibility, String Position, String Visibility, String Inheritance)
 	    throws Exception {
 
-	String call = configuration + "RegisterRoleProcess.owl RoleID=" + RegisterRoleInputRoleID
+	String call = configuration + "RegisterRoleProcess.owl RoleID=" + RoleID
 		+ " UnitID=" + UnitID + " Accessibility=" + Accessibility + " Position=" + Position
 		+ " Visibility=" + Visibility + " Inheritance=" + Inheritance;
 	this.sendInform(agent, call);
@@ -328,10 +328,12 @@ specific unit
      * Creates a new unit within a specific organization
      * 
     * @param agent is a QueueAgent, this agent implemented the  communication protocol
-     * @param UnitID
-     * @param Type
-     * @param Goal
-     * @param ParentUnitID
+     * @param UnitID is the identifier of the new unit
+     * @param Type indicates the topology of the new unit: (i) Hierarchy, in
+     * which a supervisor agent has control over other members; (ii) Team, which are
+     * groups of agents that share a common goal, collaborating and cooperating between them; and (iii) Flat, in which there is none agent with control over other members.
+     * @param Goal describes goals pursued by the unit
+     * @param ParentUnitID is the identifier of the parent unit which contains the new unit 
      * @return String Status ErrorValue
      * @throws Exception
      */
