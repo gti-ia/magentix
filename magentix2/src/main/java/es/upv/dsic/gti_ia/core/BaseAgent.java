@@ -159,8 +159,6 @@ public class BaseAgent implements Runnable {
 	 *         
 	 */
 	public void send(ACLMessage msg) {
-		System.out.println("Agente: "+getName()+"SendMethod conversationID "+msg.getConversationId()+
-				" remitente "+msg.getSender()+" destino "+msg.getReceiver());
 		MessageTransfer xfr = new MessageTransfer();
 
 		xfr.destination("amq.direct");
