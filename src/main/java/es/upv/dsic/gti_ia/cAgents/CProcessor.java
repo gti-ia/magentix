@@ -155,9 +155,6 @@ public class CProcessor implements Runnable, Cloneable{
 				switch(currentStateType){
 					case State.BEGIN:
 						BeginState beginState = (BeginState) states.get(currentState);
-						//ACLMessage welcomeMsg = new ACLMessage(ACLMessage.AGREE);
-						//welcomeMsg.setContent("Welcome");
-						//currentState = beginState.run(this, welcomeMsg);
 						currentState = beginState.run(this, messageQueue.peek());
 						break;
 					case State.ACTION:
@@ -234,8 +231,6 @@ public class CProcessor implements Runnable, Cloneable{
 							System.out.println("Cola vacia");
 							idle = true;
 							myAgent.addTimer(conversationID, waitState.getTimeOut());
-							//no es correcto, pero el return provoca interbloqueo si no se libera antes una conversación
-							//myAgent.endConversation(factoryArrayIndex);
 							return;
 						}						
 						break;
@@ -247,7 +242,7 @@ public class CProcessor implements Runnable, Cloneable{
 						FinalState finalState = (FinalState) states.get(currentState);
 						finalState.run(this);
 						terminated = true;
-						//lower the conversations counter in the processor's factory
+						//decrease the conversations counter in the processor's factory
 						myAgent.endConversation(factoryArrayIndex);
 						myAgent.removeProcessor(this.conversationID);
 						return;
