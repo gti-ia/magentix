@@ -297,6 +297,5 @@ public class CProcessor implements Runnable, Cloneable{
 				currentStateType = states.get(currentState).getType();
 			}
 		}
-	}
-	
+	}	
 }
