@@ -135,7 +135,7 @@ public class CProcessor implements Runnable, Cloneable{
 		
 		int currentStateType = states.get(currentState).getType();
 		
-		//check if the conversations must stop due to lack of available conversations in the factory
+		//check if the conversation must stop due to the lack of available conversations in the factory
 		if(currentStateType == State.BEGIN){
 			try {
 				this.getMyAgent().factories.get(factoryArrayIndex).availableConversations.acquire();
