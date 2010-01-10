@@ -36,11 +36,7 @@ public class AgentAnnouncement extends QueueAgent {
 	try {
 
 	    result = OMSservices.acquireRole(this, "member", "virtual");
-
 	    logger.info("[AgentAnnoucement]Acquire Role result: " + result + "\n");
-
-	    OMSservices.acquireRole(this, "provider", "travelagency");
-
 	    SFservices.registerProfile(this, profile);
 	    logger.info("[AgentAnnoucement]The operation register Profile return: "
 		    + profile.getServiceID() + "\n");
