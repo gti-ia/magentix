@@ -39,6 +39,15 @@ public class Participant extends CAgent{
 		factory.getCProcessor().registerState(R);
 		factory.getCProcessor().addTransition("W", "R");
 		
+		//RW
+		ReceiveState1 RW = new ReceiveState1("RW");
+		receiveFilter = new ACLMessage(ACLMessage.INFORM);
+		receiveFilter.setHeader("Purpose", "WaitMessage");
+		RW.setAcceptFilter(receiveFilter);
+		factory.getCProcessor().registerState(RW);
+		factory.getCProcessor().addTransition("W", "RW");
+		factory.getCProcessor().addTransition("RW", "W");
+		
 		//S1
 		SendState1 S1 = new SendState1("S1");
 		ACLMessage sendTemplate = new ACLMessage(ACLMessage.NOT_UNDERSTOOD);
