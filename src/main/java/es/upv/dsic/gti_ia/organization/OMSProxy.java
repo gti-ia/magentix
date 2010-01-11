@@ -94,7 +94,8 @@ public class OMSProxy {
 	 *            is a QueueAgent, this agent implemented the communication
 	 *            protocol
 	 * @param AgentID
-	 *            entity
+	 *            entity,this agent is protocol://name@host:port ej.qpid://clientagent2@localhost:8080 
+	 *            , we can extract this inform with the method getAid().toString() for example.
 	 * @param RoleID
 	 *            represent all required functionality needed in order to
 	 *            achieve the unit goal.
@@ -126,7 +127,8 @@ public class OMSProxy {
 	 *            is a QueueAgent, this agent implemented the communication
 	 *            protocol
 	 * @param AgentID
-	 *            entity
+	 *           entity,this agent is protocol://name@host:port ej.qpid://clientagent2@localhost:8080 
+	 *            , we can extract this inform with the method getAid().toString() for example.
 	 * @return ArrayList RoleUnitList
 	 * @throws Exception
 	 */
@@ -514,7 +516,8 @@ public class OMSProxy {
 	 *            is a QueueAgent, this agent implemented the communication
 	 *            protocol
 	 * @param AgentID
-	 *            Agent that we will expulse of the organization
+	 *            entity,this agent is protocol://name@host:port ej.qpid://clientagent2@localhost:8080 
+	 *            , we can extract this inform with the method getAid().toString() for example.
 	 * @param RoleID
 	 *            represent all required functionality needed in order to
 	 *            achieve the unit goal.
