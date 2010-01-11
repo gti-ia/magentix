@@ -62,6 +62,15 @@ public class Initiator extends CAgent{
 		factory.getCProcessor().registerState(R3);
 		factory.getCProcessor().addTransition("W1", "R3");
 		
+		//RW1
+		ReceiveState1 RW1 = new ReceiveState1("RW1");
+		receiveFilter = new ACLMessage(ACLMessage.INFORM);
+		receiveFilter.setHeader("Purpose", "WaitMessage");
+		RW1.setAcceptFilter(receiveFilter);
+		factory.getCProcessor().registerState(RW1);
+		factory.getCProcessor().addTransition("W1", "RW1");
+		factory.getCProcessor().addTransition("RW1", "W1");
+		
 		//W2
 		factory.getCProcessor().registerState(new WaitState("W2",100000));
 		factory.getCProcessor().addTransition("R3", "W2");
@@ -88,6 +97,15 @@ public class Initiator extends CAgent{
 		R6.setAcceptFilter(receiveFilter);
 		factory.getCProcessor().registerState(R6);
 		factory.getCProcessor().addTransition("W2", "R6");
+		
+		//RW2
+		ReceiveState1 RW2 = new ReceiveState1("RW2");
+		receiveFilter = new ACLMessage(ACLMessage.INFORM);
+		receiveFilter.setHeader("Purpose", "WaitMessage");
+		RW2.setAcceptFilter(receiveFilter);
+		factory.getCProcessor().registerState(RW2);
+		factory.getCProcessor().addTransition("W2", "RW2");
+		factory.getCProcessor().addTransition("RW2", "W2");
 		
 		//final
 		factory.getCProcessor().registerState(new GenericFinalState("F"));
