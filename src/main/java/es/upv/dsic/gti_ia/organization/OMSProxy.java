@@ -142,7 +142,7 @@ public class OMSProxy {
 		this.sendInform(agent, call);
 
 		if (!this.value.equals("Ok")) {
-			throw new Exception("Leave Role " + this.value);
+			throw new Exception("Inform Agent Role " + this.value);
 		} else
 			return this.list;
 
@@ -173,7 +173,7 @@ public class OMSProxy {
 		this.sendInform(agent, call);
 
 		if (!this.value.equals("Ok")) {
-			throw new Exception("Leave Role " + this.value);
+			throw new Exception("Inform Members " + this.value);
 		} else
 			return this.list;
 
@@ -203,7 +203,7 @@ public class OMSProxy {
 		this.sendInform(agent, call);
 
 		if (!this.value.equals("Ok")) {
-			throw new Exception("Leave Role " + this.value);
+			throw new Exception("Inform Role Norms " + this.value);
 		} else
 			return this.list;
 
@@ -231,7 +231,7 @@ public class OMSProxy {
 		this.sendInform(agent, call);
 
 		if (!this.value.equals("Ok")) {
-			throw new Exception("Leave Role " + this.value);
+			throw new Exception("Inform Role Profiles " + this.value);
 		} else
 			return this.list;
 
@@ -258,7 +258,7 @@ public class OMSProxy {
 		this.sendInform(agent, call);
 
 		if (!this.value.equals("Ok")) {
-			throw new Exception("Leave Role " + this.value);
+			throw new Exception("Inform Unit " + this.value);
 		} else
 			return this.list;
 
@@ -287,7 +287,7 @@ public class OMSProxy {
 				+ UnitID;
 		this.sendInform(agent, call);
 		if (!this.value.equals("Ok")) {
-			throw new Exception("Leave Role " + this.value);
+			throw new Exception("Inform Unit Roles " + this.value);
 		} else
 			return this.list;
 
@@ -317,7 +317,7 @@ public class OMSProxy {
 				+ RoleID + " UnitID=" + UnitID;
 		this.sendInform(agent, call);
 		if (!this.value.equals("Ok")) {
-			throw new Exception("Leave Role " + this.value);
+			throw new Exception("Quantity Members " + this.value);
 		} else
 			return this.Quantity;
 
@@ -347,7 +347,7 @@ public class OMSProxy {
 				+ NormID + " NormContent=" + NormContent;
 		this.sendInform(agent, call);
 		if (!this.value.equals("Ok")) {
-			throw new Exception("Leave Role " + this.value);
+			throw new Exception("Register Norm " + this.value);
 		} else
 			return this.value;
 
@@ -390,7 +390,7 @@ public class OMSProxy {
 				+ Visibility + " Inheritance=" + Inheritance;
 		this.sendInform(agent, call);
 		if (!this.value.equals("Ok")) {
-			throw new Exception("Leave Role " + this.value);
+			throw new Exception("Register Role " + this.value);
 		} else
 			return this.value;
 
@@ -426,7 +426,7 @@ public class OMSProxy {
 				+ ParentUnitID;
 		this.sendInform(agent, call);
 		if (!this.value.equals("Ok")) {
-			throw new Exception("Leave Role " + this.value);
+			throw new Exception("Register Unit " + this.value);
 		} else
 			return this.value;
 
@@ -450,7 +450,7 @@ public class OMSProxy {
 				+ NormID;
 		this.sendInform(agent, call);
 		if (!this.value.equals("Ok")) {
-			throw new Exception("Leave Role " + this.value);
+			throw new Exception("Deregister Norm " + this.value);
 		} else
 			return this.value;
 
@@ -478,7 +478,7 @@ public class OMSProxy {
 				+ RoleID + " UnitID=" + UnitID;
 		this.sendInform(agent, call);
 		if (!this.value.equals("Ok")) {
-			throw new Exception("Leave Role " + this.value);
+			throw new Exception("Deregister Role " + this.value);
 		} else
 			return this.value;
 
@@ -503,7 +503,7 @@ public class OMSProxy {
 				+ UnitID;
 		this.sendInform(agent, call);
 		if (!this.value.equals("Ok")) {
-			throw new Exception("Leave Role " + this.value);
+			throw new Exception("Deregister Unit " + this.value);
 		} else
 			return this.value;
 
@@ -535,7 +535,7 @@ public class OMSProxy {
 				+ " RoleID=" + RoleID + " UnitID=" + UnitID;
 		this.sendInform(agent, call);
 		if (!this.value.equals("Ok")) {
-			throw new Exception("Leave Role " + this.value);
+			throw new Exception("Expulse  " + this.value);
 		} else
 			return this.value;
 
