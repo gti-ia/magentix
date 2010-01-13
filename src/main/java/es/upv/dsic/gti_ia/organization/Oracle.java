@@ -40,6 +40,7 @@ public class Oracle {
 	 */
 
 	/**
+	 * Returns the input parameters of owls file parsed
 	 * @return Returns the input parameters of owls file parsed
 	 */
 	public ArrayList<String> getInputs() {
@@ -47,6 +48,7 @@ public class Oracle {
 	}
 
 	/**
+	 * Returns the output parameters of owls file parsed
 	 * @return Returns the output parameters of owls file parsed
 	 */
 	public ArrayList<String> getOutputs() {
@@ -54,6 +56,7 @@ public class Oracle {
 	}
 
 	/**
+	 * Returns the list of roles available to provide the service
 	 * @return Returns the list of roles available to provide the service
 	 */
 	public ArrayList<String> getProviderList() {
@@ -61,6 +64,7 @@ public class Oracle {
 	}
 
 	/**
+	 * Returns the list of roles required to use the service
 	 * @return Returns the list of roles required to use the service
 	 */
 	public ArrayList<String> getClientList() {
@@ -69,6 +73,7 @@ public class Oracle {
 
 	/**
 	 * 
+	 * Returns the behaviour name to execute on provider
 	 * @return Returns the behaviour name to execute on provider
 	 */
 	public String getServiceName() {
@@ -84,7 +89,7 @@ public class Oracle {
 //	}
 
 	/**
-	 * 
+	 * Return providerUnitList is a unit where the role client is defined
 	 *  @return providerUnitList is a unit where the role client is defined
 	 */
 	public ArrayList<String> getClientUnitList() {
@@ -92,7 +97,7 @@ public class Oracle {
 	}
 
 	/**
-	 * 
+	 * Return unitList this parameter is a unit where the role client is defined
 	 * @param unitList this parameter is a unit where the role client is defined
 	 */
 	public void setClientUnitList(ArrayList<String> unitList) {
@@ -100,14 +105,14 @@ public class Oracle {
 	}
 
 	/**
-	 * 
+	 * Return providerUnitList is a unit where the role provider is defined
 	 * @return providerUnitList is a unit where the role provider is defined
 	 */
 	public ArrayList<String> getProviderUnitList() {
 		return this.providerunitList;
 	}
 	/**
-	 * 
+	 * Return unitList this parameter is a unit where the role provider is defined
 	 * @param unitList this parameter is a unit where the role provider is defined
 	 */
 	public void setProviderUnitList(ArrayList<String> unitList) {
