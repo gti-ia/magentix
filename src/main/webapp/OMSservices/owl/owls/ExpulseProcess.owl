@@ -69,6 +69,10 @@
      <rdfs:label>AgentID</rdfs:label>
      <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
 </process:Input>
+<process:Input rdf:ID="ExpulsedAgentID">
+     <rdfs:label>ExpulsedAgentID</rdfs:label>
+     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
+</process:Input>
 <process:Input rdf:ID="UnitID">
      <rdfs:label>UnitID</rdfs:label>
      <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
