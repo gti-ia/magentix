@@ -59,7 +59,7 @@ public class AgentClient extends QueueAgent {
 		e.printStackTrace();
 	    }
 
-	    OMSservices.acquireRole(this, oracle.getClientList().get(0), "travelagency");
+	    OMSservices.acquireRole(this, oracle.getClientList().get(0), oracle.getClientUnitList().get(0));
 
 	    agents = SFservices.getProcess(this, results.get(0));
 	    logger.info("[ClientAgent]agents that offered SearchCheapHotel service: "

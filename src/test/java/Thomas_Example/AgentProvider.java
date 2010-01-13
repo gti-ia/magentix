@@ -63,7 +63,7 @@ public class AgentProvider extends QueueAgent {
 	    results = sfProxy.searchService(this, "SearchCheapHotel");
 
 	    if (results.size() == 0) {
-		System.out.println("There is no profiles similar to the SearchCheapHotel");
+		System.out.println("profiles are not similar to SearchCheapHotel");
 	    } else {
 		// cogemos el primero por ejemplo
 		String URLProfile = sfProxy.getProfile(this, results.get(0));
@@ -79,7 +79,7 @@ public class AgentProvider extends QueueAgent {
 		}
 
 	
-		omsProxy.acquireRole(this, oracle.getProviderList().get(0), "travelagency");
+		omsProxy.acquireRole(this, oracle.getProviderList().get(0), oracle.getProviderUnitList().get(0));
 
 	    }
 
@@ -90,13 +90,10 @@ public class AgentProvider extends QueueAgent {
 
     public void escenario4() {
 	try {
-		//si existe algún profile adecuado, añadimos al processDescription el id del profile el cual 
-		//vamos asociar.
-		if (results.size() != 0)
-		{
+
 	    processDescription.setProfileID(results.get(0));
+
 	    sfProxy.registerProcess(this, processDescription);
-		}
 
 	} catch (Exception e) {
 	    logger.error(e.getMessage());

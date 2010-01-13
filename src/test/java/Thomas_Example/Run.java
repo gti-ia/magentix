@@ -58,11 +58,9 @@ public class Run {
 	    /**
 	     * Execute the agents
 	     */
-	    
-	    
 
 	    AgentPayee payeeAgent = new AgentPayee(new AgentID("agentPayee"));
-	    
+
 	    AgentProvider providerAgent = new AgentProvider(new AgentID("providerAgent"));
 
 	    AgentAnnouncement registerAgent = new AgentAnnouncement(new AgentID("registerAgent"));
@@ -71,13 +69,12 @@ public class Run {
 
 	    registerAgent.start();
 	    payeeAgent.start();
-	    
+
 	    Monitor m = new Monitor();
 	    m.waiting(25 * 1000);
 	    providerAgent.start();
 	    m.waiting(5 * 1000);
 	    clientAgent.start();
-	    
 
 	} catch (Exception e) {
 	    logger.error(e.getMessage());
