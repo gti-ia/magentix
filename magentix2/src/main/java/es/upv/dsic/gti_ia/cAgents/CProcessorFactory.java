@@ -13,7 +13,7 @@ import es.upv.dsic.gti_ia.core.ACLMessage;
 public class CProcessorFactory{
 	private ACLMessage template;
 	public String name;
-	private CProcessor myCProcessor;
+	protected CProcessor myCProcessor;
 	private CAgent myAgent;
 	protected Semaphore availableConversations;
 		
