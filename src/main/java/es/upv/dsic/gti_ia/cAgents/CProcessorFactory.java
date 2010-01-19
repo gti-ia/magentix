@@ -45,11 +45,6 @@ public class CProcessorFactory{
 		return template;
 	}
 	
-	/*public void setCProcessor(CProcessor cproc){
-		myCProcessor = cproc;
-		myCProcessor.myAgent = myAgent;
-	}*/
-	
 	public CProcessor getCProcessor(){
 		return this.myCProcessor;
 	}
