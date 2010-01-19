@@ -24,7 +24,8 @@ public class CProcessor implements Runnable, Cloneable{
 	protected Map<String, State> states = new HashMap<String, State>();
 	private TransitionTable transitiontable = new TransitionTable();
 	private Queue<ACLMessage> messageQueue = new LinkedList<ACLMessage>();
-	private ACLMessage currentMessage;
+	public ACLMessage currentMessage;
+	public String parentConversationID;
 	private boolean terminated;
 	private boolean idle;
 	protected int factoryArrayIndex;
