@@ -38,7 +38,7 @@ public class Initiator extends CAgent{
 		factory.getCProcessor().addTransition("B", "S");
 		
 		//W1
-		factory.getCProcessor().registerState(new WaitState("W1",100000));
+		factory.getCProcessor().registerState(new WaitState("W1",1));
 		factory.getCProcessor().addTransition("S", "W1");
 		
 		//R1
@@ -72,7 +72,7 @@ public class Initiator extends CAgent{
 		factory.getCProcessor().addTransition("RW1", "W1");
 		
 		//W2
-		factory.getCProcessor().registerState(new WaitState("W2",100000));
+		factory.getCProcessor().registerState(new WaitState("W2",1));
 		factory.getCProcessor().addTransition("R3", "W2");
 		
 		//R4
