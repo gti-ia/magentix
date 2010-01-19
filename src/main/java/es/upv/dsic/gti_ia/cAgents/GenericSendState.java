@@ -14,6 +14,7 @@ public class GenericSendState extends SendState{
 
 	@Override
 	protected ACLMessage run(CProcessor myProcessor, ACLMessage lastReceivedMessage) {
+		this.messageTemplate.setSender(myProcessor.getMyAgent().getAid());
 		this.messageTemplate.setConversationId(myProcessor.getConversationID());
 		return this.messageTemplate;
 	}

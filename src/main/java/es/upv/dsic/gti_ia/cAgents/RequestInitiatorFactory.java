@@ -1,29 +1,23 @@
 package es.upv.dsic.gti_ia.cAgents;
 
 import es.upv.dsic.gti_ia.core.ACLMessage;
-import es.upv.dsic.gti_ia.core.AgentID;
 
 public class RequestInitiatorFactory extends CProcessorFactory{
-
-	public RequestInitiatorFactory(String name, ACLMessage template,
-			int availableConversations) {		
-		super(name, template, availableConversations);
+	
+	public RequestInitiatorFactory(String name, ACLMessage sendMessage) {		
+		super(name, new ACLMessage(ACLMessage.INFORM), 1);
 		
 		//B
 		this.getCProcessor().registerFirstState(new GenericBeginState("B"));
 		
 		//S
 		GenericSendState S = new GenericSendState("S");
-		ACLMessage sendTemplate = new ACLMessage(ACLMessage.REQUEST);
-		sendTemplate.setContent("This is a generic request message");
-		//sendTemplate.setSender(this.);
-		sendTemplate.setReceiver(new AgentID("participant"));
-		S.setMessageTemplate(sendTemplate);
+		S.setMessageTemplate(sendMessage);
 		this.getCProcessor().registerState(S);
 		this.getCProcessor().addTransition("B", "S");
 		
 		//W1
-		this.getCProcessor().registerState(new WaitState("W1",1));
+		this.getCProcessor().registerState(new WaitState("W1",10000));
 		this.getCProcessor().addTransition("S", "W1");
 		
 		//R1
@@ -57,7 +51,7 @@ public class RequestInitiatorFactory extends CProcessorFactory{
 		this.getCProcessor().addTransition("RW1", "W1");
 		
 		//W2
-		this.getCProcessor().registerState(new WaitState("W2",1));
+		this.getCProcessor().registerState(new WaitState("W2",10000));
 		this.getCProcessor().addTransition("R3", "W2");
 		
 		//R4
@@ -105,6 +99,15 @@ public class RequestInitiatorFactory extends CProcessorFactory{
 		this.getCProcessor().registerState(new GenericNotAcceptedMessagesState());
 		this.getCProcessor().registerState(new GenericSendingErrorsState());
 		this.getCProcessor().registerState(new GenericTerminatedFatherState());
+	}
+	
+	public void changeState(State s) throws Exception{
+		//if new state's type is different to the previous state's type, rise exception
+		if(s.getType() != this.getCProcessor().getState(s.getName()).getType()){
+			throw new Exception("Error: type of the new state and type of the previous state do not match");
+		}
+		else
+			this.getCProcessor().registerState(s);
 	}
 
 }
