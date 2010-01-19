@@ -24,6 +24,7 @@ import es.upv.dsic.gti_ia.architecture.MessageTemplate;
 import es.upv.dsic.gti_ia.architecture.Monitor;
 import es.upv.dsic.gti_ia.architecture.QueueAgent;
 import es.upv.dsic.gti_ia.architecture.FIPANames.InteractionProtocol;
+import es.upv.dsic.gti_ia.cAgents.*;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 
@@ -39,17 +40,22 @@ import org.mindswap.owls.process.execution.ProcessExecutionEngine;
 import org.mindswap.owls.service.Service;
 import org.mindswap.query.ValueMap;
 
-
-
-
+import conversaciones.GenericBeginState;
+import conversaciones.GenericCancelState;
+import conversaciones.GenericFinalState;
+import conversaciones.GenericNotAcceptedMessagesState;
+import conversaciones.GenericSendingErrorsState;
+import conversaciones.GenericTerminatedFatherState;
 
 
 /**
  * OMS agent is responsible for managing all the request messages from other entities
  * OMS agent follows a FIPA-Request protocol
  */
-public class OMS extends QueueAgent {
+public class OMS extends CAgent {
 
+		//CAgents
+		String msgContent = "";
 	
 		Configuration configuration = Configuration.getConfiguration();
 		
@@ -627,21 +633,345 @@ public class OMS extends QueueAgent {
 	}//end class OMSResponder
 
 	
-/**
-* Starts the OMS agent and registers all the OMS services (process, profile, grounding)
-*
-* @param 
-* @throws 
-*/
-protected void execute() {
-	//RegisterOMSServiceProfiles();
-	//RegisterOMSServiceProcess();
-	logger.info("Agent OMS active");
-	OMSResponder responder = new OMSResponder(this);
-  
-	this.addTask(responder);
-	mon.waiting();
+	/**
+	* Starts the OMS agent and registers all the OMS services (process, profile, grounding)
+	*
+	* @param 
+	* @throws 
+	*/
+	/*protected void execute() {
+		//RegisterOMSServiceProfiles();
+		//RegisterOMSServiceProcess();
+		logger.info("Agent OMS active");
+		OMSResponder responder = new OMSResponder(this);
+	  
+		this.addTask(responder);
+		mon.waiting();
+						
+	}*/// end setup
+	
+	protected void setFactories() {
+		ACLMessage template = new ACLMessage(ACLMessage.REQUEST);
+		CProcessorFactory factory = new CProcessorFactory("Participant", template, 1);
+		
+		//B
+		factory.getCProcessor().registerFirstState(new GenericBeginState("B"));
+		
+		//W
+		factory.getCProcessor().registerState(new WaitState("W",1000));
+		factory.getCProcessor().addTransition("B", "W");
+		
+		//R
+		ReceiveState1 R = new ReceiveState1("R");
+		ACLMessage receiveFilter = new ACLMessage(ACLMessage.REQUEST);
+		R.setAcceptFilter(receiveFilter);
+		factory.getCProcessor().registerState(R);
+		factory.getCProcessor().addTransition("W", "R");
+		
+		//RW
+		GenericReceiveState RW = new GenericReceiveState("RW");
+		receiveFilter = new ACLMessage(ACLMessage.INFORM);
+		receiveFilter.setHeader("Purpose", "WaitMessage");
+		RW.setAcceptFilter(receiveFilter);
+		factory.getCProcessor().registerState(RW);
+		factory.getCProcessor().addTransition("W", "RW");
+		factory.getCProcessor().addTransition("RW", "W");
+		
+		//S1
+		SendState1 S1 = new SendState1("S1");
+		ACLMessage sendTemplate = new ACLMessage(ACLMessage.NOT_UNDERSTOOD);
+		sendTemplate.setContent("Request message not understood");
+		sendTemplate.setSender(getAid());
+		sendTemplate.setProtocol("fipa-request");
+		S1.setMessageTemplate(sendTemplate);
+		factory.getCProcessor().registerState(S1);
+		factory.getCProcessor().addTransition("R", "S1");
+		
+		//S2
+		SendState1 S2 = new SendState1("S2");
+		sendTemplate = new ACLMessage(ACLMessage.REFUSE);
+		sendTemplate.setContent("Request message refused");
+		sendTemplate.setSender(getAid());
+		sendTemplate.setProtocol("fipa-request");
+		S2.setMessageTemplate(sendTemplate);
+		factory.getCProcessor().registerState(S2);
+		factory.getCProcessor().addTransition("R", "S2");
+		
+		//S3
+		SendState1 S3 = new SendState1("S3");
+		sendTemplate = new ACLMessage(ACLMessage.AGREE);
+		sendTemplate.setContent("=Agree");
+		sendTemplate.setSender(getAid());
+		sendTemplate.setProtocol("fipa-request");
+		S3.setMessageTemplate(sendTemplate);
+		factory.getCProcessor().registerState(S3);
+		factory.getCProcessor().addTransition("R", "S3");
+		
+		//A
+		factory.getCProcessor().registerState(new ActionState1("A"));
+		factory.getCProcessor().addTransition("S3", "A");
+		
+		//S4
+		SendState1 S4 = new SendState1("S4");
+		sendTemplate = new ACLMessage(ACLMessage.FAILURE);
+		sendTemplate.setContent("Failure performing the action");
+		sendTemplate.setSender(getAid());
+		sendTemplate.setProtocol("fipa-request");
+		S4.setMessageTemplate(sendTemplate);
+		factory.getCProcessor().registerState(S4);
+		factory.getCProcessor().addTransition("A", "S4");
+		
+		//S5
+		SendState2 S5 = new SendState2("S5");
+		sendTemplate = new ACLMessage(ACLMessage.INFORM);
+		sendTemplate.setHeader("inform", "done");
+		sendTemplate.setSender(getAid());
+		sendTemplate.setProtocol("fipa-request");
+		S5.setMessageTemplate(sendTemplate);
+		factory.getCProcessor().registerState(S5);
+		factory.getCProcessor().addTransition("A", "S5");
+		
+		//S6
+		SendState1 S6 = new SendState1("S6");
+		sendTemplate = new ACLMessage(ACLMessage.INFORM);
+		sendTemplate.setHeader("inform", "ref");
+		sendTemplate.setContent("Action ref");
+		sendTemplate.setSender(getAid());
+		sendTemplate.setProtocol("fipa-request");
+		S6.setMessageTemplate(sendTemplate);
+		factory.getCProcessor().registerState(S6);
+		factory.getCProcessor().addTransition("A", "S6");
+		
+		//final
+		factory.getCProcessor().registerState(new GenericFinalState("F"));
+		factory.getCProcessor().addTransition("S1", "F");
+		factory.getCProcessor().addTransition("S2", "F");
+		factory.getCProcessor().addTransition("S4", "F");
+		factory.getCProcessor().addTransition("S5", "F");
+		factory.getCProcessor().addTransition("S6", "F");
+		
+		//exception states
+		factory.getCProcessor().registerState(new GenericCancelState());
+		factory.getCProcessor().registerState(new GenericNotAcceptedMessagesState());
+		factory.getCProcessor().registerState(new GenericSendingErrorsState());
+		factory.getCProcessor().registerState(new GenericTerminatedFatherState());
+		
+		//attach factory to agent
+		this.addFactory(factory);
+	}
+	
+	public class ReceiveState1 extends ReceiveState{
+
+		public ReceiveState1(String n) {
+			super(n);
+		}
+
+		@Override
+		protected String run(CProcessor myProcessor, ACLMessage msg) {
+			String next = "";
+			System.out.println("Protocol: "+msg.getProtocol());
+			
+			if (msg != null) {
+				
+				try{
+				
+					//read msg content
+					StringTokenizer Tok = new StringTokenizer(msg.getContent());
 					
-}// end setup
+					//read in the service description
+					String token_process = Tok.nextElement().toString();
+
+					Boolean exists=false;					
+					
+					for(int i=0;i<OMSServicesProcess.length;i++){
+						
+						if(token_process.equals(OMSServicesProcess[i].toString())){
+							exists=true;
+						}
+					}
+			
+					if(exists){            
+						
+						logger.info("AGREE");
+						next = "S3";
+						
+					}else{
+                       
+						logger.info("REFUSE");
+						next = "S2";
+					}
+					
+				}catch(Exception e){
+                   
+					logger.info("EXCEPTION");
+                   
+					System.out.println(e);
+					e.printStackTrace();
+					throw new RuntimeException(e.getMessage());
+
+				}
+					
+			}else{
+               
+				logger.info("NOTUNDERSTOOD");
+				next = "S1";
+			}  
+						
+			return next;
+		}
+	}
+	
+	public class ActionState1 extends ActionState{
+
+		public ActionState1(String n) {
+			super(n);
+		}
+
+		@Override
+		protected String run(CProcessor myProcessor) {
+			String next = "";
+			
+			// create an execution engine
+			ProcessExecutionEngine exec = OWLSFactory.createExecutionEngine();
+		
+			//read msg content
+			StringTokenizer Tok = new StringTokenizer(myProcessor.currentMessage.getContent());
+			
+			//read in the service description
+			String token_process = Tok.nextElement().toString();
+			if(DEBUG)
+			{
+				
+				logger.info("[OMS]Doc OWL-S: " + token_process);
+			}
+			
+			try{
+				Service aService = kb.readService(token_process);		
+			
+				//get the process for the server
+				Process aProcess = aService.getProcess();
+				//initialize the input values to be empty
+				ValueMap values = new ValueMap();
+		
+	
+				for(int i=0;i<aProcess.getInputs().size();i++){
+					if(aProcess.getInputs().inputAt(i).getLocalName().equalsIgnoreCase("AgentID"))
+						values.setValue(aProcess.getInputs().inputAt(i),EntityFactory.createDataValue(myProcessor.currentMessage.getSender().toString()));
+					else
+						values.setValue(aProcess.getInputs().inputAt(i),EntityFactory.createDataValue(""));
+				}
+				while (Tok.hasMoreElements()) {
+					String token = Tok.nextElement().toString();
+					for(int i=0;i<aProcess.getInputs().size();i++){
+						String paramName = aProcess.getInputs().inputAt(i).getLocalName().toLowerCase();
+						if(paramName.equalsIgnoreCase(token.split("=")[0].toLowerCase())){
+							if(token.split("=").length >= 2)
+								values.setValue(aProcess.getInputs().inputAt(i),EntityFactory.createDataValue(token.split("=")[1]));
+							else
+								values.setValue(aProcess.getInputs().inputAt(i),EntityFactory.createDataValue(""));
+							}
+						
+					}
+				}//end while   
+				
+				//execute the service
+				if(DEBUG)
+				{
+				
+					logger.info("[OMS]Executing... "+values.getValues().toString());
+				}
+				values = exec.execute(aProcess, values);
+				if(DEBUG)
+				{
+					
+					logger.info("[OMS]Values obtained... "+values.toString());
+				}
+				if(DEBUG) 
+				{
+					
+					logger.info("[OMS]Creating inform message to send...");
+				}
+			
+				next = "S5";
+				if(DEBUG)
+				{
+					
+					logger.info("[OMS]Before set message content...");
+					
+				}
+				myProcessor.currentMessage.setContent(aProcess.getLocalName()+"="+values.toString());
+				                        
+            }catch(Exception e){
+            	if(DEBUG)
+            	{
+            		
+            		logger.error(e.toString());
+            	}
+            	next = "S4";
+            }		
+			
+			return next;
+		}
+	}
+	
+	public class SendState1 extends SendState{
+
+		public SendState1(String n) {
+			super(n);
+		}
+
+		@Override
+		protected ACLMessage run(CProcessor myProcessor, ACLMessage lastReceivedMessage) {
+			this.messageTemplate.setConversationId(myProcessor.getConversationID());
+			this.messageTemplate.setReceiver(lastReceivedMessage.getSender());
+			return this.messageTemplate;
+		}
+
+		@Override
+		protected String getNext(CProcessor myProcessor,
+				ACLMessage lastReceivedMessage) {
+			String next = "";
+			Set<String> transitions = new HashSet<String>();
+			transitions = myProcessor.getTransitionTable().getTransitions(this.getName());
+			Iterator<String> it = transitions.iterator();
+			if (it.hasNext()) {
+		        // Get element
+		        next = it.next();
+		    }
+			return next;
+		}
+	}
+	
+	public class SendState2 extends SendState{
+
+		public SendState2(String n) {
+			super(n);
+		}
+
+		@Override
+		protected ACLMessage run(CProcessor myProcessor, ACLMessage lastReceivedMessage) {
+			this.messageTemplate.setConversationId(myProcessor.getConversationID());
+			System.out.println("ConID: "+myProcessor.getConversationID());
+			System.out.println("Destino: "+lastReceivedMessage.getSender());
+			System.out.println("Perf: "+messageTemplate.getPerformative());
+			this.messageTemplate.setReceiver(lastReceivedMessage.getSender());
+			this.messageTemplate.setContent(lastReceivedMessage.getContent());
+			return this.messageTemplate;
+		}
+
+		@Override
+		protected String getNext(CProcessor myProcessor,
+				ACLMessage lastReceivedMessage) {
+			String next = "";
+			Set<String> transitions = new HashSet<String>();
+			transitions = myProcessor.getTransitionTable().getTransitions(this.getName());
+			Iterator<String> it = transitions.iterator();
+			if (it.hasNext()) {
+		        // Get element
+		        next = it.next();
+		    }
+			return next;
+		}
+	}
 
 } //end OMS Agent
