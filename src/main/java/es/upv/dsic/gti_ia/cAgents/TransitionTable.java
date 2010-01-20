@@ -19,7 +19,10 @@ public class TransitionTable implements Cloneable{
 	}
 	
 	protected void addTransition(String from, String destination){
-		transitions.get(from).add(destination);
+		if(transitions.get(from) == null || transitions.get(destination) == null)
+			System.out.println("Error: one of the states in the transition does not exist");
+		else
+			transitions.get(from).add(destination);
 	}
 	
 	protected void removeTransition(String from, String destination){
