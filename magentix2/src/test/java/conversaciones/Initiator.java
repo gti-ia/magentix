@@ -20,7 +20,7 @@ public class Initiator extends CAgent{
 		sendTemplate.setSender(getAid());
 		sendTemplate.setReceiver(new AgentID("participant"));
 		sendTemplate.setConversationId(CID);
-		RequestInitiatorFactory factory = new RequestInitiatorFactory("Initiator", sendTemplate);
+		RequestInitiatorFactory factory = new RequestInitiatorFactory("Initiator", sendTemplate, new ACLMessage(ACLMessage.INFORM));
 		
 		//attach factory to agent
 		this.addStartingFactory(factory, CID);
