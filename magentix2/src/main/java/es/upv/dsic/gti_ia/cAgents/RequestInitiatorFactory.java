@@ -4,7 +4,7 @@ import es.upv.dsic.gti_ia.core.ACLMessage;
 
 public class RequestInitiatorFactory extends CProcessorFactory{
 	
-	public RequestInitiatorFactory(String name, ACLMessage template, ACLMessage sendMessage) {		
+	public RequestInitiatorFactory(String name, ACLMessage template, ACLMessage sendMessage){		
 		super(name, template, 1);
 		
 		//B
