@@ -29,6 +29,7 @@ public class CProcessor implements Runnable, Cloneable{
 	private boolean terminated;
 	private boolean idle;
 	protected int factoryArrayIndex;
+	public Map<String, Object> internalData = new HashMap<String, Object>();
 	
 	protected CProcessor(){
 		terminated = false;
@@ -60,7 +61,12 @@ public class CProcessor implements Runnable, Cloneable{
 			//clone transitions
 			Iterator<String> itTrans = this.transitiontable.getTransitions(key).iterator();
 			while (itTrans.hasNext()) {
-		        aux.transitiontable.addTransition(key, itTrans.next());
+		        try {
+					aux.transitiontable.addTransition(key, itTrans.next());
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 		    }
 		}
 		return aux;
