@@ -13,16 +13,9 @@ import org.mindswap.owls.process.execution.ProcessExecutionEngine;
 import org.mindswap.owls.service.Service;
 import org.mindswap.query.ValueMap;
 
-import conversaciones.GenericBeginState;
-import conversaciones.GenericCancelState;
-import conversaciones.GenericFinalState;
-import conversaciones.GenericNotAcceptedMessagesState;
-import conversaciones.GenericSendingErrorsState;
-import conversaciones.GenericTerminatedFatherState;
-
 import es.upv.dsic.gti_ia.architecture.*;
 import es.upv.dsic.gti_ia.architecture.FIPANames.InteractionProtocol;
-import es.upv.dsic.gti_ia.cAgents.ActionState;
+import es.upv.dsic.gti_ia.cAgents.*;
 import es.upv.dsic.gti_ia.cAgents.CAgent;
 import es.upv.dsic.gti_ia.cAgents.CProcessor;
 import es.upv.dsic.gti_ia.cAgents.CProcessorFactory;
@@ -32,10 +25,7 @@ import es.upv.dsic.gti_ia.cAgents.SendState;
 import es.upv.dsic.gti_ia.cAgents.WaitState;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
-import es.upv.dsic.gti_ia.organization.OMS.ActionState1;
-import es.upv.dsic.gti_ia.organization.OMS.ReceiveState1;
-import es.upv.dsic.gti_ia.organization.OMS.SendState1;
-import es.upv.dsic.gti_ia.organization.OMS.SendState2;
+
 
 /**
  * SF agent is responsible for managing all the request messages from other
@@ -787,7 +777,6 @@ public class SF extends CAgent {
 			ProcessExecutionEngine exec = OWLSFactory.createExecutionEngine();
 
 			// read msg content
-			ACLMessage aux = myProcessor.currentMessage;
 			StringTokenizer Tok = new StringTokenizer(myProcessor.currentMessage.getContent());
 
 			// read in the service description
