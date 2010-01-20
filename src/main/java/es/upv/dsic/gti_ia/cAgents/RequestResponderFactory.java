@@ -9,7 +9,7 @@ import es.upv.dsic.gti_ia.core.ACLMessage;
 public class RequestResponderFactory extends CProcessorFactory{
 
 	public RequestResponderFactory(String name, ACLMessage template,
-			int availableConversations, ReceiveState R, ActionState A) {
+			int availableConversations, ReceiveState R, ActionState A){
 		super(name, template, availableConversations);
 		
 		ACLMessage receiveFilter;
