@@ -1,5 +1,7 @@
 package es.upv.dsic.gti_ia.cAgents;
 
+import es.upv.dsic.gti_ia.core.ACLMessage;
+
 /**
  * 
  * @author Ricard Lopez Fogues
@@ -13,6 +15,6 @@ public abstract class FinalState extends State{
 		type = State.FINAL;
 	}
 	
-	protected abstract String run(CProcessor myProcessor);
+	protected abstract ACLMessage run(CProcessor myProcessor);
 	
 }

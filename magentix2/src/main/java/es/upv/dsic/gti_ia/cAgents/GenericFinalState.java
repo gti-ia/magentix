@@ -2,6 +2,7 @@ package es.upv.dsic.gti_ia.cAgents;
 
 import es.upv.dsic.gti_ia.cAgents.CProcessor;
 import es.upv.dsic.gti_ia.cAgents.FinalState;
+import es.upv.dsic.gti_ia.core.ACLMessage;
 
 public class GenericFinalState extends FinalState{
 
@@ -11,7 +12,7 @@ public class GenericFinalState extends FinalState{
 	}
 
 	@Override
-	protected String run(CProcessor myProcessor) {
+	protected ACLMessage run(CProcessor myProcessor) {
 		// TODO Auto-generated method stub
 		System.out.println("Fin "+myProcessor.getMyAgent().getName());
 		return null;

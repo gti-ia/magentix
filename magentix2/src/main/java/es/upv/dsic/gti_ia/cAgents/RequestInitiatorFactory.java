@@ -44,7 +44,7 @@ public class RequestInitiatorFactory extends CProcessorFactory{
 		//RW1
 		GenericReceiveState RW1 = new GenericReceiveState("RW1");
 		receiveFilter = new ACLMessage(ACLMessage.INFORM);
-		receiveFilter.setHeader("Purpose", "WaitMessage");
+		receiveFilter.setHeader("purpose", "waitMessage");
 		RW1.setAcceptFilter(receiveFilter);
 		this.getCProcessor().registerState(RW1);
 		this.getCProcessor().addTransition("W1", "RW1");
@@ -80,7 +80,7 @@ public class RequestInitiatorFactory extends CProcessorFactory{
 		//RW2
 		GenericReceiveState RW2 = new GenericReceiveState("RW2");
 		receiveFilter = new ACLMessage(ACLMessage.INFORM);
-		receiveFilter.setHeader("Purpose", "WaitMessage");
+		receiveFilter.setHeader("purpose", "waitMessage");
 		RW2.setAcceptFilter(receiveFilter);
 		this.getCProcessor().registerState(RW2);
 		this.getCProcessor().addTransition("W2", "RW2");

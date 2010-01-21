@@ -161,8 +161,18 @@ public class CProcessor implements Runnable, Cloneable{
 				System.out.println("Agente: "+this.myAgent.getName()+" currentState: "+currentState);
 				switch(currentStateType){
 					case State.BEGIN:
+						//TODO :a consultar, de moment, si un missatge es de tipo start, messagequeue.remove, si no peek
+						ACLMessage peekMessage = messageQueue.peek();						
 						BeginState beginState = (BeginState) states.get(currentState);
-						currentState = beginState.run(this, messageQueue.peek());
+						if(peekMessage.getHeaderValue("start") != ""){
+							System.out.println("Missatge start");
+							System.out.println("Cabecera: "+peekMessage.getHeaderValue("start"));
+							currentState = beginState.run(this, messageQueue.remove());
+						}
+						else{
+							System.out.println("Missatge NO start");
+							currentState = beginState.run(this, messageQueue.peek());
+						}
 						break;
 					case State.ACTION:
 						ActionState actionState = (ActionState) states.get(currentState);
@@ -247,7 +257,16 @@ public class CProcessor implements Runnable, Cloneable{
 						break;
 					case State.FINAL:
 						FinalState finalState = (FinalState) states.get(currentState);
-						finalState.run(this);
+						messageToSend = finalState.run(this);
+						if(messageToSend != null){
+							try {						
+								this.myAgent.availableSends.acquire();
+								this.myAgent.send(messageToSend);
+								this.myAgent.availableSends.release();
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+						}
 						terminated = true;
 						//decrease the conversations counter in the processor's factory
 						myAgent.endConversation(factoryArrayIndex);

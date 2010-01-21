@@ -68,7 +68,7 @@ public abstract class CAgent extends BaseAgent {
 		}
 
 		@Override
-		protected String run(CProcessor myProcessor) {
+		protected ACLMessage run(CProcessor myProcessor) {
 			return null;
 		}
 		
@@ -143,7 +143,7 @@ public abstract class CAgent extends BaseAgent {
 			timer.schedule(new TimerTask() {
 	            public void run() {
 	               ACLMessage waitMessage = new ACLMessage(ACLMessage.INFORM);
-	               waitMessage.setHeader("Purpose", "WaitMessage");
+	               waitMessage.setHeader("purpose", "waitMessage");
 	               waitMessage.setContent("Límite temporal alcanzado");
 	               waitMessage.setConversationId(conversationId);
 	               processMessage(waitMessage);

@@ -55,8 +55,8 @@ public class CProcessorFactory{
 		cloneProcessor.addMessage(msg);
 		cloneProcessor.setIdle(false);
 		cloneProcessor.setFactoryArrayIndex(factoryArrayIndex);
+		myAgent.addProcessor(msg.getConversationId(), cloneProcessor);
 		myAgent.exec.execute(cloneProcessor);
-		myAgent.addProcessor(msg.getConversationId(), cloneProcessor);		
 	}
 	
 	protected synchronized void forcedStartConversation(ACLMessage msg, int factoryArrayIndex){
@@ -64,6 +64,9 @@ public class CProcessorFactory{
 		cloneProcessor.setConversationID(msg.getConversationId());
 		cloneProcessor.setIdle(false);
 		cloneProcessor.setFactoryArrayIndex(factoryArrayIndex);
+		ACLMessage startMessage = new ACLMessage(ACLMessage.INFORM);
+		startMessage.setHeader("start", "start");
+		cloneProcessor.addMessage(startMessage);
 		myAgent.addProcessor(msg.getConversationId(), cloneProcessor);
 		myAgent.exec.execute(cloneProcessor);		
 	}
