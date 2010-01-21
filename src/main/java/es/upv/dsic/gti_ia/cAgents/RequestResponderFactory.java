@@ -29,7 +29,7 @@ public class RequestResponderFactory extends CProcessorFactory{
 		//RW
 		GenericReceiveState RW = new GenericReceiveState("RW");
 		receiveFilter = new ACLMessage(ACLMessage.INFORM);
-		receiveFilter.setHeader("Purpose", "WaitMessage");
+		receiveFilter.setHeader("purpose", "waitMessage");
 		RW.setAcceptFilter(receiveFilter);
 		this.getCProcessor().registerState(RW);
 		this.getCProcessor().addTransition("W", "RW");
