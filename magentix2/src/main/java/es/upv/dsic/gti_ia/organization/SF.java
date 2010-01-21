@@ -596,7 +596,7 @@ public class SF extends CAgent {
 		//RW
 		GenericReceiveState RW = new GenericReceiveState("RW");
 		receiveFilter = new ACLMessage(ACLMessage.INFORM);
-		receiveFilter.setHeader("Purpose", "WaitMessage");
+		receiveFilter.setHeader("purpose", "waitMessage");
 		RW.setAcceptFilter(receiveFilter);
 		factory.getCProcessor().registerState(RW);
 		factory.getCProcessor().addTransition("W", "RW");
