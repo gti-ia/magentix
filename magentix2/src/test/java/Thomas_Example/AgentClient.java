@@ -44,19 +44,19 @@ public class AgentClient extends QueueAgent {
 	    result = OMSservices.acquireRole(this, "member", "virtual");
 	    logger.info("[ClientAgent]Acquire Role member return: " + result + "\n");
 	    do {
-		results = SFservices.searchService(this, "SearchCheapHotel");
+	    	results = SFservices.searchService(this, "SearchCheapHotel");
 	    } while (results.size() == 0);
 
 	    URLProfile = SFservices.getProfile(this, results.get(0));
 
 	    URL profile;
 	    try {
-		profile = new URL(URLProfile);
-		oracle = new Oracle(profile);
+	    	profile = new URL(URLProfile);
+	    	oracle = new Oracle(profile);
 
 	    } catch (MalformedURLException e) {
-		logger.error("ERROR: Profile URL Malformed!");
-		e.printStackTrace();
+	    	logger.error("ERROR: Profile URL Malformed!");
+	    	e.printStackTrace();
 	    }
 
 	    OMSservices.acquireRole(this, oracle.getClientList().get(0), "travelagency");

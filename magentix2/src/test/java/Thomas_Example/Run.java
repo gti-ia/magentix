@@ -67,7 +67,8 @@ public class Run {
 
 	    AgentAnnouncement registerAgent = new AgentAnnouncement(new AgentID("registerAgent"));
 
-	    AgentClient clientAgent = new AgentClient(new AgentID("clientAgent"));
+	    //AgentClient clientAgent = new AgentClient(new AgentID("clientAgent"));
+	    Client clientAgent = new Client(new AgentID("clientAgent"));
 
 	    registerAgent.start();
 	    payeeAgent.start();
