@@ -174,12 +174,9 @@ public class CProcessor implements Runnable, Cloneable{
 						ACLMessage peekMessage = messageQueue.peek();						
 						BeginState beginState = (BeginState) states.get(currentState);
 						if(peekMessage.getHeaderValue("start") != ""){
-							System.out.println("Missatge start");
-							System.out.println("Cabecera: "+peekMessage.getHeaderValue("start"));
 							currentState = beginState.run(this, messageQueue.remove());
 						}
 						else{
-							System.out.println("Missatge NO start");
 							currentState = beginState.run(this, messageQueue.peek());
 						}
 						break;
