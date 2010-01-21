@@ -644,7 +644,7 @@ public class OMS extends CAgent {
 		factory.getCProcessor().registerFirstState(new GenericBeginState("B"));
 		
 		//W
-		factory.getCProcessor().registerState(new WaitState("W",1000));
+		factory.getCProcessor().registerState(new WaitState("W",1000000));
 		factory.getCProcessor().addTransition("B", "W");
 		
 		//R
@@ -657,7 +657,7 @@ public class OMS extends CAgent {
 		//RW
 		GenericReceiveState RW = new GenericReceiveState("RW");
 		receiveFilter = new ACLMessage(ACLMessage.INFORM);
-		receiveFilter.setHeader("Purpose", "WaitMessage");
+		receiveFilter.setHeader("purpose", "waitMessage");
 		RW.setAcceptFilter(receiveFilter);
 		factory.getCProcessor().registerState(RW);
 		factory.getCProcessor().addTransition("W", "RW");
