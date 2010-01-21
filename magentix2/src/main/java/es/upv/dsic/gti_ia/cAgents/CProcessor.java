@@ -25,7 +25,8 @@ public class CProcessor implements Runnable, Cloneable{
 	private TransitionTable transitiontable = new TransitionTable();
 	private Queue<ACLMessage> messageQueue = new LinkedList<ACLMessage>();
 	public ACLMessage currentMessage;
-	protected String parentConversationId;
+	//protected String parentConversationId;
+	protected CProcessor parent;
 	private boolean terminated;
 	private boolean idle;
 	protected int factoryArrayIndex;
@@ -131,12 +132,12 @@ public class CProcessor implements Runnable, Cloneable{
 		return this.states.get(name);		
 	}
 	
-	public String getParentConversationId(){
-		return parentConversationId;
+	public CProcessor getParent(){
+		return parent;
 	}
 	
-	protected void setParentConversationID(String id){
-		parentConversationId = id;
+	protected void setParent(CProcessor parent){
+		this.parent = parent;
 	}
 	
 	public void run(){
