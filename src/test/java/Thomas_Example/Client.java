@@ -84,7 +84,7 @@ public class Client extends CAgent{
 		sendMessage.setContent(call);
 		sendMessage.setReceiver(new AgentID("OMS"));
 
-		RequestInitiatorFactory ARfactory = new RequestInitiatorFactory("Initiator", template, sendMessage);
+		RequestInitiatorFactory ARfactory = new RequestInitiatorFactory("ARfactory", template, sendMessage);
 		
 		//change final state
 		try {
@@ -93,7 +93,8 @@ public class Client extends CAgent{
 			e1.printStackTrace();
 		}
 		
-		this.addChildFactory(ARfactory, parentConversationId);
+		parentFactory.addChild(ARfactory);
+		this.addFactory(ARfactory);
 		
 		//SSS activate Search Service
 		SendState1 SSS = new SendState1("SSS");
@@ -149,7 +150,7 @@ public class Client extends CAgent{
 		sendMessage.setContent(call);
 		sendMessage.setReceiver(new AgentID("SF"));
 
-		RequestInitiatorFactory SSfactory = new RequestInitiatorFactory("Initiator", template, sendMessage);		
+		RequestInitiatorFactory SSfactory = new RequestInitiatorFactory("SSfactory", template, sendMessage);		
 		
 		//change state R5 and F
 		ReceiveState2 R5 = new ReceiveState2("R5");
@@ -163,7 +164,8 @@ public class Client extends CAgent{
 			e.printStackTrace();
 		}
 		
-		this.addChildFactory(SSfactory, parentConversationId);
+		parentFactory.addChild(SSfactory);
+		this.addFactory(SSfactory);
 		
 		//SGP activate Get Profile
 		SendState1 SGP = new SendState1("SGP");
@@ -217,7 +219,7 @@ public class Client extends CAgent{
 		sendMessage.setContent(call);
 		sendMessage.setReceiver(new AgentID("SF"));
 
-		RequestInitiatorFactory GPfactory = new RequestInitiatorFactory("Initiator", template, sendMessage);
+		RequestInitiatorFactory GPfactory = new RequestInitiatorFactory("GPfactory", template, sendMessage);
 		
 		receiveFilter = new ACLMessage(ACLMessage.INFORM);
 		receiveFilter.setHeader("inform", "done");
@@ -229,7 +231,8 @@ public class Client extends CAgent{
 			e.printStackTrace();
 		}
 		
-		this.addChildFactory(GPfactory, parentConversationId);
+		parentFactory.addChild(GPfactory);
+		this.addFactory(GPfactory);
 		
 		//Second Acquire Role
 		//SAR_2 activate Acquire Role
@@ -292,7 +295,8 @@ public class Client extends CAgent{
 			e1.printStackTrace();
 		}
 		
-		this.addChildFactory(ARfactory_2, parentConversationId);
+		parentFactory.addChild(ARfactory_2);
+		this.addFactory(ARfactory_2);
 		
 		//SGPR activate Get Process
 		SendState1 SGPR = new SendState1("SGPR");
@@ -357,7 +361,8 @@ public class Client extends CAgent{
 			e.printStackTrace();
 		}		
 		
-		this.addChildFactory(GPRfactory, parentConversationId);
+		parentFactory.addChild(GPRfactory);
+		this.addFactory(GPRfactory);
 				
 		//exception states
 		parentProcessor.registerState(new GenericCancelState());
@@ -415,10 +420,10 @@ public class Client extends CAgent{
 
 			if (patron.equals("RegisterProcessProcess")) {
 				if (arg2.equals("1")) {
-					myProcessor.internalData.put("setImplementationID", arg1);
-					myProcessor.internalData.put("salidaString", arg1);
+					myProcessor.getParent().internalData.put("setImplementationID", arg1);
+					myProcessor.getParent().internalData.put("salidaString", arg1);
 				} else {
-					myProcessor.internalData.put("salidaString", arg1);
+					myProcessor.getParent().internalData.put("salidaString", arg1);
 				}
 
 			}
@@ -432,9 +437,9 @@ public class Client extends CAgent{
 
 				if (arg2.equals("1"))// ha ido bien
 				{
-					myProcessor.internalData.put("salidaString", arg1);
+					myProcessor.getParent().internalData.put("salidaString", arg1);
 				} else {
-					myProcessor.internalData.put("salidaString", arg1);
+					myProcessor.getParent().internalData.put("salidaString", arg1);
 				}
 
 			}
@@ -447,10 +452,10 @@ public class Client extends CAgent{
 					// elimino del arrayList
 					// this.sf.agent.getArraySFAgentDescription().remove(
 					// this.sf.descripcion);
-					myProcessor.internalData.put("salidaString", arg2);
+					myProcessor.getParent().internalData.put("salidaString", arg2);
 				} else // ha ido mal
 				{
-					myProcessor.internalData.put("salidaString", arg2);
+					myProcessor.getParent().internalData.put("salidaString", arg2);
 				}
 
 			}
@@ -461,7 +466,7 @@ public class Client extends CAgent{
 				agen = null;
 				if (arg2.equals("0")) {
 
-					myProcessor.internalData.put("salidaString", arg2);
+					myProcessor.getParent().internalData.put("salidaString", arg2);
 				} else {
 					agen = arg1.split(",");
 					Hashtable<AgentID, String> agentes = new Hashtable<AgentID, String>();
@@ -485,7 +490,7 @@ public class Client extends CAgent{
 							agentes.put(new AgentID(arg1), arg_aux);
 						}
 					}
-					myProcessor.internalData.put("agentes", agentes);
+					myProcessor.getParent().internalData.put("agentes", agentes);
 				}
 			}
 
@@ -502,11 +507,11 @@ public class Client extends CAgent{
 
 					for (String a : agen) {
 						a = a.substring(0, arg1.indexOf(" "));
-						myProcessor.internalData.put("idSearchService", a);
+						myProcessor.getParent().internalData.put("idSearchService", a);
 					}
 				} 
 				else
-					myProcessor.internalData.put("salidaString", arg1);
+					myProcessor.getParent().internalData.put("salidaString", arg1);
 			}
 
 			// solo si ejecutamos el registerProfile
@@ -514,10 +519,10 @@ public class Client extends CAgent{
 				if (arg1.equals("1")) {
 					// para guardar nuestros ID para poder modificar
 					// posteriormente nuestro servicio
-					myProcessor.internalData.put("profileDescription", arg2);
-					myProcessor.internalData.put("salidaString", arg2);
+					myProcessor.getParent().internalData.put("profileDescription", arg2);
+					myProcessor.getParent().internalData.put("salidaString", arg2);
 				} else {
-					myProcessor.internalData.put("salidaString", arg2);
+					myProcessor.getParent().internalData.put("salidaString", arg2);
 				}
 
 			}
@@ -527,26 +532,26 @@ public class Client extends CAgent{
 			if (patron.equals("ModifyProfileProcess")) {
 				if (arg2.equals("1"))// ha hido todo bien
 				{
-					myProcessor.internalData.put("salidaString", arg2);
+					myProcessor.getParent().internalData.put("salidaString", arg2);
 				} else if (arg2.equals("0"))// existen profile ligados a este
 				// process, por tanto no puede
 				// modificar-lo
 				{
-					myProcessor.internalData.put("salidaString", arg2);
+					myProcessor.getParent().internalData.put("salidaString", arg2);
 				} else// el id del servicio no es valido
 				{
-					myProcessor.internalData.put("salidaString", arg1);
+					myProcessor.getParent().internalData.put("salidaString", arg1);
 				}
 
 			}
 
 			// Si ejecutamos el ModifyProcess
 			if (patron.equals("ModifyProcessProcess")) {
-				myProcessor.internalData.put("salidaString", arg2);
+				myProcessor.getParent().internalData.put("salidaString", arg2);
 			}
 
 			if (patron.equals("RemoveProvider")) {
-				myProcessor.internalData.put("salidaString", arg2);
+				myProcessor.getParent().internalData.put("salidaString", arg2);
 			}
 
 			// si ejecutamos un servicio generico
@@ -635,7 +640,7 @@ public class Client extends CAgent{
 			finalMessage.setHeader("inform", "done");
 			finalMessage.setSender(myProcessor.getMyAgent().getAid());
 			finalMessage.setReceiver(myProcessor.getMyAgent().getAid());
-			finalMessage.setConversationId(myProcessor.getParentConversationId());
+			finalMessage.setConversationId(myProcessor.getParent().getConversationID());
 			return finalMessage;
 		}
 
