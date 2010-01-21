@@ -90,6 +90,12 @@ public abstract class CAgent extends BaseAgent {
 		this.startingFactoryConversationId = conversationId;
 	}
 	
+	public synchronized void addChildFactory(CProcessorFactory factory, String parentConversationId){
+		factory.setAgent(this);
+		factory.getCProcessor().setParentConversationID(parentConversationId);
+		factories.add(factory);
+	}
+	
 	public synchronized void removeFactory(String name){
 		for(int i=0; i<factories.size();i++){
 			if(factories.get(i).name.equals(name)){
