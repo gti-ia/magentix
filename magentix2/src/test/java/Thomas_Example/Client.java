@@ -1,15 +1,19 @@
 package Thomas_Example;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Set;
 
-import es.upv.dsic.gti_ia.architecture.FIPANames.InteractionProtocol;
 import es.upv.dsic.gti_ia.cAgents.*;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.organization.Configuration;
+import es.upv.dsic.gti_ia.organization.Oracle;
 
 public class Client extends CAgent{
 	
@@ -211,15 +215,7 @@ public class Client extends CAgent{
 		template = new ACLMessage(ACLMessage.REQUEST);
 		template.setHeader("start", "getProfile");
 		
-		sendMessage = new ACLMessage(ACLMessage.REQUEST);
-		sendMessage.setProtocol("fipa-request");
-		String serviceID = (String) parentProcessor.internalData.get("result");
-		call = SFServiceDesciptionLocation
-		+ "GetProfileProcess.owl GetProfileInputServiceID=" + serviceID;
-		sendMessage.setContent(call);
-		sendMessage.setReceiver(new AgentID("SF"));
-
-		RequestInitiatorFactory GPfactory = new RequestInitiatorFactory("GPfactory", template, sendMessage);
+		RequestInitiatorFactory GPfactory = new RequestInitiatorFactory("GPfactory", template, new ACLMessage(ACLMessage.REQUEST));
 		
 		receiveFilter = new ACLMessage(ACLMessage.INFORM);
 		receiveFilter.setHeader("inform", "done");
@@ -227,6 +223,7 @@ public class Client extends CAgent{
 		try {
 			GPfactory.changeState(R5);
 			GPfactory.changeState(new FinalState1("F"));
+			GPfactory.changeState(new GPSendState("S"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -279,18 +276,11 @@ public class Client extends CAgent{
 		template = new ACLMessage(ACLMessage.REQUEST);
 		template.setHeader("start", "acquireRole_2");
 		
-		sendMessage = new ACLMessage(ACLMessage.REQUEST);
-		sendMessage.setProtocol(InteractionProtocol.FIPA_REQUEST);
-		UnitID = "travelagency";
-		RoleID = (String)parentProcessor.internalData.get("client");
-		call = configuration + "AcquireRoleProcess.owl RoleID=" + RoleID + " UnitID=" + UnitID;
-		sendMessage.setContent(call);
-		sendMessage.setReceiver(new AgentID("OMS"));
-
-		RequestInitiatorFactory ARfactory_2 = new RequestInitiatorFactory("Initiator", template, sendMessage);
+		RequestInitiatorFactory ARfactory_2 = new RequestInitiatorFactory("Initiator", template, new ACLMessage(ACLMessage.REQUEST));
 		
 		try {
 			ARfactory_2.changeState(new FinalState1("F"));
+			ARfactory_2.changeState(new AR_2SendState("S"));
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
@@ -342,14 +332,7 @@ public class Client extends CAgent{
 		template = new ACLMessage(ACLMessage.REQUEST);
 		template.setHeader("start", "getProcess");
 		
-		sendMessage = new ACLMessage(ACLMessage.REQUEST);
-		sendMessage.setProtocol("fipa-request");
-		serviceID = (String) parentProcessor.internalData.get("result");
-		call = SFServiceDesciptionLocation + "GetProcessProcess.owl GetProcessInputServiceID=" + serviceID;
-		sendMessage.setContent(call);
-		sendMessage.setReceiver(new AgentID("SF"));
-
-		RequestInitiatorFactory GPRfactory = new RequestInitiatorFactory("Initiator", template, sendMessage);
+		RequestInitiatorFactory GPRfactory = new RequestInitiatorFactory("Initiator", template, new ACLMessage(ACLMessage.REQUEST));
 		
 		receiveFilter = new ACLMessage(ACLMessage.INFORM);
 		receiveFilter.setHeader("inform", "done");
@@ -357,6 +340,7 @@ public class Client extends CAgent{
 		try {
 			GPRfactory.changeState(R5);
 			GPRfactory.changeState(new FinalState1("F"));
+			GPRfactory.changeState(new GPRSendState("S"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}		
@@ -364,6 +348,65 @@ public class Client extends CAgent{
 		parentFactory.addChild(GPRfactory);
 		this.addFactory(GPRfactory);
 				
+		//SCS activate Call Service
+		SendState1 SCS = new SendState1("SCS");
+		sendTemplate = new ACLMessage(ACLMessage.REQUEST);
+		sendTemplate.setHeader("start", "callService");
+		sendTemplate.setContent("Call Service");
+		sendTemplate.setSender(getAid());
+		sendTemplate.setReceiver(getAid());
+		sendTemplate.setConversationId("C"+sendTemplate.hashCode()+System.currentTimeMillis());
+		SCS.setMessageTemplate(sendTemplate);
+		parentProcessor.registerState(SCS);
+		parentProcessor.addTransition("RGPR1", "SCS");
+		
+		//WCS
+		parentProcessor.registerState(new WaitState("WCS",10000));
+		parentProcessor.addTransition("SCS", "WCS");
+		
+		//RWCS
+		GenericReceiveState RWCS = new GenericReceiveState("RWCS");
+		receiveFilter = new ACLMessage(ACLMessage.INFORM);
+		receiveFilter.setHeader("purpose", "waitMessage");
+		RWCS.setAcceptFilter(receiveFilter);
+		parentProcessor.registerState(RWCS);
+		parentProcessor.addTransition("WCS", "RWCS");
+		parentProcessor.addTransition("RWCS", "WCS");
+		
+		//RCS
+		GenericReceiveState RCS1 = new GenericReceiveState("RCS1");
+		receiveFilter = new ACLMessage(ACLMessage.INFORM);
+		receiveFilter.setHeader("inform", "done");
+		RCS1.setAcceptFilter(receiveFilter);
+		parentProcessor.registerState(RCS1);
+		parentProcessor.addTransition("WCS", "RCS1");
+		
+		//RCS2
+		GenericReceiveState RCS2 = new GenericReceiveState("RCS2");
+		receiveFilter = new ACLMessage(ACLMessage.FAILURE);
+		RCS2.setAcceptFilter(receiveFilter);
+		parentProcessor.registerState(RCS2);
+		parentProcessor.addTransition("WGPR", "RCS2");
+		
+		//Create and attach call service request conversation
+		template = new ACLMessage(ACLMessage.REQUEST);
+		template.setHeader("start", "callService");
+		
+		RequestInitiatorFactory CSfactory = new RequestInitiatorFactory("Initiator", template, new ACLMessage(ACLMessage.REQUEST));
+		
+		receiveFilter = new ACLMessage(ACLMessage.INFORM);
+		receiveFilter.setHeader("inform", "done");
+		R5.setAcceptFilter(receiveFilter);
+		try {
+			CSfactory.changeState(R5);
+			CSfactory.changeState(new FinalState1("F"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}		
+		
+		parentFactory.addChild(CSfactory);
+		this.addFactory(CSfactory);
+		
 		//exception states
 		parentProcessor.registerState(new GenericCancelState());
 		parentProcessor.registerState(new GenericNotAcceptedMessagesState());
@@ -376,8 +419,10 @@ public class Client extends CAgent{
 		parentProcessor.addTransition("RSS2", "F");
 		parentProcessor.addTransition("RGP2", "F");
 		parentProcessor.addTransition("RAR2", "F");
-		parentProcessor.addTransition("RGPR1", "F");
 		parentProcessor.addTransition("RGPR2", "F");
+		parentProcessor.addTransition("RGPR1", "F");
+		//parentProcessor.addTransition("RCS1", "F");
+		//parentProcessor.addTransition("RCS2", "F");
 		
 		//attach factory to agent
 		this.addStartingFactory(parentFactory, parentConversationId);
@@ -437,9 +482,9 @@ public class Client extends CAgent{
 
 				if (arg2.equals("1"))// ha ido bien
 				{
-					myProcessor.getParent().internalData.put("salidaString", arg1);
+					myProcessor.getParent().internalData.put("URLProfile", arg1);
 				} else {
-					myProcessor.getParent().internalData.put("salidaString", arg1);
+					myProcessor.getParent().internalData.put("URLProfile", arg1);
 				}
 
 			}
@@ -490,7 +535,7 @@ public class Client extends CAgent{
 							agentes.put(new AgentID(arg1), arg_aux);
 						}
 					}
-					myProcessor.getParent().internalData.put("agentes", agentes);
+					myProcessor.getParent().internalData.put("agents", agentes);
 				}
 			}
 
@@ -504,11 +549,13 @@ public class Client extends CAgent{
 					// this.sf.addIDSearchService(arg2);
 					// } else {
 					agen = arg1.split(",");
+					ArrayList<String> results = new ArrayList<String>();
 
 					for (String a : agen) {
 						a = a.substring(0, arg1.indexOf(" "));
-						myProcessor.getParent().internalData.put("idSearchService", a);
+						results.add(a);
 					}
+					myProcessor.getParent().internalData.put("results", results);
 				} 
 				else
 					myProcessor.getParent().internalData.put("salidaString", arg1);
@@ -644,5 +691,228 @@ public class Client extends CAgent{
 			return finalMessage;
 		}
 
+	}
+	
+	class GPSendState extends SendState{
+
+		public GPSendState(String n) {
+			super(n);
+		}
+
+		@Override
+		protected ACLMessage run(CProcessor myProcessor, ACLMessage lastReceivedMessage) {
+			
+			ArrayList<String> results = (ArrayList<String>) myProcessor.getParent().internalData.get("results");
+			String serviceID = results.get(0);
+			
+			Configuration c;
+			c = Configuration.getConfiguration();
+			ACLMessage sendMessage = new ACLMessage(ACLMessage.REQUEST);
+			sendMessage.setProtocol("fipa-request");
+			String SFServiceDesciptionLocation = c.getSFServiceDesciptionLocation();
+			String call = SFServiceDesciptionLocation
+			+ "GetProfileProcess.owl GetProfileInputServiceID=" + serviceID;
+			sendMessage.setContent(call);
+			sendMessage.setSender(myProcessor.getMyAgent().getAid());
+			sendMessage.setConversationId(myProcessor.getConversationID());
+			sendMessage.setReceiver(new AgentID("SF"));
+			
+			return sendMessage;
+		}
+
+		@Override
+		protected String getNext(CProcessor myProcessor,
+				ACLMessage lastReceivedMessage) {
+			String next = "";
+			
+			Set<String> transitions = new HashSet<String>();
+			transitions = myProcessor.getTransitionTable().getTransitions(this.getName());
+			Iterator<String> it = transitions.iterator();
+			if (it.hasNext()) {
+		        // Get element
+		        next = it.next();
+		    }
+			System.out.println("Next GP: "+next);
+			return next;
+		}
+	}
+	
+	class AR_2SendState extends SendState{
+
+		public AR_2SendState(String n) {
+			super(n);
+		}
+
+		@Override
+		protected ACLMessage run(CProcessor myProcessor, ACLMessage lastReceivedMessage) {
+			
+			Oracle oracle = null
+			;
+			URL profile;
+		    try {
+		    	profile = new URL((String) myProcessor.getParent().internalData.get("URLProfile"));
+		    	oracle = new Oracle(profile);
+	
+		    } catch (MalformedURLException e) {
+		    	logger.error("ERROR: Profile URL Malformed!");
+		    	e.printStackTrace();
+		    }
+		    
+		    Configuration c;
+		    c = Configuration.getConfiguration();
+			String configuration = c.getOMSServiceDesciptionLocation();
+			String UnitID = "travelagency";
+			String RoleID = oracle.getClientList().get(0);
+		    
+		    String call = configuration + "AcquireRoleProcess.owl RoleID=" + RoleID + " UnitID="
+			+ UnitID;
+		    
+			
+			ACLMessage sendMessage = new ACLMessage(ACLMessage.REQUEST);
+			sendMessage.setProtocol("fipa-request");
+			sendMessage.setContent(call);
+			sendMessage.setReceiver(new AgentID("OMS"));
+			sendMessage.setSender(myProcessor.getMyAgent().getAid());
+			sendMessage.setConversationId(myProcessor.getConversationID());
+					
+			return sendMessage;
+		}
+
+		@Override
+		protected String getNext(CProcessor myProcessor,
+				ACLMessage lastReceivedMessage) {
+			String next = "";
+			
+			Set<String> transitions = new HashSet<String>();
+			transitions = myProcessor.getTransitionTable().getTransitions(this.getName());
+			Iterator<String> it = transitions.iterator();
+			if (it.hasNext()) {
+		        // Get element
+		        next = it.next();
+		    }
+			return next;
+		}
+	}
+	
+	class GPRSendState extends SendState{
+
+		public GPRSendState(String n) {
+			super(n);
+		}
+
+		@Override
+		protected ACLMessage run(CProcessor myProcessor, ACLMessage lastReceivedMessage) {
+			
+			Configuration c;
+			c = Configuration.getConfiguration();
+			
+			ArrayList<String> results = (ArrayList<String>) myProcessor.getParent().internalData.get("results");
+			String serviceID = results.get(0);
+			String SFServiceDesciptionLocation = c.getSFServiceDesciptionLocation();
+			String call = SFServiceDesciptionLocation + "GetProcessProcess.owl GetProcessInputServiceID=" + serviceID;
+			
+			ACLMessage sendMessage = new ACLMessage(ACLMessage.REQUEST);
+			sendMessage.setProtocol("fipa-request");			
+			sendMessage = new ACLMessage(ACLMessage.REQUEST);
+			sendMessage.setProtocol("fipa-request");			
+			sendMessage.setContent(call);
+			sendMessage.setReceiver(new AgentID("SF"));
+			
+			sendMessage.setSender(myProcessor.getMyAgent().getAid());
+			sendMessage.setConversationId(myProcessor.getConversationID());
+					
+			return sendMessage;
+		}
+
+		@Override
+		protected String getNext(CProcessor myProcessor,
+				ACLMessage lastReceivedMessage) {
+			String next = "";
+			
+			Set<String> transitions = new HashSet<String>();
+			transitions = myProcessor.getTransitionTable().getTransitions(this.getName());
+			Iterator<String> it = transitions.iterator();
+			if (it.hasNext()) {
+		        // Get element
+		        next = it.next();
+		    }
+			return next;
+		}
+	}
+	
+	class CSSendState extends SendState{
+
+		public CSSendState(String n) {
+			super(n);
+		}
+
+		@Override
+		protected ACLMessage run(CProcessor myProcessor, ACLMessage lastReceivedMessage) {
+			
+			
+			Hashtable<AgentID, String> agents = (Hashtable<AgentID, String>) myProcessor.getParent().internalData.get("agents");
+			Enumeration<AgentID> agents1 = agents.keys();
+			AgentID agentToSend = agents1.nextElement();
+		    String URLProcess = agents.get(agentToSend);
+		    String URLProfile = (String) myProcessor.getParent().internalData.get("URLProfile");
+			
+		    Oracle oracle;
+			Configuration c;
+			c = Configuration.getConfiguration();
+			ACLMessage sendMessage = new ACLMessage(ACLMessage.REQUEST);
+			sendMessage.setProtocol("fipa-request");
+			
+			ArrayList<String> arg = new ArrayList<String>();
+			
+		    int i = 0;
+		    for (String input : oracle.getInputs()) {
+				switch (i) {	
+				case 0:
+				    System.out.println("Input: " + input);
+				    arg.add("5");
+				    break;
+				case 1:
+				    System.out.println("Input: " + input);
+				    arg.add("Spain");
+				    break;
+				case 2:
+				    System.out.println("Input: " + input);
+				    arg.add("Valencia");
+				    break;
+				}
+				i++;
+		    }
+		    
+		    URL profile;
+			try {
+				profile = new URL(URLProfile);
+			} catch (MalformedURLException e) {
+				logger.error("ERROR: Profile URL Malformed!");
+				e.printStackTrace();
+				return null;
+			}
+			
+			sendMessage.setContent(call);
+			sendMessage.setReceiver(new AgentID("SF"));			
+			sendMessage.setSender(myProcessor.getMyAgent().getAid());
+			sendMessage.setConversationId(myProcessor.getConversationID());
+					
+			return sendMessage;
+		}
+
+		@Override
+		protected String getNext(CProcessor myProcessor,
+				ACLMessage lastReceivedMessage) {
+			String next = "";
+			
+			Set<String> transitions = new HashSet<String>();
+			transitions = myProcessor.getTransitionTable().getTransitions(this.getName());
+			Iterator<String> it = transitions.iterator();
+			if (it.hasNext()) {
+		        // Get element
+		        next = it.next();
+		    }
+			return next;
+		}
 	}
 }
