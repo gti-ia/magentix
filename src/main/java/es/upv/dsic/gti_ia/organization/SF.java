@@ -647,7 +647,7 @@ public class SF extends CAgent {
 		factory.getCProcessor().addTransition("A", "S4");
 		
 		//S5
-		SendState2 S5 = new SendState2("S5");
+		SendState3 S5 = new SendState3("S5");
 		sendTemplate = new ACLMessage(ACLMessage.INFORM);
 		sendTemplate.setHeader("inform", "done");
 		sendTemplate.setSender(getAid());
@@ -875,15 +875,16 @@ public class SF extends CAgent {
 		}
 	}
 	
-	public class SendState2 extends SendState{
+	public class SendState3 extends SendState{
 
-		public SendState2(String n) {
+		public SendState3(String n) {
 			super(n);
 		}
 
 		@Override
 		protected ACLMessage run(CProcessor myProcessor, ACLMessage lastReceivedMessage) {
 			this.messageTemplate.setConversationId(myProcessor.getConversationID());
+			System.out.println("Soy SF");
 			System.out.println("ConID: "+myProcessor.getConversationID());
 			System.out.println("Destino: "+lastReceivedMessage.getSender());
 			System.out.println("Perf: "+messageTemplate.getPerformative());
