@@ -937,9 +937,11 @@ public class OMS extends CAgent {
 		@Override
 		protected ACLMessage run(CProcessor myProcessor, ACLMessage lastReceivedMessage) {
 			this.messageTemplate.setConversationId(myProcessor.getConversationID());
+			System.out.println("Soy OMS");
 			System.out.println("ConID: "+myProcessor.getConversationID());
 			System.out.println("Destino: "+lastReceivedMessage.getSender());
 			System.out.println("Perf: "+messageTemplate.getPerformative());
+			System.out.println("Content: "+lastReceivedMessage.getContent());
 			this.messageTemplate.setReceiver(lastReceivedMessage.getSender());
 			this.messageTemplate.setContent(lastReceivedMessage.getContent());
 			return this.messageTemplate;
