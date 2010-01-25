@@ -1,5 +1,7 @@
 package es.upv.dsic.gti_ia.cAgents;
 
+import java.util.Set;
+
 import es.upv.dsic.gti_ia.core.ACLMessage;
 
 public class RequestInitiatorFactory extends CProcessorFactory{
@@ -106,8 +108,9 @@ public class RequestInitiatorFactory extends CProcessorFactory{
 		if(s.getType() != this.getCProcessor().getState(s.getName()).getType()){
 			throw new Exception("Error: type of the new state and type of the previous state do not match");
 		}
-		else
-			this.getCProcessor().registerState(s);
+		else{
+			this.getCProcessor().states.put(s.getName(), s);
+		}
 	}
 
 }
