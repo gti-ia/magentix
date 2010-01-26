@@ -61,19 +61,23 @@ public class Run {
 	    
 	    
 
+	    Monitor m = new Monitor();
+	    
 	    AgentPayee payeeAgent = new AgentPayee(new AgentID("agentPayee"));
 	    
 	    AgentProvider providerAgent = new AgentProvider(new AgentID("providerAgent"));
 
-	    AgentAnnouncement registerAgent = new AgentAnnouncement(new AgentID("registerAgent"));
-
+	    //AgentAnnouncement registerAgent = new AgentAnnouncement(new AgentID("registerAgent"));
+	    Announcement registerAgent = new Announcement(new AgentID("registerAgent"));
+	    //m.waiting(10 * 1000);
+	    
 	    //AgentClient clientAgent = new AgentClient(new AgentID("clientAgent"));
 	    Client clientAgent = new Client(new AgentID("clientAgent"));
 
 	    registerAgent.start();
 	    payeeAgent.start();
 	    
-	    Monitor m = new Monitor();
+	   
 	    m.waiting(10 * 1000);
 	    providerAgent.start();
 	    m.waiting(10 * 1000);

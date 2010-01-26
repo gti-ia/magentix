@@ -85,14 +85,17 @@ public class Announcement extends CAgent{
 		template = new ACLMessage(ACLMessage.REQUEST);
 		template.setHeader("start", "acquireRole");
 		
-		ACLMessage sendMessage = new ACLMessage(ACLMessage.REQUEST);
-		sendMessage.setProtocol("fipa-request");
-		String RoleID = "member";
-		String UnitID = "virtual";
+		//variables comunes a varias llamadas
 		Configuration c;
 		c = Configuration.getConfiguration();
 		String SFServiceDesciptionLocation = c.getSFServiceDesciptionLocation();
 		String configuration = c.getOMSServiceDesciptionLocation();
+		
+		//mensaje que se enviara durante el send del request
+		ACLMessage sendMessage = new ACLMessage(ACLMessage.REQUEST);
+		sendMessage.setProtocol("fipa-request");
+		String RoleID = "member";
+		String UnitID = "virtual";
 		String call = configuration + "AcquireRoleProcess.owl RoleID=" + RoleID + " UnitID="+ UnitID;
 		sendMessage.setContent(call);
 		sendMessage.setReceiver(new AgentID("OMS"));
@@ -152,8 +155,9 @@ public class Announcement extends CAgent{
 		
 		//Create and attach acquire role request conversation
 		template = new ACLMessage(ACLMessage.REQUEST);
-		template.setHeader("start", "acquireRole");
+		template.setHeader("start", "acquireRole_2");
 		
+		//mensaje que se enviara durante el send del request
 		sendMessage = new ACLMessage(ACLMessage.REQUEST);
 		sendMessage.setProtocol("fipa-request");
 		RoleID = "provider";
@@ -216,7 +220,7 @@ public class Announcement extends CAgent{
 		
 		//Create and attach get profile request conversation
 		template = new ACLMessage(ACLMessage.REQUEST);
-		template.setHeader("start", "registerPRofile");
+		template.setHeader("start", "registerProfile");
 		
 		ProfileDescription profile = new ProfileDescription(
 			    "http://localhost:8080/SearchCheapHotel/owl/owls/SearchCheapHotelProfile.owl",
