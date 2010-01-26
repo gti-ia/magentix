@@ -394,12 +394,16 @@ public class Client extends CAgent{
 		
 		RequestInitiatorFactory CSfactory = new RequestInitiatorFactory("Initiator", template, new ACLMessage(ACLMessage.REQUEST));
 		
+		CSReceiveState R5CS = new CSReceiveState("R5");
 		receiveFilter = new ACLMessage(ACLMessage.INFORM);
 		receiveFilter.setHeader("inform", "done");
-		R5.setAcceptFilter(receiveFilter);
+		R5CS.setAcceptFilter(receiveFilter);
+		
+		CSSendState CSS = new CSSendState("S");
 		try {
-			CSfactory.changeState(R5);
+			CSfactory.changeState(R5CS);
 			CSfactory.changeState(new FinalState1("F"));
+			CSfactory.changeState(CSS);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}		
@@ -420,9 +424,8 @@ public class Client extends CAgent{
 		parentProcessor.addTransition("RGP2", "F");
 		parentProcessor.addTransition("RAR2", "F");
 		parentProcessor.addTransition("RGPR2", "F");
-		parentProcessor.addTransition("RGPR1", "F");
-		//parentProcessor.addTransition("RCS1", "F");
-		//parentProcessor.addTransition("RCS2", "F");
+		parentProcessor.addTransition("RCS1", "F");
+		parentProcessor.addTransition("RCS2", "F");
 		
 		//attach factory to agent
 		this.addStartingFactory(parentFactory, parentConversationId);
@@ -601,43 +604,6 @@ public class Client extends CAgent{
 				myProcessor.getParent().internalData.put("salidaString", arg2);
 			}
 
-			// si ejecutamos un servicio generico
-			/*boolean isgenericService = false;
-			if (isgenericService) {
-
-				// sino no es un servicio del oms o del sf, segun los outputs
-				// sacamos los resultados.
-				String sub = msg.getContent().substring(
-						msg.getContent().indexOf("=") + 1);
-				String[] aux = sub.split(",");
-
-				for (String output : oracle.getOutputs()) {
-					for (int i = 0; i < aux.length; i++) {
-						String a = aux[i];
-
-						if (i != (aux.length - 1))// menos el ultimo
-						{
-							if (a.substring(a.indexOf("#") + 1, a.indexOf("="))
-									.equals(output)) {
-								this.list.put(output, a
-										.substring(a.indexOf("=") + 1));
-							}
-						} else {
-							if (a.substring(a.indexOf("#") + 1, a.indexOf("="))
-									.equals(output)) {
-								this.list.put(output, a.substring(
-										a.indexOf("=") + 1, (a.length() - 1)));
-
-							}
-
-						}
-					}
-				}
-
-			}*/
-			
-			
-			
 			Set<String> transitions = new HashSet<String>();
 			transitions = myProcessor.getTransitionTable().getTransitions(this.getName());
 			Iterator<String> it = transitions.iterator();
@@ -847,23 +813,25 @@ public class Client extends CAgent{
 		}
 
 		@Override
-		protected ACLMessage run(CProcessor myProcessor, ACLMessage lastReceivedMessage) {
+		protected ACLMessage run(CProcessor myProcessor, ACLMessage lastReceivedMessage) {			
 			
-			
-			Hashtable<AgentID, String> agents = (Hashtable<AgentID, String>) myProcessor.getParent().internalData.get("agents");
-			Enumeration<AgentID> agents1 = agents.keys();
-			AgentID agentToSend = agents1.nextElement();
-		    String URLProcess = agents.get(agentToSend);
-		    String URLProfile = (String) myProcessor.getParent().internalData.get("URLProfile");
-			
-		    Oracle oracle;
+			Oracle oracle;
 			Configuration c;
 			c = Configuration.getConfiguration();
-			ACLMessage sendMessage = new ACLMessage(ACLMessage.REQUEST);
-			sendMessage.setProtocol("fipa-request");
-			
+					
 			ArrayList<String> arg = new ArrayList<String>();
+					    
+		    URL profile;
+			try {
+				profile = new URL((String) myProcessor.getParent().internalData.get("URLProfile"));
+				oracle = new Oracle(profile);
+			} catch (MalformedURLException e) {
+				logger.error("ERROR: Profile URL Malformed!");
+				e.printStackTrace();
+				return null;
+			}
 			
+
 		    int i = 0;
 		    for (String input : oracle.getInputs()) {
 				switch (i) {	
@@ -881,19 +849,35 @@ public class Client extends CAgent{
 				    break;
 				}
 				i++;
-		    }
+		    }		   	
+			
+			Hashtable<AgentID, String> agents = (Hashtable<AgentID, String>) myProcessor.getParent().internalData.get("agents");
+			Enumeration<AgentID> agents1 = agents.keys();
+			AgentID agentToSend = agents1.nextElement();
+		    String URLProcess = agents.get(agentToSend);
+		    String URLProfile = (String) myProcessor.getParent().internalData.get("URLProfile");
 		    
-		    URL profile;
-			try {
-				profile = new URL(URLProfile);
-			} catch (MalformedURLException e) {
-				logger.error("ERROR: Profile URL Malformed!");
-				e.printStackTrace();
-				return null;
+		    // Get inputs
+			ArrayList<String> inputs = oracle.getInputs();
+
+			// Build call arguments
+			String arguments = "";
+			i = 0;
+			for (String s : inputs) {
+				if (i <arg.size())
+					arguments = arguments + " " + s + "=" + arg.get(i);
+				i++;
 			}
 			
+			// build the message to service provider
+			String call = URLProcess + arguments;
+			
+			System.out.println("Contenido ultimo mensaje: "+call);
+			
+		    ACLMessage sendMessage = new ACLMessage(ACLMessage.REQUEST);
+			sendMessage.setProtocol("fipa-request");
 			sendMessage.setContent(call);
-			sendMessage.setReceiver(new AgentID("SF"));			
+			sendMessage.setReceiver(agentToSend);			
 			sendMessage.setSender(myProcessor.getMyAgent().getAid());
 			sendMessage.setConversationId(myProcessor.getConversationID());
 					
@@ -914,5 +898,77 @@ public class Client extends CAgent{
 		    }
 			return next;
 		}
+	}
+	
+	class CSReceiveState extends ReceiveState{
+
+		public CSReceiveState(String n) {
+			super(n);
+			// TODO Auto-generated constructor stub
+		}
+
+		@Override
+		protected String run(CProcessor myProcessor, ACLMessage msg) {
+			String next = "";
+			Oracle oracle;
+			
+			URL profile;
+			try {
+				profile = new URL((String) myProcessor.getParent().internalData.get("URLProfile"));
+				oracle = new Oracle(profile);
+			} catch (MalformedURLException e) {
+				logger.error("ERROR: Profile URL Malformed!");
+				e.printStackTrace();
+				return null;
+			}
+			
+			Hashtable<String, String> list = new Hashtable<String, String>();
+			// si ejecutamos un servicio generico
+			// sino no es un servicio del oms o del sf, segun los outputs
+			// sacamos los resultados.
+			String sub = msg.getContent().substring(
+					msg.getContent().indexOf("=") + 1);
+			String[] aux = sub.split(",");
+
+			for (String output : oracle.getOutputs()) {
+				for (int i = 0; i < aux.length; i++) {
+					String a = aux[i];
+
+					if (i != (aux.length - 1))// menos el ultimo
+					{
+						if (a.substring(a.indexOf("#") + 1, a.indexOf("="))
+								.equals(output)) {
+							list.put(output, a
+									.substring(a.indexOf("=") + 1));
+						}
+					} else {
+						if (a.substring(a.indexOf("#") + 1, a.indexOf("="))
+								.equals(output)) {
+							list.put(output, a.substring(
+									a.indexOf("=") + 1, (a.length() - 1)));
+						}
+					}
+				}
+			}
+			
+			myProcessor.getParent().internalData.put("list", list);
+			
+			Enumeration<String> e = list.keys();
+				
+			while (e.hasMoreElements()) {
+				String key = e.nextElement();
+				System.out.println(" " + key + " = " + list.get(key));
+			}			
+			
+			Set<String> transitions = new HashSet<String>();
+			transitions = myProcessor.getTransitionTable().getTransitions(this.getName());
+			Iterator<String> it = transitions.iterator();
+			if (it.hasNext()) {
+		        // Get element
+		        next = it.next();
+		    }
+			return next;
+		}
+		
 	}
 }
