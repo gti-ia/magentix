@@ -58,82 +58,83 @@ public class AgentProvider extends QueueAgent {
 
     public void escenario3() {
 
-	try {
-
-	    results = sfProxy.searchService(this, "SearchCheapHotel");
-
-	    if (results.size() == 0) {
-		System.out.println("no existen profiles similares al SearchCheapHotel");
-	    } else {
-		// cogemos el primero por ejemplo
-		String URLProfile = sfProxy.getProfile(this, results.get(0));
-
-		URL profile;
 		try {
-		    profile = new URL(URLProfile);
-		    oracle = new Oracle(profile);
-
-		} catch (MalformedURLException e) {
-		    logger.error("ERROR: Profile URL Malformed!");
-		    e.printStackTrace();
-		}
-
 	
-		omsProxy.acquireRole(this, oracle.getProviderList().get(0), "travelagency");
-
-	    }
-
-	} catch (Exception e) {
-	    logger.error(e.getMessage());
-	}
+		    results = sfProxy.searchService(this, "SearchCheapHotel");
+	
+		    if (results.size() == 0) {
+			System.out.println("no existen profiles similares al SearchCheapHotel");
+		    } else {
+			// cogemos el primero por ejemplo
+			String URLProfile = sfProxy.getProfile(this, results.get(0));
+	
+			URL profile;
+			try {
+			    profile = new URL(URLProfile);
+			    oracle = new Oracle(profile);
+	
+			} catch (MalformedURLException e) {
+			    logger.error("ERROR: Profile URL Malformed!");
+			    e.printStackTrace();
+			}
+	
+		
+			omsProxy.acquireRole(this, oracle.getProviderList().get(0), "travelagency");
+	
+		    }
+	
+		} catch (Exception e) {
+		    logger.error(e.getMessage());
+		}
     }
 
     public void escenario4() {
-	try {
-
-	    processDescription.setProfileID(results.get(0));
-
-	    sfProxy.registerProcess(this, processDescription);
-
-	} catch (Exception e) {
-	    logger.error(e.getMessage());
-	}
+		try {
+	
+		    processDescription.setProfileID(results.get(0));
+	
+		    sfProxy.registerProcess(this, processDescription);
+	
+		} catch (Exception e) {
+		    logger.error(e.getMessage());
+		}
 
     }
 
     public void escenario5(){
-	try{
-	omsProxy.acquireRole(this,"payee", "travelagency");
-	
-	}catch(Exception e)
-	{
-	    logger.error(e.getMessage());
+		try{
+		omsProxy.acquireRole(this,"payee", "travelagency");
+		
+		}catch(Exception e)
+		{
+		    logger.error(e.getMessage());
+		}
 	}
-    }
-    public void escenario6() {
-	// Rol responder
-	Responder responder = new Responder(this);
-
-	this.addTask(responder);
+    
+	public void escenario6() {
+		// Rol responder
+		Responder responder = new Responder(this);
+	
+		this.addTask(responder);
     }
 
     public void execute() {
 
-	DOMConfigurator.configure("configuration/loggin.xml");
-	logger.info("Executing, I'm " + getName());
+		DOMConfigurator.configure("configuration/loggin.xml");
+		logger.info("Executing, I'm " + getName());
+		
 	
-
-	this.escenario1();
-	this.escenario3();
-	this.escenario4();
-	this.escenario5();
-	this.escenario6();
-
-	// when we do not have to create more roles we await the expiration
-	// of the other roles
-
-	es.upv.dsic.gti_ia.architecture.Monitor mon = new es.upv.dsic.gti_ia.architecture.Monitor();
-	mon.waiting();
+		this.escenario1();
+		this.escenario3();
+		this.escenario4();
+		this.escenario5();
+		this.escenario6();
+	
+		// when we do not have to create more roles we await the expiration
+		// of the other roles
+	
+		es.upv.dsic.gti_ia.architecture.Monitor mon = new es.upv.dsic.gti_ia.architecture.Monitor();
+		mon.waiting();
 
     }
 
