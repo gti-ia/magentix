@@ -157,8 +157,7 @@ public class SFProxy {
 
 		// build the message to service provider
 		String call = URLProcess + arguments;
-		System.out.println("Contenido ultimo mensaje: "+call);
-
+		
 		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
 		requestMsg.setSender(agent.getAid());
 		requestMsg.setContent(call);
