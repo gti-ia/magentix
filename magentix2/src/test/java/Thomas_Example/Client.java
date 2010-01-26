@@ -422,7 +422,7 @@ public class Client extends CAgent{
 		parentProcessor.addTransition("RAR2", "F");
 		parentProcessor.addTransition("RSS2", "F");
 		parentProcessor.addTransition("RGP2", "F");
-		parentProcessor.addTransition("RAR2", "F");
+		parentProcessor.addTransition("RAR2_2", "F");
 		parentProcessor.addTransition("RGPR2", "F");
 		parentProcessor.addTransition("RCS1", "F");
 		parentProcessor.addTransition("RCS2", "F");
