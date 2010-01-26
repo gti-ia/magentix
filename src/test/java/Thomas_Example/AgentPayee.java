@@ -20,11 +20,11 @@ public class AgentPayee extends QueueAgent {
     
     
     public void execute(){
-	DOMConfigurator.configure("configuration/loggin.xml");
-	logger.info("Executing, I'm " + getName());
-	
-	
-	this.escenario2();
+		DOMConfigurator.configure("configuration/loggin.xml");
+		logger.info("Executing, I'm " + getName());
+		
+		
+		this.escenario2();
 	
     }
 	
