@@ -63,7 +63,8 @@ public class Run {
 
 	    Monitor m = new Monitor();
 	    
-	    AgentPayee payeeAgent = new AgentPayee(new AgentID("agentPayee"));
+	    //AgentPayee payeeAgent = new AgentPayee(new AgentID("agentPayee"));
+	    Payee payeeAgent = new Payee(new AgentID("agentPayee"));
 	    
 	    AgentProvider providerAgent = new AgentProvider(new AgentID("providerAgent"));
 
