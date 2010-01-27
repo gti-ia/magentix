@@ -140,6 +140,8 @@ public class RequestResponderFactory extends CProcessorFactory{
 			this.messageTemplate.setReceiver(lastReceivedMessage.getSender());
 			this.messageTemplate.setSender(myProcessor.getMyAgent().getAid());
 			this.messageTemplate.setConversationId(myProcessor.getConversationID());
+			if(myProcessor.internalData.get("outmsg") != null)
+				this.messageTemplate.setContent(((ACLMessage) myProcessor.internalData.get("outmsg")).getContent());
 			return this.messageTemplate;
 		}
 		
