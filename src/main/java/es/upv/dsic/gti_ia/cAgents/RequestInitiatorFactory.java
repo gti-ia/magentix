@@ -1,7 +1,5 @@
 package es.upv.dsic.gti_ia.cAgents;
 
-import java.util.Set;
-
 import es.upv.dsic.gti_ia.core.ACLMessage;
 
 public class RequestInitiatorFactory extends CProcessorFactory{
