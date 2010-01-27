@@ -17,7 +17,6 @@ import java.util.*;
 
 import es.upv.dsic.gti_ia.architecture.FIPARequestResponder;
 import es.upv.dsic.gti_ia.architecture.MessageTemplate;
-import es.upv.dsic.gti_ia.architecture.Monitor;
 import es.upv.dsic.gti_ia.architecture.FIPANames.InteractionProtocol;
 import es.upv.dsic.gti_ia.cAgents.*;
 import es.upv.dsic.gti_ia.core.ACLMessage;
@@ -52,8 +51,7 @@ public class OMS extends CAgent {
 	 	
 		static Logger logger = Logger.getLogger(OMS.class);
 		
-	 	private Monitor mon  = new Monitor();
-	// create a kb
+	 	// create a kb
 		OWLKnowledgeBase kb = OWLFactory.createKB();
 		OWLKnowledgeBase kbaux = OWLFactory.createKB();
 		
