@@ -71,7 +71,7 @@ public class Run {
 	    
 	    //AgentAnnouncement registerAgent = new AgentAnnouncement(new AgentID("registerAgent"));
 	    Announcement registerAgent = new Announcement(new AgentID("registerAgent"));
-	    //m.waiting(10 * 1000);
+	    
 	    
 	    //AgentClient clientAgent = new AgentClient(new AgentID("clientAgent"));
 	    Client clientAgent = new Client(new AgentID("clientAgent"));
@@ -82,7 +82,7 @@ public class Run {
 	   
 	    m.waiting(10 * 1000);
 	    providerAgent.start();
-	    m.waiting(10 * 1000);
+	    m.waiting(5000);
 	    clientAgent.start();
 	    
 
