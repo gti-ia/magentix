@@ -3,12 +3,17 @@ package Thomas_Example;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.mindswap.owls.OWLSFactory;
+import org.mindswap.owls.process.Process;
+import org.mindswap.owls.process.execution.ProcessExecutionEngine;
+import org.mindswap.query.ValueMap;
+
+import es.upv.dsic.gti_ia.cAgents.ActionState;
 import es.upv.dsic.gti_ia.cAgents.CAgent;
 import es.upv.dsic.gti_ia.cAgents.CProcessor;
 import es.upv.dsic.gti_ia.cAgents.CProcessorFactory;
@@ -22,6 +27,7 @@ import es.upv.dsic.gti_ia.cAgents.GenericSendingErrorsState;
 import es.upv.dsic.gti_ia.cAgents.GenericTerminatedFatherState;
 import es.upv.dsic.gti_ia.cAgents.ReceiveState;
 import es.upv.dsic.gti_ia.cAgents.RequestInitiatorFactory;
+import es.upv.dsic.gti_ia.cAgents.RequestResponderFactory;
 import es.upv.dsic.gti_ia.cAgents.SendState;
 import es.upv.dsic.gti_ia.cAgents.WaitState;
 import es.upv.dsic.gti_ia.core.ACLMessage;
@@ -54,7 +60,7 @@ public class Provider extends CAgent{
 	@Override
 	protected void setFactories() {
 		String parentConversationId = "C"+this.hashCode()+System.currentTimeMillis();
-		ACLMessage template = new ACLMessage(ACLMessage.REQUEST); //the template has no use in this example
+		ACLMessage template = new ACLMessage(ACLMessage.NOT_UNDERSTOOD); //the template has no use in this example
 		CProcessorFactory parentFactory = new CProcessorFactory("parentFactory", template, 1);
 		CProcessor parentProcessor = parentFactory.getCProcessor();
 		
@@ -300,7 +306,7 @@ public class Provider extends CAgent{
 		template = new ACLMessage(ACLMessage.REQUEST);
 		template.setHeader("start", "acquireRole_2");
 		
-		RequestInitiatorFactory ARfactory_2 = new RequestInitiatorFactory("Initiator", template, new ACLMessage(ACLMessage.REQUEST));
+		RequestInitiatorFactory ARfactory_2 = new RequestInitiatorFactory("ARfactory_2", template, new ACLMessage(ACLMessage.REQUEST));
 		
 		try {
 			ARfactory_2.changeState(new FinalState1("F"));
@@ -312,129 +318,130 @@ public class Provider extends CAgent{
 		parentFactory.addChild(ARfactory_2);
 		this.addFactory(ARfactory_2);
 		
-		//SGPR activate Get Process
-		SendState1 SGPR = new SendState1("SGPR");
+		//SRP activate Register Process
+		SendState1 SRP = new SendState1("SRP");
 		sendTemplate = new ACLMessage(ACLMessage.REQUEST);
-		sendTemplate.setHeader("start", "getProcess");
-		sendTemplate.setContent("Get Process");
+		sendTemplate.setHeader("start", "registerProcess");
+		sendTemplate.setContent("Register Process");
 		sendTemplate.setSender(getAid());
 		sendTemplate.setReceiver(getAid());
 		sendTemplate.setConversationId("C"+sendTemplate.hashCode()+System.currentTimeMillis());
-		SGPR.setMessageTemplate(sendTemplate);
-		parentProcessor.registerState(SGPR);
-		parentProcessor.addTransition("RAR1_2", "SGPR");
+		SRP.setMessageTemplate(sendTemplate);
+		parentProcessor.registerState(SRP);
+		parentProcessor.addTransition("RAR1_2", "SRP");
 		
-		//WGPR
-		parentProcessor.registerState(new WaitState("WGPR",10000));
-		parentProcessor.addTransition("SGPR", "WGPR");
+		//WRP
+		parentProcessor.registerState(new WaitState("WRP",10000));
+		parentProcessor.addTransition("SRP", "WRP");
 		
-		//RWGPR
-		GenericReceiveState RWGPR = new GenericReceiveState("RWGPR");
+		//RWRP
+		GenericReceiveState RWRP = new GenericReceiveState("RWRP");
 		receiveFilter = new ACLMessage(ACLMessage.INFORM);
 		receiveFilter.setHeader("purpose", "waitMessage");
-		RWGPR.setAcceptFilter(receiveFilter);
-		parentProcessor.registerState(RWGPR);
-		parentProcessor.addTransition("WGPR", "RWGPR");
-		parentProcessor.addTransition("RWGPR", "WGPR");
+		RWRP.setAcceptFilter(receiveFilter);
+		parentProcessor.registerState(RWRP);
+		parentProcessor.addTransition("WRP", "RWRP");
+		parentProcessor.addTransition("RWRP", "WRP");
 		
-		//RGPR1
-		GenericReceiveState RGPR1 = new GenericReceiveState("RGPR1");
+		//RRP1
+		GenericReceiveState RRP1 = new GenericReceiveState("RRP1");
 		receiveFilter = new ACLMessage(ACLMessage.INFORM);
 		receiveFilter.setHeader("inform", "done");
-		RGPR1.setAcceptFilter(receiveFilter);
-		parentProcessor.registerState(RGPR1);
-		parentProcessor.addTransition("WGPR", "RGPR1");
+		RRP1.setAcceptFilter(receiveFilter);
+		parentProcessor.registerState(RRP1);
+		parentProcessor.addTransition("WRP", "RRP1");
 		
-		//RGPR2
-		GenericReceiveState RGPR2 = new GenericReceiveState("RGPR2");
+		//RRP2
+		GenericReceiveState RRP2 = new GenericReceiveState("RRP2");
 		receiveFilter = new ACLMessage(ACLMessage.FAILURE);
-		RGPR2.setAcceptFilter(receiveFilter);
-		parentProcessor.registerState(RGPR2);
-		parentProcessor.addTransition("WGPR", "RGPR2");
+		RRP2.setAcceptFilter(receiveFilter);
+		parentProcessor.registerState(RRP2);
+		parentProcessor.addTransition("WRP", "RRP2");
 		
 		//Create and attach get profile request conversation
 		template = new ACLMessage(ACLMessage.REQUEST);
-		template.setHeader("start", "getProcess");
+		template.setHeader("start", "registerProcess");
 		
-		RequestInitiatorFactory GPRfactory = new RequestInitiatorFactory("Initiator", template, new ACLMessage(ACLMessage.REQUEST));
+		RequestInitiatorFactory RPfactory = new RequestInitiatorFactory("RPfactory", template, new ACLMessage(ACLMessage.REQUEST));
 		
 		receiveFilter = new ACLMessage(ACLMessage.INFORM);
 		receiveFilter.setHeader("inform", "done");
 		R5.setAcceptFilter(receiveFilter);
 		try {
-			GPRfactory.changeState(R5);
-			GPRfactory.changeState(new FinalState1("F"));
-			GPRfactory.changeState(new GPRSendState("S"));
+			RPfactory.changeState(R5);
+			RPfactory.changeState(new FinalState1("F"));
+			RPfactory.changeState(new RPSendState("S"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}		
 		
-		parentFactory.addChild(GPRfactory);
-		this.addFactory(GPRfactory);
-				
-		//SCS activate Call Service
-		SendState1 SCS = new SendState1("SCS");
+		parentFactory.addChild(RPfactory);
+		this.addFactory(RPfactory);
+		
+		//Third Acquire Role
+		//SAR_3 activate Acquire Role
+		SendState1 SAR_3 = new SendState1("SAR_3");
 		sendTemplate = new ACLMessage(ACLMessage.REQUEST);
-		sendTemplate.setHeader("start", "callService");
-		sendTemplate.setContent("Call Service");
+		sendTemplate.setHeader("start", "acquireRole_3");
+		sendTemplate.setContent("Acquire Role");
 		sendTemplate.setSender(getAid());
 		sendTemplate.setReceiver(getAid());
 		sendTemplate.setConversationId("C"+sendTemplate.hashCode()+System.currentTimeMillis());
-		SCS.setMessageTemplate(sendTemplate);
-		parentProcessor.registerState(SCS);
-		parentProcessor.addTransition("RGPR1", "SCS");
+		SAR_3.setMessageTemplate(sendTemplate);
+		parentProcessor.registerState(SAR_3);
+		parentProcessor.addTransition("RRP1", "SAR_3");
 		
-		//WCS
-		parentProcessor.registerState(new WaitState("WCS",10000));
-		parentProcessor.addTransition("SCS", "WCS");
+		//WAR_3
+		parentProcessor.registerState(new WaitState("WAR_3",10000));
+		parentProcessor.addTransition("SAR_3", "WAR_3");
 		
-		//RWCS
-		GenericReceiveState RWCS = new GenericReceiveState("RWCS");
+		//RWRP
+		GenericReceiveState RWAR_3 = new GenericReceiveState("RWAR_3");
 		receiveFilter = new ACLMessage(ACLMessage.INFORM);
 		receiveFilter.setHeader("purpose", "waitMessage");
-		RWCS.setAcceptFilter(receiveFilter);
-		parentProcessor.registerState(RWCS);
-		parentProcessor.addTransition("WCS", "RWCS");
-		parentProcessor.addTransition("RWCS", "WCS");
+		RWAR_3.setAcceptFilter(receiveFilter);
+		parentProcessor.registerState(RWAR_3);
+		parentProcessor.addTransition("WAR_3", "RWAR_3");
+		parentProcessor.addTransition("RWAR_3", "WAR_3");
 		
-		//RCS
-		GenericReceiveState RCS1 = new GenericReceiveState("RCS1");
+		//RAR1_3
+		GenericReceiveState RAR1_3 = new GenericReceiveState("RAR1_3");
 		receiveFilter = new ACLMessage(ACLMessage.INFORM);
 		receiveFilter.setHeader("inform", "done");
-		RCS1.setAcceptFilter(receiveFilter);
-		parentProcessor.registerState(RCS1);
-		parentProcessor.addTransition("WCS", "RCS1");
+		RAR1_3.setAcceptFilter(receiveFilter);
+		parentProcessor.registerState(RAR1_3);
+		parentProcessor.addTransition("WAR_3", "RAR1_3");
 		
-		//RCS2
-		GenericReceiveState RCS2 = new GenericReceiveState("RCS2");
+		//RAR2_3
+		GenericReceiveState RAR2_3 = new GenericReceiveState("RAR2_3");
 		receiveFilter = new ACLMessage(ACLMessage.FAILURE);
-		RCS2.setAcceptFilter(receiveFilter);
-		parentProcessor.registerState(RCS2);
-		parentProcessor.addTransition("WGPR", "RCS2");
+		RAR2_3.setAcceptFilter(receiveFilter);
+		parentProcessor.registerState(RAR2_3);
+		parentProcessor.addTransition("WAR_3", "RAR2_3");
 		
-		//Create and attach call service request conversation
+		//Create and attach acquire role request conversation
 		template = new ACLMessage(ACLMessage.REQUEST);
-		template.setHeader("start", "callService");
+		template.setHeader("start", "acquireRole_3");
+				
+		sendMessage = new ACLMessage(ACLMessage.REQUEST);
+		sendMessage.setProtocol("fipa-request");
+		RoleID = "payee";
+		UnitID = "travelagency";
+		call = configuration + "AcquireRoleProcess.owl RoleID=" + RoleID + " UnitID="+ UnitID;
+		sendMessage.setContent(call);
+		sendMessage.setReceiver(new AgentID("OMS"));
 		
-		RequestInitiatorFactory CSfactory = new RequestInitiatorFactory("Initiator", template, new ACLMessage(ACLMessage.REQUEST));
+		RequestInitiatorFactory ARfactory_3 = new RequestInitiatorFactory("AcquireRole_3", template, sendMessage);
 		
-		CSReceiveState R5CS = new CSReceiveState("R5");
-		receiveFilter = new ACLMessage(ACLMessage.INFORM);
-		receiveFilter.setHeader("inform", "done");
-		R5CS.setAcceptFilter(receiveFilter);
-		
-		CSSendState CSS = new CSSendState("S");
 		try {
-			CSfactory.changeState(R5CS);
-			CSfactory.changeState(new FinalState1("F"));
-			CSfactory.changeState(CSS);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}		
+			ARfactory_3.changeState(new FinalState1("F"));
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
 		
-		parentFactory.addChild(CSfactory);
-		this.addFactory(CSfactory);
-		
+		parentFactory.addChild(ARfactory_3);
+		this.addFactory(ARfactory_3);
+				
 		//exception states
 		parentProcessor.registerState(new GenericCancelState());
 		parentProcessor.registerState(new GenericNotAcceptedMessagesState());
@@ -447,12 +454,22 @@ public class Provider extends CAgent{
 		parentProcessor.addTransition("RSS2", "F");
 		parentProcessor.addTransition("RGP2", "F");
 		parentProcessor.addTransition("RAR2_2", "F");
-		parentProcessor.addTransition("RGPR2", "F");
-		parentProcessor.addTransition("RCS1", "F");
-		parentProcessor.addTransition("RCS2", "F");
+		parentProcessor.addTransition("RRP2", "F");
+		parentProcessor.addTransition("RAR2_3", "F");
+		parentProcessor.addTransition("RAR1_3", "F");
 		
 		//attach factory to agent
 		this.addStartingFactory(parentFactory, parentConversationId);
+		
+		//responder factory
+		ACLMessage responderTemplate = new ACLMessage(ACLMessage.REQUEST);
+		responderTemplate.setProtocol("fipa-request");
+		ResponderReceiveState responderState = new ResponderReceiveState("R");
+		ACLMessage responderFilter = new ACLMessage(ACLMessage.REQUEST);
+		responderState.setAcceptFilter(responderFilter);
+		CProcessorFactory responderFactory = new RequestResponderFactory("responderFactory", responderTemplate, 1000, 
+				responderState, new ResponderActionState("A"));
+		this.addFactory(responderFactory);
 	}
 	
 	class ReceiveState2 extends ReceiveState{
@@ -752,12 +769,13 @@ public class Provider extends CAgent{
 		    c = Configuration.getConfiguration();
 			String configuration = c.getOMSServiceDesciptionLocation();
 			String UnitID = "travelagency";
-			String RoleID = oracle.getClientList().get(0);
+			//String RoleID = oracle.getClientList().get(0);
+			String RoleID = "provider";
 		    
 		    String call = configuration + "AcquireRoleProcess.owl RoleID=" + RoleID + " UnitID="
 			+ UnitID;
 		    
-			
+			//System.out.println("Llamada acquireRole2: "+call);
 			ACLMessage sendMessage = new ACLMessage(ACLMessage.REQUEST);
 			sendMessage.setProtocol("fipa-request");
 			sendMessage.setContent(call);
@@ -784,26 +802,27 @@ public class Provider extends CAgent{
 		}
 	}
 	
-	class GPRSendState extends SendState{
+	class RPSendState extends SendState{
 
-		public GPRSendState(String n) {
+		public RPSendState(String n) {
 			super(n);
 		}
 
 		@Override
 		protected ACLMessage run(CProcessor myProcessor, ACLMessage lastReceivedMessage) {
 			
-			Configuration c;
-			c = Configuration.getConfiguration();
-			
 			ArrayList<String> results = (ArrayList<String>) myProcessor.getParent().internalData.get("results");
-			String serviceID = results.get(0);
-			String SFServiceDesciptionLocation = c.getSFServiceDesciptionLocation();
-			String call = SFServiceDesciptionLocation + "GetProcessProcess.owl GetProcessInputServiceID=" + serviceID;
+			
+			processDescription.setProfileID(results.get(0));	
+			
+			String call = SFServiceDesciptionLocation
+			+ "RegisterProcessProcess.owl"
+			+ " RegisterProcessInputServiceID="
+			+ processDescription.getProfileID()
+			+ " RegisterProcessInputServiceModel="
+			+ processDescription.getServiceModel();
 			
 			ACLMessage sendMessage = new ACLMessage(ACLMessage.REQUEST);
-			sendMessage.setProtocol("fipa-request");			
-			sendMessage = new ACLMessage(ACLMessage.REQUEST);
 			sendMessage.setProtocol("fipa-request");			
 			sendMessage.setContent(call);
 			sendMessage.setReceiver(new AgentID("SF"));
@@ -830,169 +849,87 @@ public class Provider extends CAgent{
 		}
 	}
 	
-	class CSSendState extends SendState{
+	class ResponderReceiveState extends ReceiveState{
 
-		public CSSendState(String n) {
-			super(n);
-		}
-
-		@Override
-		protected ACLMessage run(CProcessor myProcessor, ACLMessage lastReceivedMessage) {			
-			
-			Oracle oracle;
-			Configuration c;
-			c = Configuration.getConfiguration();
-					
-			ArrayList<String> arg = new ArrayList<String>();
-					    
-		    URL profile;
-			try {
-				profile = new URL((String) myProcessor.getParent().internalData.get("URLProfile"));
-				oracle = new Oracle(profile);
-			} catch (MalformedURLException e) {
-				logger.error("ERROR: Profile URL Malformed!");
-				e.printStackTrace();
-				return null;
-			}
-			
-
-		    int i = 0;
-		    for (String input : oracle.getInputs()) {
-				switch (i) {	
-				case 0:
-				    System.out.println("Input: " + input);
-				    arg.add("5");
-				    break;
-				case 1:
-				    System.out.println("Input: " + input);
-				    arg.add("Spain");
-				    break;
-				case 2:
-				    System.out.println("Input: " + input);
-				    arg.add("Valencia");
-				    break;
-				}
-				i++;
-		    }		   	
-			
-			Hashtable<AgentID, String> agents = (Hashtable<AgentID, String>) myProcessor.getParent().internalData.get("agents");
-			Enumeration<AgentID> agents1 = agents.keys();
-			AgentID agentToSend = agents1.nextElement();
-		    String URLProcess = agents.get(agentToSend);
-		    String URLProfile = (String) myProcessor.getParent().internalData.get("URLProfile");
-		    
-		    // Get inputs
-			ArrayList<String> inputs = oracle.getInputs();
-
-			// Build call arguments
-			String arguments = "";
-			i = 0;
-			for (String s : inputs) {
-				if (i <arg.size())
-					arguments = arguments + " " + s + "=" + arg.get(i);
-				i++;
-			}
-			
-			// build the message to service provider
-			String call = URLProcess + arguments;
-			
-			System.out.println("Contenido ultimo mensaje: "+call);
-			
-		    ACLMessage sendMessage = new ACLMessage(ACLMessage.REQUEST);
-			sendMessage.setProtocol("fipa-request");
-			sendMessage.setContent(call);
-			sendMessage.setReceiver(agentToSend);			
-			sendMessage.setSender(myProcessor.getMyAgent().getAid());
-			sendMessage.setConversationId(myProcessor.getConversationID());
-					
-			return sendMessage;
-		}
-
-		@Override
-		protected String getNext(CProcessor myProcessor,
-				ACLMessage lastReceivedMessage) {
-			String next = "";
-			
-			Set<String> transitions = new HashSet<String>();
-			transitions = myProcessor.getTransitionTable().getTransitions(this.getName());
-			Iterator<String> it = transitions.iterator();
-			if (it.hasNext()) {
-		        // Get element
-		        next = it.next();
-		    }
-			return next;
-		}
-	}
-	
-	class CSReceiveState extends ReceiveState{
-
-		public CSReceiveState(String n) {
+		public ResponderReceiveState(String n) {
 			super(n);
 			// TODO Auto-generated constructor stub
 		}
 
 		@Override
 		protected String run(CProcessor myProcessor, ACLMessage msg) {
-			String next = "";
-			Oracle oracle;
-			
-			URL profile;
-			try {
-				profile = new URL((String) myProcessor.getParent().internalData.get("URLProfile"));
-				oracle = new Oracle(profile);
-			} catch (MalformedURLException e) {
-				logger.error("ERROR: Profile URL Malformed!");
-				e.printStackTrace();
-				return null;
-			}
-			
-			Hashtable<String, String> list = new Hashtable<String, String>();
-			// si ejecutamos un servicio generico
-			// sino no es un servicio del oms o del sf, segun los outputs
-			// sacamos los resultados.
-			String sub = msg.getContent().substring(
-					msg.getContent().indexOf("=") + 1);
-			String[] aux = sub.split(",");
+			String next= "";
+			if (msg != null) {
+		    	try {
+		    		Process aProcess = processDescription.getProcess(msg);
+		    		System.out.println("AGREE");
+		    		myProcessor.internalData.put("inmsg", msg);
+		    		next = "S3";
+		    	} catch (Exception e) {
+		    		System.out.println("EXCEPTION");
+		    		System.out.println(e);
+		    		next = "S2";
+		    	}
 
-			for (String output : oracle.getOutputs()) {
-				for (int i = 0; i < aux.length; i++) {
-					String a = aux[i];
-
-					if (i != (aux.length - 1))// menos el ultimo
-					{
-						if (a.substring(a.indexOf("#") + 1, a.indexOf("="))
-								.equals(output)) {
-							list.put(output, a
-									.substring(a.indexOf("=") + 1));
-						}
-					} else {
-						if (a.substring(a.indexOf("#") + 1, a.indexOf("="))
-								.equals(output)) {
-							list.put(output, a.substring(
-									a.indexOf("=") + 1, (a.length() - 1)));
-						}
-					}
-				}
-			}
-			
-			myProcessor.getParent().internalData.put("list", list);
-			
-			Enumeration<String> e = list.keys();
-				
-			while (e.hasMoreElements()) {
-				String key = e.nextElement();
-				System.out.println(" " + key + " = " + list.get(key));
-			}			
-			
-			Set<String> transitions = new HashSet<String>();
-			transitions = myProcessor.getTransitionTable().getTransitions(this.getName());
-			Iterator<String> it = transitions.iterator();
-			if (it.hasNext()) {
-		        // Get element
-		        next = it.next();
+		    } else {
+		    	System.out.println("NOTUNDERSTOOD");
+		    	next = "S1";
 		    }
-			return next;
+		    return next;
+		}	
+	}
+	
+	class ResponderActionState extends ActionState{
+
+		public ResponderActionState(String n) {
+			super(n);
+			// TODO Auto-generated constructor stub
 		}
-		
+
+		@Override
+		protected String run(CProcessor myProcessor) {
+
+			String next = "";
+		    ACLMessage inmsg = (ACLMessage) myProcessor.internalData.get("inmsg");
+		    ACLMessage msg = inmsg.createReply();		
+		    
+		    // create an execution engine
+		    ProcessExecutionEngine exec = OWLSFactory.createExecutionEngine();
+		    
+		    try {
+				Process aProcess = processDescription.getProcess(inmsg);
+	
+				
+				// initialize the input values to be empty
+				ValueMap values = new ValueMap();
+				
+				values = processDescription.getServiceRequestValues(inmsg);
+				
+				
+				System.out.println("[Provider]Executing... " + values.getValues().toString());
+				values = exec.execute(aProcess, values);
+	
+				System.out.println("[Provider]Values obtained... :" + values.toString());
+	
+				System.out.println("[Provider]Creating inform message to send...");
+	
+				msg.setPerformative(ACLMessage.INFORM);
+	
+				
+				msg.setContent(aProcess.getLocalName() + "=" + values.toString());
+				System.out.println("[Provider]Before set message content..."+msg.getContent());
+				myProcessor.internalData.put("outmsg", msg);
+				next = "S5";
+
+		    } catch (Exception e) {
+
+				System.out.println("EXCEPTION");
+				System.out.println(e);
+				e.printStackTrace();
+				next = "S4";
+		    }
+		    return next;
+		} // end prepareResultNotification
 	}
 }
+
