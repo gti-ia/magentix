@@ -66,8 +66,9 @@ public class Run {
 	    //AgentPayee payeeAgent = new AgentPayee(new AgentID("agentPayee"));
 	    Payee payeeAgent = new Payee(new AgentID("agentPayee"));
 	    
-	    AgentProvider providerAgent = new AgentProvider(new AgentID("providerAgent"));
-
+	    //AgentProvider providerAgent = new AgentProvider(new AgentID("providerAgent"));
+	    Provider providerAgent = new Provider(new AgentID("providerAgent"));
+	    
 	    //AgentAnnouncement registerAgent = new AgentAnnouncement(new AgentID("registerAgent"));
 	    Announcement registerAgent = new Announcement(new AgentID("registerAgent"));
 	    //m.waiting(10 * 1000);

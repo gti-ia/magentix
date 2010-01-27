@@ -47,11 +47,12 @@ public class AgentProvider extends QueueAgent {
 
     public void escenario1() {
 
-	try {
-	    omsProxy.acquireRole(this, "member", "virtual");
-	} catch (Exception e) {
-	    logger.error(e.getMessage());
-	}
+		try {
+		    omsProxy.acquireRole(this, "member", "virtual");
+		} 
+		catch (Exception e) {
+		    logger.error(e.getMessage());
+		}
     }
 
 
@@ -63,23 +64,23 @@ public class AgentProvider extends QueueAgent {
 		    results = sfProxy.searchService(this, "SearchCheapHotel");
 	
 		    if (results.size() == 0) {
-			System.out.println("no existen profiles similares al SearchCheapHotel");
-		    } else {
-			// cogemos el primero por ejemplo
-			String URLProfile = sfProxy.getProfile(this, results.get(0));
-	
-			URL profile;
-			try {
-			    profile = new URL(URLProfile);
-			    oracle = new Oracle(profile);
-	
-			} catch (MalformedURLException e) {
-			    logger.error("ERROR: Profile URL Malformed!");
-			    e.printStackTrace();
-			}
-	
+		    	System.out.println("no existen profiles similares al SearchCheapHotel");
+		    } 
+		    else {
+				// cogemos el primero por ejemplo
+				String URLProfile = sfProxy.getProfile(this, results.get(0));
 		
-			omsProxy.acquireRole(this, oracle.getProviderList().get(0), "travelagency");
+				URL profile;
+				try {
+				    profile = new URL(URLProfile);
+				    oracle = new Oracle(profile);
+		
+				} catch (MalformedURLException e) {
+				    logger.error("ERROR: Profile URL Malformed!");
+				    e.printStackTrace();
+				}		
+				System.out.println("Llamada acquireRole2: "+oracle.getProviderList().get(0));
+				omsProxy.acquireRole(this, oracle.getProviderList().get(0), "travelagency");
 	
 		    }
 	
