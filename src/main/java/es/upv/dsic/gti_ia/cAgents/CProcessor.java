@@ -173,7 +173,7 @@ public class CProcessor implements Runnable, Cloneable{
 						//TODO :a consultar, de moment, si un missatge es de tipo start, messagequeue.remove, si no peek
 						ACLMessage peekMessage = messageQueue.peek();						
 						BeginState beginState = (BeginState) states.get(currentState);
-						if(peekMessage.getHeaderValue("start") != ""){
+						if(peekMessage.getHeaderValue("start") != null && peekMessage.getHeaderValue("start") != ""){
 							currentState = beginState.run(this, messageQueue.remove());
 						}
 						else{
