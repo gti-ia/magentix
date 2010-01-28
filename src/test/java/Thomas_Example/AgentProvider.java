@@ -138,7 +138,7 @@ public class AgentProvider extends QueueAgent {
     }
 
     /**
-     * Manages the messages for the SF services
+     * Manages the messages for the  agent provider services
      */
     public class Responder extends FIPARequestResponder {
 
@@ -152,7 +152,7 @@ public class AgentProvider extends QueueAgent {
 	/**
 	 * Receives the messages and takes the message content. Analyzes the
 	 * message content and gets the service process and input parameters to
-	 * invoke the service. After the service invocation, the SF gets the
+	 * invoke the service. After the service invocation, the agent provider gets the
 	 * answer and sends it to the requester agent.
 	 * 
 	 * @param
@@ -197,7 +197,7 @@ public class AgentProvider extends QueueAgent {
 	/**
 	 * This callback happens if the SF sent a positive reply to the original
 	 * request (i.e. an AGREE) if the SF has agreed to supply the service,
-	 * the SF has to inform the other agent that what they have asked is now
+	 * the agent provider has to inform the other agent that what they have asked is now
 	 * complete (or if it failed)
 	 * 
 	 * @param inmsg
