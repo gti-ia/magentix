@@ -816,9 +816,7 @@ public class Client extends CAgent{
 		protected ACLMessage run(CProcessor myProcessor, ACLMessage lastReceivedMessage) {			
 			
 			Oracle oracle;
-			Configuration c;
-			c = Configuration.getConfiguration();
-					
+								
 			ArrayList<String> arg = new ArrayList<String>();
 					    
 		    URL profile;
@@ -855,8 +853,7 @@ public class Client extends CAgent{
 			Enumeration<AgentID> agents1 = agents.keys();
 			AgentID agentToSend = agents1.nextElement();
 		    String URLProcess = agents.get(agentToSend);
-		    String URLProfile = (String) myProcessor.getParent().internalData.get("URLProfile");
-		    
+		    		    
 		    // Get inputs
 			ArrayList<String> inputs = oracle.getInputs();
 
