@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="SearchService" targetNamespace="http://wtp" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://wtp" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://wtp">
+      <xsd:element name="SearchService">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="ServicePurpose" type="xsd:string"/>
+            <xsd:element name="AgentID" type="xsd:string"/>
+           
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="SearchServiceResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+          	<xsd:element name="return" type="xsd:int"/>
+            <xsd:element name="ServicesList" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="SearchServiceResponse">
+    <wsdl:part name="parameters" element="tns:SearchServiceResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="SearchServiceMessage">
+    <wsdl:part name="parameters" element="tns:SearchService">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="SearchServicePortType">
+    <wsdl:operation name="SearchService">
+      <wsdl:input message="tns:SearchServiceMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:SearchServiceResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="SearchServiceSOAP" type="tns:SearchServicePortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="SearchService">
+      <soap:operation soapAction="http://wtp"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="SearchService">
+    <wsdl:port name="SearchServiceSOAP" binding="tns:SearchServiceSOAP">
+      <soap:address location="http://localhost:8080/sfservices/services/SearchService"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

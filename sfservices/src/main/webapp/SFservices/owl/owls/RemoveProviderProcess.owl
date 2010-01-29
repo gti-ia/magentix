@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+
+<!DOCTYPE uridef [
+  <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#">
+  <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <!ENTITY owl "http://www.w3.org/2002/07/owl#">
+  <!ENTITY service "http://www.daml.org/services/owl-s/1.1/Service.owl#">
+  <!ENTITY profile "http://www.daml.org/services/owl-s/1.1/Profile.owl#">
+  <!ENTITY process "http://www.daml.org/services/owl-s/1.1/Process.owl#">
+  <!ENTITY grounding "http://www.daml.org/services/owl-s/1.1/Grounding.owl#">
+  <!ENTITY xsd "http://www.w3.org/2001/XMLSchema">
+  <!ENTITY mind "http://localhost:8080/sfservices/SFservices/owl/owls/RemoveProviderProcess.owl">
+  <!ENTITY dir "http://localhost:8080/sfservices/services/RemoveProvider?wsdl">
+  <!ENTITY actor "http://www.daml.org/services/owl-s/1.1/ActorDefault.owl#">
+]>
+
+
+<rdf:RDF xmlns:rdf="&rdf;" xmlns:rdfs="&rdfs;" xmlns:owl="&owl;" xmlns:xsd="&xsd;#" 
+   xmlns:service="&service;" xmlns:process="&process;" xmlns:profile="&profile;" xmlns:grounding="&grounding;" xmlns:actor="&actor;"
+   xmlns:mind="&mind;#"      
+   xml:base="http://localhost:8080/sfservices/SFservices/owl/owls/RemoveProviderProcess.owl">
+
+
+<owl:Ontology>
+    <owl:imports rdf:resource="&service;"/>
+    <owl:imports rdf:resource="&profile;"/>
+    <owl:imports rdf:resource="&process;"/>
+    <owl:imports rdf:resource="&grounding;"/> 
+    <owl:imports rdf:resource="&actor;"/>
+</owl:Ontology>
+
+<service:Service rdf:about="http://localhost:8080/sfservices/SFservices/owl/owls/RemoveProviderProfile.owl#RemoveProviderService">
+        <service:presents rdf:resource="http://localhost:8080/sfservices/SFservices/owl/owls/RemoveProviderProfile.owl#RemoveProviderProfile"/>
+      	<service:describedBy rdf:resource="#RemoveProviderProcess"/>
+	<service:supports rdf:resource="#RemoveProviderGrounding"/>
+</service:Service>
+
+
+
+<process:AtomicProcess rdf:ID="RemoveProviderProcess">
+	<service:describes rdf:resource="http://localhost:8080/sfservices/SFservices/owl/owls/RemoveProviderProfile.owl#RemoveProviderService"/>
+     	<process:hasOutput rdf:resource="#RemoveProviderOutputServiceStatus"/>
+     	<process:hasInput rdf:resource="#RemoveProviderInputServiceImplementationID"/>
+	<process:hasInput rdf:resource="#RemoveProviderInputProviderID"/>
+	<process:hasInput rdf:resource="#RemoveProviderInputAgentID"/>
+</process:AtomicProcess>
+
+
+<process:Input rdf:ID="RemoveProviderInputServiceImplementationID">
+     <rdfs:label>InputServiceImplementationID</rdfs:label>
+     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
+</process:Input>
+<process:Input rdf:ID="RemoveProviderInputProviderID">
+     <rdfs:label>InputProviderID</rdfs:label>
+     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
+</process:Input>
+<process:Input rdf:ID="RemoveProviderInputAgentID">
+     <rdfs:label>InputAgentID</rdfs:label>
+     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
+</process:Input>
+<process:Output rdf:ID="RemoveProviderOutputServiceStatus">
+    <rdfs:label>OutputServiceStatus</rdfs:label>
+    <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#integer</process:parameterType>
+</process:Output>         
+
+<grounding:WsdlGrounding rdf:ID="RemoveProviderGrounding">
+	<service:supportedBy rdf:resource="http://localhost:8080/sfservices/SFservices/owl/owls/RemoveProviderProfile.owl#RemoveProviderService"/>
+	<grounding:hasAtomicProcessGrounding rdf:resource="#RemoveProviderWsdlAtomicProcessGrounding"/>
+</grounding:WsdlGrounding>
+
+
+<grounding:WsdlAtomicProcessGrounding rdf:ID="RemoveProviderWsdlAtomicProcessGrounding">
+	<grounding:owlsProcess rdf:resource="#RemoveProviderProcess"/>
+	<grounding:wsdlDocument rdf:datatype="&xsd;anyURI">http://localhost:8080/sfservices/services/RemoveProvider?wsdl</grounding:wsdlDocument>
+	<grounding:wsdlOperation>
+            <grounding:WsdlOperationRef>
+                <grounding:portType rdf:datatype="&xsd;#anyURI">http://localhost:8080/sfservices/services/RemoveProviderOperationsPortType</grounding:portType>
+                <grounding:operation rdf:datatype="&xsd;#anyURI">http://localhost:8080/sfservices/services/RemoveProvider</grounding:operation>
+            </grounding:WsdlOperationRef>
+        </grounding:wsdlOperation>
+
+	<grounding:wsdlInputMessage rdf:datatype="&xsd;anyURI">http://localhost:8080/sfservices/services/RemoveProviderMessage</grounding:wsdlInputMessage>
+        <grounding:wsdlOutputMessage rdf:datatype="&xsd;anyURI">http://localhost:8080/sfservices/services/RemoveProviderResponse</grounding:wsdlOutputMessage>
+       
+	<grounding:wsdlInput>
+                  <grounding:WsdlInputMessageMap>
+                    <grounding:owlsParameter rdf:resource="#RemoveProviderInputServiceImplementationID"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/sfservices/services/ServiceImplementationID</grounding:wsdlMessagePart>
+                  </grounding:WsdlInputMessageMap>
+        </grounding:wsdlInput>
+
+	<grounding:wsdlInput>
+                  <grounding:WsdlInputMessageMap>
+                    <grounding:owlsParameter rdf:resource="#RemoveProviderInputProviderID"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/sfservices/services/ProviderID</grounding:wsdlMessagePart>
+                  </grounding:WsdlInputMessageMap>
+        </grounding:wsdlInput>
+
+<grounding:wsdlInput>
+                  <grounding:WsdlInputMessageMap>
+                    <grounding:owlsParameter rdf:resource="#RemoveProviderInputAgentID"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/sfservices/services/AgentID</grounding:wsdlMessagePart>
+                  </grounding:WsdlInputMessageMap>
+        </grounding:wsdlInput>
+
+       <grounding:wsdlOutput>
+                  <grounding:WsdlOutputMessageMap>
+		    <grounding:owlsParameter rdf:resource="#RemoveProviderOutputServiceStatus"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/sfservices/services/return</grounding:wsdlMessagePart>
+                  </grounding:WsdlOutputMessageMap>
+        </grounding:wsdlOutput>
+</grounding:WsdlAtomicProcessGrounding>
+
+</rdf:RDF>
