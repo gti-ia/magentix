@@ -1,0 +1,94 @@
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>${groupId}</groupId>
+  <artifactId>${artifactId}</artifactId>
+  <packaging>jar</packaging>
+  <version>${version}</version>
+  <name>Servicio Web Thomas</name>
+  <url>http://users.dsic.upv.es/grupos/ia/ia.html</url>
+  	  <!-- *********************************** -->
+  	  <!-- **** CONSTRUCCION DEL PROYECTO **** -->
+      <!-- *********************************** -->
+  <build>
+  	<finalName>${artifactId}</finalName>
+ 
+	<plugins>
+	<!-- Plugin que tiene como entrada un WSDL y genera  un client o servidor del servicio web. -->
+	<!-- http://ws.apache.org/axis2/tools/1_2/maven-plugins/maven-wsdl2code-plugin.html -->
+	     <plugin>
+				<groupId>org.apache.axis2</groupId>
+				<artifactId>axis2-wsdl2code-maven-plugin</artifactId>
+				<version>1.4</version>
+				
+				<configuration>
+				<!-- Nombre del paquete para las funtes java generadas. -->
+					<packageName>
+						wtp
+					</packageName>
+					<!-- Localización del fichero WSDL. -->
+					<wsdlFile>
+						${basedir}/${artifactId}/${artifactId}.wsdl
+					</wsdlFile>
+					<!-- Data binding framework utilizado para generar las fuentes java. -->
+					<databindingName>adb</databindingName>
+					<!-- Si queremos crear las fuentes del lado del servidor. -->
+					<generateServerSide>true</generateServerSide>
+					<!-- Para creare el fichero "services.xml". -->
+					<generateServicesXml>true</generateServicesXml>
+					<!-- 	Mapa de namespace URI para los paquetes. -->
+					<namespaceURIs>
+						<namespaceURI>
+							<uri>http://wtp/</uri>
+							<packageName>wtp</packageName>
+						</namespaceURI>
+					</namespaceURIs>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.1</version>
+
+				<configuration>
+				<!-- Tareas que realizara el plugin al hacer mvn antrun:run,
+				también podemos poner la tarea en alguna fase del ciclo de vida de maven, compie, package ... -->
+				<!-- http://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html -->
+					<tasks>
+					<!-- Copiamos al directorio de fuentes del proyecto omsservices, ya que estamos creando un servicio oms. -->
+						<copy todir="../omsservices/src/main/java">
+						<!-- Copiamos las fuentes generadas con el plugin wsld2code. -->
+							<fileset
+								dir="./target/generated-sources/axis2/wsdl2code/src/">
+								<include name="**/*" />
+								<!-- Siempre y cuando volvamos a crear el mismos servicio deberemos descomentar
+								para que no nos vuelva a copiar la fuente Skeleton y podamos conservar la lógica del servicio. -->
+							<!-- 
+								<exclude
+									name="**/${artifactId}Skeleton.java" />
+									 -->
+
+							</fileset>
+						</copy>
+						<!-- Debido a que aun no existe ningun arquetipo web services axis2 deberemos crear
+						la carpeta services/nombre_del_servico con el servicio y el fichero services.xml -->
+						<mkdir
+							dir="../omsservices/src/main/webapp/WEB-INF/services/${artifactId}/META-INF/" />
+						<copy
+							todir="../omsservices/src/main/webapp/WEB-INF/services/${artifactId}/META-INF/">
+							<fileset
+								dir="./target/generated-sources/axis2/wsdl2code/resources/">
+								<include name="**/*" />
+							</fileset>
+						</copy>
+						<!-- También podemos hacer un clean del proyecto para eliminar los fichero generados por el
+						plugin wsdl2code. -->
+						<delete
+							dir="./target/generated-sources" />
+					</tasks>
+				</configuration>
+			</plugin>
+
+		</plugins>
+	</build>
+
+</project>
