@@ -25,6 +25,10 @@
 <entry key="user">guest</entry>
 <entry key="pass">guest</entry>
 <entry key="ssl">false</entry>
+<entry key="saslMechs">PLAIN</entry>
+<entry key="saslProtocol">AMQP</entry>
+<entry key="saslServerName">localhost</entry>
+
 
 
 <!-- Properties jena -->
