@@ -26,6 +26,10 @@ public class Configuration {
 	private String qpidUser;
 	private String qpidPassword;
 	private String qpidSsl;
+	private String saslMechs;
+	private String saslProtocol;
+	private String saslServerName;
+		
 	private String jenadbURL;
 	private String jenadbType;
 	private String jenadbDriver;
@@ -159,6 +163,31 @@ public class Configuration {
 	}
 	
 	/**
+	 * Qpid sasl Mechs
+	 */
+	public String getqpidsaslMechs()
+	{
+		return this.saslMechs;
+	}
+	
+	/**
+	 * Qpid sasl protocol
+	 */
+	public String getqpidsaslProtocol()
+	{
+		return this.saslProtocol;
+	}
+	
+	/**
+	 * Qpid server name
+	 */
+	public String getqpidServerName()
+	{
+
+		return this.saslServerName;
+	}
+	
+	/**
 	 * Jena database URL
 	 * @return URL
 	 */
@@ -259,6 +288,18 @@ public class Configuration {
 			    else    if (obj.toString().equalsIgnoreCase("ssl"))
 			    {
 			    	this.qpidSsl = properties.getProperty(obj.toString()); 	
+			    }
+			    else    if (obj.toString().equalsIgnoreCase("saslMechs"))
+			    {
+			    	this.saslMechs = properties.getProperty(obj.toString()); 	
+			    }
+			    else    if (obj.toString().equalsIgnoreCase("saslProtocol"))
+			    {
+			    	this.saslProtocol = properties.getProperty(obj.toString()); 	
+			    }
+			    else    if (obj.toString().equalsIgnoreCase("saslServerName"))
+			    {
+			    	this.saslServerName = properties.getProperty(obj.toString()); 	
 			    }
 			    else    if (obj.toString().equalsIgnoreCase("dbURL"))
 			    {

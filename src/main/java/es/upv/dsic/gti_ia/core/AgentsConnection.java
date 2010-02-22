@@ -1,6 +1,7 @@
 package es.upv.dsic.gti_ia.core;
 
 import org.apache.qpid.transport.Connection;
+import org.apache.qpid.transport.ConnectionSettings;
 
 import es.upv.dsic.gti_ia.organization.Configuration;
 
@@ -13,13 +14,25 @@ public class AgentsConnection {
 	private static Configuration c = null;
 
 	/**
-	 * Connects with a Qpid broker taking the input connection parameters from the settings.xml file.
+	 * Connects with a Qpid broker taking the input connection parameters from the Settings.xml file.
 	 * 
 	 */
 	public static void connect() {
 		c =  Configuration.getConfiguration();
 		connection = new Connection();
-		connection.connect(c.getqpidHost(),c.getqpidPort(), c.getqpidVhost(),c.getqpidUser(),c.getqpidPassword(),c.getqpidSSL());
+		
+		ConnectionSettings connectSettings = new ConnectionSettings();
+		connectSettings.setHost(c.getqpidHost());
+		connectSettings.setPort(c.getqpidPort());
+		connectSettings.setVhost(c.getqpidVhost());
+		connectSettings.setUsername(c.getqpidUser());
+		connectSettings.setPassword(c.getqpidPassword());
+		connectSettings.setUseSSL(c.getqpidSSL());
+		connectSettings.setSaslMechs(c.getqpidsaslMechs());
+		connectSettings.setSaslProtocol(c.getqpidsaslProtocol());
+		connectSettings.setSaslServerName(c.getqpidServerName());
+		
+		connection.connect(connectSettings);
 	}
 
 	
