@@ -10,6 +10,7 @@ public class Configuration {
 	
 	
 	
+    
 	public String serverName;
 	public String databaseName;
 	public String userName;
