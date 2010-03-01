@@ -16,13 +16,6 @@ import org.mindswap.query.ValueMap;
 import es.upv.dsic.gti_ia.architecture.*;
 import es.upv.dsic.gti_ia.architecture.FIPANames.InteractionProtocol;
 import es.upv.dsic.gti_ia.cAgents.*;
-import es.upv.dsic.gti_ia.cAgents.CAgent;
-import es.upv.dsic.gti_ia.cAgents.CProcessor;
-import es.upv.dsic.gti_ia.cAgents.CProcessorFactory;
-import es.upv.dsic.gti_ia.cAgents.GenericReceiveState;
-import es.upv.dsic.gti_ia.cAgents.ReceiveState;
-import es.upv.dsic.gti_ia.cAgents.SendState;
-import es.upv.dsic.gti_ia.cAgents.WaitState;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 
@@ -319,7 +312,21 @@ public class SF extends CAgent {
 
 	@Override
 	protected void setFactories() {
+		
 		ACLMessage template = new ACLMessage(ACLMessage.REQUEST);
+
+		//R
+		ReceiveState1 R = new ReceiveState1("R");
+		ACLMessage receiveFilter = new ACLMessage(ACLMessage.REQUEST);
+		R.setAcceptFilter(receiveFilter);
+
+		RequestResponderFactory factory = new RequestResponderFactory("Participant", template, 10, R, new ActionState1("A"));
+
+		//attach factory to agent
+		this.addFactory(factory);
+		
+		
+		/*ACLMessage template = new ACLMessage(ACLMessage.REQUEST);
 		CProcessorFactory factory = new CProcessorFactory("Participant", template, 1);
 		
 		//B
@@ -425,7 +432,7 @@ public class SF extends CAgent {
 		factory.getCProcessor().registerState(new GenericTerminatedFatherState());
 		
 		//attach factory to agent
-		this.addFactory(factory);		
+		this.addFactory(factory);		*/
 	}
 	
 	public class ReceiveState1 extends ReceiveState{
@@ -579,8 +586,10 @@ public class SF extends CAgent {
 				next = "S5";
 
 				logger.info("[SF]Before set message content...");
-				myProcessor.currentMessage.setContent(aProcess.getLocalName() + "="
-						+ values.toString());
+				//myProcessor.currentMessage.setContent(aProcess.getLocalName() + "="+ values.toString());
+				ACLMessage content = new ACLMessage(ACLMessage.UNKNOWN);
+				content.setContent(aProcess.getLocalName() + "="+ values.toString());
+				myProcessor.internalData.put("outmsg", content);
 
 			} catch (Exception e) {
 				next = "S4";

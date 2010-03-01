@@ -15,9 +15,6 @@ package es.upv.dsic.gti_ia.organization;
 import java.net.URI;
 import java.util.*;
 
-import es.upv.dsic.gti_ia.architecture.FIPARequestResponder;
-import es.upv.dsic.gti_ia.architecture.MessageTemplate;
-import es.upv.dsic.gti_ia.architecture.FIPANames.InteractionProtocol;
 import es.upv.dsic.gti_ia.cAgents.*;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
@@ -362,112 +359,16 @@ public class OMS extends CAgent {
 		return this.SFServiceDesciptionLocation;	
     }
     
-   protected void setFactories() {
+	protected void setFactories() {
 		ACLMessage template = new ACLMessage(ACLMessage.REQUEST);
-		CProcessorFactory factory = new CProcessorFactory("Participant", template, 1);
-		
-		//B
-		factory.getCProcessor().registerFirstState(new GenericBeginState("B"));
-		
-		//W
-		factory.getCProcessor().registerState(new WaitState("W",1000000));
-		factory.getCProcessor().addTransition("B", "W");
-		
+
 		//R
 		ReceiveState1 R = new ReceiveState1("R");
 		ACLMessage receiveFilter = new ACLMessage(ACLMessage.REQUEST);
 		R.setAcceptFilter(receiveFilter);
-		factory.getCProcessor().registerState(R);
-		factory.getCProcessor().addTransition("W", "R");
-		
-		//RW
-		GenericReceiveState RW = new GenericReceiveState("RW");
-		receiveFilter = new ACLMessage(ACLMessage.INFORM);
-		receiveFilter.setHeader("purpose", "waitMessage");
-		RW.setAcceptFilter(receiveFilter);
-		factory.getCProcessor().registerState(RW);
-		factory.getCProcessor().addTransition("W", "RW");
-		factory.getCProcessor().addTransition("RW", "W");
-		
-		//S1
-		SendState1 S1 = new SendState1("S1");
-		ACLMessage sendTemplate = new ACLMessage(ACLMessage.NOT_UNDERSTOOD);
-		sendTemplate.setContent("Request message not understood");
-		sendTemplate.setSender(getAid());
-		sendTemplate.setProtocol("fipa-request");
-		S1.setMessageTemplate(sendTemplate);
-		factory.getCProcessor().registerState(S1);
-		factory.getCProcessor().addTransition("R", "S1");
-		
-		//S2
-		SendState1 S2 = new SendState1("S2");
-		sendTemplate = new ACLMessage(ACLMessage.REFUSE);
-		sendTemplate.setContent("Request message refused");
-		sendTemplate.setSender(getAid());
-		sendTemplate.setProtocol("fipa-request");
-		S2.setMessageTemplate(sendTemplate);
-		factory.getCProcessor().registerState(S2);
-		factory.getCProcessor().addTransition("R", "S2");
-		
-		//S3
-		SendState1 S3 = new SendState1("S3");
-		sendTemplate = new ACLMessage(ACLMessage.AGREE);
-		sendTemplate.setContent("=Agree");
-		sendTemplate.setSender(getAid());
-		sendTemplate.setProtocol("fipa-request");
-		S3.setMessageTemplate(sendTemplate);
-		factory.getCProcessor().registerState(S3);
-		factory.getCProcessor().addTransition("R", "S3");
-		
-		//A
-		factory.getCProcessor().registerState(new ActionState1("A"));
-		factory.getCProcessor().addTransition("S3", "A");
-		
-		//S4
-		SendState1 S4 = new SendState1("S4");
-		sendTemplate = new ACLMessage(ACLMessage.FAILURE);
-		sendTemplate.setContent("Failure performing the action");
-		sendTemplate.setSender(getAid());
-		sendTemplate.setProtocol("fipa-request");
-		S4.setMessageTemplate(sendTemplate);
-		factory.getCProcessor().registerState(S4);
-		factory.getCProcessor().addTransition("A", "S4");
-		
-		//S5
-		SendState2 S5 = new SendState2("S5");
-		sendTemplate = new ACLMessage(ACLMessage.INFORM);
-		sendTemplate.setHeader("inform", "done");
-		sendTemplate.setSender(getAid());
-		sendTemplate.setProtocol("fipa-request");
-		S5.setMessageTemplate(sendTemplate);
-		factory.getCProcessor().registerState(S5);
-		factory.getCProcessor().addTransition("A", "S5");
-		
-		//S6
-		SendState1 S6 = new SendState1("S6");
-		sendTemplate = new ACLMessage(ACLMessage.INFORM);
-		sendTemplate.setHeader("inform", "ref");
-		sendTemplate.setContent("Action ref");
-		sendTemplate.setSender(getAid());
-		sendTemplate.setProtocol("fipa-request");
-		S6.setMessageTemplate(sendTemplate);
-		factory.getCProcessor().registerState(S6);
-		factory.getCProcessor().addTransition("A", "S6");
-		
-		//final
-		factory.getCProcessor().registerState(new GenericFinalState("F"));
-		factory.getCProcessor().addTransition("S1", "F");
-		factory.getCProcessor().addTransition("S2", "F");
-		factory.getCProcessor().addTransition("S4", "F");
-		factory.getCProcessor().addTransition("S5", "F");
-		factory.getCProcessor().addTransition("S6", "F");
-		
-		//exception states
-		factory.getCProcessor().registerState(new GenericCancelState());
-		factory.getCProcessor().registerState(new GenericNotAcceptedMessagesState());
-		factory.getCProcessor().registerState(new GenericSendingErrorsState());
-		factory.getCProcessor().registerState(new GenericTerminatedFatherState());
-		
+
+		RequestResponderFactory factory = new RequestResponderFactory("Participant", template, 10, R, new ActionState1("A"));
+
 		//attach factory to agent
 		this.addFactory(factory);
 	}
@@ -611,7 +512,10 @@ public class OMS extends CAgent {
 					logger.info("[OMS]Before set message content...");
 					
 				}
-				myProcessor.currentMessage.setContent(aProcess.getLocalName()+"="+values.toString());
+				//myProcessor.currentMessage.setContent(aProcess.getLocalName()+"="+values.toString());
+				ACLMessage content = new ACLMessage(ACLMessage.UNKNOWN);
+				content.setContent(aProcess.getLocalName()+"="+values.toString());
+				myProcessor.internalData.put("outmsg", content);
 				                        
             }catch(Exception e){
             	if(DEBUG)
@@ -669,7 +573,10 @@ public class OMS extends CAgent {
 			System.out.println("Perf: "+messageTemplate.getPerformative());
 			System.out.println("Content: "+lastReceivedMessage.getContent());
 			this.messageTemplate.setReceiver(lastReceivedMessage.getSender());
-			this.messageTemplate.setContent(lastReceivedMessage.getContent());
+			//this.messageTemplate.setContent(lastReceivedMessage.getContent());
+			if(myProcessor.internalData.get("messageContent") != null){
+				messageTemplate.setContent((String) myProcessor.internalData.get("messageContent"));
+			}
 			return this.messageTemplate;
 		}
 
