@@ -38,6 +38,7 @@ public class RequestResponderFactory extends CProcessorFactory{
 		//S1
 		ReplySendState S1 = new ReplySendState("S1");
 		ACLMessage sendTemplate = new ACLMessage(ACLMessage.NOT_UNDERSTOOD);
+		sendTemplate.setProtocol("fipa-request");
 		sendTemplate.setContent("Request message not understood");
 		S1.setMessageTemplate(sendTemplate);
 		this.getCProcessor().registerState(S1);
@@ -46,6 +47,7 @@ public class RequestResponderFactory extends CProcessorFactory{
 		//S2
 		ReplySendState S2 = new ReplySendState("S2");
 		sendTemplate = new ACLMessage(ACLMessage.REFUSE);
+		sendTemplate.setProtocol("fipa-request");
 		sendTemplate.setContent("Request message refused");
 		S2.setMessageTemplate(sendTemplate);
 		this.getCProcessor().registerState(S2);
@@ -54,6 +56,7 @@ public class RequestResponderFactory extends CProcessorFactory{
 		//S3
 		ReplySendState S3 = new ReplySendState("S3");
 		sendTemplate = new ACLMessage(ACLMessage.AGREE);
+		sendTemplate.setProtocol("fipa-request");
 		sendTemplate.setContent("Request message agree");
 		S3.setMessageTemplate(sendTemplate);
 		this.getCProcessor().registerState(S3);
@@ -67,6 +70,7 @@ public class RequestResponderFactory extends CProcessorFactory{
 		//S4
 		ReplySendState S4 = new ReplySendState("S4");
 		sendTemplate = new ACLMessage(ACLMessage.FAILURE);
+		sendTemplate.setProtocol("fipa-request");
 		sendTemplate.setContent("Failure performing the action");
 		S4.setMessageTemplate(sendTemplate);
 		this.getCProcessor().registerState(S4);
@@ -74,6 +78,7 @@ public class RequestResponderFactory extends CProcessorFactory{
 		
 		//S5
 		ReplySendState S5 = new ReplySendState("S5");
+		sendTemplate.setProtocol("fipa-request");
 		sendTemplate = new ACLMessage(ACLMessage.INFORM);
 		sendTemplate.setHeader("inform", "done");
 		sendTemplate.setContent("Action done");
@@ -84,6 +89,7 @@ public class RequestResponderFactory extends CProcessorFactory{
 		//S6
 		ReplySendState S6 = new ReplySendState("S6");
 		sendTemplate = new ACLMessage(ACLMessage.INFORM);
+		sendTemplate.setProtocol("fipa-request");
 		sendTemplate.setHeader("inform", "ref");
 		sendTemplate.setContent("Action ref");
 		S6.setMessageTemplate(sendTemplate);
