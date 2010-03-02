@@ -82,7 +82,7 @@ public class Run {
 	   
 	    m.waiting(10 * 1000);
 	    providerAgent.start();
-	    m.waiting(5000);
+	    m.waiting(10 * 1000);
 	    clientAgent.start();
 	    
 
