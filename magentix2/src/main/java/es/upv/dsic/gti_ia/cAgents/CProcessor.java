@@ -160,7 +160,7 @@ public class CProcessor implements Runnable, Cloneable{
 			}
 		}
 		
-		//check if current state is Wait or Begin tpye, if not rise exception
+		//check if current state is Wait or Begin type, if not rise exception
 		if(currentStateType != State.BEGIN && currentStateType != State.WAIT){
 			//error
 			System.out.println(this.myAgent.getName()+": Error: starting conversation and currentState different from Wait or Begin");
