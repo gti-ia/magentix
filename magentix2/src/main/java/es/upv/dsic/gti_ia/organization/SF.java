@@ -324,115 +324,6 @@ public class SF extends CAgent {
 
 		//attach factory to agent
 		this.addFactory(factory);
-		
-		
-		/*ACLMessage template = new ACLMessage(ACLMessage.REQUEST);
-		CProcessorFactory factory = new CProcessorFactory("Participant", template, 1);
-		
-		//B
-		factory.getCProcessor().registerFirstState(new GenericBeginState("B"));
-		
-		//W
-		factory.getCProcessor().registerState(new WaitState("W",1000));
-		factory.getCProcessor().addTransition("B", "W");
-		
-		//R
-		ReceiveState1 R = new ReceiveState1("R");
-		ACLMessage receiveFilter = new ACLMessage(ACLMessage.REQUEST);
-		R.setAcceptFilter(receiveFilter);
-		factory.getCProcessor().registerState(R);
-		factory.getCProcessor().addTransition("W", "R");
-		
-		//RW
-		GenericReceiveState RW = new GenericReceiveState("RW");
-		receiveFilter = new ACLMessage(ACLMessage.INFORM);
-		receiveFilter.setHeader("purpose", "waitMessage");
-		RW.setAcceptFilter(receiveFilter);
-		factory.getCProcessor().registerState(RW);
-		factory.getCProcessor().addTransition("W", "RW");
-		factory.getCProcessor().addTransition("RW", "W");
-		
-		//S1
-		SendState1 S1 = new SendState1("S1");
-		ACLMessage sendTemplate = new ACLMessage(ACLMessage.NOT_UNDERSTOOD);
-		sendTemplate.setContent("Request message not understood");
-		sendTemplate.setSender(getAid());
-		sendTemplate.setProtocol("fipa-request");
-		S1.setMessageTemplate(sendTemplate);
-		factory.getCProcessor().registerState(S1);
-		factory.getCProcessor().addTransition("R", "S1");
-		
-		//S2
-		SendState1 S2 = new SendState1("S2");
-		sendTemplate = new ACLMessage(ACLMessage.REFUSE);
-		sendTemplate.setContent("Request message refused");
-		sendTemplate.setSender(getAid());
-		sendTemplate.setProtocol("fipa-request");
-		S2.setMessageTemplate(sendTemplate);
-		factory.getCProcessor().registerState(S2);
-		factory.getCProcessor().addTransition("R", "S2");
-		
-		//S3
-		SendState1 S3 = new SendState1("S3");
-		sendTemplate = new ACLMessage(ACLMessage.AGREE);
-		sendTemplate.setContent("=Agree");
-		sendTemplate.setSender(getAid());
-		sendTemplate.setProtocol("fipa-request");
-		S3.setMessageTemplate(sendTemplate);
-		factory.getCProcessor().registerState(S3);
-		factory.getCProcessor().addTransition("R", "S3");
-		
-		//A
-		factory.getCProcessor().registerState(new ActionState1("A"));
-		factory.getCProcessor().addTransition("S3", "A");
-		
-		//S4
-		SendState1 S4 = new SendState1("S4");
-		sendTemplate = new ACLMessage(ACLMessage.FAILURE);
-		sendTemplate.setContent("Failure performing the action");
-		sendTemplate.setSender(getAid());
-		sendTemplate.setProtocol("fipa-request");
-		S4.setMessageTemplate(sendTemplate);
-		factory.getCProcessor().registerState(S4);
-		factory.getCProcessor().addTransition("A", "S4");
-		
-		//S5
-		SendState3 S5 = new SendState3("S5");
-		sendTemplate = new ACLMessage(ACLMessage.INFORM);
-		sendTemplate.setHeader("inform", "done");
-		sendTemplate.setSender(getAid());
-		sendTemplate.setProtocol("fipa-request");
-		S5.setMessageTemplate(sendTemplate);
-		factory.getCProcessor().registerState(S5);
-		factory.getCProcessor().addTransition("A", "S5");
-		
-		//S6
-		SendState1 S6 = new SendState1("S6");
-		sendTemplate = new ACLMessage(ACLMessage.INFORM);
-		sendTemplate.setHeader("inform", "ref");
-		sendTemplate.setContent("Action ref");
-		sendTemplate.setSender(getAid());
-		sendTemplate.setProtocol("fipa-request");
-		S6.setMessageTemplate(sendTemplate);
-		factory.getCProcessor().registerState(S6);
-		factory.getCProcessor().addTransition("A", "S6");
-		
-		//final
-		factory.getCProcessor().registerState(new GenericFinalState("F"));
-		factory.getCProcessor().addTransition("S1", "F");
-		factory.getCProcessor().addTransition("S2", "F");
-		factory.getCProcessor().addTransition("S4", "F");
-		factory.getCProcessor().addTransition("S5", "F");
-		factory.getCProcessor().addTransition("S6", "F");
-		
-		//exception states
-		factory.getCProcessor().registerState(new GenericCancelState());
-		factory.getCProcessor().registerState(new GenericNotAcceptedMessagesState());
-		factory.getCProcessor().registerState(new GenericSendingErrorsState());
-		factory.getCProcessor().registerState(new GenericTerminatedFatherState());
-		
-		//attach factory to agent
-		this.addFactory(factory);		*/
 	}
 	
 	public class ReceiveState1 extends ReceiveState{
@@ -586,11 +477,9 @@ public class SF extends CAgent {
 				next = "S5";
 
 				logger.info("[SF]Before set message content...");
-				//myProcessor.currentMessage.setContent(aProcess.getLocalName() + "="+ values.toString());
 				ACLMessage content = new ACLMessage(ACLMessage.UNKNOWN);
 				content.setContent(aProcess.getLocalName() + "="+ values.toString());
 				myProcessor.internalData.put("outmsg", content);
-
 			} catch (Exception e) {
 				next = "S4";
 			}
@@ -598,68 +487,5 @@ public class SF extends CAgent {
 			return next;
 		}
 	}
-	
-	public class SendState1 extends SendState{
-
-		public SendState1(String n) {
-			super(n);
-		}
-
-		@Override
-		protected ACLMessage run(CProcessor myProcessor, ACLMessage lastReceivedMessage) {
-			this.messageTemplate.setConversationId(myProcessor.getConversationID());
-			this.messageTemplate.setReceiver(lastReceivedMessage.getSender());
-			return this.messageTemplate;
-		}
-
-		@Override
-		protected String getNext(CProcessor myProcessor,
-				ACLMessage lastReceivedMessage) {
-			String next = "";
-			Set<String> transitions = new HashSet<String>();
-			transitions = myProcessor.getTransitionTable().getTransitions(this.getName());
-			Iterator<String> it = transitions.iterator();
-			if (it.hasNext()) {
-		        // Get element
-		        next = it.next();
-		    }
-			return next;
-		}
-	}
-	
-	public class SendState3 extends SendState{
-
-		public SendState3(String n) {
-			super(n);
-		}
-
-		@Override
-		protected ACLMessage run(CProcessor myProcessor, ACLMessage lastReceivedMessage) {
-			this.messageTemplate.setConversationId(myProcessor.getConversationID());
-			System.out.println("Soy SF");
-			System.out.println("ConID: "+myProcessor.getConversationID());
-			System.out.println("Destino: "+lastReceivedMessage.getSender());
-			System.out.println("Perf: "+messageTemplate.getPerformative());
-			System.out.println("Content: "+lastReceivedMessage.getContent());
-			this.messageTemplate.setReceiver(lastReceivedMessage.getSender());
-			this.messageTemplate.setContent(lastReceivedMessage.getContent());
-			return this.messageTemplate;
-		}
-
-		@Override
-		protected String getNext(CProcessor myProcessor,
-				ACLMessage lastReceivedMessage) {
-			String next = "";
-			Set<String> transitions = new HashSet<String>();
-			transitions = myProcessor.getTransitionTable().getTransitions(this.getName());
-			Iterator<String> it = transitions.iterator();
-			if (it.hasNext()) {
-		        // Get element
-		        next = it.next();
-		    }
-			return next;
-		}
-	}
-
 } // end SF Agent
 
