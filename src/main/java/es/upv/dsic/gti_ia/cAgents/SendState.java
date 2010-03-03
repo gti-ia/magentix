@@ -28,4 +28,5 @@ public abstract class SendState extends State{
 	
 	protected abstract String getNext(CProcessor myProcessor, ACLMessage lastReceivedMessage);
 
+
 }

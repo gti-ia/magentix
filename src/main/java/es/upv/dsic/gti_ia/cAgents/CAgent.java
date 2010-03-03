@@ -184,7 +184,7 @@ public abstract class CAgent extends BaseAgent {
 	
 	protected abstract void setFactories();
 	
-	protected final void execute(){
+	 protected final void execute(){
 		addFactory(createDefaultFactory());
 		setFactories();
 		//if a starting factory is set, then we force it to start

@@ -197,6 +197,20 @@ public class CProcessor implements Runnable, Cloneable{
 							e.printStackTrace();
 						}
 						break;
+					case State.SENDT: 
+						ACLMessage messageToSendT;
+						try {
+							this.myAgent.availableSends.acquire();
+							SendStateTest sendState = (SendStateTest) states.get(currentState);
+							messageToSendT = sendState.getMessageTemplate();
+							sendState.getMethod().run(this, messageToSendT, currentState);
+							this.myAgent.send(messageToSendT);
+							this.myAgent.availableSends.release();
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						
+						break;
+					}
 					case State.WAIT:
 						WaitState waitState = (WaitState) states.get(currentState);
 						if(messageQueue.size() > 0){

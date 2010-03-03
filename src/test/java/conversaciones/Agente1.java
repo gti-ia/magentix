@@ -59,6 +59,26 @@ public class Agente1 extends CAgent{
 		factoriaRes.getCProcessor().registerState(sendState);
 		factoriaRes.getCProcessor().addTransition("receiveState", "sendState");
 		
+		//sendT
+		
+		class AnswerMethodClass extends SendStateMethod{
+
+			protected void run(CProcessor myProcessor, ACLMessage messageToSend, String Next) {
+				messageToSend.setContent("hello");
+				Next = "waitState2";
+			}
+		}
+		
+		AnswerMethodClass M = new AnswerMethodClass(); 
+		ACLMessage answerTemplate = new ACLMessage(ACLMessage.AGREE);
+			
+		SendStateTest sendAnswer = new SendStateTest("sendAnswer");
+		
+		sendAnswer.setMessageTemplate(answerTemplate);
+		sendAnswer.setMethod(M);
+		factoriaRes.getCProcessor().registerState(sendAnswer);
+		factoriaRes.getCProcessor().addTransition("receiveState", "sendAnswer");
+		
 		//wait2
 		factoriaRes.getCProcessor().registerState(new WaitState("waitState2",10));
 		factoriaRes.getCProcessor().addTransition("sendState", "waitState2");

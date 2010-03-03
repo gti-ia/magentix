@@ -12,6 +12,7 @@ public abstract class State implements Cloneable{
 	public final static int FINAL = 2;
 	public final static int RECEIVE = 3;
 	public final static int SEND = 4;
+	public final static int SENDT = 99;
 	public final static int WAIT = 5;
 	protected final static int SENDING_ERRORS = 6;
 	protected final static int CANCEL = 7;
