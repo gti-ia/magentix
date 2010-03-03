@@ -25,7 +25,7 @@ public abstract class CAgent extends BaseAgent {
 
 	private LinkedBlockingQueue<ACLMessage> messageList;
 	private Map<String, CProcessor> processors = new HashMap<String, CProcessor>();
-	protected ArrayList<CProcessorFactory> factories = new ArrayList<CProcessorFactory>();
+	private ArrayList<CProcessorFactory> factories = new ArrayList<CProcessorFactory>();
 	protected ExecutorService exec;
 	protected final Semaphore availableSends = new Semaphore(1, true);
 	private int startingFactoryIndex = -1;
@@ -176,6 +176,14 @@ public abstract class CAgent extends BaseAgent {
 
 	protected synchronized void addMessage(ACLMessage msg) {
 		messageList.add(msg);
+	}
+	
+	protected CProcessorFactory getFactory(int index){
+		return factories.get(index);
+	}
+	
+	protected int getNumberOfFactories(){
+		return factories.size();
 	}
 
 	public void onMessage(ACLMessage msg) {

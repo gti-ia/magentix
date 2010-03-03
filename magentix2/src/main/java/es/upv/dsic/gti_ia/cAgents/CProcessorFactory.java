@@ -79,9 +79,9 @@ public class CProcessorFactory{
 	private void setParentChildren(CProcessor parent){
 		for(int i=0; i< children.size(); i++){
 			String factoryName = children.get(i);
-			for(int j=0; j< myAgent.factories.size(); j++)
-				if(myAgent.factories.get(j).name.equals(factoryName))
-					myAgent.factories.get(j).getCProcessor().setParent(parent);
+			for(int j=0; j< myAgent.getNumberOfFactories(); j++)
+				if(myAgent.getFactory(j).name.equals(factoryName))
+					myAgent.getFactory(j).getCProcessor().setParent(parent);
 		}		
 	}
 	
