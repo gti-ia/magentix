@@ -17,9 +17,15 @@ public class FipaRequest {
 				
 		Initiator initiator = new Initiator(new AgentID("initiator"));
 		Participant participant = new Participant(new AgentID("participant"));
+		Participant participant2 = new Participant(new AgentID("participant2"));
+		Participant participant3 = new Participant(new AgentID("participant3"));
+		Participant participant4 = new Participant(new AgentID("participant4"));
 		
 		initiator.start();
 		participant.start();
+		participant2.start();
+		participant3.start();
+		participant4.start();
 	}
 
 }

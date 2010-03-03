@@ -5,12 +5,6 @@ import java.util.Iterator;
 import java.util.Set;
 
 import es.upv.dsic.gti_ia.cAgents.*;
-import es.upv.dsic.gti_ia.cAgents.CAgent;
-import es.upv.dsic.gti_ia.cAgents.CProcessor;
-import es.upv.dsic.gti_ia.cAgents.CProcessorFactory;
-import es.upv.dsic.gti_ia.cAgents.ReceiveState;
-import es.upv.dsic.gti_ia.cAgents.SendState;
-import es.upv.dsic.gti_ia.cAgents.WaitState;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 
@@ -37,7 +31,7 @@ public class Agente1 extends CAgent{
 		//receive wait1
 		ReceiveState1 receiveWaitState = new ReceiveState1("receiveWaitState1");
 		ACLMessage receiveWaitFilter = new ACLMessage(ACLMessage.INFORM);
-		receiveWaitFilter.setHeader("Purpose", "WaitMessage");
+		receiveWaitFilter.setHeader("purpose", "waitMessage");
 		receiveWaitState.setAcceptFilter(receiveWaitFilter);
 		factoriaRes.getCProcessor().registerState(receiveWaitState);
 		factoriaRes.getCProcessor().addTransition("waitState", "receiveWaitState1");
@@ -66,7 +60,7 @@ public class Agente1 extends CAgent{
 		//receive wait2
 		ReceiveState1 receiveWaitState2 = new ReceiveState1("receiveWaitState2");
 		ACLMessage receiveWaitFilter2 = new ACLMessage(ACLMessage.INFORM);
-		receiveWaitFilter2.setHeader("Purpose", "WaitMessage");
+		receiveWaitFilter2.setHeader("purpose", "waitMessage");
 		receiveWaitState2.setAcceptFilter(receiveWaitFilter2);
 		factoriaRes.getCProcessor().registerState(receiveWaitState2);
 		factoriaRes.getCProcessor().addTransition("waitState2", "receiveWaitState2");
@@ -83,8 +77,8 @@ public class Agente1 extends CAgent{
 		//send2
 		SendState1 sendState2 = new SendState1("sendState2");
 		ACLMessage sendTemplate2 = new ACLMessage(ACLMessage.AGREE);
-		//sendTemplate2.setHeader("AnimicState", "Sad");
-		sendTemplate2.setHeader("AnimicState", "Happy");
+		sendTemplate2.setHeader("AnimicState", "Sad");
+		//sendTemplate2.setHeader("AnimicState", "Happy");
 		sendTemplate2.setContent("I'm feeling Happy");
 		sendState2.setMessageTemplate(sendTemplate2);
 		factoriaRes.getCProcessor().registerState(sendState2);

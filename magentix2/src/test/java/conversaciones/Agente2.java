@@ -4,13 +4,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import conversaciones.Agente1.ReceiveState1;
+
 import es.upv.dsic.gti_ia.cAgents.*;
-import es.upv.dsic.gti_ia.cAgents.CAgent;
-import es.upv.dsic.gti_ia.cAgents.CProcessor;
-import es.upv.dsic.gti_ia.cAgents.CProcessorFactory;
-import es.upv.dsic.gti_ia.cAgents.ReceiveState;
-import es.upv.dsic.gti_ia.cAgents.SendState;
-import es.upv.dsic.gti_ia.cAgents.WaitState;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 
@@ -45,6 +41,15 @@ public class Agente2 extends CAgent{
 		factory.getCProcessor().registerState(new WaitState("waitState",1000000000));
 		factory.getCProcessor().addTransition("sendState0", "waitState");
 		
+		//receive wait
+		ReceiveState1 receiveWaitState = new ReceiveState1("receiveWaitState");
+		ACLMessage receiveWaitFilter = new ACLMessage(ACLMessage.INFORM);
+		receiveWaitFilter.setHeader("purpose", "waitMessage");
+		receiveWaitState.setAcceptFilter(receiveWaitFilter);
+		factory.getCProcessor().registerState(receiveWaitState);
+		factory.getCProcessor().addTransition("waitState", "receiveWaitState");
+		factory.getCProcessor().addTransition("receiveWaitState", "waitState");
+		
 		//receive
 		ReceiveState1 receiveState = new ReceiveState1("receiveState");
 		ACLMessage receiveFilter = new ACLMessage(ACLMessage.AGREE);
@@ -65,6 +70,15 @@ public class Agente2 extends CAgent{
 		//wait
 		factory.getCProcessor().registerState(new WaitState("waitState2",1000000000));
 		factory.getCProcessor().addTransition("sendState", "waitState2");
+		
+		//receive wait
+		ReceiveState1 receiveWaitState2 = new ReceiveState1("receiveWaitState2");
+		ACLMessage receiveWaitFilter2 = new ACLMessage(ACLMessage.INFORM);
+		receiveWaitFilter2.setHeader("purpose", "waitMessage");
+		receiveWaitState2.setAcceptFilter(receiveWaitFilter2);
+		factory.getCProcessor().registerState(receiveWaitState2);
+		factory.getCProcessor().addTransition("waitState2", "receiveWaitState2");
+		factory.getCProcessor().addTransition("receiveWaitState2", "waitState2");
 		
 		//receive happy
 		ReceiveState1 receiveStateHappy = new ReceiveState1("receiveStateHappy");
