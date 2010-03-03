@@ -154,7 +154,7 @@ public class CProcessor implements Runnable, Cloneable{
 		//check if the conversation must stop due to the lack of available conversations in the factory
 		if(currentStateType == State.BEGIN){
 			try {
-				this.getMyAgent().factories.get(factoryArrayIndex).availableConversations.acquire();
+				this.getMyAgent().getFactory(factoryArrayIndex).availableConversations.acquire();
 			} catch (InterruptedException e1) {
 				e1.printStackTrace();
 			}
