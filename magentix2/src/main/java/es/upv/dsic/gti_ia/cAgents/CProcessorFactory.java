@@ -60,7 +60,7 @@ public class CProcessorFactory{
 		cloneProcessor.setFactoryArrayIndex(factoryArrayIndex);
 		setParentChildren(cloneProcessor);
 		myAgent.addProcessor(msg.getConversationId(), cloneProcessor);
-		myAgent.executeCProcessor(cloneProcessor);
+		myAgent.exec.execute(cloneProcessor);
 	}
 	
 	protected synchronized void forcedStartConversation(ACLMessage msg, int factoryArrayIndex){
@@ -73,15 +73,15 @@ public class CProcessorFactory{
 		cloneProcessor.addMessage(startMessage);
 		setParentChildren(cloneProcessor);
 		myAgent.addProcessor(msg.getConversationId(), cloneProcessor);
-		myAgent.executeCProcessor(cloneProcessor);	
+		myAgent.exec.execute(cloneProcessor);		
 	}
 	
 	private void setParentChildren(CProcessor parent){
 		for(int i=0; i< children.size(); i++){
 			String factoryName = children.get(i);
-			for(int j=0; j< myAgent.getNumberOfFactories(); j++)
-				if(myAgent.getFactory(j).name.equals(factoryName))
-					myAgent.getFactory(j).getCProcessor().setParent(parent);
+			for(int j=0; j< myAgent.factories.size(); j++)
+				if(myAgent.factories.get(j).name.equals(factoryName))
+					myAgent.factories.get(j).getCProcessor().setParent(parent);
 		}		
 	}
 	
