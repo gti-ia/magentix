@@ -56,7 +56,7 @@ public class BaseAgent implements Runnable {
 		}
 
 		public void message(Session ssn, MessageTransfer xfr) {
-			ACLMessage msg = MessageTransfertoACLMessage(xfr);
+			ACLMessage msg = messageTransfertoACLMessage(xfr);
 			onMessage(msg);
 		}
 
@@ -326,7 +326,7 @@ public class BaseAgent implements Runnable {
 	 *            MessageTransfer
 	 * @return ACLMessage
 	 */
-	public final ACLMessage MessageTransfertoACLMessage(MessageTransfer xfr) {
+	public final ACLMessage messageTransfertoACLMessage(MessageTransfer xfr) {
 
 		// des-serializamos el mensaje
 		// inicializaciones
