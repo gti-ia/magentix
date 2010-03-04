@@ -187,12 +187,12 @@ public class CProcessor implements Runnable, Cloneable{
 					case State.SEND:
 						ACLMessage messageToSend;
 						try {
-							this.myAgent.availableSends.acquire();
+							this.myAgent.acquireSending();
 							SendState sendState = (SendState) states.get(currentState);
 							messageToSend = sendState.run(this, currentMessage);
 							this.myAgent.send(messageToSend);
 							currentState = sendState.getNext(this, currentMessage);
-							this.myAgent.availableSends.release();
+							this.myAgent.releaseSending();
 						} catch (InterruptedException e) {
 							e.printStackTrace();
 						}
@@ -266,9 +266,9 @@ public class CProcessor implements Runnable, Cloneable{
 						messageToSend = finalState.run(this);
 						if(messageToSend != null){
 							try {						
-								this.myAgent.availableSends.acquire();
+								this.myAgent.acquireSending();
 								this.myAgent.send(messageToSend);
-								this.myAgent.availableSends.release();
+								this.myAgent.releaseSending();
 							} catch (InterruptedException e) {
 								e.printStackTrace();
 							}

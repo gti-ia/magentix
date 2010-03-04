@@ -27,7 +27,7 @@ public abstract class CAgent extends BaseAgent {
 	private Map<String, CProcessor> processors = new HashMap<String, CProcessor>();
 	private ArrayList<CProcessorFactory> factories = new ArrayList<CProcessorFactory>();
 	private ExecutorService exec;
-	protected final Semaphore availableSends = new Semaphore(1, true);
+	private final Semaphore availableSendings = new Semaphore(1, true);
 	private int startingFactoryIndex = -1;
 	private String startingFactoryConversationId = "";
 	private Map<String, Timer> timers = new HashMap<String, Timer>();
@@ -188,6 +188,14 @@ public abstract class CAgent extends BaseAgent {
 	
 	protected void executeCProcessor(CProcessor processor){
 		exec.execute(processor);
+	}
+	
+	protected void acquireSending() throws InterruptedException{
+		availableSendings.acquire();
+	}
+	
+	protected void releaseSending(){
+		availableSendings.release();
 	}
 
 	public void onMessage(ACLMessage msg) {
