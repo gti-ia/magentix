@@ -305,9 +305,8 @@ public class QueueAgent extends BaseAgent {
 					logger
 							.info("Finish with role Responder, protocol:Contract-Net state:  "
 									+ ((FIPAContractNetResponder) obj)
-											.getState());
+											.getState());	
 				}
-
 			}
 		}
 
@@ -335,6 +334,8 @@ public class QueueAgent extends BaseAgent {
 
 			ThreadInitiator h = new ThreadInitiator(obj, 1);
 			h.start();
+			
+			
 
 		} else if (patron.equals("FIPARequestResponder")) {
 
@@ -413,12 +414,15 @@ public class QueueAgent extends BaseAgent {
 				do {
 					((FIPARequestResponder) responder).action();
 				} while (((FIPARequestResponder) responder).getState() != -1);
+				break;
 
 			}
 			case 2: {
 				do {
 					((FIPAQueryResponder) responder).action();
-				} while (true);
+				} while (((FIPAQueryResponder)responder).getState() != -1);
+				break;
+				
 			}
 			case 3: {
 				do {
