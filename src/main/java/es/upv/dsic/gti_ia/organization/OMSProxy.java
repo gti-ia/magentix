@@ -94,8 +94,9 @@ public class OMSProxy {
 	 *            is a QueueAgent, this agent implemented the communication
 	 *            protocol
 	 * @param AgentID
-	 *            entity,this agent is protocol://name@host:port ej.qpid://clientagent2@localhost:8080 
-	 *            , we can extract this inform with the method getAid().toString() for example.
+	 *            entity,this agent is protocol://name@host:port
+	 *            ej.qpid://clientagent2@localhost:8080 , we can extract this
+	 *            inform with the method getAid().toString() for example.
 	 * @param RoleID
 	 *            represent all required functionality needed in order to
 	 *            achieve the unit goal.
@@ -127,8 +128,9 @@ public class OMSProxy {
 	 *            is a QueueAgent, this agent implemented the communication
 	 *            protocol
 	 * @param AgentID
-	 *           entity,this agent is protocol://name@host:port ej.qpid://clientagent2@localhost:8080 
-	 *            , we can extract this inform with the method getAid().toString() for example.
+	 *            entity,this agent is protocol://name@host:port
+	 *            ej.qpid://clientagent2@localhost:8080 , we can extract this
+	 *            inform with the method getAid().toString() for example.
 	 * @return ArrayList RoleUnitList
 	 * @throws Exception
 	 */
@@ -516,8 +518,9 @@ public class OMSProxy {
 	 *            is a QueueAgent, this agent implemented the communication
 	 *            protocol
 	 * @param AgentID
-	 *            entity,this agent is protocol://name@host:port ej.qpid://clientagent2@localhost:8080 
-	 *            , we can extract this inform with the method getAid().toString() for example.
+	 *            entity,this agent is protocol://name@host:port
+	 *            ej.qpid://clientagent2@localhost:8080 , we can extract this
+	 *            inform with the method getAid().toString() for example.
 	 * @param RoleID
 	 *            represent all required functionality needed in order to
 	 *            achieve the unit goal.
@@ -562,6 +565,39 @@ public class OMSProxy {
 
 		String call = configuration + "AcquireRoleProcess.owl RoleID=" + RoleID
 				+ " UnitID=" + UnitID;
+		this.sendInform(agent, call);
+		if (!this.value.equals("Ok")) {
+			throw new Exception("Acquire Role " + this.value);
+		} else
+			return this.value;
+
+	}
+
+	/**
+	 * Requests the adoption of a specific role within a unit
+	 * 
+	 * @param agent
+	 *            Agent that we will register in the organization, is a
+	 *            QueueAgent
+	 * @param AgentID
+	 *            entity,this agent is: protocol://name@host:port.
+	 *            ej.qpid://clientagent2@localhost:8080 , we can extract this
+	 *            inform with the method getAid().toString() for example.          
+	 * @param roleID
+	 *            Role that the agent acquires inside the organization
+	 * @param unitID
+	 *            Unit of which the agent was forming a part with the previous
+	 *            role
+	 * @return String Status ErrorValue
+	 * @throws Exception
+	 */
+	public String acquireRole(QueueAgent agent, String AgentID, String RoleID, String UnitID)
+			throws Exception {
+		// montar string de conexion
+		// Enviamos el mensaje
+
+		String call = configuration + "AcquireRoleProcess.owl RoleID=" + RoleID
+				+ " UnitID=" + UnitID+" AgentID="+ AgentID;
 		this.sendInform(agent, call);
 		if (!this.value.equals("Ok")) {
 			throw new Exception("Acquire Role " + this.value);
