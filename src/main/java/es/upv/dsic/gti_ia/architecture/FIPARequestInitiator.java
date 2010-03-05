@@ -84,7 +84,7 @@ public class FIPARequestInitiator {
 		 
 		 this.requestmsg.setPerformative(ACLMessage.CANCEL);
 		 this.myAgent.send(requestmsg);
-
+		 this.monitor.advise();
 		 this.state = ALL_RESULT_NOTIFICATION_RECEIVED_STATE;
 		 
 	 }

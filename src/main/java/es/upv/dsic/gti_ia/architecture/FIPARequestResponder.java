@@ -63,6 +63,7 @@ public class FIPARequestResponder {
 		 this.send_cancel.setPerformative(ACLMessage.CANCEL);
 		 this.myAgent.send(send_cancel);
 		 }
+		 this.monitor.advise();
 		 this.state = FINISH_STATE;
 		 
 	 }
@@ -85,12 +86,7 @@ public class FIPARequestResponder {
 			} else {
 				monitor.waiting();// waiting a message.
 			}
-			
-			
-			
-	
 			break;
-			
 		}
 		case PREPARE_RESPONSE_STATE: {
 			
