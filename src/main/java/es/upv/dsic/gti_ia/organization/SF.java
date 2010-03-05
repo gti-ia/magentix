@@ -555,11 +555,16 @@ public class SF extends QueueAgent {
 		logger.info("Agent SF active");
 
 		SFResponder responder = new SFResponder(this);
-
-		this.addTask(responder);
+		this.addTask(responder);		
 		mon.waiting();
-
 	}// end execute
 
+	public void finalize()
+	{
+		logger.info("Agent SF leaves the system.");
+		sf = null;
+		mon.advise();
+	}
+	
 } // end SF Agent
 
