@@ -23,13 +23,14 @@ public class FIPARequestResponder {
 
 	private MessageTemplate template;
 	private int state = WAITING_MSG_STATE;
-	private QueueAgent myAgent;
 	private ACLMessage requestmsg;
 	private ACLMessage responsemsg;
 	private ACLMessage resNofificationmsg;
 	private MessageTemplate template_cancel;
 	private ACLMessage  send_cancel;
 	private Monitor monitor = null;
+	public QueueAgent myAgent;
+	
 
 	/**
 	 * Create a new FIPA-Request interaction protocol, rol responder.
@@ -50,6 +51,17 @@ public class FIPARequestResponder {
 		return this.state;
 	}
 
+	 /**
+	  * Return the agent.
+	  * @return QueueAgent 
+	  */
+	 public QueueAgent getQueueAgent()
+	 {
+		return this.myAgent; 
+		 
+	 }
+	 
+	 
 	 /**
 	  *  Send a CANCEL Message for  active conversation and and terminates the protocol
 	  */

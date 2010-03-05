@@ -22,7 +22,7 @@ public class FIPARequestInitiator {
 
 	private MessageTemplate template = null;
 	private int state = PREPARE_MSG_STATE;
-	protected QueueAgent myAgent;
+	public QueueAgent myAgent;
 	private ACLMessage requestmsg;
 	private ACLMessage requestsentmsg;
 
@@ -50,6 +50,16 @@ public class FIPARequestInitiator {
 
 	}
 
+	 /**
+	  * Return the agent.
+	  * @return QueueAgent 
+	  */
+	 public QueueAgent getQueueAgent()
+	 {
+		return this.myAgent; 
+		 
+	 }
+	 
 	/**
 	 * We will be able to know if it has finished the protocol
 	 * 

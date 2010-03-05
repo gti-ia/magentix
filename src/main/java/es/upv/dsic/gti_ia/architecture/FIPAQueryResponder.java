@@ -20,7 +20,7 @@ public class FIPAQueryResponder {
 
 	private MessageTemplate template;
 	private int state = WAITING_MSG_STATE;
-	private QueueAgent myAgent;
+	public QueueAgent myAgent;
 	private ACLMessage requestmsg;
 	private ACLMessage responsemsg;
 	private ACLMessage resNofificationmsg;
@@ -42,6 +42,16 @@ public class FIPAQueryResponder {
 		this.monitor = myAgent.addMonitor(this);
 
 	}
+	
+	 /**
+	  * Return the agent.
+	  * @return QueueAgent 
+	  */
+	 public QueueAgent getQueueAgent()
+	 {
+		return this.myAgent; 
+		 
+	 }
 
 	 int getState() {
 		return this.state;

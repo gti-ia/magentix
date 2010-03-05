@@ -31,7 +31,7 @@ public class FIPAContractNetInitiator {
 
 	private MessageTemplate template = null;
 	private int state = PREPARE_MSG_STATE;
-	protected QueueAgent myAgent;
+	public QueueAgent myAgent;
 	private ACLMessage requestmsg;
 	private ACLMessage requestsentmsg;
 
@@ -57,6 +57,17 @@ public class FIPAContractNetInitiator {
 		this.monitor = myAgent.addMonitor(this);
 
 	}
+	
+	 /**
+	  * Return the agent.
+	  * @return QueueAgent 
+	  */
+	 public QueueAgent getQueueAgent()
+	 {
+		return this.myAgent; 
+		 
+	 }
+	 
 /**
  * We will be able to know if it has finished the protocol
  * @return value a boolean value is returned, true: the protocol has finished, false: the protocol even has not finished

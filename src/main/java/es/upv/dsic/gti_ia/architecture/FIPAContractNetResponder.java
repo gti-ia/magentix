@@ -23,7 +23,7 @@ public class FIPAContractNetResponder {
 
 	private MessageTemplate template;
 	private int state = WAITING_MSG_STATE;
-	private QueueAgent myAgent;
+	public QueueAgent myAgent;
 	private ACLMessage cfp;
 	private ACLMessage propose;
 	private ACLMessage accept;
@@ -47,6 +47,15 @@ public class FIPAContractNetResponder {
 
 	}
 
+	 /**
+	  * Return the agent.
+	  * @return QueueAgent 
+	  */
+	 public QueueAgent getQueueAgent()
+	 {
+		return this.myAgent; 
+		 
+	 }
 	 int getState() {
 		return this.state;
 	}
