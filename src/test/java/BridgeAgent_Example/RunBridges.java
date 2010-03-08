@@ -18,12 +18,12 @@ import es.upv.dsic.gti_ia.core.BridgeAgentOutIn;
  * @author Sergio Pajares - spajares@dsic.upv.es
  * @author Joan Bellver - jbellver@dsic.upv.es
  */
-public class Run {
+public class RunBridges {
 
 	public static void main(String[] args) {
 		DOMConfigurator.configure("configuration/loggin.xml");
 		AgentsConnection.connect("gtiiaprojects2.dsic.upv.es");
-		Logger logger = Logger.getLogger(Run.class);
+		Logger logger = Logger.getLogger(RunBridges.class);
 		
 		
 		try {
@@ -32,32 +32,32 @@ public class Run {
 			 * Instantiating a BridgeAgentInOut SingleAgent
 			 */
 			BridgeAgentInOut agenteInOut = new BridgeAgentInOut(new AgentID(
-					"BridgeAgentInOut", "qpid", "localhost", "8080"));
+					"BridgeAgentInOut", "qpid", "serpafer.dsic.upv.es", "5000"));
 			/**
 			 * Instantiating a BridgeAgentOutIn SingleAgent
 			 */
 			BridgeAgentOutIn agenteOutIn = new BridgeAgentOutIn(new AgentID(
-					"BridgeAgentOutIn", "qpid", "localhost", "8080"));
+					"BridgeAgentOutIn", "qpid", "serpafer.dsic.upv.es", "5000"));
 
 			/**
 			 * Instantiating a EmisorAgent BaseAgent
 			 */
-			SenderAgent agente1 = new SenderAgent(new AgentID("emisor-agent",
-					"qpid", "localhost", "8080"));
+		//	SenderAgent agente1 = new SenderAgent(new AgentID("emisor-agent",
+		//			"qpid", "localhost", "8080"));
 			
 			/**
 			 * Instantiating a ConsumerAgent BaseAgent
 			 */
-			ConsumerAgent agente2 = new ConsumerAgent(new AgentID(
-					"consumer-agent", "qpid", "localhost", "8080"));
+		//	ConsumerAgent agente2 = new ConsumerAgent(new AgentID(
+		//			"consumer-agent", "qpid", "localhost", "8080"));
 			/**
 			 * Execute the four agents
 			 */
 			agenteInOut.start();
 			agenteOutIn.start();
 
-			agente2.start();
-			agente1.start();
+		//	agente2.start();
+		//	agente1.start();
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 		}
