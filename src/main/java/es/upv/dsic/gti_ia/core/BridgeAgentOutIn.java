@@ -24,7 +24,7 @@ public class BridgeAgentOutIn extends BaseAgent {
 
 	//private DatagramSocket socket;
 	private ServerSocket socket;
-	public static final int http_port = 8080;
+	public static int http_port = 8080;
 
 	/**
 	 * Creates a new BrideAgentOutIn
