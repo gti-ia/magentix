@@ -155,6 +155,15 @@ public class BaseAgent implements Runnable {
 	 *         
 	 */
 	public void send(ACLMessage msg) {
+		
+		/**
+		 * Permite incluir un arroba en el nombre del agente destinatario.
+		 * Condición Obligatoria para JADE.
+		 * @ será reemplazado por ~
+		 */
+		msg.getReceiver().name = msg.getReceiver().name.replace('@', '~');
+
+		
 		MessageTransfer xfr = new MessageTransfer();
 
 		xfr.destination("amq.direct");

@@ -6,9 +6,12 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.net.SocketException;
 
 /**
@@ -17,9 +20,11 @@ import java.net.SocketException;
  * @author Ricard Lopez Fogues
  */
 
-public class BridgeAgentOutIn extends SingleAgent {
+public class BridgeAgentOutIn extends BaseAgent {
 
-	private DatagramSocket socket;
+	//private DatagramSocket socket;
+	private ServerSocket socket;
+	public static final int http_port = 8080;
 
 	/**
 	 * Creates a new BrideAgentOutIn
@@ -33,7 +38,8 @@ public class BridgeAgentOutIn extends SingleAgent {
 
 		// crear objeto DatagramSocket para enviar y recibir paquetes
 		try {
-			socket = new DatagramSocket(5000);
+			//socket = new DatagramSocket(5000);
+			socket = new ServerSocket(http_port);
 		}
 
 		// procesar los problemas que pueden ocurrir al crear el objeto
@@ -52,37 +58,81 @@ public class BridgeAgentOutIn extends SingleAgent {
 			try {
 
 				// establecer el paquete
-				byte datos[] = new byte[2000];
-				DatagramPacket recibirPaquete = new DatagramPacket(datos,
-						datos.length);
+			
+				
+				InputStream is;
+				
 
-				socket.receive(recibirPaquete); // esperar el paquete
+			
 
-				System.out.println("Received on BridgeAgentOutIn: "
-						+ new String(recibirPaquete.getData()));
+				logger.info("BridgeAgentOutIn waiting receive external FIPA-Messages");
+				Socket s = socket.accept(); //Socket Cliente
+				
+				is = s.getInputStream();
+				OutputStream os = s.getOutputStream();
 
-				// mostrar la información del paquete recibido
-				System.out.println("\nPackage received:"
-						+ "\nfrom host: "
-						+ recibirPaquete.getAddress()
-						+ "\nPort of the host: "
-						+ recibirPaquete.getPort()
-						+ "\nLenght: "
-						+ recibirPaquete.getLength()
-						+ "\nContent:\n\t"
-						+ new String(recibirPaquete.getData(), 0,
-								recibirPaquete.getLength()));
+				//System.out.println(is.toString());
 
-				// creamos nuevo hilo encargado de enviar el mensaje
-				httpToACL hilo = new httpToACL(stringToInputStream(new String(
-						recibirPaquete.getData())));
+				StringBuffer stb = new StringBuffer();
+				int i;
+				byte[] buffer = new byte[1000];
+
+				while ((is.available() > 0)
+						&& (i = is.read(buffer)) != -1) {
+					stb.append(new String(buffer, 0, i));
+				}
+				
+				String texto = new String(stb);
+
+				//System.out.println(texto);
+
+				httpToACL hilo = new httpToACL(stringToInputStream(texto));
+				
+				
+				String OK = "HTTP/1.0 200 OK\n";
+				byte a [] = OK.getBytes();
+				
+				os.write(a);
+				
+				//Cerrar
+				os.close();
+				is.close();
+				
 				hilo.run();
+				
+				s.close();
+				
+			
+				
+
+				/* Esto era con UDP */
+				
+				//System.out.println("Received on BridgeAgentOutIn: "
+				// + new String(recibirPaquete.getData()));
+				//
+				// // mostrar la información del paquete recibido
+				// System.out.println("\nPackage received:"
+				// + "\nfrom host: "
+				// + recibirPaquete.getAddress()
+				// + "\nPort of the host: "
+				// + recibirPaquete.getPort()
+				// + "\nLenght: "
+				// + recibirPaquete.getLength()
+				// + "\nContent:\n\t"
+				// + new String(recibirPaquete.getData(), 0,
+				// recibirPaquete.getLength()));
+				//
+				// // creamos nuevo hilo encargado de enviar el mensaje
+				// // httpToACL hilo = new httpToACL(stringToInputStream(new
+				// String(
+				// // recibirPaquete.getData())));
+				// // hilo.run();
 
 			}
 
 			// procesar los problemas que pueden ocurrir al manipular el paquete
 			catch (IOException excepcionES) {
-				System.out.println("Error on BridgeAgentOutIn, "
+				System.err.println("Error on BridgeAgentOutIn, "
 						+ excepcionES.toString() + "\n");
 				excepcionES.printStackTrace();
 			}
@@ -119,10 +169,17 @@ public class BridgeAgentOutIn extends SingleAgent {
 					// this statement reads the line from the file and print it
 					// to
 					// the console.
-					System.out.println(cadena);
+					//System.out.println(cadena);
 					cadena = dis.readLine();
 					cont++;
 				}
+				
+				if (cadena==null)
+				{
+					System.err.println("Error receiving JADE message");
+					
+				}
+				
 				// buscamos el boundary
 				int indexboundary = cadena.indexOf("boundary=\"");
 				String boundary = cadena.substring(indexboundary + 10, cadena
@@ -139,25 +196,26 @@ public class BridgeAgentOutIn extends SingleAgent {
 				cadena = dis.readLine();
 				// envelope
 				cadena = dis.readLine();
-				System.out.println(cadena);
+				logger.debug(cadena);
 				// parseamos contenido XML
 				Xml envelope = new Xml(stringToInputStream(cadena), "envelope");
 
 				Xml params = envelope.child("params");
-				System.out.println("index: " + params.integer("index"));
+				logger.debug("index: " + params.integer("index"));
 
 				int index = 0;
 				// Agente destino
-				System.out.println("Agent Details destination");
+				logger.debug("Agent Details destination");
 				Xml to = params.child("to");
 				Xml agent_indentifier = to.child("agent-identifier");
 
 				int index2 = agent_indentifier.child("name").content().indexOf(
 						'@');
+				
 
 				receiver.name = agent_indentifier.child("name").content()
 						.substring(0, index2);
-				System.out.println("Agent Name: " + receiver.name);
+				logger.debug("Agent Name: " + receiver.name);
 				Xml adresses = agent_indentifier.child("addresses");
 				for (Xml url : adresses.children("url")) {
 					index = url.content().indexOf(':');
@@ -166,20 +224,20 @@ public class BridgeAgentOutIn extends SingleAgent {
 							url.content().indexOf(":", index + 1));
 					index = url.content().indexOf(":", index + 1);
 					receiver.port = url.content().substring(index + 1);
-					System.out.println("Adress: " + receiver.toString());
+					logger.debug("Adress: " + receiver.toString());
 				}
 
 				msg.setReceiver(receiver);
 
 				// Agente remitente
-				System.out.println("Details sender agent");
+				logger.debug("Details sender agent");
 				Xml from = params.child("from");
 				agent_indentifier = from.child("agent-identifier");
 
 				index2 = agent_indentifier.child("name").content().indexOf('@');
 				sender.name = agent_indentifier.child("name").content()
 						.substring(0, index2);
-				System.out.println("Agent name: " + sender.name);
+				logger.debug("Agent name: " + sender.name);
 				adresses = agent_indentifier.child("addresses");
 
 				for (Xml url : adresses.children("url")) {
@@ -189,7 +247,7 @@ public class BridgeAgentOutIn extends SingleAgent {
 							url.content().indexOf(":", index + 1));
 					index = url.content().indexOf(":", index + 1);
 					sender.port = url.content().substring(index + 1);
-					System.out.println("Sender: " + sender.toString());
+					logger.debug("Sender: " + sender.toString());
 				}
 				msg.setSender(sender);
 
@@ -205,7 +263,7 @@ public class BridgeAgentOutIn extends SingleAgent {
 				cadena = dis.readLine();
 				String performative = cadena.substring(1).trim();
 				msg.setPerformative(performative);
-				System.out.println("Performative: " + msg.getPerformative());
+				logger.debug("Performative: " + msg.getPerformative());
 				// agente remitente, ya tenemos sus datos
 				cadena = dis.readLine();
 				// agente receptor, ya tenemos sus datos
@@ -235,10 +293,10 @@ public class BridgeAgentOutIn extends SingleAgent {
 				}
 				content = content.substring(0, content.length() - 1);
 				msg.setContent(content);
-				System.out.println("content " + content);
+				logger.debug("content " + content);
 
 				// language
-				String lang = "";
+		/*		String lang = "";
 				cadena = dis.readLine();
 				while (cadena.indexOf(":language") + 9 < 0 && cadena != null)
 					cadena = dis.readLine();
@@ -270,6 +328,9 @@ public class BridgeAgentOutIn extends SingleAgent {
 					k++;
 				}
 				msg.setOntology(ontology);
+				*/
+				
+				
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

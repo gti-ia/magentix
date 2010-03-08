@@ -1,9 +1,12 @@
 package es.upv.dsic.gti_ia.core;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Calendar;
@@ -15,32 +18,19 @@ import org.apache.qpid.transport.MessageTransfer;
  * @author Sergio Pajares
  * 
  */
-public class BridgeAgentInOut extends SingleAgent {
+public class BridgeAgentInOut extends BaseAgent {
 	// public BaseAgent bd;
 	public ACLMessage ACLsms;
 	String envelope;
 	String message;
-	private DatagramSocket socket;
+	//private DatagramSocket socket;
+	
+	private Socket socket;
 	LinkedBlockingQueue<MessageTransfer> internalQueue;
 
 	public BridgeAgentInOut(AgentID aid) throws Exception
-
 	{
 		super(aid);
-		// New DatagramSocket object to send and receive package
-		try {
-
-			socket = new DatagramSocket();
-		}
-
-		// Capturing possible problem
-		catch (SocketException excepcionSocket) {
-			excepcionSocket.printStackTrace();
-			logger
-					.error("Error creating DatagramSocket instance, see more in BridgeAgentInOut constructor");
-			System.exit(1);
-		}
-
 	}
 
 	private String Generate_All(ACLMessage ACLsms) throws UnknownHostException {
@@ -72,7 +62,7 @@ public class BridgeAgentInOut extends SingleAgent {
 				+ "\"\r\n";
 		// httpheader += "Content-Length: 1139\r\n";
 		httpheader += "Content-Length: ";
-		httpheader += 800;// to doString.valueOf(envelope.toCharArray().length
+		httpheader += 800+"\r\n";// to doString.valueOf(envelope.toCharArray().length
 		// + message.toCharArray().length) + "\r\n";
 		// httpheader += boost::lexical_cast<string > (content.size()) + "\r\n";
 
@@ -84,6 +74,7 @@ public class BridgeAgentInOut extends SingleAgent {
 
 	private String Generate_Content() {
 		String message = BuildACLMessage();
+		int length = message.getBytes().length;
 
 		String boundary = "a36869921a26b9d812878a42b8fc2cd";
 
@@ -92,7 +83,7 @@ public class BridgeAgentInOut extends SingleAgent {
 		content += "Content-Type: application/xml\r\n";
 		content += "\r\n";
 
-		content += Generate_Envelope();
+		content += Generate_Envelope(length);
 
 		content += "\r\n" + "--" + boundary + "\r\n";
 		content += "Content-Type: application/text\r\n";
@@ -107,44 +98,56 @@ public class BridgeAgentInOut extends SingleAgent {
 
 	}
 
-	private String Generate_Envelope() {
+	private String Generate_Envelope(int messageLenght) {
 		String aux = "<?xml version=\"1.0\"?>\n" + "<envelope>"
 				+ "<params index=\"1\">" + "<to>" + "<agent-identifier>"
 				+ "<name>";
-		aux += ACLsms.getReceiver().name_all();
+		aux += ACLsms.getReceiver().name;
 		aux += "</name>" + "<addresses>" + "<url>";
 		// agent destination
+		
 		aux += ACLsms.getReceiver().addresses_all();
+		
 		aux += "</url>" + "</addresses>" + "</agent-identifier>" + "</to>";
 
 		aux += "<from>" + "<agent-identifier>" + "<name>";
 		aux += ACLsms.getSender().name_all();
 		aux += "</name>" + "<addresses>" + "<url>";
-		aux += ACLsms.getSender().addresses_all();
+		
+		String s="";
+		try {
+			s = "http://"+InetAddress.getLocalHost().getCanonicalHostName()+":"+BridgeAgentOutIn.http_port;
+		} catch (UnknownHostException e1) {
+			logger.debug("Error BridgeAgentInOut InetAddress.getLocalHost");
+			e1.printStackTrace();
+		}
+		aux +=s;
+		
 		aux += "</url>" + "</addresses>" + "</agent-identifier>" + "</from>";
 
 		aux += "<acl-representation>" + "fipa.acl.rep.string.std"
 				+ "</acl-representation>" + "<payload-length>";
 		// message length
-		aux += ACLsms.getContent().length();
+		aux += messageLenght;
 		aux += "</payload-length>" + "<date>";
 		// timestamp
 		Calendar c1 = Calendar.getInstance();
-		String dia = Integer.toString(c1.get(Calendar.DATE));
-		String mes = Integer.toString(c1.get(Calendar.MONTH));
+		String dia = String.format("%02d",(c1.get(Calendar.DATE)));
+		String mes = String.format("%02d", (c1.get(Calendar.MONTH)));
 		String annio = Integer.toString(c1.get(Calendar.YEAR));
-		int hora = c1.get(Calendar.HOUR_OF_DAY);
-		int minutos = c1.get(Calendar.MINUTE);
-		int segundos = c1.get(Calendar.SECOND);
+		String hora = String.format("%02d",c1.get(Calendar.HOUR_OF_DAY));
+		String minutos = String.format("%02d",c1.get(Calendar.MINUTE));
+		String segundos = String.format("%02d",c1.get(Calendar.SECOND));
+		String msegundos = String.format("%03d",c1.get(Calendar.MILLISECOND));
 
 		// timestamp += "20090223Z194230825";
 
 		aux += annio + "" + mes + "" + dia + "Z" + hora + "" + minutos + ""
-				+ segundos;
+				+ segundos + msegundos;
 
 		aux += "</date>" + "<intended-receiver>" + "<agent-identifier>"
 				+ "<name>";
-		aux += ACLsms.getReceiver().name_all();
+		aux += ACLsms.getReceiver().name;
 		aux += "</name>" + "<addresses>" + "<url>";
 		aux += ACLsms.getReceiver().addresses_all();
 		aux += "</url>" + "</addresses>" + "</agent-identifier>"
@@ -175,8 +178,19 @@ public class BridgeAgentInOut extends SingleAgent {
 		/** ********************************************** */
 		/** ************* sender ********************* */
 		/** ********************************************** */
+		
+		String sender="";
+		try {
+			sender = ACLsms.getSender().name+"@"+InetAddress.getLocalHost().getHostName()+":"+BridgeAgentOutIn.http_port;
+		} catch (UnknownHostException e1) {
+			logger.debug("Error BridgeAgentInOut InetAddress.getLocalHost");
+			e1.printStackTrace();
+		}
+		
+		
+		
 		acl += " :sender ( agent-identifier :name \""
-				+ ACLsms.getSender().name_all() + "\" :addresses (sequence ";
+				+ sender + "\" :addresses (sequence ";
 
 		/*
 		 * acl+= Constants.SERVERNAME +":"+Constants.HTTPLISTENINGPORT;
@@ -184,17 +198,27 @@ public class BridgeAgentInOut extends SingleAgent {
 		 * ACLsms.getSender().port = Constants.HTTPLISTENINGPORT;
 		 * ACLsms.getSender().protocol = "http";
 		 */
+		
+		String host="";
+		try {
+			host = "http://"+InetAddress.getLocalHost().getCanonicalHostName()+":"+BridgeAgentOutIn.http_port;
+		} catch (UnknownHostException e) {
+			logger.debug("Error BridgeAgentInOut getting InetAddress.getLocalHost");
+			e.printStackTrace();
+		}
 
-		acl += ACLsms.getSender().addresses_all() + " ))\r\n";
+		acl += host + " ))\r\n";
 
 		/** ********************************************** */
 		/** ************* receiver ******************* */
 		/** ********************************************** */
 
 		acl += " :receiver (set ( agent-identifier :name \""
-				+ ACLsms.getReceiver().name_all() + "\" :addresses (sequence ";
+				+ ACLsms.getReceiver().name + "\" :addresses (sequence ";
 
-		acl += ACLsms.getReceiver().addresses_all() + " )) )\r\n";
+		acl += ACLsms.getReceiver().protocol+"://"+ACLsms.getReceiver().host+":"+ACLsms.getReceiver().port + " )) )\r\n";
+		
+		
 
 		/** ********************************************** */
 		/** ************* content ******************** */
@@ -212,7 +236,7 @@ public class BridgeAgentInOut extends SingleAgent {
 		if (!ACLsms.getReplyWith().equals("")) {
 			acl += " :reply-with " + ACLsms.getReplyWith() + "\r\n";
 		} else {
-			acl += " :reply-with " + "\"Warning: reply-with not found.\"\r\n";
+		//	acl += " :reply-with " + "\"Warning: reply-with not found.\"\r\n";
 		}
 		/** ********************************************** */
 		/** ************* in-reply-to ******************** */
@@ -221,7 +245,7 @@ public class BridgeAgentInOut extends SingleAgent {
 		if (!ACLsms.getInReplyTo().equals("")) {
 			acl += " :in-reply-to " + ACLsms.getInReplyTo() + "\r\n";
 		} else {
-			acl += " :in-reply-to " + "\"Warning: in-reply-to not found.\"\r\n";
+		//	acl += " :in-reply-to " + "\"Warning: in-reply-to not found.\"\r\n";
 		}
 
 		/** ********************************************** */
@@ -231,7 +255,7 @@ public class BridgeAgentInOut extends SingleAgent {
 		if (!ACLsms.getLanguage().equals("")) {
 			acl += " :language " + ACLsms.getLanguage() + "\r\n";
 		} else {
-			acl += " :language " + "\"Warning: language not found.\"\r\n";
+		//	acl += " :language " + "\"Warning: language not found.\"\r\n";
 		}
 
 		/** ********************************************** */
@@ -241,7 +265,7 @@ public class BridgeAgentInOut extends SingleAgent {
 		if (!ACLsms.getOntology().equals("")) {
 			acl += " :ontology \"" + ACLsms.getOntology() + "\"\r\n";
 		} else {
-			acl += " :ontology " + "\"Warning: ontology not found.\"\r\n";
+		//	acl += " :ontology " + "\"Warning: ontology not found.\"\r\n";
 		}
 
 		/** ********************************************** */
@@ -251,7 +275,7 @@ public class BridgeAgentInOut extends SingleAgent {
 		if (!ACLsms.getProtocol().equals("")) {
 			acl += " :protocol \"" + ACLsms.getProtocol() + "\"\r\n";
 		} else {
-			acl += " :protocol " + "\"Warning: protocol not found.\"\r\n";
+		//	acl += " :protocol " + "\"Warning: protocol not found.\"\r\n";
 		}
 
 		/** ********************************************** */
@@ -261,8 +285,8 @@ public class BridgeAgentInOut extends SingleAgent {
 		if (!ACLsms.getConversationId().equals("")) {
 			acl += " :conversation-id " + ACLsms.getConversationId() + "\r\n";
 		} else {
-			acl += " :conversation-id "
-					+ "\"Warning: ConversationId not found.\"";
+		//	acl += " :conversation-id "
+		//			+ "\"Warning: ConversationId not found.\"";
 		}
 
 		acl += " )";
@@ -280,14 +304,16 @@ public class BridgeAgentInOut extends SingleAgent {
 		PrintMessage("\n Redirecting package to BridgeAgentOutIn external agent");
 
 		
+		
+		
 		DatagramPacket enviarPaquete = new DatagramPacket(p.getData(), p
 				.getLength(), p.getAddress(), p.getPort());
 
 	//	logger.debug("Length in enviarPaqueteAExterior" + p.getData().length);
 
-	//	logger.debug("Sending on enviarPaqueteAExterior: ");
+//		logger.debug("Sending on enviarPaqueteAExterior: ");
 
-		socket.send(enviarPaquete);
+	//	socket.send(enviarPaquete);
 		PrintMessage("The package was sent\n");
 	}
 
@@ -297,19 +323,39 @@ public class BridgeAgentInOut extends SingleAgent {
 	private boolean ACLMessageToDatagramPacket(ACLMessage ACLsms) {
 		try {
 			String message = Generate_All(ACLsms);
-			byte datos[] = message.getBytes();
-
 			
-			DatagramPacket enviarPaquete = new DatagramPacket(datos,
-					datos.length, InetAddress
-							.getByName(ACLsms.getReceiver().host), Integer
-							.valueOf(ACLsms.getReceiver().port));
+			//System.out.println(message);
+			
+			//System.out.println(message);
+			byte datos[] = message.getBytes();
+			
 
-			logger.debug("LONGITUD!!!" + datos.length);
-			SendOut(enviarPaquete);
+			InetAddress a = InetAddress.getByName(ACLsms.getReceiver().host);
+								
+			
+			socket = new Socket(a, 7778);
+			
+			
+			InputStream is = socket.getInputStream();
+			OutputStream os = socket.getOutputStream();
+
+			os.write(datos);
+			
+			
+			
+			
+//		  DatagramPacket(datos,
+//					datos.length, InetAddress
+//							.getByName(ACLsms.getReceiver().host), Integer
+//							.valueOf(ACLsms.getReceiver().port));
+//
+//          
+//			logger.debug("LONGITUD!!!" + datos.length);
+//			SendOut();
 
 			return true;
 		} catch (IOException e) {
+			logger.error("Exception in ACLMessageToDatagramPacket");
 			return false;
 		}
 
@@ -321,26 +367,34 @@ public class BridgeAgentInOut extends SingleAgent {
 	private void PrintMessage(final String message) {
 		logger.info(message);
 	}
+	/**
+	 * We consider a special char '~' instead of '@'
+	 */
+	private void ReplaceSpecialChar(ACLMessage msg)
+	{
+		msg.getReceiver().name = msg.getReceiver().name.replace('~', '@');
+	}
 
 	/**
 	 * Waits new package, and redirects packets to another platform
 	 */
 	public void execute() {
 		while (true) {
-
+		
 		
 			ACLMessage mensaje;
 			try {
 
-				mensaje = receiveACLMessage();
-				logger.info("Message was received in BridgeAgentInOut: "
-						+ mensaje.getContent());
+				Thread.sleep(Long.MAX_VALUE);
+		//		mensaje = receiveACLMessage();
+		//		logger.info("Message was received in BridgeAgentInOut: "
+		//				+ mensaje.getContent());
 
 				/*
 				 * In the next version, here for each request will create a new
 				 * execution thread
 				 */
-				ACLMessageToDatagramPacket(mensaje); // Send packacge to out
+		//		ACLMessageToDatagramPacket(mensaje); // Send packacge to out
 
 			} catch (Exception e) {
 			}
@@ -358,4 +412,24 @@ public class BridgeAgentInOut extends SingleAgent {
 
 	}
 
+	public void onMessage(ACLMessage msg) {
+		/**
+		 * When a message arrives, its shows on screen
+		 */
+		logger.info("Mensaje received in " + this.getName()
+				+ " agent, by onMessage: " + msg.getContent());
+		
+		try{
+			
+			ReplaceSpecialChar(msg);
+			
+			ACLMessageToDatagramPacket(msg);
+		//System.out.println(message);
+		}catch(Exception e)
+		{
+			
+		}
+		
+		
+	}
 }
