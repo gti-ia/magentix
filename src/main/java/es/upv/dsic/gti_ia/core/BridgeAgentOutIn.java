@@ -24,6 +24,9 @@ public class BridgeAgentOutIn extends BaseAgent {
 
 	//private DatagramSocket socket;
 	private ServerSocket socket;
+	/**
+	 * BridgeAgentOutIn runs on 8081 port
+	 */
 	public static int http_port = 8081;
 
 	/**
