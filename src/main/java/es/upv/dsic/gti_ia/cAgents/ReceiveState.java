@@ -5,24 +5,33 @@ import es.upv.dsic.gti_ia.core.ACLMessage;
 /**
  * 
  * @author Ricard Lopez Fogues
- *
+ * 
  */
 
-public abstract class ReceiveState extends State{
+public abstract class ReceiveState extends State {
+
+	private ACLMessage acceptFilter;
+	private ReceiveStateMethod methodToRun;
+
 	public ReceiveState(String n) {
 		super(n);
 		type = State.RECEIVE;
 	}
 
-	private ACLMessage acceptFilter;
-	
-	public void setAcceptFilter(ACLMessage filter){
+	public void setAcceptFilter(ACLMessage filter) {
 		acceptFilter = filter;
 	}
-	
-	public ACLMessage getAcceptFilter(){
+
+	public ACLMessage getAcceptFilter() {
 		return acceptFilter;
 	}
-	
-	protected abstract String run(CProcessor myProcessor, ACLMessage msg);
+
+	public void setMethod(ReceiveStateMethod method) {
+		methodToRun = method;
+	}
+
+	public ReceiveStateMethod getMethod() {
+		return methodToRun;
+	}
+
 }

@@ -1,20 +1,22 @@
+// CAMBIOS EN ESTA CLASE
+
+// Sustituido el metodo run por registrar objeto SendStateMethod
+
+
 package es.upv.dsic.gti_ia.cAgents;
 
 import es.upv.dsic.gti_ia.core.ACLMessage;
 
-/**
- * 
- * @author Ricard Lopez Fogues
- *
- */
+public class SendState extends State {
 
-public abstract class SendState extends State{
+	ACLMessage messageTemplate;
+	private SendStateMethod methodToRun;
+
 	public SendState(String n) {
 		super(n);
 		type = State.SEND;
 	}
 
-	protected ACLMessage messageTemplate;
 	
 	public void setMessageTemplate(ACLMessage mt){
 		messageTemplate = mt;
@@ -24,9 +26,12 @@ public abstract class SendState extends State{
 		return messageTemplate;
 	}
 	
-	protected abstract ACLMessage run(CProcessor myProcessor, ACLMessage lastReceivedMessage);
-	
-	protected abstract String getNext(CProcessor myProcessor, ACLMessage lastReceivedMessage);
+	public void setMethod(SendStateMethod method) {
+		methodToRun = method;
+	}
 
+	public SendStateMethod getMethod() {
+		return methodToRun;
+	}
 
 }

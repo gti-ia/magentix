@@ -72,7 +72,7 @@ public class Agente1 extends CAgent{
 		AnswerMethodClass M = new AnswerMethodClass(); 
 		ACLMessage answerTemplate = new ACLMessage(ACLMessage.AGREE);
 			
-		SendStateTest sendAnswer = new SendStateTest("sendAnswer");
+		SendState sendAnswer = new SendState("sendAnswer");
 		
 		sendAnswer.setMessageTemplate(answerTemplate);
 		sendAnswer.setMethod(M);

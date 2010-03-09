@@ -1,19 +1,26 @@
 package es.upv.dsic.gti_ia.cAgents;
 
-import es.upv.dsic.gti_ia.core.ACLMessage;
-
 /**
  * 
  * @author Ricard Lopez Fogues
- *
+ * 
  */
 
-public abstract class CancelState extends State{
-	
+class CancelState extends State {
+
+	private CancelStateMethod Method;
+
 	protected CancelState() {
 		super("CANCEL_STATE");
 		type = State.CANCEL;
 	}
-		
-	protected abstract String run(ACLMessage exceptionMessage, String next);
+
+	public void setMethod(CancelStateMethod method) {
+		Method = method;
+	}
+
+	public CancelStateMethod getMethod() {
+		return Method;
+	}
+
 }

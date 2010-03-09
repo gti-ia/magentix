@@ -1,3 +1,8 @@
+//CAMBIOS
+
+// Le afecta los cambios en la forma en que ahora se lanzan las subconversaciones
+// Elimino autostartfactory
+
 package es.upv.dsic.gti_ia.cAgents;
 
 import java.util.ArrayList;
@@ -52,29 +57,19 @@ public class CProcessorFactory{
 		return this.myCProcessor;
 	}
 	
-	protected synchronized void startConversation(ACLMessage msg, int factoryArrayIndex){	
+	protected synchronized void startConversation(ACLMessage msg, int factoryArrayIndex, CProcessor parent, Boolean isSync){	
 		CProcessor cloneProcessor = (CProcessor) myCProcessor.clone();
 		cloneProcessor.setConversationID(msg.getConversationId());
 		cloneProcessor.addMessage(msg);
 		cloneProcessor.setIdle(false);
 		cloneProcessor.setFactoryArrayIndex(factoryArrayIndex);
+		cloneProcessor.setParent(parent);
+		cloneProcessor.setIsSynchronized(isSync);
 		setParentChildren(cloneProcessor);
 		myAgent.addProcessor(msg.getConversationId(), cloneProcessor);
 		myAgent.exec.execute(cloneProcessor);
 	}
-	
-	protected synchronized void forcedStartConversation(ACLMessage msg, int factoryArrayIndex){
-		CProcessor cloneProcessor = (CProcessor) myCProcessor.clone();
-		cloneProcessor.setConversationID(msg.getConversationId());
-		cloneProcessor.setIdle(false);
-		cloneProcessor.setFactoryArrayIndex(factoryArrayIndex);
-		ACLMessage startMessage = new ACLMessage(ACLMessage.INFORM);
-		startMessage.setHeader("start", "start");
-		cloneProcessor.addMessage(startMessage);
-		setParentChildren(cloneProcessor);
-		myAgent.addProcessor(msg.getConversationId(), cloneProcessor);
-		myAgent.exec.execute(cloneProcessor);		
-	}
+
 	
 	private void setParentChildren(CProcessor parent){
 		for(int i=0; i< children.size(); i++){
