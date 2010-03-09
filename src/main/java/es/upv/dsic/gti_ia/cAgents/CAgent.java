@@ -69,6 +69,7 @@ public abstract class CAgent extends BaseAgent {
 	private Map<String, Timer> timers = new HashMap<String, Timer>();
 	private ReentrantLock lock = new ReentrantLock();
 	final Condition iAmFinished = lock.newCondition();
+	private CProcessorFactory welcomeFactory;
 
 	public CAgent(AgentID aid) throws Exception {
 		super(aid);
@@ -81,7 +82,7 @@ public abstract class CAgent extends BaseAgent {
 
 		// BEGIN STATE
 
-		BeginState bs = (BeginState) defaultFactory.getCProcessor().getState(
+		BeginState bs = (BeginState) defaultFactory.cProcessorTemplate().getState(
 				"BEGIN");
 
 		class BeginMethod extends BeginStateMethod {
@@ -111,11 +112,76 @@ public abstract class CAgent extends BaseAgent {
 
 		fs.setMethod(new fsMethod());
 
-		defaultFactory.getCProcessor().registerState(fs);
+		defaultFactory.cProcessorTemplate().registerState(fs);
 
-		defaultFactory.getCProcessor().addTransition("BEGIN", "FINAL");
+		defaultFactory.cProcessorTemplate().addTransition("BEGIN", "FINAL");
 
 		return defaultFactory;
+	}
+
+	private CProcessorFactory createWelcomeFactory(final CAgent me) {
+		welcomeFactory = new CProcessorFactory("WelcomeFactory",
+				new ACLMessage(ACLMessage.UNKNOWN), 1000);
+
+		// BEGIN STATE
+
+		BeginState bs = (BeginState) welcomeFactory.cProcessorTemplate().getState(
+				"BEGIN");
+
+		class BeginMethod extends BeginStateMethod {
+
+			protected String run(CProcessor myProcessor, ACLMessage msg) {
+				me.Initialize(myProcessor, msg);
+				return "WAIT";
+			};
+		}
+
+		bs.setMethod(new BeginMethod());
+
+		// WAIT STATE
+
+		WaitState WAIT = new WaitState("WAIT",0);
+		
+		welcomeFactory.cProcessorTemplate().registerState(WAIT);
+		
+		welcomeFactory.cProcessorTemplate().addTransition("BEGIN", "WAIT");
+		
+		// RECEIVE STATE
+		
+		ReceiveState RECEIVE = new ReceiveState("RECEIVE");
+		
+		class RECEIVE_Method extends ReceiveStateMethod {
+			
+			protected  String run(CProcessor myProcessor,
+					ACLMessage receivedMessage) {
+				
+				// Nothing really to do
+				return "FINAL";
+			}						
+		}
+
+		RECEIVE.setMethod(new RECEIVE_Method());
+		RECEIVE.setAcceptFilter(new ACLMessage(ACLMessage.INFORM));
+		welcomeFactory.cProcessorTemplate().registerState(RECEIVE);
+		
+		
+		// FINAL STATE
+
+		FinalState fs = new FinalState("FINAL");
+
+		class fsMethod extends FinalStateMethod {
+
+			protected void run(CProcessor myProcessor, ACLMessage msg) {
+				me.Finalize(myProcessor, msg);
+			}
+		}
+
+		fs.setMethod(new fsMethod());
+
+		welcomeFactory.cProcessorTemplate().registerState(fs);
+
+
+		return welcomeFactory;
 	}
 
 	public void send(ACLMessage msg) {
@@ -223,9 +289,11 @@ public abstract class CAgent extends BaseAgent {
 		this.processMessage(msg);
 	}
 
-	protected abstract void Initialize(ACLMessage welcomeMessage);
+	protected abstract void Initialize(CProcessor firstProcessor,
+			ACLMessage welcomeMessage);
 
-	protected abstract void Finalize(ACLMessage finalizeMessage);
+	protected abstract void Finalize(CProcessor firstProcessor,
+			ACLMessage finalizeMessage);
 
 	void Finished() {
 
@@ -242,22 +310,25 @@ public abstract class CAgent extends BaseAgent {
 
 	protected final void execute() {
 		addFactory(createDefaultFactory());
+		addFactory(createWelcomeFactory(this));
 		ACLMessage welcomeMessage = new ACLMessage(ACLMessage.INFORM);
 		welcomeMessage.setContent("Welcome to this plarform");
 
-		Initialize(welcomeMessage);
+		welcomeFactory.startConversation(welcomeMessage, 1, null, false);
 
-		System.out.println("Soy " + this.getName() + ". Arranco");
-
-		lock.lock();
-		try {
-			iAmFinished.await();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		lock.unlock();
-
-		Finalize(welcomeMessage);
+		// Initialize(welcomeMessage);
+		//
+		// System.out.println("Soy " + this.getName() + ". Arranco");
+		//
+		// lock.lock();
+		// try {
+		// iAmFinished.await();
+		// } catch (InterruptedException e) {
+		// e.printStackTrace();
+		// }
+		// lock.unlock();
+		//
+		// Finalize(welcomeMessage);
 
 	}
 }

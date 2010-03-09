@@ -323,27 +323,27 @@ public class SF extends CAgent {
 		CProcessorFactory factory = new CProcessorFactory("Participant", template, 1);
 		
 		//B
-		factory.getCProcessor().registerFirstState(new GenericBeginState("B"));
+		factory.cProcessorTemplate().registerFirstState(new GenericBeginState("B"));
 		
 		//W
-		factory.getCProcessor().registerState(new WaitState("W",1000));
-		factory.getCProcessor().addTransition("B", "W");
+		factory.cProcessorTemplate().registerState(new WaitState("W",1000));
+		factory.cProcessorTemplate().addTransition("B", "W");
 		
 		//R
 		ReceiveState1 R = new ReceiveState1("R");
 		ACLMessage receiveFilter = new ACLMessage(ACLMessage.REQUEST);
 		R.setAcceptFilter(receiveFilter);
-		factory.getCProcessor().registerState(R);
-		factory.getCProcessor().addTransition("W", "R");
+		factory.cProcessorTemplate().registerState(R);
+		factory.cProcessorTemplate().addTransition("W", "R");
 		
 		//RW
 		GenericReceiveState RW = new GenericReceiveState("RW");
 		receiveFilter = new ACLMessage(ACLMessage.INFORM);
 		receiveFilter.setHeader("purpose", "waitMessage");
 		RW.setAcceptFilter(receiveFilter);
-		factory.getCProcessor().registerState(RW);
-		factory.getCProcessor().addTransition("W", "RW");
-		factory.getCProcessor().addTransition("RW", "W");
+		factory.cProcessorTemplate().registerState(RW);
+		factory.cProcessorTemplate().addTransition("W", "RW");
+		factory.cProcessorTemplate().addTransition("RW", "W");
 		
 		//S1
 		SendState1 S1 = new SendState1("S1");
@@ -352,8 +352,8 @@ public class SF extends CAgent {
 		sendTemplate.setSender(getAid());
 		sendTemplate.setProtocol("fipa-request");
 		S1.setMessageTemplate(sendTemplate);
-		factory.getCProcessor().registerState(S1);
-		factory.getCProcessor().addTransition("R", "S1");
+		factory.cProcessorTemplate().registerState(S1);
+		factory.cProcessorTemplate().addTransition("R", "S1");
 		
 		//S2
 		SendState1 S2 = new SendState1("S2");
@@ -362,8 +362,8 @@ public class SF extends CAgent {
 		sendTemplate.setSender(getAid());
 		sendTemplate.setProtocol("fipa-request");
 		S2.setMessageTemplate(sendTemplate);
-		factory.getCProcessor().registerState(S2);
-		factory.getCProcessor().addTransition("R", "S2");
+		factory.cProcessorTemplate().registerState(S2);
+		factory.cProcessorTemplate().addTransition("R", "S2");
 		
 		//S3
 		SendState1 S3 = new SendState1("S3");
@@ -372,12 +372,12 @@ public class SF extends CAgent {
 		sendTemplate.setSender(getAid());
 		sendTemplate.setProtocol("fipa-request");
 		S3.setMessageTemplate(sendTemplate);
-		factory.getCProcessor().registerState(S3);
-		factory.getCProcessor().addTransition("R", "S3");
+		factory.cProcessorTemplate().registerState(S3);
+		factory.cProcessorTemplate().addTransition("R", "S3");
 		
 		//A
-		factory.getCProcessor().registerState(new ActionState1("A"));
-		factory.getCProcessor().addTransition("S3", "A");
+		factory.cProcessorTemplate().registerState(new ActionState1("A"));
+		factory.cProcessorTemplate().addTransition("S3", "A");
 		
 		//S4
 		SendState1 S4 = new SendState1("S4");
@@ -386,8 +386,8 @@ public class SF extends CAgent {
 		sendTemplate.setSender(getAid());
 		sendTemplate.setProtocol("fipa-request");
 		S4.setMessageTemplate(sendTemplate);
-		factory.getCProcessor().registerState(S4);
-		factory.getCProcessor().addTransition("A", "S4");
+		factory.cProcessorTemplate().registerState(S4);
+		factory.cProcessorTemplate().addTransition("A", "S4");
 		
 		//S5
 		SendState3 S5 = new SendState3("S5");
@@ -396,8 +396,8 @@ public class SF extends CAgent {
 		sendTemplate.setSender(getAid());
 		sendTemplate.setProtocol("fipa-request");
 		S5.setMessageTemplate(sendTemplate);
-		factory.getCProcessor().registerState(S5);
-		factory.getCProcessor().addTransition("A", "S5");
+		factory.cProcessorTemplate().registerState(S5);
+		factory.cProcessorTemplate().addTransition("A", "S5");
 		
 		//S6
 		SendState1 S6 = new SendState1("S6");
@@ -407,22 +407,22 @@ public class SF extends CAgent {
 		sendTemplate.setSender(getAid());
 		sendTemplate.setProtocol("fipa-request");
 		S6.setMessageTemplate(sendTemplate);
-		factory.getCProcessor().registerState(S6);
-		factory.getCProcessor().addTransition("A", "S6");
+		factory.cProcessorTemplate().registerState(S6);
+		factory.cProcessorTemplate().addTransition("A", "S6");
 		
 		//final
-		factory.getCProcessor().registerState(new GenericFinalState("F"));
-		factory.getCProcessor().addTransition("S1", "F");
-		factory.getCProcessor().addTransition("S2", "F");
-		factory.getCProcessor().addTransition("S4", "F");
-		factory.getCProcessor().addTransition("S5", "F");
-		factory.getCProcessor().addTransition("S6", "F");
+		factory.cProcessorTemplate().registerState(new GenericFinalState("F"));
+		factory.cProcessorTemplate().addTransition("S1", "F");
+		factory.cProcessorTemplate().addTransition("S2", "F");
+		factory.cProcessorTemplate().addTransition("S4", "F");
+		factory.cProcessorTemplate().addTransition("S5", "F");
+		factory.cProcessorTemplate().addTransition("S6", "F");
 		
 		//exception states
-		factory.getCProcessor().registerState(new GenericCancelState());
-		factory.getCProcessor().registerState(new GenericNotAcceptedMessagesState());
-		factory.getCProcessor().registerState(new GenericSendingErrorsState());
-		factory.getCProcessor().registerState(new GenericTerminatedFatherState());
+		factory.cProcessorTemplate().registerState(new GenericCancelState());
+		factory.cProcessorTemplate().registerState(new GenericNotAcceptedMessagesState());
+		factory.cProcessorTemplate().registerState(new GenericSendingErrorsState());
+		factory.cProcessorTemplate().registerState(new GenericTerminatedFatherState());
 		
 		//attach factory to agent
 		this.addFactory(factory);		

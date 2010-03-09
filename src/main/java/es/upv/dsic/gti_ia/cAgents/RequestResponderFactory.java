@@ -15,62 +15,62 @@ public class RequestResponderFactory extends CProcessorFactory{
 		ACLMessage receiveFilter;
 		
 		//B
-		this.getCProcessor().registerFirstState(new GenericBeginState("B"));
+		this.cProcessorTemplate().registerFirstState(new GenericBeginState("B"));
 		
 		//W
-		this.getCProcessor().registerState(new WaitState("W",1));
-		this.getCProcessor().addTransition("B", "W");
+		this.cProcessorTemplate().registerState(new WaitState("W",1));
+		this.cProcessorTemplate().addTransition("B", "W");
 		
 		//R
 		R.setName("R");
-		this.getCProcessor().registerState(R);
-		this.getCProcessor().addTransition("W", "R");
+		this.cProcessorTemplate().registerState(R);
+		this.cProcessorTemplate().addTransition("W", "R");
 		
 		//RW
 		GenericReceiveState RW = new GenericReceiveState("RW");
 		receiveFilter = new ACLMessage(ACLMessage.INFORM);
 		receiveFilter.setHeader("purpose", "waitMessage");
 		RW.setAcceptFilter(receiveFilter);
-		this.getCProcessor().registerState(RW);
-		this.getCProcessor().addTransition("W", "RW");
-		this.getCProcessor().addTransition("RW", "W");
+		this.cProcessorTemplate().registerState(RW);
+		this.cProcessorTemplate().addTransition("W", "RW");
+		this.cProcessorTemplate().addTransition("RW", "W");
 		
 		//S1
 		ReplySendState S1 = new ReplySendState("S1");
 		ACLMessage sendTemplate = new ACLMessage(ACLMessage.NOT_UNDERSTOOD);
 		sendTemplate.setContent("Request message not understood");
 		S1.setMessageTemplate(sendTemplate);
-		this.getCProcessor().registerState(S1);
-		this.getCProcessor().addTransition("R", "S1");
+		this.cProcessorTemplate().registerState(S1);
+		this.cProcessorTemplate().addTransition("R", "S1");
 		
 		//S2
 		ReplySendState S2 = new ReplySendState("S2");
 		sendTemplate = new ACLMessage(ACLMessage.REFUSE);
 		sendTemplate.setContent("Request message refused");
 		S2.setMessageTemplate(sendTemplate);
-		this.getCProcessor().registerState(S2);
-		this.getCProcessor().addTransition("R", "S2");
+		this.cProcessorTemplate().registerState(S2);
+		this.cProcessorTemplate().addTransition("R", "S2");
 		
 		//S3
 		ReplySendState S3 = new ReplySendState("S3");
 		sendTemplate = new ACLMessage(ACLMessage.AGREE);
 		sendTemplate.setContent("Request message agree");
 		S3.setMessageTemplate(sendTemplate);
-		this.getCProcessor().registerState(S3);
-		this.getCProcessor().addTransition("R", "S3");
+		this.cProcessorTemplate().registerState(S3);
+		this.cProcessorTemplate().addTransition("R", "S3");
 		
 		//A
 		A.setName("A");
-		this.getCProcessor().registerState(A);
-		this.getCProcessor().addTransition("S3", "A");
+		this.cProcessorTemplate().registerState(A);
+		this.cProcessorTemplate().addTransition("S3", "A");
 		
 		//S4
 		ReplySendState S4 = new ReplySendState("S4");
 		sendTemplate = new ACLMessage(ACLMessage.FAILURE);
 		sendTemplate.setContent("Failure performing the action");
 		S4.setMessageTemplate(sendTemplate);
-		this.getCProcessor().registerState(S4);
-		this.getCProcessor().addTransition("A", "S4");
+		this.cProcessorTemplate().registerState(S4);
+		this.cProcessorTemplate().addTransition("A", "S4");
 		
 		//S5
 		ReplySendState S5 = new ReplySendState("S5");
@@ -78,8 +78,8 @@ public class RequestResponderFactory extends CProcessorFactory{
 		sendTemplate.setHeader("inform", "done");
 		sendTemplate.setContent("Action done");
 		S5.setMessageTemplate(sendTemplate);
-		this.getCProcessor().registerState(S5);
-		this.getCProcessor().addTransition("A", "S5");
+		this.cProcessorTemplate().registerState(S5);
+		this.cProcessorTemplate().addTransition("A", "S5");
 		
 		//S6
 		ReplySendState S6 = new ReplySendState("S6");
@@ -87,31 +87,31 @@ public class RequestResponderFactory extends CProcessorFactory{
 		sendTemplate.setHeader("inform", "ref");
 		sendTemplate.setContent("Action ref");
 		S6.setMessageTemplate(sendTemplate);
-		this.getCProcessor().registerState(S6);
-		this.getCProcessor().addTransition("A", "S6");
+		this.cProcessorTemplate().registerState(S6);
+		this.cProcessorTemplate().addTransition("A", "S6");
 		
 		//final
-		this.getCProcessor().registerState(new GenericFinalState("F"));
-		this.getCProcessor().addTransition("S1", "F");
-		this.getCProcessor().addTransition("S2", "F");
-		this.getCProcessor().addTransition("S4", "F");
-		this.getCProcessor().addTransition("S5", "F");
-		this.getCProcessor().addTransition("S6", "F");
+		this.cProcessorTemplate().registerState(new GenericFinalState("F"));
+		this.cProcessorTemplate().addTransition("S1", "F");
+		this.cProcessorTemplate().addTransition("S2", "F");
+		this.cProcessorTemplate().addTransition("S4", "F");
+		this.cProcessorTemplate().addTransition("S5", "F");
+		this.cProcessorTemplate().addTransition("S6", "F");
 		
 		//exception states
-		this.getCProcessor().registerState(new GenericCancelState());
-		this.getCProcessor().registerState(new GenericNotAcceptedMessagesState());
-		this.getCProcessor().registerState(new GenericSendingErrorsState());
-		this.getCProcessor().registerState(new GenericTerminatedFatherState());
+		this.cProcessorTemplate().registerState(new GenericCancelState());
+		this.cProcessorTemplate().registerState(new GenericNotAcceptedMessagesState());
+		this.cProcessorTemplate().registerState(new GenericSendingErrorsState());
+		this.cProcessorTemplate().registerState(new GenericTerminatedFatherState());
 	}
 	
 	public void changeState(State s) throws Exception{
 		//if new state's type is different to the previous state's type, rise exception
-		if(s.getType() != this.getCProcessor().getState(s.getName()).getType()){
+		if(s.getType() != this.cProcessorTemplate().getState(s.getName()).getType()){
 			throw new Exception("Error: type of the new state and type of the previous state do not match");
 		}
 		else
-			this.getCProcessor().registerState(s);
+			this.cProcessorTemplate().registerState(s);
 	}
 	
 	class ReplySendState extends SendState{

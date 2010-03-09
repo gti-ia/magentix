@@ -86,7 +86,7 @@ public class CProcessor implements Runnable, Cloneable {
 
 	public ACLMessage createSyncConversation(ACLMessage initalMessage,
 			Boolean sharedId) {
-		
+
 		String savedID = this.conversationID;
 
 		mutex.lock();
@@ -94,10 +94,11 @@ public class CProcessor implements Runnable, Cloneable {
 		if (!sharedId) {
 			initalMessage.setConversationId(this.newConversationID());
 		} else {
-			this.conversationID = ""; // ID is shared. New messages now will be delivered to the child processor
+			this.conversationID = ""; // ID is shared. New messages now will be
+			// delivered to the child processor
 		}
 		myAgent.startConversation(initalMessage, this, true);
-		
+
 		try {
 			syncConversationFinished.await();
 		} catch (InterruptedException e) {
@@ -258,17 +259,8 @@ public class CProcessor implements Runnable, Cloneable {
 						+ " currentState: " + currentState);
 				switch (currentStateType) {
 				case State.BEGIN:
-					// TODO :a consultar, de moment, si un missatge es de tipo
-					// start, messagequeue.remove, si no peek
-					ACLMessage peekMessage = messageQueue.peek();
-					if (peekMessage.getHeaderValue("start") != null
-							&& peekMessage.getHeaderValue("start") != "") {
-						currentState = this.beginState().getMethod().run(this,
-								messageQueue.remove());
-					} else {
-						currentState = this.beginState().getMethod().run(this,
-								messageQueue.peek());
-					}
+					currentState = this.beginState().getMethod().run(this,
+							messageQueue.remove());
 					break;
 				case State.ACTION:
 					ActionState actionState = (ActionState) states
@@ -284,7 +276,8 @@ public class CProcessor implements Runnable, Cloneable {
 						messageToSend = sendState.getMessageTemplate();
 						currentState = sendState.getMethod().run(this,
 								messageToSend);
-						messageToSend.setConversationId(this.conversationID); // Foce ID
+						messageToSend.setConversationId(this.conversationID); // Foce
+						// ID
 						this.myAgent.send(messageToSend);
 						this.myAgent.availableSends.release();
 					} catch (InterruptedException e) {
@@ -363,9 +356,10 @@ public class CProcessor implements Runnable, Cloneable {
 					} else { // queueMessage is empty
 						System.out.println("Cola vacia");
 						idle = true;
-						myAgent
-								.addTimer(conversationID, waitState
-										.getTimeOut());
+						if (waitState.getTimeOut() > 0) {
+							myAgent.addTimer(conversationID, waitState
+									.getTimeOut());
+						}
 						return;
 					}
 					break;

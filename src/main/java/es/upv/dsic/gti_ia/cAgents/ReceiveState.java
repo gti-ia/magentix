@@ -8,7 +8,7 @@ import es.upv.dsic.gti_ia.core.ACLMessage;
  * 
  */
 
-public abstract class ReceiveState extends State {
+public class ReceiveState extends State {
 
 	private ACLMessage acceptFilter;
 	private ReceiveStateMethod methodToRun;

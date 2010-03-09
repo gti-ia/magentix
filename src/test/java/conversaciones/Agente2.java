@@ -29,7 +29,7 @@ public class Agente2 extends CAgent{
 		CProcessorFactory factory = new CProcessorFactory("Ini", template, 1);
 		
 		//begin
-		factory.getCProcessor().registerFirstState(new GenericBeginState("beginState"));
+		factory.cProcessorTemplate().registerFirstState(new GenericBeginState("beginState"));
 		
 		//send
 		SendState1 sendState0 = new SendState1("sendState0");
@@ -38,20 +38,20 @@ public class Agente2 extends CAgent{
 		sendTemplate0.setContent("Hi! I'm "+this.getName());
 		sendTemplate0.setReceiver(new AgentID("agenteRes"));
 		sendState0.setMessageTemplate(sendTemplate0);
-		factory.getCProcessor().registerState(sendState0);
-		factory.getCProcessor().addTransition("beginState", "sendState0");
+		factory.cProcessorTemplate().registerState(sendState0);
+		factory.cProcessorTemplate().addTransition("beginState", "sendState0");
 		
 		//wait
-		factory.getCProcessor().registerState(new WaitState("waitState",1000000000));
-		factory.getCProcessor().addTransition("sendState0", "waitState");
+		factory.cProcessorTemplate().registerState(new WaitState("waitState",1000000000));
+		factory.cProcessorTemplate().addTransition("sendState0", "waitState");
 		
 		//receive
 		ReceiveState1 receiveState = new ReceiveState1("receiveState");
 		ACLMessage receiveFilter = new ACLMessage(ACLMessage.AGREE);
 		receiveFilter.setHeader("Purpose", "Hello");
 		receiveState.setAcceptFilter(receiveFilter);
-		factory.getCProcessor().registerState(receiveState);
-		factory.getCProcessor().addTransition("waitState", "receiveState");
+		factory.cProcessorTemplate().registerState(receiveState);
+		factory.cProcessorTemplate().addTransition("waitState", "receiveState");
 		
 		SendState1 sendState = new SendState1("sendState");
 		ACLMessage sendTemplate = new ACLMessage(ACLMessage.REQUEST);
@@ -59,47 +59,47 @@ public class Agente2 extends CAgent{
 		sendTemplate.setContent("How are you feeling today?");
 		sendTemplate.setReceiver(new AgentID("agenteRes"));
 		sendState.setMessageTemplate(sendTemplate);
-		factory.getCProcessor().registerState(sendState);
-		factory.getCProcessor().addTransition("receiveState", "sendState");
+		factory.cProcessorTemplate().registerState(sendState);
+		factory.cProcessorTemplate().addTransition("receiveState", "sendState");
 		
 		//wait
-		factory.getCProcessor().registerState(new WaitState("waitState2",1000000000));
-		factory.getCProcessor().addTransition("sendState", "waitState2");
+		factory.cProcessorTemplate().registerState(new WaitState("waitState2",1000000000));
+		factory.cProcessorTemplate().addTransition("sendState", "waitState2");
 		
 		//receive happy
 		ReceiveState1 receiveStateHappy = new ReceiveState1("receiveStateHappy");
 		ACLMessage receiveFilterHappy = new ACLMessage(ACLMessage.AGREE);
 		receiveFilterHappy.setHeader("AnimicState", "Happy");
 		receiveStateHappy.setAcceptFilter(receiveFilterHappy);
-		factory.getCProcessor().registerState(receiveStateHappy);
-		factory.getCProcessor().addTransition("waitState2", "receiveStateHappy");
+		factory.cProcessorTemplate().registerState(receiveStateHappy);
+		factory.cProcessorTemplate().addTransition("waitState2", "receiveStateHappy");
 		
 		//receive sad
 		ReceiveState1 receiveStateSad = new ReceiveState1("receiveStateSad");
 		ACLMessage receiveFilterSad = new ACLMessage(ACLMessage.AGREE);
 		receiveFilterSad.setHeader("AnimicState", "Sad");
 		receiveStateSad.setAcceptFilter(receiveFilterSad);
-		factory.getCProcessor().registerState(receiveStateSad);
-		factory.getCProcessor().addTransition("waitState2", "receiveStateSad");
+		factory.cProcessorTemplate().registerState(receiveStateSad);
+		factory.cProcessorTemplate().addTransition("waitState2", "receiveStateSad");
 		
 		//action happy
-		factory.getCProcessor().registerState(new ActionStateHappy("actionStateHappy"));
-		factory.getCProcessor().addTransition("receiveStateHappy", "actionStateHappy");
+		factory.cProcessorTemplate().registerState(new ActionStateHappy("actionStateHappy"));
+		factory.cProcessorTemplate().addTransition("receiveStateHappy", "actionStateHappy");
 		
 		//action sad
-		factory.getCProcessor().registerState(new ActionStateSad("actionStateSad"));
-		factory.getCProcessor().addTransition("receiveStateSad", "actionStateSad");
+		factory.cProcessorTemplate().registerState(new ActionStateSad("actionStateSad"));
+		factory.cProcessorTemplate().addTransition("receiveStateSad", "actionStateSad");
 		
 		//exception states
-		factory.getCProcessor().registerState(new GenericCancelState());
-		factory.getCProcessor().registerState(new GenericNotAcceptedMessagesState());
-		factory.getCProcessor().registerState(new GenericSendingErrorsState());
-		factory.getCProcessor().registerState(new GenericTerminatedFatherState());
+		factory.cProcessorTemplate().registerState(new GenericCancelState());
+		factory.cProcessorTemplate().registerState(new GenericNotAcceptedMessagesState());
+		factory.cProcessorTemplate().registerState(new GenericSendingErrorsState());
+		factory.cProcessorTemplate().registerState(new GenericTerminatedFatherState());
 		
 		//final
-		factory.getCProcessor().registerState(new GenericFinalState("finalState"));
-		factory.getCProcessor().addTransition("actionStateHappy", "finalState");
-		factory.getCProcessor().addTransition("actionStateSad", "finalState");
+		factory.cProcessorTemplate().registerState(new GenericFinalState("finalState"));
+		factory.cProcessorTemplate().addTransition("actionStateHappy", "finalState");
+		factory.cProcessorTemplate().addTransition("actionStateSad", "finalState");
 		
 		this.addStartingFactory(factory, "C"+this.hashCode()+System.currentTimeMillis());		
 	}

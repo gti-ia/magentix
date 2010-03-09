@@ -36,7 +36,7 @@ public class Announcement extends CAgent{
 		String parentConversationId = "C"+this.hashCode()+System.currentTimeMillis();
 		ACLMessage template = new ACLMessage(ACLMessage.REQUEST); //the template has no use in this example
 		CProcessorFactory parentFactory = new CProcessorFactory("parentFactory", template, 1);
-		CProcessor parentProcessor = parentFactory.getCProcessor();
+		CProcessor parentProcessor = parentFactory.cProcessorTemplate();
 		
 		//B
 		parentProcessor.registerFirstState(new GenericBeginState("B"));

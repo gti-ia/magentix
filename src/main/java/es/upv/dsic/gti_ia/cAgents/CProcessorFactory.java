@@ -53,9 +53,12 @@ public class CProcessorFactory{
 		return template;
 	}
 	
-	public CProcessor getCProcessor(){
+	public CProcessor cProcessorTemplate(){
 		return this.myCProcessor;
 	}
+	
+	
+	// PENDIENTE: cambiar índice por objeto
 	
 	protected synchronized void startConversation(ACLMessage msg, int factoryArrayIndex, CProcessor parent, Boolean isSync){	
 		CProcessor cloneProcessor = (CProcessor) myCProcessor.clone();
@@ -76,7 +79,7 @@ public class CProcessorFactory{
 			String factoryName = children.get(i);
 			for(int j=0; j< myAgent.factories.size(); j++)
 				if(myAgent.factories.get(j).name.equals(factoryName))
-					myAgent.factories.get(j).getCProcessor().setParent(parent);
+					myAgent.factories.get(j).cProcessorTemplate().setParent(parent);
 		}		
 	}
 	

@@ -28,27 +28,27 @@ public class Agente1 extends CAgent{
 		CProcessorFactory factoriaRes = new CProcessorFactory("Res", template, 5);
 		
 		//begin
-		factoriaRes.getCProcessor().registerFirstState(new GenericBeginState("beginState"));
+		factoriaRes.cProcessorTemplate().registerFirstState(new GenericBeginState("beginState"));
 		
 		//wait
-		factoriaRes.getCProcessor().registerState(new WaitState("waitState",10));
-		factoriaRes.getCProcessor().addTransition("beginState", "waitState");
+		factoriaRes.cProcessorTemplate().registerState(new WaitState("waitState",10));
+		factoriaRes.cProcessorTemplate().addTransition("beginState", "waitState");
 		
 		//receive wait1
 		ReceiveState1 receiveWaitState = new ReceiveState1("receiveWaitState1");
 		ACLMessage receiveWaitFilter = new ACLMessage(ACLMessage.INFORM);
 		receiveWaitFilter.setHeader("Purpose", "WaitMessage");
 		receiveWaitState.setAcceptFilter(receiveWaitFilter);
-		factoriaRes.getCProcessor().registerState(receiveWaitState);
-		factoriaRes.getCProcessor().addTransition("waitState", "receiveWaitState1");
+		factoriaRes.cProcessorTemplate().registerState(receiveWaitState);
+		factoriaRes.cProcessorTemplate().addTransition("waitState", "receiveWaitState1");
 		
 		//receive
 		ReceiveState1 receiveState = new ReceiveState1("receiveState");
 		ACLMessage receiveFilter = new ACLMessage(ACLMessage.REQUEST);
 		receiveFilter.setHeader("Purpose", "Hello");
 		receiveState.setAcceptFilter(receiveFilter);
-		factoriaRes.getCProcessor().registerState(receiveState);
-		factoriaRes.getCProcessor().addTransition("waitState", "receiveState");
+		factoriaRes.cProcessorTemplate().registerState(receiveState);
+		factoriaRes.cProcessorTemplate().addTransition("waitState", "receiveState");
 		
 		//send
 		SendState1 sendState = new SendState1("sendState");
@@ -56,8 +56,8 @@ public class Agente1 extends CAgent{
 		sendTemplate.setHeader("Purpose", "Hello");
 		sendTemplate.setContent("Hello! I'm "+this.getName()+" I'm feeling different today");
 		sendState.setMessageTemplate(sendTemplate);
-		factoriaRes.getCProcessor().registerState(sendState);
-		factoriaRes.getCProcessor().addTransition("receiveState", "sendState");
+		factoriaRes.cProcessorTemplate().registerState(sendState);
+		factoriaRes.cProcessorTemplate().addTransition("receiveState", "sendState");
 		
 		//sendT
 		
@@ -76,29 +76,29 @@ public class Agente1 extends CAgent{
 		
 		sendAnswer.setMessageTemplate(answerTemplate);
 		sendAnswer.setMethod(M);
-		factoriaRes.getCProcessor().registerState(sendAnswer);
-		factoriaRes.getCProcessor().addTransition("receiveState", "sendAnswer");
+		factoriaRes.cProcessorTemplate().registerState(sendAnswer);
+		factoriaRes.cProcessorTemplate().addTransition("receiveState", "sendAnswer");
 		
 		//wait2
-		factoriaRes.getCProcessor().registerState(new WaitState("waitState2",10));
-		factoriaRes.getCProcessor().addTransition("sendState", "waitState2");
+		factoriaRes.cProcessorTemplate().registerState(new WaitState("waitState2",10));
+		factoriaRes.cProcessorTemplate().addTransition("sendState", "waitState2");
 		
 		//receive wait2
 		ReceiveState1 receiveWaitState2 = new ReceiveState1("receiveWaitState2");
 		ACLMessage receiveWaitFilter2 = new ACLMessage(ACLMessage.INFORM);
 		receiveWaitFilter2.setHeader("Purpose", "WaitMessage");
 		receiveWaitState2.setAcceptFilter(receiveWaitFilter2);
-		factoriaRes.getCProcessor().registerState(receiveWaitState2);
-		factoriaRes.getCProcessor().addTransition("waitState2", "receiveWaitState2");
-		factoriaRes.getCProcessor().addTransition("receiveWaitState2", "waitState2");
+		factoriaRes.cProcessorTemplate().registerState(receiveWaitState2);
+		factoriaRes.cProcessorTemplate().addTransition("waitState2", "receiveWaitState2");
+		factoriaRes.cProcessorTemplate().addTransition("receiveWaitState2", "waitState2");
 		
 		//receive2
 		ReceiveState1 receiveState2 = new ReceiveState1("receiveState2");
 		ACLMessage receiveFilter2 = new ACLMessage(ACLMessage.REQUEST);
 		receiveFilter2.setHeader("Purpose", "AnimicState");
 		receiveState2.setAcceptFilter(receiveFilter2);
-		factoriaRes.getCProcessor().registerState(receiveState2);
-		factoriaRes.getCProcessor().addTransition("waitState2", "receiveState2");
+		factoriaRes.cProcessorTemplate().registerState(receiveState2);
+		factoriaRes.cProcessorTemplate().addTransition("waitState2", "receiveState2");
 		
 		//send2
 		SendState1 sendState2 = new SendState1("sendState2");
@@ -107,22 +107,22 @@ public class Agente1 extends CAgent{
 		sendTemplate2.setHeader("AnimicState", "Happy");
 		sendTemplate2.setContent("I'm feeling Happy");
 		sendState2.setMessageTemplate(sendTemplate2);
-		factoriaRes.getCProcessor().registerState(sendState2);
-		factoriaRes.getCProcessor().addTransition("receiveState2", "sendState2");	
+		factoriaRes.cProcessorTemplate().registerState(sendState2);
+		factoriaRes.cProcessorTemplate().addTransition("receiveState2", "sendState2");	
 		
 		//action
-		factoriaRes.getCProcessor().registerState(new ActionState1("actionState"));
-		factoriaRes.getCProcessor().addTransition("sendState2", "actionState");
+		factoriaRes.cProcessorTemplate().registerState(new ActionState1("actionState"));
+		factoriaRes.cProcessorTemplate().addTransition("sendState2", "actionState");
 		
 		//final
-		factoriaRes.getCProcessor().registerState(new GenericFinalState("finalState"));
-		factoriaRes.getCProcessor().addTransition("actionState", "finalState");
+		factoriaRes.cProcessorTemplate().registerState(new GenericFinalState("finalState"));
+		factoriaRes.cProcessorTemplate().addTransition("actionState", "finalState");
 		
 		//exception states
-		factoriaRes.getCProcessor().registerState(new GenericCancelState());
-		factoriaRes.getCProcessor().registerState(new GenericNotAcceptedMessagesState());
-		factoriaRes.getCProcessor().registerState(new GenericSendingErrorsState());
-		factoriaRes.getCProcessor().registerState(new GenericTerminatedFatherState());
+		factoriaRes.cProcessorTemplate().registerState(new GenericCancelState());
+		factoriaRes.cProcessorTemplate().registerState(new GenericNotAcceptedMessagesState());
+		factoriaRes.cProcessorTemplate().registerState(new GenericSendingErrorsState());
+		factoriaRes.cProcessorTemplate().registerState(new GenericTerminatedFatherState());
 		
 		//attach factory to agent
 		this.addFactory(factoriaRes);
