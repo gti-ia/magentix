@@ -34,7 +34,7 @@ class HarryClass extends CAgent {
 
 		// The converstation begins in the predefinited state labeled "BEGIN".
 
-		BeginState BEGIN = (BeginState) firstProcessor.getState("BEGIN");
+		BeginState BEGIN = (BeginState) talkWithSallyFactory.cProcessorTemplate().getState("BEGIN");
 
 		class BEGIN_Method extends BeginStateMethod {
 			protected String run(CProcessor myProcessor, ACLMessage msg) {
@@ -90,7 +90,7 @@ class HarryClass extends CAgent {
 		// start de conversation
 
 		firstProcessor.createSyncConversation(
-				new ACLMessage(ACLMessage.INFORM), true);
+				new ACLMessage(ACLMessage.INFORM));
 
 	}
 

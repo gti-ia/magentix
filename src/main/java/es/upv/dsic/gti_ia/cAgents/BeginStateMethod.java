@@ -2,8 +2,8 @@ package es.upv.dsic.gti_ia.cAgents;
 
 import es.upv.dsic.gti_ia.core.ACLMessage;
 
-public abstract class BeginStateMethod {
+public interface BeginStateMethod {
 	
-	protected abstract String run(CProcessor myProcessor, ACLMessage inputMessage);
+	public String run(CProcessor myProcessor, ACLMessage inputMessage);
 	
 }

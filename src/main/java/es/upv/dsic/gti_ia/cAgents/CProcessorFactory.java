@@ -37,7 +37,7 @@ public class CProcessorFactory{
 	}
 	
 	public void setTemplate(ACLMessage template){
-		this.template = template;
+		this.template = template.clone();
 	}
 	
 	protected void setAgent(CAgent myAgent){
@@ -50,7 +50,7 @@ public class CProcessorFactory{
 	}
 	
 	public ACLMessage getTemplate(){
-		return template;
+		return template.clone();
 	}
 	
 	public CProcessor cProcessorTemplate(){

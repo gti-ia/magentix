@@ -156,14 +156,16 @@ public class ACLMessage implements Serializable, Cloneable {
 	private long reply_byInMillisec = 0;
 
 	private Map<String, String> headers = new HashMap<String, String>();
+
 	// constructores
-	/*
-	 * public ACLMessage(){ performative = UNKNOWN; }
-	 */
+
+	public ACLMessage() {
+		performative = UNKNOWN;
+	}
 
 	public ACLMessage(int performative) {
 		this.performative = performative;
-		headers.put("ERROR", "");
+		headers.put("ERROR", ""); // ???
 	}
 
 	/**
@@ -485,7 +487,7 @@ public class ACLMessage implements Serializable, Cloneable {
 	 * 
 	 * @return Another ACLMessage that is a clone from this one
 	 */
-	public synchronized Object clone() {
+	public synchronized ACLMessage clone() {
 		ACLMessage result;
 
 		try {
@@ -525,29 +527,30 @@ public class ACLMessage implements Serializable, Cloneable {
 		// #CUSTOM_EXCLUDE_END
 		return m;
 	}
-	
-	public void setHeader(String key, String value){
+
+	public void setHeader(String key, String value) {
 		headers.put(key, value);
 	}
-	
-	public String getHeaderValue(String key){
-		if(headers.get(key)!= null)
+
+	public String getHeaderValue(String key) {
+		if (headers.get(key) != null)
 			return headers.get(key);
 		else
 			return "";
 	}
-	
-	public Map<String, String> getHeaders(){
+
+	public Map<String, String> getHeaders() {
 		return headers;
 	}
-	
-	public boolean headersAreEqual(ACLMessage msg){
+
+	public boolean headersAreEqual(ACLMessage msg) {
 		Iterator<String> itr = headers.keySet().iterator();
-		//iterate through HashMap values iterator
+		// iterate through HashMap values iterator
 		String key1;
-		while(itr.hasNext()){
+		while (itr.hasNext()) {
 			key1 = itr.next();
-			if(!key1.equals("ERROR") && !headers.get(key1).equals(msg.getHeaderValue(key1)))
+			if (!key1.equals("ERROR")
+					&& !headers.get(key1).equals(msg.getHeaderValue(key1)))
 				return false;
 		}
 		return true;

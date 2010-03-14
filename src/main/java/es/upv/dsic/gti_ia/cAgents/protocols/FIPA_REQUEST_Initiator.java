@@ -3,7 +3,7 @@ package es.upv.dsic.gti_ia.cAgents.protocols;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.cAgents.*;
 
-public abstract class FIPA_REQUEST {
+public abstract class FIPA_REQUEST_Initiator {
 
 	protected abstract void Process_Inform(ACLMessage msg);
 
@@ -14,34 +14,40 @@ public abstract class FIPA_REQUEST {
 		}
 	}
 
+	class BEGIN_Method implements BeginStateMethod {
+		public String run(CProcessor myProcessor, ACLMessage msg) {
+			myProcessor.internalData.put("InitialMessage", msg);
+			return "SEND";
+		};
+	}
+
 	public CProcessorFactory newInitiatorFactory(String name,
 			ACLMessage template, int availableConversations, long timeout) {
 
-		CProcessor processor;
 		ACLMessage filter;
+
+		// Create factory
 
 		template.setProtocol("REQUEST");
 		template.setPerformative(ACLMessage.REQUEST);
 		CProcessorFactory theFactory = new CProcessorFactory(name, template,
 				availableConversations);
 
-		processor = theFactory.cProcessorTemplate();
+		// Processor template setup
+
+		CProcessor processor = theFactory.cProcessorTemplate();
+
+		// BEGIN State
 
 		BeginState BEGIN = (BeginState) processor.getState("BEGIN");
-
-		class BEGIN_Method extends BeginStateMethod {
-			protected String run(CProcessor myProcessor, ACLMessage msg) {
-				myProcessor.internalData.put("InitialMessage", msg);
-				return "SEND";
-			};
-		}
 		BEGIN.setMethod(new BEGIN_Method());
 
-		SendState SEND = new SendState("SEND");
+		// REQUEST State
 
-		class SEND_Method extends SendStateMethod {
-			protected String run(CProcessor myProcessor,
-					ACLMessage messageToSend) {
+		SendState REQUEST = new SendState("REQUEST");
+
+		class REQUEST_Method implements SendStateMethod {
+			public String run(CProcessor myProcessor, ACLMessage messageToSend) {
 				messageToSend = (ACLMessage) myProcessor.internalData
 						.get("InitialMessage");
 				messageToSend.setProtocol("REQUEST");
@@ -49,35 +55,34 @@ public abstract class FIPA_REQUEST {
 				return "FINAL";
 			}
 		}
-		SEND.setMethod(new SEND_Method());
-
+		REQUEST.setMethod(new REQUEST_Method());
 		template = new ACLMessage(ACLMessage.REQUEST);
-		SEND.setMessageTemplate(template);
+		template.setProtocol("REQUEST");
+		REQUEST.setMessageTemplate(template);
+		processor.registerState(REQUEST);
+		processor.addTransition("BEGIN", "REQUEST");
 
-		processor.registerState(SEND);
-		processor.addTransition("BEGIN", "SEND");
+		// FIRST_WAIT State
 
-		// FIRST_WAIT
 		processor.registerState(new WaitState("FIRST_WAIT", timeout));
-		processor.addTransition("SEND", "FIRST_WAIT");
+		processor.addTransition("REQUEST", "FIRST_WAIT");
 
-		// INFORM
+		// INFORM State
 
 		ReceiveState INFORM = new ReceiveState("INFORM");
-
 		INFORM.setMethod(new INFORM_Method());
-
 		filter = new ACLMessage(ACLMessage.INFORM);
 		INFORM.setAcceptFilter(filter);
-
 		processor.registerState(INFORM);
 		processor.addTransition("FIRST_WAIT", "INFORM");
 
+		// FINAL State
+
 		FinalState FINAL = new FinalState("FINAL");
 
-		class FINAL_Method extends FinalStateMethod {
-			protected void run(CProcessor myProcessor, ACLMessage messageToSend) {
-				messageToSend = myProcessor.getLastReceivedMessage();
+		class FINAL_Method implements FinalStateMethod {
+			public void run(CProcessor myProcessor, ACLMessage messageToSend) {
+				messageToSend = myProcessor.getLastSendedMessage();
 			}
 		}
 		FINAL.setMethod(new FINAL_Method());

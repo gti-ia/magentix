@@ -51,6 +51,7 @@ public class CProcessor implements Runnable, Cloneable {
 	private long nextSubID = 0;
 	private String previousState;
 	private ACLMessage lastReceivedMessage;
+	private ACLMessage lastSendedMessage;
 
 	protected CProcessor() {
 		terminated = false;
@@ -69,6 +70,11 @@ public class CProcessor implements Runnable, Cloneable {
 
 	public ACLMessage getLastReceivedMessage() {
 		return lastReceivedMessage;
+	}
+
+
+	public ACLMessage getLastSendedMessage() {
+		return lastSendedMessage;
 	}
 
 	public Map<String, Object> getParentInternalData() {
@@ -241,7 +247,7 @@ public class CProcessor implements Runnable, Cloneable {
 		// System.out.println(this.myAgent.getName()+"currentMessage "+this.currentMessage.hashCode());
 		// check if current state is set
 		// if it's null then we are starting
-		
+
 		if (currentState.equals("")) {
 			currentState = firstName;
 			previousState = currentState;
@@ -271,8 +277,9 @@ public class CProcessor implements Runnable, Cloneable {
 						+ " currentState: " + currentState);
 				switch (currentStateType) {
 				case State.BEGIN:
-					currentState = this.beginState().getMethod().run(this,
-							messageQueue.remove());
+					ACLMessage aux = messageQueue.remove();
+					currentState = this.beginState().getMethod().run(this, aux);
+					lastReceivedMessage = aux;
 					break;
 				case State.ACTION:
 					ActionState actionState = (ActionState) states
@@ -291,6 +298,7 @@ public class CProcessor implements Runnable, Cloneable {
 						messageToSend.setConversationId(this.conversationID); // Foce
 						// ID
 						this.myAgent.send(messageToSend);
+						this.lastSendedMessage = messageToSend;
 						this.myAgent.availableSends.release();
 					} catch (InterruptedException e) {
 						e.printStackTrace();
