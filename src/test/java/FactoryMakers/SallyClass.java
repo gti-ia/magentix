@@ -14,16 +14,15 @@ class SallyClass extends CAgent {
 	protected void Initialize(CProcessor firstProcessor,
 			ACLMessage welcomeMessage) {
 
-		ACLMessage msg;
 		ACLMessage template;
 
 		System.out.println(welcomeMessage.getContent());
 
 		template = new ACLMessage(ACLMessage.REQUEST);
-		template.setReceiver(new AgentID("Sally"));
 
 		class myFIPA_REQUEST extends FIPA_REQUEST_Participant {
 			protected String Do_Request(ACLMessage msg) {
+				System.out.println(msg.getContent());
 				return "INFORM";
 			}
 			protected void Do_Inform(ACLMessage msg) {
@@ -34,12 +33,6 @@ class SallyClass extends CAgent {
 				.newFactory("?", template, 0, 0);
 
 		this.addFactory(talkWithHarryFactory);
-
-		msg = new ACLMessage(ACLMessage.REQUEST);
-		template.setReceiver(new AgentID("Sally"));
-		template.setHeader("Purpose", "Give me your phone number");
-		firstProcessor
-				.createSyncConversation(msg);
 
 	}
 

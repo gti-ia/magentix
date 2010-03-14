@@ -45,6 +45,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
@@ -83,12 +84,12 @@ public abstract class CAgent extends BaseAgent {
 
 		// BEGIN STATE
 
-		BeginState bs = (BeginState) defaultFactory.cProcessorTemplate().getState(
-				"BEGIN");
+		BeginState bs = (BeginState) defaultFactory.cProcessorTemplate()
+				.getState("BEGIN");
 
-		class BeginMethod extends BeginStateMethod {
+		class BeginMethod implements BeginStateMethod {
 
-			protected String run(CProcessor myProcessor, ACLMessage msg) {
+			public String run(CProcessor myProcessor, ACLMessage msg) {
 				System.out.println("Default factory tratando mensaje "
 						+ msg.getContent() + " origen: " + msg.getSender()
 						+ " ConversationID: " + msg.getConversationId());
@@ -102,9 +103,9 @@ public abstract class CAgent extends BaseAgent {
 
 		FinalState fs = new FinalState("FINAL");
 
-		class fsMethod extends FinalStateMethod {
+		class fsMethod implements FinalStateMethod {
 
-			protected void run(CProcessor myProcessor, ACLMessage msg) {
+			public void run(CProcessor myProcessor, ACLMessage msg) {
 				System.out.println("Default factory tratando mensaje "
 						+ msg.getContent() + " origen: " + msg.getSender()
 						+ " ConversationID: " + msg.getConversationId());
@@ -126,13 +127,14 @@ public abstract class CAgent extends BaseAgent {
 
 		// BEGIN STATE
 
-		BeginState bs = (BeginState) welcomeFactory.cProcessorTemplate().getState(
-				"BEGIN");
+		BeginState bs = (BeginState) welcomeFactory.cProcessorTemplate()
+				.getState("BEGIN");
 
-		class BeginMethod extends BeginStateMethod {
+		class BeginMethod implements BeginStateMethod {
 
-			protected String run(CProcessor myProcessor, ACLMessage msg) {
+			public String run(CProcessor myProcessor, ACLMessage msg) {
 				me.Initialize(myProcessor, msg);
+				System.out.println("Paso a WAIT");
 				return "WAIT";
 			};
 		}
@@ -141,38 +143,36 @@ public abstract class CAgent extends BaseAgent {
 
 		// WAIT STATE
 
-		WaitState WAIT = new WaitState("WAIT",0);
-		
+		WaitState WAIT = new WaitState("WAIT", 0);
+
 		welcomeFactory.cProcessorTemplate().registerState(WAIT);
-		
+
 		welcomeFactory.cProcessorTemplate().addTransition("BEGIN", "WAIT");
-		
+
 		// RECEIVE STATE
-		
+
 		ReceiveState RECEIVE = new ReceiveState("RECEIVE");
-		
+
 		class RECEIVE_Method implements ReceiveStateMethod {
-			
-			public String run(CProcessor myProcessor,
-					ACLMessage receivedMessage) {
-				
+
+			public String run(CProcessor myProcessor, ACLMessage receivedMessage) {
+
 				// Nothing really to do
 				return "FINAL";
-			}						
+			}
 		}
 
 		RECEIVE.setMethod(new RECEIVE_Method());
 		RECEIVE.setAcceptFilter(new ACLMessage(ACLMessage.INFORM));
 		welcomeFactory.cProcessorTemplate().registerState(RECEIVE);
-		
-		
+
 		// FINAL STATE
 
 		FinalState fs = new FinalState("FINAL");
 
-		class fsMethod extends FinalStateMethod {
+		class fsMethod implements FinalStateMethod {
 
-			protected void run(CProcessor myProcessor, ACLMessage msg) {
+			public void run(CProcessor myProcessor, ACLMessage msg) {
 				me.Finalize(myProcessor, msg);
 			}
 		}
@@ -180,7 +180,6 @@ public abstract class CAgent extends BaseAgent {
 		fs.setMethod(new fsMethod());
 
 		welcomeFactory.cProcessorTemplate().registerState(fs);
-
 
 		return welcomeFactory;
 	}
@@ -220,6 +219,7 @@ public abstract class CAgent extends BaseAgent {
 				return;
 			}
 		}
+		System.out.println("No hay factorias");
 		// PENDIENTE: Lanzar excepción si no hay fabricas asociadas
 	}
 
@@ -309,12 +309,16 @@ public abstract class CAgent extends BaseAgent {
 		lock.unlock();
 	}
 
+	String newConversationID() {
+		return this.getName() + "." + UUID.randomUUID().toString();
+	}
+
 	protected final void execute() {
 		addFactory(createDefaultFactory());
 		addFactory(createWelcomeFactory(this));
 		ACLMessage welcomeMessage = new ACLMessage(ACLMessage.INFORM);
-		welcomeMessage.setContent("Welcome to this plarform");
-
+		welcomeMessage.setContent("Welcome to this platform");
+		welcomeMessage.setConversationId(this.newConversationID());
 		welcomeFactory.startConversation(welcomeMessage, 1, null, false);
 
 		// Initialize(welcomeMessage);

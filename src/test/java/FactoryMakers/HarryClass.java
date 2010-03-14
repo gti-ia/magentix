@@ -20,7 +20,6 @@ class HarryClass extends CAgent {
 		System.out.println(welcomeMessage.getContent());
 
 		template = new ACLMessage(ACLMessage.REQUEST);
-		template.setReceiver(new AgentID("Sally"));
 
 		class myFIPA_REQUEST extends FIPA_REQUEST_Initiator {
 			protected void Process_Inform(ACLMessage msg) {
@@ -28,13 +27,15 @@ class HarryClass extends CAgent {
 		}
 
 		CProcessorFactory talkWithSallyFactory = new myFIPA_REQUEST()
-				.newInitiatorFactory("?", template, 0, 0);
+				.newInitiatorFactory("?", template, 1, 0);
 
 		this.addFactory(talkWithSallyFactory);
 
 		msg = new ACLMessage(ACLMessage.REQUEST);
-		template.setReceiver(new AgentID("Sally"));
-		template.setHeader("Purpose", "Give me your phone number");
+	    msg.setReceiver(new AgentID("Sally"));
+		msg.setHeader("Purpose", "Give me your phone number");
+		System.out.println("Inicio subconversacion");
+
 		firstProcessor
 				.createSyncConversation(msg);
 

@@ -6,6 +6,7 @@
 package es.upv.dsic.gti_ia.cAgents;
 
 import java.util.ArrayList;
+import java.util.UUID;
 import java.util.concurrent.Semaphore;
 
 import es.upv.dsic.gti_ia.core.ACLMessage;
@@ -57,11 +58,12 @@ public class CProcessorFactory{
 		return this.myCProcessor;
 	}
 	
-	
+
 	// PENDIENTE: cambiar índice por objeto
 	
 	protected synchronized void startConversation(ACLMessage msg, int factoryArrayIndex, CProcessor parent, Boolean isSync){	
 		CProcessor cloneProcessor = (CProcessor) myCProcessor.clone();
+		
 		cloneProcessor.setConversationID(msg.getConversationId());
 		cloneProcessor.addMessage(msg);
 		cloneProcessor.setIdle(false);
@@ -69,6 +71,7 @@ public class CProcessorFactory{
 		cloneProcessor.setParent(parent);
 		cloneProcessor.setIsSynchronized(isSync);
 		setParentChildren(cloneProcessor); //???
+		
 		myAgent.addProcessor(msg.getConversationId(), cloneProcessor);
 		myAgent.exec.execute(cloneProcessor);
 	}

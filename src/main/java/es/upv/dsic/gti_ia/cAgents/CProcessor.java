@@ -72,7 +72,6 @@ public class CProcessor implements Runnable, Cloneable {
 		return lastReceivedMessage;
 	}
 
-
 	public ACLMessage getLastSendedMessage() {
 		return lastSendedMessage;
 	}
@@ -103,7 +102,7 @@ public class CProcessor implements Runnable, Cloneable {
 	}
 
 	String newConversationID() {
-		return myAgent.getName() + UUID.randomUUID().toString();
+		return this.myAgent.getName() + UUID.randomUUID().toString();
 	}
 
 	public ACLMessage createSyncConversation(ACLMessage initalMessage) {
@@ -112,7 +111,7 @@ public class CProcessor implements Runnable, Cloneable {
 
 		nextSubID = nextSubID + 1;
 
-		initalMessage.setConversationId(this.newConversationID() + nextSubID);
+		initalMessage.setConversationId(this.conversationID + "." + nextSubID);
 
 		myAgent.startConversation(initalMessage, this, true);
 
@@ -135,7 +134,7 @@ public class CProcessor implements Runnable, Cloneable {
 	public void createAsyncConversation(ACLMessage initalMessage) {
 
 		// Clonar antes el mensaje ???
-		initalMessage.setConversationId(this.newConversationID());
+		initalMessage.setConversationId(myAgent.newConversationID());
 		myAgent.startConversation(initalMessage, this, false);
 	}
 
@@ -244,7 +243,7 @@ public class CProcessor implements Runnable, Cloneable {
 	public void run() {
 		String next;
 
-		// System.out.println(this.myAgent.getName()+"currentMessage "+this.currentMessage.hashCode());
+		System.out.println("Run " + this.conversationID);
 		// check if current state is set
 		// if it's null then we are starting
 
@@ -253,7 +252,9 @@ public class CProcessor implements Runnable, Cloneable {
 			previousState = currentState;
 		}
 		int currentStateType = states.get(currentState).getType();
+		System.out.println("Run 2 " + this.conversationID);
 
+		
 		// check if the conversation must stop due to the lack of available
 		// conversations in the factory
 		if (currentStateType == State.BEGIN) {
@@ -264,6 +265,7 @@ public class CProcessor implements Runnable, Cloneable {
 				e1.printStackTrace();
 			}
 		}
+		System.out.println("Run 3 " + this.conversationID);
 
 		// check if current state is Wait or Begin tpye, if not rise exception
 		if (currentStateType != State.BEGIN && currentStateType != State.WAIT) {
@@ -273,8 +275,8 @@ public class CProcessor implements Runnable, Cloneable {
 							+ ": Error: starting conversation and currentState different from Wait or Begin");
 		} else {
 			while (true) {
-				System.out.println("Agente: " + this.myAgent.getName()
-						+ " currentState: " + currentState);
+				System.out.println("[" + this.myAgent.getName() + this.conversationID
+						+ " " + currentState + "]");
 				switch (currentStateType) {
 				case State.BEGIN:
 					ACLMessage aux = messageQueue.remove();

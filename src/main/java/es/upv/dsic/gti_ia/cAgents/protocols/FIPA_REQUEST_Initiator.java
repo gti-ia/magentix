@@ -17,7 +17,7 @@ public abstract class FIPA_REQUEST_Initiator {
 	class BEGIN_Method implements BeginStateMethod {
 		public String run(CProcessor myProcessor, ACLMessage msg) {
 			myProcessor.internalData.put("InitialMessage", msg);
-			return "SEND";
+			return "REQUEST";
 		};
 	}
 
@@ -52,6 +52,7 @@ public abstract class FIPA_REQUEST_Initiator {
 						.get("InitialMessage");
 				messageToSend.setProtocol("REQUEST");
 				messageToSend.setPerformative(ACLMessage.REQUEST);
+				System.out.println("ENVIANDO");
 				return "FINAL";
 			}
 		}

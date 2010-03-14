@@ -528,6 +528,26 @@ public class ACLMessage implements Serializable, Cloneable {
 		return m;
 	}
 
+	public void copyFrom(ACLMessage msg) {
+
+		this.setContent(msg.getContent());
+		this.setConversationId(this.getConversationId());
+		this.setEncoding(msg.getEncoding());
+		this.headers = msg.getHeaders();  // PENDIENTE esto no irá
+		this.setInReplyTo(msg.getInReplyTo());
+		this.setLanguage(msg.getLanguage());
+		this.setOntology(msg.getOntology());
+		this.setPerformative(msg.getPerformativeInt());
+		this.setProtocol(msg.getProtocol());
+		this.setInReplyTo(msg.getReplyWith());
+		this.setReceiver(msg.getReceiver()); // PENDIENTE esto tampoco irá
+		this.setReplyByDate(msg.getReplyByDate());
+		this.setReplyTo(msg.getReplyTo());
+		this.setReplyWith(msg.getReplyWith());
+		this.setSender(msg.getSender());
+		
+	}
+
 	public void setHeader(String key, String value) {
 		headers.put(key, value);
 	}
