@@ -68,13 +68,13 @@ public class CProcessorFactory{
 		cloneProcessor.setFactoryArrayIndex(factoryArrayIndex);
 		cloneProcessor.setParent(parent);
 		cloneProcessor.setIsSynchronized(isSync);
-		setParentChildren(cloneProcessor);
+		setParentChildren(cloneProcessor); //???
 		myAgent.addProcessor(msg.getConversationId(), cloneProcessor);
 		myAgent.exec.execute(cloneProcessor);
 	}
 
 	
-	private void setParentChildren(CProcessor parent){
+	private void setParentChildren(CProcessor parent){ //???
 		for(int i=0; i< children.size(); i++){
 			String factoryName = children.get(i);
 			for(int j=0; j< myAgent.factories.size(); j++)

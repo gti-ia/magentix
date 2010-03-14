@@ -3,6 +3,7 @@
 // creación vía API de conversaciones síncronas y asíncronas
 // los estados fijos se crean ahora solos
 // las subclases de state han cambiado bastante, así que esto ha afectado muchas partes de esta clase
+// añado métodos para recuperar el estado previo y último mensaje recibido
 
 package es.upv.dsic.gti_ia.cAgents;
 
@@ -47,6 +48,9 @@ public class CProcessor implements Runnable, Cloneable {
 	final Condition syncConversationFinished = mutex.newCondition();
 	ACLMessage syncConversationResponse;
 	private Boolean isSynchronized;
+	private long nextSubID = 0;
+	private String previousState;
+	private ACLMessage lastReceivedMessage;
 
 	protected CProcessor() {
 		terminated = false;
@@ -57,6 +61,18 @@ public class CProcessor implements Runnable, Cloneable {
 		ses.setName("SENDING_ERRORS");
 
 		this.registerFirstState(bs);
+	}
+
+	public String getPreviousState() {
+		return previousState;
+	}
+
+	public ACLMessage getLastReceivedMessage() {
+		return lastReceivedMessage;
+	}
+
+	public Map<String, Object> getParentInternalData() {
+		return parent.internalData;
 	}
 
 	void setIsSynchronized(Boolean value) {
@@ -84,19 +100,14 @@ public class CProcessor implements Runnable, Cloneable {
 		return myAgent.getName() + UUID.randomUUID().toString();
 	}
 
-	public ACLMessage createSyncConversation(ACLMessage initalMessage,
-			Boolean sharedId) {
-
-		String savedID = this.conversationID;
+	public ACLMessage createSyncConversation(ACLMessage initalMessage) {
 
 		mutex.lock();
 
-		if (!sharedId) {
-			initalMessage.setConversationId(this.newConversationID());
-		} else {
-			this.conversationID = ""; // ID is shared. New messages now will be
-			// delivered to the child processor
-		}
+		nextSubID = nextSubID + 1;
+
+		initalMessage.setConversationId(this.newConversationID() + nextSubID);
+
 		myAgent.startConversation(initalMessage, this, true);
 
 		try {
@@ -104,7 +115,6 @@ public class CProcessor implements Runnable, Cloneable {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		this.conversationID = savedID;
 		mutex.unlock();
 		return this.syncConversationResponse;
 	}
@@ -231,9 +241,11 @@ public class CProcessor implements Runnable, Cloneable {
 		// System.out.println(this.myAgent.getName()+"currentMessage "+this.currentMessage.hashCode());
 		// check if current state is set
 		// if it's null then we are starting
-		if (currentState.equals(""))
+		
+		if (currentState.equals("")) {
 			currentState = firstName;
-
+			previousState = currentState;
+		}
 		int currentStateType = states.get(currentState).getType();
 
 		// check if the conversation must stop due to the lack of available
@@ -368,6 +380,7 @@ public class CProcessor implements Runnable, Cloneable {
 							.get(currentState);
 					currentState = receiveState.getMethod().run(this,
 							currentMessage);
+					lastReceivedMessage = currentMessage;
 					break;
 				case State.FINAL:
 					FinalState finalState = (FinalState) states
@@ -449,7 +462,8 @@ public class CProcessor implements Runnable, Cloneable {
 					break;
 				}
 				currentStateType = states.get(currentState).getType();
-			}
+				previousState = currentState;
+			} // end while (true)
 		}
 	}
 }

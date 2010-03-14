@@ -8,14 +8,15 @@
 //  >> OK
 // Gestión totalmente automatizada de IDs
 //  >> OK
-// Una subconversación síncrona puede debe poder crearse con el mismo ID que su padre
-//  >> OK
 // Revisar visibilidad de datos internos de conversación a conversaciones hijas
 // Eliminar starting factories
 //  >> OK
 // Métodos sustitiubles en los estados de los autómatas
 //  >> OK
 // Creo que necesario un lock global. Interno seguro y externo creo que también. Supongo que deberá ser el mismo.
+
+// En core debe implementarse cómo comparar un mensaje con un mensaje que actua como template. Lo que 
+//   se hace en algún lugar de los Cagents sólo compara la performativa y las cabeceras de usuario
 
 // Visibilidad de miembros y métodos al mínimo
 // Considerar cambiar argumento myProcessor en métodos de estado por método del xxxStateMethod
