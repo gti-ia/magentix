@@ -5,7 +5,7 @@ package es.upv.dsic.gti_ia.cAgents;
  * @author Ricard Lopez Fogues
  * 
  */
-public abstract class ActionState extends State {
+public class ActionState extends State {
 
 	private ActionStateMethod Method;
 

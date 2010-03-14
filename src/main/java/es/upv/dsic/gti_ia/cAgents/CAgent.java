@@ -151,9 +151,9 @@ public abstract class CAgent extends BaseAgent {
 		
 		ReceiveState RECEIVE = new ReceiveState("RECEIVE");
 		
-		class RECEIVE_Method extends ReceiveStateMethod {
+		class RECEIVE_Method implements ReceiveStateMethod {
 			
-			protected  String run(CProcessor myProcessor,
+			public String run(CProcessor myProcessor,
 					ACLMessage receivedMessage) {
 				
 				// Nothing really to do
