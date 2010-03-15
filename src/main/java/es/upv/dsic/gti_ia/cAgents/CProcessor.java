@@ -294,7 +294,7 @@ public class CProcessor implements Runnable, Cloneable {
 						this.myAgent.availableSends.acquire();
 						SendState sendState = (SendState) states
 								.get(currentState);
-						messageToSend = sendState.getMessageTemplate();
+						messageToSend = new ACLMessage();
 						currentState = sendState.getMethod().run(this,
 								messageToSend);
 						messageToSend.setConversationId(this.conversationID); // Foce

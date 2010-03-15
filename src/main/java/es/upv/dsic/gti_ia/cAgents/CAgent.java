@@ -314,6 +314,7 @@ public abstract class CAgent extends BaseAgent {
 	}
 
 	protected final void execute() {
+
 		addFactory(createDefaultFactory());
 		addFactory(createWelcomeFactory(this));
 		ACLMessage welcomeMessage = new ACLMessage(ACLMessage.INFORM);
@@ -321,19 +322,13 @@ public abstract class CAgent extends BaseAgent {
 		welcomeMessage.setConversationId(this.newConversationID());
 		welcomeFactory.startConversation(welcomeMessage, 1, null, false);
 
-		// Initialize(welcomeMessage);
-		//
-		// System.out.println("Soy " + this.getName() + ". Arranco");
-		//
-		// lock.lock();
-		// try {
-		// iAmFinished.await();
-		// } catch (InterruptedException e) {
-		// e.printStackTrace();
-		// }
-		// lock.unlock();
-		//
-		// Finalize(welcomeMessage);
+		lock.lock();
+		try {
+			iAmFinished.await();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		lock.unlock();
 
 	}
 }

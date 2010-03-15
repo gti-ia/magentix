@@ -28,6 +28,9 @@ public abstract class FIPA_REQUEST_Initiator {
 
 		// Create factory
 
+		if (template == null) {
+			template = new ACLMessage();
+		}
 		template.setProtocol("REQUEST");
 		template.setPerformative(ACLMessage.REQUEST);
 		CProcessorFactory theFactory = new CProcessorFactory(name, template,
@@ -48,8 +51,9 @@ public abstract class FIPA_REQUEST_Initiator {
 
 		class REQUEST_Method implements SendStateMethod {
 			public String run(CProcessor myProcessor, ACLMessage messageToSend) {
-				messageToSend = (ACLMessage) myProcessor.internalData
+				ACLMessage aux = (ACLMessage) myProcessor.internalData
 						.get("InitialMessage");
+				messageToSend.copyFromAsTemplate(aux);
 				messageToSend.setProtocol("REQUEST");
 				messageToSend.setPerformative(ACLMessage.REQUEST);
 				System.out.println("ENVIANDO");

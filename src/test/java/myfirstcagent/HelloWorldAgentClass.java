@@ -11,12 +11,15 @@ class HelloWorldAgentClass extends CAgent {
 		super(aid);
 	}
 
-	protected void Initialize(CProcessor firstProcessor, ACLMessage welcomeMessage) {
+	protected void Initialize(CProcessor firstProcessor,
+			ACLMessage welcomeMessage) {
 
 		System.out.println(welcomeMessage.getContent());
+
 	}
 
-	protected void Finalize(CProcessor firstProcessor, ACLMessage finalizeMessage) {
+	protected void Finalize(CProcessor firstProcessor,
+			ACLMessage finalizeMessage) {
 
 		System.out.println(finalizeMessage.getContent());
 	}

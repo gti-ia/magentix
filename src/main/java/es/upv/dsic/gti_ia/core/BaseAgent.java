@@ -222,6 +222,7 @@ public class BaseAgent implements Runnable {
 				deliveryProps.setRoutingKey(msg.getReceiver(i).name);
 			}
 			xfr.header(new Header(deliveryProps));
+			System.out.println("AQUI 1");
 			session.messageTransfer(xfr.getDestination(), xfr.getAcceptMode(),
 					xfr.getAcquireMode(), xfr.getHeader(), xfr.getBodyString());
 		}
