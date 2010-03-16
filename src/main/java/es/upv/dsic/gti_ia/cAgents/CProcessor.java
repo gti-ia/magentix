@@ -243,7 +243,6 @@ public class CProcessor implements Runnable, Cloneable {
 	public void run() {
 		String next;
 
-		System.out.println("Run " + this.conversationID);
 		// check if current state is set
 		// if it's null then we are starting
 
@@ -252,9 +251,7 @@ public class CProcessor implements Runnable, Cloneable {
 			previousState = currentState;
 		}
 		int currentStateType = states.get(currentState).getType();
-		System.out.println("Run 2 " + this.conversationID);
 
-		
 		// check if the conversation must stop due to the lack of available
 		// conversations in the factory
 		if (currentStateType == State.BEGIN) {
@@ -265,7 +262,6 @@ public class CProcessor implements Runnable, Cloneable {
 				e1.printStackTrace();
 			}
 		}
-		System.out.println("Run 3 " + this.conversationID);
 
 		// check if current state is Wait or Begin tpye, if not rise exception
 		if (currentStateType != State.BEGIN && currentStateType != State.WAIT) {
@@ -275,8 +271,8 @@ public class CProcessor implements Runnable, Cloneable {
 							+ ": Error: starting conversation and currentState different from Wait or Begin");
 		} else {
 			while (true) {
-				System.out.println("[" + this.myAgent.getName() + this.conversationID
-						+ " " + currentState + "]");
+				System.out.println("[" + this.myAgent.getName()
+						+ this.conversationID + " " + currentState + "]");
 				switch (currentStateType) {
 				case State.BEGIN:
 					ACLMessage aux = messageQueue.remove();
@@ -299,15 +295,23 @@ public class CProcessor implements Runnable, Cloneable {
 								messageToSend);
 						messageToSend.setConversationId(this.conversationID); // Foce
 						// ID
+
+						// PENDIENTE
+						// Ver si es necesario que el envío sea en exclusión
+						// mutua. En todo caso debería ir a BaseAgent
+
 						this.myAgent.send(messageToSend);
 						this.lastSendedMessage = messageToSend;
 						this.myAgent.availableSends.release();
+
 					} catch (InterruptedException e) {
 						e.printStackTrace();
-
-						break;
 					}
+					break;
+
 				case State.WAIT:
+					Integer i = 1;
+					i = i + 2;
 					WaitState waitState = (WaitState) states.get(currentState);
 					if (messageQueue.size() > 0) {
 						ACLMessage retrievedMessage = messageQueue.remove();
@@ -400,13 +404,8 @@ public class CProcessor implements Runnable, Cloneable {
 					if (this.isSynchronized) {
 						this.parent
 								.notifySyncConversationFinished(messageToSend);
-					}
-					try {
-						this.myAgent.availableSends.acquire();
-						this.myAgent.send(messageToSend);
-						this.myAgent.availableSends.release();
-					} catch (InterruptedException e) {
-						e.printStackTrace();
+					} else {
+						// PENDIENTE qué hacer cuando es asíncrona
 					}
 
 					terminated = true;
