@@ -13,9 +13,9 @@ class Main {
 
 		HarryClass Harry = new HarryClass(
 				new AgentID("Harry"));
-//		SallyClass Sally = new SallyClass(
-//				new AgentID("Sally"));
+		SallyClass Sally = new SallyClass(
+				new AgentID("Sally"));
 		Harry.start();
-//		Sally.start();
+		Sally.start();
 	}
 }

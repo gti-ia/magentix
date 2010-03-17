@@ -57,7 +57,7 @@ public abstract class FIPA_REQUEST_Initiator {
 				messageToSend.setProtocol("REQUEST");
 				messageToSend.setPerformative(ACLMessage.REQUEST);
 				System.out.println("ENVIANDO");
-				return "FINAL";
+				return "FIRST_WAIT";
 			}
 		}
 		REQUEST.setMethod(new REQUEST_Method());

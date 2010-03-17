@@ -470,6 +470,12 @@ public class CProcessor implements Runnable, Cloneable {
 					currentState = next;
 					break;
 				}
+				// PENDIENTE Excepcion si no existe estado. Java no me permite
+				// enviar una excepcion desde este metodo?
+
+				if (!states.containsKey(currentState)) {
+					System.out.println(currentState + " state " + " doesn' exist");
+				}
 				currentStateType = states.get(currentState).getType();
 				previousState = currentState;
 			} // end while (true)

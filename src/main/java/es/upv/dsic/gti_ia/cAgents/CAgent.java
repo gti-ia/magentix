@@ -287,6 +287,7 @@ public abstract class CAgent extends BaseAgent {
 	}
 
 	public void onMessage(ACLMessage msg) {
+		System.out.println(this.getName() + " recive un mensaje " + msg.getPerformative() + msg.getContent());
 		this.processMessage(msg);
 	}
 
