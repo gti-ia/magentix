@@ -1,7 +1,17 @@
 package es.upv.dsic.gti_ia.cAgents.protocols;
 
+import es.upv.dsic.gti_ia.cAgents.BeginState;
+import es.upv.dsic.gti_ia.cAgents.BeginStateMethod;
+import es.upv.dsic.gti_ia.cAgents.CInitiatorFactory;
+import es.upv.dsic.gti_ia.cAgents.CProcessor;
+import es.upv.dsic.gti_ia.cAgents.FinalState;
+import es.upv.dsic.gti_ia.cAgents.FinalStateMethod;
+import es.upv.dsic.gti_ia.cAgents.ReceiveState;
+import es.upv.dsic.gti_ia.cAgents.ReceiveStateMethod;
+import es.upv.dsic.gti_ia.cAgents.SendState;
+import es.upv.dsic.gti_ia.cAgents.SendStateMethod;
+import es.upv.dsic.gti_ia.cAgents.WaitState;
 import es.upv.dsic.gti_ia.core.ACLMessage;
-import es.upv.dsic.gti_ia.cAgents.*;
 
 public abstract class FIPA_REQUEST_Initiator {
 
@@ -16,12 +26,12 @@ public abstract class FIPA_REQUEST_Initiator {
 
 	class BEGIN_Method implements BeginStateMethod {
 		public String run(CProcessor myProcessor, ACLMessage msg) {
-			myProcessor.internalData.put("InitialMessage", msg);
+			myProcessor.getInternalData().put("InitialMessage", msg);
 			return "REQUEST";
 		};
 	}
 
-	public CProcessorFactory newInitiatorFactory(String name,
+	public CInitiatorFactory newInitiatorFactory(String name,
 			ACLMessage template, int availableConversations, long timeout) {
 
 		ACLMessage filter;
@@ -33,7 +43,7 @@ public abstract class FIPA_REQUEST_Initiator {
 		}
 		template.setProtocol("REQUEST");
 		template.setPerformative(ACLMessage.REQUEST);
-		CProcessorFactory theFactory = new CProcessorFactory(name, template,
+		CInitiatorFactory theFactory = new CInitiatorFactory(name, template,
 				availableConversations);
 
 		// Processor template setup
@@ -51,7 +61,7 @@ public abstract class FIPA_REQUEST_Initiator {
 
 		class REQUEST_Method implements SendStateMethod {
 			public String run(CProcessor myProcessor, ACLMessage messageToSend) {
-				ACLMessage aux = (ACLMessage) myProcessor.internalData
+				ACLMessage aux = (ACLMessage) myProcessor.getInternalData()
 						.get("InitialMessage");
 				messageToSend.copyFromAsTemplate(aux);
 				messageToSend.setProtocol("REQUEST");

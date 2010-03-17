@@ -23,7 +23,7 @@ class HarryClass extends CAgent {
 			}
 		}
 
-		CProcessorFactory talkWithSallyFactory = new myFIPA_REQUEST()
+		CInitiatorFactory talkWithSallyFactory = new myFIPA_REQUEST()
 				.newInitiatorFactory("?", null, 1, 0);
 
 		this.addFactory(talkWithSallyFactory);

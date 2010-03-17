@@ -34,13 +34,11 @@ public class CProcessor implements Runnable, Cloneable {
 	protected Map<String, State> states = new HashMap<String, State>();
 	private TransitionTable transitiontable = new TransitionTable();
 	private Queue<ACLMessage> messageQueue = new LinkedList<ACLMessage>();
-	public ACLMessage currentMessage;
-	// protected String parentConversationId;
+	private ACLMessage currentMessage;
 	protected CProcessor parent;
 	private boolean terminated;
 	private boolean idle;
-	protected int factoryArrayIndex;
-	public Map<String, Object> internalData = new HashMap<String, Object>();
+	private Map<String, Object> internalData = new HashMap<String, Object>();
 	private BeginState bs;
 	private CancelState cs;
 	private SendingErrorsState ses;
@@ -50,8 +48,9 @@ public class CProcessor implements Runnable, Cloneable {
 	private Boolean isSynchronized;
 	private long nextSubID = 0;
 	private String previousState;
-	private ACLMessage lastReceivedMessage;
+//	private ACLMessage lastReceivedMessage;
 	private ACLMessage lastSendedMessage;
+	private CProcessorFactory myFactory;
 
 	protected CProcessor() {
 		terminated = false;
@@ -69,7 +68,7 @@ public class CProcessor implements Runnable, Cloneable {
 	}
 
 	public ACLMessage getLastReceivedMessage() {
-		return lastReceivedMessage;
+		return currentMessage;
 	}
 
 	public ACLMessage getLastSendedMessage() {
@@ -177,6 +176,10 @@ public class CProcessor implements Runnable, Cloneable {
 		return conversationID;
 	}
 
+	public Map<String, Object> getInternalData() {
+		return internalData;
+	}
+
 	public void registerState(State s) {
 		states.put(s.getName(), s);
 		transitiontable.addState(s.getName());
@@ -224,8 +227,8 @@ public class CProcessor implements Runnable, Cloneable {
 		return myAgent;
 	}
 
-	protected void setFactoryArrayIndex(int index) {
-		this.factoryArrayIndex = index;
+	protected void setFactory(CProcessorFactory factory) {
+		this.myFactory = factory;
 	}
 
 	public State getState(String name) {
@@ -254,14 +257,14 @@ public class CProcessor implements Runnable, Cloneable {
 
 		// check if the conversation must stop due to the lack of available
 		// conversations in the factory
-		if (currentStateType == State.BEGIN) {
-			try {
-				this.getMyAgent().factories.get(factoryArrayIndex).availableConversations
-						.acquire();
-			} catch (InterruptedException e1) {
-				e1.printStackTrace();
-			}
-		}
+//		if (currentStateType == State.BEGIN) {
+//			try {
+//				this.getMyAgent().factories.get(factoryArrayIndex).availableConversations
+//						.acquire();
+//			} catch (InterruptedException e1) {
+//				e1.printStackTrace();
+//			}
+//		}
 
 		// check if current state is Wait or Begin tpye, if not rise exception
 		if (currentStateType != State.BEGIN && currentStateType != State.WAIT) {
@@ -277,7 +280,7 @@ public class CProcessor implements Runnable, Cloneable {
 				case State.BEGIN:
 					ACLMessage aux = messageQueue.remove();
 					currentState = this.beginState().getMethod().run(this, aux);
-					lastReceivedMessage = aux;
+					currentMessage = aux;
 					break;
 				case State.ACTION:
 					ActionState actionState = (ActionState) states
@@ -347,6 +350,10 @@ public class CProcessor implements Runnable, Cloneable {
 								if (states.get(stateName).getType() == State.RECEIVE) {
 									ReceiveState receiveState = (ReceiveState) states
 											.get(stateName);
+									// PENDIENTE
+									//	Hacer una comparación de mensaje con template completa. 
+									// Probablemente mejor en ACLMessage
+
 									if (retrievedMessage.getPerformativeInt() == receiveState
 											.getAcceptFilter()
 											.getPerformativeInt()
@@ -395,7 +402,6 @@ public class CProcessor implements Runnable, Cloneable {
 							.get(currentState);
 					currentState = receiveState.getMethod().run(this,
 							currentMessage);
-					lastReceivedMessage = currentMessage;
 					break;
 				case State.FINAL:
 					FinalState finalState = (FinalState) states
@@ -412,7 +418,7 @@ public class CProcessor implements Runnable, Cloneable {
 					terminated = true;
 					// decrease the conversations counter in the processor's
 					// factory
-					myAgent.endConversation(factoryArrayIndex);
+					myAgent.endConversation(this.myFactory);
 					myAgent.removeProcessor(this.conversationID);
 					return;
 				case State.SENDING_ERRORS:

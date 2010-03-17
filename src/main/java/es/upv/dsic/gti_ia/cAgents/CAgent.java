@@ -68,7 +68,10 @@ public abstract class CAgent extends BaseAgent {
 	private Map<String, Timer> timers = new HashMap<String, Timer>();
 	private ReentrantLock lock = new ReentrantLock();
 	private CProcessorFactory welcomeFactory;
-	ArrayList<CProcessorFactory> factories = new ArrayList<CProcessorFactory>();
+	private CProcessorFactory defaultFactory;
+	ArrayList<CProcessorFactory> initiatorFactories = new ArrayList<CProcessorFactory>();
+	ArrayList<CProcessorFactory> participantFactories = new ArrayList<CProcessorFactory>();
+
 	ExecutorService exec;
 	Semaphore availableSends = new Semaphore(1, true); // ???
 	final Condition iAmFinished = lock.newCondition();
@@ -80,7 +83,11 @@ public abstract class CAgent extends BaseAgent {
 
 	public synchronized void addFactory(CProcessorFactory factory) {
 		factory.setAgent(this);
-		factories.add(factory);
+		if (factory.getRole() == CProcessorFactory.FactoryRole.Initiator) {
+			initiatorFactories.add(factory);
+		} else {
+			participantFactories.add(factory);
+		}
 	}
 
 	public void onMessage(ACLMessage msg) {
@@ -90,10 +97,16 @@ public abstract class CAgent extends BaseAgent {
 	}
 
 	public synchronized void removeFactory(String name) {
-		for (int i = 0; i < factories.size(); i++) {
-			if (factories.get(i).name.equals(name)) {
-				factories.remove(i);
-				break;
+		for (int i = 0; i < initiatorFactories.size(); i++) {
+			if (initiatorFactories.get(i).name.equals(name)) {
+				initiatorFactories.remove(i);
+				return;
+			}
+		}
+		for (int i = 0; i < participantFactories.size(); i++) {
+			if (participantFactories.get(i).name.equals(name)) {
+				participantFactories.remove(i);
+				return;
 			}
 		}
 	}
@@ -104,17 +117,19 @@ public abstract class CAgent extends BaseAgent {
 		super.send(msg);
 	}
 
-	private CProcessorFactory createDefaultFactory() {
-		CProcessorFactory defaultFactory = new CProcessorFactory(
-				"DefaultFactory", new ACLMessage(ACLMessage.UNKNOWN), 1000);
+	private void createDefaultFactory (final CAgent me){
+
+		// PENDIENTE
+		// Probar y definir defaultfactory
+
+		defaultFactory = new CParticipantFactory("DefaultFactory",
+				new ACLMessage(ACLMessage.UNKNOWN), 1000);
 
 		// BEGIN STATE
 
-		BeginState bs = (BeginState) defaultFactory.cProcessorTemplate()
+		BeginState BEGIN = (BeginState) defaultFactory.cProcessorTemplate()
 				.getState("BEGIN");
-
-		class BeginMethod implements BeginStateMethod {
-
+		class BEGIN_Method implements BeginStateMethod {
 			public String run(CProcessor myProcessor, ACLMessage msg) {
 				System.out.println("Default factory tratando mensaje "
 						+ msg.getContent() + " origen: " + msg.getSender()
@@ -122,41 +137,37 @@ public abstract class CAgent extends BaseAgent {
 				return "FINAL";
 			}
 		}
-
-		bs.setMethod(new BeginMethod());
+		BEGIN.setMethod(new BEGIN_Method());
 
 		// FINAL STATE
 
-		FinalState fs = new FinalState("FINAL");
+		FinalState FINAL = new FinalState("FINAL");
 
-		class fsMethod implements FinalStateMethod {
-
+		class FINAL_Method implements FinalStateMethod {
 			public void run(CProcessor myProcessor, ACLMessage msg) {
 				System.out.println("Default factory tratando mensaje "
 						+ msg.getContent() + " origen: " + msg.getSender()
 						+ " ConversationID: " + msg.getConversationId());
 			}
 		}
-
-		fs.setMethod(new fsMethod());
-
-		defaultFactory.cProcessorTemplate().registerState(fs);
-
+		FINAL.setMethod(new FINAL_Method());
+		defaultFactory.cProcessorTemplate().registerState(FINAL);
 		defaultFactory.cProcessorTemplate().addTransition("BEGIN", "FINAL");
+		
+		defaultFactory.setAgent(this);
 
-		return defaultFactory;
 	}
 
-	private CProcessorFactory createWelcomeFactory(final CAgent me) {
-		welcomeFactory = new CProcessorFactory("WelcomeFactory",
+	private void createWelcomeFactory (final CAgent me){
+		welcomeFactory = new CParticipantFactory("WelcomeFactory",
 				new ACLMessage(ACLMessage.UNKNOWN), 1000);
 
 		// BEGIN STATE
 
-		BeginState bs = (BeginState) welcomeFactory.cProcessorTemplate()
+		BeginState BEGIN = (BeginState) welcomeFactory.cProcessorTemplate()
 				.getState("BEGIN");
 
-		class BeginMethod implements BeginStateMethod {
+		class BEGIN_Method implements BeginStateMethod {
 
 			public String run(CProcessor myProcessor, ACLMessage msg) {
 				me.Initialize(myProcessor, msg);
@@ -165,7 +176,7 @@ public abstract class CAgent extends BaseAgent {
 			};
 		}
 
-		bs.setMethod(new BeginMethod());
+		BEGIN.setMethod(new BEGIN_Method());
 
 		// WAIT STATE
 
@@ -207,7 +218,8 @@ public abstract class CAgent extends BaseAgent {
 
 		welcomeFactory.cProcessorTemplate().registerState(fs);
 
-		return welcomeFactory;
+		welcomeFactory.setAgent(this);
+
 	}
 
 	private synchronized void processMessage(ACLMessage msg) {
@@ -223,9 +235,11 @@ public abstract class CAgent extends BaseAgent {
 				exec.execute(auxProcessor);
 			}
 		} else {
-			for (int i = 1; i < factories.size(); i++) {
-				if (factories.get(i).templateIsEqual(msg)) {
-					factories.get(i).startConversation(msg, i, null, false);
+			for (int i = 0; i < participantFactories.size(); i++) {
+				CProcessorFactory factory = participantFactories.get(i);
+				if (factory.templateIsEqual(msg)) {
+					factory.startConversation(msg, null,
+							false);
 					accepted = true;
 					break;
 				}
@@ -233,19 +247,19 @@ public abstract class CAgent extends BaseAgent {
 			if (!accepted) {
 				System.out.println("Agente: " + this.getName()
 						+ " Mensaje a tratar por la DefaultFactory");
-				factories.get(0).startConversation(msg, 0, null, false);
+				defaultFactory.startConversation(msg, null, false);
 			}
 		}
 	}
 
 	protected final void execute() {
 
-		addFactory(createDefaultFactory());
-		addFactory(createWelcomeFactory(this));
+		createDefaultFactory(this);
+		createWelcomeFactory(this);
 		ACLMessage welcomeMessage = new ACLMessage(ACLMessage.INFORM);
 		welcomeMessage.setContent("Welcome to this platform");
 		welcomeMessage.setConversationId(this.newConversationID());
-		welcomeFactory.startConversation(welcomeMessage, 1, null, false);
+		welcomeFactory.startConversation(welcomeMessage, null, false);
 
 		lock.lock();
 		try {
@@ -287,8 +301,9 @@ public abstract class CAgent extends BaseAgent {
 			return false;
 	}
 
-	void endConversation(int factoryArrayIndex) {
-		factories.get(factoryArrayIndex).availableConversations.release();
+	void endConversation(CProcessorFactory theFactory) {
+		theFactory.availableConversations
+				.release();
 	}
 
 	void Finished() {
@@ -324,9 +339,10 @@ public abstract class CAgent extends BaseAgent {
 
 	synchronized void startConversation(ACLMessage msg, CProcessor parent,
 			Boolean sync) {
-		for (int i = 1; i < factories.size(); i++) {
-			if (factories.get(i).templateIsEqual(msg)) {
-				factories.get(i).startConversation(msg, i, parent, sync);
+		for (int i = 0; i < initiatorFactories.size(); i++) {
+			if (initiatorFactories.get(i).templateIsEqual(msg)) {
+				initiatorFactories.get(i).startConversation(msg, parent,
+						sync);
 				return;
 			}
 		}

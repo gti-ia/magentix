@@ -3,8 +3,8 @@ package FactoryMakers;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.cAgents.CAgent;
+import es.upv.dsic.gti_ia.cAgents.CParticipantFactory;
 import es.upv.dsic.gti_ia.cAgents.CProcessor;
-import es.upv.dsic.gti_ia.cAgents.CProcessorFactory;
 import es.upv.dsic.gti_ia.cAgents.protocols.FIPA_REQUEST_Participant;
 
 class SallyClass extends CAgent {
@@ -33,7 +33,7 @@ class SallyClass extends CAgent {
 			}
 		}
 
-		CProcessorFactory talkWith = new myFIPA_REQUEST()
+		CParticipantFactory talkWith = new myFIPA_REQUEST()
 				.newFactory("?", template, 1, 0);
 
 		this.addFactory(talkWith);

@@ -2,8 +2,8 @@ package es.upv.dsic.gti_ia.cAgents.protocols;
 
 import es.upv.dsic.gti_ia.cAgents.BeginState;
 import es.upv.dsic.gti_ia.cAgents.BeginStateMethod;
+import es.upv.dsic.gti_ia.cAgents.CParticipantFactory;
 import es.upv.dsic.gti_ia.cAgents.CProcessor;
-import es.upv.dsic.gti_ia.cAgents.CProcessorFactory;
 import es.upv.dsic.gti_ia.cAgents.FinalState;
 import es.upv.dsic.gti_ia.cAgents.FinalStateMethod;
 import es.upv.dsic.gti_ia.cAgents.SendState;
@@ -34,14 +34,14 @@ public abstract class FIPA_REQUEST_Participant {
 		}
 	}
 
-	public CProcessorFactory newFactory(String name, ACLMessage template,
+	public CParticipantFactory newFactory(String name, ACLMessage template,
 			int availableConversations, long timeout) {
 
 		// Create factory
 
 		template.setProtocol("REQUEST");
 		template.setPerformative(ACLMessage.REQUEST);
-		CProcessorFactory theFactory = new CProcessorFactory(name, template,
+		CParticipantFactory theFactory = new CParticipantFactory(name, template,
 				availableConversations);
 
 		// Processor template setup
