@@ -6,7 +6,6 @@
 package es.upv.dsic.gti_ia.cAgents;
 
 import java.util.ArrayList;
-import java.util.UUID;
 import java.util.concurrent.Semaphore;
 
 import es.upv.dsic.gti_ia.core.ACLMessage;
