@@ -27,15 +27,15 @@ import es.upv.dsic.gti_ia.core.ACLMessage;
 
 public class CProcessor implements Runnable, Cloneable {
 	private String conversationID;
-	protected CAgent myAgent;
+	private CAgent myAgent;
 	private String currentState = "";
 	private String firstName = null;
 	private String backState = null;
-	protected Map<String, State> states = new HashMap<String, State>();
+	private Map<String, State> states = new HashMap<String, State>();
 	private TransitionTable transitiontable = new TransitionTable();
 	private Queue<ACLMessage> messageQueue = new LinkedList<ACLMessage>();
 	private ACLMessage currentMessage;
-	protected CProcessor parent;
+	private CProcessor parent;
 	private boolean terminated;
 	private boolean idle;
 	private Map<String, Object> internalData = new HashMap<String, Object>();
@@ -84,6 +84,10 @@ public class CProcessor implements Runnable, Cloneable {
 		isSynchronized = value;
 	}
 
+	void setMyAgent(CAgent myAgent) {
+		this.myAgent = myAgent;
+	}
+
 	BeginState beginState() {
 		return bs;
 	}
@@ -96,7 +100,7 @@ public class CProcessor implements Runnable, Cloneable {
 		return ses;
 	}
 
-	protected void setConversationID(String id) {
+	void setConversationID(String id) {
 		conversationID = id;
 	}
 
@@ -185,7 +189,7 @@ public class CProcessor implements Runnable, Cloneable {
 		transitiontable.addState(s.getName());
 	}
 
-	public void registerFirstState(State s) {
+	void registerFirstState(State s) {
 		registerState(s);
 		firstName = s.getName();
 	}
@@ -207,19 +211,19 @@ public class CProcessor implements Runnable, Cloneable {
 		this.transitiontable.removeTransition(from, destination);
 	}
 
-	protected void addMessage(ACLMessage msg) {
+	void addMessage(ACLMessage msg) {
 		messageQueue.add(msg);
 	}
 
-	protected void setIdle(boolean idle) {
+	void setIdle(boolean idle) {
 		this.idle = idle;
 	}
 
-	protected boolean isIdle() {
+	boolean isIdle() {
 		return idle;
 	}
 
-	protected boolean isTerminated() {
+	boolean isTerminated() {
 		return terminated;
 	}
 
@@ -227,7 +231,7 @@ public class CProcessor implements Runnable, Cloneable {
 		return myAgent;
 	}
 
-	protected void setFactory(CProcessorFactory factory) {
+	void setFactory(CProcessorFactory factory) {
 		this.myFactory = factory;
 	}
 
@@ -239,7 +243,7 @@ public class CProcessor implements Runnable, Cloneable {
 		return parent;
 	}
 
-	protected void setParent(CProcessor parent) {
+	void setParent(CProcessor parent) {
 		this.parent = parent;
 	}
 

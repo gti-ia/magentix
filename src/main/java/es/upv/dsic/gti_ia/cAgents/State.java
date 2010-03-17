@@ -3,54 +3,55 @@ package es.upv.dsic.gti_ia.cAgents;
 /**
  * 
  * @author Ricard Lopez Fogues
- *
+ * 
  */
 
-public abstract class State implements Cloneable{
-	
-	// PENDIENTE: creo que es mejor usar enumerados en lugar de constantes numéricas
-	
-	public final static int ACTION = 0;
-	public final static int BEGIN = 1;
-	public final static int FINAL = 2;
-	public final static int RECEIVE = 3;
-	public final static int SEND = 4;
-	public final static int WAIT = 5;
-	protected final static int SENDING_ERRORS = 6;
-	protected final static int CANCEL = 7;
-	protected final static int TERMINATED_FATHER = 8;
-	protected final static int NOT_ACCEPTED_MESSAGES = 9;
-	
-	protected int type;
-	
+public abstract class State implements Cloneable {
+
+	// PENDIENTE: creo que es mejor usar enumerados en lugar de constantes
+	// numéricas
+
+	final static int ACTION = 0;
+	final static int BEGIN = 1;
+	final static int FINAL = 2;
+	final static int RECEIVE = 3;
+	final static int SEND = 4;
+	final static int WAIT = 5;
+	final static int SENDING_ERRORS = 6;
+	final static int CANCEL = 7;
+	final static int TERMINATED_FATHER = 8;
+	final static int NOT_ACCEPTED_MESSAGES = 9;
+
+	int type;
+
 	private String name;
-	
-	public State(String n){
+
+	public State(String n) {
 		name = n;
 	}
-	
-	public String getName(){
+
+	public String getName() {
 		return name;
 	}
-	
-	public int getType(){
+
+	int getType() {
 		return type;
 	}
-	
-	protected void setType(int t){
+
+	void setType(int t) {
 		type = t;
 	}
-	
-	protected void setName(String name){
+
+	void setName(String name) {
 		this.name = name;
 	}
-	
-	protected Object clone(){
+
+	protected Object clone() {
 		Object obj = null;
 		try {
 			obj = super.clone();
 		} catch (CloneNotSupportedException e) {
-			e.printStackTrace();		
+			e.printStackTrace();
 		}
 		return obj;
 	}

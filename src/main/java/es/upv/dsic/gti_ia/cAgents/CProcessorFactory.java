@@ -45,14 +45,14 @@ class CProcessorFactory {
 
 	void setAgent(CAgent myAgent) {
 		this.myAgent = myAgent;
-		myCProcessor.myAgent = myAgent;
+		myCProcessor.setMyAgent(myAgent);
 	}
 
 	public ACLMessage getTemplate() {
 		return template.clone();
 	}
 
-	public FactoryRole getRole() {
+	FactoryRole getRole() {
 		return role;
 	}
 
