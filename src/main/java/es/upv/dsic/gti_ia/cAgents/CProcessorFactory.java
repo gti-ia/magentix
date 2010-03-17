@@ -18,10 +18,10 @@ import es.upv.dsic.gti_ia.core.ACLMessage;
 
 public class CProcessorFactory{
 	private ACLMessage template;
-	public String name;
-	protected CProcessor myCProcessor;
+	String name;
+	private CProcessor myCProcessor;
 	private CAgent myAgent;
-	protected Semaphore availableConversations;
+	Semaphore availableConversations;
 	private ArrayList<String> children;
 		
 	public CProcessorFactory(String name, ACLMessage template, int availableConversations){

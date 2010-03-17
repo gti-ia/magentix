@@ -65,17 +65,43 @@ import es.upv.dsic.gti_ia.core.BaseAgent;
 public abstract class CAgent extends BaseAgent {
 
 	private Map<String, CProcessor> processors = new HashMap<String, CProcessor>();
-	protected ArrayList<CProcessorFactory> factories = new ArrayList<CProcessorFactory>();
-	protected ExecutorService exec;
-	protected final Semaphore availableSends = new Semaphore(1, true); // ???
 	private Map<String, Timer> timers = new HashMap<String, Timer>();
 	private ReentrantLock lock = new ReentrantLock();
-	final Condition iAmFinished = lock.newCondition();
 	private CProcessorFactory welcomeFactory;
+	ArrayList<CProcessorFactory> factories = new ArrayList<CProcessorFactory>();
+	ExecutorService exec;
+	Semaphore availableSends = new Semaphore(1, true); // ???
+	final Condition iAmFinished = lock.newCondition();
 
 	public CAgent(AgentID aid) throws Exception {
 		super(aid);
 		exec = Executors.newCachedThreadPool();
+	}
+
+	public synchronized void addFactory(CProcessorFactory factory) {
+		factory.setAgent(this);
+		factories.add(factory);
+	}
+
+	public void onMessage(ACLMessage msg) {
+		System.out.println(this.getName() + " recive un mensaje "
+				+ msg.getPerformative() + msg.getContent());
+		this.processMessage(msg);
+	}
+
+	public synchronized void removeFactory(String name) {
+		for (int i = 0; i < factories.size(); i++) {
+			if (factories.get(i).name.equals(name)) {
+				factories.remove(i);
+				break;
+			}
+		}
+	}
+
+	public void send(ACLMessage msg) {
+		System.out.println(this.getName() + " envia un mensaje "
+				+ msg.getPerformative() + msg.getContent());
+		super.send(msg);
 	}
 
 	private CProcessorFactory createDefaultFactory() {
@@ -184,46 +210,6 @@ public abstract class CAgent extends BaseAgent {
 		return welcomeFactory;
 	}
 
-	public void send(ACLMessage msg) {
-		System.out.println(this.getName() + " envia un mensaje " + msg.getPerformative() + msg.getContent());
-		super.send(msg);
-	}
-
-	public synchronized void addFactory(CProcessorFactory factory) {
-		factory.setAgent(this);
-		factories.add(factory);
-	}
-
-	public synchronized void removeFactory(String name) {
-		for (int i = 0; i < factories.size(); i++) {
-			if (factories.get(i).name.equals(name)) {
-				factories.remove(i);
-				break;
-			}
-		}
-	}
-
-	protected synchronized void addProcessor(String conversationID,
-			CProcessor processor) {
-		processors.put(conversationID, processor);
-	}
-
-	protected synchronized void removeProcessor(String conversationID) {
-		processors.remove(conversationID);
-	}
-
-	synchronized void startConversation(ACLMessage msg, CProcessor parent,
-			Boolean sync) {
-		for (int i = 1; i < factories.size(); i++) {
-			if (factories.get(i).templateIsEqual(msg)) {
-				factories.get(i).startConversation(msg, i, parent, sync);
-				return;
-			}
-		}
-		System.out.println("No hay factorias");
-		// PENDIENTE: Lanzar excepción si no hay fabricas asociadas
-	}
-
 	private synchronized void processMessage(ACLMessage msg) {
 		CProcessor auxProcessor = processors.get(msg.getConversationId());
 		boolean accepted = false;
@@ -252,8 +238,36 @@ public abstract class CAgent extends BaseAgent {
 		}
 	}
 
-	protected synchronized boolean addTimer(final String conversationId,
-			long milliseconds) {
+	protected final void execute() {
+
+		addFactory(createDefaultFactory());
+		addFactory(createWelcomeFactory(this));
+		ACLMessage welcomeMessage = new ACLMessage(ACLMessage.INFORM);
+		welcomeMessage.setContent("Welcome to this platform");
+		welcomeMessage.setConversationId(this.newConversationID());
+		welcomeFactory.startConversation(welcomeMessage, 1, null, false);
+
+		lock.lock();
+		try {
+			iAmFinished.await();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		lock.unlock();
+
+	}
+
+	protected abstract void Finalize(CProcessor firstProcessor,
+			ACLMessage finalizeMessage);
+
+	protected abstract void Initialize(CProcessor firstProcessor,
+			ACLMessage welcomeMessage);
+
+	synchronized void addProcessor(String conversationID, CProcessor processor) {
+		processors.put(conversationID, processor);
+	}
+
+	synchronized boolean addTimer(final String conversationId, long milliseconds) {
 		if (this.timers.get(conversationId) == null) {
 			Date timeToRun = new Date(System.currentTimeMillis() + milliseconds);
 			Timer timer = new Timer();
@@ -273,30 +287,9 @@ public abstract class CAgent extends BaseAgent {
 			return false;
 	}
 
-	protected synchronized boolean removeTimer(String conversationId) {
-		if (this.timers.get(conversationId) == null)
-			return false;
-		else {
-			this.timers.get(conversationId).cancel();
-			this.timers.remove(conversationId);
-			return true;
-		}
-	}
-
-	protected void endConversation(int factoryArrayIndex) {
+	void endConversation(int factoryArrayIndex) {
 		factories.get(factoryArrayIndex).availableConversations.release();
 	}
-
-	public void onMessage(ACLMessage msg) {
-		System.out.println(this.getName() + " recive un mensaje " + msg.getPerformative() + msg.getContent());
-		this.processMessage(msg);
-	}
-
-	protected abstract void Initialize(CProcessor firstProcessor,
-			ACLMessage welcomeMessage);
-
-	protected abstract void Finalize(CProcessor firstProcessor,
-			ACLMessage finalizeMessage);
 
 	void Finished() {
 
@@ -315,22 +308,29 @@ public abstract class CAgent extends BaseAgent {
 		return this.getName() + "." + UUID.randomUUID().toString();
 	}
 
-	protected final void execute() {
+	synchronized void removeProcessor(String conversationID) {
+		processors.remove(conversationID);
+	}
 
-		addFactory(createDefaultFactory());
-		addFactory(createWelcomeFactory(this));
-		ACLMessage welcomeMessage = new ACLMessage(ACLMessage.INFORM);
-		welcomeMessage.setContent("Welcome to this platform");
-		welcomeMessage.setConversationId(this.newConversationID());
-		welcomeFactory.startConversation(welcomeMessage, 1, null, false);
-
-		lock.lock();
-		try {
-			iAmFinished.await();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
+	synchronized boolean removeTimer(String conversationId) {
+		if (this.timers.get(conversationId) == null)
+			return false;
+		else {
+			this.timers.get(conversationId).cancel();
+			this.timers.remove(conversationId);
+			return true;
 		}
-		lock.unlock();
+	}
 
+	synchronized void startConversation(ACLMessage msg, CProcessor parent,
+			Boolean sync) {
+		for (int i = 1; i < factories.size(); i++) {
+			if (factories.get(i).templateIsEqual(msg)) {
+				factories.get(i).startConversation(msg, i, parent, sync);
+				return;
+			}
+		}
+		System.out.println("No hay factorias");
+		// PENDIENTE: Lanzar excepción si no hay fabricas asociadas
 	}
 }
