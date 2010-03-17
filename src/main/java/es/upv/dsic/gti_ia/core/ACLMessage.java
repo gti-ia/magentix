@@ -228,7 +228,11 @@ public class ACLMessage implements Serializable, Cloneable {
 	 * @uml.property name="receiver"
 	 */
 	public AgentID getReceiver() {
-		return receiver.get(0);
+		if (receiver.isEmpty()) {
+			return null;
+		} else {
+			return receiver.get(0);
+		}
 	}
 
 	/**
@@ -546,13 +550,12 @@ public class ACLMessage implements Serializable, Cloneable {
 		if (msg.getPerformativeInt() != ACLMessage.UNKNOWN) {
 			this.setPerformative(msg.getPerformativeInt());
 		}
-		
+
 		if (msg.getReceiver() != null) {
 			this.setReceiver(msg.getReceiver());
 		}
-		
-		
-		//PENDIENTE COMPLETAR
+
+		// PENDIENTE COMPLETAR
 
 	}
 

@@ -2,8 +2,10 @@ package FactoryMakers;
 
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
+import es.upv.dsic.gti_ia.cAgents.CAgent;
+import es.upv.dsic.gti_ia.cAgents.CProcessor;
+import es.upv.dsic.gti_ia.cAgents.CProcessorFactory;
 import es.upv.dsic.gti_ia.cAgents.protocols.FIPA_REQUEST_Participant;
-import es.upv.dsic.gti_ia.cAgents.*;
 
 class SallyClass extends CAgent {
 
@@ -21,18 +23,20 @@ class SallyClass extends CAgent {
 		template = new ACLMessage(ACLMessage.REQUEST);
 
 		class myFIPA_REQUEST extends FIPA_REQUEST_Participant {
-			protected String Do_Request(ACLMessage msg) {
-				System.out.println(msg.getContent());
+			protected String Do_Request(CProcessor myProcessor, ACLMessage msg) {	
+				System.out.println(msg.getSender() + " request me " + msg.getContent());
 				return "INFORM";
 			}
-			protected void Do_Inform(ACLMessage msg) {
+			protected void Do_Inform(CProcessor myProcessor, ACLMessage msg) {
+				msg.setContent("May be some day");
+				System.out.println(msg.getContent());
 			}
 		}
 
-		CProcessorFactory talkWithHarryFactory = new myFIPA_REQUEST()
-				.newFactory("?", template, 0, 0);
+		CProcessorFactory talkWith = new myFIPA_REQUEST()
+				.newFactory("?", template, 1, 0);
 
-		this.addFactory(talkWithHarryFactory);
+		this.addFactory(talkWith);
 
 	}
 

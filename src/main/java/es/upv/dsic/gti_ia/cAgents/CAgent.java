@@ -185,6 +185,7 @@ public abstract class CAgent extends BaseAgent {
 	}
 
 	public void send(ACLMessage msg) {
+		System.out.println(this.getName() + " envia un mensaje " + msg.getPerformative() + msg.getContent());
 		super.send(msg);
 	}
 

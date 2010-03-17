@@ -1,18 +1,25 @@
 package es.upv.dsic.gti_ia.cAgents.protocols;
 
+import es.upv.dsic.gti_ia.cAgents.BeginState;
+import es.upv.dsic.gti_ia.cAgents.BeginStateMethod;
+import es.upv.dsic.gti_ia.cAgents.CProcessor;
+import es.upv.dsic.gti_ia.cAgents.CProcessorFactory;
+import es.upv.dsic.gti_ia.cAgents.FinalState;
+import es.upv.dsic.gti_ia.cAgents.FinalStateMethod;
+import es.upv.dsic.gti_ia.cAgents.SendState;
+import es.upv.dsic.gti_ia.cAgents.SendStateMethod;
 import es.upv.dsic.gti_ia.core.ACLMessage;
-import es.upv.dsic.gti_ia.cAgents.*;
 
 public abstract class FIPA_REQUEST_Participant {
 
-	protected abstract String Do_Request(ACLMessage request);
+	protected abstract String Do_Request(CProcessor myProcessor, ACLMessage request);
 
-	protected abstract void Do_Inform(ACLMessage response);
+	protected abstract void Do_Inform(CProcessor myProcessor, ACLMessage response);
 
 	class BEGIN_Method implements BeginStateMethod {
 		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
 
-			String next = Do_Request(messageReceived);
+			String next = Do_Request(myProcessor, messageReceived);
 			return next;
 		}
 	}
@@ -20,8 +27,10 @@ public abstract class FIPA_REQUEST_Participant {
 	class INFORM_Method implements SendStateMethod {
 		public String run(CProcessor myProcessor, ACLMessage messageToSend) {
 
-			String next = Do_Request(messageToSend);
-			return next;
+			Do_Inform(myProcessor, messageToSend);
+			messageToSend.addReceiver(myProcessor.getLastReceivedMessage().getSender());
+			messageToSend.setSender(myProcessor.getMyAgent().getAid());
+			return "FINAL";
 		}
 	}
 
@@ -50,6 +59,7 @@ public abstract class FIPA_REQUEST_Participant {
 		INFORM.setMethod(new INFORM_Method());
 		template = new ACLMessage(ACLMessage.INFORM);
 		template.setProtocol("REQUEST");
+		template.setPerformative(ACLMessage.INFORM);
 		INFORM.setMessageTemplate(template);
 		processor.registerState(INFORM);
 		processor.addTransition("BEGIN", "INFORM");
