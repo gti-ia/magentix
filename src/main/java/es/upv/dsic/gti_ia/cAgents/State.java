@@ -21,6 +21,7 @@ public abstract class State implements Cloneable {
 	final static int CANCEL = 7;
 	final static int TERMINATED_FATHER = 8;
 	final static int NOT_ACCEPTED_MESSAGES = 9;
+	final static int SHUTDOWN = 10;
 
 	int type;
 

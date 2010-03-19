@@ -9,16 +9,17 @@
 // Gestión totalmente automatizada de IDs
 //  >> OK
 // Revisar visibilidad de datos internos de conversación a conversaciones hijas
+//  >> OK
 // Eliminar starting factories
 //  >> OK
 // Métodos sustitiubles en los estados de los autómatas
 //  >> OK
+
 // Creo que necesario un lock global. Interno seguro y externo creo que también. Supongo que deberá ser el mismo.
 
 // En core debe implementarse cómo comparar un mensaje con un mensaje que actua como template. Lo que 
 //   se hace en algún lugar de los Cagents sólo compara la performativa y las cabeceras de usuario
 
-// Visibilidad de miembros y métodos al mínimo
 // Considerar cambiar argumento myProcessor en métodos de estado por método del xxxStateMethod
 // Usar log4java
 // La construcción de autómatas es muy dada a cometer errores dado que se usan etiquetas
@@ -75,6 +76,8 @@ public abstract class CAgent extends BaseAgent {
 	ExecutorService exec;
 	Semaphore availableSends = new Semaphore(1, true); // ???
 	final Condition iAmFinished = lock.newCondition();
+	final Condition cProcessorRemoved = lock.newCondition();
+	boolean inShutdown = false;
 
 	public CAgent(AgentID aid) throws Exception {
 		super(aid);
@@ -111,13 +114,25 @@ public abstract class CAgent extends BaseAgent {
 		}
 	}
 
+	public void Shutdown() {
+		lock.lock();
+		this.inShutdown = true;
+		ACLMessage msg = new ACLMessage(ACLMessage.UNKNOWN);
+		msg.setHeader("PURPOSE", "SHUTDOWN");
+		for (CProcessor c : processors.values()) {
+			c.addMessage(msg);
+		}
+		this.exec.execute(new ShutdownProcess());
+		lock.unlock();
+	}
+
 	public void send(ACLMessage msg) {
 		System.out.println(this.getName() + " envia un mensaje "
 				+ msg.getPerformative() + msg.getContent());
 		super.send(msg);
 	}
 
-	private void createDefaultFactory (final CAgent me){
+	private void createDefaultFactory(final CAgent me) {
 
 		// PENDIENTE
 		// Probar y definir defaultfactory
@@ -153,12 +168,12 @@ public abstract class CAgent extends BaseAgent {
 		FINAL.setMethod(new FINAL_Method());
 		defaultFactory.cProcessorTemplate().registerState(FINAL);
 		defaultFactory.cProcessorTemplate().addTransition("BEGIN", "FINAL");
-		
+
 		defaultFactory.setAgent(this);
 
 	}
 
-	private void createWelcomeFactory (final CAgent me){
+	private void createWelcomeFactory(final CAgent me) {
 		welcomeFactory = new CParticipantFactory("WelcomeFactory",
 				new ACLMessage(ACLMessage.UNKNOWN), 1000);
 
@@ -223,23 +238,24 @@ public abstract class CAgent extends BaseAgent {
 	}
 
 	private synchronized void processMessage(ACLMessage msg) {
+
+		lock.lock();
 		CProcessor auxProcessor = processors.get(msg.getConversationId());
 		boolean accepted = false;
 		if (auxProcessor != null) {
-			processors.get(msg.getConversationId()).addMessage(msg);
+			auxProcessor.addMessage(msg);
 			if (auxProcessor.isIdle()) {
 				auxProcessor.setIdle(false);
-				if (!msg.getHeaderValue("Purpose").equals("WaitMessage"))
+				if (!msg.getHeaderValue("Purpose").equals("WaitMessage")) // ???
 					if (removeTimer(msg.getConversationId()))
 						System.out.println("Timer cancelado");
 				exec.execute(auxProcessor);
 			}
-		} else {
+		} else if (!inShutdown) {
 			for (int i = 0; i < participantFactories.size(); i++) {
 				CProcessorFactory factory = participantFactories.get(i);
 				if (factory.templateIsEqual(msg)) {
-					factory.startConversation(msg, null,
-							false);
+					factory.startConversation(msg, null, false);
 					accepted = true;
 					break;
 				}
@@ -250,6 +266,7 @@ public abstract class CAgent extends BaseAgent {
 				defaultFactory.startConversation(msg, null, false);
 			}
 		}
+		lock.unlock();
 	}
 
 	protected final void execute() {
@@ -302,21 +319,25 @@ public abstract class CAgent extends BaseAgent {
 	}
 
 	void endConversation(CProcessorFactory theFactory) {
-		theFactory.availableConversations
-				.release();
+		theFactory.availableConversations.release();
 	}
 
-	void Finished() {
+	class ShutdownProcess implements Runnable {
 
-		// PENDIENTE. Implementar el mecanismo de terminación de conversaciones
-		// en curso,
-		// mecanismo que concluirá llamando a este método para liberar el hilo
-		// principal
-		// y se alcance el final de agente
-
-		lock.lock();
-		iAmFinished.signal();
-		lock.unlock();
+		public void run() {
+			while (true) {
+				lock.lock();
+				try {
+					cProcessorRemoved.await();
+					if (processors.isEmpty()) {
+						iAmFinished.signal();
+					}
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				lock.unlock();
+			}
+		}
 	}
 
 	String newConversationID() {
@@ -324,7 +345,12 @@ public abstract class CAgent extends BaseAgent {
 	}
 
 	synchronized void removeProcessor(String conversationID) {
+		lock.lock();
 		processors.remove(conversationID);
+		if (inShutdown) {
+			cProcessorRemoved.signal();
+		}
+		lock.unlock();
 	}
 
 	synchronized boolean removeTimer(String conversationId) {
@@ -341,8 +367,7 @@ public abstract class CAgent extends BaseAgent {
 			Boolean sync) {
 		for (int i = 0; i < initiatorFactories.size(); i++) {
 			if (initiatorFactories.get(i).templateIsEqual(msg)) {
-				initiatorFactories.get(i).startConversation(msg, parent,
-						sync);
+				initiatorFactories.get(i).startConversation(msg, parent, sync);
 				return;
 			}
 		}

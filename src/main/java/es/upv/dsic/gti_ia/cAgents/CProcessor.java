@@ -39,8 +39,9 @@ public class CProcessor implements Runnable, Cloneable {
 	private boolean terminated;
 	private boolean idle;
 	private Map<String, Object> internalData = new HashMap<String, Object>();
-	private BeginState bs;
-	private CancelState cs;
+	private BeginState BEGIN;
+	private CancelState CANCEL_STATE;
+	private ShutdownState SHUTDOWN;
 	private SendingErrorsState ses;
 	private ReentrantLock mutex = new ReentrantLock();
 	final Condition syncConversationFinished = mutex.newCondition();
@@ -54,15 +55,23 @@ public class CProcessor implements Runnable, Cloneable {
 
 	protected CProcessor() {
 		terminated = false;
-		bs = new BeginState("BEGIN");
-		cs = new CancelState();
-		cs.setName("CANCEL");
+		BEGIN = new BeginState("BEGIN");
+		CANCEL_STATE = new CancelState();
+		CANCEL_STATE.setName("CANCEL");
 		ses = new SendingErrorsState();
 		ses.setName("SENDING_ERRORS");
+		SHUTDOWN = new ShutdownState();
 
-		this.registerFirstState(bs);
+		this.registerFirstState(BEGIN);
 	}
 
+	class SHUTDOWN_METHOD implements ShutdownStateMethod{
+
+		public String run(CProcessor myProcessor, ACLMessage msg) {
+			return null;
+		}
+	}
+	
 	public String getPreviousState() {
 		return previousState;
 	}
@@ -89,11 +98,11 @@ public class CProcessor implements Runnable, Cloneable {
 	}
 
 	BeginState beginState() {
-		return bs;
+		return BEGIN;
 	}
 
 	CancelState cancelState() {
-		return cs;
+		return CANCEL_STATE;
 	}
 
 	SendingErrorsState sendingErrorsState() {
@@ -325,7 +334,12 @@ public class CProcessor implements Runnable, Cloneable {
 						ACLMessage retrievedMessage = messageQueue.remove();
 						// check if message queue contains an exception message
 
-						if (retrievedMessage.getHeaderValue("ERROR").equals(
+						if (retrievedMessage.getHeaderValue("PURPOSE").equals("SHUTDOWN")) {
+							backState = currentState;
+							currentState = "SHUTDOWN_STATE";
+							currentMessage = retrievedMessage;
+							
+						} else if (retrievedMessage.getHeaderValue("ERROR").equals(
 								"SENDING_ERRORS")) {
 							backState = currentState;
 							currentState = "SENDING_ERRORS_STATE";
@@ -429,16 +443,38 @@ public class CProcessor implements Runnable, Cloneable {
 					next = backState;
 					next = this.sendingErrorsState().getMethod().run(this,
 							currentMessage);
-					if (next == "PREV") {
+					if (next == null) {
 						next = backState;
 					}
+					currentState = next;
+					break;
+				case State.SHUTDOWN:
+					next = backState;
+					next = this.sendingErrorsState().getMethod().run(this,
+							currentMessage);
+					if (next == null) {
+						if (this.isSynchronized) {
+							this.parent
+									.notifySyncConversationFinished(currentMessage);
+						} else {
+							// PENDIENTE qué hacer cuando es asíncrona
+						}
+
+						terminated = true;
+						// decrease the conversations counter in the processor's
+						// factory
+						myAgent.endConversation(this.myFactory);
+						myAgent.removeProcessor(this.conversationID);
+						return;
+					}
+					
 					currentState = next;
 					break;
 				case State.CANCEL:
 					next = backState;
 					next = this.cancelState().getMethod().run(this,
 							currentMessage);
-					if (next == "PREV") {
+					if (next == null) {
 						next = backState;
 					}
 					currentState = next;
