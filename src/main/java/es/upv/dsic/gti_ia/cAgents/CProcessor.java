@@ -53,6 +53,13 @@ public class CProcessor implements Runnable, Cloneable {
 	private ACLMessage lastSendedMessage;
 	private CProcessorFactory myFactory;
 
+	class SHUTDOWN_Method implements ShutdownStateMethod{
+
+		public String run(CProcessor myProcessor, ACLMessage msg) {
+			return null;
+		}
+	}
+	
 	protected CProcessor() {
 		terminated = false;
 		BEGIN = new BeginState("BEGIN");
@@ -61,16 +68,14 @@ public class CProcessor implements Runnable, Cloneable {
 		ses = new SendingErrorsState();
 		ses.setName("SENDING_ERRORS");
 		SHUTDOWN = new ShutdownState();
+		SHUTDOWN.setMethod(new SHUTDOWN_Method());
 
 		this.registerFirstState(BEGIN);
+		this.registerState(SHUTDOWN);
+
 	}
 
-	class SHUTDOWN_METHOD implements ShutdownStateMethod{
 
-		public String run(CProcessor myProcessor, ACLMessage msg) {
-			return null;
-		}
-	}
 	
 	public String getPreviousState() {
 		return previousState;
@@ -336,7 +341,7 @@ public class CProcessor implements Runnable, Cloneable {
 
 						if (retrievedMessage.getHeaderValue("PURPOSE").equals("SHUTDOWN")) {
 							backState = currentState;
-							currentState = "SHUTDOWN_STATE";
+							currentState = "SHUTDOWN";
 							currentMessage = retrievedMessage;
 							
 						} else if (retrievedMessage.getHeaderValue("ERROR").equals(
@@ -450,7 +455,7 @@ public class CProcessor implements Runnable, Cloneable {
 					break;
 				case State.SHUTDOWN:
 					next = backState;
-					next = this.sendingErrorsState().getMethod().run(this,
+					next = this.SHUTDOWN.getMethod().run(this,
 							currentMessage);
 					if (next == null) {
 						if (this.isSynchronized) {
@@ -465,6 +470,7 @@ public class CProcessor implements Runnable, Cloneable {
 						// factory
 						myAgent.endConversation(this.myFactory);
 						myAgent.removeProcessor(this.conversationID);
+						System.out.println("SACABO");
 						return;
 					}
 					

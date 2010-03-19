@@ -35,6 +35,7 @@ class HarryClass extends CAgent {
 
 		firstProcessor
 				.createSyncConversation(msg);
+		this.Shutdown();
 
 	}
 
