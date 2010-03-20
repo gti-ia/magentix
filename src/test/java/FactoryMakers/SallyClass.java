@@ -13,12 +13,13 @@ class SallyClass extends CAgent {
 		super(aid);
 	}
 
-	protected void Initialize(CProcessor firstProcessor,
+	protected void Initialize(CProcessor myProcessor,
 			ACLMessage welcomeMessage) {
 
 		ACLMessage template;
 
-		System.out.println(welcomeMessage.getContent());
+		System.out.println(myProcessor.getMyAgent().getName()
+				+ ": the welcome message is " + welcomeMessage.getContent());
 
 		template = new ACLMessage(ACLMessage.REQUEST);
 
@@ -29,12 +30,11 @@ class SallyClass extends CAgent {
 			}
 			protected void Do_Inform(CProcessor myProcessor, ACLMessage msg) {
 				msg.setContent("May be some day");
-				System.out.println(msg.getContent());
 			}
 		}
 
 		CParticipantFactory talkWith = new myFIPA_REQUEST()
-				.newFactory("?", template, 1, 0);
+				.newFactory("?", template, 1, 30);
 
 		this.addFactory(talkWith);
 

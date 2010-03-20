@@ -15,11 +15,11 @@ import es.upv.dsic.gti_ia.core.ACLMessage;
 
 public abstract class FIPA_REQUEST_Initiator {
 
-	protected abstract void Process_Inform(ACLMessage msg);
+	protected abstract void Process_Inform(CProcessor myProcessor, ACLMessage msg);
 
 	class INFORM_Method implements ReceiveStateMethod {
 		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
-			Process_Inform(messageReceived);
+			Process_Inform(myProcessor, messageReceived);
 			return "FINAL";
 		}
 	}
@@ -67,7 +67,6 @@ public abstract class FIPA_REQUEST_Initiator {
 				messageToSend.setProtocol("REQUEST");
 				messageToSend.setPerformative(ACLMessage.REQUEST);
 				messageToSend.setSender(myProcessor.getMyAgent().getAid());
-				System.out.println("ENVIANDO");
 				return "FIRST_WAIT";
 			}
 		}

@@ -17,6 +17,8 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.UUID;
 
+import org.apache.log4j.Logger;
+
 import es.upv.dsic.gti_ia.core.ACLMessage;
 
 /**
@@ -52,6 +54,8 @@ public class CProcessor implements Runnable, Cloneable {
 	// private ACLMessage lastReceivedMessage;
 	private ACLMessage lastSendedMessage;
 	private CProcessorFactory myFactory;
+	protected Logger logger = Logger.getLogger(CProcessor.class);
+
 
 	CProcessorFactory getMyFactory() {
 		return myFactory;
@@ -258,6 +262,10 @@ public class CProcessor implements Runnable, Cloneable {
 	public CProcessor getParent() {
 		return parent;
 	}
+	
+	public void ShutdownAgent () {
+		this.myAgent.Shutdown();
+	}
 
 	void setParent(CProcessor parent) {
 		this.parent = parent;
@@ -294,7 +302,7 @@ public class CProcessor implements Runnable, Cloneable {
 							+ ": Error: starting conversation and currentState different from Wait or Begin");
 		} else {
 			while (true) {
-				System.out.println("[" + this.myAgent.getName()
+				this.logger.info("[" + this.myAgent.getName()
 						+ this.conversationID + " " + currentState + "]");
 				switch (currentStateType) {
 				case State.BEGIN:
@@ -383,20 +391,7 @@ public class CProcessor implements Runnable, Cloneable {
 									ACLMessage filter = receiveState
 											.getAcceptFilter();
 
-									System.out.println("MENSAJE RECIBIDO");
-
-									System.out.println(retrievedMessage.getPerformative());
-									Iterator<String> itr = retrievedMessage
-											.getHeaders().keySet().iterator();
-									String key1;
-									while (itr.hasNext()) {
-										key1 = itr.next();
-										System.out.println("Header: "
-												+ key1
-												+ " Value: "
-												+ retrievedMessage
-														.getHeaderValue(key1));
-									}
+									
 
 									if (retrievedMessage.getPerformativeInt() == filter
 											.getPerformativeInt()
@@ -430,7 +425,7 @@ public class CProcessor implements Runnable, Cloneable {
 							}
 						}
 					} else { // queueMessage is empty
-						System.out.println("Cola vacia");
+						this.logger.info(this.myAgent.getName() + "Empty queue");
 						idle = true;
 						if (waitState.getTimeOut() > 0) {
 							myAgent.addTimer(conversationID, waitState
@@ -488,7 +483,6 @@ public class CProcessor implements Runnable, Cloneable {
 						// factory
 						myAgent.endConversation(this.myFactory);
 						myAgent.removeProcessor(this.conversationID);
-						System.out.println("SACABO");
 						return;
 					}
 

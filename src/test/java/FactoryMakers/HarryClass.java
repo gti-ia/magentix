@@ -11,15 +11,16 @@ class HarryClass extends CAgent {
 		super(aid);
 	}
 
-	protected void Initialize(CProcessor firstProcessor,
-			ACLMessage welcomeMessage) {
+	protected void Initialize(CProcessor myProcessor, ACLMessage welcomeMessage) {
 
 		ACLMessage msg;
-		
-		System.out.println(welcomeMessage.getContent());
+
+		System.out.println(myProcessor.getMyAgent().getName()
+				+ ": the welcome message is " + welcomeMessage.getContent());
 
 		class myFIPA_REQUEST extends FIPA_REQUEST_Initiator {
-			protected void Process_Inform(ACLMessage msg) {
+			protected void Process_Inform(CProcessor myProcessor, ACLMessage msg) {
+				System.out.println("Procesando respuesta");
 			}
 		}
 
@@ -29,14 +30,12 @@ class HarryClass extends CAgent {
 		this.addFactory(talkWithSallyFactory);
 
 		msg = talkWithSallyFactory.getTemplate();
-	    msg.setReceiver(new AgentID("Sally"));
+		msg.setReceiver(new AgentID("Sally"));
 		msg.setContent("May you give me your phone number?");
-		System.out.println("Inicio subconversacion");
 
-		firstProcessor
-				.createSyncConversation(msg);
-		this.Shutdown();
+		myProcessor.createSyncConversation(msg);
 
+		myProcessor.ShutdownAgent();
 	}
 
 	protected void Finalize(CProcessor firstProcessor,

@@ -80,6 +80,7 @@ public abstract class CAgent extends BaseAgent {
 	final Condition cProcessorRemoved = lock.newCondition();
 	boolean inShutdown = false;
 
+
 	public CAgent(AgentID aid) throws Exception {
 		super(aid);
 		exec = Executors.newCachedThreadPool();
@@ -95,8 +96,9 @@ public abstract class CAgent extends BaseAgent {
 	}
 
 	public void onMessage(ACLMessage msg) {
-		System.out.println(this.getName() + " recive un mensaje "
-				+ msg.getPerformative() + msg.getContent());
+
+		this.logger.info(this.getName() + " receives the message "
+				+ msg.getPerformative() + " " + msg.getContent());
 		this.processMessage(msg);
 	}
 
@@ -123,7 +125,6 @@ public abstract class CAgent extends BaseAgent {
 		if (processors.size() > 1) {
 			for (CProcessor c : processors.values()) {
 				if (!c.getMyFactory().equals(welcomeFactory)) {
-					System.out.println("envio mensaje shutdown");
 					c.addMessage(msg);
 				}
 			}
@@ -134,8 +135,8 @@ public abstract class CAgent extends BaseAgent {
 	}
 
 	public void send(ACLMessage msg) {
-		System.out.println(this.getName() + " envia un mensaje "
-				+ msg.getPerformative() + msg.getContent());
+		this.logger.info(this.getName() + " sends the message "
+				+ msg.getPerformative() + " " + msg.getContent());
 		super.send(msg);
 	}
 
@@ -192,7 +193,6 @@ public abstract class CAgent extends BaseAgent {
 
 			public String run(CProcessor myProcessor, ACLMessage msg) {
 				me.Initialize(myProcessor, msg);
-				System.out.println("Paso a WAIT");
 				return "WAIT";
 			};
 		}
