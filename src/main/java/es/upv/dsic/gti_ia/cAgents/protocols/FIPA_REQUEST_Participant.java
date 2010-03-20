@@ -35,10 +35,13 @@ public abstract class FIPA_REQUEST_Participant {
 	}
 
 	public CParticipantFactory newFactory(String name, ACLMessage template,
-			int availableConversations, long timeout) {
+			int availableConversations) {
 
 		// Create factory
-
+		
+		if (template == null) {
+			template = new ACLMessage();
+		}
 		template.setProtocol("REQUEST");
 		template.setPerformative(ACLMessage.REQUEST);
 		CParticipantFactory theFactory = new CParticipantFactory(name, template,

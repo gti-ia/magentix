@@ -13,30 +13,27 @@ class SallyClass extends CAgent {
 		super(aid);
 	}
 
-	protected void Initialize(CProcessor myProcessor,
-			ACLMessage welcomeMessage) {
-
-		ACLMessage template;
+	protected void Initialize(CProcessor myProcessor, ACLMessage welcomeMessage) {
 
 		System.out.println(myProcessor.getMyAgent().getName()
 				+ ": the welcome message is " + welcomeMessage.getContent());
 
-		template = new ACLMessage(ACLMessage.REQUEST);
-
 		class myFIPA_REQUEST extends FIPA_REQUEST_Participant {
-			protected String Do_Request(CProcessor myProcessor, ACLMessage msg) {	
-				System.out.println(msg.getSender() + " request me " + msg.getContent());
+			protected String Do_Request(CProcessor myProcessor, ACLMessage msg) {
+				System.out.println(msg.getSender().name + " request me "
+						+ msg.getContent());
 				return "INFORM";
 			}
+
 			protected void Do_Inform(CProcessor myProcessor, ACLMessage msg) {
 				msg.setContent("May be some day");
 			}
 		}
 
-		CParticipantFactory talkWith = new myFIPA_REQUEST()
-				.newFactory("?", template, 1, 30);
+		CParticipantFactory talk = new myFIPA_REQUEST().newFactory("TALK",
+				null, 1);
 
-		this.addFactory(talkWith);
+		this.addFactory(talk);
 
 	}
 

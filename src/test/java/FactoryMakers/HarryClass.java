@@ -20,16 +20,16 @@ class HarryClass extends CAgent {
 
 		class myFIPA_REQUEST extends FIPA_REQUEST_Initiator {
 			protected void Process_Inform(CProcessor myProcessor, ACLMessage msg) {
-				System.out.println("Procesando respuesta");
+				System.out.println(msg.getSender().name + " inform me " + msg.getContent());
 			}
 		}
 
-		CInitiatorFactory talkWithSallyFactory = new myFIPA_REQUEST()
-				.newInitiatorFactory("?", null, 1, 0);
+		CInitiatorFactory talk = new myFIPA_REQUEST()
+				.newInitiatorFactory("TALK", null, 1, 0);
 
-		this.addFactory(talkWithSallyFactory);
+		this.addFactory(talk);
 
-		msg = talkWithSallyFactory.getTemplate();
+		msg = talk.getTemplate();
 		msg.setReceiver(new AgentID("Sally"));
 		msg.setContent("May you give me your phone number?");
 

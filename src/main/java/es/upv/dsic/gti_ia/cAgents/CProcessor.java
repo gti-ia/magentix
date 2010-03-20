@@ -54,7 +54,7 @@ public class CProcessor implements Runnable, Cloneable {
 	// private ACLMessage lastReceivedMessage;
 	private ACLMessage lastSendedMessage;
 	private CProcessorFactory myFactory;
-	protected Logger logger = Logger.getLogger(CProcessor.class);
+	Logger logger = Logger.getLogger(CProcessor.class);
 
 
 	CProcessorFactory getMyFactory() {
