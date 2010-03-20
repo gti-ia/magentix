@@ -99,7 +99,7 @@ public class BaseAgent implements Runnable {
 		this.session = createSession();
 		if (this.existAgent(aid)) {
 			session.close();
-			throw new Exception("Agent ID already exists on the platform");
+			throw new Exception("Agent ID " + aid.name + " already exists on the platform");
 		} else {
 			this.aid = aid;
 			this.listener = new Listener();

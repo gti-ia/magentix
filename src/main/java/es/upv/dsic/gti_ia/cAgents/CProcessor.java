@@ -49,17 +49,21 @@ public class CProcessor implements Runnable, Cloneable {
 	private Boolean isSynchronized;
 	private long nextSubID = 0;
 	private String previousState;
-//	private ACLMessage lastReceivedMessage;
+	// private ACLMessage lastReceivedMessage;
 	private ACLMessage lastSendedMessage;
 	private CProcessorFactory myFactory;
 
-	class SHUTDOWN_Method implements ShutdownStateMethod{
+	CProcessorFactory getMyFactory() {
+		return myFactory;
+	}
+
+	class SHUTDOWN_Method implements ShutdownStateMethod {
 
 		public String run(CProcessor myProcessor, ACLMessage msg) {
 			return null;
 		}
 	}
-	
+
 	protected CProcessor() {
 		terminated = false;
 		BEGIN = new BeginState("BEGIN");
@@ -75,8 +79,6 @@ public class CProcessor implements Runnable, Cloneable {
 
 	}
 
-
-	
 	public String getPreviousState() {
 		return previousState;
 	}
@@ -275,14 +277,14 @@ public class CProcessor implements Runnable, Cloneable {
 
 		// check if the conversation must stop due to the lack of available
 		// conversations in the factory
-//		if (currentStateType == State.BEGIN) {
-//			try {
-//				this.getMyAgent().factories.get(factoryArrayIndex).availableConversations
-//						.acquire();
-//			} catch (InterruptedException e1) {
-//				e1.printStackTrace();
-//			}
-//		}
+		// if (currentStateType == State.BEGIN) {
+		// try {
+		// this.getMyAgent().factories.get(factoryArrayIndex).availableConversations
+		// .acquire();
+		// } catch (InterruptedException e1) {
+		// e1.printStackTrace();
+		// }
+		// }
 
 		// check if current state is Wait or Begin tpye, if not rise exception
 		if (currentStateType != State.BEGIN && currentStateType != State.WAIT) {
@@ -312,7 +314,8 @@ public class CProcessor implements Runnable, Cloneable {
 						SendState sendState = (SendState) states
 								.get(currentState);
 						messageToSend = new ACLMessage();
-						messageToSend.copyFromAsTemplate(sendState.messageTemplate);
+						messageToSend
+								.copyFromAsTemplate(sendState.messageTemplate);
 						currentState = sendState.getMethod().run(this,
 								messageToSend);
 						messageToSend.setConversationId(this.conversationID); // Foce
@@ -332,20 +335,19 @@ public class CProcessor implements Runnable, Cloneable {
 					break;
 
 				case State.WAIT:
-					Integer i = 1;
-					i = i + 2;
 					WaitState waitState = (WaitState) states.get(currentState);
 					if (messageQueue.size() > 0) {
 						ACLMessage retrievedMessage = messageQueue.remove();
 						// check if message queue contains an exception message
 
-						if (retrievedMessage.getHeaderValue("PURPOSE").equals("SHUTDOWN")) {
+						if (retrievedMessage.getHeaderValue("PURPOSE").equals(
+								"SHUTDOWN")) {
 							backState = currentState;
 							currentState = "SHUTDOWN";
 							currentMessage = retrievedMessage;
-							
-						} else if (retrievedMessage.getHeaderValue("ERROR").equals(
-								"SENDING_ERRORS")) {
+
+						} else if (retrievedMessage.getHeaderValue("ERROR")
+								.equals("SENDING_ERRORS")) {
 							backState = currentState;
 							currentState = "SENDING_ERRORS_STATE";
 							currentMessage = retrievedMessage;
@@ -374,15 +376,32 @@ public class CProcessor implements Runnable, Cloneable {
 									ReceiveState receiveState = (ReceiveState) states
 											.get(stateName);
 									// PENDIENTE
-									//	Hacer una comparación de mensaje con template completa. 
+									// Hacer una comparación de mensaje con
+									// template completa.
 									// Probablemente mejor en ACLMessage
 
-									if (retrievedMessage.getPerformativeInt() == receiveState
-											.getAcceptFilter()
+									ACLMessage filter = receiveState
+											.getAcceptFilter();
+
+									System.out.println("MENSAJE RECIBIDO");
+
+									System.out.println(retrievedMessage.getPerformative());
+									Iterator<String> itr = retrievedMessage
+											.getHeaders().keySet().iterator();
+									String key1;
+									while (itr.hasNext()) {
+										key1 = itr.next();
+										System.out.println("Header: "
+												+ key1
+												+ " Value: "
+												+ retrievedMessage
+														.getHeaderValue(key1));
+									}
+
+									if (retrievedMessage.getPerformativeInt() == filter
 											.getPerformativeInt()
 											&& retrievedMessage
-													.headersAreEqual(receiveState
-															.getAcceptFilter())) {
+													.headersAreEqual(filter)) {
 										currentState = stateName;
 										currentMessage = retrievedMessage;
 										accepted = true;
@@ -455,8 +474,7 @@ public class CProcessor implements Runnable, Cloneable {
 					break;
 				case State.SHUTDOWN:
 					next = backState;
-					next = this.SHUTDOWN.getMethod().run(this,
-							currentMessage);
+					next = this.SHUTDOWN.getMethod().run(this, currentMessage);
 					if (next == null) {
 						if (this.isSynchronized) {
 							this.parent
@@ -473,7 +491,7 @@ public class CProcessor implements Runnable, Cloneable {
 						System.out.println("SACABO");
 						return;
 					}
-					
+
 					currentState = next;
 					break;
 				case State.CANCEL:
@@ -527,7 +545,8 @@ public class CProcessor implements Runnable, Cloneable {
 				// enviar una excepcion desde este metodo?
 
 				if (!states.containsKey(currentState)) {
-					System.out.println(currentState + " state " + " doesn' exist");
+					System.out.println(currentState + " state "
+							+ " doesn' exist");
 				}
 				currentStateType = states.get(currentState).getType();
 				previousState = currentState;

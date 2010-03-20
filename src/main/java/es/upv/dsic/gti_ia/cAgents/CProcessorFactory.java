@@ -62,7 +62,7 @@ class CProcessorFactory {
 
 	// PENDIENTE: cambiar índice por objeto
 
-	synchronized void startConversation(ACLMessage msg, 
+	synchronized CProcessor startConversation(ACLMessage msg, 
 			CProcessor parent, Boolean isSync) {
 		CProcessor cloneProcessor = (CProcessor) myCProcessor.clone();
 
@@ -76,6 +76,7 @@ class CProcessorFactory {
 
 		myAgent.addProcessor(msg.getConversationId(), cloneProcessor);
 		myAgent.exec.execute(cloneProcessor);
+		return (cloneProcessor);
 	}
 
 //	private void setParentChildren(CProcessor parent) { // ??? Necesario?

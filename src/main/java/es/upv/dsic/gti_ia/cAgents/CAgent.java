@@ -69,6 +69,7 @@ public abstract class CAgent extends BaseAgent {
 	private Map<String, Timer> timers = new HashMap<String, Timer>();
 	private ReentrantLock lock = new ReentrantLock();
 	private CProcessorFactory welcomeFactory;
+	private CProcessor welcomeProcessor;
 	private CProcessorFactory defaultFactory;
 	ArrayList<CProcessorFactory> initiatorFactories = new ArrayList<CProcessorFactory>();
 	ArrayList<CProcessorFactory> participantFactories = new ArrayList<CProcessorFactory>();
@@ -119,10 +120,16 @@ public abstract class CAgent extends BaseAgent {
 		this.inShutdown = true;
 		ACLMessage msg = new ACLMessage(ACLMessage.UNKNOWN);
 		msg.setHeader("PURPOSE", "SHUTDOWN");
-		for (CProcessor c : processors.values()) {
-			c.addMessage(msg);
+		if (processors.size() > 1) {
+			for (CProcessor c : processors.values()) {
+				if (!c.getMyFactory().equals(welcomeFactory)) {
+					System.out.println("envio mensaje shutdown");
+					c.addMessage(msg);
+				}
+			}
+		} else {
+			this.notifyLastProcessorRemoved();
 		}
-		this.exec.execute(new ShutdownProcess());
 		lock.unlock();
 	}
 
@@ -158,14 +165,14 @@ public abstract class CAgent extends BaseAgent {
 
 		FinalState FINAL = new FinalState("FINAL");
 
-		class FINAL_Method implements FinalStateMethod {
+		class F_Method implements FinalStateMethod {
 			public void run(CProcessor myProcessor, ACLMessage msg) {
 				System.out.println("Default factory tratando mensaje "
 						+ msg.getContent() + " origen: " + msg.getSender()
 						+ " ConversationID: " + msg.getConversationId());
 			}
 		}
-		FINAL.setMethod(new FINAL_Method());
+		FINAL.setMethod(new F_Method());
 		defaultFactory.cProcessorTemplate().registerState(FINAL);
 		defaultFactory.cProcessorTemplate().addTransition("BEGIN", "FINAL");
 
@@ -181,7 +188,6 @@ public abstract class CAgent extends BaseAgent {
 
 		BeginState BEGIN = (BeginState) welcomeFactory.cProcessorTemplate()
 				.getState("BEGIN");
-
 		class BEGIN_Method implements BeginStateMethod {
 
 			public String run(CProcessor myProcessor, ACLMessage msg) {
@@ -190,51 +196,53 @@ public abstract class CAgent extends BaseAgent {
 				return "WAIT";
 			};
 		}
-
 		BEGIN.setMethod(new BEGIN_Method());
 
 		// WAIT STATE
 
 		WaitState WAIT = new WaitState("WAIT", 0);
-
 		welcomeFactory.cProcessorTemplate().registerState(WAIT);
-
 		welcomeFactory.cProcessorTemplate().addTransition("BEGIN", "WAIT");
 
 		// RECEIVE STATE
 
 		ReceiveState RECEIVE = new ReceiveState("RECEIVE");
-
 		class RECEIVE_Method implements ReceiveStateMethod {
-
 			public String run(CProcessor myProcessor, ACLMessage receivedMessage) {
-
-				// Nothing really to do
 				return "FINAL";
 			}
 		}
-
 		RECEIVE.setMethod(new RECEIVE_Method());
-		RECEIVE.setAcceptFilter(new ACLMessage(ACLMessage.INFORM));
+		ACLMessage msg = new ACLMessage(ACLMessage.UNKNOWN);
+		msg.setHeader("PURPOSE", "AGENT_END");
+		RECEIVE.setAcceptFilter(msg);
 		welcomeFactory.cProcessorTemplate().registerState(RECEIVE);
+		welcomeFactory.cProcessorTemplate().addTransition("WAIT", "RECEIVE");
 
 		// FINAL STATE
 
-		FinalState fs = new FinalState("FINAL");
+		FinalState FINAL = new FinalState("FINAL");
 
-		class fsMethod implements FinalStateMethod {
+		class FINAL_METHOD implements FinalStateMethod {
 
 			public void run(CProcessor myProcessor, ACLMessage msg) {
 				me.Finalize(myProcessor, msg);
+				myProcessor.getMyAgent().notifyAgentEnd();
 			}
 		}
 
-		fs.setMethod(new fsMethod());
+		FINAL.setMethod(new FINAL_METHOD());
 
-		welcomeFactory.cProcessorTemplate().registerState(fs);
+		welcomeFactory.cProcessorTemplate().registerState(FINAL);
 
 		welcomeFactory.setAgent(this);
 
+	}
+
+	void notifyAgentEnd() {
+		lock.lock();
+		iAmFinished.signal();
+		lock.unlock();
 	}
 
 	private synchronized void processMessage(ACLMessage msg) {
@@ -276,7 +284,8 @@ public abstract class CAgent extends BaseAgent {
 		ACLMessage welcomeMessage = new ACLMessage(ACLMessage.INFORM);
 		welcomeMessage.setContent("Welcome to this platform");
 		welcomeMessage.setConversationId(this.newConversationID());
-		welcomeFactory.startConversation(welcomeMessage, null, false);
+		welcomeProcessor = welcomeFactory.startConversation(welcomeMessage,
+				null, false);
 
 		lock.lock();
 		try {
@@ -284,6 +293,8 @@ public abstract class CAgent extends BaseAgent {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		System.out.println("SACABO");
+
 		lock.unlock();
 
 	}
@@ -344,11 +355,19 @@ public abstract class CAgent extends BaseAgent {
 		return this.getName() + "." + UUID.randomUUID().toString();
 	}
 
+	void notifyLastProcessorRemoved() {
+		ACLMessage msg = new ACLMessage(ACLMessage.UNKNOWN);
+		msg.setHeader("PURPOSE", "AGENT_END");
+		welcomeProcessor.addMessage(msg);
+	}
+
 	synchronized void removeProcessor(String conversationID) {
 		lock.lock();
 		processors.remove(conversationID);
 		if (inShutdown) {
-			cProcessorRemoved.signal();
+			if (processors.size() == 1) {
+				this.notifyLastProcessorRemoved();
+			}
 		}
 		lock.unlock();
 	}
