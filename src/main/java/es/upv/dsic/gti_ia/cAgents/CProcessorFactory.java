@@ -26,6 +26,8 @@ public class CProcessorFactory {
 //	private ArrayList<String> children; // ??? Necesario?
 
 
+
+	
 	public CProcessorFactory(String name, ACLMessage template,
 			int availableConversations) {
 		this.name = name;

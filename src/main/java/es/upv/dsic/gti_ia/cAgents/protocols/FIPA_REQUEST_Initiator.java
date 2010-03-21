@@ -31,7 +31,7 @@ public abstract class FIPA_REQUEST_Initiator {
 		};
 	}
 
-	public CProcessorFactory newInitiatorFactory(String name,
+	public CProcessorFactory newFactory(String name,
 			ACLMessage template, int availableConversations, long timeout) {
 
 		ACLMessage filter;

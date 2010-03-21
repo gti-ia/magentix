@@ -2,8 +2,10 @@ package FactoryMakers;
 
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
+import es.upv.dsic.gti_ia.cAgents.CAgent;
+import es.upv.dsic.gti_ia.cAgents.CProcessor;
+import es.upv.dsic.gti_ia.cAgents.CProcessorFactory;
 import es.upv.dsic.gti_ia.cAgents.protocols.FIPA_REQUEST_Initiator;
-import es.upv.dsic.gti_ia.cAgents.*;
 
 class HarryClass extends CAgent {
 
@@ -25,7 +27,7 @@ class HarryClass extends CAgent {
 		}
 
 		CProcessorFactory talk = new myFIPA_REQUEST()
-				.newInitiatorFactory("TALK", null, 1, 0);
+				.newFactory("TALK", null, 1, 0);
 
 		this.addFactoryAsInitiator(talk);
 
