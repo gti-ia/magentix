@@ -1,26 +1,27 @@
 // CAMBIOS PRINCIPALES EN EL PAQUETE
 
 // Inicialización y finalización del cAgent
-//  >> A medias. Falta el mecanismo de finalización ordenada de conversaciones.
+//  >> OK
 // Usar el estado Send sólo para enviar mensajes fuera sin poder cambiar el ID
 //  >> OK
 // Nuevos métodos para lanzar conversaciones síncronas y asíncronas
-//  >> OK
+//  >> OK pero falta ejemplo asíncrona
 // Gestión totalmente automatizada de IDs
-//  >> OK
+//  >> Falta hacer que las subconversaciones compartan IDs con la padre
 // Revisar visibilidad de datos internos de conversación a conversaciones hijas
 //  >> OK
 // Eliminar starting factories
 //  >> OK
 // Métodos sustitiubles en los estados de los autómatas
 //  >> OK
-
-// Creo que necesario un lock global. Interno seguro y externo creo que también. Supongo que deberá ser el mismo.
+// Fábricas participantes anidadas
+// Revisar accesos en exclusión mutua
+// Creo que necesario un lock global. Interno seguro y externo creo que también.
+// Supongo que deberá ser el mismo.
 
 // En core debe implementarse cómo comparar un mensaje con un mensaje que actua como template. Lo que 
 //   se hace en algún lugar de los Cagents sólo compara la performativa y las cabeceras de usuario
 
-// Considerar cambiar argumento myProcessor en métodos de estado por método del xxxStateMethod
 // Usar log4java
 // La construcción de autómatas es muy dada a cometer errores dado que se usan etiquetas
 //   por lo que habrá que esmerar el uso de excepciones
@@ -28,15 +29,8 @@
 // Metodo para evaluar mensajes aceptados en estado receive, como
 //   complemento al filtro
 // Método para evaluar mensajes aceptados por fábricas, como complemento al filtro
-// Combinar estructuralmente autómatas
 
-// CAMBIOS EN ESTA CLASE
 
-// Eliminada la cola de mensajes. Ahora onMessage procesa directamente el mensaje.
-// SetFactories reemplazado por Initialize (welcomeMessage)
-// La construcción de la default factory es muy distinta debido a
-//   los cambios en las clases State, cProcessor y cProcessorFactory
-// Desaparece la autostart factory
 
 package es.upv.dsic.gti_ia.cAgents;
 
@@ -49,7 +43,6 @@ import java.util.TimerTask;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Semaphore;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -75,7 +68,7 @@ public abstract class CAgent extends BaseAgent {
 	ArrayList<CProcessorFactory> participantFactories = new ArrayList<CProcessorFactory>();
 
 	ExecutorService exec;
-	Semaphore availableSends = new Semaphore(1, true); // ???
+//	Semaphore availableSends = new Semaphore(1, true); 
 	final Condition iAmFinished = lock.newCondition();
 	final Condition cProcessorRemoved = lock.newCondition();
 	boolean inShutdown = false;
@@ -146,7 +139,10 @@ public abstract class CAgent extends BaseAgent {
 	public void send(ACLMessage msg) {
 		this.logger.info(this.getName() + " sends the message "
 				+ msg.getPerformative() + " " + msg.getContent());
+		this.lock.lock();
 		super.send(msg);
+		this.lock.unlock();
+
 	}
 
 	private void createDefaultFactory(final CAgent me) {
@@ -267,7 +263,7 @@ public abstract class CAgent extends BaseAgent {
 			auxProcessor.addMessage(msg);
 			if (auxProcessor.isIdle()) {
 				auxProcessor.setIdle(false);
-				if (!msg.getHeaderValue("Purpose").equals("WaitMessage")) // ???
+				if (!msg.getHeaderValue("Purpose").equals("WaitMessage"))
 					if (removeTimer(msg.getConversationId()))
 						System.out.println("Timer cancelado");
 				exec.execute(auxProcessor);

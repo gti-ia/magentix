@@ -1,4 +1,4 @@
-package SerialFactory;
+package UsingFactories;
 
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;

@@ -284,7 +284,7 @@ public class CProcessor implements Runnable, Cloneable {
 
 		// check if the conversation must stop due to the lack of available
 		// conversations in the factory
-		if (currentStateType == State.BEGIN && this.myFactory.getLimit()!=0) {
+		if (currentStateType == State.BEGIN && this.myFactory.getLimit() != 0) {
 			try {
 				this.myFactory.availableConversations.acquire();
 			} catch (InterruptedException e1) {
@@ -315,29 +315,16 @@ public class CProcessor implements Runnable, Cloneable {
 					break;
 				case State.SEND:
 					ACLMessage messageToSend;
-					try {
-						this.myAgent.availableSends.acquire();
-						SendState sendState = (SendState) states
-								.get(currentState);
-						messageToSend = new ACLMessage();
-						messageToSend
-								.copyFromAsTemplate(sendState.messageTemplate);
-						currentState = sendState.getMethod().run(this,
-								messageToSend);
-						messageToSend.setConversationId(this.conversationID); // Foce
-						// ID
+					SendState sendState = (SendState) states.get(currentState);
+					messageToSend = new ACLMessage();
+					messageToSend.copyFromAsTemplate(sendState.messageTemplate);
+					currentState = sendState.getMethod().run(this,
+							messageToSend);
+					messageToSend.setConversationId(this.conversationID);
 
-						// PENDIENTE
-						// Ver si es necesario que el envío sea en exclusión
-						// mutua. En todo caso debería ir a BaseAgent
+					this.myAgent.send(messageToSend);
+					this.lastSendedMessage = messageToSend;
 
-						this.myAgent.send(messageToSend);
-						this.lastSendedMessage = messageToSend;
-						this.myAgent.availableSends.release();
-
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
 					break;
 
 				case State.WAIT:
