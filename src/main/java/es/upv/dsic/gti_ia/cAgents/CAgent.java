@@ -209,6 +209,7 @@ public abstract class CAgent extends BaseAgent {
 		ReceiveState RECEIVE = new ReceiveState("RECEIVE");
 		class RECEIVE_Method implements ReceiveStateMethod {
 			public String run(CProcessor myProcessor, ACLMessage receivedMessage) {
+				myProcessor.getInternalData().put("AGENT_END_MSG", receivedMessage);
 				return "FINAL";
 			}
 		}
@@ -226,6 +227,7 @@ public abstract class CAgent extends BaseAgent {
 		class FINAL_METHOD implements FinalStateMethod {
 
 			public void run(CProcessor myProcessor, ACLMessage msg) {
+				msg.copyFromAsTemplate((ACLMessage) myProcessor.getInternalData().get("AGENT_END_MSG"));
 				me.Finalize(myProcessor, msg);
 				myProcessor.getMyAgent().notifyAgentEnd();
 			}
@@ -358,6 +360,7 @@ public abstract class CAgent extends BaseAgent {
 	void notifyLastProcessorRemoved() {
 		ACLMessage msg = new ACLMessage(ACLMessage.UNKNOWN);
 		msg.setHeader("PURPOSE", "AGENT_END");
+		msg.setContent("See you");
 		welcomeProcessor.addMessage(msg);
 	}
 
