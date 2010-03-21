@@ -46,7 +46,9 @@ public class CProcessorFactory {
 	}
 
 	public void setTemplate(ACLMessage template) {
+		this.myAgent.lock();
 		this.template = template;
+		this.myAgent.unlock();
 	}
 
 	void setAgent(CAgent myAgent) {
@@ -62,7 +64,7 @@ public class CProcessorFactory {
 		return this.myCProcessor;
 	}
 
-	synchronized CProcessor startConversation(ACLMessage msg, 
+	CProcessor startConversation(ACLMessage msg, 
 			CProcessor parent, Boolean isSync) {
 		CProcessor cloneProcessor = (CProcessor) myCProcessor.clone();
 
