@@ -14,7 +14,6 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.ReentrantLock;
 import java.util.UUID;
 
 import org.apache.log4j.Logger;
@@ -45,8 +44,9 @@ public class CProcessor implements Runnable, Cloneable {
 	private CancelState CANCEL_STATE;
 	private ShutdownState SHUTDOWN;
 	private SendingErrorsState ses;
-	private ReentrantLock mutex = new ReentrantLock();
-	final Condition syncConversationFinished = mutex.newCondition();
+//	private ReentrantLock mutex = new ReentrantLock();
+//	Condition syncConversationFinished = mutex.newCondition();
+	Condition syncConversationFinished;
 	ACLMessage syncConversationResponse;
 	private Boolean isSynchronized;
 	private long nextSubID = 0;
@@ -82,6 +82,15 @@ public class CProcessor implements Runnable, Cloneable {
 
 	}
 
+	public void lockMyAgent() {
+		this.myAgent.mutex.lock();
+	}
+	
+	public void unlockMyAgent() {
+		this.myAgent.mutex.unlock();
+	}
+	
+	
 	public String getPreviousState() {
 		return previousState;
 	}
@@ -129,7 +138,7 @@ public class CProcessor implements Runnable, Cloneable {
 
 	public ACLMessage createSyncConversation(ACLMessage initalMessage) {
 
-		mutex.lock();
+		this.lockMyAgent();
 
 		nextSubID = nextSubID + 1;
 
@@ -142,20 +151,19 @@ public class CProcessor implements Runnable, Cloneable {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		mutex.unlock();
+		this.unlockMyAgent();
 		return this.syncConversationResponse;
 	}
 
 	void notifySyncConversationFinished(ACLMessage response) {
-		mutex.lock();
+		this.lockMyAgent();
 		this.syncConversationResponse = response;
 		syncConversationFinished.signal();
-		mutex.unlock();
+		this.unlockMyAgent();
 	}
 
 	public void createAsyncConversation(ACLMessage initalMessage) {
 
-		// Clonar antes el mensaje ???
 		initalMessage.setConversationId(myAgent.newConversationID());
 		myAgent.startConversation(initalMessage, this, false);
 	}
@@ -192,6 +200,7 @@ public class CProcessor implements Runnable, Cloneable {
 				}
 			}
 		}
+		aux.syncConversationFinished = this.myAgent.mutex.newCondition();	
 		return aux;
 	}
 

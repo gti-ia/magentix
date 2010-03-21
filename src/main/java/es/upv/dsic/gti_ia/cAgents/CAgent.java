@@ -58,7 +58,7 @@ public abstract class CAgent extends BaseAgent {
 
 	private Map<String, CProcessor> processors = new HashMap<String, CProcessor>();
 	private Map<String, Timer> timers = new HashMap<String, Timer>();
-	private ReentrantLock mutex = new ReentrantLock();
+	ReentrantLock mutex = new ReentrantLock();
 	private CProcessorFactory welcomeFactory;
 	private CProcessor welcomeProcessor;
 	private CProcessorFactory defaultFactory;
