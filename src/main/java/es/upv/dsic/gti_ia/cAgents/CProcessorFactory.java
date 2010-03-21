@@ -23,19 +23,26 @@ public class CProcessorFactory {
 	private CProcessor myCProcessor;
 	private CAgent myAgent;
 	Semaphore availableConversations; // PENDIENTE buscar otra solución
+	int limit;
 //	private ArrayList<String> children; // ??? Necesario?
 
 
 
 	
+
 	public CProcessorFactory(String name, ACLMessage template,
-			int availableConversations) {
+			int conversationsLimit) {
 		this.name = name;
 		this.template = template;
-		this.availableConversations = new Semaphore(availableConversations,
+		this.availableConversations = new Semaphore(conversationsLimit,
 				false);
+		this.limit = conversationsLimit;
 		this.myCProcessor = new CProcessor();
 //		children = new ArrayList<String>();
+	}
+
+	public int getLimit() {
+		return limit;
 	}
 
 	public void setTemplate(ACLMessage template) {
@@ -54,8 +61,6 @@ public class CProcessorFactory {
 	public CProcessor cProcessorTemplate() {
 		return this.myCProcessor;
 	}
-
-	// PENDIENTE: cambiar índice por objeto
 
 	synchronized CProcessor startConversation(ACLMessage msg, 
 			CProcessor parent, Boolean isSync) {

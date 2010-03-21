@@ -95,14 +95,14 @@ public abstract class CAgent extends BaseAgent {
 		participantFactories.add(factory);
 	}
 
-//	public synchronized void addFactory(CProcessorFactory factory) {
-//		factory.setAgent(this);
-//		if (factory.getRole() == CProcessorFactory.FactoryRole.Initiator) {
-//			initiatorFactories.add(factory);
-//		} else {
-//			participantFactories.add(factory);
-//		}
-//	}
+	// public synchronized void addFactory(CProcessorFactory factory) {
+	// factory.setAgent(this);
+	// if (factory.getRole() == CProcessorFactory.FactoryRole.Initiator) {
+	// initiatorFactories.add(factory);
+	// } else {
+	// participantFactories.add(factory);
+	// }
+	// }
 
 	public void onMessage(ACLMessage msg) {
 
@@ -306,7 +306,7 @@ public abstract class CAgent extends BaseAgent {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		System.out.println("SACABO");
+		this.logger.info("Agent " + this.getName() + "ENDED");
 
 		lock.unlock();
 
@@ -343,7 +343,9 @@ public abstract class CAgent extends BaseAgent {
 	}
 
 	void endConversation(CProcessorFactory theFactory) {
-		theFactory.availableConversations.release();
+		if (theFactory.getLimit() != 0) {
+			theFactory.availableConversations.release();
+		}
 	}
 
 	class ShutdownProcess implements Runnable {

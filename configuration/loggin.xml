@@ -13,8 +13,8 @@
 </layout>
 </appender>
 <root>
-<priority value ="info" />
-<appender-ref ref="Consola" />
-<appender-ref ref="Fichero" />
+<priority value ="error" />
+<appender-ref ref="Consola" ></appender-ref>
+<appender-ref ref="Fichero" ></appender-ref>
 </root>
 </log4j:configuration>

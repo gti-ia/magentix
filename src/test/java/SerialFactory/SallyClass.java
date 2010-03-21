@@ -1,4 +1,4 @@
-package FactoryMakers;
+package SerialFactory;
 
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
@@ -44,11 +44,18 @@ class SallyClass extends CAgent {
 				System.out.println(myProcessor.getMyAgent().getName() + ": "
 						+ msg.getSender().name + " request me "
 						+ msg.getContent());
+				try {
+					Thread.sleep(3000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 				return "INFORM";
 			}
 
 			protected void Do_Inform(CProcessor myProcessor, ACLMessage msg) {
 				msg.setContent("May be some day");
+				System.out.println(myProcessor.getMyAgent().getName()
+						+ ": I send the answer to " + myProcessor.getLastReceivedMessage().getSender().name);
 				// La plataforma enviará el mensaje msg tras
 				// completar de forma automática las cabeceras necesarias:
 				// performative, protocol, sender, receiver, conversation_id,
@@ -69,7 +76,7 @@ class SallyClass extends CAgent {
 		// se atenderán una por una.
 
 		CProcessorFactory talk = new myFIPA_REQUEST().newFactory("TALK", null,
-				1);
+				0);
 
 		// Por último la fábrica se configura para responder ante mensajes
 		// entrantes

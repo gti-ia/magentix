@@ -1,19 +1,21 @@
-package FactoryMakers;
+package SerialFactory;
 
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.cAgents.CAgent;
 import es.upv.dsic.gti_ia.cAgents.CProcessor;
 import es.upv.dsic.gti_ia.cAgents.CProcessorFactory;
-import es.upv.dsic.gti_ia.cAgents.protocols.FIPA_REQUEST_Participant;
+import es.upv.dsic.gti_ia.cAgents.protocols.FIPA_REQUEST_Initiator;
 
-class SallyClass extends CAgent {
+class HarryClass extends CAgent {
 
-	public SallyClass(AgentID aid) throws Exception {
+	public HarryClass(AgentID aid) throws Exception {
 		super(aid);
 	}
 
 	protected void Initialize(CProcessor myProcessor, ACLMessage welcomeMessage) {
+
+		ACLMessage msg;
 
 		System.out.println(myProcessor.getMyAgent().getName()
 				+ ": the welcome message is " + welcomeMessage.getContent());
@@ -30,53 +32,54 @@ class SallyClass extends CAgent {
 		// diseñe su propia fábrica y, por tanto, un nuevo protocolo de
 		// interacción.
 
-		// En este ejemplo el agente va a actuar como participante en el
-		// protocolo
+		// En este ejemplo el agente va a actuar como iniciador en el protocolo
 		// REQUEST definido por FIPA.
-		// Para ello extiende la clase FIPA_REQUEST_Participant implementando el
-		// método que recibe la petición (DO_Request) y el método que genera la
-		// respuesta
-		// (DO_Inform)
+		// Para ello extiende la clase FIPA_REQUEST_Initiator implementando el
+		// método que recibe la respuesta (Process_Inform)
 
-		class myFIPA_REQUEST extends FIPA_REQUEST_Participant {
-
-			protected String Do_Request(CProcessor myProcessor, ACLMessage msg) {
+		class myFIPA_REQUEST extends FIPA_REQUEST_Initiator {
+			protected void Process_Inform(CProcessor myProcessor, ACLMessage msg) {
 				System.out.println(myProcessor.getMyAgent().getName() + ": "
-						+ msg.getSender().name + " request me "
+						+ msg.getSender().name + " informs me "
 						+ msg.getContent());
-				return "INFORM";
-			}
-
-			protected void Do_Inform(CProcessor myProcessor, ACLMessage msg) {
-				msg.setContent("May be some day");
-				// La plataforma enviará el mensaje msg tras
-				// completar de forma automática las cabeceras necesarias:
-				// performative, protocol, sender, receiver, conversation_id,
-				// ...
 			}
 		}
 
-		// El agente crea la CProcessorFactory que atenderá los mensajes
-		// entrantes
+		// El agente crea la CProcessorFactory que creará procesadores para
+		// iniciar
+		// conversaciones
 		// cuyo protocol sea REQUEST y su performativa REQUEST. En este ejemplo
 		// la
 		// cProcessorFactory recibe el nombre "TALK", no se le incorpora ningún
 		// criterio
 		// de aceptación adicional al requerido por el protocolo REQUEST (null)
 		// y
-		// se limita el número de procesadores simultáneos a 1, es decir, las
-		// peticiones
-		// se atenderán una por una.
+		// no se limita el número de procesadores simultáneos (valor 0)
 
 		CProcessorFactory talk = new myFIPA_REQUEST().newFactory("TALK", null,
-				1);
+				1, 0);
 
-		// Por último la fábrica se configura para responder ante mensajes
-		// entrantes
-		// que puedan hacer que comience la participación del agente en una
+		// La fábrica se configura para responder ante solicitudes del agente
+		// de inicio de conversaciones usando el protocolo REQUEST
+
+		this.addFactoryAsInitiator(talk);
+
+		// Para iniciar una conversación, el agente crea un mensaje que pueda
+		// ser
+		// aceptado por una de sus fabricas iniciadoras.
+
+		msg = talk.getTemplate();
+		msg.setReceiver(new AgentID("Sally"));
+		msg.setContent("May you give me your phone number?");
+
+		// y finalmente se inicia la nueva conversación. Al ser del tipo
+		// síncrona,
+		// la interacción en curso se detiene hasta que concluya la nueva
 		// conversación
 
-		this.addFactoryAsParticipant(talk);
+		myProcessor.createSyncConversation(msg);
+
+		myProcessor.ShutdownAgent();
 	}
 
 	protected void Finalize(CProcessor firstProcessor,
