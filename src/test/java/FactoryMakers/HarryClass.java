@@ -24,10 +24,10 @@ class HarryClass extends CAgent {
 			}
 		}
 
-		CInitiatorFactory talk = new myFIPA_REQUEST()
+		CProcessorFactory talk = new myFIPA_REQUEST()
 				.newInitiatorFactory("TALK", null, 1, 0);
 
-		this.addFactory(talk);
+		this.addFactoryAsInitiator(talk);
 
 		msg = talk.getTemplate();
 		msg.setReceiver(new AgentID("Sally"));

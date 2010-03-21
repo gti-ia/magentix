@@ -2,7 +2,7 @@ package es.upv.dsic.gti_ia.cAgents.protocols;
 
 import es.upv.dsic.gti_ia.cAgents.BeginState;
 import es.upv.dsic.gti_ia.cAgents.BeginStateMethod;
-import es.upv.dsic.gti_ia.cAgents.CInitiatorFactory;
+import es.upv.dsic.gti_ia.cAgents.CProcessorFactory;
 import es.upv.dsic.gti_ia.cAgents.CProcessor;
 import es.upv.dsic.gti_ia.cAgents.FinalState;
 import es.upv.dsic.gti_ia.cAgents.FinalStateMethod;
@@ -31,7 +31,7 @@ public abstract class FIPA_REQUEST_Initiator {
 		};
 	}
 
-	public CInitiatorFactory newInitiatorFactory(String name,
+	public CProcessorFactory newInitiatorFactory(String name,
 			ACLMessage template, int availableConversations, long timeout) {
 
 		ACLMessage filter;
@@ -43,7 +43,7 @@ public abstract class FIPA_REQUEST_Initiator {
 		}
 		template.setProtocol("REQUEST");
 		template.setPerformative(ACLMessage.REQUEST);
-		CInitiatorFactory theFactory = new CInitiatorFactory(name, template,
+		CProcessorFactory theFactory = new CProcessorFactory(name, template,
 				availableConversations);
 
 		// Processor template setup

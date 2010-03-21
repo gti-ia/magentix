@@ -17,26 +17,23 @@ import es.upv.dsic.gti_ia.core.ACLMessage;
 // PENDIENTE
 // Distinguir fábrica de iniciador y participante
 
-class CProcessorFactory {
+public class CProcessorFactory {
 	private ACLMessage template;
 	String name;
 	private CProcessor myCProcessor;
 	private CAgent myAgent;
 	Semaphore availableConversations; // PENDIENTE buscar otra solución
 //	private ArrayList<String> children; // ??? Necesario?
-	FactoryRole role;
 
-	enum FactoryRole {Initiator,Participant};
 
 	public CProcessorFactory(String name, ACLMessage template,
-			int availableConversations, FactoryRole role) {
+			int availableConversations) {
 		this.name = name;
 		this.template = template;
 		this.availableConversations = new Semaphore(availableConversations,
 				false);
 		this.myCProcessor = new CProcessor();
 //		children = new ArrayList<String>();
-		this.role = role;
 	}
 
 	public void setTemplate(ACLMessage template) {
@@ -50,10 +47,6 @@ class CProcessorFactory {
 
 	public ACLMessage getTemplate() {
 		return template.clone();
-	}
-
-	FactoryRole getRole() {
-		return role;
 	}
 
 	public CProcessor cProcessorTemplate() {

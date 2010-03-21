@@ -80,20 +80,29 @@ public abstract class CAgent extends BaseAgent {
 	final Condition cProcessorRemoved = lock.newCondition();
 	boolean inShutdown = false;
 
-
 	public CAgent(AgentID aid) throws Exception {
 		super(aid);
 		exec = Executors.newCachedThreadPool();
 	}
 
-	public synchronized void addFactory(CProcessorFactory factory) {
+	public synchronized void addFactoryAsInitiator(CProcessorFactory factory) {
 		factory.setAgent(this);
-		if (factory.getRole() == CProcessorFactory.FactoryRole.Initiator) {
-			initiatorFactories.add(factory);
-		} else {
-			participantFactories.add(factory);
-		}
+		initiatorFactories.add(factory);
 	}
+
+	public synchronized void addFactoryAsParticipant(CProcessorFactory factory) {
+		factory.setAgent(this);
+		participantFactories.add(factory);
+	}
+
+//	public synchronized void addFactory(CProcessorFactory factory) {
+//		factory.setAgent(this);
+//		if (factory.getRole() == CProcessorFactory.FactoryRole.Initiator) {
+//			initiatorFactories.add(factory);
+//		} else {
+//			participantFactories.add(factory);
+//		}
+//	}
 
 	public void onMessage(ACLMessage msg) {
 
@@ -145,7 +154,7 @@ public abstract class CAgent extends BaseAgent {
 		// PENDIENTE
 		// Probar y definir defaultfactory
 
-		defaultFactory = new CParticipantFactory("DefaultFactory",
+		defaultFactory = new CProcessorFactory("DefaultFactory",
 				new ACLMessage(ACLMessage.UNKNOWN), 1000);
 
 		// BEGIN STATE
@@ -182,7 +191,7 @@ public abstract class CAgent extends BaseAgent {
 	}
 
 	private void createWelcomeFactory(final CAgent me) {
-		welcomeFactory = new CParticipantFactory("WelcomeFactory",
+		welcomeFactory = new CProcessorFactory("WelcomeFactory",
 				new ACLMessage(ACLMessage.UNKNOWN), 1000);
 
 		// BEGIN STATE
@@ -209,7 +218,8 @@ public abstract class CAgent extends BaseAgent {
 		ReceiveState RECEIVE = new ReceiveState("RECEIVE");
 		class RECEIVE_Method implements ReceiveStateMethod {
 			public String run(CProcessor myProcessor, ACLMessage receivedMessage) {
-				myProcessor.getInternalData().put("AGENT_END_MSG", receivedMessage);
+				myProcessor.getInternalData().put("AGENT_END_MSG",
+						receivedMessage);
 				return "FINAL";
 			}
 		}
@@ -227,7 +237,8 @@ public abstract class CAgent extends BaseAgent {
 		class FINAL_METHOD implements FinalStateMethod {
 
 			public void run(CProcessor myProcessor, ACLMessage msg) {
-				msg.copyFromAsTemplate((ACLMessage) myProcessor.getInternalData().get("AGENT_END_MSG"));
+				msg.copyFromAsTemplate((ACLMessage) myProcessor
+						.getInternalData().get("AGENT_END_MSG"));
 				me.Finalize(myProcessor, msg);
 				myProcessor.getMyAgent().notifyAgentEnd();
 			}
