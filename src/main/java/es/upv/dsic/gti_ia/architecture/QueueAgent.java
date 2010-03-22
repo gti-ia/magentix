@@ -33,6 +33,7 @@ public class QueueAgent extends BaseAgent {
 	private ArrayList<String> activeConversationsList = new ArrayList<String>();
 
 	private ArrayList<Object> roles = new ArrayList<Object>();
+	private ArrayList<Object> arguments = new ArrayList<Object>();
 
 	/**
 	 * Create a new QueueAgent.  
@@ -45,6 +46,29 @@ public class QueueAgent extends BaseAgent {
 	public QueueAgent(AgentID aid) throws Exception {
 		super(aid);
 
+	}
+	/**
+	 * Create a new QueueAgent.  
+	 * 
+	 * @param aid
+	 *            agent ID.
+	 * @param arguments
+	 *            Object ArrayList .
+	 * @throws Exception if agent id already exists on the platform
+	 */
+	public QueueAgent(AgentID aid, ArrayList<Object> arguments) throws Exception {
+		super(aid);
+		this.arguments = arguments;
+		
+	}
+	/**
+	 *	Return arrayList.   
+	 * 
+	 */
+	public  ArrayList<Object> getArguments()
+	{
+		
+		return this.arguments;
 	}
 
 	/**
