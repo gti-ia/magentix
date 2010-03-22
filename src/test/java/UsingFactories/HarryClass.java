@@ -57,7 +57,7 @@ class HarryClass extends CAgent {
 		// no se limita el número de procesadores simultáneos (valor 0)
 
 		CProcessorFactory talk = new myFIPA_REQUEST().newFactory("TALK", null,
-				1, 0);
+				1, myProcessor.getMyAgent(), 0);
 
 		// La fábrica se configura para responder ante solicitudes del agente
 		// de inicio de conversaciones usando el protocolo REQUEST

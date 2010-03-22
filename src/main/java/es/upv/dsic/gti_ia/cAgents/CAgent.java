@@ -86,14 +86,12 @@ public abstract class CAgent extends BaseAgent {
 
 	public void addFactoryAsInitiator(CProcessorFactory factory) {
 		this.lock();
-		factory.setAgent(this);
 		initiatorFactories.add(factory);
 		this.unlock();
 	}
 
 	public void addFactoryAsParticipant(CProcessorFactory factory) {
 		this.lock();
-		factory.setAgent(this);
 		participantFactories.add(factory);
 		this.unlock();
 	}
@@ -154,7 +152,7 @@ public abstract class CAgent extends BaseAgent {
 		// Probar y definir defaultfactory
 
 		defaultFactory = new CProcessorFactory("DefaultFactory",
-				new ACLMessage(ACLMessage.UNKNOWN), 1000);
+				new ACLMessage(ACLMessage.UNKNOWN), 1,this);
 
 		// BEGIN STATE
 
@@ -185,13 +183,12 @@ public abstract class CAgent extends BaseAgent {
 		defaultFactory.cProcessorTemplate().registerState(FINAL);
 		defaultFactory.cProcessorTemplate().addTransition("BEGIN", "FINAL");
 
-		defaultFactory.setAgent(this);
 
 	}
 
 	private void createWelcomeFactory(final CAgent me) {
 		welcomeFactory = new CProcessorFactory("WelcomeFactory",
-				new ACLMessage(ACLMessage.UNKNOWN), 1000);
+				new ACLMessage(ACLMessage.UNKNOWN), 1, this);
 
 		// BEGIN STATE
 
@@ -246,8 +243,6 @@ public abstract class CAgent extends BaseAgent {
 		FINAL.setMethod(new FINAL_METHOD());
 
 		welcomeFactory.cProcessorTemplate().registerState(FINAL);
-
-		welcomeFactory.setAgent(this);
 
 	}
 

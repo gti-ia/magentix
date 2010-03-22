@@ -31,13 +31,14 @@ public class CProcessorFactory {
 	
 
 	public CProcessorFactory(String name, ACLMessage template,
-			int conversationsLimit) {
+			int conversationsLimit, CAgent myAgent) {
 		this.name = name;
 		this.template = template;
 		this.availableConversations = new Semaphore(conversationsLimit,
 				false);
 		this.limit = conversationsLimit;
-		this.myCProcessor = new CProcessor();
+		this.myAgent = myAgent;
+		this.myCProcessor = new CProcessor(this.myAgent);
 //		children = new ArrayList<String>();
 	}
 
@@ -51,10 +52,6 @@ public class CProcessorFactory {
 		this.myAgent.unlock();
 	}
 
-	void setAgent(CAgent myAgent) {
-		this.myAgent = myAgent;
-		myCProcessor.setMyAgent(myAgent);
-	}
 
 	public ACLMessage getTemplate() {
 		return template.clone();

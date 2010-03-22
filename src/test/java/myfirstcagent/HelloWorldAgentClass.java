@@ -25,7 +25,7 @@ class HelloWorldAgentClass extends CAgent {
 		System.out.println(myProcessor.getMyAgent().getName()
 				+ ": the welcome message is " + welcomeMessage.getContent());
 		System.out.println(myProcessor.getMyAgent().getName()
-				+ ":  inevitably I have to say hello world" + welcomeMessage.getContent());
+				+ ":  inevitably I have to say hello world");
 		
 		
 		

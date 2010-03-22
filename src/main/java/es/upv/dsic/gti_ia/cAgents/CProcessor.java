@@ -27,6 +27,12 @@ import es.upv.dsic.gti_ia.core.ACLMessage;
  */
 
 public class CProcessor implements Runnable, Cloneable {
+	class SHUTDOWN_Method implements ShutdownStateMethod {
+
+		public String run(CProcessor myProcessor, ACLMessage msg) {
+			return null;
+		}
+	}
 	private String conversationID;
 	private CAgent myAgent;
 	private String currentState = "";
@@ -44,30 +50,18 @@ public class CProcessor implements Runnable, Cloneable {
 	private CancelState CANCEL_STATE;
 	private ShutdownState SHUTDOWN;
 	private SendingErrorsState ses;
-//	private ReentrantLock mutex = new ReentrantLock();
-//	Condition syncConversationFinished = mutex.newCondition();
 	Condition syncConversationFinished;
 	ACLMessage syncConversationResponse;
 	private Boolean isSynchronized;
 	private long nextSubID = 0;
 	private String previousState;
-	// private ACLMessage lastReceivedMessage;
 	private ACLMessage lastSendedMessage;
 	private CProcessorFactory myFactory;
+
 	Logger logger = Logger.getLogger(CProcessor.class);
 
-	CProcessorFactory getMyFactory() {
-		return myFactory;
-	}
-
-	class SHUTDOWN_Method implements ShutdownStateMethod {
-
-		public String run(CProcessor myProcessor, ACLMessage msg) {
-			return null;
-		}
-	}
-
-	protected CProcessor() {
+	protected CProcessor(CAgent myAgent) {
+		this.myAgent = myAgent;
 		terminated = false;
 		BEGIN = new BeginState("BEGIN");
 		CANCEL_STATE = new CancelState();
@@ -82,60 +76,20 @@ public class CProcessor implements Runnable, Cloneable {
 
 	}
 
-	public void lockMyAgent() {
-		this.myAgent.mutex.lock();
+	public void addTransition(String from, String destination) {
+		this.lockMyAgent();
+		this.transitiontable.addTransition(from, destination);
+		this.unlockMyAgent();
+	}
+
+	public void createAsyncConversation(ACLMessage initalMessage) {
+
+		this.lockMyAgent();
+		initalMessage.setConversationId(myAgent.newConversationID());
+		myAgent.startConversation(initalMessage, this, false);
+		this.unlockMyAgent();
 	}
 	
-	public void unlockMyAgent() {
-		this.myAgent.mutex.unlock();
-	}
-	
-	
-	public String getPreviousState() {
-		return previousState;
-	}
-
-	public ACLMessage getLastReceivedMessage() {
-		return currentMessage;
-	}
-
-	public ACLMessage getLastSendedMessage() {
-		return lastSendedMessage;
-	}
-
-	public Map<String, Object> getParentInternalData() {
-		return parent.internalData;
-	}
-
-	void setIsSynchronized(Boolean value) {
-
-		isSynchronized = value;
-	}
-
-	void setMyAgent(CAgent myAgent) {
-		this.myAgent = myAgent;
-	}
-
-	BeginState beginState() {
-		return BEGIN;
-	}
-
-	CancelState cancelState() {
-		return CANCEL_STATE;
-	}
-
-	SendingErrorsState sendingErrorsState() {
-		return ses;
-	}
-
-	void setConversationID(String id) {
-		conversationID = id;
-	}
-
-	String newConversationID() {
-		return this.myAgent.getName() + UUID.randomUUID().toString();
-	}
-
 	public ACLMessage createSyncConversation(ACLMessage initalMessage) {
 
 		this.lockMyAgent();
@@ -154,54 +108,13 @@ public class CProcessor implements Runnable, Cloneable {
 		this.unlockMyAgent();
 		return this.syncConversationResponse;
 	}
-
-	void notifySyncConversationFinished(ACLMessage response) {
+	
+	
+	public void deregisterState(State s) {
 		this.lockMyAgent();
-		this.syncConversationResponse = response;
-		syncConversationFinished.signal();
+		states.remove(s.getName());
+		transitiontable.removeState(s.getName());
 		this.unlockMyAgent();
-	}
-
-	public void createAsyncConversation(ACLMessage initalMessage) {
-
-		initalMessage.setConversationId(myAgent.newConversationID());
-		myAgent.startConversation(initalMessage, this, false);
-	}
-
-	protected Object clone() {
-		Object obj = null;
-		try {
-			obj = super.clone();
-		} catch (CloneNotSupportedException e) {
-			e.printStackTrace();
-		}
-		// manually clone all the elements that super.clone() function does not
-		// clone
-		CProcessor aux = (CProcessor) obj;
-		aux.states = new HashMap<String, State>();
-		aux.transitiontable = new TransitionTable();
-		aux.messageQueue = new LinkedList<ACLMessage>();
-		aux.currentMessage = new ACLMessage(ACLMessage.NOT_UNDERSTOOD);
-		Iterator<String> it = states.keySet().iterator();
-		// clone states
-		while (it.hasNext()) {
-			String key = it.next();
-			State val = (State) states.get(key).clone();
-			aux.registerState(val);
-			// clone transitions
-			Iterator<String> itTrans = this.transitiontable.getTransitions(key)
-					.iterator();
-			while (itTrans.hasNext()) {
-				try {
-					aux.transitiontable.addTransition(key, itTrans.next());
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		}
-		aux.syncConversationFinished = this.myAgent.mutex.newCondition();	
-		return aux;
 	}
 
 	public String getConversationID() {
@@ -212,71 +125,54 @@ public class CProcessor implements Runnable, Cloneable {
 		return internalData;
 	}
 
-	public void registerState(State s) {
-		states.put(s.getName(), s);
-		transitiontable.addState(s.getName());
+	public ACLMessage getLastReceivedMessage() {
+		return currentMessage;
 	}
 
-	void registerFirstState(State s) {
-		registerState(s);
-		firstName = s.getName();
-	}
-
-	public void deregisterState(State s) {
-		states.remove(s.getName());
-		transitiontable.removeState(s.getName());
-	}
-
-	public TransitionTable getTransitionTable() {
-		return this.transitiontable;
-	}
-
-	public void addTransition(String from, String destination) {
-		this.transitiontable.addTransition(from, destination);
-	}
-
-	public void removeTransition(String from, String destination) {
-		this.transitiontable.removeTransition(from, destination);
-	}
-
-	void addMessage(ACLMessage msg) {
-		messageQueue.add(msg);
-	}
-
-	void setIdle(boolean idle) {
-		this.idle = idle;
-	}
-
-	boolean isIdle() {
-		return idle;
-	}
-
-	boolean isTerminated() {
-		return terminated;
+	public ACLMessage getLastSendedMessage() {
+		return lastSendedMessage;
 	}
 
 	public CAgent getMyAgent() {
 		return myAgent;
 	}
 
-	void setFactory(CProcessorFactory factory) {
-		this.myFactory = factory;
+	public CProcessor getParent() {
+		return parent;
+	}
+
+	public Map<String, Object> getParentInternalData() {
+		return parent.internalData;
+	}
+
+	public String getPreviousState() {
+		return previousState;
 	}
 
 	public State getState(String name) {
 		return this.states.get(name);
 	}
 
-	public CProcessor getParent() {
-		return parent;
+	public TransitionTable getTransitionTable() {
+		// PENDIENTE reemplazar por funciones de consulta
+		return this.transitiontable;
 	}
 
-	public void ShutdownAgent() {
-		this.myAgent.Shutdown();
+	public void lockMyAgent() {
+		this.myAgent.mutex.lock();
 	}
 
-	void setParent(CProcessor parent) {
-		this.parent = parent;
+	public void registerState(State s) {
+		this.lockMyAgent();
+		states.put(s.getName(), s);
+		transitiontable.addState(s.getName());
+		this.unlockMyAgent();
+	}
+
+	public void removeTransition(String from, String destination) {
+		this.lockMyAgent();
+		this.transitiontable.removeTransition(from, destination);
+		this.unlockMyAgent();
 	}
 
 	public void run() {
@@ -539,5 +435,115 @@ public class CProcessor implements Runnable, Cloneable {
 				previousState = currentState;
 			} // end while (true)
 		}
+	}
+
+	public void ShutdownAgent() {
+		this.lockMyAgent();
+		this.myAgent.Shutdown();
+		this.unlockMyAgent();
+	}
+
+	public void unlockMyAgent() {
+		this.myAgent.mutex.unlock();
+	}
+
+	protected Object clone() {
+		Object obj = null;
+		try {
+			obj = super.clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
+		// manually clone all the elements that super.clone() function does not
+		// clone
+		CProcessor aux = (CProcessor) obj;
+		aux.states = new HashMap<String, State>();
+		aux.transitiontable = new TransitionTable();
+		aux.messageQueue = new LinkedList<ACLMessage>();
+		aux.currentMessage = new ACLMessage(ACLMessage.NOT_UNDERSTOOD);
+		Iterator<String> it = states.keySet().iterator();
+		// clone states
+		while (it.hasNext()) {
+			String key = it.next();
+			State val = (State) states.get(key).clone();
+			aux.registerState(val);
+			// clone transitions
+			Iterator<String> itTrans = this.transitiontable.getTransitions(key)
+					.iterator();
+			while (itTrans.hasNext()) {
+				try {
+					aux.transitiontable.addTransition(key, itTrans.next());
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		aux.syncConversationFinished = this.myAgent.mutex.newCondition();	
+		return aux;
+	}
+
+	void addMessage(ACLMessage msg) {
+		messageQueue.add(msg);
+	}
+
+	BeginState beginState() {
+		return BEGIN;
+	}
+
+	CancelState cancelState() {
+		return CANCEL_STATE;
+	}
+
+	CProcessorFactory getMyFactory() {
+		return myFactory;
+	}
+
+	boolean isIdle() {
+		return idle;
+	}
+
+	boolean isTerminated() {
+		return terminated;
+	}
+
+	String newConversationID() {
+		return this.myAgent.getName() + UUID.randomUUID().toString();
+	}
+
+	void notifySyncConversationFinished(ACLMessage response) {
+		this.lockMyAgent();
+		this.syncConversationResponse = response;
+		syncConversationFinished.signal();
+		this.unlockMyAgent();
+	}
+
+	void registerFirstState(State s) {
+		registerState(s);
+		firstName = s.getName();
+	}
+
+	SendingErrorsState sendingErrorsState() {
+		return ses;
+	}
+
+	void setConversationID(String id) {
+		conversationID = id;
+	}
+
+	void setFactory(CProcessorFactory factory) {
+		this.myFactory = factory;
+	}
+
+	void setIdle(boolean idle) {
+		this.idle = idle;
+	}
+
+	void setIsSynchronized(Boolean value) {
+		isSynchronized = value;
+	}
+
+	void setParent(CProcessor parent) {
+		this.parent = parent;
 	}
 }

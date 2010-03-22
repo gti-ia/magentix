@@ -76,7 +76,7 @@ class SallyClass extends CAgent {
 		// se atenderán una por una.
 
 		CProcessorFactory talk = new myFIPA_REQUEST().newFactory("TALK", null,
-				0);
+				0, myProcessor.getMyAgent());
 
 		// Por último la fábrica se configura para responder ante mensajes
 		// entrantes
