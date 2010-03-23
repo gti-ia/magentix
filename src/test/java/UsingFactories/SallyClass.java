@@ -53,7 +53,7 @@ class SallyClass extends CAgent {
 			}
 
 			protected void Do_Inform(CProcessor myProcessor, ACLMessage msg) {
-				msg.setContent("May be some day");
+				msg.setContent("Maybe someday");
 				System.out.println(myProcessor.getMyAgent().getName()
 						+ ": I send the answer to " + myProcessor.getLastReceivedMessage().getSender().name);
 				// La plataforma enviará el mensaje msg tras

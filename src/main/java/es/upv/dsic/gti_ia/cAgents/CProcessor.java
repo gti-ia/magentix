@@ -33,6 +33,7 @@ public class CProcessor implements Runnable, Cloneable {
 			return null;
 		}
 	}
+
 	private String conversationID;
 	private CAgent myAgent;
 	private String currentState = "";
@@ -89,7 +90,7 @@ public class CProcessor implements Runnable, Cloneable {
 		myAgent.startConversation(initalMessage, this, false);
 		this.unlockMyAgent();
 	}
-	
+
 	public ACLMessage createSyncConversation(ACLMessage initalMessage) {
 
 		this.lockMyAgent();
@@ -108,8 +109,7 @@ public class CProcessor implements Runnable, Cloneable {
 		this.unlockMyAgent();
 		return this.syncConversationResponse;
 	}
-	
-	
+
 	public void deregisterState(State s) {
 		this.lockMyAgent();
 		states.remove(s.getName());
@@ -229,7 +229,10 @@ public class CProcessor implements Runnable, Cloneable {
 					ACLMessage messageToSend;
 					SendState sendState = (SendState) states.get(currentState);
 					messageToSend = new ACLMessage();
-					messageToSend.copyFromAsTemplate(sendState.messageTemplate);
+					if (sendState.messageTemplate != null) {
+						messageToSend
+								.copyFromAsTemplate(sendState.messageTemplate);
+					}
 					this.unlockMyAgent();
 					currentState = sendState.getMethod().run(this,
 							messageToSend);
@@ -290,10 +293,10 @@ public class CProcessor implements Runnable, Cloneable {
 									ACLMessage filter = receiveState
 											.getAcceptFilter();
 
-									if (retrievedMessage.getPerformativeInt() == filter
+									if ((filter == null) || (retrievedMessage.getPerformativeInt() == filter
 											.getPerformativeInt()
 											&& retrievedMessage
-													.headersAreEqual(filter)) {
+													.headersAreEqual(filter))) {
 										currentState = stateName;
 										currentMessage = retrievedMessage;
 										accepted = true;
@@ -503,7 +506,7 @@ public class CProcessor implements Runnable, Cloneable {
 				}
 			}
 		}
-		aux.syncConversationFinished = this.myAgent.mutex.newCondition();	
+		aux.syncConversationFinished = this.myAgent.mutex.newCondition();
 		return aux;
 	}
 

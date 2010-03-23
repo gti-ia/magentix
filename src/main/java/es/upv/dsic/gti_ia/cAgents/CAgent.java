@@ -138,7 +138,7 @@ public abstract class CAgent extends BaseAgent {
 	}
 
 	public void send(ACLMessage msg) {
-		this.logger.info(this.getName() + " sends the message "
+		this.logger.info(this.getName() + " sends " + msg.getReceiver().name + " the message "
 				+ msg.getPerformative() + " " + msg.getContent());
 		this.lock();
 		super.send(msg);

@@ -1,9 +1,20 @@
 package IntroducingProcessorsAndFactories;
 
+import es.upv.dsic.gti_ia.cAgents.BeginState;
+import es.upv.dsic.gti_ia.cAgents.BeginStateMethod;
+import es.upv.dsic.gti_ia.cAgents.CAgent;
+import es.upv.dsic.gti_ia.cAgents.CProcessor;
+import es.upv.dsic.gti_ia.cAgents.CProcessorFactory;
+import es.upv.dsic.gti_ia.cAgents.FinalState;
+import es.upv.dsic.gti_ia.cAgents.FinalStateMethod;
+import es.upv.dsic.gti_ia.cAgents.ReceiveState;
+import es.upv.dsic.gti_ia.cAgents.ReceiveStateMethod;
+import es.upv.dsic.gti_ia.cAgents.SendState;
+import es.upv.dsic.gti_ia.cAgents.SendStateMethod;
+import es.upv.dsic.gti_ia.cAgents.WaitState;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 
-import es.upv.dsic.gti_ia.cAgents.*;
 
 class HarryClass extends CAgent {
 
@@ -11,87 +22,117 @@ class HarryClass extends CAgent {
 		super(aid);
 	}
 
-	// When a CAgent is created, its first Cprocessor is automatically created
-	// and a conversation with the platform begins in which the platform sends
-	// a welcome message to the agent. Next, the first processor calls the
-	// method Initialize that you have provided.
-
-	protected void Initialize(CProcessor firstProcessor,
-			ACLMessage welcomeMessage) {
+	protected void Initialize(CProcessor myProcessor, ACLMessage welcomeMessage) {
 
 		ACLMessage template;
 
-		System.out.println(welcomeMessage.getContent());
 
-		// Create a factory to let Harry tell Hello to Sally
+		// Creamos una fábrica para enviar una propuesta
+		// y esperar respuesta
 
-		template = new ACLMessage(ACLMessage.INFORM);
+		template = new ACLMessage(ACLMessage.PROPOSE);
 
-		CProcessorFactory talkWithSallyFactory = new CProcessorFactory(
-				"talkWithSallyFactory", template, 1);
+		CProcessorFactory talk = new CProcessorFactory("TALK", template, 1,
+				myProcessor.getMyAgent());
 
-		// Create the processor template for this conversation
+		// Un CProcessor siempre comienza en el estado predefinido BEGIN.
+		// Debemos asociar un método que se ejecutará al transitar este estado.
 
-		// The converstation begins in the predefinited state labeled "BEGIN".
+		///////////////////////////////////////////////////////////////////////////////
+		// BEGIN state
 
-		BeginState BEGIN = (BeginState) talkWithSallyFactory.cProcessorTemplate().getState("BEGIN");
+		BeginState BEGIN = (BeginState) talk.cProcessorTemplate().getState(
+				"BEGIN");
 
-		class BEGIN_Method extends BeginStateMethod {
-			protected String run(CProcessor myProcessor, ACLMessage msg) {
-				// Rally nothing to do, except to tell the cProcessor to change to
-				// the state labeled SEND
-				return "SEND";
+		class BEGIN_Method implements BeginStateMethod {
+			public String run(CProcessor myProcessor, ACLMessage msg) {
+				// En este ejemplo no hay nada más que hacer que pasar al estado
+				// PURPOSE que enviará el mensaje
+				return "PURPOSE";
 			};
 		}
 		BEGIN.setMethod(new BEGIN_Method());
 
-		// Next Harry sends a message to Sally
+		///////////////////////////////////////////////////////////////////////////////
+		// PURPOSE state
 
-		SendState SEND = new SendState("SEND");
+		SendState PURPOSE = new SendState("PURPOSE");
 
-		class SEND_Method extends SendStateMethod {
-			protected String run(CProcessor myProcessor,
-					ACLMessage messageToSend) {
-				AgentID sallyID = new AgentID("Sally");
-				messageToSend.setReceiver(sallyID);
-				messageToSend.setContent("Hello Sally. How are you?");
+		class PURPOSE_Method implements SendStateMethod {
+			public String run(CProcessor myProcessor, ACLMessage messageToSend) {
+
+				messageToSend.copyFromAsTemplate(myProcessor
+						.getLastReceivedMessage());
+				messageToSend.setSender(myProcessor.getMyAgent().getAid());
+				System.out.println(myProcessor.getMyAgent().getName() + " : I tell " + messageToSend.getReceiver().name + " "
+						+ messageToSend.getPerformative() + " " + messageToSend.getContent());
+
+				return "WAIT";
+			}
+		}
+		PURPOSE.setMethod(new PURPOSE_Method());
+
+		talk.cProcessorTemplate().registerState(PURPOSE);
+		talk.cProcessorTemplate().addTransition("BEGIN", "PURPOSE");
+
+		///////////////////////////////////////////////////////////////////////////////
+		// WAIT State
+
+		talk.cProcessorTemplate().registerState(new WaitState("WAIT", 0));
+		talk.cProcessorTemplate().addTransition("PURPOSE", "WAIT");
+
+		///////////////////////////////////////////////////////////////////////////////
+		// RECEIVE State
+
+		ReceiveState RECEIVE = new ReceiveState("RECEIVE");
+
+		class RECEIVE_Method implements ReceiveStateMethod {
+			public String run(CProcessor myProcessor, ACLMessage messageReceived) {
 				return "FINAL";
 			}
 		}
-		SEND.setMethod(new SEND_Method());
+		
+		RECEIVE.setAcceptFilter(null); // null -> aceptar cualquier mensaje
+		RECEIVE.setMethod(new RECEIVE_Method());
+		talk.cProcessorTemplate().registerState(RECEIVE);
+		talk.cProcessorTemplate().addTransition("WAIT", "RECEIVE");
 
-		template = new ACLMessage(ACLMessage.INFORM);
-		SEND.setMessageTemplate(template);
-
-		talkWithSallyFactory.cProcessorTemplate().registerState(SEND);
-		talkWithSallyFactory.cProcessorTemplate()
-				.addTransition("BEGIN", "SEND");
-
-		// Now the conversation ends. Finalize the processor and notity it to
-		// its parent processor
+		///////////////////////////////////////////////////////////////////////////////
+		// FINAL state
 
 		FinalState FINAL = new FinalState("FINAL");
 
-		class FINAL_Method extends FinalStateMethod {
-			protected void run(CProcessor myProcessor, ACLMessage messageToSend) {
-				messageToSend.setContent("I just tell Sally 'Hello'");
+		class FINAL_Method implements FinalStateMethod {
+			public void run(CProcessor myProcessor, ACLMessage messageToSend) {
+				messageToSend.copyFromAsTemplate(myProcessor
+						.getLastReceivedMessage());
 			}
 		}
 		FINAL.setMethod(new FINAL_Method());
 
-		talkWithSallyFactory.cProcessorTemplate().registerState(FINAL);
-		talkWithSallyFactory.cProcessorTemplate()
-				.addTransition("SEND", "FINAL");
+		talk.cProcessorTemplate().registerState(FINAL);
+		talk.cProcessorTemplate().addTransition("PURPOSE", "FINAL");
 
-		// cProcessorTemplate ready. Activate the factory
+		///////////////////////////////////////////////////////////////////////////////
+		
+		
+		// El procesador "molde" está listo. Activamos la fábrica.
 
-		this.addFactory(talkWithSallyFactory);
+		this.addFactoryAsInitiator(talk);
 
-		// start de conversation
+		// Finalmente Harry inicia la conversación.
+		// Para ello debe crear un mensaje admisible por la fábrica, en este
+		// caso la performativa debe ser PURPOSE
 
-		firstProcessor.createSyncConversation(
-				new ACLMessage(ACLMessage.INFORM));
+		ACLMessage msg = new ACLMessage(ACLMessage.PROPOSE);
+		msg.setReceiver(new AgentID("Sally"));
+		msg.setContent("Will you come with me to a movie?");
+		ACLMessage response = myProcessor.createSyncConversation(msg);
 
+		System.out.println(myProcessor.getMyAgent().getName() + " : Sally tell me "
+				+ response.getPerformative() + " " + response.getContent());
+
+		// myProcessor.ShutdownAgent();
 	}
 
 	protected void Finalize(CProcessor firstProcessor,
