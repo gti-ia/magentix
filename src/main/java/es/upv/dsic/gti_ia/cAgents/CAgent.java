@@ -1,34 +1,67 @@
 // CAMBIOS PRINCIPALES EN EL PAQUETE
 
-// Inicialización y finalización del cAgent
-//  >> OK
-// Usar el estado Send sólo para enviar mensajes fuera sin poder cambiar el ID
-//  >> OK
-// Nuevos métodos para lanzar conversaciones síncronas y asíncronas
-//  >> OK pero falta ejemplo asíncrona
-// Gestión totalmente automatizada de IDs
-//  >> Falta hacer que las subconversaciones compartan IDs con la padre
-// Revisar visibilidad de datos internos de conversación a conversaciones hijas
-//  >> OK
-// Eliminar starting factories
-//  >> OK
-// Métodos sustitiubles en los estados de los autómatas
-//  >> OK
-// Fábricas participantes anidadas
-// Revisar accesos en exclusión mutua
-// Creo que necesario un lock global. Interno seguro y externo creo que también.
-// Supongo que deberá ser el mismo.
+// Inicialización y finalización del cAgent. Ahora existe un CProcesor que 
+// ejecuta la conversación de bienvenida. Cuando se llama a CAgent.Shutdown 
+// las conversaciones activas pasan a un nuevo estado de excepción llamado "SHUTDOWN".
+// Cuando todas las conversaciones acaban, finaliza la conversación de bienvenida.
+
+
+// El estado tipo SEND ahora sólo sirve para enviar mensajes a otros agentes.
+
+// Las conversaciones hijas se crean ahora llamando a métodos.
+
+// La gestión de conversationIDs es ahora totalmente automática.
+
+// Al poder crear subconversaciones mediante el API ya no son necesarias
+// las autostart factories.
+
+// Los métodos de los estados son ahora reemplazables. Esto permite, por ejemplo,
+// cambiar el método del estado BEGIN sin tener que cambiar el estado entero. De
+// esta forma, cuando se crea un procesador los estados especiales se crean
+// de forma automática y el usuario sólo tiene que cambiar el método asociado.
+
+// Todas las acciones internas de un Cagent, sus fabricas y procesadores incluidos,
+// se realizan ahora en exclusión mutua. Hay un único mutex para el agente que
+// comparten sus procesadores y sus fábricas.
 
 // En core debe implementarse cómo comparar un mensaje con un mensaje que actua como template. Lo que 
 //   se hace en algún lugar de los Cagents sólo compara la performativa y las cabeceras de usuario
 
-// Usar log4java
-// La construcción de autómatas es muy dada a cometer errores dado que se usan etiquetas
-//   por lo que habrá que esmerar el uso de excepciones
-// Revisar estados de excepción
+// Los protocolos están ahora en el subpaquete protocols.
+
+// He modificado en core ACLMessage y BaseAgent !!!!!!!
+
+// DIRECTRICES
+
+// Usar log4java para los mensajes internos. Si queda algún println sustituir.
+
+// Formatear el código desde Eclipse con "Source/Format"
+
+// Todos los campos de la clase privados, ofreciendo una función get asociada.
+// La visibilidad de los métodos al mínimo:
+//   private si solo lo usa la propia clase
+//   "nada" si solo se usa desde dentro del paquete
+//   protected si puede usarse desde otros paquetes pero sólo desde una subclase
+//   public en otro caso
+// de todas formas, Java impone sus reglas, concretamente, nunca puede reducirse
+// la visibilidad de un método cuando se reimplementa. Ante esto no hay nada que
+// hacer.
+
+// Todos los métodos tienen que estar protegidos por el mutex general del agente.
+
+
+// ASUNTOS PENDIENTES
+
+// En el código hay comentarios //PENDIENTE y //??? para revisar.
+// Estados de excepción. Todavía no los he modificado. Tenemos que hablar sobre
+// ellos primero.
 // Metodo para evaluar mensajes aceptados en estado receive, como
 //   complemento al filtro
 // Método para evaluar mensajes aceptados por fábricas, como complemento al filtro
+// Completar protocolo FIPA REQUEST
+// Implementar protocolo CONTRACT_NET
+// La construcción de autómatas es muy dada a cometer errores dado que se usan etiquetas
+//   por lo que habrá que esmerar el uso de excepciones.
 
 package es.upv.dsic.gti_ia.cAgents;
 

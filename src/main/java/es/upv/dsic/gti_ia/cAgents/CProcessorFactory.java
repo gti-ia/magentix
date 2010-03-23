@@ -1,8 +1,3 @@
-//CAMBIOS
-
-// Le afecta los cambios en la forma en que ahora se lanzan las subconversaciones
-// Elimino autostartfactory
-
 package es.upv.dsic.gti_ia.cAgents;
 
 import java.util.concurrent.Semaphore;

@@ -1,10 +1,3 @@
-// CAMBIOS
-
-// creación vía API de conversaciones síncronas y asíncronas
-// los estados fijos se crean ahora solos
-// las subclases de state han cambiado bastante, así que esto ha afectado muchas partes de esta clase
-// añado métodos para recuperar el estado previo y último mensaje recibido
-
 package es.upv.dsic.gti_ia.cAgents;
 
 import java.util.HashMap;

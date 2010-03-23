@@ -1,4 +1,4 @@
-package IntroducingProcessorsAndFactories;
+package myFirstCProcessorFactories;
 
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
