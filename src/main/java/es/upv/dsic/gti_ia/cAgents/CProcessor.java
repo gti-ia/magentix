@@ -178,6 +178,7 @@ public class CProcessor implements Runnable, Cloneable {
 	public void run() {
 		String next;
 
+		this.lockMyAgent();
 		// check if current state is set
 		// if it's null then we are starting
 
@@ -191,7 +192,9 @@ public class CProcessor implements Runnable, Cloneable {
 		// conversations in the factory
 		if (currentStateType == State.BEGIN && this.myFactory.getLimit() != 0) {
 			try {
+				this.unlockMyAgent();
 				this.myFactory.availableConversations.acquire();
+				this.lockMyAgent();
 			} catch (InterruptedException e1) {
 				e1.printStackTrace();
 			}
@@ -210,21 +213,27 @@ public class CProcessor implements Runnable, Cloneable {
 				switch (currentStateType) {
 				case State.BEGIN:
 					ACLMessage aux = messageQueue.remove();
+					this.unlockMyAgent();
 					currentState = this.beginState().getMethod().run(this, aux);
+					this.lockMyAgent();
 					currentMessage = aux;
 					break;
 				case State.ACTION:
 					ActionState actionState = (ActionState) states
 							.get(currentState);
+					this.unlockMyAgent();
 					currentState = actionState.getMethod().run(this);
+					this.lockMyAgent();
 					break;
 				case State.SEND:
 					ACLMessage messageToSend;
 					SendState sendState = (SendState) states.get(currentState);
 					messageToSend = new ACLMessage();
 					messageToSend.copyFromAsTemplate(sendState.messageTemplate);
+					this.unlockMyAgent();
 					currentState = sendState.getMethod().run(this,
 							messageToSend);
+					this.lockMyAgent();
 					messageToSend.setConversationId(this.conversationID);
 
 					this.myAgent.send(messageToSend);
@@ -320,20 +329,25 @@ public class CProcessor implements Runnable, Cloneable {
 							myAgent.addTimer(conversationID, waitState
 									.getTimeOut());
 						}
+						this.unlockMyAgent();
 						return;
 					}
 					break;
 				case State.RECEIVE:
 					ReceiveState receiveState = (ReceiveState) states
 							.get(currentState);
+					this.lockMyAgent();
 					currentState = receiveState.getMethod().run(this,
 							currentMessage);
+					this.unlockMyAgent();
 					break;
 				case State.FINAL:
 					FinalState finalState = (FinalState) states
 							.get(currentState);
 					messageToSend = new ACLMessage(ACLMessage.INFORM);
+					this.unlockMyAgent();
 					finalState.getMethod().run(this, messageToSend);
+					this.lockMyAgent();
 					if (this.isSynchronized) {
 						this.parent
 								.notifySyncConversationFinished(messageToSend);
@@ -346,11 +360,14 @@ public class CProcessor implements Runnable, Cloneable {
 					// factory
 					myAgent.endConversation(this.myFactory);
 					myAgent.removeProcessor(this.conversationID);
+					this.unlockMyAgent();
 					return;
 				case State.SENDING_ERRORS:
 					next = backState;
+					this.unlockMyAgent();
 					next = this.sendingErrorsState().getMethod().run(this,
 							currentMessage);
+					this.lockMyAgent();
 					if (next == null) {
 						next = backState;
 					}
@@ -358,7 +375,9 @@ public class CProcessor implements Runnable, Cloneable {
 					break;
 				case State.SHUTDOWN:
 					next = backState;
+					this.unlockMyAgent();
 					next = this.SHUTDOWN.getMethod().run(this, currentMessage);
+					this.lockMyAgent();
 					if (next == null) {
 						if (this.isSynchronized) {
 							this.parent
@@ -372,6 +391,7 @@ public class CProcessor implements Runnable, Cloneable {
 						// factory
 						myAgent.endConversation(this.myFactory);
 						myAgent.removeProcessor(this.conversationID);
+						this.unlockMyAgent();
 						return;
 					}
 
@@ -379,8 +399,10 @@ public class CProcessor implements Runnable, Cloneable {
 					break;
 				case State.CANCEL:
 					next = backState;
+					this.unlockMyAgent();
 					next = this.cancelState().getMethod().run(this,
 							currentMessage);
+					this.lockMyAgent();
 					if (next == null) {
 						next = backState;
 					}
@@ -396,8 +418,10 @@ public class CProcessor implements Runnable, Cloneable {
 							.setContent("Exception! Reason : TERMINATED_FATHER");
 					terminatedFatherMessage.setHeader("ERROR",
 							"TERMINATED_FATHER");
+					this.unlockMyAgent();
 					next = terminatedFatherState.run(terminatedFatherMessage,
 							next);
+					this.lockMyAgent();
 					currentState = next;
 					break;
 				case State.NOT_ACCEPTED_MESSAGES:
