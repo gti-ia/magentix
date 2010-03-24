@@ -171,7 +171,7 @@ public class BridgeAgentInOut extends BaseAgent {
 		/** ******* performative ********************* */
 		/** ********************************************** */
 
-		String performative = "INFORM";
+		String performative = ACLsms.getPerformative();
 
 		acl = "(" + performative + "\r\n";
 
@@ -419,10 +419,12 @@ public class BridgeAgentInOut extends BaseAgent {
 		logger.info("Mensaje received in " + this.getName()
 				+ " agent, by onMessage: " + msg.getContent());
 		
+
+	
 		try{
 			
 			ReplaceSpecialChar(msg);
-			
+
 			ACLMessageToDatagramPacket(msg);
 		//System.out.println(message);
 		}catch(Exception e)
