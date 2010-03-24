@@ -14,6 +14,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 
+import es.upv.dsic.gti_ia.architecture.Monitor;
+
 /**
  * This agent routes messages from inside the platform to outside the platform.
  * 
@@ -70,6 +72,8 @@ public class BridgeAgentOutIn extends BaseAgent {
 
 				logger.info("BridgeAgentOutIn waiting receive external FIPA-Messages");
 				Socket s = socket.accept(); //Socket Cliente
+				Monitor m = new Monitor();
+				m.waiting(1000);
 				
 				is = s.getInputStream();
 				OutputStream os = s.getOutputStream();
@@ -237,9 +241,14 @@ public class BridgeAgentOutIn extends BaseAgent {
 				Xml from = params.child("from");
 				agent_indentifier = from.child("agent-identifier");
 
-				index2 = agent_indentifier.child("name").content().indexOf('@');
+				//index2 = agent_indentifier.child("name").content().indexOf('@');
+				index2 = agent_indentifier.child("name").content().length();
+				
 				sender.name = agent_indentifier.child("name").content()
 						.substring(0, index2);
+				
+				//String nombreJade = 
+				//sender.name = agent_indentifier.child("name").content().substring(0);
 				logger.debug("Agent name: " + sender.name);
 				adresses = agent_indentifier.child("addresses");
 
@@ -254,6 +263,8 @@ public class BridgeAgentOutIn extends BaseAgent {
 				}
 				msg.setSender(sender);
 
+				
+	
 				// volvemos a buscar el boundary
 				do
 					cadena = dis.readLine();
@@ -264,6 +275,7 @@ public class BridgeAgentOutIn extends BaseAgent {
 				cadena = dis.readLine();
 				// performativa
 				cadena = dis.readLine();
+				
 				String performative = cadena.substring(1).trim();
 				msg.setPerformative(performative);
 				logger.debug("Performative: " + msg.getPerformative());
@@ -273,6 +285,7 @@ public class BridgeAgentOutIn extends BaseAgent {
 				cadena = dis.readLine();
 				// content
 				cadena = dis.readLine();
+	
 				int indexcontent = cadena.indexOf('"');
 				String content = "";
 				boolean seguir = true;
@@ -294,7 +307,8 @@ public class BridgeAgentOutIn extends BaseAgent {
 							&& cadena.charAt(pos - 2) != '\\')
 						seguir = false;
 				}
-				content = content.substring(0, content.length() - 1);
+				content = content.substring(0, content.length() - 2);
+		
 				msg.setContent(content);
 				logger.debug("content " + content);
 
@@ -332,12 +346,65 @@ public class BridgeAgentOutIn extends BaseAgent {
 				}
 				msg.setOntology(ontology);
 				*/
+			//protocol
+				
+				String protocol ="";
+				int k = 0;
+				boolean j = true;
+				cadena = dis.readLine();
+				if (cadena.indexOf(":protocol") != -1)
+				{
+				while(cadena.indexOf(":protocol") + 9 <0 && cadena !=null)
+					cadena = dis.readLine();
+				cadena = cadena.substring(cadena.indexOf(":protocol")+9);
 				
 				
+				
+				while (cadena.charAt(k) == ' ')
+					k++;
+				
+				while (cadena.charAt(k) != ' ' && j) {
+					protocol = protocol + cadena.charAt(k);
+					k++;
+					if (k == cadena.length())
+					{
+						k--;
+						j = false;
+					}
+				}
+				msg.setProtocol(protocol);
+				}
+				cadena = dis.readLine();
+				//conversation_Id
+				if (cadena.indexOf(":conversation-id") != -1)
+				{
+				String conversation_id ="";
+				k = 0;
+				while(cadena.indexOf(":conversation-id") + 16 <0 && cadena !=null)
+					cadena = dis.readLine();
+				cadena = cadena.substring(cadena.indexOf(":conversation-id")+16);
+				
+				
+				
+				while (cadena.charAt(k) == ' ')
+					k++;
+
+				j = true;
+				while (cadena.charAt(k) != ' ' && j) {
+					conversation_id = conversation_id + cadena.charAt(k);
+					k++;
+					if (k == cadena.length())
+					{
+						k--;
+						j = false;
+					}
+				}
+				msg.setConversationId(conversation_id);
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-
+			
 			msg.getReceiver().protocol = "qpid";
 			send(msg);
 		}
