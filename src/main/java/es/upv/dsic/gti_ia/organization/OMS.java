@@ -617,7 +617,7 @@ public class OMS extends QueueAgent {
 		protected ACLMessage prepareResponse(ACLMessage msg) {
 
 			ACLMessage response = msg.createReply();
-
+	
 			if (msg != null) {
 
 				try {
@@ -627,7 +627,11 @@ public class OMS extends QueueAgent {
 
 					// read in the service description
 					String token_process = Tok.nextElement().toString();
-
+				
+					Service aService = kb.readService(token_process);		
+					
+					//get the process for the server
+					Process aProcess = aService.getProcess();
 					Boolean exists = false;
 
 					for (int i = 0; i < OMSServicesProcess.length; i++) {
@@ -643,21 +647,19 @@ public class OMS extends QueueAgent {
 						logger.info("AGREE");
 						response
 								.setPerformative(es.upv.dsic.gti_ia.core.ACLMessage.AGREE);
-						response.setContent("=Agree");
+						response.setContent(aProcess.getLocalName()+"=Agree");
 
 					} else {
 
 						logger.info("REFUSE");
 						response
 								.setPerformative(es.upv.dsic.gti_ia.core.ACLMessage.REFUSE);
-						response.setContent("=Refuse");
+						response.setContent(aProcess.getLocalName()+"=Refuse");
 					}
 
 				} catch (Exception e) {
 
-					logger.info("EXCEPTION");
-
-					System.out.println(e);
+					logger.info("EXCEPTION"+ e);
 					e.printStackTrace();
 					throw new RuntimeException(e.getMessage());
 
@@ -693,7 +695,7 @@ public class OMS extends QueueAgent {
 				ACLMessage outmsg) {
 
 			ACLMessage msg = inmsg.createReply();
-
+			
 			// create an execution engine
 			ProcessExecutionEngine exec = OWLSFactory.createExecutionEngine();
 
