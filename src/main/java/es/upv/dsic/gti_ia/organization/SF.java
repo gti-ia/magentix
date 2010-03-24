@@ -513,10 +513,14 @@ public class SF extends QueueAgent {
 						}
 						if (aProcess.getInputs().inputAt(i).toString()
 								.contains("AgentID")) {
-
+							if (inmsg.getSender().protocol.equals("http"))
 							values.setValue(aProcess.getInputs().inputAt(i),
 									EntityFactory.createDataValue(inmsg
-											.getSender().toString()));
+											.getSender().name.replace('~', '@')));
+							else
+								values.setValue(aProcess.getInputs().inputAt(i),
+										EntityFactory.createDataValue(inmsg
+												.getSender().toString()));
 						}
 					}
 				}// end while
