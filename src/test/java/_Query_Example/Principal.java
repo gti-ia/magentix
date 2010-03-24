@@ -21,7 +21,7 @@ public class Principal {
 		
 		
 		try{
-	        AgentsConnection.connect("gtiiaprojects2.dsic.upv.es");       // TODO add your handling code here:
+	        AgentsConnection.connect();       // TODO add your handling code here:
         
    
         	
@@ -29,7 +29,7 @@ public class Principal {
         Aeropuerto aeropuerto = new Aeropuerto(new AgentID("aeropuerto1"));
         aeropuerto.start();
         
-        Viajante viajante = new Viajante(new AgentID("Viajeroooooooooooooooooooooooooooooooooooo"));
+        Viajante viajante = new Viajante(new AgentID("Viajero"));
         viajante.start();
         }catch(Exception e){}
 	}
