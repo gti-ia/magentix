@@ -52,14 +52,12 @@
 
 // ASUNTOS PENDIENTES
 
+// Templates con AND, OR, NOT y () para estados Receive u fábricas
+// Completar protocolo FIPA REQUEST
+// Implementar protocolo CONTRACT_NET
 // En el código hay comentarios //PENDIENTE y //??? para revisar.
 // Estados de excepción. Todavía no los he modificado. Tenemos que hablar sobre
 // ellos primero.
-// Metodo para evaluar mensajes aceptados en estado receive, como
-//   complemento al filtro
-// Método para evaluar mensajes aceptados por fábricas, como complemento al filtro
-// Completar protocolo FIPA REQUEST
-// Implementar protocolo CONTRACT_NET
 // La construcción de autómatas es muy dada a cometer errores dado que se usan etiquetas
 //   por lo que habrá que esmerar el uso de excepciones.
 
