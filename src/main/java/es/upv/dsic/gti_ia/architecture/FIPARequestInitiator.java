@@ -143,7 +143,39 @@ public class FIPARequestInitiator {
 				else
 					timeout = -1;
 				endingtime = System.currentTimeMillis() + timeout;
+				
+				// si el mensaje es para un agente Jade
+/*
+				if (request.getReceiver() != null) {
+					if (response.getReceiver(0).protocol.equals("http")) {
+						name = response
+								.getReceiver()
+								.name_all()
+								.substring(
+										0,
+										response
+												.getReceiver()
+												.name_all()
+												.indexOf(
+														"@",
+														response
+																.getReceiver()
+																.name_all()
+																.indexOf(
+																		"@") + 1));
+						 port = response.getReceiver().port
+								.substring(response.getReceiver().port
+										.indexOf(":") + 1, response
+										.getReceiver().port
+										.indexOf("/", 10));
 
+						response.getReceiver().name = name;
+						response.getReceiver().port = port;
+
+					}
+				}
+
+				*/
 				myAgent.send(request);
 				state = RECEIVE_REPLY_STATE;
 
