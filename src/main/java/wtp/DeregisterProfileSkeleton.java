@@ -156,9 +156,11 @@ import persistence.DataBaseInterface;
 					+ urlprofile
 					+ "#>"
 					+ "select ?x "
-					+ "where {"
-					+ "mind:"
+					+ "where {<"
+					+ urlprofile
+					+ "#"
 					+ profilename
+					+ ">"
 					+ " service:presentedBy ?x " + "}";
 
         		 Query queryServiceName = QueryFactory.create(queryStringServiceName);
