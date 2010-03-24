@@ -55,9 +55,8 @@ public class QueueAgent extends BaseAgent {
 	protected void onMessage(ACLMessage msg) {
 
 		this.writeQueue(msg);
-
+	
 		// responsible for waking the class agent, may be the responder role or the role iniciator
-
 		if (monitor != null)
 			this.monitor.advise();
 
@@ -114,8 +113,8 @@ public class QueueAgent extends BaseAgent {
 				// comparamos los campos protocol y conversaci�nID (para
 				// asegurarnos
 				// que no es una conversacion existente)00
-
-				if (template.getProtocol().equals(msg.getProtocol())) {
+				if (template.getPerformativeInt() != -2 && template.getPerformative().equals(msg.getPerformative()) || !template.getProtocol().equals("") && template.getProtocol().equals(msg.getProtocol()))
+				{
 					// comprobar que sea una conversacion nueva, que no este en
 					// la
 					// lista de conversaciones activas
@@ -134,15 +133,16 @@ public class QueueAgent extends BaseAgent {
 		} else {
 			for (ACLMessage msg : messageList) {
 				// comparamos los campos protocol, idcoversaci�n y sender
-				if (template.getProtocol().equals(msg.getProtocol())) {
+				if (template.getProtocol().equals(msg.getProtocol()))
+				{
 					// miramos dentro de las conversaciones que tenemos
 					for (String conversacion : template.getList_Conversation())
 						if (conversacion.equals(msg.getConversationId())) {
 							// miramos si pertenece algun agente
-							if (template.existReceiver(msg.getSender())) {
+							//if (template.existReceiver(msg.getSender())) {
 								msgselect = msg;
 								break;
-							}
+							//}
 						}
 				}
 				if (msgselect != null)
