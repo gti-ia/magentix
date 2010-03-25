@@ -155,14 +155,12 @@ import persistence.DataBaseInterface;
 					+ "prefix mind: <"
 					+ urlprofile
 					+ "#>"
-					+ "select ?x "
-					+ "where {<"
-					+ urlprofile
-					+ "#"
+					+ " select ?x "
+					+ "where { mind:"
 					+ profilename
-					+ ">"
 					+ " service:presentedBy ?x " + "}";
 
+        		 System.out.println("consulta: "+queryStringServiceName);
         		 Query queryServiceName = QueryFactory.create(queryStringServiceName);
 
         		 // Execute the query and obtain results
