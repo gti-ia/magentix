@@ -120,7 +120,7 @@ public class MessageTemplate extends ACLMessage {
 				i++;
 			}
 			else if(expr.charAt(i) == 'A'){ //pot ser un AND o altra cosa
-				if((expr.substring(i, i + 3).equals("AND")) && expr.charAt(i + 3) == ' '){ //es un AND
+				if((expr.substring(i, i + 3).equals("AND")) && (expr.charAt(i + 3) == ' ' || expr.charAt(i + 3) == '(')){ //es un AND
 					nodos.add(new Node(Node.AND));
 					i = i+3;
 				}
@@ -145,7 +145,7 @@ public class MessageTemplate extends ACLMessage {
 				}
 			}
 			else if(expr.charAt(i) == 'O'){ //pot ser un OR o altra cosa
-				if((expr.substring(i, i + 2).equals("OR")) && expr.charAt(i + 2) == ' '){ //es un OR
+				if((expr.substring(i, i + 2).equals("OR")) && (expr.charAt(i + 2) == ' ' || expr.charAt(i + 2) == '(')){ //es un OR
 					nodos.add(new Node(Node.OR));
 					i = i + 2;
 				}
