@@ -38,6 +38,9 @@ public class DataBaseInterface {
 	         
 	         if(rs.next()) {
 	        	 System.out.println("[Error] in AddNewProfile: the service profile already exists");
+	        	 Integer numserviceprofileid=rs.getInt("serviceprofileid")*(-1);
+	        	 serviceprofileid=numserviceprofileid.toString();
+	        	 
 	         }
 	         
 	         else{
