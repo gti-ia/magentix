@@ -33,17 +33,19 @@ public class MessageTemplate extends ACLMessage {
 		int type;
 		Node left;
 		Node right;
-		boolean value;
+		String headerName;
 
 		public Node(int type) {
 			this.type = type;
 		}
-		
-		public Node(int type, boolean value){
+				
+		public Node(int type, String headerName){
 			this.type = type;
-			this.value = value;
+			this.headerName = headerName;
 		}
 	}
+	
+	Node root;
 
 	public MessageTemplate() {
 		super();
@@ -51,13 +53,15 @@ public class MessageTemplate extends ACLMessage {
 
 	public MessageTemplate(int performative, String expr) {
 		super(performative);
-		if(correctExpression(expr))
+		if(correctExpression(expr)){
 			this.expr = expr;
+			root = this.createBinaryTree(this.createNodeList());
+		}
 	}
 	
 	public boolean compareHeaders(ACLMessage msg){
 		if(!singleElement)
-			return this.evaluateTree(this.createBinaryTree(this.createNodeList(msg)));
+			return this.evaluateTree(root, msg);
 		else
 			return this.getHeaderValue(expr.trim()) == msg.getHeaderValue(expr.trim());
 		
@@ -99,7 +103,7 @@ public class MessageTemplate extends ACLMessage {
 		return false;
 	}
 	
-	private List<Node> createNodeList(ACLMessage msg){
+	private List<Node> createNodeList(){
 		List<Node> nodos = new ArrayList<Node>();
 		int i =0;
 		int index;
@@ -136,7 +140,7 @@ public class MessageTemplate extends ACLMessage {
 					else
 						index = indexEsp;
 					headerName = expr.substring(i, index);
-					nodos.add(new Node(Node.VALUE, this.getHeaderValue(headerName) == msg.getHeaderValue(headerName)));
+					nodos.add(new Node(Node.VALUE, headerName));
 					i = index;
 				}
 			}
@@ -161,7 +165,7 @@ public class MessageTemplate extends ACLMessage {
 					else
 						index = indexEsp;
 					headerName = expr.substring(i, index);
-					nodos.add(new Node(Node.VALUE, this.getHeaderValue(headerName) == msg.getHeaderValue(headerName)));
+					nodos.add(new Node(Node.VALUE, headerName));
 					i = index;
 				}
 			}
@@ -181,7 +185,7 @@ public class MessageTemplate extends ACLMessage {
 				else
 					index = indexEsp;
 				headerName = expr.substring(i, index);
-				nodos.add(new Node(Node.VALUE, this.getHeaderValue(headerName) == msg.getHeaderValue(headerName)));
+				nodos.add(new Node(Node.VALUE, headerName));
 				i = index;
 			}
 			else
@@ -226,19 +230,20 @@ public class MessageTemplate extends ACLMessage {
 			root.right = createBinaryTree(nodos.subList(index+1, nodos.size()));
 		}
 		else
-			root.value = nodos.get(index).value;
+			root.headerName = nodos.get(index).headerName;
 		return root;
 	}
 	
-	private boolean evaluateTree(Node root){
+	private boolean evaluateTree(Node root, ACLMessage msg){
 		if(root.type == Node.AND){
-			return evaluateTree(root.left) && evaluateTree(root.right);
+			return evaluateTree(root.left, msg) && evaluateTree(root.right, msg);
 		}
 		else if(root.type == Node.OR){
-			return evaluateTree(root.left) || evaluateTree(root.right);
+			return evaluateTree(root.left, msg) || evaluateTree(root.right, msg);
 		}
-		else if(root.type == Node.VALUE)
-			return root.value;
+		else if(root.type == Node.VALUE){
+			return this.getHeaderValue(root.headerName) == msg.getHeaderValue(root.headerName);
+		}
 		else return false;
 	}
 }
