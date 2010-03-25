@@ -59,7 +59,7 @@ import persistence.DataBaseInterface;
      			System.out.println("***ServiceID..."+ deregisterProfile.getServiceID());
      			System.out.println("***AgentID..."+ deregisterProfile.getAgentID());
      		}
-        	 
+        	 boolean problem = false;
         	// Get the service process 
         	 persistence.DataBaseInterface thomasBD = new DataBaseInterface();
         	 
@@ -167,8 +167,8 @@ import persistence.DataBaseInterface;
         		 QueryExecution qeServiceName = QueryExecutionFactory.create(queryServiceName, m);
         		 ResultSet resultsServiceName = qeServiceName.execSelect();
         		 if (resultsServiceName.hasNext()) {
-        			 System.out.println("no es null");
-        		 }
+        			 System.out.println("The owls profile document exists");
+        		 
         		 String ServiceName = resultsServiceName.next().toString();
         		 System.out.println("Service Name: " + ServiceName);
 
@@ -204,7 +204,11 @@ import persistence.DataBaseInterface;
         		 QuerySolution querysol = new QuerySolutionMap();
         		 UpdateAction.parseExecute(update, m, querysol);
         		 UpdateAction.parseExecute(update2, m, querysol);
-
+        		 }
+        		 else{
+        			 System.out.println("The owls profile document does not exist");
+        			 problem = true;
+        		 }
         		 if (DEBUG) {
         			 System.out.println("DB after delete profile ... ");
         			 m.write(System.out, "N3");
@@ -223,9 +227,15 @@ import persistence.DataBaseInterface;
         			 System.exit(1);
         		 }
         		 
+        		 if(!problem){
         		 thomasBD.DeleteProfile(deregisterProfile.getServiceID());
         		 response.set_return(1);
         		 return (response);
+        		 }
+        		 else{
+        			 response.set_return(0);
+            		 return (response);
+        		 }
         	 } else {
         		 response.set_return(0);
         		 return (response);
