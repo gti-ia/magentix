@@ -26,10 +26,13 @@ public class BridgeAgentOutIn extends BaseAgent {
 
 	//private DatagramSocket socket;
 	private ServerSocket socket;
+	private Socket s;
 	/**
 	 * BridgeAgentOutIn runs on 8081 port
 	 */
 	public static int http_port = 8081;
+	
+	private boolean finalized = false;
 
 	/**
 	 * Creates a new BrideAgentOutIn
@@ -57,7 +60,7 @@ public class BridgeAgentOutIn extends BaseAgent {
 	}
 
 	public void execute() {
-		while (true) {
+		while (!finalized) {
 			// Escuchar por protocolo http y enviar a quien corresponda
 			// recibir paquete, mostrar su contenido
 			try {
@@ -71,7 +74,10 @@ public class BridgeAgentOutIn extends BaseAgent {
 			
 
 				logger.info("BridgeAgentOutIn waiting receive external FIPA-Messages");
-				Socket s = socket.accept(); //Socket Cliente
+				 s = socket.accept(); //Socket Cliente
+				 
+				 
+				
 				Monitor m = new Monitor();
 				m.waiting(1000);
 				
@@ -91,7 +97,7 @@ public class BridgeAgentOutIn extends BaseAgent {
 				
 				String texto = new String(stb);
 
-				//System.out.println(texto);
+				
 
 				httpToACL hilo = new httpToACL(stringToInputStream(texto));
 				
@@ -134,15 +140,27 @@ public class BridgeAgentOutIn extends BaseAgent {
 				// String(
 				// // recibirPaquete.getData())));
 				// // hilo.run();
+				 }
 
-			}
+			
 
 			// procesar los problemas que pueden ocurrir al manipular el paquete
 			catch (IOException excepcionES) {
-				System.err.println("Error on BridgeAgentOutIn, "
-						+ excepcionES.toString() + "\n");
-				excepcionES.printStackTrace();
+		
+				
+				
+		
+					if (excepcionES.getClass().toString().equals("class java.net.SocketException"))
+						System.out.println("BridgeAgentOutIn Socket Closed");
+					else
+					{
+					System.err.println("Error on BridgeAgentOutIn, "
+							+ excepcionES.toString() + "\n");
+					excepcionES.printStackTrace();
+					}
+			
 			}
+			
 		}
 	}
 
@@ -223,6 +241,7 @@ public class BridgeAgentOutIn extends BaseAgent {
 				receiver.name = agent_indentifier.child("name").content()
 						.substring(0, index2);
 				logger.debug("Agent Name: " + receiver.name);
+				
 				Xml adresses = agent_indentifier.child("addresses");
 				for (Xml url : adresses.children("url")) {
 					index = url.content().indexOf(':');
@@ -255,9 +274,11 @@ public class BridgeAgentOutIn extends BaseAgent {
 				for (Xml url : adresses.children("url")) {
 					index = url.content().indexOf(':');
 					sender.protocol = url.content().substring(0, index);
+					
 					sender.host = url.content().substring(index + 3,
 							url.content().indexOf(":", index + 1));
 					index = url.content().indexOf(":", index + 1);
+					
 					sender.port = url.content().substring(index + 1);
 					logger.debug("Sender: " + sender.toString());
 				}
@@ -418,5 +439,23 @@ public class BridgeAgentOutIn extends BaseAgent {
 			e.printStackTrace();
 		}
 		return is;
+	}
+	
+	public void exit()
+	{
+		try {
+			
+			if (s != null)
+				s.close();
+			
+			
+			socket.close();
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		this.finalized = true;
+		System.out.println("Bridge Agent Out In leave the system");
 	}
 }

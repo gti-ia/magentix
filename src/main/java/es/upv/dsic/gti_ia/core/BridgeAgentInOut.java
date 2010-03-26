@@ -23,6 +23,7 @@ public class BridgeAgentInOut extends BaseAgent {
 	public ACLMessage ACLsms;
 	String envelope;
 	String message;
+	private boolean finalized = false;
 	//private DatagramSocket socket;
 	
 	private Socket socket;
@@ -35,15 +36,22 @@ public class BridgeAgentInOut extends BaseAgent {
 
 	private String Generate_All(ACLMessage ACLsms) throws UnknownHostException {
 		this.ACLsms = ACLsms;
-
+		try{
+			
+	
 		InetAddress hostDestiny = InetAddress
 				.getByName(ACLsms.getReceiver().host);
 		int portDestiny = Integer.valueOf(ACLsms.getReceiver().port);
 
 		String content = Generate_Content();
 		String header = Generate_Header(hostDestiny, portDestiny);
-
 		return header + content;
+		}catch(Exception e)
+		{
+			System.out.println("ERROR: "+ e.getMessage());
+			return "ERROR";
+		}
+		
 	}
 
 	private String Generate_Header(InetAddress hostDestiny, int portDestiny) {
@@ -322,6 +330,9 @@ public class BridgeAgentInOut extends BaseAgent {
 	 */
 	private boolean ACLMessageToDatagramPacket(ACLMessage ACLsms) {
 		try {
+			
+			if (ACLsms.getReceiver().host.indexOf("@") != -1)
+				ACLsms.getReceiver().host = ACLsms.getReceiver().host.substring(ACLsms.getReceiver().host.indexOf("@")+1,ACLsms.getReceiver().host.length());
 			String message = Generate_All(ACLsms);
 			
 			//System.out.println(message);
@@ -329,7 +340,7 @@ public class BridgeAgentInOut extends BaseAgent {
 			//System.out.println(message);
 			byte datos[] = message.getBytes();
 			
-
+			
 			InetAddress a = InetAddress.getByName(ACLsms.getReceiver().host);
 								
 			
@@ -379,7 +390,7 @@ public class BridgeAgentInOut extends BaseAgent {
 	 * Waits new package, and redirects packets to another platform
 	 */
 	public void execute() {
-		while (true) {
+		while (!finalized) {
 		
 		
 			ACLMessage mensaje;
@@ -433,5 +444,11 @@ public class BridgeAgentInOut extends BaseAgent {
 		}
 		
 		
+	}
+	
+	public void finalize()
+	{
+		this.finalized = true;
+		System.out.println("Bridge Agent In Out leave the system");
 	}
 }
