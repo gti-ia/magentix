@@ -55,7 +55,7 @@ public class QueueAgent extends BaseAgent {
 	protected void onMessage(ACLMessage msg) {
 
 		this.writeQueue(msg);
-	
+		
 		// responsible for waking the class agent, may be the responder role or the role iniciator
 		if (monitor != null)
 			this.monitor.advise();
@@ -132,7 +132,10 @@ public class QueueAgent extends BaseAgent {
 			}
 		} else {
 			for (ACLMessage msg : messageList) {
-				// comparamos los campos protocol, idcoversaci�n y sender
+				//caso especial por si es un cancel
+			if (template.getPerformativeInt() != ACLMessage.CANCEL ||  template.getPerformative().equals(msg.getPerformative()))
+			{
+					// comparamos los campos protocol, idcoversaci�n y sender
 				if (template.getProtocol().equals(msg.getProtocol()))
 				{
 					// miramos dentro de las conversaciones que tenemos
@@ -147,6 +150,7 @@ public class QueueAgent extends BaseAgent {
 				}
 				if (msgselect != null)
 					break;
+			}
 			}
 		}
 		if (msgselect != null) {
