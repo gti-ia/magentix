@@ -12,6 +12,7 @@ import java.util.UUID;
 import org.apache.log4j.Logger;
 
 import es.upv.dsic.gti_ia.core.ACLMessage;
+import es.upv.dsic.gti_ia.core.MessageTemplate;
 
 /**
  * 
@@ -279,17 +280,14 @@ public class CProcessor implements Runnable, Cloneable {
 									ReceiveState receiveState = (ReceiveState) states
 											.get(stateName);
 									// PENDIENTE
-									// Hacer una comparación de mensaje con
+									// Hacer una comparaciï¿½n de mensaje con
 									// template completa.
 									// Probablemente mejor en ACLMessage
 
-									ACLMessage filter = receiveState
+									MessageTemplate filter = receiveState
 											.getAcceptFilter();
 
-									if ((filter == null) || (retrievedMessage.getPerformativeInt() == filter
-											.getPerformativeInt()
-											&& retrievedMessage
-													.headersAreEqual(filter))) {
+									if (filter == null || filter.compareHeaders(retrievedMessage)) {
 										currentState = stateName;
 										currentMessage = retrievedMessage;
 										accepted = true;
@@ -348,7 +346,7 @@ public class CProcessor implements Runnable, Cloneable {
 						this.parent
 								.notifySyncConversationFinished(messageToSend);
 					} else {
-						// PENDIENTE qué hacer cuando es asíncrona
+						// PENDIENTE quï¿½ hacer cuando es asï¿½ncrona
 					}
 
 					terminated = true;
@@ -379,7 +377,7 @@ public class CProcessor implements Runnable, Cloneable {
 							this.parent
 									.notifySyncConversationFinished(currentMessage);
 						} else {
-							// PENDIENTE qué hacer cuando es asíncrona
+							// PENDIENTE quï¿½ hacer cuando es asï¿½ncrona
 						}
 
 						terminated = true;

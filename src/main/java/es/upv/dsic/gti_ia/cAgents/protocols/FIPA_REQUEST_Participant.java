@@ -13,14 +13,14 @@ import es.upv.dsic.gti_ia.core.ACLMessage;
 
 public abstract class FIPA_REQUEST_Participant {
 
-	protected abstract String Do_Request(CProcessor myProcessor, ACLMessage request);
+	protected abstract String doRequest(CProcessor myProcessor, ACLMessage request);
 
 	protected abstract void Do_Inform(CProcessor myProcessor, ACLMessage response);
 
 	class BEGIN_Method implements BeginStateMethod {
 		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
 
-			String next = Do_Request(myProcessor, messageReceived);
+			String next = doRequest(myProcessor, messageReceived);
 			return next;
 		}
 	}

@@ -1,65 +1,65 @@
 // CAMBIOS PRINCIPALES EN EL PAQUETE
 
-// Inicialización y finalización del cAgent. Ahora existe un CProcesor que 
-// ejecuta la conversación de bienvenida. Cuando se llama a CAgent.Shutdown 
-// las conversaciones activas pasan a un nuevo estado de excepción llamado "SHUTDOWN".
-// Cuando todas las conversaciones acaban, finaliza la conversación de bienvenida.
+// Inicializaciï¿½n y finalizaciï¿½n del cAgent. Ahora existe un CProcesor que 
+// ejecuta la conversaciï¿½n de bienvenida. Cuando se llama a CAgent.Shutdown 
+// las conversaciones activas pasan a un nuevo estado de excepciï¿½n llamado "SHUTDOWN".
+// Cuando todas las conversaciones acaban, finaliza la conversaciï¿½n de bienvenida.
 
 
-// El estado tipo SEND ahora sólo sirve para enviar mensajes a otros agentes.
+// El estado tipo SEND ahora sï¿½lo sirve para enviar mensajes a otros agentes.
 
-// Las conversaciones hijas se crean ahora llamando a métodos.
+// Las conversaciones hijas se crean ahora llamando a mï¿½todos.
 
-// La gestión de conversationIDs es ahora totalmente automática.
+// La gestiï¿½n de conversationIDs es ahora totalmente automï¿½tica.
 
 // Al poder crear subconversaciones mediante el API ya no son necesarias
 // las autostart factories.
 
-// Los métodos de los estados son ahora reemplazables. Esto permite, por ejemplo,
-// cambiar el método del estado BEGIN sin tener que cambiar el estado entero. De
+// Los mï¿½todos de los estados son ahora reemplazables. Esto permite, por ejemplo,
+// cambiar el mï¿½todo del estado BEGIN sin tener que cambiar el estado entero. De
 // esta forma, cuando se crea un procesador los estados especiales se crean
-// de forma automática y el usuario sólo tiene que cambiar el método asociado.
+// de forma automï¿½tica y el usuario sï¿½lo tiene que cambiar el mï¿½todo asociado.
 
 // Todas las acciones internas de un Cagent, sus fabricas y procesadores incluidos,
-// se realizan ahora en exclusión mutua. Hay un único mutex para el agente que
-// comparten sus procesadores y sus fábricas.
+// se realizan ahora en exclusiï¿½n mutua. Hay un ï¿½nico mutex para el agente que
+// comparten sus procesadores y sus fï¿½bricas.
 
-// En core debe implementarse cómo comparar un mensaje con un mensaje que actua como template. Lo que 
-//   se hace en algún lugar de los Cagents sólo compara la performativa y las cabeceras de usuario
+// En core debe implementarse cï¿½mo comparar un mensaje con un mensaje que actua como template. Lo que 
+//   se hace en algï¿½n lugar de los Cagents sï¿½lo compara la performativa y las cabeceras de usuario
 
-// Los protocolos están ahora en el subpaquete protocols.
+// Los protocolos estï¿½n ahora en el subpaquete protocols.
 
 // He modificado en core ACLMessage y BaseAgent !!!!!!!
 
 // DIRECTRICES
 
-// Usar log4java para los mensajes internos. Si queda algún println sustituir.
+// Usar log4java para los mensajes internos. Si queda algï¿½n println sustituir.
 
-// Formatear el código desde Eclipse con "Source/Format"
+// Formatear el cï¿½digo desde Eclipse con "Source/Format"
 
-// Todos los campos de la clase privados, ofreciendo una función get asociada.
-// La visibilidad de los métodos al mínimo:
+// Todos los campos de la clase privados, ofreciendo una funciï¿½n get asociada.
+// La visibilidad de los mï¿½todos al mï¿½nimo:
 //   private si solo lo usa la propia clase
 //   "nada" si solo se usa desde dentro del paquete
-//   protected si puede usarse desde otros paquetes pero sólo desde una subclase
+//   protected si puede usarse desde otros paquetes pero sï¿½lo desde una subclase
 //   public en otro caso
 // de todas formas, Java impone sus reglas, concretamente, nunca puede reducirse
-// la visibilidad de un método cuando se reimplementa. Ante esto no hay nada que
+// la visibilidad de un mï¿½todo cuando se reimplementa. Ante esto no hay nada que
 // hacer.
 
-// Todos los métodos tienen que estar protegidos por el mutex general del agente.
+// Todos los mï¿½todos tienen que estar protegidos por el mutex general del agente.
 
 
 // ASUNTOS PENDIENTES
 
-// Templates con AND, OR, NOT y () para estados Receive u fábricas
+// Templates con AND, OR, NOT y () para estados Receive u fï¿½bricas
 // Completar protocolo FIPA REQUEST
 // Implementar protocolo CONTRACT_NET
-// En el código hay comentarios //PENDIENTE y //??? para revisar.
-// Estados de excepción. Todavía no los he modificado. Tenemos que hablar sobre
+// En el cï¿½digo hay comentarios //PENDIENTE y //??? para revisar.
+// Estados de excepciï¿½n. Todavï¿½a no los he modificado. Tenemos que hablar sobre
 // ellos primero.
-// La construcción de autómatas es muy dada a cometer errores dado que se usan etiquetas
-//   por lo que habrá que esmerar el uso de excepciones.
+// La construcciï¿½n de autï¿½matas es muy dada a cometer errores dado que se usan etiquetas
+//   por lo que habrï¿½ que esmerar el uso de excepciones.
 
 package es.upv.dsic.gti_ia.cAgents;
 
@@ -78,6 +78,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.BaseAgent;
+import es.upv.dsic.gti_ia.core.MessageTemplate;
 
 /**
  * 
@@ -251,7 +252,7 @@ public abstract class CAgent extends BaseAgent {
 			}
 		}
 		RECEIVE.setMethod(new RECEIVE_Method());
-		ACLMessage msg = new ACLMessage(ACLMessage.UNKNOWN);
+		MessageTemplate msg = new MessageTemplate(ACLMessage.UNKNOWN, "performative and PURPOSE");
 		msg.setHeader("PURPOSE", "AGENT_END");
 		RECEIVE.setAcceptFilter(msg);
 		welcomeFactory.cProcessorTemplate().registerState(RECEIVE);
@@ -427,6 +428,6 @@ public abstract class CAgent extends BaseAgent {
 		}
 		System.out.println("No hay factorias");
 		this.unlock();
-		// PENDIENTE: Lanzar excepción si no hay fabricas asociadas
+		// PENDIENTE: Lanzar excepciï¿½n si no hay fabricas asociadas
 	}
 }
