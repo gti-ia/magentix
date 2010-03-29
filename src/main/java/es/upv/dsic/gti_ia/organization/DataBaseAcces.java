@@ -262,6 +262,28 @@ public class DataBaseAcces {
         }
         return rs;
     }
+    
+    
+    public ResultSet getServiceID(String url)
+    {
+        ResultSet rs = null;
+        try
+        {
+            // Se crea un Statement, para realizar la consulta
+            Statement s = conection.createStatement();
+
+            // Se realiza la consulta. Los resultados se guardan en el
+            // ResultSet rs
+	        String sql="SELECT u.serviceprofileid FROM serviceprofileid u WHERE u.urlprofile='"+url+"'  ";
+	        sql.toLowerCase();
+            rs = s.executeQuery(sql);
+            
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return rs;
+    }
 
 
 }
