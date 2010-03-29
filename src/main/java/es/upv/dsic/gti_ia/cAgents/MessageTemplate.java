@@ -12,6 +12,7 @@ import es.upv.dsic.gti_ia.core.ACLMessage;
 public class MessageTemplate extends ACLMessage {
 
 	/**
+	 * Author Ricard López Fogués
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
