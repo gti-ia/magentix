@@ -334,19 +334,6 @@ public class BaseAgent implements Runnable {
 		 * Sending a ACLMessage
 		 */
 		send(msg);
-		
-/*
- 		Map<String, Object> arguments = new HashMap<String, Object>();
-		
-		arguments.put("x-match", "all");
-    	arguments.put("event_type", eventType);
-    	arguments.put("origin_entity", originEntity);
-
-    	this.session.exchangeBind(aid.name+".trace", "mgx.trace", aid.name + eventType + originEntity.toString(), arguments);
-    	// confirm completion
-    	this.session.sync();
-    	arguments = new HashMap<String, Object>();
-*/    	
 	}
 	
 	/**
