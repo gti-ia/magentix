@@ -252,7 +252,7 @@ public abstract class CAgent extends BaseAgent {
 			}
 		}
 		RECEIVE.setMethod(new RECEIVE_Method());
-		MessageTemplate msg = new MessageTemplate(ACLMessage.UNKNOWN, "performative and PURPOSE");
+		MessageTemplate msg = new MessageTemplate(ACLMessage.UNKNOWN, "performative AND PURPOSE");
 		msg.setHeader("PURPOSE", "AGENT_END");
 		RECEIVE.setAcceptFilter(msg);
 		welcomeFactory.cProcessorTemplate().registerState(RECEIVE);
