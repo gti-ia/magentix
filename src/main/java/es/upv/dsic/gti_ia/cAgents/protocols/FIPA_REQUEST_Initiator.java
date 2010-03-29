@@ -33,7 +33,7 @@ public abstract class FIPA_REQUEST_Initiator {
 		ACLMessage aux = (ACLMessage) myProcessor.getInternalData().get(
 				"InitialMessage");
 		messageToSend.copyFromAsTemplate(aux);
-		messageToSend.setProtocol("REQUEST");
+		messageToSend.setProtocol("fipa-request");
 		messageToSend.setPerformative(ACLMessage.REQUEST);
 		messageToSend.setSender(myProcessor.getMyAgent().getAid());
 	}
@@ -134,7 +134,7 @@ public abstract class FIPA_REQUEST_Initiator {
 		if (template == null) {
 			template = new ACLMessage();
 		}
-		template.setProtocol("REQUEST");
+		template.setProtocol("fipa-request");
 		template.setPerformative(ACLMessage.REQUEST);
 		CProcessorFactory theFactory = new CProcessorFactory(name, template,
 				availableConversations, myAgent);
