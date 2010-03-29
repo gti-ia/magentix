@@ -20,6 +20,7 @@ public class AgentsConnection {
 		c =  Configuration.getConfiguration();
 		connection = new Connection();
 		connection.connect(c.getqpidHost(),c.getqpidPort(), c.getqpidVhost(),c.getqpidUser(),c.getqpidPassword(),c.getqpidSSL());
+		System.out.println(c.getqpidHost()+" "+c.getqpidPort()+" "+ c.getqpidVhost()+" "+c.getqpidUser()+" "+c.getqpidPassword()+" "+c.getqpidSSL());
 	}
 
 	

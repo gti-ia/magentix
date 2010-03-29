@@ -1,6 +1,9 @@
 package es.upv.dsic.gti_ia.core;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.log4j.Logger;
 import org.apache.qpid.transport.Connection;
 import org.apache.qpid.transport.DeliveryProperties;
@@ -8,6 +11,7 @@ import org.apache.qpid.transport.Header;
 import org.apache.qpid.transport.MessageAcceptMode;
 import org.apache.qpid.transport.MessageAcquireMode;
 import org.apache.qpid.transport.MessageCreditUnit;
+import org.apache.qpid.transport.MessageProperties;
 import org.apache.qpid.transport.MessageTransfer;
 import org.apache.qpid.transport.Option;
 import org.apache.qpid.transport.Session;
@@ -18,6 +22,11 @@ import org.apache.qpid.transport.SessionListener;
  * @author Ricard Lopez Fogues
  * @author Sergio Pajares Ferrando
  * @author Joan Bellver Faus
+ */
+/**
+ * [TRACE]:
+ * Modified by Luis Burdalo to support event tracing
+ *
  */
 public class BaseAgent implements Runnable {
 
@@ -43,6 +52,9 @@ public class BaseAgent implements Runnable {
 	 * @uml.property name="myThread"
 	 */
 	private Thread myThread;
+	
+	//protected Session traceSession;
+	
 
 	private class Listener implements SessionListener {
 		public void opened(Session ssn) {
@@ -64,6 +76,28 @@ public class BaseAgent implements Runnable {
 		}
 
 	}
+	
+	private class TraceListener implements SessionListener {
+		public void opened(Session ssn) {
+		}
+
+		public void resumed(Session ssn) {
+		}
+
+		public void message(Session ssn, MessageTransfer xfr) {
+			TraceEvent tEvent = MessageTransfertoTraceEvent(xfr);
+			//ACLMessage msg = MessageTransfertoACLMessage(xfr);
+			onTraceEvent(tEvent);
+		}
+
+		public void exception(Session ssn, SessionException exc) {
+			exc.printStackTrace();
+		}
+
+		public void closed(Session ssn) {
+		}
+
+	}
 
 	/**
 	 * @uml.property name="listener"
@@ -71,6 +105,13 @@ public class BaseAgent implements Runnable {
 	 */
 	private Listener listener;
 
+	/**
+	 * [TRACE]:
+	 * Attributes necessary for event tracing
+	 *
+	 */
+	private TraceListener traceListener;
+	
 	/**
 	 * Creates a new agent in an open broker connection
 	 * 
@@ -81,12 +122,14 @@ public class BaseAgent implements Runnable {
 	 *            Connection that the agent will use
 	 * @throws Exception
 	 *             If Agent ID already exists on the platform
+	 *             
+	 * [TRACE]:
+	 * 		Create the event queue and the event listener
 	 */
 	public BaseAgent(AgentID aid) throws Exception {
 
 		if (AgentsConnection.connection == null) {
-			logger
-					.error("Before create a agent, the qpid broker connection is necesary");
+			logger.error("Before create a agent, the qpid broker connection is necesary");
 			throw new Exception("Error doesn't work the broken connection");
 		} else {
 			this.connection = AgentsConnection.connection;
@@ -103,6 +146,11 @@ public class BaseAgent implements Runnable {
 			createQueue();
 			createBind();
 			createSubscription();
+			
+			this.traceListener = new TraceListener();			
+			createEventQueue();
+			createTraceBind();
+			createTraceSubscription();
 		}
 	}
 
@@ -127,7 +175,6 @@ public class BaseAgent implements Runnable {
 	 * Binds the exchange and the agent queue
 	 */
 	private void createBind() {
-		// this.session.exchangeBind(aid.name, aid.name, null, null);
 		this.session.exchangeBind(aid.name, "amq.direct", aid.name, null);
 	}
 
@@ -160,7 +207,7 @@ public class BaseAgent implements Runnable {
 		xfr.destination("amq.direct");
 		xfr.acceptMode(MessageAcceptMode.EXPLICIT);
 		xfr.acquireMode(MessageAcquireMode.PRE_ACQUIRED);
-
+		
 		DeliveryProperties deliveryProps = new DeliveryProperties();
 
 		// Serialize message content
@@ -212,6 +259,139 @@ public class BaseAgent implements Runnable {
 	}
 
 	/**
+	 * [TRACE]: Methods necessary for event trace support
+	 */
+	/**
+	 * Creates queue where the agent will receive trace events
+	 */
+	private void createEventQueue() {
+		this.session.queueDeclare(aid.name+".trace", null, null, Option.AUTO_DELETE);
+	}
+	
+	private void createTraceBind(){
+		Map<String, Object> arguments = new HashMap<String, Object>();
+				
+		arguments.put("x-match", "all");
+    	arguments.put("origin_entity", "system");
+    	//arguments.put("route", "direct");
+    	arguments.put("receiver", aid.name);
+
+    	this.session.exchangeBind(aid.name+".trace", "mgx.trace", aid.name + ".system.direct", arguments);
+    	
+    	arguments.clear();
+    	arguments.put("x-match", "all");
+    	arguments.put("origin_entity", "system");
+    	arguments.put("receiver", "all");
+    	
+    	this.session.exchangeBind(aid.name+".trace", "mgx.trace", aid.name + ".system.all", arguments);
+    	
+    	// confirm completion
+    	this.session.sync();
+    	
+	}
+	
+	/**
+	 * Creates the subscription through the agent listener will get trace events
+	 * from the event queue
+	 */
+	private void createTraceSubscription() {
+		this.session.setSessionListener(this.traceListener);
+		
+		this.session.messageSubscribe(aid.name+"trace", "listener_destination",
+				MessageAcceptMode.NONE, MessageAcquireMode.PRE_ACQUIRED, null,
+				0, null);
+
+		this.session.messageFlow("listener_destination",
+				MessageCreditUnit.BYTE, Session.UNLIMITED_CREDIT);
+		this.session.messageFlow("listener_destination",
+				MessageCreditUnit.MESSAGE, Session.UNLIMITED_CREDIT);
+	}
+	
+	/**
+	 * Publish a tracing service so that other agents can request it
+	 * and receive the corresponding trace events 
+	 */
+	public void publishTracingService(){
+		/* Oops! This still has to be done :P */
+	}
+
+	/**
+	 * Request a tracing service: Binds the exchange and the agent queue
+	 * 
+	 */
+	private void requestTracingService(String eventType, AgentID originEntity) {
+		/**
+		 * Building a ACLMessage
+		 */
+		ACLMessage msg = new ACLMessage(ACLMessage.SUBSCRIBE);
+		AgentID tms_aid = new AgentID("qpid://tms@localhost:8080");
+		
+		msg.setReceiver(tms_aid);
+		msg.setSender(this.getAid());
+		msg.setLanguage("ACL");
+		msg.setContent(eventType + "#" + originEntity.toString());
+		/**
+		 * Sending a ACLMessage
+		 */
+		send(msg);
+		
+/*
+ 		Map<String, Object> arguments = new HashMap<String, Object>();
+		
+		arguments.put("x-match", "all");
+    	arguments.put("event_type", eventType);
+    	arguments.put("origin_entity", originEntity);
+
+    	this.session.exchangeBind(aid.name+".trace", "mgx.trace", aid.name + eventType + originEntity.toString(), arguments);
+    	// confirm completion
+    	this.session.sync();
+    	arguments = new HashMap<String, Object>();
+*/    	
+	}
+	
+	/**
+	 * 
+	 * Sends a trace event to the mgx.trace exchange
+	 * @param tEvent
+	 *         
+	 */
+	public void sendTraceEvent(TraceEvent tEvent) {
+		MessageTransfer xfr = new MessageTransfer();
+
+		xfr.destination("mgx.trace");
+		xfr.acceptMode(MessageAcceptMode.EXPLICIT);
+		xfr.acquireMode(MessageAcquireMode.PRE_ACQUIRED);
+		
+		DeliveryProperties deliveryProps = new DeliveryProperties();
+
+		// Serialize message content
+		String body;
+		// Timestamp
+		body = String.valueOf(tEvent.getTimestamp()) + "#";
+		// EventType
+		body = body + tEvent.getEventType().length() + "#"
+				+ tEvent.getEventType();
+		// OriginEntiy
+		body = body + tEvent.getOriginEntity().toString().length() + "#" + tEvent.getOriginEntity().toString();
+		// Content
+		body = body + tEvent.getContent().length() + "#" + tEvent.getContent();
+		
+		xfr.setBody(body);
+		
+		// set message headers
+    	MessageProperties messageProperties = new MessageProperties();
+    	Map<String, Object> messageHeaders = new HashMap<String, Object>();
+    	// set the message property
+    	messageHeaders.put("event_type", tEvent.getEventType());
+    	messageHeaders.put("origin_entity", tEvent.getOriginEntity().toString());
+    	messageProperties.setApplicationHeaders(messageHeaders);
+		
+    	xfr.header(new Header(deliveryProps, messageProperties));
+		this.session.messageTransfer(xfr.getDestination(), xfr.getAcceptMode(),
+				xfr.getAcquireMode(), xfr.getHeader(), xfr.getBodyString());
+	}
+	
+	/**
 	 * Returns the agent name
 	 * 
 	 * @return Agent name
@@ -253,6 +433,15 @@ public class BaseAgent implements Runnable {
 
 	}
 
+	/** [TRACE]
+	 * Function that will be executed when the agent gets a trace event. The user has
+	 * to write his/her code here
+	 * 
+	 */
+	protected void onTraceEvent(TraceEvent tEvent) {
+		
+	}
+	
 	/**
 	 * Function that will be executed when the agent terminates
 	 */
@@ -424,4 +613,76 @@ public class BaseAgent implements Runnable {
 		return msg;
 	}
 
+	/**
+	 * [TRACE]: Transforms the message to TraceEvent
+	 * 
+	 * @param xfr
+	 *            MessageTransfer
+	 * @return TraceEvent
+	 */
+	public final TraceEvent MessageTransfertoTraceEvent(MessageTransfer xfr) {
+
+		// des-serializamos el mensaje
+		// inicializaciones
+		int indice1 = 0;
+		int indice2 = 0;
+		int aidindice1 = 0;
+		int aidindice2 = 0;
+		int tam = 0;
+		String aidString;
+		String body = xfr.getBodyString();
+
+		// System.out.println("BODY: " + body);
+
+		TraceEvent tEvent = new TraceEvent();
+		
+		// Timestamp
+		indice2 = body.indexOf('#', indice1);
+		tam = Integer.parseInt(body.substring(indice1, indice2));
+		tEvent.setTimestamp(Long.parseLong(body.substring(indice2, indice2+1+tam)));
+		
+		// Event Type
+		indice1=indice2+1+tam;
+		indice2 = body.indexOf('#', indice1);
+		tam = Integer.parseInt(body.substring(indice1, indice2));
+		tEvent.setEventType(body.substring(indice2 + 1, indice2 + 1 + tam));
+		
+		// Origin Entity
+		AgentID aid = new AgentID();
+		aidindice1 = 0;
+		aidindice2 = 0;
+		indice1 = indice2 + 1 + tam;
+		indice2 = body.indexOf('#', indice1);
+		tam = Integer.parseInt(body.substring(indice1, indice2));
+		aidString = body.substring(indice2 + 1, indice2 + 1 + tam);
+		aidindice2 = aidString.indexOf(':');
+		if (aidindice2 - aidindice1 <= 0)
+			aid.protocol = "";
+		else
+			aid.protocol = aidString.substring(aidindice1, aidindice2);
+		aidindice1 = aidindice2 + 3;
+		aidindice2 = aidString.indexOf('@', aidindice1);
+		if (aidindice2 - aidindice1 <= 0)
+			aid.name = "";
+		else
+			aid.name = aidString.substring(aidindice1, aidindice2);
+		aidindice1 = aidindice2 + 1;
+		aidindice2 = aidString.indexOf(':', aidindice1);
+		if (aidindice2 - aidindice1 <= 0)
+			aid.host = "";
+		else
+			aid.host = aidString.substring(aidindice1, aidindice2);
+		aid.port = aidString.substring(aidindice2 + 1);
+		
+		tEvent.setOriginEntity(aid);
+		
+		// Content
+		indice1 = indice2 + 1 + tam;
+		indice2 = body.indexOf('#', indice1);
+		tam = Integer.parseInt(body.substring(indice1, indice2));
+		tEvent.setContent(body.substring(indice2 + 1, indice2 + 1 + tam));
+		
+		return tEvent;
+	}
+	
 }
