@@ -32,8 +32,7 @@ public class FIPARequestInitiator {
 	String conversationID = null;
 	private long timeout = -1;
 	private long endingtime = 0;
-	private String name;
-	private String port;
+
 
 	private Logger logger = Logger.getLogger(this.getClass().getName());
 
