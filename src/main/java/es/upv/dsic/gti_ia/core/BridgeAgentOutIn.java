@@ -77,8 +77,8 @@ public class BridgeAgentOutIn extends BaseAgent {
 				 
 				
 				Monitor m = new Monitor();
-				m.waiting(1000);
-				
+				m.waiting(10);
+							
 				is = s.getInputStream();
 				OutputStream os = s.getOutputStream();
 
