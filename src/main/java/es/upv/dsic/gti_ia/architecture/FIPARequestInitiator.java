@@ -32,6 +32,8 @@ public class FIPARequestInitiator {
 	String conversationID = null;
 	private long timeout = -1;
 	private long endingtime = 0;
+	private String name;
+	private String port;
 
 	private Logger logger = Logger.getLogger(this.getClass().getName());
 
@@ -145,37 +147,24 @@ public class FIPARequestInitiator {
 				endingtime = System.currentTimeMillis() + timeout;
 				
 				// si el mensaje es para un agente Jade
-/*
+				//lo puedo saber dependiendo de si el agente tiene alguna palabra concreta como /JADE o por ejemplo
+				//si es un agente que no existe en la plataforma magentix es de jade.
 				if (request.getReceiver() != null) {
-					if (response.getReceiver(0).protocol.equals("http")) {
-						name = response
-								.getReceiver()
-								.name_all()
-								.substring(
-										0,
-										response
-												.getReceiver()
-												.name_all()
-												.indexOf(
-														"@",
-														response
-																.getReceiver()
-																.name_all()
-																.indexOf(
-																		"@") + 1));
-						 port = response.getReceiver().port
-								.substring(response.getReceiver().port
-										.indexOf(":") + 1, response
-										.getReceiver().port
-										.indexOf("/", 10));
-
-						response.getReceiver().name = name;
-						response.getReceiver().port = port;
+					if (request.getReceiver(0).name.contains("/JADE")) {
+						//name = response.getReceiver().name_all().substring(0,response.getReceiver().name_all().indexOf("@",response.getReceiver().name_all().indexOf("@") + 1));
+						//port = response.getReceiver().port.substring(response.getReceiver().port.indexOf(":") + 1, response.getReceiver().port.indexOf("/", 10));
+						
+						
+						request.getReceiver().host = request.getReceiver().name.substring(request.getReceiver().name.indexOf("@")+1,request.getReceiver().name.indexOf(":"));
+						request.getReceiver().port = "7778";
+						request.getReceiver().protocol = "http";
 
 					}
 				}
 
-				*/
+				
+				
+				
 				myAgent.send(request);
 				state = RECEIVE_REPLY_STATE;
 
