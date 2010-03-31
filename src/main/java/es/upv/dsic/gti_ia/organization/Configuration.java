@@ -31,6 +31,7 @@ public class Configuration {
 	private String jenadbDriver;
 	private String isTomcat;
 	private String pathTomcat;
+	private String os;
 	private static Configuration configuration = null;
 	
 
@@ -41,6 +42,16 @@ public class Configuration {
 
 	}
 	
+	
+	
+	/**
+	 * Path where the tomcat is located
+	 * @return 
+	 */
+	public String getOS()
+	{
+		return this.os;
+	}
 	/**
 	 * Path where the tomcat is located
 	 * @return 
@@ -303,6 +314,10 @@ public class Configuration {
 			    else    if (obj.toString().equalsIgnoreCase("pathTomcat"))
 			    {
 			    	this.pathTomcat = properties.getProperty(obj.toString()); 	
+			    }
+			    else    if (obj.toString().equalsIgnoreCase("os"))
+			    {
+			    	this.os = properties.getProperty(obj.toString()); 	
 			    }
 	
 			}
