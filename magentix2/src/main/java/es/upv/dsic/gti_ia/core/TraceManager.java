@@ -373,7 +373,7 @@ public class TraceManager extends BaseAgent{
 		super(aid);
 		
 		// Create session and exchange for delivering events
-        this.session.exchangeDeclare("mgx.trace", "headers", "amq.direct", null);
+        //this.session.exchangeDeclare("mgx.trace", "headers", "amq.direct", null);
         
         // Create session and exchange for trace manager coordination
         this.session.exchangeDeclare("mgx.trace.manager", "fanout", "amq.direct", null);
@@ -393,6 +393,7 @@ public class TraceManager extends BaseAgent{
 		DI_Tracing_Services = new TracingServiceList();
 		DD_Tracing_Services = new TracingServiceList();
 		
+		// System Trace Events
 		DI_Tracing_Services.addTracingService(new TracingService("TRACE_ERROR", "TRACE_ERROR"));
 		DI_Tracing_Services.addTracingService(new TracingService("TRACE_START", "TRACE_START"));
 		DI_Tracing_Services.addTracingService(new TracingService("TRACE_STOP", "TRACE_STOP"));
@@ -403,6 +404,7 @@ public class TraceManager extends BaseAgent{
 		DI_Tracing_Services.addTracingService(new TracingService("STREAM_FLUSH_START", "STREAM_FLUSH_START"));
 		DI_Tracing_Services.addTracingService(new TracingService("STREAM_FLUSH_STOP", "STREAM_FLUSH_STOP"));
 		
+		// Life cycle of Tracing Entities
 		DI_Tracing_Services.addTracingService(new TracingService("NEW_AGENT", "NEW_AGENT"));
 		//DI_Tracing_Services.addTracingService(new TracingService("NEW_ARTIFACT", "NEW_ARTIFACT"));
 		//DI_Tracing_Services.addTracingService(new TracingService("NEW_AGGREGATION", "NEW_AGGREGATION"));
@@ -414,10 +416,12 @@ public class TraceManager extends BaseAgent{
 		//DI_Tracing_Services.addTracingService(new TracingService("ARTIFACT_ENTERS_AGGREGATION", "ARTIFACT_ENTERS_AGGREGATION"));
 		//DI_Tracing_Services.addTracingService(new TracingService("ARTIFACT_LEAVES_AGGREGATION", "ARTIFACT_LEAVES_AGGREGATION"));
 		
+		// Messaging among Tracing Entities
 		DI_Tracing_Services.addTracingService(new TracingService("MESSAGE_SENT", "MESSAGE_SENT"));
 		DI_Tracing_Services.addTracingService(new TracingService("MESSAGE_RECEIVED", "MESSAGE_RECEIVED"));
 		DI_Tracing_Services.addTracingService(new TracingService("MESSAGE_UNDELIVERABLE", "MESSAGE_UNDELIVERABLE"));
 		
+		// OMS related Trace Events
 		//DI_Tracing_Services.addTracingService(new TracingService("ROLE_REGISTRATION", "ROLE_REGISTRATION"));
 		//DI_Tracing_Services.addTracingService(new TracingService("ROLE_DEREGISTRATION", "ROLE_DEREGISTRATION"));
 		//DI_Tracing_Services.addTracingService(new TracingService("NORM_REGISTRATION", "NORM_REGISTRATION"));
@@ -429,6 +433,7 @@ public class TraceManager extends BaseAgent{
 		//DI_Tracing_Services.addTracingService(new TracingService("ROLE_EXPULSION", "ROLE_EXPULSION"));
 		//DI_Tracing_Services.addTracingService(new TracingService("NORM_VIOLATION", "NORM_VIOLATION"));
 		
+		// Tracing System related Tracing Services
 		DI_Tracing_Services.addTracingService(new TracingService("PUBLISHED_TRACING_SERVICE", "PUBLISHED_TRACING_SERVICE"));
 		DI_Tracing_Services.addTracingService(new TracingService("UNPUBLISHED_TRACING_SERVICE", "UNPUBLISHED_TRACING_SERVICE"));
 		DI_Tracing_Services.addTracingService(new TracingService("TRACING_SERVICE_REQUEST", "TRACING_SERVICE_REQUEST"));
@@ -452,7 +457,8 @@ public class TraceManager extends BaseAgent{
 	public void sendSystemTraceEvent(TraceEvent tEvent, String destination) {
 		MessageTransfer xfr = new MessageTransfer();
 
-		xfr.destination("mgx.trace");
+		xfr.destination("amq.match");
+		//xfr.destination("mgx.trace");
 		xfr.acceptMode(MessageAcceptMode.EXPLICIT);
 		xfr.acquireMode(MessageAcquireMode.PRE_ACQUIRED);
 		
@@ -512,7 +518,8 @@ public class TraceManager extends BaseAgent{
 		    	arguments.put("event_type", eventType);
 		    	arguments.put("origin_entity", originEntity);
 		    	
-		    	this.session.exchangeBind(msg.getSender().toString()+".trace", "mgx.trace", eventType + "#" + originEntity.toString(), arguments);
+		    	this.session.exchangeBind(msg.getSender().toString()+".trace", "amq.match", eventType + "#" + originEntity.toString(), arguments);
+		    	//this.session.exchangeBind(msg.getSender().toString()+".trace", "mgx.trace", eventType + "#" + originEntity.toString(), arguments);
 		    	// confirm completion
 		    	this.session.sync();
 		    	
@@ -542,7 +549,8 @@ public class TraceManager extends BaseAgent{
 				eventType = content.substring(0, index);
 				originEntity = content.substring(index + 1);
 				
-				this.session.exchangeUnbind(msg.getSender()+".trace", "mgx.trace", eventType + "#" + originEntity.toString(), Option.NONE);
+				this.session.exchangeUnbind(msg.getSender()+".trace", "amq.match", eventType + "#" + originEntity.toString(), Option.NONE);
+				//this.session.exchangeUnbind(msg.getSender()+".trace", "mgx.trace", eventType + "#" + originEntity.toString(), Option.NONE);
 				
 		    	// confirm completion
 		    	this.session.sync();

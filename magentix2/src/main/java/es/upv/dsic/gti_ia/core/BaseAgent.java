@@ -276,14 +276,16 @@ public class BaseAgent implements Runnable {
     	//arguments.put("route", "direct");
     	arguments.put("receiver", aid.name);
 
-    	this.session.exchangeBind(aid.name+".trace", "mgx.trace", aid.name + ".system.direct", arguments);
+    	this.session.exchangeBind(aid.name+".trace", "amq.match", aid.name + ".system.direct", arguments);
+    	//this.session.exchangeBind(aid.name+".trace", "mgx.trace", aid.name + ".system.direct", arguments);
     	
     	arguments.clear();
     	arguments.put("x-match", "all");
     	arguments.put("origin_entity", "system");
     	arguments.put("receiver", "all");
     	
-    	this.session.exchangeBind(aid.name+".trace", "mgx.trace", aid.name + ".system.all", arguments);
+    	this.session.exchangeBind(aid.name+".trace", "amq.match", aid.name + ".system.all", arguments);
+    	//this.session.exchangeBind(aid.name+".trace", "mgx.trace", aid.name + ".system.all", arguments);
     	
     	// confirm completion
     	this.session.sync();
@@ -297,7 +299,7 @@ public class BaseAgent implements Runnable {
 	private void createTraceSubscription() {
 		this.session.setSessionListener(this.traceListener);
 		
-		this.session.messageSubscribe(aid.name+"trace", "listener_destination",
+		this.session.messageSubscribe(aid.name+".trace", "listener_destination",
 				MessageAcceptMode.NONE, MessageAcquireMode.PRE_ACQUIRED, null,
 				0, null);
 
@@ -345,7 +347,8 @@ public class BaseAgent implements Runnable {
 	public void sendTraceEvent(TraceEvent tEvent) {
 		MessageTransfer xfr = new MessageTransfer();
 
-		xfr.destination("mgx.trace");
+		xfr.destination("amq.match");
+		//xfr.destination("mgx.trace");
 		xfr.acceptMode(MessageAcceptMode.EXPLICIT);
 		xfr.acquireMode(MessageAcquireMode.PRE_ACQUIRED);
 		
