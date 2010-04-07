@@ -82,7 +82,7 @@ import persistence.DataBaseInterface;
 			String parentUnitType=thomasBD.GetUnitType(parentUnitID);
 			if(parentUnitType.equalsIgnoreCase("flat")) return true;
 			if(parentUnitType.equalsIgnoreCase("team")) {
-				if(thomasBD.CheckAgentPlaysRoleInUnit(parentUnitType, agentID)) return true;
+				if(thomasBD.CheckAgentPlaysRoleInUnit(parentUnitID, agentID)) return true;
 				else return false;
 			}
 			List<String> positions;
