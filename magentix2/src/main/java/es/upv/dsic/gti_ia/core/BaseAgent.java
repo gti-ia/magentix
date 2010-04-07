@@ -48,6 +48,7 @@ public class BaseAgent implements Runnable {
 	 * @uml.property name="session"
 	 */
 	protected Session session;
+	protected Session traceSession;
 	/**
 	 * @uml.property name="myThread"
 	 */
@@ -136,6 +137,7 @@ public class BaseAgent implements Runnable {
 		}
 
 		this.session = createSession();
+		this.traceSession = createTraceSession();
 		if (this.existAgent(aid)) {
 			session.close();
 			throw new Exception("Agent ID already exists on the platform");
@@ -151,6 +153,7 @@ public class BaseAgent implements Runnable {
 			createEventQueue();
 			createTraceBind();
 			createTraceSubscription();
+
 		}
 	}
 
@@ -185,13 +188,13 @@ public class BaseAgent implements Runnable {
 	private void createSubscription() {
 		this.session.setSessionListener(this.listener);
 
-		this.session.messageSubscribe(aid.name, "listener_destination",
+		this.session.messageSubscribe(aid.name, "destination",
 				MessageAcceptMode.NONE, MessageAcquireMode.PRE_ACQUIRED, null,
 				0, null);
 
-		this.session.messageFlow("listener_destination",
+		this.session.messageFlow("destination",
 				MessageCreditUnit.BYTE, Session.UNLIMITED_CREDIT);
-		this.session.messageFlow("listener_destination",
+		this.session.messageFlow("destination",
 				MessageCreditUnit.MESSAGE, Session.UNLIMITED_CREDIT);
 	}
 
@@ -262,10 +265,20 @@ public class BaseAgent implements Runnable {
 	 * [TRACE]: Methods necessary for event trace support
 	 */
 	/**
+	 * Creates the exclusive session the agent will use for trace events
+	 * 
+	 * @return The new Session
+	 */
+	private Session createTraceSession() {
+		Session session = this.connection.createSession(0);
+		return session;
+	}
+	/**
 	 * Creates queue where the agent will receive trace events
 	 */
 	private void createEventQueue() {
-		this.session.queueDeclare(aid.name+".trace", null, null, Option.AUTO_DELETE);
+		this.traceSession.queueDeclare(aid.toString()+".trace", null, null, Option.AUTO_DELETE);
+		
 	}
 	
 	private void createTraceBind(){
@@ -276,7 +289,7 @@ public class BaseAgent implements Runnable {
     	//arguments.put("route", "direct");
     	arguments.put("receiver", aid.name);
 
-    	this.session.exchangeBind(aid.name+".trace", "amq.match", aid.name + ".system.direct", arguments);
+    	this.traceSession.exchangeBind(aid.toString()+".trace", "amq.match", aid.name + ".system.direct", arguments);
     	//this.session.exchangeBind(aid.name+".trace", "mgx.trace", aid.name + ".system.direct", arguments);
     	
     	arguments.clear();
@@ -284,11 +297,11 @@ public class BaseAgent implements Runnable {
     	arguments.put("origin_entity", "system");
     	arguments.put("receiver", "all");
     	
-    	this.session.exchangeBind(aid.name+".trace", "amq.match", aid.name + ".system.all", arguments);
+    	this.traceSession.exchangeBind(aid.toString()+".trace", "amq.match", aid.name + ".system.all", arguments);
     	//this.session.exchangeBind(aid.name+".trace", "mgx.trace", aid.name + ".system.all", arguments);
     	
     	// confirm completion
-    	this.session.sync();
+    	this.traceSession.sync();
     	
 	}
 	
@@ -297,15 +310,15 @@ public class BaseAgent implements Runnable {
 	 * from the event queue
 	 */
 	private void createTraceSubscription() {
-		this.session.setSessionListener(this.traceListener);
+		this.traceSession.setSessionListener(this.traceListener);
 		
-		this.session.messageSubscribe(aid.name+".trace", "listener_destination",
+		this.traceSession.messageSubscribe(aid.toString()+".trace", "listener_destination",
 				MessageAcceptMode.NONE, MessageAcquireMode.PRE_ACQUIRED, null,
 				0, null);
 
-		this.session.messageFlow("listener_destination",
+		this.traceSession.messageFlow("listener_destination",
 				MessageCreditUnit.BYTE, Session.UNLIMITED_CREDIT);
-		this.session.messageFlow("listener_destination",
+		this.traceSession.messageFlow("listener_destination",
 				MessageCreditUnit.MESSAGE, Session.UNLIMITED_CREDIT);
 	}
 	
@@ -318,20 +331,42 @@ public class BaseAgent implements Runnable {
 	}
 
 	/**
-	 * Request a tracing service: Binds the exchange and the agent queue
+	 * Request a tracing service
 	 * 
 	 */
-	private void requestTracingService(String eventType, AgentID originEntity) {
+	public void requestTracingService(String eventType, AgentID originEntity) {
 		/**
 		 * Building a ACLMessage
 		 */
 		ACLMessage msg = new ACLMessage(ACLMessage.SUBSCRIBE);
-		AgentID tms_aid = new AgentID("qpid://tms@localhost:8080");
+		AgentID tms_aid = new AgentID("qpid://tm@localhost:8080");
 		
 		msg.setReceiver(tms_aid);
 		msg.setSender(this.getAid());
 		msg.setLanguage("ACL");
 		msg.setContent(eventType + "#" + originEntity.toString());
+		/**
+		 * Sending a ACLMessage
+		 */
+		send(msg);
+	}
+	
+	/**
+	 * Request a tracing service: By not specifying the origin entity,
+	 * it is understood that the agent is interested in all of the tracing entities.
+	 * 
+	 */
+	public void requestTracingService(String eventType) {
+		/**
+		 * Building a ACLMessage
+		 */
+		ACLMessage msg = new ACLMessage(ACLMessage.SUBSCRIBE);
+		AgentID tms_aid = new AgentID("qpid://tm@localhost:8080");
+		
+		msg.setReceiver(tms_aid);
+		msg.setSender(this.getAid());
+		msg.setLanguage("ACL");
+		msg.setContent(eventType + "#any");
 		/**
 		 * Sending a ACLMessage
 		 */
@@ -377,7 +412,7 @@ public class BaseAgent implements Runnable {
     	messageProperties.setApplicationHeaders(messageHeaders);
 		
     	xfr.header(new Header(deliveryProps, messageProperties));
-		this.session.messageTransfer(xfr.getDestination(), xfr.getAcceptMode(),
+		this.traceSession.messageTransfer(xfr.getDestination(), xfr.getAcceptMode(),
 				xfr.getAcquireMode(), xfr.getHeader(), xfr.getBodyString());
 	}
 	

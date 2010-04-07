@@ -199,7 +199,17 @@ public class TraceManager extends BaseAgent{
 		}
 		
 		public int addTracingService (TracingService newService) {
-			this.last.setNext(newService);
+			if (this.nTracingServices < 0){
+				// Error mucho gordo
+				return -1;
+			}
+			else if (this.nTracingServices == 0) {
+				this.first=newService;
+			}
+			else {
+				this.last.setNext(newService);
+			}
+			
 			this.last = newService;
 			newService.next = null;
 			this.nTracingServices++;
@@ -208,11 +218,11 @@ public class TraceManager extends BaseAgent{
 		}
 		
 		public int addTracingServiceAtPosition (TracingService newService, int position) {
-			// position goes from 0 to (nproviders-1)
+			// position goes from 0 to (nTracingServices-1)
 			int i;
 			TracingService ts;
 			
-			if (position > this.nTracingServices) {
+			if ((position > this.nTracingServices) || (position < 0)) {
 				// Bad position
 				return -1;
 			}
@@ -376,13 +386,15 @@ public class TraceManager extends BaseAgent{
         //this.session.exchangeDeclare("mgx.trace", "headers", "amq.direct", null);
         
         // Create session and exchange for trace manager coordination
-        this.session.exchangeDeclare("mgx.trace.manager", "fanout", "amq.direct", null);
+        //this.session.exchangeDeclare("mgx.trace.manager", "fanout", "amq.direct", null);
         
         // Bind the original message queue to the TM coordination exchange
-        this.session.exchangeBind(aid.name, "mgx.trace.manager", aid.name+".tm", null);
-        this.session.sync();
+        //this.session.exchangeBind(aid.name, "mgx.trace.manager", aid.name+".tm", null);
+        //this.session.sync();
         
-        initialize();
+        logger.info("[TRACE MANAGER]: Executing, I'm " + getName());
+        
+        //initialize();
 /*		this.session.messageSubscribe(aid.name, "listener_destination",
 				MessageAcceptMode.NONE, MessageAcquireMode.PRE_ACQUIRED, null,
 				0, null);
@@ -493,6 +505,19 @@ public class TraceManager extends BaseAgent{
 				xfr.getAcquireMode(), xfr.getHeader(), xfr.getBodyString());
 	}
 	
+	public void execute() {
+		
+		while(true){}
+	}
+	
+//	public void onMessage(ACLMessage msg) {
+//		/**
+//		 * When a message arrives, its shows on screen
+//		 */
+//		logger.info("[TRACE MANAGER]: Mensaje received in " + this.getName()
+//				+ " agent, by onMessage: " + msg.getContent());
+//	}
+	
 	public void onMessage(ACLMessage msg) {
 		String content, eventType, originEntity;
 		Map<String, Object> arguments;
@@ -500,11 +525,13 @@ public class TraceManager extends BaseAgent{
 		TraceEvent tEvent; // = new TraceEvent();
 		ACLMessage response_msg;
 		
+		//logger.info("[TRACE MANAGER]: received [" + msg.getPerformativeInt() + "] -> " + msg.getContent());
+		
 		switch (msg.getPerformativeInt()){
 		
 			case ACLMessage.SUBSCRIBE:
 				// Subscription to a tracing service
-				
+								
 				arguments = new HashMap<String, Object>();
 								
 				content = msg.getContent();
@@ -516,16 +543,18 @@ public class TraceManager extends BaseAgent{
 				
 				arguments.put("x-match", "all");
 		    	arguments.put("event_type", eventType);
-		    	arguments.put("origin_entity", originEntity);
 		    	
-		    	this.session.exchangeBind(msg.getSender().toString()+".trace", "amq.match", eventType + "#" + originEntity.toString(), arguments);
+		    	if (!originEntity.equals("any")) {
+		    		arguments.put("origin_entity", originEntity);
+		    	}
+		    			    	
+		    	this.session.exchangeBind(msg.getSender().toString()+".trace", "amq.match", eventType + "#" + originEntity, arguments);
 		    	//this.session.exchangeBind(msg.getSender().toString()+".trace", "mgx.trace", eventType + "#" + originEntity.toString(), arguments);
 		    	// confirm completion
-		    	this.session.sync();
+		    	//this.session.sync();
 		    	
-		    	tEvent = new TraceEvent("system_notify", this.getAid(), "SUBSCRIBED#" + eventType + "#" + originEntity);
-		    	sendSystemTraceEvent(tEvent, msg.getSender().toString());
-		    			    	
+//		    	tEvent = new TraceEvent("system_notify", this.getAid(), "SUBSCRIBED#" + eventType + "#" + originEntity);
+//		    	sendSystemTraceEvent(tEvent, msg.getSender().toString());
 		    	/**
 				 * Building a ACLMessage
 				 */
@@ -533,6 +562,7 @@ public class TraceManager extends BaseAgent{
 				response_msg=msg.createReply();
 				response_msg.setPerformative(ACLMessage.AGREE);
 				response_msg.setContent("subscription#" + eventType + "#" + originEntity);
+				
 				/**
 				 * Sending a ACLMessage
 				 */
