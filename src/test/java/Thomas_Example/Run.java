@@ -8,6 +8,8 @@ import es.upv.dsic.gti_ia.organization.CleanBD;
 import es.upv.dsic.gti_ia.architecture.Monitor;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
+import es.upv.dsic.gti_ia.core.BridgeAgentInOut;
+import es.upv.dsic.gti_ia.core.BridgeAgentOutIn;
 import es.upv.dsic.gti_ia.organization.OMS;
 import es.upv.dsic.gti_ia.organization.SF;
 
@@ -35,11 +37,11 @@ public class Run {
 	/**
 	 * Clean database
 	 */
-	/*
+	
 	CleanBD clean = new CleanBD();
 
 	clean.clean_database();
-	*/
+	
 	/**
 	 * Connecting to Qpid Broker, default localhost.
 	 */
@@ -50,13 +52,23 @@ public class Run {
 	    /**
 	     * Instantiating a OMS and FS agent's
 	     */
-		/*
+		
 	    OMS agenteOMS = OMS.getOMS();
 	    agenteOMS.start();
 
 	    SF agenteSF = SF.getSF();
 	    agenteSF.start();
-	    */
+	    
+	    BridgeAgentInOut agenteInOut = new BridgeAgentInOut(new AgentID(
+					"BridgeAgentInOut", "qpid", "localhost", "5000"));
+			/**
+			 * Instantiating a BridgeAgentOutIn SingleAgent
+			 */
+		BridgeAgentOutIn	agenteOutIn = new BridgeAgentOutIn(new AgentID(
+					"BridgeAgentOutIn", "qpid","localhost", "5000"));
+
+			agenteInOut.start();
+			agenteOutIn.start();
 
 	    /**
 	     * Execute the agents
@@ -78,7 +90,8 @@ public class Run {
 	    //providerAgent.start();
 	    m.waiting(5 * 1000);
 	    */
-	    clientAgent.start();
+	    
+	    //clientAgent.start();
 
 	} catch (Exception e) {
 	    logger.error(e.getMessage());
