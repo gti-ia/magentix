@@ -1,4 +1,4 @@
-package BaseAgent_Example;
+package MMS_Example;
 
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
@@ -12,8 +12,8 @@ import es.upv.dsic.gti_ia.core.BaseAgent;
  */
 public class SenderAgent extends BaseAgent {
 
-	public SenderAgent(AgentID aid) throws Exception {
-		super(aid);
+	public SenderAgent(AgentID aid, String keyStorePath, String key, String CertType) throws Exception {
+		super(aid,keyStorePath,key,CertType);
 	}
 
 	public void execute() {
@@ -26,7 +26,7 @@ public class SenderAgent extends BaseAgent {
 		ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
 		msg.setReceiver(receiver);
 		//msg.setSender(this.getAid());
-		msg.setSender(new AgentID("pepito"));
+		msg.setSender(new AgentID("sender"));
 		msg.setLanguage("ACL");
 		msg.setContent("Hello, I'm " + getName());
 		/**

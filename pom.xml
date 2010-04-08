@@ -140,17 +140,7 @@
 			<version>3.8.1</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.apache</groupId>
-			<artifactId>qpid-common</artifactId>
-			<version>0.5</version>
-		</dependency>
 
-		<dependency>
-			<groupId>org.apache</groupId>
-			<artifactId>qpid-client</artifactId>
-			<version>0.5</version>
-		</dependency>
 		<dependency>
 			<groupId>com.bubbler</groupId>
 			<artifactId>serializer</artifactId>
@@ -239,6 +229,32 @@
 			<artifactId>axis</artifactId>
 			<version>1.4</version>
 		</dependency>
+		<dependency>
+			<groupId>javax.jms</groupId>
+			<artifactId>jms</artifactId>
+			<version>1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache</groupId>
+			<artifactId>commons-collections</artifactId>
+			<version>3.2</version>
+		</dependency>
 
+		<dependency>
+			<groupId>org.apache</groupId>
+			<artifactId>qpid-client-modifcado</artifactId>
+			<version>0.7</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache</groupId>
+			<artifactId>qpid-common-06042010</artifactId>
+			<version>0.7</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache</groupId>
+			<artifactId>qpid-management-consoleV2</artifactId>
+			<version>0.7</version>
+		</dependency>
 	</dependencies>
 </project>

@@ -1,19 +1,28 @@
 package es.upv.dsic.gti_ia.core;
 
 import java.util.Date;
+
+
+
+
+
+
 import org.apache.log4j.Logger;
+
+
 import org.apache.qpid.transport.Connection;
+import org.apache.qpid.transport.ConnectionSettings;
 import org.apache.qpid.transport.DeliveryProperties;
 import org.apache.qpid.transport.Header;
 import org.apache.qpid.transport.MessageAcceptMode;
 import org.apache.qpid.transport.MessageAcquireMode;
 import org.apache.qpid.transport.MessageCreditUnit;
+import org.apache.qpid.transport.MessageProperties;
 import org.apache.qpid.transport.MessageTransfer;
 import org.apache.qpid.transport.Option;
 import org.apache.qpid.transport.Session;
 import org.apache.qpid.transport.SessionException;
 import org.apache.qpid.transport.SessionListener;
-
 /**
  * @author Ricard Lopez Fogues
  * @author Sergio Pajares Ferrando
@@ -25,6 +34,7 @@ public class BaseAgent implements Runnable {
 	 * The logger variable considers to print any event that occurs by the agent
 	 */
 	protected Logger logger = Logger.getLogger(BaseAgent.class);
+	private  es.upv.dsic.gti_ia.organization.Configuration c = es.upv.dsic.gti_ia.organization.Configuration.getConfiguration();
 
 	/**
 	 * @uml.property name="aid"
@@ -35,6 +45,9 @@ public class BaseAgent implements Runnable {
 	 * @uml.property name="connection"
 	 */
 	private Connection connection;
+	
+
+	
 	/**
 	 * @uml.property name="session"
 	 */
@@ -70,7 +83,68 @@ public class BaseAgent implements Runnable {
 	 * @uml.associationEnd
 	 */
 	private Listener listener;
+	
 
+	public BaseAgent(AgentID aid, String keyStorePath, String key, String CertType) throws Exception
+	{
+		if (AgentsConnection.isSecured())
+		{
+			//si esta activo el modulo de seguridad:
+				//deberemos crear una conexion por cada agente
+			connection = new Connection();
+			
+		//	this.ClientOptions.put("keyStore","/home/joabelfa/wokspace/c++/certificates/clientV2/keystore.jks");
+			
+			
+			//connect = new AMQConnection(,,),,ssl_configuration,);
+			 //path = "/home/joabelfa/wokspace/c++/certificates/clientV2/keystore.jks";//podria extraerlo del Settings.xml
+		
+			
+			
+			ConnectionSettings connectSettings = new ConnectionSettings();
+			
+			
+			connectSettings.setHost(c.getqpidHost());
+			connectSettings.setPort(c.getqpidPort());
+			connectSettings.setVhost(c.getqpidVhost());
+			connectSettings.setUsername(c.getqpidUser());
+			connectSettings.setPassword(c.getqpidPassword());
+			connectSettings.setUseSSL(c.getqpidSSL());
+			connectSettings.setSaslMechs(c.getqpidsaslMechs());
+			connectSettings.setKeyStorePassword(key);
+			connectSettings.setKeyStorePath(keyStorePath);
+			connectSettings.setKeyStoreCertType(CertType);
+			//connectSettings.setTrustStoreCertType("SunX509");
+			//connectSettings.setTrustStorePassword("key123");
+			//connectSettings.setTrustStorePath("/home/joabelfa/wokspace/c++/certificates/client/certstore.jks");
+			//connectSettings.setCertAlias("mydomain");
+			
+		
+
+			try{
+			connection.connect(connectSettings);
+			}catch(Exception e)
+			{
+				System.out.println("Error in connect: "+ e);
+			}
+
+			//connection.connect(c.getqpidHost(),c.getqpidPort(),c.getqpidVhost(),c.getqpidUser(),c.getqpidPassword(),true,c.getqpidsaslMechs());
+				//ademas de un certificado que le pasaremos a esa conexion
+			this.session = createSession();
+			if (this.existAgent(aid)) {
+				session.close();
+				throw new Exception("Agent ID already exists on the platform");
+			} else {
+				this.aid = aid;
+				this.listener = new Listener();
+				myThread = new Thread(this);
+				createQueue();
+				createBind();
+				createSubscription();
+			}
+				
+		}
+	}
 	/**
 	 * Creates a new agent in an open broker connection
 	 * 
@@ -84,6 +158,7 @@ public class BaseAgent implements Runnable {
 	 */
 	public BaseAgent(AgentID aid) throws Exception {
 
+		
 		if (AgentsConnection.connection == null) {
 			logger
 					.error("Before create a agent, the qpid broker connection is necesary");
@@ -91,6 +166,7 @@ public class BaseAgent implements Runnable {
 		} else {
 			this.connection = AgentsConnection.connection;
 		}
+		
 
 		this.session = createSession();
 		if (this.existAgent(aid)) {
@@ -104,6 +180,7 @@ public class BaseAgent implements Runnable {
 			createBind();
 			createSubscription();
 		}
+		
 	}
 
 	/**
@@ -113,6 +190,7 @@ public class BaseAgent implements Runnable {
 	 */
 	private Session createSession() {
 		Session session = this.connection.createSession(0);
+
 		return session;
 	}
 
@@ -120,7 +198,7 @@ public class BaseAgent implements Runnable {
 	 * Creates queue the agent will listen to for messages *
 	 */
 	private void createQueue() {
-		this.session.queueDeclare(aid.name, null, null, Option.AUTO_DELETE);
+		this.session.queueDeclare(aid.name, null, null, Option.AUTO_DELETE);	
 	}
 
 	/**
@@ -129,6 +207,7 @@ public class BaseAgent implements Runnable {
 	private void createBind() {
 		// this.session.exchangeBind(aid.name, aid.name, null, null);
 		this.session.exchangeBind(aid.name, "amq.direct", aid.name, null);
+		
 	}
 
 	/**
@@ -137,7 +216,8 @@ public class BaseAgent implements Runnable {
 	 */
 	private void createSubscription() {
 		this.session.setSessionListener(this.listener);
-
+		
+		
 		this.session.messageSubscribe(aid.name, "listener_destination",
 				MessageAcceptMode.NONE, MessageAcquireMode.PRE_ACQUIRED, null,
 				0, null);
@@ -146,6 +226,7 @@ public class BaseAgent implements Runnable {
 				MessageCreditUnit.BYTE, Session.UNLIMITED_CREDIT);
 		this.session.messageFlow("listener_destination",
 				MessageCreditUnit.MESSAGE, Session.UNLIMITED_CREDIT);
+		
 	}
 
 	/**
@@ -155,13 +236,19 @@ public class BaseAgent implements Runnable {
 	 *         
 	 */
 	public void send(ACLMessage msg) {
+		
+		DeliveryProperties deliveryProps = new DeliveryProperties();
+		deliveryProps.setRoutingKey("routing_key");
+		
+		MessageProperties messageProperties = new MessageProperties();
+		
 		MessageTransfer xfr = new MessageTransfer();
 
 		xfr.destination("amq.direct");
 		xfr.acceptMode(MessageAcceptMode.EXPLICIT);
 		xfr.acquireMode(MessageAcquireMode.PRE_ACQUIRED);
 
-		DeliveryProperties deliveryProps = new DeliveryProperties();
+		
 
 		// Serialize message content
 		String body;
@@ -196,7 +283,15 @@ public class BaseAgent implements Runnable {
 		// content
 		body = body + msg.getContent().length() + "#" + msg.getContent();
 
+		
 		xfr.setBody(body);
+		/*
+		try{
+			messageProperties.setUserId(msg.getSender().toString().getBytes("UTF-8"));
+		}catch (java.io.UnsupportedEncodingException e) {}
+		System.out.println("User ID: "+ messageProperties.getUserId());
+*/
+		
 		for (int i = 0; i < msg.getTotalReceivers(); i++) {
 			// If protocol is not qpid then the message goes outside the
 			// platform
@@ -206,8 +301,12 @@ public class BaseAgent implements Runnable {
 				deliveryProps.setRoutingKey(msg.getReceiver(i).name);
 			}
 			xfr.header(new Header(deliveryProps));
+			//session.messageTransfer(xfr.getDestination(), xfr.getAcceptMode(),
+				//	xfr.getAcquireMode(), xfr.getHeader(), xfr.getBodyString());
+			
 			session.messageTransfer(xfr.getDestination(), xfr.getAcceptMode(),
-					xfr.getAcquireMode(), xfr.getHeader(), xfr.getBodyString());
+					xfr.getAcquireMode(),new Header(deliveryProps,messageProperties), xfr.getBodyString());
+			
 		}
 	}
 
@@ -256,10 +355,15 @@ public class BaseAgent implements Runnable {
 	/**
 	 * Function that will be executed when the agent terminates
 	 */
-	protected void terminate() {
-		session.queueDelete(aid.name);
-		session.close();
+	protected void terminate() { 
 
+		this.session.exchangeUnbind(aid.name,"amq.direct", aid.name);
+		
+	
+		//session.queueDelete(aid.name);
+		//session.close();
+		session.closed();
+	
 	}
 
 	/**
@@ -420,7 +524,17 @@ public class BaseAgent implements Runnable {
 		tam = Integer.parseInt(body.substring(indice1, indice2));
 		// Content
 		msg.setContent(body.substring(indice2 + 1, indice2 + 1 + tam));
-
+		/*
+		MessageProperties mp = xfr.getHeader().get(MessageProperties.class);
+		if(mp == null)
+			System.out.println("NOOOOOOOOOOOO MessageProperties!");
+		else
+			try{
+				System.out.println("El mensaje me ha dicho que es de:"+ msg.getSender().name + "pero es: "+ new java.lang.String(mp.getUserId(),"UTF-8"));
+		        	
+			}catch (java.io.UnsupportedEncodingException e) {}
+			*/
+			
 		return msg;
 	}
 

@@ -1,0 +1,5 @@
+
+
+acl allow guest@QPID all all
+acl allow Joe Client@QPID all all
+#acl allow all all

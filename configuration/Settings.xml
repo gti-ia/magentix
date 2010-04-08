@@ -20,15 +20,22 @@
 
 <!-- Properties qpid broker -->
 <entry key="host">localhost</entry>
-<entry key="port">5672</entry>
+<entry key="port">5671</entry>
 <entry key="vhost">test</entry>
 <entry key="user">guest</entry>
 <entry key="pass">guest</entry>
-<entry key="ssl">false</entry>
-<entry key="saslMechs">PLAIN</entry>
-<entry key="saslProtocol">AMQP</entry>
-<entry key="saslServerName">localhost</entry>
+<entry key="ssl">true</entry>
 
+<!-- Secure qpid properties -->
+<entry key="saslMechs">EXTERNAL</entry>
+<entry key="saslProtocol">qpidd</entry>
+<entry key="saslServerName">produccion</entry>
+<entry key="KeyStorePath">produccion</entry>
+<entry key="KeyStorePassword">produccion</entry>
+<entry key="KeyStoreCertType">produccion</entry>
+<entry key="TrustStorePath">produccion</entry>
+<entry key="TrustStorePassword">produccion</entry>
+<entry key="KeyStoreCertType">produccion</entry>
 
 
 <!-- Properties jena -->
