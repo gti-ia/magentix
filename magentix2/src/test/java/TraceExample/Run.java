@@ -36,31 +36,30 @@ public class Run {
 			/**
 			 * Instantiating the trace manager agent
 			 */
-			TraceManager tmAgent = new TraceManager(new AgentID("qpid://tm@localhost:8080"));
-			tmAgent.start();
+			//TraceManager tmAgent = new TraceManager(new AgentID("qpid://tm@localhost:8080"));
+			//tmAgent.start();
 			
 			/**
 			 * Instantiating a sender agent
 			 */
-			//SenderAgent sender = new SenderAgent(new AgentID("qpid://emisor@localhost:8080"));
+			SenderAgent sender = new SenderAgent(new AgentID("qpid://emisor@localhost:8080"));
 
 			/**
 			 * Instantiating a consumer agent
 			 */
-			//ConsumerAgent consumer = new ConsumerAgent(new AgentID("qpid://consumer@localhost:8080"));
+			ConsumerAgent consumer = new ConsumerAgent(new AgentID("qpid://consumer@localhost:8080"));
 			
 			/**
 			 * Instantiating an observer agent
 			 */
-			ObserverAgent observer = new ObserverAgent(new AgentID("qpid://observer@localhost:8080"));
+			//ObserverAgent observer = new ObserverAgent(new AgentID("qpid://observer@localhost:8080"));
 
 			/**
 			 * Execute agents
 			 */
-			observer.start();
-			//consumer.start();
-			//sender.start();
-			
+			//observer.start();
+			consumer.start();
+			sender.start();
 			
 
 		} catch (Exception e) {

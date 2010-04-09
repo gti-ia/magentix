@@ -254,7 +254,20 @@ public class TraceManager extends BaseAgent{
 		
 		public int getNTracingServices () {
 			return this.nTracingServices;
-		} 
+		}
+		
+		public String listAllTracingServices () {
+			String list = new String();
+			int i;
+			TracingService ts;
+			
+			for (i=0, ts=this.getFirst(); (i < this.getNTracingServices()) && (ts.getNext() != null); i++, ts=ts.getNext()){
+				list = list + "\n" + ts.eventType.toString();
+			}
+			list = list + "\n";
+			
+			return list;
+		}
 	}
 	
 	private class TracingServiceSubscription {
@@ -394,7 +407,7 @@ public class TraceManager extends BaseAgent{
         
         logger.info("[TRACE MANAGER]: Executing, I'm " + getName());
         
-        //initialize();
+        initialize();
 /*		this.session.messageSubscribe(aid.name, "listener_destination",
 				MessageAcceptMode.NONE, MessageAcquireMode.PRE_ACQUIRED, null,
 				0, null);
@@ -453,6 +466,8 @@ public class TraceManager extends BaseAgent{
 		DI_Tracing_Services.addTracingService(new TracingService("AUTHORIZATION_REQUEST", "AUTHORIZATION_REQUEST"));
 		DI_Tracing_Services.addTracingService(new TracingService("AUTHORIZATION_ADDED", "AUTHORIZATION_ADDED"));
 		DI_Tracing_Services.addTracingService(new TracingService("AUTHORIZATION_REMOVED", "AUTHORIZATION_REMOVED"));
+		
+		//System.out.print("DI Tracing services:\n" + DI_Tracing_Services.listAllTracingServices());
 	}
 	
 	/**
@@ -506,8 +521,6 @@ public class TraceManager extends BaseAgent{
 	}
 	
 	public void execute() {
-		
-		while(true){}
 	}
 	
 //	public void onMessage(ACLMessage msg) {
@@ -525,7 +538,7 @@ public class TraceManager extends BaseAgent{
 		TraceEvent tEvent; // = new TraceEvent();
 		ACLMessage response_msg;
 		
-		//logger.info("[TRACE MANAGER]: received [" + msg.getPerformativeInt() + "] -> " + msg.getContent());
+		//logger.info("[TRACE MANAGER]: Received [" + msg.getPerformativeInt() + "] -> " + msg.getContent());
 		
 		switch (msg.getPerformativeInt()){
 		
@@ -549,6 +562,7 @@ public class TraceManager extends BaseAgent{
 		    	}
 		    			    	
 		    	this.session.exchangeBind(msg.getSender().toString()+".trace", "amq.match", eventType + "#" + originEntity, arguments);
+		    	logger.info("[TRACE MANAGER]: binding " + msg.getSender().toString()+".trace");
 		    	//this.session.exchangeBind(msg.getSender().toString()+".trace", "mgx.trace", eventType + "#" + originEntity.toString(), arguments);
 		    	// confirm completion
 		    	//this.session.sync();
@@ -562,11 +576,11 @@ public class TraceManager extends BaseAgent{
 				response_msg=msg.createReply();
 				response_msg.setPerformative(ACLMessage.AGREE);
 				response_msg.setContent("subscription#" + eventType + "#" + originEntity);
-				
+				logger.info("[TRACE MANAGER]: sending message to " + msg.getReceiver().toString());
 				/**
 				 * Sending a ACLMessage
 				 */
-				send(response_msg);						
+				//send(response_msg);						
 				
 		    	break;
 		    	

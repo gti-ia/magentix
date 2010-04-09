@@ -87,7 +87,6 @@ public class BaseAgent implements Runnable {
 
 		public void message(Session ssn, MessageTransfer xfr) {
 			TraceEvent tEvent = MessageTransfertoTraceEvent(xfr);
-			//ACLMessage msg = MessageTransfertoACLMessage(xfr);
 			onTraceEvent(tEvent);
 		}
 
@@ -128,7 +127,7 @@ public class BaseAgent implements Runnable {
 	 * 		Create the event queue and the event listener
 	 */
 	public BaseAgent(AgentID aid) throws Exception {
-
+				
 		if (AgentsConnection.connection == null) {
 			logger.error("Before create a agent, the qpid broker connection is necesary");
 			throw new Exception("Error doesn't work the broken connection");
@@ -155,6 +154,8 @@ public class BaseAgent implements Runnable {
 			createTraceSubscription();
 
 		}
+		
+		sendTraceEvent(new TraceEvent("NEW_AGENT", aid, ""));
 	}
 
 	/**
@@ -258,7 +259,10 @@ public class BaseAgent implements Runnable {
 			xfr.header(new Header(deliveryProps));
 			session.messageTransfer(xfr.getDestination(), xfr.getAcceptMode(),
 					xfr.getAcquireMode(), xfr.getHeader(), xfr.getBodyString());
+			
+			sendTraceEvent(new TraceEvent("MESSAGE_SENT", this.aid, xfr.getBodyString()));
 		}
+		
 	}
 
 	/**
@@ -277,7 +281,7 @@ public class BaseAgent implements Runnable {
 	 * Creates queue where the agent will receive trace events
 	 */
 	private void createEventQueue() {
-		this.traceSession.queueDeclare(aid.toString()+".trace", null, null, Option.AUTO_DELETE);
+		this.traceSession.queueDeclare(aid.name+".trace", null, null, Option.AUTO_DELETE);
 		
 	}
 	
@@ -289,15 +293,15 @@ public class BaseAgent implements Runnable {
     	//arguments.put("route", "direct");
     	arguments.put("receiver", aid.name);
 
-    	this.traceSession.exchangeBind(aid.toString()+".trace", "amq.match", aid.name + ".system.direct", arguments);
+    	this.traceSession.exchangeBind(aid.name+".trace", "amq.match", aid.name + ".system.direct", arguments);
     	//this.session.exchangeBind(aid.name+".trace", "mgx.trace", aid.name + ".system.direct", arguments);
-    	
+    	    	
     	arguments.clear();
     	arguments.put("x-match", "all");
     	arguments.put("origin_entity", "system");
     	arguments.put("receiver", "all");
     	
-    	this.traceSession.exchangeBind(aid.toString()+".trace", "amq.match", aid.name + ".system.all", arguments);
+    	this.traceSession.exchangeBind(aid.name+".trace", "amq.match", aid.name + ".system.all", arguments);
     	//this.session.exchangeBind(aid.name+".trace", "mgx.trace", aid.name + ".system.all", arguments);
     	
     	// confirm completion
@@ -312,7 +316,7 @@ public class BaseAgent implements Runnable {
 	private void createTraceSubscription() {
 		this.traceSession.setSessionListener(this.traceListener);
 		
-		this.traceSession.messageSubscribe(aid.toString()+".trace", "listener_destination",
+		this.traceSession.messageSubscribe(aid.name + ".trace", "listener_destination",
 				MessageAcceptMode.NONE, MessageAcquireMode.PRE_ACQUIRED, null,
 				0, null);
 
@@ -408,7 +412,7 @@ public class BaseAgent implements Runnable {
     	Map<String, Object> messageHeaders = new HashMap<String, Object>();
     	// set the message property
     	messageHeaders.put("event_type", tEvent.getEventType());
-    	messageHeaders.put("origin_entity", tEvent.getOriginEntity().toString());
+    	messageHeaders.put("origin_entity", tEvent.getOriginEntity().name);
     	messageProperties.setApplicationHeaders(messageHeaders);
 		
     	xfr.header(new Header(deliveryProps, messageProperties));

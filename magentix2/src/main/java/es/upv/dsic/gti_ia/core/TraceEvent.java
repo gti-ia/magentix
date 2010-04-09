@@ -64,7 +64,7 @@ public class TraceEvent implements Serializable {
 	public void setContent(String content){
 		this.content=content;
 	}
-	
+		
 	/*
 	public String getDomain(){
 		return domains[this.domain];
@@ -85,5 +85,13 @@ public class TraceEvent implements Serializable {
 	
 	public long getTimestamp(){
 		return this.timestamp;
+	}
+	
+	public String toReadableString() {
+		String event_str = String.valueOf(this.getTimestamp()) + ": " +
+			this.getEventType() + " from " + this.getOriginEntity().toString() + " Content: " +
+			this.getContent();
+		
+		return event_str;
 	}
 }
