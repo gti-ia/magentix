@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -26,10 +27,10 @@ import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.BaseAgent;
 import es.upv.dsic.gti_ia.organization.Configuration;
 
-import org.apache.qpid.client.SSLConfiguration;
+
 import org.apache.qpid.console.Session;
 import org.apache.qpid.console.QMFObject;
-import org.apache.qpid.console.ClassKey;;
+
 
 
 public class MMS extends BaseAgent {
@@ -59,10 +60,8 @@ public class MMS extends BaseAgent {
 		//this.conectToBroker();
 		//this.writeAclFile();
 		this.conectToBroker();
-		this.readACLFile();
-		
-	
-		//m.waiting();
+		//this.readACLFile();
+		m.waiting();
 	}
 
 	
@@ -121,11 +120,11 @@ public class MMS extends BaseAgent {
 			e.printStackTrace();
 		}
 	}
-	public void writeAclFile() {
+	public void writeAclFile(String command) {
 		PrintWriter aclFile = ACLFile();
 		try
 		{
-		aclFile.println("acl allow all all");
+			aclFile.println(command);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -142,11 +141,23 @@ public class MMS extends BaseAgent {
 	}
 
 
-	
+	public void clearACLFile()
+	{
+		File fichero = new File("./certificates/broker.acl");
+		fichero.delete();
+		try {
+			fichero.createNewFile();
+		} catch (IOException ex) {
+			// Logger.getLogger(ThomasGUI.class.getName()).log(Level.SEVERE,
+			// null, ex);
+			logger.error(ex.getMessage());
+		}	
+	}
 	private PrintWriter ACLFile() {
 		// TODO Auto-generated method stub
 		 try {
-			fichero = new FileWriter("/home/joabelfa/wokspace/java/workarea/Secure/magentix2Secure/certificates/broker.acl");
+			//fichero = new FileWriter("./certificates/broker.acl");
+			fichero = new FileWriter("./certificates/broker.acl", true);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -195,7 +206,6 @@ public class MMS extends BaseAgent {
 
 	public void conectToBroker() {
 		
-		SSLConfiguration sslConfig = new SSLConfiguration();
 	
 		String connectionBroker = "amqp://" + c.getqpidUser() + ":"
 				+ c.getqpidPassword() + "@/" + c.getqpidVhost()
@@ -205,9 +215,6 @@ public class MMS extends BaseAgent {
 		//,TrustStorePassword="+"dsfds"+"
 		
 		sess = new Session();
-		sslConfig.setKeystorePassword("key123");
-		sslConfig.setKeystorePath("/home/joabelfa/wokspace/c++/certificates/clientV2/keystore.jks");
-		
 		sess.addBroker(connectionBroker);
 		
 		
@@ -218,16 +225,14 @@ public class MMS extends BaseAgent {
 	{
 		// sess.addBroker("amqp://guest:guest@/?brokerlist='tcp://gtiiaprojects.dsic.upv.es:5671?ssl='true',saslMechs='PLAIN',saslProtocol='qpidd',saslServerName='produccion''");
 		
-		ArrayList<ClassKey> array = sess.getClasses("org.apache.qpid.acl");
+		//ArrayList<ClassKey> array = sess.getClasses("org.apache.qpid.acl");
 		hash.put("_class", "acl");
 		qmf = sess.getObjects(hash);
-		qmf.get(0).invokeMethod("reloadACLFile", "");
-		
-		
-		
+		qmf.get(0).invokeMethod("reloadACLFile", "");	
 	}
 
 	public void finalize() {
+	
 		sess.close();
 		m.advise();
 	}
