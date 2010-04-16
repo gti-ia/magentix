@@ -1,1 +1,9 @@
-acl allow all all 
+#acl allow luis@QPID create exchange name=luis
+#acl allow luis@QPID create queue name=luis
+#acl allow luis@QPID bind exchange name=amq.direct routingkey=luis 
+#acl allow luis@QPID all all
+acl allow MMS@QPID all all
+acl allow guest@QPID all all
+
+acl allow luis@QPID all queue name=luis
+acl allow luis@QPID all exchange name=amq.direct routingkey=luis
