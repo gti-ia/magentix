@@ -171,7 +171,7 @@ public abstract class FIPA_REQUEST_Participant {
 		// RECEIVE_REQUEST State
 		ReceiveState RECEIVE_REQUEST = new ReceiveState("RECEIVE_REQUEST");
 		RECEIVE_REQUEST.setMethod(new RECEIVE_REQUEST_Method());
-		filter = new MessageFilter(ACLMessage.REQUEST, "performative");
+		filter = new MessageFilter("performative = REQUEST");
 		RECEIVE_REQUEST.setAcceptFilter(filter);
 		processor.registerState(RECEIVE_REQUEST);
 		processor.addTransition("WAIT", "RECEIVE_REQUEST");

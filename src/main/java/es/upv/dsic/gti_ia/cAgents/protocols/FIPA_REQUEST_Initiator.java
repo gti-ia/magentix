@@ -168,8 +168,7 @@ public abstract class FIPA_REQUEST_Initiator {
 		
 		ReceiveState RECEIVE_FIRST_WAIT = new ReceiveState("RECEIVE_FIRST_WAIT");
 		RECEIVE_FIRST_WAIT.setMethod(new FIRST_WAIT_Method());
-		filter = new MessageFilter(ACLMessage.INFORM, "performative AND purpose");
-		filter.setHeader("purpose", "waitMessage");
+		filter = new MessageFilter("performative = INFORM AND purpose = waitMessage");
 		RECEIVE_FIRST_WAIT.setAcceptFilter(filter);
 		processor.registerState(RECEIVE_FIRST_WAIT);
 		processor.addTransition("RECEIVE_FIRST_WAIT", "FIRST_WAIT");
@@ -178,7 +177,7 @@ public abstract class FIPA_REQUEST_Initiator {
 		
 		ReceiveState NOT_UNDERSTOOD = new ReceiveState("NOT_UNDERSTOOD");
 		NOT_UNDERSTOOD.setMethod(new NOT_UNDERSTOOD_Method());
-		filter = new MessageFilter(ACLMessage.NOT_UNDERSTOOD,"performative");
+		filter = new MessageFilter("performative = NOT_UNDERSTOOD");
 		NOT_UNDERSTOOD.setAcceptFilter(filter);
 		processor.registerState(NOT_UNDERSTOOD);
 		processor.addTransition("FIRST_WAIT", "NOT_UNDERSTOOD");
@@ -187,7 +186,7 @@ public abstract class FIPA_REQUEST_Initiator {
 		
 		ReceiveState REFUSE = new ReceiveState("REFUSE");
 		REFUSE.setMethod(new REFUSE_Method());
-		filter = new MessageFilter(ACLMessage.REFUSE,"performative");
+		filter = new MessageFilter("performative = REFUSE");
 		REFUSE.setAcceptFilter(filter);
 		processor.registerState(REFUSE);
 		processor.addTransition("FIRST_WAIT", "REFUSE");
@@ -196,7 +195,7 @@ public abstract class FIPA_REQUEST_Initiator {
 		
 		ReceiveState AGREE = new ReceiveState("AGREE");
 		AGREE.setMethod(new AGREE_Method());
-		filter = new MessageFilter(ACLMessage.AGREE,"performative");
+		filter = new MessageFilter("performative = AGREE");
 		AGREE.setAcceptFilter(filter);
 		processor.registerState(AGREE);
 		processor.addTransition("FIRST_WAIT", "AGREE");
@@ -210,7 +209,7 @@ public abstract class FIPA_REQUEST_Initiator {
 
 		ReceiveState FAILURE = new ReceiveState("FAILURE");
 		FAILURE.setMethod(new FAILURE_Method());
-		filter = new MessageFilter(ACLMessage.FAILURE, "performative");
+		filter = new MessageFilter("performative = FAILURE");
 		FAILURE.setAcceptFilter(filter);
 		processor.registerState(FAILURE);
 		processor.addTransition("SECOND_WAIT", "FAILURE");
@@ -219,7 +218,7 @@ public abstract class FIPA_REQUEST_Initiator {
 
 		ReceiveState INFORM = new ReceiveState("INFORM");
 		INFORM.setMethod(new INFORM_Method());
-		filter = new MessageFilter(ACLMessage.INFORM, "performative");
+		filter = new MessageFilter("performative = INFORM");
 		INFORM.setAcceptFilter(filter);
 		processor.registerState(INFORM);
 		processor.addTransition("SECOND_WAIT", "INFORM");
