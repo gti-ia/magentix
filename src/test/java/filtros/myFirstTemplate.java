@@ -15,8 +15,7 @@ public class myFirstTemplate {
 		DOMConfigurator.configure("configuration/loggin.xml");
 		AgentsConnection.connect("localhost");
 		
-		//MessageFilter template = new MessageFilter("NOT performative AND NOT (seller AND(buyer OR object AND purpose))");
-		MessageFilter template = new MessageFilter("performative = UNKNOWN");
+		MessageFilter template = new MessageFilter("performative = UNKNOWN AND purpose != comprar");
 				
 		ACLMessage msg = new ACLMessage(ACLMessage.UNKNOWN);
 		msg.setHeader("purpose", "vender");
