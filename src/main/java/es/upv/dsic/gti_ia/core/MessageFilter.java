@@ -282,8 +282,12 @@ public class MessageFilter{
 		} else if (root.type == Node.NOT) {
 			return !evaluateTree(root.left, msg);
 		} else if (root.type == Node.EQUAL) {
+			if(root.left.headerName.toLowerCase().equals("performative"))
+				return msg.getPerformative().toLowerCase().equals(root.right.headerName.toLowerCase());
 			return msg.getHeaderValue(root.left.headerName).equals(root.right.headerName);
 		} else if (root.type == Node.NOTEQUAL){
+			if(root.left.headerName.toLowerCase().equals("performative"))
+				return !msg.getPerformative().toLowerCase().equals(root.right.headerName.toLowerCase());
 			return !msg.getHeaderValue(root.left.headerName).equals(root.right.headerName);
 		} else
 			return false;

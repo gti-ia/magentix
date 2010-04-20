@@ -184,6 +184,7 @@ public class ACLMessage implements Serializable, Cloneable {
 	 */
 	public String getPerformative() {
 		try {
+			if(performative == -1) return "UNKNOWN";
 			return performatives[performative];
 		} catch (Exception e) {
 			return performatives[NOT_UNDERSTOOD];
