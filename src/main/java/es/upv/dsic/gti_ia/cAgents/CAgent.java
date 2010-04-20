@@ -78,7 +78,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.BaseAgent;
-import es.upv.dsic.gti_ia.core.MessageTemplate;
+import es.upv.dsic.gti_ia.core.MessageFilter;
 
 /**
  * 
@@ -252,8 +252,7 @@ public abstract class CAgent extends BaseAgent {
 			}
 		}
 		RECEIVE.setMethod(new RECEIVE_Method());
-		MessageTemplate msg = new MessageTemplate(ACLMessage.UNKNOWN, "performative AND PURPOSE");
-		msg.setHeader("PURPOSE", "AGENT_END");
+		MessageFilter msg = new MessageFilter("performative = UNKNOWN AND PURPOSE = AGENT_END");
 		RECEIVE.setAcceptFilter(msg);
 		welcomeFactory.cProcessorTemplate().registerState(RECEIVE);
 		welcomeFactory.cProcessorTemplate().addTransition("WAIT", "RECEIVE");

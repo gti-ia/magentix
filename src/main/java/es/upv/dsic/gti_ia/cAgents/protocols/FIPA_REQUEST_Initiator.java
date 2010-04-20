@@ -13,7 +13,7 @@ import es.upv.dsic.gti_ia.cAgents.SendState;
 import es.upv.dsic.gti_ia.cAgents.SendStateMethod;
 import es.upv.dsic.gti_ia.cAgents.WaitState;
 import es.upv.dsic.gti_ia.core.ACLMessage;
-import es.upv.dsic.gti_ia.core.MessageTemplate;
+import es.upv.dsic.gti_ia.core.MessageFilter;
 
 public abstract class FIPA_REQUEST_Initiator {
 	
@@ -127,7 +127,7 @@ public abstract class FIPA_REQUEST_Initiator {
 	public CProcessorFactory newFactory(String name, ACLMessage template,
 			int availableConversations, CAgent myAgent, long timeout) {
 
-		MessageTemplate filter;
+		MessageFilter filter;
 
 		// Create factory
 
@@ -168,7 +168,7 @@ public abstract class FIPA_REQUEST_Initiator {
 		
 		ReceiveState RECEIVE_FIRST_WAIT = new ReceiveState("RECEIVE_FIRST_WAIT");
 		RECEIVE_FIRST_WAIT.setMethod(new FIRST_WAIT_Method());
-		filter = new MessageTemplate(ACLMessage.INFORM, "performative AND purpose");
+		filter = new MessageFilter(ACLMessage.INFORM, "performative AND purpose");
 		filter.setHeader("purpose", "waitMessage");
 		RECEIVE_FIRST_WAIT.setAcceptFilter(filter);
 		processor.registerState(RECEIVE_FIRST_WAIT);
@@ -178,7 +178,7 @@ public abstract class FIPA_REQUEST_Initiator {
 		
 		ReceiveState NOT_UNDERSTOOD = new ReceiveState("NOT_UNDERSTOOD");
 		NOT_UNDERSTOOD.setMethod(new NOT_UNDERSTOOD_Method());
-		filter = new MessageTemplate(ACLMessage.NOT_UNDERSTOOD,"performative");
+		filter = new MessageFilter(ACLMessage.NOT_UNDERSTOOD,"performative");
 		NOT_UNDERSTOOD.setAcceptFilter(filter);
 		processor.registerState(NOT_UNDERSTOOD);
 		processor.addTransition("FIRST_WAIT", "NOT_UNDERSTOOD");
@@ -187,7 +187,7 @@ public abstract class FIPA_REQUEST_Initiator {
 		
 		ReceiveState REFUSE = new ReceiveState("REFUSE");
 		REFUSE.setMethod(new REFUSE_Method());
-		filter = new MessageTemplate(ACLMessage.REFUSE,"performative");
+		filter = new MessageFilter(ACLMessage.REFUSE,"performative");
 		REFUSE.setAcceptFilter(filter);
 		processor.registerState(REFUSE);
 		processor.addTransition("FIRST_WAIT", "REFUSE");
@@ -196,7 +196,7 @@ public abstract class FIPA_REQUEST_Initiator {
 		
 		ReceiveState AGREE = new ReceiveState("AGREE");
 		AGREE.setMethod(new AGREE_Method());
-		filter = new MessageTemplate(ACLMessage.AGREE,"performative");
+		filter = new MessageFilter(ACLMessage.AGREE,"performative");
 		AGREE.setAcceptFilter(filter);
 		processor.registerState(AGREE);
 		processor.addTransition("FIRST_WAIT", "AGREE");
@@ -210,7 +210,7 @@ public abstract class FIPA_REQUEST_Initiator {
 
 		ReceiveState FAILURE = new ReceiveState("FAILURE");
 		FAILURE.setMethod(new FAILURE_Method());
-		filter = new MessageTemplate(ACLMessage.FAILURE, "performative");
+		filter = new MessageFilter(ACLMessage.FAILURE, "performative");
 		FAILURE.setAcceptFilter(filter);
 		processor.registerState(FAILURE);
 		processor.addTransition("SECOND_WAIT", "FAILURE");
@@ -219,7 +219,7 @@ public abstract class FIPA_REQUEST_Initiator {
 
 		ReceiveState INFORM = new ReceiveState("INFORM");
 		INFORM.setMethod(new INFORM_Method());
-		filter = new MessageTemplate(ACLMessage.INFORM, "performative");
+		filter = new MessageFilter(ACLMessage.INFORM, "performative");
 		INFORM.setAcceptFilter(filter);
 		processor.registerState(INFORM);
 		processor.addTransition("SECOND_WAIT", "INFORM");

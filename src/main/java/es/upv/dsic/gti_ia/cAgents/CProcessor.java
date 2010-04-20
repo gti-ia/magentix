@@ -12,7 +12,7 @@ import java.util.UUID;
 import org.apache.log4j.Logger;
 
 import es.upv.dsic.gti_ia.core.ACLMessage;
-import es.upv.dsic.gti_ia.core.MessageTemplate;
+import es.upv.dsic.gti_ia.core.MessageFilter;
 
 /**
  * 
@@ -284,7 +284,7 @@ public class CProcessor implements Runnable, Cloneable {
 									// template completa.
 									// Probablemente mejor en ACLMessage
 
-									MessageTemplate filter = receiveState
+									MessageFilter filter = receiveState
 											.getAcceptFilter();
 
 									if (filter == null || filter.compareHeaders(retrievedMessage)) {

@@ -15,7 +15,7 @@ import es.upv.dsic.gti_ia.cAgents.SendState;
 import es.upv.dsic.gti_ia.cAgents.SendStateMethod;
 import es.upv.dsic.gti_ia.cAgents.WaitState;
 import es.upv.dsic.gti_ia.core.ACLMessage;
-import es.upv.dsic.gti_ia.core.MessageTemplate;
+import es.upv.dsic.gti_ia.core.MessageFilter;
 
 public abstract class FIPA_REQUEST_Participant {
 
@@ -144,7 +144,7 @@ public abstract class FIPA_REQUEST_Participant {
 	public CProcessorFactory newFactory(String name, ACLMessage template,
 			int availableConversations, CAgent myAgent) {
 
-		MessageTemplate filter;
+		MessageFilter filter;
 		// Create factory
 
 		if (template == null) {
@@ -171,7 +171,7 @@ public abstract class FIPA_REQUEST_Participant {
 		// RECEIVE_REQUEST State
 		ReceiveState RECEIVE_REQUEST = new ReceiveState("RECEIVE_REQUEST");
 		RECEIVE_REQUEST.setMethod(new RECEIVE_REQUEST_Method());
-		filter = new MessageTemplate(ACLMessage.REQUEST, "performative");
+		filter = new MessageFilter(ACLMessage.REQUEST, "performative");
 		RECEIVE_REQUEST.setAcceptFilter(filter);
 		processor.registerState(RECEIVE_REQUEST);
 		processor.addTransition("WAIT", "RECEIVE_REQUEST");

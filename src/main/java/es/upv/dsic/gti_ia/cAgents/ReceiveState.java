@@ -1,6 +1,6 @@
 package es.upv.dsic.gti_ia.cAgents;
 
-import es.upv.dsic.gti_ia.core.MessageTemplate;
+import es.upv.dsic.gti_ia.core.MessageFilter;
 
 /**
  * 
@@ -10,7 +10,7 @@ import es.upv.dsic.gti_ia.core.MessageTemplate;
 
 public class ReceiveState extends State {
 
-	private MessageTemplate acceptFilter;
+	private MessageFilter acceptFilter;
 	private ReceiveStateMethod methodToRun;
 
 	public ReceiveState(String n) {
@@ -18,11 +18,11 @@ public class ReceiveState extends State {
 		type = State.RECEIVE;
 	}
 
-	public void setAcceptFilter(MessageTemplate filter) {
+	public void setAcceptFilter(MessageFilter filter) {
 		acceptFilter = filter;
 	}
 
-	public MessageTemplate getAcceptFilter() {
+	public MessageFilter getAcceptFilter() {
 		return acceptFilter;
 	}
 
