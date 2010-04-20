@@ -9,7 +9,7 @@ import org.apache.log4j.Logger;
 
 import es.upv.dsic.gti_ia.cAgents.CProcessor;
 
-public class MessageTemplate extends ACLMessage {
+public class MessageFilter{
 
 	/**
 	 * Author Ricard López Fogués
@@ -18,19 +18,21 @@ public class MessageTemplate extends ACLMessage {
 	private static final long serialVersionUID = 1L;
 
 	private final Pattern pattern = Pattern
-			.compile("(\\s*(NOT\\s)*(\\s*\\(*)*[a-zA-Z0-9]+((\\s*\\)\\s*)+|\\s+)(AND|OR))+\\s+[a-zA-Z0-9]+(\\s*\\)*)*");
-	private final Pattern pattern2 = Pattern.compile("\\s*(NOT\\s)*[a-zA-Z0-9]+\\s*");
+			.compile("(\\s*(NOT\\s)*(\\s*\\(*)*[a-zA-Z0-9]+\\s*(=|!=)\\s*[a-zA-Z0-9]+((\\s*\\)\\s*)+|\\s+)(AND|OR))+\\s+[a-zA-Z0-9]+\\s*(=|!=)\\s*[a-zA-Z0-9]+(\\s*\\)*)*");
+	private final Pattern pattern2 = Pattern.compile("\\s*(NOT\\s)*[a-zA-Z0-9]+\\s*(=|!=)\\s*[a-zA-Z0-9]+\\s*");
 
 	Logger logger = Logger.getLogger(CProcessor.class);
 	private String expr;
 	
 	class Node {
 		public static final int VALUE = 0;
-		public static final int OPARENTHESIS = 1;
-		public static final int CPARENTHESIS = 2;
-		public static final int NOT = 3;
-		public static final int AND = 4;
-		public static final int OR = 5;
+		public static final int EQUAL = 1;
+		public static final int NOTEQUAL = 2;
+		public static final int OPARENTHESIS = 3;
+		public static final int CPARENTHESIS = 4;
+		public static final int NOT = 5;
+		public static final int AND = 6;
+		public static final int OR = 7;
 		int type;
 		Node left;
 		Node right;
@@ -48,12 +50,7 @@ public class MessageTemplate extends ACLMessage {
 
 	Node root;
 
-	public MessageTemplate() {
-		super();
-	}
-
-	public MessageTemplate(int performative, String expr) {
-		super(performative);
+	public MessageFilter(String expr) {
 		if (correctExpression(expr)) {
 			this.expr = expr;
 			root = this.createBinaryTree(this.createNodeList());
@@ -110,6 +107,12 @@ public class MessageTemplate extends ACLMessage {
 				i++;
 			} else if (expr.charAt(i) == ')') {
 				nodos.add(new Node(Node.CPARENTHESIS));
+				i++;
+			} else if (expr.charAt(i) == '!') {
+				nodos.add(new Node(Node.NOTEQUAL));
+				i = i + 2;
+			} else if (expr.charAt(i) == '=') {
+				nodos.add(new Node(Node.EQUAL));
 				i++;
 			} else if (expr.charAt(i) == 'A') { // pot ser un AND o altra cosa
 				if ((expr.substring(i, i + 3).equals("AND"))
@@ -278,11 +281,10 @@ public class MessageTemplate extends ACLMessage {
 					|| evaluateTree(root.right, msg);
 		} else if (root.type == Node.NOT) {
 			return !evaluateTree(root.left, msg);
-		} else if (root.type == Node.VALUE) {
-			if(root.headerName.toLowerCase().equals("performative"))
-				return this.getPerformative() == msg.getPerformative();
-			return this.getHeaderValue(root.headerName) == msg
-					.getHeaderValue(root.headerName);
+		} else if (root.type == Node.EQUAL) {
+			return msg.getHeaderValue(root.left.headerName).equals(root.right.headerName);
+		} else if (root.type == Node.NOTEQUAL){
+			return !msg.getHeaderValue(root.left.headerName).equals(root.right.headerName);
 		} else
 			return false;
 	}
