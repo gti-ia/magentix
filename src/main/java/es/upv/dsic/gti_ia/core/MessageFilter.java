@@ -9,7 +9,7 @@ import org.apache.log4j.Logger;
 
 import es.upv.dsic.gti_ia.cAgents.CProcessor;
 
-public class MessageFilter{
+public class MessageFilter implements Cloneable{
 
 	/**
 	 * Author Ricard López Fogués
@@ -55,6 +55,10 @@ public class MessageFilter{
 			this.expr = expr;
 			root = this.createBinaryTree(this.createNodeList());
 		}
+	}
+	
+	public MessageFilter clone(){
+		return this.clone();
 	}
 
 	public boolean compareHeaders(ACLMessage msg) {
