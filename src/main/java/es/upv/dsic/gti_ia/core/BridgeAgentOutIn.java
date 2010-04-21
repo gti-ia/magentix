@@ -76,8 +76,11 @@ public class BridgeAgentOutIn extends BaseAgent {
 				 
 				 
 				
-				Monitor m = new Monitor();
-				m.waiting(10);
+				 
+				 
+				 
+				 
+				
 							
 				is = s.getInputStream();
 				OutputStream os = s.getOutputStream();
@@ -202,7 +205,8 @@ public class BridgeAgentOutIn extends BaseAgent {
 					System.err.println("Error receiving JADE message");
 					
 				}
-				
+				else
+				{
 				// buscamos el boundary
 				int indexboundary = cadena.indexOf("boundary=\"");
 				String boundary = cadena.substring(indexboundary + 10, cadena
@@ -420,12 +424,17 @@ public class BridgeAgentOutIn extends BaseAgent {
 				}
 				msg.setConversationId(conversation_id);
 				}
+				
+				msg.getReceiver().protocol = "qpid";
+				System.out.println("Voy a enviar a "+ msg.getReceiver().name + " el mensaje es: "+ msg.getContent());
+				send(msg);
+				
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 			
-			msg.getReceiver().protocol = "qpid";
-			send(msg);
+			
 		}
 	}
 
