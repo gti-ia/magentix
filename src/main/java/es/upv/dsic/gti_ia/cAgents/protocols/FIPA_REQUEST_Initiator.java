@@ -18,6 +18,7 @@ import es.upv.dsic.gti_ia.core.MessageFilter;
 public abstract class FIPA_REQUEST_Initiator {
 	
 	protected void doBegin(CProcessor myProcessor, ACLMessage msg) {
+		System.out.println("Initiator Begin");
 		myProcessor.getInternalData().put("InitialMessage", msg);		
 	}
 
@@ -30,6 +31,7 @@ public abstract class FIPA_REQUEST_Initiator {
 	
 	protected void doRequest(CProcessor myProcessor,
 			ACLMessage messageToSend) {
+		System.out.println("Initiator Request");
 		ACLMessage aux = (ACLMessage) myProcessor.getInternalData().get(
 				"InitialMessage");
 		messageToSend.copyFromAsTemplate(aux);
@@ -45,17 +47,8 @@ public abstract class FIPA_REQUEST_Initiator {
 		}
 	}
 	
-	protected void doFirstWait(CProcessor myProcessor, ACLMessage msg){	
-	}
-
-	class FIRST_WAIT_Method implements ReceiveStateMethod {
-		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
-			doFirstWait(myProcessor, messageReceived);
-			return "FIRST_WAIT";
-		}
-	}
-	
 	protected void doNotUnderstood(CProcessor myProcessor, ACLMessage msg){
+		System.out.println("Initiator NotUnderstood");
 	}
 
 	class NOT_UNDERSTOOD_Method implements ReceiveStateMethod {
@@ -66,6 +59,7 @@ public abstract class FIPA_REQUEST_Initiator {
 	}
 	
 	protected void doRefuse(CProcessor myProcessor, ACLMessage msg){
+		System.out.println("Initiator Refuse");
 	}
 
 	class REFUSE_Method implements ReceiveStateMethod {
@@ -76,6 +70,7 @@ public abstract class FIPA_REQUEST_Initiator {
 	}
 	
 	protected void doAgree(CProcessor myProcessor, ACLMessage msg){
+		System.out.println("Initiator Agree");
 	}
 
 	class AGREE_Method implements ReceiveStateMethod {
@@ -163,15 +158,6 @@ public abstract class FIPA_REQUEST_Initiator {
 
 		processor.registerState(new WaitState("FIRST_WAIT", timeout));
 		processor.addTransition("REQUEST", "FIRST_WAIT");
-		
-		// RECEIVE_FIRST_WAIT State
-		
-		ReceiveState RECEIVE_FIRST_WAIT = new ReceiveState("RECEIVE_FIRST_WAIT");
-		RECEIVE_FIRST_WAIT.setMethod(new FIRST_WAIT_Method());
-		filter = new MessageFilter("performative = INFORM AND purpose = waitMessage");
-		RECEIVE_FIRST_WAIT.setAcceptFilter(filter);
-		processor.registerState(RECEIVE_FIRST_WAIT);
-		processor.addTransition("RECEIVE_FIRST_WAIT", "FIRST_WAIT");
 		
 		// NOT_UNDERSTOOD State
 		

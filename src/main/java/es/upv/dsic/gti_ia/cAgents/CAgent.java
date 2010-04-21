@@ -184,7 +184,7 @@ public abstract class CAgent extends BaseAgent {
 		// Probar y definir defaultfactory
 
 		defaultFactory = new CProcessorFactory("DefaultFactory",
-				new ACLMessage(ACLMessage.UNKNOWN), 1,this);
+				new MessageFilter("performative = UNKNWON"), 1,this);
 
 		// BEGIN STATE
 
@@ -220,7 +220,7 @@ public abstract class CAgent extends BaseAgent {
 
 	private void createWelcomeFactory(final CAgent me) {
 		welcomeFactory = new CProcessorFactory("WelcomeFactory",
-				new ACLMessage(ACLMessage.UNKNOWN), 1, this);
+				new MessageFilter("performative = UNKNOWN"), 1, this);
 
 		// BEGIN STATE
 

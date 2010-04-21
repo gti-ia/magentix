@@ -20,6 +20,7 @@ import es.upv.dsic.gti_ia.core.MessageFilter;
 public abstract class FIPA_REQUEST_Participant {
 
 	protected void doBegin(CProcessor myProcessor, ACLMessage msg) {
+		System.out.println("Participant Begin");
 		myProcessor.getInternalData().put("InitialMessage", msg);
 	}
 
@@ -30,27 +31,19 @@ public abstract class FIPA_REQUEST_Participant {
 		};
 	}
 
-	protected void doFirstWait(CProcessor myProcessor, ACLMessage msg) {
-	}
-
-	class FIRST_WAIT_Method implements ReceiveStateMethod {
-		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
-			doFirstWait(myProcessor, messageReceived);
-			return "FIRST_WAIT";
-		}
-	}
-
 	protected abstract String doReceiveRequest(CProcessor myProcessor,
 			ACLMessage request);
 
 	class RECEIVE_REQUEST_Method implements ReceiveStateMethod {
 		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
+			System.out.println("Participant receive request");
 			return doReceiveRequest(myProcessor, messageReceived);
 		}
 	}
 
 	protected void doNotUnderstood(CProcessor myProcessor,
 			ACLMessage messageToSend) {
+		System.out.println("Participant not understood");
 		messageToSend.setProtocol("fipa-request");
 		messageToSend.setPerformative(ACLMessage.NOT_UNDERSTOOD);
 		messageToSend.setSender(myProcessor.getMyAgent().getAid());
@@ -66,6 +59,7 @@ public abstract class FIPA_REQUEST_Participant {
 	
 	protected void doRefuse(CProcessor myProcessor,
 			ACLMessage messageToSend) {
+		System.out.println("Participant refuse");
 		messageToSend.setProtocol("fipa-request");
 		messageToSend.setPerformative(ACLMessage.REFUSE);
 		messageToSend.setSender(myProcessor.getMyAgent().getAid());
