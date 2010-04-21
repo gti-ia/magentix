@@ -426,7 +426,7 @@ public class BridgeAgentOutIn extends BaseAgent {
 				}
 				
 				msg.getReceiver().protocol = "qpid";
-				System.out.println("Voy a enviar a "+ msg.getReceiver().name + " el mensaje es: "+ msg.getContent());
+				
 				send(msg);
 				
 				}
