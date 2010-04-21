@@ -64,6 +64,10 @@ public class MessageFilter implements Cloneable{
 	public boolean compareHeaders(ACLMessage msg) {
 		return this.evaluateTree(root, msg);
 	}
+	
+	public String getExpression(){
+		return expr;
+	}
 
 	private boolean correctExpression(String expr) {
 		Matcher matcher = pattern.matcher(expr);
