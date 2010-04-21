@@ -8,6 +8,11 @@
 package es.upv.dsic.gti_ia.architecture;
 
 import java.util.ArrayList;
+
+import java.util.LinkedList;
+import java.util.Queue;
+
+
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.BaseAgent;
@@ -25,7 +30,10 @@ public class QueueAgent extends BaseAgent {
 
 	
 
-	private ArrayList<ACLMessage> messageList = new ArrayList<ACLMessage>();
+	//private ArrayList<ACLMessage> messageList = new ArrayList<ACLMessage>();
+
+	private Queue<ACLMessage> messageList = new LinkedList<ACLMessage>();;//new Queue<ACLMessage>();
+	
 
 	private Monitor monitor = null;
 
@@ -53,17 +61,30 @@ public class QueueAgent extends BaseAgent {
 	 * @param msg ACLMessage
 	 */
 	protected void onMessage(ACLMessage msg) {
-
+		
+		
+		System.out.println("Entra el mensaje: "+ msg.getContent());
 		this.writeQueue(msg);
 		
 		// responsible for waking the class agent, may be the responder role or the role iniciator
 		if (monitor != null)
+		{
+			
 			this.monitor.advise();
+		}
 
 	}
 
 	private synchronized void writeQueue(ACLMessage msg) {
+	
+		try{
 		messageList.add(msg);
+		}catch(Exception e)
+		{
+			System.out.println("e: "+e);
+		}
+		//Collections.synchronizedCollection(messageList);
+		
 	}
 
 	/**
@@ -79,7 +100,10 @@ public class QueueAgent extends BaseAgent {
 		if (template.getProtocol() == "")
 			throw new Exception("The protocol field is empty");
 
-		for (ACLMessage msg : messageList) {
+		for (int i=0;i<messageList.size();i++)
+		{
+			
+			ACLMessage msg = messageList.peek();
 			// comparamos los campos protocol y conversaci�nID (para
 			// asegurarnos
 			// que no es una conversacion existente)00
@@ -107,9 +131,25 @@ public class QueueAgent extends BaseAgent {
 	 */
 	synchronized ACLMessage receiveACLMessage(MessageTemplate template, int type) {
 		ACLMessage msgselect = null;
-
+		//Queue<ACLMessage> cola_Aux = messageList;
+		
+		if (messageList != null)
+		{
 		if (type == 1) {
-			for (ACLMessage msg : messageList) {
+			
+			
+			//Iterator<ACLMessage> i  =  messageList.iterator();
+			
+			//while(i.hasNext())
+			//{
+				//ACLMessage msg = (ACLMessage) i.next();
+			    
+			
+			for (int i=0;i<messageList.size();i++)
+			{
+				
+				ACLMessage msg = messageList.peek();
+			//for (ACLMessage msg : messageList) {
 				// comparamos los campos protocol y conversaci�nID (para
 				// asegurarnos
 				// que no es una conversacion existente)00
@@ -123,6 +163,7 @@ public class QueueAgent extends BaseAgent {
 						// si existe, entonces debera trartalo el rol de
 						// iniciador
 						if (conv.equals(msg.getConversationId())) {
+							
 							msgselect = null;
 							break;
 						}
@@ -131,7 +172,13 @@ public class QueueAgent extends BaseAgent {
 
 			}
 		} else {
-			for (ACLMessage msg : messageList) {
+			
+			for (int i=0;i<messageList.size();i++)
+			{
+				
+				ACLMessage msg = messageList.peek();
+				
+			//for (ACLMessage msg : messageList) {
 				//caso especial por si es un cancel
 			if (template.getPerformativeInt() != ACLMessage.CANCEL ||  template.getPerformative().equals(msg.getPerformative()))
 			{
@@ -143,6 +190,7 @@ public class QueueAgent extends BaseAgent {
 						if (conversacion.equals(msg.getConversationId())) {
 							// miramos si pertenece algun agente
 							//if (template.existReceiver(msg.getSender())) {
+							
 								msgselect = msg;
 								break;
 							//}
@@ -151,10 +199,13 @@ public class QueueAgent extends BaseAgent {
 				if (msgselect != null)
 					break;
 			}
-			}
+			}//for
 		}
 		if (msgselect != null) {
 			messageList.remove(msgselect);
+		}
+		if (msgselect != null)
+			System.out.println("EL mensaje que sale en la cola es: "+ msgselect.getContent());
 		}
 		return msgselect;
 	}
