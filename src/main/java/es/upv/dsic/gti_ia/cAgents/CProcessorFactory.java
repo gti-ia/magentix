@@ -20,6 +20,7 @@ public class CProcessorFactory {
 	private CAgent myAgent;
 	Semaphore availableConversations; // PENDIENTE buscar otra soluci�n
 	int limit;
+	private boolean initiator = false;
 
 	// private ArrayList<String> children; // ??? Necesario?
 
@@ -62,6 +63,7 @@ public class CProcessorFactory {
 		cloneProcessor.setFactory(this);
 		cloneProcessor.setParent(parent);
 		cloneProcessor.setIsSynchronized(isSync);
+		cloneProcessor.setInitiator(this.initiator);
 		// setParentChildren(cloneProcessor); // ???
 
 		myAgent.addProcessor(msg.getConversationId(), cloneProcessor);
@@ -88,7 +90,16 @@ public class CProcessorFactory {
 	// Hacer una comparaci�n de mensaje con template completa.
 	// Probablemente mejor en ACLMessage
 
-	boolean templateIsEqual(ACLMessage template) {
+	protected boolean templateIsEqual(ACLMessage template) {
 		return this.filter.compareHeaders(template);
 	}
+	
+	protected void setInitiator(boolean initiator){
+		this.initiator = initiator;
+	}
+	
+	protected boolean isInitiator(){
+		return initiator;
+	}
+	
 }

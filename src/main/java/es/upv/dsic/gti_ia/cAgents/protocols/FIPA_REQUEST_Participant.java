@@ -18,9 +18,8 @@ import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.MessageFilter;
 
 public abstract class FIPA_REQUEST_Participant {
-
+	
 	protected void doBegin(CProcessor myProcessor, ACLMessage msg) {
-		System.out.println("Participant Begin");
 		myProcessor.getInternalData().put("InitialMessage", msg);
 	}
 
@@ -36,14 +35,12 @@ public abstract class FIPA_REQUEST_Participant {
 
 	class RECEIVE_REQUEST_Method implements ReceiveStateMethod {
 		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
-			System.out.println("Participant receive request");
 			return doReceiveRequest(myProcessor, messageReceived);
 		}
 	}
 
 	protected void doNotUnderstood(CProcessor myProcessor,
 			ACLMessage messageToSend) {
-		System.out.println("Participant not understood");
 		messageToSend.setProtocol("fipa-request");
 		messageToSend.setPerformative(ACLMessage.NOT_UNDERSTOOD);
 		messageToSend.setSender(myProcessor.getMyAgent().getAid());
@@ -59,7 +56,6 @@ public abstract class FIPA_REQUEST_Participant {
 	
 	protected void doRefuse(CProcessor myProcessor,
 			ACLMessage messageToSend) {
-		System.out.println("Participant refuse");
 		messageToSend.setProtocol("fipa-request");
 		messageToSend.setPerformative(ACLMessage.REFUSE);
 		messageToSend.setSender(myProcessor.getMyAgent().getAid());
@@ -135,18 +131,19 @@ public abstract class FIPA_REQUEST_Participant {
 		}
 	}
 
-	public CProcessorFactory newFactory(String name, ACLMessage template,
+	public CProcessorFactory newFactory(String name, MessageFilter filter,
 			int availableConversations, CAgent myAgent) {
 
-		MessageFilter filter;
+		//MessageFilter filter;
+		ACLMessage template;
 		// Create factory
 
-		if (template == null) {
-			template = new ACLMessage();
+		if (filter == null) {
+			filter = new MessageFilter("performative = REQUEST");//falta AND protocol = fipa-request
 		}
-		template.setProtocol("REQUEST");
-		template.setPerformative(ACLMessage.REQUEST);
-		CProcessorFactory theFactory = new CProcessorFactory(name, template,
+		//template.setProtocol("REQUEST");
+		//template.setPerformative(ACLMessage.REQUEST);
+		CProcessorFactory theFactory = new CProcessorFactory(name, filter,
 				availableConversations, myAgent);
 
 		// Processor template setup

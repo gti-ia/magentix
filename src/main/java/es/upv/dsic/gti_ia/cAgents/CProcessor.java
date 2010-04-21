@@ -52,6 +52,7 @@ public class CProcessor implements Runnable, Cloneable {
 	private String previousState;
 	private ACLMessage lastSendedMessage;
 	private CProcessorFactory myFactory;
+	private boolean initiator;
 
 	Logger logger = Logger.getLogger(CProcessor.class);
 
@@ -206,7 +207,12 @@ public class CProcessor implements Runnable, Cloneable {
 						+ this.conversationID + " " + currentState + "]");
 				switch (currentStateType) {
 				case State.BEGIN:
-					ACLMessage aux = messageQueue.remove();
+					//ACLMessage aux = messageQueue.remove(); //!!!!!Cuidado, he cambiado por peek -> Ricard!!!!
+					ACLMessage aux;
+					if(this.isInitiator())
+						aux = messageQueue.remove();
+					else
+						aux = messageQueue.peek();
 					this.unlockMyAgent();
 					currentState = this.beginState().getMethod().run(this, aux);
 					this.lockMyAgent();
@@ -267,6 +273,7 @@ public class CProcessor implements Runnable, Cloneable {
 							currentState = "TERMINATED_FATHER_STATE";
 
 						} else { // there is no exception message in the queue
+							
 							Set<String> receiveStates;
 							receiveStates = transitiontable
 									.getTransitions(currentState);
@@ -286,7 +293,6 @@ public class CProcessor implements Runnable, Cloneable {
 
 									MessageFilter filter = receiveState
 											.getAcceptFilter();
-
 									if (filter == null || filter.compareHeaders(retrievedMessage)) {
 										currentState = stateName;
 										currentMessage = retrievedMessage;
@@ -300,7 +306,7 @@ public class CProcessor implements Runnable, Cloneable {
 								System.out
 										.println("Performativa "
 												+ retrievedMessage
-														.getPerformativeInt());
+														.getPerformativeInt()+ "Contenido "+retrievedMessage.getContent());
 								Iterator<String> itr = retrievedMessage
 										.getHeaders().keySet().iterator();
 								String key1;
@@ -563,5 +569,13 @@ public class CProcessor implements Runnable, Cloneable {
 
 	void setParent(CProcessor parent) {
 		this.parent = parent;
+	}
+	
+	protected void setInitiator(boolean initiator){
+		this.initiator = initiator;
+	}
+	
+	protected boolean isInitiator(){
+		return this.initiator;
 	}
 }

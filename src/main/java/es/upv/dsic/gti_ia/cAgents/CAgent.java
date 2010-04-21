@@ -118,12 +118,14 @@ public abstract class CAgent extends BaseAgent {
 
 	public void addFactoryAsInitiator(CProcessorFactory factory) {
 		this.lock();
+		factory.setInitiator(true);
 		initiatorFactories.add(factory);
 		this.unlock();
 	}
 
 	public void addFactoryAsParticipant(CProcessorFactory factory) {
 		this.lock();
+		factory.setInitiator(false);
 		participantFactories.add(factory);
 		this.unlock();
 	}
@@ -218,7 +220,9 @@ public abstract class CAgent extends BaseAgent {
 
 	}
 
-	private void createWelcomeFactory(final CAgent me) {
+	private void createWelcomeFactory(final CAgent me) { /* Cambio factoria welcome
+	para que sea coherente con el hecho de que se hace peek de los mensajes en los
+	estados begin y no remove*/
 		welcomeFactory = new CProcessorFactory("WelcomeFactory",
 				new MessageFilter("performative = UNKNOWN"), 1, this);
 
@@ -229,7 +233,7 @@ public abstract class CAgent extends BaseAgent {
 		class BEGIN_Method implements BeginStateMethod {
 
 			public String run(CProcessor myProcessor, ACLMessage msg) {
-				me.Initialize(myProcessor, msg);
+				//me.Initialize(myProcessor, msg);
 				return "WAIT";
 			};
 		}
@@ -240,6 +244,30 @@ public abstract class CAgent extends BaseAgent {
 		WaitState WAIT = new WaitState("WAIT", 0);
 		welcomeFactory.cProcessorTemplate().registerState(WAIT);
 		welcomeFactory.cProcessorTemplate().addTransition("BEGIN", "WAIT");
+		
+		// RECEIVE WELCOME STATE
+
+		ReceiveState RECEIVE_WELCOME = new ReceiveState("RECEIVE_WELCOME");
+		class RECEIVE_WELCOME_Method implements ReceiveStateMethod {
+			public String run(CProcessor myProcessor, ACLMessage receivedMessage) {
+				//myProcessor.getInternalData().put("AGENT_END_MSG",
+					//	receivedMessage);
+				me.Initialize(myProcessor, receivedMessage);
+				return "WAIT2";
+			}
+		}
+		RECEIVE_WELCOME.setMethod(new RECEIVE_WELCOME_Method());
+		MessageFilter filter = new MessageFilter("performative = INFORM");
+		RECEIVE_WELCOME.setAcceptFilter(filter);
+		welcomeFactory.cProcessorTemplate().registerState(RECEIVE_WELCOME);
+		welcomeFactory.cProcessorTemplate().addTransition("WAIT", "RECEIVE_WELCOME");
+		
+		// WAIT STATE 2
+
+		WaitState WAIT2 = new WaitState("WAIT2", 0);
+		welcomeFactory.cProcessorTemplate().registerState(WAIT2);
+		welcomeFactory.cProcessorTemplate().addTransition("RECEIVE_WELCOME", "WAIT2");
+		
 
 		// RECEIVE STATE
 
@@ -252,10 +280,10 @@ public abstract class CAgent extends BaseAgent {
 			}
 		}
 		RECEIVE.setMethod(new RECEIVE_Method());
-		MessageFilter msg = new MessageFilter("performative = UNKNOWN AND PURPOSE = AGENT_END");
-		RECEIVE.setAcceptFilter(msg);
+		MessageFilter filter2 = new MessageFilter("performative = UNKNOWN AND PURPOSE = AGENT_END");
+		RECEIVE.setAcceptFilter(filter2);
 		welcomeFactory.cProcessorTemplate().registerState(RECEIVE);
-		welcomeFactory.cProcessorTemplate().addTransition("WAIT", "RECEIVE");
+		welcomeFactory.cProcessorTemplate().addTransition("WAIT2", "RECEIVE");
 
 		// FINAL STATE
 
