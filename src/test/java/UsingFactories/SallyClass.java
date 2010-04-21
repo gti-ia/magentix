@@ -18,70 +18,69 @@ class SallyClass extends CAgent {
 		System.out.println(myProcessor.getMyAgent().getName()
 				+ ": the welcome message is " + welcomeMessage.getContent());
 
-		// Cada conversación del agente es llevada a cabo por un CProcessor y
+		// Cada conversaciï¿½n del agente es llevada a cabo por un CProcessor y
 		// los CProcessors son creados por las CProcessorFactories, en respuesta
-		// a mensajes que inician la actividad del agente en una conversación.
+		// a mensajes que inician la actividad del agente en una conversaciï¿½n.
 
 		// Una forma sencilla de crear una CProcessorFactory a partir de las
-		// fábricas
+		// fï¿½bricas
 		// predeterminadas del paquete es.upv.dsic.gti_ia.cAgents.protocols.
 		// Otra alternativa, no mostrada en este ejemplo, consiste en que el
 		// agente
-		// diseñe su propia fábrica y, por tanto, un nuevo protocolo de
-		// interacción.
+		// diseï¿½e su propia fï¿½brica y, por tanto, un nuevo protocolo de
+		// interacciï¿½n.
 
 		// En este ejemplo el agente va a actuar como participante en el
 		// protocolo
 		// REQUEST definido por FIPA.
 		// Para ello extiende la clase FIPA_REQUEST_Participant implementando el
-		// método que recibe la petición (DO_Request) y el método que genera la
+		// mï¿½todo que recibe la peticiï¿½n (DO_Request) y el mï¿½todo que genera la
 		// respuesta
 		// (DO_Inform)
 
 		class myFIPA_REQUEST extends FIPA_REQUEST_Participant {
 
-			protected String Do_Request(CProcessor myProcessor, ACLMessage msg) {
-				System.out.println(myProcessor.getMyAgent().getName() + ": "
-						+ msg.getSender().name + " request me "
-						+ msg.getContent());
-				try {
-					Thread.sleep(3000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+			@Override
+			protected String doAction(CProcessor myProcessor) {
+				System.out.println("Nada que hacer en la acciÃ³n, solo retornar el siguiente estado");
 				return "INFORM";
 			}
 
-			protected void Do_Inform(CProcessor myProcessor, ACLMessage msg) {
-				msg.setContent("Maybe someday");
+			@Override
+			protected void doInform(CProcessor myProcessor, ACLMessage response) {
+				response.setContent("Maybe someday");
 				System.out.println(myProcessor.getMyAgent().getName()
 						+ ": I send the answer to " + myProcessor.getLastReceivedMessage().getSender().name);
-				// La plataforma enviará el mensaje msg tras
-				// completar de forma automática las cabeceras necesarias:
-				// performative, protocol, sender, receiver, conversation_id,
-				// ...
+				
+			}
+
+			@Override
+			protected String doReceiveRequest(CProcessor myProcessor,
+					ACLMessage request) {
+				System.out.println("Siempre aceptamos peticiones");
+				return "AGREE";
 			}
 		}
 
-		// El agente crea la CProcessorFactory que atenderá los mensajes
+		// El agente crea la CProcessorFactory que atenderï¿½ los mensajes
 		// entrantes
 		// cuyo protocol sea REQUEST y su performativa REQUEST. En este ejemplo
 		// la
-		// cProcessorFactory recibe el nombre "TALK", no se le incorpora ningún
+		// cProcessorFactory recibe el nombre "TALK", no se le incorpora ningï¿½n
 		// criterio
-		// de aceptación adicional al requerido por el protocolo REQUEST (null)
+		// de aceptaciï¿½n adicional al requerido por el protocolo REQUEST (null)
 		// y
-		// se limita el número de procesadores simultáneos a 1, es decir, las
+		// se limita el nï¿½mero de procesadores simultï¿½neos a 1, es decir, las
 		// peticiones
-		// se atenderán una por una.
+		// se atenderï¿½n una por una.
 
 		CProcessorFactory talk = new myFIPA_REQUEST().newFactory("TALK", null,
 				0, myProcessor.getMyAgent());
 
-		// Por último la fábrica se configura para responder ante mensajes
+		// Por ï¿½ltimo la fï¿½brica se configura para responder ante mensajes
 		// entrantes
-		// que puedan hacer que comience la participación del agente en una
-		// conversación
+		// que puedan hacer que comience la participaciï¿½n del agente en una
+		// conversaciï¿½n
 
 		this.addFactoryAsParticipant(talk);
 	}
