@@ -63,7 +63,7 @@ public class QueueAgent extends BaseAgent {
 	protected void onMessage(ACLMessage msg) {
 		
 		
-		System.out.println("Entra el mensaje: "+ msg.getContent());
+	
 		this.writeQueue(msg);
 		
 		// responsible for waking the class agent, may be the responder role or the role iniciator
@@ -204,8 +204,7 @@ public class QueueAgent extends BaseAgent {
 		if (msgselect != null) {
 			messageList.remove(msgselect);
 		}
-		if (msgselect != null)
-			System.out.println("EL mensaje que sale en la cola es: "+ msgselect.getContent());
+
 		}
 		return msgselect;
 	}
