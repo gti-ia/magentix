@@ -12,42 +12,36 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
-
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.BaseAgent;
 
 /**
  * 
- * This class defines an new agents template, extending of BaseAgent.
- * This type of agent's implements the protocols.
+ * This class defines an new agents template, extending of BaseAgent. This type
+ * of agent's implements the protocols.
  * 
- * @author Joan Bellver Faus 
+ * @author Joan Bellver Faus
  * 
  */
 
 public class QueueAgent extends BaseAgent {
 
-	
-
-	//private ArrayList<ACLMessage> messageList = new ArrayList<ACLMessage>();
-
-	private Queue<ACLMessage> messageList = new LinkedList<ACLMessage>();;//new Queue<ACLMessage>();
-	
+	private Queue<ACLMessage> messageList = new LinkedList<ACLMessage>();
 
 	private Monitor monitor = null;
 
-	
 	private ArrayList<String> activeConversationsList = new ArrayList<String>();
 
 	private ArrayList<Object> roles = new ArrayList<Object>();
 
 	/**
-	 * Create a new QueueAgent.  
+	 * Create a new QueueAgent.
 	 * 
 	 * @param aid
 	 *            agent ID.
-	 * @throws Exception if agent id already exists on the platform
+	 * @throws Exception
+	 *             if agent id already exists on the platform
 	 */
 
 	public QueueAgent(AgentID aid) throws Exception {
@@ -58,51 +52,50 @@ public class QueueAgent extends BaseAgent {
 	/**
 	 * Function that will be executed when the agent gets a message
 	 * 
-	 * @param msg ACLMessage
+	 * @param msg
+	 *            ACLMessage
 	 */
 	protected void onMessage(ACLMessage msg) {
-		
-		
-	
+
 		this.writeQueue(msg);
-		
-		// responsible for waking the class agent, may be the responder role or the role iniciator
-		if (monitor != null)
-		{
-			
+
+		// responsible for waking the class agent, may be the responder role or
+		// the role iniciator
+		if (monitor != null) {
+
 			this.monitor.advise();
 		}
 
 	}
 
 	private synchronized void writeQueue(ACLMessage msg) {
-	
-		try{
-		messageList.add(msg);
-		}catch(Exception e)
-		{
-			System.out.println("e: "+e);
+
+		try {
+			messageList.add(msg);
+		} catch (Exception e) {
+			System.out.println("e: " + e);
 		}
-		//Collections.synchronizedCollection(messageList);
-		
+		// Collections.synchronizedCollection(messageList);
+
 	}
 
 	/**
 	 * Method to receive a magentix2 AclMessage
 	 * 
-	 * @param template is a MessageTemplate, will serve as a filter for receiving the right message
+	 * @param template
+	 *            is a MessageTemplate, will serve as a filter for receiving the
+	 *            right message
 	 * @return msg ACLMessage
 	 */
-	public synchronized ACLMessage receiveACLMessage(
-			MessageTemplate template) throws Exception {
+	public synchronized ACLMessage receiveACLMessage(MessageTemplate template)
+			throws Exception {
 		ACLMessage msgselect = null;
 
 		if (template.getProtocol() == "")
 			throw new Exception("The protocol field is empty");
 
-		for (int i=0;i<messageList.size();i++)
-		{
-			
+		for (int i = 0; i < messageList.size(); i++) {
+
 			ACLMessage msg = messageList.peek();
 			// comparamos los campos protocol y conversaci�nID (para
 			// asegurarnos
@@ -124,86 +117,84 @@ public class QueueAgent extends BaseAgent {
 	/**
 	 * Method to receive a magentix2 AclMessage
 	 * 
-	 * @param template is a MessageTemplate
+	 * @param template
+	 *            is a MessageTemplate
 	 * @param type
 	 *            1 = rol responder other = rol initiator
 	 * @return msg ACLMessage
 	 */
 	synchronized ACLMessage receiveACLMessage(MessageTemplate template, int type) {
 		ACLMessage msgselect = null;
-		//Queue<ACLMessage> cola_Aux = messageList;
-		
-		if (messageList != null)
-		{
-		if (type == 1) {
-			
-			
-			//Iterator<ACLMessage> i  =  messageList.iterator();
-			
-			//while(i.hasNext())
-			//{
-				//ACLMessage msg = (ACLMessage) i.next();
-			    
-			
-			for (int i=0;i<messageList.size();i++)
-			{
-				
-				ACLMessage msg = messageList.peek();
-			//for (ACLMessage msg : messageList) {
-				// comparamos los campos protocol y conversaci�nID (para
-				// asegurarnos
-				// que no es una conversacion existente)00
-				if (template.getPerformativeInt() != -2 && template.getPerformative().equals(msg.getPerformative()) || !template.getProtocol().equals("") && template.getProtocol().equals(msg.getProtocol()))
-				{
-					// comprobar que sea una conversacion nueva, que no este en
-					// la
-					// lista de conversaciones activas
-					msgselect = msg;
-					for (String conv : this.activeConversationsList) {
-						// si existe, entonces debera trartalo el rol de
-						// iniciador
-						if (conv.equals(msg.getConversationId())) {
-							
-							msgselect = null;
-							break;
+		// Queue<ACLMessage> cola_Aux = messageList;
+
+		if (messageList != null) {
+			if (type == 1) {
+
+				for (int i = 0; i < messageList.size(); i++) {
+
+					ACLMessage msg = messageList.peek();
+
+					// comparamos los campos protocol y conversaci�nID (para
+					// asegurarnos
+					// que no es una conversacion existente)00
+					if (template.getPerformativeInt() != -2
+							&& template.getPerformative().equals(
+									msg.getPerformative())
+							|| !template.getProtocol().equals("")
+							&& template.getProtocol().equals(msg.getProtocol())) {
+						// comprobar que sea una conversacion nueva, que no este
+						// en
+						// la
+						// lista de conversaciones activas
+						msgselect = msg;
+						for (String conv : this.activeConversationsList) {
+							// si existe, entonces debera trartalo el rol de
+							// iniciador
+							if (conv.equals(msg.getConversationId())) {
+
+								msgselect = null;
+								break;
+							}
 						}
 					}
-				}
 
-			}
-		} else {
-			
-			for (int i=0;i<messageList.size();i++)
-			{
-				
-				ACLMessage msg = messageList.peek();
-				
-			//for (ACLMessage msg : messageList) {
-				//caso especial por si es un cancel
-			if (template.getPerformativeInt() != ACLMessage.CANCEL ||  template.getPerformative().equals(msg.getPerformative()))
-			{
-					// comparamos los campos protocol, idcoversaci�n y sender
-				if (template.getProtocol().equals(msg.getProtocol()))
-				{
-					// miramos dentro de las conversaciones que tenemos
-					for (String conversacion : template.getList_Conversation())
-						if (conversacion.equals(msg.getConversationId())) {
-							// miramos si pertenece algun agente
-							//if (template.existReceiver(msg.getSender())) {
-							
-								msgselect = msg;
-								break;
-							//}
-						}
 				}
-				if (msgselect != null)
-					break;
+			} else {
+
+				for (int i = 0; i < messageList.size(); i++) {
+
+					ACLMessage msg = messageList.peek();
+
+					// caso especial por si es un cancel
+					if (template.getPerformativeInt() != ACLMessage.CANCEL
+							|| template.getPerformative().equals(
+									msg.getPerformative())) {
+						// comparamos los campos protocol, idcoversaci�n y
+						// sender
+						if (template.getProtocol().equals(msg.getProtocol())) {
+							// miramos dentro de las conversaciones que tenemos
+							for (String conversacion : template
+									.getList_Conversation())
+								if (conversacion
+										.equals(msg.getConversationId())) {
+									// miramos si pertenece algun agente
+									// if
+									// (template.existReceiver(msg.getSender()))
+									// {
+
+									msgselect = msg;
+									break;
+									// }
+								}
+						}
+						if (msgselect != null)
+							break;
+					}
+				}// for
 			}
-			}//for
-		}
-		if (msgselect != null) {
-			messageList.remove(msgselect);
-		}
+			if (msgselect != null) {
+				messageList.remove(msgselect);
+			}
 
 		}
 		return msgselect;
@@ -211,11 +202,12 @@ public class QueueAgent extends BaseAgent {
 
 	/**
 	 * Return name of agent.
+	 * 
 	 * @return String name
 	 */
-	//public String getAllName() {
-	//	return this.getAid().toString();
-	//}
+	// public String getAllName() {
+	// return this.getAid().toString();
+	// }
 
 	/**
 	 * 
@@ -331,7 +323,7 @@ public class QueueAgent extends BaseAgent {
 							+ ((FIPARequestInitiator) obj).getState());
 
 				} else if (patron.equals("FIPARequestResponder")) {
-					
+
 					((FIPARequestResponder) obj).finish();
 					logger
 							.info("Finish with role Responder, protocol:Request, state:  "
@@ -359,7 +351,7 @@ public class QueueAgent extends BaseAgent {
 					logger
 							.info("Finish with role Responder, protocol:Contract-Net state:  "
 									+ ((FIPAContractNetResponder) obj)
-											.getState());	
+											.getState());
 				}
 			}
 		}
@@ -372,8 +364,9 @@ public class QueueAgent extends BaseAgent {
 	 * Adds a new task (FIPA protocol) to the agent,was creating a new thread
 	 * 
 	 * @param obj
-	 *            object of type FIPA protocol. ej: FIPARequestInitiator, FIPARequestResponder, 
-	 *            FIPAQueryResponder, FIPAQueryInitiator, FIPAContractNetResponder, FIPAContractNetInitiator.
+	 *            object of type FIPA protocol. ej: FIPARequestInitiator,
+	 *            FIPARequestResponder, FIPAQueryResponder, FIPAQueryInitiator,
+	 *            FIPAContractNetResponder, FIPAContractNetInitiator.
 	 */
 	public void addTask(Object obj) {
 
@@ -388,8 +381,6 @@ public class QueueAgent extends BaseAgent {
 
 			ThreadInitiator h = new ThreadInitiator(obj, 1);
 			h.start();
-			
-			
 
 		} else if (patron.equals("FIPARequestResponder")) {
 
@@ -416,7 +407,6 @@ public class QueueAgent extends BaseAgent {
 		}
 
 	}
-
 
 	private class ThreadInitiator extends Thread {
 
@@ -474,9 +464,9 @@ public class QueueAgent extends BaseAgent {
 			case 2: {
 				do {
 					((FIPAQueryResponder) responder).action();
-				} while (((FIPAQueryResponder)responder).getState() != -1);
+				} while (((FIPAQueryResponder) responder).getState() != -1);
 				break;
-				
+
 			}
 			case 3: {
 				do {
@@ -487,6 +477,5 @@ public class QueueAgent extends BaseAgent {
 			}
 		}
 	}
-
 
 }
