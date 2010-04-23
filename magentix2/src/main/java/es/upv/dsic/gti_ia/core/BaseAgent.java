@@ -53,9 +53,7 @@ public class BaseAgent implements Runnable {
 	 * @uml.property name="myThread"
 	 */
 	private Thread myThread;
-	
-	//protected Session traceSession;
-	
+		
 
 	private class Listener implements SessionListener {
 		public void opened(Session ssn) {
@@ -86,7 +84,9 @@ public class BaseAgent implements Runnable {
 		}
 
 		public void message(Session ssn, MessageTransfer xfr) {
+			/// 1
 			TraceEvent tEvent = MessageTransfertoTraceEvent(xfr);
+			//// 2
 			onTraceEvent(tEvent);
 		}
 
@@ -137,8 +137,10 @@ public class BaseAgent implements Runnable {
 
 		this.session = createSession();
 		this.traceSession = createTraceSession();
+		
 		if (this.existAgent(aid)) {
 			session.close();
+			traceSession.close();
 			throw new Exception("Agent ID already exists on the platform");
 		} else {
 			this.aid = aid;
@@ -189,13 +191,13 @@ public class BaseAgent implements Runnable {
 	private void createSubscription() {
 		this.session.setSessionListener(this.listener);
 
-		this.session.messageSubscribe(aid.name, "destination",
+		this.session.messageSubscribe(aid.name, "listener_destination",
 				MessageAcceptMode.NONE, MessageAcquireMode.PRE_ACQUIRED, null,
 				0, null);
 
-		this.session.messageFlow("destination",
+		this.session.messageFlow("listener_destination",
 				MessageCreditUnit.BYTE, Session.UNLIMITED_CREDIT);
-		this.session.messageFlow("destination",
+		this.session.messageFlow("listener_destination",
 				MessageCreditUnit.MESSAGE, Session.UNLIMITED_CREDIT);
 	}
 
@@ -260,7 +262,7 @@ public class BaseAgent implements Runnable {
 			session.messageTransfer(xfr.getDestination(), xfr.getAcceptMode(),
 					xfr.getAcquireMode(), xfr.getHeader(), xfr.getBodyString());
 			
-			sendTraceEvent(new TraceEvent("MESSAGE_SENT", this.aid, xfr.getBodyString()));
+			//sendTraceEvent(new TraceEvent("MESSAGE_SENT", this.aid, xfr.getBodyString()));
 		}
 		
 	}
@@ -290,9 +292,9 @@ public class BaseAgent implements Runnable {
 				
 		arguments.put("x-match", "all");
     	arguments.put("origin_entity", "system");
-    	//arguments.put("route", "direct");
     	arguments.put("receiver", aid.name);
-
+    	//arguments.put("route", "direct");
+    	
     	this.traceSession.exchangeBind(aid.name+".trace", "amq.match", aid.name + ".system.direct", arguments);
     	//this.session.exchangeBind(aid.name+".trace", "mgx.trace", aid.name + ".system.direct", arguments);
     	    	
@@ -324,6 +326,7 @@ public class BaseAgent implements Runnable {
 				MessageCreditUnit.BYTE, Session.UNLIMITED_CREDIT);
 		this.traceSession.messageFlow("listener_destination",
 				MessageCreditUnit.MESSAGE, Session.UNLIMITED_CREDIT);
+		this.traceSession.sync();
 	}
 	
 	/**
@@ -392,20 +395,23 @@ public class BaseAgent implements Runnable {
 		xfr.acquireMode(MessageAcquireMode.PRE_ACQUIRED);
 		
 		DeliveryProperties deliveryProps = new DeliveryProperties();
-
-		// Serialize message content
-		String body;
-		// Timestamp
-		body = String.valueOf(tEvent.getTimestamp()) + "#";
-		// EventType
-		body = body + tEvent.getEventType().length() + "#"
-				+ tEvent.getEventType();
-		// OriginEntiy
-		body = body + tEvent.getOriginEntity().toString().length() + "#" + tEvent.getOriginEntity().toString();
-		// Content
-		body = body + tEvent.getContent().length() + "#" + tEvent.getContent();
 		
-		xfr.setBody(body);
+		// Serialize message content
+//		String body;
+//		// Timestamp
+//		body = String.valueOf(tEvent.getTimestamp()) + "#";
+//		// EventType
+//		body = body + tEvent.getEventType().length() + "#"
+//				+ tEvent.getEventType();
+//		// OriginEntiy
+//		body = body + tEvent.getOriginEntity().toString().length() + "#" + tEvent.getOriginEntity().toString();
+//		// Content
+//		body = body + tEvent.getContent().length() + "#" + tEvent.getContent();
+//		
+//		xfr.setBody(body);
+		xfr.setBody("Trace Event");
+		
+//		deliveryProps.setRoutingKey(msg.getReceiver(i).name);
 		
 		// set message headers
     	MessageProperties messageProperties = new MessageProperties();
@@ -415,9 +421,12 @@ public class BaseAgent implements Runnable {
     	messageHeaders.put("origin_entity", tEvent.getOriginEntity().name);
     	messageProperties.setApplicationHeaders(messageHeaders);
 		
-    	xfr.header(new Header(deliveryProps, messageProperties));
-		this.traceSession.messageTransfer(xfr.getDestination(), xfr.getAcceptMode(),
-				xfr.getAcquireMode(), xfr.getHeader(), xfr.getBodyString());
+    	Header header = new Header(deliveryProps, messageProperties);
+    	
+    	//xfr.header(new Header(deliveryProps, messageProperties));
+    	this.traceSession.messageTransfer("amq.match", MessageAcceptMode.EXPLICIT, MessageAcquireMode.PRE_ACQUIRED,
+                header, xfr.getBodyString());
+
 	}
 	
 	/**
@@ -477,6 +486,9 @@ public class BaseAgent implements Runnable {
 	protected void terminate() {
 		session.queueDelete(aid.name);
 		session.close();
+		
+		traceSession.queueDelete(aid.name + ".trace");
+		traceSession.close();
 
 	}
 
@@ -661,19 +673,28 @@ public class BaseAgent implements Runnable {
 		String aidString;
 		String body = xfr.getBodyString();
 
-		// System.out.println("BODY: " + body);
+		System.out.println("BODY: " + body);
 
 		TraceEvent tEvent = new TraceEvent();
 		
+		//System.out.println("Por ahora bien...");
+		
 		// Timestamp
 		indice2 = body.indexOf('#', indice1);
-		tam = Integer.parseInt(body.substring(indice1, indice2));
-		tEvent.setTimestamp(Long.parseLong(body.substring(indice2, indice2+1+tam)));
+		//System.out.println("Por ahora bien... " + indice1 + ", " + indice2);
 		
+		//System.out.println("Tam " + (indice2-indice1));
+		tam = indice2-indice1;
+				
+		//System.out.println("Timestamp " + body.substring(indice1, indice2));
+		tEvent.setTimestamp(Long.parseLong(body.substring(indice2, indice2)));
+				
 		// Event Type
-		indice1=indice2+1+tam;
+		//indice1=indice2+1+tam;
+		indice1=indice2+1;
 		indice2 = body.indexOf('#', indice1);
 		tam = Integer.parseInt(body.substring(indice1, indice2));
+		System.out.println("Tam " + (indice2-indice1));
 		tEvent.setEventType(body.substring(indice2 + 1, indice2 + 1 + tam));
 		
 		// Origin Entity
