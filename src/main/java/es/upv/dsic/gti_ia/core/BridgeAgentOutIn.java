@@ -63,8 +63,7 @@ public class BridgeAgentOutIn extends BaseAgent {
 			// recibir paquete, mostrar su contenido
 			try {
 
-				// establecer el paquete
-			
+							
 				
 				InputStream is;
 				
@@ -73,33 +72,79 @@ public class BridgeAgentOutIn extends BaseAgent {
 
 				logger.info("BridgeAgentOutIn waiting receive external FIPA-Messages");
 				 s = socket.accept(); //Socket Cliente
-				 
-				 
-				
-				 try {
-					Thread.sleep(10);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				 
-				 
-				 
-				
+
+					//	Monitor m = new Monitor();
+					//	m.waiting(10);
+	
 							
 				is = s.getInputStream();
 				OutputStream os = s.getOutputStream();
-
-				//System.out.println(is.toString());
+				
+		/*		 try {
+						Thread.sleep(100);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+		*/
+			
 
 				StringBuffer stb = new StringBuffer();
 				int i;
-				byte[] buffer = new byte[1000];
+				byte[] buffer = new byte[16384];
 
-				while ((is.available() > 0)
+			/*	while ((is.available() > 0)
 						&& (i = is.read(buffer)) != -1) {
 					stb.append(new String(buffer, 0, i));
 				}
+			*/	
+			
+			boolean condicion = false;
+			
+			
+			/*
+			 * Parche: HTTP 1.1 no cierra la conexión, por lo que no podemos leer hasta eof.
+			 * La solución adoptada es que al final de la lectura, si los bytes leidos son menores
+			 * que el tamaño del buffer y además al final se encuentra la cadena "\r\n\r\n" se asume
+			 * el final del mensaje.
+			 * 
+			 * 
+			 * 
+			 * No funcionaría este parche, si y solo si: 
+			 * 
+			 * - El tamaño del mensaje total coincide exactamente con el tamaño del buffer, pues no cortariamos
+			 * el mensaje.
+			 * 
+			 * - El tamaño leido es menor al del buffer y el final del paquete coincide con la cadena \r\n\r\n, pero
+			 * no es el final del mensaje sino un trozo del mensaje total.
+			 * 
+			 */	
+			
+			try{
+				while ((i = is.read(buffer)) != -1) 
+				{
+					stb.append(new String(buffer, 0, i));
+					
+					char[] temp = new char[4]; // Array temporal, en busca de final de mensaje.
+					stb.getChars(stb.length()-4, stb.length(), temp, 0);
+										
+					
+					if (temp[0] == '\r' && temp[1] == '\n' && temp[2] == '\r' && temp[3] == '\n')
+					{
+						condicion = true;
+					}
+					
+					if(i < buffer.length && condicion)
+					{
+						break;
+					}
+				
+				}
+			}catch(Exception e)
+			{
+				logger.error(e.getMessage() +" - "+e.getStackTrace());
+			}
+		
 				
 				String texto = new String(stb);
 
@@ -108,7 +153,7 @@ public class BridgeAgentOutIn extends BaseAgent {
 				httpToACL hilo = new httpToACL(stringToInputStream(texto));
 				
 				
-				String OK = "HTTP/1.0 200 OK\n";
+				String OK = "HTTP/1.0 200 OK\r\n\r\n";
 				byte a [] = OK.getBytes();
 				
 				os.write(a);
@@ -153,9 +198,7 @@ public class BridgeAgentOutIn extends BaseAgent {
 			// procesar los problemas que pueden ocurrir al manipular el paquete
 			catch (IOException excepcionES) {
 		
-				
-				
-		
+
 					if (excepcionES.getClass().toString().equals("class java.net.SocketException"))
 						System.out.println("BridgeAgentOutIn Socket Closed");
 					else
@@ -228,7 +271,7 @@ public class BridgeAgentOutIn extends BaseAgent {
 				cadena = dis.readLine();
 				// envelope
 				cadena = dis.readLine();
-				logger.debug(cadena);
+				//logger.debug(cadena);
 				// parseamos contenido XML
 				Xml envelope = new Xml(stringToInputStream(cadena), "envelope");
 
@@ -438,8 +481,6 @@ public class BridgeAgentOutIn extends BaseAgent {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			
-			
 		}
 	}
 
