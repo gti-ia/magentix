@@ -12,8 +12,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 
-import es.upv.dsic.gti_ia.architecture.Monitor;
-
 /**
  * This agent routes messages from inside the platform to outside the platform.
  * 
