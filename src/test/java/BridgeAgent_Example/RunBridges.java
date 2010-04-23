@@ -48,15 +48,15 @@ public class RunBridges {
 			/**
 			 * Instantiating a ConsumerAgent BaseAgent
 			 */
-		//	ConsumerAgent agente2 = new ConsumerAgent(new AgentID(
-		//			"consumer-agent", "qpid", "localhost", "8080"));
+			ConsumerAgent agente2 = new ConsumerAgent(new AgentID(
+					"consumer", "qpid", "localhost", "8080"));
 			/**
 			 * Execute the four agents
 			 */
 			agenteInOut.start();
 			agenteOutIn.start();
 
-		//	agente2.start();
+			agente2.start();
 		//	agente1.start();
 		} catch (Exception e) {
 			logger.error(e.getMessage());
