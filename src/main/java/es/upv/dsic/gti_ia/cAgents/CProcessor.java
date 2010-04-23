@@ -77,6 +77,12 @@ public class CProcessor implements Runnable, Cloneable {
 		this.transitiontable.addTransition(from, destination);
 		this.unlockMyAgent();
 	}
+	
+	public void addTransition(State from, State destination) {
+		this.lockMyAgent();
+		this.transitiontable.addTransition(from.getName(), destination.getName());
+		this.unlockMyAgent();
+	}
 
 	public void createAsyncConversation(ACLMessage initalMessage) {
 
