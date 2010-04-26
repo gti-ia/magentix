@@ -365,7 +365,7 @@ public abstract class FIPA_CONTRACTNET_Initiator {
 		FINAL.setMethod(new FINAL_Method());
 
 		processor.registerState(FINAL);
-		processor.addTransition(RECEIVE_INFORM, FINAL);
+		processor.addTransition(RECEIVE_INFORM, FINAL);			
 		processor.addTransition(RECEIVE_FAILURE, FINAL);
 				
 		// We add the internal data
