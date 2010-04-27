@@ -162,6 +162,10 @@ public abstract class FIPA_CONTRACTNET_Participant {
 																	// =
 																	// fipa-contract-net;
 		}
+		
+		if (template == null){
+			template = new ACLMessage(ACLMessage.PROPOSE);
+		}
 		CProcessorFactory theFactory = new CProcessorFactory(name, filter,
 				availableConversations, myAgent);
 
@@ -258,7 +262,7 @@ public abstract class FIPA_CONTRACTNET_Participant {
 		
 		// SEND_INFO State
 
-		SendState SEND_INFO = new SendState("SEND_INFO");
+		SendState SEND_INFO = new SendState("SEND_INFORM");
 
 		SEND_INFO.setMethod(new SEND_INFO_Method());
 		template.setProtocol("fipa-contract-net");

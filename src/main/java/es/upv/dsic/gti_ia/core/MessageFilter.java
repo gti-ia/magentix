@@ -18,8 +18,8 @@ public class MessageFilter implements Cloneable{
 	private static final long serialVersionUID = 1L;
 
 	private final Pattern pattern = Pattern
-			.compile("(\\s*(NOT\\s)*(\\s*\\(*)*[a-zA-Z0-9_]+\\s*(=|!=)\\s*[a-zA-Z0-9_]+((\\s*\\)\\s*)+|\\s+)(AND|OR))+\\s+[a-zA-Z0-9_]+\\s*(=|!=)\\s*[a-zA-Z0-9_]+(\\s*\\)*)*");
-	private final Pattern pattern2 = Pattern.compile("\\s*(NOT\\s)*[a-zA-Z0-9_]+\\s*(=|!=)\\s*[a-zA-Z0-9_]+\\s*");
+			.compile("(\\s*(NOT\\s)*(\\s*\\(*)*[a-zA-Z0-9_-]+\\s*(=|!=)\\s*[a-zA-Z0-9_-]+((\\s*\\)\\s*)+|\\s+)(AND|OR))+\\s+[a-zA-Z0-9_-]+\\s*(=|!=)\\s*[a-zA-Z0-9_-]+(\\s*\\)*)*");
+	private final Pattern pattern2 = Pattern.compile("\\s*(NOT\\s)*[a-zA-Z0-9_-]+\\s*(=|!=)\\s*[a-zA-Z0-9_-]+\\s*");
 
 	Logger logger = Logger.getLogger(CProcessor.class);
 	private String expr;

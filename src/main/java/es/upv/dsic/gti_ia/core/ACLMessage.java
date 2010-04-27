@@ -533,31 +533,52 @@ public class ACLMessage implements Serializable, Cloneable {
 		return m;
 	}
 
-	public void copyFromAsTemplate(ACLMessage msg) {
-
-		if (msg.getContent() != null) {
-			this.setContent(msg.getContent());
-		}
-		if (msg.getConversationId() != null) {
-			this.setConversationId(this.getConversationId());
-		}
-		if (msg.getOntology() != null) {
-			this.setOntology(msg.getOntology());
-		}
-		if (msg.getProtocol() != null) {
-			this.setProtocol(msg.getProtocol());
-		}
+	public void copyFromAsTemplate(ACLMessage msg) {		
 
 		if (msg.getPerformativeInt() != ACLMessage.UNKNOWN) {
 			this.setPerformative(msg.getPerformativeInt());
 		}
-
-		if (msg.getReceiver() != null) {
-			this.setReceiver(msg.getReceiver());
+		
+		this.setSender(msg.getSender());
+		
+		if (msg.getReceiverList() != null){
+			for(int i = 0; i<msg.getReceiverList().size();i++)
+				this.addReceiver(msg.getReceiver(i));
 		}
-
-		// PENDIENTE COMPLETAR
-
+		
+		this.setReplyTo(msg.getReplyTo());
+		
+		if (msg.getContent() != null) {
+			this.setContent(msg.getContent());
+		}
+		
+		this.setLanguage(msg.getLanguage());
+		
+		this.setEncoding(msg.getEncoding());
+		
+		if (msg.getOntology() != null) {
+			this.setOntology(msg.getOntology());
+		}
+		
+		if (msg.getProtocol() != null) {
+			this.setProtocol(msg.getProtocol());
+		}
+		
+		if (msg.getConversationId() != null) {
+			this.setConversationId(this.getConversationId());
+		}
+		
+		this.setReplyWith(msg.getReplyWith());
+		
+		this.setInReplyTo(msg.getInReplyTo());
+		
+		this.setReplyByDate(msg.getReplyByDate());
+		
+		Iterator it = this.headers.entrySet().iterator();
+		while (it.hasNext()) {
+			Map.Entry pairs = (Map.Entry)it.next();
+			this.setHeader(String.valueOf(pairs.getKey()), String.valueOf(pairs.getValue()));
+		}
 	}
 
 	public void setHeader(String key, String value) {

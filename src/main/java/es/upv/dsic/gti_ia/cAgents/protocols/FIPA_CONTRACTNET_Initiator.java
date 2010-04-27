@@ -37,9 +37,6 @@ public abstract class FIPA_CONTRACTNET_Initiator {
 
 	protected void doSolicitProposals(CProcessor myProcessor,
 			ACLMessage messageToSend) {
-		ACLMessage aux = (ACLMessage) myProcessor.getInternalData().get(
-				"InitialMessage");
-		messageToSend.copyFromAsTemplate(aux);
 		messageToSend.setProtocol("fipa-contract-net");
 		messageToSend.setPerformative(ACLMessage.CFP);
 		messageToSend.setSender(myProcessor.getMyAgent().getAid());
@@ -87,8 +84,8 @@ public abstract class FIPA_CONTRACTNET_Initiator {
 
 	@SuppressWarnings("unchecked")
 	protected void doReceivePropose(CProcessor myProcessor, ACLMessage msg){
-		ArrayList<ACLMessage> proposes = (ArrayList<ACLMessage>)myProcessor.getInternalData().get("propose");
-		proposes.add(msg);		
+		ArrayList<ACLMessage> proposes = (ArrayList<ACLMessage>)myProcessor.getInternalData().get("proposes");
+		proposes.add(msg);
 	}
 
 	class RECEIVE_PROPOSE_Method implements ReceiveStateMethod {
@@ -97,7 +94,7 @@ public abstract class FIPA_CONTRACTNET_Initiator {
 			int receivedResponses = (Integer)myProcessor.getInternalData().get("receivedResponses");
 			doReceivePropose(myProcessor, messageReceived);
 			receivedResponses++;
-			doReceivePropose(myProcessor, messageReceived);
+			myProcessor.getInternalData().put("receivedResponses", receivedResponses);
 			if (receivedResponses >= participants)
 				return "EVALUATE_PROPOSALS";
 			else
@@ -120,7 +117,7 @@ public abstract class FIPA_CONTRACTNET_Initiator {
 	class EVALUATE_PROPOSALS_Method implements ActionStateMethod {
 		@SuppressWarnings("unchecked")
 		public String run(CProcessor myProcessor) {
-			ArrayList<ACLMessage> proposes = (ArrayList<ACLMessage>)myProcessor.getInternalData().get("propose");
+			ArrayList<ACLMessage> proposes = (ArrayList<ACLMessage>)myProcessor.getInternalData().get("proposes");
 			ArrayList<ACLMessage> acceptances = new ArrayList<ACLMessage>();
 			ArrayList<ACLMessage> rejections = new ArrayList<ACLMessage>();
 			doEvaluateProposals(myProcessor, proposes, acceptances, rejections);
@@ -155,8 +152,10 @@ public abstract class FIPA_CONTRACTNET_Initiator {
 				send.setMessageTemplate(rejections.get(j));
 				myProcessor.registerState(send);
 				if(j == 0)
-					if(accept)
-						myProcessor.addTransition("SEND_ACCEPTANCE", "SEND_REJECTION_"+j);
+					if(accept){
+						System.out.println("SEND_ACCEPTANCE_"+(i-1));
+						myProcessor.addTransition("SEND_ACCEPTANCE_"+(i-1), "SEND_REJECTION_"+j);
+					}
 					else
 						myProcessor.addTransition("EVALUATE_PROPOSALS", "SEND_REJECTION_"+j);
 				else
@@ -373,6 +372,7 @@ public abstract class FIPA_CONTRACTNET_Initiator {
 		processor.getInternalData().put("receivedResponses", 0);
 		processor.getInternalData().put("acceptedProposals", 0);
 		processor.getInternalData().put("receivedResults", 0);
+		processor.getInternalData().put("proposes", new ArrayList<ACLMessage>());
 				
 		return theFactory;
 	}
