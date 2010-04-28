@@ -461,6 +461,10 @@ public class CProcessor implements Runnable, Cloneable {
 					System.out.println(currentState + " state "
 							+ " doesn' exist");
 				}
+				if(!this.transitiontable.existsTransation(previousState, currentState)){
+					this.logger.error(this.myAgent.getName() + "No transition defined between "+previousState+" and "+currentState);
+					return;
+				}
 				currentStateType = states.get(currentState).getType();
 				previousState = currentState;
 			} // end while (true)

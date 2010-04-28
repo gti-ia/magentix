@@ -322,7 +322,7 @@ public abstract class CAgent extends BaseAgent {
 				auxProcessor.setIdle(false);
 				if (!msg.getHeaderValue("Purpose").equals("WaitMessage"))
 					if (removeTimer(msg.getConversationId()))
-						System.out.println("Timer cancelado");
+						this.logger.info("Timer canceled");
 				exec.execute(auxProcessor);
 			}
 		} else if (!inShutdown) {
