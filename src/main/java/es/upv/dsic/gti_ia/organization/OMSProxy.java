@@ -259,7 +259,7 @@ public class OMSProxy {
 		String call = configuration + "InformUnitProcess.owl UnitID=" + UnitID;
 		this.sendInform(agent, call);
 
-		if (!this.value.equals("Ok")) {
+		if (!this.value.contains("Ok")) {
 			throw new Exception("Inform Unit " + this.value);
 		} else
 			return this.list;
