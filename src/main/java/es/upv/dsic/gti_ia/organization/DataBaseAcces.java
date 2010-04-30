@@ -232,7 +232,7 @@ public class DataBaseAcces {
 
             // Se realiza la consulta. Los resultados se guardan en el
             // ResultSet rs
-	        String sql="SELECT u.entity FROM entityplaylist u WHERE u.unit='"+unidad+"'  ";
+	        String sql="SELECT e.entityId FROM entityplaylist u join entity e on u.entity = e.id WHERE u.unit='"+unidad+"'  ";
 	        sql.toLowerCase();
             rs = s.executeQuery(sql);
 
