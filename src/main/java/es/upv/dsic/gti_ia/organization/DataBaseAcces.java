@@ -3,6 +3,7 @@ package es.upv.dsic.gti_ia.organization;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 /**
@@ -284,6 +285,33 @@ public class DataBaseAcces {
         }
         return rs;
     }
+
+    
+	public String getAgentServices(String agentID) {
+		
+		String result = "[";
+		try {
+			Statement s = conection.createStatement();
+			ResultSet rs = s
+					.executeQuery("Select * from serviceprocessid where providername='"
+							+ agentID.toLowerCase() + "'");
+			System.out
+					.println("Select * from serviceprocessid where providername='"
+							+ agentID.toLowerCase() + "'");
+			while (rs.next()) {
+				result = result + "(" + rs.getString("processname") + "), ";
+			}
+			if (!result.equalsIgnoreCase("["))
+				result = result.substring(0, result.length() - 2);
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		}
+		return result + "]";
+
+	}
+
+    
+    
 
 
 }

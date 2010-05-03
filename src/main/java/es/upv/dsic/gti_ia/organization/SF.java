@@ -1,6 +1,7 @@
 package es.upv.dsic.gti_ia.organization;
 
 import java.net.URI;
+
 import java.util.*;
 
 import org.apache.log4j.Logger;
@@ -28,9 +29,9 @@ public class SF extends QueueAgent {
 
 	Configuration configuration = Configuration.getConfiguration();
 
-	
 	private static SF sf = null;
-	private String SFServiceDesciptionLocation = configuration.getSFServiceDesciptionLocation();
+	private String SFServiceDesciptionLocation = configuration
+			.getSFServiceDesciptionLocation();
 
 	static Logger logger = Logger.getLogger(SF.class);
 	// create a kb
@@ -38,7 +39,7 @@ public class SF extends QueueAgent {
 	OWLKnowledgeBase kbaux = OWLFactory.createKB();
 
 	// Debug
-	//private final Boolean DEBUG = true;
+	// private final Boolean DEBUG = true;
 
 	// URI where the SF service descriptions are located
 
@@ -61,8 +62,8 @@ public class SF extends QueueAgent {
 			+ "RemoveProviderProfile.owl");
 	private final URI SF_REMOVEPROVIDER_PROCESS = URI.create(OWL_S_SF_SERVICES
 			+ "RemoveProviderProcess.owl");
-	private final URI SF_REMOVEPROVIDER_GROUNDING = URI.create(OWL_S_SF_SERVICES
-			+ "RemoveProviderGrounding.owl");
+	private final URI SF_REMOVEPROVIDER_GROUNDING = URI
+			.create(OWL_S_SF_SERVICES + "RemoveProviderGrounding.owl");
 	private final URI SF_REMOVEPROVIDER_ID = URI.create(OWL_S_SF_SERVICES
 			+ "RemoveProviderProfile.owl#RemoveProviderProfile");
 	private final URI SF_REMOVEPROVIDER_GOAL = URI.create("RemoveProvider");
@@ -199,43 +200,41 @@ public class SF extends QueueAgent {
 			SF_MODIFYPROCESS_PROVIDER, SF_MODIFYPROFILE_PROVIDER,
 			SF_SEARCHSERVICE_PROVIDER };
 
-	
-	
-	
 	/**
 	 * Returns an instance of the agents SF
-	 * @param agent a new Agent ID
-	  * @return SFagent SF
+	 * 
+	 * @param agent
+	 *            a new Agent ID
+	 * @return SFagent SF
 	 */
-	static public SF getSF(AgentID agent)
-	{
+	static public SF getSF(AgentID agent) {
 		if (sf == null)
-		try
-		{
-			sf = new SF(agent);
-	     }catch(Exception e){logger.error(e);}
+			try {
+				sf = new SF(agent);
+			} catch (Exception e) {
+				logger.error(e);
+			}
 		return sf;
-		
-		
+
 	}
-	
+
 	/**
-	 * Returns an instance of the agents SF, the agentID of the agent is AgentID("SF")
-	  * @return SF agent SF
+	 * Returns an instance of the agents SF, the agentID of the agent is
+	 * AgentID("SF")
+	 * 
+	 * @return SF agent SF
 	 */
-	static public SF getSF()
-	{
+	static public SF getSF() {
 		if (sf == null)
-		try
-		{
-			sf = new SF(new AgentID("SF"));
-	     }catch(Exception e){logger.error(e);}
+			try {
+				sf = new SF(new AgentID("SF"));
+			} catch (Exception e) {
+				logger.error(e);
+			}
 		return sf;
-		
-		
+
 	}
-	
-	
+
 	/**
 	 * Initial registration of the SF service profiles
 	 * 
@@ -250,18 +249,20 @@ public class SF extends QueueAgent {
 	}
 
 	/**
-	 * Change the URL where the owl's document is
-	 * located.
-	 * @param SFUrl ej. http://localhost:8080/sfservices/SFservices/owl/owls/
+	 * Change the URL where the owl's document is located.
+	 * 
+	 * @param SFUrl
+	 *            ej. http://localhost:8080/sfservices/SFservices/owl/owls/
 	 */
 	public void setSFServiceDesciptionLocation(String SFUrl) {
 		this.SFServiceDesciptionLocation = SFUrl;
 	}
 
 	/**
-	 * get the URL where the owl's document is
-	 * located.
-	 * @param SFUrl ej. http://localhost:8080/sfservices/SFservices/owl/owls/
+	 * get the URL where the owl's document is located.
+	 * 
+	 * @param SFUrl
+	 *            ej. http://localhost:8080/sfservices/SFservices/owl/owls/
 	 */
 	public String getSFServiceDesciptionLocation() {
 		return this.SFServiceDesciptionLocation;
@@ -313,7 +314,7 @@ public class SF extends QueueAgent {
 	/**
 	 * Initial registration of the SF service process
 	 * 
-	 * 	 */
+	 * */
 	public void RegisterSFServiceProcess() {
 		// create an execution engine
 		ProcessExecutionEngine exec = OWLSFactory.createExecutionEngine();
@@ -374,7 +375,8 @@ public class SF extends QueueAgent {
 		 * invoke the service. After the service invocation, the SF gets the
 		 * answer and sends it to the requester agent.
 		 * 
-		 * @param msg ACLMessage
+		 * @param msg
+		 *            ACLMessage
 		 * @throws RuntimeException
 		 */
 		protected ACLMessage prepareResponse(ACLMessage msg) {
@@ -391,10 +393,7 @@ public class SF extends QueueAgent {
 					String token_process = Tok.nextElement().toString();
 
 					logger.info("[SF]Doc OWL-S: " + token_process);
-					Service aService = kb.readService(token_process);
-
-					// get the process for the server
-					Process aProcess = aService.getProcess();
+					
 
 					// System.out.println("resultado de la comparacion
 					// "+token_process.equals(SFServicesProcess[4].toString()));
@@ -416,25 +415,32 @@ public class SF extends QueueAgent {
 							|| token_process.equals(SFServicesProcess[8]
 									.toString())
 							|| token_process.equals(SFServicesProcess[9]
-									.toString())) {
+									.toString())
+							|| token_process.toLowerCase().contains(
+									"getagentservices")) {
 
-						logger.info("AGREE");
+						logger.info("[SF] Agrees to execute the service: "
+								+ token_process);
+
 						response
 								.setPerformative(es.upv.dsic.gti_ia.core.ACLMessage.AGREE);
-						response.setContent(aProcess.getLocalName() + "=Agree");
+						response.setContent(token_process.toLowerCase() + "=Agree");
 
 					} else {
 
-						logger.info("REFUSE");
+						logger.info("[SF] Refuses to execute the service: "
+								+ token_process);
+
 						response
 								.setPerformative(es.upv.dsic.gti_ia.core.ACLMessage.REFUSE);
 						response
-								.setContent(aProcess.getLocalName() + "=Refuse");
+								.setContent(token_process.toLowerCase() + "=Refuse");
 					}
 
 				} catch (Exception e) {
 
-					logger.info("EXCEPTION");
+					logger.info("[SF] Exception");
+
 					System.out.println(e);
 					e.printStackTrace();
 					throw new RuntimeException(e.getMessage());
@@ -443,7 +449,8 @@ public class SF extends QueueAgent {
 
 			} else {
 
-				logger.info("NOTUNDERSTOOD");
+				logger.info("[SF] does not understood the message");
+
 				response
 						.setPerformative(es.upv.dsic.gti_ia.core.ACLMessage.NOT_UNDERSTOOD);
 				response.setContent("NotUnderstood");
@@ -461,9 +468,12 @@ public class SF extends QueueAgent {
 		 * the SF has to inform the other agent that what they have asked is now
 		 * complete (or if it failed)
 		 * 
-		 * @param inmsg  Message messages sent by the initiator
-		 * @param outmsg Message which we will send to the initiator with the notification 
-		 
+		 * @param inmsg
+		 *            Message messages sent by the initiator
+		 * @param outmsg
+		 *            Message which we will send to the initiator with the
+		 *            notification
+		 * 
 		 * @throws RuntimeException
 		 */
 		protected ACLMessage prepareResultNotification(ACLMessage inmsg,
@@ -482,69 +492,102 @@ public class SF extends QueueAgent {
 
 			logger.info("[SF]Doc OWL-S: " + token_process);
 
-			try {
-				Service aService = kb.readService(token_process);
-
-				// get the process for the server
-				Process aProcess = aService.getProcess();
-				// initialize the input values to be empty
-				ValueMap values = new ValueMap();
-
-				// get the input values
-				for (int i = 0; i < aProcess.getInputs().size(); i++)
-					values.setValue(aProcess.getInputs().inputAt(i),
-							EntityFactory.createDataValue(""));
+			if (token_process.toLowerCase().contains("getagentservices")) {
+				String agentID = "";
 				while (Tok.hasMoreElements()) {
 					String token = Tok.nextElement().toString();
-					for (int i = 0; i < aProcess.getInputs().size(); i++) {
-						String paramName = aProcess.getInputs().inputAt(i)
-								.getLocalName().toLowerCase();
-						if (paramName.equalsIgnoreCase(token.split("=")[0]
-								.toLowerCase())) {
-							if (token.split("=").length >= 2)
-								values.setValue(
-										aProcess.getInputs().inputAt(i),
-										EntityFactory.createDataValue(token
-												.split("=")[1]));
-							else
-								values.setValue(
-										aProcess.getInputs().inputAt(i),
-										EntityFactory.createDataValue(""));
-						}
-						if (aProcess.getInputs().inputAt(i).toString()
-								.contains("AgentID")) {
-							if (inmsg.getSender().protocol.equals("http"))
-							values.setValue(aProcess.getInputs().inputAt(i),
-									EntityFactory.createDataValue(inmsg
-											.getSender().name.replace('~', '@')));
-							else
-								values.setValue(aProcess.getInputs().inputAt(i),
-										EntityFactory.createDataValue(inmsg
-												.getSender().toString()));
-						}
+					if (token.split("=")[0].toLowerCase().contains("agentid")) {
+						agentID = token.split("=")[1];
 					}
 				}// end while
-
-				// execute the service
-				logger
-						.info("[SF]Executing... "
-								+ values.getValues().toString());
-				values = exec.execute(aProcess, values);
-
-				logger.info("[SF]Values obtained... ");
-
-				logger.info("[SF]Creating inform message to send...");
+				logger.info("[SF] Executing...: " + token_process);
+				// System.out.println("[SF]Executing... "+values.getValues().toString());
+				DataBaseAcces db = new DataBaseAcces();
+				db.connect();
+				String servicesList = db.getAgentServices(agentID);
+				logger.info("[SF] Values obtained...: " + servicesList);
+				// System.out.println("[SF]Values obtained... :"+values.toString());
+				logger.info("[SF] Creating inform message to send...");
+				// System.out.println("[SF]Creating inform message to send...");
 
 				msg.setPerformative(es.upv.dsic.gti_ia.core.ACLMessage.INFORM);
+				// System.out.println("[SF]Before set message content...");
+				msg.setContent("GetAgentServicesProcess={" + token_process
+						+ "#ServiceList=" + servicesList + "}");
 
-				logger.info("[SF]Before set message content...");
-				msg.setContent(aProcess.getLocalName() + "="
-						+ values.toString());
+			} else {
+				try {
+					Service aService = kb.readService(token_process);
 
-			} catch (Exception e) {
+					// get the process for the server
+					Process aProcess = aService.getProcess();
+					// initialize the input values to be empty
+					ValueMap values = new ValueMap();
 
+					// get the input values
+					for (int i = 0; i < aProcess.getInputs().size(); i++)
+						values.setValue(aProcess.getInputs().inputAt(i),
+								EntityFactory.createDataValue(""));
+					while (Tok.hasMoreElements()) {
+						String token = Tok.nextElement().toString();
+						for (int i = 0; i < aProcess.getInputs().size(); i++) {
+							String paramName = aProcess.getInputs().inputAt(i)
+									.getLocalName().toLowerCase();
+							if (paramName.equalsIgnoreCase(token.split("=")[0]
+									.toLowerCase())) {
+								if (token.split("=").length >= 2)
+									values.setValue(aProcess.getInputs()
+											.inputAt(i),
+											EntityFactory.createDataValue(token
+													.split("=")[1]));
+								else
+									values.setValue(aProcess.getInputs()
+											.inputAt(i), EntityFactory
+											.createDataValue(""));
+							}
+							if (aProcess.getInputs().inputAt(i).toString()
+									.contains("AgentID")) {
+								if (inmsg.getSender().protocol.equals("http"))
+									values.setValue(aProcess.getInputs()
+											.inputAt(i),
+											EntityFactory.createDataValue(inmsg
+													.getSender().name.replace(
+													'~', '@')));
+								else
+									values.setValue(aProcess.getInputs()
+											.inputAt(i), EntityFactory
+											.createDataValue(inmsg.getSender()
+													.toString()));
+							}
+						}
+					}// end while
+
+					// execute the service
+					logger.info("[SF]Executing... "
+							+ values.getValues().toString());
+					values = exec.execute(aProcess, values);
+
+					logger.info("[SF]Values obtained... ");
+
+					logger.info("[SF]Creating inform message to send...");
+
+					msg
+							.setPerformative(es.upv.dsic.gti_ia.core.ACLMessage.INFORM);
+
+					logger.info("[SF]Before set message content...");
+					msg.setContent(aProcess.getLocalName() + "="
+							+ values.toString());
+
+				} catch (Exception e) {
+					e.printStackTrace();
+					msg
+							.setPerformative(es.upv.dsic.gti_ia.core.ACLMessage.FAILURE);
+					logger.warn("[SF] Failure...");
+
+				}
 			}
 			return (msg);
+
 		} // end prepareResultNotification
 
 	}// end class SFResponder
@@ -559,16 +602,15 @@ public class SF extends QueueAgent {
 		logger.info("Agent SF active");
 
 		SFResponder responder = new SFResponder(this);
-		this.addTask(responder);		
+		this.addTask(responder);
 		mon.waiting();
 	}// end execute
 
-	public void finalize()
-	{
+	public void finalize() {
 		logger.info("Agent SF leaves the system.");
 		sf = null;
 		mon.advise();
 	}
-	
+
 } // end SF Agent
 
