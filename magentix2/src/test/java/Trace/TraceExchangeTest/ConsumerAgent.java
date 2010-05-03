@@ -59,62 +59,6 @@ public class ConsumerAgent extends BaseAgent {
     	for (i=0; i < 10; i++) {
 			try {
 				logger.info("[CONSUMER " + getName() + "]: Waiting (" + (i+1) + ")...");
-				
-				ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
-				msg.setReceiver(this.getAid());
-				msg.setSender(this.getAid());
-				msg.setLanguage("ACL");
-				msg.setContent("Hello, I'm " + getName());
-				/**
-				 * Sending a ACLMessage
-				 */
-				send(msg);
-				
-				//tEvent = new TraceEvent("TRACE_TEST", this.getAid(), "Test trace event (" + (i+1) + ")");
-				
-				tEvent = new TraceEvent("TRACE_TEST", aid, "Test trace event (" + (i+1) + ")");
-				
-				sendTraceEvent(tEvent);
-				
-//				xfr = new MessageTransfer();
-//				
-//				xfr.destination("amq.match");
-//				xfr.acceptMode(MessageAcceptMode.EXPLICIT);
-//				xfr.acquireMode(MessageAcquireMode.PRE_ACQUIRED);
-//								
-//				deliveryProps = new DeliveryProperties();
-//				
-//				// Serialize message content
-//				// Timestamp
-//				body = String.valueOf(tEvent.getTimestamp()) + "#";
-//				// EventType
-//				body = body + tEvent.getEventType().length() + "#"
-//						+ tEvent.getEventType();
-//				// OriginEntiy
-//				body = body + tEvent.getOriginEntity().toString().length() + "#" + tEvent.getOriginEntity().toString();
-//				// Content
-//				body = body + tEvent.getContent().length() + "#" + tEvent.getContent();
-//								
-//				xfr.setBody(body);
-//								
-//				// set message headers
-//				messageProperties = new MessageProperties();
-//				messageHeaders = new HashMap<String, Object>();
-//				// set the message property
-//				messageHeaders.put("event_type", tEvent.getEventType());
-//				//messageHeaders.put("origin_entity", tEvent.getOriginEntity().name);
-//				messageProperties.setApplicationHeaders(messageHeaders);
-//								
-//				xfr.header(new Header(deliveryProps, messageProperties));
-//						    	
-//				this.traceSession.messageTransfer(xfr.getDestination(), xfr.getAcceptMode(),
-//						xfr.getAcquireMode(), xfr.getHeader(), xfr.getBodyString());
-////				this.traceSession.messageTransfer("amq.match", MessageAcceptMode.EXPLICIT,
-////				MessageAcquireMode.PRE_ACQUIRED, xfr.getHeader(), body);				
-////				this.traceSession.sync();
-				
-				
-				
 				Thread.currentThread().sleep(1000);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block

@@ -41,7 +41,7 @@ public class Run {
 			/**
 			 * Instantiating the sender agent
 			 */
-			//SenderAgent sender = new SenderAgent(new AgentID("qpid://sender@localhost:8080"));
+			SenderAgent sender = new SenderAgent(new AgentID("qpid://sender@localhost:8080"));
 
 			/**
 			 * Instantiating the consumer agent
@@ -52,7 +52,7 @@ public class Run {
 			 * Execute the agents
 			 */
 			consumer.start();
-			//sender.start();
+			sender.start();
 
 		} catch (Exception e) {
 			logger.error("Error  " + e.getMessage());

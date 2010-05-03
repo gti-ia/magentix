@@ -32,51 +32,13 @@ public class SenderAgent extends BaseAgent {
 		
 		logger.info("[SENDER " + getName() +"]: Executing...");
 		
-		for (int i=0; i < 1; i++) {
-			tEvent = new TraceEvent("TRACE_TEST", this.getAid(), "Test trace event (" + (i+1) + ")");
-			/**
-			 * Event type: TRACE TEST
-			 * Origin entity: this.getAid()
-			 * Content: "Test trace event"
-			 */
+		for (int i=0; i < 10; i++) {
 			try {
-				logger.info("[SENDER " + getName() +"]: Sending trace event... (" + (i+1) + ")...");
-				//sendTraceEvent(tEvent);
+				logger.info("[SENDER " + getName() + "]: Waiting (" + (i+1) + ")...");
 				
-//				xfr = new MessageTransfer();
-//
-//				xfr.destination("amq.match");
-//				xfr.acceptMode(MessageAcceptMode.EXPLICIT);
-//				xfr.acquireMode(MessageAcquireMode.PRE_ACQUIRED);
-//				
-//				DeliveryProperties deliveryProps = new DeliveryProperties();
-//
-//				// Serialize message content
-//				String body;
-//				// Timestamp
-//				body = String.valueOf(tEvent.getTimestamp()) + "#";
-//				// EventType
-//				body = body + tEvent.getEventType().length() + "#"
-//						+ tEvent.getEventType();
-//				// OriginEntiy
-//				body = body + tEvent.getOriginEntity().toString().length() + "#" + tEvent.getOriginEntity().toString();
-//				// Content
-//				body = body + tEvent.getContent().length() + "#" + tEvent.getContent();
-//				
-//				xfr.setBody(body);
-//				
-//				// set message headers
-//		    	MessageProperties messageProperties = new MessageProperties();
-//		    	Map<String, Object> messageHeaders = new HashMap<String, Object>();
-//		    	// set the message property
-//		    	messageHeaders.put("event_type", tEvent.getEventType());
-//		    	messageHeaders.put("origin_entity", tEvent.getOriginEntity().name);
-//		    	messageProperties.setApplicationHeaders(messageHeaders);
-//				
-//		    	xfr.header(new Header(deliveryProps, messageProperties));
-//		    	
-//				this.traceSession.messageTransfer(xfr.getDestination(), xfr.getAcceptMode(),
-//						xfr.getAcquireMode(), xfr.getHeader(), xfr.getBodyString());
+				tEvent = new TraceEvent("TRACE_TEST", this.getAid(), "Test trace event (" + (i+1) + ")");
+
+				sendTraceEvent(tEvent);
 				
 				Thread.currentThread().sleep(1000);
 			} catch (InterruptedException e) {
