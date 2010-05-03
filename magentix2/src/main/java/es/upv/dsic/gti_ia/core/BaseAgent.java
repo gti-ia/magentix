@@ -397,19 +397,22 @@ public class BaseAgent implements Runnable {
 		DeliveryProperties deliveryProps = new DeliveryProperties();
 		
 		// Serialize message content
-//		String body;
-//		// Timestamp
-//		body = String.valueOf(tEvent.getTimestamp()) + "#";
-//		// EventType
-//		body = body + tEvent.getEventType().length() + "#"
-//				+ tEvent.getEventType();
-//		// OriginEntiy
-//		body = body + tEvent.getOriginEntity().toString().length() + "#" + tEvent.getOriginEntity().toString();
-//		// Content
-//		body = body + tEvent.getContent().length() + "#" + tEvent.getContent();
-//		
-//		xfr.setBody(body);
-		xfr.setBody("Trace Event");
+		String body;
+		// Timestamp
+		body = String.valueOf(tEvent.getTimestamp()) + "#";
+		// EventType
+		body = body + tEvent.getEventType().length() + "#"
+				+ tEvent.getEventType();
+		//body = body + tEvent.getEventType() + "#";
+		// OriginEntiy
+		body = body + tEvent.getOriginEntity().toString().length() + "#" + tEvent.getOriginEntity().toString();
+		//body = body + tEvent.getOriginEntity().toString() + "#";
+		// Content
+		body = body + tEvent.getContent().length() + "#" + tEvent.getContent();
+		//body = body + tEvent.getContent();
+		
+		xfr.setBody(body);
+//		xfr.setBody("Trace Event");
 		
 //		deliveryProps.setRoutingKey(msg.getReceiver(i).name);
 		
@@ -662,8 +665,7 @@ public class BaseAgent implements Runnable {
 	 * @return TraceEvent
 	 */
 	public final TraceEvent MessageTransfertoTraceEvent(MessageTransfer xfr) {
-
-		// des-serializamos el mensaje
+		// des-serializamos el evento
 		// inicializaciones
 		int indice1 = 0;
 		int indice2 = 0;
@@ -673,29 +675,18 @@ public class BaseAgent implements Runnable {
 		String aidString;
 		String body = xfr.getBodyString();
 
-		System.out.println("BODY: " + body);
-
 		TraceEvent tEvent = new TraceEvent();
 		
-		//System.out.println("Por ahora bien...");
-		
 		// Timestamp
-		indice2 = body.indexOf('#', indice1);
-		//System.out.println("Por ahora bien... " + indice1 + ", " + indice2);
+		tam = body.indexOf('#', indice1);
+				
+		tEvent.setTimestamp(Long.parseLong(body.substring(indice2, indice1+tam)));
 		
-		//System.out.println("Tam " + (indice2-indice1));
-		tam = indice2-indice1;
-				
-		//System.out.println("Timestamp " + body.substring(indice1, indice2));
-		tEvent.setTimestamp(Long.parseLong(body.substring(indice2, indice2)));
-				
 		// Event Type
-		//indice1=indice2+1+tam;
-		indice1=indice2+1;
+		indice1 = indice1 + 1 + tam;
 		indice2 = body.indexOf('#', indice1);
 		tam = Integer.parseInt(body.substring(indice1, indice2));
-		System.out.println("Tam " + (indice2-indice1));
-		tEvent.setEventType(body.substring(indice2 + 1, indice2 + 1 + tam));
+		tEvent.setEventType(body.substring(indice2+1, indice2+1+tam));
 		
 		// Origin Entity
 		AgentID aid = new AgentID();
@@ -727,10 +718,11 @@ public class BaseAgent implements Runnable {
 		tEvent.setOriginEntity(aid);
 		
 		// Content
-		indice1 = indice2 + 1 + tam;
+		indice1 = indice1 + 1 + tam;
 		indice2 = body.indexOf('#', indice1);
 		tam = Integer.parseInt(body.substring(indice1, indice2));
-		tEvent.setContent(body.substring(indice2 + 1, indice2 + 1 + tam));
+		tEvent.setContent(body.substring(indice2+1));
+
 		
 		return tEvent;
 	}
