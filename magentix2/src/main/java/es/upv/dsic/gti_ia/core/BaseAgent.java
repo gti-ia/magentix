@@ -18,6 +18,8 @@ import org.apache.qpid.transport.Session;
 import org.apache.qpid.transport.SessionException;
 import org.apache.qpid.transport.SessionListener;
 
+import es.upv.dsic.gti_ia.trace.TraceInteract;
+
 /**
  * @author Ricard Lopez Fogues
  * @author Sergio Pajares Ferrando
@@ -48,6 +50,9 @@ public class BaseAgent implements Runnable {
 	 * @uml.property name="session"
 	 */
 	protected Session session;
+	/**
+	 * @uml.property name="traceSession"
+	 */
 	protected Session traceSession;
 	/**
 	 * @uml.property name="myThread"
@@ -84,9 +89,7 @@ public class BaseAgent implements Runnable {
 		}
 
 		public void message(Session ssn, MessageTransfer xfr) {
-			/// 1
 			TraceEvent tEvent = MessageTransfertoTraceEvent(xfr);
-			//// 2
 			onTraceEvent(tEvent);
 		}
 
@@ -109,6 +112,9 @@ public class BaseAgent implements Runnable {
 	 * [TRACE]:
 	 * Attributes necessary for event tracing
 	 *
+	 */
+	/**
+	 * @uml.property name="traceListener"
 	 */
 	private TraceListener traceListener;
 	
@@ -136,6 +142,7 @@ public class BaseAgent implements Runnable {
 		}
 
 		this.session = createSession();
+		
 		this.traceSession = createTraceSession();
 		
 		if (this.existAgent(aid)) {
@@ -289,26 +296,25 @@ public class BaseAgent implements Runnable {
 	
 	private void createTraceBind(){
 		Map<String, Object> arguments = new HashMap<String, Object>();
-				
+		
+		arguments.put("x-match", "all");
+    	arguments.put("origin_entity", "system");
+    	arguments.put("receiver", "all");
+    	// To let an agent receive all those system trace events from the tracing system to ALL agents
+    	this.traceSession.exchangeBind(aid.name+".trace", "amq.match", aid.name + ".system.all", arguments);
+    	//this.session.exchangeBind(aid.name+".trace", "mgx.trace", aid.name + ".system.all", arguments);
+		
+    	arguments.clear();
+    	
 		arguments.put("x-match", "all");
     	arguments.put("origin_entity", "system");
     	arguments.put("receiver", aid.name);
-    	//arguments.put("route", "direct");
-    	
+    	// To let an agent receive all those system trace events from the tracing system to THAT agent  
     	this.traceSession.exchangeBind(aid.name+".trace", "amq.match", aid.name + ".system.direct", arguments);
     	//this.session.exchangeBind(aid.name+".trace", "mgx.trace", aid.name + ".system.direct", arguments);
-    	    	
-    	arguments.clear();
-    	arguments.put("x-match", "all");
-    	arguments.put("origin_entity", "system");
-    	arguments.put("receiver", "all");
-    	
-    	this.traceSession.exchangeBind(aid.name+".trace", "amq.match", aid.name + ".system.all", arguments);
-    	//this.session.exchangeBind(aid.name+".trace", "mgx.trace", aid.name + ".system.all", arguments);
     	
     	// confirm completion
     	this.traceSession.sync();
-    	
 	}
 	
 	/**
@@ -334,28 +340,29 @@ public class BaseAgent implements Runnable {
 	 * and receive the corresponding trace events 
 	 */
 	public void publishTracingService(){
-		/* Oops! This still has to be done :P */
+		
+		TraceInteract.publishTracingService();
+		
 	}
 
+	/**
+	 * Unpublish a previously published tracing service so that other agents cannot
+	 * receive the corresponding trace events 
+	 */
+	public void unpublishTracingService(){
+		
+		TraceInteract.unpublishTracingService();
+		
+	}
+	
 	/**
 	 * Request a tracing service
 	 * 
 	 */
 	public void requestTracingService(String eventType, AgentID originEntity) {
-		/**
-		 * Building a ACLMessage
-		 */
-		ACLMessage msg = new ACLMessage(ACLMessage.SUBSCRIBE);
-		AgentID tms_aid = new AgentID("qpid://tm@localhost:8080");
 		
-		msg.setReceiver(tms_aid);
-		msg.setSender(this.getAid());
-		msg.setLanguage("ACL");
-		msg.setContent(eventType + "#" + originEntity.toString());
-		/**
-		 * Sending a ACLMessage
-		 */
-		send(msg);
+		TraceInteract.requestTracingService(this, eventType, originEntity);
+		
 	}
 	
 	/**
@@ -364,20 +371,9 @@ public class BaseAgent implements Runnable {
 	 * 
 	 */
 	public void requestTracingService(String eventType) {
-		/**
-		 * Building a ACLMessage
-		 */
-		ACLMessage msg = new ACLMessage(ACLMessage.SUBSCRIBE);
-		AgentID tms_aid = new AgentID("qpid://tm@localhost:8080");
 		
-		msg.setReceiver(tms_aid);
-		msg.setSender(this.getAid());
-		msg.setLanguage("ACL");
-		msg.setContent(eventType + "#any");
-		/**
-		 * Sending a ACLMessage
-		 */
-		send(msg);
+		TraceInteract.requestTracingService(this, eventType);
+		
 	}
 	
 	/**
