@@ -377,6 +377,24 @@ public class BaseAgent implements Runnable {
 	}
 	
 	/**
+	 * Cancel subscription to a tracing service
+	 */
+	public void cancelTracingServiceSubscription(String eventType, AgentID originEntity) {
+		
+		TraceInteract.cancelTracingServiceSubscription(this, eventType, originEntity);
+		
+	}
+	
+	/**
+	 * Cancel subscription to a tracing service
+	 */
+	public void cancelTracingServiceSubscription(String eventType) {
+		
+		TraceInteract.cancelTracingServiceSubscription(this, eventType);
+		
+	}
+	
+	/**
 	 * 
 	 * Sends a trace event to the mgx.trace exchange
 	 * @param tEvent

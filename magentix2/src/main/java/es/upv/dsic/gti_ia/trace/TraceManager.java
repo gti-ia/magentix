@@ -493,7 +493,7 @@ public class TraceManager extends BaseAgent{
 		xfr.acquireMode(MessageAcquireMode.PRE_ACQUIRED);
 		
 		DeliveryProperties deliveryProps = new DeliveryProperties();
-
+		
 		// Serialize message content
 		String body;
 		// Timestamp
@@ -501,29 +501,36 @@ public class TraceManager extends BaseAgent{
 		// EventType
 		body = body + tEvent.getEventType().length() + "#"
 				+ tEvent.getEventType();
+		//body = body + tEvent.getEventType() + "#";
 		// OriginEntiy
 		body = body + tEvent.getOriginEntity().toString().length() + "#" + tEvent.getOriginEntity().toString();
+		//body = body + tEvent.getOriginEntity().toString() + "#";
 		// Content
 		body = body + tEvent.getContent().length() + "#" + tEvent.getContent();
+		//body = body + tEvent.getContent();
 		
 		xfr.setBody(body);
+//		xfr.setBody("Trace Event");
+		
+//		deliveryProps.setRoutingKey(msg.getReceiver(i).name);
 		
 		// set message headers
     	MessageProperties messageProperties = new MessageProperties();
     	Map<String, Object> messageHeaders = new HashMap<String, Object>();
     	// set the message property
     	messageHeaders.put("event_type", tEvent.getEventType());
-    	messageHeaders.put("origin_entity", tEvent.getOriginEntity().toString());
+    	messageHeaders.put("origin_entity", "system");
     	messageHeaders.put("receiver", destination);
-    	    	
-    	messageProperties.setApplicationHeaders(messageHeaders);
 		
-    	xfr.header(new Header(deliveryProps, messageProperties));
-		this.session.messageTransfer(xfr.getDestination(), xfr.getAcceptMode(),
-				xfr.getAcquireMode(), xfr.getHeader(), xfr.getBodyString());
+    	Header header = new Header(deliveryProps, messageProperties);
+    	
+    	//xfr.header(new Header(deliveryProps, messageProperties));
+    	this.traceSession.messageTransfer("amq.match", MessageAcceptMode.EXPLICIT, MessageAcquireMode.PRE_ACQUIRED,
+                header, xfr.getBodyString());
 	}
 	
 	public void execute() {
+		while(true){}
 	}
 	
 //	public void onMessage(ACLMessage msg) {
@@ -564,8 +571,8 @@ public class TraceManager extends BaseAgent{
 		    		arguments.put("origin_entity", originEntity);
 		    	}
 		    			    	
-		    	this.session.exchangeBind(msg.getSender().toString()+".trace", "amq.match", eventType + "#" + originEntity, arguments);
-		    	logger.info("[TRACE MANAGER]: binding " + msg.getSender().toString()+".trace");
+		    	this.session.exchangeBind(msg.getSender().name+".trace", "amq.match", eventType + "#" + originEntity, arguments);
+		    	logger.info("[TRACE MANAGER]: binding " + msg.getSender().name+".trace to receive " + eventType);
 		    	//this.session.exchangeBind(msg.getSender().toString()+".trace", "mgx.trace", eventType + "#" + originEntity.toString(), arguments);
 		    	// confirm completion
 		    	//this.session.sync();
@@ -575,15 +582,16 @@ public class TraceManager extends BaseAgent{
 		    	/**
 				 * Building a ACLMessage
 				 */
-				//response_msg = new ACLMessage(ACLMessage.AGREE);
-				response_msg=msg.createReply();
-				response_msg.setPerformative(ACLMessage.AGREE);
+		    	//response_msg=msg.createReply();
+		    	response_msg = new ACLMessage(ACLMessage.AGREE);
+		    	response_msg.setReceiver(msg.getSender());
+				//response_msg.setPerformative(ACLMessage.AGREE);
 				response_msg.setContent("subscription#" + eventType + "#" + originEntity);
 				logger.info("[TRACE MANAGER]: sending message to " + msg.getReceiver().toString());
 				/**
 				 * Sending a ACLMessage
 				 */
-				//send(response_msg);						
+				send(response_msg);						
 				
 		    	break;
 		    	
@@ -596,11 +604,11 @@ public class TraceManager extends BaseAgent{
 				eventType = content.substring(0, index);
 				originEntity = content.substring(index + 1);
 				
-				this.session.exchangeUnbind(msg.getSender()+".trace", "amq.match", eventType + "#" + originEntity.toString(), Option.NONE);
+				this.session.exchangeUnbind(msg.getSender().name+".trace", "amq.match", eventType + "#" + originEntity.toString(), Option.NONE);
 				//this.session.exchangeUnbind(msg.getSender()+".trace", "mgx.trace", eventType + "#" + originEntity.toString(), Option.NONE);
-				
+				logger.info("[TRACE MANAGER]: unbinding " + msg.getSender().name+".trace from " + eventType);
 		    	// confirm completion
-		    	this.session.sync();
+		    	//this.session.sync();
 		    	
 		    	tEvent = new TraceEvent("system_notify", this.getAid(), "UNSUBSCRIBED#" + eventType + "#" + originEntity);
 		    	sendSystemTraceEvent(tEvent, msg.getSender().toString());
@@ -608,9 +616,11 @@ public class TraceManager extends BaseAgent{
 		    	/**
 				 * Building a ACLMessage
 				 */
-				response_msg=msg.createReply();
-				response_msg.setPerformative(ACLMessage.FAILURE);
-				response_msg.setContent("subscription#" + eventType + "#" + originEntity);
+				//response_msg=msg.createReply();
+		    	response_msg = new ACLMessage(ACLMessage.FAILURE);
+		    	response_msg.setReceiver(msg.getSender());
+				//response_msg.setPerformative(ACLMessage.FAILURE);
+				response_msg.setContent("unsubscription#" + eventType + "#" + originEntity);
 				/**
 				 * Sending a ACLMessage
 				 */
@@ -622,7 +632,6 @@ public class TraceManager extends BaseAgent{
 				logger.info("Mensaje received in " + this.getName()
 						+ " agent, by onMessage: " + msg.getContent());
 		}
-		
 		
 	}
 	
