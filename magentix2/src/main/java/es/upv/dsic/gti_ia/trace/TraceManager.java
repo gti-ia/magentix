@@ -603,7 +603,7 @@ public class TraceManager extends BaseAgent{
 				//length = Integer.parseInt(content.substring(0, index));
 				eventType = content.substring(0, index);
 				originEntity = content.substring(index + 1);
-				
+				//System.out.println("JAAAAAAR " + this.session.exchangeBound("amq.match", msg.getSender().name+".trace", eventType+"#"+originEntity.toString(), null, Option.NONE).);
 				this.session.exchangeUnbind(msg.getSender().name+".trace", "amq.match", eventType + "#" + originEntity.toString(), Option.NONE);
 				//this.session.exchangeUnbind(msg.getSender()+".trace", "mgx.trace", eventType + "#" + originEntity.toString(), Option.NONE);
 				logger.info("[TRACE MANAGER]: unbinding " + msg.getSender().name+".trace from " + eventType);
