@@ -15,9 +15,10 @@ import org.apache.qpid.transport.MessageTransfer;
 import org.apache.qpid.transport.Session;
 import org.apache.qpid.transport.SessionException;
 
+
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
-import es.upv.dsic.gti_ia.core.TraceManager;
+import es.upv.dsic.gti_ia.trace.TraceManager;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;

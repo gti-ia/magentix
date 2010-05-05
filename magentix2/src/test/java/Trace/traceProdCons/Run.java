@@ -2,9 +2,10 @@ package traceProdCons;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
+
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
-import es.upv.dsic.gti_ia.core.TraceManager;
+import es.upv.dsic.gti_ia.trace.TraceManager;
 
 /**
  * Simple issuer/consumer example. This example is based on trace events instead of
