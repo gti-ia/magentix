@@ -1,5 +1,7 @@
 package es.upv.dsic.gti_ia.cAgents.protocols;
 
+import java.util.Date;
+
 import es.upv.dsic.gti_ia.cAgents.ActionState;
 import es.upv.dsic.gti_ia.cAgents.ActionStateMethod;
 import es.upv.dsic.gti_ia.cAgents.BeginState;
@@ -14,6 +16,7 @@ import es.upv.dsic.gti_ia.cAgents.ReceiveStateMethod;
 import es.upv.dsic.gti_ia.cAgents.SendState;
 import es.upv.dsic.gti_ia.cAgents.SendStateMethod;
 import es.upv.dsic.gti_ia.cAgents.WaitState;
+import es.upv.dsic.gti_ia.cAgents.WaitStateMethod;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.MessageFilter;
 
@@ -203,7 +206,7 @@ public abstract class FIPA_CONTRACTNET_Participant {
 		template.setPerformative(ACLMessage.PROPOSE);
 		SEND_PROPOSAL.setMessageTemplate(template);
 		processor.registerState(SEND_PROPOSAL);
-		processor.addTransition(WAIT_FOR_SOLICIT, SEND_PROPOSAL);
+		processor.addTransition(RECEIVE_SOLICIT, SEND_PROPOSAL);
 		
 		// SEND_REFUSE State
 

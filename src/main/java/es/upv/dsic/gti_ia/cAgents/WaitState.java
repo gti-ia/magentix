@@ -1,5 +1,7 @@
 package es.upv.dsic.gti_ia.cAgents;
 
+import java.util.Date;
+
 /**
  * 
  * @author Ricard Lopez Fogues
@@ -7,19 +9,22 @@ package es.upv.dsic.gti_ia.cAgents;
  */
 
 public class WaitState extends State{
-	private long timeOut;
+	private WaitStateMethod methodToRun = null;
+	long timeout;
 	
-	public WaitState(String n, long timeOut) {
+	public WaitState(String n, long timeout) {
 		super(n);
 		type = State.WAIT;
-		this.timeOut = timeOut;
+		this.timeout = timeout;
 	}
 	
-	public void setTimeOut(long time){
-		timeOut = time;
+	public void setMethod(WaitStateMethod method) {
+		methodToRun = method;
 	}
 	
-	public long getTimeOut(){
-		return timeOut;
+	public Date getTimeOut(){
+		if(methodToRun != null)
+			return methodToRun.run(timeout);
+		else return null;
 	}
 }

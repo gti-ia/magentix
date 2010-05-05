@@ -77,10 +77,11 @@ public class CProcessor implements Runnable, Cloneable {
 		this.transitiontable.addTransition(from, destination);
 		this.unlockMyAgent();
 	}
-	
+
 	public void addTransition(State from, State destination) {
 		this.lockMyAgent();
-		this.transitiontable.addTransition(from.getName(), destination.getName());
+		this.transitiontable.addTransition(from.getName(), destination
+				.getName());
 		this.unlockMyAgent();
 	}
 
@@ -209,13 +210,14 @@ public class CProcessor implements Runnable, Cloneable {
 							+ ": Error: starting conversation and currentState different from Wait or Begin");
 		} else {
 			while (true) {
-				this.logger.info("[" + this.myAgent.getName()
+				this.logger.info("[" + this.myAgent.getName() + " "
 						+ this.conversationID + " " + currentState + "]");
 				switch (currentStateType) {
 				case State.BEGIN:
-					//ACLMessage aux = messageQueue.remove(); //!!!!!Cuidado, he cambiado por peek -> Ricard!!!!
+					// ACLMessage aux = messageQueue.remove(); //!!!!!Cuidado,
+					// he cambiado por peek -> Ricard!!!!
 					ACLMessage aux;
-					if(this.isInitiator())
+					if (this.isInitiator())
 						aux = messageQueue.remove();
 					else
 						aux = messageQueue.peek();
@@ -279,7 +281,7 @@ public class CProcessor implements Runnable, Cloneable {
 							currentState = "TERMINATED_FATHER_STATE";
 
 						} else { // there is no exception message in the queue
-							
+
 							Set<String> receiveStates;
 							receiveStates = transitiontable
 									.getTransitions(currentState);
@@ -299,7 +301,9 @@ public class CProcessor implements Runnable, Cloneable {
 
 									MessageFilter filter = receiveState
 											.getAcceptFilter();
-									if (filter == null || filter.compareHeaders(retrievedMessage)) {
+									if (filter == null
+											|| filter
+													.compareHeaders(retrievedMessage)) {
 										currentState = stateName;
 										currentMessage = retrievedMessage;
 										accepted = true;
@@ -309,10 +313,10 @@ public class CProcessor implements Runnable, Cloneable {
 
 							if (!accepted) {
 								backState = currentState;
-								System.out
-										.println("Performativa "
-												+ retrievedMessage
-														.getPerformativeInt()+ "Contenido "+retrievedMessage.getContent());
+								System.out.println("Performativa "
+										+ retrievedMessage.getPerformativeInt()
+										+ "Contenido "
+										+ retrievedMessage.getContent());
 								Iterator<String> itr = retrievedMessage
 										.getHeaders().keySet().iterator();
 								String key1;
@@ -331,7 +335,7 @@ public class CProcessor implements Runnable, Cloneable {
 						this.logger
 								.info(this.myAgent.getName() + "Empty queue");
 						idle = true;
-						if (waitState.getTimeOut() > 0) {
+						if (waitState.getTimeOut() != null) {
 							myAgent.addTimer(conversationID, waitState
 									.getTimeOut());
 						}
@@ -461,8 +465,12 @@ public class CProcessor implements Runnable, Cloneable {
 					System.out.println(currentState + " state "
 							+ " doesn' exist");
 				}
-				if(!this.transitiontable.existsTransation(previousState, currentState)){
-					this.logger.error(this.myAgent.getName() + "No transition defined between "+previousState+" and "+currentState);
+				if (!this.transitiontable.existsTransation(previousState,
+						currentState)) {
+					this.logger.error(this.myAgent.getName() + " "
+							+ this.conversationID
+							+ " No transition defined between " + previousState
+							+ " and " + currentState);
 					return;
 				}
 				currentStateType = states.get(currentState).getType();
@@ -580,12 +588,12 @@ public class CProcessor implements Runnable, Cloneable {
 	void setParent(CProcessor parent) {
 		this.parent = parent;
 	}
-	
-	protected void setInitiator(boolean initiator){
+
+	protected void setInitiator(boolean initiator) {
 		this.initiator = initiator;
 	}
-	
-	protected boolean isInitiator(){
+
+	protected boolean isInitiator() {
 		return this.initiator;
 	}
 }

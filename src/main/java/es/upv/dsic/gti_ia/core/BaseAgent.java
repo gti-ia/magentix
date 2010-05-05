@@ -23,7 +23,7 @@ import org.apache.qpid.transport.SessionListener;
  * @author Sergio Pajares Ferrando
  * @author Joan Bellver Faus
  */
-public class BaseAgent implements Runnable {
+public class BaseAgent implements Runnable{
 
 	/**
 	 * The logger variable considers to print any event that occurs by the agent
@@ -87,7 +87,7 @@ public class BaseAgent implements Runnable {
 	 *             If Agent ID already exists on the platform
 	 */
 	public BaseAgent(AgentID aid) throws Exception {
-
+		
 		if (AgentsConnection.connection == null) {
 			logger
 					.error("Before create a agent, the qpid broker connection is necesary");
@@ -222,6 +222,7 @@ public class BaseAgent implements Runnable {
 				deliveryProps.setRoutingKey(msg.getReceiver(i).name);
 			}
 			xfr.header(new Header(deliveryProps));
+			
 			session.messageTransfer(xfr.getDestination(), xfr.getAcceptMode(),
 					xfr.getAcquireMode(), xfr.getHeader(), xfr.getBodyString());
 		}

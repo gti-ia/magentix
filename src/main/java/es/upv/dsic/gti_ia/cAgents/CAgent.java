@@ -63,6 +63,7 @@
 
 package es.upv.dsic.gti_ia.cAgents;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -302,6 +303,7 @@ public abstract class CAgent extends BaseAgent {
 		FINAL.setMethod(new FINAL_METHOD());
 
 		welcomeFactory.cProcessorTemplate().registerState(FINAL);
+		welcomeFactory.cProcessorTemplate().addTransition(RECEIVE, FINAL);
 
 	}
 
@@ -322,7 +324,7 @@ public abstract class CAgent extends BaseAgent {
 				auxProcessor.setIdle(false);
 				if (!msg.getHeaderValue("Purpose").equals("WaitMessage"))
 					if (removeTimer(msg.getConversationId()))
-						this.logger.info("Timer canceled");
+						this.logger.info(this.getName() + " " + msg.getConversationId()+ " Timer canceled");
 				exec.execute(auxProcessor);
 			}
 		} else if (!inShutdown) {
@@ -376,21 +378,22 @@ public abstract class CAgent extends BaseAgent {
 		this.unlock();
 	}
 
-	boolean addTimer(final String conversationId, long milliseconds) {
+	boolean addTimer(final String conversationId, final Date timeout) {
 		this.lock();
 		if (this.timers.get(conversationId) == null) {
-			Date timeToRun = new Date(System.currentTimeMillis() + milliseconds);
+			//final Date timeToRun = new Date(System.currentTimeMillis() + milliseconds);
 			Timer timer = new Timer();
-
+			
 			timer.schedule(new TimerTask() {
 				public void run() {
+					DateFormat df = DateFormat.getDateInstance();
 					ACLMessage waitMessage = new ACLMessage(ACLMessage.INFORM);
 					waitMessage.setHeader("purpose", "waitMessage");
-					waitMessage.setContent("Límite temporal alcanzado");
+					waitMessage.setContent(df.format(timeout));
 					waitMessage.setConversationId(conversationId);
 					processMessage(waitMessage);
 				}
-			}, timeToRun);
+			}, timeout);
 			this.timers.put(conversationId, timer);
 			this.unlock();
 			return true;
@@ -398,7 +401,7 @@ public abstract class CAgent extends BaseAgent {
 			this.unlock();
 		return false;
 	}
-
+	
 	void endConversation(CProcessorFactory theFactory) {
 		this.lock();
 		if (theFactory.getLimit() != 0) {

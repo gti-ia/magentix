@@ -201,6 +201,7 @@ public abstract class FIPA_CONTRACTNET_Initiator {
 			int acceptedProposals = (Integer)myProcessor.getInternalData().get("acceptedProposals");
 			int receivedResults = (Integer)myProcessor.getInternalData().get("receivedResults");
 			receivedResults++;
+			myProcessor.getInternalData().put("receivedResults", receivedResults);
 			if(receivedResults >= acceptedProposals)
 				return "FINAL";
 			else
@@ -218,6 +219,7 @@ public abstract class FIPA_CONTRACTNET_Initiator {
 			int acceptedProposals = (Integer)myProcessor.getInternalData().get("acceptedProposals");
 			int receivedResults = (Integer)myProcessor.getInternalData().get("receivedResults");
 			receivedResults++;
+			myProcessor.getInternalData().put("receivedResults", receivedResults);
 			if(receivedResults >= acceptedProposals)
 				return "FINAL";
 			else
@@ -237,7 +239,7 @@ public abstract class FIPA_CONTRACTNET_Initiator {
 
 	public CProcessorFactory newFactory(String name, MessageFilter filter,
 			ACLMessage template, int availableConversations, CAgent myAgent,
-			long deadline, int participants, int timeout) {
+			int participants, long deadline, int timeout) {
 
 		// Create factory
 
@@ -285,6 +287,7 @@ public abstract class FIPA_CONTRACTNET_Initiator {
 		processor.registerState(RECEIVE_NOT_UNDERSTOOD);
 		processor.addTransition(WAIT_FOR_PROPOSALS,
 				RECEIVE_NOT_UNDERSTOOD);
+		processor.addTransition(RECEIVE_NOT_UNDERSTOOD, WAIT_FOR_PROPOSALS);
 
 		// RECEIVE_REFUSE State
 
@@ -295,6 +298,7 @@ public abstract class FIPA_CONTRACTNET_Initiator {
 		processor.registerState(RECEIVE_REFUSE);
 		processor.addTransition(WAIT_FOR_PROPOSALS,
 				RECEIVE_REFUSE);
+		processor.addTransition(RECEIVE_REFUSE, WAIT_FOR_PROPOSALS);
 
 		// RECEIVE_PROPOSE State
 
@@ -304,6 +308,7 @@ public abstract class FIPA_CONTRACTNET_Initiator {
 		RECEIVE_PROPOSE.setAcceptFilter(filter);
 		processor.registerState(RECEIVE_PROPOSE);
 		processor.addTransition(WAIT_FOR_PROPOSALS, RECEIVE_PROPOSE);
+		processor.addTransition(RECEIVE_PROPOSE, WAIT_FOR_PROPOSALS);
 		
 		// TIMEOUT State
 		
@@ -364,6 +369,7 @@ public abstract class FIPA_CONTRACTNET_Initiator {
 		FINAL.setMethod(new FINAL_Method());
 
 		processor.registerState(FINAL);
+		processor.addTransition(EVALUATE_PROPOSALS, FINAL);
 		processor.addTransition(RECEIVE_INFORM, FINAL);			
 		processor.addTransition(RECEIVE_FAILURE, FINAL);
 				
