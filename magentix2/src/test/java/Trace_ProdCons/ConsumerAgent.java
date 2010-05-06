@@ -40,7 +40,7 @@ public class ConsumerAgent extends BaseAgent {
     	for (int i=0; i < 10; i++) {
 			try {
 				logger.info("[CONSUMER " + getName() + "]: Waiting (" + (i+1) + ")...");
-				Thread.currentThread().sleep(1000);
+				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -51,7 +51,7 @@ public class ConsumerAgent extends BaseAgent {
     	TraceInteract.cancelTracingServiceSubscription(this, "TRACE_TEST");
 		
     	try {
-			Thread.currentThread().sleep(3000);
+			Thread.sleep(3000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

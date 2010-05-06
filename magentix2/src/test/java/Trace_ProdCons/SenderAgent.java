@@ -32,7 +32,7 @@ public class SenderAgent extends BaseAgent {
 				// Generating the trace event
 				sendTraceEvent(tEvent);
 				
-				Thread.currentThread().sleep(1000);
+				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -40,7 +40,7 @@ public class SenderAgent extends BaseAgent {
 		}
 		
 		try {
-			Thread.currentThread().sleep(3000);
+			Thread.sleep(3000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
