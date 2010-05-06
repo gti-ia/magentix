@@ -24,8 +24,7 @@ import org.apache.qpid.transport.SessionListener;
  * @author Joan Bellver Faus
  */
 /**
- * [TRACE]:
- * Modified by Luis Burdalo to support event tracing
+ * [TRACE]: Modified by Luis Burdalo to support event tracing
  *
  */
 public class BaseAgent implements Runnable {
