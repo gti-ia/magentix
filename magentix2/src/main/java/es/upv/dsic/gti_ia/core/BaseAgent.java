@@ -18,7 +18,7 @@ import org.apache.qpid.transport.Session;
 import org.apache.qpid.transport.SessionException;
 import org.apache.qpid.transport.SessionListener;
 
-import es.upv.dsic.gti_ia.trace.TraceInteract;
+//import es.upv.dsic.gti_ia.trace.TraceInteract;
 
 /**
  * @author Ricard Lopez Fogues
@@ -334,66 +334,7 @@ public class BaseAgent implements Runnable {
 				MessageCreditUnit.MESSAGE, Session.UNLIMITED_CREDIT);
 		this.traceSession.sync();
 	}
-	
-	/**
-	 * Publish a tracing service so that other agents can request it
-	 * and receive the corresponding trace events 
-	 */
-	public void publishTracingService(){
 		
-		TraceInteract.publishTracingService();
-		
-	}
-
-	/**
-	 * Unpublish a previously published tracing service so that other agents cannot
-	 * receive the corresponding trace events 
-	 */
-	public void unpublishTracingService(){
-		
-		TraceInteract.unpublishTracingService();
-		
-	}
-	
-	/**
-	 * Request a tracing service
-	 * 
-	 */
-	public void requestTracingService(String eventType, AgentID originEntity) {
-		
-		TraceInteract.requestTracingService(this, eventType, originEntity);
-		
-	}
-	
-	/**
-	 * Request a tracing service: By not specifying the origin entity,
-	 * it is understood that the agent is interested in all of the tracing entities.
-	 * 
-	 */
-	public void requestTracingService(String eventType) {
-		
-		TraceInteract.requestTracingService(this, eventType);
-		
-	}
-	
-	/**
-	 * Cancel subscription to a tracing service
-	 */
-	public void cancelTracingServiceSubscription(String eventType, AgentID originEntity) {
-		
-		TraceInteract.cancelTracingServiceSubscription(this, eventType, originEntity);
-		
-	}
-	
-	/**
-	 * Cancel subscription to a tracing service
-	 */
-	public void cancelTracingServiceSubscription(String eventType) {
-		
-		TraceInteract.cancelTracingServiceSubscription(this, eventType);
-		
-	}
-	
 	/**
 	 * 
 	 * Sends a trace event to the mgx.trace exchange
