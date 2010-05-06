@@ -274,6 +274,7 @@ public abstract class FIPA_CONTRACTNET_Initiator {
 
 		// WAIT_FOR_PROPOSALS State
 		WaitState WAIT_FOR_PROPOSALS = new WaitState("WAIT_FOR_PROPOSALS", deadline);
+		WAIT_FOR_PROPOSALS.setWaitType(WaitState.ABSOLUT);
 		processor.registerState(WAIT_FOR_PROPOSALS);
 		processor.addTransition(SOLICIT_PROPOSALS, WAIT_FOR_PROPOSALS);
 

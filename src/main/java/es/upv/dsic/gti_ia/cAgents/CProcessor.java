@@ -335,9 +335,8 @@ public class CProcessor implements Runnable, Cloneable {
 						this.logger
 								.info(this.myAgent.getName() + "Empty queue");
 						idle = true;
-						if (waitState.getTimeOut() != null) {
-							myAgent.addTimer(conversationID, waitState
-									.getTimeOut());
+						if (waitState.getPeriod() != 0) {
+							myAgent.addTimer(conversationID, waitState.getName(), waitState.getPeriod(), waitState.getWaitType());
 						}
 						this.unlockMyAgent();
 						return;

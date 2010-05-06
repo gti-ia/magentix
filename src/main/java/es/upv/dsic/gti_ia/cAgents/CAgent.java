@@ -91,6 +91,7 @@ public abstract class CAgent extends BaseAgent {
 
 	private Map<String, CProcessor> processors = new HashMap<String, CProcessor>();
 	private Map<String, Timer> timers = new HashMap<String, Timer>();
+	private HashMap<String, HashMap<String, Long>> deadlines = new HashMap<String, HashMap<String, Long>>();
 	ReentrantLock mutex = new ReentrantLock();
 	private CProcessorFactory welcomeFactory;
 	private CProcessor welcomeProcessor;
@@ -378,10 +379,11 @@ public abstract class CAgent extends BaseAgent {
 		this.unlock();
 	}
 
-	boolean addTimer(final String conversationId, final Date timeout) {
+	boolean addTimer(final String conversationId, String stateName, final long period, int waitType) {
 		this.lock();
-		if (this.timers.get(conversationId) == null) {
-			//final Date timeToRun = new Date(System.currentTimeMillis() + milliseconds);
+		final Date deadline;
+		if(waitType == WaitState.ONESHOT){		
+			deadline = new Date(System.currentTimeMillis() + period);
 			Timer timer = new Timer();
 			
 			timer.schedule(new TimerTask() {
@@ -389,16 +391,90 @@ public abstract class CAgent extends BaseAgent {
 					DateFormat df = DateFormat.getDateInstance();
 					ACLMessage waitMessage = new ACLMessage(ACLMessage.INFORM);
 					waitMessage.setHeader("purpose", "waitMessage");
-					waitMessage.setContent(df.format(timeout));
+					waitMessage.setContent(df.format(deadline));
 					waitMessage.setConversationId(conversationId);
 					processMessage(waitMessage);
 				}
-			}, timeout);
+			}, deadline);
 			this.timers.put(conversationId, timer);
 			this.unlock();
-			return true;
-		} else
+			return true;	
+		}
+		else if(waitType == WaitState.ABSOLUT){
+			long auxDeadline;
+			if(this.deadlines.get(conversationId) == null)//the first timer for this conversation
+				auxDeadline = System.currentTimeMillis() + period;
+			else if(this.deadlines.get(conversationId).get(stateName) == null)//the first time the conversation passes through this state
+				auxDeadline = System.currentTimeMillis() + period;
+			else{
+				auxDeadline = this.deadlines.get(conversationId).get(stateName);
+				if(auxDeadline <= System.currentTimeMillis())
+					auxDeadline = System.currentTimeMillis() + period;
+			}
+			deadline = new Date(auxDeadline);
+			DateFormat df = DateFormat.getTimeInstance();
+			this.logger.info("Deadline "+ df.format(deadline));
+			Timer timer = new Timer();
+			
+			timer.schedule(new TimerTask() {
+				public void run() {
+					DateFormat df = DateFormat.getDateInstance();
+					ACLMessage waitMessage = new ACLMessage(ACLMessage.INFORM);
+					waitMessage.setHeader("purpose", "waitMessage");
+					waitMessage.setContent(df.format(deadline));
+					waitMessage.setConversationId(conversationId);
+					processMessage(waitMessage);
+				}
+			}, deadline);
+			this.timers.put(conversationId, timer);
+			if(this.deadlines.get(conversationId) == null)
+				this.deadlines.put(conversationId, new HashMap<String, Long>());
+			this.deadlines.get(conversationId).put(stateName, new Long(auxDeadline));
 			this.unlock();
+			return true;
+		}
+		else if(waitType == WaitState.PERIODIC){
+			this.unlock();
+			long auxDeadline;
+			if(this.deadlines.get(conversationId) == null)//the first timer for this conversation
+				auxDeadline = System.currentTimeMillis() + period;
+			else if(this.deadlines.get(conversationId).get(stateName) == null)//the first time the conversation passes through this state
+				auxDeadline = System.currentTimeMillis() + period;
+			else{
+				auxDeadline = this.deadlines.get(conversationId).get(stateName);
+				if(auxDeadline <= System.currentTimeMillis()){
+					ACLMessage waitMessage = new ACLMessage(ACLMessage.INFORM);
+					waitMessage.setHeader("purpose", "waitMessage");
+					waitMessage.setConversationId(conversationId);
+					processMessage(waitMessage);
+					while(auxDeadline < System.currentTimeMillis())
+						auxDeadline += period;
+				}
+			}
+			deadline = new Date(auxDeadline);
+			DateFormat df = DateFormat.getTimeInstance();
+			this.logger.info("Deadline "+ df.format(deadline));
+			Timer timer = new Timer();
+			
+			timer.schedule(new TimerTask() {
+				public void run() {
+					DateFormat df = DateFormat.getDateInstance();
+					ACLMessage waitMessage = new ACLMessage(ACLMessage.INFORM);
+					waitMessage.setHeader("purpose", "waitMessage");
+					waitMessage.setContent(df.format(deadline));
+					waitMessage.setConversationId(conversationId);
+					processMessage(waitMessage);
+				}
+			}, deadline);
+			this.timers.put(conversationId, timer);
+			if(this.deadlines.get(conversationId) == null)
+				this.deadlines.put(conversationId, new HashMap<String, Long>());
+			auxDeadline = auxDeadline + period;//we store the next deadline after the timer sends the message
+			this.deadlines.get(conversationId).put(stateName, new Long(auxDeadline));
+			//this.unlock();
+			return true;
+		}
+		//this.unlock();
 		return false;
 	}
 	
