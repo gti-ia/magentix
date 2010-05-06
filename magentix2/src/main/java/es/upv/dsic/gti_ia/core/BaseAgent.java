@@ -18,8 +18,6 @@ import org.apache.qpid.transport.Session;
 import org.apache.qpid.transport.SessionException;
 import org.apache.qpid.transport.SessionListener;
 
-//import es.upv.dsic.gti_ia.trace.TraceInteract;
-
 /**
  * @author Ricard Lopez Fogues
  * @author Sergio Pajares Ferrando
