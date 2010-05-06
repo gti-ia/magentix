@@ -39,17 +39,20 @@ public class Run {
 			/**
 			 * Instantiating the Trace Manager
 			 */
-			TraceManager tm = new TraceManager(new AgentID("qpid://tm@localhost:8080"));
+			//TraceManager tm = new TraceManager(new AgentID("qpid://tm@localhost:8080"));
+			TraceManager tm = new TraceManager(new AgentID("tm"));
 			
 			/**
 			 * Instantiating the sender agent
 			 */
-			SenderAgent sender = new SenderAgent(new AgentID("qpid://sender@localhost:8080"));
+			//SenderAgent sender = new SenderAgent(new AgentID("qpid://sender@localhost:8080"));
+			SenderAgent sender = new SenderAgent(new AgentID("sender"));
 
 			/**
 			 * Instantiating the consumer agent
 			 */
-			ConsumerAgent consumer = new ConsumerAgent(new AgentID("qpid://consumer@localhost:8080"));
+			//ConsumerAgent consumer = new ConsumerAgent(new AgentID("qpid://consumer@localhost:8080"));
+			ConsumerAgent consumer = new ConsumerAgent(new AgentID("consumer"));
 
 			/**
 			 * Execute the agents
