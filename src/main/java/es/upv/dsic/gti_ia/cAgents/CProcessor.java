@@ -333,7 +333,7 @@ public class CProcessor implements Runnable, Cloneable {
 						}
 					} else { // queueMessage is empty
 						this.logger
-								.info(this.myAgent.getName() + "Empty queue");
+								.info(this.myAgent.getName() + " Empty queue");
 						idle = true;
 						if (waitState.getPeriod() != 0) {
 							myAgent.addTimer(conversationID, waitState.getName(), waitState.getPeriod(), waitState.getWaitType());
