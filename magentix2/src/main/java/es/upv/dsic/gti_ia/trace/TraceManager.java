@@ -23,372 +23,9 @@ import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.BaseAgent;
 import es.upv.dsic.gti_ia.core.TraceEvent;
 
-public class TraceManager extends BaseAgent{
+import es.upv.dsic.gti_ia.trace.*;
 
-	private class ServiceProvider {
-		private AgentID aid;
-		private ServiceProvider next;
-		
-		public ServiceProvider () {
-			this.aid=null;
-			this.next=null;
-		}
-		
-		public ServiceProvider (AgentID aid) {
-			this.aid=aid;
-			this.next=null;
-		}
-		
-		public void setAID (AgentID aid) {
-			this.aid=aid;
-		}
-		
-		public void setNext(ServiceProvider nextProvider) {
-			this.next=nextProvider;
-		}
-		
-		public AgentID getAID () {
-			return this.aid;
-		}
-		
-		public ServiceProvider getNext() {
-			return this.next;
-		}
-	}
-	
-	private class ServiceProviderList {
-		private ServiceProvider first;
-		private ServiceProvider last;
-		private int nproviders;
-		
-		public ServiceProviderList () {
-			this.first=null;
-			this.last=null;
-			this.nproviders=0;
-		}
-		
-		public ServiceProviderList (ServiceProvider provider) {
-			this.first=provider;
-			this.last=provider;
-			this.nproviders=1;
-		}
-		
-		public ServiceProvider getFirst () {
-			return this.first;
-		}
-		
-		public ServiceProvider getLast () {
-			return this.last;
-		}
-		
-		public int getNProviders () {
-			return this.nproviders;
-		}
-		
-		public int addProvider (ServiceProvider newProvider) {
-			// Returns position in which it was inserted
-			this.getLast().setNext(newProvider);
-			newProvider.setNext(null);
-			this.last=newProvider;
-			this.nproviders++;
-			
-			return this.nproviders-1;
-		}
-		
-		public int addProviderAt (ServiceProvider newProvider, int position) {
-			// position goes from 0 to (nproviders-1)
-			int i;
-			ServiceProvider sp;
-			
-			if (position > this.nproviders) {
-				// Bad position
-				return -1;
-			}
-			
-			for (i=0, sp=this.getFirst(); i < position; i++, sp=sp.getNext());
-			
-			newProvider.setNext(sp.getNext());
-			sp.setNext(newProvider);
-			
-			if (position == 0) {
-				this.first=newProvider;
-			}
-			else if (position == nproviders) {
-				this.last=newProvider;
-			}
-			
-			this.nproviders++;
-			
-			return position;
-		}
-	}
-	
-	private class TracingService {
-		private String name;
-		private String eventType;
-		private ServiceProviderList providers;
-		private TracingService next;
-		
-		public TracingService () {
-			this.name = null;
-			this.eventType = null;
-			this.providers = null;
-			this.next = null;
-		}
-		
-		public TracingService (String serviceName, String eventType) {
-			this.name=serviceName;
-			this.eventType=eventType;
-			this.providers=null;
-			this.next = null;
-		}
-		
-		private void newSystemTracingService (String serviceName, String eventType) {
-			this.name=serviceName;
-			this.eventType=eventType;
-			this.providers=null;
-			this.next = null;
-		}
-		
-		public void setName(String name) {
-			this.name=name;
-		}
-		
-		public void setEventType (String eventType) {
-			this.eventType=eventType;
-		}
-		
-		public void setNext (TracingService ts) {
-			this.next=ts;
-		}
-		
-		public String getName () {
-			return this.name;
-		}
-		
-		public String getEventType () {
-			return this.eventType;
-		}
-		
-		public ServiceProviderList getProviders () {
-			return this.providers;
-		}
-		
-		public TracingService getNext (){
-			return this.next;
-		}
-		
-		public void addProvider (ServiceProvider provider) {
-			this.providers.addProvider(provider);
-		}
-		
-	}
-	
-	private class TracingServiceList {
-		private TracingService first;
-		private TracingService last;
-		private int nTracingServices;
-		
-		public TracingServiceList () {
-			this.first = null;
-			this.last = null;
-			this.nTracingServices = 0;
-		}
-		
-		public TracingServiceList (TracingService tService) {
-			this.first = tService;
-			this.last = tService;
-			this.nTracingServices = 1;
-		}
-		
-		public int addTracingService (TracingService newService) {
-			if (this.nTracingServices < 0){
-				// Error mucho gordo
-				return -1;
-			}
-			else if (this.nTracingServices == 0) {
-				this.first=newService;
-			}
-			else {
-				this.last.setNext(newService);
-			}
-			
-			this.last = newService;
-			newService.next = null;
-			this.nTracingServices++;
-			
-			return this.nTracingServices-1;
-		}
-		
-		public int addTracingServiceAtPosition (TracingService newService, int position) {
-			// position goes from 0 to (nTracingServices-1)
-			int i;
-			TracingService ts;
-			
-			if ((position > this.nTracingServices) || (position < 0)) {
-				// Bad position
-				return -1;
-			}
-			
-			for (i=0, ts=this.getFirst(); i < position; i++, ts=ts.getNext());
-			
-			newService.setNext(ts.getNext());
-			ts.setNext(newService);
-			
-			if (position == 0) {
-				this.first=newService;
-			}
-			else if (position == nTracingServices) {
-				this.last=newService;
-			}
-			
-			this.nTracingServices++;
-			
-			return position;
-		}
-		
-		public TracingService getFirst () {
-			return this.first;
-		}
-		
-		public TracingService getLast () {
-			return this.last;
-		}
-		
-		public int getNTracingServices () {
-			return this.nTracingServices;
-		}
-		
-		public String listAllTracingServices () {
-			String list = new String();
-			int i;
-			TracingService ts;
-			
-			for (i=0, ts=this.getFirst(); (i < this.getNTracingServices()) && (ts.getNext() != null); i++, ts=ts.getNext()){
-				list = list + "\n" + ts.eventType.toString();
-			}
-			list = list + "\n";
-			
-			return list;
-		}
-	}
-	
-	private class TracingServiceSubscription {
-		AgentID subscriptor;
-		TracingService tracingService;
-		TracingServiceSubscription next;
-		
-		public void TracingServiceSubscription () {
-			this.subscriptor = null;
-			this.tracingService = null;
-			this.next = null;
-		}
-		
-		public void TracingServiceSubscription (AgentID subscriptor, TracingService tracingService) {
-			this.subscriptor = subscriptor;
-			this.tracingService = tracingService;
-			this.next = null;
-		}
-		
-		public void setSubscriptor (AgentID aid) {
-			this.subscriptor = aid;
-		}
-		
-		public void setTracingService (TracingService service) {
-			this.tracingService = service;
-		}
-		
-		public void setNext (TracingServiceSubscription subscription) {
-			this.next = subscription;
-		}
-		
-		public AgentID getSubscriptor () {
-			return this.subscriptor;
-		}
-		
-		public TracingService getService () {
-			return this.tracingService;
-		}
-		
-		public TracingServiceSubscription getNext () {
-			return this.next;
-		}
-	}
-	
-	private class TracingServiceSubscriptionList {
-		private TracingServiceSubscription first;
-		private TracingServiceSubscription last;
-		private int nsubscriptions;
-		
-		public void TracingServiceSubscriptionList (){
-			this.first = null;
-			this.last = null;
-			this.nsubscriptions = 0;
-		}
-		
-		public void TracingServiceSubscriptionList (TracingServiceSubscription subscription) {
-			this.first = subscription;
-			this.last = subscription;
-			this.nsubscriptions = 1;
-		}
-		
-		public TracingServiceSubscription getFirst () {
-			return this.first;
-		}
-		
-		public TracingServiceSubscription getLast () {
-			return this.last;
-		}
-		
-		public int getNSubscriptions () {
-			return this.nsubscriptions;
-		}
-		
-		public int addSubscription (TracingServiceSubscription newSubscription) {
-			// Returns position in which it was inserted
-			this.getLast().setNext(newSubscription);
-			newSubscription.setNext(null);
-			this.last=newSubscription;
-			this.nsubscriptions++;
-			
-			return this.nsubscriptions-1;
-		}
-		
-		public int addSubscriptionAt (TracingServiceSubscription newSubscription, int position) {
-			// position goes from 0 to (nproviders-1)
-			int i;
-			TracingServiceSubscription sb;
-			
-			if (position > this.nsubscriptions) {
-				// Bad position
-				return -1;
-			}
-			
-			for (i=0, sb=this.getFirst(); i < position; i++, sb=sb.getNext());
-			
-			newSubscription.setNext(sb.getNext());
-			sb.setNext(newSubscription);
-			
-			if (position == 0) {
-				this.first=newSubscription;
-			}
-			else if (position == nsubscriptions) {
-				this.last=newSubscription;
-			}
-			
-			this.nsubscriptions++;
-			
-			return position;
-		}
-	}
-	
-	private class TracingServiceAuthorization {
-		
-	}
-	
-	private class TracingServiceAuthorizationGraph {
-		
-	}
+public class TraceManager extends BaseAgent{
 	
 	private TracingServiceList DI_Tracing_Services;
 	private TracingServiceList DD_Tracing_Services;
@@ -422,55 +59,56 @@ public class TraceManager extends BaseAgent{
 		DD_Tracing_Services = new TracingServiceList();
 		
 		// System Trace Events
-		DI_Tracing_Services.addTracingService(new TracingService("TRACE_ERROR", "TRACE_ERROR"));
-		DI_Tracing_Services.addTracingService(new TracingService("TRACE_START", "TRACE_START"));
-		DI_Tracing_Services.addTracingService(new TracingService("TRACE_STOP", "TRACE_STOP"));
-		DI_Tracing_Services.addTracingService(new TracingService("SUBSCRIBED", "SUBSCRIBED"));
-		DI_Tracing_Services.addTracingService(new TracingService("UNSUBSCRIBED", "UNSUBSCRIBED"));
-		DI_Tracing_Services.addTracingService(new TracingService("STREAM_OVERFLOW", "STREAM_OVERFLOW"));
-		DI_Tracing_Services.addTracingService(new TracingService("STREAM_RESUME", "STREAM_RESUME"));
-		DI_Tracing_Services.addTracingService(new TracingService("STREAM_FLUSH_START", "STREAM_FLUSH_START"));
-		DI_Tracing_Services.addTracingService(new TracingService("STREAM_FLUSH_STOP", "STREAM_FLUSH_STOP"));
+		DI_Tracing_Services.addTracingService(null, new TracingService("TRACE_ERROR", "TRACE_ERROR", "General error in the tracing process."));
+		DI_Tracing_Services.addTracingService(null, new TracingService("TRACE_START", "TRACE_START", "The ER entity started tracing."));
+		DI_Tracing_Services.addTracingService(null, new TracingService("TRACE_STOP", "TRACE_STOP", "The ER entity stoppped tracing."));
+		DI_Tracing_Services.addTracingService(null, new TracingService("SUBSCRIBED", "SUBSCRIBED", "The ER entity subscribed to a tracing service."));
+		DI_Tracing_Services.addTracingService(null, new TracingService("UNSUBSCRIBED", "UNSUBSCRIBED", "The ER entity unsubscribed from a tracing service."));
+		DI_Tracing_Services.addTracingService(null, new TracingService("STREAM_OVERFLOW", "STREAM_OVERFLOW", "The stream where trace events were being stored for the ER to recover them is full."));
+		DI_Tracing_Services.addTracingService(null, new TracingService("STREAM_RESUME", "STREAM_RESUME", "The ER entity began to trace events after having stoppped."));
+		DI_Tracing_Services.addTracingService(null, new TracingService("STREAM_FLUSH_START", "STREAM_FLUSH_START", "The ER entity started flushing the stream where it was receiving events."));
+		DI_Tracing_Services.addTracingService(null, new TracingService("STREAM_FLUSH_STOP", "STREAM_FLUSH_STOP", "The flushing process previously started has arrived to its end."));
 		
 		// Life cycle of Tracing Entities
-		DI_Tracing_Services.addTracingService(new TracingService("NEW_AGENT", "NEW_AGENT"));
-		//DI_Tracing_Services.addTracingService(new TracingService("NEW_ARTIFACT", "NEW_ARTIFACT"));
-		//DI_Tracing_Services.addTracingService(new TracingService("NEW_AGGREGATION", "NEW_AGGREGATION"));
-		DI_Tracing_Services.addTracingService(new TracingService("AGENT_SUSPENDED", "AGENT_SUSPENDED"));
-		DI_Tracing_Services.addTracingService(new TracingService("AGENT_RESUMED", "AGENT_RESUMED"));
-		DI_Tracing_Services.addTracingService(new TracingService("AGENT_DESTROYED", "AGENT_DESTROYED"));
-		//DI_Tracing_Services.addTracingService(new TracingService("AGENT_ENTERS_AGGREGATION", "AGENT_ENTERS_AGGREGATION"));
-		//DI_Tracing_Services.addTracingService(new TracingService("AGENT_LEAVES_AGGREGATION", "AGENT_LEAVES_AGGREGATION"));
-		//DI_Tracing_Services.addTracingService(new TracingService("ARTIFACT_ENTERS_AGGREGATION", "ARTIFACT_ENTERS_AGGREGATION"));
-		//DI_Tracing_Services.addTracingService(new TracingService("ARTIFACT_LEAVES_AGGREGATION", "ARTIFACT_LEAVES_AGGREGATION"));
+		DI_Tracing_Services.addTracingService(null, new TracingService("NEW_AGENT", "NEW_AGENT", "A new agent was registered in the system."));
+		//DI_Tracing_Services.addTracingService(null, new TracingService("NEW_ARTIFACT", "NEW_ARTIFACT", "A new artifact was registered in the system."));
+		//DI_Tracing_Services.addTracingService(null, new TracingService("NEW_AGGREGATION", "NEW_AGGREGATION", "A new aggregation was registered in the system."));
+		DI_Tracing_Services.addTracingService(null, new TracingService("AGENT_SUSPENDED", "AGENT_SUSPENDED", "An agent was suspended."));
+		DI_Tracing_Services.addTracingService(null, new TracingService("AGENT_RESUMED", "AGENT_RESUMED", "An agent restarted after a suspension."));
+		DI_Tracing_Services.addTracingService(null, new TracingService("AGENT_DESTROYED", "AGENT_DESTROYED", "An agent was destroyed."));
+		//DI_Tracing_Services.addTracingService(null, new TracingService("AGENT_ENTERS_AGGREGATION", "AGENT_ENTERS_AGGREGATION", "An agent enters an aggregation."));
+		//DI_Tracing_Services.addTracingService(null, new TracingService("AGENT_LEAVES_AGGREGATION", "AGENT_LEAVES_AGGREGATION", "An agent leaves an aggregation."));
+		//DI_Tracing_Services.addTracingService(null, new TracingService("ARTIFACT_ENTERS_AGGREGATION", "ARTIFACT_ENTERS_AGGREGATION", "An artifact starts being part of an aggregation."));
+		//DI_Tracing_Services.addTracingService(null, new TracingService("ARTIFACT_LEAVES_AGGREGATION", "ARTIFACT_LEAVES_AGGREGATION", "An artifact stops being part of an aggregation."));
 		
 		// Messaging among Tracing Entities
-		DI_Tracing_Services.addTracingService(new TracingService("MESSAGE_SENT", "MESSAGE_SENT"));
-		DI_Tracing_Services.addTracingService(new TracingService("MESSAGE_RECEIVED", "MESSAGE_RECEIVED"));
-		DI_Tracing_Services.addTracingService(new TracingService("MESSAGE_UNDELIVERABLE", "MESSAGE_UNDELIVERABLE"));
+		DI_Tracing_Services.addTracingService(null, new TracingService("MESSAGE_SENT", "MESSAGE_SENT", "A FIPA-ACL message was sent."));
+		DI_Tracing_Services.addTracingService(null, new TracingService("MESSAGE_RECEIVED", "MESSAGE_RECEIVED", "A FIPA-ACL message was received."));
+		DI_Tracing_Services.addTracingService(null, new TracingService("MESSAGE_UNDELIVERABLE", "MESSAGE_UNDELIVERABLE", "A FIPA-ACL message was impossible to deliver."));
 		
 		// OMS related Trace Events
-		//DI_Tracing_Services.addTracingService(new TracingService("ROLE_REGISTRATION", "ROLE_REGISTRATION"));
-		//DI_Tracing_Services.addTracingService(new TracingService("ROLE_DEREGISTRATION", "ROLE_DEREGISTRATION"));
-		//DI_Tracing_Services.addTracingService(new TracingService("NORM_REGISTRATION", "NORM_REGISTRATION"));
-		//DI_Tracing_Services.addTracingService(new TracingService("NORM_DEREGISTRATION", "NORM_DEREGISTRATION"));
-		//DI_Tracing_Services.addTracingService(new TracingService("UNIT_REGISTRATION", "UNIT_REGISTRATION"));
-		//DI_Tracing_Services.addTracingService(new TracingService("UNIT_DEREGISTRATION", "UNIT_DEREGISTRATION"));
-		//DI_Tracing_Services.addTracingService(new TracingService("ROLE_ACQUIRE", "ROLE_ACQUIRE"));
-		//DI_Tracing_Services.addTracingService(new TracingService("ROLE_LEAVE", "ROLE_LEAVE"));
-		//DI_Tracing_Services.addTracingService(new TracingService("ROLE_EXPULSION", "ROLE_EXPULSION"));
-		//DI_Tracing_Services.addTracingService(new TracingService("NORM_VIOLATION", "NORM_VIOLATION"));
+		//DI_Tracing_Services.addTracingService(null, new TracingService("ROLE_REGISTRATION", "ROLE_REGISTRATION", "A new role has been registered in the system."));
+		//DI_Tracing_Services.addTracingService(null, new TracingService("ROLE_DEREGISTRATION", "ROLE_DEREGISTRATION", "An existing role has been removed from the system."));
+		//DI_Tracing_Services.addTracingService(null, new TracingService("NORM_REGISTRATION", "NORM_REGISTRATION", "A new norm has been registered in the system."));
+		//DI_Tracing_Services.addTracingService(null, new TracingService("NORM_DEREGISTRATION", "NORM_DEREGISTRATION", "A norm has been removed from the system."));
+		//DI_Tracing_Services.addTracingService(null, new TracingService("UNIT_REGISTRATION", "UNIT_REGISTRATION", "A new organisational unit has been registered in the system."));
+		//DI_Tracing_Services.addTracingService(null, new TracingService("UNIT_DEREGISTRATION", "UNIT_DEREGISTRATION", "An existing organizational unit has been removed from the system."));
+		//DI_Tracing_Services.addTracingService(null, new TracingService("ROLE_ACQUIRE", "ROLE_ACQUIRE", "A role has been acquired by an entity."));
+		//DI_Tracing_Services.addTracingService(null, new TracingService("ROLE_LEAVE", "ROLE_LEAVE", "An entity in the system has voluntarily stoppped playing a specific role."));
+		//DI_Tracing_Services.addTracingService(null, new TracingService("ROLE_EXPULSION", "ROLE_EXPULSION", "An entity in the system has been expulsed from playing a specific role."));
+		//DI_Tracing_Services.addTracingService(null, new TracingService("NORM_VIOLATION", "NORM_VIOLATION", "A norm in the system has been violated."));
 		
 		// Tracing System related Tracing Services
-		DI_Tracing_Services.addTracingService(new TracingService("PUBLISHED_TRACING_SERVICE", "PUBLISHED_TRACING_SERVICE"));
-		DI_Tracing_Services.addTracingService(new TracingService("UNPUBLISHED_TRACING_SERVICE", "UNPUBLISHED_TRACING_SERVICE"));
-		DI_Tracing_Services.addTracingService(new TracingService("TRACING_SERVICE_REQUEST", "TRACING_SERVICE_REQUEST"));
-		DI_Tracing_Services.addTracingService(new TracingService("TRACING_SERVICE_CANCEL", "TRACING_SERVICE_CANCEL"));
-		DI_Tracing_Services.addTracingService(new TracingService("AUTHORIZATION_REQUEST", "AUTHORIZATION_REQUEST"));
-		DI_Tracing_Services.addTracingService(new TracingService("AUTHORIZATION_ADDED", "AUTHORIZATION_ADDED"));
-		DI_Tracing_Services.addTracingService(new TracingService("AUTHORIZATION_REMOVED", "AUTHORIZATION_REMOVED"));
+		DI_Tracing_Services.addTracingService(null, new TracingService("PUBLISHED_TRACING_SERVICE", "PUBLISHED_TRACING_SERVICE", "A new tracing service has been published by an ES entity."));
+		DI_Tracing_Services.addTracingService(null, new TracingService("UNPUBLISHED_TRACING_SERVICE", "UNPUBLISHED_TRACING_SERVICE", "A tracing service is not being offered by an ER entity."));
+		// These two seem redundant with "SUBSCRIBED" and "UNSUBSCRIBED"
+		//DI_Tracing_Services.addTracingService(null, new TracingService("TRACING_SERVICE_REQUEST", "TRACING_SERVICE_REQUEST", "An ER entity requested a tracing service."));
+		//DI_Tracing_Services.addTracingService(null, new TracingService("TRACING_SERVICE_CANCEL", "TRACING_SERVICE_CANCEL", "An ER entity cancelled the subscription to a tracing service."));
+		DI_Tracing_Services.addTracingService(null, new TracingService("AUTHORIZATION_REQUEST", "AUTHORIZATION_REQUEST", "An entity requested authorization for a tracing service."));
+		DI_Tracing_Services.addTracingService(null, new TracingService("AUTHORIZATION_ADDED", "AUTHORIZATION_ADDED", "An entity added an authorization for a tracing service."));
+		DI_Tracing_Services.addTracingService(null, new TracingService("AUTHORIZATION_REMOVED", "AUTHORIZATION_REMOVED", "An authorization for a tracing service was removed."));
 		
-		//System.out.print("DI Tracing services:\n" + DI_Tracing_Services.listAllTracingServices());
+		//logger.info("DI Tracing services:\n" + DI_Tracing_Services.listAllTracingServices());
 	}
 	
 	/**
@@ -544,14 +182,102 @@ public class TraceManager extends BaseAgent{
 	public void onMessage(ACLMessage msg) {
 		String content, eventType, originEntity;
 		Map<String, Object> arguments;
-		int index;
+		int index, index2, length;
 		TraceEvent tEvent; // = new TraceEvent();
-		ACLMessage response_msg;
+		ACLMessage response_msg = null;
+		String command;
+		
+		int error;
 		
 		//logger.info("[TRACE MANAGER]: Received [" + msg.getPerformativeInt() + "] -> " + msg.getContent());
 		
 		switch (msg.getPerformativeInt()){
 		
+			case ACLMessage.REQUEST:
+				
+				content = msg.getContent();
+				
+				index = content.indexOf('#', 0);
+				command = content.substring(0, index);
+				
+				if (command.equals("publish")) {
+					// Publication of a tracing service
+					TracingService newService = new TracingService();
+					
+					index2 = content.indexOf('#', index+1);
+					length = Integer.parseInt(content.substring(index + 1, index2));
+					newService.setName(content.substring(index2 + 1, index2 + 1 + length));
+					
+					index = index2 + length + 1;
+					index2 = content.indexOf('#', index);
+					length = Integer.parseInt(content.substring(index, index2));
+					newService.setEventType(content.substring(index2 + 1, index2 + 1 + length));
+					
+					index = index2 + length + 1;
+					newService.setDescription(content.substring(index));
+					
+					if ((error = DD_Tracing_Services.addTracingService(msg.getSender(), newService)) >= 0){
+						response_msg = new ACLMessage(ACLMessage.AGREE);
+						response_msg.setReceiver(msg.getSender());
+						response_msg.setContent("publish#" + newService.getName());
+						logger.info("[TRACE MANAGER]: sending AGREE message to " + msg.getReceiver().toString());
+					}
+					else{
+						response_msg = new ACLMessage(ACLMessage.REFUSE);
+						response_msg.setReceiver(msg.getSender());
+						response_msg.setContent("publish#" + newService.getName());
+						logger.info("[TRACE MANAGER]: sending REFUSE message to " + msg.getReceiver().toString());
+					}
+				}
+				else if (command.equals("unpublish")){
+					// Remove publication of a tracing service
+					String serviceName=content.substring(index+1);
+					TracingService ts;
+					
+					if ((ts=DD_Tracing_Services.getServiceByName(serviceName)) == null){
+						// Service not found
+						response_msg = new ACLMessage(ACLMessage.REFUSE);
+					}
+					else{
+						if ((error=ts.removeProvider(msg.getSender())) == 0){
+							// Provider removed
+					    	response_msg = new ACLMessage(ACLMessage.AGREE);
+						}
+						else if (error == 1){
+							// Provider removed, but now the tracing service has run out of providers
+							if ((error = DD_Tracing_Services.removeTracingService(serviceName)) == 0){
+								// Tracing service also removed
+								response_msg = new ACLMessage(ACLMessage.AGREE);
+							}
+							else{
+								// This should never happen
+								response_msg = new ACLMessage(ACLMessage.REFUSE);
+							}
+						}
+						else{
+							// This should never happen
+							response_msg = new ACLMessage(ACLMessage.REFUSE);
+						}
+					}
+					
+					response_msg.setReceiver(msg.getSender());
+					response_msg.setContent("unpublish#" + serviceName);
+					logger.info("[TRACE MANAGER]: sending message to " + msg.getReceiver().toString());
+				}
+				else {
+					/**
+					 * Building a ACLMessage
+					 */
+			    	response_msg = new ACLMessage(ACLMessage.UNKNOWN);
+			    	response_msg.setReceiver(msg.getSender());
+					response_msg.setContent(content);
+					logger.info("[TRACE MANAGER]: returning UNKNOWN message to " + msg.getReceiver().toString());
+				}
+				
+				send(response_msg);
+				
+				break;
+				
 			case ACLMessage.SUBSCRIBE:
 				// Subscription to a tracing service
 								
@@ -560,7 +286,6 @@ public class TraceManager extends BaseAgent{
 				content = msg.getContent();
 				
 				index = content.indexOf('#', 0);
-				//length = Integer.parseInt(content.substring(0, index));
 				eventType = content.substring(0, index);
 				originEntity = content.substring(index + 1);
 				
@@ -572,22 +297,15 @@ public class TraceManager extends BaseAgent{
 		    	}
 		    			    	
 		    	this.session.exchangeBind(msg.getSender().name+".trace", "amq.match", eventType + "#" + originEntity, arguments);
-		    	logger.info("[TRACE MANAGER]: binding " + msg.getSender().name+".trace to receive " + eventType);
-		    	//this.session.exchangeBind(msg.getSender().toString()+".trace", "mgx.trace", eventType + "#" + originEntity.toString(), arguments);
-		    	// confirm completion
-		    	//this.session.sync();
-		    	
-//		    	tEvent = new TraceEvent("system_notify", this.getAid(), "SUBSCRIBED#" + eventType + "#" + originEntity);
-//		    	sendSystemTraceEvent(tEvent, msg.getSender().toString());
+		    	//logger.info("[TRACE MANAGER]: binding " + msg.getSender().name+".trace to receive " + eventType);
+
 		    	/**
 				 * Building a ACLMessage
 				 */
-		    	//response_msg=msg.createReply();
 		    	response_msg = new ACLMessage(ACLMessage.AGREE);
 		    	response_msg.setReceiver(msg.getSender());
-				//response_msg.setPerformative(ACLMessage.AGREE);
 				response_msg.setContent("subscription#" + eventType + "#" + originEntity);
-				logger.info("[TRACE MANAGER]: sending message to " + msg.getReceiver().toString());
+				//logger.info("[TRACE MANAGER]: sending message to " + msg.getReceiver().toString());
 				/**
 				 * Sending a ACLMessage
 				 */
@@ -600,15 +318,11 @@ public class TraceManager extends BaseAgent{
 				content = msg.getContent();
 				
 				index = content.indexOf('#', 0);
-				//length = Integer.parseInt(content.substring(0, index));
 				eventType = content.substring(0, index);
 				originEntity = content.substring(index + 1);
 				//System.out.println("JAAAAAAR " + this.session.exchangeBound("amq.match", msg.getSender().name+".trace", eventType+"#"+originEntity.toString(), null, Option.NONE).);
 				this.session.exchangeUnbind(msg.getSender().name+".trace", "amq.match", eventType + "#" + originEntity.toString(), Option.NONE);
-				//this.session.exchangeUnbind(msg.getSender()+".trace", "mgx.trace", eventType + "#" + originEntity.toString(), Option.NONE);
-				logger.info("[TRACE MANAGER]: unbinding " + msg.getSender().name+".trace from " + eventType);
-		    	// confirm completion
-		    	//this.session.sync();
+				//logger.info("[TRACE MANAGER]: unbinding " + msg.getSender().name+".trace from " + eventType);
 		    	
 		    	tEvent = new TraceEvent("system_notify", this.getAid(), "UNSUBSCRIBED#" + eventType + "#" + originEntity);
 		    	sendSystemTraceEvent(tEvent, msg.getSender().toString());
@@ -616,10 +330,8 @@ public class TraceManager extends BaseAgent{
 		    	/**
 				 * Building a ACLMessage
 				 */
-				//response_msg=msg.createReply();
-		    	response_msg = new ACLMessage(ACLMessage.FAILURE);
+		    	response_msg = new ACLMessage(ACLMessage.AGREE);
 		    	response_msg.setReceiver(msg.getSender());
-				//response_msg.setPerformative(ACLMessage.FAILURE);
 				response_msg.setContent("unsubscription#" + eventType + "#" + originEntity);
 				/**
 				 * Sending a ACLMessage
@@ -629,8 +341,16 @@ public class TraceManager extends BaseAgent{
 				break;
 				
 			default:
-				logger.info("Mensaje received in " + this.getName()
-						+ " agent, by onMessage: " + msg.getContent());
+				/**
+				 * Building a ACLMessage
+				 */
+		    	response_msg = new ACLMessage(ACLMessage.UNKNOWN);
+		    	response_msg.setReceiver(msg.getSender());
+				response_msg.setContent(msg.getContent());
+//				logger.info("Mensaje received in " + this.getName()
+//						+ " agent, by onMessage: " + msg.getContent());
+//				logger.info("[TRACE MANAGER]: returning UNKNOWN message to " + msg.getReceiver().toString());
+				send(response_msg);
 		}
 		
 	}
