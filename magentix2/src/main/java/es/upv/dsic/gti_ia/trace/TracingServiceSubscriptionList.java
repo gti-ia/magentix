@@ -42,23 +42,23 @@ public class TracingServiceSubscriptionList {
 			return -1;
 		}
 		else {
-			this.last.setNext(newProvider);
-			newProvider.setPrev(this.last);
+			this.last.setNext(newSubscription);
+			newSubscription.setPrev(this.last);
 		}
 		
-		newProvider.setNext(null);
-		this.last = newProvider;
-		this.nProviders++;
+		newSubscription.setNext(null);
+		this.last = newSubscription;
+		this.nSubscriptions++;
 				
 		return 0;
-		
-		// Returns position in which it was inserted
-		this.getLast().setNext(newSubscription);
-		newSubscription.setNext(null);
-		this.last=newSubscription;
-		this.nsubscriptions++;
-		
-		return this.nsubscriptions-1;
+//		
+//		// Returns position in which it was inserted
+//		this.getLast().setNext(newSubscription);
+//		newSubscription.setNext(null);
+//		this.last=newSubscription;
+//		this.nSubscriptions++;
+//		
+//		return this.nSubscriptions-1;
 	}
 	
 	public int addSubscriptionAt (TracingServiceSubscription newSubscription, int position) {
