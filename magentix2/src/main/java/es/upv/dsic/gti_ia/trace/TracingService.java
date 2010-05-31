@@ -6,6 +6,7 @@ public class TracingService {
 	private String name;
 	private String eventType;
 	private String description;
+	private TracingServiceSubscriptionList subscriptorsAll;
 	private ServiceProviderList providers;
 	private TracingService prev;
 	private TracingService next;
@@ -13,6 +14,7 @@ public class TracingService {
 	public TracingService () {
 		this.name = null;
 		this.eventType = null;
+		this.subscriptorsAll = null;
 		this.providers = new ServiceProviderList();
 		this.prev=null;
 		this.next = null;
@@ -22,6 +24,7 @@ public class TracingService {
 		this.name=serviceName;
 		this.eventType=eventType;
 		this.description=description;
+		this.subscriptorsAll = null;
 		this.providers=new ServiceProviderList();
 		this.prev=null;
 		this.next = null;
@@ -31,6 +34,7 @@ public class TracingService {
 		this.name=serviceName;
 		this.eventType=eventType;
 		this.description=description;
+		this.subscriptorsAll = null;
 		this.providers=new ServiceProviderList();
 		this.prev=null;
 		this.next = null;
@@ -66,6 +70,10 @@ public class TracingService {
 	
 	public String getDescription () {
 		return this.description;
+	}
+	
+	public TracingServiceSubscriptionList getSubscriptorsAll () {
+		return this.subscriptorsAll;
 	}
 	
 	public ServiceProviderList getProviders () {
@@ -116,5 +124,21 @@ public class TracingService {
 	
 	public int removeProvider (AgentID provider){
 		return this.providers.removeProvider(provider);
+	}
+	
+	public int addSubscriptionAll (TracingServiceSubscription newSubscription) {
+		return this.subscriptorsAll.addSubscription(newSubscription);
+	}
+	
+	public int addSubscription (String tracingService, AgentID provider) {
+		ServiceProvider sp;
+		if ((sp=this.providers.getProviderByAid(provider)) == null){
+			// Provider not found
+		}
+		return 0;
+	}
+	
+	public int addSubscription (String tracingService) {
+		return 0;
 	}
 }

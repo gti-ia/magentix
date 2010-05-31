@@ -64,6 +64,7 @@ public class TraceManager extends BaseAgent{
 		DI_Tracing_Services.addTracingService(null, new TracingService("TRACE_STOP", "TRACE_STOP", "The ER entity stoppped tracing."));
 		DI_Tracing_Services.addTracingService(null, new TracingService("SUBSCRIBED", "SUBSCRIBED", "The ER entity subscribed to a tracing service."));
 		DI_Tracing_Services.addTracingService(null, new TracingService("UNSUBSCRIBED", "UNSUBSCRIBED", "The ER entity unsubscribed from a tracing service."));
+		DI_Tracing_Services.addTracingService(null, new TracingService("UNAVAILABLE_TS", "UNAVAILABLE_TS", "The tracing service which was requested does not exist or it has been un published and thus, it is not avilable anymore"));
 		DI_Tracing_Services.addTracingService(null, new TracingService("STREAM_OVERFLOW", "STREAM_OVERFLOW", "The stream where trace events were being stored for the ER to recover them is full."));
 		DI_Tracing_Services.addTracingService(null, new TracingService("STREAM_RESUME", "STREAM_RESUME", "The ER entity began to trace events after having stoppped."));
 		DI_Tracing_Services.addTracingService(null, new TracingService("STREAM_FLUSH_START", "STREAM_FLUSH_START", "The ER entity started flushing the stream where it was receiving events."));

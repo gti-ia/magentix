@@ -1,5 +1,7 @@
 package es.upv.dsic.gti_ia.trace;
 
+import es.upv.dsic.gti_ia.core.AgentID;
+
 public class TracingServiceSubscriptionList {
 	private TracingServiceSubscription first;
 	private TracingServiceSubscription last;
@@ -38,7 +40,7 @@ public class TracingServiceSubscriptionList {
 			this.first=newSubscription;
 			newSubscription.setPrev(null);
 		}
-		else if (this.existsSubscriptor(newSubscription.getAID())) {
+		else if (this.existsSubscriptor(newSubscription.getSubscriptor())) {
 			return -1;
 		}
 		else {

@@ -22,28 +22,26 @@ public class TracingServiceList {
 	}
 	
 	/**
-	 * Add a tracing service to the end of the tracing service list.
+	 * Add a tracing service at the end of the tracing sevices list.
+	 * The AgentID of the service publisher has to be unique within the list, otherwise,
+	 * it will not be added and the method will return error.
 	 * 
 	 * @param publisher
-	 * 		AgentID of the agent who wants to publish the tracing service.
-	 * 		If publisher is null, the tracing service is added without publishers.
+	 * 		AgentID of the agent which publishes the tracing service 
 	 * 
 	 * @param newService
-	 * 		TracingService to be published.
-	 * 		If the service was already published and publisher was not null,
-	 * 		a new provider for that service will be added.
+	 * 		TracingService object to add at the end of the list
 	 * 
 	 * @return 0
-	 * 		Success: Service published, with or without publisher, depending on
-	 * 			the parameters.
+	 * 		Success: Tracing service added.
 	 * 
 	 * @return 1
-	 * 		Success: The service was already published and only a new publisher
-	 * 			had to be added.
+	 * 		Success: The tracing service was already published by another provider.
+	 * 			The provider was added to the list of providers of the service.
 	 * 
 	 * @return -1
-	 * 		Error: Duplicate tracing service name and publisher (if specified)
-	 * 			No changes were made to the corresponding TracingServiceList
+	 * 		Error: Tracing service already published by the specified provider in the list.
+	 * 			No changes were made to the corresponding ServiceProviderList
 	 * 
 	 * @return -2
 	 * 		Error: Unknown error
