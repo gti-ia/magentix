@@ -63,7 +63,35 @@ public class TracingServiceSubscriptionList {
 //		return this.nSubscriptions-1;
 	}
 	
-	public int addSubscriptionAt (TracingServiceSubscription newSubscription, int position) {
+	public int addSubscription (AgentID subscriber, String tracingServiceName){
+		TracingServiceSubscription newSubscription;
+		
+		if (this.nSubscriptions < 0){
+			// Error mucho gordo
+			return -2;
+		}
+		else if (this.nSubscriptions == 0) {
+			
+			newSubscription = new TracingServiceSubscription(subscriber, ts);
+			this.first=newSubscription;
+			newSubscription.setPrev(null);
+		}
+		else if (this.existsSubscriptor(newSubscription.getSubscriptor())) {
+			return -1;
+		}
+		else {
+			this.last.setNext(newSubscription);
+			newSubscription.setPrev(this.last);
+		}
+		
+		newSubscription.setNext(null);
+		this.last = newSubscription;
+		this.nSubscriptions++;
+				
+		return 0;
+	}
+	
+	private int addSubscriptionAt (TracingServiceSubscription newSubscription, int position) {
 		// position goes from 0 to (nproviders-1)
 		int i;
 		TracingServiceSubscription sb;

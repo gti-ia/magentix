@@ -188,6 +188,8 @@ public class TraceManager extends BaseAgent{
 		ACLMessage response_msg = null;
 		String command;
 		
+		TracingService ts;
+		
 		int error;
 		
 		//logger.info("[TRACE MANAGER]: Received [" + msg.getPerformativeInt() + "] -> " + msg.getContent());
@@ -233,7 +235,7 @@ public class TraceManager extends BaseAgent{
 				else if (command.equals("unpublish")){
 					// Remove publication of a tracing service
 					String serviceName=content.substring(index+1);
-					TracingService ts;
+					
 					
 					if ((ts=DD_Tracing_Services.getServiceByName(serviceName)) == null){
 						// Service not found
@@ -289,6 +291,20 @@ public class TraceManager extends BaseAgent{
 				index = content.indexOf('#', 0);
 				eventType = content.substring(0, index);
 				originEntity = content.substring(index + 1);
+				
+				if ((ts=DI_Tracing_Services.getServiceByName(eventType)) != null){
+					// Subscribe to a DI tracing service
+					if (!originEntity.equals("any")) {
+						ts.addSubscriptionAll(newSubscription)
+					}
+				}
+				else if ((ts=DD_Tracing_Services.getServiceByName(eventType)) != null){
+					// Subscribe to a DD tracing service
+					
+				}
+				else{
+					// Tracing service not available
+				}
 				
 				arguments.put("x-match", "all");
 		    	arguments.put("event_type", eventType);

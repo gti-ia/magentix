@@ -130,6 +130,10 @@ public class TracingService {
 		return this.subscriptorsAll.addSubscription(newSubscription);
 	}
 	
+	public int addSubscriptionAll (AgentID subscriptor){
+		return this.subscriptorsAll.addSubscription(subscriptor);
+	}
+	
 	public int addSubscription (String tracingService, AgentID provider) {
 		ServiceProvider sp;
 		if ((sp=this.providers.getProviderByAid(provider)) == null){
