@@ -5,8 +5,8 @@ import es.upv.dsic.gti_ia.cAgents.CProcessor;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 
-// Para poder crear un CAgent es necesario en primer lugar
-// extender la clase CAgent e implementar los métodos Initialize y Finalize
+// In order to create a CAgent it is necessary to extend
+// the class CAgent and implement Initialize and Finalize methods.
 
 class HelloWorldAgentClass extends CAgent {
 
@@ -14,11 +14,11 @@ class HelloWorldAgentClass extends CAgent {
 		super(aid);
 	}
 
-	// La plataforma inicia una conversación con cada agente recién creado,
-	// enviándole un mensaje de bienvenida. Este envío hace que se cree el
-	// primer CProcessor del agente. Para tratar este mensaje, el usuario debe
-	// implementar el método Initialize definido por la clase CAgent, método que
-	// es ejecutado por el primer CProcessor.
+	// The platform starts a conversation with each agent that has been just created
+	// by sending her a welcome message. This sending creates the first CProcessor
+	// of the agent. In order to manage this message the user must implement 
+	// the Ininitialize method defined by the class CAgent, this method will
+	// be executed by the first CProcessor.
 
 	protected void Initialize(CProcessor myProcessor, ACLMessage welcomeMessage) {
 
@@ -28,15 +28,14 @@ class HelloWorldAgentClass extends CAgent {
 				+ ":  inevitably I have to say hello world");
 		
 		
-		
-		// El método ShutdownAgent inicia el proceso de finalizar las conversaciones 
-		// activas del agente. Cuando este proceso concluye, la plataforma
-		// envía al agente el mensaje de finalización.
+		// ShutdownAgent method initialize the process which will finalize the
+		// active conversations of the agent. When this process ends, the platform
+		// sends a finalize message to the agent.
 		myProcessor.ShutdownAgent();
 	}
 
-	// Para tratar el mensaje de finalización, el usuario debe
-	// implementar el método Finalize definido por la clase CAgent
+	// In order to manage the finalization message, the user has to
+	// implement the Finalize method defined by the CAgent class.
 	
 	protected void Finalize(CProcessor myProcessor, ACLMessage finalizeMessage) {
 
