@@ -7,7 +7,7 @@ public class TracingService {
 	private String eventType;
 	private String description;
 	private TracingServiceSubscriptionList subscriptorsAll;
-	private ServiceProviderList providers;
+	private TracingEntityList providers;
 	private TracingService prev;
 	private TracingService next;
 	
@@ -15,7 +15,7 @@ public class TracingService {
 		this.name = null;
 		this.eventType = null;
 		this.subscriptorsAll = null;
-		this.providers = new ServiceProviderList();
+		this.providers = new TracingEntityList();
 		this.prev=null;
 		this.next = null;
 	}
@@ -25,7 +25,7 @@ public class TracingService {
 		this.eventType=eventType;
 		this.description=description;
 		this.subscriptorsAll = null;
-		this.providers=new ServiceProviderList();
+		this.providers=new TracingEntityList();
 		this.prev=null;
 		this.next = null;
 	}
@@ -35,7 +35,7 @@ public class TracingService {
 		this.eventType=eventType;
 		this.description=description;
 		this.subscriptorsAll = null;
-		this.providers=new ServiceProviderList();
+		this.providers=new TracingEntityList();
 		this.prev=null;
 		this.next = null;
 	}
@@ -76,7 +76,7 @@ public class TracingService {
 		return this.subscriptorsAll;
 	}
 	
-	public ServiceProviderList getProviders () {
+	public TracingEntityList getProviders () {
 		return this.providers;
 	}
 	
@@ -101,8 +101,8 @@ public class TracingService {
 	 *   - DUPLICATE PROVIDER: Method returns -1
 	 *   - OTHER ERROR: Method returns -2
 	 */
-	public int addProvider (ServiceProvider provider) {
-		return this.providers.addProvider(provider);
+	public int addProvider (TracingEntity provider) {
+		return this.providers.addTE(provider);
 	}
 	
 	/**
@@ -119,11 +119,11 @@ public class TracingService {
 	 *   - OTHER ERROR: Method returns -2
 	 */
 	public int addProvider (AgentID aid) {
-		return this.providers.addProvider(aid);
+		return this.providers.addTE(aid);
 	}
 	
 	public int removeProvider (AgentID provider){
-		return this.providers.removeProvider(provider);
+		return this.providers.removeTE(provider);
 	}
 	
 	public int addSubscriptionAll (TracingServiceSubscription newSubscription) {
@@ -131,15 +131,19 @@ public class TracingService {
 	}
 	
 	public int addSubscriptionAll (AgentID subscriptor){
-		return this.subscriptorsAll.addSubscription(subscriptor);
+		return this.subscriptorsAll.addSubscription(subscriptor, this.name);
 	}
 	
 	public int addSubscription (String tracingService, AgentID provider) {
-		ServiceProvider sp;
-		if ((sp=this.providers.getProviderByAid(provider)) == null){
+		TracingEntity te;
+		
+		if ((te=this.providers.getTEByAid(provider)) == null){
 			// Provider not found
+			return -1;
 		}
-		return 0;
+		else {
+			return 0;
+		}
 	}
 	
 	public int addSubscription (String tracingService) {

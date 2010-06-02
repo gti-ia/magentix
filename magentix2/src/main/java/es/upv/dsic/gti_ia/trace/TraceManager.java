@@ -27,6 +27,8 @@ import es.upv.dsic.gti_ia.trace.*;
 
 public class TraceManager extends BaseAgent{
 	
+	private TracingEntityList TracingEntities;
+	
 	private TracingServiceList DI_Tracing_Services;
 	private TracingServiceList DD_Tracing_Services;
 	
@@ -55,6 +57,10 @@ public class TraceManager extends BaseAgent{
 	}
 	
 	public void initialize (){
+		Map<String, Object> arguments = new HashMap<String, Object>();
+		
+		TracingEntities = new TracingEntityList();
+		
 		DI_Tracing_Services = new TracingServiceList();
 		DD_Tracing_Services = new TracingServiceList();
 		
@@ -106,22 +112,30 @@ public class TraceManager extends BaseAgent{
 		//DI_Tracing_Services.addTracingService(null, new TracingService("TRACING_SERVICE_REQUEST", "TRACING_SERVICE_REQUEST", "An ER entity requested a tracing service."));
 		//DI_Tracing_Services.addTracingService(null, new TracingService("TRACING_SERVICE_CANCEL", "TRACING_SERVICE_CANCEL", "An ER entity cancelled the subscription to a tracing service."));
 		DI_Tracing_Services.addTracingService(null, new TracingService("AUTHORIZATION_REQUEST", "AUTHORIZATION_REQUEST", "An entity requested authorization for a tracing service."));
-		DI_Tracing_Services.addTracingService(null, new TracingService("AUTHORIZATION_ADDED", "AUTHORIZATION_ADDED", "An entity added an authorization for a tracing service."));
-		DI_Tracing_Services.addTracingService(null, new TracingService("AUTHORIZATION_REMOVED", "AUTHORIZATION_REMOVED", "An authorization for a tracing service was removed."));
+		DI_Tracing_Services.addTracingService(null, new TracingService("AUTHORIZATION_GRANTED", "AUTHORIZATION_GRANTED", "An entity added an authorization for a tracing service."));
+		DI_Tracing_Services.addTracingService(null, new TracingService("AUTHORIZATION_DENIED", "AUTHORIZATION_DENIED", "An authorization for a tracing service was removed."));
 		
 		//logger.info("DI Tracing services:\n" + DI_Tracing_Services.listAllTracingServices());
+		
+		// Subscribe to tracing entities life cycle related tracing services
+		arguments.clear();
+    	
+		arguments.put("x-match", "any");
+		arguments.put("event_type", "type");  
+    	this.traceSession.exchangeBind(this.getName() + ".trace", "amq.match", this.getName() + ".control.direct", arguments);
+    	
+    	// confirm completion
+    	this.traceSession.sync();
 	}
 	
 	/**
-	 * 
-	 * Sends a trace event to the mgx.trace exchange
+	 * Sends a trace event to the amq.match exchange
 	 * @param tEvent
 	 * 
 	 * @param destination
 	 * 		"all"  : System trace events which are to be received by all tracing entities
 	 * 
-	 * 		!"all" : agent name of the agent which has to receive that system trace event
-	 *         
+	 * 		!"all" : agent name of the agent which has to receive that system trace event        
 	 */
 	public void sendSystemTraceEvent(TraceEvent tEvent, String destination) {
 		MessageTransfer xfr = new MessageTransfer();

@@ -1,6 +1,7 @@
 package es.upv.dsic.gti_ia.trace;
 
 import es.upv.dsic.gti_ia.core.AgentID;
+import es.upv.dsic.gti_ia.trace.TracingEntity;
 
 /**
  * 
@@ -12,24 +13,26 @@ import es.upv.dsic.gti_ia.core.AgentID;
 public class TracingEntityList {
 
 	private class TE_Node {
-		private AgentID aid;
+		private TracingEntity TEntity;
 		private TE_Node prev;
 		private TE_Node next;
 		
 		public TE_Node(){
-			this.aid=null;
+			this.TEntity=null;
+			this.prev=null;
+			this.next=null;
+		}
+		
+		public TE_Node(TracingEntity te){
+			this.TEntity=te;
 			this.prev=null;
 			this.next=null;
 		}
 		
 		public TE_Node(AgentID aid){
-			this.aid=aid;
+			this.TEntity = new TracingEntity(TracingEntity.AGENT, aid);
 			this.prev=null;
 			this.next=null;
-		}
-		
-		public void setAid(AgentID aid){
-			this.aid = aid;
 		}
 		
 		public void setNext(TE_Node next){
@@ -40,8 +43,8 @@ public class TracingEntityList {
 			this.prev = prev;
 		}
 		
-		public AgentID getAid(){
-			return this.aid;
+		public TracingEntity getTEntity(){
+			return this.TEntity;
 		}
 		
 		public TE_Node getPrev(){
@@ -71,21 +74,38 @@ public class TracingEntityList {
 		this.last=last;
 	}
 	
-	private TE_Node getFirst(){
+	public TE_Node getFirst(){
 		return this.first;
 	}
 	
-	private TE_Node getLast(){
+	public TE_Node getLast(){
 		return this.last;
 	}
 	
-	private TE_Node getTEByAid(AgentID aid){
+	public int getLength(){
+		return this.length;
+	}
+	
+	private TE_Node getTE_NodeByAid(AgentID aid){
 		int i;
 		TE_Node node;
 		
 		for (i=0, node=this.first; i < this.length; i++, node=node.getNext()){
-			if (node.getAid().equals(aid)){
+			if (node.getTEntity().getAid().equals(aid)){
 				return node;
+			}
+		}
+		
+		return null;
+	}
+	
+	public TracingEntity getTEByAid(AgentID aid){
+		int i;
+		TE_Node node;
+		
+		for (i=0, node=this.first; i < this.length; i++, node=node.getNext()){
+			if (node.getTEntity().getAid().equals(aid)){
+				return node.getTEntity();
 			}
 		}
 		
@@ -156,6 +176,54 @@ public class TracingEntityList {
 	}
 	
 	/**
+	 * Add a new TE with the specified AgentID to the list
+	 * @param newTracingEntity
+	 * 		TracingEntity to be added to the list
+	 * @return 0
+	 * 		Success: The new tracing entity has been added at
+	 * 			the end of the list
+	 * @return -1
+	 * 		Duplicate AgentID: A tracing entity with the specified
+	 * 			identifier already exists in the list
+	 * @return -2
+	 * 		Internal values of the list are not correct. There is
+	 * 		something really wrong if this happens :-S
+	 * @return -3
+	 * 		Tracing entity type not supported yet
+	 */
+	public int addTE(TracingEntity newTracingEntity){
+		TE_Node te_node;
+		
+		if (newTracingEntity.getType() != TracingEntity.AGENT){
+			// ARTIFACTS and AGGREGATIONS are not supported yet
+			return -3;
+		}
+		
+		if (this.length < 0){
+			// Error mucho gordo
+			return -2;
+		}
+		else if (this.length == 0) {
+			te_node = new TE_Node(newTracingEntity);
+			this.first=te_node;
+		}
+		else if (this.existsTE(newTracingEntity.getAid())) {
+			return -1;
+		}
+		else {
+			te_node = new TE_Node(newTracingEntity);
+			this.last.setNext(te_node);
+			te_node.setPrev(this.last);
+		}
+		
+		te_node.setNext(null);
+		this.last = te_node;
+		this.length++;
+				
+		return 0;
+	}
+	
+	/**
 	 * Remove the TE with the specified AgentID from the list
 	 * @param aid
 	 * 		AgentID of the tracing entity which has to be removed
@@ -171,7 +239,7 @@ public class TracingEntityList {
 	public int removeTE(AgentID aid){
 		TE_Node te;
 		
-		if ((te=this.getTEByAid(aid)) == null){
+		if ((te=this.getTE_NodeByAid(aid)) == null){
 			// Service provider does not exist
 			return -1;
 		}
@@ -207,5 +275,38 @@ public class TracingEntityList {
 		
 		this.length--;
 		return 0;
+	}
+	
+	/**
+	 * List all tracing entities in the list 
+	 * @return A string with all tracing entities in the list, separated by '\n'
+	 * 		The format in which each tracing entity is returned is the following:
+	 * 		(Tracing entity type) Entity identifier
+	 * @return null
+	 */
+	public String listAllTracingEntities () {
+		String list = new String();
+		int i;
+		TE_Node te_node;
+				
+		for (i=0, te_node=this.getFirst(); (i < this.getLength()) && (te_node.getNext() != null); i++, te_node=te_node.getNext()){
+			switch (te_node.getTEntity().getType()){
+				case TracingEntity.AGENT:
+					list = list + "(AGENT) " + te_node.getTEntity().getAid().toString() + "\n";
+					break;
+				case TracingEntity.ARTIFACT:
+					break;
+				case TracingEntity.AGGREGATION:
+					break;
+				default:
+					// Unknown tracing entity type: This should never happen!
+					return null;
+			}
+			
+		}
+		
+		//list = list + "\n";
+		
+		return list;
 	}
 }
