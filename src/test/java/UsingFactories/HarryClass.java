@@ -19,24 +19,21 @@ class HarryClass extends CAgent {
 
 		System.out.println(myProcessor.getMyAgent().getName()
 				+ ": the welcome message is " + welcomeMessage.getContent());
+		
+		// Each agent's conversation is carried out by a CProcessor.
+		// CProcessors are created by the CFactories in response
+		// to messages that start the agent's activity in a conversation
 
-		// Cada conversaci�n del agente es llevada a cabo por un CProcessor y
-		// los CProcessors son creados por las CProcessorFactories, en respuesta
-		// a mensajes que inician la actividad del agente en una conversaci�n.
+		// An easy way to create CFactories is to create them from the 
+		// predefined factories of package es.upv.dsi.gri_ia.cAgents.protocols
+		// Another option, not shown in this example, is that the agent
+		// designs her own factory and, therefore, a new interaction protocol
 
-		// Una forma sencilla de crear una CProcessorFactory a partir de las
-		// f�bricas
-		// predeterminadas del paquete es.upv.dsic.gti_ia.cAgents.protocols.
-		// Otra alternativa, no mostrada en este ejemplo, consiste en que el
-		// agente
-		// dise�e su propia f�brica y, por tanto, un nuevo protocolo de
-		// interacci�n.
-
-		// En este ejemplo el agente va a actuar como iniciador en el protocolo
-		// REQUEST definido por FIPA.
-		// Para ello extiende la clase FIPA_REQUEST_Initiator implementando el
-		// m�todo que recibe la respuesta (Process_Inform)
-
+		// In this example the agent is going to act as the initiator in the
+		// REQUEST protocol defined by FIPA.
+		// In order to do so, she has to extend the class FIPA_REQUEST_Initiator
+		// implementing the method that receives results of the request (doInform)
+		
 		class myFIPA_REQUEST extends FIPA_REQUEST_Initiator {
 			protected void doInform(CProcessor myProcessor, ACLMessage msg) {
 				System.out.println(myProcessor.getMyAgent().getName() + ": "
@@ -45,38 +42,30 @@ class HarryClass extends CAgent {
 			}
 		}
 		
-		// Para iniciar una conversaci�n, el agente crea un mensaje que pueda
-		// ser
-		// aceptado por una de sus fabricas iniciadoras.
+		// In order to start a conversation the agent creates a message
+		// that can be accepted by one of its initiator factories.
 
 		msg = new ACLMessage(ACLMessage.REQUEST);
 		msg.setReceiver(new AgentID("Sally"));
 		msg.setContent("May you give me your phone number?");
-
-		// El agente crea la CProcessorFactory que crear� procesadores para
-		// iniciar
-		// conversaciones
-		// cuyo protocol sea REQUEST y su performativa REQUEST. En este ejemplo
-		// la
-		// cProcessorFactory recibe el nombre "TALK", no se le incorpora ning�n
-		// criterio
-		// de aceptaci�n adicional al requerido por el protocolo REQUEST (null)
-		// y
-		// no se limita el n�mero de procesadores simult�neos (valor 0)
+		
+		// The agent creates the CFactory that creates processors that initiate
+		// REQUEST protocol conversations. In this
+		// example the CFactory gets the name "TALK", we don't add any
+		// additional message acceptance criterion other than the required
+		// by the REQUEST protocol (null) and we do not limit the number of simultaneous
+		// processors (value 0)
 		
 		CProcessorFactory talk = new myFIPA_REQUEST().newFactory("TALK", null, msg,
 				1, myProcessor.getMyAgent(), 0);
 
-		// La f�brica se configura para responder ante solicitudes del agente
-		// de inicio de conversaciones usando el protocolo REQUEST
+		// The factory is setup to answer start conversation requests from the agent
+		// using the REQUEST protocol.
 
 		this.addFactoryAsInitiator(talk);
 
-		// y finalmente se inicia la nueva conversaci�n. Al ser del tipo
-		// s�ncrona,
-		// la interacci�n en curso se detiene hasta que concluya la nueva
-		// conversaci�n
-
+		// finally the new conversation starts. Because it is synchronous, 
+		// the current interaction halts until the new conversation ends.
 		myProcessor.createSyncConversation(msg);
 
 		myProcessor.ShutdownAgent();

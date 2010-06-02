@@ -18,25 +18,21 @@ class SallyClass extends CAgent {
 		System.out.println(myProcessor.getMyAgent().getName()
 				+ ": the welcome message is " + welcomeMessage.getContent());
 
-		// Cada conversaci�n del agente es llevada a cabo por un CProcessor y
-		// los CProcessors son creados por las CProcessorFactories, en respuesta
-		// a mensajes que inician la actividad del agente en una conversaci�n.
+		// Each agent's conversation is carried out by a CProcessor.
+		// CProcessors are created by the CFactories in response
+		// to messages that start the agent's activity in a conversation
 
-		// Una forma sencilla de crear una CProcessorFactory a partir de las
-		// f�bricas
-		// predeterminadas del paquete es.upv.dsic.gti_ia.cAgents.protocols.
-		// Otra alternativa, no mostrada en este ejemplo, consiste en que el
-		// agente
-		// dise�e su propia f�brica y, por tanto, un nuevo protocolo de
-		// interacci�n.
+		// An easy way to create CFactories is to create them from the 
+		// predefined factories of package es.upv.dsi.gri_ia.cAgents.protocols
+		// Another option, not shown in this example, is that the agent
+		// designs her own factory and, therefore, a new interaction protocol
 
-		// En este ejemplo el agente va a actuar como participante en el
-		// protocolo
-		// REQUEST definido por FIPA.
-		// Para ello extiende la clase FIPA_REQUEST_Participant implementando el
-		// m�todo que recibe la petici�n (DO_Request) y el m�todo que genera la
-		// respuesta
-		// (DO_Inform)
+		// In this example the agent is going to act as the participant in
+		// REQUESt protocol defined by FIPA.
+		// In order to do so, she has to extend the class FIPA_REQUEST_Participant
+		// implementing the method that receives the request (doRequest),
+		// the method that carries out the request (doAction) and
+		// the method that generates the answer (doInform)
 
 		class myFIPA_REQUEST extends FIPA_REQUEST_Participant {
 
@@ -62,26 +58,18 @@ class SallyClass extends CAgent {
 			}
 		}
 
-		// El agente crea la CProcessorFactory que atender� los mensajes
-		// entrantes
-		// cuyo protocol sea REQUEST y su performativa REQUEST. En este ejemplo
-		// la
-		// cProcessorFactory recibe el nombre "TALK", no se le incorpora ning�n
-		// criterio
-		// de aceptaci�n adicional al requerido por el protocolo REQUEST (null)
-		// y
-		// se limita el n�mero de procesadores simult�neos a 1, es decir, las
-		// peticiones
-		// se atender�n una por una.
-
+		// The agent creates the CFactory that manages every message which its
+		// performative is set to REQUEST and protocol set to REQUEST. In this
+		// example the CFactory gets the name "TALK", we don't add any
+		// additional message acceptance criterion other than the required
+		// by the REQUEST protocol (null) and we limit the number of simultaneous
+		// processors to 1, i.e. the requests will be attended one after another.
+		
 		CProcessorFactory talk = new myFIPA_REQUEST().newFactory("TALK", null,
 				0, myProcessor.getMyAgent());
 
-		// Por �ltimo la f�brica se configura para responder ante mensajes
-		// entrantes
-		// que puedan hacer que comience la participaci�n del agente en una
-		// conversaci�n
-
+		// Finally the factory is setup to answer to incoming messages that
+		// can start the participation of the agent in a new conversation
 		this.addFactoryAsParticipant(talk);
 	}
 
