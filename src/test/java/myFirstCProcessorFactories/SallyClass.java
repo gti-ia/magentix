@@ -2,6 +2,7 @@ package myFirstCProcessorFactories;
 
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
+import es.upv.dsic.gti_ia.core.MessageFilter;
 
 import es.upv.dsic.gti_ia.cAgents.*;
 
@@ -13,17 +14,19 @@ class SallyClass extends CAgent {
 
 	protected void Initialize(CProcessor myProcessor, ACLMessage welcomeMessage) {
 
+		MessageFilter filter;
 		ACLMessage template;
 
-		// Creamos una fábrica para tratar propuestas
+		// We create a factory in order to manage propositions
 
-		template = new ACLMessage(ACLMessage.PROPOSE);
+		filter = new MessageFilter("performative = PROPOSE");
 
-		CProcessorFactory talk = new CProcessorFactory("TALK", template, 1,
-				myProcessor.getMyAgent());
+		CProcessorFactory talk = new CProcessorFactory("TALK", filter, 1,
+				this);
 
-		// Un CProcessor siempre comienza en el estado predefinido BEGIN.
-		// Debemos asociar un método que se ejecutará al transitar este estado.
+		// A CProcessor always starts in the predefined state BEGIN.
+		// We have to associate this state with a method that will be
+		// executed at the beginning of the conversation.
 
 		///////////////////////////////////////////////////////////////////////////////
 		// BEGIN state
@@ -33,8 +36,8 @@ class SallyClass extends CAgent {
 
 		class BEGIN_Method implements BeginStateMethod {
 			public String run(CProcessor myProcessor, ACLMessage msg) {
-				// En este ejemplo no hay nada más que hacer que pasar al estado
-				// REFUSE que enviará la respuesta
+				// In this example there is nothing more to do than continue
+				// to the next state which will send the answer.
 				return "REFUSE";
 			};
 		}
@@ -77,11 +80,10 @@ class SallyClass extends CAgent {
 		talk.cProcessorTemplate().registerState(FINAL);
 		talk.cProcessorTemplate().addTransition("REFUSE", "FINAL");
 
-		// El procesador "molde" está listo. Activamos la fábrica
-		// como participante. Todo mensaje que llege al agente
-		// con la performativa PURPOSE hará que la fábrica TALK
-		// cree un procesador para atender la conversación
-
+		// The template processor is ready. We activate the factory
+		// as participant. Every message that arrives to the agent
+		// with the performative set to PURPOSE will make the factory
+		// TALK to create a processor in order to manage the conversation.
 		this.addFactoryAsParticipant(talk);
 
 	}

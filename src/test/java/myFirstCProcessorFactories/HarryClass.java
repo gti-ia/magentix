@@ -14,6 +14,7 @@ import es.upv.dsic.gti_ia.cAgents.SendStateMethod;
 import es.upv.dsic.gti_ia.cAgents.WaitState;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
+import es.upv.dsic.gti_ia.core.MessageFilter;
 
 
 class HarryClass extends CAgent {
@@ -24,19 +25,18 @@ class HarryClass extends CAgent {
 
 	protected void Initialize(CProcessor myProcessor, ACLMessage welcomeMessage) {
 
-		ACLMessage template;
+		MessageFilter filter;
+		
+		// We create a factory in order to send a propose and wait for the answer
 
-
-		// Creamos una fábrica para enviar una propuesta
-		// y esperar respuesta
-
-		template = new ACLMessage(ACLMessage.PROPOSE);
-
-		CProcessorFactory talk = new CProcessorFactory("TALK", template, 1,
+		filter = new MessageFilter("performative = PROPOSE");
+		
+		CProcessorFactory talk = new CProcessorFactory("TALK", filter, 1,
 				myProcessor.getMyAgent());
 
-		// Un CProcessor siempre comienza en el estado predefinido BEGIN.
-		// Debemos asociar un método que se ejecutará al transitar este estado.
+		// A CProcessor always starts in the predefined state BEGIN.
+		// We have to associate this state with a method that will be
+		// executed at the beginning of the conversation.
 
 		///////////////////////////////////////////////////////////////////////////////
 		// BEGIN state
@@ -46,8 +46,8 @@ class HarryClass extends CAgent {
 
 		class BEGIN_Method implements BeginStateMethod {
 			public String run(CProcessor myProcessor, ACLMessage msg) {
-				// En este ejemplo no hay nada más que hacer que pasar al estado
-				// PURPOSE que enviará el mensaje
+				// In this example there is nothing more to do than continue
+				// to the next state which will send the message.
 				return "PURPOSE";
 			};
 		}
@@ -92,7 +92,7 @@ class HarryClass extends CAgent {
 			}
 		}
 		
-		RECEIVE.setAcceptFilter(null); // null -> aceptar cualquier mensaje
+		RECEIVE.setAcceptFilter(null); // null -> accept any message
 		RECEIVE.setMethod(new RECEIVE_Method());
 		talk.cProcessorTemplate().registerState(RECEIVE);
 		talk.cProcessorTemplate().addTransition("WAIT", "RECEIVE");
@@ -111,18 +111,18 @@ class HarryClass extends CAgent {
 		FINAL.setMethod(new FINAL_Method());
 
 		talk.cProcessorTemplate().registerState(FINAL);
+		talk.cProcessorTemplate().addTransition(RECEIVE, FINAL);
 		talk.cProcessorTemplate().addTransition("PURPOSE", "FINAL");
 
 		///////////////////////////////////////////////////////////////////////////////
 		
-		
-		// El procesador "molde" está listo. Activamos la fábrica.
+		// The template processor is ready. We activate the factory.
 
 		this.addFactoryAsInitiator(talk);
 
-		// Finalmente Harry inicia la conversación.
-		// Para ello debe crear un mensaje admisible por la fábrica, en este
-		// caso la performativa debe ser PURPOSE
+		// Finally Harry starts the conversation.
+		// In order to do so he has to create a message that can be accepted
+		// by the factory, in this caste the performative has to be PURPOSE.
 
 		ACLMessage msg = new ACLMessage(ACLMessage.PROPOSE);
 		msg.setReceiver(new AgentID("Sally"));
@@ -131,8 +131,6 @@ class HarryClass extends CAgent {
 
 		System.out.println(myProcessor.getMyAgent().getName() + " : Sally tell me "
 				+ response.getPerformative() + " " + response.getContent());
-
-		// myProcessor.ShutdownAgent();
 	}
 
 	protected void Finalize(CProcessor firstProcessor,
