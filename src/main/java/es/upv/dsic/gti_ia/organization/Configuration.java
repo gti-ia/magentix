@@ -6,7 +6,11 @@ import java.io.*;
 import java.io.InputStream;
 
 
-
+/**
+ * This class reads the contents of settings.xml file found in the configuration directory
+ *
+ *
+ */
 public class Configuration {
 	
 	
@@ -25,6 +29,9 @@ public class Configuration {
 	private String jenadbURL;
 	private String jenadbType;
 	private String jenadbDriver;
+	private String isTomcat;
+	private String pathTomcat;
+	private String os;
 	private static Configuration configuration = null;
 	
 
@@ -33,6 +40,37 @@ public class Configuration {
 	{
 		this.load();
 
+	}
+	
+	
+	
+	/**
+	 * Path where the tomcat is located
+	 * @return 
+	 */
+	public String getOS()
+	{
+		return this.os;
+	}
+	/**
+	 * Path where the tomcat is located
+	 * @return 
+	 */
+	public String getPathTomcat()
+	{
+		return this.pathTomcat;
+	}
+	
+	/**
+	 * Is tomcat active
+	 * @return
+	 */
+	public boolean getIsTomcat()
+	{
+		if (this.isTomcat.equals("true"))
+			return true;
+		else
+			return false;
 	}
 	
 	/**
@@ -60,7 +98,7 @@ public class Configuration {
 		return this.databaseUser;
 	}
 	/**
-	 * Password  user of the database
+	 * User password of the database
 	 * @return password
 	 */
 	public String getdatabasePassword()
@@ -68,7 +106,7 @@ public class Configuration {
 		return this.databasePassword;
 	}
 	/**
-	 * 
+	 * Full path where are the owl's deployed the services of the OMS 
 	 * @return OMSServiceDescriptionLocation
 	 */
 	public String getOMSServiceDesciptionLocation()
@@ -76,7 +114,7 @@ public class Configuration {
 		return this.OMSServiceDesciptionLocation;
 	}
 	/**
-	 * 
+	 * Full path where are the owl's deployed the services of the SF
 	 * @return SFServiceDesciptionLocation
 	 */
 	public String getSFServiceDesciptionLocation()
@@ -155,7 +193,7 @@ public class Configuration {
 	}
 	
 	/**
-	 * jena database URL
+	 * Jena database URL
 	 * @return URL
 	 */
 	public String getjenadbURL()
@@ -166,7 +204,7 @@ public class Configuration {
 
 	
 	/**
-	 * type of jena database
+	 * Type of jena database
 	 * @return type
 	 */
 	public String getjenadbType()
@@ -175,7 +213,7 @@ public class Configuration {
 	}
 
 	/**
-	 * diver of jena database
+	 * Diver of jena database
 	 * @return driver
 	 */
 	public String getjenadbDriver()
@@ -268,6 +306,18 @@ public class Configuration {
 			    else    if (obj.toString().equalsIgnoreCase("dbDriver"))
 			    {
 			    	this.jenadbDriver = properties.getProperty(obj.toString()); 	
+			    }
+			    else    if (obj.toString().equalsIgnoreCase("tomcat"))
+			    {
+			    	this.isTomcat = properties.getProperty(obj.toString()); 	
+			    }
+			    else    if (obj.toString().equalsIgnoreCase("pathTomcat"))
+			    {
+			    	this.pathTomcat = properties.getProperty(obj.toString()); 	
+			    }
+			    else    if (obj.toString().equalsIgnoreCase("os"))
+			    {
+			    	this.os = properties.getProperty(obj.toString()); 	
 			    }
 	
 			}

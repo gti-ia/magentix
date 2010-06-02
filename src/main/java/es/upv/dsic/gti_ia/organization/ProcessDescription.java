@@ -47,7 +47,7 @@ public class ProcessDescription {
     /**
      * Returns a url which makes reference to the service process description document. 
      * 
-     * @return serviceModel : URLProcess + goalProfile+Process.owl#+goalProfile;
+     * @return serviceModel 
      */
     public String getServiceModel() {
 	return this.servicemodel;
@@ -83,16 +83,16 @@ public class ProcessDescription {
     }
 
     /**
-     * Change ID of the ProcessDescription
+     * Change ID of the profile which is associated the process
      * 
-     * @param id
+     * @param id this param is returned when we call the method searchService.
      */
     public void setProfileID(String id) {
 	this.ServiceID = id;
     }
 
     /**
-     * Return an ID of the ProcessDescription
+     * Returns the id of the profile which is associated the process
      * 
      * @return
      */
@@ -103,7 +103,7 @@ public class ProcessDescription {
     /**
      * Add the implementationID
      * 
-     * @param im
+     * @param im , this parameter is automatically assigned when the method  registerProcess is called.
      */
     public void setImplementationID(String im) {
 	this.ImplementationID = im;
@@ -121,7 +121,7 @@ public class ProcessDescription {
 
     /**
      * Returns a org.mindswap.owls.process.Process   to use him to the execution of a service. 
-     * @param inmsg
+     * @param inmsg This message is sent by the client agent wants to make use of service, in the message content is the path of the service process
      * @return Process is a mindswap.owls.process.Process;
      * @throws Exception
      */
@@ -152,7 +152,7 @@ public class ProcessDescription {
     
     /**
      * Returns a ValueMap with the name of the field and the value that there gives us the client who calls to the service.
-     * @param inmsg
+     * @param inmsg This message is sent by the client agent wants to make use of service, in the message content ara input values.
      * @return ValueMap 
      * @throws Exception
      */
@@ -165,7 +165,7 @@ public class ProcessDescription {
 	// read in the service description
 	String token_process = Tok.nextElement().toString();
 
-	System.out.println("[Provider]Doc OWL-S: " + token_process);
+	//System.out.println("[Provider]Doc OWL-S: " + token_process);
 
 	try {
 	    Service aService = kb.readService(token_process);

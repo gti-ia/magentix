@@ -4,7 +4,6 @@ package es.upv.dsic.gti_ia.architecture;
  * Provides a single access point for the set of constants already
  * defined by FIPA. 
  */
-
 public interface FIPANames {
 	
 	

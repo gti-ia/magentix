@@ -1,3 +1,10 @@
+package es.upv.dsic.gti_ia.architecture;
+
+import org.apache.log4j.Logger;
+
+import es.upv.dsic.gti_ia.organization.OMS;
+
+
 
 /**
  * 
@@ -7,15 +14,6 @@
  * @author  Joan Bellver Faus
  * @version 2009.9.07
  */
-
-package es.upv.dsic.gti_ia.architecture;
-
-import org.apache.log4j.Logger;
-
-import es.upv.dsic.gti_ia.organization.OMS;
-
-
-
 public class Monitor {
 
 	static Logger logger = Logger.getLogger(OMS.class);

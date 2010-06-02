@@ -1,11 +1,3 @@
-
-/**
- * This class implements the Fipa-Contract-Net interaction protocol, Role Initiator
- * 
- * @author  Joan Bellver Faus, GTI-IA, DSIC, UPV
- * @version 2009.9.07
- */
-
 package es.upv.dsic.gti_ia.architecture;
 
 
@@ -19,6 +11,12 @@ import es.upv.dsic.gti_ia.core.AgentID;
 
 
 
+/**
+ * This class implements the Fipa-Contract-Net interaction protocol, Role Initiator
+ * 
+ * @author  Joan Bellver Faus, GTI-IA, DSIC, UPV
+ * @version 2009.9.07
+ */
 public class FIPAContractNetInitiator {
 
 	private Monitor monitor = null;
@@ -33,7 +31,7 @@ public class FIPAContractNetInitiator {
 
 	private MessageTemplate template = null;
 	private int state = PREPARE_MSG_STATE;
-	protected QueueAgent myAgent;
+	public QueueAgent myAgent;
 	private ACLMessage requestmsg;
 	private ACLMessage requestsentmsg;
 
@@ -59,6 +57,17 @@ public class FIPAContractNetInitiator {
 		this.monitor = myAgent.addMonitor(this);
 
 	}
+	
+	 /**
+	  * Return the agent.
+	  * @return QueueAgent 
+	  */
+	 public QueueAgent getQueueAgent()
+	 {
+		return this.myAgent; 
+		 
+	 }
+	 
 /**
  * We will be able to know if it has finished the protocol
  * @return value a boolean value is returned, true: the protocol has finished, false: the protocol even has not finished
@@ -70,7 +79,7 @@ public class FIPAContractNetInitiator {
 	{
 		return this.state;
 	}
-	@SuppressWarnings("unchecked")
+
 	
 	/**
 	*  Run the state machine with the communication protocol
@@ -97,7 +106,7 @@ public class FIPAContractNetInitiator {
 				// usuario
 				
 				//guardar temporalmente los agentes a enviar
-				
+				@SuppressWarnings("unchecked")
 				ArrayList<AgentID> agentes = (ArrayList<AgentID>)request.getReceiverList().clone();
 				request.setSender(myAgent.getAid());
 				// recorrer todos lo receivers

@@ -1,7 +1,5 @@
 package Thomas_Example;
 
-
-
 import es.upv.dsic.gti_ia.architecture.QueueAgent;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.organization.OMSProxy;
@@ -34,17 +32,11 @@ public class AgentAnnouncement extends QueueAgent {
 	String result;
 
 	try {
-
 	    result = OMSservices.acquireRole(this, "member", "virtual");
-
-	    logger.info("[BroadCastAgent]Acquire Role result: " + result + "\n");
-
-	    OMSservices.acquireRole(this, "provider", "travelagency");
-
+	    logger.info("[AgentAnnoucement]Acquire Role result: " + result + "\n");
 	    SFservices.registerProfile(this, profile);
-	    logger.info("[BroadCastAgent]The operation register Profile return: "
+	    logger.info("[AgentAnnoucement]The operation register Profile return: "
 		    + profile.getServiceID() + "\n");
-
 	} catch (Exception e) {
 	    logger.error(e.getMessage());
 

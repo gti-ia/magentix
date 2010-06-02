@@ -9,6 +9,10 @@
 <entry key="SFServiceDesciptionLocation">http://localhost:8080/sfservices/SFservices/owl/owls/</entry>
 
 
+<!-- Properties servlets server -->
+<entry key="tomcat">false</entry>
+<entry key="os">linux</entry><!-- linux windows -->
+<entry key="pathTomcat">/home/joabelfa/workspace/Java/apache-tomcat-6.0.20</entry>
 
 <!-- Properties mysql -->
 <entry key="serverName">localhost</entry>

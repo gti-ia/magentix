@@ -47,100 +47,98 @@ public class AgentProvider extends QueueAgent {
 
     public void escenario1() {
 
-		try {
-		    omsProxy.acquireRole(this, "member", "virtual");
-		} 
-		catch (Exception e) {
-		    logger.error(e.getMessage());
-		}
+	try {
+	    omsProxy.acquireRole(this, "member", "virtual");
+	} catch (Exception e) {
+	    logger.error(e.getMessage());
+	}
     }
 
 
 
     public void escenario3() {
 
+	try {
+
+	    results = sfProxy.searchService(this, "SearchCheapHotel");
+
+	    if (results.size() == 0) {
+		System.out.println("profiles are not similar to SearchCheapHotel");
+	    } else {
+		// cogemos el primero por ejemplo
+		String URLProfile = sfProxy.getProfile(this, results.get(0));
+
+		URL profile;
 		try {
-	
-		    results = sfProxy.searchService(this, "SearchCheapHotel");
-	
-		    if (results.size() == 0) {
-		    	System.out.println("no existen profiles similares al SearchCheapHotel");
-		    } 
-		    else {
-				// cogemos el primero por ejemplo
-				String URLProfile = sfProxy.getProfile(this, results.get(0));
-		
-				URL profile;
-				try {
-				    profile = new URL(URLProfile);
-				    oracle = new Oracle(profile);
-		
-				} catch (MalformedURLException e) {
-				    logger.error("ERROR: Profile URL Malformed!");
-				    e.printStackTrace();
-				}		
-				System.out.println("Llamada acquireRole2: "+oracle.getProviderList().get(0));
-				omsProxy.acquireRole(this, oracle.getProviderList().get(0), "travelagency");
-	
-		    }
-	
-		} catch (Exception e) {
-		    logger.error(e.getMessage());
+		    profile = new URL(URLProfile);
+		    oracle = new Oracle(profile);
+
+		} catch (MalformedURLException e) {
+		    logger.error("ERROR: Profile URL Malformed!");
+		    e.printStackTrace();
 		}
+
+	
+		omsProxy.acquireRole(this, oracle.getProviderList().get(0), oracle.getProviderUnitList().get(0));
+
+	    }
+
+	} catch (Exception e) {
+	    logger.error(e.getMessage());
+	}
     }
 
     public void escenario4() {
-		try {
-	
-		    processDescription.setProfileID(results.get(0));
-	
-		    sfProxy.registerProcess(this, processDescription);
-	
-		} catch (Exception e) {
-		    logger.error(e.getMessage());
-		}
+	try {
+
+	    processDescription.setProfileID(results.get(0));
+
+	    sfProxy.registerProcess(this, processDescription);
+
+	} catch (Exception e) {
+	    logger.error(e.getMessage());
+	}
 
     }
 
     public void escenario5(){
-		try{
-		omsProxy.acquireRole(this,"payee", "travelagency");
-		
-		}catch(Exception e)
-		{
-		    logger.error(e.getMessage());
-		}
-	}
-    
-	public void escenario6() {
-		// Rol responder
-		Responder responder = new Responder(this);
+	try{
+	omsProxy.acquireRole(this,"payee", "travelagency");
 	
-		this.addTask(responder);
+	}catch(Exception e)
+	{
+	    logger.error(e.getMessage());
+	}
+    }
+    public void escenario6() {
+	// Rol responder
+	Responder responder = new Responder(this);
+
+	this.addTask(responder);
     }
 
     public void execute() {
 
-		DOMConfigurator.configure("configuration/loggin.xml");
-		logger.info("Executing, I'm " + getName());
-		
+	DOMConfigurator.configure("configuration/loggin.xml");
+	logger.info("Executing, I'm " + getName());
 	
-		this.escenario1();
-		this.escenario3();
-		this.escenario4();
-		this.escenario5();
-		this.escenario6();
-	
-		// when we do not have to create more roles we await the expiration
-		// of the other roles
-	
-		es.upv.dsic.gti_ia.architecture.Monitor mon = new es.upv.dsic.gti_ia.architecture.Monitor();
-		mon.waiting();
+
+	this.escenario1();
+	this.escenario3();
+	this.escenario4();
+	this.escenario5();
+	this.escenario6();
+
+	// when we do not have to create more roles we await the expiration
+	// of the other roles
+
+	es.upv.dsic.gti_ia.architecture.Monitor mon = new es.upv.dsic.gti_ia.architecture.Monitor();
+	mon.waiting();
 
     }
 
     /**
-     * Manages the messages for the SF services
+     * Manages the messages for the  agent provider services
      */
     public class Responder extends FIPARequestResponder {
 
@@ -154,7 +152,7 @@ public class AgentProvider extends QueueAgent {
 	/**
 	 * Receives the messages and takes the message content. Analyzes the
 	 * message content and gets the service process and input parameters to
-	 * invoke the service. After the service invocation, the SF gets the
+	 * invoke the service. After the service invocation, the agent provider gets the
 	 * answer and sends it to the requester agent.
 	 * 
 	 * @param
@@ -199,7 +197,7 @@ public class AgentProvider extends QueueAgent {
 	/**
 	 * This callback happens if the SF sent a positive reply to the original
 	 * request (i.e. an AGREE) if the SF has agreed to supply the service,
-	 * the SF has to inform the other agent that what they have asked is now
+	 * the agent provider has to inform the other agent that what they have asked is now
 	 * complete (or if it failed)
 	 * 
 	 * @param inmsg

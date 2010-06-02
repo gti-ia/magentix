@@ -1,10 +1,3 @@
-/**
- * This class implements the FIPA-Request interaction protocol, Role Initiator
- * 
- * @author  Joan Bellver Faus, GTI-IA, DSIC, UPV
- * @version 2009.9.07
- */
-
 package es.upv.dsic.gti_ia.architecture;
 
 import java.util.Date;
@@ -13,6 +6,12 @@ import java.util.logging.*;
 import es.upv.dsic.gti_ia.architecture.FIPANames.InteractionProtocol;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 
+/**
+ * This class implements the FIPA-Request interaction protocol, Role Initiator
+ * 
+ * @author  Joan Bellver Faus, GTI-IA, DSIC, UPV
+ * @version 2009.9.07
+ */
 public class FIPARequestInitiator {
 	private final static int PREPARE_MSG_STATE = 0;
 	private final static int SEND_MSG_STATE = 1;
@@ -23,7 +22,7 @@ public class FIPARequestInitiator {
 
 	private MessageTemplate template = null;
 	private int state = PREPARE_MSG_STATE;
-	protected QueueAgent myAgent;
+	public QueueAgent myAgent;
 	private ACLMessage requestmsg;
 	private ACLMessage requestsentmsg;
 
@@ -33,6 +32,7 @@ public class FIPARequestInitiator {
 	String conversationID = null;
 	private long timeout = -1;
 	private long endingtime = 0;
+
 
 	private Logger logger = Logger.getLogger(this.getClass().getName());
 
@@ -51,6 +51,16 @@ public class FIPARequestInitiator {
 
 	}
 
+	 /**
+	  * Return the agent.
+	  * @return QueueAgent 
+	  */
+	 public QueueAgent getQueueAgent()
+	 {
+		return this.myAgent; 
+		 
+	 }
+	 
 	/**
 	 * We will be able to know if it has finished the protocol
 	 * 
@@ -85,7 +95,7 @@ public class FIPARequestInitiator {
 		 
 		 this.requestmsg.setPerformative(ACLMessage.CANCEL);
 		 this.myAgent.send(requestmsg);
-
+		 this.monitor.advise();
 		 this.state = ALL_RESULT_NOTIFICATION_RECEIVED_STATE;
 		 
 	 }
@@ -134,7 +144,26 @@ public class FIPARequestInitiator {
 				else
 					timeout = -1;
 				endingtime = System.currentTimeMillis() + timeout;
+				
+				// si el mensaje es para un agente Jade
+				//lo puedo saber dependiendo de si el agente tiene alguna palabra concreta como /JADE o por ejemplo
+				//si es un agente que no existe en la plataforma magentix es de jade.
+				if (request.getReceiver() != null) {
+					if (request.getReceiver(0).name.contains("/JADE")) {
+						//name = response.getReceiver().name_all().substring(0,response.getReceiver().name_all().indexOf("@",response.getReceiver().name_all().indexOf("@") + 1));
+						//port = response.getReceiver().port.substring(response.getReceiver().port.indexOf(":") + 1, response.getReceiver().port.indexOf("/", 10));
+						
+						
+						request.getReceiver().host = request.getReceiver().name.substring(request.getReceiver().name.indexOf("@")+1,request.getReceiver().name.indexOf(":"));
+						request.getReceiver().port = "7778";
+						request.getReceiver().protocol = "http";
 
+					}
+				}
+
+				
+				
+				
 				myAgent.send(request);
 				state = RECEIVE_REPLY_STATE;
 

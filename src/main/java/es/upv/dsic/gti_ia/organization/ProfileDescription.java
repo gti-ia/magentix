@@ -38,8 +38,8 @@ public class ProfileDescription {
 	/**
 	 * Returns the url which makes reference to the service profile description document
 	 * 
-	 * @return serviceprofile : URLProfile
-	 *         #+profileName
+	 * @return serviceprofile 
+	 *         
 	 */
 	public String getServiceProfile() {
 		return this.serviceprofile;
@@ -49,7 +49,7 @@ public class ProfileDescription {
 	
 	/**
 	 * Change a url which makes reference to the service profile description document 
-	 * @param profilename URLProfile + # + profilename
+	 * @param profilename 
 	 */
 	public void setServiceProfile(String profilename){
 	    
@@ -72,7 +72,7 @@ public class ProfileDescription {
 	 * Return the URL where the owl's document (related with service profile) is
 	 * located.
 	 * 
-	 * @return
+	 * @return URLProfile
 	 */
 	public String getURLProfile() {
 		return this.URLProfile;
@@ -81,7 +81,7 @@ public class ProfileDescription {
 	/**
 	 * Change ID of the service
 	 * 
-	 * @param id is generated automatically by the database.
+	 * @param id is generated automatically by the database.this parameter is automatically assigned when the method  registerProfile is called.
 	 */
 	public void setServiceID(String id) {
 		this.serviceID = id;
@@ -90,7 +90,7 @@ public class ProfileDescription {
 	/**
 	 * Return an ID of the service
 	 * 
-	 * @return String 
+	 * @return serviceID
 	 */
 	public String getServiceID() {
 		return this.serviceID;

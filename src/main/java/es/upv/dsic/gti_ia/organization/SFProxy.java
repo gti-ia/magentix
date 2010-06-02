@@ -3,12 +3,6 @@
  */
 package es.upv.dsic.gti_ia.organization;
 
-/**
- *This class provides access to methods that implements the SF agent
- * 
- * @author Joan Bellver Faus GTI-IA.DSIC.UPV
- */
-
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
@@ -23,6 +17,11 @@ import es.upv.dsic.gti_ia.architecture.FIPANames.InteractionProtocol;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 
+/**
+ *This class provides access to methods that implements the SF agent
+ * 
+ * @author Joan Bellver Faus GTI-IA.DSIC.UPV
+ */
 public class SFProxy {
 
 	private String SFServiceDesciptionLocation;
@@ -157,7 +156,7 @@ public class SFProxy {
 
 		// build the message to service provider
 		String call = URLProcess + arguments;
-		
+
 		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
 		requestMsg.setSender(agent.getAid());
 		requestMsg.setContent(call);
@@ -183,8 +182,9 @@ public class SFProxy {
 	}
 
 	private void sendInfo(QueueAgent agent, String call) {
+		
 		this.setSalida(true);
-
+		
 		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
 		requestMsg.setSender(agent.getAid());
 		requestMsg.setContent(call);
@@ -206,11 +206,14 @@ public class SFProxy {
 	 * This service deletes the service process registrated in the sf database.
 	 * 
 	 * @param agent
+	 *            is a QueueAgent, this agent implemented the communication
+	 *            protocol
 	 * @param ProcessDescription
 	 *            Must have at least completed the field Implementation ID
 	 * @return status RemoveProviderResponse contains an element: return which
 	 *         indicates if an error occurs (1:OK otherwise 0)
 	 * @throws Exception
+	 *             if Implementation ID is empty
 	 */
 
 	public String removeProvider(QueueAgent agent,
@@ -224,7 +227,7 @@ public class SFProxy {
 		String call = SFServiceDesciptionLocation
 				+ "RemoveProviderProcess.owl "
 				+ "RemoveProviderInputServiceImplementationID="
-				+ this.processDescripcion.getImplementationID();
+				+ this.processDescripcion.getImplementationID()+" RemoveProviderInputProviderID="+agent.getAid().toString();
 
 		this.sendInfo(agent, call);
 
@@ -235,24 +238,26 @@ public class SFProxy {
 	}
 
 	/**
-	 * This service searches in the sf database the services which have the goal
+	 * His service searchs in the sf database the services which has the goal
 	 * required by the client. Currently this service makes a query to the
-	 * database searching the services whose service description field match with
+	 * database seaching the services whose service description field mathc with
 	 * the client requirements (the input service purpose).
 	 * 
 	 * @param agent
-	 *            QueueAgent
+	 *            is a QueueAgent, this agent implemented the communication
+	 *            protocol
 	 * @param serviceGoal
 	 *            service purpose (is a string: the service description).
-	 * @return services list (is a list of <service profile id, ranking: service
-	 *         profile id, ranking: ...>
+	 * @return services list (is a list of service profile id, ranking: service
+	 *         profile id, ranking: ...)
+	 * @exception Exception
 	 */
 	public ArrayList<String> searchService(QueueAgent agent, String serviceGoal)
 			throws Exception {
 
 		this.idsSearchService.clear();
-
 		this.agentes.clear();
+
 		String call = SFServiceDesciptionLocation
 				+ "SearchServiceProcess.owl SearchServiceInputServicePurpose="
 				+ serviceGoal;
@@ -270,15 +275,18 @@ public class SFProxy {
 	 * inserts the new process
 	 * 
 	 * @param agent
-	 *            QueueAgent
+	 *            is a QueueAgent, this agent implemented the communication
+	 *            protocol
 	 * @param ProcessDescription
 	 *            contains two elements: service implementation ID (is a string:
 	 *            serviceprofile@servicenumdidagent), service model (is a
-	 *            string: urlprocess#processname).
+	 *            string: urlprocess#processname, this parameter is entered when
+	 *            creating the instance of ProcessDescription)).
 	 * @return ModifyProcessResponse contains return which indicates if an error
 	 *         occurs (1:OK, otherwise 0).
 	 * 
 	 * @throws Exception
+	 *             if ImplementationID or ServiceGoal is empty
 	 */
 	public String modifyProcess(QueueAgent agent,
 			ProcessDescription ProcessDescription) throws Exception
@@ -311,15 +319,19 @@ public class SFProxy {
 	 * inserts the new profile.
 	 * 
 	 * @param agent
-	 *            QueueAgent
+	 *            is a QueueAgent, this agent implemented the communication
+	 *            protocol
 	 * @param ProfileDescription
 	 *            contains three elements: service id (is a string: service
 	 *            profile id), service goal (currently is not in use),and
-	 *            service profile ( is a string urlprofile#profilename)
+	 *            service profile ( is a string urlprofile#profilename, this
+	 *            parameter is entered when creating the instance of
+	 *            ProfileDescription))
 	 * @return Status return which indicates if a problem occurs (1: ok, 0:
 	 *         there are provider which implement the profile, -1: the service
 	 *         id is not valid).
 	 * @throws Exception
+	 *             if ServiceID or Service Goal is empty
 	 */
 	public String modifyProfile(QueueAgent agent,
 			ProfileDescription ProfileDescription) throws Exception {
@@ -352,14 +364,15 @@ public class SFProxy {
 	 * This service deletes the profile in the sf database.
 	 * 
 	 * @param agent
-	 *            QueueAgent
+	 *            is a QueueAgent, this agent implemented the communication
+	 *            protocol
 	 * @param ProfileDescription
 	 *            contains one element: service id (is a string: service profile
 	 *            id)
 	 * @return Status DeregisterProfileResponse contains an element: return
 	 *         indicates if an error occurs ( 0: ok, 1:error).
 	 * @throws Exception
-	 *             if
+	 *             if ServiceID is empty
 	 */
 	public String deregisterProfile(QueueAgent agent,
 			ProfileDescription ProfileDescription) throws Exception {
@@ -390,10 +403,10 @@ public class SFProxy {
 	 * This service returns the providers which implements the required profile.
 	 * 
 	 * @param agent
-	 *            QueueAgent
-	 * @param id
-	 *            the service ID (is a string: service profile id) and the agent
-	 *            id (is a string).
+	 *            is a QueueAgent, this agent implemented the communication
+	 *            protocol
+	 * @param serviceID
+	 *            the service ID (is a string: service profile id).
 	 * @return provider list (is a string with the next template: [service
 	 *         implementation id urlprocess, service implementation id
 	 *         urlproces, ... ]
@@ -423,7 +436,8 @@ public class SFProxy {
 	 * This service returns the url of the required profile.
 	 * 
 	 * @param agent
-	 *            QueueAgent
+	 *            is a QueueAgent, this agent implemented the communication
+	 *            protocol
 	 * @param serviceID
 	 *            the service ID (is a string: service profile id)
 	 * @return Status contains three elements: service profile (is a string: the
@@ -451,12 +465,15 @@ public class SFProxy {
 	/**
 	 * 
 	 * This service registers the profile of a service in the sf's database.
+	 * This method assigns an Id to the structure ProfileDescription
 	 * 
 	 * @param agent
-	 *            QueueAgent
-	 * @param SFProfileDescription
+	 *            is a QueueAgent, this agent implemented the communication
+	 *            protocol
+	 * @param ProfileDescription
 	 *            This parameter contains one element: service profile ( is a
-	 *            string: urlprofile#profilename )
+	 *            string: urlprofile#profilename, this parameter is entered when
+	 *            creating the instance of ProfileDescription) )
 	 * @return Status indicates if an error occurs.
 	 * @throws Exception
 	 */
@@ -488,13 +505,18 @@ public class SFProxy {
 
 	/**
 	 * This service registers the process of a service in the sf's database.
+	 * This method assigns an ImplementationId to the structure
+	 * ProcessDescription
 	 * 
 	 * @param agent
-	 *            QueueAgent
-	 *@param ProfileDescription
-	 *            . This parameter contains two elements: service id (is a
-	 *            string), and service model (is a string:
-	 *            urlprocess#urlprocessname).
+	 *            is a QueueAgent, this agent implemented the communication
+	 *            protocol
+	 *@param ProcessDescription
+	 *            . This parameter contains two elements: service profile id (is
+	 *            a string, this param is returned when we call the method
+	 *            serarchService), and service model (is a string, this
+	 *            parameter is entered when creating the instance of
+	 *            ProcessDescription).
 	 * @return status indicates if an error occurs (1:ok , 0: bad news).
 	 * @throws Exception
 	 */
@@ -735,9 +757,8 @@ public class SFProxy {
 
 		}
 
-	}	
-	
-	
+	}
+
 	/**
 	 * TestAgentClient handles the messages received from the SF
 	 */
@@ -759,7 +780,7 @@ public class SFProxy {
 		}
 
 		protected void handleRefuse(ACLMessage msg) {
-			logger.info(myAgent.getName() + ": Oh no! "
+			logger.error(myAgent.getName() + ": Oh no! "
 					+ msg.getSender().getLocalName()
 					+ " has rejected my proposal.");
 			this.sf.setSalida(false);
@@ -777,7 +798,7 @@ public class SFProxy {
 		}
 
 		protected void handleNotUnderstood(ACLMessage msg) {
-			logger.info(myAgent.getName() + ":"
+			logger.error(myAgent.getName() + ":"
 					+ msg.getSender().getLocalName()
 					+ " has indicated that they didn't understand.");
 			this.sf.setSalida(false);
@@ -785,7 +806,16 @@ public class SFProxy {
 		}
 
 		protected void handleOutOfSequence(ACLMessage msg) {
-			logger.info(myAgent.getName() + ":"
+			logger.error(myAgent.getName() + ":"
+					+ msg.getSender().getLocalName()
+					+ " has send me a message which i wasn't"
+					+ " expecting in this conversation");
+			this.sf.setSalida(false);
+			this.sf.setSalidaString(msg.getContent());
+		}
+
+		protected void handleFailure(ACLMessage msg) {
+			logger.error(myAgent.getName() + ":"
 					+ msg.getSender().getLocalName()
 					+ " has send me a message which i wasn't"
 					+ " expecting in this conversation");
