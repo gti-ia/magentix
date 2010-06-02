@@ -21,5 +21,4 @@ class Main {
 		HarryClass Harry = new HarryClass(new AgentID("Harry"));
 		Harry.start();
 	}
-
 }

@@ -1,5 +1,7 @@
 package contractNetFactory;
 
+import java.util.Random;
+
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.cAgents.CAgent;
@@ -17,33 +19,30 @@ class SallyClass extends CAgent {
 
 		System.out.println(myProcessor.getMyAgent().getName()
 				+ ": the welcome message is " + welcomeMessage.getContent());
+		
+		// Each agent's conversation is carried out by a CProcessor.
+		// CProcessors are created by the CFactories in response
+		// to messages that start the agent's activity in a conversation
 
-		// Cada conversaci�n del agente es llevada a cabo por un CProcessor y
-		// los CProcessors son creados por las CProcessorFactories, en respuesta
-		// a mensajes que inician la actividad del agente en una conversaci�n.
+		// An easy way to create CFactories is to create them from the 
+		// predefined factories of package es.upv.dsi.gri_ia.cAgents.protocols
+		// Another option, not shown in this example, is that the agent
+		// designs her own factory and, therefore, a new interaction protocol
 
-		// Una forma sencilla de crear una CProcessorFactory a partir de las
-		// f�bricas
-		// predeterminadas del paquete es.upv.dsic.gti_ia.cAgents.protocols.
-		// Otra alternativa, no mostrada en este ejemplo, consiste en que el
-		// agente
-		// dise�e su propia f�brica y, por tanto, un nuevo protocolo de
-		// interacci�n.
-
-		// En este ejemplo el agente va a actuar como participante en el
-		// protocolo
-		// REQUEST definido por FIPA.
-		// Para ello extiende la clase FIPA_REQUEST_Participant implementando el
-		// m�todo que recibe la petici�n (DO_Request) y el m�todo que genera la
-		// respuesta
-		// (DO_Inform)
+		// In this example the agent is going to act as the participant in
+		// CONTRACT protocol defined by FIPA.
+		// In order to do so, she has to extend the class FIPA_CONTRACTNET_Participant
+		// implementing the method that receives solicit (doSolicit),
+		// the method that carries out the proposal if it is accepted (doTask),
+		// the method that informs of the result of the task (doSendInfo) and
+		// the method that sends the proposal (doSendProposal)
 
 		class myFIPA_CONTRACTNET extends FIPA_CONTRACTNET_Participant {
 
 			@Override
 			protected String doReceiveSolicit(CProcessor myProcessor,
 					ACLMessage msg) {
-				// acceptem totes les sol·licituds
+				// accept all the solicits
 				return "SEND_PROPOSAL";
 			}
 
@@ -52,8 +51,7 @@ class SallyClass extends CAgent {
 					ACLMessage messageToSend) {
 				messageToSend.setSender(getAid());
 				messageToSend.setReceiver(myProcessor.getLastReceivedMessage().getSender());
-				System.out.println("Receiver inform "+myProcessor.getLastReceivedMessage().getSender()+" content "+myProcessor.getLastReceivedMessage().getContent());
-				messageToSend.setContent("Soc "+getAid()+" Dema a les 20:00");
+				messageToSend.setContent("I'm "+getAid()+". Ok. See you tomorrow!");
 				messageToSend.setPerformative(ACLMessage.INFORM);
 				messageToSend.setProtocol("fipa-contract-net");				
 			}
@@ -61,9 +59,11 @@ class SallyClass extends CAgent {
 			@Override
 			protected void doSendProposal(CProcessor myProcessor,
 					ACLMessage messageToSend) {
+				Random rand = new Random(System.currentTimeMillis());
+				int x = rand.nextInt(100);				
 				messageToSend.setSender(getAid());
 				messageToSend.setReceiver(myProcessor.getLastReceivedMessage().getSender());
-				messageToSend.setContent("Dema a les 20:00");
+				messageToSend.setContent(String.valueOf(x));
 				messageToSend.setPerformative(ACLMessage.PROPOSE);
 				messageToSend.setProtocol("fipa-contract-net");						
 			}
@@ -71,31 +71,25 @@ class SallyClass extends CAgent {
 			@Override
 			protected String doTask(CProcessor myProcessor,
 					ACLMessage solicitMessage) {
-				System.out.println(getAid()+" Pensem que fer");
+				// no action to take, just inform
+				System.out.println("I'm "+getName()+" my proposal was accepted");
 				return "SEND_INFORM";
 			}
 
 		}
 
-		// El agente crea la CProcessorFactory que atender� los mensajes
-		// entrantes
-		// cuyo protocol sea REQUEST y su performativa REQUEST. En este ejemplo
-		// la
-		// cProcessorFactory recibe el nombre "TALK", no se le incorpora ning�n
-		// criterio
-		// de aceptaci�n adicional al requerido por el protocolo REQUEST (null)
-		// y
-		// se limita el n�mero de procesadores simult�neos a 1, es decir, las
-		// peticiones
-		// se atender�n una por una.
+		// The agent creates the CFactory that manages every message which its
+		// performative is set to CFP and protocol set to CONTRACTNET. In this
+		// example the CFactory gets the name "TALK", we don't add any
+		// additional message acceptance criterion other than the required
+		// by the CONTRACTNET protocol (null) and we limit the number of simultaneous
+		// processors to 1, i.e. the requests will be attended one after another.
 
 		CProcessorFactory talk = new myFIPA_CONTRACTNET().newFactory("TALK", null, 
 				null, 1, myProcessor.getMyAgent(), 0);
 		
-		// Por �ltimo la f�brica se configura para responder ante mensajes
-		// entrantes
-		// que puedan hacer que comience la participaci�n del agente en una
-		// conversaci�n
+		// Finally the factory is setup to answer to incoming messages that
+		// can start the participation of the agent in a new conversation
 
 		this.addFactoryAsParticipant(talk);
 	}

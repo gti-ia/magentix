@@ -22,23 +22,21 @@ class HarryClass extends CAgent {
 		System.out.println(myProcessor.getMyAgent().getName()
 				+ ": the welcome message is " + welcomeMessage.getContent());
 
-		// Cada conversaci�n del agente es llevada a cabo por un CProcessor y
-		// los CProcessors son creados por las CProcessorFactories, en respuesta
-		// a mensajes que inician la actividad del agente en una conversaci�n.
+		// Each agent's conversation is carried out by a CProcessor.
+		// CProcessors are created by the CFactories in response
+		// to messages that start the agent's activity in a conversation
 
-		// Una forma sencilla de crear una CProcessorFactory a partir de las
-		// f�bricas
-		// predeterminadas del paquete es.upv.dsic.gti_ia.cAgents.protocols.
-		// Otra alternativa, no mostrada en este ejemplo, consiste en que el
-		// agente
-		// dise�e su propia f�brica y, por tanto, un nuevo protocolo de
-		// interacci�n.
+		// An easy way to create CFactories is to create them from the 
+		// predefined factories of package es.upv.dsi.gri_ia.cAgents.protocols
+		// Another option, not shown in this example, is that the agent
+		// designs her own factory and, therefore, a new interaction protocol
 
-		// En este ejemplo el agente va a actuar como iniciador en el protocolo
-		// REQUEST definido por FIPA.
-		// Para ello extiende la clase FIPA_REQUEST_Initiator implementando el
-		// m�todo que recibe la respuesta (Process_Inform)
-
+		// In this example the agent is going to act as the initiator in the
+		// CONTRACT_NET protocol defined by FIPA.
+		// In order to do so, she has to extend the class FIPA_REQUEST_Initiator
+		// implementing the method that evaluates the proposals (doEvaluateProposals)
+		// and the method that receives the results of the accepted proposal (doInform)
+		
 		class myFIPA_CONTRACTNET extends FIPA_CONTRACTNET_Initiator {
 
 			@Override
@@ -46,67 +44,72 @@ class HarryClass extends CAgent {
 					ArrayList<ACLMessage> proposes,
 					ArrayList<ACLMessage> acceptances,
 					ArrayList<ACLMessage> rejections) {
-				// al primer li diguem que si
-				ACLMessage accept = new ACLMessage(ACLMessage.ACCEPT_PROPOSAL);
-				accept.setContent("Me mola la teua proposta");
-				System.out.println("Me mola "+proposes.get(0).getSender()+" "+getAid());
-				accept.setReceiver(proposes.get(0).getSender());
-				accept.setSender(getAid());
-				accept.setProtocol("fipa-contract-net");
-				acceptances.add(accept);
+				int min = 1000;
+				int index = -1;
+				for(int i=0; i < proposes.size(); i++){
+					if(Integer.valueOf(proposes.get(i).getContent()) < min){
+						min = Integer.valueOf(proposes.get(i).getContent());
+						index = i;
+					}
+				}
 				
-				//al segon que no
-				ACLMessage reject = new ACLMessage(ACLMessage.REJECT_PROPOSAL);
-				reject.setContent("No me mola la teua proposta");
-				System.out.println("No Me mola "+proposes.get(1).getSender());
-				reject.setReceiver(proposes.get(1).getSender());
-				reject.setSender(getAid());
-				reject.setProtocol("fipa-contract-net");
-				rejections.add(reject);				
+				for(int i=0; i < proposes.size(); i++){
+					if(i == index){ // accept the cheaper proposal
+						System.out.println("I accept "+proposes.get(i).getSender()+"'s proposal");
+						ACLMessage accept = new ACLMessage(ACLMessage.ACCEPT_PROPOSAL);
+						accept.setContent("I accept your proposal");
+						accept.setReceiver(proposes.get(i).getSender());
+						accept.setSender(getAid());
+						accept.setProtocol("fipa-contract-net");
+						acceptances.add(accept);
+					}
+					else{ // reject the rest
+						System.out.println("I reject "+proposes.get(i).getSender()+"'s proposal");
+						ACLMessage reject = new ACLMessage(ACLMessage.REJECT_PROPOSAL);
+						reject.setContent("I don't like your proposal, I reject it");
+						reject.setReceiver(proposes.get(1).getSender());
+						reject.setSender(getAid());
+						reject.setProtocol("fipa-contract-net");
+						rejections.add(reject);
+					}
+				}
 			}
 
 			@Override
 			protected void doReceiveInform(CProcessor myProcessor,
 					ACLMessage msg) {
-				//rebem resultat de la proposta
-				System.out.println("Resultat: "+msg.getContent());
+				// receive accepted proposal result
+				System.out.println("Result: "+msg.getContent());
 				
 			}
 			
 		}
 		
-		// Para iniciar una conversaci�n, el agente crea un mensaje que pueda
-		// ser
-		// aceptado por una de sus fabricas iniciadoras.
+		// In order to start a conversation the agent creates a message
+		// that can be accepted by one of its initiator factories.
 
 		msg = new ACLMessage(ACLMessage.CFP);
 		msg.addReceiver(new AgentID("Sally"));
 		msg.addReceiver(new AgentID("Sally2"));
-		msg.setContent("Cuando quedamos?");
+		msg.setContent("How much do you want to spend tomorrow in the dinner?");
 
-		// El agente crea la CProcessorFactory que crear� procesadores para
-		// iniciar
-		// conversaciones
-		// cuyo protocol sea REQUEST y su performativa REQUEST. En este ejemplo
-		// la
-		// cProcessorFactory recibe el nombre "TALK", no se le incorpora ning�n
-		// criterio
-		// de aceptaci�n adicional al requerido por el protocolo REQUEST (null)
-		// y
-		// no se limita el n�mero de procesadores simult�neos (valor 0)
+		// The agent creates the CFactory that creates processors that initiate
+		// CONTRACT_NET protocol conversations. In this
+		// example the CFactory gets the name "TALK", we don't add any
+		// additional message acceptance criterion other than the required
+		// by the CONTRACT_NET protocol (null) and we do not limit the number of simultaneous
+		// processors (value 0)
 		
 		CProcessorFactory talk = new myFIPA_CONTRACTNET().newFactory("TALK", null, msg,
-				1, myProcessor.getMyAgent(), 0, 2, 0);
+				1, myProcessor.getMyAgent(), 2, 2000, 0);
 
-		// La f�brica se configura para responder ante solicitudes del agente
-		// de inicio de conversaciones usando el protocolo REQUEST
+		// The factory is setup to answer start conversation requests from the agent
+		// using the CONTRACT_NET protocol.
 
 		this.addFactoryAsInitiator(talk);
 
-		// y finalmente se inicia la nueva conversaci�n. Al ser del tipo
-		// s�ncrona,
-		// la interacci�n en curso se detiene hasta que concluya la nueva
-		// conversaci�n
+		// finally the new conversation starts. Because it is synchronous, 
+		// the current interaction halts until the new conversation ends.
 
 		myProcessor.createSyncConversation(msg);
 
