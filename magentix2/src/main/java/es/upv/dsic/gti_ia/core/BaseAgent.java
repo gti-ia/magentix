@@ -312,6 +312,9 @@ public class BaseAgent implements Runnable {
     	
     	// confirm completion
     	this.traceSession.sync();
+    	
+    	// Add tracing entity to the TraceManager TracingEntityList
+    	
 	}
 	
 	/**
