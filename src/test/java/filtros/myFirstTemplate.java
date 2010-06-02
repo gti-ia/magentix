@@ -15,7 +15,7 @@ public class myFirstTemplate {
 		DOMConfigurator.configure("configuration/loggin.xml");
 		AgentsConnection.connect("localhost");
 		
-		MessageFilter template = new MessageFilter("performative = UNKNOWN AND purpose != comprar");
+		MessageFilter template = new MessageFilter("performative = UNKNOWN AND purpose= vender");
 				
 		ACLMessage msg = new ACLMessage(ACLMessage.UNKNOWN);
 		msg.setHeader("purpose", "vender");
