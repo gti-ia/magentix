@@ -53,7 +53,7 @@ public class TracingService {
 	
 	public static final int MAX_DI_TS = 22;
 	
-	private static final TracingService[] DI_TracingServices = new TracingService[MAX_DI_TS];
+	public static final TracingService[] DI_TracingServices = new TracingService[MAX_DI_TS];
 	static{
 		DI_TracingServices[TRACE_ERROR].name="TRACE_ERROR";
 		DI_TracingServices[TRACE_ERROR].description="General error in the tracing process.";

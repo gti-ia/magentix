@@ -44,6 +44,16 @@ public class TracingEntity {
 		return this.subscribedToTS;
 	}
 	
+	public int setType(int type){
+		if ((type < 0) || (type > 2)){
+			return -1;
+		}
+		else {
+			this.type=type;
+			return 0;
+		}
+	}
+	
 	public String toReadableString(){
 		switch (this.type){
 			case TracingEntity.AGENT:

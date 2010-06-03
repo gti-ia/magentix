@@ -24,7 +24,7 @@ public class TraceEvent implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	//private int domain;
-	private TracingService tService;
+	private String tService;
 	private long timestamp;
 	private TracingEntity originEntity;
 //	private AgentID originEntity;
@@ -38,7 +38,7 @@ public class TraceEvent implements Serializable {
 		this.content=null;
 	}
 	
-	public TraceEvent(TracingService tService, TracingEntity originEntity, String content){
+	public TraceEvent(String tService, TracingEntity originEntity, String content){
 		this.tService=tService;
 		this.originEntity=originEntity;
 		this.timestamp=System.currentTimeMillis();
@@ -56,7 +56,7 @@ public class TraceEvent implements Serializable {
 	}
 	*/
 	
-	public void setTracingService(TracingService tService){
+	public void setTracingService(String tService){
 		this.tService=tService;
 	}
 	
@@ -78,7 +78,7 @@ public class TraceEvent implements Serializable {
 	}
 	*/
 	
-	public TracingService getTracingService(){
+	public String getTracingService(){
 		return this.tService;
 	}
 	
@@ -96,7 +96,7 @@ public class TraceEvent implements Serializable {
 	
 	public String toReadableString() {
 		String event_str = String.valueOf(this.getTimestamp()) + ": " +
-			this.getTracingService().getName() + " from " + this.getOriginEntity().toReadableString() + " Content: " +
+			this.getTracingService() + " from " + this.getOriginEntity().toReadableString() + " Content: " +
 			this.getContent();
 		
 		return event_str;

@@ -18,6 +18,8 @@ import org.apache.qpid.transport.Session;
 import org.apache.qpid.transport.SessionException;
 import org.apache.qpid.transport.SessionListener;
 
+import es.upv.dsic.gti_ia.trace.TracingEntity;
+
 /**
  * @author Ricard Lopez Fogues
  * @author Sergio Pajares Ferrando
@@ -161,7 +163,8 @@ public class BaseAgent implements Runnable {
 
 		}
 		
-		sendTraceEvent(new TraceEvent("NEW_AGENT", aid, ""));
+		sendTraceEvent(new TraceEvent(TracingService.DI_TracingServices[TracingService.NEW_AGENT].getName(),
+				new TracingEntity(TracingEntity.AGENT, this.aid), ""));
 	}
 
 	/**
@@ -345,7 +348,6 @@ public class BaseAgent implements Runnable {
 		MessageTransfer xfr = new MessageTransfer();
 
 		xfr.destination("amq.match");
-		//xfr.destination("mgx.trace");
 		xfr.acceptMode(MessageAcceptMode.EXPLICIT);
 		xfr.acquireMode(MessageAcquireMode.PRE_ACQUIRED);
 		
@@ -356,32 +358,31 @@ public class BaseAgent implements Runnable {
 		// Timestamp
 		body = String.valueOf(tEvent.getTimestamp()) + "#";
 		// EventType
-		body = body + tEvent.getEventType().length() + "#"
-				+ tEvent.getEventType();
-		//body = body + tEvent.getEventType() + "#";
+		body = body + tEvent.getTracingService().length() + "#"
+				+ tEvent.getTracingService();
 		// OriginEntiy
-		body = body + tEvent.getOriginEntity().toString().length() + "#" + tEvent.getOriginEntity().toString();
-		//body = body + tEvent.getOriginEntity().toString() + "#";
+		body = body + tEvent.getOriginEntity().getType() + "#";
+		if (tEvent.getOriginEntity().getType() == TracingEntity.AGENT){
+			body = body + tEvent.getOriginEntity().getAid().toString().length() + "#" + 
+				tEvent.getOriginEntity().getAid().toString(); 
+		}
 		// Content
 		body = body + tEvent.getContent().length() + "#" + tEvent.getContent();
-		//body = body + tEvent.getContent();
 		
 		xfr.setBody(body);
-//		xfr.setBody("Trace Event");
-		
-//		deliveryProps.setRoutingKey(msg.getReceiver(i).name);
 		
 		// set message headers
     	MessageProperties messageProperties = new MessageProperties();
     	Map<String, Object> messageHeaders = new HashMap<String, Object>();
     	// set the message property
-    	messageHeaders.put("event_type", tEvent.getEventType());
-    	messageHeaders.put("origin_entity", tEvent.getOriginEntity().name);
+    	messageHeaders.put("tracing_service", tEvent.getTracingService());
+    	if (tEvent.getOriginEntity().getType() == TracingEntity.AGENT){
+    		messageHeaders.put("origin_entity", tEvent.getOriginEntity().getAid().name);
+    	}
     	messageProperties.setApplicationHeaders(messageHeaders);
 		
     	Header header = new Header(deliveryProps, messageProperties);
     	
-    	//xfr.header(new Header(deliveryProps, messageProperties));
     	this.traceSession.messageTransfer("amq.match", MessageAcceptMode.EXPLICIT, MessageAcquireMode.PRE_ACQUIRED,
                 header, xfr.getBodyString());
 
@@ -641,37 +642,42 @@ public class BaseAgent implements Runnable {
 		indice1 = indice1 + 1 + tam;
 		indice2 = body.indexOf('#', indice1);
 		tam = Integer.parseInt(body.substring(indice1, indice2));
-		tEvent.setEventType(body.substring(indice2+1, indice2+1+tam));
+		tEvent.setTracingService(body.substring(indice2+1, indice2+1+tam));
 		
 		// Origin Entity
 		AgentID aid = new AgentID();
+		int type;
 		aidindice1 = 0;
 		aidindice2 = 0;
 		indice1 = indice2 + 1 + tam;
 		indice2 = body.indexOf('#', indice1);
+		type=Integer.parseInt(body.substring(indice1, indice2));
+		indice1 = indice2 + 1;
+		indice2 = body.indexOf('#', indice1);
 		tam = Integer.parseInt(body.substring(indice1, indice2));
-		aidString = body.substring(indice2 + 1, indice2 + 1 + tam);
-		aidindice2 = aidString.indexOf(':');
-		if (aidindice2 - aidindice1 <= 0)
-			aid.protocol = "";
-		else
-			aid.protocol = aidString.substring(aidindice1, aidindice2);
-		aidindice1 = aidindice2 + 3;
-		aidindice2 = aidString.indexOf('@', aidindice1);
-		if (aidindice2 - aidindice1 <= 0)
-			aid.name = "";
-		else
-			aid.name = aidString.substring(aidindice1, aidindice2);
-		aidindice1 = aidindice2 + 1;
-		aidindice2 = aidString.indexOf(':', aidindice1);
-		if (aidindice2 - aidindice1 <= 0)
-			aid.host = "";
-		else
-			aid.host = aidString.substring(aidindice1, aidindice2);
-		aid.port = aidString.substring(aidindice2 + 1);
+		if (type == TracingEntity.AGENT){
+			aidString = body.substring(indice2 + 1, indice2 + 1 + tam);
+			aidindice2 = aidString.indexOf(':');
+			if (aidindice2 - aidindice1 <= 0)
+				aid.protocol = "";
+			else
+				aid.protocol = aidString.substring(aidindice1, aidindice2);
+			aidindice1 = aidindice2 + 3;
+			aidindice2 = aidString.indexOf('@', aidindice1);
+			if (aidindice2 - aidindice1 <= 0)
+				aid.name = "";
+			else
+				aid.name = aidString.substring(aidindice1, aidindice2);
+			aidindice1 = aidindice2 + 1;
+			aidindice2 = aidString.indexOf(':', aidindice1);
+			if (aidindice2 - aidindice1 <= 0)
+				aid.host = "";
+			else
+				aid.host = aidString.substring(aidindice1, aidindice2);
+			aid.port = aidString.substring(aidindice2 + 1);
 		
-		tEvent.setOriginEntity(aid);
-		
+			tEvent.setOriginEntity(new TracingEntity(type, aid));
+		}
 		// Content
 		indice1 = indice1 + 1 + tam;
 		indice2 = body.indexOf('#', indice1);

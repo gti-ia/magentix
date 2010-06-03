@@ -1,5 +1,7 @@
 package es.upv.dsic.gti_ia.trace;
 
+import es.upv.dsic.gti_ia.core.TracingService;
+
 public class TracingServiceList {
 	
 	private class TS_Node {
