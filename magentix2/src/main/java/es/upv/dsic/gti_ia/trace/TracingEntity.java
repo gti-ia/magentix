@@ -43,4 +43,15 @@ public class TracingEntity {
 	public TracingServiceSubscriptionList getSubscribedToTS(){
 		return this.subscribedToTS;
 	}
+	
+	public String toReadableString(){
+		switch (this.type){
+			case TracingEntity.AGENT:
+				return this.aid.toString();
+				//break;
+			default:
+				// ARTIFACT and AGGREGATION not supported
+				return null;
+		}
+	}
 }

@@ -22,10 +22,108 @@ import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.BaseAgent;
 import es.upv.dsic.gti_ia.core.TraceEvent;
+import es.upv.dsic.gti_ia.core.TracingService;
 
 import es.upv.dsic.gti_ia.trace.*;
 
 public class TraceManager extends BaseAgent{
+	
+	private class TracingServiceManagementList {
+		private class TSM_Node {
+			private TracingService tService;
+			private TracingEntityList subscribers;
+			private TSM_Node prev;
+			private TSM_Node next;
+			
+			public TSM_Node(){
+				this.tService=null;
+				this.subscribers=new TracigEntityList(); 
+				this.prev=null;
+				this.next=null;
+			}
+			
+			public TEM_Node(TracingEntity te){
+				this.TEntity=te;
+				this.prev=null;
+				this.next=null;
+			}
+			
+			public TEM_Node(AgentID aid){
+				this.TEntity = new TracingEntity(TracingEntity.AGENT, aid);
+				this.prev=null;
+				this.next=null;
+			}
+			
+			public void setNext(TEM_Node next){
+				this.next = next;
+			}
+			
+			public void setPrev(TEM_Node prev){
+				this.prev = prev;
+			}
+			
+			public TracingEntity getTEntity(){
+				return this.TEntity;
+			}
+			
+			public TEM_Node getPrev(){
+				return this.prev;
+			}
+			
+			public TEM_Node getNext(){
+				return this.next;
+			}
+		}
+	}
+	
+	private class TraceEntityManagementList {
+		private class TEM_Node {
+			private TracingEntity TEntity;
+			private TracingServiceManagementList publishedTS;
+			private TracingServiceList subscribedAll;
+			private TracingServiceSubscriptionList subscribed;
+			private TEM_Node prev;
+			private TEM_Node next;
+			
+			public TEM_Node(){
+				this.TEntity=null;
+				this.prev=null;
+				this.next=null;
+			}
+			
+			public TEM_Node(TracingEntity te){
+				this.TEntity=te;
+				this.prev=null;
+				this.next=null;
+			}
+			
+			public TEM_Node(AgentID aid){
+				this.TEntity = new TracingEntity(TracingEntity.AGENT, aid);
+				this.prev=null;
+				this.next=null;
+			}
+			
+			public void setNext(TEM_Node next){
+				this.next = next;
+			}
+			
+			public void setPrev(TEM_Node prev){
+				this.prev = prev;
+			}
+			
+			public TracingEntity getTEntity(){
+				return this.TEntity;
+			}
+			
+			public TEM_Node getPrev(){
+				return this.prev;
+			}
+			
+			public TEM_Node getNext(){
+				return this.next;
+			}
+		}
+	}
 	
 	private TracingEntityList TracingEntities;
 	

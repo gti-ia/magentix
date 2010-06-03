@@ -1,14 +1,12 @@
 package es.upv.dsic.gti_ia.trace;
 
 import es.upv.dsic.gti_ia.core.AgentID;
-import es.upv.dsic.gti_ia.trace.TracingEntity;
 
 /**
  * 
  * @author L Burdalo (lburdalo@dsic.upv.es)
  *
  * Double linked list of Tracing Entities
- * identified by their AgentID  
  */
 public class TracingEntityList {
 
@@ -66,13 +64,13 @@ public class TracingEntityList {
 		this.length=0;
 	}
 	
-	private void setFirst(TE_Node first){
-		this.first=first;
-	}
-	
-	private void setLast(TE_Node last){
-		this.last=last;
-	}
+//	private void setFirst(TE_Node first){
+//		this.first=first;
+//	}
+//	
+//	private void setLast(TE_Node last){
+//		this.last=last;
+//	}
 	
 	public TE_Node getFirst(){
 		return this.first;
@@ -176,7 +174,7 @@ public class TracingEntityList {
 	}
 	
 	/**
-	 * Add a new TE with the specified AgentID to the list
+	 * Add a new TE to the list
 	 * @param newTracingEntity
 	 * 		TracingEntity to be added to the list
 	 * @return 0
@@ -228,7 +226,7 @@ public class TracingEntityList {
 	 * @param aid
 	 * 		AgentID of the tracing entity which has to be removed
 	 * @return 0
-	 * 		Success: The new tracing entity has been added at
+	 * 		Success: The tracing entity has been removed from
 	 * 			the end of the list
 	 * @return -1
 	 * 		AgentID not found
