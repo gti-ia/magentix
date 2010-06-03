@@ -36,12 +36,12 @@ public class Run {
 			 * Instantiating a sender agent
 			 */
 			SenderAgent2 agente = new SenderAgent2(new AgentID(
-					"qpid://Ricardemisor@localhost:8080"));
+					"qpid://emisor@localhost:8080"));
 
 			/**
 			 * Instantiating a consumer agent
 			 */
-			ConsumerAgent2 agente2 = new ConsumerAgent2(new AgentID("qpid://Ricardconsumer@localhost:8080"));
+			ConsumerAgent2 agente2 = new ConsumerAgent2(new AgentID("qpid://consumer@localhost:8080"));
 
 			/**
 			 * Execute the agents
