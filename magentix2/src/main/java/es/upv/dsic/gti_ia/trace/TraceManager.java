@@ -28,55 +28,55 @@ import es.upv.dsic.gti_ia.trace.TracingEntityList;
 
 public class TraceManager extends BaseAgent{
 	
-	private class TracingServiceManagementList {
-		private class TSM_Node {
-			private TracingService tService;
-			private TracingEntityList subscribers;
-			private TSM_Node prev;
-			private TSM_Node next;
-			
-			public TSM_Node(){
-				this.tService=null;
-				this.subscribers=null; 
-				this.prev=null;
-				this.next=null;
-			}
-			
-			public TSM_Node(TracingService ts){
-				this.tService=ts;
-				this.subscribers=new TracingEntityList();
-				this.prev=null;
-				this.next=null;
-			}
-			
-			public TSM_Node(TracingService ts, TracingEntityList subs){
-				this.tService=ts;
-				this.subscribers=subs;
-				this.prev=null;
-				this.next=null;
-			}
-			
-			public void setNext(TSM_Node next){
-				this.next = next;
-			}
-			
-			public void setPrev(TSM_Node prev){
-				this.prev = prev;
-			}
-			
-			public TracingService getTService(){
-				return this.tService;
-			}
-			
-			public TSM_Node getPrev(){
-				return this.prev;
-			}
-			
-			public TSM_Node getNext(){
-				return this.next;
-			}
+	private class TSM_Node {
+		private TracingService tService;
+		private TracingEntityList subscribers;
+		private TSM_Node prev;
+		private TSM_Node next;
+		
+		public TSM_Node(){
+			this.tService=null;
+			this.subscribers=null; 
+			this.prev=null;
+			this.next=null;
 		}
 		
+		public TSM_Node(TracingService ts){
+			this.tService=ts;
+			this.subscribers=new TracingEntityList();
+			this.prev=null;
+			this.next=null;
+		}
+		
+		public TSM_Node(TracingService ts, TracingEntityList subs){
+			this.tService=ts;
+			this.subscribers=subs;
+			this.prev=null;
+			this.next=null;
+		}
+		
+		public void setNext(TSM_Node next){
+			this.next = next;
+		}
+		
+		public void setPrev(TSM_Node prev){
+			this.prev = prev;
+		}
+		
+		public TracingService getTService(){
+			return this.tService;
+		}
+		
+		public TSM_Node getPrev(){
+			return this.prev;
+		}
+		
+		public TSM_Node getNext(){
+			return this.next;
+		}
+	}
+	
+	private class TracingServiceManagementList {
 		private TSM_Node first;
 		private TSM_Node last;
 		private int length;
@@ -240,74 +240,74 @@ public class TraceManager extends BaseAgent{
 			return 0;
 		}
 	}
-
-	private class TracingEntityManagementList {
-		public class TEM_Node {
-			private TracingEntity TEntity;
-			private TracingServiceManagementList published_DI_TS;
-			private TracingServiceManagementList published_DD_TS;
-			private TracingServiceList isSubscribedAny;
-			private TracingServiceSubscriptionList isSubscribed;
-			private TEM_Node prev;
-			private TEM_Node next;
-			
-			public TEM_Node(){
-				this.TEntity=null;
-				this.published_DI_TS = new TracingServiceManagementList();
-				this.published_DD_TS = new TracingServiceManagementList();
-				this.isSubscribedAny = new TracingServiceList();
-				this.isSubscribed = new TracingServiceSubscriptionList();
-				this.prev=null;
-				this.next=null;
-			}
-			
-			public TEM_Node(TracingEntity te){
-				this.TEntity=te;
-				this.published_DI_TS = new TracingServiceManagementList();
-				this.published_DD_TS = new TracingServiceManagementList();
-				this.isSubscribedAny = new TracingServiceList();
-				this.isSubscribed = new TracingServiceSubscriptionList();
-				this.prev=null;
-				this.next=null;
-			}
-			
-//			public void setNext(TEM_Node next){
-//				this.next = next;
-//			}
-//			
-//			public void setPrev(TEM_Node prev){
-//				this.prev = prev;
-//			}
-			
-			public TracingEntity getTEntity(){
-				return this.TEntity;
-			}
-			
-			public TEM_Node getPrev(){
-				return this.prev;
-			}
-			
-			public TEM_Node getNext(){
-				return this.next;
-			}
-			
-			public TracingServiceManagementList getPublished_DI_TS(){
-				return this.published_DI_TS;
-			}
-			
-			public TracingServiceManagementList getPublished_DD_TS(){
-				return this.published_DD_TS;
-			}
-			
-			public TracingServiceList getIsSubscribedAny(){
-				return this.isSubscribedAny;
-			}
-			
-			public TracingServiceSubscriptionList getIsSubscribed(){
-				return this.isSubscribed;
-			}
+	
+	private class TEM_Node {
+		private TracingEntity TEntity;
+		private TracingServiceManagementList published_DI_TS;
+		private TracingServiceManagementList published_DD_TS;
+		private TracingServiceList isSubscribedAny;
+		private TracingServiceSubscriptionList isSubscribed;
+		private TEM_Node prev;
+		private TEM_Node next;
+		
+		public TEM_Node(){
+			this.TEntity=null;
+			this.published_DI_TS = new TracingServiceManagementList();
+			this.published_DD_TS = new TracingServiceManagementList();
+			this.isSubscribedAny = new TracingServiceList();
+			this.isSubscribed = new TracingServiceSubscriptionList();
+			this.prev=null;
+			this.next=null;
 		}
 		
+		public TEM_Node(TracingEntity te){
+			this.TEntity=te;
+			this.published_DI_TS = new TracingServiceManagementList();
+			this.published_DD_TS = new TracingServiceManagementList();
+			this.isSubscribedAny = new TracingServiceList();
+			this.isSubscribed = new TracingServiceSubscriptionList();
+			this.prev=null;
+			this.next=null;
+		}
+		
+//		public void setNext(TEM_Node next){
+//			this.next = next;
+//		}
+//		
+//		public void setPrev(TEM_Node prev){
+//			this.prev = prev;
+//		}
+		
+		public TracingEntity getTEntity(){
+			return this.TEntity;
+		}
+		
+		public TEM_Node getPrev(){
+			return this.prev;
+		}
+		
+		public TEM_Node getNext(){
+			return this.next;
+		}
+		
+		public TracingServiceManagementList getPublished_DI_TS(){
+			return this.published_DI_TS;
+		}
+		
+		public TracingServiceManagementList getPublished_DD_TS(){
+			return this.published_DD_TS;
+		}
+		
+		public TracingServiceList getIsSubscribedAny(){
+			return this.isSubscribedAny;
+		}
+		
+		public TracingServiceSubscriptionList getIsSubscribed(){
+			return this.isSubscribed;
+		}
+	}
+	
+	private class TracingEntityManagementList {
 		private TEM_Node first;
 		private TEM_Node last;
 		private int length;
@@ -330,7 +330,7 @@ public class TraceManager extends BaseAgent{
 			return this.length;
 		}
 		
-		private TEM_Node getTEM_NodeByAid(AgentID aid){
+		public TEM_Node getTEM_NodeByAid(AgentID aid){
 			int i;
 			TEM_Node node;
 			
@@ -686,8 +686,8 @@ public class TraceManager extends BaseAgent{
 					newService.setDescription(content.substring(index));
 					
 					if ((error = DD_Tracing_Services.addTS(newService)) >= 0){
-						tem_node=TracingEntities.getTEMByAid(msg.getSender());
-						tem_node
+						tem_node=TracingEntities.getTEM_NodeByAid(msg.getSender());
+						tem_node.addTSM(newService);
 					}
 					
 					if ((error = DD_Tracing_Services.addTS(newService)) >= 0){
