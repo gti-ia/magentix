@@ -242,7 +242,7 @@ public class TraceManager extends BaseAgent{
 	}
 
 	private class TracingEntityManagementList {
-		private class TEM_Node {
+		public class TEM_Node {
 			private TracingEntity TEntity;
 			private TracingServiceManagementList published_DI_TS;
 			private TracingServiceManagementList published_DD_TS;
@@ -654,6 +654,7 @@ public class TraceManager extends BaseAgent{
 		String command;
 		
 		TracingService ts;
+		TEM_Node tem_node;
 		
 		int error;
 		
@@ -683,7 +684,12 @@ public class TraceManager extends BaseAgent{
 					
 					index = index2 + length + 1;
 					newService.setDescription(content.substring(index));
-										
+					
+					if ((error = DD_Tracing_Services.addTS(newService)) >= 0){
+						tem_node=TracingEntities.getTEMByAid(msg.getSender());
+						tem_node
+					}
+					
 					if ((error = DD_Tracing_Services.addTS(newService)) >= 0){
 						response_msg = new ACLMessage(ACLMessage.AGREE);
 						response_msg.setReceiver(msg.getSender());
