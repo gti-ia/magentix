@@ -654,6 +654,7 @@ public class TraceManager extends BaseAgent{
 		String command;
 		
 		TracingService ts;
+		TSM_Node tsm_node;
 		TEM_Node tem_node;
 		
 		int error;
@@ -687,14 +688,18 @@ public class TraceManager extends BaseAgent{
 					
 					if ((error = DD_Tracing_Services.addTS(newService)) >= 0){
 						tem_node=TracingEntities.getTEM_NodeByAid(msg.getSender());
-						tem_node.addTSM(newService);
-					}
-					
-					if ((error = DD_Tracing_Services.addTS(newService)) >= 0){
-						response_msg = new ACLMessage(ACLMessage.AGREE);
-						response_msg.setReceiver(msg.getSender());
-						response_msg.setContent("publish#" + newService.getName());
-						logger.info("[TRACE MANAGER]: sending AGREE message to " + msg.getReceiver().toString());
+						if (tem_node.published_DD_TS.addTSM(newService) >= 0){
+							response_msg = new ACLMessage(ACLMessage.AGREE);
+							response_msg.setReceiver(msg.getSender());
+							response_msg.setContent("publish#" + newService.getName());
+							logger.info("[TRACE MANAGER]: sending AGREE message to " + msg.getReceiver().toString());
+						}
+						else{
+							response_msg = new ACLMessage(ACLMessage.REFUSE);
+							response_msg.setReceiver(msg.getSender());
+							response_msg.setContent("publish#" + newService.getName());
+							logger.info("[TRACE MANAGER]: sending REFUSE message to " + msg.getReceiver().toString());
+						}
 					}
 					else{
 						response_msg = new ACLMessage(ACLMessage.REFUSE);
@@ -707,8 +712,11 @@ public class TraceManager extends BaseAgent{
 					// Remove publication of a tracing service
 					String serviceName=content.substring(index+1);
 					
+					if((tsm_node=TracingEntities.getTEM_NodeByAid(msg.getSender()).published_DD_TS.getTSM_NodeByServiceName(serviceName)) == null){
+						
+					}
 					
-					if ((ts=DD_Tracing_Services.getTSByName(serviceName)) == null){
+					if ((tem_node=DD_Tracing_Services.getTEM_NodeByName(serviceName)) == null){
 						// Service not found
 						response_msg = new ACLMessage(ACLMessage.REFUSE);
 					}
