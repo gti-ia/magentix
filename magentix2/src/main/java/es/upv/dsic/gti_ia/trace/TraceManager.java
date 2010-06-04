@@ -516,59 +516,6 @@ public class TraceManager extends BaseAgent{
 		//DI_Tracing_Services = new TracingServiceList();
 		DD_Tracing_Services = new TracingServiceList();
 		
-//		// System Trace Events
-//		DI_Tracing_Services.addTracingService(null, new TracingService("TRACE_ERROR", "TRACE_ERROR", "General error in the tracing process."));
-//		DI_Tracing_Services.addTracingService(null, new TracingService("TRACE_START", "TRACE_START", "The ER entity started tracing."));
-//		DI_Tracing_Services.addTracingService(null, new TracingService("TRACE_STOP", "TRACE_STOP", "The ER entity stoppped tracing."));
-//		DI_Tracing_Services.addTracingService(null, new TracingService("SUBSCRIBED", "SUBSCRIBED", "The ER entity subscribed to a tracing service."));
-//		DI_Tracing_Services.addTracingService(null, new TracingService("UNSUBSCRIBED", "UNSUBSCRIBED", "The ER entity unsubscribed from a tracing service."));
-//		DI_Tracing_Services.addTracingService(null, new TracingService("UNAVAILABLE_TS", "UNAVAILABLE_TS", "The tracing service which was requested does not exist or it has been un published and thus, it is not avilable anymore"));
-//		DI_Tracing_Services.addTracingService(null, new TracingService("STREAM_OVERFLOW", "STREAM_OVERFLOW", "The stream where trace events were being stored for the ER to recover them is full."));
-//		DI_Tracing_Services.addTracingService(null, new TracingService("STREAM_RESUME", "STREAM_RESUME", "The ER entity began to trace events after having stoppped."));
-//		DI_Tracing_Services.addTracingService(null, new TracingService("STREAM_FLUSH_START", "STREAM_FLUSH_START", "The ER entity started flushing the stream where it was receiving events."));
-//		DI_Tracing_Services.addTracingService(null, new TracingService("STREAM_FLUSH_STOP", "STREAM_FLUSH_STOP", "The flushing process previously started has arrived to its end."));
-//		
-//		// Life cycle of Tracing Entities
-//		DI_Tracing_Services.addTracingService(null, new TracingService("NEW_AGENT", "NEW_AGENT", "A new agent was registered in the system."));
-//		//DI_Tracing_Services.addTracingService(null, new TracingService("NEW_ARTIFACT", "NEW_ARTIFACT", "A new artifact was registered in the system."));
-//		//DI_Tracing_Services.addTracingService(null, new TracingService("NEW_AGGREGATION", "NEW_AGGREGATION", "A new aggregation was registered in the system."));
-//		DI_Tracing_Services.addTracingService(null, new TracingService("AGENT_SUSPENDED", "AGENT_SUSPENDED", "An agent was suspended."));
-//		DI_Tracing_Services.addTracingService(null, new TracingService("AGENT_RESUMED", "AGENT_RESUMED", "An agent restarted after a suspension."));
-//		DI_Tracing_Services.addTracingService(null, new TracingService("AGENT_DESTROYED", "AGENT_DESTROYED", "An agent was destroyed."));
-//		//DI_Tracing_Services.addTracingService(null, new TracingService("AGENT_ENTERS_AGGREGATION", "AGENT_ENTERS_AGGREGATION", "An agent enters an aggregation."));
-//		//DI_Tracing_Services.addTracingService(null, new TracingService("AGENT_LEAVES_AGGREGATION", "AGENT_LEAVES_AGGREGATION", "An agent leaves an aggregation."));
-//		//DI_Tracing_Services.addTracingService(null, new TracingService("ARTIFACT_ENTERS_AGGREGATION", "ARTIFACT_ENTERS_AGGREGATION", "An artifact starts being part of an aggregation."));
-//		//DI_Tracing_Services.addTracingService(null, new TracingService("ARTIFACT_LEAVES_AGGREGATION", "ARTIFACT_LEAVES_AGGREGATION", "An artifact stops being part of an aggregation."));
-//		
-//		// Messaging among Tracing Entities
-//		DI_Tracing_Services.addTracingService(null, new TracingService("MESSAGE_SENT", "MESSAGE_SENT", "A FIPA-ACL message was sent."));
-//		DI_Tracing_Services.addTracingService(null, new TracingService("MESSAGE_RECEIVED", "MESSAGE_RECEIVED", "A FIPA-ACL message was received."));
-//		DI_Tracing_Services.addTracingService(null, new TracingService("MESSAGE_UNDELIVERABLE", "MESSAGE_UNDELIVERABLE", "A FIPA-ACL message was impossible to deliver."));
-//		
-//		// OMS related Trace Events
-//		//DI_Tracing_Services.addTracingService(null, new TracingService("ROLE_REGISTRATION", "ROLE_REGISTRATION", "A new role has been registered in the system."));
-//		//DI_Tracing_Services.addTracingService(null, new TracingService("ROLE_DEREGISTRATION", "ROLE_DEREGISTRATION", "An existing role has been removed from the system."));
-//		//DI_Tracing_Services.addTracingService(null, new TracingService("NORM_REGISTRATION", "NORM_REGISTRATION", "A new norm has been registered in the system."));
-//		//DI_Tracing_Services.addTracingService(null, new TracingService("NORM_DEREGISTRATION", "NORM_DEREGISTRATION", "A norm has been removed from the system."));
-//		//DI_Tracing_Services.addTracingService(null, new TracingService("UNIT_REGISTRATION", "UNIT_REGISTRATION", "A new organisational unit has been registered in the system."));
-//		//DI_Tracing_Services.addTracingService(null, new TracingService("UNIT_DEREGISTRATION", "UNIT_DEREGISTRATION", "An existing organizational unit has been removed from the system."));
-//		//DI_Tracing_Services.addTracingService(null, new TracingService("ROLE_ACQUIRE", "ROLE_ACQUIRE", "A role has been acquired by an entity."));
-//		//DI_Tracing_Services.addTracingService(null, new TracingService("ROLE_LEAVE", "ROLE_LEAVE", "An entity in the system has voluntarily stoppped playing a specific role."));
-//		//DI_Tracing_Services.addTracingService(null, new TracingService("ROLE_EXPULSION", "ROLE_EXPULSION", "An entity in the system has been expulsed from playing a specific role."));
-//		//DI_Tracing_Services.addTracingService(null, new TracingService("NORM_VIOLATION", "NORM_VIOLATION", "A norm in the system has been violated."));
-//		
-//		// Tracing System related Tracing Services
-//		DI_Tracing_Services.addTracingService(null, new TracingService("PUBLISHED_TRACING_SERVICE", "PUBLISHED_TRACING_SERVICE", "A new tracing service has been published by an ES entity."));
-//		DI_Tracing_Services.addTracingService(null, new TracingService("UNPUBLISHED_TRACING_SERVICE", "UNPUBLISHED_TRACING_SERVICE", "A tracing service is not being offered by an ER entity."));
-//		// These two seem redundant with "SUBSCRIBED" and "UNSUBSCRIBED"
-//		//DI_Tracing_Services.addTracingService(null, new TracingService("TRACING_SERVICE_REQUEST", "TRACING_SERVICE_REQUEST", "An ER entity requested a tracing service."));
-//		//DI_Tracing_Services.addTracingService(null, new TracingService("TRACING_SERVICE_CANCEL", "TRACING_SERVICE_CANCEL", "An ER entity cancelled the subscription to a tracing service."));
-//		DI_Tracing_Services.addTracingService(null, new TracingService("AUTHORIZATION_REQUEST", "AUTHORIZATION_REQUEST", "An entity requested authorization for a tracing service."));
-//		DI_Tracing_Services.addTracingService(null, new TracingService("AUTHORIZATION_GRANTED", "AUTHORIZATION_GRANTED", "An entity added an authorization for a tracing service."));
-//		DI_Tracing_Services.addTracingService(null, new TracingService("AUTHORIZATION_DENIED", "AUTHORIZATION_DENIED", "An authorization for a tracing service was removed."));
-		
-		//logger.info("DI Tracing services:\n" + DI_Tracing_Services.listAllTracingServices());
-		
 		// Subscribe to tracing entities life cycle related tracing services
 		arguments.clear();
 		arguments.put("x-match", "any");
