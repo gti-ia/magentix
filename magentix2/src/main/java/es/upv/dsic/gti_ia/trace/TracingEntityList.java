@@ -134,31 +134,36 @@ public class TracingEntityList {
 	
 	/**
 	 * Add a new TE with the specified AgentID to the list
+	 * 
 	 * @param aid
 	 * 		AgentID of the tracing entity which has to be added
+	 * 
 	 * @return 0
 	 * 		Success: The new tracing entity has been added at
 	 * 			the end of the list
+	 * 
 	 * @return -1
-	 * 		Duplicate AgentID: A tracing entity with the specified
-	 * 			AgentID already exists in the list
-	 * @return -2
 	 * 		Internal values of the list are not correct. There is
 	 * 		something really wrong if this happens :-S
+	 * 
+	 * @return -2
+	 * 		Duplicate AgentID: A tracing entity with the specified
+	 * 			AgentID already exists in the list
+
 	 */
 	public int addTE(AgentID aid){
 		TE_Node te;
 		
 		if (this.length < 0){
 			// Error mucho gordo
-			return -2;
+			return -1;
 		}
 		else if (this.length == 0) {
 			te = new TE_Node(aid);
 			this.first=te;
 		}
 		else if (this.existsTE(aid)) {
-			return -1;
+			return -2;
 		}
 		else {
 			te = new TE_Node(aid);
@@ -175,17 +180,22 @@ public class TracingEntityList {
 	
 	/**
 	 * Add a new TE to the list
+	 * 
 	 * @param newTracingEntity
 	 * 		TracingEntity to be added to the list
+	 * 
 	 * @return 0
 	 * 		Success: The new tracing entity has been added at
 	 * 			the end of the list
+	 * 
 	 * @return -1
-	 * 		Duplicate AgentID: A tracing entity with the specified
-	 * 			identifier already exists in the list
-	 * @return -2
 	 * 		Internal values of the list are not correct. There is
 	 * 		something really wrong if this happens :-S
+	 * 
+	 * @return -2
+	 * 		Duplicate AgentID: A tracing entity with the specified
+	 * 			identifier already exists in the list
+	 * 
 	 * @return -3
 	 * 		Tracing entity type not supported yet
 	 */
@@ -199,14 +209,14 @@ public class TracingEntityList {
 		
 		if (this.length < 0){
 			// Error mucho gordo
-			return -2;
+			return -1;
 		}
 		else if (this.length == 0) {
 			te_node = new TE_Node(newTracingEntity);
 			this.first=te_node;
 		}
 		else if (this.existsTE(newTracingEntity.getAid())) {
-			return -1;
+			return -2;
 		}
 		else {
 			te_node = new TE_Node(newTracingEntity);
@@ -223,23 +233,23 @@ public class TracingEntityList {
 	
 	/**
 	 * Remove the TE with the specified AgentID from the list
+	 * 
 	 * @param aid
 	 * 		AgentID of the tracing entity which has to be removed
+	 * 
 	 * @return 0
 	 * 		Success: The tracing entity has been removed from
 	 * 			the end of the list
-	 * @return -1
-	 * 		AgentID not found
+	 * 
 	 * @return -2
-	 * 		Internal values of the list are not correct. There is
-	 * 		something really wrong if this happens :-S
+	 * 		AgentID not found
 	 */
 	public int removeTE(AgentID aid){
 		TE_Node te;
 		
 		if ((te=this.getTE_NodeByAid(aid)) == null){
 			// Service provider does not exist
-			return -1;
+			return -2;
 		}
 		else{
 			if (te.getPrev() == null){
@@ -276,10 +286,12 @@ public class TracingEntityList {
 	}
 	
 	/**
-	 * List all tracing entities in the list 
+	 * List all tracing entities in the list
+	 * 
 	 * @return A string with all tracing entities in the list, separated by '\n'
 	 * 		The format in which each tracing entity is returned is the following:
 	 * 		(Tracing entity type) Entity identifier
+	 * 
 	 * @return null
 	 */
 	public String listAllTracingEntities () {

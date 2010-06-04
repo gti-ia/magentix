@@ -481,9 +481,12 @@ public class TraceManager extends BaseAgent{
 		}
 	}
 	
-	private TracingEntityManagementList TracingEntities;
-	private TracingServiceList DD_Tracing_Services;
-	//private TracingServiceList DI_Tracing_Services;
+	private TracingEntityList TracingEntities;
+	private TracingEntityList TSProviderEntities;
+	private TracingEntityList TSSubscriptorEntities;
+	private TracingServiceList TracingServices;
+	
+	//private TracingServiceList DI_TracingServices;
 	//private TracingServiceSubscriptionList Subscriptions;
 	
 	public TraceManager(AgentID aid) throws Exception{
@@ -511,19 +514,20 @@ public class TraceManager extends BaseAgent{
 	public void initialize (){
 		Map<String, Object> arguments = new HashMap<String, Object>();
 		
-		TracingEntities = new TracingEntityManagementList();
+		TracingEntities = new TracingEntityList();
+		TSProviderEntities = new TracingEntityList();
+		TSSubscriptorEntities = new TracingEntityList();
+		TracingServices = new TracingServiceList();
+		
+		// Add Trace Manager to the tracing entities list
+		TracingEntities.addTE(this.getAid());
+		if (TracingServices.initializeWithDITracingServices() != 0){
+			logger.error("[TRACE MANAGER]: Error while initializing the tracing service list");
+		}
 		
 		//DI_Tracing_Services = new TracingServiceList();
-		DD_Tracing_Services = new TracingServiceList();
+		//DD_TracingServices = new TracingServiceList();
 		
-		// Subscribe to tracing entities life cycle related tracing services
-		arguments.clear();
-		arguments.put("x-match", "any");
-		arguments.put("tracing_service", TracingService.DI_TracingServices[TracingService.NEW_AGENT].getName());
-		arguments.put("tracing_service", TracingService.DI_TracingServices[TracingService.AGENT_DESTROYED].getName());
-    	this.traceSession.exchangeBind(this.getName() + ".trace", "amq.match", this.getName() + ".control.direct", arguments);
-    	// confirm completion
-    	this.traceSession.sync();
 	}
 	
 	/**
@@ -605,6 +609,7 @@ public class TraceManager extends BaseAgent{
 		TEM_Node tem_node;
 		
 		int error;
+		boolean agree_response;
 		
 		//logger.info("[TRACE MANAGER]: Received [" + msg.getPerformativeInt() + "] -> " + msg.getContent());
 		
@@ -632,6 +637,59 @@ public class TraceManager extends BaseAgent{
 					
 					index = index2 + length + 1;
 					newService.setDescription(content.substring(index));
+					
+					if (!TracingEntities.existsTE(msg.getSender())){
+						// Register a new tracing entity
+						if ((error=TracingEntities.addTE(msg.getSender())) != 0){
+							// Error adding the tracing entity
+							
+						}
+					}
+					else{
+						if ((error=TracingServices.addTS(newService)) != 0){
+							switch (error) {
+								case -1:
+									// Unknown error
+									break;
+								case -2:
+									// Duplicate tracing service
+									break;
+								default:
+									// Unknown
+									// This should never happen...
+							}
+						}
+						else{
+							if ((error=TSProviderEntities.addTE(msg.getSender())) != 0){
+								// Added the new tracing service
+							}
+							
+						}
+					}
+					
+					if (TracingService.existsDITracingService(newService.getName())){
+						// A DI Tracing Service already exists
+						// The new service cannot be published
+						agree_response=false;
+					}
+					else if ((ts=DD_TracingServices.getTSByName(newService.getName())) != null){
+						if (!ts.equals(newService)){
+							// Another DD tracing service exists with that name
+							// The new service cannot be published
+							agree_response=false;
+						}
+						agree_response=true;
+					}
+					
+					if (agree_response==true){
+						if ((error=DD_TracingServices.addTS(newService)) >= 0){
+							
+						}
+					}
+					
+					if (newService.equals(DD_Tracing_Services.getTSByName(newService.getName()))){
+						// The Service is already published
+					}
 					
 					if ((error = DD_Tracing_Services.addTS(newService)) >= 0){
 						tem_node=TracingEntities.getTEM_NodeByAid(msg.getSender());

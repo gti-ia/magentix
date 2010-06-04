@@ -163,8 +163,8 @@ public class BaseAgent implements Runnable {
 
 		}
 		
-		sendTraceEvent(new TraceEvent(TracingService.DI_TracingServices[TracingService.NEW_AGENT].getName(),
-				new TracingEntity(TracingEntity.AGENT, this.aid), ""));
+		//sendTraceEvent(new TraceEvent(TracingService.DI_TracingServices[TracingService.NEW_AGENT].getName(),
+		//		new TracingEntity(TracingEntity.AGENT, this.aid), ""));
 	}
 
 	/**

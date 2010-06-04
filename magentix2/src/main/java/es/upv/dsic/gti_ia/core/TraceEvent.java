@@ -4,8 +4,14 @@ package es.upv.dsic.gti_ia.core;
 import java.lang.System;
 import java.io.Serializable;
 
-import es.upv.dsic.gti_ia.core.TracingService;
 import es.upv.dsic.gti_ia.trace.TracingEntity;
+
+/**
+ * 
+ * @author L Burdalo (lburdalo@dsic.upv.es)
+ *
+ * Definition of Trace Event
+ */
 
 public class TraceEvent implements Serializable {
 	/*

@@ -1,6 +1,13 @@
 package es.upv.dsic.gti_ia.core;
 
-public class TracingService {
+/**
+ * 
+ * @author L Burdalo (lburdalo@dsic.upv.es)
+ *
+ * Definition of Tracing Service
+ */
+
+public class TracingService {	
 	/**
 	 * Domain Independent Tracing Service names
 	 */
@@ -129,4 +136,38 @@ public class TracingService {
 	public String getDescription () {
 		return this.description;
 	}
+	
+//	public static TracingService getDITracingServiceByName(String name){
+//		int i;
+//		
+//		for (i=0; i < MAX_DI_TS; i++){
+//			if (DI_TracingServices[i].getName().contentEquals(name)){
+//				return DI_TracingServices[i];
+//			}
+//		}
+//		
+//		return null;
+//	}
+	
+	/**
+	 * Determines if a tracing service already exists in the list
+	 * 
+	 * @param name
+	 * 		Name of the tracing service
+	 * 
+	 * @return true
+	 * 		A tracing service with the specified name
+	 * 		exists in the list.
+	 * @return false
+	 * 		It does not exists a tracing service with
+	 * 		that name in the list.
+	 */
+//	public static boolean existsDITracingService(String name){
+//		if (TracingService.getDITracingServiceByName(name) != null){
+//			return true;
+//		}
+//		else {
+//			return false;
+//		}
+//	}
 }

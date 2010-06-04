@@ -3,6 +3,11 @@ package es.upv.dsic.gti_ia.trace;
 import es.upv.dsic.gti_ia.core.AgentID;
 
 /**
+ * 
+ * @author L Burdalo (lburdalo@dsic.upv.es)
+ *
+ * Definition of Tracing Entity
+ *
  * TODO: Artifacts and aggregations are not yet supported
  * 		far beyond the constants defined in the class 
  */
