@@ -1,5 +1,10 @@
 package es.upv.dsic.gti_ia.core;
 
+import es.upv.dsic.gti_ia.trace.TracingEntity;
+import es.upv.dsic.gti_ia.trace.TracingEntityList;
+import es.upv.dsic.gti_ia.trace.TracingServiceSubscription;
+import es.upv.dsic.gti_ia.trace.TracingServiceSubscriptionList;
+
 /**
  * 
  * @author L Burdalo (lburdalo@dsic.upv.es)
@@ -110,15 +115,21 @@ public class TracingService {
 	
 	private String name;
 	private String description;
+	private TracingEntityList providers;
+	private TracingServiceSubscriptionList subscriptions;
 
 	public TracingService () {
 		this.name = null;
 		this.description = null;
+		this.providers = null;
+		this.subscriptions = null;
 	}
 	
 	public TracingService (String serviceName, String description) {
 		this.name=serviceName;
 		this.description=description;
+		this.providers = new TracingEntityList();
+		this.subscriptions = new TracingServiceSubscriptionList();
 	}
 	
 	public void setName (String name) {
@@ -135,6 +146,14 @@ public class TracingService {
 	
 	public String getDescription () {
 		return this.description;
+	}
+	
+	public TracingEntityList getProviders(){
+		return this.providers;
+	}
+	
+	public TracingServiceSubscriptionList getSubscriptions(){
+		return this.subscriptions;
 	}
 	
 //	public static TracingService getDITracingServiceByName(String name){

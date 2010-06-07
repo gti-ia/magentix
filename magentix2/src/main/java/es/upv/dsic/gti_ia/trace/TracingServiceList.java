@@ -1,5 +1,6 @@
 package es.upv.dsic.gti_ia.trace;
 
+import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.TracingService;
 
 public class TracingServiceList {
@@ -29,6 +30,10 @@ public class TracingServiceList {
 			this.prev = prev;
 		}
 		
+		public void setTS(TracingService ts){
+			this.TService=ts;
+		}
+		
 		public TracingService getTService(){
 			return this.TService;
 		}
@@ -45,11 +50,20 @@ public class TracingServiceList {
 	private TS_Node first;
 	private TS_Node last;
 	private int length;
+	AgentID ownerAid;
 	
 	public TracingServiceList () {
 		this.first = null;
 		this.last = null;
 		this.length = 0;
+		this.ownerAid=null;
+	}
+	
+	public TracingServiceList (AgentID owner) {
+		this.first = null;
+		this.last = null;
+		this.length = 0;
+		this.ownerAid=owner;
 	}
 	
 	public TS_Node getFirst () {
@@ -62,6 +76,10 @@ public class TracingServiceList {
 	
 	public int getLength () {
 		return this.length;
+	}
+	
+	public AgentID getOwnerAid(){
+		return this.ownerAid;
 	}
 	
 	private TS_Node getTS_NodeByName(String name){
@@ -77,12 +95,40 @@ public class TracingServiceList {
 		return null;
 	}
 	
+	private TS_Node getTS_Node(TracingService tService){
+		int i;
+		TS_Node node;
+		
+		for (i=0, node=this.first; i < this.length; i++, node=node.getNext()){
+			if ((node.getTService().getName().contentEquals(tService.getName())) &&
+				(node.getTService().getDescription().contentEquals(tService.getDescription()))){
+				return node;
+			}
+		}
+		
+		return null;
+	}
+	
 	public TracingService getTSByName(String name){
 		int i;
 		TS_Node node;
 		
 		for (i=0, node=this.first; i < this.length; i++, node=node.getNext()){
 			if (node.getTService().getName().contentEquals(name)){
+				return node.getTService();
+			}
+		}
+		
+		return null;
+	}
+	
+	public TracingService getTS(TracingService tService){
+		int i;
+		TS_Node node;
+		
+		for (i=0, node=this.first; i < this.length; i++, node=node.getNext()){
+			if ((node.getTService().getName().contentEquals(tService.getName())) &&
+				(node.getTService().getDescription().contentEquals(tService.getDescription()))){
 				return node.getTService();
 			}
 		}
@@ -203,6 +249,61 @@ public class TracingServiceList {
 			return -2;
 		}
 		else{
+			if (ts.getPrev() == null){
+				// ts is the first in the list
+				if (this.length == 1){
+					// Empty the list
+					this.first=null;
+					this.last=null;
+				}
+				else{
+					ts=this.first;
+					this.first=ts.getNext();
+					ts.setNext(null);
+					this.first.setPrev(null);
+				}
+			}
+			else if (ts.getNext() == null){
+				// ts is the last provider in the list
+				ts=this.last;
+				this.last=ts.getPrev();
+				this.last.setNext(null);
+				ts.setPrev(null);
+			}
+			else{
+				ts.getPrev().setNext(ts.getNext());
+				ts.getNext().setPrev(ts.getPrev());
+				ts.setPrev(null);
+				ts.setNext(null);
+			}
+		}
+		
+		this.length--;
+		return 0;
+	}
+	
+	/**
+	 * Remove the TS from the list
+	 * 
+	 * @param tService
+	 * 		Tracing service which has to be removed
+	 * 
+	 * @return 0
+	 * 		Success: The tracing service has been removed from
+	 * 			the end of the list
+	 * 
+	 * @return -2
+	 * 		Name not found
+	 */
+	public int removeTS(TracingService tService){
+		TS_Node ts;
+		
+		if ((ts=this.getTS_Node(tService)) == null){
+			// Tracing service does not exist
+			return -2;
+		}
+		else{
+			ts.setTS(null);
 			if (ts.getPrev() == null){
 				// ts is the first in the list
 				if (this.length == 1){
