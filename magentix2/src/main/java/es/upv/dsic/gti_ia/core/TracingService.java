@@ -156,37 +156,31 @@ public class TracingService {
 		return this.subscriptions;
 	}
 	
-//	public static TracingService getDITracingServiceByName(String name){
-//		int i;
-//		
-//		for (i=0; i < MAX_DI_TS; i++){
-//			if (DI_TracingServices[i].getName().contentEquals(name)){
-//				return DI_TracingServices[i];
-//			}
-//		}
-//		
-//		return null;
-//	}
+	public int addServiceProvider(TracingEntity provider){
+		return this.providers.addTE(provider);
+	}
 	
-	/**
-	 * Determines if a tracing service already exists in the list
-	 * 
-	 * @param name
-	 * 		Name of the tracing service
-	 * 
-	 * @return true
-	 * 		A tracing service with the specified name
-	 * 		exists in the list.
-	 * @return false
-	 * 		It does not exists a tracing service with
-	 * 		that name in the list.
-	 */
-//	public static boolean existsDITracingService(String name){
-//		if (TracingService.getDITracingServiceByName(name) != null){
-//			return true;
-//		}
-//		else {
-//			return false;
-//		}
-//	}
+	public int addSubscription (TracingServiceSubscription subscription){
+		return this.subscriptions.addTSS(subscription);
+	}
+	
+	public int removeProvider(AgentID providerAid){
+		return this.providers.removeTE(providerAid);
+	}
+	
+	public int removeSubscriptionsWithProvider(AgentID providerAid){
+		return this.subscriptions.removeAllTSSFromProvider(providerAid);
+	}
+	
+	public int removeSubscriptionsWithProvider(TracingEntity provider){
+		return this.subscriptions.removeAllTSSFromProvider(provider);
+	}
+	
+	public int removeSubscriptionsWithSubscriptor(AgentID subscriptorAid){
+		return this.subscriptions.removeAllTSSFromSubscriptor(subscriptorAid);
+	}
+	
+	public int removeSubscriptionsWithSubscriptor(TracingEntity subscriptor){
+		return this.subscriptions.removeAllTSSFromSubscriptor(subscriptor);
+	}
 }

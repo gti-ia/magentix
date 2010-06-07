@@ -28,463 +28,6 @@ import es.upv.dsic.gti_ia.trace.TracingEntityList;
 
 public class TraceManager extends BaseAgent{
 	
-//	private class TracingServiceManagementList extends TracingServiceList {
-//		
-//	}
-//	
-//	private class TSM_Node {
-//		private TracingService tService;
-//		private TracingEntityList subscribers;
-//		private TSM_Node prev;
-//		private TSM_Node next;
-//		
-//		public TSM_Node(){
-//			this.tService=null;
-//			this.subscribers=null; 
-//			this.prev=null;
-//			this.next=null;
-//		}
-//		
-//		public TSM_Node(TracingService ts){
-//			this.tService=ts;
-//			this.subscribers=new TracingEntityList();
-//			this.prev=null;
-//			this.next=null;
-//		}
-//		
-//		public TSM_Node(TracingService ts, TracingEntityList subs){
-//			this.tService=ts;
-//			this.subscribers=subs;
-//			this.prev=null;
-//			this.next=null;
-//		}
-//		
-//		public void setNext(TSM_Node next){
-//			this.next = next;
-//		}
-//		
-//		public void setPrev(TSM_Node prev){
-//			this.prev = prev;
-//		}
-//		
-//		public TracingService getTService(){
-//			return this.tService;
-//		}
-//		
-//		public TSM_Node getPrev(){
-//			return this.prev;
-//		}
-//		
-//		public TSM_Node getNext(){
-//			return this.next;
-//		}
-//	}
-//	
-//	private class TracingServiceManagementList {
-//		private TSM_Node first;
-//		private TSM_Node last;
-//		private int length;
-//		
-//		public TracingServiceManagementList(){
-//			this.first=null;
-//			this.last=null;
-//			this.length=0;
-//		}
-//				
-//		public TSM_Node getFirst(){
-//			return this.first;
-//		}
-//		
-//		public TSM_Node getLast(){
-//			return this.last;
-//		}
-//		
-//		public int getLength(){
-//			return this.length;
-//		}
-//		
-//		private TSM_Node getTSM_NodeByServiceName(String name){
-//			int i;
-//			TSM_Node node;
-//			
-//			for (i=0, node=this.first; i < this.length; i++, node=node.getNext()){
-//				if (node.getTService().getName().contentEquals(name)){
-//					return node;
-//				}
-//			}
-//			
-//			return null;
-//		}
-//		
-//		public TracingService getTSByName(String name){
-//			int i;
-//			TSM_Node node;
-//			
-//			for (i=0, node=this.first; i < this.length; i++, node=node.getNext()){
-//				if (node.getTService().getName().contentEquals(name)){
-//					return node.getTService();
-//				}
-//			}
-//			return null;
-//		}
-//		
-//		/**
-//		 * Determines if a tracing service already exists in the list
-//		 * 
-//		 * @param name
-//		 * 		Name of the tracing service
-//		 * 
-//		 * @return true
-//		 * 		A tracing service with the specified name
-//		 * 		exists in the list.
-//		 * @return false
-//		 * 		It does not exists a tracing service with
-//		 * 		that name in the list.
-//		 */
-//		public boolean existsTS(String name){
-//			if (this.getTSByName(name) != null){
-//				return true;
-//			}
-//			else {
-//				return false;
-//			}
-//		}
-//		
-//		/**
-//		 * Add a new TS without subscriptors to the list.
-//		 * If the TS already exists, the method returns error. 
-//		 * @param newTracingService
-//		 * 		TracingService to be added to the list
-//		 * @return 0
-//		 * 		Success: The new tracing service has been added at
-//		 * 			the end of the list
-//		 * @return -1
-//		 * 		Duplicate TS: The specified TS already exists in the list
-//		 * @return -2
-//		 * 		Internal values of the list are not correct. There is
-//		 * 		something really wrong if this happens :-S
-//		 */
-//		public int addTSM(TracingService newTracingService){
-//			TSM_Node tsm_node;
-//						
-//			if (this.length < 0){
-//				// Error mucho gordo
-//				return -2;
-//			}
-//					
-//			tsm_node=new TSM_Node(newTracingService);
-//			
-//			if (this.length == 0) {
-//				this.first=tsm_node;
-//			}
-//			else if (this.existsTS(newTracingService.getName())) {
-//				return -1;
-//			}
-//			else {
-//				this.last.setNext(tsm_node);
-//				tsm_node.setPrev(this.last);
-//			}
-//			
-//			tsm_node.setNext(null);
-//			this.last = tsm_node;
-//			this.length++;
-//				
-//			return 0;
-//		}
-//		
-//		/**
-//		 * Remove the TS from the from the list.
-//		 * 
-//		 * @param tService
-//		 * 
-//		 * @return 0
-//		 * 		Success: The TS has been removed from
-//		 * 			the list
-//		 * @return -1
-//		 * 		TS not found
-//		 */
-//		public int removeTS(TracingService tService){
-//			TSM_Node tsm;
-//			
-//			if ((tsm=this.getTSM_NodeByServiceName(tService.getName())) == null){
-//				// Service provider does not exist
-//				return -1;
-//			}
-//			else{
-//				if (tsm.getPrev() == null){
-//					// tsm is the first in the list
-//					if (this.length == 1){
-//						// Empty the list
-//						this.first=null;
-//						this.last=null;
-//					}
-//					else{
-//						tsm=this.first;
-//						this.first=tsm.getNext();
-//						tsm.setNext(null);
-//						this.first.setPrev(null);
-//					}
-//				}
-//				else if (tsm.getNext() == null){
-//					// tsm is the last in the list
-//					tsm=this.last;
-//					this.last=tsm.getPrev();
-//					this.last.setNext(null);
-//					tsm.setPrev(null);
-//				}
-//				else{
-//					tsm.getPrev().setNext(tsm.getNext());
-//					tsm.getNext().setPrev(tsm.getPrev());
-//					tsm.setPrev(null);
-//					tsm.setNext(null);
-//				}
-//			}
-//			
-//			this.length--;
-//			return 0;
-//		}
-//	}
-//	
-//	private class TEM_Node {
-//		private TracingEntity TEntity;
-//		private TracingServiceManagementList published_DI_TS;
-//		private TracingServiceManagementList published_DD_TS;
-//		private TracingServiceList isSubscribedAny;
-//		private TracingServiceSubscriptionList isSubscribed;
-//		private TEM_Node prev;
-//		private TEM_Node next;
-//		
-//		public TEM_Node(){
-//			this.TEntity=null;
-//			this.published_DI_TS = new TracingServiceManagementList();
-//			this.published_DD_TS = new TracingServiceManagementList();
-//			this.isSubscribedAny = new TracingServiceList();
-//			this.isSubscribed = new TracingServiceSubscriptionList();
-//			this.prev=null;
-//			this.next=null;
-//		}
-//		
-//		public TEM_Node(TracingEntity te){
-//			this.TEntity=te;
-//			this.published_DI_TS = new TracingServiceManagementList();
-//			this.published_DD_TS = new TracingServiceManagementList();
-//			this.isSubscribedAny = new TracingServiceList();
-//			this.isSubscribed = new TracingServiceSubscriptionList();
-//			this.prev=null;
-//			this.next=null;
-//		}
-//		
-////		public void setNext(TEM_Node next){
-////			this.next = next;
-////		}
-////		
-////		public void setPrev(TEM_Node prev){
-////			this.prev = prev;
-////		}
-//		
-//		public TracingEntity getTEntity(){
-//			return this.TEntity;
-//		}
-//		
-//		public TEM_Node getPrev(){
-//			return this.prev;
-//		}
-//		
-//		public TEM_Node getNext(){
-//			return this.next;
-//		}
-//		
-//		public TracingServiceManagementList getPublished_DI_TS(){
-//			return this.published_DI_TS;
-//		}
-//		
-//		public TracingServiceManagementList getPublished_DD_TS(){
-//			return this.published_DD_TS;
-//		}
-//		
-//		public TracingServiceList getIsSubscribedAny(){
-//			return this.isSubscribedAny;
-//		}
-//		
-//		public TracingServiceSubscriptionList getIsSubscribed(){
-//			return this.isSubscribed;
-//		}
-//	}
-//	
-//	private class TracingEntityManagementList {
-//		private TEM_Node first;
-//		private TEM_Node last;
-//		private int length;
-//		
-//		public TracingEntityManagementList(){
-//			this.first=null;
-//			this.last=null;
-//			this.length=0;
-//		}
-//		
-//		public TEM_Node getFirst(){
-//			return this.first;
-//		}
-//		
-//		public TEM_Node getLast(){
-//			return this.getLast();
-//		}
-//		
-//		public int getLength(){
-//			return this.length;
-//		}
-//		
-//		public TEM_Node getTEM_NodeByAid(AgentID aid){
-//			int i;
-//			TEM_Node node;
-//			
-//			for (i=0, node=this.first; i < this.length; i++, node=node.getNext()){
-//				if (node.getTEntity().getAid().equals(aid)){
-//					return node;
-//				}
-//			}
-//			
-//			return null;
-//		}
-//		
-//		public TracingEntity getTEMByAid(AgentID aid){
-//			int i;
-//			TEM_Node node;
-//			
-//			for (i=0, node=this.first; i < this.length; i++, node=node.getNext()){
-//				if (node.getTEntity().getAid().equals(aid)){
-//					return node.getTEntity();
-//				}
-//			}
-//			
-//			return null;
-//		}
-//		
-//		/**
-//		 * Determines if a tracing entity already exists in the list
-//		 * 
-//		 * @param aid
-//		 * 		AgentID of the tracing entity
-//		 * 
-//		 * @return true
-//		 * 		A tracing entity with the specified AgentID
-//		 * 		exists in the list.
-//		 * @return false
-//		 * 		It does not exists a tracing entity with
-//		 * 		that AgentID in the list.
-//		 */
-//		public boolean existsTEM(AgentID aid){
-//			if (this.getTEMByAid(aid) != null){
-//				return true;
-//			}
-//			else {
-//				return false;
-//			}
-//		}
-//		
-//		/**
-//		 * Add a new TE to the list
-//		 * @param newTracingEntity
-//		 * 		TracingEntity to be added to the list
-//		 * @return 0
-//		 * 		Success: The new tracing entity has been added at
-//		 * 			the end of the list
-//		 * @return -1
-//		 * 		Duplicate AgentID: A tracing entity with the specified
-//		 * 			identifier already exists in the list
-//		 * @return -2
-//		 * 		Internal values of the list are not correct. There is
-//		 * 		something really wrong if this happens :-S
-//		 * @return -3
-//		 * 		Tracing entity type not supported yet
-//		 */
-//		public int addTEM(TracingEntity newTracingEntity){
-//			TEM_Node tem_node;
-//			
-//			if (newTracingEntity.getType() != TracingEntity.AGENT){
-//				// ARTIFACTS and AGGREGATIONS are not supported yet
-//				return -3;
-//			}
-//			
-//			if (this.length < 0){
-//				// Error mucho gordo
-//				return -2;
-//			}
-//			else if (this.length == 0) {
-//				tem_node = new TEM_Node(newTracingEntity);
-//				this.first=tem_node;
-//			}
-//			else if (this.existsTEM(newTracingEntity.getAid())) {
-//				return -1;
-//			}
-//			else {
-//				tem_node = new TEM_Node(newTracingEntity);
-//				this.last.next=tem_node;
-//				tem_node.prev=this.last;
-//			}
-//			
-//			tem_node.next=null;
-//			this.last = tem_node;
-//			this.length++;
-//					
-//			return 0;
-//		}
-//		
-//		/**
-//		 * Remove the TE with the specified AgentID from the list
-//		 * @param aid
-//		 * 		AgentID of the tracing entity which has to be removed
-//		 * @return 0
-//		 * 		Success: The tracing entity has been removed from
-//		 * 			the end of the list
-//		 * @return -1
-//		 * 		AgentID not found
-//		 * @return -2
-//		 * 		Internal values of the list are not correct. There is
-//		 * 		something really wrong if this happens :-S
-//		 */
-//		public int removeTEM(AgentID aid){
-//			TEM_Node tem;
-//			
-//			if ((tem=this.getTEM_NodeByAid(aid)) == null){
-//				// Service provider does not exist
-//				return -1;
-//			}
-//			else{
-//				if (tem.getPrev() == null){
-//					// tem is the first in the list
-//					if (this.length == 1){
-//						// Empty the list
-//						this.first=null;
-//						this.last=null;
-//					}
-//					else{
-//						tem=this.first;
-//						this.first=tem.getNext();
-//						tem.next=null;
-//						this.first.prev=null;
-//					}
-//				}
-//				else if (tem.getNext() == null){
-//					// tem is the last provider in the list
-//					tem=this.last;
-//					this.last=tem.getPrev();
-//					this.last.next=null;
-//					tem.prev=null;
-//				}
-//				else{
-//					tem.getPrev().next=tem.getNext();
-//					tem.getNext().prev=tem.getPrev();
-//					tem.prev=null;
-//					tem.next=null;
-//				}
-//			}
-//			
-//			this.length--;
-//			return 0;
-//		}
-//	}
-	
 	private TracingEntityList TracingEntities;
 	private TracingEntityList TSProviderEntities;
 	private TracingEntityList TSSubscriptorEntities;
@@ -539,15 +82,14 @@ public class TraceManager extends BaseAgent{
 	 * @param tEvent
 	 * 
 	 * @param destination
-	 * 		"all"  : System trace events which are to be received by all tracing entities
-	 * 
-	 * 		!"all" : agent name of the agent which has to receive that system trace event        
+	 * 		Tracing entity to which the trace event is directed to.
+	 * 		If set to null, the system trace event is understood to be directed to all tracing
+	 * 		entities.        
 	 */
-	public static void sendSystemTraceEvent(TraceEvent tEvent, String destination) {
+	public void sendSystemTraceEvent(TraceEvent tEvent, TracingEntity destination) {
 		MessageTransfer xfr = new MessageTransfer();
 
 		xfr.destination("amq.match");
-		//xfr.destination("mgx.trace");
 		xfr.acceptMode(MessageAcceptMode.EXPLICIT);
 		xfr.acquireMode(MessageAcquireMode.PRE_ACQUIRED);
 		
@@ -560,30 +102,32 @@ public class TraceManager extends BaseAgent{
 		// EventType
 		body = body + tEvent.getTracingService().length() + "#"
 				+ tEvent.getTracingService();
-		//body = body + tEvent.getEventType() + "#";
 		// OriginEntiy
 		body = body + tEvent.getOriginEntity().toString().length() + "#" + tEvent.getOriginEntity().toString();
-		//body = body + tEvent.getOriginEntity().toString() + "#";
 		// Content
 		body = body + tEvent.getContent().length() + "#" + tEvent.getContent();
-		//body = body + tEvent.getContent();
 		
 		xfr.setBody(body);
-//		xfr.setBody("Trace Event");
-		
-//		deliveryProps.setRoutingKey(msg.getReceiver(i).name);
-		
+
 		// set message headers
     	MessageProperties messageProperties = new MessageProperties();
     	Map<String, Object> messageHeaders = new HashMap<String, Object>();
     	// set the message property
     	messageHeaders.put("tracing_service", tEvent.getTracingService());
     	messageHeaders.put("origin_entity", "system");
-    	messageHeaders.put("receiver", destination);
+    	if (destination == null){
+    		messageHeaders.put("receiver", "all");
+    	}
+    	else if (destination.getType() == TracingEntity.AGENT){
+    		messageHeaders.put("receiver", destination.getAid().name);
+    	}
+//    	else{
+//    		// Other tracing entity types are not supported yet
+//    		
+//    	}
 		
     	Header header = new Header(deliveryProps, messageProperties);
     	
-    	//xfr.header(new Header(deliveryProps, messageProperties));
     	this.traceSession.messageTransfer("amq.match", MessageAcceptMode.EXPLICIT, MessageAcquireMode.PRE_ACQUIRED,
                 header, xfr.getBodyString());
 	}
@@ -601,7 +145,7 @@ public class TraceManager extends BaseAgent{
 //	}
 	
 	public void onMessage(ACLMessage msg) {
-		String content, eventType, originEntity;
+		String content, serviceName, originEntity;
 		Map<String, Object> arguments;
 		int index, index2, length;
 		TraceEvent tEvent; // = new TraceEvent();
@@ -612,7 +156,17 @@ public class TraceManager extends BaseAgent{
 		TracingEntity tEntity;
 		TracingServiceSubscription tServiceSubscription;
 		
-		int error;
+		TracingServiceSubscriptionList removeList;
+		
+		AgentID originAid;
+		int indice1 = 0;
+		int indice2 = 0;
+		int aidindice1 = 0;
+		int aidindice2 = 0;
+		int tam = 0;
+		
+		int error, i;
+		String tEventContent;
 		boolean agree_response=true;
 		boolean added_TE=false;
 		boolean added_TS=false;
@@ -721,7 +275,7 @@ public class TraceManager extends BaseAgent{
 				}
 				else if (command.equals("unpublish")){
 					// Remove publication of a tracing service
-					String serviceName=content.substring(index+1);
+					serviceName=content.substring(index+1);
 					
 					if ((tEntity=TSProviderEntities.getTEByAid(msg.getSender())) == null){
 						// The tracing entity is not providing any tracing service
@@ -749,18 +303,35 @@ public class TraceManager extends BaseAgent{
 								response_msg.setContent("unpublish#" + serviceName + ":Tracing entity not publishing the specified service");
 							}
 							else{
-								// Unpublish the tracing service
-								if ((error=tService.getSubscriptions().removeAllTSSFromProvider(msg.getSender())) != 0){
-									switch (error){
-										case -2:
-											// No subscriptions to the tracing service found
-											break;
-										default:
+								// Remove subscriptions to that service
+								if ((removeList=tService.getSubscriptions().removeAllTSSFromProvider(msg.getSender())) != null){
+									while (removeList.getLength() > 0){
+										tServiceSubscription=removeList.getFirstSubscription();
+										// Send UNAVAILABLE_TS trace event
+										if (tServiceSubscription.getAnyProvider()){
+											tEventContent=TracingService.DI_TracingServices[TracingService.UNAVAILABLE_TS].getName() + "#" +
+											serviceName + "#any";
+										}
+										else{
+											tEventContent=TracingService.DI_TracingServices[TracingService.UNAVAILABLE_TS].getName() + "#" +
+											serviceName + msg.getSender();
+										}
+										
+								    	sendSystemTraceEvent(tEvent, tServiceSubscription.getSubscriptorEntity());
+								    	
+										if ((error=removeList.removeFirstTSS()) != 0){
+											// Somethig went wrong
 											agree_response=false;
 											response_msg = new ACLMessage(ACLMessage.REFUSE);
 											response_msg.setReceiver(msg.getSender());
-											response_msg.setContent("unpublish#" + serviceName + ":Unknown error trying to unpublish the service");
+											response_msg.setContent("unpublish#" + serviceName + ":Error sending system events");
+										}
 									}
+								}
+								
+								if (tService.getProviders().getLength() == 0){
+									// Tracing service was only offered by the specified tracing entity
+									TracingServices.removeTS(tService);
 								}
 							}
 						}
@@ -796,8 +367,128 @@ public class TraceManager extends BaseAgent{
 				content = msg.getContent();
 				
 				index = content.indexOf('#', 0);
-				eventType = content.substring(0, index);
+				serviceName = content.substring(0, index);
 				originEntity = content.substring(index + 1);
+				
+				if (!originEntity.contentEquals("any")){
+					originAid = new AgentID();
+					aidindice1 = 0;
+					aidindice2 = originEntity.indexOf(':');
+					if (aidindice2 - aidindice1 <= 0)
+						originAid.protocol = "";
+					else
+						originAid.protocol = originEntity.substring(aidindice1, aidindice2);
+					aidindice1 = aidindice2 + 3;
+					aidindice2 = originEntity.indexOf('@', aidindice1);
+					if (aidindice2 - aidindice1 <= 0)
+						originAid.name = "";
+					else
+						originAid.name = originEntity.substring(aidindice1, aidindice2);
+					aidindice1 = aidindice2 + 1;
+					aidindice2 = originEntity.indexOf(':', aidindice1);
+					if (aidindice2 - aidindice1 <= 0)
+						originAid.host = "";
+					else
+						originAid.host = originEntity.substring(aidindice1, aidindice2);
+					originAid.port = originEntity.substring(aidindice2 + 1);
+				}
+					
+				// Register tracing entity
+				if ((tEntity=TracingEntities.getTEByAid(msg.getSender())) == null){
+					// Register a new tracing entity
+					tEntity=new TracingEntity(TracingEntity.AGENT, msg.getSender());
+					if ((error=TracingEntities.addTE(tEntity)) != 0){
+						// Error adding the tracing entity
+						agree_response=false;
+						response_msg = new ACLMessage(ACLMessage.REFUSE);
+						response_msg.setReceiver(msg.getSender());
+						response_msg.setContent("subscribe#" + serviceName + ":Error registering tracing entity");
+						logger.info("[TRACE MANAGER]: sending REFUSE message to " + msg.getReceiver().toString());
+					}
+					else{
+						added_TE=true;
+					}
+				}
+				
+				// Check Tracing Service and Provider Entity
+				if (agree_response){
+					if ((tService=TracingServices.getTSByName(serviceName)) == null){
+						// The tracing service does not exist
+						agree_response=false;
+						response_msg = new ACLMessage(ACLMessage.REFUSE);
+						response_msg.setReceiver(msg.getSender());
+						response_msg.setContent("subscribe#" + serviceName + ":Tracing service not found");
+						logger.info("[TRACE MANAGER]: sending REFUSE message to " + msg.getReceiver().toString());
+					}
+					else if (!originEntity.contentEquals("any")){
+						if (tService.getProviders().getTEByAid(originAid) == null){
+							// The specified tracing entity does not provide that tracing service
+							if (added_TE) {
+								TracingEntities.removeTE(msg.getSender());
+							}
+							agree_response=false;
+							response_msg = new ACLMessage(ACLMessage.REFUSE);
+							response_msg.setReceiver(msg.getSender());
+							response_msg.setContent("subscribe#" + serviceName + ":Tracing service not offered by the tracing entity");
+							logger.info("[TRACE MANAGER]: sending REFUSE message to " + msg.getReceiver().toString());
+						}
+					}
+				}
+				
+				if (agree_response){
+					if (tService.getSubscriptions().existsTSS(msg.getSender(), originAid, serviceName)){
+						// The subscription already existse
+						agree_response=false;
+						response_msg = new ACLMessage(ACLMessage.REFUSE);
+						response_msg.setReceiver(msg.getSender());
+						response_msg.setContent("subscribe#" + serviceName + ":Subscription already existent");
+						logger.info("[TRACE MANAGER]: sending REFUSE message to " + msg.getReceiver().toString());
+					}
+				}
+				
+				if (agree_response){
+					
+				}
+				else{
+					if (added_TE) {
+						TracingEntities.removeTE(msg.getSender());
+					}
+				}
+				
+				
+					else if ((tService.getProviders().getTEByAid(originAid) == null) &&
+							(!originEntity.contentEquals("any"))){
+						// The specified tracing entity does not provide that tracing service
+						if (added_TE) {
+							TracingEntities.removeTE(msg.getSender());
+						}
+						agree_response=false;
+						response_msg = new ACLMessage(ACLMessage.REFUSE);
+						response_msg.setReceiver(msg.getSender());
+						response_msg.setContent("subscribe#" + serviceName + ":Tracing service not offered by the tracing entity");
+						logger.info("[TRACE MANAGER]: sending REFUSE message to " + msg.getReceiver().toString());
+					}
+					else if (tService.getSubscriptions().existsTSS(msg.getSender(), originAid, serviceName)){
+						
+					}
+						if ((error=TracingServices.addTS(newService)) != 0){
+							// Impossible to add tracing service
+							if (added_TE) {
+								TracingEntities.removeTE(msg.getSender());
+							}
+							agree_response=false;
+							response_msg = new ACLMessage(ACLMessage.REFUSE);
+							response_msg.setReceiver(msg.getSender());
+							response_msg.setContent("publish#" + newService.getName() + ":Error registering tracing service");
+							logger.info("[TRACE MANAGER]: sending REFUSE message to " + msg.getReceiver().toString());
+						}
+						else{
+							added_TS=true;
+						}
+					}
+				}
+				// Check existing subscription
+				// Add Subscription
 				
 				if ((ts=TracingServices.))
 				if ((ts=DI_Tracing_Services.getServiceByName(eventType)) != null){

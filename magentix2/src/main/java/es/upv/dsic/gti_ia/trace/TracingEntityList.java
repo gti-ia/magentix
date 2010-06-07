@@ -93,18 +93,18 @@ public class TracingEntityList {
 		return this.length;
 	}
 	
-	public TE_Node getFirstNode(){
+	private TE_Node getFirstNode(){
 		return this.first;
 	}
 	
-	public TE_Node getLastNode(){
+	private TE_Node getLastNode(){
 		return this.last;
 	}
 	
 	public AgentID getOwnerAid(){
 		return this.ownerAid;
 	}
-	
+		
 	private TE_Node getTE_NodeByAid(AgentID aid){
 		int i;
 		TE_Node node;
@@ -260,7 +260,7 @@ public class TracingEntityList {
 	 * 
 	 * @return 0
 	 * 		Success: The tracing entity has been removed from
-	 * 			the end of the list
+	 * 			the list
 	 * 
 	 * @return -2
 	 * 		AgentID not found
@@ -320,7 +320,7 @@ public class TracingEntityList {
 		int i;
 		TE_Node te_node;
 				
-		for (i=0, te_node=this.getFirst(); (i < this.getLength()) && (te_node.getNext() != null); i++, te_node=te_node.getNext()){
+		for (i=0, te_node=this.getFirstNode(); (i < this.getLength()) && (te_node.getNext() != null); i++, te_node=te_node.getNext()){
 			switch (te_node.getTEntity().getType()){
 				case TracingEntity.AGENT:
 					list = list + "(AGENT) " + te_node.getTEntity().getAid().toString() + "\n";

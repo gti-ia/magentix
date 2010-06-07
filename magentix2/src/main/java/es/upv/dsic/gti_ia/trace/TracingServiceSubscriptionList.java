@@ -41,16 +41,16 @@ public class TracingServiceSubscriptionList {
 			this.TSSubscription=TSSubscription;
 		}
 		
-		public TracingServiceSubscription getTSSubscription(){
-			return this.TSSubscription;
-		}
-		
 		public TSS_Node getPrev(){
 			return this.prev;
 		}
 		
 		public TSS_Node getNext(){
 			return this.next;
+		}
+		
+		public TracingServiceSubscription getTSSubscription(){
+			return this.TSSubscription;
 		}
 	}
 	
@@ -77,8 +77,16 @@ public class TracingServiceSubscriptionList {
 		return this.first;
 	}
 	
+	public TracingServiceSubscription getFirstSubscription(){
+		return this.first.getTSSubscription();
+	}
+	
 	public TSS_Node getLast(){
 		return this.last;
+	}
+	
+	public TracingServiceSubscription getLastSubscription(){
+		return this.last.getTSSubscription();
 	}
 	
 	public int getLength(){
@@ -94,7 +102,7 @@ public class TracingServiceSubscriptionList {
 		TSS_Node node;
 		
 		for (i=0, node=this.first; i < this.length; i++, node=node.getNext()){
-			if ((node.getTSSubscription().getSubscriptor().getAid().equals(subscriptorAid)) &&
+			if ((node.getTSSubscription().getSubscriptorEntity().getAid().equals(subscriptorAid)) &&
 				(node.getTSSubscription().getOriginEntity().getAid().equals(originAid)) &&
 				 node.getTSSubscription().getTracingService().getName().contentEquals(serviceName)){
 				return node;
@@ -109,7 +117,7 @@ public class TracingServiceSubscriptionList {
 		TSS_Node node;
 		
 		for (i=0, node=this.first; i < this.length; i++, node=node.getNext()){
-			if ((node.getTSSubscription().getSubscriptor().getAid().equals(subscriptorAid)) &&
+			if ((node.getTSSubscription().getSubscriptorEntity().getAid().equals(subscriptorAid)) &&
 				(node.getTSSubscription().getOriginEntity().getAid().equals(originAid)) &&
 					node.getTSSubscription().getTracingService().getName().contentEquals(serviceName)){
 				return node.getTSSubscription();
@@ -128,7 +136,7 @@ public class TracingServiceSubscriptionList {
 	 * @param providerAid
 	 * 		AgentID of the origin tracing entity
 	 * 
-	 * @param name
+	 * @param serviceName
 	 * 		Tracing service name
 	 * 
 	 * @return true
@@ -220,7 +228,7 @@ public class TracingServiceSubscriptionList {
 			tss_node = new TSS_Node(newSubscription);
 			this.first=tss_node;
 		}
-		else if (this.existsTSS(newSubscription.getSubscriptor().getAid(), newSubscription.getOriginEntity().getAid(), newSubscription.getTracingService().getName())) {
+		else if (this.existsTSS(newSubscription.getSubscriptorEntity().getAid(), newSubscription.getOriginEntity().getAid(), newSubscription.getTracingService().getName())) {
 			return -1;
 		}
 		else {
@@ -234,6 +242,28 @@ public class TracingServiceSubscriptionList {
 		this.length++;
 				
 		return 0;
+	}
+	
+	public int removeFirstTSS(){
+		TSS_Node tss_node;
+		
+		if (this.length < 0){
+			// This should never happen
+			return -1;
+		}
+		else if (this.length == 0){
+			// The list is empty
+			return -2;
+		}
+		else{
+			tss_node=this.first;
+			this.first=tss_node.getNext();
+			this.first.setPrev(null);
+			tss_node.setNext(null);
+			tss_node.TSSubscription=null;
+			
+			return 0;
+		}
 	}
 	
 	/**
@@ -297,46 +327,81 @@ public class TracingServiceSubscriptionList {
 //		return 0;
 //	}
 	
-	public int removeAllTSSFromProvider(AgentID providerAid){
+	public TracingServiceSubscriptionList getAllTSSFromProvider(AgentID providerAid){
+		int i;
+		TSS_Node node;
+		
+		TracingServiceSubscriptionList returnList = new TracingServiceSubscriptionList();
+		
+		for (i=0, node=this.getFirst(); i < this.length; i++, node=node.next){
+			if ((node.getTSSubscription().getOriginEntity().getAid().equals(providerAid)) ||
+				node.getTSSubscription().getAnyProvider()){
+				returnList.addTSS(node.getTSSubscription());
+			}
+		}
+		
+		return returnList;
+	}
+	
+	public TracingServiceSubscriptionList getAllTSSFromSubscriptor(AgentID providerAid){
+		int i;
+		TSS_Node node;
+		
+		TracingServiceSubscriptionList returnList = new TracingServiceSubscriptionList();
+		
+		for (i=0, node=this.getFirst(); i < this.length; i++, node=node.next){
+			if (node.getTSSubscription().getSubscriptorEntity().getAid().equals(providerAid)){
+				returnList.addTSS(node.getTSSubscription());
+			}
+		}
+		
+		return returnList;
+	}
+	
+	public TracingServiceSubscriptionList removeAllTSSFromProvider(AgentID providerAid){
 		int i;
 		TSS_Node node, removed_node;
 //		int removed=0;
-		TraceEvent tEvent;
-		String receiver;
+//		TraceEvent tEvent;
+//		String receiver;
+		
+		TracingServiceSubscriptionList returnList = new TracingServiceSubscriptionList();
 		
 		if (this.getLength() == 1){
 			if (this.getFirst().getTSSubscription().getOriginEntity().getAid().equals(providerAid)){
 				// Only one provider -> Remove all subscriptions
 				for (i=0, node=this.first; i < this.length; i++){
+					returnList.addTSS(node.TSSubscription);
 					removed_node=node;
 					node=node.getNext();
-					receiver=removed_node.getTSSubscription().getSubscriptor().getAid().toString();
+					//receiver=removed_node.getTSSubscription().getSubscriptorEntity().getAid().toString();
 					removed_node.setNext(null);
 					removed_node.setPrev(null);
 					removed_node.setTSSubscription(null);
-//					removed++;
-					tEvent = new TraceEvent(TracingService.DI_TracingServices[TracingService.UNAVAILABLE_TS].getName(),
-							new TracingEntity(TracingEntity.AGENT, this.getOwnerAid()),
-							TracingService.DI_TracingServices[TracingService.UNAVAILABLE_TS].getName() + "#" +
-							removed_node.getTSSubscription().getTracingService().getName() + "#" + providerAid.toString());
-			    	TraceManager.sendSystemTraceEvent(tEvent, receiver);
+
+					//tEvent = new TraceEvent(TracingService.DI_TracingServices[TracingService.UNAVAILABLE_TS].getName(),
+					//		new TracingEntity(TracingEntity.AGENT, this.getOwnerAid()),
+					//		TracingService.DI_TracingServices[TracingService.UNAVAILABLE_TS].getName() + "#" +
+					//		removed_node.getTSSubscription().getTracingService().getName() + "#" + providerAid.toString());
+			    	//sendSystemTraceEvent(tEvent, receiver);
 				}
 				this.first=null;
 				this.last=null;
 				this.length=0;
-				return 0;
+				return returnList;
 			}
 			else{
 				// Error: The origin entity does not exist in the list
-				return -2;
+				return null;
 			}
 		}
 		else{
 			for (i=0, node=this.first; i < this.length; i++){
 				if ((node.getTSSubscription().getOriginEntity().getAid().equals(providerAid))){
+					returnList.addTSS(node.TSSubscription);
 					removed_node=node;
 					node=node.getNext();
-					receiver=removed_node.getTSSubscription().getSubscriptor().getAid().toString();
+					//receiver=removed_node.getTSSubscription().getSubscriptorEntity().getAid().toString();
 					if (removed_node.getPrev() == null){
 						// removed_node is the first in the list
 						if (this.length == 1){
@@ -361,11 +426,11 @@ public class TracingServiceSubscriptionList {
 					this.length--;
 //					removed++;
 					
-					tEvent = new TraceEvent(TracingService.DI_TracingServices[TracingService.UNAVAILABLE_TS].getName(),
-							new TracingEntity(TracingEntity.AGENT, this.getOwnerAid()),
-							TracingService.DI_TracingServices[TracingService.UNAVAILABLE_TS].getName() + "#" +
-							removed_node.getTSSubscription().getTracingService().getName() + "#" + providerAid.toString());
-			    	TraceManager.sendSystemTraceEvent(tEvent, receiver);
+					//tEvent = new TraceEvent(TracingService.DI_TracingServices[TracingService.UNAVAILABLE_TS].getName(),
+					//		new TracingEntity(TracingEntity.AGENT, this.getOwnerAid()),
+					//		TracingService.DI_TracingServices[TracingService.UNAVAILABLE_TS].getName() + "#" +
+					//		removed_node.getTSSubscription().getTracingService().getName() + "#" + providerAid.toString());
+			    	//TraceManager.sendSystemTraceEvent(tEvent, receiver);
 			    	
 			    	removed_node.setNext(null);
 					removed_node.setPrev(null);
@@ -375,8 +440,90 @@ public class TracingServiceSubscriptionList {
 					node=node.getNext();
 				}
 			}
-			return 0;
+			return returnList;
 		}
 	}
+	
+//	public int removeAllTSSFromProvider(AgentID providerAid){
+//		int i;
+//		TSS_Node node, removed_node;
+////		int removed=0;
+//		TraceEvent tEvent;
+//		String receiver;
+//		
+//		if (this.getLength() == 1){
+//			if (this.getFirst().getTSSubscription().getOriginEntity().getAid().equals(providerAid)){
+//				// Only one provider -> Remove all subscriptions
+//				for (i=0, node=this.first; i < this.length; i++){
+//					removed_node=node;
+//					node=node.getNext();
+//					receiver=removed_node.getTSSubscription().getSubscriptorEntity().getAid().toString();
+//					removed_node.setNext(null);
+//					removed_node.setPrev(null);
+//					removed_node.setTSSubscription(null);
+//
+//					tEvent = new TraceEvent(TracingService.DI_TracingServices[TracingService.UNAVAILABLE_TS].getName(),
+//							new TracingEntity(TracingEntity.AGENT, this.getOwnerAid()),
+//							TracingService.DI_TracingServices[TracingService.UNAVAILABLE_TS].getName() + "#" +
+//							removed_node.getTSSubscription().getTracingService().getName() + "#" + providerAid.toString());
+//			    	sendSystemTraceEvent(tEvent, receiver);
+//				}
+//				this.first=null;
+//				this.last=null;
+//				this.length=0;
+//				return 0;
+//			}
+//			else{
+//				// Error: The origin entity does not exist in the list
+//				return -2;
+//			}
+//		}
+//		else{
+//			for (i=0, node=this.first; i < this.length; i++){
+//				if ((node.getTSSubscription().getOriginEntity().getAid().equals(providerAid))){
+//					removed_node=node;
+//					node=node.getNext();
+//					receiver=removed_node.getTSSubscription().getSubscriptorEntity().getAid().toString();
+//					if (removed_node.getPrev() == null){
+//						// removed_node is the first in the list
+//						if (this.length == 1){
+//							// Empty the list
+//							this.first=null;
+//							this.last=null;
+//						}
+//						else{
+//							this.first=removed_node.getNext();
+//							this.first.setPrev(null);
+//						}
+//					}
+//					else if (removed_node.getNext() == null){
+//						// removed_node is the last provider in the list
+//						this.last=removed_node.getPrev();
+//						this.last.setNext(null);
+//					}
+//					else{
+//						removed_node.getPrev().setNext(removed_node.getNext());
+//						removed_node.getNext().setPrev(removed_node.getPrev());
+//					}
+//					this.length--;
+////					removed++;
+//					
+//					tEvent = new TraceEvent(TracingService.DI_TracingServices[TracingService.UNAVAILABLE_TS].getName(),
+//							new TracingEntity(TracingEntity.AGENT, this.getOwnerAid()),
+//							TracingService.DI_TracingServices[TracingService.UNAVAILABLE_TS].getName() + "#" +
+//							removed_node.getTSSubscription().getTracingService().getName() + "#" + providerAid.toString());
+//			    	TraceManager.sendSystemTraceEvent(tEvent, receiver);
+//			    	
+//			    	removed_node.setNext(null);
+//					removed_node.setPrev(null);
+//					removed_node.setTSSubscription(null);
+//				}
+//				else{
+//					node=node.getNext();
+//				}
+//			}
+//			return 0;
+//		}
+//	}
 	
 }

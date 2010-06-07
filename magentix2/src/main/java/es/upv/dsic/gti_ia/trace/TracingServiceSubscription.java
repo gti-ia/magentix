@@ -27,7 +27,7 @@ public class TracingServiceSubscription {
 		this.tracingService = tracingService;
 	}
 	
-	public TracingEntity getSubscriptor(){
+	public TracingEntity getSubscriptorEntity(){
 		return this.subscriptorEntity;
 	}
 	

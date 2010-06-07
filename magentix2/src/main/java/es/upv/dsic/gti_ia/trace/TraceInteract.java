@@ -7,7 +7,6 @@ import es.upv.dsic.gti_ia.core.BaseAgent;
 import es.upv.dsic.gti_ia.trace.*;
 
 public class TraceInteract {
-	
 	/**
 	 * Publish a tracing service so that other agents can request it
 	 * and receive the corresponding trace events.
