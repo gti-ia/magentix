@@ -1,6 +1,5 @@
 package SingleAgent_Example;
 
-import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
@@ -25,24 +24,24 @@ public class Run {
 		 * Setting the Logger
 		 */
 		DOMConfigurator.configure("configuration/loggin.xml");
-		Logger logger = Logger.getLogger(Run.class);
+		//Logger logger = Logger.getLogger(Run.class);
 
 		/**
 		 * Connecting to Qpid Broker
 		 */
-		AgentsConnection.connect("gtiiaprojects2");
+		AgentsConnection.connect("127.0.0.1");
 
 		try {
 			/**
 			 * Instantiating a sender agent
 			 */
-			SenderAgent agente = new SenderAgent(new AgentID(
+			SenderAgent2 agente = new SenderAgent2(new AgentID(
 					"qpid://emisor@localhost:8080"));
 
 			/**
 			 * Instantiating a consumer agent
 			 */
-			ConsumerAgent agente2 = new ConsumerAgent(new AgentID("consumer"));
+			ConsumerAgent2 agente2 = new ConsumerAgent2(new AgentID("qpid://consumer@localhost:8080"));
 
 			/**
 			 * Execute the agents
@@ -51,7 +50,8 @@ public class Run {
 			agente.start();
 
 		} catch (Exception e) {
-			logger.error("Error  " + e.getMessage());
+			//logger.error("Error  " + e.getMessage());
+			System.out.println(e.getMessage());
 		}
 	}
 

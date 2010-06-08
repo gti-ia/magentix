@@ -4,7 +4,6 @@ import es.upv.dsic.gti_ia.architecture.Monitor;
 import es.upv.dsic.gti_ia.architecture.FIPANames.InteractionProtocol;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 
-
 /**
  * This class implements the FIPA-Request interaction protocol, Role Responder.
  * 
@@ -87,7 +86,7 @@ public class FIPARequestResponder {
 		switch (state) {
 		case WAITING_MSG_STATE: {
 			ACLMessage request = myAgent.receiveACLMessage(template, 1);
-			
+
 			if (request != null) {
 				this.requestmsg = request;
 				state = PREPARE_RESPONSE_STATE;
@@ -149,53 +148,39 @@ public class FIPARequestResponder {
 					ACLMessage receivedMsg = this.requestmsg;
 
 					response = arrangeMessage(receivedMsg, response);
-					
+
 					response.setSender(myAgent.getAid());
 
 					// si el mensaje es para un agente Jade
 
-			
 					if (response.getReceiver() != null) {
 						if (response.getReceiver(0).protocol.equals("http")) {
-							name = response
-									.getReceiver()
-									.name_all()
-									.substring(
-											0,
-											response
-													.getReceiver()
-													.name_all()
-													.indexOf(
-															"@",
-															response
-																	.getReceiver()
-																	.name_all()
-																	.indexOf(
-																			"@") + 1));
-							if (response.getReceiver().port.indexOf(":") != -1)
-							{
-							 port = response.getReceiver().port
-									.substring(response.getReceiver().port
-											.indexOf(":") + 1, response
-											.getReceiver().port
-											.indexOf("/", 10));
-							}
-							else
-							{
-								port = response.getReceiver().port
-								.substring(0, response
-										.getReceiver().port
-										.indexOf("/"));
-								
-							}
-						
+							name = response.getReceiver().name_all().substring(
+									0,
+									response.getReceiver().name_all().indexOf(
+											"@",
+											response.getReceiver().name_all()
+													.indexOf("@") + 1));
 							
+							//esta acció ara la fa el agent BridgeAgentInOut
+							/*if (response.getReceiver().port.indexOf(":") != -1) {
+								port = response.getReceiver().port.substring(
+										response.getReceiver().port
+												.indexOf(":") + 1, response
+												.getReceiver().port.indexOf(
+												"/", 10));
+							} else {
+								port = response.getReceiver().port.substring(0,
+										response.getReceiver().port
+												.indexOf("/"));
+
+							}*/
+							port = response.getReceiver().port;
 							response.getReceiver().name = name;
 							response.getReceiver().port = port;
-
 						}
 					}
-					
+
 					myAgent.send(response);
 
 					if (response.getPerformativeInt() == ACLMessage.AGREE)
@@ -254,8 +239,6 @@ public class FIPARequestResponder {
 							resNotification);
 					receiveMsg.setSender(myAgent.getAid());
 
-
-
 					if (receiveMsg.getReceiver() != null) {
 						if (receiveMsg.getReceiver(0).protocol.equals("http")) {
 
@@ -263,7 +246,7 @@ public class FIPARequestResponder {
 							receiveMsg.getReceiver().port = port;
 						}
 					}
-					
+
 					myAgent.send(receiveMsg);
 				}
 
@@ -277,7 +260,7 @@ public class FIPARequestResponder {
 			this.requestmsg = null;
 			this.resNofificationmsg = null;
 			this.responsemsg = null;
-			//this.template_cancel = null;
+			// this.template_cancel = null;
 			break;
 		}
 

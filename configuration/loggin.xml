@@ -9,12 +9,12 @@
 </appender>
 <appender name="Consola" class="org.apache.log4j.ConsoleAppender">
 <layout class="org.apache.log4j.PatternLayout">
-<param name="ConversionPattern" value="%d %-5p [%t] %C{2} (%F:%L) - %m%n"/>
+<param name="ConversionPattern" value="%d %-5p [%t] %C{2} (%F:%L) - \n        %m%n"/>
 </layout>
 </appender>
 <root>
 <priority value ="info" />
-<appender-ref ref="Consola" />
-<appender-ref ref="Fichero" />
+<appender-ref ref="Consola" ></appender-ref>
+<appender-ref ref="Fichero" ></appender-ref>
 </root>
 </log4j:configuration>

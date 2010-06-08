@@ -101,19 +101,19 @@ public class BridgeAgentOutIn extends BaseAgent {
 			
 			
 			/*
-			 * Parche: HTTP 1.1 no cierra la conexión, por lo que no podemos leer hasta eof.
-			 * La solución adoptada es que al final de la lectura, si los bytes leidos son menores
-			 * que el tamaño del buffer y además al final se encuentra la cadena "\r\n\r\n" se asume
+			 * Parche: HTTP 1.1 no cierra la conexiï¿½n, por lo que no podemos leer hasta eof.
+			 * La soluciï¿½n adoptada es que al final de la lectura, si los bytes leidos son menores
+			 * que el tamaï¿½o del buffer y ademï¿½s al final se encuentra la cadena "\r\n\r\n" se asume
 			 * el final del mensaje.
 			 * 
 			 * 
 			 * 
-			 * No funcionaría este parche, si y solo si: 
+			 * No funcionarï¿½a este parche, si y solo si: 
 			 * 
-			 * - El tamaño del mensaje total coincide exactamente con el tamaño del buffer, pues no cortariamos
+			 * - El tamaï¿½o del mensaje total coincide exactamente con el tamaï¿½o del buffer, pues no cortariamos
 			 * el mensaje.
 			 * 
-			 * - El tamaño leido es menor al del buffer y el final del paquete coincide con la cadena \r\n\r\n, pero
+			 * - El tamaï¿½o leido es menor al del buffer y el final del paquete coincide con la cadena \r\n\r\n, pero
 			 * no es el final del mensaje sino un trozo del mensaje total.
 			 * 
 			 */	

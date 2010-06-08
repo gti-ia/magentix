@@ -2,7 +2,7 @@ package es.upv.dsic.gti_ia.core;
 
 import java.io.Serializable;
 
-public final class AgentID implements Serializable {
+public final class AgentID implements Serializable, Cloneable {
 	/**
 	 * 
 	 */
