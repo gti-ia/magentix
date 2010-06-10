@@ -1,9 +1,7 @@
 package es.upv.dsic.gti_ia.trace;
 
 import es.upv.dsic.gti_ia.core.AgentID;
-import es.upv.dsic.gti_ia.core.TraceEvent;
 import es.upv.dsic.gti_ia.core.TracingService;
-import es.upv.dsic.gti_ia.trace.TraceManager;
 
 public class TracingServiceSubscriptionList {
 	private class TSS_Node {
@@ -57,20 +55,17 @@ public class TracingServiceSubscriptionList {
 	private TSS_Node first;
 	private TSS_Node last;
 	private int length;
-	private AgentID ownerAid;
 	
 	public TracingServiceSubscriptionList (){
 		this.first = null;
 		this.last = null;
 		this.length = 0;
-		this.ownerAid=null;
 	}
 	
 	public TracingServiceSubscriptionList (AgentID owner){
 		this.first = null;
 		this.last = null;
 		this.length = 0;
-		this.ownerAid=owner;
 	}
 	
 	public TSS_Node getFirst(){
@@ -93,34 +88,67 @@ public class TracingServiceSubscriptionList {
 		return this.length;
 	}
 	
-	public AgentID getOwnerAid(){
-		return this.ownerAid;
-	}
-	
-	private TSS_Node getTSS_NodeByAidAndTServiceName(AgentID subscriptorAid, AgentID originAid, String serviceName){
+	private TSS_Node getTSS_Node(AgentID subscriptorAid, AgentID originAid, String serviceName){
 		int i;
 		TSS_Node node;
 		
-		for (i=0, node=this.first; i < this.length; i++, node=node.getNext()){
-			if ((node.getTSSubscription().getSubscriptorEntity().getAid().equals(subscriptorAid)) &&
-				(node.getTSSubscription().getOriginEntity().getAid().equals(originAid)) &&
-				 node.getTSSubscription().getTracingService().getName().contentEquals(serviceName)){
-				return node;
+		if (originAid != null){
+			for (i=0, node=this.first; i < this.length; i++, node=node.getNext()){
+				if ((node.getTSSubscription().getSubscriptorEntity().getAid().equals(subscriptorAid)) &&
+					(node.getTSSubscription().getOriginEntity().getAid().equals(originAid)) &&
+					 node.getTSSubscription().getTracingService().getName().contentEquals(serviceName)){
+					
+					return node;
+				}
+			}
+		}
+		else{
+			for (i=0, node=this.first; i < this.length; i++, node=node.getNext()){
+				if ((node.getTSSubscription().getSubscriptorEntity().getAid().equals(subscriptorAid)) &&
+					 node.getTSSubscription().getAnyProvider() &&
+					 node.getTSSubscription().getTracingService().getName().contentEquals(serviceName)){
+					
+					return node;
+				}
 			}
 		}
 		
 		return null;
 	}
 	
-	private TracingServiceSubscription getTSSByAidAndTServiceName(AgentID subscriptorAid, AgentID originAid, String serviceName){
+	/**
+	 * Obtain a tracing service subscription in the list
+	 * @param subscriptorAid
+	 * 		Aid of the agent which is subscribed
+	 * @param originAid
+	 * 		Aid of the origin agent. A null value is interpreted as an "any" subscription
+	 * @param serviceName
+	 * 		Name of the tracing service
+	 * @return
+	 * 		The corresponding TracingServiceSusbscription in case it exists
+	 * 		or null otherwise
+	 */
+	public TracingServiceSubscription getTSS(AgentID subscriptorAid, AgentID originAid, String serviceName){
 		int i;
 		TSS_Node node;
 		
-		for (i=0, node=this.first; i < this.length; i++, node=node.getNext()){
-			if ((node.getTSSubscription().getSubscriptorEntity().getAid().equals(subscriptorAid)) &&
-				(node.getTSSubscription().getOriginEntity().getAid().equals(originAid)) &&
-					node.getTSSubscription().getTracingService().getName().contentEquals(serviceName)){
-				return node.getTSSubscription();
+		if (originAid != null){
+			for (i=0, node=this.first; i < this.length; i++, node=node.getNext()){
+				if ((node.getTSSubscription().getSubscriptorEntity().getAid().equals(subscriptorAid)) &&
+					(node.getTSSubscription().getOriginEntity().getAid().equals(originAid)) &&
+					 node.getTSSubscription().getTracingService().getName().contentEquals(serviceName)){
+					
+					return node.getTSSubscription();
+				}
+			}
+		}
+		else{
+			for (i=0, node=this.first; i < this.length; i++, node=node.getNext()){
+				if ((node.getTSSubscription().getSubscriptorEntity().getAid().equals(subscriptorAid)) &&
+					 node.getTSSubscription().getAnyProvider() &&
+					 node.getTSSubscription().getTracingService().getName().contentEquals(serviceName)){
+					return node.getTSSubscription();
+				}
 			}
 		}
 		
@@ -134,7 +162,8 @@ public class TracingServiceSubscriptionList {
 	 * 		AgentID of the subscriptor entity
 	 * 
 	 * @param providerAid
-	 * 		AgentID of the origin tracing entity
+	 * 		AgentID of the origin tracing entity. A null value is
+	 * 		interpreted as an "any" subscription
 	 * 
 	 * @param serviceName
 	 * 		Tracing service name
@@ -148,7 +177,7 @@ public class TracingServiceSubscriptionList {
 	 * 		provided the specified origin entity.
 	 */
 	public boolean existsTSS(AgentID subscriptorAid, AgentID providerAid, String serviceName){
-		if (this.getTSSByAidAndTServiceName(subscriptorAid, providerAid, serviceName) != null){
+		if (this.getTSS(subscriptorAid, providerAid, serviceName) != null){
 			return true;
 		}
 		else {
@@ -160,8 +189,12 @@ public class TracingServiceSubscriptionList {
 	 * Add a new TSS for the specified tracing service provided by the specified
 	 * origin AgentID to the list
 	 * 
+	 * @param subscriptorEntity
+	 * 		Tracing entity which wants to subscribe to the tracing service
+	 *  
 	 * @param originEntity
-	 * 		Tracing entity which provides the tracing service
+	 * 		Tracing entity which provides the tracing service.
+	 * 		For subscribing to any provider, a null value has to be specified
 	 * 
 	 * @param service
 	 * 		Tracing Service 
@@ -170,37 +203,36 @@ public class TracingServiceSubscriptionList {
 	 * 		Success: The new tracing service subscription has been added at
 	 * 			the end of the list
 	 * @return -1
-	 * 		Duplicate AgentID: A subscription to the tracing service provided by the specified
-	 * 			origin entity already exists in the list
-	 * @return -2
 	 * 		Internal values of the list are not correct. There is
 	 * 		something really wrong if this happens :-S
+	 * 
+	 * @return -2
+	 * 		Duplicate AgentID: A subscription to the tracing service provided by the specified
+	 * 			origin entity already exists in the list
 	 */
 	public int addTSS(TracingEntity subscriptorEntity, TracingEntity originEntity, TracingService service){
 		TSS_Node tss;
 		
 		if (this.length < 0){
 			// Error mucho gordo
-			return -2;
+			return -1;
 		}
 		else if (this.length == 0) {
 			tss = new TSS_Node(subscriptorEntity, originEntity, service);
 			this.first=tss;
+			return 0;
 		}
-		else if (this.existsTSS(subscriptorEntity.getAid(), originEntity.getAid(), service.getName())) {
-			return -1;
+		else{
+			if (this.existsTSS(subscriptorEntity.getAid(), originEntity.getAid(), service.getName())){
+				return -2;
+			}
+			else{
+				tss = new TSS_Node(subscriptorEntity, originEntity, service);
+				this.last.setNext(tss);
+				tss.setPrev(this.last);
+				return 0;
+			}
 		}
-		else {
-			tss = new TSS_Node(subscriptorEntity, originEntity, service);
-			this.last.setNext(tss);
-			tss.setPrev(this.last);
-		}
-		
-		tss.setNext(null);
-		this.last = tss;
-		this.length++;
-				
-		return 0;
 	}
 	
 	/**
@@ -361,9 +393,6 @@ public class TracingServiceSubscriptionList {
 	public TracingServiceSubscriptionList removeAllTSSFromProvider(AgentID providerAid){
 		int i;
 		TSS_Node node, removed_node;
-//		int removed=0;
-//		TraceEvent tEvent;
-//		String receiver;
 		
 		TracingServiceSubscriptionList returnList = new TracingServiceSubscriptionList();
 		
@@ -374,16 +403,9 @@ public class TracingServiceSubscriptionList {
 					returnList.addTSS(node.TSSubscription);
 					removed_node=node;
 					node=node.getNext();
-					//receiver=removed_node.getTSSubscription().getSubscriptorEntity().getAid().toString();
 					removed_node.setNext(null);
 					removed_node.setPrev(null);
 					removed_node.setTSSubscription(null);
-
-					//tEvent = new TraceEvent(TracingService.DI_TracingServices[TracingService.UNAVAILABLE_TS].getName(),
-					//		new TracingEntity(TracingEntity.AGENT, this.getOwnerAid()),
-					//		TracingService.DI_TracingServices[TracingService.UNAVAILABLE_TS].getName() + "#" +
-					//		removed_node.getTSSubscription().getTracingService().getName() + "#" + providerAid.toString());
-			    	//sendSystemTraceEvent(tEvent, receiver);
 				}
 				this.first=null;
 				this.last=null;
@@ -401,7 +423,6 @@ public class TracingServiceSubscriptionList {
 					returnList.addTSS(node.TSSubscription);
 					removed_node=node;
 					node=node.getNext();
-					//receiver=removed_node.getTSSubscription().getSubscriptorEntity().getAid().toString();
 					if (removed_node.getPrev() == null){
 						// removed_node is the first in the list
 						if (this.length == 1){
@@ -424,13 +445,6 @@ public class TracingServiceSubscriptionList {
 						removed_node.getNext().setPrev(removed_node.getPrev());
 					}
 					this.length--;
-//					removed++;
-					
-					//tEvent = new TraceEvent(TracingService.DI_TracingServices[TracingService.UNAVAILABLE_TS].getName(),
-					//		new TracingEntity(TracingEntity.AGENT, this.getOwnerAid()),
-					//		TracingService.DI_TracingServices[TracingService.UNAVAILABLE_TS].getName() + "#" +
-					//		removed_node.getTSSubscription().getTracingService().getName() + "#" + providerAid.toString());
-			    	//TraceManager.sendSystemTraceEvent(tEvent, receiver);
 			    	
 			    	removed_node.setNext(null);
 					removed_node.setPrev(null);
@@ -443,87 +457,4 @@ public class TracingServiceSubscriptionList {
 			return returnList;
 		}
 	}
-	
-//	public int removeAllTSSFromProvider(AgentID providerAid){
-//		int i;
-//		TSS_Node node, removed_node;
-////		int removed=0;
-//		TraceEvent tEvent;
-//		String receiver;
-//		
-//		if (this.getLength() == 1){
-//			if (this.getFirst().getTSSubscription().getOriginEntity().getAid().equals(providerAid)){
-//				// Only one provider -> Remove all subscriptions
-//				for (i=0, node=this.first; i < this.length; i++){
-//					removed_node=node;
-//					node=node.getNext();
-//					receiver=removed_node.getTSSubscription().getSubscriptorEntity().getAid().toString();
-//					removed_node.setNext(null);
-//					removed_node.setPrev(null);
-//					removed_node.setTSSubscription(null);
-//
-//					tEvent = new TraceEvent(TracingService.DI_TracingServices[TracingService.UNAVAILABLE_TS].getName(),
-//							new TracingEntity(TracingEntity.AGENT, this.getOwnerAid()),
-//							TracingService.DI_TracingServices[TracingService.UNAVAILABLE_TS].getName() + "#" +
-//							removed_node.getTSSubscription().getTracingService().getName() + "#" + providerAid.toString());
-//			    	sendSystemTraceEvent(tEvent, receiver);
-//				}
-//				this.first=null;
-//				this.last=null;
-//				this.length=0;
-//				return 0;
-//			}
-//			else{
-//				// Error: The origin entity does not exist in the list
-//				return -2;
-//			}
-//		}
-//		else{
-//			for (i=0, node=this.first; i < this.length; i++){
-//				if ((node.getTSSubscription().getOriginEntity().getAid().equals(providerAid))){
-//					removed_node=node;
-//					node=node.getNext();
-//					receiver=removed_node.getTSSubscription().getSubscriptorEntity().getAid().toString();
-//					if (removed_node.getPrev() == null){
-//						// removed_node is the first in the list
-//						if (this.length == 1){
-//							// Empty the list
-//							this.first=null;
-//							this.last=null;
-//						}
-//						else{
-//							this.first=removed_node.getNext();
-//							this.first.setPrev(null);
-//						}
-//					}
-//					else if (removed_node.getNext() == null){
-//						// removed_node is the last provider in the list
-//						this.last=removed_node.getPrev();
-//						this.last.setNext(null);
-//					}
-//					else{
-//						removed_node.getPrev().setNext(removed_node.getNext());
-//						removed_node.getNext().setPrev(removed_node.getPrev());
-//					}
-//					this.length--;
-////					removed++;
-//					
-//					tEvent = new TraceEvent(TracingService.DI_TracingServices[TracingService.UNAVAILABLE_TS].getName(),
-//							new TracingEntity(TracingEntity.AGENT, this.getOwnerAid()),
-//							TracingService.DI_TracingServices[TracingService.UNAVAILABLE_TS].getName() + "#" +
-//							removed_node.getTSSubscription().getTracingService().getName() + "#" + providerAid.toString());
-//			    	TraceManager.sendSystemTraceEvent(tEvent, receiver);
-//			    	
-//			    	removed_node.setNext(null);
-//					removed_node.setPrev(null);
-//					removed_node.setTSSubscription(null);
-//				}
-//				else{
-//					node=node.getNext();
-//				}
-//			}
-//			return 0;
-//		}
-//	}
-	
 }

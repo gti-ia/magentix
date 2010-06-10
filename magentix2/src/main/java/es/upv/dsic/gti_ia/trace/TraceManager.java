@@ -153,7 +153,7 @@ public class TraceManager extends BaseAgent{
 		String command;
 		
 		TracingService tService;
-		TracingEntity tEntity;
+		TracingEntity tEntity, originTEntity;
 		TracingServiceSubscription tServiceSubscription;
 		
 		TracingServiceSubscriptionList removeList;
@@ -392,6 +392,9 @@ public class TraceManager extends BaseAgent{
 						originAid.host = originEntity.substring(aidindice1, aidindice2);
 					originAid.port = originEntity.substring(aidindice2 + 1);
 				}
+				else{
+					originAid=null;
+				}
 					
 				// Register tracing entity
 				if ((tEntity=TracingEntities.getTEByAid(msg.getSender())) == null){
@@ -420,12 +423,9 @@ public class TraceManager extends BaseAgent{
 						response_msg.setContent("subscribe#" + serviceName + ":Tracing service not found");
 						logger.info("[TRACE MANAGER]: sending REFUSE message to " + msg.getReceiver().toString());
 					}
-					else if (!originEntity.contentEquals("any")){
-						if (tService.getProviders().getTEByAid(originAid) == null){
+					else if (originAid != null){
+						if ((originTEntity=tService.getProviders().getTEByAid(originAid)) == null){
 							// The specified tracing entity does not provide that tracing service
-							if (added_TE) {
-								TracingEntities.removeTE(msg.getSender());
-							}
 							agree_response=false;
 							response_msg = new ACLMessage(ACLMessage.REFUSE);
 							response_msg.setReceiver(msg.getSender());
@@ -437,107 +437,136 @@ public class TraceManager extends BaseAgent{
 				
 				if (agree_response){
 					if (tService.getSubscriptions().existsTSS(msg.getSender(), originAid, serviceName)){
-						// The subscription already existse
+						// The subscription already exists
 						agree_response=false;
 						response_msg = new ACLMessage(ACLMessage.REFUSE);
 						response_msg.setReceiver(msg.getSender());
 						response_msg.setContent("subscribe#" + serviceName + ":Subscription already existent");
 						logger.info("[TRACE MANAGER]: sending REFUSE message to " + msg.getReceiver().toString());
 					}
+					else{
+						// Add subscription
+						tServiceSubscription=new TracingServiceSubscription(tEntity, null, tService);
+						tService.addSubscription(tServiceSubscription);
+					}
 				}
 				
 				if (agree_response){
+					arguments.put("x-match", "all");
+			    	arguments.put("tracing_service", serviceName);
+			    	
+			    	if (!originEntity.equals("any")) {
+			    		arguments.put("origin_entity", originEntity);
+			    	}
+			    	
+			    	this.session.exchangeBind(msg.getSender().name+".trace", "amq.match", serviceName + "#" + originEntity, arguments);
+			    	//logger.info("[TRACE MANAGER]: binding " + msg.getSender().name+".trace to receive " + eventType);
 					
-				}
-				else{
+			    	/**
+					 * Building a ACLMessage
+					 */
+			    	response_msg = new ACLMessage(ACLMessage.AGREE);
+			    	response_msg.setReceiver(msg.getSender());
+					response_msg.setContent("subscription#" + serviceName + "#" + originEntity);
+					//logger.info("[TRACE MANAGER]: sending message to " + msg.getReceiver().toString());
+				}else{
 					if (added_TE) {
 						TracingEntities.removeTE(msg.getSender());
 					}
 				}
-				
-				
-					else if ((tService.getProviders().getTEByAid(originAid) == null) &&
-							(!originEntity.contentEquals("any"))){
-						// The specified tracing entity does not provide that tracing service
-						if (added_TE) {
-							TracingEntities.removeTE(msg.getSender());
-						}
-						agree_response=false;
-						response_msg = new ACLMessage(ACLMessage.REFUSE);
-						response_msg.setReceiver(msg.getSender());
-						response_msg.setContent("subscribe#" + serviceName + ":Tracing service not offered by the tracing entity");
-						logger.info("[TRACE MANAGER]: sending REFUSE message to " + msg.getReceiver().toString());
-					}
-					else if (tService.getSubscriptions().existsTSS(msg.getSender(), originAid, serviceName)){
-						
-					}
-						if ((error=TracingServices.addTS(newService)) != 0){
-							// Impossible to add tracing service
-							if (added_TE) {
-								TracingEntities.removeTE(msg.getSender());
-							}
-							agree_response=false;
-							response_msg = new ACLMessage(ACLMessage.REFUSE);
-							response_msg.setReceiver(msg.getSender());
-							response_msg.setContent("publish#" + newService.getName() + ":Error registering tracing service");
-							logger.info("[TRACE MANAGER]: sending REFUSE message to " + msg.getReceiver().toString());
-						}
-						else{
-							added_TS=true;
-						}
-					}
-				}
-				// Check existing subscription
-				// Add Subscription
-				
-				if ((ts=TracingServices.))
-				if ((ts=DI_Tracing_Services.getServiceByName(eventType)) != null){
-					// Subscribe to a DI tracing service
-					if (!originEntity.equals("any")) {
-						ts.addSubscriptionAll(newSubscription)
-					}
-				}
-				else if ((ts=DD_Tracing_Services.getServiceByName(eventType)) != null){
-					// Subscribe to a DD tracing service
-					
-				}
-				else{
-					// Tracing service not available
-				}
-				
-				arguments.put("x-match", "all");
-		    	arguments.put("tracing_service", eventType);
-		    	
-		    	if (!originEntity.equals("any")) {
-		    		arguments.put("origin_entity", originEntity);
-		    	}
-		    			    	
-		    	this.session.exchangeBind(msg.getSender().name+".trace", "amq.match", eventType + "#" + originEntity, arguments);
-		    	//logger.info("[TRACE MANAGER]: binding " + msg.getSender().name+".trace to receive " + eventType);
-
-		    	/**
-				 * Building a ACLMessage
-				 */
-		    	response_msg = new ACLMessage(ACLMessage.AGREE);
-		    	response_msg.setReceiver(msg.getSender());
-				response_msg.setContent("subscription#" + eventType + "#" + originEntity);
-				//logger.info("[TRACE MANAGER]: sending message to " + msg.getReceiver().toString());
 				/**
 				 * Sending a ACLMessage
 				 */
-				send(response_msg);						
+				send(response_msg);
 				
 		    	break;
 		    	
 			case ACLMessage.CANCEL:
 				// Unsubscription from a tracing service
+				
 				content = msg.getContent();
 				
 				index = content.indexOf('#', 0);
-				eventType = content.substring(0, index);
+				serviceName = content.substring(0, index);
 				originEntity = content.substring(index + 1);
-				//System.out.println("JAAAAAAR " + this.session.exchangeBound("amq.match", msg.getSender().name+".trace", eventType+"#"+originEntity.toString(), null, Option.NONE).);
-				this.session.exchangeUnbind(msg.getSender().name+".trace", "amq.match", eventType + "#" + originEntity.toString(), Option.NONE);
+				
+				if (!originEntity.contentEquals("any")){
+					originAid = new AgentID();
+					aidindice1 = 0;
+					aidindice2 = originEntity.indexOf(':');
+					if (aidindice2 - aidindice1 <= 0)
+						originAid.protocol = "";
+					else
+						originAid.protocol = originEntity.substring(aidindice1, aidindice2);
+					aidindice1 = aidindice2 + 3;
+					aidindice2 = originEntity.indexOf('@', aidindice1);
+					if (aidindice2 - aidindice1 <= 0)
+						originAid.name = "";
+					else
+						originAid.name = originEntity.substring(aidindice1, aidindice2);
+					aidindice1 = aidindice2 + 1;
+					aidindice2 = originEntity.indexOf(':', aidindice1);
+					if (aidindice2 - aidindice1 <= 0)
+						originAid.host = "";
+					else
+						originAid.host = originEntity.substring(aidindice1, aidindice2);
+					originAid.port = originEntity.substring(aidindice2 + 1);
+				}
+				else{
+					originAid=null;
+				}
+				
+				index = content.indexOf('#', 0);
+				serviceName = content.substring(0, index);
+				originEntity = content.substring(index + 1);
+				
+				// Check existence of subscriptor tracing entity
+				if ((tEntity=TracingEntities.getTEByAid(msg.getSender())) == null){
+					// Tracing entity not found
+					agree_response=false;
+					response_msg = new ACLMessage(ACLMessage.REFUSE);
+					response_msg.setReceiver(msg.getSender());
+					response_msg.setContent("unsubscribe#" + serviceName + ":Subscriptor entity not found");
+					logger.info("[TRACE MANAGER]: sending REFUSE message to " + msg.getReceiver().toString());
+				}
+				else if ((tService=TracingServices.getTSByName(serviceName)) == null){
+					// Tracing Service not found
+					agree_response=false;
+					response_msg = new ACLMessage(ACLMessage.REFUSE);
+					response_msg.setReceiver(msg.getSender());
+					response_msg.setContent("unsubscribe#" + serviceName + ":Tracing service not found");
+					logger.info("[TRACE MANAGER]: sending REFUSE message to " + msg.getReceiver().toString());
+				}
+				else if ((originAid != null) &&
+						((originTEntity=tService.getProviders().getTEByAid(originAid)) == null)){
+					// Origin tracing entity not found
+					agree_response=false;
+					response_msg = new ACLMessage(ACLMessage.REFUSE);
+					response_msg.setReceiver(msg.getSender());
+					response_msg.setContent("unsubscribe#" + serviceName + ":Provider entity not found");
+					logger.info("[TRACE MANAGER]: sending REFUSE message to " + msg.getReceiver().toString());
+				}
+				else{
+					// Check for the subscription to remove
+					if ((tServiceSubscription=tService.getSubscriptions().getTSS(msg.getSender(), originAid, serviceName)) == null){
+						// Subscription not found
+						agree_response=false;
+						response_msg = new ACLMessage(ACLMessage.REFUSE);
+						response_msg.setReceiver(msg.getSender());
+						response_msg.setContent("unsubscribe#" + serviceName + ":Subscription not found");
+						logger.info("[TRACE MANAGER]: sending REFUSE message to " + msg.getReceiver().toString());
+					}
+					else{
+						// Remove subscription
+						this.session.exchangeUnbind(msg.getSender().name+".trace", "amq.match", serviceName + "#" + originEntity, Option.NONE);
+						//logger.info("[TRACE MANAGER]: unbinding " + msg.getSender().name+".trace from " + eventType);
+						
+						// Generar evento correspondiente (y en el subscribe tb!!!)
+						
+					}
+				}
+				
+				this.session.exchangeUnbind(msg.getSender().name+".trace", "amq.match", serviceName + "#" + originEntity, Option.NONE);
 				//logger.info("[TRACE MANAGER]: unbinding " + msg.getSender().name+".trace from " + eventType);
 		    	
 		    	tEvent = new TraceEvent("system_notify", this.getAid(), "UNSUBSCRIBED#" + eventType + "#" + originEntity);
