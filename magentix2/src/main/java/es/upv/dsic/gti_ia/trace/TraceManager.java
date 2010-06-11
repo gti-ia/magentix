@@ -1,22 +1,22 @@
 package es.upv.dsic.gti_ia.trace;
 
-import java.util.Date;
+//import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
-import org.apache.qpid.transport.Connection;
+//import org.apache.log4j.Logger;
+//import org.apache.qpid.transport.Connection;
 import org.apache.qpid.transport.DeliveryProperties;
 import org.apache.qpid.transport.Header;
 import org.apache.qpid.transport.MessageAcceptMode;
 import org.apache.qpid.transport.MessageAcquireMode;
-import org.apache.qpid.transport.MessageCreditUnit;
+//import org.apache.qpid.transport.MessageCreditUnit;
 import org.apache.qpid.transport.MessageProperties;
 import org.apache.qpid.transport.MessageTransfer;
 import org.apache.qpid.transport.Option;
-import org.apache.qpid.transport.Session;
-import org.apache.qpid.transport.SessionException;
-import org.apache.qpid.transport.SessionListener;
+//import org.apache.qpid.transport.Session;
+//import org.apache.qpid.transport.SessionException;
+//import org.apache.qpid.transport.SessionListener;
 
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
@@ -33,34 +33,15 @@ public class TraceManager extends BaseAgent{
 	private TracingEntityList TSSubscriptorEntities;
 	private TracingServiceList TracingServices;
 	
-	//private TracingServiceList DI_TracingServices;
-	//private TracingServiceSubscriptionList Subscriptions;
-	
 	public TraceManager(AgentID aid) throws Exception{
 		super(aid);
-		
-		// Create session and exchange for delivering events
-        //this.session.exchangeDeclare("mgx.trace", "headers", "amq.direct", null);
-        
-        // Create session and exchange for trace manager coordination
-        //this.session.exchangeDeclare("mgx.trace.manager", "fanout", "amq.direct", null);
-        
-        // Bind the original message queue to the TM coordination exchange
-        //this.session.exchangeBind(aid.name, "mgx.trace.manager", aid.name+".tm", null);
-        //this.session.sync();
         
         logger.info("[TRACE MANAGER]: Executing, I'm " + getName());
         
         initialize();
-/*		this.session.messageSubscribe(aid.name, "listener_destination",
-				MessageAcceptMode.NONE, MessageAcquireMode.PRE_ACQUIRED, null,
-				0, null);
-*/
 	}
 	
 	public void initialize (){
-		Map<String, Object> arguments = new HashMap<String, Object>();
-		
 		TracingEntities = new TracingEntityList(this.getAid());
 		TSProviderEntities = new TracingEntityList(this.getAid());
 		TSSubscriptorEntities = new TracingEntityList(this.getAid());
@@ -71,10 +52,6 @@ public class TraceManager extends BaseAgent{
 		if (TracingServices.initializeWithDITracingServices() != 0){
 			logger.error("[TRACE MANAGER]: Error while initializing the tracing service list");
 		}
-		
-		//DI_Tracing_Services = new TracingServiceList();
-		//DD_TracingServices = new TracingServiceList();
-		
 	}
 	
 	/**
@@ -152,20 +129,20 @@ public class TraceManager extends BaseAgent{
 		ACLMessage response_msg = null;
 		String command;
 		
-		TracingService tService;
-		TracingEntity tEntity, originTEntity;
-		TracingServiceSubscription tServiceSubscription;
+		TracingService tService=null;
+		TracingEntity tEntity=null, originTEntity=null;
+		TracingServiceSubscription tServiceSubscription=null;
 		
-		TracingServiceSubscriptionList removeList;
+		TracingServiceSubscriptionList removeList=null;
 		
 		AgentID originAid;
-		int indice1 = 0;
-		int indice2 = 0;
+//		int indice1 = 0;
+//		int indice2 = 0;
 		int aidindice1 = 0;
 		int aidindice2 = 0;
-		int tam = 0;
+//		int tam = 0;
 		
-		int error, i;
+		int error; //, i;
 		String tEventContent;
 		boolean agree_response=true;
 		boolean added_TE=false;
@@ -305,6 +282,9 @@ public class TraceManager extends BaseAgent{
 							else{
 								// Remove subscriptions to that service
 								if ((removeList=tService.getSubscriptions().removeAllTSSFromProvider(msg.getSender())) != null){
+									
+									tEntity=new TracingEntity(TracingEntity.AGENT, this.getAid());
+									
 									while (removeList.getLength() > 0){
 										tServiceSubscription=removeList.getFirstSubscription();
 										// Send UNAVAILABLE_TS trace event
@@ -317,10 +297,12 @@ public class TraceManager extends BaseAgent{
 											serviceName + msg.getSender();
 										}
 										
-								    	sendSystemTraceEvent(tEvent, tServiceSubscription.getSubscriptorEntity());
+										tEvent=new TraceEvent(TracingService.DI_TracingServices[TracingService.UNAVAILABLE_TS].getName(),
+												tEntity, tEventContent);
+										sendSystemTraceEvent(tEvent, tServiceSubscription.getSubscriptorEntity());
 								    	
 										if ((error=removeList.removeFirstTSS()) != 0){
-											// Somethig went wrong
+											// Something went wrong
 											agree_response=false;
 											response_msg = new ACLMessage(ACLMessage.REFUSE);
 											response_msg.setReceiver(msg.getSender());
@@ -462,6 +444,18 @@ public class TraceManager extends BaseAgent{
 			    	this.session.exchangeBind(msg.getSender().name+".trace", "amq.match", serviceName + "#" + originEntity, arguments);
 			    	//logger.info("[TRACE MANAGER]: binding " + msg.getSender().name+".trace to receive " + eventType);
 					
+			    	TSSubscriptorEntities.addTE(originTEntity);
+			    	
+			    	// Send system trace event
+					tEntity=new TracingEntity(TracingEntity.AGENT, this.getAid());
+					
+					tEventContent=TracingService.DI_TracingServices[TracingService.SUBSCRIBE].getName() + "#" +
+					serviceName + originEntity;
+					
+					tEvent=new TraceEvent(TracingService.DI_TracingServices[TracingService.SUBSCRIBE].getName(),
+							tEntity, tEventContent);
+					sendSystemTraceEvent(tEvent, tServiceSubscription.getSubscriptorEntity());
+			    	
 			    	/**
 					 * Building a ACLMessage
 					 */
@@ -561,23 +555,28 @@ public class TraceManager extends BaseAgent{
 						this.session.exchangeUnbind(msg.getSender().name+".trace", "amq.match", serviceName + "#" + originEntity, Option.NONE);
 						//logger.info("[TRACE MANAGER]: unbinding " + msg.getSender().name+".trace from " + eventType);
 						
-						// Generar evento correspondiente (y en el subscribe tb!!!)
+						TSSubscriptorEntities.removeTE(originAid);
 						
+						// Send system trace event
+						tEntity=new TracingEntity(TracingEntity.AGENT, this.getAid());
+						
+						tEventContent=TracingService.DI_TracingServices[TracingService.UNSUBSCRIBE].getName() + "#" +
+						serviceName + originEntity;
+						
+						tEvent=new TraceEvent(TracingService.DI_TracingServices[TracingService.UNSUBSCRIBE].getName(),
+								tEntity, tEventContent);
+						sendSystemTraceEvent(tEvent, tServiceSubscription.getSubscriptorEntity());
+						
+						/**
+						 * Building a ACLMessage
+						 */
+						response_msg = new ACLMessage(ACLMessage.AGREE);
+						response_msg.setReceiver(msg.getSender());
+						response_msg.setContent("subscribe#" + serviceName + "#" + originEntity);
+						logger.info("[TRACE MANAGER]: sending REFUSE message to " + msg.getReceiver().toString());
 					}
 				}
 				
-				this.session.exchangeUnbind(msg.getSender().name+".trace", "amq.match", serviceName + "#" + originEntity, Option.NONE);
-				//logger.info("[TRACE MANAGER]: unbinding " + msg.getSender().name+".trace from " + eventType);
-		    	
-		    	tEvent = new TraceEvent("system_notify", this.getAid(), "UNSUBSCRIBED#" + eventType + "#" + originEntity);
-		    	sendSystemTraceEvent(tEvent, msg.getSender().toString());
-		    	
-		    	/**
-				 * Building a ACLMessage
-				 */
-		    	response_msg = new ACLMessage(ACLMessage.AGREE);
-		    	response_msg.setReceiver(msg.getSender());
-				response_msg.setContent("unsubscription#" + eventType + "#" + originEntity);
 				/**
 				 * Sending a ACLMessage
 				 */

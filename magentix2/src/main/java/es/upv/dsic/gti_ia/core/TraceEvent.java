@@ -35,6 +35,13 @@ public class TraceEvent implements Serializable {
 		this.content=content;
 	}
 	
+	public TraceEvent(String tService, AgentID originAid, String content){
+		this.tService=tService;
+		this.originEntity=new TracingEntity(TracingEntity.AGENT, originAid);
+		this.timestamp=System.currentTimeMillis();
+		this.content=content;
+	}
+	
 	public void setTracingService(String tService){
 		this.tService=tService;
 	}

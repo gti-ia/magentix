@@ -48,6 +48,7 @@ public class ConsumerAgent extends BaseAgent {
 		}
     	
     	// Unsubscribe to trace events of the type "TRACE_TEST", coming from any tracing entity
+    	logger.info("[CONSUMER " + getName() + "]: Unsubscribing from the tracing service TRACE TEST");
     	TraceInteract.cancelTracingServiceSubscription(this, "TRACE_TEST");
 		
     	try {
@@ -69,7 +70,7 @@ public class ConsumerAgent extends BaseAgent {
 	}
 	
 	public void onMessage(ACLMessage msg){
-		logger.info("[CONSUMER " + getName() +"]: Message received by onMessage: " + msg.getContent());
+		logger.info("[CONSUMER " + getName() +"]: Message received by onMessage: " + msg.getPerformative() + " " + msg.getContent());
 	}
 
 }

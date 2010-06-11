@@ -1,8 +1,10 @@
 package Trace_ProdCons;
 
+import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.BaseAgent;
 import es.upv.dsic.gti_ia.core.TraceEvent;
+import es.upv.dsic.gti_ia.trace.TraceInteract;
 
 /**
  * SenderAgent class defines the structure of a sender BaseAgent
@@ -15,6 +17,8 @@ public class SenderAgent extends BaseAgent {
 
 	public SenderAgent(AgentID aid) throws Exception {
 		super(aid);
+		TraceInteract.publishTracingService(this, "TRACE_TEST", "TRACE_TEST", "Tracing service with no other use than testing the system");
+		//logger.info("Published TRACE_TEST tracing service");
 	}
 
 	public void execute() {
@@ -46,7 +50,20 @@ public class SenderAgent extends BaseAgent {
 			e.printStackTrace();
 		}
 		
+		logger.info("[SENDER " + getName() + "]: Unpublishing tracing service TRACE TEST");
+		TraceInteract.unpublishTracingService(this, "TRACE_TEST");
+		
 		logger.info("[SENDER " + getName() + "]: Bye!");		
 	}
-
+	
+	public void onTraceEvent(TraceEvent tEvent) {
+		/**
+		 * When a trace event arrives, its shows it on the screen
+		 */
+		logger.info("[SENDER " + getName() +"]: Trace event received by onTraceEvent: " + tEvent.toReadableString());
+	}
+	
+	public void onMessage(ACLMessage msg){
+		logger.info("[SENDER " + getName() +"]: Message received by onMessage: " + msg.getPerformative() + " " + msg.getContent());
+	}
 }

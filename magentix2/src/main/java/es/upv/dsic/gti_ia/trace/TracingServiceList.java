@@ -360,12 +360,18 @@ public class TracingServiceList {
 	
 	public int initializeWithDITracingServices(){
 		int i;
+		TracingService tService;
+		
+		System.out.println("Initialising with DI Tracing Services: Adding " + TracingService.MAX_DI_TS + " services");
 		
 		for (i=0; i < TracingService.MAX_DI_TS; i++){
-			if (this.addTS(new TracingService(TracingService.DI_TracingServices[i].getName(),
-					TracingService.DI_TracingServices[i].getDescription())) != 0){
+			tService=TracingService.DI_TracingServices[i];
+			if (this.addTS(tService) != 0){
 				return -1;
 			}
+//			else{
+//				System.out.println("Added " + (i+1) + " from " + TracingService.MAX_DI_TS + ": " + TracingService.DI_TracingServices[i].getName());
+//			}
 		}
 		return 0;
 	}
