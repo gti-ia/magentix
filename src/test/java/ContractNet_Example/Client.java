@@ -28,7 +28,7 @@ public class Client extends QueueAgent {
 	// parameters
 	ACLMessage mensajeCFP = new ACLMessage(ACLMessage.CFP);
 
-	for (int i = 0; i < 20; i++) {
+	for (int i = 0; i < 5; i++) {
 	    // Send message to twenty agents that offer the service
 	    mensajeCFP.addReceiver(new AgentID("Autos" + i));
 	}
