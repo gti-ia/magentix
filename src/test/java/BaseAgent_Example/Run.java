@@ -29,7 +29,7 @@ public class Run {
 		/**
 		 * Connecting to Qpid Broker
 		 */
-		AgentsConnection.connect("gtiiaprojects2");
+		AgentsConnection.connect();
 
 		try {
 			/**
