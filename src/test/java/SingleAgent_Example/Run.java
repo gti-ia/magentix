@@ -29,7 +29,7 @@ public class Run {
 		/**
 		 * Connecting to Qpid Broker
 		 */
-		AgentsConnection.connect("127.0.0.1");
+		AgentsConnection.connect();
 
 		try {
 			/**
