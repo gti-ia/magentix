@@ -1,4 +1,4 @@
-package _Query_Example;
+package Query_Example;
 
 
 
@@ -15,10 +15,10 @@ import es.upv.dsic.gti_ia.core.AgentID;
 
 
 
-public class Viajante extends QueueAgent {
+public class Passenger extends QueueAgent {
 
 	private Monitor adv= new Monitor();
-    public Viajante(AgentID aid) throws Exception
+    public Passenger(AgentID aid) throws Exception
     {
 
     	super(aid);
@@ -31,12 +31,12 @@ public class Viajante extends QueueAgent {
  
         ACLMessage mensaje = new ACLMessage(ACLMessage.QUERY_IF);
         mensaje.setProtocol(FIPANames.InteractionProtocol.FIPA_QUERY);
-        mensaje.setContent("" +"¿Tengo la reserva?");
+        mensaje.setContent("" +"I have a reservation?");
  
         mensaje.setSender(getAid());
-        mensaje.setReceiver(new AgentID("aeropuerto1","qpid","localhost",""));
+        mensaje.setReceiver(new AgentID("ManisesAirPort","qpid","localhost",""));
         
-        //Añadimos el comportamiento de la consulta.
+        //Aï¿½adimos el comportamiento de la consulta.
         this.addTask(new ComprobarInitiator(this, mensaje)); 
         adv.waiting();
         
@@ -48,23 +48,23 @@ public class Viajante extends QueueAgent {
         }
  
         protected void handleAgree(ACLMessage agree) {
-            System.out.printf("Espere un momento por favor, estamos buscando en la Base de Datos.", agree.getSender().getLocalName());
+            System.out.printf("Wait a moment please, we are looking for in the Database.", agree.getSender().getLocalName());
         }
  
         protected void handleRefuse(ACLMessage refuse) {
-            System.out.printf("%s: En estos momentos todas las operadoras estan ocupadas. No podemos atenderle.", getName(), refuse.getSender().getLocalName());
+            System.out.printf("%s: At the moment all operators are busy. We can not assist.", getName(), refuse.getSender().getLocalName());
         }
  
         protected void handleNotUnderstood(ACLMessage notUnderstood) {
-            System.out.printf("%s: La operadora no entiende el mensaje.", getName(), notUnderstood.getSender().getLocalName());
+            System.out.printf("%s: The operator does not understand the message.", getName(), notUnderstood.getSender().getLocalName());
         }
  
     protected void handleInform(ACLMessage inform) {
-            System.out.printf("La operadora informa: %s.", inform.getContent());
+            System.out.printf("The operator reports: %s.", inform.getContent());
         }
  
         protected void handleFailure(ACLMessage fallo) {
-            System.out.println(getName() + ": Se ha producido un fallo.");
+            System.out.println(getName() + ": There has been a failure.");
         }
     }
 }

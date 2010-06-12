@@ -1,7 +1,15 @@
-package _Query_Example;
+package Query_Example;
 
 
-
+/**
+* Run class is an example of an agent that implements the FIPA Query protocol.
+*
+* 
+* 
+* @author Joan Bellver - jbellver@dsic.upv.es
+* @author Sergio Pajares - spajares@dsic.upv.es
+*
+*/
 
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
@@ -9,7 +17,7 @@ import es.upv.dsic.gti_ia.core.AgentsConnection;
 
 
 
-public class Principal {
+public class Run {
 
 	/**
 	 * @param args
@@ -26,10 +34,10 @@ public class Principal {
    
         	
       
-        Aeropuerto aeropuerto = new Aeropuerto(new AgentID("aeropuerto1"));
+        Airport aeropuerto = new Airport(new AgentID("ManisesAirPort"));
         aeropuerto.start();
         
-        Viajante viajante = new Viajante(new AgentID("Viajero"));
+        Passenger viajante = new Passenger(new AgentID("Veronica"));
         viajante.start();
         }catch(Exception e){}
 	}
