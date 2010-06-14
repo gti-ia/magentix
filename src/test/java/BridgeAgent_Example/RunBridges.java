@@ -22,7 +22,7 @@ public class RunBridges {
 
 	public static void main(String[] args) {
 		DOMConfigurator.configure("configuration/loggin.xml");
-		AgentsConnection.connect("gtiiaprojects2.dsic.upv.es");
+		AgentsConnection.connect();
 		Logger logger = Logger.getLogger(RunBridges.class);
 		
 		
@@ -32,12 +32,12 @@ public class RunBridges {
 			 * Instantiating a BridgeAgentInOut SingleAgent
 			 */
 			BridgeAgentInOut agenteInOut = new BridgeAgentInOut(new AgentID(
-					"BridgeAgentInOut", "qpid", "serpafer.dsic.upv.es", "5000"));
+					"BridgeAgentInOut", "qpid", "locke.dsic.upv.es", "5000"));
 			/**
 			 * Instantiating a BridgeAgentOutIn SingleAgent
 			 */
 			BridgeAgentOutIn agenteOutIn = new BridgeAgentOutIn(new AgentID(
-					"BridgeAgentOutIn", "qpid", "serpafer.dsic.upv.es", "5000"));
+					"BridgeAgentOutIn", "qpid", "locke.dsic.upv.es", "5000"));
 
 			/**
 			 * Instantiating a EmisorAgent BaseAgent

@@ -29,14 +29,14 @@ public class RunSenderReplayJADE {
 		/**
 		 * Connecting to Qpid Broker
 		 */
-		AgentsConnection.connect("gtiiaprojects2");
+		AgentsConnection.connect();
 
 		try {
 			/**
 			 * Instantiating a sender agent
 			 */
 			SenderAgentJADE agente = new SenderAgentJADE(new AgentID(
-					"qpid://emisor@serpafer.dsic.upv.es:8080"));
+					"qpid://emisor@locke.dsic.upv.es:8080"));
 
 			/**
 			 * Instantiating a consumer agent

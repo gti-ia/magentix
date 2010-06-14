@@ -21,9 +21,9 @@ public class SenderAgentJADE extends BaseAgent {
 		//AgentID receiver = new AgentID("consumer");
 		
 		AgentID receiver = new AgentID();
-		receiver.name = "JUAN@laplace:1099/JADE";
+		receiver.name = "AgenteConsumidor@joabelfa-desktop:1099/JADE";
 		//receiver.name="JuanAngel@pepe";
-		receiver.host = "laplace.dsic.upv.es";
+		receiver.host = "locke.dsic.upv.es";
 		receiver.port = "7778";
 		receiver.protocol = "http";
 
