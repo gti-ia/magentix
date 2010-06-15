@@ -106,6 +106,7 @@ class HarryClass extends CAgent {
 			public void run(CProcessor myProcessor, ACLMessage messageToSend) {
 				messageToSend.copyFromAsTemplate(myProcessor
 						.getLastReceivedMessage());
+				myProcessor.ShutdownAgent();
 			}
 		}
 		FINAL.setMethod(new FINAL_Method());

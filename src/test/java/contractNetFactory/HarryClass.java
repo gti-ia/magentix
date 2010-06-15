@@ -101,7 +101,7 @@ class HarryClass extends CAgent {
 		// processors (value 0)
 		
 		CProcessorFactory talk = new myFIPA_CONTRACTNET().newFactory("TALK", null, msg,
-				1, myProcessor.getMyAgent(), 2, 2000, 0);
+				1, myProcessor.getMyAgent(), 2, 2000, 2000);
 
 		// The factory is setup to answer start conversation requests from the agent
 		// using the CONTRACT_NET protocol.

@@ -1,4 +1,4 @@
-package UsingFactories;
+package requestFactory;
 
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
@@ -44,7 +44,7 @@ class SallyClass extends CAgent {
 
 			@Override
 			protected void doInform(CProcessor myProcessor, ACLMessage response) {
-				response.setContent("Maybe someday");
+				response.setContent("Yes, my number is 666 456 855");
 				System.out.println(myProcessor.getMyAgent().getName()
 						+ ": I send the answer to " + myProcessor.getLastReceivedMessage().getSender().name);
 				
