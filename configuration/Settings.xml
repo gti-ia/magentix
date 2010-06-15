@@ -23,7 +23,7 @@
 
 
 <!-- Properties qpid broker -->
-<entry key="host">localhost</entry>
+<entry key="host">gtiiaprojects2</entry>
 <entry key="port">5672</entry>
 <entry key="vhost">test</entry>
 <entry key="user">guest</entry>
