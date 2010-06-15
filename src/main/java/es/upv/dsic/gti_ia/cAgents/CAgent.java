@@ -63,24 +63,6 @@
 
 package es.upv.dsic.gti_ia.cAgents;
 
-import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.UUID;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.ReentrantLock;
-
-import es.upv.dsic.gti_ia.core.ACLMessage;
-import es.upv.dsic.gti_ia.core.AgentID;
-import es.upv.dsic.gti_ia.core.BaseAgent;
-import es.upv.dsic.gti_ia.core.MessageFilter;
-
 /**
  * 
  * @author Ricard Lopez Fogues

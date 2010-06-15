@@ -1,10 +1,5 @@
 package es.upv.dsic.gti_ia.cAgents;
 
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.Set;
-
 /**
  * 
  * @author Ricard Lopez Fogues

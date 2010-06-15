@@ -5,8 +5,6 @@
 
 package es.upv.dsic.gti_ia.cAgents;
 
-import java.util.Date;
-
 
 public interface WaitStateMethod {
 	

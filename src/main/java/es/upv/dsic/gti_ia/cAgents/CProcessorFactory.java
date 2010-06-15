@@ -1,10 +1,5 @@
 package es.upv.dsic.gti_ia.cAgents;
 
-import java.util.concurrent.Semaphore;
-
-import es.upv.dsic.gti_ia.core.ACLMessage;
-import es.upv.dsic.gti_ia.core.MessageFilter;
-
 /**
  * 
  * @author Ricard Lopez Fogues
