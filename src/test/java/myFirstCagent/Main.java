@@ -6,7 +6,7 @@ import org.apache.log4j.xml.DOMConfigurator;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
 
-class HelloWorldExample {
+class Main {
 
 	public static void main(String[] args) throws Exception {
 
