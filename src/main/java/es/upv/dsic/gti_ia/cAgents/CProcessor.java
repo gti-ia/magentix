@@ -1,5 +1,19 @@
 package es.upv.dsic.gti_ia.cAgents;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Queue;
+import java.util.Set;
+import java.util.concurrent.locks.Condition;
+import java.util.UUID;
+
+import org.apache.log4j.Logger;
+
+import es.upv.dsic.gti_ia.core.ACLMessage;
+import es.upv.dsic.gti_ia.core.MessageFilter;
+
 /**
  * 
  * @author Ricard Lopez Fogues

@@ -2,6 +2,7 @@ package es.upv.dsic.gti_ia.core;
 
 import java.util.concurrent.LinkedBlockingQueue;
 
+
 /**
  * @author Ricard Lopez Fogues
  * @author Sergio Pajares Ferrando
@@ -63,7 +64,6 @@ public abstract class SingleAgent extends BaseAgent {
 		messageList.add(msg);
 	}
 
-	@Override
 	public void onMessage(ACLMessage msg) {
 		this.writeQueue(msg);
 	}

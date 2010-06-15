@@ -1,7 +1,9 @@
 // PENDIENTE:
-// Valorar si cambiar este estado por un mï¿½todo de rechazo en estado WAIT
+// Valorar si cambiar este estado por un método de rechazo en estado WAIT
 
 package es.upv.dsic.gti_ia.cAgents;
+
+import es.upv.dsic.gti_ia.core.ACLMessage;
 
 /**
  * 

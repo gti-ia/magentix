@@ -7,6 +7,15 @@
 
 package es.upv.dsic.gti_ia.architecture;
 
+import java.util.ArrayList;
+
+import java.util.LinkedList;
+import java.util.Queue;
+
+import es.upv.dsic.gti_ia.core.ACLMessage;
+import es.upv.dsic.gti_ia.core.AgentID;
+import es.upv.dsic.gti_ia.core.BaseAgent;
+
 /**
  * 
  * This class defines an new agents template, extending of BaseAgent. This type

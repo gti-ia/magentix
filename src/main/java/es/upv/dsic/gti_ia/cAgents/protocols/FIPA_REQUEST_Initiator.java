@@ -1,5 +1,20 @@
 package es.upv.dsic.gti_ia.cAgents.protocols;
 
+import es.upv.dsic.gti_ia.cAgents.BeginState;
+import es.upv.dsic.gti_ia.cAgents.BeginStateMethod;
+import es.upv.dsic.gti_ia.cAgents.CAgent;
+import es.upv.dsic.gti_ia.cAgents.CProcessorFactory;
+import es.upv.dsic.gti_ia.cAgents.CProcessor;
+import es.upv.dsic.gti_ia.cAgents.FinalState;
+import es.upv.dsic.gti_ia.cAgents.FinalStateMethod;
+import es.upv.dsic.gti_ia.cAgents.ReceiveState;
+import es.upv.dsic.gti_ia.cAgents.ReceiveStateMethod;
+import es.upv.dsic.gti_ia.cAgents.SendState;
+import es.upv.dsic.gti_ia.cAgents.SendStateMethod;
+import es.upv.dsic.gti_ia.cAgents.WaitState;
+import es.upv.dsic.gti_ia.core.ACLMessage;
+import es.upv.dsic.gti_ia.core.MessageFilter;
+
 public abstract class FIPA_REQUEST_Initiator {
 	
 	protected void doBegin(CProcessor myProcessor, ACLMessage msg) {

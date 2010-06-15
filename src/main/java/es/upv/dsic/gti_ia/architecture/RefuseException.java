@@ -23,6 +23,10 @@ Boston, MA  02111-1307, USA.
 
 package es.upv.dsic.gti_ia.architecture;
 
+
+
+import es.upv.dsic.gti_ia.core.ACLMessage;
+
 /**
 This class represents a generic RefuseException 
 @author Fabio Bellifemine - CSELT S.p.A. 
@@ -43,7 +47,6 @@ public class RefuseException extends FIPAException {
 		super(refuse); 
 	}
 
-	@Override
 	public ACLMessage getACLMessage() {
 		if (msg == null) {
 			msg = new ACLMessage(ACLMessage.REFUSE);

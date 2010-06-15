@@ -2,6 +2,15 @@ package es.upv.dsic.gti_ia.architecture;
 
 
 
+import java.util.*;
+
+
+import es.upv.dsic.gti_ia.architecture.FIPANames.InteractionProtocol;
+import es.upv.dsic.gti_ia.core.ACLMessage;
+import es.upv.dsic.gti_ia.core.AgentID;
+
+
+
 /**
  * This class implements the Fipa-Contract-Net interaction protocol, Role Initiator
  * 

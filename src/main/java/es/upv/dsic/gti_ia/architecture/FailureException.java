@@ -23,6 +23,8 @@ Boston, MA  02111-1307, USA.
 
 package es.upv.dsic.gti_ia.architecture;
 
+import es.upv.dsic.gti_ia.core.ACLMessage;
+
 /**
  * This class represents a generic FailureException
  * 
@@ -45,7 +47,6 @@ public class FailureException extends FIPAException {
 		super(failure);
 	}
 
-	@Override
 	public ACLMessage getACLMessage() {
 		if (msg == null) {
 			msg = new ACLMessage(ACLMessage.FAILURE);

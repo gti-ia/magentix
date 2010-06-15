@@ -1,5 +1,7 @@
 package es.upv.dsic.gti_ia.cAgents;
 
+import es.upv.dsic.gti_ia.core.MessageFilter;
+
 /**
  * 
  * @author Ricard Lopez Fogues

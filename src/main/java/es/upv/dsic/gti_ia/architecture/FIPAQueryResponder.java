@@ -1,5 +1,8 @@
 package es.upv.dsic.gti_ia.architecture;
 
+import es.upv.dsic.gti_ia.architecture.Monitor;
+import es.upv.dsic.gti_ia.core.ACLMessage;
+
 /**
  * This class implements the FIPA-Query interaction protocol, Role Responder.
  * 

@@ -1,5 +1,9 @@
 package es.upv.dsic.gti_ia.architecture;
 
+import org.apache.log4j.Logger;
+
+import es.upv.dsic.gti_ia.organization.OMS;
+
 
 
 /**
