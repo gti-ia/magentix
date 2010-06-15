@@ -1,5 +1,6 @@
 package es.upv.dsic.gti_ia.core;
 
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * @author Ricard Lopez Fogues

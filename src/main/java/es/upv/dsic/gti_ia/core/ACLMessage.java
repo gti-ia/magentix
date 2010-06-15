@@ -1,5 +1,19 @@
 package es.upv.dsic.gti_ia.core;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
+import es.upv.dsic.gti_ia.core.ISO8601;
+
 /**
  * @author Ricard Lopez Fogues
  */

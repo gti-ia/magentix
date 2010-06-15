@@ -1,5 +1,28 @@
 package es.upv.dsic.gti_ia.core;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
+import org.apache.log4j.Logger;
+import org.apache.qpid.transport.Connection;
+import org.apache.qpid.transport.DeliveryProperties;
+import org.apache.qpid.transport.Header;
+import org.apache.qpid.transport.MessageAcceptMode;
+import org.apache.qpid.transport.MessageAcquireMode;
+import org.apache.qpid.transport.MessageCreditUnit;
+import org.apache.qpid.transport.MessageTransfer;
+import org.apache.qpid.transport.Option;
+import org.apache.qpid.transport.Session;
+import org.apache.qpid.transport.SessionException;
+import org.apache.qpid.transport.SessionListener;
+
 /**
  * @author Ricard Lopez Fogues
  * @author Sergio Pajares Ferrando
@@ -392,7 +415,7 @@ public class BaseAgent implements Runnable {
 		//String body = xfr.getBodyString();
 		byte[] binaryContent = xfr.getBodyBytes();
 		//boolean hasBinaryContent = false;
-		MessageContent msgContent = null;
+		//MessageContent msgContent = null;
 		
 		/*if(binaryContent != null){
 			hasBinaryContent = true;

@@ -1,5 +1,9 @@
 package es.upv.dsic.gti_ia.core;
 
+import java.util.Date;
+import java.util.Calendar;
+import java.util.TimeZone;
+
 /**
  * This class contains a set of static methods that convert to/from the Date
  * Time format adopted by FIPA. The FIPA format is based on ISO8601, with the
