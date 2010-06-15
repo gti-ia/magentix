@@ -1,9 +1,15 @@
 package Others_Examples;
 
-import java.io.*;
-import java.net.*;
-import java.awt.*;
-import javax.swing.*;
+import java.awt.BorderLayout;
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.SocketException;
+
+import javax.swing.JFrame;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.SwingUtilities;
 
 public class httpserver extends JFrame {
 	private JTextArea areaPantalla;
@@ -48,7 +54,7 @@ public class httpserver extends JFrame {
 
 				socket.receive(recibirPaquete); // esperar el paquete
 
-				// mostrar la información del paquete recibido
+				// mostrar la informaciï¿½n del paquete recibido
 				mostrarMensaje("\nPaquete recibido:"
 						+ "\nDel host: "
 						+ recibirPaquete.getAddress()
@@ -70,9 +76,9 @@ public class httpserver extends JFrame {
 				excepcionES.printStackTrace();
 			}
 
-		} // fin de instrucción while
+		} // fin de instrucciï¿½n while
 
-	} // fin del método esperarPaquetes
+	} // fin del mï¿½todo esperarPaquetes
 
 	// repetir el paquete al cliente
 	private void enviarPaqueteACliente(DatagramPacket recibirPaquete)
@@ -88,10 +94,10 @@ public class httpserver extends JFrame {
 		mostrarMensaje("Paquete enviado\n");
 	}
 
-	// método utilitario que es llamado desde otros subprocesos para manipular a
+	// mï¿½todo utilitario que es llamado desde otros subprocesos para manipular a
 	// areaPantalla en el subproceso despachador de eventos
 	private void mostrarMensaje(final String mensajeAMostrar) {
-		// mostrar el mensaje del subproceso de ejecución despachador de eventos
+		// mostrar el mensaje del subproceso de ejecuciï¿½n despachador de eventos
 		SwingUtilities.invokeLater(new Runnable() { // clase interna para
 													// asegurar que la GUI se
 													// actualice apropiadamente

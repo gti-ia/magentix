@@ -1,10 +1,17 @@
 package myFirstCProcessorFactories;
 
+import es.upv.dsic.gti_ia.cAgents.BeginState;
+import es.upv.dsic.gti_ia.cAgents.BeginStateMethod;
+import es.upv.dsic.gti_ia.cAgents.CAgent;
+import es.upv.dsic.gti_ia.cAgents.CProcessor;
+import es.upv.dsic.gti_ia.cAgents.CProcessorFactory;
+import es.upv.dsic.gti_ia.cAgents.FinalState;
+import es.upv.dsic.gti_ia.cAgents.FinalStateMethod;
+import es.upv.dsic.gti_ia.cAgents.SendState;
+import es.upv.dsic.gti_ia.cAgents.SendStateMethod;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.MessageFilter;
-
-import es.upv.dsic.gti_ia.cAgents.*;
 
 class SallyClass extends CAgent {
 

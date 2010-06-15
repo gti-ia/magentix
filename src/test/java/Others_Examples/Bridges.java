@@ -1,10 +1,5 @@
 package Others_Examples;
 
-import java.net.UnknownHostException;
-import java.util.Calendar;
-
-import es.upv.dsic.gti_ia.core.ACLMessage;
-import es.upv.dsic.gti_ia.core.AgentID;
 
 public class Bridges {
 	

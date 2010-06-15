@@ -1,14 +1,14 @@
 package ContractNet_Example;
 
+import java.util.ArrayList;
+import java.util.Date;
+
 import es.upv.dsic.gti_ia.architecture.FIPAContractNetInitiator;
 import es.upv.dsic.gti_ia.architecture.FIPANames;
 import es.upv.dsic.gti_ia.architecture.Monitor;
 import es.upv.dsic.gti_ia.architecture.QueueAgent;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
-
-import java.util.Date;
-import java.util.ArrayList;
 
 public class Client extends QueueAgent {
 

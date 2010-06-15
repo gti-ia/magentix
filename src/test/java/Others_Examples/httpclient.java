@@ -1,10 +1,20 @@
 package Others_Examples;
 
-import java.io.*;
-import java.net.*;
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
+import java.awt.BorderLayout;
+import java.awt.Container;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketException;
+
+import javax.swing.JFrame;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 
 public class httpclient extends JFrame {
 	private JTextField campoIntroducir;
@@ -17,7 +27,7 @@ public class httpclient extends JFrame {
 
 		Container contenedor = getContentPane();
 
-		campoIntroducir = new JTextField("Escriba aquí el mensaje");
+		campoIntroducir = new JTextField("Escriba aquï¿½ el mensaje");
 		campoIntroducir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent evento) {
 				// crear y enviar el paquete
@@ -110,14 +120,14 @@ public class httpclient extends JFrame {
 				excepcion.printStackTrace();
 			}
 
-		} // fin de instrucción while
+		} // fin de instrucciï¿½n while
 
-	} // fin del método esperarPaquetes
+	} // fin del mï¿½todo esperarPaquetes
 
-	// método utilitario que es llamado desde otros subprocesos para manipular a
+	// mï¿½todo utilitario que es llamado desde otros subprocesos para manipular a
 	// areaPantalla en el subproceso despachador de eventos
 	private void mostrarMensaje(final String mensajeAMostrar) {
-		// mostrar mensaje del subproceso de ejecución despachador de eventos
+		// mostrar mensaje del subproceso de ejecuciï¿½n despachador de eventos
 		SwingUtilities.invokeLater(new Runnable() { // clase interna para
 													// asegurar que la GUI se
 													// actualice apropiadamente

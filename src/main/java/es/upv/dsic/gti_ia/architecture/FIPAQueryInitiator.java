@@ -2,7 +2,8 @@ package es.upv.dsic.gti_ia.architecture;
 
 
 import java.util.Date;
-import java.util.logging.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import es.upv.dsic.gti_ia.architecture.FIPANames.InteractionProtocol;
 import es.upv.dsic.gti_ia.core.ACLMessage;

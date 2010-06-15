@@ -2,7 +2,6 @@ package SingleAgent_Example;
 
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
-import es.upv.dsic.gti_ia.core.BaseAgent;
 import es.upv.dsic.gti_ia.core.SingleAgent;
 
 /**

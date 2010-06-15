@@ -5,9 +5,9 @@ package Query_Example;
 
 
 
-import es.upv.dsic.gti_ia.architecture.Monitor;
 import es.upv.dsic.gti_ia.architecture.FIPANames;
 import es.upv.dsic.gti_ia.architecture.FIPAQueryInitiator;
+import es.upv.dsic.gti_ia.architecture.Monitor;
 import es.upv.dsic.gti_ia.architecture.QueueAgent;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;

@@ -8,7 +8,6 @@
 package es.upv.dsic.gti_ia.architecture;
 
 import java.util.ArrayList;
-
 import java.util.LinkedList;
 import java.util.Queue;
 

@@ -4,15 +4,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
-
 import org.apache.log4j.xml.DOMConfigurator;
-
-
 import org.mindswap.owls.OWLSFactory;
 import org.mindswap.owls.process.Process;
 import org.mindswap.owls.process.execution.ProcessExecutionEngine;
 import org.mindswap.query.ValueMap;
-
 
 import es.upv.dsic.gti_ia.architecture.FIPARequestResponder;
 import es.upv.dsic.gti_ia.architecture.MessageTemplate;

@@ -1,6 +1,5 @@
 package es.upv.dsic.gti_ia.architecture;
 
-import es.upv.dsic.gti_ia.architecture.Monitor;
 import es.upv.dsic.gti_ia.architecture.FIPANames.InteractionProtocol;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 

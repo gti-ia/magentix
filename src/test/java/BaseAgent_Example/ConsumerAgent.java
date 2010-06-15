@@ -1,6 +1,7 @@
 package BaseAgent_Example;
 
 import java.util.concurrent.LinkedBlockingQueue;
+
 import org.apache.qpid.transport.MessageTransfer;
 
 import es.upv.dsic.gti_ia.core.ACLMessage;
