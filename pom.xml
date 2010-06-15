@@ -245,14 +245,14 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org</groupId>
+			<groupId>org.jade</groupId>
 			<artifactId>jade</artifactId>
 			<version>3.6.1</version>
 		</dependency>
 
 		<dependency>
-			<groupId>org</groupId>
-			<artifactId>jade-tools</artifactId>
+			<groupId>org.jade</groupId>
+			<artifactId>jadeTools</artifactId>
 			<version>3.6.1</version>
 		</dependency>
 
