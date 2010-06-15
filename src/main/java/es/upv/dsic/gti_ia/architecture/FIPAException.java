@@ -36,8 +36,6 @@ content, i.e. the exception message.
 
 package es.upv.dsic.gti_ia.architecture;
 
-import es.upv.dsic.gti_ia.core.ACLMessage;
-
 public class FIPAException extends Exception {
 
 	/**

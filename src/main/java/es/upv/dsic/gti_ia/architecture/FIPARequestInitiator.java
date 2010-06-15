@@ -1,11 +1,5 @@
 package es.upv.dsic.gti_ia.architecture;
 
-import java.util.Date;
-import java.util.logging.*;
-
-import es.upv.dsic.gti_ia.architecture.FIPANames.InteractionProtocol;
-import es.upv.dsic.gti_ia.core.ACLMessage;
-
 /**
  * This class implements the FIPA-Request interaction protocol, Role Initiator
  * 

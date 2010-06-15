@@ -23,9 +23,6 @@ Boston, MA  02111-1307, USA.
 
 package es.upv.dsic.gti_ia.architecture;
 
-
-import es.upv.dsic.gti_ia.core.ACLMessage;
-
 /** 
  * 
  * @author Fabio Bellifemine - CSELT S.p.A.
