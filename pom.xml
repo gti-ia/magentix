@@ -13,6 +13,7 @@
 		<artifactId>thomas</artifactId>
 		<groupId>es.upv.dsic.gti-ia</groupId>
 		<version>0.3</version>
+		<relativePath>../thomas</relativePath>
 	</parent>
 	<build>
 		<finalName>omsservices</finalName>
