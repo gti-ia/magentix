@@ -1,18 +1,5 @@
 package es.upv.dsic.gti_ia.core;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.DatagramPacket;
-
-import java.net.InetAddress;
-import java.net.Socket;
-
-import java.net.UnknownHostException;
-import java.util.Calendar;
-import java.util.concurrent.LinkedBlockingQueue;
-import org.apache.qpid.transport.MessageTransfer;
-
 /**
  * This agent routes messages from inside the platform to outside the platform.
  * *

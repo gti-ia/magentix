@@ -1,14 +1,5 @@
 package es.upv.dsic.gti_ia.core;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
-import es.upv.dsic.gti_ia.core.ISO8601;
-
 /**
  * @author Ricard Lopez Fogues
  */
@@ -112,6 +103,8 @@ public class ACLMessage implements Serializable, Cloneable {
 	 * @uml.property name="receiver"
 	 */
 	private ArrayList<AgentID> receiver = new ArrayList();
+	
+	private byte[] byteSequenceContent = null;
 
 	/**
 	 * @uml.property name="reply_to"
@@ -271,6 +264,7 @@ public class ACLMessage implements Serializable, Cloneable {
 	 * @uml.property name="content"
 	 */
 	public void setContent(String cont) {
+		byteSequenceContent = null;
 		content = cont;
 	}
 
@@ -607,5 +601,62 @@ public class ACLMessage implements Serializable, Cloneable {
 				return false;
 		}
 		return true;
+	}
+	
+	public void setContentObject(java.io.Serializable s) throws IOException
+	{
+		ByteArrayOutputStream c = new ByteArrayOutputStream();
+		ObjectOutputStream oos = new ObjectOutputStream(c);
+		oos.writeObject(s);
+		oos.flush();
+		setByteSequenceContent(c.toByteArray());
+	}
+	
+	public void setByteSequenceContent(byte[] content) {
+		this.content = null; //make to null the other variable
+		byteSequenceContent = content;
+	}
+	
+	public java.io.Serializable getContentObject() throws IOException,
+			ClassNotFoundException {
+		byte[] data = getByteSequenceContent();
+		if (data == null)
+			return null;
+		ObjectInputStream oin = new ObjectInputStream(new ByteArrayInputStream(
+				data));
+		java.io.Serializable s = (java.io.Serializable) oin.readObject();
+		return s;
+	}
+	
+	public byte[] getByteSequenceContent() {
+		if (byteSequenceContent != null)
+			return byteSequenceContent;
+		return null;
+	}
+	
+	/**
+	 Returns the integer corresponding to the performative
+	 
+	 @returns the integer corresponding to the performative; -1 otherwise
+	 */
+	public static int getIntegerPerformative(String performative){
+		String tmp = performative.toUpperCase();
+		for (int i=0; i<performatives.length; i++)
+			if (performatives[i].equals(tmp))
+				return i;
+		return -1;
+	}
+	
+	/**
+	 Returns the string corresponding to the integer for the performative
+	 @return the string corresponding to the integer for the performative; 
+	 "NOT-UNDERSTOOD" if the integer is out of range.
+	 */
+	public static String getStringPerformative(int perf){
+		try {
+			return performatives[perf];
+		} catch (Exception e) {
+			return performatives[NOT_UNDERSTOOD];
+		}
 	}
 }

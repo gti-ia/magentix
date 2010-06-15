@@ -1,9 +1,5 @@
 package es.upv.dsic.gti_ia.core;
 
-import org.apache.qpid.transport.Connection;
-
-import es.upv.dsic.gti_ia.organization.Configuration;
-
 /**
  * This class work to open a Qpid broker connection.
  * @author Sergio Pajares

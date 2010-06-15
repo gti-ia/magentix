@@ -1,29 +1,11 @@
 package es.upv.dsic.gti_ia.core;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
-import org.apache.log4j.Logger;
-import org.apache.qpid.transport.Connection;
-import org.apache.qpid.transport.DeliveryProperties;
-import org.apache.qpid.transport.Header;
-import org.apache.qpid.transport.MessageAcceptMode;
-import org.apache.qpid.transport.MessageAcquireMode;
-import org.apache.qpid.transport.MessageCreditUnit;
-import org.apache.qpid.transport.MessageTransfer;
-import org.apache.qpid.transport.Option;
-import org.apache.qpid.transport.Session;
-import org.apache.qpid.transport.SessionException;
-import org.apache.qpid.transport.SessionListener;
-
 /**
  * @author Ricard Lopez Fogues
  * @author Sergio Pajares Ferrando
  * @author Joan Bellver Faus
  */
-public class BaseAgent implements Runnable{
+public class BaseAgent implements Runnable {
 
 	/**
 	 * The logger variable considers to print any event that occurs by the agent
@@ -87,7 +69,7 @@ public class BaseAgent implements Runnable{
 	 *             If Agent ID already exists on the platform
 	 */
 	public BaseAgent(AgentID aid) throws Exception {
-		
+
 		if (AgentsConnection.connection == null) {
 			logger
 					.error("Before create a agent, the qpid broker connection is necesary");
@@ -99,7 +81,8 @@ public class BaseAgent implements Runnable{
 		this.session = createSession();
 		if (this.existAgent(aid)) {
 			session.close();
-			throw new Exception("Agent ID " + aid.name + " already exists on the platform");
+			throw new Exception("Agent ID " + aid.name
+					+ " already exists on the platform");
 		} else {
 			this.aid = aid;
 			this.listener = new Listener();
@@ -154,20 +137,21 @@ public class BaseAgent implements Runnable{
 
 	/**
 	 * 
-	 * Sends a ACLMessage to all specified recipients agents. If a message destination having another platform, this will be forwarded to BridgeAgentInOut agent.
+	 * Sends a ACLMessage to all specified recipients agents. If a message
+	 * destination having another platform, this will be forwarded to
+	 * BridgeAgentInOut agent.
+	 * 
 	 * @param msg
-	 *         
+	 * 
 	 */
 	public void send(ACLMessage msg) {
-		
+
 		/**
 		 * Permite incluir un arroba en el nombre del agente destinatario.
-		 * Condición Obligatoria para JADE.
-		 * @ será reemplazado por ~
+		 * Condiciï¿½n Obligatoria para JADE. @ serï¿½ reemplazado por ~
 		 */
 		msg.getReceiver().name = msg.getReceiver().name.replace('@', '~');
 
-		
 		MessageTransfer xfr = new MessageTransfer();
 
 		xfr.destination("amq.direct");
@@ -176,6 +160,7 @@ public class BaseAgent implements Runnable{
 
 		DeliveryProperties deliveryProps = new DeliveryProperties();
 
+		/*
 		// Serialize message content
 		String body;
 		// Performative
@@ -190,38 +175,85 @@ public class BaseAgent implements Runnable{
 		body = body + msg.getReplyTo().toString().length() + "#"
 				+ msg.getReplyTo().toString();
 		// language
-		body = body + msg.getLanguage().length() + "#" + msg.getLanguage();
+		body = body + msg.getLanguage().length() + "#"
+				+ msg.getLanguage();
 		// encoding
-		body = body + msg.getEncoding().length() + "#" + msg.getEncoding();
+		body = body + msg.getEncoding().length() + "#"
+				+ msg.getEncoding();
 		// ontology
-		body = body + msg.getOntology().length() + "#" + msg.getOntology();
+		body = body + msg.getOntology().length() + "#"
+				+ msg.getOntology();
 		// protocol
-		body = body + msg.getProtocol().length() + "#" + msg.getProtocol();
+		body = body + msg.getProtocol().length() + "#"
+				+ msg.getProtocol();
 		// conversation id
 		body = body + msg.getConversationId().length() + "#"
 				+ msg.getConversationId();
 		// reply with
-		body = body + msg.getReplyWith().length() + "#" + msg.getReplyWith();
+		body = body + msg.getReplyWith().length() + "#"
+				+ msg.getReplyWith();
 		// in reply to
-		body = body + msg.getInReplyTo().length() + "#" + msg.getInReplyTo();
+		body = body + msg.getInReplyTo().length() + "#"
+				+ msg.getInReplyTo();
 		// reply by
-		body = body + msg.getReplyBy().length() + "#" + msg.getReplyBy();
+		body = body + msg.getReplyBy().length() + "#"
+				+ msg.getReplyBy();
 		// content
-		body = body + msg.getContent().length() + "#" + msg.getContent();
-		// serialize message headers, it looks like: number of headers#key.length#key|value.length#value
-		//number of headers
+		body = body + msg.getContent().length() + "#"
+				+ msg.getContent();
+		// serialize message headers, it looks like: number of
+		// headers#key.length#key|value.length#value
+		// number of headers
 		body = body + String.valueOf(msg.getHeaders().size()) + "#";
-		Map<String, String> headers = new HashMap<String, String>(msg.getHeaders());
+		Map<String, String> headers = new HashMap<String, String>(msg
+				.getHeaders());
 		Iterator<String> itr = headers.keySet().iterator();
 		String key;
-		//iterate through HashMap values iterator
-		while(itr.hasNext()){
+		// iterate through HashMap values iterator
+		while (itr.hasNext()) {
 			key = itr.next();
 			body = body + key.length() + "#" + key;
-			body = body + headers.get(key).length() + "#" + headers.get(key);		 
+			body = body + headers.get(key).length() + "#"
+					+ headers.get(key);
 		}
-				
-		xfr.setBody(body);
+		*/
+		/*boolean binaryContent = false;
+		//if the message has binary content then serialize it
+		try {
+			if (msg.getContentObject() != null) {
+				binaryContent = true;
+				ObjectContent content = new ObjectContent();
+				content.messageHeader = body;
+				content.content = msg.getByteSequenceContent();
+				ByteArrayOutputStream c = new ByteArrayOutputStream();
+				ObjectOutputStream oos = new ObjectOutputStream(c);
+				oos.writeObject(content);
+				oos.flush();
+				xfr.setBody(c.toByteArray());
+			} else {
+				xfr.setBody(body);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}*/
+		
+		//MessageContent msgContent = new MessageContent();
+		//msgContent.setStringContent(body);
+		//msgContent.setBinaryContent(msg.getByteSequenceContent());
+		ByteArrayOutputStream c = new ByteArrayOutputStream();
+		ObjectOutputStream oos;
+		try {
+			oos = new ObjectOutputStream(c);
+			//oos.writeObject(msgContent);
+			oos.writeObject(msg);
+			oos.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}		
+		xfr.setBody(c.toByteArray());
+		
 		for (int i = 0; i < msg.getTotalReceivers(); i++) {
 			// If protocol is not qpid then the message goes outside the
 			// platform
@@ -231,9 +263,14 @@ public class BaseAgent implements Runnable{
 				deliveryProps.setRoutingKey(msg.getReceiver(i).name);
 			}
 			xfr.header(new Header(deliveryProps));
-			
+			/*if(!binaryContent)
+				session.messageTransfer(xfr.getDestination(), xfr.getAcceptMode(),
+						xfr.getAcquireMode(), xfr.getHeader(), xfr.getBodyString());
+			else
+				session.messageTransfer(xfr.getDestination(), xfr.getAcceptMode(),
+						xfr.getAcquireMode(), xfr.getHeader(), xfr.getBodyBytes());*/
 			session.messageTransfer(xfr.getDestination(), xfr.getAcceptMode(),
-					xfr.getAcquireMode(), xfr.getHeader(), xfr.getBodyString());
+					xfr.getAcquireMode(), xfr.getHeader(), xfr.getBodyBytes());			
 		}
 	}
 
@@ -246,21 +283,25 @@ public class BaseAgent implements Runnable{
 		return aid.name;
 	}
 
-	/**Define activities such as initialization resources, and every task necessary before execution of execute procedure.
-	 * It will be executed when the agent will be launched and may be defined by the user.
+	/**
+	 * Define activities such as initialization resources, and every task
+	 * necessary before execution of execute procedure. It will be executed when
+	 * the agent will be launched and may be defined by the user.
 	 * 
 	 */
 
 	protected void init() {
 
 	}
+
 	/**
-	 * Method that defines all the logic and behavior of the agent.
-	 * This method necessarily must be defined.
+	 * Method that defines all the logic and behavior of the agent. This method
+	 * necessarily must be defined.
 	 */
 	protected void execute() {
 
 	}
+
 	/**
 	 * 
 	 */
@@ -285,13 +326,12 @@ public class BaseAgent implements Runnable{
 	protected void terminate() {
 		session.queueDelete(aid.name);
 		session.close();
-
 	}
 
 	/**
-	 * Runs Agent's thread 
+	 * Runs Agent's thread
 	 */
-	public void run(){
+	public void run() {
 		init();
 		execute();
 		finalize();
@@ -310,7 +350,9 @@ public class BaseAgent implements Runnable{
 	 **************************************************************************/
 
 	/**
-	 *Returns a structure as the Agent Identificator formed by the name, protocol, host and port Agent.
+	 *Returns a structure as the Agent Identificator formed by the name,
+	 * protocol, host and port Agent.
+	 * 
 	 * @return agent ID
 	 * @uml.property name="aid"
 	 */
@@ -346,11 +388,41 @@ public class BaseAgent implements Runnable{
 		int aidindice2 = 0;
 		int tam = 0;
 		String aidString;
-		String body = xfr.getBodyString();
+		String body = null;
+		//String body = xfr.getBodyString();
+		byte[] binaryContent = xfr.getBodyBytes();
+		//boolean hasBinaryContent = false;
+		MessageContent msgContent = null;
+		
+		/*if(binaryContent != null){
+			hasBinaryContent = true;
+			ObjectInputStream oin;
+			try {
+				oin = new ObjectInputStream(new ByteArrayInputStream(binaryContent));
+				content = (ObjectContent) oin.readObject();
+				body = content.messageHeader;
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}			
+		}*/
+		ACLMessage msg = null;
+		ObjectInputStream oin;
+		try {
+			oin = new ObjectInputStream(new ByteArrayInputStream(binaryContent));
+			//msgContent = (MessageContent)oin.readObject();
+			//body = msgContent.getStringContent();
+			msg = (ACLMessage)oin.readObject();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}			
 
 		// System.out.println("BODY: " + body);
 
-		indice2 = body.indexOf('#', indice1);
+		/*indice2 = body.indexOf('#', indice1);
 		ACLMessage msg = new ACLMessage(Integer.parseInt(body.substring(
 				indice1, indice2)));
 
@@ -445,36 +517,39 @@ public class BaseAgent implements Runnable{
 		indice2 = body.indexOf('#', indice1);
 		tam = Integer.parseInt(body.substring(indice1, indice2));
 		// Content
-		msg.setContent(body.substring(indice2 + 1, indice2 + 1 + tam));
-				
+		if(msgContent.getBinaryContent() != null)
+			msg.setByteSequenceContent(msgContent.getBinaryContent());
+		else
+			msg.setContent(body.substring(indice2 + 1, indice2 + 1 + tam));
+
 		indice1 = indice2 + 1 + tam;
 		indice2 = body.indexOf('#', indice1);
-		//headers
+		// headers
 		int numberOfHeaders = Integer.valueOf(body.substring(indice1, indice2));
 		String key;
 		String value;
 		tam = 0;
 		int copy = numberOfHeaders / 10;
-		//find out how many ciphers numberOfHeaders has
-		while(copy > 0){
+		// find out how many ciphers numberOfHeaders has
+		while (copy > 0) {
 			tam++;
 			copy /= 10;
 		}
-		for(int i=0; i< numberOfHeaders; i++){
-			//key
+		for (int i = 0; i < numberOfHeaders; i++) {
+			// key
 			indice1 = indice2 + 1 + tam;
 			indice2 = body.indexOf('#', indice1);
-			tam = Integer.parseInt(body.substring(indice1, indice2));	
+			tam = Integer.parseInt(body.substring(indice1, indice2));
 			key = body.substring(indice2 + 1, indice2 + 1 + tam);
-					
-			//value
+
+			// value
 			indice1 = indice2 + 1 + tam;
 			indice2 = body.indexOf('#', indice1);
-			tam = Integer.parseInt(body.substring(indice1, indice2));			
+			tam = Integer.parseInt(body.substring(indice1, indice2));
 			value = body.substring(indice2 + 1, indice2 + 1 + tam);
-			
-			msg.setHeader(key, value);			
-		}		
+
+			msg.setHeader(key, value);
+		}*/
 
 		return msg;
 	}
