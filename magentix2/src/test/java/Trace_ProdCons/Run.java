@@ -13,7 +13,7 @@ import es.upv.dsic.gti_ia.core.AgentsConnection;
  * the ConsumerAgent subscribes to them in order to receive them. When the consumer agent
  * receives a trace event, it displays its content on the screen.
  * 
- * Before ending, the Consumer agent unsubscribes from the event type.
+ * Before ending, the Consumer agent unsubscribes from the corresponding event type.
  * 
  * @author Luis Burdalo - lburdalo@dsic.upv.es
  */
