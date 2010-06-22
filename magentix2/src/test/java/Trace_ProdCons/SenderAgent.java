@@ -17,7 +17,7 @@ public class SenderAgent extends BaseAgent {
 
 	public SenderAgent(AgentID aid) throws Exception {
 		super(aid);
-		TraceInteract.publishTracingService(this, "TRACE_TEST", "TRACE_TEST", "Tracing service with no other use than testing the system");
+		TraceInteract.publishTracingService(this, "TRACE_TEST", "Tracing service with no other use than testing the system");
 		//logger.info("Published TRACE_TEST tracing service");
 	}
 

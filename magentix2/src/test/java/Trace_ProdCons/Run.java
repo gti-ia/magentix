@@ -41,6 +41,7 @@ public class Run {
 			 */
 			//TraceManager tm = new TraceManager(new AgentID("qpid://tm@localhost:8080"));
 			TraceManager tm = new TraceManager(new AgentID("tm"));
+			tm.start();
 			
 			/**
 			 * Instantiating the sender agent
@@ -58,7 +59,7 @@ public class Run {
 			 * Execute the agents
 			 */
 			//consumer.start();
-			//sender.start();
+			sender.start();
 
 		} catch (Exception e) {
 			logger.error("Error  " + e.getMessage());
