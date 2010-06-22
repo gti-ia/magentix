@@ -4,8 +4,6 @@ import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.BaseAgent;
 
-import es.upv.dsic.gti_ia.trace.*;
-
 public class TraceInteract {
 	/**
 	 * Publish a tracing service so that other agents can request it
@@ -20,7 +18,7 @@ public class TraceInteract {
 	 * description, in order to let tracing entities discover tracing services and decide which
 	 * of them are interesting for them.
 	 */
-	static public void publishTracingService(BaseAgent applicantAgent, String name, String eventType, String description){
+	static public void publishTracingService(BaseAgent applicantAgent, String serviceName, String description){
 		/**
 		 * Building a ACLMessage
 		 */
@@ -31,7 +29,7 @@ public class TraceInteract {
 		msg.setReceiver(tms_aid);
 		msg.setSender(applicantAgent.getAid());
 		msg.setLanguage("ACL");
-		body = "publish" + "#" + name.length() + "#" + name + eventType.length() + "#" + eventType + description;
+		body = "publish" + "#" + serviceName.length() + "#" + serviceName + description;
 		//System.out.println("Publication request: " + body);
 		msg.setContent(body);
 		/**
@@ -56,7 +54,6 @@ public class TraceInteract {
 		msg.setSender(applicantAgent.getAid());
 		msg.setLanguage("ACL");
 		body = "unpublish" + "#" + name;
-		body = name;
 		//System.out.println(body);
 		msg.setContent(body);
 		/**

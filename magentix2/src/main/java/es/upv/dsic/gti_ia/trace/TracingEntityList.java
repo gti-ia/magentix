@@ -110,7 +110,7 @@ public class TracingEntityList {
 		TE_Node node;
 		
 		for (i=0, node=this.first; i < this.length; i++, node=node.getNext()){
-			if (node.getTEntity().getAid().equals(aid)){
+			if (node.getTEntity().hasTheSameAidAs(aid)){
 				return node;
 			}
 		}
@@ -123,7 +123,7 @@ public class TracingEntityList {
 		TE_Node node;
 		
 		for (i=0, node=this.first; i < this.length; i++, node=node.getNext()){
-			if (node.getTEntity().getAid().equals(aid)){
+			if (node.getTEntity().hasTheSameAidAs(aid)){
 				return node.getTEntity();
 			}
 		}

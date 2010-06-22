@@ -397,7 +397,7 @@ public class TracingServiceSubscriptionList {
 		TracingServiceSubscriptionList returnList = new TracingServiceSubscriptionList();
 		
 		if (this.getLength() == 1){
-			if (this.getFirst().getTSSubscription().getOriginEntity().getAid().equals(providerAid)){
+			if (this.getFirst().getTSSubscription().getOriginEntity().hasTheSameAidAs(providerAid)){
 				// Only one provider -> Remove all subscriptions
 				for (i=0, node=this.first; i < this.length; i++){
 					returnList.addTSS(node.TSSubscription);
@@ -419,7 +419,7 @@ public class TracingServiceSubscriptionList {
 		}
 		else{
 			for (i=0, node=this.first; i < this.length; i++){
-				if ((node.getTSSubscription().getOriginEntity().getAid().equals(providerAid))){
+				if ((node.getTSSubscription().getOriginEntity().hasTheSameAidAs(providerAid))){
 					returnList.addTSS(node.TSSubscription);
 					removed_node=node;
 					node=node.getNext();

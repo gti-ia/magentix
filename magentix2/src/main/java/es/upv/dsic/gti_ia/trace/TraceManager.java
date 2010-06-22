@@ -147,8 +147,9 @@ public class TraceManager extends BaseAgent{
 		boolean agree_response=true;
 		boolean added_TE=false;
 		boolean added_TS=false;
+		boolean added_TSP=false;
 		
-		//logger.info("[TRACE MANAGER]: Received [" + msg.getPerformativeInt() + "] -> " + msg.getContent());
+		logger.info("[TRACE MANAGER]: Received [" + msg.getPerformativeInt() + "] -> " + msg.getContent());
 		
 		switch (msg.getPerformativeInt()){
 		
@@ -161,15 +162,11 @@ public class TraceManager extends BaseAgent{
 				
 				if (command.equals("publish")) {
 					// Publication of a tracing service
+					
 					TracingService newService = new TracingService();
 					
 					index2 = content.indexOf('#', index+1);
 					length = Integer.parseInt(content.substring(index + 1, index2));
-					newService.setName(content.substring(index2 + 1, index2 + 1 + length));
-					
-					index = index2 + length + 1;
-					index2 = content.indexOf('#', index);
-					length = Integer.parseInt(content.substring(index, index2));
 					newService.setName(content.substring(index2 + 1, index2 + 1 + length));
 					
 					index = index2 + length + 1;
@@ -185,69 +182,82 @@ public class TraceManager extends BaseAgent{
 							response_msg = new ACLMessage(ACLMessage.REFUSE);
 							response_msg.setReceiver(msg.getSender());
 							response_msg.setContent("publish#" + newService.getName() + ":Error registering tracing entity");
-							logger.info("[TRACE MANAGER]: sending REFUSE message to " + msg.getReceiver().toString());
+							logger.info("[TRACE MANAGER]: Sending REFUSE message to " + msg.getReceiver().toString());
 						}
 						else{
 							added_TE=true;
 						}
 					}
 					
+					// Register tracing entity as service provider
+					if (agree_response && (TSProviderEntities.getTEByAid(msg.getSender()) == null)){
+						if ((error=TSProviderEntities.addTE(tEntity)) != 0){
+							// Error adding the tracing entity
+							agree_response=false;
+							response_msg = new ACLMessage(ACLMessage.REFUSE);
+							response_msg.setReceiver(msg.getSender());
+							response_msg.setContent("publish#" + newService.getName() + ":Error registering tracing entity as provider");
+							logger.info("[TRACE MANAGER]: Sending REFUSE message to " + msg.getReceiver().toString());
+						}
+						else{
+							added_TSP=true;
+						}
+					}
+					
 					// Add tracing service
-					if (agree_response){
-						if ((tService=TracingServices.getTS(newService)) == null){
-							// The tracing service does not exist
-							if ((error=TracingServices.addTS(newService)) != 0){
-								// Impossible to add tracing service
-								if (added_TE) {
-									TracingEntities.removeTE(msg.getSender());
-								}
-								agree_response=false;
-								response_msg = new ACLMessage(ACLMessage.REFUSE);
-								response_msg.setReceiver(msg.getSender());
-								response_msg.setContent("publish#" + newService.getName() + ":Error registering tracing service");
-								logger.info("[TRACE MANAGER]: sending REFUSE message to " + msg.getReceiver().toString());
-							}
-							else{
-								added_TS=true;
-							}
+					if (agree_response && ((tService=TracingServices.getTS(newService)) == null)){
+						// The tracing service does not exist
+						if ((error=TracingServices.addTS(newService)) != 0){
+							// Impossible to add tracing service
+							agree_response=false;
+							response_msg = new ACLMessage(ACLMessage.REFUSE);
+							response_msg.setReceiver(msg.getSender());
+							response_msg.setContent("publish#" + newService.getName() + ":Error registering tracing service");
+							logger.info("[TRACE MANAGER]: Sending REFUSE message to " + msg.getReceiver().toString());
+						}
+						else{
+							added_TS=true;
 						}
 					}
 					
 					// Add the service provider to the tracing service
-					if (agree_response){
-						if ((error=newService.getProviders().addTE(tEntity)) != 0){
-							if (added_TS){
-								TracingServices.removeTS(newService);
-							}
-							if (added_TE){
-								TracingEntities.removeTE(msg.getSender());
-							}
-							response_msg = new ACLMessage(ACLMessage.REFUSE);
-							response_msg.setReceiver(msg.getSender());
-							switch (error){
-								case -1:
-									// Unknown error
-									response_msg.setContent("publish#" + newService.getName() + ":Error adding a provider for the service");
-									logger.info("[TRACE MANAGER]: sending REFUSE message to " + msg.getReceiver().toString());
-									break;
-								case -2:
-									// Duplicate service provider
-									response_msg.setContent("publish#" + newService.getName() + ":Service already published");
-									logger.info("[TRACE MANAGER]: sending REFUSE message to " + msg.getReceiver().toString());
-									break;
-								default:
-									response_msg.setContent("publish#" + newService.getName() + ":Error publishing tracing service");
-									logger.info("[TRACE MANAGER]: sending REFUSE message to " + msg.getReceiver().toString());
-							}
-							agree_response=false;
+					if (agree_response && ((error=newService.getProviders().addTE(tEntity)) != 0)){
+						response_msg = new ACLMessage(ACLMessage.REFUSE);
+						response_msg.setReceiver(msg.getSender());
+						switch (error){
+							case -1:
+								// Unknown error
+								response_msg.setContent("publish#" + newService.getName() + ":Error adding a provider for the service");
+								logger.info("[TRACE MANAGER]: Sending REFUSE message to " + msg.getReceiver().toString());
+								break;
+							case -2:
+								// Duplicate service provider
+								response_msg.setContent("publish#" + newService.getName() + ":Service already published");
+								logger.info("[TRACE MANAGER]: Sending REFUSE message to " + msg.getReceiver().toString());
+								break;
+							default:
+								response_msg.setContent("publish#" + newService.getName() + ":Error publishing tracing service");
+								logger.info("[TRACE MANAGER]: Sending REFUSE message to " + msg.getReceiver().toString());
 						}
+						agree_response=false;
 					}
 					
 					if (agree_response){
 						response_msg = new ACLMessage(ACLMessage.AGREE);
 						response_msg.setReceiver(msg.getSender());
 						response_msg.setContent("publish#" + newService.getName());
-						logger.info("[TRACE MANAGER]: sending AGREE message to " + msg.getReceiver().toString());
+						logger.info("[TRACE MANAGER]: Sending AGREE message to " + msg.getReceiver().toString());
+					}
+					else{
+						if (added_TS){
+							TracingServices.removeTS(newService);
+						}
+						if (added_TSP) {
+							TSProviderEntities.removeTE(msg.getSender());
+						}
+						if (added_TE){
+							TracingEntities.removeTE(msg.getSender());
+						}
 					}
 				}
 				else if (command.equals("unpublish")){
@@ -260,62 +270,65 @@ public class TraceManager extends BaseAgent{
 						response_msg = new ACLMessage(ACLMessage.REFUSE);
 						response_msg.setReceiver(msg.getSender());
 						response_msg.setContent("unpublish#" + serviceName + ":Tracing entity not publishing any service");
-						logger.info("[TRACE MANAGER]: sending REFUSE message to " + msg.getReceiver().toString());
+						logger.info("[TRACE MANAGER]: Sending REFUSE message to " + msg.getSender().toString());
 					}
-					
-					if (agree_response){
-						if ((tService=TracingServices.getTSByName(serviceName)) == null){
-							// The tracing service does not exist
-							agree_response=false;
-							response_msg = new ACLMessage(ACLMessage.REFUSE);
-							response_msg.setReceiver(msg.getSender());
-							response_msg.setContent("unpublish#" + serviceName + ":Tracing service not found");
-						}
-						else{
-							if (tService.getProviders().removeTE(msg.getSender()) != 0){
-								// The service is not offered by the tracing entity
-								agree_response=false;
-								response_msg = new ACLMessage(ACLMessage.REFUSE);
-								response_msg.setReceiver(msg.getSender());
-								response_msg.setContent("unpublish#" + serviceName + ":Tracing entity not publishing the specified service");
-							}
-							else{
-								// Remove subscriptions to that service
-								if ((removeList=tService.getSubscriptions().removeAllTSSFromProvider(msg.getSender())) != null){
+					else if ((tService=TracingServices.getTSByName(serviceName)) == null){
+						// The tracing service does not exist
+						agree_response=false;
+						response_msg = new ACLMessage(ACLMessage.REFUSE);
+						response_msg.setReceiver(msg.getSender());
+						response_msg.setContent("unpublish#" + serviceName + ":Tracing service not found");
+						logger.info("[TRACE MANAGER]: Sending REFUSE message to " + msg.getReceiver().toString());
+					}
+					else if (tService.getProviders().removeTE(msg.getSender()) != 0){
+						// The service is not offered by the tracing entity
+						agree_response=false;
+						response_msg = new ACLMessage(ACLMessage.REFUSE);
+						response_msg.setReceiver(msg.getSender());
+						response_msg.setContent("unpublish#" + serviceName + ":Tracing entity not publishing the specified service");
+						logger.info("[TRACE MANAGER]: Sending REFUSE message to " + msg.getReceiver().toString());
+					}
+					else{
+						// Remove subscriptions to that service
+						if ((removeList=tService.getSubscriptions().removeAllTSSFromProvider(msg.getSender())) != null){
 									
-									tEntity=new TracingEntity(TracingEntity.AGENT, this.getAid());
-									
-									while (removeList.getLength() > 0){
-										tServiceSubscription=removeList.getFirstSubscription();
-										// Send UNAVAILABLE_TS trace event
-										if (tServiceSubscription.getAnyProvider()){
-											tEventContent=TracingService.DI_TracingServices[TracingService.UNAVAILABLE_TS].getName() + "#" +
-											serviceName + "#any";
-										}
-										else{
-											tEventContent=TracingService.DI_TracingServices[TracingService.UNAVAILABLE_TS].getName() + "#" +
-											serviceName + msg.getSender();
-										}
-										
-										tEvent=new TraceEvent(TracingService.DI_TracingServices[TracingService.UNAVAILABLE_TS].getName(),
-												tEntity, tEventContent);
-										sendSystemTraceEvent(tEvent, tServiceSubscription.getSubscriptorEntity());
-								    	
-										if ((error=removeList.removeFirstTSS()) != 0){
-											// Something went wrong
-											agree_response=false;
-											response_msg = new ACLMessage(ACLMessage.REFUSE);
-											response_msg.setReceiver(msg.getSender());
-											response_msg.setContent("unpublish#" + serviceName + ":Error sending system events");
-										}
-									}
-								}
+							tEntity=new TracingEntity(TracingEntity.AGENT, this.getAid());
+							
+							while (removeList.getLength() > 0){
+								// Unsubscribe and send UNAVAILABLE_TS trace event
+								tServiceSubscription=removeList.getFirstSubscription();
 								
-								if (tService.getProviders().getLength() == 0){
-									// Tracing service was only offered by the specified tracing entity
-									TracingServices.removeTS(tService);
+								if (tServiceSubscription.getAnyProvider()){
+									tEventContent=TracingService.DI_TracingServices[TracingService.UNAVAILABLE_TS].getName() + "#" +
+									serviceName + "#any";
+									// Remove subscription
+									this.session.exchangeUnbind(msg.getSender().name+".trace", "amq.match", serviceName + "#any", Option.NONE);
+								}
+								else{
+									tEventContent=TracingService.DI_TracingServices[TracingService.UNAVAILABLE_TS].getName() + "#" +
+									serviceName + msg.getSender();
+									// Remove subscription
+									this.session.exchangeUnbind(msg.getSender().name+".trace", "amq.match", serviceName + "#" + msg.getSender(), Option.NONE);
+								}								
+								
+								tEvent=new TraceEvent(TracingService.DI_TracingServices[TracingService.UNAVAILABLE_TS].getName(),
+										tEntity, tEventContent);
+								sendSystemTraceEvent(tEvent, tServiceSubscription.getSubscriptorEntity());
+								    	
+								if ((error=removeList.removeFirstTSS()) != 0){
+									// Something went wrong
+									agree_response=false;
+									response_msg = new ACLMessage(ACLMessage.REFUSE);
+									response_msg.setReceiver(msg.getSender());
+									response_msg.setContent("unpublish#" + serviceName + ":Error sending system events");
+									logger.info("[TRACE MANAGER]: Sending REFUSE message to " + msg.getReceiver().toString());
 								}
 							}
+						}
+								
+						if (tService.getProviders().getLength() == 0){
+							// Tracing service was only offered by the specified tracing entity
+							TracingServices.removeTS(tService);
 						}
 					}
 					
@@ -323,9 +336,8 @@ public class TraceManager extends BaseAgent{
 						response_msg = new ACLMessage(ACLMessage.AGREE);
 						response_msg.setReceiver(msg.getSender());
 						response_msg.setContent("unpublish#" + serviceName + ":Tracing service unpublished");
+						logger.info("[TRACE MANAGER]: Sending AGREE message to " + msg.getReceiver().toString());
 					}
-					
-					logger.info("[TRACE MANAGER]: sending message to " + msg.getReceiver().toString());
 				}
 				else {
 					/**
@@ -334,7 +346,7 @@ public class TraceManager extends BaseAgent{
 			    	response_msg = new ACLMessage(ACLMessage.UNKNOWN);
 			    	response_msg.setReceiver(msg.getSender());
 					response_msg.setContent(content);
-					logger.info("[TRACE MANAGER]: returning UNKNOWN message to " + msg.getReceiver().toString());
+					logger.info("[TRACE MANAGER]: Returning UNKNOWN message to " + msg.getReceiver().toString());
 				}
 				
 				send(response_msg);
@@ -437,7 +449,7 @@ public class TraceManager extends BaseAgent{
 					arguments.put("x-match", "all");
 			    	arguments.put("tracing_service", serviceName);
 			    	
-			    	if (!originEntity.equals("any")) {
+			    	if (!originEntity.contentEquals("any")) {
 			    		arguments.put("origin_entity", originEntity);
 			    	}
 			    	

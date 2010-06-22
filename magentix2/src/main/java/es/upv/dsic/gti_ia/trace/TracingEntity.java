@@ -59,6 +59,18 @@ public class TracingEntity {
 		}
 	}
 	
+	public boolean hasTheSameAidAs(AgentID aid){
+		if (this.getAid().host.contentEquals(aid.host) &&
+			this.getAid().name.contentEquals(aid.name) &&
+			this.getAid().port.contentEquals(aid.port) &&
+			this.getAid().protocol.contentEquals(aid.protocol)){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+	
 	public String toReadableString(){
 		switch (this.type){
 			case TracingEntity.AGENT:

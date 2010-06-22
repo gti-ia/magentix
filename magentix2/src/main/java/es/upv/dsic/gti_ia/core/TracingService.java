@@ -146,8 +146,8 @@ public class TracingService {
 	public TracingService () {
 		this.name = null;
 		this.description = null;
-		this.providers = null;
-		this.subscriptions = null;
+		this.providers = new TracingEntityList();
+		this.subscriptions = new TracingServiceSubscriptionList();
 	}
 	
 	public TracingService (String serviceName, String description) {
