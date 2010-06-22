@@ -146,7 +146,10 @@ public class OMSProxy {
 		if (!this.value.equals("Ok")) {
 			throw new Exception("Inform Agent Role " + this.value);
 		} else
-			return this.list;
+		{
+			return new ArrayList<String>(this.list);
+			//return this.list;
+		}
 
 	}
 
@@ -177,7 +180,10 @@ public class OMSProxy {
 		if (!this.value.equals("Ok")) {
 			throw new Exception("Inform Members " + this.value);
 		} else
-			return this.list;
+		{
+			return new ArrayList<String>(this.list);
+			//return this.list;
+		}
 
 	}
 
@@ -207,7 +213,10 @@ public class OMSProxy {
 		if (!this.value.equals("Ok")) {
 			throw new Exception("Inform Role Norms " + this.value);
 		} else
-			return this.list;
+		{
+			return new ArrayList<String>(this.list);
+			//return this.list;
+		}
 
 	}
 
@@ -235,7 +244,10 @@ public class OMSProxy {
 		if (!this.value.equals("Ok")) {
 			throw new Exception("Inform Role Profiles " + this.value);
 		} else
-			return this.list;
+		{
+			return new ArrayList<String>(this.list);
+			//return this.list;
+		}
 
 	}
 
@@ -262,7 +274,10 @@ public class OMSProxy {
 		if (!this.value.contains("Ok")) {
 			throw new Exception("Inform Unit " + this.value);
 		} else
-			return this.list;
+		{
+			return new ArrayList<String>(this.list);
+			//return this.list;
+		}
 
 	}
 
@@ -291,7 +306,10 @@ public class OMSProxy {
 		if (!this.value.equals("Ok")) {
 			throw new Exception("Inform Unit Roles " + this.value);
 		} else
-			return this.list;
+		{
+			return new ArrayList<String>(this.list);
+			//return this.list;
+		}
 
 	}
 
