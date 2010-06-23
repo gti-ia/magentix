@@ -52,13 +52,13 @@ public class Run {
 			/**
 			 * Instantiating the consumer agent
 			 */
-			//ConsumerAgent consumer = new ConsumerAgent(new AgentID("qpid://consumer@localhost:8080"));
+			ConsumerAgent consumer = new ConsumerAgent(new AgentID("qpid://consumer@localhost:8080"));
 			//ConsumerAgent consumer = new ConsumerAgent(new AgentID("consumer"));
 
 			/**
 			 * Execute the agents
 			 */
-			//consumer.start();
+			consumer.start();
 			sender.start();
 
 		} catch (Exception e) {
