@@ -27,24 +27,14 @@
 <entry key="ssl">true</entry>
 
 <!-- Secure qpid properties -->
+<entry key="secureMode">true</entry>
 <entry key="saslMechs">EXTERNAL</entry>
-<entry key="saslProtocol">qpidd</entry>
-<entry key="saslServerName">produccion</entry>
-<entry key="KeyStorePath">produccion</entry>
-<entry key="KeyStorePassword">produccion</entry>
-<entry key="KeyStoreCertType">produccion</entry>
-<entry key="TrustStorePath">produccion</entry>
-<entry key="TrustStorePassword">produccion</entry>
-<entry key="KeyStoreCertType">produccion</entry>
+
 
 
 <!-- Properties jena -->
 <entry key="dbURL">jdbc:mysql://localhost/thomas</entry>
 <entry key="dbType">MySQL</entry>
 <entry key="dbDriver">com.mysql.jdbc.Driver</entry>
-
-
-
-
 
 </properties>
