@@ -142,16 +142,16 @@ public class BaseAgent implements Runnable {
 				connectSettings.setPassword(c.getqpidPassword());
 				connectSettings.setUseSSL(c.getqpidSSL());
 				connectSettings.setSaslMechs(c.getqpidsaslMechs());
+				
 				//Accedemos al fichero de configuración de seguirdad del usuario.
 				connectSettings.setKeyStorePassword(propSecurity
 						.getProperty("KeyStorePassword"));
+				
 				connectSettings.setKeyStorePath(propSecurity
 						.getProperty("KeyStorePath"));
-				connectSettings.setKeyStoreCertType(propSecurity
-						.getProperty("KeyStoreCertType"));
+
 				connectSettings.setCertAlias(certAlias);
-				connectSettings.setTrustStoreCertType(propSecurity
-						.getProperty("TrustStoreCertType"));
+				
 				connectSettings.setTrustStorePassword(propSecurity
 						.getProperty("TrustStorePassword"));
 				connectSettings.setTrustStorePath(propSecurity
