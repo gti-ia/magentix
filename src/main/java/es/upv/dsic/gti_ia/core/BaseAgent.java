@@ -1,14 +1,12 @@
 package es.upv.dsic.gti_ia.core;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Date;
-
-
-
-
-
+import java.util.Properties;
 
 import org.apache.log4j.Logger;
-
 
 import org.apache.qpid.transport.Connection;
 import org.apache.qpid.transport.ConnectionSettings;
@@ -23,6 +21,9 @@ import org.apache.qpid.transport.Option;
 import org.apache.qpid.transport.Session;
 import org.apache.qpid.transport.SessionException;
 import org.apache.qpid.transport.SessionListener;
+
+import es.upv.dsic.gti_ia.secure.SecurityTools;
+
 /**
  * @author Ricard Lopez Fogues
  * @author Sergio Pajares Ferrando
@@ -34,7 +35,10 @@ public class BaseAgent implements Runnable {
 	 * The logger variable considers to print any event that occurs by the agent
 	 */
 	protected Logger logger = Logger.getLogger(BaseAgent.class);
-	private  es.upv.dsic.gti_ia.organization.Configuration c = es.upv.dsic.gti_ia.organization.Configuration.getConfiguration();
+	private es.upv.dsic.gti_ia.organization.Configuration c = es.upv.dsic.gti_ia.organization.Configuration
+			.getConfiguration();
+	// Variable para controlar cuando salta una excepción en el broker.
+	private int sessionCommandsIn = 0;
 
 	/**
 	 * @uml.property name="aid"
@@ -45,9 +49,7 @@ public class BaseAgent implements Runnable {
 	 * @uml.property name="connection"
 	 */
 	private Connection connection;
-	
 
-	
 	/**
 	 * @uml.property name="session"
 	 */
@@ -65,7 +67,12 @@ public class BaseAgent implements Runnable {
 		}
 
 		public void message(Session ssn, MessageTransfer xfr) {
-			ACLMessage msg = MessageTransfertoACLMessage(xfr);
+			ACLMessage msg = null;
+			try {
+				msg = MessageTransfertoACLMessage(xfr);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			onMessage(msg);
 		}
 
@@ -83,68 +90,7 @@ public class BaseAgent implements Runnable {
 	 * @uml.associationEnd
 	 */
 	private Listener listener;
-	
 
-	public BaseAgent(AgentID aid, String keyStorePath, String key, String CertType) throws Exception
-	{
-		if (AgentsConnection.isSecured())
-		{
-			//si esta activo el modulo de seguridad:
-				//deberemos crear una conexion por cada agente
-			connection = new Connection();
-			
-		//	this.ClientOptions.put("keyStore","/home/joabelfa/wokspace/c++/certificates/clientV2/keystore.jks");
-			
-			
-			//connect = new AMQConnection(,,),,ssl_configuration,);
-			 //path = "/home/joabelfa/wokspace/c++/certificates/clientV2/keystore.jks";//podria extraerlo del Settings.xml
-		
-			
-			
-			ConnectionSettings connectSettings = new ConnectionSettings();
-			
-			
-			connectSettings.setHost(c.getqpidHost());
-			connectSettings.setPort(c.getqpidPort());
-			connectSettings.setVhost(c.getqpidVhost());
-			connectSettings.setUsername(c.getqpidUser());
-			connectSettings.setPassword(c.getqpidPassword());
-			connectSettings.setUseSSL(c.getqpidSSL());
-			connectSettings.setSaslMechs(c.getqpidsaslMechs());
-			connectSettings.setKeyStorePassword(key);
-			connectSettings.setKeyStorePath(keyStorePath);
-			connectSettings.setKeyStoreCertType(CertType);
-			//connectSettings.setTrustStoreCertType("SunX509");
-			//connectSettings.setTrustStorePassword("key123");
-			//connectSettings.setTrustStorePath("/home/joabelfa/wokspace/c++/certificates/client/certstore.jks");
-			//connectSettings.setCertAlias("mydomain");
-			
-		
-
-			try{
-			connection.connect(connectSettings);
-			}catch(Exception e)
-			{
-				System.out.println("Error in connect: "+ e);
-			}
-
-			//connection.connect(c.getqpidHost(),c.getqpidPort(),c.getqpidVhost(),c.getqpidUser(),c.getqpidPassword(),true,c.getqpidsaslMechs());
-				//ademas de un certificado que le pasaremos a esa conexion
-			this.session = createSession();
-			if (this.existAgent(aid)) {
-				session.close();
-				throw new Exception("Agent ID already exists on the platform");
-			} else {
-				this.aid = aid;
-				this.listener = new Listener();
-				myThread = new Thread(this);
-				createQueue();
-				createBind();
-				createSubscription();
-			}
-				
-		}
-	}
 	/**
 	 * Creates a new agent in an open broker connection
 	 * 
@@ -158,16 +104,78 @@ public class BaseAgent implements Runnable {
 	 */
 	public BaseAgent(AgentID aid) throws Exception {
 
-		
-		if (AgentsConnection.connection == null) {
-			logger
-					.error("Before create a agent, the qpid broker connection is necesary");
-			throw new Exception("Error doesn't work the broken connection");
-		} else {
-			this.connection = AgentsConnection.connection;
-		}
-		
+		// Si no estamos en modo seguro funcionara como siempre, es por tant
+		// transparente al programador.
+		if (c.isSecureMode()) {
 
+			SecurityTools st = SecurityTools.GetInstance();
+			Properties propSecurity = new Properties();
+			try {
+				//Nuevo fichero para la configuración de datos para las seguridad.
+				propSecurity.load(new FileInputStream("./configuration/securityUser.properties"));
+			} catch (FileNotFoundException e) {
+				logger.error(e);
+			} catch (IOException e) {
+				logger.error(e);
+				e.printStackTrace();
+			}
+
+			//Vemos si el usuario ya posee algún certificado para ese agente. Se comprueba también la validez.
+			//Este método es el encargado de crear todo el proceso de solicitud y creación de certificados para los 
+			//agentes del usuario. Podemos encontrarlo en la clas SecurityTools del paquete secure.
+			if (st.generateAllProcessCertificate(aid.name)) {
+
+				
+
+				//El alias sera el mismo que el nombre del agente
+				connection = null;
+				String certAlias = aid.name;
+				
+				// deberemos crear una conexion por cada agente del usuario.
+				connection = new Connection();
+				ConnectionSettings connectSettings = new ConnectionSettings();
+
+				connectSettings.setHost(c.getqpidHost());
+				connectSettings.setPort(c.getqpidPort());
+				connectSettings.setVhost(c.getqpidVhost());
+				connectSettings.setUsername(c.getqpidUser());
+				connectSettings.setPassword(c.getqpidPassword());
+				connectSettings.setUseSSL(c.getqpidSSL());
+				connectSettings.setSaslMechs(c.getqpidsaslMechs());
+				//Accedemos al fichero de configuración de seguirdad del usuario.
+				connectSettings.setKeyStorePassword(propSecurity
+						.getProperty("KeyStorePassword"));
+				connectSettings.setKeyStorePath(propSecurity
+						.getProperty("KeyStorePath"));
+				connectSettings.setKeyStoreCertType(propSecurity
+						.getProperty("KeyStoreCertType"));
+				connectSettings.setCertAlias(certAlias);
+				connectSettings.setTrustStoreCertType(propSecurity
+						.getProperty("TrustStoreCertType"));
+				connectSettings.setTrustStorePassword(propSecurity
+						.getProperty("TrustStorePassword"));
+				connectSettings.setTrustStorePath(propSecurity
+						.getProperty("TrustStorePath"));
+
+				try {
+					connection.connect(connectSettings);
+				} catch (Exception e) {
+					System.out.println("Error in connect: " + e);
+				}
+			}
+
+			
+		} else {
+			if (AgentsConnection.connection == null) {
+				logger
+						.error("Before create a agent, the qpid broker connection is necesary");
+				throw new Exception("Error doesn't work the broken connection");
+			} else {
+				this.connection = AgentsConnection.connection;
+			}
+
+		}
+		//Esta parte es la misma que cuando no es modo seguro.
 		this.session = createSession();
 		if (this.existAgent(aid)) {
 			session.close();
@@ -180,7 +188,20 @@ public class BaseAgent implements Runnable {
 			createBind();
 			createSubscription();
 		}
-		
+
+	}
+
+	//Cuando el agente infringe alguna regla de seguridad, la política del broker es destruir la sesión 
+	//del usuario, que no la conexión. Por tanto este método recarga la session creando una nueva.
+	
+	private void reloadSession() {
+
+		this.session = this.createSession();
+		this.createQueue();
+		this.createBind();
+		this.createSubscription();
+		this.sessionCommandsIn = this.session.getCommandsIn();
+
 	}
 
 	/**
@@ -189,6 +210,7 @@ public class BaseAgent implements Runnable {
 	 * @return The new Session
 	 */
 	private Session createSession() {
+
 		Session session = this.connection.createSession(0);
 
 		return session;
@@ -198,7 +220,8 @@ public class BaseAgent implements Runnable {
 	 * Creates queue the agent will listen to for messages *
 	 */
 	private void createQueue() {
-		this.session.queueDeclare(aid.name, null, null, Option.AUTO_DELETE);	
+		this.session.queueDeclare(aid.name, null, null, Option.AUTO_DELETE);
+
 	}
 
 	/**
@@ -207,7 +230,7 @@ public class BaseAgent implements Runnable {
 	private void createBind() {
 		// this.session.exchangeBind(aid.name, aid.name, null, null);
 		this.session.exchangeBind(aid.name, "amq.direct", aid.name, null);
-		
+
 	}
 
 	/**
@@ -216,8 +239,7 @@ public class BaseAgent implements Runnable {
 	 */
 	private void createSubscription() {
 		this.session.setSessionListener(this.listener);
-		
-		
+
 		this.session.messageSubscribe(aid.name, "listener_destination",
 				MessageAcceptMode.NONE, MessageAcquireMode.PRE_ACQUIRED, null,
 				0, null);
@@ -226,29 +248,41 @@ public class BaseAgent implements Runnable {
 				MessageCreditUnit.BYTE, Session.UNLIMITED_CREDIT);
 		this.session.messageFlow("listener_destination",
 				MessageCreditUnit.MESSAGE, Session.UNLIMITED_CREDIT);
-		
+
 	}
 
 	/**
 	 * 
-	 * Sends a ACLMessage to all specified recipients agents. If a message destination having another platform, this will be forwarded to BridgeAgentInOut agent.
+	 * Unbind the exchange and the agent queue
+	 */
+	private void unbindExchange() {
+
+		this.session.exchangeUnbind(aid.name, "amq.direct", aid.name);
+	}
+
+	/**
+	 * 
+	 * Sends a ACLMessage to all specified recipients agents. If a message
+	 * destination having another platform, this will be forwarded to
+	 * BridgeAgentInOut agent.
+	 * 
 	 * @param msg
-	 *         
+	 * 
 	 */
 	public void send(ACLMessage msg) {
-		
+
 		DeliveryProperties deliveryProps = new DeliveryProperties();
 		deliveryProps.setRoutingKey("routing_key");
-		
+
 		MessageProperties messageProperties = new MessageProperties();
-		
+
 		MessageTransfer xfr = new MessageTransfer();
 
 		xfr.destination("amq.direct");
 		xfr.acceptMode(MessageAcceptMode.EXPLICIT);
 		xfr.acquireMode(MessageAcquireMode.PRE_ACQUIRED);
 
-		
+		// deliveryProps.deliveryMode(MessageDeliveryMode.PERSISTENT);
 
 		// Serialize message content
 		String body;
@@ -283,15 +317,19 @@ public class BaseAgent implements Runnable {
 		// content
 		body = body + msg.getContent().length() + "#" + msg.getContent();
 
-		
 		xfr.setBody(body);
-		/*
-		try{
-			messageProperties.setUserId(msg.getSender().toString().getBytes("UTF-8"));
-		}catch (java.io.UnsupportedEncodingException e) {}
-		System.out.println("User ID: "+ messageProperties.getUserId());
-*/
-		
+
+		//Esto forma parte de la implementación para el soporte del no repudio por parte de los agentes.
+		//Obligamos a que en el mensaje se envie la identidad verdadera del agente emisor.
+		if (c.isSecureMode()) {
+			try {
+				messageProperties.setUserId(msg.getSender().name.toString()
+						.getBytes("UTF-8"));
+			} catch (java.io.UnsupportedEncodingException e) {
+				System.err.println("Caught exception " + e.toString());
+			}
+		}
+
 		for (int i = 0; i < msg.getTotalReceivers(); i++) {
 			// If protocol is not qpid then the message goes outside the
 			// platform
@@ -301,13 +339,32 @@ public class BaseAgent implements Runnable {
 				deliveryProps.setRoutingKey(msg.getReceiver(i).name);
 			}
 			xfr.header(new Header(deliveryProps));
-			//session.messageTransfer(xfr.getDestination(), xfr.getAcceptMode(),
-				//	xfr.getAcquireMode(), xfr.getHeader(), xfr.getBodyString());
-			
-			session.messageTransfer(xfr.getDestination(), xfr.getAcceptMode(),
-					xfr.getAcquireMode(),new Header(deliveryProps,messageProperties), xfr.getBodyString());
-			
+			// session.messageTransfer(xfr.getDestination(),
+			// xfr.getAcceptMode(),
+			// xfr.getAcquireMode(), xfr.getHeader(), xfr.getBodyString());
+			try {
+
+				// Si el broker destruye la session por una accion no permitida
+				// realizada anteriormente.
+				if (session.getCommandsIn() == this.sessionCommandsIn + 1) {
+					this.reloadSession();
+				}
+
+				session.messageTransfer(xfr.getDestination(), xfr
+						.getAcceptMode(), xfr.getAcquireMode(), new Header(
+						deliveryProps, messageProperties), xfr.getBodyString());
+
+			} catch (SessionException e) {
+
+				this.reloadSession();
+				logger.error(e.getMessage());
+			} catch (Exception e) {
+				System.err.println("Caught exception " + e.toString());
+
+			}
+
 		}
+
 	}
 
 	/**
@@ -319,21 +376,25 @@ public class BaseAgent implements Runnable {
 		return aid.name;
 	}
 
-	/**Define activities such as initialization resources, and every task necessary before execution of execute procedure.
-	 * It will be executed when the agent will be launched and may be defined by the user.
+	/**
+	 * Define activities such as initialization resources, and every task
+	 * necessary before execution of execute procedure. It will be executed when
+	 * the agent will be launched and may be defined by the user.
 	 * 
 	 */
 
 	protected void init() {
 
 	}
+
 	/**
-	 * Method that defines all the logic and behavior of the agent.
-	 * This method necessarily must be defined.
+	 * Method that defines all the logic and behavior of the agent. This method
+	 * necessarily must be defined.
 	 */
 	protected void execute() {
 
 	}
+
 	/**
 	 * 
 	 */
@@ -355,15 +416,14 @@ public class BaseAgent implements Runnable {
 	/**
 	 * Function that will be executed when the agent terminates
 	 */
-	protected void terminate() { 
+	protected void terminate() {
 
-		this.session.exchangeUnbind(aid.name,"amq.direct", aid.name);
-		
-	
-		//session.queueDelete(aid.name);
-		//session.close();
-		session.closed();
-	
+		this.unbindExchange();
+		// if (AgentsConnection.isSecure())
+		// this.deleteQueue();
+		session.close();
+		this.connection.close();
+
 	}
 
 	/**
@@ -388,7 +448,9 @@ public class BaseAgent implements Runnable {
 	 **************************************************************************/
 
 	/**
-	 *Returns a structure as the Agent Identificator formed by the name, protocol, host and port Agent.
+	 *Returns a structure as the Agent Identificator formed by the name,
+	 * protocol, host and port Agent.
+	 * 
 	 * @return agent ID
 	 * @uml.property name="aid"
 	 */
@@ -414,7 +476,8 @@ public class BaseAgent implements Runnable {
 	 *            MessageTransfer
 	 * @return ACLMessage
 	 */
-	public final ACLMessage MessageTransfertoACLMessage(MessageTransfer xfr) {
+	public final ACLMessage MessageTransfertoACLMessage(MessageTransfer xfr)
+			throws Exception {
 
 		// des-serializamos el mensaje
 		// inicializaciones
@@ -524,17 +587,29 @@ public class BaseAgent implements Runnable {
 		tam = Integer.parseInt(body.substring(indice1, indice2));
 		// Content
 		msg.setContent(body.substring(indice2 + 1, indice2 + 1 + tam));
-		/*
+
 		MessageProperties mp = xfr.getHeader().get(MessageProperties.class);
-		if(mp == null)
-			System.out.println("NOOOOOOOOOOOO MessageProperties!");
-		else
-			try{
-				System.out.println("El mensaje me ha dicho que es de:"+ msg.getSender().name + "pero es: "+ new java.lang.String(mp.getUserId(),"UTF-8"));
-		        	
-			}catch (java.io.UnsupportedEncodingException e) {}
-			*/
-			
+
+		
+		if (c.isSecureMode()) {
+			if (mp == null)
+				throw new Exception(
+						"In Magentix Secure mode, the UserID is required in message.");
+
+			else
+				try {
+					if (!msg.getSender().name.equals(new java.lang.String(mp
+							.getUserId(), "UTF-8")))
+						throw new Exception(
+								"Sender field ("
+										+ msg.getSender().name
+										+ ") doesn't match with the name of the sender agent ("
+										+ new java.lang.String(mp.getUserId(),
+												"UTF-8") + ")");
+				} catch (java.io.UnsupportedEncodingException e) {
+				}
+		}
+
 		return msg;
 	}
 
