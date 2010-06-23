@@ -50,21 +50,21 @@ public class TracingServiceList {
 	private TS_Node first;
 	private TS_Node last;
 	private int length;
-	AgentID ownerAid;
+//	AgentID ownerAid;
 	
 	public TracingServiceList () {
 		this.first = null;
 		this.last = null;
 		this.length = 0;
-		this.ownerAid=null;
+//		this.ownerAid=null;
 	}
 	
-	public TracingServiceList (AgentID owner) {
-		this.first = null;
-		this.last = null;
-		this.length = 0;
-		this.ownerAid=owner;
-	}
+//	public TracingServiceList (AgentID owner) {
+//		this.first = null;
+//		this.last = null;
+//		this.length = 0;
+//		this.ownerAid=owner;
+//	}
 	
 	public TS_Node getFirst () {
 		return this.first;
@@ -78,9 +78,9 @@ public class TracingServiceList {
 		return this.length;
 	}
 	
-	public AgentID getOwnerAid(){
-		return this.ownerAid;
-	}
+//	public AgentID getOwnerAid(){
+//		return this.ownerAid;
+//	}
 	
 	private TS_Node getTS_NodeByName(String name){
 		int i;

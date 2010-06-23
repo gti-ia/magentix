@@ -62,11 +62,11 @@ public class TracingServiceSubscriptionList {
 		this.length = 0;
 	}
 	
-	public TracingServiceSubscriptionList (AgentID owner){
-		this.first = null;
-		this.last = null;
-		this.length = 0;
-	}
+//	public TracingServiceSubscriptionList (AgentID owner){
+//		this.first = null;
+//		this.last = null;
+//		this.length = 0;
+//	}
 	
 	public TSS_Node getFirst(){
 		return this.first;
@@ -134,8 +134,8 @@ public class TracingServiceSubscriptionList {
 		
 		if (originAid != null){
 			for (i=0, node=this.first; i < this.length; i++, node=node.getNext()){
-				if ((node.getTSSubscription().getSubscriptorEntity().getAid().equals(subscriptorAid)) &&
-					(node.getTSSubscription().getOriginEntity().getAid().equals(originAid)) &&
+				if ((node.getTSSubscription().getSubscriptorEntity().hasTheSameAidAs(subscriptorAid)) &&
+					(node.getTSSubscription().getOriginEntity().hasTheSameAidAs(originAid)) &&
 					 node.getTSSubscription().getTracingService().getName().contentEquals(serviceName)){
 					
 					return node.getTSSubscription();
@@ -144,7 +144,7 @@ public class TracingServiceSubscriptionList {
 		}
 		else{
 			for (i=0, node=this.first; i < this.length; i++, node=node.getNext()){
-				if ((node.getTSSubscription().getSubscriptorEntity().getAid().equals(subscriptorAid)) &&
+				if ((node.getTSSubscription().getSubscriptorEntity().hasTheSameAidAs(subscriptorAid)) &&
 					 node.getTSSubscription().getAnyProvider() &&
 					 node.getTSSubscription().getTracingService().getName().contentEquals(serviceName)){
 					return node.getTSSubscription();
@@ -397,8 +397,12 @@ public class TracingServiceSubscriptionList {
 		TracingServiceSubscriptionList returnList = new TracingServiceSubscriptionList();
 		
 		if (this.getLength() == 1){
-			if (this.getFirst().getTSSubscription().getOriginEntity().hasTheSameAidAs(providerAid)){
-				// Only one provider -> Remove all subscriptions
+			// Only one subscription -> Remove it only if it corresponds to the
+			// specified provider or if it is an "any" subscription and there are no more
+			// providers
+			if ((this.getFirst().getTSSubscription().getOriginEntity().hasTheSameAidAs(providerAid)) ||
+				(this.getFirst().getTSSubscription().getAnyProvider() && (this.getFirstSubscription().getTracingService().getProviders().getLength() == 1))){
+					
 				for (i=0, node=this.first; i < this.length; i++){
 					returnList.addTSS(node.TSSubscription);
 					removed_node=node;
@@ -413,11 +417,14 @@ public class TracingServiceSubscriptionList {
 				return returnList;
 			}
 			else{
-				// Error: The origin entity does not exist in the list
+				// No subscription to be removed
 				return null;
 			}
 		}
 		else{
+			// For each service, check if there is only one provider.
+			// If so, remove all subscriptions to the service,
+			// otherwise, remove only those which are not "any" subscriptions
 			for (i=0, node=this.first; i < this.length; i++){
 				if ((node.getTSSubscription().getOriginEntity().hasTheSameAidAs(providerAid))){
 					returnList.addTSS(node.TSSubscription);

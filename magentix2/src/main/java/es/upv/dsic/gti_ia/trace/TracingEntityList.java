@@ -57,21 +57,21 @@ public class TracingEntityList {
 	private TE_Node first;
 	private TE_Node last;
 	private int length;
-	private AgentID ownerAid; 
+//	private AgentID ownerAid; 
 	
 	public TracingEntityList(){
 		this.first=null;
 		this.last=null;
 		this.length=0;
-		this.ownerAid=null;
+//		this.ownerAid=null;
 	}
 	
-	public TracingEntityList(AgentID owner){
-		this.first=null;
-		this.last=null;
-		this.length=0;
-		this.ownerAid=owner;
-	}
+//	public TracingEntityList(AgentID owner){
+//		this.first=null;
+//		this.last=null;
+//		this.length=0;
+//		this.ownerAid=owner;
+//	}
 	
 //	private void setFirst(TE_Node first){
 //		this.first=first;
@@ -101,9 +101,9 @@ public class TracingEntityList {
 		return this.last;
 	}
 	
-	public AgentID getOwnerAid(){
-		return this.ownerAid;
-	}
+//	public AgentID getOwnerAid(){
+//		return this.ownerAid;
+//	}
 		
 	private TE_Node getTE_NodeByAid(AgentID aid){
 		int i;
