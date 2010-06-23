@@ -35,12 +35,23 @@ public class Configuration {
 	private String jenadbDriver;
 	private static Configuration configuration = null;
 	
+	private boolean isSecure = false;
+	
 
 
 	private Configuration()
 	{
 		this.load();
 
+	}
+	
+	/**
+	 * If the platform is in secure mode or not
+	 * @return isSecure
+	 */
+	public boolean isSecureMode()
+	{
+		return this.isSecure;
 	}
 	
 	/**
@@ -313,6 +324,13 @@ public class Configuration {
 			    else    if (obj.toString().equalsIgnoreCase("dbDriver"))
 			    {
 			    	this.jenadbDriver = properties.getProperty(obj.toString()); 	
+			    }
+			    else    if (obj.toString().equalsIgnoreCase("secureMode"))
+			    {
+			    	if (properties.getProperty(obj.toString()).equals("true"))
+			    		this.isSecure = true;
+			    	else
+			    		this.isSecure = false;
 			    }
 	
 			}
