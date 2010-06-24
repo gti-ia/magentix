@@ -297,6 +297,7 @@ public class TracingServiceSubscriptionList {
 			return 0;
 		}
 	}
+	
 	/**
 	 * Remove a tracing service subscription from the list
 	 * @param subscriptorAid
@@ -305,11 +306,19 @@ public class TracingServiceSubscriptionList {
 	 * 		Aid of the origin agent. A null value is interpreted as an "any" subscription
 	 * @param serviceName
 	 * 		Name of the tracing service
-	 * @return
-	 * 		The corresponding TracingServiceSusbscription in case it exists
-	 * 		or null otherwise
+	 * 
+	 * @return 0
+	 * 		Success: The tracing service subscription has been removed from
+	 * 			the end of the list
+	 * 
+	 * @return -1
+	 * 		Internal values of the list are not correct. There is
+	 * 		something really wrong if this happens :-S
+	 * 
+	 * @return -2
+	 * 		Subscription not found
 	 */
-	public TracingServiceSubscription removeTSS(AgentID subscriptorAid, AgentID originAid, String serviceName){
+	public int removeTSS(AgentID subscriptorAid, AgentID originAid, String serviceName){
 		int i;
 		TSS_Node node;
 		
@@ -318,8 +327,39 @@ public class TracingServiceSubscriptionList {
 				if ((node.getTSSubscription().getSubscriptorEntity().hasTheSameAidAs(subscriptorAid)) &&
 					(node.getTSSubscription().getOriginEntity().hasTheSameAidAs(originAid)) &&
 					 node.getTSSubscription().getTracingService().getName().contentEquals(serviceName)){
+					// Subscription found
+					if (node.prev == null){
+						// node is the first in the list
+						if (this.length == 1){
+							// Empty the list
+							this.first=null;
+							this.last=null;
+						}
+						else{
+							//node=this.first;
+							this.first=node.next;
+							node.next=null;
+							this.first.prev=null;
+						}
+					}
+					else if (node.next == null){
+						// tss is the last provider in the list
+						//node=this.last;
+						this.last=node.prev;
+						this.last.next=null;
+						node.prev=null;
+					}
+					else{
+						node.prev.next=node.next;
+						node.next.prev=node.prev;
+						node.prev=null;
+						node.next=null;
+					}
 					
-					return node.getTSSubscription();
+					this.length--;
+					node.TSSubscription=null;
+					
+					return 0;
 				}
 			}
 		}
@@ -328,73 +368,151 @@ public class TracingServiceSubscriptionList {
 				if ((node.getTSSubscription().getSubscriptorEntity().hasTheSameAidAs(subscriptorAid)) &&
 					 node.getTSSubscription().getAnyProvider() &&
 					 node.getTSSubscription().getTracingService().getName().contentEquals(serviceName)){
-					return node.getTSSubscription();
+					// Subscription found
+					if (node.prev == null){
+						// node is the first in the list
+						if (this.length == 1){
+							// Empty the list
+							this.first=null;
+							this.last=null;
+						}
+						else{
+							//node=this.first;
+							this.first=node.next;
+							node.next=null;
+							this.first.prev=null;
+						}
+					}
+					else if (node.next == null){
+						// tss is the last provider in the list
+						//node=this.last;
+						this.last=node.prev;
+						this.last.next=null;
+						node.prev=null;
+					}
+					else{
+						node.prev.next=node.next;
+						node.next.prev=node.prev;
+						node.prev=null;
+						node.next=null;
+					}
+					
+					this.length--;
+					node.TSSubscription=null;
+					
+					return 0;
 				}
 			}
 		}
 		
-		return null;
+		return -2;
 	}
+	
 	/**
-	 * Remove the specified Subscription from the list
-	 * 
-	 * @param aid
-	 * 		AgentID of the origin entity which provides the tracing service
-	 * 
-	 * @param serviceName
-	 * 		Name of the tracing service in the subscription
+	 * Remove a tracing service subscription from the list
+	 * @param TSSubscription
+	 * 		Subscription to be removed
 	 * 
 	 * @return 0
 	 * 		Success: The tracing service subscription has been removed from
 	 * 			the end of the list
 	 * 
 	 * @return -1
-	 * 		Subscription not found
-	 * 
-	 * @return -2
 	 * 		Internal values of the list are not correct. There is
 	 * 		something really wrong if this happens :-S
+	 * 
+	 * @return -2
+	 * 		Subscription not found
 	 */
-//	public int removeTSS(AgentID aid, String serviceName){
-//		TSS_Node tss;
-//		
-//		if ((tss=this.getTSS_NodeByAidAndTServiceName(aid, serviceName)) == null){
-//			// Service provider does not exist
-//			return -1;
-//		}
-//		else{
-//			if (tss.getPrev() == null){
-//				// tss is the first in the list
-//				if (this.length == 1){
-//					// Empty the list
-//					this.first=null;
-//					this.last=null;
-//				}
-//				else{
-//					tss=this.first;
-//					this.first=tss.getNext();
-//					tss.setNext(null);
-//					this.first.setPrev(null);
-//				}
-//			}
-//			else if (tss.getNext() == null){
-//				// tss is the last provider in the list
-//				tss=this.last;
-//				this.last=tss.getPrev();
-//				this.last.setNext(null);
-//				tss.setPrev(null);
-//			}
-//			else{
-//				tss.getPrev().setNext(tss.getNext());
-//				tss.getNext().setPrev(tss.getPrev());
-//				tss.setPrev(null);
-//				tss.setNext(null);
-//			}
-//		}
-//		
-//		this.length--;
-//		return 0;
-//	}
+	public int removeTSS(TracingServiceSubscription TSSubscription){
+		int i;
+		TSS_Node node;
+		
+		if (TSSubscription.getOriginEntity() != null){
+			for (i=0, node=this.first; i < this.length; i++, node=node.getNext()){
+				if ((node.getTSSubscription().getSubscriptorEntity().hasTheSameAidAs(TSSubscription.getSubscriptorEntity().getAid())) &&
+					(node.getTSSubscription().getOriginEntity().hasTheSameAidAs(TSSubscription.getOriginEntity().getAid())) &&
+					 node.getTSSubscription().getTracingService().getName().contentEquals(TSSubscription.getTracingService().getName())){
+					// Subscription found
+					if (node.prev == null){
+						// node is the first in the list
+						if (this.length == 1){
+							// Empty the list
+							this.first=null;
+							this.last=null;
+						}
+						else{
+							//node=this.first;
+							this.first=node.next;
+							node.next=null;
+							this.first.prev=null;
+						}
+					}
+					else if (node.next == null){
+						// tss is the last provider in the list
+						//node=this.last;
+						this.last=node.prev;
+						this.last.next=null;
+						node.prev=null;
+					}
+					else{
+						node.prev.next=node.next;
+						node.next.prev=node.prev;
+						node.prev=null;
+						node.next=null;
+					}
+					
+					this.length--;
+					node.TSSubscription=null;
+					
+					return 0;
+				}
+			}
+		}
+		else{
+			for (i=0, node=this.first; i < this.length; i++, node=node.getNext()){
+				if ((node.getTSSubscription().getSubscriptorEntity().hasTheSameAidAs(TSSubscription.getSubscriptorEntity().getAid())) &&
+					(node.getTSSubscription().getAnyProvider()) &&
+					 node.getTSSubscription().getTracingService().getName().contentEquals(TSSubscription.getTracingService().getName())){
+					// Subscription found
+					if (node.prev == null){
+						// node is the first in the list
+						if (this.length == 1){
+							// Empty the list
+							this.first=null;
+							this.last=null;
+						}
+						else{
+							//node=this.first;
+							this.first=node.next;
+							node.next=null;
+							this.first.prev=null;
+						}
+					}
+					else if (node.next == null){
+						// tss is the last provider in the list
+						//node=this.last;
+						this.last=node.prev;
+						this.last.next=null;
+						node.prev=null;
+					}
+					else{
+						node.prev.next=node.next;
+						node.next.prev=node.prev;
+						node.prev=null;
+						node.next=null;
+					}
+					
+					this.length--;
+					node.TSSubscription=null;
+					
+					return 0;
+				}
+			}
+		}
+		
+		return -2;
+	}
 	
 	public TracingServiceSubscriptionList getAllTSSFromProvider(AgentID providerAid){
 		int i;
@@ -443,10 +561,10 @@ public class TracingServiceSubscriptionList {
 				for (i=0, node=this.first; i < this.length; i++){
 					returnList.addTSS(node.TSSubscription);
 					removed_node=node;
-					node=node.getNext();
-					removed_node.setNext(null);
-					removed_node.setPrev(null);
-					removed_node.setTSSubscription(null);
+					node=node.next;
+					removed_node.next=null;
+					removed_node.prev=null;
+					removed_node.TSSubscription=null;
 				}
 				this.first=null;
 				this.last=null;
@@ -459,11 +577,12 @@ public class TracingServiceSubscriptionList {
 			}
 		}
 		else{
-			// For each service, check if there is only one provider.
-			// If so, remove all subscriptions to the service,
-			// otherwise, remove only those which are not "any" subscriptions
+			// For each subscription, check if the provider corresponds or if it is an "any"
+			// subscription and the service has only one provider.
+			// If so, add the subscription to the return list and remove it from the list
 			for (i=0, node=this.first; i < this.length; i++){
-				if ((node.getTSSubscription().getOriginEntity().hasTheSameAidAs(providerAid))){
+				if ((node.getTSSubscription().getOriginEntity().hasTheSameAidAs(providerAid)) ||
+					(node.getTSSubscription().getAnyProvider() && (node.getTSSubscription().getTracingService().getProviders().getLength() == 1))){
 					returnList.addTSS(node.TSSubscription);
 					removed_node=node;
 					node=node.getNext();
@@ -485,17 +604,17 @@ public class TracingServiceSubscriptionList {
 						this.last.setNext(null);
 					}
 					else{
-						removed_node.getPrev().setNext(removed_node.getNext());
-						removed_node.getNext().setPrev(removed_node.getPrev());
+						removed_node.prev.next=removed_node.next;
+						removed_node.next.prev=removed_node.prev;
 					}
 					this.length--;
 			    	
-			    	removed_node.setNext(null);
-					removed_node.setPrev(null);
-					removed_node.setTSSubscription(null);
+			    	removed_node.next=null;
+					removed_node.prev=null;
+					removed_node.TSSubscription=null;
 				}
 				else{
-					node=node.getNext();
+					node=node.next;
 				}
 			}
 			return returnList;

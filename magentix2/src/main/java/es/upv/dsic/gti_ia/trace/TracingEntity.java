@@ -1,6 +1,7 @@
 package es.upv.dsic.gti_ia.trace;
 
 import es.upv.dsic.gti_ia.core.AgentID;
+import es.upv.dsic.gti_ia.core.TracingService;
 
 /**
  * 
@@ -57,6 +58,97 @@ public class TracingEntity {
 			this.type=type;
 			return 0;
 		}
+	}
+	
+	/**
+	 * Add a new subscription to the tracing entity
+	 * @param newTracingServiceSubscription
+	 * 		TracingServiceSubscription to be added to the list
+	 * @return 0
+	 * 		Success: The new subscription has been added at
+	 * 			the end of the list
+	 * @return -1
+	 * 		Duplicate subscription: A tracing entity with the specified
+	 * 			origin entity and tracing service already exists in the list
+	 * @return -2
+	 * 		Internal values of the list are not correct. There is
+	 * 		something really wrong if this happens :-S
+	 */
+	public int addSubscription (TracingServiceSubscription newSubscription){
+		return this.subscribedToTS.addTSS(newSubscription);
+	}
+	
+	/**
+	 * Add a new subscription to the tracing entity for the specified tracing service provided by the specified
+	 * origin AgentID to the list
+	 * 
+	 * @param subscriptorEntity
+	 * 		Tracing entity which wants to subscribe to the tracing service
+	 *  
+	 * @param originEntity
+	 * 		Tracing entity which provides the tracing service.
+	 * 		For subscribing to any provider, a null value has to be specified
+	 * 
+	 * @param service
+	 * 		Tracing Service 
+	 * 
+	 * @return 0
+	 * 		Success: The new tracing service subscription has been added at
+	 * 			the end of the list
+	 * @return -1
+	 * 		Internal values of the list are not correct. There is
+	 * 		something really wrong if this happens :-S
+	 * 
+	 * @return -2
+	 * 		Duplicate AgentID: A subscription to the tracing service provided by the specified
+	 * 			origin entity already exists in the list
+	 */
+	public int addSubscription (TracingEntity subscriptorEntity, TracingEntity originEntity, TracingService service){
+		return this.subscribedToTS.addTSS(subscriptorEntity, originEntity, service);
+	}
+	
+	/**
+	 * Remove a tracing service subscription from the list
+	 * @param subscriptorAid
+	 * 		Aid of the agent which is subscribed
+	 * @param originAid
+	 * 		Aid of the origin agent. A null value is interpreted as an "any" subscription
+	 * @param serviceName
+	 * 		Name of the tracing service
+	 * 
+	 * @return 0
+	 * 		Success: The tracing service subscription has been removed from
+	 * 			the end of the list
+	 * 
+	 * @return -1
+	 * 		Internal values of the list are not correct. There is
+	 * 		something really wrong if this happens :-S
+	 * 
+	 * @return -2
+	 * 		Subscription not found
+	 */
+	public int removeSubscription(AgentID subscriptorAid, AgentID originAid, String serviceName){
+		return this.subscribedToTS.removeTSS(subscriptorAid, originAid, serviceName);
+	}
+	
+	/**
+	 * Remove a tracing service subscription from the list
+	 * @param TSSubscription
+	 * 		Subscription to be removed
+	 * 
+	 * @return 0
+	 * 		Success: The tracing service subscription has been removed from
+	 * 			the end of the list
+	 * 
+	 * @return -1
+	 * 		Internal values of the list are not correct. There is
+	 * 		something really wrong if this happens :-S
+	 * 
+	 * @return -2
+	 * 		Subscription not found
+	 */
+	public int removeSubscription(TracingServiceSubscription TSSubscription){
+		return this.subscribedToTS.removeTSS(TSSubscription);
 	}
 	
 	public boolean hasTheSameAidAs(AgentID aid){

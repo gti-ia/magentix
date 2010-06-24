@@ -193,10 +193,10 @@ public class TracingService {
 		return this.providers.removeTE(providerAid);
 	}
 	
-//	public int removeSubscriptionsWithProvider(AgentID providerAid){
-//		return this.subscriptions.removeAllTSSFromProvider(providerAid);
-//	}
-//	
+	public TracingServiceSubscriptionList removeSubscriptionsWithProvider(AgentID providerAid){
+		return this.subscriptions.removeAllTSSFromProvider(providerAid);
+	}
+	
 //	public int removeSubscriptionsWithProvider(TracingEntity provider){
 //		return this.subscriptions.removeAllTSSFromProvider(provider);
 //	}

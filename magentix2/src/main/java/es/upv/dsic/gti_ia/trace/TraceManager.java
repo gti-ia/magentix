@@ -273,7 +273,8 @@ public class TraceManager extends BaseAgent{
 						response_msg.setContent("unpublish#" + serviceName + ":Tracing entity not publishing any service");
 						logger.info("[TRACE MANAGER]: Sending REFUSE message to " + msg.getSender().toString());
 					}
-					else if ((tService=TracingServices.getTSByName(serviceName)) == null){
+					
+					if (agree_response && ((tService=TracingServices.getTSByName(serviceName)) == null)){
 						// The tracing service does not exist
 						agree_response=false;
 						response_msg = new ACLMessage(ACLMessage.REFUSE);
@@ -281,7 +282,57 @@ public class TraceManager extends BaseAgent{
 						response_msg.setContent("unpublish#" + serviceName + ":Tracing service not found");
 						logger.info("[TRACE MANAGER]: Sending REFUSE message to " + msg.getReceiver().toString());
 					}
-					else if (tService.getProviders().removeTE(msg.getSender()) != 0){
+					
+					// Remove all subscriptions and send the corresponding trace events to subscriptors
+					if (agree_response && (removeList=tService.removeSubscriptionsWithProvider(msg.getSender())) != null){
+						tEntity=new TracingEntity(TracingEntity.AGENT, this.getAid());
+						while (removeList.getLength() > 0){
+							tServiceSubscription=removeList.getFirstSubscription();
+							if ((tServiceSubscription.getSubscriptorEntity().removeSubscription(tServiceSubscription) != 0) ||
+								(removeList.removeFirstTSS() != 0)){
+								agree_response=false;
+								response_msg = new ACLMessage(ACLMessage.REFUSE);
+								response_msg.setReceiver(msg.getSender());
+								response_msg.setContent("unpublish#" + serviceName + ":Error removing subscriptions");
+								logger.info("[TRACE MANAGER]: Sending REFUSE message to " + msg.getReceiver().toString());
+								break;
+							}
+							else{
+								if (tServiceSubscription.getAnyProvider()){
+									tEventContent=TracingService.DI_TracingServices[TracingService.UNAVAILABLE_TS].getName() + "#" +
+									serviceName + "#any";
+									// Remove subscription
+									this.session.exchangeUnbind(msg.getSender().name+".trace", "amq.match", serviceName + "#any", Option.NONE);
+								}
+								else{
+									tEventContent=TracingService.DI_TracingServices[TracingService.UNAVAILABLE_TS].getName() + "#" +
+									serviceName + msg.getSender();
+									// Remove subscription
+									this.session.exchangeUnbind(msg.getSender().name+".trace", "amq.match", serviceName + "#" + msg.getSender(), Option.NONE);
+								}
+								
+								tEvent=new TraceEvent(TracingService.DI_TracingServices[TracingService.UNAVAILABLE_TS].getName(),
+										tEntity, tEventContent);
+								sendSystemTraceEvent(tEvent, tServiceSubscription.getSubscriptorEntity());
+								
+								if ((error=removeList.removeFirstTSS()) != 0){
+									// Something went wrong
+									agree_response=false;
+									response_msg = new ACLMessage(ACLMessage.REFUSE);
+									response_msg.setReceiver(msg.getSender());
+									response_msg.setContent("unpublish#" + serviceName + ":Error sending system events");
+									logger.info("[TRACE MANAGER]: Sending REFUSE message to " + msg.getReceiver().toString());
+									break;
+								}
+							}
+						}
+						
+						if (tService.getProviders().getLength() == 0){
+							TracingServices.removeTS(tService);
+						}
+					}
+					
+					if (agree_response && (tService.getProviders().removeTE(msg.getSender()) != 0)){
 						// The service is not offered by the tracing entity
 						agree_response=false;
 						response_msg = new ACLMessage(ACLMessage.REFUSE);
@@ -289,6 +340,22 @@ public class TraceManager extends BaseAgent{
 						response_msg.setContent("unpublish#" + serviceName + ":Tracing entity not publishing the specified service");
 						logger.info("[TRACE MANAGER]: Sending REFUSE message to " + msg.getReceiver().toString());
 					}
+					else if (tService.getProviders().getLength() == 0){
+						// Remove the tracing service, since it has no more providers
+						if (TracingServices.removeTS(tService) != 0){
+							// The service is not offered by the tracing entity
+							agree_response=false;
+							response_msg = new ACLMessage(ACLMessage.REFUSE);
+							response_msg.setReceiver(msg.getSender());
+							response_msg.setContent("unpublish#" + serviceName + ":Tracing entity not publishing the specified service");
+							logger.info("[TRACE MANAGER]: Sending REFUSE message to " + msg.getReceiver().toString());
+						}
+					}
+					
+					
+					
+//					if (agree_response && ())
+					
 					else{
 						// Remove subscriptions to that service
 						if ((removeList=tService.getSubscriptions().removeAllTSSFromProvider(msg.getSender())) != null){
@@ -459,6 +526,7 @@ public class TraceManager extends BaseAgent{
 					// Add subscription
 					tServiceSubscription=new TracingServiceSubscription(tEntity, originTEntity, tService);
 					tService.addSubscription(tServiceSubscription);
+					tEntity.addSubscription(tServiceSubscription);
 					
 					arguments.put("x-match", "all");
 			    	arguments.put("tracing_service", serviceName);
@@ -573,11 +641,9 @@ public class TraceManager extends BaseAgent{
 					}
 				}
 				
-				if (agree_response &&
-					(tServiceSubscription=TSSubscriptorEntities.getTEByAid(msg.getSender()).getSubscribedToTS().getTSS(msg.getSender(), originAid, serviceName)))
-				
 				// Check for the subscription to remove
-				if (agree_response && ((tServiceSubscription=tService.getSubscriptions().getTSS(msg.getSender(), originAid, serviceName)) == null)){
+				if (agree_response &&
+					(tService.getSubscriptions().removeTSS(msg.getSender(), originAid, serviceName) != 0)){
 					// Subscription not found
 					agree_response=false;
 					response_msg = new ACLMessage(ACLMessage.REFUSE);
@@ -586,14 +652,13 @@ public class TraceManager extends BaseAgent{
 					logger.info("[TRACE MANAGER]: sending REFUSE message to " + msg.getReceiver().toString());
 				}
 				
-				if (agree_response && (TSSubscriptorEntities.getTEByAid(msg.getSender()).getSubscribedToTS() != 0)){
-					// TODO: Add method to TracingServiceSubscriptionList which allows removing a subscription
-					//      FROM THIS LINE ON, THE TRACE MANAGER IS NOT USABLE!!!
-					// Subscriptor not found
+				if (agree_response &&
+					(tEntity.getSubscribedToTS().removeTSS(msg.getSender(), originAid, serviceName) != 0)){
+					// Subscription not found
 					agree_response=false;
 					response_msg = new ACLMessage(ACLMessage.REFUSE);
 					response_msg.setReceiver(msg.getSender());
-					response_msg.setContent("unsubscribe#" + serviceName + ":Subscriptor not found");
+					response_msg.setContent("unsubscribe#" + serviceName + ":Subscription not found");
 					logger.info("[TRACE MANAGER]: sending REFUSE message to " + msg.getReceiver().toString());
 				}
 				
@@ -610,62 +675,15 @@ public class TraceManager extends BaseAgent{
 					
 					tEvent=new TraceEvent(TracingService.DI_TracingServices[TracingService.UNSUBSCRIBE].getName(),
 							tEntity, tEventContent);
-					sendSystemTraceEvent(tEvent, tServiceSubscription.getSubscriptorEntity());
+					sendSystemTraceEvent(tEvent, tEntity);
 					
 					/**
 					 * Building a ACLMessage
 					 */
 					response_msg = new ACLMessage(ACLMessage.AGREE);
 					response_msg.setReceiver(msg.getSender());
-					response_msg.setContent("subscribe#" + serviceName + "#" + originEntity);
-					logger.info("[TRACE MANAGER]: sending REFUSE message to " + msg.getReceiver().toString());
-				}
-			}
-				
-				if ((originAid != null) &&
-						((originTEntity=tService.getProviders().getTEByAid(originAid)) == null)){
-					// Origin tracing entity not found
-					agree_response=false;
-					response_msg = new ACLMessage(ACLMessage.REFUSE);
-					response_msg.setReceiver(msg.getSender());
-					response_msg.setContent("unsubscribe#" + serviceName + ":Provider entity not found");
-					logger.info("[TRACE MANAGER]: sending REFUSE message to " + msg.getReceiver().toString());
-				}
-				else{
-					// Check for the subscription to remove
-					if ((tServiceSubscription=tService.getSubscriptions().getTSS(msg.getSender(), originAid, serviceName)) == null){
-						// Subscription not found
-						agree_response=false;
-						response_msg = new ACLMessage(ACLMessage.REFUSE);
-						response_msg.setReceiver(msg.getSender());
-						response_msg.setContent("unsubscribe#" + serviceName + ":Subscription not found");
-						logger.info("[TRACE MANAGER]: sending REFUSE message to " + msg.getReceiver().toString());
-					}
-					else{
-						// Remove subscription
-						this.session.exchangeUnbind(msg.getSender().name+".trace", "amq.match", serviceName + "#" + originEntity, Option.NONE);
-						//logger.info("[TRACE MANAGER]: unbinding " + msg.getSender().name+".trace from " + eventType);
-						
-						TSSubscriptorEntities.removeTE(msg.getSender());
-						
-						// Send system trace event
-						tEntity=new TracingEntity(TracingEntity.AGENT, this.getAid());
-						
-						tEventContent=TracingService.DI_TracingServices[TracingService.UNSUBSCRIBE].getName() + "#" +
-						serviceName + originEntity;
-						
-						tEvent=new TraceEvent(TracingService.DI_TracingServices[TracingService.UNSUBSCRIBE].getName(),
-								tEntity, tEventContent);
-						sendSystemTraceEvent(tEvent, tServiceSubscription.getSubscriptorEntity());
-						
-						/**
-						 * Building a ACLMessage
-						 */
-						response_msg = new ACLMessage(ACLMessage.AGREE);
-						response_msg.setReceiver(msg.getSender());
-						response_msg.setContent("subscribe#" + serviceName + "#" + originEntity);
-						logger.info("[TRACE MANAGER]: sending REFUSE message to " + msg.getReceiver().toString());
-					}
+					response_msg.setContent("unsubscribe#" + serviceName + "#" + originEntity);
+					logger.info("[TRACE MANAGER]: sending AGREE message to " + msg.getReceiver().toString());
 				}
 				
 				/**
