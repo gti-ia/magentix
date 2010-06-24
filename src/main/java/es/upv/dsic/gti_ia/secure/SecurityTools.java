@@ -128,7 +128,10 @@ public class SecurityTools {
 				+ propSecurityUser.getProperty("path");
 		
 
-			// Cargamos el keystore
+			// Cargamos el keystore si es
+		
+		//TODO provisonal, se debe cambiar
+		
 			KeyStore keystoreUser = this.getKeyStore(path,pass);
 
 			
@@ -141,6 +144,7 @@ public class SecurityTools {
 				this.importCACertificateInToCertStore(keystoreUser,
 						propSecurityUser, path, pass);
 			}
+		
 
 			// Vemos si tiene ya el certificado del agente y es valido
 
@@ -250,6 +254,7 @@ public class SecurityTools {
 		String path = propSecurityUser.getProperty("KeyStorePath");
 		String type = propSecurityUser.getProperty("KeyStoreCertType");
 		String aliasMMS = propSecurityUser.getProperty("aliasMMS");
+	
 		try {
 
 			RampartConfig rampartConfig = new RampartConfig();
@@ -286,9 +291,9 @@ public class SecurityTools {
 				String pkcs11ConfigFile = "./configuration/dnie_linux.cfg";
 				Provider pkcs11Provider = new sun.security.pkcs11.SunPKCS11(pkcs11ConfigFile);
 				Security.addProvider(pkcs11Provider);
-				props.setProperty("org.apache.ws.security.crypto.merlin.keystore.type",type);
-				props.setProperty("org.apache.ws.security.crypto.merlin.file",path);
-				props.setProperty("org.apache.ws.security.crypto.merlin.keystore.password",	pass);
+				props.setProperty("org.apache.ws.security.crypto.merlin.keystore.type",propSecurityUser.getProperty("dnieType"));
+				props.setProperty("org.apache.ws.security.crypto.merlin.file",propSecurityUser.getProperty("dniePath"));
+				props.setProperty("org.apache.ws.security.crypto.merlin.keystore.password",	propSecurityUser.getProperty("dniePin"));
 				break;
 			case 1 : 
 				props.setProperty("org.apache.ws.security.crypto.merlin.keystore.type",type);
@@ -307,11 +312,11 @@ public class SecurityTools {
 			// autenticarse contra el MMS
 
 			System.setProperty("javax.net.ssl.type", propSecurityUser
-					.getProperty("TrustStoreCertType"));
+					.getProperty("KeyStoreCertType"));
 			System.setProperty("javax.net.ssl.trustStore", propSecurityUser
-					.getProperty("TrustStorePath"));
+					.getProperty("KeyStorePath"));
 			System.setProperty("javax.net.ssl.trustStorePassword",
-					propSecurityUser.getProperty("TrustStorePassword"));
+					propSecurityUser.getProperty("KeyStorePassword"));
 			
 
 			sigCrypto.setProp(props);
