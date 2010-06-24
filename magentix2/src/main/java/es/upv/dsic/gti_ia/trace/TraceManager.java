@@ -573,6 +573,9 @@ public class TraceManager extends BaseAgent{
 					}
 				}
 				
+				if (agree_response &&
+					(tServiceSubscription=TSSubscriptorEntities.getTEByAid(msg.getSender()).getSubscribedToTS().getTSS(msg.getSender(), originAid, serviceName)))
+				
 				// Check for the subscription to remove
 				if (agree_response && ((tServiceSubscription=tService.getSubscriptions().getTSS(msg.getSender(), originAid, serviceName)) == null)){
 					// Subscription not found

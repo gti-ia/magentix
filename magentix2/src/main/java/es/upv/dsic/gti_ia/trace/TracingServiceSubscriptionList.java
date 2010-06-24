@@ -297,7 +297,44 @@ public class TracingServiceSubscriptionList {
 			return 0;
 		}
 	}
-	
+	/**
+	 * Remove a tracing service subscription from the list
+	 * @param subscriptorAid
+	 * 		Aid of the agent which is subscribed
+	 * @param originAid
+	 * 		Aid of the origin agent. A null value is interpreted as an "any" subscription
+	 * @param serviceName
+	 * 		Name of the tracing service
+	 * @return
+	 * 		The corresponding TracingServiceSusbscription in case it exists
+	 * 		or null otherwise
+	 */
+	public TracingServiceSubscription removeTSS(AgentID subscriptorAid, AgentID originAid, String serviceName){
+		int i;
+		TSS_Node node;
+		
+		if (originAid != null){
+			for (i=0, node=this.first; i < this.length; i++, node=node.getNext()){
+				if ((node.getTSSubscription().getSubscriptorEntity().hasTheSameAidAs(subscriptorAid)) &&
+					(node.getTSSubscription().getOriginEntity().hasTheSameAidAs(originAid)) &&
+					 node.getTSSubscription().getTracingService().getName().contentEquals(serviceName)){
+					
+					return node.getTSSubscription();
+				}
+			}
+		}
+		else{
+			for (i=0, node=this.first; i < this.length; i++, node=node.getNext()){
+				if ((node.getTSSubscription().getSubscriptorEntity().hasTheSameAidAs(subscriptorAid)) &&
+					 node.getTSSubscription().getAnyProvider() &&
+					 node.getTSSubscription().getTracingService().getName().contentEquals(serviceName)){
+					return node.getTSSubscription();
+				}
+			}
+		}
+		
+		return null;
+	}
 	/**
 	 * Remove the specified Subscription from the list
 	 * 
