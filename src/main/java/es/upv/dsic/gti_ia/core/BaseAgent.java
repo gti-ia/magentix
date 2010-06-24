@@ -153,9 +153,9 @@ public class BaseAgent implements Runnable {
 				connectSettings.setCertAlias(certAlias);
 				
 				connectSettings.setTrustStorePassword(propSecurity
-						.getProperty("TrustStorePassword"));
+						.getProperty("KeyStorePassword"));
 				connectSettings.setTrustStorePath(propSecurity
-						.getProperty("TrustStorePath"));
+						.getProperty("KeyStorePath"));
 
 				try {
 					connection.connect(connectSettings);
