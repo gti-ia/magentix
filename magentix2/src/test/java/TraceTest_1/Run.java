@@ -1,4 +1,4 @@
-package TraceBasic;
+package TraceTest_1;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
@@ -60,8 +60,8 @@ public class Run {
 			 * Execute the agents
 			 */
 			coordinator.start();
-			//subscriber.start();
-			//publisher.start();
+			subscriber.start();
+			publisher.start();
 		} catch (Exception e) {
 			logger.error("Error  " + e.getMessage());
 		}

@@ -6,6 +6,7 @@ import java.util.Map;
 
 //import org.apache.log4j.Logger;
 //import org.apache.qpid.transport.Connection;
+import org.apache.log4j.Level;
 import org.apache.qpid.transport.DeliveryProperties;
 import org.apache.qpid.transport.Header;
 import org.apache.qpid.transport.MessageAcceptMode;
@@ -37,6 +38,8 @@ public class TraceManager extends BaseAgent{
 		super(aid);
         
         logger.info("[TRACE MANAGER]: Executing, I'm " + getName());
+        
+        logger.setLevel(Level.OFF);
         
         initialize();
 	}
