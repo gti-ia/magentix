@@ -81,6 +81,8 @@ public class AgentCertificate {
 	private HashMap<String, Object> hash = new HashMap<String, Object>();
 	private Session sess = new Session();
 	Properties properties = new Properties();
+	private ArrayList<String> reservedNames = new ArrayList<String>();
+	ByteArrayOutputStream outStream = null;
 
 	/**
 	 * This method return a new signed certificate, the common name is a name of agent. 
@@ -92,9 +94,10 @@ public class AgentCertificate {
 
 		// this.load();
 
+		reservedNames.add("mms");
 		try {
 			properties.load(new FileInputStream(
-					"./configuration/securityAdmin.properties"));
+					"./securityAdmin.properties"));
 		} catch (FileNotFoundException e) {
 			System.err.println(e);
 		} catch (IOException e) {
@@ -120,8 +123,8 @@ public class AgentCertificate {
 				// .get(WSSecurityEngineResult.TAG_X509_CERTIFICATE));
 
 				System.out.println("User name: " + username);
-
-
+				
+			
 				// Para poder comprobar el estado de revocación del dnie o otro
 				// certificado. Falta por hacer con https.
 
@@ -135,6 +138,12 @@ public class AgentCertificate {
 				 */
 			}
 
+			//Es un nombre que no reservado??
+
+			if (!reservedNames.contains(agentName))
+			{
+				
+			
 			System.out.println("Creating a new Agent certificate with Common Name= "
 					+ agentName);
 
@@ -171,14 +180,14 @@ public class AgentCertificate {
 			Certificate[] certs = this.generateAndSignedCertificate(x500Name,
 					sigAlg, validity, pke, pkey);
 
-			ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+			outStream = new ByteArrayOutputStream();
 			ObjectOutputStream os = new ObjectOutputStream(outStream);
 
 			os.writeObject(certs);
 			os.close();
 
 			// Especificar la ubicación del archivo del almacén de certificados
-			// en los que se confía, el mismo que el de broker.
+			// en los que se confía, el mismo que el del broker.
 			System.setProperty("javax.net.ssl.trustStore", properties
 					.getProperty("TrustStorePath"));
 			System.setProperty("javax.net.ssl.trustStorePassword", properties
@@ -192,10 +201,6 @@ public class AgentCertificate {
 					.getProperty("KeyStorePassword"));
 
 			// Conectamos con el broker
-			this.conectToBroker();
-
-			// Escribimos por cada agente las siguientes lineas.
-
 			String command = String.format("\n" + "acl allow " + agentName
 					+ "@QPID create queue name=" + agentName + "\n"
 					+ "acl allow " + agentName
@@ -203,11 +208,27 @@ public class AgentCertificate {
 					+ agentName);
 
 			this.writeAclFile(command);
+			
+			
+			this.conectToBroker();
+		
+			// Escribimos por cada agente las siguientes lineas.
+
+		
 
 			// Recargamos el fichero.
 			this.reloadACLFile();
-
+			
 			return outStream.toByteArray();
+			}
+			else
+			{
+				byte[] failed = "This name is reserved".getBytes();
+				return failed;
+			}
+
+			
+			
 
 		} catch (Exception e) {
 			System.err.println("Error caught: " + e);
@@ -235,11 +256,11 @@ public class AgentCertificate {
 		Provider p;
 		
 		prop.load(new FileInputStream(
-		"./configuration/securityAdmin.properties"));
+		"./securityAdmin.properties"));
 
 		String path = prop.getProperty("pathnsscfg");
-		String alias = prop.getProperty("aliasMMS");
-		String password = prop.getProperty("passowrd");
+		String alias = prop.getProperty("aliasCA");
+		String password = prop.getProperty("password");
 		String type = prop.getProperty("type");
 
 		
@@ -252,7 +273,7 @@ public class AgentCertificate {
 
 		
 		
-		
+
 
 		if (Security.getProvider("SunPKCS11-NSSkeystore") == null) {
 			p = new sun.security.pkcs11.SunPKCS11(path);
