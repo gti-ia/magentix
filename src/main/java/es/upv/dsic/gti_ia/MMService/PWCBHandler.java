@@ -22,7 +22,7 @@ public class PWCBHandler implements CallbackHandler
     	Properties prop = new Properties();
 		try {
 			prop.load(new FileInputStream(
-					"./configuration/securityAdmin.properties"));
+					"./securityAdmin.properties"));
 		} catch (FileNotFoundException e) {
 			System.err.println(e);
 		} catch (IOException e) {
@@ -35,11 +35,12 @@ public class PWCBHandler implements CallbackHandler
             int usage = pwcb.getUsage();
             if (usage == WSPasswordCallback.DECRYPT || usage == WSPasswordCallback.SIGNATURE) {
                 
+  
                 //Used to retrieve password for private key
-            	//serverkey es el alias, por tanto sera el password del keystore
-                if (prop.getProperty("alias").equals(id)) {
+                 if (prop.getProperty("alias").equals(id)) {
                     pwcb.setPassword(prop.getProperty("key"));
                 }
+                
   
             }
         }
