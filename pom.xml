@@ -266,11 +266,7 @@
 			<artifactId>qpid-common-seguridad</artifactId>
 			<version>0.7</version>
 		</dependency>
-		<dependency>
-			<groupId>org.apache</groupId>
-			<artifactId>qpid-management-console-seguridad</artifactId>
-			<version>0.7</version>
-		</dependency>
+
 		<dependency>
 			<groupId>bouncycastle</groupId>
 			<artifactId>bcprov-jdk16</artifactId>
