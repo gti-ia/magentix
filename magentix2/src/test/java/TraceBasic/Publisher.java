@@ -38,7 +38,7 @@ public class Publisher extends BaseAgent {
 		}
 		finish=false;
 		generator = new Random(System.currentTimeMillis());
-		coordinatorAid = new AgentID("qpid://publisher@localhost:8080");
+		coordinatorAid = new AgentID("qpid://coordinator@localhost:8080");
 		
 		System.out.println("[PUBLISHER]: Basic test start...");
 		
@@ -90,6 +90,7 @@ public class Publisher extends BaseAgent {
 		
 		for (i=0; i < MAX_SERVICES; i++){
 			ACLMessage coordination_msg = new ACLMessage(ACLMessage.INFORM);
+			coordination_msg.setSender(this.getAid());
 			coordination_msg.setReceiver(coordinatorAid);
 			coordination_msg.setContent("SENT:" + i + ":" + EventsSent[i]);
 			send(coordination_msg);

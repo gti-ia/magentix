@@ -49,7 +49,7 @@ public class Subscriber extends BaseAgent{
 //			}
 		}
 		finish=false;
-		coordinatorAid = new AgentID("qpid://publisher@localhost:8080");
+		coordinatorAid = new AgentID("qpid://coordinator@localhost:8080");
 	}
 
 	public void execute() {
@@ -78,6 +78,7 @@ public class Subscriber extends BaseAgent{
 		
     	for (i=0; i < MAX_SERVICES; i++){
 			ACLMessage coordination_msg = new ACLMessage(ACLMessage.INFORM);
+			coordination_msg.setSender(this.getAid());
 			coordination_msg.setReceiver(coordinatorAid);
 			coordination_msg.setContent("RECV:" + i + ":" + EventsReceived[i]);
 			send(coordination_msg);

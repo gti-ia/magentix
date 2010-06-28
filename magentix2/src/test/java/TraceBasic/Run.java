@@ -60,8 +60,8 @@ public class Run {
 			 * Execute the agents
 			 */
 			coordinator.start();
-			//subscriber.start();
-			//publisher.start();
+			subscriber.start();
+			publisher.start();
 		} catch (Exception e) {
 			logger.error("Error  " + e.getMessage());
 		}

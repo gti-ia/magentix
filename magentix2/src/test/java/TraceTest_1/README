@@ -1,12 +1,18 @@
-/*****************************************************************************************/
-/*                                      Trace_Basic                                      */
-/*****************************************************************************************/
-/*                     Author: Luis Burdalo (lburdalo@dsic.upv.es)                       */
-/*****************************************************************************************/
-/*                                     DESCRIPTION                                       */
-/*****************************************************************************************/
-
-    Simple battery of requests to make sure the Trace Manager does not let erroneous
-    publication/unpublication nor subscription/unsubscription
-
-/****************************************************************************************/
+/*****************************************************************************************
+/*                                      TraceTest_1                                      *
+/*****************************************************************************************
+/*                     Author: Luis Burdalo (lburdalo@dsic.upv.es)                       *
+/*****************************************************************************************
+/*                                     DESCRIPTION                                       *
+/*****************************************************************************************
+    Simple test with three agents: a PUBLISHER agent and a SUBSCRIBER agent.
+    
+    The PUBLISHER agent publishes a tracing service called 'DD_Test_TS' which content is
+    just a string. Each second, the publisher generates the trace event. After 10
+    seconds, the PUBLISHER unpublishes the tracing service and says 'Bye!'.
+    
+    The SUBSCRIBER agent subscribes to the tracing service 'DD_Test_TS' and waits for 10
+    seconds for trace events to arrive. After this time, the SUBSCRIBER agent
+    unsubscribes from the tracing service and says 'Bye!'. Each time a trace event is
+    received, the SUBSCRIBER prints its content on the screen.
+*****************************************************************************************/
