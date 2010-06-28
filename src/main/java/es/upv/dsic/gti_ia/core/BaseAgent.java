@@ -122,7 +122,7 @@ public class BaseAgent implements Runnable {
 
 			//Vemos si el usuario ya posee algún certificado para ese agente. Se comprueba también la validez.
 			//Este método es el encargado de crear todo el proceso de solicitud y creación de certificados para los 
-			//agentes del usuario. Podemos encontrarlo en la clas SecurityTools del paquete secure.
+			//agentes del usuario. Podemos encontrarlo en la clase SecurityTools del paquete secure.
 			if (st.generateAllProcessCertificate(aid.name)) {
 
 				
@@ -143,7 +143,7 @@ public class BaseAgent implements Runnable {
 				connectSettings.setUseSSL(c.getqpidSSL());
 				connectSettings.setSaslMechs(c.getqpidsaslMechs());
 				
-				//Accedemos al fichero de configuración de seguirdad del usuario.
+				//Accedemos al fichero de configuración de seguridad del usuario.
 				connectSettings.setKeyStorePassword(propSecurity
 						.getProperty("KeyStorePassword"));
 				
@@ -153,9 +153,9 @@ public class BaseAgent implements Runnable {
 				connectSettings.setCertAlias(certAlias);
 				
 				connectSettings.setTrustStorePassword(propSecurity
-						.getProperty("KeyStorePassword"));
+						.getProperty("TrustStorePassword"));
 				connectSettings.setTrustStorePath(propSecurity
-						.getProperty("KeyStorePath"));
+						.getProperty("TrustStorePath"));
 
 				try {
 					connection.connect(connectSettings);
