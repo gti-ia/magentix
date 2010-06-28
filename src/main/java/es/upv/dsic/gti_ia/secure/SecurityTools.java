@@ -139,7 +139,7 @@ public class SecurityTools {
 				keystoreUser = this.createKeyStore(path,pass);
 			// Miramos si tiene el certificado y ya tiene importado el
 			// certificado del MMS
-			if (!keystoreUser.containsAlias("MMS") || !keystoreUser.containsAlias("MMService")) {
+			if (!keystoreUser.containsAlias("MMS")) {
 				// Introducimos el certificado del CA
 				this.importCACertificateInToCertStore(keystoreUser,
 						propSecurityUser, path, pass);
@@ -252,7 +252,6 @@ public class SecurityTools {
 		
 		String pass = propSecurityUser.getProperty("KeyStorePassword");
 		String path = propSecurityUser.getProperty("KeyStorePath");
-		String type = propSecurityUser.getProperty("KeyStoreCertType");
 		String aliasMMS = propSecurityUser.getProperty("aliasMMS");
 	
 		try {
@@ -296,28 +295,14 @@ public class SecurityTools {
 				props.setProperty("org.apache.ws.security.crypto.merlin.keystore.password",	propSecurityUser.getProperty("dniePin"));
 				break;
 			case 1 : 
-				props.setProperty("org.apache.ws.security.crypto.merlin.keystore.type",type);
 				props.setProperty("org.apache.ws.security.crypto.merlin.file",path);
 				props.setProperty("org.apache.ws.security.crypto.merlin.keystore.password",pass);
 				break;
 			case 2 : break;
 			default: logger.error("What will be the certifying authority?");
 			}
-		
-			propsEncryption.setProperty("org.apache.ws.security.crypto.merlin.keystore.type",type);
 			propsEncryption.setProperty("org.apache.ws.security.crypto.merlin.file",path);
 			propsEncryption.setProperty("org.apache.ws.security.crypto.merlin.keystore.password",pass);
-
-			// para guardar el certificado del MMS para conectar con el tomcat y
-			// autenticarse contra el MMS
-
-			System.setProperty("javax.net.ssl.type", propSecurityUser
-					.getProperty("KeyStoreCertType"));
-			System.setProperty("javax.net.ssl.trustStore", propSecurityUser
-					.getProperty("KeyStorePath"));
-			System.setProperty("javax.net.ssl.trustStorePassword",
-					propSecurityUser.getProperty("KeyStorePassword"));
-			
 
 			sigCrypto.setProp(props);
 			encrCrypto.setProp(propsEncryption);
@@ -357,14 +342,10 @@ public class SecurityTools {
 		// Aqui deberiamos importar el certificado del CA en el la keystore que
 		// ha creado el MMS para el usuario.
 
-		String pathMMS = propSecurityUser.getProperty("CACertificatePath");
-		String pathTomcat = propSecurityUser.getProperty("tomcatCertificate");
+		String pathMMS = propSecurityUser.getProperty("CACertificatePath");;
 		Certificate cert = this.getCertificate(pathMMS);
-		Certificate certTomcat = this.getCertificate(pathTomcat);
 		if (!key.containsAlias("MMS"))
-			key.setCertificateEntry("MMS", certTomcat);
-		if (!key.containsAlias("MMService"))
-			key.setCertificateEntry("MMService", cert);
+			key.setCertificateEntry("MMS", cert);
 		key.store(new FileOutputStream(path), pass.toCharArray());
 		return key;
 
