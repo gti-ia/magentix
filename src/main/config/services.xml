@@ -62,25 +62,26 @@
 
 				<ramp:RampartConfig xmlns:ramp="http://ws.apache.org/rampart/policy">
 				<!-- 	<ramp:items>Timestamp Signature Encrypt</ramp:items> -->
-					<ramp:user>root</ramp:user>
+					<ramp:user>mms</ramp:user>
 					<ramp:encryptionUser>useReqSigCert</ramp:encryptionUser>
 					<ramp:passwordCallbackClass>es.upv.dsic.gti_ia.MMService.PWCBHandler</ramp:passwordCallbackClass>
 					<ramp:signatureCrypto>
 						<ramp:crypto provider="org.apache.ws.security.components.crypto.Merlin">
 							<ramp:property
 								name="org.apache.ws.security.crypto.merlin.keystore.type">JKS</ramp:property>
-							<ramp:property name="org.apache.ws.security.crypto.merlin.file">service.jks</ramp:property>
-							<ramp:property
-								name="org.apache.ws.security.crypto.merlin.keystore.password">servicePW</ramp:property>
+							<ramp:property name="org.apache.ws.security.crypto.merlin.file">/home/joabelfa/Desktop/Seguridad/qpidd/security/MMSkeystore.jks</ramp:property>
+					 		 <ramp:property
+								name="org.apache.ws.security.crypto.merlin.keystore.password">password_mmskeystore</ramp:property> 
 						</ramp:crypto>
 					</ramp:signatureCrypto>
 					<ramp:encryptionCrypto>
 						<ramp:crypto provider="org.apache.ws.security.components.crypto.Merlin">
 							<ramp:property
 								name="org.apache.ws.security.crypto.merlin.keystore.type">JKS</ramp:property>
-							<ramp:property name="org.apache.ws.security.crypto.merlin.file">service.jks</ramp:property>
-							<ramp:property
-								name="org.apache.ws.security.crypto.merlin.keystore.password">servicePW</ramp:property>
+							<ramp:property name="org.apache.ws.security.crypto.merlin.file">/home/joabelfa/Desktop/Seguridad/qpidd/security/MMSkeystore.jks</ramp:property>
+					 		<ramp:property
+								name="org.apache.ws.security.crypto.merlin.keystore.password">password_mmskeystore</ramp:property> 
+		
 						</ramp:crypto>
 					</ramp:encryptionCrypto>
 				</ramp:RampartConfig>
