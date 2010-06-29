@@ -40,6 +40,7 @@ import java.security.cert.CertificateException; //import java.security.cert.Cert
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Properties;
 import java.util.Vector; /*
@@ -73,6 +74,7 @@ import org.apache.ws.security.WSSecurityEngineResult;
 import org.apache.ws.security.handler.WSHandlerConstants;
 import org.apache.ws.security.handler.WSHandlerResult;
 
+/** This class is a core for MMS service, It is responsible for issuing certificates signed by the CA*/
 public class AgentCertificate {
 
 	FileWriter fichero = null;
@@ -138,7 +140,7 @@ public class AgentCertificate {
 				 */
 			}
 
-			//Es un nombre que no reservado??
+			//El nombre del agente esta reservado??
 
 			if (!reservedNames.contains(agentName))
 			{
@@ -163,8 +165,7 @@ public class AgentCertificate {
 			int validity = Integer.parseInt(properties.getProperty("Validity"));
 			PrivateKeyEntry pke = this.generateMMSPrivateKeyEntry();
 
-			// Por defecto como quiere que este formado nombre de los
-			// certificados que emita.
+			// Que información contendra el certificados que emita.
 			String commonName = agentName;
 			String organizationalUnit = properties
 					.getProperty("organizationalUnit");
@@ -187,7 +188,7 @@ public class AgentCertificate {
 			os.close();
 
 			// Especificar la ubicación del archivo del almacén de certificados
-			// en los que se confía, el mismo que el del broker.
+			// en los que se confía.
 			System.setProperty("javax.net.ssl.trustStore", properties
 					.getProperty("TrustStorePath"));
 			System.setProperty("javax.net.ssl.trustStorePassword", properties
@@ -200,28 +201,36 @@ public class AgentCertificate {
 			System.setProperty("javax.net.ssl.keyStorePassword", properties
 					.getProperty("KeyStorePassword"));
 
-			// Conectamos con el broker
+		
+		
+
+			//Conectamos con el broker.
+			this.conectToBroker();
+			
+			// Escribimos por cada agente las siguientes lineas con los permisos necesarios.
+
 			String command = String.format("\n" + "acl allow " + agentName
-					+ "@QPID create queue name=" + agentName + "\n"
+					+ "@QPID all queue name=" + agentName + "\n"
 					+ "acl allow " + agentName
 					+ "@QPID bind exchange name=amq.direct routingkey="
 					+ agentName);
-
+			//Escribimos el fichero acl.
 			this.writeAclFile(command);
 			
 			
-			this.conectToBroker();
+			
 		
-			// Escribimos por cada agente las siguientes lineas.
-
+			
 		
 
 			// Recargamos el fichero.
 			this.reloadACLFile();
+
+			this.closeSession();
 			
 			return outStream.toByteArray();
 			}
-			else
+			else//Si el nombre esta reservado, como por ejemplo MMS.
 			{
 				byte[] failed = "This name is reserved".getBytes();
 				return failed;
@@ -269,11 +278,7 @@ public class AgentCertificate {
 		// X509Certificate rootX509certificate = null;
 		
 		
-		// tenemos que extraer el certificado de la keystore
-
-		
-		
-
+		// tenemos que extraer el certificado de la base de datos nss.
 
 		if (Security.getProvider("SunPKCS11-NSSkeystore") == null) {
 			p = new sun.security.pkcs11.SunPKCS11(path);
@@ -409,10 +414,16 @@ public class AgentCertificate {
 				+ properties.getProperty("port") + "?ssl='"
 				+ properties.getProperty("ssl") + "',sasl_mechs='"
 				+ properties.getProperty("saslMechs") + "''";
-		System.out.println("Connecting to: " + connectionBroker);
 		sess = new Session();
 		sess.addBroker(connectionBroker);
+		
+		
 
+	}
+	
+	private void closeSession()
+	{
+		sess.close();
 	}
 
 	//Método que llama a la función de recarga, a continuación el broker recargará el fichero.
@@ -490,4 +501,121 @@ public class AgentCertificate {
 	 * System.err.println("Caught exception " + e.toString()); return
 	 * "exception"; } }
 	 */
+	/*
+	 *Este método tiene algunas funcionalidades para trabajar con dnie. En principio no se utilizará, peró nos puede
+	 *servir para futuros trabajos.
+	private void DNIeAccesCertificate() {
+
+		try {
+
+			// Primero hago una prueba con el certificado de la generalitat
+			// valenciana.
+			X509Certificate certACCVOCSP = (X509Certificate) this
+					.getCertificate("./certificates/accv_certificates/ocsp-gva_pem.crt");
+			X509Certificate certACCVJoan = (X509Certificate) this
+					.getCertificate("./certificates/accv_certificates/joabelfa@hotmail.com.crt");
+
+			System.out.println("El estado de revocación es: "
+					+ this.revocation_state(certACCVJoan, certACCVOCSP,
+							"http://ocsp.pki.gva.es"));
+
+			// sacar el certificado de la ac, es este caso la 002:
+
+			Certificate certAC = null;
+
+			certAC = this
+					.getCertificate("./certificates/ACDNIE_CERTIFICATES/ACDNIE002-SHA2.crt");
+			// borrar el que accede al la base de datos del certificado del MMS.
+
+			if (p != null)
+				Security.removeProvider(p.getName());
+			if (Security.getProvider("SunPKCS11-DNIE\nlibrary") == null) {
+				String configName = "./certificates/dnie_linux.cfg";
+				Provider p = new sun.security.pkcs11.SunPKCS11(configName);
+				Security.addProvider(p);
+			}
+
+			System.out.println("keyStore accessing...");
+			KeyStore store = KeyStore.getInstance("PKCS11");
+
+			char[] pin = "ue3wYatu".toCharArray();
+			// store.load(null,"CFqXmkUT".toCharArray());//
+
+			store.load(null, pin);
+
+			Enumeration<?> enumeration = store.aliases();
+			Certificate[] certs = null;
+			PrivateKey privateKey = null;
+			while (enumeration.hasMoreElements()) {
+
+				String alias = enumeration.nextElement().toString();
+				// Solo queremos acceder al alias del certificado de
+				// autenticacion
+				if (alias.equals("CertAutenticacion")) {
+					certs = store.getCertificateChain(alias);
+
+					// sacamos la clave privada para firmar el reto
+					privateKey = (PrivateKey) store.getKey(alias, pin);
+
+				}
+
+			}
+
+			// se crea un reto para autenticar al usuario (challenge-response)
+
+			Signature dsa = Signature.getInstance("SHA1withRSA");
+			dsa.initSign((PrivateKey) privateKey);
+
+			byte[] data = new String(
+					"Estos datos sirven para verificar la firma del propietario del DNIe")
+					.getBytes();
+
+			dsa.update(data);
+			byte[] realSig = dsa.sign();
+
+			Signature sigver = Signature.getInstance("SHA1withRSA");
+			sigver.initVerify(store.getCertificate("CertAutenticacion")
+					.getPublicKey());
+			// ó initVerify(store.getCertificate(alias))
+			sigver.update(data);
+			boolean verSig = sigver.verify(realSig);
+
+			System.out.println("Dnie verificado: " + verSig);
+
+			for (Certificate c : certs) {
+				X509Certificate cx = (X509Certificate) c;
+				// System.out.println(cx);
+				System.out.println("Subject: " + cx.getSubjectX500Principal());
+				// System.out.println("Subject: "+cx.getSubjectDN().getName().substring(cx.getSubjectDN().getName().indexOf("GIVENNAME"),cx.getSubjectDN().getName().indexOf(",",
+				// 4)));// .getSubjectDN().getName())
+				System.out.println("Validity: " + cx.getNotBefore() + " to "
+						+ cx.getNotAfter());
+
+				System.out
+						.println("Hola ....vamos a comprobar si su certificado esta vigente....");
+
+				// System.out.println("El estado de revocación es: "+
+				// this.revocation_stateBouncyCastle(cx,(X509Certificate)certAC));
+				// X509Certificate certOCSP = (X509Certificate)
+				// getCertificate("./certificates/OCSP_certificate/AVDNIEFNMTSHA2.crt");
+				System.out.println("El estado de revocación es: "
+						+ this.revocation_state(cx, (X509Certificate) certAC,
+								"http://ocsp.dnielectronico.es/"));
+
+			}
+			// deberemos exportar el certificado de la direccion general de
+			// trafico a nuestra keystore
+			// System.out.println("Su  certificado es valido??: "+
+			// firmadoPor(certs[0], certAC));
+
+			// verificar el certificado
+
+		} catch (CertificateException e) {
+			System.err.println("Caught exception " + e.toString()
+					+ ". Compruebe si ha introducido un pin.");
+		} catch (Exception e) {
+			System.err.println("Caught exception " + e.toString());
+		}
+
+	}*/
 }
