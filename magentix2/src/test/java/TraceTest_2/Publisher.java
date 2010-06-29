@@ -53,8 +53,8 @@ public class Publisher extends BaseAgent {
 			try {
 				tEvent = new TraceEvent(this.getName()+"<DD_Test_TS_1>", this.getAid(), this.getName()+"<DD_Test_TS_1> " + (i+1) + " of " + N_EVENTS);
 				// Generating the trace event
-				sendTraceEvent(tEvent);
-				System.out.println("[PUBLISHER "+ this.getName() + "]: Event sent");
+//				sendTraceEvent(tEvent);
+//				System.out.println("[PUBLISHER "+ this.getName() + "]: Event sent");
 //				coordination_msg = new ACLMessage(ACLMessage.INFORM);
 //				coordination_msg.setSender(this.getAid());
 //				coordination_msg.setReceiver(coordinatorAid);

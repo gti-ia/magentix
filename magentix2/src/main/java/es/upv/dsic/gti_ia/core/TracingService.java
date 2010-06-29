@@ -181,31 +181,20 @@ public class TracingService {
 		return this.subscriptions;
 	}
 	
-	public int addServiceProvider(TracingEntity provider){
-		return this.providers.addTE(provider);
+	public boolean addServiceProvider(TracingEntity provider){
+		return this.providers.add(provider);
 	}
 	
-	public int addSubscription (TracingServiceSubscription subscription){
-		return this.subscriptions.addTSS(subscription);
+	public boolean addSubscription (TracingServiceSubscription subscription){
+		return this.subscriptions.add(subscription);
 	}
 	
-	public int removeProvider(AgentID providerAid){
-		return this.providers.removeTE(providerAid);
+	public boolean removeProvider(AgentID providerAid){
+		return this.providers.remove(new TracingEntity(TracingEntity.AGENT, providerAid));
+//		return this.providers.removeTE(providerAid);
 	}
 	
-	public TracingServiceSubscriptionList removeSubscriptionsWithProvider(AgentID providerAid){
-		return this.subscriptions.removeAllTSSFromProvider(providerAid);
-	}
-	
-//	public int removeSubscriptionsWithProvider(TracingEntity provider){
-//		return this.subscriptions.removeAllTSSFromProvider(provider);
-//	}
-//	
-//	public int removeSubscriptionsWithSubscriptor(AgentID subscriptorAid){
-//		return this.subscriptions.removeAllTSSFromSubscriptor(subscriptorAid);
-//	}
-//	
-//	public int removeSubscriptionsWithSubscriptor(TracingEntity subscriptor){
-//		return this.subscriptions.removeAllTSSFromSubscriptor(subscriptor);
+//	public TracingServiceSubscriptionList removeSubscriptionsWithProvider(AgentID providerAid){
+//		return this.subscriptions.removeAllTSSFromProvider(providerAid);
 //	}
 }

@@ -74,9 +74,9 @@ public class TracingEntity {
 	 * 		Internal values of the list are not correct. There is
 	 * 		something really wrong if this happens :-S
 	 */
-	public int addSubscription (TracingServiceSubscription newSubscription){
-		return this.subscribedToTS.addTSS(newSubscription);
-	}
+//	public int addSubscription (TracingServiceSubscription newSubscription){
+//		return this.subscribedToTS.addTSS(newSubscription);
+//	}
 	
 	/**
 	 * Add a new subscription to the tracing entity for the specified tracing service provided by the specified
@@ -103,9 +103,9 @@ public class TracingEntity {
 	 * 		Duplicate AgentID: A subscription to the tracing service provided by the specified
 	 * 			origin entity already exists in the list
 	 */
-	public int addSubscription (TracingEntity subscriptorEntity, TracingEntity originEntity, TracingService service){
-		return this.subscribedToTS.addTSS(subscriptorEntity, originEntity, service);
-	}
+//	public int addSubscription (TracingEntity subscriptorEntity, TracingEntity originEntity, TracingService service){
+//		return this.subscribedToTS.addTSS(subscriptorEntity, originEntity, service);
+//	}
 	
 	/**
 	 * Remove a tracing service subscription from the list
@@ -127,9 +127,9 @@ public class TracingEntity {
 	 * @return -2
 	 * 		Subscription not found
 	 */
-	public int removeSubscription(AgentID subscriptorAid, AgentID originAid, String serviceName){
-		return this.subscribedToTS.removeTSS(subscriptorAid, originAid, serviceName);
-	}
+//	public int removeSubscription(AgentID subscriptorAid, AgentID originAid, String serviceName){
+//		return this.subscribedToTS.removeTSS(subscriptorAid, originAid, serviceName);
+//	}
 	
 	/**
 	 * Remove a tracing service subscription from the list
@@ -147,8 +147,8 @@ public class TracingEntity {
 	 * @return -2
 	 * 		Subscription not found
 	 */
-	public int removeSubscription(TracingServiceSubscription TSSubscription){
-		return this.subscribedToTS.removeTSS(TSSubscription);
+	public boolean removeSubscription(TracingServiceSubscription TSSubscription){
+		return this.subscribedToTS.remove(TSSubscription);
 	}
 	
 	public boolean hasTheSameAidAs(AgentID aid){

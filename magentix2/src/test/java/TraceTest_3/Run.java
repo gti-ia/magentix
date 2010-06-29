@@ -1,4 +1,4 @@
-package TraceTest_1;
+package TraceTest_3;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
@@ -50,11 +50,6 @@ public class Run {
 			tm.start();
 			
 			/**
-			 * Instantiating the coordinator agent
-			 */
-			//Coordinator coordinator = new Coordinator(new AgentID("qpid://coordinator@localhost:8080"));
-			
-			/**
 			 * Instantiating the publisher agent
 			 */
 			Publisher publisher = new Publisher(new AgentID("qpid://publisher@localhost:8080"));
@@ -62,13 +57,12 @@ public class Run {
 			/**
 			 * Instantiating the subscriber agent
 			 */
-			//Subscriber subscriber = new Subscriber(new AgentID("qpid://subscriber@localhost:8080"));
+			Subscriber subscriber = new Subscriber(new AgentID("qpid://subscriber@localhost:8080"));
 
 			/**
 			 * Execute the agents
 			 */
-			//coordinator.start();
-			//subscriber.start();
+			subscriber.start();
 			publisher.start();
 		} catch (Exception e) {
 			logger.error("Error  " + e.getMessage());

@@ -3,6 +3,7 @@ package TraceTest_2;
 import java.util.Random;
 
 //import es.upv.dsic.gti_ia.core.ACLMessage;
+import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.BaseAgent;
 import es.upv.dsic.gti_ia.core.TraceEvent;
@@ -27,20 +28,16 @@ import es.upv.dsic.gti_ia.trace.*;
 *****************************************************************************************/
 public class Subscriber extends BaseAgent{
 	final int N_PUBLISHERS = 1;
-//	AgentID coordinatorAid;
 	private Random generator;
 	private int publisher_number1=0, publisher_number2=0;
 	private int service1=0, service2=0;
-
+	
 	public Subscriber(AgentID aid) throws Exception {
-		
 		super(aid);
 		/**
 		 * Initializing tracing services and stuff
 		 */
-//		System.out.println("[SUBSCRIBER "+ this.getName() + "]: Basic test start...");
-
-//		coordinatorAid = new AgentID("qpid://coordinator@localhost:8080");
+		System.out.println("[SUBSCRIBER]: Basic test start...");
 		generator = new Random(System.currentTimeMillis());
 		//System.out.println("[SUBSCRIBER "+ this.getName() + "]: Subscribing to tracing services...");
 		while ((publisher_number1 == publisher_number2) && (service1 == service2)){
@@ -49,24 +46,29 @@ public class Subscriber extends BaseAgent{
 			service1=generator.nextInt(2)+1;
 			service2=generator.nextInt(2)+1;
 		}
+		
+	}
+
+	public void execute() {
+		int i;
+		System.out.println("[SUBSCRIBER]: Executing...");
+		/**
+		 * This agent has no definite work. Wait infinitely the arrival of new
+		 * messages.
+		 */
 		System.out.println("[SUBSCRIBER "+ this.getName() + "]: Subscribing to publisher"+publisher_number1+"<DD_Test_TS_"+service1+">");
 		TraceInteract.requestTracingService(this, "publisher"+publisher_number1+"<DD_Test_TS_"+service1+">");
 		System.out.println("[SUBSCRIBER "+ this.getName() + "]: Subscribing to publisher"+publisher_number2+"<DD_Test_TS_"+service2+">");
 		TraceInteract.requestTracingService(this, "publisher"+publisher_number2+"<DD_Test_TS_"+service2+">");
 		//System.out.println("[SUBSCRIBER "+ this.getName() + "]: Done!");
-	}
-
-	public void execute() {
-		int i;
 		
-		System.out.println("[SUBSCRIBER "+ this.getName() + "]: Executing...");
-		/**
-		 * This agent has no definite work. Wait infinitely the arrival of new
-		 * messages.
-		 */
+//		System.out.println("[SUBSCRIBER]: Subscribing to tracing service...");
+		//TraceInteract.requestTracingService(this, "DD_Test_TS");
+//		System.out.println("[SUBSCRIBER]: Done!");
+		
     	for (i=0; i < 10; i++) {
 			try {
-				//System.out.println("[SUBSCRIBER "+ this.getName() + "]: Waiting (" + i + ")...");
+//				System.out.println("[SUBSCRIBER]: Waiting (" + i + ")...");
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
@@ -78,19 +80,94 @@ public class Subscriber extends BaseAgent{
 		TraceInteract.cancelTracingServiceSubscription(this, "publisher"+publisher_number1+"<DD_Test_TS_"+service1+">");
 		TraceInteract.cancelTracingServiceSubscription(this, "publisher"+publisher_number2+"<DD_Test_TS_"+service2+">");
     	//System.out.println("[SUBSCRIBER "+ this.getName() + "]: Done!");
+    	
+//    	System.out.println("[SUBSCRIBER]: Now unsubscribing from tracing services...");
+//		TraceInteract.cancelTracingServiceSubscription(this, "DD_Test_TS");
+//    	System.out.println("[SUBSCRIBER]: Done!");
 		
-		System.out.println("[SUBSCRIBER "+ this.getName() + "]: Bye!");
+		System.out.println("[SUBSCRIBER]: Bye!");
+		
 	}
 
 	public void onTraceEvent(TraceEvent tEvent) {
 		/**
-		 * When a trace event arrives, it sends it to the coordinator
+		 * When a trace event arrives, it prints it on the screen
 		 */
-		System.out.println("[SUBSCRIBER "+ this.getName() + "] RECV:" + tEvent.getContent());
-//		ACLMessage coordination_msg = new ACLMessage(ACLMessage.INFORM);
-//		coordination_msg.setSender(this.getAid());
-//		coordination_msg.setReceiver(coordinatorAid);
-//		coordination_msg.setContent("RECV:" + tEvent.getContent());
-//		send(coordination_msg);
+		System.out.println("[SUBSCRIBER]: Received from " + tEvent.getOriginEntity().getAid().name + ": " + tEvent.getContent());
 	}
+	
+	public void onMessage(ACLMessage msg){
+		System.out.println("[SUBSCRIBER]: Received from " + msg.getSender().toString() + ": " + msg.getContent());
+//		switch (msg.getPerformativeInt()){
+//			case ACLMessage.INFORM:
+//				System.out.println("[COORDINATOR]: Received from " + msg.getSender().toString() + ": " + msg.getContent());
+//				break;
+//		}
+	}
+	
+////	AgentID coordinatorAid;
+
+//
+//	public Subscriber(AgentID aid) throws Exception {
+//		
+//		super(aid);
+//		/**
+//		 * Initializing tracing services and stuff
+//		 */
+////		System.out.println("[SUBSCRIBER "+ this.getName() + "]: Basic test start...");
+//
+////		coordinatorAid = new AgentID("qpid://coordinator@localhost:8080");
+//		generator = new Random(System.currentTimeMillis());
+//		//System.out.println("[SUBSCRIBER "+ this.getName() + "]: Subscribing to tracing services...");
+//		while ((publisher_number1 == publisher_number2) && (service1 == service2)){
+//			publisher_number1=generator.nextInt(N_PUBLISHERS)+1;
+//			publisher_number2=generator.nextInt(N_PUBLISHERS)+1;
+//			service1=generator.nextInt(2)+1;
+//			service2=generator.nextInt(2)+1;
+//		}
+//		
+//	}
+//
+//	public void execute() {
+//		int i;
+//		
+//		System.out.println("[SUBSCRIBER "+ this.getName() + "]: Executing...");
+//		/**
+//		 * This agent has no definite work. Wait infinitely the arrival of new
+//		 * messages.
+//		 */
+//		System.out.println("[SUBSCRIBER "+ this.getName() + "]: Subscribing to publisher"+publisher_number1+"<DD_Test_TS_"+service1+">");
+//		TraceInteract.requestTracingService(this, "publisher"+publisher_number1+"<DD_Test_TS_"+service1+">");
+//		System.out.println("[SUBSCRIBER "+ this.getName() + "]: Subscribing to publisher"+publisher_number2+"<DD_Test_TS_"+service2+">");
+//		TraceInteract.requestTracingService(this, "publisher"+publisher_number2+"<DD_Test_TS_"+service2+">");
+//		//System.out.println("[SUBSCRIBER "+ this.getName() + "]: Done!");
+//    	for (i=0; i < 10; i++) {
+//			try {
+//				//System.out.println("[SUBSCRIBER "+ this.getName() + "]: Waiting (" + i + ")...");
+//				Thread.sleep(1000);
+//			} catch (InterruptedException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		}
+//    	
+//    	System.out.println("[SUBSCRIBER "+ this.getName() + "]: Now unsubscribing from tracing services publisher"+publisher_number1+"<DD_Test_TS_"+service1+"> and publisher"+publisher_number2+"<DD_Test_TS_"+service2+">...");
+//		TraceInteract.cancelTracingServiceSubscription(this, "publisher"+publisher_number1+"<DD_Test_TS_"+service1+">");
+//		TraceInteract.cancelTracingServiceSubscription(this, "publisher"+publisher_number2+"<DD_Test_TS_"+service2+">");
+//    	//System.out.println("[SUBSCRIBER "+ this.getName() + "]: Done!");
+//		
+//		System.out.println("[SUBSCRIBER "+ this.getName() + "]: Bye!");
+//	}
+//
+//	public void onTraceEvent(TraceEvent tEvent) {
+//		/**
+//		 * When a trace event arrives, it sends it to the coordinator
+//		 */
+//		System.out.println("[SUBSCRIBER "+ this.getName() + "] RECV:" + tEvent.getContent());
+////		ACLMessage coordination_msg = new ACLMessage(ACLMessage.INFORM);
+////		coordination_msg.setSender(this.getAid());
+////		coordination_msg.setReceiver(coordinatorAid);
+////		coordination_msg.setContent("RECV:" + tEvent.getContent());
+////		send(coordination_msg);
+//	}
 }
