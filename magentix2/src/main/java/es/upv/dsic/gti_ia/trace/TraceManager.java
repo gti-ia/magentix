@@ -1,25 +1,17 @@
 package es.upv.dsic.gti_ia.trace;
 
-//import java.util.Date;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-//import org.apache.log4j.Logger;
-//import org.apache.qpid.transport.Connection;
 import org.apache.log4j.Level;
 import org.apache.qpid.transport.DeliveryProperties;
 import org.apache.qpid.transport.Header;
 import org.apache.qpid.transport.MessageAcceptMode;
 import org.apache.qpid.transport.MessageAcquireMode;
-//import org.apache.qpid.transport.MessageCreditUnit;
 import org.apache.qpid.transport.MessageProperties;
 import org.apache.qpid.transport.MessageTransfer;
 import org.apache.qpid.transport.Option;
-//import org.apache.qpid.transport.Session;
-//import org.apache.qpid.transport.SessionException;
-//import org.apache.qpid.transport.SessionListener;
 
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
@@ -131,18 +123,12 @@ public class TraceManager extends BaseAgent{
 		TracingEntity tEntity=null, originTEntity=null;
 		TracingServiceSubscription tServiceSubscription=null;
 		
-		TracingServiceSubscriptionList removeList=null;
 		Iterator<TracingServiceSubscription> TSS_iter;
-		Iterator<TracingEntity> TE_iter;
 		
 		AgentID originAid;
-//		int indice1 = 0;
-//		int indice2 = 0;
 		int aidindice1 = 0;
 		int aidindice2 = 0;
-//		int tam = 0;
 		
-		int error; //, i;
 		String tEventContent;
 		boolean agree_response=true;
 		boolean added_TE=false;
@@ -150,7 +136,6 @@ public class TraceManager extends BaseAgent{
 		boolean added_TSP=false;
 		boolean linked_TE_TS=false;
 		boolean added_TSS=false;
-		int tServiceIndex, tEntityIndex, tServiceProviderIndex;
 		
 		logger.info("[TRACE MANAGER]: Received [" + msg.getPerformativeInt() + "] -> " + msg.getContent());
 		
