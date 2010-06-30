@@ -1,6 +1,5 @@
 package es.upv.dsic.gti_ia.core;
 
-//import java.util.Date;
 import java.lang.System;
 import java.io.Serializable;
 

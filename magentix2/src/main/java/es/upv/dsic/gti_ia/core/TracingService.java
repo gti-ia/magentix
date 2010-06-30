@@ -90,54 +90,6 @@ public class TracingService {
 		new TracingService("AUTHORIZATION_DENIED", "An authorization for a tracing service was removed.")
 	};
 	
-//	public static final TracingService[] DI_TracingServices = new TracingService[MAX_DI_TS];
-//	static{
-//		DI_TracingServices[TRACE_ERROR].name="TRACE_ERROR";
-//		DI_TracingServices[TRACE_ERROR].description="General error in the tracing process.";
-//		DI_TracingServices[TRACE_START].name="TRACE_START";
-//		DI_TracingServices[TRACE_START].description="The ER entity started tracing.";
-//		DI_TracingServices[TRACE_STOP].name="TRACE_STOP";
-//		DI_TracingServices[TRACE_STOP].description="The ER entity stoppped tracing.";
-//		DI_TracingServices[SUBSCRIBE].name="SUBSCRIBE";
-//		DI_TracingServices[SUBSCRIBE].description="The ER entity subscribed to a tracing service.";
-//		DI_TracingServices[UNSUBSCRIBE].name="UNSUBSCRIBE";
-//		DI_TracingServices[UNSUBSCRIBE].description="The ER entity unsubscribed from a tracing service.";
-//		DI_TracingServices[UNAVAILABLE_TS].name="UNAVAILABLE_TS";
-//		DI_TracingServices[UNAVAILABLE_TS].description="The tracing service which was requested does not exist or it has been un published and thus, it is not avilable anymore";
-//		DI_TracingServices[STREAM_OVERFLOW].name="STREAM_OVERFLOW";
-//		DI_TracingServices[STREAM_OVERFLOW].description="The stream where trace events were being stored for the ER to recover them is full.";
-//		DI_TracingServices[STREAM_RESUME].name="STREAM_RESUME";
-//		DI_TracingServices[STREAM_RESUME].description="The ER entity began to trace events after having stoppped.";
-//		DI_TracingServices[STREAM_FLUSH_START].name="STREAM_FLUSH_START";
-//		DI_TracingServices[STREAM_FLUSH_START].description="The ER entity started flushing the stream where it was receiving events.";
-//		DI_TracingServices[STREAM_FLUSH_STOP].name="STREAM_FLUSH_STOP";
-//		DI_TracingServices[STREAM_FLUSH_STOP].description="The flushing process previously started has arrived to its end.";
-//		DI_TracingServices[NEW_AGENT].name="NEW_AGENT";
-//		DI_TracingServices[NEW_AGENT].description="A new agent was registered in the system.";
-//		DI_TracingServices[AGENT_SUSPENDED].name="AGENT_SUSPENDED";
-//		DI_TracingServices[AGENT_SUSPENDED].description="An agent was suspended.";
-//		DI_TracingServices[AGENT_RESUMED].name="AGENT_RESUMED";
-//		DI_TracingServices[AGENT_RESUMED].description="An agent restarted after a suspension.";
-//		DI_TracingServices[AGENT_DESTROYED].name="AGENT_DESTROYED";
-//		DI_TracingServices[AGENT_DESTROYED].description="An agent was destroyed.";
-//		DI_TracingServices[MESSAGE_SENT].name="MESSAGE_SENT";
-//		DI_TracingServices[MESSAGE_SENT].description="A FIPA-ACL message was sent.";
-//		DI_TracingServices[MESSAGE_RECEIVED].name="MESSAGE_RECEIVED";
-//		DI_TracingServices[MESSAGE_RECEIVED].description="A FIPA-ACL message was received.";
-//		DI_TracingServices[MESSAGE_UNDELIVERABLE].name="MESSAGE_UNDELIVERABLE";
-//		DI_TracingServices[MESSAGE_UNDELIVERABLE].description="A FIPA-ACL message was impossible to deliver.";
-//		DI_TracingServices[PUBLISHED_TRACING_SERVICE].name="PUBLISHED_TRACING_SERVICE";
-//		DI_TracingServices[PUBLISHED_TRACING_SERVICE].description="A new tracing service has been published by an ES entity.";
-//		DI_TracingServices[UNPUBLISHED_TRACING_SERVICE].name="UNPUBLISHED_TRACING_SERVICE";
-//		DI_TracingServices[UNPUBLISHED_TRACING_SERVICE].description="A tracing service is not being offered by an ER entity.";
-//		DI_TracingServices[AUTHORIZATION_REQUEST].name="AUTHORIZATION_REQUEST";
-//		DI_TracingServices[AUTHORIZATION_REQUEST].description="An entity requested authorization for a tracing service.";
-//		DI_TracingServices[AUTHORIZATION_GRANTED].name="AUTHORIZATION_GRANTED";
-//		DI_TracingServices[AUTHORIZATION_GRANTED].description="An entity added an authorization for a tracing service.";
-//		DI_TracingServices[AUTHORIZATION_DENIED].name="AUTHORIZATION_DENIED";
-//		DI_TracingServices[AUTHORIZATION_DENIED].description="An authorization for a tracing service was removed.";
-//	}
-	
 	private String name;
 	private String description;
 	private TracingEntityList providers;
@@ -191,10 +143,5 @@ public class TracingService {
 	
 	public boolean removeProvider(AgentID providerAid){
 		return this.providers.remove(new TracingEntity(TracingEntity.AGENT, providerAid));
-//		return this.providers.removeTE(providerAid);
 	}
-	
-//	public TracingServiceSubscriptionList removeSubscriptionsWithProvider(AgentID providerAid){
-//		return this.subscriptions.removeAllTSSFromProvider(providerAid);
-//	}
 }
