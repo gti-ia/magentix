@@ -1,6 +1,7 @@
 package TraceTest_3;
 
-import es.upv.dsic.gti_ia.core.ACLMessage;
+import java.util.Random;
+
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.BaseAgent;
 import es.upv.dsic.gti_ia.core.TraceEvent;
@@ -22,7 +23,8 @@ import es.upv.dsic.gti_ia.trace.*;
     received, the SUBSCRIBER prints its content on the screen.
 *****************************************************************************************/
 public class Subscriber extends BaseAgent{
-
+	private Random generator;
+	
 	public Subscriber(AgentID aid) throws Exception {
 		super(aid);
 		/**

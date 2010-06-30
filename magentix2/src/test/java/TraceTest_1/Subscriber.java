@@ -14,7 +14,7 @@ import es.upv.dsic.gti_ia.trace.*;
 /*****************************************************************************************
 /*                                     DESCRIPTION                                       *
 /*****************************************************************************************
-    Simple test with three agents: a PUBLISHER agent and a SUBSCRIBER agent.
+    Simple test with two agents: a PUBLISHER agent and a SUBSCRIBER agent.
     
     The SUBSCRIBER agent subscribes to the tracing service 'DD_Test_TS' and waits for 10
     seconds for trace events to arrive. After this time, the SUBSCRIBER agent

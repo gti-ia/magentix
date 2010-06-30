@@ -15,7 +15,7 @@ import es.upv.dsic.gti_ia.trace.TraceInteract;
 /*****************************************************************************************
 /*                                     DESCRIPTION                                       *
 /*****************************************************************************************
-    Simple test with three agents: a PUBLISHER agent and a SUBSCRIBER agent.
+    Simple test with two agents: a PUBLISHER agent and a SUBSCRIBER agent.
     
     The PUBLISHER agent publishes a tracing service called 'DD_Test_TS' which content is
     just a string. Each second, the publisher generates the trace event. After 10
