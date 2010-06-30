@@ -1,27 +1,27 @@
 /*****************************************************************************************/
-/*                                      Trace_Basic                                      */
+/*                                      TraceTest_2                                      */
 /*****************************************************************************************/
 /*                     Author: Luis Burdalo (lburdalo@dsic.upv.es)                       */
 /*****************************************************************************************/
 /*                                     DESCRIPTION                                       */
 /*****************************************************************************************/
 
-    Simple test with three agents: a PUBLISHER agent, a SUBSCRIBER agent and a
-    COORDINATOR agent.
+    Simple test with two types of agents: 100 PUBLISHER agents and 30 SUBSCRIBER agents.
     
-    The PUBLISHER agent publishes a tracing service called 'DD_Test_TS' which content is
-    just a string. Each second, the publisher generates the trace event and then sends a
-    message to the COORDINATOR agent with the content of the trace event. After 10
-    seconds, the PUBLISHER unpublishes the tracing service and says 'Bye!'.
+    PUBLISHER agents publish 2 different DD tracing services each and generate 10 trace
+    events for each tracing service during 10 seconds (one per second). After that,
+    the tracing services are unpublished. Waiting times before and after unpublishing
+    tracing services are there just to let SUBSCRIBER agents time enough to unsubscribe
+    and to print messages on the screen. 
     
-    The SUBSCRIBER agent subscribes to the tracing service 'DD_Test_TS' and waits for 10
-    seconds for trace events to arrive. After this time, the SUBSCRIBER agent
-    unsubscribes from the tracing service and says 'Bye!'. Each time a trace event is
-    received, the SUBSCRIBER sends a message to the coordinator with the content of the
-    trace event.
+    SUBSCRIBER agents subscribe randomly to two of the services offered by the PUBLISHER
+    agents and wait during 12 seconds for events to arrive. Each time a trace event is
+    received, the SUBSCRIBER agent updates the corresponding counter so that it is
+    possible to verify after the execution that the number of received events of each
+    tracing service is 10. Before finishing, each SUBSCRIBER agent displays the number
+    of trace events of each tracing service which have been received.
     
-    The COORDINATOR agent waits for 12 seconds for messages to arrive. Each time a
-    message arrives, it prints in the screen the content of the message and the AgentID
-    of the agent which sent it.
+    Messages to be displayed on the screen during the execution have been commented in
+    order to make the execution more easily readable.
 
 /****************************************************************************************/

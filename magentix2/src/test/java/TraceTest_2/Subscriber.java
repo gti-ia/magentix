@@ -10,34 +10,41 @@ import es.upv.dsic.gti_ia.core.TraceEvent;
 
 import es.upv.dsic.gti_ia.trace.*;
 
+/*****************************************************************************************/
+/*                                      TraceTest_2                                      */
+/*****************************************************************************************/
+/*                     Author: Luis Burdalo (lburdalo@dsic.upv.es)                       */
+/*****************************************************************************************/
+/*                                     DESCRIPTION                                       */
 /*****************************************************************************************
-/*                                      Trace_Basic                                      *
-/*****************************************************************************************
-/*                     Author: Luis Burdalo (lburdalo@dsic.upv.es)                       *
-/*****************************************************************************************
-/*                                     DESCRIPTION                                       *
-/*****************************************************************************************
-    Simple test with three agents: a PUBLISHER agent, a SUBSCRIBER agent and a
-    COORDINATOR agent.
+
+    Simple test with two types of agents: 100 PUBLISHER agents and 30 SUBSCRIBER agents.
     
-    The SUBSCRIBER agent subscribes to the tracing service 'DD_Test_TS' and waits for 10
-    seconds for trace events to arrive. After this time, the SUBSCRIBER agent
-    unsubscribes from the tracing service and says 'Bye!'. Each time a trace event is
-    received, the SUBSCRIBER sends a message to the coordinator with the content of the
-    trace event.
+    SUBSCRIBER agents subscribe randomly to two of the services offered by the PUBLISHER
+    agents and wait during 12 seconds for events to arrive. Each time a trace event is
+    received, the SUBSCRIBER agent updates the corresponding counter so that it is
+    possible to verify after the execution that the number of received events of each
+    tracing service is 10. Before finishing, each SUBSCRIBER agent displays the number
+    of trace events of each tracing service which have been received.
+    
+    Messages to be displayed on the screen during the execution have been commented in
+    order to make the execution more easily readable.
+
 *****************************************************************************************/
 public class Subscriber extends BaseAgent{
-	final int N_PUBLISHERS = 1;
+	final int N_PUBLISHERS = 100;
+	private final int N_EVENTS = 10;
 	private Random generator;
 	private int publisher_number1=0, publisher_number2=0;
 	private int service1=0, service2=0;
+	private int n_received1=0;
+	private int n_received2=0;
 	
 	public Subscriber(AgentID aid) throws Exception {
 		super(aid);
 		/**
 		 * Initializing tracing services and stuff
 		 */
-		System.out.println("[SUBSCRIBER]: Basic test start...");
 		generator = new Random(System.currentTimeMillis());
 		//System.out.println("[SUBSCRIBER "+ this.getName() + "]: Subscribing to tracing services...");
 		while ((publisher_number1 == publisher_number2) && (service1 == service2)){
@@ -46,128 +53,62 @@ public class Subscriber extends BaseAgent{
 			service1=generator.nextInt(2)+1;
 			service2=generator.nextInt(2)+1;
 		}
-		
+//		System.out.println("[SUBSCRIBER " + this.getName() + "]: Subscribing to publisher"+publisher_number1+"<DD_Test_TS_"+service1+">");
+		TraceInteract.requestTracingService(this, "publisher"+publisher_number1+"<DD_Test_TS_"+service1+">");
+//		System.out.println("[SUBSCRIBER " + this.getName() + "]: Subscribing to publisher"+publisher_number2+"<DD_Test_TS_"+service2+">");
+		TraceInteract.requestTracingService(this, "publisher"+publisher_number2+"<DD_Test_TS_"+service2+">");
 	}
 
 	public void execute() {
-		int i;
-		System.out.println("[SUBSCRIBER]: Executing...");
 		/**
 		 * This agent has no definite work. Wait infinitely the arrival of new
 		 * messages.
 		 */
-		System.out.println("[SUBSCRIBER "+ this.getName() + "]: Subscribing to publisher"+publisher_number1+"<DD_Test_TS_"+service1+">");
-		TraceInteract.requestTracingService(this, "publisher"+publisher_number1+"<DD_Test_TS_"+service1+">");
-		System.out.println("[SUBSCRIBER "+ this.getName() + "]: Subscribing to publisher"+publisher_number2+"<DD_Test_TS_"+service2+">");
-		TraceInteract.requestTracingService(this, "publisher"+publisher_number2+"<DD_Test_TS_"+service2+">");
-		//System.out.println("[SUBSCRIBER "+ this.getName() + "]: Done!");
-		
-//		System.out.println("[SUBSCRIBER]: Subscribing to tracing service...");
-		//TraceInteract.requestTracingService(this, "DD_Test_TS");
-//		System.out.println("[SUBSCRIBER]: Done!");
-		
-    	for (i=0; i < 10; i++) {
-			try {
-//				System.out.println("[SUBSCRIBER]: Waiting (" + i + ")...");
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		try {
+			Thread.sleep(12000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-    	
-    	System.out.println("[SUBSCRIBER "+ this.getName() + "]: Now unsubscribing from tracing services publisher"+publisher_number1+"<DD_Test_TS_"+service1+"> and publisher"+publisher_number2+"<DD_Test_TS_"+service2+">...");
+
+		//System.out.println("[SUBSCRIBER " + this.getName() + "]: Now unsubscribing from tracing services publisher"+publisher_number1+"<DD_Test_TS_"+service1+"> and publisher"+publisher_number2+"<DD_Test_TS_"+service2+">...");
 		TraceInteract.cancelTracingServiceSubscription(this, "publisher"+publisher_number1+"<DD_Test_TS_"+service1+">");
 		TraceInteract.cancelTracingServiceSubscription(this, "publisher"+publisher_number2+"<DD_Test_TS_"+service2+">");
-    	//System.out.println("[SUBSCRIBER "+ this.getName() + "]: Done!");
     	
-//    	System.out.println("[SUBSCRIBER]: Now unsubscribing from tracing services...");
-//		TraceInteract.cancelTracingServiceSubscription(this, "DD_Test_TS");
-//    	System.out.println("[SUBSCRIBER]: Done!");
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
-		System.out.println("[SUBSCRIBER]: Bye!");
+		if ((n_received1 == N_EVENTS) && (n_received2 == N_EVENTS)){
+			System.out.println("[SUBSCRIBER " + this.getName() + "]: OK! Received " + n_received1 + " of " + N_EVENTS);
+		}
+		else{
+			System.out.println("[SUBSCRIBER " + this.getName() + "]: FAIL! Missed events. Received " + n_received1 + " of " + N_EVENTS + " and " + n_received2 + " of " + N_EVENTS);
+		}
+		
+		//System.out.println("[SUBSCRIBER " + this.getName() + "]: Bye!");
 		
 	}
 
 	public void onTraceEvent(TraceEvent tEvent) {
+		int index;
 		/**
-		 * When a trace event arrives, it prints it on the screen
+		 * When a trace event arrives, it updates counters and prints the content on the screen
 		 */
-		System.out.println("[SUBSCRIBER]: Received from " + tEvent.getOriginEntity().getAid().name + ": " + tEvent.getContent());
+		//System.out.println("[SUBSCRIBER " + this.getName() + "]: Received from " + tEvent.getOriginEntity().getAid().name + ": " + tEvent.getContent());
+		index=tEvent.getContent().indexOf(" ");
+		if (tEvent.getContent().substring(0, index).contentEquals("publisher"+publisher_number1+"<DD_Test_TS_"+service1+">")){
+			n_received1++;
+		}
+		else if (tEvent.getContent().substring(0, index).contentEquals("publisher"+publisher_number2+"<DD_Test_TS_"+service2+">")){
+			n_received2++;
+		}
 	}
 	
 	public void onMessage(ACLMessage msg){
-		System.out.println("[SUBSCRIBER]: Received from " + msg.getSender().toString() + ": " + msg.getContent());
-//		switch (msg.getPerformativeInt()){
-//			case ACLMessage.INFORM:
-//				System.out.println("[COORDINATOR]: Received from " + msg.getSender().toString() + ": " + msg.getContent());
-//				break;
-//		}
+//		System.out.println("[SUBSCRIBER " + this.getName() + "]: Received from " + msg.getSender().toString() + ": " + msg.getContent());
 	}
-	
-////	AgentID coordinatorAid;
-
-//
-//	public Subscriber(AgentID aid) throws Exception {
-//		
-//		super(aid);
-//		/**
-//		 * Initializing tracing services and stuff
-//		 */
-////		System.out.println("[SUBSCRIBER "+ this.getName() + "]: Basic test start...");
-//
-////		coordinatorAid = new AgentID("qpid://coordinator@localhost:8080");
-//		generator = new Random(System.currentTimeMillis());
-//		//System.out.println("[SUBSCRIBER "+ this.getName() + "]: Subscribing to tracing services...");
-//		while ((publisher_number1 == publisher_number2) && (service1 == service2)){
-//			publisher_number1=generator.nextInt(N_PUBLISHERS)+1;
-//			publisher_number2=generator.nextInt(N_PUBLISHERS)+1;
-//			service1=generator.nextInt(2)+1;
-//			service2=generator.nextInt(2)+1;
-//		}
-//		
-//	}
-//
-//	public void execute() {
-//		int i;
-//		
-//		System.out.println("[SUBSCRIBER "+ this.getName() + "]: Executing...");
-//		/**
-//		 * This agent has no definite work. Wait infinitely the arrival of new
-//		 * messages.
-//		 */
-//		System.out.println("[SUBSCRIBER "+ this.getName() + "]: Subscribing to publisher"+publisher_number1+"<DD_Test_TS_"+service1+">");
-//		TraceInteract.requestTracingService(this, "publisher"+publisher_number1+"<DD_Test_TS_"+service1+">");
-//		System.out.println("[SUBSCRIBER "+ this.getName() + "]: Subscribing to publisher"+publisher_number2+"<DD_Test_TS_"+service2+">");
-//		TraceInteract.requestTracingService(this, "publisher"+publisher_number2+"<DD_Test_TS_"+service2+">");
-//		//System.out.println("[SUBSCRIBER "+ this.getName() + "]: Done!");
-//    	for (i=0; i < 10; i++) {
-//			try {
-//				//System.out.println("[SUBSCRIBER "+ this.getName() + "]: Waiting (" + i + ")...");
-//				Thread.sleep(1000);
-//			} catch (InterruptedException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//		}
-//    	
-//    	System.out.println("[SUBSCRIBER "+ this.getName() + "]: Now unsubscribing from tracing services publisher"+publisher_number1+"<DD_Test_TS_"+service1+"> and publisher"+publisher_number2+"<DD_Test_TS_"+service2+">...");
-//		TraceInteract.cancelTracingServiceSubscription(this, "publisher"+publisher_number1+"<DD_Test_TS_"+service1+">");
-//		TraceInteract.cancelTracingServiceSubscription(this, "publisher"+publisher_number2+"<DD_Test_TS_"+service2+">");
-//    	//System.out.println("[SUBSCRIBER "+ this.getName() + "]: Done!");
-//		
-//		System.out.println("[SUBSCRIBER "+ this.getName() + "]: Bye!");
-//	}
-//
-//	public void onTraceEvent(TraceEvent tEvent) {
-//		/**
-//		 * When a trace event arrives, it sends it to the coordinator
-//		 */
-//		System.out.println("[SUBSCRIBER "+ this.getName() + "] RECV:" + tEvent.getContent());
-////		ACLMessage coordination_msg = new ACLMessage(ACLMessage.INFORM);
-////		coordination_msg.setSender(this.getAid());
-////		coordination_msg.setReceiver(coordinatorAid);
-////		coordination_msg.setContent("RECV:" + tEvent.getContent());
-////		send(coordination_msg);
-//	}
 }
