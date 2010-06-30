@@ -47,13 +47,7 @@ public class Run {
 			 * Instantiating the Trace Manager
 			 */
 			TraceManager tm = new TraceManager(new AgentID("tm"));
-			tm.start();
-			
-			/**
-			 * Instantiating the coordinator agent
-			 */
-			//Coordinator coordinator = new Coordinator(new AgentID("qpid://coordinator@localhost:8080"));
-			
+
 			/**
 			 * Instantiating the publisher agent
 			 */
@@ -67,7 +61,6 @@ public class Run {
 			/**
 			 * Execute the agents
 			 */
-			//coordinator.start();
 			subscriber.start();
 			publisher.start();
 		} catch (Exception e) {

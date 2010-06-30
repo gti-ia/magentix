@@ -57,6 +57,13 @@ public class Publisher extends BaseAgent {
 		System.out.println("[PUBLISHER]: Now unpublishing tracing service:");
 		TraceInteract.unpublishTracingService(this, "DD_Test_TS");
 		
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		System.out.println("[PUBLISHER]: Bye!");
 	}
 	
