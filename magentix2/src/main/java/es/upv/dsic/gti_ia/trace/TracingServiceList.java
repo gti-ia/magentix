@@ -1,6 +1,7 @@
 package es.upv.dsic.gti_ia.trace;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.TracingService;
@@ -20,6 +21,19 @@ public class TracingServiceList extends ArrayList<TracingService> {
 			}
 		}
 		return true;
+	}
+	
+	public TracingService getTS(String name){
+		TracingService tService;
+		Iterator<TracingService> iter = this.iterator();
+		
+		while (iter.hasNext()){
+			tService=iter.next();
+			if (tService.getName().contentEquals(name)){
+				return tService;
+			}
+		}
+		return null;
 	}
 	
 //	private class TS_Node {

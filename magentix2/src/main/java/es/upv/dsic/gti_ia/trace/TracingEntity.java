@@ -64,19 +64,10 @@ public class TracingEntity {
 	 * Add a new subscription to the tracing entity
 	 * @param newTracingServiceSubscription
 	 * 		TracingServiceSubscription to be added to the list
-	 * @return 0
-	 * 		Success: The new subscription has been added at
-	 * 			the end of the list
-	 * @return -1
-	 * 		Duplicate subscription: A tracing entity with the specified
-	 * 			origin entity and tracing service already exists in the list
-	 * @return -2
-	 * 		Internal values of the list are not correct. There is
-	 * 		something really wrong if this happens :-S
 	 */
-//	public int addSubscription (TracingServiceSubscription newSubscription){
-//		return this.subscribedToTS.addTSS(newSubscription);
-//	}
+	public boolean addSubscription (TracingServiceSubscription newSubscription){
+		return this.subscribedToTS.add(newSubscription);
+	}
 	
 	/**
 	 * Add a new subscription to the tracing entity for the specified tracing service provided by the specified

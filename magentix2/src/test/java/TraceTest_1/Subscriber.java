@@ -1,5 +1,6 @@
 package TraceTest_1;
 
+import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.BaseAgent;
 import es.upv.dsic.gti_ia.core.TraceEvent;
@@ -28,6 +29,9 @@ public class Subscriber extends BaseAgent{
 		 * Initializing tracing services and stuff
 		 */
 		System.out.println("[SUBSCRIBER]: Basic test start...");
+		System.out.println("[SUBSCRIBER]: Subscribing to tracing service...");
+		TraceInteract.requestTracingService(this, "DD_Test_TS");
+		System.out.println("[SUBSCRIBER]: Done!");
 	}
 
 	public void execute() {
@@ -37,23 +41,26 @@ public class Subscriber extends BaseAgent{
 		 * This agent has no definite work. Wait infinitely the arrival of new
 		 * messages.
 		 */
-		System.out.println("[SUBSCRIBER]: Subscribing to tracing service...");
-		TraceInteract.requestTracingService(this, "DD_Test_TS");
-		System.out.println("[SUBSCRIBER]: Done!");
-		
-    	for (i=0; i < 10; i++) {
+//    	for (i=0; i < 10; i++) {
 			try {
 //				System.out.println("[SUBSCRIBER]: Waiting (" + i + ")...");
-				Thread.sleep(1000);
+				Thread.sleep(10000);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}
+//		}
     	
     	System.out.println("[SUBSCRIBER]: Now unsubscribing from tracing services...");
 		TraceInteract.cancelTracingServiceSubscription(this, "DD_Test_TS");
-    	System.out.println("[SUBSCRIBER]: Done!");
+		
+		try {
+//			System.out.println("[SUBSCRIBER]: Waiting (" + i + ")...");
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		System.out.println("[SUBSCRIBER]: Bye!");
 		
@@ -64,5 +71,9 @@ public class Subscriber extends BaseAgent{
 		 * When a trace event arrives, it prints it on the screen
 		 */
 		System.out.println("[SUBSCRIBER]: Received from " + tEvent.getOriginEntity().getAid().name + ": " + tEvent.getContent());
+	}
+	
+	public void onMessage(ACLMessage msg){
+		System.out.println("[SUBSCRIBER]: Received from " + msg.getSender() + "[ " + msg.getPerformative() + " " + msg.getContent() + " ]");
 	}
 }

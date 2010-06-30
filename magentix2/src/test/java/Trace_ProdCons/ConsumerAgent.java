@@ -28,7 +28,7 @@ public class ConsumerAgent extends BaseAgent {
 	}
 
 	public void execute() {
-		logger.info("[CONSUMER " + getName() +"]: Executing...");
+		System.out.println("[CONSUMER " + getName() +"]: Executing...");
 		/**
 		 * This agent has no definite work. Wait infinitely the arrival of new
 		 * messages.
@@ -39,7 +39,7 @@ public class ConsumerAgent extends BaseAgent {
     	
     	for (int i=0; i < 10; i++) {
 			try {
-				logger.info("[CONSUMER " + getName() + "]: Waiting (" + (i+1) + ")...");
+				System.out.println("[CONSUMER " + getName() + "]: Waiting (" + (i+1) + ")...");
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
@@ -48,7 +48,7 @@ public class ConsumerAgent extends BaseAgent {
 		}
     	
     	// Unsubscribe to trace events of the type "TRACE_TEST", coming from any tracing entity
-    	logger.info("[CONSUMER " + getName() + "]: Unsubscribing from the tracing service TRACE TEST");
+    	System.out.println("[CONSUMER " + getName() + "]: Unsubscribing from the tracing service TRACE TEST");
     	TraceInteract.cancelTracingServiceSubscription(this, "TRACE_TEST");
 		
     	try {
@@ -58,7 +58,7 @@ public class ConsumerAgent extends BaseAgent {
 			e.printStackTrace();
 		}
 		
-		logger.info("[CONSUMER " + getName() + "]: Bye!");
+		System.out.println("[CONSUMER " + getName() + "]: Bye!");
 		
 	}
 
@@ -66,11 +66,11 @@ public class ConsumerAgent extends BaseAgent {
 		/**
 		 * When a trace event arrives, its shows it on the screen
 		 */
-		logger.info("[CONSUMER " + getName() +"]: Trace event received by onTraceEvent: " + tEvent.toReadableString());
+		System.out.println("[CONSUMER " + getName() +"]: Trace event received by onTraceEvent: " + tEvent.toReadableString());
 	}
 	
 	public void onMessage(ACLMessage msg){
-		logger.info("[CONSUMER " + getName() +"]: Message received by onMessage: " + msg.getPerformative() + " " + msg.getContent());
+		System.out.println("[CONSUMER " + getName() +"]: Message received by onMessage: " + msg.getPerformative() + " " + msg.getContent());
 	}
 
 }

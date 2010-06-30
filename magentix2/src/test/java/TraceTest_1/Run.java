@@ -62,13 +62,13 @@ public class Run {
 			/**
 			 * Instantiating the subscriber agent
 			 */
-			//Subscriber subscriber = new Subscriber(new AgentID("qpid://subscriber@localhost:8080"));
+			Subscriber subscriber = new Subscriber(new AgentID("qpid://subscriber@localhost:8080"));
 
 			/**
 			 * Execute the agents
 			 */
 			//coordinator.start();
-			//subscriber.start();
+			subscriber.start();
 			publisher.start();
 		} catch (Exception e) {
 			logger.error("Error  " + e.getMessage());

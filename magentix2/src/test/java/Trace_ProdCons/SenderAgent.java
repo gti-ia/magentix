@@ -28,7 +28,7 @@ public class SenderAgent extends BaseAgent {
 		
 		for (int i=0; i < 10; i++) {
 			try {
-				logger.info("[SENDER " + getName() + "]: Waiting (" + (i+1) + ")...");
+				System.out.println("[SENDER " + getName() + "]: Waiting (" + (i+1) + ")...");
 				
 				// Create a trace event of type "TRACE_TEST"
 				tEvent = new TraceEvent("TRACE_TEST", this.getAid(), "Test trace event (" + (i+1) + ")");
@@ -50,20 +50,20 @@ public class SenderAgent extends BaseAgent {
 			e.printStackTrace();
 		}
 		
-		logger.info("[SENDER " + getName() + "]: Unpublishing tracing service TRACE TEST");
+		System.out.println("[SENDER " + getName() + "]: Unpublishing tracing service TRACE TEST");
 		TraceInteract.unpublishTracingService(this, "TRACE_TEST");
 		
-		logger.info("[SENDER " + getName() + "]: Bye!");		
+		System.out.println("[SENDER " + getName() + "]: Bye!");		
 	}
 	
 	public void onTraceEvent(TraceEvent tEvent) {
 		/**
 		 * When a trace event arrives, its shows it on the screen
 		 */
-		logger.info("[SENDER " + getName() +"]: Trace event received by onTraceEvent: " + tEvent.toReadableString());
+		System.out.println("[SENDER " + getName() +"]: Trace event received by onTraceEvent: " + tEvent.toReadableString());
 	}
 	
 	public void onMessage(ACLMessage msg){
-		logger.info("[SENDER " + getName() +"]: Message received by onMessage: " + msg.getPerformative() + " " + msg.getContent());
+		System.out.println("[SENDER " + getName() +"]: Message received by onMessage: " + msg.getPerformative() + " " + msg.getContent());
 	}
 }

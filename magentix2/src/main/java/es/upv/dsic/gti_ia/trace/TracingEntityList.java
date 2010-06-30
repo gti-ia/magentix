@@ -124,11 +124,13 @@ public class TracingEntityList extends ArrayList<TracingEntity>{
 //	}
 //	
 	public TracingEntity getTEByAid(AgentID aid){
+		TracingEntity tEntity;
 		Iterator<TracingEntity> iter = this.iterator();
 		
 		while (iter.hasNext()){
-			if (iter.next().hasTheSameAidAs(aid)){
-				return iter.next();
+			tEntity=iter.next();
+			if (tEntity.hasTheSameAidAs(aid)){
+				return tEntity;
 			}
 		}
 		return null;

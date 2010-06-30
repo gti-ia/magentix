@@ -33,7 +33,6 @@ public class Publisher extends BaseAgent {
 		
 		System.out.println("[PUBLISHER]: Publishing tracing service:");
 		TraceInteract.publishTracingService(this, "DD_Test_TS", "Domain Dependent Test Tracing Service");
-		TraceInteract.publishTracingService(this, "DD_Test_TS", "Domain Dependent Test Tracing Service");
 		System.out.println("[PUBLISHER]: Done!");
 	}
 
@@ -54,16 +53,14 @@ public class Publisher extends BaseAgent {
 			}
 			
 		}
-		System.out.println("[PUBLISHER]: Done!");
 
-		System.out.println("[PUBLISHER]: Now unpublishing the tracing service...");
+		System.out.println("[PUBLISHER]: Now unpublishing tracing service:");
 		TraceInteract.unpublishTracingService(this, "DD_Test_TS");
-		System.out.println("[PUBLISHER]: Done!");
-
+		
 		System.out.println("[PUBLISHER]: Bye!");
 	}
 	
 	public void onMessage(ACLMessage msg){
-		System.out.println("[PUBLISHER]: Received from " + msg.getSender() + "[ " + msg.getContent() + " ]");
+		System.out.println("[PUBLISHER]: Received from " + msg.getSender() + "[ " + msg.getPerformative() + " " + msg.getContent() + " ]");
 	}
 }
