@@ -115,9 +115,9 @@ public class TraceManager extends BaseAgent{
                 header, xfr.getBodyString());
 	}
 	
-	public void execute() {
-		while(true){}
-	}
+//	public void execute() {
+//		while(true){}
+//	}
 	
 	public void onMessage(ACLMessage msg) {
 		String content, serviceName, serviceDescription, originEntity;
