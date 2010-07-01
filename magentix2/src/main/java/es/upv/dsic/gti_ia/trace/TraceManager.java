@@ -78,7 +78,8 @@ public class TraceManager extends BaseAgent{
 		body = body + tEvent.getTracingService().length() + "#"
 				+ tEvent.getTracingService();
 		// OriginEntiy
-		body = body + tEvent.getOriginEntity().toString().length() + "#" + tEvent.getOriginEntity().toString();
+		body = body + tEvent.getOriginEntity().getType() + "#";
+		body = body + this.getAid().toString().length() + "#" + this.getAid().toString();
 		// Content
 		body = body + tEvent.getContent().length() + "#" + tEvent.getContent();
 		
@@ -101,6 +102,8 @@ public class TraceManager extends BaseAgent{
 //    		
 //    	}
 		
+    	messageProperties.setApplicationHeaders(messageHeaders);
+    	
     	Header header = new Header(deliveryProps, messageProperties);
     	
     	this.traceSession.messageTransfer("amq.match", MessageAcceptMode.EXPLICIT, MessageAcquireMode.PRE_ACQUIRED,
@@ -239,6 +242,12 @@ public class TraceManager extends BaseAgent{
 					}
 
 					if (agree_response){
+						tEventContent=TracingService.DI_TracingServices[TracingService.PUBLISHED_TRACING_SERVICE].getName() + "#" +
+						serviceName;
+						tEvent=new TraceEvent(TracingService.DI_TracingServices[TracingService.PUBLISHED_TRACING_SERVICE].getName(),
+								tEntity, tEventContent);
+						sendSystemTraceEvent(tEvent, tEntity);
+						
 						response_msg = new ACLMessage(ACLMessage.AGREE);
 						response_msg.setSender(this.getAid());
 						response_msg.setReceiver(msg.getSender());
@@ -342,22 +351,15 @@ public class TraceManager extends BaseAgent{
 									}
 									TSS_iter.remove();
 									
-									if (tServiceSubscription.getAnyProvider()){
-										tEventContent=TracingService.DI_TracingServices[TracingService.UNAVAILABLE_TS].getName() + "#" +
-										serviceName + "#any";
-										// Remove subscription
-										this.session.exchangeUnbind(msg.getSender().name+".trace", "amq.match", serviceName + "#any", Option.NONE);
-									}
-									else{
-										tEventContent=TracingService.DI_TracingServices[TracingService.UNAVAILABLE_TS].getName() + "#" +
-										serviceName + msg.getSender();
-										// Remove subscription
-										this.session.exchangeUnbind(msg.getSender().name+".trace", "amq.match", serviceName + "#" + msg.getSender(), Option.NONE);
-									}
+									tEventContent=TracingService.DI_TracingServices[TracingService.UNAVAILABLE_TS].getName() + "#" +
+									serviceName + msg.getSender();
+									// Remove subscription
+									this.session.exchangeUnbind(msg.getSender().name+".trace", "amq.match", serviceName + "#" + msg.getSender(), Option.NONE);
 									
 									tEvent=new TraceEvent(TracingService.DI_TracingServices[TracingService.UNAVAILABLE_TS].getName(),
 											tEntity, tEventContent);
 									sendSystemTraceEvent(tEvent, tServiceSubscription.getSubscriptorEntity());
+								
 								}
 							}
 						}
@@ -366,6 +368,12 @@ public class TraceManager extends BaseAgent{
 						if (tEntity.getPublishedTS().size() == 0){
 							TSProviderEntities.remove(tEntity);
 						}
+						
+						tEventContent=TracingService.DI_TracingServices[TracingService.UNPUBLISHED_TRACING_SERVICE].getName() +
+							"#" + serviceName + "#" + tEntity.getAid();
+						tEvent=new TraceEvent(TracingService.DI_TracingServices[TracingService.UNPUBLISHED_TRACING_SERVICE].getName(),
+								tEntity, tEventContent);
+						sendSystemTraceEvent(tEvent, tEntity);
 
 						response_msg = new ACLMessage(ACLMessage.AGREE);
 						response_msg.setSender(this.getAid());
@@ -436,7 +444,7 @@ public class TraceManager extends BaseAgent{
 					logger.info("[TRACE MANAGER]: Sending REFUSE message to " + msg.getReceiver().toString());
 				}
 				
-				if (agree_response && (originAid != null) &&((originTEntity=tService.getProviders().getTEByAid(originAid))) == null){
+				if (agree_response && (originAid != null) && ((originTEntity=tService.getProviders().getTEByAid(originAid))) == null){
 					// Tracing service not published by the origin tracing entity
 					agree_response=false;
 					response_msg = new ACLMessage(ACLMessage.REFUSE);
@@ -450,7 +458,6 @@ public class TraceManager extends BaseAgent{
 				if (agree_response &&
 					((tEntity=TSSubscriberEntities.getTEByAid(msg.getSender())) != null) &&
 					(tEntity.getSubscribedToTS().getTSS(tEntity, originTEntity, tService) != null)){
-					
 					// The subscription already exists
 					agree_response=false;
 					response_msg = new ACLMessage(ACLMessage.REFUSE);
@@ -514,7 +521,7 @@ public class TraceManager extends BaseAgent{
 					tEntity=new TracingEntity(TracingEntity.AGENT, this.getAid());
 					
 					tEventContent=TracingService.DI_TracingServices[TracingService.SUBSCRIBE].getName() + "#" +
-					serviceName + originEntity;
+					serviceName + "#" + originEntity;
 					
 					tEvent=new TraceEvent(TracingService.DI_TracingServices[TracingService.SUBSCRIBE].getName(),
 							tEntity, tEventContent);
@@ -578,10 +585,6 @@ public class TraceManager extends BaseAgent{
 					originAid=null;
 					originTEntity=null;
 				}
-//				
-//				index = content.indexOf('#', 0);
-//				serviceName = content.substring(0, index);
-//				originEntity = content.substring(index + 1);
 				
 				if ((tService=TracingServices.getTS(serviceName)) == null){
 					// The tracing service does not exist
@@ -622,7 +625,7 @@ public class TraceManager extends BaseAgent{
 					tEntity=new TracingEntity(TracingEntity.AGENT, this.getAid());
 					
 					tEventContent=TracingService.DI_TracingServices[TracingService.UNSUBSCRIBE].getName() + "#" +
-					serviceName + originEntity;
+					serviceName + "#" + originEntity;
 					
 					tEvent=new TraceEvent(TracingService.DI_TracingServices[TracingService.UNSUBSCRIBE].getName(),
 							tEntity, tEventContent);
@@ -653,9 +656,9 @@ public class TraceManager extends BaseAgent{
 		    	response_msg.setSender(this.getAid());
 		    	response_msg.setReceiver(msg.getSender());
 				response_msg.setContent(msg.getContent());
-//				logger.info("Mensaje received in " + this.getName()
-//						+ " agent, by onMessage: " + msg.getContent());
-//				logger.info("[TRACE MANAGER]: returning UNKNOWN message to " + msg.getReceiver().toString());
+				logger.info("Mensaje received in " + this.getName()
+						+ " agent, by onMessage: " + msg.getContent());
+				logger.info("[TRACE MANAGER]: returning UNKNOWN message to " + msg.getReceiver().toString());
 				send(response_msg);
 		}
 		

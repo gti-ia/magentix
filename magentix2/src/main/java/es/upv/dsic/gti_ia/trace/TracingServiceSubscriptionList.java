@@ -24,23 +24,27 @@ public class TracingServiceSubscriptionList extends ArrayList<TracingServiceSubs
 		TracingServiceSubscription tServiceSubscription;
 		Iterator<TracingServiceSubscription> iter = this.iterator();
 		
-		while (iter.hasNext()){
-			tServiceSubscription=iter.next();
-			if (originEntity == null){
+		if (originEntity == null){
+			while (iter.hasNext()){
+				tServiceSubscription=iter.next();
 				if (tServiceSubscription.getAnyProvider() &&
 					tServiceSubscription.getSubscriptorEntity().equals(subscriberEntity) &&
 					tServiceSubscription.getTracingService().equals(tService)){
 					return tServiceSubscription;
 				}
 			}
-			else{
-				if (tServiceSubscription.getOriginEntity().equals(originEntity) &&
+		}
+		else{
+			while (iter.hasNext()){
+				tServiceSubscription=iter.next();
+				if (!tServiceSubscription.getAnyProvider() && tServiceSubscription.getOriginEntity().equals(originEntity) &&
 					tServiceSubscription.getSubscriptorEntity().equals(subscriberEntity) &&
 					tServiceSubscription.getTracingService().equals(tService)){
 					return tServiceSubscription;
 				}
 			}
 		}
+		
 		return null;
 	}
 }

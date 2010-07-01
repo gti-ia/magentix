@@ -67,7 +67,14 @@ public class Publisher extends BaseAgent {
 		System.out.println("[PUBLISHER]: Bye!");
 	}
 	
+	public void onTraceEvent(TraceEvent tEvent) {
+		/**
+		 * When a trace event arrives, it prints it on the screen
+		 */
+		System.out.println("[PUBLISHER]: Received from " + tEvent.getOriginEntity().getAid().name + ": " + tEvent.getContent());
+	}
+	
 	public void onMessage(ACLMessage msg){
-		System.out.println("[PUBLISHER]: Received from " + msg.getSender() + "[ " + msg.getPerformative() + " " + msg.getContent() + " ]");
+		System.out.println("[PUBLISHER]: Received from " + msg.getSender().name + ": [ " + msg.getPerformative() + " " + msg.getContent() + " ]");
 	}
 }

@@ -40,8 +40,8 @@ public class Run {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		final int N_PUBLISHERS = 100;
-		final int N_SUBSCRIBERS = 30;
+		final int N_PUBLISHERS = 1;
+		final int N_SUBSCRIBERS = 1;
 		Publisher publishers[] = new Publisher[N_PUBLISHERS];
 		Subscriber subscribers[] = new Subscriber[N_SUBSCRIBERS];
 		int i;
@@ -83,13 +83,13 @@ public class Run {
 			/**
 			 * Execute the agents
 			 */
-			for (i=0; i < N_SUBSCRIBERS; i++){
-				subscribers[i].start();
-			}
+//			for (i=0; i < N_SUBSCRIBERS; i++){
+//				subscribers[i].start();
+//			}
 			
-			for (i=0; i < N_PUBLISHERS; i++){
-				publishers[i].start();
-			}
+//			for (i=0; i < N_PUBLISHERS; i++){
+//				publishers[i].start();
+//			}
 			
 		} catch (Exception e) {
 			logger.error("Error  " + e.getMessage());

@@ -10,7 +10,7 @@ import es.upv.dsic.gti_ia.core.TraceEvent;
 import es.upv.dsic.gti_ia.trace.TraceInteract;
 
 /*****************************************************************************************
-/*                                      TraceTest_1                                      *
+/*                                      TraceTest_3                                      *
 /*****************************************************************************************
 /*                     Author: Luis Burdalo (lburdalo@dsic.upv.es)                       *
 /*****************************************************************************************
@@ -51,11 +51,11 @@ public class Publisher extends BaseAgent {
 		
 		while(!finish){
 			try {
-				System.out.println("[PUBLISHER " + this.getName() + "]: Sending event...");
+				//System.out.println("[PUBLISHER " + this.getName() + "]: Sending event...");
 				tServiceName="DD_Test_TS" + (generator.nextInt(5)+1);
 				tEvent = new TraceEvent(tServiceName, this.getAid(), tServiceName + ": Test...");
 				sendTraceEvent(tEvent);
-				Thread.sleep(generator.nextInt(1000));
+				Thread.sleep(generator.nextInt(250));
 			} catch (InterruptedException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -73,7 +73,7 @@ public class Publisher extends BaseAgent {
 	}
 	
 	public void onTraceEvent(TraceEvent tEvent) {
-		System.out.println("[SUBSCRIBER " + this.getName() + "]: Received from " + tEvent.getOriginEntity().getAid().name + ": " + tEvent.getContent());
+		System.out.println("[PUBLISHER " + this.getName() + "]: Received from " + tEvent.getOriginEntity().getAid().name + ": " + tEvent.getContent());
 	}
 	
 	public void onMessage(ACLMessage msg){

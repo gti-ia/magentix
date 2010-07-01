@@ -65,7 +65,7 @@ public class TraceInteract {
 	/**
 	 * Request a tracing service
 	 */
-	static public void requestTracingService(BaseAgent requesterAgent, String eventType, AgentID originEntity) {
+	static public void requestTracingService(BaseAgent requesterAgent, String name, AgentID originEntity) {
 		/**
 		 * Building a ACLMessage
 		 */
@@ -75,7 +75,7 @@ public class TraceInteract {
 		msg.setReceiver(tms_aid);
 		msg.setSender(requesterAgent.getAid());
 		msg.setLanguage("ACL");
-		msg.setContent(eventType + "#" + originEntity.toString());
+		msg.setContent(name + "#" + originEntity.toString());
 		/**
 		 * Sending a ACLMessage
 		 */
@@ -85,7 +85,7 @@ public class TraceInteract {
 	/**
 	 * Request a tracing service
 	 */
-	static public void requestTracingService(BaseAgent requesterAgent, String eventType) {
+	static public void requestTracingService(BaseAgent requesterAgent, String name) {
 		/**
 		 * Building a ACLMessage
 		 */
@@ -95,7 +95,7 @@ public class TraceInteract {
 		msg.setReceiver(tms_aid);
 		msg.setSender(requesterAgent.getAid());
 		msg.setLanguage("ACL");
-		msg.setContent(eventType + "#any");
+		msg.setContent(name + "#any");
 		/**
 		 * Sending a ACLMessage
 		 */

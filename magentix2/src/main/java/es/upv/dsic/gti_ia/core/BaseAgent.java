@@ -385,7 +385,6 @@ public class BaseAgent implements Runnable {
     	
     	this.traceSession.messageTransfer("amq.match", MessageAcceptMode.EXPLICIT, MessageAcquireMode.PRE_ACQUIRED,
                 header, xfr.getBodyString());
-
 	}
 	
 	/**

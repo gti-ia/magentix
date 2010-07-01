@@ -58,6 +58,13 @@ public class Run {
 			 */
 			Subscriber subscriber = new Subscriber(new AgentID("qpid://subscriber@localhost:8080"));
 
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 			/**
 			 * Execute the agents
 			 */

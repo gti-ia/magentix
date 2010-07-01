@@ -1,5 +1,6 @@
 package TraceTest_2;
 
+import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.BaseAgent;
 import es.upv.dsic.gti_ia.core.TraceEvent;
@@ -66,7 +67,7 @@ public class Publisher extends BaseAgent {
 			e.printStackTrace();
 		}
 		
-		//System.out.println("[PUBLISHER "+ this.getName() + "]: Now unpublishing tracing services...");
+		System.out.println("[PUBLISHER "+ this.getName() + "]: Now unpublishing tracing services...");
 		TraceInteract.unpublishTracingService(this, this.getName()+"<DD_Test_TS_1>");
 		TraceInteract.unpublishTracingService(this, this.getName()+"<DD_Test_TS_2>");
 
@@ -78,5 +79,16 @@ public class Publisher extends BaseAgent {
 		}
 		
 		//System.out.println("[PUBLISHER "+ this.getName() + "]: Bye!");
+	}
+	
+	public void onTraceEvent(TraceEvent tEvent) {
+		/**
+		 * When a trace event arrives, it prints it on the screen
+		 */
+		System.out.println("[PUBLISHER]: Received from " + tEvent.getOriginEntity().getAid().name + ": " + tEvent.getContent());
+	}
+	
+	public void onMessage(ACLMessage msg){
+		System.out.println("[PUBLISHER]: Received from " + msg.getSender().name + ": [ " + msg.getPerformative() + " " + msg.getContent() + " ]");
 	}
 }

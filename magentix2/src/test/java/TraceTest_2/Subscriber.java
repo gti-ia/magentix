@@ -31,7 +31,7 @@ import es.upv.dsic.gti_ia.trace.*;
 
 *****************************************************************************************/
 public class Subscriber extends BaseAgent{
-	final int N_PUBLISHERS = 100;
+	final int N_PUBLISHERS = 1;
 	private final int N_EVENTS = 10;
 	private Random generator;
 	private int publisher_number1=0, publisher_number2=0;

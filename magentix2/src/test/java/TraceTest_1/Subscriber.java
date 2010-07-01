@@ -70,6 +70,6 @@ public class Subscriber extends BaseAgent{
 	}
 	
 	public void onMessage(ACLMessage msg){
-		System.out.println("[SUBSCRIBER]: Received from " + msg.getSender() + "[ " + msg.getPerformative() + " " + msg.getContent() + " ]");
+		System.out.println("[SUBSCRIBER]: Received from " + msg.getSender().name + ": [ " + msg.getPerformative() + " " + msg.getContent() + " ]");
 	}
 }
