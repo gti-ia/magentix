@@ -40,7 +40,6 @@ import java.security.cert.CertificateException; //import java.security.cert.Cert
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Properties;
 import java.util.Vector; /*
