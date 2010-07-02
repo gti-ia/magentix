@@ -1,0 +1,47 @@
+# Magentix2 Example of ACL file for Qpid Broker.
+#
+# Jose Miguel Such (jsuch@dsic.upv.es)
+#
+# In order for the Broker to load the acl file efficiently,
+# please, remove the comments when the acl file is ready to be used.
+
+# Queue Creation and Binding
+# ----------------------------
+# In order to allow agents to create their own queue and bind it to amq.direct,
+# for each agent created include: 
+# acl allow agentname@QPID all queue name=agentname
+# acl allow agentname@QPID bind exchange name=amq.direct routingkey=agentname
+
+# we can also allow all agents to create queues and bindings to amq.direct
+# without constraints using the following two rules:
+# acl allow all create queue
+# acl allow all bind exchange name=amq.direct
+
+
+
+# Communication prohibition
+# --------------------------
+# In order to not allow agent1 to communicate to agent2, include
+# at this point of the ACL file and always before Magentix2 default rules:
+#
+# acl deny agent1@QPID publish exchange name=amq.direct routingkey=agent2
+#
+
+
+
+# Magentix2 default rules
+# --------------------------
+#
+# The following rule allows all agents to consume messages from their own queues:
+
+acl allow all consume queue owner=self
+
+# The following rule allows all agents in Magentix to communicate to each other,
+# unless a communication prohibition is stated before this rule.
+
+acl allow all publish exchange name=amq.direct
+
+acl allow MMS@QPID all queue
+acl allow MMS@QPID all exchange name=amq.direct
+acl allow MMS@QPID all exchange name=qpid.management
+acl allow MMS@QPID all method name=reloadACLFile
