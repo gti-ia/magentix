@@ -6,7 +6,7 @@
 /*                                     DESCRIPTION                                       */
 /*****************************************************************************************/
 
-    Simple test with two types of agents: 100 PUBLISHER agents and 30 SUBSCRIBER agents.
+    Simple test with two types of agents: 10 PUBLISHER agents and 5 SUBSCRIBER agents.
     
     PUBLISHER agents publish 2 different DD tracing services each and generate 10 trace
     events for each tracing service during 10 seconds (one per second). After that,

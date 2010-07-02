@@ -18,13 +18,12 @@ public class SenderAgent extends BaseAgent {
 	public SenderAgent(AgentID aid) throws Exception {
 		super(aid);
 		TraceInteract.publishTracingService(this, "TRACE_TEST", "Tracing service with no other use than testing the system");
-		//logger.info("Published TRACE_TEST tracing service");
 	}
 
 	public void execute() {
 		TraceEvent tEvent;
 		
-		logger.info("[SENDER " + getName() +"]: Executing...");
+		System.out.println("[SENDER " + getName() +"]: Executing...");
 		
 		for (int i=0; i < 10; i++) {
 			try {
@@ -57,13 +56,10 @@ public class SenderAgent extends BaseAgent {
 	}
 	
 	public void onTraceEvent(TraceEvent tEvent) {
-		/**
-		 * When a trace event arrives, its shows it on the screen
-		 */
-		System.out.println("[SENDER " + getName() +"]: Trace event received by onTraceEvent: " + tEvent.toReadableString());
+		System.out.println("[SENDER " + this.getName() + "]: Received from " + tEvent.getOriginEntity().getAid().name + ": " + tEvent.getContent());
 	}
 	
 	public void onMessage(ACLMessage msg){
-		System.out.println("[SENDER " + getName() +"]: Message received by onMessage: " + msg.getPerformative() + " " + msg.getContent());
+		System.out.println("[SENDER " + this.getName() + "]: Received from " + msg.getSender().toString() + ": " + msg.getContent());
 	}
 }

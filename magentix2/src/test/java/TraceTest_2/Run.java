@@ -15,7 +15,7 @@ import es.upv.dsic.gti_ia.core.AgentsConnection;
 /*                                     DESCRIPTION                                       */
 /*****************************************************************************************
 
-    Simple test with two types of agents: 100 PUBLISHER agents and 30 SUBSCRIBER agents.
+    Simple test with two types of agents: 10 PUBLISHER agents and 5 SUBSCRIBER agents.
     
     PUBLISHER agents publish 2 different DD tracing services each and generate 10 trace
     events for each tracing service during 10 seconds (one per second). After that,
@@ -40,8 +40,8 @@ public class Run {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		final int N_PUBLISHERS = 1;
-		final int N_SUBSCRIBERS = 1;
+		final int N_PUBLISHERS = 10;
+		final int N_SUBSCRIBERS = 5;
 		Publisher publishers[] = new Publisher[N_PUBLISHERS];
 		Subscriber subscribers[] = new Subscriber[N_SUBSCRIBERS];
 		int i;

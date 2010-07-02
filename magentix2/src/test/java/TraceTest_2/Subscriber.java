@@ -17,7 +17,7 @@ import es.upv.dsic.gti_ia.trace.*;
 /*                                     DESCRIPTION                                       */
 /*****************************************************************************************
 
-    Simple test with two types of agents: 100 PUBLISHER agents and 30 SUBSCRIBER agents.
+    Simple test with two types of agents: 10 PUBLISHER agents and 5 SUBSCRIBER agents.
     
     SUBSCRIBER agents subscribe randomly to two of the services offered by the PUBLISHER
     agents and wait during 12 seconds for events to arrive. Each time a trace event is
@@ -31,7 +31,7 @@ import es.upv.dsic.gti_ia.trace.*;
 
 *****************************************************************************************/
 public class Subscriber extends BaseAgent{
-	final int N_PUBLISHERS = 1;
+	final int N_PUBLISHERS = 10;
 	private final int N_EVENTS = 10;
 	private Random generator;
 	private int publisher_number1=0, publisher_number2=0;
@@ -45,7 +45,7 @@ public class Subscriber extends BaseAgent{
 		 * Initializing tracing services and stuff
 		 */
 		generator = new Random(System.currentTimeMillis());
-		//System.out.println("[SUBSCRIBER "+ this.getName() + "]: Subscribing to tracing services...");
+//		System.out.println("[SUBSCRIBER "+ this.getName() + "]: Subscribing to tracing services...");
 		while ((publisher_number1 == publisher_number2) && (service1 == service2)){
 			publisher_number1=generator.nextInt(N_PUBLISHERS)+1;
 			publisher_number2=generator.nextInt(N_PUBLISHERS)+1;
@@ -70,7 +70,7 @@ public class Subscriber extends BaseAgent{
 			e.printStackTrace();
 		}
 
-		//System.out.println("[SUBSCRIBER " + this.getName() + "]: Now unsubscribing from tracing services publisher"+publisher_number1+"<DD_Test_TS_"+service1+"> and publisher"+publisher_number2+"<DD_Test_TS_"+service2+">...");
+//		System.out.println("[SUBSCRIBER " + this.getName() + "]: Now unsubscribing from tracing services publisher"+publisher_number1+"<DD_Test_TS_"+service1+"> and publisher"+publisher_number2+"<DD_Test_TS_"+service2+">...");
 		TraceInteract.cancelTracingServiceSubscription(this, "publisher"+publisher_number1+"<DD_Test_TS_"+service1+">");
 		TraceInteract.cancelTracingServiceSubscription(this, "publisher"+publisher_number2+"<DD_Test_TS_"+service2+">");
     	
@@ -88,21 +88,20 @@ public class Subscriber extends BaseAgent{
 			System.out.println("[SUBSCRIBER " + this.getName() + "]: FAIL! Missed events. Received " + n_received1 + " of " + N_EVENTS + " and " + n_received2 + " of " + N_EVENTS);
 		}
 		
-		//System.out.println("[SUBSCRIBER " + this.getName() + "]: Bye!");
+		System.out.println("[SUBSCRIBER " + this.getName() + "]: Bye!");
 		
 	}
 
 	public void onTraceEvent(TraceEvent tEvent) {
-		int index;
 		/**
 		 * When a trace event arrives, it updates counters and prints the content on the screen
 		 */
-		//System.out.println("[SUBSCRIBER " + this.getName() + "]: Received from " + tEvent.getOriginEntity().getAid().name + ": " + tEvent.getContent());
-		index=tEvent.getContent().indexOf(" ");
-		if (tEvent.getContent().substring(0, index).contentEquals("publisher"+publisher_number1+"<DD_Test_TS_"+service1+">")){
+		System.out.println("[SUBSCRIBER " + this.getName() + "]: Received from " + tEvent.getOriginEntity().getAid().name + ": " + tEvent.getContent());
+
+		if (tEvent.getTracingService().contentEquals("publisher"+publisher_number1+"<DD_Test_TS_"+service1+">")){
 			n_received1++;
 		}
-		else if (tEvent.getContent().substring(0, index).contentEquals("publisher"+publisher_number2+"<DD_Test_TS_"+service2+">")){
+		else if (tEvent.getTracingService().contentEquals("publisher"+publisher_number2+"<DD_Test_TS_"+service2+">")){
 			n_received2++;
 		}
 	}

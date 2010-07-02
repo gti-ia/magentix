@@ -7,112 +7,157 @@ import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.BaseAgent;
 import es.upv.dsic.gti_ia.core.TraceEvent;
-import es.upv.dsic.gti_ia.core.TracingService;
 import es.upv.dsic.gti_ia.trace.TraceInteract;
 
-/**
- * SenderAgent class defines the structure of a sender BaseAgent
- * 
- * Sends a trace event of the type "TRACE_TEST" each 1 second
- * 
- * @author Luis Burdalo - lburdalo@dsic.upv.es
- */
+/*****************************************************************************************/
+/*                                      Trace_Basic                                      */
+/*****************************************************************************************/
+/*                     Author: Luis Burdalo (lburdalo@dsic.upv.es)                       */
+/*****************************************************************************************/
+/*                                     DESCRIPTION                                       */
+/*****************************************************************************************
+
+    Simple battery of requests to make sure the Trace Manager does not let erroneous
+    publication/unpublication nor subscription/unsubscription
+    
+    Initialization:
+    
+    PUBLISHER:
+      - Publishes the tracing service DD_Test_TS1 (OK)
+      - Publishes AGAIN the tracing service DD_Test_TS1 (FAIL!)
+      - Unpublishes DD_Test_TS2 (FAIL!)
+      - Unpublishes DD-Test_TS1 (OK)
+      - Publishes 5 tracing services: DD_Test_TS1 to DD_Test_TS5 (OK)
+      
+    Execution:
+    
+    PUBLISHER:
+    	- Generates a trace event of each tracing service every second.
+    	- When the SUBSCRIBER requests it (via ACLMessage), it unpublishes DD_Test_TS3
+    	- When a STOP message arrives from the main Run thread, it stops generating trace
+    	  events and unpublishes all tracing services (DD_Test_TS3 unpublication should fail
+    	  since it should be already unpublished).
+
+*****************************************************************************************/
 public class Publisher extends BaseAgent {
-	private final int MAX_SERVICES = 10;
-	private TracingService[] TracingServices=new TracingService[MAX_SERVICES];
-	private Integer[] EventsSent = new Integer[MAX_SERVICES];
-	private boolean finish;
-	private Random generator;
-	private AgentID coordinatorAid;
+private boolean finish=false;
+	
 	
 	public Publisher(AgentID aid) throws Exception {
 		super(aid);
-		
-		int i;
 		/**
 		 * Initializing tracing services and stuff
 		 */
-		for (i=0; i < MAX_SERVICES; i++){
-			TracingServices[i]=new TracingService("SRV_" + i, "Tracing Service " + i);
-			EventsSent[i]=0;
-		}
-		finish=false;
-		generator = new Random(System.currentTimeMillis());
-		coordinatorAid = new AgentID("qpid://coordinator@localhost:8080");
+		System.out.println("[PUBLISHER " + this.getName() + "]: Basic test start...");
 		
-		System.out.println("[PUBLISHER]: Basic test start...");
-		
-		System.out.println("[PUBLISHER]: Publishing " + MAX_SERVICES + " tracing services:");
-		for (i=0; i < MAX_SERVICES; i++){
-			System.out.println("[PUBLISHER]: Publishing " + (i+1) + " of "+ MAX_SERVICES);
-			TraceInteract.publishTracingService(this, TracingServices[i].getName(), TracingServices[i].getDescription());
+		try{
+			System.out.println("[PUBLISHER " + this.getName() + "]: First, basic publication and unpublication operations:");
+			
+			System.out.println();
+			System.out.println();
+			System.out.println();
+			System.out.println("[PUBLISHER " + this.getName() + "]: Publishing DD_Test_TS1...");
+			TraceInteract.publishTracingService(this, "DD_Test_TS1", "Domain Dependent Test Tracing Service1");
+			Thread.sleep(500);
+			
+			System.out.println();
+			System.out.println();
+			System.out.println();
+			System.out.println("[PUBLISHER " + this.getName() + "]: Publishing AGAIN DD_Test_TS1 (THIS SHOULD FAIL)...");
+			TraceInteract.publishTracingService(this, "DD_Test_TS1", "Domain Dependent Test Tracing Service1");
+			Thread.sleep(500);
+			
+			System.out.println();
+			System.out.println();
+			System.out.println();
+			System.out.println("[PUBLISHER " + this.getName() + "]: Unpublishing DD_Test_TS2 (THIS SHOULD FAIL)...");
+			TraceInteract.unpublishTracingService(this, "DD_Test_TS2");
+			Thread.sleep(500);
+			
+			System.out.println();
+			System.out.println();
+			System.out.println();
+			System.out.println("[PUBLISHER " + this.getName() + "]: Unpublishing DD_Test_TS1...");
+			TraceInteract.unpublishTracingService(this, "DD_Test_TS1");
+			Thread.sleep(500);
+			
+			System.out.println();
+			System.out.println();
+			System.out.println();
+			System.out.println("[PUBLISHER " + this.getName() + "]: Ok, now publish 5 tracing services:");
+						
+			TraceInteract.publishTracingService(this, "DD_Test_TS1", "Domain Dependent Test Tracing Service1");
+			Thread.sleep(500);
+			TraceInteract.publishTracingService(this, "DD_Test_TS2", "Domain Dependent Test Tracing Service2");
+			Thread.sleep(500);
+			TraceInteract.publishTracingService(this, "DD_Test_TS3", "Domain Dependent Test Tracing Service3");
+			Thread.sleep(500);
+			TraceInteract.publishTracingService(this, "DD_Test_TS4", "Domain Dependent Test Tracing Service4");
+			Thread.sleep(500);
+			TraceInteract.publishTracingService(this, "DD_Test_TS5", "Domain Dependent Test Tracing Service5");
+			Thread.sleep(500);
+			System.out.println("[PUBLISHER " + this.getName() + "]: Done!");
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
-		System.out.println("[PUBLISHER]: Done!");
 	}
 
 	public void execute() {
 		TraceEvent tEvent;
-		String serviceName;
-		int i;
+		Random generator = new Random(System.currentTimeMillis());
 		
-//		try {
-//			// Wait 2 seconds for Subscriber to subscribe to the services
-//			Thread.sleep(2000);
-//		} catch (InterruptedException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+		System.out.println("[PUBLISHER " + this.getName() + "]: Sending trace events");
 		
 		while(!finish){
 			try {
-				// Create a trace event of a random type
-				i=generator.nextInt(MAX_SERVICES);
-				serviceName="SRV_" + i;
-				tEvent = new TraceEvent(serviceName, this.getAid(), serviceName);
-
-				// Generating the trace event
+				tEvent = new TraceEvent("DD_Test_TS1", this.getAid(), "DD_Test_TS1" + ": Test");
 				sendTraceEvent(tEvent);
-				System.out.println("[PUBLISHER " + getName() + "]: Event sent (" + serviceName + ")");
-				EventsSent[i]++;
-				Thread.sleep(100);
-			} catch (InterruptedException e) {
+				tEvent = new TraceEvent("DD_Test_TS2", this.getAid(), "DD_Test_TS2" + ": Test");
+				sendTraceEvent(tEvent);
+				tEvent = new TraceEvent("DD_Test_TS3", this.getAid(), "DD_Test_TS3" + ": Test");
+				sendTraceEvent(tEvent);
+				tEvent = new TraceEvent("DD_Test_TS4", this.getAid(), "DD_Test_TS4" + ": Test");
+				sendTraceEvent(tEvent);
+				tEvent = new TraceEvent("DD_Test_TS5", this.getAid(), "DD_Test_TS5" + ": Test");
+				sendTraceEvent(tEvent);
+				Thread.sleep(generator.nextInt(1000));
+			} catch (InterruptedException e1) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				e1.printStackTrace();
 			}
 		}
 
-		System.out.println("[PUBLISHER]: Now unpublishing tracing services...");
-		for (i=0; i < MAX_SERVICES; i++){
-			//logger.info("[PUBLISHER]: Unpublishing " + (i+1) + " of "+ MAX_SERVICES);
-			TraceInteract.unpublishTracingService(this, TracingServices[i].getName());
-		}
-		System.out.println("[PUBLISHER]: Done!");
-		
-		for (i=0; i < MAX_SERVICES; i++){
-			ACLMessage coordination_msg = new ACLMessage(ACLMessage.INFORM);
-			coordination_msg.setSender(this.getAid());
-			coordination_msg.setReceiver(coordinatorAid);
-			coordination_msg.setContent("SENT:" + i + ":" + EventsSent[i]);
-			send(coordination_msg);
-		}
-		
-		System.out.println("[PUBLISHER]: Bye!");
+		System.out.println("[PUBLISHER " + this.getName() + "]: Now unpublishing tracing services\n\t(one of them will probably fail because it was already unpublished)...");
+		TraceInteract.unpublishTracingService(this, "DD_Test_TS1");
+		TraceInteract.unpublishTracingService(this, "DD_Test_TS2");
+		// This one has probably been already unpublished in the onMessage method
+		TraceInteract.unpublishTracingService(this, "DD_Test_TS3");
+		TraceInteract.unpublishTracingService(this, "DD_Test_TS4");
+		TraceInteract.unpublishTracingService(this, "DD_Test_TS5");
+
+		System.out.println("[PUBLISHER " + this.getName() + "]: Bye!");
 	}
 	
 	public void onTraceEvent(TraceEvent tEvent) {
-		/**
-		 * When a trace event arrives, its shows it on the screen
-		 */
-		//System.out.println("[PUBLISHER " + getName() +"]: Event: " + tEvent.toReadableString());
+		System.out.println("[PUBLISHER " + this.getName() + "]: Received from " + tEvent.getOriginEntity().getAid().name + ": " + tEvent.getContent());
 	}
 	
 	public void onMessage(ACLMessage msg){
-		switch (msg.getPerformativeInt()){
-			case ACLMessage.REQUEST:
-				if (msg.getContent().contentEquals("STOP")){
-					finish = true;
-				}
-				break;
-		}
+		int index;
+		String serviceName;
+		
+		if (msg.getPerformativeInt() == ACLMessage.REQUEST){
+			if ((index=msg.getContent().indexOf("#")) >= 0){
+				serviceName=msg.getContent().substring(index+1);
+				System.out.println("[PUBLISHER " + this.getName() + "]: Now unpublishing tracing service " + serviceName);
+				TraceInteract.unpublishTracingService(this, serviceName);
+			}
+			else if (msg.getContent().contentEquals("STOP")){
+				finish=true;
+			}
+		}else{
+			System.out.println("[PUBLISHER " + this.getName() + "]: Received from " + msg.getSender().toString() + ": " + msg.getContent());
+		}	
 	}
 }

@@ -14,7 +14,7 @@ import es.upv.dsic.gti_ia.trace.TraceInteract;
 /*                                     DESCRIPTION                                       */
 /*****************************************************************************************
 
-    Simple test with two types of agents: 100 PUBLISHER agents and 30 SUBSCRIBER agents.
+    Simple test with two types of agents: 10 PUBLISHER agents and 5 SUBSCRIBER agents.
     
     PUBLISHER agents publish 2 different DD tracing services each and generate 10 trace
     events for each tracing service during 10 seconds (one per second). After that,
@@ -35,7 +35,7 @@ public class Publisher extends BaseAgent {
 		 * Initializing tracing services and stuff
 		 */
 		
-		//System.out.println("[PUBLISHER "+ this.getName() + "]: Publishing tracing services...");
+//		System.out.println("[PUBLISHER "+ this.getName() + "]: Publishing tracing services...");
 		TraceInteract.publishTracingService(this, this.getName()+"<DD_Test_TS_1>", this.getName() + " Domain Dependent Test Tracing Service 1");
 		TraceInteract.publishTracingService(this, this.getName()+"<DD_Test_TS_2>", this.getName() + " Domain Dependent Test Tracing Service 2");
 	}
@@ -44,14 +44,14 @@ public class Publisher extends BaseAgent {
 		TraceEvent tEvent;
 		int i;
 		
-		//System.out.println("[PUBLISHER "+ this.getName() + "]: Sending trace events");
+//		System.out.println("[PUBLISHER "+ this.getName() + "]: Sending trace events");
 		for (i=0; i < N_EVENTS; i++) {
 			try {
 				tEvent = new TraceEvent(this.getName()+"<DD_Test_TS_1>", this.getAid(), this.getName()+"<DD_Test_TS_1> " + (i+1) + " of " + N_EVENTS);
 				// Generating trace events
-//				sendTraceEvent(tEvent);
+				sendTraceEvent(tEvent);
 				tEvent = new TraceEvent(this.getName()+"<DD_Test_TS_2>", this.getAid(), this.getName()+"<DD_Test_TS_2> " + (i+1) + " of " + N_EVENTS);
-//				sendTraceEvent(tEvent);
+				sendTraceEvent(tEvent);
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
@@ -89,6 +89,6 @@ public class Publisher extends BaseAgent {
 	}
 	
 	public void onMessage(ACLMessage msg){
-		System.out.println("[PUBLISHER]: Received from " + msg.getSender().name + ": [ " + msg.getPerformative() + " " + msg.getContent() + " ]");
+//		System.out.println("[PUBLISHER]: Received from " + msg.getSender().name + ": [ " + msg.getPerformative() + " " + msg.getContent() + " ]");
 	}
 }
