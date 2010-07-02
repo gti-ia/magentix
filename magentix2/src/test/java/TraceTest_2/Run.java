@@ -83,13 +83,13 @@ public class Run {
 			/**
 			 * Execute the agents
 			 */
-//			for (i=0; i < N_SUBSCRIBERS; i++){
-//				subscribers[i].start();
-//			}
+			for (i=0; i < N_SUBSCRIBERS; i++){
+				subscribers[i].start();
+			}
 			
-//			for (i=0; i < N_PUBLISHERS; i++){
-//				publishers[i].start();
-//			}
+			for (i=0; i < N_PUBLISHERS; i++){
+				publishers[i].start();
+			}
 			
 		} catch (Exception e) {
 			logger.error("Error  " + e.getMessage());

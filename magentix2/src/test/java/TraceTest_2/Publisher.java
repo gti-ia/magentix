@@ -49,9 +49,9 @@ public class Publisher extends BaseAgent {
 			try {
 				tEvent = new TraceEvent(this.getName()+"<DD_Test_TS_1>", this.getAid(), this.getName()+"<DD_Test_TS_1> " + (i+1) + " of " + N_EVENTS);
 				// Generating trace events
-				sendTraceEvent(tEvent);
+//				sendTraceEvent(tEvent);
 				tEvent = new TraceEvent(this.getName()+"<DD_Test_TS_2>", this.getAid(), this.getName()+"<DD_Test_TS_2> " + (i+1) + " of " + N_EVENTS);
-				sendTraceEvent(tEvent);
+//				sendTraceEvent(tEvent);
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
