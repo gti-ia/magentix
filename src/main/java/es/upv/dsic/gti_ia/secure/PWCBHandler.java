@@ -15,12 +15,19 @@ import java.io.IOException;
 import java.util.Properties;
 
 
-
+/**
+ * Simple password callback handler. This just checks if the password for the private key
+ * is being requested, and if so sets that value.
+ */
 public class PWCBHandler implements CallbackHandler
 {
 	
 	protected Logger logger = Logger.getLogger(PWCBHandler.class);
 	
+	
+	/**
+	 * This method set the password for the private key. 
+	 */
     public void handle(Callback[] callbacks) throws IOException {
     	DOMConfigurator.configure("configuration/loggin.xml");
     	Properties prop = new Properties();
