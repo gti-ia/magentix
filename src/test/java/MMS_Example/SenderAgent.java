@@ -1,7 +1,6 @@
 package MMS_Example;
 
-import org.apache.log4j.Logger;
-import org.apache.log4j.xml.DOMConfigurator;
+
 
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
@@ -33,7 +32,7 @@ public class SenderAgent extends BaseAgent {
 		// msg.setSender(this.getAid());
 		//Para el ejemplo del agente malintencionado vamos a cambiar el nombre del sender. Pondremos en vez de emisor, pondremos 
 		//emisorFalso.
-		msg.setSender(new AgentID("emisorMalintencionado"));
+		msg.setSender(new AgentID("emisor"));
 		msg.setLanguage("ACL");
 		msg.setContent("Hello, I'm " + getName());
 		/**

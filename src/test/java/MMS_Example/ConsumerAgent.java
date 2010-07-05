@@ -2,8 +2,7 @@ package MMS_Example;
 
 import java.util.concurrent.LinkedBlockingQueue;
 
-import org.apache.log4j.Logger;
-import org.apache.log4j.xml.DOMConfigurator;
+
 import org.apache.qpid.transport.MessageTransfer;
 
 import es.upv.dsic.gti_ia.core.ACLMessage;
