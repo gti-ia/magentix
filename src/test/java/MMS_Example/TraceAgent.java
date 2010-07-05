@@ -1,10 +1,8 @@
 package MMS_Example;
 
-import org.apache.qpid.transport.MessageAcceptMode;
-import org.apache.qpid.transport.MessageAcquireMode;
-import org.apache.qpid.transport.MessageCreditUnit;
+
 import org.apache.qpid.transport.Option;
-import org.apache.qpid.transport.Session;
+
 
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.BaseAgent;
