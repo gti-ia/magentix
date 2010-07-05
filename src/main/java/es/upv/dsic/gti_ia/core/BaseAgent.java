@@ -104,14 +104,14 @@ public class BaseAgent implements Runnable {
 	 */
 	public BaseAgent(AgentID aid) throws Exception {
 
-		// Si no estamos en modo seguro funcionara como siempre, es por tant
+		// Si no estamos en modo seguro funcionara como siempre, es por tanto
 		// transparente al programador.
 		if (c.isSecureMode()) {
 
 			SecurityTools st = SecurityTools.GetInstance();
 			Properties propSecurity = new Properties();
 			try {
-				//Nuevo fichero para la configuración de datos para las seguridad.
+				//Nuevo fichero para la configuración de datos para la seguridad.
 				propSecurity.load(new FileInputStream("./configuration/securityUser.properties"));
 			} catch (FileNotFoundException e) {
 				logger.error(e);
@@ -127,8 +127,9 @@ public class BaseAgent implements Runnable {
 
 				
 
-				//El alias sera el mismo que el nombre del agente
+				
 				connection = null;
+				//El alias sera el mismo que el nombre del agente
 				String certAlias = aid.name;
 				
 				// deberemos crear una conexion por cada agente del usuario.
