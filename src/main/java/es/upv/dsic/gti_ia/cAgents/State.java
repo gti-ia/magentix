@@ -9,7 +9,7 @@ package es.upv.dsic.gti_ia.cAgents;
 public abstract class State implements Cloneable {
 
 	// PENDIENTE: creo que es mejor usar enumerados en lugar de constantes
-	// numéricas
+	// numericas
 
 	final static int ACTION = 0;
 	final static int BEGIN = 1;

@@ -12,18 +12,22 @@ import org.apache.qpid.transport.Header;
 import org.apache.qpid.transport.MessageAcceptMode;
 import org.apache.qpid.transport.MessageAcquireMode;
 import org.apache.qpid.transport.MessageCreditUnit;
+import org.apache.qpid.transport.MessageProperties;
 import org.apache.qpid.transport.MessageTransfer;
 import org.apache.qpid.transport.Option;
 import org.apache.qpid.transport.Session;
 import org.apache.qpid.transport.SessionException;
 import org.apache.qpid.transport.SessionListener;
 
+import es.upv.dsic.gti_ia.trace.TracingEntity;
+
 /**
  * @author Ricard Lopez Fogues
  * @author Sergio Pajares Ferrando
  * @author Joan Bellver Faus
+ * @author Luis Burdalo
  */
-public class BaseAgent implements Runnable{
+public class BaseAgent implements Runnable {
 
 	/**
 	 * The logger variable considers to print any event that occurs by the agent
@@ -44,9 +48,14 @@ public class BaseAgent implements Runnable{
 	 */
 	protected Session session;
 	/**
+	 * @uml.property name="traceSession"
+	 */
+	protected Session traceSession;
+	/**
 	 * @uml.property name="myThread"
 	 */
 	private Thread myThread;
+		
 
 	private class Listener implements SessionListener {
 		public void opened(Session ssn) {
@@ -68,6 +77,27 @@ public class BaseAgent implements Runnable{
 		}
 
 	}
+	
+	private class TraceListener implements SessionListener {
+		public void opened(Session ssn) {
+		}
+
+		public void resumed(Session ssn) {
+		}
+
+		public void message(Session ssn, MessageTransfer xfr) {
+			TraceEvent tEvent = MessageTransfertoTraceEvent(xfr);
+			onTraceEvent(tEvent);
+		}
+
+		public void exception(Session ssn, SessionException exc) {
+			exc.printStackTrace();
+		}
+
+		public void closed(Session ssn) {
+		}
+
+	}
 
 	/**
 	 * @uml.property name="listener"
@@ -75,6 +105,16 @@ public class BaseAgent implements Runnable{
 	 */
 	private Listener listener;
 
+	/**
+	 * [TRACE]:
+	 * Attributes necessary for event tracing
+	 *
+	 */
+	/**
+	 * @uml.property name="traceListener"
+	 */
+	private TraceListener traceListener;
+	
 	/**
 	 * Creates a new agent in an open broker connection
 	 * 
@@ -85,20 +125,26 @@ public class BaseAgent implements Runnable{
 	 *            Connection that the agent will use
 	 * @throws Exception
 	 *             If Agent ID already exists on the platform
+	 *             
+	 * [TRACE]:
+	 * 		Create the event queue and the event listener
 	 */
 	public BaseAgent(AgentID aid) throws Exception {
-		
+				
 		if (AgentsConnection.connection == null) {
-			logger
-					.error("Before create a agent, the qpid broker connection is necesary");
+			logger.error("Before create a agent, the qpid broker connection is necesary");
 			throw new Exception("Error doesn't work the broken connection");
 		} else {
 			this.connection = AgentsConnection.connection;
 		}
 
 		this.session = createSession();
+		
+		this.traceSession = createTraceSession();
+		
 		if (this.existAgent(aid)) {
 			session.close();
+			traceSession.close();
 			throw new Exception("Agent ID " + aid.name + " already exists on the platform");
 		} else {
 			this.aid = aid;
@@ -107,7 +153,16 @@ public class BaseAgent implements Runnable{
 			createQueue();
 			createBind();
 			createSubscription();
+			
+			this.traceListener = new TraceListener();			
+			createEventQueue();
+			createTraceBind();
+			createTraceSubscription();
+
 		}
+		
+		//sendTraceEvent(new TraceEvent(TracingService.DI_TracingServices[TracingService.NEW_AGENT].getName(),
+		//		new TracingEntity(TracingEntity.AGENT, this.aid), ""));
 	}
 
 	/**
@@ -131,7 +186,6 @@ public class BaseAgent implements Runnable{
 	 * Binds the exchange and the agent queue
 	 */
 	private void createBind() {
-		// this.session.exchangeBind(aid.name, aid.name, null, null);
 		this.session.exchangeBind(aid.name, "amq.direct", aid.name, null);
 	}
 
@@ -159,21 +213,19 @@ public class BaseAgent implements Runnable{
 	 *         
 	 */
 	public void send(ACLMessage msg) {
-		
 		/**
 		 * Permite incluir un arroba en el nombre del agente destinatario.
-		 * CondiciÛn Obligatoria para JADE.
-		 * @ ser· reemplazado por ~
+		 * Condici√≥n Obligatoria para JADE.
+		 * @ ser√° reemplazado por ~
 		 */
 		msg.getReceiver().name = msg.getReceiver().name.replace('@', '~');
-
 		
 		MessageTransfer xfr = new MessageTransfer();
 
 		xfr.destination("amq.direct");
 		xfr.acceptMode(MessageAcceptMode.EXPLICIT);
 		xfr.acquireMode(MessageAcquireMode.PRE_ACQUIRED);
-
+		
 		DeliveryProperties deliveryProps = new DeliveryProperties();
 
 		// Serialize message content
@@ -208,6 +260,7 @@ public class BaseAgent implements Runnable{
 		body = body + msg.getReplyBy().length() + "#" + msg.getReplyBy();
 		// content
 		body = body + msg.getContent().length() + "#" + msg.getContent();
+		
 		// serialize message headers, it looks like: number of headers#key.length#key|value.length#value
 		//number of headers
 		body = body + String.valueOf(msg.getHeaders().size()) + "#";
@@ -220,7 +273,7 @@ public class BaseAgent implements Runnable{
 			body = body + key.length() + "#" + key;
 			body = body + headers.get(key).length() + "#" + headers.get(key);		 
 		}
-				
+
 		xfr.setBody(body);
 		for (int i = 0; i < msg.getTotalReceivers(); i++) {
 			// If protocol is not qpid then the message goes outside the
@@ -231,12 +284,127 @@ public class BaseAgent implements Runnable{
 				deliveryProps.setRoutingKey(msg.getReceiver(i).name);
 			}
 			xfr.header(new Header(deliveryProps));
-			
 			session.messageTransfer(xfr.getDestination(), xfr.getAcceptMode(),
 					xfr.getAcquireMode(), xfr.getHeader(), xfr.getBodyString());
+			
+			//sendTraceEvent(new TraceEvent("MESSAGE_SENT", this.aid, xfr.getBodyString()));
 		}
+		
 	}
 
+	/**
+	 * [TRACE]: Methods necessary for event trace support
+	 */
+	/**
+	 * Creates the exclusive session the agent will use for trace events
+	 * 
+	 * @return The new Session
+	 */
+	private Session createTraceSession() {
+		Session session = this.connection.createSession(0);
+		return session;
+	}
+	/**
+	 * Creates queue where the agent will receive trace events
+	 */
+	private void createEventQueue() {
+		this.traceSession.queueDeclare(aid.name+".trace", null, null, Option.AUTO_DELETE);
+		
+	}
+	
+	private void createTraceBind(){
+		Map<String, Object> arguments = new HashMap<String, Object>();
+		
+		arguments.put("x-match", "all");
+    	arguments.put("origin_entity", "system");
+    	arguments.put("receiver", "all");
+    	// To let an agent receive all those system trace events from the tracing system to ALL agents
+    	this.traceSession.exchangeBind(aid.name+".trace", "amq.match", aid.name + ".system.all", arguments);
+    	//this.session.exchangeBind(aid.name+".trace", "mgx.trace", aid.name + ".system.all", arguments);
+		
+    	arguments.clear();
+    	
+		arguments.put("x-match", "all");
+    	arguments.put("origin_entity", "system");
+    	arguments.put("receiver", aid.name);
+    	// To let an agent receive all those system trace events from the tracing system to THAT agent  
+    	this.traceSession.exchangeBind(aid.name+".trace", "amq.match", aid.name + ".system.direct", arguments);
+    	//this.session.exchangeBind(aid.name+".trace", "mgx.trace", aid.name + ".system.direct", arguments);
+    	
+    	// confirm completion
+    	this.traceSession.sync();
+    	
+    	// Add tracing entity to the TraceManager TracingEntityList
+    	
+	}
+	
+	/**
+	 * Creates the subscription through the agent listener will get trace events
+	 * from the event queue
+	 */
+	private void createTraceSubscription() {
+		this.traceSession.setSessionListener(this.traceListener);
+		
+		this.traceSession.messageSubscribe(aid.name + ".trace", "listener_destination",
+				MessageAcceptMode.NONE, MessageAcquireMode.PRE_ACQUIRED, null,
+				0, null);
+
+		this.traceSession.messageFlow("listener_destination",
+				MessageCreditUnit.BYTE, Session.UNLIMITED_CREDIT);
+		this.traceSession.messageFlow("listener_destination",
+				MessageCreditUnit.MESSAGE, Session.UNLIMITED_CREDIT);
+		this.traceSession.sync();
+	}
+		
+	/**
+	 * 
+	 * Sends a trace event to the mgx.trace exchange
+	 * @param tEvent
+	 *         
+	 */
+	public void sendTraceEvent(TraceEvent tEvent) {
+		MessageTransfer xfr = new MessageTransfer();
+
+		xfr.destination("amq.match");
+		xfr.acceptMode(MessageAcceptMode.EXPLICIT);
+		xfr.acquireMode(MessageAcquireMode.PRE_ACQUIRED);
+		
+		DeliveryProperties deliveryProps = new DeliveryProperties();
+		
+		// Serialize message content
+		String body;
+		// Timestamp
+		body = String.valueOf(tEvent.getTimestamp()) + "#";
+		// EventType
+		body = body + tEvent.getTracingService().length() + "#"
+				+ tEvent.getTracingService();
+		// OriginEntiy
+		body = body + tEvent.getOriginEntity().getType() + "#";
+		if (tEvent.getOriginEntity().getType() == TracingEntity.AGENT){
+			body = body + tEvent.getOriginEntity().getAid().toString().length() + "#" + 
+				tEvent.getOriginEntity().getAid().toString(); 
+		}
+		// Content
+		body = body + tEvent.getContent().length() + "#" + tEvent.getContent();
+		
+		xfr.setBody(body);
+		
+		// set message headers
+    	MessageProperties messageProperties = new MessageProperties();
+    	Map<String, Object> messageHeaders = new HashMap<String, Object>();
+    	// set the message property
+    	messageHeaders.put("tracing_service", tEvent.getTracingService());
+    	if (tEvent.getOriginEntity().getType() == TracingEntity.AGENT){
+    		messageHeaders.put("origin_entity", tEvent.getOriginEntity().getAid().name);
+    	}
+    	messageProperties.setApplicationHeaders(messageHeaders);
+		
+    	Header header = new Header(deliveryProps, messageProperties);
+    	
+    	this.traceSession.messageTransfer("amq.match", MessageAcceptMode.EXPLICIT, MessageAcquireMode.PRE_ACQUIRED,
+                header, xfr.getBodyString());
+	}
+	
 	/**
 	 * Returns the agent name
 	 * 
@@ -279,19 +447,31 @@ public class BaseAgent implements Runnable{
 
 	}
 
+	/** [TRACE]
+	 * Function that will be executed when the agent gets a trace event. The user has
+	 * to write his/her code here
+	 * 
+	 */
+	protected void onTraceEvent(TraceEvent tEvent) {
+		
+	}
+	
 	/**
 	 * Function that will be executed when the agent terminates
 	 */
 	protected void terminate() {
 		session.queueDelete(aid.name);
 		session.close();
+		
+		traceSession.queueDelete(aid.name + ".trace");
+		traceSession.close();
 
 	}
 
 	/**
-	 * Runs Agent's thread 
+	 * Runs Agent's thread
 	 */
-	public void run(){
+	public void run() {
 		init();
 		execute();
 		finalize();
@@ -446,36 +626,83 @@ public class BaseAgent implements Runnable{
 		tam = Integer.parseInt(body.substring(indice1, indice2));
 		// Content
 		msg.setContent(body.substring(indice2 + 1, indice2 + 1 + tam));
-				
-		indice1 = indice2 + 1 + tam;
-		indice2 = body.indexOf('#', indice1);
-		//headers
-		int numberOfHeaders = Integer.valueOf(body.substring(indice1, indice2));
-		String key;
-		String value;
-		tam = 0;
-		int copy = numberOfHeaders / 10;
-		//find out how many ciphers numberOfHeaders has
-		while(copy > 0){
-			tam++;
-			copy /= 10;
-		}
-		for(int i=0; i< numberOfHeaders; i++){
-			//key
-			indice1 = indice2 + 1 + tam;
-			indice2 = body.indexOf('#', indice1);
-			tam = Integer.parseInt(body.substring(indice1, indice2));	
-			key = body.substring(indice2 + 1, indice2 + 1 + tam);
-					
-			//value
-			indice1 = indice2 + 1 + tam;
-			indice2 = body.indexOf('#', indice1);
-			tam = Integer.parseInt(body.substring(indice1, indice2));			
-			value = body.substring(indice2 + 1, indice2 + 1 + tam);
-			
-			msg.setHeader(key, value);			
-		}		
 
 		return msg;
 	}
+
+	/**
+	 * [TRACE]: Transforms the message to TraceEvent
+	 * 
+	 * @param xfr
+	 *            MessageTransfer
+	 * @return TraceEvent
+	 */
+	public final TraceEvent MessageTransfertoTraceEvent(MessageTransfer xfr) {
+		// des-serializamos el evento
+		// inicializaciones
+		int indice1 = 0;
+		int indice2 = 0;
+		int aidindice1 = 0;
+		int aidindice2 = 0;
+		int tam = 0;
+		String aidString;
+		String body = xfr.getBodyString();
+
+		TraceEvent tEvent = new TraceEvent();
+		
+		// Timestamp
+		tam = body.indexOf('#', indice1);
+				
+		tEvent.setTimestamp(Long.parseLong(body.substring(indice2, indice1+tam)));
+		
+		// Event Type
+		indice1 = indice1 + 1 + tam;
+		indice2 = body.indexOf('#', indice1);
+		tam = Integer.parseInt(body.substring(indice1, indice2));
+		tEvent.setTracingService(body.substring(indice2+1, indice2+1+tam));
+		
+		// Origin Entity
+		AgentID aid = new AgentID();
+		int type;
+		aidindice1 = 0;
+		aidindice2 = 0;
+		indice1 = indice2 + 1 + tam;
+		indice2 = body.indexOf('#', indice1);
+		type=Integer.parseInt(body.substring(indice1, indice2));
+		indice1 = indice2 + 1;
+		indice2 = body.indexOf('#', indice1);
+		tam = Integer.parseInt(body.substring(indice1, indice2));
+		if (type == TracingEntity.AGENT){
+			aidString = body.substring(indice2 + 1, indice2 + 1 + tam);
+			aidindice2 = aidString.indexOf(':');
+			if (aidindice2 - aidindice1 <= 0)
+				aid.protocol = "";
+			else
+				aid.protocol = aidString.substring(aidindice1, aidindice2);
+			aidindice1 = aidindice2 + 3;
+			aidindice2 = aidString.indexOf('@', aidindice1);
+			if (aidindice2 - aidindice1 <= 0)
+				aid.name = "";
+			else
+				aid.name = aidString.substring(aidindice1, aidindice2);
+			aidindice1 = aidindice2 + 1;
+			aidindice2 = aidString.indexOf(':', aidindice1);
+			if (aidindice2 - aidindice1 <= 0)
+				aid.host = "";
+			else
+				aid.host = aidString.substring(aidindice1, aidindice2);
+			aid.port = aidString.substring(aidindice2 + 1);
+		
+			tEvent.setOriginEntity(new TracingEntity(type, aid));
+		}
+		// Content
+		indice1 = indice1 + 1 + tam;
+		indice2 = body.indexOf('#', indice1);
+		tam = Integer.parseInt(body.substring(indice1, indice2));
+		tEvent.setContent(body.substring(indice2+1));
+
+		
+		return tEvent;
+	}
+	
 }

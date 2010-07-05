@@ -1,5 +1,5 @@
 // PENDIENTE:
-// Valorar si cambiar este estado por un método de rechazo en estado WAIT
+// Valorar si cambiar este estado por un metodo de rechazo en estado WAIT
 
 package es.upv.dsic.gti_ia.cAgents;
 
