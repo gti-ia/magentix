@@ -110,7 +110,7 @@ public class Run {
 
 			// Create connection
 	        org.apache.qpid.transport.Connection con = new org.apache.qpid.transport.Connection();
-	        con.connect("localhost", 5672, "test", "guest", "guest",false);
+	        con.connect("gtiiaprojects2", 5672, "test", "guest", "guest",false);
 	        // Create session
 	        org.apache.qpid.transport.Session session = con.createSession(0);
 			

@@ -135,7 +135,16 @@ private boolean finish=false;
 		TraceInteract.unpublishTracingService(this, "DD_Test_TS3");
 		TraceInteract.unpublishTracingService(this, "DD_Test_TS4");
 		TraceInteract.unpublishTracingService(this, "DD_Test_TS5");
-
+		try
+		{
+			Thread.sleep(2000);
+		}
+		catch (InterruptedException e)
+		{
+			System.err.println("Error while waiting for services to be unpublished.");
+			e.printStackTrace();
+			System.exit(-1);
+		}
 		System.out.println("[PUBLISHER " + this.getName() + "]: Bye!");
 	}
 	
