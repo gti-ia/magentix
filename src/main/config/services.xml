@@ -61,7 +61,6 @@
 				</sp:EncryptedParts>
 
 				<ramp:RampartConfig xmlns:ramp="http://ws.apache.org/rampart/policy">
-				<!-- 	<ramp:items>Timestamp Signature Encrypt</ramp:items> -->
 					<ramp:user>mms</ramp:user>
 					<ramp:encryptionUser>useReqSigCert</ramp:encryptionUser>
 					<ramp:passwordCallbackClass>es.upv.dsic.gti_ia.MMService.PWCBHandler</ramp:passwordCallbackClass>
@@ -77,19 +76,6 @@
 
 						</ramp:crypto>
 					</ramp:signatureCrypto>
-					<!-- 
-					<ramp:encryptionCrypto>
-						<ramp:crypto provider="org.apache.ws.security.components.crypto.Merlin">
-							<ramp:property
-								name="org.apache.ws.security.crypto.merlin.keystore.type">JKS</ramp:property>
-
-						<ramp:property name="org.apache.ws.security.crypto.merlin.file">/home/joabelfa/Escritorio/pruebas_seguridad/qpidd/security/MMSkeystore.jks</ramp:property>
-					 		 <ramp:property
-								name="org.apache.ws.security.crypto.merlin.keystore.password">password_mmskeystore</ramp:property> 
-
-								
-						</ramp:crypto>
-					</ramp:encryptionCrypto> -->
 				</ramp:RampartConfig>
 
 			</wsp:All>
