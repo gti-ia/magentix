@@ -3,6 +3,9 @@ package es.upv.dsic.gti_ia.core;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import es.upv.dsic.gti_ia.core.ISO8601;
 
@@ -148,17 +151,21 @@ public class ACLMessage implements Serializable, Cloneable {
 	 */
 	private String in_reply_to = "";
 	/**
-	 * @uml.property name="reply_byInMillisec"
+	 * @uml.property name="reply_byInMillu isec"
 	 */
 	private long reply_byInMillisec = 0;
 
+	private Map<String, String> headers = new HashMap<String, String>();
+
 	// constructores
-	/*
-	 * public ACLMessage(){ performative = UNKNOWN; }
-	 */
+
+	public ACLMessage() {
+		performative = UNKNOWN;
+	}
 
 	public ACLMessage(int performative) {
 		this.performative = performative;
+		headers.put("ERROR", ""); // ???
 	}
 
 	/**
@@ -177,6 +184,7 @@ public class ACLMessage implements Serializable, Cloneable {
 	 */
 	public String getPerformative() {
 		try {
+			if(performative == -1) return "UNKNOWN";
 			return performatives[performative];
 		} catch (Exception e) {
 			return performatives[NOT_UNDERSTOOD];
@@ -221,7 +229,11 @@ public class ACLMessage implements Serializable, Cloneable {
 	 * @uml.property name="receiver"
 	 */
 	public AgentID getReceiver() {
-		return receiver.get(0);
+		if (receiver.isEmpty()) {
+			return null;
+		} else {
+			return receiver.get(0);
+		}
 	}
 
 	/**
@@ -480,7 +492,7 @@ public class ACLMessage implements Serializable, Cloneable {
 	 * 
 	 * @return Another ACLMessage that is a clone from this one
 	 */
-	public synchronized Object clone() {
+	public synchronized ACLMessage clone() {
 		ACLMessage result;
 
 		try {
@@ -519,5 +531,81 @@ public class ACLMessage implements Serializable, Cloneable {
 
 		// #CUSTOM_EXCLUDE_END
 		return m;
+	}
+
+	public void copyFromAsTemplate(ACLMessage msg) {		
+
+		if (msg.getPerformativeInt() != ACLMessage.UNKNOWN) {
+			this.setPerformative(msg.getPerformativeInt());
+		}
+		
+		this.setSender(msg.getSender());
+		
+		if (msg.getReceiverList() != null){
+			for(int i = 0; i<msg.getReceiverList().size();i++)
+				this.addReceiver(msg.getReceiver(i));
+		}
+		
+		this.setReplyTo(msg.getReplyTo());
+		
+		if (msg.getContent() != null) {
+			this.setContent(msg.getContent());
+		}
+		
+		this.setLanguage(msg.getLanguage());
+		
+		this.setEncoding(msg.getEncoding());
+		
+		if (msg.getOntology() != null) {
+			this.setOntology(msg.getOntology());
+		}
+		
+		if (msg.getProtocol() != null) {
+			this.setProtocol(msg.getProtocol());
+		}
+		
+		if (msg.getConversationId() != null) {
+			this.setConversationId(this.getConversationId());
+		}
+		
+		this.setReplyWith(msg.getReplyWith());
+		
+		this.setInReplyTo(msg.getInReplyTo());
+		
+		this.setReplyByDate(msg.getReplyByDate());
+		
+		Iterator it = this.headers.entrySet().iterator();
+		while (it.hasNext()) {
+			Map.Entry pairs = (Map.Entry)it.next();
+			this.setHeader(String.valueOf(pairs.getKey()), String.valueOf(pairs.getValue()));
+		}
+	}
+
+	public void setHeader(String key, String value) {
+		headers.put(key, value);
+	}
+
+	public String getHeaderValue(String key) {
+		if (headers.get(key) != null)
+			return headers.get(key);
+		else
+			return "";
+	}
+
+	public Map<String, String> getHeaders() {
+		return headers;
+	}
+
+	public boolean headersAreEqual(ACLMessage msg) {
+		Iterator<String> itr = headers.keySet().iterator();
+		// iterate through HashMap values iterator
+		String key1;
+		while (itr.hasNext()) {
+			key1 = itr.next();
+			if (!key1.equals("ERROR")
+					&& !headers.get(key1).equals(msg.getHeaderValue(key1)))
+				return false;
+		}
+		return true;
 	}
 }

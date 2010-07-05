@@ -17,7 +17,7 @@ public class httpclient extends JFrame {
 
 		Container contenedor = getContentPane();
 
-		campoIntroducir = new JTextField("Escriba aquí el mensaje");
+		campoIntroducir = new JTextField("Escriba aqui el mensaje");
 		campoIntroducir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent evento) {
 				// crear y enviar el paquete
@@ -110,14 +110,14 @@ public class httpclient extends JFrame {
 				excepcion.printStackTrace();
 			}
 
-		} // fin de instrucción while
+		} // fin de instruccion while
 
-	} // fin del método esperarPaquetes
+	} // fin del metodo esperarPaquetes
 
-	// método utilitario que es llamado desde otros subprocesos para manipular a
+	// metodo utilitario que es llamado desde otros subprocesos para manipular a
 	// areaPantalla en el subproceso despachador de eventos
 	private void mostrarMensaje(final String mensajeAMostrar) {
-		// mostrar mensaje del subproceso de ejecución despachador de eventos
+		// mostrar mensaje del subproceso de ejecucion despachador de eventos
 		SwingUtilities.invokeLater(new Runnable() { // clase interna para
 													// asegurar que la GUI se
 													// actualice apropiadamente

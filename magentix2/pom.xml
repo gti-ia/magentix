@@ -241,4 +241,12 @@
 		</dependency>
 
 	</dependencies>
+	
+	<repositories>
+    <repository>
+      <id>GTI</id>
+      <url>http://gti-ia.dsic.upv.es:8081/artifactory/remote-repos/</url>
+    </repository>
+  </repositories>
+	
 </project>

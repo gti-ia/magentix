@@ -2,6 +2,7 @@ package es.upv.dsic.gti_ia.core;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -24,10 +25,7 @@ import es.upv.dsic.gti_ia.trace.TracingEntity;
  * @author Ricard Lopez Fogues
  * @author Sergio Pajares Ferrando
  * @author Joan Bellver Faus
- */
-/**
- * [TRACE]: Modified by Luis Burdalo to support event tracing
- *
+ * @author Luis Burdalo
  */
 public class BaseAgent implements Runnable {
 
@@ -147,7 +145,7 @@ public class BaseAgent implements Runnable {
 		if (this.existAgent(aid)) {
 			session.close();
 			traceSession.close();
-			throw new Exception("Agent ID already exists on the platform");
+			throw new Exception("Agent ID " + aid.name + " already exists on the platform");
 		} else {
 			this.aid = aid;
 			this.listener = new Listener();
@@ -215,6 +213,13 @@ public class BaseAgent implements Runnable {
 	 *         
 	 */
 	public void send(ACLMessage msg) {
+		/**
+		 * Permite incluir un arroba en el nombre del agente destinatario.
+		 * Condición Obligatoria para JADE.
+		 * @ será reemplazado por ~
+		 */
+		msg.getReceiver().name = msg.getReceiver().name.replace('@', '~');
+		
 		MessageTransfer xfr = new MessageTransfer();
 
 		xfr.destination("amq.direct");
@@ -255,6 +260,19 @@ public class BaseAgent implements Runnable {
 		body = body + msg.getReplyBy().length() + "#" + msg.getReplyBy();
 		// content
 		body = body + msg.getContent().length() + "#" + msg.getContent();
+		
+		// serialize message headers, it looks like: number of headers#key.length#key|value.length#value
+		//number of headers
+		body = body + String.valueOf(msg.getHeaders().size()) + "#";
+		Map<String, String> headers = new HashMap<String, String>(msg.getHeaders());
+		Iterator<String> itr = headers.keySet().iterator();
+		String key;
+		//iterate through HashMap values iterator
+		while(itr.hasNext()){
+			key = itr.next();
+			body = body + key.length() + "#" + key;
+			body = body + headers.get(key).length() + "#" + headers.get(key);		 
+		}
 
 		xfr.setBody(body);
 		for (int i = 0; i < msg.getTotalReceivers(); i++) {

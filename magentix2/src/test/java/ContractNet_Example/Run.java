@@ -33,7 +33,7 @@ public class Run {
 	     */
 	    AgentsConnection.connect();
 
-	    for (int i = 0; i < 20; i++) {
+	    for (int i = 0; i < 5; i++) {
 		/**
 		 * Instantiating a consumer agent
 		 */

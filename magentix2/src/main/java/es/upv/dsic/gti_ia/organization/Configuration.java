@@ -29,6 +29,9 @@ public class Configuration {
 	private String jenadbURL;
 	private String jenadbType;
 	private String jenadbDriver;
+	private String isTomcat;
+	private String pathTomcat;
+	private String os;
 	private static Configuration configuration = null;
 	
 
@@ -37,6 +40,37 @@ public class Configuration {
 	{
 		this.load();
 
+	}
+	
+	
+	
+	/**
+	 * Path where the tomcat is located
+	 * @return 
+	 */
+	public String getOS()
+	{
+		return this.os;
+	}
+	/**
+	 * Path where the tomcat is located
+	 * @return 
+	 */
+	public String getPathTomcat()
+	{
+		return this.pathTomcat;
+	}
+	
+	/**
+	 * Is tomcat active
+	 * @return
+	 */
+	public boolean getIsTomcat()
+	{
+		if (this.isTomcat.equals("true"))
+			return true;
+		else
+			return false;
 	}
 	
 	/**
@@ -272,6 +306,18 @@ public class Configuration {
 			    else    if (obj.toString().equalsIgnoreCase("dbDriver"))
 			    {
 			    	this.jenadbDriver = properties.getProperty(obj.toString()); 	
+			    }
+			    else    if (obj.toString().equalsIgnoreCase("tomcat"))
+			    {
+			    	this.isTomcat = properties.getProperty(obj.toString()); 	
+			    }
+			    else    if (obj.toString().equalsIgnoreCase("pathTomcat"))
+			    {
+			    	this.pathTomcat = properties.getProperty(obj.toString()); 	
+			    }
+			    else    if (obj.toString().equalsIgnoreCase("os"))
+			    {
+			    	this.os = properties.getProperty(obj.toString()); 	
 			    }
 	
 			}

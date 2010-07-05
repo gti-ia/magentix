@@ -48,7 +48,7 @@ public class httpserver extends JFrame {
 
 				socket.receive(recibirPaquete); // esperar el paquete
 
-				// mostrar la información del paquete recibido
+				// mostrar la informacion del paquete recibido
 				mostrarMensaje("\nPaquete recibido:"
 						+ "\nDel host: "
 						+ recibirPaquete.getAddress()
@@ -70,9 +70,9 @@ public class httpserver extends JFrame {
 				excepcionES.printStackTrace();
 			}
 
-		} // fin de instrucción while
+		} // fin de instruccion while
 
-	} // fin del método esperarPaquetes
+	} // fin del metodo esperarPaquetes
 
 	// repetir el paquete al cliente
 	private void enviarPaqueteACliente(DatagramPacket recibirPaquete)
@@ -88,10 +88,10 @@ public class httpserver extends JFrame {
 		mostrarMensaje("Paquete enviado\n");
 	}
 
-	// método utilitario que es llamado desde otros subprocesos para manipular a
+	// metodo utilitario que es llamado desde otros subprocesos para manipular a
 	// areaPantalla en el subproceso despachador de eventos
 	private void mostrarMensaje(final String mensajeAMostrar) {
-		// mostrar el mensaje del subproceso de ejecución despachador de eventos
+		// mostrar el mensaje del subproceso de ejecucion despachador de eventos
 		SwingUtilities.invokeLater(new Runnable() { // clase interna para
 													// asegurar que la GUI se
 													// actualice apropiadamente
