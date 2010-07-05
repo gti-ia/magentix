@@ -17,6 +17,10 @@ import java.util.Properties;
  */
 public class PWCBHandler implements CallbackHandler
 {
+	
+	/**
+	 * This method set the password key for the MMS encryption alias. 
+	 */
     public void handle(Callback[] callbacks) throws IOException {
     	
     	Properties prop = new Properties();
