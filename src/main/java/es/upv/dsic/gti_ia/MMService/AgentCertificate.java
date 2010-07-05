@@ -419,6 +419,7 @@ public class AgentCertificate {
 
 	}
 	
+	//Cerramos la sesion con el broker.
 	private void closeSession()
 	{
 		sess.close();
