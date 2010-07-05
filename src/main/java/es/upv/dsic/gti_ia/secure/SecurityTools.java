@@ -93,10 +93,10 @@ public class SecurityTools {
 	// ESta clase es la encargada de seguir todo el procedimiento de solicitud
 	// de certificados para el agente.
 	// Comprobar que exista la keystore del usuario
-	// Comprobar que no tenga el certificado del agente que va a lanzar y que no
+	// Comprobar que no tenga el certificado del agente que va a lanzar o que no
 	// este válido.
 	// Contactar con el MMS
-	// Añadir el nuevo certificado a la keystore
+	// Añadir el nuevo certificado devuelto por el MMS a la keystore con el alias del agente.
 	public boolean generateAllProcessCertificate(String Agentname) {
 
 		String name = Agentname;
@@ -171,8 +171,10 @@ public class SecurityTools {
 				nc.setPk(dataHandler);
 				nc.setAgentName(name);
 
+				//Hacemos la llamada al servicio.
 				NewCertificateResponse re = stub.newCertificate(nc);
 
+				//Resultado de la llamada.
 				DataHandler result = re.get_return();
 
 				InputStream inputDataHandler = result.getInputStream();
@@ -182,6 +184,7 @@ public class SecurityTools {
 				Certificate[] certificates = (Certificate[]) ois.readObject();
 				ois.close();
 
+				//Introducimos el certificado firmado en la keystore.
 				setKeyEntry(name, propSecurityUser, kp, certificates);
 
 			}
@@ -281,7 +284,7 @@ public class SecurityTools {
 			policy.addAssertion(rampartConfig);
 			return policy;
 		} catch (Exception e) {
-			e.getMessage();
+			logger.error(e);
 			return null;
 		}
 
@@ -328,12 +331,12 @@ public class SecurityTools {
 
 			return value;
 		} catch (Exception e) {
-			System.err.println("Caught exception " + e.toString());
+			logger.error(e);
 			return false;
 		}
 	}
 
-
+	//Devuelve ub objeto de tipo keystore.
 	private KeyStore getKeyStore(String path, String pass) {
 		try {
 
@@ -346,13 +349,13 @@ public class SecurityTools {
 
 			return keystore;
 		} catch (Exception e) {
-			System.out.println(e);
+			logger.error(e);
 			return null;
 		}
 
 	}
 
-	// creamos una nueva keystore e importamos el certificado de la CA
+	//Creamos una nueva keystore
 	private KeyStore createKeyStore(String path, String pass) {
 		try {
 
