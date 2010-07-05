@@ -200,8 +200,7 @@ public class AgentCertificate {
 			System.setProperty("javax.net.ssl.keyStorePassword", properties
 					.getProperty("KeyStorePassword"));
 
-		
-		
+
 
 			//Conectamos con el broker.
 			this.conectToBroker();
