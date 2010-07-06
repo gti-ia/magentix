@@ -290,7 +290,7 @@ public class TraceManager extends BaseAgent{
 						response_msg = new ACLMessage(ACLMessage.REFUSE);
 						response_msg.setSender(this.getAid());
 						response_msg.setReceiver(msg.getSender());
-						response_msg.setContent("publish#" + serviceName + ":Tracing service not found");
+						response_msg.setContent("unpublish#" + serviceName + ":Tracing service not found");
 						logger.info("[TRACE MANAGER]: Sending REFUSE message to " + msg.getReceiver().toString());
 					}
 					
@@ -302,7 +302,7 @@ public class TraceManager extends BaseAgent{
 						response_msg = new ACLMessage(ACLMessage.REFUSE);
 						response_msg.setSender(this.getAid());
 						response_msg.setReceiver(msg.getSender());
-						response_msg.setContent("publish#" + serviceName + ":Tracing service not published by the tracing entity");
+						response_msg.setContent("unpublish#" + serviceName + ":Tracing service not published by the tracing entity");
 						logger.info("[TRACE MANAGER]: Sending REFUSE message to " + msg.getReceiver().toString());
 					}
 					
