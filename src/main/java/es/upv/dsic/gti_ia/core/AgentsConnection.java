@@ -33,6 +33,7 @@ public class AgentsConnection {
 
 		connection.connect(connectSettings);
 
+		System.out.println(c.getqpidHost()+" "+c.getqpidPort()+" "+ c.getqpidVhost()+" "+c.getqpidUser()+" "+c.getqpidPassword()+" "+c.getqpidSSL());
 	}
 	
 	

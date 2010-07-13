@@ -3,6 +3,7 @@ package es.upv.dsic.gti_ia.organization;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 /**
@@ -69,6 +70,26 @@ public class DataBaseAcces {
 		}
 		return rs;
 	}
+	
+	   public ResultSet getListSubUnits(String idparentunit)
+	    {
+	        ResultSet rs = null;
+	        try
+	        {
+	            // Se crea un Statement, para realizar la consulta
+	            Statement s = conection.createStatement();
+
+	            // Se realiza la consulta. Los resultados se guardan en el
+	            // ResultSet rs
+		        String sql="SELECT u.unitid FROM unit u WHERE u.parentunit='"+idparentunit+"'  ";
+		        sql.toLowerCase();
+	            rs = s.executeQuery(sql);
+	        } catch (Exception e)
+	        {
+	            e.printStackTrace();
+	        }
+	        return rs;
+	    }
 
 	/**
 	 * Make the query of the roles in the table and returns the corresponding ResultSet.
@@ -82,7 +103,7 @@ public class DataBaseAcces {
 
 			// Se realiza la consulta. Los resultados se guardan en el
 			// ResultSet rs
-			String sql = "select r1.RoleID, r1.Position, r1.Accessibility, r1.Visibility, r2.RoleID as Inheritance, un.UnitID from (role r1 left join role r2 on r1.inheritance=r2.id) left join unit un on r1.unit=un.ID";
+			 String sql="select r1.RoleID, r1.Position, r1.Accessibility, r1.Visibility, r2.RoleID as Inheritance, un.UnitID from (role r1 left join role r2 on r1.inheritance=r2.id) left join unit un on r1.unit=un.ID";
 			sql.toLowerCase();
 			rs = s.executeQuery(sql);
 		} catch (Exception e) {
@@ -90,6 +111,7 @@ public class DataBaseAcces {
 		}
 		return rs;
 	}
+
 
 	/** Closes the connection with the database  */
 	public void closeConnection() {
@@ -152,7 +174,8 @@ public class DataBaseAcces {
 
 			// Se realiza la consulta. Los resultados se guardan en el
 			// ResultSet rs
-			String sql = "SELECT s.serviceprofileid AS profileID,s.profilename AS profile, p.serviceprocessid AS processID, p.processname AS process FROM (serviceprofileid s LEFT JOIN serviceprocessid p ON s.serviceprofileid=p.serviceprofileid)  ";
+			
+			 String sql="SELECT s.serviceprofileid AS profileID,s.profilename AS profile, s.urlprofile AS URL FROM serviceprofileid s";
 			sql.toLowerCase();
 			rs = s.executeQuery(sql);
 		} catch (Exception e) {
@@ -160,5 +183,135 @@ public class DataBaseAcces {
 		}
 		return rs;
 	}
+	
+    public ResultSet getListProcess(String profileid)
+    {
+        ResultSet rs = null;
+        try
+        {
+            // Se crea un Statement, para realizar la consulta
+            Statement s = conection.createStatement();
+
+            // Se realiza la consulta. Los resultados se guardan en el
+            // ResultSet rs
+	        String sql="SELECT s.serviceprocessid AS processID, s.processname AS process FROM serviceprocessid s WHERE s.serviceprofileid='"+profileid+"'  ";
+	        sql.toLowerCase();
+            rs = s.executeQuery(sql);
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return rs;
+    }
+    public ResultSet getListProcess()
+    {
+        ResultSet rs = null;
+        try
+        {
+            // Se crea un Statement, para realizar la consulta
+            Statement s = conection.createStatement();
+
+            // Se realiza la consulta. Los resultados se guardan en el
+            // ResultSet rs
+	        String sql="SELECT s.serviceprocessid AS processID, s.processname AS process FROM serviceprocessid s ";
+	        sql.toLowerCase();
+            rs = s.executeQuery(sql);
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return rs;
+    }
+    
+    public ResultSet getUnitEntities(String unidad)
+    {
+        ResultSet rs = null;
+        try
+        {
+            // Se crea un Statement, para realizar la consulta
+            Statement s = conection.createStatement();
+
+            // Se realiza la consulta. Los resultados se guardan en el
+            // ResultSet rs
+	        String sql="SELECT e.entityId FROM entityplaylist u join entity e on u.entity = e.id WHERE u.unit='"+unidad+"'  ";
+	        sql.toLowerCase();
+            rs = s.executeQuery(sql);
+
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return rs;
+    }
+    
+    public ResultSet getUnitID(String unit)
+    {
+        ResultSet rs = null;
+        try
+        {
+            // Se crea un Statement, para realizar la consulta
+            Statement s = conection.createStatement();
+
+            // Se realiza la consulta. Los resultados se guardan en el
+            // ResultSet rs
+	        String sql="SELECT u.id FROM unit u WHERE u.unitid='"+unit+"'  ";
+	        sql.toLowerCase();
+            rs = s.executeQuery(sql);
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return rs;
+    }
+    
+    
+    public ResultSet getServiceID(String url)
+    {
+        ResultSet rs = null;
+        try
+        {
+            // Se crea un Statement, para realizar la consulta
+            Statement s = conection.createStatement();
+
+            // Se realiza la consulta. Los resultados se guardan en el
+            // ResultSet rs
+	        String sql="SELECT u.serviceprofileid FROM serviceprofileid u WHERE u.urlprofile='"+url+"'  ";
+	        sql.toLowerCase();
+            rs = s.executeQuery(sql);
+            
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return rs;
+    }
+
+    
+	public String getAgentServices(String agentID) {
+		
+		String result = "[";
+		try {
+			Statement s = conection.createStatement();
+			ResultSet rs = s
+					.executeQuery("Select * from serviceprocessid where providername='"
+							+ agentID.toLowerCase() + "'");
+			System.out
+					.println("Select * from serviceprocessid where providername='"
+							+ agentID.toLowerCase() + "'");
+			while (rs.next()) {
+				result = result + "(" + rs.getString("processname") + "), ";
+			}
+			if (!result.equalsIgnoreCase("["))
+				result = result.substring(0, result.length() - 2);
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		}
+		return result + "]";
+
+	}
+
+    
+    
+
 
 }

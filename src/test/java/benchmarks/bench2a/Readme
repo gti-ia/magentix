@@ -1,3 +1,0 @@
-This benchmarks, consists of a set of senders's agents, each agent
-in different hosts. Also a single receiver agent, placed in another host. Each of the agents
-senders send as many messages as indicating the nmsgtot's variable.

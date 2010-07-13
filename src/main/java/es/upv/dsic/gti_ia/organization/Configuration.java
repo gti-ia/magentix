@@ -27,16 +27,14 @@ public class Configuration {
 	private String qpidPassword;
 	private String qpidSsl;
 	private String saslMechs;
-	private String saslProtocol;
-	private String saslServerName;
-		
 	private String jenadbURL;
 	private String jenadbType;
 	private String jenadbDriver;
+	private String isTomcat;
+	private String pathTomcat;
+	private String os;
 	private static Configuration configuration = null;
-	
 	private boolean isSecure = false;
-	
 
 
 	private Configuration()
@@ -52,6 +50,35 @@ public class Configuration {
 	public boolean isSecureMode()
 	{
 		return this.isSecure;
+	}
+	
+	/**
+	 * Path where the tomcat is located
+	 * @return 
+	 */
+	public String getOS()
+	{
+		return this.os;
+	}
+	/**
+	 * Path where the tomcat is located
+	 * @return 
+	 */
+	public String getPathTomcat()
+	{
+		return this.pathTomcat;
+	}
+	
+	/**
+	 * Is tomcat active
+	 * @return
+	 */
+	public boolean getIsTomcat()
+	{
+		if (this.isTomcat.equals("true"))
+			return true;
+		else
+			return false;
 	}
 	
 	/**
@@ -182,23 +209,6 @@ public class Configuration {
 	}
 	
 	/**
-	 * Qpid sasl protocol
-	 */
-	public String getqpidsaslProtocol()
-	{
-		return this.saslProtocol;
-	}
-	
-	/**
-	 * Qpid server name
-	 */
-	public String getqpidServerName()
-	{
-
-		return this.saslServerName;
-	}
-	
-	/**
 	 * Jena database URL
 	 * @return URL
 	 */
@@ -304,14 +314,6 @@ public class Configuration {
 			    {
 			    	this.saslMechs = properties.getProperty(obj.toString()); 	
 			    }
-			    else    if (obj.toString().equalsIgnoreCase("saslProtocol"))
-			    {
-			    	this.saslProtocol = properties.getProperty(obj.toString()); 	
-			    }
-			    else    if (obj.toString().equalsIgnoreCase("saslServerName"))
-			    {
-			    	this.saslServerName = properties.getProperty(obj.toString()); 	
-			    }
 			    else    if (obj.toString().equalsIgnoreCase("dbURL"))
 			    {
 			    	this.jenadbURL = properties.getProperty(obj.toString()); 	
@@ -324,6 +326,18 @@ public class Configuration {
 			    else    if (obj.toString().equalsIgnoreCase("dbDriver"))
 			    {
 			    	this.jenadbDriver = properties.getProperty(obj.toString()); 	
+			    }
+			    else    if (obj.toString().equalsIgnoreCase("tomcat"))
+			    {
+			    	this.isTomcat = properties.getProperty(obj.toString()); 	
+			    }
+			    else    if (obj.toString().equalsIgnoreCase("pathTomcat"))
+			    {
+			    	this.pathTomcat = properties.getProperty(obj.toString()); 	
+			    }
+			    else    if (obj.toString().equalsIgnoreCase("os"))
+			    {
+			    	this.os = properties.getProperty(obj.toString()); 	
 			    }
 			    else    if (obj.toString().equalsIgnoreCase("secureMode"))
 			    {

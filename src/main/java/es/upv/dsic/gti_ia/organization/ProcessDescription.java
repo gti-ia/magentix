@@ -165,7 +165,7 @@ public class ProcessDescription {
 	// read in the service description
 	String token_process = Tok.nextElement().toString();
 
-	System.out.println("[Provider]Doc OWL-S: " + token_process);
+	//System.out.println("[Provider]Doc OWL-S: " + token_process);
 
 	try {
 	    Service aService = kb.readService(token_process);

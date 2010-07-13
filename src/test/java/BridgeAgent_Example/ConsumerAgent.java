@@ -28,11 +28,6 @@ public class ConsumerAgent extends SingleAgent {
 			} catch (Exception e) {
 				logger.error(e.getMessage());
 			}
-
-	
 		}
-	
 	}
-
-
 }

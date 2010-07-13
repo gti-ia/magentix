@@ -227,7 +227,7 @@ public class SFProxy {
 		String call = SFServiceDesciptionLocation
 				+ "RemoveProviderProcess.owl "
 				+ "RemoveProviderInputServiceImplementationID="
-				+ this.processDescripcion.getImplementationID();
+				+ this.processDescripcion.getImplementationID()+" RemoveProviderInputProviderID="+agent.getAid().toString();
 
 		this.sendInfo(agent, call);
 

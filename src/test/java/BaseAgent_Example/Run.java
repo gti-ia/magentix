@@ -29,11 +29,7 @@ public class Run {
 		/**
 		 * Connecting to Qpid Broker
 		 */
-		//AgentsConnection.connect();
-		
-		//AgentsConnection.connect("localhost", 5672, "test","guest","guest",false);
-		AgentsConnection.connect("localhost", 5671, "test","guest","guest",true,"EXTERNAL");
-
+		AgentsConnection.connect();
 
 		try {
 			/**
