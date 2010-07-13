@@ -210,7 +210,7 @@ public class AgentCertificate {
 			String command = String.format("\n" + "acl allow " + agentName
 					+ "@QPID all queue name=" + agentName + "\n"
 					+ "acl allow " + agentName
-					+ "@QPID bind exchange name=amq.direct routingkey="
+					+ "@QPID all exchange name=amq.direct routingkey="
 					+ agentName);
 			//Escribimos el fichero acl.
 			this.writeAclFile(command);
