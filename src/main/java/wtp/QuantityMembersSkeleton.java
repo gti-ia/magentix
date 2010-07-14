@@ -17,11 +17,16 @@ public class QuantityMembersSkeleton
 {
 	persistence.DataBaseInterface	thomasBD	= new DataBaseInterface();
 	public static final Boolean		DEBUG		= true;
-	/**
-	 * Auto generated method signature
-	 * @param quantityMembers
-	 */
 	
+	/**
+	 * Service used for requesting the number of current members of a specific unit. If a
+	 * role is specified only the members playing that role are taken into account. The unit and
+	 * the role must exist and the agent must be a member of the parent unit.
+	 * @param quantityMembers containing:
+	 * - UnitID
+	 * - RoleID
+	 * - AgentID
+	 */
 	public wtp.QuantityMembersResponse QuantityMembers(
 			wtp.QuantityMembers quantityMembers)
 	{
@@ -50,7 +55,7 @@ public class QuantityMembersSkeleton
 			res.setStatus("Error");
 			return res;
 		}
-		if( !thomasBD.CheckExistsRole(quantityMembers.getRoleID()))
+		if (!thomasBD.CheckExistsRole(quantityMembers.getRoleID()))
 		{
 			res.setErrorValue("NotFound");
 			res.setStatus("Error");

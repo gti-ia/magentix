@@ -15,11 +15,18 @@ public class ExpulseSkeleton
 {
 	persistence.DataBaseInterface	thomasBD	= new DataBaseInterface();
 	public static final Boolean		DEBUG		= true;
-	/**
-	 * Auto generated method signature
-	 * @param expulse
-	 */
 	
+	/**
+	 * Service to force an agent (nominee) to leave a specific role. The nominee must play the
+	 * specified role inside the specified unit, and the requester must have enough permissions
+	 * (depending on the type of the unit) to expulse the nominee. If the type is 'FLAT' the
+	 * agent is not allowed, if 'TEAM' or 'HIERARCHY' the agent must be supervisor of this unit. 
+	 * @param expulse containing:
+	 * - ExpulseAgentID
+	 * - RoleID
+	 * - UnitID
+	 * - AgentID
+	 */
 	public wtp.ExpulseResponse Expulse(wtp.Expulse expulse)
 	{
 		
@@ -28,7 +35,8 @@ public class ExpulseSkeleton
 		{
 			System.out.println("Expulse :");
 			System.out.println("***AgentID..." + expulse.getAgentID());
-			System.out.println("***Expulsed AgentID..."+expulse.getExpulsedAgentID());
+			System.out.println("***Expulsed AgentID..."
+					+ expulse.getExpulsedAgentID());
 			System.out.println("*** RoleID()..." + expulse.getRoleID());
 			System.out.println("*** UnitID()..." + expulse.getUnitID());
 		}

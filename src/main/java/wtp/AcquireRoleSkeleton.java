@@ -20,10 +20,14 @@ public class AcquireRoleSkeleton
 	private static NormativeManager		normManager	= new NormativeManager();
 	
 	/**
-	 * Auto generated method signature
-	 * @param acquireRole
+	 * Service used for acquiring a role in a specific unit. The role must exist in this unit, the
+	 * agent must not play already that role, the agent must be inside the parent unit of this unit,
+	 * and the rules of cardinality and compatibility must be passed.
+	 * @param acquireRole containing:
+	 * - UnitID
+	 * - RoleID
+	 * - AgentID
 	 */
-	
 	public wtp.AcquireRoleResponse AcquireRole(wtp.AcquireRole acquireRole)
 	{
 		wtp.AcquireRoleResponse res = new AcquireRoleResponse();
@@ -56,7 +60,8 @@ public class AcquireRoleSkeleton
 			res.setStatus("Error");
 			return res;
 		}
-		if(!thomasBD.CheckExistsRoleInUnit(acquireRole.getRoleID(),acquireRole.getUnitID()))
+		if (!thomasBD.CheckExistsRoleInUnit(acquireRole.getRoleID(),
+				acquireRole.getUnitID()))
 		{
 			res.setErrorValue("NotFound");
 			res.setStatus("Error");
