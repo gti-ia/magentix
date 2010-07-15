@@ -39,6 +39,7 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateException; //import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Properties;
@@ -84,6 +85,7 @@ public class AgentCertificate {
 	Properties properties = new Properties();
 	private ArrayList<String> reservedNames = new ArrayList<String>();
 	ByteArrayOutputStream outStream = null;
+	String username = "";
 
 	/**
 	 * This method return a new signed certificate, the common name is a name of agent. 
@@ -96,6 +98,7 @@ public class AgentCertificate {
 		// this.load();
 
 		reservedNames.add("mms");
+		reservedNames.add("tm");
 		try {
 			properties.load(new FileInputStream(
 					"./securityAdmin.properties"));
@@ -105,7 +108,7 @@ public class AgentCertificate {
 			System.err.println(e);
 		}
 		try {
-
+			
 			MessageContext ctx = MessageContext.getCurrentMessageContext();
 			Vector<WSHandlerResult> results = (Vector<WSHandlerResult>) ctx
 					.getProperty(WSHandlerConstants.RECV_RESULTS);
@@ -116,12 +119,8 @@ public class AgentCertificate {
 				WSSecurityEngineResult wsSecurityEngineResult = (WSSecurityEngineResult) result
 						.getResults().get(0);
 
-				String username = ((Principal) wsSecurityEngineResult
+				username = ((Principal) wsSecurityEngineResult
 						.get(WSSecurityEngineResult.TAG_PRINCIPAL)).getName();
-
-				// X509Certificate cert = ((X509Certificate)
-				// wsSecurityEngineResult
-				// .get(WSSecurityEngineResult.TAG_X509_CERTIFICATE));
 
 				System.out.println("User name: " + username);
 				
@@ -140,7 +139,6 @@ public class AgentCertificate {
 			}
 
 			//El nombre del agente esta reservado??
-
 			if (!reservedNames.contains(agentName))
 			{
 				
@@ -164,7 +162,7 @@ public class AgentCertificate {
 			int validity = Integer.parseInt(properties.getProperty("Validity"));
 			PrivateKeyEntry pke = this.generateMMSPrivateKeyEntry();
 
-			// Que información contendra el certificados que emita.
+			// Que información contendrá el certificados que emita.
 			String commonName = agentName;
 			String organizationalUnit = properties
 					.getProperty("organizationalUnit");
@@ -185,6 +183,13 @@ public class AgentCertificate {
 
 			os.writeObject(certs);
 			os.close();
+			
+			//Guardamos el registro del usuario / agente.
+			//Estará formado por fecha - usuario - agente 
+			Calendar calendario = Calendar.getInstance();
+			String commandLog = "====================================================== \n Session: "+ calendario.getTime().toString() +"\n User name: " + username +"\n Agent Name: "+ agentName +"\n======================================================";
+			
+			this.writeAclFile(commandLog, properties.getProperty("Userlog"));
 
 			// Especificar la ubicación del archivo del almacén de certificados
 			// en los que se confía.
@@ -201,19 +206,23 @@ public class AgentCertificate {
 					.getProperty("KeyStorePassword"));
 
 
-
+			
 			//Conectamos con el broker.
-			this.conectToBroker();
+			this.connectToBroker();
 			
 			// Escribimos por cada agente las siguientes lineas con los permisos necesarios.
 
-			String command = String.format("\n" + "acl allow " + agentName
-					+ "@QPID all queue name=" + agentName + "\n"
-					+ "acl allow " + agentName
-					+ "@QPID all exchange name=amq.direct routingkey="
-					+ agentName);
+			String command = String.format("\n" 
+					+ "acl allow "+agentName+"@QPID all queue name=" + agentName + "\n"
+					+ "acl allow "+agentName+"@QPID all exchange name=amq.direct routingkey="+ agentName +"\n"
+					+ "acl allow "+agentName+"@QPID all queue name="+agentName+".trace" +"\n"
+					+ "acl allow "+agentName+"@QPID bind exchange name=amq.match routingkey="+agentName+".system.all" +"\n"
+					+ "acl allow "+agentName+"@QPID bind exchange name=amq.match routingkey="+agentName+".system.direct"+"\n"
+					+ "acl allow "+agentName+"@QPID publish exchange name=amq.match");
+
 			//Escribimos el fichero acl.
-			this.writeAclFile(command);
+			this.writeAclFile(command, properties.getProperty("ACLPath"));
+			
 			
 			
 			
@@ -287,8 +296,6 @@ public class AgentCertificate {
 		KeyStore ks = KeyStore.getInstance(type);
 		ks.load(null, pin);
 		rootCertificate = ks.getCertificate(alias);
-		rootCertificate.getPublicKey();
-		// rootX509certificate = (X509Certificate) rootCertificate;
 
 		try {
 			rootkey = (PrivateKey) ks.getKey(alias, pin);
@@ -361,8 +368,8 @@ public class AgentCertificate {
 	}
 
 	//Método para escribir en el fichero acl dando permisos o restricciones.
-	private void writeAclFile(String command) {
-		PrintWriter aclFile = ACLFile();
+	private void writeAclFile(String command, String path) {
+		PrintWriter aclFile = ACLFile(path);
 		try {
 			aclFile.println(command);
 		} catch (Exception e) {
@@ -390,10 +397,10 @@ public class AgentCertificate {
 	 * } }
 	 */
 	//Crear un nuevo tipo PrintWriter en base a una ruta (indica el path donde se encuentra el fichero acl).
-	private PrintWriter ACLFile() {
-
+	private PrintWriter ACLFile(String path) {
+		
 		try {
-			fichero = new FileWriter(properties.getProperty("ACLPath"), true);
+			fichero = new FileWriter(path, true);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -403,7 +410,7 @@ public class AgentCertificate {
 	}
 
 	//Método para conectar con el broker.
-	private void conectToBroker() {
+	private void connectToBroker() {
 
 		String connectionBroker = "amqp://" + properties.getProperty("user")
 				+ ":" + properties.getProperty("pass") + "@/"
