@@ -41,7 +41,21 @@ acl allow all consume queue owner=self
 
 acl allow all publish exchange name=amq.direct
 
+# MMS agent default rules
+# --------------------------
+# In order to allow MMS comunicate to broker and execute method reload ACL File  
 acl allow MMS@QPID all queue
 acl allow MMS@QPID all exchange name=amq.direct
 acl allow MMS@QPID all exchange name=qpid.management
 acl allow MMS@QPID all method name=reloadACLFile
+
+# Management Trace Agent default rule
+# -------------------------------------
+# In order to allow traceManager comunicate to broker and execute method reload ACL File and access to exchange amq.match
+
+acl allow tm@QPID all queue name=tm
+acl allow tm@QPID all exchange name=amq.direct routingkey=tm
+acl allow tm@QPID all queue name=tm.trace
+acl allow tm@QPID all exchange name=amq.match 
+acl allow tm@QPID all exchange name=qpid.management
+acl allow tm@QPID all method name=reloadACLFile
