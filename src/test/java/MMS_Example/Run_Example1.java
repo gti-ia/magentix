@@ -37,7 +37,7 @@ public class Run_Example1 {
 			 * Instantiating a sender agent
 			 */
 			SenderAgent agente = new SenderAgent(new AgentID(
-					"qpid://emisor@localhost:8080"));
+					"qpid://sender@localhost:8080"));
 
 			/**
 			 * Instantiating a consumer agent

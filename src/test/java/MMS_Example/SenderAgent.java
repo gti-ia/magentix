@@ -31,8 +31,8 @@ public class SenderAgent extends BaseAgent {
 		msg.setReceiver(receiver);
 		// msg.setSender(this.getAid());
 		//Para el ejemplo del agente malintencionado vamos a cambiar el nombre del sender. Pondremos en vez de emisor, pondremos 
-		//emisorFalso.
-		msg.setSender(new AgentID("emisor"));
+		//senderMalicius.
+		msg.setSender(new AgentID("sender"));
 		msg.setLanguage("ACL");
 		msg.setContent("Hello, I'm " + getName());
 		/**
