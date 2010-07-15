@@ -45,9 +45,7 @@ public class BaseAgent implements Runnable
 	private es.upv.dsic.gti_ia.organization.Configuration	c					=
 																						es.upv.dsic.gti_ia.organization.Configuration
 																								.getConfiguration();
-	// Variable para controlar cuando salta una excepción en el broker.
-	private int												sessionCommandsIn	=
-																						0;
+
 	
 	/**
 	 * @uml.property name="aid"
@@ -159,6 +157,9 @@ public class BaseAgent implements Runnable
 	 */
 	public BaseAgent(AgentID aid) throws Exception
 	{
+		FileInputStream propFile = new FileInputStream(
+		"./configuration/securityUser.properties");
+		
 		// Si no estamos en modo seguro funcionara como siempre, es por tanto
 		// transparente al programador.
 		if (c.isSecureMode())
@@ -169,8 +170,9 @@ public class BaseAgent implements Runnable
 			try
 			{
 				// Nuevo fichero para la configuración de datos para la seguridad.
-				propSecurity.load(new FileInputStream(
-						"./configuration/securityUser.properties"));
+				propSecurity.load(propFile);
+			
+				
 			}
 			catch (FileNotFoundException e)
 			{
@@ -224,6 +226,7 @@ public class BaseAgent implements Runnable
 				try
 				{
 					connection.connect(connectSettings);
+					propFile.close();
 				}
 				catch (Exception e)
 				{
@@ -281,13 +284,21 @@ public class BaseAgent implements Runnable
 	// Cuando el agente infringe alguna regla de seguridad, la política del broker es destruir la
 	// sesión
 	// del usuario, que no la conexión. Por tanto este método recarga la session creando una nueva.
+	
 	private void reloadSession()
 	{
 		this.session = this.createSession();
 		this.createQueue();
 		this.createBind();
 		this.createSubscription();
-		this.sessionCommandsIn = this.session.getCommandsIn();
+		
+		
+		this.traceSession = createTraceSession();
+		this.traceListener = new TraceListener();
+		createEventQueue();
+		createTraceBind();
+		createTraceSubscription();
+		//this.sessionCommandsIn = this.session.getCommandsIn();
 		
 	}
 	
@@ -431,7 +442,7 @@ public class BaseAgent implements Runnable
 			}
 			catch (java.io.UnsupportedEncodingException e)
 			{
-				System.err.println("Caught exception " + e.toString());
+				logger.error("Caught exception " + e.toString());
 			}
 		}
 		
@@ -453,13 +464,15 @@ public class BaseAgent implements Runnable
 				
 				// Si el broker destruye la session por una accion no permitida
 				// realizada anteriormente.
+				/*
 				if (session.getCommandsIn() == this.sessionCommandsIn + 1)
 				{
 					this.reloadSession();
-				}
+				}*/
+		
 				session.messageTransfer(xfr.getDestination(), xfr
-						.getAcceptMode(), xfr.getAcquireMode(),
-						xfr.getHeader(), xfr.getBodyString());
+						.getAcceptMode(), xfr.getAcquireMode(), new Header(
+						deliveryProps, messageProperties), xfr.getBodyString());
 			}
 			catch (SessionException e)
 			{
@@ -524,6 +537,7 @@ public class BaseAgent implements Runnable
 				aid.name + ".system.direct", arguments);
 		// this.session.exchangeBind(aid.name+".trace", "mgx.trace", aid.name + ".system.direct",
 		// arguments);
+		
 		
 		// confirm completion
 		this.traceSession.sync();
