@@ -60,14 +60,17 @@ public class SecurityTools {
 	static Properties propSecurityUser = new Properties();
 	private static SecurityTools sec = new SecurityTools();
 	static Logger logger = Logger.getLogger(SecurityTools.class);
+	private FileInputStream propFile = null;
 
 	// La clase es privada ya que utilizamos el patrón de diseño singleton.
 	private SecurityTools() {
 
 		DOMConfigurator.configure("configuration/loggin.xml");
 		try {
-			propSecurityUser.load(new FileInputStream(
-					"./configuration/securityUser.properties"));
+			 propFile = new FileInputStream(
+				"./configuration/securityUser.properties");
+			 
+			propSecurityUser.load(propFile);
 		} catch (FileNotFoundException e) {
 			logger.error(e);
 		} catch (IOException e) {
@@ -176,7 +179,10 @@ public class SecurityTools {
 
 				//Resultado de la llamada.
 				DataHandler result = re.get_return();
-
+				
+				
+				if (result.getInputStream() != null)
+				{
 				InputStream inputDataHandler = result.getInputStream();
 				byte[] arrayByte = IOUtils.toByteArray(inputDataHandler);
 				ByteArrayInputStream bis = new ByteArrayInputStream(arrayByte);
@@ -186,10 +192,19 @@ public class SecurityTools {
 
 				//Introducimos el certificado firmado en la keystore.
 				setKeyEntry(name, propSecurityUser, kp, certificates);
+				
+				propFile.close();
+				}
+				else
+				{
+					throw new Exception("MMS is not available now or the agent certificate is unauthorized");
+				}
+				
 
 			}
 			return true;
 		} catch (Exception e) {
+			
 			logger.error(e);
 			return false;
 		}
