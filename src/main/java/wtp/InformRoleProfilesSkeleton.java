@@ -15,7 +15,7 @@ public class InformRoleProfilesSkeleton
 	persistence.DataBaseInterface	thomasBD	= new DataBaseInterface();
 	
 	/**
-	 * TODO: this service seems to have no returning value.
+	 * This service is no longer supported.
 	 * @param informRoleProfiles containing:
 	 * - RoleID
 	 * - AgentID
