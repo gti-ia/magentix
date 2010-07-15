@@ -20,7 +20,10 @@ public class AgentsConnection {
 	 * 
 	 */
 	public static void connect() {
+		
 		c =  Configuration.getConfiguration();
+		if (c.isSecureMode())
+			return;
 		connection = new Connection();
 	
 		ConnectionSettings connectSettings = new ConnectionSettings();
@@ -32,8 +35,6 @@ public class AgentsConnection {
 		connectSettings.setUseSSL(c.getqpidSSL());
 
 		connection.connect(connectSettings);
-
-		System.out.println(c.getqpidHost()+" "+c.getqpidPort()+" "+ c.getqpidVhost()+" "+c.getqpidUser()+" "+c.getqpidPassword()+" "+c.getqpidSSL());
 	}
 	
 	
