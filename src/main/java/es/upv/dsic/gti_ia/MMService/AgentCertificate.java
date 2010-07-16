@@ -86,7 +86,9 @@ public class AgentCertificate {
 	private ArrayList<String> reservedNames = new ArrayList<String>();
 	ByteArrayOutputStream outStream = null;
 	String username = "";
-
+	Calendar calendario;
+	
+	
 	/**
 	 * This method return a new signed certificate, the common name is a name of agent. 
 	 * @param agentName (Common Name)
@@ -186,7 +188,7 @@ public class AgentCertificate {
 			
 			//Guardamos el registro del usuario / agente.
 			//Estará formado por fecha - usuario - agente 
-			Calendar calendario = Calendar.getInstance();
+			calendario = Calendar.getInstance();
 			String commandLog = "====================================================== \n Session: "+ calendario.getTime().toString() +"\n User name: " + username +"\n Agent Name: "+ agentName +"\n======================================================";
 			
 			this.writeAclFile(commandLog, properties.getProperty("Userlog"));
@@ -239,8 +241,13 @@ public class AgentCertificate {
 			}
 			else//Si el nombre esta reservado, como por ejemplo MMS.
 			{
-				byte[] failed = "This name is reserved".getBytes();
-				return failed;
+				calendario = Calendar.getInstance();
+				//Registramos quin intenta acceder a nombres reservados
+				String commandLog = "=====================WARNING========================== \n Session: "+ calendario.getTime().toString() +"\n User name: " + username +"\n Agent Name: "+ agentName +"\n======================================================";
+				
+				this.writeAclFile(commandLog, properties.getProperty("Userlog"));			
+	
+				return null;
 			}
 
 			
