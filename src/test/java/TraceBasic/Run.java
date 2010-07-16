@@ -6,6 +6,7 @@ import org.apache.log4j.xml.DOMConfigurator;
 
 import es.upv.dsic.gti_ia.trace.TraceManager;
 import es.upv.dsic.gti_ia.core.AgentID;
+import es.upv.dsic.gti_ia.core.AgentsConnection;
 
 
 /*****************************************************************************************/
@@ -77,7 +78,7 @@ public class Run {
 		 * Connecting to Qpid Broker
 		 */
 		//Cuando se utilize modo seguro deberemos comentar esta linea, ya que las conexiones se harán por agente, no por usuario.
-		//AgentsConnection.connect();
+		AgentsConnection.connect();
 
 		try {
 			/**
