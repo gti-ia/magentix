@@ -113,7 +113,7 @@
 					<target>1.6</target>
 				</configuration>
 			</plugin>
-			<plugin>
+			<!-- <plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<configuration>
 					<descriptorRefs>
@@ -124,15 +124,15 @@
 					<execution>
 						<id>make-assembly</id>
 						<phase>package</phase>
-						<!--
+						<!-*
 							Ser� ejecutado en la fase de empaquetado.
-						-->
+						*->
 						<goals>
-							<goal>single</goal><!-- goals == mojos -->
+							<goal>single</goal><!-* goals == mojos *->
 						</goals>
 					</execution>
 				</executions>
-			</plugin>
+			</plugin> -->
 		</plugins>
 	</build>
 	<dependencies>
