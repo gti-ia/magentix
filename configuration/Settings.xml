@@ -24,20 +24,21 @@
 
 <!-- Properties qpid broker -->
 <entry key="host">gtiiaprojects2</entry>
-<entry key="port">5672</entry>
+<entry key="port">5671</entry>
 <entry key="vhost">test</entry>
 <entry key="user">guest</entry>
 <entry key="pass">guest</entry>
-<entry key="ssl">false</entry>
+<entry key="ssl">true</entry>
+
+<!-- Secure qpid properties -->
+<entry key="secureMode">true</entry>
+<entry key="saslMechs">EXTERNAL</entry>
+
 
 
 <!-- Properties jena -->
 <entry key="dbURL">jdbc:mysql://localhost/thomas</entry>
 <entry key="dbType">MySQL</entry>
 <entry key="dbDriver">com.mysql.jdbc.Driver</entry>
-
-
-
-
 
 </properties>

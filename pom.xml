@@ -1,5 +1,4 @@
-﻿<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+﻿<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>es.upv.dsic.gti-ia</groupId>
@@ -114,7 +113,7 @@
 					<target>1.6</target>
 				</configuration>
 			</plugin>
-			<plugin>
+			<!-- <plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<configuration>
 					<descriptorRefs>
@@ -124,13 +123,16 @@
 				<executions>
 					<execution>
 						<id>make-assembly</id>
-						<phase>package</phase><!-- Ser� ejecutado en la fase de empaquetado. -->
+						<phase>package</phase>
+						<!-*
+							Ser� ejecutado en la fase de empaquetado.
+						*->
 						<goals>
-							<goal>single</goal><!-- goals == mojos -->
+							<goal>single</goal><!-* goals == mojos *->
 						</goals>
 					</execution>
 				</executions>
-			</plugin>
+			</plugin> -->
 		</plugins>
 	</build>
 	<dependencies>
@@ -140,17 +142,7 @@
 			<version>3.8.1</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.apache</groupId>
-			<artifactId>qpid-common</artifactId>
-			<version>0.5</version>
-		</dependency>
 
-		<dependency>
-			<groupId>org.apache</groupId>
-			<artifactId>qpid-client</artifactId>
-			<version>0.5</version>
-		</dependency>
 		<dependency>
 			<groupId>com.bubbler</groupId>
 			<artifactId>serializer</artifactId>
@@ -172,13 +164,26 @@
 			<artifactId>ant-apache-log4j</artifactId>
 			<version>1.7.1</version>
 		</dependency>
+
+		<dependency>
+			<groupId>java.openjdk</groupId>
+			<artifactId>rt</artifactId>
+			<version>1.6.0_14</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>org.mozilla</groupId>
+			<artifactId>jss</artifactId>
+			<version>4</version>
+
+		</dependency>
+
 		<dependency>
 			<groupId>org.mindswap</groupId>
 			<artifactId>owl-s</artifactId>
 			<version>1.1.0</version>
 		</dependency>
-
-
 		<!-- Librerias para thomas -->
 
 
@@ -239,7 +244,49 @@
 			<artifactId>axis</artifactId>
 			<version>1.4</version>
 		</dependency>
+		<dependency>
+			<groupId>javax.jms</groupId>
+			<artifactId>jms</artifactId>
+			<version>1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache</groupId>
+			<artifactId>commons-collections</artifactId>
+			<version>3.2</version>
+		</dependency>
 
+		<dependency>
+			<groupId>org.apache</groupId>
+			<artifactId>qpid-client-seguridad</artifactId>
+			<version>0.7</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache</groupId>
+			<artifactId>qpid-common-seguridad</artifactId>
+			<version>0.7</version>
+		</dependency>
+
+		<dependency>
+			<groupId>bouncycastle</groupId>
+			<artifactId>bcprov-jdk16</artifactId>
+			<version>140</version>
+		</dependency>
+		        <dependency>
+        	<groupId>org.apache.rampart</groupId>
+        	<artifactId>rampart-core</artifactId>
+        	<version>1.4</version>
+        </dependency>
+        <dependency>
+        	<groupId>org.apache.rampart</groupId>
+        	<artifactId>rampart-policy</artifactId>
+        	<version>1.4</version>
+        </dependency>
+        <dependency>
+        	<groupId>org.apache.rampart</groupId>
+        	<artifactId>rampart-trust</artifactId>
+        	<version>1.4</version>
+        </dependency>
 	</dependencies>
 	
 	<repositories>

@@ -26,6 +26,7 @@ public class Configuration {
 	private String qpidUser;
 	private String qpidPassword;
 	private String qpidSsl;
+	private String saslMechs;
 	private String jenadbURL;
 	private String jenadbType;
 	private String jenadbDriver;
@@ -33,7 +34,7 @@ public class Configuration {
 	private String pathTomcat;
 	private String os;
 	private static Configuration configuration = null;
-	
+	private boolean isSecure = false;
 
 
 	private Configuration()
@@ -42,7 +43,14 @@ public class Configuration {
 
 	}
 	
-	
+	/**
+	 * If the platform is in secure mode or not
+	 * @return isSecure
+	 */
+	public boolean isSecureMode()
+	{
+		return this.isSecure;
+	}
 	
 	/**
 	 * Path where the tomcat is located
@@ -193,6 +201,14 @@ public class Configuration {
 	}
 	
 	/**
+	 * Qpid sasl Mechs
+	 */
+	public String getqpidsaslMechs()
+	{
+		return this.saslMechs;
+	}
+	
+	/**
 	 * Jena database URL
 	 * @return URL
 	 */
@@ -294,6 +310,10 @@ public class Configuration {
 			    {
 			    	this.qpidSsl = properties.getProperty(obj.toString()); 	
 			    }
+			    else    if (obj.toString().equalsIgnoreCase("saslMechs"))
+			    {
+			    	this.saslMechs = properties.getProperty(obj.toString()); 	
+			    }
 			    else    if (obj.toString().equalsIgnoreCase("dbURL"))
 			    {
 			    	this.jenadbURL = properties.getProperty(obj.toString()); 	
@@ -318,6 +338,13 @@ public class Configuration {
 			    else    if (obj.toString().equalsIgnoreCase("os"))
 			    {
 			    	this.os = properties.getProperty(obj.toString()); 	
+			    }
+			    else    if (obj.toString().equalsIgnoreCase("secureMode"))
+			    {
+			    	if (properties.getProperty(obj.toString()).equals("true"))
+			    		this.isSecure = true;
+			    	else
+			    		this.isSecure = false;
 			    }
 	
 			}

@@ -1,6 +1,8 @@
 package es.upv.dsic.gti_ia.core;
 
+
 import org.apache.qpid.transport.Connection;
+import org.apache.qpid.transport.ConnectionSettings;
 
 import es.upv.dsic.gti_ia.organization.Configuration;
 
@@ -10,18 +12,32 @@ import es.upv.dsic.gti_ia.organization.Configuration;
  */
 public class AgentsConnection {
 	public static org.apache.qpid.transport.Connection connection;
+
 	private static Configuration c = null;
 
 	/**
-	 * Connects with a Qpid broker taking the input connection parameters from the settings.xml file.
+	 * Connects with a Qpid broker taking the input connection parameters from the Settings.xml file.
 	 * 
 	 */
 	public static void connect() {
+		
 		c =  Configuration.getConfiguration();
+		if (c.isSecureMode())
+			return;
 		connection = new Connection();
-		connection.connect(c.getqpidHost(),c.getqpidPort(), c.getqpidVhost(),c.getqpidUser(),c.getqpidPassword(),c.getqpidSSL());
-		System.out.println(c.getqpidHost()+" "+c.getqpidPort()+" "+ c.getqpidVhost()+" "+c.getqpidUser()+" "+c.getqpidPassword()+" "+c.getqpidSSL());
+	
+		ConnectionSettings connectSettings = new ConnectionSettings();
+		connectSettings.setHost(c.getqpidHost());
+		connectSettings.setPort(c.getqpidPort());
+		connectSettings.setVhost(c.getqpidVhost());
+		connectSettings.setUsername(c.getqpidUser());
+		connectSettings.setPassword(c.getqpidPassword());
+		connectSettings.setUseSSL(c.getqpidSSL());
+
+		connection.connect(connectSettings);
 	}
+	
+	
 
 	
 	/**
@@ -39,7 +55,13 @@ public class AgentsConnection {
 		connection.connect(qpidHost, qpidPort, qpidVhost, qpdidUser, qpidPassword, qpidSSL);
 	}
 	
-
+	public static void connect(String qpidHost, int qpidPort, String qpidVhost, String qpdidUser,
+			String qpidPassword, boolean qpidSSL, String sasl_mechs) {
+		connection = new Connection();
+		connection.connect(qpidHost, qpidPort, qpidVhost, qpdidUser, qpidPassword, qpidSSL,sasl_mechs);
+	
+	}
+	
 	
 	/**
 	 * Connects to Qpid broker taking into account the qpidhost parameter and considering the rest as defaults parameters.
