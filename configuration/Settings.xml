@@ -23,15 +23,15 @@
 
 
 <!-- Properties qpid broker -->
-<entry key="host">gtiiaprojects2</entry>
-<entry key="port">5671</entry>
+<entry key="host">localhost</entry>
+<entry key="port">5672</entry>
 <entry key="vhost">test</entry>
 <entry key="user">guest</entry>
 <entry key="pass">guest</entry>
-<entry key="ssl">true</entry>
+<entry key="ssl">false</entry>
 
 <!-- Secure qpid properties -->
-<entry key="secureMode">true</entry>
+<entry key="secureMode">false</entry>
 <entry key="saslMechs">EXTERNAL</entry>
 
 
