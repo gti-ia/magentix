@@ -1,8 +1,12 @@
 package es.upv.dsic.gti_ia.core;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -361,10 +365,69 @@ public class BaseAgent implements Runnable
 	 */
 	public void send(ACLMessage msg)
 	{
+		
+		/**
+		 * Permite incluir un arroba en el nombre del agente destinatario.
+		 * Condici�n Obligatoria para JADE. @ ser� reemplazado por ~
+		 */
+		msg.getReceiver().name = msg.getReceiver().name.replace('@', '~');
+
+		MessageTransfer xfr = new MessageTransfer();
+
+		xfr.destination("amq.direct");
+		xfr.acceptMode(MessageAcceptMode.EXPLICIT);
+		xfr.acquireMode(MessageAcquireMode.PRE_ACQUIRED);
+
+		DeliveryProperties deliveryProps = new DeliveryProperties();
+		MessageProperties messageProperties = new MessageProperties();
+		
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		ObjectOutputStream oos;
+		try {
+			oos = new ObjectOutputStream(bos);
+			oos.writeObject(msg);
+			oos.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}		
+		xfr.setBody(bos.toByteArray());
+		
+		// Esto forma parte de la implementación para el soporte del no repudio por parte de los
+		// agentes.
+		// Obligamos a que en el mensaje se envie la identidad verdadera del agente emisor.
+		if (c.isSecureMode())
+		{
+			try
+			{
+				messageProperties.setUserId(msg.getSender().name.toString()
+						.getBytes("UTF-8"));
+			}
+			catch (java.io.UnsupportedEncodingException e)
+			{
+				logger.error("Caught exception " + e.toString());
+			}
+		}
+		
+		for (int i = 0; i < msg.getTotalReceivers(); i++) {
+			// If protocol is not qpid then the message goes outside the
+			// platform
+			if (!msg.getReceiver(i).protocol.equals("qpid")) {
+				deliveryProps.setRoutingKey("BridgeAgentInOut");
+			} else {
+				deliveryProps.setRoutingKey(msg.getReceiver(i).name);
+			}			
+			session.messageTransfer(xfr.getDestination(), xfr.getAcceptMode(),
+					xfr.getAcquireMode(), new Header(deliveryProps, 
+							messageProperties), xfr.getBodyBytes());			
+		}
+		
+		
+		
 		/**
 		 * Permite incluir un arroba en el nombre del agente destinatario. Condición Obligatoria
 		 * para JADE. @ será reemplazado por ~
 		 */
+		/*
 		msg.getReceiver().name = msg.getReceiver().name.replace('@', '~');
 		
 		MessageTransfer xfr = new MessageTransfer();
@@ -469,7 +532,7 @@ public class BaseAgent implements Runnable
 				{
 					this.reloadSession();
 				}*/
-		
+			/*
 				session.messageTransfer(xfr.getDestination(), xfr
 						.getAcceptMode(), xfr.getAcquireMode(), new Header(
 						deliveryProps, messageProperties), xfr.getBodyString());
@@ -486,7 +549,7 @@ public class BaseAgent implements Runnable
 				
 			}
 			
-		}
+		}*/
 		
 	}
 	
@@ -745,7 +808,48 @@ public class BaseAgent implements Runnable
 	public final ACLMessage MessageTransfertoACLMessage(MessageTransfer xfr)
 			throws Exception
 	{
+		byte[] binaryContent = xfr.getBodyBytes();
 		
+		ACLMessage msg = null;
+		ObjectInputStream oin;
+		try {
+			oin = new ObjectInputStream(new ByteArrayInputStream(binaryContent));
+			msg = (ACLMessage)oin.readObject();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		MessageProperties mp = xfr.getHeader().get(MessageProperties.class);
+		
+		if (c.isSecureMode())
+		{
+			if (mp == null)
+				throw new Exception(
+						"In Magentix Secure mode, the UserID is required in message.");
+			
+			else
+				try
+				{
+					if (!msg.getSender().name.equals(new java.lang.String(mp
+							.getUserId(), "UTF-8")))
+						throw new Exception(
+								"Sender field ("
+										+ msg.getSender().name
+										+ ") doesn't match with the name of the sender agent ("
+										+ new java.lang.String(mp.getUserId(),
+												"UTF-8") + ")");
+				}
+				catch (java.io.UnsupportedEncodingException e)
+				{
+				}
+		}
+		
+		
+		return msg;
+		
+		/*
 		// des-serializamos el mensaje
 		// inicializaciones
 		int indice1 = 0;
@@ -882,7 +986,7 @@ public class BaseAgent implements Runnable
 				}
 		}
 		
-		return msg;
+		return msg;*/
 	}
 	
 	/**

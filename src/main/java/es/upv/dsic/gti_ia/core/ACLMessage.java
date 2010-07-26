@@ -1,5 +1,10 @@
 package es.upv.dsic.gti_ia.core;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -122,6 +127,9 @@ public class ACLMessage implements Serializable, Cloneable {
 	 * @uml.property name="content"
 	 */
 	private String content = "";
+	
+	private byte[] byteSequenceContent = null;
+	
 	/**
 	 * @uml.property name="language"
 	 */
@@ -271,6 +279,7 @@ public class ACLMessage implements Serializable, Cloneable {
 	 * @uml.property name="content"
 	 */
 	public void setContent(String cont) {
+		byteSequenceContent = null; //make to null the other variable
 		content = cont;
 	}
 
@@ -607,5 +616,101 @@ public class ACLMessage implements Serializable, Cloneable {
 				return false;
 		}
 		return true;
+	}
+	
+	/**
+	 Sets the value of byte sequence content
+	 @param serializable object to store
+	 */
+	
+	public void setContentObject(java.io.Serializable s) throws IOException
+	{
+		ByteArrayOutputStream c = new ByteArrayOutputStream();
+		ObjectOutputStream oos = new ObjectOutputStream(c);
+		oos.writeObject(s);
+		oos.flush();
+		setByteSequenceContent(c.toByteArray());
+	}
+	
+	/**
+	 Sets the value of byte sequence content
+	 @param byte array to store
+	 */
+	public void setByteSequenceContent(byte[] content) {
+		this.content = null; //make to null the other variable
+		byteSequenceContent = content;
+	}
+	
+	/**
+	 Returns the integer corresponding to the performative
+	 @returns the integer corresponding to the performative; -1 otherwise
+	 */
+	public static int getPerformative(String perf)
+	{
+		String tmp = perf.toUpperCase();
+		for (int i=0; i<performatives.length; i++)
+			if (performatives[i].equals(tmp))
+				return i;
+		return -1;
+	}
+	
+	/**
+	 Returns the string corresponding to the integer for the performative
+	 @return the string corresponding to the integer for the performative; 
+	 "NOT-UNDERSTOOD" if the integer is out of range.
+	 */
+	public static String getPerformative(int perf){
+		try {
+			return performatives[perf];
+		} catch (Exception e) {
+			return performatives[NOT_UNDERSTOOD];
+		}
+	}
+	
+	/**
+	 * Reads <code>:content</code> slot. <p>
+	 * @return The value of <code>:content</code> slot.
+	 */
+	public byte[] getByteSequenceContent() {
+		if (content != null) 
+			return new StringBuffer(content).toString().getBytes();
+		else if (byteSequenceContent != null)
+			return byteSequenceContent;
+		return null;
+	}
+	
+	
+	/**
+	 * This method returns the content of this ACLMessage when they have
+	 * been written via the method <code>setContentObject</code>.
+	 * 
+	 * @return the object read from the content of this ACLMessage
+	 */
+	public Object getContentObject() {
+		
+		Object o = null;
+		if(content != null && content != "")
+			return (Object)content;
+		else if(this.byteSequenceContent != null){
+			try{
+				byte[] data = getByteSequenceContent();
+				if (data == null)
+					return null;
+				ByteArrayInputStream bis = new ByteArrayInputStream(data);
+				ObjectInputStream oin = new ObjectInputStream(bis);
+				o = (java.io.Serializable)oin.readObject();
+				return o;
+			}
+			catch (java.lang.Error e) {
+				e.printStackTrace();
+			}
+			catch (IOException e1) {
+				e1.printStackTrace();
+			}
+			catch(ClassNotFoundException e2) {
+				e2.printStackTrace();
+			}
+		}
+		return o;
 	}
 }
