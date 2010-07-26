@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="InformNormContent" targetNamespace="http://wtp" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://wtp" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://wtp">
+      <xsd:element name="InformNormContent">
+        <xsd:complexType>
+          <xsd:sequence>
+             <xsd:element name="NormID" type="xsd:string"/>
+             <xsd:element name="AgentID" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="InformNormContentResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+          	<xsd:element name="Description" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="InformNormContentResponse">
+    <wsdl:part name="parameters" element="tns:InformNormContentResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="InformNormContentMessage">
+    <wsdl:part name="parameters" element="tns:InformNormContent">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="InformNormContentPortType">
+    <wsdl:operation name="InformNormContent">
+      <wsdl:input message="tns:InformNormContentMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:InformNormContentResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="InformNormContentSOAP" type="tns:InformNormContentPortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="InformNormContent">
+      <soap:operation soapAction="http://wtp"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="InformNormContent">
+    <wsdl:port name="InformNormContentSOAP" binding="tns:InformNormContentSOAP">
+      <soap:address location="http://localhost:8080/OMS/services/InformNormContent"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
