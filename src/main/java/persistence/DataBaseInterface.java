@@ -514,6 +514,22 @@ public class DataBaseInterface {
 			return false;
 		}
 	}	
+	public String GetNormContent(String normID)
+	{
+		try{
+			Statement stmt = db.connection.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM norm WHERE normid='"+normID.toLowerCase()+"'");
+	        if (rs.next()){
+	        	return rs.getString("normcontent");
+	        }
+	        else{
+	        	return null;
+	        }
+		}catch(Exception e){
+			e.printStackTrace();
+			return null;
+		}
+	}
 	
 	public boolean CheckSimpleRequestNorm(String deonticConcept, String roleID,
 			String serviceName) {

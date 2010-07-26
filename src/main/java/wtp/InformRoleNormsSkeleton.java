@@ -20,9 +20,8 @@ public class InformRoleNormsSkeleton
 	/**
 	 * Service used for requesting the list of norms addressed to a specific role. The role must
 	 * exist and the agent must be a member of THOMAS.
-	 * @param informRoleNorms containing:
-	 * - RoleID
-	 * - AgentID
+	 * @param informRoleNorms
+	 *            containing: - RoleID - AgentID
 	 */
 	public wtp.InformRoleNormsResponse InformRoleNorms(
 			wtp.InformRoleNorms informRoleNorms)
