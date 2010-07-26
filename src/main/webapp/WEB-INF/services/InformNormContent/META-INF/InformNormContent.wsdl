@@ -14,6 +14,8 @@
         <xsd:complexType>
           <xsd:sequence>
           	<xsd:element name="Description" type="xsd:string"/>
+	      	<xsd:element name="Status" type="xsd:string"/>
+          	<xsd:element name="ErrorValue" type="xsd:string"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
