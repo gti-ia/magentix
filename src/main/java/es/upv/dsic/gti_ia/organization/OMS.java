@@ -323,6 +323,7 @@ public class OMS extends QueueAgent {
 	private final URI OMS_QUANTITYMEMBERS_GOAL = URI.create("QuantityMembers");
 	@SuppressWarnings("unused")
 	private final URI OMS_QUANTITYMEMBERS_PROVIDER = URI.create("Provider");
+	private final URI OMS_INFORMNORMCONTENT_PROCESS = URI.create(OWL_S_OMS_SERVICES +"InformNormContentProcess.owl");
 
 	// array with the OMS processes related with registration
 	URI[] OMSServicesProfiles = { OMS_REGISTERUNIT_PROFILE /*
@@ -412,7 +413,8 @@ public class OMS extends QueueAgent {
 			OMS_INFORMUNITROLES_PROCESS, OMS_INFORMUNITROLES_PROCESS,
 			OMS_INFORMROLE_PROCESS, OMS_INFORMROLENORMS_PROCESS,
 			OMS_INFORMMEMBERS_PROCESS, OMS_INFORMROLE_PROCESS,
-			OMS_INFORMUNITROLES_PROCESS, OMS_QUANTITYMEMBERS_PROCESS };
+			OMS_INFORMUNITROLES_PROCESS, OMS_QUANTITYMEMBERS_PROCESS,
+			OMS_INFORMNORMCONTENT_PROCESS };
 
 	/**
 	 * Returns an instance of the agents OMS
