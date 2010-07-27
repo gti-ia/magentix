@@ -2,16 +2,16 @@
 <!-- This file was auto-generated from WSDL -->
 <!-- by the Apache Axis2 version: 1.4  Built on : Apr 26, 2008 (06:24:30 EDT) -->
 <serviceGroup>
-    <service name="GetAgentServices">
+    <service name="GetProcess">
         <messageReceivers>
-            <messageReceiver mep="http://www.w3.org/ns/wsdl/in-out" class="wtp.GetAgentServicesMessageReceiverInOut"/>
+            <messageReceiver mep="http://www.w3.org/ns/wsdl/in-out" class="wtp.GetProcessMessageReceiverInOut"/>
         </messageReceivers>
-        <parameter name="ServiceClass">wtp.GetAgentServicesSkeleton</parameter>
+        <parameter name="ServiceClass">wtp.GetProcessSkeleton</parameter>
         <parameter name="useOriginalwsdl">true</parameter>
         <parameter name="modifyUserWSDLPortAddress">true</parameter>
-        <operation name="GetAgentServices" mep="http://www.w3.org/ns/wsdl/in-out" namespace="http://wtp">
+        <operation name="GetProcess" mep="http://www.w3.org/ns/wsdl/in-out" namespace="http://wtp">
             <actionMapping>http://wtp</actionMapping>
-            <outputActionMapping>http://wtp/GetAgentServicesPortType/GetAgentServicesResponse</outputActionMapping>
+            <outputActionMapping>http://wtp/GetProcessPortType/GetProcessResponse</outputActionMapping>
         </operation>
     </service>
 </serviceGroup>

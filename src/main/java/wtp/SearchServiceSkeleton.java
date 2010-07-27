@@ -134,6 +134,10 @@ import wtp.PlannerStub;
 			response.set_return(0);
 			response.setServicesList("There are not profiles with the goal: "+searchService.getServicePurpose());
 		}
+		if(DEBUG)
+		{
+			System.out.println("*** Search result:" + serviceList);
+		}
 		return (response);
 
 	}// end SearchService

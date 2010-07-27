@@ -88,15 +88,13 @@ public class DataBaseInterface {
    	 		if(rs.next()){
    
    	 			System.out.println("The serviceidprofile "+ serviceprofileid+ " has associated process");
+   	 			return(true);
    	 		}
    	 		else{
    	 			
-   	 			System.out.println("The profile does have associated process ");
+   	 			System.out.println("The profile does not have associated process ");
    	 			return(false);
    	 		}
-   	 		
-   	 		return(true);
-		
 		}catch(Exception e){
 			e.printStackTrace();
 		}
