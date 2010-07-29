@@ -161,7 +161,8 @@ public class AgentCertificate {
 			bis.close();
 
 			String sigAlg = properties.getProperty("sigAlg");
-			int validity = Integer.parseInt(properties.getProperty("Validity"));
+			double validity =  Double.valueOf(properties.getProperty("Validity")).doubleValue();
+		
 			PrivateKeyEntry pke = this.generateMMSPrivateKeyEntry();
 
 			// Que información contendrá el certificados que emita.
@@ -322,7 +323,7 @@ public class AgentCertificate {
 	// información del agente (Common Name...).
 
 	private Certificate[] generateAndSignedCertificate(X500Name myname,
-			String sigAlg, long validity, PrivateKeyEntry issuerEntry,
+			String sigAlg, double validity, PrivateKeyEntry issuerEntry,
 			PublicKey publicKey) throws NoSuchAlgorithmException,
 			InvalidKeyException, CertificateException, SignatureException,
 			NoSuchProviderException, IOException, KeyStoreException {
@@ -336,8 +337,8 @@ public class AgentCertificate {
 						.getIssuerX500Principal().getEncoded()));
 
 		Date firstDate = new Date();
-		Date lastDate = new Date(firstDate.getTime() + (long) validity * 24
-				* 60 * 60 * 1000);
+		Date lastDate = new Date(firstDate.getTime() + (long) (validity * 24
+				* 60 * 60 * 1000));
 
 		CertificateValidity interval = new CertificateValidity(firstDate,
 				lastDate);
