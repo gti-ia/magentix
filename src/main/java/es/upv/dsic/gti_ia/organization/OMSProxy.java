@@ -519,7 +519,7 @@ public class OMSProxy {
 	public String deregisterUnit(QueueAgent agent, String UnitID)
 			throws Exception {
 
-		String call = configuration + "DeregisterNormProcess.owl  UnitID="
+		String call = configuration + "DeregisterUnitProcess.owl  UnitID="
 				+ UnitID;
 		this.sendInform(agent, call);
 		if (!this.value.equals("Ok")) {
