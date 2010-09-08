@@ -66,7 +66,8 @@ public class RemoveProviderSkeleton {
 		// Get the service process 
 		persistence.DataBaseInterface thomasBD = new DataBaseInterface();
 		String serviceprocess = thomasBD.GetServiceProcessFromProcessID(removeProvider.getServiceImplementationID());
-
+		String urlProfileService = thomasBD.GetServiceProfileFromProcessID(removeProvider.getServiceImplementationID());
+		
 		if (thomasBD.DeleteProcess(removeProvider.getServiceImplementationID())) {
 
 			////////////
@@ -140,12 +141,14 @@ public class RemoveProviderSkeleton {
 
 			// Get the url profile # service name
 			m.write(System.out, "N3");
-			String urlProfileService = GetServiceProfile(urlProcessDoc,processName, m);
+			String urlProcessService = GetServiceProcess(urlProcessDoc,processName, m);
 
 			if (DEBUG) {
 				System.out.println("URL process: " + urlProcessDoc);
 				System.out.println("Process name: " + processName);
 				System.out.println("URL profile#service: " + urlProfileService);
+				System.out.println("URL process#service: " + urlProcessService);
+				
 				// System.out.println("Provider ID: "+ providerName);
 			}
 
@@ -156,7 +159,7 @@ public class RemoveProviderSkeleton {
 					+ "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
 					+ "select ?x "
 					+ "where {"
-					+ urlProfileService
+					+ urlProcessService
 					+ " service:presents ?x" + "}";
 
 			Query queryServiceProfileName = QueryFactory.create(queryStringServiceProfileName);
@@ -173,7 +176,7 @@ public class RemoveProviderSkeleton {
 			Profile = Profile.replace(")", "");
 
 			// RemoveProvider(urlProcessDoc, providerName, processName, m);
-			RemoveProcess(urlProcessDoc, processName, urlProfileService,Profile, m);
+			RemoveProcess(urlProcessDoc, processName, urlProfileService,urlProcessService,Profile, m);
 
 			m.commit();
 			response.set_return(1);
@@ -213,7 +216,7 @@ public class RemoveProviderSkeleton {
 			 * @param m
 			 * @return
 			 */
-         public int RemoveProcess(String urlProcessDoc, String processname, String urlProfileService, String Profile, OntModel m){
+         public int RemoveProcess(String urlProcessDoc, String processname, String urlProfileService, String urlProcessService, String Profile, OntModel m){
         	 
         	   if (DEBUG) {
        			System.out.println("Removing Process ... ");
@@ -253,7 +256,7 @@ public class RemoveProviderSkeleton {
     				DeleteProfile(urlProfileService,Profile, m);
     			}
     			
-        		String processGround = GetServiceGrounding(urlProcessDoc, processname,urlProfileService, m);
+        		String processGround = GetServiceGrounding(urlProcessDoc, processname,urlProcessService, m);
         		String processGroundWSDL = GetServiceWSDLGrounding(urlProcessDoc, processGround, m);
         		String WsdlURL = GetServiceWSDLGroundingDoc(urlProcessDoc, processGroundWSDL, m);
         		
@@ -334,7 +337,7 @@ public class RemoveProviderSkeleton {
          void DeleteProfile(String urlProfileService,String Profile, OntModel m){
         	 
         	 if (DEBUG) {
-       			System.out.println("Delete Profile... ");
+       			System.out.println("Delete Profile... "+urlProfileService);
 	 	      }
         	 
         	//Delete profile tuples where the property is profile
@@ -366,7 +369,7 @@ public class RemoveProviderSkeleton {
  	            "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" + 
  	            "delete {?x ?y ?z}" +
  	            "where" +
- 	            "{" +urlProfileService+" ?y ?z" +
+ 	            "{ <"+urlProfileService+"> ?y ?z" +
  	            " filter ( ?z = service:Service " +
  	                   "|| ?y = service:presents " +
  	                   ")" +
@@ -378,6 +381,12 @@ public class RemoveProviderSkeleton {
   	            UpdateAction.parseExecute(update, m, querysol);
   	            UpdateAction.parseExecute(update2, m, querysol);
   	      
+  	            persistence.DataBaseInterface thomasBD = new DataBaseInterface();
+  	            
+  	            StringTokenizer Tok = new StringTokenizer(urlProfileService);
+				String urlProfile = Tok.nextToken("#");
+  	            String profileID = thomasBD.GetServiceProfileID(urlProfile);
+  	            thomasBD.DeleteProfile(profileID);
          }// end DeleteProfile
          
          
@@ -784,7 +793,7 @@ public class RemoveProviderSkeleton {
           * @param OntModel m
           * @return 
           */ 
-         public String GetServiceProfile(String urlProcessDoc, String processname, OntModel m){
+         public String GetServiceProcess(String urlProcessDoc, String processname, OntModel m){
          	//Query to get the service profile
  			String queryStringProfile =
  				"prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
@@ -921,12 +930,12 @@ public class RemoveProviderSkeleton {
  						+ "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
  						+ "prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>" 
  						+ "prefix actor: <http://www.daml.org/services/owl-s/1.1/ActorDefault.owl#>"
- 						+ "prefix mind: <"+urlProcessDoc+"#>" 
- 						+ "select ?x " 
+ 						+ " select ?x " 
  						+ "where {" 
  						+ processGroundWSDL +" grounding:wsdlDocument ?x" 
  						+ "}";
 
+ 			System.out.println("queryStringDocWSDL: "+queryStringDocWSDL);
  			Query queryDocWSDL = QueryFactory.create(queryStringDocWSDL);
 
      		// Execute the query and obtain results
