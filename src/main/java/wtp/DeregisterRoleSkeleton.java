@@ -66,7 +66,7 @@ public class DeregisterRoleSkeleton
 			res.setStatus("ErrorNorm");
 			return res;
 		}
-		if (thomasBD.CheckRoleIsPlayed(deregisterRole.getRoleID()))
+		if (thomasBD.CheckRoleIsPlayedInUnit(deregisterRole.getRoleID(),deregisterRole.getUnitID()))
 		{
 			res.setErrorValue("Invalid");
 			res.setStatus("ErrorPlayed");

@@ -49,7 +49,6 @@ public class DeregisterUnitSkeleton
 			res.setStatus("Error");
 			return res;
 		}
-		
 		if (!thomasBD.CheckExistsUnit(deregisterUnit.getUnitID()))
 		{
 			res.setErrorValue("NotFound");
