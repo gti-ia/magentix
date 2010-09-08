@@ -379,6 +379,40 @@ public Boolean CheckServiceProcessUrl(String urlprocess){
 	 	
 	}
 
+public String GetServiceProfileFromProcessID(String serviceprocessid){
+	System.out.println("Start GetServiceProfileFromProcessID");
+	Statement stmt = null;
+	ResultSet rs = null;
+	String serviceProfile = "";
+	String profileid = null;
+	try{
+		if(CheckServiceProfileID(serviceprocessid))
+		stmt = db.connection.createStatement();
+		rs = stmt.executeQuery("select * from serviceprocessid where serviceprocessid='"+serviceprocessid+"'");
+	 		if(rs.next()){
+	 			profileid = rs.getString("serviceprofileid");
+	 			System.out.println("The service Profileid is "+profileid);
+	 			
+	 		}
+	 		
+	 	rs = stmt.executeQuery("select * from serviceprofileid where serviceprofileid='"+profileid+"'");
+	 		if(rs.next()){
+	 			String urlprofile = rs.getString("urlprofile");
+	 			String profilename = rs.getString("profilename");
+	 			
+	 			serviceProfile= urlprofile+"#"+profilename;
+	 			System.out.println("The service Profile is "+serviceProfile);
+	 		}
+	 		
+	 		
+	}catch(Exception e){
+		e.printStackTrace();
+	}
+	System.out.println("End GetServiceProcessFromProcessID");
+ 	return(serviceProfile);
+
+}
+
 public String GetServiceProcessFromProfile(String serviceprofileid){
 	System.out.println("Start GetServiceProcessFromProfile");
 	Statement stmt = null;
