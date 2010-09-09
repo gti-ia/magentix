@@ -80,6 +80,7 @@ public class DeregisterRoleSkeleton
 			res.setStatus("Error");
 			return res;
 		}
+		System.out.println("DEREGISTERROLE, exit rolebasedcontrol!!");
 		if (!thomasBD.DeleteRole(deregisterRole.getRoleID(), deregisterRole
 				.getUnitID()))
 		{
@@ -91,27 +92,39 @@ public class DeregisterRoleSkeleton
 	}
 	private boolean roleBasedControl(String agentID, String unitID)
 	{
+		System.out.println("DEREGISTERROLE 1");
 		if (unitID.equalsIgnoreCase("virtual"))
 			return false;
+		System.out.println("DEREGISTERROLE 2");
 		if (!thomasBD.CheckExistsAgent(agentID))
 			return false;
+		System.out.println("DEREGISTERROLE 3");
 		String unitType = thomasBD.GetUnitType(unitID);
 		if (unitType.equalsIgnoreCase("flat"))
 			return true;
+		System.out.println("DEREGISTERROLE 4");
 		if (unitType.equalsIgnoreCase("team"))
 		{
+			System.out.println("DEREGISTERROLE 5");
 			if (thomasBD.CheckAgentPlaysRoleInUnit(unitID, agentID))
 				return true;
 			else
 				return false;
 		}
+		System.out.println("DEREGISTERROLE 6");
 		List<String> positions;
 		try
 		{
+			System.out.println("DEREGISTERROLE agentID="+agentID+", unitID="+unitID);
 			positions = thomasBD.GetAgentPosition(agentID, unitID);
-			for (int i = 0; i < positions.size(); i++)
-				if (positions.get(i).equalsIgnoreCase("supervisor"))
+			System.out.println("DEREGISTERROLE positions.size="+positions.size());
+			for (int i = 0; i < positions.size(); i++){
+				System.out.println("DEREGISTERROLE position["+i+"]='"+positions.get(i)+"'");
+				if (positions.get(i).equalsIgnoreCase("supervisor")){
+					System.out.println("DEREGISTERROLE somos supervisor");
 					return true;
+				}
+			}
 		}
 		catch (Exception e)
 		{

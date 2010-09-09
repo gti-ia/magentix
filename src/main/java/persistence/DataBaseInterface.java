@@ -1,5 +1,6 @@
 package persistence;
 
+import java.sql.Array;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -255,38 +256,45 @@ public class DataBaseInterface
 		}
 		return isPlayed;
 	}
-	public boolean CheckRoleIsPlayedInUnit(String RoleID, String UnitID)
+	public boolean CheckRoleIsPlayedInUnit(String RoleString, String UnitString)
 	{
-		boolean isPlayed = false;
 		try
 		{
+			System.out.println("CHECKROLE 1");
 			Statement stmt = db.connection.createStatement();
-			ResultSet rs =
+			ResultSet unitId =
 					stmt.executeQuery("SELECT * FROM unit WHERE unitid='"
-							+ UnitID.toLowerCase() + "'");
-			if (rs.next())
-			{
-				stmt = db.connection.createStatement();
-				ResultSet rs2 =
-						stmt.executeQuery("SELECT * FROM role WHERE roleid='"
-								+ RoleID.toLowerCase() + "' AND unit="
-								+ rs.getString("id"));
-				if (rs2.next())
-				{
-					stmt = db.connection.createStatement();
-					ResultSet rs3 =
-							stmt
-									.executeQuery("SELECT * FROM entityplaylist WHERE role="
-											+ rs.getString("id"));
-					if (rs3.next())
-						isPlayed = true;
-				}
+							+ UnitString.toLowerCase() + "'");
+			if (!unitId.next())
+				return false;
+			System.out.println("unitID="+unitId.getString("id"));
+			System.out.println("CHECKROLE 2");
+			stmt = db.connection.createStatement();
+			ResultSet roleId =
+				stmt.executeQuery("SELECT * FROM role WHERE roleid='"
+						+ RoleString.toLowerCase() + "'");
+			if(!roleId.next())
+				return false;
+			System.out.println("roleId="+roleId.getString("id"));
+			System.out.println("CHECKROLE 3");
+			stmt = db.connection.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM entityplaylist WHERE role='"
+					+roleId.getString("id")+"' AND unit='"+unitId.getString("id")+"'");
+			rs.first();
+			System.out.println("COUNT = "+rs.getInt(1));
+			if(rs.getInt(1)>0){
+				return true;
+			}
+			else{
+				return false;
 			}
 		}
 		catch (Exception e)
 		{
+			System.out.println("Exception in DataBase. Message follows:");
+			System.out.println(e.getMessage());
+			return false; // TODO: what to return? it should throw again the exception
 		}
-		return isPlayed;
 	}
 	public boolean CheckUnitHasRole(String unitID)
 	{
