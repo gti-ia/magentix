@@ -387,7 +387,7 @@ public class SFProxy {
 		// eliminar el servicio de la tabla de servicios de el agente
 
 		String call = SFServiceDesciptionLocation
-				+ "DeregisterProfileProcess.owl GetProcessInputServiceID="
+				+ "DeregisterProfileProcess.owl DeregisterProfileInputServiceID="
 				+ profileDescription.getServiceID();
 
 		this.sendInfo(agent, call);
