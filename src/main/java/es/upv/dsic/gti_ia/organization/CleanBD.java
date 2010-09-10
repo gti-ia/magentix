@@ -1,6 +1,6 @@
 package es.upv.dsic.gti_ia.organization;
 
-import java.sql.ResultSet;
+
 import java.sql.Statement;
 
 import com.hp.hpl.jena.db.DBConnection;
