@@ -249,12 +249,12 @@ public class RemoveProviderSkeleton {
     			}
     			
     			// If there are not more than one process, the profile should be deleted
-    			if (numprocess==1) {
+    			/*if (numprocess==1) {  
     				if (DEBUG) {
 	          			System.out.println("The profile should be deleted... ");
 		 	        }
     				DeleteProfile(urlProfileService,Profile, m);
-    			}
+    			}*/
     			
         		String processGround = GetServiceGrounding(urlProcessDoc, processname,urlProcessService, m);
         		String processGroundWSDL = GetServiceWSDLGrounding(urlProcessDoc, processGround, m);
