@@ -161,13 +161,15 @@ public class BaseAgent implements Runnable
 	 */
 	public BaseAgent(AgentID aid) throws Exception
 	{
-		FileInputStream propFile = new FileInputStream(
-		"./configuration/securityUser.properties");
+
 		
 		// Si no estamos en modo seguro funcionara como siempre, es por tanto
 		// transparente al programador.
 		if (c.isSecureMode())
 		{
+			FileInputStream propFile = new FileInputStream(
+			"./configuration/securityUser.properties");
+			
 			
 			SecurityTools st = SecurityTools.GetInstance();
 			Properties propSecurity = new Properties();
