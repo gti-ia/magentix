@@ -40,8 +40,11 @@ public class TracingService {
 //	public static final int ARTIFACT_LEAVES_AGGREGATION = 10;
 	// Messaging among Tracing Entities
 	public static final int MESSAGE_SENT = 14;
-	public static final int MESSAGE_RECEIVED = 15;
-	public static final int MESSAGE_UNDELIVERABLE = 16;
+	public static final int MESSAGE_SENT_DETAIL = 15;
+	public static final int MESSAGE_RECEIVED = 16;
+	public static final int MESSAGE_RECEIVED_DETAIL = 17;
+	public static final int MESSAGE_UNDELIVERABLE = 18;
+	public static final int MESSAGE_UNDELIVERABLE_DETAIL = 19;
 	// OMS related Trace Events
 //	public static final int ROLE_REGISTRATION = 10;
 //	public static final int ROLE_DEREGISTRATION = 10;
@@ -54,16 +57,16 @@ public class TracingService {
 //	public static final int ROLE_EXPULSION = 10;
 //	public static final int NORM_VIOLATION = 10;
 	// Tracing System related Tracing Services
-	public static final int PUBLISHED_TRACING_SERVICE = 17;
-	public static final int UNPUBLISHED_TRACING_SERVICE = 18;
+	public static final int PUBLISHED_TRACING_SERVICE = 20;
+	public static final int UNPUBLISHED_TRACING_SERVICE = 21;
 	// These two seem redundant with "SUBSCRIBED" and "UNSUBSCRIBED"
 	//public static final int TRACING_SERVICE_REQUEST = 10;
 	//public static final int TRACING_SERVICE_CANCEL = 10;
-	public static final int AUTHORIZATION_REQUEST = 19;
-	public static final int AUTHORIZATION_GRANTED = 20;
-	public static final int AUTHORIZATION_DENIED = 21;
+	public static final int AUTHORIZATION_REQUEST = 22;
+	public static final int AUTHORIZATION_GRANTED = 23;
+	public static final int AUTHORIZATION_DENIED = 24;
 	
-	public static final int MAX_DI_TS = 22;
+	public static final int MAX_DI_TS = 25;
 	
 	public static final TracingService[] DI_TracingServices = new TracingService[]{
 		new TracingService("TRACE_ERROR", "General error in the tracing process."),
@@ -81,8 +84,11 @@ public class TracingService {
 		new TracingService("AGENT_RESUMED", "An agent restarted after a suspension."),
 		new TracingService("AGENT_DESTROYED", "An agent was destroyed."),
 		new TracingService("MESSAGE_SENT", "A FIPA-ACL message was sent."),
+		new TracingService("MESSAGE_SENT_DETAIL", "A FIPA-ACL message was sent. Message included in the event."),
 		new TracingService("MESSAGE_RECEIVED", "A FIPA-ACL message was received."),
+		new TracingService("MESSAGE_RECEIVED_DETAIL", "A FIPA-ACL message was received. Message included in the event."),
 		new TracingService("MESSAGE_UNDELIVERABLE", "A FIPA-ACL message was impossible to deliver."),
+		new TracingService("MESSAGE_UNDELIVERABLE_DETAIL", "A FIPA-ACL message was impossible to deliver. Message included in the event."),
 		new TracingService("PUBLISHED_TRACING_SERVICE", "A new tracing service has been published by an ES entity."),
 		new TracingService("UNPUBLISHED_TRACING_SERVICE", "A tracing service is not being offered by an ER entity."),
 		new TracingService("AUTHORIZATION_REQUEST", "An entity requested authorization for a tracing service."),

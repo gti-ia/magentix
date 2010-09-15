@@ -94,6 +94,13 @@ public class BaseAgent implements Runnable
 			{
 				e.printStackTrace();
 			}
+			
+			// Send trace events
+			sendTraceEvent(new TraceEvent(TracingService.DI_TracingServices[TracingService.MESSAGE_RECEIVED].getName(),
+					aid, msg.getSender().toString()));
+			sendTraceEvent(new TraceEvent(TracingService.DI_TracingServices[TracingService.MESSAGE_RECEIVED_DETAIL].getName(),
+					aid, msg.toString()));
+			
 			onMessage(msg);
 		}
 		
@@ -282,9 +289,10 @@ public class BaseAgent implements Runnable
 			
 		}
 		
-		// sendTraceEvent(new
-		// TraceEvent(TracingService.DI_TracingServices[TracingService.NEW_AGENT].getName(),
-		// new TracingEntity(TracingEntity.AGENT, this.aid), ""));
+		// Send trace event
+		sendSystemTraceEvent(new TraceEvent(TracingService.DI_TracingServices[TracingService.NEW_AGENT].getName(),
+				new AgentID("system", aid.protocol, aid.host, aid.port), aid.toString()));
+		
 	}
 	
 	// Cuando el agente infringe alguna regla de seguridad, la política del broker es destruir la
@@ -423,7 +431,11 @@ public class BaseAgent implements Runnable
 							messageProperties), xfr.getBodyBytes());			
 		}
 		
-		
+		// Send trace events
+		sendTraceEvent(new TraceEvent(TracingService.DI_TracingServices[TracingService.MESSAGE_SENT].getName(),
+				aid, msg.getReceiver().toString()));
+		sendTraceEvent(new TraceEvent(TracingService.DI_TracingServices[TracingService.MESSAGE_SENT_DETAIL].getName(),
+				aid, msg.toString()));
 		
 		/**
 		 * Permite incluir un arroba en el nombre del agente destinatario. Condición Obligatoria
@@ -607,7 +619,6 @@ public class BaseAgent implements Runnable
 		// confirm completion
 		this.traceSession.sync();
 		
-		// Add tracing entity to the TraceManager TracingEntityList
 		
 	}
 	
@@ -677,6 +688,7 @@ public class BaseAgent implements Runnable
 			messageHeaders.put("origin_entity", tEvent.getOriginEntity()
 					.getAid().name);
 		}
+		
 		messageProperties.setApplicationHeaders(messageHeaders);
 		
 		Header header = new Header(deliveryProps, messageProperties);
@@ -684,6 +696,54 @@ public class BaseAgent implements Runnable
 		this.traceSession.messageTransfer("amq.match",
 				MessageAcceptMode.EXPLICIT, MessageAcquireMode.PRE_ACQUIRED,
 				header, xfr.getBodyString());
+	}
+	
+	/**
+	 * Sends a trace event with "system" as origin entity to the amq.match exchange
+	 * @param tEvent
+	 * 
+	 * @param destination
+	 * 		Tracing entity to which the trace event is directed to.
+	 * 		If set to null, the system trace event is understood to be directed to all tracing
+	 * 		entities.        
+	 */
+	private void sendSystemTraceEvent(TraceEvent tEvent) {
+		MessageTransfer xfr = new MessageTransfer();
+
+		xfr.destination("amq.match");
+		xfr.acceptMode(MessageAcceptMode.EXPLICIT);
+		xfr.acquireMode(MessageAcquireMode.PRE_ACQUIRED);
+		
+		DeliveryProperties deliveryProps = new DeliveryProperties();
+		
+		// Serialize message content
+		String body;
+		// Timestamp
+		body = String.valueOf(tEvent.getTimestamp()) + "#";
+		// EventType
+		body = body + tEvent.getTracingService().length() + "#"
+				+ tEvent.getTracingService();
+		// OriginEntiy
+		body = body + tEvent.getOriginEntity().getType() + "#";
+		body = body + this.getAid().toString().length() + "#" + this.getAid().toString();
+		// Content
+		body = body + tEvent.getContent().length() + "#" + tEvent.getContent();
+		
+		xfr.setBody(body);
+
+		// set message headers
+    	MessageProperties messageProperties = new MessageProperties();
+    	Map<String, Object> messageHeaders = new HashMap<String, Object>();
+    	// set the message property
+    	messageHeaders.put("tracing_service", tEvent.getTracingService());
+    	messageHeaders.put("origin_entity", "system");
+		
+    	messageProperties.setApplicationHeaders(messageHeaders);
+    	
+    	Header header = new Header(deliveryProps, messageProperties);
+    	
+    	this.traceSession.messageTransfer("amq.match", MessageAcceptMode.EXPLICIT, MessageAcquireMode.PRE_ACQUIRED,
+                header, xfr.getBodyString());
 	}
 	
 	/**
@@ -754,6 +814,8 @@ public class BaseAgent implements Runnable
 		traceSession.queueDelete(aid.name + ".trace");
 		traceSession.close();
 		
+		sendSystemTraceEvent(new TraceEvent(TracingService.DI_TracingServices[TracingService.AGENT_DESTROYED].getName(),
+				new AgentID("system", aid.protocol, aid.host, aid.port), aid.toString()));
 	}
 	
 	/**
