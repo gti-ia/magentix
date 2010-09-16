@@ -352,20 +352,18 @@ public class TraceManager extends BaseAgent{
 								TSS_iter.remove();
 								
 								if (tServiceSubscription.getAnyProvider()){
-									tEventContent=TracingService.DI_TracingServices[TracingService.UNAVAILABLE_TS].getName() + "#" +
-									serviceName + "#any";
+									tEventContent=serviceName + "#any";
 									// Remove subscription
 									this.session.exchangeUnbind(tServiceSubscription.getSubscriptorEntity().getAid().name+".trace", "amq.match", serviceName + "#any", Option.NONE);
 								}
 								else{
-									tEventContent=TracingService.DI_TracingServices[TracingService.UNAVAILABLE_TS].getName() + "#" +
-									serviceName + msg.getSender();
+									tEventContent=serviceName + msg.getSender();
 									// Remove subscription
 									this.session.exchangeUnbind(tServiceSubscription.getSubscriptorEntity().getAid().name+".trace", "amq.match", serviceName + "#" + msg.getSender(), Option.NONE);
 								}
 								
 								tEvent=new TraceEvent(TracingService.DI_TracingServices[TracingService.UNAVAILABLE_TS].getName(),
-										tEntity, tEventContent);
+										new AgentID("system", this.getAid().protocol, this.getAid().host, this.getAid().port), tEventContent);
 								sendSystemTraceEvent(tEvent, tServiceSubscription.getSubscriptorEntity());
 							}
 						}
@@ -381,13 +379,12 @@ public class TraceManager extends BaseAgent{
 									}
 									TSS_iter.remove();
 									
-									tEventContent=TracingService.DI_TracingServices[TracingService.UNAVAILABLE_TS].getName() + "#" +
-									serviceName + msg.getSender();
+									tEventContent=serviceName + msg.getSender();
 									// Remove subscription
 									this.session.exchangeUnbind(tServiceSubscription.getSubscriptorEntity().getAid().name+".trace", "amq.match", serviceName + "#" + msg.getSender(), Option.NONE);
 									
 									tEvent=new TraceEvent(TracingService.DI_TracingServices[TracingService.UNAVAILABLE_TS].getName(),
-											tEntity, tEventContent);
+											new AgentID("system", this.getAid().protocol, this.getAid().host, this.getAid().port), tEventContent);
 									sendSystemTraceEvent(tEvent, tServiceSubscription.getSubscriptorEntity());
 								
 								}
@@ -702,10 +699,11 @@ public class TraceManager extends BaseAgent{
 	public void onTraceEvent(TraceEvent tEvent)
 	{
 		TracingEntity tEntity;
+		TracingService tService;
+		TracingServiceSubscription tServiceSubscription;
 		Iterator<TracingService> TS_iter;
 		Iterator<TracingServiceSubscription> TSS_iter;
-		TracingServiceSubscription TSS;
-		
+		TraceEvent responseTEvent;
 		
 		if (tEvent.getTracingService().contentEquals(TracingService.DI_TracingServices[TracingService.NEW_AGENT].getName()) == true){
 			// Register tracing entity
@@ -717,24 +715,30 @@ public class TraceManager extends BaseAgent{
 		else if (tEvent.getTracingService().contentEquals(TracingService.DI_TracingServices[TracingService.AGENT_DESTROYED].getName()) == true){
 			// Unregister tracing entity
 			
+			tEntity=TracingEntities.getTEByAid(new AgentID(tEvent.getContent()));
+			
 			// Cancel subscriptions of that tracing entity to any tracing service
-			if ((tEntity=TSSubscriberEntities.getTEByAid(new AgentID(tEvent.getContent()))) != null){
+			if (TSSubscriberEntities.contains(tEntity)){
 				// There are subscriptions to cancel
 				TSS_iter = tEntity.getSubscribedToTS().iterator();
 				while(TSS_iter.hasNext()){
-					TSS=TSS_iter.next();
-					TracingServices.getTS(name)
+					tServiceSubscription=TSS_iter.next();
+					TracingServices.getTS(tServiceSubscription.getTracingService().getName()).getSubscriptions().remove(tServiceSubscription);
+					TSS_iter.remove();
 				}
-				//tService=
-				TracingServices.getTS(TSS_iter.next().getTracingService().getName()).getSubscriptions().remove(o);
-				
-				
-				// Remove all subscriptions and send the corresponding trace events to subscriptors
-				if (agree_response){
+				TSSubscriberEntities.remove(tEntity);
+			}
+			
+			// Unpublish tracing services the tracing entity was offering
+			if (TSProviderEntities.contains(tEntity)){
+				// There are services which may have to be unpublished
+				TS_iter = tEntity.getPublishedTS().iterator();
+				while(TS_iter.hasNext()){
+					tService=TS_iter.next();
 					TSS_iter = tService.getSubscriptions().iterator();
 					
 					if (tService.getProviders().size() == 1){
-						// Just one provider: remove all subscriptions
+						// Just one provider: remove all subscriptions and inform to subscriptors
 						while(TSS_iter.hasNext()){
 							tServiceSubscription=TSS_iter.next();
 							
@@ -744,22 +748,21 @@ public class TraceManager extends BaseAgent{
 							}
 							TSS_iter.remove();
 							
+							responseTEvent = new TraceEvent(TracingService.DI_TracingServices[TracingService.UNAVAILABLE_TS].getName(), new AgentID("system", this.getAid().protocol, this.getAid().host, this.getAid().port), "");
+							
 							if (tServiceSubscription.getAnyProvider()){
-								tEventContent=TracingService.DI_TracingServices[TracingService.UNAVAILABLE_TS].getName() + "#" +
-								serviceName + "#any";
+								responseTEvent.setContent(tService.getName() + "#any");
 								// Remove subscription
-								this.session.exchangeUnbind(tServiceSubscription.getSubscriptorEntity().getAid().name+".trace", "amq.match", serviceName + "#any", Option.NONE);
+								this.session.exchangeUnbind(tServiceSubscription.getSubscriptorEntity().getAid().name+".trace", "amq.match", tService.getName() + "#any", Option.NONE);
 							}
 							else{
-								tEventContent=TracingService.DI_TracingServices[TracingService.UNAVAILABLE_TS].getName() + "#" +
-								serviceName + msg.getSender();
+								responseTEvent.setContent(tService.getName() + tEntity.getAid().toString());
 								// Remove subscription
-								this.session.exchangeUnbind(tServiceSubscription.getSubscriptorEntity().getAid().name+".trace", "amq.match", serviceName + "#" + msg.getSender(), Option.NONE);
+								this.session.exchangeUnbind(tServiceSubscription.getSubscriptorEntity().getAid().name+".trace",
+										"amq.match", tService.getName() + tEntity.getAid().toString(), Option.NONE);
 							}
 							
-							tEvent=new TraceEvent(TracingService.DI_TracingServices[TracingService.UNAVAILABLE_TS].getName(),
-									tEntity, tEventContent);
-							sendSystemTraceEvent(tEvent, tServiceSubscription.getSubscriptorEntity());
+							sendSystemTraceEvent(responseTEvent, tServiceSubscription.getSubscriptorEntity());
 						}
 					}
 					else{
@@ -774,76 +777,23 @@ public class TraceManager extends BaseAgent{
 								}
 								TSS_iter.remove();
 								
-								tEventContent=TracingService.DI_TracingServices[TracingService.UNAVAILABLE_TS].getName() + "#" +
-								serviceName + msg.getSender();
+								responseTEvent = new TraceEvent(TracingService.DI_TracingServices[TracingService.UNAVAILABLE_TS].getName(),
+										new AgentID("system", this.getAid().protocol, this.getAid().host, this.getAid().port),
+										tService.getName() + tEntity.getAid().toString());
 								// Remove subscription
-								this.session.exchangeUnbind(tServiceSubscription.getSubscriptorEntity().getAid().name+".trace", "amq.match", serviceName + "#" + msg.getSender(), Option.NONE);
+								this.session.exchangeUnbind(tServiceSubscription.getSubscriptorEntity().getAid().name+".trace",
+										"amq.match", tService.getName() + tEntity.getAid().toString(), Option.NONE);
 								
-								tEvent=new TraceEvent(TracingService.DI_TracingServices[TracingService.UNAVAILABLE_TS].getName(),
-										tEntity, tEventContent);
-								sendSystemTraceEvent(tEvent, tServiceSubscription.getSubscriptorEntity());
-							
+								sendSystemTraceEvent(responseTEvent, tServiceSubscription.getSubscriptorEntity());
 							}
 						}
 					}
-					
-					tEntity.getPublishedTS().remove(tService);
+					TS_iter.remove();
 					tService.getProviders().remove(tEntity);
-					if (tEntity.getPublishedTS().size() == 0){
-						TSProviderEntities.remove(tEntity);
-					}
-					
-					tEvent=new TraceEvent(TracingService.DI_TracingServices[TracingService.UNPUBLISHED_TRACING_SERVICE].getName(),
-						tEntity, serviceName);
-					sendTraceEvent(tEvent);
-					
-					//tEventContent=TracingService.DI_TracingServices[TracingService.UNPUBLISHED_TRACING_SERVICE].getName() +
-					//	"#" + serviceName + "#" + tEntity.getAid();
-					//tEvent=new TraceEvent(TracingService.DI_TracingServices[TracingService.UNPUBLISHED_TRACING_SERVICE].getName(),
-					//		tEntity, tEventContent);
-					//sendSystemTraceEvent(tEvent, tEntity);
-
-					response_msg = new ACLMessage(ACLMessage.AGREE);
-					response_msg.setSender(this.getAid());
-					response_msg.setReceiver(msg.getSender());
-					response_msg.setContent("unpublish#" + serviceName + ":Tracing service unpublished");
-					logger.info("[TRACE MANAGER]: Sending AGREE message to " + msg.getReceiver().toString());
 				}
-				
+				TSProviderEntities.remove(tEntity);
 			}
-			
-			
-			if (agree_response){
-				// Remove subscription
-				tEntity.getSubscribedToTS().remove(tServiceSubscription);
-				if (tEntity.getSubscribedToTS().size() == 0){
-					TSSubscriberEntities.remove(tEntity);
-				}
-				tService.getSubscriptions().remove(tServiceSubscription);
-				this.session.exchangeUnbind(msg.getSender().name+".trace", "amq.match", serviceName + "#" + originEntity, Option.NONE);
-				//logger.info("[TRACE MANAGER]: unbinding " + msg.getSender().name+".trace from " + eventType);
-				
-				// Send system trace event
-				tEntity=new TracingEntity(TracingEntity.AGENT, this.getAid());
-				
-				tEventContent=TracingService.DI_TracingServices[TracingService.UNSUBSCRIBE].getName() + "#" +
-				serviceName + "#" + originEntity;
-				
-				tEvent=new TraceEvent(TracingService.DI_TracingServices[TracingService.UNSUBSCRIBE].getName(),
-						tEntity, tEventContent);
-				sendSystemTraceEvent(tEvent, tEntity);
-				
-				/**
-				 * Building a ACLMessage
-				 */
-				response_msg = new ACLMessage(ACLMessage.AGREE);
-				response_msg.setSender(this.getAid());
-				response_msg.setReceiver(msg.getSender());
-				response_msg.setContent("unsubscribe#" + serviceName + "#" + originEntity);
-				logger.info("[TRACE MANAGER]: sending AGREE message to " + msg.getReceiver().toString());
-			}
-			
-			// Unpublish tracing services the tracing entity was offering
+			TracingEntities.remove(tEntity);
 		}
 	}
 	
