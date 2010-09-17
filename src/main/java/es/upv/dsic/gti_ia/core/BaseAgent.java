@@ -660,18 +660,14 @@ public class BaseAgent implements Runnable
 		// Timestamp
 		body = String.valueOf(tEvent.getTimestamp()) + "#";
 		// EventType
-		body =
-				body + tEvent.getTracingService().length() + "#"
-						+ tEvent.getTracingService();
+		body = body + tEvent.getTracingService().length() + "#" +
+				tEvent.getTracingService();
 		// OriginEntiy
 		body = body + tEvent.getOriginEntity().getType() + "#";
 		if (tEvent.getOriginEntity().getType() == TracingEntity.AGENT)
 		{
-			body =
-					body
-							+ tEvent.getOriginEntity().getAid().toString()
-									.length() + "#"
-							+ tEvent.getOriginEntity().getAid().toString();
+			body = body + tEvent.getOriginEntity().getAid().toString().length() + "#" +
+				tEvent.getOriginEntity().getAid().toString();
 		}
 		// Content
 		body = body + tEvent.getContent().length() + "#" + tEvent.getContent();
@@ -685,8 +681,7 @@ public class BaseAgent implements Runnable
 		messageHeaders.put("tracing_service", tEvent.getTracingService());
 		if (tEvent.getOriginEntity().getType() == TracingEntity.AGENT)
 		{
-			messageHeaders.put("origin_entity", tEvent.getOriginEntity()
-					.getAid().name);
+			messageHeaders.put("origin_entity", tEvent.getOriginEntity().getAid().name);
 		}
 		
 		messageProperties.setApplicationHeaders(messageHeaders);

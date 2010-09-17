@@ -69,40 +69,42 @@ public class TracingService {
 	public static final int MAX_DI_TS = 25;
 	
 	public static final TracingService[] DI_TracingServices = new TracingService[]{
-		new TracingService("TRACE_ERROR", "General error in the tracing process."),
-		new TracingService("TRACE_START", "The ER entity started tracing."),
-		new TracingService("TRACE_STOP", "The ER entity stoppped tracing."),
-		new TracingService("SUBSCRIBE", "The ER entity subscribed to a tracing service."),
-		new TracingService("UNSUBSCRIBE", "The ER entity unsubscribed from a tracing service."),
-		new TracingService("UNAVAILABLE_TS", "The tracing service which was requested does not exist or it has been un published and thus, it is not avilable anymore"),
-		new TracingService("STREAM_OVERFLOW", "The stream where trace events were being stored for the ER to recover them is full."),
-		new TracingService("STREAM_RESUME", "The ER entity began to trace events after having stoppped."),
-		new TracingService("STREAM_FLUSH_START", "The ER entity started flushing the stream where it was receiving events."),
-		new TracingService("STREAM_FLUSH_STOP", "The flushing process previously started has arrived to its end."),
-		new TracingService("NEW_AGENT", "A new agent was registered in the system."),
-		new TracingService("AGENT_SUSPENDED", "An agent was suspended."),
-		new TracingService("AGENT_RESUMED", "An agent restarted after a suspension."),
-		new TracingService("AGENT_DESTROYED", "An agent was destroyed."),
-		new TracingService("MESSAGE_SENT", "A FIPA-ACL message was sent."),
-		new TracingService("MESSAGE_SENT_DETAIL", "A FIPA-ACL message was sent. Message included in the event."),
-		new TracingService("MESSAGE_RECEIVED", "A FIPA-ACL message was received."),
-		new TracingService("MESSAGE_RECEIVED_DETAIL", "A FIPA-ACL message was received. Message included in the event."),
-		new TracingService("MESSAGE_UNDELIVERABLE", "A FIPA-ACL message was impossible to deliver."),
-		new TracingService("MESSAGE_UNDELIVERABLE_DETAIL", "A FIPA-ACL message was impossible to deliver. Message included in the event."),
-		new TracingService("PUBLISHED_TRACING_SERVICE", "A new tracing service has been published by an ES entity."),
-		new TracingService("UNPUBLISHED_TRACING_SERVICE", "A tracing service is not being offered by an ER entity."),
-		new TracingService("AUTHORIZATION_REQUEST", "An entity requested authorization for a tracing service."),
-		new TracingService("AUTHORIZATION_GRANTED", "An entity added an authorization for a tracing service."),
-		new TracingService("AUTHORIZATION_DENIED", "An authorization for a tracing service was removed.")
+		new TracingService("TRACE_ERROR", false, "General error in the tracing process."),
+		new TracingService("TRACE_START", false, "The ER entity started tracing."),
+		new TracingService("TRACE_STOP", false, "The ER entity stoppped tracing."),
+		new TracingService("SUBSCRIBE", true, "The ER entity subscribed to a tracing service."),
+		new TracingService("UNSUBSCRIBE", true, "The ER entity unsubscribed from a tracing service."),
+		new TracingService("UNAVAILABLE_TS", false, "The tracing service which was requested does not exist or it has been un published and thus, it is not avilable anymore"),
+		new TracingService("STREAM_OVERFLOW", false, "The stream where trace events were being stored for the ER to recover them is full."),
+		new TracingService("STREAM_RESUME", false, "The ER entity began to trace events after having stoppped."),
+		new TracingService("STREAM_FLUSH_START", false, "The ER entity started flushing the stream where it was receiving events."),
+		new TracingService("STREAM_FLUSH_STOP", false, "The flushing process previously started has arrived to its end."),
+		new TracingService("NEW_AGENT", false, "A new agent was registered in the system."),
+		new TracingService("AGENT_SUSPENDED", false, "An agent was suspended."),
+		new TracingService("AGENT_RESUMED", false, "An agent restarted after a suspension."),
+		new TracingService("AGENT_DESTROYED", false, "An agent was destroyed."),
+		new TracingService("MESSAGE_SENT", true, "A FIPA-ACL message was sent."),
+		new TracingService("MESSAGE_SENT_DETAIL", true, "A FIPA-ACL message was sent. Message included in the event."),
+		new TracingService("MESSAGE_RECEIVED", true, "A FIPA-ACL message was received."),
+		new TracingService("MESSAGE_RECEIVED_DETAIL", true, "A FIPA-ACL message was received. Message included in the event."),
+		new TracingService("MESSAGE_UNDELIVERABLE", false, "A FIPA-ACL message was impossible to deliver."),
+		new TracingService("MESSAGE_UNDELIVERABLE_DETAIL", false, "A FIPA-ACL message was impossible to deliver. Message included in the event."),
+		new TracingService("PUBLISHED_TRACING_SERVICE", true, "A new tracing service has been published by an ES entity."),
+		new TracingService("UNPUBLISHED_TRACING_SERVICE", true, "A tracing service is not being offered by an ER entity."),
+		new TracingService("AUTHORIZATION_REQUEST", false, "An entity requested authorization for a tracing service."),
+		new TracingService("AUTHORIZATION_GRANTED", false, "An entity added an authorization for a tracing service."),
+		new TracingService("AUTHORIZATION_DENIED", false, "An authorization for a tracing service was removed.")
 	};
 	
 	private String name;
+	private boolean mandatory;
 	private String description;
 	private TracingEntityList providers;
 	private TracingServiceSubscriptionList subscriptions;
 
 	public TracingService () {
 		this.name = null;
+		this.mandatory = false;
 		this.description = null;
 		this.providers = new TracingEntityList();
 		this.subscriptions = new TracingServiceSubscriptionList();
@@ -110,6 +112,15 @@ public class TracingService {
 	
 	public TracingService (String serviceName, String description) {
 		this.name=serviceName;
+		this.mandatory = false;
+		this.description=description;
+		this.providers = new TracingEntityList();
+		this.subscriptions = new TracingServiceSubscriptionList();
+	}
+	
+	private TracingService (String serviceName, boolean mandatory, String description) {
+		this.name=serviceName;
+		this.mandatory = mandatory;
 		this.description=description;
 		this.providers = new TracingEntityList();
 		this.subscriptions = new TracingServiceSubscriptionList();
@@ -119,12 +130,20 @@ public class TracingService {
 		this.name=name;
 	}
 	
+	private void setMandatory (boolean mandatory) {
+		this.mandatory=mandatory;
+	}
+	
 	public void setDescription (String description) {
 		this.description=description;
 	}
 	
 	public String getName () {
 		return this.name;
+	}
+	
+	public boolean getMandatory () {
+		return this.mandatory;
 	}
 	
 	public String getDescription () {
