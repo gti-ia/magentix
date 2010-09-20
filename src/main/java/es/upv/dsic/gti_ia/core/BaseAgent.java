@@ -773,7 +773,8 @@ public class BaseAgent implements Runnable
 	 */
 	public void finalize()
 	{
-		
+		sendSystemTraceEvent(new TraceEvent(TracingService.DI_TracingServices[TracingService.AGENT_DESTROYED].getName(),
+				new AgentID("system", aid.protocol, aid.host, aid.port), aid.toString()));
 	}
 	
 	/**
@@ -808,9 +809,6 @@ public class BaseAgent implements Runnable
 		
 		traceSession.queueDelete(aid.name + ".trace");
 		traceSession.close();
-		
-		sendSystemTraceEvent(new TraceEvent(TracingService.DI_TracingServices[TracingService.AGENT_DESTROYED].getName(),
-				new AgentID("system", aid.protocol, aid.host, aid.port), aid.toString()));
 	}
 	
 	/**
