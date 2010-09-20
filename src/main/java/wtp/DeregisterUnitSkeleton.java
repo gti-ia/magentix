@@ -55,32 +55,32 @@ public class DeregisterUnitSkeleton
 			res.setStatus("Error");
 			return res;
 		}
-		if (thomasBD.CheckUnitHasRole(deregisterUnit.getUnitID()))
-		{
-			res.setErrorValue("Invalid");
-			res.setStatus("Error");
-			return res;
-		}
-		if (thomasBD.CheckUnitHasUnit(deregisterUnit.getUnitID()))
-		{
-			res.setErrorValue("Invalid");
-			res.setStatus("Error");
-			return res;
-		}
-		if (thomasBD.CheckUnitHasMember(deregisterUnit.getUnitID()))
-		{
-			res.setErrorValue("Invalid");
-			res.setStatus("Error");
-			return res;
-		}
-		// role based control
-		if (!roleBasedControl(deregisterUnit.getAgentID(), deregisterUnit
-				.getUnitID()))
-		{
-			res.setErrorValue("Not-Allowed");
-			res.setStatus("Error");
-			return res;
-		}
+//		if (thomasBD.CheckUnitHasRole(deregisterUnit.getUnitID()))
+//		{
+//			res.setErrorValue("Invalid");
+//			res.setStatus("Error");
+//			return res;
+//		}
+//		if (thomasBD.CheckUnitHasUnit(deregisterUnit.getUnitID()))
+//		{
+//			res.setErrorValue("Invalid");
+//			res.setStatus("Error");
+//			return res;
+//		}
+//		if (thomasBD.CheckUnitHasMember(deregisterUnit.getUnitID()))
+//		{
+//			res.setErrorValue("Invalid");
+//			res.setStatus("Error");
+//			return res;
+//		}
+//		// role based control
+//		if (!roleBasedControl(deregisterUnit.getAgentID(), deregisterUnit
+//				.getUnitID()))
+//		{
+//			res.setErrorValue("Not-Allowed");
+//			res.setStatus("Error");
+//			return res;
+//		}
 		if (!thomasBD.DeleteUnit(deregisterUnit.getUnitID()))
 		{
 			res.setErrorValue("Invalid");
@@ -96,28 +96,45 @@ public class DeregisterUnitSkeleton
 			return false;
 		if (!thomasBD.CheckExistsAgent(agentID))
 			return false;
+		
 		String parentUnitID = thomasBD.GetParentUnitID(unitID);
 		String parentUnitType = thomasBD.GetUnitType(parentUnitID);
+		
 		if (parentUnitType.equalsIgnoreCase("flat"))
-			return true;
-		if (parentUnitType.equalsIgnoreCase("team"))
 		{
-			if (thomasBD.CheckAgentPlaysRoleInUnit(unitID, agentID))
+			if(thomasBD.CheckUnitIsEmpty(unitID))
 				return true;
 			else
 				return false;
 		}
+		else if (parentUnitType.equalsIgnoreCase("team"))
+		{
+//			if (thomasBD.CheckAgentPlaysRoleInUnit(unitID, agentID))
+//				return true;
+//			else
+//				return false;
+			if(thomasBD.CheckUnitHasOnlyThisMemberWithOneRole(unitID, agentID))
+				return true;
+			else
+				return false;
+		}
+		
+		// unit is hierarchy
 		List<String> positions;
+		boolean isSupervisor=false;
 		try
 		{
 			positions = thomasBD.GetAgentPosition(agentID, parentUnitID);
 			for (int i = 0; i < positions.size(); i++)
 				if (positions.get(i).equalsIgnoreCase("supervisor"))
-					return true;
+					isSupervisor=true;
 		}
 		catch (Exception e)
 		{
 		}
-		return false;
+		if(isSupervisor && thomasBD.CheckUnitHasOnlyThisMemberWithOneRole(unitID, agentID))
+			return true;
+		else
+			return false;
 	}
 }

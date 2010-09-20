@@ -373,6 +373,71 @@ public class DataBaseInterface
 		}
 		return hasMember;
 	}
+	
+	/*
+	 * Devuelve true si la unidad tiene como miembro solo a este agente,
+	 * no tiene más roles que el que juega el agente en la unidad, y no
+	 * tiene unidades hijas.
+	 */
+	public boolean CheckUnitHasOnlyThisMemberWithOneRole(String unitName, String agentName)
+	{
+		try{
+			
+			Statement st = db.connection.createStatement();
+			ResultSet rs = st.executeQuery("SELECT id FROM unit WHERE unitid='"+unitName.toLowerCase()+"'");
+			if(!rs.next())
+			{
+				System.err.println("Unit not found");
+				return false;
+			}
+			String unitID = rs.getString("id");
+			
+			rs= st.executeQuery("SELECT id FROM entity WHERE entityid='"+agentName.toLowerCase()+"'");
+			if(!rs.next())
+			{
+				System.err.println("Agent not found");
+				return false;
+			}
+			String agentID = rs.getString("id");
+			
+			String query = "SELECT count(*) FROM role r, entityplaylist pl WHERE r.unit=pl.unit AND "+
+			"pl.unit='"+unitID+"' AND pl.entity='"+agentID+"' AND NOT EXISTS "+
+			"(SELECT * FROM unit u WHERE u.parentunit='"+unitID+"')";
+			rs = st.executeQuery(query);
+			//rs = st.executeQuery("SELECT COUNT(*) FROM role r, entityplaylist pl WHERE r.unit='"+
+			//		unitID+"' AND pl.entity='"+agentID+"' AND pl.unit='"+unitID+"'");
+			if(rs.next()==false)
+			{
+				// something went wrong, count(*) should always return a value
+				return false; 
+			}
+			else if(rs.getInt(1)==1)
+			{
+				return true; // un solo agente juega un rol, no hay más roles que éste
+				// y las unidad no tiene unidades hijas
+			}
+			else
+			{
+				return false;
+			}
+		}
+		catch(Exception exc)
+		{
+			System.err.println("Exception while in CheckUnitHasOnlyThisMemberWithOneRole");
+			System.err.print(exc);
+			return false;
+		}
+	}
+	
+	public boolean CheckUnitIsEmpty(String unitID)
+	{
+		if(CheckUnitHasMember(unitID) || CheckUnitHasRole(unitID) || CheckUnitHasUnit(unitID))
+			return false;
+		else
+			return true;
+	}
+	
+	
 	public boolean DeleteUnit(String unitID)
 	{
 		try
@@ -867,7 +932,7 @@ public class DataBaseInterface
 		}
 		return true;
 	}
-	// A�adido
+	// Añadido
 	public Integer GetNormID(String normID)
 	{
 		try
