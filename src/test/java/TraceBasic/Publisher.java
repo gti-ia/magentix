@@ -111,15 +111,15 @@ private boolean finish=false;
 		
 		while(!finish){
 			try {
-				tEvent = new TraceEvent("DD_Test_TS1", this.getAid(), "DD_Test_TS1" + ": Test");
+				tEvent = new TraceEvent("DD_Test_TS1", this.getAid(), "Test");
 				sendTraceEvent(tEvent);
-				tEvent = new TraceEvent("DD_Test_TS2", this.getAid(), "DD_Test_TS2" + ": Test");
+				tEvent = new TraceEvent("DD_Test_TS2", this.getAid(), "Test");
 				sendTraceEvent(tEvent);
-				tEvent = new TraceEvent("DD_Test_TS3", this.getAid(), "DD_Test_TS3" + ": Test");
+				tEvent = new TraceEvent("DD_Test_TS3", this.getAid(), "Test");
 				sendTraceEvent(tEvent);
-				tEvent = new TraceEvent("DD_Test_TS4", this.getAid(), "DD_Test_TS4" + ": Test");
+				tEvent = new TraceEvent("DD_Test_TS4", this.getAid(), "Test");
 				sendTraceEvent(tEvent);
-				tEvent = new TraceEvent("DD_Test_TS5", this.getAid(), "DD_Test_TS5" + ": Test");
+				tEvent = new TraceEvent("DD_Test_TS5", this.getAid(), "Test");
 				sendTraceEvent(tEvent);
 				Thread.sleep(generator.nextInt(1000));
 			} catch (InterruptedException e1) {
@@ -149,7 +149,7 @@ private boolean finish=false;
 	}
 	
 	public void onTraceEvent(TraceEvent tEvent) {
-		System.out.println("[PUBLISHER " + this.getName() + "]: Received from " + tEvent.getOriginEntity().getAid().name + ": " + tEvent.getContent());
+		System.out.println("[PUBLISHER " + this.getName() + "]: Event from " + tEvent.getOriginEntity().getAid().name + ": " + tEvent.getTracingService() + ": " + tEvent.getContent());
 	}
 	
 	public void onMessage(ACLMessage msg){
