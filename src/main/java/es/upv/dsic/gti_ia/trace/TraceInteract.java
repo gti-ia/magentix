@@ -103,6 +103,26 @@ public class TraceInteract {
 	}
 	
 	/**
+	 * Request all tracing services available at this time
+	 */
+	static public void requestAllTracingServices(BaseAgent requesterAgent) {
+		/**
+		 * Building a ACLMessage
+		 */
+		ACLMessage msg = new ACLMessage(ACLMessage.SUBSCRIBE);
+		AgentID tms_aid = new AgentID("qpid://tm@localhost:8080");
+		
+		msg.setReceiver(tms_aid);
+		msg.setSender(requesterAgent.getAid());
+		msg.setLanguage("ACL");
+		msg.setContent("all");
+		/**
+		 * Sending a ACLMessage
+		 */
+		requesterAgent.send(msg);
+	}
+	
+	/**
 	 * Cancel subscription to a tracing service
 	 */
 	static public void cancelTracingServiceSubscription(BaseAgent requesterAgent, String eventType, AgentID originEntity) {
