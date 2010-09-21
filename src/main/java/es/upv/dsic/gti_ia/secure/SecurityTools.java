@@ -5,7 +5,7 @@ import java.util.Properties;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+//import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -57,25 +57,25 @@ public class SecurityTools {
 	FileWriter fichero = null;
 	PrintWriter pw = null;
 	// Fichero de propiedades del usuario
-	static Properties propSecurityUser = new Properties();
+	//static Properties propSecurityUser = new Properties();
 	private static SecurityTools sec = new SecurityTools();
 	static Logger logger = Logger.getLogger(SecurityTools.class);
-	private FileInputStream propFile = null;
+//	private FileInputStream propFile = null;
 
 	// La clase es privada ya que utilizamos el patrón de diseño singleton.
 	private SecurityTools() {
 
 		DOMConfigurator.configure("configuration/loggin.xml");
-		try {
-			 propFile = new FileInputStream(
-				"./configuration/securityUser.properties");
-			 
-			propSecurityUser.load(propFile);
-		} catch (FileNotFoundException e) {
-			logger.error(e);
-		} catch (IOException e) {
-			logger.error(e);
-		}
+//		try {
+//			 propFile = new FileInputStream(
+//				"./configuration/securityUser.properties");
+//			 
+//			propSecurityUser.load(propFile);
+//		} catch (FileNotFoundException e) {
+//			logger.error(e);
+//		} catch (IOException e) {
+//			logger.error(e);
+//		}
 	}
 
 	/**
@@ -100,7 +100,7 @@ public class SecurityTools {
 	// este válido.
 	// Contactar con el MMS
 	// Añadir el nuevo certificado devuelto por el MMS a la keystore con el alias del agente.
-	public boolean generateAllProcessCertificate(String Agentname) {
+	public boolean generateAllProcessCertificate(String Agentname, Properties propSecurityUser) {
 
 		String name = Agentname;
 		String path = propSecurityUser.getProperty("KeyStorePath");
@@ -138,17 +138,15 @@ public class SecurityTools {
 								"./configuration/client-repo", null);
 
 				MMServiceStub stub = new MMServiceStub(ctx, target);// "https://localhost:8334/axis2/services/MMService");
-				ServiceClient sc = stub._getServiceClient();
-
-				sc.engageModule("rampart");
-
+			
+				stub._getServiceClient().engageModule("rampart");
+				
+				
 				// Configuramos el módulo de seguridad Rampart.
-				Policy rampartConfig = getRampartConfig(alias, key, type);
-				Options options = sc.getOptions();
-				options.setProperty(RampartMessageData.KEY_RAMPART_POLICY,
-						rampartConfig);
-
-				sc.getAxisService().getPolicySubject().attachPolicy(
+				Policy rampartConfig = getRampartConfig(alias, key, type, propSecurityUser);
+				
+				
+				stub._getServiceClient().getAxisService().getPolicySubject().attachPolicy(
 						rampartConfig);
 
 				// Creamos nosotros el par clave privada/pública, el MMS
@@ -181,7 +179,7 @@ public class SecurityTools {
 				DataHandler result = re.get_return();
 				
 				
-				if (result.getInputStream() != null)
+				if (result != null)
 				{
 				InputStream inputDataHandler = result.getInputStream();
 				byte[] arrayByte = IOUtils.toByteArray(inputDataHandler);
@@ -193,7 +191,7 @@ public class SecurityTools {
 				//Introducimos el certificado firmado en la keystore.
 				setKeyEntry(name, propSecurityUser, kp, certificates);
 				
-				propFile.close();
+				//propFile.close();
 				}
 				else
 				{
@@ -210,84 +208,122 @@ public class SecurityTools {
 		}
 	}
 	//Método para la configuración del módulo Rampart
+	//Método para la configuración del módulo Rampart
 	private Policy getRampartConfig(String alias, String key,
-			String typeUserCertificate) {
+			String typeUserCertificate, Properties propSecurityUser) {
 		int t = 0;
 
 		String pass = propSecurityUser.getProperty("KeyStorePassword");
 		String path = propSecurityUser.getProperty("KeyStorePath");
 		String aliasMMS = propSecurityUser.getProperty("aliasMMS");
+		
+		
+		
 
 		try {
 
 			RampartConfig rampartConfig = new RampartConfig();
+		
+			
 			rampartConfig.setUser(alias);
+			rampartConfig.setEncryptionUser(aliasMMS);
+			
 		
 			rampartConfig.setPwCbClass("es.upv.dsic.gti_ia.secure.PWCBHandler");
-			rampartConfig.setEncryptionUser(aliasMMS);
+			
 
-			CryptoConfig encrCrypto = new CryptoConfig();
+			CryptoConfig encCrypto = new CryptoConfig();
 			CryptoConfig sigCrypto = new CryptoConfig();
+			CryptoConfig decCrypto = new CryptoConfig();
 
-			sigCrypto
-					.setProvider("org.apache.ws.security.components.crypto.Merlin");
-			encrCrypto
-					.setProvider("org.apache.ws.security.components.crypto.Merlin");
+			sigCrypto.setProvider("org.apache.ws.security.components.crypto.Merlin");
+			encCrypto.setProvider("org.apache.ws.security.components.crypto.Merlin");
+			decCrypto.setProvider("org.apache.ws.security.components.crypto.Merlin");
 
-			Properties props = new Properties();
-			Properties propsEncryption = new Properties();
+			Properties sigProps = new Properties();
+			Properties encProps = new Properties();
+			Properties decProps = new Properties();
 
 			// dnie
-			if (typeUserCertificate.equals("dnie"))
+			if (typeUserCertificate.equals("others"))
 				t = 0;
 			//Certificados propios.
 			else if (typeUserCertificate.equals("own"))
 				t = 1;
-			else
-				// others //por implementar
-				t = 2;
 
 			switch (t) {
 			case 0:
 				String pkcs11ConfigFile = "./configuration/dnie_linux.cfg";
-				Provider pkcs11Provider = new sun.security.pkcs11.SunPKCS11(
-						pkcs11ConfigFile);
+				Provider pkcs11Provider = new sun.security.pkcs11.SunPKCS11(pkcs11ConfigFile);
+				
+				Provider providerBouncyCastle = new org.bouncycastle.jce.provider.BouncyCastleProvider();
+				Security.addProvider(providerBouncyCastle);
+				
 				Security.addProvider(pkcs11Provider);
-				props.setProperty(
+				
+			sigProps.setProperty(
 						"org.apache.ws.security.crypto.merlin.keystore.type",
 						propSecurityUser.getProperty("dnieType"));
-				props.setProperty("org.apache.ws.security.crypto.merlin.file",
+				sigProps.setProperty(
+						"org.apache.ws.security.crypto.merlin.file",
 						propSecurityUser.getProperty("dniePath"));
-				props
-						.setProperty(
-								"org.apache.ws.security.crypto.merlin.keystore.password",
-								propSecurityUser.getProperty("dniePin"));
+				sigProps.setProperty(
+						"org.apache.ws.security.crypto.merlin.keystore.password",
+						propSecurityUser.getProperty("dniePin"));
+				
+				
+			    decProps.setProperty(
+			    		"org.apache.ws.security.crypto.merlin.keystore.type",
+						propSecurityUser.getProperty("dnieType"));
+				decProps.setProperty(
+						"org.apache.ws.security.crypto.merlin.file",
+						propSecurityUser.getProperty("dniePath"));
+				decProps.setProperty(
+						"org.apache.ws.security.crypto.merlin.keystore.password",
+						propSecurityUser.getProperty("dniePin"));
+		
+				
+				
 				break;
 			case 1:
-				props.setProperty("org.apache.ws.security.crypto.merlin.file",
+				sigProps.setProperty(
+						"org.apache.ws.security.crypto.merlin.file",
 						path);
-				props
-						.setProperty(
-								"org.apache.ws.security.crypto.merlin.keystore.password",
-								pass);
+				sigProps.setProperty(
+						"org.apache.ws.security.crypto.merlin.keystore.password",
+						pass);
 				break;
-			case 2:
-				break;
+	
 			default:
 				logger.error("What will be the certifying authority?");
 			}
-			propsEncryption.setProperty(
-					"org.apache.ws.security.crypto.merlin.file", path);
-			propsEncryption.setProperty(
+			 
+			//Donde se encuentra el keystore para encriptar
+			encProps.setProperty(
+					"org.apache.ws.security.crypto.merlin.file",
+					path);
+			encProps.setProperty(
 					"org.apache.ws.security.crypto.merlin.keystore.password",
 					pass);
+		
+	
+			
 
-			sigCrypto.setProp(props);
-			encrCrypto.setProp(propsEncryption);
+			
+			
+			sigCrypto.setProp(sigProps);
+
+			encCrypto.setProp(encProps);
+
+			decCrypto.setProp(decProps);
+			
 
 			rampartConfig.setSigCryptoConfig(sigCrypto);
-			rampartConfig.setEncrCryptoConfig(encrCrypto);
-
+		
+			rampartConfig.setDecCryptoConfig(decCrypto);
+			
+			rampartConfig.setEncrCryptoConfig(encCrypto);
+						
 			Policy policy = new Policy();
 
 			try {
@@ -297,6 +333,7 @@ public class SecurityTools {
 			}
 
 			policy.addAssertion(rampartConfig);
+
 			return policy;
 		} catch (Exception e) {
 			logger.error(e);
@@ -331,7 +368,7 @@ public class SecurityTools {
 
 				// Si el periodo de caducidad es mayor que la fecha actual
 				// Si existe, pero no tiene un periodo válido habra que
-				// borrar-lo.
+				// borrarlo.
 
 				if (d.compareTo(cert.getNotAfter()) < 0) {
 					value = false;
