@@ -174,11 +174,9 @@ public class BaseAgent implements Runnable
 		// transparente al programador.
 		if (c.isSecureMode())
 		{
+			
 			FileInputStream propFile = new FileInputStream(
 			"./configuration/securityUser.properties");
-			
-			
-			SecurityTools st = SecurityTools.GetInstance();
 			Properties propSecurity = new Properties();
 			try
 			{
@@ -197,14 +195,19 @@ public class BaseAgent implements Runnable
 				e.printStackTrace();
 			}
 			
+			SecurityTools st = SecurityTools.GetInstance();
+			
+		
+			
 			// Vemos si el usuario ya posee algún certificado para ese agente. Se comprueba también
 			// la validez.
 			// Este método es el encargado de crear todo el proceso de solicitud y creación de
 			// certificados para los
 			// agentes del usuario. Podemos encontrarlo en la clase SecurityTools del paquete
 			// secure.
-			if (st.generateAllProcessCertificate(aid.name))
+			if (st.generateAllProcessCertificate(aid.name, propSecurity))
 			{
+			
 				
 				connection = null;
 				// El alias sera el mismo que el nombre del agente
@@ -228,7 +231,7 @@ public class BaseAgent implements Runnable
 				
 				connectSettings.setKeyStorePath(propSecurity
 						.getProperty("KeyStorePath"));
-				// Lo convertimos a minisculas para que no haya problemas
+				// Lo convertimos a minusculas para que no haya problemas
 				connectSettings.setCertAlias(certAlias.toLowerCase());
 				
 				connectSettings.setTrustStorePassword(propSecurity
@@ -239,13 +242,14 @@ public class BaseAgent implements Runnable
 				try
 				{
 					connection.connect(connectSettings);
-					propFile.close();
+					
 				}
 				catch (Exception e)
 				{
 					System.out.println("Error in connect: " + e);
 				}
 			}
+			propFile.close();
 			
 		}
 		else
