@@ -74,19 +74,25 @@ public class DeregisterUnitSkeleton
 //			return res;
 //		}
 //		// role based control
-//		if (!roleBasedControl(deregisterUnit.getAgentID(), deregisterUnit
-//				.getUnitID()))
-//		{
-//			res.setErrorValue("Not-Allowed");
-//			res.setStatus("Error");
-//			return res;
-//		}
+		System.out.println("DeregisterUnit 3");
+		if (!roleBasedControl(deregisterUnit.getAgentID(), deregisterUnit
+				.getUnitID()))
+		{
+			System.out.println("DeregisterUnit 4");
+			res.setErrorValue("Not-Allowed");
+			res.setStatus("Error");
+			return res;
+		}
+		System.out.println("DeregisterUnit 5");
+		
 		if (!thomasBD.DeleteUnit(deregisterUnit.getUnitID()))
 		{
+			System.out.println("DeregisterUnit 6");
 			res.setErrorValue("Invalid");
 			res.setStatus("Error");
 			return res;
 		}
+		System.out.println("DeregisterUnit ENDED");
 		return res;
 	}
 	
@@ -97,17 +103,19 @@ public class DeregisterUnitSkeleton
 		if (!thomasBD.CheckExistsAgent(agentID))
 			return false;
 		
-		String parentUnitID = thomasBD.GetParentUnitID(unitID);
-		String parentUnitType = thomasBD.GetUnitType(parentUnitID);
+		//String parentUnitID = thomasBD.GetParentUnitID(unitID);
+		String unitType = thomasBD.GetUnitType(unitID);
 		
-		if (parentUnitType.equalsIgnoreCase("flat"))
+		if (unitType.equalsIgnoreCase("flat"))
 		{
 			if(thomasBD.CheckUnitIsEmpty(unitID))
+				return true;
+			else if (thomasBD.CheckUnitHasOnlyThisMemberWithOneRole(unitID,agentID))
 				return true;
 			else
 				return false;
 		}
-		else if (parentUnitType.equalsIgnoreCase("team"))
+		else if (unitType.equalsIgnoreCase("team"))
 		{
 //			if (thomasBD.CheckAgentPlaysRoleInUnit(unitID, agentID))
 //				return true;
@@ -124,13 +132,15 @@ public class DeregisterUnitSkeleton
 		boolean isSupervisor=false;
 		try
 		{
-			positions = thomasBD.GetAgentPosition(agentID, parentUnitID);
+			positions = thomasBD.GetAgentPosition(agentID, unitID);
 			for (int i = 0; i < positions.size(); i++)
 				if (positions.get(i).equalsIgnoreCase("supervisor"))
 					isSupervisor=true;
 		}
 		catch (Exception e)
 		{
+			System.err.println("DeregisterUnit: exception caught:");
+			System.err.println(e.toString());
 		}
 		if(isSupervisor && thomasBD.CheckUnitHasOnlyThisMemberWithOneRole(unitID, agentID))
 			return true;

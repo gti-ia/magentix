@@ -374,35 +374,35 @@ public class DataBaseInterface
 		return hasMember;
 	}
 	
-	/*
+	/**
 	 * Devuelve true si la unidad tiene como miembro solo a este agente,
 	 * no tiene más roles que el que juega el agente en la unidad, y no
 	 * tiene unidades hijas.
 	 */
-	public boolean CheckUnitHasOnlyThisMemberWithOneRole(String unitName, String agentName)
+	public boolean CheckUnitHasOnlyThisMemberWithOneRole(String unitID, String agentID)
 	{
 		try{
 			
 			Statement st = db.connection.createStatement();
-			ResultSet rs = st.executeQuery("SELECT id FROM unit WHERE unitid='"+unitName.toLowerCase()+"'");
+			ResultSet rs = st.executeQuery("SELECT id FROM unit WHERE unitid='"+unitID.toLowerCase()+"'");
 			if(!rs.next())
 			{
 				System.err.println("Unit not found");
 				return false;
 			}
-			String unitID = rs.getString("id");
+			String unitCode = rs.getString("id");
 			
-			rs= st.executeQuery("SELECT id FROM entity WHERE entityid='"+agentName.toLowerCase()+"'");
+			rs= st.executeQuery("SELECT id FROM entity WHERE entityid='"+agentID.toLowerCase()+"'");
 			if(!rs.next())
 			{
 				System.err.println("Agent not found");
 				return false;
 			}
-			String agentID = rs.getString("id");
+			String agentCode = rs.getString("id");
 			
 			String query = "SELECT count(*) FROM role r, entityplaylist pl WHERE r.unit=pl.unit AND "+
-			"pl.unit='"+unitID+"' AND pl.entity='"+agentID+"' AND NOT EXISTS "+
-			"(SELECT * FROM unit u WHERE u.parentunit='"+unitID+"')";
+			"pl.unit='"+unitCode+"' AND pl.entity='"+agentCode+"' AND NOT EXISTS "+
+			"(SELECT * FROM unit u WHERE u.parentunit='"+unitCode+"')";
 			rs = st.executeQuery(query);
 			//rs = st.executeQuery("SELECT COUNT(*) FROM role r, entityplaylist pl WHERE r.unit='"+
 			//		unitID+"' AND pl.entity='"+agentID+"' AND pl.unit='"+unitID+"'");
@@ -411,7 +411,8 @@ public class DataBaseInterface
 				// something went wrong, count(*) should always return a value
 				return false; 
 			}
-			else if(rs.getInt(1)==1)
+			System.out.println("CheckUnitHasOnlyThisMemberWithOneRole returns "+rs.getInt(1));
+			if(rs.getInt(1)==1)
 			{
 				return true; // un solo agente juega un rol, no hay más roles que éste
 				// y las unidad no tiene unidades hijas
@@ -437,22 +438,67 @@ public class DataBaseInterface
 			return true;
 	}
 	
-	
+	/**
+	 * Deletes the specified unit when has no roles or just one role and an agent playing it.
+	 * It will fail when there are more than one role for this unit or the unit doesn't exist.
+	 * 
+	 * WARNING!: do not call this method unless you're certain that there is only one agent or 
+	 * none at all in this unit. Otherwise the method will delete the role and leave some of
+	 * these agents playing a role that no longer exists.
+	 * WARNING!: the above applies also for the children units. There should be no children unit
+	 * for the unit to be deleted.
+	 * 
+	 * @param unitID The name of the unit to be deleted
+	 * @return True: Unit has been deleted. False: some error happened.
+	 */
 	public boolean DeleteUnit(String unitID)
 	{
 		try
 		{
+			Statement st = db.connection.createStatement();
+			ResultSet rs = st.executeQuery("SELECT id FROM unit WHERE unitid='"+unitID+"'");
+			if(!rs.next())
+			{
+				System.err.println("Error in Delete unit. Unit does not exist. UnitID="+unitID);
+				return false;
+			}
+			String unitCode = rs.getString("id");
+			
+			// Tests whether there is no role, just one role or more than one role in the unit: 
+			rs = st.executeQuery("SELECT roleid FROM role WHERE unit ='"+unitCode+"'");
+			if(rs.next())
+			{
+				// here there is at least one role
+				if(!rs.isLast())
+				{
+					// more than one role, cannot continue
+					System.err.println("Error in Delete unit: unit contains more than 1 role");
+					return false;
+				}
+				// here there is exactly one role in this unit, delete the relationships among
+				// agent-role and role-unit
+				String roleID = rs.getString("roleid");
+				this.DeleteAgentPlaysRole(roleID, unitID);
+				this.DeleteRole(roleID, unitID);
+				// everything is now ready
+			}
+			
+			// now is the right time to delete the entry for the unit in the "unit" table:
 			Statement stmt = db.connection.createStatement();
 			stmt.executeUpdate("DELETE FROM unit WHERE unitid='"
 					+ unitID.toLowerCase() + "'");
-			this.DeleteRole("creator", unitID);
-			this.DeleteAgentPlaysRole("creator", unitID);
+			
+//			this.DeleteAgentPlaysRole("creator", unitID);
+//			this.DeleteRole("creator", unitID);
+			
 			return true;
 		}
 		catch (Exception e)
 		{
+			System.err.println("DBInterface.Delete Unit: Exception. Message follows:");
+			System.err.println(e.toString());
+			return false;
 		}
-		return false;
 	}
 	public boolean CheckExistsNorm(String normID)
 	{
@@ -901,8 +947,7 @@ public class DataBaseInterface
 		{
 			
 			Statement stmt = db.connection.createStatement();
-			String sql =
-					"SELECT * FROM UNIT WHERE UNITID='" + unitID.toLowerCase()
+			String sql = "SELECT * FROM UNIT WHERE UNITID='" + unitID.toLowerCase()
 							+ "'";
 			sql = sql.toLowerCase();
 			ResultSet rs = stmt.executeQuery(sql);
@@ -910,8 +955,7 @@ public class DataBaseInterface
 				return false;
 			String unit = rs.getString("id");
 			stmt = db.connection.createStatement();
-			sql =
-					"SELECT * FROM Role WHERE RoleID='" + roleID.toLowerCase()
+			sql = "SELECT * FROM Role WHERE RoleID='" + roleID.toLowerCase()
 							+ "'";
 			sql = sql.toLowerCase();
 			rs = stmt.executeQuery(sql);
@@ -919,8 +963,7 @@ public class DataBaseInterface
 				return false;
 			String role = rs.getString("id");
 			stmt = db.connection.createStatement();
-			sql =
-					"DELETE FROM entityplaylist WHERE UNIT=" + unit
+			sql = "DELETE FROM entityplaylist WHERE UNIT=" + unit
 							+ " AND Role=" + role;
 			sql = sql.toLowerCase();
 			stmt.executeUpdate(sql);

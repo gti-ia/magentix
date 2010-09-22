@@ -43,9 +43,11 @@ public class DeregisterRoleSkeleton
 		res.setErrorValue("");
 		res.setStatus("Ok");
 		
+//		if (deregisterRole.getRoleID() == ""
+//				|| deregisterRole.getRoleID().equalsIgnoreCase("member")
+//				|| deregisterRole.getUnitID() == "")
 		if (deregisterRole.getRoleID() == ""
-				|| deregisterRole.getRoleID().equalsIgnoreCase("member")
-				|| deregisterRole.getUnitID() == "")
+			|| deregisterRole.getUnitID() == "") // se permite borrar el rol member, ya que no se crea por defecto al crear una unidad.
 		{
 			res.setErrorValue("Invalid");
 			res.setStatus("Error");
