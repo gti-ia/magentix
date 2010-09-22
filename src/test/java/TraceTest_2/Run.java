@@ -70,7 +70,7 @@ public class Run {
 			for (i=0; i < N_PUBLISHERS; i++){
 				publishers[i] = new Publisher(new AgentID("qpid://publisher"+ (i+1) +"@localhost:8080"));
 			}
-
+			
 			/**
 			 * Instantiating the subscriber agents
 			 */
@@ -78,6 +78,13 @@ public class Run {
 				subscribers[i] = new Subscriber(new AgentID("qpid://subscriber"+ (i+1) +"@localhost:8080"));
 			}
 
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 			System.out.println("NOW, WAIT ABOUT 10 SECONDS...");
 			
 			/**
