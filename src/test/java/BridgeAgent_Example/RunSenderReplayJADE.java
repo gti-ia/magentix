@@ -36,7 +36,7 @@ public class RunSenderReplayJADE {
 			 * Instantiating a sender agent
 			 */
 			SenderAgentJADE agente = new SenderAgentJADE(new AgentID(
-					"qpid://emisor@locke.dsic.upv.es:8080"));
+					"qpid://emisor@hostname.domain:8080"));
 
 			/**
 			 * Instantiating a consumer agent
