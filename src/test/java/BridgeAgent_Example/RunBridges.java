@@ -32,12 +32,12 @@ public class RunBridges {
 			 * Instantiating a BridgeAgentInOut SingleAgent
 			 */
 			BridgeAgentInOut agenteInOut = new BridgeAgentInOut(new AgentID(
-					"BridgeAgentInOut", "qpid", "locke.dsic.upv.es", "5000"));
+					"BridgeAgentInOut", "qpid", "hostname.domain", "5000"));
 			/**
 			 * Instantiating a BridgeAgentOutIn SingleAgent
 			 */
 			BridgeAgentOutIn agenteOutIn = new BridgeAgentOutIn(new AgentID(
-					"BridgeAgentOutIn", "qpid", "locke.dsic.upv.es", "5000"));
+					"BridgeAgentOutIn", "qpid", "hostname.domain", "5000"));
 
 			/**
 			 * Instantiating a EmisorAgent BaseAgent
