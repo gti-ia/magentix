@@ -36,12 +36,12 @@ public class Run {
 	Logger logger = Logger.getLogger(Run.class);
 
 	/**
-	 * Clean database
+	 * Initialize database.
 	 */
 	
-	CleanBD clean = new CleanBD();
+	CleanDB clean = new CleanDB();
 
-	clean.clean_database();
+	clean.initialize_db();
 	
 	/**
 	 * Connecting to Qpid Broker, default localhost.
