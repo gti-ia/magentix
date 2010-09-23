@@ -53,13 +53,14 @@ public class RegisterUnitSkeleton
 			res.setStatus("Error");
 			return res;
 		}
+		
 		if (registerUnit.getType() == "")
 			registerUnit.setType("FLAT");
 		if (registerUnit.getParentUnitID() == "")
 			registerUnit.setParentUnitID("VIRTUAL");
-		if (registerUnit.getType().equalsIgnoreCase("FLAT")
-				&& registerUnit.getType().equalsIgnoreCase("HIERARCHY")
-				&& registerUnit.getType().equalsIgnoreCase("TEAM"))
+		if (!registerUnit.getType().equalsIgnoreCase("FLAT")
+				&& !registerUnit.getType().equalsIgnoreCase("HIERARCHY")
+				&& !registerUnit.getType().equalsIgnoreCase("TEAM"))
 		{
 			res.setErrorValue("Invalid");
 			res.setStatus("Error");
