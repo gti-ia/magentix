@@ -91,8 +91,6 @@ public class Run {
 			 */
 			Observer observer = new Observer(new AgentID("qpid://observer@localhost:8080"));
 			
-			observer.start();
-			
 			/**
 			 * Instantiating the publisher agent
 			 */
@@ -111,6 +109,7 @@ public class Run {
 			/**
 			 * Execute the agents
 			 */
+			observer.start();
 			publisher.start();
 			subscriber.start();
 			coordinator.start();

@@ -149,7 +149,7 @@ private boolean finish=false;
 	}
 	
 	public void onTraceEvent(TraceEvent tEvent) {
-		System.err.println("[PUBLISHER " + this.getName() + "]: Event from " + tEvent.getOriginEntity().getAid().toString() + ": " + tEvent.getTracingService() + ": " + tEvent.getContent());
+//		System.err.println("[PUBLISHER " + this.getName() + "]: Event from " + tEvent.getOriginEntity().getAid().toString() + ": " + tEvent.getTracingService() + ": " + tEvent.getContent());
 	}
 	
 	public void onMessage(ACLMessage msg){
