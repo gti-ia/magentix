@@ -96,7 +96,7 @@ public class Subscriber extends BaseAgent{
 		/**
 		 * When a trace event arrives, it updates counters and prints the content on the screen
 		 */
-		System.out.println("[SUBSCRIBER " + this.getName() + "]: Received from " + tEvent.getOriginEntity().getAid().name + ": " + tEvent.getContent());
+		System.out.println("[SUBSCRIBER " + this.getName() + "]: Received from " + tEvent.getOriginEntity().getAid().toString() + ": " + tEvent.getTracingService() + " " + tEvent.getContent());
 
 		if (tEvent.getTracingService().contentEquals("publisher"+publisher_number1+"<DD_Test_TS_"+service1+">")){
 			n_received1++;

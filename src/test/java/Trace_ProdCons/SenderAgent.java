@@ -17,7 +17,7 @@ public class SenderAgent extends BaseAgent {
 
 	public SenderAgent(AgentID aid) throws Exception {
 		super(aid);
-		TraceInteract.publishTracingService(this, "TRACE_TEST", "Tracing service with no other use than testing the system");
+		TraceInteract.publishTracingService(this, "TRACE_TEST", "A simple test tracing service");
 	}
 
 	public void execute() {
@@ -43,7 +43,7 @@ public class SenderAgent extends BaseAgent {
 		}
 		
 		try {
-			Thread.sleep(3000);
+			Thread.sleep(1000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -52,14 +52,21 @@ public class SenderAgent extends BaseAgent {
 		System.out.println("[SENDER " + getName() + "]: Unpublishing tracing service TRACE TEST");
 		TraceInteract.unpublishTracingService(this, "TRACE_TEST");
 		
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		System.out.println("[SENDER " + getName() + "]: Bye!");		
 	}
 	
 	public void onTraceEvent(TraceEvent tEvent) {
-		System.out.println("[SENDER " + this.getName() + "]: Received from " + tEvent.getOriginEntity().getAid().name + ": " + tEvent.getContent());
+		System.out.println("[SENDER " + this.getName() + "]: Received from " + tEvent.getOriginEntity().getAid().toString() + ": " + tEvent.getTracingService() + " " + tEvent.getContent());
 	}
 	
 	public void onMessage(ACLMessage msg){
-		System.out.println("[SENDER " + this.getName() + "]: Received from " + msg.getSender().toString() + ": " + msg.getContent());
+		System.out.println("[SENDER " + this.getName() + "]: Received from " + msg.getSender().toString() + ": " + msg.getPerformative() + " " + msg.getContent());
 	}
 }
