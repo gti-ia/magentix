@@ -15,7 +15,7 @@ public class Main {
 	 */
 	public static void main(String[] args) throws Exception {
 		DOMConfigurator.configure("configuration/loggin.xml");
-		AgentsConnection.connect("localhost");
+		AgentsConnection.connect();
 		
 		MagentixAgArch arch = new MagentixAgArch();		
 		JasonAgent bob = new JasonAgent(new AgentID("bob"), "./src/test/java/jasonTest_2/bob.asl", arch);
