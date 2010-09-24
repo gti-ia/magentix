@@ -830,7 +830,7 @@ public class DataBaseInterface
 			stmt = db.connection.createStatement();
 			sql =
 					"SELECT * FROM Role WHERE RoleID='" + roleID.toLowerCase()
-							+ "'";
+							+ "' AND unit='"+unit.toLowerCase()+"'";
 			sql = sql.toLowerCase();
 			rs = stmt.executeQuery(sql);
 			if (!rs.next())

@@ -54,16 +54,23 @@ public class AcquireRoleSkeleton
 			res.setStatus("Error");
 			return res;
 		}
-		if (!thomasBD.CheckExistsRole(acquireRole.getRoleID()))
+//		if (!thomasBD.CheckExistsRole(acquireRole.getRoleID()))
+//		{
+//			res.setErrorValue("NotFound");
+//			res.setStatus("Error");
+//			return res;
+//		}
+		if (!thomasBD.CheckExistsRoleInUnit(acquireRole.getRoleID(),
+				acquireRole.getUnitID()))
 		{
 			res.setErrorValue("NotFound");
 			res.setStatus("Error");
 			return res;
 		}
-		if (!thomasBD.CheckExistsRoleInUnit(acquireRole.getRoleID(),
-				acquireRole.getUnitID()))
+		String parentUnitID = thomasBD.GetParentUnitID(acquireRole.getUnitID());
+		if(!acquireRole.getUnitID().equalsIgnoreCase("virtual") && !thomasBD.CheckAgentPlaysRoleInUnit(parentUnitID,acquireRole.getAgentID()))
 		{
-			res.setErrorValue("NotFound");
+			res.setErrorValue("Not-Allowed: agent is not inside the parent unit.\nUnitID="+acquireRole.getUnitID());
 			res.setStatus("Error");
 			return res;
 		}
@@ -75,8 +82,7 @@ public class AcquireRoleSkeleton
 			return res;
 		}
 		if (!acquireRole.getUnitID().equalsIgnoreCase("virtual")
-				& !thomasBD.CheckAgentPlaysRoleInUnit(thomasBD
-						.GetParentUnitID(acquireRole.getUnitID()), acquireRole
+				& !thomasBD.CheckAgentPlaysRoleInUnit(parentUnitID, acquireRole
 						.getAgentID()))
 		{
 			res.setErrorValue("Invalid");
