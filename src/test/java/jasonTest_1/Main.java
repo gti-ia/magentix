@@ -15,7 +15,7 @@ public class Main {
 	 */
 	public static void main(String[] args) throws Exception {
 		DOMConfigurator.configure("configuration/loggin.xml");
-		AgentsConnection.connect("localhost");
+		AgentsConnection.connect();
 		
 		SimpleArchitecture arch = new SimpleArchitecture();
 		
