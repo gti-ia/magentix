@@ -10,7 +10,7 @@ class Main {
 	public static void main(String[] args) throws Exception {
 
 		DOMConfigurator.configure("configuration/loggin.xml");
-		AgentsConnection.connect("127.0.0.1");
+		AgentsConnection.connect();
 
 		SallyClass Sally = new SallyClass(new AgentID("Sally"));
 		Sally.start();
