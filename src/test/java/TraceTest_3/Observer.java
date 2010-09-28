@@ -1,7 +1,5 @@
 package TraceTest_3;
 
-import java.awt.Color;
-
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.BaseAgent;
@@ -9,6 +7,10 @@ import es.upv.dsic.gti_ia.core.TraceEvent;
 //import es.upv.dsic.gti_ia.core.TracingService;
 
 import es.upv.dsic.gti_ia.trace.*;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 public class Observer extends BaseAgent {
 	private boolean finish=false;
@@ -38,9 +40,26 @@ public class Observer extends BaseAgent {
 		/**
 		 * When a trace event arrives, it prints it on the screen
 		 */
-		System.out.println("[OBSERVER " + this.getName() + "]: Event from " + tEvent.getOriginEntity().getAid().toString() + ": " + tEvent.getTracingService() + ": " + tEvent.getContent());
-		if (tEvent.getTracingService().contentEquals("PUBLISHED_TRACING_SERVICE")){
-			TraceInteract.requestTracingService(this, tEvent.getContent());
+		//DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss.SSS");
+		DateFormat formatter = new SimpleDateFormat("HH:mm:ss.SSS");
+		
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTimeInMillis(tEvent.getTimestamp());
+		
+		ACLMessage msg;
+		
+		if (tEvent.getTracingService().contentEquals("MESSAGE_SENT_DETAIL") ||
+			tEvent.getTracingService().contentEquals("MESSAGE_SENT_DETAIL")){
+			msg = ACLMessage.fromString(tEvent.getContent());
+			System.out.println("[OBSERVER " + formatter.format(calendar.getTime()) + "]: Event from " + tEvent.getOriginEntity().getAid().toString() + ": " + tEvent.getTracingService() + ": ");
+			System.out.println("\t" + msg.getPerformative() + " from " + msg.getSender().toString() + " to " + msg.getReceiver());
+			System.out.println("\tCONTENT:" + msg.getContent());
+		}
+		else{
+			System.out.println("[OBSERVER " + formatter.format(calendar.getTime()) + "]: Event from " + tEvent.getOriginEntity().getAid().toString() + ": " + tEvent.getTracingService() + ": " + tEvent.getContent());
+			if (tEvent.getTracingService().contentEquals("PUBLISHED_TRACING_SERVICE")){
+				TraceInteract.requestTracingService(this, tEvent.getContent());
+			}
 		}
 	}
 	

@@ -1,5 +1,5 @@
 /*****************************************************************************************/
-/*                                      Trace_Basic                                      */
+/*                                      TraceTest_3                                      */
 /*****************************************************************************************/
 /*                     Author: Luis Burdalo (lburdalo@dsic.upv.es)                       */
 /*****************************************************************************************/
@@ -10,6 +10,11 @@
     publication/unpublication nor subscription/unsubscription
     
     Initialization:
+    
+    OBSERVER:
+      - Subscribes to all available tracing services
+      - Unsubscribes from MESSAGE_SENT and MESSAGE RECEIVED because they are
+        redundant with MESSAGE_SENT_DETAIL and MESSAGE_RECEIVED_DETAIL
     
     PUBLISHER:
       - Publishes the tracing service DD_Test_TS1 (OK)
@@ -33,6 +38,10 @@
     	- Unpublishes DD_Test_TS1 (FAIL!)
       
     Execution:
+    
+    OBSERVER:
+      - Each time a new tracing service is published, it subscribes to it
+      - Each time a trace event arrives, it prints it on screen
     
     PUBLISHER:
     	- Generates a trace event of each tracing service every second.
