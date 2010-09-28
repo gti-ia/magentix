@@ -7,7 +7,7 @@ import es.upv.dsic.gti_ia.core.TracingService;
 
 public class TracingServiceSubscriptionList extends ArrayList<TracingServiceSubscription> {
 	private static final long serialVersionUID = 1L;
-
+	
 	/**
 	 * Obtain a tracing service subscription in the list
 	 * @param subscriberEntity

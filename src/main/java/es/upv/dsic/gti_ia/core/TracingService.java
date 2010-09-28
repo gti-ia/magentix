@@ -1,5 +1,7 @@
 package es.upv.dsic.gti_ia.core;
 
+import java.io.Serializable;
+
 import es.upv.dsic.gti_ia.trace.TracingEntity;
 import es.upv.dsic.gti_ia.trace.TracingEntityList;
 import es.upv.dsic.gti_ia.trace.TracingServiceSubscription;
@@ -12,7 +14,8 @@ import es.upv.dsic.gti_ia.trace.TracingServiceSubscriptionList;
  * Definition of Tracing Service
  */
 
-public class TracingService {	
+public class TracingService implements Serializable{
+	private static final long serialVersionUID = 1L;
 	/**
 	 * Domain Independent Tracing Service names
 	 */

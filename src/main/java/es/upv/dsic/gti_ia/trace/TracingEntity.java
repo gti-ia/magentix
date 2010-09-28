@@ -1,5 +1,7 @@
 package es.upv.dsic.gti_ia.trace;
 
+import java.io.Serializable;
+
 import es.upv.dsic.gti_ia.core.AgentID;
 
 /**
@@ -11,7 +13,9 @@ import es.upv.dsic.gti_ia.core.AgentID;
  * TODO: Artifacts and aggregations are not yet supported
  * 		far beyond the constants defined in the class 
  */
-public class TracingEntity {
+public class TracingEntity implements Serializable{
+	private static final long serialVersionUID = 1L;
+	
 	public static final int AGENT = 0;
 	public static final int ARTIFACT = 1;
 	public static final int AGGREGATION = 2;
@@ -20,6 +24,13 @@ public class TracingEntity {
 	private AgentID aid;
 	private TracingServiceList publishedTS;
 	private TracingServiceSubscriptionList subscribedToTS;
+	
+	public TracingEntity (){
+		this.type=-1;
+		this.aid=null;
+		this.publishedTS=new TracingServiceList();
+		this.subscribedToTS=new TracingServiceSubscriptionList();
+	}
 	
 	public TracingEntity (int type, AgentID aid){
 		this.type=AGENT;

@@ -1,6 +1,7 @@
 package es.upv.dsic.gti_ia.core;
 
 import java.lang.System;
+import java.util.Date;
 import java.io.Serializable;
 
 import es.upv.dsic.gti_ia.trace.TracingEntity;
@@ -12,7 +13,7 @@ import es.upv.dsic.gti_ia.trace.TracingEntity;
  * Definition of Trace Event
  */
 
-public class TraceEvent implements Serializable {
+public class TraceEvent implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	private String tService;

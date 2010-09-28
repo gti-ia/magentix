@@ -1,8 +1,12 @@
 package es.upv.dsic.gti_ia.trace;
 
+import java.io.Serializable;
+
 import es.upv.dsic.gti_ia.core.TracingService;
 
-public class TracingServiceSubscription {
+public class TracingServiceSubscription implements Serializable {
+	private static final long serialVersionUID = 1L;
+	
 	private TracingEntity subscriptorEntity;
 	private boolean any_provider;
 	private TracingEntity originEntity;

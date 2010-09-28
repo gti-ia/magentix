@@ -17,6 +17,9 @@ import es.upv.dsic.gti_ia.core.ISO8601;
 /**
  * @author Ricard Lopez Fogues
  */
+/**
+ * @author Luis Burdalo: Added toString and fromString methods
+ */
 @SuppressWarnings("unchecked")
 public class ACLMessage implements Serializable, Cloneable {
 	/**
@@ -712,5 +715,152 @@ public class ACLMessage implements Serializable, Cloneable {
 			}
 		}
 		return o;
+	}
+	
+	public String toString(){
+		// Serialize message content
+		String strMsg;
+		
+		// Performative
+		strMsg = this.getPerformativeInt() + "#";
+		// Sender
+		strMsg = strMsg + this.getSender().toString().length() + "#"
+						+ this.getSender().toString();
+		// receiver
+		strMsg = strMsg + this.getReceiver().toString().length() + "#"
+						+ this.getReceiver().toString();
+		// reply to
+		strMsg = strMsg + this.getReplyTo().toString().length() + "#"
+						+ this.getReplyTo().toString();
+		// language
+		strMsg = strMsg + this.getLanguage().length() + "#" + this.getLanguage();
+		// encoding
+		strMsg = strMsg + this.getEncoding().length() + "#" + this.getEncoding();
+		// ontology
+		strMsg = strMsg + this.getOntology().length() + "#" + this.getOntology();
+		// protocol
+		strMsg = strMsg + this.getProtocol().length() + "#" + this.getProtocol();
+		// conversation id
+		strMsg = strMsg + this.getConversationId().length() + "#"
+						+ this.getConversationId();
+		// reply with
+		strMsg = strMsg + this.getReplyWith().length() + "#" + this.getReplyWith();
+		// in reply to
+		strMsg = strMsg + this.getInReplyTo().length() + "#" + this.getInReplyTo();
+		// reply by
+		strMsg = strMsg + this.getReplyBy().length() + "#" + this.getReplyBy();
+		// content
+		strMsg = strMsg + this.getContent().length() + "#" + this.getContent();
+		
+		return strMsg;
+	}
+	
+	public static ACLMessage fromString (String strMsg){
+		// Unserialize message content
+		ACLMessage msg;
+		int indice1 = 0;
+		int indice2 = 0;
+		int aidindice1 = 0;
+		int aidindice2 = 0;
+		int tam = 0;
+		String aidString;
+		
+		indice2 = strMsg.indexOf('#', indice1);
+		msg = new ACLMessage(Integer.parseInt(strMsg.substring(indice1, indice2)));
+		
+		// Unserialize different AgentID's (Sender, Receiver, ReplyTo)
+		for (int i = 0; i < 3; i++)
+		{
+			AgentID aid = new AgentID();
+			aidindice1 = 0;
+			aidindice2 = 0;
+			indice1 = indice2 + 1 + tam;
+			indice2 = strMsg.indexOf('#', indice1);
+			tam = Integer.parseInt(strMsg.substring(indice1, indice2));
+			aidString = strMsg.substring(indice2 + 1, indice2 + 1 + tam);
+			aidindice2 = aidString.indexOf(':');
+			if (aidindice2 - aidindice1 <= 0)
+				aid.protocol = "";
+			else
+				aid.protocol = aidString.substring(aidindice1, aidindice2);
+			aidindice1 = aidindice2 + 3;
+			aidindice2 = aidString.indexOf('@', aidindice1);
+			if (aidindice2 - aidindice1 <= 0)
+				aid.name = "";
+			else
+				aid.name = aidString.substring(aidindice1, aidindice2);
+			aidindice1 = aidindice2 + 1;
+			aidindice2 = aidString.indexOf(':', aidindice1);
+			if (aidindice2 - aidindice1 <= 0)
+				aid.host = "";
+			else
+				aid.host = aidString.substring(aidindice1, aidindice2);
+			aid.port = aidString.substring(aidindice2 + 1);
+			
+			if (i == 0)
+				msg.setSender(aid);
+			if (i == 1)
+				msg.setReceiver(aid);
+			if (i == 2)
+				msg.setReplyTo(aid);
+		}
+		indice1 = indice2 + 1 + tam;
+		indice2 = strMsg.indexOf('#', indice1);
+		tam = Integer.parseInt(strMsg.substring(indice1, indice2));
+		// language
+		msg.setLanguage(strMsg.substring(indice2 + 1, indice2 + 1 + tam));
+		
+		indice1 = indice2 + 1 + tam;
+		indice2 = strMsg.indexOf('#', indice1);
+		tam = Integer.parseInt(strMsg.substring(indice1, indice2));
+		// encoding
+		msg.setEncoding(strMsg.substring(indice2 + 1, indice2 + 1 + tam));
+		
+		indice1 = indice2 + 1 + tam;
+		indice2 = strMsg.indexOf('#', indice1);
+		tam = Integer.parseInt(strMsg.substring(indice1, indice2));
+		// ontologyencodingACLMessage template
+		msg.setOntology(strMsg.substring(indice2 + 1, indice2 + 1 + tam));
+		
+		indice1 = indice2 + 1 + tam;
+		indice2 = strMsg.indexOf('#', indice1);
+		tam = Integer.parseInt(strMsg.substring(indice1, indice2));
+		// Protocol
+		msg.setProtocol(strMsg.substring(indice2 + 1, indice2 + 1 + tam));
+		
+		indice1 = indice2 + 1 + tam;
+		indice2 = strMsg.indexOf('#', indice1);
+		tam = Integer.parseInt(strMsg.substring(indice1, indice2));
+		// Conversation id
+		msg.setConversationId(strMsg.substring(indice2 + 1, indice2 + 1 + tam));
+		
+		indice1 = indice2 + 1 + tam;
+		indice2 = strMsg.indexOf('#', indice1);
+		tam = Integer.parseInt(strMsg.substring(indice1, indice2));
+		// Reply with
+		msg.setReplyWith(strMsg.substring(indice2 + 1, indice2 + 1 + tam));
+		
+		indice1 = indice2 + 1 + tam;
+		indice2 = strMsg.indexOf("#", indice1);
+		
+		tam = Integer.parseInt(strMsg.substring(indice1, indice2));
+		// In reply to
+		msg.setInReplyTo(strMsg.substring(indice2 + 1, indice2 + 1 + tam));
+		
+		indice1 = indice2 + 1 + tam;
+		indice2 = strMsg.indexOf('#', indice1);
+		tam = Integer.parseInt(strMsg.substring(indice1, indice2));
+		// reply by
+		
+		if (tam != 0)
+			msg.setReplyByDate(new Date(Integer.parseInt(strMsg.substring(indice2 + 10, indice2 + tam))));
+		
+		indice1 = indice2 + 1 + tam;
+		indice2 = strMsg.indexOf('#', indice1);
+		tam = Integer.parseInt(strMsg.substring(indice1, indice2));
+		// Content
+		msg.setContent(strMsg.substring(indice2 + 1, indice2 + 1 + tam));
+		
+		return msg;
 	}
 }

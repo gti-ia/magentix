@@ -1,5 +1,8 @@
 package es.upv.dsic.gti_ia.trace;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -168,6 +171,49 @@ public class TraceManager extends BaseAgent{
     	
     	this.traceSession.messageTransfer("amq.match", MessageAcceptMode.EXPLICIT, MessageAcquireMode.PRE_ACQUIRED,
                 header, xfr.getBodyString());
+    	
+		/**  PRE-OPTIMIZATION OF EVENT TRANSMISSION
+    	MessageTransfer xfr = new MessageTransfer();
+
+		xfr.destination("amq.match");
+		xfr.acceptMode(MessageAcceptMode.EXPLICIT);
+		xfr.acquireMode(MessageAcquireMode.PRE_ACQUIRED);
+
+		DeliveryProperties deliveryProps = new DeliveryProperties();
+		MessageProperties messageProperties = new MessageProperties();
+		Map<String, Object> messageHeaders = new HashMap<String, Object>();
+		
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		ObjectOutputStream oos;
+		try {
+			oos = new ObjectOutputStream(bos);
+			oos.writeObject(tEvent);
+			oos.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}		
+		xfr.setBody(bos.toByteArray());
+		
+		// set the message property
+    	messageHeaders.put("tracing_service", tEvent.getTracingService());
+    	messageHeaders.put("origin_entity", "system");
+    	if (destination == null){
+    		messageHeaders.put("receiver", "all");
+    	}
+    	else if (destination.getType() == TracingEntity.AGENT){
+    		messageHeaders.put("receiver", destination.getAid().name);
+    	}
+//    	else{
+//    		// Other tracing entity types are not supported yet
+//    		
+//    	}
+    	
+		messageProperties.setApplicationHeaders(messageHeaders);
+				
+		traceSession.messageTransfer(xfr.getDestination(), xfr.getAcceptMode(),
+				xfr.getAcquireMode(), new Header(deliveryProps, 
+						messageProperties), xfr.getBodyBytes());
+		*/
 	}
 	
 //	public void execute() {

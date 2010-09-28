@@ -695,6 +695,42 @@ public class BaseAgent implements Runnable
 		this.traceSession.messageTransfer("amq.match",
 				MessageAcceptMode.EXPLICIT, MessageAcquireMode.PRE_ACQUIRED,
 				header, xfr.getBodyString());
+		
+	/**   PRE-OPTIMIZATION OF EVENT TRANSMISSION	
+		MessageTransfer xfr = new MessageTransfer();
+
+		xfr.destination("amq.match");
+		xfr.acceptMode(MessageAcceptMode.EXPLICIT);
+		xfr.acquireMode(MessageAcquireMode.PRE_ACQUIRED);
+
+		DeliveryProperties deliveryProps = new DeliveryProperties();
+		MessageProperties messageProperties = new MessageProperties();
+		Map<String, Object> messageHeaders = new HashMap<String, Object>();
+		
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		ObjectOutputStream oos;
+		try {
+			oos = new ObjectOutputStream(bos);
+			oos.writeObject(tEvent);
+			oos.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}		
+		xfr.setBody(bos.toByteArray());
+		
+		// set the message property
+		messageHeaders.put("tracing_service", tEvent.getTracingService());
+		if (tEvent.getOriginEntity().getType() == TracingEntity.AGENT)
+		{
+			messageHeaders.put("origin_entity", tEvent.getOriginEntity().getAid().name);
+		}
+		
+		messageProperties.setApplicationHeaders(messageHeaders);
+				
+		traceSession.messageTransfer(xfr.getDestination(), xfr.getAcceptMode(),
+				xfr.getAcquireMode(), new Header(deliveryProps, 
+						messageProperties), xfr.getBodyBytes());
+	*/
 	}
 	
 	/**
@@ -706,7 +742,7 @@ public class BaseAgent implements Runnable
 	 * 		If set to null, the system trace event is understood to be directed to all tracing
 	 * 		entities.        
 	 */
-	private void sendSystemTraceEvent(TraceEvent tEvent) {
+	private void sendSystemTraceEvent(TraceEvent tEvent) {	
 		MessageTransfer xfr = new MessageTransfer();
 
 		xfr.destination("amq.match");
@@ -743,6 +779,38 @@ public class BaseAgent implements Runnable
     	
     	this.traceSession.messageTransfer("amq.match", MessageAcceptMode.EXPLICIT, MessageAcquireMode.PRE_ACQUIRED,
                 header, xfr.getBodyString());
+    /**   PRE-OPTIMIZATION OF EVENT TRANSMISSION
+		MessageTransfer xfr = new MessageTransfer();
+
+		xfr.destination("amq.match");
+		xfr.acceptMode(MessageAcceptMode.EXPLICIT);
+		xfr.acquireMode(MessageAcquireMode.PRE_ACQUIRED);
+
+		DeliveryProperties deliveryProps = new DeliveryProperties();
+		MessageProperties messageProperties = new MessageProperties();
+		Map<String, Object> messageHeaders = new HashMap<String, Object>();
+		
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		ObjectOutputStream oos;
+		try {
+			oos = new ObjectOutputStream(bos);
+			oos.writeObject(tEvent);
+			oos.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}		
+		xfr.setBody(bos.toByteArray());
+		
+		// set the message property
+		messageHeaders.put("tracing_service", tEvent.getTracingService());
+    	messageHeaders.put("origin_entity", "system");
+		
+		messageProperties.setApplicationHeaders(messageHeaders);
+				
+		traceSession.messageTransfer(xfr.getDestination(), xfr.getAcceptMode(),
+				xfr.getAcquireMode(), new Header(deliveryProps, 
+						messageProperties), xfr.getBodyBytes());
+	*/
 	}
 	
 	/**
