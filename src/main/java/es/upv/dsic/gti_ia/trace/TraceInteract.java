@@ -161,4 +161,28 @@ public class TraceInteract {
 		 */
 		requesterAgent.send(msg);
 	}
+	
+	/**
+	 * Request a list of registered tracing entities
+	 * @param applicantAgent
+	 */
+	static public void listTracingEntities(BaseAgent applicantAgent){
+		/**
+		 * Building a ACLMessage
+		 */
+		ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
+		AgentID tms_aid = new AgentID("qpid://tm@localhost:8080");
+		String body;
+		
+		msg.setReceiver(tms_aid);
+		msg.setSender(applicantAgent.getAid());
+		msg.setLanguage("ACL");
+		body = "list" + "#entities";
+		//System.out.println("Publication request: " + body);
+		msg.setContent(body);
+		/**
+		 * Sending a ACLMessage
+		 */
+		applicantAgent.send(msg);
+	}
 }

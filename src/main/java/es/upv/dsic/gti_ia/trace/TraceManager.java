@@ -226,7 +226,7 @@ public class TraceManager extends BaseAgent{
 		int index, index2, length;
 		TraceEvent tEvent; // = new TraceEvent();
 		ACLMessage response_msg = null;
-		String command;
+		String command, specification;
 		
 		TracingService tService=null;
 		TracingEntity tEntity=null, originTEntity=null;
@@ -234,8 +234,9 @@ public class TraceManager extends BaseAgent{
 		
 		Iterator<TracingServiceSubscription> TSS_iter;
 		Iterator<TracingService> TS_iter;
+		Iterator<TracingEntity> TE_iter;
 		
-		AgentID originAid;
+		AgentID originAid, requestedAid;
 		int aidindice1 = 0;
 		int aidindice2 = 0;
 		
@@ -480,9 +481,86 @@ public class TraceManager extends BaseAgent{
 						logger.info("[TRACE MANAGER]: Sending AGREE message to " + msg.getReceiver().toString());
 					}
 				}
-//				if (command.equals("list")) {
-//					
-//				}
+				if (command.equals("list")) {
+					specification=content.substring(index+1);
+					if (specification.contentEquals("entities")){
+						// Return all available tracing entities
+						response_msg = new ACLMessage(ACLMessage.AGREE);
+						response_msg.setSender(this.getAid());
+						response_msg.setReceiver(msg.getSender());
+						
+						content="list#entities#"+ TracingEntities.size();
+						
+						TE_iter=TracingEntities.iterator();
+						
+						while(TE_iter.hasNext()){
+							tEntity=TE_iter.next();
+							
+							content = content + "#" + tEntity.getType() + "#" +
+								tEntity.getAid().toString().length() + "#" + tEntity.getAid().toString();
+						}
+						
+						response_msg.setContent(content);
+					}
+//					else if (specification.contentEquals("service_entities")){
+//						// Return all tracing entities which offer a tracing service
+//						requestedAid=new AgentID
+//						response_msg = new ACLMessage(ACLMessage.AGREE);
+//						response_msg.setSender(this.getAid());
+//						response_msg.setReceiver(msg.getSender());
+//						
+//						content="list#service_entities#"+ TracingEntities.size();
+//						
+//						TE_iter=TracingEntities.iterator();
+//						
+//						while(TE_iter.hasNext()){
+//							tEntity=TE_iter.next();
+//							
+//							content = content + "#" + tEntity.getType() + "#" +
+//								tEntity.getAid().toString().length() + "#" + tEntity.getAid().toString();
+//						}
+//						
+//						response_msg.setContent(content);
+//					}
+					else if (specification.contentEquals("services")){
+						// Return all available tracing services
+						response_msg = new ACLMessage(ACLMessage.AGREE);
+						response_msg.setSender(this.getAid());
+						response_msg.setReceiver(msg.getSender());
+						
+						content="list#services#"+ TracingServices.size();
+						
+						TS_iter=TracingServices.iterator();
+						
+						while(TS_iter.hasNext()){
+							tService=TS_iter.next();
+							
+							content = content + "#" + tService.getName().length() + "#" + tService.getName() +
+								"#" + tService.getDescription();
+						}
+						
+						response_msg.setContent(content);
+					}
+//					else if (specification.contentEquals("entity_services")){
+//						// Return all tracing services a tracing entity offers
+//						response_msg = new ACLMessage(ACLMessage.AGREE);
+//						response_msg.setSender(this.getAid());
+//						response_msg.setReceiver(msg.getSender());
+//						
+//						content="list#services#"+ TracingServices.size();
+//						
+//						TS_iter=TracingServices.iterator();
+//						
+//						while(TS_iter.hasNext()){
+//							tService=TS_iter.next();
+//							
+//							content = content + "#" + tService.getName().length() + "#" + tService.getName() +
+//								"#" + tService.getDescription();
+//						}
+//						
+//						response_msg.setContent(content);
+//					}
+				}
 				else {
 					/**
 					 * Building a ACLMessage
