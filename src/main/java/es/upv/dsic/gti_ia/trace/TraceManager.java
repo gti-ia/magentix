@@ -480,6 +480,9 @@ public class TraceManager extends BaseAgent{
 						logger.info("[TRACE MANAGER]: Sending AGREE message to " + msg.getReceiver().toString());
 					}
 				}
+//				if (command.equals("list")) {
+//					
+//				}
 				else {
 					/**
 					 * Building a ACLMessage
