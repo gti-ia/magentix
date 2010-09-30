@@ -12,6 +12,29 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+/*****************************************************************************************/
+/*                                      TraceTest3                                       */
+/*****************************************************************************************/
+/*                     Author: Luis Burdalo (lburdalo@dsic.upv.es)                       */
+/*****************************************************************************************/
+/*                                     DESCRIPTION                                       */
+/*****************************************************************************************
+
+	Initialization:
+    
+    OBSERVER:
+      - Subscribes to all available tracing services
+      - Unsubscribes from MESSAGE_SENT and MESSAGE RECEIVED because they are
+        redundant with MESSAGE_SENT_DETAIL and MESSAGE_RECEIVED_DETAIL
+        
+    Execution:
+    
+    OBSERVER:
+      - Each time a new tracing service is published, it subscribes to it
+      - Each time a trace event arrives, it prints it on screen
+      
+*****************************************************************************************/
+
 public class Observer extends BaseAgent {
 	private boolean finish=false;
 	
