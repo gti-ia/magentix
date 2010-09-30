@@ -685,7 +685,7 @@ public class BaseAgent implements Runnable
 		messageHeaders.put("tracing_service", tEvent.getTracingService());
 		if (tEvent.getOriginEntity().getType() == TracingEntity.AGENT)
 		{
-			messageHeaders.put("origin_entity", tEvent.getOriginEntity().getAid().name);
+			messageHeaders.put("origin_entity", tEvent.getOriginEntity().getAid().toString());
 		}
 		
 		messageProperties.setApplicationHeaders(messageHeaders);
