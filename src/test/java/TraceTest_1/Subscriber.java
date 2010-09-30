@@ -47,7 +47,7 @@ public class Subscriber extends BaseAgent{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-    	
+		
     	System.out.println("[SUBSCRIBER]: Now unsubscribing from tracing services...");
 		TraceInteract.cancelTracingServiceSubscription(this, "DD_Test_TS");
 		

@@ -49,7 +49,7 @@ public class Observer extends BaseAgent {
 		ACLMessage msg;
 		
 		if (tEvent.getTracingService().contentEquals("MESSAGE_SENT_DETAIL") ||
-			tEvent.getTracingService().contentEquals("MESSAGE_SENT_DETAIL")){
+			tEvent.getTracingService().contentEquals("MESSAGE_RECEIVED_DETAIL")){
 			msg = ACLMessage.fromString(tEvent.getContent());
 			System.out.println("[OBSERVER " + formatter.format(calendar.getTime()) + "]: Event from " + tEvent.getOriginEntity().getAid().toString() + ": " + tEvent.getTracingService() + ": ");
 			System.out.println("\t" + msg.getPerformative() + " from " + msg.getSender().toString() + " to " + msg.getReceiver());
