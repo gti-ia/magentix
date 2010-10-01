@@ -105,10 +105,10 @@ public class OMSProxy {
 	 *            (agents or other units)
 	 * @return String Status ErrorValue
 	 */
-	public String leaveRole(QueueAgent agent, String AgentID, String RoleID,
+	public String leaveRole(QueueAgent agent, String RoleID,
 			String UnitID) throws Exception {
 
-		String call = configuration + "LeaveRoleProcess.owl AgentID=" + AgentID
+		String call = configuration + "LeaveRoleProcess.owl AgentID=" + agent.getAid().toString()
 				+ " RoleID=" + RoleID + " UnitID=" + UnitID;
 
 		this.sendInform(agent, call);
@@ -321,8 +321,7 @@ public class OMSProxy {
 	 *            protocol
 	 * 
 	 * @param RoleID
-	 *            represent all required functionality needed in order to
-	 *            achieve the unit goal.
+	 *            if a role is indicated then only the quantity of members playing this roles is detailed.
 	 * @param UnitID
 	 *            organizational units (OUs), which represent groups of entities
 	 *            (agents or other units)
@@ -385,18 +384,18 @@ public class OMSProxy {
 	 *            is the identifier of the organizational unit in which the new
 	 *            role is defined
 	 * @param Accessibility
-	 *            considers two types of roles: (a) internal roles, which are
-	 *            assigned to internal agents of the system platform; and (b)
-	 *            external roles, which can be enacted by any agent.
+	 *            considers two types of roles: (internal) internal roles, which are
+	 *            assigned to internal agents of the system platform; and (external)
+	 *            external roles, which can be enacted by any agent. Default is a External.
 	 * @param Position
 	 *            determines its structural position inside the unit, such as
-	 *            supervisor or subordinate
+	 *            member, supervisor or subordinate. Default is a Member.
 	 * @param Visibility
 	 *            indicates whether agents can obtain information of this role
 	 *            from outside the unit in which this role is defined (public)
-	 *            or from inside (private).
+	 *            or from inside (private). Default is a Public.
 	 * @param Inheritance
-	 *            is the identifier of the parent role in the role hierarchy
+	 *            is the identifier of the parent role in the role hierarchy. Default is a Member.
 	 * @return String Status ErroValue
 	 * @throws Exception
 	 */
@@ -429,12 +428,12 @@ public class OMSProxy {
 	 *            which a supervisor agent has control over other members; (ii)
 	 *            Team, which are groups of agents that share a common goal,
 	 *            collaborating and cooperating between them; and (iii) Flat, in
-	 *            which there is none agent with control over other members.
+	 *            which there is none agent with control over other members. Default is a Flat.
 	 * @param Goal
 	 *            describes goals pursued by the unit
 	 * @param ParentUnitID
 	 *            is the identifier of the parent unit which contains the new
-	 *            unit
+	 *            unit. Default is a Virtual.
 	 * @return String Status ErrorValue
 	 * @throws Exception
 	 */
