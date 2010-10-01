@@ -4,6 +4,39 @@ import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.BaseAgent;
 
+/*****************************************************************************************
+/*                                       TraceDaddy                                      *
+/*****************************************************************************************
+/*                     Author: Luis Burdalo (lburdalo@dsic.upv.es)                       *
+/*****************************************************************************************
+/*                                     DESCRIPTION                                       *
+/*****************************************************************************************
+    Simple example of how to use domain independent tracing services to follow other
+    agents' activities and to make decisions according to this activity.
+    
+    In this case, a Daddy agent listens to his sons (Boy agents) while they are playing
+    and when one of them starts crying, he proposes them to take them to the park. When
+    both children agree, daddy and his sons leave the building and the application
+    finishes.
+    
+    Initialization:
+
+    BOYS (Bobby and Timmy):
+       - Print on screen their name and age.
+       
+    Execution:
+         
+    BOYS (Bobby and Timmy):
+       - Bobby, which is only 5, sends each second an ACL request message to Timmy (which
+         is 7) to request him his toy (Give me your toy). After 5 denials, Bobby starts
+         requesting it by crying (sending an ACL message with a loud GUAAAAAA!).
+       - Both Boy agents reply NO! to any request which does not come from their father
+         and only AGREE when their dad requestes them to GO TO THE PARK.
+       - When dad requests them (via an ACL message) to go to the park, both sons agree
+         and end their execution.
+         
+*****************************************************************************************/
+
 public class Boy extends BaseAgent {
 	private int age;
 	private boolean finish=false;
