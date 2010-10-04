@@ -724,33 +724,93 @@ public class ACLMessage implements Serializable, Cloneable {
 		// Performative
 		strMsg = this.getPerformativeInt() + "#";
 		// Sender
-		strMsg = strMsg + this.getSender().toString().length() + "#"
+		if (this.getSender() == null){
+			strMsg = strMsg + "0#";
+		}
+		else{
+			strMsg = strMsg + this.getSender().toString().length() + "#"
 						+ this.getSender().toString();
+		}
 		// receiver
-		strMsg = strMsg + this.getReceiver().toString().length() + "#"
+		if (this.getReceiver() == null){
+			strMsg = strMsg + "0#";
+		}
+		else{
+			strMsg = strMsg + this.getReceiver().toString().length() + "#"
 						+ this.getReceiver().toString();
+		}
 		// reply to
-		strMsg = strMsg + this.getReplyTo().toString().length() + "#"
+		if (this.getReplyTo() == null){
+			strMsg = strMsg + "0#";
+		}
+		else{
+			strMsg = strMsg + this.getReplyTo().toString().length() + "#"
 						+ this.getReplyTo().toString();
+		}
 		// language
-		strMsg = strMsg + this.getLanguage().length() + "#" + this.getLanguage();
+		if (this.getLanguage() == null){
+			strMsg = strMsg + "0#";
+		}
+		else{
+			strMsg = strMsg + this.getLanguage().length() + "#" + this.getLanguage();
+		}
 		// encoding
-		strMsg = strMsg + this.getEncoding().length() + "#" + this.getEncoding();
+		if (this.getEncoding() == null){
+			strMsg = strMsg + "0#";
+		}
+		else{
+			strMsg = strMsg + this.getEncoding().length() + "#" + this.getEncoding();
+		}
 		// ontology
-		strMsg = strMsg + this.getOntology().length() + "#" + this.getOntology();
+		if (this.getOntology() == null){
+			strMsg = strMsg + "0#";
+		}
+		else{
+			strMsg = strMsg + this.getOntology().length() + "#" + this.getOntology();
+		}
 		// protocol
-		strMsg = strMsg + this.getProtocol().length() + "#" + this.getProtocol();
+		if (this.getProtocol() == null){
+			strMsg = strMsg + "0#";
+		}
+		else{
+			strMsg = strMsg + this.getProtocol().length() + "#" + this.getProtocol();
+		}
 		// conversation id
-		strMsg = strMsg + this.getConversationId().length() + "#"
+		if (this.getConversationId() == null){
+			strMsg = strMsg + "0#";
+		}
+		else{
+			strMsg = strMsg + this.getConversationId().length() + "#"
 						+ this.getConversationId();
+		}
 		// reply with
-		strMsg = strMsg + this.getReplyWith().length() + "#" + this.getReplyWith();
+		if (this.getReplyWith() == null){
+			strMsg = strMsg + "0#";
+		}
+		else{
+			strMsg = strMsg + this.getReplyWith().length() + "#" + this.getReplyWith();
+		}
 		// in reply to
-		strMsg = strMsg + this.getInReplyTo().length() + "#" + this.getInReplyTo();
+		if (this.getInReplyTo() == null){
+			strMsg = strMsg + "0#";
+		}
+		else{
+			strMsg = strMsg + this.getInReplyTo().length() + "#" + this.getInReplyTo();
+		}
 		// reply by
-		strMsg = strMsg + this.getReplyBy().length() + "#" + this.getReplyBy();
+		if (this.getReplyBy() == null){
+			strMsg = strMsg + "0#";
+		}
+		else{
+			strMsg = strMsg + this.getReplyBy().length() + "#" + this.getReplyBy();
+		}
 		// content
-		strMsg = strMsg + this.getContent().length() + "#" + this.getContent();
+		if (this.getContent() == null){
+			strMsg = strMsg + "0#";
+		}
+		else{
+			strMsg = strMsg + this.getContent().length() + "#" + this.getContent();
+		}
 		
 		return strMsg;
 	}
