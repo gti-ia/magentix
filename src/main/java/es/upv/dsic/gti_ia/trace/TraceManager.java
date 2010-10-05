@@ -560,6 +560,43 @@ public class TraceManager extends BaseAgent{
 //						
 //						response_msg.setContent(content);
 //					}
+					else {
+						index = content.indexOf('#', 0);
+						specification = content.substring(0, index);
+						if (specification.contentEquals("service")){
+							// Return service description
+							serviceName=content.substring(index+1);
+							if ((tService=TracingServices.getTS(serviceName)) == null){
+								// The tracing service does not exist
+								agree_response=false;
+								response_msg = new ACLMessage(ACLMessage.REFUSE);
+								response_msg.setSender(this.getAid());
+								response_msg.setReceiver(msg.getSender());
+								response_msg.setContent("list#service#" + serviceName.length() + "#" +
+										serviceName + TraceError.SERVICE_NOT_FOUND);
+								logger.info("[TRACE MANAGER]: Sending REFUSE message to " + msg.getReceiver().toString());
+							}
+							else {
+								response_msg = new ACLMessage(ACLMessage.AGREE);
+								response_msg.setSender(this.getAid());
+								response_msg.setReceiver(msg.getSender());
+								
+								content="list#service#" + serviceName.length() + "#" + serviceName + tService.getDescription();
+																
+								response_msg.setContent(content);
+							}
+						}
+						else{
+							/**
+							 * Building a ACLMessage
+							 */
+					    	response_msg = new ACLMessage(ACLMessage.UNKNOWN);
+					    	response_msg.setSender(this.getAid());
+					    	response_msg.setReceiver(msg.getSender());
+							response_msg.setContent(content);
+							logger.info("[TRACE MANAGER]: Returning UNKNOWN message to " + msg.getReceiver().toString());
+						}
+					}
 				}
 				else {
 					/**
