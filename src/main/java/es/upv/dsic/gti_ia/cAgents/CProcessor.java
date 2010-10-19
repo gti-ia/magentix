@@ -261,7 +261,7 @@ public class CProcessor implements Runnable, Cloneable {
 					ACLMessage messageToSend;
 					SendState sendState = (SendState) states.get(currentState);
 					messageToSend = new ACLMessage();
-					System.out.println("Template "+sendState.messageTemplate.getContent());
+					logger.info("Template "+sendState.messageTemplate.getContent());
 					if (sendState.messageTemplate != null) {
 						messageToSend
 								.copyFromAsTemplate(sendState.messageTemplate);
@@ -338,7 +338,7 @@ public class CProcessor implements Runnable, Cloneable {
 
 							if (!accepted) {
 								backState = currentState;
-								System.out.println("Performativa "
+								logger.info("Performativa "
 										+ retrievedMessage.getPerformativeInt()
 										+ "Contenido "
 										+ retrievedMessage.getContent());
@@ -347,7 +347,7 @@ public class CProcessor implements Runnable, Cloneable {
 								String key1;
 								while (itr.hasNext()) {
 									key1 = itr.next();
-									System.out.println("Header: "
+									logger.info("Header: "
 											+ key1
 											+ " Value: "
 											+ retrievedMessage
@@ -486,7 +486,7 @@ public class CProcessor implements Runnable, Cloneable {
 				// enviar una excepcion desde este metodo?
 
 				if (!states.containsKey(currentState)) {
-					System.out.println(currentState + " state "
+					logger.info(currentState + " state "
 							+ " doesn' exist");
 				}
 				if (!this.transitiontable.existsTransation(previousState,
