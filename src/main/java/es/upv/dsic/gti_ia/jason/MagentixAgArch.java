@@ -27,7 +27,6 @@ import java.util.logging.Logger;
 import es.upv.dsic.gti_ia.cAgents.CAgent;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
-import es.upv.dsic.gti_ia.core.BaseAgent;
 
 /**
  * @author Ricard Lopez Fogues
