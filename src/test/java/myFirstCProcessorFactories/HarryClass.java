@@ -23,7 +23,7 @@ class HarryClass extends CAgent {
 		super(aid);
 	}
 
-	protected void Initialize(CProcessor myProcessor, ACLMessage welcomeMessage) {
+	protected void execution(CProcessor myProcessor, ACLMessage welcomeMessage) {
 
 		MessageFilter filter;
 		
@@ -134,7 +134,7 @@ class HarryClass extends CAgent {
 				+ response.getPerformative() + " " + response.getContent());
 	}
 
-	protected void Finalize(CProcessor firstProcessor,
+	protected void finalize(CProcessor firstProcessor,
 			ACLMessage finalizeMessage) {
 
 		System.out.println(finalizeMessage.getContent());

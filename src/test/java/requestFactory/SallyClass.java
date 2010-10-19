@@ -13,7 +13,7 @@ class SallyClass extends CAgent {
 		super(aid);
 	}
 
-	protected void Initialize(CProcessor myProcessor, ACLMessage welcomeMessage) {
+	protected void execution(CProcessor myProcessor, ACLMessage welcomeMessage) {
 
 		System.out.println(myProcessor.getMyAgent().getName()
 				+ ": the welcome message is " + welcomeMessage.getContent());
@@ -73,7 +73,7 @@ class SallyClass extends CAgent {
 		this.addFactoryAsParticipant(talk);
 	}
 
-	protected void Finalize(CProcessor firstProcessor,
+	protected void finalize(CProcessor firstProcessor,
 			ACLMessage finalizeMessage) {
 	}
 }

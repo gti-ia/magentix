@@ -12,7 +12,7 @@ class SallyClass extends CAgent {
 		super(aid);
 	}
 
-	protected void Initialize(CProcessor myProcessor, ACLMessage welcomeMessage) {
+	protected void execution(CProcessor myProcessor, ACLMessage welcomeMessage) {
 
 		MessageFilter filter;
 		ACLMessage template;
@@ -88,7 +88,7 @@ class SallyClass extends CAgent {
 
 	}
 
-	protected void Finalize(CProcessor firstProcessor,
+	protected void finalize(CProcessor firstProcessor,
 			ACLMessage finalizeMessage) {
 
 		System.out.println(finalizeMessage.getContent());

@@ -13,7 +13,7 @@ class HarryClass extends CAgent {
 		super(aid);
 	}
 
-	protected void Initialize(CProcessor myProcessor, ACLMessage welcomeMessage) {
+	protected void execution(CProcessor myProcessor, ACLMessage welcomeMessage) {
 
 		ACLMessage msg;
 
@@ -48,6 +48,8 @@ class HarryClass extends CAgent {
 		msg = new ACLMessage(ACLMessage.REQUEST);
 		msg.setReceiver(new AgentID("Sally"));
 		msg.setContent("May you give me your phone number?");
+		msg.setProtocol("fipa-request");
+		msg.setSender(getAid());
 		
 		// The agent creates the CFactory that creates processors that initiate
 		// REQUEST protocol conversations. In this
@@ -66,12 +68,13 @@ class HarryClass extends CAgent {
 
 		// finally the new conversation starts. Because it is synchronous, 
 		// the current interaction halts until the new conversation ends.
-		myProcessor.createSyncConversation(msg);
+		//myProcessor.createSyncConversation(msg);
+		this.startSyncConversation("TALK");
 
 		myProcessor.ShutdownAgent();
 	}
 
-	protected void Finalize(CProcessor firstProcessor,
+	protected void finalize(CProcessor firstProcessor,
 			ACLMessage finalizeMessage) {
 	}
 }

@@ -15,7 +15,7 @@ class HarryClass extends CAgent {
 		super(aid);
 	}
 
-	protected void Initialize(CProcessor myProcessor, ACLMessage welcomeMessage) {
+	protected void execution(CProcessor myProcessor, ACLMessage welcomeMessage) {
 
 		ACLMessage msg;
 
@@ -116,7 +116,7 @@ class HarryClass extends CAgent {
 		myProcessor.ShutdownAgent();
 	}
 
-	protected void Finalize(CProcessor firstProcessor,
+	protected void finalize(CProcessor firstProcessor,
 			ACLMessage finalizeMessage) {
 	}
 }

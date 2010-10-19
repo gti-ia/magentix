@@ -20,7 +20,7 @@ class HelloWorldAgentClass extends CAgent {
 	// the Ininitialize method defined by the class CAgent, this method will
 	// be executed by the first CProcessor.
 
-	protected void Initialize(CProcessor myProcessor, ACLMessage welcomeMessage) {
+	protected void execution(CProcessor myProcessor, ACLMessage welcomeMessage) {
 
 		System.out.println(myProcessor.getMyAgent().getName()
 				+ ": the welcome message is " + welcomeMessage.getContent());
@@ -37,7 +37,7 @@ class HelloWorldAgentClass extends CAgent {
 	// In order to manage the finalization message, the user has to
 	// implement the Finalize method defined by the CAgent class.
 	
-	protected void Finalize(CProcessor myProcessor, ACLMessage finalizeMessage) {
+	protected void finalize(CProcessor myProcessor, ACLMessage finalizeMessage) {
 
 		System.out.println(myProcessor.getMyAgent().getName()
 				+ ": the finalize message is " + finalizeMessage.getContent());
