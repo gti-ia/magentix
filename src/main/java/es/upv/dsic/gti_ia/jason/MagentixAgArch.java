@@ -24,8 +24,10 @@ import java.util.Queue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import es.upv.dsic.gti_ia.cAgents.CAgent;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
+import es.upv.dsic.gti_ia.core.BaseAgent;
 
 /**
  * @author Ricard Lopez Fogues
@@ -33,12 +35,12 @@ import es.upv.dsic.gti_ia.core.AgentID;
 
 public class MagentixAgArch extends AgArch{
 	
-	private JasonAgent jasonAgent;
+	private CAgent jasonAgent;
 	private static Logger logger = Logger.getLogger(MagentixAgArch.class.getName());
 	private Queue<ACLMessage> messageList = new LinkedList<ACLMessage>();
 	protected boolean running = true;
 	
-	public void init(String filename, JasonAgent agent){
+	public void init(String filename, CAgent agent){
 		try {
 			this.jasonAgent = agent;
 			Agent ag = new Agent();
@@ -55,6 +57,9 @@ public class MagentixAgArch extends AgArch{
 			while (isRunning()) {
 				// calls the Jason engine to perform one reasoning cycle
 				logger.fine("Reasoning....");
+				// parche para arreglar la sincronizacion, buscar mejor solucion y porque occure esto
+				if(this.jasonAgent.getMutexHoldCount() > 0)
+					this.jasonAgent.unlock();
 				getTS().reasoningCycle();
 			}
 		} catch (Exception e) {
