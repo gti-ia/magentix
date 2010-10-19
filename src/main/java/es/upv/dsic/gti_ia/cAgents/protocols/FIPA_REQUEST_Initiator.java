@@ -30,12 +30,12 @@ public abstract class FIPA_REQUEST_Initiator {
 	
 	protected void doRequest(CProcessor myProcessor,
 			ACLMessage messageToSend) {
-		ACLMessage aux = (ACLMessage) myProcessor.getInternalData().get(
+		/*ACLMessage aux = (ACLMessage) myProcessor.getInternalData().get(
 				"InitialMessage");
 		messageToSend.copyFromAsTemplate(aux);
 		messageToSend.setProtocol("fipa-request");
 		messageToSend.setPerformative(ACLMessage.REQUEST);
-		messageToSend.setSender(myProcessor.getMyAgent().getAid());
+		messageToSend.setSender(myProcessor.getMyAgent().getAid());*/
 	}
 
 	class REQUEST_Method implements SendStateMethod {
@@ -114,7 +114,7 @@ public abstract class FIPA_REQUEST_Initiator {
 		}
 	}
 
-	public CProcessorFactory newFactory(String name, MessageFilter filter, ACLMessage template,
+	public CProcessorFactory newFactory(String name, MessageFilter filter, ACLMessage requestMessage,
 			int availableConversations, CAgent myAgent, long timeout) {
 
 		// Create factory
@@ -139,9 +139,9 @@ public abstract class FIPA_REQUEST_Initiator {
 		SendState REQUEST = new SendState("REQUEST_REQUEST_INITIATOR");
 
 		REQUEST.setMethod(new REQUEST_Method());
-		template = new ACLMessage(ACLMessage.REQUEST);
-		template.setProtocol("REQUEST");
-		REQUEST.setMessageTemplate(template);
+		//requestMessage = new ACLMessage(ACLMessage.REQUEST);
+		//requestMessage.setProtocol("REQUEST");		
+		REQUEST.setMessageTemplate(requestMessage);
 		processor.registerState(REQUEST);
 		processor.addTransition("BEGIN", "REQUEST_REQUEST_INITIATOR");
 

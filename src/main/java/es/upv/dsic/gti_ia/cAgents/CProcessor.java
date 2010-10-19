@@ -97,11 +97,33 @@ public class CProcessor implements Runnable, Cloneable {
 
 		this.lockMyAgent();
 
-		nextSubID = nextSubID + 1;
+		//nextSubID = nextSubID + 1;
 
-		initalMessage.setConversationId(this.conversationID + "." + nextSubID);
+		//initalMessage.setConversationId(this.conversationID + "." + nextSubID);
+		initalMessage.setConversationId(myAgent.newConversationID());
 
 		myAgent.startConversation(initalMessage, this, true);
+
+		try {
+			syncConversationFinished.await();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		this.unlockMyAgent();
+		return this.syncConversationResponse;
+	}
+	
+	public ACLMessage createSyncConversation(CProcessorFactory factory, String id) {
+
+		this.lockMyAgent();
+
+		//nextSubID = nextSubID + 1;
+
+		//initalMessage.setConversationId(this.conversationID + "." + nextSubID);
+		//initalMessage.setConversationId(myAgent.newConversationID());
+
+		//myAgent.startConversation(initalMessage, this, true);
+		factory.startConversationWithID(id, this, true);
 
 		try {
 			syncConversationFinished.await();
@@ -216,9 +238,11 @@ public class CProcessor implements Runnable, Cloneable {
 				case State.BEGIN:
 					// ACLMessage aux = messageQueue.remove(); //!!!!!Cuidado,
 					// he cambiado por peek -> Ricard!!!!
-					ACLMessage aux;
+					ACLMessage aux = null;
 					if (this.isInitiator())
-						aux = messageQueue.remove();
+						aux = messageQueue.peek();
+						if(aux != null)
+							aux = messageQueue.remove();
 					else
 						aux = messageQueue.peek();
 					this.unlockMyAgent();
@@ -237,6 +261,7 @@ public class CProcessor implements Runnable, Cloneable {
 					ACLMessage messageToSend;
 					SendState sendState = (SendState) states.get(currentState);
 					messageToSend = new ACLMessage();
+					System.out.println("Template "+sendState.messageTemplate.getContent());
 					if (sendState.messageTemplate != null) {
 						messageToSend
 								.copyFromAsTemplate(sendState.messageTemplate);
@@ -246,7 +271,7 @@ public class CProcessor implements Runnable, Cloneable {
 							messageToSend);
 					this.lockMyAgent();
 					messageToSend.setConversationId(this.conversationID);
-
+					
 					this.myAgent.send(messageToSend);
 					this.lastSendedMessage = messageToSend;
 

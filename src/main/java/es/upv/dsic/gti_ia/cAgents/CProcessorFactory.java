@@ -70,6 +70,23 @@ public class CProcessorFactory {
 		myAgent.exec.execute(cloneProcessor);
 		return (cloneProcessor);
 	}
+	
+	CProcessor startConversationWithID(String id, CProcessor parent, Boolean isSync) {
+		CProcessor cloneProcessor = (CProcessor) myCProcessor.clone();
+
+		cloneProcessor.setConversationID(id);
+		//cloneProcessor.addMessage(msg);
+		cloneProcessor.setIdle(false);
+		cloneProcessor.setFactory(this);
+		cloneProcessor.setParent(parent);
+		cloneProcessor.setIsSynchronized(isSync);
+		cloneProcessor.setInitiator(this.initiator);
+		// setParentChildren(cloneProcessor); // ???
+
+		myAgent.addProcessor(id, cloneProcessor);
+		myAgent.exec.execute(cloneProcessor);
+		return (cloneProcessor);
+	}
 
 	// private void setParentChildren(CProcessor parent) { // ??? Necesario?
 	// for (int i = 0; i < children.size(); i++) {
@@ -91,6 +108,8 @@ public class CProcessorFactory {
 	// Probablemente mejor en ACLMessage
 
 	protected boolean templateIsEqual(ACLMessage template) {
+		if(this.filter == null)
+			return true;
 		return this.filter.compareHeaders(template);
 	}
 	
@@ -100,6 +119,10 @@ public class CProcessorFactory {
 	
 	protected boolean isInitiator(){
 		return initiator;
+	}
+	
+	public String getName(){
+		return this.name;
 	}
 	
 }

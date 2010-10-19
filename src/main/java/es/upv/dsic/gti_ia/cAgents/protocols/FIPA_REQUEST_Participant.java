@@ -139,7 +139,7 @@ public abstract class FIPA_REQUEST_Participant {
 		// Create factory
 
 		if (filter == null) {
-			filter = new MessageFilter("performative = REQUEST");//falta AND protocol = fipa-request
+			filter = new MessageFilter("performative = REQUEST AND protocol = fipa-request");
 		}
 		//template.setProtocol("REQUEST");
 		//template.setPerformative(ACLMessage.REQUEST);

@@ -70,7 +70,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.locks.Condition;
@@ -95,7 +94,7 @@ public abstract class CAgent extends BaseAgent {
 	ReentrantLock mutex = new ReentrantLock();
 	private CProcessorFactory welcomeFactory;
 	private CProcessor welcomeProcessor;
-	private CProcessorFactory defaultFactory;
+	protected CProcessorFactory defaultFactory;
 	ArrayList<CProcessorFactory> initiatorFactories = new ArrayList<CProcessorFactory>();
 	ArrayList<CProcessorFactory> participantFactories = new ArrayList<CProcessorFactory>();
 
@@ -104,6 +103,8 @@ public abstract class CAgent extends BaseAgent {
 	final Condition iAmFinished = mutex.newCondition();
 	final Condition cProcessorRemoved = mutex.newCondition();
 	boolean inShutdown = false;
+	
+	private long conversationCounter = 0;
 
 	public CAgent(AgentID aid) throws Exception {
 		super(aid);
@@ -144,12 +145,14 @@ public abstract class CAgent extends BaseAgent {
 		for (int i = 0; i < initiatorFactories.size(); i++) {
 			if (initiatorFactories.get(i).name.equals(name)) {
 				initiatorFactories.remove(i);
+				this.unlock();
 				return;
 			}
 		}
 		for (int i = 0; i < participantFactories.size(); i++) {
 			if (participantFactories.get(i).name.equals(name)) {
 				participantFactories.remove(i);
+				this.unlock();
 				return;
 			}
 		}
@@ -182,7 +185,7 @@ public abstract class CAgent extends BaseAgent {
 
 	}
 
-	private void createDefaultFactory(final CAgent me) {
+	protected void createDefaultFactory(final CAgent me) {
 
 		// PENDIENTE
 		// Probar y definir defaultfactory
@@ -254,7 +257,7 @@ public abstract class CAgent extends BaseAgent {
 			public String run(CProcessor myProcessor, ACLMessage receivedMessage) {
 				//myProcessor.getInternalData().put("AGENT_END_MSG",
 					//	receivedMessage);
-				me.Initialize(myProcessor, receivedMessage);
+				me.execution(myProcessor, receivedMessage);
 				return "WAIT2";
 			}
 		}
@@ -296,7 +299,7 @@ public abstract class CAgent extends BaseAgent {
 			public void run(CProcessor myProcessor, ACLMessage msg) {
 				msg.copyFromAsTemplate((ACLMessage) myProcessor
 						.getInternalData().get("AGENT_END_MSG"));
-				me.Finalize(myProcessor, msg);
+				me.finalize(myProcessor, msg);
 				myProcessor.getMyAgent().notifyAgentEnd();
 			}
 		}
@@ -315,11 +318,15 @@ public abstract class CAgent extends BaseAgent {
 	}
 
 	private void processMessage(ACLMessage msg) {
-
+		//this.logger.info(this.getName() + " before lock count "+this.mutex.getHoldCount()+" queue "+this.mutex.getQueueLength());
+		// Ricard
 		this.lock();
+		//this.logger.info(this.getName() + " after lock");
 		CProcessor auxProcessor = processors.get(msg.getConversationId());
+		//this.logger.info(this.getName() + " after auxProcessor");
 		boolean accepted = false;
 		if (auxProcessor != null) {
+			//this.logger.info(this.getName() + " conversacio en marxa");
 			auxProcessor.addMessage(msg);
 			if (auxProcessor.isIdle()) {
 				auxProcessor.setIdle(false);
@@ -329,10 +336,15 @@ public abstract class CAgent extends BaseAgent {
 				exec.execute(auxProcessor);
 			}
 		} else if (!inShutdown) {
+			//this.logger.info(this.getName() + " conversacio nova");
 			for (int i = 0; i < participantFactories.size(); i++) {
 				CProcessorFactory factory = participantFactories.get(i);
 				if (factory.templateIsEqual(msg)) {
+					//this.logger.info(this.getName() + " factoria trobada");
+					if(this.getName().equals("providerAgent") || this.getName() == "providerAgent")
+						System.out.println("");
 					factory.startConversation(msg, null, false);
+					//this.logger.info(this.getName() + " conversacio iniciada");
 					accepted = true;
 					break;
 				}
@@ -361,19 +373,19 @@ public abstract class CAgent extends BaseAgent {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		this.logger.info("Agent " + this.getName() + "ENDED");
+		this.logger.info("Agent " + this.getName() + " ENDED");
 
 		this.unlock();
-
 	}
 
-	protected abstract void Finalize(CProcessor firstProcessor,
+	protected abstract void finalize(CProcessor firstProcessor,
 			ACLMessage finalizeMessage);
 
-	protected abstract void Initialize(CProcessor firstProcessor,
+	protected abstract void execution(CProcessor firstProcessor,
 			ACLMessage welcomeMessage);
 
 	void addProcessor(String conversationID, CProcessor processor) {
+		// Ricard
 		this.lock();
 		processors.put(conversationID, processor);
 		this.unlock();
@@ -486,8 +498,10 @@ public abstract class CAgent extends BaseAgent {
 		this.unlock();
 	}
 
-	String newConversationID() {
-		return this.getName() + "." + UUID.randomUUID().toString();
+	synchronized String newConversationID() {
+		//return this.getName() + "." + UUID.randomUUID().toString();
+		this.conversationCounter++;
+		return this.getName() + "." + this.conversationCounter;
 	}
 
 	void notifyLastProcessorRemoved() {
@@ -535,5 +549,21 @@ public abstract class CAgent extends BaseAgent {
 		System.out.println("No hay factorias");
 		this.unlock();
 		// PENDIENTE: Lanzar excepci�n si no hay fabricas asociadas
+	}
+	
+	public void startSyncConversation(String factoryName){
+		this.lock();
+		for (int i = 0; i < initiatorFactories.size(); i++) {
+			if (initiatorFactories.get(i).name.equals(factoryName)) {
+				this.welcomeProcessor.createSyncConversation(initiatorFactories.get(i), newConversationID());
+				this.unlock();
+				return;
+			}
+		}
+		this.unlock();
+	}
+	
+	public int getMutexHoldCount(){
+		return this.mutex.getHoldCount();
 	}
 }
