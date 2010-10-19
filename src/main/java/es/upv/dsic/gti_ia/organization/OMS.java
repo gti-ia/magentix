@@ -453,11 +453,6 @@ public class OMS extends CAgent {
 			@Override
 			protected void doInform(CProcessor myProcessor, ACLMessage response) {
 				ACLMessage lastReceivedMessage = myProcessor.getLastReceivedMessage();
-				System.out.println("Soy OMS");
-				System.out.println("ConID: "+myProcessor.getConversationID());
-				System.out.println("Destino: "+lastReceivedMessage.getSender());
-				System.out.println("Perf: INFORM");
-				System.out.println("Content: "+lastReceivedMessage.getContent());
 				response.setContent(lastReceivedMessage.getContent());		
 			}
 
@@ -466,8 +461,7 @@ public class OMS extends CAgent {
 					ACLMessage request) {				
 				ACLMessage msg = request;
 				String next = "";
-				System.out.println("Protocol: "+msg.getProtocol());
-				
+								
 				if (msg != null) {
 					
 					try{					

@@ -396,11 +396,6 @@ public class SF extends CAgent {
 			@Override
 			protected void doInform(CProcessor myProcessor, ACLMessage response) {
 				ACLMessage lastReceivedMessage = myProcessor.getLastReceivedMessage();
-				System.out.println("Soy SF");
-				System.out.println("ConID: "+myProcessor.getConversationID());
-				System.out.println("Destino: "+lastReceivedMessage.getSender());
-				System.out.println("Perf: INFORM");
-				System.out.println("Content: "+lastReceivedMessage.getContent());
 				response.setContent(lastReceivedMessage.getContent());				
 			}
 

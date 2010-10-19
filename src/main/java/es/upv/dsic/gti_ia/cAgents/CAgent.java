@@ -318,15 +318,10 @@ public abstract class CAgent extends BaseAgent {
 	}
 
 	private void processMessage(ACLMessage msg) {
-		//this.logger.info(this.getName() + " before lock count "+this.mutex.getHoldCount()+" queue "+this.mutex.getQueueLength());
-		// Ricard
 		this.lock();
-		//this.logger.info(this.getName() + " after lock");
 		CProcessor auxProcessor = processors.get(msg.getConversationId());
-		//this.logger.info(this.getName() + " after auxProcessor");
 		boolean accepted = false;
 		if (auxProcessor != null) {
-			//this.logger.info(this.getName() + " conversacio en marxa");
 			auxProcessor.addMessage(msg);
 			if (auxProcessor.isIdle()) {
 				auxProcessor.setIdle(false);
@@ -336,15 +331,10 @@ public abstract class CAgent extends BaseAgent {
 				exec.execute(auxProcessor);
 			}
 		} else if (!inShutdown) {
-			//this.logger.info(this.getName() + " conversacio nova");
 			for (int i = 0; i < participantFactories.size(); i++) {
 				CProcessorFactory factory = participantFactories.get(i);
 				if (factory.templateIsEqual(msg)) {
-					//this.logger.info(this.getName() + " factoria trobada");
-					if(this.getName().equals("providerAgent") || this.getName() == "providerAgent")
-						System.out.println("");
 					factory.startConversation(msg, null, false);
-					//this.logger.info(this.getName() + " conversacio iniciada");
 					accepted = true;
 					break;
 				}
