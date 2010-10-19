@@ -26,7 +26,7 @@ public class TimerAgent extends CAgent{
 	}
 
 	@Override
-	protected void Initialize(CProcessor firstProcessor,
+	protected void execution(CProcessor firstProcessor,
 			ACLMessage welcomeMessage) {
 		
 
@@ -135,7 +135,7 @@ public class TimerAgent extends CAgent{
 	}
 	
 	@Override
-	protected void Finalize(CProcessor firstProcessor,
+	protected void finalize(CProcessor firstProcessor,
 			ACLMessage finalizeMessage) {
 		// TODO Auto-generated method stub
 		
