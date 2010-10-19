@@ -16,11 +16,11 @@ public class AgentAnnouncement extends QueueAgent {
 
     // We create the class that will make us the agent proxy oms,facilitates
     // access to the methods of the OMS
-    OMSProxy OMSservices = new OMSProxy();
+    OMSProxy OMSservices = new OMSProxy(this);
 
     // We create the class that will make us the agent proxy sf,facilitates
     // access to the methods of the SF
-    SFProxy SFservices = new SFProxy();
+    SFProxy SFservices = new SFProxy(this);
 
     ProfileDescription profile = new ProfileDescription(
 	    "http://localhost:8080/SearchCheapHotel/owl/owls/SearchCheapHotelProfile.owl",
@@ -28,18 +28,17 @@ public class AgentAnnouncement extends QueueAgent {
 
     public void execute() {
 
-	logger.info("Executing, I'm " + getName());
+    System.out.println("Executing, I'm " + getName());
 	String result;
 
-	try {
-	    result = OMSservices.acquireRole(this, "member", "virtual");
-	    logger.info("[AgentAnnoucement]Acquire Role result: " + result + "\n");
-	    SFservices.registerProfile(this, profile);
-	    logger.info("[AgentAnnoucement]The operation register Profile return: "
-		    + profile.getServiceID() + "\n");
-	} catch (Exception e) {
-	    logger.error(e.getMessage());
 
-	}
+	    result = OMSservices.acquireRole("member", "virtual");
+	    System.out.println("[AgentAnnoucement] Acquire Role member in virtual: "+ result);
+	
+	    SFservices.registerProfile(profile);
+	    
+	    System.out.println("[AgentAnnoucement]The operation register Profile return: "
+		    + profile.getServiceID() + "\n");
+
     }
 }

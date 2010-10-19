@@ -27,9 +27,9 @@ import es.upv.dsic.gti_ia.organization.SFProxy;
 
 public class AgentProvider extends QueueAgent {
 
-    private OMSProxy omsProxy = new OMSProxy();
+    private OMSProxy omsProxy = new OMSProxy(this);
 
-    private SFProxy sfProxy = new SFProxy();
+    private SFProxy sfProxy = new SFProxy(this);
 
     private ArrayList<String> results = new ArrayList<String>();
 
@@ -47,26 +47,24 @@ public class AgentProvider extends QueueAgent {
 
     public void escenario1() {
 
-	try {
-	    omsProxy.acquireRole(this, "member", "virtual");
-	} catch (Exception e) {
-	    logger.error(e.getMessage());
-	}
+
+	 System.out.println("[AgentProvider] Acquire Role member in virtual: "+ omsProxy.acquireRole( "member", "virtual"));
+
     }
 
 
 
     public void escenario3() {
 
-	try {
+	
 
-	    results = sfProxy.searchService(this, "SearchCheapHotel");
+	    results = sfProxy.searchService("SearchCheapHotel");
 
 	    if (results.size() == 0) {
 		System.out.println("profiles are not similar to SearchCheapHotel");
 	    } else {
 		// cogemos el primero por ejemplo
-		String URLProfile = sfProxy.getProfile(this, results.get(0));
+		String URLProfile = sfProxy.getProfile(results.get(0));
 
 		URL profile;
 		try {
@@ -79,31 +77,27 @@ public class AgentProvider extends QueueAgent {
 		}
 
 	
-		omsProxy.acquireRole(this, oracle.getProviderList().get(0), oracle.getProviderUnitList().get(0));
+		 System.out.println("[AgentProvider] Acquire Role "+oracle.getProviderList().get(0)+" in "+oracle.getProviderUnitList().get(0)+ " :"+omsProxy.acquireRole(oracle.getProviderList().get(0), oracle.getProviderUnitList().get(0)));
 
 	    }
 
-	} catch (Exception e) {
-	    logger.error(e.getMessage());
-	}
+
     }
 
     public void escenario4() {
-	try {
+
 
 	    processDescription.setProfileID(results.get(0));
 
-	    sfProxy.registerProcess(this, processDescription);
+	    System.out.println("[AgentProvider] RegisterProcess: "+ sfProxy.registerProcess(processDescription));
 
-	} catch (Exception e) {
-	    logger.error(e.getMessage());
-	}
+
 
     }
 
     public void escenario5(){
 	try{
-	omsProxy.acquireRole(this,"payee", "travelagency");
+	System.out.println("[AgentProvider] Acquire Role payee in travelagency: "+ omsProxy.acquireRole("payee", "travelagency"));
 	
 	}catch(Exception e)
 	{
@@ -115,6 +109,8 @@ public class AgentProvider extends QueueAgent {
 	Responder responder = new Responder(this);
 
 	this.addTask(responder);
+
+
     }
 
     public void execute() {

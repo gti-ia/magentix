@@ -9,7 +9,7 @@ import org.apache.log4j.xml.DOMConfigurator;
 import es.upv.dsic.gti_ia.architecture.Monitor;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
-
+import es.upv.dsic.gti_ia.organization.CleanBD;
 import es.upv.dsic.gti_ia.organization.OMS;
 import es.upv.dsic.gti_ia.organization.SF;
 
@@ -25,68 +25,73 @@ import es.upv.dsic.gti_ia.organization.SF;
 
 public class Run {
 
-    /**
-     * @param args
-     */
 
-    public static void main(String[] args) {
+	public static void main(String[] args) {
 
-	DOMConfigurator.configure("configuration/loggin.xml");
-	Logger logger = Logger.getLogger(Run.class);
+		DOMConfigurator.configure("configuration/loggin.xml");
+		Logger logger = Logger.getLogger(Run.class);
 
-	/**
-	 * Initialize database.
-	 */
-	
-	CleanDB clean = new CleanDB();
+		/**
+		 * Connecting to Qpid Broker, default localhost.
+		 */
+		AgentsConnection.connect();
 
-	clean.initialize_db();
-	
-	/**
-	 * Connecting to Qpid Broker, default localhost.
-	 */
-	AgentsConnection.connect();
 
-	try {
+		/**
+		 * Clean database
+		 */
 
-	    /**
-	     * Instantiating a OMS and FS agent's
-	     */
-		
-	    OMS agenteOMS = OMS.getOMS();
-	    agenteOMS.start();
+		CleanBD clean = new CleanBD();
+		InitializeThomasScenario its = new InitializeThomasScenario();
 
-	    SF agenteSF = SF.getSF();
-	    agenteSF.start();
-	    
+		clean.clean_database();
+		its.initialize_db();
 
-	    /**
-	     * Execute the agents
-	     */
+		/**
+		 * Connecting to Qpid Broker, default localhost.
+		 */
+		AgentsConnection.connect();
 
-	    AgentPayee payeeAgent = new AgentPayee(new AgentID("agentPayee"));
+		try {
 
-	    AgentProvider providerAgent = new AgentProvider(new AgentID("providerAgent"));
+			/**
+			 * Instantiating a OMS and FS agent's
+			 */
 
-	    AgentAnnouncement registerAgent = new AgentAnnouncement(new AgentID("registerAgent"));
+			OMS agenteOMS = OMS.getOMS();
+			agenteOMS.start();
 
-	    AgentClient clientAgent = new AgentClient(new AgentID("clientAgent"));
-	    
-	    registerAgent.start();
-	    payeeAgent.start();
+			SF agenteSF = SF.getSF();
+			agenteSF.start();
 
-	    Monitor m = new Monitor();
-	    m.waiting(25 * 1000);
-	    providerAgent.start();
-	    m.waiting(5 * 1000);
-	    
-	    clientAgent.start();
 
-	} catch (Exception e) {
-	    logger.error(e.getMessage());
+			/**
+			 * Execute the agents
+			 */
+
+			AgentPayee payeeAgent = new AgentPayee(new AgentID("agentPayee"));
+
+			AgentProvider providerAgent = new AgentProvider(new AgentID("providerAgent"));
+
+			AgentAnnouncement registerAgent = new AgentAnnouncement(new AgentID("registerAgent"));
+
+			AgentClient clientAgent = new AgentClient(new AgentID("clientAgent"));
+
+			registerAgent.start();
+			payeeAgent.start();
+
+			Monitor m = new Monitor();
+			m.waiting(15 * 1000);
+			providerAgent.start();
+			m.waiting(5 * 1000);
+
+			clientAgent.start();
+
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+
+		}
 
 	}
-
-    }
 
 }

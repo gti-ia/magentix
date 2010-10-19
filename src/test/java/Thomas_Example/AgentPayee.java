@@ -8,7 +8,7 @@ import es.upv.dsic.gti_ia.organization.OMSProxy;
 
 public class AgentPayee extends QueueAgent {
 
-    private OMSProxy omsProxy = new OMSProxy();
+    private OMSProxy omsProxy = new OMSProxy(this);
 
     public AgentPayee(AgentID aid) throws Exception {
 
@@ -18,21 +18,19 @@ public class AgentPayee extends QueueAgent {
 
     public void execute() {
 	DOMConfigurator.configure("configuration/loggin.xml");
-	logger.info("Executing, I'm " + getName());
+	System.out.println("Executing, I'm " + getName());
 
 	this.escenario2();
 
     }
 
     public void escenario2() {
-	try {
-	    omsProxy.acquireRole(this, "member", "virtual");
-	    omsProxy.acquireRole(this, "payee", "travelagency");
-	    omsProxy.registerNorm(this, "norma1",
-		    "FORBIDDEN_Member_REQUEST_acquireRole_MESSAGE(CONTENT(ROLE_'Payee'))");
-	} catch (Exception e) {
-	    logger.error(e.getMessage());
-	}
+
+	System.out.println("[AgentPayee] Acquire Role member in virtual: "+omsProxy.acquireRole( "member", "virtual"));
+	System.out.println("[AgentPayee] Acquire Role payee in travelagency: "+omsProxy.acquireRole("payee", "travelagency"));
+	System.out.println("[AgentPayee] Register norm: "+omsProxy.registerNorm( "norma1",
+		    "FORBIDDEN_Member_REQUEST_acquireRole_MESSAGE(CONTENT(ROLE_'Payee'))"));
+
 
     }
 
