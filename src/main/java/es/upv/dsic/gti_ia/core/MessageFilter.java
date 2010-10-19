@@ -280,6 +280,7 @@ public class MessageFilter implements Cloneable{
 	}
 
 	private boolean evaluateTree(Node root, ACLMessage msg) {
+		boolean equalValue;
 		if (root.type == Node.AND) {
 			return evaluateTree(root.left, msg)
 					&& evaluateTree(root.right, msg);
@@ -288,14 +289,39 @@ public class MessageFilter implements Cloneable{
 					|| evaluateTree(root.right, msg);
 		} else if (root.type == Node.NOT) {
 			return !evaluateTree(root.left, msg);
-		} else if (root.type == Node.EQUAL) {
+		} else if (root.type == Node.EQUAL || root.type == Node.NOTEQUAL) {
 			if(root.left.headerName.toLowerCase().equals("performative"))
-				return msg.getPerformative().toLowerCase().equals(root.right.headerName.toLowerCase());
-			return msg.getHeaderValue(root.left.headerName).equals(root.right.headerName);
-		} else if (root.type == Node.NOTEQUAL){
-			if(root.left.headerName.toLowerCase().equals("performative"))
-				return !msg.getPerformative().toLowerCase().equals(root.right.headerName.toLowerCase());
-			return !msg.getHeaderValue(root.left.headerName).equals(root.right.headerName);
+				equalValue = msg.getPerformative().toLowerCase().equals(root.right.headerName.toLowerCase());
+			else if(root.left.headerName.toLowerCase().equals("protocol"))
+				equalValue = msg.getProtocol().toLowerCase().equals(root.right.headerName.toLowerCase());
+			else if(root.left.headerName.toLowerCase().equals("sender"))
+				equalValue = msg.getSender().toString().toLowerCase().equals(root.right.headerName.toLowerCase());
+			else if(root.left.headerName.toLowerCase().equals("receiver"))
+				equalValue = msg.getReceiver().toString().toLowerCase().equals(root.right.headerName.toLowerCase());
+			else if(root.left.headerName.toLowerCase().equals("reply-to"))
+				equalValue = msg.getReplyTo().toString().toLowerCase().equals(root.right.headerName.toLowerCase());
+			else if(root.left.headerName.toLowerCase().equals("content"))
+				equalValue = msg.getContent().toLowerCase().equals(root.right.headerName.toLowerCase());
+			else if(root.left.headerName.toLowerCase().equals("language"))
+				equalValue = msg.getLanguage().toLowerCase().equals(root.right.headerName.toLowerCase());
+			else if(root.left.headerName.toLowerCase().equals("encoding"))
+				equalValue = msg.getEncoding().toLowerCase().equals(root.right.headerName.toLowerCase());
+			else if(root.left.headerName.toLowerCase().equals("ontology"))
+				equalValue = msg.getOntology().toLowerCase().equals(root.right.headerName.toLowerCase());
+			else if(root.left.headerName.toLowerCase().equals("conversation-id"))
+				equalValue = msg.getConversationId().toLowerCase().equals(root.right.headerName.toLowerCase());
+			else if(root.left.headerName.toLowerCase().equals("reply-with"))
+				equalValue = msg.getReplyWith().toLowerCase().equals(root.right.headerName.toLowerCase());
+			else if(root.left.headerName.toLowerCase().equals("in-reply-to"))
+				equalValue = msg.getInReplyTo().toLowerCase().equals(root.right.headerName.toLowerCase());
+			else if(root.left.headerName.toLowerCase().equals("reply-by"))
+				equalValue = msg.getReplyBy().toLowerCase().equals(root.right.headerName.toLowerCase());
+			else equalValue = msg.getHeaderValue(root.left.headerName).equals(root.right.headerName);
+			
+			if(root.type == Node.EQUAL)
+				return equalValue;
+			else
+				return !equalValue;
 		} else
 			return false;
 	}
