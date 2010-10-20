@@ -1,5 +1,6 @@
 package es.upv.dsic.gti_ia.secure;
 
+
 import java.util.Date;
 import java.util.Properties;
 import java.io.ByteArrayInputStream;
@@ -35,10 +36,7 @@ import javax.xml.stream.XMLStreamException;
 
 import es.upv.dsic.gti_ia.secure.MMServiceStub.NewCertificate;
 import es.upv.dsic.gti_ia.secure.MMServiceStub.NewCertificateResponse;
-
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
-import org.apache.axis2.client.Options;
-import org.apache.axis2.client.ServiceClient;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.ConfigurationContextFactory;
 import org.apache.commons.io.IOUtils;
@@ -46,7 +44,6 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 import org.apache.neethi.Policy;
 import org.apache.neethi.PolicyEngine;
-import org.apache.rampart.RampartMessageData;
 import org.apache.rampart.policy.model.CryptoConfig;
 import org.apache.rampart.policy.model.RampartConfig;
 
@@ -66,16 +63,7 @@ public class SecurityTools {
 	private SecurityTools() {
 
 		DOMConfigurator.configure("configuration/loggin.xml");
-//		try {
-//			 propFile = new FileInputStream(
-//				"./configuration/securityUser.properties");
-//			 
-//			propSecurityUser.load(propFile);
-//		} catch (FileNotFoundException e) {
-//			logger.error(e);
-//		} catch (IOException e) {
-//			logger.error(e);
-//		}
+
 	}
 
 	/**
@@ -138,16 +126,31 @@ public class SecurityTools {
 								"./configuration/client-repo", null);
 
 				MMServiceStub stub = new MMServiceStub(ctx, target);// "https://localhost:8334/axis2/services/MMService");
-			
 				stub._getServiceClient().engageModule("rampart");
 				
-				
+
 				// Configuramos el módulo de seguridad Rampart.
+
 				Policy rampartConfig = getRampartConfig(alias, key, type, propSecurityUser);
+
 				
+				//stub._getServiceClient().getOptions().setProperty(WSSHandlerConstants.OUTFLOW_SECURITY, rampartConfig);
+				//stub._getServiceClient().getOptions().setProperty(WSSHandlerConstants.INFLOW_SECURITY, rampartConfig);
+
 				
 				stub._getServiceClient().getAxisService().getPolicySubject().attachPolicy(
-						rampartConfig);
+					rampartConfig);
+			
+				
+				
+				//stub._getServiceClient().getAxisService().getPolicySubject().attachPolicyComponent(WSSHandlerConstants.OUTFLOW_SECURITY, rampartConfig);
+				//stub._getServiceClient().getAxisService().getPolicySubject().attachPolicyComponent(WSSHandlerConstants.INFLOW_SECURITY, rampartConfigInflow);
+				
+				
+				
+				 //.attachPolicyComponent(PolicyInclude.INPUT_POLICY, rampartConfigInflow);
+
+
 
 				// Creamos nosotros el par clave privada/pública, el MMS
 				// solamente tendrá
@@ -207,7 +210,11 @@ public class SecurityTools {
 			return false;
 		}
 	}
-	//Método para la configuración del módulo Rampart
+	
+
+	
+	
+
 	//Método para la configuración del módulo Rampart
 	private Policy getRampartConfig(String alias, String key,
 			String typeUserCertificate, Properties propSecurityUser) {
@@ -215,7 +222,10 @@ public class SecurityTools {
 
 		String pass = propSecurityUser.getProperty("KeyStorePassword");
 		String path = propSecurityUser.getProperty("KeyStorePath");
-		String aliasMMS = propSecurityUser.getProperty("aliasMMS");
+		String aliasMMS = "mms";//propSecurityUser.getProperty("aliasMMS");
+		
+		
+		
 		
 		
 		
@@ -263,27 +273,26 @@ public class SecurityTools {
 				
 			sigProps.setProperty(
 						"org.apache.ws.security.crypto.merlin.keystore.type",
-						propSecurityUser.getProperty("dnieType"));
+
+						propSecurityUser.getProperty("othersType"));
 				sigProps.setProperty(
 						"org.apache.ws.security.crypto.merlin.file",
-						propSecurityUser.getProperty("dniePath"));
+						propSecurityUser.getProperty("othersPath"));
 				sigProps.setProperty(
 						"org.apache.ws.security.crypto.merlin.keystore.password",
-						propSecurityUser.getProperty("dniePin"));
+						propSecurityUser.getProperty("othersPin"));
 				
 				
 			    decProps.setProperty(
 			    		"org.apache.ws.security.crypto.merlin.keystore.type",
-						propSecurityUser.getProperty("dnieType"));
+						propSecurityUser.getProperty("othersType"));
 				decProps.setProperty(
 						"org.apache.ws.security.crypto.merlin.file",
-						propSecurityUser.getProperty("dniePath"));
+						propSecurityUser.getProperty("othersPath"));
 				decProps.setProperty(
 						"org.apache.ws.security.crypto.merlin.keystore.password",
-						propSecurityUser.getProperty("dniePin"));
-		
-				
-				
+						propSecurityUser.getProperty("othersPin"));
+
 				break;
 			case 1:
 				sigProps.setProperty(
@@ -388,7 +397,7 @@ public class SecurityTools {
 		}
 	}
 
-	//Devuelve ub objeto de tipo keystore.
+	//Devuelve un objeto de tipo keystore.
 	private KeyStore getKeyStore(String path, String pass) {
 		try {
 

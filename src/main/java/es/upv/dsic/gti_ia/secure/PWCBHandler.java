@@ -40,29 +40,25 @@ public class PWCBHandler implements CallbackHandler
 			logger.error(e);
 		}
 		//String idP = prop.getProperty("alias");
-		String key= prop.getProperty("key");
+		String keySignature = prop.getProperty("KeyStorePassword");
+		String keyDecrypt = prop.getProperty("KeyStorePassword");
 		 
         for (int i = 0; i < callbacks.length; i++) {
         	
             WSPasswordCallback pwcb = (WSPasswordCallback)callbacks[i];
-            /*
-            String id = pwcb.getIdentifer();
-            System.out.println("Callbacks: "+ id);
-            
-            int usage = pwcb.getUsage();
-            System.out.println("Usage "+ usage);
-            System.out.println("Decrypt "+ WSPasswordCallback.DECRYPT);
-            System.out.println("Signature "+ WSPasswordCallback.SIGNATURE);
-            if (usage == WSPasswordCallback.DECRYPT ||
-                usage == WSPasswordCallback.SIGNATURE) {
-                // used to retrieve password for private key
-               // if (idP.equals(id)) {
-                    pwcb.setPassword(key);
-                //}
-                
 
-            }*/
-            pwcb.setPassword(key);
+            int usage = pwcb.getUsage();
+
+            
+            if (usage == WSPasswordCallback.SIGNATURE) {
+                 pwcb.setPassword(keySignature);
+            }
+            else if (usage == WSPasswordCallback.DECRYPT)
+            {
+            	 pwcb.setPassword(keyDecrypt);
+            	 
+            }
+
         }
     }
 }
