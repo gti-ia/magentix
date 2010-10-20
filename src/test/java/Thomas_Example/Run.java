@@ -41,16 +41,13 @@ public class Run {
 		 * Clean database
 		 */
 
-		CleanBD clean = new CleanBD();
-		InitializeThomasScenario its = new InitializeThomasScenario();
+		CleanDB clean = new CleanDB();
 
-		clean.clean_database();
-		its.initialize_db();
 
-		/**
-		 * Connecting to Qpid Broker, default localhost.
-		 */
-		AgentsConnection.connect();
+		
+		clean.initialize_db();
+
+
 
 		try {
 
