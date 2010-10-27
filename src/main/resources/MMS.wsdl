@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="MMS" targetNamespace="http://wtp" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://wtp" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://wtp">
+      <xsd:element name="MMS">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="agentName" type="xsd:string"/>
+            <xsd:element name="publicKey" type="xsd:base64Binary"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="MMSResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+          	<xsd:element name="Certificate" type="xsd:base64Binary"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="MMSResponse">
+    <wsdl:part name="parameters" element="tns:MMSResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="MMSMessage">
+    <wsdl:part name="parameters" element="tns:MMS">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="MMSPortType">
+    <wsdl:operation name="MMS">
+      <wsdl:input message="tns:MMSMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:MMSResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="MMSSOAP" type="tns:MMSPortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="MMS">
+      <soap:operation soapAction="http://wtp"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="MMS">
+    <wsdl:port name="MMSSOAP" binding="tns:MMSSOAP">
+      <soap:address location="http://158.42.185.224:8080/MMS/services/MMS"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
