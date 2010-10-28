@@ -1,18 +1,18 @@
 
 /**
- * MMServiceCallbackHandler.java
+ * MMSCallbackHandler.java
  *
  * This file was auto-generated from WSDL
- * by the Apache Axis2 version: 1.4.1  Built on : Aug 13, 2008 (05:03:35 LKT)
+ * by the Apache Axis2 version: 1.5.1  Built on : Oct 19, 2009 (10:59:00 EDT)
  */
 
     package es.upv.dsic.gti_ia.secure;
 
     /**
-     *  MMServiceCallbackHandler Callback class, Users can extend this class and implement
+     *  MMSCallbackHandler Callback class, Users can extend this class and implement
      *  their own receiveResult and receiveError methods.
      */
-    public abstract class MMServiceCallbackHandler{
+    public abstract class MMSCallbackHandler{
 
 
 
@@ -24,14 +24,14 @@
     * @param clientData Object mechanism by which the user can pass in user data
     * that will be avilable at the time this callback is called.
     */
-    public MMServiceCallbackHandler(Object clientData){
+    public MMSCallbackHandler(Object clientData){
         this.clientData = clientData;
     }
 
     /**
     * Please use this constructor if you don't want to set any clientData
     */
-    public MMServiceCallbackHandler(){
+    public MMSCallbackHandler(){
         this.clientData = null;
     }
 
@@ -45,19 +45,19 @@
 
         
            /**
-            * auto generated Axis2 call back method for newCertificate method
-            * override this method for handling normal response from newCertificate operation
+            * auto generated Axis2 call back method for mMS method
+            * override this method for handling normal response from mMS operation
             */
-           public void receiveResultnewCertificate(
-                    es.upv.dsic.gti_ia.secure.MMServiceStub.NewCertificateResponse result
+           public void receiveResultmMS(
+                    javax.activation.DataHandler result
                         ) {
            }
 
           /**
            * auto generated Axis2 Error handler
-           * override this method for handling error response from newCertificate operation
+           * override this method for handling error response from mMS operation
            */
-            public void receiveErrornewCertificate(java.lang.Exception e) {
+            public void receiveErrormMS(java.lang.Exception e) {
             }
                 
 

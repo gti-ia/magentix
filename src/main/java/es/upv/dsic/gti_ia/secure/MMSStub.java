@@ -1,20 +1,20 @@
 
 /**
- * MMServiceStub.java
+ * MMSStub.java
  *
  * This file was auto-generated from WSDL
- * by the Apache Axis2 version: 1.4.1  Built on : Aug 13, 2008 (05:03:35 LKT)
+ * by the Apache Axis2 version: 1.5.1  Built on : Oct 19, 2009 (10:59:00 EDT)
  */
         package es.upv.dsic.gti_ia.secure;
 
         
 
         /*
-        *  MMServiceStub java implementation
+        *  MMSStub java implementation
         */
 
         
-        public class MMServiceStub extends org.apache.axis2.client.Stub
+        public class MMSStub extends org.apache.axis2.client.Stub
         {
         protected org.apache.axis2.description.AxisOperation[] _operations;
 
@@ -25,20 +25,20 @@
 
         private static int counter = 0;
 
-        private static synchronized String getUniqueSuffix(){
+        private static synchronized java.lang.String getUniqueSuffix(){
             // reset the counter if it is greater than 99999
             if (counter > 99999){
                 counter = 0;
             }
             counter = counter + 1; 
-            return Long.toString(System.currentTimeMillis()) + "_" + counter;
+            return java.lang.Long.toString(System.currentTimeMillis()) + "_" + counter;
         }
 
     
     private void populateAxisService() throws org.apache.axis2.AxisFault {
 
      //creating the Service with a unique name
-     _service = new org.apache.axis2.description.AxisService("MMService" + getUniqueSuffix());
+     _service = new org.apache.axis2.description.AxisService("MMS" + getUniqueSuffix());
      addAnonymousOperations();
 
         //creating the operations
@@ -49,14 +49,10 @@
                    __operation = new org.apache.axis2.description.OutInAxisOperation();
                 
 
-            __operation.setName(new javax.xml.namespace.QName("http://MMService.gti_ia.dsic.upv.es", "newCertificate"));
+            __operation.setName(new javax.xml.namespace.QName("http://wtp", "mMS"));
 	    _service.addOperation(__operation);
 	    
 
-	    
-	    (__operation).getMessage(org.apache.axis2.wsdl.WSDLConstants.MESSAGE_LABEL_OUT_VALUE).getPolicySubject().attachPolicy(getPolicy("<wsp:Policy xmlns:wsp=\"http://schemas.xmlsoap.org/ws/2004/09/policy\"><wsp:ExactlyOne><wsp:All><sp:AsymmetricBinding xmlns:sp=\"http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702\">\n                    <wsp:Policy>\n                        <sp:InitiatorToken>\n                            <wsp:Policy>\n                                <sp:X509Token sp:IncludeToken=\"http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702/IncludeToken/AlwaysToRecipient\">\n                                    <wsp:Policy>\n                                        <sp:WssX509V3Token10 />\n                                    </wsp:Policy>\n                                </sp:X509Token>\n                            </wsp:Policy>\n                        </sp:InitiatorToken>\n                        <sp:RecipientToken>\n                            <wsp:Policy>\n                                <sp:X509Token sp:IncludeToken=\"http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702/IncludeToken/Never\">\n                                    <wsp:Policy>\n                                        <sp:RequireThumbprintReference />\n                                        <sp:WssX509V3Token10 />\n                                    </wsp:Policy>\n                                </sp:X509Token>\n                            </wsp:Policy>\n                        </sp:RecipientToken>\n                        <sp:AlgorithmSuite>\n                            <wsp:Policy>\n                                <sp:TripleDesRsa15 />\n                            </wsp:Policy>\n                        </sp:AlgorithmSuite>\n                        <sp:Layout>\n                            <wsp:Policy>\n                                <sp:Strict />\n                            </wsp:Policy>\n                        </sp:Layout>\n                        <sp:IncludeTimestamp />\n                        <sp:OnlySignEntireHeadersAndBody />\n                    </wsp:Policy>\n                </sp:AsymmetricBinding><sp:SignedParts xmlns:sp=\"http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702\">\n                    <sp:Body />\n                </sp:SignedParts><sp:EncryptedParts xmlns:sp=\"http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702\">\n                    <sp:Body />\n                </sp:EncryptedParts><sp:AsymmetricBinding xmlns:sp=\"http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702\">\n                    <wsp:Policy>\n                        <sp:InitiatorToken>\n                            <wsp:Policy>\n                                <sp:X509Token sp:IncludeToken=\"http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702/IncludeToken/AlwaysToRecipient\">\n                                    <wsp:Policy>\n                                        <sp:WssX509V3Token10 />\n                                    </wsp:Policy>\n                                </sp:X509Token>\n                            </wsp:Policy>\n                        </sp:InitiatorToken>\n                        <sp:RecipientToken>\n                            <wsp:Policy>\n                                <sp:X509Token sp:IncludeToken=\"http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702/IncludeToken/Never\">\n                                    <wsp:Policy>\n                                        <sp:RequireThumbprintReference />\n                                        <sp:WssX509V3Token10 />\n                                    </wsp:Policy>\n                                </sp:X509Token>\n                            </wsp:Policy>\n                        </sp:RecipientToken>\n                        <sp:AlgorithmSuite>\n                            <wsp:Policy>\n                                <sp:TripleDesRsa15 />\n                            </wsp:Policy>\n                        </sp:AlgorithmSuite>\n                        <sp:Layout>\n                            <wsp:Policy>\n                                <sp:Strict />\n                            </wsp:Policy>\n                        </sp:Layout>\n                        <sp:IncludeTimestamp />\n                        <sp:OnlySignEntireHeadersAndBody />\n                    </wsp:Policy>\n                </sp:AsymmetricBinding><sp:SignedParts xmlns:sp=\"http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702\">\n                    <sp:Body />\n                </sp:SignedParts><sp:EncryptedParts xmlns:sp=\"http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702\">\n                    <sp:Body />\n                </sp:EncryptedParts></wsp:All></wsp:ExactlyOne></wsp:Policy>"));
-	    
-	    (__operation).getMessage(org.apache.axis2.wsdl.WSDLConstants.MESSAGE_LABEL_IN_VALUE).getPolicySubject().attachPolicy(getPolicy("<wsp:Policy xmlns:wsp=\"http://schemas.xmlsoap.org/ws/2004/09/policy\"><wsp:ExactlyOne><wsp:All><sp:AsymmetricBinding xmlns:sp=\"http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702\">\n                    <wsp:Policy>\n                        <sp:InitiatorToken>\n                            <wsp:Policy>\n                                <sp:X509Token sp:IncludeToken=\"http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702/IncludeToken/AlwaysToRecipient\">\n                                    <wsp:Policy>\n                                        <sp:WssX509V3Token10 />\n                                    </wsp:Policy>\n                                </sp:X509Token>\n                            </wsp:Policy>\n                        </sp:InitiatorToken>\n                        <sp:RecipientToken>\n                            <wsp:Policy>\n                                <sp:X509Token sp:IncludeToken=\"http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702/IncludeToken/Never\">\n                                    <wsp:Policy>\n                                        <sp:RequireThumbprintReference />\n                                        <sp:WssX509V3Token10 />\n                                    </wsp:Policy>\n                                </sp:X509Token>\n                            </wsp:Policy>\n                        </sp:RecipientToken>\n                        <sp:AlgorithmSuite>\n                            <wsp:Policy>\n                                <sp:TripleDesRsa15 />\n                            </wsp:Policy>\n                        </sp:AlgorithmSuite>\n                        <sp:Layout>\n                            <wsp:Policy>\n                                <sp:Strict />\n                            </wsp:Policy>\n                        </sp:Layout>\n                        <sp:IncludeTimestamp />\n                        <sp:OnlySignEntireHeadersAndBody />\n                    </wsp:Policy>\n                </sp:AsymmetricBinding><sp:SignedParts xmlns:sp=\"http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702\">\n                    <sp:Body />\n                </sp:SignedParts><sp:EncryptedParts xmlns:sp=\"http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702\">\n                    <sp:Body />\n                </sp:EncryptedParts><sp:AsymmetricBinding xmlns:sp=\"http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702\">\n                    <wsp:Policy>\n                        <sp:InitiatorToken>\n                            <wsp:Policy>\n                                <sp:X509Token sp:IncludeToken=\"http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702/IncludeToken/AlwaysToRecipient\">\n                                    <wsp:Policy>\n                                        <sp:WssX509V3Token10 />\n                                    </wsp:Policy>\n                                </sp:X509Token>\n                            </wsp:Policy>\n                        </sp:InitiatorToken>\n                        <sp:RecipientToken>\n                            <wsp:Policy>\n                                <sp:X509Token sp:IncludeToken=\"http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702/IncludeToken/Never\">\n                                    <wsp:Policy>\n                                        <sp:RequireThumbprintReference />\n                                        <sp:WssX509V3Token10 />\n                                    </wsp:Policy>\n                                </sp:X509Token>\n                            </wsp:Policy>\n                        </sp:RecipientToken>\n                        <sp:AlgorithmSuite>\n                            <wsp:Policy>\n                                <sp:TripleDesRsa15 />\n                            </wsp:Policy>\n                        </sp:AlgorithmSuite>\n                        <sp:Layout>\n                            <wsp:Policy>\n                                <sp:Strict />\n                            </wsp:Policy>\n                        </sp:Layout>\n                        <sp:IncludeTimestamp />\n                        <sp:OnlySignEntireHeadersAndBody />\n                    </wsp:Policy>\n                </sp:AsymmetricBinding><sp:SignedParts xmlns:sp=\"http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702\">\n                    <sp:Body />\n                </sp:SignedParts><sp:EncryptedParts xmlns:sp=\"http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702\">\n                    <sp:Body />\n                </sp:EncryptedParts></wsp:All></wsp:ExactlyOne></wsp:Policy>"));
 	    
 	    
             _operations[0]=__operation;
@@ -75,7 +71,7 @@
       *Constructor that takes in a configContext
       */
 
-    public MMServiceStub(org.apache.axis2.context.ConfigurationContext configurationContext,
+    public MMSStub(org.apache.axis2.context.ConfigurationContext configurationContext,
        java.lang.String targetEndpoint)
        throws org.apache.axis2.AxisFault {
          this(configurationContext,targetEndpoint,false);
@@ -85,7 +81,7 @@
    /**
      * Constructor that takes in a configContext  and useseperate listner
      */
-   public MMServiceStub(org.apache.axis2.context.ConfigurationContext configurationContext,
+   public MMSStub(org.apache.axis2.context.ConfigurationContext configurationContext,
         java.lang.String targetEndpoint, boolean useSeparateListener)
         throws org.apache.axis2.AxisFault {
          //To populate AxisService
@@ -94,17 +90,10 @@
 
         _serviceClient = new org.apache.axis2.client.ServiceClient(configurationContext,_service);
         
-        _service.applyPolicy();
-        
 	
-        configurationContext = _serviceClient.getServiceContext().getConfigurationContext();
-
         _serviceClient.getOptions().setTo(new org.apache.axis2.addressing.EndpointReference(
                 targetEndpoint));
         _serviceClient.getOptions().setUseSeparateListener(useSeparateListener);
-        
-            //Set the soap version
-            _serviceClient.getOptions().setSoapVersionURI(org.apache.axiom.soap.SOAP12Constants.SOAP_ENVELOPE_NAMESPACE_URI);
         
     
     }
@@ -112,25 +101,25 @@
     /**
      * Default Constructor
      */
-    public MMServiceStub(org.apache.axis2.context.ConfigurationContext configurationContext) throws org.apache.axis2.AxisFault {
+    public MMSStub(org.apache.axis2.context.ConfigurationContext configurationContext) throws org.apache.axis2.AxisFault {
         
-                    this(configurationContext,"http://localhost:8080/axis2/services/MMService.MMServiceHttpSoap12Endpoint/" );
+                    this(configurationContext,"http://158.42.186.40:8080/MMS/services/MMS/" );
                 
     }
 
     /**
      * Default Constructor
      */
-    public MMServiceStub() throws org.apache.axis2.AxisFault {
+    public MMSStub() throws org.apache.axis2.AxisFault {
         
-                    this("http://localhost:8080/axis2/services/MMService.MMServiceHttpSoap12Endpoint/" );
+                    this("http://158.42.186.40:8080/MMS/services/MMS/" );
                 
     }
 
     /**
      * Constructor taking the target endpoint
      */
-    public MMServiceStub(java.lang.String targetEndpoint) throws org.apache.axis2.AxisFault {
+    public MMSStub(java.lang.String targetEndpoint) throws org.apache.axis2.AxisFault {
         this(null,targetEndpoint);
     }
 
@@ -140,16 +129,16 @@
                     /**
                      * Auto generated method signature
                      * 
-                     * @see es.upv.dsic.gti_ia.ClienteMMS.MMService#newCertificate
-                     * @param newCertificate0
+                     * @see es.upv.dsic.gti_ia.secure.MMS#mMS
+                     * @param mMS0
                     
                      */
 
                     
 
-                            public  es.upv.dsic.gti_ia.secure.MMServiceStub.NewCertificateResponse newCertificate(
+                            public  javax.activation.DataHandler mMS(
 
-                            es.upv.dsic.gti_ia.secure.MMServiceStub.NewCertificate newCertificate0)
+                            java.lang.String agentName1,javax.activation.DataHandler publicKey2)
                         
 
                     throws java.rmi.RemoteException
@@ -158,7 +147,7 @@
               org.apache.axis2.context.MessageContext _messageContext = null;
               try{
                org.apache.axis2.client.OperationClient _operationClient = _serviceClient.createClient(_operations[0].getName());
-              _operationClient.getOptions().setAction("urn:newCertificate");
+              _operationClient.getOptions().setAction("http://wtp");
               _operationClient.getOptions().setExceptionToBeThrownOnSOAPFault(true);
 
               
@@ -173,12 +162,13 @@
 
               // create SOAP envelope with that payload
               org.apache.axiom.soap.SOAPEnvelope env = null;
-                    
-                                                    
+                    es.upv.dsic.gti_ia.secure.MMSStub.MMS dummyWrappedType = null;
                                                     env = toEnvelope(getFactory(_operationClient.getOptions().getSoapVersionURI()),
-                                                    newCertificate0,
-                                                    optimizeContent(new javax.xml.namespace.QName("http://MMService.gti_ia.dsic.upv.es",
-                                                    "newCertificate")));
+                                                    agentName1,
+                                                    publicKey2,
+                                                    dummyWrappedType,
+                                                    optimizeContent(new javax.xml.namespace.QName("http://wtp",
+                                                    "mMS")));
                                                 
         //adding SOAP soap_headers
          _serviceClient.addHeadersToEnvelope(env);
@@ -199,11 +189,11 @@
                 
                                 java.lang.Object object = fromOM(
                                              _returnEnv.getBody().getFirstElement() ,
-                                             es.upv.dsic.gti_ia.secure.MMServiceStub.NewCertificateResponse.class,
+                                             es.upv.dsic.gti_ia.secure.MMSStub.MMSResponse.class,
                                               getEnvelopeNamespaces(_returnEnv));
 
                                
-                                        return (es.upv.dsic.gti_ia.secure.MMServiceStub.NewCertificateResponse)object;
+                                        return getMMSResponseCertificate((es.upv.dsic.gti_ia.secure.MMSStub.MMSResponse)object);
                                    
          }catch(org.apache.axis2.AxisFault f){
 
@@ -259,20 +249,20 @@
                 /**
                 * Auto generated method signature for Asynchronous Invocations
                 * 
-                * @see es.upv.dsic.gti_ia.ClienteMMS.MMService#startnewCertificate
-                    * @param newCertificate0
+                * @see es.upv.dsic.gti_ia.secure.MMS#startmMS
+                    * @param mMS0
                 
                 */
-                public  void startnewCertificate(
+                public  void startmMS(
 
-                 es.upv.dsic.gti_ia.secure.MMServiceStub.NewCertificate newCertificate0,
+                 java.lang.String agentName1,javax.activation.DataHandler publicKey2,
 
-                  final es.upv.dsic.gti_ia.secure.MMServiceCallbackHandler callback)
+                  final es.upv.dsic.gti_ia.secure.MMSCallbackHandler callback)
 
                 throws java.rmi.RemoteException{
 
               org.apache.axis2.client.OperationClient _operationClient = _serviceClient.createClient(_operations[0].getName());
-             _operationClient.getOptions().setAction("urn:newCertificate");
+             _operationClient.getOptions().setAction("http://wtp");
              _operationClient.getOptions().setExceptionToBeThrownOnSOAPFault(true);
 
               
@@ -287,12 +277,13 @@
 
                     
                                     //Style is Doc.
-                                    
-                                                    
+                                    es.upv.dsic.gti_ia.secure.MMSStub.MMS dummyWrappedType = null;
                                                     env = toEnvelope(getFactory(_operationClient.getOptions().getSoapVersionURI()),
-                                                    newCertificate0,
-                                                    optimizeContent(new javax.xml.namespace.QName("http://MMService.gti_ia.dsic.upv.es",
-                                                    "newCertificate")));
+                                                    agentName1,
+                                                    publicKey2,
+                                                     dummyWrappedType,
+                                                    optimizeContent(new javax.xml.namespace.QName("http://wtp",
+                                                    "mMS")));
                                                 
         // adding SOAP soap_headers
          _serviceClient.addHeadersToEnvelope(env);
@@ -310,13 +301,13 @@
                                 org.apache.axiom.soap.SOAPEnvelope resultEnv = resultContext.getEnvelope();
                                 
                                         java.lang.Object object = fromOM(resultEnv.getBody().getFirstElement(),
-                                                                         es.upv.dsic.gti_ia.secure.MMServiceStub.NewCertificateResponse.class,
+                                                                         es.upv.dsic.gti_ia.secure.MMSStub.MMSResponse.class,
                                                                          getEnvelopeNamespaces(resultEnv));
-                                        callback.receiveResultnewCertificate(
-                                        (es.upv.dsic.gti_ia.secure.MMServiceStub.NewCertificateResponse)object);
+                                        callback.receiveResultmMS(
+                                            getMMSResponseCertificate((es.upv.dsic.gti_ia.secure.MMSStub.MMSResponse)object));
                                         
                             } catch (org.apache.axis2.AxisFault e) {
-                                callback.receiveErrornewCertificate(e);
+                                callback.receiveErrormMS(e);
                             }
                             }
 
@@ -341,37 +332,37 @@
 													m.invoke(ex,new java.lang.Object[]{messageObject});
 													
 					
-										            callback.receiveErrornewCertificate(new java.rmi.RemoteException(ex.getMessage(), ex));
+										            callback.receiveErrormMS(new java.rmi.RemoteException(ex.getMessage(), ex));
                                             } catch(java.lang.ClassCastException e){
                                                 // we cannot intantiate the class - throw the original Axis fault
-                                                callback.receiveErrornewCertificate(f);
+                                                callback.receiveErrormMS(f);
                                             } catch (java.lang.ClassNotFoundException e) {
                                                 // we cannot intantiate the class - throw the original Axis fault
-                                                callback.receiveErrornewCertificate(f);
+                                                callback.receiveErrormMS(f);
                                             } catch (java.lang.NoSuchMethodException e) {
                                                 // we cannot intantiate the class - throw the original Axis fault
-                                                callback.receiveErrornewCertificate(f);
+                                                callback.receiveErrormMS(f);
                                             } catch (java.lang.reflect.InvocationTargetException e) {
                                                 // we cannot intantiate the class - throw the original Axis fault
-                                                callback.receiveErrornewCertificate(f);
+                                                callback.receiveErrormMS(f);
                                             } catch (java.lang.IllegalAccessException e) {
                                                 // we cannot intantiate the class - throw the original Axis fault
-                                                callback.receiveErrornewCertificate(f);
+                                                callback.receiveErrormMS(f);
                                             } catch (java.lang.InstantiationException e) {
                                                 // we cannot intantiate the class - throw the original Axis fault
-                                                callback.receiveErrornewCertificate(f);
+                                                callback.receiveErrormMS(f);
                                             } catch (org.apache.axis2.AxisFault e) {
                                                 // we cannot intantiate the class - throw the original Axis fault
-                                                callback.receiveErrornewCertificate(f);
+                                                callback.receiveErrormMS(f);
                                             }
 									    } else {
-										    callback.receiveErrornewCertificate(f);
+										    callback.receiveErrormMS(f);
 									    }
 									} else {
-									    callback.receiveErrornewCertificate(f);
+									    callback.receiveErrormMS(f);
 									}
 								} else {
-								    callback.receiveErrornewCertificate(error);
+								    callback.receiveErrormMS(error);
 								}
                             }
 
@@ -384,7 +375,7 @@
                                 try {
                                     _messageContext.getTransportOut().getSender().cleanup(_messageContext);
                                 } catch (org.apache.axis2.AxisFault axisFault) {
-                                    callback.receiveErrornewCertificate(axisFault);
+                                    callback.receiveErrormMS(axisFault);
                                 }
                             }
                 });
@@ -418,16 +409,6 @@
     }
 
     
-    ////////////////////////////////////////////////////////////////////////
-    
-    private static org.apache.neethi.Policy getPolicy (java.lang.String policyString) {
-    	java.io.ByteArrayInputStream bais = new java.io.ByteArrayInputStream(policyString.getBytes());
-    	return org.apache.neethi.PolicyEngine.getPolicy(bais);
-    }
-    
-    /////////////////////////////////////////////////////////////////////////
-
-    
     
     private javax.xml.namespace.QName[] opNameArray = null;
     private boolean optimizeContent(javax.xml.namespace.QName opName) {
@@ -443,31 +424,19 @@
         }
         return false;
     }
-     //http://localhost:8080/axis2/services/MMService.MMServiceHttpSoap12Endpoint/
-        public static class ExtensionMapper{
-
-          public static java.lang.Object getTypeObject(java.lang.String namespaceURI,
-                                                       java.lang.String typeName,
-                                                       javax.xml.stream.XMLStreamReader reader) throws java.lang.Exception{
-
-              
-             throw new org.apache.axis2.databinding.ADBException("Unsupported type " + namespaceURI + " " + typeName);
-          }
-
-        }
-    
-        public static class NewCertificate
+     //http://158.42.186.40:8080/MMS/services/MMS/
+        public static class MMS
         implements org.apache.axis2.databinding.ADBBean{
         
                 public static final javax.xml.namespace.QName MY_QNAME = new javax.xml.namespace.QName(
-                "http://MMService.gti_ia.dsic.upv.es",
-                "newCertificate",
+                "http://wtp",
+                "MMS",
                 "ns1");
 
             
 
         private static java.lang.String generatePrefix(java.lang.String namespace) {
-            if(namespace.equals("http://MMService.gti_ia.dsic.upv.es")){
+            if(namespace.equals("http://wtp")){
                 return "ns1";
             }
             return org.apache.axis2.databinding.utils.BeanUtil.getUniquePrefix();
@@ -482,12 +451,6 @@
                         
                                     protected java.lang.String localAgentName ;
                                 
-                           /*  This tracker boolean wil be used to detect whether the user called the set method
-                          *   for this attribute. It will be used to determine whether to include this field
-                           *   in the serialized XML
-                           */
-                           protected boolean localAgentNameTracker = false ;
-                           
 
                            /**
                            * Auto generated getter method
@@ -505,14 +468,6 @@
                                */
                                public void setAgentName(java.lang.String param){
                             
-                                       if (param != null){
-                                          //update the setting tracker
-                                          localAgentNameTracker = true;
-                                       } else {
-                                          localAgentNameTracker = true;
-                                              
-                                       }
-                                   
                                             this.localAgentName=param;
                                     
 
@@ -520,44 +475,30 @@
                             
 
                         /**
-                        * field for Pk
+                        * field for PublicKey
                         */
 
                         
-                                    protected javax.activation.DataHandler localPk ;
+                                    protected javax.activation.DataHandler localPublicKey ;
                                 
-                           /*  This tracker boolean wil be used to detect whether the user called the set method
-                          *   for this attribute. It will be used to determine whether to include this field
-                           *   in the serialized XML
-                           */
-                           protected boolean localPkTracker = false ;
-                           
 
                            /**
                            * Auto generated getter method
                            * @return javax.activation.DataHandler
                            */
-                           public  javax.activation.DataHandler getPk(){
-                               return localPk;
+                           public  javax.activation.DataHandler getPublicKey(){
+                               return localPublicKey;
                            }
 
                            
                         
                             /**
                                * Auto generated setter method
-                               * @param param Pk
+                               * @param param PublicKey
                                */
-                               public void setPk(javax.activation.DataHandler param){
+                               public void setPublicKey(javax.activation.DataHandler param){
                             
-                                       if (param != null){
-                                          //update the setting tracker
-                                          localPkTracker = true;
-                                       } else {
-                                          localPkTracker = true;
-                                              
-                                       }
-                                   
-                                            this.localPk=param;
+                                            this.localPublicKey=param;
                                     
 
                                }
@@ -595,7 +536,7 @@
                        new org.apache.axis2.databinding.ADBDataSource(this,MY_QNAME){
 
                  public void serialize(org.apache.axis2.databinding.utils.writer.MTOMAwareXMLStreamWriter xmlWriter) throws javax.xml.stream.XMLStreamException {
-                       NewCertificate.this.serialize(MY_QNAME,factory,xmlWriter);
+                       MMS.this.serialize(MY_QNAME,factory,xmlWriter);
                  }
                };
                return new org.apache.axiom.om.impl.llom.OMSourcedElementImpl(
@@ -646,21 +587,21 @@
                   if (serializeType){
                
 
-                   java.lang.String namespacePrefix = registerPrefix(xmlWriter,"http://MMService.gti_ia.dsic.upv.es");
+                   java.lang.String namespacePrefix = registerPrefix(xmlWriter,"http://wtp");
                    if ((namespacePrefix != null) && (namespacePrefix.trim().length() > 0)){
                        writeAttribute("xsi","http://www.w3.org/2001/XMLSchema-instance","type",
-                           namespacePrefix+":newCertificate",
+                           namespacePrefix+":MMS",
                            xmlWriter);
                    } else {
                        writeAttribute("xsi","http://www.w3.org/2001/XMLSchema-instance","type",
-                           "newCertificate",
+                           "MMS",
                            xmlWriter);
                    }
 
                
                    }
-                if (localAgentNameTracker){
-                                    namespace = "http://MMService.gti_ia.dsic.upv.es";
+               
+                                    namespace = "";
                                     if (! namespace.equals("")) {
                                         prefix = xmlWriter.getPrefix(namespace);
 
@@ -683,7 +624,7 @@
                                           if (localAgentName==null){
                                               // write the nil attribute
                                               
-                                                     writeAttribute("xsi","http://www.w3.org/2001/XMLSchema-instance","nil","1",xmlWriter);
+                                                     throw new org.apache.axis2.databinding.ADBException("agentName cannot be null!!");
                                                   
                                           }else{
 
@@ -693,34 +634,34 @@
                                           }
                                     
                                    xmlWriter.writeEndElement();
-                             } if (localPkTracker){
-                                    namespace = "http://MMService.gti_ia.dsic.upv.es";
+                             
+                                    namespace = "";
                                     if (! namespace.equals("")) {
                                         prefix = xmlWriter.getPrefix(namespace);
 
                                         if (prefix == null) {
                                             prefix = generatePrefix(namespace);
 
-                                            xmlWriter.writeStartElement(prefix,"pk", namespace);
+                                            xmlWriter.writeStartElement(prefix,"publicKey", namespace);
                                             xmlWriter.writeNamespace(prefix, namespace);
                                             xmlWriter.setPrefix(prefix, namespace);
 
                                         } else {
-                                            xmlWriter.writeStartElement(namespace,"pk");
+                                            xmlWriter.writeStartElement(namespace,"publicKey");
                                         }
 
                                     } else {
-                                        xmlWriter.writeStartElement("pk");
+                                        xmlWriter.writeStartElement("publicKey");
                                     }
                                 
                                         
-                                    if (localPk!=null)
+                                    if (localPublicKey!=null)
                                     {
-                                       xmlWriter.writeDataHandler(localPk);
+                                       xmlWriter.writeDataHandler(localPublicKey);
                                     }
                                  
                                    xmlWriter.writeEndElement();
-                             }
+                             
                     xmlWriter.writeEndElement();
                
 
@@ -882,18 +823,21 @@
                  java.util.ArrayList elementList = new java.util.ArrayList();
                  java.util.ArrayList attribList = new java.util.ArrayList();
 
-                 if (localAgentNameTracker){
-                                      elementList.add(new javax.xml.namespace.QName("http://MMService.gti_ia.dsic.upv.es",
+                
+                                      elementList.add(new javax.xml.namespace.QName("",
                                                                       "agentName"));
                                  
-                                         elementList.add(localAgentName==null?null:
-                                         org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localAgentName));
-                                    } if (localPkTracker){
-                                      elementList.add(new javax.xml.namespace.QName("http://MMService.gti_ia.dsic.upv.es",
-                                        "pk"));
+                                        if (localAgentName != null){
+                                            elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localAgentName));
+                                        } else {
+                                           throw new org.apache.axis2.databinding.ADBException("agentName cannot be null!!");
+                                        }
+                                    
+                                      elementList.add(new javax.xml.namespace.QName("",
+                                        "publicKey"));
                                 
-                            elementList.add(localPk);
-                        }
+                            elementList.add(localPublicKey);
+                        
 
                 return new org.apache.axis2.databinding.utils.reader.ADBXMLStreamReaderImpl(qName, elementList.toArray(), attribList.toArray());
             
@@ -918,9 +862,9 @@
         * Postcondition: If this object is an element, the reader is positioned at its end element
         *                If this object is a complex type, the reader is positioned at the end element of its outer element
         */
-        public static NewCertificate parse(javax.xml.stream.XMLStreamReader reader) throws java.lang.Exception{
-            NewCertificate object =
-                new NewCertificate();
+        public static MMS parse(javax.xml.stream.XMLStreamReader reader) throws java.lang.Exception{
+            MMS object =
+                new MMS();
 
             int event;
             java.lang.String nillableValue = null;
@@ -944,10 +888,10 @@
 
                     java.lang.String type = fullTypeName.substring(fullTypeName.indexOf(":")+1);
                     
-                            if (!"newCertificate".equals(type)){
+                            if (!"MMS".equals(type)){
                                 //find namespace for the prefix
                                 java.lang.String nsUri = reader.getNamespaceContext().getNamespaceURI(nsPrefix);
-                                return (NewCertificate)ExtensionMapper.getTypeObject(
+                                return (MMS)ExtensionMapper.getTypeObject(
                                      nsUri,type,reader);
                               }
                         
@@ -972,47 +916,39 @@
                                     
                                     while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
                                 
-                                    if (reader.isStartElement() && new javax.xml.namespace.QName("http://MMService.gti_ia.dsic.upv.es","agentName").equals(reader.getName())){
+                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","agentName").equals(reader.getName())){
                                 
-                                       nillableValue = reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance","nil");
-                                       if (!"true".equals(nillableValue) && !"1".equals(nillableValue)){
-                                    
                                     java.lang.String content = reader.getElementText();
                                     
                                               object.setAgentName(
                                                     org.apache.axis2.databinding.utils.ConverterUtil.convertToString(content));
-                                            
-                                       } else {
-                                           
-                                           
-                                           reader.getElementText(); // throw away text nodes if any.
-                                       }
-                                      
+                                              
                                         reader.next();
                                     
                               }  // End of if for expected property start element
                                 
-                                    else {
-                                        
-                                    }
-                                
+                                else{
+                                    // A start element we are not expecting indicates an invalid parameter was passed
+                                    throw new org.apache.axis2.databinding.ADBException("Unexpected subelement " + reader.getLocalName());
+                                }
+                            
                                     
                                     while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
                                 
-                                    if (reader.isStartElement() && new javax.xml.namespace.QName("http://MMService.gti_ia.dsic.upv.es","pk").equals(reader.getName())){
+                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","publicKey").equals(reader.getName())){
                                 reader.next();
                                     if (isReaderMTOMAware(reader)
                                             &&
                                             java.lang.Boolean.TRUE.equals(reader.getProperty(org.apache.axiom.om.OMConstants.IS_BINARY)))
                                     {
                                         //MTOM aware reader - get the datahandler directly and put it in the object
-                                        object.setPk(
+                                        object.setPublicKey(
                                                 (javax.activation.DataHandler) reader.getProperty(org.apache.axiom.om.OMConstants.DATA_HANDLER));
                                     } else {
                                         if (reader.getEventType() == javax.xml.stream.XMLStreamConstants.START_ELEMENT && reader.getName().equals(new javax.xml.namespace.QName(org.apache.axiom.om.impl.MTOMConstants.XOP_NAMESPACE_URI, org.apache.axiom.om.impl.MTOMConstants.XOP_INCLUDE)))
                                         {
                                             java.lang.String id = org.apache.axiom.om.util.ElementHelper.getContentID(reader, "UTF-8");
-                                            object.setPk(((org.apache.axiom.soap.impl.builder.MTOMStAXSOAPModelBuilder) ((org.apache.axiom.om.impl.llom.OMStAXWrapper) reader).getBuilder()).getDataHandler(id));
+                                            object.setPublicKey(((org.apache.axiom.soap.impl.builder.MTOMStAXSOAPModelBuilder) ((org.apache.axiom.om.impl.llom.OMStAXWrapper) reader).getBuilder()).getDataHandler(id));
                                             reader.next();
                                             
                                                 reader.next();
@@ -1020,7 +956,7 @@
                                         } else if(reader.hasText()) {
                                             //Do the usual conversion
                                             java.lang.String content = reader.getText();
-                                            object.setPk(
+                                            object.setPublicKey(
                                                     org.apache.axis2.databinding.utils.ConverterUtil.convertToBase64Binary(content));
                                             
                                                 reader.next();
@@ -1033,10 +969,11 @@
                                     
                               }  // End of if for expected property start element
                                 
-                                    else {
-                                        
-                                    }
-                                  
+                                else{
+                                    // A start element we are not expecting indicates an invalid parameter was passed
+                                    throw new org.apache.axis2.databinding.ADBException("Unexpected subelement " + reader.getLocalName());
+                                }
+                              
                             while (!reader.isStartElement() && !reader.isEndElement())
                                 reader.next();
                             
@@ -1061,18 +998,30 @@
         }
            
           
-        public static class NewCertificateResponse
+        public static class ExtensionMapper{
+
+          public static java.lang.Object getTypeObject(java.lang.String namespaceURI,
+                                                       java.lang.String typeName,
+                                                       javax.xml.stream.XMLStreamReader reader) throws java.lang.Exception{
+
+              
+             throw new org.apache.axis2.databinding.ADBException("Unsupported type " + namespaceURI + " " + typeName);
+          }
+
+        }
+    
+        public static class MMSResponse
         implements org.apache.axis2.databinding.ADBBean{
         
                 public static final javax.xml.namespace.QName MY_QNAME = new javax.xml.namespace.QName(
-                "http://MMService.gti_ia.dsic.upv.es",
-                "newCertificateResponse",
+                "http://wtp",
+                "MMSResponse",
                 "ns1");
 
             
 
         private static java.lang.String generatePrefix(java.lang.String namespace) {
-            if(namespace.equals("http://MMService.gti_ia.dsic.upv.es")){
+            if(namespace.equals("http://wtp")){
                 return "ns1";
             }
             return org.apache.axis2.databinding.utils.BeanUtil.getUniquePrefix();
@@ -1081,44 +1030,30 @@
         
 
                         /**
-                        * field for _return
+                        * field for Certificate
                         */
 
                         
-                                    protected javax.activation.DataHandler local_return ;
+                                    protected javax.activation.DataHandler localCertificate ;
                                 
-                           /*  This tracker boolean wil be used to detect whether the user called the set method
-                          *   for this attribute. It will be used to determine whether to include this field
-                           *   in the serialized XML
-                           */
-                           protected boolean local_returnTracker = false ;
-                           
 
                            /**
                            * Auto generated getter method
                            * @return javax.activation.DataHandler
                            */
-                           public  javax.activation.DataHandler get_return(){
-                               return local_return;
+                           public  javax.activation.DataHandler getCertificate(){
+                               return localCertificate;
                            }
 
                            
                         
                             /**
                                * Auto generated setter method
-                               * @param param _return
+                               * @param param Certificate
                                */
-                               public void set_return(javax.activation.DataHandler param){
+                               public void setCertificate(javax.activation.DataHandler param){
                             
-                                       if (param != null){
-                                          //update the setting tracker
-                                          local_returnTracker = true;
-                                       } else {
-                                          local_returnTracker = true;
-                                              
-                                       }
-                                   
-                                            this.local_return=param;
+                                            this.localCertificate=param;
                                     
 
                                }
@@ -1156,7 +1091,7 @@
                        new org.apache.axis2.databinding.ADBDataSource(this,MY_QNAME){
 
                  public void serialize(org.apache.axis2.databinding.utils.writer.MTOMAwareXMLStreamWriter xmlWriter) throws javax.xml.stream.XMLStreamException {
-                       NewCertificateResponse.this.serialize(MY_QNAME,factory,xmlWriter);
+                       MMSResponse.this.serialize(MY_QNAME,factory,xmlWriter);
                  }
                };
                return new org.apache.axiom.om.impl.llom.OMSourcedElementImpl(
@@ -1207,47 +1142,47 @@
                   if (serializeType){
                
 
-                   java.lang.String namespacePrefix = registerPrefix(xmlWriter,"http://MMService.gti_ia.dsic.upv.es");
+                   java.lang.String namespacePrefix = registerPrefix(xmlWriter,"http://wtp");
                    if ((namespacePrefix != null) && (namespacePrefix.trim().length() > 0)){
                        writeAttribute("xsi","http://www.w3.org/2001/XMLSchema-instance","type",
-                           namespacePrefix+":newCertificateResponse",
+                           namespacePrefix+":MMSResponse",
                            xmlWriter);
                    } else {
                        writeAttribute("xsi","http://www.w3.org/2001/XMLSchema-instance","type",
-                           "newCertificateResponse",
+                           "MMSResponse",
                            xmlWriter);
                    }
 
                
                    }
-                if (local_returnTracker){
-                                    namespace = "http://MMService.gti_ia.dsic.upv.es";
+               
+                                    namespace = "";
                                     if (! namespace.equals("")) {
                                         prefix = xmlWriter.getPrefix(namespace);
 
                                         if (prefix == null) {
                                             prefix = generatePrefix(namespace);
 
-                                            xmlWriter.writeStartElement(prefix,"return", namespace);
+                                            xmlWriter.writeStartElement(prefix,"Certificate", namespace);
                                             xmlWriter.writeNamespace(prefix, namespace);
                                             xmlWriter.setPrefix(prefix, namespace);
 
                                         } else {
-                                            xmlWriter.writeStartElement(namespace,"return");
+                                            xmlWriter.writeStartElement(namespace,"Certificate");
                                         }
 
                                     } else {
-                                        xmlWriter.writeStartElement("return");
+                                        xmlWriter.writeStartElement("Certificate");
                                     }
                                 
                                         
-                                    if (local_return!=null)
+                                    if (localCertificate!=null)
                                     {
-                                       xmlWriter.writeDataHandler(local_return);
+                                       xmlWriter.writeDataHandler(localCertificate);
                                     }
                                  
                                    xmlWriter.writeEndElement();
-                             }
+                             
                     xmlWriter.writeEndElement();
                
 
@@ -1409,12 +1344,12 @@
                  java.util.ArrayList elementList = new java.util.ArrayList();
                  java.util.ArrayList attribList = new java.util.ArrayList();
 
-                 if (local_returnTracker){
-                                      elementList.add(new javax.xml.namespace.QName("http://MMService.gti_ia.dsic.upv.es",
-                                        "return"));
+                
+                                      elementList.add(new javax.xml.namespace.QName("",
+                                        "Certificate"));
                                 
-                            elementList.add(local_return);
-                        }
+                            elementList.add(localCertificate);
+                        
 
                 return new org.apache.axis2.databinding.utils.reader.ADBXMLStreamReaderImpl(qName, elementList.toArray(), attribList.toArray());
             
@@ -1439,9 +1374,9 @@
         * Postcondition: If this object is an element, the reader is positioned at its end element
         *                If this object is a complex type, the reader is positioned at the end element of its outer element
         */
-        public static NewCertificateResponse parse(javax.xml.stream.XMLStreamReader reader) throws java.lang.Exception{
-            NewCertificateResponse object =
-                new NewCertificateResponse();
+        public static MMSResponse parse(javax.xml.stream.XMLStreamReader reader) throws java.lang.Exception{
+            MMSResponse object =
+                new MMSResponse();
 
             int event;
             java.lang.String nillableValue = null;
@@ -1465,10 +1400,10 @@
 
                     java.lang.String type = fullTypeName.substring(fullTypeName.indexOf(":")+1);
                     
-                            if (!"newCertificateResponse".equals(type)){
+                            if (!"MMSResponse".equals(type)){
                                 //find namespace for the prefix
                                 java.lang.String nsUri = reader.getNamespaceContext().getNamespaceURI(nsPrefix);
-                                return (NewCertificateResponse)ExtensionMapper.getTypeObject(
+                                return (MMSResponse)ExtensionMapper.getTypeObject(
                                      nsUri,type,reader);
                               }
                         
@@ -1493,20 +1428,20 @@
                                     
                                     while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
                                 
-                                    if (reader.isStartElement() && new javax.xml.namespace.QName("http://MMService.gti_ia.dsic.upv.es","return").equals(reader.getName())){
+                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","Certificate").equals(reader.getName())){
                                 reader.next();
                                     if (isReaderMTOMAware(reader)
                                             &&
                                             java.lang.Boolean.TRUE.equals(reader.getProperty(org.apache.axiom.om.OMConstants.IS_BINARY)))
                                     {
                                         //MTOM aware reader - get the datahandler directly and put it in the object
-                                        object.set_return(
+                                        object.setCertificate(
                                                 (javax.activation.DataHandler) reader.getProperty(org.apache.axiom.om.OMConstants.DATA_HANDLER));
                                     } else {
                                         if (reader.getEventType() == javax.xml.stream.XMLStreamConstants.START_ELEMENT && reader.getName().equals(new javax.xml.namespace.QName(org.apache.axiom.om.impl.MTOMConstants.XOP_NAMESPACE_URI, org.apache.axiom.om.impl.MTOMConstants.XOP_INCLUDE)))
                                         {
                                             java.lang.String id = org.apache.axiom.om.util.ElementHelper.getContentID(reader, "UTF-8");
-                                            object.set_return(((org.apache.axiom.soap.impl.builder.MTOMStAXSOAPModelBuilder) ((org.apache.axiom.om.impl.llom.OMStAXWrapper) reader).getBuilder()).getDataHandler(id));
+                                            object.setCertificate(((org.apache.axiom.soap.impl.builder.MTOMStAXSOAPModelBuilder) ((org.apache.axiom.om.impl.llom.OMStAXWrapper) reader).getBuilder()).getDataHandler(id));
                                             reader.next();
                                             
                                                 reader.next();
@@ -1514,7 +1449,7 @@
                                         } else if(reader.hasText()) {
                                             //Do the usual conversion
                                             java.lang.String content = reader.getText();
-                                            object.set_return(
+                                            object.setCertificate(
                                                     org.apache.axis2.databinding.utils.ConverterUtil.convertToBase64Binary(content));
                                             
                                                 reader.next();
@@ -1527,10 +1462,11 @@
                                     
                               }  // End of if for expected property start element
                                 
-                                    else {
-                                        
-                                    }
-                                  
+                                else{
+                                    // A start element we are not expecting indicates an invalid parameter was passed
+                                    throw new org.apache.axis2.databinding.ADBException("Unexpected subelement " + reader.getLocalName());
+                                }
+                              
                             while (!reader.isStartElement() && !reader.isEndElement())
                                 reader.next();
                             
@@ -1555,12 +1491,12 @@
         }
            
           
-            private  org.apache.axiom.om.OMElement  toOM(es.upv.dsic.gti_ia.secure.MMServiceStub.NewCertificate param, boolean optimizeContent)
+            private  org.apache.axiom.om.OMElement  toOM(es.upv.dsic.gti_ia.secure.MMSStub.MMS param, boolean optimizeContent)
             throws org.apache.axis2.AxisFault {
 
             
                         try{
-                             return param.getOMElement(es.upv.dsic.gti_ia.secure.MMServiceStub.NewCertificate.MY_QNAME,
+                             return param.getOMElement(es.upv.dsic.gti_ia.secure.MMSStub.MMS.MY_QNAME,
                                           org.apache.axiom.om.OMAbstractFactory.getOMFactory());
                         } catch(org.apache.axis2.databinding.ADBException e){
                             throw org.apache.axis2.AxisFault.makeFault(e);
@@ -1569,12 +1505,12 @@
 
             }
         
-            private  org.apache.axiom.om.OMElement  toOM(es.upv.dsic.gti_ia.secure.MMServiceStub.NewCertificateResponse param, boolean optimizeContent)
+            private  org.apache.axiom.om.OMElement  toOM(es.upv.dsic.gti_ia.secure.MMSStub.MMSResponse param, boolean optimizeContent)
             throws org.apache.axis2.AxisFault {
 
             
                         try{
-                             return param.getOMElement(es.upv.dsic.gti_ia.secure.MMServiceStub.NewCertificateResponse.MY_QNAME,
+                             return param.getOMElement(es.upv.dsic.gti_ia.secure.MMSStub.MMSResponse.MY_QNAME,
                                           org.apache.axiom.om.OMAbstractFactory.getOMFactory());
                         } catch(org.apache.axis2.databinding.ADBException e){
                             throw org.apache.axis2.AxisFault.makeFault(e);
@@ -1584,25 +1520,47 @@
             }
         
                                     
-                                        private  org.apache.axiom.soap.SOAPEnvelope toEnvelope(org.apache.axiom.soap.SOAPFactory factory, es.upv.dsic.gti_ia.secure.MMServiceStub.NewCertificate param, boolean optimizeContent)
-                                        throws org.apache.axis2.AxisFault{
+                                private  org.apache.axiom.soap.SOAPEnvelope toEnvelope(org.apache.axiom.soap.SOAPFactory factory,
+                                    java.lang.String param1,
+                                    javax.activation.DataHandler param2,
+                                    es.upv.dsic.gti_ia.secure.MMSStub.MMS dummyWrappedType,
+                                 boolean optimizeContent) throws org.apache.axis2.AxisFault{
 
-                                             
-                                                    try{
+                                try{
+                                es.upv.dsic.gti_ia.secure.MMSStub.MMS wrappedType = new es.upv.dsic.gti_ia.secure.MMSStub.MMS();
 
-                                                            org.apache.axiom.soap.SOAPEnvelope emptyEnvelope = factory.getDefaultEnvelope();
-                                                            emptyEnvelope.getBody().addChild(param.getOMElement(es.upv.dsic.gti_ia.secure.MMServiceStub.NewCertificate.MY_QNAME,factory));
-                                                            return emptyEnvelope;
-                                                        } catch(org.apache.axis2.databinding.ADBException e){
-                                                            throw org.apache.axis2.AxisFault.makeFault(e);
-                                                        }
-                                                
+                                 
+                                              wrappedType.setAgentName(param1);
+                                         
+                                              wrappedType.setPublicKey(param2);
+                                         
 
-                                        }
+                               org.apache.axiom.soap.SOAPEnvelope emptyEnvelope = factory.getDefaultEnvelope();
+                                  
+                                        emptyEnvelope.getBody().addChild(wrappedType.getOMElement(es.upv.dsic.gti_ia.secure.MMSStub.MMS.MY_QNAME,factory));
+                                    
+
+                                return emptyEnvelope;
+                               } catch(org.apache.axis2.databinding.ADBException e){
+                                    throw org.apache.axis2.AxisFault.makeFault(e);
+                               }
+                               }
+
+
+
                                 
                              
                              /* methods to provide back word compatibility */
 
+                             
+
+                                
+                                private javax.activation.DataHandler getMMSResponseCertificate(
+                                es.upv.dsic.gti_ia.secure.MMSStub.MMSResponse wrappedType){
+                                
+                                        return wrappedType.getCertificate();
+                                    
+                                }
                              
 
 
@@ -1621,16 +1579,16 @@
 
         try {
         
-                if (es.upv.dsic.gti_ia.secure.MMServiceStub.NewCertificate.class.equals(type)){
+                if (es.upv.dsic.gti_ia.secure.MMSStub.MMS.class.equals(type)){
                 
-                           return es.upv.dsic.gti_ia.secure.MMServiceStub.NewCertificate.Factory.parse(param.getXMLStreamReaderWithoutCaching());
+                           return es.upv.dsic.gti_ia.secure.MMSStub.MMS.Factory.parse(param.getXMLStreamReaderWithoutCaching());
                     
 
                 }
            
-                if (es.upv.dsic.gti_ia.secure.MMServiceStub.NewCertificateResponse.class.equals(type)){
+                if (es.upv.dsic.gti_ia.secure.MMSStub.MMSResponse.class.equals(type)){
                 
-                           return es.upv.dsic.gti_ia.secure.MMServiceStub.NewCertificateResponse.Factory.parse(param.getXMLStreamReaderWithoutCaching());
+                           return es.upv.dsic.gti_ia.secure.MMSStub.MMSResponse.Factory.parse(param.getXMLStreamReaderWithoutCaching());
                     
 
                 }
