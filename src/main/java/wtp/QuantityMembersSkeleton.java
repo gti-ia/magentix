@@ -55,7 +55,7 @@ public class QuantityMembersSkeleton
 			res.setStatus("Error");
 			return res;
 		}
-		if (!thomasBD.CheckExistsRole(quantityMembers.getRoleID()))
+		if (quantityMembers.getRoleID()!="" && !thomasBD.CheckExistsRole(quantityMembers.getRoleID()))
 		{
 			res.setErrorValue("NotFound");
 			res.setStatus("Error");

@@ -75,7 +75,7 @@ public class ExpulseSkeleton
 			return res;
 		}
 		if (!thomasBD.CheckAgentPlaysRole(expulse.getRoleID(), expulse
-				.getUnitID(), expulse.getAgentID()))
+				.getUnitID(), expulse.getExpulsedAgentID()))
 		{
 			res.setErrorValue("NotFound");
 			res.setStatus("Error");
