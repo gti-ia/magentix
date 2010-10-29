@@ -7,22 +7,22 @@ import com.hp.hpl.jena.db.DBConnection;
 import com.hp.hpl.jena.db.IDBConnection;
 
 /**
- * Clean DataBase thomas and remove jena tables.
+ * Clean DataBase THOMAS and remove JENA tables.
  */
 public class CleanBD {
 
 
-	
-    private Configuration c;
 
-  /**
-   * This class clean the entire contents of the tables in the database thomas, including tables that are created within jena, it is important that we make use of this method at the beginning or end of the initialization of our projects, we must be careful configure the settings.xml file with data from the database.
-   */
+	private Configuration c;
+
+	/**
+	 * This class clean the entire contents of the tables in the database THOMAS, including tables that are created within Jena. It is important that we make use of this method at the beginning or end of the initialization of our projects, we must be careful configure the settings.xml file with data from the database.
+	 */
 	public void clean_database() {
 		try {
 			DataBaseAcces bd = new DataBaseAcces();
 			bd.connect();
-			// Borramos
+			// Clean 
 			Statement s = bd.conection.createStatement();
 			s.executeUpdate("Delete from unit where id<>1");
 			s = bd.conection.createStatement();
@@ -43,7 +43,7 @@ public class CleanBD {
 			s.executeUpdate("Delete from serviceprofileid");
 			s = bd.conection.createStatement();
 			s.executeUpdate("Delete from serviceprocessid");
-		
+
 
 
 			bd.closeConnection();
@@ -51,11 +51,11 @@ public class CleanBD {
 			e.printStackTrace();
 			return;
 		}
-/////////////
+		/////////////
 		////JENA/////
 		/////////////
 		IDBConnection conn = null;
-		
+
 		c = Configuration.getConfiguration();
 
 
@@ -66,12 +66,6 @@ public class CleanBD {
 			System.err.println("Failed to load the driver for the database: "+ e.getMessage());
 			System.err.println("Have you got the CLASSPATH set correctly?");
 		}
-
-		
-	
-		
-		
-		
 
 		// Create database connection
 		try {
