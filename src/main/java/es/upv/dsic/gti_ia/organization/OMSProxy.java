@@ -214,7 +214,7 @@ public class OMSProxy extends THOMASProxy{
 	 *            organizational units (OUs), which represent groups of entities
 	 *            (agents or other units)
 	 * 
-	 * @return int Quantity
+	 * @return Integer Quantity
 	 */
 	public int quantityMembers(String RoleID, String UnitID)
 		 {
@@ -372,7 +372,7 @@ public class OMSProxy extends THOMASProxy{
 	/**
 	 * Forces an agent to leave a specific role
 	 * 
-	 * @param AgentID
+	 * @param ExpulseAgentID
 	 *            entity,this agent is protocol://name@host:port
 	 *            ej.qpid://clientagent2@localhost:8080 , we can extract this
 	 *            inform with the method getAid().toString() for example.
@@ -384,10 +384,10 @@ public class OMSProxy extends THOMASProxy{
 	 *            (agents or other units)
 	 * @return String Status ErrorValue
 	 */
-	public String expulse(String AgentID, String RoleID,
+	public String expulse(String ExpulseAgentID, String RoleID,
 			String UnitID) {
-		serviceName ="ExpulseProces";
-		call = ServiceDescriptionLocation + "ExpulseProcess.owl AgentID=" + AgentID
+		serviceName ="ExpulseProcess";
+		call = ServiceDescriptionLocation + "ExpulseProcess.owl ExpulsedAgentID=" + ExpulseAgentID
 				+ " RoleID=" + RoleID + " UnitID=" + UnitID;
 	return (String) this.sendInform();
 	
@@ -406,8 +406,6 @@ public class OMSProxy extends THOMASProxy{
 	 */
 	public String acquireRole(String RoleID, String UnitID)
 			{
-		// montar string de conexion
-		// Enviamos el mensaje
 		serviceName ="AcquireRoleProcess";
 		call = ServiceDescriptionLocation + "AcquireRoleProcess.owl RoleID=" + RoleID
 				+ " UnitID=" + UnitID;
@@ -415,35 +413,5 @@ public class OMSProxy extends THOMASProxy{
 		
 
 	}
-
-	/**
-	 * Requests the adoption of a specific role within a unit
-	 * 
-	 * @param AgentID
-	 *            entity,this agent is: protocol://name@host:port.
-	 *            ej.qpid://clientagent2@localhost:8080 , we can extract this
-	 *            inform with the method getAid().toString() for example.          
-	 * @param RoleID
-	 *            Role that the agent acquires inside the organization
-	 * @param UnitID
-	 *            Unit of which the agent was forming a part with the previous
-	 *            role
-	 * @return String Status ErrorValue
-	 */
-	public String acquireRole(String AgentID, String RoleID, String UnitID)
-		 {
-		// montar string de conexion
-		// Enviamos el mensaje
-		serviceName ="AcquireRoleProcess";
-		call = ServiceDescriptionLocation + "AcquireRoleProcess.owl RoleID=" + RoleID
-				+ " UnitID=" + UnitID+" AgentID="+ AgentID;
-
-	return 	(String) this.sendInform();
-
-
-	}
-	
-
-	
 
 }
