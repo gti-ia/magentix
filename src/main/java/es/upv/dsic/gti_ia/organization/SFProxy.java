@@ -59,43 +59,6 @@ public class SFProxy extends THOMASProxy {
 
 	}
 
-
-	/**
-	 * Inserts the service profile id returned by the searchService
-	 * 
-	 * @param id
-	 *            returned by the SF when the service register
-	 * @param profilename
-	 *            name of the profile
-	 */
-
-	void setSearchServiceProfile(String profilename, String ranking) {
-		this.tablaSearchServiceProfile.put(profilename, ranking);
-	}
-
-	/**
-	 * Return Service Profile
-	 * 
-	 * @param serviceGoal
-	 * @return ServiceProfile
-	 */
-	String getSearchServiceProfile(String serviceGoal) {
-		return this.tablaSearchServiceProfile.get(serviceGoal);
-	}
-
-	/**
-	 * 
-	 * @return SFAgentDescription
-	 */
-	ProfileDescription getProfileDescription() {
-		return this.profileDescription;
-	}
-
-	ProcessDescription getProcessDescription() {
-
-		return this.processDescripcion;
-	}
-
 	/**
 	 * When the service is not SF or OMS service. This method is recommend used when an other provider agent offer a new service 
 	 * 
@@ -299,7 +262,7 @@ public class SFProxy extends THOMASProxy {
 			return "";
 		}
 
-		// eliminar el servicio de la tabla de servicios de el agente
+	
 
 		call = ServiceDescriptionLocation
 				+ "DeregisterProfileProcess.owl DeregisterProfileInputServiceID="
@@ -355,7 +318,7 @@ public class SFProxy extends THOMASProxy {
 
 	}
 
-	// Devuelve el ID para poder modificar luego el servicio�
+
 
 	/**
 	 * 
@@ -381,7 +344,7 @@ public class SFProxy extends THOMASProxy {
 
 		}
 
-		//
+	
 		call = ServiceDescriptionLocation
 				+ "RegisterProfileProcess.owl "
 				+ "RegisterProfileInputServiceGoal= "
