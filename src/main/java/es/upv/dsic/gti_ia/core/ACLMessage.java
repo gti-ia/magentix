@@ -15,6 +15,7 @@ import java.util.Map;
 import es.upv.dsic.gti_ia.core.ISO8601;
 
 /**
+ * This class represents a message sent between agents.
  * @author Ricard Lopez Fogues
  */
 /**
@@ -170,10 +171,19 @@ public class ACLMessage implements Serializable, Cloneable {
 
 	// constructores
 
+	/**
+	 * Empty constructor. The performative is set to UNKNOWN
+	 * @see setPerformative
+	 */
 	public ACLMessage() {
 		performative = UNKNOWN;
 	}
 
+	/**
+	 * Constructor for the class. Only sets the performative.
+	 * @param performative The performative to be used in this message.
+	 * @see setPerformative
+	 */
 	public ACLMessage(int performative) {
 		this.performative = performative;
 		headers.put("ERROR", ""); // ???
@@ -190,7 +200,7 @@ public class ACLMessage implements Serializable, Cloneable {
 	}
 
 	/**
-	 * @return Performative type
+	 * @return Performative type as a String
 	 * @uml.property name="performative"
 	 */
 	public String getPerformative() {
@@ -202,6 +212,10 @@ public class ACLMessage implements Serializable, Cloneable {
 		}
 	}
 
+	/**
+	 * 
+	 * @return Performative type as an integer
+	 */
 	public int getPerformativeInt() {
 		return performative;
 	}
@@ -209,16 +223,19 @@ public class ACLMessage implements Serializable, Cloneable {
 	/**
 	 * Set sender
 	 * 
-	 * @param sender
+	 * @param sender The AgentID of the sender of this message.
 	 * @uml.property name="sender"
+	 * @see AgentID
 	 */
 	public void setSender(AgentID sender) {
 		this.sender = sender;
 	}
 
 	/**
-	 * @return sender
+	 * Returns the sender of this message.
+	 * @return sender The AgentID of the sender of this message.
 	 * @uml.property name="sender"
+	 * @see AgentID
 	 */
 	public AgentID getSender() {
 		return sender;
@@ -236,8 +253,10 @@ public class ACLMessage implements Serializable, Cloneable {
 	}
 
 	/**
+	 * Obtains the AgentID of the first receiver of the (possibly many) receivers of this message.
 	 * @return First receiver in receivers list
 	 * @uml.property name="receiver"
+	 * @see AgentID
 	 */
 	public AgentID getReceiver() {
 		if (receiver.isEmpty()) {
@@ -323,6 +342,7 @@ public class ACLMessage implements Serializable, Cloneable {
 	}
 
 	/**
+	 * Get the encoding for this message.
 	 * @return encoding
 	 * @uml.property name="encoding"
 	 */
@@ -331,6 +351,7 @@ public class ACLMessage implements Serializable, Cloneable {
 	}
 
 	/**
+	 * Set ontology of the message
 	 * @param ontology
 	 * @uml.property name="ontology"
 	 */
@@ -339,6 +360,7 @@ public class ACLMessage implements Serializable, Cloneable {
 	}
 
 	/**
+	 * Get the ontology for the message
 	 * @return ontology
 	 * @uml.property name="ontology"
 	 */
@@ -347,6 +369,7 @@ public class ACLMessage implements Serializable, Cloneable {
 	}
 
 	/**
+	 * Sets the protocol for the message
 	 * @param protocol
 	 * @uml.property name="protocol"
 	 */
@@ -355,6 +378,7 @@ public class ACLMessage implements Serializable, Cloneable {
 	}
 
 	/**
+	 * Gets the protocol for the message
 	 * @return protocol
 	 * @uml.property name="protocol"
 	 */
@@ -466,7 +490,7 @@ public class ACLMessage implements Serializable, Cloneable {
 	/**
 	 * Adds a receiver to the receivers list
 	 * 
-	 * @param receiver
+	 * @param receiver AgentID of the receiver to be added.
 	 * @return -1 if the agent already exists in the list, 1 otherwise
 	 */
 	public int addReceiver(AgentID r) {
@@ -484,8 +508,9 @@ public class ACLMessage implements Serializable, Cloneable {
 	}
 
 	/**
-	 * 
+	 * Returns the whole list of the AgentID of the receivers.
 	 * @return receivers list
+	 * @see AgentID
 	 */
 	public ArrayList<AgentID> getReceiverList() {
 		return receiver;
@@ -608,7 +633,7 @@ public class ACLMessage implements Serializable, Cloneable {
 		return headers;
 	}
 
-	public boolean headersAreEqual(ACLMessage msg) {
+	private boolean headersAreEqual(ACLMessage msg) {
 		Iterator<String> itr = headers.keySet().iterator();
 		// iterate through HashMap values iterator
 		String key1;
