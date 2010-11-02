@@ -7,13 +7,13 @@ import java.io.InputStream;
 
 
 /**
- * This class reads the contents of settings.xml file found in the configuration directory
+ * This class reads the contents of Settings.xml file that found in the configuration directory
  *
  *
  */
 public class Configuration {
-	
-	
+
+
 	private String databaseServer;
 	private String databaseName;
 	private String databaseUser;
@@ -42,7 +42,7 @@ public class Configuration {
 		this.load();
 
 	}
-	
+
 	/**
 	 * If the platform is in secure mode or not
 	 * @return isSecure
@@ -51,9 +51,9 @@ public class Configuration {
 	{
 		return this.isSecure;
 	}
-	
+
 	/**
-	 * Path where the tomcat is located
+	 * Path where the TOMCAT is located
 	 * @return 
 	 */
 	public String getOS()
@@ -61,16 +61,16 @@ public class Configuration {
 		return this.os;
 	}
 	/**
-	 * Path where the tomcat is located
+	 * Path where the TOMCAT is located
 	 * @return 
 	 */
 	public String getPathTomcat()
 	{
 		return this.pathTomcat;
 	}
-	
+
 	/**
-	 * Is tomcat active
+	 * If TOMCAT is active
 	 * @return
 	 */
 	public boolean getIsTomcat()
@@ -80,7 +80,7 @@ public class Configuration {
 		else
 			return false;
 	}
-	
+
 	/**
 	 * Name of the database server
 	 * @return serverName ej. localhost 
@@ -143,13 +143,13 @@ public class Configuration {
 	 * @return configuration
 	 */
 	public static Configuration getConfiguration(){
-		
+
 		if (configuration == null)
 			configuration = new Configuration();
 		return configuration;
-		
+
 	}
-	
+
 	/**
 	 * Qpid port
 	 * @return port
@@ -158,17 +158,17 @@ public class Configuration {
 	{
 
 		return Integer.parseInt(this.qpidPort);
-		
+
 	}
 	/**
-	 * Virtual qpid host
+	 * Virtual Qpid host
 	 * @return Virtual host
 	 */
 	public String getqpidVhost()
 	{
 		return this.qpidVhost;
 	}
-	
+
 	/**
 	 * Qpid user
 	 * @return user
@@ -177,7 +177,7 @@ public class Configuration {
 	{
 		return this.qpidUser;
 	}
-	
+
 	/**
 	 * Qpid user password
 	 * @return password
@@ -186,7 +186,7 @@ public class Configuration {
 	{
 		return this.qpidPassword;
 	}
-	
+
 	/**
 	 * Qpid ssl
 	 * @return SSl
@@ -197,9 +197,9 @@ public class Configuration {
 			return true;
 		else
 			return false;
-		
+
 	}
-	
+
 	/**
 	 * Qpid sasl Mechs
 	 */
@@ -207,25 +207,25 @@ public class Configuration {
 	{
 		return this.saslMechs;
 	}
-	
+
 	/**
 	 * Jena database URL
 	 * @return URL
 	 */
 	public String getjenadbURL()
 	{
-	    return this.jenadbURL;
+		return this.jenadbURL;
 	}
-	
 
-	
+
+
 	/**
 	 * Type of jena database
 	 * @return type
 	 */
 	public String getjenadbType()
 	{
-	    return this.jenadbType;
+		return this.jenadbType;
 	}
 
 	/**
@@ -234,127 +234,122 @@ public class Configuration {
 	 */
 	public String getjenadbDriver()
 	{
-	    return this.jenadbDriver;
+		return this.jenadbDriver;
 	}
-	
+	/**
+	 * This method load all Settings.xml values in properties.
+	 */
 	private void load()
 	{
-		//Cargamos los valores desde un archivo .xml 
 		Properties properties = new Properties();
 
-	   try {
-		   
-		   
-		   
-		   String fileName = "Settings.xml";
-		   
-		   InputStream is = new FileInputStream("configuration/"+fileName);
-		   
+		try {
 
 
-			  properties.loadFromXML(is);
-			 // properties.loadFromXML(Configuration.class.getResourceAsStream("/"+"Settings.xml"));	  
-			  
 
-		 
-		  
+			String fileName = "Settings.xml";
+
+			InputStream is = new FileInputStream("configuration/"+fileName);
+
+
+			properties.loadFromXML(is);
+
+
 			for (Enumeration<Object> e = properties.keys(); e.hasMoreElements() ; ) {
-			    // Obtenemos el objeto
-			    Object obj = e.nextElement();
-			    if (obj.toString().equalsIgnoreCase("serverName"))
-			    {
-			    	this.databaseServer= properties.getProperty(obj.toString());	
-			    }
-			    else if (obj.toString().equalsIgnoreCase("databaseName"))
-			    {
-			    	databaseName= properties.getProperty(obj.toString());
-			    }
-			    else    if (obj.toString().equalsIgnoreCase("userName"))
-			    {
-			    	this.databaseUser= properties.getProperty(obj.toString());
-			    }
-			    else    if (obj.toString().equalsIgnoreCase("password"))
-			    {
-			    	this.databasePassword= properties.getProperty(obj.toString());
-			    }
-			    else    if (obj.toString().equalsIgnoreCase("OMSServiceDesciptionLocation"))
-			    {
-			    	OMSServiceDesciptionLocation= properties.getProperty(obj.toString());
-			    }
-			    else    if (obj.toString().equalsIgnoreCase("SFServiceDesciptionLocation"))
-			    {
-			    	SFServiceDesciptionLocation= properties.getProperty(obj.toString()); 	
-			    }else    if (obj.toString().equalsIgnoreCase("host"))
-			    {
-	
-			    	this.qpidHost= properties.getProperty(obj.toString()); 	
-			    }
-			    else    if (obj.toString().equalsIgnoreCase("port"))
-			    {
-			    	
-			    	this.qpidPort= properties.getProperty(obj.toString()); 	
-			    }
-			    else    if (obj.toString().equalsIgnoreCase("vhost"))
-			    {
-			    	this.qpidVhost= properties.getProperty(obj.toString()); 	
-			    }
-			    else    if (obj.toString().equalsIgnoreCase("user"))
-			    {
-			    	this.qpidUser = properties.getProperty(obj.toString()); 	
-			    }
-			    else    if (obj.toString().equalsIgnoreCase("pass"))
-			    {
-			    	this.qpidPassword= properties.getProperty(obj.toString()); 	
-			    }
-			    else    if (obj.toString().equalsIgnoreCase("ssl"))
-			    {
-			    	this.qpidSsl = properties.getProperty(obj.toString()); 	
-			    }
-			    else    if (obj.toString().equalsIgnoreCase("saslMechs"))
-			    {
-			    	this.saslMechs = properties.getProperty(obj.toString()); 	
-			    }
-			    else    if (obj.toString().equalsIgnoreCase("dbURL"))
-			    {
-			    	this.jenadbURL = properties.getProperty(obj.toString()); 	
-			    }
-	
-			    else    if (obj.toString().equalsIgnoreCase("dbType"))
-			    {
-			    	this.jenadbType = properties.getProperty(obj.toString()); 	
-			    }
-			    else    if (obj.toString().equalsIgnoreCase("dbDriver"))
-			    {
-			    	this.jenadbDriver = properties.getProperty(obj.toString()); 	
-			    }
-			    else    if (obj.toString().equalsIgnoreCase("tomcat"))
-			    {
-			    	this.isTomcat = properties.getProperty(obj.toString()); 	
-			    }
-			    else    if (obj.toString().equalsIgnoreCase("pathTomcat"))
-			    {
-			    	this.pathTomcat = properties.getProperty(obj.toString()); 	
-			    }
-			    else    if (obj.toString().equalsIgnoreCase("os"))
-			    {
-			    	this.os = properties.getProperty(obj.toString()); 	
-			    }
-			    else    if (obj.toString().equalsIgnoreCase("secureMode"))
-			    {
-			    	if (properties.getProperty(obj.toString()).equals("true"))
-			    		this.isSecure = true;
-			    	else
-			    		this.isSecure = false;
-			    }
-	
+				// Get the object
+				Object obj = e.nextElement();
+				if (obj.toString().equalsIgnoreCase("serverName"))
+				{
+					this.databaseServer= properties.getProperty(obj.toString());	
+				}
+				else if (obj.toString().equalsIgnoreCase("databaseName"))
+				{
+					databaseName= properties.getProperty(obj.toString());
+				}
+				else    if (obj.toString().equalsIgnoreCase("userName"))
+				{
+					this.databaseUser= properties.getProperty(obj.toString());
+				}
+				else    if (obj.toString().equalsIgnoreCase("password"))
+				{
+					this.databasePassword= properties.getProperty(obj.toString());
+				}
+				else    if (obj.toString().equalsIgnoreCase("OMSServiceDesciptionLocation"))
+				{
+					OMSServiceDesciptionLocation= properties.getProperty(obj.toString());
+				}
+				else    if (obj.toString().equalsIgnoreCase("SFServiceDesciptionLocation"))
+				{
+					SFServiceDesciptionLocation= properties.getProperty(obj.toString()); 	
+				}else    if (obj.toString().equalsIgnoreCase("host"))
+				{
+
+					this.qpidHost= properties.getProperty(obj.toString()); 	
+				}
+				else    if (obj.toString().equalsIgnoreCase("port"))
+				{
+
+					this.qpidPort= properties.getProperty(obj.toString()); 	
+				}
+				else    if (obj.toString().equalsIgnoreCase("vhost"))
+				{
+					this.qpidVhost= properties.getProperty(obj.toString()); 	
+				}
+				else    if (obj.toString().equalsIgnoreCase("user"))
+				{
+					this.qpidUser = properties.getProperty(obj.toString()); 	
+				}
+				else    if (obj.toString().equalsIgnoreCase("pass"))
+				{
+					this.qpidPassword= properties.getProperty(obj.toString()); 	
+				}
+				else    if (obj.toString().equalsIgnoreCase("ssl"))
+				{
+					this.qpidSsl = properties.getProperty(obj.toString()); 	
+				}
+				else    if (obj.toString().equalsIgnoreCase("saslMechs"))
+				{
+					this.saslMechs = properties.getProperty(obj.toString()); 	
+				}
+				else    if (obj.toString().equalsIgnoreCase("dbURL"))
+				{
+					this.jenadbURL = properties.getProperty(obj.toString()); 	
+				}
+
+				else    if (obj.toString().equalsIgnoreCase("dbType"))
+				{
+					this.jenadbType = properties.getProperty(obj.toString()); 	
+				}
+				else    if (obj.toString().equalsIgnoreCase("dbDriver"))
+				{
+					this.jenadbDriver = properties.getProperty(obj.toString()); 	
+				}
+				else    if (obj.toString().equalsIgnoreCase("tomcat"))
+				{
+					this.isTomcat = properties.getProperty(obj.toString()); 	
+				}
+				else    if (obj.toString().equalsIgnoreCase("pathTomcat"))
+				{
+					this.pathTomcat = properties.getProperty(obj.toString()); 	
+				}
+				else    if (obj.toString().equalsIgnoreCase("os"))
+				{
+					this.os = properties.getProperty(obj.toString()); 	
+				}
+				else    if (obj.toString().equalsIgnoreCase("secureMode"))
+				{
+					if (properties.getProperty(obj.toString()).equals("true"))
+						this.isSecure = true;
+					else
+						this.isSecure = false;
+				}
+
 			}
 
-	    } catch (IOException e) {
-	    	System.out.print(e);
-	    	return;
-	    }
+		} catch (IOException e) {
+			System.out.print(e);
+			return;
+		}
 	}
-	
-
 
 }
