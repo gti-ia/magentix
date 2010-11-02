@@ -102,7 +102,7 @@ public class ProcessDescription {
 	/**
 	 * This method adds the implementationID
 	 * 
-	 * @param im , this parameter is automatically assigned when the method registerProcess is called.
+	 * @param im this parameter is automatically assigned when the method registerProcess is called.
 	 */
 	public void setImplementationID(String im) {
 		this.ImplementationID = im;
