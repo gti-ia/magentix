@@ -11,7 +11,7 @@ import es.upv.dsic.gti_ia.cAgents.BeginState;
 import es.upv.dsic.gti_ia.cAgents.BeginStateMethod;
 import es.upv.dsic.gti_ia.cAgents.CAgent;
 import es.upv.dsic.gti_ia.cAgents.CProcessor;
-import es.upv.dsic.gti_ia.cAgents.CProcessorFactory;
+import es.upv.dsic.gti_ia.cAgents.CFactory;
 import es.upv.dsic.gti_ia.cAgents.FinalState;
 import es.upv.dsic.gti_ia.cAgents.FinalStateMethod;
 import es.upv.dsic.gti_ia.cAgents.ReceiveState;
@@ -23,7 +23,12 @@ import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.MessageFilter;
 
 public abstract class FIPA_CONTRACTNET_Initiator {
-	
+
+	/**
+	 * Method executed at the beginning of the conversation
+	 * @param myProcessor
+	 * @param msg
+	 */
 	protected void doBegin(CProcessor myProcessor, ACLMessage msg) {
 		myProcessor.getInternalData().put("InitialMessage", msg);
 	}
@@ -35,6 +40,11 @@ public abstract class FIPA_CONTRACTNET_Initiator {
 		};
 	}
 
+	/**
+	 * Method executed when the initiator calls for proposals
+	 * @param myProcessor
+	 * @param messageToSend
+	 */
 	protected void doSolicitProposals(CProcessor myProcessor,
 			ACLMessage messageToSend) {
 		messageToSend.setProtocol("fipa-contract-net");
@@ -49,6 +59,11 @@ public abstract class FIPA_CONTRACTNET_Initiator {
 		}
 	}
 
+	/**
+	 * Method executed when the initiator receives a not-understood message
+	 * @param myProcessor
+	 * @param msg
+	 */
 	protected void doReceiveNotUnderstood(CProcessor myProcessor, ACLMessage msg) {
 	}
 
@@ -65,6 +80,11 @@ public abstract class FIPA_CONTRACTNET_Initiator {
 		}
 	}
 
+	/**
+	 * Method executed when the initiator receives a refuse message
+	 * @param myProcessor
+	 * @param msg
+	 */
 	protected void doReceiveRefuse(CProcessor myProcessor, ACLMessage msg) {
 	}
 
@@ -82,8 +102,13 @@ public abstract class FIPA_CONTRACTNET_Initiator {
 		}
 	}
 
+	/**
+	 * Method executed when the initiator receives a proposal
+	 * @param myProcessor
+	 * @param msg
+	 */
 	@SuppressWarnings("unchecked")
-	protected void doReceivePropose(CProcessor myProcessor, ACLMessage msg){
+	protected void doReceiveProposal(CProcessor myProcessor, ACLMessage msg){
 		ArrayList<ACLMessage> proposes = (ArrayList<ACLMessage>)myProcessor.getInternalData().get("proposes");
 		proposes.add(msg);
 	}
@@ -92,7 +117,7 @@ public abstract class FIPA_CONTRACTNET_Initiator {
 		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
 			int participants = (Integer)myProcessor.getInternalData().get("participants");
 			int receivedResponses = (Integer)myProcessor.getInternalData().get("receivedResponses");
-			doReceivePropose(myProcessor, messageReceived);
+			doReceiveProposal(myProcessor, messageReceived);
 			receivedResponses++;
 			myProcessor.getInternalData().put("receivedResponses", receivedResponses);
 			if (receivedResponses >= participants)
@@ -102,6 +127,11 @@ public abstract class FIPA_CONTRACTNET_Initiator {
 		}
 	}
 
+	/**
+	 * Method executed when the timeout is reached while the initiator was waiting for proposals
+	 * @param myProcessor
+	 * @param msg
+	 */
 	protected void doTimeout(CProcessor myProcessor, ACLMessage msg) {
 	}
 
@@ -111,6 +141,14 @@ public abstract class FIPA_CONTRACTNET_Initiator {
 		}
 	}
 
+	/**
+	 * Evaluate proposals. Each accepted proposal has to be added to the acceptances list.
+	 * Each rejected proposal has to be added to the rejected list
+	 * @param myProcessor
+	 * @param proposes Proposals
+	 * @param acceptances Accepted proposals
+	 * @param rejections Rejected proposals
+	 */
 	protected abstract void doEvaluateProposals(CProcessor myProcessor,
 			ArrayList<ACLMessage> proposes, ArrayList<ACLMessage> acceptances, ArrayList<ACLMessage> rejections);
 
@@ -131,7 +169,7 @@ public abstract class FIPA_CONTRACTNET_Initiator {
 				accept = true;
 			if(rejections.size() > 0)
 				reject = true;
-			
+
 			for(i=0; i< acceptances.size(); i++){
 				send = new SendState("SEND_ACCEPTANCE_"+i);
 				send.setMethod(new SEND_Method("SEND_ACCEPTANCE_"+i));
@@ -144,7 +182,7 @@ public abstract class FIPA_CONTRACTNET_Initiator {
 			}
 			if(!reject && accept)
 				myProcessor.addTransition("SEND_ACCEPTANCE_"+(i-1), "WAIT_FOR_RESULTS");
-			
+
 			int j;
 			for(j=0; j< rejections.size(); j++){
 				send = new SendState("SEND_REJECTION_"+j);
@@ -163,20 +201,20 @@ public abstract class FIPA_CONTRACTNET_Initiator {
 			}
 			if(reject)
 				myProcessor.addTransition("SEND_REJECTION_"+(j-1), "WAIT_FOR_RESULTS");
-			
+
 			if(accept) return "SEND_ACCEPTANCE_0";
 			else if(reject) return "SEND_REJECTION_0";
 			else return "FINAL";
 		}
 	}
-	
+
 	class SEND_Method implements SendStateMethod{
 		private String stateName;
-		
+
 		public SEND_Method(String stateName){
 			this.stateName = stateName;
 		}
-		
+
 		@Override
 		public String run(CProcessor myProcessor, ACLMessage messageToSend) {
 			String next = "";
@@ -184,14 +222,19 @@ public abstract class FIPA_CONTRACTNET_Initiator {
 			transitions = myProcessor.getTransitionTable().getTransitions(this.stateName);
 			Iterator<String> it = transitions.iterator();
 			if (it.hasNext()) {
-		        // Get element
-		        next = it.next();
-		    }
+				// Get element
+				next = it.next();
+			}
 			return next;
 		}
-		
+
 	}
 
+	/**
+	 * Method executed when the initiator receives a failure
+	 * @param myProcessor
+	 * @param msg
+	 */
 	protected void doReceiveFailure(CProcessor myProcessor, ACLMessage msg) {
 	}
 
@@ -209,9 +252,14 @@ public abstract class FIPA_CONTRACTNET_Initiator {
 		}
 	}
 
+	/**
+	 * Method executed when the initiator receives a inform
+	 * @param myProcessor
+	 * @param msg
+	 */
 	protected abstract void doReceiveInform(CProcessor myProcessor, ACLMessage msg); // Method
-																				// to
-																				// implement
+	// to
+	// implement
 
 	class RECEIVE_INFORM_Method implements ReceiveStateMethod {
 		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
@@ -227,8 +275,13 @@ public abstract class FIPA_CONTRACTNET_Initiator {
 		}
 	}
 
+	/**
+	 * Method executed when the initiator ends the conversation
+	 * @param myProcessor
+	 * @param messageToSend
+	 */
 	protected void doFinal(CProcessor myProcessor, ACLMessage messageToSend) {
-		messageToSend = myProcessor.getLastSendedMessage();
+		messageToSend = myProcessor.getLastSentMessage();
 	}
 
 	class FINAL_Method implements FinalStateMethod {
@@ -237,7 +290,19 @@ public abstract class FIPA_CONTRACTNET_Initiator {
 		}
 	}
 
-	public CProcessorFactory newFactory(String name, MessageFilter filter,
+	/**
+	 * Creates a new contract net initiator factory
+	 * @param name of the factory
+	 * @param filter message filter
+	 * @param template first message to send
+	 * @param availableConversations 
+	 * @param myAgent
+	 * @param participants number of participants
+	 * @param deadline for waiting for proposals
+	 * @param timeout for waiting for inform
+	 * @return the new cfactory
+	 */
+	public CFactory newFactory(String name, MessageFilter filter,
 			ACLMessage template, int availableConversations, CAgent myAgent,
 			int participants, long deadline, int timeout) {
 
@@ -245,11 +310,11 @@ public abstract class FIPA_CONTRACTNET_Initiator {
 
 		if (filter == null) {
 			filter = new MessageFilter("performative = CFP"); // falta AND
-																	// protocol
-																	// =
-																	// fipa-contract-net;
+			// protocol
+			// =
+			// fipa-contract-net;
 		}
-		CProcessorFactory theFactory = new CProcessorFactory(name, filter,
+		CFactory theFactory = new CFactory(name, filter,
 				availableConversations, myAgent);
 
 		// Processor template setup
@@ -281,7 +346,7 @@ public abstract class FIPA_CONTRACTNET_Initiator {
 		// RECEIVE_NOT_UNDERSTOOD State
 
 		ReceiveState RECEIVE_NOT_UNDERSTOOD = new ReceiveState(
-				"RECEIVE_NOT_UNDERSTOOD");
+		"RECEIVE_NOT_UNDERSTOOD");
 		RECEIVE_NOT_UNDERSTOOD.setMethod(new RECEIVE_NOT_UNDERSTOOD_Method());
 		filter = new MessageFilter("performative = NOT_UNDERSTOOD");
 		RECEIVE_NOT_UNDERSTOOD.setAcceptFilter(filter);
@@ -310,18 +375,18 @@ public abstract class FIPA_CONTRACTNET_Initiator {
 		processor.registerState(RECEIVE_PROPOSE);
 		processor.addTransition(WAIT_FOR_PROPOSALS, RECEIVE_PROPOSE);
 		processor.addTransition(RECEIVE_PROPOSE, WAIT_FOR_PROPOSALS);
-		
+
 		// TIMEOUT State
-		
+
 		ReceiveState TIMEOUT = new ReceiveState("TIMEOUT");
 		TIMEOUT.setMethod(new TIMEOUT_Method());
 		filter = new MessageFilter("performative = INFORM AND purpose = waitMessage");
 		TIMEOUT.setAcceptFilter(filter);
 		processor.registerState(TIMEOUT);
 		processor.addTransition(WAIT_FOR_PROPOSALS, TIMEOUT);
-		
+
 		// EVALUATE_PROPOSALS State
-		
+
 		ActionState EVALUATE_PROPOSALS = new ActionState("EVALUATE_PROPOSALS");
 		EVALUATE_PROPOSALS.setMethod(new EVALUATE_PROPOSALS_Method());
 		processor.registerState(EVALUATE_PROPOSALS);
@@ -329,7 +394,7 @@ public abstract class FIPA_CONTRACTNET_Initiator {
 		processor.addTransition(RECEIVE_NOT_UNDERSTOOD, EVALUATE_PROPOSALS);
 		processor.addTransition(RECEIVE_REFUSE, EVALUATE_PROPOSALS);
 		processor.addTransition(TIMEOUT, EVALUATE_PROPOSALS);
-		
+
 		//We don't need to register send rejections/acceptances. It is done 
 		//dynamically by the EVALUATE_PROPOSALS State
 
@@ -373,14 +438,14 @@ public abstract class FIPA_CONTRACTNET_Initiator {
 		processor.addTransition(EVALUATE_PROPOSALS, FINAL);
 		processor.addTransition(RECEIVE_INFORM, FINAL);			
 		processor.addTransition(RECEIVE_FAILURE, FINAL);
-				
+
 		// We add the internal data
 		processor.getInternalData().put("participants", participants);
 		processor.getInternalData().put("receivedResponses", 0);
 		processor.getInternalData().put("acceptedProposals", 0);
 		processor.getInternalData().put("receivedResults", 0);
 		processor.getInternalData().put("proposes", new ArrayList<ACLMessage>());
-				
+
 		return theFactory;
 	}
 }

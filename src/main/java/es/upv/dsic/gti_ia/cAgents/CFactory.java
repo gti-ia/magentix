@@ -12,7 +12,7 @@ import es.upv.dsic.gti_ia.core.MessageFilter;
  */
 // PENDIENTE
 // Distinguir f�brica de iniciador y participante
-public class CProcessorFactory {
+public class CFactory {
 	//private ACLMessage template;
 	private MessageFilter filter;
 	String name;
@@ -24,7 +24,14 @@ public class CProcessorFactory {
 
 	// private ArrayList<String> children; // ??? Necesario?
 
-	public CProcessorFactory(String name, MessageFilter filter,
+	/**
+	 * Constructor of the class
+	 * @param name
+	 * @param filter
+	 * @param conversationLimit
+	 * @param myAgent
+	 */
+	public CFactory(String name, MessageFilter filter,
 			int conversationsLimit, CAgent myAgent) {
 		this.name = name;
 		this.filter = filter;
@@ -35,25 +42,49 @@ public class CProcessorFactory {
 		// children = new ArrayList<String>();
 	}
 
+	/**
+	 * Returns the conversation limit
+	 * @return
+	 */
 	public int getLimit() {
 		return limit;
 	}
 
+	/**
+	 * Sets the message filter that will make this CFactory to start new CProcessors
+	 * @param template
+	 */
 	public void setFilter(MessageFilter template) {
 		this.myAgent.lock();
 		this.filter = template;
 		this.myAgent.unlock();
 	}
 
+	/**
+	 * Returns this CFactory's message filter
+	 * @return
+	 */
 	public MessageFilter getFilter() {
 		return filter.clone();
 	}
 
+	/**
+	 * Returns the CProcessor that acts as template and will be cloned 
+	 * in order to create new CProcessors
+	 * @return
+	 */
 	public CProcessor cProcessorTemplate() {
 		return this.myCProcessor;
 	}
 
-	CProcessor startConversation(ACLMessage msg, CProcessor parent,
+	/**
+	 * Creates a new CProcessor that will manage the new conversation
+	 * @param msg Initial message
+	 * @param parent Parent CProcessor
+	 * @param isSync True if it is synchronous, false otherwise
+	 * @return the new CProcessor
+	 */
+	protected CProcessor startConversation(ACLMessage msg, CProcessor parent,
 			Boolean isSync) {
 		CProcessor cloneProcessor = (CProcessor) myCProcessor.clone();
 
@@ -71,7 +102,14 @@ public class CProcessorFactory {
 		return (cloneProcessor);
 	}
 	
-	CProcessor startConversationWithID(String id, CProcessor parent, Boolean isSync) {
+	/**
+	 * Creates a new CProcessor that will manage the new conversation
+	 * @param id The conversation identifier of the new conversation
+	 * @param parent Parent CProcessor
+	 * @param isSync True if it is synchronous, false otherwise
+	 * @return
+	 */
+	protected CProcessor startConversationWithID(String id, CProcessor parent, Boolean isSync) {
 		CProcessor cloneProcessor = (CProcessor) myCProcessor.clone();
 
 		cloneProcessor.setConversationID(id);
@@ -107,20 +145,35 @@ public class CProcessorFactory {
 	// Hacer una comparaci�n de mensaje con template completa.
 	// Probablemente mejor en ACLMessage
 
+	/**
+	 * Returns true if the message matches with the message filter
+	 */
 	protected boolean templateIsEqual(ACLMessage template) {
 		if(this.filter == null)
 			return true;
 		return this.filter.compareHeaders(template);
 	}
 	
+	/**
+	 * Sets the type of the CFactory
+	 * @param initiator True if this is initiator, false if this is participant
+	 */
 	protected void setInitiator(boolean initiator){
 		this.initiator = initiator;
 	}
 	
+	/**
+	 * Returns true if this is initiator, false if this is participant
+	 * @return
+	 */
 	protected boolean isInitiator(){
 		return initiator;
 	}
 	
+	/**
+	 * Returns this CFactory's name
+	 * @return
+	 */
 	public String getName(){
 		return this.name;
 	}

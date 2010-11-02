@@ -15,7 +15,7 @@ import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.MessageFilter;
 
 /**
- * 
+ * CProcessor class
  * @author Ricard Lopez Fogues
  * 
  */
@@ -48,14 +48,18 @@ public class CProcessor implements Runnable, Cloneable {
 	Condition syncConversationFinished;
 	ACLMessage syncConversationResponse;
 	private Boolean isSynchronized;
-	private long nextSubID = 0;
+	//private long nextSubID = 0;
 	private String previousState;
-	private ACLMessage lastSendedMessage;
-	private CProcessorFactory myFactory;
+	private ACLMessage lastSentMessage;
+	private CFactory myFactory;
 	private boolean initiator;
 
 	Logger logger = Logger.getLogger(CProcessor.class);
 
+	/**
+	 * Creates a new CProcessor associated to an agent
+	 * @param myAgent The associated agent
+	 */
 	protected CProcessor(CAgent myAgent) {
 		this.myAgent = myAgent;
 		terminated = false;
@@ -72,12 +76,22 @@ public class CProcessor implements Runnable, Cloneable {
 
 	}
 
+	/**
+	 * Adds a transition between two states
+	 * @param from
+	 * @param destination
+	 */
 	public void addTransition(String from, String destination) {
 		this.lockMyAgent();
 		this.transitiontable.addTransition(from, destination);
 		this.unlockMyAgent();
 	}
 
+	/**
+	 * Adds a transition between two states
+	 * @param from
+	 * @param destination
+	 */
 	public void addTransition(State from, State destination) {
 		this.lockMyAgent();
 		this.transitiontable.addTransition(from.getName(), destination
@@ -85,6 +99,11 @@ public class CProcessor implements Runnable, Cloneable {
 		this.unlockMyAgent();
 	}
 
+	
+	/**
+	 * Creates a asynchronous CProcessor
+	 * @param initalMessage
+	 */
 	public void createAsyncConversation(ACLMessage initalMessage) {
 
 		this.lockMyAgent();
@@ -93,6 +112,11 @@ public class CProcessor implements Runnable, Cloneable {
 		this.unlockMyAgent();
 	}
 
+	/**
+	 * Creates a synchronous conversation where this agent is the initiator
+	 * @param initalMessage The message tha will be sent as the first message of the conversation
+	 * @return Final message
+	 */
 	public ACLMessage createSyncConversation(ACLMessage initalMessage) {
 
 		this.lockMyAgent();
@@ -113,7 +137,13 @@ public class CProcessor implements Runnable, Cloneable {
 		return this.syncConversationResponse;
 	}
 	
-	public ACLMessage createSyncConversation(CProcessorFactory factory, String id) {
+	/**
+	 * Creates a synchrnous conversation where this agent is the initiator
+	 * @param factory Fatory that will create the conversation
+	 * @param id Conversation id
+	 * @return
+	 */
+	public ACLMessage createSyncConversation(CFactory factory, String id) {
 
 		this.lockMyAgent();
 
@@ -134,6 +164,10 @@ public class CProcessor implements Runnable, Cloneable {
 		return this.syncConversationResponse;
 	}
 
+	/**
+	 * Removes a state from the graph
+	 * @param s State to remove
+	 */
 	public void deregisterState(State s) {
 		this.lockMyAgent();
 		states.remove(s.getName());
@@ -141,51 +175,91 @@ public class CProcessor implements Runnable, Cloneable {
 		this.unlockMyAgent();
 	}
 
+	/**
+	 * Gets conversation identifier
+	 * @return Conversation identifier
+	 */
 	public String getConversationID() {
 		return conversationID;
 	}
 
+	/**
+	 * Gets conversation's internal data
+	 * @return
+	 */
 	public Map<String, Object> getInternalData() {
 		return internalData;
 	}
 
+	/**
+	 * Gets the last received message during this conversation 
+	 * @return
+	 */
 	public ACLMessage getLastReceivedMessage() {
 		return currentMessage;
 	}
 
-	public ACLMessage getLastSendedMessage() {
-		return lastSendedMessage;
+	/**
+	 * Gets the last sent message during this conversation
+	 * @return
+	 */
+	public ACLMessage getLastSentMessage() {
+		return lastSentMessage;
 	}
 
+	/**
+	 * Returns the agent owner of this CProcessor
+	 * @return
+	 */
 	public CAgent getMyAgent() {
 		return myAgent;
 	}
 
+	/**
+	 * Returns the CProcessor which is parent of this one
+	 * @return
+	 */
 	public CProcessor getParent() {
 		return parent;
 	}
 
+	/**
+	 * Returns parent internal data
+	 * @return
+	 */
 	public Map<String, Object> getParentInternalData() {
 		return parent.internalData;
 	}
 
-	public String getPreviousState() {
-		return previousState;
-	}
-
+	/**
+	 * Returns the state identified by its name
+	 * @param name
+	 * @return
+	 */
 	public State getState(String name) {
 		return this.states.get(name);
 	}
 
+	/**
+	 * Returns the table of transitions between the states of the graph
+	 * @return
+	 */
 	public TransitionTable getTransitionTable() {
 		// PENDIENTE reemplazar por funciones de consulta
 		return this.transitiontable;
 	}
 
-	public void lockMyAgent() {
+	/**
+	 * Locks the agent's mutex
+	 */
+	private void lockMyAgent() {
 		this.myAgent.mutex.lock();
 	}
 
+	/**
+	 * Registers a new state in the CProcessor
+	 * @param s The new state
+	 */
 	public void registerState(State s) {
 		this.lockMyAgent();
 		states.put(s.getName(), s);
@@ -193,12 +267,21 @@ public class CProcessor implements Runnable, Cloneable {
 		this.unlockMyAgent();
 	}
 
+	/**
+	 * Removes a transition between from state and destination state
+	 * @param from
+	 * @param destination
+	 */
 	public void removeTransition(String from, String destination) {
 		this.lockMyAgent();
 		this.transitiontable.removeTransition(from, destination);
 		this.unlockMyAgent();
 	}
 
+	/**
+	 * This method executes the CProcessor thread. This method manages the
+	 * conversation through the different graph states
+	 */
 	public void run() {
 		String next;
 
@@ -273,7 +356,7 @@ public class CProcessor implements Runnable, Cloneable {
 					messageToSend.setConversationId(this.conversationID);
 					
 					this.myAgent.send(messageToSend);
-					this.lastSendedMessage = messageToSend;
+					this.lastSentMessage = messageToSend;
 
 					break;
 
@@ -503,17 +586,26 @@ public class CProcessor implements Runnable, Cloneable {
 		}
 	}
 
+	/**
+	 * Tries to end agent execution
+	 */
 	public void ShutdownAgent() {
 		this.lockMyAgent();
 		this.myAgent.Shutdown();
 		this.unlockMyAgent();
 	}
 
+	/**
+	 * Unlocks the mutex of the agent owner of this CProcessor
+	 */
 	public void unlockMyAgent() {
 		this.myAgent.mutex.unlock();
 	}
 
-	protected Object clone() {
+	/**
+	 * Clones this object
+	 */
+	public Object clone() {
 		Object obj = null;
 		try {
 			obj = super.clone();
@@ -549,74 +641,142 @@ public class CProcessor implements Runnable, Cloneable {
 		return aux;
 	}
 
-	void addMessage(ACLMessage msg) {
+	/**
+	 * Assigns a message to this CProcessor
+	 * @param msg
+	 */
+	protected void addMessage(ACLMessage msg) {
 		messageQueue.add(msg);
 	}
 
-	BeginState beginState() {
+	/**
+	 * Returns the name of the first state
+	 * @return The name of the begin state
+	 */
+	protected BeginState beginState() {
 		return BEGIN;
 	}
 
-	CancelState cancelState() {
+	/**
+	 * Returns the name of the exception cancel state
+	 * @return The name of the cancel state
+	 */
+	protected CancelState cancelState() {
 		return CANCEL_STATE;
 	}
 
-	CProcessorFactory getMyFactory() {
+	/**
+	 * Returns the factory that has associated this CProcessor
+	 * @return
+	 */
+	public CFactory getMyFactory() {
 		return myFactory;
 	}
 
-	boolean isIdle() {
+	/**
+	 * Returns true if the CProcessor is idle, false otherwise
+	 * @return
+	 */
+	public boolean isIdle() {
 		return idle;
 	}
 
-	boolean isTerminated() {
+	/**
+	 * Returns true if the CProcessor is terminated, false otherwise
+	 * @return
+	 */
+	public boolean isTerminated() {
 		return terminated;
 	}
 
-	String newConversationID() {
+	/**
+	 * Returns a new conversation identifier
+	 * @return
+	 */
+	protected String newConversationID() {
 		return this.myAgent.getName() + UUID.randomUUID().toString();
 	}
 
-	void notifySyncConversationFinished(ACLMessage response) {
+	/**
+	 * When a synchrnous conversation finished this method is executed
+	 * @param response
+	 */
+	private void notifySyncConversationFinished(ACLMessage response) {
 		this.lockMyAgent();
 		this.syncConversationResponse = response;
 		syncConversationFinished.signal();
 		this.unlockMyAgent();
 	}
 
-	void registerFirstState(State s) {
+	/**
+	 * Registers the first state of the graph
+	 * @param s
+	 */
+	public void registerFirstState(State s) {
 		registerState(s);
 		firstName = s.getName();
 	}
 
-	SendingErrorsState sendingErrorsState() {
+	/**
+	 * Returns the exception state that manages sending errors
+	 * @return
+	 */
+	protected SendingErrorsState sendingErrorsState() {
 		return ses;
 	}
 
-	void setConversationID(String id) {
+	/**
+	 * Sets the conversation identifier
+	 * @param id
+	 */
+	protected void setConversationID(String id) {
 		conversationID = id;
 	}
 
-	void setFactory(CProcessorFactory factory) {
+	/**
+	 * Sets the factory to which this CProcessor is associated
+	 * @param factory
+	 */
+	protected void setFactory(CFactory factory) {
 		this.myFactory = factory;
 	}
 
-	void setIdle(boolean idle) {
+	/**
+	 * Sets the CProcessor as idle
+	 * @param idle
+	 */
+	protected void setIdle(boolean idle) {
 		this.idle = idle;
 	}
 
-	void setIsSynchronized(Boolean value) {
+	/**
+	 * Sets the CProcessor as synchronous or asynchronous
+	 * @param value
+	 */
+	protected void setIsSynchronized(boolean value) {
 		isSynchronized = value;
 	}
 
-	void setParent(CProcessor parent) {
+	/**
+	 * Sets the parent CProcessor of this one
+	 * @param parent
+	 */
+	protected void setParent(CProcessor parent) {
 		this.parent = parent;
 	}
 
+	/**
+	 * Sets the CProcessor as initiator or participant
+	 * @param initiator
+	 */
 	protected void setInitiator(boolean initiator) {
 		this.initiator = initiator;
 	}
 
+	/**
+	 * Returns true if this CProcessor is initiator, false otherwise
+	 * @return
+	 */
 	protected boolean isInitiator() {
 		return this.initiator;
 	}

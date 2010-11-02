@@ -6,7 +6,7 @@ import es.upv.dsic.gti_ia.cAgents.BeginState;
 import es.upv.dsic.gti_ia.cAgents.BeginStateMethod;
 import es.upv.dsic.gti_ia.cAgents.CAgent;
 import es.upv.dsic.gti_ia.cAgents.CProcessor;
-import es.upv.dsic.gti_ia.cAgents.CProcessorFactory;
+import es.upv.dsic.gti_ia.cAgents.CFactory;
 import es.upv.dsic.gti_ia.cAgents.FinalState;
 import es.upv.dsic.gti_ia.cAgents.FinalStateMethod;
 import es.upv.dsic.gti_ia.cAgents.ReceiveState;
@@ -18,6 +18,11 @@ import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.MessageFilter;
 
 public abstract class FIPA_CONTRACTNET_Participant {
+	/**
+	 * Method executed at the beginning of the conversation
+	 * @param myProcessor
+	 * @param msg
+	 */
 	protected void doBegin(CProcessor myProcessor, ACLMessage msg) {
 		myProcessor.getInternalData().put("InitialMessage", msg);
 	}
@@ -29,6 +34,12 @@ public abstract class FIPA_CONTRACTNET_Participant {
 		};
 	}
 
+	/**
+	 * Method executed when the participant receives a call for proposals
+	 * @param myProcessor
+	 * @param msg
+	 * @return
+	 */
 	protected abstract String doReceiveSolicit(CProcessor myProcessor, ACLMessage msg);
 
 	class RECEIVE_SOLICIT_Method implements ReceiveStateMethod {
@@ -38,6 +49,11 @@ public abstract class FIPA_CONTRACTNET_Participant {
 		}
 	}
 
+	/**
+	 * Method executed when the participant sends a proposal
+	 * @param myProcessor
+	 * @param messageToSend
+	 */
 	protected abstract void doSendProposal(CProcessor myProcessor,
 			ACLMessage messageToSend);
 
@@ -48,6 +64,11 @@ public abstract class FIPA_CONTRACTNET_Participant {
 		}
 	}
 	
+	/**
+	 * Method executed when the participant sends a refuse
+	 * @param myProcessor
+	 * @param messageToSend
+	 */
 	protected void doSendRefuse(CProcessor myProcessor,
 			ACLMessage messageToSend){
 		ACLMessage aux = (ACLMessage) myProcessor.getInternalData().get(
@@ -66,6 +87,11 @@ public abstract class FIPA_CONTRACTNET_Participant {
 		}
 	}
 	
+	/**
+	 * Method executed when the participant sends a not-understood
+	 * @param myProcessor
+	 * @param messageToSend
+	 */
 	protected void doSendNotUnderstood(CProcessor myProcessor,
 			ACLMessage messageToSend){
 		ACLMessage aux = (ACLMessage) myProcessor.getInternalData().get(
@@ -84,6 +110,11 @@ public abstract class FIPA_CONTRACTNET_Participant {
 		}
 	}
 	
+	/**
+	 * Method executed when the initiator accepts participant's proposal
+	 * @param myProcessor
+	 * @param msg
+	 */
 	protected void doReceiveAccept(CProcessor myProcessor, ACLMessage msg){
 	}
 
@@ -94,6 +125,11 @@ public abstract class FIPA_CONTRACTNET_Participant {
 		}
 	}
 	
+	/**
+	 * Method executed when the initiator rejects participant's proposal
+	 * @param myProcessor
+	 * @param msg
+	 */
 	protected void doReceiveReject(CProcessor myProcessor, ACLMessage msg){
 	}
 
@@ -104,6 +140,12 @@ public abstract class FIPA_CONTRACTNET_Participant {
 		}
 	}
 
+	/**
+	 * Perform the proposal's task
+	 * @param myProcessor
+	 * @param solicitMessage
+	 * @return
+	 */
 	protected abstract String doTask(CProcessor myProcessor, ACLMessage solicitMessage);
 
 	class DO_TASK_Method implements ActionStateMethod {
@@ -113,6 +155,11 @@ public abstract class FIPA_CONTRACTNET_Participant {
 		}
 	}
 	
+	/**
+	 * Method executed when the task failed
+	 * @param myProcessor
+	 * @param messageToSend
+	 */
 	protected void doSendFailure(CProcessor myProcessor,
 			ACLMessage messageToSend){
 		ACLMessage aux = (ACLMessage) myProcessor.getInternalData().get(
@@ -131,6 +178,11 @@ public abstract class FIPA_CONTRACTNET_Participant {
 		}
 	}
 	
+	/**
+	 * Method executed when the task succeeded
+	 * @param myProcessor
+	 * @param messageToSend
+	 */
 	protected abstract void doSendInfo(CProcessor myProcessor,
 			ACLMessage messageToSend);
 
@@ -141,8 +193,13 @@ public abstract class FIPA_CONTRACTNET_Participant {
 		}
 	}	
 
+	/**
+	 * Method executed when the conversation ends
+	 * @param myProcessor
+	 * @param messageToSend
+	 */
 	protected void doFinal(CProcessor myProcessor, ACLMessage messageToSend) {
-		messageToSend = myProcessor.getLastSendedMessage();
+		messageToSend = myProcessor.getLastSentMessage();
 	}
 
 	class FINAL_Method implements FinalStateMethod {
@@ -151,7 +208,17 @@ public abstract class FIPA_CONTRACTNET_Participant {
 		}
 	}
 	
-	public CProcessorFactory newFactory(String name, MessageFilter filter,
+	/**
+	 * Creates a new contract-net participant CFactory
+	 * @param name factory's name
+	 * @param filter message filter
+	 * @param template first message to send
+	 * @param availableConversations
+	 * @param myAgent 
+	 * @param timeout for waiting after sending the proposal
+	 * @return
+	 */
+	public CFactory newFactory(String name, MessageFilter filter,
 			ACLMessage template, int availableConversations, CAgent myAgent, int timeout) {
 
 		// Create factory
@@ -166,7 +233,7 @@ public abstract class FIPA_CONTRACTNET_Participant {
 		if (template == null){
 			template = new ACLMessage(ACLMessage.PROPOSE);
 		}
-		CProcessorFactory theFactory = new CProcessorFactory(name, filter,
+		CFactory theFactory = new CFactory(name, filter,
 				availableConversations, myAgent);
 
 		// Processor template setup

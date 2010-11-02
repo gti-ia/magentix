@@ -2,7 +2,7 @@ package es.upv.dsic.gti_ia.cAgents;
 
 
 /**
- * 
+ * This class is not currently used. It needs a revision in order to define its operation
  * @author Ricard Lopez Fogues
  * 
  */

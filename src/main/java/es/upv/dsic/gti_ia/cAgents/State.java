@@ -26,24 +26,44 @@ public abstract class State implements Cloneable {
 	int type;
 
 	private String name;
-
-	public State(String n) {
+	
+	/**
+	 * Creates a new state
+	 * @param n
+	 */
+	protected State(String n) {
 		name = n;
 	}
 
+	/**
+	 * Returns this state's name
+	 * @return this state's name
+	 */
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * Returns this state's type
+	 * @return this state's type
+	 */
 	int getType() {
 		return type;
 	}
 
-	void setType(int t) {
+	/**
+	 * Sets this state's type
+	 * @param t type of the state
+	 */
+	protected void setType(int t) {
 		type = t;
 	}
 
-	void setName(String name) {
+	/**
+	 * Sets this state's name
+	 * @param name of the state
+	 */
+	protected void setName(String name) {
 		this.name = name;
 	}
 

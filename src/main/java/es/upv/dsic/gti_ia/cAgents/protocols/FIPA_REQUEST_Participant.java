@@ -5,7 +5,7 @@ import es.upv.dsic.gti_ia.cAgents.ActionStateMethod;
 import es.upv.dsic.gti_ia.cAgents.BeginState;
 import es.upv.dsic.gti_ia.cAgents.BeginStateMethod;
 import es.upv.dsic.gti_ia.cAgents.CAgent;
-import es.upv.dsic.gti_ia.cAgents.CProcessorFactory;
+import es.upv.dsic.gti_ia.cAgents.CFactory;
 import es.upv.dsic.gti_ia.cAgents.CProcessor;
 import es.upv.dsic.gti_ia.cAgents.FinalState;
 import es.upv.dsic.gti_ia.cAgents.FinalStateMethod;
@@ -19,6 +19,11 @@ import es.upv.dsic.gti_ia.core.MessageFilter;
 
 public abstract class FIPA_REQUEST_Participant {
 	
+	/**
+	 * Method executed at the beginning of the conversation
+	 * @param myProcessor
+	 * @param msg
+	 */
 	protected void doBegin(CProcessor myProcessor, ACLMessage msg) {
 		myProcessor.getInternalData().put("InitialMessage", msg);
 	}
@@ -30,6 +35,12 @@ public abstract class FIPA_REQUEST_Participant {
 		};
 	}
 
+	/**
+	 * Method executed when the initiator receives the request
+	 * @param myProcessor
+	 * @param request
+	 * @return
+	 */
 	protected abstract String doReceiveRequest(CProcessor myProcessor,
 			ACLMessage request);
 
@@ -39,6 +50,11 @@ public abstract class FIPA_REQUEST_Participant {
 		}
 	}
 
+	/**
+	 * Sets the not-understood message
+	 * @param myProcessor
+	 * @param messageToSend
+	 */
 	protected void doNotUnderstood(CProcessor myProcessor,
 			ACLMessage messageToSend) {
 		messageToSend.setProtocol("fipa-request");
@@ -54,6 +70,11 @@ public abstract class FIPA_REQUEST_Participant {
 		}
 	}
 	
+	/**
+	 * Sets the refuse message
+	 * @param myProcessor
+	 * @param messageToSend
+	 */
 	protected void doRefuse(CProcessor myProcessor,
 			ACLMessage messageToSend) {
 		messageToSend.setProtocol("fipa-request");
@@ -69,6 +90,11 @@ public abstract class FIPA_REQUEST_Participant {
 		}
 	}
 	
+	/**
+	 * Sets the agree message
+	 * @param myProcessor
+	 * @param messageToSend
+	 */
 	protected void doAgree(CProcessor myProcessor,
 			ACLMessage messageToSend) {
 		messageToSend.setProtocol("fipa-request");
@@ -84,6 +110,11 @@ public abstract class FIPA_REQUEST_Participant {
 		}
 	}
 	
+	/**
+	 * Perform the requested action
+	 * @param myProcessor
+	 * @return
+	 */
 	protected abstract String doAction(CProcessor myProcessor);
 	
 	class ACTION_Method implements ActionStateMethod{
@@ -94,6 +125,11 @@ public abstract class FIPA_REQUEST_Participant {
 		
 	}
 	
+	/**
+	 * Sets the failure message
+	 * @param myProcessor
+	 * @param messageToSend
+	 */
 	protected void doFailure(CProcessor myProcessor,
 			ACLMessage messageToSend) {
 		messageToSend.setProtocol("fipa-request");
@@ -109,6 +145,11 @@ public abstract class FIPA_REQUEST_Participant {
 		}
 	}
 	
+	/**
+	 * Sets the inform message
+	 * @param myProcessor
+	 * @param response
+	 */
 	protected abstract void doInform(CProcessor myProcessor, ACLMessage response);
 
 	class INFORM_Method implements SendStateMethod {
@@ -122,6 +163,11 @@ public abstract class FIPA_REQUEST_Participant {
 		}
 	}
 	
+	/**
+	 * Method executed when the conversation ends
+	 * @param myProcessor
+	 * @param messageToSend
+	 */
 	protected void doFinal(CProcessor myProcessor, ACLMessage messageToSend){
 	}
 	
@@ -131,7 +177,15 @@ public abstract class FIPA_REQUEST_Participant {
 		}
 	}
 
-	public CProcessorFactory newFactory(String name, MessageFilter filter,
+	/**
+	 * Creates a new participant fipa request factory
+	 * @param name
+	 * @param filter
+	 * @param availableConversations
+	 * @param myAgent
+	 * @return
+	 */
+	public CFactory newFactory(String name, MessageFilter filter,
 			int availableConversations, CAgent myAgent) {
 
 		//MessageFilter filter;
@@ -143,7 +197,7 @@ public abstract class FIPA_REQUEST_Participant {
 		}
 		//template.setProtocol("REQUEST");
 		//template.setPerformative(ACLMessage.REQUEST);
-		CProcessorFactory theFactory = new CProcessorFactory(name, filter,
+		CFactory theFactory = new CFactory(name, filter,
 				availableConversations, myAgent);
 
 		// Processor template setup

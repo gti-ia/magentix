@@ -3,7 +3,7 @@ package es.upv.dsic.gti_ia.cAgents.protocols;
 import es.upv.dsic.gti_ia.cAgents.BeginState;
 import es.upv.dsic.gti_ia.cAgents.BeginStateMethod;
 import es.upv.dsic.gti_ia.cAgents.CAgent;
-import es.upv.dsic.gti_ia.cAgents.CProcessorFactory;
+import es.upv.dsic.gti_ia.cAgents.CFactory;
 import es.upv.dsic.gti_ia.cAgents.CProcessor;
 import es.upv.dsic.gti_ia.cAgents.FinalState;
 import es.upv.dsic.gti_ia.cAgents.FinalStateMethod;
@@ -17,6 +17,11 @@ import es.upv.dsic.gti_ia.core.MessageFilter;
 
 public abstract class FIPA_REQUEST_Initiator {
 	
+	/**
+	 * Method to execute at the beginning of the conversation
+	 * @param myProcessor
+	 * @param msg
+	 */
 	protected void doBegin(CProcessor myProcessor, ACLMessage msg) {
 		myProcessor.getInternalData().put("InitialMessage", msg);		
 	}
@@ -28,6 +33,11 @@ public abstract class FIPA_REQUEST_Initiator {
 		};
 	}
 	
+	/**
+	 * Sets the request message
+	 * @param myProcessor
+	 * @param messageToSend
+	 */
 	protected void doRequest(CProcessor myProcessor,
 			ACLMessage messageToSend) {
 		/*ACLMessage aux = (ACLMessage) myProcessor.getInternalData().get(
@@ -45,6 +55,11 @@ public abstract class FIPA_REQUEST_Initiator {
 		}
 	}
 	
+	/**
+	 * Method to execute when the initiator receives a not-understood message
+	 * @param myProcessor
+	 * @param msg
+	 */
 	protected void doNotUnderstood(CProcessor myProcessor, ACLMessage msg){
 	}
 
@@ -55,6 +70,11 @@ public abstract class FIPA_REQUEST_Initiator {
 		}
 	}
 	
+	/**
+	 * Method to execute when the initiator receives a failure message
+	 * @param myProcessor
+	 * @param msg
+	 */
 	protected void doRefuse(CProcessor myProcessor, ACLMessage msg){
 	}
 
@@ -65,6 +85,11 @@ public abstract class FIPA_REQUEST_Initiator {
 		}
 	}
 	
+	/**
+	 * Method to execute when the initiator receives an agree message
+	 * @param myProcessor
+	 * @param msg
+	 */
 	protected void doAgree(CProcessor myProcessor, ACLMessage msg){
 	}
 
@@ -75,6 +100,11 @@ public abstract class FIPA_REQUEST_Initiator {
 		}
 	}
 	
+	/**
+	 * Method to execute when the timeout is reached
+	 * @param myProcessor
+	 * @param msg
+	 */
 	protected void doSecondWait(CProcessor myProcessor, ACLMessage msg){		
 	}
 
@@ -85,6 +115,11 @@ public abstract class FIPA_REQUEST_Initiator {
 		}
 	}
 	
+	/**
+	 * Method to execute when the initiator receives a failure message
+	 * @param myProcessor
+	 * @param msg
+	 */
 	protected void doFailure(CProcessor myProcessor, ACLMessage msg){
 	}
 
@@ -95,6 +130,11 @@ public abstract class FIPA_REQUEST_Initiator {
 		}
 	}
 	
+	/**
+	 * Method to execute when the initiator receives an inform message
+	 * @param myProcessor
+	 * @param msg
+	 */
 	protected abstract void doInform(CProcessor myProcessor, ACLMessage msg); //Method to implement
 
 	class INFORM_Method implements ReceiveStateMethod {
@@ -104,8 +144,13 @@ public abstract class FIPA_REQUEST_Initiator {
 		}
 	}
 
+	/**
+	 * Method to execute when the initiator ends the conversation
+	 * @param myProcessor
+	 * @param messageToSend
+	 */
 	protected void doFinal(CProcessor myProcessor, ACLMessage messageToSend) {
-		messageToSend = myProcessor.getLastSendedMessage();
+		messageToSend = myProcessor.getLastSentMessage();
 	}
 
 	class FINAL_Method implements FinalStateMethod {
@@ -114,7 +159,17 @@ public abstract class FIPA_REQUEST_Initiator {
 		}
 	}
 
-	public CProcessorFactory newFactory(String name, MessageFilter filter, ACLMessage requestMessage,
+	/**
+	 * Creates a new initiator fipa request cfactory
+	 * @param name
+	 * @param filter
+	 * @param requestMessage
+	 * @param availableConversations
+	 * @param myAgent
+	 * @param timeout
+	 * @return
+	 */
+	public CFactory newFactory(String name, MessageFilter filter, ACLMessage requestMessage,
 			int availableConversations, CAgent myAgent, long timeout) {
 
 		// Create factory
@@ -122,7 +177,7 @@ public abstract class FIPA_REQUEST_Initiator {
 		if (filter == null) {
 			filter = new MessageFilter("performative = REQUEST"); //falta AND protocol = fipa-request;
 		}
-		CProcessorFactory theFactory = new CProcessorFactory(name, filter,
+		CFactory theFactory = new CFactory(name, filter,
 				availableConversations, myAgent);
 
 		// Processor template setup
