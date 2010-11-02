@@ -89,7 +89,7 @@ public class Oracle {
 //	}
 
 	/**
-	 * Return providerUnitList is a unit where the role client is defined
+	 * Returns providerUnitList is a unit where the role client is defined
 	 *  @return providerUnitList is a unit where the role client is defined
 	 */
 	public ArrayList<String> getClientUnitList() {
@@ -97,7 +97,7 @@ public class Oracle {
 	}
 
 	/**
-	 * Return unitList this parameter is a unit where the role client is defined
+	 * Returns unitList this parameter is a unit where the role client is defined
 	 * @param unitList this parameter is a unit where the role client is defined
 	 */
 	public void setClientUnitList(ArrayList<String> unitList) {
@@ -105,21 +105,21 @@ public class Oracle {
 	}
 
 	/**
-	 * Return providerUnitList is a unit where the role provider is defined
+	 * Returns providerUnitList is a unit where the role provider is defined
 	 * @return providerUnitList is a unit where the role provider is defined
 	 */
 	public ArrayList<String> getProviderUnitList() {
 		return this.providerunitList;
 	}
 	/**
-	 * Return unitList this parameter is a unit where the role provider is defined
+	 * Returns unitList this parameter is a unit where the role provider is defined
 	 * @param unitList this parameter is a unit where the role provider is defined
 	 */
 	public void setProviderUnitList(ArrayList<String> unitList) {
 		this.providerunitList = unitList;
 	}
 	/**
-	 * Method to parse an OWL-S file
+	 * Method to parses an OWL-S file
 	 * 
 	 * @param file
 	 */
@@ -138,7 +138,7 @@ public class Oracle {
 	}
 
 	/**
-	 * Method to parse an OWL-S url
+	 * Method to parses an OWL-S URL
 	 * 
 	 * @param url
 	 */
@@ -157,7 +157,7 @@ public class Oracle {
 		}
 	}
 
-	public void visit(Node node, int level) {
+	private void visit(Node node, int level) {
 		NodeList nl = node.getChildNodes();
 
 		for (int i = 0, cnt = nl.getLength(); i < cnt; i++) {
@@ -372,13 +372,31 @@ public class Oracle {
 		}
 	}
 
-	public Document parserXML(File file) throws SAXException, IOException,
+	/**
+	 * Converts a file to org.w3c.dom.Document.
+	 * 
+	 * @param file
+	 * @return org.w3c.dom.Document
+	 * @throws SAXException
+	 * @throws IOException
+	 * @throws ParserConfigurationException
+	 */
+	private Document parserXML(File file) throws SAXException, IOException,
 			ParserConfigurationException {
 		return DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(
 				file);
 	}
 
-	public Document parserXML(URL url) throws SAXException, IOException,
+	/**
+	 * Converts a URL to org.w3c.dom.Document 
+	 * 
+	 * @param url
+	 * @return org.w3c.dom.Document
+	 * @throws SAXException
+	 * @throws IOException
+	 * @throws ParserConfigurationException
+	 */
+	private Document parserXML(URL url) throws SAXException, IOException,
 			ParserConfigurationException {
 		return DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(
 				url.openStream());
