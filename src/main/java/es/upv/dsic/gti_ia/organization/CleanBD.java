@@ -16,7 +16,7 @@ public class CleanBD {
 	private Configuration c;
 
 	/**
-	 * This class cleans the entire contents of the tables in the database THOMAS, including tables that are created within Jena. It is important that we make use of this method at the beginning or end of the initialization of our projects, we must be careful configure the settings.xml file with data from the database.
+	 * This class cleans the entire contents of the tables in the database THOMAS, including tables that are created within Jena. We must be careful configure the settings.xml file with data from the database.
 	 */
 	public void clean_database() {
 		try {
