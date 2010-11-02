@@ -21,17 +21,17 @@ import java.util.Properties;
  */
 public class PWCBHandler implements CallbackHandler
 {
-	
+
 	protected Logger logger = Logger.getLogger(PWCBHandler.class);
-	
-	
+
+
 	/**
 	 * This method set the password for the private key. 
 	 */
-    public void handle(Callback[] callbacks) throws IOException {
-    	DOMConfigurator.configure("configuration/loggin.xml");
-    	Properties prop = new Properties();
-    	try {
+	public void handle(Callback[] callbacks) throws IOException {
+		DOMConfigurator.configure("configuration/loggin.xml");
+		Properties prop = new Properties();
+		try {
 			prop.load(new FileInputStream(
 					"./configuration/securityUser.properties"));
 		} catch (FileNotFoundException e) {
@@ -42,23 +42,23 @@ public class PWCBHandler implements CallbackHandler
 		//String idP = prop.getProperty("alias");
 		String keySignature = prop.getProperty("KeyStorePassword");
 		String keyDecrypt = prop.getProperty("KeyStorePassword");
-		 
-        for (int i = 0; i < callbacks.length; i++) {
-        	
-            WSPasswordCallback pwcb = (WSPasswordCallback)callbacks[i];
 
-            int usage = pwcb.getUsage();
+		for (int i = 0; i < callbacks.length; i++) {
 
-            
-            if (usage == WSPasswordCallback.SIGNATURE) {
-                 pwcb.setPassword(keySignature);
-            }
-            else if (usage == WSPasswordCallback.DECRYPT)
-            {
-            	 pwcb.setPassword(keyDecrypt);
-            	 
-            }
+			WSPasswordCallback pwcb = (WSPasswordCallback)callbacks[i];
 
-        }
-    }
+			int usage = pwcb.getUsage();
+
+
+			if (usage == WSPasswordCallback.SIGNATURE) {
+				pwcb.setPassword(keySignature);
+			}
+			else if (usage == WSPasswordCallback.DECRYPT)
+			{
+				pwcb.setPassword(keyDecrypt);
+
+			}
+
+		}
+	}
 }
