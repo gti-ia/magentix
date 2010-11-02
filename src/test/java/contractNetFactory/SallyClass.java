@@ -6,7 +6,7 @@ import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.cAgents.CAgent;
 import es.upv.dsic.gti_ia.cAgents.CProcessor;
-import es.upv.dsic.gti_ia.cAgents.CProcessorFactory;
+import es.upv.dsic.gti_ia.cAgents.CFactory;
 import es.upv.dsic.gti_ia.cAgents.protocols.FIPA_CONTRACTNET_Participant;
 
 class SallyClass extends CAgent {
@@ -85,7 +85,7 @@ class SallyClass extends CAgent {
 		// by the CONTRACTNET protocol (null) and we limit the number of simultaneous
 		// processors to 1, i.e. the requests will be attended one after another.
 
-		CProcessorFactory talk = new myFIPA_CONTRACTNET().newFactory("TALK", null, 
+		CFactory talk = new myFIPA_CONTRACTNET().newFactory("TALK", null, 
 				null, 1, myProcessor.getMyAgent(), 0);
 		
 		// Finally the factory is setup to answer to incoming messages that

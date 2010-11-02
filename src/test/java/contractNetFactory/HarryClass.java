@@ -6,7 +6,7 @@ import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.cAgents.CAgent;
 import es.upv.dsic.gti_ia.cAgents.CProcessor;
-import es.upv.dsic.gti_ia.cAgents.CProcessorFactory;
+import es.upv.dsic.gti_ia.cAgents.CFactory;
 import es.upv.dsic.gti_ia.cAgents.protocols.FIPA_CONTRACTNET_Initiator;
 
 class HarryClass extends CAgent {
@@ -100,7 +100,7 @@ class HarryClass extends CAgent {
 		// by the CONTRACT_NET protocol (null) and we do not limit the number of simultaneous
 		// processors (value 0)
 		
-		CProcessorFactory talk = new myFIPA_CONTRACTNET().newFactory("TALK", null, msg,
+		CFactory talk = new myFIPA_CONTRACTNET().newFactory("TALK", null, msg,
 				1, myProcessor.getMyAgent(), 2, 2000, 2000);
 
 		// The factory is setup to answer start conversation requests from the agent

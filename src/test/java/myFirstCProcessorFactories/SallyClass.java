@@ -21,7 +21,7 @@ class SallyClass extends CAgent {
 
 		filter = new MessageFilter("performative = PROPOSE");
 
-		CProcessorFactory talk = new CProcessorFactory("TALK", filter, 1,
+		CFactory talk = new CFactory("TALK", filter, 1,
 				this);
 
 		// A CProcessor always starts in the predefined state BEGIN.

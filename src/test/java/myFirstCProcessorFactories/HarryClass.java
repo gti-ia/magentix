@@ -4,7 +4,7 @@ import es.upv.dsic.gti_ia.cAgents.BeginState;
 import es.upv.dsic.gti_ia.cAgents.BeginStateMethod;
 import es.upv.dsic.gti_ia.cAgents.CAgent;
 import es.upv.dsic.gti_ia.cAgents.CProcessor;
-import es.upv.dsic.gti_ia.cAgents.CProcessorFactory;
+import es.upv.dsic.gti_ia.cAgents.CFactory;
 import es.upv.dsic.gti_ia.cAgents.FinalState;
 import es.upv.dsic.gti_ia.cAgents.FinalStateMethod;
 import es.upv.dsic.gti_ia.cAgents.ReceiveState;
@@ -31,7 +31,7 @@ class HarryClass extends CAgent {
 
 		filter = new MessageFilter("performative = PROPOSE");
 		
-		CProcessorFactory talk = new CProcessorFactory("TALK", filter, 1,
+		CFactory talk = new CFactory("TALK", filter, 1,
 				myProcessor.getMyAgent());
 
 		// A CProcessor always starts in the predefined state BEGIN.
