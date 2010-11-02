@@ -39,7 +39,12 @@ public class MagentixAgArch extends AgArch{
 	private Queue<ACLMessage> messageList = new LinkedList<ACLMessage>();
 	protected boolean running = true;
 	
-	public void init(String filename, CAgent agent){
+	/**
+	 * Starts the architecture
+	 * @param filename File with the AgentSepak code
+	 * @param agent Agent with this architecture
+	 */
+	protected void init(String filename, CAgent agent){
 		try {
 			this.jasonAgent = agent;
 			Agent ag = new Agent();
@@ -49,7 +54,10 @@ public class MagentixAgArch extends AgArch{
 			logger.log(Level.SEVERE, "Init error", e);
 		}
 	}
-			
+	
+	/**
+	 * Runs the reasoning cycle
+	 */
 	public void run() {
 		RunCentralisedMAS.setupLogger();
 		try {
@@ -155,7 +163,10 @@ public class MagentixAgArch extends AgArch{
 		} while(m != null);
 	}
 	
-	/** returns the content of the message m and implements some pro-processing of the content, if necessary */
+	/** 
+	 * returns the content of the message m and implements some pro-processing of the content, if necessary 
+	 * @param m Message to translate
+	 * */
     protected Object translateContentToJason(ACLMessage m) {
         Object propCont = null;
         try {
@@ -187,7 +198,13 @@ public class MagentixAgArch extends AgArch{
 	public void broadcast(jason.asSemantics.Message m) throws Exception {
 	}
 	
-	protected ACLMessage jasonToACL(Message m) throws IOException {
+	/**
+	 * Converts a jason message into an ACLMessage
+	 * @param m
+	 * @return
+	 * @throws IOException
+	 */
+	private ACLMessage jasonToACL(Message m) throws IOException {
 		ACLMessage acl = new ACLMessage(kqmlToACL(m.getIlForce()));
 		// send content as string if it is a Term/String (it is better for interoperability)
 		if (m.getPropCont() instanceof Term || m.getPropCont() instanceof String) {
@@ -205,14 +222,19 @@ public class MagentixAgArch extends AgArch{
 		return acl;
 	}
 
-	public static final int UNTELL    = 1001;
-	public static final int ASKALL    = 1002;
-	public static final int UNACHIEVE = 1003;
-	public static final int TELLHOW   = 1004;
-	public static final int UNTELLHOW = 1005;
-	public static final int ASKHOW    = 1006;
+	private static final int UNTELL    = 1001;
+	private static final int ASKALL    = 1002;
+	private static final int UNACHIEVE = 1003;
+	private static final int TELLHOW   = 1004;
+	private static final int UNTELLHOW = 1005;
+	private static final int ASKHOW    = 1006;
 
-	public static int kqmlToACL(String p) {
+	/**
+	 * Converts a kqml performative into a fipa performative
+	 * @param p
+	 * @return
+	 */
+	private static int kqmlToACL(String p) {
 		if (p.equals("tell")) {
 			return ACLMessage.INFORM;
 		} else if (p.equals("askOne")) {
@@ -235,7 +257,12 @@ public class MagentixAgArch extends AgArch{
 		return ACLMessage.getPerformative(p);       
 	}
 
-	public static String aclToKqml(int p) {
+	/**
+	 * Converts a fipa performative into a kqml one
+	 * @param p
+	 * @return
+	 */
+	private static String aclToKqml(int p) {
 		switch(p) {
 		case ACLMessage.INFORM: return "tell"; 
 		case ACLMessage.QUERY_REF: return "askOne";
@@ -250,7 +277,11 @@ public class MagentixAgArch extends AgArch{
 		return ACLMessage.getPerformative(p).toLowerCase().replaceAll("-", "_");
 	}
 	
-	public void addMessage(ACLMessage msg){
+	/**
+	 * Adds a message to the message list
+	 * @param msg
+	 */
+	protected void addMessage(ACLMessage msg){
 		this.messageList.add(msg);
 	}
 	
