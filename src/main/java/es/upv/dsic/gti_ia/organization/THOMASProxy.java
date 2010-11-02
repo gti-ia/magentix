@@ -53,10 +53,10 @@ public class THOMASProxy {
 	private String[] agentGetProcess;
 	private boolean Status = true;
 	
-	private ArrayList<String> serviceType1 = new ArrayList<String>();//Devuelven String
-	private ArrayList<String> serviceType2 = new ArrayList<String>();//Devuelven Array de strings
-	private ArrayList<String> serviceType3 = new ArrayList<String>();//Devuelven Entero
-	private ArrayList<String> serviceType4 = new ArrayList<String>();//Devuelven Hastable<AgentID, String>
+	private ArrayList<String> serviceType1 = new ArrayList<String>();//This type return a String
+	private ArrayList<String> serviceType2 = new ArrayList<String>();//This type return a  Array of strings
+	private ArrayList<String> serviceType3 = new ArrayList<String>();//This type return a Integer
+	private ArrayList<String> serviceType4 = new ArrayList<String>();//This type return a  Hastable<AgentID, String>
 	
 	
 	
@@ -73,7 +73,7 @@ public class THOMASProxy {
 	 * @param ServiceDesciptionLocation
 	 *            The URL where the owl's document is located.
 	 */
-	public THOMASProxy(BaseAgent agent, String thomasAgent,String ServiceDescriptionLocation) {
+	THOMASProxy(BaseAgent agent, String thomasAgent,String ServiceDescriptionLocation) {
 		this.agent = agent;
 		this.ServiceDescriptionLocation = ServiceDescriptionLocation;
 	}
@@ -89,7 +89,7 @@ public class THOMASProxy {
 	 * @param thomasAgent, is a OMS or SF.
 	 * 
 	 */
-	public THOMASProxy(BaseAgent agent, String thomasAgent) {
+	THOMASProxy(BaseAgent agent, String thomasAgent) {
 		
 		this.agent = agent;
 		this.thomasAgent = thomasAgent;
@@ -107,10 +107,10 @@ public class THOMASProxy {
 		this.Quantity = Quantity;
 	}
 	
-	void initialize()
+	private void initialize()
 	{
 		
-		//Añade cada servicio al tipo que le corresponde.
+		//Add type for each service 
 		serviceType1.add("LeaveRoleProcess");
 		serviceType1.add("AcquireRoleProcess");
 		serviceType1.add("RegisterNormProcess");
@@ -158,7 +158,7 @@ public class THOMASProxy {
 		requestMsg.setSender(agent.getAid());
 		requestMsg.setContent(call);
 		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
-		if (isgenericSerice)//Se enviara al proveedor del servicio
+		if (isgenericSerice)//If is a genericService, Receiver is the provider to service.
 		{
 			requestMsg.setReceiver(new AgentID(clientProvider));
 		}
@@ -176,7 +176,10 @@ public class THOMASProxy {
 		return returnResult();
 	}
 	
-	void reset()
+	/**
+	 * Clear values.
+	 */
+	private void reset()
 	{
 		this.setValue("");	
 		this.Status = true;
@@ -185,12 +188,16 @@ public class THOMASProxy {
 		ErrorValue = "";
 		status = "";	
 	}
-	//Esta función se encarga de devolver el resultado, mostrando un error si no ha salido correctamente la operación o 
-	//creando un nuevo objeto con el resultado de la operación.
-	Object returnResult()
+	
+	/**
+	 * This function return the result of service, adds a new object with the result 
+	 * a new or showed an error message if the operation is incorrect.
+	 * @return
+	 */
+	private Object returnResult()
 	{
 
-		//Servicios que devuelven un string.
+		//Services that return a String.
 		if (serviceType1.contains(serviceName))
 		{
 			if (!Status) {
@@ -200,7 +207,7 @@ public class THOMASProxy {
 			{
 				return this.value;
 			}
-		}//Servicios que devuelven un ArrayList<String>()
+		}//Services that return a ArrayList<String>()
 		else if (serviceType2.contains(serviceName))
 		{
 
@@ -211,7 +218,7 @@ public class THOMASProxy {
 			{
 				return new ArrayList<String>(this.listResults);
 			}
-		}//Servicios que devuelven un entero.
+		}//Services that return a Integer.
 		else  if (serviceType3.contains(serviceName))
 		{
 			if (!Status) {
@@ -219,7 +226,7 @@ public class THOMASProxy {
 				return 0;
 			} else
 				return this.Quantity;
-		}//Servicios que devuelven una Hashtable
+		}//Services that return a Hashtable
 		else  if (serviceType4.contains(serviceName))
 		{
 			if (!Status)
@@ -232,10 +239,8 @@ public class THOMASProxy {
 				return this.agents;
 
 		}
-		else //Este es el servicio de tipo genericService 
+		else //If types is a genericService.  
 		{
-
-			//para este tipo si que tendremos que tener en cuenta que es genericService, ya que no existe como tal ese servicio.
 			if (!Status) {
 				logger.error("["+agent.getName()+"] "+ "Error in generic funcion: "+ this.value);
 				return new Hashtable<String, String>();
@@ -246,10 +251,8 @@ public class THOMASProxy {
 
 	}
 	
-	
-	//Aqui es donde debemos diferenciar entre si es un agente QueueAgent o un agente CAgent. Cada tipo ejecutará
-	//de manera diferente el protocolo.
-	void initProxyProtocol(ACLMessage requestMsg)
+	//If is an QueueAgent or is a CAgent. Each type run protocol differently.
+	private void initProxyProtocol(ACLMessage requestMsg)
 	{
 		if (agent instanceof QueueAgent)
 		{
@@ -263,7 +266,7 @@ public class THOMASProxy {
 		else if (agent instanceof CAgent)
 		{
 			
-		//Inicialización del protocolo / conversación request.
+		//Initialization protocol  / conversation request.
 			CAgent myAgent = (CAgent)agent;
 			THOMASCAgentRequest protocol = new THOMASCAgentRequest(this);
 			CProcessorFactory talk = protocol.newFactory("THOMASRequest", null, requestMsg, 1, myAgent, 0);
@@ -275,7 +278,7 @@ public class THOMASProxy {
 		
 	}
 	
-	void setValue(String msg)
+	private void setValue(String msg)
 	{
 		this.value = msg;
 		
@@ -290,19 +293,21 @@ public class THOMASProxy {
 
 	
 	//Funcion de parsing para convertir el string del resultado en variables de retorno.
-	void extractInfo(ACLMessage msg)
+	/**
+	 * This function parses a result string for return a value. 
+	 */
+	private void extractInfo(ACLMessage msg)
 	{
 
 		//**************************************************SF parsing*******************************************************
 
-		// Sacamos el patron
 
 		if (thomasAgent.equals("SF"))
 		{
 
 			String arg1 ="";
-			// primer argumento si es un DeregisterProfileProcess no sacaremos
-			// el arg1
+
+			//if first argument is a DeregisterProfileProcess, not extract the arg1
 			if (!serviceName.equals("DeregisterProfileProcess")
 					&& !serviceName.equals("ModifyProfileProcess")
 					&& !serviceName.equals("ModifyProcessProcess")
@@ -313,16 +318,15 @@ public class THOMASProxy {
 				arg1 = arg1.substring(arg1.indexOf("=") + 1, arg1.indexOf(","));
 			}
 
-			// segundo argumento
+			//Second argument
 			String arg2 = msg.getContent();
 			arg2 = arg2.substring((arg2.lastIndexOf("=")) + 1, arg2.length() - 1);
 
-			// si ejecutamos el registerProcess
+
 
 			if (serviceName.equals("RegisterProcessProcess")) {
 				if (arg2.equals("1")) {
 					this.processDescripcion.setImplementationID(arg1);
-					// this.sf.agent.setSFAgentDescription(this.sf.descripcion);
 					this.setValue(arg1);
 
 				} else {
@@ -332,14 +336,14 @@ public class THOMASProxy {
 
 			}
 
-			// si ejecutamos el GetProfile
+			
 			if (serviceName.equals("GetProfileProcess")) {
 				arg2 = msg.getContent().substring(
 						msg.getContent().indexOf(",") + 1,
 						msg.getContent().length());
 				arg2 = arg2.substring(arg2.indexOf("=") + 1, arg2.indexOf(","));
 
-				if (arg2.equals("1"))// ha ido bien
+				if (arg2.equals("1"))// Is correct
 				{
 					this.setValue(arg1);
 				} else {
@@ -349,17 +353,13 @@ public class THOMASProxy {
 
 			}
 
-			// si ejecutamos el DeregisterProfile
+			
 			if (serviceName.equals("DeregisterProfileProcess")) {
 
-				if (arg2.equals("1"))// ha ido bien
+				if (arg2.equals("1"))// Is correct
 				{
-					// elimino del arrayList
-					// this.sf.agent.getArraySFAgentDescription().remove(
-					// this.sf.descripcion);
-
 					this.setValue(arg2);
-				} else // ha ido mal
+				} else //Not right
 				{
 					this.Status = false;
 					this.setValue("The error is caused for there are process associated with the profile or the id profile not exist.");
@@ -367,7 +367,7 @@ public class THOMASProxy {
 
 			}
 
-			// si ejecutamos el GetProcess
+	
 			if (serviceName.equals("GetProcessProcess")) {
 
 				agentGetProcess = null;
@@ -378,22 +378,18 @@ public class THOMASProxy {
 				} else {
 					agentGetProcess = arg1.split(",");
 					for (String a : agentGetProcess) {
-						// sacamos el url process
+						//Extract the URL process.
 						String arg_aux = a.substring(arg1.indexOf(" ") + 1, arg1
 								.length());
 
 						arg1 = a.substring(0, arg1.indexOf(" "));
 						arg1 = arg1.substring(arg1.indexOf("-") + 1, arg1.length());
 
-						// tenemos que controlar si existe 0, 1 o mas
-						// proveedores.
-
-						if (!arg1.equals("null"))// si existe algun provideer
+						
+						//We have control if exist zero, one o more providers.
+						if (!arg1.equals("null"))//Exist any provider
 						{
 
-							// a�adimos tantos agentes proveedores como nos
-							// devuelva
-							// this.agentes.add(new AgentID(arg1));
 							this.agents.put(new AgentID(arg1), arg_aux);
 						}
 
@@ -404,15 +400,12 @@ public class THOMASProxy {
 
 			}
 
-			// si ejecutamos el searchService
+
 			if (serviceName.equals("SearchServiceProcess")) {
 
 				agentGetProcess = null;
 
 				if (arg2.equals("1")) {
-
-					// this.sf.addIDSearchService(arg2);
-					// } else {
 					this.agentGetProcess = arg1.split(",");
 
 					for (String a : agentGetProcess) {
@@ -429,11 +422,8 @@ public class THOMASProxy {
 
 			}
 
-			// solo si ejecutamos el registerProfile
 			if (serviceName.equals("RegisterProfileProcess")) {
 				if (arg1.equals("1")) {
-					// para guardar nuestros ID para poder modificar
-					// posteriormente nuestro servicio
 					this.profileDescription.setServiceID(arg2);
 					this.setValue(arg2);
 
@@ -445,20 +435,16 @@ public class THOMASProxy {
 
 			}
 
-			// Si ejecutamos el ModifyProfile
-
 			if (serviceName.equals("ModifyProfileProcess")) {
-				if (arg2.equals("1"))// ha hido todo bien
+				if (arg2.equals("1"))
 				{
 					this.setValue(arg2);
 
-				} else if (arg2.equals("0"))// existen profile ligados a este
-					// process, por tanto no puede
-					// modificar-lo
+				} else if (arg2.equals("0"))
 				{
 					this.Status = false;
 					this.setValue(arg2);
-				} else// el id del servicio no es valido
+				} else
 				{
 
 					this.setValue(arg1);
@@ -466,7 +452,7 @@ public class THOMASProxy {
 
 			}
 
-			// Si ejecutamos el ModifyProcess
+		
 			if (serviceName.equals("ModifyProcessProcess")) {
 				this.setValue(arg2);
 
@@ -479,12 +465,10 @@ public class THOMASProxy {
 					this.setValue("Service process id does not exist");
 			}
 
-			// si ejecutamos un servicio generico
+	
 			if (this.isgenericSerice) {
 
-
-				// sino no es un servicio del oms o del sf, segun los outputs
-				// sacamos los resultados.
+				//If not is a OMS or SF services, according to outputs extract the results.
 				String sub = msg.getContent().substring(
 						msg.getContent().indexOf("=") + 1);
 				String[] aux = sub.split(",");
@@ -493,7 +477,7 @@ public class THOMASProxy {
 					for (int i = 0; i < aux.length; i++) {
 						String a = aux[i];
 
-						if (i != (aux.length - 1))// menos el ultimo
+						if (i != (aux.length - 1))
 						{
 							if (a.substring(a.indexOf("#") + 1, a.indexOf("="))
 									.equals(output)) {
@@ -544,9 +528,7 @@ public class THOMASProxy {
 
 			}
 
-			// sacamos el Status
-
-
+			//We extract status
 			int n = msg.getContent().indexOf(",")
 			- msg.getContent().indexOf("Status");
 
@@ -567,13 +549,8 @@ public class THOMASProxy {
 					|| serviceName.equals("InformRoleProfilesProcess")
 					|| serviceName.equals("InformUnitRolesProcess")) {
 
-				// recorrer el vector
+			
 				String argAux;
-
-				// para los servicios informativos
-
-				// diferenciamos entre los que tienen tuplas y los que no
-				// son tuplas
 
 				if (serviceName.equals("InformAgentRoleProcess")
 						|| serviceName.equals("InformMembersProcess")) {
@@ -595,7 +572,7 @@ public class THOMASProxy {
 							int paridad = 0;
 
 							for (String e : elements) {
-								if ((paridad % 2) == 0)// es par
+								if ((paridad % 2) == 0)// is pair
 								{
 									argAux = e
 									.substring(e.indexOf("(") + 1, e.length());
@@ -646,7 +623,7 @@ public class THOMASProxy {
 
 			}
 
-			if (status.contains("Ok")) {//Cambiado por equals
+			if (status.contains("Ok")) {
 
 				if (serviceName.equals("QuantityMembersProcess")) {
 
@@ -660,7 +637,6 @@ public class THOMASProxy {
 				this.setValue(status);
 			} else {
 				this.Status = false;
-				// vemos que tipo de error
 				this.setValue(status + " " + ErrorValue);
 			}
 
