@@ -1,11 +1,11 @@
 /**
- * This package contains the definition of the classes for the interaction with the thomas organization
+ * This package contains the definition of the classes for the interaction with the THOMAS organization
  */
 package es.upv.dsic.gti_ia.organization;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
+//import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
@@ -20,10 +20,10 @@ import es.upv.dsic.gti_ia.core.BaseAgent;
 public class SFProxy extends THOMASProxy {
 
 
-	
 
-	
-	private HashMap<String, String> tablaSearchServiceProfile = new HashMap<String, String>();
+
+
+//	private HashMap<String, String> tablaSearchServiceProfile = new HashMap<String, String>();
 
 	/**
 	 *  This class gives us the support to accede to the services of the SF
@@ -71,7 +71,7 @@ public class SFProxy extends THOMASProxy {
 	 * @param ArrayArguments
 	 *            Input arguments of the service.
 	 *             
-	 * @return Hashtable<String, String> is a hashtable with a pair of key and value. 
+	 * @return Hashtable<String, String> is a Hashtable with a pair of key and value. 
 	 * The key is name of output, and value is the value returned.
 	 */
 	@SuppressWarnings("unchecked")
@@ -81,8 +81,8 @@ public class SFProxy extends THOMASProxy {
 
 		isgenericSerice = true;
 		serviceName = "Generic";
-		
-		
+
+
 		URL profile;
 		try {
 			profile = new URL(URLProfile);
@@ -110,11 +110,11 @@ public class SFProxy extends THOMASProxy {
 		call = URLProcess + arguments;
 
 		clientProvider = agentProvider.name;
-		
-	
-		
+
+
+
 		return  (Hashtable<String, String>) this.sendInform();
-		
+
 	}
 
 
@@ -140,30 +140,31 @@ public class SFProxy extends THOMASProxy {
 
 		}
 		call = ServiceDescriptionLocation
-				+ "RemoveProviderProcess.owl "
-				+ "RemoveProviderInputServiceImplementationID="
-				+ this.processDescripcion.getImplementationID()+" RemoveProviderInputProviderID="+agent.getAid().toString();
+		+ "RemoveProviderProcess.owl "
+		+ "RemoveProviderInputServiceImplementationID="
+		+ this.processDescripcion.getImplementationID()+" RemoveProviderInputProviderID="+agent.getAid().toString();
 
 		return (String) this.sendInform();
 	}
 
 	/**
-	 * It search a service whose description satisfies the client request. 
+	 * It searches a service whose description satisfies the client request. 
 	 * 
 
 	 * @param serviceGoal
 	 *            service purpose (is a string: the service description).
 	 * @return services list (is a list of service profile id, ranking: service
-	 *         profile id, ranking: ...)
+	 *         profile id, ranking: ...) or return which
+	 *         indicates if an error occurs
 	 */
 	@SuppressWarnings("unchecked")
 	public ArrayList<String> searchService(String serviceGoal)
-			{
+	{
 
 		serviceName = "SearchServiceProcess";
 		call = ServiceDescriptionLocation
-				+ "SearchServiceProcess.owl SearchServiceInputServicePurpose="
-				+ serviceGoal;
+		+ "SearchServiceProcess.owl SearchServiceInputServicePurpose="
+		+ serviceGoal;
 
 		return (ArrayList<String>) this.sendInform();	
 	}
@@ -194,11 +195,11 @@ public class SFProxy extends THOMASProxy {
 		}
 
 		call = ServiceDescriptionLocation + "ModifyProcessProcess.owl"
-				+ " ModifyProcessInputServiceGrounding= "
-				+ " ModifyProcessInputServiceImplementationID="
-				+ this.processDescripcion.getImplementationID()
-				+ " ModifyProcessInputServiceModel="
-				+ this.processDescripcion.getServiceModel();
+		+ " ModifyProcessInputServiceGrounding= "
+		+ " ModifyProcessInputServiceImplementationID="
+		+ this.processDescripcion.getImplementationID()
+		+ " ModifyProcessInputServiceModel="
+		+ this.processDescripcion.getServiceModel();
 
 		return (String) this.sendInform();
 
@@ -228,16 +229,16 @@ public class SFProxy extends THOMASProxy {
 				|| ProfileDescription.getServiceProfile().equals("")) {
 			logger.error("ID or Service Goal is  empty");
 			return "";
-			
+
 
 		}
 
 		call = ServiceDescriptionLocation + "ModifyProfileProcess.owl "
-				+ "ModifyProfileInputServiceID="
-				+ this.profileDescription.getServiceID()
-				+ " ModifyProfileInputServiceGoal=" + " "
-				+ " ModifyProfileInputServiceProfile="
-				+ this.profileDescription.getServiceProfile();
+		+ "ModifyProfileInputServiceID="
+		+ this.profileDescription.getServiceID()
+		+ " ModifyProfileInputServiceGoal=" + " "
+		+ " ModifyProfileInputServiceProfile="
+		+ this.profileDescription.getServiceProfile();
 
 		return (String) this.sendInform();
 
@@ -249,8 +250,7 @@ public class SFProxy extends THOMASProxy {
 	 * @param ProfileDescription
 	 *            in this structure a one element is required: service id (is a string: service profile
 	 *            id)
-	 * @return Status DeregisterProfileResponse contains an element: return
-	 *         indicates if an error occurs ( 0: ok, 1:error).
+	 * @return Status  return indicates if an error occurs.
 	 */
 	public String deregisterProfile(
 			ProfileDescription ProfileDescription)  {
@@ -262,11 +262,11 @@ public class SFProxy extends THOMASProxy {
 			return "";
 		}
 
-	
+
 
 		call = ServiceDescriptionLocation
-				+ "DeregisterProfileProcess.owl DeregisterProfileInputServiceID="
-				+ profileDescription.getServiceID();
+		+ "DeregisterProfileProcess.owl DeregisterProfileInputServiceID="
+		+ profileDescription.getServiceID();
 
 		return (String) this.sendInform();
 
@@ -287,13 +287,13 @@ public class SFProxy extends THOMASProxy {
 
 		serviceName = "GetProcessProcess";
 		call = ServiceDescriptionLocation
-				+ "GetProcessProcess.owl GetProcessInputServiceID=" + serviceID;
+		+ "GetProcessProcess.owl GetProcessInputServiceID=" + serviceID;
 		/*
 		 * + sfAgentdescription.getURLProfile() + descripcion.getID() + ".owl#"
 		 * + descripcion.getID();
 		 */
 		return (Hashtable<AgentID, String>) this.sendInform();
-		
+
 	}
 
 	/**
@@ -303,15 +303,13 @@ public class SFProxy extends THOMASProxy {
 	 * @param serviceID
 	 *            the service ID (is a string: service profile id)
 	 * @return Status contains three elements: service profile (is a string: the
-	 *         URL profile), the goal of the profile (currently is not in use)
-	 *         and the return (is an integer) which indicates if an error
-	 *         occurs.
+	 *         URL profile), or indicates if an error occurs.
 	 */
 	public String getProfile(String serviceID)
-			{
+	{
 
 		call = ServiceDescriptionLocation
-				+ "GetProfileProcess.owl GetProfileInputServiceID=" + serviceID;
+		+ "GetProfileProcess.owl GetProfileInputServiceID=" + serviceID;
 
 		serviceName = "GetProfileProcess";
 		return (String) this.sendInform();
@@ -329,8 +327,8 @@ public class SFProxy extends THOMASProxy {
 	 * @param ProfileDescription
 	 *            This parameter contains one element necessary: service profile ( is a
 	 *            string: urlprofile#profilename, this parameter is entered when
-	 *            creating the instance of ProfileDescription, therefore it is not necessary to add further.) )
-	 * @return Status indicates if an error occurs.
+	 *            creating the instance of ProfileDescription, therefore it is not necessary to be add it.) )
+	 * @return Status indicates if an error occurs (1:OK , 0: bad news).
 
 	 */
 	public String registerProfile(
@@ -344,12 +342,12 @@ public class SFProxy extends THOMASProxy {
 
 		}
 
-	
+
 		call = ServiceDescriptionLocation
-				+ "RegisterProfileProcess.owl "
-				+ "RegisterProfileInputServiceGoal= "
-				+ " RegisterProfileInputServiceProfile="
-				+ this.profileDescription.getServiceProfile();
+		+ "RegisterProfileProcess.owl "
+		+ "RegisterProfileInputServiceGoal= "
+		+ " RegisterProfileInputServiceProfile="
+		+ this.profileDescription.getServiceProfile();
 
 		return (String) this.sendInform();
 
@@ -363,16 +361,16 @@ public class SFProxy extends THOMASProxy {
 	 * ProcessDescription
 
 	 *@param ProcessDescription
-	 *            this parameter contains two elements necessary: service profile id, is
-	 *            a string, this parameter is returned when we call the method
-	 *            searchService (use ProcessDescription method setProfileID), and service model, is a string, this
+	 *            this parameter contains two elements necessary: service profile id,
+	 *            this parameter is returned when we call the method
+	 *            searchService (use ProcessDescription method setProfileID to add), and service model, this
 	 *            parameter is entered when creating the instance of
 	 *            ProcessDescription.
 	 * @return status indicates if an error occurs (1:OK , 0: bad news).
 	 */
 	public String registerProcess(
 			ProcessDescription ProcessDescription) {
-	
+
 
 		this.processDescripcion = ProcessDescription;
 		serviceName = "RegisterProcessProcess";
@@ -384,15 +382,15 @@ public class SFProxy extends THOMASProxy {
 		}
 
 		call = ServiceDescriptionLocation
-				+ "RegisterProcessProcess.owl"
-				+ " RegisterProcessInputServiceID="
-				+ this.processDescripcion.getProfileID()
-				+ " RegisterProcessInputServiceModel="
-				+ this.processDescripcion.getServiceModel();
+		+ "RegisterProcessProcess.owl"
+		+ " RegisterProcessInputServiceID="
+		+ this.processDescripcion.getProfileID()
+		+ " RegisterProcessInputServiceModel="
+		+ this.processDescripcion.getServiceModel();
 
 		return (String) this.sendInform();
 
-		
+
 	}
 
 
