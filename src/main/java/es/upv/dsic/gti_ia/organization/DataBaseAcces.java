@@ -7,12 +7,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 /**
- * Class responsible for connection and database queries.
+ * This class is responsible for connection and database queries.
  * 
-
  */
 public class DataBaseAcces {
-    
+
 	/** 
 	 * 
 	 * The connection to the database 
@@ -20,27 +19,21 @@ public class DataBaseAcces {
 	public Connection conection = null;
 
 	/** 
-	 * Establishing the connection with the database  
+	 * This method sets the connection with the THOMAS database  
 	 * */
 	public void connect() {
 		if (conection != null)
 			return;
 
 		try {
-		    	Configuration c = Configuration.getConfiguration();
-			// Se registra el Driver de MySQL
+			Configuration c = Configuration.getConfiguration();
+			//Register a MySQL driver. 
 			String driverName = c.getjenadbDriver(); // MySQL MM JDBC
-															// driver
+			// driver
 			Class.forName(driverName);
-			// Se obtiene una conexi�n con la base de datos. Hay que
-			// cambiar el usuario "usuario" y la clave "" por las
-			// adecuadas a la base de datos que estemos usando.
-			
 			String serverName = c.getdatabaseServer();
 			String mydatabase = c.getdatabaseName();
 			String url = "jdbc:mysql://" + serverName + "/" + mydatabase; // a
-																			// JDBC
-																			// url
 			String username = c.getdatabaseUser();
 			String password = c.getdatabasePassword();
 			conection = DriverManager.getConnection(url, username, password);
@@ -50,18 +43,17 @@ public class DataBaseAcces {
 	}
 
 	/**
-	 * Make the query of the units in the table and returns the corresponding ResultSet.
+	 * This method makes the query of the units in the table and returns the corresponding ResultSet.
 	 * 
 	 * @return The result of the consultation 
 	 */
 	public ResultSet getUnitList() {
 		ResultSet rs = null;
 		try {
-			// Se crea un Statement, para realizar la consulta
+			// Creates a Statement, to query
 			Statement s = conection.createStatement();
 
-			// Se realiza la consulta. Los resultados se guardan en el
-			// ResultSet rs
+			// Creates a query.The results are stored in ResultSet rs
 			String sql = "SELECT u1.unitid As UnitID, u1.type as type, u1.goal AS goal,u2.unitid As parentUnit FROM (thomas.unit u1 LEFT joIN thomas.unit u2 ON u1.parentunit=u2.id)";
 			sql.toLowerCase();
 			rs = s.executeQuery(sql);
@@ -70,29 +62,35 @@ public class DataBaseAcces {
 		}
 		return rs;
 	}
-	
-	   public ResultSet getListSubUnits(String idparentunit)
-	    {
-	        ResultSet rs = null;
-	        try
-	        {
-	            // Se crea un Statement, para realizar la consulta
-	            Statement s = conection.createStatement();
-
-	            // Se realiza la consulta. Los resultados se guardan en el
-	            // ResultSet rs
-		        String sql="SELECT u.unitid FROM unit u WHERE u.parentunit='"+idparentunit+"'  ";
-		        sql.toLowerCase();
-	            rs = s.executeQuery(sql);
-	        } catch (Exception e)
-	        {
-	            e.printStackTrace();
-	        }
-	        return rs;
-	    }
 
 	/**
-	 * Make the query of the roles in the table and returns the corresponding ResultSet.
+	 * This method makes the query of the subunits in the table and returns the corresponding ResultSet.
+	 * 
+	 * @param idparentunit Id of parent unit.
+	 * @return The result of the consultation.
+	 */
+	public ResultSet getListSubUnits(String idparentunit)
+	{
+		ResultSet rs = null;
+		try
+		{
+			//Create a Statement, to query
+			Statement s = conection.createStatement();
+
+			// Creates a query.The results are stored in ResultSet rs
+			String sql="SELECT u.unitid FROM unit u WHERE u.parentunit='"+idparentunit+"'  ";
+			sql.toLowerCase();
+			rs = s.executeQuery(sql);
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		return rs;
+	}
+
+	/**
+	 * This method makes the query of the roles in the table and returns the corresponding ResultSet.
+	 * 
 	 * @return The result of the consultation
 	 */
 	public ResultSet getRoleList() {
@@ -103,7 +101,7 @@ public class DataBaseAcces {
 
 			// Se realiza la consulta. Los resultados se guardan en el
 			// ResultSet rs
-			 String sql="select r1.RoleID, r1.Position, r1.Accessibility, r1.Visibility, r2.RoleID as Inheritance, un.UnitID from (role r1 left join role r2 on r1.inheritance=r2.id) left join unit un on r1.unit=un.ID";
+			String sql="select r1.RoleID, r1.Position, r1.Accessibility, r1.Visibility, r2.RoleID as Inheritance, un.UnitID from (role r1 left join role r2 on r1.inheritance=r2.id) left join unit un on r1.unit=un.ID";
 			sql.toLowerCase();
 			rs = s.executeQuery(sql);
 		} catch (Exception e) {
@@ -113,7 +111,7 @@ public class DataBaseAcces {
 	}
 
 
-	/** Closes the connection with the database  */
+	/** This method closes the connection with the database  */
 	public void closeConnection() {
 		try {
 			conection.close();
@@ -123,17 +121,15 @@ public class DataBaseAcces {
 	}
 
 	/**
-	 * Return a list of norms in the Thomas organization
+	 * This method returns a list of norms in the THOMAS organization
 	 * @return The result of the consultation
 	 */
 	public ResultSet getListNorms() {
 		ResultSet rs = null;
 		try {
-			// Se crea un Statement, para realizar la consulta
+	
 			Statement s = conection.createStatement();
 
-			// Se realiza la consulta. Los resultados se guardan en el
-			// ResultSet rs
 			rs = s.executeQuery("select * from norm");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -142,7 +138,7 @@ public class DataBaseAcces {
 	}
 
 	/**
-	 * Return a list of entity play in the Thomas organization
+	 * This method returns a list of entity play in the THOMAS organization
 	 * @return The result of the consultation
 	 */
 	public ResultSet getListEntityPlay() {
@@ -163,7 +159,7 @@ public class DataBaseAcces {
 	}
 
 	/**
-	 * Return a list of profile id in the Thomas organization
+	 * This method returns a list of profile id in the THOMAS organization
 	 * @return The result of the consultation
 	 */
 	public ResultSet getListProfileId() {
@@ -174,8 +170,8 @@ public class DataBaseAcces {
 
 			// Se realiza la consulta. Los resultados se guardan en el
 			// ResultSet rs
-			
-			 String sql="SELECT s.serviceprofileid AS profileID,s.profilename AS profile, s.urlprofile AS URL FROM serviceprofileid s";
+
+			String sql="SELECT s.serviceprofileid AS profileID,s.profilename AS profile, s.urlprofile AS URL FROM serviceprofileid s";
 			sql.toLowerCase();
 			rs = s.executeQuery(sql);
 		} catch (Exception e) {
@@ -183,121 +179,149 @@ public class DataBaseAcces {
 		}
 		return rs;
 	}
+
+	/**
+	 * This method returns a list of process id in the THOMAS organization with an specific id.
+	 * 
+	 * @param profileid is a ID profile 
+	 * @return The result of the consultation
+	 */
+	public ResultSet getListProcess(String profileid)
+	{
+		ResultSet rs = null;
+		try
+		{
+
+			Statement s = conection.createStatement();
+
+
+			String sql="SELECT s.serviceprocessid AS processID, s.processname AS process FROM serviceprocessid s WHERE s.serviceprofileid='"+profileid+"'  ";
+			sql.toLowerCase();
+			rs = s.executeQuery(sql);
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		return rs;
+	}
+	/**
+	 * This method returns a list of process id in the THOMAS organization
+	 *  
+	 * @return The result of the consultation
+	 */
+	public ResultSet getListProcess()
+	{
+		ResultSet rs = null;
+		try
+		{
 	
-    public ResultSet getListProcess(String profileid)
-    {
-        ResultSet rs = null;
-        try
-        {
-            // Se crea un Statement, para realizar la consulta
-            Statement s = conection.createStatement();
+			Statement s = conection.createStatement();
 
-            // Se realiza la consulta. Los resultados se guardan en el
-            // ResultSet rs
-	        String sql="SELECT s.serviceprocessid AS processID, s.processname AS process FROM serviceprocessid s WHERE s.serviceprofileid='"+profileid+"'  ";
-	        sql.toLowerCase();
-            rs = s.executeQuery(sql);
-        } catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-        return rs;
-    }
-    public ResultSet getListProcess()
-    {
-        ResultSet rs = null;
-        try
-        {
-            // Se crea un Statement, para realizar la consulta
-            Statement s = conection.createStatement();
-
-            // Se realiza la consulta. Los resultados se guardan en el
-            // ResultSet rs
-	        String sql="SELECT s.serviceprocessid AS processID, s.processname AS process FROM serviceprocessid s ";
-	        sql.toLowerCase();
-            rs = s.executeQuery(sql);
-        } catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-        return rs;
-    }
-    
-    public ResultSet getUnitEntities(String unidad)
-    {
-        ResultSet rs = null;
-        try
-        {
-            // Se crea un Statement, para realizar la consulta
-            Statement s = conection.createStatement();
-
-            // Se realiza la consulta. Los resultados se guardan en el
-            // ResultSet rs
-	        String sql="SELECT e.entityId FROM entityplaylist u join entity e on u.entity = e.id WHERE u.unit='"+unidad+"'  ";
-	        sql.toLowerCase();
-            rs = s.executeQuery(sql);
-
-        } catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-        return rs;
-    }
-    
-    public ResultSet getUnitID(String unit)
-    {
-        ResultSet rs = null;
-        try
-        {
-            // Se crea un Statement, para realizar la consulta
-            Statement s = conection.createStatement();
-
-            // Se realiza la consulta. Los resultados se guardan en el
-            // ResultSet rs
-	        String sql="SELECT u.id FROM unit u WHERE u.unitid='"+unit+"'  ";
-	        sql.toLowerCase();
-            rs = s.executeQuery(sql);
-        } catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-        return rs;
-    }
-    
-    
-    public ResultSet getServiceID(String url)
-    {
-        ResultSet rs = null;
-        try
-        {
-            // Se crea un Statement, para realizar la consulta
-            Statement s = conection.createStatement();
-
-            // Se realiza la consulta. Los resultados se guardan en el
-            // ResultSet rs
-	        String sql="SELECT u.serviceprofileid FROM serviceprofileid u WHERE u.urlprofile='"+url+"'  ";
-	        sql.toLowerCase();
-            rs = s.executeQuery(sql);
-            
-        } catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-        return rs;
-    }
-
-    
-	public String getAgentServices(String agentID) {
 		
+			String sql="SELECT s.serviceprocessid AS processID, s.processname AS process FROM serviceprocessid s ";
+			sql.toLowerCase();
+			rs = s.executeQuery(sql);
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		return rs;
+	}
+
+	/**
+	 * This method returns a list of specific entity units in the THOMAS organization 
+	 * @param unit
+	 * @return
+	 */
+	public ResultSet getUnitEntities(String unit)
+	{
+		ResultSet rs = null;
+		try
+		{
+			// Se crea un Statement, para realizar la consulta
+			Statement s = conection.createStatement();
+
+			// Se realiza la consulta. Los resultados se guardan en el
+			// ResultSet rs
+			String sql="SELECT e.entityId FROM entityplaylist u join entity e on u.entity = e.id WHERE u.unit='"+unit+"'  ";
+			sql.toLowerCase();
+			rs = s.executeQuery(sql);
+
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		return rs;
+	}
+
+	/**
+	 * This method returns a unit id in the THOMAS organization
+	 * @param unit name of unit
+	 */
+	public ResultSet getUnitID(String unit)
+	{
+		ResultSet rs = null;
+		try
+		{
+			// Se crea un Statement, para realizar la consulta
+			Statement s = conection.createStatement();
+
+			// Se realiza la consulta. Los resultados se guardan en el
+			// ResultSet rs
+			String sql="SELECT u.id FROM unit u WHERE u.unitid='"+unit+"'  ";
+			sql.toLowerCase();
+			rs = s.executeQuery(sql);
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		return rs;
+	}
+
+	/**
+	 * This method returns a ServiceId in the THOMAS organization
+	 * @param url url process
+	 * @return
+	 */
+	public ResultSet getServiceID(String url)
+	{
+		ResultSet rs = null;
+		try
+		{
+			// Se crea un Statement, para realizar la consulta
+			Statement s = conection.createStatement();
+
+			// Se realiza la consulta. Los resultados se guardan en el
+			// ResultSet rs
+			String sql="SELECT u.serviceprofileid FROM serviceprofileid u WHERE u.urlprofile='"+url+"'  ";
+			sql.toLowerCase();
+			rs = s.executeQuery(sql);
+
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		return rs;
+	}
+
+
+	/**
+	 * This method returns Agent Services in the THOMAS organization
+	 * 
+	 * @param agentID 
+	 * @return
+	 */
+	public String getAgentServices(String agentID) {
+
 		String result = "[";
 		try {
 			Statement s = conection.createStatement();
 			ResultSet rs = s
-					.executeQuery("Select * from serviceprocessid where providername='"
-							+ agentID.toLowerCase() + "'");
+			.executeQuery("Select * from serviceprocessid where providername='"
+					+ agentID.toLowerCase() + "'");
 			System.out
-					.println("Select * from serviceprocessid where providername='"
-							+ agentID.toLowerCase() + "'");
+			.println("Select * from serviceprocessid where providername='"
+					+ agentID.toLowerCase() + "'");
 			while (rs.next()) {
 				result = result + "(" + rs.getString("processname") + "), ";
 			}
@@ -309,9 +333,5 @@ public class DataBaseAcces {
 		return result + "]";
 
 	}
-
-    
-    
-
 
 }
