@@ -1,7 +1,7 @@
 package es.upv.dsic.gti_ia.organization;
 
 /**
- * This class is used to store the complete description of a profile to publish in the organization
+ * This class is used to stored the complete description of a profile to publish in the organization
  * 
  * @author Joan Bellver Faus 
  */
@@ -36,7 +36,7 @@ public class ProfileDescription {
 
 
 	/**
-	 * Returns the url which makes reference to the service profile description document
+	 * This method returns the URL which makes reference to the service profile description document
 	 * 
 	 * @return serviceprofile 
 	 *         
@@ -48,7 +48,7 @@ public class ProfileDescription {
 	
 	
 	/**
-	 * Change a url which makes reference to the service profile description document 
+	 * This method changes a URL which makes reference to the service profile description document 
 	 * @param profilename 
 	 */
 	public void setServiceProfile(String profilename){
@@ -59,7 +59,7 @@ public class ProfileDescription {
 
 
 	/**
-	 * Change the URL where the owl's document (related with service profile) is
+	 * This method changes the URL where the owl's document (related with service profile) is
 	 * located.
 	 * 
 	 * @param url
@@ -69,7 +69,7 @@ public class ProfileDescription {
 	}
 
 	/**
-	 * Return the URL where the owl's document (related with service profile) is
+	 * This method returns the URL where the owl's document (related with service profile) is
 	 * located.
 	 * 
 	 * @return URLProfile
@@ -79,16 +79,16 @@ public class ProfileDescription {
 	}
 
 	/**
-	 * Change ID of the service
+	 * This method changes ID of the service
 	 * 
-	 * @param id is generated automatically by the database.this parameter is automatically assigned when the method  registerProfile is called.
+	 * @param id is generated automatically by the database. This parameter is automatically assigned when the method  registerProfile is called.
 	 */
 	public void setServiceID(String id) {
 		this.serviceID = id;
 	}
 
 	/**
-	 * Return an ID of the service
+	 * This method returns an ID of the service
 	 * 
 	 * @return serviceID
 	 */
