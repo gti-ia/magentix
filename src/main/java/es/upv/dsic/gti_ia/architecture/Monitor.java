@@ -9,7 +9,7 @@ import es.upv.dsic.gti_ia.organization.OMS;
 /**
  * 
  *  
- * The class Adviser allows to control the state of an agent (executing, suspended).
+ * The class allows to control the state of an agent (executing, suspended).
  * 
  * @author  Joan Bellver Faus
  * @version 2009.9.07
