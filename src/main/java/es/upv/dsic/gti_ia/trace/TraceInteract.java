@@ -38,6 +38,26 @@ public class TraceInteract {
 		applicantAgent.send(msg);
 	}
 	
+	static public void publishTracingService(AgentID tms_aid, BaseAgent applicantAgent, String serviceName, String description){
+		/**
+		 * Building a ACLMessage
+		 */
+		ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
+		//AgentID tms_aid = new AgentID("qpid://tm@localhost:8080");
+		String body;
+		
+		msg.setReceiver(tms_aid);
+		msg.setSender(applicantAgent.getAid());
+		msg.setLanguage("ACL");
+		body = "publish" + "#" + serviceName.length() + "#" + serviceName + description;
+		//System.out.println("Publication request: " + body);
+		msg.setContent(body);
+		/**
+		 * Sending a ACLMessage
+		 */
+		applicantAgent.send(msg);
+	}
+	
 	/**
 	 * Unpublish a previously published tracing service so that other agents cannot
 	 * subscribe nor receive the corresponding trace events 
@@ -48,6 +68,26 @@ public class TraceInteract {
 		 */
 		ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
 		AgentID tms_aid = new AgentID("qpid://tm@localhost:8080");
+		String body;
+		
+		msg.setReceiver(tms_aid);
+		msg.setSender(applicantAgent.getAid());
+		msg.setLanguage("ACL");
+		body = "unpublish" + "#" + name;
+		//System.out.println(body);
+		msg.setContent(body);
+		/**
+		 * Sending a ACLMessage
+		 */
+		applicantAgent.send(msg);
+	}
+	
+	static public void unpublishTracingService(AgentID tms_aid, BaseAgent applicantAgent, String name){
+		/**
+		 * Building a ACLMessage
+		 */
+		ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
+		//AgentID tms_aid = new AgentID("qpid://tm@localhost:8080");
 		String body;
 		
 		msg.setReceiver(tms_aid);
@@ -82,6 +122,23 @@ public class TraceInteract {
 		requesterAgent.send(msg);
 	}
 	
+	static public void requestTracingService(AgentID tms_aid, BaseAgent requesterAgent, String name, AgentID originEntity) {
+		/**
+		 * Building a ACLMessage
+		 */
+		ACLMessage msg = new ACLMessage(ACLMessage.SUBSCRIBE);
+		//AgentID tms_aid = new AgentID("qpid://tm@localhost:8080");
+		
+		msg.setReceiver(tms_aid);
+		msg.setSender(requesterAgent.getAid());
+		msg.setLanguage("ACL");
+		msg.setContent(name + "#" + originEntity.toString());
+		/**
+		 * Sending a ACLMessage
+		 */
+		requesterAgent.send(msg);
+	}
+	
 	/**
 	 * Request a tracing service
 	 */
@@ -102,6 +159,22 @@ public class TraceInteract {
 		requesterAgent.send(msg);
 	}
 	
+	static public void requestTracingService(AgentID tms_aid, BaseAgent requesterAgent, String name) {
+		/**
+		 * Building a ACLMessage
+		 */
+		ACLMessage msg = new ACLMessage(ACLMessage.SUBSCRIBE);
+		//AgentID tms_aid = new AgentID("qpid://tm@localhost:8080");
+		
+		msg.setReceiver(tms_aid);
+		msg.setSender(requesterAgent.getAid());
+		msg.setLanguage("ACL");
+		msg.setContent(name + "#any");
+		/**
+		 * Sending a ACLMessage
+		 */
+		requesterAgent.send(msg);
+	}
 	/**
 	 * Request all tracing services available at this time
 	 */
@@ -111,6 +184,23 @@ public class TraceInteract {
 		 */
 		ACLMessage msg = new ACLMessage(ACLMessage.SUBSCRIBE);
 		AgentID tms_aid = new AgentID("qpid://tm@localhost:8080");
+		
+		msg.setReceiver(tms_aid);
+		msg.setSender(requesterAgent.getAid());
+		msg.setLanguage("ACL");
+		msg.setContent("all");
+		/**
+		 * Sending a ACLMessage
+		 */
+		requesterAgent.send(msg);
+	}
+	
+	static public void requestAllTracingServices(AgentID tms_aid, BaseAgent requesterAgent) {
+		/**
+		 * Building a ACLMessage
+		 */
+		ACLMessage msg = new ACLMessage(ACLMessage.SUBSCRIBE);
+		//AgentID tms_aid = new AgentID("qpid://tm@localhost:8080");
 		
 		msg.setReceiver(tms_aid);
 		msg.setSender(requesterAgent.getAid());
@@ -142,6 +232,23 @@ public class TraceInteract {
 		requesterAgent.send(msg);
 	}
 	
+	static public void cancelTracingServiceSubscription(AgentID tms_aid, BaseAgent requesterAgent, String eventType, AgentID originEntity) {
+		/**
+		 * Building a ACLMessage
+		 */
+		ACLMessage msg = new ACLMessage(ACLMessage.CANCEL);
+		//AgentID tms_aid = new AgentID("qpid://tm@localhost:8080");
+		
+		msg.setReceiver(tms_aid);
+		msg.setSender(requesterAgent.getAid());
+		msg.setLanguage("ACL");
+		msg.setContent(eventType + "#" + originEntity.toString());
+		/**
+		 * Sending a ACLMessage
+		 */
+		requesterAgent.send(msg);
+	}
+	
 	/**
 	 * Cancel subscription to a tracing service
 	 */
@@ -151,6 +258,23 @@ public class TraceInteract {
 		 */
 		ACLMessage msg = new ACLMessage(ACLMessage.CANCEL);
 		AgentID tms_aid = new AgentID("qpid://tm@localhost:8080");
+		
+		msg.setReceiver(tms_aid);
+		msg.setSender(requesterAgent.getAid());
+		msg.setLanguage("ACL");
+		msg.setContent(eventType + "#any");
+		/**
+		 * Sending a ACLMessage
+		 */
+		requesterAgent.send(msg);
+	}
+	
+	static public void cancelTracingServiceSubscription(AgentID tms_aid, BaseAgent requesterAgent, String eventType) {
+		/**
+		 * Building a ACLMessage
+		 */
+		ACLMessage msg = new ACLMessage(ACLMessage.CANCEL);
+		//AgentID tms_aid = new AgentID("qpid://tm@localhost:8080");
 		
 		msg.setReceiver(tms_aid);
 		msg.setSender(requesterAgent.getAid());
@@ -178,6 +302,70 @@ public class TraceInteract {
 		msg.setSender(applicantAgent.getAid());
 		msg.setLanguage("ACL");
 		body = "list" + "#entities";
+		//System.out.println("Publication request: " + body);
+		msg.setContent(body);
+		/**
+		 * Sending a ACLMessage
+		 */
+		applicantAgent.send(msg);
+	}
+	
+	static public void listTracingEntities(AgentID tms_aid, BaseAgent applicantAgent){
+		/**
+		 * Building a ACLMessage
+		 */
+		ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
+		//AgentID tms_aid = new AgentID("qpid://tm@localhost:8080");
+		String body;
+		
+		msg.setReceiver(tms_aid);
+		msg.setSender(applicantAgent.getAid());
+		msg.setLanguage("ACL");
+		body = "list" + "#entities";
+		//System.out.println("Publication request: " + body);
+		msg.setContent(body);
+		/**
+		 * Sending a ACLMessage
+		 */
+		applicantAgent.send(msg);
+	}
+	
+	/**
+	 * Request a list of registered tracing entities
+	 * @param applicantAgent
+	 */
+	static public void listTracingServices(BaseAgent applicantAgent){
+		/**
+		 * Building a ACLMessage
+		 */
+		ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
+		AgentID tms_aid = new AgentID("qpid://tm@localhost:8080");
+		String body;
+		
+		msg.setReceiver(tms_aid);
+		msg.setSender(applicantAgent.getAid());
+		msg.setLanguage("ACL");
+		body = "list" + "#services";
+		//System.out.println("Publication request: " + body);
+		msg.setContent(body);
+		/**
+		 * Sending a ACLMessage
+		 */
+		applicantAgent.send(msg);
+	}
+	
+	static public void listTracingServices(AgentID tms_aid, BaseAgent applicantAgent){
+		/**
+		 * Building a ACLMessage
+		 */
+		ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
+		//AgentID tms_aid = new AgentID("qpid://tm@localhost:8080");
+		String body;
+		
+		msg.setReceiver(tms_aid);
+		msg.setSender(applicantAgent.getAid());
+		msg.setLanguage("ACL");
+		body = "list" + "#services";
 		//System.out.println("Publication request: " + body);
 		msg.setContent(body);
 		/**
