@@ -60,10 +60,18 @@ public abstract class SingleAgent extends BaseAgent {
 
 	}
 
+	/**
+	 * Adds a message to the queue.
+	 * @param msg The message to be added.
+	 */
 	private synchronized void writeQueue(ACLMessage msg) {
 		messageList.add(msg);
 	}
 
+	/**
+	 * Every message received will be queued. This method is called automatically by the base class,
+	 * which is BaseAgent.
+	 */
 	public void onMessage(ACLMessage msg) {
 		this.writeQueue(msg);
 	}

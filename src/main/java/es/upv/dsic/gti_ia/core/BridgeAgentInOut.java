@@ -15,10 +15,8 @@ import org.apache.qpid.transport.MessageTransfer;
 
 /**
  * This agent routes messages from inside the platform to outside the platform.
- * *
  * 
  * @author Sergio Pajares
- * 
  */
 public class BridgeAgentInOut extends BaseAgent {
 	// public BaseAgent bd;
@@ -29,12 +27,29 @@ public class BridgeAgentInOut extends BaseAgent {
 	// private DatagramSocket socket;
 
 	private Socket socket;
-	LinkedBlockingQueue<MessageTransfer> internalQueue;
+	private LinkedBlockingQueue<MessageTransfer> internalQueue;
 
+	/**
+	 * Creates the agent.
+	 * 
+	 * @param aid The ID
+	 * @throws Exception if the AID is already in use.
+	 * @see BaseAgent#BaseAgent(AgentID)
+	 */
 	public BridgeAgentInOut(AgentID aid) throws Exception {
 		super(aid);
 	}
 
+	/**
+	 * Creates a message ready to be sent to another platform (e.g. Jade) by using some helper methods.
+	 * 
+	 * @param ACLsms Message
+	 * @return The String containing the whole message.
+	 * @throws UnknownHostException
+	 * @see {@link BridgeAgentInOut#Generate_Header(InetAddress, int)}
+	 * @see {@link BridgeAgentInOut#Generate_Envelope(int)}
+	 * @see {@link BridgeAgentInOut#Generate_Content()}
+	 */
 	private String Generate_All(ACLMessage ACLsms) throws UnknownHostException {
 
 		String port = ACLsms.getReceiver().port;
@@ -59,6 +74,12 @@ public class BridgeAgentInOut extends BaseAgent {
 
 	}
 
+	/**
+	 * Creates a HTTP header to be used in the message.
+	 * @param hostDestiny The destination of the receiver.
+	 * @param portDestiny The port destiny of the receiver.
+	 * @return The String containing the header
+	 */
 	private String Generate_Header(InetAddress hostDestiny, int portDestiny) {
 		String boundary = "a36869921a26b9d812878a42b8fc2cd";
 		String httpheader = "POST ";
@@ -86,6 +107,11 @@ public class BridgeAgentInOut extends BaseAgent {
 		return httpheader;
 	}
 
+	/**
+	 * Converts the message in the {@link #ACLsms} message field to a format 
+	 * compatible with HTTP transport. 
+	 * @return
+	 */
 	private String Generate_Content() {
 		String message = BuildACLMessage();
 		int length = message.getBytes().length;
@@ -112,6 +138,12 @@ public class BridgeAgentInOut extends BaseAgent {
 
 	}
 
+	/**
+	 * Creates the envelope in XML
+	 * @param messageLenght The length of the content, which is needed to generate the envelope.
+	 * @return The envelope in XML
+	 * @see BridgeAgentInOut#Generate_Content()
+	 */
 	private String Generate_Envelope(int messageLenght) {
 		String aux = "<?xml version=\"1.0\"?>\n" + "<envelope>"
 				+ "<params index=\"1\">" + "<to>" + "<agent-identifier>"
@@ -379,6 +411,7 @@ public class BridgeAgentInOut extends BaseAgent {
 	}
 
 	/**
+	 * Debug method: prints the message to the console.
 	 * @param message
 	 */
 	private void PrintMessage(final String message) {

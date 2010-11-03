@@ -8,6 +8,10 @@ import org.apache.log4j.Logger;
 import es.upv.dsic.gti_ia.cAgents.CProcessor;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 
+/**
+ * Class used to represent a filter for messages. By using this filter the user will be able to
+ * process only those messages they desire. 
+ */
 public class MessageFilter implements Cloneable{
 
 	/**
@@ -23,7 +27,11 @@ public class MessageFilter implements Cloneable{
 	Logger logger = Logger.getLogger(CProcessor.class);
 	private String expr;
 	
-	class Node {
+	/**
+	 * Node in the tree of logic expressions (e.g. AND, EQUAL,..)
+	 *
+	 */
+	private class Node {
 		public static final int VALUE = 0;
 		public static final int EQUAL = 1;
 		public static final int NOTEQUAL = 2;
@@ -32,23 +40,37 @@ public class MessageFilter implements Cloneable{
 		public static final int NOT = 5;
 		public static final int AND = 6;
 		public static final int OR = 7;
-		int type;
-		Node left;
-		Node right;
-		String headerName;
+		private int type;
+		private Node left;
+		private Node right;
+		private String headerName;
 
+		/**
+		 * Creates a node with the specified type.
+		 * @param type Should be one of the static int defined in this class
+		 */
 		public Node(int type) {
 			this.type = type;
 		}
 
+		/**
+		 * Creates a node with the specified type and the header name.
+		 * @param type The type
+		 * @param headerName The header name, to be used for filtering
+		 * @see Node#Node(int)
+		 */
 		public Node(int type, String headerName) {
 			this.type = type;
 			this.headerName = headerName;
 		}
 	}
 
-	Node root;
+	private Node root;
 
+	/**
+	 * Creates a filter tree from the given expression.
+	 * @param expr A String containing the expression.
+	 */
 	public MessageFilter(String expr) {
 		if (correctExpression(expr)) {
 			this.expr = expr;
@@ -56,18 +78,33 @@ public class MessageFilter implements Cloneable{
 		}
 	}
 	
+	// TODO: llamada recursiva??
 	public MessageFilter clone(){
 		return this.clone();
 	}
 
+	/**
+	 * The evaluation method. The filter is compared against the message in this method.
+	 * @param msg The message to compare.
+	 * @return True if the message satisfies the filter. False otherwise.
+	 */
 	public boolean compareHeaders(ACLMessage msg) {
 		return this.evaluateTree(root, msg);
 	}
 	
+	/**
+	 * Gets The expression for which this object can create the filter.
+	 * @return The String containing the expression.
+	 */
 	public String getExpression(){
 		return expr;
 	}
 
+	/**
+	 * Checks whether the expression is correct or not.
+	 * @param expr String with the filtering expression
+	 * @return True if OK, False otherwise.
+	 */
 	private boolean correctExpression(String expr) {
 		Matcher matcher = pattern.matcher(expr);
 
@@ -101,6 +138,10 @@ public class MessageFilter implements Cloneable{
 		return false;
 	}
 
+	/**
+	 * Method acting like a lexer ("scanner") for the creation of the expression tree.
+	 * @return The lexemes ("tokens") in order of appearance.
+	 */
 	private List<Node> createNodeList() {
 		List<Node> nodos = new ArrayList<Node>();
 		int i = 0;
@@ -230,6 +271,11 @@ public class MessageFilter implements Cloneable{
 		return nodos;
 	}
 
+	/**
+	 * The parser converting the lexemes into an expression tree.
+	 * @param nodos The lexemes (obtained by a call to {@link #createNodeList()}
+	 * @return The expression tree
+	 */
 	private Node createBinaryTree(List<Node> nodos) {
 		int minPrior = -1;
 		int index = -1;
@@ -279,6 +325,12 @@ public class MessageFilter implements Cloneable{
 		return root;
 	}
 
+	/**
+	 * Walks the expression tree filter and compares it with the given message.
+	 * @param root The tree filter root node.
+	 * @param msg The message.
+	 * @return True if the message satisfies the filter. False otherwise.
+	 */
 	private boolean evaluateTree(Node root, ACLMessage msg) {
 		boolean equalValue;
 		if (root.type == Node.AND) {
