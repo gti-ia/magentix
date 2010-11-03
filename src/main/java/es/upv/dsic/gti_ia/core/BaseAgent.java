@@ -68,6 +68,10 @@ public class BaseAgent implements Runnable
 	 */
 	private Thread											myThread;
 	
+	/**
+	 * Class representing the communication listener.
+	 *
+	 */
 	private class Listener implements SessionListener
 	{
 		public void opened(Session ssn)
@@ -78,6 +82,10 @@ public class BaseAgent implements Runnable
 		{
 		}
 		
+		/**
+		 * Called to treat the message. At the end, the method {@link BaseAgent#onMessage(ACLMessage)} 
+		 * is called.
+		 */
 		public void message(Session ssn, MessageTransfer xfr)
 		{
 			ACLMessage msg = null;
