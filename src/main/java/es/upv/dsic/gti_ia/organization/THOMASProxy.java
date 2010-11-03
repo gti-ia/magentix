@@ -18,8 +18,9 @@ import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.BaseAgent;
 
 
-
-
+/**
+ * This class is the parent class for the OMS and SF proxys.
+ */
 public class THOMASProxy {
 	
 	
@@ -35,7 +36,7 @@ public class THOMASProxy {
 	Configuration c;
 	
 	String call,thomasAgent,clientProvider,serviceName,ErrorValue,status,ServiceDescriptionLocation;
-	String value = ""; //Valor devuelto
+	String value = ""; //Returned value
 	
 	int Quantity;
 	String[] elements;
@@ -65,13 +66,10 @@ public class THOMASProxy {
 	
 	/**
 	 * This class gives us the support to accede to the services of the OMS and SF
-	 * @param agent,
-	 *            is a BaseAgent, this agent implemented the communication
-	 *            protocol
-	 *            
+	 * @param agent, is a BaseAgent, this agent implemented the communication protocol          
 	 * @param thomasAgent, is a OMS or SF.
-	 * @param ServiceDesciptionLocation
-	 *            The URL where the owl's document is located.
+	 * @param ServiceDesciptionLocation The URL where the owl's document is located.
+	 *            
 	 */
 	THOMASProxy(BaseAgent agent, String thomasAgent,String ServiceDescriptionLocation) {
 		this.agent = agent;
@@ -80,7 +78,7 @@ public class THOMASProxy {
 
 	/**
 	 * This class gives us the support to access to the services of the OMS and SF.
-	 * Checked that the data contained in the file configuration/Settings.xml, the URL
+	 * Checked that the data contained in the file configuration/Settings.xml the URL
 	 * ServiceDescriptionLocation is not empty and is the correct path.
 	 * 
 	 * @param agent,
@@ -98,15 +96,25 @@ public class THOMASProxy {
 		
 	}
 	
-
+   /**
+    * Adds a new element to list
+    * @param element
+    */
 	private void addElementToList(String element) {
 		this.listResults.add(element);
 	}
 
+	/**
+	 * Sets quantity 
+	 * @param Quantity
+	 */
 	private void setQuantity(int Quantity) {
 		this.Quantity = Quantity;
 	}
 	
+	/**
+	 * Initializes the structures with the types of services
+	 */
 	private void initialize()
 	{
 		
@@ -149,7 +157,9 @@ public class THOMASProxy {
 	}
 	//****************************************Common methods***************************************************
 	
-	
+	/**
+	 * This method builds the ACLMessage with the sender, content, protocol and receivers.
+	 */
 	Object sendInform() {
 
 		this.reset();
@@ -190,7 +200,7 @@ public class THOMASProxy {
 	}
 	
 	/**
-	 * This function return the result of service, adds a new object with the result 
+	 * This function returns the result of service, adds a new object with the result 
 	 * a new or showed an error message if the operation is incorrect.
 	 * @return
 	 */
@@ -251,7 +261,10 @@ public class THOMASProxy {
 
 	}
 	
-	//If is an QueueAgent or is a CAgent. Each type run protocol differently.
+
+	/**
+	 * This method initiates a new communication Protocol,If is an QueueAgent or is a CAgent. Each type runs protocol differently.
+	 */
 	private void initProxyProtocol(ACLMessage requestMsg)
 	{
 		if (agent instanceof QueueAgent)
@@ -278,13 +291,20 @@ public class THOMASProxy {
 		
 	}
 	
+	/**
+	 * Sets returned value 
+	 * @param msg
+	 */
 	private void setValue(String msg)
 	{
 		this.value = msg;
 		
 	}
 	
-	
+	/**
+	 * Adds the Id profile when the search service is calls
+	 * @param id
+	 */
 	private void addIDSearchService(String id) {
 
 		this.listResults.add(id);
@@ -292,7 +312,7 @@ public class THOMASProxy {
 	}
 
 	
-	//Funcion de parsing para convertir el string del resultado en variables de retorno.
+	
 	/**
 	 * This function parses a result string for return a value. 
 	 */
@@ -647,7 +667,7 @@ public class THOMASProxy {
 	//***************************************Protocol implementation*******************************************
 	
 	/**
-	 * THOMASQAgentRequest handles the messages received from the OMS or SF
+	 * This class handles the messages received from the OMS or SF. 
 	 */
 	static class THOMASQAgentRequest extends FIPARequestInitiator {
 
@@ -711,6 +731,9 @@ public class THOMASProxy {
 		}
 	}
 	
+	/**
+	 * This class handles the messages received from the OMS or SF. 
+	 */
 	class THOMASCAgentRequest extends FIPA_REQUEST_Initiator {
 		
 		THOMASProxy thomasProxy;
