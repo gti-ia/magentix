@@ -98,7 +98,7 @@ public class BaseAgent implements Runnable
 				e.printStackTrace();
 			}
 			
-			// Send trace events
+			// Send trace events each time a message is received by an agent
 			sendTraceEvent(new TraceEvent(TracingService.DI_TracingServices[TracingService.MESSAGE_RECEIVED].getName(), aid, msg.getSender().toString()));
 			sendTraceEvent(new TraceEvent(TracingService.DI_TracingServices[TracingService.MESSAGE_RECEIVED_DETAIL].getName(), aid, msg.toString()));
 			
@@ -116,6 +116,10 @@ public class BaseAgent implements Runnable
 		
 	}
 	
+	/**
+	 * Class representing the trace event listener.
+	 *
+	 */
 	private class TraceListener implements SessionListener
 	{
 		public void opened(Session ssn)
@@ -126,6 +130,10 @@ public class BaseAgent implements Runnable
 		{
 		}
 		
+		/**
+		 * Called to treat the trace event. At the end, the method {@link BaseAgent#onTraceEvent(TraceEvent tEvent)} 
+		 * is called.
+		 */
 		public void message(Session ssn, MessageTransfer xfr)
 		{
 			TraceEvent tEvent = MessageTransfertoTraceEvent(xfr);
@@ -164,8 +172,8 @@ public class BaseAgent implements Runnable
 	 * @param connection
 	 *            Connection that the agent will use
 	 * @throws Exception
-	 *             If Agent ID already exists on the platform [TRACE]: Create the event queue and
-	 *             the event listener
+	 *             If Agent ID already exists on the platform
+	 * 
 	 */
 	public BaseAgent(AgentID aid) throws Exception
 	{
@@ -258,6 +266,7 @@ public class BaseAgent implements Runnable
 		// Esta parte es la misma que cuando no es modo seguro.
 		this.session = createSession();
 		
+		// Create a session for trace event transmission
 		this.traceSession = createTraceSession();
 		
 		if (this.existAgent(aid))
@@ -275,6 +284,7 @@ public class BaseAgent implements Runnable
 			createBind();
 			createSubscription();
 			
+			// Install the listener for trace events
 			this.traceListener = new TraceListener();
 			createEventQueue();
 			createTraceBind();
@@ -282,7 +292,7 @@ public class BaseAgent implements Runnable
 			
 		}
 		
-		// Send trace event
+		// Send trace event NEW_AGENT
 		sendSystemTraceEvent(new TraceEvent(TracingService.DI_TracingServices[TracingService.NEW_AGENT].getName(), new AgentID("system", aid.protocol, aid.host, aid.port), aid.toString()));
 		
 	}
@@ -427,7 +437,7 @@ public class BaseAgent implements Runnable
 			session.messageTransfer(xfr.getDestination(), xfr.getAcceptMode(), xfr.getAcquireMode(), new Header(deliveryProps, messageProperties), xfr.getBodyBytes());
 		}
 		
-		// Send trace events
+		// Send trace events each time a message is sent
 		sendTraceEvent(new TraceEvent(TracingService.DI_TracingServices[TracingService.MESSAGE_SENT].getName(), aid, msg.getReceiver().toString()));
 		sendTraceEvent(new TraceEvent(TracingService.DI_TracingServices[TracingService.MESSAGE_SENT_DETAIL].getName(), aid, msg.toString()));
 		
@@ -496,7 +506,8 @@ public class BaseAgent implements Runnable
 		return session;
 	}
 	/**
-	 * Creates queue where the agent will receive trace events
+	 * Creates queue where the agent will receive trace events.
+	 * The queue name is the name of the agent (aid.name) followed by the suffix ".trace"
 	 */
 	private void createEventQueue()
 	{
@@ -506,6 +517,9 @@ public class BaseAgent implements Runnable
 	
 	/**
 	 * Creates the bindings needed by the event trace system.
+	 * Two different bindings are made to the trace queue (agent_name.trace):
+	 * agent_name.system.all => Receive all trace events sent from the system to ALL agents
+	 * agent_name.system.direct => Receive all trace events sent from the system to this agent
 	 */
 	private void createTraceBind()
 	{
@@ -598,7 +612,7 @@ public class BaseAgent implements Runnable
 		
 		this.traceSession.messageTransfer("amq.match", MessageAcceptMode.EXPLICIT, MessageAcquireMode.PRE_ACQUIRED, header, xfr.getBodyString());
 		
-		/**
+		/*
 		 * PRE-OPTIMIZATION OF EVENT TRANSMISSION MessageTransfer xfr = new MessageTransfer();
 		 * xfr.destination("amq.match"); xfr.acceptMode(MessageAcceptMode.EXPLICIT);
 		 * xfr.acquireMode(MessageAcquireMode.PRE_ACQUIRED); DeliveryProperties deliveryProps = new
@@ -620,8 +634,8 @@ public class BaseAgent implements Runnable
 	 * Sends a trace event with "system" as origin entity to the amq.match exchange
 	 * @param tEvent
 	 * @param destination
-	 *            Tracing entity to which the trace event is directed to. If set to null, the system
-	 *            trace event is understood to be directed to all tracing entities.
+	 *        Tracing entity to which the trace event is directed to. If set to null, the system
+	 *        trace event is understood to be directed to all tracing entities.
 	 */
 	private void sendSystemTraceEvent(TraceEvent tEvent)
 	{
@@ -659,7 +673,7 @@ public class BaseAgent implements Runnable
 		Header header = new Header(deliveryProps, messageProperties);
 		
 		this.traceSession.messageTransfer("amq.match", MessageAcceptMode.EXPLICIT, MessageAcquireMode.PRE_ACQUIRED, header, xfr.getBodyString());
-		/**
+		/*
 		 * PRE-OPTIMIZATION OF EVENT TRANSMISSION MessageTransfer xfr = new MessageTransfer();
 		 * xfr.destination("amq.match"); xfr.acceptMode(MessageAcceptMode.EXPLICIT);
 		 * xfr.acquireMode(MessageAcquireMode.PRE_ACQUIRED); DeliveryProperties deliveryProps = new
