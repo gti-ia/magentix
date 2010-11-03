@@ -55,6 +55,16 @@ public class AgentsConnection {
 		connection.connect(qpidHost, qpidPort, qpidVhost, qpdidUser, qpidPassword, qpidSSL);
 	}
 	
+	/**
+	 * Connects to Qpid broker taking into account all the parameters specified as input.
+	 * @param qpidHost
+	 * @param qpidPort
+	 * @param qpidVhost
+	 * @param qpdidUser
+	 * @param qpidPassword
+	 * @param qpidSSL
+	 * @param sasl_mechs
+	 */
 	public static void connect(String qpidHost, int qpidPort, String qpidVhost, String qpdidUser,
 			String qpidPassword, boolean qpidSSL, String sasl_mechs) {
 		connection = new Connection();

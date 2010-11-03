@@ -2,6 +2,10 @@ package es.upv.dsic.gti_ia.core;
 
 import java.io.Serializable;
 
+/**
+ * Represents an identifier used to univocally recognize an agent.
+ * 
+ */
 public final class AgentID implements Serializable, Cloneable {
 	/**
 	 * 
@@ -14,9 +18,21 @@ public final class AgentID implements Serializable, Cloneable {
 	public String port = "";
 
 	// constructors
+	/**
+	 * Empty constructor.
+	 */
 	public AgentID() {
 	}
 
+	/**
+	 * Constructor for the ID.
+	 * 
+	 * @param __name The name of the agent.
+	 * @param __protocol The protocol being used.
+	 * @param __host The host where the agent is located.
+	 * @param __port The port in the host where the agent can listen for messages.
+	 * @see AgentID#AgentID(String) 
+	 */
 	public AgentID(String __name, String __protocol, String __host,
 			String __port) {
 		name = __name;
@@ -26,11 +42,11 @@ public final class AgentID implements Serializable, Cloneable {
 	}
 
 	/**
-	 * Constructor allow a input like http://nombreagente@localhost:8080 or a
+	 * Constructor allows a input like http://nombreagente@localhost:8080 or a
 	 * input like AgentName, in this case there are defaults options, like
 	 * protocol = "qpid", host="localhost", port="8080".
 	 * 
-	 * @param id
+	 * @param id The String containing the ID coded as the example.
 	 */
 	public AgentID(String id) {
 		try {
@@ -48,27 +64,46 @@ public final class AgentID implements Serializable, Cloneable {
 
 	}
 
+	/**
+	 * Creates a String containing the ID as a String.
+	 * 
+	 * @see AgentID#AgentID(String) 
+	 */
 	public String toString() {
 		String cadena = protocol + "://" + name + "@" + host + ":" + port;
 		return cadena;
 	}
 
+	/**
+	 * @return The name, host and port coded in a similar fashion as the ToString method
+	 * @see AgentID#toString()
+	 */
 	public String name_all() {
 		String cadena = name + "@" + host + ":" + port; // +"/JADE";
 		return cadena;
 	}
 
+	/**
+	 * @return The protocol, host and port of this ID, similar to an URL.
+	 */
 	public String addresses_all() {
 		String cadena = protocol + "://" + host + ":" + port;
 		return cadena;
 	}
 
-	public String addresses_single() {
+	/**
+	 * @return The host and port separated by the ':' character.
+	 */
+	private String addresses_single() {
 		String cadena = host + ":" + port;
 		;
 		return cadena;
 	}
 
+	/**
+	 * @return Returns only the name of the agent.
+	 * @see AgentID#AgentID(String, String, String, String)
+	 */
 	public String getLocalName() {
 		int atPos = name.lastIndexOf('@');
 		if (atPos == -1)

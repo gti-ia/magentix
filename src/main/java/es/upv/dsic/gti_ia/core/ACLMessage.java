@@ -286,9 +286,9 @@ public class ACLMessage implements Serializable, Cloneable {
 	}
 
 	/**
-	 * Sets ReplyTo field
+	 * Gets the ReplyTo field
 	 * 
-	 * @return
+	 * @return AgentID of ReplyTo field
 	 */
 	public AgentID getReplyTo() {
 		return reply_to;
@@ -306,7 +306,9 @@ public class ACLMessage implements Serializable, Cloneable {
 	}
 
 	/**
-	 * @return Content of content field
+	 * Gets the content of this message.
+	 * 
+	 * @return Content of content field as a String
 	 * @uml.property name="content"
 	 */
 	public String getContent() {
@@ -314,7 +316,7 @@ public class ACLMessage implements Serializable, Cloneable {
 	}
 
 	/**
-	 * Sets languange field
+	 * Sets language field
 	 * 
 	 * @param lang
 	 * @uml.property name="language"
@@ -324,7 +326,9 @@ public class ACLMessage implements Serializable, Cloneable {
 	}
 
 	/**
-	 * @return content of languange field
+	 * Gets the language field.
+	 * 
+	 * @return content of language field
 	 * @uml.property name="language"
 	 */
 	public String getLanguage() {
@@ -352,6 +356,7 @@ public class ACLMessage implements Serializable, Cloneable {
 
 	/**
 	 * Set ontology of the message
+	 * 
 	 * @param ontology
 	 * @uml.property name="ontology"
 	 */
@@ -361,6 +366,7 @@ public class ACLMessage implements Serializable, Cloneable {
 
 	/**
 	 * Get the ontology for the message
+	 * 
 	 * @return ontology
 	 * @uml.property name="ontology"
 	 */
@@ -370,6 +376,7 @@ public class ACLMessage implements Serializable, Cloneable {
 
 	/**
 	 * Sets the protocol for the message
+	 * 
 	 * @param protocol
 	 * @uml.property name="protocol"
 	 */
@@ -379,6 +386,7 @@ public class ACLMessage implements Serializable, Cloneable {
 
 	/**
 	 * Gets the protocol for the message
+	 * 
 	 * @return protocol
 	 * @uml.property name="protocol"
 	 */
@@ -387,14 +395,16 @@ public class ACLMessage implements Serializable, Cloneable {
 	}
 
 	/**
+	 * Sets the conversationID of this message.
 	 * 
-	 * @param id
+	 * @param id A String containing the conversationID to be set.
 	 */
 	public void setConversationId(String id) {
 		conversation_id = id;
 	}
 
 	/**
+	 * Gets the conversationID of this message.
 	 * 
 	 * @return conversation id
 	 */
@@ -403,15 +413,16 @@ public class ACLMessage implements Serializable, Cloneable {
 	}
 
 	/**
+	 * Sets the replyWith field of this message.
 	 * 
-	 * @param reply
-	 *            With
+	 * @param replyWith
 	 */
 	public void setReplyWith(String rw) {
 		reply_with = rw;
 	}
 
 	/**
+	 * Gets the replyWith field of this message.
 	 * 
 	 * @return reply with
 	 */
@@ -420,15 +431,16 @@ public class ACLMessage implements Serializable, Cloneable {
 	}
 
 	/**
+	 * Sets the inReplyTo field of this message.
 	 * 
-	 * @param in
-	 *            reply to
+	 * @param inReplyTo 
 	 */
 	public void setInReplyTo(String irt) {
 		in_reply_to = irt;
 	}
 
 	/**
+	 * Gets the inReplyTo field of this message.
 	 * 
 	 * @return in reply to
 	 */
@@ -437,16 +449,16 @@ public class ACLMessage implements Serializable, Cloneable {
 	}
 
 	/**
-	 * Default value date.getTime()
+	 * Sets the replyByDate field for this message.
 	 * 
-	 * @param date
+	 * @param date If the date is null, the current time and date is used.
 	 */
 	public void setReplyByDate(Date date) {
 		reply_byInMillisec = (date == null ? 0 : date.getTime());
 	}
 
 	/**
-	 * 
+	 * Gets the replyByDate field for this message.
 	 * @return reply by time in date format
 	 */
 	public Date getReplyByDate() {
@@ -457,6 +469,7 @@ public class ACLMessage implements Serializable, Cloneable {
 	}
 
 	/**
+	 * Gets the replyBy field.
 	 * 
 	 * @return reply by time in string format
 	 */
@@ -468,8 +481,11 @@ public class ACLMessage implements Serializable, Cloneable {
 	}
 
 	/**
+	 * Sets the performative field in the message.
 	 * 
-	 * @param performative
+	 * @param performative Must contain a valid performative (e.g. INFORM) in order to be set.
+	 * See the performatives in this class to notice which ones are valid.
+	 * @see ACLMessage
 	 */
 	public void setPerformative(String performative) {
 		for (int i = 0; i < performatives.length; i++) {
@@ -517,6 +533,7 @@ public class ACLMessage implements Serializable, Cloneable {
 	}
 
 	/**
+	 * Gets the count of receivers of this message.
 	 * 
 	 * @return total number of receivers
 	 */
@@ -570,6 +587,11 @@ public class ACLMessage implements Serializable, Cloneable {
 		return m;
 	}
 
+	/**
+	 * Copies the fields of the message to this one, when those fields have a correct value. If they don't, they are not copied.
+	 * 
+	 * @param msg From which the fields are to be copied.
+	 */
 	public void copyFromAsTemplate(ACLMessage msg) {		
 
 		if (msg.getPerformativeInt() != ACLMessage.UNKNOWN) {
@@ -618,10 +640,22 @@ public class ACLMessage implements Serializable, Cloneable {
 		}
 	}
 
+	/**
+	 * Sets the value of a header for this message.
+	 * 
+	 * @param key The name of the header
+	 * @param value The content for the header
+	 */
 	public void setHeader(String key, String value) {
 		headers.put(key, value);
 	}
 
+	/**
+	 * Gets the value of a header for this message.
+	 * 
+	 * @param key The name of the header
+	 * @return The value of the header specified
+	 */
 	public String getHeaderValue(String key) {
 		if (headers.get(key) != null)
 			return headers.get(key);
@@ -629,6 +663,11 @@ public class ACLMessage implements Serializable, Cloneable {
 			return "";
 	}
 
+	/**
+	 * Obtains the whole set of headers in this message.
+	 * 
+	 * @return A Map containing all the headers (and its contents) in this message
+	 */
 	public Map<String, String> getHeaders() {
 		return headers;
 	}
@@ -650,7 +689,6 @@ public class ACLMessage implements Serializable, Cloneable {
 	 Sets the value of byte sequence content
 	 @param serializable object to store
 	 */
-	
 	public void setContentObject(java.io.Serializable s) throws IOException
 	{
 		ByteArrayOutputStream c = new ByteArrayOutputStream();
@@ -742,6 +780,10 @@ public class ACLMessage implements Serializable, Cloneable {
 		return o;
 	}
 	
+	/**
+	 * Serializes this message to a String, using all the fields in the message.
+	 * The fields are separated using the char '#'
+	 */
 	public String toString(){
 		// Serialize message content
 		String strMsg;
@@ -840,6 +882,13 @@ public class ACLMessage implements Serializable, Cloneable {
 		return strMsg;
 	}
 	
+	/**
+	 * Parses the message given as a String and creates an object of type ACLMessage.
+	 * 
+	 * @param strMsg String containing a serialization of an ACLMessage
+	 * @return An object of type ACLMessage created from the given String
+	 * @see ACLMessage#toString()
+	 */
 	public static ACLMessage fromString (String strMsg){
 		// Unserialize message content
 		ACLMessage msg;
