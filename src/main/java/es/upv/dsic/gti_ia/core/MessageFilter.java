@@ -78,10 +78,20 @@ public class MessageFilter implements Cloneable{
 		}
 	}
 	
-	// TODO: llamada recursiva??
-	public MessageFilter clone(){
-		return this.clone();
+	public Object clone(){
+		Object obj=null;
+		try{
+			obj=super.clone();
+		}catch(CloneNotSupportedException ex){
+			logger.error(ex);
+		}
+		return obj;
 	}
+
+	// TODO: llamada recursiva??
+	/*public MessageFilter clone(){
+		super.clone();
+	}*/
 
 	/**
 	 * The evaluation method. The filter is compared against the message in this method.

@@ -65,7 +65,7 @@ public class CFactory {
 	 * @return
 	 */
 	public MessageFilter getFilter() {
-		return filter.clone();
+		return (MessageFilter) filter.clone();
 	}
 
 	/**
