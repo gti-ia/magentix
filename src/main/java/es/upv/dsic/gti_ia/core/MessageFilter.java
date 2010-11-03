@@ -88,11 +88,6 @@ public class MessageFilter implements Cloneable{
 		return obj;
 	}
 
-	// TODO: llamada recursiva??
-	/*public MessageFilter clone(){
-		super.clone();
-	}*/
-
 	/**
 	 * The evaluation method. The filter is compared against the message in this method.
 	 * @param msg The message to compare.
