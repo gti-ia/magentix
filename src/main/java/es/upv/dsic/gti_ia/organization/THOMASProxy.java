@@ -11,7 +11,7 @@ import es.upv.dsic.gti_ia.architecture.QueueAgent;
 import es.upv.dsic.gti_ia.architecture.FIPANames.InteractionProtocol;
 import es.upv.dsic.gti_ia.cAgents.CAgent;
 import es.upv.dsic.gti_ia.cAgents.CProcessor;
-import es.upv.dsic.gti_ia.cAgents.CProcessorFactory;
+import es.upv.dsic.gti_ia.cAgents.CFactory;
 import es.upv.dsic.gti_ia.cAgents.protocols.FIPA_REQUEST_Initiator;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
@@ -269,7 +269,7 @@ public class THOMASProxy {
 		//Initialization protocol  / conversation request.
 			CAgent myAgent = (CAgent)agent;
 			THOMASCAgentRequest protocol = new THOMASCAgentRequest(this);
-			CProcessorFactory talk = protocol.newFactory("THOMASRequest", null, requestMsg, 1, myAgent, 0);
+			CFactory talk = protocol.newFactory("THOMASRequest", null, requestMsg, 1, myAgent, 0);
 			myAgent.addFactoryAsInitiator(talk);
 			myAgent.startSyncConversation(talk.getName());
 			myAgent.removeFactory(talk.getName());

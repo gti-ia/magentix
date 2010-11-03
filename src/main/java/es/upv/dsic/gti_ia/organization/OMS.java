@@ -499,7 +499,7 @@ public class OMS extends CAgent {
 			}
 		}
 		
-		CProcessorFactory talk = new myFIPA_REQUEST().newFactory("TALK", null,
+		CFactory talk = new myFIPA_REQUEST().newFactory("TALK", null,
 				1, firstProcessor.getMyAgent());
 
 		// Finally the factory is setup to answer to incoming messages that
