@@ -33,7 +33,7 @@ public class FIPARequestResponder {
 	private String port = "";
 
 	/**
-	 * Create a new FIPA-Request interaction protocol, rol responder.
+	 * Creates a new FIPA-Request interaction protocol, Role responder.
 	 * 
 	 * @param agent
 	 *            agent is the reference to the Agent Object.
@@ -53,7 +53,7 @@ public class FIPARequestResponder {
 	}
 
 	/**
-	 * Return the agent.
+	 * Returns the agent.
 	 * 
 	 * @return QueueAgent
 	 */
@@ -63,7 +63,7 @@ public class FIPARequestResponder {
 	}
 
 	/**
-	 * Send a CANCEL Message for active conversation and and terminates the
+	 * Sends a CANCEL Message for active conversation and terminates the
 	 * protocol
 	 */
 	public void finish() {
@@ -80,7 +80,7 @@ public class FIPARequestResponder {
 	}
 
 	/**
-	 * Run the state machine with the communication protocol
+	 * Runs the state machine with the communication protocol
 	 */
 	public void action() {
 		switch (state) {
@@ -90,7 +90,7 @@ public class FIPARequestResponder {
 			if (request != null) {
 				this.requestmsg = request;
 				state = PREPARE_RESPONSE_STATE;
-				// configuramos el template del cancel
+				//Configure the cancel template
 				template_cancel = new MessageTemplate(
 						InteractionProtocol.FIPA_REQUEST);
 				template_cancel.addConversation(request.getConversationId());
@@ -151,7 +151,7 @@ public class FIPARequestResponder {
 
 					response.setSender(myAgent.getAid());
 
-					// si el mensaje es para un agente Jade
+					//If the message is for a Jade agent
 
 					if (response.getReceiver() != null) {
 						if (response.getReceiver(0).protocol.equals("http")) {
@@ -161,20 +161,6 @@ public class FIPARequestResponder {
 											"@",
 											response.getReceiver().name_all()
 													.indexOf("@") + 1));
-							
-							//esta acció ara la fa el agent BridgeAgentInOut
-							/*if (response.getReceiver().port.indexOf(":") != -1) {
-								port = response.getReceiver().port.substring(
-										response.getReceiver().port
-												.indexOf(":") + 1, response
-												.getReceiver().port.indexOf(
-												"/", 10));
-							} else {
-								port = response.getReceiver().port.substring(0,
-										response.getReceiver().port
-												.indexOf("/"));
-
-							}*/
 							port = response.getReceiver().port;
 							response.getReceiver().name = name;
 							response.getReceiver().port = port;
@@ -260,7 +246,6 @@ public class FIPARequestResponder {
 			this.requestmsg = null;
 			this.resNofificationmsg = null;
 			this.responsemsg = null;
-			// this.template_cancel = null;
 			break;
 		}
 
