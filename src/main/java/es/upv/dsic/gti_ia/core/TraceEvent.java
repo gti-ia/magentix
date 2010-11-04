@@ -1,7 +1,6 @@
 package es.upv.dsic.gti_ia.core;
 
 import java.lang.System;
-import java.util.Date;
 import java.io.Serializable;
 
 import es.upv.dsic.gti_ia.trace.TracingEntity;
@@ -28,6 +27,8 @@ public class TraceEvent implements Serializable{
 	 * Origin entity which threw the trace event.
 	 * When the origin entity of the trace event is the system,
 	 * originEntity.name="system"
+	 * 
+	 * @see es.upv.dsic.gti_ia.trace.TracingEntity
 	 */
 	private TracingEntity originEntity;
 	/**
@@ -37,7 +38,7 @@ public class TraceEvent implements Serializable{
 	
 	/**
 	 * Void constructor which sets all attributes to null
-	 * except for @see{timestamp}, which is set to -1
+	 * except for @link{timestamp}, which is set to -1
 	 */
 	public TraceEvent(){
 		this.tService=null;
@@ -48,12 +49,13 @@ public class TraceEvent implements Serializable{
 	
 	/**
 	 * Creates a new trace event and sets its attributes according to the 
-	 * specified parameters, except for @see{timestamp}, which is set to
-	 * @see{java.lang.System.currentTimeMillis()}
+	 * specified parameters, except for @link{timestamp}, which is set to
 	 *  
 	 * @param tService 
 	 * @param originEntity
 	 * @param content
+	 * 
+	 * @see java.lang.System.currentTimeMillis()
 	 */
 	public TraceEvent(String tService, TracingEntity originEntity, String content){
 		this.tService=tService;
@@ -64,13 +66,15 @@ public class TraceEvent implements Serializable{
 	
 	/**
 	 * Creates a new trace event and sets its attributes according to the 
-	 * specified parameters, except for @see{timestamp}, which is set to
-	 * @see{java.lang.System.currentTimeMillis()}
+	 * specified parameters, except for @link{timestamp}, which is set to
+	 * @link{java.lang.System.currentTimeMillis()}
 	 * A new tracing entity is created for the specified AgentID
 	 *  
 	 * @param tService 
 	 * @param originAid
 	 * @param content
+	 * 
+	 * @see java.lang.System#currentTimeMillis()
 	 */
 	public TraceEvent(String tService, AgentID originAid, String content){
 		this.tService=tService;
@@ -82,7 +86,7 @@ public class TraceEvent implements Serializable{
 	/**
 	 * Sets the tracing service of the trace event to the specified one
 	 * 
-	 * @param tService
+	 * @param tService Name of the tracing service
 	 */
 	public void setTracingService(String tService){
 		this.tService=tService;
@@ -91,7 +95,7 @@ public class TraceEvent implements Serializable{
 	/**
 	 * Sets the time stamp of the trace event to the specified one
 	 * 
-	 * @param timestamp
+	 * @param timestamp time at which the trace event was thrown
 	 */
 	public void setTimestamp(long timestamp){
 		this.timestamp=timestamp;
@@ -100,7 +104,7 @@ public class TraceEvent implements Serializable{
 	/**
 	 * Sets the origin entity of the trace event to the specified one
 	 * 
-	 * @param originEntity
+	 * @param originEntity Tracing entity which originated the trace event
 	 */
 	public void setOriginEntity(TracingEntity originEntity){
 		this.originEntity=originEntity;
@@ -109,7 +113,7 @@ public class TraceEvent implements Serializable{
 	/**
 	 * Sets the content of the trace event to the specified one
 	 * 
-	 * @param content
+	 * @param content Content of the trace event
 	 */
 	public void setContent(String content){
 		this.content=content;
@@ -118,7 +122,7 @@ public class TraceEvent implements Serializable{
 	/**
 	 * Returns the tracing service of the trace event
 	 * 
-	 * @return tService
+	 * @return tService Name of the tracing Service
 	 */
 	public String getTracingService(){
 		return this.tService;
@@ -127,7 +131,7 @@ public class TraceEvent implements Serializable{
 	/**
 	 * Returns the origin entity of the trace event
 	 * 
-	 * @return originEntity
+	 * @return originEntity Tracing entity which originated the trace event
 	 */
 	public TracingEntity getOriginEntity(){
 		return this.originEntity;
@@ -136,7 +140,7 @@ public class TraceEvent implements Serializable{
 	/**
 	 * Returns the content of the trace event
 	 * 
-	 * @return content
+	 * @return content Content of the trace event
 	 */
 	public String getContent(){
 		return this.content;
@@ -145,7 +149,7 @@ public class TraceEvent implements Serializable{
 	/**
 	 * Returns the time stamp of the trace event
 	 * 
-	 * @return timestamp
+	 * @return timestamp Time at which the trace event was generated
 	 */
 	public long getTimestamp(){
 		return this.timestamp;
@@ -153,9 +157,11 @@ public class TraceEvent implements Serializable{
 	
 	/**
 	 * Converts the trace event to a human readable string
-	 * @see{es.upv.dsic.gti_ia.trace.TracingEntity.toReadableString()}
+	 *
 	 * 
 	 * @return A readable string containing all information of the trace event
+	 * 
+	 * @see es.upv.dsic.gti_ia.trace.TracingEntity#toReadableString()
 	 */
 	public String toReadableString() {
 		String event_str = String.valueOf(this.getTimestamp()) + ": " +

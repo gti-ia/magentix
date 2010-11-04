@@ -294,7 +294,6 @@ public class BaseAgent implements Runnable
 		
 		// Send trace event NEW_AGENT
 		sendSystemTraceEvent(new TraceEvent(TracingService.DI_TracingServices[TracingService.NEW_AGENT].getName(), new AgentID("system", aid.protocol, aid.host, aid.port), aid.toString()));
-		
 	}
 	
 	// Cuando el agente infringe alguna regla de seguridad, la política del broker es destruir la

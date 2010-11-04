@@ -17,7 +17,7 @@ import es.upv.dsic.gti_ia.trace.TracingServiceSubscriptionList;
 public class TracingService implements Serializable{
 	private static final long serialVersionUID = 1L;
 	/**
-	 * Domain Independent Tracing Service names
+	 * Domain Independent Tracing Service constant identifiers
 	 */
 	// System Trace Events
 	public static final int TRACE_ERROR = 0;
@@ -69,8 +69,14 @@ public class TracingService implements Serializable{
 //	public static final int AUTHORIZATION_GRANTED = 23;
 //	public static final int AUTHORIZATION_DENIED = 24;
 	
+	/**
+	 * Number of supported Domain Independent Tracing Services
+	 */
 	public static final int MAX_DI_TS = 12;
 	
+	/**
+	 * Array of Domain Independent Tracing Services
+	 */
 	public static final TracingService[] DI_TracingServices = new TracingService[]{
 		new TracingService("TRACE_ERROR", true, false, "General error in the tracing process."),
 //		new TracingService("TRACE_START", true, false, "The ER entity started tracing."),
@@ -99,13 +105,51 @@ public class TracingService implements Serializable{
 //		new TracingService("AUTHORIZATION_DENIED", true, false, "An authorization for a tracing service was removed.")
 	};
 	
+	/**
+	 * Tracing Service name, which has to be unique
+	 */
 	private String name;
+	/**
+	 * Flag that indicates that the tracing service cannot be unpublished
+	 */
 	private boolean mandatory; // Cannot be unpublished
-	private boolean requestable; // Is not requestable
+	/**
+	 * Flag that indicates that the tracing service is requestable
+	 * (system tracing services such TRACE_ERROR or SUBSCRIBE are non requestable
+	 * since tracing entities automatically receive them when necessary)
+	 */
+	private boolean requestable;
+	/**
+	 * Human oriented description of the tracing service (next versions of the event
+	 * trace support will change this description in order to be tracing entity oriented)
+	 */
 	private String description;
+	/**
+	 * List of tracing entities which provide the tracing service
+	 * 
+	 * @see es.upv.dsic.gti_ia.trace.TracingEntityList
+	 * @see es.upv.dsic.gti_ia.trace.TracingEntity
+	 */
 	private TracingEntityList providers;
+	/**
+	 * List of subscriptions to the tracing service
+	 * 
+	 * @see es.upv.dsic.gti_ia.trace.TracingServiceSubscriptionList
+	 * @see es.upv.dsic.gti_ia.trace.TracingServiceSubscription
+	 */
 	private TracingServiceSubscriptionList subscriptions;
 
+	/**
+	 * Void constructor which creates an empty tracing service, without
+	 * any provider nor subscriptor, which will be requestable
+	 * ( @link{es.upv.dsic.gti_ia.trace.TracingService#requestable} == true ),
+	 * and not mandatory ( @link{es.upv.dsic.gti_is.trace.TracingService#mandatory} == false )
+	 * 
+	 * @see es.upv.dsic.gti_ia.trace.TracingEntityList
+	 * @see es.upv.dsic.gti_ia.trace.TracingEntity
+	 * @see es.upv.dsic.gti_ia.trace.TracingServiceSubscriptionList
+	 * @see es.upv.dsic.gti_ia.trace.TracingServiceSubscription
+	 */
 	public TracingService () {
 		this.name = null;
 		this.mandatory = false;
@@ -115,6 +159,21 @@ public class TracingService implements Serializable{
 		this.subscriptions = new TracingServiceSubscriptionList();
 	}
 	
+	/**
+	 * Constructor which creates an tracing service with the specified
+	 * service name and description, without any provider nor subscriptor,
+	 * which will be requestable
+	 * ( @link{es.upv.dsic.gti_ia.trace.TracingService#requestable} == true ),
+	 * and not mandatory ( @link{es.upv.dsic.gti_is.trace.TracingService#mandatory} == false )
+	 * 
+	 * @param serviceName Name of the tracing service
+	 * @param description Description of the tracing service
+	 * 
+	 * @see es.upv.dsic.gti_ia.trace.TracingEntityList
+	 * @see es.upv.dsic.gti_ia.trace.TracingEntity
+	 * @see es.upv.dsic.gti_ia.trace.TracingServiceSubscriptionList
+	 * @see es.upv.dsic.gti_ia.trace.TracingServiceSubscription
+	 */
 	public TracingService (String serviceName, String description) {
 		this.name=serviceName;
 		this.mandatory = false;
@@ -124,6 +183,22 @@ public class TracingService implements Serializable{
 		this.subscriptions = new TracingServiceSubscriptionList();
 	}
 	
+	/**
+	 * Constructor which creates an tracing service with the specified
+	 * service name and description, without any provider nor subscriptor.
+	 * The tracing service will be requestable and mandatory depending on
+	 * the input parameters
+	 * 
+	 * @param serviceName Name of the tracing service
+	 * @param mandatory Flag which determines if the tracing service can be unpublished
+	 * @param requestable Flag which determines if the tracing service can be requested
+	 * @param description Description of the tracing service
+	 * 
+	 * @see es.upv.dsic.gti_ia.trace.TracingEntityList
+	 * @see es.upv.dsic.gti_ia.trace.TracingEntity
+	 * @see es.upv.dsic.gti_ia.trace.TracingServiceSubscriptionList
+	 * @see es.upv.dsic.gti_ia.trace.TracingServiceSubscription
+	 */
 	private TracingService (String serviceName, boolean mandatory, boolean requestable, String description) {
 		this.name=serviceName;
 		this.mandatory = mandatory;
