@@ -7,6 +7,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 //import java.io.FileNotFoundException;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -95,6 +97,8 @@ public class SecurityTools {
 		String pass = propSecurityUser.getProperty("KeyStorePassword");
 		String alias = propSecurityUser.getProperty("alias");
 		//String key = propSecurityUser.getProperty("key");
+		
+
 		String type = propSecurityUser.getProperty("type");
 		try {
 			// String connection with the MMS service.
@@ -342,13 +346,14 @@ public class SecurityTools {
 	 * Load policy file from classpath.
 	 * 
 	 * @param name The resource name
+	 * @throws FileNotFoundException 
 	 */
-	private Policy loadPolicy(String name) throws XMLStreamException {
-		
-		ClassLoader loader = SecurityTools.class.getClassLoader();
-		InputStream resource = loader.getResourceAsStream(name);
-		StAXOMBuilder builder = new StAXOMBuilder(resource);
-		
+	private Policy loadPolicy(String name) throws XMLStreamException, FileNotFoundException {
+
+		File f = new File("./configuration/"+name);
+
+		FileInputStream fi = new FileInputStream(f);
+		StAXOMBuilder builder = new StAXOMBuilder(fi);	
 		return PolicyEngine.getPolicy(builder.getDocumentElement());
 	}
 
