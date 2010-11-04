@@ -30,7 +30,7 @@ public class FIPAQueryResponder {
 	private Monitor monitor = null;
 
 	/**
-	 * Create a new FIPA-Query interaction protocol, rol responder.
+	 * Creates a new FIPA-Query interaction protocol, rol responder.
 	 * 
 	 * @param agent
 	 *            is the reference to the Agent Object
@@ -46,7 +46,7 @@ public class FIPAQueryResponder {
 	}
 	
 	 /**
-	  * Return the agent.
+	  * Returns the agent.
 	  * @return QueueAgent 
 	  */
 	 public QueueAgent getQueueAgent()
@@ -60,7 +60,7 @@ public class FIPAQueryResponder {
 	}
 
 	 /**
-	  *  Run the state machine with the communication protocol
+	  *  Runs the state machine with the communication protocol
 	  */
 	public void action() {
 
@@ -71,7 +71,7 @@ public class FIPAQueryResponder {
 				this.requestmsg = request;
 				state = PREPARE_RESPONSE_STATE;
 			} else {
-				monitor.waiting();// me espero a que llegue un mensaje.
+				monitor.waiting();//waiting to new messages arrive
 			}
 			break;
 		}
@@ -103,9 +103,8 @@ public class FIPAQueryResponder {
 
 				response = arrangeMessage(receivedMsg, response);
 				response.setSender(myAgent.getAid());
-				// si el mensaje es para un agente Jade
+				//If the message is for a Jade agent
 
-				
 				if (response.getReceiver() != null) {
 					if (response.getReceiver(0).protocol.equals("http")) {
 						name = response
