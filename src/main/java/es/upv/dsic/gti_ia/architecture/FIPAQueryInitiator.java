@@ -39,10 +39,10 @@ public class FIPAQueryInitiator {
 	private Logger logger = Logger.getLogger(this.getClass().getName());
 
 	/**
-	 * Create a new FIPA-Query interaction protocol, rol initiator.
+	 * Creates a new FIPA-Query interaction protocol, rol initiator.
 	 * 
 	 * @param agent
-	 *            agent is the reference to the Agent Object
+	 *            is the reference to the Agent Object
 	 * @param msg
 	 *            initial message
 	 */
@@ -54,18 +54,19 @@ public class FIPAQueryInitiator {
 
 	}
 
-	 /**
-	  * Return the agent.
-	  * @return QueueAgent 
-	  */
-	 public QueueAgent getQueueAgent()
-	 {
-		return this.myAgent; 
-		 
-	 }
-	 
 	/**
-	 * We will be able to know if it has finished the protocol
+	 * Return the agent.
+	 * @return QueueAgent 
+	 */
+	public QueueAgent getQueueAgent()
+	{
+		return this.myAgent; 
+
+	}
+
+	/**
+	 * 
+	 * This method reports if the protocol has been finished
 	 * 
 	 * @return value a boolean value is returned, true: the protocol has
 	 *         finished, false: the protocol even has not finished
@@ -74,12 +75,13 @@ public class FIPAQueryInitiator {
 		return this.finish;
 	}
 
+
 	int getState() {
 		return this.state;
 	}
-	
+
 	/**
-	 * returns the id of the message used in communication protocol
+	 * Returns the id of the message used in communication protocol
 	 * @return conversationID
 	 */
 	public String getIdConversation() {
@@ -87,9 +89,9 @@ public class FIPAQueryInitiator {
 	}
 
 
-	 /**
-	  *  Run the state machine with the communication protocol
-	  */
+	/**
+	 *  Runs the state machine with the communication protocol
+	 */
 	public void action() {
 		switch (state) {
 		case PREPARE_MSG_STATE: {
@@ -103,45 +105,40 @@ public class FIPAQueryInitiator {
 
 			ACLMessage request = this.requestsentmsg;
 			if (request == null) {
-				// finalización del protocolo
+				//Finalized protocol
 				this.finish = true;
 				break;
 			} else {
 				if (request.getConversationId().equals("")) {
 					conversationID = "C" + hashCode() + "_"
-							+ System.currentTimeMillis();
+					+ System.currentTimeMillis();
 					request.setConversationId(conversationID);
 				} else {
 					conversationID = request.getConversationId();
 				}
 
-				// configuramos el template
+				// Configure template
 				template = new MessageTemplate(InteractionProtocol.FIPA_QUERY);
 
-				// template.setConversationId(conversationID);
 
 				template.addConversation(conversationID);
 				template.add_receiver(request.getReceiver());
 
 				myAgent.setActiveConversation(conversationID);
 
-				// fijamos el el timeout del mensaje
+
+				//The timeout is fixed in the message
 				Date d = request.getReplyByDate();
 				if (d != null)
 					timeout = d.getTime() - (new Date()).getTime();
 				else
 					timeout = -1;
-				
+
 				endingtime = System.currentTimeMillis() + timeout;
-				// si el mensaje es para un agente Jade
-				//lo puedo saber dependiendo de si el agente tiene alguna palabra concreta como /JADE o por ejemplo
-				//si es un agente que no existe en la plataforma magentix es de jade.
+				//If the message is for a Jade agent
+			
 				if (request.getReceiver() != null) {
 					if (request.getReceiver(0).name.contains("/JADE")) {
-						//name = response.getReceiver().name_all().substring(0,response.getReceiver().name_all().indexOf("@",response.getReceiver().name_all().indexOf("@") + 1));
-						//port = response.getReceiver().port.substring(response.getReceiver().port.indexOf(":") + 1, response.getReceiver().port.indexOf("/", 10));
-						
-						
 						request.getReceiver().host = request.getReceiver().name.substring(request.getReceiver().name.indexOf("@")+1,request.getReceiver().name.indexOf(":"));
 						request.getReceiver().port = "7778";
 						request.getReceiver().protocol = "http";
@@ -191,8 +188,7 @@ public class FIPAQueryInitiator {
 
 				}
 				default: {
-					// nos llega el segundo mensaje, habido problemas con el
-					// primer mensaje
+					//We receive the second message, there were problems in first message
 					state = RECEIVE_REPLY_STATE;
 					handleOutOfSequence(firstReply);
 					break;
@@ -212,7 +208,7 @@ public class FIPAQueryInitiator {
 				} else {
 					this.monitor.waiting();
 					state = RECEIVE_REPLY_STATE;// state =
-												// ALL_REPLIES_RECEIVED_STATE;
+					// ALL_REPLIES_RECEIVED_STATE;
 					break;
 				}
 			}
@@ -339,7 +335,7 @@ public class FIPAQueryInitiator {
 	}
 
 	/**
-	  * This method is called when a unexpected message is received.
+	 * This method is called when a unexpected message is received.
 	 * 
 	 * @param msg
 	 *            the received message
