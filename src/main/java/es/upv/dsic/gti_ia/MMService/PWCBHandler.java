@@ -18,39 +18,39 @@ import java.util.Properties;
  */
 public class PWCBHandler implements CallbackHandler
 {
-	
+
 	/**
-	 * This method set the password key for the MMS encryption alias. 
+	 * This method sets the password key for the MMS encryption alias. 
 	 */
-    public void handle(Callback[] callbacks) throws IOException {
-    	
-    	Properties prop = new Properties();
+	public void handle(Callback[] callbacks) throws IOException {
+
+		Properties prop = new Properties();
 		try {
-			
+
 			prop.load(PWCBHandler.class.getResourceAsStream("/"+"securityAdmin.properties"));
-			
+
 			//prop.load(new FileInputStream(
-				//	"./securityAdmin.properties"));
+			//	"./securityAdmin.properties"));
 		} catch (FileNotFoundException e) {
 			System.err.println(e);
 		} catch (IOException e) {
 			System.err.println(e);
 		}
-    	
-        for (int i = 0; i < callbacks.length; i++) {
-            WSPasswordCallback pwcb = (WSPasswordCallback)callbacks[i];
-            String id = pwcb.getIdentifier();
-            int usage = pwcb.getUsage();
-            if (usage == WSPasswordCallback.DECRYPT || usage == WSPasswordCallback.SIGNATURE) {
-                
-  
-                //Used to retrieve password for private key
-                 if (prop.getProperty("alias").equals(id)) {
-                    pwcb.setPassword(prop.getProperty("key"));
-                }
-                
-  
-            }
-        }
-    }
+
+		for (int i = 0; i < callbacks.length; i++) {
+			WSPasswordCallback pwcb = (WSPasswordCallback)callbacks[i];
+			String id = pwcb.getIdentifier();
+			int usage = pwcb.getUsage();
+			if (usage == WSPasswordCallback.DECRYPT || usage == WSPasswordCallback.SIGNATURE) {
+
+
+				//Used to retrieve password for private key
+				if (prop.getProperty("alias").equals(id)) {
+					pwcb.setPassword(prop.getProperty("key"));
+				}
+
+
+			}
+		}
+	}
 }

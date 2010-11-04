@@ -1,19 +1,7 @@
 package es.upv.dsic.gti_ia.MMService;
 
-/*
- import java.io.BufferedInputStream;
- import java.io.BufferedOutputStream;
- import java.io.DataOutputStream;
- import java.io.File;
- import java.io.InputStream;
- import java.io.OutputStream;
- import java.net.HttpURLConnection;
- import java.net.URL;
- */
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -44,18 +32,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Properties;
 import java.util.Vector;
-import javax.servlet.*;
-/*
 
-
-import javax.servlet.ServletContext;
- import org.bouncycastle.ocsp.BasicOCSPResp;
- import org.bouncycastle.ocsp.CertificateID;
- import org.bouncycastle.ocsp.OCSPReq;
- import org.bouncycastle.ocsp.OCSPReqGenerator;
- import org.bouncycastle.ocsp.OCSPResp;
- import org.bouncycastle.ocsp.SingleResp;
- */
 import sun.security.x509.AlgorithmId;
 import sun.security.x509.CertificateAlgorithmId;
 import sun.security.x509.CertificateExtensions;
@@ -73,8 +50,6 @@ import sun.security.x509.X509CertImpl;
 import sun.security.x509.X509CertInfo;
 
 import org.apache.axis2.context.MessageContext;
-import org.apache.log4j.Logger;
-import org.apache.log4j.xml.DOMConfigurator;
 import org.apache.qpid.console.QMFObject;
 import org.apache.qpid.console.Session;
 import org.apache.ws.security.WSSecurityEngineResult;
@@ -97,19 +72,18 @@ public class AgentCertificate {
 	String username = "";
 	Calendar calendario;
 
-	
-	
+
+
 
 	/**
-	 * This method return a new signed certificate, the common name is a name of agent. 
-	 * @param agentName (Common Name)
+	 * This method returns a new signed certificate 
+	 * @param agentName Common Name=Name of agent
 	 * @param pk This is a user public key.
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	public byte[] newCertificate(String agentName, byte[] pk) {
 
-		
-		// this.load();
 
 		reservedNames.add("mms");
 		reservedNames.add("tm");
@@ -121,23 +95,23 @@ public class AgentCertificate {
 			System.err.println(e);
 		}
 		try {
-			
+
 			MessageContext ctx = MessageContext.getCurrentMessageContext();
 			Vector<WSHandlerResult> results = (Vector<WSHandlerResult>) ctx
-					.getProperty(WSHandlerConstants.RECV_RESULTS);
+			.getProperty(WSHandlerConstants.RECV_RESULTS);
 			if (results != null) {
 
 				WSHandlerResult result = (WSHandlerResult) results.get(0);
 
 				WSSecurityEngineResult wsSecurityEngineResult = (WSSecurityEngineResult) result
-						.getResults().get(0);
+				.getResults().get(0);
 
 				username = ((Principal) wsSecurityEngineResult
 						.get(WSSecurityEngineResult.TAG_PRINCIPAL)).getName();
 
 				System.out.println("User name: " + username);
-				
-			
+
+
 				// Para poder comprobar el estado de revocación del dnie o otro
 				// certificado. Falta por hacer con https.
 
@@ -154,117 +128,110 @@ public class AgentCertificate {
 			//El nombre del agente esta reservado??
 			if (!reservedNames.contains(agentName))
 			{
-				
-			
-			System.out.println("Creating a new Agent certificate with Common Name= "
-					+ agentName);
 
-			// pasar de byte a x500Name
-			ByteArrayInputStream bis = new ByteArrayInputStream(pk);
 
-			ObjectInputStream ois = new ObjectInputStream(bis);
+				System.out.println("Creating a new Agent certificate with Common Name= "
+						+ agentName);
 
-			Object okey = ois.readObject();
+				// pasar de byte a x500Name
+				ByteArrayInputStream bis = new ByteArrayInputStream(pk);
 
-			PublicKey pkey = (PublicKey) okey;
-			ois.close();
+				ObjectInputStream ois = new ObjectInputStream(bis);
 
-			bis.close();
-	
-			String sigAlg = properties.getProperty("sigAlg");
-			double validity =  Double.valueOf(properties.getProperty("Validity")).doubleValue();
-		
-			PrivateKeyEntry pke = this.generateMMSPrivateKeyEntry(properties);
+				Object okey = ois.readObject();
 
-			// Que información contendrá el certificados que emita.
-			String commonName = agentName;
-			String organizationalUnit = properties
-					.getProperty("organizationalUnit");
-			String organization = properties.getProperty("organization");
-			String city = properties.getProperty("city");
-			String state = properties.getProperty("state");
-			String country = properties.getProperty("country");
+				PublicKey pkey = (PublicKey) okey;
+				ois.close();
 
-			X500Name x500Name;
-			x500Name = new X500Name(commonName, organizationalUnit,
-					organization, city, state, country);
+				bis.close();
 
-			Certificate[] certs = this.generateAndSignedCertificate(x500Name,
-					sigAlg, validity, pke, pkey);
+				String sigAlg = properties.getProperty("sigAlg");
+				double validity =  Double.valueOf(properties.getProperty("Validity")).doubleValue();
 
-			outStream = new ByteArrayOutputStream();
-			ObjectOutputStream os = new ObjectOutputStream(outStream);
+				PrivateKeyEntry pke = this.generateMMSPrivateKeyEntry(properties);
 
-			os.writeObject(certs);
-			os.close();
-			
-			//Guardamos el registro del usuario / agente.
-			//Estará formado por fecha - usuario - agente 
-			calendario = Calendar.getInstance();
-			String commandLog = "====================================================== \n Session: "+ calendario.getTime().toString() +"\n User name: " + username +"\n Agent Name: "+ agentName +"\n======================================================";
-			
-			this.writeAclFile(commandLog, properties.getProperty("Userlog"));
-			
-			// Especificar la ubicación del archivo del almacén de certificados
-			// en los que se confía.
-			System.setProperty("javax.net.ssl.trustStore", properties
-					.getProperty("TrustStorePath"));
-			System.setProperty("javax.net.ssl.trustStorePassword", properties
-					.getProperty("TrustStorePassword"));
+				// Que información contendrá el certificados que emita.
+				String commonName = agentName;
+				String organizationalUnit = properties
+				.getProperty("organizationalUnit");
+				String organization = properties.getProperty("organization");
+				String city = properties.getProperty("city");
+				String state = properties.getProperty("state");
+				String country = properties.getProperty("country");
 
-			// Especificar la ubicación del almacén de certificados keyStore,
-			// tendremos que tener un certificado en cual confie el broker.
-			System.setProperty("javax.net.ssl.keyStore", properties
-					.getProperty("KeyStorePath"));
-			System.setProperty("javax.net.ssl.keyStorePassword", properties
-					.getProperty("KeyStorePassword"));
+				X500Name x500Name;
+				x500Name = new X500Name(commonName, organizationalUnit,
+						organization, city, state, country);
 
-			
-			
-			//Conectamos con el broker.
-			this.connectToBroker();
-			
-			// Escribimos por cada agente las siguientes lineas con los permisos necesarios.
+				Certificate[] certs = this.generateAndSignedCertificate(x500Name,
+						sigAlg, validity, pke, pkey);
 
-			String command = String.format("\n" 
-					+ "acl allow "+agentName+"@QPID all queue name=" + agentName + "\n"
-					+ "acl allow "+agentName+"@QPID all exchange name=amq.direct routingkey="+ agentName +"\n"
-					+ "acl allow "+agentName+"@QPID all queue name="+agentName+".trace" +"\n"
-					+ "acl allow "+agentName+"@QPID bind exchange name=amq.match routingkey="+agentName+".system.all" +"\n"
-					+ "acl allow "+agentName+"@QPID bind exchange name=amq.match routingkey="+agentName+".system.direct"+"\n"
-					+ "acl allow "+agentName+"@QPID publish exchange name=amq.match");
+				outStream = new ByteArrayOutputStream();
+				ObjectOutputStream os = new ObjectOutputStream(outStream);
 
-			//Escribimos el fichero acl.
-			this.writeAclFile(command, properties.getProperty("ACLPath"));
-			
-			
-			
-			
-		
-			
-		
+				os.writeObject(certs);
+				os.close();
 
-			// Recargamos el fichero.
-			this.reloadACLFile();
+				//Guardamos el registro del usuario / agente.
+				//Estará formado por fecha - usuario - agente 
+				calendario = Calendar.getInstance();
+				String commandLog = "====================================================== \n Session: "+ calendario.getTime().toString() +"\n User name: " + username +"\n Agent Name: "+ agentName +"\n======================================================";
 
-			this.closeSession();
-			
-			
-			return outStream.toByteArray();
+				this.writeAclFile(commandLog, properties.getProperty("Userlog"));
+
+				// Especificar la ubicación del archivo del almacén de certificados
+				// en los que se confía.
+				System.setProperty("javax.net.ssl.trustStore", properties
+						.getProperty("TrustStorePath"));
+				System.setProperty("javax.net.ssl.trustStorePassword", properties
+						.getProperty("TrustStorePassword"));
+
+				// Especificar la ubicación del almacén de certificados keyStore,
+				// tendremos que tener un certificado en cual confie el broker.
+				System.setProperty("javax.net.ssl.keyStore", properties
+						.getProperty("KeyStorePath"));
+				System.setProperty("javax.net.ssl.keyStorePassword", properties
+						.getProperty("KeyStorePassword"));
+
+
+
+				//Conectamos con el broker.
+				this.connectToBroker();
+
+				// Escribimos por cada agente las siguientes lineas con los permisos necesarios.
+
+				String command = String.format("\n" 
+						+ "acl allow "+agentName+"@QPID all queue name=" + agentName + "\n"
+						+ "acl allow "+agentName+"@QPID all exchange name=amq.direct routingkey="+ agentName +"\n"
+						+ "acl allow "+agentName+"@QPID all queue name="+agentName+".trace" +"\n"
+						+ "acl allow "+agentName+"@QPID bind exchange name=amq.match routingkey="+agentName+".system.all" +"\n"
+						+ "acl allow "+agentName+"@QPID bind exchange name=amq.match routingkey="+agentName+".system.direct"+"\n"
+						+ "acl allow "+agentName+"@QPID publish exchange name=amq.match");
+
+				//Escribimos el fichero acl.
+				this.writeAclFile(command, properties.getProperty("ACLPath"));
+
+				// Recargamos el fichero.
+				this.reloadACLFile();
+
+				this.closeSession();
+
+
+				return outStream.toByteArray();
 			}
 			else//Si el nombre esta reservado, como por ejemplo MMS.
 			{
 				calendario = Calendar.getInstance();
 				//Registramos quin intenta acceder a nombres reservados
 				String commandLog = "=====================WARNING========================== \n Session: "+ calendario.getTime().toString() +"\n User name: " + username +"\n Agent Name: "+ agentName +"\n======================================================";
-				
+
 				this.writeAclFile(commandLog, properties.getProperty("Userlog"));			
-	
+
 				return null;
 			}
 
-			
-			
+
+
 
 		} catch (Exception e) {
 			System.err.println("Error caught: " + e);
@@ -281,18 +248,21 @@ public class AgentCertificate {
 	// como el servicio no tiene persistencia lo haremos todo en la misma
 	// función cada vez.
 
+	/**
+	 * This method extracts an MMS private key entry. With this private key, MMS signing the agent certificates
+	 */
 	private PrivateKeyEntry generateMMSPrivateKeyEntry(Properties prop)
-			throws NoSuchAlgorithmException, InvalidKeyException,
-			CertificateException, SignatureException, NoSuchProviderException,
-			IOException, KeyStoreException, InstantiationException, IllegalAccessException {
+	throws NoSuchAlgorithmException, InvalidKeyException,
+	CertificateException, SignatureException, NoSuchProviderException,
+	IOException, KeyStoreException, InstantiationException, IllegalAccessException {
 
-		
-		
-	
+
+
+
 		PrivateKeyEntry entry = null;
 		PrivateKey rootkey = null;
 		Provider p;
-		
+
 
 
 		String path = prop.getProperty("pathnsscfg");
@@ -303,9 +273,7 @@ public class AgentCertificate {
 
 		Certificate rootCertificate = null;
 		Certificate[] certs;
-		// X509Certificate rootX509certificate = null;
-		
-		
+	
 		// tenemos que extraer el certificado de la base de datos nss.
 
 		if (Security.getProvider("SunPKCS11-NSSkeystore") == null) {
@@ -324,7 +292,7 @@ public class AgentCertificate {
 			e.printStackTrace();
 		}
 
-		
+
 
 		certs = new Certificate[] { rootCertificate };
 		entry = new KeyStore.PrivateKeyEntry(rootkey, certs);
@@ -335,6 +303,9 @@ public class AgentCertificate {
 	// la
 	// información del agente (Common Name...).
 
+	/**
+	 * This method generates and signs a certificate of agent.
+	 */
 	private Certificate[] generateAndSignedCertificate(X500Name myname,
 			String sigAlg, double validity, PrivateKeyEntry issuerEntry,
 			PublicKey publicKey) throws NoSuchAlgorithmException,
@@ -347,7 +318,7 @@ public class AgentCertificate {
 		signature.initSign(issuerEntry.getPrivateKey());
 		issuer = new X500Signer(signature, new X500Name(
 				((X509Certificate) issuerEntry.getCertificate())
-						.getIssuerX500Principal().getEncoded()));
+				.getIssuerX500Principal().getEncoded()));
 
 		Date firstDate = new Date();
 		Date lastDate = new Date(firstDate.getTime() + (long) (validity * 24
@@ -389,6 +360,10 @@ public class AgentCertificate {
 	}
 
 	//Método para escribir en el fichero acl dando permisos o restricciones.
+	
+	/**
+	 * This file acl contains the agent permissions
+	 */
 	private void writeAclFile(String command, String path) {
 		PrintWriter aclFile = ACLFile(path);
 		try {
@@ -418,8 +393,13 @@ public class AgentCertificate {
 	 * } }
 	 */
 	//Crear un nuevo tipo PrintWriter en base a una ruta (indica el path donde se encuentra el fichero acl).
+	/**
+	 * Returns a new PrintWriter.
+	 * 
+	 * @param path is the path for a new FileWriter
+	 */
 	private PrintWriter ACLFile(String path) {
-		
+
 		try {
 			fichero = new FileWriter(path, true);
 		} catch (IOException e) {
@@ -431,30 +411,42 @@ public class AgentCertificate {
 	}
 
 	//Método para conectar con el broker.
+	
+	/**
+	 * This method connects with the broker. 
+	 */
 	private void connectToBroker() {
 
 		String connectionBroker = "amqp://" + properties.getProperty("user")
-				+ ":" + properties.getProperty("pass") + "@/"
-				+ properties.getProperty("vhost") + "?brokerlist='tcp://"
-				+ properties.getProperty("host") + ":"
-				+ properties.getProperty("port") + "?ssl='"
-				+ properties.getProperty("ssl") + "',sasl_mechs='"
-				+ properties.getProperty("saslMechs") + "''";
+		+ ":" + properties.getProperty("pass") + "@/"
+		+ properties.getProperty("vhost") + "?brokerlist='tcp://"
+		+ properties.getProperty("host") + ":"
+		+ properties.getProperty("port") + "?ssl='"
+		+ properties.getProperty("ssl") + "',sasl_mechs='"
+		+ properties.getProperty("saslMechs") + "''";
 		sess = new Session();
 		sess.addBroker(connectionBroker);
-		
-		
+
+
 
 	}
-	
+
 	//Cerramos la sesion con el broker.
+	/**
+	 * Close session
+	 */
 	private void closeSession()
 	{
 		sess.close();
-		
+
 	}
 
 	//Método que llama a la función de recarga, a continuación el broker recargará el fichero.
+	
+	/**
+	 * Indicated to broker that reload the acl file.
+	 * This acl file contains the agent permissions
+	 */
 	private void reloadACLFile() {
 		hash.put("_class", "acl");
 		qmf = sess.getObjects(hash);
