@@ -10,7 +10,7 @@ import es.upv.dsic.gti_ia.core.AgentID;
 
 
 /**
- * The class messageTemplate create a new template to compare messages.
+ * The class messageTemplate creates a new template to compare messages.
  */
 public class MessageTemplate {
 
@@ -108,7 +108,7 @@ public class MessageTemplate {
 
 
 	/**
-	 * Create a new MessageTemplate. This messageTemplate helps us to compare messages that we receive.
+	 * Creates a new MessageTemplate. This messageTemplate helps us to compare messages that we receive.
 	 * 
 	 * @param iprotocol
 	 */
@@ -123,7 +123,7 @@ public class MessageTemplate {
 	}
 
 	/**
-	 * Return Conversations list
+	 * Returns Conversations list
 	 * 
 	 * @return
 	 */
@@ -133,7 +133,7 @@ public class MessageTemplate {
 	}
 
 	/**
-	 * Add new conversation id in the list of conversations
+	 * Adds new conversation id in the list of conversations
 	 * 
 	 * @param conversacion
 	 */
@@ -143,7 +143,7 @@ public class MessageTemplate {
 	}
 
 	/**
-	 * Delete all conversations in the list of conversations
+	 * Deletes all conversations in the list of conversations
 	 * 
 	 * @return
 	 */
@@ -157,7 +157,7 @@ public class MessageTemplate {
 	}
 
 	/**
-	 * Delete a conversation id in the list of conversations
+	 * Deletes a conversation id in the list of conversations
 	 * 
 	 * @param conversacion
 	 */
@@ -173,7 +173,7 @@ public class MessageTemplate {
 	}
 
 	/**
-	 * Add a new receiver
+	 * Adds a new receiver
 	 * 
 	 * @param a
 	 *            AgentID
@@ -212,7 +212,7 @@ public class MessageTemplate {
 	}
 
 	/**
-	 * Delete all receivers in the list of receivers
+	 * Deletes all receivers in the list of receivers
 	 * 
 	 * @return
 	 */
@@ -225,7 +225,7 @@ public class MessageTemplate {
 	}
 
 	/**
-	 * Return Receiver list
+	 * Returns Receiver list
 	 * 
 	 * @return
 	 */
@@ -234,7 +234,7 @@ public class MessageTemplate {
 	}
 
 	/**
-	 * Set a new receiver list
+	 * Sets a new receiver list
 	 * 
 	 * @param receiver_list
 	 */
@@ -243,7 +243,7 @@ public class MessageTemplate {
 	}
 
 	/**
-	 * Set a new performative
+	 * Sets a new performative
 	 * 
 	 * @param performative
 	 */
@@ -252,7 +252,7 @@ public class MessageTemplate {
 	}
 
 	/**
-	 * Set a new performative
+	 * Sets a new performative
 	 * 
 	 * @param performative
 	 */
