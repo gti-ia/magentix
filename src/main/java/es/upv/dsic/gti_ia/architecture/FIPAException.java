@@ -73,7 +73,7 @@ public class FIPAException extends Exception {
 	}
 
 	/**
-	 * Retrieve the ACL message whose content is represented by this exception.
+	 * Retrieves the ACL message whose content is represented by this exception.
 	 * 
 	 * @return the ACLMessage representing this exception
 	 */
@@ -86,7 +86,7 @@ public class FIPAException extends Exception {
 	}
 
 	/**
-	 * Set the content of the ACL message representing this exception
+	 * Sets the content of the ACL message representing this exception
 	 * 
 	 * @param message
 	 *            is the content
@@ -98,7 +98,7 @@ public class FIPAException extends Exception {
 	}
 
 	/**
-	 * Get the content of the ACL message representing this exception
+	 * Gets the content of the ACL message representing this exception
 	 * 
 	 * @return A string representing the message content that describes this
 	 *         FIPA exception.
