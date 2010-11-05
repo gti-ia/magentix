@@ -5,7 +5,7 @@ import es.upv.dsic.gti_ia.architecture.FIPANames.InteractionProtocol;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 
 /**
- * This class implements the Fipa-Contract-Net interaction protocol, Role Responder
+ * This class implements the FIPA-Contract-Net interaction protocol, Role Responder
  * 
  * @author  Joan Bellver Faus, GTI-IA, DSIC, UPV
  * @version 2009.9.07
@@ -35,7 +35,7 @@ public class FIPAContractNetResponder {
 	private Monitor monitor = null;
 
 	/**
-	 * Create a new FIPA-Contract-Net interaction protocol, rol responder.
+	 * Creates a new FIPA-Contract-Net interaction protocol, rol responder.
 	 * 
 	 * @param agent
 	 *             is the reference to the Agent Object
@@ -50,7 +50,7 @@ public class FIPAContractNetResponder {
 	}
 
 	 /**
-	  * Return the agent.
+	  * Returns the agent.
 	  * @return QueueAgent 
 	  */
 	 public QueueAgent getQueueAgent()
@@ -64,7 +64,7 @@ public class FIPAContractNetResponder {
 
 
 	 /**
-	  *  Run the state machine with the communication protocol
+	  *  Runs the state machine with the communication protocol
 	  */
 	public void action() {
 
@@ -78,7 +78,7 @@ public class FIPAContractNetResponder {
 				state = PREPARE_RESPONSE_STATE;
 			} else {
 
-				monitor.waiting();// me espero a que llegue un mensaje.
+				monitor.waiting();//waiting for a new messages
 
 			}
 			break;
@@ -112,9 +112,7 @@ public class FIPAContractNetResponder {
 
 				response = arrangeMessage(this.cfp, response);
 				response.setSender(myAgent.getAid());
-				// si el mensaje es para un agente Jade
-
-				
+				//If the message is for a agent Jade
 				if (response.getReceiver() != null) {
 					if (response.getReceiver(0).protocol.equals("http")) {
 						name = response
@@ -159,7 +157,7 @@ public class FIPAContractNetResponder {
 				if (response.getPerformativeInt() == ACLMessage.PROPOSE)
 					state = RECEIVE_MSG_STATE;
 				else
-					// si la performativa es refuse terminamos con el protocolo.
+					//If the performative is refuse then we cancel the protocol.
 					state = RESET_STATE;
 			}
 
@@ -168,15 +166,16 @@ public class FIPAContractNetResponder {
 		}
 
 		case RECEIVE_MSG_STATE: {
-			// configuramos un nuevo template para esperar solo al que le hemos
-			// enviado la contrapuesta.
+			
+			//configure a new template to wait only the response for the agent wich we send a message 
 			MessageTemplate template2 = new MessageTemplate(
 					InteractionProtocol.FIPA_CONTRACT_NET);
 			template2.addConversation(this.propose.getConversationId());
 			template2.add_receiver(this.propose.getReceiver());
 			ACLMessage secondReply = myAgent.receiveACLMessage(template2, 0);
 
-			// esperamos haber si acepta nuestra contrapropuesta
+			
+			//waiting to the agent accepts the second proposal
 			if (secondReply != null) {
 
 				switch (secondReply.getPerformativeInt()) {
