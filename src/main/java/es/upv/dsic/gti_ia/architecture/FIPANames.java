@@ -8,7 +8,7 @@ public interface FIPANames {
 	
 	
 	/**
-	 * Set of constants that identifies the Interaction Protocols and that can
+	 * Sets of constants that identifies the Interaction Protocols and that can
 	 * be assigned via
 	 * <code>ACLMessage.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST)
 	 * </code>
