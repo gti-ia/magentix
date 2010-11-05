@@ -12,7 +12,7 @@ import es.upv.dsic.gti_ia.core.AgentID;
 
 
 /**
- * This class implements the Fipa-Contract-Net interaction protocol, Role Initiator
+ * This class implements the FIPA-Contract-Net interaction protocol, Role Initiator
  * 
  * @author  Joan Bellver Faus, GTI-IA, DSIC, UPV
  * @version 2009.9.07
@@ -40,15 +40,15 @@ public class FIPAContractNetInitiator {
 	private long timeout = -1;
 	private long endingtime = 0;
 
-	ArrayList<ACLMessage> aceptados = new ArrayList<ACLMessage>();
+	ArrayList<ACLMessage> accepted = new ArrayList<ACLMessage>();
 	ArrayList<ACLMessage> respuestas = new ArrayList<ACLMessage>();
 
-	private int nEnviados = 0;
-	private int nLeidos = 0;
+	private int nSends = 0;
+	private int nReads = 0;
 
 	/**
-	 * Create a new FIPA-Contract-Net interaction protocol, rol initiator.
-	 * @param agent agent is the reference to the Agent Object 
+	 * Creates a new FIPA-Contract-Net interaction protocol, initiator role.
+	 * @param agent agent is the reference to the QueueAgent Object 
 	 * @param msg initial message
 	 */
 	public FIPAContractNetInitiator(QueueAgent agent, ACLMessage msg) {
@@ -57,33 +57,36 @@ public class FIPAContractNetInitiator {
 		this.monitor = myAgent.addMonitor(this);
 
 	}
-	
-	 /**
-	  * Return the agent.
-	  * @return QueueAgent 
-	  */
-	 public QueueAgent getQueueAgent()
-	 {
+
+	/**
+	 * Returns the agent.
+	 * @return QueueAgent 
+	 */
+	QueueAgent getQueueAgent()
+	{
 		return this.myAgent; 
-		 
-	 }
-	 
-/**
- * We will be able to know if it has finished the protocol
- * @return value a boolean value is returned, true: the protocol has finished, false: the protocol even has not finished
- */
-	public boolean finished() {
+
+	}
+
+	/**
+	 * This method reports if the protocol has been finished
+	 * 
+	 * @return value a boolean value is returned, true: the protocol has finished, false: the protocol even has not finished
+	 */
+	boolean finished() {
 		return this.finish;
 	}
+
+
 	int getState()
 	{
 		return this.state;
 	}
 
-	
+
 	/**
-	*  Run the state machine with the communication protocol
-	*/
+	 *  Runs the state machine with the communication protocol
+	 */
 	public void action() {
 
 		switch (state) {
@@ -98,25 +101,29 @@ public class FIPAContractNetInitiator {
 
 			ACLMessage request = this.requestsentmsg;
 			if (request == null) {
-				// finalización del protocolo
+				// End of protocol
 				this.finish = true;
 				break;
 			} else {
-				// a�adir el agentId que lo envia, lo hacemos tranparente al
-				// usuario
+				//Add the agent who sent him, we do transparent to the user
 				
-				//guardar temporalmente los agentes a enviar
+				//Add the agentID 
+
+				//Sending agents are added temporarily
 				@SuppressWarnings("unchecked")
 				ArrayList<AgentID> agentes = (ArrayList<AgentID>)request.getReceiverList().clone();
 				request.setSender(myAgent.getAid());
-				// recorrer todos lo receivers
+				
+				
+			
 				template = new MessageTemplate(InteractionProtocol.FIPA_CONTRACT_NET);
 				for (es.upv.dsic.gti_ia.core.AgentID agent : agentes) {
-					
-		
-					// por cada agente que enviamos creamos una idconversacion
+
+
+						
+					//For each sending agent a new idconversation is added 
 					conversationID = "C" + hashCode() + "_"
-							+ System.currentTimeMillis();
+					+ System.currentTimeMillis();
 					request.setConversationId(conversationID);
 					template.add_receiver(agent);
 					template.addConversation(conversationID);
@@ -124,14 +131,14 @@ public class FIPAContractNetInitiator {
 
 					request.setReceiver(agent);
 					myAgent.send(request);
-				
+
 
 				}
 
-				this.nEnviados = agentes.size();
+				this.nSends = agentes.size();
 
 
-				// fijamos el el timeout del mensaje
+				//The timeout message is added
 				Date d = request.getReplyByDate();
 				if (d != null)
 					timeout = d.getTime() - (new Date()).getTime();
@@ -147,13 +154,11 @@ public class FIPAContractNetInitiator {
 		}
 		case RECEIVE_REPLY_STATE: {
 
-			// nos esperaremos a un timeout o a que termine de llegar todos.
+			// we will wait until a timeout or that all agents have finished
 
-			// el template buscara todos los que tengan un conversacionID
-			// determinada, que el protocolo sea cfp y ademas que provenga
-			// de un agent en concreto, //lo del agente lo podemos poner para
-			// que no se envie un idconversacion y no sea alguno de los que
-			// enviado
+
+			//template matching with all messages that having an explicit conversationId, the protocol is a cfp, and the message
+			//is an know agent
 			ACLMessage firstReply = myAgent.receiveACLMessage(template,0);
 
 
@@ -165,20 +170,21 @@ public class FIPAContractNetInitiator {
 
 					respuestas.add(firstReply);
 					// aceptados.add(firstReply);
-					handlePropose(firstReply, aceptados);
-					// Si estan todos salir
-					if (this.nEnviados <= this.respuestas.size()) {
+					handlePropose(firstReply, accepted);
+			
+					//If all messages have arrived, out of this state
+					if (this.nSends <= this.respuestas.size()) {
 						state = SEND_2ND_REPLY_STATE;
-						handleAllResponses(respuestas, aceptados);
+						handleAllResponses(respuestas, accepted);
 					}
 					break;
 				}
 				case ACLMessage.REFUSE: {
 					respuestas.add(firstReply);
 					handleRefuse(firstReply);
-					if (this.nEnviados <= this.respuestas.size()) {
+					if (this.nSends <= this.respuestas.size()) {
 						state = SEND_2ND_REPLY_STATE;
-						handleAllResponses(respuestas, aceptados);
+						handleAllResponses(respuestas, accepted);
 					}
 					break;
 				}
@@ -186,9 +192,9 @@ public class FIPAContractNetInitiator {
 					respuestas.add(firstReply);
 					{
 						handleNotUnderstood(firstReply);
-						if (this.nEnviados <= this.respuestas.size()) {
+						if (this.nSends <= this.respuestas.size()) {
 							state = SEND_2ND_REPLY_STATE;
-							handleAllResponses(respuestas, aceptados);
+							handleAllResponses(respuestas, accepted);
 						}
 						break;
 
@@ -196,18 +202,18 @@ public class FIPAContractNetInitiator {
 				case ACLMessage.FAILURE: {
 					respuestas.add(firstReply);
 					handleFailure(firstReply);
-					if (this.nEnviados <= this.respuestas.size()) {
+					if (this.nSends <= this.respuestas.size()) {
 						state = SEND_2ND_REPLY_STATE;
-						handleAllResponses(respuestas, aceptados);
+						handleAllResponses(respuestas, accepted);
 					}
 					break;
 				}
 				default: {
 					respuestas.add(firstReply);
 					handleOutOfSequence(firstReply);
-					if (this.nEnviados <= this.respuestas.size()) {
+					if (this.nSends <= this.respuestas.size()) {
 						state = SEND_2ND_REPLY_STATE;
-						handleAllResponses(respuestas, aceptados);
+						handleAllResponses(respuestas, accepted);
 					}
 					break;
 
@@ -216,31 +222,34 @@ public class FIPAContractNetInitiator {
 				break;
 			} else {
 
-				// si hemos a�adido un timeout
+				
+				//If a timeout is added
 				if (timeout > 0) {
 					long blocktime = endingtime - System.currentTimeMillis();
 
-					if (blocktime <= 0)// dejamos de leer mensajes, ha
-										// terminado el timeout
+					if (blocktime <= 0)
+						//we stopped reading messages, the timeout is over
 					{
-	
 
-						handleAllResponses(respuestas, aceptados);
+
+						handleAllResponses(respuestas, accepted);
 						state = SEND_2ND_REPLY_STATE;
 						break;
 					} else {
 
-						// compruebo que aun quedan mensajes por leer
-						if (this.nEnviados > this.respuestas.size()) {
+
+						
+						//check if there are messages to read  
+						if (this.nSends > this.respuestas.size()) {
 
 							this.monitor.waiting();
 							state = RECEIVE_REPLY_STATE;
 
 							break;
-						} else// sino, ya hemos leido todos los mensajes.
+						} else
 						{
-	
-							handleAllResponses(respuestas, aceptados);
+
+							handleAllResponses(respuestas, accepted);
 							state = SEND_2ND_REPLY_STATE;
 							break;
 						}
@@ -248,23 +257,19 @@ public class FIPAContractNetInitiator {
 					}
 
 				} else {
-						// todos los mensajes.
-					if (this.nEnviados < respuestas.size())// si aun quedan por
-															// leer nos
-															// esperaremos la
-															// llegada de un
-															// nuevo mensaje
-					{
+				
+					//All messages
+					if (this.nSends < respuestas.size())
+					{//waiting if there are messages to read
 						this.monitor.waiting();
 						state = RECEIVE_REPLY_STATE;// state =
-													// ALL_REPLIES_RECEIVED_STATE;
+						// ALL_REPLIES_RECEIVED_STATE;
 						break;
-					} else// si hemos leido todos los mensajes pasamos de
-							// estado
-					{
-						handleAllResponses(respuestas, aceptados);
+					} else
+					{//If all messages have been read, change status
+						handleAllResponses(respuestas, accepted);
 						state = SEND_2ND_REPLY_STATE;// state =
-														// ALL_REPLIES_RECEIVED_STATE;
+						// ALL_REPLIES_RECEIVED_STATE;
 						break;
 					}
 				}
@@ -275,18 +280,21 @@ public class FIPAContractNetInitiator {
 
 			// resetemaos el template quitando los receivers y los
 			// conversationID
+			
+			//The template is reset, deleting the receivers and conversationID's
 			template.deleteAllConversation();
 			template.deleteAllReceiver();
-			// borramos las conversaciones activas
-
+			
+			
+			//remove the active conversations
 			myAgent.deleteAllActiveConversation();
 
-			// recorremos el vector de aceptados y lo enviamos
-			for (ACLMessage mensaje : aceptados) {
+			//the message is searched in accepted arrays and then is sent
+			for (ACLMessage mensaje : accepted) {
 
 				if (mensaje.getConversationId().equals("")) {
 					conversationID = "C" + hashCode() + "_"
-							+ System.currentTimeMillis();
+					+ System.currentTimeMillis();
 					mensaje.setConversationId(conversationID);
 				} else {
 					conversationID = mensaje.getConversationId();
@@ -299,61 +307,56 @@ public class FIPAContractNetInitiator {
 				mensaje.setSender(myAgent.getAid());
 
 				myAgent.send(mensaje);
-				// enviamos
-
-				// modifcamos la performativa para poder recibir el que hemos
-				// enviado
+				// send
 
 			}
 
-			// si la respuesta que enviamos es reject tenemos que terminar
+			//If response that we send is rejected, then we terminated
 
 			state = RECEIVE_2ND_REPLY_STATE;
 		}
 		case RECEIVE_2ND_REPLY_STATE: {
 
-			// Esperamos la llegada de segundo mensaje
-			// si existe algun aceptado
-			if (this.aceptados.size() == 0)
+
+			//waiting for a second message if exist any accepted message
+			if (this.accepted.size() == 0)
 				state = ALL_RESULT_NOTIFICATION_RECEIVED_STATE;
 			else {
-					ACLMessage secondReply = myAgent
-							.receiveACLMessage(template,0);
+				ACLMessage secondReply = myAgent
+				.receiveACLMessage(template,0);
 
-					if (secondReply != null) {
-						this.nLeidos++;
-						switch (secondReply.getPerformativeInt()) {
-						case ACLMessage.INFORM: {
-							handleInform(secondReply);
-							break;
+				if (secondReply != null) {
+					this.nReads++;
+					switch (secondReply.getPerformativeInt()) {
+					case ACLMessage.INFORM: {
+						handleInform(secondReply);
+						break;
 
-						}
-						case ACLMessage.FAILURE: {
-							handleFailure(secondReply);
-							break;
+					}
+					case ACLMessage.FAILURE: {
+						handleFailure(secondReply);
+						break;
 
-						}
-						default: {
-							handleOutOfSequence(secondReply);
-							break;
-						}
-						}
+					}
+					default: {
+						handleOutOfSequence(secondReply);
+						break;
+					}
+					}
+					break;
+				} else {
+				
+					//waiting the proposals
+					if (this.nReads < this.accepted.size())
+					{
+						this.monitor.waiting();
+						state = RECEIVE_2ND_REPLY_STATE;
 						break;
 					} else {
-						// tendremos que esperar a que nos lleguen todas las
-						// propuestas
-						if (this.nLeidos < this.aceptados.size())// si aun no
-																	// est�n
-																	// todos
-						{
-							this.monitor.waiting();
-							state = RECEIVE_2ND_REPLY_STATE;
-							break;
-						} else {
-							state = ALL_RESULT_NOTIFICATION_RECEIVED_STATE;
-						}
+						state = ALL_RESULT_NOTIFICATION_RECEIVED_STATE;
 					}
-				
+				}
+
 			}
 		}
 		case ALL_REPLIES_RECEIVED_STATE: {
@@ -368,7 +371,7 @@ public class FIPAContractNetInitiator {
 			//this.myAgent.deleteAllActiveConversation();
 			for (String conversation : this.template.getList_Conversation())
 				this.myAgent.deleteActiveConversation(conversation);
-			
+
 			break;
 		}
 		}
@@ -376,7 +379,7 @@ public class FIPAContractNetInitiator {
 	}
 
 	/**
-	 * This method must return the ACLMessage to be sent. This default
+	 * This method must returns the ACLMessage to be sent. This default
 	 * implementation just return the ACLMessage object passed in the
 	 * constructor. Programmer might override the method in order to return a
 	 * different ACLMessage. Note that for this simple version of protocol, the
@@ -397,7 +400,7 @@ public class FIPAContractNetInitiator {
 	 */
 	protected void handlePropose(ACLMessage msg, ArrayList<ACLMessage> accepted) {
 	}
- 
+
 	/**
 	 * This method is called when a refuse message is received.
 	 * @param msg the received refuse message
