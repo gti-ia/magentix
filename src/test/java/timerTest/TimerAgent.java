@@ -10,7 +10,7 @@ import es.upv.dsic.gti_ia.cAgents.BeginState;
 import es.upv.dsic.gti_ia.cAgents.BeginStateMethod;
 import es.upv.dsic.gti_ia.cAgents.CAgent;
 import es.upv.dsic.gti_ia.cAgents.CProcessor;
-import es.upv.dsic.gti_ia.cAgents.CProcessorFactory;
+import es.upv.dsic.gti_ia.cAgents.CFactory;
 import es.upv.dsic.gti_ia.cAgents.ReceiveState;
 import es.upv.dsic.gti_ia.cAgents.ReceiveStateMethod;
 import es.upv.dsic.gti_ia.cAgents.WaitState;
@@ -35,7 +35,7 @@ public class TimerAgent extends CAgent{
 
 		MessageFilter filter = new MessageFilter("performative = PROPOSE");
 
-		CProcessorFactory talk = new CProcessorFactory("TALK", filter, 1, this);
+		CFactory talk = new CFactory("TALK", filter, 1, this);
 
 		// Un CProcessor siempre comienza en el estado predefinido BEGIN.
 		// Debemos asociar un m�todo que se ejecutar� al transitar este estado.
