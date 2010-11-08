@@ -50,10 +50,11 @@ public class TraceEvent implements Serializable{
 	/**
 	 * Creates a new trace event and sets its attributes according to the 
 	 * specified parameters, except for @link{timestamp}, which is set to
+	 * the current time using @link{java.lang.System.currentTimeMillis()}
 	 *  
-	 * @param tService 
-	 * @param originEntity
-	 * @param content
+	 * @param tService		Tracing service name
+	 * @param originEntity	Tracing entity which originated the trace event
+	 * @param content		Content of the trace event
 	 * 
 	 * @see java.lang.System.currentTimeMillis()
 	 */
@@ -70,9 +71,9 @@ public class TraceEvent implements Serializable{
 	 * @link{java.lang.System.currentTimeMillis()}
 	 * A new tracing entity is created for the specified AgentID
 	 *  
-	 * @param tService 
-	 * @param originAid
-	 * @param content
+	 * @param tService		Tracing service name
+	 * @param originEntity	Tracing entity which originated the trace event
+	 * @param content		Content of the trace event
 	 * 
 	 * @see java.lang.System#currentTimeMillis()
 	 */
@@ -95,7 +96,7 @@ public class TraceEvent implements Serializable{
 	/**
 	 * Sets the time stamp of the trace event to the specified one
 	 * 
-	 * @param timestamp time at which the trace event was thrown
+	 * @param timestamp Time at which the trace event was thrown
 	 */
 	public void setTimestamp(long timestamp){
 		this.timestamp=timestamp;

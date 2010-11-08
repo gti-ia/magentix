@@ -166,8 +166,8 @@ public class TracingService implements Serializable{
 	 * ( @link{es.upv.dsic.gti_ia.trace.TracingService#requestable} == true ),
 	 * and not mandatory ( @link{es.upv.dsic.gti_is.trace.TracingService#mandatory} == false )
 	 * 
-	 * @param serviceName Name of the tracing service
-	 * @param description Description of the tracing service
+	 * @param serviceName	Name of the tracing service
+	 * @param description	Description of the tracing service
 	 * 
 	 * @see es.upv.dsic.gti_ia.trace.TracingEntityList
 	 * @see es.upv.dsic.gti_ia.trace.TracingEntity
@@ -189,10 +189,10 @@ public class TracingService implements Serializable{
 	 * The tracing service will be requestable and mandatory depending on
 	 * the input parameters
 	 * 
-	 * @param serviceName Name of the tracing service
-	 * @param mandatory Flag which determines if the tracing service can be unpublished
-	 * @param requestable Flag which determines if the tracing service can be requested
-	 * @param description Description of the tracing service
+	 * @param serviceName	Name of the tracing service
+	 * @param mandatory		Flag which determines if the tracing service can be unpublished
+	 * @param requestable	Flag which determines if the tracing service can be requested
+	 * @param description	Description of the tracing service
 	 * 
 	 * @see es.upv.dsic.gti_ia.trace.TracingEntityList
 	 * @see es.upv.dsic.gti_ia.trace.TracingEntity
@@ -208,46 +208,121 @@ public class TracingService implements Serializable{
 		this.subscriptions = new TracingServiceSubscriptionList();
 	}
 	
+	/**
+	 * Sets the name of the tracing service
+	 * 
+	 * @param name	New name of the tracing service
+	 */
 	public void setName (String name) {
 		this.name=name;
 	}
 	
+	/**
+	 * Sets the description of the tracing service
+	 * 
+	 * @param description	New description of the tracing service
+	 */
 	public void setDescription (String description) {
 		this.description=description;
 	}
 	
+	/**
+	 * Returns the name of the tracing service
+	 * 
+	 * @return Name of the tracing service
+	 */
 	public String getName () {
 		return this.name;
 	}
 	
+	/**
+	 * Returns true if the tracing service is mandatory (i.e: it cannot
+	 * be unpublished by any tracing entity)
+	 * 
+	 * @return Value of the 'mandatory' attribute of the TracingService object 
+	 */
 	public boolean getMandatory () {
 		return this.mandatory;
 	}
 	
+	/**
+	 * Returns true if the tracing service is requestable
+	 * 
+	 * @return Value of the 'requestable' attribute of the TracingService object 
+	 */
 	public boolean getRequestable () {
 		return this.requestable;
 	}
 	
+	/**
+	 * Returns the description of the tracing service
+	 * 
+	 * @return Description of the tracing service
+	 */
 	public String getDescription () {
 		return this.description;
 	}
 	
+	/**
+	 * Returns the list of tracing entities which provide the tracing service
+	 * 
+	 * @return Value of the 'providers' attribute of the TracingService object
+	 * 
+	 * @see es.upv.dsic.gti_ia.trace.TracingEntityList
+	 */
 	public TracingEntityList getProviders(){
 		return this.providers;
 	}
 	
+	/**
+	 * Returns the list of subscriptions to that tracing service
+	 *  
+	 * @return Value of the 'subscriptions' attribute of the TracingService object
+	 * 
+	 * @see es.upv.dsic.gti_ia.trace.TracingServiceSubscriptionList
+	 * @see es.upv.dsic.gti_ia.trace.TracingServiceSubscription
+	 */
 	public TracingServiceSubscriptionList getSubscriptions(){
 		return this.subscriptions;
 	}
 	
+	/**
+	 * Adds a provider to the tracing service
+	 * 
+	 * @param provider	Tracing entity which will provide the tracing service
+	 * 
+	 * @return true if the provider is correctly added or false otherwise
+	 * 
+	 * @see es.upv.dsic.gti_ia.trace.TracingEntityList#add(TracingEntity)
+	 */
 	public boolean addServiceProvider(TracingEntity provider){
 		return this.providers.add(provider);
 	}
 	
+	/**
+	 * Adds a subscription to the tracing service
+	 * 
+	 * @param subscription	Subscription to the tracing service
+	 * 
+	 * @return true if the subscription is correctly added or false otherwise
+	 * 
+	 * @see es.upv.dsic.gti_ia.trace.TracingServiceSubscriptionList#add(TracingServiceSubscription)
+	 * @see es.upv.dsic.gti_ia.trace.TracingServiceSubscription
+	 */
 	public boolean addSubscription (TracingServiceSubscription subscription){
 		return this.subscriptions.add(subscription);
 	}
 	
+	/**
+	 * Removes provider from a tracing service
+	 * 
+	 * @param providerAid	AgentID of the agent to be removed from the
+	 * 		'providers' list of the tracing service
+	 * 
+	 * @return true if the provider is correctly removed or false otherwise
+	 * 
+	 * @see es.upv.dsic.gti_ia.trace.TracingEntityList#remove(Object)
+	 */
 	public boolean removeProvider(AgentID providerAid){
 		return this.providers.remove(new TracingEntity(TracingEntity.AGENT, providerAid));
 	}

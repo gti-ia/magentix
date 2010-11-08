@@ -566,7 +566,7 @@ public class BaseAgent implements Runnable
 	
 	/**
 	 * Sends a trace event to the mgx.trace exchange
-	 * @param tEvent
+	 * @param tEvent	Trace event which is to be sent
 	 */
 	public void sendTraceEvent(TraceEvent tEvent)
 	{
@@ -632,9 +632,9 @@ public class BaseAgent implements Runnable
 	/**
 	 * Sends a trace event with "system" as origin entity to the amq.match exchange
 	 * @param tEvent
-	 * @param destination
-	 *        Tracing entity to which the trace event is directed to. If set to null, the system
-	 *        trace event is understood to be directed to all tracing entities.
+	 * @param destination	Tracing entity to which the trace event is directed to.
+	 * 		If set to null, the system trace event is understood to be directed to
+	 *		all tracing entities.
 	 */
 	private void sendSystemTraceEvent(TraceEvent tEvent)
 	{
