@@ -120,8 +120,11 @@ public class TracingService implements Serializable{
 	 */
 	private boolean requestable;
 	/**
-	 * Human oriented description of the tracing service (next versions of the event
-	 * trace support will change this description in order to be tracing entity oriented)
+	 * Description of the tracing service. This description is now a
+	 * human-readable/human-understandable string to describe the service,
+	 * but in future versions, it should contain an entity-readable/entity-understandable
+	 * description, in order to let tracing entities discover tracing services and decide
+	 * which of them are interesting for them.
 	 */
 	private String description;
 	/**
@@ -142,8 +145,8 @@ public class TracingService implements Serializable{
 	/**
 	 * Void constructor which creates an empty tracing service, without
 	 * any provider nor subscriptor, which will be requestable
-	 * ( @link{es.upv.dsic.gti_ia.trace.TracingService#requestable} == true ),
-	 * and not mandatory ( @link{es.upv.dsic.gti_is.trace.TracingService#mandatory} == false )
+	 * ( {@link es.upv.dsic.gti_ia.trace.TracingService#requestable} == true ),
+	 * and not mandatory ( {@link es.upv.dsic.gti_is.trace.TracingService#mandatory} == false )
 	 * 
 	 * @see es.upv.dsic.gti_ia.trace.TracingEntityList
 	 * @see es.upv.dsic.gti_ia.trace.TracingEntity
@@ -163,8 +166,8 @@ public class TracingService implements Serializable{
 	 * Constructor which creates an tracing service with the specified
 	 * service name and description, without any provider nor subscriptor,
 	 * which will be requestable
-	 * ( @link{es.upv.dsic.gti_ia.trace.TracingService#requestable} == true ),
-	 * and not mandatory ( @link{es.upv.dsic.gti_is.trace.TracingService#mandatory} == false )
+	 * ( {@link es.upv.dsic.gti_ia.trace.TracingService#requestable} == true ),
+	 * and not mandatory ( {@link es.upv.dsic.gti_is.trace.TracingService#mandatory} == false )
 	 * 
 	 * @param serviceName	Name of the tracing service
 	 * @param description	Description of the tracing service
@@ -187,7 +190,7 @@ public class TracingService implements Serializable{
 	 * Constructor which creates an tracing service with the specified
 	 * service name and description, without any provider nor subscriptor.
 	 * The tracing service will be requestable and mandatory depending on
-	 * the input parameters
+	 * the input parameters.
 	 * 
 	 * @param serviceName	Name of the tracing service
 	 * @param mandatory		Flag which determines if the tracing service can be unpublished
@@ -209,7 +212,7 @@ public class TracingService implements Serializable{
 	}
 	
 	/**
-	 * Sets the name of the tracing service
+	 * Sets the name of the tracing service.
 	 * 
 	 * @param name	New name of the tracing service
 	 */
@@ -218,7 +221,7 @@ public class TracingService implements Serializable{
 	}
 	
 	/**
-	 * Sets the description of the tracing service
+	 * Sets the description of the tracing service.
 	 * 
 	 * @param description	New description of the tracing service
 	 */
@@ -227,7 +230,7 @@ public class TracingService implements Serializable{
 	}
 	
 	/**
-	 * Returns the name of the tracing service
+	 * Returns the name of the tracing service.
 	 * 
 	 * @return Name of the tracing service
 	 */
@@ -237,7 +240,7 @@ public class TracingService implements Serializable{
 	
 	/**
 	 * Returns true if the tracing service is mandatory (i.e: it cannot
-	 * be unpublished by any tracing entity)
+	 * be unpublished by any tracing entity).
 	 * 
 	 * @return Value of the 'mandatory' attribute of the TracingService object 
 	 */
@@ -246,7 +249,7 @@ public class TracingService implements Serializable{
 	}
 	
 	/**
-	 * Returns true if the tracing service is requestable
+	 * Returns true if the tracing service is requestable.
 	 * 
 	 * @return Value of the 'requestable' attribute of the TracingService object 
 	 */
@@ -255,7 +258,7 @@ public class TracingService implements Serializable{
 	}
 	
 	/**
-	 * Returns the description of the tracing service
+	 * Returns the description of the tracing service.
 	 * 
 	 * @return Description of the tracing service
 	 */
@@ -264,7 +267,7 @@ public class TracingService implements Serializable{
 	}
 	
 	/**
-	 * Returns the list of tracing entities which provide the tracing service
+	 * Returns the list of tracing entities which provide the tracing service.
 	 * 
 	 * @return Value of the 'providers' attribute of the TracingService object
 	 * 
@@ -275,7 +278,7 @@ public class TracingService implements Serializable{
 	}
 	
 	/**
-	 * Returns the list of subscriptions to that tracing service
+	 * Returns the list of subscriptions to that tracing service.
 	 *  
 	 * @return Value of the 'subscriptions' attribute of the TracingService object
 	 * 
@@ -287,7 +290,7 @@ public class TracingService implements Serializable{
 	}
 	
 	/**
-	 * Adds a provider to the tracing service
+	 * Adds a provider to the tracing service.
 	 * 
 	 * @param provider	Tracing entity which will provide the tracing service
 	 * 
@@ -300,7 +303,7 @@ public class TracingService implements Serializable{
 	}
 	
 	/**
-	 * Adds a subscription to the tracing service
+	 * Adds a subscription to the tracing service.
 	 * 
 	 * @param subscription	Subscription to the tracing service
 	 * 
@@ -314,7 +317,7 @@ public class TracingService implements Serializable{
 	}
 	
 	/**
-	 * Removes provider from a tracing service
+	 * Removes provider from a tracing service.
 	 * 
 	 * @param providerAid	AgentID of the agent to be removed from the
 	 * 		'providers' list of the tracing service

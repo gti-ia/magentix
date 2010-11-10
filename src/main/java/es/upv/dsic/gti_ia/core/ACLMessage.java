@@ -17,9 +17,7 @@ import es.upv.dsic.gti_ia.core.ISO8601;
 /**
  * This class represents a message sent between agents.
  * @author Ricard Lopez Fogues
- */
-/**
- * @author Luis Burdalo: Added toString and fromString methods
+ * @author Luis Burdalo (Added toString and fromString methods)
  */
 @SuppressWarnings("unchecked")
 public class ACLMessage implements Serializable, Cloneable {
@@ -886,7 +884,9 @@ public class ACLMessage implements Serializable, Cloneable {
 	 * Parses the message given as a String and creates an object of type ACLMessage.
 	 * 
 	 * @param strMsg String containing a serialization of an ACLMessage
+	 * 
 	 * @return An object of type ACLMessage created from the given String
+	 * 
 	 * @see ACLMessage#toString()
 	 */
 	public static ACLMessage fromString (String strMsg){

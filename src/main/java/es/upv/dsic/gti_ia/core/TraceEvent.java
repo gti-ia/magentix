@@ -32,13 +32,13 @@ public class TraceEvent implements Serializable{
 	 */
 	private TracingEntity originEntity;
 	/**
-	 * Content of the trace event. This will depend on @see{tService}
+	 * Content of the trace event. This will depend on {@link tService}
 	 */
 	private String content;
 	
 	/**
 	 * Void constructor which sets all attributes to null
-	 * except for @link{timestamp}, which is set to -1
+	 * except for {@link timestamp}, which is set to -1
 	 */
 	public TraceEvent(){
 		this.tService=null;
@@ -49,8 +49,8 @@ public class TraceEvent implements Serializable{
 	
 	/**
 	 * Creates a new trace event and sets its attributes according to the 
-	 * specified parameters, except for @link{timestamp}, which is set to
-	 * the current time using @link{java.lang.System.currentTimeMillis()}
+	 * specified parameters, except for {@link timestamp}, which is set to
+	 * the current time using {@link java.lang.System#currentTimeMillis()}
 	 *  
 	 * @param tService		Tracing service name
 	 * @param originEntity	Tracing entity which originated the trace event
@@ -67,8 +67,8 @@ public class TraceEvent implements Serializable{
 	
 	/**
 	 * Creates a new trace event and sets its attributes according to the 
-	 * specified parameters, except for @link{timestamp}, which is set to
-	 * @link{java.lang.System.currentTimeMillis()}
+	 * specified parameters, except for {@link timestamp}, which is set to
+	 * {@link java.lang.System.currentTimeMillis()}
 	 * A new tracing entity is created for the specified AgentID
 	 *  
 	 * @param tService		Tracing service name
@@ -85,7 +85,7 @@ public class TraceEvent implements Serializable{
 	}
 	
 	/**
-	 * Sets the tracing service of the trace event to the specified one
+	 * Sets the tracing service of the trace event to the specified one.
 	 * 
 	 * @param tService Name of the tracing service
 	 */
@@ -94,7 +94,7 @@ public class TraceEvent implements Serializable{
 	}
 	
 	/**
-	 * Sets the time stamp of the trace event to the specified one
+	 * Sets the time stamp of the trace event to the specified one.
 	 * 
 	 * @param timestamp Time at which the trace event was thrown
 	 */
@@ -103,7 +103,7 @@ public class TraceEvent implements Serializable{
 	}
 	
 	/**
-	 * Sets the origin entity of the trace event to the specified one
+	 * Sets the origin entity of the trace event to the specified one.
 	 * 
 	 * @param originEntity Tracing entity which originated the trace event
 	 */
@@ -112,7 +112,7 @@ public class TraceEvent implements Serializable{
 	}
 	
 	/**
-	 * Sets the content of the trace event to the specified one
+	 * Sets the content of the trace event to the specified one.
 	 * 
 	 * @param content Content of the trace event
 	 */
@@ -121,7 +121,7 @@ public class TraceEvent implements Serializable{
 	}
 
 	/**
-	 * Returns the tracing service of the trace event
+	 * Returns the tracing service of the trace event.
 	 * 
 	 * @return tService Name of the tracing Service
 	 */
@@ -130,7 +130,7 @@ public class TraceEvent implements Serializable{
 	}
 	
 	/**
-	 * Returns the origin entity of the trace event
+	 * Returns the origin entity of the trace event.
 	 * 
 	 * @return originEntity Tracing entity which originated the trace event
 	 */
@@ -139,7 +139,7 @@ public class TraceEvent implements Serializable{
 	}
 	
 	/**
-	 * Returns the content of the trace event
+	 * Returns the content of the trace event.
 	 * 
 	 * @return content Content of the trace event
 	 */
@@ -148,7 +148,7 @@ public class TraceEvent implements Serializable{
 	}
 	
 	/**
-	 * Returns the time stamp of the trace event
+	 * Returns the time stamp of the trace event.
 	 * 
 	 * @return timestamp Time at which the trace event was generated
 	 */
@@ -157,8 +157,7 @@ public class TraceEvent implements Serializable{
 	}
 	
 	/**
-	 * Converts the trace event to a human readable string
-	 *
+	 * Converts the trace event to a human readable string.
 	 * 
 	 * @return A readable string containing all information of the trace event
 	 * 

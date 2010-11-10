@@ -9,7 +9,10 @@ package es.upv.dsic.gti_ia.trace;
  */
 
 public class TraceError {
-
+	
+	/**
+	 * Numeric constants which identify available trace error messages
+	 */
 	public static final int TRACE_ERROR = 0;
 	public static final int ENTITY_NOT_FOUND = 1;
 	public static final int PROVIDER_NOT_FOUND = 2;
@@ -26,8 +29,14 @@ public class TraceError {
 	public static final int UNSUBSCRIPTION_ERROR = 13;
 	public static final int AUTHORIZATION_ERROR = 14;
 	
+	/**
+	 * Number of available trace error messages
+	 */
 	public static final int MAX_TRACE_ERROR = 15;
 	
+	/**
+	 * Available trace error messages 
+	 */
 	public static final TraceError[] TraceErrors = new TraceError[]{
 		new TraceError("TRACE_ERROR", "Undefined trace error"),
 		new TraceError("ENTITY_NOT_FOUND", "Tracing entity not present in the system"),
@@ -46,18 +55,39 @@ public class TraceError {
 		new TraceError("AUTHORIZATION_ERROR", "Unauthorized to do so")
 	};
 	
+	/**
+	 * Identifier name of the error message
+	 */
 	private String name;
+	/**
+	 * Human readable description of the meaning of the error message
+	 */
 	private String description;
-	
+	/**
+	 * Constructor which creates a trace error message with the specified name and description 
+	 * 
+	 * @param name	Identifier name of the error message
+	 * @param description	Human readable description of the error
+	 */
 	public TraceError (String name, String description){
 		this.name=name;
 		this.description=description;
 	}
 	
+	/**
+	 * Returns the identifier name of the error message
+	 * 
+	 * @return Name of the error
+	 */
 	public String getName(){
 		return this.name;
 	}
 	
+	/**
+	 * Returns the description of the errormessage
+	 * 
+	 * @return Description of the error
+	 */
 	public String getDescription(){
 		return this.description;
 	}
