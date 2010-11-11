@@ -346,34 +346,22 @@ public class SF extends CAgent {
 					while (Tok.hasMoreElements()) {
 						String token = Tok.nextElement().toString();
 						for (int i = 0; i < aProcess.getInputs().size(); i++) {
-							String paramName = aProcess.getInputs().inputAt(i)
-							.getLocalName().toLowerCase();
-							if (paramName.equalsIgnoreCase(token.split("=")[0]
-							                                                .toLowerCase())) {
+							String paramName = aProcess.getInputs().inputAt(i).getLocalName().toLowerCase();
+							if (paramName.equalsIgnoreCase(token.split("=")[0].toLowerCase())) {
 								if (token.split("=").length >= 2)
-									values.setValue(
-											aProcess.getInputs().inputAt(i),
-											EntityFactory.createDataValue(token
-													.split("=")[1]));
+									values.setValue(aProcess.getInputs().inputAt(i),EntityFactory.createDataValue(token.split("=")[1]));
 								else
-									values.setValue(
-											aProcess.getInputs().inputAt(i),
-											EntityFactory.createDataValue(""));
+									values.setValue(aProcess.getInputs().inputAt(i),EntityFactory.createDataValue(""));
 							}
-							if (aProcess.getInputs().inputAt(i).toString()
-									.contains("AgentID")) {
-
-								values.setValue(aProcess.getInputs().inputAt(i),
-										EntityFactory.createDataValue(myProcessor.getLastReceivedMessage()
-												.getSender().toString()));
+							if (aProcess.getInputs().inputAt(i).toString().contains("AgentID")) {
+								values.setValue(aProcess.getInputs().inputAt(i),EntityFactory.createDataValue(
+										myProcessor.getLastReceivedMessage().getSender().name.replace('~', '@')));
 							}
 						}
 					}// end while
 
 					// execute the service
-					logger
-					.info("[SF]Executing... "
-							+ values.getValues().toString());
+					logger.info("[SF]Executing... "+ values.getValues().toString());
 					values = exec.execute(aProcess, values);
 
 					logger.info("[SF]Values obtained... ");

@@ -399,8 +399,10 @@ public class OMS extends CAgent {
 			
 		
 					for(int i=0;i<aProcess.getInputs().size();i++){
-						if(aProcess.getInputs().inputAt(i).getLocalName().equalsIgnoreCase("AgentID"))
-							values.setValue(aProcess.getInputs().inputAt(i),EntityFactory.createDataValue(myProcessor.getLastReceivedMessage().getSender().toString()));
+						if(aProcess.getInputs().inputAt(i).getLocalName().equalsIgnoreCase("AgentID")){
+							values.setValue(aProcess.getInputs().inputAt(i),EntityFactory.createDataValue(myProcessor.getLastReceivedMessage()
+									.getSender().name.replace('~', '@')));
+						}
 						else
 							values.setValue(aProcess.getInputs().inputAt(i),EntityFactory.createDataValue(""));
 					}
