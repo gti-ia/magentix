@@ -39,13 +39,13 @@ case $# in
 		echo "***Creating new CA certificate and key databases.***"
 		certutil -N -f $root_directory -d CA_db 
 	
-		echo "***Create an MagentixCA certificate and add it to a certificate database. ***"
+		echo "***Creating an MagentixCA certificate and adding it to a certificate database. ***"
 		certutil -S -f $root_directory -d CA_db -n "MagentixCA" -s "CN=MagentixCA, O=Magentix" -t "CT,," -x
 
-		echo "***Export CA certificate in CA_db***"
+		echo "***Exporting CA certificate in CA_db***"
 		certutil -L -f $root_directory -d CA_db -n "MagentixCA" -a -o CA_db/rootca.crt
 
-		echo "***Display the CA_db content***"
+		echo "***Displays the CA_db content***"
 		certutil -L -f $root_directory -d CA_db
 
 		#Parte para los certificados del broker
@@ -64,25 +64,25 @@ case $# in
 		certutil -C -f $root_directory -d CA_db -c "MagentixCA" -a -i broker_db/server.req -o broker_db/server.crt 
 		echo "***Adding server certificate to a certificate database***"
 		certutil -A -f $broker_directory -d broker_db -n broker -a -i broker_db/server.crt -t ",,"
-		echo "***Check the validity of a certificate and its attributes***"
+		echo "***Checks the validity of a certificate and its attributes***"
 		certutil -V -f $broker_directory -d broker_db -u V -n broker
 
 		
 		#Parte del MMS
 
-		echo "***Import a root certificate into MMS keystore***"
+		echo "***Imports a root certificate into MMS keystore***"
 		keytool -import -trustcacerts -alias MagentixCA -noprompt -file CA_db/rootca.crt -storepass $3 -keypass $3 -keystore MMSkeystore.jks
-		echo "***Import a root certificate into MMS truststore***"
+		echo "***Imports a root certificate into MMS truststore***"
 		keytool -import -trustcacerts -alias MagentixCA -noprompt -file CA_db/rootca.crt -storepass $3 -keypass $3 -keystore MMStruststore.jks
-		echo "***Generate a key pair with CN=MMS and O=Magentix***"
+		echo "***Generates a key pair with CN=MMS and O=Magentix***"
 		keytool -genkey -alias MMS -keyalg RSA -dname "CN=MMS,O=Magentix" -storepass $3 -keypass $3 -keystore MMSkeystore.jks
-		echo "***Create request certificate with name mms.csr***"
+		echo "***Creates request certificate with name mms.csr***"
 		keytool -certreq -alias MMS -storepass $3 -keypass $3 -keystore MMSkeystore.jks -file mms.csr
-		echo "***Create a signed certificate with name mms.crt***"
+		echo "***Creates a signed certificate with name mms.crt***"
 		certutil -C -f $broker_directory -d CA_db/ -c "MagentixCA" -a -i mms.csr -o mms.crt
-		echo "***Import a mms.crt in MMS keystore***"
+		echo "***Imports a mms.crt in MMS keystore***"
 		keytool -import -trustcacerts -alias MMS -file mms.crt -storepass $3 -keypass $3 -keystore MMSkeystore.jks
-		echo "***Export certificate***"
+		echo "***Exports certificate***"
 		keytool -export -alias MMS -file mms.crt -storepass $3 -keypass $3 -keystore MMSkeystore.jks
 
 		rm $root_directory
