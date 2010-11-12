@@ -5,11 +5,20 @@ import java.util.Iterator;
 
 import es.upv.dsic.gti_ia.core.TracingService;
 
+/**
+ * List of tracing service subscriptions
+ * 
+ * @author L Burdalo (lburdalo@dsic.upv.es)
+ * 
+ * @see es.upv.dsic.gti_ia.trace.TracingServiceSubscription
+ * @see java.util.Arraylist
+ */
 public class TracingServiceSubscriptionList extends ArrayList<TracingServiceSubscription> {
 	private static final long serialVersionUID = 1L;
 	
 	/**
-	 * Obtain a tracing service subscription in the list
+	 * Obtain a tracing service subscription in the list.
+	 * 
 	 * @param subscriberEntity
 	 * 		Subscriber entity of the subscription.
 	 * @param originEntity

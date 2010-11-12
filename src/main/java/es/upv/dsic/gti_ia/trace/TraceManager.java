@@ -1,8 +1,8 @@
 package es.upv.dsic.gti_ia.trace;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
+//import java.io.ByteArrayOutputStream;
+//import java.io.IOException;
+//import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -24,15 +24,70 @@ import es.upv.dsic.gti_ia.core.TracingService;
 
 import es.upv.dsic.gti_ia.trace.TracingEntityList;
 
+/**
+ * 
+ * @author L Burdalo (lburdalo@dsic.upv.es)
+ * 
+ * Trace Manager entity definition.
+ * 
+ * The trace manager entity is an agent in charge of coordinating and
+ * managing the event trace process. Tracing entities have to interact with
+ * the trace manager through ACL messages in order to publish/unpublish their
+ * tracing service and in order to subscribe/unsubscribe from tracing services.
+ */
 public class TraceManager extends BaseAgent{
 	
+	/**
+	 * List of tracing entities present in the system.
+	 * 
+	 * @see es.upv.dsic.gti-ia.trace.TracingEntityList
+	 */
 	private TracingEntityList TracingEntities;
+	/**
+	 * List of tracing entities which provide a tracing service.
+	 * 
+	 * @see es.upv.dsic.gti_ia.trace.TracingEntityList
+	 */
 	private TracingEntityList TSProviderEntities;
+	/**
+	 * List of tracing entities which are subscribed to some tracing service
+	 * 
+	 * @see es.upv.dsic.gti_ia.trace.TracingEntityList
+	 */
 	private TracingEntityList TSSubscriberEntities;
+	/**
+	 * List of tracing services available in the system.
+	 * 
+	 * @see es.upv.dsic.gti_ia.trace.TracingServiceList
+	 */
 	private TracingServiceList TracingServices;
 	
+	/**
+	 * Flag which determines if the trace manager has been launched in
+	 * monitorization mode, which is necessary in order to subscribe to
+	 * all available tracing services using 
+	 * {@link es.upv.dsic.gti_ia.trace.TraceInteract#requestAllTracingServices(BaseAgent requesterAgent)}
+	 */
 	private boolean monitorizable;
 	
+	/**
+	 * Constructor which creates and initializes a TraceManager with the monitorization flag
+	 * set to 'false'. Initialization tasks are the following:<p>
+	 * 
+	 * 1) Creation of empty Tracing Entities, Tracing Service Providers,
+	 * 		Tracing Service Subscribers and Tracing Services lists.<p>
+	 * 2) Add the trace manager to the Tracing Entities List.<p>
+	 * 3) Initialize the Tracing Services list with DI tracing services and add the trace
+	 * 		manager as provider of those tracing services which are mandatory and requestable.<p>
+	 * 4) Subscribe to NEW_AGENT and AGENT_DESTROYED tracing services in order to
+	 * 		be able to register tracing entities in the system
+	 * 
+	 * @see es.upv.dsic.gti_ia.core.TracingService
+	 * 
+	 * @param aid	AgentID which will be used to create the agent
+	 * 
+	 * @throws Exception
+	 */
 	public TraceManager(AgentID aid) throws Exception{
 		super(aid);
         
@@ -45,6 +100,24 @@ public class TraceManager extends BaseAgent{
         initialize();
 	}
 	
+	/**
+	 * Constructor which creates and initializes a TraceManager. Initialization tasks are
+	 * the following:<p>
+	 * 
+	 * 1) Creation of empty Tracing Entities, Tracing Service Providers,
+	 * 		Tracing Service Subscribers and Tracing Services lists.<p>
+	 * 2) Add the trace manager to the Tracing Entities List.<p>
+	 * 3) Initialize the Tracing Services list with DI tracing services and add the trace
+	 * 		manager as provider of those tracing services which are mandatory and requestable.<p>
+	 * 4) Subscribe to NEW_AGENT and AGENT_DESTROYED tracing services in order to
+	 * 		be able to register tracing entities in the system
+	 * 
+	 * @param aid	AgentID which will be used to create the agent
+	 * @param monitorizable	Value to which the monitorizable attribute of
+	 * 		the class will be set
+	 * 
+	 * @throws Exception
+	 */
 	public TraceManager(AgentID aid, boolean monitorizable) throws Exception{
 		super(aid);
         
@@ -62,7 +135,7 @@ public class TraceManager extends BaseAgent{
         initialize();
 	}
 	
-	public void initialize (){
+	private void initialize (){
 		Map<String, Object> arguments = new HashMap<String, Object>();
 		TracingEntities = new TracingEntityList();
 		TSProviderEntities = new TracingEntityList();
@@ -116,11 +189,11 @@ public class TraceManager extends BaseAgent{
 	}
 	
 	/**
-	 * Sends a trace event to the amq.match exchange
-	 * @param tEvent
+	 * Sends a system trace event to the amq.match exchange
 	 * 
-	 * @param destination
-	 * 		Tracing entity to which the trace event is directed to.
+	 * @param tEvent	Trace event to be sent
+	 * 
+	 * @param destination	Tracing entity to which the trace event is directed to.
 	 * 		If set to null, the system trace event is understood to be directed to all tracing
 	 * 		entities.        
 	 */
@@ -172,7 +245,7 @@ public class TraceManager extends BaseAgent{
     	this.traceSession.messageTransfer("amq.match", MessageAcceptMode.EXPLICIT, MessageAcquireMode.PRE_ACQUIRED,
                 header, xfr.getBodyString());
     	
-		/**  PRE-OPTIMIZATION OF EVENT TRANSMISSION
+		/*  PRE-OPTIMIZATION OF EVENT TRANSMISSION
     	MessageTransfer xfr = new MessageTransfer();
 
 		xfr.destination("amq.match");
@@ -220,7 +293,13 @@ public class TraceManager extends BaseAgent{
 //		while(true){}
 //	}
 	
-	public void onMessage(ACLMessage msg) {
+	/**
+	 * Requests to the trace manager are sent via ACL messages which are processed
+	 * in this method 
+	 *
+	 * @param msg Message received
+	 */
+	protected void onMessage(ACLMessage msg) {
 		String content, serviceName, serviceDescription, originEntity;
 		Map<String, Object> arguments;
 		int index, index2, length;
@@ -236,7 +315,7 @@ public class TraceManager extends BaseAgent{
 		Iterator<TracingService> TS_iter;
 		Iterator<TracingEntity> TE_iter;
 		
-		AgentID originAid, requestedAid;
+		AgentID originAid;//, requestedAid;
 		int aidindice1 = 0;
 		int aidindice2 = 0;
 		
