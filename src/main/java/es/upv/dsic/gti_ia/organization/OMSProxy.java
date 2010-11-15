@@ -68,7 +68,7 @@ public class OMSProxy extends THOMASProxy{
 	public String leaveRole(String RoleID,
 			String UnitID) {
 		serviceName = "LeaveRoleProcess";
-		call = ServiceDescriptionLocation + "LeaveRoleProcess.owl AgentID=" + agent.getAid().toString()
+		call = ServiceDescriptionLocation + "LeaveRoleProcess.owl AgentID=" + agent.getAid().name.replace('~', '@')
 				+ " RoleID=" + RoleID + " UnitID=" + UnitID;
 		return (String) this.sendInform();
 	}
