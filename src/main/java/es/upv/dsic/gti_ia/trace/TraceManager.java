@@ -25,15 +25,15 @@ import es.upv.dsic.gti_ia.core.TracingService;
 import es.upv.dsic.gti_ia.trace.TracingEntityList;
 
 /**
- * 
- * @author L Burdalo (lburdalo@dsic.upv.es)
- * 
  * Trace Manager entity definition.
  * 
  * The trace manager entity is an agent in charge of coordinating and
  * managing the event trace process. Tracing entities have to interact with
  * the trace manager through ACL messages in order to publish/unpublish their
  * tracing service and in order to subscribe/unsubscribe from tracing services.
+ * 
+ * @author L Burdalo (lburdalo@dsic.upv.es)
+ * 
  */
 public class TraceManager extends BaseAgent{
 	
@@ -103,7 +103,7 @@ public class TraceManager extends BaseAgent{
 	/**
 	 * Constructor which creates and initializes a TraceManager.<p>
 	 * 
-	 * Initialization tasks are performed in{@link initialize()}
+	 * Initialization tasks are performed in {@link es.upv.dsic.gti_ia.trace.TraceManager#initialize()}
 	 * the following:<p>
 	 * 
 	 * @see es.upv.dsic.gti_ia.trace.TraceManager#initialize()

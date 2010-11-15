@@ -5,12 +5,12 @@ import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.BaseAgent;
 
 /**
- * 
- * @author L Burdalo (lburdalo@dsic.upv.es)
- * 
  * Methods to interact with the trace manager in order to publish and unpublish tracing services,
  * to subscribe and unsubscribe to/from tracing services and to list available tracing entities
  * and services.
+ * 
+ * @author L Burdalo (lburdalo@dsic.upv.es)
+ * 
  */
 public class TraceInteract {
 	
@@ -177,7 +177,7 @@ public class TraceInteract {
 	 * This method communicates via ACL with a trace manager entity in localhost
 	 * ("qpid://tm@localhost:8080"). To interact with a different trace manager
 	 * entity, use the method
-	 * {@link es.upv.dsic.gti_ia.trace.TraceInteract#requestTracingService(AgentID tms_aid, BaseAgent requesterAgent, String serviceName, AgentId originEntity)}<p>
+	 * {@link es.upv.dsic.gti_ia.trace.TraceInteract#requestTracingService(AgentID tms_aid, BaseAgent requesterAgent, String serviceName, AgentID originEntity)}<p>
 	 * 
 	 * This method requests a tracing service provided by a specific tracing entity. To request a tracing service from
 	 * any tracing entity and receive the trace events of the corresponding tracing service from any entity in the system
@@ -385,11 +385,11 @@ public class TraceInteract {
 	 * This method communicates via ACL with a trace manager entity in localhost
 	 * ("qpid://tm@localhost:8080"). To interact with a different trace manager
 	 * entity, use the method
-	 * {@link es.upv.dsic.gti_ia.trace.TraceInteract#cancelTracingServiceSubscription(AgentID tms_aid, BaseAgent requesterAgent, String serviceName, AgentID originEntity}<p>
+	 * {@link es.upv.dsic.gti_ia.trace.TraceInteract#cancelTracingServiceSubscription(AgentID tms_aid, BaseAgent requesterAgent, String serviceName, AgentID originEntity)}<p>
 	 * 
 	 * This method cancels the subscription to a tracing service from a specific tracing entity. To cancel a subscription
 	 * to any entity, use the method
-	 * {@link cancelTracingServiceSubscription(BaseAgent requesterAgent, String serviceName)}
+	 * {@link es.upv.dsic.gti_ia.trace.TraceInteract#cancelTracingServiceSubscription(BaseAgent requesterAgent, String serviceName)}
 	 * 
 	 * @param requesterAgent	Agent which wants to cancel its subscription
 	 * @param serviceName		Name of the tracing service to which the subscription was made
@@ -418,11 +418,11 @@ public class TraceInteract {
 	 * This method communicates via ACL with the trace manager entity specified
 	 * by the parameter tms_aid. To interact with the default trace manager entity in
 	 * localhost ("qpid://tm@localhost:8080"), use the method
-	 * {@link es.upv.dsic.gti_ia.trace.TraceInteract#cancelTracingServiceSubscription(BaseAgent requesterAgent, String serviceName, AgentID originEntity}<p>
+	 * {@link es.upv.dsic.gti_ia.trace.TraceInteract#cancelTracingServiceSubscription(BaseAgent requesterAgent, String serviceName, AgentID originEntity)}<p>
 	 * 
 	 * This method cancels the subscription to a tracing service from a specific tracing entity. To cancel a subscription
 	 * to any entity, use the method
-	 * {@link cancelTracingServiceSubscription(AgentID tms_aid, BaseAgent requesterAgent, String serviceName)}
+	 * {@link es.upv.dsic.gti_ia.trace.TraceInteract#cancelTracingServiceSubscription(AgentID tms_aid, BaseAgent requesterAgent, String serviceName)}
 	 * 
 	 * @param tms_aid			AgentID of the trace manager entity which is being sent the request
 	 * @param requesterAgent	Agent which wants to cancel its subscription
@@ -451,11 +451,11 @@ public class TraceInteract {
 	 * This method communicates via ACL with a trace manager entity in localhost
 	 * ("qpid://tm@localhost:8080"). To interact with a different trace manager
 	 * entity, use the method
-	 * {@link es.upv.dsic.gti_ia.trace.TraceInteract#cancelTracingServiceSubscription(AgentID tms_aid, BaseAgent requesterAgent, String serviceName}<p>
+	 * {@link es.upv.dsic.gti_ia.trace.TraceInteract#cancelTracingServiceSubscription(AgentID tms_aid, BaseAgent requesterAgent, String serviceName)}<p>
 	 * 
 	 * This method cancels the subscription to a tracing service from a specific tracing entity. To cancel a subscription
 	 * to any entity, use the method
-	 * {@link cancelTracingServiceSubscription(BaseAgent requesterAgent, String serviceName, AgentID originEntity)}
+	 * {@link es.upv.dsic.gti_ia.trace.TraceInteract#cancelTracingServiceSubscription(BaseAgent requesterAgent, String serviceName, AgentID originEntity)}
 	 * 
 	 * @param requesterAgent	Agent which wants to cancel its subscription
 	 * @param serviceName		Name of the tracing service to which the subscription was made
@@ -487,7 +487,7 @@ public class TraceInteract {
 	 * 
 	 * This method cancels the subscription to a tracing service from a specific tracing entity. To cancel a subscription
 	 * to any entity, use the method
-	 * {@link cancelTracingServiceSubscription(AgentID tms_aid, BaseAgent requesterAgent, String serviceName, AgentID originEntity)}
+	 * {@link es.upv.dsic.gti_ia.trace.TraceInteract#cancelTracingServiceSubscription(AgentID tms_aid, BaseAgent requesterAgent, String serviceName, AgentID originEntity)}
 	 * 
 	 * @param tms_aid			AgentID of the trace manager entity which is being sent the request
 	 * @param requesterAgent	Agent which wants to cancel its subscription

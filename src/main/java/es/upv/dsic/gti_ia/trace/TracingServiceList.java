@@ -51,13 +51,13 @@ public class TracingServiceList extends ArrayList<TracingService> {
 	 * @return returns the tracing service which has that name if it exists in the list
 	 * 		or null if no tracing service with the specified name is found 
 	 */
-	public TracingService getTS(String name){
+	public TracingService getTS(String serviceName){
 		TracingService tService;
 		Iterator<TracingService> iter = this.iterator();
 		
 		while (iter.hasNext()){
 			tService=iter.next();
-			if (tService.getName().contentEquals(name)){
+			if (tService.getName().contentEquals(serviceName)){
 				return tService;
 			}
 		}

@@ -5,13 +5,12 @@ import java.io.Serializable;
 import es.upv.dsic.gti_ia.core.AgentID;
 
 /**
- * 
- * @author L Burdalo (lburdalo@dsic.upv.es)
- *
  * Definition of Tracing Entity
  *
  * TODO: Artifacts and aggregations are not yet supported
- * 		far beyond the constants defined in the class 
+ * 		far beyond the constants defined in the class
+ * 
+ *  @author L Burdalo (lburdalo@dsic.upv.es)
  */
 public class TracingEntity implements Serializable{
 	private static final long serialVersionUID = 1L;
@@ -44,7 +43,7 @@ public class TracingEntity implements Serializable{
 	/**
 	 * List of subscriptions made by the tracing entity
 	 * 
-	 * @see es.upv.dsic.gti_ia.core.TracingServiceSubscription
+	 * @see es.upv.dsic.gti_ia.trace.TracingServiceSubscription
 	 * @see es.upv.dsic.gti_ia.trace.TracingServiceSubscriptionList
 	 */
 	private TracingServiceSubscriptionList subscribedToTS;
@@ -85,8 +84,9 @@ public class TracingEntity implements Serializable{
 	/**
 	 * Get the type of the tracing entity
 	 * 
-	 * @return Type of the tracing entity: {@link AGENT},
-	 * 		{@link ARTIFACT} or {@link AGGREGATION}
+	 * @return Type of the tracing entity: {@link es.upv.dsic.gti_ia.trace.TracingEntity#AGENT},
+	 * 		{@link es.upv.dsic.gti_ia.trace.TracingEntity#ARTIFACT} or
+	 * 		{@link es.upv.dsic.gti_ia.trace.TracingEntity#AGGREGATION}
 	 */
 	public int getType(){
 		return this.type;
@@ -123,8 +123,8 @@ public class TracingEntity implements Serializable{
 	 * 
 	 * @return List of subscriptions
 	 * 
-	 * @see es.upv.dsic.gti_ia.TracingServiceSubscription
-	 * @see es.upv.dsic.gti_ia.TracingServiceSubscriptionList
+	 * @see es.upv.dsic.gti_ia.trace.TracingServiceSubscription
+	 * @see es.upv.dsic.gti_ia.trace.TracingServiceSubscriptionList
 	 */
 	public TracingServiceSubscriptionList getSubscribedToTS(){
 		return this.subscribedToTS;
@@ -133,8 +133,9 @@ public class TracingEntity implements Serializable{
 	/**
 	 * Set the type of the tracing entity
 	 * 
-	 * @param type	Allowed types are {@linkplain AGENT},
-	 * 		{@linkplain ARTIFACT} and {@linkplain AGGREGATION}}
+	 * @param type	Allowed types are {@link es.upv.dsic.gti_ia.trace.TracingEntity#AGENT},
+	 * 		{@link es.upv.dsic.gti_ia.trace.TracingEntity#ARTIFACT} and
+	 * 		{@link es.upv.dsic.gti_ia.trace.TracingEntity#AGGREGATION}}
 	 * 
 	 * @return	Returns -1 if the type is not valid or 0 otherwise
 	 */
@@ -151,7 +152,7 @@ public class TracingEntity implements Serializable{
 	/**
 	 * Add a new subscription to the tracing entity
 	 * 
-	 * @param newTracingServiceSubscription
+	 * @param newSubscription
 	 * 		TracingServiceSubscription to be added to the list
 	 */
 	public boolean addSubscription (TracingServiceSubscription newSubscription){
@@ -173,7 +174,7 @@ public class TracingEntity implements Serializable{
 	 * 
 	 * 		-2 : Subscription not found
 	 * 
-	 * @see es.upv.dsic.gti_ia.TracingServiceSubscriptionList
+	 * @see es.upv.dsic.gti_ia.trace.TracingServiceSubscriptionList
 	 */
 	public boolean removeSubscription(TracingServiceSubscription TSSubscription){
 		return this.subscribedToTS.remove(TSSubscription);

@@ -1,11 +1,9 @@
 package es.upv.dsic.gti_ia.trace;
 
 /**
- * 
- * @author L Burdalo (lburdalo@dsic.upv.es)
- *
  * Specification of error messages related to the trace support
  *
+ * @author L Burdalo (lburdalo@dsic.upv.es)
  */
 
 public class TraceError {

@@ -6,10 +6,9 @@ import java.util.Iterator;
 import es.upv.dsic.gti_ia.core.AgentID;
 
 /**
- * 
- * @author L Burdalo (lburdalo@dsic.upv.es)
- *
  * List of Tracing Entities
+ *  
+ * @author L Burdalo (lburdalo@dsic.upv.es)
  * 
  * @see es.upv.dsic.gti_ia.trace.TracingEntity
  * @see java.util.Arraylist
