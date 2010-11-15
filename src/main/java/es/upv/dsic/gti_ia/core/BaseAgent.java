@@ -175,19 +175,16 @@ public class BaseAgent implements Runnable
 	private Listener		listener;
 	
 	/**
-	 * [TRACE]: Attributes necessary for event tracing
-	 */
-	/**
 	 * @uml.property name="traceListener"
 	 */
 	private TraceListener	traceListener;
 	
 	/**
 	 * Creates a new agent in an open broker connection
+	 * 
 	 * @param aid
 	 *            Agent identification for the new agent, it has to be unique on the platform
-	 * @param connection
-	 *            Connection that the agent will use
+	 *            
 	 * @throws Exception
 	 *             If Agent ID already exists on the platform
 	 * 
@@ -510,9 +507,6 @@ public class BaseAgent implements Runnable
 	}
 	
 	/**
-	 * [TRACE]: Methods necessary for event trace support
-	 */
-	/**
 	 * Creates the exclusive session the agent will use for trace events
 	 * @return The new Session
 	 */
@@ -583,6 +577,7 @@ public class BaseAgent implements Runnable
 	
 	/**
 	 * Sends a trace event to the mgx.trace exchange
+	 * 
 	 * @param tEvent	Trace event which is to be sent
 	 */
 	public void sendTraceEvent(TraceEvent tEvent)
@@ -648,6 +643,7 @@ public class BaseAgent implements Runnable
 	
 	/**
 	 * Sends a trace event with "system" as origin entity to the amq.match exchange
+	 * 
 	 * @param tEvent
 	 * @param destination	Tracing entity to which the trace event is directed to.
 	 * 		If set to null, the system trace event is understood to be directed to
@@ -752,7 +748,7 @@ public class BaseAgent implements Runnable
 	}
 	
 	/**
-	 * [TRACE] Function that will be executed when the agent gets a trace event. The user has to
+	 * Function that will be executed when the agent gets a trace event. The user has to
 	 * write his/her code here
 	 */
 	protected void onTraceEvent(TraceEvent tEvent)
@@ -917,7 +913,8 @@ public class BaseAgent implements Runnable
 	}
 	
 	/**
-	 * [TRACE]: Transforms the message to TraceEvent
+	 * Transforms the message to TraceEvent
+	 * 
 	 * @param xfr MessageTransfer
 	 * @return TraceEvent
 	 */

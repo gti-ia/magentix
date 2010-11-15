@@ -31,13 +31,13 @@ public class TraceEvent implements Serializable{
 	 */
 	private TracingEntity originEntity;
 	/**
-	 * Content of the trace event. This will depend on {@link tService}
+	 * Content of the trace event. This will depend on {@link es.upv.dsic.gti_ia.core.TraceEvent#tService}
 	 */
 	private String content;
 	
 	/**
 	 * Void constructor which sets all attributes to null
-	 * except for {@link timestamp}, which is set to -1
+	 * except for {@link es.upv.dsic.gti_ia.core.TraceEvent#timestamp}, which is set to -1
 	 */
 	public TraceEvent(){
 		this.tService=null;
@@ -48,14 +48,15 @@ public class TraceEvent implements Serializable{
 	
 	/**
 	 * Creates a new trace event and sets its attributes according to the 
-	 * specified parameters, except for {@link timestamp}, which is set to
+	 * specified parameters, except for
+	 * {@link es.upv.dsic.gti_ia.core.TraceEvent#timestamp}, which is set to
 	 * the current time using {@link java.lang.System#currentTimeMillis()}
 	 *  
 	 * @param tService		Tracing service name
 	 * @param originEntity	Tracing entity which originated the trace event
 	 * @param content		Content of the trace event
 	 * 
-	 * @see java.lang.System.currentTimeMillis()
+	 * @see java.lang.System#currentTimeMillis()
 	 */
 	public TraceEvent(String tService, TracingEntity originEntity, String content){
 		this.tService=tService;
@@ -66,15 +67,16 @@ public class TraceEvent implements Serializable{
 	
 	/**
 	 * Creates a new trace event and sets its attributes according to the 
-	 * specified parameters, except for {@link timestamp}, which is set to
-	 * {@link java.lang.System.currentTimeMillis()}
+	 * specified parameters, except for {@link es.upv.dsic.gti_ia.core.TraceEvent#timestamp}, which is set to
+	 * {@link java.lang.System#currentTimeMillis()}
 	 * A new tracing entity is created for the specified AgentID
 	 *  
 	 * @param tService		Tracing service name
-	 * @param originEntity	Tracing entity which originated the trace event
+	 * @param originAid		AgentID of the tracing entity which originated the trace event
 	 * @param content		Content of the trace event
 	 * 
 	 * @see java.lang.System#currentTimeMillis()
+	 * @see es.upv.dsic.gti_ia.core.AgentID
 	 */
 	public TraceEvent(String tService, AgentID originAid, String content){
 		this.tService=tService;

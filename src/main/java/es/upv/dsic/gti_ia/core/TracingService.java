@@ -15,7 +15,8 @@ import es.upv.dsic.gti_ia.trace.TracingServiceSubscriptionList;
 
 public class TracingService implements Serializable{
 	private static final long serialVersionUID = 1L;
-	/**
+	
+	/*
 	 * Domain Independent Tracing Service constant identifiers
 	 */
 	// System Trace Events
@@ -108,16 +109,19 @@ public class TracingService implements Serializable{
 	 * Tracing Service name, which has to be unique
 	 */
 	private String name;
+	
 	/**
 	 * Flag that indicates that the tracing service cannot be unpublished
 	 */
 	private boolean mandatory; // Cannot be unpublished
+	
 	/**
 	 * Flag that indicates that the tracing service is requestable
 	 * (system tracing services such TRACE_ERROR or SUBSCRIBE are non requestable
 	 * since tracing entities automatically receive them when necessary)
 	 */
 	private boolean requestable;
+	
 	/**
 	 * Description of the tracing service. This description is now a
 	 * human-readable/human-understandable string to describe the service,
@@ -126,6 +130,7 @@ public class TracingService implements Serializable{
 	 * which of them are interesting for them.
 	 */
 	private String description;
+	
 	/**
 	 * List of tracing entities which provide the tracing service
 	 * 
@@ -133,6 +138,7 @@ public class TracingService implements Serializable{
 	 * @see es.upv.dsic.gti_ia.trace.TracingEntity
 	 */
 	private TracingEntityList providers;
+	
 	/**
 	 * List of subscriptions to the tracing service
 	 * 
@@ -144,8 +150,8 @@ public class TracingService implements Serializable{
 	/**
 	 * Void constructor which creates an empty tracing service, without
 	 * any provider nor subscriptor, which will be requestable
-	 * ( {@link es.upv.dsic.gti_ia.trace.TracingService#requestable} == true ),
-	 * and not mandatory ( {@link es.upv.dsic.gti_is.trace.TracingService#mandatory} == false )
+	 * ( {@link es.upv.dsic.gti_ia.core.TracingService#requestable} == true ),
+	 * and not mandatory ( {@link es.upv.dsic.gti_ia.core.TracingService#mandatory} == false )
 	 * 
 	 * @see es.upv.dsic.gti_ia.trace.TracingEntityList
 	 * @see es.upv.dsic.gti_ia.trace.TracingEntity
@@ -165,8 +171,8 @@ public class TracingService implements Serializable{
 	 * Constructor which creates an tracing service with the specified
 	 * service name and description, without any provider nor subscriptor,
 	 * which will be requestable
-	 * ( {@link es.upv.dsic.gti_ia.trace.TracingService#requestable} == true ),
-	 * and not mandatory ( {@link es.upv.dsic.gti_is.trace.TracingService#mandatory} == false )
+	 * ( {@link es.upv.dsic.gti_ia.core.TracingService#requestable} == true ),
+	 * and not mandatory ( {@link es.upv.dsic.gti_ia.core.TracingService#mandatory} == false )
 	 * 
 	 * @param serviceName	Name of the tracing service
 	 * @param description	Description of the tracing service
@@ -241,7 +247,7 @@ public class TracingService implements Serializable{
 	 * Returns true if the tracing service is mandatory (i.e: it cannot
 	 * be unpublished by any tracing entity).
 	 * 
-	 * @return Value of the 'mandatory' attribute of the TracingService object 
+	 * @return Value of the {@link es.upv.dsic.gti_ia.core.TracingService#mandatory} attribute of the TracingService object 
 	 */
 	public boolean getMandatory () {
 		return this.mandatory;
@@ -250,7 +256,7 @@ public class TracingService implements Serializable{
 	/**
 	 * Returns true if the tracing service is requestable.
 	 * 
-	 * @return Value of the 'requestable' attribute of the TracingService object 
+	 * @return Value of the {@link es.upv.dsic.gti_ia.core.TracingService#requestable} attribute of the TracingService object 
 	 */
 	public boolean getRequestable () {
 		return this.requestable;
@@ -268,7 +274,7 @@ public class TracingService implements Serializable{
 	/**
 	 * Returns the list of tracing entities which provide the tracing service.
 	 * 
-	 * @return Value of the 'providers' attribute of the TracingService object
+	 * @return Value of the {@link es.upv.dsic.gti_ia.core.TracingService#providers} attribute of the TracingService object
 	 * 
 	 * @see es.upv.dsic.gti_ia.trace.TracingEntityList
 	 */
@@ -279,7 +285,7 @@ public class TracingService implements Serializable{
 	/**
 	 * Returns the list of subscriptions to that tracing service.
 	 *  
-	 * @return Value of the 'subscriptions' attribute of the TracingService object
+	 * @return Value of the {@link es.upv.dsic.gti_ia.core.TracingService#subscriptions} attribute of the TracingService object
 	 * 
 	 * @see es.upv.dsic.gti_ia.trace.TracingServiceSubscriptionList
 	 * @see es.upv.dsic.gti_ia.trace.TracingServiceSubscription
@@ -296,6 +302,7 @@ public class TracingService implements Serializable{
 	 * @return true if the provider is correctly added or false otherwise
 	 * 
 	 * @see es.upv.dsic.gti_ia.trace.TracingEntityList#add(TracingEntity)
+	 * 
 	 */
 	public boolean addServiceProvider(TracingEntity provider){
 		return this.providers.add(provider);
@@ -319,7 +326,8 @@ public class TracingService implements Serializable{
 	 * Removes provider from a tracing service.
 	 * 
 	 * @param providerAid	AgentID of the agent to be removed from the
-	 * 		'providers' list of the tracing service
+	 * 		{@link es.upv.dsic.gti_ia.core.TracingService#providers} list of the
+	 * 		tracing service
 	 * 
 	 * @return true if the provider is correctly removed or false otherwise
 	 * 
