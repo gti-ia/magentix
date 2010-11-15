@@ -101,16 +101,12 @@ public class TraceManager extends BaseAgent{
 	}
 	
 	/**
-	 * Constructor which creates and initializes a TraceManager. Initialization tasks are
+	 * Constructor which creates and initializes a TraceManager.<p>
+	 * 
+	 * Initialization tasks are performed in{@link initialize()}
 	 * the following:<p>
 	 * 
-	 * 1) Creation of empty Tracing Entities, Tracing Service Providers,
-	 * 		Tracing Service Subscribers and Tracing Services lists.<p>
-	 * 2) Add the trace manager to the Tracing Entities List.<p>
-	 * 3) Initialize the Tracing Services list with DI tracing services and add the trace
-	 * 		manager as provider of those tracing services which are mandatory and requestable.<p>
-	 * 4) Subscribe to NEW_AGENT and AGENT_DESTROYED tracing services in order to
-	 * 		be able to register tracing entities in the system
+	 * @see es.upv.dsic.gti_ia.trace.TraceManager#initialize()
 	 * 
 	 * @param aid	AgentID which will be used to create the agent
 	 * @param monitorizable	Value to which the monitorizable attribute of
@@ -135,6 +131,19 @@ public class TraceManager extends BaseAgent{
         initialize();
 	}
 	
+	/**
+	 * Initializes the TraceManager.<p>
+	 * 
+	 * Initialization tasks are the following:<p>
+	 * 
+	 * 1) Creation of empty Tracing Entities, Tracing Service Providers,
+	 * 		Tracing Service Subscribers and Tracing Services lists.<p>
+	 * 2) Add the trace manager to the Tracing Entities List.<p>
+	 * 3) Initialize the Tracing Services list with DI tracing services and add the trace
+	 * 		manager as provider of those tracing services which are mandatory and requestable.<p>
+	 * 4) Subscribe to NEW_AGENT and AGENT_DESTROYED tracing services in order to
+	 * 		be able to register tracing entities in the system
+	 */
 	private void initialize (){
 		Map<String, Object> arguments = new HashMap<String, Object>();
 		TracingEntities = new TracingEntityList();
@@ -185,7 +194,6 @@ public class TraceManager extends BaseAgent{
 //    	arguments.put("tracing_service", TracingService.DI_TracingServices[TracingService.NEW_AGGREGATION].getName());
 //    	this.traceSession.exchangeBind(this.getAid().name+".trace", "amq.match", TracingService.DI_TracingServices[TracingService.NEW_AGGREGATION].getName() + "#any", arguments);
 //    	arguments.clear();
-
 	}
 	
 	/**

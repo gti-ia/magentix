@@ -82,6 +82,12 @@ public class TracingEntity implements Serializable{
 		this.subscribedToTS=new TracingServiceSubscriptionList();
 	}
 	
+	/**
+	 * Get the type of the tracing entity
+	 * 
+	 * @return Type of the tracing entity: {@link AGENT},
+	 * 		{@link ARTIFACT} or {@link AGGREGATION}
+	 */
 	public int getType(){
 		return this.type;
 	}
