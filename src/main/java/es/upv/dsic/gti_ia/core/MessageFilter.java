@@ -78,6 +78,9 @@ public class MessageFilter implements Cloneable{
 		}
 	}
 	
+	/**
+	 * Creates a replica of this object by calling object.clone() of itself.
+	 */
 	public Object clone(){
 		Object obj=null;
 		try{

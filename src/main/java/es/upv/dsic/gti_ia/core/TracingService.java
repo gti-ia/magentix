@@ -8,10 +8,9 @@ import es.upv.dsic.gti_ia.trace.TracingServiceSubscription;
 import es.upv.dsic.gti_ia.trace.TracingServiceSubscriptionList;
 
 /**
+ * Definition of Tracing Service.
  * 
  * @author L Burdalo (lburdalo@dsic.upv.es)
- *
- * Definition of Tracing Service
  */
 
 public class TracingService implements Serializable{

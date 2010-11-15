@@ -11,6 +11,11 @@ import es.upv.dsic.gti_ia.organization.Configuration;
  * @author Sergio Pajares
  */
 public class AgentsConnection {
+	
+	/**
+	 * Used to establish a communication with a Qpid broker. Can be initialized according to the parameters
+	 * specified in the settings for an agent.
+	 */
 	public static org.apache.qpid.transport.Connection connection;
 
 	private static Configuration c = null;
@@ -42,12 +47,12 @@ public class AgentsConnection {
 	
 	/**
 	 * Connects to Qpid broker taking into account all the parameters specified as input.
-	 * @param qpidHost
-	 * @param qpidPort
-	 * @param qpidVhost
-	 * @param qpdidUser
-	 * @param qpidPassword
-	 * @param qpidSSL
+	 * @param qpidHost Host where the broker is.
+	 * @param qpidPort Port where the broker is listening.
+	 * @param qpidVhost Name for the Vhost to pass to the QPid broker.
+	 * @param qpdidUser Username to pass to the QPid broker.
+	 * @param qpidPassword Password to pass to the QPid broker.
+	 * @param qpidSSL Boolean indicating whether SSL is being used or not.
 	 */
 	public static void connect(String qpidHost, int qpidPort, String qpidVhost, String qpdidUser,
 			String qpidPassword, boolean qpidSSL) {
@@ -57,13 +62,13 @@ public class AgentsConnection {
 	
 	/**
 	 * Connects to Qpid broker taking into account all the parameters specified as input.
-	 * @param qpidHost
-	 * @param qpidPort
-	 * @param qpidVhost
-	 * @param qpdidUser
-	 * @param qpidPassword
-	 * @param qpidSSL
-	 * @param sasl_mechs
+	 * @param qpidHost Host where the broker is.
+	 * @param qpidPort Port where the broker is listening.
+	 * @param qpidVhost Name for the Vhost to pass to the QPid broker.
+	 * @param qpdidUser Username to pass to the QPid broker.
+	 * @param qpidPassword Password to pass to the QPid broker.
+	 * @param qpidSSL Boolean indicating whether SSL is being used or not.
+	 * @param sasl_mechs SASL mechanism used for the secure communication with the broker.
 	 */
 	public static void connect(String qpidHost, int qpidPort, String qpidVhost, String qpdidUser,
 			String qpidPassword, boolean qpidSSL, String sasl_mechs) {
@@ -76,7 +81,7 @@ public class AgentsConnection {
 	/**
 	 * Connects to Qpid broker taking into account the qpidhost parameter and considering the rest as defaults parameters.
 	 * broker installation
-	 * @param qpidHost
+	 * @param qpidHost Host where the broker is.
 	 */
 	public static void connect(String qpidHost) {
 		connection = new Connection();

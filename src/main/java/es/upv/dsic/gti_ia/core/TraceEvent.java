@@ -6,10 +6,9 @@ import java.io.Serializable;
 import es.upv.dsic.gti_ia.trace.TracingEntity;
 
 /**
+ * Definition of Trace Event.
  * 
  * @author L Burdalo (lburdalo@dsic.upv.es)
- *
- * Definition of Trace Event
  */
 
 public class TraceEvent implements Serializable{

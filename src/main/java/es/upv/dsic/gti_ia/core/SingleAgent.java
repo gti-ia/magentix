@@ -4,11 +4,11 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 
 /**
+ * This class defines an new agents template, extending of BaseAgent.
+ * 
  * @author Ricard Lopez Fogues
  * @author Sergio Pajares Ferrando
  * @author Joan Bellver Faus
- * 
- * This class defines an new agents template, extending of BaseAgent.
  */
 
 public abstract class SingleAgent extends BaseAgent {

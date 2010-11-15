@@ -29,9 +29,21 @@ import org.apache.qpid.transport.SessionException;
 import org.apache.qpid.transport.SessionListener;
 
 import es.upv.dsic.gti_ia.trace.TracingEntity;
+import es.upv.dsic.gti_ia.architecture.QueueAgent;
+import es.upv.dsic.gti_ia.cAgents.CAgent;
 import es.upv.dsic.gti_ia.secure.SecurityTools;
 
 /**
+ * Base class to inherit when implementing a basic Magentix agent.
+ * This class provides mechanisms to enable communication between agents. A good alternative 
+ * is to inherit from SingleAgent, which provides methods (callbacks) when a message arrives, etc.
+ * If this class is too basic, consider to inherit from one of the two possibilities given by the 
+ * QueueAgent and the CAgent.
+ * 
+ * @see SingleAgent
+ * @see QueueAgent
+ * @see CAgent
+ * 
  * @author Ricard Lopez Fogues
  * @author Sergio Pajares Ferrando
  * @author Joan Bellver Faus
@@ -44,6 +56,10 @@ public class BaseAgent implements Runnable
 	 * The logger variable considers to print any event that occurs by the agent
 	 */
 	protected Logger										logger	= Logger.getLogger(BaseAgent.class);
+	
+	/**
+	 * Configuration object to read the configuration from the Settings.xml file for this agent.
+	 */
 	private es.upv.dsic.gti_ia.organization.Configuration	c		= es.upv.dsic.gti_ia.organization.Configuration.getConfiguration();
 	
 	/**
@@ -56,11 +72,12 @@ public class BaseAgent implements Runnable
 	 */
 	private Connection										connection;
 	/**
-	 * @uml.property name="session"
+	 * QPid session used for communication.
 	 */
 	protected Session										session;
 	/**
-	 * @uml.property name="traceSession"
+	 * Qpid session used for tracing.
+	 * @see TracingService
 	 */
 	protected Session										traceSession;
 	/**

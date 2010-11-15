@@ -75,6 +75,8 @@ public final class AgentID implements Serializable, Cloneable {
 	}
 
 	/**
+	 * Builds a string identifying this agent. The string is similar to the identifiers used in Jade.
+	 * 
 	 * @return The name, host and port coded in a similar fashion as the ToString method
 	 * @see AgentID#toString()
 	 */
@@ -84,6 +86,8 @@ public final class AgentID implements Serializable, Cloneable {
 	}
 
 	/**
+	 * Builds a string identifying this agent. This string is of the form of an URL.
+	 * 
 	 * @return The protocol, host and port of this ID, similar to an URL.
 	 */
 	public String addresses_all() {
@@ -101,6 +105,9 @@ public final class AgentID implements Serializable, Cloneable {
 	}
 
 	/**
+	 * Builds a string identifying this agent. The string is valid inside the local domain, 
+	 * since it does not qualify the machine where the agent is located.
+	 * 
 	 * @return Returns only the name of the agent.
 	 * @see AgentID#AgentID(String, String, String, String)
 	 */
