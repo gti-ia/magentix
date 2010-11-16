@@ -20,31 +20,62 @@ public class TracingService implements Serializable{
 	 * Domain Independent Tracing Service constant identifiers
 	 */
 	// System Trace Events
+	/**
+	 * General error in the tracing process
+	 */
 	public static final int TRACE_ERROR = 0;
 //	public static final int TRACE_START = 1;
 //	public static final int TRACE_STOP = 2;
+	/**
+	 * The ER entity subscribed to a tracing service
+	 */
 	public static final int SUBSCRIBE = 1;
+	/**
+	 * The ER entity unsubscribed from a tracing service
+	 */
 	public static final int UNSUBSCRIBE = 2;
+	/**
+	 * The tracing service which was requested does not exist
+	 * or it has been un published and thus, it is not available anymore
+	 */
 	public static final int UNAVAILABLE_TS = 3;
 //	public static final int STREAM_OVERFLOW = 6;
 //	public static final int STREAM_RESUME = 7;
 //	public static final int STREAM_FLUSH_START = 8;
 //	public static final int STREAM_FLUSH_STOP = 9;
 	// Life cycle of Tracing Entities
+	/**
+	 * A new agent was registered in the system
+	 */
 	public static final int NEW_AGENT = 4;
 //	public static final int NEW_ARTIFACT = 11;
 //	public static final int NEW_AGGREGATION = 12;
 //	public static final int AGENT_SUSPENDED = 11;
 //	public static final int AGENT_RESUMED = 12;
+	/**
+	 * An agent was destroyed
+	 */
 	public static final int AGENT_DESTROYED = 5;
 //	public static final int AGENT_ENTERS_AGGREGATION = 10;
 //	public static final int AGENT_LEAVES_AGGREGATION = 10;
 //	public static final int ARTIFACT_ENTERS_AGGREGATION = 10;
 //	public static final int ARTIFACT_LEAVES_AGGREGATION = 10;
 	// Messaging among Tracing Entities
+	/**
+	 * A FIPA-ACL message was sent
+	 */
 	public static final int MESSAGE_SENT = 6;
+	/**
+	 * A FIPA-ACL message was sent. Message included in the event
+	 */
 	public static final int MESSAGE_SENT_DETAIL = 7;
+	/**
+	 * A FIPA-ACL message was received
+	 */
 	public static final int MESSAGE_RECEIVED = 8;
+	/**
+	 * A FIPA-ACL message was received. Message included in the event
+	 */
 	public static final int MESSAGE_RECEIVED_DETAIL = 9;
 //	public static final int MESSAGE_UNDELIVERABLE = 16;
 //	public static final int MESSAGE_UNDELIVERABLE_DETAIL = 17;
@@ -60,7 +91,13 @@ public class TracingService implements Serializable{
 //	public static final int ROLE_EXPULSION = 10;
 //	public static final int NORM_VIOLATION = 10;
 	// Tracing System related Tracing Services
+	/**
+	 * A new tracing service has been published by an ES entity
+	 */
 	public static final int PUBLISHED_TRACING_SERVICE = 10;
+	/**
+	 * A tracing service is not being offered by an ER entity
+	 */
 	public static final int UNPUBLISHED_TRACING_SERVICE = 11;
 	// These two seem redundant with "SUBSCRIBED" and "UNSUBSCRIBED"
 	//public static final int TRACING_SERVICE_REQUEST = 10;
@@ -83,7 +120,7 @@ public class TracingService implements Serializable{
 //		new TracingService("TRACE_STOP", true, false, "The ER entity stoppped tracing."),
 		new TracingService("SUBSCRIBE", true, false, "The ER entity subscribed to a tracing service."),
 		new TracingService("UNSUBSCRIBE", true, false, "The ER entity unsubscribed from a tracing service."),
-		new TracingService("UNAVAILABLE_TS", true, false, "The tracing service which was requested does not exist or it has been un published and thus, it is not avilable anymore"),
+		new TracingService("UNAVAILABLE_TS", true, false, "The tracing service which was requested does not exist or it has been un published and thus, it is not available anymore"),
 //		new TracingService("STREAM_OVERFLOW", true, false, "The stream where trace events were being stored for the ER to recover them is full."),
 //		new TracingService("STREAM_RESUME", true, false, "The ER entity began to trace events after having stoppped."),
 //		new TracingService("STREAM_FLUSH_START", true, false, "The ER entity started flushing the stream where it was receiving events."),

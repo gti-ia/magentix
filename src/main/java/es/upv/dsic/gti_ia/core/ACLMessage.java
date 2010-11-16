@@ -707,7 +707,7 @@ public class ACLMessage implements Serializable, Cloneable {
 	
 	/**
 	 Returns the integer corresponding to the performative
-	 @returns the integer corresponding to the performative; -1 otherwise
+	 @return the integer corresponding to the performative; -1 otherwise
 	 */
 	public static int getPerformative(String perf)
 	{

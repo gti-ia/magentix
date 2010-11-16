@@ -16,10 +16,18 @@ public class TracingEntity implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	/**
-	 * Constants to identify the tracing entity as an agent, artifact or aggregation
+	 * Constant to identify the tracing entity as an agent
 	 */
 	public static final int AGENT = 0;
+	
+	/**
+	 * Constant to identify the tracing entity as an agent
+	 */
 	public static final int ARTIFACT = 1;
+	
+	/**
+	 * Constant to identify the tracing entity as an agent
+	 */
 	public static final int AGGREGATION = 2;
 	
 	/**

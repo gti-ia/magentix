@@ -8,23 +8,69 @@ package es.upv.dsic.gti_ia.trace;
 
 public class TraceError {
 	
-	/**
+	/*
 	 * Numeric constants which identify available trace error messages
 	 */
+	
+	/**
+	 * Undefined trace error
+	 */
 	public static final int TRACE_ERROR = 0;
+	/**
+	 * Tracing entity not present in the system
+	 */
 	public static final int ENTITY_NOT_FOUND = 1;
+	/**
+	 * Provider is not offering the tracing service
+	 */
 	public static final int PROVIDER_NOT_FOUND = 2;
+	/**
+	 * Tracing service not offered by any entity in the system
+	 */
 	public static final int SERVICE_NOT_FOUND = 3;
+	/**
+	 * Subscription to the tracing service not found
+	 */
 	public static final int SUBSCRIPTION_NOT_FOUND = 4;
+	/**
+	 * Tracing entity already present in the system
+	 */
 	public static final int ENTITY_DUPLICATE = 5;
+	/**
+	 * Tracing service already offered by the tracing entity
+	 */
 	public static final int SERVICE_DUPLICATE = 6;
+	/**
+	 * Subscription already exists
+	 */
 	public static final int SUBSCRIPTION_DUPLICATE = 7;
+	/**
+	 * Tracing entity not correct
+	 */
 	public static final int BAD_ENTITY = 8;
+	/**
+	 * Tracing service not correct
+	 */
 	public static final int BAD_SERVICE = 9;
+	/**
+	 * Impossible to publish the tracing service
+	 */
 	public static final int PUBLISH_ERROR = 10;
+	/**
+	 * Impossible to unpublish the tracing service
+	 */
 	public static final int UNPUBLISH_ERROR = 11;
+	/**
+	 * Impossible to subscribe to the tracing service
+	 */
 	public static final int SUBSCRIPTION_ERROR = 12;
+	/**
+	 * Impossible to unsubscribe from tracing service
+	 */
 	public static final int UNSUBSCRIPTION_ERROR = 13;
+	/**
+	 * Unauthorized to do so
+	 */
 	public static final int AUTHORIZATION_ERROR = 14;
 	
 	/**
@@ -33,7 +79,7 @@ public class TraceError {
 	public static final int MAX_TRACE_ERROR = 15;
 	
 	/**
-	 * Available trace error messages 
+	 * Array of available trace error messages 
 	 */
 	public static final TraceError[] TraceErrors = new TraceError[]{
 		new TraceError("TRACE_ERROR", "Undefined trace error"),
@@ -57,10 +103,12 @@ public class TraceError {
 	 * Identifier name of the error message
 	 */
 	private String name;
+	
 	/**
 	 * Human readable description of the meaning of the error message
 	 */
 	private String description;
+	
 	/**
 	 * Constructor which creates a trace error message with the specified name and description 
 	 * 
