@@ -918,7 +918,7 @@ public class BaseAgent implements Runnable
 	 * @param xfr MessageTransfer
 	 * @return TraceEvent
 	 */
-	public final TraceEvent MessageTransfertoTraceEvent(MessageTransfer xfr)
+	private final TraceEvent MessageTransfertoTraceEvent(MessageTransfer xfr)
 	{
 		// des-serializamos el evento
 		// inicializaciones
