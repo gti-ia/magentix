@@ -20,6 +20,15 @@ import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.MessageFilter;
 import es.upv.dsic.gti_ia.core.AgentID;;
 
+/**
+ * Template for CFactories that manage fipa recruiting participant conversation.
+ * The user has to create his/her own class extending from this one. And implement
+ * the abstract methods. Other methods can be overriden in order to modify the default
+ * behaviour
+ * @author ricard
+ *
+ */
+
 public abstract class FIPA_RECRUITING_Participant {
 	
 	public static String BEGIN = "BEGIN";

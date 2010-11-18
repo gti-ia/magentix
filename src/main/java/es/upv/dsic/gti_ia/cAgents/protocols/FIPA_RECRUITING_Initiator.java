@@ -15,6 +15,15 @@ import es.upv.dsic.gti_ia.cAgents.WaitState;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.MessageFilter;
 
+/**
+ * Template for CFactories that manage fipa recruiting initiator conversation.
+ * The user has to create his/her own class extending from this one. And implement
+ * the abstract methods. Other methods can be overriden in order to modify the default
+ * behaviour
+ * @author ricard
+ *
+ */
+
 public abstract class FIPA_RECRUITING_Initiator {
 	
 	/**
