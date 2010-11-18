@@ -19,8 +19,8 @@ public abstract class FIPA_RECRUITING_Initiator {
 	
 	/**
 	 * Method executed at the beginning of the conversation
-	 * @param myProcessor
-	 * @param msg
+	 * @param myProcessor the CProcessor managing the conversation
+	 * @param msg first message to send
 	 */
 	protected void doBegin(CProcessor myProcessor, ACLMessage msg) {
 		myProcessor.getInternalData().put("InitialMessage", msg);
@@ -35,8 +35,8 @@ public abstract class FIPA_RECRUITING_Initiator {
 
 	/**
 	 * Set the proxy message
-	 * @param myProcessor
-	 * @param messageToSend
+	 * @param myProcessor the CProcessor managing the conversation
+	 * @param messageToSend proxy message
 	 */
 	protected abstract void setProxyMessage(CProcessor myProcessor,
 			ACLMessage messageToSend);
@@ -52,8 +52,8 @@ public abstract class FIPA_RECRUITING_Initiator {
 	
 	/**
 	 * Method executed when the initiator receives a refuse message
-	 * @param myProcessor
-	 * @param msg
+	 * @param myProcessor the CProcessor managing the conversation
+	 * @param msg refuse message
 	 */
 	protected void doReceiveRefuse(CProcessor myProcessor, ACLMessage msg) {
 	}
@@ -67,8 +67,8 @@ public abstract class FIPA_RECRUITING_Initiator {
 	
 	/**
 	 * Method executed when the initiator receives an agree message
-	 * @param myProcessor
-	 * @param msg
+	 * @param myProcessor the CProcessor managing the conversation
+	 * @param msg agree message
 	 */
 	protected void doReceiveAgree(CProcessor myProcessor, ACLMessage msg) {
 	}
@@ -82,8 +82,8 @@ public abstract class FIPA_RECRUITING_Initiator {
 	
 	/**
 	 * Method executed when the initiator receives a proxy failure message
-	 * @param myProcessor
-	 * @param msg
+	 * @param myProcessor the CProcessor managing the conversation
+	 * @param msg proxy failure message
 	 */
 	protected void doReceiveFailureProxy(CProcessor myProcessor, ACLMessage msg) {
 		System.out.println("Proxy action failed");
@@ -98,8 +98,8 @@ public abstract class FIPA_RECRUITING_Initiator {
 	
 	/**
 	 * Method executed when the initiator receives a no match message
-	 * @param myProcessor
-	 * @param msg
+	 * @param mmyProcessor the CProcessor managing the conversation
+	 * @param msg no match message
 	 */
 	protected void doReceiveFailureNoMatch(CProcessor myProcessor, ACLMessage msg) {
 		System.out.println("No agent match found");
@@ -114,8 +114,8 @@ public abstract class FIPA_RECRUITING_Initiator {
 	
 	/**
 	 * Method executed when the initiator receives an inform message
-	 * @param myProcessor
-	 * @param msg
+	 * @param myProcessor the CProcessor managing the conversation
+	 * @param msg inform message
 	 */
 	protected void doReceiveInform(CProcessor myProcessor, ACLMessage msg) {
 		System.out.println("Proxy worked");
@@ -130,8 +130,8 @@ public abstract class FIPA_RECRUITING_Initiator {
 	
 	/**
 	 * Method executed when the conversation ends
-	 * @param myProcessor
-	 * @param messageToSend
+	 * @param myProcessor the CProcessor managing the conversation
+	 * @param messageToSend final message
 	 */
 	protected void doFinalRecruitingInitiator(CProcessor myProcessor, ACLMessage messageToSend) {
 		messageToSend = myProcessor.getLastSentMessage();
@@ -145,13 +145,13 @@ public abstract class FIPA_RECRUITING_Initiator {
 	
 	/**
 	 * Creates a new initiator fipa recruiting cfactory
-	 * @param name
-	 * @param filter
-	 * @param template
-	 * @param availableConversations
-	 * @param myAgent
-	 * @param timeout
-	 * @return
+	 * @param name factory's name
+	 * @param filter message filter
+	 * @param template first message to send
+	 * @param availableConversations maximum conversation that can be managed by this CFactory
+	 * @param myAgent agent owner of this CFactory
+	 * @param timeout for waiting after sending the proxy message
+	 * @return a new fipa recruiting initiator factory
 	 */
 	public CFactory newFactory(String name, MessageFilter filter, ACLMessage template,
 			int availableConversations, CAgent myAgent, long timeout) {

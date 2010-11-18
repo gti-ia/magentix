@@ -3,9 +3,10 @@ package es.upv.dsic.gti_ia.cAgents;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 
 /**
- * 
+ * This class represents a send state during an interaction protocol.
+ * When a conversation reaches this state it executes the state's method.
  * @author Ricard Lopez Fogues
- *
+ * 
  */
 
 public class SendState extends State {

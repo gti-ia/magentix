@@ -1,7 +1,7 @@
 package es.upv.dsic.gti_ia.cAgents;
 
 /**
- * 
+ * This is the generic state class. All other state classes extend this one
  * @author Ricard Lopez Fogues
  * 
  */
@@ -29,7 +29,7 @@ public abstract class State implements Cloneable {
 	
 	/**
 	 * Creates a new state
-	 * @param n
+	 * @param n name of the state
 	 */
 	protected State(String n) {
 		name = n;

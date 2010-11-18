@@ -37,8 +37,8 @@ public abstract class FIPA_RECRUITING_Participant {
 	
 	/**
 	 * Method executed at the beginning of the conversation
-	 * @param myProcessor
-	 * @param msg
+	 * @param myProcessor the CProcessor managing the conversation
+	 * @param msg first message assigned to this conversation
 	 */
 	protected void doBegin(CProcessor myProcessor, ACLMessage msg) {
 		myProcessor.getInternalData().put("InitialMessage", msg);
@@ -53,9 +53,9 @@ public abstract class FIPA_RECRUITING_Participant {
 	
 	/**
 	 * Method executed when the participant receive a message to proxy
-	 * @param myProcessor
-	 * @param msg
-	 * @return
+	 * @param myProcessor the CProcessor managing the conversation
+	 * @param msg proxy message
+	 * @return next conversation state
 	 */
 	protected abstract String doReceiveProxy(CProcessor myProcessor, ACLMessage msg);
 
@@ -69,8 +69,8 @@ public abstract class FIPA_RECRUITING_Participant {
 	
 	/**
 	 * Sets the refuse message to a proxy action
-	 * @param myProcessor
-	 * @param messageToSend
+	 * @param myProcessor the CProcessor managing the conversation
+	 * @param messageToSend refuse message
 	 */
 	protected void doRefuse(CProcessor myProcessor,
 			ACLMessage messageToSend){
@@ -89,8 +89,8 @@ public abstract class FIPA_RECRUITING_Participant {
 	
 	/**
 	 * Sets the agree message to a proxy action
-	 * @param myProcessor
-	 * @param messageToSend
+	 * @param myProcessor the CProcessor managing the conversation
+	 * @param messageToSend agree message
 	 */
 	protected void doAgree(CProcessor myProcessor,ACLMessage messageToSend){
 	}
@@ -108,9 +108,9 @@ public abstract class FIPA_RECRUITING_Participant {
 	
 	/**
 	 * Locate agents to recruit
-	 * @param myProcessor
-	 * @param proxyMessage
-	 * @return
+	 * @param myProcessor the CProcessor managing the conversation
+	 * @param proxyMessage proxy message sent by the initiator
+	 * @return next conversation state
 	 */
 	protected abstract ArrayList<AgentID> doLocateAgents(CProcessor myProcessor, ACLMessage proxyMessage);
 	
@@ -130,8 +130,8 @@ public abstract class FIPA_RECRUITING_Participant {
 	
 	/**
 	 * Method to execute when there is no agents to recruit
-	 * @param myProcessor
-	 * @param messageToSend
+	 * @param myProcessor the CProcessor managing the conversation
+	 * @param messageToSend no match message
 	 */
 	protected void doFailureNoMatch(CProcessor myProcessor,ACLMessage messageToSend){
 	}
@@ -150,9 +150,9 @@ public abstract class FIPA_RECRUITING_Participant {
 	
 	/**
 	 * Returns the result of a proxy action
-	 * @param myProcessor
-	 * @param subProtocolMessageResult
-	 * @return
+	 * @param myProcessor the CProcessor managing the conversation
+	 * @param subProtocolMessageResult result of the subprotocol
+	 * @return next conversation message
 	 */
 	protected abstract boolean resultOfSubProtocol(CProcessor myProcessor, ACLMessage subProtocolMessageResult);
 		
@@ -175,8 +175,8 @@ public abstract class FIPA_RECRUITING_Participant {
 	
 	/**
 	 * Sets the failure message
-	 * @param myProcessor
-	 * @param messageToSend
+	 * @param myProcessor the CProcessor managing the conversation
+	 * @param messageToSend failure message
 	 */
 	protected void doFailureProxy(CProcessor myProcessor,ACLMessage messageToSend){
 	}
@@ -195,8 +195,8 @@ public abstract class FIPA_RECRUITING_Participant {
 	
 	/**
 	 * Sets the inform message
-	 * @param myProcessor
-	 * @param messageToSend
+	 * @param myProcessor the CProcessor managing the conversation
+	 * @param messageToSend inform message
 	 */
 	protected void doInform(CProcessor myProcessor,ACLMessage messageToSend){
 	}
@@ -214,8 +214,8 @@ public abstract class FIPA_RECRUITING_Participant {
 	
 	/**
 	 * End of the conversation
-	 * @param myProcessor
-	 * @param messageToSend
+	 * @param myProcessor the CProcessor managing the conversation
+	 * @param messageToSend final message
 	 */
 	protected void doFinalRecruitingParticipant(CProcessor myProcessor, ACLMessage messageToSend) {
 		messageToSend = myProcessor.getLastSentMessage();
@@ -229,19 +229,18 @@ public abstract class FIPA_RECRUITING_Participant {
 		
 	/**
 	 * Creates a new participant fipa recruiting CFactory
-	 * @param name
-	 * @param filter
-	 * @param template
-	 * @param availableConversations
-	 * @param myAgent
-	 * @param timeout
-	 * @return
+	 * @param name factory's name
+	 * @param filter message filter
+	 * @param template first message to send
+	 * @param availableConversations maximum number of conversation this CFactory can manage simultaneously
+	 * @param myAgent agent owner of this CFactory
+	 * @return a new fipa recruiting participant factory
 	 */
 	public CFactory newFactory(String name, MessageFilter filter, ACLMessage template,
-			int availableConversations, CAgent myAgent, long timeout) {
+			int availableConversations, CAgent myAgent) {
 		
 		// Create factory
-
+		long timeout = 0;
 		if (filter == null) {
 			filter = new MessageFilter("protocol = fipa-recruiting"); //falta AND protocol = fipa-request;
 		}

@@ -6,7 +6,11 @@ import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.MessageFilter;
 
 /**
- * 
+ * A CFactory starts CProcessors in order to manage conversations.
+ * Every CFactory has a CProcessor associated that works as a template
+ * for the CProcessors that this CFactory will create.
+ * Every CFactory also has a message filter that specifies which type of
+ * messages can start new conversations
  * @author Ricard Lopez Fogues
  * 
  */
@@ -26,10 +30,11 @@ public class CFactory {
 
 	/**
 	 * Constructor of the class
-	 * @param name
-	 * @param filter
-	 * @param conversationLimit
-	 * @param myAgent
+	 * @param name of the CFactory
+	 * @param filter message filter that specifies which type of
+	 * messages can start new conversations
+	 * @param conversationLimit how many conversations can a CFactory manage simultaneously
+	 * @param myAgent the agent owner of this factory
 	 */
 	public CFactory(String name, MessageFilter filter,
 			int conversationsLimit, CAgent myAgent) {
@@ -43,8 +48,8 @@ public class CFactory {
 	}
 
 	/**
-	 * Returns the conversation limit
-	 * @return
+	 * Returns how many conversations can a CFactory manage simultaneously
+	 * @return conversation limit
 	 */
 	public int getLimit() {
 		return limit;
@@ -52,7 +57,7 @@ public class CFactory {
 
 	/**
 	 * Sets the message filter that will make this CFactory to start new CProcessors
-	 * @param template
+	 * @param template message filter that will make this CFactory to start new CProcessors
 	 */
 	public void setFilter(MessageFilter template) {
 		this.myAgent.lock();
@@ -62,7 +67,7 @@ public class CFactory {
 
 	/**
 	 * Returns this CFactory's message filter
-	 * @return
+	 * @return the message filter that will make this CFactory to start new CProcessors
 	 */
 	public MessageFilter getFilter() {
 		return (MessageFilter) filter.clone();
@@ -71,7 +76,8 @@ public class CFactory {
 	/**
 	 * Returns the CProcessor that acts as template and will be cloned 
 	 * in order to create new CProcessors
-	 * @return
+	 * @return CProcessor that acts as template and will be cloned 
+	 * in order to create new CProcessors
 	 */
 	public CProcessor cProcessorTemplate() {
 		return this.myCProcessor;
@@ -80,9 +86,9 @@ public class CFactory {
 	/**
 	 * Creates a new CProcessor that will manage the new conversation
 	 * @param msg Initial message
-	 * @param parent Parent CProcessor
+	 * @param parent CProcessor that start this conversation and acts as parent
 	 * @param isSync True if it is synchronous, false otherwise
-	 * @return the new CProcessor
+	 * @return the new CProcessor just created
 	 */
 	protected CProcessor startConversation(ACLMessage msg, CProcessor parent,
 			Boolean isSync) {
@@ -107,7 +113,7 @@ public class CFactory {
 	 * @param id The conversation identifier of the new conversation
 	 * @param parent Parent CProcessor
 	 * @param isSync True if it is synchronous, false otherwise
-	 * @return
+	 * @return the new CProcessor just created
 	 */
 	protected CProcessor startConversationWithID(String id, CProcessor parent, Boolean isSync) {
 		CProcessor cloneProcessor = (CProcessor) myCProcessor.clone();
@@ -147,6 +153,7 @@ public class CFactory {
 
 	/**
 	 * Returns true if the message matches with the message filter
+	 * @return true if the message matches with the message filter, false otherwise
 	 */
 	protected boolean templateIsEqual(ACLMessage template) {
 		if(this.filter == null)
@@ -156,7 +163,7 @@ public class CFactory {
 	
 	/**
 	 * Sets the type of the CFactory
-	 * @param initiator True if this is initiator, false if this is participant
+	 * @param initiator True if this is a initiator CFactory, false if this is a participant one
 	 */
 	protected void setInitiator(boolean initiator){
 		this.initiator = initiator;
@@ -164,7 +171,7 @@ public class CFactory {
 	
 	/**
 	 * Returns true if this is initiator, false if this is participant
-	 * @return
+	 * @return true if this is initiator, false if this is participant
 	 */
 	protected boolean isInitiator(){
 		return initiator;
@@ -172,7 +179,7 @@ public class CFactory {
 	
 	/**
 	 * Returns this CFactory's name
-	 * @return
+	 * @return this CFactory's name
 	 */
 	public String getName(){
 		return this.name;

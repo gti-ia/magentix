@@ -1,7 +1,9 @@
 package es.upv.dsic.gti_ia.cAgents;
 
 /**
- * 
+ * This class represents a wait state during an interaction protocol.
+ * It halts until a message is assigned to this conversation
+ * or the timeout is reached, whatever happens earlier.
  * @author Ricard Lopez Fogues
  *
  */
@@ -29,13 +31,14 @@ public class WaitState extends State{
 	
 	/**
 	 * Sets type of the wait state
-	 * @param type
+	 * @param type of this wait state
 	 */
 	public void setWaitType(int type) {
 		this.waitType = type;
 	}
 	
 	/**
+	 * Returns the timeout period
 	 * @return the timeout period
 	 */
 	public long getPeriod(){
@@ -43,8 +46,8 @@ public class WaitState extends State{
 	}
 	
 	/**
-	 * 
-	 * @return type of the wait state
+	 * Returns the type of this wait state
+	 * @return type of this wait state
 	 */
 	public int getWaitType(){
 		return waitType;

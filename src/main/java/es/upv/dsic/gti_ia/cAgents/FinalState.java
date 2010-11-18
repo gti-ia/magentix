@@ -1,7 +1,8 @@
 package es.upv.dsic.gti_ia.cAgents;
 
 /**
- * 
+ * This class represents a final state during an interaction protocol.
+ * When a conversation reaches this state it executes the state's method.
  * @author Ricard Lopez Fogues
  *
  */

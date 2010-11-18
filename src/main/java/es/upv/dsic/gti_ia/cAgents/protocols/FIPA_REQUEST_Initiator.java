@@ -19,8 +19,8 @@ public abstract class FIPA_REQUEST_Initiator {
 	
 	/**
 	 * Method to execute at the beginning of the conversation
-	 * @param myProcessor
-	 * @param msg
+	 * @param myProcessor the CProcessor managing the conversation
+	 * @param msg first message to send
 	 */
 	protected void doBegin(CProcessor myProcessor, ACLMessage msg) {
 		myProcessor.getInternalData().put("InitialMessage", msg);		
@@ -35,8 +35,8 @@ public abstract class FIPA_REQUEST_Initiator {
 	
 	/**
 	 * Sets the request message
-	 * @param myProcessor
-	 * @param messageToSend
+	 * @param myProcessor the CProcessor managing the conversation
+	 * @param messageToSend request message
 	 */
 	protected void doRequest(CProcessor myProcessor,
 			ACLMessage messageToSend) {
@@ -57,8 +57,8 @@ public abstract class FIPA_REQUEST_Initiator {
 	
 	/**
 	 * Method to execute when the initiator receives a not-understood message
-	 * @param myProcessor
-	 * @param msg
+	 * @param myProcessor the CProcessor managing the conversation
+	 * @param msg not-understood message
 	 */
 	protected void doNotUnderstood(CProcessor myProcessor, ACLMessage msg){
 	}
@@ -72,8 +72,8 @@ public abstract class FIPA_REQUEST_Initiator {
 	
 	/**
 	 * Method to execute when the initiator receives a failure message
-	 * @param myProcessor
-	 * @param msg
+	 * @param myProcessor the CProcessor managing the conversation
+	 * @param msg failure message
 	 */
 	protected void doRefuse(CProcessor myProcessor, ACLMessage msg){
 	}
@@ -87,8 +87,8 @@ public abstract class FIPA_REQUEST_Initiator {
 	
 	/**
 	 * Method to execute when the initiator receives an agree message
-	 * @param myProcessor
-	 * @param msg
+	 * @param myProcessor the CProcessor managing the conversation
+	 * @param msg agree message
 	 */
 	protected void doAgree(CProcessor myProcessor, ACLMessage msg){
 	}
@@ -102,8 +102,8 @@ public abstract class FIPA_REQUEST_Initiator {
 	
 	/**
 	 * Method to execute when the timeout is reached
-	 * @param myProcessor
-	 * @param msg
+	 * @param myProcessor the CProcessor managing the conversation
+	 * @param msg timeout message
 	 */
 	protected void doSecondWait(CProcessor myProcessor, ACLMessage msg){		
 	}
@@ -117,8 +117,8 @@ public abstract class FIPA_REQUEST_Initiator {
 	
 	/**
 	 * Method to execute when the initiator receives a failure message
-	 * @param myProcessor
-	 * @param msg
+	 * @param myProcessor the CProcessor managing the conversation
+	 * @param msg failure message
 	 */
 	protected void doFailure(CProcessor myProcessor, ACLMessage msg){
 	}
@@ -161,13 +161,13 @@ public abstract class FIPA_REQUEST_Initiator {
 
 	/**
 	 * Creates a new initiator fipa request cfactory
-	 * @param name
-	 * @param filter
-	 * @param requestMessage
-	 * @param availableConversations
-	 * @param myAgent
-	 * @param timeout
-	 * @return
+	 * @param name factory's name
+	 * @param filter message filter
+	 * @param requestMessage first message to send
+	 * @param availableConversations maximum number of conversation this CFactory can manage simultaneously
+	 * @param myAgent agent owner of this CFactory
+	 * @param timeout for waiting after sending the request message
+	 * @return a new fipa request initiator factory
 	 */
 	public CFactory newFactory(String name, MessageFilter filter, ACLMessage requestMessage,
 			int availableConversations, CAgent myAgent, long timeout) {

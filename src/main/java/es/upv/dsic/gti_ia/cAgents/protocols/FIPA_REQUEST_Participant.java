@@ -21,8 +21,8 @@ public abstract class FIPA_REQUEST_Participant {
 	
 	/**
 	 * Method executed at the beginning of the conversation
-	 * @param myProcessor
-	 * @param msg
+	 * @param myProcessor the CProcessor managing the conversation
+	 * @param msg first message assigned to this conversation
 	 */
 	protected void doBegin(CProcessor myProcessor, ACLMessage msg) {
 		myProcessor.getInternalData().put("InitialMessage", msg);
@@ -37,8 +37,8 @@ public abstract class FIPA_REQUEST_Participant {
 
 	/**
 	 * Method executed when the initiator receives the request
-	 * @param myProcessor
-	 * @param request
+	 * @param myProcessor the CProcessor managing the conversation
+	 * @param request request message
 	 * @return
 	 */
 	protected abstract String doReceiveRequest(CProcessor myProcessor,
@@ -52,8 +52,8 @@ public abstract class FIPA_REQUEST_Participant {
 
 	/**
 	 * Sets the not-understood message
-	 * @param myProcessor
-	 * @param messageToSend
+	 * @param myProcessor the CProcessor managing the conversation
+	 * @param messageToSend not-understood message
 	 */
 	protected void doNotUnderstood(CProcessor myProcessor,
 			ACLMessage messageToSend) {
@@ -92,8 +92,8 @@ public abstract class FIPA_REQUEST_Participant {
 	
 	/**
 	 * Sets the agree message
-	 * @param myProcessor
-	 * @param messageToSend
+	 * @param myProcessor the CProcessor managing the conversation
+	 * @param messageToSend agree message
 	 */
 	protected void doAgree(CProcessor myProcessor,
 			ACLMessage messageToSend) {
@@ -112,8 +112,8 @@ public abstract class FIPA_REQUEST_Participant {
 	
 	/**
 	 * Perform the requested action
-	 * @param myProcessor
-	 * @return
+	 * @param myProcessor the CProcessor managing the conversation
+	 * @return next conversation state
 	 */
 	protected abstract String doAction(CProcessor myProcessor);
 	
@@ -127,8 +127,8 @@ public abstract class FIPA_REQUEST_Participant {
 	
 	/**
 	 * Sets the failure message
-	 * @param myProcessor
-	 * @param messageToSend
+	 * @param myProcessor the CProcessor managing the conversation
+	 * @param messageToSend failure message
 	 */
 	protected void doFailure(CProcessor myProcessor,
 			ACLMessage messageToSend) {
@@ -147,8 +147,8 @@ public abstract class FIPA_REQUEST_Participant {
 	
 	/**
 	 * Sets the inform message
-	 * @param myProcessor
-	 * @param response
+	 * @param myProcessor the CProcessor managing the conversation
+	 * @param response inform message
 	 */
 	protected abstract void doInform(CProcessor myProcessor, ACLMessage response);
 
@@ -165,8 +165,8 @@ public abstract class FIPA_REQUEST_Participant {
 	
 	/**
 	 * Method executed when the conversation ends
-	 * @param myProcessor
-	 * @param messageToSend
+	 * @param myProcessor the CProcessor managing the conversation
+	 * @param messageToSend final message
 	 */
 	protected void doFinal(CProcessor myProcessor, ACLMessage messageToSend){
 	}
@@ -179,11 +179,11 @@ public abstract class FIPA_REQUEST_Participant {
 
 	/**
 	 * Creates a new participant fipa request factory
-	 * @param name
-	 * @param filter
-	 * @param availableConversations
-	 * @param myAgent
-	 * @return
+	 * @param name factory's name
+	 * @param filter message filter
+	 * @param availableConversations maximum number of conversation this CFactory can manage simultaneously
+	 * @param myAgent agent owner of this CFactory
+	 * @return a new fipa request participant factory
 	 */
 	public CFactory newFactory(String name, MessageFilter filter,
 			int availableConversations, CAgent myAgent) {

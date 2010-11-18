@@ -3,8 +3,8 @@ package es.upv.dsic.gti_ia.cAgents;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 
 /**
- * 
- * @author ricard
+ * This interface represents a method of a shutdown state
+ * @author Agustín Espinosa
  *
  */
 

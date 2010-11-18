@@ -22,12 +22,21 @@ import es.upv.dsic.gti_ia.cAgents.WaitState;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.MessageFilter;
 
+/**
+ * Template for CFactories that manage fipa contract net initiator conversation.
+ * The user has to create his/her own class extending from this one. And implement
+ * the abstract methods. Other methods can be overriden in order to modify the default
+ * behaviour
+ * @author ricard
+ *
+ */
+
 public abstract class FIPA_CONTRACTNET_Initiator {
 
 	/**
 	 * Method executed at the beginning of the conversation
-	 * @param myProcessor
-	 * @param msg
+	 * @param myProcessor the CProcessor managing the conversation
+	 * @param msg first message to send in the conversation
 	 */
 	protected void doBegin(CProcessor myProcessor, ACLMessage msg) {
 		myProcessor.getInternalData().put("InitialMessage", msg);
@@ -42,8 +51,8 @@ public abstract class FIPA_CONTRACTNET_Initiator {
 
 	/**
 	 * Method executed when the initiator calls for proposals
-	 * @param myProcessor
-	 * @param messageToSend
+	 * @param myProcessor the CProcessor managing the conversation
+	 * @param messageToSend Message to send
 	 */
 	protected void doSolicitProposals(CProcessor myProcessor,
 			ACLMessage messageToSend) {
@@ -61,8 +70,8 @@ public abstract class FIPA_CONTRACTNET_Initiator {
 
 	/**
 	 * Method executed when the initiator receives a not-understood message
-	 * @param myProcessor
-	 * @param msg
+	 * @param myProcessor the CProcessor managing the conversation
+	 * @param msg not-understood message
 	 */
 	protected void doReceiveNotUnderstood(CProcessor myProcessor, ACLMessage msg) {
 	}
@@ -82,8 +91,8 @@ public abstract class FIPA_CONTRACTNET_Initiator {
 
 	/**
 	 * Method executed when the initiator receives a refuse message
-	 * @param myProcessor
-	 * @param msg
+	 * @param myProcessor the CProcessor managing the conversation
+	 * @param msg refuse message
 	 */
 	protected void doReceiveRefuse(CProcessor myProcessor, ACLMessage msg) {
 	}
@@ -104,8 +113,8 @@ public abstract class FIPA_CONTRACTNET_Initiator {
 
 	/**
 	 * Method executed when the initiator receives a proposal
-	 * @param myProcessor
-	 * @param msg
+	 * @param myProcessor the CProcessor managing the conversation
+	 * @param msg proposal message
 	 */
 	@SuppressWarnings("unchecked")
 	protected void doReceiveProposal(CProcessor myProcessor, ACLMessage msg){
@@ -129,8 +138,8 @@ public abstract class FIPA_CONTRACTNET_Initiator {
 
 	/**
 	 * Method executed when the timeout is reached while the initiator was waiting for proposals
-	 * @param myProcessor
-	 * @param msg
+	 * @param myProcessor the CProcessor managing the conversation
+	 * @param msg timeout message
 	 */
 	protected void doTimeout(CProcessor myProcessor, ACLMessage msg) {
 	}
@@ -144,7 +153,7 @@ public abstract class FIPA_CONTRACTNET_Initiator {
 	/**
 	 * Evaluate proposals. Each accepted proposal has to be added to the acceptances list.
 	 * Each rejected proposal has to be added to the rejected list
-	 * @param myProcessor
+	 * @param myProcessor the CProcessor managing the conversation
 	 * @param proposes Proposals
 	 * @param acceptances Accepted proposals
 	 * @param rejections Rejected proposals
@@ -232,8 +241,8 @@ public abstract class FIPA_CONTRACTNET_Initiator {
 
 	/**
 	 * Method executed when the initiator receives a failure
-	 * @param myProcessor
-	 * @param msg
+	 * @param myProcessor the CProcessor managing the conversation
+	 * @param msg the failure message
 	 */
 	protected void doReceiveFailure(CProcessor myProcessor, ACLMessage msg) {
 	}
@@ -254,8 +263,8 @@ public abstract class FIPA_CONTRACTNET_Initiator {
 
 	/**
 	 * Method executed when the initiator receives a inform
-	 * @param myProcessor
-	 * @param msg
+	 * @param myProcessor the CProcessor managing the conversation
+	 * @param msg inform message
 	 */
 	protected abstract void doReceiveInform(CProcessor myProcessor, ACLMessage msg); // Method
 	// to
@@ -277,8 +286,8 @@ public abstract class FIPA_CONTRACTNET_Initiator {
 
 	/**
 	 * Method executed when the initiator ends the conversation
-	 * @param myProcessor
-	 * @param messageToSend
+	 * @param myProcessor the CProcessor managing the conversation
+	 * @param messageToSend final message of this conversation
 	 */
 	protected void doFinal(CProcessor myProcessor, ACLMessage messageToSend) {
 		messageToSend = myProcessor.getLastSentMessage();
@@ -295,12 +304,12 @@ public abstract class FIPA_CONTRACTNET_Initiator {
 	 * @param name of the factory
 	 * @param filter message filter
 	 * @param template first message to send
-	 * @param availableConversations 
-	 * @param myAgent
+	 * @param availableConversations maximum number of conversation this CFactory can manage simultaneously
+	 * @param myAgent agent owner of this Cfactory
 	 * @param participants number of participants
 	 * @param deadline for waiting for proposals
 	 * @param timeout for waiting for inform
-	 * @return the new cfactory
+	 * @return the a new contract net initiator CFactory
 	 */
 	public CFactory newFactory(String name, MessageFilter filter,
 			ACLMessage template, int availableConversations, CAgent myAgent,

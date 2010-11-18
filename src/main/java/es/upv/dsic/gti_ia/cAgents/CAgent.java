@@ -156,6 +156,7 @@ public abstract class CAgent extends BaseAgent {
 
 	/**
 	 * This method should not be modified.
+	 * @param msg message received by the agent
 	 */
 	public void onMessage(ACLMessage msg) {
 
@@ -219,7 +220,7 @@ public abstract class CAgent extends BaseAgent {
 	/**
 	 * This method creates the default factory that will manage the messages that
 	 * no other factory can
-	 * @param me
+	 * @param me The agent owner of this factory
 	 */
 	protected void createDefaultFactory(final CAgent me) {
 
@@ -263,7 +264,7 @@ public abstract class CAgent extends BaseAgent {
 
 	/**
 	 * This method creates the factory that will control the execution of the agent
-	 * @param me
+	 * @param me The agent owner of this factory
 	 */
 	private void createWelcomeFactory(final CAgent me) { /* Cambio factoria welcome
 	para que sea coherente con el hecho de que se hace peek de los mensajes en los
@@ -352,7 +353,8 @@ public abstract class CAgent extends BaseAgent {
 	}
 
 	/**
-	 * This method signals the end of the agent
+	 * This method signals the end of the agent in order to unlock
+	 * the main conversation thread
 	 */
 	private void notifyAgentEnd() {
 		this.lock();
@@ -363,7 +365,7 @@ public abstract class CAgent extends BaseAgent {
 	/**
 	 * This method assigna a received message to a factory, an already running CProcessor
 	 * or to the default Factory
-	 * @param msg
+	 * @param msg Message to be processed
 	 */
 	private void processMessage(ACLMessage msg) {
 		this.lock();
@@ -422,16 +424,16 @@ public abstract class CAgent extends BaseAgent {
 
 	/**
 	 * This method is executed just before the agent ends its execution
-	 * @param firstProcessor 
-	 * @param finalizeMessage
+	 * @param firstProcessor The CProcessor managing the welcome conversation
+	 * @param finalizeMessage The final message produced by this conversation
 	 */
 	protected abstract void finalize(CProcessor firstProcessor,
 			ACLMessage finalizeMessage);
 
 	/**
 	 * This is the main method of the agent
-	 * @param firstProcessor 
-	 * @param welcomeMessage
+	 * @param firstProcessor The CProcessor managing the welcome conversation
+	 * @param welcomeMessage The message sent by the platform to the agent
 	 */
 	protected abstract void execution(CProcessor firstProcessor,
 			ACLMessage welcomeMessage);
@@ -454,7 +456,7 @@ public abstract class CAgent extends BaseAgent {
 	 * @param stateName
 	 * @param period Time to wait
 	 * @param waitType Wait type (oneshot, absolut or periodic)
-	 * @return
+	 * @return true if a timer was added, false otherwise
 	 */
 	protected boolean addTimer(final String conversationId, String stateName, final long period, int waitType) {
 		this.lock();
@@ -557,7 +559,7 @@ public abstract class CAgent extends BaseAgent {
 	
 	/**
 	 * Ends a conversation
-	 * @param theFactory
+	 * @param theFactory managing the conversation that is going to be finished
 	 */
 	protected void endConversation(CFactory theFactory) {
 		this.lock();
@@ -569,7 +571,7 @@ public abstract class CAgent extends BaseAgent {
 
 	/**
 	 * Gets a new conversation identifier
-	 * @return
+	 * @return new conversation identifier
 	 */
 	protected synchronized String newConversationID() {
 		//return this.getName() + "." + UUID.randomUUID().toString();
@@ -591,7 +593,7 @@ public abstract class CAgent extends BaseAgent {
 
 	/**
 	 * Removes a processor identified by its conversation id
-	 * @param conversationID
+	 * @param conversationID of the conversation that the CProcessor that is going to be removed is managing
 	 */
 	protected void removeProcessor(String conversationID) {
 		this.lock();
@@ -606,8 +608,8 @@ public abstract class CAgent extends BaseAgent {
 
 	/**
 	 * Removes a timer of a CProcessor
-	 * @param conversationId
-	 * @return
+	 * @param conversationId of the conversation that the CProcessor is managing
+	 * @return true if a timer was removed, false otherwise
 	 */
 	private boolean removeTimer(String conversationId) {
 		this.lock();
@@ -626,7 +628,7 @@ public abstract class CAgent extends BaseAgent {
 	 * Starts a conversation
 	 * @param msg Initial message
 	 * @param parent CProcessor
-	 * @param sync If it is synchronous or asynchronous
+	 * @param sync true if it is a synchronous conversation or false it is asynchronous
 	 */
 	protected void startConversation(ACLMessage msg, CProcessor parent, Boolean sync) {
 		this.lock();

@@ -7,11 +7,16 @@ package es.upv.dsic.gti_ia.cAgents;
 
 import java.util.Date;
 
+/**
+ * This interface represents a method of a wait state
+ * @author ricard
+ *
+ */
 
 public interface WaitStateMethod {
 	
 	/**
-	 * The method to be executed by the action state
+	 * This method returns the moment when this state's timeout is reached
 	 * @param timeout
 	 * @return Date when the timeout ends
 	 */

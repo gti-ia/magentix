@@ -6,7 +6,7 @@ import java.util.Hashtable;
 import java.util.Set;
 
 /**
- * 
+ * This class is used to define all the transitions between the states of a CProcessor's graph
  * @author Ricard Lopez Fogues
  *
  */
@@ -68,7 +68,7 @@ public class TransitionTable implements Cloneable{
 	 * Checks whether the transition exists
 	 * @param from state
 	 * @param destination state
-	 * @return
+	 * @return true if the transition exists, false otherwise
 	 */
 	protected boolean existsTransation(String from, String destination){
 		return transitions.get(from).contains(destination);

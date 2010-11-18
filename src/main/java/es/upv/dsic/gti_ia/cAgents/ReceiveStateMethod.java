@@ -2,6 +2,12 @@ package es.upv.dsic.gti_ia.cAgents;
 
 import es.upv.dsic.gti_ia.core.ACLMessage;
 
+/**
+ * This interface represents a method of a receive state
+ * @author Ricard Lopez Fogues
+ *
+ */
+
 public interface ReceiveStateMethod {
 
 	/**

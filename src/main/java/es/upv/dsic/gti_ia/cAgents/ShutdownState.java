@@ -1,8 +1,9 @@
 package es.upv.dsic.gti_ia.cAgents;
 
 /**
- * 
- * @author Ricard Lopez Fogues
+ * This class represents a shutdown state during an interaction protocol.
+ * When a conversation reaches this state it executes the state's method.
+ * @author Agustín Espinosa
  * 
  */
 

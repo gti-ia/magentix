@@ -3,7 +3,8 @@ package es.upv.dsic.gti_ia.cAgents;
 import es.upv.dsic.gti_ia.core.MessageFilter;
 
 /**
- * 
+ * This class represents a receive state during an interaction protocol.
+ * When a conversation reaches this state it executes the state's method.
  * @author Ricard Lopez Fogues
  * 
  */
