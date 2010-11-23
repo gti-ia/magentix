@@ -810,7 +810,7 @@ public class BaseAgent implements Runnable
 	 *            Agent ID to look for
 	 * @return True if agent exists, false otherwise
 	 */
-	public boolean existAgent(AgentID aid)
+	private boolean existAgent(AgentID aid)
 	{
 		return session.queueQuery(aid.name).get().getQueue() != null;
 	}
@@ -821,7 +821,7 @@ public class BaseAgent implements Runnable
 	 *            MessageTransfer
 	 * @return ACLMessage
 	 */
-	public final ACLMessage MessageTransfertoACLMessage(MessageTransfer xfr) throws Exception
+	private final ACLMessage MessageTransfertoACLMessage(MessageTransfer xfr) throws Exception
 	{
 		byte[] binaryContent = xfr.getBodyBytes();
 		
