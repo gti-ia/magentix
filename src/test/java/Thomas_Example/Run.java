@@ -53,14 +53,14 @@ public class Run {
 
 			/**
 			 * Instantiating a OMS and FS agent's
-			 */
+			 
 
 			OMS agenteOMS = OMS.getOMS();
 			agenteOMS.start();
 
 			SF agenteSF = SF.getSF();
 			agenteSF.start();
-
+			**/
 
 			/**
 			 * Execute the agents
