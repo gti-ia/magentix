@@ -322,8 +322,10 @@ public class SFProxy extends THOMASProxy {
 	 * 
 	 * It is used when an autonomous entity wants to register a service description. To do this the following structure has
 	 * to be completed in order the service description (ProfileDescription).
-	 * This method assigns an Id to the structure ProfileDescription
-
+	 * This method assigns an Id to the structure ProfileDescription. This result implies that the service is publicly available.
+	 * 
+	 * The execution of this service implies:
+	 *	- Checks if ServiceProfile isn't null
 	 * @param ProfileDescription
 	 *            This parameter contains one element necessary: service profile ( is a
 	 *            string: urlprofile#profilename, this parameter is entered when
