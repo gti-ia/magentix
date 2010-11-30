@@ -57,6 +57,11 @@ public class OMSProxy extends THOMASProxy{
 	/**
 	 * Service used for leaving a role inside a specific unit. The agent plays this role inside the unit.
 	 * 
+	 * The execution of this service implies:
+	 *	– Check that the role and the unit exist (Preconditions Pre1 and Pre2).
+	 *	– Check that the agent plays this role inside the unit (Precondition Pre3).
+	 *	– Deregister Agent - Role - Unit entry in EntityPlayList (using DeregisterAgentRole service)
+	 *
 	 * @param RoleID
 	 *            represent all required functionality needed in order to
 	 *            achieve the unit goal.
@@ -74,7 +79,13 @@ public class OMSProxy extends THOMASProxy{
 	}
 
 	/**
-	 * Request roles adopted by an agent
+	 * Requesting the list of roles and units in which an agent is in a specific moment.
+	 * 
+	 *The execution of this service checks:
+	 *	– That the requested agent exists
+	 *	– Whether the agent (AgentID) asks information about its own roles (i.e.
+	 *		AgentID=RequestedAgentID).
+	 *
 	 * 
 	 * @param AgentID
 	 *            entity,this agent is protocol://name@host:port
@@ -94,8 +105,10 @@ public class OMSProxy extends THOMASProxy{
 
 	/**
 	 * Indicates entities that are members of a specific unit. Optionally, it is possible to specify a role of this unit, 
-	 * so then only members playing this role are detailed. A agent can make use of this service, depending on the type of unit 
-	 *  (UnitID): if FLAT, the agent is allowed, if TEAM, he is only allowed if he is a member of this unit, if HIERARCHY, then he is
+	 * so then only members playing this role are detailed. 
+	 * 
+	 *  A agent can make use of this service, depending on the type of unit (UnitID): 
+	 *  if FLAT, the agent is allowed, if TEAM, he is only allowed if he is a member of this unit, if HIERARCHY, then he is
 	 *  only allowed if he is a supervisor of this unit.
 	 * 
 	 * @param RoleID
@@ -120,7 +133,12 @@ public class OMSProxy extends THOMASProxy{
 	}
 
 	/**
-	 * Provides all norms addressed to a specific role
+	 * Provides all norms addressed to a specific role.
+	 * 
+	 * The execution of this service checks:
+	 *	– That the role exists.
+	 *	– That the requester agent (AgentID) is member of THOMAS.
+  	 *
 	 * 
 	 * @param RoleID
 	 *            represent all required functionality needed in order to
@@ -163,6 +181,10 @@ public class OMSProxy extends THOMASProxy{
 	/**
 	 * Provides unit description
 	 * 
+	 * The execution of this service checks:
+	 *	– That the unit exists.
+	 *	– That the requester agent (AgentID) is member of the ParentUnit.
+	 *
 	 * @param UnitID
 	 *            organizational units (OUs), which represent groups of entities
 	 *            (agents or other units)
@@ -181,8 +203,11 @@ public class OMSProxy extends THOMASProxy{
 	}
 
 	/**
-	 * Used for requesting the list of roles that have been registered inside a unit. Agent can make use of this service
-	 * depending on the type of unit (UnitID):if FLAT, the agent is allowed, if TEAM or HIERARCHY he is only if he is a member
+	 * Used for requesting the list of roles that have been registered inside a unit. 
+	 * 
+	 * Agent can make use of this service depending on the type of unit (UnitID):
+	 * 
+	 * if FLAT, the agent is allowed, if TEAM or HIERARCHY he is only if he is a member
 	 * of this unit.
 	 * 
 	 * 
@@ -227,7 +252,7 @@ public class OMSProxy extends THOMASProxy{
 	}
 
 	/**
-	 * Includes a new norm within a unit
+	 * Includes a new norm inside a unit
 	 * 
 	 * @param NormID
 	 *            norm for controlling role actions
@@ -248,8 +273,20 @@ public class OMSProxy extends THOMASProxy{
 	}
 
 	/**
-	 * Creates a new role within a unit
+	 * Creates a new role inside a unit
 	 * 
+	 * 
+	 * The execution of this service:
+	 *	– Checks that the unit exists (Precondition Pre2), but there is not any role
+	 *		inside this unit with the same name (Precondition Pre1).
+	 *	– If a parent role has been defined, using the inheritance parameter, then
+	 *		it checks that this parent role exists (Precondition Pre3).
+	 *	– Checks that the requester agent (AgentID) can make use of this service,
+	 *		depending on the type of the unit(indicated in UnitID): if FLAT, the
+	 *		agent is allowed; if TEAM, he is only allowed if he is a member of the unit;
+	 *		if HIERARCHY, then he can only register this role if he is a supervisor
+	 *		of this unit
+  	 *
 	 * @param RoleID
 	 *            is the identifier of the new role
 	 * @param UnitID
@@ -284,7 +321,20 @@ public class OMSProxy extends THOMASProxy{
 	}
 
 	/**
-	 * Creates a new unit within a specific organization
+	 * Creates a  new empty unit in the organization, with a specific structure, goal and parent unit.
+	 *
+	 *
+	 *The execution of this service checks:
+	 *	– That the unit (UnitID) does not exist (Precondition Pre1).
+	 *	– If a parent unit has been defined, then it checks that this parent unit
+	 *		exists (Precondition Pre2). If this paremeter is not included, then the
+	 *		"Virtual" unit is assumed as parent unit.
+	 *	– That the requester agent (AgentID) can make use of this service, de-
+	 *		pending on the type of the parent unit (indicated in ParentUnitID): if
+	 *		FLAT, the agent is allowed; if TEAM, he is only allowed if he is a mem-
+	 *		ber of the parent unit; if HIERARCHY, then he can only register this
+	 *		unit if he is a supervisor of the parent unit.
+  	 *
 	 * @param UnitID
 	 *            is the identifier of the new unit
 	 * @param Type
@@ -314,6 +364,11 @@ public class OMSProxy extends THOMASProxy{
 	/**
 	 * Removes a specific norm.
 	 * 
+	 * The execution of this service checks:
+	 *	– That the norm exists and the requester agent (AgentID) is member of
+	 *		THOMAS 
+ 	 *
+	 * 
 	 * @param NormID
 	 *            norm name
 	 * @return String Status ErrorValue
@@ -329,8 +384,12 @@ public class OMSProxy extends THOMASProxy{
 	}
 
 	/**
-	 * Removes a specific role description from a unit. There must not be any agent playing this role nor any norm 
-	 * addressed to it. The agent can make use of this service, depending on the type of unit (UnitID). if FLAT, the agent
+	 * Removes a specific role description from a unit. 
+	 * 
+	 * The execution of this service checks:
+	 * 
+	 * - There must not be any agent playing this role nor any norm addressed to it. 
+	 * - The agent can make use of this service, depending on the type of unit (UnitID). if FLAT, the agent
 	 * is allowed; if TEAM, he is only allowed if he is a member of this unit; if HIERARCHY, then he is only allowed if he is
 	 * a supervisor of this unit.
 	 * @param RoleID
@@ -372,6 +431,15 @@ public class OMSProxy extends THOMASProxy{
 	/**
 	 * Forces an agent to leave a specific role
 	 * 
+	 * 
+	 * The execution of this service implies:
+	 *	– Check that the specified agent (ExpulseAgentID) plays the indicated role inside the unit. 
+	 *	– Check that the requester agent (AgentID) can make use of this service,
+	 *		depending on the type of unit (UnitID): if FLAT, the agent is not allowed; 
+	 *		if TEAM or HIERARCHY, he is only allowed if he is a supervisor
+	 *		of this unit.
+	 *	– Deregister Agent - Role - Unit entry in EntityPlayList (using DeregisterAgentRole service)
+  	 *
 	 * @param ExpulseAgentID
 	 *            entity,this agent is protocol://name@host:port
 	 *            ej.qpid://clientagent2@localhost:8080 , we can extract this
@@ -395,7 +463,17 @@ public class OMSProxy extends THOMASProxy{
 	}
 
 	/**
-	 * Requests the adoption of a specific role within a unit
+	 * Requests the adoption of a specific role inside a unit
+	 * 
+	 * The execution of this service implies:
+	 *	– Check that the requested role exits inside the unit.
+	 *	– Check that the agent is not already playing this role.
+	 *	– Check that the agent is inside its parent unit.
+	 *	– Check cardinality restrictions (maximum cardinality).
+	 *	– Check compatibility restrictions, i.e. the requested role is not incompatible with the other roles played by the agent.
+	 *	– Register Agent - Role - Unit entry in EntityPlayList (using RegisterAgentRole service)
+	 *	– Activate agent norms related with this requested role.
+ 	 *
 	 * 
 	 * @param RoleID
 	 *            Role that the agent acquires inside the organization
