@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
-<comment>Propiedades de configuración</comment>
+<comment>Magentix2 Configuration properties</comment>
 
 
 <!-- Properties thomas -->
@@ -12,7 +12,7 @@
 <!-- Properties servlets server -->
 <entry key="tomcat">false</entry>
 <entry key="os">linux</entry><!-- linux windows -->
-<entry key="pathTomcat">/home/joabelfa/workspace/Java/apache-tomcat-6.0.20</entry>
+<entry key="pathTomcat">../apache-tomcat-6.0.20</entry>
 
 <!-- Properties mysql -->
 <entry key="serverName">localhost</entry>
@@ -21,29 +21,29 @@
 <entry key="password">thomas</entry>
 
 
-<!-- SIN SEGURIDAD -->
+<!-- WITHOUT SECURITY -->
 <!-- Properties qpid broker -->
-<entry key="host">localhost</entry>
+<!--<entry key="host">localhost</entry>
 <entry key="port">5672</entry>
 <entry key="vhost">test</entry>
 <entry key="user">guest</entry>
 <entry key="pass">guest</entry>
 <entry key="ssl">false</entry>
-<!-- Secure qpid properties -->
-<entry key="secureMode">false</entry>
+--><!-- Secure qpid properties -->
+<!--<entry key="secureMode">false</entry>
 <entry key="saslMechs">EXTERNAL</entry>
 
-<!-- CON SEGURIDAD -->
+--><!-- WITH SECURITY -->
 <!-- Properties qpid broker -->
-<!--<entry key="host">gtiiaprojects.dsic.upv.es</entry>-->
-<!--<entry key="port">5671</entry>-->
-<!--<entry key="vhost">test</entry>-->
-<!--<entry key="user">guest</entry>-->
-<!--<entry key="pass">guest</entry>-->
-<!--<entry key="ssl">true</entry>-->
+<entry key="host">locahost</entry>
+<entry key="port">5671</entry>
+<entry key="vhost">test</entry>
+<entry key="user">guest</entry>
+<entry key="pass">guest</entry>
+<entry key="ssl">true</entry>
 <!-- Secure qpid properties -->
-<!--<entry key="secureMode">true</entry>-->
-<!--<entry key="saslMechs">EXTERNAL</entry>-->
+<entry key="secureMode">true</entry>
+<entry key="saslMechs">EXTERNAL</entry>
 
 
 
