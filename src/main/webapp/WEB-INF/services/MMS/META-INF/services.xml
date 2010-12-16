@@ -71,7 +71,7 @@
 								name="org.apache.ws.security.crypto.merlin.keystore.type">JKS</ramp:property>
 
 
-							<ramp:property name="org.apache.ws.security.crypto.merlin.file">./security/MMSkeystore.jks</ramp:property>
+							<ramp:property name="org.apache.ws.security.crypto.merlin.file">../../bin/security/MMSkeystore.jks</ramp:property>
 							<ramp:property
 								name="org.apache.ws.security.crypto.merlin.keystore.password">password</ramp:property>
 
