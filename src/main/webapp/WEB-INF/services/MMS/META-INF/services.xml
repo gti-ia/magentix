@@ -73,7 +73,7 @@
 
 							<ramp:property name="org.apache.ws.security.crypto.merlin.file">../bin/security/MMSkeystore.jks</ramp:property>
 							<ramp:property
-								name="org.apache.ws.security.crypto.merlin.keystore.password">password</ramp:property>
+								name="org.apache.ws.security.crypto.merlin.keystore.password">MMS_PASSWORD</ramp:property>
 
 						</ramp:crypto>
 					</ramp:signatureCrypto>
