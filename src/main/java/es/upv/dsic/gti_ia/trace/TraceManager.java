@@ -320,7 +320,7 @@ public class TraceManager extends BaseAgent{
 	 *
 	 * @param msg Message received
 	 */
-	protected void onMessage(ACLMessage msg) {
+	synchronized protected void onMessage(ACLMessage msg) {
 		String content, serviceName, serviceDescription, originEntity;
 		Map<String, Object> arguments;
 		int index, index2, length;
@@ -1057,7 +1057,7 @@ public class TraceManager extends BaseAgent{
 		
 	}
 	
-	public void onTraceEvent(TraceEvent tEvent)
+	synchronized public void onTraceEvent(TraceEvent tEvent)
 	{
 		TracingEntity tEntity;
 		TracingService tService;

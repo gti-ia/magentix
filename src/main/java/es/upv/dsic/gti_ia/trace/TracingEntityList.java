@@ -28,7 +28,7 @@ public class TracingEntityList extends ArrayList<TracingEntity>{
 	 * 
 	 * @see es.upv.dsic.gti_ia.trace.TracingEntity#hasTheSameAidAs(AgentID)
 	 */
-	public TracingEntity getTEByAid(AgentID aid){
+	synchronized public TracingEntity getTEByAid(AgentID aid){
 		TracingEntity tEntity;
 		Iterator<TracingEntity> iter = this.iterator();
 		
