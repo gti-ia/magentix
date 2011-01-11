@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="QuantityMembers" targetNamespace="http://wtp" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://wtp" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://wtp">
+      <xsd:element name="QuantityMembers">
+        <xsd:complexType>
+          <xsd:sequence>
+             <xsd:element name="UnitID" type="xsd:string"/>
+             <xsd:element name="RoleID" type="xsd:string"/>
+             <xsd:element name="AgentID" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="QuantityMembersResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+          	<xsd:element name="Status" type="xsd:string"/>
+          	<xsd:element name="ErrorValue" type="xsd:string"/>
+          	<xsd:element name="Quantity" type="xsd:integer"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="QuantityMembersMessage">
+    <wsdl:part name="parameters" element="tns:QuantityMembers">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="QuantityMembersResponse">
+    <wsdl:part name="parameters" element="tns:QuantityMembersResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="QuantityMembersPortType">
+    <wsdl:operation name="QuantityMembers">
+      <wsdl:input message="tns:QuantityMembersMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:QuantityMembersResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="QuantityMembersSOAP" type="tns:QuantityMembersPortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="QuantityMembers">
+      <soap:operation soapAction="http://wtp"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="QuantityMembers">
+    <wsdl:port name="QuantityMembersSOAP" binding="tns:QuantityMembersSOAP">
+      <soap:address location="http://localhost:8080/OMS/services/QuantityMembers"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
