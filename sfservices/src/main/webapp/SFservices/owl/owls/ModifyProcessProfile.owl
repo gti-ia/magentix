@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+
+<!DOCTYPE uridef [
+  <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#">
+  <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <!ENTITY owl "http://www.w3.org/2002/07/owl#">
+  <!ENTITY service "http://www.daml.org/services/owl-s/1.1/Service.owl#">
+  <!ENTITY profile "http://www.daml.org/services/owl-s/1.1/Profile.owl#">
+  <!ENTITY process "http://www.daml.org/services/owl-s/1.1/Process.owl#">
+  <!ENTITY grounding "http://www.daml.org/services/owl-s/1.1/Grounding.owl#">
+  <!ENTITY xsd "http://www.w3.org/2001/XMLSchema">
+  <!ENTITY mind "http://localhost:8080/sfservices/SFservices/owl/owls/ModifyProcessProfile.owl">
+  <!ENTITY dir "http://localhost:8080/sfservices/services/ModifyProcess?wsdl">
+]>
+
+
+<rdf:RDF xmlns:rdf="&rdf;" xmlns:rdfs="&rdfs;" xmlns:owl="&owl;" xmlns:xsd="&xsd;#" 
+   xmlns:service="&service;" xmlns:process="&process;" xmlns:profile="&profile;" xmlns:grounding="&grounding;" 
+   xmlns:mind="&mind;#"      
+   xml:base="http://localhost:8080/sfservices/SFservices/owl/owls/ModifyProcessProfile.owl">
+
+
+
+<service:Service rdf:ID="ModifyProcessService">
+        <service:presents rdf:resource="#ModifyProcessProfile"/>
+</service:Service>
+
+
+       
+
+<profile:Profile rdf:ID="ModifyProcessProfile">
+    <service:isPresentedBy rdf:resource="#ModifyProcessService"/>
+    <profile:serviceName xml:lang="en">ModifyProcess</profile:serviceName>
+    <profile:hasInput rdf:resource="#ModifyProcessInputServiceImplementationID"/>
+    <profile:hasInput rdf:resource="#ModifyProcessInputServiceModel"/>
+    <profile:hasInput rdf:resource="#ModifyProcessInputServiceGrounding"/>
+<profile:hasInput rdf:resource="#ModifyProcessInputAgentID"/>
+   
+    <profile:hasOutput rdf:resource="#ModifyProcessOutputServiceStatus"/>
+   
+</profile:Profile>
+
+</rdf:RDF> 
