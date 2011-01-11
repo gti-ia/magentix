@@ -775,10 +775,25 @@ public class BaseAgent implements Runnable
 	 */
 	public void run()
 	{
+	    try{
 		init();
 		execute();
 		finalize();
 		terminate();
+	    }catch(Exception e)
+	    {
+		try
+		{
+		    finalize();
+		}
+		catch(Exception ex)
+		{
+		    terminate();
+		    logger.error(this.aid.getLocalName() + " ended execution incorrectly: "+ ex);
+		}
+		terminate();
+		logger.error(this.aid.getLocalName() + " ended execution incorrectly: "+ e);
+	    }
 	}
 	
 	/**
