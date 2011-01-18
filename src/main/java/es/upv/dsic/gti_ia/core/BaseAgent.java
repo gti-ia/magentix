@@ -85,6 +85,9 @@ public class BaseAgent implements Runnable
 	 */
 	private Thread											myThread;
 	
+	
+	private boolean traceServiceActivated = true;
+
 	/**
 	 * Class representing the communication listener.
 	 *
@@ -115,10 +118,12 @@ public class BaseAgent implements Runnable
 				e.printStackTrace();
 			}
 			
-			// Send trace events each time a message is received by an agent
-			sendTraceEvent(new TraceEvent(TracingService.DI_TracingServices[TracingService.MESSAGE_RECEIVED].getName(), aid, msg.getSender().toString()));
-			sendTraceEvent(new TraceEvent(TracingService.DI_TracingServices[TracingService.MESSAGE_RECEIVED_DETAIL].getName(), aid, msg.toString()));
-			
+			// Send trace events
+			if(traceServiceActivated){
+				sendTraceEvent(new TraceEvent(TracingService.DI_TracingServices[TracingService.MESSAGE_RECEIVED].getName(), aid, msg.getSender().toString()));
+				sendTraceEvent(new TraceEvent(TracingService.DI_TracingServices[TracingService.MESSAGE_RECEIVED_DETAIL].getName(), aid, msg.toString()));
+			}
+
 			onMessage(msg);
 		}
 		
@@ -449,10 +454,14 @@ public class BaseAgent implements Runnable
 			}
 			session.messageTransfer(xfr.getDestination(), xfr.getAcceptMode(), xfr.getAcquireMode(), new Header(deliveryProps, messageProperties), xfr.getBodyBytes());
 		}
+	
 		
-		// Send trace events each time a message is sent
-		sendTraceEvent(new TraceEvent(TracingService.DI_TracingServices[TracingService.MESSAGE_SENT].getName(), aid, msg.getReceiver().toString()));
-		sendTraceEvent(new TraceEvent(TracingService.DI_TracingServices[TracingService.MESSAGE_SENT_DETAIL].getName(), aid, msg.toString()));
+		// Send trace events
+		if(this.traceServiceActivated){
+			sendTraceEvent(new TraceEvent(TracingService.DI_TracingServices[TracingService.MESSAGE_SENT].getName(), aid, msg.getReceiver().toString()));
+			sendTraceEvent(new TraceEvent(TracingService.DI_TracingServices[TracingService.MESSAGE_SENT_DETAIL].getName(), aid, msg.toString()));
+		}
+
 		
 		/**
 		 * Permite incluir un arroba en el nombre del agente destinatario. Condición Obligatoria
@@ -1001,5 +1010,13 @@ public class BaseAgent implements Runnable
 		
 		return tEvent;
 	}
+	public void  activateTraceService(){
+		this.traceServiceActivated = true;
+	}
+	
+	public void deactivateTraceService(){
+		this.traceServiceActivated = false;
+	}
+
 	
 }
