@@ -951,8 +951,12 @@ public class TraceManager extends BaseAgent{
 					if (agree_response){
 						// Add subscription
 						tServiceSubscription=new TracingServiceSubscription(tEntity, originTEntity, tService);
-						tService.addSubscription(tServiceSubscription);
-						tEntity.addSubscription(tServiceSubscription);
+						synchronized(tService.getSubscriptions()){
+							tService.addSubscription(tServiceSubscription);
+						}
+						synchronized(tEntity.getSubscribedToTS()){
+							tEntity.addSubscription(tServiceSubscription);
+						}
 						
 						arguments.put("x-match", "all");
 				    	arguments.put("tracing_service", serviceName);
@@ -985,7 +989,9 @@ public class TraceManager extends BaseAgent{
 						//logger.info("[TRACE MANAGER]: sending message to " + msg.getReceiver().toString());
 					}else{
 						if (added_TSS){
-							TSSubscriberEntities.remove(tEntity);
+							synchronized(TSSubscriberEntities){
+								TSSubscriberEntities.remove(tEntity);
+							}
 						}
 					}
 				}
