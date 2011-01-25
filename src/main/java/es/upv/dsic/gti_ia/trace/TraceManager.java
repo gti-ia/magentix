@@ -168,8 +168,10 @@ public class TraceManager extends BaseAgent{
 		
 		// Add Trace Manager to the tracing entities list
 		tEntity=new TracingEntity(TracingEntity.AGENT, this.getAid());
-		TracingEntities.add(tEntity);
-
+		synchronized(TracingEntities){
+			TracingEntities.add(tEntity);
+		}
+		
 		if (!TracingServices.initializeWithDITracingServices()){
 			logger.error("[TRACE MANAGER]: Error while initializing the tracing service list");
 		}
@@ -178,8 +180,12 @@ public class TraceManager extends BaseAgent{
 		for (int i=0; i < TracingService.MAX_DI_TS; i++){
 			if (TracingService.DI_TracingServices[i].getRequestable()){
 				tService=TracingServices.getTS(TracingService.DI_TracingServices[i].getName());
-				tEntity.getPublishedTS().add(tService);
-				tService.getProviders().add(tEntity);
+				synchronized(tEntity.getPublishedTS()){
+					tEntity.getPublishedTS().add(tService);
+				}
+				synchronized(tService.getProviders()){
+					tService.getProviders().add(tEntity);
+				}
 			}
 		}
 		
@@ -320,7 +326,7 @@ public class TraceManager extends BaseAgent{
 	 *
 	 * @param msg Message received
 	 */
-	synchronized protected void onMessage(ACLMessage msg) {
+	protected void onMessage(ACLMessage msg) {
 		String content, serviceName, serviceDescription, originEntity;
 		Map<String, Object> arguments;
 		int index, index2, length;
@@ -346,6 +352,7 @@ public class TraceManager extends BaseAgent{
 		boolean added_TSP=false;
 		boolean linked_TE_TS=false;
 		boolean added_TSS=false;
+		boolean error;
 		
 		logger.info("[TRACE MANAGER]: Received [" + msg.getPerformativeInt() + "] -> " + msg.getContent());
 		
@@ -377,7 +384,10 @@ public class TraceManager extends BaseAgent{
 					}
 					else if (!TSProviderEntities.contains(tEntity)){
 						// Register tracing entity as service provider
-						if (TSProviderEntities.add(tEntity)){
+						synchronized(TSProviderEntities){
+							error=TSProviderEntities.add(tEntity);
+						}
+						if (error){
 							added_TSP=true;
 						}
 						else{
@@ -395,7 +405,10 @@ public class TraceManager extends BaseAgent{
 					if (agree_response && ((tService=TracingServices.getTS(serviceName)) == null)){
 						// The tracing service does not exist
 						tService = new TracingService(serviceName, serviceDescription);
-						if (TracingServices.add(tService)){
+						synchronized(TracingServices){
+							error=TracingServices.add(tService);
+						}
+						if (error){
 							added_TS=true;
 						}
 						else{
@@ -422,8 +435,15 @@ public class TraceManager extends BaseAgent{
 							logger.info("[TRACE MANAGER]: Sending REFUSE message to " + msg.getReceiver().toString());
 						}
 						else{
-							if ((!tService.getProviders().add(tEntity)) ||
-								(!tEntity.getPublishedTS().add(tService))){
+							synchronized(tService.getProviders()){
+								error=tService.getProviders().add(tEntity);
+							}
+							if (error){
+								synchronized(tEntity.getPublishedTS()){
+									error=tEntity.getPublishedTS().add(tService);
+								}
+							}
+							if (!error){
 								// Impossible to link properly tracing service and provider
 								agree_response=false;
 								response_msg = new ACLMessage(ACLMessage.REFUSE);
@@ -452,14 +472,22 @@ public class TraceManager extends BaseAgent{
 					}
 					else{
 						if (linked_TE_TS){
-							tService.getProviders().remove(tEntity);
-							tEntity.getPublishedTS().remove(tService);
+							synchronized(tService.getProviders()){
+								tService.getProviders().remove(tEntity);
+							}
+							synchronized(tEntity.getPublishedTS()){
+								tEntity.getPublishedTS().remove(tService);
+							}
 						}
 						if (added_TS){
-							TracingServices.remove(tService);
+							synchronized(TracingServices){
+								TracingServices.remove(tService);
+							}
 						}
 						if (added_TSP) {
-							TSProviderEntities.remove(tEntity);
+							synchronized(TSProviderEntities){
+								TSProviderEntities.remove(tEntity);
+							}
 						}
 					}
 				}
@@ -506,62 +534,74 @@ public class TraceManager extends BaseAgent{
 					
 					// Remove all subscriptions and send the corresponding trace events to subscriptors
 					if (agree_response){
-						TSS_iter = tService.getSubscriptions().iterator();
-						
-						if (tService.getProviders().size() == 1){
-							// Just one provider: remove all subscriptions
-							while(TSS_iter.hasNext()){
-								tServiceSubscription=TSS_iter.next();
-								
-								tServiceSubscription.getSubscriptorEntity().getSubscribedToTS().remove(tServiceSubscription);
-								if (tServiceSubscription.getSubscriptorEntity().getSubscribedToTS().size() == 0){
-									TSSubscriberEntities.remove(tServiceSubscription.getSubscriptorEntity());
-								}
-								TSS_iter.remove();
-								
-								if (tServiceSubscription.getAnyProvider()){
-									tEventContent=serviceName + "#any";
-									// Remove subscription
-									this.traceSession.exchangeUnbind(tServiceSubscription.getSubscriptorEntity().getAid().name+".trace", "amq.match", serviceName + "#any", Option.NONE);
-								}
-								else{
-									tEventContent=serviceName + msg.getSender();
-									// Remove subscription
-									this.traceSession.exchangeUnbind(tServiceSubscription.getSubscriptorEntity().getAid().name+".trace", "amq.match", serviceName + "#" + msg.getSender(), Option.NONE);
-								}
-								
-								tEvent=new TraceEvent(TracingService.DI_TracingServices[TracingService.UNAVAILABLE_TS].getName(),
-										new AgentID("system", this.getAid().protocol, this.getAid().host, this.getAid().port), tEventContent);
-								sendSystemTraceEvent(tEvent, tServiceSubscription.getSubscriptorEntity());
-							}
-						}
-						else{
-							while(TSS_iter.hasNext()){
-								tServiceSubscription=TSS_iter.next();
-								if (!tServiceSubscription.getAnyProvider() &&
-									tServiceSubscription.getOriginEntity().equals(tEntity)){
+						synchronized(tService.getSubscriptions()){
+							TSS_iter = tService.getSubscriptions().iterator();
+							
+							if (tService.getProviders().size() == 1){
+								// Just one provider: remove all subscriptions
+								while(TSS_iter.hasNext()){
+									tServiceSubscription=TSS_iter.next();
 									
 									tServiceSubscription.getSubscriptorEntity().getSubscribedToTS().remove(tServiceSubscription);
 									if (tServiceSubscription.getSubscriptorEntity().getSubscribedToTS().size() == 0){
-										TSSubscriberEntities.remove(tServiceSubscription.getSubscriptorEntity());
+										synchronized(TSSubscriberEntities){
+											TSSubscriberEntities.remove(tServiceSubscription.getSubscriptorEntity());
+										}
 									}
 									TSS_iter.remove();
 									
-									tEventContent=serviceName + msg.getSender();
-									// Remove subscription
-									this.traceSession.exchangeUnbind(tServiceSubscription.getSubscriptorEntity().getAid().name+".trace", "amq.match", serviceName + "#" + msg.getSender(), Option.NONE);
+									if (tServiceSubscription.getAnyProvider()){
+										tEventContent=serviceName + "#any";
+										// Remove subscription
+										this.traceSession.exchangeUnbind(tServiceSubscription.getSubscriptorEntity().getAid().name+".trace", "amq.match", serviceName + "#any", Option.NONE);
+									}
+									else{
+										tEventContent=serviceName + msg.getSender();
+										// Remove subscription
+										this.traceSession.exchangeUnbind(tServiceSubscription.getSubscriptorEntity().getAid().name+".trace", "amq.match", serviceName + "#" + msg.getSender(), Option.NONE);
+									}
 									
 									tEvent=new TraceEvent(TracingService.DI_TracingServices[TracingService.UNAVAILABLE_TS].getName(),
 											new AgentID("system", this.getAid().protocol, this.getAid().host, this.getAid().port), tEventContent);
 									sendSystemTraceEvent(tEvent, tServiceSubscription.getSubscriptorEntity());
 								}
 							}
+							else{
+								while(TSS_iter.hasNext()){
+									tServiceSubscription=TSS_iter.next();
+									if (!tServiceSubscription.getAnyProvider() &&
+										tServiceSubscription.getOriginEntity().equals(tEntity)){
+										
+										tServiceSubscription.getSubscriptorEntity().getSubscribedToTS().remove(tServiceSubscription);
+										if (tServiceSubscription.getSubscriptorEntity().getSubscribedToTS().size() == 0){
+											synchronized(TSSubscriberEntities){
+												TSSubscriberEntities.remove(tServiceSubscription.getSubscriptorEntity());
+											}
+										}
+										TSS_iter.remove();
+										
+										tEventContent=serviceName + msg.getSender();
+										// Remove subscription
+										this.traceSession.exchangeUnbind(tServiceSubscription.getSubscriptorEntity().getAid().name+".trace", "amq.match", serviceName + "#" + msg.getSender(), Option.NONE);
+										
+										tEvent=new TraceEvent(TracingService.DI_TracingServices[TracingService.UNAVAILABLE_TS].getName(),
+												new AgentID("system", this.getAid().protocol, this.getAid().host, this.getAid().port), tEventContent);
+										sendSystemTraceEvent(tEvent, tServiceSubscription.getSubscriptorEntity());
+									}
+								}
+							}
 						}
 						
-						tEntity.getPublishedTS().remove(tService);
-						tService.getProviders().remove(tEntity);
+						synchronized(tEntity.getPublishedTS()){
+							tEntity.getPublishedTS().remove(tService);
+						}
+						synchronized(tService.getProviders()){
+							tService.getProviders().remove(tEntity);
+						}
 						if (tEntity.getPublishedTS().size() == 0){
-							TSProviderEntities.remove(tEntity);
+							synchronized(TSProviderEntities){
+								TSProviderEntities.remove(tEntity);
+							}
 						}
 						
 						tEvent=new TraceEvent(TracingService.DI_TracingServices[TracingService.UNPUBLISHED_TRACING_SERVICE].getName(),
@@ -591,13 +631,15 @@ public class TraceManager extends BaseAgent{
 						
 						content="list#entities#"+ TracingEntities.size();
 						
-						TE_iter=TracingEntities.iterator();
-						
-						while(TE_iter.hasNext()){
-							tEntity=TE_iter.next();
+						synchronized(TracingEntities){
+							TE_iter=TracingEntities.iterator();
 							
-							content = content + "#" + tEntity.getType() + "#" +
-								tEntity.getAid().toString().length() + "#" + tEntity.getAid().toString();
+							while(TE_iter.hasNext()){
+								tEntity=TE_iter.next();
+								
+								content = content + "#" + tEntity.getType() + "#" +
+									tEntity.getAid().toString().length() + "#" + tEntity.getAid().toString();
+							}
 						}
 						
 						response_msg.setContent(content);
@@ -630,13 +672,15 @@ public class TraceManager extends BaseAgent{
 						
 						content="list#services#"+ TracingServices.size();
 						
-						TS_iter=TracingServices.iterator();
-						
-						while(TS_iter.hasNext()){
-							tService=TS_iter.next();
+						synchronized(TracingServices){
+							TS_iter=TracingServices.iterator();
 							
-							content = content + "#" + tService.getName().length() + "#" + tService.getName() +
-								"#" + tService.getDescription();
+							while(TS_iter.hasNext()){
+								tService=TS_iter.next();
+								
+								content = content + "#" + tService.getName().length() + "#" + tService.getName() +
+									"#" + tService.getDescription();
+							}
 						}
 						
 						response_msg.setContent(content);
@@ -732,7 +776,10 @@ public class TraceManager extends BaseAgent{
 						}
 						else if (!TSSubscriberEntities.contains(tEntity)){
 							// Register tracing entity as subscriber
-							if (!TSSubscriberEntities.add(tEntity)){
+							synchronized(TSSubscriberEntities){
+								error=TSSubscriberEntities.add(tEntity);
+							}
+							if (!error){
 								// Error adding the tracing entity
 								agree_response=false;
 								response_msg = new ACLMessage(ACLMessage.REFUSE);
@@ -744,34 +791,36 @@ public class TraceManager extends BaseAgent{
 						}
 						
 						if (agree_response){
-							TS_iter = TracingServices.iterator();
-							while(TS_iter.hasNext()){
-								tService=TS_iter.next();
-								// Subscribe to the tracing service
-								if (tEntity.getSubscribedToTS().getTSS(tEntity, null, tService) != null){
-									// The subscription already exists
-									continue;
-								}
-								else{
-									// Add subscription
-									tServiceSubscription=new TracingServiceSubscription(tEntity, null, tService);
-									tService.addSubscription(tServiceSubscription);
-									tEntity.addSubscription(tServiceSubscription);
-									
-									if (!tService.getName().contentEquals(TracingService.DI_TracingServices[TracingService.SUBSCRIBE].getName()) &&
-										!tService.getName().contentEquals(TracingService.DI_TracingServices[TracingService.UNSUBSCRIBE].getName())){
-										arguments.put("x-match", "all");
-								    	arguments.put("tracing_service", tService.getName());
-								    	
-								    	this.traceSession.exchangeBind(msg.getSender().name+".trace", "amq.match", tService.getName() + "#any", arguments);
+							synchronized(TracingServices){
+								TS_iter = TracingServices.iterator();
+								while(TS_iter.hasNext()){
+									tService=TS_iter.next();
+									// Subscribe to the tracing service
+									if (tEntity.getSubscribedToTS().getTSS(tEntity, null, tService) != null){
+										// The subscription already exists
+										continue;
 									}
+									else{
+										// Add subscription
+										tServiceSubscription=new TracingServiceSubscription(tEntity, null, tService);
+										tService.addSubscription(tServiceSubscription);
+										tEntity.addSubscription(tServiceSubscription);
+										
+										if (!tService.getName().contentEquals(TracingService.DI_TracingServices[TracingService.SUBSCRIBE].getName()) &&
+											!tService.getName().contentEquals(TracingService.DI_TracingServices[TracingService.UNSUBSCRIBE].getName())){
+											arguments.put("x-match", "all");
+									    	arguments.put("tracing_service", tService.getName());
+									    	
+									    	this.traceSession.exchangeBind(msg.getSender().name+".trace", "amq.match", tService.getName() + "#any", arguments);
+										}
 
-							    	// Send system trace event
-									tEventContent=tService.getName() + "#" + tService.getDescription().length() + " " + tService.getDescription() + "#any";
-									
-									tEvent=new TraceEvent(TracingService.DI_TracingServices[TracingService.SUBSCRIBE].getName(),
-											tEntity, tEventContent);
-									sendSystemTraceEvent(tEvent, tServiceSubscription.getSubscriptorEntity());
+								    	// Send system trace event
+										tEventContent=tService.getName() + "#" + tService.getDescription().length() + " " + tService.getDescription() + "#any";
+										
+										tEvent=new TraceEvent(TracingService.DI_TracingServices[TracingService.SUBSCRIBE].getName(),
+												tEntity, tEventContent);
+										sendSystemTraceEvent(tEvent, tServiceSubscription.getSubscriptorEntity());
+									}
 								}
 							}
 							/**
@@ -881,7 +930,10 @@ public class TraceManager extends BaseAgent{
 					}
 					else if (!TSSubscriberEntities.contains(tEntity)){
 						// Register tracing entity as subscriber
-						if (TSSubscriberEntities.add(tEntity)){
+						synchronized(TSSubscriberEntities){
+							error=TSSubscriberEntities.add(tEntity);
+						}
+						if (error){
 							added_TSS=true;
 						}
 						else{
@@ -1008,11 +1060,17 @@ public class TraceManager extends BaseAgent{
 				
 				if (agree_response){
 					// Remove subscription
-					tEntity.getSubscribedToTS().remove(tServiceSubscription);
-					if (tEntity.getSubscribedToTS().size() == 0){
-						TSSubscriberEntities.remove(tEntity);
+					synchronized(tEntity.getSubscribedToTS()){
+						tEntity.getSubscribedToTS().remove(tServiceSubscription);
 					}
-					tService.getSubscriptions().remove(tServiceSubscription);
+					if (tEntity.getSubscribedToTS().size() == 0){
+						synchronized(TSSubscriberEntities){
+							TSSubscriberEntities.remove(tEntity);
+						}
+					}
+					synchronized(tService.getSubscriptions()){
+						tService.getSubscriptions().remove(tServiceSubscription);
+					}
 					this.traceSession.exchangeUnbind(msg.getSender().name+".trace", "amq.match", serviceName + "#" + originEntity, Option.NONE);
 					//logger.info("[TRACE MANAGER]: unbinding " + msg.getSender().name+".trace from " + eventType);
 					
@@ -1057,7 +1115,7 @@ public class TraceManager extends BaseAgent{
 		
 	}
 	
-	synchronized public void onTraceEvent(TraceEvent tEvent)
+	public void onTraceEvent(TraceEvent tEvent)
 	{
 		TracingEntity tEntity;
 		TracingService tService;
@@ -1065,16 +1123,24 @@ public class TraceManager extends BaseAgent{
 		Iterator<TracingService> TS_iter;
 		Iterator<TracingServiceSubscription> TSS_iter;
 		TraceEvent responseTEvent;
+		boolean error;
 		
 		if (tEvent.getTracingService().contentEquals(TracingService.DI_TracingServices[TracingService.NEW_AGENT].getName()) == true){
 			// Register tracing entity
 			tEntity=new TracingEntity(TracingEntity.AGENT, new AgentID(tEvent.getContent()));
-			if (TracingEntities.add(tEntity)){
+			synchronized(TracingEntities){
+				error=TracingEntities.add(tEntity);
+			}
+			if (error){
 				for (int i=0; i < TracingService.MAX_DI_TS; i++){
 					if (TracingService.DI_TracingServices[i].getRequestable()){
 						tService=TracingServices.getTS(TracingService.DI_TracingServices[i].getName());
-						tEntity.getPublishedTS().add(tService);
-						tService.getProviders().add(tEntity);
+						synchronized(tEntity.getPublishedTS()){
+							tEntity.getPublishedTS().add(tService);
+						}
+						synchronized(tService.getProviders()){
+							tService.getProviders().add(tEntity);
+						}
 					}
 				}
 			}
@@ -1090,81 +1156,99 @@ public class TraceManager extends BaseAgent{
 			// Cancel subscriptions of that tracing entity to any tracing service
 			if (TSSubscriberEntities.contains(tEntity)){
 				// There are subscriptions to cancel
-				TSS_iter = tEntity.getSubscribedToTS().iterator();
-				while(TSS_iter.hasNext()){
-					tServiceSubscription=TSS_iter.next();
-					TracingServices.getTS(tServiceSubscription.getTracingService().getName()).getSubscriptions().remove(tServiceSubscription);
-					TSS_iter.remove();
+				synchronized(tEntity.getSubscribedToTS()){
+					TSS_iter = tEntity.getSubscribedToTS().iterator();
+					while(TSS_iter.hasNext()){
+						tServiceSubscription=TSS_iter.next();
+						TracingServices.getTS(tServiceSubscription.getTracingService().getName()).getSubscriptions().remove(tServiceSubscription);
+						TSS_iter.remove();
+					}
 				}
-				TSSubscriberEntities.remove(tEntity);
+				synchronized(TSSubscriberEntities){
+					TSSubscriberEntities.remove(tEntity);
+				}
 			}
 			
 			// Unpublish tracing services the tracing entity was offering
 			if (TSProviderEntities.contains(tEntity)){
 				// There are services which may have to be unpublished
-				TS_iter = tEntity.getPublishedTS().iterator();
-				while(TS_iter.hasNext()){
-					tService=TS_iter.next();
-					TSS_iter = tService.getSubscriptions().iterator();
-					
-					if (tService.getProviders().size() == 1){
-						// Just one provider: remove all subscriptions and inform to subscriptors
-						while(TSS_iter.hasNext()){
-							tServiceSubscription=TSS_iter.next();
+				synchronized(tEntity.getPublishedTS()){
+					TS_iter = tEntity.getPublishedTS().iterator();
+					while(TS_iter.hasNext()){
+						tService=TS_iter.next();
+						synchronized(tService.getSubscriptions()){
+							TSS_iter = tService.getSubscriptions().iterator();
 							
-							tServiceSubscription.getSubscriptorEntity().getSubscribedToTS().remove(tServiceSubscription);
-							if (tServiceSubscription.getSubscriptorEntity().getSubscribedToTS().size() == 0){
-								TSSubscriberEntities.remove(tServiceSubscription.getSubscriptorEntity());
-							}
-							TSS_iter.remove();
-							
-							responseTEvent = new TraceEvent(TracingService.DI_TracingServices[TracingService.UNAVAILABLE_TS].getName(), new AgentID("system", this.getAid().protocol, this.getAid().host, this.getAid().port), "");
-							
-							if (tServiceSubscription.getAnyProvider()){
-								responseTEvent.setContent(tService.getName() + "#any");
-								// Remove subscription
-								this.traceSession.exchangeUnbind(tServiceSubscription.getSubscriptorEntity().getAid().name+".trace", "amq.match", tService.getName() + "#any", Option.NONE);
+							if (tService.getProviders().size() == 1){
+								// Just one provider: remove all subscriptions and inform to subscriptors
+								while(TSS_iter.hasNext()){
+									tServiceSubscription=TSS_iter.next();
+									
+									tServiceSubscription.getSubscriptorEntity().getSubscribedToTS().remove(tServiceSubscription);
+									if (tServiceSubscription.getSubscriptorEntity().getSubscribedToTS().size() == 0){
+										synchronized(TSSubscriberEntities){
+											TSSubscriberEntities.remove(tServiceSubscription.getSubscriptorEntity());
+										}
+									}
+									TSS_iter.remove();
+									
+									responseTEvent = new TraceEvent(TracingService.DI_TracingServices[TracingService.UNAVAILABLE_TS].getName(), new AgentID("system", this.getAid().protocol, this.getAid().host, this.getAid().port), "");
+									
+									if (tServiceSubscription.getAnyProvider()){
+										responseTEvent.setContent(tService.getName() + "#any");
+										// Remove subscription
+										this.traceSession.exchangeUnbind(tServiceSubscription.getSubscriptorEntity().getAid().name+".trace", "amq.match", tService.getName() + "#any", Option.NONE);
+									}
+									else{
+										responseTEvent.setContent(tService.getName() + tEntity.getAid().toString());
+										// Remove subscription
+										this.traceSession.exchangeUnbind(tServiceSubscription.getSubscriptorEntity().getAid().name+".trace",
+												"amq.match", tService.getName() + tEntity.getAid().toString(), Option.NONE);
+									}
+									
+									sendSystemTraceEvent(responseTEvent, tServiceSubscription.getSubscriptorEntity());
+								}
 							}
 							else{
-								responseTEvent.setContent(tService.getName() + tEntity.getAid().toString());
-								// Remove subscription
-								this.traceSession.exchangeUnbind(tServiceSubscription.getSubscriptorEntity().getAid().name+".trace",
-										"amq.match", tService.getName() + tEntity.getAid().toString(), Option.NONE);
-							}
-							
-							sendSystemTraceEvent(responseTEvent, tServiceSubscription.getSubscriptorEntity());
-						}
-					}
-					else{
-						while(TSS_iter.hasNext()){
-							tServiceSubscription=TSS_iter.next();
-							if (!tServiceSubscription.getAnyProvider() &&
-								tServiceSubscription.getOriginEntity().equals(tEntity)){
-								
-								tServiceSubscription.getSubscriptorEntity().getSubscribedToTS().remove(tServiceSubscription);
-								if (tServiceSubscription.getSubscriptorEntity().getSubscribedToTS().size() == 0){
-									TSSubscriberEntities.remove(tServiceSubscription.getSubscriptorEntity());
+								while(TSS_iter.hasNext()){
+									tServiceSubscription=TSS_iter.next();
+									if (!tServiceSubscription.getAnyProvider() &&
+										tServiceSubscription.getOriginEntity().equals(tEntity)){
+										
+										tServiceSubscription.getSubscriptorEntity().getSubscribedToTS().remove(tServiceSubscription);
+										if (tServiceSubscription.getSubscriptorEntity().getSubscribedToTS().size() == 0){
+											synchronized(TSSubscriberEntities){
+												TSSubscriberEntities.remove(tServiceSubscription.getSubscriptorEntity());
+											}
+										}
+										TSS_iter.remove();
+										
+										responseTEvent = new TraceEvent(TracingService.DI_TracingServices[TracingService.UNAVAILABLE_TS].getName(),
+												new AgentID("system", this.getAid().protocol, this.getAid().host, this.getAid().port),
+												tService.getName() + tEntity.getAid().toString());
+										// Remove subscription
+										this.traceSession.exchangeUnbind(tServiceSubscription.getSubscriptorEntity().getAid().name+".trace",
+												"amq.match", tService.getName() + tEntity.getAid().toString(), Option.NONE);
+										
+										sendSystemTraceEvent(responseTEvent, tServiceSubscription.getSubscriptorEntity());
+									}
 								}
-								TSS_iter.remove();
-								
-								responseTEvent = new TraceEvent(TracingService.DI_TracingServices[TracingService.UNAVAILABLE_TS].getName(),
-										new AgentID("system", this.getAid().protocol, this.getAid().host, this.getAid().port),
-										tService.getName() + tEntity.getAid().toString());
-								// Remove subscription
-								this.traceSession.exchangeUnbind(tServiceSubscription.getSubscriptorEntity().getAid().name+".trace",
-										"amq.match", tService.getName() + tEntity.getAid().toString(), Option.NONE);
-								
-								sendSystemTraceEvent(responseTEvent, tServiceSubscription.getSubscriptorEntity());
 							}
 						}
+						TS_iter.remove();
+						synchronized(tService.getProviders()){
+							tService.getProviders().remove(tEntity);
+						}
 					}
-					TS_iter.remove();
-					tService.getProviders().remove(tEntity);
 				}
-				TSProviderEntities.remove(tEntity);
+				
+				synchronized(TSProviderEntities){
+					TSProviderEntities.remove(tEntity);
+				}
 			}
-			TracingEntities.remove(tEntity);
+			synchronized(TracingEntities){
+				TracingEntities.remove(tEntity);
+			}
 		}
 	}
-	
 }

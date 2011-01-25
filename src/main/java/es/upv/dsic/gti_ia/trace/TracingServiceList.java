@@ -29,7 +29,7 @@ public class TracingServiceList extends ArrayList<TracingService> {
 	 * @return Returns true if all domain independent tracing services were added
 	 * 		to the list or false otherwise
 	 */
-	public boolean initializeWithDITracingServices(){
+	public synchronized boolean initializeWithDITracingServices(){
 		int i;
 	
 		logger.info("Initialising with DI Tracing Services: Adding " + TracingService.MAX_DI_TS + " services");
@@ -51,7 +51,7 @@ public class TracingServiceList extends ArrayList<TracingService> {
 	 * @return returns the tracing service which has that name if it exists in the list
 	 * 		or null if no tracing service with the specified name is found 
 	 */
-	public TracingService getTS(String serviceName){
+	public synchronized TracingService getTS(String serviceName){
 		TracingService tService;
 		Iterator<TracingService> iter = this.iterator();
 		

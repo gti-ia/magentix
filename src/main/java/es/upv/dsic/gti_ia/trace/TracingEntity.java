@@ -163,7 +163,7 @@ public class TracingEntity implements Serializable{
 	 * @param newSubscription
 	 * 		TracingServiceSubscription to be added to the list
 	 */
-	public boolean addSubscription (TracingServiceSubscription newSubscription){
+	public synchronized boolean addSubscription (TracingServiceSubscription newSubscription){
 		return this.subscribedToTS.add(newSubscription);
 	}
 	
@@ -184,7 +184,7 @@ public class TracingEntity implements Serializable{
 	 * 
 	 * @see es.upv.dsic.gti_ia.trace.TracingServiceSubscriptionList
 	 */
-	public boolean removeSubscription(TracingServiceSubscription TSSubscription){
+	public synchronized boolean removeSubscription(TracingServiceSubscription TSSubscription){
 		return this.subscribedToTS.remove(TSSubscription);
 	}
 	

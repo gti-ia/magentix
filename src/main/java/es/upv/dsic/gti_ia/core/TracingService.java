@@ -341,7 +341,7 @@ public class TracingService implements Serializable{
 	 * @see es.upv.dsic.gti_ia.trace.TracingEntityList#add(TracingEntity)
 	 * 
 	 */
-	public boolean addServiceProvider(TracingEntity provider){
+	public synchronized boolean addServiceProvider(TracingEntity provider){
 		return this.providers.add(provider);
 	}
 	
@@ -355,7 +355,7 @@ public class TracingService implements Serializable{
 	 * @see es.upv.dsic.gti_ia.trace.TracingServiceSubscriptionList#add(TracingServiceSubscription)
 	 * @see es.upv.dsic.gti_ia.trace.TracingServiceSubscription
 	 */
-	public boolean addSubscription (TracingServiceSubscription subscription){
+	public synchronized boolean addSubscription (TracingServiceSubscription subscription){
 		return this.subscriptions.add(subscription);
 	}
 	
@@ -370,7 +370,7 @@ public class TracingService implements Serializable{
 	 * 
 	 * @see es.upv.dsic.gti_ia.trace.TracingEntityList#remove(Object)
 	 */
-	public boolean removeProvider(AgentID providerAid){
+	public synchronized boolean removeProvider(AgentID providerAid){
 		return this.providers.remove(new TracingEntity(TracingEntity.AGENT, providerAid));
 	}
 }

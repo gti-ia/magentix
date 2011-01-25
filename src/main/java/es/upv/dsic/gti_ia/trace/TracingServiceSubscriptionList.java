@@ -29,7 +29,7 @@ public class TracingServiceSubscriptionList extends ArrayList<TracingServiceSubs
 	 * 		The corresponding TracingServiceSusbscription in case it exists
 	 * 		or null otherwise
 	 */
-	public TracingServiceSubscription getTSS(TracingEntity subscriberEntity, TracingEntity originEntity, TracingService tService){
+	public synchronized TracingServiceSubscription getTSS(TracingEntity subscriberEntity, TracingEntity originEntity, TracingService tService){
 		TracingServiceSubscription tServiceSubscription;
 		Iterator<TracingServiceSubscription> iter = this.iterator();
 		
