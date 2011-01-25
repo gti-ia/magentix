@@ -52,9 +52,11 @@ public class Subscriber extends BaseAgent{
 			service1=generator.nextInt(2)+1;
 			service2=generator.nextInt(2)+1;
 		}
-//		System.out.println("[SUBSCRIBER " + this.getName() + "]: Subscribing to publisher"+publisher_number1+"<DD_Test_TS_"+service1+">");
+		Thread.sleep(500);
+		System.out.println("[SUBSCRIBER " + this.getName() + "]: Subscribing to publisher"+publisher_number1+"<DD_Test_TS_"+service1+">");
 		TraceInteract.requestTracingService(this, "publisher"+publisher_number1+"<DD_Test_TS_"+service1+">");
-//		System.out.println("[SUBSCRIBER " + this.getName() + "]: Subscribing to publisher"+publisher_number2+"<DD_Test_TS_"+service2+">");
+		Thread.sleep(500);
+		System.out.println("[SUBSCRIBER " + this.getName() + "]: Subscribing to publisher"+publisher_number2+"<DD_Test_TS_"+service2+">");
 		TraceInteract.requestTracingService(this, "publisher"+publisher_number2+"<DD_Test_TS_"+service2+">");
 	}
 
@@ -77,7 +79,6 @@ public class Subscriber extends BaseAgent{
 		try {
 			Thread.sleep(3000);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -107,6 +108,6 @@ public class Subscriber extends BaseAgent{
 	}
 	
 	public void onMessage(ACLMessage msg){
-//		System.out.println("[SUBSCRIBER " + this.getName() + "]: Received from " + msg.getSender().toString() + ": " + msg.getContent());
+//		System.out.println("[SUBSCRIBER " + this.getName() + "]: Received from " + msg.getSender().toString() + ": " + msg.getPerformative() + " "+ msg.getContent());
 	}
 }

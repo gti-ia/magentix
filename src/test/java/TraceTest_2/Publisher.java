@@ -54,7 +54,6 @@ public class Publisher extends BaseAgent {
 				sendTraceEvent(tEvent);
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
@@ -63,7 +62,6 @@ public class Publisher extends BaseAgent {
 		try {
 			Thread.sleep(5000);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -74,7 +72,6 @@ public class Publisher extends BaseAgent {
 		try {
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -85,7 +82,7 @@ public class Publisher extends BaseAgent {
 		/**
 		 * When a trace event arrives, it prints it on the screen
 		 */
-		System.out.println("[PUBLISHER]: Received from " + tEvent.getOriginEntity().getAid().name + ": " + tEvent.getTracingService() + ":" + tEvent.getContent());
+//		System.out.println("[PUBLISHER]: Received from " + tEvent.getOriginEntity().getAid().name + ": " + tEvent.getTracingService() + ":" + tEvent.getContent());
 	}
 	
 	public void onMessage(ACLMessage msg){
