@@ -525,6 +525,14 @@ public class BaseAgent implements Runnable
 		return session;
 	}
 	/**
+	 * Unbind the exchange and the agent queue
+	 */
+	private void unbindTraceExchange()
+	{
+		this.session.exchangeUnbind(aid.name+".trace", "amq.match", aid.name + ".system.all");
+		this.session.exchangeUnbind(aid.name+".trace", "amq.match", aid.name + ".system.direct");
+	}
+	/**
 	 * Creates queue where the agent will receive trace events.
 	 * The queue name is the name of the agent (aid.name) followed by the suffix ".trace"
 	 */
@@ -771,6 +779,7 @@ public class BaseAgent implements Runnable
 	protected void terminate()
 	{
 		this.unbindExchange();
+		this.unbindTraceExchange();
 		
 		session.queueDelete(aid.name);
 		session.close();
