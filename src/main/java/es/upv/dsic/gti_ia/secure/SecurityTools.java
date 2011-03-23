@@ -165,7 +165,7 @@ public class SecurityTools {
 				DataHandler re = stub.mMS(name, dataHandler);
 
 				//re is a result of service request.
-				if (re != null)
+				try
 				{
 					InputStream inputDataHandler = re.getInputStream();
 					byte[] arrayByte = IOUtils.toByteArray(inputDataHandler);
@@ -177,16 +177,22 @@ public class SecurityTools {
 					
 					//The signed certificate is added in keystore.
 					setKeyEntry(name, propSecurityUser, kp, certificates);
+					
+					//Todo ha ido correctamente.
+					return true;
 
 				}
-				else
+				catch(Exception e)
 				{
-					throw new Exception("MMS is not available now or the agent certificate is unauthorized");
+				    	//El MMS le ha denegado la emision del certificado.
+				    	logger.error("MMS is not available now or the user not has the permissions to acquire the name " + Agentname);
+					return false;
 				}
 
 
 			}
-			return true;
+			else //Tiene un certificado emitido por el MMS valido.
+			    return true;
 		} catch (Exception e) {
 			logger.error(e);
 			return false;
