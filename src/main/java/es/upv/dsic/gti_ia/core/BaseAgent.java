@@ -7,9 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
@@ -88,6 +86,14 @@ public class BaseAgent implements Runnable
 	
 	private boolean traceServiceActivated = true;
 
+	
+	private FileInputStream propFile;
+
+	private Properties propSecurity;
+
+	private SecurityTools st;
+	    
+	    
 	/**
 	 * Class representing the communication listener.
 	 *
@@ -202,8 +208,8 @@ public class BaseAgent implements Runnable
 		if (c.isSecureMode())
 		{
 			
-			FileInputStream propFile = new FileInputStream("./configuration/securityUser.properties");
-			Properties propSecurity = new Properties();
+			propFile = new FileInputStream("./configuration/securityUser.properties");
+			propSecurity = new Properties();
 			try
 			{
 				// Nuevo fichero para la configuración de datos para la seguridad.
@@ -220,7 +226,7 @@ public class BaseAgent implements Runnable
 				e.printStackTrace();
 			}
 			
-			SecurityTools st = SecurityTools.GetInstance();
+			st = SecurityTools.GetInstance();
 			
 			// Vemos si el usuario ya posee algún certificado para ese agente. Se comprueba también
 			// la validez.
@@ -314,6 +320,94 @@ public class BaseAgent implements Runnable
 		// Send trace event NEW_AGENT
 		sendSystemTraceEvent(new TraceEvent(TracingService.DI_TracingServices[TracingService.NEW_AGENT].getName(), new AgentID("system", aid.protocol, aid.host, aid.port), aid.toString()));
 	}
+	
+	  /**
+	     * 	Changes the name of the agent to acquire a new identity.
+	     * @param _aid the new agent id 
+	     * @throws Exception
+	     */
+	    public void changeIdentity(AgentID _aid) throws Exception
+	    {
+
+		//Si el MMS nos da un certificado para el agente es que podemos crear la conexión para ese agente.
+		//o si ya tenemos un certificado válido para ese agente.
+		if (st.generateAllProcessCertificate(_aid.name, propSecurity))
+		{
+
+
+		    ConnectionSettings connectSettings = new ConnectionSettings();
+
+		    //Se abre por que se ha cerrado anteriormente.
+		    propFile = new FileInputStream("./configuration/securityUser.properties");
+		    propSecurity.load(propFile);
+
+		    /***************************************************************************
+		     * Conexión como agente anterior
+		     **************************************************************************/
+
+		    unbindExchange();
+		    unbindTraceExchange();
+
+		    session.queueDelete(aid.name);
+		    traceSession.queueDelete(aid.name + ".trace");
+
+		    session.close();
+		    traceSession.close();
+
+
+		    /***************************************************************************
+		     * Conexión como nuevo agente
+		     **************************************************************************/
+		    aid = _aid;
+		    connection = null;
+
+		    String certAlias = aid.name;
+
+		    connectSettings.setHost(c.getqpidHost());
+		    connectSettings.setPort(c.getqpidPort());
+		    connectSettings.setVhost(c.getqpidVhost());
+		    connectSettings.setUsername(c.getqpidUser());
+		    connectSettings.setPassword(c.getqpidPassword());
+		    connectSettings.setUseSSL(c.getqpidSSL());
+		    connectSettings.setSaslMechs(c.getqpidsaslMechs());
+		    connectSettings.setCertAlias(certAlias.toLowerCase());
+
+		    connectSettings.setKeyStorePassword(propSecurity.getProperty("KeyStorePassword"));
+		    connectSettings.setKeyStorePath(propSecurity.getProperty("KeyStorePath"));
+		    connectSettings.setTrustStorePassword(propSecurity.getProperty("TrustStorePassword"));
+		    connectSettings.setTrustStorePath(propSecurity.getProperty("TrustStorePath"));
+
+		    connection = new Connection();
+		    connection.connect(connectSettings);
+
+
+
+		    //Create new sessions.
+		    session = createSession();
+		    traceSession = createTraceSession();
+
+
+		    createQueue();
+		    createBind();
+		    createSubscription();
+
+		    // Install the listener for trace events
+		    createEventQueue();
+		    createTraceBind();
+		    createTraceSubscription();
+
+		    propFile.close();
+
+		    System.out.println("Identity "+this.aid +" changed successfully!!");
+
+		}
+		else
+		{
+		    logger.error("Agent ID " + _aid.name + " already exists on the platform");
+		}
+	    }
+	
+	
 	
 	// Cuando el agente infringe alguna regla de seguridad, la política del broker es destruir la
 	// sesión
