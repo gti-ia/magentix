@@ -14,7 +14,7 @@ USE security;
 --
 -- Definition of table `serviceProfileID`
 --
-CREATE TABLE `security`.`registers` (
+CREATE TABLE IF NOT EXISTS `security`.`registers`(
   `user` TEXT  NOT NULL,
   `dateFirst` TEXT  NOT NULL,
   `dateLast` TEXT  NOT NULL,

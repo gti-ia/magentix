@@ -10,10 +10,10 @@ usage()
 
 case $# in
 	1)
-		#Cargamos el schema MMS.sql, creara el schema thomas
+		#Cargamos el schema MMS.sql, creara el schema security
 		sudo ../../mysql/bin/mysql --user=root --password=$1  < MMS.sql
 
-		#Creamos el usuario thomas thomas y le damos permisos sobre la base de datos thomas
+		#Creamos el usuario mms mms y le damos permisos sobre la base de datos security
 		sudo ../../mysql/bin/mysql --user=root --password=$1 < mysqldata;;
 
 	*)usage
