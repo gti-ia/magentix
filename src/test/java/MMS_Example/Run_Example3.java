@@ -34,7 +34,7 @@ public class Run_Example3 {
 	    /**
 	     * Instantiating a consumer agent
 	     */
-	    Agent agent = new Agent(new AgentID("agentA"));
+	    AgentA_C agent = new AgentA_C(new AgentID("agentA"));
 
 	    /**
 	     * Execute the agents

@@ -14,13 +14,13 @@ import es.upv.dsic.gti_ia.core.SingleAgent;
  * 
  * @author Joan Bellver - jbellver@dsic.upv.es
  */
-public class Agent extends SingleAgent {
+public class AgentA_C extends SingleAgent {
 
     LinkedBlockingQueue<MessageTransfer> internalQueue;
 
 
 
-    public Agent(AgentID aid) throws Exception {
+    public AgentA_C(AgentID aid) throws Exception {
 	super(aid);
     }
 
