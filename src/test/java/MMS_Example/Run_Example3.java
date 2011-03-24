@@ -32,9 +32,10 @@ public class Run_Example3 {
 	try {
 
 	    /**
+	     * 
 	     * Instantiating a consumer agent
 	     */
-	    AgentA_C agent = new AgentA_C(new AgentID("agentA"));
+	    AgentAC agent = new AgentAC(new AgentID("agentA"));
 
 	    /**
 	     * Execute the agents

@@ -5,7 +5,6 @@ import org.apache.qpid.transport.MessageTransfer;
 
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
-import es.upv.dsic.gti_ia.core.BaseAgent;
 import es.upv.dsic.gti_ia.core.SingleAgent;
 
 /**
@@ -16,7 +15,6 @@ public class AgentB extends SingleAgent {
 
     LinkedBlockingQueue<MessageTransfer> internalQueue;
 
-    private boolean received = false;
 
     public AgentB(AgentID aid) throws Exception {
 	super(aid);

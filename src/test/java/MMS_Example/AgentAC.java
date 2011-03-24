@@ -14,13 +14,13 @@ import es.upv.dsic.gti_ia.core.SingleAgent;
  * 
  * @author Joan Bellver - jbellver@dsic.upv.es
  */
-public class AgentA_C extends SingleAgent {
+public class AgentAC extends SingleAgent {
 
     LinkedBlockingQueue<MessageTransfer> internalQueue;
 
 
 
-    public AgentA_C(AgentID aid) throws Exception {
+    public AgentAC(AgentID aid) throws Exception {
 	super(aid);
     }
 
@@ -44,28 +44,28 @@ public class AgentA_C extends SingleAgent {
 	    //Espero la respuesta
 	    ACLMessage msgResceived = receiveACLMessage();
 	    System.out.println("["+this.getAid().getLocalName()+"] Message received from " + msgResceived.getSender()+ ". The content is: "+ msgResceived.getContent());
-	    
+
 	    try{
-	    changeIdentity(new AgentID("agentB"));
+		changeIdentity(new AgentID("agentC"));
 	    }catch(Exception e)
 	    {
 		logger.error(e.getMessage());
-		
+
 	    }
-	    
-	   
-	    
+
+
+
 	    ACLMessage msgResponse = new ACLMessage(ACLMessage.REQUEST);
 	    msgResponse.setReceiver(receiver);
 	    msgResponse.setSender(this.getAid());
 	    msgResponse.setContent("Hello, I'm " + getName() );
 
 	    send(msgResponse);
-	    
+
 	    //Espero la respuesta
 	    ACLMessage msgResceived2 = receiveACLMessage();
 	    System.out.println("["+this.getAid().getLocalName()+"] Message received from " + msgResceived2.getSender()+ ". The content is: "+ msgResceived2.getContent());
-	    
+
 
 	} catch (Exception e) {
 	    logger.error(e.getMessage());
