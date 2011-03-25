@@ -1,0 +1,30 @@
+<assembly>
+	<id>jar-with-dependencies</id>
+	<baseDirectory>/</baseDirectory>
+	<moduleSets>
+		<moduleSet>
+			<includes>
+				<include>org.apache.axis2:addressing</include>
+			</includes>
+		</moduleSet>
+	</moduleSets>
+	<dependencySets>
+		<dependencySet>
+			<unpack>true</unpack>
+			<outputDirectory></outputDirectory>
+			
+				<excludes>
+					<exclude>org.apache.axis2:addressing</exclude>
+					<exclude>org.apache.rampart:rampart-core</exclude>
+					<exclude>org.apache.rampart:rampart-policy</exclude>
+					<exclude>org.mozilla:jss</exclude>
+					<exclude>bouncycastle:bcprov-jdk13:jar:132</exclude>
+				</excludes>
+
+		</dependencySet>
+	</dependencySets>
+	<formats>
+		<!-- Formatos en el que queremos el zip -->
+		<format>zip</format>
+	</formats>
+</assembly>
