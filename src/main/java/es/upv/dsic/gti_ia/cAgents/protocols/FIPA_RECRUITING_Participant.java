@@ -152,7 +152,7 @@ public abstract class FIPA_RECRUITING_Participant {
 			messageToSend.setPerformative(ACLMessage.FAILURE);
 			messageToSend.setHeader("reason", "no-match");
 			messageToSend.setReceiver(initiator);
-			doRefuse(myProcessor, messageToSend);
+			doFailureNoMatch(myProcessor, messageToSend);  
 			return "FINAL_RECRUITING_PARTICIPANT";
 		}
 	}

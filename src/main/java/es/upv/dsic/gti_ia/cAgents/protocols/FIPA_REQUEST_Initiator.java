@@ -218,7 +218,7 @@ public abstract class FIPA_REQUEST_Initiator {
 		
 		ReceiveState NOT_UNDERSTOOD = new ReceiveState("NOT_UNDERSTOOD_REQUEST_INITIATOR");
 		NOT_UNDERSTOOD.setMethod(new NOT_UNDERSTOOD_Method());
-		filter = new MessageFilter("performative = NOT_UNDERSTOOD");
+		filter = new MessageFilter("performative = "+ACLMessage.getPerformative(ACLMessage.NOT_UNDERSTOOD));
 		NOT_UNDERSTOOD.setAcceptFilter(filter);
 		processor.registerState(NOT_UNDERSTOOD);
 		processor.addTransition("FIRST_WAIT_REQUEST_INITIATOR", "NOT_UNDERSTOOD_REQUEST_INITIATOR");

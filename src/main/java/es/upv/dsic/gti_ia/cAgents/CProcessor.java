@@ -126,17 +126,20 @@ public class CProcessor implements Runnable, Cloneable {
 
 		this.lockMyAgent();
 
-		//nextSubID = nextSubID + 1;
+		// nextSubID = nextSubID + 1;
 
-		//initalMessage.setConversationId(this.conversationID + "." + nextSubID);
-		initalMessage.setConversationId(myAgent.newConversationID());
+		// initalMessage.setConversationId(this.conversationID + "." +
+		// nextSubID);
+		if (myAgent.initiatorFactories.size() > 0) {
+			initalMessage.setConversationId(myAgent.newConversationID());
 
-		myAgent.startConversation(initalMessage, this, true);
+			myAgent.startConversation(initalMessage, this, true);
 
-		try {
-			syncConversationFinished.await();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
+			try {
+				syncConversationFinished.await();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 		this.unlockMyAgent();
 		return this.syncConversationResponse;
