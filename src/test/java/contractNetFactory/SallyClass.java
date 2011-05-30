@@ -17,8 +17,8 @@ class SallyClass extends CAgent {
 
 	protected void execution(CProcessor myProcessor, ACLMessage welcomeMessage) {
 
-		System.out.println(myProcessor.getMyAgent().getName()
-				+ ": the welcome message is " + welcomeMessage.getContent());
+		//System.out.println(myProcessor.getMyAgent().getName()
+			//	+ ": the welcome message is " + welcomeMessage.getContent());
 		
 		// Each agent's conversation is carried out by a CProcessor.
 		// CProcessors are created by the CFactories in response
@@ -51,7 +51,7 @@ class SallyClass extends CAgent {
 					ACLMessage messageToSend) {
 				messageToSend.setSender(getAid());
 				messageToSend.setReceiver(myProcessor.getLastReceivedMessage().getSender());
-				messageToSend.setContent("I'm "+getAid()+". Ok. See you tomorrow!");
+				messageToSend.setContent("I'm "+getName()+". Ok. See you tomorrow!");
 				messageToSend.setPerformative(ACLMessage.INFORM);
 				messageToSend.setProtocol("fipa-contract-net");				
 			}
@@ -65,14 +65,15 @@ class SallyClass extends CAgent {
 				messageToSend.setReceiver(myProcessor.getLastReceivedMessage().getSender());
 				messageToSend.setContent(String.valueOf(x));
 				messageToSend.setPerformative(ACLMessage.PROPOSE);
-				messageToSend.setProtocol("fipa-contract-net");						
+				messageToSend.setProtocol("fipa-contract-net");	
+				System.out.println(getName()+": I propose to expend "+messageToSend.getContent());
 			}
 
 			@Override
 			protected String doTask(CProcessor myProcessor,
 					ACLMessage solicitMessage) {
 				// no action to take, just inform
-				System.out.println("I'm "+getName()+" my proposal was accepted");
+				System.out.println(getName()+": my proposal was accepted!");
 				return "SEND_INFORM";
 			}
 

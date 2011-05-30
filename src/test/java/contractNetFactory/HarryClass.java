@@ -19,8 +19,8 @@ class HarryClass extends CAgent {
 
 		ACLMessage msg;
 
-		System.out.println(myProcessor.getMyAgent().getName()
-				+ ": the welcome message is " + welcomeMessage.getContent());
+		//System.out.println(myProcessor.getMyAgent().getName()
+			//	+ ": the welcome message is " + welcomeMessage.getContent());
 
 		// Each agent's conversation is carried out by a CProcessor.
 		// CProcessors are created by the CFactories in response
@@ -52,10 +52,10 @@ class HarryClass extends CAgent {
 						index = i;
 					}
 				}
-				
+				System.out.println(getName()+": I don't want to run out of money, thus I will choose the cheapest proposal");
 				for(int i=0; i < proposes.size(); i++){
 					if(i == index){ // accept the cheaper proposal
-						System.out.println("I accept "+proposes.get(i).getSender()+"'s proposal");
+						System.out.println(getName()+": I accept "+proposes.get(i).getSender().name+"'s proposal");
 						ACLMessage accept = new ACLMessage(ACLMessage.ACCEPT_PROPOSAL);
 						accept.setContent("I accept your proposal");
 						accept.setReceiver(proposes.get(i).getSender());
@@ -64,7 +64,7 @@ class HarryClass extends CAgent {
 						acceptances.add(accept);
 					}
 					else{ // reject the rest
-						System.out.println("I reject "+proposes.get(i).getSender()+"'s proposal");
+						System.out.println(getName()+": I reject "+proposes.get(i).getSender().name+"'s proposal");
 						ACLMessage reject = new ACLMessage(ACLMessage.REJECT_PROPOSAL);
 						reject.setContent("I don't like your proposal, I reject it");
 						reject.setReceiver(proposes.get(1).getSender());
@@ -79,7 +79,7 @@ class HarryClass extends CAgent {
 			protected void doReceiveInform(CProcessor myProcessor,
 					ACLMessage msg) {
 				// receive accepted proposal result
-				System.out.println("Result: "+msg.getContent());
+				System.out.println(getName()+": I received the message: "+msg.getContent());
 				
 			}
 			
@@ -90,7 +90,7 @@ class HarryClass extends CAgent {
 
 		msg = new ACLMessage(ACLMessage.CFP);
 		msg.addReceiver(new AgentID("Sally"));
-		msg.addReceiver(new AgentID("Sally2"));
+		msg.addReceiver(new AgentID("Mary"));
 		msg.setContent("How much do you want to spend tomorrow in the dinner?");
 
 		// The agent creates the CFactory that creates processors that initiate
@@ -111,6 +111,7 @@ class HarryClass extends CAgent {
 		// finally the new conversation starts. Because it is synchronous, 
 		// the current interaction halts until the new conversation ends.
 
+		System.out.println("I ask for proposals to Mary and Sally");
 		myProcessor.createSyncConversation(msg);
 
 		myProcessor.ShutdownAgent();

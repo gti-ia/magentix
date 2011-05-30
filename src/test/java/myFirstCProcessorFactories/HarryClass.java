@@ -60,10 +60,10 @@ class HarryClass extends CAgent {
 
 		class PURPOSE_Method implements SendStateMethod {
 			public String run(CProcessor myProcessor, ACLMessage messageToSend) {
-
-				messageToSend.copyFromAsTemplate(myProcessor
-						.getLastReceivedMessage());
+				messageToSend.setPerformative(ACLMessage.PROPOSE);
+				messageToSend.setReceiver(new AgentID("Sally"));
 				messageToSend.setSender(myProcessor.getMyAgent().getAid());
+				messageToSend.setContent("Will you come with me to a movie?");
 				System.out.println(myProcessor.getMyAgent().getName() + " : I tell " + messageToSend.getReceiver().name + " "
 						+ messageToSend.getPerformative() + " " + messageToSend.getContent());
 
@@ -103,8 +103,8 @@ class HarryClass extends CAgent {
 		FinalState FINAL = new FinalState("FINAL");
 
 		class FINAL_Method implements FinalStateMethod {
-			public void run(CProcessor myProcessor, ACLMessage messageToSend) {
-				messageToSend.copyFromAsTemplate(myProcessor
+			public void run(CProcessor myProcessor, ACLMessage messageToReturn) {
+				messageToReturn.copyFromAsTemplate(myProcessor
 						.getLastReceivedMessage());
 				myProcessor.ShutdownAgent();
 			}
@@ -117,21 +117,15 @@ class HarryClass extends CAgent {
 
 		///////////////////////////////////////////////////////////////////////////////
 		
-		// The template processor is ready. We activate the factory.
+		// The template processor is ready. We add the factory, in this case as a participant one
 
 		this.addFactoryAsInitiator(talk);
 
 		// Finally Harry starts the conversation.
-		// In order to do so he has to create a message that can be accepted
-		// by the factory, in this caste the performative has to be PURPOSE.
+		this.startSyncConversation("TALK");
 
-		ACLMessage msg = new ACLMessage(ACLMessage.PROPOSE);
-		msg.setReceiver(new AgentID("Sally"));
-		msg.setContent("Will you come with me to a movie?");
-		ACLMessage response = myProcessor.createSyncConversation(msg);
-
-		System.out.println(myProcessor.getMyAgent().getName() + " : Sally tell me "
-				+ response.getPerformative() + " " + response.getContent());
+		//System.out.println(this.getAid().name + " : Sally tell me "
+			//	+ response.getPerformative() + " " + response.getContent());
 	}
 
 	protected void finalize(CProcessor firstProcessor,

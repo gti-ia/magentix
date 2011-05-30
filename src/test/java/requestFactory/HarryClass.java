@@ -42,8 +42,8 @@ class HarryClass extends CAgent {
 			}
 		}
 		
-		// In order to start a conversation the agent creates a message
-		// that can be accepted by one of its initiator factories.
+		// We create the message that will be sent in the doRequest method
+		// of the conversation
 
 		msg = new ACLMessage(ACLMessage.REQUEST);
 		msg.setReceiver(new AgentID("Sally"));
@@ -58,8 +58,7 @@ class HarryClass extends CAgent {
 		// by the REQUEST protocol (null) and we do not limit the number of simultaneous
 		// processors (value 0)
 		
-		CFactory talk = new myFIPA_REQUEST().newFactory("TALK", null, msg,
-				1, myProcessor.getMyAgent(), 0);
+		CFactory talk = new myFIPA_REQUEST().newFactory("TALK", null , msg,1, this, 0);
 
 		// The factory is setup to answer start conversation requests from the agent
 		// using the REQUEST protocol.
