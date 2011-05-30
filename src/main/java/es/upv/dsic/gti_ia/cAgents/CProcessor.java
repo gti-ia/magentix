@@ -352,7 +352,7 @@ public class CProcessor implements Runnable, Cloneable {
 					ACLMessage messageToSend;
 					SendState sendState = (SendState) states.get(currentState);
 					messageToSend = new ACLMessage();
-					logger.info("Template "+sendState.messageTemplate.getContent());
+					//logger.info("Template "+sendState.messageTemplate.getContent());
 					if (sendState.messageTemplate != null) {
 						messageToSend
 								.copyFromAsTemplate(sendState.messageTemplate);
@@ -461,10 +461,10 @@ public class CProcessor implements Runnable, Cloneable {
 				case State.RECEIVE:
 					ReceiveState receiveState = (ReceiveState) states
 							.get(currentState);
-					this.lockMyAgent();
+					this.unlockMyAgent();
 					currentState = receiveState.getMethod().run(this,
 							currentMessage);
-					this.unlockMyAgent();
+					this.lockMyAgent();
 					break;
 				case State.FINAL:
 					FinalState finalState = (FinalState) states
