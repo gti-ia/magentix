@@ -13,25 +13,22 @@ package es.upv.dsic.gti_ia.organization;
 
 
 import java.net.URI;
-import java.util.*;
-
-import es.upv.dsic.gti_ia.cAgents.*;
-import es.upv.dsic.gti_ia.cAgents.protocols.FIPA_REQUEST_Participant;
-import es.upv.dsic.gti_ia.core.ACLMessage;
-import es.upv.dsic.gti_ia.core.AgentID;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.StringTokenizer;
 
 import org.apache.log4j.Logger;
-import org.mindswap.owl.EntityFactory;
-import org.mindswap.owl.OWLFactory;
-import org.mindswap.owl.OWLKnowledgeBase;
-import org.mindswap.owls.OWLSFactory;
-import org.mindswap.owls.process.Process;
-import org.mindswap.owls.process.execution.ProcessExecutionEngine;
-import org.mindswap.owls.service.Service;
-import org.mindswap.query.ValueMap;
 
 import ThomasNOMindswap.Oracle;
 import ThomasNOMindswap.ServiceClient;
+import es.upv.dsic.gti_ia.cAgents.CAgent;
+import es.upv.dsic.gti_ia.cAgents.CFactory;
+import es.upv.dsic.gti_ia.cAgents.CProcessor;
+import es.upv.dsic.gti_ia.cAgents.protocols.FIPA_REQUEST_Participant;
+import es.upv.dsic.gti_ia.core.ACLMessage;
+import es.upv.dsic.gti_ia.core.AgentID;
 
 
 /**
@@ -53,8 +50,8 @@ public class OMS extends CAgent {
 		static Logger logger = Logger.getLogger(OMS.class);
 		
 	 	// create a kb
-		OWLKnowledgeBase kb = OWLFactory.createKB();
-		OWLKnowledgeBase kbaux = OWLFactory.createKB();
+//		OWLKnowledgeBase kb = OWLFactory.createKB();
+//		OWLKnowledgeBase kbaux = OWLFactory.createKB();
 		
 		// Debug
 		private static final Boolean DEBUG = true;

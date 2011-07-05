@@ -1,22 +1,19 @@
 package es.upv.dsic.gti_ia.organization;
 
 import java.net.URI;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.StringTokenizer;
 
 import org.apache.log4j.Logger;
-import org.mindswap.owl.EntityFactory;
-import org.mindswap.owl.OWLFactory;
-import org.mindswap.owl.OWLKnowledgeBase;
-import org.mindswap.owls.OWLSFactory;
-import org.mindswap.owls.process.Process;
-import org.mindswap.owls.process.execution.ProcessExecutionEngine;
-import org.mindswap.owls.service.Service;
-import org.mindswap.query.ValueMap;
 
 import ThomasNOMindswap.Oracle;
 import ThomasNOMindswap.ServiceClient;
-
-import es.upv.dsic.gti_ia.cAgents.*;
+import es.upv.dsic.gti_ia.cAgents.CAgent;
+import es.upv.dsic.gti_ia.cAgents.CFactory;
+import es.upv.dsic.gti_ia.cAgents.CProcessor;
 import es.upv.dsic.gti_ia.cAgents.protocols.FIPA_REQUEST_Participant;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
@@ -36,8 +33,8 @@ public class SF extends CAgent {
 
 	static Logger logger = Logger.getLogger(SF.class);
 	// create a kb
-	OWLKnowledgeBase kb = OWLFactory.createKB();
-	OWLKnowledgeBase kbaux = OWLFactory.createKB();
+//	OWLKnowledgeBase kb = OWLFactory.createKB();
+//	OWLKnowledgeBase kbaux = OWLFactory.createKB();
 
 	// Debug
 	//private final Boolean DEBUG = true;
@@ -270,35 +267,32 @@ public class SF extends CAgent {
 	 */
 	public void RegisterSFServiceProfiles() {
 
-		// create an execution engine
-		ProcessExecutionEngine exec = OWLSFactory.createExecutionEngine();
-
 		try {
 
 			// REGISTER SF SERVICES PROFILES
-			Service RegisterProfileService = kb
-			.readService(SF_REGISTERPROCESS_PROCESS);
-			// get the process for the server
-			Process RegisterProfileProcess = RegisterProfileService
-			.getProcess();
-
+			ThomasNOMindswap.Oracle oracle = new Oracle();
+			oracle.setURLProcess(SF_REGISTERPROCESS_PROCESS.toString());
+		
 			for (int k = 0; k < SFServicesProfiles.length; k++) {
-
-				// initialize the input values to be empty
-				ValueMap values = new ValueMap();
-				values.setDataValue(RegisterProfileProcess
-						.getInput("RegisterProfileInputServiceProfile"),
-						SFServicesProfiles[k].toString());
-				values.setDataValue(RegisterProfileProcess
-						.getInput("RegisterProfileInputServiceGoal"),
-						SFServicesGoals[k].toString());
-
-				logger
-				.info("[SF]Executing... "
-						+ values.getValues().toString());
-				values = exec.execute(RegisterProfileProcess, values);
-
-				logger.info("[SF]Values obtained... :" + values.toString());
+				//construct params list with the value of the parameters ordered...
+				ArrayList<String> params = new ArrayList<String>();
+				params.add(this.getName());
+				params.add(SFServicesProfiles[k].toString());
+				params.add(SFServicesGoals[k].toString());
+				
+				logger.info("[SF]Executing... ");
+				
+				ServiceClient serviceClient = new ServiceClient();
+			    ArrayList<String> results = serviceClient.invoke(SF_REGISTERPROCESS_PROCESS.toString(), params);
+			    
+			    Iterator<String> iterRes=results.iterator();
+			    String resStr="";
+			    while(iterRes.hasNext()){
+			    	String res=iterRes.next();
+			    	resStr+=res+" ";
+			    }
+			    
+				logger.info("[SF]Values obtained... :" + resStr);
 
 			}// for k
 		} catch (Exception e) {
