@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="MyService" targetNamespace="http://wtp" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://wtp" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://wtp">
+      <xsd:element name="MyService">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="Name" type="xsd:string"/>
+             <xsd:element name="Number1" type="xsd:int"/>
+             <xsd:element name="Number2" type="xsd:int"/>
+             
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="MyServiceResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+          	<xsd:element name="Result" type="xsd:int"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="MyServiceResponse">
+    <wsdl:part name="parameters" element="tns:MyServiceResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="MyServiceMessage">
+    <wsdl:part name="parameters" element="tns:MyService">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="MyServicePortType">
+    <wsdl:operation name="MyService">
+      <wsdl:input message="tns:MyServiceMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:MyServiceResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="MyServiceSOAP" type="tns:MyServicePortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="MyService">
+      <soap:operation soapAction="http://wtp"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="MyService">
+    <wsdl:port name="MyServiceSOAP" binding="tns:MyServiceSOAP">
+      <soap:address location="http://158.42.185.224:8080/MyService/services/MyService"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

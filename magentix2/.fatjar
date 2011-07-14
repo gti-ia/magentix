@@ -1,0 +1,14 @@
+#Fat Jar Configuration File
+#Wed Nov 03 17:19:53 CET 2010
+onejar.license.required=false
+manifest.classpath=
+manifest.removesigners=true
+onejar.checkbox=false
+jarname=/home/ricard/benchmarks2/magentix2_fat.jar
+manifest.mergeall=true
+manifest.mainclass=benchmark1_rev.Bench1
+manifest.file=<createnew>
+jarname.isextern=true
+onejar.expand=
+excludes=
+includes=
