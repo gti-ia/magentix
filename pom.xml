@@ -147,11 +147,6 @@
 			<version>1.0.0</version>
 			<scope>runtime</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-nop</artifactId>
-			<version>1.5.8</version>
-		</dependency>
 
 		<dependency>
 			<groupId>java.openjdk</groupId>
@@ -245,36 +240,68 @@
 
 		<dependency>
 			<groupId>org.apache</groupId>
-			<artifactId>qpid-client-seguridad</artifactId>
-			<version>0.7</version>
+			<artifactId>qpid-client</artifactId>
+			<version>0.10</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache</groupId>
-			<artifactId>qpid-common-seguridad</artifactId>
-			<version>0.7</version>
+			<artifactId>qpid-common</artifactId>
+			<version>0.10</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.apache.rampart</groupId>
 			<artifactId>rampart-core</artifactId>
-			<version>1.4</version>
+			<version>1.5.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.rampart</groupId>
 			<artifactId>rampart-policy</artifactId>
-			<version>1.4</version>
+			<version>1.5.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.rampart</groupId>
 			<artifactId>rampart-trust</artifactId>
-			<version>1.4</version>
+			<version>1.5.1</version>
 		</dependency>
 		<dependency>
 			<groupId>jason</groupId>
 			<artifactId>jason</artifactId>
 			<version>1.3.2</version>
 		</dependency>
+	
+	
+
+
+
+		<dependency>
+			<groupId>org.apache.axis2</groupId>
+			<artifactId>axis2-transport-http</artifactId>
+			<version>1.5.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.axis2</groupId>
+			<artifactId>axis2-transport-local</artifactId>
+			<version>1.5.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.opensaml</groupId>
+			<artifactId>openws</artifactId>
+			<version>1.2.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.axis2</groupId>
+			<artifactId>axis2</artifactId>
+			<version>1.5.4</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>apache-log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.15</version>
+		</dependency> 
 	</dependencies>
 
 
