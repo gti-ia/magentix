@@ -37,16 +37,30 @@ import javax.mail.util.ByteArrayDataSource;
 import javax.xml.stream.XMLStreamException;
 
 
+import org.apache.axiom.om.OMAbstractFactory;
+import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.OMFactory;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
+import org.apache.axis2.client.Options;
+import org.apache.axis2.client.ServiceClient;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.ConfigurationContextFactory;
+import org.apache.axis2.addressing.EndpointReference;
 import org.apache.commons.io.IOUtils;
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.apache.log4j.xml.DOMConfigurator;
+//import org.apache.log4j.xml.DOMConfigurator;
 import org.apache.neethi.Policy;
 import org.apache.neethi.PolicyEngine;
+import org.apache.rahas.RahasConstants;
+import org.apache.rahas.TokenStorage;
+import org.apache.rahas.TrustUtil;
+import org.apache.rahas.client.STSClient;
+import org.apache.rahas.Token;
+import org.apache.rampart.RampartMessageData;
 import org.apache.rampart.policy.model.CryptoConfig;
 import org.apache.rampart.policy.model.RampartConfig;
+import org.apache.ws.secpolicy.SP11Constants;
 
 
 /** This class provides support to work in secure mode **/
@@ -55,15 +69,38 @@ public class SecurityTools {
 	//To access for a Qpid broker acl file.
 	FileWriter fichero = null;
 	PrintWriter pw = null;
-	
+
+	KeyStore keystoreUser = null;
+	Policy policy, policy_sts, rconfMMS = null;
+	ConfigurationContext ctx = null;
+	STSClient stsClient = null;
+	String action = null;
+	Token responseToken, tok = null;
+	TokenStorage store = null;
+	KeyPair kp  = null;
+	ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+	ObjectOutputStream os = null;
+	Options optionsMMS = null;
+	MMSStub stub = null;
+	InputStream inputDataHandler = null;
+	Certificate[] certificates = null;
+	byte[] arrayByte = null;
+	ByteArrayInputStream bis = null;
+	ObjectInputStream ois = null;
+	Object p = null;
+	DataSource dataSource = null;
+	DataHandler dataHandler = null;
+
 	private static SecurityTools sec = new SecurityTools();
 	static Logger logger = Logger.getLogger(SecurityTools.class);
+
+
 
 
 	//This method is a private because SecurityTools is a class that uses an singleton design pattern.
 	private SecurityTools() {
 
-		DOMConfigurator.configure("configuration/loggin.xml");
+		//DOMConfigurator.configure("configuration/loggin.xml");
 
 	}
 
@@ -74,6 +111,7 @@ public class SecurityTools {
 	 */
 	public static SecurityTools GetInstance() {
 		return sec;
+
 	}
 
 	/**
@@ -83,7 +121,7 @@ public class SecurityTools {
 	 * @param propSecurityUser
 	 * @return True (no problems with the creation of the certificate) or False
 	 */
-	
+
 	// All process of agent certificate request is created in this method.
 	// The steps are:
 	// 1. Check that it is the user keystore.
@@ -92,114 +130,210 @@ public class SecurityTools {
 	// 4. The new certificate returned by the MMS is add to the keystore with agent name alias.
 	public boolean generateAllProcessCertificate(String Agentname, Properties propSecurityUser) {
 
-		String name = Agentname;
-		String path = propSecurityUser.getProperty("KeyStorePath");
-		String pass = propSecurityUser.getProperty("KeyStorePassword");
-		String alias = propSecurityUser.getProperty("alias");
-		//String key = propSecurityUser.getProperty("key");
+		logger.setLevel(Level.OFF);
 		
+		
+		//======================================================//
+		//    													//
+		//				Client Initialization					//
+		//														//	
+		//======================================================//
 
-		String type = propSecurityUser.getProperty("type");
+		String name = Agentname;
+		String alias = propSecurityUser.getProperty("alias");
+
+		if (policy == null)
+			policy = getRampartConfig("sts",alias, propSecurityUser,"policy.xml");
+
+		if (policy_sts == null)
+			policy_sts = getRampartConfig("sts",alias, propSecurityUser,"sts_policy.xml");
+
+		if (rconfMMS == null)
+			rconfMMS = getRampartConfig("mms", alias, propSecurityUser, "policy.xml");
+		//String key = propSecurityUser.getProperty("key");
+
+
+
 		try {
 			// String connection with the MMS service.
-			
+
 			String target = propSecurityUser.getProperty("protocol") + "://"
 			+ propSecurityUser.getProperty("host") + ":"
 			+ propSecurityUser.getProperty("port")
 			+ propSecurityUser.getProperty("path");
 
-			//Loaded the user keystore.
-			KeyStore keystoreUser = this.getKeyStore(path, pass);
 
 			//If not exist, will be create a new Keystore.
 			if (keystoreUser == null)
-				keystoreUser = this.createKeyStore(path, pass);
+				keystoreUser = getKeyStore(propSecurityUser.getProperty("KeyStorePath"), propSecurityUser.getProperty("KeyStorePassword"));
 
 
 			//Check if agent has a valid certificate.
 			if (getExistAliasAndIsValidPeriod(keystoreUser, name)) {
 
-				//If agent not has or is not valid, a new certificate is created. 
-				//This is sends to MMS service. The MMS services is responsible to be signs the certificate. 
-
-
 				// create the client stub
-				System.out.println("Connecting to " + target);
+				logger.info("Connecting to " + target);
 
-				// To be able to load the client configuration from axis2.xml
-				ConfigurationContext ctx = ConfigurationContextFactory
-				.createConfigurationContextFromFileSystem(
-						"./configuration/client-repo", null);
-
-				MMSStub stub = new MMSStub(ctx, target);
-				stub._getServiceClient().engageModule("rampart");
+				if (ctx == null)
+				{
+					ctx = ConfigurationContextFactory.createConfigurationContextFromFileSystem("./configuration/client-repo", null);
+					stub =  new MMSStub(ctx, null);
+				}
 
 
 				
-				// We configure the security Rampart module.
-				Policy rampartConfig = getRampartConfig(alias,type, propSecurityUser);
+				
+				
 
-				stub._getServiceClient().getAxisService().getPolicySubject().attachPolicy(rampartConfig);
+				//==================================================================================//
+				//  STS Section: In this section, the client sends a new RST message				//
+				// The RST message contains a security token that holds the client's credentials	//
+				//																					//	
+				//==================================================================================//
+
+				stsClient = new STSClient(ctx);
+				stsClient.setRstTemplate(getRSTTemplate());
+				action = TrustUtil.getActionValue(RahasConstants.VERSION_05_02, RahasConstants.RST_ACTION_ISSUE);
+				stsClient.setAction(action);
+
+
+
+				responseToken = stsClient.requestSecurityToken(policy,propSecurityUser.getProperty("STSpath") ,policy_sts, null);
+				store = TrustUtil.getTokenStore(ctx);
+
+
+				store.add(responseToken);
+
+
+
+				//store.getValidTokens()[0].getId();
+
+
+				tok = store.getToken(responseToken.getId());
+
+
+
+
 
 
 				//We make the private/public key pair, the MMS only has that sign the certificates. 
-				KeyPair kp = generateKeyPair("RSA", 1024);
-
-		
-				ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-				ObjectOutputStream os = new ObjectOutputStream(outStream);
+				kp = generateKeyPair("RSA", 1024);
+				outStream = new ByteArrayOutputStream();
+				os = new ObjectOutputStream(outStream);
 
 				//Send the public key.
-				PublicKey pbk = kp.getPublic();
-
-				Object p = pbk;
+				//PublicKey pbk = kp.getPublic();
+				p = kp.getPublic();
 				os.writeObject(p);
-				os.close();
 
-				DataSource dataSource = new ByteArrayDataSource(outStream
-						.toByteArray(), "application/octet-stream");
-				DataHandler dataHandler = new DataHandler(dataSource);
+				dataSource = new ByteArrayDataSource(outStream.toByteArray(), "application/octet-stream");
+				dataHandler = new DataHandler(dataSource);
 
+
+
+
+
+
+
+
+				optionsMMS = new Options();
+				optionsMMS.setTo(new EndpointReference(target));
+				optionsMMS.setProperty(RampartMessageData.KEY_RAMPART_POLICY, rconfMMS);// loadPolicy("sample05/policy.xml"));
+
+
+				optionsMMS.setTimeOutInMilliSeconds(300 * 1000);
+				stub._getServiceClient().engageModule("rampart");
+				stub._getServiceClient().engageModule("addressing");
+
+				optionsMMS.setProperty(RampartMessageData.KEY_CUSTOM_ISSUED_TOKEN, tok.getId());
+				stub._getServiceClient().setOptions(optionsMMS);
+
+
+				DataHandler result = null;
 
 				//Call service is created.
-				DataHandler re = stub.mMS(name, dataHandler);
+				result = stub.mMS(name, dataHandler);
 
-				//re is a result of service request.
+
+				//result is a result of service request.
 				try
 				{
-					InputStream inputDataHandler = re.getInputStream();
-					byte[] arrayByte = IOUtils.toByteArray(inputDataHandler);
-					ByteArrayInputStream bis = new ByteArrayInputStream(arrayByte);
-					ObjectInputStream ois = new ObjectInputStream(bis);
-					Certificate[] certificates = (Certificate[]) ois.readObject();
-					ois.close();
+					inputDataHandler = result.getInputStream();
+					arrayByte = IOUtils.toByteArray(inputDataHandler);
+					bis = new ByteArrayInputStream(arrayByte);
+					ois = new ObjectInputStream(bis);
+					certificates = (Certificate[]) ois.readObject();
 
-					
+
+
 					//The signed certificate is added in keystore.
 					setKeyEntry(name, propSecurityUser, kp, certificates);
-					
+
+
 					//Todo ha ido correctamente.
 					return true;
 
 				}
 				catch(Exception e)
 				{
-				    	//El MMS le ha denegado la emision del certificado.
-				    	logger.error("MMS is not available now or the user not has the permissions to acquire the name " + Agentname);
+					//El MMS le ha denegado la emision del certificado.
+					logger.error("MMS is not available now or the user not has the permissions to acquire the name " + Agentname);
+					logger.error("The error is caused by: "+ e.getMessage());
 					return false;
+				}
+				finally
+				{
+					stub.cleanup();
+					bis.close();
+					ois.close();
+					arrayByte = null;
+					kp = null;
+					certificates = null;
+					inputDataHandler = null;
 				}
 
 
 			}
 			else //Tiene un certificado emitido por el MMS valido.
-			    return true;
+				return true;
 		} catch (Exception e) {
 			logger.error(e);
 			return false;
 		}
+		finally{
+			try {
+				if (ctx != null)
+				{
+					ctx.cleanupContexts();
+					ctx.clearPropertyDifferences();
+					ctx.flush();
+					ctx.terminate();
+				}
+				responseToken = null;
+				optionsMMS = null;
+				dataSource = null;
+				dataHandler = null;
+				outStream.close();
+				p = null;
+				//os.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
 	}
 
 
+
+	private static OMElement getRSTTemplate() throws Exception {
+		OMFactory fac = OMAbstractFactory.getOMFactory();
+		OMElement elem = fac.createOMElement(SP11Constants.REQUEST_SECURITY_TOKEN_TEMPLATE);
+		TrustUtil.createTokenTypeElement(RahasConstants.VERSION_05_02, elem).setText(RahasConstants.TOK_TYPE_SAML_10);
+		TrustUtil.createKeyTypeElement(RahasConstants.VERSION_05_02, elem, RahasConstants.KEY_TYPE_SYMM_KEY);
+		TrustUtil.createKeySizeElement(RahasConstants.VERSION_05_02, elem, 256);
+		return elem;
+	} 
 
 
 
@@ -211,40 +345,38 @@ public class SecurityTools {
 	 * @param typeUserCertificate if is own or others certificate type
 	 * @param propSecurityUser
 	 */
-	private Policy getRampartConfig(String alias,
-			String typeUserCertificate, Properties propSecurityUser) {
+	private Policy getRampartConfig(String _aliasService, String alias,
+			Properties propSecurityUser, String _policy) {
 		int t = 0;
 
-		String pass = propSecurityUser.getProperty("KeyStorePassword");
-		String path = propSecurityUser.getProperty("KeyStorePath");
-		String aliasMMS = "mms";
-
+		String aliasService = _aliasService;
+		String typeUserCertificate = propSecurityUser.getProperty("type");
+		RampartConfig rampartConfig = new RampartConfig();
+		CryptoConfig sigCrypto = new CryptoConfig();
+		Properties sigProps = new Properties();
 
 		try {
 
-			RampartConfig rampartConfig = new RampartConfig();
+
+			Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+
+
 
 
 			rampartConfig.setUser(alias);
-			rampartConfig.setEncryptionUser(aliasMMS);
+			rampartConfig.setEncryptionUser(aliasService);
 
 
 			rampartConfig.setPwCbClass("es.upv.dsic.gti_ia.secure.PWCBHandler");
 
 
-			CryptoConfig encCrypto = new CryptoConfig();
-			CryptoConfig sigCrypto = new CryptoConfig();
-			CryptoConfig decCrypto = new CryptoConfig();
+
 
 			sigCrypto.setProvider("org.apache.ws.security.components.crypto.Merlin");
-			encCrypto.setProvider("org.apache.ws.security.components.crypto.Merlin");
-			decCrypto.setProvider("org.apache.ws.security.components.crypto.Merlin");
 
-			Properties sigProps = new Properties();
-			Properties encProps = new Properties();
-			Properties decProps = new Properties();
 
-		
+
+
 			if (typeUserCertificate.equals("others"))
 				t = 0;
 			else if (typeUserCertificate.equals("own"))
@@ -252,38 +384,16 @@ public class SecurityTools {
 
 			switch (t) {
 			case 0:
-				
-
-			//	String pkcs11ConfigFile = "./configuration/dnie_linux.cfg";
-				//Provider pkcs11Provider = new sun.security.pkcs11.SunPKCS11(pkcs11ConfigFile);
-
-				Provider providerBouncyCastle = new org.bouncycastle.jce.provider.BouncyCastleProvider();
-				Security.addProvider(providerBouncyCastle);
-
-				//Security.addProvider(pkcs11Provider);
 
 				sigProps.setProperty(
 						"org.apache.ws.security.crypto.merlin.keystore.type",
 						propSecurityUser.getProperty("othersType"));
-				
+
 				sigProps.setProperty(
 						"org.apache.ws.security.crypto.merlin.file",
 						propSecurityUser.getProperty("othersPath"));
-				
+
 				sigProps.setProperty(
-						"org.apache.ws.security.crypto.merlin.keystore.password",
-						propSecurityUser.getProperty("othersPin"));
-
-
-				decProps.setProperty(
-						"org.apache.ws.security.crypto.merlin.keystore.type",
-						propSecurityUser.getProperty("othersType"));
-				
-				decProps.setProperty(
-						"org.apache.ws.security.crypto.merlin.file",
-						propSecurityUser.getProperty("othersPath"));
-				
-				decProps.setProperty(
 						"org.apache.ws.security.crypto.merlin.keystore.password",
 						propSecurityUser.getProperty("othersPin"));
 
@@ -291,49 +401,28 @@ public class SecurityTools {
 			case 1:
 				sigProps.setProperty(
 						"org.apache.ws.security.crypto.merlin.file",
-						path);
-				
+						propSecurityUser.getProperty("KeyStorePath"));
+
 				sigProps.setProperty(
 						"org.apache.ws.security.crypto.merlin.keystore.password",
-						pass);
+						propSecurityUser.getProperty("KeyStorePassword"));
+
 				break;
 
 			default:
-				logger.error("What will be the certifying authority?");
+				logger.error("Please select 0 to own certificates or 1 to others.");
 			}
-
-			
-			//The values indicate the encrypt keystore path and password.
-			encProps.setProperty(
-					"org.apache.ws.security.crypto.merlin.file",
-					path);
-			
-			encProps.setProperty(
-					"org.apache.ws.security.crypto.merlin.keystore.password",
-					pass);
-
-
-
-
-
 
 			sigCrypto.setProp(sigProps);
 
-			encCrypto.setProp(encProps);
-
-			decCrypto.setProp(decProps);
-
-
 			rampartConfig.setSigCryptoConfig(sigCrypto);
 
-			rampartConfig.setDecCryptoConfig(decCrypto);
 
-			rampartConfig.setEncrCryptoConfig(encCrypto);
 
 			Policy policy = new Policy();
 
 			try {
-				policy = loadPolicy("policy.xml");
+				policy = loadPolicy(_policy);
 			} catch (XMLStreamException e) {
 				logger.error(e);
 			}
@@ -344,6 +433,11 @@ public class SecurityTools {
 		} catch (Exception e) {
 			logger.error(e);
 			return null;
+		}
+		finally{
+			sigCrypto = null;
+			sigProps = null;
+			rampartConfig = null;
 		}
 
 	}
@@ -416,6 +510,7 @@ public class SecurityTools {
 			FileInputStream keyStoreFile = new FileInputStream(path);
 
 			keystore.load(keyStoreFile, pass.toCharArray());
+
 			keyStoreFile.close();
 
 			return keystore;
@@ -426,8 +521,15 @@ public class SecurityTools {
 
 	}
 
-	
-	
+
+	private void closeKeyStore(KeyStore ks)
+	{
+		ks = null;
+
+	}
+
+
+
 	/**
 	 * This method creates a new keystore.
 	 * 
@@ -437,7 +539,7 @@ public class SecurityTools {
 	private KeyStore createKeyStore(String path, String pass) {
 		try {
 
-			
+
 			//This kesytore is created for add all agent new certificates
 			KeyStore keystore = KeyStore.getInstance("JKS");// PKCS11
 			FileOutputStream keyStoreFile = new FileOutputStream(path);
@@ -445,6 +547,7 @@ public class SecurityTools {
 			keystore.load(null);
 			keystore.store(keyStoreFile, pass.toCharArray());
 
+			keyStoreFile.close();
 			return keystore;
 
 		} catch (NoSuchAlgorithmException nsaex) {
@@ -462,8 +565,8 @@ public class SecurityTools {
 		}
 	}
 
-	
-	
+
+
 	/**
 	 * This method generates a new public/private key pair.
 	 * 
@@ -475,7 +578,7 @@ public class SecurityTools {
 
 		KeyPairGenerator keyGen = KeyPairGenerator.getInstance(keyType);
 		SecureRandom prng = new SecureRandom();
-		 
+
 		keyGen.initialize(keyBits, prng);
 		KeyPair pair = keyGen.generateKeyPair();
 		return pair;
@@ -500,7 +603,7 @@ public class SecurityTools {
 		char[] pass = prop.getProperty("KeyStorePassword").toCharArray();
 		String path = prop.getProperty("KeyStorePath");
 
-		
+
 		//We extract the certificate for the keystore. 
 		PrivateKey privateKey = keyPair.getPrivate();
 		PrivateKeyEntry userEntry = null;
@@ -516,7 +619,7 @@ public class SecurityTools {
 
 		boolean nExist = false;
 		FileInputStream ksfis = null;
-		
+
 		//If not exists then a new is creates, but if exist the certificate is opened. 
 		try {
 			ksfis = new FileInputStream(path);
@@ -537,7 +640,7 @@ public class SecurityTools {
 		}
 
 
-		
+
 		//The keys and certificate are added into keystore.
 		truststore.setKeyEntry(alias, userEntry.getPrivateKey(), pass, certs);
 
