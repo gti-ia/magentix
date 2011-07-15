@@ -17,8 +17,9 @@
 					<exclude>org.apache.axis2:addressing</exclude>
 					<exclude>org.apache.rampart:rampart-core</exclude>
 					<exclude>org.apache.rampart:rampart-policy</exclude>
+					<exclude>org.bouncycastle:bcprov-ext-jdk15</exclude>
 					<exclude>org.mozilla:jss</exclude>
-					<exclude>bouncycastle:bcprov-jdk13:jar:132</exclude>
+					<exclude>bouncycastle:*:jar:*</exclude>
 				</excludes>
 
 		</dependencySet>

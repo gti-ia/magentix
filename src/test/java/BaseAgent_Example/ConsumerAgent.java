@@ -6,6 +6,7 @@ import org.apache.qpid.transport.MessageTransfer;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.BaseAgent;
+import es.upv.dsic.gti_ia.core.SingleAgent;
 
 /**
  * ConsumerAgent class define the structure of a consumer BaseAgent
@@ -13,7 +14,7 @@ import es.upv.dsic.gti_ia.core.BaseAgent;
  * @author Sergio Pajares - spajares@dsic.upv.es
  * @author Joan Bellver - jbellver@dsic.upv.es
  */
-public class ConsumerAgent extends BaseAgent {
+public class ConsumerAgent extends SingleAgent {
 
 	LinkedBlockingQueue<MessageTransfer> internalQueue;
 
@@ -21,23 +22,24 @@ public class ConsumerAgent extends BaseAgent {
 		super(aid);
 	}
 
-	public void execute() {
-		logger.info("Executing, I'm " + getName());
-		/**
-		 * This agent has no definite work. Wait infinitely the arrival of new
-		 * messages.
-		 */
-		while (true) {
-
+	public void execute(){		
+		while(true){
+			ACLMessage msg = null;
+			try {
+				msg = this.receiveACLMessage();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			AgentID emisor = msg.getSender();
+			//System.out.println("Rebut missatge des de: "+emisor.getName());
+			msg.setSender(this.getAid());
+			msg.clearAllReceiver();
+			msg.setReceiver(emisor);
+			//doWait(1000);
+			send(msg);
+			//System.out.println("Enviat missatge des de: "+getName());
 		}
-	}
-
-	public void onMessage(ACLMessage msg) {
-		/**
-		 * When a message arrives, its shows on screen
-		 */
-		logger.info("Mensaje received in " + this.getName()
-				+ " agent, by onMessage: " + msg.getContent());
 	}
 
 }

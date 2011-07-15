@@ -30,6 +30,19 @@ public class Run_Example3 {
 
 
 	try {
+	    
+	    /**
+	     * 
+	     * Instantiating a consumer agent
+	     */
+	    AgentB agentB = new AgentB(new AgentID("agentB"));
+
+	    /**
+	     * Execute the agents
+	     */
+	    agentB.start();
+	    
+	    
 
 	    /**
 	     * 
