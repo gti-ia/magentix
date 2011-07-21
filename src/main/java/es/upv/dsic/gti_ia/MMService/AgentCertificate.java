@@ -53,12 +53,14 @@ import sun.security.x509.X509CertImpl;
 import sun.security.x509.X509CertInfo;
 
 import org.apache.axis2.context.MessageContext;
+import org.apache.log4j.Logger;
 import org.apache.qpid.console.QMFObject;
 import org.apache.qpid.console.Session;
 import org.apache.ws.security.WSSecurityEngineResult;
 import org.apache.ws.security.handler.WSHandlerConstants;
 import org.apache.ws.security.handler.WSHandlerResult;
 import org.opensaml.SAMLAssertion;
+
 
 
 
@@ -85,7 +87,7 @@ public class AgentCertificate {
 	public Connection connection = null;
 
 
-
+	static Logger logger = Logger.getLogger(AgentCertificate.class);
 
 	/**
 	 * This method returns a new signed certificate 
@@ -138,8 +140,12 @@ public class AgentCertificate {
 			{
 
 
-				System.out.println("Creating a new Agent certificate with Common Name= "
+				logger.info("Creating a new Agent certificate with Common Name = "
 						+ agentName);
+
+
+
+
 
 				// pasar de byte a x500Name
 				ByteArrayInputStream bis = new ByteArrayInputStream(pk);
@@ -157,6 +163,7 @@ public class AgentCertificate {
 				double validity =  Double.valueOf(properties.getProperty("Validity")).doubleValue();
 
 				PrivateKeyEntry pke = this.generateMMSPrivateKeyEntry(properties);
+
 
 				// Que información contendrá el certificados que emita.
 				String commonName = agentName;
@@ -179,6 +186,8 @@ public class AgentCertificate {
 
 				os.writeObject(certs);
 				os.close();
+
+
 				// Especificar la ubicación del archivo del almacén de certificados
 				// en los que se confía.
 				System.setProperty("javax.net.ssl.trustStore", properties
@@ -196,7 +205,10 @@ public class AgentCertificate {
 				//Solamente cuando se cree el agente por primera vez. Si no existe el agente.
 				if (!existAgent)
 				{
-					//Conectamos con el broker.
+
+					//TODO
+					//Conectamos con el broker. Podemos provar 2 veces
+
 					this.connectToBroker();
 
 					// Escribimos por cada agente las siguientes lineas con los permisos necesarios.
@@ -252,7 +264,7 @@ public class AgentCertificate {
 
 
 		} catch (Exception e) {
-			System.err.println("Error caught: " + e);
+			logger.error("Error caught: " + e);
 			return null;
 		}
 
@@ -283,11 +295,11 @@ public class AgentCertificate {
 				sql.toLowerCase();
 				int result = s.executeUpdate(sql);
 				if(result != 0){
-					System.out.println("Agent updated correctly.");
+					logger.info("Agent updated correctly.");
 
 				}
 				else{
-					System.out.println("Agent not updated. ");	
+					logger.info("Agent not updated. ");	
 
 				}
 
@@ -298,11 +310,11 @@ public class AgentCertificate {
 				sql.toLowerCase();
 				boolean result = s.execute(sql);
 				if(!result){
-					System.out.println("Agent registered correctly.");
+					logger.info("Agent registered correctly.");
 
 				}
 				else{
-					System.out.println("Agent not registered. ");	
+					logger.info("Agent not registered. ");	
 
 				}
 			}
@@ -449,6 +461,7 @@ public class AgentCertificate {
 
 		certs = new Certificate[] { rootCertificate };
 		entry = new KeyStore.PrivateKeyEntry(rootkey, certs);
+
 		return entry;
 	}
 
@@ -580,8 +593,20 @@ public class AgentCertificate {
 
 
 		sess = new Session();
-		sess.addBroker(connectionBroker);
-
+		int pos = 1;
+		boolean exit;
+		do{
+			try{
+				
+				sess.addBroker(connectionBroker);
+				exit = false;
+			}catch(Exception e)
+			{
+				System.out.println("Fail to add a broker. Try again.");
+				exit = true;
+				pos++;
+			}
+		}while(exit && pos < 5);
 
 
 
