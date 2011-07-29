@@ -54,6 +54,7 @@ import sun.security.x509.X509CertInfo;
 
 import org.apache.axis2.context.MessageContext;
 import org.apache.log4j.Logger;
+import org.apache.qpid.console.Broker;
 import org.apache.qpid.console.QMFObject;
 import org.apache.qpid.console.Session;
 import org.apache.ws.security.WSSecurityEngineResult;
@@ -80,6 +81,8 @@ public class AgentCertificate {
 	private Calendar calendar;
 	private String id="";
 	private boolean existAgent = false;
+	private String connectionBroker = "";
+	Broker broker = null;
 	/** 
 	 * 
 	 * The connection to the database 
@@ -206,7 +209,7 @@ public class AgentCertificate {
 				if (!existAgent)
 				{
 
-					//TODO
+				
 					//Conectamos con el broker. Podemos provar 2 veces
 
 					this.connectToBroker();
@@ -583,7 +586,7 @@ public class AgentCertificate {
 	 */
 	private void connectToBroker() {
 
-		String connectionBroker = "amqp://" + properties.getProperty("user")
+		connectionBroker = "amqp://" + properties.getProperty("user")
 		+ ":" + properties.getProperty("pass") + "@/"
 		+ properties.getProperty("vhost") + "?brokerlist='tcp://"
 		+ properties.getProperty("host") + ":"
@@ -593,20 +596,31 @@ public class AgentCertificate {
 
 
 		sess = new Session();
-		int pos = 1;
-		boolean exit;
-		do{
-			try{
-				
-				sess.addBroker(connectionBroker);
-				exit = false;
-			}catch(Exception e)
-			{
-				System.out.println("Fail to add a broker. Try again.");
-				exit = true;
-				pos++;
-			}
-		}while(exit && pos < 5);
+		
+		try{
+			broker = new Broker(sess, connectionBroker);
+			sess.addBroker(connectionBroker);
+		}
+		catch(Exception e)
+		{
+			System.out.println("Error in add broker: "+ e.getMessage());
+		}
+		
+//			try{
+//				
+//				sess.addBroker(connectionBroker);
+//				
+//			}catch(Exception e)
+//			{
+//				System.out.println("Fail to add a broker. Try again.");
+//				System.out.println("ERROR message:"+ e.getMessage());
+//				System.out.println("ERROR cause:"+ e.getCause().toString());
+//			
+//				sess.close();
+//				sess = new Session();
+//				sess.addBroker(connectionBroker);
+//			}
+		
 
 
 
@@ -618,7 +632,15 @@ public class AgentCertificate {
 	 */
 	private void closeSession()
 	{
+		try
+		{
+		sess.removeBroker(broker);
 		sess.close();
+		broker.shutdown();
+		}catch(Exception e)
+		{
+			System.out.println("Error in close session: "+ e.getMessage());
+		}
 
 	}
 
@@ -629,9 +651,15 @@ public class AgentCertificate {
 	 * This acl file contains the agent permissions
 	 */
 	private void reloadACLFile() {
+		
+		try{
 		hash.put("_class", "acl");
 		qmf = sess.getObjects(hash);
 		qmf.get(0).invokeMethod("reloadACLFile", "");
+		}catch(Exception e)
+		{
+			System.out.println("Error in reload ACL File: "+ e.getMessage());
+		}
 	}
 
 }
