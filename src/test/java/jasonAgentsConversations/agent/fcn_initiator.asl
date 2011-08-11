@@ -50,6 +50,9 @@ stuff([clothe,shoes,furniture,electronic]).
    ?rejected(R,ConvID);
    jasonAgentsConversations.conversationsFactory.initiator.ia_FCN_Initiator("proposalsevaluated",[BP,SBP],R,ConvID).
 
++proposalsevaluationtime(ConvID):.my_name(Me)&conversationID(Me,cnp,ConvID)
+<- .print("INITIATOR:- NO PROPOSALS TO EVALUATE.");
+    jasonAgentsConversations.conversationsFactory.initiator.ia_FCN_Initiator("proposalsevaluated",[],[],ConvID).
  
 +!evaluateProposals(ConvID):proposal(P,S,ConvID)&rejected(R,ConvID)&bestProposal(X,Sx,ConvID)&(P>X) 
 <- .print("INITIATOR:- EVALUATING PROPOSAL ",P," FROM AGENT ",S," AND UPDATING BEST BECAUSE ", P, " > ", X,".");
