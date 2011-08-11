@@ -357,7 +357,7 @@ public abstract class FIPA_CONTRACTNET_Initiator {
 		ReceiveState RECEIVE_NOT_UNDERSTOOD = new ReceiveState(
 		"RECEIVE_NOT_UNDERSTOOD");
 		RECEIVE_NOT_UNDERSTOOD.setMethod(new RECEIVE_NOT_UNDERSTOOD_Method());
-		filter = new MessageFilter("performative = NOT_UNDERSTOOD");
+		filter = new MessageFilter("performative = "+ACLMessage.getPerformative(ACLMessage.NOT_UNDERSTOOD));  //Bexy 11/8/11
 		RECEIVE_NOT_UNDERSTOOD.setAcceptFilter(filter);
 		processor.registerState(RECEIVE_NOT_UNDERSTOOD);
 		processor.addTransition(WAIT_FOR_PROPOSALS,
