@@ -125,9 +125,10 @@ public class ia_fipa_request_Participant extends protocolInternalAction {
 				frp.RequestResult = Protocol_Template.AGREE_STEEP;
 				//frp.Protocol_Semaphore.release();
 				//myag.getConversationByJasonID(agentConversationID).release_semaphore();
-				
+
+				//Removing conversation from pending conversations list and adding it to the 
+				//list of conversations of the participant agent
 				Conversation conv = Protocol_Factory.removeConversationByJasonID(agentConversationID);
-				
 				conversationsList.put(agentConversationID, conv);
 				
 				conv.release_semaphore();
@@ -141,7 +142,6 @@ public class ia_fipa_request_Participant extends protocolInternalAction {
 					//myag.getConversationByJasonID(agentConversationID).release_semaphore();
 					
 					Conversation conv = Protocol_Factory.removeConversationByJasonID(agentConversationID);
-					
 					conversationsList.put(agentConversationID, conv);
 					
 					conversationsList.get(agentConversationID).release_semaphore();
@@ -152,8 +152,8 @@ public class ia_fipa_request_Participant extends protocolInternalAction {
 						frp.RequestResult = Protocol_Template.NOT_UNDERSTOOD_STEEP;						
 						//frp.Protocol_Semaphore.release();
 						//myag.getConversationByJasonID(agentConversationID).release_semaphore();
+
 						Conversation conv = Protocol_Factory.removeConversationByJasonID(agentConversationID);
-						
 						conversationsList.put(agentConversationID, conv);
 						
 						conversationsList.get(agentConversationID).release_semaphore();
