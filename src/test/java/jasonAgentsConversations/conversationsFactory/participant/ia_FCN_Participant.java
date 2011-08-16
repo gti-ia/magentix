@@ -23,7 +23,7 @@ public class ia_FCN_Participant extends protocolInternalAction {
 
 	//her there must be more factory fields
 
-	@Override public int getMinArgs() { return 3; };
+	@Override public int getMinArgs() { return 2; };
 	@Override public int getMaxArgs() { return 5; };
 
 	@Override
