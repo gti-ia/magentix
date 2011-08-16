@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import es.upv.dsic.gti_ia.cAgents.CFactory;
-//import es.upv.dsic.gti_ia.cAgents.CProcessor;
 import jason.asSemantics.DefaultInternalAction;
 import jason.asSyntax.*;
 
@@ -23,7 +21,6 @@ public abstract class protocolInternalAction extends DefaultInternalAction {
 	private static final long serialVersionUID = 1L;
 	protected String protocolSteep;
 	protected ConvCFactory Protocol_Factory;
-	//protected CProcessor Protocol_Processor;
 	protected int timeOut = 0;
 	protected long conversationTime;
 	

@@ -8,11 +8,10 @@ import jasonAgentsConversations.agentNConv.ConvCProcessor;
 import jasonAgentsConversations.agentNConv.ConvJasonAgent;
 import jasonAgentsConversations.agentNConv.ConvMagentixAgArch;
 import jasonAgentsConversations.agentNConv.Conversation;
-import jasonAgentsConversations.agentNConv.IFRConversation;
+import jasonAgentsConversations.agentNConv.FRConversation;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Semaphore;
 
 import es.upv.dsic.gti_ia.cAgents.BeginState;
 import es.upv.dsic.gti_ia.cAgents.BeginStateMethod;
@@ -69,7 +68,7 @@ public class Jason_Fipa_Request_Initiator {
 
 protected void doBegin(ConvCProcessor myProcessor,
 		ACLMessage messageToSend) {
-	IFRConversation conv =  (IFRConversation) myProcessor.getConversation();
+	FRConversation conv =  (FRConversation) myProcessor.getConversation();
 	messageToSend.setContent(conv.initialMessage);
 	myProcessor.getInternalData().put("InitialMessage", messageToSend);
 
@@ -89,21 +88,10 @@ class BEGIN_Method implements BeginStateMethod {
  */
 protected void doRequest(ConvCProcessor myProcessor,
 		ACLMessage messageToSend) {
-//	try {
-//		Protocol_Semaphore.acquire();
-//	} catch (InterruptedException e) {
-//		e.printStackTrace();
-//	}
 	
-	//ConvJasonAgent myag = ((ConvMagentixAgArch)Ts.getUserAgArch()).getJasonAgent();
-	//Conversation conv = myag.getConversationByintID(myProcessor.getConversationID());
-	
-	IFRConversation conv = (IFRConversation) myProcessor.getConversation();
-	/*if (conv.jasonConvID.compareTo("work")==0){
-		Ts.getAg().getLogger().info("*************** Traza en accion interna request con CID: work *******************");
-	}*/
+	FRConversation conv = (FRConversation) myProcessor.getConversation();
+
 	conv.aquire_semaphore();
-	
 	
 	messageToSend.setContent(conv.frMessage);
 	messageToSend.setProtocol("fipa-request");
@@ -216,7 +204,7 @@ protected void doInform(ConvCProcessor myProcessor, ACLMessage msg) {
 	//ConvJasonAgent myag = ((ConvMagentixAgArch)Ts.getUserAgArch()).getJasonAgent();
 	
 	//Conversation conv = myag.getConversationByintID(myProcessor.getConversationID());
-	IFRConversation conv = (IFRConversation) myProcessor.getConversation();
+	FRConversation conv = (FRConversation) myProcessor.getConversation();
 
 	List<Literal> allperc = new ArrayList<Literal>();
 	String percept = "taskdonesuccessfully("+conv.Participant +","+conv.jasonConvID+")[source(self)]";

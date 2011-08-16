@@ -11,11 +11,10 @@ import jasonAgentsConversations.agentNConv.Conversation;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Semaphore;
+
 
 import es.upv.dsic.gti_ia.cAgents.ActionState;
 import es.upv.dsic.gti_ia.cAgents.BeginState;
-import es.upv.dsic.gti_ia.cAgents.CAgent;
 import es.upv.dsic.gti_ia.cAgents.CProcessor;
 import es.upv.dsic.gti_ia.cAgents.FinalState;
 import es.upv.dsic.gti_ia.cAgents.ReceiveState;
@@ -41,12 +40,10 @@ public class Jason_Fipa_Request_Participant {
 	
 	public int TimeOut ;
 	
-	public Semaphore Protocol_Semaphore = new Semaphore(0,true);
-	
-	public String Initiator ;
-	public String RequestResult = "";
-	public String TaskDesition = "";
+	/*public String Initiator ;*/
 	public String TaskResult = "" ;
+	public String TaskDesition = "";
+	public String RequestResult = "";
 	public String Task = "" ;
 	
 	public Jason_Fipa_Request_Participant(String sagName, 
@@ -90,6 +87,7 @@ public class Jason_Fipa_Request_Participant {
 		
 		Conversation conv = myProcessor.getConversation();
 		conv.jasonConvID = jasonID;
+		conv.initiator = request.getSender();
 		
 		
 		List<Literal> allperc = new ArrayList<Literal>();

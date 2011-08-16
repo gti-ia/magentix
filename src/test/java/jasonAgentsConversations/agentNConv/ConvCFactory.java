@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import es.upv.dsic.gti_ia.cAgents.CAgent;
 import es.upv.dsic.gti_ia.cAgents.CFactory;
 import es.upv.dsic.gti_ia.cAgents.CProcessor;
 import es.upv.dsic.gti_ia.core.ACLMessage;
@@ -12,7 +11,6 @@ import es.upv.dsic.gti_ia.core.MessageFilter;
 
 public class ConvCFactory extends CFactory{
 
-	//HashMap<String, Conversation> jasonIDconversationsList =  new HashMap<String, Conversation>(); //Bexy
 	HashMap<String, Conversation> participantNoIdConv =  new HashMap<String, Conversation>(); //Bexy
 	ConvCProcessor myConvCProcessor; //template
 	ConvJasonAgent convAgent; 
@@ -32,10 +30,9 @@ public class ConvCFactory extends CFactory{
 	
 	public ConvCProcessor startConversation(ACLMessage msg, CProcessor parent,  //Bexy: public
 			Boolean isSync) {
-		//System.out.println(convAgent.getName()+" PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP: INITIATOR EN CONVCFACTORY -> "+convinitiator);
 		ConvCProcessor cloneProcessor = (ConvCProcessor) myConvCProcessor.clone();
 		if (!convinitiator){
-		Conversation conv = new Conversation("",msg.getConversationId());
+		Conversation conv = new Conversation("",msg.getConversationId(),null);
 		cloneProcessor.setConversation(conv);
 		participantNoIdConv.put(msg.getConversationId(), conv);			
 		}
@@ -76,32 +73,20 @@ public class ConvCFactory extends CFactory{
 
 	}
 	
-	/*public void insertConversation(Conversation conv){
-		jasonIDconversationsList.put( conv.jasonConvID , conv);
-		internalIDconversationsList.put( conv.internalConvID , conv);
+	public Conversation removeConversationByInternalID(String internalID){
+		return participantNoIdConv.remove(internalID);
 	}
 	
-	public void insertJasonIDConversation(Conversation conv, String jasonID){
-		jasonIDconversationsList.put( jasonID , conv);
-	}
-	
-	public void insertintIDConversation(Conversation conv, String internalID){
-		internalIDconversationsList.put( internalID , conv);
-	}
-	
-	
-	public void removeConversation(Conversation conv){
-		jasonIDconversationsList.remove(conv.jasonConvID);
-		internalIDconversationsList.remove(conv.internalConvID);
-	}
-	
-	public Conversation getConversationByJasonID(String jasonID){
-		return jasonIDconversationsList.get(jasonID);
-	}
-	
-	public Conversation getConversationByintID(String internalID){
-		return internalIDconversationsList.get(internalID);
+	public void UpdateConv(Conversation newConv, ConvCProcessor proc){
+		Conversation tmpConv = null;
+		tmpConv = removeConversationByInternalID(newConv.internalConvID);
 		
-	}*/
+		if (tmpConv!=null){
+			participantNoIdConv.put(newConv.internalConvID, newConv);
+		}
+		proc.setConversation(newConv);
+	}
+	
+
 
 }

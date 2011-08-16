@@ -3,12 +3,12 @@ package jasonAgentsConversations.agentNConv;
 
 import java.util.concurrent.Semaphore;
 
-import es.upv.dsic.gti_ia.cAgents.CProcessor;
+import es.upv.dsic.gti_ia.core.AgentID;
 
 /**
- * @author bexy
+ * @author Bexy
  * This class represents a conversation of the Jason agent. It has associated a semaphore to control
- * the conversation and its corresponding CProcessor. 
+ * the conversation. 
  */
 public class Conversation {
 	
@@ -17,11 +17,15 @@ public class Conversation {
 	public String jasonConvID;
 	public String internalConvID;
 	
-	public Conversation(/*CProcessor proc,*/ String jasonID, String internalID){
+	public AgentID initiator;
+
+	
+	
+	public Conversation(/*CProcessor proc,*/ String jasonID, String internalID, AgentID initiatorAg){
 		Protocol_Semaphore = new Semaphore(0,true);
-		//processor = proc;
 		jasonConvID = jasonID;
 		internalConvID = internalID;
+		initiator = initiatorAg;
 	}
 	
 	public void aquire_semaphore(){

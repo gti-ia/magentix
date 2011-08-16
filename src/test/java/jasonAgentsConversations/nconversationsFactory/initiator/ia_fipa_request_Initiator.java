@@ -10,13 +10,11 @@ import jasonAgentsConversations.agentNConv.ConvCFactory;
 import jasonAgentsConversations.agentNConv.ConvCProcessor;
 import jasonAgentsConversations.agentNConv.ConvJasonAgent;
 import jasonAgentsConversations.agentNConv.ConvMagentixAgArch;
-import jasonAgentsConversations.agentNConv.IFRConversation;
+import jasonAgentsConversations.agentNConv.FRConversation;
 import jasonAgentsConversations.agentNConv.Protocol_Template;
 import jasonAgentsConversations.agentNConv.protocolInternalAction;
 
 import es.upv.dsic.gti_ia.core.ACLMessage;
-
-
 
 
 public class ia_fipa_request_Initiator extends protocolInternalAction {
@@ -27,9 +25,7 @@ public class ia_fipa_request_Initiator extends protocolInternalAction {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	/*
-	 * It's necessary to define a new protocol Internal Action
-	 */
+
 	Jason_Fipa_Request_Initiator fri = null;
 
 	@Override public int getMinArgs() { return 2; };
@@ -44,13 +40,13 @@ public class ia_fipa_request_Initiator extends protocolInternalAction {
 		if (((Term)args[args.length-1]).isAtom()){result=true;}
 
 		result = (result && (((Term)args[0]).isString()) );
-		
+
 		if ( protocolSteep.compareTo(Protocol_Template.START_STEEP)==0)
 		{
 			int cont = 0; 
 			for (Term t:args){
 				switch (cont){
-				case 1:result = (result&&t.isAtom());
+				case 1:result = (result&&t.isAtom());	
 				break;
 				case 2:result = (result&&t.isNumeric());
 				break;
@@ -83,11 +79,12 @@ public class ia_fipa_request_Initiator extends protocolInternalAction {
 	@Override
 	public Object execute(TransitionSystem ts, Unifier un, Term[] args) throws Exception {
 
+
 		protocolSteep = getTermAsString(args[0]);
 
-		agentConversationID = getAtomAsString(args[args.length-1]);
-
 		checkArguments(args);
+		
+		agentConversationID = getAtomAsString(args[args.length-1]);
 
 		agName  = ts.getUserAgArch().getAgName();
 
@@ -146,7 +143,8 @@ public class ia_fipa_request_Initiator extends protocolInternalAction {
 			
 			myag.lock();
 			String ConvID = myag.newConvID();
-			IFRConversation conv = new IFRConversation(agentConversationID,ConvID,timeOut,participant,initialInfo); //the internal id is unknown yet
+			FRConversation conv = new FRConversation(agentConversationID,ConvID,timeOut,participant,initialInfo,
+					((ConvMagentixAgArch)ts.getUserAgArch()).getJasonAgent().getAid()); //the internal id is unknown yet
 			ConvCProcessor processorTemplate = ((ConvCFactory)Protocol_Factory).cProcessorTemplate();
 			processorTemplate.setConversation(conv);
 			msg.setConversationId(ConvID);
@@ -165,7 +163,7 @@ public class ia_fipa_request_Initiator extends protocolInternalAction {
 				//fri.Participant = getAtomAsString(args[2]);
 				//fri.requestMsg = getTermAsString(args[1]);
 				//ts.getLogger().info("*/*/*/ Setting requestMsg: "+fri.requestMsg);
-				((IFRConversation)conversationsList.get(agentConversationID)).frMessage=getTermAsString(args[1]);
+				((FRConversation)conversationsList.get(agentConversationID)).frMessage=getTermAsString(args[1]);
 				conversationsList.get(agentConversationID).release_semaphore();	
 
 				//myag.getConversationByJasonID(agentConversationID).release_semaphore();
