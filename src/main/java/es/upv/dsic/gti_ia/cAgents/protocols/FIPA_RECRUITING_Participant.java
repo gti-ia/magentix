@@ -110,7 +110,7 @@ public abstract class FIPA_RECRUITING_Participant {
 			messageToSend.setSender(myProcessor.getMyAgent().getAid());
 			messageToSend.setPerformative(ACLMessage.AGREE);
 			messageToSend.setReceiver(initiator);
-			doRefuse(myProcessor, messageToSend);
+			doAgree(myProcessor, messageToSend);
 			return "LOCATE_AGENTS";
 		}
 	}
