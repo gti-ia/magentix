@@ -484,7 +484,7 @@ class Jason_FCN_Initiator {
 
 		// Processor template setup
 
-		CProcessor processor = theFactory.cProcessorTemplate();
+		ConvCProcessor processor = theFactory.cProcessorTemplate();
 
 		// BEGIN State
 
