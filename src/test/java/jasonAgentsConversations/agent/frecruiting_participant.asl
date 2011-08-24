@@ -1,4 +1,4 @@
-// Agent FRequest_Participant in project conversationsFactory
+// Agent frecruiting_participant in project magentix2
 
 /* Initial beliefs and rules */
 allowed([frecruiting_initiator]).
