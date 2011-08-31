@@ -37,8 +37,8 @@ public class ia_FCN_Participant extends protocolInternalAction {
 
 		result = (result && (((Term)args[0]).isString()) );
 		
-		if ((protocolSteep.compareTo(Protocol_Template.TASK_DONE_STEEP)==0)||
-				(protocolSteep.compareTo(Protocol_Template.TASK_NOT_DONE_STEEP)==0))
+		if ((protocolSteep.compareTo(Protocol_Template.TASK_DONE_STEP)==0)||
+				(protocolSteep.compareTo(Protocol_Template.TASK_NOT_DONE_STEP)==0))
 		{
 			result = (result && (((Term)args[1]).isString()) );
 		}
@@ -83,7 +83,7 @@ public class ia_FCN_Participant extends protocolInternalAction {
 		
 		//the first state in the conversation
 
-		if (protocolSteep.compareTo(Protocol_Template.JOIN_STEEP)==0){
+		if (protocolSteep.compareTo(Protocol_Template.JOIN_STEP)==0){
 			//TODO: It is necessary to document that 80000 is the max time for the waiting states by default so 
 			//in the Jason code of the participant this data is eliminated. Update examples in document. This value 
 			//must be greater than the wait_for_proposals deadline.
@@ -140,7 +140,7 @@ public class ia_FCN_Participant extends protocolInternalAction {
 				conversationsList.get(agentConversationID).release_semaphore();
 			}
 			else
-				if (protocolSteep.compareTo(Protocol_Template.REFUSE_STEEP)==0){
+				if (protocolSteep.compareTo(Protocol_Template.REFUSE_STEP)==0){
 					Conversation conv = Protocol_Factory.removeConversationByJasonID(agentConversationID);
 					conversationsList.put(agentConversationID, conv);
 					
@@ -150,7 +150,7 @@ public class ia_FCN_Participant extends protocolInternalAction {
 
 				}
 				else
-					if (protocolSteep.compareTo(Protocol_Template.NOT_UNDERSTOOD_STEEP)==0){
+					if (protocolSteep.compareTo(Protocol_Template.NOT_UNDERSTOOD_STEP)==0){
 						Conversation conv = Protocol_Factory.removeConversationByJasonID(agentConversationID);
 						conversationsList.put(agentConversationID, conv);
 						
@@ -159,7 +159,7 @@ public class ia_FCN_Participant extends protocolInternalAction {
 						conversationsList.get(agentConversationID).release_semaphore();
 					}
 					else
-						if (protocolSteep.compareTo(Protocol_Template.TASK_DONE_STEEP)==0){
+						if (protocolSteep.compareTo(Protocol_Template.TASK_DONE_STEP)==0){
 							
 							Term finalInfo = args[1];
 
@@ -170,7 +170,7 @@ public class ia_FCN_Participant extends protocolInternalAction {
 
 						}
 						else
-							if (protocolSteep.compareTo(Protocol_Template.TASK_NOT_DONE_STEEP)==0){
+							if (protocolSteep.compareTo(Protocol_Template.TASK_NOT_DONE_STEP)==0){
 
 								Term finalInfo = args[1];
 								((FCNConversation)conversationsList.get(agentConversationID)).infoToSend = ((StringTerm)finalInfo).getString();

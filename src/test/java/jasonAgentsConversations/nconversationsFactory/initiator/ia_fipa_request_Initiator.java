@@ -41,7 +41,7 @@ public class ia_fipa_request_Initiator extends protocolInternalAction {
 
 		result = (result && (((Term)args[0]).isString()) );
 
-		if ( protocolSteep.compareTo(Protocol_Template.START_STEEP)==0)
+		if ( protocolSteep.compareTo(Protocol_Template.START_STEP)==0)
 		{
 			int cont = 0; 
 			for (Term t:args){
@@ -58,12 +58,12 @@ public class ia_fipa_request_Initiator extends protocolInternalAction {
 				cont++;
 			}
 		}
-		if ((protocolSteep.compareTo(Protocol_Template.REQUEST_STEEP)==0)||
-				(protocolSteep.compareTo(Protocol_Template.TASK_DONE_STEEP)==0))
+		if ((protocolSteep.compareTo(Protocol_Template.REQUEST_STEP)==0)||
+				(protocolSteep.compareTo(Protocol_Template.TASK_DONE_STEP)==0))
 		{
 			result = (result && (((Term)args[1]).isAtom()) );
 		}
-		if (protocolSteep.compareTo(Protocol_Template.REQUEST_STEEP)==0)
+		if (protocolSteep.compareTo(Protocol_Template.REQUEST_STEP)==0)
 		{
 			result = (result && (((Term)args[2]).isAtom()) );
 		}
@@ -94,7 +94,7 @@ public class ia_fipa_request_Initiator extends protocolInternalAction {
 
 		/*
 		 * When a FR Protocol is taking place*/
-		if (protocolSteep.compareTo(Protocol_Template.START_STEEP)==0){
+		if (protocolSteep.compareTo(Protocol_Template.START_STEP)==0){
 
 			String participant = getAtomAsString(args[1]);
 
@@ -134,7 +134,7 @@ public class ia_fipa_request_Initiator extends protocolInternalAction {
        		 using the FIPA_REQUEST protocol.*/
 
 				((ConvMagentixAgArch)ts.getUserAgArch()).getJasonAgent().addFactoryAsInitiator(Protocol_Factory);
-				//ts.getAg().getLogger().info("@@@@@@@@@@@@@  Initiator de la factory al crear: "+Protocol_Factory.convinitiator);
+				
 			}
 
 			/* finally the new conversation starts an asynchronous conversation.*/
@@ -148,7 +148,7 @@ public class ia_fipa_request_Initiator extends protocolInternalAction {
 			ConvCProcessor processorTemplate = ((ConvCFactory)Protocol_Factory).cProcessorTemplate();
 			processorTemplate.setConversation(conv);
 			msg.setConversationId(ConvID);
-			//ts.getAg().getLogger().info("@@@@@@@@@@@@@  Initiator de la factory en newconversation: "+Protocol_Factory.convinitiator);
+			
 			ConvCProcessor convPprocessor =  myag.newConversation(msg, processorTemplate, false, Protocol_Factory);
 			convPprocessor.setConversation(conv);
 			//myag.insertConversation( new Conversation(convPprocessor,agentConversationID,ConvID));
@@ -158,7 +158,7 @@ public class ia_fipa_request_Initiator extends protocolInternalAction {
 
 			
 		}else
-			if(protocolSteep.compareTo(Protocol_Template.REQUEST_STEEP)==0){
+			if(protocolSteep.compareTo(Protocol_Template.REQUEST_STEP)==0){
 
 				//fri.Participant = getAtomAsString(args[2]);
 				//fri.requestMsg = getTermAsString(args[1]);
@@ -169,7 +169,7 @@ public class ia_fipa_request_Initiator extends protocolInternalAction {
 				//myag.getConversationByJasonID(agentConversationID).release_semaphore();
 				//fri.Protocol_Semaphore.release();
 			}else
-				if(protocolSteep.compareTo(Protocol_Template.TASK_DONE_STEEP)==0){
+				if(protocolSteep.compareTo(Protocol_Template.TASK_DONE_STEP)==0){
 					//fri.Protocol_Semaphore.release();
 
 					//myag.getConversationByJasonID(agentConversationID).release_semaphore();

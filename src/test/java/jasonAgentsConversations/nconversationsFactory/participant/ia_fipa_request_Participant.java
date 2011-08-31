@@ -35,13 +35,13 @@ public class ia_fipa_request_Participant extends protocolInternalAction {
 
 		result = (result && (((Term)args[0]).isString()) );
 		
-		if ((protocolSteep.compareTo(Protocol_Template.JOIN_STEEP)==0)||
-				(protocolSteep.compareTo(Protocol_Template.FAILURE_STEEP)==0))
+		if ((protocolSteep.compareTo(Protocol_Template.JOIN_STEP)==0)||
+				(protocolSteep.compareTo(Protocol_Template.FAILURE_STEP)==0))
 		{
 			result = (result && (((Term)args[1]).isNumeric()) );
 		}
 
-		if (protocolSteep.compareTo(Protocol_Template.INFORM_STEEP)==0){
+		if (protocolSteep.compareTo(Protocol_Template.INFORM_STEP)==0){
 			
 			int cont = 0; result = true;
 			for (Term t:args){
@@ -78,7 +78,7 @@ public class ia_fipa_request_Participant extends protocolInternalAction {
 		
 		ts.getAg().getLogger().info("CALLING INTERNAL ACTION WITH STEEP: '"+protocolSteep+"'"+" CID: "+agentConversationID); 
 		
-		if (protocolSteep.compareTo(Protocol_Template.JOIN_STEEP)==0){
+		if (protocolSteep.compareTo(Protocol_Template.JOIN_STEP)==0){
 			
 			if (frp == null){
 				if (args.length >2)
@@ -120,9 +120,9 @@ public class ia_fipa_request_Participant extends protocolInternalAction {
 
 		}
 		else
-			if (protocolSteep.compareTo(Protocol_Template.AGREE_STEEP)==0){
+			if (protocolSteep.compareTo(Protocol_Template.AGREE_STEP)==0){
 				
-				frp.RequestResult = Protocol_Template.AGREE_STEEP;
+				frp.RequestResult = Protocol_Template.AGREE_STEP;
 				//frp.Protocol_Semaphore.release();
 				//myag.getConversationByJasonID(agentConversationID).release_semaphore();
 
@@ -135,9 +135,9 @@ public class ia_fipa_request_Participant extends protocolInternalAction {
 
 			}
 			else
-				if (protocolSteep.compareTo(Protocol_Template.REFUSE_STEEP)==0){
+				if (protocolSteep.compareTo(Protocol_Template.REFUSE_STEP)==0){
 
-					frp.RequestResult = Protocol_Template.REFUSE_STEEP;					
+					frp.RequestResult = Protocol_Template.REFUSE_STEP;					
 					//frp.Protocol_Semaphore.release();
 					//myag.getConversationByJasonID(agentConversationID).release_semaphore();
 					
@@ -147,9 +147,9 @@ public class ia_fipa_request_Participant extends protocolInternalAction {
 					conversationsList.get(agentConversationID).release_semaphore();
 				}
 				else
-					if (protocolSteep.compareTo(Protocol_Template.NOT_UNDERSTOOD_STEEP)==0){
+					if (protocolSteep.compareTo(Protocol_Template.NOT_UNDERSTOOD_STEP)==0){
 
-						frp.RequestResult = Protocol_Template.NOT_UNDERSTOOD_STEEP;						
+						frp.RequestResult = Protocol_Template.NOT_UNDERSTOOD_STEP;						
 						//frp.Protocol_Semaphore.release();
 						//myag.getConversationByJasonID(agentConversationID).release_semaphore();
 
@@ -159,11 +159,11 @@ public class ia_fipa_request_Participant extends protocolInternalAction {
 						conversationsList.get(agentConversationID).release_semaphore();
 					}
 					else
-						if (protocolSteep.compareTo(Protocol_Template.INFORM_STEEP)==0){
+						if (protocolSteep.compareTo(Protocol_Template.INFORM_STEP)==0){
 							//getTermAsString(args[2]): has the task done
 							frp.TaskResult = getTermAsString(args[2]);
 							
-							frp.TaskDesition = Protocol_Template.INFORM_STEEP;						
+							frp.TaskDesition = Protocol_Template.INFORM_STEP;						
 							//frp.Protocol_Semaphore.release();
 							//myag.getConversationByJasonID(agentConversationID).release_semaphore();
 							
@@ -171,10 +171,10 @@ public class ia_fipa_request_Participant extends protocolInternalAction {
 							
 						}
 						else
-							if (protocolSteep.compareTo(Protocol_Template.FAILURE_STEEP)==0){
+							if (protocolSteep.compareTo(Protocol_Template.FAILURE_STEP)==0){
 								//getTermAsString(args[2]): has the task done
 
-								frp.TaskDesition = Protocol_Template.FAILURE_STEEP;						
+								frp.TaskDesition = Protocol_Template.FAILURE_STEP;						
 								//frp.Protocol_Semaphore.release();
 								//myag.getConversationByJasonID(agentConversationID).release_semaphore();
 								

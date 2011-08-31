@@ -96,7 +96,7 @@ protected void doRequest(ConvCProcessor myProcessor,
 	messageToSend.setContent(conv.frMessage);
 	messageToSend.setProtocol("fipa-request");
 	messageToSend.setPerformative(ACLMessage.REQUEST);
-	messageToSend.setReceiver(new AgentID("frequest_participant"));  //TODO Esto hay que arreglarlo
+	messageToSend.setReceiver(new AgentID(conv.Participant));  
 	messageToSend.setSender(myProcessor.getMyAgent().getAid() );
 	messageToSend.setHeader("jasonID", conv.jasonConvID);
 	
@@ -168,7 +168,7 @@ class AGREE_Method implements ReceiveStateMethod {
  * @param myProcessor the CProcessor managing the conversation
  * @param msg timeout message
  */
-protected void doSecondWait(CProcessor myProcessor, ACLMessage msg){		
+/*protected void doSecondWait(CProcessor myProcessor, ACLMessage msg){		
 }
 
 class SECOND_WAIT_Method implements ReceiveStateMethod {
@@ -176,7 +176,7 @@ class SECOND_WAIT_Method implements ReceiveStateMethod {
 		doSecondWait(myProcessor, messageReceived);
 		return "SECOND_WAIT_REQUEST_INITIATOR";
 	}
-}
+}*/
 
 /**
  * Method to execute when the initiator receives a failure message

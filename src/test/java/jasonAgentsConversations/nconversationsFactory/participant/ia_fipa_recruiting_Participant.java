@@ -44,11 +44,11 @@ public class ia_fipa_recruiting_Participant extends protocolInternalAction {
 
 		result = (result && (((Term)args[0]).isString()) );
 
-		if ( protocolSteep.compareTo(Protocol_Template.LOCATE_AGENTS_STEEP)==0)
+		if ( protocolSteep.compareTo(Protocol_Template.LOCATE_AGENTS_STEP)==0)
 		{
 			result = (result && (((Term)args[1]).isList()) );
 		}
-		if ( protocolSteep.compareTo(Protocol_Template.INFORM_STEEP)==0)
+		if ( protocolSteep.compareTo(Protocol_Template.INFORM_STEP)==0)
 		{
 			result = (result && (((Term)args[1]).isString()) );
 		}
@@ -71,7 +71,7 @@ public class ia_fipa_recruiting_Participant extends protocolInternalAction {
 
 		agName  = ts.getUserAgArch().getAgName();
 
-		if (protocolSteep.compareTo(Protocol_Template.JOIN_STEEP)==0){
+		if (protocolSteep.compareTo(Protocol_Template.JOIN_STEP)==0){
 
 			
 
@@ -111,7 +111,7 @@ public class ia_fipa_recruiting_Participant extends protocolInternalAction {
 
 		}
 		else
-			if (protocolSteep.compareTo(Protocol_Template.AGREE_STEEP)==0){
+			if (protocolSteep.compareTo(Protocol_Template.AGREE_STEP)==0){
 				
 				Conversation conv = Protocol_Factory.removeConversationByJasonID(agentConversationID);
 
@@ -124,7 +124,7 @@ public class ia_fipa_recruiting_Participant extends protocolInternalAction {
 				
 			}
 			else
-				if (protocolSteep.compareTo(Protocol_Template.REFUSE_STEEP)==0){
+				if (protocolSteep.compareTo(Protocol_Template.REFUSE_STEP)==0){
 					Conversation conv = Protocol_Factory.removeConversationByJasonID(agentConversationID);
 					conversationsList.put(agentConversationID, conv);
 
@@ -134,7 +134,7 @@ public class ia_fipa_recruiting_Participant extends protocolInternalAction {
 					conversationsList.get(agentConversationID).release_semaphore();
 				}
 				else
-					if (protocolSteep.compareTo(Protocol_Template.LOCATE_AGENTS_STEEP)==0){
+					if (protocolSteep.compareTo(Protocol_Template.LOCATE_AGENTS_STEP)==0){
 
 						List<String> tagents = new ArrayList<String>();
 						tagents = getTermAsStringList(args[1]);
@@ -145,7 +145,7 @@ public class ia_fipa_recruiting_Participant extends protocolInternalAction {
 						conversationsList.get(agentConversationID).release_semaphore();
 					}
 					else
-						if (protocolSteep.compareTo(Protocol_Template.INFORM_STEEP)==0){
+						if (protocolSteep.compareTo(Protocol_Template.INFORM_STEP)==0){
 							//getTermAsString(args[2]): has the task done
 							((FRCConversation)conversationsList.get(agentConversationID)).InfoToSend = getTermAsString(args[1]);
 

@@ -297,7 +297,7 @@ class Jason_FCN_Initiator {
 				reject = true;
 
 			for(i=0; i< acceptances.size(); i++){
-				//Ts.getLogger().info("@@@@@@@ - Enviando aceptacion a: "+acceptances.get(i).getReceiver().getLocalName());
+				
 				send = new SendState("SEND_ACCEPTANCE_"+i);
 				send.setMethod(new SEND_Method("SEND_ACCEPTANCE_"+i));
 				send.setMessageTemplate(acceptances.get(i));
@@ -397,7 +397,7 @@ class Jason_FCN_Initiator {
 			ACLMessage msg) {
 		
 		FCNConversation conv = (FCNConversation) myProcessor.getConversation();
-		//Ts.getLogger().info("@@@@@@@@ - Entro en RECEIVE_INFORM. CID: "+conv.jasonConvID);
+		
 		List<Literal> allperc = new ArrayList<Literal>();
 		
 		String tmpsender = myProcessor.getLastReceivedMessage().getSender().name;

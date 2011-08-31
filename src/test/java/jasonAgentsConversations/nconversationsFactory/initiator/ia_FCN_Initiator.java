@@ -46,7 +46,7 @@ public class ia_FCN_Initiator extends protocolInternalAction {
 		if (((Term)args[args.length-1]).isAtom()){result=true;}
 		result = (result && (((Term)args[0]).isString()) );
 
-		if  (protocolSteep.compareTo(Protocol_Template.START_STEEP)==0)
+		if  (protocolSteep.compareTo(Protocol_Template.START_STEP)==0)
 		{
 			int cont = 0; 
 			for (Term t:args){
@@ -102,7 +102,7 @@ public class ia_FCN_Initiator extends protocolInternalAction {
 		ts.getAg().getLogger().info("CALLING INTERNAL ACTION WITH STEEP: '"+protocolSteep+"'"+" CID: "+agentConversationID);
 
 		//the first state in the conversation
-		if (protocolSteep.compareTo(Protocol_Template.START_STEEP)==0){
+		if (protocolSteep.compareTo(Protocol_Template.START_STEP)==0){
 			//TODO: It's necessary to document that this is the time for waiting for the inform
 			timeOut = getTermAsInt(args[1]);
 			
@@ -147,7 +147,7 @@ public class ia_FCN_Initiator extends protocolInternalAction {
        		 using the FIPA_REQUEST protocol.*/
 
 				((ConvMagentixAgArch)ts.getUserAgArch()).getJasonAgent().addFactoryAsInitiator(Protocol_Factory);
-				//ts.getAg().getLogger().info("@@@@@@@@@@@@@  Initiator de la factory al crear: "+Protocol_Factory.convinitiator);
+				
 			}
 			
 			/* finally the new conversation starts an asynchronous conversation.*/
