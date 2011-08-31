@@ -26,22 +26,24 @@ public class Protocol_Template {
 	
 	public static final String CNP_Protocol = "cnp";
 	
-	public static final String START_STEEP = "start";
-	public static final String REQUEST_STEEP = "request";
-	public static final String FINAL_STEEP = "final";
-	public static final String TASK_DONE_STEEP = "taskdone";
-	public static final String TASK_NOT_DONE_STEEP = "tasknotdone";
-	public static final String JOIN_STEEP = "joinconversation";	
-	public static final String AGREE_STEEP = "agree";
-	public static final String REFUSE_STEEP = "refuse";
-	public static final String NOT_UNDERSTOOD_STEEP = "notunderstood";
-	public static final String INFORM_STEEP = "inform";
-	public static final String RECEIVE_INFORM_STEEP = "receiveinform";
-	public static final String FAILURE_STEEP = "failure";
-	public static final String LOCATE_AGENTS_STEEP = "locateagents";
+	public static final String START_STEP = "start";
+	public static final String REQUEST_STEP = "request";
+	public static final String FINAL_STEP = "final";
+	public static final String TASK_DONE_STEP = "taskdone";
+	public static final String TASK_NOT_DONE_STEP = "tasknotdone";
+	public static final String JOIN_STEP = "joinconversation";	
+	public static final String AGREE_STEP = "agree";
+	public static final String REFUSE_STEP = "refuse";
+	public static final String NOT_UNDERSTOOD_STEP = "notunderstood";
+	public static final String INFORM_STEP = "inform";
+	public static final String RECEIVE_INFORM_STEP = "receiveinform";
+	public static final String FAILURE_STEP = "failure";
+	public static final String LOCATE_AGENTS_STEP = "locateagents";
 	public static final String PROPOSALS_EVALUATED_STEP = "proposalsevaluated";
 	public static final String RESULTS_PROCESSED_STEP = "resultsprocessed";
 	public static final String MAKE_PROPOSAL_STEP = "makeproposal";
+	public static final String QUERYIF_STEP = "if-query";
+	public static final String QUERYREF_STEP = "ref-query";
 
 
 }
