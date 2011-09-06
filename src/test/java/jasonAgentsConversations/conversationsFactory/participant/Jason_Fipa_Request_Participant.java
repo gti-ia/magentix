@@ -3,12 +3,12 @@ package jasonAgentsConversations.conversationsFactory.participant;
 import jason.asSemantics.TransitionSystem;
 import jason.asSyntax.Literal;
 import jasonAgentsConversations.agent.ConvMagentixAgArch;
+import jasonAgentsConversations.agent.Protocol_Template;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
-import conversationsFactory.Protocol_Template;
 
 
 import es.upv.dsic.gti_ia.cAgents.CProcessor;
