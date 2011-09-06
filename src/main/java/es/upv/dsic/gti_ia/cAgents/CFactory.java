@@ -92,8 +92,9 @@ public class CFactory {
 	 */
 	protected CProcessor startConversation(ACLMessage msg, CProcessor parent,
 			Boolean isSync) {
+		
 		CProcessor cloneProcessor = (CProcessor) myCProcessor.clone();
-
+		
 		cloneProcessor.setConversationID(msg.getConversationId());
 		cloneProcessor.addMessage(msg);
 		cloneProcessor.setIdle(false);
@@ -183,6 +184,10 @@ public class CFactory {
 	 */
 	public String getName(){
 		return this.name;
+	}
+	
+	public void setCProcessor(CProcessor proc){  //added by Bexy
+		myCProcessor = proc;
 	}
 	
 }

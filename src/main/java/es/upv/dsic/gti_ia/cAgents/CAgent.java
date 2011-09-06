@@ -98,7 +98,7 @@ public abstract class CAgent extends BaseAgent {
 	ArrayList<CFactory> initiatorFactories = new ArrayList<CFactory>();
 	ArrayList<CFactory> participantFactories = new ArrayList<CFactory>();
 
-	ExecutorService exec;
+	public ExecutorService exec; //Bexy: Added 'public'
 	// Semaphore availableSends = new Semaphore(1, true);
 	final Condition iAmFinished = mutex.newCondition();
 	final Condition cProcessorRemoved = mutex.newCondition();

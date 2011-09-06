@@ -8,6 +8,7 @@ import jasonAgentsConversations.agentNConv.ConvCProcessor;
 import jasonAgentsConversations.agentNConv.ConvJasonAgent;
 import jasonAgentsConversations.agentNConv.ConvMagentixAgArch;
 import jasonAgentsConversations.agentNConv.Conversation;
+import jasonAgentsConversations.agentNConv.Protocol_Template;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +21,6 @@ import es.upv.dsic.gti_ia.cAgents.FinalState;
 import es.upv.dsic.gti_ia.cAgents.ReceiveState;
 import es.upv.dsic.gti_ia.cAgents.SendState;
 import es.upv.dsic.gti_ia.cAgents.WaitState;
-import es.upv.dsic.gti_ia.cAgents.protocols.Protocol_Template;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.MessageFilter;
@@ -107,13 +107,13 @@ public class Jason_Fipa_Request_Participant {
 		conv.aquire_semaphore();
 		
 		String result = null; 
-		if (RequestResult==Protocol_Template.AGREE_STEEP){
+		if (RequestResult==Protocol_Template.AGREE_STEP){
 			result = "AGREE";
 		}else 
-		if (RequestResult==Protocol_Template.REFUSE_STEEP){
+		if (RequestResult==Protocol_Template.REFUSE_STEP){
 			result = "REFUSE";
 		}else 
-		if (RequestResult==Protocol_Template.NOT_UNDERSTOOD_STEEP){
+		if (RequestResult==Protocol_Template.NOT_UNDERSTOOD_STEP){
 			result = "NOT_UNDERSTOOD";
 		} 
 
@@ -212,10 +212,10 @@ public class Jason_Fipa_Request_Participant {
 		conv.aquire_semaphore();
 		
 		String result = null; 
-		if (TaskDesition==Protocol_Template.INFORM_STEEP){
+		if (TaskDesition==Protocol_Template.INFORM_STEP){
 			result = "INFORM";
 		}else 
-		if (TaskDesition==Protocol_Template.FAILURE_STEEP){
+		if (TaskDesition==Protocol_Template.FAILURE_STEP){
 			result = "FAILURE";
 		}
 			

@@ -61,7 +61,7 @@ public class Jason_Fipa_Query_Participant {
 	/**
 	 * Method executed when the initiator receives the query
 	 * @param myProcessor the CProcessor managing the conversation
-	 * @param request request message
+	 * @param query request message
 	 * @return
 	 */
 	protected String doReceiveQuery(ConvCProcessor myProcessor,
