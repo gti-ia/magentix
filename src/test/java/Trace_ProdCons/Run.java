@@ -39,7 +39,7 @@ public class Run {
 			/**
 			 * Instantiating the Trace Manager
 			 */
-			TraceManager tm = new TraceManager(new AgentID("tm"));
+			TraceManager tm = new TraceManager(new AgentID("TM"));
 			
 			/**
 			 * Instantiating the sender agent

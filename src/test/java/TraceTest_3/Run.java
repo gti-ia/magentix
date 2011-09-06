@@ -84,7 +84,7 @@ public class Run {
 			/**
 			 * Instantiating the Trace Manager
 			 */
-			TraceManager tm = new TraceManager(new AgentID("tm"), true);
+			TraceManager tm = new TraceManager(new AgentID("TM"), true);
 
 			/**
 			 * Instantiating the observer agent

@@ -75,7 +75,7 @@ public class Run {
 			/**
 			 * Instantiating the Trace Manager
 			 */
-			TraceManager tm = new TraceManager(new AgentID("tm"));
+			TraceManager tm = new TraceManager(new AgentID("TM"));
 
 			System.out.println("INITIALIZING...");
 			
