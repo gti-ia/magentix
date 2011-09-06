@@ -23,7 +23,7 @@ public class TraceInteract {
 	 * by the service and a description of the tracing service.<p>
 	 * 
 	 * This method communicates via ACL with a trace manager entity in localhost
-	 * ("qpid://tm@localhost:8080"). To interact with a different trace manager
+	 * ("qpid://TM@localhost:8080"). To interact with a different trace manager
 	 * entity, use the method
 	 * {@link es.upv.dsic.gti_ia.trace.TraceInteract#publishTracingService(AgentID tms_aid, BaseAgent applicantAgent, String serviceName, String description)}
 	 * 
@@ -38,7 +38,7 @@ public class TraceInteract {
 		 * Building a ACLMessage
 		 */
 		ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
-		AgentID tms_aid = new AgentID("qpid://tm@localhost:8080");
+		AgentID tms_aid = new AgentID("qpid://TM@localhost:8080");
 		String body;
 		
 		msg.setReceiver(tms_aid);
@@ -63,7 +63,7 @@ public class TraceInteract {
 	 * 
 	 * This method communicates via ACL with the trace manager entity specified
 	 * by the parameter tms_aid. To interact with the default trace manager entity in
-	 * localhost ("qpid://tm@localhost:8080"), use the method
+	 * localhost ("qpid://TM@localhost:8080"), use the method
 	 * {@link es.upv.dsic.gti_ia.trace.TraceInteract#publishTracingService(BaseAgent applicantAgent, String serviceName, String description)}
 	 * 
 	 * @param tms_aid			AgentID of the trace manager entity which is being sent the publication request
@@ -103,7 +103,7 @@ public class TraceInteract {
 	 * providers.<p>
 	 * 
 	 * This method communicates via ACL with a trace manager entity in localhost
-	 * ("qpid://tm@localhost:8080"). To interact with a different trace manager
+	 * ("qpid://TM@localhost:8080"). To interact with a different trace manager
 	 * entity, use the method
 	 * {@link es.upv.dsic.gti_ia.trace.TraceInteract#unpublishTracingService(AgentID tms_aid, BaseAgent applicantAgent, String serviceName)}
 	 * 
@@ -115,7 +115,7 @@ public class TraceInteract {
 		 * Building a ACLMessage
 		 */
 		ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
-		AgentID tms_aid = new AgentID("qpid://tm@localhost:8080");
+		AgentID tms_aid = new AgentID("qpid://TM@localhost:8080");
 		String body;
 		
 		msg.setReceiver(tms_aid);
@@ -141,7 +141,7 @@ public class TraceInteract {
 	 * 
 	 * This method communicates via ACL with the trace manager entity specified
 	 * by the parameter tms_aid. To interact with the default trace manager entity in
-	 * localhost ("qpid://tm@localhost:8080"), use the method
+	 * localhost ("qpid://TM@localhost:8080"), use the method
 	 * {@link es.upv.dsic.gti_ia.trace.TraceInteract#unpublishTracingService(BaseAgent applicantAgent, String serviceName)}
 	 * 
 	 * @param tms_aid			AgentID of the trace manager entity which is being sent the unpublication request
@@ -175,7 +175,7 @@ public class TraceInteract {
 	 * by the service and a description of the tracing service.<p>
 	 * 
 	 * This method communicates via ACL with a trace manager entity in localhost
-	 * ("qpid://tm@localhost:8080"). To interact with a different trace manager
+	 * ("qpid://TM@localhost:8080"). To interact with a different trace manager
 	 * entity, use the method
 	 * {@link es.upv.dsic.gti_ia.trace.TraceInteract#requestTracingService(AgentID tms_aid, BaseAgent requesterAgent, String serviceName, AgentID originEntity)}<p>
 	 * 
@@ -195,7 +195,7 @@ public class TraceInteract {
 		 * Building a ACLMessage
 		 */
 		ACLMessage msg = new ACLMessage(ACLMessage.SUBSCRIBE);
-		AgentID tms_aid = new AgentID("qpid://tm@localhost:8080");
+		AgentID tms_aid = new AgentID("qpid://TM@localhost:8080");
 		
 		msg.setReceiver(tms_aid);
 		msg.setSender(requesterAgent.getAid());
@@ -216,7 +216,7 @@ public class TraceInteract {
 	 * 
 	 * This method communicates via ACL with the trace manager entity specified
 	 * by the parameter tms_aid. To interact with the default trace manager entity in
-	 * localhost ("qpid://tm@localhost:8080"), use the method
+	 * localhost ("qpid://TM@localhost:8080"), use the method
 	 * {@link es.upv.dsic.gti_ia.trace.TraceInteract#requestTracingService(BaseAgent requesterAgent, String serviceName, AgentID originEntity)}<p>
 	 * 
 	 * This method requests a tracing service provided by a specific tracing entity. To request a tracing service from
@@ -255,7 +255,7 @@ public class TraceInteract {
 	 * by the service and a description of the tracing service.<p>
 	 * 
 	 * This method communicates via ACL with a trace manager entity in localhost
-	 * ("qpid://tm@localhost:8080"). To interact with a different trace manager
+	 * ("qpid://TM@localhost:8080"). To interact with a different trace manager
 	 * entity, use the method
 	 * {@link es.upv.dsic.gti_ia.trace.TraceInteract#requestTracingService(AgentID tms_aid, BaseAgent requesterAgent, String serviceName)}<p>
 	 * 
@@ -274,7 +274,7 @@ public class TraceInteract {
 		 * Building a ACLMessage
 		 */
 		ACLMessage msg = new ACLMessage(ACLMessage.SUBSCRIBE);
-		AgentID tms_aid = new AgentID("qpid://tm@localhost:8080");
+		AgentID tms_aid = new AgentID("qpid://TM@localhost:8080");
 		
 		msg.setReceiver(tms_aid);
 		msg.setSender(requesterAgent.getAid());
@@ -295,7 +295,7 @@ public class TraceInteract {
 	 * 
 	 * This method communicates via ACL with the trace manager entity specified
 	 * by the parameter tms_aid. To interact with the default trace manager entity in
-	 * localhost ("qpid://tm@localhost:8080"), use the method
+	 * localhost ("qpid://TM@localhost:8080"), use the method
 	 * {@link es.upv.dsic.gti_ia.trace.TraceInteract#requestTracingService(AgentID tms_aid, BaseAgent requesterAgent, String serviceName)}<p>
 	 * 
 	 * This method requests a tracing service to receive trace events coming from any tracing entity which provides it.
@@ -329,7 +329,7 @@ public class TraceInteract {
 	 * Request all tracing services available at the time.<p>
 	 * 
 	 * This method communicates via ACL with a trace manager entity in localhost
-	 * ("qpid://tm@localhost:8080"). To interact with a different trace manager
+	 * ("qpid://TM@localhost:8080"). To interact with a different trace manager
 	 * entity, use the method
 	 * {@link es.upv.dsic.gti_ia.trace.TraceInteract#requestAllTracingServices(AgentID tms_aid, BaseAgent requesterAgent)}
 	 * 
@@ -340,7 +340,7 @@ public class TraceInteract {
 		 * Building a ACLMessage
 		 */
 		ACLMessage msg = new ACLMessage(ACLMessage.SUBSCRIBE);
-		AgentID tms_aid = new AgentID("qpid://tm@localhost:8080");
+		AgentID tms_aid = new AgentID("qpid://TM@localhost:8080");
 		
 		msg.setReceiver(tms_aid);
 		msg.setSender(requesterAgent.getAid());
@@ -357,7 +357,7 @@ public class TraceInteract {
 	 * 
 	 * This method communicates via ACL with the trace manager entity specified
 	 * by the parameter tms_aid. To interact with the default trace manager entity in
-	 * localhost ("qpid://tm@localhost:8080"), use the method
+	 * localhost ("qpid://TM@localhost:8080"), use the method
 	 * {@link es.upv.dsic.gti_ia.trace.TraceInteract#requestAllTracingServices(BaseAgent requesterAgent)}
 	 * 
 	 * @param tms_aid			AgentID of the trace manager entity which is being sent the request
@@ -383,7 +383,7 @@ public class TraceInteract {
 	 * Cancel subscription to a tracing service from a specific tracing entity.<p>
 	 * 
 	 * This method communicates via ACL with a trace manager entity in localhost
-	 * ("qpid://tm@localhost:8080"). To interact with a different trace manager
+	 * ("qpid://TM@localhost:8080"). To interact with a different trace manager
 	 * entity, use the method
 	 * {@link es.upv.dsic.gti_ia.trace.TraceInteract#cancelTracingServiceSubscription(AgentID tms_aid, BaseAgent requesterAgent, String serviceName, AgentID originEntity)}<p>
 	 * 
@@ -400,7 +400,7 @@ public class TraceInteract {
 		 * Building a ACLMessage
 		 */
 		ACLMessage msg = new ACLMessage(ACLMessage.CANCEL);
-		AgentID tms_aid = new AgentID("qpid://tm@localhost:8080");
+		AgentID tms_aid = new AgentID("qpid://TM@localhost:8080");
 		
 		msg.setReceiver(tms_aid);
 		msg.setSender(requesterAgent.getAid());
@@ -417,7 +417,7 @@ public class TraceInteract {
 	 * 
 	 * This method communicates via ACL with the trace manager entity specified
 	 * by the parameter tms_aid. To interact with the default trace manager entity in
-	 * localhost ("qpid://tm@localhost:8080"), use the method
+	 * localhost ("qpid://TM@localhost:8080"), use the method
 	 * {@link es.upv.dsic.gti_ia.trace.TraceInteract#cancelTracingServiceSubscription(BaseAgent requesterAgent, String serviceName, AgentID originEntity)}<p>
 	 * 
 	 * This method cancels the subscription to a tracing service from a specific tracing entity. To cancel a subscription
@@ -449,7 +449,7 @@ public class TraceInteract {
 	 * Cancel subscription to a tracing service from any tracing entity.<p>
 	 * 
 	 * This method communicates via ACL with a trace manager entity in localhost
-	 * ("qpid://tm@localhost:8080"). To interact with a different trace manager
+	 * ("qpid://TM@localhost:8080"). To interact with a different trace manager
 	 * entity, use the method
 	 * {@link es.upv.dsic.gti_ia.trace.TraceInteract#cancelTracingServiceSubscription(AgentID tms_aid, BaseAgent requesterAgent, String serviceName)}<p>
 	 * 
@@ -465,7 +465,7 @@ public class TraceInteract {
 		 * Building a ACLMessage
 		 */
 		ACLMessage msg = new ACLMessage(ACLMessage.CANCEL);
-		AgentID tms_aid = new AgentID("qpid://tm@localhost:8080");
+		AgentID tms_aid = new AgentID("qpid://TM@localhost:8080");
 		
 		msg.setReceiver(tms_aid);
 		msg.setSender(requesterAgent.getAid());
@@ -482,7 +482,7 @@ public class TraceInteract {
 	 * 
 	 * This method communicates via ACL with the trace manager entity specified
 	 * by the parameter tms_aid. To interact with the default trace manager entity in
-	 * localhost ("qpid://tm@localhost:8080"), use the method
+	 * localhost ("qpid://TM@localhost:8080"), use the method
 	 * {@link es.upv.dsic.gti_ia.trace.TraceInteract#cancelTracingServiceSubscription(BaseAgent requesterAgent, String serviceName)}<p>
 	 * 
 	 * This method cancels the subscription to a tracing service from a specific tracing entity. To cancel a subscription
@@ -513,7 +513,7 @@ public class TraceInteract {
 	 * Request a list of registered tracing entities.<p>
 	 * 
 	 * This method communicates via ACL with a trace manager entity in localhost
-	 * ("qpid://tm@localhost:8080"). To interact with a different trace manager
+	 * ("qpid://TM@localhost:8080"). To interact with a different trace manager
 	 * entity, use the method
 	 * {@link es.upv.dsic.gti_ia.trace.TraceInteract#listTracingEntities(AgentID tms_aid, BaseAgent applicantAgent)}
 	 * 
@@ -524,7 +524,7 @@ public class TraceInteract {
 		 * Building a ACLMessage
 		 */
 		ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
-		AgentID tms_aid = new AgentID("qpid://tm@localhost:8080");
+		AgentID tms_aid = new AgentID("qpid://TM@localhost:8080");
 		String body;
 		
 		msg.setReceiver(tms_aid);
@@ -544,7 +544,7 @@ public class TraceInteract {
 	 * 
 	 * This method communicates via ACL with the trace manager entity specified
 	 * by the parameter tms_aid. To interact with the default trace manager entity in
-	 * localhost ("qpid://tm@localhost:8080"), use the method
+	 * localhost ("qpid://TM@localhost:8080"), use the method
 	 * {@link es.upv.dsic.gti_ia.trace.TraceInteract#listTracingEntities(BaseAgent applicantAgent)}
 	 * 
 	 * @param tms_aid			AgentID of the trace manager entity which is being sent the request
@@ -573,7 +573,7 @@ public class TraceInteract {
 	 * Request a list of registered tracing services.<p>
 	 * 
 	 * This method communicates via ACL with a trace manager entity in localhost
-	 * ("qpid://tm@localhost:8080"). To interact with a different trace manager
+	 * ("qpid://TM@localhost:8080"). To interact with a different trace manager
 	 * entity, use the method
 	 * {@link es.upv.dsic.gti_ia.trace.TraceInteract#listTracingServices(AgentID tms_aid, BaseAgent applicantAgent)}
 	 * 
@@ -584,7 +584,7 @@ public class TraceInteract {
 		 * Building a ACLMessage
 		 */
 		ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
-		AgentID tms_aid = new AgentID("qpid://tm@localhost:8080");
+		AgentID tms_aid = new AgentID("qpid://TM@localhost:8080");
 		String body;
 		
 		msg.setReceiver(tms_aid);
@@ -604,7 +604,7 @@ public class TraceInteract {
 	 * 
 	 * This method communicates via ACL with the trace manager entity specified
 	 * by the parameter tms_aid. To interact with the default trace manager entity in
-	 * localhost ("qpid://tm@localhost:8080"), use the method
+	 * localhost ("qpid://TM@localhost:8080"), use the method
 	 * {@link es.upv.dsic.gti_ia.trace.TraceInteract#listTracingServices(BaseAgent applicantAgent)}
 	 * 
 	 * @param tms_aid			AgentID of the trace manager entity which is being sent the request
