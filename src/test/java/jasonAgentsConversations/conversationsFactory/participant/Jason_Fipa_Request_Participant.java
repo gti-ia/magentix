@@ -8,10 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
+import conversationsFactory.Protocol_Template;
+
 
 import es.upv.dsic.gti_ia.cAgents.CProcessor;
 import es.upv.dsic.gti_ia.cAgents.protocols.FIPA_REQUEST_Participant;
-import es.upv.dsic.gti_ia.cAgents.protocols.Protocol_Template;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 
