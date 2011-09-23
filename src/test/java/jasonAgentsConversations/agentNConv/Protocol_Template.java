@@ -38,12 +38,16 @@ public class Protocol_Template {
 	public static final String INFORM_STEP = "inform";
 	public static final String RECEIVE_INFORM_STEP = "receiveinform";
 	public static final String FAILURE_STEP = "failure";
+	public static final String FAILURE_CANCEL_STEP = "failurecancel";
+	public static final String INFORM_CANCEL_STEP = "informcancel";
 	public static final String LOCATE_AGENTS_STEP = "locateagents";
 	public static final String PROPOSALS_EVALUATED_STEP = "proposalsevaluated";
 	public static final String RESULTS_PROCESSED_STEP = "resultsprocessed";
 	public static final String MAKE_PROPOSAL_STEP = "makeproposal";
 	public static final String QUERYIF_STEP = "if-query";
 	public static final String QUERYREF_STEP = "ref-query";
-
+	public static final String SUBSCRIBE_STEP = "subscribe";
+	public static final String RECEIVE_SUBSCRIBE_STEP = "receivesubscribe";
+	public static final String CANCEL_STEP = "cancel";
 
 }

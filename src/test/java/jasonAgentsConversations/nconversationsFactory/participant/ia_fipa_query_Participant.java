@@ -1,7 +1,6 @@
 package jasonAgentsConversations.nconversationsFactory.participant;
 
 import es.upv.dsic.gti_ia.core.ACLMessage;
-import es.upv.dsic.gti_ia.core.AgentID;
 import jason.JasonException;
 import jason.asSemantics.TransitionSystem;
 import jason.asSemantics.Unifier;

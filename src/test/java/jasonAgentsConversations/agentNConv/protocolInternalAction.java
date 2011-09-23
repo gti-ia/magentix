@@ -78,10 +78,13 @@ public abstract class protocolInternalAction extends DefaultInternalAction {
 	}
 	
 	public List<String> getTermAsStringList(Term term){
-		String selem;
+		String selem = "" ;
 		List<String> result = new ArrayList<String>();
 		for (Term t: (ListTerm)term) {
-			selem = ((Atom)t).toString();
+			if (t.isAtom())
+			  {selem = ((Atom)t).toString();}
+			else if (t.isLiteral())
+			  {selem = t.toString();}
 			result.add(selem);
 		}
 		return result;

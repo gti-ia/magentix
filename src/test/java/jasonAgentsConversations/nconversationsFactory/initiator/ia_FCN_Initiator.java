@@ -3,7 +3,6 @@ package jasonAgentsConversations.nconversationsFactory.initiator;
 //Internal action code for project CNP
 
 
-import es.upv.dsic.gti_ia.cAgents.SendState;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import jason.JasonException;

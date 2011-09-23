@@ -7,7 +7,6 @@ import jasonAgentsConversations.agentNConv.ConvCProcessor;
 import jasonAgentsConversations.agentNConv.ConvJasonAgent;
 import jasonAgentsConversations.agentNConv.ConvMagentixAgArch;
 import jasonAgentsConversations.agentNConv.Conversation;
-import jasonAgentsConversations.agentNConv.FCNConversation;
 import jasonAgentsConversations.agentNConv.FQConversation;
 
 import java.util.ArrayList;

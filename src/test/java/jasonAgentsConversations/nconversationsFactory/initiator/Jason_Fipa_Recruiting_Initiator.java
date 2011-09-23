@@ -45,7 +45,6 @@ public class Jason_Fipa_Recruiting_Initiator {
 	 */
 	protected void doBegin(ConvCProcessor myProcessor, ACLMessage msg) {
 		myProcessor.getInternalData().put("InitialMessage", msg);
-		FRCConversation conv =  (FRCConversation) myProcessor.getConversation();
 	}
 
 	class BEGIN_Method implements BeginStateMethod {

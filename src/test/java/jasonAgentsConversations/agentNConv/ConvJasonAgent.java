@@ -1,8 +1,6 @@
 package jasonAgentsConversations.agentNConv;
 
 
-import java.util.HashMap;
-
 import es.upv.dsic.gti_ia.cAgents.BeginState;
 import es.upv.dsic.gti_ia.cAgents.BeginStateMethod;
 import es.upv.dsic.gti_ia.cAgents.CAgent;
