@@ -22,48 +22,48 @@ import es.upv.dsic.gti_ia.core.BaseAgent;
  * This class is the parent class for the OMS and SF proxys.
  */
 public class THOMASProxy {
-	
-	
-	
+
+
+
 	//******************************************VARIABLES*********************************************
 
 	static Logger logger = Logger.getLogger(THOMASProxy.class);
-	
-	
+
+
 	BaseAgent agent = null;
 	Oracle oracle;
-	
+
 	Configuration c;
-	
+
 	String call,thomasAgent,clientProvider,serviceName,ErrorValue,status,ServiceDescriptionLocation;
 	String value = ""; //Returned value
-	
+
 	int Quantity;
 	String[] elements;
-	
+
 	Hashtable<AgentID, String> agents = new Hashtable<AgentID, String>();
 	ArrayList<String> listResults = new ArrayList<String>();
-	
-	
+
+
 	ProcessDescription processDescripcion;
 	ProfileDescription profileDescription;
-	
+
 	boolean isgenericSerice = false;
-	
+
 	private Hashtable<String, String> genericServiceList = new Hashtable<String, String>();
 	private String[] agentGetProcess;
 	private boolean Status = true;
-	
+
 	private ArrayList<String> serviceType1 = new ArrayList<String>();//This type return a String
 	private ArrayList<String> serviceType2 = new ArrayList<String>();//This type return a  Array of strings
 	private ArrayList<String> serviceType3 = new ArrayList<String>();//This type return a Integer
 	private ArrayList<String> serviceType4 = new ArrayList<String>();//This type return a  Hastable<AgentID, String>
-	
-	
-	
-	
+
+
+
+
 	//**********************************CONSTRUCTORS******************************************
-	
+
 	/**
 	 * This class gives us the support to accede to the services of the OMS and SF
 	 * @param agent, is a BaseAgent, this agent implemented the communication protocol          
@@ -88,18 +88,18 @@ public class THOMASProxy {
 	 * 
 	 */
 	THOMASProxy(BaseAgent agent, String thomasAgent) {
-		
+
 		this.agent = agent;
 		this.thomasAgent = thomasAgent;
 		c = Configuration.getConfiguration();
 		this.initialize();
-		
+
 	}
-	
-   /**
-    * Adds a new element to list
-    * @param element
-    */
+
+	/**
+	 * Adds a new element to list
+	 * @param element
+	 */
 	private void addElementToList(String element) {
 		this.listResults.add(element);
 	}
@@ -111,13 +111,13 @@ public class THOMASProxy {
 	private void setQuantity(int Quantity) {
 		this.Quantity = Quantity;
 	}
-	
+
 	/**
 	 * Initializes the structures with the types of services
 	 */
 	private void initialize()
 	{
-		
+
 		//Add type for each service 
 		serviceType1.add("LeaveRoleProcess");
 		serviceType1.add("AcquireRoleProcess");
@@ -135,8 +135,8 @@ public class THOMASProxy {
 		serviceType1.add("GetProfileProcess");
 		serviceType1.add("RegisterProfileProcess");
 		serviceType1.add("RegisterProcessProcess");
-		
-		
+
+
 		serviceType2.add("InformAgentRoleProcess");
 		serviceType2.add("InformMembersProcess");
 		serviceType2.add("InformRoleNormsProcess");
@@ -145,25 +145,25 @@ public class THOMASProxy {
 		serviceType2.add("InformUnitRolesProcess");
 		serviceType2.add("SearchServiceProcess");
 
-		
-		
-		serviceType3.add("QuantityMembersProcess");
-		
-		serviceType4.add("GetProcessProcess");
-		
 
-		
-		
+
+		serviceType3.add("QuantityMembersProcess");
+
+		serviceType4.add("GetProcessProcess");
+
+
+
+
 	}
 	//****************************************Common methods***************************************************
-	
+
 	/**
 	 * This method builds the ACLMessage with the sender, content, protocol and receivers.
 	 */
 	Object sendInform() {
 
 		this.reset();
-		
+
 		ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
 		requestMsg.setSender(agent.getAid());
 		requestMsg.setContent(call);
@@ -176,16 +176,16 @@ public class THOMASProxy {
 		{
 			requestMsg.setReceiver(new AgentID(thomasAgent));	
 		}
-		
-		
+
+
 		logger.info("[QueryAgent]Sms to send: " + requestMsg.getContent());
 		logger.info("[QueryAgent]Sending... ");
-		
+
 		initProxyProtocol(requestMsg);
-		
+
 		return returnResult();
 	}
-	
+
 	/**
 	 * Clear values.
 	 */
@@ -198,7 +198,7 @@ public class THOMASProxy {
 		ErrorValue = "";
 		status = "";	
 	}
-	
+
 	/**
 	 * This function returns the result of service, adds a new object with the result 
 	 * a new or showed an error message if the operation is incorrect.
@@ -260,7 +260,7 @@ public class THOMASProxy {
 		}
 
 	}
-	
+
 
 	/**
 	 * This method initiates a new communication Protocol,If is an QueueAgent or is a CAgent. Each type runs protocol differently.
@@ -274,12 +274,12 @@ public class THOMASProxy {
 			do {
 				test.action();
 			} while (!test.finished());
-			
+
 		}
 		else if (agent instanceof CAgent)
 		{
-			
-		//Initialization protocol  / conversation request.
+
+			//Initialization protocol  / conversation request.
 			CAgent myAgent = (CAgent)agent;
 			THOMASCAgentRequest protocol = new THOMASCAgentRequest(this);
 			CFactory talk = protocol.newFactory("THOMASRequest", null, requestMsg, 1, myAgent, 0);
@@ -287,10 +287,10 @@ public class THOMASProxy {
 			myAgent.startSyncConversation(talk.getName());
 			myAgent.removeFactory(talk.getName());
 		}
-		
-		
+
+
 	}
-	
+
 	/**
 	 * Sets returned value 
 	 * @param msg
@@ -298,9 +298,9 @@ public class THOMASProxy {
 	private void setValue(String msg)
 	{
 		this.value = msg;
-		
+
 	}
-	
+
 	/**
 	 * Adds the Id profile when the search service is calls
 	 * @param id
@@ -311,8 +311,8 @@ public class THOMASProxy {
 
 	}
 
-	
-	
+
+
 	/**
 	 * This function parses a result string for return a value. 
 	 */
@@ -331,6 +331,7 @@ public class THOMASProxy {
 			if (!serviceName.equals("DeregisterProfileProcess")
 					&& !serviceName.equals("ModifyProfileProcess")
 					&& !serviceName.equals("ModifyProcessProcess")
+					&& !serviceName.equals("GetProcessProcess")
 					&& !serviceName.equals("RemoveProviderProcess")) {
 				arg1 = msg.getContent().substring(
 						msg.getContent().indexOf("=") + 1,
@@ -356,7 +357,7 @@ public class THOMASProxy {
 
 			}
 
-			
+
 			if (serviceName.equals("GetProfileProcess")) {
 				arg2 = msg.getContent().substring(
 						msg.getContent().indexOf(",") + 1,
@@ -373,7 +374,7 @@ public class THOMASProxy {
 
 			}
 
-			
+
 			if (serviceName.equals("DeregisterProfileProcess")) {
 
 				if (arg2.equals("1"))// Is correct
@@ -387,34 +388,66 @@ public class THOMASProxy {
 
 			}
 
-	
-			if (serviceName.equals("GetProcessProcess")) {
 
+			if (serviceName.equals("GetProcessProcess")) {
 				agentGetProcess = null;
+				
 				if (arg2.equals("0")) {
 					this.Status = false;
 					this.setValue(arg1);
 
 				} else {
-					agentGetProcess = arg1.split(",");
-					for (String a : agentGetProcess) {
-						//Extract the URL process.
-						String arg_aux = a.substring(arg1.indexOf(" ") + 1, arg1
-								.length());
+					//Extract the providers of the message content.
+					String base = msg.getContent().substring(msg.getContent().indexOf("=")+1);
+					for (String s : base.split(","))
+					{
+						if (s.contains("@") && s.contains("="))
+						{
+							arg1 = s.substring(
+									s.indexOf("=") + 1,
+									s.length());
 
-						arg1 = a.substring(0, arg1.indexOf(" "));
-						arg1 = arg1.substring(arg1.indexOf("-") + 1, arg1.length());
 
-						
-						//We have control if exist zero, one o more providers.
-						if (!arg1.equals("null"))//Exist any provider
+							String arg_aux = arg1.substring(arg1.indexOf(" ") + 1, arg1
+									.length());
+
+							//arg1 = s.substring(0, arg1.indexOf(" "));
+							arg1 = arg1.substring(arg1.indexOf("-") + 1, arg1.indexOf(" "));
+
+
+							//We have control if exist zero, one o more providers.
+							if (!arg1.equals("null"))//Exist any provider
+							{
+
+								this.agents.put(new AgentID(arg1), arg_aux);
+							}
+
+						}
+						else if (s.contains("@"))
 						{
 
-							this.agents.put(new AgentID(arg1), arg_aux);
+
+							int index = s.indexOf(" ", 1);
+
+							String arg_aux = s.substring(index, s
+									.length());
+
+
+
+							arg1 = s.substring(1, index);
+
+							arg1 = arg1.substring(arg1.indexOf("-") + 1, arg1.length());
+
+
+							//We have control if exist zero, one o more providers.
+							if (!arg1.equals("null"))//Exist any provider
+							{
+
+								this.agents.put(new AgentID(arg1), arg_aux);
+							}
+
 						}
-
 					}
-
 
 				}
 
@@ -472,7 +505,7 @@ public class THOMASProxy {
 
 			}
 
-		
+
 			if (serviceName.equals("ModifyProcessProcess")) {
 				this.setValue(arg2);
 
@@ -485,7 +518,7 @@ public class THOMASProxy {
 					this.setValue("Service process id does not exist");
 			}
 
-	
+
 			if (this.isgenericSerice) {
 
 				//If not is a OMS or SF services, according to outputs extract the results.
@@ -523,7 +556,7 @@ public class THOMASProxy {
 		else
 		{
 
-	//**********************************************OMS parsing*********************************************
+			//**********************************************OMS parsing*********************************************
 			if (serviceName.equals("InformUnitProcess")) {
 
 				String arg;
@@ -569,7 +602,7 @@ public class THOMASProxy {
 					|| serviceName.equals("InformRoleProfilesProcess")
 					|| serviceName.equals("InformUnitRolesProcess")) {
 
-			
+
 				String argAux;
 
 				if (serviceName.equals("InformAgentRoleProcess")
@@ -662,10 +695,10 @@ public class THOMASProxy {
 
 		}
 	}
-	
-	
+
+
 	//***************************************Protocol implementation*******************************************
-	
+
 	/**
 	 * This class handles the messages received from the OMS or SF. 
 	 */
@@ -677,8 +710,8 @@ public class THOMASProxy {
 			super(agent, msg);
 			this.thomasProxy = thomasProxy;
 		}
-		
-		
+
+
 
 		protected void handleAgree(ACLMessage msg) {
 			logger.info(myAgent.getName() + ": OOH! "
@@ -730,19 +763,19 @@ public class THOMASProxy {
 
 		}
 	}
-	
+
 	/**
 	 * This class handles the messages received from the OMS or SF. 
 	 */
 	class THOMASCAgentRequest extends FIPA_REQUEST_Initiator {
-		
+
 		THOMASProxy thomasProxy;
-		
+
 		public THOMASCAgentRequest(THOMASProxy thomasProxy){
 			this.thomasProxy = thomasProxy;
 			thomasProxy.setValue("");
 		}
-		
+
 		protected void doInform(CProcessor myProcessor, ACLMessage msg) {
 			logger.info(myProcessor.getMyAgent().getName() + ":"
 					+ msg.getSender().getLocalName()
@@ -750,27 +783,27 @@ public class THOMASProxy {
 					+ " They said : " + msg.getContent());
 			this.thomasProxy.extractInfo(msg);
 		}
-		
+
 		protected void doAgree(CProcessor myProcessor, ACLMessage msg){
 			logger.info(myProcessor.getMyAgent().getName() + ": OOH! "
 					+ msg.getSender().getLocalName()
 					+ " Has agreed to excute the service!");
 		}
-		
+
 		protected void doRefuse(CProcessor myProcessor, ACLMessage msg){
 			logger.error(myProcessor.getMyAgent().getName() + ": Oh no! "
 					+ msg.getSender().getLocalName()
 					+ " has rejected my proposal.");
 			this.thomasProxy.setValue("");
 		}
-		
+
 		protected void doNotUnderstood(CProcessor myProcessor, ACLMessage msg){
 			logger.error(myProcessor.getMyAgent().getName() + ":"
 					+ msg.getSender().getLocalName()
 					+ " has indicated that they didn't understand.");
 			this.thomasProxy.setValue("");
 		}
-		
+
 		protected void doFailure(CProcessor myProcessor, ACLMessage msg){
 			logger.error(myProcessor.getMyAgent().getName() + ":"
 					+ msg.getSender().getLocalName()
@@ -779,6 +812,6 @@ public class THOMASProxy {
 			this.thomasProxy.setValue("");
 		}
 	}
-	
+
 
 }
