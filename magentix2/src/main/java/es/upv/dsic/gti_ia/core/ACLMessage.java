@@ -168,6 +168,8 @@ public class ACLMessage implements Serializable, Cloneable {
 	private long reply_byInMillisec = 0;
 
 	private Map<String, String> headers = new HashMap<String, String>();
+	
+	private Map<String, String> exchangeHeaders = new HashMap<String, String>();
 
 	// constructores
 
@@ -996,5 +998,17 @@ public class ACLMessage implements Serializable, Cloneable {
 		msg.setContent(strMsg.substring(indice2 + 1, indice2 + 1 + tam));
 		
 		return msg;
+	}
+	
+	public void putExchangeHeader(String key, String value){
+		this.exchangeHeaders.put(key, value);
+	}
+	
+	public String getExchangeHeader(String key){
+		return this.exchangeHeaders.get(key);
+	}
+	
+	public Map<String, String> getExchangeHeaders(){
+		return this.exchangeHeaders;
 	}
 }
