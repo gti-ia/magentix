@@ -386,12 +386,13 @@ public class CProcessor implements Runnable, Cloneable {
 							currentState = "SENDING_ERRORS_STATE";
 							currentMessage = retrievedMessage;
 
-						} else if (retrievedMessage.getPerformativeInt() == ACLMessage.CANCEL) { // CANCEL
+						} /*else if (retrievedMessage.getPerformativeInt() == ACLMessage.CANCEL) { // CANCEL
 							backState = currentState;
 							currentState = "CANCEL_STATE";
 							currentMessage = retrievedMessage;
 
-						} else if (retrievedMessage.getHeaderValue("ERROR")
+						} */
+						else if (retrievedMessage.getHeaderValue("ERROR")
 								.equals("TERMINATED_FATHER")) {
 							backState = currentState;
 							currentState = "TERMINATED_FATHER_STATE";
