@@ -93,7 +93,7 @@ public abstract class CAgent extends BaseAgent {
 	private HashMap<String, HashMap<String, Long>> deadlines = new HashMap<String, HashMap<String, Long>>();
 	ReentrantLock mutex = new ReentrantLock();
 	private CFactory welcomeFactory;
-	private CProcessor welcomeProcessor;
+	CProcessor welcomeProcessor;
 	protected CFactory defaultFactory;
 	ArrayList<CFactory> initiatorFactories = new ArrayList<CFactory>();
 	ArrayList<CFactory> participantFactories = new ArrayList<CFactory>();
@@ -202,10 +202,15 @@ public abstract class CAgent extends BaseAgent {
 					c.addMessage(msg);
 				}
 			}
-		} else {
-			this.notifyLastProcessorRemoved();
+		//} else {
+			//this.notifyLastProcessorRemoved();
 		}
+		this.notifyLastProcessorRemoved();
 		this.unlock();
+	}
+	
+	public void ShutdownNoLock(){
+		this.inShutdown = true;
 	}
 
 	public void send(ACLMessage msg) {
@@ -356,7 +361,7 @@ public abstract class CAgent extends BaseAgent {
 	 * This method signals the end of the agent in order to unlock
 	 * the main conversation thread
 	 */
-	private void notifyAgentEnd() {
+	void notifyAgentEnd() {
 		this.lock();
 		iAmFinished.signal();
 		this.unlock();
