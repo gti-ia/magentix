@@ -496,64 +496,103 @@ public class BaseAgent implements Runnable
 	 */
 	public void send(ACLMessage msg)
 	{
+		if(msg.getExchangeHeaders().isEmpty()){
+			/**
+			 * Permite incluir un arroba en el nombre del agente destinatario. Condici�n Obligatoria
+			 * para JADE. @ ser� reemplazado por ~
+			 */
+			msg.getReceiver().name = msg.getReceiver().name.replace('@', '~');
 
-		/**
-		 * Permite incluir un arroba en el nombre del agente destinatario. Condici�n Obligatoria
-		 * para JADE. @ ser� reemplazado por ~
-		 */
-		msg.getReceiver().name = msg.getReceiver().name.replace('@', '~');
+			MessageTransfer xfr = new MessageTransfer();
 
-		MessageTransfer xfr = new MessageTransfer();
+			xfr.destination("amq.direct");
+			xfr.acceptMode(MessageAcceptMode.EXPLICIT);
+			xfr.acquireMode(MessageAcquireMode.PRE_ACQUIRED);
 
-		xfr.destination("amq.direct");
-		xfr.acceptMode(MessageAcceptMode.EXPLICIT);
-		xfr.acquireMode(MessageAcquireMode.PRE_ACQUIRED);
+			DeliveryProperties deliveryProps = new DeliveryProperties();
+			MessageProperties messageProperties = new MessageProperties();
 
-		DeliveryProperties deliveryProps = new DeliveryProperties();
-		MessageProperties messageProperties = new MessageProperties();
-
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		ObjectOutputStream oos;
-		try
-		{
-			oos = new ObjectOutputStream(bos);
-			oos.writeObject(msg);
-			oos.flush();
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
-		xfr.setBody(bos.toByteArray());
-
-		// Esto forma parte de la implementación para el soporte del no repudio por parte de los
-		// agentes.
-		// Obligamos a que en el mensaje se envie la identidad verdadera del agente emisor.
-		if (c.isSecureMode())
-		{
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			ObjectOutputStream oos;
 			try
 			{
-				messageProperties.setUserId(msg.getSender().name.toString().getBytes("UTF-8"));
+				oos = new ObjectOutputStream(bos);
+				oos.writeObject(msg);
+				oos.flush();
 			}
-			catch (java.io.UnsupportedEncodingException e)
+			catch (IOException e)
 			{
-				logger.error("Caught exception " + e.toString());
+				e.printStackTrace();
+			}
+			xfr.setBody(bos.toByteArray());
+
+			// Esto forma parte de la implementación para el soporte del no repudio por parte de los
+			// agentes.
+			// Obligamos a que en el mensaje se envie la identidad verdadera del agente emisor.
+			if (c.isSecureMode())
+			{
+				try
+				{
+					messageProperties.setUserId(msg.getSender().name.toString().getBytes("UTF-8"));
+				}
+				catch (java.io.UnsupportedEncodingException e)
+				{
+					logger.error("Caught exception " + e.toString());
+				}
+			}
+
+			for (int i = 0; i < msg.getTotalReceivers(); i++)
+			{
+				// If protocol is not qpid then the message goes outside the
+				// platform
+				if (!msg.getReceiver(i).protocol.equals("qpid"))
+				{
+					deliveryProps.setRoutingKey("BridgeAgentInOut");
+				}
+				else
+				{
+					deliveryProps.setRoutingKey(msg.getReceiver(i).name);
+				}
+				session.messageTransfer(xfr.getDestination(), xfr.getAcceptMode(), xfr.getAcquireMode(), new Header(deliveryProps, messageProperties), xfr.getBodyBytes());
 			}
 		}
+		else{	
+			
+			MessageTransfer xfr = new MessageTransfer();
 
-		for (int i = 0; i < msg.getTotalReceivers(); i++)
-		{
-			// If protocol is not qpid then the message goes outside the
-			// platform
-			if (!msg.getReceiver(i).protocol.equals("qpid"))
+			xfr.destination("amq.match");
+			xfr.acceptMode(MessageAcceptMode.EXPLICIT);
+			xfr.acquireMode(MessageAcquireMode.PRE_ACQUIRED);
+
+			DeliveryProperties deliveryProps = new DeliveryProperties();
+			
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			ObjectOutputStream oos;
+			try
 			{
-				deliveryProps.setRoutingKey("BridgeAgentInOut");
+				oos = new ObjectOutputStream(bos);
+				oos.writeObject(msg);
+				oos.flush();
 			}
-			else
+			catch (IOException e)
 			{
-				deliveryProps.setRoutingKey(msg.getReceiver(i).name);
+				e.printStackTrace();
 			}
-			session.messageTransfer(xfr.getDestination(), xfr.getAcceptMode(), xfr.getAcquireMode(), new Header(deliveryProps, messageProperties), xfr.getBodyBytes());
+			xfr.setBody(bos.toByteArray());
+
+			// set message headers
+			MessageProperties messageProperties = new MessageProperties();
+			Map<String, Object> messageHeaders = new HashMap<String, Object>();
+			
+			for( String key: msg.getExchangeHeaders().keySet() ){
+				messageHeaders.put(key, msg.getExchangeHeader(key));
+			}
+			
+			messageProperties.setApplicationHeaders(messageHeaders);
+
+			Header header = new Header(deliveryProps, messageProperties);
+
+			this.session.messageTransfer("amq.match", MessageAcceptMode.EXPLICIT, MessageAcquireMode.PRE_ACQUIRED, header, xfr.getBodyBytes());
 		}
 
 
