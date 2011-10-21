@@ -430,9 +430,11 @@ public class CProcessor implements Runnable, Cloneable {
 
 							if (!accepted) {
 								backState = currentState;
-								logger.info("Performativa "
-										+ retrievedMessage.getPerformativeInt()
-										+ "Contenido "
+								logger.info("Performative "
+										+ retrievedMessage.getPerformative()
+										+ "Headers "
+										+ retrievedMessage.getHeaders().toString()
+										+ "Content "
 										+ retrievedMessage.getContent());
 								Iterator<String> itr = retrievedMessage
 										.getHeaders().keySet().iterator();
@@ -487,6 +489,14 @@ public class CProcessor implements Runnable, Cloneable {
 					myAgent.endConversation(this.myFactory);
 					myAgent.removeProcessor(this.conversationID);
 					this.unlockMyAgent();
+					if(this.myAgent.inShutdown){
+						this.myAgent.notifyAgentEnd();
+						ACLMessage msg = new ACLMessage(ACLMessage.UNKNOWN);
+						msg.setHeader("PURPOSE", "AGENT_END");
+						msg.setContent("See you");
+						this.myAgent.welcomeProcessor.addMessage(msg);
+						this.myAgent.exec.shutdownNow();
+					}
 					return;
 				case State.SENDING_ERRORS:
 					next = backState;
