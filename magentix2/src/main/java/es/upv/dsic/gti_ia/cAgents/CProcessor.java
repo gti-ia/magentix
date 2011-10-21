@@ -386,12 +386,13 @@ public class CProcessor implements Runnable, Cloneable {
 							currentState = "SENDING_ERRORS_STATE";
 							currentMessage = retrievedMessage;
 
-						} else if (retrievedMessage.getPerformativeInt() == ACLMessage.CANCEL) { // CANCEL
+						} /*else if (retrievedMessage.getPerformativeInt() == ACLMessage.CANCEL) { // CANCEL
 							backState = currentState;
 							currentState = "CANCEL_STATE";
 							currentMessage = retrievedMessage;
 
-						} else if (retrievedMessage.getHeaderValue("ERROR")
+						} */
+						else if (retrievedMessage.getHeaderValue("ERROR")
 								.equals("TERMINATED_FATHER")) {
 							backState = currentState;
 							currentState = "TERMINATED_FATHER_STATE";
@@ -486,6 +487,14 @@ public class CProcessor implements Runnable, Cloneable {
 					myAgent.endConversation(this.myFactory);
 					myAgent.removeProcessor(this.conversationID);
 					this.unlockMyAgent();
+					if(this.myAgent.inShutdown){
+						this.myAgent.notifyAgentEnd();
+						ACLMessage msg = new ACLMessage(ACLMessage.UNKNOWN);
+						msg.setHeader("PURPOSE", "AGENT_END");
+						msg.setContent("See you");
+						this.myAgent.welcomeProcessor.addMessage(msg);
+						this.myAgent.exec.shutdownNow();
+					}
 					return;
 				case State.SENDING_ERRORS:
 					next = backState;

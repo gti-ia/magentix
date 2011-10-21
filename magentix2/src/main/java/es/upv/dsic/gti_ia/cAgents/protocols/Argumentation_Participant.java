@@ -1,6 +1,5 @@
 package es.upv.dsic.gti_ia.cAgents.protocols;
 
-import es.upv.dsic.gti_ia.cAgents.ActionState;
 import es.upv.dsic.gti_ia.cAgents.BeginState;
 import es.upv.dsic.gti_ia.cAgents.BeginStateMethod;
 import es.upv.dsic.gti_ia.cAgents.CAgent;
@@ -13,17 +12,6 @@ import es.upv.dsic.gti_ia.cAgents.ReceiveStateMethod;
 import es.upv.dsic.gti_ia.cAgents.SendState;
 import es.upv.dsic.gti_ia.cAgents.SendStateMethod;
 import es.upv.dsic.gti_ia.cAgents.WaitState;
-import es.upv.dsic.gti_ia.cAgents.protocols.FIPA_CONTRACTNET_Participant.BEGIN_Method;
-import es.upv.dsic.gti_ia.cAgents.protocols.FIPA_CONTRACTNET_Participant.DO_TASK_Method;
-import es.upv.dsic.gti_ia.cAgents.protocols.FIPA_CONTRACTNET_Participant.FINAL_Method;
-import es.upv.dsic.gti_ia.cAgents.protocols.FIPA_CONTRACTNET_Participant.RECEIVE_ACCEPT_Method;
-import es.upv.dsic.gti_ia.cAgents.protocols.FIPA_CONTRACTNET_Participant.RECEIVE_REJECT_Method;
-import es.upv.dsic.gti_ia.cAgents.protocols.FIPA_CONTRACTNET_Participant.RECEIVE_SOLICIT_Method;
-import es.upv.dsic.gti_ia.cAgents.protocols.FIPA_CONTRACTNET_Participant.SEND_FAILURE_Method;
-import es.upv.dsic.gti_ia.cAgents.protocols.FIPA_CONTRACTNET_Participant.SEND_INFO_Method;
-import es.upv.dsic.gti_ia.cAgents.protocols.FIPA_CONTRACTNET_Participant.SEND_NOT_UNDERSTOOD_Method;
-import es.upv.dsic.gti_ia.cAgents.protocols.FIPA_CONTRACTNET_Participant.SEND_PROPOSAL_Method;
-import es.upv.dsic.gti_ia.cAgents.protocols.FIPA_CONTRACTNET_Participant.SEND_REFUSE_Method;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.MessageFilter;
 
@@ -37,13 +25,15 @@ public abstract class Argumentation_Participant {
 	private final String PROPOSE="PROPOSE";
 	private final String WHY="WHY";
 	private final String NOCOMMIT="NOCOMMIT";
-	private final String ASSERT="ASSERT";
+	private final String ASSERTS="ASSERT";
 	private final String ACCEPT="ACCEPT";
-	private final String ATTACK="ATTACK";
+	private final String ATTACKS="ATTACK";
 	private final String RETRACT="RETRACT";
 	private final String DIE="DIE";
 	
 	private final String LOCUTION="locution";
+	
+	private String currentWhyAgentID;
 	
 	
 	protected void doBegin(CProcessor myProcessor, ACLMessage msg) {
@@ -53,19 +43,25 @@ public abstract class Argumentation_Participant {
 	class Begin_Method implements BeginStateMethod {
 		public String run(CProcessor myProcessor, ACLMessage msg) {
 			doBegin(myProcessor, msg);
-			return "OPEN";
+			return "WAIT_OPEN";
 		};
 	}
 	
+	protected abstract void doOpenDialogue(CProcessor myProcessor, ACLMessage msg);
 	
 	class Open_Method implements ReceiveStateMethod {
 		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
 			
 			if(messageReceived.getHeaderValue(LOCUTION).equalsIgnoreCase(DIE))
 				return "DIE";
-			else if(messageReceived.getHeaderValue(LOCUTION).equalsIgnoreCase(OPENDIALOGUE))
+			else if(messageReceived.getHeaderValue(LOCUTION).equalsIgnoreCase(OPENDIALOGUE)){
+				doOpenDialogue(myProcessor,messageReceived);
 				return "ENTER";
-			else return "OPEN";
+			}
+			else if(messageReceived.getHeaderValue(LOCUTION).equalsIgnoreCase(FINISHDIALOGUE)){
+				return "WAIT_SOLUTION";
+			}
+			else return "WAIT_OPEN";
 		};
 	}
 	
@@ -80,11 +76,12 @@ public abstract class Argumentation_Participant {
 	
 	
 	class Enter_Method implements SendStateMethod {
-		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
-			boolean enterDialogue=doEnterDialogue(myProcessor, messageReceived);
+		public String run(CProcessor myProcessor, ACLMessage msg) {
+			boolean enterDialogue=doEnterDialogue(myProcessor, msg);
+			System.out.println("************* message "+msg.getHeaderValue("locution")+ " receiver: "+msg.getReceiver().name);
 			if(enterDialogue)
 				return "PROPOSE";
-			else return "OPEN";
+			else return "WAIT_OPEN";
 		};
 	}
 	
@@ -101,8 +98,8 @@ public abstract class Argumentation_Participant {
 		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
 			boolean propose=doPropose(myProcessor, messageReceived);
 			if(propose)
-				return "CENTRAL";
-			else return "OPEN";
+				return "WAIT_CENTRAL";
+			else return "WAIT_OPEN";
 		};
 	}
 	
@@ -112,163 +109,186 @@ public abstract class Argumentation_Participant {
 	
 	class Central_Method implements ReceiveStateMethod {
 		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
-			if(messageReceived.getHeaderValue(LOCUTION).equalsIgnoreCase(WHY))
+			if(messageReceived.getHeaderValue(LOCUTION).equalsIgnoreCase(WHY)){
+				currentWhyAgentID=messageReceived.getSender().name;
 				return "ASSERT"; // TODO no esta clar este canvi, evaluar abans si podré fer l'assert?
+			}
 			else if(messageReceived.getHeaderValue(LOCUTION).equalsIgnoreCase(FINISHDIALOGUE)){
 				doFinishDialogue(myProcessor,messageReceived);
-				return "OPEN";
+				return "SEND_POSITION";
 			}
-			else return "OPEN";//TODO per fer
+			else return "CENTRAL_TIMEOUT";
 		};
 	}
 	
-	//TODO seguisc a partir d'ací
+	
+	protected abstract void doSendPosition(CProcessor myProcessor, ACLMessage msg);
 	
 	
-	protected abstract boolean doWhy(CProcessor myProcessor, ACLMessage msg);
-	
-	protected abstract boolean doAssert(CProcessor myProcessor, ACLMessage msg);
-	
-	class Three_Method implements ReceiveStateMethod {
-		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
-			myProcessor.getInternalData().put("solicitMessage", messageReceived);
-			
-			if(messageReceived.getHeaderValue(LOCUTION).equalsIgnoreCase(WHY)){
-				doAssert(myProcessor, messageReceived);
-				return "4";
-			}
-			else if(messageReceived.getHeaderValue(LOCUTION).equalsIgnoreCase(DIE)){
-				
-				return "final";
-			}
-			else{
-				boolean why=doWhy(myProcessor, messageReceived);
-				if(why)
-					return "6";
-				else return "3";
-			}
-		}
+	class Send_Position_Method implements SendStateMethod {
+		public String run(CProcessor myProcessor, ACLMessage msg) {
+			doSendPosition(myProcessor, msg);
+			return "WAIT_SOLUTION";
+		};
 	}
 	
+	
+	protected abstract void doSolution(CProcessor myProcessor, ACLMessage msg);
+	
+	
+	class Solution_Method implements ReceiveStateMethod {
+		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
+			doSolution(myProcessor,messageReceived);
+			return "WAIT_OPEN";
+		};
+	}
+	
+	
+	
+	protected abstract String doAssert(CProcessor myProcessor, ACLMessage msg, String whyAgentID);
+	
+	
+	class Assert_Method implements SendStateMethod {
+		public String run(CProcessor myProcessor, ACLMessage msg) {
+			String asserts=doAssert(myProcessor, msg, currentWhyAgentID);
+			if(asserts.equalsIgnoreCase(ASSERTS))
+				return "WAIT_ATTACK";
+			else if(asserts.equalsIgnoreCase(NOCOMMIT))
+				return "PROPOSE";
+			else return "WAIT_CENTRAL";
+		};
+	}
+	
+	
+	class Wait_Attack_Method implements ReceiveStateMethod {
+		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
+			if(messageReceived.getHeaderValue(LOCUTION).equalsIgnoreCase(ACCEPT))
+				return "WAIT_CENTRAL"; 
+			else if(messageReceived.getHeaderValue(LOCUTION).equalsIgnoreCase(ATTACKS)){
+				
+				return "DEFEND";
+			}
+			else return "WAIT_CENTRAL"; //TODO no tiene porqué...
+		};
+	}
 	
 	protected abstract boolean doAttack(CProcessor myProcessor, ACLMessage msg);
 	
-	protected abstract boolean doRetractAssert(CProcessor myProcessor, ACLMessage msg);
-	
-	
-	
-	class Four_Method implements ReceiveStateMethod {
+	class Defend_Method implements SendStateMethod {
 		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
-			myProcessor.getInternalData().put("solicitMessage", messageReceived);
-			
-			if(messageReceived.getHeaderValue(LOCUTION).equalsIgnoreCase(ATTACK)){
-				boolean attack=doAttack(myProcessor, messageReceived);
-				if(attack)
-					return "5";
-				else{
-					doRetractAssert(myProcessor, messageReceived);
-					return "3";
-				}
-					
-			}
-			else{ //accept
-				
-				return "3";
-			}
+			boolean attack=doAttack(myProcessor, messageReceived);
+			if(attack)
+				return "WAIT_ATTACK";
+			else return "WAIT_CENTRAL"; //TODO revise protocol to see if we return directly to CENTRAL
+		};
+	}
+	
+	
+	class Central_Timeout_Method implements ReceiveStateMethod {
+		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
+			return "QUERY_POSITIONS";
 		}
 	}
 	
 	
-	protected abstract boolean doRetractAttack(CProcessor myProcessor, ACLMessage msg);
+	protected abstract void doQueryPositions(CProcessor myProcessor, ACLMessage msg);
 	
-	
-	class Five_Method implements ReceiveStateMethod {
+	class Query_Positions_Method implements SendStateMethod {
 		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
-			myProcessor.getInternalData().put("solicitMessage", messageReceived);
-			
-			if(messageReceived.getHeaderValue(LOCUTION).equalsIgnoreCase(ATTACK)){
-				boolean attack=doAttack(myProcessor, messageReceived);
-				if(attack)
-					return "5";
-				else{
-					doRetractAttack(myProcessor, messageReceived);
-					return "4";
-				}
-					
-			}
-			else{ //accept
-				
-				return "4"; //??? 
-			}
-		}
+			doQueryPositions(myProcessor, messageReceived);
+			return "WAIT_POSITIONS"; 
+		};
 	}
 	
+	protected abstract boolean doGetPositions(CProcessor myProcessor, ACLMessage msg);
 	
-	
-	class Six_Method implements ReceiveStateMethod {
+	class Get_Positions_Method implements ReceiveStateMethod {
 		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
-			myProcessor.getInternalData().put("solicitMessage", messageReceived);
-			
-			if(messageReceived.getHeaderValue(LOCUTION).equalsIgnoreCase(ASSERT)){
-				boolean attack=doAttack(myProcessor, messageReceived);
-				if(attack)
-					return "7";
-				else{
-					
-					//TODO
-					return "3";
-				}
-					
+			if(messageReceived.getHeaderValue("locution").equalsIgnoreCase(FINISHDIALOGUE)){
+				return "SEND_POSITION";
 			}
-			else{ //no_commit
-				
-				return "3";
+			else{
+				boolean positions=doGetPositions(myProcessor, messageReceived);
+				if(positions) return "WHY";
+				else return "WAIT_CENTRAL";
 			}
-		}
+		};
+	}
+	
+	protected abstract boolean doWhy(CProcessor myProcessor, ACLMessage msg);
+	
+	class Why_Method implements SendStateMethod {
+		public String run(CProcessor myProcessor, ACLMessage msg) {
+			boolean why=doWhy(myProcessor, msg);
+			if(why)
+				return "WAIT_ASSERT";
+			else return "WAIT_CENTRAL"; 
+		};
 	}
 	
 	
 	
-	class Seven_Method implements ReceiveStateMethod {
+	
+	class Wait_Assert_Method implements ReceiveStateMethod {
 		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
-			myProcessor.getInternalData().put("solicitMessage", messageReceived);
-			
-			if(messageReceived.getHeaderValue(LOCUTION).equalsIgnoreCase(ATTACK)){
-				boolean attack=doAttack(myProcessor, messageReceived);
-				if(attack)
-					return "7";
-				else{
-					doRetractAttack(myProcessor, messageReceived);
-					return "6";
-				}
-					
+			if(messageReceived.getHeaderValue(LOCUTION).equalsIgnoreCase(ASSERTS))
+				return "ATTACK"; 
+			else if(messageReceived.getHeaderValue(LOCUTION).equalsIgnoreCase(NOCOMMIT)){
+				return "WAIT_CENTRAL";
 			}
-			else{ //accept
-				
-				return "6"; //??? 
-			}
-		}
+			else return "WAIT_CENTRAL"; //TODO no tiene porqué...
+		};
 	}
 	
 	
-	/**
-	 * Method executed when the conversation ends
-	 * @param myProcessor the CProcessor managing the conversation
-	 * @param messageToSend final message
-	 */
-	protected void doFinal(CProcessor myProcessor, ACLMessage messageToSend) {
-		messageToSend = myProcessor.getLastSentMessage();
+	
+	
+	
+	class Attack_Method implements SendStateMethod {
+		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
+			boolean attack=doAttack(myProcessor, messageReceived);
+			if(attack)
+				return "ATTACK2";
+			else return "WAIT_CENTRAL"; 
+		};
 	}
 	
 	
-	class FINAL_Method implements FinalStateMethod {
+	class Attack2_Method implements ReceiveStateMethod {
+		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
+			if(messageReceived.getHeaderValue(LOCUTION).equalsIgnoreCase(ATTACKS))
+				return "ATTACK"; 
+			else if(messageReceived.getHeaderValue(LOCUTION).equalsIgnoreCase(ACCEPT)){
+				return "WAIT_CENTRAL"; //"WAIT_ASSERT";
+			}
+			else if(messageReceived.getHeaderValue(LOCUTION).equalsIgnoreCase(RETRACT)){
+				return "WAIT_CENTRAL"; //"WAIT_ASSERT";
+			}
+			else return "WAIT_CENTRAL"; //TODO no tiene porqué...
+		};
+	}
+	
+	
+	
+	
+	
+	
+	protected abstract void doDie(CProcessor myProcessor);
+	
+	
+	class Die_Method implements FinalStateMethod {
 		public void run(CProcessor myProcessor, ACLMessage messageToSend) {
-			doFinal(myProcessor, messageToSend);
+			doDie(myProcessor);
 		}
 	}
 	
 	
-	
+	class Ronya_Method implements ReceiveStateMethod {
+		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
+			System.out.println("----------- " +messageReceived.getHeaderValue("locution"));
+			return "WAIT_SOLUTION";
+		};
+	}
 	
 	
 	
@@ -284,20 +304,23 @@ public abstract class Argumentation_Participant {
 	 * @return a new argumentation participant factory
 	 */
 	public CFactory newFactory(String name, MessageFilter filter,
-			ACLMessage template, int availableConversations, CAgent myAgent, int timeout) {
+			ACLMessage template, int availableConversations, CAgent myAgent, long stdTimeout, long randTimeout) {
 
 		// Create factory
 
-		if (filter == null) {
-			filter = new MessageFilter("performative = CFP"); // falta AND
-																	// protocol
-																	// =
-																	// fipa-contract-net;
-		}
+		//TODO revise filter and template
+//		if (filter == null) {
+//			filter = new MessageFilter("performative = CFP"); // falta AND
+//																	// protocol
+//																	// =
+//																	// fipa-contract-net;
+//		}
+//		
+//		if (template == null){
+//			template = new ACLMessage(ACLMessage.PROPOSE);
+//		}
 		
-		if (template == null){
-			template = new ACLMessage(ACLMessage.PROPOSE);
-		}
+		filter = new MessageFilter("performative = INFORM AND locution = "+OPENDIALOGUE);
 		CFactory theFactory = new CFactory(name, filter,
 				availableConversations, myAgent);
 
@@ -310,121 +333,223 @@ public abstract class Argumentation_Participant {
 		BeginState BEGIN = (BeginState) processor.getState("BEGIN");
 		BEGIN.setMethod(new Begin_Method());
 		
-		// WAIT_FOR_SOLICIT State
-		WaitState OPEN_DIALOGUE = new WaitState("OPEN_DIALOGUE", timeout);
-		processor.registerState(OPEN_DIALOGUE);
-		processor.addTransition(BEGIN, OPEN_DIALOGUE);
 		
-		// RECEIVE_SOLICIT State
+		WaitState WAIT_OPEN = new WaitState("WAIT_OPEN", 0);
+		processor.registerState(WAIT_OPEN);
+		processor.addTransition(BEGIN, WAIT_OPEN);
+		
+		ReceiveState OPEN = new ReceiveState("OPEN");
+		OPEN.setMethod(new Open_Method());
+		filter = new MessageFilter("performative = INFORM");// AND locution = "+OPENDIALOGUE);
+		OPEN.setAcceptFilter(filter);
+		processor.registerState(OPEN);
+		processor.addTransition(WAIT_OPEN,OPEN);		
 
-		ReceiveState ONE = new ReceiveState("1");
-		ONE.setMethod(new One_Method());
-		filter = new MessageFilter("performative = CFP");
-//		RECEIVE_SOLICIT.setAcceptFilter(filter);
-		processor.registerState(ONE);
-		processor.addTransition(OPEN_DIALOGUE,ONE);
-
-		// SEND_PROPOSAL State
-
-		ReceiveState TWO = new ReceiveState("2");
-
-		TWO.setMethod(new Two_Method());
+		
+		FinalState DIE = new FinalState("DIE");
+		DIE.setMethod(new Die_Method());
+		processor.registerState(DIE);
+		processor.addTransition(OPEN, DIE);
+		
+		
+		SendState ENTER = new SendState("ENTER");
+		ENTER.setMethod(new Enter_Method());
 //		template.setProtocol("fipa-contract-net");
 //		template.setPerformative(ACLMessage.PROPOSE);
 //		SEND_PROPOSAL.setMessageTemplate(template);
-		processor.registerState(TWO);
-		processor.addTransition(ONE, TWO);
+		processor.registerState(ENTER);
+		processor.addTransition(OPEN, ENTER);
 		
-		processor.addTransition(TWO, ONE);
+		processor.addTransition(ENTER, WAIT_OPEN);
 		
 		// SEND_REFUSE State
 
-		SendState SEND_REFUSE = new SendState("SEND_REFUSE");
-
-		SEND_REFUSE.setMethod(new SEND_REFUSE_Method());
-		template.setProtocol("fipa-contract-net");
-		template.setPerformative(ACLMessage.REFUSE);
-		SEND_REFUSE.setMessageTemplate(template);
-		processor.registerState(SEND_REFUSE);
-		processor.addTransition(WAIT_FOR_SOLICIT, SEND_REFUSE);
+		SendState PROPOSE = new SendState("PROPOSE");
+		PROPOSE.setMethod(new Propose_Method());
+//		template.setProtocol("fipa-contract-net");
+//		template.setPerformative(ACLMessage.REFUSE);
+//		SEND_REFUSE.setMessageTemplate(template);
+		processor.registerState(PROPOSE);
+		processor.addTransition(ENTER, PROPOSE);
 		
-		// SEND_NOT_UNDERSTOOD State
-
-		SendState SEND_NOT_UNDERSTOOD = new SendState("SEND_NOT_UNDERSTOOD");
-
-		SEND_NOT_UNDERSTOOD.setMethod(new SEND_NOT_UNDERSTOOD_Method());
-		template.setProtocol("fipa-contract-net");
-		template.setPerformative(ACLMessage.NOT_UNDERSTOOD);
-		SEND_NOT_UNDERSTOOD.setMessageTemplate(template);
-		processor.registerState(SEND_NOT_UNDERSTOOD);
-		processor.addTransition(WAIT_FOR_SOLICIT, SEND_NOT_UNDERSTOOD);
-
-		// WAIT_FOR_ACCEPT State
-		WaitState WAIT_FOR_ACCEPT = new WaitState("WAIT_FOR_ACCEPT", timeout);
-		processor.registerState(WAIT_FOR_ACCEPT);
-		processor.addTransition(SEND_PROPOSAL, WAIT_FOR_ACCEPT);
-
-		// RECEIVE_ACCEPT State
-
-		ReceiveState RECEIVE_ACCEPT = new ReceiveState(
-				"RECEIVE_ACCEPT");
-		RECEIVE_ACCEPT.setMethod(new RECEIVE_ACCEPT_Method());
-		filter = new MessageFilter("performative = ACCEPT-PROPOSAL");
-		RECEIVE_ACCEPT.setAcceptFilter(filter);
-		processor.registerState(RECEIVE_ACCEPT);
-		processor.addTransition(WAIT_FOR_ACCEPT,
-				RECEIVE_ACCEPT);
-
-		// RECEIVE_REJECT State
-
-		ReceiveState RECEIVE_REJECT = new ReceiveState("RECEIVE_REJECT");
-		RECEIVE_REJECT.setMethod(new RECEIVE_REJECT_Method());
-		filter = new MessageFilter("performative = REJECT-PROPOSAL");
-		RECEIVE_REJECT.setAcceptFilter(filter);
-		processor.registerState(RECEIVE_REJECT);
-		processor.addTransition(WAIT_FOR_ACCEPT,
-				RECEIVE_REJECT);
-
-		// DO_TASK State
-
-		ActionState DO_TASK = new ActionState("DO_TASK");
-		DO_TASK.setMethod(new DO_TASK_Method());
-		processor.registerState(DO_TASK);
-		processor.addTransition(RECEIVE_ACCEPT, DO_TASK);
+		processor.addTransition(PROPOSE, WAIT_OPEN);
 		
-		// SEND_INFO State
-
-		SendState SEND_INFO = new SendState("SEND_INFORM");
-
-		SEND_INFO.setMethod(new SEND_INFO_Method());
-		template.setProtocol("fipa-contract-net");
-		template.setPerformative(ACLMessage.INFORM);
-		SEND_INFO.setMessageTemplate(template);
-		processor.registerState(SEND_INFO);
-		processor.addTransition(DO_TASK, SEND_INFO);
 		
-		// SEND_INFO State
+		
+		WaitState WAIT_CENTRAL = new WaitState("WAIT_CENTRAL", randTimeout);
+		processor.registerState(WAIT_CENTRAL);
+		processor.addTransition(PROPOSE, WAIT_CENTRAL);
+		
+		ReceiveState CENTRAL = new ReceiveState("CENTRAL");
+		CENTRAL.setMethod(new Central_Method());
+		filter = new MessageFilter("locution = "+WHY+" OR locution = "+FINISHDIALOGUE);
+		CENTRAL.setAcceptFilter(filter);
+		processor.registerState(CENTRAL);
+		processor.addTransition(WAIT_CENTRAL,CENTRAL);
+		
+		
+		ReceiveState CENTRAL_TIMEOUT = new ReceiveState("CENTRAL_TIMEOUT");
+		CENTRAL_TIMEOUT.setMethod(new Central_Timeout_Method());
+		filter = new MessageFilter("performative = INFORM AND purpose = waitMessage");
+		CENTRAL_TIMEOUT.setAcceptFilter(filter);
+		processor.registerState(CENTRAL_TIMEOUT);
+		processor.addTransition(WAIT_CENTRAL, CENTRAL_TIMEOUT);
+		
+		
+		SendState QUERY_POSITIONS = new SendState("QUERY_POSITIONS");
+		QUERY_POSITIONS.setMethod(new Query_Positions_Method());
+		processor.registerState(QUERY_POSITIONS);
+		processor.addTransition(CENTRAL_TIMEOUT, QUERY_POSITIONS);
+		
+		WaitState WAIT_POSITIONS = new WaitState("WAIT_POSITIONS", stdTimeout);
+		processor.registerState(WAIT_POSITIONS);
+		processor.addTransition(QUERY_POSITIONS, WAIT_POSITIONS);
+		
+		ReceiveState GET_POSITIONS = new ReceiveState("GET_POSITIONS");
+		GET_POSITIONS.setMethod(new Get_Positions_Method());
+		filter = new MessageFilter("performative = INFORM OR locution = GETALLPOSITIONS OR locution = FINISHDIALOGUE");
+		CENTRAL_TIMEOUT.setAcceptFilter(filter);
+		processor.registerState(GET_POSITIONS);
+		processor.addTransition(WAIT_POSITIONS,GET_POSITIONS);
+		
+		processor.addTransition(GET_POSITIONS, WAIT_CENTRAL);
+		
+		
+		
+		
+		
+		SendState SEND_POSITION = new SendState("SEND_POSITION");
+		SEND_POSITION.setMethod(new Send_Position_Method());
+		processor.registerState(SEND_POSITION);
+		processor.addTransition(CENTRAL, SEND_POSITION);
+		
+		processor.addTransition(GET_POSITIONS, SEND_POSITION);
+		
+		
+		WaitState WAIT_SOLUTION = new WaitState("WAIT_SOLUTION", 0);
+		processor.registerState(WAIT_SOLUTION);
+		processor.addTransition(SEND_POSITION, WAIT_SOLUTION);
+		
+		processor.addTransition(OPEN, WAIT_SOLUTION);
+		
+		ReceiveState SOLUTION = new ReceiveState("SOLUTION");
+		SOLUTION.setMethod(new Solution_Method());
+		filter = new MessageFilter("performative = INFORM AND locution = "+"SOLUTION");
+		//filter = new MessageFilter("performative = INFORM");
+		SOLUTION.setAcceptFilter(filter);
+		processor.registerState(SOLUTION);
+		processor.addTransition(WAIT_SOLUTION,SOLUTION);
+		
+		processor.addTransition(SOLUTION,WAIT_OPEN);
+		
+		/*ReceiveState NOT_ACCEPTED_MESSAGES_STATE = new ReceiveState("NOT_ACCEPTED_MESSAGES_STATE");
+		NOT_ACCEPTED_MESSAGES_STATE.setMethod(new Ronya_Method());
+		processor.registerState(NOT_ACCEPTED_MESSAGES_STATE);
+		//processor.addTransition(WAIT_SOLUTION,NOT_ACCEPTED_MESSAGES_STATE);
+		processor.addTransition(NOT_ACCEPTED_MESSAGES_STATE,WAIT_SOLUTION);*/
+		
+		ReceiveState RONYOS = new ReceiveState("RONYOS");
+		RONYOS.setMethod(new Ronya_Method());
+		filter = new MessageFilter("performative = INFORM AND locution = "+"GETALLPOSITIONS");
+		RONYOS.setAcceptFilter(filter);
+		processor.registerState(RONYOS);
+		processor.addTransition(WAIT_SOLUTION,RONYOS);
+		processor.addTransition(RONYOS,WAIT_SOLUTION);
 
-		SendState SEND_FAILURE = new SendState("SEND_FAILURE");
-
-		SEND_FAILURE.setMethod(new SEND_FAILURE_Method());
-		template.setProtocol("fipa-contract-net");
-		template.setPerformative(ACLMessage.FAILURE);
-		SEND_FAILURE.setMessageTemplate(template);
-		processor.registerState(SEND_FAILURE);
-		processor.addTransition(DO_TASK, SEND_FAILURE);		
-
-		// FINAL State
-
-		FinalState FINAL = new FinalState("FINAL");
-
-		FINAL.setMethod(new FINAL_Method());
-
-		processor.registerState(FINAL);
-		processor.addTransition(SEND_FAILURE, FINAL);			
-		processor.addTransition(SEND_INFO, FINAL);
-		processor.addTransition(RECEIVE_REJECT, FINAL);
-		processor.addTransition(SEND_NOT_UNDERSTOOD, FINAL);
+		SendState ASSERT = new SendState("ASSERT");
+		ASSERT.setMethod(new Assert_Method());
+//		template.setProtocol("fipa-contract-net");
+//		template.setPerformative(ACLMessage.REFUSE);
+//		SEND_REFUSE.setMessageTemplate(template);
+		processor.registerState(ASSERT);
+		processor.addTransition(CENTRAL, ASSERT);
+		
+		processor.addTransition(ASSERT, WAIT_CENTRAL);
+		processor.addTransition(ASSERT, PROPOSE);
+		
+		
+		
+		WaitState WAIT_WAIT_ATTACK = new WaitState("WAIT_WAIT_ATTACK", stdTimeout);
+		processor.registerState(WAIT_WAIT_ATTACK);
+		processor.addTransition(ASSERT, WAIT_WAIT_ATTACK);
+		
+		ReceiveState WAIT_ATTACK = new ReceiveState("WAIT_ATTACK");
+		WAIT_ATTACK.setMethod(new Wait_Attack_Method());
+		filter = new MessageFilter("locution = "+WHY+" OR locution = "+FINISHDIALOGUE);
+		WAIT_ATTACK.setAcceptFilter(filter);
+		processor.registerState(WAIT_ATTACK);
+		processor.addTransition(WAIT_WAIT_ATTACK,WAIT_ATTACK);
+		
+		processor.addTransition(WAIT_ATTACK,WAIT_CENTRAL);
+		
+		
+		
+		SendState DEFEND = new SendState("DEFEND");
+		DEFEND.setMethod(new Defend_Method());
+//		template.setProtocol("fipa-contract-net");
+//		template.setPerformative(ACLMessage.REFUSE);
+//		SEND_REFUSE.setMessageTemplate(template);
+		processor.registerState(DEFEND);
+		processor.addTransition(WAIT_ATTACK, DEFEND);
+		
+		processor.addTransition(DEFEND, WAIT_ATTACK);
+		processor.addTransition(DEFEND, WAIT_CENTRAL);
+		
+		
+		
+		SendState WHY = new SendState("WHY");
+		WHY.setMethod(new Why_Method());
+//		template.setProtocol("fipa-contract-net");
+//		template.setPerformative(ACLMessage.REFUSE);
+//		SEND_REFUSE.setMessageTemplate(template);
+		processor.registerState(WHY);
+		processor.addTransition(GET_POSITIONS,WHY);
+		
+		processor.addTransition(WHY, WAIT_CENTRAL);
+		
+		
+		
+		
+		WaitState WAIT_WAIT_ASSERT = new WaitState("WAIT_WAIT_ASSERT", stdTimeout);
+		processor.registerState(WAIT_WAIT_ASSERT);
+		processor.addTransition(WHY, WAIT_WAIT_ASSERT);
+		
+		ReceiveState WAIT_ASSERT = new ReceiveState("WAIT_ASSERT");
+		WAIT_ASSERT.setMethod(new Wait_Assert_Method());
+		filter = new MessageFilter("locution = "+ASSERTS+" OR locution = "+NOCOMMIT);
+		WAIT_ASSERT.setAcceptFilter(filter);
+		processor.registerState(WAIT_ASSERT);
+		processor.addTransition(WAIT_WAIT_ASSERT,WAIT_ASSERT);
+		
+		processor.addTransition(WAIT_ASSERT,WAIT_CENTRAL);
+		
+		
+		
+		SendState ATTACK = new SendState("ATTACK");
+		ATTACK.setMethod(new Attack_Method());
+//		template.setProtocol("fipa-contract-net");
+//		template.setPerformative(ACLMessage.REFUSE);
+//		SEND_REFUSE.setMessageTemplate(template);
+		processor.registerState(ATTACK);
+		processor.addTransition(WAIT_ASSERT, ATTACK);
+		
+		processor.addTransition(ATTACK, WAIT_CENTRAL);
+		
+		
+		
+		WaitState WAIT_ATTACK2 = new WaitState("WAIT_ATTACK2", stdTimeout);
+		processor.registerState(WAIT_ATTACK2);
+		processor.addTransition(ATTACK, WAIT_ATTACK2);
+		
+		ReceiveState ATTACK2 = new ReceiveState("ATTACK2");
+		ATTACK2.setMethod(new Attack2_Method());
+		filter = new MessageFilter("locution = "+ATTACKS+" OR locution = "+ACCEPT+" OR locution = "+RETRACT);
+		ATTACK2.setAcceptFilter(filter);
+		processor.registerState(ATTACK2);
+		processor.addTransition(ATTACK,ATTACK2);
+		
+		processor.addTransition(ATTACK2,WAIT_CENTRAL);
+		
 				
 		return theFactory;
 	}
