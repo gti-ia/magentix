@@ -1,5 +1,8 @@
 package es.upv.dsic.gti_ia.cAgents.protocols;
 
+import java.io.IOException;
+import java.io.Serializable;
+
 import es.upv.dsic.gti_ia.cAgents.BeginState;
 import es.upv.dsic.gti_ia.cAgents.BeginStateMethod;
 import es.upv.dsic.gti_ia.cAgents.CAgent;
@@ -22,6 +25,7 @@ public abstract class Argumentation_Participant {
 	private final String LEAVEDIALOGUE="LEAVEDIALOGUE";
 	private final String FINISHDIALOGUE="FINISHDIALOGUE";
 	private final String WITHDRAWDIALOGUE="WITHDRAWDIALOGUE";
+	private final String GETALLPOSITIONS="GETALLPOSITIONS";
 	private final String PROPOSE="PROPOSE";
 	private final String WHY="WHY";
 	private final String NOCOMMIT="NOCOMMIT";
@@ -204,14 +208,19 @@ public abstract class Argumentation_Participant {
 	
 	class Get_Positions_Method implements ReceiveStateMethod {
 		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
-			if(messageReceived.getHeaderValue("locution").equalsIgnoreCase(FINISHDIALOGUE)){
+			if(messageReceived.getHeaderValue(LOCUTION).equalsIgnoreCase(FINISHDIALOGUE)){
 				return "SEND_POSITION";
 			}
-			else{
-				boolean positions=doGetPositions(myProcessor, messageReceived);
+			else if(messageReceived.getHeaderValue(LOCUTION).equalsIgnoreCase(GETALLPOSITIONS)){
+				System.out.println("++++++++++++++++++++++ locution in getPositionsMethod="+messageReceived.getHeaderValue(LOCUTION));
+				ACLMessage msg2=new ACLMessage();
+				copyMessages(msg2, messageReceived);
+				boolean positions=doGetPositions(myProcessor, msg2);
 				if(positions) return "WHY";
 				else return "WAIT_CENTRAL";
 			}
+			else return "WAIT_CENTRAL"; //TODO with the filter, this should not happen
+				
 		};
 	}
 	
@@ -290,7 +299,25 @@ public abstract class Argumentation_Participant {
 		};
 	}
 	
-	
+	/**
+	 * Copies all contents of the msg2 to the msg1
+	 * @param msg
+	 * @param msg2
+	 */
+	private void copyMessages(ACLMessage msg, ACLMessage msg2){
+		msg.setSender(msg2.getSender());
+		msg.setReceiver(msg2.getReceiver());
+		msg.setConversationId(msg2.getConversationId());
+		msg.setHeader("locution", msg2.getHeaderValue("locution"));
+		msg.setPerformative(msg2.getPerformative());
+		if(msg2.getContentObject()!=null)
+			try {
+				msg.setContentObject((Serializable) msg2.getContentObject());
+			} catch (IOException e) {
+				
+				e.printStackTrace();
+			}
+	}
 	
 	
 	/**
@@ -407,7 +434,7 @@ public abstract class Argumentation_Participant {
 		
 		ReceiveState GET_POSITIONS = new ReceiveState("GET_POSITIONS");
 		GET_POSITIONS.setMethod(new Get_Positions_Method());
-		filter = new MessageFilter("performative = INFORM OR locution = GETALLPOSITIONS OR locution = FINISHDIALOGUE");
+		filter = new MessageFilter("performative = INFORM AND (locution = GETALLPOSITIONS OR locution = FINISHDIALOGUE)");
 		CENTRAL_TIMEOUT.setAcceptFilter(filter);
 		processor.registerState(GET_POSITIONS);
 		processor.addTransition(WAIT_POSITIONS,GET_POSITIONS);
