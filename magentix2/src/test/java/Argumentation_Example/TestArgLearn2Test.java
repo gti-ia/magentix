@@ -10,6 +10,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 
 import es.upv.dsic.gti_ia.argAgents.CommitmentStore;
+import es.upv.dsic.gti_ia.argAgents.CommitmentStore2;
 import es.upv.dsic.gti_ia.argAgents.knowledgeResources.DomainCase;
 import es.upv.dsic.gti_ia.argAgents.knowledgeResources.Group;
 import es.upv.dsic.gti_ia.argAgents.knowledgeResources.SocialContext.DependencyRelation;
@@ -153,6 +154,9 @@ public class TestArgLearn2Test {
 						Vector<DomainCase> aTicket=new Vector<DomainCase>();
 						aTicket.add(tickets.get(repetition));
 				
+						CommitmentStore2 commitmentStore = new CommitmentStore2(new AgentID("qpid://commitmentStore@localhost:8080"));
+						commitmentStore.start();
+						
 						ArrayList<ArgCAgent> agents = new ArrayList<ArgCAgent>();
 						
 						if (repetition<(tickets.size()-1)){
@@ -167,8 +171,7 @@ public class TestArgLearn2Test {
 //								group, owlDomainFiles, iniArgFileNames, iniArgFileNames, nArgCases, testerAgentID, 0.5f, 1f, 1f,1f,1f,1f,1f);
 //					
 						
-						CommitmentStore commitmentStore = new CommitmentStore(new AgentID("qpid://commitmentStore@localhost:8080"));
-						commitmentStore.start();
+						
 						
 						TesterAgentArgLearn1and2 testerAgent= new TesterAgentArgLearn1and2(new AgentID("qpid://"+testerAgentID+"@localhost:8080"), nTickets, 
 								socialEntities, commitmentStore.getName(), "results/performance/test1and2Inc/test2argLearnLL5DC+0AC+Per-"+nOperators+"agB.txt",
