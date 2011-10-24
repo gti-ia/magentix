@@ -6,6 +6,7 @@ import es.upv.dsic.gti_ia.core.MessageFilter;
 
 import es.upv.dsic.gti_ia.cAgents.*;
 
+
 class SallyClass extends CAgent {
 
 	public SallyClass(AgentID aid) throws Exception {
@@ -38,10 +39,39 @@ class SallyClass extends CAgent {
 			public String run(CProcessor myProcessor, ACLMessage msg) {
 				// In this example there is nothing more to do than continue
 				// to the next state which will send the answer.
-				return "REFUSE";
+				return "WAIT";
 			};
 		}
 		BEGIN.setMethod(new BEGIN_Method());
+		
+		talk.cProcessorTemplate().registerState(new WaitState("WAIT", 0));
+		talk.cProcessorTemplate().addTransition("BEGIN", "WAIT");
+		
+		class GETMESSAGE_Method implements ReceiveStateMethod {
+			public String run(CProcessor myProcessor, ACLMessage messageReceived) {
+				System.out.println("Getting message");
+				return "REFUSE";
+			}
+		}
+		
+		ReceiveState GETMESSAGE = new ReceiveState("GETMESSAGE");
+		GETMESSAGE.setMethod(new GETMESSAGE_Method());
+		filter = new MessageFilter("performative = PROPOSE");
+		GETMESSAGE.setAcceptFilter(filter);
+		talk.cProcessorTemplate().registerState(GETMESSAGE);
+		talk.cProcessorTemplate().addTransition("WAIT", "GETMESSAGE");
+		
+		class NOT_ACCEPTED_MESSAGES_STATE_Method implements ActionStateMethod {
+			@Override
+			public String run(CProcessor myProcessor) {
+				System.out.println("This is NOT_ACCEPTED_MESSAGES_STATE");
+				return "REFUSE";
+			}
+		}
+		
+		ActionState NOT_ACCEPTED_MESSAGES_STATE = new ActionState("NOT_ACCEPTED_MESSAGES_STATE");
+		NOT_ACCEPTED_MESSAGES_STATE.setMethod(new NOT_ACCEPTED_MESSAGES_STATE_Method());
+		talk.cProcessorTemplate().registerState(NOT_ACCEPTED_MESSAGES_STATE);
 
 		///////////////////////////////////////////////////////////////////////////////
 		// REFUSE state
@@ -63,7 +93,7 @@ class SallyClass extends CAgent {
 		REFUSE.setMessageTemplate(template);
 
 		talk.cProcessorTemplate().registerState(REFUSE);
-		talk.cProcessorTemplate().addTransition("BEGIN", "REFUSE");
+		talk.cProcessorTemplate().addTransition(GETMESSAGE, REFUSE);
 
 		///////////////////////////////////////////////////////////////////////////////
 		// FINAL state
@@ -73,6 +103,7 @@ class SallyClass extends CAgent {
 		class FINAL_Method implements FinalStateMethod {
 			public void run(CProcessor myProcessor, ACLMessage messageToSend) {
 				messageToSend.setContent("Done");
+				myProcessor.getMyAgent().Shutdown();
 			}
 		}
 		FINAL.setMethod(new FINAL_Method());
