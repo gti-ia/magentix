@@ -408,18 +408,14 @@ public class CProcessor implements Runnable, Cloneable {
 							while (it.hasNext() && !accepted) {
 								String stateName = it.next();
 								if (states.get(stateName).getType() == State.RECEIVE) {
-									ReceiveState receiveState = (ReceiveState) states
-											.get(stateName);
+									ReceiveState receiveState = (ReceiveState) states.get(stateName);
 									// PENDIENTE
 									// Hacer una comparaci�n de mensaje con
 									// template completa.
 									// Probablemente mejor en ACLMessage
 
-									MessageFilter filter = receiveState
-											.getAcceptFilter();
-									if (filter == null
-											|| filter
-													.compareHeaders(retrievedMessage)) {
+									MessageFilter filter = receiveState.getAcceptFilter();
+									if (filter == null || filter.compareHeaders(retrievedMessage)) {
 										currentState = stateName;
 										currentMessage = retrievedMessage;
 										accepted = true;
@@ -429,9 +425,9 @@ public class CProcessor implements Runnable, Cloneable {
 
 							if (!accepted) {
 								backState = currentState;
-								logger.info("Performativa "
-										+ retrievedMessage.getPerformativeInt()
-										+ "Contenido "
+								logger.info("Performative "
+										+ retrievedMessage.getPerformative()
+										+ " Content "
 										+ retrievedMessage.getContent());
 								Iterator<String> itr = retrievedMessage
 										.getHeaders().keySet().iterator();
@@ -577,17 +573,29 @@ public class CProcessor implements Runnable, Cloneable {
 				// enviar una excepcion desde este metodo?
 
 				if (!states.containsKey(currentState)) {
-					logger.info(currentState + " state "
-							+ " doesn' exist");
+					logger.error(currentState + " state " + " doesn' exist");
 				}
-				if (!this.transitiontable.existsTransation(previousState,
-						currentState)) {
-					this.logger.error(this.myAgent.getName() + " "
-							+ this.conversationID
-							+ " No transition defined between " + previousState
-							+ " and " + currentState);
-					return;
+				// check if the current or previous state is not an error state
+				if(currentState != "SHUTDOW" && currentState != "SENDING_ERRORS" && currentState != "CANCEL_STATE" 
+					&& currentState != "TERMINATED_FATHER" && currentState != "NOT_ACCEPTED_MESSAGES_STATE"
+					&& previousState != "SHUTDOW" && previousState != "SENDING_ERRORS" && previousState != "CANCEL_STATE" 
+					&& previousState != "TERMINATED_FATHER" && previousState != "NOT_ACCEPTED_MESSAGES_STATE"){
+					if (!this.transitiontable.existsTransation(previousState, currentState)) {
+						this.logger.error(this.myAgent.getName() + " "
+								+ this.conversationID
+								+ " No transition defined between " + previousState
+								+ " and " + currentState);
+						return;
+					}
 				}
+				else{
+					// check if the error state is defined
+					if(states.get(currentState) == null){
+						this.logger.warn("Error state: "+currentState+" not defined. Strange agent behaviour may occur");
+						currentState = previousState;
+					}					
+				}
+				
 				currentStateType = states.get(currentState).getType();
 				previousState = currentState;
 			} // end while (true)
