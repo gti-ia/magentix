@@ -450,7 +450,8 @@ public class ArgCAgent extends CAgent{
 			@Override
 			protected boolean doGetPositions(CProcessor myProcessor,
 					ACLMessage msg) {
-				// TODO Auto-generated method stub
+				// TODO problem
+				logger.info(myID+": doGetPositions Locution received= "+msg.getHeaderValue("locution"));
 				differentPositions=getDifferentPositions((ArrayList<Position>)msg.getContentObject());
 				return true;
 			}
@@ -521,6 +522,32 @@ public class ArgCAgent extends CAgent{
 				}
 				
 				myProcessor.getMyAgent().ShutdownNoLock();
+				
+			}
+
+			@Override
+			protected void doWithdrawDialogue(CProcessor myProcessor,
+					ACLMessage msg) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			protected void doMyPositionAccepted(CProcessor myProcessor,
+					ACLMessage msg) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			protected void doNoCommit(CProcessor myProcessor, ACLMessage msg) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			protected void doAccept(CProcessor myProcessor, ACLMessage msg) {
+				// TODO Auto-generated method stub
 				
 			}
 
@@ -929,7 +956,7 @@ public class ArgCAgent extends CAgent{
 								position.getSolution(), socCont).size();
 						usedArgCases += arguCases;
 					} catch (Exception e) {
-						// TODO Auto-generated catch block
+						
 						arguCases = 0;
 					}
 					int totalCases = domCases + arguCases;
@@ -1061,7 +1088,7 @@ public class ArgCAgent extends CAgent{
 				arguCases = argCBR.getSameDomainAndSocialContextAccepted(myPos.getPremises(), 
 						myPos.getSolution(), socialContext).size();
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
+				
 				arguCases = 0;
 			}
 			int totalCases = domCases + arguCases;
@@ -1255,9 +1282,10 @@ public class ArgCAgent extends CAgent{
 					arguCases = argCBR.getSameDomainAndSocialContextAccepted(myPosPremises, 
 							sol, socialContext).size();
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
+					
 					arguCases = 0;
-				}				int totalCases = domCases + arguCases;
+				}				
+				int totalCases = domCases + arguCases;
 				
 				if (totalCases != 0){
 					wSimilarity = (float) domCases / (float) totalCases;
