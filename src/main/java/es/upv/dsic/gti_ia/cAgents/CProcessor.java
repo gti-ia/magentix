@@ -482,6 +482,7 @@ public class CProcessor implements Runnable, Cloneable {
 					myAgent.endConversation(this.myFactory);
 					myAgent.removeProcessor(this.conversationID);
 					this.unlockMyAgent();
+					this.checkShutDown();
 					return;
 				case State.SENDING_ERRORS:
 					next = backState;
@@ -568,7 +569,9 @@ public class CProcessor implements Runnable, Cloneable {
 					next = notAcceptedMessagesState.getNext(next);
 					currentState = next;
 					break;
-				}
+				}				
+				this.checkShutDown();
+				
 				// PENDIENTE Excepcion si no existe estado. Java no me permite
 				// enviar una excepcion desde este metodo?
 
@@ -599,6 +602,13 @@ public class CProcessor implements Runnable, Cloneable {
 				currentStateType = states.get(currentState).getType();
 				previousState = currentState;
 			} // end while (true)
+		}
+	}
+	
+	private void checkShutDown(){
+		if(this.myAgent.inShutdown){
+			this.myAgent.notifyAgentEnd();
+			this.myAgent.exec.shutdownNow();			
 		}
 	}
 

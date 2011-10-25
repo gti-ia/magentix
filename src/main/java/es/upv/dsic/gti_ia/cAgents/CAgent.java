@@ -93,10 +93,11 @@ public abstract class CAgent extends BaseAgent {
 	private HashMap<String, HashMap<String, Long>> deadlines = new HashMap<String, HashMap<String, Long>>();
 	ReentrantLock mutex = new ReentrantLock();
 	private CFactory welcomeFactory;
-	private CProcessor welcomeProcessor;
+	protected CProcessor welcomeProcessor;
 	protected CFactory defaultFactory;
 	ArrayList<CFactory> initiatorFactories = new ArrayList<CFactory>();
 	ArrayList<CFactory> participantFactories = new ArrayList<CFactory>();
+	private boolean finalizeExecuted = false;
 
 	public ExecutorService exec; //Bexy: Added 'public'
 	// Semaphore availableSends = new Semaphore(1, true);
@@ -341,6 +342,7 @@ public abstract class CAgent extends BaseAgent {
 				msg.copyFromAsTemplate((ACLMessage) myProcessor
 						.getInternalData().get("AGENT_END_MSG"));
 				me.finalize(myProcessor, msg);
+				me.finalizeExecuted = true;
 				myProcessor.getMyAgent().notifyAgentEnd();
 			}
 		}
@@ -356,7 +358,7 @@ public abstract class CAgent extends BaseAgent {
 	 * This method signals the end of the agent in order to unlock
 	 * the main conversation thread
 	 */
-	private void notifyAgentEnd() {
+	protected void notifyAgentEnd() {
 		this.lock();
 		iAmFinished.signal();
 		this.unlock();
@@ -418,7 +420,9 @@ public abstract class CAgent extends BaseAgent {
 			e.printStackTrace();
 		}
 		this.logger.info("Agent " + this.getName() + " ENDED");
-
+		if(!finalizeExecuted)
+			this.finalize(welcomeProcessor, null);
+		
 		this.unlock();
 	}
 
