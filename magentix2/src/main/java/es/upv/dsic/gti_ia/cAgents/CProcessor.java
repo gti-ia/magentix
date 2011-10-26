@@ -54,6 +54,7 @@ public class CProcessor implements Runnable, Cloneable {
 	private Boolean isSynchronized;
 	//private long nextSubID = 0;
 	private String previousState;
+	private String fromState = "";
 	private ACLMessage lastSentMessage;
 	private CFactory myFactory;
 	private boolean initiator;
@@ -386,13 +387,12 @@ public class CProcessor implements Runnable, Cloneable {
 							currentState = "SENDING_ERRORS_STATE";
 							currentMessage = retrievedMessage;
 
-						} /*else if (retrievedMessage.getPerformativeInt() == ACLMessage.CANCEL) { // CANCEL
+						} else if (retrievedMessage.getPerformativeInt() == ACLMessage.CANCEL) { // CANCEL
 							backState = currentState;
 							currentState = "CANCEL_STATE";
 							currentMessage = retrievedMessage;
 
-						} */
-						else if (retrievedMessage.getHeaderValue("ERROR")
+						} else if (retrievedMessage.getHeaderValue("ERROR")
 								.equals("TERMINATED_FATHER")) {
 							backState = currentState;
 							currentState = "TERMINATED_FATHER_STATE";
@@ -409,18 +409,14 @@ public class CProcessor implements Runnable, Cloneable {
 							while (it.hasNext() && !accepted) {
 								String stateName = it.next();
 								if (states.get(stateName).getType() == State.RECEIVE) {
-									ReceiveState receiveState = (ReceiveState) states
-											.get(stateName);
+									ReceiveState receiveState = (ReceiveState) states.get(stateName);
 									// PENDIENTE
 									// Hacer una comparaci�n de mensaje con
 									// template completa.
 									// Probablemente mejor en ACLMessage
 
-									MessageFilter filter = receiveState
-											.getAcceptFilter();
-									if (filter == null
-											|| filter
-													.compareHeaders(retrievedMessage)) {
+									MessageFilter filter = receiveState.getAcceptFilter();
+									if (filter == null || filter.compareHeaders(retrievedMessage)) {
 										currentState = stateName;
 										currentMessage = retrievedMessage;
 										accepted = true;
@@ -430,9 +426,9 @@ public class CProcessor implements Runnable, Cloneable {
 
 							if (!accepted) {
 								backState = currentState;
-								logger.info("Performativa "
-										+ retrievedMessage.getPerformativeInt()
-										+ "Contenido "
+								logger.info("Performative "
+										+ retrievedMessage.getPerformative()
+										+ " Content "
 										+ retrievedMessage.getContent());
 								Iterator<String> itr = retrievedMessage
 										.getHeaders().keySet().iterator();
@@ -487,14 +483,7 @@ public class CProcessor implements Runnable, Cloneable {
 					myAgent.endConversation(this.myFactory);
 					myAgent.removeProcessor(this.conversationID);
 					this.unlockMyAgent();
-					if(this.myAgent.inShutdown){
-						this.myAgent.notifyAgentEnd();
-						ACLMessage msg = new ACLMessage(ACLMessage.UNKNOWN);
-						msg.setHeader("PURPOSE", "AGENT_END");
-						msg.setContent("See you");
-						this.myAgent.welcomeProcessor.addMessage(msg);
-						this.myAgent.exec.shutdownNow();
-					}
+					this.checkShutDown();
 					return;
 				case State.SENDING_ERRORS:
 					next = backState;
@@ -581,25 +570,47 @@ public class CProcessor implements Runnable, Cloneable {
 					next = notAcceptedMessagesState.getNext(next);
 					currentState = next;
 					break;
-				}
+				}				
+				this.checkShutDown();
+				
 				// PENDIENTE Excepcion si no existe estado. Java no me permite
 				// enviar una excepcion desde este metodo?
 
 				if (!states.containsKey(currentState)) {
-					logger.info(currentState + " state "
-							+ " doesn' exist");
+					logger.error(currentState + " state " + " doesn' exist");
 				}
-				if (!this.transitiontable.existsTransation(previousState,
-						currentState)) {
-					this.logger.error(this.myAgent.getName() + " "
-							+ this.conversationID
-							+ " No transition defined between " + previousState
-							+ " and " + currentState);
-					return;
+				// check if the current or previous state is not an error state
+				if(currentState != "SHUTDOW" && currentState != "SENDING_ERRORS" && currentState != "CANCEL_STATE" 
+					&& currentState != "TERMINATED_FATHER" && currentState != "NOT_ACCEPTED_MESSAGES_STATE"
+					&& previousState != "SHUTDOW" && previousState != "SENDING_ERRORS" && previousState != "CANCEL_STATE" 
+					&& previousState != "TERMINATED_FATHER" && previousState != "NOT_ACCEPTED_MESSAGES_STATE"){
+					if (!this.transitiontable.existsTransation(previousState, currentState)) {
+						this.logger.error(this.myAgent.getName() + " "
+								+ this.conversationID
+								+ " No transition defined between " + previousState
+								+ " and " + currentState);
+						return;
+					}
 				}
+				else{
+					// check if the error state is defined
+					if(states.get(currentState) == null){
+						this.logger.warn("Error state: "+currentState+" not defined. Strange agent behaviour may occur");
+						currentState = previousState;
+					}					
+				}
+				
 				currentStateType = states.get(currentState).getType();
+				fromState = previousState;
 				previousState = currentState;
 			} // end while (true)
+		}
+	}
+	
+	private void checkShutDown(){
+		if(this.myAgent.inShutdown){
+			this.myAgent.notifyAgentEnd();
+			this.myAgent.exec.shutdownNow();			
 		}
 	}
 
@@ -797,5 +808,9 @@ public class CProcessor implements Runnable, Cloneable {
 	 */
 	protected boolean isInitiator() {
 		return this.initiator;
+	}
+	
+	public String getPreviousState(){
+		return fromState;	
 	}
 }

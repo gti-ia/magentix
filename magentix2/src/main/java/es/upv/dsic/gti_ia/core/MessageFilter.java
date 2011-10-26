@@ -270,6 +270,10 @@ public class MessageFilter implements Cloneable{
 					index = indexPar;
 				else
 					index = indexEsp;
+				if(expr.charAt(index-1) == '=')
+					index--;
+				if(expr.charAt(index-1) == '!')
+					index--;
 				headerName = expr.substring(i, index);
 				nodos.add(new Node(Node.VALUE, headerName));
 				i = index;

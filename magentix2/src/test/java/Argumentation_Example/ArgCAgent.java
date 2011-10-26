@@ -53,8 +53,8 @@ public class ArgCAgent extends CAgent{
 	private boolean lastLocutionOpenDialogue=false; //just to avoid excessive log messages of OPENDIALOGUE waiting
 	private final String OPENDIALOGUE="OPENDIALOGUE";
 	private final String ENTERDIALOGUE="ENTERDIALOGUE";
-	private final String LEAVEDIALOGUE="LEAVEDIALOGUE";
-//	private final String WITHDRAWDIALOGUE="WITHDRAWDIALOGUE";
+//	private final String LEAVEDIALOGUE="LEAVEDIALOGUE";
+	private final String WITHDRAWDIALOGUE="WITHDRAWDIALOGUE";
 //	private final String PROPOSE="PROPOSE";
 	private final String WHY="WHY";
 	private final String NOCOMMIT="NOCOMMIT";
@@ -313,12 +313,13 @@ public class ArgCAgent extends CAgent{
 
 			@Override
 			protected String doAssert(CProcessor myProcessor, ACLMessage msg, String whyAgentID) {
-				ArrayList<Position> myPositionsAsked=attendedWhyPetitions.get(whyAgentID);
+				
 				ACLMessage msg2;
 				
+				ArrayList<Position> myPositionsAsked=attendedWhyPetitions.get(whyAgentID);
 				if(myPositionsAsked!=null && myPositionsAsked.contains(currentPosition)){
 					//I have already replied this agent with my current position, do not reply him
-					return "CENTRAL"; //TODO send something...?? what?
+					return "WAIT_CENTRAL"; //TODO send something...?? what?
 				}
 				else{	
 					//try to generate a support argument 
@@ -366,22 +367,99 @@ public class ArgCAgent extends CAgent{
 			}
 
 			@Override
-			protected boolean doAttack(CProcessor myProcessor, ACLMessage msg) {
+			protected boolean doAttack(CProcessor myProcessor, ACLMessage msgToSend, ACLMessage msgReceived, boolean defending) {
+				
+				Argument againstArgument=(Argument)msgReceived.getContentObject();
+				subDialogueAgentID=msgReceived.getSender().getLocalName();
+				
+				//store this attack into the corresponding argument
+				Argument myLastUsedArg=getMyLastUsedArg(subDialogueAgentID,againstArgument.getAttackingToArgID());
+				if(myLastUsedArg!=null){
+					// if attack was a counter-example
+					if (!againstArgument.getSupportSet().getCounterExamplesDomCases().isEmpty() || 
+							!againstArgument.getSupportSet().getCounterExamplesArgCases().isEmpty())
+						myLastUsedArg.addReceivedAttacksCounterExample(againstArgument);
+					// it is a distinguishing premises attack
+					else
+						myLastUsedArg.addReceivedAttacksDistPremises(againstArgument);
+				}
+				
+				ArgNode argNode=null;
+				if(msgReceived.getHeaderValue("locution").equalsIgnoreCase(ASSERT)){
+					//add his position to my asked positions
+					Solution sol=new Solution(againstArgument.getHasConclusion(),againstArgument.getPromotesValue(),againstArgument.getTimesUsedConclusion());
+					Position hisPosition=new Position(subDialogueAgentID, subDialogueAgentID, sol, null, null, 0f);
+					askedPositions.add(hisPosition);
+					argNode=new ArgNode(againstArgument.getID(), new ArrayList<Long>(), -1, ArgNode.NodeType.FIRST);
+					currentDialogueGraph=new DialogueGraph();
+				}
+				else{
+					if(defending){
+						ArrayList<Position> myPositionsAsked= attendedWhyPetitions.get(subDialogueAgentID);
+						if(myPositionsAsked==null){
+							myPositionsAsked=new ArrayList<Position>();
+							myPositionsAsked.add(currentPosition);
+						}
+						else{
+							if(!myPositionsAsked.contains(currentPosition))
+								myPositionsAsked.add(currentPosition);
+						}
+						attendedWhyPetitions.put(subDialogueAgentID, myPositionsAsked);
+					}
+					// add the incoming attack argument in dialogue graph and child list of the last node
+					argNode=new ArgNode(againstArgument.getID(), new ArrayList<Long>(), againstArgument.getAttackingToArgID(), ArgNode.NodeType.NODE);
+					ArgNode attackedNode = currentDialogueGraph.getNode(againstArgument.getAttackingToArgID());
+					if (attackedNode == null){
+						logger.error(myID + " subDialogueAgentID " + subDialogueAgentID  +  " GETTING NODE " + againstArgument.getAttackingToArgID());
+						for (ArgNode node : currentDialogueGraph.getNodes()){
+							logger.error(myID + " " + node.getNodeType() + " " + node.getArgCaseID() + " PARENT " + node.getParentArgCaseID()+ "\n");
+						}
+						Iterator<String> sup = myUsedSupportArguments.keySet().iterator();
+						while (sup.hasNext()){
+							String s = sup.next();
+							ArrayList<Argument> mySupports = myUsedSupportArguments.get(s);
+							if (mySupports != null) 
+								for (Argument supp : mySupports){
+									logger.error(myID + " subDialogueAgentID " + s + " Support Argument " + supp.getID() + "\n");
+								}
+						}
+						Iterator<String> att = myUsedAttackArguments.keySet().iterator();
+						while (att.hasNext()){
+							String at = att.next();
+							ArrayList<Argument> myAttacks = myUsedAttackArguments.get(at);
+							if (myAttacks != null) 
+								for (Argument a : myAttacks){
+									logger.error(myID + " subDialogueAgentID " + at + " Attack Argument " + a.getID() + "\n");
+								}
+						}
+	
+					}
+					else
+						attackedNode.addChildArgCaseID(againstArgument.getID());// aquí petaba!!!
+				}
+				currentDialogueGraph.addNode(argNode);
+				
+				
+				
 				// try to generate an attack argument: Distinguishing premise or Counter Example, depending on the attack received
-				Argument againstArgument = (Argument)msg.getContentObject();
-				Argument attackArg=generateAttackArgument(againstArgument, msg.getSender().getLocalName());
+				
+				logger.info("+++++++++ "+myID+" locution= "+msgReceived.getHeaderValue("locution"));
+				logger.info("+++++++++ "+myID+": doAttack from "+subDialogueAgentID);
+				logger.info("+++++++++ "+myID+" receiver: "+msgReceived.getReceiver().getLocalName());
+				
+				Argument attackArg=generateAttackArgument(againstArgument, msgReceived.getSender().name);
 				ACLMessage msg2;
 				
 				if(attackArg!=null){
-					msg2=attack(msg.getSender().getLocalName(), attackArg);
-					copyMessages(msg, msg2);
+					msg2=attack(subDialogueAgentID, attackArg);
+					copyMessages(msgToSend, msg2);
 					
 					//add argument to myUsedAttackArguments
-					ArrayList<Argument> attackArgs=myUsedAttackArguments.get(msg.getSender().getLocalName());
+					ArrayList<Argument> attackArgs=myUsedAttackArguments.get(subDialogueAgentID);
 					if(attackArgs==null)
 						attackArgs=new ArrayList<Argument>();
 					attackArgs.add(attackArg);
-					myUsedAttackArguments.put(msg.getSender().getLocalName(), attackArgs);
+					myUsedAttackArguments.put(subDialogueAgentID, attackArgs);
 					
 					// add the attack argument to dialogue graph
 					ArgNode attNode = currentDialogueGraph.getNode(againstArgument.getID());
@@ -406,30 +484,33 @@ public class ArgCAgent extends CAgent{
 					 */
 					
 					//search my last attack argument, the one I told this agent
-					ArrayList<Argument> attackArgs=myUsedAttackArguments.get(msg.getSender().getLocalName());
-					Argument myLastAttackArg=attackArgs.get(attackArgs.size()-1);
-					//put acceptability state to Unacceptable
-					myLastAttackArg.setAcceptabilityState(AcceptabilityState.UNACCEPTABLE);
-					//retract my last attack argument
-					ArrayList<Argument> storeList = storeArguments.get(msg.getSender().getLocalName());
-					if (storeList == null)
-						storeList = new ArrayList<Argument>();
-					storeList.add(myLastAttackArg);
-					storeArguments.put(msg.getSender().getLocalName(), storeList);
-					
-					msg2=retract(msg.getSender().getLocalName(), myLastAttackArg);
-					copyMessages(msg, msg2);
-					
-					// set the last node of this branch of the dialogue graph
-					ArgNode thisNode = currentDialogueGraph.getNode(myLastAttackArg.getID());
-					if (thisNode == null){
-						logger.error(myID + " GETTING NODE " + myLastAttackArg.getID());
+					ArrayList<Argument> attackArgs=myUsedAttackArguments.get(subDialogueAgentID);
+					if(attackArgs!=null && !attackArgs.isEmpty()){
+						Argument myLastAttackArg=attackArgs.get(attackArgs.size()-1);
+						//put acceptability state to Unacceptable
+						myLastAttackArg.setAcceptabilityState(AcceptabilityState.UNACCEPTABLE);
+						//retract my last attack argument
+						ArrayList<Argument> storeList = storeArguments.get(subDialogueAgentID);
+						if (storeList == null)
+							storeList = new ArrayList<Argument>();
+						storeList.add(myLastAttackArg);
+						storeArguments.put(subDialogueAgentID, storeList);
+						
+						// set the last node of this branch of the dialogue graph
+						ArgNode thisNode = currentDialogueGraph.getNode(myLastAttackArg.getID());
+						if (thisNode == null){
+							logger.error(myID + " GETTING NODE " + myLastAttackArg.getID());
 
-						for (ArgNode node : currentDialogueGraph.getNodes()){
-							logger.error(myID + " " + node.getNodeType() + " " + node.getArgCaseID() + " PARENT " + node.getParentArgCaseID()+ "\n");
+							for (ArgNode node : currentDialogueGraph.getNodes()){
+								logger.error(myID + " " + node.getNodeType() + " " + node.getArgCaseID() + " PARENT " + node.getParentArgCaseID()+ "\n");
+							}
 						}
+						thisNode.setNodeType(NodeType.LAST);
 					}
-					thisNode.setNodeType(NodeType.LAST);
+//					msg2=retract(subDialogueAgentID, myLastAttackArg);
+//					copyMessages(msgToSend, msg2);
+					
+					
 
 					return false;
 						
@@ -472,8 +553,14 @@ public class ArgCAgent extends CAgent{
 				}
 				else{//nothing to challenge, remain in this state
 					//TODO return some message????
+					
+					msg.setReceiver(new AgentID(commitmentStoreID));
+					msg.setHeader("locution", "NOTHING");
+					msg.setSender(getAid());
+					msg.setConversationId(currentDialogueID);
+					msg.setPerformative(ACLMessage.INFORM);
 					logger.info("------------ ------ "+myID + ": NOT WHY nothing to challenge");
-					 return false; 
+					return false; 
 				}
 				
 			}
@@ -521,34 +608,61 @@ public class ArgCAgent extends CAgent{
 					System.err.println("Error: " + e.getMessage());
 				}
 				
-				myProcessor.getMyAgent().ShutdownNoLock();
+				myProcessor.getMyAgent().Shutdown();
 				
 			}
 
 			@Override
-			protected void doWithdrawDialogue(CProcessor myProcessor,
-					ACLMessage msg) {
-				// TODO Auto-generated method stub
+			protected void doMyPositionAccepted(CProcessor myProcessor, ACLMessage messageReceived) {
+				//my position is accepted, increase timesAccepted of my Position 
+				currentPosition.increaseTimesAccepted();
+				logger.info(myID+": "+"increasing vote for my position. SolID="+
+						currentPosition.getSolution().getConclusion().getID()+" currentVotes="+currentPosition.getTimesAccepted()+"\n");
 				
-			}
+				//change my support argument acceptability state
+				//search my support argument, the one I told this agent.
+				ArrayList<Argument> supportArgs=myUsedSupportArguments.get(messageReceived.getSender().getLocalName());
+				Argument myLastSupportArg=supportArgs.get(supportArgs.size()-1);
+				myLastSupportArg.setAcceptabilityState(AcceptabilityState.ACCEPTABLE);
+				supportArgs.set(supportArgs.size()-1, myLastSupportArg);
+				myUsedSupportArguments.put(messageReceived.getSender().getLocalName(), supportArgs);
+				ArrayList<Argument> storeList = storeArguments.get(messageReceived.getSender().getLocalName());
+				if (storeList == null)
+					storeList = new ArrayList<Argument>();
+				storeList.add(myLastSupportArg);
+				storeArguments.put(messageReceived.getSender().getLocalName(), storeList);
+				
+				// change type of the last node in dialogue graph that corresponds to the last argument that I gave
+				ArgNode thisNode = currentDialogueGraph.getNodes().get(currentDialogueGraph.size()-1);
+				if (thisNode == null){
+					logger.error(myID + " GETTING NODE " + currentDialogueGraph.getNodes().get(currentDialogueGraph.size()-1).getArgCaseID());
 
-			@Override
-			protected void doMyPositionAccepted(CProcessor myProcessor,
-					ACLMessage msg) {
-				// TODO Auto-generated method stub
+					for (ArgNode node : currentDialogueGraph.getNodes()){
+						logger.error(myID + " " + node.getNodeType() + " " + node.getArgCaseID() + " PARENT " + node.getParentArgCaseID()+ "\n");
+					}
+				}
+				thisNode.setNodeType(NodeType.AGREE);
+
 				
+				// add finished dialogue to the hashmap
+				ArrayList<DialogueGraph> theseGraphs = dialogueGraphs.get(messageReceived.getSender().getLocalName());
+				if (theseGraphs == null)
+					theseGraphs = new ArrayList<DialogueGraph>();
+				theseGraphs.add(currentDialogueGraph);
+				dialogueGraphs.put(messageReceived.getSender().getLocalName(), theseGraphs);
 			}
 
 			@Override
 			protected void doNoCommit(CProcessor myProcessor, ACLMessage msg) {
-				// TODO Auto-generated method stub
+				ACLMessage msg2=noCommit(subDialogueAgentID, currentPosition);
+				copyMessages(msg, msg2);
 				
 			}
 
 			@Override
 			protected void doAccept(CProcessor myProcessor, ACLMessage msg) {
-				// TODO Auto-generated method stub
-				
+				ACLMessage msg2=accept(subDialogueAgentID);
+				copyMessages(msg, msg2);
 			}
 
 			
@@ -691,17 +805,11 @@ public class ArgCAgent extends CAgent{
 //		}
 //		else
 //			return false;
-			return leaveDialogue(currentDialogueID);
+			myUsedLocutions++;
+			return sendMessage(commitmentStoreID, WITHDRAWDIALOGUE, currentDialogueID, null);
 	}
 	
 	public ACLMessage propose(Position pos, String dialogueID){
-		
-		ArrayList<String> locutions = new ArrayList<String>();
-		locutions.add(ACCEPT);
-		locutions.add(WHY);
-		
-		// clean message queue from old messages
-//		cleanMessagesQueue(locutions);
 		
 		return addPosition(pos, dialogueID);
 		
@@ -709,27 +817,12 @@ public class ArgCAgent extends CAgent{
 	
 	public ACLMessage why(String agentIDr, Position pos){
 		
-		ArrayList<String> locutions = new ArrayList<String>();
-		locutions.add(ASSERT);
-		locutions.add(NOCOMMIT);
-		
-		// clean message queue from old messages
-//		cleanMessagesQueue(locutions, agentIDr);
-		
-		
 		myUsedLocutions++;
 		return sendMessage(agentIDr, WHY, currentDialogueID, pos);
 	}
 	
-//	public void why(String agentIDr, Argument arg){
-//		
-//		sendMessage(agentIDr, WHY, currentDialogueID, arg);
-//		
-//	}
 	
 	public ACLMessage noCommit(String agentIDr, Position pos){
-		
-		removePosition(currentDialogueID);
 		
 		myUsedLocutions++;
 		if (currentPosition != null)
@@ -738,35 +831,23 @@ public class ArgCAgent extends CAgent{
 		currentPosition=null;
 		currentPosAccepted = 0;
 		
+		//(the no commit is received also by the Commitment Store)
 		return sendMessage(agentIDr, NOCOMMIT, currentDialogueID, null);
 		
 	}
 	
 	public ACLMessage asserts(String agentIDr, Argument arg){
-		
-		ArrayList<String> locutions = new ArrayList<String>();
-		locutions.add(ACCEPT);
-		locutions.add(ATTACK);
-		
-		// clean message queue from old messages
-//		cleanMessagesQueue(locutions, agentIDr);
-		
-		//add the argument to commitment store
-		addArgument(arg, currentDialogueID);
-		
-		//send it to the other agent
-		
 		myUsedLocutions++;
-		return sendMessage(agentIDr, ASSERT,currentDialogueID, arg);
+		//send it to the other agent and add the argument to commitment store (the assert is received also by the Commitment Store)
+		return sendMessage(agentIDr, ASSERT, currentDialogueID, arg);
 		
 	}
 	
-	public void accept(String agentIDr, Argument arg){
+	public ACLMessage accept(String agentIDr){
 		
 		//send it to the other agent
-		sendMessage(agentIDr, ACCEPT, currentDialogueID, arg);
 		myUsedLocutions++;
-		
+		return sendMessage(agentIDr, ACCEPT, currentDialogueID, null);
 	}
 	
 //	public void accept(String agentIDr, Position pos){
@@ -777,36 +858,24 @@ public class ArgCAgent extends CAgent{
 //	}
 	
 	public ACLMessage attack(String agentIDr, Argument arg){
-		
-		ArrayList<String> locutions = new ArrayList<String>();
-		locutions.add(ACCEPT);
-		locutions.add(ATTACK);
-		locutions.add(RETRACT);
-		
-		// clean message queue from old messages
-//		cleanMessagesQueue(locutions, agentIDr);
-		
-		//add the argument to commitment store
-		addArgument(arg, currentDialogueID);
-		
-		//send it to the other agent
-		
 		myUsedLocutions++;
+		
+		//send it to the other agent AND add the argument to commitment store
 		return sendMessage(agentIDr, ATTACK, currentDialogueID, arg);
 	}
 	
-	public ACLMessage retract(String agentIDr, Argument arg){
-		
-		//remove the argument from commitment store
-		removeArgument(arg, currentDialogueID);
-		
-		//The argument is not removed from the list of used arguments. I need to know those arguments
-	
-		//inform to the other agent
-		
-		myUsedLocutions++;
-		return sendMessage(agentIDr, RETRACT, currentDialogueID, arg);
-	}
+//	public ACLMessage retract(String agentIDr, Argument arg){
+//		
+//		//remove the argument from commitment store
+//		removeArgument(arg, currentDialogueID);
+//		
+//		//The argument is not removed from the list of used arguments. I need to know those arguments
+//	
+//		//inform to the other agent
+//		
+//		myUsedLocutions++;
+//		return sendMessage(agentIDr, RETRACT, currentDialogueID, arg);
+//	}
 	
 
 	private Argument getMyLastUsedArg(String agentID, long argID){
@@ -1728,9 +1797,9 @@ public class ArgCAgent extends CAgent{
 		return differentPositions;
 	}
 	
-	private void removePosition(String dialogueID){
-		sendMessage(commitmentStoreID, REMOVEPOSITION, dialogueID, currentPosition);
-	}
+//	private void removePosition(String dialogueID){
+//		sendMessage(commitmentStoreID, REMOVEPOSITION, dialogueID, currentPosition);
+//	}
 	
 	/**
 	 * Adds a dialogue to commitment store. If it exist a dialogue with the same id, it is overwritten
@@ -1767,14 +1836,14 @@ public class ArgCAgent extends CAgent{
 //		return dia;
 //	}
 	
-	/**
-	 * Removes the agentID from the list of the dialogue.
-	 * @param dialogueID
-	 */
-	private ACLMessage leaveDialogue(String dialogueID){
-		myUsedLocutions++;
-		return sendMessage(commitmentStoreID, LEAVEDIALOGUE, dialogueID, null);
-	}
+//	/**
+//	 * Removes the agentID from the list of the dialogue.
+//	 * @param dialogueID
+//	 */
+//	private ACLMessage leaveDialogue(String dialogueID){
+//		myUsedLocutions++;
+//		return sendMessage(commitmentStoreID, LEAVEDIALOGUE, dialogueID, null);
+//	}
 	
 	
 	
@@ -1922,6 +1991,9 @@ public class ArgCAgent extends CAgent{
 		ACLMessage msg = new ACLMessage();
 		msg.setSender(getAid());
 		msg.setReceiver(new AgentID(agentID));
+		if(locution.equalsIgnoreCase(NOCOMMIT) || locution.equalsIgnoreCase(ASSERT) || locution.equalsIgnoreCase(ATTACK)){
+			msg.addReceiver(new AgentID(commitmentStoreID));
+		}
 		msg.setConversationId(dialogueID);
 		msg.setPerformative(ACLMessage.INFORM);
 		
@@ -1941,8 +2013,14 @@ public class ArgCAgent extends CAgent{
 				e.printStackTrace();
 			}
 		}
+		ArrayList<AgentID> receivers=msg.getReceiverList();
+		String receiversStr="";
+		Iterator<AgentID> iterReceivers=receivers.iterator();
+		while(iterReceivers.hasNext()){
+			receiversStr+=iterReceivers.next().name+" ";
+		}
 		//System.out.println(this.getName()+": "+"message to send: "+"to: "+msg.getReceiver().toString()+" dialogueID: "+msg.getConversationId()+" locution: "+msg.getHeaderValue("locution"));
-		logger.info(this.getName()+": "+"message to send: "+"to: "+msg.getReceiver().getLocalName()+" dialogueID: "+msg.getConversationId()+" locution: "+msg.getHeaderValue("locution"));
+		logger.info(this.getName()+": "+"message to send to: "+receiversStr+" dialogueID: "+msg.getConversationId()+" locution: "+msg.getHeaderValue("locution"));
 		//send(msg);
 		return msg;
 	}

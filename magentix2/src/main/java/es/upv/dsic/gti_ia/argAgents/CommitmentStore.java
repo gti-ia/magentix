@@ -31,11 +31,14 @@ public class CommitmentStore extends SingleAgent{
 	private final String ADDPOSITION="ADDPOSITION";
 	private final String GETPOSITION="GETPOSITION";
 	private final String GETALLPOSITIONS="GETALLPOSITIONS";
-	private final String REMOVEPOSITION="REMOVEPOSITION";
+	private final String NOCOMMIT="NOCOMMIT";
+	private final String ASSERT="ASSERT";
+	private final String ATTACK="ATTACK";
 	private final String ADDDIALOGUE="ADDDIALOGUE";
 	private final String GETDIALOGUE="GETDIALOGUE";
 	private final String ENTERDIALOGUE="ENTERDIALOGUE";
-	private final String LEAVEDIALOGUE="LEAVEDIALOGUE";
+	private final String WITHDRAWDIALOGUE="WITHDRAWDIALOGUE";
+//	private final String LEAVEDIALOGUE="LEAVEDIALOGUE";
 	
 	public CommitmentStore(AgentID aid) throws Exception {
 		super(aid);
@@ -84,7 +87,8 @@ public class CommitmentStore extends SingleAgent{
 			Long millisDifference=System.currentTimeMillis()-lastDate;
 			sendMessage(msg.getSender().getLocalName(), "LASTMODIFICATIONDATE", msg.getConversationId(), millisDifference);
 		}
-		else if(locution.equalsIgnoreCase(ADDARGUMENT)){
+		else if(locution.equalsIgnoreCase(ADDARGUMENT) || locution.equalsIgnoreCase(ATTACK) ||
+				locution.equalsIgnoreCase(ASSERT)){
 			lastModificationDates.put(msg.getConversationId(), System.currentTimeMillis());
 			Argument arg=(Argument)msg.getContentObject();
 			addArgument(arg, msg.getSender().getLocalName(), msg.getConversationId());
@@ -111,7 +115,7 @@ public class CommitmentStore extends SingleAgent{
 			ArrayList<Position> allPositions=getAllPositions(msg.getConversationId(),msg.getSender().getLocalName());
 			sendMessage(msg.getSender().getLocalName(), GETALLPOSITIONS, msg.getConversationId(), allPositions);
 		}
-		else if(locution.equalsIgnoreCase(REMOVEPOSITION)){
+		else if(locution.equalsIgnoreCase(NOCOMMIT)){
 			lastModificationDates.put(msg.getConversationId(), System.currentTimeMillis());
 			//Position pos=(Position)msg.getContentObject();
 			removePosition(msg.getSender().getLocalName(), msg.getConversationId());
@@ -133,7 +137,7 @@ public class CommitmentStore extends SingleAgent{
 			dialogue.addAgentID(msg.getSender().getLocalName());
 			dialogues.put(msg.getConversationId(), dialogue);
 		}
-		else if(locution.equalsIgnoreCase(LEAVEDIALOGUE)){
+		else if(locution.equalsIgnoreCase(WITHDRAWDIALOGUE)){
 			lastModificationDates.put(msg.getConversationId(), System.currentTimeMillis());
 			Dialogue dialogue=dialogues.get(msg.getConversationId());
 			dialogue.removeAgentID(msg.getSender().getLocalName());

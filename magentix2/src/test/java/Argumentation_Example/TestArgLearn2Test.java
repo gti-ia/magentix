@@ -154,7 +154,7 @@ public class TestArgLearn2Test {
 						Vector<DomainCase> aTicket=new Vector<DomainCase>();
 						aTicket.add(tickets.get(repetition));
 				
-						CommitmentStore2 commitmentStore = new CommitmentStore2(new AgentID("qpid://commitmentStore@localhost:8080"));
+						CommitmentStore commitmentStore = new CommitmentStore(new AgentID("qpid://commitmentStore@localhost:8080"));
 						commitmentStore.start();
 						
 						ArrayList<ArgCAgent> agents = new ArrayList<ArgCAgent>();
