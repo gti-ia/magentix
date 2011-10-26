@@ -54,6 +54,7 @@ public class CProcessor implements Runnable, Cloneable {
 	private Boolean isSynchronized;
 	//private long nextSubID = 0;
 	private String previousState;
+	private String fromState = "";
 	private ACLMessage lastSentMessage;
 	private CFactory myFactory;
 	private boolean initiator;
@@ -600,6 +601,7 @@ public class CProcessor implements Runnable, Cloneable {
 				}
 				
 				currentStateType = states.get(currentState).getType();
+				fromState = previousState;
 				previousState = currentState;
 			} // end while (true)
 		}
@@ -806,5 +808,9 @@ public class CProcessor implements Runnable, Cloneable {
 	 */
 	protected boolean isInitiator() {
 		return this.initiator;
+	}
+	
+	public String getPreviousState(){
+		return fromState;	
 	}
 }
