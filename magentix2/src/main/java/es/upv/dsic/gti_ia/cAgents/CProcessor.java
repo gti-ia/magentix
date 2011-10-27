@@ -59,7 +59,7 @@ public class CProcessor implements Runnable, Cloneable {
 	private CFactory myFactory;
 	private boolean initiator;
 
-	Logger logger = Logger.getLogger(CProcessor.class);
+	public Logger logger = Logger.getLogger(CProcessor.class);
 
 	/**
 	 * Creates a new CProcessor associated to an agent

@@ -3,6 +3,8 @@ package es.upv.dsic.gti_ia.cAgents.protocols;
 import java.io.IOException;
 import java.io.Serializable;
 
+import com.hp.hpl.jena.graph.query.regexptrees.Nothing;
+
 import es.upv.dsic.gti_ia.cAgents.BeginState;
 import es.upv.dsic.gti_ia.cAgents.BeginStateMethod;
 import es.upv.dsic.gti_ia.cAgents.CAgent;
@@ -16,6 +18,7 @@ import es.upv.dsic.gti_ia.cAgents.SendState;
 import es.upv.dsic.gti_ia.cAgents.SendStateMethod;
 import es.upv.dsic.gti_ia.cAgents.WaitState;
 import es.upv.dsic.gti_ia.core.ACLMessage;
+import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.MessageFilter;
 
 public abstract class Argumentation_Participant {
@@ -306,22 +309,56 @@ public abstract class Argumentation_Participant {
 		};
 	}
 	
+//	ACLMessage msgToSend;
+//	String nextState;
 	
-	
-	class NOT_ACCEPTED_MESSAGES_STATE_Method implements SendStateMethod {
+	class NOT_ACCEPTED_MESSAGES_STATE_Method implements ReceiveStateMethod {
 		@Override
-		public String run(CProcessor myProcessor, ACLMessage messageToSend) {
-		// TODO Auto-generated method stub
-		System.out.println("This is NOT_ACCEPTED_MESSAGES_STATE");
-
-		messageToSend.setPerformative(myProcessor.getLastReceivedMessage().getPerformative());
-		messageToSend.setSender(myProcessor.getLastReceivedMessage().getSender());
-		messageToSend.setContent(myProcessor.getLastReceivedMessage().getContent());
-		messageToSend.setReceiver(myProcessor.getLastReceivedMessage().getReceiver());
-		return myProcessor.getPreviousState();
+		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
+		
+			myProcessor.logger.info("\nThis is NOT_ACCEPTED_MESSAGES_STATE\nPrevious state: "+
+			myProcessor.getPreviousState()+" locutionprocesor: "+myProcessor.getLastReceivedMessage().getHeaderValue(LOCUTION)+
+			"\nlocutionMsg: "+messageReceived.getHeaderValue(LOCUTION));
+			if(myProcessor.getLastReceivedMessage().getHeaderValue(LOCUTION).equalsIgnoreCase(FINISHDIALOGUE)){
+				
+				String prevState=myProcessor.getPreviousState();
+				if(prevState.equalsIgnoreCase("WAIT_OPEN")){
+					return "WAIT_OPEN";
+				}
+				else{
+					return "SEND_POSITION";
+				}
+				
+			}
+			else if(myProcessor.getLastReceivedMessage().getHeaderValue(LOCUTION).equalsIgnoreCase(DIE)){
+				return "DIE";
+			}
+			else{
+//				msgToSend=new ACLMessage();
+//				msgToSend.setPerformative(myProcessor.getLastReceivedMessage().getPerformative());
+//				msgToSend.setSender(myProcessor.getLastReceivedMessage().getSender());
+//				msgToSend.setContent(myProcessor.getLastReceivedMessage().getContent());
+//				msgToSend.setReceiver(myProcessor.getLastReceivedMessage().getReceiver());
+//				
+//				nextState=myProcessor.getPreviousState();
+//				
+//				return "SEND_NOT_ACCEPTED";
+				
+				return myProcessor.getPreviousState();
+			}
+			
 		}
 	}
 	
+//	class SEND_NOT_ACCEPTED_Method implements SendStateMethod{
+//		@Override
+//		public String run(CProcessor myProcessor, ACLMessage messageToSend) {
+//		
+//			copyMessages(messageToSend, msgToSend);
+//			return nextState;
+//			
+//		}
+//	}
 	
 	
 	
@@ -436,7 +473,8 @@ public abstract class Argumentation_Participant {
 		
 		ReceiveState CENTRAL = new ReceiveState("CENTRAL");
 		CENTRAL.setMethod(new Central_Method());
-		filter = new MessageFilter("performative = INFORM AND (locution = "+WHY+" OR locution = "+FINISHDIALOGUE+" OR locution = "+ACCEPTS+")");
+		//filter = new MessageFilter("performative = INFORM AND (locution = "+WHY+" OR locution = "+FINISHDIALOGUE+" OR locution = "+ACCEPTS+")");
+		filter = new MessageFilter("performative = INFORM AND (locution = "+WHY+" OR locution = "+ACCEPTS+")");
 		CENTRAL.setAcceptFilter(filter);
 		processor.registerState(CENTRAL);
 		processor.addTransition(WAIT_CENTRAL,CENTRAL);
@@ -461,7 +499,8 @@ public abstract class Argumentation_Participant {
 		
 		ReceiveState GET_POSITIONS = new ReceiveState("GET_POSITIONS");
 		GET_POSITIONS.setMethod(new Get_Positions_Method());
-		filter = new MessageFilter("performative = INFORM AND (locution = "+GETALLPOSITIONS+" OR locution = "+FINISHDIALOGUE+")");
+		//filter = new MessageFilter("performative = INFORM AND (locution = "+GETALLPOSITIONS+" OR locution = "+FINISHDIALOGUE+")");
+		filter = new MessageFilter("performative = INFORM AND locution = "+GETALLPOSITIONS);
 		GET_POSITIONS.setAcceptFilter(filter);
 		processor.registerState(GET_POSITIONS);
 		processor.addTransition(WAIT_POSITIONS,GET_POSITIONS);
@@ -552,6 +591,7 @@ public abstract class Argumentation_Participant {
 		processor.registerState(WAIT_ASSERT_TIMEOUT);
 		processor.addTransition(WAIT_WAIT_ASSERT, WAIT_ASSERT_TIMEOUT);
 		
+		processor.addTransition(WAIT_ASSERT_TIMEOUT, WAIT_CENTRAL);
 		
 		SendState ATTACK = new SendState("ATTACK");
 		ATTACK.setMethod(new Attack_Method());
@@ -605,10 +645,21 @@ public abstract class Argumentation_Participant {
 		
 		
 		
-		SendState NOT_ACCEPTED_MESSAGES_STATE = new SendState("NOT_ACCEPTED_MESSAGES_STATE");
+		ReceiveState NOT_ACCEPTED_MESSAGES_STATE = new ReceiveState("NOT_ACCEPTED_MESSAGES_STATE");
 		NOT_ACCEPTED_MESSAGES_STATE.setMethod(new NOT_ACCEPTED_MESSAGES_STATE_Method());
 		theFactory.cProcessorTemplate().registerState(NOT_ACCEPTED_MESSAGES_STATE); 
 		
+//		SendState SEND_NOT_ACCEPTED = new SendState("SEND_NOT_ACCEPTED");
+//		SEND_NOT_ACCEPTED.setMethod(new SEND_NOT_ACCEPTED_Method());
+//		theFactory.cProcessorTemplate().registerState(SEND_NOT_ACCEPTED); 
+////		processor.addTransition(NOT_ACCEPTED_MESSAGES_STATE,SEND_NOT_ACCEPTED);//TODO??
+//		processor.addTransition(SEND_NOT_ACCEPTED, WAIT_OPEN);
+//		processor.addTransition(SEND_NOT_ACCEPTED, WAIT_POSITIONS);
+//		processor.addTransition(SEND_NOT_ACCEPTED, WAIT_ATTACK2);
+//		processor.addTransition(SEND_NOT_ACCEPTED, WAIT_CENTRAL);
+//		processor.addTransition(SEND_NOT_ACCEPTED, WAIT_SOLUTION);
+//		processor.addTransition(SEND_NOT_ACCEPTED, WAIT_WAIT_ASSERT);
+//		processor.addTransition(SEND_NOT_ACCEPTED, WAIT_WAIT_ATTACK);
 		
 		return theFactory;
 	}

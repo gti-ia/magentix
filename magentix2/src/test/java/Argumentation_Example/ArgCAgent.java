@@ -319,7 +319,7 @@ public class ArgCAgent extends CAgent{
 				ArrayList<Position> myPositionsAsked=attendedWhyPetitions.get(whyAgentID);
 				if(myPositionsAsked!=null && myPositionsAsked.contains(currentPosition)){
 					//I have already replied this agent with my current position, do not reply him
-					return "WAIT_CENTRAL"; //TODO send something...?? what?
+					return "WAIT_CENTRAL"; //TODO send something (message with locution NOTHING)
 				}
 				else{	
 					//try to generate a support argument 
@@ -531,7 +531,6 @@ public class ArgCAgent extends CAgent{
 			@Override
 			protected boolean doGetPositions(CProcessor myProcessor,
 					ACLMessage msg) {
-				// TODO problem
 				logger.info(myID+": doGetPositions Locution received= "+msg.getHeaderValue("locution"));
 				differentPositions=getDifferentPositions((ArrayList<Position>)msg.getContentObject());
 				return true;
