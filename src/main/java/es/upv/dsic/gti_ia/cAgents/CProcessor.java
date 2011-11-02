@@ -556,7 +556,7 @@ public class CProcessor implements Runnable, Cloneable {
 						case NotAcceptedMessagesState.REPLY_NOT_UNDERSTOOD:
 							ACLMessage cloneCurrentMessage = (ACLMessage) currentMessage
 									.clone();
-							cloneCurrentMessage.setPerformative(ACLMessage.FAILURE);
+							cloneCurrentMessage.setPerformative(ACLMessage.NOT_UNDERSTOOD);
 							cloneCurrentMessage.clearAllReceiver();
 							cloneCurrentMessage.addReceiver(currentMessage
 									.getSender());
