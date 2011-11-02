@@ -25,6 +25,6 @@ public abstract class NotAcceptedMessagesState extends State{
 	
 	protected abstract int run(ACLMessage exceptionMessage, String next);
 	
-	protected abstract String getNext(String next);
+	protected abstract String getNext(String previousState);
 
 }

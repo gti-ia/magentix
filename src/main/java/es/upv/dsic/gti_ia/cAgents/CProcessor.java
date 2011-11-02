@@ -54,7 +54,6 @@ public class CProcessor implements Runnable, Cloneable {
 	private Boolean isSynchronized;
 	//private long nextSubID = 0;
 	private String previousState;
-	private String fromState = "";
 	private ACLMessage lastSentMessage;
 	private CFactory myFactory;
 	private boolean initiator;
@@ -552,20 +551,20 @@ public class CProcessor implements Runnable, Cloneable {
 					NotAcceptedMessagesState notAcceptedMessagesState = (NotAcceptedMessagesState) states
 							.get(currentState);
 					switch (notAcceptedMessagesState.run(currentMessage, next)) {
-					case NotAcceptedMessagesState.IGNORE:
-						break;
-					case NotAcceptedMessagesState.REPLY_NOT_UNDERSTOOD:
-						ACLMessage cloneCurrentMessage = (ACLMessage) currentMessage
-								.clone();
-						cloneCurrentMessage.setPerformative(ACLMessage.FAILURE);
-						cloneCurrentMessage.clearAllReceiver();
-						cloneCurrentMessage.addReceiver(currentMessage
-								.getSender());
-						myAgent.send(cloneCurrentMessage);
-						break;
-					case NotAcceptedMessagesState.KEEP:
-						// PENDIENTE: myAgent.addMessage(currentMessage);
-						break;
+						case NotAcceptedMessagesState.IGNORE:
+							break;
+						case NotAcceptedMessagesState.REPLY_NOT_UNDERSTOOD:
+							ACLMessage cloneCurrentMessage = (ACLMessage) currentMessage
+									.clone();
+							cloneCurrentMessage.setPerformative(ACLMessage.FAILURE);
+							cloneCurrentMessage.clearAllReceiver();
+							cloneCurrentMessage.addReceiver(currentMessage
+									.getSender());
+							myAgent.send(cloneCurrentMessage);
+							break;
+						case NotAcceptedMessagesState.KEEP:
+							addMessage(currentMessage);
+							break;
 					}
 					next = notAcceptedMessagesState.getNext(next);
 					currentState = next;
@@ -601,7 +600,6 @@ public class CProcessor implements Runnable, Cloneable {
 				}
 				
 				currentStateType = states.get(currentState).getType();
-				fromState = previousState;
 				previousState = currentState;
 			} // end while (true)
 		}
@@ -808,9 +806,5 @@ public class CProcessor implements Runnable, Cloneable {
 	 */
 	protected boolean isInitiator() {
 		return this.initiator;
-	}
-	
-	public String getPreviousState(){
-		return fromState;	
 	}
 }
