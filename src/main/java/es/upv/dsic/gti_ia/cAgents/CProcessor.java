@@ -424,6 +424,7 @@ public class CProcessor implements Runnable, Cloneable {
 							}
 
 							if (!accepted) {
+								currentMessage = retrievedMessage;
 								backState = currentState;
 								logger.info("Performative "
 										+ retrievedMessage.getPerformative()
