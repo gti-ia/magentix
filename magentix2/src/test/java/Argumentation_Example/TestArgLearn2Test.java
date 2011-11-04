@@ -85,7 +85,7 @@ public class TestArgLearn2Test {
 			
 			Vector<DomainCase> tickets=CreatePartitions.getTestDomainCases();
 						
-			for(nOperators = 5; nOperators <= 5; nOperators+=2){	
+			for(nOperators = 3; nOperators <= 9; nOperators+=2){	
 			
 				int nArgCases=10;
 			
@@ -111,7 +111,7 @@ public class TestArgLearn2Test {
 				
 				int casesInc;
 			
-				for(int cases=25;cases<=45;cases+=5){
+				for(int cases=5;cases<=45;cases+=5){
 //					for(int repetition=0;repetition<tickets.size();repetition++){
 					
 					casesInc = cases + 5;

@@ -12,6 +12,7 @@ import es.upv.dsic.gti_ia.cAgents.CFactory;
 import es.upv.dsic.gti_ia.cAgents.CProcessor;
 import es.upv.dsic.gti_ia.cAgents.FinalState;
 import es.upv.dsic.gti_ia.cAgents.FinalStateMethod;
+import es.upv.dsic.gti_ia.cAgents.NotAcceptedMessagesState;
 import es.upv.dsic.gti_ia.cAgents.ReceiveState;
 import es.upv.dsic.gti_ia.cAgents.ReceiveStateMethod;
 import es.upv.dsic.gti_ia.cAgents.SendState;
@@ -312,43 +313,90 @@ public abstract class Argumentation_Participant {
 //	ACLMessage msgToSend;
 //	String nextState;
 	
-	class NOT_ACCEPTED_MESSAGES_STATE_Method implements ReceiveStateMethod {
-		@Override
-		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
+	
+	
+	class NotAcceptedMessagesState2 extends NotAcceptedMessagesState {
 		
-			myProcessor.logger.info("\nThis is NOT_ACCEPTED_MESSAGES_STATE\nPrevious state: "+
-			myProcessor.getPreviousState()+" locutionprocesor: "+myProcessor.getLastReceivedMessage().getHeaderValue(LOCUTION)+
-			"\nlocutionMsg: "+messageReceived.getHeaderValue(LOCUTION));
-			if(myProcessor.getLastReceivedMessage().getHeaderValue(LOCUTION).equalsIgnoreCase(FINISHDIALOGUE)){
-				
-				String prevState=myProcessor.getPreviousState();
-				if(prevState.equalsIgnoreCase("WAIT_OPEN")){
+		String nextState;
+		
+		@Override
+		protected int run(CProcessor myProcessor, ACLMessage exceptionMessage, String next) {
+			
+			myProcessor.logger.info("\nThis is NOT_ACCEPTED_MESSAGES_STATE\n prevState: "+next+
+			" locutionProcesor: "+exceptionMessage.getHeaderValue(LOCUTION));
+			if(exceptionMessage.getHeaderValue(LOCUTION).equalsIgnoreCase(FINISHDIALOGUE)){
+				nextState="FINISH";
+				return NotAcceptedMessagesState.IGNORE;
+			}
+			else if(exceptionMessage.getHeaderValue(LOCUTION).equalsIgnoreCase(DIE)){
+				nextState="DIE";
+				return NotAcceptedMessagesState.IGNORE;
+			}
+			else{
+				nextState="SAME";
+				return NotAcceptedMessagesState.IGNORE; //TODO cuidao!
+			}
+						
+		}
+	
+		@Override
+		protected String getNext(CProcessor myProcessor, String previousState) {
+			myProcessor.logger.info("\nNextStateSuposat: "+nextState+" previousState: "+previousState);
+			if(nextState.equalsIgnoreCase("FINISH")){
+				if(previousState.equalsIgnoreCase("WAIT_OPEN")){
 					return "WAIT_OPEN";
 				}
 				else{
 					return "SEND_POSITION";
 				}
-				
 			}
-			else if(myProcessor.getLastReceivedMessage().getHeaderValue(LOCUTION).equalsIgnoreCase(DIE)){
+			else if(nextState.equalsIgnoreCase("DIE")){
 				return "DIE";
 			}
 			else{
-//				msgToSend=new ACLMessage();
-//				msgToSend.setPerformative(myProcessor.getLastReceivedMessage().getPerformative());
-//				msgToSend.setSender(myProcessor.getLastReceivedMessage().getSender());
-//				msgToSend.setContent(myProcessor.getLastReceivedMessage().getContent());
-//				msgToSend.setReceiver(myProcessor.getLastReceivedMessage().getReceiver());
-//				
-//				nextState=myProcessor.getPreviousState();
-//				
-//				return "SEND_NOT_ACCEPTED";
-				
-				return myProcessor.getPreviousState();
+				return previousState;
 			}
 			
 		}
+		
+		
 	}
+		
+//		@Override
+//		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
+//		
+//			myProcessor.logger.info("\nThis is NOT_ACCEPTED_MESSAGES_STATE\nPrevious state: "+
+//			myProcessor.getPreviousState()+" locutionProcesor: "+myProcessor.getLastReceivedMessage().getHeaderValue(LOCUTION)+
+//			"\nlocutionMsg: "+messageReceived.getHeaderValue(LOCUTION));
+//			if(myProcessor.getLastReceivedMessage().getHeaderValue(LOCUTION).equalsIgnoreCase(FINISHDIALOGUE)){
+//				
+//				String prevState=myProcessor.getPreviousState();
+//				if(prevState.equalsIgnoreCase("WAIT_OPEN")){
+//					return "WAIT_OPEN";
+//				}
+//				else{
+//					return "SEND_POSITION";
+//				}
+//			}
+//			else if(myProcessor.getLastReceivedMessage().getHeaderValue(LOCUTION).equalsIgnoreCase(DIE)){
+//				return "DIE";
+//			}
+//			else{
+////				msgToSend=new ACLMessage();
+////				msgToSend.setPerformative(myProcessor.getLastReceivedMessage().getPerformative());
+////				msgToSend.setSender(myProcessor.getLastReceivedMessage().getSender());
+////				msgToSend.setContent(myProcessor.getLastReceivedMessage().getContent());
+////				msgToSend.setReceiver(myProcessor.getLastReceivedMessage().getReceiver());
+////				
+////				nextState=myProcessor.getPreviousState();
+////				
+////				return "SEND_NOT_ACCEPTED";
+//				
+//				return myProcessor.getPreviousState();
+//			}
+//			
+//		}
+	
 	
 //	class SEND_NOT_ACCEPTED_Method implements SendStateMethod{
 //		@Override
@@ -620,7 +668,7 @@ public abstract class Argumentation_Participant {
 		processor.addTransition(WAIT_ATTACK2,ATTACK2);
 		
 		processor.addTransition(ATTACK2,WAIT_CENTRAL);
-		processor.addTransition(ATTACK2,WAIT_ATTACK2);
+		processor.addTransition(ATTACK2,ATTACK);
 		
 		
 		SendState SEND_POSITION = new SendState("SEND_POSITION");
@@ -645,8 +693,7 @@ public abstract class Argumentation_Participant {
 		
 		
 		
-		ReceiveState NOT_ACCEPTED_MESSAGES_STATE = new ReceiveState("NOT_ACCEPTED_MESSAGES_STATE");
-		NOT_ACCEPTED_MESSAGES_STATE.setMethod(new NOT_ACCEPTED_MESSAGES_STATE_Method());
+		NotAcceptedMessagesState2 NOT_ACCEPTED_MESSAGES_STATE = new NotAcceptedMessagesState2();
 		theFactory.cProcessorTemplate().registerState(NOT_ACCEPTED_MESSAGES_STATE); 
 		
 //		SendState SEND_NOT_ACCEPTED = new SendState("SEND_NOT_ACCEPTED");

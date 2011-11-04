@@ -23,8 +23,8 @@ public abstract class NotAcceptedMessagesState extends State{
 		type = State.NOT_ACCEPTED_MESSAGES;
 	}
 	
-	protected abstract int run(ACLMessage exceptionMessage, String next);
+	protected abstract int run(CProcessor myProcessor, ACLMessage exceptionMessage, String next);
 	
-	protected abstract String getNext(String next);
+	protected abstract String getNext(CProcessor myProcessor, String previousState);
 
 }

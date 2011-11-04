@@ -505,7 +505,8 @@ public class ArgCAgent extends CAgent{
 								logger.error(myID + " " + node.getNodeType() + " " + node.getArgCaseID() + " PARENT " + node.getParentArgCaseID()+ "\n");
 							}
 						}
-						thisNode.setNodeType(NodeType.LAST);
+						else
+							thisNode.setNodeType(NodeType.LAST);
 					}
 //					msg2=retract(subDialogueAgentID, myLastAttackArg);
 //					copyMessages(msgToSend, msg2);
@@ -713,7 +714,7 @@ public class ArgCAgent extends CAgent{
 
 		logger.info("+++++++++++++++++++++++++++++++++++++++ "+this.getName()+": Finalizing");
 		
-		System.out.println(finalizeMessage.getContent());
+		//System.out.println(finalizeMessage.getContent());
 	}
 	
 	

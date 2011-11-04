@@ -54,7 +54,6 @@ public class CProcessor implements Runnable, Cloneable {
 	private Boolean isSynchronized;
 	//private long nextSubID = 0;
 	private String previousState;
-	private String fromState = "";
 	private ACLMessage lastSentMessage;
 	private CFactory myFactory;
 	private boolean initiator;
@@ -425,6 +424,7 @@ public class CProcessor implements Runnable, Cloneable {
 							}
 
 							if (!accepted) {
+								currentMessage = retrievedMessage;
 								backState = currentState;
 								logger.info("Performative "
 										+ retrievedMessage.getPerformative()
@@ -551,23 +551,23 @@ public class CProcessor implements Runnable, Cloneable {
 					next = backState;
 					NotAcceptedMessagesState notAcceptedMessagesState = (NotAcceptedMessagesState) states
 							.get(currentState);
-					switch (notAcceptedMessagesState.run(currentMessage, next)) {
-					case NotAcceptedMessagesState.IGNORE:
-						break;
-					case NotAcceptedMessagesState.REPLY_NOT_UNDERSTOOD:
-						ACLMessage cloneCurrentMessage = (ACLMessage) currentMessage
-								.clone();
-						cloneCurrentMessage.setPerformative(ACLMessage.FAILURE);
-						cloneCurrentMessage.clearAllReceiver();
-						cloneCurrentMessage.addReceiver(currentMessage
-								.getSender());
-						myAgent.send(cloneCurrentMessage);
-						break;
-					case NotAcceptedMessagesState.KEEP:
-						// PENDIENTE: myAgent.addMessage(currentMessage);
-						break;
+					switch (notAcceptedMessagesState.run(this,currentMessage, next)) {
+						case NotAcceptedMessagesState.IGNORE:
+							break;
+						case NotAcceptedMessagesState.REPLY_NOT_UNDERSTOOD:
+							ACLMessage cloneCurrentMessage = (ACLMessage) currentMessage
+									.clone();
+							cloneCurrentMessage.setPerformative(ACLMessage.NOT_UNDERSTOOD);
+							cloneCurrentMessage.clearAllReceiver();
+							cloneCurrentMessage.addReceiver(currentMessage
+									.getSender());
+							myAgent.send(cloneCurrentMessage);
+							break;
+						case NotAcceptedMessagesState.KEEP:
+							addMessage(currentMessage);
+							break;
 					}
-					next = notAcceptedMessagesState.getNext(next);
+					next = notAcceptedMessagesState.getNext(this,next);
 					currentState = next;
 					break;
 				}				
@@ -601,7 +601,6 @@ public class CProcessor implements Runnable, Cloneable {
 				}
 				
 				currentStateType = states.get(currentState).getType();
-				fromState = previousState;
 				previousState = currentState;
 			} // end while (true)
 		}
@@ -808,9 +807,5 @@ public class CProcessor implements Runnable, Cloneable {
 	 */
 	protected boolean isInitiator() {
 		return this.initiator;
-	}
-	
-	public String getPreviousState(){
-		return fromState;	
 	}
 }
