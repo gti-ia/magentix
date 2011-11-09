@@ -157,4 +157,11 @@ public class Argument implements Serializable {
 			ArrayList<Argument> receivedAttacksDistPremises) {
 		this.receivedAttacksDistPremises = receivedAttacksDistPremises;
 	}
+	
+	public String toString(){
+		
+		return "id="+this.id+" solID="+this.conclusion.getID()+" promotedValue="+this.value+
+				" attackingToArgID="+this.attackingToArgID+"\nSupportSet: "+this.supportSet.toString();
+		
+	}
 }

@@ -85,7 +85,7 @@ public class TestArgLearn2Test {
 			
 			Vector<DomainCase> tickets=CreatePartitions.getTestDomainCases();
 						
-			for(nOperators = 3; nOperators <= 9; nOperators+=2){	
+			for(nOperators = 5; nOperators <= 5; nOperators+=2){	
 			
 				int nArgCases=10;
 			
@@ -101,7 +101,7 @@ public class TestArgLearn2Test {
 //				}
 //				AgentsCreation.createEmptyArgCasesPartitions(owlArgFileNames);
 			
-				ArrayList<SocialEntity> socialEntities=AgentsCreation.createSocialEntities("ArgLearnAg",nOperators, nExperts, nManagers);
+				ArrayList<SocialEntity> socialEntities=AgentsCreation.createSocialEntities("ArgLearnCAg",nOperators, nExperts, nManagers);
 				ArrayList<ArrayList<SocialEntity>> friendsLists=AgentsCreation.createFriendsLists(socialEntities);
 				ArrayList<ArrayList<DependencyRelation>> depenRelsLists=AgentsCreation.createDependencyRelations(nOperators, nExperts, nManagers);
 				
@@ -111,20 +111,20 @@ public class TestArgLearn2Test {
 				
 				int casesInc;
 			
-				for(int cases=5;cases<=45;cases+=5){
+				for(int cases=20;cases<=45;cases+=5){
 //					for(int repetition=0;repetition<tickets.size();repetition++){
 					
 					casesInc = cases + 5;
 					
 						iniDomainFiles=new ArrayList<String>();
 						for(int i=0;i<nOperators;i++){
-							iniDomainFiles.add("partitionsInc/part"+cases+"cas"+i+"op.dat");
+							iniDomainFiles.add("partitionsInc/partContinuous"+cases+"cas"+i+"op.dat");
 
 						}
 						
 						finDomainFiles=new ArrayList<String>();
 						for(int i=0;i<nOperators;i++){
-							finDomainFiles.add("partitionsInc/part"+cases+"cas"+i+"op.dat");
+							finDomainFiles.add("partitionsInc/partContinuous"+cases+"cas"+i+"op.dat");
 
 						}
 						
@@ -174,7 +174,7 @@ public class TestArgLearn2Test {
 						
 						
 						TesterAgentArgLearn1and2 testerAgent= new TesterAgentArgLearn1and2(new AgentID("qpid://"+testerAgentID+"@localhost:8080"), nTickets, 
-								socialEntities, commitmentStore.getName(), "results/performance/test1and2Inc/test2argLearnLL5DC+0AC+Per-"+nOperators+"agB.txt",
+								socialEntities, commitmentStore.getName(), "results/performance/test1and2Inc/argLearnContinuousLL5DC+0AC+Per-"+nOperators+"ag.txt",
 								finishFileName, cases, repetition, aTicket, new ArrayList<String>(), agents);
 						testerAgent.start();
 						

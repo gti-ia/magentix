@@ -266,7 +266,35 @@ public class SupportSet implements Serializable{
 		this.counterExamplesArgCases = counterExamplesArgCases;
 	}
     
-    
+    public String toString(){
+    	String str="";
+    	if(this.premises!=null && !this.premises.isEmpty()){
+    		str+="premises: ";
+    		Iterator<Premise> iterPremises=this.premises.iterator();
+    		while(iterPremises.hasNext()){
+    			Premise p=iterPremises.next();
+    			str+=p.getID()+"="+p.getContent()+" ";
+    		}
+    	}
+    	if(this.distPremises!=null && !this.distPremises.isEmpty()){
+    		str+="\ndistPremises: ";
+    		Iterator<Premise> iterPremises=this.distPremises.iterator();
+    		while(iterPremises.hasNext()){
+    			Premise p=iterPremises.next();
+    			str+=p.getID()+"="+p.getContent()+" ";
+    		}
+    	}
+    	
+    	if(this.counterExamplesArgCases!=null && !this.counterExamplesArgCases.isEmpty()){
+    		str+="\nArgCases: ";
+    		Iterator<ArgumentCase> iterArgCases=this.counterExamplesArgCases.iterator();
+    		while(iterArgCases.hasNext()){
+    			ArgumentCase argCase=iterArgCases.next();
+    			str+="argCaseID="+argCase.getID()+" ";
+    		}
+    	}
+    	return str;
+    }
 
 //  public void addCounterExample(Case newCounterExample) {
 //      counterExamples.add(newCounterExample);

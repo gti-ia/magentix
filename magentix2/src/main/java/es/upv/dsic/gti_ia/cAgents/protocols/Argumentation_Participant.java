@@ -2,6 +2,7 @@ package es.upv.dsic.gti_ia.cAgents.protocols;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Iterator;
 
 import com.hp.hpl.jena.graph.query.regexptrees.Nothing;
 
@@ -438,7 +439,10 @@ public abstract class Argumentation_Participant {
 	 */
 	private void copyMessages(ACLMessage msg, ACLMessage msg2){
 		msg.setSender(msg2.getSender());
-		msg.setReceiver(msg2.getReceiver());
+		Iterator<AgentID> iterReceivers=msg2.getReceiverList().iterator();
+		while(iterReceivers.hasNext()){
+			msg.addReceiver(iterReceivers.next());
+		}
 		msg.setConversationId(msg2.getConversationId());
 		msg.setHeader("locution", msg2.getHeaderValue("locution"));
 		msg.setPerformative(msg2.getPerformative());

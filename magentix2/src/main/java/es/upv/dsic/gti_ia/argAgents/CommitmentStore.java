@@ -78,10 +78,11 @@ public class CommitmentStore extends SingleAgent{
 	
 	public void respondMessage(ACLMessage msg) {
 		//logger.info("\n\n"+this.getName()+": "+msg.toString()+"\n\n");
-		logger.info(this.getName()+": "+"message received: "+"from: "+msg.getSender().getLocalName()+" dialogueID: "+msg.getConversationId()+" locution: "+msg.getHeaderValue("locution"));
 		String locution=msg.getHeaderValue("locution");
+		logger.info(this.getName()+": "+"message received: "+"from: "+msg.getSender().getLocalName()+" dialogueID: "+msg.getConversationId()+" locution: "+locution);
+		
 		try{
-			
+		
 		if(locution.equalsIgnoreCase("LASTMODIFICATIONDATE")){
 			Long lastDate=lastModificationDates.get(msg.getConversationId());
 			Long millisDifference=System.currentTimeMillis()-lastDate;

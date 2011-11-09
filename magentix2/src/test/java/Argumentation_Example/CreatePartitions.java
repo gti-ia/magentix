@@ -167,6 +167,47 @@ public class CreatePartitions {
 		}
 		
 	}
+	
+	public static void createDomCasesPartitionsContinued(int nCases, int nOperators){
+		try {
+		
+		Vector<DomainCase> allCases=readDomainCasesFile("Helpdesk-DomainCases.dat");
+		
+		//ArrayList<ArrayList<Case>> partitionsCases=new ArrayList<ArrayList<Case>>();
+		
+		for(int op=0;op<nOperators;op++){
+			System.out.println("Operator "+op);
+			ArrayList<Integer> casesList=new ArrayList<Integer>();
+			ArrayList<DomainCase> currentPartition=new ArrayList<DomainCase>();
+			for(int cases=0;cases<nCases;cases+=5){
+				System.out.println("Partition cases = "+(cases+5));
+				for(int i=cases;i<cases+5;i++){//5 cases per incremental iteration
+					int index=(op+i)%allCases.size();
+					casesList.add(index);
+					currentPartition.add(allCases.get(index));
+					System.out.println(index);
+				}
+				System.out.println("current partition size = "+currentPartition.size());
+				//save the list currentPartition in the given file, using the function of domain onto parser
+				writeDomainCases(currentPartition, 
+							"partitionsInc/partContinuous"+(cases+5)+"cas"+op+"op.dat");
+				
+				
+			}
+			if(op==0){
+				Iterator<DomainCase> iterCases=currentPartition.iterator();
+				while(iterCases.hasNext()){
+					DomainCase c = iterCases.next();
+					System.out.println("tipiNode="+c.getProblem().getDomainContext().getPremises().get(0).getContent()+" solID="+c.getSolutions().get(0).getConclusion().getID());
+				}
+			}
+		}
+		
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
 //	
 //	public static void createDomCasesPartitionsIncOrdered(int nCases, int nOperators){
 //		try {
@@ -783,6 +824,9 @@ public class CreatePartitions {
 	 */
 	public static void main(String[] args) {
 		
+		
+		createDomCasesPartitionsContinued(45, 5);
+		
 //		createDomCasesPartitions(40, 48, 9);
 //		createExpertsPartitions();
 //		
@@ -833,11 +877,11 @@ public class CreatePartitions {
 		
 //		createDomCasesPartitionsIncremental(45, 15);
 		
-		ArrayList<String> argFileNames=new ArrayList<String>();
-		for(int i=0;i<15;i++){
-			argFileNames.add("partArgInc/partArg"+"Operator"+i+".dat");
-		}
-		createEmptyArgCasesPartitions(argFileNames);
+//		ArrayList<String> argFileNames=new ArrayList<String>();
+//		for(int i=0;i<15;i++){
+//			argFileNames.add("partArgInc/partArg"+"Operator"+i+".dat");
+//		}
+//		createEmptyArgCasesPartitions(argFileNames);
 	}
 
 //	public static void createTestData(){

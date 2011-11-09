@@ -92,13 +92,12 @@ public class ArgumentCase extends Case implements Serializable{
 				HashMap<Integer, Premise> premises = argCase.getArgumentProblem().getDomainContext().getPremises();
 				Iterator<Premise> it = premises.values().iterator();
 				while(it.hasNext()){
-					try{
-						System.out.println("\t\t Premise ID: " + it.next().getID());
-						System.out.println("\t\t Premise Name: " + it.next().getName());
-						System.out.println("\t\t Premise Content: " +it.next().getContent() );
-					}catch(Exception e){
-						
-					}
+					Premise p=it.next();
+					
+						System.out.println("\t\t Premise ID: " + p.getID());
+						System.out.println("\t\t Premise Name: " + p.getName());
+						System.out.println("\t\t Premise Content: " +p.getContent() );
+					
 				}
 			System.out.println("\t ArgumentProblem hasSocialContext: " + argCase.getArgumentProblem().getSocialContext().hashCode());
 				SocialEntity pro = argCase.getArgumentProblem().getSocialContext().getProponent();
@@ -164,4 +163,29 @@ public class ArgumentCase extends Case implements Serializable{
 				
 				System.out.println("\t\t Dependency Relation: " + argCase.getArgumentProblem().getSocialContext().getDependencyRelation());
 	}
+	
+	public String toString(){
+		String str="id: "+this.getID()+" creationDate: "+this.getCreationDate()+"\n";
+		
+		str+="Domain context. Premises:\n";
+		HashMap<Integer, Premise> premises = this.getArgumentProblem().getDomainContext().getPremises();
+		Iterator<Premise> it = premises.values().iterator();
+		while(it.hasNext()){
+			Premise p=it.next();
+			str+="\t ID: " + p.getID();
+			str+=" Content: " +p.getContent();
+		}
+		
+		str+="\nSocial context. \n";
+		SocialEntity pro = this.getArgumentProblem().getSocialContext().getProponent();
+		str+="Proponent ID: " + pro.getID()+" name: "+ pro.getName()+" role: "+pro.getRole()+"\n";
+		
+		SocialEntity op = this.getArgumentProblem().getSocialContext().getOpponent();
+		str+="Oponent ID: " + op.getID()+" name: "+ op.getName()+" role: "+op.getRole()+"\n";
+		
+		str+="Dependency Relation: " + this.getArgumentProblem().getSocialContext().getDependencyRelation()+"\n";
+		
+		return str;
+	}
+	
 }

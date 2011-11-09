@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -388,7 +389,7 @@ public class ArgCAgent extends CAgent{
 				if(msgReceived.getHeaderValue("locution").equalsIgnoreCase(ASSERT)){
 					//add his position to my asked positions
 					Solution sol=new Solution(againstArgument.getHasConclusion(),againstArgument.getPromotesValue(),againstArgument.getTimesUsedConclusion());
-					Position hisPosition=new Position(subDialogueAgentID, subDialogueAgentID, sol, null, null, 0f);
+					Position hisPosition=new Position(subDialogueAgentID, currentDialogueID, sol, null, null, 0f);
 					askedPositions.add(hisPosition);
 					argNode=new ArgNode(againstArgument.getID(), new ArrayList<Long>(), -1, ArgNode.NodeType.FIRST);
 					currentDialogueGraph=new DialogueGraph();
@@ -447,7 +448,7 @@ public class ArgCAgent extends CAgent{
 				logger.info("+++++++++ "+myID+": doAttack from "+subDialogueAgentID);
 				logger.info("+++++++++ "+myID+" receiver: "+msgReceived.getReceiver().getLocalName());
 				
-				Argument attackArg=generateAttackArgument(againstArgument, msgReceived.getSender().name);
+				Argument attackArg=generateAttackArgument(againstArgument, subDialogueAgentID);
 				ACLMessage msg2;
 				
 				if(attackArg!=null){
@@ -458,8 +459,11 @@ public class ArgCAgent extends CAgent{
 					ArrayList<Argument> attackArgs=myUsedAttackArguments.get(subDialogueAgentID);
 					if(attackArgs==null)
 						attackArgs=new ArrayList<Argument>();
-					attackArgs.add(attackArg);
+					attackArgs.add(attackArg); 
 					myUsedAttackArguments.put(subDialogueAgentID, attackArgs);
+					
+					logger.info("\n"+myID+": myUsedAttackArgs with "+subDialogueAgentID+" "+attackArgs.size()+" "+myUsedAttackArguments.get(subDialogueAgentID).size()+"\n");
+					
 					
 					// add the attack argument to dialogue graph
 					ArgNode attNode = currentDialogueGraph.getNode(againstArgument.getID());
@@ -730,7 +734,10 @@ public class ArgCAgent extends CAgent{
 	 */
 	private void copyMessages(ACLMessage msg, ACLMessage msg2){
 		msg.setSender(msg2.getSender());
-		msg.setReceiver(msg2.getReceiver());
+		Iterator<AgentID> iterReceivers=msg2.getReceiverList().iterator();
+		while(iterReceivers.hasNext()){
+			msg.addReceiver(iterReceivers.next());
+		}
 		msg.setConversationId(msg2.getConversationId());
 		msg.setHeader("locution", msg2.getHeaderValue("locution"));
 		msg.setPerformative(msg2.getPerformative());
@@ -1302,7 +1309,7 @@ public class ArgCAgent extends CAgent{
 			
 				argJustification.addDomainCase(currentPosition.getDomainCases().get(i).getID());
 			
-					
+				
 				ArgumentCase argCasefromDomainCase= 
 				new ArgumentCase(System.nanoTime(), new Date(System.currentTimeMillis()).toString(), argProblem, argSolution, 
 						argJustification, 0);
@@ -1465,7 +1472,7 @@ public class ArgCAgent extends CAgent{
 			ArrayList<Premise> distPremises=getDistinguishingPremises(myUsefulPremises, hisUsefulPremises);
 			ArrayList<Premise> hisdistPremises=getDistinguishingPremises(hisUsefulPremises, myUsefulPremises);
 			
-			if(distPremises.size()>=hisdistPremises.size()){//generate attack
+			if(distPremises.size()>0 && distPremises.size()>=hisdistPremises.size()){//generate attack
 				ArrayList<Premise> premises=new ArrayList<Premise>();
 				Iterator<Premise> iterPremises=currentPosition.getPremises().values().iterator();
 				while(iterPremises.hasNext()){
@@ -1484,7 +1491,21 @@ public class ArgCAgent extends CAgent{
 				Argument argument= new Argument(System.nanoTime(), currentPosition.getSolution().getConclusion(), 
 						currentPosition.getSolution().getTimesUsed(), currentPosition.getSolution().getPromotesValue(), supportSet,relation);
 				if(!argumentPreviouslyUsed(argument,myUsedAttackArguments.get(agentID))){
-					logger.info(this.getName()+": "+" distinguishing premises attack argument against: "+agentID+"\n");
+					
+					Iterator<Premise> iterPrem=distPremises.iterator();
+					String str="";
+		    		while(iterPrem.hasNext()){
+		    			Premise p=iterPrem.next();
+		    			str+=p.getID()+"="+p.getContent()+" ";
+		    		}
+		    		Iterator<Premise> iterPremises2=hisdistPremises.iterator();
+					String str2="";
+		    		while(iterPremises2.hasNext()){
+		    			Premise p=iterPremises2.next();
+		    			str2+=p.getID()+"="+p.getContent()+" ";
+		    		}
+					logger.info(this.getName()+": "+" distinguishing premises attack argument against: "+agentID+"\n"
+							+"mydistPremises ("+distPremises.size()+"): "+str+"\n hisdistPremises ("+hisdistPremises.size()+"): "+str2+"\n");
 					return argument;
 				}
 
@@ -1641,25 +1662,55 @@ public class ArgCAgent extends CAgent{
 					ArrayList<ArgumentCase> cases=argSupp.getCounterExamplesArgCases();
 					ArrayList<ArgumentCase> cases2=currentArgSupp.getCounterExamplesArgCases();
 					if(cases!=null && cases2!=null && cases.size()>0 && cases2.size()>0){
-						//logger.info(this.getName()+": "+" counter example cases\n");
-						if(cases.get(0).equals(cases2.get(0))){
-							logger.info(this.getName()+": "+" SAME counter example argument cases\n");
-							return true;
+						logger.info(this.getName()+": "+" counter example cases:\n"+
+								cases.get(0).toString()+"\n"+cases2.get(0).toString());
+						
+						boolean same=false;
+						ArgumentCase case1=cases.get(0);
+						ArgumentCase case2=cases2.get(0);
+						
+						if(case1.getID()==case2.getID()){
+							logger.info(this.getName()+": "+" SAME counter example argument cases ID");
+							same=true;
 						}
+						if(case1.equals(case2)){
+							logger.info(this.getName()+": "+" SAME counter example argument cases");
+							same=true;
+						}
+						if(areSamePremises(case1.getArgumentProblem().getDomainContext().getPremises(),case2.getArgumentProblem().getDomainContext().getPremises())
+								&& case1.getArgumentSolution().getConclusion().equals(case2.getArgumentSolution().getConclusion())
+								&& case1.getArgumentSolution().getPromotesValue().equals(case2.getArgumentSolution().getPromotesValue())
+								&& case1.getArgumentSolution().getTimesUsed()==case2.getArgumentSolution().getTimesUsed()){
+							logger.info(this.getName()+": "+" SAME counter example argument cases premises and conclusions");
+							same=true;
+						}
+						
+						if(same) return true;
 					}
 				}
-				if(argSupp.getDistinguishingPremises().size()>0 && argSupp.getDistinguishingPremises().size()==currentArgSupp.getDistinguishingPremises().size()){
+				if(argSupp.getDistinguishingPremises().size()>0){
 					ArrayList<Premise> premises=argSupp.getDistinguishingPremises();
-					ArrayList<Premise> premises2=argSupp.getDistinguishingPremises();
+					ArrayList<Premise> premises2=currentArgSupp.getDistinguishingPremises();
+					
+					Iterator<Premise> iterPremises=premises.iterator();
+					String str="";
+		    		while(iterPremises.hasNext()){
+		    			Premise p=iterPremises.next();
+		    			str+=p.getID()+"="+p.getContent()+" ";
+		    		}
+		    		Iterator<Premise> iterPremises2=premises2.iterator();
+					String str2="";
+		    		while(iterPremises2.hasNext()){
+		    			Premise p=iterPremises2.next();
+		    			str2+=p.getID()+"="+p.getContent()+" ";
+		    		}
+		    		logger.info(this.getName()+": dist prems\n"+str+"\n"+str2);
 					if(premises!=null && premises2!=null && premises.size()>0 && premises2.size()>0 && premises.size()==premises2.size()){
-						//logger.info(this.getName()+": "+" distinguishing premises\n");
-						boolean samePremises=true;
-						for(int prem=0;prem<premises.size();prem++){
-							if(premises.get(prem).getID()!=premises2.get(prem).getID()){
-								samePremises=false;
-							}
-						}
-						if(samePremises){
+						logger.info(this.getName()+": "+" distinguishing premises\n");
+						
+						
+						
+						if(areSamePremises(premises,premises2)){
 							logger.info(this.getName()+": "+" SAME distinguishing premises\n");
 							return true;
 						}
@@ -1669,9 +1720,46 @@ public class ArgCAgent extends CAgent{
 				
 			}
 		}
-		logger.info("**********************"+this.getName()+": "+" argument not previously used");
+		logger.info(this.getName()+": "+" argument not previously used");
 		return false;
 	}
+	
+	private boolean areSamePremises(HashMap<Integer, Premise> prem1, HashMap<Integer, Premise> prem2){
+		
+		if(prem1.values().size()!=prem2.values().size())
+			return false;
+		Iterator<Premise> iterPrem=prem1.values().iterator();
+		while(iterPrem.hasNext()){
+			Premise p=iterPrem.next();
+			Premise p2=prem2.get(p.getID());
+			if(p2==null || !p2.getContent().equalsIgnoreCase(p.getContent()))
+				return false;
+		}
+		
+		return true;
+	}
+	
+	private boolean areSamePremises(ArrayList<Premise> prem1, ArrayList<Premise> prem2){
+		
+		if(prem1.size()!=prem2.size())
+			return false;
+		Iterator<Premise> iterPrem=prem1.iterator();
+		while(iterPrem.hasNext()){
+			Premise p=iterPrem.next();
+			Iterator<Premise> iterPrem2=prem2.iterator();
+			while(iterPrem2.hasNext()){
+				Premise p2=iterPrem2.next();
+				if(p.getID()==p2.getID()){
+					if(!p.getContent().equals(p2.getContent()))
+						return false;
+					break;
+				}
+			}
+		}
+		
+		return true;
+	}
+	
 	
 	private int getPreferredValueIndex(String value){
 		for(int i=0;i<preferedValues.size();i++){
@@ -1782,7 +1870,7 @@ public class ArgCAgent extends CAgent{
 							break;
 						}
 					}
-						
+
 				}
 				if(!asked)
 					differentPositions.add(pos);
