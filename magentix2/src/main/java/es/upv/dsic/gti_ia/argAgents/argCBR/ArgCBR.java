@@ -83,7 +83,7 @@ public class ArgCBR {
 			    aux = ois.readObject();
 			}
 			ois.close();
-		
+			
 		
 		} catch (EOFException e) {
 			
@@ -94,6 +94,8 @@ public class ArgCBR {
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
+		
+		System.out.println(ncases+" argument Cases in ArgCBR");
 		
 		
 	}

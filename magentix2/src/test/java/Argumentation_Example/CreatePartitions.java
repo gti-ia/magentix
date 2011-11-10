@@ -1,12 +1,10 @@
 package Argumentation_Example;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.EOFException;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -17,10 +15,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Vector;
 
-
 import es.upv.dsic.gti_ia.argAgents.domainCBR.Attribute;
 import es.upv.dsic.gti_ia.argAgents.domainCBR.Category;
-import es.upv.dsic.gti_ia.argAgents.domainCBR.DomainCBR;
 import es.upv.dsic.gti_ia.argAgents.domainCBR.OWLDomainParser;
 import es.upv.dsic.gti_ia.argAgents.domainCBR.Ticket;
 import es.upv.dsic.gti_ia.argAgents.knowledgeResources.ArgumentCase;
@@ -818,6 +814,17 @@ public class CreatePartitions {
 //	
 //	}
 	
+	public static Vector<DomainCase> getTestDomainCases(){
+		Vector<DomainCase> tickets=new Vector<DomainCase>();
+		try {
+			tickets = readDomainCasesFile("Helpdesk-DomainCases.dat");
+			System.out.println("domain cases= "+tickets.size());
+		}catch (Exception e){//Catch exception if any
+			System.err.println("Error reading file: " + e.getMessage());
+			e.printStackTrace();
+		}
+		return tickets;
+	}
 	
 	/**
 	 * @param args
@@ -825,7 +832,7 @@ public class CreatePartitions {
 	public static void main(String[] args) {
 		
 		
-		createDomCasesPartitionsContinued(45, 5);
+		createDomCasesPartitionsContinued(45, 9);
 		
 //		createDomCasesPartitions(40, 48, 9);
 //		createExpertsPartitions();
@@ -915,16 +922,6 @@ public class CreatePartitions {
 //		return tickets;
 //	}
 //	
-	public static Vector<DomainCase> getTestDomainCases(){
-		Vector<DomainCase> tickets=new Vector<DomainCase>();
-		try {
-			tickets = readDomainCasesFile("Helpdesk-DomainCases.dat");
-			System.out.println("domain cases= "+tickets.size());
-		}catch (Exception e){//Catch exception if any
-			System.err.println("Error reading file: " + e.getMessage());
-			e.printStackTrace();
-		}
-		return tickets;
-	}
+	
 
 }

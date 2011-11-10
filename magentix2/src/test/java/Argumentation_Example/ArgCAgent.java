@@ -5,14 +5,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.StringTokenizer;
 
-import es.upv.dsic.gti_ia.argAgents.CommitmentStore;
 import es.upv.dsic.gti_ia.argAgents.argCBR.ArgCBR;
 import es.upv.dsic.gti_ia.argAgents.domainCBR.DomainCBR;
 import es.upv.dsic.gti_ia.argAgents.knowledgeResources.AcceptabilityState;
@@ -25,7 +23,6 @@ import es.upv.dsic.gti_ia.argAgents.knowledgeResources.ArgumentProblem;
 import es.upv.dsic.gti_ia.argAgents.knowledgeResources.ArgumentSolution;
 import es.upv.dsic.gti_ia.argAgents.knowledgeResources.ArgumentSolution.ArgumentType;
 import es.upv.dsic.gti_ia.argAgents.knowledgeResources.ArgumentationScheme;
-import es.upv.dsic.gti_ia.argAgents.knowledgeResources.Dialogue;
 import es.upv.dsic.gti_ia.argAgents.knowledgeResources.DialogueGraph;
 import es.upv.dsic.gti_ia.argAgents.knowledgeResources.DomainCase;
 import es.upv.dsic.gti_ia.argAgents.knowledgeResources.DomainContext;
@@ -50,41 +47,26 @@ import es.upv.dsic.gti_ia.core.AgentID;
 public class ArgCAgent extends CAgent{
 	
 	private final int multTimeFactor=10; //1000 will be seconds
-	private boolean die=false;
-	private boolean lastLocutionOpenDialogue=false; //just to avoid excessive log messages of OPENDIALOGUE waiting
-	private final String OPENDIALOGUE="OPENDIALOGUE";
 	private final String ENTERDIALOGUE="ENTERDIALOGUE";
-//	private final String LEAVEDIALOGUE="LEAVEDIALOGUE";
 	private final String WITHDRAWDIALOGUE="WITHDRAWDIALOGUE";
-//	private final String PROPOSE="PROPOSE";
 	private final String WHY="WHY";
 	private final String NOCOMMIT="NOCOMMIT";
 	private final String ASSERT="ASSERT";
 	private final String ACCEPT="ACCEPT";
 	private final String ATTACK="ATTACK";
-	private final String RETRACT="RETRACT";
 	
-	private final String ADDARGUMENT="ADDARGUMENT";
-//	private final String GETARGUMENT="GETARGUMENT";
-	private final String REMOVEARGUMENT="REMOVEARGUMENT";
+	
 	private final String ADDPOSITION="ADDPOSITION";
-	private final String GETPOSITION="GETPOSITION";
 	private final String GETALLPOSITIONS="GETALLPOSITIONS";
-	private final String REMOVEPOSITION="REMOVEPOSITION";
-	private final String ADDDIALOGUE="ADDDIALOGUE";
-//	private final String GETDIALOGUE="GETDIALOGUE";
 	
-	private final String FINISHDIALOGUE="FINISHDIALOGUE";
 	
 	private String myID;
-	private boolean initiator=false;
 	private ArrayList<String> preferedValues;
 	private SocialEntity mySocialEntity;
 	private ArrayList<SocialEntity> myFriends;
 	private ArrayList<DependencyRelation> depenRelations;
 	private Group myGroup;
 	private String commitmentStoreID;
-	private String testerAgentID;
 	
 	private DomainCBR domainCBR;
 	private ArgCBR argCBR;
@@ -107,10 +89,8 @@ public class ArgCAgent extends CAgent{
 		
 	
 	private String currentDialogueID;
-	private String currentDialogueIDWithdraw;//only for initiator agents
 	private Problem currentProblem;
 	private DomainCase currentDomCase2Solve;
-	private DomainCase originalTDomCase2Solve;
 	private Position currentPosition;
 	private Position lastPositionBeforeNull;
 	private HashMap<String,ArrayList<DialogueGraph>> dialogueGraphs;
@@ -118,14 +98,6 @@ public class ArgCAgent extends CAgent{
 	private String subDialogueAgentID="";
 	private ArrayList<Position> differentPositions;
 	
-	private boolean dialogueFinished;
-//	private boolean waitingFinalSolution;
-	private long myLastCheckMillis=0l;
-	private long dialogueInitTime;
-	private int timesInState4=0;
-	private int timesInState5=0;
-	private int timesInState6=0;
-	private int timesInState7=0;
 	private float dialogueTime = 0f;
 	private int currentPosAccepted = 0;
 	private int agreementReached = 0;
@@ -149,14 +121,6 @@ public class ArgCAgent extends CAgent{
 	
 	private HashMap<String,ArrayList<Argument>> storeArguments;
 	
-	
-	private ArrayList<ACLMessage> messagesQueue;
-	
-	private String iniArgCasesFilePath;
-	private String finArgCasesFilePath;
-	private String iniDomCasesFilePath;
-	private String finDomCasesFilePath;
-
 	/**
 	 * Main method to build Argumentative Agents
 	 * @param aid Agent {@link AID}
@@ -189,14 +153,12 @@ public class ArgCAgent extends CAgent{
 		super(aid);
 		
 		this.myID=aid.getLocalName();
-		this.initiator=isInitiator;
 		this.mySocialEntity=mySocialEntity;
 		this.preferedValues=mySocialEntity.getValPref().getValues();
 		this.myFriends=myFriends;
 		this.depenRelations=depenRelations;
 		this.myGroup=group;
 		this.commitmentStoreID=commitmentStoreID;
-		this.testerAgentID=testerAgentID;
 		this.threshold=threshold;
 		this.wPD = wPD;
 		this.wSD = wSD;
@@ -205,25 +167,14 @@ public class ArgCAgent extends CAgent{
 		this.wED = wED;
 		this.wEP = wEP;
 		
-		this.iniArgCasesFilePath = iniArgCasesFilePath;
-		this.finArgCasesFilePath = finArgCasesFilePath;
-		this.iniDomCasesFilePath = iniDomCasesFilePath;
-		this.finDomCasesFilePath = finDomCasesFilePath;
-
-		
 		domainCBR= new DomainCBR(iniDomCasesFilePath, finDomCasesFilePath);
 		argCBR= new ArgCBR(iniArgCasesFilePath, finArgCasesFilePath);
 		
 		currentDialogueID=null;
-		currentDialogueIDWithdraw=null;//only for initiator agents
 		currentProblem=null;
 		currentDomCase2Solve=null;
-		originalTDomCase2Solve=null;
 		lastPositionBeforeNull = null;
 		currentPosition=null;
-		dialogueFinished=false;
-//		waitingFinalSolution=false;
-		dialogueInitTime=0;
 		dialogueGraphs=new HashMap<String, ArrayList<DialogueGraph>>();
 		currentDialogueGraph=null;
 		
@@ -232,11 +183,9 @@ public class ArgCAgent extends CAgent{
 		askedPositions=new ArrayList<Position>();
 		attendedWhyPetitions=new HashMap<String, ArrayList<Position>>();
 		mySupportArguments= new HashMap<String, ArrayList<Argument>>();
-//		myAttackArguments= new HashMap<String, ArrayList<Argument>>();
 		myUsedSupportArguments= new HashMap<String, ArrayList<Argument>>();
 		myUsedAttackArguments= new HashMap<String, ArrayList<Argument>>();
 		storeArguments= new HashMap<String, ArrayList<Argument>>();
-		messagesQueue= new ArrayList<ACLMessage>();
 	}
 
 	protected void execution(CProcessor myProcessor, ACLMessage welcomeMessage) {
@@ -320,7 +269,9 @@ public class ArgCAgent extends CAgent{
 				ArrayList<Position> myPositionsAsked=attendedWhyPetitions.get(whyAgentID);
 				if(myPositionsAsked!=null && myPositionsAsked.contains(currentPosition)){
 					//I have already replied this agent with my current position, do not reply him
-					return "WAIT_CENTRAL"; //TODO send something (message with locution NOTHING)
+					msg2=nothingMsg();
+					copyMessages(msg, msg2);
+					return "WAIT_CENTRAL"; // send message with locution NOTHING to noOne (non existing agent)
 				}
 				else{	
 					//try to generate a support argument 
@@ -512,10 +463,6 @@ public class ArgCAgent extends CAgent{
 						else
 							thisNode.setNodeType(NodeType.LAST);
 					}
-//					msg2=retract(subDialogueAgentID, myLastAttackArg);
-//					copyMessages(msgToSend, msg2);
-					
-					
 
 					return false;
 						
@@ -556,14 +503,10 @@ public class ArgCAgent extends CAgent{
 					return true;
 				}
 				else{//nothing to challenge, remain in this state
-					//TODO return some message????
-					
-					msg.setReceiver(new AgentID(commitmentStoreID));
-					msg.setHeader("locution", "NOTHING");
-					msg.setSender(getAid());
-					msg.setConversationId(currentDialogueID);
-					msg.setPerformative(ACLMessage.INFORM);
-					logger.info("------------ ------ "+myID + ": NOT WHY nothing to challenge");
+					//send NOTHING message
+					msg2=nothingMsg();
+					copyMessages(msg, msg2);
+					logger.info(myID + ": NOT WHY nothing to challenge");
 					return false; 
 				}
 				
@@ -678,20 +621,11 @@ public class ArgCAgent extends CAgent{
 			
 		}
 		
-		// In order to start a conversation the agent creates a message
-		// that can be accepted by one of its initiator factories.
-
-//		msg = new ACLMessage(ACLMessage.CFP);
-//		msg.addReceiver(new AgentID("Sally"));
-//		msg.addReceiver(new AgentID("Mary"));
-//		msg.setContent("How much do you want to spend tomorrow in the dinner?");
+		
 
 		// The agent creates the CFactory that creates processors that initiate
-		// CONTRACT_NET protocol conversations. In this
-		// example the CFactory gets the name "TALK", we don't add any
-		// additional message acceptance criterion other than the required
-		// by the CONTRACT_NET protocol (null) and we do not limit the number of simultaneous
-		// processors (value 0)
+		// conversations. In this example the CFactory gets the name "TALK".
+		// We limit the number of simultaneous processors to 1.
 		
 		long rand=(long) (1200*Math.random());
 		CFactory talk = new myArgumentation().newFactory("TALK", null, null,
@@ -699,26 +633,13 @@ public class ArgCAgent extends CAgent{
 		
 		logger.info(this.getName()+": My rand wait time is "+rand);
 
-		// The factory is setup to answer start conversation requests from the agent
-		// using the CONTRACT_NET protocol.
-
 		this.addFactoryAsParticipant(talk);
-
-		// finally the new conversation starts. Because it is synchronous, 
-		// the current interaction halts until the new conversation ends.
-
-//		System.out.println("I ask for proposals to Mary and Sally");
-//		myProcessor.createSyncConversation(msg);
-
 		
 	}
 
 	protected void finalize(CProcessor firstProcessor,
 			ACLMessage finalizeMessage) {
-
 		logger.info("+++++++++++++++++++++++++++++++++++++++ "+this.getName()+": Finalizing");
-		
-		//System.out.println(finalizeMessage.getContent());
 	}
 	
 	
@@ -762,9 +683,6 @@ public class ArgCAgent extends CAgent{
 		//a test agent will give the initiator agent the Ticket to solve
 		similarDomainCases=domainCBR.retrieve(domCase.getProblem().getDomainContext().getPremises(), threshold);
 		
-//		if(similarDomainCases==null || similarDomainCases.size()==0)
-//			logger.info("\n"+this.getName()+": "+" NO similar domain cases"+"\n");
-		
 		currentDialogueID=dialogueID;
 		
 		//has cases and solutions to enter in the dialogue
@@ -776,8 +694,6 @@ public class ArgCAgent extends CAgent{
 					currentPosition.getPremises(), currentPosition.getDomainCases(), currentPosition.getDomainCaseSimilarity());;
 			currentPosition=null;
 			positionsGenerated=false;
-			dialogueFinished=false;
-//			waitingFinalSolution=false;
 			
 			askedPositions=new ArrayList<Position>();
 			attendedWhyPetitions=new HashMap<String, ArrayList<Position>>();
@@ -857,13 +773,6 @@ public class ArgCAgent extends CAgent{
 		return sendMessage(agentIDr, ACCEPT, currentDialogueID, null);
 	}
 	
-//	public void accept(String agentIDr, Position pos){
-//
-//		//send it to the other agent
-//		sendMessage(agentIDr, ACCEPT, currentDialogueID, pos);
-//		
-//	}
-	
 	public ACLMessage attack(String agentIDr, Argument arg){
 		myUsedLocutions++;
 		
@@ -871,18 +780,16 @@ public class ArgCAgent extends CAgent{
 		return sendMessage(agentIDr, ATTACK, currentDialogueID, arg);
 	}
 	
-//	public ACLMessage retract(String agentIDr, Argument arg){
-//		
-//		//remove the argument from commitment store
-//		removeArgument(arg, currentDialogueID);
-//		
-//		//The argument is not removed from the list of used arguments. I need to know those arguments
-//	
-//		//inform to the other agent
-//		
-//		myUsedLocutions++;
-//		return sendMessage(agentIDr, RETRACT, currentDialogueID, arg);
-//	}
+	public ACLMessage nothingMsg(){
+		ACLMessage msg=new ACLMessage();
+		msg.setReceiver(new AgentID("noOne"));
+		msg.setHeader("locution", "NOTHING");
+		msg.setSender(getAid());
+		msg.setConversationId(currentDialogueID);
+		msg.setPerformative(ACLMessage.INFORM);
+		
+		return msg;
+	}
 	
 
 	private Argument getMyLastUsedArg(String agentID, long argID){
@@ -918,7 +825,7 @@ public class ArgCAgent extends CAgent{
 		//then, with each solution, create a Position
 		//with each position, query the argCBR calculating the SuitFactor Arg (PD + ....)
 		
-		// Fist, assign weights in accordance with the quantity of knowledge
+		// First, assign weights in accordance with the quantity of knowledge
 //		int domCases = domainCBR.getAllCasesVector().size();
 //		int arguCases = argCBR.getAllCasesVector().size();
 //		int totalCases = domCases + arguCases;
@@ -1057,9 +964,6 @@ public class ArgCAgent extends CAgent{
 				finalPositions.addAll(positions);
 				
 			}
-			
-
-			
 			
 		}
 		
@@ -1380,10 +1284,6 @@ public class ArgCAgent extends CAgent{
 			
 			Collections.sort(argCases);
 			
-//			HashMap<Integer,Premise> hisUsefulPremises=getUsefulPremises(currentProblem.getDomainContext().getPremises(), incArgument.getSupportSet().getPremises());
-			
-			// SupportSet(premises, domainCases, argumentCases, schemes, distPremises, presumptions, 
-			// exceptions, counterExamplesdomainCases, counterExamplesargumentCases)
 			SupportSet incSS = incArgument.getSupportSet();
 			Argument attack = null;
 			boolean support = false;
@@ -1577,20 +1477,6 @@ public class ArgCAgent extends CAgent{
 	}
 	
 	
-//	private HashMap<Integer,Premise> getUsefulPremises(HashMap<Integer,Premise> problemPremises, ArrayList<Premise> myPremises){
-//		
-//		Iterator<Premise> iterHisPremises=myPremises.iterator();
-//		HashMap<Integer,Premise> usefulPremises=new HashMap<Integer, Premise>();
-//		while(iterHisPremises.hasNext()){
-//			Premise premise=iterHisPremises.next();
-//			Premise problemPremise=problemPremises.get(premise.getID());
-//			if(problemPremise!=null && problemPremise.getContent().equalsIgnoreCase(premise.getContent())){//this premise is in the problem
-//				usefulPremises.put(premise.getID(), premise);
-//			}
-//		}
-//		return usefulPremises;
-//	}
-	
 	private ArrayList<Premise> getDistinguishingPremises(HashMap<Integer,Premise> myPremises, HashMap<Integer,Premise> hisPremises){
 		ArrayList<Premise> distPremises=new ArrayList<Premise>();
 		Iterator<Premise> iterUsefulPremises=myPremises.values().iterator();
@@ -1662,30 +1548,27 @@ public class ArgCAgent extends CAgent{
 					ArrayList<ArgumentCase> cases=argSupp.getCounterExamplesArgCases();
 					ArrayList<ArgumentCase> cases2=currentArgSupp.getCounterExamplesArgCases();
 					if(cases!=null && cases2!=null && cases.size()>0 && cases2.size()>0){
-						logger.info(this.getName()+": "+" counter example cases:\n"+
-								cases.get(0).toString()+"\n"+cases2.get(0).toString());
+						//logger.info(this.getName()+": "+" counter example cases:\n"+
+						//		cases.get(0).toString()+"\n"+cases2.get(0).toString());
 						
-						boolean same=false;
 						ArgumentCase case1=cases.get(0);
 						ArgumentCase case2=cases2.get(0);
 						
 						if(case1.getID()==case2.getID()){
 							logger.info(this.getName()+": "+" SAME counter example argument cases ID");
-							same=true;
+							return true;
 						}
-						if(case1.equals(case2)){
+						else if(case1.equals(case2)){
 							logger.info(this.getName()+": "+" SAME counter example argument cases");
-							same=true;
+							return true;
 						}
-						if(areSamePremises(case1.getArgumentProblem().getDomainContext().getPremises(),case2.getArgumentProblem().getDomainContext().getPremises())
+						else if(areSamePremises(case1.getArgumentProblem().getDomainContext().getPremises(),case2.getArgumentProblem().getDomainContext().getPremises())
 								&& case1.getArgumentSolution().getConclusion().equals(case2.getArgumentSolution().getConclusion())
 								&& case1.getArgumentSolution().getPromotesValue().equals(case2.getArgumentSolution().getPromotesValue())
 								&& case1.getArgumentSolution().getTimesUsed()==case2.getArgumentSolution().getTimesUsed()){
 							logger.info(this.getName()+": "+" SAME counter example argument cases premises and conclusions");
-							same=true;
+							return true;
 						}
-						
-						if(same) return true;
 					}
 				}
 				if(argSupp.getDistinguishingPremises().size()>0){
@@ -1707,8 +1590,6 @@ public class ArgCAgent extends CAgent{
 		    		logger.info(this.getName()+": dist prems\n"+str+"\n"+str2);
 					if(premises!=null && premises2!=null && premises.size()>0 && premises2.size()>0 && premises.size()==premises2.size()){
 						logger.info(this.getName()+": "+" distinguishing premises\n");
-						
-						
 						
 						if(areSamePremises(premises,premises2)){
 							logger.info(this.getName()+": "+" SAME distinguishing premises\n");
@@ -1769,17 +1650,6 @@ public class ArgCAgent extends CAgent{
 		return -1;
 	}
 	
-//	private SocialEntity getSocialEntityFriend(AgentID agentID){
-//		Iterator<SocialEntity> iterFriends=myFriends.iterator();
-//		while(iterFriends.hasNext()){
-//			SocialEntity friend=iterFriends.next();
-//			if(friend.getName().equalsIgnoreCase(agentID.toString())){
-//				return friend;
-//			}
-//		}
-//		return null;
-//	}
-	
 	private int getFriendIndex(String agentID){
 		Iterator<SocialEntity> iterFriends=myFriends.iterator();
 		while(iterFriends.hasNext()){
@@ -1792,48 +1662,17 @@ public class ArgCAgent extends CAgent{
 		return -1;
 	}
 	
-//	private DependencyRelation getDependencyRelationFriend(AgentID agentID){
-//		Iterator<DependencyRelation> iterRels=depenRelations.iterator();
-//		while(iterRels.hasNext()){
-//			DependencyRelation rel=iterRels.next();
-//			if(friend.getName().equalsIgnoreCase(agentID.toString())){
-//				return friend;
-//			}
-//		}
-//		return null;
-//	}
+	
 	
 	/*
 	 * Methods to access to Commitment Store
 	 */
 	
 	
-	private void addArgument(Argument arg, String dialogueID){
-		sendMessage(commitmentStoreID, ADDARGUMENT, dialogueID, arg);
-	}
-	
-//	private Argument getArgument(String agentID, String dialogueID){
-//		sendMessage(commitmentStoreID, GETARGUMENT, dialogueID, null);
-//		ArrayList<String> locutions=new ArrayList<String>();
-//		locutions.add(GETARGUMENT);
-//		ACLMessage msg=listenAndReviseQueue(locutions,2);// careful, only look the queue once
-//		Argument arg=null;
-//		if(msg!=null)
-//			arg= (Argument) msg.getContentObject();
-//		return arg;
-//	}
-	
-	private void removeArgument(Argument arg, String dialogueID){
-		sendMessage(commitmentStoreID, REMOVEARGUMENT, dialogueID, arg);
-	}
-	
-	
-	
 	private ACLMessage addPosition(Position pos, String dialogueID){
 		myUsedLocutions++;
 		return sendMessage(commitmentStoreID, ADDPOSITION, dialogueID, pos);
 	}
-	
 	
 	
 	/**
@@ -1885,18 +1724,7 @@ public class ArgCAgent extends CAgent{
 		return differentPositions;
 	}
 	
-//	private void removePosition(String dialogueID){
-//		sendMessage(commitmentStoreID, REMOVEPOSITION, dialogueID, currentPosition);
-//	}
 	
-	/**
-	 * Adds a dialogue to commitment store. If it exist a dialogue with the same id, it is overwritten
-	 * @param dialogue to be added
-	 */
-	private void addDialogue(Dialogue dialogue){
-		sendMessage(commitmentStoreID, ADDDIALOGUE, dialogue.getDialogueID(), dialogue);
-	}
-
 	/**
 	 * Adds this agent to the dialogue specified in commitment store
 	 * @param dialogueID id of the dialogue to join
@@ -1906,37 +1734,6 @@ public class ArgCAgent extends CAgent{
 		myUsedLocutions++;
 		return sendMessage(commitmentStoreID, ENTERDIALOGUE, dialogueID, null);
 	}
-	
-//	/**
-//	 * Returns the dialogue with the given dialogue ID
-//	 * @param dialogueID
-//	 * @return the dialogue with the given dialogue ID
-//	 */
-//	private Dialogue getDialogue(String dialogueID){
-//		sendMessage(commitmentStoreID, GETDIALOGUE, dialogueID, null);
-//		ArrayList<String> locutions=new ArrayList<String>();
-//		locutions.add(GETDIALOGUE);
-//		ACLMessage msg=null;
-//		while(msg==null){//careful waiting forever if CS does not respond
-//			msg=listenAndReviseQueue(locutions,2);
-//		}
-//		Dialogue dia = (Dialogue) msg.getContentObject();
-//		return dia;
-//	}
-	
-//	/**
-//	 * Removes the agentID from the list of the dialogue.
-//	 * @param dialogueID
-//	 */
-//	private ACLMessage leaveDialogue(String dialogueID){
-//		myUsedLocutions++;
-//		return sendMessage(commitmentStoreID, LEAVEDIALOGUE, dialogueID, null);
-//	}
-	
-	
-	
-	
-	
 	
 	/**
 	 * Returns the list of IDs of the given domain cases
@@ -1966,8 +1763,6 @@ public class ArgCAgent extends CAgent{
 		}
 		return longListIDs;
 	}
-	
-	
 	
 	/**
 	 * Adds the final solution to the current ticket and adds it in the domain case-base.
@@ -2107,9 +1902,9 @@ public class ArgCAgent extends CAgent{
 		while(iterReceivers.hasNext()){
 			receiversStr+=iterReceivers.next().name+" ";
 		}
-		//System.out.println(this.getName()+": "+"message to send: "+"to: "+msg.getReceiver().toString()+" dialogueID: "+msg.getConversationId()+" locution: "+msg.getHeaderValue("locution"));
+		
 		logger.info(this.getName()+": "+"message to send to: "+receiversStr+" dialogueID: "+msg.getConversationId()+" locution: "+msg.getHeaderValue("locution"));
-		//send(msg);
+		
 		return msg;
 	}
 	

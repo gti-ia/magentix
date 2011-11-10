@@ -9,15 +9,14 @@ import java.util.Iterator;
 import es.upv.dsic.gti_ia.argAgents.knowledgeResources.Argument;
 import es.upv.dsic.gti_ia.argAgents.knowledgeResources.Dialogue;
 import es.upv.dsic.gti_ia.argAgents.knowledgeResources.Position;
+import es.upv.dsic.gti_ia.cAgents.CAgent;
+import es.upv.dsic.gti_ia.cAgents.CFactory;
+import es.upv.dsic.gti_ia.cAgents.CProcessor;
+import es.upv.dsic.gti_ia.cAgents.protocols.CommitmentStore_Protocol;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
-import es.upv.dsic.gti_ia.core.SingleAgent;
 
-
-public class CommitmentStore extends SingleAgent{
-	
-	
-	//double hashmap, first search by agentID, second by dialogueID
+public class CommitmentStore extends CAgent {
 	
 	HashMap<String,Dialogue> dialogues;
 	HashMap<String,HashMap<String,ArrayList<Argument>>> arguments;
@@ -26,7 +25,6 @@ public class CommitmentStore extends SingleAgent{
 	HashMap<String,Long> lastModificationDates;
 	
 	private final String ADDARGUMENT="ADDARGUMENT";
-//	private final String GETARGUMENT="GETARGUMENT";
 	private final String REMOVEARGUMENT="REMOVEARGUMENT";
 	private final String ADDPOSITION="ADDPOSITION";
 	private final String GETPOSITION="GETPOSITION";
@@ -38,122 +36,118 @@ public class CommitmentStore extends SingleAgent{
 	private final String GETDIALOGUE="GETDIALOGUE";
 	private final String ENTERDIALOGUE="ENTERDIALOGUE";
 	private final String WITHDRAWDIALOGUE="WITHDRAWDIALOGUE";
-//	private final String LEAVEDIALOGUE="LEAVEDIALOGUE";
-	
+
 	public CommitmentStore(AgentID aid) throws Exception {
 		super(aid);
+		
 		this.arguments = new HashMap<String, HashMap<String,ArrayList<Argument>>>();
 		this.positions = new HashMap<String, HashMap<String,Position>>();
 		this.dialogues = new HashMap<String, Dialogue>();
-		
 		this.lastModificationDates = new HashMap<String, Long>();
-		
-		
 	}
-	
-	public void execute() {
-		try{
-		logger.info(this.getName()+": agent created");
-		while(true){
-			try {
-				ACLMessage msg=receiveACLMessage();
-				//finish the agent
-				if(msg.getHeaderValue("locution").equalsIgnoreCase("DIE")){
-					logger.info(this.getName()+": "+"DIE received "+"from: "+msg.getSender().getLocalName());
-					break;
+
+	@Override
+	protected void finalize(CProcessor firstProcessor,
+			ACLMessage finalizeMessage) {
+		logger.info("+++++++++++++++++++++++++++++++++++++++ "+this.getName()+": Finalizing");
+	}
+
+	@Override
+	protected void execution(CProcessor firstProcessor,
+			ACLMessage welcomeMessage) {
+		
+		class myCSProtocol extends CommitmentStore_Protocol{
+
+			@Override
+			protected ACLMessage doRespond(CProcessor myProcessor, ACLMessage msg) {
+				ACLMessage response=null;
+				logger.info(getAid().name+": "+"message received: "+"from: "+msg.getSender().getLocalName()+" dialogueID: "+msg.getConversationId()+" locution: "+msg.getHeaderValue("locution"));
+				String locution=msg.getHeaderValue("locution");
+				try{
+					
+				if(locution.equalsIgnoreCase("LASTMODIFICATIONDATE")){
+					Long lastDate=lastModificationDates.get(msg.getConversationId());
+					Long millisDifference=System.currentTimeMillis()-lastDate;
+					response=sendMessage(msg.getSender().getLocalName(), "LASTMODIFICATIONDATE", msg.getConversationId(), millisDifference);
+				}
+				else if(locution.equalsIgnoreCase(ADDARGUMENT) || locution.equalsIgnoreCase(ATTACK) ||
+						locution.equalsIgnoreCase(ASSERT)){
+					lastModificationDates.put(msg.getConversationId(), System.currentTimeMillis());
+					Argument arg=(Argument)msg.getContentObject();
+					addArgument(arg, msg.getSender().getLocalName(), msg.getConversationId());
+				}
+				else if(locution.equalsIgnoreCase(REMOVEARGUMENT)){
+					lastModificationDates.put(msg.getConversationId(), System.currentTimeMillis());
+					Argument arg=(Argument)msg.getContentObject();
+					removeArgument(arg, msg.getSender().getLocalName(),msg.getConversationId());
+				}
+				else if(locution.equalsIgnoreCase(ADDPOSITION)){
+					lastModificationDates.put(msg.getConversationId(), System.currentTimeMillis());
+					Position pos=(Position)msg.getContentObject();
+					addPosition(pos, msg.getSender().getLocalName(),msg.getConversationId());
+				}
+				else if(locution.equalsIgnoreCase(GETPOSITION)){
+					Position pos=getPosition(msg.getHeaderValue("agentID"), msg.getConversationId());
+					response=sendMessage(msg.getSender().getLocalName(), GETPOSITION, msg.getConversationId(), pos);
+				}
+				else if(locution.equalsIgnoreCase(GETALLPOSITIONS)){
+					ArrayList<Position> allPositions=getAllPositions(msg.getConversationId(),msg.getSender().getLocalName());
+					response=sendMessage(msg.getSender().getLocalName(), GETALLPOSITIONS, msg.getConversationId(), allPositions);
+				}
+				else if(locution.equalsIgnoreCase(NOCOMMIT)){
+					lastModificationDates.put(msg.getConversationId(), System.currentTimeMillis());
+					removePosition(msg.getSender().getLocalName(), msg.getConversationId());
+				}
+				else if(locution.equalsIgnoreCase(ADDDIALOGUE)){
+					lastModificationDates.put(msg.getConversationId(), System.currentTimeMillis());
+					Dialogue dialogue=(Dialogue) msg.getContentObject();
+					addDialogue(dialogue);
+				}
+				else if(locution.equalsIgnoreCase(GETDIALOGUE)){
+					String dialogueID=msg.getConversationId();
+					Dialogue dialogue=getDialogue(dialogueID);
+					
+					response=sendMessage(msg.getSender().getLocalName(),GETDIALOGUE,dialogueID,dialogue);
+				}
+				else if(locution.equalsIgnoreCase(ENTERDIALOGUE)){
+					lastModificationDates.put(msg.getConversationId(), System.currentTimeMillis());
+					Dialogue dialogue=dialogues.get(msg.getConversationId());
+					dialogue.addAgentID(msg.getSender().getLocalName());
+					dialogues.put(msg.getConversationId(), dialogue);
+				}
+				else if(locution.equalsIgnoreCase(WITHDRAWDIALOGUE)){
+					lastModificationDates.put(msg.getConversationId(), System.currentTimeMillis());
+					Dialogue dialogue=dialogues.get(msg.getConversationId());
+					dialogue.removeAgentID(msg.getSender().getLocalName());
+					dialogues.put(msg.getConversationId(), dialogue);
+				}
+				else{
+					logger.info(getAid().name+": not understood");
+				}
+				}catch(Exception e){
+					e.printStackTrace();
 				}
 				
-				
-				respondMessage(msg);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+				return response;
 			}
-		}
-		}catch(Exception e){
-			e.printStackTrace();
-			logger.error(this.getName()+ 
-					": +++++++++++++++++++++++++++++++++++++++++++\n\n\n" + e.getMessage());
-		}
-	}
-	
-	public void respondMessage(ACLMessage msg) {
-		//logger.info("\n\n"+this.getName()+": "+msg.toString()+"\n\n");
-		String locution=msg.getHeaderValue("locution");
-		logger.info(this.getName()+": "+"message received: "+"from: "+msg.getSender().getLocalName()+" dialogueID: "+msg.getConversationId()+" locution: "+locution);
-		
-		try{
-		
-		if(locution.equalsIgnoreCase("LASTMODIFICATIONDATE")){
-			Long lastDate=lastModificationDates.get(msg.getConversationId());
-			Long millisDifference=System.currentTimeMillis()-lastDate;
-			sendMessage(msg.getSender().getLocalName(), "LASTMODIFICATIONDATE", msg.getConversationId(), millisDifference);
-		}
-		else if(locution.equalsIgnoreCase(ADDARGUMENT) || locution.equalsIgnoreCase(ATTACK) ||
-				locution.equalsIgnoreCase(ASSERT)){
-			lastModificationDates.put(msg.getConversationId(), System.currentTimeMillis());
-			Argument arg=(Argument)msg.getContentObject();
-			addArgument(arg, msg.getSender().getLocalName(), msg.getConversationId());
-		}
-//		else if(locution.equalsIgnoreCase(GETARGUMENT)){
-//			
-//			//TODO not used at the moment
-//		}
-		else if(locution.equalsIgnoreCase(REMOVEARGUMENT)){
-			lastModificationDates.put(msg.getConversationId(), System.currentTimeMillis());
-			Argument arg=(Argument)msg.getContentObject();
-			removeArgument(arg, msg.getSender().getLocalName(),msg.getConversationId());
-		}
-		else if(locution.equalsIgnoreCase(ADDPOSITION)){
-			lastModificationDates.put(msg.getConversationId(), System.currentTimeMillis());
-			Position pos=(Position)msg.getContentObject();
-			addPosition(pos, msg.getSender().getLocalName(),msg.getConversationId());
-		}
-		else if(locution.equalsIgnoreCase(GETPOSITION)){
-			Position pos=getPosition(msg.getHeaderValue("agentID"), msg.getConversationId());
-			sendMessage(msg.getSender().getLocalName(), GETPOSITION, msg.getConversationId(), pos);
-		}
-		else if(locution.equalsIgnoreCase(GETALLPOSITIONS)){
-			ArrayList<Position> allPositions=getAllPositions(msg.getConversationId(),msg.getSender().getLocalName());
-			sendMessage(msg.getSender().getLocalName(), GETALLPOSITIONS, msg.getConversationId(), allPositions);
-		}
-		else if(locution.equalsIgnoreCase(NOCOMMIT)){
-			lastModificationDates.put(msg.getConversationId(), System.currentTimeMillis());
-			//Position pos=(Position)msg.getContentObject();
-			removePosition(msg.getSender().getLocalName(), msg.getConversationId());
-		}
-		else if(locution.equalsIgnoreCase(ADDDIALOGUE)){
-			lastModificationDates.put(msg.getConversationId(), System.currentTimeMillis());
-			Dialogue dialogue=(Dialogue) msg.getContentObject();
-			addDialogue(dialogue);
-		}
-		else if(locution.equalsIgnoreCase(GETDIALOGUE)){
-			String dialogueID=msg.getConversationId();
-			Dialogue dialogue=getDialogue(dialogueID);
+
+			@Override
+			protected void doDie(CProcessor myProcessor) {
+				
+				myProcessor.getMyAgent().Shutdown();
+				
+			}
 			
-			sendMessage(msg.getSender().getLocalName(),GETDIALOGUE,dialogueID,dialogue);
-		}
-		else if(locution.equalsIgnoreCase(ENTERDIALOGUE)){
-			lastModificationDates.put(msg.getConversationId(), System.currentTimeMillis());
-			Dialogue dialogue=dialogues.get(msg.getConversationId());
-			dialogue.addAgentID(msg.getSender().getLocalName());
-			dialogues.put(msg.getConversationId(), dialogue);
-		}
-		else if(locution.equalsIgnoreCase(WITHDRAWDIALOGUE)){
-			lastModificationDates.put(msg.getConversationId(), System.currentTimeMillis());
-			Dialogue dialogue=dialogues.get(msg.getConversationId());
-			dialogue.removeAgentID(msg.getSender().getLocalName());
-			dialogues.put(msg.getConversationId(), dialogue);
-		}
-		else{
-			logger.info(this.getName()+": not understood");
-		}
-		}catch(Exception e){
-			e.printStackTrace();
 		}
 		
+		CFactory talk = new myCSProtocol().newFactory("TALK", null, null,
+				1, this);
+		
+		this.addFactoryAsParticipant(talk);
 	}
 	
-	private void sendMessage(String agentID, String locution, String conversationID, Serializable contentObject){
+	
+	private ACLMessage sendMessage(String agentID, String locution, String conversationID, Serializable contentObject){
 		
 		ACLMessage msg = new ACLMessage();
 		msg.setSender(getAid());
@@ -166,10 +160,10 @@ public class CommitmentStore extends SingleAgent{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		//System.out.println(this.getName()+": "+"message to send: "+"to: "+msg.getReceiver().toString()+" dialogueID: "+msg.getConversationId()+" locution: "+locution);
-		//logger.info(this.getName()+": "+"message to send: "+"to: "+msg.getReceiver().toString()+" dialogueID: "+msg.getConversationId()+" locution: "+msg.getHeaderValue("locution"));
-		send(msg);
+		logger.info(this.getName()+": "+"message to send: "+"to: "+msg.getReceiver().toString()+" dialogueID: "+msg.getConversationId()+" locution: "+msg.getHeaderValue("locution"));
 		
+		return msg;
+	
 	}
 	
 
@@ -265,5 +259,5 @@ public class CommitmentStore extends SingleAgent{
 	}
 	
 	
-	
+
 }

@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.Iterator;
 
-import com.hp.hpl.jena.graph.query.regexptrees.Nothing;
-
 import es.upv.dsic.gti_ia.cAgents.BeginState;
 import es.upv.dsic.gti_ia.cAgents.BeginStateMethod;
 import es.upv.dsic.gti_ia.cAgents.CAgent;
@@ -26,27 +24,20 @@ import es.upv.dsic.gti_ia.core.MessageFilter;
 public abstract class Argumentation_Participant {
 
 	private final String OPENDIALOGUE="OPENDIALOGUE";
-	private final String ENTERDIALOGUE="ENTERDIALOGUE";
-	private final String LEAVEDIALOGUE="LEAVEDIALOGUE";
 	private final String FINISHDIALOGUE="FINISHDIALOGUE";
-	private final String WITHDRAWDIALOGUE="WITHDRAWDIALOGUE";
 	private final String GETALLPOSITIONS="GETALLPOSITIONS";
-	private final String PROPOSE="PROPOSE";
 	private final String WHY="WHY";
 	private final String NOCOMMIT="NOCOMMIT";
 	private final String ASSERTS="ASSERT";
 	private final String ACCEPTS="ACCEPT";
 	private final String ATTACKS="ATTACK";
-	//private final String RETRACT="RETRACT";
 	private final String DIE="DIE";
-	
 	private final String LOCUTION="locution";
 	
 	private String currentWhyAgentID;
 	
-	
 	protected void doBegin(CProcessor myProcessor, ACLMessage msg) {
-		myProcessor.getInternalData().put("InitialMessage", msg); //TODO ??
+		myProcessor.getInternalData().put("InitialMessage", msg);
 	}
 	
 	class Begin_Method implements BeginStateMethod {
@@ -131,7 +122,6 @@ public abstract class Argumentation_Participant {
 		};
 	}
 	
-	
 	protected abstract void doSendPosition(CProcessor myProcessor, ACLMessage msg);
 	
 	
@@ -142,7 +132,6 @@ public abstract class Argumentation_Participant {
 		};
 	}
 	
-	
 	protected abstract void doSolution(CProcessor myProcessor, ACLMessage msg);
 	
 	
@@ -152,8 +141,6 @@ public abstract class Argumentation_Participant {
 			return "WAIT_OPEN";
 		};
 	}
-	
-	
 	
 	protected abstract String doAssert(CProcessor myProcessor, ACLMessage msg, String whyAgentID);
 	
@@ -181,7 +168,7 @@ public abstract class Argumentation_Participant {
 			else if(messageReceived.getHeaderValue(LOCUTION).equalsIgnoreCase(ATTACKS)){
 				return "DEFEND";
 			}
-			else return "WAIT_CENTRAL"; //TODO no tiene porqué...
+			else return "WAIT_CENTRAL"; //should not happen
 		};
 	}
 	
@@ -198,7 +185,6 @@ public abstract class Argumentation_Participant {
 		};
 	}
 	
-	
 	protected abstract void doNoCommit(CProcessor myProcessor, ACLMessage msg);
 	
 	class No_Commit_Method implements SendStateMethod {
@@ -207,8 +193,6 @@ public abstract class Argumentation_Participant {
 			return "PROPOSE";
 		};
 	}
-	
-	
 	
 	class Central_Timeout_Method implements ReceiveStateMethod {
 		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
@@ -241,14 +225,13 @@ public abstract class Argumentation_Participant {
 				return "SEND_POSITION";
 			}
 			else if(messageReceived.getHeaderValue(LOCUTION).equalsIgnoreCase(GETALLPOSITIONS)){
-				System.out.println("++++++++++++++++++++++ locution in getPositionsMethod="+messageReceived.getHeaderValue(LOCUTION));
 				ACLMessage msg2=new ACLMessage();
 				copyMessages(msg2, messageReceived);
 				boolean positions=doGetPositions(myProcessor, msg2);
 				if(positions) return "WHY";
 				else return "WAIT_CENTRAL";
 			}
-			else return "WAIT_CENTRAL"; //TODO with the filter, this should not happen
+			else return "WAIT_CENTRAL"; //should not happen
 			
 		};
 	}
@@ -263,9 +246,6 @@ public abstract class Argumentation_Participant {
 		};
 	}
 	
-	
-	
-	
 	class Wait_Assert_Method implements ReceiveStateMethod {
 		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
 			if(messageReceived.getHeaderValue(LOCUTION).equalsIgnoreCase(ASSERTS))
@@ -273,10 +253,9 @@ public abstract class Argumentation_Participant {
 			else if(messageReceived.getHeaderValue(LOCUTION).equalsIgnoreCase(NOCOMMIT)){
 				return "WAIT_CENTRAL";
 			}
-			else return "WAIT_CENTRAL"; //TODO should not happen
+			else return "WAIT_CENTRAL"; // should not happen
 		};
 	}
-	
 	
 	class Wait_Assert_Timeout_Method implements ReceiveStateMethod {
 		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
@@ -285,7 +264,6 @@ public abstract class Argumentation_Participant {
 	}
 	
 	protected abstract void doAccept(CProcessor myProcessor, ACLMessage msgToSend);
-	
 	
 	class Attack_Method implements SendStateMethod {
 		public String run(CProcessor myProcessor, ACLMessage msgToSend) {
@@ -298,8 +276,6 @@ public abstract class Argumentation_Participant {
 		};
 	}
 	
-	
-	
 	class Attack2_Method implements ReceiveStateMethod {
 		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
 			if(messageReceived.getHeaderValue(LOCUTION).equalsIgnoreCase(ATTACKS))
@@ -307,14 +283,9 @@ public abstract class Argumentation_Participant {
 			else if(messageReceived.getHeaderValue(LOCUTION).equalsIgnoreCase(NOCOMMIT)){
 				return "WAIT_CENTRAL";
 			}
-			else return "WAIT_CENTRAL"; //TODO no tiene porqué...
+			else return "WAIT_CENTRAL"; // should not happen
 		};
 	}
-	
-//	ACLMessage msgToSend;
-//	String nextState;
-	
-	
 	
 	class NotAcceptedMessagesState2 extends NotAcceptedMessagesState {
 		
@@ -342,7 +313,7 @@ public abstract class Argumentation_Participant {
 	
 		@Override
 		protected String getNext(CProcessor myProcessor, String previousState) {
-			myProcessor.logger.info("\nNextStateSuposat: "+nextState+" previousState: "+previousState);
+			myProcessor.logger.info("\nNextStateSuposed: "+nextState+" previousState: "+previousState);
 			if(nextState.equalsIgnoreCase("FINISH")){
 				if(previousState.equalsIgnoreCase("WAIT_OPEN")){
 					return "WAIT_OPEN";
@@ -363,54 +334,6 @@ public abstract class Argumentation_Participant {
 		
 	}
 		
-//		@Override
-//		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
-//		
-//			myProcessor.logger.info("\nThis is NOT_ACCEPTED_MESSAGES_STATE\nPrevious state: "+
-//			myProcessor.getPreviousState()+" locutionProcesor: "+myProcessor.getLastReceivedMessage().getHeaderValue(LOCUTION)+
-//			"\nlocutionMsg: "+messageReceived.getHeaderValue(LOCUTION));
-//			if(myProcessor.getLastReceivedMessage().getHeaderValue(LOCUTION).equalsIgnoreCase(FINISHDIALOGUE)){
-//				
-//				String prevState=myProcessor.getPreviousState();
-//				if(prevState.equalsIgnoreCase("WAIT_OPEN")){
-//					return "WAIT_OPEN";
-//				}
-//				else{
-//					return "SEND_POSITION";
-//				}
-//			}
-//			else if(myProcessor.getLastReceivedMessage().getHeaderValue(LOCUTION).equalsIgnoreCase(DIE)){
-//				return "DIE";
-//			}
-//			else{
-////				msgToSend=new ACLMessage();
-////				msgToSend.setPerformative(myProcessor.getLastReceivedMessage().getPerformative());
-////				msgToSend.setSender(myProcessor.getLastReceivedMessage().getSender());
-////				msgToSend.setContent(myProcessor.getLastReceivedMessage().getContent());
-////				msgToSend.setReceiver(myProcessor.getLastReceivedMessage().getReceiver());
-////				
-////				nextState=myProcessor.getPreviousState();
-////				
-////				return "SEND_NOT_ACCEPTED";
-//				
-//				return myProcessor.getPreviousState();
-//			}
-//			
-//		}
-	
-	
-//	class SEND_NOT_ACCEPTED_Method implements SendStateMethod{
-//		@Override
-//		public String run(CProcessor myProcessor, ACLMessage messageToSend) {
-//		
-//			copyMessages(messageToSend, msgToSend);
-//			return nextState;
-//			
-//		}
-//	}
-	
-	
-	
 	protected abstract void doDie(CProcessor myProcessor);
 	
 	
@@ -421,19 +344,8 @@ public abstract class Argumentation_Participant {
 	}
 	
 	
-//	class ManageMessages_Method implements ReceiveStateMethod {
-//		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
-//			if(messageReceived.getHeaderValue("locution").equalsIgnoreCase(FINISHDIALOGUE)){
-//				//if(currentPosition!=null)
-//				return "SEND_POSITION";
-//			}
-//			else
-//				myProcessor
-//		};
-//	}
-	
 	/**
-	 * Copies all contents of the msg2 to the msg1
+	 * Copies all contents of the msg2 to the msg
 	 * @param msg
 	 * @param msg2
 	 */
@@ -525,7 +437,6 @@ public abstract class Argumentation_Participant {
 		
 		ReceiveState CENTRAL = new ReceiveState("CENTRAL");
 		CENTRAL.setMethod(new Central_Method());
-		//filter = new MessageFilter("performative = INFORM AND (locution = "+WHY+" OR locution = "+FINISHDIALOGUE+" OR locution = "+ACCEPTS+")");
 		filter = new MessageFilter("performative = INFORM AND (locution = "+WHY+" OR locution = "+ACCEPTS+")");
 		CENTRAL.setAcceptFilter(filter);
 		processor.registerState(CENTRAL);
@@ -551,7 +462,6 @@ public abstract class Argumentation_Participant {
 		
 		ReceiveState GET_POSITIONS = new ReceiveState("GET_POSITIONS");
 		GET_POSITIONS.setMethod(new Get_Positions_Method());
-		//filter = new MessageFilter("performative = INFORM AND (locution = "+GETALLPOSITIONS+" OR locution = "+FINISHDIALOGUE+")");
 		filter = new MessageFilter("performative = INFORM AND locution = "+GETALLPOSITIONS);
 		GET_POSITIONS.setAcceptFilter(filter);
 		processor.registerState(GET_POSITIONS);
@@ -607,8 +517,6 @@ public abstract class Argumentation_Participant {
 		SendState NO_COMMIT = new SendState("NO_COMMIT");
 		NO_COMMIT.setMethod(new No_Commit_Method());
 		processor.registerState(NO_COMMIT);
-//		processor.addTransition(DEFEND, NO_COMMIT);
-//		processor.addTransition(ASSERT, NO_COMMIT);
 		processor.addTransition(CENTRAL, NO_COMMIT);
 		
 		processor.addTransition(NO_COMMIT, PROPOSE);
@@ -652,13 +560,6 @@ public abstract class Argumentation_Participant {
 		
 		processor.addTransition(ATTACK, WAIT_CENTRAL);
 	
-//		SendState ACCEPT = new SendState("ACCEPT");
-//		ACCEPT.setMethod(new Accept_Method());
-//		processor.registerState(ACCEPT);
-//		processor.addTransition(ATTACK, ACCEPT);
-//		
-//		processor.addTransition(ACCEPT, WAIT_CENTRAL);
-	
 		
 		WaitState WAIT_ATTACK2 = new WaitState("WAIT_ATTACK2", stdTimeout);
 		processor.registerState(WAIT_ATTACK2);
@@ -695,22 +596,9 @@ public abstract class Argumentation_Participant {
 		
 		processor.addTransition(SOLUTION,WAIT_OPEN);
 		
-		
-		
 		NotAcceptedMessagesState2 NOT_ACCEPTED_MESSAGES_STATE = new NotAcceptedMessagesState2();
 		theFactory.cProcessorTemplate().registerState(NOT_ACCEPTED_MESSAGES_STATE); 
 		
-//		SendState SEND_NOT_ACCEPTED = new SendState("SEND_NOT_ACCEPTED");
-//		SEND_NOT_ACCEPTED.setMethod(new SEND_NOT_ACCEPTED_Method());
-//		theFactory.cProcessorTemplate().registerState(SEND_NOT_ACCEPTED); 
-////		processor.addTransition(NOT_ACCEPTED_MESSAGES_STATE,SEND_NOT_ACCEPTED);//TODO??
-//		processor.addTransition(SEND_NOT_ACCEPTED, WAIT_OPEN);
-//		processor.addTransition(SEND_NOT_ACCEPTED, WAIT_POSITIONS);
-//		processor.addTransition(SEND_NOT_ACCEPTED, WAIT_ATTACK2);
-//		processor.addTransition(SEND_NOT_ACCEPTED, WAIT_CENTRAL);
-//		processor.addTransition(SEND_NOT_ACCEPTED, WAIT_SOLUTION);
-//		processor.addTransition(SEND_NOT_ACCEPTED, WAIT_WAIT_ASSERT);
-//		processor.addTransition(SEND_NOT_ACCEPTED, WAIT_WAIT_ATTACK);
 		
 		return theFactory;
 	}
