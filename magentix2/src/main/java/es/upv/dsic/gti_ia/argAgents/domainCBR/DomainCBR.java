@@ -26,7 +26,13 @@ import es.upv.dsic.gti_ia.argAgents.knowledgeResources.Problem;
 import es.upv.dsic.gti_ia.argAgents.knowledgeResources.SimilarDomainCase;
 import es.upv.dsic.gti_ia.argAgents.knowledgeResources.Solution;
 
-
+/**
+ * It is a CBR that stores domain knowledge of previous solved problems. 
+ * It is used by the argumentative agent to generate and select 
+ * the position (solution) to defend in an argumentation dialogue.
+ * @author Jaume Jordan
+ *
+ */
 public class DomainCBR {
 
 	private Hashtable<String, ArrayList<DomainCase>> domainCB;
@@ -36,6 +42,12 @@ public class DomainCBR {
 	
 	private int index=-1;
 	
+	/**
+	 * Constructor of the DomainCBR. Initializes the structures and loads the cases of the given filePath.
+	 * It also establishes the storingFilePath to the case-base.
+	 * @param filePath path of the file to load the initial domain-cases
+	 * @param storingFilePath path of the file to store the final domain-cases
+	 */
 	public DomainCBR(String filePath, String storingFilePath) {
 		
 		this.filePath=filePath;
@@ -45,27 +57,11 @@ public class DomainCBR {
 		
 		loadCaseBase();
 		
-//		domainCB=new Hashtable<String, ArrayList<DomainCase>>();
-//		
-//		HashMap<Integer,Premise> premises=new HashMap<Integer, Premise>();
-//		premises.put(1, new Premise(1, "", "blau"));
-//		premises.put(2, new Premise(2, "", "verd"));
-//		premises.put(3, new Premise(3, "", "roig"));
-//		
-//		ArrayList<Solution> solutions= new ArrayList<Solution>();
-//		solutions.add(new Solution(new Conclusion(1, "sol1"), "sol1_value", 1));
-//		
-//		DomainCase dmCase=new DomainCase(new Problem(new DomainContext(premises)), solutions, new Justification("justification"));
-//		
-//		int introduced=0, notIntroduced=0;
-//	    boolean returnedValue=addCase(dmCase);
-//		if(returnedValue)
-//			introduced++;
-//		else
-//			notIntroduced++;
-//		System.out.println("cases="+(introduced+notIntroduced)+" introduced="+introduced+" notIntroduced="+notIntroduced);
 	}
 	
+	/**
+	 * Loads the case-base stored in the initial file path
+	 */
 	private void loadCaseBase(){
 		domainCB=new Hashtable<String, ArrayList<DomainCase>>();
 		int introduced=0, notIntroduced=0;
@@ -100,21 +96,17 @@ public class DomainCBR {
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
-		
-		
-		
 	
-		//System.out.println("tickets="+vTickets.size()+" introduced="+introduced+" notIntroduced="+notIntroduced);
 		System.out.println("cases="+(introduced+notIntroduced)+" introduced="+introduced+" notIntroduced="+notIntroduced);
 		
 	}
 	
 	
 	/** 
-	 * Retrieves the most similar cases of the ticket with a similarity greater or equal to the given threshold. 
-	 * Also, it retains a new case if the attributes of the ticket are not exactly the same of any case.  
-	 * @param ticket The ticket that needs a solution from the CBR 
-	 * @param threshold The threshold of minimum similarity of the cases to return
+	 * Retrieves the most similar domain-cases to the given one with a similarity greater or equal to the given threshold. 
+	 * Also, it retains a new domain-case if the premises of the domain-case are not exactly the same of any domain-case.  
+	 * @param domCase The domain-case (representing a problem to solve) that needs a solution from the CBR 
+	 * @param threshold The threshold of minimum similarity of the domain-cases to return
 	 * @return an {@link ArrayList} of {@link SimilarDomainCase}
 	 */	
 	public ArrayList<SimilarDomainCase> retrieveAndRetain(DomainCase domCase,float threshold){
@@ -132,11 +124,9 @@ public class DomainCBR {
 			Iterator<SimilarDomainCase> iterCases=similarCases.iterator();
 			while(iterCases.hasNext()){
 				SimilarDomainCase similarCase=iterCases.next();
-				//System.out.println("\nTipiNode:"+similarCase.getCase().getCategoryNode().getIdTipi()+" Project="+similarCase.getCase().getProject());
+				
 				if(similarCase.getSimilarity()<1.0f){
 					//add case
-					//Case caseb=new Case(categories.get(tipiNodeID),attributes,)
-					
 					domCase.setSolutions(similarCase.getCaseb().getSolutions());//add the solutions of the most similar case to the new case
 					boolean returnedValue=addCase(domCase);
 					if(returnedValue)
@@ -156,6 +146,12 @@ public class DomainCBR {
 		
 	}
 	
+	/**
+	 * Retrieves the most similar domain-cases to the given premises with a similarity greater or equal to the given threshold.
+	 * @param premises {@link HashMap} of premises that describe the problem to solve
+	 * @param threshold The threshold of minimum similarity of the domain-cases to return
+	 * @return an {@link ArrayList} of {@link SimilarDomainCase}
+	 */
 	public ArrayList<SimilarDomainCase> retrieve(HashMap<Integer, Premise> premises,float threshold){
 		
 		/**
@@ -163,10 +159,6 @@ public class DomainCBR {
 		 *  Increase timesUsed. If we return a list of possible cases and possible solutions for each case, what solution has to be increased?
 		 *
 		 */
-		//Premise categoryPrem=premises.remove(0);
-		//int categoryNode=Integer.parseInt(categoryPrem.getContent());
-		//System.err.println("CATEGORYNODEid="+categoryNode);
-		
 		
 		Configuration c= new Configuration();
 		ArrayList<SimilarDomainCase> similarCases=getMostSimilar(premises,threshold, c.domainCBRSimilarity);
@@ -176,8 +168,8 @@ public class DomainCBR {
 	
 	
 	/**
-	 * Adds a new case to CB
-	 * Otherwise, if it exists the same case in case base, adds the group, the operator 
+	 * Adds a new case to domain case-base.
+	 * Otherwise, if it exists the same domain-case in case-base, adds the group, the operator 
 	 * and the solutions to the corresponding case.
 	 * @param newCase Case that could be added.
 	 * @return True if a case is added, else false.
@@ -196,10 +188,9 @@ public class DomainCBR {
 			Iterator<Premise> iterNewCasePremises= newCase.getProblem().getDomainContext().getPremises().values().iterator();
 			ArrayList<Integer> newCasePremisesList=new ArrayList<Integer>();
 			
-			while(iterNewCasePremises.hasNext()){ //copy the premises to an arraylist, ordered from lower to higher id
+			while(iterNewCasePremises.hasNext()){ //copy the premises to an ArrayList, ordered from lower to higher id
 				Premise prem=iterNewCasePremises.next();
 				newCasePremisesList.add(prem.getID());
-//				System.out.println("Prem: "+prem.getID());
 			}
 			Collections.sort(newCasePremisesList);
 			mainPremiseID=newCasePremisesList.get(0);
@@ -219,7 +210,6 @@ public class DomainCBR {
 				System.out.println("addcase mainPremiseID: "+mainPremiseID);
 			
 			}
-			//System.err.println("Vacia, lo pongo");
 			return true;
 		}
 		
@@ -229,8 +219,7 @@ public class DomainCBR {
 			DomainCase currentCase=cases.get(i);
 			HashMap<Integer, Premise> currentPremises=currentCase.getProblem().getDomainContext().getPremises();
 			if(currentPremises.size()!=newCase.getProblem().getDomainContext().getPremises().size())
-				continue;//no tienen los mismos atributos, se pasa a mirar el siguiente
-			
+				continue;//They do not have the same premises, we go to look the next one
 			
 			Iterator<Premise> casePremIter=newCase.getProblem().getDomainContext().getPremises().values().iterator();
 			
@@ -245,14 +234,6 @@ public class DomainCBR {
 					break;
 				}
 			}
-			
-//			for(int i=0;i<currentAttributes.size();i++){
-//				if(currentAttributes.get(i).getID()!=ticketAttributes.get(i).getID() ||
-//						!currentAttributes.get(i).getContent().equalsIgnoreCase(ticketAttributes.get(i).getContent())){
-//					equal=false;
-//					break;
-//				}
-//			}
 			
 			if(equal){//same premises with same content
 				
@@ -280,14 +261,13 @@ public class DomainCBR {
 				
 				
 				found=true;
-				return false; //no lo introducimos porque ya lo tenemos
+				return false; //We do not introduce it because it already is in the case-base
 			}
 			
 			
 		}
-		if(!found){//no existe igual, se introduce
+		if(!found){//It does not exist equal, we introduce it
 			cases.add(newCase);
-			//System.err.println("No existe ninguno igual");
 			return true;
 		}
 		
@@ -297,13 +277,12 @@ public class DomainCBR {
 	
 	
 	/**
-	 * Gets the most similar cases of the given case with a similarity degree greater or equal to the given threshold.
+	 * Gets the most similar domain-cases of the given premises with a similarity degree greater or equal to the given threshold.
 	 * The similarity algorithm is determined by an integer parameter.
-	 * @param categoryNode id of the tipification node
-	 * @param attributes collection of attributes for retrieving cases from case base.
+	 * @param premises {@link HashMap} of premises for retrieving cases from case base.
 	 * @param threshold The threshold of minimum similarity of the cases to return.
 	 * @param similarityType A string to specify which similarity algorithm has to be used.
-	 * @return An ArrayList of SimilarCase with similarity degree greater or equal to the threshold.
+	 * @return An {@link ArrayList} of {@link SimilarDomainCase} with similarity degree greater or equal to the threshold.
 	 */
 	private ArrayList<SimilarDomainCase> getMostSimilar(HashMap<Integer,Premise> premises, float threshold, String similarityType){
 		
@@ -313,20 +292,16 @@ public class DomainCBR {
 		
 		if(similarityType.equalsIgnoreCase("normalizedEuclidean")){
 			finalCandidates=SimilarityAlgorithms.normalizedEuclideanSimilarity(premises, candidateCases);
-			//System.err.println("normalizedEuclidean");
 		}
 		else if(similarityType.equalsIgnoreCase("weightedEuclidean")){
 			finalCandidates=SimilarityAlgorithms.weightedEuclideanSimilarity(premises, candidateCases);
-			//System.err.println("weightedEuclideandd");
 		}
 		else if(similarityType.equalsIgnoreCase("normalizedTversky")){
 			finalCandidates=SimilarityAlgorithms.normalizedTverskySimilarity(premises, candidateCases);
-			//System.err.println("normalizedTversky");
 		}
 		else{
 			finalCandidates=SimilarityAlgorithms.normalizedEuclideanSimilarity(premises, candidateCases);
 		}
-	
 		
 		Iterator<SimilarDomainCase> finCandIter=finalCandidates.iterator();
 		while(finCandIter.hasNext()){
@@ -339,97 +314,15 @@ public class DomainCBR {
 			
 		}
 		
-		
 		return moreSimilarCandidates;
 	}
 	
 	/**
-	 * Gets the most similar case of the given ticket.
-	 * The similarity algorithm is determined by an integer parameter.
-	 * @param categoryNode id of the tipification node
-	 * @param attributes collection of attributes for retrieving cases from case base.
-	 * @param similarityType A string to specify which similarity algorithm has to be used.
-	 * @return The most similar case to the ticket of case base.
+	 * Obtains the similarity between two {@link HashMap} of premises using the similarity type specified in the configuration.
+	 * @param premises1 {@link HashMap} of premises 1
+	 * @param premises2 {@link HashMap} of premises 2
+	 * @return float with the similarity
 	 */
-	
-	@SuppressWarnings("unused")
-	private SimilarDomainCase getMostSimilar(HashMap<Integer,Premise> premises, String similarityType){
-		
-		//obtener los casos con tipiNode igual y "padres" del tipiNode para comparar
-		ArrayList<DomainCase> candidateCases=getCandidateCases(premises);
-		ArrayList<SimilarDomainCase> finalCandidates;
-		
-		if(similarityType.equalsIgnoreCase("normalizedEuclidean")){
-			finalCandidates=SimilarityAlgorithms.normalizedEuclideanSimilarity(premises, candidateCases);
-		}
-		else if(similarityType.equalsIgnoreCase("weightedEuclidean")){
-			finalCandidates=SimilarityAlgorithms.weightedEuclideanSimilarity(premises, candidateCases);
-		}
-		else if(similarityType.equalsIgnoreCase("normalizedTversky")){
-			finalCandidates=SimilarityAlgorithms.normalizedTverskySimilarity(premises, candidateCases);
-		}
-		else{
-			finalCandidates=SimilarityAlgorithms.normalizedEuclideanSimilarity(premises, candidateCases);
-		}
-	
-//		Iterator<SimilarCase> finCandIter=finalCandidates.iterator();
-//		while(finCandIter.hasNext()){
-//			SimilarCase simCase=finCandIter.next();
-//			//System.out.println(simTicket.getTicket().getID()+" "+simTicket.getTicket().getIdTipiNode()+" "+simTicket.getSimilarity());
-//			
-//		}
-		
-		//obtener la soluci�n que se ha utilizado m�s veces de los casos m�s similares
-		//para eso se mira el primer caso devuelto (que es el m�s similar)
-		//y los siguientes al primero que tengan el mismo grado de similitud que �ste
-		
-		SimilarDomainCase bestSimilarTicket=null;
-		if(finalCandidates!=null && finalCandidates.size()>0){
-			bestSimilarTicket=finalCandidates.get(0);
-			float bestSimilarity=finalCandidates.get(0).getSimilarity();
-			Solution bestSolution=null;
-			
-			//primero obtener la mejor soluci�n del primer caso devuelto (m�s similar)
-			Iterator<Solution> iterSolutions=finalCandidates.get(0).getCaseb().getSolutions().iterator();
-			int mostTimesUsed=-1;
-			while(iterSolutions.hasNext()){
-				Solution sol= iterSolutions.next();
-				if(sol.getTimesUsed()>mostTimesUsed){
-					mostTimesUsed=sol.getTimesUsed();
-					bestSolution=sol;
-				}
-			}
-			
-			//mirar los siguientes casos al primero mientras tengan el mismo grado de similitud
-			Iterator<SimilarDomainCase> finalCandidatesIter=finalCandidates.iterator();
-			while(finalCandidatesIter.hasNext()){
-				SimilarDomainCase simTicket=finalCandidatesIter.next();
-				if(simTicket.getSimilarity()==bestSimilarity){
-					Iterator<Solution> iterSolutions2=simTicket.getCaseb().getSolutions().iterator();
-					while(iterSolutions2.hasNext()){
-						Solution sol= iterSolutions2.next();
-						if(sol.getTimesUsed()>mostTimesUsed){
-							mostTimesUsed=sol.getTimesUsed();
-							bestSolution=sol;
-							bestSimilarTicket=simTicket;
-						}
-					}
-				}
-				else
-					break;
-			}
-			
-			
-			System.out.println("\nSolution="+bestSolution.getConclusion().getID()+" -> "+bestSolution.getConclusion().getDescription()+" TimesUsed="+bestSolution.getTimesUsed()+" similarity="+bestSimilarity);
-			
-		}
-		
-		return bestSimilarTicket;
-	}
-	
-	
-
-	
 	public float getPremisesSimilarity(HashMap<Integer, Premise> premises1, HashMap<Integer, Premise> premises2){
 		
 		Configuration c = new Configuration();
@@ -444,15 +337,12 @@ public class DomainCBR {
 		
 		if(similarityType.equalsIgnoreCase("normalizedEuclidean")){
 			finalCandidates=SimilarityAlgorithms.normalizedEuclideanSimilarity(premises1, caseList);
-			//System.err.println("normalizedEuclidean");
 		}
 		else if(similarityType.equalsIgnoreCase("weightedEuclidean")){
 			finalCandidates=SimilarityAlgorithms.weightedEuclideanSimilarity(premises1, caseList);
-			//System.err.println("weightedEuclideandd");
 		}
 		else if(similarityType.equalsIgnoreCase("normalizedTversky")){
 			finalCandidates=SimilarityAlgorithms.normalizedTverskySimilarity(premises1, caseList);
-			//System.err.println("normalizedTversky");
 		}
 		else{
 			finalCandidates=SimilarityAlgorithms.normalizedEuclideanSimilarity(premises1, caseList);
@@ -463,11 +353,13 @@ public class DomainCBR {
 	
 	
 	
-	
+	/**
+	 * Stores the current domain-cases case-base to the storing file path
+	 */
 	public void doCache(){
 		
 		try {
-			ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(this.filePath));
+			ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(this.storingFilePath));
 		
 			Iterator<DomainCase> iterCases=getAllCasesVector().iterator();
 			while(iterCases.hasNext()){
@@ -482,10 +374,13 @@ public class DomainCBR {
 			
 			e.printStackTrace();
 		}
-		//System.out.println("\n\n\n\n++++++++++++++++++++++\nWriting "+OWLFilePath+"\n++++++++++++++++++++++\n\n\n\n");
 	}
 	
+	/**
+	 * Stores the current domain-cases case-base to the storing file path in an incremental way
+	 */
 	public void doCacheInc(){
+		
 //		try {
 //			owlArgCBRparser.saveArgumentationOntology(getAllCasesVector(), initialOWLFilePath, storingOWLFilePath);
 //		} catch (Exception e) {
@@ -573,10 +468,9 @@ public class DomainCBR {
 			Iterator<Premise> iterNewCasePremises= premises.values().iterator();
 			ArrayList<Integer> newCasePremisesList=new ArrayList<Integer>();
 			
-			while(iterNewCasePremises.hasNext()){ //copy the premises to an arraylist, ordered from lower to higher id
+			while(iterNewCasePremises.hasNext()){ //copy the premises to an ArrayList, ordered from lower to higher id
 				Premise prem=iterNewCasePremises.next();
 				newCasePremisesList.add(prem.getID());
-//				System.out.println("Prem: "+prem.getID());
 			}
 			Collections.sort(newCasePremisesList);
 			mainPremiseID=newCasePremisesList.get(0);
@@ -591,8 +485,8 @@ public class DomainCBR {
 	}
 	
 	/**
-	 * Returns all cases in an ArrayList
-	 * @return
+	 * Returns all domain-cases in an {@link ArrayList}
+	 * @return all domain-cases in an {@link ArrayList}
 	 */
 	public ArrayList<DomainCase> getAllCasesList(){
 		ArrayList<DomainCase> cases=new ArrayList<DomainCase>();
@@ -606,8 +500,8 @@ public class DomainCBR {
 	}
 	
 	/**
-	 * Returns all cases in a Vector
-	 * @return
+	 * Returns all domain-cases in a {@link Vector}
+	 * @return all domain-cases in a {@link Vector}
 	 */
 	public Vector<DomainCase> getAllCasesVector(){
 		Vector<DomainCase> cases=new Vector<DomainCase>();

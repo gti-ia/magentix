@@ -17,32 +17,30 @@ import es.upv.dsic.gti_ia.argAgents.knowledgeResources.SimilarDomainCase;
 public class SimilarityAlgorithms {
 	
 	/**
-	 * Returns a list of the candidate cases with a similarity degree to the given ticket.
-	 * The similarity is calculated using normalized Euclidean distance among the attributes. 
-	 * @param attributes collection of attributes to calculate the similarity with the candidate cases
-	 * @param candidateCases The cases that can be similar to the ticket
-	 * @return A SimilarCase ArrayList with the candidate cases and its similarity degree to the ticket.
+	 * Returns a list of the candidate domain-cases with a similarity degree to the given domain-cases.
+	 * The similarity is calculated using normalized Euclidean distance among the premises. 
+	 * @param premises {@link HashMap} of {@link Premise} to calculate the similarity with the candidate domain-cases
+	 * @param candidateCases The domain-cases that can be similar to the domain-case to solve
+	 * @return A {@link SimilarDomainCase} {@link ArrayList} with the candidate domain-cases and its similarity degree to the domain-case to solve
 	 */	
 	public static ArrayList<SimilarDomainCase> normalizedEuclideanSimilarity(HashMap<Integer,Premise> premises, ArrayList<DomainCase> candidateCases){
 		
 
 		int numCases=candidateCases.size();
-		//System.out.println("numCasesCandidates="+numCases+" ticketId="+ticket.getID());
 		
-		
-		float accumDist[] = new float[numCases]; // acumulaciÓn de la distancia por casos
+		float accumDist[] = new float[numCases];
 		for(int i=0;i<numCases;i++){
 			accumDist[i]=0;
 		}
 		
 		Iterator<Premise> premIter=premises.values().iterator();
 		
-		while(premIter.hasNext()){ //para cada atributo del caso
+		while(premIter.hasNext()){ 
 			float maxDist=0;
 			int index = 0;
-			float auxDist[] = new float[numCases]; // vector temporal de distancias por atributo: key: el objeto caso, value: la distancia
+			float auxDist[] = new float[numCases]; //  temporal vector of distances per attribute: key: case object, value: distance
 			
-			boolean maxDistVec[] = new boolean[numCases]; // vector de marcas de distancias maximas: key: el objeto caso, value: true/false
+			boolean maxDistVec[] = new boolean[numCases]; // marks vector of max distances: key: case object, value: true/false
 			for (int j = 0; j < maxDistVec.length; j++) {
 				maxDistVec[j] = false;
 			}
@@ -51,7 +49,7 @@ public class SimilarityAlgorithms {
 			
 			Iterator<DomainCase> candIterator=candidateCases.iterator();
 			
-			while(candIterator.hasNext()){ //para cada caso candidato a ser similar
+			while(candIterator.hasNext()){ 
 				DomainCase candidate=candIterator.next();
 				float myDist = 1;
 				
@@ -59,7 +57,7 @@ public class SimilarityAlgorithms {
 				if(candPremise!=null){
 					myDist=Metrics.doDist(premise.getContent(),candPremise.getContent());
 				}
-				else{//El atributo no existe en el caso recuperado
+				else{//The attribute does not exist in the retrieved case
 					myDist = 1;
 					maxDistVec[index] = true;
 				}
@@ -69,11 +67,9 @@ public class SimilarityAlgorithms {
 					maxDist=myDist;
 				index++;
 				
-			} //fin para cada caso candidato a ser similar
+			} 
 			
-			
-			// hemos recorrido ya el atributo en todos los casos.
-			// dividimos entre el mÁximo para normalizar las distancias
+			//divide by the maximum to normalize the distances
 			for(index=0;index<numCases;index++){
 				if (maxDist==0) 
 					auxDist[index]=0;
@@ -85,29 +81,25 @@ public class SimilarityAlgorithms {
 					}
 				}
 
-				// y se eleva al cuadrado
 				auxDist[index] *= auxDist[index];
 				accumDist[index] += auxDist[index];
 			}
 			
 			
-		} // fin para cada atributo del caso
-		
-		
+		}
 		
 		Iterator<DomainCase> candIterator=candidateCases.iterator();
 		
 		
 		ArrayList<SimilarDomainCase> finalCandidates=new ArrayList<SimilarDomainCase>();
 		int index=0;
-		while(candIterator.hasNext()){ //para cada caso candidato a ser similar
+		while(candIterator.hasNext()){
 			DomainCase candidate=candIterator.next();
 			
 			Iterator <Premise> candidatePremisesIter=candidate.getProblem().getDomainContext().getPremises().values().iterator();
-			while(candidatePremisesIter.hasNext()){//para cada atributo del caso
+			while(candidatePremisesIter.hasNext()){
 				Premise candidatePremise=candidatePremisesIter.next();
 				
-				//buscar si existe el atributo en el caso objetivo
 				if(premises.get(candidatePremise.getID())==null){// not found
 					accumDist[index]++;
 				}
@@ -117,7 +109,7 @@ public class SimilarityAlgorithms {
 			float similarity=(float) (1/(Math.sqrt(accumDist[index])+1));
 			finalCandidates.add(new SimilarDomainCase(candidate,similarity));
 			index++;
-		} //fin para cada caso candidato a ser similar
+		}
 		
 		Collections.sort(finalCandidates);
 		
@@ -126,20 +118,18 @@ public class SimilarityAlgorithms {
 	}
 	
 	/**
-	 * Returns a list of the candidate cases with a similarity degree to the given ticket.
-	 * The similarity is calculated using weighted Euclidean distance among the attributes.
-	 * @param attributes collection of attributes to calculate the similarity with the candidate cases 
-	 * @param candidateCases The cases that can be similar to the ticket
-	 * @return A SimilarCase ArrayList with the candidate cases and its similarity degree to the ticket.
+	 * Returns a list of the candidate domain-cases with a similarity degree to the given domain-cases.
+	 * The similarity is calculated using weighted Euclidean distance among the premises.
+	 * @param premises {@link HashMap} of {@link Premise} to calculate the similarity with the candidate domain-cases
+	 * @param candidateCases The domain-cases that can be similar to the domain-case to solve
+	 * @return A {@link SimilarDomainCase} {@link ArrayList} with the candidate domain-cases and its similarity degree to the domain-case to solve
 	 */
 	public static ArrayList<SimilarDomainCase> weightedEuclideanSimilarity(HashMap<Integer,Premise> premises, ArrayList<DomainCase> candidateCases){
 		
 		ArrayList<SimilarDomainCase> finalCandidates=new ArrayList<SimilarDomainCase>();
 		
-		//ArrayList<Attribute> ticketPremises=ticket.getAttributes().values().iterator();
-		
 		Iterator<DomainCase> candIterator=candidateCases.iterator();
-		while(candIterator.hasNext()){ //para cada caso candidato a ser similar
+		while(candIterator.hasNext()){ 
 			DomainCase candidate=candIterator.next();
 			float distance = 0;
 			float weight[] = new float[premises.size()];
@@ -148,11 +138,11 @@ public class SimilarityAlgorithms {
 			Iterator<Premise> casePremisesIter=premises.values().iterator();
 			
 			
-			while(casePremisesIter.hasNext()){ // para cada atributo
+			while(casePremisesIter.hasNext()){ 
 				
 				Premise casePremise=casePremisesIter.next();
-				// entrenar los pesos
-				weight[attribute] = 1; //por defecto todos los pesos valen 1
+				//train weights
+				weight[attribute] = 1; //by default 1
 			
 				float myDist=1;
 				
@@ -165,7 +155,7 @@ public class SimilarityAlgorithms {
 					myDist = 1;
 				}
 				
-				weight[attribute] *= weight[attribute]; //elevamos al cuadrado
+				weight[attribute] *= weight[attribute]; 
 				myDist *= myDist;
 				distance = distance + weight[attribute] * myDist;
 				attribute++;
@@ -174,7 +164,7 @@ public class SimilarityAlgorithms {
 			
 			Iterator<Premise> candPremisesIter=candidate.getProblem().getDomainContext().getPremises().values().iterator();
 			
-			while(candPremisesIter.hasNext()) {// para cada atributo del caso
+			while(candPremisesIter.hasNext()) {
 				Premise candPremise=candPremisesIter.next();
 				
 				Premise domCasePremise=premises.get(candPremise.getID());
@@ -186,8 +176,7 @@ public class SimilarityAlgorithms {
 			
 			float similarity=(float)(1/( Math.sqrt(distance) +1));
 			finalCandidates.add(new SimilarDomainCase(candidate,similarity));
-			//o bien
-			//element.similarity = (float)(Math.exp(-distance));
+
 		}
 		
 		Collections.sort(finalCandidates);
@@ -196,20 +185,18 @@ public class SimilarityAlgorithms {
 	}
 	
 	/**
-	 * Returns a list of the candidate cases with a similarity degree to the given ticket.
-	 * The similarity is calculated using normalized Tversky distance among the attributes.
-	 * @param attributes collection of attributes to calculate the similarity with the candidate cases
-	 * @param candidateCases The cases that can be similar to the ticket
-	 * @return A SimilarCase ArrayList with the candidate cases and its similarity degree to the ticket.
+	 * Returns a list of the candidate domain-cases with a similarity degree to the given domain-cases.
+	 * The similarity is calculated using normalized Tversky distance among the premises.
+	 * @param premises {@link HashMap} of {@link Premise} to calculate the similarity with the candidate domain-cases
+	 * @param candidateCases The domain-cases that can be similar to the domain-case to solve
+	 * @return A {@link SimilarDomainCase} {@link ArrayList} with the candidate domain-cases and its similarity degree to the domain-case to solve
 	 */
 	public static ArrayList<SimilarDomainCase> normalizedTverskySimilarity(HashMap<Integer,Premise> premises, ArrayList<DomainCase> candidateCases){
 		int numCases=candidateCases.size();
-		//System.out.println("numCasesCandidates="+numCases+" ticketId="+ticket.getID());
 		
-		
-		float commonAt[] = new float[numCases]; // acumulador de atributos comunes por casos
-		float differentAt[] = new float[numCases]; // acumulador de atributos diferentes por casos
-		float distinctAt[] = new float[numCases]; // acumulador de atributos que no existen en ambos casos
+		float commonAt[] = new float[numCases]; 
+		float differentAt[] = new float[numCases];
+		float distinctAt[] = new float[numCases];
 		
 		for (int i=0; i < numCases; i++) {
 			commonAt[i] = 0;
@@ -219,13 +206,13 @@ public class SimilarityAlgorithms {
 		
 		Iterator<Premise> premIter=premises.values().iterator();
 		
-		while(premIter.hasNext()){ //para cada atributo del caso
+		while(premIter.hasNext()){ 
 			
 			float maxDist=0;
 			int index = 0;
-			float auxDist[] = new float[numCases]; // vector temporal de distancias por atributo: key: el objeto caso, value: la distancia
+			float auxDist[] = new float[numCases]; 
 			
-			boolean maxDistVec[] = new boolean[numCases]; // vector de marcas de distancias maximas: key: el objeto caso, value: true/false
+			boolean maxDistVec[] = new boolean[numCases];
 			for (int j = 0; j < maxDistVec.length; j++) {
 				maxDistVec[j] = false;
 			}
@@ -233,7 +220,7 @@ public class SimilarityAlgorithms {
 			Premise premise=premIter.next();
 			Iterator<DomainCase> candIterator=candidateCases.iterator();
 			
-			while(candIterator.hasNext()){ //para cada caso candidato a ser similar
+			while(candIterator.hasNext()){ 
 				DomainCase candidate=candIterator.next();
 				
 				float myDist = 1;
@@ -243,7 +230,7 @@ public class SimilarityAlgorithms {
 				if(candPremise!=null){
 					myDist=Metrics.doDist(premise.getContent(),candPremise.getContent());
 				}
-				else{//El atributo no existe en el caso recuperado
+				else{
 					distinctAt[index]++;
 					maxDistVec[index] = true;
 				}
@@ -253,11 +240,10 @@ public class SimilarityAlgorithms {
 					maxDist=myDist;
 				index++;
 				
-			} //fin para cada caso candidato a ser similar
+			} 
 			
-			// hemos recorrido ya el atributo en todos los casos
-			// normalizamos
-			for(index=0;index<numCases;index++){ // para cada caso
+			// normalize
+			for(index=0;index<numCases;index++){ 
 				if (maxDist==0)
 					auxDist[index]=0;
 				else {
@@ -276,21 +262,19 @@ public class SimilarityAlgorithms {
 			
 			
 			
-		} // fin para cada atributo del caso
-		
+		} 
 		
 		Iterator<DomainCase> candIterator=candidateCases.iterator();
 		
 		ArrayList<SimilarDomainCase> finalCandidates=new ArrayList<SimilarDomainCase>();
 		int index=0;
-		while(candIterator.hasNext()){ //para cada caso candidato a ser similar
+		while(candIterator.hasNext()){ 
 			DomainCase candidate=candIterator.next();
 			
 			Iterator <Premise> candidatePremisesIter=candidate.getProblem().getDomainContext().getPremises().values().iterator();
-			while(candidatePremisesIter.hasNext()){//para cada atributo del caso
+			while(candidatePremisesIter.hasNext()){
 				Premise candidatePremise=candidatePremisesIter.next();
 				
-				//buscar si existe el atributo en el caso objetivo
 				Premise domCasePremise=premises.get(candidatePremise.getID());
 				if(domCasePremise==null)
 					distinctAt[index]++;
@@ -301,7 +285,7 @@ public class SimilarityAlgorithms {
 			float similarity=(commonAt[index] / (commonAt[index] + differentAt[index] + distinctAt[index]));
 			finalCandidates.add(new SimilarDomainCase(candidate,similarity));
 			index++;
-		} //fin para cada caso candidato a ser similar
+		}
 		
 		Collections.sort(finalCandidates);
 		

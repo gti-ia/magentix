@@ -1,9 +1,3 @@
-/*
- * Created on 19-may-2005
- *
- * TODO To change the template for this generated file go to
- * Window - Preferences - Java - Code Style - Code Templates
- */
 package es.upv.dsic.gti_ia.argAgents;
 
 import java.util.Date;
@@ -11,22 +5,22 @@ import java.util.Date;
 
 /**
  * This class contains metrics that are used in the CBR algorithm
- * to mesure distances between case attributes. 
+ * to measure distances between case attributes. 
  */
 public class Metrics {
 	
 	/**
 	 * This method decide about which is the data type of the 
 	 * attributes that are contained in the Strings that will be
-	 * compared, and return the distance beetwen them.
+	 * compared, and return the distance between them.
 	 * 
-	 * @param a an String that contains an atributte.
-	 * @param b an String that contains an atributte.
+	 * @param a an String that contains an attribute.
+	 * @param b an String that contains an attribute.
 	 */
 	
 	public static float doDist(String a, String b){
 		
-		// lo que haremos será intentar convertir el string a número, etc.
+		// try to convert the String to an integer, long or float
 		try{
 			int ia = Integer.decode(a).intValue();
 			int ib = Integer.decode(b).intValue();
@@ -57,7 +51,7 @@ public class Metrics {
 	 * This method calculates the distance between two floats.
 	 * @param a a float data
  	 * @param b a float data
-	 * @return the distance beetwen two floats.
+	 * @return the distance between two floats.
 	 */
 	
 	public static float dist(float a, float b) {
@@ -65,10 +59,10 @@ public class Metrics {
 	}
 	
 	/**
-	 * This method calculates the distance beetwen two integers.
+	 * This method calculates the distance between two integers.
 	 * @param a an integer data
 	 * @param b an integer data
-	 * @return the distance beetwen two integers.
+	 * @return the distance between two integers.
 	 */
 	
 	public static int dist(int a, int b) {
@@ -76,10 +70,10 @@ public class Metrics {
 	}
 	
 	/**
-	 * This method calculates the distance beetwen two Date Objects.
+	 * This method calculates the distance between two Date Objects.
 	 * @param a a Date Object
 	 * @param b a Date Object
-	 * @return the distante beetwen two Date Objects.
+	 * @return the distance between two Date Objects.
 	 */
 	
 	public static int dist(Date a,Date b){
@@ -87,15 +81,15 @@ public class Metrics {
 	}
 	
 	/**
-	 * This method calculates the edition distance beetwen two Strings.
+	 * This method calculates the edition distance between two Strings.
 	 * @param sp a String Object.
 	 * @param tp a String Object.
-	 * @return the edition distance beetwen two Strings.
+	 * @return the edition distance between two Strings.
 	 */
 	
 	public static int dist(String sp, String tp) {
-		// distancia de Levenshtein (http://www.merriampark.com/ld.htm, http://www.merriampark.com/ldjava.htm)
-		// pasamos las cadenas a mayúsculas todas.
+		// Levenshtein distance (http://www.merriampark.com/ld.htm, http://www.merriampark.com/ldjava.htm)
+		//all String to upper case
 		String s = sp.toUpperCase();
 		String t = tp.toUpperCase();
 		

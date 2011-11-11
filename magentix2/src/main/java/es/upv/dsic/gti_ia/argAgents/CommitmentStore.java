@@ -16,6 +16,13 @@ import es.upv.dsic.gti_ia.cAgents.protocols.CommitmentStore_Protocol;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 
+/**
+ * This agent stores all the information about the dialogues, including: 
+ * positions, arguments and modification times.
+ * It responds to the petitions of the agents in the dialogue process.
+ * @author Jaume Jordan
+ *
+ */
 public class CommitmentStore extends CAgent {
 	
 	HashMap<String,Dialogue> dialogues;
@@ -37,6 +44,12 @@ public class CommitmentStore extends CAgent {
 	private final String ENTERDIALOGUE="ENTERDIALOGUE";
 	private final String WITHDRAWDIALOGUE="WITHDRAWDIALOGUE";
 
+	/**
+	 * Constructor of the Commitment Store. It takes the agent id as a parameter 
+	 * and it initializes all the structures.
+	 * @param aid Agent identifier
+	 * @throws Exception
+	 */
 	public CommitmentStore(AgentID aid) throws Exception {
 		super(aid);
 		
@@ -56,6 +69,12 @@ public class CommitmentStore extends CAgent {
 	protected void execution(CProcessor firstProcessor,
 			ACLMessage welcomeMessage) {
 		
+		/**
+		 * This class extends the Commitment Store protocol to do the necessary 
+		 * functionalities of this agent implementing the abstract methods
+		 * @author Jaume Jordan
+		 *
+		 */
 		class myCSProtocol extends CommitmentStore_Protocol{
 
 			@Override
@@ -146,7 +165,14 @@ public class CommitmentStore extends CAgent {
 		this.addFactoryAsParticipant(talk);
 	}
 	
-	
+	/**
+	 * Creates and returns an {@link ACLMessage} to send with the specified parameters. 
+	 * @param agentID Agent identifier of the receiver
+	 * @param locution Locution of the message
+	 * @param conversationID Conversation identifier
+	 * @param contentObject Content object if it is necessary
+	 * @return Returns an {@link ACLMessage}
+	 */
 	private ACLMessage sendMessage(String agentID, String locution, String conversationID, Serializable contentObject){
 		
 		ACLMessage msg = new ACLMessage();
@@ -160,13 +186,18 @@ public class CommitmentStore extends CAgent {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		logger.info(this.getName()+": "+"message to send: "+"to: "+msg.getReceiver().toString()+" dialogueID: "+msg.getConversationId()+" locution: "+msg.getHeaderValue("locution"));
+		logger.info(this.getName()+": "+"message to send to: "+msg.getReceiver().toString()+" dialogueID: "+msg.getConversationId()+" locution: "+msg.getHeaderValue("locution"));
 		
 		return msg;
 	
 	}
 	
-
+	/**
+	 * Adds an {@link Argument} to the corresponding list of the dialogue and the agent
+	 * @param arg {@link Argument} to store
+	 * @param agentID Agent identifier of the agent that use the {@link Argument}
+	 * @param dialogueID Dialogue identifier where the {@link Argument} is used
+	 */
 	private void addArgument(Argument arg, String agentID, String dialogueID){
 		HashMap<String,ArrayList<Argument>> agentArg=arguments.get(agentID);
 		if(agentArg==null)
@@ -180,6 +211,12 @@ public class CommitmentStore extends CAgent {
 		arguments.put(agentID, agentArg);
 	}
 	
+	/**
+	 * Returns the arguments that has used an agent in a dialogue.
+	 * @param agentID Agent identifier
+	 * @param dialogueID Dialogue identifier
+	 * @return arguments that has used an agent in a dialogue
+	 */
 	private ArrayList<Argument> getArguments(String agentID, String dialogueID){
 		HashMap<String,ArrayList<Argument>> agentArg=arguments.get(agentID);
 		if(agentArg==null)
@@ -188,6 +225,12 @@ public class CommitmentStore extends CAgent {
 		return args;
 	}
 	
+	/**
+	 * Returns an {@link Argument} that has used an agent in a dialogue.
+	 * @param arg {@link Argument} to remove
+	 * @param agentID Agent identifier of the agent that use the {@link Argument}
+	 * @param dialogueID Dialogue identifier where the Argument is used
+	 */
 	private void removeArgument(Argument arg, String agentID, String dialogueID){
 		ArrayList<Argument> argumentsList=getArguments(agentID, dialogueID);
 		if(argumentsList!=null){
@@ -204,7 +247,12 @@ public class CommitmentStore extends CAgent {
 		arguments.put(agentID, agentArg);
 	}
 	
-	
+	/**
+	 * Adds a {@link Position} to the corresponding list of the dialogue and the agent
+	 * @param pos {@link Position} to store
+	 * @param agentID Agent identifier of the agent that has the {@link Position}
+	 * @param dialogueID Dialogue identifier where the {@link Position} is used
+	 */
 	private void addPosition(Position pos, String agentID, String dialogueID){
 		//check if there is a previous position
 		HashMap<String,Position> agentPos=positions.get(agentID);
@@ -214,6 +262,12 @@ public class CommitmentStore extends CAgent {
 		positions.put(agentID, agentPos);
 	}
 	
+	/**
+	 * Returns the {@link Position} of the given agent in the given dialogue
+	 * @param agentID agent identifier
+	 * @param dialogueID dialogue identifier
+	 * @return the {@link Position} of the given agent in the given dialogue
+	 */
 	private Position getPosition(String agentID, String dialogueID){
 		HashMap<String,Position> agentPos=positions.get(agentID);
 		if(agentPos==null)
@@ -222,6 +276,13 @@ public class CommitmentStore extends CAgent {
 		return pos;
 	}
 	
+	/**
+	 * Returns all the positions of a dialogue 
+	 * (not including the position of the agent specified in the second parameter, normally the requester)
+	 * @param dialogueID dialogue identifier
+	 * @param myAgentID agent identifier
+	 * @return all the positions of the given dialogue
+	 */
 	private ArrayList<Position> getAllPositions(String dialogueID, String myAgentID){
 		ArrayList<Position> positionsList=new ArrayList<Position>();
 		Dialogue dialogue=dialogues.get(dialogueID);
@@ -242,6 +303,11 @@ public class CommitmentStore extends CAgent {
 		return positionsList;
 	}
 	
+	/**
+	 * Removes the positions of the given agent in the given dialogue
+	 * @param agentID agent identifier
+	 * @param dialogueID dialogue identifier
+	 */
 	private void removePosition(String agentID, String dialogueID){
 		HashMap<String,Position> agentPositions=positions.get(agentID);
 		
@@ -249,10 +315,19 @@ public class CommitmentStore extends CAgent {
 		positions.put(agentID, agentPositions);
 	}
 	
+	/**
+	 * Adds a dialogue to the dialogue {@link HashMap}
+	 * @param dialogue
+	 */
 	private void addDialogue(Dialogue dialogue){
 		dialogues.put(dialogue.getDialogueID(), dialogue);
 	}
 	
+	/**
+	 * Returns the {@link Dialogue} specified by the identifier
+	 * @param dialogueID dialogue identifier
+	 * @return the {@link Dialogue} specified by the identifier
+	 */
 	private Dialogue getDialogue(String dialogueID){
 		Dialogue dialogue = dialogues.get(dialogueID);
 		return dialogue;

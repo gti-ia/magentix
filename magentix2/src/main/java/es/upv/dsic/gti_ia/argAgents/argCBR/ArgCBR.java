@@ -100,86 +100,6 @@ public class ArgCBR {
 		
 	}
 	
-	//SocialEntity socialEntity2=new SocialEntity(2,"Worker",null,new ValPref(new Value(2,"calidad"),null));
-//	public static SocialEntity createSocialEntity(long id, String name,String role, String value){
-//		ArrayList<String> values=new ArrayList<String>();
-//		values.add(value);
-//		SocialEntity socialEntity1=new SocialEntity(id,name,role,null,new ValPref(values));
-//		
-//		return socialEntity1;
-//	}
-//	
-//	public static Group createGroup(long groupID, String value){
-//		Group group1=new Group();
-//		
-//		ArrayList<String> values=new ArrayList<String>();
-//		values.add(value);
-//		group1.setID(groupID);group1.setValPref(new ValPref(values));
-//		
-//		return group1;
-//	}
-	
-//	public static ArgumentCase createArgCase(int firstPremiseID,ArrayList<String> premiseResponses, SocialEntity proponent, SocialEntity opponent,Group group, DependencyRelation relation){
-//		
-//		HashMap<Integer,Premise> premises=new HashMap<Integer, Premise>();
-//		for(int i=0;i<premiseResponses.size();i++){
-//			premises.put(i+firstPremiseID, new Premise(i+firstPremiseID,"",premiseResponses.get(i)));
-//		}
-//		
-//		ArgumentProblem argProblem=new ArgumentProblem(new DomainContext(premises),new SocialContext(proponent,opponent,group,relation));
-//		
-//		ArgumentSolution argSolution=new ArgumentSolution(ArgumentType.INDUCTIVE,AcceptabilityState.ACCEPTABLE,null,null,null,null,null);
-//		
-//		ArgumentJustification argJustification=new ArgumentJustification(null,null,null,null);
-//		Date now = new Date(System.currentTimeMillis());
-//		ArgumentCase argCase = new ArgumentCase(1l,now.toString(),argProblem,argSolution,argJustification,1);
-//		
-//		return argCase;
-//	}
-	
-//	private void loadCases(){
-//		
-//		ArrayList<String> premisesResponses=new ArrayList<String>();
-//		premisesResponses.add("si");
-//		premisesResponses.add("si");
-//		premisesResponses.add("si");
-//		premisesResponses.add("si");
-//		SocialEntity socialEntity1=createSocialEntity(1, "Boss", "argAgent1", "ahorro");
-//		SocialEntity socialEntity2=createSocialEntity(2, "Worker", "argAgent2", "calidad");
-//		Group group1=createGroup(1, "ahorro");
-//		ArgumentCase argCase = createArgCase(1,premisesResponses,socialEntity1, socialEntity2,group1,DependencyRelation.POWER);
-//		ArgumentCase argCase2 = createArgCase(2,premisesResponses,socialEntity1, socialEntity2,group1,DependencyRelation.POWER);
-//		ArgumentCase argCase3 = createArgCase(1,premisesResponses,socialEntity2, socialEntity1,group1,DependencyRelation.POWER);
-//		
-//		
-//		addCase(argCase);
-//		addCase(argCase2);
-//		addCase(argCase3);
-//		
-////		ArrayList<ArgumentCase> argCasesList=new ArrayList<ArgumentCase>();
-////		argCasesList.add(argCase);
-////		argCasesList.add(argCase2);
-////		argCB.put(1, argCasesList);
-//		
-//		
-//		
-//		System.out.println(argCB.size()+" lists in CB");
-//		
-//		ArrayList<ArgumentCase> extractedArgCases=argCB.get(1);
-//		if(extractedArgCases!=null && extractedArgCases.size()>0){
-//			System.out.println(extractedArgCases.size()+" cases in list 1");
-//			ArgumentCase argCa=extractedArgCases.get(0);
-//			Iterator<Premise> iterPremises=argCa.getArgumentProblem().getDomainContext().getPremises().values().iterator();
-//			while(iterPremises.hasNext()){
-//				Premise premise=iterPremises.next();
-//				System.out.print("premise "+premise.getID()+" | ");
-//			}
-//			System.out.println();
-//		}
-//		
-//	}
-	
-	
 	/**
 	 * Adds a new argument case to the case base.
 	 * If the argument case is in case base, the associated domain cases and the attacks received are added to that argument case.
@@ -629,8 +549,7 @@ public class ArgCBR {
 		return allPositions;
 		
 	}
-	
-	
+		
 	
 	/**
 	 * Returns the attack degree of each given Position
