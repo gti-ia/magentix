@@ -54,6 +54,7 @@ public class ArgCAgent extends CAgent{
 	private final String ASSERT="ASSERT";
 	private final String ACCEPT="ACCEPT";
 	private final String ATTACK="ATTACK";
+	private final String LOCUTION="locution";
 	
 	
 	private final String ADDPOSITION="ADDPOSITION";
@@ -113,7 +114,7 @@ public class ArgCAgent extends CAgent{
 	private HashMap<String,ArrayList<Argument>> mySupportArguments;
 	private int myUsedLocutions = 0;
 
-	//we don't use a list of attack arguments because we only generate a counter example or distinguishing premises arguments
+	//we do not use a list of attack arguments because we only generate a counter example or distinguishing premises arguments
 	//and that don't cause efficiency problems
 	//private HashMap<String,ArrayList<Argument>> myAttackArguments;
 	private HashMap<String,ArrayList<Argument>> myUsedSupportArguments;
@@ -188,6 +189,7 @@ public class ArgCAgent extends CAgent{
 		storeArguments= new HashMap<String, ArrayList<Argument>>();
 	}
 
+
 	protected void execution(CProcessor myProcessor, ACLMessage welcomeMessage) {
 
 		
@@ -201,7 +203,12 @@ public class ArgCAgent extends CAgent{
 			System.err.println("Error: " + e.getMessage());
 		}
 		
-		
+		/**
+		 * This class extends the Argumentation Participant protocol implementing all 
+		 * the needed functions to perform the dialogue.
+		 * @author Jaume Jordan
+		 *
+		 */
 		class myArgumentation extends Argumentation_Participant {
 
 			
@@ -223,8 +230,8 @@ public class ArgCAgent extends CAgent{
 				ACLMessage msg2=enter_dialogue(currentDomCase2Solve, currentDialogueID);
 				copyMessages(msg, msg2);
 				
-				logger.info(myID+": message "+msg.getHeaderValue("locution")+ " receiver: "+msg.getReceiver().name);
-				if(msg.getHeaderValue("locution").equalsIgnoreCase(ENTERDIALOGUE)) return true;
+				logger.info(myID+": message "+msg.getHeaderValue(LOCUTION)+ " receiver: "+msg.getReceiver().name);
+				if(msg.getHeaderValue(LOCUTION).equalsIgnoreCase(ENTERDIALOGUE)) return true;
 				else return false;
 			}
 
@@ -253,7 +260,7 @@ public class ArgCAgent extends CAgent{
 					return true;
 				}
 				else{//no position generated, withdraw
-					msg2=withdraw_dialogue(currentProblem);
+					msg2=withdraw_dialogue();
 					copyMessages(msg, msg2);
 					return false;
 				}
@@ -265,6 +272,11 @@ public class ArgCAgent extends CAgent{
 			protected String doAssert(CProcessor myProcessor, ACLMessage msg, String whyAgentID) {
 				
 				ACLMessage msg2;
+				
+				// clean other possible WHY sent by the same agent and attend only one
+				ArrayList<String> locutions=new ArrayList<String>();
+				locutions.add(WHY);
+				myProcessor.cleanMessagesQueue(whyAgentID, LOCUTION, locutions);
 				
 				ArrayList<Position> myPositionsAsked=attendedWhyPetitions.get(whyAgentID);
 				if(myPositionsAsked!=null && myPositionsAsked.contains(currentPosition)){
@@ -305,6 +317,13 @@ public class ArgCAgent extends CAgent{
 						currentDialogueGraph=new DialogueGraph();
 						currentDialogueGraph.addNode(argNode);
 						
+						ArrayList<String> locutions2 = new ArrayList<String>();
+						locutions2.add(ACCEPT);
+						locutions2.add(ATTACK);
+						
+						// clean message queue from old messages
+						myProcessor.cleanMessagesQueue(subDialogueAgentID, LOCUTION, locutions2);
+						
 						return ASSERT;
 					}
 					else{ //can not generate support arguments, noCommit
@@ -337,7 +356,7 @@ public class ArgCAgent extends CAgent{
 				}
 				
 				ArgNode argNode=null;
-				if(msgReceived.getHeaderValue("locution").equalsIgnoreCase(ASSERT)){
+				if(msgReceived.getHeaderValue(LOCUTION).equalsIgnoreCase(ASSERT)){
 					//add his position to my asked positions
 					Solution sol=new Solution(againstArgument.getHasConclusion(),againstArgument.getPromotesValue(),againstArgument.getTimesUsedConclusion());
 					Position hisPosition=new Position(subDialogueAgentID, currentDialogueID, sol, null, null, 0f);
@@ -395,7 +414,7 @@ public class ArgCAgent extends CAgent{
 				
 				// try to generate an attack argument: Distinguishing premise or Counter Example, depending on the attack received
 				
-				logger.info("+++++++++ "+myID+" locution= "+msgReceived.getHeaderValue("locution"));
+				logger.info("+++++++++ "+myID+" locution= "+msgReceived.getHeaderValue(LOCUTION));
 				logger.info("+++++++++ "+myID+": doAttack from "+subDialogueAgentID);
 				logger.info("+++++++++ "+myID+" receiver: "+msgReceived.getReceiver().getLocalName());
 				
@@ -403,6 +422,13 @@ public class ArgCAgent extends CAgent{
 				ACLMessage msg2;
 				
 				if(attackArg!=null){
+					ArrayList<String> locutions = new ArrayList<String>();
+					locutions.add(ACCEPT);
+					locutions.add(ATTACK);
+					locutions.add(NOCOMMIT);
+					// clean message queue from old messages
+					myProcessor.cleanMessagesQueue(subDialogueAgentID, LOCUTION, locutions);
+					
 					msg2=attack(subDialogueAgentID, attackArg);
 					copyMessages(msgToSend, msg2);
 					
@@ -474,7 +500,7 @@ public class ArgCAgent extends CAgent{
 			protected void doQueryPositions(CProcessor myProcessor,
 					ACLMessage msg) {
 				
-				ACLMessage msg2=sendMessage(commitmentStoreID, GETALLPOSITIONS, currentDialogueID, null);
+				ACLMessage msg2=createMessage(commitmentStoreID, GETALLPOSITIONS, currentDialogueID, null);
 				copyMessages(msg, msg2);
 				
 			}
@@ -483,7 +509,7 @@ public class ArgCAgent extends CAgent{
 			@Override
 			protected boolean doGetPositions(CProcessor myProcessor,
 					ACLMessage msg) {
-				logger.info(myID+": doGetPositions Locution received= "+msg.getHeaderValue("locution"));
+				logger.info(myID+": doGetPositions Locution received= "+msg.getHeaderValue(LOCUTION));
 				differentPositions=getDifferentPositions((ArrayList<Position>)msg.getContentObject());
 				return true;
 			}
@@ -497,6 +523,13 @@ public class ArgCAgent extends CAgent{
 					int randPos=(int)Math.random()*differentPositions.size();
 					Position pos=differentPositions.get(randPos); //position chosen randomly
 					//askedPositions.add(pos);  we only add the position of the other agent when that agent responds
+					
+					ArrayList<String> locutions = new ArrayList<String>();
+					locutions.add(ASSERT);
+					locutions.add(NOCOMMIT);
+					// clean message queue from old messages
+					myProcessor.cleanMessagesQueue(pos.getAgentID(), LOCUTION, locutions);
+					
 					msg2=why(pos.getAgentID(),pos);
 					copyMessages(msg, msg2);
 					logger.info("------------ ------ "+myID + ": WHY to "+pos.getAgentID());
@@ -525,7 +558,7 @@ public class ArgCAgent extends CAgent{
 					ACLMessage msg) {
 				ACLMessage msg2;
 				if(currentPosition!=null){
-					msg2=sendMessage(commitmentStoreID, ADDPOSITION, currentDialogueID, currentPosition);
+					msg2=createMessage(commitmentStoreID, ADDPOSITION, currentDialogueID, currentPosition);
 					copyMessages(msg, msg2);
 				}
 				
@@ -613,22 +646,14 @@ public class ArgCAgent extends CAgent{
 			}
 
 			
-
-			
-
-			
-
-			
 		}
 		
-		
-
 		// The agent creates the CFactory that creates processors that initiate
 		// conversations. In this example the CFactory gets the name "TALK".
 		// We limit the number of simultaneous processors to 1.
 		
 		long rand=(long) (1200*Math.random());
-		CFactory talk = new myArgumentation().newFactory("TALK", null, null,
+		CFactory talk = new myArgumentation().newFactory("TALK",
 				1, this, 300, rand);
 		
 		logger.info(this.getName()+": My rand wait time is "+rand);
@@ -644,12 +669,8 @@ public class ArgCAgent extends CAgent{
 	
 	
 	
-	
-	
-	
-	
 	/**
-	 * Copies all contents of the msg2 to the msg1
+	 * Copies all contents of the msg2 to the msg
 	 * @param msg
 	 * @param msg2
 	 */
@@ -660,7 +681,7 @@ public class ArgCAgent extends CAgent{
 			msg.addReceiver(iterReceivers.next());
 		}
 		msg.setConversationId(msg2.getConversationId());
-		msg.setHeader("locution", msg2.getHeaderValue("locution"));
+		msg.setHeader(LOCUTION, msg2.getHeaderValue(LOCUTION));
 		msg.setPerformative(msg2.getPerformative());
 		if(msg2.getContentObject()!=null)
 			try {
@@ -671,16 +692,22 @@ public class ArgCAgent extends CAgent{
 			}
 	}
 	
-	
-	public ACLMessage enter_dialogue(DomainCase domCase, String dialogueID){
+	/**
+	 * Evaluates if the agent can enter in the dialogue offering a solution. It it can,
+	 * it returns an {@link ACLMessage} with the locution ENTERDIALOGUE. If not, it returns
+	 * the {@link ACLMessage} with the locution WITHDRAWDIALOGUE.
+	 * @param domCase {@link DomainCase} that represents the problem to solve
+	 * @param dialogueID dialogue identifier
+	 * @return {@link ACLMessage} with the corresponding locution depending if it can enter or not to the dialogue
+	 */
+	private ACLMessage enter_dialogue(DomainCase domCase, String dialogueID){
 		
 		currentDomCase2Solve=domCase;
 		/*
 		 * each agent adds domain-cases with the agreed solution ONLY!!! at the end of the dialogue
 		 */
 		
-		
-		//a test agent will give the initiator agent the Ticket to solve
+		//a test agent will give the initiator agent the problem to solve
 		similarDomainCases=domainCBR.retrieve(domCase.getProblem().getDomainContext().getPremises(), threshold);
 		
 		currentDialogueID=dialogueID;
@@ -707,45 +734,58 @@ public class ArgCAgent extends CAgent{
 		}
 		//Not enter in the dialogue
 		else{ 
-			return withdraw_dialogue(currentProblem);
+			return withdraw_dialogue();
 		}
 	}
 	
-	public ACLMessage withdraw_dialogue(Problem prob){
+	/**
+	 * Returns an {@link ACLMessage} with the locution WITHDRAWDIALOGUE
+	 * @return an {@link ACLMessage} with the locution WITHDRAWDIALOGUE
+	 */
+	private ACLMessage withdraw_dialogue(){
 		
-//		//check if there is not any active position
-//		Position pos= getPosition(myID, currentDialogueID);
-//		if(pos==null){
-			//then, get out of dialogue
-			
-			if (currentPosition != null)
-				lastPositionBeforeNull= new Position(currentPosition.getAgentID(), currentPosition.getDialogueID(), currentPosition.getSolution(),
-					currentPosition.getPremises(), currentPosition.getDomainCases(), currentPosition.getDomainCaseSimilarity());;
-			currentPosition=null;
-			currentProblem=null;
-			positionsGenerated=false;
-//			return true;
-//		}
-//		else
-//			return false;
-			myUsedLocutions++;
-			return sendMessage(commitmentStoreID, WITHDRAWDIALOGUE, currentDialogueID, null);
+		if (currentPosition != null)
+			lastPositionBeforeNull= new Position(currentPosition.getAgentID(), currentPosition.getDialogueID(), currentPosition.getSolution(),
+				currentPosition.getPremises(), currentPosition.getDomainCases(), currentPosition.getDomainCaseSimilarity());;
+		currentPosition=null;
+		currentProblem=null;
+		positionsGenerated=false;
+
+		myUsedLocutions++;
+		return createMessage(commitmentStoreID, WITHDRAWDIALOGUE, currentDialogueID, null);
 	}
 	
-	public ACLMessage propose(Position pos, String dialogueID){
+	/**
+	 * Returns an {@link ACLMessage} with the locution ADDPOSITION and the position proposed
+	 * @param pos {@link Position} to propose
+	 * @param dialogueID dialogue identifier
+	 * @return an {@link ACLMessage} with the locution ADDPOSITION
+	 */
+	private ACLMessage propose(Position pos, String dialogueID){
 		
 		return addPosition(pos, dialogueID);
 		
 	}
 	
-	public ACLMessage why(String agentIDr, Position pos){
+	/**
+	 * Returns an {@link ACLMessage} with locution WHY to the given position
+	 * @param agentIDr agent identifier to ask WHY is defending a {@link Position}
+	 * @param pos {@link Position} of the agent to ask WHY
+	 * @return an {@link ACLMessage} with locution WHY to the given position
+	 */
+	private ACLMessage why(String agentIDr, Position pos){
 		
 		myUsedLocutions++;
-		return sendMessage(agentIDr, WHY, currentDialogueID, pos);
+		return createMessage(agentIDr, WHY, currentDialogueID, pos);
 	}
 	
-	
-	public ACLMessage noCommit(String agentIDr, Position pos){
+	/**
+	 * Returns an {@link ACLMessage} with locution NOCOMMIT to the given position
+	 * @param agentIDr agent identifier to tell NOCOMMIT
+	 * @param pos {@link Position} that the agent does the NOCOMMIT
+	 * @return an {@link ACLMessage} with locution NOCOMMIT to the given position
+	 */
+	private ACLMessage noCommit(String agentIDr, Position pos){
 		
 		myUsedLocutions++;
 		if (currentPosition != null)
@@ -755,35 +795,35 @@ public class ArgCAgent extends CAgent{
 		currentPosAccepted = 0;
 		
 		//(the no commit is received also by the Commitment Store)
-		return sendMessage(agentIDr, NOCOMMIT, currentDialogueID, null);
+		return createMessage(agentIDr, NOCOMMIT, currentDialogueID, null);
 		
 	}
 	
-	public ACLMessage asserts(String agentIDr, Argument arg){
+	private ACLMessage asserts(String agentIDr, Argument arg){
 		myUsedLocutions++;
 		//send it to the other agent and add the argument to commitment store (the assert is received also by the Commitment Store)
-		return sendMessage(agentIDr, ASSERT, currentDialogueID, arg);
+		return createMessage(agentIDr, ASSERT, currentDialogueID, arg);
 		
 	}
 	
-	public ACLMessage accept(String agentIDr){
+	private ACLMessage accept(String agentIDr){
 		
 		//send it to the other agent
 		myUsedLocutions++;
-		return sendMessage(agentIDr, ACCEPT, currentDialogueID, null);
+		return createMessage(agentIDr, ACCEPT, currentDialogueID, null);
 	}
 	
-	public ACLMessage attack(String agentIDr, Argument arg){
+	private ACLMessage attack(String agentIDr, Argument arg){
 		myUsedLocutions++;
 		
 		//send it to the other agent AND add the argument to commitment store
-		return sendMessage(agentIDr, ATTACK, currentDialogueID, arg);
+		return createMessage(agentIDr, ATTACK, currentDialogueID, arg);
 	}
 	
-	public ACLMessage nothingMsg(){
+	private ACLMessage nothingMsg(){
 		ACLMessage msg=new ACLMessage();
 		msg.setReceiver(new AgentID("noOne"));
-		msg.setHeader("locution", "NOTHING");
+		msg.setHeader(LOCUTION, "NOTHING");
 		msg.setSender(getAid());
 		msg.setConversationId(currentDialogueID);
 		msg.setPerformative(ACLMessage.INFORM);
@@ -1361,7 +1401,7 @@ public class ArgCAgent extends CAgent{
 			
 	}
 	
-	public Argument generateDPAttack(ArrayList<SimilarArgumentCase> argCases, HashMap<Integer, Premise> hisPremises, 
+	private Argument generateDPAttack(ArrayList<SimilarArgumentCase> argCases, HashMap<Integer, Premise> hisPremises, 
 			DependencyRelation relation, String agentID){
 		HashMap<Integer, Premise> hisUsefulPremises = getUsefulPremises(currentProblem.getDomainContext().getPremises(), hisPremises);
 		Iterator<SimilarArgumentCase> iterArgCases=argCases.iterator();
@@ -1415,7 +1455,7 @@ public class ArgCAgent extends CAgent{
 		return null;
 	}
 	
-	public Argument generateCEAttack(ArrayList<SimilarArgumentCase> argCases, HashMap<Integer, Premise> hisCasePremises, 
+	private Argument generateCEAttack(ArrayList<SimilarArgumentCase> argCases, HashMap<Integer, Premise> hisCasePremises, 
 			DependencyRelation relation, String agentID){
 		
 		HashMap<Integer,Premise> hisUsefulPremises=getUsefulPremises(currentProblem.getDomainContext().getPremises(), hisCasePremises);
@@ -1671,7 +1711,7 @@ public class ArgCAgent extends CAgent{
 	
 	private ACLMessage addPosition(Position pos, String dialogueID){
 		myUsedLocutions++;
-		return sendMessage(commitmentStoreID, ADDPOSITION, dialogueID, pos);
+		return createMessage(commitmentStoreID, ADDPOSITION, dialogueID, pos);
 	}
 	
 	
@@ -1732,7 +1772,7 @@ public class ArgCAgent extends CAgent{
 	private ACLMessage enterDialogue(String dialogueID){
 		
 		myUsedLocutions++;
-		return sendMessage(commitmentStoreID, ENTERDIALOGUE, dialogueID, null);
+		return createMessage(commitmentStoreID, ENTERDIALOGUE, dialogueID, null);
 	}
 	
 	/**
@@ -1869,7 +1909,7 @@ public class ArgCAgent extends CAgent{
 	 * @param dialogueID String with dialogueID of the message
 	 * @param contentObject Serializable with an object to attach to the message
 	 */
-	private ACLMessage sendMessage(String agentID, String locution, String dialogueID, Serializable contentObject){
+	private ACLMessage createMessage(String agentID, String locution, String dialogueID, Serializable contentObject){
 		
 		ACLMessage msg = new ACLMessage();
 		msg.setSender(getAid());
@@ -1887,7 +1927,7 @@ public class ArgCAgent extends CAgent{
 			locution=perf;
 			msg.setHeader("agentID", contentAgentID);
 		}
-		msg.setHeader("locution", locution);
+		msg.setHeader(LOCUTION, locution);
 		
 		if(contentObject!=null){
 			try {
@@ -1903,7 +1943,7 @@ public class ArgCAgent extends CAgent{
 			receiversStr+=iterReceivers.next().name+" ";
 		}
 		
-		logger.info(this.getName()+": "+"message to send to: "+receiversStr+" dialogueID: "+msg.getConversationId()+" locution: "+msg.getHeaderValue("locution"));
+		logger.info(this.getName()+": "+"message to send to: "+receiversStr+" dialogueID: "+msg.getConversationId()+" locution: "+msg.getHeaderValue(LOCUTION));
 		
 		return msg;
 	}

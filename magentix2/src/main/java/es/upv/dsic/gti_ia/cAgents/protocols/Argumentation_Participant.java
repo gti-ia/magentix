@@ -371,28 +371,25 @@ public abstract class Argumentation_Participant {
 	/**
 	 * Creates a new argumentation participant CFactory
 	 * @param name factory's name
-	 * @param filter message filter
-	 * @param template first message to send
 	 * @param availableConversations maximum number of conversation this CFactory can manage simultaneously
 	 * @param myAgent agent owner of this CFactory
-	 * @param timeout for waiting after sending the proposal
+	 * @param stdTimeout standard timeout to wait in wait states
+	 * @param randTimeout random timeout to wait in some states of the dialogue
 	 * @return a new argumentation participant factory
 	 */
-	public CFactory newFactory(String name, MessageFilter filter,
-			ACLMessage template, int availableConversations, CAgent myAgent, long stdTimeout, long randTimeout) {
+	public CFactory newFactory(String name, int availableConversations, CAgent myAgent, 
+			long stdTimeout, long randTimeout) {
+
+		MessageFilter filter = new MessageFilter("performative = INFORM AND locution = "+OPENDIALOGUE);
 
 		// Create factory
-
-		filter = new MessageFilter("performative = INFORM AND locution = "+OPENDIALOGUE);
 		CFactory theFactory = new CFactory(name, filter,
 				availableConversations, myAgent);
 
 		// Processor template setup
-
 		CProcessor processor = theFactory.cProcessorTemplate();
 
 		// BEGIN State
-
 		BeginState BEGIN = (BeginState) processor.getState("BEGIN");
 		BEGIN.setMethod(new Begin_Method());
 		
@@ -478,7 +475,6 @@ public abstract class Argumentation_Participant {
 		processor.addTransition(WAIT_POSITIONS, POSITIONS_TIMEOUT);
 		
 		processor.addTransition(POSITIONS_TIMEOUT, WAIT_CENTRAL);
-		
 		
 		
 		SendState ASSERT = new SendState("ASSERT");

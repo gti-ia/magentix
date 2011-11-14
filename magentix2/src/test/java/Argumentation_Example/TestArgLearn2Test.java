@@ -51,7 +51,7 @@ public class TestArgLearn2Test {
 			
 			Vector<DomainCase> tickets=CreatePartitions.getTestDomainCases();
 						
-			for(nOperators = 7; nOperators <= 9; nOperators+=2){	
+			for(nOperators = 7; nOperators <= 7; nOperators+=2){	
 			
 				int nArgCases=10;
 			
@@ -70,7 +70,7 @@ public class TestArgLearn2Test {
 				values.add("ahorro");values.add("rapidez");values.add("calidad");
 				Group group=new Group(1, "group1", new ValPref(values), socialEntities);
 				
-				for(int cases=5;cases<=45;cases+=5){
+				for(int cases=40;cases<=45;cases+=5){
 				
 					iniDomainFiles=new ArrayList<String>();
 					for(int i=0;i<nOperators;i++){

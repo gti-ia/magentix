@@ -15,10 +15,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Vector;
 
-import es.upv.dsic.gti_ia.argAgents.domainCBR.Attribute;
-import es.upv.dsic.gti_ia.argAgents.domainCBR.Category;
 import es.upv.dsic.gti_ia.argAgents.domainCBR.OWLDomainParser;
-import es.upv.dsic.gti_ia.argAgents.domainCBR.Ticket;
 import es.upv.dsic.gti_ia.argAgents.knowledgeResources.ArgumentCase;
 import es.upv.dsic.gti_ia.argAgents.knowledgeResources.Conclusion;
 import es.upv.dsic.gti_ia.argAgents.knowledgeResources.DomainCase;
@@ -292,39 +289,7 @@ public class CreatePartitions {
 		}
 	}
 	
-	public static void createDomCases(String resultFileName){
-		try {
-			OWLDomainParser owlDomParser=new OWLDomainParser();
-			Vector<es.upv.dsic.gti_ia.argAgents.domainCBR.Case> allCases=owlDomParser.parseDomainOntologyInCases("Helpdesk-Cases.owl");
-			ArrayList<DomainCase> domCases=new ArrayList<DomainCase>();
-			
-			Iterator<es.upv.dsic.gti_ia.argAgents.domainCBR.Case> iterCases=allCases.iterator();
-			while(iterCases.hasNext()){
-				es.upv.dsic.gti_ia.argAgents.domainCBR.Case cas=iterCases.next();
-				DomainCase domCase=new DomainCase(new Problem(new DomainContext(convertAttributesToPremises(cas.getAttributes(), cas.getCategoryNode()))),
-						convertSolutions(cas.getSolutions()), new Justification());
-				domCases.add(domCase);
-				
-			}
-			
-			writeDomainCases(domCases, resultFileName);
-			
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-	}
 	
-	private static ArrayList<Solution> convertSolutions(HashMap<Integer,es.upv.dsic.gti_ia.argAgents.domainCBR.Solution> iniSolutions){
-		ArrayList<Solution> finalSolutions=new ArrayList<Solution>();
-		Iterator<es.upv.dsic.gti_ia.argAgents.domainCBR.Solution> iterIniSols=iniSolutions.values().iterator();
-		while(iterIniSols.hasNext()){
-			es.upv.dsic.gti_ia.argAgents.domainCBR.Solution iniSol=iterIniSols.next();
-			Solution sol=new Solution(new Conclusion(iniSol.getSolutionID(), iniSol.getSolutionDesc()), iniSol.getPromotedValue(), iniSol.getTimesUsed());
-			finalSolutions.add(sol);
-		}
-		
-		return finalSolutions;
-	}
 	
 	private static void writeDomainCases(ArrayList<DomainCase> domCases, String filePath){
 		try {
@@ -345,69 +310,7 @@ public class CreatePartitions {
 		}
 	}
 	
-	/**
-	 * Converts a Map of {@link Attribute} in a HashMap of {@link Premise}. With the category as a premise with id 0.
-	 * @param attributes Map of {@link Attribute} to convert to a HashMap of {@link Premise}
-	 * @param category tipification node
-	 * @return a HashMap of {@link Premise} with the category as a premise with id 0
-	 */
-	private static HashMap<Integer, Premise> convertAttributesToPremises(Map<Integer,Attribute> attributes, Category category){
-		HashMap<Integer, Premise> premises=new HashMap<Integer, Premise>();
-		
-		//convert Attributes to Premises
-		Iterator<Attribute> iterAttribute= attributes.values().iterator();
-		while(iterAttribute.hasNext()){
-			Attribute attr=iterAttribute.next();
-			Premise premise=new Premise(attr.getAskedQuestion().getQuestionID(), attr.getAskedQuestion().getQuestionDesc(), attr.getAnswer());
-			premises.put(premise.getID(), premise);
-		}
-		//put the tipification node as a Premise with identifier 0
-		Premise tipificationPremise=
-			new Premise(0,category.getTipification(), String.valueOf(category.getIdTipi()));
-		premises.put(0, tipificationPremise);
-		
-		return premises;
-	}
 	
-	public static void createTestTickets(String resultFileName,int nTickets){
-		
-		try{
-			OWLDomainParser owlDomainParser= new OWLDomainParser();
-			Vector<Ticket> allTickets=new Vector<Ticket>();
-			allTickets = owlDomainParser.parseDomainOntology("Helpdesk-Full.owl");
-			
-			// Create file 
-			FileWriter fstream = new FileWriter(resultFileName,false);
-			BufferedWriter outFile = new BufferedWriter(fstream);
-			
-			if(nTickets >= allTickets.size())
-			{
-				for (int i=0; i<allTickets.size();i++){
-					outFile.write(Integer.toString(i));
-					outFile.newLine();
-				}
-			
-				for(int i=allTickets.size();i<nTickets;i++){
-					int index=(int)(Math.random()*allTickets.size());
-					outFile.write(Integer.toString(index));
-					outFile.newLine();
-				}
-			}
-			else
-			{
-				for (int i=0; i<nTickets;i++){
-					outFile.write(Integer.toString(i));
-					outFile.newLine();
-				}
-			}
-			
-			//Close the output stream
-			outFile.close();
-		}catch (Exception e){//Catch exception if any
-			System.err.println("Error: " + e.getMessage());
-		}
-		
-	}
 	
 //	public static void createExpertsOWLPartitions(){
 //		OWLDomainParser owlDomainParser=new OWLDomainParser();
@@ -815,15 +718,15 @@ public class CreatePartitions {
 //	}
 	
 	public static Vector<DomainCase> getTestDomainCases(){
-		Vector<DomainCase> tickets=new Vector<DomainCase>();
+		Vector<DomainCase> domCases=new Vector<DomainCase>();
 		try {
-			tickets = readDomainCasesFile("Helpdesk-DomainCases.dat");
-			System.out.println("domain cases= "+tickets.size());
+			domCases = readDomainCasesFile("Helpdesk-DomainCases.dat");
+			System.out.println("domain cases= "+domCases.size());
 		}catch (Exception e){//Catch exception if any
 			System.err.println("Error reading file: " + e.getMessage());
 			e.printStackTrace();
 		}
-		return tickets;
+		return domCases;
 	}
 	
 	/**

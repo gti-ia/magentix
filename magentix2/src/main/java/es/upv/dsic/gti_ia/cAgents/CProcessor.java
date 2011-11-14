@@ -1,5 +1,6 @@
 package es.upv.dsic.gti_ia.cAgents;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -675,6 +676,39 @@ public class CProcessor implements Runnable, Cloneable {
 	 */
 	protected void addMessage(ACLMessage msg) {
 		messageQueue.add(msg);
+	}
+	
+	public int cleanMessagesQueue(String agentID, String headerTitle, ArrayList<String> headerContents){
+		ArrayList<ACLMessage> toRemove=new ArrayList<ACLMessage>();
+		Iterator<ACLMessage> iterQueue=messageQueue.iterator();
+		while(iterQueue.hasNext()){
+			ACLMessage msg=iterQueue.next();
+			if(!msg.getSender().getLocalName().equals(agentID))
+				continue;
+			String headerValue=msg.getHeaderValue(headerTitle);
+			Iterator<String> iterContents=headerContents.iterator();
+			while(iterContents.hasNext()){
+				if(headerValue.equals(iterContents.next())){
+					toRemove.add(msg);
+					break;
+				}
+			}
+		}
+		int removes=0;
+		Iterator<ACLMessage> iterRemoves=toRemove.iterator();
+		while(iterRemoves.hasNext()){
+			ACLMessage msg2Remove=iterRemoves.next();
+			String headerCont=msg2Remove.getHeaderValue(headerTitle);
+			if(messageQueue.remove(msg2Remove)){
+				logger.info("------- message removed HeaderContent: "+headerCont);
+				removes++;
+			}
+			else{
+				logger.info("------- CANNOT REMOVE message HeaderContent: "+headerCont);
+			}
+		}
+		
+		return removes;
 	}
 
 	/**
