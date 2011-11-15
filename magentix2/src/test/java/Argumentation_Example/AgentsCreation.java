@@ -572,48 +572,11 @@ public class AgentsCreation {
 //		
 //	}
 	
-	public static ArrayList<ArgCAgent> createArgLearnAgents(ArrayList<SocialEntity> socialEntities, 
-			ArrayList<ArrayList<SocialEntity>> friendsLists, ArrayList<ArrayList<DependencyRelation>> dependencyRels, Group group, 
-			ArrayList<String> owlDomainFileNames, ArrayList<String> owlArgFileNames, int nDomCases, int nArgCases, String testerAgentID,
-			float threshold, float wPD, float wSD, float wRD, float wAD, float wED, float wEP){
-		
-		ArrayList<ArgCAgent> agents = new ArrayList<ArgCAgent>();
-		
-		int totalAgents=socialEntities.size();
-		//createDomCasesPartitions(owlDomainFileNames,nDomCases);
-		
-		try {
-			
-			ArgCAgent argLeanAgent1 = new ArgCAgent(new AgentID("qpid://"+socialEntities.get(0).getName()+"@localhost:8080"), 
-						true, socialEntities.get(0), friendsLists.get(0), dependencyRels.get(0), 
-						group, "commitmentStore", testerAgentID, owlDomainFileNames.get(0), owlDomainFileNames.get(0),
-						owlArgFileNames.get(0), owlArgFileNames.get(0), threshold, wPD, wSD, wRD, wAD, wED, wEP);
-			argLeanAgent1.start();
-			agents.add(argLeanAgent1);
-			
-			for(int i=1;i<totalAgents;i++){
-				ArgCAgent argLeanAgent=new ArgCAgent(new AgentID("qpid://"+socialEntities.get(i).getName()+"@localhost:8080"), 
-						false, socialEntities.get(i), friendsLists.get(i),  dependencyRels.get(i), 
-						group, "commitmentStore", null, owlDomainFileNames.get(i), owlDomainFileNames.get(i),
-						owlArgFileNames.get(i), owlArgFileNames.get(i), threshold, wPD, wSD, wRD, wAD, wED, wEP);
-				argLeanAgent.start();
-				agents.add(argLeanAgent);
-			}
-		
-		} catch (Exception e) {
-			
-			e.printStackTrace();
-		}
-		
-		
-		return agents;
-		
-		
-	}
 	
 	public static ArrayList<ArgCAgent> createArgLearnAgentsInc(ArrayList<SocialEntity> socialEntities, 
 			ArrayList<ArrayList<SocialEntity>> friendsLists, ArrayList<ArrayList<DependencyRelation>> dependencyRels, Group group, 
-			ArrayList<String> iniDomainFileNames, ArrayList<String> finDomainFileNames, ArrayList<String> iniArgFileNames,  ArrayList<String> finArgFileNames,int nArgCases, String testerAgentID, float threshold,
+			ArrayList<String> iniDomainFileNames, ArrayList<String> finDomainFileNames, int domCBRindex, float domCBRthreshold,
+			ArrayList<String> iniArgFileNames,  ArrayList<String> finArgFileNames,int nArgCases, String testerAgentID, 
 			float wPD, float wSD, float wRD, float wAD, float wED, float wEP){
 		
 		ArrayList<ArgCAgent> agents = new ArrayList<ArgCAgent>();
@@ -623,18 +586,13 @@ public class AgentsCreation {
 		
 		try {
 			
-			ArgCAgent argLearnAgent1 = new ArgCAgent(new AgentID("qpid://"+socialEntities.get(0).getName()+"@localhost:8080"), 
-						true, socialEntities.get(0), friendsLists.get(0), dependencyRels.get(0), 
-						group, "commitmentStore", testerAgentID, iniDomainFileNames.get(0), finDomainFileNames.get(0),
-						iniArgFileNames.get(0), finArgFileNames.get(0), threshold, wPD, wSD, wRD, wAD, wED, wEP);
-			argLearnAgent1.start();
-			agents.add(argLearnAgent1);
 			
-			for(int i=1;i<totalAgents;i++){
+			for(int i=0;i<totalAgents;i++){
 				ArgCAgent argLeanAgent=new ArgCAgent(new AgentID("qpid://"+socialEntities.get(i).getName()+"@localhost:8080"), 
 						false, socialEntities.get(i), friendsLists.get(i),  dependencyRels.get(i), 
-						group, "commitmentStore", null, iniDomainFileNames.get(i), finDomainFileNames.get(i),
-						iniArgFileNames.get(i), finArgFileNames.get(i), threshold, wPD, wSD, wRD, wAD, wED, wEP);
+						group, "commitmentStore", null, 
+						iniDomainFileNames.get(i), finDomainFileNames.get(i), domCBRindex, domCBRthreshold,
+						iniArgFileNames.get(i), finArgFileNames.get(i), wPD, wSD, wRD, wAD, wED, wEP);
 				argLeanAgent.start();
 				agents.add(argLeanAgent);
 			}

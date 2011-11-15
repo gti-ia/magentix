@@ -74,7 +74,7 @@ public class TesterAgentArgLearn1and2 extends SingleAgent{
 		}
 		
 		try {
-			Thread.sleep(2*1000);//wait 1 second at the beginning 
+			Thread.sleep(2*1000);//wait 2 seconds at the beginning 
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -300,37 +300,27 @@ public class TesterAgentArgLearn1and2 extends SingleAgent{
 					posSolsString+="+++++++++++++++++\n";
 					//logger.info("+++++++++++++++++\n");
 					logger.info(posSolsString);
+					
+					
 				}
 				
 				
-				Solution finalSolution2;
-				Iterator<Solution> iteOriSol = ticketToSend.getSolutions().iterator();
-				finalSolution2=new Solution();
-				if(finalSolution.getConclusion().getID()!=-1){
-					while (iteOriSol.hasNext()){
-						Solution oriSol = iteOriSol.next();
-						if (finalSolution.getConclusion().getID() == oriSol.getConclusion().getID()){
-							finalSolution2= new Solution(new Conclusion((int)finalSolution.getConclusion().getID(),""), finalSolution.getPromotesValue(), finalSolution.getTimesUsed());
-							break;
-						}	
-					}
-				}
 				//send the solution to all agents, if solution is correct
 				iterAgents=socialEntities.iterator();
 				while(iterAgents.hasNext()){
 					SocialEntity socialEntitie=iterAgents.next();
-					sendMessage(socialEntitie.getName(), "SOLUTION", currentDialogueID, finalSolution2);
+					sendMessage(socialEntitie.getName(), "SOLUTION", currentDialogueID, finalSolution);
 				}
 				
 				
-				if(finalSolution2.getConclusion().getID()!=-1 && finalSolution2.getConclusion().getID() != 0){
+				if(finalSolution.getConclusion().getID()!=-1 && finalSolution.getConclusion().getID() != 0){
 					//logger.info("\n\n********\n"+this.getName()+": "+"message received: "+"from: "+msg.getSender().toString()+" solutionID="+sol.getConclusion().getId()+" valuePromoted="+sol.getPromotesValue()+" timesUsed="+sol.getTimesUsed()+"\n\n********\n");
 					
 					DomainCase ticketSent=domCases.get(nTicket-1);
 					Solution originalSolution=null;
 					ArrayList<Solution> ticketSolutions=ticketSent.getSolutions();
 					
-					int solID=(int)finalSolution2.getConclusion().getID();
+					int solID=(int)finalSolution.getConclusion().getID();
 					Iterator<Solution> iterSolutions=ticketSolutions.iterator();
 					while(iterSolutions.hasNext()){
 						Solution solu=iterSolutions.next();
@@ -349,7 +339,7 @@ public class TesterAgentArgLearn1and2 extends SingleAgent{
 					
 					solvedProblems++;
 					
-					logger.info("\n\n********\n"+this.getName()+": "+ "PARTITION " + casesPerAgent + " ITERATION " + iteration +" proposedSol="+finalSolution2.getConclusion().getID()+" originalSolutions="+orgSolutions+" totalErrors="+totalErrors+"\n\n********\n");
+					logger.info("\n\n********\n"+this.getName()+": "+ "PARTITION " + casesPerAgent + " ITERATION " + iteration +" proposedSol="+finalSolution.getConclusion().getID()+" originalSolutions="+orgSolutions+" totalErrors="+totalErrors+"\n\n********\n");
 				}
 				else{//NO SOLUTION
 					totalErrors++;
@@ -617,7 +607,7 @@ public class TesterAgentArgLearn1and2 extends SingleAgent{
 		}
 		
 		//System.out.println(this.getName()+": "+"message to send: "+"to: "+msg.getReceiver().toString()+" dialogueID: "+msg.getConversationId()+" locution: "+msg.getContent());
-		logger.info(this.getName()+": "+"message to send: "+"to: "+msg.getReceiver().toString()+" dialogueID: "+msg.getConversationId()+" locution: "+msg.getHeaderValue("locution"));
+		logger.info(this.getName()+": "+"message to send to: "+msg.getReceiver().toString()+" dialogueID: "+msg.getConversationId()+" locution: "+msg.getHeaderValue("locution"));
 		send(msg);
 		
 	}

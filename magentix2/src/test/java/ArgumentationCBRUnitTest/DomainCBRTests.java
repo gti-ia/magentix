@@ -39,7 +39,7 @@ public class DomainCBRTests {
 	@org.junit.Before 
 	public void setUp(){
 		//Initialize domain CBR
-		cbr = new DomainCBR("Helpdesk-DomainCases.dat", "/tmp/null");
+		cbr = new DomainCBR("Helpdesk-DomainCases.dat", "/tmp/null", -1);
 	}
 	
 	/**

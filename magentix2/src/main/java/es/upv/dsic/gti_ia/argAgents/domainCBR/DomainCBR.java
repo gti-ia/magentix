@@ -47,14 +47,14 @@ public class DomainCBR {
 	 * It also establishes the storingFilePath to the case-base.
 	 * @param filePath path of the file to load the initial domain-cases
 	 * @param storingFilePath path of the file to store the final domain-cases
+	 * @param index identifier of the premise which value will be used as a hash index. To not use index put -1
 	 */
-	public DomainCBR(String filePath, String storingFilePath) {
+	public DomainCBR(String filePath, String storingFilePath, int index) {
 		
 		this.filePath=filePath;
 		this.storingFilePath = storingFilePath;
 		
-		//TODO select index
-		
+		this.index=index;
 		loadCaseBase();
 		
 	}
@@ -455,13 +455,15 @@ public class DomainCBR {
 	 */
 	private ArrayList<DomainCase> getCandidateCases(HashMap<Integer,Premise> premises){
 		
-		ArrayList<DomainCase> candidateCases=new ArrayList<DomainCase>();
+		ArrayList<DomainCase> candidateCases;
 		
 		int mainPremiseID=-1;
 		String mainPremiseValue=null;
 		
 		if(index!=-1){
 			mainPremiseValue=premises.get(index).getContent();
+			System.out.println("mainPremiseValue: "+mainPremiseValue);
+			
 			candidateCases=domainCB.get(mainPremiseValue);
 		}
 		else{
@@ -475,9 +477,12 @@ public class DomainCBR {
 			Collections.sort(newCasePremisesList);
 			mainPremiseID=newCasePremisesList.get(0);
 			
-			candidateCases=domainCB.get(String.valueOf(mainPremiseID));
+			candidateCases=domainCB.get(mainPremiseID);
 			
 		}
+		if(candidateCases==null)
+			candidateCases=new ArrayList<DomainCase>();
+		
 		System.out.println("Main Premise ID: "+mainPremiseID);
 		System.out.println(" candidates: "+candidateCases.size());
 		return candidateCases;

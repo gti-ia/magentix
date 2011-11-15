@@ -71,9 +71,7 @@ public class ArgCAgent extends CAgent{
 	
 	private DomainCBR domainCBR;
 	private ArgCBR argCBR;
-	
-	//private Ticket ticket;
-	private float threshold;
+	private float domCBRthreshold;
 	ArrayList<SimilarDomainCase> similarDomainCases;
 	
 	//weights
@@ -147,8 +145,9 @@ public class ArgCAgent extends CAgent{
 	 */
 	public ArgCAgent(AgentID aid, boolean isInitiator, SocialEntity mySocialEntity, 
 			ArrayList<SocialEntity> myFriends, ArrayList<DependencyRelation> depenRelations, Group group, 
-			String commitmentStoreID, String testerAgentID, String iniDomCasesFilePath, String finDomCasesFilePath, 
-			String iniArgCasesFilePath, String finArgCasesFilePath, float threshold,
+			String commitmentStoreID, String testerAgentID, 
+			String iniDomCasesFilePath, String finDomCasesFilePath, int domCBRindex, float domCBRthreshold,
+			String iniArgCasesFilePath, String finArgCasesFilePath,
 			float wPD, float wSD, float wRD, float wAD, float wED, float wEP) throws Exception {
 		
 		super(aid);
@@ -160,7 +159,7 @@ public class ArgCAgent extends CAgent{
 		this.depenRelations=depenRelations;
 		this.myGroup=group;
 		this.commitmentStoreID=commitmentStoreID;
-		this.threshold=threshold;
+		this.domCBRthreshold=domCBRthreshold;
 		this.wPD = wPD;
 		this.wSD = wSD;
 		this.wRD = wRD;
@@ -168,7 +167,7 @@ public class ArgCAgent extends CAgent{
 		this.wED = wED;
 		this.wEP = wEP;
 		
-		domainCBR= new DomainCBR(iniDomCasesFilePath, finDomCasesFilePath);
+		domainCBR= new DomainCBR(iniDomCasesFilePath, finDomCasesFilePath,domCBRindex);
 		argCBR= new ArgCBR(iniArgCasesFilePath, finArgCasesFilePath);
 		
 		currentDialogueID=null;
@@ -276,7 +275,8 @@ public class ArgCAgent extends CAgent{
 				// clean other possible WHY sent by the same agent and attend only one
 				ArrayList<String> locutions=new ArrayList<String>();
 				locutions.add(WHY);
-				myProcessor.cleanMessagesQueue(whyAgentID, LOCUTION, locutions);
+				int removed=myProcessor.cleanMessagesQueue(whyAgentID, LOCUTION, locutions);
+				logger.info(myID+": "+removed+" messages removed");
 				
 				ArrayList<Position> myPositionsAsked=attendedWhyPetitions.get(whyAgentID);
 				if(myPositionsAsked!=null && myPositionsAsked.contains(currentPosition)){
@@ -322,7 +322,8 @@ public class ArgCAgent extends CAgent{
 						locutions2.add(ATTACK);
 						
 						// clean message queue from old messages
-						myProcessor.cleanMessagesQueue(subDialogueAgentID, LOCUTION, locutions2);
+						int removed2=myProcessor.cleanMessagesQueue(subDialogueAgentID, LOCUTION, locutions2);
+						logger.info(myID+": "+removed2+" messages removed");
 						
 						return ASSERT;
 					}
@@ -427,7 +428,8 @@ public class ArgCAgent extends CAgent{
 					locutions.add(ATTACK);
 					locutions.add(NOCOMMIT);
 					// clean message queue from old messages
-					myProcessor.cleanMessagesQueue(subDialogueAgentID, LOCUTION, locutions);
+					int removed=myProcessor.cleanMessagesQueue(subDialogueAgentID, LOCUTION, locutions);
+					logger.info(myID+": "+removed+" messages removed");
 					
 					msg2=attack(subDialogueAgentID, attackArg);
 					copyMessages(msgToSend, msg2);
@@ -528,7 +530,8 @@ public class ArgCAgent extends CAgent{
 					locutions.add(ASSERT);
 					locutions.add(NOCOMMIT);
 					// clean message queue from old messages
-					myProcessor.cleanMessagesQueue(pos.getAgentID(), LOCUTION, locutions);
+					int removed=myProcessor.cleanMessagesQueue(pos.getAgentID(), LOCUTION, locutions);
+					logger.info(myID+": "+removed+" messages removed");
 					
 					msg2=why(pos.getAgentID(),pos);
 					copyMessages(msg, msg2);
@@ -708,7 +711,7 @@ public class ArgCAgent extends CAgent{
 		 */
 		
 		//a test agent will give the initiator agent the problem to solve
-		similarDomainCases=domainCBR.retrieve(domCase.getProblem().getDomainContext().getPremises(), threshold);
+		similarDomainCases=domainCBR.retrieve(domCase.getProblem().getDomainContext().getPremises(), domCBRthreshold);
 		
 		currentDialogueID=dialogueID;
 		

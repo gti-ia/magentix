@@ -86,7 +86,7 @@ public class TestArgLearn2Test {
 						commitmentStore.start();
 						
 						ArrayList<ArgCAgent> agents = AgentsCreation.createArgLearnAgentsInc(socialEntities, friendsLists, depenRelsLists, 
-								group, iniDomainFiles, iniDomainFiles, iniArgFileNames, iniArgFileNames, nArgCases, testerAgentID, 0.5f, 1f, 1f,1f,1f,1f,1f);
+								group, iniDomainFiles, iniDomainFiles, 0, 0.5f, iniArgFileNames, iniArgFileNames, nArgCases, testerAgentID, 1f, 1f,1f,1f,1f,1f);
 							
 						TesterAgentArgLearn1and2 testerAgent= new TesterAgentArgLearn1and2(new AgentID("qpid://"+testerAgentID+"@localhost:8080"), nTickets, 
 								socialEntities, commitmentStore.getName(), "results/performance/test1and2Inc/argLearnContinuousLL5DC+0AC+Per-"+nOperators+"ag.txt",
