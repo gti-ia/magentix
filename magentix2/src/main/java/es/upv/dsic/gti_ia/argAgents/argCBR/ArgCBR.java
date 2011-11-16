@@ -46,7 +46,6 @@ public class ArgCBR {
 	 * @param initialOWLFilePath Path of the OWL file with the argument-cases to load
 	 * @param storingOWLFilePath Path of the OWL file to store the argument-cases
 	 */
-	
 	public ArgCBR(String initialOWLFilePath, String storingOWLFilePath) {
 		
 		this.initialFilePath=initialOWLFilePath;
@@ -105,7 +104,7 @@ public class ArgCBR {
 	 * If the argument case is in case base, the associated domain cases and the attacks received are added to that argument case.
 	 * Two cases are considered equal if they have the same domain context, social context, conclusion and state of acceptability.
 	 * @param newArgCase A new argument case to add to the case base.
-	 * @return true if the argument case is added, otherwise false.
+	 * @return <code>true</code> if the argument case is added, otherwise <code>false</code>.
 	 */
 	public boolean addCase(ArgumentCase newArgCase){
 		//two cases are equal if they have the same domain context, social context, conclusion and state of acceptability
@@ -343,7 +342,7 @@ public class ArgCBR {
 	 * Return a list with the degrees (attack, efficiency, explanatory power, 
 	 * persuasiveness, support and risk) of an argument-case
 	 * @param argProblem Problem to solve
-	 * @param solution Solution that proposes the argument-case
+	 * @param solution {@link Solution} that proposes the argument-case
 	 * @param allPositions Positions to calculate the degrees of the argument-case
 	 * @param index Index of the position that represents the argument-case which the degrees are being calculated
 	 * @return list with the degrees
@@ -433,8 +432,8 @@ public class ArgCBR {
 	
 	/**
 	 * Get similar argument cases to the given one with the same problem description and accepted
-	 * @param sameProblemArgCases ArrayList with argument cases with the same problem description
-	 * @return ArrayList of similar argument cases with the same problem description and accepted
+	 * @param sameProblemArgCases {@link ArrayList} with argument cases with the same problem description
+	 * @return {@link ArrayList} of similar argument cases with the same problem description and accepted
 	 */
 	private ArrayList<SimilarArgumentCase> getSameProblemAcceptedArgCases(ArrayList<SimilarArgumentCase> sameProblemArgCases){
 		
@@ -451,7 +450,7 @@ public class ArgCBR {
 	
 	/**
 	 * Get similar argument cases to the given one with the same problem description and conclusion
-	 * @param sameProblemArgCases ArrayList with argument cases with the same problem description
+	 * @param sameProblemArgCases {@link ArrayList} with argument cases with the same problem description
 	 * @param solution the conclusion that must have the argument cases returned 
 	 * @return ArrayList of similar argument cases with the same problem description and conclusion
 	 */
@@ -471,8 +470,8 @@ public class ArgCBR {
 	
 	/**
 	 * Get similar argument cases to the given one with the same problem description, conclusion and accepted
-	 * @param sameProblemConclusionArgCases ArrayList with argument cases with the same problem description and conclusion
-	 * @return ArrayList of similar argument cases with the same problem description, conclusion and accepted
+	 * @param sameProblemConclusionArgCases {@link ArrayList} with argument cases with the same problem description and conclusion
+	 * @return {@link ArrayList} of similar argument cases with the same problem description, conclusion and accepted
 	 */
 	private ArrayList<SimilarArgumentCase> getSameProblemConclusionAcceptedArgCases(ArrayList<SimilarArgumentCase> sameProblemConclusionArgCases){
 		
@@ -489,8 +488,8 @@ public class ArgCBR {
 	
 	/**
 	 * Get similar argument cases to the given one with the same problem description, conclusion, accepted and with attacks
-	 * @param sameProblemConclusionAcceptedArgCases ArrayList with argument cases with the same problem description, conclusion and accepted
-	 * @return ArrayList of similar argument cases with the same problem description, conclusion, accepted and with attacks
+	 * @param sameProblemConclusionAcceptedArgCases {@link ArrayList} with argument cases with the same problem description, conclusion and accepted
+	 * @return {@link ArrayList} of similar argument cases with the same problem description, conclusion, accepted and with attacks
 	 */
 	private ArrayList<SimilarArgumentCase> getSameProblemConclusionAcceptedAttackedArgCases(ArrayList<SimilarArgumentCase> sameProblemConclusionAcceptedArgCases){
 		
@@ -515,7 +514,7 @@ public class ArgCBR {
 	 * Return all the argument cases of the different given positions that have the same conclusion in each case
 	 * @param sameProblemAcceptedArgCases argument cases with the same problem description and accepted
 	 * @param initialPositions argument cases with different initial positions 
-	 * @return an ArrayList of ArrayList of argument cases for each initial position
+	 * @return an {@link ArrayList} of {@link ArrayList} of argument cases for each initial position
 	 */
 	
 	private ArrayList<ArrayList<SimilarArgumentCase>> getAllPositionArgCases(ArrayList<SimilarArgumentCase> sameProblemAcceptedArgCases, ArrayList<Position> initialPositions){
@@ -552,10 +551,10 @@ public class ArgCBR {
 		
 	
 	/**
-	 * Returns the attack degree of each given Position
+	 * Returns the attack degree of each given {@link Position}
 	 * @param sameProblemAcceptedArgCases argument cases with the same problem description and accepted
-	 * @param initialPositions ArrayList with different positions, but with the same problem description
-	 * @return an ArrayList of Float with the attack degree of each initial position
+	 * @param initialPositions {@link ArrayList} with different positions, but with the same problem description
+	 * @return an {@link ArrayList} of {@link Float} with the attack degree of each initial position
 	 */
 	public ArrayList<Float> getAttackDegree(ArrayList<SimilarArgumentCase> sameProblemAcceptedArgCases, ArrayList<Position> initialPositions){
 		//TODO it could be join attackDegree, efficiency degree and explanatory power in only one function
@@ -609,8 +608,8 @@ public class ArgCBR {
 	/**
 	 * Returns the efficiency degree of each initial position
 	 * @param sameProblemAcceptedArgCases argument cases with the same problem description and accepted
-	 * @param initialPositions ArrayList with different positions, but with the same problem description
-	 * @return an ArrayList of Float with the efficiency degree of each initial position
+	 * @param initialPositions {@link ArrayList} with different positions, but with the same problem description
+	 * @return an {@link ArrayList} of {@link Float} with the efficiency degree of each initial position
 	 */
 	public ArrayList<Float> getEfficiencyDegree(ArrayList<SimilarArgumentCase> sameProblemAcceptedArgCases, ArrayList<Position> initialPositions){
 		
@@ -677,8 +676,8 @@ public class ArgCBR {
 	/**
 	 * Returns the explanatory power of the given positions 
 	 * @param sameProblemAcceptedArgCases argument cases with the same problem description and accepted
-	 * @param initialPositions ArrayList with different positions, but with the same problem description
-	 * @return an ArrayList of Float with the explanatory power of each initial position
+	 * @param initialPositions {@link ArrayList} with different positions, but with the same problem description
+	 * @return an {@link ArrayList} of {@link Float} with the explanatory power of each initial position
 	 */
 	public ArrayList<Float> getExplanatoryPower(ArrayList<SimilarArgumentCase> sameProblemAcceptedArgCases, ArrayList<Position> initialPositions){
 		
@@ -726,9 +725,9 @@ public class ArgCBR {
 	
 	/**
 	 * Returns the argument-cases with the same domain and social context that have been accepted
-	 * @param premises
-	 * @param solution
-	 * @param socialContext
+	 * @param premises {@link HashMap} of the premises that describe the domain context
+	 * @param solution {@link Solution} of the problem
+	 * @param socialContext {@link SocialContext} of the current situation
 	 * @return argument-cases with the same domain and social context that have been accepted
 	 */
 	public ArrayList<SimilarArgumentCase> getSameDomainAndSocialContextAccepted(HashMap<Integer,Premise> premises, Solution solution, SocialContext socialContext){
@@ -799,7 +798,7 @@ public class ArgCBR {
 	 * Get the argument cases with the same domain context as the given argument case and the same dependency relation.
 	 * The returned argument cases are pondered with a degree of suitability depending on the coincidence of the social context.
 	 * @param argProblem The argument problem with a determined domain context and social context that the returned argument cases have to be similar 
-	 * @return an arraylist of SimilarArgumentCase that have he same domain context as the given argument case and the same dependency relation, pondered with a suitability 
+	 * @return an {@link ArrayList} of {@link SimilarArgumentCase} that have he same domain context as the given argument case and the same dependency relation, pondered with a suitability 
 	 */
 	public ArrayList<SimilarArgumentCase> getMostSimilarArgCases(ArgumentProblem argProblem){
 		ArrayList<SimilarArgumentCase> mostSimilarArgCases=new ArrayList<SimilarArgumentCase>();
@@ -822,13 +821,13 @@ public class ArgCBR {
 							currentArgCase.getArgumentProblem().getSocialContext().getProponent().getID())
 							proponentIDcomp=c.argCBRproponentidweight;
 					} catch (Exception e) {
-						//e.printStackTrace();
+						
 					}
 					try {
 						if(argProblem.getSocialContext().getProponent().getValPref().getPreferred().equalsIgnoreCase(currentArgCase.getArgumentProblem().getSocialContext().getProponent().getValPref().getPreferred()))
 							proponentPrefcomp=c.argCBRproponentprefweight;
 					} catch (Exception e) {
-						//e.printStackTrace();
+						
 					}
 					
 					try {
@@ -836,14 +835,14 @@ public class ArgCBR {
 							currentArgCase.getArgumentProblem().getSocialContext().getOpponent().getID())
 							opponentIDcomp=c.argCBRopponentidweight;
 					} catch (Exception e) {
-						//e.printStackTrace();
+						
 					}
 					
 					try {
 						if(argProblem.getSocialContext().getOpponent().getValPref().getPreferred().equalsIgnoreCase(currentArgCase.getArgumentProblem().getSocialContext().getOpponent().getValPref().getPreferred()))
 							opponentPrefcomp=c.argCBRopponentprefweight;
 					} catch (Exception e) {
-						//e.printStackTrace();
+						
 					}
 					
 					try {
@@ -851,16 +850,15 @@ public class ArgCBR {
 							currentArgCase.getArgumentProblem().getSocialContext().getGroup().getID())
 							groupIDcomp=c.argCBRgroupidweight;
 					} catch (Exception e) {
-						//e.printStackTrace();
+						
 					}
 					try {
 						if(argProblem.getSocialContext().getGroup().getValPref().getPreferred().equalsIgnoreCase(currentArgCase.getArgumentProblem().getSocialContext().getGroup().getValPref().getPreferred()))
 							groupPrefcomp=c.argCBRgroupprefweight;
 					} catch (Exception e) {
-						//e.printStackTrace();
+						
 					}
-					
-					//System.err.println(proponentIDcomp+" "+proponentPrefcomp+" "+opponentIDcomp+" "+opponentPrefcomp+" "+groupIDcomp+" "+groupPrefcomp);
+
 					suitability=(proponentIDcomp+proponentPrefcomp+opponentIDcomp+opponentPrefcomp+groupIDcomp+groupPrefcomp)/
 					(c.argCBRproponentidweight+c.argCBRproponentprefweight+c.argCBRopponentidweight+c.argCBRopponentprefweight+c.argCBRgroupidweight+c.argCBRgroupprefweight);
 				}
@@ -875,8 +873,8 @@ public class ArgCBR {
 	}
 	
 	/**
-	 * Returns an arraylist with argument cases with the same given premises (id and content) in the domain context
-	 * @param desiredPremises HashMap with the desired premises  
+	 * Returns an {@link ArrayList} with argument cases with the same given premises (id and content) in the domain context
+	 * @param desiredPremises {@link HashMap} with the desired premises  
 	 * @return argument cases with the same given premises in the domain context
 	 */
 	private ArrayList<ArgumentCase> getDomainSimilarArgCases(HashMap<Integer,Premise> desiredPremises){
@@ -885,16 +883,15 @@ public class ArgCBR {
 		Iterator<Premise> iterCasePremises=desiredPremises.values().iterator();
 		ArrayList<Premise> desiredPremisesList=new ArrayList<Premise>();
 		
-		while(iterCasePremises.hasNext()){ //copy the premises to an arraylist, ordered from lower to higher id
+		while(iterCasePremises.hasNext()){ //copy the premises to an ArrayList, ordered from lower to higher id
 			Premise premise=iterCasePremises.next();
-			//System.err.println("premiseID="+premise.getID());
+			
 			desiredPremisesList.add(premise);
 		}
 		
 		Premise firstCasePremise=desiredPremisesList.get(0);
 		if(firstCasePremise!=null){
 			int firstPremiseID=firstCasePremise.getID();
-			//System.err.println("firstPremiseID="+firstPremiseID);
 			ArrayList<ArgumentCase> candidateCases=argCB.get(firstPremiseID);
 			if(candidateCases!=null && candidateCases.size()>0){
 				Iterator<ArgumentCase> iterArgCases=candidateCases.iterator();
@@ -916,10 +913,10 @@ public class ArgCBR {
 	}
 	
 	/**
-	 * Returns true if all the premises in the given arraylist are the same (id and content) in the hashmap
-	 * @param premises1 arraylist with premises
-	 * @param premises2 hashmap with premises
-	 * @return true if it is the same domain context, otherwise false
+	 * Returns <code>true</code> if all the premises in the given {@link ArrayList} are the same (id and content) in the {@link HashMap}
+	 * @param premises1 {@link ArrayList} with premises
+	 * @param premises2 {@link HashMap} with premises
+	 * @return <code>true</code> if it is the same domain context, otherwise <code>false</code>
 	 */
 	private boolean isSameDomainContext(ArrayList<Premise> premises1, HashMap<Integer,Premise> premises2){
 		Iterator<Premise> iterPremises1=premises1.iterator();
@@ -937,10 +934,10 @@ public class ArgCBR {
 	}
 	
 	/**
-	 * Returns true if all the premises in the given arraylist are the same (id and content) in the hashmap and there are not anymore. 
-	 * @param premises1 arraylist with premises
-	 * @param premises2 hashmap with premises
-	 * @return true if it is the same domain context, otherwise false
+	 * Returns <code>true</code> if all the premises in the given {@link ArrayList} are the same (id and content) in the {@link HashMap} and there are not anymore. 
+	 * @param premises1 {@link ArrayList} with premises
+	 * @param premises2 {@link HashMap} with premises
+	 * @return <code>true</code> if it is the same domain context, otherwise <code>false</code>
 	 */
 	private boolean isSameDomainContextPrecise(ArrayList<Premise> premises1, HashMap<Integer,Premise> premises2){
 		
@@ -962,10 +959,10 @@ public class ArgCBR {
 	}
 	
 	/**
-	 * Returns true if the given social contexts are the same (dependency relation, group, proponent and opponent).
+	 * Returns <code>true</code> if the given social contexts are the same (dependency relation, group, proponent and opponent).
 	 * @param socialContext1 a social context to compare
 	 * @param socialContext2 a social context to compare
-	 * @return true if the given social contexts are the same, otherwise false
+	 * @return <code>true</code> if the given social contexts are the same, otherwise <code>false</code>
 	 */
 	private boolean isSameSocialContext(SocialContext socialContext1, SocialContext socialContext2){
 		
@@ -983,16 +980,16 @@ public class ArgCBR {
 	}
 	
 	/**
-	 * Returns all argument-cases in a Collection
-	 * @return all argument-cases in a Collection
+	 * Returns all argument-cases in a {@link Collection}
+	 * @return all argument-cases in a {@link Collection}
 	 */
 	public Collection<ArrayList<ArgumentCase>> getAllCases(){
 		return argCB.values();
 	}
 	
 	/**
-	 * Returns all argument-cases in a Vector
-	 * @return all argument-cases in a Vector
+	 * Returns all argument-cases in a {@link Vector}
+	 * @return all argument-cases in a {@link Vector}
 	 */
 	public Vector<ArgumentCase> getAllCasesVector(){
 		Vector<ArgumentCase> vector= new Vector<ArgumentCase>();

@@ -71,7 +71,7 @@ public class CommitmentStore extends CAgent {
 		
 		/**
 		 * This class extends the Commitment Store protocol to do the necessary 
-		 * functionalities of this agent implementing the abstract methods
+		 * functionalities of this agent implementing the abstract methods.
 		 * @author Jaume Jordan
 		 *
 		 */
@@ -87,7 +87,7 @@ public class CommitmentStore extends CAgent {
 				if(locution.equalsIgnoreCase("LASTMODIFICATIONDATE")){
 					Long lastDate=lastModificationDates.get(msg.getConversationId());
 					Long millisDifference=System.currentTimeMillis()-lastDate;
-					response=sendMessage(msg.getSender().getLocalName(), "LASTMODIFICATIONDATE", msg.getConversationId(), millisDifference);
+					response=createMessage(msg.getSender().getLocalName(), "LASTMODIFICATIONDATE", msg.getConversationId(), millisDifference);
 				}
 				else if(locution.equalsIgnoreCase(ADDARGUMENT) || locution.equalsIgnoreCase(ATTACK) ||
 						locution.equalsIgnoreCase(ASSERT)){
@@ -107,11 +107,11 @@ public class CommitmentStore extends CAgent {
 				}
 				else if(locution.equalsIgnoreCase(GETPOSITION)){
 					Position pos=getPosition(msg.getHeaderValue("agentID"), msg.getConversationId());
-					response=sendMessage(msg.getSender().getLocalName(), GETPOSITION, msg.getConversationId(), pos);
+					response=createMessage(msg.getSender().getLocalName(), GETPOSITION, msg.getConversationId(), pos);
 				}
 				else if(locution.equalsIgnoreCase(GETALLPOSITIONS)){
 					ArrayList<Position> allPositions=getAllPositions(msg.getConversationId(),msg.getSender().getLocalName());
-					response=sendMessage(msg.getSender().getLocalName(), GETALLPOSITIONS, msg.getConversationId(), allPositions);
+					response=createMessage(msg.getSender().getLocalName(), GETALLPOSITIONS, msg.getConversationId(), allPositions);
 				}
 				else if(locution.equalsIgnoreCase(NOCOMMIT)){
 					lastModificationDates.put(msg.getConversationId(), System.currentTimeMillis());
@@ -126,7 +126,7 @@ public class CommitmentStore extends CAgent {
 					String dialogueID=msg.getConversationId();
 					Dialogue dialogue=getDialogue(dialogueID);
 					
-					response=sendMessage(msg.getSender().getLocalName(),GETDIALOGUE,dialogueID,dialogue);
+					response=createMessage(msg.getSender().getLocalName(),GETDIALOGUE,dialogueID,dialogue);
 				}
 				else if(locution.equalsIgnoreCase(ENTERDIALOGUE)){
 					lastModificationDates.put(msg.getConversationId(), System.currentTimeMillis());
@@ -173,7 +173,7 @@ public class CommitmentStore extends CAgent {
 	 * @param contentObject Content object if it is necessary
 	 * @return Returns an {@link ACLMessage}
 	 */
-	private ACLMessage sendMessage(String agentID, String locution, String conversationID, Serializable contentObject){
+	private ACLMessage createMessage(String agentID, String locution, String conversationID, Serializable contentObject){
 		
 		ACLMessage msg = new ACLMessage();
 		msg.setSender(getAid());

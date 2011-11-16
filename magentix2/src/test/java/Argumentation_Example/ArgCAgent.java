@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.StringTokenizer;
 
+import arq.cmdline.Arg;
+
 import es.upv.dsic.gti_ia.argAgents.argCBR.ArgCBR;
 import es.upv.dsic.gti_ia.argAgents.domainCBR.DomainCBR;
 import es.upv.dsic.gti_ia.argAgents.knowledgeResources.AcceptabilityState;
@@ -549,10 +551,10 @@ public class ArgCAgent extends CAgent{
 			}
 
 			@Override
-			protected boolean doFinishDialogue(CProcessor myProcessor,
+			protected void doFinishDialogue(CProcessor myProcessor,
 					ACLMessage msg) {
 				
-				return true;
+				
 			}
 			
 			
@@ -802,6 +804,12 @@ public class ArgCAgent extends CAgent{
 		
 	}
 	
+	/**
+	 * Returns an {@link ACLMessage} with locution ASSERT and the corresponding assert argument to respond another agent about a WHY
+	 * @param agentIDr agent identifier to tell that this agent makes an ASSERT to respond its WHY
+	 * @param arg assert argument that use the agent
+	 * @return an {@link ACLMessage} with locution ASSERT and the corresponding assert argument
+	 */
 	private ACLMessage asserts(String agentIDr, Argument arg){
 		myUsedLocutions++;
 		//send it to the other agent and add the argument to commitment store (the assert is received also by the Commitment Store)
@@ -809,6 +817,11 @@ public class ArgCAgent extends CAgent{
 		
 	}
 	
+	/**
+	 * Returns an {@link ACLMessage} with locution ACCEPT
+	 * @param agentIDr agent identifier to tell that this agent makes an ACCEPT of its position or argument
+	 * @return an {@link ACLMessage} with locution ACCEPT
+	 */
 	private ACLMessage accept(String agentIDr){
 		
 		//send it to the other agent
@@ -816,6 +829,12 @@ public class ArgCAgent extends CAgent{
 		return createMessage(agentIDr, ACCEPT, currentDialogueID, null);
 	}
 	
+	/**
+	 * Returns an {@link ACLMessage} with locution ATTACK and an attack argument
+	 * @param agentIDr agent identifier to tell that this agent makes an ATTACK to its position or argument
+	 * @param arg attack argument
+	 * @return an {@link ACLMessage} with locution ATTACK and an attack argument
+	 */
 	private ACLMessage attack(String agentIDr, Argument arg){
 		myUsedLocutions++;
 		
@@ -823,6 +842,10 @@ public class ArgCAgent extends CAgent{
 		return createMessage(agentIDr, ATTACK, currentDialogueID, arg);
 	}
 	
+	/**
+	 * Returns an {@link ACLMessage} with locution NOTHING to send it to no one
+	 * @return an {@link ACLMessage} with locution NOTHING to send it to no one
+	 */
 	private ACLMessage nothingMsg(){
 		ACLMessage msg=new ACLMessage();
 		msg.setReceiver(new AgentID("noOne"));
@@ -834,7 +857,12 @@ public class ArgCAgent extends CAgent{
 		return msg;
 	}
 	
-
+	/**
+	 * Returns the last used argument with another specified agent and with the given id
+	 * @param agentID agent identifier that received the argument
+	 * @param argID argument identifier
+	 * @return Returns the last used argument
+	 */
 	private Argument getMyLastUsedArg(String agentID, long argID){
 		try{
 			ArrayList<Argument> attackArgs=myUsedAttackArguments.get(agentID);
@@ -860,8 +888,15 @@ public class ArgCAgent extends CAgent{
 		return null;
 	}
 	
-	//the agent will get the first position always, removing it. when he is out of positions, has to withdraw
+	/**
+	 * Returns an {@link ArrayList} of {@link Position} with all generated positions to solve the specified problem, 
+	 * ordered from more to less suitable to the problem.
+	 * @param prob {@link Problem} to solve.
+	 * @return an {@link ArrayList} of {@link Position} with all generated positions
+	 */
 	private ArrayList<Position> generatePositions(Problem prob){
+		//the agent will get the first position always, removing it. when it is out of positions, has to withdraw
+		
 		//generate all positions and store them in a list, ordered by Promoted Value, and then Suitability = w*SimDegree + w2*SuitFactor arg
 		
 		//so, at first we need make a query to DomainCBR to the possible solutions
@@ -1019,7 +1054,13 @@ public class ArgCAgent extends CAgent{
 		return finalPositions;
 	}
 	
-	
+	/**
+	 * Returns an {@link ArrayList} of support {@link Argument} for the given {@link Position} 
+	 * against the given agent identifier 
+	 * @param myPos {@link Position} to generate support arguments for it
+	 * @param agentID agent identifier to give support arguments
+	 * @return an {@link ArrayList} of support {@link Argument}
+	 */
 	private ArrayList<Argument> generateSupportArguments(Position myPos, String agentID){
 		// Fist, assign weights in accordance with the quantity of knowledge
 //		int domCases = domainCBR.getAllCasesVector().size();
@@ -1098,8 +1139,6 @@ public class ArgCAgent extends CAgent{
 			float explanatoryPower=degreesList.get(5);
 			
 			float argSuitabilityFactor =
-//				(wPD * persuasivenessDegree + wSD * supportDegree + wRD * (1 - riskDegree) 
-//						+ wAD * (1 - attackDegree) + wED * efficiencyDegree + wEP * explanatoryPower) /6;
 				(wPD * persuasivenessDegree + wSD * supportDegree + wRD * (1 - riskDegree) 
 						+ wAD * (1 - attackDegree) + wED * efficiencyDegree + wEP * explanatoryPower);
 //			simArgCase.setSuitability((argSuitabilityFactor * wArgSuitFactor + simArgCase.getSuitability() * wSimilarity)/2);
@@ -1193,7 +1232,12 @@ public class ArgCAgent extends CAgent{
 		
 	}
 	
-	
+	/**
+	 * Returns an attack {@link Argument} against the given argument of the given agent identifier
+	 * @param incArgument previous {@link Argument} of the agent to give an attack {@link Argument}
+	 * @param agentID agent identifier of the agent to attack
+	 * @return an attack {@link Argument} against the given argument, or <code>null</code> if it is not possible
+	 */
 	private Argument generateAttackArgument(Argument incArgument, String agentID){
 		// Fist, assign weights in accordance with the quantity of knowledge
 //		int domCases = domainCBR.getAllCasesVector().size();
@@ -1228,11 +1272,12 @@ public class ArgCAgent extends CAgent{
 //		
 		try{
 			
-			//the opponent is more powerful than me
+			
 			int friendInd = getFriendIndex(agentID);
 			SocialEntity opponent = myFriends.get(friendInd);
 			DependencyRelation relation = depenRelations.get(friendInd);
 			
+			//if the opponent is more powerful than me, do not attack 
 			if(incArgument.getProponentDepenRelation().compareTo(relation)<0)
 				return null;
 			
@@ -1292,9 +1337,7 @@ public class ArgCAgent extends CAgent{
 				float explanatoryPower=degreesList.get(5);
 								
 				float argSuitabilityFactor =
-//					(wPD * persuasivenessDegree + wSD * supportDegree + wRD * (1 - riskDegree) 
-//							+ wAD * (1 - attackDegree) + wED * efficiencyDegree + wEP * explanatoryPower) /6;
-					(wPD * persuasivenessDegree + wSD * supportDegree + wRD * (1 - riskDegree) 
+						(wPD * persuasivenessDegree + wSD * supportDegree + wRD * (1 - riskDegree) 
 							+ wAD * (1 - attackDegree) + wED * efficiencyDegree + wEP * explanatoryPower);
 //				simArgCase.setSuitability((argSuitabilityFactor * wArgSuitFactor + simArgCase.getSuitability() * wSimilarity)/2);
 				
@@ -1404,18 +1447,26 @@ public class ArgCAgent extends CAgent{
 			
 	}
 	
-	private Argument generateDPAttack(ArrayList<SimilarArgumentCase> argCases, HashMap<Integer, Premise> hisPremises, 
+	/**
+	 * Return a distinguishing premises attack {@link Argument} against the agent of the given agent identifier, and its given premises
+	 * @param argCases {@link ArrayList} of {@link SimilarArgumentCase} to the current {@link Position} to defend to generate distinguishing premises
+	 * @param itsPremises {@link HashMap} of the premises of the other agent to attack
+	 * @param relation {@link DependencyRelation} with the other agent to attack
+	 * @param agentID agent identifier of the agent to attack
+	 * @return a distinguishing premises attack {@link Argument}, or <code>null</code> if it is not possible
+	 */
+	private Argument generateDPAttack(ArrayList<SimilarArgumentCase> argCases, HashMap<Integer, Premise> itsPremises, 
 			DependencyRelation relation, String agentID){
-		HashMap<Integer, Premise> hisUsefulPremises = getUsefulPremises(currentProblem.getDomainContext().getPremises(), hisPremises);
+		HashMap<Integer, Premise> hisUsefulPremises = getUsefulPremises(currentProblem.getDomainContext().getPremises(), itsPremises);
 		Iterator<SimilarArgumentCase> iterArgCases=argCases.iterator();
 		while(iterArgCases.hasNext()){
 			SimilarArgumentCase simArgCase = iterArgCases.next();
 			HashMap<Integer,Premise> myPremises=simArgCase.getArgumentCase().getArgumentProblem().getDomainContext().getPremises();
 			HashMap<Integer,Premise> myUsefulPremises=getUsefulPremises(currentProblem.getDomainContext().getPremises(), myPremises);
 			ArrayList<Premise> distPremises=getDistinguishingPremises(myUsefulPremises, hisUsefulPremises);
-			ArrayList<Premise> hisdistPremises=getDistinguishingPremises(hisUsefulPremises, myUsefulPremises);
+			ArrayList<Premise> itsdistPremises=getDistinguishingPremises(hisUsefulPremises, myUsefulPremises);
 			
-			if(distPremises.size()>0 && distPremises.size()>=hisdistPremises.size()){//generate attack
+			if(distPremises.size()>0 && distPremises.size()>=itsdistPremises.size()){//generate attack
 				ArrayList<Premise> premises=new ArrayList<Premise>();
 				Iterator<Premise> iterPremises=currentPosition.getPremises().values().iterator();
 				while(iterPremises.hasNext()){
@@ -1441,14 +1492,14 @@ public class ArgCAgent extends CAgent{
 		    			Premise p=iterPrem.next();
 		    			str+=p.getID()+"="+p.getContent()+" ";
 		    		}
-		    		Iterator<Premise> iterPremises2=hisdistPremises.iterator();
+		    		Iterator<Premise> iterPremises2=itsdistPremises.iterator();
 					String str2="";
 		    		while(iterPremises2.hasNext()){
 		    			Premise p=iterPremises2.next();
 		    			str2+=p.getID()+"="+p.getContent()+" ";
 		    		}
 					logger.info(this.getName()+": "+" distinguishing premises attack argument against: "+agentID+"\n"
-							+"mydistPremises ("+distPremises.size()+"): "+str+"\n hisdistPremises ("+hisdistPremises.size()+"): "+str2+"\n");
+							+"mydistPremises ("+distPremises.size()+"): "+str+"\n itsdistPremises ("+itsdistPremises.size()+"): "+str2+"\n");
 					return argument;
 				}
 
@@ -1458,10 +1509,18 @@ public class ArgCAgent extends CAgent{
 		return null;
 	}
 	
-	private Argument generateCEAttack(ArrayList<SimilarArgumentCase> argCases, HashMap<Integer, Premise> hisCasePremises, 
+	/**
+	 * Return a counter-example attack {@link Argument} against the agent of the given agent identifier, and its given premises
+	 * @param argCases {@link ArrayList} of {@link SimilarArgumentCase} to the current {@link Position} to defend to generate counter-examples
+	 * @param itsCasePremises {@link HashMap} of the premises of the other agent to attack
+	 * @param relation {@link DependencyRelation} with the other agent to attack
+	 * @param agentID agent identifier of the agent to attack
+	 * @return a counter-example attack {@link Argument}, or <code>null</code> if it is not possible
+	 */
+	private Argument generateCEAttack(ArrayList<SimilarArgumentCase> argCases, HashMap<Integer, Premise> itsCasePremises, 
 			DependencyRelation relation, String agentID){
 		
-		HashMap<Integer,Premise> hisUsefulPremises=getUsefulPremises(currentProblem.getDomainContext().getPremises(), hisCasePremises);
+		HashMap<Integer,Premise> itsUsefulPremises=getUsefulPremises(currentProblem.getDomainContext().getPremises(), itsCasePremises);
 		Iterator<SimilarArgumentCase> iterArgCases=argCases.iterator();
 		while(iterArgCases.hasNext()){
 			SimilarArgumentCase simArgCase = iterArgCases.next();
@@ -1469,7 +1528,7 @@ public class ArgCAgent extends CAgent{
 			HashMap<Integer,Premise> myUsefulPremises=getUsefulPremises(currentProblem.getDomainContext().getPremises(), myPremises);
 			
 			boolean find = false;
-			Iterator<Premise> hisPrem = hisUsefulPremises.values().iterator();
+			Iterator<Premise> hisPrem = itsUsefulPremises.values().iterator();
 			while(hisPrem.hasNext() && !find){
 				Premise hp = hisPrem.next();
 				if (myUsefulPremises.get(hp.getID()) == null)
@@ -1505,6 +1564,12 @@ public class ArgCAgent extends CAgent{
 		return null;
 	}
 	
+	/**
+	 * Returns a {@link HashMap} of the useful premises of the agent of the current problem to solve (the premises of the {@link Position} that are in the problem).
+	 * @param problemPremises {@link HashMap} with the premises of the problem to solve
+	 * @param myPremises {@link HashMap} with the premises of the {@link Position} that defends the agent
+	 * @return a {@link HashMap} of the useful premises of the agent of the current problem to solve
+	 */
 	private HashMap<Integer,Premise> getUsefulPremises(HashMap<Integer,Premise> problemPremises, HashMap<Integer,Premise> myPremises){
 		
 		Iterator<Premise> iterMyPremises=myPremises.values().iterator();
@@ -1519,13 +1584,18 @@ public class ArgCAgent extends CAgent{
 		return usefulPremises;
 	}
 	
-	
-	private ArrayList<Premise> getDistinguishingPremises(HashMap<Integer,Premise> myPremises, HashMap<Integer,Premise> hisPremises){
+	/**
+	 * Returns an {@link ArrayList} with distinguishing premises between the HashMaps given as arguments
+	 * @param myPremises {@link HashMap} of the premises candidates to be distinguishing premises
+	 * @param itsPremises {@link HashMap} of the premises to generate distinguishing premises against 
+	 * @return an {@link ArrayList} with distinguishing premises
+	 */
+	private ArrayList<Premise> getDistinguishingPremises(HashMap<Integer,Premise> myPremises, HashMap<Integer,Premise> itsPremises){
 		ArrayList<Premise> distPremises=new ArrayList<Premise>();
 		Iterator<Premise> iterUsefulPremises=myPremises.values().iterator();
 		while(iterUsefulPremises.hasNext()){
 			Premise premise=iterUsefulPremises.next();
-			Premise premise2=hisPremises.get(premise.getID());
+			Premise premise2=itsPremises.get(premise.getID());
 			if(premise2!=null && premise2.getContent().equalsIgnoreCase(premise.getContent())){
 				
 			}
@@ -1536,10 +1606,10 @@ public class ArgCAgent extends CAgent{
 	}
 	
 	/**
-	 * Returns true if the given argument is on the given ArrayList of arguments, otherwise returns false 
-	 * @param arg 
-	 * @param myArguments
-	 * @return true if the given argument is on the given ArrayList of arguments, otherwise returns false
+	 * Returns true if the given {@link Argument} is on the given {@link ArrayList} of arguments, otherwise returns false 
+	 * @param arg {@link Argument} to be test if its knowledge resources have been used previously
+	 * @param myArguments {@link ArrayList} of {@link Argument} used previously
+	 * @return true if the given {@link Argument} is on the given {@link ArrayList} of arguments, otherwise returns false
 	 */
 	private boolean argumentPreviouslyUsed(Argument arg, ArrayList<Argument> myArguments){
 		
@@ -1648,6 +1718,12 @@ public class ArgCAgent extends CAgent{
 		return false;
 	}
 	
+	/**
+	 * Returns <code>true</code> if the premises of the given HashMaps are the same
+	 * @param prem1 {@link HashMap} of {@link Premise}
+	 * @param prem2 {@link HashMap} of {@link Premise}
+	 * @return <code>true</code> if the premises of the given HashMaps are the same
+	 */
 	private boolean areSamePremises(HashMap<Integer, Premise> prem1, HashMap<Integer, Premise> prem2){
 		
 		if(prem1.values().size()!=prem2.values().size())
@@ -1663,6 +1739,12 @@ public class ArgCAgent extends CAgent{
 		return true;
 	}
 	
+	/**
+	 * Returns <code>true</code> if the premises of the given ArrayLists are the same
+	 * @param prem1 {@link ArrayList} of {@link Premise}
+	 * @param prem2 {@link ArrayList} of {@link Premise}
+	 * @return <code>true</code> if the premises of the given ArrayLists are the same
+	 */
 	private boolean areSamePremises(ArrayList<Premise> prem1, ArrayList<Premise> prem2){
 		
 		if(prem1.size()!=prem2.size())
@@ -1684,7 +1766,11 @@ public class ArgCAgent extends CAgent{
 		return true;
 	}
 	
-	
+	/**
+	 * Returns the index of the given preference value
+	 * @param value String representing a preference value
+	 * @return the index of the given preference value
+	 */
 	private int getPreferredValueIndex(String value){
 		for(int i=0;i<preferedValues.size();i++){
 			if(preferedValues.get(i).equalsIgnoreCase(value))
@@ -1693,6 +1779,11 @@ public class ArgCAgent extends CAgent{
 		return -1;
 	}
 	
+	/**
+	 * Returns the index of the given agent identifier
+	 * @param agentID agent identifier
+	 * @return the index of the given agent identifier
+	 */
 	private int getFriendIndex(String agentID){
 		Iterator<SocialEntity> iterFriends=myFriends.iterator();
 		while(iterFriends.hasNext()){
@@ -1706,12 +1797,12 @@ public class ArgCAgent extends CAgent{
 	}
 	
 	
-	
-	/*
-	 * Methods to access to Commitment Store
+	/**
+	 * Returns an {@link ACLMessage} with the locution ADDPOSITION and a {@link Position} to send to Commitment Store
+	 * @param pos {@link Position} to add in the Commitment Store
+	 * @param dialogueID current dialogue identifier
+	 * @return an {@link ACLMessage} with the locution ADDPOSITION
 	 */
-	
-	
 	private ACLMessage addPosition(Position pos, String dialogueID){
 		myUsedLocutions++;
 		return createMessage(commitmentStoreID, ADDPOSITION, dialogueID, pos);
@@ -1719,9 +1810,9 @@ public class ArgCAgent extends CAgent{
 	
 	
 	/**
-	 * Returns a list of positions that are different from the defended position and also are not asked yet.
+	 * Returns an {@link ArrayList} of positions that are different from the defended position and also are not asked yet.
 	 * @param positions {@link ArrayList} with all the positions in the dialogue
-	 * @return
+	 * @return an {@link ArrayList} of positions that are different from the defended position
 	 */
 	private ArrayList<Position> getDifferentPositions(ArrayList<Position> positions){
 		ArrayList<Position> differentPositions= new ArrayList<Position>();
@@ -1769,11 +1860,11 @@ public class ArgCAgent extends CAgent{
 	
 	
 	/**
-	 * Adds this agent to the dialogue specified in commitment store
+	 * Returns an {@link ACLMessage} with the locution ENTERDIALOGUE to send to Commitment Store
 	 * @param dialogueID id of the dialogue to join
+	 * @return an {@link ACLMessage} with the locution ENTERDIALOGUE
 	 */
 	private ACLMessage enterDialogue(String dialogueID){
-		
 		myUsedLocutions++;
 		return createMessage(commitmentStoreID, ENTERDIALOGUE, dialogueID, null);
 	}
@@ -1906,11 +1997,12 @@ public class ArgCAgent extends CAgent{
 	
 	
 	/**
-	 * Sends a message to the given agent.
-	 * @param agentID String with the agent ID to send the message
-	 * @param locution String with the locution of the message to send
-	 * @param dialogueID String with dialogueID of the message
-	 * @param contentObject Serializable with an object to attach to the message
+	 * Creates and returns an {@link ACLMessage} with the given arguments.
+	 * @param agentID {@link String} with the agent ID to send the message
+	 * @param locution {@link String} with the locution of the message to send
+	 * @param dialogueID {@link String} with dialogueID of the message
+	 * @param contentObject {@link Serializable} with an object to attach to the message
+	 * @return an {@link ACLMessage} with the given arguments
 	 */
 	private ACLMessage createMessage(String agentID, String locution, String dialogueID, Serializable contentObject){
 		
@@ -1951,56 +2043,106 @@ public class ArgCAgent extends CAgent{
 		return msg;
 	}
 	
-	
+	/**
+	 * 
+	 * @return used locutions in the current dialogue
+	 */
 	public int getMyUsedLocutions(){
 		return myUsedLocutions;
 	}
 	
+	/**
+	 * 
+	 * @return number of domain-cases in the domain CBR
+	 */
 	public int getNumberDomainCases(){
 		return domainCBR.getAllCasesList().size();
 	}
 	
+	/**
+	 * 
+	 * @return number of argument-cases in the argumentation CBR
+	 */
 	public int getNumberArgumentCases(){
 		return argCBR.getAllCasesVector().size();
 	}
 	
-	
-	public float getDialogueTime(){
+	/**
+	 * 
+	 * @return dialogue time
+	 */
+	public float getDialogueTime(){ //TODO not working...
 		return dialogueTime;
 	}
 	
+	/**
+	 * 
+	 * @return last {@link Position} before being <code>null</code>
+	 */
 	public Position getLastPositionBeforeNull(){
 		return lastPositionBeforeNull;
 	}
 	
+	/**
+	 * 
+	 * @return current {@link Position} defended by the agent in the current dialogue
+	 */
 	public Position getCurrentPosition(){
 		return currentPosition;
 	}
 	
+	/**
+	 * 
+	 * @return current dialogue identifier
+	 */
 	public String getCurrentDialogueID(){
 		return currentDialogueID;
 	}
 	
+	/**
+	 * 
+	 * @return number of votes to the current position
+	 */
 	public int getAccepted(){
 		return currentPosAccepted;
 	}
 	
+	/**
+	 * 
+	 * @return number of agreements of the current position
+	 */
 	public int getAgreement(){
 		return agreementReached;
 	}
 	
+	/**
+	 * 
+	 * @return acceptance frequency
+	 */
 	public int getAcceptanceFrequency(){
 		return acceptanceFrequency;
 	}
 	
+	/**
+	 * 
+	 * @return <code>true</code> if the agent is alive, otherwise it returns <code>false</code>
+	 */
 	public boolean isAlive(){
 		return alive;
 	}
 	
+	/**
+	 * 
+	 * @return votes received to the defended position
+	 */
 	public int getVotes(){
 		return votesReceived;
 	}
 	
+	/**
+	 * 
+	 * @return number of used argument-cases
+	 */
 	public int getUsedArgCases(){
 		return usedArgCases;
 	}

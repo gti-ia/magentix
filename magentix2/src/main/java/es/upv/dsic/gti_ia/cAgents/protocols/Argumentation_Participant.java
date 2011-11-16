@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.Iterator;
 
+import es.upv.dsic.gti_ia.argAgents.knowledgeResources.Argument;
+import es.upv.dsic.gti_ia.argAgents.knowledgeResources.Position;
 import es.upv.dsic.gti_ia.cAgents.BeginState;
 import es.upv.dsic.gti_ia.cAgents.BeginStateMethod;
 import es.upv.dsic.gti_ia.cAgents.CAgent;
@@ -21,6 +23,12 @@ import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.MessageFilter;
 
+/**
+ * Abstract class that defines the argumentation participant protocol to be followed
+ * by the CAgents.
+ * @author Jaume Jordan
+ *
+ */
 public abstract class Argumentation_Participant {
 
 	private final String OPENDIALOGUE="OPENDIALOGUE";
@@ -36,6 +44,11 @@ public abstract class Argumentation_Participant {
 	
 	private String currentWhyAgentID;
 	
+	/**
+	 * Begin method executed to begin the conversation
+	 * @param myProcessor {@link CProcessor} that manage the conversation
+	 * @param msg initial message
+	 */
 	protected void doBegin(CProcessor myProcessor, ACLMessage msg) {
 		myProcessor.getInternalData().put("InitialMessage", msg);
 	}
@@ -47,6 +60,11 @@ public abstract class Argumentation_Participant {
 		};
 	}
 	
+	/**
+	 * Takes the domain-case to solve and the dialogue ID from the {@link ACLMessage} given
+	 * @param myProcessor {@link CProcessor} that manage the conversation
+	 * @param msg {@link ACLMessage} with the domain-case to solve and the dialogue ID
+	 */
 	protected abstract void doOpenDialogue(CProcessor myProcessor, ACLMessage msg);
 	
 	class Open_Method implements ReceiveStateMethod {
@@ -64,10 +82,10 @@ public abstract class Argumentation_Participant {
 	
 	
 	/**
-	 * Evaluates if the agent can enter in the dialogue offering a solution. If it can't, it does a withdraw dialogue.
-	 * @param myProcessor
-	 * @param msg
-	 * @return
+	 * Evaluates if the agent can enter in the dialogue offering a solution. If it can not, it does a withdraw dialogue.
+	 * @param myProcessor {@link CProcessor} that manage the conversation
+	 * @param msg {@link ACLMessage} to send to Commitment Store, with locution ENTERDIALOGUE or WITHDRAWDIALOGUE
+	 * @return <code>true</code> if it makes an ENTERDIALOGUE, <code>false</code> if it makes a WITHDRAWDIALOGUE
 	 */
 	protected abstract boolean doEnterDialogue(CProcessor myProcessor, ACLMessage msg);
 	
@@ -75,7 +93,6 @@ public abstract class Argumentation_Participant {
 	class Enter_Method implements SendStateMethod {
 		public String run(CProcessor myProcessor, ACLMessage msg) {
 			boolean enterDialogue=doEnterDialogue(myProcessor, msg);
-			System.out.println("************* message "+msg.getHeaderValue("locution")+ " receiver: "+msg.getReceiver().name);
 			if(enterDialogue)
 				return "PROPOSE";
 			else return "WAIT_OPEN";
@@ -84,10 +101,10 @@ public abstract class Argumentation_Participant {
 	
 	
 	/**
-	 * Proposes a position to defend in the dialogue. If it can't, it does a withdraw dialogue.
+	 * Proposes a {@link Position} to defend in the dialogue. If it can not, it does a withdraw dialogue.
 	 * @param myProcessor
-	 * @param msg
-	 * @return
+	 * @param msg {@link ACLMessage} to send with the {@link Position} to propose (ADDPOSITION) or WITHDRAWDIALOGUE
+	 * @return <code>true</code> if it makes an ADDPOSITION, <code>false</code> if it makes a WITHDRAWDIALOGUE
 	 */
 	protected abstract boolean doPropose(CProcessor myProcessor, ACLMessage msg);
 	
@@ -100,8 +117,18 @@ public abstract class Argumentation_Participant {
 		};
 	}
 	
+	/**
+	 * Actions to be executed when the dialogue has to finish
+	 * @param myProcessor
+	 * @param msg {@link ACLMessage} received with the locution FINISHDIALOGUE
+	 */
+	protected abstract void doFinishDialogue(CProcessor myProcessor, ACLMessage msg);
 	
-	protected abstract boolean doFinishDialogue(CProcessor myProcessor, ACLMessage msg);
+	/**
+	 * Actions to perform when the position of the agent has been accepted.
+	 * @param myProcessor
+	 * @param messageReceived {@link ACLMessage} with the locution ACCEPT
+	 */
 	protected abstract void doMyPositionAccepted(CProcessor myProcessor, ACLMessage messageReceived);
 	
 	class Central_Method implements ReceiveStateMethod {
@@ -122,6 +149,11 @@ public abstract class Argumentation_Participant {
 		};
 	}
 	
+	/**
+	 * Sends an {@link ACLMessage} with the {@link Position} defended by the agent 
+	 * @param myProcessor
+	 * @param msg an {@link ACLMessage} to send with the {@link Position} defended by the agent 
+	 */
 	protected abstract void doSendPosition(CProcessor myProcessor, ACLMessage msg);
 	
 	
@@ -132,6 +164,11 @@ public abstract class Argumentation_Participant {
 		};
 	}
 	
+	/**
+	 * Actions to perform when the final solution to the current problem to solve arrives in an {@link ACLMessage}
+	 * @param myProcessor
+	 * @param msg an {@link ACLMessage} received with the solution to the current problem
+	 */
 	protected abstract void doSolution(CProcessor myProcessor, ACLMessage msg);
 	
 	
@@ -142,6 +179,13 @@ public abstract class Argumentation_Participant {
 		};
 	}
 	
+	/**
+	 * Try to assert a support argument to respond to the WHY received previously.
+	 * @param myProcessor
+	 * @param msg an {@link ACLMessage} to send with an {@link Argument} and locution ASSERT, a locution NOCOMMIT, or a locution NOTHING
+	 * @param whyAgentID agent identifier that has made the WHY
+	 * @return A {@link String} describing if it makes an ASSERT, NOCOMMIT or, WAIT_CENTRAL
+	 */
 	protected abstract String doAssert(CProcessor myProcessor, ACLMessage msg, String whyAgentID);
 	
 	
@@ -172,6 +216,14 @@ public abstract class Argumentation_Participant {
 		};
 	}
 	
+	/**
+	 * Actions to perform to generate an attack argument against an attack or assert received
+	 * @param myProcessor 
+	 * @param msgToSend {@link ACLMessage} to send with the attack argument or a NOCOMMIT
+	 * @param msgReceived {@link ACLMessage} received with an attack or assert
+	 * @param defending indicates if it is defending its position or attacking another agent position
+	 * @return <code>true</code> if an attack argument has been generated
+	 */
 	protected abstract boolean doAttack(CProcessor myProcessor, ACLMessage msgToSend, ACLMessage msgReceived, boolean defending);
 	
 	class Defend_Method implements SendStateMethod {
@@ -185,6 +237,11 @@ public abstract class Argumentation_Participant {
 		};
 	}
 	
+	/**
+	 * Creates an {@link ACLMessage} to send with the locution NOCOMMIT
+	 * @param myProcessor
+	 * @param msg {@link ACLMessage} to send with the locution NOCOMMIT
+	 */
 	protected abstract void doNoCommit(CProcessor myProcessor, ACLMessage msg);
 	
 	class No_Commit_Method implements SendStateMethod {
@@ -199,7 +256,6 @@ public abstract class Argumentation_Participant {
 			return "QUERY_POSITIONS";
 		}
 	}
-	
 	
 	protected abstract void doQueryPositions(CProcessor myProcessor, ACLMessage msg);
 	

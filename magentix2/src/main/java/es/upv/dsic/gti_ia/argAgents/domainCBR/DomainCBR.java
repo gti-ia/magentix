@@ -21,6 +21,7 @@ import es.upv.dsic.gti_ia.argAgents.SimilarityAlgorithms;
 import es.upv.dsic.gti_ia.argAgents.knowledgeResources.DomainCase;
 import es.upv.dsic.gti_ia.argAgents.knowledgeResources.DomainContext;
 import es.upv.dsic.gti_ia.argAgents.knowledgeResources.Justification;
+import es.upv.dsic.gti_ia.argAgents.knowledgeResources.Position;
 import es.upv.dsic.gti_ia.argAgents.knowledgeResources.Premise;
 import es.upv.dsic.gti_ia.argAgents.knowledgeResources.Problem;
 import es.upv.dsic.gti_ia.argAgents.knowledgeResources.SimilarDomainCase;
@@ -29,7 +30,7 @@ import es.upv.dsic.gti_ia.argAgents.knowledgeResources.Solution;
 /**
  * It is a CBR that stores domain knowledge of previous solved problems. 
  * It is used by the argumentative agent to generate and select 
- * the position (solution) to defend in an argumentation dialogue.
+ * the {@link Position} (solution) to defend in an argumentation dialogue.
  * @author Jaume Jordan
  *
  */
@@ -152,7 +153,7 @@ public class DomainCBR {
 	 * @param threshold The threshold of minimum similarity of the domain-cases to return
 	 * @return an {@link ArrayList} of {@link SimilarDomainCase}
 	 */
-	public ArrayList<SimilarDomainCase> retrieve(HashMap<Integer, Premise> premises,float threshold){
+	public ArrayList<SimilarDomainCase> retrieve(HashMap<Integer, Premise> premises, float threshold){
 		
 		/**
 		 * TODO
@@ -168,11 +169,10 @@ public class DomainCBR {
 	
 	
 	/**
-	 * Adds a new case to domain case-base.
-	 * Otherwise, if it exists the same domain-case in case-base, adds the group, the operator 
-	 * and the solutions to the corresponding case.
-	 * @param newCase Case that could be added.
-	 * @return True if a case is added, else false.
+	 * Adds a new domain-case to domain case-base.
+	 * Otherwise, if it exists the same domain-case in case-base, adds the relevant data to the existing one.
+	 * @param newCase {@link DomainCase} that could be added.
+	 * @return <code>true</code> if the domain-case is added, else <code>false</code>.
 	 */
 	public boolean addCase(DomainCase newCase){
 		
@@ -281,7 +281,7 @@ public class DomainCBR {
 	 * The similarity algorithm is determined by an integer parameter.
 	 * @param premises {@link HashMap} of premises for retrieving cases from case base.
 	 * @param threshold The threshold of minimum similarity of the cases to return.
-	 * @param similarityType A string to specify which similarity algorithm has to be used.
+	 * @param similarityType A {@link String} to specify which similarity algorithm has to be used.
 	 * @return An {@link ArrayList} of {@link SimilarDomainCase} with similarity degree greater or equal to the threshold.
 	 */
 	private ArrayList<SimilarDomainCase> getMostSimilar(HashMap<Integer,Premise> premises, float threshold, String similarityType){
@@ -441,17 +441,17 @@ public class DomainCBR {
 	
 	
 	/**
-	 * Returns all cases in a Collection of ArrayLists
-	 * @return
+	 * Returns all cases in a {@link Collection} of ArrayLists
+	 * @return all cases in a {@link Collection} of ArrayLists
 	 */
 	public Collection<ArrayList<DomainCase>> getAllCases(){
 		return domainCB.values();
 	}
 	
 	/**
-	 * Gets the cases of a given tipiNode and the cases of its ancestor tipiNodes
-	 * @param tipiNode An integer representing the identifier of a tipiNode
-	 * @return A Case ArrayList with the cases of the tipiNode and its ancestors
+	 * Gets a {@link DomainCase} {@link ArrayList} with the domain-cases that fits the given premises
+	 * @param premises {@link HashMap} of {@link Premise} that describe the problem
+	 * @return A {@link DomainCase} {@link ArrayList} with the domain-cases that fits the given premises
 	 */
 	private ArrayList<DomainCase> getCandidateCases(HashMap<Integer,Premise> premises){
 		
