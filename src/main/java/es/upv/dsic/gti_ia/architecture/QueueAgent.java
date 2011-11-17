@@ -9,6 +9,7 @@ package es.upv.dsic.gti_ia.architecture;
 
 import java.util.ArrayList;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -94,13 +95,15 @@ public class QueueAgent extends BaseAgent {
 	public synchronized ACLMessage receiveACLMessage(MessageTemplate template)
 	throws Exception {
 		ACLMessage msgselect = null;
+		Iterator<ACLMessage> iterator = messageList.iterator();
 
 		if (template.getProtocol() == "")
 			throw new Exception("The protocol field is empty");
 
-		for (int i = 0; i < messageList.size(); i++) {
+		while(iterator.hasNext())
+		{
+			ACLMessage msg = iterator.next();
 
-			ACLMessage msg = messageList.peek();
 			//Matching with the protocol and converastionID fields, to ensure that the conversation isn't a 
 			//existing conversation 
 			if (template.getProtocol().equals(msg.getProtocol())) {
@@ -128,14 +131,15 @@ public class QueueAgent extends BaseAgent {
 	synchronized ACLMessage receiveACLMessage(MessageTemplate template, int type) {
 		ACLMessage msgselect = null;
 
-		if (messageList != null) {
-			if (type == 1) {
-
-				for (int i = 0; i < messageList.size(); i++) {
-
-					ACLMessage msg = messageList.peek();
-
-
+		Iterator<ACLMessage> iterator = messageList.iterator();
+		
+		if (type == 1) {
+				
+				while(iterator.hasNext())
+				{
+					ACLMessage msg = iterator.next();
+				
+			
 					//Matching with the protocol and converastionID fields, to ensure that the conversation isn't a 
 					//existing conversation 
 					if (template.getPerformativeInt() != -2
@@ -156,10 +160,10 @@ public class QueueAgent extends BaseAgent {
 				}
 			} else {
 
-				for (int i = 0; i < messageList.size(); i++) {
-
-					ACLMessage msg = messageList.peek();
-
+				while(iterator.hasNext())
+				{
+					ACLMessage msg = iterator.next();
+				
 					
 					//This is a special case, when is a cancel performative.
 					if (template.getPerformativeInt() != ACLMessage.CANCEL
@@ -185,7 +189,7 @@ public class QueueAgent extends BaseAgent {
 				messageList.remove(msgselect);
 			}
 
-		}
+		
 		return msgselect;
 	}
 
