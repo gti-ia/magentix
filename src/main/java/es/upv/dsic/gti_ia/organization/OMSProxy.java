@@ -90,15 +90,19 @@ public class OMSProxy extends THOMASProxy{
 	}
 	public ArrayList<String> getAgentPosition(String agent, String unit, String role)
 	{
-
+		
 		Connection connection = null;
 		String agent_id = "";
 		String unit_id = "";
 		ArrayList<String> role_ids = new ArrayList<String>();
 		ArrayList<String> role_positions = new ArrayList<String>();
+		
+		
+		
 		try
 		{
 
+			
 
 			connection = basicDataSource.getConnection();
 
@@ -167,7 +171,6 @@ public class OMSProxy extends THOMASProxy{
 				try {
 					connection.close();
 				} catch (SQLException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 		}
@@ -219,8 +222,16 @@ public class OMSProxy extends THOMASProxy{
 
 				Iterator<String> iterator1 = agentRole.iterator();
 
-
-				agentPositions = this.getAgentPosition(agent.getName(),OrganizationID, null);
+				//TODO Esta parte esta hardoceada, es especifica para el ejemplo de la implementación, donde el agente creador
+				//solamente tendra el rol con posicion creator. Esto se debe hacer asi ya que el rol creator ahora se le asigna 
+				//al position supervisor.
+				if (agent.getName().equals("agente_creador"))
+				{
+					agentPositions = new ArrayList<String>();
+					agentPositions.add("creator");
+				}
+				else
+					agentPositions = this.getAgentPosition(agent.getName(),OrganizationID, null);
 
 
 				//Comprobaremos si tiene solamente el rol con la posición creator, en ese caso no puede enviar nada a ningún grupo.
