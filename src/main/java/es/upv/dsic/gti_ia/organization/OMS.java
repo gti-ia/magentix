@@ -469,10 +469,6 @@ public class OMS extends CAgent {
 					}
 					myProcessor.getLastReceivedMessage().setContent(aProcess.getLocalName()+"="+values.toString());
 
-				}catch(THOMASException e)
-				{
-					System.out.println(e.getContent());
-					next = "FAILURE";
 				}catch(Exception e){
 					if(DEBUG)
 					{	            		
