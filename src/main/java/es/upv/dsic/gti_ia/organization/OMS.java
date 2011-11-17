@@ -567,7 +567,7 @@ public class OMS extends CAgent {
 						}
 						else if (!positionType.equals("creator"))
 						{
-							throw new THOMASException("Unknown position");
+							throw new THOMASException("Unknown position "+ positionType);
 						}
 
 					}
@@ -627,6 +627,10 @@ public class OMS extends CAgent {
 					}
 					myProcessor.getLastReceivedMessage().setContent(aProcess.getLocalName()+"="+values.toString());
 
+				}catch(THOMASException e)
+				{
+					System.out.println(e.getContent());
+					next = "FAILURE";
 				}catch(Exception e){
 					if(DEBUG)
 					{	            		
