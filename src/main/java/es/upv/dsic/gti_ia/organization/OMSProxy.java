@@ -2,8 +2,19 @@ package es.upv.dsic.gti_ia.organization;
 
 
 
-import es.upv.dsic.gti_ia.core.BaseAgent;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Iterator;
+
+import org.apache.commons.dbcp.BasicDataSource;
+
+import es.upv.dsic.gti_ia.core.ACLMessage;
+import es.upv.dsic.gti_ia.core.AgentID;
+import es.upv.dsic.gti_ia.core.BaseAgent;
+
 
 
 
@@ -20,6 +31,10 @@ import java.util.ArrayList;
 public class OMSProxy extends THOMASProxy{
 
 
+	BasicDataSource basicDataSource;
+
+
+
 	/**
 	 * This class gives us the support to access to the services of the OMS
 	 * 
@@ -31,7 +46,8 @@ public class OMSProxy extends THOMASProxy{
 	 */
 	public OMSProxy(BaseAgent agent, String OMSServiceDesciptionLocation) {
 		super(agent, "OMS",OMSServiceDesciptionLocation);
-		
+		this.createConnection();
+
 	}
 
 	/**
@@ -45,10 +61,237 @@ public class OMSProxy extends THOMASProxy{
 	 * ServiceDescriptionLocation is not empty and is the correct path.
 	 */
 	public OMSProxy(BaseAgent agent) {
-		
+
 		super(agent,"OMS");
 		ServiceDescriptionLocation = c.getOMSServiceDesciptionLocation();
-		
+		this.createConnection();
+	}
+
+
+	public void createConnection()
+	{
+		try
+		{
+			String driverName = "com.mysql.jdbc.Driver"; // MySQL MM JDBC driver
+			Class.forName(driverName);
+			basicDataSource = new BasicDataSource();
+
+			basicDataSource.setDriverClassName(driverName);
+			basicDataSource.setUrl("jdbc:mysql://" + c.getdatabaseServer() +  "/" + c.getdatabaseName());
+			basicDataSource.setUsername(c.getdatabaseUser());
+			basicDataSource.setPassword(c.getdatabasePassword());
+
+
+		}catch(Exception e)
+		{
+			logger.error(e);
+		}
+
+	}
+	public ArrayList<String> getAgentPosition(String agent, String unit, String role)
+	{
+
+		Connection connection = null;
+		String agent_id = "";
+		String unit_id = "";
+		ArrayList<String> role_ids = new ArrayList<String>();
+		ArrayList<String> role_positions = new ArrayList<String>();
+		try
+		{
+
+
+			connection = basicDataSource.getConnection();
+
+			Statement stmt = connection.createStatement();
+			ResultSet rs =
+				stmt.executeQuery("SELECT id FROM entity WHERE entityid='"
+						+ agent + "'");
+			if (rs.next())
+			{
+				agent_id = rs.getString("id");
+
+			}
+			stmt = connection.createStatement();
+			rs = stmt.executeQuery("SELECT id FROM unit WHERE unitid='"
+					+ unit + "'");
+
+			if (rs.next())
+			{
+				unit_id = rs.getString("id");
+
+			}
+
+			stmt = connection.createStatement();
+			rs = stmt.executeQuery("SELECT role FROM entityplaylist WHERE unit='"
+					+ unit_id + "' and entity='"+agent_id+"'");
+			while(rs.next())
+			{
+				role_ids.add(rs.getString("role"));
+			}
+
+			if (role != null)
+			{
+				for (int i=0;i< role_ids.size();i++)
+				{
+					stmt = connection.createStatement();
+					rs = stmt.executeQuery("SELECT position FROM role WHERE id='"
+							+ role_ids.get(i) + "' and roleid='"+role+"'");
+					if (rs.next())
+					{
+						role_positions.add(rs.getString("position"));
+					}
+				}
+			}
+			else
+			{
+				for (int i=0;i< role_ids.size();i++)
+				{
+					stmt = connection.createStatement();
+					rs = stmt.executeQuery("SELECT position FROM role WHERE id='"
+							+ role_ids.get(i) + "'");
+					if (rs.next())
+					{
+						role_positions.add(rs.getString("position"));
+					}
+				}
+			}
+
+
+		}
+		catch (Exception e)
+		{
+			logger.error(e);
+		}
+		finally {
+			if (null != connection)
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		}
+
+
+
+
+		return role_positions;
+	}
+
+
+	/**
+	 * Built a new organizational message with the appropriate receivers 
+	 * @param OrganizationID the ID of the organization 
+	 * @return returns the message built
+	 * @throws THOMASException  in order to show the cause of exception uses getContent
+	 */
+
+	public ACLMessage buildOrganizationalMessage(String OrganizationID) throws THOMASException
+	{
+		ArrayList<String> unit;
+		ArrayList<String> agentRole = null;
+		ArrayList<String> agentPositions = null;
+		boolean insideUnit = false;
+
+
+		//Create a new ACLMessage
+		ACLMessage msg = new ACLMessage();
+
+		msg.setSender(agent.getAid());
+
+		//Inform Unit
+		unit = this.informUnit(OrganizationID);
+
+		if (unit.isEmpty())
+		{
+			throw new THOMASException("Not allowed or unit "+ OrganizationID+" not found");
+
+		}else
+		{
+
+			agentRole = this.informAgentRole(agent.getAid().name);
+			if (agentRole.isEmpty())
+			{
+				throw new THOMASException("The agent role is empty.");
+			}
+			else
+			{
+
+				Iterator<String> iterator1 = agentRole.iterator();
+
+
+				agentPositions = this.getAgentPosition(agent.getName(),OrganizationID, null);
+
+
+				//Comprobaremos si tiene solamente el rol con la posición creator, en ese caso no puede enviar nada a ningún grupo.
+				if (agentPositions.contains("creator") && agentPositions.size() == 1)
+				{
+					throw new THOMASException("The agent [ "+ agent.getName()+" ] only contains the rol position creator, this rol position can not send organizational message");
+				}
+
+				//The unit type is flat
+				if (unit.get(2).equals("flat"))
+				{
+					msg.putExchangeHeader("participant", OrganizationID);
+					msg.setReceiver(new AgentID(OrganizationID));
+				}
+				else
+				{
+
+					while(iterator1.hasNext())
+					{
+						//Cogemos primero el rol, para que solamente compruebe la unidad que es el segundo elemento.
+						iterator1.next();
+
+						if (iterator1.next().equals(OrganizationID))
+						{
+							insideUnit = true;
+						}
+					}
+					if (insideUnit)
+					{
+						if (unit.get(2).equals("team"))
+						{
+							msg.putExchangeHeader("participant", OrganizationID);
+							msg.setReceiver(new AgentID(OrganizationID));
+						}
+						else if (unit.get(2).equals("hierarchy"))
+						{
+							//Sacamos la posición del agente
+							//Debemos elegir el de mayor
+
+							if (agentPositions.contains("supervisor"))
+							{
+								msg.putExchangeHeader("supervisor", OrganizationID);
+								msg.putExchangeHeader("participant", OrganizationID);
+							}
+							else if (agentPositions.contains("subordinate"))
+							{
+								msg.putExchangeHeader("supervisor", OrganizationID);
+
+							}
+
+							msg.setReceiver(new AgentID(OrganizationID));
+
+						}
+						else
+						{
+							throw new THOMASException("Unknown unit type");
+						}
+					}
+					else //El agente no esta dentro de la unidad
+					{
+
+						throw new THOMASException("The agent [ "+agent.getName()+" ] is not inside the unit "+ OrganizationID);
+					}
+				}
+
+			}
+
+
+		}
+
+		return msg;
 	}
 
 
@@ -74,7 +317,7 @@ public class OMSProxy extends THOMASProxy{
 			String UnitID) {
 		serviceName = "LeaveRoleProcess";
 		call = ServiceDescriptionLocation + "LeaveRoleProcess.owl AgentID=" + agent.getAid().name.replace('~', '@')
-				+ " RoleID=" + RoleID + " UnitID=" + UnitID;
+		+ " RoleID=" + RoleID + " UnitID=" + UnitID;
 		return (String) this.sendInform();
 	}
 
@@ -99,7 +342,7 @@ public class OMSProxy extends THOMASProxy{
 		listResults.clear();
 
 		call = ServiceDescriptionLocation
-				+ "InformAgentRoleProcess.owl RequestedAgentID=" + AgentID;
+		+ "InformAgentRoleProcess.owl RequestedAgentID=" + AgentID;
 		return (ArrayList<String>) this.sendInform();
 	}
 
@@ -127,8 +370,8 @@ public class OMSProxy extends THOMASProxy{
 		listResults.clear();
 
 		call = ServiceDescriptionLocation + "InformMembersProcess.owl RoleID="
-				+ RoleID + " UnitID=" + UnitID;
-	return (ArrayList<String>) this.sendInform();
+		+ RoleID + " UnitID=" + UnitID;
+		return (ArrayList<String>) this.sendInform();
 
 	}
 
@@ -138,7 +381,7 @@ public class OMSProxy extends THOMASProxy{
 	 * The execution of this service checks:
 	 *	– That the role exists.
 	 *	– That the requester agent (AgentID) is member of THOMAS.
-  	 *
+	 *
 	 * 
 	 * @param RoleID
 	 *            represent all required functionality needed in order to
@@ -148,12 +391,12 @@ public class OMSProxy extends THOMASProxy{
 	 */
 	@SuppressWarnings("unchecked")
 	public ArrayList<String> informRoleNorms(String RoleID)
-		 {
+	{
 		serviceName ="InformRoleNormsProcess";
 		listResults.clear();
 
 		call = ServiceDescriptionLocation + "InformRoleNormsProcess.owl RoleID="
-				+ RoleID;
+		+ RoleID;
 		return (ArrayList<String>) this.sendInform();
 
 	}
@@ -168,12 +411,12 @@ public class OMSProxy extends THOMASProxy{
 	 */
 	@SuppressWarnings("unchecked")
 	public ArrayList<String> informRoleProfiles(String UnitID)
-			{
+	{
 		serviceName ="InformRoleProfilesProcess";
 		listResults.clear();
 
 		call = ServiceDescriptionLocation + "InformRoleProfilesProcess.owl UnitID="
-				+ UnitID;
+		+ UnitID;
 		return (ArrayList<String>) this.sendInform();
 
 	}
@@ -192,7 +435,7 @@ public class OMSProxy extends THOMASProxy{
 	 */
 	@SuppressWarnings("unchecked")
 	public ArrayList<String> informUnit(String UnitID)
-			{
+	{
 		serviceName ="InformUnitProcess";
 		listResults.clear();
 
@@ -219,12 +462,12 @@ public class OMSProxy extends THOMASProxy{
 	 */
 	@SuppressWarnings("unchecked")
 	public ArrayList<String> informUnitRoles(String UnitID)
-			 {
+	{
 		serviceName ="InformUnitRolesProcess";
 		listResults.clear();
 
 		call = ServiceDescriptionLocation + "InformUnitRolesProcess.owl UnitID="
-				+ UnitID;
+		+ UnitID;
 		return (ArrayList<String>) this.sendInform();
 
 	}
@@ -242,10 +485,10 @@ public class OMSProxy extends THOMASProxy{
 	 * @return Integer Quantity
 	 */
 	public int quantityMembers(String RoleID, String UnitID)
-		 {
+	{
 		serviceName ="QuantityMembersProcess";
 		call = ServiceDescriptionLocation + "QuantityMembersProcess.owl RoleID="
-				+ RoleID + " UnitID=" + UnitID;
+		+ RoleID + " UnitID=" + UnitID;
 		return Integer.parseInt(this.sendInform().toString());
 
 
@@ -268,7 +511,7 @@ public class OMSProxy extends THOMASProxy{
 			String NormContent) {
 		serviceName ="RegisterNormProcess";
 		call = ServiceDescriptionLocation + "RegisterNormProcess.owl NormID="
-				+ NormID + " NormContent=" + NormContent;
+		+ NormID + " NormContent=" + NormContent;
 		return (String) this.sendInform();
 	}
 
@@ -286,7 +529,7 @@ public class OMSProxy extends THOMASProxy{
 	 *		agent is allowed; if TEAM, he is only allowed if he is a member of the unit;
 	 *		if HIERARCHY, then he can only register this role if he is a supervisor
 	 *		of this unit
-  	 *
+	 *
 	 * @param RoleID
 	 *            is the identifier of the new role
 	 * @param UnitID
@@ -312,9 +555,9 @@ public class OMSProxy extends THOMASProxy{
 			String Inheritance){
 		serviceName ="RegisterRoleProcess";
 		call = ServiceDescriptionLocation + "RegisterRoleProcess.owl RoleID="
-				+ RoleID + " UnitID=" + UnitID + " Accessibility="
-				+ Accessibility + " Position=" + Position + " Visibility="
-				+ Visibility + " Inheritance=" + Inheritance;
+		+ RoleID + " UnitID=" + UnitID + " Accessibility="
+		+ Accessibility + " Position=" + Position + " Visibility="
+		+ Visibility + " Inheritance=" + Inheritance;
 		return (String) this.sendInform();
 
 
@@ -334,7 +577,7 @@ public class OMSProxy extends THOMASProxy{
 	 *		FLAT, the agent is allowed; if TEAM, he is only allowed if he is a mem-
 	 *		ber of the parent unit; if HIERARCHY, then he can only register this
 	 *		unit if he is a supervisor of the parent unit.
-  	 *
+	 *
 	 * @param UnitID
 	 *            is the identifier of the new unit
 	 * @param Type
@@ -354,9 +597,9 @@ public class OMSProxy extends THOMASProxy{
 			String Goal, String ParentUnitID) {
 		serviceName ="RegisterUnitProcess";
 		call = ServiceDescriptionLocation + "RegisterUnitProcess.owl  UnitID="
-				+ UnitID + " Type=" + Type + " Goal=" + Goal + " ParentUnitID="
-				+ ParentUnitID;
-	 return 	(String) this.sendInform();
+		+ UnitID + " Type=" + Type + " Goal=" + Goal + " ParentUnitID="
+		+ ParentUnitID;
+		return 	(String) this.sendInform();
 
 
 	}
@@ -367,18 +610,18 @@ public class OMSProxy extends THOMASProxy{
 	 * The execution of this service checks:
 	 *	– That the norm exists and the requester agent (AgentID) is member of
 	 *		THOMAS 
- 	 *
+	 *
 	 * 
 	 * @param NormID
 	 *            norm name
 	 * @return String Status ErrorValue
 	 */
 	public String deregisterNorm(String NormID)
-		 {
+	{
 		serviceName ="DeregisterNormProcess";
 		call = ServiceDescriptionLocation + "DeregisterNormProcess.owl  NormID="
-				+ NormID;
-	return 	(String) this.sendInform();
+		+ NormID;
+		return 	(String) this.sendInform();
 
 
 	}
@@ -401,11 +644,11 @@ public class OMSProxy extends THOMASProxy{
 	 * @return String Status ErrorValue
 	 */
 	public String deregisterRole(String RoleID, String UnitID)
-		 {
+	{
 		serviceName = "DeregisterRoleProcess";
 		call = ServiceDescriptionLocation + "DeregisterRoleProcess.owl  RoleID="
-				+ RoleID + " UnitID=" + UnitID;
-	 return	(String) this.sendInform();
+		+ RoleID + " UnitID=" + UnitID;
+		return	(String) this.sendInform();
 
 
 	}
@@ -419,11 +662,11 @@ public class OMSProxy extends THOMASProxy{
 	 * @return String Status ErrorValue
 	 */
 	public String deregisterUnit(String UnitID)
-			 {
+	{
 		serviceName ="DeregisterUnitProcess";
 		call = ServiceDescriptionLocation + "DeregisterUnitProcess.owl  UnitID="
-				+ UnitID;
-	return (String) this.sendInform();
+		+ UnitID;
+		return (String) this.sendInform();
 
 
 	}
@@ -439,7 +682,7 @@ public class OMSProxy extends THOMASProxy{
 	 *		if TEAM or HIERARCHY, he is only allowed if he is a supervisor
 	 *		of this unit.
 	 *	– Deregister Agent - Role - Unit entry in EntityPlayList (using DeregisterAgentRole service)
-  	 *
+	 *
 	 * @param ExpulseAgentID
 	 *            entity,this agent is protocol://name@host:port
 	 *            ej.qpid://clientagent2@localhost:8080 , we can extract this
@@ -456,9 +699,9 @@ public class OMSProxy extends THOMASProxy{
 			String UnitID) {
 		serviceName ="ExpulseProcess";
 		call = ServiceDescriptionLocation + "ExpulseProcess.owl ExpulsedAgentID=" + ExpulseAgentID
-				+ " RoleID=" + RoleID + " UnitID=" + UnitID;
-	return (String) this.sendInform();
-	
+		+ " RoleID=" + RoleID + " UnitID=" + UnitID;
+		return (String) this.sendInform();
+
 
 	}
 
@@ -473,7 +716,7 @@ public class OMSProxy extends THOMASProxy{
 	 *	– Check compatibility restrictions, i.e. the requested role is not incompatible with the other roles played by the agent.
 	 *	– Register Agent - Role - Unit entry in EntityPlayList (using RegisterAgentRole service)
 	 *	– Activate agent norms related with this requested role.
- 	 *
+	 *
 	 * 
 	 * @param RoleID
 	 *            Role that the agent acquires inside the organization
@@ -483,13 +726,16 @@ public class OMSProxy extends THOMASProxy{
 	 * @return String Status ErrorValue
 	 */
 	public String acquireRole(String RoleID, String UnitID)
-			{
+	{
 		serviceName ="AcquireRoleProcess";
 		call = ServiceDescriptionLocation + "AcquireRoleProcess.owl RoleID=" + RoleID
-				+ " UnitID=" + UnitID;
-	return (String) this.sendInform();
-		
+		+ " UnitID=" + UnitID;
+
+
+		return (String) this.sendInform();
+
 
 	}
 
 }
+
