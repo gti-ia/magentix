@@ -578,6 +578,7 @@ public class ACLMessage implements Serializable, Cloneable {
 		m.setReplyByDate(null);
 		m.setContent("");
 		m.setEncoding("");
+		m.exchangeHeaders = new HashMap<String, String>();;
 		// #CUSTOM_EXCLUDE_BEGIN
 		// Set the Aclrepresentation of the reply message to the
 		// aclrepresentation of the sent message
