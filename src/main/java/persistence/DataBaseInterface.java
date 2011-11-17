@@ -150,7 +150,7 @@ public class DataBaseInterface
 			sql = sql.toLowerCase();
 			stmt.executeUpdate(sql);
 			this.AddNewRole("creator", UnitID, "hidden", "private", "member",
-					"creator");
+					"supervisor");
 			this.AddNewAgentPlaysRole("creator", UnitID, AgentID);
 		}
 		catch (Exception e)
