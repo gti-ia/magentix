@@ -156,7 +156,7 @@ public class RegisterRoleSkeleton
 		{
 			positions = thomasBD.GetAgentPosition(agentID, unitID);
 			for (int i = 0; i < positions.size(); i++)
-				if (positions.get(i).equalsIgnoreCase("supervisor"))
+				if (positions.get(i).equalsIgnoreCase("creator"))
 					return true;
 		}
 		catch (Exception e)

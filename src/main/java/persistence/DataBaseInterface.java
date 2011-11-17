@@ -150,7 +150,7 @@ public class DataBaseInterface
 			sql = sql.toLowerCase();
 			stmt.executeUpdate(sql);
 			this.AddNewRole("creator", UnitID, "hidden", "private", "member",
-					"supervisor");
+					"creator");
 			this.AddNewAgentPlaysRole("creator", UnitID, AgentID);
 		}
 		catch (Exception e)
@@ -908,8 +908,8 @@ public class DataBaseInterface
 				String unit = rs.getString("id");
 				stmt = db.connection.createStatement();
 				sql =
-						"SELECT * FROM Role WHERE RoleID='"
-								+ roleID.toLowerCase() + "'";
+					"SELECT * FROM Role WHERE RoleID='"
+						+ roleID.toLowerCase() + "' and unit='"+unit+"'";
 				sql = sql.toLowerCase();
 				rs = stmt.executeQuery(sql);
 				if (!rs.next())
