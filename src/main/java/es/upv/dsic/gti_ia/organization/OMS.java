@@ -524,7 +524,7 @@ public class OMS extends CAgent {
 						AIDName = values.getValues().toString().replace("[", "").split(",")[0].trim();
 						OrganizationID = values.getValues().toString().split(",")[1].trim();
 						Rol = values.getValues().toString().replace("]", "").split(",")[2].trim();
-						positionType = omsProxy.getAgentPosition(AIDName,OrganizationID, Rol).get(0);
+						positionType = omsProxy.getAgentPosition(AIDName,OrganizationID, Rol);
 						
 						
 						
@@ -552,7 +552,7 @@ public class OMS extends CAgent {
 							positionType = "creator";
 						}
 						else
-							positionType = omsProxy.getAgentPosition(AIDName,OrganizationID, Rol).get(0);
+							positionType = omsProxy.getAgentPosition(AIDName,OrganizationID, Rol);
 						if (positionType.equals("member"))
 						{
 							createBinding(OrganizationID, "participant", AIDName);
@@ -605,7 +605,7 @@ public class OMS extends CAgent {
 							if (unit_aux.equals(OrganizationID) && !role_aux.equals("creator"))
 							{
 								//If position is equal of the agent position plays
-								if (positionType.equals(omsProxy.getAgentPosition(AIDName,OrganizationID, role_aux).get(0)))
+								if (positionType.equals(omsProxy.getAgentPosition(AIDName,OrganizationID, role_aux)))
 										existen = true;
 							}
 			
