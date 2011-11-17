@@ -2,14 +2,8 @@ package es.upv.dsic.gti_ia.organization;
 
 
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Iterator;
-
-import org.apache.commons.dbcp.BasicDataSource;
 
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
@@ -31,8 +25,6 @@ import es.upv.dsic.gti_ia.core.BaseAgent;
 public class OMSProxy extends THOMASProxy{
 
 
-	BasicDataSource basicDataSource;
-
 
 
 	/**
@@ -46,7 +38,7 @@ public class OMSProxy extends THOMASProxy{
 	 */
 	public OMSProxy(BaseAgent agent, String OMSServiceDesciptionLocation) {
 		super(agent, "OMS",OMSServiceDesciptionLocation);
-		this.createConnection();
+
 
 	}
 
@@ -64,121 +56,42 @@ public class OMSProxy extends THOMASProxy{
 
 		super(agent,"OMS");
 		ServiceDescriptionLocation = c.getOMSServiceDesciptionLocation();
-		this.createConnection();
-	}
-
-
-	public void createConnection()
-	{
-		try
-		{
-			String driverName = "com.mysql.jdbc.Driver"; // MySQL MM JDBC driver
-			Class.forName(driverName);
-			basicDataSource = new BasicDataSource();
-
-			basicDataSource.setDriverClassName(driverName);
-			basicDataSource.setUrl("jdbc:mysql://" + c.getdatabaseServer() +  "/" + c.getdatabaseName());
-			basicDataSource.setUsername(c.getdatabaseUser());
-			basicDataSource.setPassword(c.getdatabasePassword());
-
-
-		}catch(Exception e)
-		{
-			logger.error(e);
-		}
 
 	}
-	public ArrayList<String> getAgentPosition(String agent, String unit, String role)
-	{
-		
-		Connection connection = null;
-		String agent_id = "";
-		String unit_id = "";
-		ArrayList<String> role_ids = new ArrayList<String>();
-		ArrayList<String> role_positions = new ArrayList<String>();
-		
-		
-		
-		try
-		{
 
+	//Funcion adhoc para el ejemplo.
+	public String getAgentPosition(String agent, String unit, String rol)
+	{
+	
+		String position = null;
+		
+		if (agent.equals("agente_creador") && unit.equals("calculin") && rol.equals("creator"))
+		{
+			position = "creator";
+
+		}else if (agent.equals("agente_ruidoso"))
+		{
+			if (rol.equals("creator") && unit.equals("externa"))
+				position = "creator";
+			if (rol.equals("manager") && unit.equals("externa"))
+				position = "member";
 			
-
-			connection = basicDataSource.getConnection();
-
-			Statement stmt = connection.createStatement();
-			ResultSet rs =
-				stmt.executeQuery("SELECT id FROM entity WHERE entityid='"
-						+ agent + "'");
-			if (rs.next())
-			{
-				agent_id = rs.getString("id");
-
-			}
-			stmt = connection.createStatement();
-			rs = stmt.executeQuery("SELECT id FROM unit WHERE unitid='"
-					+ unit + "'");
-
-			if (rs.next())
-			{
-				unit_id = rs.getString("id");
-
-			}
-
-			stmt = connection.createStatement();
-			rs = stmt.executeQuery("SELECT role FROM entityplaylist WHERE unit='"
-					+ unit_id + "' and entity='"+agent_id+"'");
-			while(rs.next())
-			{
-				role_ids.add(rs.getString("role"));
-			}
-
-			if (role != null)
-			{
-				for (int i=0;i< role_ids.size();i++)
-				{
-					stmt = connection.createStatement();
-					rs = stmt.executeQuery("SELECT position FROM role WHERE id='"
-							+ role_ids.get(i) + "' and roleid='"+role+"'");
-					if (rs.next())
-					{
-						role_positions.add(rs.getString("position"));
-					}
-				}
-			}
-			else
-			{
-				for (int i=0;i< role_ids.size();i++)
-				{
-					stmt = connection.createStatement();
-					rs = stmt.executeQuery("SELECT position FROM role WHERE id='"
-							+ role_ids.get(i) + "'");
-					if (rs.next())
-					{
-						role_positions.add(rs.getString("position"));
-					}
-				}
-			}
-
-
-		}
-		catch (Exception e)
+		}if (agent.equals("agente_suma") && unit.equals("calculin") && rol.equals("operador"))
 		{
-			logger.error(e);
+			position = "subordinate";
+		}if (agent.equals("agente_sumatorio") && unit.equals("calculin") && rol.equals("manager"))
+		{
+			position = "supervisor";
+
+		}if (agent.equals("agente_visor") && unit.equals("calculin") && rol.equals("manager"))
+		{
+			position = "supervisor";
+		} if (agent.equals("agente_producto") && unit.equals("calculin") && rol.equals("operador"))
+		{
+			position = "subordinate";
 		}
-		finally {
-			if (null != connection)
-				try {
-					connection.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-		}
 
-
-
-
-		return role_positions;
+		return position;
 	}
 
 
@@ -193,7 +106,10 @@ public class OMSProxy extends THOMASProxy{
 	{
 		ArrayList<String> unit;
 		ArrayList<String> agentRole = null;
-		ArrayList<String> agentPositions = null;
+		ArrayList<String> agentPositions = new ArrayList<String>();
+		String rol_aux;
+		String unit_aux;
+		
 		boolean insideUnit = false;
 
 
@@ -225,21 +141,24 @@ public class OMSProxy extends THOMASProxy{
 				//TODO Esta parte esta hardoceada, es especifica para el ejemplo de la implementación, donde el agente creador
 				//solamente tendra el rol con posicion creator. Esto se debe hacer asi ya que el rol creator ahora se le asigna 
 				//al position supervisor.
-				if (agent.getName().equals("agente_creador"))
+
+				while(iterator1.hasNext())
 				{
-					agentPositions = new ArrayList<String>();
-					agentPositions.add("creator");
+					rol_aux = iterator1.next();
+					unit_aux = iterator1.next();
+					
+					String position = getAgentPosition(agent.getName(),unit_aux,rol_aux);
+					if (position!=null)
+						agentPositions.add(position);
+
 				}
-				else
-					agentPositions = this.getAgentPosition(agent.getName(),OrganizationID, null);
-
-
 				//Comprobaremos si tiene solamente el rol con la posición creator, en ese caso no puede enviar nada a ningún grupo.
 				if (agentPositions.contains("creator") && agentPositions.size() == 1)
 				{
 					throw new THOMASException("The agent [ "+ agent.getName()+" ] only contains the rol position creator, this rol position can not send organizational message");
 				}
 
+				agentPositions.clear();
 				//The unit type is flat
 				if (unit.get(2).equals("flat"))
 				{
@@ -248,12 +167,14 @@ public class OMSProxy extends THOMASProxy{
 				}
 				else
 				{
-
+					
 					while(iterator1.hasNext())
 					{
 						//Cogemos primero el rol, para que solamente compruebe la unidad que es el segundo elemento.
-						iterator1.next();
+						rol_aux = iterator1.next();
 
+						agentPositions.add(getAgentPosition(agent.getName(),OrganizationID,rol_aux));
+						
 						if (iterator1.next().equals(OrganizationID))
 						{
 							insideUnit = true;
