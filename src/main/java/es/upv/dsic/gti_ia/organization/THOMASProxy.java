@@ -651,7 +651,7 @@ public class THOMASProxy {
 						elements = arg3.split(",");
 
 						for (String e : elements) {
-							this.addElementToList(e);
+							this.addElementToList(e.trim());
 
 						}
 
