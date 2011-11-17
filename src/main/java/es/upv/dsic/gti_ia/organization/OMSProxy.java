@@ -3,10 +3,7 @@ package es.upv.dsic.gti_ia.organization;
 
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
-import es.upv.dsic.gti_ia.core.ACLMessage;
-import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.BaseAgent;
 
 
