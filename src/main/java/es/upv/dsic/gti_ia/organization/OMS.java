@@ -381,13 +381,13 @@ public class OMS extends CAgent {
 
 
 	/**
-	 * Create a new bind
-	 * @param OrganizationID
-	 * @param positionType
-	 * @param aid
-	 * @throws THOMASException
+	 * Creates a new binding according to type of playing position into organization
+	 * @param The Agent ID represents the name of the agent queue 
+	 * @param The Organization ID is part of the binging key
+	 * @param The Position Type, this position may be supervisor, subordinate, participant(member) or creator 
+	 * @throws THOMASException in order to show the cause of exception uses getContent
 	 */
-	private void createBinding(String OrganizationID, String positionType, String aid) throws THOMASException
+	private void createBinding(String aid, String OrganizationID, String positionType) throws THOMASException
 	{
 	
 
@@ -420,13 +420,14 @@ public class OMS extends CAgent {
 	}
 
 	/**
-	 * Delete bind
-	 * @param OrganizationID
-	 * @param positionType
-	 * @param aid
-	 * @throws THOMASException
+	 * Deletes binding with binding key represented by the aid, organizationID and positionType 
+	 * @param The Agent ID represents the name of the agent queue 
+	 * @param The Organization ID is part of the binging key
+	 * @param The Position Type, this position may be supervisor, subordinate, participant(member) or creator 
+	 * @throws THOMASException in order to show the cause of exception uses getContent
+	
 	 */
-	private void deleteBinding(String OrganizationID, String positionType, String aid) throws THOMASException
+	private void deleteBinding(String aid, String OrganizationID, String positionType) throws THOMASException
 	{
 		try
 		{
@@ -451,10 +452,11 @@ public class OMS extends CAgent {
 			@Override
 			protected String doAction(CProcessor myProcessor) {
 				String next = "";	
-				String OrganizationID = "";
-				String AIDName = "";
-				String Rol = "";
+				String organizationID = "";
+				String aidName = "";
+				String rol = "";
 				String positionType = "";
+				String unitType = "";
 				// create an execution engine
 				ProcessExecutionEngine exec = OWLSFactory.createExecutionEngine();
 
@@ -512,24 +514,60 @@ public class OMS extends CAgent {
 					//Extract the parameters needed to create and delete binds
 					if (aProcess.toString().contains("AcquireRoleProcess"))
 					{
-						Rol = values.getValues().toString().replace("[", "").split(",")[0].trim();
-						OrganizationID = values.getValues().toString().split(",")[1].trim();
-						AIDName = values.getValues().toString().replace("]", "").split(",")[2].trim();
+						
+						
+						rol = values.getValues().toString().replace("[", "").split(",")[0].trim();
+						organizationID = values.getValues().toString().split(",")[1].trim();
+						aidName = values.getValues().toString().replace("]", "").split(",")[2].trim();
+						
+						ValueMap valueUnit = new ValueMap();;
+						
+						Service aServiceUnit = kb.readService(OMS_INFORMUNIT_PROCESS);
+						Process aProcessUnit = aServiceUnit.getProcess();
+						
+						valueUnit.setValue(aProcessUnit.getInputs().inputAt(0),EntityFactory.createDataValue(aidName));
+						valueUnit.setValue(aProcessUnit.getInputs().inputAt(1),EntityFactory.createDataValue(organizationID));
+						
+						
+						//Execute service inform unit in order to select the unit type 
+						valueUnit = exec.execute(aProcessUnit, valueUnit);
+						
+						//Select the unit type of the unit
+						unitType = valueUnit.getValue("UnitType").toString();
+					
 						
 						
 					}
 					else if (aProcess.toString().contains("LeaveRoleProcess"))
 					{
+					
 						
-						AIDName = values.getValues().toString().replace("[", "").split(",")[0].trim();
-						OrganizationID = values.getValues().toString().split(",")[1].trim();
-						Rol = values.getValues().toString().replace("]", "").split(",")[2].trim();
-						positionType = omsProxy.getAgentPosition(AIDName,OrganizationID, Rol);
+						aidName = values.getValues().toString().replace("[", "").split(",")[0].trim();
+						organizationID = values.getValues().toString().split(",")[1].trim();
+						rol = values.getValues().toString().replace("]", "").split(",")[2].trim();
+						
+						ValueMap valueUnit = new ValueMap();;
+						
+						Service aServiceUnit = kb.readService(OMS_INFORMUNIT_PROCESS);
+						Process aProcessUnit = aServiceUnit.getProcess();
+						
+						valueUnit.setValue(aProcessUnit.getInputs().inputAt(0),EntityFactory.createDataValue(aidName));
+						valueUnit.setValue(aProcessUnit.getInputs().inputAt(1),EntityFactory.createDataValue(organizationID));
+						
+						
+						//Execute service inform unit in order to select the unit type
+						valueUnit = exec.execute(aProcessUnit, valueUnit);
+						
+						//Select the unit type of the unit
+						unitType = valueUnit.getValue("UnitType").toString();//.toString().split(" ");
+					
+						
+						positionType = omsProxy.getAgentPosition(aidName,organizationID, rol, unitType);
 						
 						
 						
 					}
-			
+					//Execute the service requested by the agent
 					values = exec.execute(aProcess, values);
 
 
@@ -547,24 +585,27 @@ public class OMS extends CAgent {
 					if (values.toString().contains("AcquireRole.owl#Status=Ok"))
 					{
 						// If organization is virtual the agent position is considered creator , if not get position for the unit
-						if (OrganizationID.equals("virtual"))
+						if (organizationID.equals("virtual"))
 						{
 							positionType = "creator";
 						}
 						else
-							positionType = omsProxy.getAgentPosition(AIDName,OrganizationID, Rol);
+							positionType = omsProxy.getAgentPosition(aidName,organizationID, rol, unitType);
+						
+						//If position type is member then creates binding for participant
 						if (positionType.equals("member"))
 						{
-							createBinding(OrganizationID, "participant", AIDName);
-						}
+							createBinding(aidName, organizationID, "participant");
+						}//If position type is subordinate then creates binding for subordinate
 						else if (positionType.equals("subordinate"))
 						{
-							createBinding(OrganizationID, "subordinate", AIDName);
+							createBinding(aidName, organizationID, "subordinate");
 
-						}else if (positionType.equals("supervisor"))
+						}//If position type is supervisor then creates binding for supervisor
+						else if (positionType.equals("supervisor"))
 						{
-							createBinding(OrganizationID, "supervisor", AIDName);
-						}
+							createBinding(aidName, organizationID, "supervisor");
+						}//If not this one in any of the previous positions and it is not creator either
 						else if (!positionType.equals("creator"))
 						{
 							throw new THOMASException("Unknown position "+ positionType);
@@ -581,8 +622,8 @@ public class OMS extends CAgent {
 						aService = kb.readService(OMS_INFORMAGENTROLE_PROCESS);
 						aProcess = aService.getProcess();
 						
-						value.setValue(aProcess.getInputs().inputAt(0),EntityFactory.createDataValue(AIDName));
-						value.setValue(aProcess.getInputs().inputAt(1),EntityFactory.createDataValue(AIDName));
+						value.setValue(aProcess.getInputs().inputAt(0),EntityFactory.createDataValue(aidName));
+						value.setValue(aProcess.getInputs().inputAt(1),EntityFactory.createDataValue(aidName));
 						
 						
 						//Execute service inform agent role 
@@ -602,10 +643,10 @@ public class OMS extends CAgent {
 							unit_aux = r.substring(r.indexOf(",")+1, r.indexOf(")"));
 							
 							//If agent is inside the organization and the rol played is not creator
-							if (unit_aux.equals(OrganizationID) && !role_aux.equals("creator"))
+							if (unit_aux.equals(organizationID) && !role_aux.equals("creator"))
 							{
 								//If position is equal of the agent position plays
-								if (positionType.equals(omsProxy.getAgentPosition(AIDName,OrganizationID, role_aux)))
+								if (positionType.equals(omsProxy.getAgentPosition(aidName,organizationID, role_aux, unitType)))
 										existen = true;
 							}
 			
@@ -613,7 +654,7 @@ public class OMS extends CAgent {
 						
 						if (!existen)
 						{
-							deleteBinding(OrganizationID, positionType, AIDName);
+							deleteBinding(aidName, organizationID, positionType);
 						}
 						
 						
