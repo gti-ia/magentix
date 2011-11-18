@@ -141,7 +141,7 @@ public class OMSProxy extends THOMASProxy{
 		//If unit not exist
 		if (unit.isEmpty())
 		{
-			throw new THOMASException("Not allowed or unit "+ OrganizationID+" not found");
+			throw new THOMASException("Inform unit not allowed or unit "+ OrganizationID+" not found.");
 
 		}else
 		{
@@ -150,7 +150,7 @@ public class OMSProxy extends THOMASProxy{
 			
 			if (agentRole.isEmpty())
 			{
-				throw new THOMASException("The agent role is empty.");
+				throw new THOMASException("The agent not play any rol.");
 			}
 			else
 			{
@@ -170,7 +170,7 @@ public class OMSProxy extends THOMASProxy{
 				// Comprobaremos si tiene solamente el rol con la posición creator, en ese caso no puede enviar nada a ningún grupo.
 				if (agentPositions.contains("creator") && agentPositions.size() == 1)
 				{
-					throw new THOMASException("The agent [ "+ agent.getName()+" ] only contains the rol position creator, this rol position can not send organizational message");
+					throw new THOMASException("Communication is not allowed to agents which only play the role creator.");
 				}
 
 				agentPositions.clear();
@@ -223,13 +223,13 @@ public class OMSProxy extends THOMASProxy{
 						}
 						else
 						{
-							throw new THOMASException("Unknown unit type");
+							throw new THOMASException("Unknown unit type.");
 						}
 					}
 					else //El agente no esta dentro de la unidad
 					{
 
-						throw new THOMASException("The agent [ "+agent.getName()+" ] is not inside the unit "+ OrganizationID);
+						throw new THOMASException("The agent is not inside the unit "+ OrganizationID+".");
 					}
 				}
 
