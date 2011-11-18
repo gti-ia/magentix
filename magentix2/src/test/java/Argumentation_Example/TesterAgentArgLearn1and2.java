@@ -12,7 +12,6 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.Vector;
 
-import es.upv.dsic.gti_ia.argAgents.knowledgeResources.Conclusion;
 import es.upv.dsic.gti_ia.argAgents.knowledgeResources.Dialogue;
 import es.upv.dsic.gti_ia.argAgents.knowledgeResources.DomainCase;
 import es.upv.dsic.gti_ia.argAgents.knowledgeResources.Position;
@@ -24,12 +23,10 @@ import es.upv.dsic.gti_ia.core.SingleAgent;
 
 public class TesterAgentArgLearn1and2 extends SingleAgent{
 
-	int totalTickets;
-	//String OWLFileName;
+	int totalDomCases;
 	ArrayList<SocialEntity> socialEntities;
 	String resultFileName;
 	String finishFileName;
-//	DomainCBR domCBR;
 	int casesPerAgent;
 	int iteration;
 	Vector<DomainCase> domCases;
@@ -40,14 +37,27 @@ public class TesterAgentArgLearn1and2 extends SingleAgent{
 	String commitmentStoreID;
 	long multTimeFactor=10;
 	
-	
-	public TesterAgentArgLearn1and2(AgentID aid, int totalTickets, ArrayList<SocialEntity> socialEntities, String commitmentStoreID, String resultFileName, 
+	/**
+	 * Constructor of the tester agent
+	 * @param aid
+	 * @param totalDomCases
+	 * @param socialEntities
+	 * @param commitmentStoreID
+	 * @param resultFileName
+	 * @param finishFileName
+	 * @param casesPerAgent
+	 * @param iteration
+	 * @param domCases
+	 * @param argCasesFiles
+	 * @param agents
+	 * @throws Exception
+	 */
+	public TesterAgentArgLearn1and2(AgentID aid, int totalDomCases, ArrayList<SocialEntity> socialEntities, String commitmentStoreID, String resultFileName, 
 			String finishFileName, int casesPerAgent, int iteration, Vector<DomainCase> domCases, ArrayList<String> argCasesFiles, ArrayList<ArgCAgent> agents) throws Exception {
 		super(aid);
 		logger.info(this.getName()+": agent created");
 		
-		this.totalTickets=totalTickets;
-		//this.OWLFileName=OWLFileName;
+		this.totalDomCases=totalDomCases;
 		this.socialEntities=socialEntities;
 		this.commitmentStoreID=commitmentStoreID;
 		this.resultFileName=resultFileName;
@@ -78,20 +88,17 @@ public class TesterAgentArgLearn1and2 extends SingleAgent{
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-//		ArrayList<Ticket> tickets=getTestTickets(totalTickets);
-		int nTicket=0;
+		int nDomCase=0;
 		
-		//create a new instance of the ticket without the solutions
-		DomainCase auxTicket=domCases.get(nTicket);
-//		Ticket ticketToSend=
-//			new Ticket(auxTicket.getTicketID(), auxTicket.getCategoryNode(), auxTicket.getAttributes(), auxTicket.getProblemDesc(), auxTicket.getProject(), auxTicket.getSolvingGroups(), auxTicket.getSolvingOperators(), null);
+		//create a new instance of the DomainCase without the solutions
+		DomainCase auxDomCase=domCases.get(nDomCase);
 
-		DomainCase ticketToSend = auxTicket;
+		DomainCase domCaseToSend = auxDomCase;
 		
 		long time=System.nanoTime();
 		currentDialogueID=String.valueOf(time);
 		ArrayList<String> agentIDs=new ArrayList<String>();
-		Dialogue dialogue = new Dialogue(currentDialogueID, agentIDs, ticketToSend.getProblem());
+		Dialogue dialogue = new Dialogue(currentDialogueID, agentIDs, domCaseToSend.getProblem());
 		
 		//store the init date of dialogue
 		dialogueInitTime=System.currentTimeMillis();
@@ -102,29 +109,19 @@ public class TesterAgentArgLearn1and2 extends SingleAgent{
 		Iterator<SocialEntity> iterAgents=socialEntities.iterator();
 		while(iterAgents.hasNext()){
 			SocialEntity socialEntity=iterAgents.next();
-			sendMessage(socialEntity.getName(), "OPENDIALOGUE", currentDialogueID, ticketToSend);
+			sendMessage(socialEntity.getName(), "OPENDIALOGUE", currentDialogueID, domCaseToSend);
 		}
-		nTicket++;
+		nDomCase++;
 		int totalErrors=0;
 		int solvedProblems=0;
 		logger.info("\n\n********\n"+this.getName()+": " + "PARTITION " + casesPerAgent + " ITERATION " + iteration+"\n\n********\n");
 		
-		long myLastCheckMillis=0l;
+		
 		Solution finalSolution=new Solution();
 		
 		while(true){
 			
 			Thread.sleep(100*multTimeFactor);
-			
-//			//this is to avoid a lot of test about modification date
-//			if(myLastCheckMillis>0l){
-//				
-//				long currentTime=System.currentTimeMillis();
-//				if(currentTime-myLastCheckMillis<30l*multTimeFactor){
-//					continue;
-//				}
-//			}
-			
 			
 			//ask to commitment store the elapsed milliseconds since the last modification (new arguments or positions) 
 			sendMessage(commitmentStoreID, "LASTMODIFICATIONDATE", currentDialogueID, null);
@@ -138,7 +135,6 @@ public class TesterAgentArgLearn1and2 extends SingleAgent{
 			}
 			Long millisDifference = (Long) msg.getContentObject();
 			logger.info("\n"+this.getName()+": millis difference="+millisDifference+"\n");
-			myLastCheckMillis=System.currentTimeMillis();
 			
 			//dialogue must finish
 			if(millisDifference>150*multTimeFactor){
@@ -156,8 +152,6 @@ public class TesterAgentArgLearn1and2 extends SingleAgent{
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-				
-				
 				
 				// Select the most frequent position (or the most voted in case of draw). Random by default
 				
@@ -199,10 +193,6 @@ public class TesterAgentArgLearn1and2 extends SingleAgent{
 					
 				}
 				
-//				if (frequentPositions.size() == 1){
-//					agreementReached = 1;
-//					acceptanceFrequency = frequentPositions.values().iterator().next();
-//				}
 				
 				//obtain most voted position
 				Set<Long> keySet=votedPositions.keySet();
@@ -254,14 +244,12 @@ public class TesterAgentArgLearn1and2 extends SingleAgent{
 					if(drawsInFreq.size()==0)
 						finalSolution=possibleSolutions.get(maxFrequentSolID);
 					else{//choose a solution if are in draw with votes and frequency
-//						int randomSolIndex=(int)Math.random()*drawsInFreq.size();
+
 						long maxIndSol=drawsInFreq.size()-1;
 						for (int i = 0; i < drawsInFreq.size(); i++){
 							if (drawsInFreq.get(i)>drawsInFreq.get((int) maxIndSol))
 								maxIndSol = i;
 						}
-//						long randomSolID=drawsInFreq.get(randomSolIndex);
-//						finalSolution=possibleSolutions.get(randomSolID);
 						long maxSolID=drawsInFreq.get((int) maxIndSol);
 						finalSolution=possibleSolutions.get(maxSolID);
 					}
@@ -279,7 +267,6 @@ public class TesterAgentArgLearn1and2 extends SingleAgent{
 						agentIDs2+=pos.getAgentID()+" ";
 					}
 					logger.info("\n++++++++++++++++\nFINAL SOLUTION:\n"+" solutionID="+finalSolution.getConclusion().getID()+" valuePromoted="+finalSolution.getPromotesValue()+" timesUsed="+finalSolution.getTimesUsed()+" proposingAgents: "+agentIDs2+" frequency:"+frequentPositions.get(finalSolution.getConclusion().getID())+" votes:"+votedPositions.get(finalSolution.getConclusion().getID()));
-					int votesReceived = votedPositions.get(finalSolution.getConclusion().getID());
 					float dialogueTime=(System.currentTimeMillis()-dialogueInitTime)/1000f;
 					logger.info("Dialogue elapsed time: "+dialogueTime+" seconds");
 					//logger.info("POSSIBLE SOLUTIONS:");
@@ -316,7 +303,7 @@ public class TesterAgentArgLearn1and2 extends SingleAgent{
 				if(finalSolution.getConclusion().getID()!=-1 && finalSolution.getConclusion().getID() != 0){
 					//logger.info("\n\n********\n"+this.getName()+": "+"message received: "+"from: "+msg.getSender().toString()+" solutionID="+sol.getConclusion().getId()+" valuePromoted="+sol.getPromotesValue()+" timesUsed="+sol.getTimesUsed()+"\n\n********\n");
 					
-					DomainCase ticketSent=domCases.get(nTicket-1);
+					DomainCase ticketSent=domCases.get(nDomCase-1);
 					Solution originalSolution=null;
 					ArrayList<Solution> ticketSolutions=ticketSent.getSolutions();
 					
@@ -360,179 +347,133 @@ public class TesterAgentArgLearn1and2 extends SingleAgent{
 		}
 			
 			
-			
-//			if(nTicket<domCases.size()){
-//				//create a new instance of the ticket without the solutions
-//				auxTicket=domCases.get(nTicket);
-//				ticketToSend=new DomainCase(auxTicket.getProblem(),new ArrayList<Solution>(),auxTicket.getJustification());
-//				//logger.info(this.getName()+": "+"proposing new ticket "+ticketToSend.getTicketID());
-//				iterAgents=socialEntities.iterator();
-//				while(iterAgents.hasNext()){
-//					SocialEntity socialEntity=iterAgents.next();
-//					sendMessage(socialEntity.getName(), "OPENDIALOGUE", "", ticketToSend);
-//				}
-//				nTicket++;
-//			}
-//			else{//finish the agent!
 				
-				// Compute the number of Locutions used per agent
-				int totalLocutions = 0;
-//				int totalAgents = 0;
-				for (ArgCAgent agent : agents){
-					totalLocutions+= agent.getMyUsedLocutions();
-//					totalAgents++;
-				}
-//				totalLocutions = totalLocutions / totalAgents;
-				
-				// Compute the number of Domain-Cases per agent
-				Vector<Integer> domCasesSize = new Vector<Integer>();
-								
-				for (int i = 0; i<agents.size(); i++){
-					domCasesSize.add(agents.get(i).getNumberDomainCases());
-				}
-				
-				float domCases = 0;
-				for (int j=0; j<domCasesSize.size(); j++){
-					domCases += domCasesSize.get(j);
-				}
-				domCases = domCases/domCasesSize.size();
-				
-				
-				// Compute the number of Argument-Cases per agent
-				Vector<Integer> argCasesSize = new Vector<Integer>();
-								
-				for (int i = 0; i<agents.size(); i++){
-					argCasesSize.add(agents.get(i).getNumberArgumentCases());
-				}
-				
-				float argCases = 0;
-				for (int j=0; j<argCasesSize.size(); j++){
-					argCases += argCasesSize.get(j);
-				}
-				argCases = argCases/argCasesSize.size();
-				
-				int agreementReached = agents.get(0).getAgreement();				
-				int acceptanceFrequency = agents.get(0).getAcceptanceFrequency();
-				
-				float frequency = 0f;
-				if (agents.size() != 0)
-					frequency = (float) acceptanceFrequency / (float) agents.size();
-				
-				float votesPercentage = 0f;
-				int selectedAsBest = 0;
-				
-				Position positionArgLearn = agents.get(0).getLastPositionBeforeNull();
-				
-				if (positionArgLearn != null && 
-						positionArgLearn.getSolution().getConclusion().getID() == finalSolution.getConclusion().getID())
-					selectedAsBest = 1;
-				
-//				if (selectedAsBest == 1 && agents.get(0).getVotes() != 0)
-					votesPercentage = (float) agents.get(0).getVotes() / (float) agents.size();
-				
-				int currPosAccepted = agents.get(0).getAccepted();
-				
-			
-				int iniArgCases = agents.get(0).getUsedArgCases();
-				float usedArgCases = 0f;
-				for (int ag = 0; ag < agents.size(); ag++){
-					usedArgCases+= (float) agents.get(ag).getUsedArgCases();
-				}
-				if (usedArgCases != 0)
-					usedArgCases/= (float) agents.size();
-				
-				iterAgents=socialEntities.iterator();
-				while(iterAgents.hasNext()){
-					SocialEntity socialEntity=iterAgents.next();
-					sendMessage(socialEntity.getName(), "DIE", currentDialogueID, null);
-				}
-				sendMessage(commitmentStoreID, "DIE", currentDialogueID, null);
-				
-				
-//				try {
-//					Thread.sleep(1500);//wait 1.5 seconds to give time to agents to finish
-//					Thread.sleep(5000);//wait to give time to agents to finish
-//					boolean someoneAlive = true;
-//					int ag = 0;
-//					while (someoneAlive || ag < agents.size()){
-//						someoneAlive = false;
-//						ag = 0;
-//						for (int i = 0; i < agents.size(); i++){
-//							ag++;
-//							try{
-//								ArgLearnAgent agent = agents.get(i);
-//								if (agent.isAlive()){
-//									someoneAlive = true;
-//									System.out.println(agent.getName() + " still alive");
-//									break;
-//								}
-//							}catch(Exception e){
-//								System.out.println("Agent " + ag + " knocked out");
-//							}
-//						}
+		// Compute the number of Locutions used per agent
+		int totalLocutions = 0;
 
-//					}
-
-//				} catch (InterruptedException e) {
-//					e.printStackTrace();
-//				}
+		for (ArgCAgent agent : agents){
+			totalLocutions+= agent.getMyUsedLocutions();
+		}
+		
+		// Compute the number of Domain-Cases per agent
+		Vector<Integer> domCasesSize = new Vector<Integer>();
+						
+		for (int i = 0; i<agents.size(); i++){
+			domCasesSize.add(agents.get(i).getNumberDomainCases());
+		}
+		
+		float domCases = 0;
+		for (int j=0; j<domCasesSize.size(); j++){
+			domCases += domCasesSize.get(j);
+		}
+		domCases = domCases/domCasesSize.size();
+		
+		
+		// Compute the number of Argument-Cases per agent
+		Vector<Integer> argCasesSize = new Vector<Integer>();
+						
+		for (int i = 0; i<agents.size(); i++){
+			argCasesSize.add(agents.get(i).getNumberArgumentCases());
+		}
+		
+		float argCases = 0;
+		for (int j=0; j<argCasesSize.size(); j++){
+			argCases += argCasesSize.get(j);
+		}
+		argCases = argCases/argCasesSize.size();
+		
+		int agreementReached = agents.get(0).getAgreement();				
+		int acceptanceFrequency = agents.get(0).getAcceptanceFrequency();
+		
+		float frequency = 0f;
+		if (agents.size() != 0)
+			frequency = (float) acceptanceFrequency / (float) agents.size();
+		
+		float votesPercentage = 0f;
+		int selectedAsBest = 0;
+		
+		Position positionArgLearn = agents.get(0).getLastPositionBeforeNull();
+		
+		if (positionArgLearn != null && 
+				positionArgLearn.getSolution().getConclusion().getID() == finalSolution.getConclusion().getID())
+			selectedAsBest = 1;
+		
+		votesPercentage = (float) agents.get(0).getVotes() / (float) agents.size();
+		
+		int currPosAccepted = agents.get(0).getAccepted();
+		
+	
+		int iniArgCases = agents.get(0).getUsedArgCases();
+		float usedArgCases = 0f;
+		for (int ag = 0; ag < agents.size(); ag++){
+			usedArgCases+= (float) agents.get(ag).getUsedArgCases();
+		}
+		if (usedArgCases != 0)
+			usedArgCases/= (float) agents.size();
+		
+		iterAgents=socialEntities.iterator();
+		while(iterAgents.hasNext()){
+			SocialEntity socialEntity=iterAgents.next();
+			sendMessage(socialEntity.getName(), "DIE", currentDialogueID, null);
+		}
+		sendMessage(commitmentStoreID, "DIE", currentDialogueID, null);
+		
 				
-				boolean someoneAlive = true;
-				while(someoneAlive){
-					Thread.sleep(3000);
-					someoneAlive = false;
-					try{
-						for (int i = 0; i< agents.size(); i++){
-							FileReader fstream = new FileReader(agents.get(i).getName());
-							BufferedReader file = new BufferedReader(fstream);
-							String line=file.readLine();
-							file.close();
-							if(line==null || line.equals("")){
-								someoneAlive = true;
-								break;
-							}
-						}
-
-					}catch (Exception e){//Catch exception if any
-						System.err.println("Error reading file: " + e.getMessage());
-						e.printStackTrace();
+				
+		boolean someoneAlive = true;
+		while(someoneAlive){
+			Thread.sleep(3000);
+			someoneAlive = false;
+			try{
+				for (int i = 0; i< agents.size(); i++){
+					FileReader fstream = new FileReader(agents.get(i).getName());
+					BufferedReader file = new BufferedReader(fstream);
+					String line=file.readLine();
+					file.close();
+					if(line==null || line.equals("")){
+						someoneAlive = true;
+						break;
 					}
 				}
+
+			}catch (Exception e){//Catch exception if any
+				System.err.println("Error reading file: " + e.getMessage());
+				e.printStackTrace();
+			}
+		}
 				
-				//print solution into a file
-				try{
-					
-					logger.info(this.getName()+": "+"finishing and writing the file");
-					
-					// Create file 
-					FileWriter fstream = new FileWriter(resultFileName,true);
-					BufferedWriter outFile = new BufferedWriter(fstream);
-//					outFile.write("solutionID= "+sol.getConclusion().getId()+" valuePromoted= "+sol.getPromotesValue()+" timesUsed= "+sol.getTimesUsed());
-//					outFile.write(casesPerAgent+" "+ totalErrors + " " + solvedProblems + " " + argCases + " " + totalLocutions + " " + agreementReached + " " + frequency);
-					outFile.write(domCases+" "+ totalErrors + " " + solvedProblems +
-							" " + argCases + " " + totalLocutions + " " + agreementReached + 
-							" " + frequency+ " " + currPosAccepted + " " + votesPercentage + 
-							" " + selectedAsBest + " " + iniArgCases + " " + usedArgCases);
-					outFile.newLine();
-					//Close the output stream
-					outFile.close();
-				}catch (Exception e){//Catch exception if any
-					System.err.println("Error: " + e.getMessage());
-				}
-				
-				
-				try{
-					
-					// Create file 
-					FileWriter fstream = new FileWriter(finishFileName,false);
-					BufferedWriter outFile = new BufferedWriter(fstream);
-					outFile.write("test2 finished");
-					outFile.newLine();
-					//Close the output stream
-					outFile.close();
-				}catch (Exception e){//Catch exception if any
-					System.err.println("Error: " + e.getMessage());
-				}
+		//print solution into a file
+		try{
+			
+			logger.info(this.getName()+": "+"finishing and writing the file");
+			
+			// Create file 
+			FileWriter fstream = new FileWriter(resultFileName,true);
+			BufferedWriter outFile = new BufferedWriter(fstream);
+			outFile.write(domCases+" "+ totalErrors + " " + solvedProblems +
+					" " + argCases + " " + totalLocutions + " " + agreementReached + 
+					" " + frequency+ " " + currPosAccepted + " " + votesPercentage + 
+					" " + selectedAsBest + " " + iniArgCases + " " + usedArgCases);
+			outFile.newLine();
+			//Close the output stream
+			outFile.close();
+		}catch (Exception e){//Catch exception if any
+			System.err.println("Error: " + e.getMessage());
+		}
+		
+		
+		try{
+			
+			// Create file 
+			FileWriter fstream = new FileWriter(finishFileName,false);
+			BufferedWriter outFile = new BufferedWriter(fstream);
+			outFile.write("test2 finished");
+			outFile.newLine();
+			//Close the output stream
+			outFile.close();
+		}catch (Exception e){//Catch exception if any
+			System.err.println("Error: " + e.getMessage());
+		}
 				
 //			}
 			
@@ -543,36 +484,12 @@ public class TesterAgentArgLearn1and2 extends SingleAgent{
 		}
 	}
 	
-//	private ArrayList<Ticket> getTestTickets(int nTickets){
-//		
-//		OWLDomainParser owlDomainParser= new OWLDomainParser();
-//		Vector<Ticket> allTickets=new Vector<Ticket>();
-//		try {
-//			allTickets = owlDomainParser.parseDomainOntology("Helpdesk-Full.owl");
-//		} catch (Exception e) {
-//			
-//			e.printStackTrace();
-//		}
-//		ArrayList<Ticket> tickets=new ArrayList<Ticket>();
-//		
-//		
-//		for(int i=0;i<nTickets;i++){
-//			int index=(int)(Math.random()*allTickets.size());
-//			Ticket ticket=allTickets.get(index);
-//			tickets.add(ticket);
-//		}
-//		
-//		return tickets;
-//	}
-	
-	
-	
-//	public void onMessage(ACLMessage msg){
-//		//logger.info("\n\n"+this.getName()+": "+msg.toString()+"\n\n");
-//		Solution sol=(Solution) msg.getContentObject();
-//		logger.info("\n\n********\n"+this.getName()+": "+"message received: "+"from: "+msg.getSender().toString()+" solutionID="+sol.getConclusion().getId()+" valuePromoted="+sol.getPromotesValue()+" timesUsed="+sol.getTimesUsed()+"\n\n********\n");
-//	}
-	
+	/**
+	 * Sends an {@link ACLMessage} with locution GETALLPOSITIONS to the Commitment Store
+	 * and returns the positions in a list
+	 * @param dialogueID
+	 * @return positions in a list
+	 */
 	@SuppressWarnings("unchecked")
 	private ArrayList<Position> getAllPositions(String dialogueID){
 		sendMessage(commitmentStoreID, "GETALLPOSITIONS", dialogueID, null);
@@ -591,6 +508,13 @@ public class TesterAgentArgLearn1and2 extends SingleAgent{
 		return positions;
 	}
 	
+	/**
+	 * Sends an {@link ACLMessage} with the given parameters
+	 * @param agentID
+	 * @param locution
+	 * @param conversationID
+	 * @param contentObject
+	 */
 	private void sendMessage(String agentID, String locution, String conversationID, Serializable contentObject){
 		
 		ACLMessage msg = new ACLMessage();
@@ -606,7 +530,6 @@ public class TesterAgentArgLearn1and2 extends SingleAgent{
 			e.printStackTrace();
 		}
 		
-		//System.out.println(this.getName()+": "+"message to send: "+"to: "+msg.getReceiver().toString()+" dialogueID: "+msg.getConversationId()+" locution: "+msg.getContent());
 		logger.info(this.getName()+": "+"message to send to: "+msg.getReceiver().toString()+" dialogueID: "+msg.getConversationId()+" locution: "+msg.getHeaderValue("locution"));
 		send(msg);
 		

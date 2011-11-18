@@ -10,118 +10,26 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Vector;
 
-import es.upv.dsic.gti_ia.argAgents.domainCBR.OWLDomainParser;
+
 import es.upv.dsic.gti_ia.argAgents.knowledgeResources.ArgumentCase;
-import es.upv.dsic.gti_ia.argAgents.knowledgeResources.Conclusion;
 import es.upv.dsic.gti_ia.argAgents.knowledgeResources.DomainCase;
-import es.upv.dsic.gti_ia.argAgents.knowledgeResources.DomainContext;
-import es.upv.dsic.gti_ia.argAgents.knowledgeResources.Justification;
-import es.upv.dsic.gti_ia.argAgents.knowledgeResources.Premise;
-import es.upv.dsic.gti_ia.argAgents.knowledgeResources.Problem;
-import es.upv.dsic.gti_ia.argAgents.knowledgeResources.Solution;
 
 
-
+/**
+ * This class creates different partitions of domain-cases and argument-cases to make tests
+ * @author Jaume Jordan
+ *
+ */
 public class CreatePartitions {
 
-//	public static void createDomCasesOWLPartitions(int nCases, int nRepetition){
-//		try {
-//		OWLDomainParser owlDomParser=new OWLDomainParser();
-//		Vector<Case> allCases=owlDomParser.parseDomainOntologyInCases("Helpdesk-Cases.owl");
-//		
-//		
-//		//ArrayList<ArrayList<Case>> partitionsCases=new ArrayList<ArrayList<Case>>();
-//		
-//		for(int op=0;op<10;op++){
-//			int inc=2;
-//			for(int cases=2;cases<=nCases;cases+=inc){
-//				
-//				for(int repetition=0;repetition<nRepetition;repetition++){
-//					Vector<Case> currentPartition=new Vector<Case>();
-//					ArrayList<Integer> usedIndex=new ArrayList<Integer>();
-//					for(int i=0;i<cases;i++){
-//						int index=(int)(Math.random()*allCases.size());
-//						while(usedIndex.contains(index)){
-//							index=(int)(Math.random()*allCases.size());
-//						}
-//						Case aCase=allCases.get(index);
-//						currentPartition.add(aCase);
-//						usedIndex.add(index);
-//					}
-//					//partitionsCases.add(currentPartition);
-//					
-//					//save the list currentPartition in the given file, using the function of domain onto parser
-//					
-//					
-//						owlDomParser.saveCasesInDomainOntology(currentPartition, "HelpdeskOnto.owl", 
-//								"partitions/part"+cases+"cas"+repetition+"rep"+op+"op.owl");
-////						owlDomParser.saveCasesInDomainOntology(currentPartition, "partitions/part"+cases+"cas"+repetition+"rep"+op+"op.owl", 
-////							"partitions/part"+cases+"cas"+repetition+"rep"+op+"op.owl");
-//					
-//					
-//				}
-//				
-//				
-//				if(inc==3) inc=2;
-//				else inc=3;
-//			}
-//		}
-//		
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		
-//	}
-	
-//	public static void createDomCasesPartitions(int nCases, int nRepetition, int nOperators){
-//		try {
-//		
-//		Vector<Case> allCases=readCasesFile("Helpdesk-Cases.dat");
-//		
-//		//ArrayList<ArrayList<Case>> partitionsCases=new ArrayList<ArrayList<Case>>();
-//		
-//		for(int op=0;op<nOperators;op++){
-////			int inc=2;
-//			for(int cases=5;cases<=nCases;cases+=5){
-//				
-//				for(int repetition=0;repetition<nRepetition;repetition++){
-//					Vector<Case> currentPartition=new Vector<Case>();
-//					ArrayList<Integer> usedIndex=new ArrayList<Integer>();
-//					for(int i=0;i<cases;i++){
-//						int index=(int)(Math.random()*allCases.size());
-//						while(usedIndex.contains(index)){
-//							index=(int)(Math.random()*allCases.size());
-//						}
-//						Case aCase=allCases.get(index);
-//						currentPartition.add(aCase);
-//						usedIndex.add(index);
-//					}
-//					//partitionsCases.add(currentPartition);
-//					
-//					//save the list currentPartition in the given file, using the function of domain onto parser
-//					
-//					
-//						writeCasesFile(currentPartition, 
-//								"partitions/part"+cases+"cas"+repetition+"rep"+op+"op.dat");
-//					
-//				}
-//				
-////				if(inc==3) inc=2;
-////				else inc=3;
-//			}
-//		}
-//		
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		
-//	}
-//	
+	/**
+	 * Creates the data files with the domainCases serialized as Java Objects
+	 * @param nCases Creates different files, from 0 to nCases
+	 * @param nOperators number of operators
+	 */
 	public static void createDomCasesPartitionsIncremental(int nCases, int nOperators){
 		try {
 		
@@ -151,7 +59,6 @@ public class CreatePartitions {
 					writeDomainCases(currentPartition, 
 							"partitionsInc/part"+cases+"cas"+op+"op.dat");
 				
-				
 			}
 		}
 		
@@ -161,6 +68,12 @@ public class CreatePartitions {
 		
 	}
 	
+	/**
+	 * Creates the data files with the domainCases, serialized as Java Objects.
+	 * It takes a concrete order to create continuous and incremental partitions.
+	 * @param nCases Creates different files, from 0 to nCases
+	 * @param nOperators number of operators
+	 */
 	public static void createDomCasesPartitionsContinued(int nCases, int nOperators){
 		try {
 		
@@ -201,40 +114,14 @@ public class CreatePartitions {
 		}
 		
 	}
-//	
-//	public static void createDomCasesPartitionsIncOrdered(int nCases, int nOperators){
-//		try {
-//		
-//		Vector<Case> allCases=readCasesFile("Helpdesk-CasesCatOrder.dat");
-//		
-//		//ArrayList<ArrayList<Case>> partitionsCases=new ArrayList<ArrayList<Case>>();
-//		
-//		for(int op=0;op<nOperators;op++){
-//			Vector<Case> currentPartition=new Vector<Case>();
-//			for(int cases=5;cases<=nCases;cases+=5){
-//				
-//				for(int i=0;i<cases;i++){//5 cases per incremental iteration
-//					Case aCase=allCases.get(i);
-//					currentPartition.add(aCase);
-//				}
-//				
-//				
-//				//save the list currentPartition in the given file, using the function of domain onto parser
-//				
-//				
-//					writeCasesFile(currentPartition, 
-//							"partitionsInc/partExpert"+cases+"cas"+op+"op.dat");
-//				
-//				
-//			}
-//		}
-//		
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		
-//	}
-//	
+	
+	/**
+	 * Creates the data files with the ArgumentCases of each {@link SocialEntity}, serialized as Java Objects
+	 * @param file The original file with ArgumentCases to read (if any)
+	 * @param inc The number of cases that is added to each new file
+	 * @param operator number of operator
+	 * @param nCases Creates different files, from 0 to nCases
+	 */
 	public static void createArgCasesPartitionsIncremental(String file, int inc, int operator, int nCases){
 		try {
 		
@@ -261,7 +148,6 @@ public class CreatePartitions {
 				usedIndex.add(index);
 			}
 				
-				
 			//save the list currentPartition in the given file, using the function of domain onto parser
 				
 			writeArgCasesFile(currentPartition, 
@@ -275,6 +161,10 @@ public class CreatePartitions {
 		
 	}
 	
+	/**
+	 * Create empty partitions of argument-cases with the given file names
+	 * @param destFileNames file names to create empty partitions
+	 */
 	public static void createEmptyArgCasesPartitions(ArrayList<String> destFileNames){
 		
 		for(int i=0;i<destFileNames.size();i++){
@@ -290,7 +180,11 @@ public class CreatePartitions {
 	}
 	
 	
-	
+	/**
+	 * Write the given domain-cases as a Serializable Java Objects in the given file path 
+	 * @param domCases list of domain-cases to write
+	 * @param filePath file path to write the domain-cases
+	 */
 	private static void writeDomainCases(ArrayList<DomainCase> domCases, String filePath){
 		try {
 			ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filePath));
@@ -310,176 +204,11 @@ public class CreatePartitions {
 		}
 	}
 	
-	
-	
-//	public static void createExpertsOWLPartitions(){
-//		OWLDomainParser owlDomainParser=new OWLDomainParser();
-//		try {
-//			
-//			ArrayList<Integer> categoriesAdded=new ArrayList<Integer>();
-//			Vector<Case> casesPartition=new Vector<Case>();
-//			Vector<Case> aditionalCases=new Vector<Case>();
-//			Vector<Case> cases=owlDomainParser.parseDomainOntologyInCases("Helpdesk-Cases.owl");
-//			
-//			Iterator<Case> iterCases=cases.iterator();
-//			while(iterCases.hasNext()){
-//				Case acase=iterCases.next();
-//				int categoryID=acase.getCategoryNode().getIdTipi();
-//				if(!categoriesAdded.contains(categoryID)){
-//					categoriesAdded.add(categoryID);
-//					casesPartition.add(acase);
-//					System.out.println("category="+categoryID+" sol="+acase.getSolutions().values().iterator().next().getSolutionID());
-//				}
-//				else
-//					aditionalCases.add(acase);
-//				
-//			}
-//			System.out.println(casesPartition.size()+" cases in partition");
-//			owlDomainParser.saveCasesInDomainOntology(casesPartition, "HelpdeskOnto.owl", "partitions/expert26.owl");
-//			
-//			int nCases=40;
-////			int inc=2;
-//			for(int icases=30;icases<=nCases;icases+=5){
-//				
-//				
-//				Vector<Case> currentPartition=new Vector<Case>();
-//				Iterator<Case> iterCasesPart=casesPartition.iterator();
-//				while(iterCasesPart.hasNext()){
-//					currentPartition.add(iterCasesPart.next());
-//				}
-//				ArrayList<Integer> usedIndex=new ArrayList<Integer>();
-//				for(int i=0;i<icases-casesPartition.size();i++){
-//					int index=(int)(Math.random()*aditionalCases.size());
-//					while(usedIndex.contains(index)){
-//						index=(int)(Math.random()*aditionalCases.size());
-//					}
-//					Case aCase=aditionalCases.get(index);
-//					currentPartition.add(aCase);
-//					usedIndex.add(index);
-//				}
-//				//partitionsCases.add(currentPartition);
-//				
-//				//save the list currentPartition in the given file, using the function of domain onto parser
-//				
-//				
-//				owlDomainParser.saveCasesInDomainOntology(currentPartition, "HelpdeskOnto.owl", 
-//							"partitions/expert"+icases+".owl");
-//				
-////				if(inc==3) inc=2;
-////				else inc=3;
-//			}
-//		
-//		
-//		
-//		} catch (Exception e) {
-//			
-//			e.printStackTrace();
-//		}
-//	}
-//	
-//	public static void createExpertsPartitions(){
-//		
-//		try {
-//			
-//			ArrayList<Integer> categoriesAdded=new ArrayList<Integer>();
-//			Vector<Case> casesPartition=new Vector<Case>();
-//			Vector<Case> aditionalCases=new Vector<Case>();
-//			Vector<Case> cases=readCasesFile("Helpdesk-Cases.dat");
-//			
-//			Iterator<Case> iterCases=cases.iterator();
-//			while(iterCases.hasNext()){
-//				Case acase=iterCases.next();
-//				int categoryID=acase.getCategoryNode().getIdTipi();
-//				if(!categoriesAdded.contains(categoryID)){
-//					categoriesAdded.add(categoryID);
-//					casesPartition.add(acase);
-//					System.out.println("category="+categoryID+" sol="+acase.getSolutions().values().iterator().next().getSolutionID());
-//				}
-//				else
-//					aditionalCases.add(acase);
-//				
-//			}
-//			System.out.println(casesPartition.size()+" cases in partition");
-//			writeCasesFile(casesPartition, "partitions/expert26.dat");
-//			
-//			int nCases=40;
-////			int inc=2;
-//			for(int icases=30;icases<=nCases;icases+=5){
-//				
-//				
-//				Vector<Case> currentPartition=new Vector<Case>();
-//				Iterator<Case> iterCasesPart=casesPartition.iterator();
-//				while(iterCasesPart.hasNext()){
-//					currentPartition.add(iterCasesPart.next());
-//				}
-//				ArrayList<Integer> usedIndex=new ArrayList<Integer>();
-//				for(int i=0;i<icases-casesPartition.size();i++){
-//					int index=(int)(Math.random()*aditionalCases.size());
-//					while(usedIndex.contains(index)){
-//						index=(int)(Math.random()*aditionalCases.size());
-//					}
-//					Case aCase=aditionalCases.get(index);
-//					currentPartition.add(aCase);
-//					usedIndex.add(index);
-//				}
-//				//partitionsCases.add(currentPartition);
-//				
-//				//save the list currentPartition in the given file, using the function of domain onto parser
-//				
-//				
-//				writeCasesFile(currentPartition,"partitions/expert"+icases+".dat");
-//				
-////				if(inc==3) inc=2;
-////				else inc=3;
-//			}
-//		
-//		
-//		
-//		} catch (Exception e) {
-//			
-//			e.printStackTrace();
-//		}
-//	}
-//	
-//	public static Vector<Case> readCasesFile(String fileName){
-//		int ncases=0;
-//		Vector<Case> cases=new Vector<Case>();
-//		try {
-//			
-//			ObjectInputStream ois = new ObjectInputStream(new FileInputStream(fileName));
-//			
-//			// Read first object
-//			Object aux = ois.readObject();
-//			
-//			// While there are objects
-//			while (aux!=null){
-//			    if(aux instanceof Case){
-//			    	ncases++;
-//			    	Case acase=(Case) aux;
-//			    	cases.add(acase);
-//			        
-//			    }
-//			    aux = ois.readObject();
-//			}
-//			ois.close();
-//		
-//		
-//		} catch (EOFException e) {
-//			
-//		} catch (FileNotFoundException e) {
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		} catch (ClassNotFoundException e) {
-//			e.printStackTrace();
-//		}
-//		
-//		System.out.println("cases="+ncases);
-//		
-//		return cases;
-//		
-//	}
-//	
+	/**
+	 * Reads in a {@link Vector} of {@link DomainCase} the contents of a file
+	 * @param fileName The file to read
+	 * @return {@link Vector} of {@link DomainCase}
+	 */
 	public static Vector<DomainCase> readDomainCasesFile(String fileName){
 		int ncases=0;
 		Vector<DomainCase> cases=new Vector<DomainCase>();
@@ -519,6 +248,11 @@ public class CreatePartitions {
 		
 	}
 	
+	/**
+	 * Reads in a {@link Vector} of {@link ArgumentCase} the contents of a file
+	 * @param fileName The file to read
+	 * @return {@link Vector} of {@link ArgumentCase}
+	 */
 	public static Vector<ArgumentCase> readArgCasesFile(String fileName){
 		int ncases=0;
 		Vector<ArgumentCase> cases=new Vector<ArgumentCase>();
@@ -558,63 +292,11 @@ public class CreatePartitions {
 		
 	}
 	
-//	public static Vector<Ticket> readTicketsFile(String fileName){
-//		int ntickets=0;
-//		Vector<Ticket> tickets=new Vector<Ticket>();
-//		try {
-//			
-//			ObjectInputStream ois = new ObjectInputStream(new FileInputStream(fileName));
-//			
-//			// Read first object
-//			Object aux = ois.readObject();
-//			
-//			// While there are objects
-//			while (aux!=null){
-//			    if(aux instanceof Ticket){
-//			    	ntickets++;
-//			    	Ticket ticket=(Ticket) aux;
-//			    	tickets.add(ticket);
-//			        
-//			    }
-//			    aux = ois.readObject();
-//			}
-//			ois.close();
-//		
-//		
-//		} catch (EOFException e) {
-//			
-//		} catch (FileNotFoundException e) {
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		} catch (ClassNotFoundException e) {
-//			e.printStackTrace();
-//		}
-//		
-//		System.out.println("tickets="+ntickets);
-//		
-//		return tickets;
-//		
-//	}
-//	
-//	public static void writeCasesFile(Vector<Case> cases, String fileName){
-//		try {
-//			ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileName));
-//			Iterator<Case> iterCases=cases.iterator();
-//			while(iterCases.hasNext()){
-//				Case aCase=iterCases.next();
-//				oos.writeObject(aCase);
-//			}
-//		
-//		} catch (FileNotFoundException e) {
-//			
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			
-//			e.printStackTrace();
-//		}
-//	}
-	
+	/**
+	 * Writes a {@link Vector} of {@link ArgumentCase} in a file
+	 * @param cases {@link Vector} of {@link ArgumentCase}s to write
+	 * @param fileName File to write
+	 */
 	public static void writeArgCasesFile(Vector<ArgumentCase> cases, String fileName){
 		try {
 			ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileName));
@@ -633,90 +315,10 @@ public class CreatePartitions {
 		}
 	}
 	
-//	public static void writeTicketsFile(Vector<Ticket> tickets, String fileName){
-//		try {
-//			ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileName));
-//			Iterator<Ticket> iterTickets=tickets.iterator();
-//			while(iterTickets.hasNext()){
-//				Ticket ticket=iterTickets.next();
-//				oos.writeObject(ticket);
-//			}
-//		
-//		} catch (FileNotFoundException e) {
-//			
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			
-//			e.printStackTrace();
-//		}
-//	}
-//	
-	
-//	public static Vector<Case> createOrderedCaseBase(){
-//		Vector<Case> cases=readCasesFile("Helpdesk-Cases.dat");
-//		HashMap<Integer,ArrayList<Case>> casesByCategory=new HashMap<Integer, ArrayList<Case>>();
-//		
-//		Iterator<Case> iterCases=cases.iterator();
-//		while(iterCases.hasNext()){
-//			Case acase=iterCases.next();
-//			int categoryID=acase.getCategoryNode().getIdTipi();
-//			ArrayList<Case> casesList=casesByCategory.get(categoryID);
-//			if(casesList!=null && !casesList.isEmpty()){
-//				casesList.add(acase);
-//			}
-//			else{
-//				casesList=new ArrayList<Case>();
-//				casesList.add(acase);
-//				casesByCategory.put(categoryID, casesList);
-//			}
-//		}
-//		HashMap<Integer,ArrayList<Integer>> categoryQuantity= new HashMap<Integer, ArrayList<Integer>>();
-//		Iterator<ArrayList<Case>> iterCasesLists=casesByCategory.values().iterator();
-//		while(iterCasesLists.hasNext()){
-//			ArrayList<Case> list= iterCasesLists.next();
-//			ArrayList<Integer> categoriesList=categoryQuantity.get(list.size());
-//			if(categoriesList!=null && !categoriesList.isEmpty())
-//				categoriesList.add(list.get(0).getCategoryNode().getIdTipi());
-//			else{
-//				categoriesList=new ArrayList<Integer>();
-//				categoriesList.add(list.get(0).getCategoryNode().getIdTipi());
-//				categoryQuantity.put(list.size(), categoriesList);
-//			}
-//			
-//		}
-//		
-//		ArrayList<Integer> categoriesOrdered=new ArrayList<Integer>();
-//		Iterator<ArrayList<Integer>> iterCategoryQuantity= categoryQuantity.values().iterator();
-//		while(iterCategoryQuantity.hasNext()){
-//			ArrayList<Integer> categories= iterCategoryQuantity.next();
-//			Iterator<Integer> iterCategories=categories.iterator();
-//			while(iterCategories.hasNext()){
-//				int category=iterCategories.next();
-//				if(categoriesOrdered.isEmpty())
-//					categoriesOrdered.add(category);
-//				else 
-//					categoriesOrdered.add(0, category);
-//			
-//			}
-//		}
-//		
-//		Vector<Case> casesByCategoryOrdered=new Vector<Case>();
-//		Iterator<Integer> iterCategoriesOrdered=categoriesOrdered.iterator();
-//		while(iterCategoriesOrdered.hasNext()){
-//			int category=iterCategoriesOrdered.next();
-//			casesByCategoryOrdered.addAll(casesByCategory.get(category));
-//		}
-//		
-//		Iterator<Case> iterCasesByCategoryOrdered=casesByCategoryOrdered.iterator();
-//		while(iterCasesByCategoryOrdered.hasNext()){
-//			Case acase=iterCasesByCategoryOrdered.next();
-//			System.out.println(acase.getCategoryNode().getIdTipi());
-//		}
-//		
-//		return casesByCategoryOrdered;
-//	
-//	}
-	
+	/**
+	 * Returns a {@link Vector} of all the domain-cases of the file Helpdesk-DomainCases.dat
+	 * @return a {@link Vector} of all the domain-cases of the file Helpdesk-DomainCases.dat
+	 */
 	public static Vector<DomainCase> getTestDomainCases(){
 		Vector<DomainCase> domCases=new Vector<DomainCase>();
 		try {
@@ -729,102 +331,12 @@ public class CreatePartitions {
 		return domCases;
 	}
 	
-	/**
-	 * @param args
-	 */
+	
 	public static void main(String[] args) {
 		
 		
-		createDomCasesPartitionsContinued(45, 9);
-		
-//		createDomCasesPartitions(40, 48, 9);
-//		createExpertsPartitions();
-//		
-//		createTestData();
-		
-//		createDomCasesPartitionsIncremental(45, 9);
-		
-//		Vector<Case> cases=readCasesFile("partitionsInc/part10cas8op.dat");
-//		Iterator<Case> iterCases=cases.iterator();
-//		while(iterCases.hasNext()){
-//			Case caseA=iterCases.next();
-//			System.out.println(caseA.getCategoryNode().getIdTipi()+" "+caseA.getSolutions().values().iterator().next().getSolutionID());
-//		}
-		
-//		createOrderedCaseBase();
-//		writeCasesFile(createOrderedCaseBase(), "Helpdesk-CasesCatOrder.dat");
 	
-//		Vector<Vector<ArgumentCase>> argCases = new Vector<Vector<ArgumentCase>>();
-//		Vector<ArgumentCase> argCasesCB = new Vector<ArgumentCase>();
-//		Vector<Integer> argCasesSize = new Vector<Integer>();
-//
-//
-//		for (int op = 0; op < 9; op++){
-////			Vector<ArgumentCase> argCasesOp = new Vector<ArgumentCase>();
-////			Vector<ArgumentCase> argCasesAux= new Vector<ArgumentCase>();
-////			for (int pref = 0; pref <= 5; pref++){
-////				if (pref == 1 || pref == 3 || pref == 4)
-////					argCasesAux = readArgCasesFile("partArgInc/partArg"+18+"cas"+pref+"ValPref"+op+"op.dat");
-////				else
-////					argCasesAux = readArgCasesFile("partArgInc/partArg"+19+"cas"+pref+"ValPref"+op+"op.dat");
-////				argCasesOp.addAll(argCasesAux);
-////			}
-////			System.out.println(argCasesOp.size());
-////			writeArgCasesFile(argCasesOp, "partArgInc/argCasesFull" + op + "op.dat");
-//			
-//			ArgCBR argCBR = new ArgCBR("partArgInc/argCasesFull" + op + "op.dat", "partArgInc/argCases" + op + "op.dat");
-//			
-//			argCBR.doCache();
-//		
-//			
-////			createArgCasesPartitionsIncremental("partArgInc/argCases" + op + "op.dat",2,op,20);
-//			
-//		}
-		
-//		createDomCasesPartitionsIncOrdered(45, 9);
-		
-//		createDomCases("Helpdesk-DomainCases.dat");
-		
-//		createDomCasesPartitionsIncremental(45, 15);
-		
-//		ArrayList<String> argFileNames=new ArrayList<String>();
-//		for(int i=0;i<15;i++){
-//			argFileNames.add("partArgInc/partArg"+"Operator"+i+".dat");
-//		}
-//		createEmptyArgCasesPartitions(argFileNames);
 	}
-
-//	public static void createTestData(){
-//		Vector<Ticket> ticketsTest = new Vector<Ticket>();
-//		Vector<Case> casesTest = readCasesFile("Helpdesk-Cases.dat");
-//		
-//		Iterator<Case> ite = casesTest.iterator();
-//		while(ite.hasNext()){
-//			Case c = ite.next();
-//			
-//			int id = (int) System.currentTimeMillis();
-//			if (id < 0) id = id * -1;
-//		    
-//			// WARNING: it is correct since Helpdesk-Cases has ONLY 1 SOLUTION per case
-//			Ticket t = new Ticket(id, c.getCategoryNode(), c.getAttributes(), c.getProblemDesc(), 
-//					c.getProject(), c.getSolvingGroups(), c.getSolvingOperators(), c.getSolutions());
-//			ticketsTest.add(t);	
-//		}
-//		
-//		writeTicketsFile(ticketsTest, "Helpdesk-Test.dat");
-//	}
-//	
-//	public static Vector<Ticket> getTestTickets(){
-//		Vector<Ticket> tickets=new Vector<Ticket>();
-//		try {
-//			tickets = readTicketsFile("Helpdesk-Test.dat");	
-//		}catch (Exception e){//Catch exception if any
-//			System.err.println("Error reading file: " + e.getMessage());
-//			e.printStackTrace();
-//		}
-//		return tickets;
-//	}
-//	
-	
+		
 
 }

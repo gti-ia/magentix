@@ -15,7 +15,7 @@ import java.util.Vector;
 
 
 import es.upv.dsic.gti_ia.argAgents.Configuration;
-import es.upv.dsic.gti_ia.argAgents.knowledgeResources.AcceptabilityState;
+import es.upv.dsic.gti_ia.argAgents.knowledgeResources.AcceptabilityStatus;
 import es.upv.dsic.gti_ia.argAgents.knowledgeResources.ArgNode;
 import es.upv.dsic.gti_ia.argAgents.knowledgeResources.ArgumentCase;
 import es.upv.dsic.gti_ia.argAgents.knowledgeResources.ArgumentProblem;
@@ -441,7 +441,7 @@ public class ArgCBR {
 		
 		for(int i=0;i<sameProblemArgCases.size();i++){
 			// if case is accepted, add it to the list
-			if(sameProblemArgCases.get(i).getArgumentCase().getArgumentSolution().getAcceptabilityState().compareTo(AcceptabilityState.ACCEPTABLE)==0){
+			if(sameProblemArgCases.get(i).getArgumentCase().getArgumentSolution().getAcceptabilityState().compareTo(AcceptabilityStatus.ACCEPTABLE)==0){
 				returnList.add(sameProblemArgCases.get(i));
 			}
 		}
@@ -479,7 +479,7 @@ public class ArgCBR {
 		
 		for(int i=0;i<sameProblemConclusionArgCases.size();i++){
 			// if case is accepted, add it to the list
-			if(sameProblemConclusionArgCases.get(i).getArgumentCase().getArgumentSolution().getAcceptabilityState().compareTo(AcceptabilityState.ACCEPTABLE)==0){
+			if(sameProblemConclusionArgCases.get(i).getArgumentCase().getArgumentSolution().getAcceptabilityState().compareTo(AcceptabilityStatus.ACCEPTABLE)==0){
 				returnList.add(sameProblemConclusionArgCases.get(i));
 			}
 		}
@@ -783,7 +783,7 @@ public class ArgCBR {
 		//only accepted cases
 		for(int i=0;i<finalArgCases.size();i++){
 			// if case is not accepted, remove it from list
-			if(finalArgCases.get(i).getArgumentCase().getArgumentSolution().getAcceptabilityState().compareTo(AcceptabilityState.ACCEPTABLE)!=0){
+			if(finalArgCases.get(i).getArgumentCase().getArgumentSolution().getAcceptabilityState().compareTo(AcceptabilityStatus.ACCEPTABLE)!=0){
 				finalArgCases.remove(i);
 				i--;
 			}

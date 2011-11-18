@@ -15,7 +15,7 @@ public class ArgumentSolution extends Solution {
 	private static final long serialVersionUID = -1756923394620376629L;
 	public enum ArgumentType {INDUCTIVE, PRESUMTIVE, MIXED};
 	private ArgumentType argumentType;
-	private AcceptabilityState acceptabilityState;
+	private AcceptabilityStatus acceptabilityState;
 	private ArrayList<Premise> distPremises;
 	private ArrayList<Premise> presumptions;
 	private ArrayList<Premise> exceptions;
@@ -27,7 +27,7 @@ public class ArgumentSolution extends Solution {
 	private ArrayList<Long> counterExamplesArgCaseIDList;
 	private ArrayList<Long> counterExamplesDomCaseIDList;
 	
-    public ArgumentSolution(ArgumentType argumentType, AcceptabilityState acceptabilityState,
+    public ArgumentSolution(ArgumentType argumentType, AcceptabilityStatus acceptabilityState,
     		ArrayList<Premise> distPremises, ArrayList<Premise> presumptions, ArrayList<Premise> exceptions,
     		ArrayList<Long> counterExamplesDomCaseID, ArrayList<Long> counterExamplesArgCaseID) {
         this.argumentType = argumentType;
@@ -42,7 +42,7 @@ public class ArgumentSolution extends Solution {
 
     public ArgumentSolution() {
     	argumentType = null;
-    	acceptabilityState = AcceptabilityState.UNDECIDED;
+    	acceptabilityState = AcceptabilityStatus.UNDECIDED;
     	distPremises = new ArrayList<Premise>();
     	presumptions = new ArrayList<Premise>();
     	exceptions = new ArrayList<Premise>();
@@ -53,12 +53,12 @@ public class ArgumentSolution extends Solution {
 
     // Property hasAcceptabilityState
 
-    public AcceptabilityState getAcceptabilityState() {
+    public AcceptabilityStatus getAcceptabilityState() {
         return acceptabilityState;
     }
 
 
-    public void setAcceptabilityState(AcceptabilityState newAcceptabilityState) {
+    public void setAcceptabilityState(AcceptabilityStatus newAcceptabilityState) {
         acceptabilityState = newAcceptabilityState;
     }
 

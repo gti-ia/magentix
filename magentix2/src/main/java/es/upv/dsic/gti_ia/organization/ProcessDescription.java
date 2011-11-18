@@ -26,7 +26,7 @@ public class ProcessDescription {
 	private String servicemodel;
 	private String URLProcess;
 	private String ServiceID; // id profile
-	private OWLKnowledgeBase kb = OWLFactory.createKB();
+//	private OWLKnowledgeBase kb = OWLFactory.createKB();
 
 	/**
 	 * 
@@ -126,30 +126,30 @@ public class ProcessDescription {
 	 * @return Process is a mindswap.owls.process.Process;
 	 * @throws Exception
 	 */
-	public Process getProcess(ACLMessage inmsg) throws Exception {
-
-		// read msg content
-		StringTokenizer Tok = new StringTokenizer(inmsg.getContent());
-
-		// read in the service description
-		String token_process = Tok.nextElement().toString();
-
-		try {
-			Service aService = kb.readService(token_process);
-
-			// get the process for the server
-			Process aProcess = aService.getProcess();
-
-			return aProcess;
-
-		} catch (Exception e) {
-
-			e.printStackTrace();
-			throw new Exception(e);
-
-		}
-
-	}
+//	public Process getProcess(ACLMessage inmsg) throws Exception {
+//
+//		// read msg content
+//		StringTokenizer Tok = new StringTokenizer(inmsg.getContent());
+//
+//		// read in the service description
+//		String token_process = Tok.nextElement().toString();
+//
+//		try {
+//			Service aService = kb.readService(token_process);
+//
+//			// get the process for the server
+//			Process aProcess = aService.getProcess();
+//
+//			return aProcess;
+//
+//		} catch (Exception e) {
+//
+//			e.printStackTrace();
+//			throw new Exception(e);
+//
+//		}
+//
+//	}
 	
 	/**
 	 * This method returns a String with the process URL to use it in the execution of a service.
@@ -227,53 +227,53 @@ public class ProcessDescription {
 	 * @throws Exception
 	 */
 
-	public ValueMap getServiceRequestValues(ACLMessage inmsg) throws Exception {
-
-		// read msg content
-		StringTokenizer Tok = new StringTokenizer(inmsg.getContent());
-
-		// read in the service description
-		String token_process = Tok.nextElement().toString();
-
-		//System.out.println("[Provider]Doc OWL-S: " + token_process);
-
-		try {
-			Service aService = kb.readService(token_process);
-
-			// get the process for the server
-			Process aProcess = aService.getProcess();
-
-			// initialize the input values to be empty
-			ValueMap values = new ValueMap();
-
-			// get the input values
-			// int n = 0;
-
-			// int tokenCount = Tok.countTokens();
-			for (int i = 0; i < aProcess.getInputs().size(); i++)
-				values.setValue(aProcess.getInputs().inputAt(i), EntityFactory.createDataValue(""));
-
-			while (Tok.hasMoreElements()) {
-				String token = Tok.nextElement().toString();
-				for (int i = 0; i < aProcess.getInputs().size(); i++) {
-					String paramName = aProcess.getInputs().inputAt(i).getLocalName().toLowerCase();
-					if (paramName.equalsIgnoreCase(token.split("=")[0].toLowerCase())) {
-						if (token.split("=").length >= 2)
-							values.setValue(aProcess.getInputs().inputAt(i), EntityFactory
-									.createDataValue(token.split("=")[1]));
-						else
-							values.setValue(aProcess.getInputs().inputAt(i), EntityFactory
-									.createDataValue(""));
-						break;
-					}
-				}
-			}// end while
-			return values;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new Exception(e);
-		}
-
-	}
+//	public ValueMap getServiceRequestValues(ACLMessage inmsg) throws Exception {
+//
+//		// read msg content
+//		StringTokenizer Tok = new StringTokenizer(inmsg.getContent());
+//
+//		// read in the service description
+//		String token_process = Tok.nextElement().toString();
+//
+//		//System.out.println("[Provider]Doc OWL-S: " + token_process);
+//
+//		try {
+//			Service aService = kb.readService(token_process);
+//
+//			// get the process for the server
+//			Process aProcess = aService.getProcess();
+//
+//			// initialize the input values to be empty
+//			ValueMap values = new ValueMap();
+//
+//			// get the input values
+//			// int n = 0;
+//
+//			// int tokenCount = Tok.countTokens();
+//			for (int i = 0; i < aProcess.getInputs().size(); i++)
+//				values.setValue(aProcess.getInputs().inputAt(i), EntityFactory.createDataValue(""));
+//
+//			while (Tok.hasMoreElements()) {
+//				String token = Tok.nextElement().toString();
+//				for (int i = 0; i < aProcess.getInputs().size(); i++) {
+//					String paramName = aProcess.getInputs().inputAt(i).getLocalName().toLowerCase();
+//					if (paramName.equalsIgnoreCase(token.split("=")[0].toLowerCase())) {
+//						if (token.split("=").length >= 2)
+//							values.setValue(aProcess.getInputs().inputAt(i), EntityFactory
+//									.createDataValue(token.split("=")[1]));
+//						else
+//							values.setValue(aProcess.getInputs().inputAt(i), EntityFactory
+//									.createDataValue(""));
+//						break;
+//					}
+//				}
+//			}// end while
+//			return values;
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			throw new Exception(e);
+//		}
+//
+//	}
 
 }

@@ -46,7 +46,7 @@ import org.semanticweb.owlapi.reasoner.NodeSet;
 
 import com.clarkparsia.pellet.owlapiv3.PelletReasoner;
 
-import es.upv.dsic.gti_ia.argAgents.knowledgeResources.AcceptabilityState;
+import es.upv.dsic.gti_ia.argAgents.knowledgeResources.AcceptabilityStatus;
 import es.upv.dsic.gti_ia.argAgents.knowledgeResources.ArgNode;
 import es.upv.dsic.gti_ia.argAgents.knowledgeResources.ArgumentCase;
 import es.upv.dsic.gti_ia.argAgents.knowledgeResources.ArgumentJustification;
@@ -932,7 +932,7 @@ public class OWLArgCBRParser {
 				Set<OWLLiteral> accState = reasoner.getDataPropertyValues(
 						solution, argAccState);
 				try {
-					AcceptabilityState accStateAC = AcceptabilityState
+					AcceptabilityStatus accStateAC = AcceptabilityStatus
 							.valueOf(accState.iterator().next().getLiteral()
 									.trim());
 
@@ -1866,7 +1866,7 @@ public class OWLArgCBRParser {
 				changes.add(createIndividual(argSolInd, "ArgumentSolution"));
 
 				// creating Data property hasAcceptabilityState
-				AcceptabilityState accState = argSol.getAcceptabilityState();
+				AcceptabilityStatus accState = argSol.getAcceptabilityState();
 				if (accState != null)
 					changes.add(createDataPropString(argSolInd,
 							"hasAcceptabilityState", this.filter(accState.name())));

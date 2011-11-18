@@ -3,7 +3,7 @@ package Argumentation_Example;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.util.ArrayList;
-import java.util.Vector;
+
 
 import es.upv.dsic.gti_ia.argAgents.knowledgeResources.Group;
 import es.upv.dsic.gti_ia.argAgents.knowledgeResources.SocialContext.DependencyRelation;
@@ -11,10 +11,18 @@ import es.upv.dsic.gti_ia.argAgents.knowledgeResources.SocialEntity;
 import es.upv.dsic.gti_ia.argAgents.knowledgeResources.ValPref;
 import es.upv.dsic.gti_ia.core.AgentID;
 
+/**
+ * This class has different methods to create groups of agents and some of their parameters
+ * @author Jaume Jordan
+ *
+ */
 public class AgentsCreation {
 	
 	
-	
+	/**
+	 * Gets an {@link ArrayList} of {@link ValPref} with the different combinations of (ahorro, calidad, rapidez)
+	 * @return an {@link ArrayList} of {@link ValPref}
+	 */
 	public static ArrayList<ValPref> getValPrefList(){
 		ArrayList<ValPref> preferredValues=new ArrayList<ValPref>();
 		
@@ -59,6 +67,10 @@ public class AgentsCreation {
 		return preferredValues;
 	}
 	
+	/**
+	 Gets an {@link ArrayList} of {@link ValPref} with void preference
+	 * @return an {@link ArrayList} of {@link ValPref}
+	 */
 	public static ArrayList<ValPref> getValPrefVoidList(){
 		ArrayList<ValPref> preferredValues=new ArrayList<ValPref>();
 		
@@ -68,52 +80,10 @@ public class AgentsCreation {
 		return preferredValues;
 	}
 	
-//	
-//	public static void createDomCasesPartitions(ArrayList<String> destFileNames,int nCases){
-//		
-//		DomainCBR domCBR=new DomainCBR("Helpdesk-Cases.owl"); //TODO we could use directly the parser
-//		ArrayList<Case> allCases=domCBR.getAllCasesList();
-//		OWLDomainParser domainParser=new OWLDomainParser();
-//		
-//		
-//		//ArrayList<ArrayList<Case>> partitionsCases=new ArrayList<ArrayList<Case>>();
-//		for(int partitions=0;partitions<destFileNames.size();partitions++){
-//			Vector<Case> currentPartition=new Vector<Case>();
-//			for(int i=0;i<nCases;i++){
-//				int index=(int)(Math.random()*allCases.size());
-//				Case aCase=allCases.get(index);
-//				currentPartition.add(aCase);
-//			}
-//			//partitionsCases.add(currentPartition);
-//			
-//			//TODO save the list currentPartition in the given file, using the function of domain onto parser
-//			
-//			try {
-////				domainParser.saveCasesInDomainOntology(currentPartition, "HelpdeskOnto.owl", destFileNames.get(partitions));
-//				domainParser.saveCasesInDomainOntology(currentPartition, destFileNames.get(partitions), destFileNames.get(partitions));
-//
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-//			
-//		}
-//		
-//	}
-	
-	
-	
-//	public static void createArgCasesPartitions(String initialOnto,ArrayList<String> destFileNames){
-//		OWLArgCBRParser owlArgCBRParser=new OWLArgCBRParser();
-//		for(int i=0;i<destFileNames.size();i++){
-//			try {
-//				owlArgCBRParser.saveArgumentationOntology(new Vector<ArgumentCase>(), initialOnto, destFileNames.get(i));
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-//		}
-//	}
-	
-	
+	/**
+	 * Creates empty {@link ArgumentCase} partitions in the specified file names 
+	 * @param destFileNames {@link ArrayList} of file names
+	 */
 	public static void createEmptyArgCasesPartitions(ArrayList<String> destFileNames){
 	
 		for(int i=0;i<destFileNames.size();i++){
@@ -128,7 +98,14 @@ public class AgentsCreation {
 		}
 	}
 	
-	
+	/**
+	 * Creates {@link SocialEntity} with the given base name and the number of operators, experts and managers specified
+	 * @param baseName Name to put as base of the {@link SocialEntity} create.
+	 * @param nOperators 
+	 * @param nExperts
+	 * @param nManagers
+	 * @return {@link ArrayList} of {@link SocialEntity}
+	 */
 	public static ArrayList<SocialEntity> createSocialEntities(String baseName, int nOperators, int nExperts, int nManagers){
 		ArrayList<ValPref> preferredValues=AgentsCreation.getValPrefList();
 		ArrayList<SocialEntity> socialEntities=new ArrayList<SocialEntity>();
@@ -176,6 +153,14 @@ public class AgentsCreation {
 		return socialEntities;
 	}
 	
+	/**
+	 * Creates {@link SocialEntity} with different value preferences the given base name and the number of operators, experts and managers specified
+	 * @param baseName Name to put as base of the {@link SocialEntity} create.
+	 * @param nOperators 
+	 * @param nExperts
+	 * @param nManagers
+	 * @return {@link ArrayList} of {@link SocialEntity}
+	 */
 	public static ArrayList<SocialEntity> createSocialEntitiesDifRoles(String baseName, int nManagers, int nExperts, int nOperators){
 		ArrayList<ValPref> preferredValues=AgentsCreation.getValPrefList();
 		ArrayList<SocialEntity> socialEntities=new ArrayList<SocialEntity>();
@@ -225,11 +210,17 @@ public class AgentsCreation {
 		return socialEntities;
 	}
 	
+	/**
+	 * Creates {@link SocialEntity} with the given list of preferences, base name and the number of operators, experts and managers specified
+	 * @param baseName Name to put as base of the {@link SocialEntity} create.
+	 * @param nOperators 
+	 * @param nExperts
+	 * @param nManagers
+	 * @return {@link ArrayList} of {@link SocialEntity}
+	 */
 	public static ArrayList<SocialEntity> createSocialEntitiesDifRoles(int valList,String baseName, int nManagers, int nExperts, int nOperators){
 		ArrayList<ValPref> preferredValues=AgentsCreation.getValPrefList();
 		ArrayList<SocialEntity> socialEntities=new ArrayList<SocialEntity>();
-		
-		int totalAgents = nManagers + nExperts + nOperators;
 		
 		int j = 0;
 		SocialEntity socialEntity;
@@ -276,6 +267,14 @@ public class AgentsCreation {
 		return socialEntities;
 	}
 	
+	/**
+	 * Creates {@link SocialEntity} with void values, the given base name and the number of operators, experts and managers specified
+	 * @param baseName Name to put as base of the {@link SocialEntity} create.
+	 * @param nOperators 
+	 * @param nExperts
+	 * @param nManagers
+	 * @return {@link ArrayList} of {@link SocialEntity}
+	 */
 	public static ArrayList<SocialEntity> createSocialEntitiesDifRolesVoidValues(String baseName, int nManagers, int nExperts, int nOperators){
 		ArrayList<ValPref> preferredValues=AgentsCreation.getValPrefList();
 		ArrayList<ValPref> preferredValuesVoid=AgentsCreation.getValPrefVoidList();
@@ -333,7 +332,12 @@ public class AgentsCreation {
 	}
 	
 	
-	
+	/**
+	 * Creates an {@link ArrayList} for each {@link SocialEntity} given in the parameters. 
+	 * Each {@link ArrayList} represents the agents of the group in the view of one of them
+	 * @param socialEntities {@link ArrayList} of {@link SocialEntity} to create the lists.
+	 * @return {@link ArrayList} of {@link ArrayList} of {@link SocialEntity}
+	 */
 	public static ArrayList<ArrayList<SocialEntity>> createFriendsLists(ArrayList<SocialEntity> socialEntities){
 		int totalAgents=socialEntities.size();
 		ArrayList<ArrayList<SocialEntity>> friendsLists=new ArrayList<ArrayList<SocialEntity>>();
@@ -349,6 +353,13 @@ public class AgentsCreation {
 		return friendsLists;
 	}
 	
+	/**
+	 * Creates an {@link ArrayList} with {@link ArrayList} of {@link DependencyRelation} for each operator, expert and manager specified. 
+	 * @param nOperators
+	 * @param nExperts
+	 * @param nManagers
+	 * @return an {@link ArrayList} with {@link ArrayList} of {@link DependencyRelation}
+	 */
 	public static ArrayList<ArrayList<DependencyRelation>> createDependencyRelations(int nOperators, int nExperts, int nManagers){
 		ArrayList<ArrayList<DependencyRelation>> dependencyLists=new ArrayList<ArrayList<DependencyRelation>>();
 		//int totalAgents=nOperators+nExperts+nManagers;
@@ -404,6 +415,13 @@ public class AgentsCreation {
 		return dependencyLists;
 	}
 	
+	/**
+	 * Creates an {@link ArrayList} with {@link ArrayList} of {@link DependencyRelation} for each manager, expert and operator specified. 
+	 * @param nOperators
+	 * @param nExperts
+	 * @param nManagers
+	 * @return an {@link ArrayList} with {@link ArrayList} of {@link DependencyRelation}
+	 */
 	public static ArrayList<ArrayList<DependencyRelation>> createDependencyRelationsDifRoles(int nManagers, int nExperts, int nOperators){
 		ArrayList<ArrayList<DependencyRelation>> dependencyLists=new ArrayList<ArrayList<DependencyRelation>>();
 		//int totalAgents=nOperators+nExperts+nManagers;
@@ -457,122 +475,29 @@ public class AgentsCreation {
 	}
 	
 	
-//	public static ArrayList<RandAgent> createRandomAgents(ArrayList<SocialEntity> socialEntities, 
-//			ArrayList<ArrayList<SocialEntity>> friendsLists, Group group, ArrayList<String> owlFileNames, int nCases, String testerAgentID){
-//		
-//		ArrayList<RandAgent> agents = new ArrayList<RandAgent>();
-//		
-//		float threshold=0.5f;
-//		
-//		
-//		int totalAgents=socialEntities.size();
-//		//createDomCasesPartitions(owlFileNames,nCases);
-//		
-//		try {
-//			
-//			RandAgent randAgent1 = new RandAgent(new AgentID("qpid://"+socialEntities.get(0).getName()+"@localhost:8080"), 
-//						true, socialEntities.get(0), friendsLists.get(0), group, 
-//						"commitmentStore", testerAgentID, owlFileNames.get(0), owlFileNames.get(0), threshold);
-//			randAgent1.start();
-//			agents.add(randAgent1);
-//			
-//			for(int i=1;i<totalAgents;i++){
-//				RandAgent randAgent=new RandAgent(new AgentID("qpid://"+socialEntities.get(i).getName()+"@localhost:8080"), 
-//						false, socialEntities.get(i), friendsLists.get(i),  group, 
-//						"commitmentStore", null, owlFileNames.get(i), owlFileNames.get(i), threshold);
-//				randAgent.start();
-//				agents.add(randAgent);
-//			}
-//		
-//		} catch (Exception e) {
-//			
-//			e.printStackTrace();
-//		}
-//		
-//		
-//		return agents;
-//		
-//		
-//	}
-//	
-//	
-//	public static ArrayList<VotAgent> createVotAgents(ArrayList<SocialEntity> socialEntities, 
-//			ArrayList<ArrayList<SocialEntity>> friendsLists, Group group, ArrayList<String> owlFileNames, int nCases, String testerAgentID){
-//		
-//		ArrayList<VotAgent> agents = new ArrayList<VotAgent>();
-//		
-//		float threshold=0.5f;
-//		
-//		
-//		int totalAgents=socialEntities.size();
-//		//createDomCasesPartitions(owlFileNames,nCases);
-//		
-//		try {
-//			
-//			VotAgent votAgent1 = new VotAgent(new AgentID("qpid://"+socialEntities.get(0).getName()+"@localhost:8080"), 
-//						true, socialEntities.get(0), friendsLists.get(0), group, 
-//						"commitmentStore", testerAgentID, owlFileNames.get(0), owlFileNames.get(0), threshold);
-//			votAgent1.start();
-//			agents.add(votAgent1);
-//			
-//			for(int i=1;i<totalAgents;i++){
-//				VotAgent votAgent=new VotAgent(new AgentID("qpid://"+socialEntities.get(i).getName()+"@localhost:8080"), 
-//						false, socialEntities.get(i), friendsLists.get(i),  group, 
-//						"commitmentStore", null, owlFileNames.get(i), owlFileNames.get(i), threshold);
-//				votAgent.start();
-//				agents.add(votAgent);
-//			}
-//		
-//		} catch (Exception e) {
-//			
-//			e.printStackTrace();
-//		}
-//		
-//		
-//		return agents;
-//		
-//		
-//	}
-//	
-//	public static ArrayList<ArgAgent> createArgAgents(ArrayList<SocialEntity> socialEntities, 
-//			ArrayList<ArrayList<SocialEntity>> friendsLists, ArrayList<ArrayList<DependencyRelation>> dependencyRels, 
-//			Group group, ArrayList<String> owlFileNames, int nCases, String testerAgentID){
-//		
-//		ArrayList<ArgAgent> agents = new ArrayList<ArgAgent>();
-//		
-//		float threshold=0.5f;
-//		
-//		int totalAgents=socialEntities.size();
-//		//createDomCasesPartitions(owlFileNames,nCases);
-//		
-//		try {
-//			
-//			ArgAgent argAgent1 = new ArgAgent(new AgentID("qpid://"+socialEntities.get(0).getName()+"@localhost:8080"), 
-//						true, socialEntities.get(0), friendsLists.get(0), dependencyRels.get(0), 
-//						group, "commitmentStore", testerAgentID, owlFileNames.get(0), owlFileNames.get(0), threshold);
-//			argAgent1.start();
-//			agents.add(argAgent1);
-//			
-//			for(int i=1;i<totalAgents;i++){
-//				ArgAgent argAgent=new ArgAgent(new AgentID("qpid://"+socialEntities.get(i).getName()+"@localhost:8080"), 
-//						false, socialEntities.get(i), friendsLists.get(i), dependencyRels.get(i), 
-//						group, "commitmentStore", null, owlFileNames.get(i), owlFileNames.get(i), threshold);
-//				argAgent.start();
-//				agents.add(argAgent);
-//			}
-//		
-//		} catch (Exception e) {
-//			
-//			e.printStackTrace();
-//		}
-//		
-//		
-//		return agents;
-//		
-//		
-//	}
 	
-	
+	/**
+	 * Creates an {@link ArrayList} of {@link ArgCAgent} with the specified {@link SocialEntity}
+	 * @param socialEntities {@link ArrayList} of {@link SocialEntity} that define the agents to create
+	 * @param friendsLists {@link ArrayList} of {@link ArrayList} of {@link SocialEntity} with all the agents of the group
+	 * @param dependencyRels dependency relations between all the agents
+	 * @param group of the agents
+	 * @param iniDomainFileNames file names of the initial domain-cases case-bases
+	 * @param finDomainFileNames file names to store the final domain-cases case-bases 
+	 * @param domCBRindex index of the domain CBR to distribute efficiently the domain-cases in the hash table. -1 if there is no index
+	 * @param domCBRthreshold minimum threshold of similarity to take into account a domain-case in the domain CBR as a possible solution
+	 * @param iniArgFileNames file names of the initial argument-cases case-bases
+	 * @param finArgFileNames file names to store the final argument-cases case-bases
+	 * @param nArgCases number of initial argument-cases
+	 * @param testerAgentID identifier of the tester agent
+	 * @param wPD Weight of the Persuasion Degree
+	 * @param wSD Weight of the Support Degree
+	 * @param wRD Weight of the Risk Degree
+	 * @param wAD Weight of the Attack Degree
+	 * @param wED Weight of the Efficiency Degree
+	 * @param wEP Weight of the Explanatory Power
+	 * @return list of ArgCAgents created with the given parameters
+	 */
 	public static ArrayList<ArgCAgent> createArgLearnAgentsInc(ArrayList<SocialEntity> socialEntities, 
 			ArrayList<ArrayList<SocialEntity>> friendsLists, ArrayList<ArrayList<DependencyRelation>> dependencyRels, Group group, 
 			ArrayList<String> iniDomainFileNames, ArrayList<String> finDomainFileNames, int domCBRindex, float domCBRthreshold,
@@ -582,7 +507,6 @@ public class AgentsCreation {
 		ArrayList<ArgCAgent> agents = new ArrayList<ArgCAgent>();
 		
 		int totalAgents=socialEntities.size();
-		//createDomCasesPartitions(owlDomainFileNames,nDomCases);
 		
 		try {
 			
@@ -607,58 +531,5 @@ public class AgentsCreation {
 		
 		
 	}
-//	
-//	public static ArrayList<ArgLearnAgentNoLearn> createArgLearnNoLearnAgents(ArrayList<SocialEntity> socialEntities, 
-//			ArrayList<ArrayList<SocialEntity>> friendsLists, ArrayList<ArrayList<DependencyRelation>> dependencyRels, Group group, 
-//			ArrayList<String> iniDomainFileNames, ArrayList<String> finDomainFileNames, ArrayList<String> owlArgFileNames, int nDomCases, int nArgCases, String testerAgentID,
-//			float threshold, float wPD, float wSD, float wRD, float wAD, float wED, float wEP){
-//		
-//		ArrayList<ArgLearnAgentNoLearn> agents = new ArrayList<ArgLearnAgentNoLearn>();
-//		
-//		int totalAgents=socialEntities.size();
-//		//createDomCasesPartitions(owlDomainFileNames,nDomCases);
-//		
-//		try {
-//			
-//			ArgLearnAgentNoLearn argLearnAgentNoLearn1 = new ArgLearnAgentNoLearn(new AgentID("qpid://"+socialEntities.get(0).getName()+"@localhost:8080"), 
-//						true, socialEntities.get(0), friendsLists.get(0), dependencyRels.get(0), 
-//						group, "commitmentStore", testerAgentID, iniDomainFileNames.get(0), finDomainFileNames.get(0),
-//						owlArgFileNames.get(0), owlArgFileNames.get(0), threshold, wPD, wSD, wRD, wAD, wED, wEP);
-//			argLearnAgentNoLearn1.start();
-//			agents.add(argLearnAgentNoLearn1);
-//			
-//			for(int i=1;i<totalAgents;i++){
-//				ArgLearnAgentNoLearn argLeanAgentNoLearn=new ArgLearnAgentNoLearn(new AgentID("qpid://"+socialEntities.get(i).getName()+"@localhost:8080"), 
-//						false, socialEntities.get(i), friendsLists.get(i),  dependencyRels.get(i), 
-//						group, "commitmentStore", null, iniDomainFileNames.get(i), finDomainFileNames.get(i),
-//						owlArgFileNames.get(i), owlArgFileNames.get(i), threshold, wPD, wSD, wRD, wAD, wED, wEP);
-//				argLeanAgentNoLearn.start();
-//				agents.add(argLeanAgentNoLearn);
-//			}
-//		
-//		} catch (Exception e) {
-//			
-//			e.printStackTrace();
-//		}
-//		
-//		
-//		return agents;
-//		
-//		
-//	}
 	
-	
-	//TODO read helpdesk global and create list of operators and groups
-	
-	//TODO initialize agents with the name of the operators of the list, if the list is too short, invent more names
-	
-	//TODO partition helpdesk database in several databases, one per agent
-	
-	//TODO do a function to assign to each operator ONLY the tickets that he has solved
-	
-	//TODO program a bobo agent and a semi-bobo agent
-	
-	//TODO update the tester agent
-	
-	//TODO create a class for each test
 }

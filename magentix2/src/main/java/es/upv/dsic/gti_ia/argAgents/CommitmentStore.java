@@ -159,8 +159,7 @@ public class CommitmentStore extends CAgent {
 			
 		}
 		
-		CFactory talk = new myCSProtocol().newFactory("TALK", null, null,
-				1, this);
+		CFactory talk = new myCSProtocol().newFactory("TALK", 1, this);
 		
 		this.addFactoryAsParticipant(talk);
 	}

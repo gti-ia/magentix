@@ -11,11 +11,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.StringTokenizer;
 
-import arq.cmdline.Arg;
-
+import es.upv.dsic.gti_ia.argAgents.CommitmentStore;
 import es.upv.dsic.gti_ia.argAgents.argCBR.ArgCBR;
 import es.upv.dsic.gti_ia.argAgents.domainCBR.DomainCBR;
-import es.upv.dsic.gti_ia.argAgents.knowledgeResources.AcceptabilityState;
+import es.upv.dsic.gti_ia.argAgents.knowledgeResources.AcceptabilityStatus;
 import es.upv.dsic.gti_ia.argAgents.knowledgeResources.ArgNode;
 import es.upv.dsic.gti_ia.argAgents.knowledgeResources.ArgNode.NodeType;
 import es.upv.dsic.gti_ia.argAgents.knowledgeResources.Argument;
@@ -46,6 +45,12 @@ import es.upv.dsic.gti_ia.cAgents.protocols.Argumentation_Participant;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 
+/**
+ * This class implements the argumentative agent as a CAgent. It can join in an
+ * argumentation dialogue to solve a problem.
+ * @author Jaume Jordan
+ *
+ */
 public class ArgCAgent extends CAgent{
 	
 	private final int multTimeFactor=10; //1000 will be seconds
@@ -473,7 +478,7 @@ public class ArgCAgent extends CAgent{
 					if(attackArgs!=null && !attackArgs.isEmpty()){
 						Argument myLastAttackArg=attackArgs.get(attackArgs.size()-1);
 						//put acceptability state to Unacceptable
-						myLastAttackArg.setAcceptabilityState(AcceptabilityState.UNACCEPTABLE);
+						myLastAttackArg.setAcceptabilityState(AcceptabilityStatus.UNACCEPTABLE);
 						//retract my last attack argument
 						ArrayList<Argument> storeList = storeArguments.get(subDialogueAgentID);
 						if (storeList == null)
@@ -511,11 +516,9 @@ public class ArgCAgent extends CAgent{
 
 			@SuppressWarnings("unchecked")
 			@Override
-			protected boolean doGetPositions(CProcessor myProcessor,
+			protected void doGetPositions(CProcessor myProcessor,
 					ACLMessage msg) {
-				logger.info(myID+": doGetPositions Locution received= "+msg.getHeaderValue(LOCUTION));
 				differentPositions=getDifferentPositions((ArrayList<Position>)msg.getContentObject());
-				return true;
 			}
 			
 			@Override
@@ -608,7 +611,7 @@ public class ArgCAgent extends CAgent{
 				//search my support argument, the one I told this agent.
 				ArrayList<Argument> supportArgs=myUsedSupportArguments.get(messageReceived.getSender().getLocalName());
 				Argument myLastSupportArg=supportArgs.get(supportArgs.size()-1);
-				myLastSupportArg.setAcceptabilityState(AcceptabilityState.ACCEPTABLE);
+				myLastSupportArg.setAcceptabilityState(AcceptabilityStatus.ACCEPTABLE);
 				supportArgs.set(supportArgs.size()-1, myLastSupportArg);
 				myUsedSupportArguments.put(messageReceived.getSender().getLocalName(), supportArgs);
 				ArrayList<Argument> storeList = storeArguments.get(messageReceived.getSender().getLocalName());

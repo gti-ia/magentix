@@ -22,7 +22,7 @@ public class Argument implements Serializable {
 	private int timesUsedConclusion;
 	private String value;
 	private SupportSet supportSet;
-	private AcceptabilityState acceptabilityState;
+	private AcceptabilityStatus acceptabilityState;
 	private DependencyRelation proponentDepenRelation;
 	private long attackingToArgID;
 	private ArrayList<Argument> receivedAttacksCounterExamples;
@@ -36,7 +36,7 @@ public class Argument implements Serializable {
     	this.value = promotedValue;
     	this.supportSet = supportSet;
     	this.proponentDepenRelation = proponentDepenRelation;
-    	this.acceptabilityState = AcceptabilityState.UNDECIDED;
+    	this.acceptabilityState = AcceptabilityStatus.UNDECIDED;
     	this.attackingToArgID = -1;
     	this.receivedAttacksCounterExamples = new ArrayList<Argument>();
     	this.receivedAttacksDistPremises = new ArrayList<Argument>();
@@ -49,7 +49,7 @@ public class Argument implements Serializable {
     	this.timesUsedConclusion = 0;
     	value = "";
     	supportSet = new SupportSet();
-    	this.acceptabilityState = AcceptabilityState.UNDECIDED;
+    	this.acceptabilityState = AcceptabilityStatus.UNDECIDED;
     	this.attackingToArgID = -1;
     	this.receivedAttacksCounterExamples = new ArrayList<Argument>();
     	this.receivedAttacksDistPremises = new ArrayList<Argument>();
@@ -108,11 +108,11 @@ public class Argument implements Serializable {
         value = (String) newPromotesValue;
     }
 
-	public AcceptabilityState getAcceptabilityState() {
+	public AcceptabilityStatus getAcceptabilityState() {
 		return acceptabilityState;
 	}
 
-	public void setAcceptabilityState(AcceptabilityState acceptabilityState) {
+	public void setAcceptabilityState(AcceptabilityStatus acceptabilityState) {
 		this.acceptabilityState = acceptabilityState;
 	}
 

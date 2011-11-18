@@ -18,14 +18,25 @@ import es.upv.dsic.gti_ia.cAgents.WaitState;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.MessageFilter;
 
+/**
+ * Abstract class that defines the protocol that the Commitment Store follows to attend
+ * the petitions of the agents.
+ * @author Jaume Jordan
+ *
+ */
 public abstract class CommitmentStore_Protocol {
 	
 	private final String DIE="DIE";
 	private final String LOCUTION="locution";
 	private ACLMessage response=null;
 	
+	/**
+	 * Begin method executed to begin the conversation
+	 * @param myProcessor {@link CProcessor} that manage the conversation
+	 * @param msg initial message
+	 */
 	protected void doBegin(CProcessor myProcessor, ACLMessage msg) {
-		myProcessor.getInternalData().put("InitialMessage", msg); //TODO ??
+		myProcessor.getInternalData().put("InitialMessage", msg);
 	}
 	
 	class Begin_Method implements BeginStateMethod {
@@ -35,7 +46,13 @@ public abstract class CommitmentStore_Protocol {
 		};
 	}
 
-	protected abstract ACLMessage doRespond(CProcessor myProcessor, ACLMessage msg);
+	/**
+	 * Creates a response depending on the petition received previously in the {@link ACLMessage} parameter
+	 * @param myProcessor {@link CProcessor} that manage the conversation
+	 * @param msgReceived {@link ACLMessage} received as a petition by other agent
+	 * @return {@link ACLMessage} with the response to give or null if it is not necessary to respond
+	 */
+	protected abstract ACLMessage doRespond(CProcessor myProcessor, ACLMessage msgReceived);
 	
 	class Receive_Method implements ReceiveStateMethod {
 		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
@@ -58,6 +75,10 @@ public abstract class CommitmentStore_Protocol {
 		};
 	}
 	
+	/**
+	 * Actions to perform when the DIE message is received.
+	 * @param myProcessor {@link CProcessor} that manage the conversation
+	 */
 	protected abstract void doDie(CProcessor myProcessor);
 	
 	
@@ -69,21 +90,17 @@ public abstract class CommitmentStore_Protocol {
 	
 	
 	/**
-	 * Creates a new argumentation participant CFactory
+	 * Creates a new commitment store protocol {@link CFactory}
 	 * @param name factory's name
-	 * @param filter message filter
-	 * @param template first message to send
-	 * @param availableConversations maximum number of conversation this CFactory can manage simultaneously
+	 * @param availableConversations maximum number of conversation this {@link CFactory} can manage simultaneously
 	 * @param myAgent agent owner of this CFactory
-	 * @param timeout for waiting after sending the proposal
-	 * @return a new argumentation participant factory
+	 * @return a new commitment store protocol factory
 	 */
-	public CFactory newFactory(String name, MessageFilter filter,
-			ACLMessage template, int availableConversations, CAgent myAgent) {
+	public CFactory newFactory(String name, int availableConversations, CAgent myAgent) {
 
 		// Create factory
 		
-		filter = new MessageFilter("performative = INFORM");
+		MessageFilter filter = new MessageFilter("performative = INFORM");
 		CFactory theFactory = new CFactory(name, filter,
 				availableConversations, myAgent);
 
@@ -118,9 +135,6 @@ public abstract class CommitmentStore_Protocol {
 		
 		SendState SEND = new SendState("SEND");
 		SEND.setMethod(new Send_Method());
-//		template.setProtocol("fipa-contract-net");
-//		template.setPerformative(ACLMessage.PROPOSE);
-//		SEND_PROPOSAL.setMessageTemplate(template);
 		processor.registerState(SEND);
 		processor.addTransition(RECEIVE, SEND);
 		
@@ -132,8 +146,8 @@ public abstract class CommitmentStore_Protocol {
 	}
 	/**
 	 * Copies all contents of the msg2 to the msg1
-	 * @param msg
-	 * @param msg2
+	 * @param msg {@link ACLMessage}
+	 * @param msg2 {@link ACLMessage}
 	 */
 	private void copyMessages(ACLMessage msg, ACLMessage msg2){
 		msg.setSender(msg2.getSender());
