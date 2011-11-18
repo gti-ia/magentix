@@ -59,46 +59,62 @@ public class OMSProxy extends THOMASProxy{
 
 	}
 
-	//Funcion adhoc para el ejemplo.
-	public String getAgentPosition(String agent, String unit, String rol)
+	//TODO Función ad hoc para el ejemplo. Se substituirá cuando el nuevo thomas
+	//tenga un servicio que devuelva la posición del agente.
+	String getAgentPosition(String agent, String unit, String rol, String unitType)
 	{
-	
+
 		String position = null;
 		
-		if (agent.equals("agente_creador") && unit.equals("calculin") && rol.equals("creator"))
+		
+		if (agent.equals("agente_creador") && unit.equals("calculin") && rol.equals("creador"))
 		{
 			position = "creator";
 
 		}else if (agent.equals("agente_ruidoso"))
 		{
-			if (rol.equals("creator") && unit.equals("externa"))
+			if (rol.equals("creador") && unit.equals("externa"))
 				position = "creator";
 			if (rol.equals("manager") && unit.equals("externa"))
 				position = "member";
-			
-		}if (agent.equals("agente_suma") && unit.equals("calculin") && rol.equals("operador"))
-		{
-			position = "subordinate";
-		}if (agent.equals("agente_sumatorio") && unit.equals("calculin") && rol.equals("manager"))
-		{
-			position = "supervisor";
 
-		}if (agent.equals("agente_visor") && unit.equals("calculin") && rol.equals("manager"))
+		}if (agent.equals("agente_suma") || agent.equals("agente_producto"))
 		{
-			position = "supervisor";
-		} if (agent.equals("agente_producto") && unit.equals("calculin") && rol.equals("operador"))
+			if (unit.equals("calculin") && rol.equals("operador"))
+			{
+				if (unitType.equals("flat") || unitType.equals("team"))
+					position = "member";	
+				else
+					position = "subordinate";	
+			}
+						
+		}	
+		if (agent.equals("agente_sumatorio"))
 		{
-			position = "subordinate";
+			if  (unit.equals("calculin") && rol.equals("manager"))
+			{
+				if (unitType.equals("flat") || unitType.equals("team"))
+					position = "member";	
+				else
+					position = "supervisor";
+			}
+				
 		}
-
+		if (agent.equals("agente_visor") && rol.equals("manager"))
+		{
+			if (unitType.equals("flat") || unitType.equals("team"))
+				position = "member";
+			else
+				position = "supervisor";
+		}
 		return position;
 	}
 
 
 	/**
-	 * Built a new organizational message with the appropriate receivers 
-	 * @param OrganizationID the ID of the organization 
-	 * @return returns the message built
+	 * Builds a new organizational message with the appropriate receivers according to the type of unit and position of the role that the agent is performing
+	 * @param OrganizationID represents the ID of the organization to which the agent wants to send a message
+	 * @return returns the ACL message built 
 	 * @throws THOMASException  in order to show the cause of exception uses getContent
 	 */
 
@@ -107,9 +123,10 @@ public class OMSProxy extends THOMASProxy{
 		ArrayList<String> unit;
 		ArrayList<String> agentRole = null;
 		ArrayList<String> agentPositions = new ArrayList<String>();
+
 		String rol_aux;
 		String unit_aux;
-		
+
 		boolean insideUnit = false;
 
 
@@ -121,14 +138,16 @@ public class OMSProxy extends THOMASProxy{
 		//Inform Unit
 		unit = this.informUnit(OrganizationID);
 
+		//If unit not exist
 		if (unit.isEmpty())
 		{
 			throw new THOMASException("Not allowed or unit "+ OrganizationID+" not found");
 
 		}else
 		{
-
+			
 			agentRole = this.informAgentRole(agent.getAid().name);
+			
 			if (agentRole.isEmpty())
 			{
 				throw new THOMASException("The agent role is empty.");
@@ -138,21 +157,17 @@ public class OMSProxy extends THOMASProxy{
 
 				Iterator<String> iterator1 = agentRole.iterator();
 
-				//TODO Esta parte esta hardoceada, es especifica para el ejemplo de la implementación, donde el agente creador
-				//solamente tendra el rol con posicion creator. Esto se debe hacer asi ya que el rol creator ahora se le asigna 
-				//al position supervisor.
-
 				while(iterator1.hasNext())
 				{
 					rol_aux = iterator1.next();
 					unit_aux = iterator1.next();
-					
-					String position = getAgentPosition(agent.getName(),unit_aux,rol_aux);
+
+					String position = getAgentPosition(agent.getName(),unit_aux,rol_aux, unit.get(2));
 					if (position!=null)
 						agentPositions.add(position);
 
 				}
-				//Comprobaremos si tiene solamente el rol con la posición creator, en ese caso no puede enviar nada a ningún grupo.
+				// Comprobaremos si tiene solamente el rol con la posición creator, en ese caso no puede enviar nada a ningún grupo.
 				if (agentPositions.contains("creator") && agentPositions.size() == 1)
 				{
 					throw new THOMASException("The agent [ "+ agent.getName()+" ] only contains the rol position creator, this rol position can not send organizational message");
@@ -167,14 +182,14 @@ public class OMSProxy extends THOMASProxy{
 				}
 				else
 				{
-					
+					iterator1 = agentRole.iterator();
 					while(iterator1.hasNext())
 					{
 						//Cogemos primero el rol, para que solamente compruebe la unidad que es el segundo elemento.
 						rol_aux = iterator1.next();
 
-						agentPositions.add(getAgentPosition(agent.getName(),OrganizationID,rol_aux));
-						
+						agentPositions.add(getAgentPosition(agent.getName(),OrganizationID,rol_aux, unit.get(2)));
+
 						if (iterator1.next().equals(OrganizationID))
 						{
 							insideUnit = true;
