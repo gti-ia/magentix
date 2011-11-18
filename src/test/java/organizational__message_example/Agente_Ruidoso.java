@@ -45,8 +45,6 @@ public class Agente_Ruidoso extends QueueAgent {
 
 		this.enviar_informacion(result+"");
 
-		System.out.println("[ "+this.getName()+" ] Bye Bye.");
-
 	}
 
 	private void sumar_y_avisar(ACLMessage msg)
@@ -100,10 +98,11 @@ public class Agente_Ruidoso extends QueueAgent {
 			msg.setProtocol(InteractionProtocol.FIPA_REQUEST);
 			msg.setLanguage("ACL");
 			msg.setContent(n1+" "+ n2);
-
+			
+			System.out.println("[ "+this.getName()+" ] Envío mensaje");
 			send(msg);
 		} catch (THOMASException e) {
-			System.out.println(e.getContent());
+			System.out.println("[ "+this.getName()+" ] "+ e.getContent());
 
 		}
 	}
@@ -119,7 +118,7 @@ public class Agente_Ruidoso extends QueueAgent {
 
 			send(msg);
 		} catch (THOMASException e) {
-			System.out.println(e.getContent());
+			System.out.println("[ "+this.getName()+" ] "+ e.getContent());
 
 		}
 	}

@@ -101,7 +101,7 @@ public class Agente_Producto extends QueueAgent {
 //			omsProxy.leaveRole("operador"+n, "calculin");
 //			System.out.println("VALOR "+ n);
 			
-
+		//	System.out.println("Envio soy "+ this.getQueueAgent().getName()+ " contenido: "+ msg.getContent());
 			return (msg);
 		} // end prepareResultNotification
 

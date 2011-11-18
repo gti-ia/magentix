@@ -66,7 +66,6 @@ public class Agente_Sumatorio extends QueueAgent {
 		{
 			if (!msg.getContent().contains("En breve")) //Descartamos los mensajes informativos.
 			{
-				
 				this.sumar_y_avisar(msg);
 			}
 		}
@@ -87,7 +86,7 @@ public class Agente_Sumatorio extends QueueAgent {
 			
 			send(msg);
 		} catch (THOMASException e) {
-			System.out.println(e.getContent());
+			System.out.println("[ "+this.getName()+" ] "+ e.getContent());
 
 		}
 	}
@@ -95,14 +94,15 @@ public class Agente_Sumatorio extends QueueAgent {
 	private void enviar_informacion(String content)
 	{
 		try {
+			
 			ACLMessage msg = omsProxy.buildOrganizationalMessage("calculin");
 			msg.setPerformative(ACLMessage.INFORM);
 			msg.setLanguage("ACL");
 			msg.setContent(content);
 
 			send(msg);
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
+		} catch (THOMASException e) {
+			System.out.println("[ "+this.getName()+" ] "+ e.getContent());
 
 		}
 	}

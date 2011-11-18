@@ -63,7 +63,7 @@ public class Agente_Creador extends QueueAgent {
 			send(msg);
 		} catch (THOMASException e) {
 			// TODO Auto-generated catch block
-			System.out.println(e.getContent());
+			System.out.println("[ "+this.getName()+" ] "+ e.getContent());
 
 		}
 	}
