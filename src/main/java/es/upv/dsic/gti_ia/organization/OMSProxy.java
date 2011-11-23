@@ -61,7 +61,7 @@ public class OMSProxy extends THOMASProxy{
 
 	//TODO Función ad hoc para el ejemplo. Se substituirá cuando el nuevo thomas
 	//tenga un servicio que devuelva la posición del agente.
-	String getAgentPosition(String agent, String unit, String rol, String unitType)
+	public String getAgentPosition(String agent, String unit, String rol, String unitType)
 	{
 
 		String position = null;
@@ -87,11 +87,14 @@ public class OMSProxy extends THOMASProxy{
 				else
 					position = "subordinate";	
 			}
+	
+		
 						
 		}	
-		if (agent.equals("agente_sumatorio"))
+		if (agent.equals("agente_sumatorio") || agent.equals("agente_visor") || agent.equals("agente_sumaPotencias"))
 		{
-			if  (unit.equals("calculin") && rol.equals("manager"))
+			
+			if  (unit.equals("calculin") && (rol.equals("manager")))
 			{
 				if (unitType.equals("flat") || unitType.equals("team"))
 					position = "member";	
@@ -99,13 +102,6 @@ public class OMSProxy extends THOMASProxy{
 					position = "supervisor";
 			}
 				
-		}
-		if (agent.equals("agente_visor") && rol.equals("manager"))
-		{
-			if (unitType.equals("flat") || unitType.equals("team"))
-				position = "member";
-			else
-				position = "supervisor";
 		}
 		return position;
 	}
