@@ -654,6 +654,9 @@ public class OMS extends CAgent {
 						
 						if (!existen)
 						{
+							if (positionType.equals("member"))
+								positionType = "participant";
+							
 							deleteBinding(aidName, organizationID, positionType);
 						}
 						
