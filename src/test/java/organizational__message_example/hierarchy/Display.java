@@ -66,7 +66,7 @@ public class Display extends QueueAgent {
 			
 		
 			if (position.equals("supervisor"))//Si el agente que me envía el mensaje tiene rol manager
-				System.out.println("[ "+this.getName()+" ] Inform that "+ msg.getSender().name+" says " + msg.getContent());
+				System.out.println("[ "+this.getName()+" ]  "+ msg.getSender().name+" says " + msg.getContent());
 		}
 	}
 

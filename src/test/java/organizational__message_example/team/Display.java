@@ -49,7 +49,7 @@ public class Display extends QueueAgent {
 		ArrayList<String> roles = omsProxy.informMembers("manager","calculin");
 		
 		if (roles.contains(msg.getSender().name.toLowerCase()))//Si el agente que me envía el mensaje tiene rol manager
-			System.out.println("[ "+this.getName()+" ] Inform that "+ msg.getSender().name+" says " + msg.getContent());
+			System.out.println("[ "+this.getName()+" ]  "+ msg.getSender().name+" says " + msg.getContent());
 	}
 
 
