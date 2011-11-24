@@ -17,7 +17,7 @@ public class Display extends QueueAgent {
 
 	OMSProxy omsProxy = new OMSProxy(this);
 	Monitor m = new Monitor();
-	ACLMessage mensaje_recibido = new ACLMessage();
+	ACLMessage receivedMsg = new ACLMessage();
 	private Queue<ACLMessage> messageList = new LinkedList<ACLMessage>();
 
 	public Display(AgentID aid) throws Exception {
@@ -43,7 +43,10 @@ public class Display extends QueueAgent {
 
 	}
 
-
+	/**
+	 * Display agent messages with position qual to supervisor 
+	 * @param _msg
+	 */
 	public void displayMessage(ACLMessage _msg)
 	{
 		ACLMessage msg = _msg;
@@ -51,21 +54,26 @@ public class Display extends QueueAgent {
 		Iterator<String> unitRoleIterator = unitRoles.iterator();
 		
 		while(unitRoleIterator.hasNext())
-		{
+		{  /**
+			For every role that exists in the unit calculin we extract the members who have this role
+		**/
 			String rol = unitRoleIterator.next();
 			ArrayList<String> roles = omsProxy.informMembers(rol,"calculin");			
 			Iterator<String> i = roles.iterator();
 			String position = "";
+			
+			//If the agent is equal to the sender, then the position is extracted
 			while(i.hasNext())
 			{
 				String agent = i.next().toString();
 				rol = i.next().toString();
+			
 				if (agent.equals(msg.getSender().name.toLowerCase()))
 					position = omsProxy.getAgentPosition(msg.getSender().name, "calculin",rol, "hierarchy");	
 			}
 			
-		
-			if (position.equals("supervisor"))//Si el agente que me envía el mensaje tiene rol manager
+			//If the position is equal to supervisor, it shows the message
+			if (position.equals("supervisor"))
 				System.out.println("[ "+this.getName()+" ]  "+ msg.getSender().name+" says " + msg.getContent());
 		}
 	}
@@ -75,10 +83,10 @@ public class Display extends QueueAgent {
 	public void onMessage(ACLMessage msg)
 	{
 		
-		if (msg.getReceiver().name.equals("calculin")) //Me interesan los mensajes que llegan de la organización
+		if (msg.getReceiver().name.equals("calculin")) //Messages that come from the organization
 		{
 			messageList.add(msg);
-			m.advise(); //Aviso de que ya tiene un nuevo mensaje
+			m.advise(); //When a new message arrives, it advise the main thread
 		}
 		if (msg.getSender().name.equals("OMS") || msg.getSender().name.equals("SF"))
 			super.onMessage(msg);

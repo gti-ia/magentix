@@ -28,14 +28,14 @@ public class Summation extends QueueAgent {
 	
 	
 		this.send_request(6,3);
-		m.waiting(10 * 1000); // Espero a que me lleguen las respuestas con timeout de 10 segundos
-		this.send_result("" + result); // Informo del resultado obtenido
+		m.waiting(10 * 1000); // Waiting the response with a timeout
+		this.send_result("" + result); // Inform the result.
 		
-		expected = 2; //Reinicio el contador, ahora solo espero uno
+		expected = 2; //Reset the result and messages expected
 		result=0;
 		this.send_request(5,3);
-		m.waiting(10 * 1000); // Espero a que me lleguen las respuestas con un timeout de 10 segundos
-		this.send_result("" + result); // Informo del resultado obtenido
+		m.waiting(10 * 1000); // Waiting the response with a timeout
+		this.send_result("" + result); // Inform the result.
 
 	}
 
@@ -43,7 +43,7 @@ public class Summation extends QueueAgent {
 		result += Integer.parseInt(msg.getContent());
 		expected--;
 		if (expected == 0) {
-			m.advise(); //Aviso al hilo principal que ya tiene todas las respuestas
+			m.advise(); //When all message arrives, it notifies the main thread
 			
 			
 		}
@@ -54,12 +54,14 @@ public class Summation extends QueueAgent {
 	
 		if (msg.getSender().name.equals("agente_suma") || msg.getSender().name.contains("agente_producto")) 
 		{
-			if (!msg.getContent().contains("OK")) // Descartamos los mensajes informativos.
+			//When a message arrives, it select the message with a results
+			if (!msg.getContent().contains("OK")) 
 			{
-				this.add_and_advise(msg);
+				this.add_and_advise(msg);	
 			}
 		}
-		if (msg.getSender().name.equals("OMS") || msg.getSender().name.equals("SF")) // Los del agente OMS y SF los volvemos a encolar, ya que sonnecesarios para el thomas proxy
+		//The messages with OMS and SF senders will be returned to super onMessage
+		if (msg.getSender().name.equals("OMS") || msg.getSender().name.equals("SF")) 
 			super.onMessage(msg);
 
 	}

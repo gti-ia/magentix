@@ -31,7 +31,7 @@ public class Run {
 		try {
 			
 			
-			//Lanzamos los agentes OMS y SF
+			
 			
 			OMS oms = OMS.getOMS();
 			SF sf = SF.getSF();
@@ -39,18 +39,14 @@ public class Run {
 			oms.start();
 			sf.start();
 			
+			//Clean data base
 			CleanDB clean = new CleanDB();
-
 			clean.initialize_db();
 			
 			/**
-			 * Instantiating a sender agent
+			 * Instantiating agents
 			 */
 			
-
-//			/**
-//			 * Instantiating a consumer agent
-//			 */
 			Creator iniAgent = new Creator(new AgentID("agente_creador"));
 			Noisy ruiAgent = new Noisy(new AgentID("agente_ruidoso"));
 			Product proAgent = new Product(new AgentID("agente_producto"));
@@ -60,7 +56,7 @@ public class Run {
 			Display visAgent = new Display(new AgentID("agente_visor"));
 			
 			iniAgent.start();
-			Thread.sleep(10 * 1000);//Esperamos a que se inicialize la estructura
+			Thread.sleep(10 * 1000);//Waiting for system initialization
 			ruiAgent.start();
 			proAgent.start();
 			sumAgent.start();

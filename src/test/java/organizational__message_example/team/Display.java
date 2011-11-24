@@ -42,13 +42,16 @@ public class Display extends QueueAgent {
 
 	}
 
-
+	/**
+	 * Display agent messages with position qual to supervisor 
+	 * @param _msg
+	 */
 	public void displayMessage(ACLMessage _msg)
 	{
 		ACLMessage msg = _msg; 
 		ArrayList<String> roles = omsProxy.informMembers("manager","calculin");
-		
-		if (roles.contains(msg.getSender().name.toLowerCase()))//Si el agente que me envía el mensaje tiene rol manager
+		//If sender agent has rol manager, it shows the message
+		if (roles.contains(msg.getSender().name.toLowerCase()))
 			System.out.println("[ "+this.getName()+" ]  "+ msg.getSender().name+" says " + msg.getContent());
 	}
 
@@ -60,7 +63,7 @@ public class Display extends QueueAgent {
 		if (msg.getReceiver().name.equals("calculin")) //Me interesan los mensajes que llegan de la organización
 		{
 			messageList.add(msg);
-			m.advise(); //Aviso de que ya tiene un nuevo mensaje
+			m.advise(); //When a new message arrives, it advise the main thread
 		}
 		if (msg.getSender().name.equals("OMS") || msg.getSender().name.equals("SF"))
 			super.onMessage(msg);

@@ -22,40 +22,35 @@ public class Exponentiation extends QueueAgent {
 	public void execute() {
 
 		omsProxy.acquireRole("member", "virtual");
-	
 		omsProxy.acquireRole("manager", "calculin");
 	
 
-		this.send_request(6, 3);
-		m.waiting(10 * 1000); // Espero a que me lleguen las respuestas con un timeout de 10 segundos
-		this.send_result("" + result); // Informo del resultado obtenido
+		this.send_request(6, 3);//Send request
+		m.waiting(10 * 1000); // Waiting the response with a timeout
+		this.send_result("" + result); // Inform the result.
 		
 		try {
 			Thread.sleep(2 * 1000);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		omsProxy.leaveRole("manager", "calculin");
 		
-		result=0;
+		result=0; //Reset the result and messages expected
 		expected = 0;
 		this.send_request(5, 3);
-		m.waiting(); // Espero a que me lleguen las respuestas con un timeout de 10 segundos
-		this.send_result("" + result); // Informo del resultado obtenido
+		m.waiting(); // Waiting the response with a timeout 
+		this.send_result("" + result); // Inform the result.
 		
 
 	}
 
 	private void add_and_advise(ACLMessage msg) {
 		result += Integer.parseInt(msg.getContent()) * Integer.parseInt(msg.getContent());
-		
 		expected--;
+		
 		if (expected == 0) {
-			m.advise(); // Te que acabar el onMessage, sinos no em deixa rebre
-			// mes missatges, per tant hem de avisar a un programa
-			// desde fora del metode
-
+			m.advise(); //When all message arrives, it notifies the main thread
 		}
 	}
 
@@ -64,12 +59,13 @@ public class Exponentiation extends QueueAgent {
 	
 		if (msg.getSender().name.equals("agente_suma") || msg.getSender().name.equals("agente_producto")) 
 		{
-			if (!msg.getContent().contains("OK")) // Descartamos los mensajes informativos.
+			//When a message arrives, it select the message with a results
+			if (!msg.getContent().contains("OK")) 
 			{
 				this.add_and_advise(msg);
 			}
-		}
-		if (msg.getSender().name.equals("OMS") || msg.getSender().name.equals("SF")) // Los del agente OMS y SF los volvemos a encolar, ya que sonnecesarios para el thomas proxy
+		}//The messages with OMS and SF senders will be returned to super onMessage
+		if (msg.getSender().name.equals("OMS") || msg.getSender().name.equals("SF")) 
 			super.onMessage(msg);
 
 	}

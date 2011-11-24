@@ -35,7 +35,7 @@ public class Noisy extends QueueAgent {
 
 		this.send_request(1,7);
 
-		m.waiting(); //Espero a que me lleguen las respuestas y las mostraré por pantalla
+		m.waiting(); 
 
 		this.send_result(result+"");
 
@@ -47,7 +47,7 @@ public class Noisy extends QueueAgent {
 		expected--;
 		if (expected == 0)
 		{
-			m.advise();//Aviso al hilo principal que ya tiene todas las respuestas
+			m.advise();
 		}
 	}
 

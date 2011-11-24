@@ -39,24 +39,20 @@ public class Run {
 			oms.start();
 			sf.start();
 			
+			//Clean data base
 			CleanDB clean = new CleanDB();
 
 			clean.initialize_db();
 			
 			/**
-			 * Instantiating a sender agent
+			 * Instantiating agents
 			 */
 			
-
-//			/**
-//			 * Instantiating a consumer agent
-//			 */
 			Creator iniAgent = new Creator(new AgentID("agente_creador"));
 			Noisy ruiAgent = new Noisy(new AgentID("agente_ruidoso"));
 			Product proAgent = new Product(new AgentID("agente_producto"));
 			Addition sumAgent = new Addition(new AgentID("agente_suma"));
 			Summation sumtAgent = new Summation(new AgentID("agente_sumatorio"));
-		
 			Display visAgent = new Display(new AgentID("agente_visor"));
 			
 			iniAgent.start();
