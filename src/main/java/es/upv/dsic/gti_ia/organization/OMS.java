@@ -389,7 +389,7 @@ public class OMS extends CAgent {
 	 */
 	private void createBinding(String aid, String OrganizationID, String positionType) throws THOMASException
 	{
-	
+
 
 		Map<String, Object> arguments = new HashMap<String, Object>();
 
@@ -425,7 +425,7 @@ public class OMS extends CAgent {
 	 * @param The Organization ID is part of the binging key
 	 * @param The Position Type, this position may be supervisor, subordinate, participant(member) or creator 
 	 * @throws THOMASException in order to show the cause of exception uses getContent
-	
+
 	 */
 	private void deleteBinding(String aid, String OrganizationID, String positionType) throws THOMASException
 	{
@@ -437,7 +437,7 @@ public class OMS extends CAgent {
 		{
 			throw new THOMASException("Exchange unbind error: "+ e);
 		}
-		
+
 	}
 
 
@@ -460,10 +460,10 @@ public class OMS extends CAgent {
 				// create an execution engine
 				ProcessExecutionEngine exec = OWLSFactory.createExecutionEngine();
 
-				
+
 				//read msg content
 				StringTokenizer Tok = new StringTokenizer(myProcessor.getLastReceivedMessage().getContent());
-				
+
 				//read in the service description
 				String token_process = Tok.nextElement().toString();
 				if(DEBUG)
@@ -480,7 +480,7 @@ public class OMS extends CAgent {
 					//initialize the input values to be empty
 					ValueMap values = new ValueMap();
 
-					
+
 					for(int i=0;i<aProcess.getInputs().size();i++){
 						if(aProcess.getInputs().inputAt(i).getLocalName().equalsIgnoreCase("AgentID")){
 							values.setValue(aProcess.getInputs().inputAt(i),EntityFactory.createDataValue(myProcessor.getLastReceivedMessage()
@@ -514,58 +514,58 @@ public class OMS extends CAgent {
 					//Extract the parameters needed to create and delete binds
 					if (aProcess.toString().contains("AcquireRoleProcess"))
 					{
-						
-						
+
+
 						rol = values.getValues().toString().replace("[", "").split(",")[0].trim();
 						organizationID = values.getValues().toString().split(",")[1].trim();
 						aidName = values.getValues().toString().replace("]", "").split(",")[2].trim();
-						
+
 						ValueMap valueUnit = new ValueMap();;
-						
+
 						Service aServiceUnit = kb.readService(OMS_INFORMUNIT_PROCESS);
 						Process aProcessUnit = aServiceUnit.getProcess();
-						
+
 						valueUnit.setValue(aProcessUnit.getInputs().inputAt(0),EntityFactory.createDataValue(aidName));
 						valueUnit.setValue(aProcessUnit.getInputs().inputAt(1),EntityFactory.createDataValue(organizationID));
-						
-						
+
+
 						//Execute service inform unit in order to select the unit type 
 						valueUnit = exec.execute(aProcessUnit, valueUnit);
-						
+
 						//Select the unit type of the unit
 						unitType = valueUnit.getValue("UnitType").toString();
-					
-						
-						
+
+
+
 					}
 					else if (aProcess.toString().contains("LeaveRoleProcess"))
 					{
-					
-						
+
+
 						aidName = values.getValues().toString().replace("[", "").split(",")[0].trim();
 						organizationID = values.getValues().toString().split(",")[1].trim();
 						rol = values.getValues().toString().replace("]", "").split(",")[2].trim();
-						
+
 						ValueMap valueUnit = new ValueMap();;
-						
+
 						Service aServiceUnit = kb.readService(OMS_INFORMUNIT_PROCESS);
 						Process aProcessUnit = aServiceUnit.getProcess();
-						
+
 						valueUnit.setValue(aProcessUnit.getInputs().inputAt(0),EntityFactory.createDataValue(aidName));
 						valueUnit.setValue(aProcessUnit.getInputs().inputAt(1),EntityFactory.createDataValue(organizationID));
-						
-						
+
+
 						//Execute service inform unit in order to select the unit type
 						valueUnit = exec.execute(aProcessUnit, valueUnit);
-						
+
 						//Select the unit type of the unit
 						unitType = valueUnit.getValue("UnitType").toString();//.toString().split(" ");
-					
-						
+
+
 						positionType = omsProxy.getAgentPosition(aidName,organizationID, rol, unitType);
-						
-						
-						
+
+
+
 					}
 					//Execute the service requested by the agent
 					values = exec.execute(aProcess, values);
@@ -581,17 +581,12 @@ public class OMS extends CAgent {
 					}
 
 
-					//If acquire role is ok
-					if (values.toString().contains("AcquireRole.owl#Status=Ok"))
+					//If acquire role is ok. If organization is virtual the agent position is considered creator
+					if (values.toString().contains("AcquireRole.owl#Status=Ok") && !organizationID.equals("virtual"))
 					{
-						// If organization is virtual the agent position is considered creator , if not get position for the unit
-						if (organizationID.equals("virtual"))
-						{
-							positionType = "creator";
-						}
-						else
-							positionType = omsProxy.getAgentPosition(aidName,organizationID, rol, unitType);
-						
+						//Gets position for the unit
+						positionType = omsProxy.getAgentPosition(aidName,organizationID, rol, unitType);
+
 						//If position type is member then creates binding for participant
 						if (positionType.equals("member"))
 						{
@@ -612,58 +607,62 @@ public class OMS extends CAgent {
 						}
 
 					}
-					
-					//If leave role is ok
-					if (values.toString().contains("LeaveRole.owl#Status=Ok"))
+
+					//If leave role is ok. If organization is virtual the agent position is considered creator
+					if (values.toString().contains("LeaveRole.owl#Status=Ok") && !organizationID.equals("virtual"))
 					{
-						
+
+
 						ValueMap value = new ValueMap();;
-						
+
 						aService = kb.readService(OMS_INFORMAGENTROLE_PROCESS);
 						aProcess = aService.getProcess();
-						
+
 						value.setValue(aProcess.getInputs().inputAt(0),EntityFactory.createDataValue(aidName));
 						value.setValue(aProcess.getInputs().inputAt(1),EntityFactory.createDataValue(aidName));
-						
-						
+
+
 						//Execute service inform agent role 
 						value = exec.execute(aProcess, value);
-						
+
 						//Select the roles of the agent
 						String[] roles = value.getValue("RoleUnitList").toString().split(" ");
-						
-						boolean existen = false;
+
+						boolean exists_in_unit = false;
+
+
 						String unit_aux;
 						String role_aux;
-						
-						
+
+
 						for(String r : roles)
 						{
 							role_aux = r.substring(r.indexOf("(")+1, r.indexOf(","));
 							unit_aux = r.substring(r.indexOf(",")+1, r.indexOf(")"));
-							
+
 							//If agent is inside the organization and the rol played is not creator
 							if (unit_aux.equals(organizationID) && !role_aux.equals("creator"))
 							{
 								//If position is equal of the agent position plays
 								if (positionType.equals(omsProxy.getAgentPosition(aidName,organizationID, role_aux, unitType)))
-										existen = true;
+									exists_in_unit = true;
 							}
-			
+
 						}
-						
-						if (!existen)
+
+						if (!exists_in_unit)
 						{
 							if (positionType.equals("member"))
 								positionType = "participant";
-							
+
 							deleteBinding(aidName, organizationID, positionType);
 						}
-						
-						
-						
+
+
+
+
+
 					}
-				
 					next = "INFORM";
 					if(DEBUG)
 					{						
@@ -706,7 +705,7 @@ public class OMS extends CAgent {
 						String token_process = Tok.nextElement().toString();
 						Boolean exists=false;											
 						for(int i=0;i<OMSServicesProcess.length;i++){		
-							
+
 							if(token_process.equals(OMSServicesProcess[i].toString())){
 								exists=true;
 							}
