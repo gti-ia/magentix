@@ -66,7 +66,7 @@ public class DataBaseInterface
 		return "";
 	}
 	
-	public String createUnit(String unitName, String unitType, String parentUnitName, String agentName){
+	public String createUnit(String unitName, String unitType, String parentUnitName, String agentName, String creatorAgentName){
 		return "";
 	}
 	
