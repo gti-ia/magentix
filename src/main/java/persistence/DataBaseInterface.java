@@ -13,7 +13,92 @@ public class DataBaseInterface
 	{
 		db = new DataBase();
 	}
-	public boolean CheckExistsRole(String RoleID)
+	
+	public boolean acquireRole(String unitName, String roleName, String agentName){
+		return true;
+	}
+	
+	public String allocateRole(String roleName, String unitName, String targetAgentName, String agentName){
+		return "";
+	}
+	
+	public boolean checkAgent(String agentName){
+		return true;
+	}
+	
+	public boolean checkAgentInUnit(String agentName, String unit){
+		return true;
+	}
+	
+	public boolean checkAgentPlaysRole(String agentName, String role, String unit){
+		return true;
+	}
+	
+	public boolean checkPlayedRoleInUnit(String role, String unit){
+		return true;
+	}
+	
+	public boolean checkTargetRoleNorm(String role, String unit){
+		return true;
+	}
+	
+	public boolean checkAgentPlaysPosition(String agent, String position, String unit){
+		return true;
+	}
+	
+	public boolean checkRoleInUnit(String reolename, String unitName){
+		return true;
+	}
+	
+	public boolean checkSubUnits(String unit){
+		return true;
+	}
+	
+	public boolean checkUnit(String unitName){
+		return true;
+	}
+	
+	public boolean checkVirtualUnit(String unitName){
+		return true;
+	}
+	
+	public String createRole(String roleName, String uniName, String accessibility, String visibility, String position){
+		return "";
+	}
+	
+	public String createUnit(String unitName, String unitType, String parentUnitName, String agentName){
+		return "";
+	}
+	
+	public String deallocateRole(String roleName, String unitName, String targetAgentName, String agentName){
+		return "";
+	}
+	
+	public String deleteRole(String roleName, String unitName, String agentName){
+		return "";
+	}
+	
+	public String deleteUnit(String unitName, String agentName){
+		return "";
+	}
+	
+	public String jointUnit(String unitName, String parentName, String agentName){
+		return "";
+	}
+	
+	public String leaveRole(String unitName, String roleName, String agentName){
+		return "";
+	}
+	
+	public String getUnitType(String unit){
+		return "";
+	}
+	
+	public boolean agentInUnit(String unit){
+		return true;
+	}
+	
+	/*public boolean CheckExistsRole(String RoleID)
 	{
 		boolean exists = false;
 		try
@@ -374,11 +459,6 @@ public class DataBaseInterface
 		return hasMember;
 	}
 	
-	/**
-	 * Devuelve true si la unidad tiene como miembro solo a este agente,
-	 * no tiene más roles que el que juega el agente en la unidad, y no
-	 * tiene unidades hijas.
-	 */
 	public boolean CheckUnitHasOnlyThisMemberWithOneRole(String unitID, String agentID)
 	{
 		try{
@@ -438,19 +518,7 @@ public class DataBaseInterface
 			return true;
 	}
 	
-	/**
-	 * Deletes the specified unit when has no roles or just one role and an agent playing it.
-	 * It will fail when there are more than one role for this unit or the unit doesn't exist.
-	 * 
-	 * WARNING!: do not call this method unless you're certain that there is only one agent or 
-	 * none at all in this unit. Otherwise the method will delete the role and leave some of
-	 * these agents playing a role that no longer exists.
-	 * WARNING!: the above applies also for the children units. There should be no children unit
-	 * for the unit to be deleted.
-	 * 
-	 * @param unitID The name of the unit to be deleted
-	 * @return True: Unit has been deleted. False: some error happened.
-	 */
+	
 	public boolean DeleteUnit(String unitID)
 	{
 		try
@@ -996,12 +1064,6 @@ public class DataBaseInterface
 			return -1;
 		}
 	}
-	/*
-	 * public boolean CheckExistsService(String serviceName) { boolean exists=false; try{ Statement
-	 * stmt = db.connection.createStatement(); ResultSet rs =
-	 * stmt.executeQuery("SELECT * FROM service WHERE serviceid='"+serviceName.toLowerCase()+"'");
-	 * while (rs.next()) { exists=true; } } catch (Exception e) { } return exists; }
-	 */
 
 	public boolean AddNewNorm(String normID, String normContent)
 	{
@@ -1472,6 +1534,6 @@ public class DataBaseInterface
 		}
 		
 		return exists;
-	}
+	}*/
 	
 }
