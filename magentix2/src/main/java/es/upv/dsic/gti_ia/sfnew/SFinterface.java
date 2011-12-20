@@ -1,10 +1,16 @@
 package es.upv.dsic.gti_ia.sfnew;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -12,10 +18,23 @@ import java.util.Iterator;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
 import com.hp.hpl.jena.db.DBConnection;
 import com.hp.hpl.jena.db.IDBConnection;
+import com.hp.hpl.jena.ontology.AllDifferent;
+import com.hp.hpl.jena.ontology.ComplementClass;
+import com.hp.hpl.jena.ontology.Individual;
+import com.hp.hpl.jena.ontology.OntClass;
 import com.hp.hpl.jena.ontology.OntModel;
 import com.hp.hpl.jena.ontology.OntModelSpec;
+import com.hp.hpl.jena.ontology.OntProperty;
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
@@ -27,60 +46,165 @@ import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.ModelMaker;
+import com.hp.hpl.jena.rdf.model.Property;
+import com.hp.hpl.jena.rdf.model.RDFNode;
+import com.hp.hpl.jena.rdf.model.ResIterator;
 import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.update.UpdateAction;
+import com.hp.hpl.jena.util.iterator.ExtendedIterator;
+import com.hp.hpl.jena.vocabulary.VCARD;
 
 public class SFinterface {
-	
+
 	private static boolean DEBUG = true;
-	
+
 	private IDBConnection conn;
-	
+
 	public SFinterface(){
 		super();
 		conn=JenaDBConnection();
 	}
-	
-	
+
+
 	public void testQuery(String serviceURL){
-//		ArrayList<String> inputs=new ArrayList<String>();
-//		inputs.add("\"http://127.0.0.1/ontology/geographydataset.owl#Code\"^^xsd:anyURI");
-//		inputs.add("\"http://127.0.0.1/ontology/protont.owl#longitude\"^^xsd:anyURI");
-//		inputs.add("\"http://127.0.0.1/ontology/protonu.owl#Date\"^^xsd:anyURI");
-//		inputs.add("\"http://127.0.0.1/ontology/protont.owl#latitude\"^^xsd:anyURI");
-//		ArrayList<String> outputs=new ArrayList<String>();
-//		outputs.add("\"http://127.0.0.1/ontology/geographydataset.owl#Sunrise\"^^xsd:anyURI");
-//		String reg=searchRegisteredServices(inputs, outputs);
-//		System.out.println("Registered: "+reg);
+		//		ArrayList<String> inputs=new ArrayList<String>();
+		//		inputs.add("\"http://127.0.0.1/ontology/geographydataset.owl#Code\"^^xsd:anyURI");
+		//		inputs.add("\"http://127.0.0.1/ontology/protont.owl#longitude\"^^xsd:anyURI");
+		//		inputs.add("\"http://127.0.0.1/ontology/protonu.owl#Date\"^^xsd:anyURI");
+		//		inputs.add("\"http://127.0.0.1/ontology/protont.owl#latitude\"^^xsd:anyURI");
+		//		ArrayList<String> outputs=new ArrayList<String>();
+		//		outputs.add("\"http://127.0.0.1/ontology/geographydataset.owl#Sunrise\"^^xsd:anyURI");
+		//		String reg=searchRegisteredServices(inputs, outputs);
+		//		System.out.println("Registered: "+reg);
+
+
 		
-		
-		
-		ModelMaker maker = ModelFactory.createModelRDBMaker(conn);
+		ModelMaker maker = ModelFactory.createMemModelMaker();
 		Model base = maker.createModel("http://example.org/ontologias");
 		// now we plug that base model into an ontology model that also uses 
 		// the given model maker to create storage for imported models
 		OntModelSpec spec = new OntModelSpec(OntModelSpec.OWL_MEM);
 		spec.setImportModelMaker(maker);
 		OntModel m = ModelFactory.createOntologyModel(spec, base);
-		
-		//load the service profile in the database
+
+		//load the service
 		m.read(serviceURL);
-		m.commit();
-
+		
+		
+		
+		
+		//m.listIndividuals(); 
+		
+		//m.listClasses();
+		//m.listNamedClasses();
+		//m.listNameSpaces();
+		//m.listObjects();
+		//m.listStatements();
+		//m.listSubjects();
+		
+		
+		
+		Resource r=m.getResource("http://127.0.0.1/services/1.1/calculateSunriseTime.owls#CALCULATE_SUNRISE_AtomicProcessGrounding3");
+		
+//		System.out.println("resource: "+r.getLocalName()+"\n"+r.getURI()+"\n"+r.getNameSpace()+
+//				"\n"+r.toString());
+		//m.write(System.out,"N3");
+		Statement s=r.getProperty(m.createProperty("http://www.daml.org/services/owl-s/1.1/Grounding.owl#wsdlInputMessage"));
+//		System.out.println("prop: "+s.getString());
+		
+//		ExtendedIterator<ComplementClass> iterInd = m.listComplementClasses();
+//		int rows=0;
+//		while(iterInd.hasNext()){
+//			rows++;
+//			OntClass ind=iterInd.next();
+//			System.out.println("row="+rows+" "+ind.toString());//ind.getLocalName()+" "+ind.getNameSpace()+" "+ind.getURI());
+//		}
+		
+		
+		ModelMaker maker2 = ModelFactory.createModelRDBMaker(conn);
+		Model base2 = maker2.createModel("http://example.org/ontologias");
+		OntModelSpec spec2 = new OntModelSpec(OntModelSpec.OWL_MEM);
+		spec.setImportModelMaker(maker2);
+		OntModel mainModel = ModelFactory.createOntologyModel(spec2, base2);
+		
+//		mainModel.add(r,m.createProperty("http://www.daml.org/services/owl-s/1.1/Grounding.owl#wsdlInputMessage"),"pepe");
+//		
+//		mainModel.commit();
+		
+		
+				
+		
 		try {
-			conn.close();
-		} catch (Exception e) {
+			File file=new File("unGround.owls");
+			InputStream in = new FileInputStream(file);
+			mainModel.read(in, "");
+			mainModel.commit();
+		} catch (FileNotFoundException e) {
+			
 			e.printStackTrace();
-			System.exit(1);
 		}
-
-		//Close the model 
-		m.close();
-
 		
 		
+		//		
+		//		//load the service profile in the database
+		//		m.read(serviceURL);
+		//		m.commit();
+		//
+		//		try {
+		//			conn.close();
+		//		} catch (Exception e) {
+		//			e.printStackTrace();
+		//			System.exit(1);
+		//		}
+		//
+		//		//Close the model 
+		//		m.close();
+
+
+
 	}
 
+	
+	public void writeOWLSFile(String serviceURL){
+
+		//			URL urlOrigin=new URL(url);
+		//			InputStream in=urlOrigin.openStream();
+		//			Document doc=DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(in);
+
+		//			File file=new File(url);
+		//			Document doc=DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(file);
+		try {
+
+			FileWriter fstream = new FileWriter("tmp.owls");
+			BufferedWriter out = new BufferedWriter(fstream);
+
+			out.write("<?xml version=\"1.0\" encoding=\"WINDOWS-1252\"?>"+"\n"+
+					"<rdf:RDF  xmlns:owl       = \"http://www.w3.org/2002/07/owl#\""+"\n"+
+					"xmlns:rdfs      = \"http://www.w3.org/2000/01/rdf-schema#\""+"\n"+
+					"xmlns:rdf       = \"http://www.w3.org/1999/02/22-rdf-syntax-ns#\""+"\n"+
+					"xmlns:service   = \"http://www.daml.org/services/owl-s/1.1/Service.owl#\""+"\n"+
+					"xmlns:process   = \"http://www.daml.org/services/owl-s/1.1/Process.owl#\""+"\n"+
+					"xmlns:profile    = \"http://www.daml.org/services/owl-s/1.1/Profile.owl#\""+"\n"+
+					"xmlns:grounding = \"http://www.daml.org/services/owl-s/1.1/Grounding.owl#\""+"\n"+
+					"xmlns:provider = \"http://127.0.0.1/ontology/provider.owl#\">"+"\n");
+
+			String profile=getProfile(serviceURL, false);
+			String groundsOWLS=getGroundingsOWLSfromFile(profile, serviceURL);
+			
+			out.write(groundsOWLS);
+			
+			//TODO providers
+
+
+			out.write("</rdf:RDF>");
+
+		} catch (IOException e) {
+			
+			e.printStackTrace();
+		}
+
+	}
 
 	/**
 	 * Search in the Jena DB if it exists a registered service with the same given inputs and outputs
@@ -89,52 +213,52 @@ public class SFinterface {
 	 * @return the profile URI if it exists an equal registered service, or an empty String if not
 	 */
 	private String searchRegisteredServices(ArrayList<String> inputs, ArrayList<String> outputs){
-		
+
 		//search the inputs
-		
+
 		ModelMaker maker = ModelFactory.createModelRDBMaker(conn);
 		Model base = maker.createModel("http://example.org/ontologias");
 		OntModel m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
-		
+
 		ArrayList<String> candidates=new ArrayList<String>();
 		boolean firstInput=true;
 		Iterator<String> iterInputs=inputs.iterator();
 		while(iterInputs.hasNext()){
-			
+
 			String in=iterInputs.next();
-			
+
 			ArrayList<String> candN=new ArrayList<String>();
-			
+
 			String queryStr =
-				"prefix xsd: <http://www.w3.org/2001/XMLSchema#>"+
-				"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"+
-				"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"+
-				"select ?x where { ?x a process:Input ; process:parameterType "+in+" . }";
-			
+					"prefix xsd: <http://www.w3.org/2001/XMLSchema#>"+
+							"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"+
+							"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"+
+							"select ?x where { ?x a process:Input ; process:parameterType "+in+" . }";
+
 			Query query = QueryFactory.create(queryStr);
 
 			// Execute the query and obtain results
 			QueryExecution querySearchInputs = QueryExecutionFactory.create(query, m);
 			ResultSet resultsSearchInputs = querySearchInputs.execSelect();
-			
+
 			if (resultsSearchInputs != null) {
-				
+
 				while (resultsSearchInputs.hasNext()) {
 					QuerySolution sol=resultsSearchInputs.next();
-					
+
 					Resource resource=sol.getResource("x");
 					String param=resource.getURI();
 					String cand=getProfileURI(param, true);
 					//System.out.println("input param="+param+"\n\t cand="+cand);
 					if(!candN.contains(cand))
 						candN.add(cand);
-					
+
 				}//end for 
 			}//end if
-			
+
 			// close the query
-//			querySearchInputs.close();
-			
+			//			querySearchInputs.close();
+
 			if(!candidates.isEmpty()){
 				candidates.retainAll(candN);
 			}
@@ -142,79 +266,79 @@ public class SFinterface {
 				candidates.addAll(candN);
 				firstInput=false;
 			}
-			
-			
+
+
 		}
-		
+
 		//search the outputs
 		Iterator<String> iterOutputs=outputs.iterator();
 		while(iterOutputs.hasNext()){
-			
+
 			String out=iterOutputs.next();
-			
+
 			ArrayList<String> candN=new ArrayList<String>();
-			
+
 			String queryStr =
-				"prefix xsd: <http://www.w3.org/2001/XMLSchema#>"+
-				"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"+
-				"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"+
-				"select ?x where { ?x a process:Output ; process:parameterType "+out+" . }";
-			
+					"prefix xsd: <http://www.w3.org/2001/XMLSchema#>"+
+							"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"+
+							"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"+
+							"select ?x where { ?x a process:Output ; process:parameterType "+out+" . }";
+
 			Query query = QueryFactory.create(queryStr);
 
 			// Execute the query and obtain results
 			QueryExecution querySearchOutputs = QueryExecutionFactory.create(query, m);
 			ResultSet resultsSearchOutputs = querySearchOutputs.execSelect();
-			
+
 			if (resultsSearchOutputs != null) {
-				
+
 				while (resultsSearchOutputs.hasNext()) {
 					QuerySolution sol=resultsSearchOutputs.next();
-					
+
 					Resource resource=sol.getResource("x");
 					String param=resource.getURI();
 					String cand=getProfileURI(param, false);
 					//System.out.println("output param="+param+"\n\t cand="+cand);
 					if(!candN.contains(cand))
 						candN.add(cand);
-					
+
 				}//end for 
 			}//end if
-			
+
 			// close the query
-//			querySearchOutputs.close();
-			
+			//			querySearchOutputs.close();
+
 			if(!candidates.isEmpty()){
 				candidates.retainAll(candN);
-				
+
 			}
-			
+
 		}
-		
+
 		//m.close();
-	
+
 		if(candidates.isEmpty()){
 			return "";
 		}
 		else{//check if the inputs and outputs are the same exactly 
 			//(could arrive here having a service with more inputs 
 			//than the specified as parameter and will be different services) 
-			
-			
+
+
 			//TODO bad use, create another getInputs getOutputs without using the URI, using the Jena DB
 			ArrayList<String> inputsCandidate=getInputs(candidates.get(0));
 			ArrayList<String> outputsCandidate=getOutputs(candidates.get(0));
-			
+
 			ArrayList<String> inputParamTypeCand=getInputParameterTypes(inputsCandidate);
 			ArrayList<String> outputParamTypeCand=getOutputParameterTypes(outputsCandidate);
-			
+
 			//comparar completamente (que sean los mismos y el mismo número) los parametros del candidato y los dados
-			
+
 			if(inputParamTypeCand.size()!=inputs.size())
 				return "";
 			if(outputParamTypeCand.size()!=outputs.size())
 				return "";
-			
+
 			Iterator<String> iterInputCand=inputParamTypeCand.iterator();
 			while(iterInputCand.hasNext()){
 				String inCand=iterInputCand.next();
@@ -232,7 +356,7 @@ public class SFinterface {
 				if(!found)
 					return "";
 			}
-			
+
 			Iterator<String> iterOutputCand=outputParamTypeCand.iterator();
 			while(iterOutputCand.hasNext()){
 				String outCand=iterOutputCand.next();
@@ -250,12 +374,12 @@ public class SFinterface {
 				if(!found)
 					return "";
 			}
-			
+
 			return candidates.get(0);
 		}
 	}
-	
-	
+
+
 	/**
 	 * Returns the profile URI of the given parameter name. 
 	 * @param paramName parameter name of a service profile
@@ -264,50 +388,50 @@ public class SFinterface {
 	 */
 	private String getProfileURI(String paramName, boolean input){
 		String res="";
-		
+
 		ModelMaker maker = ModelFactory.createModelRDBMaker(conn);
 		Model base = maker.createModel("http://example.org/ontologias");
 		OntModel m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
-		
+
 		String queryStringSearchName;
 		if(input)
-		 queryStringSearchName =
-				"prefix xsd: <http://www.w3.org/2001/XMLSchema#>"+
-				"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"+
-				"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"+
-				"select ?x where { ?x profile:hasInput <"+paramName+"> }";
+			queryStringSearchName =
+			"prefix xsd: <http://www.w3.org/2001/XMLSchema#>"+
+					"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"+
+					"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"+
+					"select ?x where { ?x profile:hasInput <"+paramName+"> }";
 		else
 			queryStringSearchName =
 			"prefix xsd: <http://www.w3.org/2001/XMLSchema#>"+
-			"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"+
-			"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"+
-			"select ?x where { ?x profile:hasOutput <"+paramName+"> }";
-		
+					"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"+
+					"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"+
+					"select ?x where { ?x profile:hasOutput <"+paramName+"> }";
+
 		Query querySearchName = QueryFactory.create(queryStringSearchName);
-		
+
 		QueryExecution qeSearchName = QueryExecutionFactory.create(querySearchName, m);
 		ResultSet resultsSearchName = qeSearchName.execSelect();
-		
+
 		if (resultsSearchName != null) {
-			
+
 			while(resultsSearchName.hasNext()) {
 				res = resultsSearchName.next().getResource("x").toString();
-//				System.out.println(res);
-				
+				//				System.out.println(res);
+
 			} 
-			
+
 		}//end if
 		else{
 			System.out.println("resultsSearchName is null");
 		}
-		
+
 		// close the query
 		qeSearchName.close();
 		//m.close();
-		
+
 		return res; 
 	}
-	
+
 	/**
 	 * Returns the inputs of the given service profile
 	 * @param serviceProfile
@@ -315,7 +439,7 @@ public class SFinterface {
 	 */
 	private ArrayList<String> getInputs(String serviceURL){
 		ArrayList<String> inputs=new ArrayList<String>();
-		
+
 		ModelMaker maker = ModelFactory.createMemModelMaker();
 		Model base = maker.createModel("http://example.org/ontologias");
 		// now we plug that base model into an ontology model that also uses 
@@ -323,83 +447,83 @@ public class SFinterface {
 		OntModelSpec spec = new OntModelSpec(OntModelSpec.OWL_MEM);
 		spec.setImportModelMaker(maker);
 		OntModel m = ModelFactory.createOntologyModel(spec, base);
-		
-		//load the service profile in the database
+
+		//load the service
 		m.read(serviceURL);
-		
+
 		String queryStringSearchName =
 				"prefix xsd: <http://www.w3.org/2001/XMLSchema#>"+
-				"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"+
-				"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"+
-				"select ?x where { ?y profile:hasInput ?x }";
-		
+						"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"+
+						"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"+
+						"select ?x where { ?y profile:hasInput ?x }";
+
 		Query querySearchName = QueryFactory.create(queryStringSearchName);
-		
+
 		QueryExecution qeSearchName = QueryExecutionFactory.create(querySearchName, m);
 		ResultSet resultsSearchName = qeSearchName.execSelect();
-		
+
 		if (resultsSearchName != null) {
-			
+
 			while(resultsSearchName.hasNext()) {
 				String res = resultsSearchName.next().getResource("x").toString();
 				inputs.add(res);
 			} 
-			
+
 		}//end if
 		else{
 			System.out.println("resultsSearchName is null");
 		}
-		
+
 		qeSearchName.close();
 		m.close();
-		
+
 		return inputs;
 	}
-	
+
 	private ArrayList<String> getInputParameterTypes(ArrayList<String> inputs){
 		ArrayList<String> inputParamsRegistered=new ArrayList<String>();
-		
+
 		ModelMaker maker = ModelFactory.createModelRDBMaker(conn);
 		Model base = maker.createModel("http://example.org/ontologias");
 		OntModel m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
-		
+
 		Iterator<String> iterInputs=inputs.iterator();
 		while(iterInputs.hasNext()){
-			
+
 			String in=iterInputs.next();
 			String queryStr =
 					"prefix xsd: <http://www.w3.org/2001/XMLSchema#>"+
-					"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"+
-					"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"+
-					"select ?x where { <"+in+"> a process:Input ; process:parameterType ?x . }";
-	
+							"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"+
+							"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"+
+							"select ?x where { <"+in+"> a process:Input ; process:parameterType ?x . }";
+
 			Query query = QueryFactory.create(queryStr);
-	
+
 			// Execute the query and obtain results
 			QueryExecution querySearchInputs = QueryExecutionFactory.create(query, m);
 			ResultSet resultsSearchInputs = querySearchInputs.execSelect();
-			
+
 			if (resultsSearchInputs != null) {
-				
+
 				while (resultsSearchInputs.hasNext()) {
 					QuerySolution sol=resultsSearchInputs.next();
-					
+
 					String param="\""+sol.getLiteral("x").getString()+"\"^^"+
-					sol.getLiteral("x").getDatatypeURI().replace("http://www.w3.org/2001/XMLSchema#", "xsd:");
+							sol.getLiteral("x").getDatatypeURI().replace("http://www.w3.org/2001/XMLSchema#", "xsd:");
 					//System.out.println(param);
 					inputParamsRegistered.add(param);
-					
+
 				}//end for 
 			}//end if
-			
-		
+
+
 			// close the query
 			querySearchInputs.close();
 		}
-		
+
 		return inputParamsRegistered;
 	}
-	
+
 	/**
 	 * Returns the specification in OWL-S of the given input
 	 * @param input
@@ -408,28 +532,28 @@ public class SFinterface {
 	private String getInputOWLS(String input){
 		String inputOWLS="";
 		String param="";
-		
+
 		ModelMaker maker = ModelFactory.createModelRDBMaker(conn);
 		Model base = maker.createModel("http://example.org/ontologias");
 		OntModel m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
-		
+
 		String queryStringSearchName =
 				"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"+
-				"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"+
-				"select ?x where { <"+input+"> a process:Input ; process:parameterType ?x . }";
-		
+						"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"+
+						"select ?x where { <"+input+"> a process:Input ; process:parameterType ?x . }";
+
 		Query querySearchName = QueryFactory.create(queryStringSearchName);
-		
+
 		QueryExecution qeSearchName = QueryExecutionFactory.create(querySearchName, m);
 		ResultSet resultsSearchName = qeSearchName.execSelect();
-		
-		
+
+
 		if (resultsSearchName != null) {
-			
+
 			if(resultsSearchName.hasNext()) {
 				param=resultsSearchName.next().getLiteral("x").toString();
 			} 
-			
+
 		}//end if
 		else{
 			System.out.println("resultsSearchName is null");
@@ -437,15 +561,15 @@ public class SFinterface {
 		StringTokenizer strToken=new StringTokenizer(param, "^^");
 		String paramType=strToken.nextToken();
 		String paramDataType= strToken.nextToken();
-		
+
 		inputOWLS="<process:Input rdf:ID=\""+input+"\">"+"\n"+
 				"<process:parameterType rdf:datatype=\""+paramDataType+"\">"+paramType+"</process:parameterType>"+"\n"+
 				"</process:Input>";
-		
+
 		return inputOWLS;
-		
+
 	}
-	
+
 	/**
 	 * Returns the outputs of the given service profile
 	 * @param serviceProfile
@@ -453,7 +577,7 @@ public class SFinterface {
 	 */
 	private ArrayList<String> getOutputs(String serviceURL){
 		ArrayList<String> outputs=new ArrayList<String>();
-		
+
 		ModelMaker maker = ModelFactory.createMemModelMaker();
 		Model base = maker.createModel("http://example.org/ontologias");
 		// now we plug that base model into an ontology model that also uses 
@@ -461,83 +585,83 @@ public class SFinterface {
 		OntModelSpec spec = new OntModelSpec(OntModelSpec.OWL_MEM);
 		spec.setImportModelMaker(maker);
 		OntModel m = ModelFactory.createOntologyModel(spec, base);
-		
-		//load the service profile in the database
+
+		//load the service
 		m.read(serviceURL);
-		
+
 		String queryStringSearchName =
 				"prefix xsd: <http://www.w3.org/2001/XMLSchema#>"+
-				"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"+
-				"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"+
-				"select ?x where { ?y profile:hasOutput ?x }";
-		
+						"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"+
+						"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"+
+						"select ?x where { ?y profile:hasOutput ?x }";
+
 		Query querySearchName = QueryFactory.create(queryStringSearchName);
-		
+
 		QueryExecution qeSearchName = QueryExecutionFactory.create(querySearchName, m);
 		ResultSet resultsSearchName = qeSearchName.execSelect();
-		
+
 		if (resultsSearchName != null) {
-			
+
 			while(resultsSearchName.hasNext()) {
 				String res = resultsSearchName.next().getResource("x").toString();
 				outputs.add(res);
 			} 
-			
+
 		}//end if
 		else{
 			System.out.println("resultsSearchName is null");
 		}
-	
+
 		qeSearchName.close();
 		m.close();
-		
+
 		return outputs;
 	}
-	
+
 	private ArrayList<String> getOutputParameterTypes(ArrayList<String> outputs){
 		ArrayList<String> outputParamsRegistered=new ArrayList<String>();
-		
+
 		ModelMaker maker = ModelFactory.createModelRDBMaker(conn);
 		Model base = maker.createModel("http://example.org/ontologias");
 		OntModel m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
-		
+
 		Iterator<String> iterOutputs=outputs.iterator();
 		while(iterOutputs.hasNext()){
-			
+
 			String out=iterOutputs.next();
 			String queryStr =
 					"prefix xsd: <http://www.w3.org/2001/XMLSchema#>"+
-					"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"+
-					"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"+
-					"select ?x where { <"+out+"> a process:Output ; process:parameterType ?x . }";
-	
+							"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"+
+							"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"+
+							"select ?x where { <"+out+"> a process:Output ; process:parameterType ?x . }";
+
 			Query query = QueryFactory.create(queryStr);
-	
+
 			// Execute the query and obtain results
 			QueryExecution querySearchInputs = QueryExecutionFactory.create(query, m);
 			ResultSet resultsSearchInputs = querySearchInputs.execSelect();
-			
+
 			if (resultsSearchInputs != null) {
-				
+
 				while (resultsSearchInputs.hasNext()) {
 					QuerySolution sol=resultsSearchInputs.next();
-					
+
 					String param="\""+sol.getLiteral("x").getString()+"\"^^"+
 							sol.getLiteral("x").getDatatypeURI().replace("http://www.w3.org/2001/XMLSchema#", "xsd:");
 					//System.out.println(param);
 					outputParamsRegistered.add(param);
-					
+
 				}//end for 
 			}//end if
-			
-		
+
+
 			// close the query
 			querySearchInputs.close();
 		}
-		
+
 		return outputParamsRegistered;
 	}
-	
+
 	/**
 	 * Returns the specification in OWL-S of the given output
 	 * @param output
@@ -546,28 +670,28 @@ public class SFinterface {
 	private String getOutputOWLS(String output){
 		String outputOWLS="";
 		String param="";
-		
+
 		ModelMaker maker = ModelFactory.createModelRDBMaker(conn);
 		Model base = maker.createModel("http://example.org/ontologias");
 		OntModel m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
-		
+
 		String queryStringSearchName =
 				"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"+
-				"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"+
-				"select ?x where { <"+output+"> a process:Output ; process:parameterType ?x . }";
-		
+						"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"+
+						"select ?x where { <"+output+"> a process:Output ; process:parameterType ?x . }";
+
 		Query querySearchName = QueryFactory.create(queryStringSearchName);
-		
+
 		QueryExecution qeSearchName = QueryExecutionFactory.create(querySearchName, m);
 		ResultSet resultsSearchName = qeSearchName.execSelect();
-		
-		
+
+
 		if (resultsSearchName != null) {
-			
+
 			if(resultsSearchName.hasNext()) {
 				param=resultsSearchName.next().getLiteral("x").toString();
 			} 
-			
+
 		}//end if
 		else{
 			System.out.println("resultsSearchName is null");
@@ -575,69 +699,108 @@ public class SFinterface {
 		StringTokenizer strToken=new StringTokenizer(param, "^^");
 		String paramType=strToken.nextToken();
 		String paramDataType= strToken.nextToken();
-		
+
 		outputOWLS="<process:Output rdf:ID=\""+output+"\">"+"\n"+
 				"<process:parameterType rdf:datatype=\""+paramDataType+"\">"+paramType+"</process:parameterType>"+"\n"+
 				"</process:Output>";
-		
+
 		return outputOWLS;
-		
+
 	}
-	
-	
+
+
 	//TODO detectar si entra un process y grounding nuevos para registrarlos igualmente, pero solo esa parte... el profile de nuevo no!
 	public void RegisterService(String serviceURL){
-		
-		 
-		
+
+
+
 		ArrayList<String> inputs=getInputs(serviceURL);
 		ArrayList<String> outputs=getOutputs(serviceURL);
-		
+
 		ArrayList<String> inputsParams=getInputParameterTypes(inputs);
 		ArrayList<String> outputParams=getOutputParameterTypes(outputs);
-		
-		String regService=searchRegisteredServices(inputsParams, outputParams);
-		if(!regService.equalsIgnoreCase("")){
-			System.out.println("Service already registered: "+regService);
-			
-			
-			
+
+		String regServiceProfile=searchRegisteredServices(inputsParams, outputParams);
+		if(!regServiceProfile.equalsIgnoreCase("")){
+			System.out.println("Service already registered: "+regServiceProfile);
+
+
+
 			//TODO mirar si se tiene que registrar algun provider
-			
-			
+
+
 			//obtain the registered wsdl docs and the one that has to be registered. 
 			//If the new wsdl doc is different, it is registered
-			
-			String wsdlToRegister=getWSDLDocumentFromServiceURL(serviceURL);
-			
-			String serviceURI=getServiceURI(regService);
-			ArrayList<String> groundings=getGroundings(serviceURI);
+
+			ArrayList<String> wsdlsToRegister=getWSDLDocumentFromServiceURL(serviceURL);
+
+			String serviceURI=getServiceURI(regServiceProfile,null);
+			ArrayList<String> groundings=getGroundings(serviceURI,null);
 			Iterator<String> iterGrounds=groundings.iterator();
 			boolean found=false;
 			while(iterGrounds.hasNext()){
 				String groundingURI=iterGrounds.next();
-				String atomicProcessGrounding=getAtomicProcessGrounding(groundingURI);
-				String WSDLDocandDatatype=getWSDLDocument(atomicProcessGrounding);
-				if(WSDLDocandDatatype.equalsIgnoreCase(wsdlToRegister)){
-					found=true;
-					break;
+				String atomicProcessGrounding=getAtomicProcessGrounding(groundingURI,null);
+				String WSDLDocandDatatype=getWSDLDocument(atomicProcessGrounding,null);
+				Iterator<String> iterWsdlsToRegister=wsdlsToRegister.iterator();
+				while(iterWsdlsToRegister.hasNext()){
+					String wsdlToRegister=iterWsdlsToRegister.next();
+					if(WSDLDocandDatatype.equalsIgnoreCase(wsdlToRegister)){
+						found=true;
+						break;
+					}
 				}
+				if(found)
+					break;
 			}
 			if(!found){//register the grounding
 				System.out.println("Register the grounding");
+
+				writeOWLSFile(serviceURL);
 				
-				
-				//1) crear un nuevo owls y meterlo en una url del propio servidor local 
-				//funciona, pero ojo con las URLs!!
-				
+				//TODO enganchar tanto los groundings como los providers con el profile que ya estaba registrado
+
+				ModelMaker maker = ModelFactory.createModelRDBMaker(conn);
+				Model base = maker.createModel("http://example.org/ontologias");
+				OntModelSpec spec = new OntModelSpec(OntModelSpec.OWL_MEM);
+				spec.setImportModelMaker(maker);
+				OntModel m = ModelFactory.createOntologyModel(spec, base);
+
+				try {
+					
+					File file=new File("tmp.owls");
+					InputStream in = new FileInputStream(file);
+
+					m.read(in, "");
+					m.commit();
+
+				} catch (FileNotFoundException e) {
+
+					e.printStackTrace();
+				}
+
+				//1) crear un nuevo owls en el directorio local y cargarlo en jena
+				// 
+				//funciona, pero ojo con las URLs!! hay que poner el xml:base "URL"
+
+				//parsear el original
+				//extraer todo lo de <rdf:RDF .... >
+				//<grounding:WsdlGrounding
+				//<grounding:WsdlAtomicProcessGrounding
+
+				//guardar en archivo owls en el servidor
+				//cargar el archivo owls a Jena
+
+
+
 				//2) cargar el owls con Jena, y extraer uno a uno los datos que se quieren,
 				//ir añadiendolos al modelo mediante funciones m.add ... (esto se tiene que probar...)
 			}
 			else{
 				System.out.println("Not register any grounding");
 			}
-			
-			
+
+
 		}
 		else{
 			ModelMaker maker = ModelFactory.createModelRDBMaker(conn);
@@ -647,7 +810,7 @@ public class SFinterface {
 			OntModelSpec spec = new OntModelSpec(OntModelSpec.OWL_MEM);
 			spec.setImportModelMaker(maker);
 			OntModel m = ModelFactory.createOntologyModel(spec, base);
-			
+
 			//load the service profile in the database
 			m.read(serviceURL);
 			m.commit();
@@ -662,14 +825,58 @@ public class SFinterface {
 			//Close the model 
 			m.close();
 
-			
+
 			System.out.println("Service registered: "+serviceURL);
 		}
-		
-		
-		
+
+
+
 	}
 	
+	private String getProfile(String serviceURL, boolean database){
+		ModelMaker maker;
+		Model base;
+		OntModel m;
+		if(database){
+			maker = ModelFactory.createModelRDBMaker(conn);
+			base = maker.createModel("http://example.org/ontologias");
+			m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
+		}
+		else{
+			maker = ModelFactory.createMemModelMaker();
+			base = maker.createModel("http://example.org/ontologias");
+			m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
+			m.read(serviceURL);
+		}
+		
+		String queryStringSearchName =
+				"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"+
+				"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"+
+				"select ?x where { ?x a profile:Profile }";
+
+		Query querySearchName = QueryFactory.create(queryStringSearchName);
+
+		QueryExecution qeSearchName = QueryExecutionFactory.create(querySearchName, m);
+		ResultSet resultsSearchName = qeSearchName.execSelect();
+		
+		String profile="";
+
+		if (resultsSearchName != null) {
+
+			if(resultsSearchName.hasNext()) {
+				profile = resultsSearchName.next().getLiteral("x").toString();
+
+			} 
+
+		}//end if
+		else{
+			System.out.println("resultsSearchName is null");
+		}
+
+		return profile;
+		
+	}
+
 	/**
 	 * Returns the profile service name 
 	 * @param serviceProfile
@@ -677,38 +884,38 @@ public class SFinterface {
 	 */
 	private String getProfileServiceName(String serviceProfile){
 		String serviceName="";
-		
+
 		ModelMaker maker = ModelFactory.createModelRDBMaker(conn);
 		Model base = maker.createModel("http://example.org/ontologias");
 		OntModel m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
-		
+
 		String queryStringSearchName =
 				"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"+
-				"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"+
-				"select ?x where { "+"<"+serviceProfile+">"+" profile:serviceName ?x }";
-		
+						"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"+
+						"select ?x where { "+"<"+serviceProfile+">"+" profile:serviceName ?x }";
+
 		Query querySearchName = QueryFactory.create(queryStringSearchName);
-		
+
 		QueryExecution qeSearchName = QueryExecutionFactory.create(querySearchName, m);
 		ResultSet resultsSearchName = qeSearchName.execSelect();
-		
-		
+
+
 		if (resultsSearchName != null) {
-			
+
 			while(resultsSearchName.hasNext()) {
 				serviceName = resultsSearchName.next().getLiteral("x").toString();
-				
+
 			} 
-			
+
 		}//end if
 		else{
 			System.out.println("resultsSearchName is null");
 		}
-		
+
 		return serviceName;
-		
+
 	}
-	
+
 	/**
 	 * Returns the profile text description
 	 * @param serviceProfile
@@ -716,199 +923,234 @@ public class SFinterface {
 	 */
 	private String getProfileTextDescription(String serviceProfile){
 		String textDescription="";
-		
+
 		ModelMaker maker = ModelFactory.createModelRDBMaker(conn);
 		Model base = maker.createModel("http://example.org/ontologias");
 		OntModel m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
-		
+
 		String queryStringSearchName =
 				"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"+
-				"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"+
-				"select ?x where { "+"<"+serviceProfile+">"+" profile:textDescription ?x }";
-		
+						"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"+
+						"select ?x where { "+"<"+serviceProfile+">"+" profile:textDescription ?x }";
+
 		Query querySearchName = QueryFactory.create(queryStringSearchName);
-		
+
 		QueryExecution qeSearchName = QueryExecutionFactory.create(querySearchName, m);
 		ResultSet resultsSearchName = qeSearchName.execSelect();
-		
-		
+
+
 		if (resultsSearchName != null) {
-			
+
 			while(resultsSearchName.hasNext()) {
 				textDescription = resultsSearchName.next().getLiteral("x").toString();
-				
+
 			} 
-			
+
 		}//end if
 		else{
 			System.out.println("resultsSearchName is null");
 		}
-		
+
 		return textDescription;
-		
+
 	}
-	
+
 	/**
 	 * Returns the service URI
 	 * @param serviceProfile
 	 * @return the service URI
 	 */
-	private String getServiceURI(String serviceProfile){
+	private String getServiceURI(String serviceProfile, String serviceURL){
 		String serviceURI="";
 		
-		ModelMaker maker = ModelFactory.createModelRDBMaker(conn);
-		Model base = maker.createModel("http://example.org/ontologias");
-		OntModel m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
+		ModelMaker maker;
+		Model base;
+		OntModel m;
+		if(serviceURL!=null){
+			maker = ModelFactory.createModelRDBMaker(conn);
+			base = maker.createModel("http://example.org/ontologias");
+			m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
+		}
+		else{
+			maker = ModelFactory.createMemModelMaker();
+			base = maker.createModel("http://example.org/ontologias");
+			m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
+			m.read(serviceURL);
+		}
 		
+		
+
 		String queryStringSearchName =
 				"prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>"+
-				"select ?x where { ?x service:presents <"+serviceProfile+"> }";
-		
+						"select ?x where { ?x service:presents <"+serviceProfile+"> }";
+
 		Query querySearchName = QueryFactory.create(queryStringSearchName);
-		
+
 		QueryExecution qeSearchName = QueryExecutionFactory.create(querySearchName, m);
 		ResultSet resultsSearchName = qeSearchName.execSelect();
-		
-		
+
+
 		if (resultsSearchName != null) {
-			
+
 			if(resultsSearchName.hasNext()) {
 				serviceURI=resultsSearchName.next().getResource("x").toString();
 			} 
-			
+
 		}//end if
 		else{
 			System.out.println("resultsSearchName is null");
 		}
-		
+
 		qeSearchName.close();
 		m.close();
-		
+
 		return serviceURI;
 	}
-	
+
 	/**
 	 * Returns an {@link ArrayList} with the grounding URIs of the given service URI 
 	 * @param serviceURI
 	 * @return an {@link ArrayList} with the grounding URIs of the given service URI
 	 */
-	private ArrayList<String> getGroundings(String serviceURI){
+	private ArrayList<String> getGroundings(String serviceURI, String serviceURL){
 		ArrayList<String> groundings=new ArrayList<String>();
-		
-		ModelMaker maker = ModelFactory.createModelRDBMaker(conn);
-		Model base = maker.createModel("http://example.org/ontologias");
-		OntModel m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
-		
+
+		ModelMaker maker;
+		Model base;
+		OntModel m;
+		if(serviceURL!=null){
+			maker = ModelFactory.createModelRDBMaker(conn);
+			base = maker.createModel("http://example.org/ontologias");
+			m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
+		}
+		else{
+			maker = ModelFactory.createMemModelMaker();
+			base = maker.createModel("http://example.org/ontologias");
+			m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
+			m.read(serviceURL);
+		}
+
 		String queryStringSearchName =
 				"prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>"+
-				"select ?x where { ?x service:supportedBy <"+serviceURI+"> }";
-		
+						"select ?x where { ?x service:supportedBy <"+serviceURI+"> }";
+
 		Query querySearchName = QueryFactory.create(queryStringSearchName);
-		
+
 		QueryExecution qeSearchName = QueryExecutionFactory.create(querySearchName, m);
 		ResultSet resultsSearchName = qeSearchName.execSelect();
-		
-		
+
+
 		if (resultsSearchName != null) {
-			
+
 			while(resultsSearchName.hasNext()) {
 				String ground=resultsSearchName.next().getResource("x").toString();
 				groundings.add(ground);
 			} 
-			
+
 		}//end if
 		else{
 			System.out.println("resultsSearchName is null");
 		}
-		
+
 		qeSearchName.close();
 		m.close();
-		
+
 		return groundings;
 	}
-	
+
 	/**
 	 * Returns the atomic process grounding URI of the given grounding URI
 	 * @param groundingURI
 	 * @return the atomic process grounding URI of the given grounding URI
 	 */
-	private String getAtomicProcessGrounding(String groundingURI){
+	private String getAtomicProcessGrounding(String groundingURI, String serviceURL){
 		String atomicProcessGrounding="";
-		
-		ModelMaker maker = ModelFactory.createModelRDBMaker(conn);
-		Model base = maker.createModel("http://example.org/ontologias");
-		OntModel m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
-		
+
+		ModelMaker maker;
+		Model base;
+		OntModel m;
+		if(serviceURL!=null){
+			maker = ModelFactory.createModelRDBMaker(conn);
+			base = maker.createModel("http://example.org/ontologias");
+			m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
+		}
+		else{
+			maker = ModelFactory.createMemModelMaker();
+			base = maker.createModel("http://example.org/ontologias");
+			m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
+			m.read(serviceURL);
+		}
+
 		String queryStringSearchName =
 				"prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>"+
-				"select ?x where { <"+groundingURI+"> grounding:hasAtomicProcessGrounding ?x }";
-		
+						"select ?x where { <"+groundingURI+"> grounding:hasAtomicProcessGrounding ?x }";
+
 		Query querySearchName = QueryFactory.create(queryStringSearchName);
-		
+
 		QueryExecution qeSearchName = QueryExecutionFactory.create(querySearchName, m);
 		ResultSet resultsSearchName = qeSearchName.execSelect();
-		
-		
+
+
 		if (resultsSearchName != null) {
-			
+
 			if(resultsSearchName.hasNext()) {
 				atomicProcessGrounding=resultsSearchName.next().getResource("x").toString();
 			} 
-			
+
 		}//end if
 		else{
 			System.out.println("resultsSearchName is null");
 		}
-		
+
 		qeSearchName.close();
 		m.close();
-		
+
 		return atomicProcessGrounding;
 	}
-	
+
 	/**
 	 * Returns the WSDL document URI of the given atomic process grounding URI
 	 * @param atomicProcessGrounding
 	 * @return the WSDL document URI of the given atomic process grounding URI
 	 */
-	private String getWSDLDocument(String atomicProcessGrounding){
+	private String getWSDLDocument(String atomicProcessGrounding, String serviceURL){
 		String WSDLDoc="";
-		
+
 		ModelMaker maker = ModelFactory.createModelRDBMaker(conn);
 		Model base = maker.createModel("http://example.org/ontologias");
 		OntModel m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
 		
 		String queryStringSearchName =
 				"prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>"+
-				"select ?x where { <"+atomicProcessGrounding+"> grounding:wsdlDocument ?x }";
-		
+						"select ?x where { <"+atomicProcessGrounding+"> grounding:wsdlDocument ?x }";
+
 		Query querySearchName = QueryFactory.create(queryStringSearchName);
-		
+
 		QueryExecution qeSearchName = QueryExecutionFactory.create(querySearchName, m);
 		ResultSet resultsSearchName = qeSearchName.execSelect();
-		
-		
+
+
 		if (resultsSearchName != null) {
-			
+
 			if(resultsSearchName.hasNext()) {
 				WSDLDoc=resultsSearchName.next().getLiteral("x").toString();
 			} 
-			
+
 		}//end if
 		else{
 			System.out.println("resultsSearchName is null");
 		}
-		
+
 		qeSearchName.close();
 		m.close();
-		
+
 		return WSDLDoc;
 	}
-	
-	
-	private String getWSDLDocumentFromServiceURL(String serviceURL){
-		String WSDLDoc="";
-		
+
+
+	private ArrayList<String> getWSDLDocumentFromServiceURL(String serviceURL){
+		ArrayList<String> WSDLDocs=new ArrayList<String>();
+
 		ModelMaker maker = ModelFactory.createMemModelMaker();
 		Model base = maker.createModel("http://example.org/ontologias");
 		// now we plug that base model into an ontology model that also uses 
@@ -918,35 +1160,36 @@ public class SFinterface {
 		OntModel m = ModelFactory.createOntologyModel(spec, base);
 		//load the service profile in the database
 		m.read(serviceURL);
-				
+
 		String queryStringSearchName =
 				"prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>"+
-				"select ?x where { ?y grounding:wsdlDocument ?x }";
-		
+						"select ?x where { ?y grounding:wsdlDocument ?x }";
+
 		Query querySearchName = QueryFactory.create(queryStringSearchName);
-		
+
 		QueryExecution qeSearchName = QueryExecutionFactory.create(querySearchName, m);
 		ResultSet resultsSearchName = qeSearchName.execSelect();
-		
-		
+
+
 		if (resultsSearchName != null) {
-			
+
 			if(resultsSearchName.hasNext()) {
-				WSDLDoc=resultsSearchName.next().getLiteral("x").toString();
+				String wsdldoc=resultsSearchName.next().getLiteral("x").toString();
+				WSDLDocs.add(wsdldoc);
 				//System.out.println("wsdldoc="+WSDLDoc);
 			} 
-			
+
 		}//end if
 		else{
 			System.out.println("resultsSearchName is null");
 		}
-		
+
 		qeSearchName.close();
 		m.close();
-		
-		return WSDLDoc;
+
+		return WSDLDocs;
 	}
-	
+
 	/**
 	 * Returns a String containing the specification in OWL-S of all groundings of the given service profile
 	 * @param serviceProfile
@@ -954,32 +1197,67 @@ public class SFinterface {
 	 */
 	private String getGroundingsOWLS(String serviceProfile){
 		String groundsOWLS="";
-		String serviceURI=getServiceURI(serviceProfile);
-		ArrayList<String> groundings=getGroundings(serviceURI);
+		String serviceURI=getServiceURI(serviceProfile,null);
+		ArrayList<String> groundings=getGroundings(serviceURI,null);
 		Iterator<String> iterGrounds=groundings.iterator();
 		while(iterGrounds.hasNext()){
 			String groundingURI=iterGrounds.next();
-			String atomicProcessGrounding=getAtomicProcessGrounding(groundingURI);
-			String WSDLDocandDatatype=getWSDLDocument(atomicProcessGrounding);
+			String atomicProcessGrounding=getAtomicProcessGrounding(groundingURI,null);
+			String WSDLDocandDatatype=getWSDLDocument(atomicProcessGrounding,null);
 			StringTokenizer token=new StringTokenizer(WSDLDocandDatatype,"^^");
 			String wsdlDoc=token.nextToken();
 			String wsdlDatatype=token.nextToken();
 			groundsOWLS+="<grounding:WsdlGrounding rdf:ID=\""+groundingURI+"\">\n"+
-			"<service:supportedBy rdf:resource=\""+serviceURI+"\"/> \n"+
-			"<grounding:hasAtomicProcessGrounding>\n"+
-			"<grounding:WsdlAtomicProcessGrounding rdf:ID=\""+atomicProcessGrounding+"\"/>"+
-			"</grounding:hasAtomicProcessGrounding>\n"+
-			"</grounding:WsdlGrounding>\n";
-			
+					"<service:supportedBy rdf:resource=\""+serviceURI+"\"/> \n"+
+					"<grounding:hasAtomicProcessGrounding>\n"+
+					"<grounding:WsdlAtomicProcessGrounding rdf:ID=\""+atomicProcessGrounding+"\"/>"+
+					"</grounding:hasAtomicProcessGrounding>\n"+
+					"</grounding:WsdlGrounding>\n";
+
 			groundsOWLS+="<grounding:WsdlAtomicProcessGrounding rdf:about=\""+atomicProcessGrounding+"\">\n"+
-			"<grounding:wsdlDocument rdf:datatype=\""+wsdlDatatype+"\">\n"+
-			wsdlDoc+"</grounding:wsdlDocument>\n"+
-			"</grounding:WsdlAtomicProcessGrounding>\n";
+					"<grounding:wsdlDocument rdf:datatype=\""+wsdlDatatype+"\">\n"+
+					wsdlDoc+"</grounding:wsdlDocument>\n"+
+					"</grounding:WsdlAtomicProcessGrounding>\n";
 		}
-		
+
 		return groundsOWLS;
 	}
 	
+	/**
+	 * Returns a String containing the specification in OWL-S of all groundings of the given service profile
+	 * @param serviceProfile
+	 * @return a String containing the specification in OWL-S of all groundings of the given service profile
+	 */
+	private String getGroundingsOWLSfromFile(String serviceProfile, String serviceURL){
+		String groundsOWLS="";
+		String serviceURI=getServiceURI(serviceProfile,serviceURL);
+		ArrayList<String> groundings=getGroundings(serviceURI,serviceURL);
+		Iterator<String> iterGrounds=groundings.iterator();
+		while(iterGrounds.hasNext()){
+			String groundingURI=iterGrounds.next();
+			String atomicProcessGrounding=getAtomicProcessGrounding(groundingURI, serviceURL);
+			String WSDLDocandDatatype=getWSDLDocument(atomicProcessGrounding,serviceURL);
+			StringTokenizer token=new StringTokenizer(WSDLDocandDatatype,"^^");
+			String wsdlDoc=token.nextToken();
+			String wsdlDatatype=token.nextToken();
+			groundsOWLS+="<grounding:WsdlGrounding rdf:ID=\""+groundingURI+"\">\n"+
+					"<service:supportedBy rdf:resource=\""+serviceURI+"\"/> \n"+
+					"<grounding:hasAtomicProcessGrounding>\n"+
+					"<grounding:WsdlAtomicProcessGrounding rdf:ID=\""+atomicProcessGrounding+"\"/>"+
+					"</grounding:hasAtomicProcessGrounding>\n"+
+					"</grounding:WsdlGrounding>\n";
+
+			//TODO añadir las partes que faltan del grounding
+			
+			groundsOWLS+="<grounding:WsdlAtomicProcessGrounding rdf:about=\""+atomicProcessGrounding+"\">\n"+
+					"<grounding:wsdlDocument rdf:datatype=\""+wsdlDatatype+"\">\n"+
+					wsdlDoc+"</grounding:wsdlDocument>\n"+
+					"</grounding:WsdlAtomicProcessGrounding>\n";
+		}
+
+		return groundsOWLS;
+	}
+
 	/**
 	 * Implementation of the SF service Get Service. It returns an OWL-S specification with the information of the given service.
 	 * @param serviceProfile
@@ -987,35 +1265,35 @@ public class SFinterface {
 	 */
 	public String getService(String serviceProfile){
 		String owlsService="";
-		
+
 		//headers
 		owlsService+="<?xml version=\"1.0\" encoding=\"WINDOWS-1252\"?>"+"\n"+
-		"<rdf:RDF  xmlns:owl       = \"http://www.w3.org/2002/07/owl#\""+"\n"+
-		"xmlns:rdfs      = \"http://www.w3.org/2000/01/rdf-schema#\""+"\n"+
-		"xmlns:rdf       = \"http://www.w3.org/1999/02/22-rdf-syntax-ns#\""+"\n"+
-		"xmlns:service   = \"http://www.daml.org/services/owl-s/1.1/Service.owl#\""+"\n"+
-		"xmlns:process   = \"http://www.daml.org/services/owl-s/1.1/Process.owl#\""+"\n"+
-		"xmlns:profile    = \"http://www.daml.org/services/owl-s/1.1/Profile.owl#\""+"\n"+
-		"xmlns:grounding = \"http://www.daml.org/services/owl-s/1.1/Grounding.owl#\""+"\n"+
-		"xmlns:provider = \"http://127.0.0.1/ontology/provider.owl#\">"+"\n";
-		
+				"<rdf:RDF  xmlns:owl       = \"http://www.w3.org/2002/07/owl#\""+"\n"+
+				"xmlns:rdfs      = \"http://www.w3.org/2000/01/rdf-schema#\""+"\n"+
+				"xmlns:rdf       = \"http://www.w3.org/1999/02/22-rdf-syntax-ns#\""+"\n"+
+				"xmlns:service   = \"http://www.daml.org/services/owl-s/1.1/Service.owl#\""+"\n"+
+				"xmlns:process   = \"http://www.daml.org/services/owl-s/1.1/Process.owl#\""+"\n"+
+				"xmlns:profile    = \"http://www.daml.org/services/owl-s/1.1/Profile.owl#\""+"\n"+
+				"xmlns:grounding = \"http://www.daml.org/services/owl-s/1.1/Grounding.owl#\""+"\n"+
+				"xmlns:provider = \"http://127.0.0.1/ontology/provider.owl#\">"+"\n";
+
 		//profile descriptions...
 		//profile:serviceName
 		//profile:textDescription
 		owlsService+="<profile:Profile rdf:ID=\""+serviceProfile+"\">\n"+
-		"<profile:serviceName xml:lang=\"en\">"+
-		getProfileServiceName(serviceProfile)+"</profile:serviceName>"+"\n";
-		
+				"<profile:serviceName xml:lang=\"en\">"+
+				getProfileServiceName(serviceProfile)+"</profile:serviceName>"+"\n";
+
 		owlsService+="<profile:textDescription xml:lang=\"en\">"+
-		getProfileTextDescription(serviceProfile)+"</profile:textDescription>"+"\n";
-		
+				getProfileTextDescription(serviceProfile)+"</profile:textDescription>"+"\n";
+
 		//providers
 		//profile:contactInformation
 		//+
 		//<http://127.0.0.1/services/1.1/calculateSunriseTime.owls#Provider2>
-        //a       provider:Provider
+		//a       provider:Provider
 		owlsService+=getProvidersOWLS(serviceProfile);
-		
+
 		//inputs and outputs of a process with their types
 		String processInputs="", processOutputs="";
 		//TODO bad use of getInputs...
@@ -1026,8 +1304,8 @@ public class SFinterface {
 			String in=iterInputs.next();
 			owlsService+="<profile:hasInput rdf:resource=\""+in+ "\"/>"+"\n";
 			processInputs+=getInputOWLS(in);
-			
-			
+
+
 		}
 		//TODO bad use of getOutputs...
 		ArrayList<String> outputs=getOutputs(serviceProfile);
@@ -1037,61 +1315,61 @@ public class SFinterface {
 			String out=iterOutputs.next();
 			owlsService+="<profile:hasOutput rdf:resource=\""+out+ "\"/>"+"\n";
 			processOutputs+=getOutputOWLS(out);
-			
+
 		}
 		owlsService+="</profile:Profile>";
-		
+
 		//process:parameterType
 		//process:parameterType
-		
+
 		owlsService+=processInputs+processOutputs;
-		
-		
+
+
 		//all the groundings
 		owlsService+=getGroundingsOWLS(serviceProfile);
-		
+
 		owlsService+="</rdf:RDF>";
 		return owlsService;
 	}
-	
-	
+
+
 	public void registerNServices(String fileName){
 		File file = null;
-	    FileReader fr = null;
-	    BufferedReader br = null;
-	    String baseURL="http://127.0.0.1/services/1.1/";
-	      try {
-	        
-	    	 file = new File (fileName);
-	         fr = new FileReader (file);
-	         br = new BufferedReader(fr);
+		FileReader fr = null;
+		BufferedReader br = null;
+		String baseURL="http://127.0.0.1/services/1.1/";
+		try {
 
-	         // Lectura del fichero
-	         String line;
-	         while((line=br.readLine())!=null){
-	        	 System.out.println(line);
-	        	 RegisterService(baseURL+line);
-	         }
-	      }
-	      catch(Exception e){
-	         e.printStackTrace();
-	      }
+			file = new File (fileName);
+			fr = new FileReader (file);
+			br = new BufferedReader(fr);
+
+			// Lectura del fichero
+			String line;
+			while((line=br.readLine())!=null){
+				System.out.println(line);
+				RegisterService(baseURL+line);
+			}
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
 	}
-	
+
 	//TODO
 	public void deregisterService(String profileURL, String profileName, String serviceName){
-		
+
 		ModelMaker maker = ModelFactory.createModelRDBMaker(conn);
 		Model base = maker.createModel("http://example.org/ontologias");
 		OntModel m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
-		
+
 		profileURL="http://127.0.0.1/services/1.1/calculateSunriseTime.owls";
 		profileName="CALCULATE_SUNRISE_PROFILE";
 		serviceName="CALCULATE_SUNRISE_SERVICE";
-		
+
 		String serviceprocess="http://127.0.0.1/services/1.1/calculateSunriseTime.owls#CALCULATE_SUNRISE_PROCESS";
 		String urlProfileService="http://127.0.0.1/services/1.1/calculateSunriseTime.owls#CALCULATE_SUNRISE_PROFILE";
-		
+
 		StringTokenizer Tok = new StringTokenizer(serviceprocess);
 		// Get the owl process document
 		String urlProcessDoc = Tok.nextToken("#");
@@ -1102,22 +1380,22 @@ public class SFinterface {
 		System.out.println("processname " + processName);
 
 		// Get the url profile # service name
-//		m.write(System.out, "N3");
+		//		m.write(System.out, "N3");
 		String urlProcessService = GetServiceProcess(urlProcessDoc,processName, m);
 		if(urlProcessService==null){
 			System.err.println("urlProcessService is null, cannot deregister service "+profileName);
 			return;
 		}
-			
+
 		if (DEBUG) {
 			System.out.println("URL process: " + urlProcessDoc);
 			System.out.println("Process name: " + processName);
 			System.out.println("URL profile#service: " + urlProfileService);
 			System.out.println("URL process#service: " + urlProcessService);
-			
+
 			// System.out.println("Provider ID: "+ providerName);
 		}
-		
+
 		// Query to get the service profile name
 		String queryStringServiceProfileName = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
 				+ "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>"
@@ -1145,11 +1423,11 @@ public class SFinterface {
 		RemoveProcess(urlProcessDoc, processName, urlProfileService,urlProcessService,Profile, m);
 
 		m.commit();
-		
-		
-		
-		
-		
+
+
+
+
+
 		// Delete profile tuples where the property is profile
 		String update =
 				"prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
@@ -1168,106 +1446,106 @@ public class SFinterface {
 						+ "|| ?y = service:isPresentedBy "
 						+ "|| ?y = service:presents "
 						+ "|| ?z = profile:Profile " + ")" + "?x ?y ?z}";
-		
+
 		String update2 =
-			"prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
-					+ "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>"
-					+ "prefix proc: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
-					+ "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
-					+ "prefix mind: <" + profileURL + "#>" +
+				"prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
+						+ "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>"
+						+ "prefix proc: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
+						+ "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
+						+ "prefix mind: <" + profileURL + "#>" +
 
 					"delete {?x ?y ?z}" + "where" + "{" + "mind:"
 					+ serviceName + " ?y ?z"
 					+ " filter ( ?z = service:Service "
 					+ "|| ?y = service:presents " + ")"
 					+ "?x ?y ?z}";
-		
+
 		// Execute the query and obtain results
 		QuerySolution querysol = new QuerySolutionMap();
 		UpdateAction.parseExecute(update, m, querysol);
 		UpdateAction.parseExecute(update2, m, querysol);
-		
-		
-		
+
+
+
 	}
-	
-	
+
+
 	private String getProvidersOWLS(String serviceProfile){
-		
+
 		String providersOWLS="";
 		ModelMaker maker = ModelFactory.createModelRDBMaker(conn);
 		Model base = maker.createModel("http://example.org/ontologias");
 		OntModel m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
-		
+
 		String queryStringSearchName =
 				"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"+
-				"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"+
-				"select ?x where { "+"<"+serviceProfile+">"+" profile:contactInformation ?x }";
-		
+						"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"+
+						"select ?x where { "+"<"+serviceProfile+">"+" profile:contactInformation ?x }";
+
 		Query querySearchName = QueryFactory.create(queryStringSearchName);
-		
+
 		QueryExecution qeSearchName = QueryExecutionFactory.create(querySearchName, m);
 		ResultSet resultsSearchName = qeSearchName.execSelect();
-		
+
 		String providerURI="", entityID="", entityType="", language="", performative="";
-		
+
 		if (resultsSearchName != null) {
-			
+
 			while(resultsSearchName.hasNext()) {
 				providerURI = resultsSearchName.next().getResource("x").toString();
-				
-				
+
+
 				entityID=getProviderParameter(providerURI, "entityID");
 				entityType=getProviderParameter(providerURI, "entityType");
 				language=getProviderParameter(providerURI, "language");
 				performative=getProviderParameter(providerURI, "performative");
-				
+
 				providersOWLS+="<profile:contactInformation>"+"\n"+
-				"<provider:Provider rdf:ID=\""+providerURI+"\">"+"\n"+
-				"<provider:entityID rdf:datatype=\"^^xsd;string\">"+entityID+"</provider:entityID>"+"\n"+
-				"<provider:entityType rdf:datatype=\"^^xsd;string\">"+entityType+"</provider:entityType>"+"\n"+
-				"<provider:language rdf:datatype=\"^^xsd;string\">"+language+"</provider:language>"+"\n"+
-				"<provider:performative rdf:datatype=\"^^xsd;string\">"+performative+"</provider:performative>"+"\n"+
-				"</provider:Provider>"+"\n"+
-				"</profile:contactInformation>"+"\n";
-				
+						"<provider:Provider rdf:ID=\""+providerURI+"\">"+"\n"+
+						"<provider:entityID rdf:datatype=\"^^xsd;string\">"+entityID+"</provider:entityID>"+"\n"+
+						"<provider:entityType rdf:datatype=\"^^xsd;string\">"+entityType+"</provider:entityType>"+"\n"+
+						"<provider:language rdf:datatype=\"^^xsd;string\">"+language+"</provider:language>"+"\n"+
+						"<provider:performative rdf:datatype=\"^^xsd;string\">"+performative+"</provider:performative>"+"\n"+
+						"</provider:Provider>"+"\n"+
+						"</profile:contactInformation>"+"\n";
+
 				//System.out.println(providerURI+"\n"+entityID+" "+entityType+" "+language+" "+performative);
-				
+
 			} 
-			
-			
+
+
 		}//end if
 		else{
 			System.out.println("resultsSearchName is null");
 		}
-		
+
 		// close the query
 		qeSearchName.close();
 		m.close();
-		
+
 		return providersOWLS;
 	}
-	
-	
+
+
 	private String getProviderParameter(String providerURI, String parameter){
-		
+
 		ModelMaker maker = ModelFactory.createModelRDBMaker(conn);
 		Model base = maker.createModel("http://example.org/ontologias");
 		OntModel m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
-		
+
 		String queryStringSearchName2 =
 				"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"+
-				"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"+
-				"prefix provider: <http://127.0.0.1/ontology/provider.owl#>"+
-				"select ?x where { <"+providerURI+"> provider:"+parameter+" ?x }";
-		
+						"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"+
+						"prefix provider: <http://127.0.0.1/ontology/provider.owl#>"+
+						"select ?x where { <"+providerURI+"> provider:"+parameter+" ?x }";
+
 		Query querySearchName2 = QueryFactory.create(queryStringSearchName2);
-		
+
 		QueryExecution qeSearchName2 = QueryExecutionFactory.create(querySearchName2, m);
 		ResultSet resultsSearchName2 = qeSearchName2.execSelect();
 		String result="";
 		if (resultsSearchName2 != null) {
-			
+
 			if(resultsSearchName2.hasNext()) {
 				String str = resultsSearchName2.next().getLiteral("x").toString();
 				StringTokenizer strToken=new StringTokenizer(str, "^^");
@@ -1276,17 +1554,17 @@ public class SFinterface {
 		}
 		return result;
 	}
-	
-	
-	
-	
+
+
+
+
 	//TODO idea: fer consulta primer per el process:parameterType per veure si coincideix i despres
-		//agafar el profile:hasInput
-		//seria més elegant poder agafar directament el parameterType sabent que es Input...
-		
-		
-		
-		
+	//agafar el profile:hasInput
+	//seria més elegant poder agafar directament el parameterType sabent que es Input...
+
+
+
+
 	//hacer una consulta por cada entrada deseada, guardando los servicios que tengan al menos una entrada (sin repetirlos en la lista)
 	//de cada servicio, comprobar exactamente cuantas entradas coinciden, y después las salidas
 	//sumar con algún tipo de ponderación
@@ -1297,159 +1575,159 @@ public class SFinterface {
 	 * @param outputs Specify the parameter type. Example: \"http://127.0.0.1/ontology/books.owl#Novel\"^^xsd:anyURI
 	 */
 	public void SearchServices(ArrayList<String> inputs, ArrayList<String> outputs){
-		
-		
+
+
 		ModelMaker maker = ModelFactory.createModelRDBMaker(conn);
 		Model base = maker.createModel("http://example.org/ontologias");
 		OntModel m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
-	
+
 		ArrayList<String> candidates=new ArrayList<String>();
-		
+
 		Iterator<String> iterInputs=inputs.iterator();
 		while(iterInputs.hasNext()){
-			
-			
-			
+
+
+
 			String in=iterInputs.next();
-			
+
 			String queryStr =
-				"prefix xsd: <http://www.w3.org/2001/XMLSchema#>"+
-				"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"+
-				"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"+
-				"select ?x where { ?x a process:Input ; process:parameterType "+in+" . }";
-			
-//				String queryStr =
-//				"prefix xsd: <http://www.w3.org/2001/XMLSchema#>"+
-//				"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"+
-//				"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"+
-//				"select ?x where { ?x a process:Input { ?x process:parameterType "+in+" . } }";
-			
-//				String queryStr =
-//					"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"+
-//					"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"+
-//					"select ?x where { ?x process:parameterType ?y }";
-			
+					"prefix xsd: <http://www.w3.org/2001/XMLSchema#>"+
+							"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"+
+							"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"+
+							"select ?x where { ?x a process:Input ; process:parameterType "+in+" . }";
+
+			//				String queryStr =
+			//				"prefix xsd: <http://www.w3.org/2001/XMLSchema#>"+
+			//				"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"+
+			//				"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"+
+			//				"select ?x where { ?x a process:Input { ?x process:parameterType "+in+" . } }";
+
+			//				String queryStr =
+			//					"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"+
+			//					"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"+
+			//					"select ?x where { ?x process:parameterType ?y }";
+
 			Query query = QueryFactory.create(queryStr);
 
 			// Execute the query and obtain results
 			QueryExecution querySearchInputs = QueryExecutionFactory.create(query, m);
 			ResultSet resultsSearchInputs = querySearchInputs.execSelect();
-			
+
 			if (resultsSearchInputs != null) {
 				int controws=0;
-				
-				
+
+
 				while (resultsSearchInputs.hasNext()) {
 					controws++;
-					
+
 					QuerySolution sol=resultsSearchInputs.next();
-					
-					
+
+
 					Resource resource=sol.getResource("x");
 					String cand=resource.getURI();
 					if(!candidates.contains(cand))
 						candidates.add(cand);
-					
+
 					System.out.println("candidate: "+cand);
 
-					
+
 
 				}//end for 
 			}//end if
-			
+
 			// close the query
 			querySearchInputs.close();
-			
-//				m.close();
-			
+
+			//				m.close();
+
 		}
-		
-		
-//			System.out.println("****FINAL CANDIDATES:****");
-//			Iterator<String> iterCandidates=candidates.iterator();
-//			while(iterCandidates.hasNext()){
-//				String cand=iterCandidates.next();
-//				System.out.println(cand);
-//			}
-		
-		
-		
+
+
+		//			System.out.println("****FINAL CANDIDATES:****");
+		//			Iterator<String> iterCandidates=candidates.iterator();
+		//			while(iterCandidates.hasNext()){
+		//				String cand=iterCandidates.next();
+		//				System.out.println(cand);
+		//			}
+
+
+
 		//TODO guardar una lista de profiles con sus ponderaciones asociadas de semejanza al servicio
 		ArrayList<Profile> profiles=new ArrayList<Profile>();
-		
+
 		Iterator<String> iterCandidates=candidates.iterator();
 		while(iterCandidates.hasNext()){
 			String cand=iterCandidates.next();
-			
+
 			String queryStr =
-				"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"+
-				"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"+
-				"select ?x where { ?x profile:hasInput "+"<"+cand+">"+" }";
-			
+					"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"+
+							"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"+
+							"select ?x where { ?x profile:hasInput "+"<"+cand+">"+" }";
+
 			Query query = QueryFactory.create(queryStr);
 
 			// Execute the query and obtain results
 			QueryExecution querySearchInputs = QueryExecutionFactory.create(query, m);
 			ResultSet resultsSearchInputs = querySearchInputs.execSelect();
-			
+
 			if (resultsSearchInputs != null && resultsSearchInputs.hasNext()) {
 				QuerySolution sol=resultsSearchInputs.next();
-				
+
 				Resource resource=sol.getResource("x");
 				String profileURL=resource.getURI();
 				Profile profile= new Profile(profileURL, 0f);
 				if(!profiles.contains(profile))
 					profiles.add(profile);
-				
+
 				System.out.println("profile: "+profile.getUrl());
 			}
-			
+
 		}
-		
+
 		Iterator<Profile> iterProfiles=profiles.iterator();
 		while(iterProfiles.hasNext()){
 			Profile profile=iterProfiles.next();
 			int inputsProfile=0;
 			int outputsProfile=0;
-			
+
 			//SEARCH INPUTS
 			String queryStr =
-				"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"+
-				"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"+
-				"select ?x where { "+"<"+profile.getUrl()+">"+" profile:hasInput ?x }";
-			
+					"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"+
+							"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"+
+							"select ?x where { "+"<"+profile.getUrl()+">"+" profile:hasInput ?x }";
+
 			Query query = QueryFactory.create(queryStr);
 
 			// Execute the query and obtain results
 			QueryExecution querySearchInputs = QueryExecutionFactory.create(query, m);
 			ResultSet resultsSearchInputs = querySearchInputs.execSelect();
-			
-			
+
+
 			if (resultsSearchInputs != null){
-				
+
 				while(resultsSearchInputs.hasNext()) {
 					inputsProfile++;
 					QuerySolution sol=resultsSearchInputs.next();
-					
+
 					Resource resource=sol.getResource("x");
 					String input=resource.getURI();
-					
+
 					//TODO mirar todas las entradas (consulta del tipo) buscando si esta está
 					String queryStrType =
-						"prefix xsd: <http://www.w3.org/2001/XMLSchema#>"+
-						"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"+
-						"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"+
-						"select ?x where { <"+input+"> a process:Input ; process:parameterType ?x . }";
-					
+							"prefix xsd: <http://www.w3.org/2001/XMLSchema#>"+
+									"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"+
+									"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"+
+									"select ?x where { <"+input+"> a process:Input ; process:parameterType ?x . }";
+
 					Query queryType = QueryFactory.create(queryStrType);
 
 					// Execute the query and obtain results
 					QueryExecution querySearchInputType = QueryExecutionFactory.create(queryType, m);
 					ResultSet resultsSearchInputType = querySearchInputType.execSelect();
-					
+
 					if (resultsSearchInputType != null && resultsSearchInputType.hasNext()) {
 						QuerySolution sol2=resultsSearchInputType.next();
-						
+
 						Literal literal2=sol2.getLiteral("x");
 						String parameterType=literal2.getString();
 						System.out.println("\t\tparameterType: "+parameterType);
@@ -1464,51 +1742,51 @@ public class SFinterface {
 								break;
 							}
 						}
-						
+
 					}
-					
+
 					System.out.println("\tinput: "+input);
 				}
 			}
-			
-			
+
+
 			//SEARCH OUTPUTS
 			String queryStrOutputs =
-				"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"+
-				"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"+
-				"select ?x where { "+"<"+profile.getUrl()+">"+" profile:hasOutput ?x }";
-			
+					"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"+
+							"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"+
+							"select ?x where { "+"<"+profile.getUrl()+">"+" profile:hasOutput ?x }";
+
 			Query queryOutputs = QueryFactory.create(queryStrOutputs);
 
 			// Execute the query and obtain results
 			QueryExecution querySearchOutputs = QueryExecutionFactory.create(queryOutputs, m);
 			ResultSet resultsSearchOutputs = querySearchOutputs.execSelect();
-			
+
 			if (resultsSearchOutputs != null){
-				
+
 				while(resultsSearchOutputs.hasNext()) {
 					outputsProfile++;
 					QuerySolution sol=resultsSearchOutputs.next();
-					
+
 					Resource resource=sol.getResource("x");
 					String output=resource.getURI();
-					
+
 					//TODO mirar todas las entradas (consulta del tipo) buscando si esta está
 					String queryStrType =
-						"prefix xsd: <http://www.w3.org/2001/XMLSchema#>"+
-						"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"+
-						"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"+
-						"select ?x where { <"+output+"> a process:Output ; process:parameterType ?x . }";
-					
+							"prefix xsd: <http://www.w3.org/2001/XMLSchema#>"+
+									"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"+
+									"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"+
+									"select ?x where { <"+output+"> a process:Output ; process:parameterType ?x . }";
+
 					Query queryType = QueryFactory.create(queryStrType);
 
 					// Execute the query and obtain results
 					QueryExecution querySearchOutputType = QueryExecutionFactory.create(queryType, m);
 					ResultSet resultsSearchOutputType = querySearchOutputType.execSelect();
-					
+
 					if (resultsSearchOutputType != null && resultsSearchOutputType.hasNext()) {
 						QuerySolution sol2=resultsSearchOutputType.next();
-						
+
 						Literal literal2=sol2.getLiteral("x");
 						String parameterType=literal2.getString();
 						System.out.println("\t\tparameterType: "+parameterType);
@@ -1523,101 +1801,101 @@ public class SFinterface {
 								break;
 							}
 						}
-						
+
 					}
-					
+
 					System.out.println("\toutput: "+output);
 				}
 			}
-			
+
 			System.out.println(profile.getSuitability()+" "+inputs.size()+" "+outputs.size());
-			
+
 			float adaptToAsked=profile.getSuitability()/(inputs.size()+outputs.size());
 			float adaptToFoundService=profile.getSuitability()/(inputsProfile+outputsProfile);
 			profile.setSuitability(0.5f*adaptToAsked+0.5f*adaptToFoundService);
-			
+
 			System.out.println(profile.getUrl()+" -> "+profile.getSuitability());
-			
+
 		}
-		
-		
-		
-		
-		
-		
-		
-		
-		
-	  }
-	
-	  public int RemoveProcess(String urlProcessDoc, String processname, String urlProfileService, String urlProcessService, String Profile, OntModel m){
-		   	 
-	 	   if (DEBUG) {
-				System.out.println("Removing Process ... ");
-		       }
-	 	 
-	 	   
-	 	    // Query to know if there are more process with the same profile
-				String queryStringServiceProcess =
-					"prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
-							+ "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>"
-							+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
-							+ "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
-							+ "prefix actor: <http://www.daml.org/services/owl-s/1.1/ActorDefault.owl#>"
-							+ "select ?x " 
-							+ "where {" 
-							+ "?x service:presents "+Profile 
-							+ "}";
 
-				Query queryServiceProcess = QueryFactory.create(queryStringServiceProcess);
 
-	  		// Execute the query
-				QueryExecution qeServiceProcess = QueryExecutionFactory.create(queryServiceProcess, m);
-				ResultSet resultsServiceProcess = qeServiceProcess.execSelect();
-				
-				int numprocess=0;
-				Iterator j = resultsServiceProcess;
-				while ( resultsServiceProcess.hasNext()) {
-					resultsServiceProcess.next();
-					numprocess++;
-				}
-				
-				// If there are not more than one process, the profile should be deleted
-				/*if (numprocess==1) {  
+
+
+
+
+
+
+
+	}
+
+	public int RemoveProcess(String urlProcessDoc, String processname, String urlProfileService, String urlProcessService, String Profile, OntModel m){
+
+		if (DEBUG) {
+			System.out.println("Removing Process ... ");
+		}
+
+
+		// Query to know if there are more process with the same profile
+		String queryStringServiceProcess =
+				"prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
+						+ "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>"
+						+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
+						+ "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
+						+ "prefix actor: <http://www.daml.org/services/owl-s/1.1/ActorDefault.owl#>"
+						+ "select ?x " 
+						+ "where {" 
+						+ "?x service:presents "+Profile 
+						+ "}";
+
+		Query queryServiceProcess = QueryFactory.create(queryStringServiceProcess);
+
+		// Execute the query
+		QueryExecution qeServiceProcess = QueryExecutionFactory.create(queryServiceProcess, m);
+		ResultSet resultsServiceProcess = qeServiceProcess.execSelect();
+
+		int numprocess=0;
+		Iterator j = resultsServiceProcess;
+		while ( resultsServiceProcess.hasNext()) {
+			resultsServiceProcess.next();
+			numprocess++;
+		}
+
+		// If there are not more than one process, the profile should be deleted
+		/*if (numprocess==1) {  
 					if (DEBUG) {
 	       			System.out.println("The profile should be deleted... ");
 		 	        }
 					DeleteProfile(urlProfileService,Profile, m);
 				}*/
-				
-	 		String processGround = GetServiceGrounding(urlProcessDoc, processname,urlProcessService, m);
-	 		String processGroundWSDL = GetServiceWSDLGrounding(urlProcessDoc, processGround, m);
-	 		String WsdlURL = GetServiceWSDLGroundingDoc(urlProcessDoc, processGroundWSDL, m);
-	 		
-	 		// Delete Process tuples	
-	 		DeleteWSDLMessagePart(urlProcessDoc, WsdlURL, m);
-	 		DeleteWSDLOperation(urlProcessDoc, WsdlURL, m);
-	 		DeleteWSDLPortType(urlProcessDoc, WsdlURL, m);
-	 		DeleteProcessInputs(urlProcessDoc, processname, WsdlURL, m);
-	 		DeleteProcessOutputs(urlProcessDoc, processname, WsdlURL, m);
-	 		DeleteProcessGrounding(urlProcessDoc, processname, processGround, processGroundWSDL, m);
-	 		DeleteProcess(urlProcessDoc, processname, m);
-	       		
-	 		return(1);
-	 	 
-	  }// end RemoveProcess
-	  
-	  
-	  /**
-	   * GetServiceProfile
-	   * @param String urlProcessDoc
-	   * @param String processname
-	   * @param OntModel m
-	   * @return 
-	   */ 
-	  public String GetServiceProcess(String urlProcessDoc, String processname, OntModel m){
-	  	//Query to get the service profile
-			String queryStringProfile =
+
+		String processGround = GetServiceGrounding(urlProcessDoc, processname,urlProcessService, m);
+		String processGroundWSDL = GetServiceWSDLGrounding(urlProcessDoc, processGround, m);
+		String WsdlURL = GetServiceWSDLGroundingDoc(urlProcessDoc, processGroundWSDL, m);
+
+		// Delete Process tuples	
+		DeleteWSDLMessagePart(urlProcessDoc, WsdlURL, m);
+		DeleteWSDLOperation(urlProcessDoc, WsdlURL, m);
+		DeleteWSDLPortType(urlProcessDoc, WsdlURL, m);
+		DeleteProcessInputs(urlProcessDoc, processname, WsdlURL, m);
+		DeleteProcessOutputs(urlProcessDoc, processname, WsdlURL, m);
+		DeleteProcessGrounding(urlProcessDoc, processname, processGround, processGroundWSDL, m);
+		DeleteProcess(urlProcessDoc, processname, m);
+
+		return(1);
+
+	}// end RemoveProcess
+
+
+	/**
+	 * GetServiceProfile
+	 * @param String urlProcessDoc
+	 * @param String processname
+	 * @param OntModel m
+	 * @return 
+	 */ 
+	public String GetServiceProcess(String urlProcessDoc, String processname, OntModel m){
+		//Query to get the service profile
+		String queryStringProfile =
 				"prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
 						+ "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>"
 						+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
@@ -1629,44 +1907,44 @@ public class SFinterface {
 						+ "mind:"+processname+" service:describes ?x " 
 						+ "}";
 
-			Query queryProfile = QueryFactory.create(queryStringProfile);
+		Query queryProfile = QueryFactory.create(queryStringProfile);
 
-			// Execute the query and obtain results
-			QueryExecution qeProfile = QueryExecutionFactory.create(queryProfile, m);
-			ResultSet resultProfile = qeProfile.execSelect();
-			if(resultProfile.hasNext()){
-				// To get the name of the profile
-				String result = resultProfile.next().toString();
-				StringTokenizer Tok = new StringTokenizer(result);
-				String processProfileResult = Tok.nextToken("=");
-				String processProfile = Tok.nextToken();
-				processProfile = processProfile.replace(")", "");
-				if (DEBUG) {
-					System.out.println("Process Profile: " + processProfile);
-				}
-		  	
-				return(processProfile);
+		// Execute the query and obtain results
+		QueryExecution qeProfile = QueryExecutionFactory.create(queryProfile, m);
+		ResultSet resultProfile = qeProfile.execSelect();
+		if(resultProfile.hasNext()){
+			// To get the name of the profile
+			String result = resultProfile.next().toString();
+			StringTokenizer Tok = new StringTokenizer(result);
+			String processProfileResult = Tok.nextToken("=");
+			String processProfile = Tok.nextToken();
+			processProfile = processProfile.replace(")", "");
+			if (DEBUG) {
+				System.out.println("Process Profile: " + processProfile);
 			}
-			else{
-				if (DEBUG) {
-					System.out.println("There is not Process Profile!!");
-				}
-				return null;
+
+			return(processProfile);
+		}
+		else{
+			if (DEBUG) {
+				System.out.println("There is not Process Profile!!");
 			}
-			
-	  }//end GetServiceProfile 
-	  
-	  /**
-	   * GetServiceGrounding
-	   * @param String urlProcessDoc
-	   * @param String processname
-	   * @param String processProfile
-	   * @param OntModel m
-	   */ 
-	  public String GetServiceGrounding(String urlProcessDoc, String processname, String processProfile, OntModel m){
-	  	
-	  	// Query to get the service Grounding
-			String queryStringProcessGround =
+			return null;
+		}
+
+	}//end GetServiceProfile 
+
+	/**
+	 * GetServiceGrounding
+	 * @param String urlProcessDoc
+	 * @param String processname
+	 * @param String processProfile
+	 * @param OntModel m
+	 */ 
+	public String GetServiceGrounding(String urlProcessDoc, String processname, String processProfile, OntModel m){
+
+		// Query to get the service Grounding
+		String queryStringProcessGround =
 				"prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
 						+ "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>"
 						+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
@@ -1678,38 +1956,38 @@ public class SFinterface {
 						+ "?x service:supportedBy "+processProfile 
 						+ "}";
 
-			Query queryProcessGround = QueryFactory.create(queryStringProcessGround);
+		Query queryProcessGround = QueryFactory.create(queryStringProcessGround);
 
-			// Execute the query and obtain results
-			QueryExecution qeProcessGround = QueryExecutionFactory.create(queryProcessGround, m);
-			ResultSet resultProcessGround = qeProcessGround.execSelect();
-			// To take the grounding
-			String result = resultProcessGround.next().toString();
-			StringTokenizer Tok = new StringTokenizer(result);
-			String processGroundResult = Tok.nextToken("=");
-			String processGround = Tok.nextToken();
-			processGround = processGround.replace(")", "");
-			
-			if (DEBUG) {
-				System.out.println("Process Ground: " + processGround);
-			}
-			
-			return(processGround);
-			
-	  } //end GetServiceGrounding
-	  	
-	  	
-	  
-	  /**
-	   * GetServiceWSDLGrounding
-	   * @param String urlProcessDoc
-	   * @param String processGround
-	   * @param OntModel m
-	   */ 
-	  public String GetServiceWSDLGrounding(String urlProcessDoc, String processGround, OntModel m){
-			
-	  	// Query to get the service WSDLGrounding
-			String queryStringProcessGroundWSDL =
+		// Execute the query and obtain results
+		QueryExecution qeProcessGround = QueryExecutionFactory.create(queryProcessGround, m);
+		ResultSet resultProcessGround = qeProcessGround.execSelect();
+		// To take the grounding
+		String result = resultProcessGround.next().toString();
+		StringTokenizer Tok = new StringTokenizer(result);
+		String processGroundResult = Tok.nextToken("=");
+		String processGround = Tok.nextToken();
+		processGround = processGround.replace(")", "");
+
+		if (DEBUG) {
+			System.out.println("Process Ground: " + processGround);
+		}
+
+		return(processGround);
+
+	} //end GetServiceGrounding
+
+
+
+	/**
+	 * GetServiceWSDLGrounding
+	 * @param String urlProcessDoc
+	 * @param String processGround
+	 * @param OntModel m
+	 */ 
+	public String GetServiceWSDLGrounding(String urlProcessDoc, String processGround, OntModel m){
+
+		// Query to get the service WSDLGrounding
+		String queryStringProcessGroundWSDL =
 				"prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
 						+ "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>"
 						+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
@@ -1722,38 +2000,38 @@ public class SFinterface {
 						+ processGround +" grounding:hasAtomicProcessGrounding ?x" 
 						+ "}";
 
-			Query queryProcessGroundWSDL = QueryFactory.create(queryStringProcessGroundWSDL);
+		Query queryProcessGroundWSDL = QueryFactory.create(queryStringProcessGroundWSDL);
 
-			// Execute the query and obtain results
-			QueryExecution qeProcessGroundWSDL = QueryExecutionFactory.create(queryProcessGroundWSDL, m);
-			ResultSet resultProcessGroundWSDL = qeProcessGroundWSDL.execSelect();
-			
-			// To take the WSDL Grounding		
-			String result = resultProcessGroundWSDL.next().toString();
-			StringTokenizer Tok = new StringTokenizer(result);
-			String processGroundWSDLResult = Tok.nextToken("=");
-			String processGroundWSDL = Tok.nextToken();
-			processGroundWSDL = processGroundWSDL.replace(")", "");
-			
-			if (DEBUG) {
-				System.out.println("Process Ground WSDL: " + processGroundWSDL);
-			}
-			return(processGroundWSDL);
-			
-	  }//end GetServiceWSDLGrounding
-	  
-	  	
-	  
-	  /**
-	   * GetServiceWSDLGroundingDoc
-	   * @param String urlProcessDoc
-	   * @param String processGroundWSDL
-	   * @param OntModel m
-	   */ 
-	  private String GetServiceWSDLGroundingDoc(String urlProcessDoc, String processGroundWSDL, OntModel m){
-			
-	  	// Query to get the service WSDLGrounding Document
-			String queryStringDocWSDL =
+		// Execute the query and obtain results
+		QueryExecution qeProcessGroundWSDL = QueryExecutionFactory.create(queryProcessGroundWSDL, m);
+		ResultSet resultProcessGroundWSDL = qeProcessGroundWSDL.execSelect();
+
+		// To take the WSDL Grounding		
+		String result = resultProcessGroundWSDL.next().toString();
+		StringTokenizer Tok = new StringTokenizer(result);
+		String processGroundWSDLResult = Tok.nextToken("=");
+		String processGroundWSDL = Tok.nextToken();
+		processGroundWSDL = processGroundWSDL.replace(")", "");
+
+		if (DEBUG) {
+			System.out.println("Process Ground WSDL: " + processGroundWSDL);
+		}
+		return(processGroundWSDL);
+
+	}//end GetServiceWSDLGrounding
+
+
+
+	/**
+	 * GetServiceWSDLGroundingDoc
+	 * @param String urlProcessDoc
+	 * @param String processGroundWSDL
+	 * @param OntModel m
+	 */ 
+	private String GetServiceWSDLGroundingDoc(String urlProcessDoc, String processGroundWSDL, OntModel m){
+
+		// Query to get the service WSDLGrounding Document
+		String queryStringDocWSDL =
 				"prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
 						+ "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>"
 						+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
@@ -1765,117 +2043,117 @@ public class SFinterface {
 						+ processGroundWSDL +" grounding:wsdlDocument ?x" 
 						+ "}";
 
-			System.out.println("queryStringDocWSDL: "+queryStringDocWSDL);
-			Query queryDocWSDL = QueryFactory.create(queryStringDocWSDL);
+		System.out.println("queryStringDocWSDL: "+queryStringDocWSDL);
+		Query queryDocWSDL = QueryFactory.create(queryStringDocWSDL);
 
-			// Execute the query and obtain results
-			QueryExecution qeDocWSDL = QueryExecutionFactory.create(queryDocWSDL, m);
-			ResultSet resultDocWSDL = qeDocWSDL.execSelect();
-			
-			
-			// To take the WSDL Grounding Document
-			String result = resultDocWSDL.next().toString();
-			StringTokenizer Tok = new StringTokenizer(result);
-			String DocWSDLResult = Tok.nextToken("=");
-			String DocWSDL = Tok.nextToken();
-			DocWSDL = DocWSDL.replace(")", "");
-			
-			if (DEBUG) {
-				System.out.println("DOC WSDL: " + DocWSDL);
-			}
-			// To take the URL of the WSDL Document
-			Tok = new StringTokenizer(DocWSDL);
-			String DocURL = Tok.nextToken("?");
-			DocURL = DocURL.replace("\"", " ");
-			if (DEBUG) {
-				System.out.println("DocURL: " + DocURL);
-			}
-			String URL = null;
-			URL = DocURL;
-			String WsdlURL = "";
-			Tok = new StringTokenizer(URL, ":8080/");
-			String DocPartURL = Tok.nextToken();
-			System.out.println("DocPartURL"+DocPartURL);	
-			
-			return (DocPartURL);
-	  }//end GetServiceWSDLGroundingDoc
-	  	
-	  
-	  
-	  /**
-	   * DeleteProfile
-	   * @param urlProfileService
-	   * @param Profile
-	   * @param m
-	   * @return
-	   */
-	  private void DeleteProfile(String urlProfileService,String Profile, OntModel m){
-	 	 
-	 	 if (DEBUG) {
-				System.out.println("Delete Profile... "+urlProfileService);
-		      }
-	 	 
-	 	//Delete profile tuples where the property is profile
-			String update= 
-	      	"prefix xsd: <http://www.w3.org/2001/XMLSchema#>" +
-	          "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>" +
-	          "prefix proc: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" +  
-	          "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" + 
-	          "delete {?x ?y ?z}" +
-	          "where" +
-	          "{" +Profile+" ?y ?z" +
-	          " filter ( ?y = profile:hasInput " +
-	                 "|| ?y = profile:hasOutput " +
-	                 "|| ?y = profile:serviceName " +
-	                 "|| ?y = service:isPresentedBy " +
-	                 "|| ?y = service:presentedBy " +
-	                 "|| ?y = profile:textDescription " +
-	                 "|| ?y = profile:has_process " +
-	                 "|| ?y = service:presents " +
-	                 "|| ?z = profile:Profile " +
-	                 ")" +
-	          "?x ?y ?z}";
-			
-		         		
-			//Delete tuples where the property is service (it is related with the profile)
-	      String update2= 
-	      	"prefix xsd: <http://www.w3.org/2001/XMLSchema#>" +
-	          "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>" +
-	          "prefix proc: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" +  
-	          "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" + 
-	          "delete {?x ?y ?z}" +
-	          "where" +
-	          "{ <"+urlProfileService+"> ?y ?z" +
-	          " filter ( ?z = service:Service " +
-	                 "|| ?y = service:presents " +
-	                 ")" +
-	          "?x ?y ?z}";
-	      
-	     
-	 		// Execute the query and obtain results
-	 		QuerySolution querysol=new QuerySolutionMap();
-	        UpdateAction.parseExecute(update, m, querysol);
-	        UpdateAction.parseExecute(update2, m, querysol);
-	     
-	           
-	  }// end DeleteProfile
-	  
-	  
-	  
-	  
-	  
-	  /**
-	   * DeleteWSDLMessagePart
-	   * @param urlProcessDoc
-	   * @param WsdlURL
-	   * @param m
-	   * @return 
-	   */
-	  private void DeleteWSDLMessagePart(String urlProcessDoc, String WsdlURL, OntModel m){
-	  	
-	  	
-			// Query to get the service input and output tuples related with the property grounding:wsdlMessagePart
-			String queryStringWSDLMsgMap =
+		// Execute the query and obtain results
+		QueryExecution qeDocWSDL = QueryExecutionFactory.create(queryDocWSDL, m);
+		ResultSet resultDocWSDL = qeDocWSDL.execSelect();
+
+
+		// To take the WSDL Grounding Document
+		String result = resultDocWSDL.next().toString();
+		StringTokenizer Tok = new StringTokenizer(result);
+		String DocWSDLResult = Tok.nextToken("=");
+		String DocWSDL = Tok.nextToken();
+		DocWSDL = DocWSDL.replace(")", "");
+
+		if (DEBUG) {
+			System.out.println("DOC WSDL: " + DocWSDL);
+		}
+		// To take the URL of the WSDL Document
+		Tok = new StringTokenizer(DocWSDL);
+		String DocURL = Tok.nextToken("?");
+		DocURL = DocURL.replace("\"", " ");
+		if (DEBUG) {
+			System.out.println("DocURL: " + DocURL);
+		}
+		String URL = null;
+		URL = DocURL;
+		String WsdlURL = "";
+		Tok = new StringTokenizer(URL, ":8080/");
+		String DocPartURL = Tok.nextToken();
+		System.out.println("DocPartURL"+DocPartURL);	
+
+		return (DocPartURL);
+	}//end GetServiceWSDLGroundingDoc
+
+
+
+	/**
+	 * DeleteProfile
+	 * @param urlProfileService
+	 * @param Profile
+	 * @param m
+	 * @return
+	 */
+	private void DeleteProfile(String urlProfileService,String Profile, OntModel m){
+
+		if (DEBUG) {
+			System.out.println("Delete Profile... "+urlProfileService);
+		}
+
+		//Delete profile tuples where the property is profile
+		String update= 
+				"prefix xsd: <http://www.w3.org/2001/XMLSchema#>" +
+						"prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>" +
+						"prefix proc: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" +  
+						"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" + 
+						"delete {?x ?y ?z}" +
+						"where" +
+						"{" +Profile+" ?y ?z" +
+						" filter ( ?y = profile:hasInput " +
+						"|| ?y = profile:hasOutput " +
+						"|| ?y = profile:serviceName " +
+						"|| ?y = service:isPresentedBy " +
+						"|| ?y = service:presentedBy " +
+						"|| ?y = profile:textDescription " +
+						"|| ?y = profile:has_process " +
+						"|| ?y = service:presents " +
+						"|| ?z = profile:Profile " +
+						")" +
+						"?x ?y ?z}";
+
+
+		//Delete tuples where the property is service (it is related with the profile)
+		String update2= 
+				"prefix xsd: <http://www.w3.org/2001/XMLSchema#>" +
+						"prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>" +
+						"prefix proc: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" +  
+						"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" + 
+						"delete {?x ?y ?z}" +
+						"where" +
+						"{ <"+urlProfileService+"> ?y ?z" +
+						" filter ( ?z = service:Service " +
+						"|| ?y = service:presents " +
+						")" +
+						"?x ?y ?z}";
+
+
+		// Execute the query and obtain results
+		QuerySolution querysol=new QuerySolutionMap();
+		UpdateAction.parseExecute(update, m, querysol);
+		UpdateAction.parseExecute(update2, m, querysol);
+
+
+	}// end DeleteProfile
+
+
+
+
+
+	/**
+	 * DeleteWSDLMessagePart
+	 * @param urlProcessDoc
+	 * @param WsdlURL
+	 * @param m
+	 * @return 
+	 */
+	private void DeleteWSDLMessagePart(String urlProcessDoc, String WsdlURL, OntModel m){
+
+
+		// Query to get the service input and output tuples related with the property grounding:wsdlMessagePart
+		String queryStringWSDLMsgMap =
 				"prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
 						+ "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>"
 						+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
@@ -1888,67 +2166,67 @@ public class SFinterface {
 						+ "?x grounding:wsdlMessagePart ?y " 
 						+ "}";
 
-			Query queryWSDLMsgMap = QueryFactory.create(queryStringWSDLMsgMap);
-			WsdlURL=WsdlURL.replace(" ", "");
-			
-			// Execute the query and obtain the WsdlMessageMap value  
-			QueryExecution qeWSDLMsgMap = QueryExecutionFactory.create(queryWSDLMsgMap, m);
-			ResultSet resultsqeWSDLMsgMap = qeWSDLMsgMap.execSelect();
-			
-			// For each WsdlMessageMap, all the tuples related with the service are deleted
-			if (resultsqeWSDLMsgMap != null) {
+		Query queryWSDLMsgMap = QueryFactory.create(queryStringWSDLMsgMap);
+		WsdlURL=WsdlURL.replace(" ", "");
 
-				for (Iterator j = resultsqeWSDLMsgMap; resultsqeWSDLMsgMap.hasNext();) {
-				
-					// To take only the WsdlMessageMap 
-					String result = resultsqeWSDLMsgMap.next().toString();
-					// If the url related with the WsdlMessageMap property contains the url of the service,
-					// the tuple should be deleted
-					if(result.contains((CharSequence)WsdlURL)){
-						StringTokenizer Tok = new StringTokenizer(result);
-						String wsdlMsg = Tok.nextToken("=");
-						wsdlMsg = Tok.nextToken();
-						wsdlMsg = wsdlMsg.replace(")", "");
-						System.out.println("wsdlMSG : "+wsdlMsg);
-					
-						// Delete the WsdlMessageMap tuple related with the service grounding
-						String updateWSDLMessageMap= 
-			        	"prefix xsd: <http://www.w3.org/2001/XMLSchema#>" +
-			            "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>" +
-			            "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" +  
-			            "prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>" +
-			            "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" +
-			            "prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>" +
-			            "prefix mind: <"+urlProcessDoc+"#>" +
-			            "delete {?x ?y ?z}" +
-			            "where" +
-			            "{?x ?y "+wsdlMsg +
-			            " filter ( ?y = grounding:wsdlMessagePart " +
-			                  ")" +
-			            "?x ?y ?z}";
-		       		
-						// Execute the query 
-						QuerySolution querysol=new QuerySolutionMap();
-						UpdateAction.parseExecute(updateWSDLMessageMap, m, querysol);
-					
-					}// end if 
-				}// end for
-			}// end if
-	  }// DeleteWSDLMessagePart
-	  
-	  
-	  /**
-	   * DeleteWSDLPortType
-	   * @param urlProcessDoc
-	   * @param WsdlURL
-	   * @param m
-	   * @return
-	   */
-	  private void DeleteWSDLPortType(String urlProcessDoc, String WsdlURL, OntModel m){
-	  	
-	  	
-			// Query to get the service tuples related with the property grounding:portType 
-			String queryStringWSDLPort =
+		// Execute the query and obtain the WsdlMessageMap value  
+		QueryExecution qeWSDLMsgMap = QueryExecutionFactory.create(queryWSDLMsgMap, m);
+		ResultSet resultsqeWSDLMsgMap = qeWSDLMsgMap.execSelect();
+
+		// For each WsdlMessageMap, all the tuples related with the service are deleted
+		if (resultsqeWSDLMsgMap != null) {
+
+			for (Iterator j = resultsqeWSDLMsgMap; resultsqeWSDLMsgMap.hasNext();) {
+
+				// To take only the WsdlMessageMap 
+				String result = resultsqeWSDLMsgMap.next().toString();
+				// If the url related with the WsdlMessageMap property contains the url of the service,
+				// the tuple should be deleted
+				if(result.contains((CharSequence)WsdlURL)){
+					StringTokenizer Tok = new StringTokenizer(result);
+					String wsdlMsg = Tok.nextToken("=");
+					wsdlMsg = Tok.nextToken();
+					wsdlMsg = wsdlMsg.replace(")", "");
+					System.out.println("wsdlMSG : "+wsdlMsg);
+
+					// Delete the WsdlMessageMap tuple related with the service grounding
+					String updateWSDLMessageMap= 
+							"prefix xsd: <http://www.w3.org/2001/XMLSchema#>" +
+									"prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>" +
+									"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" +  
+									"prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>" +
+									"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" +
+									"prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>" +
+									"prefix mind: <"+urlProcessDoc+"#>" +
+									"delete {?x ?y ?z}" +
+									"where" +
+									"{?x ?y "+wsdlMsg +
+									" filter ( ?y = grounding:wsdlMessagePart " +
+									")" +
+									"?x ?y ?z}";
+
+					// Execute the query 
+					QuerySolution querysol=new QuerySolutionMap();
+					UpdateAction.parseExecute(updateWSDLMessageMap, m, querysol);
+
+				}// end if 
+			}// end for
+		}// end if
+	}// DeleteWSDLMessagePart
+
+
+	/**
+	 * DeleteWSDLPortType
+	 * @param urlProcessDoc
+	 * @param WsdlURL
+	 * @param m
+	 * @return
+	 */
+	private void DeleteWSDLPortType(String urlProcessDoc, String WsdlURL, OntModel m){
+
+
+		// Query to get the service tuples related with the property grounding:portType 
+		String queryStringWSDLPort =
 				"prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
 						+ "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>"
 						+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
@@ -1961,67 +2239,67 @@ public class SFinterface {
 						+ "?x grounding:portType ?y " 
 						+ "}";
 
-			Query queryWSDLPort = QueryFactory.create(queryStringWSDLPort);
+		Query queryWSDLPort = QueryFactory.create(queryStringWSDLPort);
 
-			// Execute the query 
-			QueryExecution qeWSDLPort = QueryExecutionFactory.create(queryWSDLPort, m);
-			ResultSet resultsqeWSDLPort = qeWSDLPort.execSelect();
-			WsdlURL=WsdlURL.replace(" ", "");
-			
-			// For each input, all the tuples with the property grounding:portType related with the service are deleted
-			if (resultsqeWSDLPort != null) {
+		// Execute the query 
+		QueryExecution qeWSDLPort = QueryExecutionFactory.create(queryWSDLPort, m);
+		ResultSet resultsqeWSDLPort = qeWSDLPort.execSelect();
+		WsdlURL=WsdlURL.replace(" ", "");
 
-				for (Iterator j = resultsqeWSDLPort; resultsqeWSDLPort.hasNext();) {
-				
-					// To take only the url associated with the property grounding:portType
-					String result = resultsqeWSDLPort.next().toString();
-					// If the url contains the url of the service, this tuple should be delete
-					if(result.contains((CharSequence)WsdlURL)){
-						StringTokenizer Tok = new StringTokenizer(result);
-						String wsdlPort = Tok.nextToken("=");
-						wsdlPort = Tok.nextToken();
-						wsdlPort = wsdlPort.replace(")", "");
-					
-						System.out.println("wsdlPort : "+wsdlPort);
-						//Delete the tuple 
-						String updateWSDLPort= 
-			        	"prefix xsd: <http://www.w3.org/2001/XMLSchema#>" +
-			            "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>" +
-			            "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" +  
-			            "prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>" +
-			            "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" +
-			            "prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>" +
-			            "prefix mind: <"+urlProcessDoc+"#>" +
-			            "delete {?x ?y ?z}" +
-			            "where" +
-			            "{?x ?y "+wsdlPort +
-			            " filter ( ?y = grounding:portType " +
-			                  ")" +
-			            "?x ?y ?z}";
-		       		
-						// Execute the query 
-						QuerySolution querysol=new QuerySolutionMap();
-						UpdateAction.parseExecute(updateWSDLPort, m, querysol);
-					
-					}// end if 
-				}// end for
-			}// end if
-	  }// DeleteWSDLPortType
-	  
-	  
-	  
-	  /**
-	   * DeleteWSDLOperation
-	   * @param urlProcessDoc
-	   * @param WsdlURL
-	   * @param m
-	   * @return
-	   */
-	  private void DeleteWSDLOperation(String urlProcessDoc, String WsdlURL, OntModel m){
-	  	
-	  	
-			// Query to get the service tuples related with the property grounding:operation
-			String queryStringWSDLOp =
+		// For each input, all the tuples with the property grounding:portType related with the service are deleted
+		if (resultsqeWSDLPort != null) {
+
+			for (Iterator j = resultsqeWSDLPort; resultsqeWSDLPort.hasNext();) {
+
+				// To take only the url associated with the property grounding:portType
+				String result = resultsqeWSDLPort.next().toString();
+				// If the url contains the url of the service, this tuple should be delete
+				if(result.contains((CharSequence)WsdlURL)){
+					StringTokenizer Tok = new StringTokenizer(result);
+					String wsdlPort = Tok.nextToken("=");
+					wsdlPort = Tok.nextToken();
+					wsdlPort = wsdlPort.replace(")", "");
+
+					System.out.println("wsdlPort : "+wsdlPort);
+					//Delete the tuple 
+					String updateWSDLPort= 
+							"prefix xsd: <http://www.w3.org/2001/XMLSchema#>" +
+									"prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>" +
+									"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" +  
+									"prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>" +
+									"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" +
+									"prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>" +
+									"prefix mind: <"+urlProcessDoc+"#>" +
+									"delete {?x ?y ?z}" +
+									"where" +
+									"{?x ?y "+wsdlPort +
+									" filter ( ?y = grounding:portType " +
+									")" +
+									"?x ?y ?z}";
+
+					// Execute the query 
+					QuerySolution querysol=new QuerySolutionMap();
+					UpdateAction.parseExecute(updateWSDLPort, m, querysol);
+
+				}// end if 
+			}// end for
+		}// end if
+	}// DeleteWSDLPortType
+
+
+
+	/**
+	 * DeleteWSDLOperation
+	 * @param urlProcessDoc
+	 * @param WsdlURL
+	 * @param m
+	 * @return
+	 */
+	private void DeleteWSDLOperation(String urlProcessDoc, String WsdlURL, OntModel m){
+
+
+		// Query to get the service tuples related with the property grounding:operation
+		String queryStringWSDLOp =
 				"prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
 						+ "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>"
 						+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
@@ -2034,67 +2312,67 @@ public class SFinterface {
 						+ "?x grounding:operation ?y " 
 						+ "}";
 
-			Query queryWSDLOp = QueryFactory.create(queryStringWSDLOp);
+		Query queryWSDLOp = QueryFactory.create(queryStringWSDLOp);
 
-			// Execute the query 
-			QueryExecution qeWSDLOp = QueryExecutionFactory.create(queryWSDLOp, m);
-			ResultSet resultsqeWSDLOp = qeWSDLOp.execSelect();
-			WsdlURL=WsdlURL.replace(" ", "");
-			
-			// For each tuple, the tuples with the property grounding:operation related 
-			// with the service grounding are deleted
-			if (resultsqeWSDLOp != null) {
+		// Execute the query 
+		QueryExecution qeWSDLOp = QueryExecutionFactory.create(queryWSDLOp, m);
+		ResultSet resultsqeWSDLOp = qeWSDLOp.execSelect();
+		WsdlURL=WsdlURL.replace(" ", "");
 
-				for (Iterator j = resultsqeWSDLOp; resultsqeWSDLOp.hasNext();) {
-				
-					//To take only the url of the property grounding:operation
-					String result = resultsqeWSDLOp.next().toString();
+		// For each tuple, the tuples with the property grounding:operation related 
+		// with the service grounding are deleted
+		if (resultsqeWSDLOp != null) {
+
+			for (Iterator j = resultsqeWSDLOp; resultsqeWSDLOp.hasNext();) {
+
+				//To take only the url of the property grounding:operation
+				String result = resultsqeWSDLOp.next().toString();
+				//Delete the tuple with the url that contains the service url 
+				if(result.contains((CharSequence)WsdlURL)){
+					StringTokenizer Tok = new StringTokenizer(result);
+					String wsdlOp = Tok.nextToken("=");
+					wsdlOp = Tok.nextToken();
+					wsdlOp = wsdlOp.replace(")", "");
+					System.out.println("wsdlOP : "+wsdlOp);
+
 					//Delete the tuple with the url that contains the service url 
-					if(result.contains((CharSequence)WsdlURL)){
-						StringTokenizer Tok = new StringTokenizer(result);
-						String wsdlOp = Tok.nextToken("=");
-						wsdlOp = Tok.nextToken();
-						wsdlOp = wsdlOp.replace(")", "");
-						System.out.println("wsdlOP : "+wsdlOp);
-					
-						//Delete the tuple with the url that contains the service url 
-						String updateWSDLOp= 
-			        	"prefix xsd: <http://www.w3.org/2001/XMLSchema#>" +
-			            "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>" +
-			            "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" +  
-			            "prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>" +
-			            "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" +
-			            "prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>" +
-			            "prefix mind: <"+urlProcessDoc+"#>" +
-			            "delete {?x ?y ?z}" +
-			            "where" +
-			            "{?x ?y "+wsdlOp +
-			            " filter ( ?y = grounding:operation " +
-			                  ")" +
-			            "?x ?y ?z}";
-		       		
-						// Execute the query 
-						QuerySolution querysol=new QuerySolutionMap();
-						UpdateAction.parseExecute(updateWSDLOp, m, querysol);
-					
-					}// end if 
-				}//end for 
-			}// end if 
-	  }// DeleteWSDLOperation
-	  
-	  
-	  /**
-	   * DeleteProcessInputs
-	   * @param urlProcessDoc
-	   * @param processname
-	   * @param WsdlURL
-	   * @param m
-	   * @return
-	   */
-	  private void DeleteProcessInputs(String urlProcessDoc, String processname, String WsdlURL, OntModel m) {
-	  
-	  	// Query to get the service inputs tuples related with the service process
-			String queryStringServiceInputs =
+					String updateWSDLOp= 
+							"prefix xsd: <http://www.w3.org/2001/XMLSchema#>" +
+									"prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>" +
+									"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" +  
+									"prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>" +
+									"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" +
+									"prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>" +
+									"prefix mind: <"+urlProcessDoc+"#>" +
+									"delete {?x ?y ?z}" +
+									"where" +
+									"{?x ?y "+wsdlOp +
+									" filter ( ?y = grounding:operation " +
+									")" +
+									"?x ?y ?z}";
+
+					// Execute the query 
+					QuerySolution querysol=new QuerySolutionMap();
+					UpdateAction.parseExecute(updateWSDLOp, m, querysol);
+
+				}// end if 
+			}//end for 
+		}// end if 
+	}// DeleteWSDLOperation
+
+
+	/**
+	 * DeleteProcessInputs
+	 * @param urlProcessDoc
+	 * @param processname
+	 * @param WsdlURL
+	 * @param m
+	 * @return
+	 */
+	private void DeleteProcessInputs(String urlProcessDoc, String processname, String WsdlURL, OntModel m) {
+
+		// Query to get the service inputs tuples related with the service process
+		String queryStringServiceInputs =
 				"prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
 						+ "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>"
 						+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
@@ -2106,82 +2384,82 @@ public class SFinterface {
 						+ "mind:"+processname+" process:hasInput ?x " 
 						+ "}";
 
-			Query queryServiceInputs = QueryFactory.create(queryStringServiceInputs);
+		Query queryServiceInputs = QueryFactory.create(queryStringServiceInputs);
 
-			// Execute the query and obtain the service process inputs
-			QueryExecution qeServiceInputs = QueryExecutionFactory.create(queryServiceInputs, m);
-			ResultSet resultsServiceInputs = qeServiceInputs.execSelect();
-		    // For each input, all the tuples related with the process are deleted
-			if (resultsServiceInputs != null) {
-				for (Iterator j = resultsServiceInputs; resultsServiceInputs.hasNext();) {
-					//To take only the name of the input
-					String result = resultsServiceInputs.next().toString();
-					StringTokenizer Tok = new StringTokenizer(result);
-					String processInputResult = Tok.nextToken("#");
-					String processInputName = Tok.nextToken();
-					processInputName = processInputName.replace(">", "");
-					processInputName = processInputName.replace(")", "");
-					if (DEBUG) {
-						System.out.println("Process Input: " + processInputName);
-					}
-				    
-					// Delete input tuples related with the service process
-					String updateInput= 
-			        	"prefix xsd: <http://www.w3.org/2001/XMLSchema#>" +
-			            "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>" +
-			            "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" +  
-			            "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" +
-			            "prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>" +
-			            "prefix mind: <"+urlProcessDoc+"#>" +
-			            "delete {?x ?y ?z}" +
-			            "where" +
-			            "{mind:" +processInputName+" ?y ?z" +
-			            " filter ( ?y = rdfs:label " +
-			                   "|| ?y = process:parameterType " +
-			                   "|| ?z = process:Input " +
-			                   ")" +
-			            "?x ?y ?z}";
-		       		
-	      
-					//Delete the output tuple related with the service grounding
-					String updateGroundInput= 
-			        	"prefix xsd: <http://www.w3.org/2001/XMLSchema#>" +
-			            "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>" +
-			            "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" +  
-			            "prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>" +
-			            "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" +
-			            "prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>" +
-			            "prefix mind: <"+urlProcessDoc+"#>" +
-			            "delete {?x ?y ?z}" +
-			            "where" +
-			            "{?x ?y mind:"+processInputName +
-			            " filter ( ?y = grounding:owlsParameter " +
-			                   ")" +
-			            "?x ?y ?z}";
-					
-		       		// Execute the query 
-					QuerySolution querysol=new QuerySolutionMap();
-		 	        UpdateAction.parseExecute(updateInput, m, querysol);
-		 	        UpdateAction.parseExecute(updateGroundInput, m, querysol);
-	 
-				}//end for 
-			}//end if	
+		// Execute the query and obtain the service process inputs
+		QueryExecution qeServiceInputs = QueryExecutionFactory.create(queryServiceInputs, m);
+		ResultSet resultsServiceInputs = qeServiceInputs.execSelect();
+		// For each input, all the tuples related with the process are deleted
+		if (resultsServiceInputs != null) {
+			for (Iterator j = resultsServiceInputs; resultsServiceInputs.hasNext();) {
+				//To take only the name of the input
+				String result = resultsServiceInputs.next().toString();
+				StringTokenizer Tok = new StringTokenizer(result);
+				String processInputResult = Tok.nextToken("#");
+				String processInputName = Tok.nextToken();
+				processInputName = processInputName.replace(">", "");
+				processInputName = processInputName.replace(")", "");
+				if (DEBUG) {
+					System.out.println("Process Input: " + processInputName);
+				}
 
-	  }// end Delete inputs
-	  
-	  
-	  /**
-	   * DeleteProcessOutputs
-	   * @param urlProcessDoc
-	   * @param processname
-	   * @param WsdlURL
-	   * @param m
-	   * @return
-	   */
-	  private void DeleteProcessOutputs(String urlProcessDoc, String processname, String WsdlURL, OntModel m) {
-	      
-	 	    // Query to get the service outputs related with the process
-			String queryStringServiceOutputs =
+				// Delete input tuples related with the service process
+				String updateInput= 
+						"prefix xsd: <http://www.w3.org/2001/XMLSchema#>" +
+								"prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>" +
+								"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" +  
+								"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" +
+								"prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>" +
+								"prefix mind: <"+urlProcessDoc+"#>" +
+								"delete {?x ?y ?z}" +
+								"where" +
+								"{mind:" +processInputName+" ?y ?z" +
+								" filter ( ?y = rdfs:label " +
+								"|| ?y = process:parameterType " +
+								"|| ?z = process:Input " +
+								")" +
+								"?x ?y ?z}";
+
+
+				//Delete the output tuple related with the service grounding
+				String updateGroundInput= 
+						"prefix xsd: <http://www.w3.org/2001/XMLSchema#>" +
+								"prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>" +
+								"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" +  
+								"prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>" +
+								"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" +
+								"prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>" +
+								"prefix mind: <"+urlProcessDoc+"#>" +
+								"delete {?x ?y ?z}" +
+								"where" +
+								"{?x ?y mind:"+processInputName +
+								" filter ( ?y = grounding:owlsParameter " +
+								")" +
+								"?x ?y ?z}";
+
+				// Execute the query 
+				QuerySolution querysol=new QuerySolutionMap();
+				UpdateAction.parseExecute(updateInput, m, querysol);
+				UpdateAction.parseExecute(updateGroundInput, m, querysol);
+
+			}//end for 
+		}//end if	
+
+	}// end Delete inputs
+
+
+	/**
+	 * DeleteProcessOutputs
+	 * @param urlProcessDoc
+	 * @param processname
+	 * @param WsdlURL
+	 * @param m
+	 * @return
+	 */
+	private void DeleteProcessOutputs(String urlProcessDoc, String processname, String WsdlURL, OntModel m) {
+
+		// Query to get the service outputs related with the process
+		String queryStringServiceOutputs =
 				"prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
 						+ "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>"
 						+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
@@ -2193,203 +2471,203 @@ public class SFinterface {
 						+ "mind:"+processname+" process:hasOutput ?x " 
 						+ "}";
 
-			Query queryServiceOutputs = QueryFactory.create(queryStringServiceOutputs);
+		Query queryServiceOutputs = QueryFactory.create(queryStringServiceOutputs);
 
-			// Execute the query 
-			QueryExecution qeServiceOutputs = QueryExecutionFactory.create(queryServiceOutputs, m);
-			ResultSet resultsServiceOutputs = qeServiceOutputs.execSelect();
-		    // For each service output, all the tuples related with the process are deleted 
-			if (resultsServiceOutputs != null) {
-				for (Iterator j = resultsServiceOutputs; resultsServiceOutputs.hasNext();) {
-					// To take the name of the output
-					String result = resultsServiceOutputs.next().toString();
-					StringTokenizer Tok = new StringTokenizer(result);
-					String processOutputResult = Tok.nextToken("#");
-					String processOutputName = Tok.nextToken();
-					processOutputName = processOutputName.replace(">", "");
-					processOutputName = processOutputName.replace(")", "");
-					
-					if (DEBUG) {
-						System.out.println("Process Output: " + processOutputName);
-					}
-				    
-					// Delete the output tuple related with the service process
-					String updateOutput= 
-			        	"prefix xsd: <http://www.w3.org/2001/XMLSchema#>" +
-			            "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>" +
-			            "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" +  
-			            "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" +
-			            "prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>" +
-			            "prefix mind: <"+urlProcessDoc+"#>" +
-			            "delete {?x ?y ?z}" +
-			            "where" +
-			            "{mind:" +processOutputName+" ?y ?z" +
-			            " filter ( ?y = rdfs:label " +
-			                   "|| ?y = process:parameterType " +
-			                   "|| ?z = process:Output " +
-			                   ")" +
-			            "?x ?y ?z}";
-		       		
-		 	        
-					//Delete the output tuple related with the service grounding
-					String updateGroundOutput= 
-			        	"prefix xsd: <http://www.w3.org/2001/XMLSchema#>" +
-			            "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>" +
-			            "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" +  
-			            "prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>" +
-			            "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" +
-			            "prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>" +
-			            "prefix mind: <"+urlProcessDoc+"#>" +
-			            "delete {?x ?y ?z}" +
-			            "where" +
-			            "{?x ?y mind:"+processOutputName +
-			            " filter ( ?y = grounding:owlsParameter " +
-			                   ")" +
-			            "?x ?y ?z}";
-		       		
-					
-		       		// Execute the query 
-					QuerySolution querysol=new QuerySolutionMap();
-		 	        UpdateAction.parseExecute(updateOutput, m, querysol);
-		 	        UpdateAction.parseExecute(updateGroundOutput, m, querysol);
-		 	        
+		// Execute the query 
+		QueryExecution qeServiceOutputs = QueryExecutionFactory.create(queryServiceOutputs, m);
+		ResultSet resultsServiceOutputs = qeServiceOutputs.execSelect();
+		// For each service output, all the tuples related with the process are deleted 
+		if (resultsServiceOutputs != null) {
+			for (Iterator j = resultsServiceOutputs; resultsServiceOutputs.hasNext();) {
+				// To take the name of the output
+				String result = resultsServiceOutputs.next().toString();
+				StringTokenizer Tok = new StringTokenizer(result);
+				String processOutputResult = Tok.nextToken("#");
+				String processOutputName = Tok.nextToken();
+				processOutputName = processOutputName.replace(">", "");
+				processOutputName = processOutputName.replace(")", "");
 
-				}//end for 
-			}//end if	
-	  }//end DeleteProcessOutputs
-	 
-	  
-	  /**
-	   * DeleteProcessGrounding
-	   * @param String urlProcessDoc
-	   * @param String processname
-	   * @param String processGround
-	   * @param String processGroundWSDL
-	   * @param OntModel m
-	   */ 
-	  private void DeleteProcessGrounding(String urlProcessDoc, String processname, String processGround, String processGroundWSDL, OntModel m){
-				
-			//Deletes Query Strings
-			String updateGround= 
-	      	"prefix xsd: <http://www.w3.org/2001/XMLSchema#>" +
-	          "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>" +
-	          "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" +  
-	          "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" +
-	          "prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>" +
-	          "prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>" +
-	          "prefix mind: <"+urlProcessDoc+"#>" +
-	          "delete {?x ?y ?z .}" +
-	          "where" +
-	          "{"+processGround+" ?y ?z ." +
-	          " filter ( ?y = grounding:owlsProcess" + 
-	                 "|| ?y = grounding:hasAtomicProcessGrounding " +
-	                 "|| ?y = service:supportedBy " +
-	                 "|| ?z = grounding:WsdlGrounding " +
-	                 ")" +
-	          "?x ?y ?z .}";
-		
-			
-			String updateGroundWSDL= 
-			        	"prefix xsd: <http://www.w3.org/2001/XMLSchema#>" +
-			            "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>" +
-			            "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" +  
-			            "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" +
-			            "prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>" +
-			            "prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>" +
-			            "prefix mind: <"+urlProcessDoc+"#>" +
-			            "delete {?x ?y ?z .}" +
-			            "where" +
-			            "{"+processGroundWSDL+" ?y ?z ." +
-			            " filter ( ?y = grounding:owlsProcess" + 
-			                   "|| ?y = grounding:wsdlDocument " +
-		                       "|| ?y = grounding:wsdlInput " +
-		                       "|| ?y = grounding:wsdlInputMessage " +
-		                       "|| ?y = grounding:wsdlOperation " +
-		                       "|| ?y = grounding:wsdlOutput " + 
-		                       "|| ?y = grounding:wsdlOutputMessage "+
-		                       "|| ?z = grounding:WsdlAtomicProcessGrounding "+
-			                   ")" +
-			            "?x ?y ?z .} ";
-	                  
-			
-			String updateGroundSupportsProperty= 
-	      	"prefix xsd: <http://www.w3.org/2001/XMLSchema#>" +
-	          "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>" +
-	          "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" +  
-	          "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" +
-	          "prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>" +
-	          "prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>" +
-	          "prefix mind: <"+urlProcessDoc+"#>" +
-	          "delete {?x ?y ?z}" +
-	          "where" +
-	          "{?x ?y " + processGround +
-	          " filter ( ?y = service:supports" +
-	                 ")" +
-	          "?x ?y ?z}";
-			
-		       	// Execute the deletes
-		       	QuerySolution querysol=new QuerySolutionMap();
-		 	    UpdateAction.parseExecute(updateGroundWSDL, m, querysol);
-		 	    UpdateAction.parseExecute(updateGround, m, querysol);
-		 	    UpdateAction.parseExecute(updateGroundSupportsProperty, m, querysol);
-			
-	  	 
-	  }//end DeleteProcessGrounding
-	  
-		
-		
-		/**
-	   * DeleteProcess
-	   * @param String urlProcessDoc
-	   * @param String processname
-	   * @param OntModel m
-	   */ 
-	  private void DeleteProcess(String urlProcessDoc, String processname, OntModel m) {
-	      
-						//Delete the process general description
-						String updateProcess= 
-				        	"prefix xsd: <http://www.w3.org/2001/XMLSchema#>" +
-				            "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>" +
-				            "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" +  
-				            "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" +
-				            "prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>" +
-				            "prefix mind: <"+urlProcessDoc+"#>" +
-				            "delete {?x ?y ?z}" +
-				            "where" +
-				            "{mind:" +processname+" ?y ?z" +
-				            " filter ( ?y = process:hasOutput " +
-				                   "|| ?y = process:hasInput " +
-				                   "|| ?y = service:describes " +
-				                   "|| ?y = process:hasPrecondition " +
-				                   "|| ?z = process:AtomicProcess " +
-				                   ")" +
-				            "?x ?y ?z}";
-						
-						//Delete the profile property where the process appears
-						String updateDescribedByProperty= 
-				        	"prefix xsd: <http://www.w3.org/2001/XMLSchema#>" +
-				            "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>" +
-				            "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" +  
-				            "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" +
-				            "prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>" +
-				            "prefix mind: <"+urlProcessDoc+"#>" +
-				            "delete {?x ?y ?z}" +
-				            "where" +
-				            "{?x ?y mind:" +processname +
-				            " filter ( ?y = service:describedBy " +
-				                   ")" +
-				            "?x ?y ?z}";
-			       		
-			       		// Execute the query 
-			       		QuerySolution querysol=new QuerySolutionMap();
-			 	        UpdateAction.parseExecute(updateProcess, m, querysol);
-			 	        UpdateAction.parseExecute(updateDescribedByProperty, m, querysol);
-						
-	  }// DeleteProcess 
-	
+				if (DEBUG) {
+					System.out.println("Process Output: " + processOutputName);
+				}
+
+				// Delete the output tuple related with the service process
+				String updateOutput= 
+						"prefix xsd: <http://www.w3.org/2001/XMLSchema#>" +
+								"prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>" +
+								"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" +  
+								"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" +
+								"prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>" +
+								"prefix mind: <"+urlProcessDoc+"#>" +
+								"delete {?x ?y ?z}" +
+								"where" +
+								"{mind:" +processOutputName+" ?y ?z" +
+								" filter ( ?y = rdfs:label " +
+								"|| ?y = process:parameterType " +
+								"|| ?z = process:Output " +
+								")" +
+								"?x ?y ?z}";
+
+
+				//Delete the output tuple related with the service grounding
+				String updateGroundOutput= 
+						"prefix xsd: <http://www.w3.org/2001/XMLSchema#>" +
+								"prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>" +
+								"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" +  
+								"prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>" +
+								"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" +
+								"prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>" +
+								"prefix mind: <"+urlProcessDoc+"#>" +
+								"delete {?x ?y ?z}" +
+								"where" +
+								"{?x ?y mind:"+processOutputName +
+								" filter ( ?y = grounding:owlsParameter " +
+								")" +
+								"?x ?y ?z}";
+
+
+				// Execute the query 
+				QuerySolution querysol=new QuerySolutionMap();
+				UpdateAction.parseExecute(updateOutput, m, querysol);
+				UpdateAction.parseExecute(updateGroundOutput, m, querysol);
+
+
+			}//end for 
+		}//end if	
+	}//end DeleteProcessOutputs
+
+
+	/**
+	 * DeleteProcessGrounding
+	 * @param String urlProcessDoc
+	 * @param String processname
+	 * @param String processGround
+	 * @param String processGroundWSDL
+	 * @param OntModel m
+	 */ 
+	private void DeleteProcessGrounding(String urlProcessDoc, String processname, String processGround, String processGroundWSDL, OntModel m){
+
+		//Deletes Query Strings
+		String updateGround= 
+				"prefix xsd: <http://www.w3.org/2001/XMLSchema#>" +
+						"prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>" +
+						"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" +  
+						"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" +
+						"prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>" +
+						"prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>" +
+						"prefix mind: <"+urlProcessDoc+"#>" +
+						"delete {?x ?y ?z .}" +
+						"where" +
+						"{"+processGround+" ?y ?z ." +
+						" filter ( ?y = grounding:owlsProcess" + 
+						"|| ?y = grounding:hasAtomicProcessGrounding " +
+						"|| ?y = service:supportedBy " +
+						"|| ?z = grounding:WsdlGrounding " +
+						")" +
+						"?x ?y ?z .}";
+
+
+		String updateGroundWSDL= 
+				"prefix xsd: <http://www.w3.org/2001/XMLSchema#>" +
+						"prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>" +
+						"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" +  
+						"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" +
+						"prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>" +
+						"prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>" +
+						"prefix mind: <"+urlProcessDoc+"#>" +
+						"delete {?x ?y ?z .}" +
+						"where" +
+						"{"+processGroundWSDL+" ?y ?z ." +
+						" filter ( ?y = grounding:owlsProcess" + 
+						"|| ?y = grounding:wsdlDocument " +
+						"|| ?y = grounding:wsdlInput " +
+						"|| ?y = grounding:wsdlInputMessage " +
+						"|| ?y = grounding:wsdlOperation " +
+						"|| ?y = grounding:wsdlOutput " + 
+						"|| ?y = grounding:wsdlOutputMessage "+
+						"|| ?z = grounding:WsdlAtomicProcessGrounding "+
+						")" +
+						"?x ?y ?z .} ";
+
+
+		String updateGroundSupportsProperty= 
+				"prefix xsd: <http://www.w3.org/2001/XMLSchema#>" +
+						"prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>" +
+						"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" +  
+						"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" +
+						"prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>" +
+						"prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>" +
+						"prefix mind: <"+urlProcessDoc+"#>" +
+						"delete {?x ?y ?z}" +
+						"where" +
+						"{?x ?y " + processGround +
+						" filter ( ?y = service:supports" +
+						")" +
+						"?x ?y ?z}";
+
+		// Execute the deletes
+		QuerySolution querysol=new QuerySolutionMap();
+		UpdateAction.parseExecute(updateGroundWSDL, m, querysol);
+		UpdateAction.parseExecute(updateGround, m, querysol);
+		UpdateAction.parseExecute(updateGroundSupportsProperty, m, querysol);
+
+
+	}//end DeleteProcessGrounding
+
+
+
+	/**
+	 * DeleteProcess
+	 * @param String urlProcessDoc
+	 * @param String processname
+	 * @param OntModel m
+	 */ 
+	private void DeleteProcess(String urlProcessDoc, String processname, OntModel m) {
+
+		//Delete the process general description
+		String updateProcess= 
+				"prefix xsd: <http://www.w3.org/2001/XMLSchema#>" +
+						"prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>" +
+						"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" +  
+						"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" +
+						"prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>" +
+						"prefix mind: <"+urlProcessDoc+"#>" +
+						"delete {?x ?y ?z}" +
+						"where" +
+						"{mind:" +processname+" ?y ?z" +
+						" filter ( ?y = process:hasOutput " +
+						"|| ?y = process:hasInput " +
+						"|| ?y = service:describes " +
+						"|| ?y = process:hasPrecondition " +
+						"|| ?z = process:AtomicProcess " +
+						")" +
+						"?x ?y ?z}";
+
+		//Delete the profile property where the process appears
+		String updateDescribedByProperty= 
+				"prefix xsd: <http://www.w3.org/2001/XMLSchema#>" +
+						"prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>" +
+						"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" +  
+						"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" +
+						"prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>" +
+						"prefix mind: <"+urlProcessDoc+"#>" +
+						"delete {?x ?y ?z}" +
+						"where" +
+						"{?x ?y mind:" +processname +
+						" filter ( ?y = service:describedBy " +
+						")" +
+						"?x ?y ?z}";
+
+		// Execute the query 
+		QuerySolution querysol=new QuerySolutionMap();
+		UpdateAction.parseExecute(updateProcess, m, querysol);
+		UpdateAction.parseExecute(updateDescribedByProperty, m, querysol);
+
+	}// DeleteProcess 
+
 	private IDBConnection JenaDBConnection(){
 		IDBConnection conn = null;
-		
+
 		String s_dbURL="";
 		String s_dbUser="";
 		String s_dbPw="";
@@ -2399,40 +2677,40 @@ public class SFinterface {
 		Properties properties = new Properties();
 
 		try {
-		 
-		  
-		  
-		  FileInputStream fis = new FileInputStream("THOMASDemoConfiguration.xml");
-		   //properties.loadFromXML(ProvaServeis1.class.getResourceAsStream("THOMASDemoConfiguration.xml"));
-		  properties.loadFromXML(fis);
-		  for (Enumeration<Object>  e = properties.keys(); e.hasMoreElements() ; ) {
-			// Obtain the object
-		    Object obj = e.nextElement();
-		    if (obj.toString().equalsIgnoreCase("DB_URL"))
-		    {
-		    	s_dbURL= properties.getProperty(obj.toString());	
-		    }
-		    else if (obj.toString().equalsIgnoreCase("DB_USER"))
-		    {
-		    	s_dbUser = properties.getProperty(obj.toString());
-		    }
-		    else    if (obj.toString().equalsIgnoreCase("DB_PASSWD"))
-		    {
-		    	s_dbPw = properties.getProperty(obj.toString());
-		    }
-		    else    if (obj.toString().equalsIgnoreCase("DB"))
-		    {
-		    	s_dbType = properties.getProperty(obj.toString());
-		    }
-		    else    if (obj.toString().equalsIgnoreCase("DB_DRIVER"))
-		    {
-		    	s_dbDriver = properties.getProperty(obj.toString());
-		    }
-		}
 
-	    } catch (IOException e) {
-	    	System.out.print(e);
-	    }
+
+
+			FileInputStream fis = new FileInputStream("THOMASDemoConfiguration.xml");
+			//properties.loadFromXML(ProvaServeis1.class.getResourceAsStream("THOMASDemoConfiguration.xml"));
+			properties.loadFromXML(fis);
+			for (Enumeration<Object>  e = properties.keys(); e.hasMoreElements() ; ) {
+				// Obtain the object
+				Object obj = e.nextElement();
+				if (obj.toString().equalsIgnoreCase("DB_URL"))
+				{
+					s_dbURL= properties.getProperty(obj.toString());	
+				}
+				else if (obj.toString().equalsIgnoreCase("DB_USER"))
+				{
+					s_dbUser = properties.getProperty(obj.toString());
+				}
+				else    if (obj.toString().equalsIgnoreCase("DB_PASSWD"))
+				{
+					s_dbPw = properties.getProperty(obj.toString());
+				}
+				else    if (obj.toString().equalsIgnoreCase("DB"))
+				{
+					s_dbType = properties.getProperty(obj.toString());
+				}
+				else    if (obj.toString().equalsIgnoreCase("DB_DRIVER"))
+				{
+					s_dbDriver = properties.getProperty(obj.toString());
+				}
+			}
+
+		} catch (IOException e) {
+			System.out.print(e);
+		}
 
 		// ensure the JDBC driver class is loaded
 		try {
@@ -2452,7 +2730,7 @@ public class SFinterface {
 		}
 		return conn;
 	}
-	
+
 	public void clean(){
 		try {
 			conn.cleanDB();
@@ -2460,7 +2738,7 @@ public class SFinterface {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private OntModelSpec getModelSpec(ModelMaker maker) {
 		// create a spec for the new ont model that will use no inference over
 		// models made by the given maker (which is where we get the persistent models from)
@@ -2469,12 +2747,12 @@ public class SFinterface {
 
 		return spec;
 	}
-	
+
 	public void writeModel(){
 		ModelMaker maker = ModelFactory.createModelRDBMaker(conn);
 		Model base = maker.createModel("http://example.org/ontologias");
 		OntModel m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
-		
+
 		m.write(System.out, "N3");
 	}
 

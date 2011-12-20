@@ -55,11 +55,15 @@ public class SFtesting {
 		
 		//sf.RegisterService("http://127.0.0.1/services/1.1/calculateSunriseTime.owls#CALCULATE_SUNRISE_PROFILE");
 		
-		sf.testQuery("http://127.0.0.1/services/1.1/unGround.owls");
 		
-		System.out.println("\n\nMODEL:\n\n");
-		sf.writeModel();
+//		sf.testQuery("http://127.0.0.1/services/1.1/unGround.owls");
 		
+		
+//		System.out.println("\n\nMODEL:\n\n");
+//		sf.writeModel();
+		
+		//sf.readOWLS("http://127.0.0.1/services/1.1/calculateSunriseTime.owls");
+		sf.readOWLS("unGround.owls");
 		
 	}
 
