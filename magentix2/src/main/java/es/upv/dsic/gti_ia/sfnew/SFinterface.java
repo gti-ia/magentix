@@ -166,45 +166,7 @@ public class SFinterface {
 	}
 
 	
-	public void writeOWLSFile(String serviceURL){
-
-		//			URL urlOrigin=new URL(url);
-		//			InputStream in=urlOrigin.openStream();
-		//			Document doc=DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(in);
-
-		//			File file=new File(url);
-		//			Document doc=DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(file);
-		try {
-
-			FileWriter fstream = new FileWriter("tmp.owls");
-			BufferedWriter out = new BufferedWriter(fstream);
-
-			out.write("<?xml version=\"1.0\" encoding=\"WINDOWS-1252\"?>"+"\n"+
-					"<rdf:RDF  xmlns:owl       = \"http://www.w3.org/2002/07/owl#\""+"\n"+
-					"xmlns:rdfs      = \"http://www.w3.org/2000/01/rdf-schema#\""+"\n"+
-					"xmlns:rdf       = \"http://www.w3.org/1999/02/22-rdf-syntax-ns#\""+"\n"+
-					"xmlns:service   = \"http://www.daml.org/services/owl-s/1.1/Service.owl#\""+"\n"+
-					"xmlns:process   = \"http://www.daml.org/services/owl-s/1.1/Process.owl#\""+"\n"+
-					"xmlns:profile    = \"http://www.daml.org/services/owl-s/1.1/Profile.owl#\""+"\n"+
-					"xmlns:grounding = \"http://www.daml.org/services/owl-s/1.1/Grounding.owl#\""+"\n"+
-					"xmlns:provider = \"http://127.0.0.1/ontology/provider.owl#\">"+"\n");
-
-			String profile=getProfile(serviceURL, false);
-			String groundsOWLS=getGroundingsOWLSfromFile(profile, serviceURL);
-			
-			out.write(groundsOWLS);
-			
-			//TODO providers
-
-
-			out.write("</rdf:RDF>");
-
-		} catch (IOException e) {
-			
-			e.printStackTrace();
-		}
-
-	}
+	
 
 	/**
 	 * Search in the Jena DB if it exists a registered service with the same given inputs and outputs
@@ -325,12 +287,12 @@ public class SFinterface {
 			//than the specified as parameter and will be different services) 
 
 
-			//TODO bad use, create another getInputs getOutputs without using the URI, using the Jena DB
-			ArrayList<String> inputsCandidate=getInputs(candidates.get(0));
-			ArrayList<String> outputsCandidate=getOutputs(candidates.get(0));
+			
+			ArrayList<String> inputsCandidate=getInputs(candidates.get(0),null);
+			ArrayList<String> outputsCandidate=getOutputs(candidates.get(0),null);
 
-			ArrayList<String> inputParamTypeCand=getInputParameterTypes(inputsCandidate);
-			ArrayList<String> outputParamTypeCand=getOutputParameterTypes(outputsCandidate);
+			ArrayList<String> inputParamTypeCand=getInputParameterTypes(inputsCandidate,null);
+			ArrayList<String> outputParamTypeCand=getOutputParameterTypes(outputsCandidate,null);
 
 			//comparar completamente (que sean los mismos y el mismo número) los parametros del candidato y los dados
 
@@ -437,26 +399,33 @@ public class SFinterface {
 	 * @param serviceProfile
 	 * @return the inputs of the given service profile
 	 */
-	private ArrayList<String> getInputs(String serviceURL){
+	private ArrayList<String> getInputs(String serviceProfile, String serviceURL){
 		ArrayList<String> inputs=new ArrayList<String>();
 
-		ModelMaker maker = ModelFactory.createMemModelMaker();
-		Model base = maker.createModel("http://example.org/ontologias");
-		// now we plug that base model into an ontology model that also uses 
-		// the given model maker to create storage for imported models
-		OntModelSpec spec = new OntModelSpec(OntModelSpec.OWL_MEM);
-		spec.setImportModelMaker(maker);
-		OntModel m = ModelFactory.createOntologyModel(spec, base);
-
-		//load the service
-		m.read(serviceURL);
-
-		String queryStringSearchName =
-				"prefix xsd: <http://www.w3.org/2001/XMLSchema#>"+
-						"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"+
-						"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"+
-						"select ?x where { ?y profile:hasInput ?x }";
-
+		ModelMaker maker;
+		Model base;
+		OntModel m;
+		String queryStringSearchName;
+		if(serviceURL==null){
+			maker = ModelFactory.createModelRDBMaker(conn);
+			base = maker.createModel("http://example.org/ontologias");
+			m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
+			queryStringSearchName = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>"+
+					"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"+
+					"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"+
+					"select ?x where { <"+serviceProfile+"> profile:hasInput ?x }";
+		}
+		else{
+			maker = ModelFactory.createMemModelMaker();
+			base = maker.createModel("http://example.org/ontologias");
+			m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
+			m.read(serviceURL);
+			queryStringSearchName = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>"+
+					"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"+
+					"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"+
+					"select ?x where { ?y profile:hasInput ?x }";
+		}
+		
 		Query querySearchName = QueryFactory.create(queryStringSearchName);
 
 		QueryExecution qeSearchName = QueryExecutionFactory.create(querySearchName, m);
@@ -480,12 +449,23 @@ public class SFinterface {
 		return inputs;
 	}
 
-	private ArrayList<String> getInputParameterTypes(ArrayList<String> inputs){
+	private ArrayList<String> getInputParameterTypes(ArrayList<String> inputs, String serviceURL){
 		ArrayList<String> inputParamsRegistered=new ArrayList<String>();
 
-		ModelMaker maker = ModelFactory.createModelRDBMaker(conn);
-		Model base = maker.createModel("http://example.org/ontologias");
-		OntModel m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
+		ModelMaker maker;
+		Model base;
+		OntModel m;
+		if(serviceURL==null){
+			maker = ModelFactory.createModelRDBMaker(conn);
+			base = maker.createModel("http://example.org/ontologias");
+			m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
+		}
+		else{
+			maker = ModelFactory.createMemModelMaker();
+			base = maker.createModel("http://example.org/ontologias");
+			m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
+			m.read(serviceURL);
+		}
 
 		Iterator<String> iterInputs=inputs.iterator();
 		while(iterInputs.hasNext()){
@@ -575,25 +555,32 @@ public class SFinterface {
 	 * @param serviceProfile
 	 * @return the outputs of the given service profile
 	 */
-	private ArrayList<String> getOutputs(String serviceURL){
+	private ArrayList<String> getOutputs(String serviceProfile, String serviceURL){
 		ArrayList<String> outputs=new ArrayList<String>();
 
-		ModelMaker maker = ModelFactory.createMemModelMaker();
-		Model base = maker.createModel("http://example.org/ontologias");
-		// now we plug that base model into an ontology model that also uses 
-		// the given model maker to create storage for imported models
-		OntModelSpec spec = new OntModelSpec(OntModelSpec.OWL_MEM);
-		spec.setImportModelMaker(maker);
-		OntModel m = ModelFactory.createOntologyModel(spec, base);
-
-		//load the service
-		m.read(serviceURL);
-
-		String queryStringSearchName =
-				"prefix xsd: <http://www.w3.org/2001/XMLSchema#>"+
-						"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"+
-						"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"+
-						"select ?x where { ?y profile:hasOutput ?x }";
+		ModelMaker maker;
+		Model base;
+		OntModel m;
+		String queryStringSearchName;
+		if(serviceURL==null){
+			maker = ModelFactory.createModelRDBMaker(conn);
+			base = maker.createModel("http://example.org/ontologias");
+			m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
+			queryStringSearchName = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>"+
+					"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"+
+					"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"+
+					"select ?x where { <"+serviceProfile+"> profile:hasOutput ?x }";
+		}
+		else{
+			maker = ModelFactory.createMemModelMaker();
+			base = maker.createModel("http://example.org/ontologias");
+			m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
+			m.read(serviceURL);
+			queryStringSearchName = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>"+
+					"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"+
+					"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"+
+					"select ?x where { ?y profile:hasOutput ?x }";
+		}
 
 		Query querySearchName = QueryFactory.create(queryStringSearchName);
 
@@ -618,12 +605,23 @@ public class SFinterface {
 		return outputs;
 	}
 
-	private ArrayList<String> getOutputParameterTypes(ArrayList<String> outputs){
+	private ArrayList<String> getOutputParameterTypes(ArrayList<String> outputs, String serviceURL){
 		ArrayList<String> outputParamsRegistered=new ArrayList<String>();
 
-		ModelMaker maker = ModelFactory.createModelRDBMaker(conn);
-		Model base = maker.createModel("http://example.org/ontologias");
-		OntModel m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
+		ModelMaker maker;
+		Model base;
+		OntModel m;
+		if(serviceURL==null){
+			maker = ModelFactory.createModelRDBMaker(conn);
+			base = maker.createModel("http://example.org/ontologias");
+			m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
+		}
+		else{
+			maker = ModelFactory.createMemModelMaker();
+			base = maker.createModel("http://example.org/ontologias");
+			m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
+			m.read(serviceURL);
+		}
 
 		Iterator<String> iterOutputs=outputs.iterator();
 		while(iterOutputs.hasNext()){
@@ -709,25 +707,87 @@ public class SFinterface {
 	}
 
 
-	//TODO detectar si entra un process y grounding nuevos para registrarlos igualmente, pero solo esa parte... el profile de nuevo no!
+	private void writeProvidersGroundingOWLSFile(String serviceURL, String registeredProfile, String fileName){
+
+		//			URL urlOrigin=new URL(url);
+		//			InputStream in=urlOrigin.openStream();
+		//			Document doc=DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(in);
+
+		//			File file=new File(url);
+		//			Document doc=DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(file);
+		try {
+
+			StringTokenizer tokenProfile=new StringTokenizer(registeredProfile, "#");
+			String urlBase=tokenProfile.nextToken();
+			String regProfileName=tokenProfile.nextToken();
+			
+			FileWriter fstream = new FileWriter(fileName);
+			BufferedWriter out = new BufferedWriter(fstream);
+
+			out.write("<?xml version=\"1.0\" encoding=\"WINDOWS-1252\"?>"+"\n"+
+					"<rdf:RDF  xmlns:owl       = \"http://www.w3.org/2002/07/owl#\""+"\n"+
+					"xmlns:rdfs      = \"http://www.w3.org/2000/01/rdf-schema#\""+"\n"+
+					"xmlns:rdf       = \"http://www.w3.org/1999/02/22-rdf-syntax-ns#\""+"\n"+
+					"xmlns:xsd       = \"http://www.w3.org/2001/XMLSchema#\""+"\n"+
+					"xmlns:service   = \"http://www.daml.org/services/owl-s/1.1/Service.owl#\""+"\n"+
+					"xmlns:process   = \"http://www.daml.org/services/owl-s/1.1/Process.owl#\""+"\n"+
+					"xmlns:profile    = \"http://www.daml.org/services/owl-s/1.1/Profile.owl#\""+"\n"+
+					"xmlns:grounding = \"http://www.daml.org/services/owl-s/1.1/Grounding.owl#\""+"\n"+
+					"xmlns:provider = \"http://127.0.0.1/ontology/provider.owl#\""+"\n"+
+					"xml:base        = \""+urlBase+"\">"+"\n");
+			
+
+			
+			
+			out.write("<profile:Profile rdf:ID=\""+regProfileName+"\">\n");
+			
+			StringTokenizer tokenRegServ=new StringTokenizer(registeredProfile, "#");
+			String baseURI=tokenRegServ.nextToken();
+			
+			String registeredServiceURI=getServiceURI(registeredProfile, null);
+			String profile=getProfile(serviceURL, false);
+			
+			// it is not necessary to check if the providers are already registered, Jena does not write them two times
+			String providersOWLS=getProvidersOWLS(profile, serviceURL, baseURI);
+			
+			System.out.println("profile="+profile+"\nProvidersOWLS:\n"+providersOWLS);
+			
+			
+			
+			out.write(providersOWLS);
+			out.write("</profile:Profile>\n");
+			
+			String groundsOWLS=getGroundingsOWLSfromFile(profile, serviceURL, registeredServiceURI, baseURI);
+			
+			System.out.println("groundsOWLS:\n"+groundsOWLS);
+			
+			out.write(groundsOWLS);
+			out.write("</rdf:RDF>\n");
+			
+			out.close();
+
+		} catch (IOException e) {
+			
+			e.printStackTrace();
+		}
+
+	}
+	
+	
+	
 	public void RegisterService(String serviceURL){
 
 
 
-		ArrayList<String> inputs=getInputs(serviceURL);
-		ArrayList<String> outputs=getOutputs(serviceURL);
+		ArrayList<String> inputs=getInputs(null, serviceURL);
+		ArrayList<String> outputs=getOutputs(null, serviceURL);
 
-		ArrayList<String> inputsParams=getInputParameterTypes(inputs);
-		ArrayList<String> outputParams=getOutputParameterTypes(outputs);
+		ArrayList<String> inputsParams=getInputParameterTypes(inputs,serviceURL);
+		ArrayList<String> outputParams=getOutputParameterTypes(outputs,serviceURL);
 
 		String regServiceProfile=searchRegisteredServices(inputsParams, outputParams);
 		if(!regServiceProfile.equalsIgnoreCase("")){
 			System.out.println("Service already registered: "+regServiceProfile);
-
-
-
-			//TODO mirar si se tiene que registrar algun provider
-
 
 			//obtain the registered wsdl docs and the one that has to be registered. 
 			//If the new wsdl doc is different, it is registered
@@ -737,9 +797,10 @@ public class SFinterface {
 			String serviceURI=getServiceURI(regServiceProfile,null);
 			ArrayList<String> groundings=getGroundings(serviceURI,null);
 			Iterator<String> iterGrounds=groundings.iterator();
+			String groundingURI="";
 			boolean found=false;
 			while(iterGrounds.hasNext()){
-				String groundingURI=iterGrounds.next();
+				groundingURI=iterGrounds.next();
 				String atomicProcessGrounding=getAtomicProcessGrounding(groundingURI,null);
 				String WSDLDocandDatatype=getWSDLDocument(atomicProcessGrounding,null);
 				Iterator<String> iterWsdlsToRegister=wsdlsToRegister.iterator();
@@ -754,12 +815,11 @@ public class SFinterface {
 					break;
 			}
 			if(!found){//register the grounding
-				System.out.println("Register the grounding");
+				System.out.println("Register the grounding: "+groundingURI);
 
-				writeOWLSFile(serviceURL);
+				String fileName="tmp.owls";
+				writeProvidersGroundingOWLSFile(serviceURL, regServiceProfile, fileName);
 				
-				//TODO enganchar tanto los groundings como los providers con el profile que ya estaba registrado
-
 				ModelMaker maker = ModelFactory.createModelRDBMaker(conn);
 				Model base = maker.createModel("http://example.org/ontologias");
 				OntModelSpec spec = new OntModelSpec(OntModelSpec.OWL_MEM);
@@ -768,7 +828,7 @@ public class SFinterface {
 
 				try {
 					
-					File file=new File("tmp.owls");
+					File file=new File(fileName);
 					InputStream in = new FileInputStream(file);
 
 					m.read(in, "");
@@ -797,7 +857,7 @@ public class SFinterface {
 				//ir añadiendolos al modelo mediante funciones m.add ... (esto se tiene que probar...)
 			}
 			else{
-				System.out.println("Not register any grounding");
+				System.out.println("Not register this grounding: "+groundingURI);
 			}
 
 
@@ -864,7 +924,7 @@ public class SFinterface {
 		if (resultsSearchName != null) {
 
 			if(resultsSearchName.hasNext()) {
-				profile = resultsSearchName.next().getLiteral("x").toString();
+				profile = resultsSearchName.next().getResource("x").toString();
 
 			} 
 
@@ -966,7 +1026,7 @@ public class SFinterface {
 		ModelMaker maker;
 		Model base;
 		OntModel m;
-		if(serviceURL!=null){
+		if(serviceURL==null){
 			maker = ModelFactory.createModelRDBMaker(conn);
 			base = maker.createModel("http://example.org/ontologias");
 			m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
@@ -1018,7 +1078,7 @@ public class SFinterface {
 		ModelMaker maker;
 		Model base;
 		OntModel m;
-		if(serviceURL!=null){
+		if(serviceURL==null){
 			maker = ModelFactory.createModelRDBMaker(conn);
 			base = maker.createModel("http://example.org/ontologias");
 			m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
@@ -1069,7 +1129,7 @@ public class SFinterface {
 		ModelMaker maker;
 		Model base;
 		OntModel m;
-		if(serviceURL!=null){
+		if(serviceURL==null){
 			maker = ModelFactory.createModelRDBMaker(conn);
 			base = maker.createModel("http://example.org/ontologias");
 			m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
@@ -1116,9 +1176,20 @@ public class SFinterface {
 	private String getWSDLDocument(String atomicProcessGrounding, String serviceURL){
 		String WSDLDoc="";
 
-		ModelMaker maker = ModelFactory.createModelRDBMaker(conn);
-		Model base = maker.createModel("http://example.org/ontologias");
-		OntModel m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
+		ModelMaker maker;
+		Model base;
+		OntModel m;
+		if(serviceURL==null){
+			maker = ModelFactory.createModelRDBMaker(conn);
+			base = maker.createModel("http://example.org/ontologias");
+			m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
+		}
+		else{
+			maker = ModelFactory.createMemModelMaker();
+			base = maker.createModel("http://example.org/ontologias");
+			m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
+			m.read(serviceURL);
+		}
 		
 		String queryStringSearchName =
 				"prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>"+
@@ -1228,7 +1299,7 @@ public class SFinterface {
 	 * @param serviceProfile
 	 * @return a String containing the specification in OWL-S of all groundings of the given service profile
 	 */
-	private String getGroundingsOWLSfromFile(String serviceProfile, String serviceURL){
+	private String getGroundingsOWLSfromFile(String serviceProfile, String serviceURL, String registeredServiceURI, String baseURI){
 		String groundsOWLS="";
 		String serviceURI=getServiceURI(serviceProfile,serviceURL);
 		ArrayList<String> groundings=getGroundings(serviceURI,serviceURL);
@@ -1240,8 +1311,20 @@ public class SFinterface {
 			StringTokenizer token=new StringTokenizer(WSDLDocandDatatype,"^^");
 			String wsdlDoc=token.nextToken();
 			String wsdlDatatype=token.nextToken();
-			groundsOWLS+="<grounding:WsdlGrounding rdf:ID=\""+groundingURI+"\">\n"+
-					"<service:supportedBy rdf:resource=\""+serviceURI+"\"/> \n"+
+			StringTokenizer tokenGroundURI=new StringTokenizer(groundingURI,"#");
+			tokenGroundURI.nextToken();
+			String groundingURIName=tokenGroundURI.nextToken();
+			
+			StringTokenizer tokenRegServURI=new StringTokenizer(registeredServiceURI, "#");
+			tokenRegServURI.nextToken();
+			String registeredServiceURIName=tokenRegServURI.nextToken();
+			
+			StringTokenizer tokenAtomicProcess=new StringTokenizer(atomicProcessGrounding, "#");
+			tokenAtomicProcess.nextToken();
+			atomicProcessGrounding=tokenAtomicProcess.nextToken();//baseURI+"#"+tokenAtomicProcess.nextToken();
+			
+			groundsOWLS+="<grounding:WsdlGrounding rdf:ID=\""+groundingURIName+"\">\n"+ //"<grounding:WsdlGrounding rdf:ID=\""+baseURI+"#"+groundingURIName+"\">\n"+
+					"<service:supportedBy rdf:resource=\""+"#"+registeredServiceURIName+"\"/> \n"+
 					"<grounding:hasAtomicProcessGrounding>\n"+
 					"<grounding:WsdlAtomicProcessGrounding rdf:ID=\""+atomicProcessGrounding+"\"/>"+
 					"</grounding:hasAtomicProcessGrounding>\n"+
@@ -1249,7 +1332,7 @@ public class SFinterface {
 
 			//TODO añadir las partes que faltan del grounding
 			
-			groundsOWLS+="<grounding:WsdlAtomicProcessGrounding rdf:about=\""+atomicProcessGrounding+"\">\n"+
+			groundsOWLS+="<grounding:WsdlAtomicProcessGrounding rdf:about=\""+"#"+atomicProcessGrounding+"\">\n"+
 					"<grounding:wsdlDocument rdf:datatype=\""+wsdlDatatype+"\">\n"+
 					wsdlDoc+"</grounding:wsdlDocument>\n"+
 					"</grounding:WsdlAtomicProcessGrounding>\n";
@@ -1271,6 +1354,7 @@ public class SFinterface {
 				"<rdf:RDF  xmlns:owl       = \"http://www.w3.org/2002/07/owl#\""+"\n"+
 				"xmlns:rdfs      = \"http://www.w3.org/2000/01/rdf-schema#\""+"\n"+
 				"xmlns:rdf       = \"http://www.w3.org/1999/02/22-rdf-syntax-ns#\""+"\n"+
+				"xmlns:xsd       = \"http://www.w3.org/2001/XMLSchema#\""+"\n"+
 				"xmlns:service   = \"http://www.daml.org/services/owl-s/1.1/Service.owl#\""+"\n"+
 				"xmlns:process   = \"http://www.daml.org/services/owl-s/1.1/Process.owl#\""+"\n"+
 				"xmlns:profile    = \"http://www.daml.org/services/owl-s/1.1/Profile.owl#\""+"\n"+
@@ -1292,12 +1376,12 @@ public class SFinterface {
 		//+
 		//<http://127.0.0.1/services/1.1/calculateSunriseTime.owls#Provider2>
 		//a       provider:Provider
-		owlsService+=getProvidersOWLS(serviceProfile);
+		owlsService+=getProvidersOWLS(serviceProfile, null, null);
 
 		//inputs and outputs of a process with their types
 		String processInputs="", processOutputs="";
-		//TODO bad use of getInputs...
-		ArrayList<String> inputs=getInputs(serviceProfile);
+		
+		ArrayList<String> inputs=getInputs(serviceProfile,null);
 		Iterator<String> iterInputs=inputs.iterator();
 		while(iterInputs.hasNext()){
 			//profile:hasInput
@@ -1307,8 +1391,8 @@ public class SFinterface {
 
 
 		}
-		//TODO bad use of getOutputs...
-		ArrayList<String> outputs=getOutputs(serviceProfile);
+		
+		ArrayList<String> outputs=getOutputs(serviceProfile,null);
 		Iterator<String> iterOutputs=outputs.iterator();
 		while(iterOutputs.hasNext()){
 			//profile:hasOutput
@@ -1330,6 +1414,62 @@ public class SFinterface {
 
 		owlsService+="</rdf:RDF>";
 		return owlsService;
+	}
+
+	
+	
+	public void removeProvider(String serviceProfile, String providerName){
+		
+		StringTokenizer tokenServiceProf=new StringTokenizer(serviceProfile, "#");
+		String baseURI=tokenServiceProf.nextToken();
+		String profileName=tokenServiceProf.nextToken();
+		
+		ModelMaker maker= ModelFactory.createModelRDBMaker(conn);
+		Model base= maker.createModel("http://example.org/ontologias");
+		OntModel m= ModelFactory.createOntologyModel(getModelSpec(maker), base);
+		
+		
+		//Delete provider
+		String delete= 
+				"prefix xsd: <http://www.w3.org/2001/XMLSchema#>" +
+				"prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>" +
+				"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" +  
+				"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" +
+				"prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>" +
+				"prefix mind: <"+baseURI+"#>" +
+				"delete {?x ?y ?z} " +
+				"where" +
+				"{mind:" +profileName+" ?y ?z" +
+				" filter ( ?y = profile:contactInformation " +
+				"&& ?z = <"+baseURI+"#"+providerName+">" +
+				")" +
+				"?x ?y ?z}";
+		
+		String delete2= 
+				"prefix xsd: <http://www.w3.org/2001/XMLSchema#>" +
+				"prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>" +
+				"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" +  
+				"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" +
+				"prefix provider: <http://127.0.0.1/ontology/provider.owl#>"+
+				"prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>" +
+				"prefix mind: <"+baseURI+"#>" +
+				"delete {?x ?y ?z} " +
+				"where" +
+				"{mind:" +providerName+" ?y ?z" +
+				" filter ( ( ?y = provider:entityID " +
+				"|| ?y = provider:entityType " +
+				"|| ?y = provider:language " +
+				"|| ?y = provider:performative "+ 
+				"|| ?z = provider:Provider )"+ 
+				"&& ?x = <"+baseURI+"#"+providerName+">" +
+				")" +
+				"?x ?y ?z}";
+
+		
+		QuerySolution querysol=new QuerySolutionMap();
+		UpdateAction.parseExecute(delete, m, querysol);
+		UpdateAction.parseExecute(delete2, m, querysol);
+
 	}
 
 
@@ -1470,12 +1610,23 @@ public class SFinterface {
 	}
 
 
-	private String getProvidersOWLS(String serviceProfile){
+	private String getProvidersOWLS(String serviceProfile, String serviceURL, String baseURI){
 
 		String providersOWLS="";
-		ModelMaker maker = ModelFactory.createModelRDBMaker(conn);
-		Model base = maker.createModel("http://example.org/ontologias");
-		OntModel m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
+		ModelMaker maker;
+		Model base;
+		OntModel m;
+		if(serviceURL==null){
+			maker = ModelFactory.createModelRDBMaker(conn);
+			base = maker.createModel("http://example.org/ontologias");
+			m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
+		}
+		else{
+			maker = ModelFactory.createMemModelMaker();
+			base = maker.createModel("http://example.org/ontologias");
+			m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
+			m.read(serviceURL);
+		}
 
 		String queryStringSearchName =
 				"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"+
@@ -1495,13 +1646,18 @@ public class SFinterface {
 				providerURI = resultsSearchName.next().getResource("x").toString();
 
 
-				entityID=getProviderParameter(providerURI, "entityID");
-				entityType=getProviderParameter(providerURI, "entityType");
-				language=getProviderParameter(providerURI, "language");
-				performative=getProviderParameter(providerURI, "performative");
+				entityID=getProviderParameter(providerURI, "entityID", serviceURL);
+				entityType=getProviderParameter(providerURI, "entityType", serviceURL);
+				language=getProviderParameter(providerURI, "language", serviceURL);
+				performative=getProviderParameter(providerURI, "performative", serviceURL);
 
+				StringTokenizer tokenProvURI=new StringTokenizer(providerURI,"#");
+				tokenProvURI.nextToken();
+				String providerName=tokenProvURI.nextToken();
+				//providerName=providerName;//baseURI+"#"+providerName;
+				
 				providersOWLS+="<profile:contactInformation>"+"\n"+
-						"<provider:Provider rdf:ID=\""+providerURI+"\">"+"\n"+
+						"<provider:Provider rdf:ID=\""+providerName+"\">"+"\n"+
 						"<provider:entityID rdf:datatype=\"^^xsd;string\">"+entityID+"</provider:entityID>"+"\n"+
 						"<provider:entityType rdf:datatype=\"^^xsd;string\">"+entityType+"</provider:entityType>"+"\n"+
 						"<provider:language rdf:datatype=\"^^xsd;string\">"+language+"</provider:language>"+"\n"+
@@ -1527,11 +1683,22 @@ public class SFinterface {
 	}
 
 
-	private String getProviderParameter(String providerURI, String parameter){
+	private String getProviderParameter(String providerURI, String parameter, String serviceURL){
 
-		ModelMaker maker = ModelFactory.createModelRDBMaker(conn);
-		Model base = maker.createModel("http://example.org/ontologias");
-		OntModel m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
+		ModelMaker maker;
+		Model base;
+		OntModel m;
+		if(serviceURL==null){
+			maker = ModelFactory.createModelRDBMaker(conn);
+			base = maker.createModel("http://example.org/ontologias");
+			m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
+		}
+		else{
+			maker = ModelFactory.createMemModelMaker();
+			base = maker.createModel("http://example.org/ontologias");
+			m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
+			m.read(serviceURL);
+		}
 
 		String queryStringSearchName2 =
 				"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"+

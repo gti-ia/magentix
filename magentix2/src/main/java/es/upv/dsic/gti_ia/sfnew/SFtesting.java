@@ -10,10 +10,17 @@ public class SFtesting {
 		
 		SFinterface sf=new SFinterface();
 		
-//		sf.clean();
-//		
-		//sf.RegisterService("http://127.0.0.1/services/1.1/author_bookprice_service.owls");
-//		sf.RegisterService("http://127.0.0.1/services/1.1/calculateSunriseTime.owls");
+		sf.clean();
+
+		sf.RegisterService("http://127.0.0.1/services/1.1/calculateSunriseTime.owls");
+		
+		sf.RegisterService("http://127.0.0.1/services/1.1/calculateSunriseTime2.owls");
+		
+		sf.removeProvider("http://127.0.0.1/services/1.1/calculateSunriseTime.owls#CALCULATE_SUNRISE_PROFILE"
+				, "Provider3");
+		
+		
+		//sf.RegisterService("http://127.0.0.1/services/1.1/author_bookprice_service.owls");		
 //
 //		sf.deregisterService("http://127.0.0.1/services/1.1/calculateSunriseTime.owls", 
 //				"CALCULATE_SUNRISE_PROFILE", "CALCULATE_SUNRISE_SERVICE");
@@ -59,11 +66,10 @@ public class SFtesting {
 //		sf.testQuery("http://127.0.0.1/services/1.1/unGround.owls");
 		
 		
-//		System.out.println("\n\nMODEL:\n\n");
-//		sf.writeModel();
+		System.out.println("\n\nMODEL:\n\n");
+		sf.writeModel();
 		
 		//sf.readOWLS("http://127.0.0.1/services/1.1/calculateSunriseTime.owls");
-		sf.readOWLS("unGround.owls");
 		
 	}
 
