@@ -4,6 +4,8 @@
  */
 package wtp;
 
+import java.sql.SQLException;
+
 import persistence.OMSInterface;
 import persistence.THOMASException;
 
@@ -52,6 +54,12 @@ public class LeaveRoleSkeleton
 			res.setErrorValue("");
 			return res;
 		}catch(THOMASException e)
+		{
+			res.setStatus("Error");
+			res.setErrorValue(e.getMessage());
+			return res;
+		}
+		catch(SQLException e)
 		{
 			res.setStatus("Error");
 			res.setErrorValue(e.getMessage());

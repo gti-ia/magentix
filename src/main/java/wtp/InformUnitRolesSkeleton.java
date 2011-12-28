@@ -4,9 +4,12 @@
  */
 package wtp;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import persistence.DataBaseInterface;
+import persistence.OMSInterface;
+import persistence.THOMASException;
 
 /**
  * InformUnitRolesSkeleton java skeleton for the axisService
@@ -14,9 +17,9 @@ import persistence.DataBaseInterface;
 
 public class InformUnitRolesSkeleton
 {
-	persistence.DataBaseInterface	thomasBD	= new DataBaseInterface();
-	public static final Boolean		DEBUG		= true;
 	
+	public static final Boolean		DEBUG		= true;
+	private static OMSInterface omsInterface = new OMSInterface();
 	/**
 	 * Service used for requesting the list of roles that have been registered inside a unit.
 	 * The unit must exist and the requester agent is allowed to use the service: if the type
@@ -30,7 +33,7 @@ public class InformUnitRolesSkeleton
 			wtp.InformUnitRoles informUnitRoles)
 	{
 		wtp.InformUnitRolesResponse res = new InformUnitRolesResponse();
-		
+		String result = "";
 		if (DEBUG)
 		{
 			System.out.println("InformUnitRoles :");
@@ -48,39 +51,25 @@ public class InformUnitRolesSkeleton
 			res.setStatus("Error");
 			return res;
 		}
+		try{
+			result =omsInterface.informUnitRoles(informUnitRoles.getUnitID(),informUnitRoles.getAgentID());
+			res.setStatus("Ok");
+			res.setRoleList(result);
+			res.setErrorValue("");
+			return res;
+		}catch(THOMASException e)
+		{
+			res.setStatus("Error");
+			res.setErrorValue(e.getMessage());
+			return res;
+		}
+		catch(SQLException e)
+		{
+			res.setStatus("Error");
+			res.setErrorValue(e.getMessage());
+			return res;
+		}
 		
-		if (!thomasBD.CheckExistsUnit(informUnitRoles.getUnitID()))
-		{
-			res.setErrorValue("NotFound");
-			res.setStatus("Error");
-			return res;
-		}
-		// role based control
-		if (!roleBasedControl(informUnitRoles.getAgentID(), informUnitRoles
-				.getUnitID()))
-		{
-			res.setErrorValue("Not-Allowed");
-			res.setStatus("Error");
-			return res;
-		}
-		res.setRoleList(thomasBD.GetRoleList(informUnitRoles.getUnitID())
-				.toString());
-		return res;
-	}
-	private boolean roleBasedControl(String agentID, String unitID)
-	{
-		if (unitID.equalsIgnoreCase("virtual"))
-			return true;
-		if (!thomasBD.CheckExistsAgent(agentID))
-			return false;
-		String unitType = thomasBD.GetUnitType(unitID);
-		if (unitType.equalsIgnoreCase("flat"))
-			return true;
-		String parentUnitID = thomasBD.GetParentUnitID(unitID);
-		if (thomasBD.CheckAgentPlaysRoleInUnit(parentUnitID, agentID))
-			return true;
-		else
-			return false;
 	}
 	
 }

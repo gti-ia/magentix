@@ -1,6 +1,6 @@
 
 /**
- * QuantityMembersResponse.java
+ * InformUnit.java
  *
  * This file was auto-generated from WSDL
  * by the Apache Axis2 version: 1.4  Built on : Apr 26, 2008 (06:25:17 EDT)
@@ -10,15 +10,15 @@
             
 
             /**
-            *  QuantityMembersResponse bean class
+            *  InformUnit bean class
             */
         
-        public  class QuantityMembersResponse
+        public  class InformUnit
         implements org.apache.axis2.databinding.ADBBean{
         
                 public static final javax.xml.namespace.QName MY_QNAME = new javax.xml.namespace.QName(
                 "http://wtp",
-                "QuantityMembersResponse",
+                "InformUnit",
                 "ns1");
 
             
@@ -33,90 +33,60 @@
         
 
                         /**
-                        * field for Status
+                        * field for UnitID
                         */
 
                         
-                                    protected java.lang.String localStatus ;
+                                    protected java.lang.String localUnitID ;
                                 
 
                            /**
                            * Auto generated getter method
                            * @return java.lang.String
                            */
-                           public  java.lang.String getStatus(){
-                               return localStatus;
+                           public  java.lang.String getUnitID(){
+                               return localUnitID;
                            }
 
                            
                         
                             /**
                                * Auto generated setter method
-                               * @param param Status
+                               * @param param UnitID
                                */
-                               public void setStatus(java.lang.String param){
+                               public void setUnitID(java.lang.String param){
                             
-                                            this.localStatus=param;
+                                            this.localUnitID=param;
                                     
 
                                }
                             
 
                         /**
-                        * field for ErrorValue
+                        * field for AgentID
                         */
 
                         
-                                    protected java.lang.String localErrorValue ;
+                                    protected java.lang.String localAgentID ;
                                 
 
                            /**
                            * Auto generated getter method
                            * @return java.lang.String
                            */
-                           public  java.lang.String getErrorValue(){
-                               return localErrorValue;
+                           public  java.lang.String getAgentID(){
+                               return localAgentID;
                            }
 
                            
                         
                             /**
                                * Auto generated setter method
-                               * @param param ErrorValue
+                               * @param param AgentID
                                */
-                               public void setErrorValue(java.lang.String param){
+                               public void setAgentID(java.lang.String param){
                             
-                                            this.localErrorValue=param;
-                                    
-
-                               }
-                            
-
-                        /**
-                        * field for Quantity
-                        */
-
-                        
-                                    protected java.math.BigInteger localQuantity ;
-                                
-
-                           /**
-                           * Auto generated getter method
-                           * @return java.math.BigInteger
-                           */
-                           public  java.math.BigInteger getQuantity(){
-                               return localQuantity;
-                           }
-
-                           
-                        
-                            /**
-                               * Auto generated setter method
-                               * @param param Quantity
-                               */
-                               public void setQuantity(java.math.BigInteger param){
-                            
-                                            this.localQuantity=param;
+                                            this.localAgentID=param;
                                     
 
                                }
@@ -154,7 +124,7 @@
                        new org.apache.axis2.databinding.ADBDataSource(this,MY_QNAME){
 
                  public void serialize(org.apache.axis2.databinding.utils.writer.MTOMAwareXMLStreamWriter xmlWriter) throws javax.xml.stream.XMLStreamException {
-                       QuantityMembersResponse.this.serialize(MY_QNAME,factory,xmlWriter);
+                       InformUnit.this.serialize(MY_QNAME,factory,xmlWriter);
                  }
                };
                return new org.apache.axiom.om.impl.llom.OMSourcedElementImpl(
@@ -208,11 +178,11 @@
                    java.lang.String namespacePrefix = registerPrefix(xmlWriter,"http://wtp");
                    if ((namespacePrefix != null) && (namespacePrefix.trim().length() > 0)){
                        writeAttribute("xsi","http://www.w3.org/2001/XMLSchema-instance","type",
-                           namespacePrefix+":QuantityMembersResponse",
+                           namespacePrefix+":InformUnit",
                            xmlWriter);
                    } else {
                        writeAttribute("xsi","http://www.w3.org/2001/XMLSchema-instance","type",
-                           "QuantityMembersResponse",
+                           "InformUnit",
                            xmlWriter);
                    }
 
@@ -226,28 +196,28 @@
                                         if (prefix == null) {
                                             prefix = generatePrefix(namespace);
 
-                                            xmlWriter.writeStartElement(prefix,"Status", namespace);
+                                            xmlWriter.writeStartElement(prefix,"UnitID", namespace);
                                             xmlWriter.writeNamespace(prefix, namespace);
                                             xmlWriter.setPrefix(prefix, namespace);
 
                                         } else {
-                                            xmlWriter.writeStartElement(namespace,"Status");
+                                            xmlWriter.writeStartElement(namespace,"UnitID");
                                         }
 
                                     } else {
-                                        xmlWriter.writeStartElement("Status");
+                                        xmlWriter.writeStartElement("UnitID");
                                     }
                                 
 
-                                          if (localStatus==null){
+                                          if (localUnitID==null){
                                               // write the nil attribute
                                               
-                                                     throw new org.apache.axis2.databinding.ADBException("Status cannot be null!!");
+                                                     throw new org.apache.axis2.databinding.ADBException("UnitID cannot be null!!");
                                                   
                                           }else{
 
                                         
-                                                   xmlWriter.writeCharacters(localStatus);
+                                                   xmlWriter.writeCharacters(localUnitID);
                                             
                                           }
                                     
@@ -260,62 +230,28 @@
                                         if (prefix == null) {
                                             prefix = generatePrefix(namespace);
 
-                                            xmlWriter.writeStartElement(prefix,"ErrorValue", namespace);
+                                            xmlWriter.writeStartElement(prefix,"AgentID", namespace);
                                             xmlWriter.writeNamespace(prefix, namespace);
                                             xmlWriter.setPrefix(prefix, namespace);
 
                                         } else {
-                                            xmlWriter.writeStartElement(namespace,"ErrorValue");
+                                            xmlWriter.writeStartElement(namespace,"AgentID");
                                         }
 
                                     } else {
-                                        xmlWriter.writeStartElement("ErrorValue");
+                                        xmlWriter.writeStartElement("AgentID");
                                     }
                                 
 
-                                          if (localErrorValue==null){
+                                          if (localAgentID==null){
                                               // write the nil attribute
                                               
-                                                     throw new org.apache.axis2.databinding.ADBException("ErrorValue cannot be null!!");
+                                                     throw new org.apache.axis2.databinding.ADBException("AgentID cannot be null!!");
                                                   
                                           }else{
 
                                         
-                                                   xmlWriter.writeCharacters(localErrorValue);
-                                            
-                                          }
-                                    
-                                   xmlWriter.writeEndElement();
-                             
-                                    namespace = "";
-                                    if (! namespace.equals("")) {
-                                        prefix = xmlWriter.getPrefix(namespace);
-
-                                        if (prefix == null) {
-                                            prefix = generatePrefix(namespace);
-
-                                            xmlWriter.writeStartElement(prefix,"Quantity", namespace);
-                                            xmlWriter.writeNamespace(prefix, namespace);
-                                            xmlWriter.setPrefix(prefix, namespace);
-
-                                        } else {
-                                            xmlWriter.writeStartElement(namespace,"Quantity");
-                                        }
-
-                                    } else {
-                                        xmlWriter.writeStartElement("Quantity");
-                                    }
-                                
-
-                                          if (localQuantity==null){
-                                              // write the nil attribute
-                                              
-                                                     throw new org.apache.axis2.databinding.ADBException("Quantity cannot be null!!");
-                                                  
-                                          }else{
-
-                                        
-                                                   xmlWriter.writeCharacters(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localQuantity));
+                                                   xmlWriter.writeCharacters(localAgentID);
                                             
                                           }
                                     
@@ -484,30 +420,21 @@
 
                 
                                       elementList.add(new javax.xml.namespace.QName("",
-                                                                      "Status"));
+                                                                      "UnitID"));
                                  
-                                        if (localStatus != null){
-                                            elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localStatus));
+                                        if (localUnitID != null){
+                                            elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localUnitID));
                                         } else {
-                                           throw new org.apache.axis2.databinding.ADBException("Status cannot be null!!");
+                                           throw new org.apache.axis2.databinding.ADBException("UnitID cannot be null!!");
                                         }
                                     
                                       elementList.add(new javax.xml.namespace.QName("",
-                                                                      "ErrorValue"));
+                                                                      "AgentID"));
                                  
-                                        if (localErrorValue != null){
-                                            elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localErrorValue));
+                                        if (localAgentID != null){
+                                            elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localAgentID));
                                         } else {
-                                           throw new org.apache.axis2.databinding.ADBException("ErrorValue cannot be null!!");
-                                        }
-                                    
-                                      elementList.add(new javax.xml.namespace.QName("",
-                                                                      "Quantity"));
-                                 
-                                        if (localQuantity != null){
-                                            elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localQuantity));
-                                        } else {
-                                           throw new org.apache.axis2.databinding.ADBException("Quantity cannot be null!!");
+                                           throw new org.apache.axis2.databinding.ADBException("AgentID cannot be null!!");
                                         }
                                     
 
@@ -534,9 +461,9 @@
         * Postcondition: If this object is an element, the reader is positioned at its end element
         *                If this object is a complex type, the reader is positioned at the end element of its outer element
         */
-        public static QuantityMembersResponse parse(javax.xml.stream.XMLStreamReader reader) throws java.lang.Exception{
-            QuantityMembersResponse object =
-                new QuantityMembersResponse();
+        public static InformUnit parse(javax.xml.stream.XMLStreamReader reader) throws java.lang.Exception{
+            InformUnit object =
+                new InformUnit();
 
             int event;
             java.lang.String nillableValue = null;
@@ -560,10 +487,10 @@
 
                     java.lang.String type = fullTypeName.substring(fullTypeName.indexOf(":")+1);
                     
-                            if (!"QuantityMembersResponse".equals(type)){
+                            if (!"InformUnit".equals(type)){
                                 //find namespace for the prefix
                                 java.lang.String nsUri = reader.getNamespaceContext().getNamespaceURI(nsPrefix);
-                                return (QuantityMembersResponse)wtp.ExtensionMapper.getTypeObject(
+                                return (InformUnit)wtp.ExtensionMapper.getTypeObject(
                                      nsUri,type,reader);
                               }
                         
@@ -588,11 +515,11 @@
                                     
                                     while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
                                 
-                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","Status").equals(reader.getName())){
+                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","UnitID").equals(reader.getName())){
                                 
                                     java.lang.String content = reader.getElementText();
                                     
-                                              object.setStatus(
+                                              object.setUnitID(
                                                     org.apache.axis2.databinding.utils.ConverterUtil.convertToString(content));
                                               
                                         reader.next();
@@ -607,31 +534,12 @@
                                     
                                     while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
                                 
-                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","ErrorValue").equals(reader.getName())){
+                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","AgentID").equals(reader.getName())){
                                 
                                     java.lang.String content = reader.getElementText();
                                     
-                                              object.setErrorValue(
+                                              object.setAgentID(
                                                     org.apache.axis2.databinding.utils.ConverterUtil.convertToString(content));
-                                              
-                                        reader.next();
-                                    
-                              }  // End of if for expected property start element
-                                
-                                else{
-                                    // A start element we are not expecting indicates an invalid parameter was passed
-                                    throw new org.apache.axis2.databinding.ADBException("Unexpected subelement " + reader.getLocalName());
-                                }
-                            
-                                    
-                                    while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
-                                
-                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","Quantity").equals(reader.getName())){
-                                
-                                    java.lang.String content = reader.getElementText();
-                                    
-                                              object.setQuantity(
-                                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToInteger(content));
                                               
                                         reader.next();
                                     

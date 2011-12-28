@@ -1,6 +1,6 @@
 
 /**
- * QuantityMembersMessageReceiverInOut.java
+ * InformUnitMessageReceiverInOut.java
  *
  * This file was auto-generated from WSDL
  * by the Apache Axis2 version: 1.4  Built on : Apr 26, 2008 (06:24:30 EDT)
@@ -8,10 +8,10 @@
         package wtp;
 
         /**
-        *  QuantityMembersMessageReceiverInOut message receiver
+        *  InformUnitMessageReceiverInOut message receiver
         */
 
-        public class QuantityMembersMessageReceiverInOut extends org.apache.axis2.receivers.AbstractInOutMessageReceiver{
+        public class InformUnitMessageReceiverInOut extends org.apache.axis2.receivers.AbstractInOutMessageReceiver{
 
 
         public void invokeBusinessLogic(org.apache.axis2.context.MessageContext msgContext, org.apache.axis2.context.MessageContext newMsgContext)
@@ -22,7 +22,7 @@
         // get the implementation class for the Web Service
         Object obj = getTheImplementationObject(msgContext);
 
-        QuantityMembersSkeleton skel = (QuantityMembersSkeleton)obj;
+        InformUnitSkeleton skel = (InformUnitSkeleton)obj;
         //Out Envelop
         org.apache.axiom.soap.SOAPEnvelope envelope = null;
         //Find the axisOperation that has been set by the Dispatch phase.
@@ -36,22 +36,22 @@
 
         
 
-            if("QuantityMembers".equals(methodName)){
+            if("InformUnit".equals(methodName)){
                 
-                wtp.QuantityMembersResponse quantityMembersResponse1 = null;
-	                        wtp.QuantityMembers wrappedParam =
-                                                             (wtp.QuantityMembers)fromOM(
+                wtp.InformUnitResponse informUnitResponse1 = null;
+	                        wtp.InformUnit wrappedParam =
+                                                             (wtp.InformUnit)fromOM(
                                     msgContext.getEnvelope().getBody().getFirstElement(),
-                                    wtp.QuantityMembers.class,
+                                    wtp.InformUnit.class,
                                     getEnvelopeNamespaces(msgContext.getEnvelope()));
                                                 
-                                               quantityMembersResponse1 =
+                                               informUnitResponse1 =
                                                    
                                                    
-                                                         skel.QuantityMembers(wrappedParam)
+                                                         skel.InformUnit(wrappedParam)
                                                     ;
                                             
-                                        envelope = toEnvelope(getSOAPFactory(msgContext), quantityMembersResponse1, false);
+                                        envelope = toEnvelope(getSOAPFactory(msgContext), informUnitResponse1, false);
                                     
             } else {
               throw new java.lang.RuntimeException("method not found");
@@ -67,12 +67,12 @@
         }
         
         //
-            private  org.apache.axiom.om.OMElement  toOM(wtp.QuantityMembers param, boolean optimizeContent)
+            private  org.apache.axiom.om.OMElement  toOM(wtp.InformUnit param, boolean optimizeContent)
             throws org.apache.axis2.AxisFault {
 
             
                         try{
-                             return param.getOMElement(wtp.QuantityMembers.MY_QNAME,
+                             return param.getOMElement(wtp.InformUnit.MY_QNAME,
                                           org.apache.axiom.om.OMAbstractFactory.getOMFactory());
                         } catch(org.apache.axis2.databinding.ADBException e){
                             throw org.apache.axis2.AxisFault.makeFault(e);
@@ -81,12 +81,12 @@
 
             }
         
-            private  org.apache.axiom.om.OMElement  toOM(wtp.QuantityMembersResponse param, boolean optimizeContent)
+            private  org.apache.axiom.om.OMElement  toOM(wtp.InformUnitResponse param, boolean optimizeContent)
             throws org.apache.axis2.AxisFault {
 
             
                         try{
-                             return param.getOMElement(wtp.QuantityMembersResponse.MY_QNAME,
+                             return param.getOMElement(wtp.InformUnitResponse.MY_QNAME,
                                           org.apache.axiom.om.OMAbstractFactory.getOMFactory());
                         } catch(org.apache.axis2.databinding.ADBException e){
                             throw org.apache.axis2.AxisFault.makeFault(e);
@@ -95,12 +95,12 @@
 
             }
         
-                    private  org.apache.axiom.soap.SOAPEnvelope toEnvelope(org.apache.axiom.soap.SOAPFactory factory, wtp.QuantityMembersResponse param, boolean optimizeContent)
+                    private  org.apache.axiom.soap.SOAPEnvelope toEnvelope(org.apache.axiom.soap.SOAPFactory factory, wtp.InformUnitResponse param, boolean optimizeContent)
                         throws org.apache.axis2.AxisFault{
                       try{
                           org.apache.axiom.soap.SOAPEnvelope emptyEnvelope = factory.getDefaultEnvelope();
                            
-                                    emptyEnvelope.getBody().addChild(param.getOMElement(wtp.QuantityMembersResponse.MY_QNAME,factory));
+                                    emptyEnvelope.getBody().addChild(param.getOMElement(wtp.InformUnitResponse.MY_QNAME,factory));
                                 
 
                          return emptyEnvelope;
@@ -109,8 +109,8 @@
                     }
                     }
                     
-                         private wtp.QuantityMembersResponse wrapQuantityMembers(){
-                                wtp.QuantityMembersResponse wrappedElement = new wtp.QuantityMembersResponse();
+                         private wtp.InformUnitResponse wrapInformUnit(){
+                                wtp.InformUnitResponse wrappedElement = new wtp.InformUnitResponse();
                                 return wrappedElement;
                          }
                     
@@ -131,16 +131,16 @@
 
         try {
         
-                if (wtp.QuantityMembers.class.equals(type)){
+                if (wtp.InformUnit.class.equals(type)){
                 
-                           return wtp.QuantityMembers.Factory.parse(param.getXMLStreamReaderWithoutCaching());
+                           return wtp.InformUnit.Factory.parse(param.getXMLStreamReaderWithoutCaching());
                     
 
                 }
            
-                if (wtp.QuantityMembersResponse.class.equals(type)){
+                if (wtp.InformUnitResponse.class.equals(type)){
                 
-                           return wtp.QuantityMembersResponse.Factory.parse(param.getXMLStreamReaderWithoutCaching());
+                           return wtp.InformUnitResponse.Factory.parse(param.getXMLStreamReaderWithoutCaching());
                     
 
                 }
