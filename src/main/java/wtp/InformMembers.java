@@ -1,6 +1,6 @@
 
 /**
- * InformNormContent.java
+ * InformMembers.java
  *
  * This file was auto-generated from WSDL
  * by the Apache Axis2 version: 1.4  Built on : Apr 26, 2008 (06:25:17 EDT)
@@ -10,15 +10,15 @@
             
 
             /**
-            *  InformNormContent bean class
+            *  InformMembers bean class
             */
         
-        public  class InformNormContent
+        public  class InformMembers
         implements org.apache.axis2.databinding.ADBBean{
         
                 public static final javax.xml.namespace.QName MY_QNAME = new javax.xml.namespace.QName(
                 "http://wtp",
-                "InformNormContent",
+                "InformMembers",
                 "ns1");
 
             
@@ -33,30 +33,90 @@
         
 
                         /**
-                        * field for NormID
+                        * field for UnitID
                         */
 
                         
-                                    protected java.lang.String localNormID ;
+                                    protected java.lang.String localUnitID ;
                                 
 
                            /**
                            * Auto generated getter method
                            * @return java.lang.String
                            */
-                           public  java.lang.String getNormID(){
-                               return localNormID;
+                           public  java.lang.String getUnitID(){
+                               return localUnitID;
                            }
 
                            
                         
                             /**
                                * Auto generated setter method
-                               * @param param NormID
+                               * @param param UnitID
                                */
-                               public void setNormID(java.lang.String param){
+                               public void setUnitID(java.lang.String param){
                             
-                                            this.localNormID=param;
+                                            this.localUnitID=param;
+                                    
+
+                               }
+                            
+
+                        /**
+                        * field for RoleID
+                        */
+
+                        
+                                    protected java.lang.String localRoleID ;
+                                
+
+                           /**
+                           * Auto generated getter method
+                           * @return java.lang.String
+                           */
+                           public  java.lang.String getRoleID(){
+                               return localRoleID;
+                           }
+
+                           
+                        
+                            /**
+                               * Auto generated setter method
+                               * @param param RoleID
+                               */
+                               public void setRoleID(java.lang.String param){
+                            
+                                            this.localRoleID=param;
+                                    
+
+                               }
+                            
+
+                        /**
+                        * field for PositionValue
+                        */
+
+                        
+                                    protected java.lang.String localPositionValue ;
+                                
+
+                           /**
+                           * Auto generated getter method
+                           * @return java.lang.String
+                           */
+                           public  java.lang.String getPositionValue(){
+                               return localPositionValue;
+                           }
+
+                           
+                        
+                            /**
+                               * Auto generated setter method
+                               * @param param PositionValue
+                               */
+                               public void setPositionValue(java.lang.String param){
+                            
+                                            this.localPositionValue=param;
                                     
 
                                }
@@ -124,7 +184,7 @@
                        new org.apache.axis2.databinding.ADBDataSource(this,MY_QNAME){
 
                  public void serialize(org.apache.axis2.databinding.utils.writer.MTOMAwareXMLStreamWriter xmlWriter) throws javax.xml.stream.XMLStreamException {
-                       InformNormContent.this.serialize(MY_QNAME,factory,xmlWriter);
+                       InformMembers.this.serialize(MY_QNAME,factory,xmlWriter);
                  }
                };
                return new org.apache.axiom.om.impl.llom.OMSourcedElementImpl(
@@ -178,11 +238,11 @@
                    java.lang.String namespacePrefix = registerPrefix(xmlWriter,"http://wtp");
                    if ((namespacePrefix != null) && (namespacePrefix.trim().length() > 0)){
                        writeAttribute("xsi","http://www.w3.org/2001/XMLSchema-instance","type",
-                           namespacePrefix+":InformNormContent",
+                           namespacePrefix+":InformMembers",
                            xmlWriter);
                    } else {
                        writeAttribute("xsi","http://www.w3.org/2001/XMLSchema-instance","type",
-                           "InformNormContent",
+                           "InformMembers",
                            xmlWriter);
                    }
 
@@ -196,28 +256,96 @@
                                         if (prefix == null) {
                                             prefix = generatePrefix(namespace);
 
-                                            xmlWriter.writeStartElement(prefix,"NormID", namespace);
+                                            xmlWriter.writeStartElement(prefix,"UnitID", namespace);
                                             xmlWriter.writeNamespace(prefix, namespace);
                                             xmlWriter.setPrefix(prefix, namespace);
 
                                         } else {
-                                            xmlWriter.writeStartElement(namespace,"NormID");
+                                            xmlWriter.writeStartElement(namespace,"UnitID");
                                         }
 
                                     } else {
-                                        xmlWriter.writeStartElement("NormID");
+                                        xmlWriter.writeStartElement("UnitID");
                                     }
                                 
 
-                                          if (localNormID==null){
+                                          if (localUnitID==null){
                                               // write the nil attribute
                                               
-                                                     throw new org.apache.axis2.databinding.ADBException("NormID cannot be null!!");
+                                                     throw new org.apache.axis2.databinding.ADBException("UnitID cannot be null!!");
                                                   
                                           }else{
 
                                         
-                                                   xmlWriter.writeCharacters(localNormID);
+                                                   xmlWriter.writeCharacters(localUnitID);
+                                            
+                                          }
+                                    
+                                   xmlWriter.writeEndElement();
+                             
+                                    namespace = "";
+                                    if (! namespace.equals("")) {
+                                        prefix = xmlWriter.getPrefix(namespace);
+
+                                        if (prefix == null) {
+                                            prefix = generatePrefix(namespace);
+
+                                            xmlWriter.writeStartElement(prefix,"RoleID", namespace);
+                                            xmlWriter.writeNamespace(prefix, namespace);
+                                            xmlWriter.setPrefix(prefix, namespace);
+
+                                        } else {
+                                            xmlWriter.writeStartElement(namespace,"RoleID");
+                                        }
+
+                                    } else {
+                                        xmlWriter.writeStartElement("RoleID");
+                                    }
+                                
+
+                                          if (localRoleID==null){
+                                              // write the nil attribute
+                                              
+                                                     throw new org.apache.axis2.databinding.ADBException("RoleID cannot be null!!");
+                                                  
+                                          }else{
+
+                                        
+                                                   xmlWriter.writeCharacters(localRoleID);
+                                            
+                                          }
+                                    
+                                   xmlWriter.writeEndElement();
+                             
+                                    namespace = "";
+                                    if (! namespace.equals("")) {
+                                        prefix = xmlWriter.getPrefix(namespace);
+
+                                        if (prefix == null) {
+                                            prefix = generatePrefix(namespace);
+
+                                            xmlWriter.writeStartElement(prefix,"PositionValue", namespace);
+                                            xmlWriter.writeNamespace(prefix, namespace);
+                                            xmlWriter.setPrefix(prefix, namespace);
+
+                                        } else {
+                                            xmlWriter.writeStartElement(namespace,"PositionValue");
+                                        }
+
+                                    } else {
+                                        xmlWriter.writeStartElement("PositionValue");
+                                    }
+                                
+
+                                          if (localPositionValue==null){
+                                              // write the nil attribute
+                                              
+                                                     throw new org.apache.axis2.databinding.ADBException("PositionValue cannot be null!!");
+                                                  
+                                          }else{
+
+                                        
+                                                   xmlWriter.writeCharacters(localPositionValue);
                                             
                                           }
                                     
@@ -420,12 +548,30 @@
 
                 
                                       elementList.add(new javax.xml.namespace.QName("",
-                                                                      "NormID"));
+                                                                      "UnitID"));
                                  
-                                        if (localNormID != null){
-                                            elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localNormID));
+                                        if (localUnitID != null){
+                                            elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localUnitID));
                                         } else {
-                                           throw new org.apache.axis2.databinding.ADBException("NormID cannot be null!!");
+                                           throw new org.apache.axis2.databinding.ADBException("UnitID cannot be null!!");
+                                        }
+                                    
+                                      elementList.add(new javax.xml.namespace.QName("",
+                                                                      "RoleID"));
+                                 
+                                        if (localRoleID != null){
+                                            elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localRoleID));
+                                        } else {
+                                           throw new org.apache.axis2.databinding.ADBException("RoleID cannot be null!!");
+                                        }
+                                    
+                                      elementList.add(new javax.xml.namespace.QName("",
+                                                                      "PositionValue"));
+                                 
+                                        if (localPositionValue != null){
+                                            elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localPositionValue));
+                                        } else {
+                                           throw new org.apache.axis2.databinding.ADBException("PositionValue cannot be null!!");
                                         }
                                     
                                       elementList.add(new javax.xml.namespace.QName("",
@@ -461,9 +607,9 @@
         * Postcondition: If this object is an element, the reader is positioned at its end element
         *                If this object is a complex type, the reader is positioned at the end element of its outer element
         */
-        public static InformNormContent parse(javax.xml.stream.XMLStreamReader reader) throws java.lang.Exception{
-            InformNormContent object =
-                new InformNormContent();
+        public static InformMembers parse(javax.xml.stream.XMLStreamReader reader) throws java.lang.Exception{
+            InformMembers object =
+                new InformMembers();
 
             int event;
             java.lang.String nillableValue = null;
@@ -487,10 +633,10 @@
 
                     java.lang.String type = fullTypeName.substring(fullTypeName.indexOf(":")+1);
                     
-                            if (!"InformNormContent".equals(type)){
+                            if (!"InformMembers".equals(type)){
                                 //find namespace for the prefix
                                 java.lang.String nsUri = reader.getNamespaceContext().getNamespaceURI(nsPrefix);
-                                return (InformNormContent)wtp.ExtensionMapper.getTypeObject(
+                                return (InformMembers)wtp.ExtensionMapper.getTypeObject(
                                      nsUri,type,reader);
                               }
                         
@@ -515,11 +661,49 @@
                                     
                                     while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
                                 
-                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","NormID").equals(reader.getName())){
+                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","UnitID").equals(reader.getName())){
                                 
                                     java.lang.String content = reader.getElementText();
                                     
-                                              object.setNormID(
+                                              object.setUnitID(
+                                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToString(content));
+                                              
+                                        reader.next();
+                                    
+                              }  // End of if for expected property start element
+                                
+                                else{
+                                    // A start element we are not expecting indicates an invalid parameter was passed
+                                    throw new org.apache.axis2.databinding.ADBException("Unexpected subelement " + reader.getLocalName());
+                                }
+                            
+                                    
+                                    while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
+                                
+                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","RoleID").equals(reader.getName())){
+                                
+                                    java.lang.String content = reader.getElementText();
+                                    
+                                              object.setRoleID(
+                                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToString(content));
+                                              
+                                        reader.next();
+                                    
+                              }  // End of if for expected property start element
+                                
+                                else{
+                                    // A start element we are not expecting indicates an invalid parameter was passed
+                                    throw new org.apache.axis2.databinding.ADBException("Unexpected subelement " + reader.getLocalName());
+                                }
+                            
+                                    
+                                    while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
+                                
+                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","PositionValue").equals(reader.getName())){
+                                
+                                    java.lang.String content = reader.getElementText();
+                                    
+                                              object.setPositionValue(
                                                     org.apache.axis2.databinding.utils.ConverterUtil.convertToString(content));
                                               
                                         reader.next();

@@ -1,6 +1,6 @@
 
 /**
- * DeregisterNormMessageReceiverInOut.java
+ * InformMembersMessageReceiverInOut.java
  *
  * This file was auto-generated from WSDL
  * by the Apache Axis2 version: 1.4  Built on : Apr 26, 2008 (06:24:30 EDT)
@@ -8,10 +8,10 @@
         package wtp;
 
         /**
-        *  DeregisterNormMessageReceiverInOut message receiver
+        *  InformMembersMessageReceiverInOut message receiver
         */
 
-        public class DeregisterNormMessageReceiverInOut extends org.apache.axis2.receivers.AbstractInOutMessageReceiver{
+        public class InformMembersMessageReceiverInOut extends org.apache.axis2.receivers.AbstractInOutMessageReceiver{
 
 
         public void invokeBusinessLogic(org.apache.axis2.context.MessageContext msgContext, org.apache.axis2.context.MessageContext newMsgContext)
@@ -22,7 +22,7 @@
         // get the implementation class for the Web Service
         Object obj = getTheImplementationObject(msgContext);
 
-        DeregisterNormSkeleton skel = (DeregisterNormSkeleton)obj;
+        InformMembersSkeleton skel = (InformMembersSkeleton)obj;
         //Out Envelop
         org.apache.axiom.soap.SOAPEnvelope envelope = null;
         //Find the axisOperation that has been set by the Dispatch phase.
@@ -36,22 +36,22 @@
 
         
 
-            if("DeregisterNorm".equals(methodName)){
+            if("InformMembers".equals(methodName)){
                 
-                wtp.DeregisterNormResponse deregisterNormResponse1 = null;
-	                        wtp.DeregisterNorm wrappedParam =
-                                                             (wtp.DeregisterNorm)fromOM(
+                wtp.InformMembersResponse informMembersResponse1 = null;
+	                        wtp.InformMembers wrappedParam =
+                                                             (wtp.InformMembers)fromOM(
                                     msgContext.getEnvelope().getBody().getFirstElement(),
-                                    wtp.DeregisterNorm.class,
+                                    wtp.InformMembers.class,
                                     getEnvelopeNamespaces(msgContext.getEnvelope()));
                                                 
-                                               deregisterNormResponse1 =
+                                               informMembersResponse1 =
                                                    
                                                    
-                                                         skel.DeregisterNorm(wrappedParam)
+                                                         skel.InformMembers(wrappedParam)
                                                     ;
                                             
-                                        envelope = toEnvelope(getSOAPFactory(msgContext), deregisterNormResponse1, false);
+                                        envelope = toEnvelope(getSOAPFactory(msgContext), informMembersResponse1, false);
                                     
             } else {
               throw new java.lang.RuntimeException("method not found");
@@ -67,12 +67,12 @@
         }
         
         //
-            private  org.apache.axiom.om.OMElement  toOM(wtp.DeregisterNorm param, boolean optimizeContent)
+            private  org.apache.axiom.om.OMElement  toOM(wtp.InformMembers param, boolean optimizeContent)
             throws org.apache.axis2.AxisFault {
 
             
                         try{
-                             return param.getOMElement(wtp.DeregisterNorm.MY_QNAME,
+                             return param.getOMElement(wtp.InformMembers.MY_QNAME,
                                           org.apache.axiom.om.OMAbstractFactory.getOMFactory());
                         } catch(org.apache.axis2.databinding.ADBException e){
                             throw org.apache.axis2.AxisFault.makeFault(e);
@@ -81,12 +81,12 @@
 
             }
         
-            private  org.apache.axiom.om.OMElement  toOM(wtp.DeregisterNormResponse param, boolean optimizeContent)
+            private  org.apache.axiom.om.OMElement  toOM(wtp.InformMembersResponse param, boolean optimizeContent)
             throws org.apache.axis2.AxisFault {
 
             
                         try{
-                             return param.getOMElement(wtp.DeregisterNormResponse.MY_QNAME,
+                             return param.getOMElement(wtp.InformMembersResponse.MY_QNAME,
                                           org.apache.axiom.om.OMAbstractFactory.getOMFactory());
                         } catch(org.apache.axis2.databinding.ADBException e){
                             throw org.apache.axis2.AxisFault.makeFault(e);
@@ -95,12 +95,12 @@
 
             }
         
-                    private  org.apache.axiom.soap.SOAPEnvelope toEnvelope(org.apache.axiom.soap.SOAPFactory factory, wtp.DeregisterNormResponse param, boolean optimizeContent)
+                    private  org.apache.axiom.soap.SOAPEnvelope toEnvelope(org.apache.axiom.soap.SOAPFactory factory, wtp.InformMembersResponse param, boolean optimizeContent)
                         throws org.apache.axis2.AxisFault{
                       try{
                           org.apache.axiom.soap.SOAPEnvelope emptyEnvelope = factory.getDefaultEnvelope();
                            
-                                    emptyEnvelope.getBody().addChild(param.getOMElement(wtp.DeregisterNormResponse.MY_QNAME,factory));
+                                    emptyEnvelope.getBody().addChild(param.getOMElement(wtp.InformMembersResponse.MY_QNAME,factory));
                                 
 
                          return emptyEnvelope;
@@ -109,8 +109,8 @@
                     }
                     }
                     
-                         private wtp.DeregisterNormResponse wrapDeregisterNorm(){
-                                wtp.DeregisterNormResponse wrappedElement = new wtp.DeregisterNormResponse();
+                         private wtp.InformMembersResponse wrapInformMembers(){
+                                wtp.InformMembersResponse wrappedElement = new wtp.InformMembersResponse();
                                 return wrappedElement;
                          }
                     
@@ -131,16 +131,16 @@
 
         try {
         
-                if (wtp.DeregisterNorm.class.equals(type)){
+                if (wtp.InformMembers.class.equals(type)){
                 
-                           return wtp.DeregisterNorm.Factory.parse(param.getXMLStreamReaderWithoutCaching());
+                           return wtp.InformMembers.Factory.parse(param.getXMLStreamReaderWithoutCaching());
                     
 
                 }
            
-                if (wtp.DeregisterNormResponse.class.equals(type)){
+                if (wtp.InformMembersResponse.class.equals(type)){
                 
-                           return wtp.DeregisterNormResponse.Factory.parse(param.getXMLStreamReaderWithoutCaching());
+                           return wtp.InformMembersResponse.Factory.parse(param.getXMLStreamReaderWithoutCaching());
                     
 
                 }
