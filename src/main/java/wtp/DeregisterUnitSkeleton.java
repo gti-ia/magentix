@@ -4,17 +4,18 @@
  */
 package wtp;
 
-import java.util.List;
+import java.sql.SQLException;
 
-import persistence.DataBaseInterface;
+import persistence.OMSInterface;
+import persistence.THOMASException;
 
 /**
  * DeregisterUnitSkeleton java skeleton for the axisService
  */
 public class DeregisterUnitSkeleton
 {
-	persistence.DataBaseInterface	thomasBD	= new DataBaseInterface();
 	public static final Boolean		DEBUG		= true;
+	private static OMSInterface omsInterface = new OMSInterface();
 	
 	/**
 	 * Service used for deleting a unit (organization). The unit must exist, there must be no
@@ -31,6 +32,7 @@ public class DeregisterUnitSkeleton
 			wtp.DeregisterUnit deregisterUnit)
 	{
 		wtp.DeregisterUnitResponse res = new DeregisterUnitResponse();
+		String result = "";
 		
 		if (DEBUG)
 		{
@@ -42,109 +44,28 @@ public class DeregisterUnitSkeleton
 		res.setErrorValue("");
 		res.setStatus("Ok");
 		
-		if (deregisterUnit.getUnitID() == ""
-				|| deregisterUnit.getUnitID().equalsIgnoreCase("virtual"))
+		if (deregisterUnit.getUnitID() == "")
 		{
-			res.setErrorValue("Invalid");
+			res.setErrorValue("Invalid. Empty parameters are not allowed.");
 			res.setStatus("Error");
 			return res;
 		}
-		if (!thomasBD.CheckExistsUnit(deregisterUnit.getUnitID()))
+		try{
+			result =omsInterface.deregisterUnit(deregisterUnit.getUnitID(), deregisterUnit.getAgentID());
+			res.setStatus(result);
+			res.setErrorValue("");
+			return res;
+		}catch(THOMASException e)
 		{
-			res.setErrorValue("NotFound");
 			res.setStatus("Error");
+			res.setErrorValue(e.getMessage());
 			return res;
 		}
-//		if (thomasBD.CheckUnitHasRole(deregisterUnit.getUnitID()))
-//		{
-//			res.setErrorValue("Invalid");
-//			res.setStatus("Error");
-//			return res;
-//		}
-//		if (thomasBD.CheckUnitHasUnit(deregisterUnit.getUnitID()))
-//		{
-//			res.setErrorValue("Invalid");
-//			res.setStatus("Error");
-//			return res;
-//		}
-//		if (thomasBD.CheckUnitHasMember(deregisterUnit.getUnitID()))
-//		{
-//			res.setErrorValue("Invalid");
-//			res.setStatus("Error");
-//			return res;
-//		}
-//		// role based control
-		System.out.println("DeregisterUnit 3");
-		if (!roleBasedControl(deregisterUnit.getAgentID(), deregisterUnit
-				.getUnitID()))
+		catch(SQLException e)
 		{
-			System.out.println("DeregisterUnit 4");
-			res.setErrorValue("Not-Allowed");
 			res.setStatus("Error");
+			res.setErrorValue(e.getMessage());
 			return res;
 		}
-		System.out.println("DeregisterUnit 5");
-		
-		if (!thomasBD.DeleteUnit(deregisterUnit.getUnitID()))
-		{
-			System.out.println("DeregisterUnit 6");
-			res.setErrorValue("Invalid");
-			res.setStatus("Error");
-			return res;
-		}
-		System.out.println("DeregisterUnit ENDED");
-		return res;
-	}
-	
-	private boolean roleBasedControl(String agentID, String unitID)
-	{
-		if (unitID.equalsIgnoreCase("virtual"))
-			return false;
-		if (!thomasBD.CheckExistsAgent(agentID))
-			return false;
-		
-		//String parentUnitID = thomasBD.GetParentUnitID(unitID);
-		String unitType = thomasBD.GetUnitType(unitID);
-		
-		if (unitType.equalsIgnoreCase("flat"))
-		{
-			if(thomasBD.CheckUnitIsEmpty(unitID))
-				return true;
-			else if (thomasBD.CheckUnitHasOnlyThisMemberWithOneRole(unitID,agentID))
-				return true;
-			else
-				return false;
-		}
-		else if (unitType.equalsIgnoreCase("team"))
-		{
-//			if (thomasBD.CheckAgentPlaysRoleInUnit(unitID, agentID))
-//				return true;
-//			else
-//				return false;
-			if(thomasBD.CheckUnitHasOnlyThisMemberWithOneRole(unitID, agentID))
-				return true;
-			else
-				return false;
-		}
-		
-		// unit is hierarchy
-		List<String> positions;
-		boolean isSupervisor=false;
-		try
-		{
-			positions = thomasBD.GetAgentPosition(agentID, unitID);
-			for (int i = 0; i < positions.size(); i++)
-				if (positions.get(i).equalsIgnoreCase("supervisor"))
-					isSupervisor=true;
-		}
-		catch (Exception e)
-		{
-			System.err.println("DeregisterUnit: exception caught:");
-			System.err.println(e.toString());
-		}
-		if(isSupervisor && thomasBD.CheckUnitHasOnlyThisMemberWithOneRole(unitID, agentID))
-			return true;
-		else
-			return false;
 	}
 }

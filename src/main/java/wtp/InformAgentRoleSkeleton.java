@@ -4,7 +4,11 @@
  */
 package wtp;
 
-import persistence.DataBaseInterface;
+import java.sql.SQLException;
+
+import persistence.OMSInterface;
+import persistence.THOMASException;
+
 
 /**
  * InformAgentRoleSkeleton java skeleton for the axisService
@@ -14,7 +18,7 @@ public class InformAgentRoleSkeleton
 {
 	
 	public static final Boolean	DEBUG	= true;
-	
+	private static OMSInterface omsInterface = new OMSInterface();
 	/**
 	 * Service used for requesting the list of roles and units where an agent is, given the 
 	 * specific moment. The agent must exist and must be the same one as the requester.
@@ -25,6 +29,7 @@ public class InformAgentRoleSkeleton
 	public wtp.InformAgentRoleResponse InformAgentRole(
 			wtp.InformAgentRole informAgentRole)
 	{
+		String result = "";
 		wtp.InformAgentRoleResponse res = new InformAgentRoleResponse();
 		if (DEBUG)
 		{
@@ -40,34 +45,28 @@ public class InformAgentRoleSkeleton
 		
 		if (informAgentRole.getAgentID() == "")
 		{
-			res.setErrorValue("Invalid");
+			res.setErrorValue("Invalid. Empty parameters are not allowed.");
 			res.setStatus("Error");
 			return res;
 		}
-		persistence.DataBaseInterface thomasBD = new DataBaseInterface();
-		if (!thomasBD.CheckExistsAgent(informAgentRole.getAgentID()))
+		try{
+			result =omsInterface.informAgentRole(informAgentRole.getRequestedAgentID(),informAgentRole.getAgentID());
+			res.setStatus(result);
+			res.setErrorValue("");
+			return res;
+		}catch(THOMASException e)
 		{
-			res.setErrorValue("NotFound");
 			res.setStatus("Error");
+			res.setErrorValue(e.getMessage());
 			return res;
 		}
-		// role based control
-		if (!informAgentRole.getAgentID().equalsIgnoreCase(
-				informAgentRole.getRequestedAgentID()))
+		catch(SQLException e)
 		{
-			res.setErrorValue("Not-Allowed");
 			res.setStatus("Error");
+			res.setErrorValue(e.getMessage());
 			return res;
 		}
-		res.setRoleUnitList(thomasBD.GetRoleUnitList(
-				informAgentRole.getAgentID()).toString());
-		if (DEBUG)
-		{
-			System.out.println("InformAgentRole :");
-			System.out.println("***Result..."
-					+ res.getRoleUnitList().toString());
-		}
-		return res;
-	}
+		
+ }
 	
 }

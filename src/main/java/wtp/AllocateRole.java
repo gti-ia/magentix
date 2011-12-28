@@ -1,6 +1,6 @@
 
 /**
- * Expulse.java
+ * AllocateRole.java
  *
  * This file was auto-generated from WSDL
  * by the Apache Axis2 version: 1.4  Built on : Apr 26, 2008 (06:25:17 EDT)
@@ -10,15 +10,15 @@
             
 
             /**
-            *  Expulse bean class
+            *  AllocateRole bean class
             */
         
-        public  class Expulse
+        public  class AllocateRole
         implements org.apache.axis2.databinding.ADBBean{
         
                 public static final javax.xml.namespace.QName MY_QNAME = new javax.xml.namespace.QName(
                 "http://wtp",
-                "Expulse",
+                "AllocateRole",
                 "ns1");
 
             
@@ -33,120 +33,120 @@
         
 
                         /**
-                        * field for ExpulsedAgentID
+                        * field for RoleName
                         */
 
                         
-                                    protected java.lang.String localExpulsedAgentID ;
+                                    protected java.lang.String localRoleName ;
                                 
 
                            /**
                            * Auto generated getter method
                            * @return java.lang.String
                            */
-                           public  java.lang.String getExpulsedAgentID(){
-                               return localExpulsedAgentID;
+                           public  java.lang.String getRoleName(){
+                               return localRoleName;
                            }
 
                            
                         
                             /**
                                * Auto generated setter method
-                               * @param param ExpulsedAgentID
+                               * @param param RoleName
                                */
-                               public void setExpulsedAgentID(java.lang.String param){
+                               public void setRoleName(java.lang.String param){
                             
-                                            this.localExpulsedAgentID=param;
+                                            this.localRoleName=param;
                                     
 
                                }
                             
 
                         /**
-                        * field for UnitID
+                        * field for UnitName
                         */
 
                         
-                                    protected java.lang.String localUnitID ;
+                                    protected java.lang.String localUnitName ;
                                 
 
                            /**
                            * Auto generated getter method
                            * @return java.lang.String
                            */
-                           public  java.lang.String getUnitID(){
-                               return localUnitID;
+                           public  java.lang.String getUnitName(){
+                               return localUnitName;
                            }
 
                            
                         
                             /**
                                * Auto generated setter method
-                               * @param param UnitID
+                               * @param param UnitName
                                */
-                               public void setUnitID(java.lang.String param){
+                               public void setUnitName(java.lang.String param){
                             
-                                            this.localUnitID=param;
+                                            this.localUnitName=param;
                                     
 
                                }
                             
 
                         /**
-                        * field for RoleID
+                        * field for TargetAgentName
                         */
 
                         
-                                    protected java.lang.String localRoleID ;
+                                    protected java.lang.String localTargetAgentName ;
                                 
 
                            /**
                            * Auto generated getter method
                            * @return java.lang.String
                            */
-                           public  java.lang.String getRoleID(){
-                               return localRoleID;
+                           public  java.lang.String getTargetAgentName(){
+                               return localTargetAgentName;
                            }
 
                            
                         
                             /**
                                * Auto generated setter method
-                               * @param param RoleID
+                               * @param param TargetAgentName
                                */
-                               public void setRoleID(java.lang.String param){
+                               public void setTargetAgentName(java.lang.String param){
                             
-                                            this.localRoleID=param;
+                                            this.localTargetAgentName=param;
                                     
 
                                }
                             
 
                         /**
-                        * field for AgentID
+                        * field for AgentId
                         */
 
                         
-                                    protected java.lang.String localAgentID ;
+                                    protected java.lang.String localAgentId ;
                                 
 
                            /**
                            * Auto generated getter method
                            * @return java.lang.String
                            */
-                           public  java.lang.String getAgentID(){
-                               return localAgentID;
+                           public  java.lang.String getAgentId(){
+                               return localAgentId;
                            }
 
                            
                         
                             /**
                                * Auto generated setter method
-                               * @param param AgentID
+                               * @param param AgentId
                                */
-                               public void setAgentID(java.lang.String param){
+                               public void setAgentId(java.lang.String param){
                             
-                                            this.localAgentID=param;
+                                            this.localAgentId=param;
                                     
 
                                }
@@ -184,7 +184,7 @@
                        new org.apache.axis2.databinding.ADBDataSource(this,MY_QNAME){
 
                  public void serialize(org.apache.axis2.databinding.utils.writer.MTOMAwareXMLStreamWriter xmlWriter) throws javax.xml.stream.XMLStreamException {
-                       Expulse.this.serialize(MY_QNAME,factory,xmlWriter);
+                       AllocateRole.this.serialize(MY_QNAME,factory,xmlWriter);
                  }
                };
                return new org.apache.axiom.om.impl.llom.OMSourcedElementImpl(
@@ -238,11 +238,11 @@
                    java.lang.String namespacePrefix = registerPrefix(xmlWriter,"http://wtp");
                    if ((namespacePrefix != null) && (namespacePrefix.trim().length() > 0)){
                        writeAttribute("xsi","http://www.w3.org/2001/XMLSchema-instance","type",
-                           namespacePrefix+":Expulse",
+                           namespacePrefix+":AllocateRole",
                            xmlWriter);
                    } else {
                        writeAttribute("xsi","http://www.w3.org/2001/XMLSchema-instance","type",
-                           "Expulse",
+                           "AllocateRole",
                            xmlWriter);
                    }
 
@@ -256,28 +256,28 @@
                                         if (prefix == null) {
                                             prefix = generatePrefix(namespace);
 
-                                            xmlWriter.writeStartElement(prefix,"ExpulsedAgentID", namespace);
+                                            xmlWriter.writeStartElement(prefix,"RoleName", namespace);
                                             xmlWriter.writeNamespace(prefix, namespace);
                                             xmlWriter.setPrefix(prefix, namespace);
 
                                         } else {
-                                            xmlWriter.writeStartElement(namespace,"ExpulsedAgentID");
+                                            xmlWriter.writeStartElement(namespace,"RoleName");
                                         }
 
                                     } else {
-                                        xmlWriter.writeStartElement("ExpulsedAgentID");
+                                        xmlWriter.writeStartElement("RoleName");
                                     }
                                 
 
-                                          if (localExpulsedAgentID==null){
+                                          if (localRoleName==null){
                                               // write the nil attribute
                                               
-                                                     throw new org.apache.axis2.databinding.ADBException("ExpulsedAgentID cannot be null!!");
+                                                     throw new org.apache.axis2.databinding.ADBException("RoleName cannot be null!!");
                                                   
                                           }else{
 
                                         
-                                                   xmlWriter.writeCharacters(localExpulsedAgentID);
+                                                   xmlWriter.writeCharacters(localRoleName);
                                             
                                           }
                                     
@@ -290,28 +290,28 @@
                                         if (prefix == null) {
                                             prefix = generatePrefix(namespace);
 
-                                            xmlWriter.writeStartElement(prefix,"UnitID", namespace);
+                                            xmlWriter.writeStartElement(prefix,"UnitName", namespace);
                                             xmlWriter.writeNamespace(prefix, namespace);
                                             xmlWriter.setPrefix(prefix, namespace);
 
                                         } else {
-                                            xmlWriter.writeStartElement(namespace,"UnitID");
+                                            xmlWriter.writeStartElement(namespace,"UnitName");
                                         }
 
                                     } else {
-                                        xmlWriter.writeStartElement("UnitID");
+                                        xmlWriter.writeStartElement("UnitName");
                                     }
                                 
 
-                                          if (localUnitID==null){
+                                          if (localUnitName==null){
                                               // write the nil attribute
                                               
-                                                     throw new org.apache.axis2.databinding.ADBException("UnitID cannot be null!!");
+                                                     throw new org.apache.axis2.databinding.ADBException("UnitName cannot be null!!");
                                                   
                                           }else{
 
                                         
-                                                   xmlWriter.writeCharacters(localUnitID);
+                                                   xmlWriter.writeCharacters(localUnitName);
                                             
                                           }
                                     
@@ -324,28 +324,28 @@
                                         if (prefix == null) {
                                             prefix = generatePrefix(namespace);
 
-                                            xmlWriter.writeStartElement(prefix,"RoleID", namespace);
+                                            xmlWriter.writeStartElement(prefix,"TargetAgentName", namespace);
                                             xmlWriter.writeNamespace(prefix, namespace);
                                             xmlWriter.setPrefix(prefix, namespace);
 
                                         } else {
-                                            xmlWriter.writeStartElement(namespace,"RoleID");
+                                            xmlWriter.writeStartElement(namespace,"TargetAgentName");
                                         }
 
                                     } else {
-                                        xmlWriter.writeStartElement("RoleID");
+                                        xmlWriter.writeStartElement("TargetAgentName");
                                     }
                                 
 
-                                          if (localRoleID==null){
+                                          if (localTargetAgentName==null){
                                               // write the nil attribute
                                               
-                                                     throw new org.apache.axis2.databinding.ADBException("RoleID cannot be null!!");
+                                                     throw new org.apache.axis2.databinding.ADBException("TargetAgentName cannot be null!!");
                                                   
                                           }else{
 
                                         
-                                                   xmlWriter.writeCharacters(localRoleID);
+                                                   xmlWriter.writeCharacters(localTargetAgentName);
                                             
                                           }
                                     
@@ -358,28 +358,28 @@
                                         if (prefix == null) {
                                             prefix = generatePrefix(namespace);
 
-                                            xmlWriter.writeStartElement(prefix,"AgentID", namespace);
+                                            xmlWriter.writeStartElement(prefix,"AgentId", namespace);
                                             xmlWriter.writeNamespace(prefix, namespace);
                                             xmlWriter.setPrefix(prefix, namespace);
 
                                         } else {
-                                            xmlWriter.writeStartElement(namespace,"AgentID");
+                                            xmlWriter.writeStartElement(namespace,"AgentId");
                                         }
 
                                     } else {
-                                        xmlWriter.writeStartElement("AgentID");
+                                        xmlWriter.writeStartElement("AgentId");
                                     }
                                 
 
-                                          if (localAgentID==null){
+                                          if (localAgentId==null){
                                               // write the nil attribute
                                               
-                                                     throw new org.apache.axis2.databinding.ADBException("AgentID cannot be null!!");
+                                                     throw new org.apache.axis2.databinding.ADBException("AgentId cannot be null!!");
                                                   
                                           }else{
 
                                         
-                                                   xmlWriter.writeCharacters(localAgentID);
+                                                   xmlWriter.writeCharacters(localAgentId);
                                             
                                           }
                                     
@@ -548,39 +548,39 @@
 
                 
                                       elementList.add(new javax.xml.namespace.QName("",
-                                                                      "ExpulsedAgentID"));
+                                                                      "RoleName"));
                                  
-                                        if (localExpulsedAgentID != null){
-                                            elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localExpulsedAgentID));
+                                        if (localRoleName != null){
+                                            elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localRoleName));
                                         } else {
-                                           throw new org.apache.axis2.databinding.ADBException("ExpulsedAgentID cannot be null!!");
+                                           throw new org.apache.axis2.databinding.ADBException("RoleName cannot be null!!");
                                         }
                                     
                                       elementList.add(new javax.xml.namespace.QName("",
-                                                                      "UnitID"));
+                                                                      "UnitName"));
                                  
-                                        if (localUnitID != null){
-                                            elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localUnitID));
+                                        if (localUnitName != null){
+                                            elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localUnitName));
                                         } else {
-                                           throw new org.apache.axis2.databinding.ADBException("UnitID cannot be null!!");
+                                           throw new org.apache.axis2.databinding.ADBException("UnitName cannot be null!!");
                                         }
                                     
                                       elementList.add(new javax.xml.namespace.QName("",
-                                                                      "RoleID"));
+                                                                      "TargetAgentName"));
                                  
-                                        if (localRoleID != null){
-                                            elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localRoleID));
+                                        if (localTargetAgentName != null){
+                                            elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localTargetAgentName));
                                         } else {
-                                           throw new org.apache.axis2.databinding.ADBException("RoleID cannot be null!!");
+                                           throw new org.apache.axis2.databinding.ADBException("TargetAgentName cannot be null!!");
                                         }
                                     
                                       elementList.add(new javax.xml.namespace.QName("",
-                                                                      "AgentID"));
+                                                                      "AgentId"));
                                  
-                                        if (localAgentID != null){
-                                            elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localAgentID));
+                                        if (localAgentId != null){
+                                            elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localAgentId));
                                         } else {
-                                           throw new org.apache.axis2.databinding.ADBException("AgentID cannot be null!!");
+                                           throw new org.apache.axis2.databinding.ADBException("AgentId cannot be null!!");
                                         }
                                     
 
@@ -607,9 +607,9 @@
         * Postcondition: If this object is an element, the reader is positioned at its end element
         *                If this object is a complex type, the reader is positioned at the end element of its outer element
         */
-        public static Expulse parse(javax.xml.stream.XMLStreamReader reader) throws java.lang.Exception{
-            Expulse object =
-                new Expulse();
+        public static AllocateRole parse(javax.xml.stream.XMLStreamReader reader) throws java.lang.Exception{
+            AllocateRole object =
+                new AllocateRole();
 
             int event;
             java.lang.String nillableValue = null;
@@ -633,10 +633,10 @@
 
                     java.lang.String type = fullTypeName.substring(fullTypeName.indexOf(":")+1);
                     
-                            if (!"Expulse".equals(type)){
+                            if (!"AllocateRole".equals(type)){
                                 //find namespace for the prefix
                                 java.lang.String nsUri = reader.getNamespaceContext().getNamespaceURI(nsPrefix);
-                                return (Expulse)wtp.ExtensionMapper.getTypeObject(
+                                return (AllocateRole)wtp.ExtensionMapper.getTypeObject(
                                      nsUri,type,reader);
                               }
                         
@@ -661,11 +661,11 @@
                                     
                                     while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
                                 
-                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","ExpulsedAgentID").equals(reader.getName())){
+                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","RoleName").equals(reader.getName())){
                                 
                                     java.lang.String content = reader.getElementText();
                                     
-                                              object.setExpulsedAgentID(
+                                              object.setRoleName(
                                                     org.apache.axis2.databinding.utils.ConverterUtil.convertToString(content));
                                               
                                         reader.next();
@@ -680,11 +680,11 @@
                                     
                                     while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
                                 
-                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","UnitID").equals(reader.getName())){
+                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","UnitName").equals(reader.getName())){
                                 
                                     java.lang.String content = reader.getElementText();
                                     
-                                              object.setUnitID(
+                                              object.setUnitName(
                                                     org.apache.axis2.databinding.utils.ConverterUtil.convertToString(content));
                                               
                                         reader.next();
@@ -699,11 +699,11 @@
                                     
                                     while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
                                 
-                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","RoleID").equals(reader.getName())){
+                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","TargetAgentName").equals(reader.getName())){
                                 
                                     java.lang.String content = reader.getElementText();
                                     
-                                              object.setRoleID(
+                                              object.setTargetAgentName(
                                                     org.apache.axis2.databinding.utils.ConverterUtil.convertToString(content));
                                               
                                         reader.next();
@@ -718,11 +718,11 @@
                                     
                                     while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
                                 
-                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","AgentID").equals(reader.getName())){
+                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","AgentId").equals(reader.getName())){
                                 
                                     java.lang.String content = reader.getElementText();
                                     
-                                              object.setAgentID(
+                                              object.setAgentId(
                                                     org.apache.axis2.databinding.utils.ConverterUtil.convertToString(content));
                                               
                                         reader.next();

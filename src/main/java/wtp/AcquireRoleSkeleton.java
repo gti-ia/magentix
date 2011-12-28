@@ -4,9 +4,10 @@
  */
 package wtp;
 
-import NormativeManagement.NormativeChecker;
-import NormativeManagement.NormativeManager;
-import persistence.DataBaseInterface;
+import java.sql.SQLException;
+
+import persistence.OMSInterface;
+import persistence.THOMASException;
 
 /**
  * AcquireRoleSkeleton java skeleton for the axisService
@@ -14,11 +15,9 @@ import persistence.DataBaseInterface;
 public class AcquireRoleSkeleton
 {
 	public static final Boolean			DEBUG		= true;
-	
-	private static NormativeChecker		normCheck	= new NormativeChecker();
-	private static DataBaseInterface	thomasBD	= new DataBaseInterface();
-	private static NormativeManager		normManager	= new NormativeManager();
-	
+
+	private static OMSInterface omsInterface = new OMSInterface();
+
 	/**
 	 * Service used for acquiring a role in a specific unit. The role must exist in this unit, the
 	 * agent must not play already that role, the agent must be inside the parent unit of this unit,
@@ -31,6 +30,8 @@ public class AcquireRoleSkeleton
 	public wtp.AcquireRoleResponse AcquireRole(wtp.AcquireRole acquireRole)
 	{
 		wtp.AcquireRoleResponse res = new AcquireRoleResponse();
+		String result;
+
 		if (DEBUG)
 		{
 			System.out.println("AcquireRole :");
@@ -38,79 +39,34 @@ public class AcquireRoleSkeleton
 			System.out.println("***RoleID()..." + acquireRole.getRoleID());
 			System.out.println("***UnitID()..." + acquireRole.getUnitID());
 		}
+
+
 		res.setStatus("Ok");
 		res.setErrorValue("");
 		if (acquireRole.getAgentID() == "" || acquireRole.getRoleID() == ""
-				|| acquireRole.getUnitID() == "")
+			|| acquireRole.getUnitID() == "")
 		{
-			res.setErrorValue("Invalid");
+			res.setErrorValue("Invalid. Empty parameters are not allowed.");
 			res.setStatus("Error");
 			return res;
 		}
-		persistence.DataBaseInterface thomasBD = new DataBaseInterface();
-		if (!thomasBD.CheckExistsUnit(acquireRole.getUnitID()))
+		try{
+			result = omsInterface.AcquireRole(acquireRole.getUnitID(), acquireRole.getRoleID(), acquireRole.getAgentID());
+			
+			res.setStatus(result);
+			res.setErrorValue("");
+			return res;
+		}catch(THOMASException e)
 		{
-			res.setErrorValue("NotFound");
 			res.setStatus("Error");
+			res.setErrorValue(e.getMessage());
 			return res;
 		}
-//		if (!thomasBD.CheckExistsRole(acquireRole.getRoleID()))
-//		{
-//			res.setErrorValue("NotFound");
-//			res.setStatus("Error");
-//			return res;
-//		}
-		if (!thomasBD.CheckExistsRoleInUnit(acquireRole.getRoleID(),
-				acquireRole.getUnitID()))
+		catch(SQLException e)
 		{
-			res.setErrorValue("NotFound");
 			res.setStatus("Error");
+			res.setErrorValue(e.getMessage());
 			return res;
 		}
-		String parentUnitID = thomasBD.GetParentUnitID(acquireRole.getUnitID());
-		if(!acquireRole.getUnitID().equalsIgnoreCase("virtual") && !thomasBD.CheckAgentPlaysRoleInUnit(parentUnitID,acquireRole.getAgentID()))
-		{
-			res.setErrorValue("Not-Allowed: agent is not inside the parent unit.\nUnitID="+acquireRole.getUnitID());
-			res.setStatus("Error");
-			return res;
-		}
-		if (thomasBD.CheckAgentPlaysRole(acquireRole.getRoleID(), acquireRole
-				.getUnitID(), acquireRole.getAgentID()))
-		{
-			res.setErrorValue("Duplicate");
-			res.setStatus("Error");
-			return res;
-		}
-		if (!acquireRole.getUnitID().equalsIgnoreCase("virtual")
-				& !thomasBD.CheckAgentPlaysRoleInUnit(parentUnitID, acquireRole
-						.getAgentID()))
-		{
-			res.setErrorValue("Invalid");
-			res.setStatus("Error");
-			return res;
-		}
-		// COMPROBACION DE LAS NORMAS
-		if (!normManager.checkMaxCardinalityNorms(acquireRole.getRoleID(),
-				acquireRole.getAgentID()))
-		{
-			res.setErrorValue("MaxCardinalityConstraint");
-			res.setStatus("Error");
-			return res;
-		}
-		if (!normManager.checkIncompatibilityNorms(acquireRole.getRoleID(),
-				acquireRole.getAgentID()))
-		{
-			res.setErrorValue("IncompatibilityConstraint");
-			res.setStatus("Error");
-			return res;
-		}
-		if (!thomasBD.AddNewAgentPlaysRole(acquireRole.getRoleID(), acquireRole
-				.getUnitID(), acquireRole.getAgentID()))
-		{
-			res.setErrorValue("Invalid");
-			res.setStatus("Error");
-			return res;
-		}
-		return res;
 	}
 }

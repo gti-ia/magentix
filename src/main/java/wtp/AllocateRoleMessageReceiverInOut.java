@@ -1,6 +1,6 @@
 
 /**
- * InformMembersMessageReceiverInOut.java
+ * AllocateRoleMessageReceiverInOut.java
  *
  * This file was auto-generated from WSDL
  * by the Apache Axis2 version: 1.4  Built on : Apr 26, 2008 (06:24:30 EDT)
@@ -8,10 +8,10 @@
         package wtp;
 
         /**
-        *  InformMembersMessageReceiverInOut message receiver
+        *  AllocateRoleMessageReceiverInOut message receiver
         */
 
-        public class InformMembersMessageReceiverInOut extends org.apache.axis2.receivers.AbstractInOutMessageReceiver{
+        public class AllocateRoleMessageReceiverInOut extends org.apache.axis2.receivers.AbstractInOutMessageReceiver{
 
 
         public void invokeBusinessLogic(org.apache.axis2.context.MessageContext msgContext, org.apache.axis2.context.MessageContext newMsgContext)
@@ -22,7 +22,7 @@
         // get the implementation class for the Web Service
         Object obj = getTheImplementationObject(msgContext);
 
-        InformMembersSkeleton skel = (InformMembersSkeleton)obj;
+        AllocateRoleSkeleton skel = (AllocateRoleSkeleton)obj;
         //Out Envelop
         org.apache.axiom.soap.SOAPEnvelope envelope = null;
         //Find the axisOperation that has been set by the Dispatch phase.
@@ -36,22 +36,22 @@
 
         
 
-            if("InformMembers".equals(methodName)){
+            if("AllocateRole".equals(methodName)){
                 
-                wtp.InformMembersResponse informMembersResponse1 = null;
-	                        wtp.InformMembers wrappedParam =
-                                                             (wtp.InformMembers)fromOM(
+                wtp.AllocateRoleResponse allocateRoleResponse1 = null;
+	                        wtp.AllocateRole wrappedParam =
+                                                             (wtp.AllocateRole)fromOM(
                                     msgContext.getEnvelope().getBody().getFirstElement(),
-                                    wtp.InformMembers.class,
+                                    wtp.AllocateRole.class,
                                     getEnvelopeNamespaces(msgContext.getEnvelope()));
                                                 
-                                               informMembersResponse1 =
+                                               allocateRoleResponse1 =
                                                    
                                                    
-                                                         skel.InformMembers(wrappedParam)
+                                                         skel.AllocateRole(wrappedParam)
                                                     ;
                                             
-                                        envelope = toEnvelope(getSOAPFactory(msgContext), informMembersResponse1, false);
+                                        envelope = toEnvelope(getSOAPFactory(msgContext), allocateRoleResponse1, false);
                                     
             } else {
               throw new java.lang.RuntimeException("method not found");
@@ -67,12 +67,12 @@
         }
         
         //
-            private  org.apache.axiom.om.OMElement  toOM(wtp.InformMembers param, boolean optimizeContent)
+            private  org.apache.axiom.om.OMElement  toOM(wtp.AllocateRole param, boolean optimizeContent)
             throws org.apache.axis2.AxisFault {
 
             
                         try{
-                             return param.getOMElement(wtp.InformMembers.MY_QNAME,
+                             return param.getOMElement(wtp.AllocateRole.MY_QNAME,
                                           org.apache.axiom.om.OMAbstractFactory.getOMFactory());
                         } catch(org.apache.axis2.databinding.ADBException e){
                             throw org.apache.axis2.AxisFault.makeFault(e);
@@ -81,12 +81,12 @@
 
             }
         
-            private  org.apache.axiom.om.OMElement  toOM(wtp.InformMembersResponse param, boolean optimizeContent)
+            private  org.apache.axiom.om.OMElement  toOM(wtp.AllocateRoleResponse param, boolean optimizeContent)
             throws org.apache.axis2.AxisFault {
 
             
                         try{
-                             return param.getOMElement(wtp.InformMembersResponse.MY_QNAME,
+                             return param.getOMElement(wtp.AllocateRoleResponse.MY_QNAME,
                                           org.apache.axiom.om.OMAbstractFactory.getOMFactory());
                         } catch(org.apache.axis2.databinding.ADBException e){
                             throw org.apache.axis2.AxisFault.makeFault(e);
@@ -95,12 +95,12 @@
 
             }
         
-                    private  org.apache.axiom.soap.SOAPEnvelope toEnvelope(org.apache.axiom.soap.SOAPFactory factory, wtp.InformMembersResponse param, boolean optimizeContent)
+                    private  org.apache.axiom.soap.SOAPEnvelope toEnvelope(org.apache.axiom.soap.SOAPFactory factory, wtp.AllocateRoleResponse param, boolean optimizeContent)
                         throws org.apache.axis2.AxisFault{
                       try{
                           org.apache.axiom.soap.SOAPEnvelope emptyEnvelope = factory.getDefaultEnvelope();
                            
-                                    emptyEnvelope.getBody().addChild(param.getOMElement(wtp.InformMembersResponse.MY_QNAME,factory));
+                                    emptyEnvelope.getBody().addChild(param.getOMElement(wtp.AllocateRoleResponse.MY_QNAME,factory));
                                 
 
                          return emptyEnvelope;
@@ -109,8 +109,8 @@
                     }
                     }
                     
-                         private wtp.InformMembersResponse wrapInformMembers(){
-                                wtp.InformMembersResponse wrappedElement = new wtp.InformMembersResponse();
+                         private wtp.AllocateRoleResponse wrapAllocateRole(){
+                                wtp.AllocateRoleResponse wrappedElement = new wtp.AllocateRoleResponse();
                                 return wrappedElement;
                          }
                     
@@ -131,16 +131,16 @@
 
         try {
         
-                if (wtp.InformMembers.class.equals(type)){
+                if (wtp.AllocateRole.class.equals(type)){
                 
-                           return wtp.InformMembers.Factory.parse(param.getXMLStreamReaderWithoutCaching());
+                           return wtp.AllocateRole.Factory.parse(param.getXMLStreamReaderWithoutCaching());
                     
 
                 }
            
-                if (wtp.InformMembersResponse.class.equals(type)){
+                if (wtp.AllocateRoleResponse.class.equals(type)){
                 
-                           return wtp.InformMembersResponse.Factory.parse(param.getXMLStreamReaderWithoutCaching());
+                           return wtp.AllocateRoleResponse.Factory.parse(param.getXMLStreamReaderWithoutCaching());
                     
 
                 }

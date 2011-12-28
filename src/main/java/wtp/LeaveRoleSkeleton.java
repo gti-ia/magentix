@@ -4,7 +4,8 @@
  */
 package wtp;
 
-import persistence.DataBaseInterface;
+import persistence.OMSInterface;
+import persistence.THOMASException;
 
 /**
  * LeaveRoleSkeleton java skeleton for the axisService
@@ -14,6 +15,7 @@ public class LeaveRoleSkeleton
 {
 	
 	public static final Boolean	DEBUG	= true;
+	private static OMSInterface omsInterface = new OMSInterface();
 	
 	/**
 	 * Service used for an agent to leave a role in a unit. The role and the unit must exist,
@@ -26,6 +28,7 @@ public class LeaveRoleSkeleton
 	public wtp.LeaveRoleResponse LeaveRole(wtp.LeaveRole leaveRole)
 	{
 		wtp.LeaveRoleResponse res = new LeaveRoleResponse();
+		String result = "";
 		if (DEBUG)
 		{
 			System.out.println("LeaveRole :");
@@ -39,44 +42,22 @@ public class LeaveRoleSkeleton
 		if (leaveRole.getAgentID() == "" || leaveRole.getRoleID() == ""
 				|| leaveRole.getUnitID() == "")
 		{
-			res.setErrorValue("Invalid");
+			res.setErrorValue("Invalid. Empty parameters are not allowed.");
 			res.setStatus("Error");
 			return res;
 		}
-		persistence.DataBaseInterface thomasBD = new DataBaseInterface();
-		if (!thomasBD.CheckExistsAgent(leaveRole.getAgentID()))
+		try{
+			result =omsInterface.leaveRole(leaveRole.getUnitID(), leaveRole.getRoleID(), leaveRole.getAgentID());
+			res.setStatus(result);
+			res.setErrorValue("");
+			return res;
+		}catch(THOMASException e)
 		{
-			res.setErrorValue("NotFound");
 			res.setStatus("Error");
+			res.setErrorValue(e.getMessage());
 			return res;
 		}
-		if (!thomasBD.CheckExistsUnit(leaveRole.getUnitID()))
-		{
-			res.setErrorValue("NotFound");
-			res.setStatus("Error");
-			return res;
-		}
-		if (!thomasBD.CheckExistsRole(leaveRole.getRoleID()))
-		{
-			res.setErrorValue("NotFound");
-			res.setStatus("Error");
-			return res;
-		}
-		if (!thomasBD.CheckAgentPlaysRole(leaveRole.getRoleID(), leaveRole
-				.getUnitID(), leaveRole.getAgentID()))
-		{
-			res.setErrorValue("NotFound");
-			res.setStatus("Error");
-			return res;
-		}
-		if (!thomasBD.DeleteAgentPlaysRole(leaveRole.getRoleID(), leaveRole
-				.getUnitID(), leaveRole.getAgentID()))
-		{
-			res.setErrorValue("Invalid");
-			res.setStatus("Error");
-			return res;
-		}
-		return res;
+		
 	}
 	
 }

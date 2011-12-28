@@ -1,6 +1,6 @@
 
 /**
- * ExpulseMessageReceiverInOut.java
+ * DeallocateRoleMessageReceiverInOut.java
  *
  * This file was auto-generated from WSDL
  * by the Apache Axis2 version: 1.4  Built on : Apr 26, 2008 (06:24:30 EDT)
@@ -8,10 +8,10 @@
         package wtp;
 
         /**
-        *  ExpulseMessageReceiverInOut message receiver
+        *  DeallocateRoleMessageReceiverInOut message receiver
         */
 
-        public class ExpulseMessageReceiverInOut extends org.apache.axis2.receivers.AbstractInOutMessageReceiver{
+        public class DeallocateRoleMessageReceiverInOut extends org.apache.axis2.receivers.AbstractInOutMessageReceiver{
 
 
         public void invokeBusinessLogic(org.apache.axis2.context.MessageContext msgContext, org.apache.axis2.context.MessageContext newMsgContext)
@@ -22,7 +22,7 @@
         // get the implementation class for the Web Service
         Object obj = getTheImplementationObject(msgContext);
 
-        ExpulseSkeleton skel = (ExpulseSkeleton)obj;
+        DeallocateRoleSkeleton skel = (DeallocateRoleSkeleton)obj;
         //Out Envelop
         org.apache.axiom.soap.SOAPEnvelope envelope = null;
         //Find the axisOperation that has been set by the Dispatch phase.
@@ -36,22 +36,22 @@
 
         
 
-            if("Expulse".equals(methodName)){
+            if("DeallocateRole".equals(methodName)){
                 
-                wtp.ExpulseResponse expulseResponse1 = null;
-	                        wtp.Expulse wrappedParam =
-                                                             (wtp.Expulse)fromOM(
+                wtp.DeallocateRoleResponse deallocateRoleResponse1 = null;
+	                        wtp.DeallocateRole wrappedParam =
+                                                             (wtp.DeallocateRole)fromOM(
                                     msgContext.getEnvelope().getBody().getFirstElement(),
-                                    wtp.Expulse.class,
+                                    wtp.DeallocateRole.class,
                                     getEnvelopeNamespaces(msgContext.getEnvelope()));
                                                 
-                                               expulseResponse1 =
+                                               deallocateRoleResponse1 =
                                                    
                                                    
-                                                         skel.Expulse(wrappedParam)
+                                                         skel.DeallocateRole(wrappedParam)
                                                     ;
                                             
-                                        envelope = toEnvelope(getSOAPFactory(msgContext), expulseResponse1, false);
+                                        envelope = toEnvelope(getSOAPFactory(msgContext), deallocateRoleResponse1, false);
                                     
             } else {
               throw new java.lang.RuntimeException("method not found");
@@ -67,12 +67,12 @@
         }
         
         //
-            private  org.apache.axiom.om.OMElement  toOM(wtp.Expulse param, boolean optimizeContent)
+            private  org.apache.axiom.om.OMElement  toOM(wtp.DeallocateRole param, boolean optimizeContent)
             throws org.apache.axis2.AxisFault {
 
             
                         try{
-                             return param.getOMElement(wtp.Expulse.MY_QNAME,
+                             return param.getOMElement(wtp.DeallocateRole.MY_QNAME,
                                           org.apache.axiom.om.OMAbstractFactory.getOMFactory());
                         } catch(org.apache.axis2.databinding.ADBException e){
                             throw org.apache.axis2.AxisFault.makeFault(e);
@@ -81,12 +81,12 @@
 
             }
         
-            private  org.apache.axiom.om.OMElement  toOM(wtp.ExpulseResponse param, boolean optimizeContent)
+            private  org.apache.axiom.om.OMElement  toOM(wtp.DeallocateRoleResponse param, boolean optimizeContent)
             throws org.apache.axis2.AxisFault {
 
             
                         try{
-                             return param.getOMElement(wtp.ExpulseResponse.MY_QNAME,
+                             return param.getOMElement(wtp.DeallocateRoleResponse.MY_QNAME,
                                           org.apache.axiom.om.OMAbstractFactory.getOMFactory());
                         } catch(org.apache.axis2.databinding.ADBException e){
                             throw org.apache.axis2.AxisFault.makeFault(e);
@@ -95,12 +95,12 @@
 
             }
         
-                    private  org.apache.axiom.soap.SOAPEnvelope toEnvelope(org.apache.axiom.soap.SOAPFactory factory, wtp.ExpulseResponse param, boolean optimizeContent)
+                    private  org.apache.axiom.soap.SOAPEnvelope toEnvelope(org.apache.axiom.soap.SOAPFactory factory, wtp.DeallocateRoleResponse param, boolean optimizeContent)
                         throws org.apache.axis2.AxisFault{
                       try{
                           org.apache.axiom.soap.SOAPEnvelope emptyEnvelope = factory.getDefaultEnvelope();
                            
-                                    emptyEnvelope.getBody().addChild(param.getOMElement(wtp.ExpulseResponse.MY_QNAME,factory));
+                                    emptyEnvelope.getBody().addChild(param.getOMElement(wtp.DeallocateRoleResponse.MY_QNAME,factory));
                                 
 
                          return emptyEnvelope;
@@ -109,8 +109,8 @@
                     }
                     }
                     
-                         private wtp.ExpulseResponse wrapExpulse(){
-                                wtp.ExpulseResponse wrappedElement = new wtp.ExpulseResponse();
+                         private wtp.DeallocateRoleResponse wrapDeallocateRole(){
+                                wtp.DeallocateRoleResponse wrappedElement = new wtp.DeallocateRoleResponse();
                                 return wrappedElement;
                          }
                     
@@ -131,16 +131,16 @@
 
         try {
         
-                if (wtp.Expulse.class.equals(type)){
+                if (wtp.DeallocateRole.class.equals(type)){
                 
-                           return wtp.Expulse.Factory.parse(param.getXMLStreamReaderWithoutCaching());
+                           return wtp.DeallocateRole.Factory.parse(param.getXMLStreamReaderWithoutCaching());
                     
 
                 }
            
-                if (wtp.ExpulseResponse.class.equals(type)){
+                if (wtp.DeallocateRoleResponse.class.equals(type)){
                 
-                           return wtp.ExpulseResponse.Factory.parse(param.getXMLStreamReaderWithoutCaching());
+                           return wtp.DeallocateRoleResponse.Factory.parse(param.getXMLStreamReaderWithoutCaching());
                     
 
                 }

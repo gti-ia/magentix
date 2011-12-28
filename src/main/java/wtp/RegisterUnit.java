@@ -93,36 +93,6 @@
                             
 
                         /**
-                        * field for Goal
-                        */
-
-                        
-                                    protected java.lang.String localGoal ;
-                                
-
-                           /**
-                           * Auto generated getter method
-                           * @return java.lang.String
-                           */
-                           public  java.lang.String getGoal(){
-                               return localGoal;
-                           }
-
-                           
-                        
-                            /**
-                               * Auto generated setter method
-                               * @param param Goal
-                               */
-                               public void setGoal(java.lang.String param){
-                            
-                                            this.localGoal=param;
-                                    
-
-                               }
-                            
-
-                        /**
                         * field for ParentUnitID
                         */
 
@@ -177,6 +147,36 @@
                                public void setAgentID(java.lang.String param){
                             
                                             this.localAgentID=param;
+                                    
+
+                               }
+                            
+
+                        /**
+                        * field for CreatorName
+                        */
+
+                        
+                                    protected java.lang.String localCreatorName ;
+                                
+
+                           /**
+                           * Auto generated getter method
+                           * @return java.lang.String
+                           */
+                           public  java.lang.String getCreatorName(){
+                               return localCreatorName;
+                           }
+
+                           
+                        
+                            /**
+                               * Auto generated setter method
+                               * @param param CreatorName
+                               */
+                               public void setCreatorName(java.lang.String param){
+                            
+                                            this.localCreatorName=param;
                                     
 
                                }
@@ -354,40 +354,6 @@
                                         if (prefix == null) {
                                             prefix = generatePrefix(namespace);
 
-                                            xmlWriter.writeStartElement(prefix,"Goal", namespace);
-                                            xmlWriter.writeNamespace(prefix, namespace);
-                                            xmlWriter.setPrefix(prefix, namespace);
-
-                                        } else {
-                                            xmlWriter.writeStartElement(namespace,"Goal");
-                                        }
-
-                                    } else {
-                                        xmlWriter.writeStartElement("Goal");
-                                    }
-                                
-
-                                          if (localGoal==null){
-                                              // write the nil attribute
-                                              
-                                                     throw new org.apache.axis2.databinding.ADBException("Goal cannot be null!!");
-                                                  
-                                          }else{
-
-                                        
-                                                   xmlWriter.writeCharacters(localGoal);
-                                            
-                                          }
-                                    
-                                   xmlWriter.writeEndElement();
-                             
-                                    namespace = "";
-                                    if (! namespace.equals("")) {
-                                        prefix = xmlWriter.getPrefix(namespace);
-
-                                        if (prefix == null) {
-                                            prefix = generatePrefix(namespace);
-
                                             xmlWriter.writeStartElement(prefix,"ParentUnitID", namespace);
                                             xmlWriter.writeNamespace(prefix, namespace);
                                             xmlWriter.setPrefix(prefix, namespace);
@@ -444,6 +410,40 @@
 
                                         
                                                    xmlWriter.writeCharacters(localAgentID);
+                                            
+                                          }
+                                    
+                                   xmlWriter.writeEndElement();
+                             
+                                    namespace = "";
+                                    if (! namespace.equals("")) {
+                                        prefix = xmlWriter.getPrefix(namespace);
+
+                                        if (prefix == null) {
+                                            prefix = generatePrefix(namespace);
+
+                                            xmlWriter.writeStartElement(prefix,"CreatorName", namespace);
+                                            xmlWriter.writeNamespace(prefix, namespace);
+                                            xmlWriter.setPrefix(prefix, namespace);
+
+                                        } else {
+                                            xmlWriter.writeStartElement(namespace,"CreatorName");
+                                        }
+
+                                    } else {
+                                        xmlWriter.writeStartElement("CreatorName");
+                                    }
+                                
+
+                                          if (localCreatorName==null){
+                                              // write the nil attribute
+                                              
+                                                     throw new org.apache.axis2.databinding.ADBException("CreatorName cannot be null!!");
+                                                  
+                                          }else{
+
+                                        
+                                                   xmlWriter.writeCharacters(localCreatorName);
                                             
                                           }
                                     
@@ -630,15 +630,6 @@
                                         }
                                     
                                       elementList.add(new javax.xml.namespace.QName("",
-                                                                      "Goal"));
-                                 
-                                        if (localGoal != null){
-                                            elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localGoal));
-                                        } else {
-                                           throw new org.apache.axis2.databinding.ADBException("Goal cannot be null!!");
-                                        }
-                                    
-                                      elementList.add(new javax.xml.namespace.QName("",
                                                                       "ParentUnitID"));
                                  
                                         if (localParentUnitID != null){
@@ -654,6 +645,15 @@
                                             elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localAgentID));
                                         } else {
                                            throw new org.apache.axis2.databinding.ADBException("AgentID cannot be null!!");
+                                        }
+                                    
+                                      elementList.add(new javax.xml.namespace.QName("",
+                                                                      "CreatorName"));
+                                 
+                                        if (localCreatorName != null){
+                                            elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localCreatorName));
+                                        } else {
+                                           throw new org.apache.axis2.databinding.ADBException("CreatorName cannot be null!!");
                                         }
                                     
 
@@ -772,25 +772,6 @@
                                     
                                     while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
                                 
-                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","Goal").equals(reader.getName())){
-                                
-                                    java.lang.String content = reader.getElementText();
-                                    
-                                              object.setGoal(
-                                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToString(content));
-                                              
-                                        reader.next();
-                                    
-                              }  // End of if for expected property start element
-                                
-                                else{
-                                    // A start element we are not expecting indicates an invalid parameter was passed
-                                    throw new org.apache.axis2.databinding.ADBException("Unexpected subelement " + reader.getLocalName());
-                                }
-                            
-                                    
-                                    while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
-                                
                                     if (reader.isStartElement() && new javax.xml.namespace.QName("","ParentUnitID").equals(reader.getName())){
                                 
                                     java.lang.String content = reader.getElementText();
@@ -815,6 +796,25 @@
                                     java.lang.String content = reader.getElementText();
                                     
                                               object.setAgentID(
+                                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToString(content));
+                                              
+                                        reader.next();
+                                    
+                              }  // End of if for expected property start element
+                                
+                                else{
+                                    // A start element we are not expecting indicates an invalid parameter was passed
+                                    throw new org.apache.axis2.databinding.ADBException("Unexpected subelement " + reader.getLocalName());
+                                }
+                            
+                                    
+                                    while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
+                                
+                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","CreatorName").equals(reader.getName())){
+                                
+                                    java.lang.String content = reader.getElementText();
+                                    
+                                              object.setCreatorName(
                                                     org.apache.axis2.databinding.utils.ConverterUtil.convertToString(content));
                                               
                                         reader.next();

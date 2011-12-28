@@ -183,36 +183,6 @@
                             
 
                         /**
-                        * field for Inheritance
-                        */
-
-                        
-                                    protected java.lang.String localInheritance ;
-                                
-
-                           /**
-                           * Auto generated getter method
-                           * @return java.lang.String
-                           */
-                           public  java.lang.String getInheritance(){
-                               return localInheritance;
-                           }
-
-                           
-                        
-                            /**
-                               * Auto generated setter method
-                               * @param param Inheritance
-                               */
-                               public void setInheritance(java.lang.String param){
-                            
-                                            this.localInheritance=param;
-                                    
-
-                               }
-                            
-
-                        /**
                         * field for AgentID
                         */
 
@@ -516,40 +486,6 @@
                                         if (prefix == null) {
                                             prefix = generatePrefix(namespace);
 
-                                            xmlWriter.writeStartElement(prefix,"Inheritance", namespace);
-                                            xmlWriter.writeNamespace(prefix, namespace);
-                                            xmlWriter.setPrefix(prefix, namespace);
-
-                                        } else {
-                                            xmlWriter.writeStartElement(namespace,"Inheritance");
-                                        }
-
-                                    } else {
-                                        xmlWriter.writeStartElement("Inheritance");
-                                    }
-                                
-
-                                          if (localInheritance==null){
-                                              // write the nil attribute
-                                              
-                                                     throw new org.apache.axis2.databinding.ADBException("Inheritance cannot be null!!");
-                                                  
-                                          }else{
-
-                                        
-                                                   xmlWriter.writeCharacters(localInheritance);
-                                            
-                                          }
-                                    
-                                   xmlWriter.writeEndElement();
-                             
-                                    namespace = "";
-                                    if (! namespace.equals("")) {
-                                        prefix = xmlWriter.getPrefix(namespace);
-
-                                        if (prefix == null) {
-                                            prefix = generatePrefix(namespace);
-
                                             xmlWriter.writeStartElement(prefix,"AgentID", namespace);
                                             xmlWriter.writeNamespace(prefix, namespace);
                                             xmlWriter.setPrefix(prefix, namespace);
@@ -785,15 +721,6 @@
                                         }
                                     
                                       elementList.add(new javax.xml.namespace.QName("",
-                                                                      "Inheritance"));
-                                 
-                                        if (localInheritance != null){
-                                            elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localInheritance));
-                                        } else {
-                                           throw new org.apache.axis2.databinding.ADBException("Inheritance cannot be null!!");
-                                        }
-                                    
-                                      elementList.add(new javax.xml.namespace.QName("",
                                                                       "AgentID"));
                                  
                                         if (localAgentID != null){
@@ -961,25 +888,6 @@
                                     java.lang.String content = reader.getElementText();
                                     
                                               object.setVisibility(
-                                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToString(content));
-                                              
-                                        reader.next();
-                                    
-                              }  // End of if for expected property start element
-                                
-                                else{
-                                    // A start element we are not expecting indicates an invalid parameter was passed
-                                    throw new org.apache.axis2.databinding.ADBException("Unexpected subelement " + reader.getLocalName());
-                                }
-                            
-                                    
-                                    while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
-                                
-                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","Inheritance").equals(reader.getName())){
-                                
-                                    java.lang.String content = reader.getElementText();
-                                    
-                                              object.setInheritance(
                                                     org.apache.axis2.databinding.utils.ConverterUtil.convertToString(content));
                                               
                                         reader.next();

@@ -1,6 +1,6 @@
 
 /**
- * InformMembersResponse.java
+ * DeallocateRole.java
  *
  * This file was auto-generated from WSDL
  * by the Apache Axis2 version: 1.4  Built on : Apr 26, 2008 (06:25:17 EDT)
@@ -10,15 +10,15 @@
             
 
             /**
-            *  InformMembersResponse bean class
+            *  DeallocateRole bean class
             */
         
-        public  class InformMembersResponse
+        public  class DeallocateRole
         implements org.apache.axis2.databinding.ADBBean{
         
                 public static final javax.xml.namespace.QName MY_QNAME = new javax.xml.namespace.QName(
                 "http://wtp",
-                "InformMembersResponse",
+                "DeallocateRole",
                 "ns1");
 
             
@@ -33,90 +33,120 @@
         
 
                         /**
-                        * field for Status
+                        * field for RoleName
                         */
 
                         
-                                    protected java.lang.String localStatus ;
+                                    protected java.lang.String localRoleName ;
                                 
 
                            /**
                            * Auto generated getter method
                            * @return java.lang.String
                            */
-                           public  java.lang.String getStatus(){
-                               return localStatus;
+                           public  java.lang.String getRoleName(){
+                               return localRoleName;
                            }
 
                            
                         
                             /**
                                * Auto generated setter method
-                               * @param param Status
+                               * @param param RoleName
                                */
-                               public void setStatus(java.lang.String param){
+                               public void setRoleName(java.lang.String param){
                             
-                                            this.localStatus=param;
+                                            this.localRoleName=param;
                                     
 
                                }
                             
 
                         /**
-                        * field for ErrorValue
+                        * field for UnitName
                         */
 
                         
-                                    protected java.lang.String localErrorValue ;
+                                    protected java.lang.String localUnitName ;
                                 
 
                            /**
                            * Auto generated getter method
                            * @return java.lang.String
                            */
-                           public  java.lang.String getErrorValue(){
-                               return localErrorValue;
+                           public  java.lang.String getUnitName(){
+                               return localUnitName;
                            }
 
                            
                         
                             /**
                                * Auto generated setter method
-                               * @param param ErrorValue
+                               * @param param UnitName
                                */
-                               public void setErrorValue(java.lang.String param){
+                               public void setUnitName(java.lang.String param){
                             
-                                            this.localErrorValue=param;
+                                            this.localUnitName=param;
                                     
 
                                }
                             
 
                         /**
-                        * field for EntityRoleList
+                        * field for TargetAgentName
                         */
 
                         
-                                    protected java.lang.String localEntityRoleList ;
+                                    protected java.lang.String localTargetAgentName ;
                                 
 
                            /**
                            * Auto generated getter method
                            * @return java.lang.String
                            */
-                           public  java.lang.String getEntityRoleList(){
-                               return localEntityRoleList;
+                           public  java.lang.String getTargetAgentName(){
+                               return localTargetAgentName;
                            }
 
                            
                         
                             /**
                                * Auto generated setter method
-                               * @param param EntityRoleList
+                               * @param param TargetAgentName
                                */
-                               public void setEntityRoleList(java.lang.String param){
+                               public void setTargetAgentName(java.lang.String param){
                             
-                                            this.localEntityRoleList=param;
+                                            this.localTargetAgentName=param;
+                                    
+
+                               }
+                            
+
+                        /**
+                        * field for AgentID
+                        */
+
+                        
+                                    protected java.lang.String localAgentID ;
+                                
+
+                           /**
+                           * Auto generated getter method
+                           * @return java.lang.String
+                           */
+                           public  java.lang.String getAgentID(){
+                               return localAgentID;
+                           }
+
+                           
+                        
+                            /**
+                               * Auto generated setter method
+                               * @param param AgentID
+                               */
+                               public void setAgentID(java.lang.String param){
+                            
+                                            this.localAgentID=param;
                                     
 
                                }
@@ -154,7 +184,7 @@
                        new org.apache.axis2.databinding.ADBDataSource(this,MY_QNAME){
 
                  public void serialize(org.apache.axis2.databinding.utils.writer.MTOMAwareXMLStreamWriter xmlWriter) throws javax.xml.stream.XMLStreamException {
-                       InformMembersResponse.this.serialize(MY_QNAME,factory,xmlWriter);
+                       DeallocateRole.this.serialize(MY_QNAME,factory,xmlWriter);
                  }
                };
                return new org.apache.axiom.om.impl.llom.OMSourcedElementImpl(
@@ -208,11 +238,11 @@
                    java.lang.String namespacePrefix = registerPrefix(xmlWriter,"http://wtp");
                    if ((namespacePrefix != null) && (namespacePrefix.trim().length() > 0)){
                        writeAttribute("xsi","http://www.w3.org/2001/XMLSchema-instance","type",
-                           namespacePrefix+":InformMembersResponse",
+                           namespacePrefix+":DeallocateRole",
                            xmlWriter);
                    } else {
                        writeAttribute("xsi","http://www.w3.org/2001/XMLSchema-instance","type",
-                           "InformMembersResponse",
+                           "DeallocateRole",
                            xmlWriter);
                    }
 
@@ -226,28 +256,28 @@
                                         if (prefix == null) {
                                             prefix = generatePrefix(namespace);
 
-                                            xmlWriter.writeStartElement(prefix,"Status", namespace);
+                                            xmlWriter.writeStartElement(prefix,"RoleName", namespace);
                                             xmlWriter.writeNamespace(prefix, namespace);
                                             xmlWriter.setPrefix(prefix, namespace);
 
                                         } else {
-                                            xmlWriter.writeStartElement(namespace,"Status");
+                                            xmlWriter.writeStartElement(namespace,"RoleName");
                                         }
 
                                     } else {
-                                        xmlWriter.writeStartElement("Status");
+                                        xmlWriter.writeStartElement("RoleName");
                                     }
                                 
 
-                                          if (localStatus==null){
+                                          if (localRoleName==null){
                                               // write the nil attribute
                                               
-                                                     throw new org.apache.axis2.databinding.ADBException("Status cannot be null!!");
+                                                     throw new org.apache.axis2.databinding.ADBException("RoleName cannot be null!!");
                                                   
                                           }else{
 
                                         
-                                                   xmlWriter.writeCharacters(localStatus);
+                                                   xmlWriter.writeCharacters(localRoleName);
                                             
                                           }
                                     
@@ -260,28 +290,28 @@
                                         if (prefix == null) {
                                             prefix = generatePrefix(namespace);
 
-                                            xmlWriter.writeStartElement(prefix,"ErrorValue", namespace);
+                                            xmlWriter.writeStartElement(prefix,"UnitName", namespace);
                                             xmlWriter.writeNamespace(prefix, namespace);
                                             xmlWriter.setPrefix(prefix, namespace);
 
                                         } else {
-                                            xmlWriter.writeStartElement(namespace,"ErrorValue");
+                                            xmlWriter.writeStartElement(namespace,"UnitName");
                                         }
 
                                     } else {
-                                        xmlWriter.writeStartElement("ErrorValue");
+                                        xmlWriter.writeStartElement("UnitName");
                                     }
                                 
 
-                                          if (localErrorValue==null){
+                                          if (localUnitName==null){
                                               // write the nil attribute
                                               
-                                                     throw new org.apache.axis2.databinding.ADBException("ErrorValue cannot be null!!");
+                                                     throw new org.apache.axis2.databinding.ADBException("UnitName cannot be null!!");
                                                   
                                           }else{
 
                                         
-                                                   xmlWriter.writeCharacters(localErrorValue);
+                                                   xmlWriter.writeCharacters(localUnitName);
                                             
                                           }
                                     
@@ -294,28 +324,62 @@
                                         if (prefix == null) {
                                             prefix = generatePrefix(namespace);
 
-                                            xmlWriter.writeStartElement(prefix,"EntityRoleList", namespace);
+                                            xmlWriter.writeStartElement(prefix,"TargetAgentName", namespace);
                                             xmlWriter.writeNamespace(prefix, namespace);
                                             xmlWriter.setPrefix(prefix, namespace);
 
                                         } else {
-                                            xmlWriter.writeStartElement(namespace,"EntityRoleList");
+                                            xmlWriter.writeStartElement(namespace,"TargetAgentName");
                                         }
 
                                     } else {
-                                        xmlWriter.writeStartElement("EntityRoleList");
+                                        xmlWriter.writeStartElement("TargetAgentName");
                                     }
                                 
 
-                                          if (localEntityRoleList==null){
+                                          if (localTargetAgentName==null){
                                               // write the nil attribute
                                               
-                                                     throw new org.apache.axis2.databinding.ADBException("EntityRoleList cannot be null!!");
+                                                     throw new org.apache.axis2.databinding.ADBException("TargetAgentName cannot be null!!");
                                                   
                                           }else{
 
                                         
-                                                   xmlWriter.writeCharacters(localEntityRoleList);
+                                                   xmlWriter.writeCharacters(localTargetAgentName);
+                                            
+                                          }
+                                    
+                                   xmlWriter.writeEndElement();
+                             
+                                    namespace = "";
+                                    if (! namespace.equals("")) {
+                                        prefix = xmlWriter.getPrefix(namespace);
+
+                                        if (prefix == null) {
+                                            prefix = generatePrefix(namespace);
+
+                                            xmlWriter.writeStartElement(prefix,"AgentID", namespace);
+                                            xmlWriter.writeNamespace(prefix, namespace);
+                                            xmlWriter.setPrefix(prefix, namespace);
+
+                                        } else {
+                                            xmlWriter.writeStartElement(namespace,"AgentID");
+                                        }
+
+                                    } else {
+                                        xmlWriter.writeStartElement("AgentID");
+                                    }
+                                
+
+                                          if (localAgentID==null){
+                                              // write the nil attribute
+                                              
+                                                     throw new org.apache.axis2.databinding.ADBException("AgentID cannot be null!!");
+                                                  
+                                          }else{
+
+                                        
+                                                   xmlWriter.writeCharacters(localAgentID);
                                             
                                           }
                                     
@@ -484,30 +548,39 @@
 
                 
                                       elementList.add(new javax.xml.namespace.QName("",
-                                                                      "Status"));
+                                                                      "RoleName"));
                                  
-                                        if (localStatus != null){
-                                            elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localStatus));
+                                        if (localRoleName != null){
+                                            elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localRoleName));
                                         } else {
-                                           throw new org.apache.axis2.databinding.ADBException("Status cannot be null!!");
+                                           throw new org.apache.axis2.databinding.ADBException("RoleName cannot be null!!");
                                         }
                                     
                                       elementList.add(new javax.xml.namespace.QName("",
-                                                                      "ErrorValue"));
+                                                                      "UnitName"));
                                  
-                                        if (localErrorValue != null){
-                                            elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localErrorValue));
+                                        if (localUnitName != null){
+                                            elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localUnitName));
                                         } else {
-                                           throw new org.apache.axis2.databinding.ADBException("ErrorValue cannot be null!!");
+                                           throw new org.apache.axis2.databinding.ADBException("UnitName cannot be null!!");
                                         }
                                     
                                       elementList.add(new javax.xml.namespace.QName("",
-                                                                      "EntityRoleList"));
+                                                                      "TargetAgentName"));
                                  
-                                        if (localEntityRoleList != null){
-                                            elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localEntityRoleList));
+                                        if (localTargetAgentName != null){
+                                            elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localTargetAgentName));
                                         } else {
-                                           throw new org.apache.axis2.databinding.ADBException("EntityRoleList cannot be null!!");
+                                           throw new org.apache.axis2.databinding.ADBException("TargetAgentName cannot be null!!");
+                                        }
+                                    
+                                      elementList.add(new javax.xml.namespace.QName("",
+                                                                      "AgentID"));
+                                 
+                                        if (localAgentID != null){
+                                            elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localAgentID));
+                                        } else {
+                                           throw new org.apache.axis2.databinding.ADBException("AgentID cannot be null!!");
                                         }
                                     
 
@@ -534,9 +607,9 @@
         * Postcondition: If this object is an element, the reader is positioned at its end element
         *                If this object is a complex type, the reader is positioned at the end element of its outer element
         */
-        public static InformMembersResponse parse(javax.xml.stream.XMLStreamReader reader) throws java.lang.Exception{
-            InformMembersResponse object =
-                new InformMembersResponse();
+        public static DeallocateRole parse(javax.xml.stream.XMLStreamReader reader) throws java.lang.Exception{
+            DeallocateRole object =
+                new DeallocateRole();
 
             int event;
             java.lang.String nillableValue = null;
@@ -560,10 +633,10 @@
 
                     java.lang.String type = fullTypeName.substring(fullTypeName.indexOf(":")+1);
                     
-                            if (!"InformMembersResponse".equals(type)){
+                            if (!"DeallocateRole".equals(type)){
                                 //find namespace for the prefix
                                 java.lang.String nsUri = reader.getNamespaceContext().getNamespaceURI(nsPrefix);
-                                return (InformMembersResponse)wtp.ExtensionMapper.getTypeObject(
+                                return (DeallocateRole)wtp.ExtensionMapper.getTypeObject(
                                      nsUri,type,reader);
                               }
                         
@@ -588,11 +661,11 @@
                                     
                                     while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
                                 
-                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","Status").equals(reader.getName())){
+                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","RoleName").equals(reader.getName())){
                                 
                                     java.lang.String content = reader.getElementText();
                                     
-                                              object.setStatus(
+                                              object.setRoleName(
                                                     org.apache.axis2.databinding.utils.ConverterUtil.convertToString(content));
                                               
                                         reader.next();
@@ -607,11 +680,11 @@
                                     
                                     while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
                                 
-                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","ErrorValue").equals(reader.getName())){
+                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","UnitName").equals(reader.getName())){
                                 
                                     java.lang.String content = reader.getElementText();
                                     
-                                              object.setErrorValue(
+                                              object.setUnitName(
                                                     org.apache.axis2.databinding.utils.ConverterUtil.convertToString(content));
                                               
                                         reader.next();
@@ -626,11 +699,30 @@
                                     
                                     while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
                                 
-                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","EntityRoleList").equals(reader.getName())){
+                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","TargetAgentName").equals(reader.getName())){
                                 
                                     java.lang.String content = reader.getElementText();
                                     
-                                              object.setEntityRoleList(
+                                              object.setTargetAgentName(
+                                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToString(content));
+                                              
+                                        reader.next();
+                                    
+                              }  // End of if for expected property start element
+                                
+                                else{
+                                    // A start element we are not expecting indicates an invalid parameter was passed
+                                    throw new org.apache.axis2.databinding.ADBException("Unexpected subelement " + reader.getLocalName());
+                                }
+                            
+                                    
+                                    while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
+                                
+                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","AgentID").equals(reader.getName())){
+                                
+                                    java.lang.String content = reader.getElementText();
+                                    
+                                              object.setAgentID(
                                                     org.apache.axis2.databinding.utils.ConverterUtil.convertToString(content));
                                               
                                         reader.next();

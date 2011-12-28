@@ -4,9 +4,10 @@
  */
 package wtp;
 
-import java.util.List;
+import java.sql.SQLException;
 
-import persistence.DataBaseInterface;
+import persistence.OMSInterface;
+import persistence.THOMASException;
 
 /**
  * DeregisterRoleSkeleton java skeleton for the axisService
@@ -14,8 +15,8 @@ import persistence.DataBaseInterface;
 public class DeregisterRoleSkeleton
 {
 	public static final Boolean		DEBUG		= true;
-	persistence.DataBaseInterface	thomasBD	= new DataBaseInterface();
-	
+	private static OMSInterface omsInterface = new OMSInterface();
+
 	/**
 	 * Service used to deregister a norm. The role must exist, there must be no norm addressed to
 	 * this role, this role must not be currently played by any agent, and the agent requesting
@@ -32,6 +33,8 @@ public class DeregisterRoleSkeleton
 			wtp.DeregisterRole deregisterRole)
 	{
 		wtp.DeregisterRoleResponse res = new DeregisterRoleResponse();
+		String result= "";
+
 		if (DEBUG)
 		{
 			System.out.println("DeregisterRole :");
@@ -39,98 +42,37 @@ public class DeregisterRoleSkeleton
 			System.out.println("*** RoleID()..." + deregisterRole.getRoleID());
 			System.out.println("*** UnitID()..." + deregisterRole.getUnitID());
 		}
-		
+
 		res.setErrorValue("");
 		res.setStatus("Ok");
-		
-//		if (deregisterRole.getRoleID() == ""
-//				|| deregisterRole.getRoleID().equalsIgnoreCase("member")
-//				|| deregisterRole.getUnitID() == "")
+
+		//		if (deregisterRole.getRoleID() == ""
+		//				|| deregisterRole.getRoleID().equalsIgnoreCase("member")
+		//				|| deregisterRole.getUnitID() == "")
 		if (deregisterRole.getRoleID() == ""
 			|| deregisterRole.getUnitID() == "") // se permite borrar el rol member, ya que no se crea por defecto al crear una unidad.
 		{
-			res.setErrorValue("Invalid");
+			res.setErrorValue("Invalid. Empty parameters are not allowed.");
 			res.setStatus("Error");
 			return res;
 		}
-		
-		if (!thomasBD.CheckExistsRoleInUnit(deregisterRole.getRoleID(),
-				deregisterRole.getUnitID()))
+
+		try{
+			result =omsInterface.deregisterRole(deregisterRole.getRoleID(), deregisterRole.getUnitID(), deregisterRole.getAgentID());
+			res.setStatus(result);
+			res.setErrorValue("");
+			return res;
+		}catch(THOMASException e)
 		{
-			res.setErrorValue("NotFound");
 			res.setStatus("Error");
+			res.setErrorValue(e.getMessage());
 			return res;
 		}
-		
-		if (thomasBD.CheckRoleHasNorms(deregisterRole.getRoleID()))
+		catch(SQLException e)
 		{
-			res.setErrorValue("Invalid");
-			res.setStatus("ErrorNorm");
-			return res;
-		}
-		if (thomasBD.CheckRoleIsPlayedInUnit(deregisterRole.getRoleID(),deregisterRole.getUnitID()))
-		{
-			res.setErrorValue("Invalid");
-			res.setStatus("ErrorPlayed");
-			return res;
-		}
-		// role based control
-		if (!roleBasedControl(deregisterRole.getAgentID(), deregisterRole
-				.getUnitID()))
-		{
-			res.setErrorValue("Not-Allowed");
 			res.setStatus("Error");
+			res.setErrorValue(e.getMessage());
 			return res;
 		}
-		System.out.println("DEREGISTERROLE, exit rolebasedcontrol!!");
-		if (!thomasBD.DeleteRole(deregisterRole.getRoleID(), deregisterRole
-				.getUnitID()))
-		{
-			res.setErrorValue("Invalid");
-			res.setStatus("Error");
-			return res;
-		}
-		return res;
-	}
-	private boolean roleBasedControl(String agentID, String unitID)
-	{
-		System.out.println("DEREGISTERROLE 1");
-		if (unitID.equalsIgnoreCase("virtual"))
-			return false;
-		System.out.println("DEREGISTERROLE 2");
-		if (!thomasBD.CheckExistsAgent(agentID))
-			return false;
-		System.out.println("DEREGISTERROLE 3");
-		String unitType = thomasBD.GetUnitType(unitID);
-		if (unitType.equalsIgnoreCase("flat"))
-			return true;
-		System.out.println("DEREGISTERROLE 4");
-		if (unitType.equalsIgnoreCase("team"))
-		{
-			System.out.println("DEREGISTERROLE 5");
-			if (thomasBD.CheckAgentPlaysRoleInUnit(unitID, agentID))
-				return true;
-			else
-				return false;
-		}
-		System.out.println("DEREGISTERROLE 6");
-		List<String> positions;
-		try
-		{
-			System.out.println("DEREGISTERROLE agentID="+agentID+", unitID="+unitID);
-			positions = thomasBD.GetAgentPosition(agentID, unitID);
-			System.out.println("DEREGISTERROLE positions.size="+positions.size());
-			for (int i = 0; i < positions.size(); i++){
-				System.out.println("DEREGISTERROLE position["+i+"]='"+positions.get(i)+"'");
-				if (positions.get(i).equalsIgnoreCase("supervisor")){
-					System.out.println("DEREGISTERROLE somos supervisor");
-					return true;
-				}
-			}
-		}
-		catch (Exception e)
-		{
-		}
-		return false;
 	}
 }
