@@ -1,6 +1,6 @@
 
 /**
- * InformRoleProfiles.java
+ * InformRole.java
  *
  * This file was auto-generated from WSDL
  * by the Apache Axis2 version: 1.4  Built on : Apr 26, 2008 (06:25:17 EDT)
@@ -10,15 +10,15 @@
             
 
             /**
-            *  InformRoleProfiles bean class
+            *  InformRole bean class
             */
         
-        public  class InformRoleProfiles
+        public  class InformRole
         implements org.apache.axis2.databinding.ADBBean{
         
                 public static final javax.xml.namespace.QName MY_QNAME = new javax.xml.namespace.QName(
                 "http://wtp",
-                "InformRoleProfiles",
+                "InformRole",
                 "ns1");
 
             
@@ -33,30 +33,60 @@
         
 
                         /**
-                        * field for RoleID
+                        * field for RoleName
                         */
 
                         
-                                    protected java.lang.String localRoleID ;
+                                    protected java.lang.String localRoleName ;
                                 
 
                            /**
                            * Auto generated getter method
                            * @return java.lang.String
                            */
-                           public  java.lang.String getRoleID(){
-                               return localRoleID;
+                           public  java.lang.String getRoleName(){
+                               return localRoleName;
                            }
 
                            
                         
                             /**
                                * Auto generated setter method
-                               * @param param RoleID
+                               * @param param RoleName
                                */
-                               public void setRoleID(java.lang.String param){
+                               public void setRoleName(java.lang.String param){
                             
-                                            this.localRoleID=param;
+                                            this.localRoleName=param;
+                                    
+
+                               }
+                            
+
+                        /**
+                        * field for UnitName
+                        */
+
+                        
+                                    protected java.lang.String localUnitName ;
+                                
+
+                           /**
+                           * Auto generated getter method
+                           * @return java.lang.String
+                           */
+                           public  java.lang.String getUnitName(){
+                               return localUnitName;
+                           }
+
+                           
+                        
+                            /**
+                               * Auto generated setter method
+                               * @param param UnitName
+                               */
+                               public void setUnitName(java.lang.String param){
+                            
+                                            this.localUnitName=param;
                                     
 
                                }
@@ -124,7 +154,7 @@
                        new org.apache.axis2.databinding.ADBDataSource(this,MY_QNAME){
 
                  public void serialize(org.apache.axis2.databinding.utils.writer.MTOMAwareXMLStreamWriter xmlWriter) throws javax.xml.stream.XMLStreamException {
-                       InformRoleProfiles.this.serialize(MY_QNAME,factory,xmlWriter);
+                       InformRole.this.serialize(MY_QNAME,factory,xmlWriter);
                  }
                };
                return new org.apache.axiom.om.impl.llom.OMSourcedElementImpl(
@@ -178,11 +208,11 @@
                    java.lang.String namespacePrefix = registerPrefix(xmlWriter,"http://wtp");
                    if ((namespacePrefix != null) && (namespacePrefix.trim().length() > 0)){
                        writeAttribute("xsi","http://www.w3.org/2001/XMLSchema-instance","type",
-                           namespacePrefix+":InformRoleProfiles",
+                           namespacePrefix+":InformRole",
                            xmlWriter);
                    } else {
                        writeAttribute("xsi","http://www.w3.org/2001/XMLSchema-instance","type",
-                           "InformRoleProfiles",
+                           "InformRole",
                            xmlWriter);
                    }
 
@@ -196,28 +226,62 @@
                                         if (prefix == null) {
                                             prefix = generatePrefix(namespace);
 
-                                            xmlWriter.writeStartElement(prefix,"RoleID", namespace);
+                                            xmlWriter.writeStartElement(prefix,"RoleName", namespace);
                                             xmlWriter.writeNamespace(prefix, namespace);
                                             xmlWriter.setPrefix(prefix, namespace);
 
                                         } else {
-                                            xmlWriter.writeStartElement(namespace,"RoleID");
+                                            xmlWriter.writeStartElement(namespace,"RoleName");
                                         }
 
                                     } else {
-                                        xmlWriter.writeStartElement("RoleID");
+                                        xmlWriter.writeStartElement("RoleName");
                                     }
                                 
 
-                                          if (localRoleID==null){
+                                          if (localRoleName==null){
                                               // write the nil attribute
                                               
-                                                     throw new org.apache.axis2.databinding.ADBException("RoleID cannot be null!!");
+                                                     throw new org.apache.axis2.databinding.ADBException("RoleName cannot be null!!");
                                                   
                                           }else{
 
                                         
-                                                   xmlWriter.writeCharacters(localRoleID);
+                                                   xmlWriter.writeCharacters(localRoleName);
+                                            
+                                          }
+                                    
+                                   xmlWriter.writeEndElement();
+                             
+                                    namespace = "";
+                                    if (! namespace.equals("")) {
+                                        prefix = xmlWriter.getPrefix(namespace);
+
+                                        if (prefix == null) {
+                                            prefix = generatePrefix(namespace);
+
+                                            xmlWriter.writeStartElement(prefix,"UnitName", namespace);
+                                            xmlWriter.writeNamespace(prefix, namespace);
+                                            xmlWriter.setPrefix(prefix, namespace);
+
+                                        } else {
+                                            xmlWriter.writeStartElement(namespace,"UnitName");
+                                        }
+
+                                    } else {
+                                        xmlWriter.writeStartElement("UnitName");
+                                    }
+                                
+
+                                          if (localUnitName==null){
+                                              // write the nil attribute
+                                              
+                                                     throw new org.apache.axis2.databinding.ADBException("UnitName cannot be null!!");
+                                                  
+                                          }else{
+
+                                        
+                                                   xmlWriter.writeCharacters(localUnitName);
                                             
                                           }
                                     
@@ -420,12 +484,21 @@
 
                 
                                       elementList.add(new javax.xml.namespace.QName("",
-                                                                      "RoleID"));
+                                                                      "RoleName"));
                                  
-                                        if (localRoleID != null){
-                                            elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localRoleID));
+                                        if (localRoleName != null){
+                                            elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localRoleName));
                                         } else {
-                                           throw new org.apache.axis2.databinding.ADBException("RoleID cannot be null!!");
+                                           throw new org.apache.axis2.databinding.ADBException("RoleName cannot be null!!");
+                                        }
+                                    
+                                      elementList.add(new javax.xml.namespace.QName("",
+                                                                      "UnitName"));
+                                 
+                                        if (localUnitName != null){
+                                            elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localUnitName));
+                                        } else {
+                                           throw new org.apache.axis2.databinding.ADBException("UnitName cannot be null!!");
                                         }
                                     
                                       elementList.add(new javax.xml.namespace.QName("",
@@ -461,9 +534,9 @@
         * Postcondition: If this object is an element, the reader is positioned at its end element
         *                If this object is a complex type, the reader is positioned at the end element of its outer element
         */
-        public static InformRoleProfiles parse(javax.xml.stream.XMLStreamReader reader) throws java.lang.Exception{
-            InformRoleProfiles object =
-                new InformRoleProfiles();
+        public static InformRole parse(javax.xml.stream.XMLStreamReader reader) throws java.lang.Exception{
+            InformRole object =
+                new InformRole();
 
             int event;
             java.lang.String nillableValue = null;
@@ -487,10 +560,10 @@
 
                     java.lang.String type = fullTypeName.substring(fullTypeName.indexOf(":")+1);
                     
-                            if (!"InformRoleProfiles".equals(type)){
+                            if (!"InformRole".equals(type)){
                                 //find namespace for the prefix
                                 java.lang.String nsUri = reader.getNamespaceContext().getNamespaceURI(nsPrefix);
-                                return (InformRoleProfiles)wtp.ExtensionMapper.getTypeObject(
+                                return (InformRole)wtp.ExtensionMapper.getTypeObject(
                                      nsUri,type,reader);
                               }
                         
@@ -515,11 +588,30 @@
                                     
                                     while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
                                 
-                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","RoleID").equals(reader.getName())){
+                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","RoleName").equals(reader.getName())){
                                 
                                     java.lang.String content = reader.getElementText();
                                     
-                                              object.setRoleID(
+                                              object.setRoleName(
+                                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToString(content));
+                                              
+                                        reader.next();
+                                    
+                              }  // End of if for expected property start element
+                                
+                                else{
+                                    // A start element we are not expecting indicates an invalid parameter was passed
+                                    throw new org.apache.axis2.databinding.ADBException("Unexpected subelement " + reader.getLocalName());
+                                }
+                            
+                                    
+                                    while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
+                                
+                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","UnitName").equals(reader.getName())){
+                                
+                                    java.lang.String content = reader.getElementText();
+                                    
+                                              object.setUnitName(
                                                     org.apache.axis2.databinding.utils.ConverterUtil.convertToString(content));
                                               
                                         reader.next();

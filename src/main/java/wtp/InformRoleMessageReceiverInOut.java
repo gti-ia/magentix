@@ -1,6 +1,6 @@
 
 /**
- * RegisterNormMessageReceiverInOut.java
+ * InformRoleMessageReceiverInOut.java
  *
  * This file was auto-generated from WSDL
  * by the Apache Axis2 version: 1.4  Built on : Apr 26, 2008 (06:24:30 EDT)
@@ -8,10 +8,10 @@
         package wtp;
 
         /**
-        *  RegisterNormMessageReceiverInOut message receiver
+        *  InformRoleMessageReceiverInOut message receiver
         */
 
-        public class RegisterNormMessageReceiverInOut extends org.apache.axis2.receivers.AbstractInOutMessageReceiver{
+        public class InformRoleMessageReceiverInOut extends org.apache.axis2.receivers.AbstractInOutMessageReceiver{
 
 
         public void invokeBusinessLogic(org.apache.axis2.context.MessageContext msgContext, org.apache.axis2.context.MessageContext newMsgContext)
@@ -22,7 +22,7 @@
         // get the implementation class for the Web Service
         Object obj = getTheImplementationObject(msgContext);
 
-        RegisterNormSkeleton skel = (RegisterNormSkeleton)obj;
+        InformRoleSkeleton skel = (InformRoleSkeleton)obj;
         //Out Envelop
         org.apache.axiom.soap.SOAPEnvelope envelope = null;
         //Find the axisOperation that has been set by the Dispatch phase.
@@ -36,22 +36,22 @@
 
         
 
-            if("RegisterNorm".equals(methodName)){
+            if("InformRole".equals(methodName)){
                 
-                wtp.RegisterNormResponse registerNormResponse1 = null;
-	                        wtp.RegisterNorm wrappedParam =
-                                                             (wtp.RegisterNorm)fromOM(
+                wtp.InformRoleResponse informRoleResponse1 = null;
+	                        wtp.InformRole wrappedParam =
+                                                             (wtp.InformRole)fromOM(
                                     msgContext.getEnvelope().getBody().getFirstElement(),
-                                    wtp.RegisterNorm.class,
+                                    wtp.InformRole.class,
                                     getEnvelopeNamespaces(msgContext.getEnvelope()));
                                                 
-                                               registerNormResponse1 =
+                                               informRoleResponse1 =
                                                    
                                                    
-                                                         skel.RegisterNorm(wrappedParam)
+                                                         skel.InformRole(wrappedParam)
                                                     ;
                                             
-                                        envelope = toEnvelope(getSOAPFactory(msgContext), registerNormResponse1, false);
+                                        envelope = toEnvelope(getSOAPFactory(msgContext), informRoleResponse1, false);
                                     
             } else {
               throw new java.lang.RuntimeException("method not found");
@@ -67,12 +67,12 @@
         }
         
         //
-            private  org.apache.axiom.om.OMElement  toOM(wtp.RegisterNorm param, boolean optimizeContent)
+            private  org.apache.axiom.om.OMElement  toOM(wtp.InformRole param, boolean optimizeContent)
             throws org.apache.axis2.AxisFault {
 
             
                         try{
-                             return param.getOMElement(wtp.RegisterNorm.MY_QNAME,
+                             return param.getOMElement(wtp.InformRole.MY_QNAME,
                                           org.apache.axiom.om.OMAbstractFactory.getOMFactory());
                         } catch(org.apache.axis2.databinding.ADBException e){
                             throw org.apache.axis2.AxisFault.makeFault(e);
@@ -81,12 +81,12 @@
 
             }
         
-            private  org.apache.axiom.om.OMElement  toOM(wtp.RegisterNormResponse param, boolean optimizeContent)
+            private  org.apache.axiom.om.OMElement  toOM(wtp.InformRoleResponse param, boolean optimizeContent)
             throws org.apache.axis2.AxisFault {
 
             
                         try{
-                             return param.getOMElement(wtp.RegisterNormResponse.MY_QNAME,
+                             return param.getOMElement(wtp.InformRoleResponse.MY_QNAME,
                                           org.apache.axiom.om.OMAbstractFactory.getOMFactory());
                         } catch(org.apache.axis2.databinding.ADBException e){
                             throw org.apache.axis2.AxisFault.makeFault(e);
@@ -95,12 +95,12 @@
 
             }
         
-                    private  org.apache.axiom.soap.SOAPEnvelope toEnvelope(org.apache.axiom.soap.SOAPFactory factory, wtp.RegisterNormResponse param, boolean optimizeContent)
+                    private  org.apache.axiom.soap.SOAPEnvelope toEnvelope(org.apache.axiom.soap.SOAPFactory factory, wtp.InformRoleResponse param, boolean optimizeContent)
                         throws org.apache.axis2.AxisFault{
                       try{
                           org.apache.axiom.soap.SOAPEnvelope emptyEnvelope = factory.getDefaultEnvelope();
                            
-                                    emptyEnvelope.getBody().addChild(param.getOMElement(wtp.RegisterNormResponse.MY_QNAME,factory));
+                                    emptyEnvelope.getBody().addChild(param.getOMElement(wtp.InformRoleResponse.MY_QNAME,factory));
                                 
 
                          return emptyEnvelope;
@@ -109,8 +109,8 @@
                     }
                     }
                     
-                         private wtp.RegisterNormResponse wrapRegisterNorm(){
-                                wtp.RegisterNormResponse wrappedElement = new wtp.RegisterNormResponse();
+                         private wtp.InformRoleResponse wrapInformRole(){
+                                wtp.InformRoleResponse wrappedElement = new wtp.InformRoleResponse();
                                 return wrappedElement;
                          }
                     
@@ -131,16 +131,16 @@
 
         try {
         
-                if (wtp.RegisterNorm.class.equals(type)){
+                if (wtp.InformRole.class.equals(type)){
                 
-                           return wtp.RegisterNorm.Factory.parse(param.getXMLStreamReaderWithoutCaching());
+                           return wtp.InformRole.Factory.parse(param.getXMLStreamReaderWithoutCaching());
                     
 
                 }
            
-                if (wtp.RegisterNormResponse.class.equals(type)){
+                if (wtp.InformRoleResponse.class.equals(type)){
                 
-                           return wtp.RegisterNormResponse.Factory.parse(param.getXMLStreamReaderWithoutCaching());
+                           return wtp.InformRoleResponse.Factory.parse(param.getXMLStreamReaderWithoutCaching());
                     
 
                 }

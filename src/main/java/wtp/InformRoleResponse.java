@@ -1,6 +1,6 @@
 
 /**
- * RegisterNormResponse.java
+ * InformRoleResponse.java
  *
  * This file was auto-generated from WSDL
  * by the Apache Axis2 version: 1.4  Built on : Apr 26, 2008 (06:25:17 EDT)
@@ -10,15 +10,15 @@
             
 
             /**
-            *  RegisterNormResponse bean class
+            *  InformRoleResponse bean class
             */
         
-        public  class RegisterNormResponse
+        public  class InformRoleResponse
         implements org.apache.axis2.databinding.ADBBean{
         
                 public static final javax.xml.namespace.QName MY_QNAME = new javax.xml.namespace.QName(
                 "http://wtp",
-                "RegisterNormResponse",
+                "InformRoleResponse",
                 "ns1");
 
             
@@ -63,30 +63,30 @@
                             
 
                         /**
-                        * field for ErrorValue
+                        * field for ProfileList
                         */
 
                         
-                                    protected java.lang.String localErrorValue ;
+                                    protected java.lang.String localProfileList ;
                                 
 
                            /**
                            * Auto generated getter method
                            * @return java.lang.String
                            */
-                           public  java.lang.String getErrorValue(){
-                               return localErrorValue;
+                           public  java.lang.String getProfileList(){
+                               return localProfileList;
                            }
 
                            
                         
                             /**
                                * Auto generated setter method
-                               * @param param ErrorValue
+                               * @param param ProfileList
                                */
-                               public void setErrorValue(java.lang.String param){
+                               public void setProfileList(java.lang.String param){
                             
-                                            this.localErrorValue=param;
+                                            this.localProfileList=param;
                                     
 
                                }
@@ -124,7 +124,7 @@
                        new org.apache.axis2.databinding.ADBDataSource(this,MY_QNAME){
 
                  public void serialize(org.apache.axis2.databinding.utils.writer.MTOMAwareXMLStreamWriter xmlWriter) throws javax.xml.stream.XMLStreamException {
-                       RegisterNormResponse.this.serialize(MY_QNAME,factory,xmlWriter);
+                       InformRoleResponse.this.serialize(MY_QNAME,factory,xmlWriter);
                  }
                };
                return new org.apache.axiom.om.impl.llom.OMSourcedElementImpl(
@@ -178,11 +178,11 @@
                    java.lang.String namespacePrefix = registerPrefix(xmlWriter,"http://wtp");
                    if ((namespacePrefix != null) && (namespacePrefix.trim().length() > 0)){
                        writeAttribute("xsi","http://www.w3.org/2001/XMLSchema-instance","type",
-                           namespacePrefix+":RegisterNormResponse",
+                           namespacePrefix+":InformRoleResponse",
                            xmlWriter);
                    } else {
                        writeAttribute("xsi","http://www.w3.org/2001/XMLSchema-instance","type",
-                           "RegisterNormResponse",
+                           "InformRoleResponse",
                            xmlWriter);
                    }
 
@@ -230,28 +230,28 @@
                                         if (prefix == null) {
                                             prefix = generatePrefix(namespace);
 
-                                            xmlWriter.writeStartElement(prefix,"ErrorValue", namespace);
+                                            xmlWriter.writeStartElement(prefix,"ProfileList", namespace);
                                             xmlWriter.writeNamespace(prefix, namespace);
                                             xmlWriter.setPrefix(prefix, namespace);
 
                                         } else {
-                                            xmlWriter.writeStartElement(namespace,"ErrorValue");
+                                            xmlWriter.writeStartElement(namespace,"ProfileList");
                                         }
 
                                     } else {
-                                        xmlWriter.writeStartElement("ErrorValue");
+                                        xmlWriter.writeStartElement("ProfileList");
                                     }
                                 
 
-                                          if (localErrorValue==null){
+                                          if (localProfileList==null){
                                               // write the nil attribute
                                               
-                                                     throw new org.apache.axis2.databinding.ADBException("ErrorValue cannot be null!!");
+                                                     throw new org.apache.axis2.databinding.ADBException("ProfileList cannot be null!!");
                                                   
                                           }else{
 
                                         
-                                                   xmlWriter.writeCharacters(localErrorValue);
+                                                   xmlWriter.writeCharacters(localProfileList);
                                             
                                           }
                                     
@@ -429,12 +429,12 @@
                                         }
                                     
                                       elementList.add(new javax.xml.namespace.QName("",
-                                                                      "ErrorValue"));
+                                                                      "ProfileList"));
                                  
-                                        if (localErrorValue != null){
-                                            elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localErrorValue));
+                                        if (localProfileList != null){
+                                            elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localProfileList));
                                         } else {
-                                           throw new org.apache.axis2.databinding.ADBException("ErrorValue cannot be null!!");
+                                           throw new org.apache.axis2.databinding.ADBException("ProfileList cannot be null!!");
                                         }
                                     
 
@@ -461,9 +461,9 @@
         * Postcondition: If this object is an element, the reader is positioned at its end element
         *                If this object is a complex type, the reader is positioned at the end element of its outer element
         */
-        public static RegisterNormResponse parse(javax.xml.stream.XMLStreamReader reader) throws java.lang.Exception{
-            RegisterNormResponse object =
-                new RegisterNormResponse();
+        public static InformRoleResponse parse(javax.xml.stream.XMLStreamReader reader) throws java.lang.Exception{
+            InformRoleResponse object =
+                new InformRoleResponse();
 
             int event;
             java.lang.String nillableValue = null;
@@ -487,10 +487,10 @@
 
                     java.lang.String type = fullTypeName.substring(fullTypeName.indexOf(":")+1);
                     
-                            if (!"RegisterNormResponse".equals(type)){
+                            if (!"InformRoleResponse".equals(type)){
                                 //find namespace for the prefix
                                 java.lang.String nsUri = reader.getNamespaceContext().getNamespaceURI(nsPrefix);
-                                return (RegisterNormResponse)wtp.ExtensionMapper.getTypeObject(
+                                return (InformRoleResponse)wtp.ExtensionMapper.getTypeObject(
                                      nsUri,type,reader);
                               }
                         
@@ -534,11 +534,11 @@
                                     
                                     while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
                                 
-                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","ErrorValue").equals(reader.getName())){
+                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","ProfileList").equals(reader.getName())){
                                 
                                     java.lang.String content = reader.getElementText();
                                     
-                                              object.setErrorValue(
+                                              object.setProfileList(
                                                     org.apache.axis2.databinding.utils.ConverterUtil.convertToString(content));
                                               
                                         reader.next();
