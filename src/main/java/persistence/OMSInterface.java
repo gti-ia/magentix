@@ -1,5 +1,6 @@
 package persistence;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class OMSInterface {
@@ -11,7 +12,7 @@ public class OMSInterface {
 	{
 		dbInterface = new DataBaseInterface();
 	}
-	public String registerUnit(String UnitName, String UnitType, String AgentName, String CreatorName) throws THOMASException
+	public String registerUnit(String UnitName, String UnitType, String AgentName, String CreatorName) throws THOMASException, SQLException
 	{
 		String result = "";
 
@@ -24,10 +25,13 @@ public class OMSInterface {
 		}
 		return result;
 	}
-	public String registerUnit(String UnitName, String UnitType, String ParentUnitName, String AgentName, String CreatorName) throws THOMASException
+	public String registerUnit(String UnitName, String UnitType, String ParentUnitName, String AgentName, String CreatorName) throws THOMASException, SQLException
 	{
 
 		String result="";
+
+
+
 
 		if (dbInterface.checkUnit(UnitName))
 		{
@@ -44,14 +48,13 @@ public class OMSInterface {
 			}
 			//TODO comprobar las normas. Por ahora se acepta siempre
 
-			if (dbInterface.checkAgentPlaysPosition(AgentName,"creator",ParentUnitName))
+			if (dbInterface.checkPositionInUnit(AgentName,"creator",ParentUnitName))
 			{
-				try{
-					result = dbInterface.createUnit(UnitName, UnitType, ParentUnitName, AgentName, CreatorName);
-				}catch(Exception e)
+				result = dbInterface.createUnit(UnitName, UnitType, ParentUnitName, AgentName, CreatorName);
+
+				if (result.contains("Error"))
 				{
-					throw new THOMASException("Error in createUnit: "+ e);
-					throw e; // en el caso de que me devuelva una THOMASException. 
+					throw new THOMASException(result);
 				}
 			}
 			else
@@ -64,61 +67,54 @@ public class OMSInterface {
 		{
 			throw new THOMASException("Not found. Unit "+ UnitName + " not found.");
 		}
+
+
 		return result;
 	}
 
-	public String deregisterUnit(String UnitName, String AgentName) throws THOMASException
+	public String deregisterUnit(String UnitName, String AgentName) throws THOMASException, SQLException
 	{
 		String result="";
 		boolean play = false;
-		boolean exist = false;
+
 
 		if (dbInterface.checkUnit(UnitName) && !dbInterface.checkVirtualUnit(UnitName))
 		{
 			//TODO control de normas.
-			if (dbInterface.checkAgentPlaysPosition(AgentName, "creator", UnitName))
+			if (dbInterface.checkPositionInUnit(AgentName, "creator", UnitName))
+			{
+				play= true;
+			}
+			//TODO en un futuro se deberan ver para todas las unidades padre.
+			String parentsUnit = dbInterface.getParentsUnit(UnitName);
+
+			if (dbInterface.checkPositionInUnit(AgentName, "creator", parentsUnit))
 			{
 				play= true;
 			}
 
-			//TODO aqui tendremos una función que mire todas las unidades padres de la unidad, por cada una
-			//comprobaremos si el agente juega o no un rol con posicion creator.
-
 			if (play)
 			{
-				//TODO Comprobar que no haya ningún agente en la unidad que tenga un rol distinto a creator.
-				String results = dbInterface.getAgentsInUnit(UnitName);
-				//Si existe alguna tupla con position diferente a creator no puedo eliminar la unidad.
 
-				String[] agentInfo = results.split(">");//Sacamos todos las tripletas
-
-				for (String s : agentInfo)//Por cada tripleta
-				{
-					if (s.split(",")[2].substring(1).equals(AgentName))//Si esa tripleta contiene el agente que va a registrar el role
-					{
-						exist = true;
-					}
-				}
-
-				if (exist)
+				if (dbInterface.checkNoCreatorAgentsInUnit(UnitName))
 				{
 					throw new THOMASException("Not allowed. There are agents in unit playing roles with position different from creator.");
 				}
 				else
 				{
+
 					if (dbInterface.checkSubUnits(UnitName))
 					{
-						throw new THOMASException("Not allowed. There are subunits in unit.");
+						throw new THOMASException("Not allowed. There are subunits in unit ."+ UnitName);
 					}
 					else
 					{
-						try
+
+						result = dbInterface.deleteUnit(UnitName, AgentName);
+
+						if (result.contains("Error"))
 						{
-							result = dbInterface.deleteUnit(UnitName, AgentName);
-						}catch(THOMASException e)
-						{
-							throw new THOMASException("Error in deleteUnit: "+ e);
-							throw e; // en el caso de que me devuelva una THOMASException.
+							throw new THOMASException(result);
 						}
 					}
 				}
@@ -135,15 +131,15 @@ public class OMSInterface {
 		return result;
 	}
 
-	public String registerRole(String RoleName, String UnitName, String Accessibility, String Visibility, String Position, String AgentName) throws THOMASException
+	public String registerRole(String RoleName, String UnitName, String Accessibility, String Visibility, String Position, String AgentName) throws THOMASException, SQLException
 	{
 		String result = "";
 		String unitType = "";
-		boolean exists = false;
+
 
 		if (dbInterface.checkUnit(UnitName))
 		{
-			if (!dbInterface.checkRoleInUnit(RoleName, UnitName))
+			if (!dbInterface.checkRole(RoleName, UnitName))
 			{
 				unitType = dbInterface.getUnitType(UnitName);
 
@@ -174,31 +170,13 @@ public class OMSInterface {
 				{
 					if (unitType.equals("hierarchy"))
 					{
-						//TODO devuelve la tripleta agente, rol, posición
-						String results = dbInterface.getAgentsInUnit(UnitName);
-						//TODO De todos estos tengo que ver el que solicita 
-						String[] agentInfo = results.split(">");//Sacamos todos las tripletas
 
-						for (String s : agentInfo)//Por cada tripleta
+						if (dbInterface.checkPositionInUnit(AgentName, "creator", UnitName) || dbInterface.checkPositionInUnit(AgentName, "supervisor", UnitName))
 						{
-							if (s.split(",")[0].substring(1).equals(AgentName))//Si esa tripleta contiene el agente que va a registrar el role
+							result = dbInterface.createRole(RoleName, UnitName, Accessibility, Visibility, Position);
+							if (result.contains("Error"))
 							{
-								if  (s.contains("creator") || s.contains("supervisor"))
-								{
-									exists = true;
-								}
-							}
-						}
-
-						if (exists)
-						{
-							try
-							{
-								result = dbInterface.createRole(RoleName, UnitName, Accessibility, Visibility, Position);
-							}catch(THOMASException e)
-							{
-								throw new THOMASException("Error in create role: "+ e);
-								throw e; // en el caso de que me devuelva una THOMASException.
+								throw new THOMASException(result);
 							}
 						}
 						else
@@ -207,36 +185,15 @@ public class OMSInterface {
 						}
 
 
-
 					}else if (unitType.equals("team") || unitType.equals("flat"))
 					{
-						//TODO devuelve la tripleta agente, rol, posición
-						String results = dbInterface.getAgentsInUnit(UnitName);
 
-						//TODO De todos estos tengo que ver el que solicita 
-						String[] agentInfo = results.split(">");//Sacamos todos las tripletas
-
-						for (String s : agentInfo)//Por cada tripleta
+						if (dbInterface.checkPositionInUnit(AgentName, "creator", UnitName) || dbInterface.checkPositionInUnit(AgentName, "member", UnitName))
 						{
-							if (s.split(",")[0].substring(1).equals(AgentName))//Si esa tripleta contiene el agente que va a registrar el role
+							result = dbInterface.createRole(RoleName, UnitName, Accessibility, Visibility, Position);
+							if (result.contains("Error"))
 							{
-								if  (s.contains("creator") || s.contains("member"))
-								{
-
-									exists = true;
-								}
-							}
-						}
-
-						if (exists)
-						{
-							try
-							{
-								result = dbInterface.createRole(RoleName, UnitName, Accessibility, Visibility, Position);
-							}catch(THOMASException e)
-							{
-								throw new THOMASException("Error in create role: "+ e);
-								throw e; // en el caso de que me devuelva una THOMASException.
+								throw new THOMASException(result);
 							}
 						}
 						else
@@ -252,31 +209,13 @@ public class OMSInterface {
 				{
 					if (unitType.equals("flat"))
 					{
-						//TODO devuelve la tripleta agente, rol, posición
-						String results = dbInterface.getAgentsInUnit(UnitName);
 
-						//TODO De todos estos tengo que ver el que solicita 
-						String[] agentInfo = results.split(">");//Sacamos todos las tripletas
-
-						for (String s : agentInfo)//Por cada tripleta
+						if (dbInterface.checkPosition(AgentName, "creator"))
 						{
-							if (s.split(",")[0].substring(1).equals(AgentName))//Si esa tripleta contiene el agente que va a registrar el role
+							result = dbInterface.createRole(RoleName, UnitName, Accessibility, Visibility, Position);
+							if (result.contains("Error"))
 							{
-								if (s.contains("creator"))
-								{
-									exists = true;
-								}		
-							}
-						}
-						if (exists)
-						{
-							try
-							{
-								result = dbInterface.createRole(RoleName, UnitName, Accessibility, Visibility, Position);
-							}catch(THOMASException e)
-							{
-								throw new THOMASException("Error in create role: "+ e);
-								throw e; // en el caso de que me devuelva una THOMASException.
+								throw new THOMASException(result);
 							}
 						}
 						else
@@ -304,15 +243,15 @@ public class OMSInterface {
 		return result;
 	}
 
-	public String deregisterRole(String RoleName, String UnitName, String AgentName) throws THOMASException
+	public String deregisterRole(String RoleName, String UnitName, String AgentName) throws THOMASException, SQLException
 	{
 		String result = "";
 		String unitType = "";
-		boolean exists = false;
+
 
 		if (dbInterface.checkUnit(UnitName)) 
 		{
-			if (dbInterface.checkRoleInUnit(RoleName, UnitName))
+			if (dbInterface.checkRole(RoleName, UnitName))
 			{
 				//TODO Control de normas.
 				if (!dbInterface.checkTargetRoleNorm(RoleName, UnitName))
@@ -326,32 +265,12 @@ public class OMSInterface {
 							if (unitType.equals("hierarchy"))
 							{
 
-								//TODO devuelve la tripleta agente, rol, posición
-								String results = dbInterface.getAgentsInUnit(UnitName);
-
-								//TODO De todos estos tengo que ver el que solicita 
-								String[] agentInfo = results.split(">");//Sacamos todos las tripletas
-
-								for (String s : agentInfo)//Por cada tripleta
+								if (dbInterface.checkPositionInUnit(AgentName, "creator", UnitName) || dbInterface.checkPositionInUnit(AgentName, "supervisor", UnitName))
 								{
-									if (s.split(",")[0].substring(1).equals(AgentName))//Si esa tripleta contiene el agente que va a registrar el role
+									result = dbInterface.deleteRole(RoleName, UnitName, AgentName);
+									if (result.contains("Error"))
 									{
-										if  (s.contains("creator") || s.contains("supervisor"))
-										{
-											exists = true;
-										}
-
-									}
-								}
-								if (exists)
-								{
-									try
-									{
-										result = dbInterface.deleteRole(RoleName, UnitName, AgentName);
-									}catch(THOMASException e)
-									{
-										throw new THOMASException("Error in create role: "+ e);
-										throw e; // en el caso de que me devuelva una THOMASException.
+										throw new THOMASException(result);
 									}
 								}
 								else
@@ -361,32 +280,13 @@ public class OMSInterface {
 							}
 							else if (unitType.equals("team") || unitType.equals("flat"))
 							{
-								//TODO devuelve la tripleta agente, rol, posición
-								String results = dbInterface.getAgentsInUnit(UnitName);
 
-								//TODO De todos estos tengo que ver el que solicita 
-								String[] agentInfo = results.split(">");//Sacamos todos las tripletas
-
-								for (String s : agentInfo)//Por cada tripleta
+								if (dbInterface.checkPositionInUnit(AgentName, "creator", UnitName) || dbInterface.checkPositionInUnit(AgentName, "member", UnitName))
 								{
-									if (s.split(",")[0].substring(1).equals(AgentName))//Si esa tripleta contiene el agente que va a registrar el role
+									result = dbInterface.deleteRole(RoleName, UnitName, AgentName);
+									if (result.contains("Error"))
 									{
-										if  (s.contains("creator") || s.contains("member"))
-										{
-											exists = true;
-										}
-
-									}
-								}
-								if (exists)
-								{
-									try
-									{
-										result = dbInterface.deleteRole(RoleName, UnitName, AgentName);
-									}catch(THOMASException e)
-									{
-										throw new THOMASException("Error in delete role: "+ e);
-										throw e; // en el caso de que me devuelva una THOMASException.
+										throw new THOMASException(result);
 									}
 								}
 								else
@@ -404,32 +304,12 @@ public class OMSInterface {
 						{
 							if (unitType.equals("flat"))
 							{
-								//TODO devuelve la tripleta agente, rol, posición
-								String results = dbInterface.getAgentsInUnit(UnitName);
-
-								//TODO De todos estos tengo que ver el que solicita 
-								String[] agentInfo = results.split(">");//Sacamos todos las tripletas
-
-								for (String s : agentInfo)//Por cada tripleta
+								if (dbInterface.checkPosition(AgentName, "creator"))
 								{
-									if (s.split(",")[0].substring(1).equals(AgentName))//Si esa tripleta contiene el agente que va a registrar el role
+									result = dbInterface.deleteRole(RoleName, UnitName, AgentName);
+									if (result.contains("Error"))
 									{
-										if (s.contains("creator"))
-										{
-											exists = true;
-										}
-
-									}
-								}
-								if (exists)
-								{
-									try
-									{
-										result = dbInterface.deleteRole(RoleName, UnitName, AgentName);
-									}catch(THOMASException e)
-									{
-										throw new THOMASException("Error in delete role: "+ e);
-										throw e; // en el caso de que me devuelva una THOMASException.
+										throw new THOMASException(result);
 									}
 								}
 								else
@@ -466,14 +346,14 @@ public class OMSInterface {
 		return result;
 	}
 
-	public boolean AcquireRole(String UnitName, String RoleName, String AgentName) throws THOMASException
+	public String AcquireRole(String UnitName, String RoleName, String AgentName) throws THOMASException, SQLException
 	{
-		boolean result;
+		String result;
 		boolean exists = false;
 		ArrayList<String> agentRoles = new ArrayList<String>();
 		if (dbInterface.checkUnit(UnitName))
 		{
-			if (dbInterface.checkRoleInUnit(RoleName, UnitName))
+			if (dbInterface.checkRole(RoleName, UnitName))
 			{
 				//TODO Control de normas.
 				if (dbInterface.checkAgentPlaysRole(AgentName, RoleName, UnitName))
@@ -483,83 +363,69 @@ public class OMSInterface {
 				}
 				else
 				{
-					//TODO devuelve la tripleta agente, rol, posición
-					String results = dbInterface.getAgentsInUnit(UnitName);
+					String informRole = dbInterface.getInformRole(RoleName, UnitName, AgentName);
+					String position = informRole.split(" ")[5];
+					String visibility = informRole.split(" ")[3];
+					String accessibility = informRole.split(" ")[1];
 
-					//TODO El agente que solo tenga un rol y sea subordinate no puede adquirir un rol con position 
-					//creator o supervisor
-					//Puede adquirir el rol
-					String informRole = getInformRole(RoleName);
-
-					//TODO De todos estos tengo que ver el que solicita 
-					String[] agentInfo = results.split(">");//Sacamos todos las tripletas
-
-					for (String s : agentInfo)//Por cada tripleta
+					if (!dbInterface.checkPositionInUnit(AgentName, "member", UnitName) && 
+							!dbInterface.checkPositionInUnit(AgentName, "creator", UnitName) &&
+							!dbInterface.checkPositionInUnit(AgentName, "supervisor", UnitName))
 					{
-						if (s.split(",")[0].substring(1).equals(AgentName))//Si esa tripleta contiene el agente que va a registrar el role
+						//Solamente tiene el rol subordinate.
+
+
+
+						if (informRole.contains("Error"))
 						{
-							agentRoles.add(s.split(",")[2]);
+							throw new THOMASException(informRole);
 						}
-					}
-					if (!agentRoles.contains("creator") && !agentRoles.contains("supervisor") && !agentRoles.contains("member"))
-					{
-						//TODO Extraer la position del rol					
-						if (!informRole.contains("subordinate") && !informRole.contains("member"))
+						//TODO Parseado del resultado, verificar que es correcto.
+						if (!position.equals("subordinate") && !position.equals("member"))
 						{
-
 							throw new THOMASException("Not allowed. The position role cannot be creator or supervisor.");
 						}
+
+
 					}
-					if (informRole.contains("external"))
+
+					if (accessibility.equals("external"))
 					{
+						result = dbInterface.acquireRole(UnitName, RoleName, AgentName);
 
-
-						try
+						if (result.contains("Error"))
 						{
-							result = dbInterface.acquireRole(UnitName, RoleName, AgentName);
+							throw new THOMASException(result);
 						}
-						catch(THOMASException e)
+					}
+					else if (visibility.equals("public"))
+					{
+						result = dbInterface.acquireRole(UnitName, RoleName, AgentName);
+
+						if (result.contains("Error"))
 						{
-							throw new THOMASException("Error in delete role: "+ e);
-							throw e; // en el caso de que me devuelva una THOMASException.
+							throw new THOMASException(result);
 						}
 					}
 					else
 					{
-						if (informRole.contains("public"))
+						if (dbInterface.checkAgentInUnit(AgentName, UnitName))
 						{
-							try
+							result = dbInterface.acquireRole(UnitName, RoleName, AgentName);
+
+							if (result.contains("Error"))
 							{
-								result = dbInterface.acquireRole(UnitName, RoleName, AgentName);
-							}
-							catch(THOMASException e)
-							{
-								throw new THOMASException("Error in delete role: "+ e);
-								throw e; // en el caso de que me devuelva una THOMASException.
+								throw new THOMASException(result);
 							}
 						}
 						else
 						{
-							if (checkAgentInUnit(AgentName, UnitName))
-							{
-								try
-								{
-									result = dbInterface.acquireRole(UnitName, RoleName, AgentName);
-								}
-								catch(THOMASException e)
-								{
-									throw new THOMASException("Error in acquire role: "+ e);
-									throw e; // en el caso de que me devuelva una THOMASException.
-								}
-							}
-							else
-							{
-								throw new THOMASException("Not allowed. Agent "+ AgentName + " is not inside the unit.");
-							}
+							throw new THOMASException("Not allowed. Agent "+ AgentName + " is not inside the unit.");
 						}
 					}
+
 				}
-			}
+			}//checkRole
 			else
 			{
 				throw new THOMASException("Not allowed. Role "+ RoleName + " is not registered in the unit.");
@@ -573,13 +439,13 @@ public class OMSInterface {
 		return result;
 	}
 
-	public String leaveRole(String UnitName, String RoleName, String AgentName) throws THOMASException
+	public String leaveRole(String UnitName, String RoleName, String AgentName) throws THOMASException, SQLException
 	{
 		String result = "";
 
 		if (dbInterface.checkUnit(UnitName))
 		{
-			if (dbInterface.checkRoleInUnit(RoleName, UnitName))
+			if (dbInterface.checkRole(RoleName, UnitName))
 			{
 				//TODO Control de normas.
 				if (!dbInterface.checkAgentPlaysRole(AgentName, RoleName, UnitName))
@@ -589,15 +455,13 @@ public class OMSInterface {
 				}
 				else
 				{
-					try
+					result = dbInterface.leaveRole(UnitName, RoleName, AgentName);
+
+					if (result.contains("Error"))
 					{
-						result = dbInterface.leaveRole(UnitName, RoleName, AgentName);
+						throw new THOMASException(result);
 					}
-					catch(THOMASException e)
-					{
-						throw new THOMASException("Error in leave role: "+ e);
-						throw e; // en el caso de que me devuelva una THOMASException.
-					}
+
 				}
 			}
 			else
@@ -612,20 +476,22 @@ public class OMSInterface {
 		return result;
 	}
 
-	public String allocateRole(String RoleName, String UnitName, String TargetAgentName, String AgentName) throws THOMASException
+	public String allocateRole(String RoleName, String UnitName, String TargetAgentName, String AgentName) throws THOMASException, SQLException
 	{
 		String result = "";
 
 
 		if (dbInterface.checkUnit(UnitName))
 		{
-			if (dbInterface.checkRoleInUnit(RoleName, UnitName))
+			if (dbInterface.checkRole(RoleName, UnitName))
 			{
-				//TODO Falta por hacer la comprobación del targetName, por ahora no se dispone de suficiente información para ello.
+
 				if (TargetAgentName.equals(AgentName))
 				{
 					throw new THOMASException("Invalid. The TargetAgentName is the same than AgentName.");
 				}
+
+				//TODO Control de normas.
 				String type = dbInterface.getUnitType(UnitName);
 
 				if (type.equals("hierarchy"))
@@ -634,19 +500,15 @@ public class OMSInterface {
 					{
 						if (dbInterface.checkPositionInUnit(AgentName, "supervisor", UnitName) || dbInterface.checkPositionInUnit(AgentName, "creator", UnitName))
 						{
-							try
+							result = dbInterface.allocateRole(RoleName, UnitName, TargetAgentName, AgentName);
+							if (result.contains("Error"))
 							{
-								result = dbInterface.allocateRole(RoleName, UnitName, TargetAgentName, AgentName);
-							}
-							catch(THOMASException e)
-							{
-								throw new THOMASException("Error in allocate role: "+ e);
-								throw e; // en el caso de que me devuelva una THOMASException.
+								throw new THOMASException(result);
 							}
 						}
 						else
 						{
-							throw new THOMASException("Not allowed. The Agent "+ AgentName + " not play any rol with position supervisor or creator.");
+							throw new THOMASException("Not allowed. The Agent "+ AgentName + " not play any rol with position supervisor or creator in unit "+ UnitName+".");
 						}
 					}
 					else
@@ -657,14 +519,11 @@ public class OMSInterface {
 				{
 					if (dbInterface.checkAgentInUnit(AgentName, UnitName))
 					{
-						try
+						result = dbInterface.allocateRole(RoleName, UnitName, TargetAgentName, AgentName);
+
+						if (result.contains("Error"))
 						{
-							result = dbInterface.allocateRole(RoleName, UnitName, TargetAgentName, AgentName);
-						}
-						catch(THOMASException e)
-						{
-							throw new THOMASException("Error in allocate role: "+ e);
-							throw e; // en el caso de que me devuelva una THOMASException.
+							throw new THOMASException(result);
 						}
 					}
 					else
@@ -678,34 +537,27 @@ public class OMSInterface {
 
 						if (dbInterface.checkPositionInUnit(AgentName, "member", UnitName) || dbInterface.checkPositionInUnit(AgentName, "creator", UnitName))
 						{
-							try
+							result = dbInterface.allocateRole(RoleName, UnitName, TargetAgentName, AgentName);
+							if (result.contains("Error"))
 							{
-								result = dbInterface.allocateRole(RoleName, UnitName, TargetAgentName, AgentName);
-							}
-							catch(THOMASException e)
-							{
-								throw new THOMASException("Error in allocate role: "+ e);
-								throw e; // en el caso de que me devuelva una THOMASException.
+								throw new THOMASException(result);
 							}
 						}
 						else
 						{
-							throw new THOMASException("Not allowed. The Agent "+ AgentName + " not play any rol with position member or creator.");
+							throw new THOMASException("Not allowed. The Agent "+ AgentName + " not play any rol with position member or creator in unit "+ UnitName+".");
 						}
 
 					}
 					else
 					{
-						if (dbInterface.checkAgentPosition(AgentName, "creator"))
+						if (dbInterface.checkPosition(AgentName, "creator"))
 						{
-							try
+
+							result = dbInterface.allocateRole(RoleName, UnitName, TargetAgentName, AgentName);
+							if (result.contains("Error"))
 							{
-								result = dbInterface.allocateRole(RoleName, UnitName, TargetAgentName, AgentName);
-							}
-							catch(THOMASException e)
-							{
-								throw new THOMASException("Error in allocate role: "+ e);
-								throw e; // en el caso de que me devuelva una THOMASException.
+								throw new THOMASException(result);
 							}
 						}
 						else
@@ -731,18 +583,20 @@ public class OMSInterface {
 		return result;
 	}
 
-	public String deallocateRole(String RoleName, String UnitName, String TargetAgentName, String AgentName) throws THOMASException
+
+	public String deallocateRole(String RoleName, String UnitName, String TargetAgentName, String AgentName) throws THOMASException, SQLException
 	{
 		String result = "";
 		if (dbInterface.checkUnit(UnitName))
 		{
-			if (dbInterface.checkRoleInUnit(RoleName, UnitName))
+			if (dbInterface.checkRole(RoleName, UnitName))
 			{
 				//TODO Falta por hacer la comprobación del targetName, por ahora no se dispone de suficiente información para ello.
 				if (TargetAgentName.equals(AgentName))
 				{
 					throw new THOMASException("Not allowed. The TargetAgentName is the same than AgentName.");
 				}
+				//TODO Control de normas
 				String type = dbInterface.getUnitType(UnitName);
 
 				if (type.equals("hierarchy"))
@@ -751,19 +605,15 @@ public class OMSInterface {
 					{
 						if (dbInterface.checkPositionInUnit(AgentName, "supervisor", UnitName) || dbInterface.checkPositionInUnit(AgentName, "creator", UnitName))
 						{
-							try
+							result = dbInterface.deallocateRole(RoleName, UnitName, TargetAgentName, AgentName);
+							if (result.contains("Error"))
 							{
-								result = dbInterface.deallocateRole(RoleName, UnitName, TargetAgentName, AgentName);
-							}
-							catch(THOMASException e)
-							{
-								throw new THOMASException("Error in deallocate role: "+ e);
-								throw e; // en el caso de que me devuelva una THOMASException.
+								throw new THOMASException(result);
 							}
 						}
 						else
 						{
-							throw new THOMASException("Not allowed. The Agent "+ AgentName + " not play any rol with position supervisor or creator.");
+							throw new THOMASException("Not allowed. The Agent "+ AgentName + " not play any rol with position supervisor or creator in unit "+ UnitName+".");
 						}
 					}
 					else
@@ -775,19 +625,15 @@ public class OMSInterface {
 				{
 					if (dbInterface.checkAgentInUnit(AgentName, UnitName))
 					{
-						try
+						result = dbInterface.deallocateRole(RoleName, UnitName, TargetAgentName, AgentName);
+						if (result.contains("Error"))
 						{
-							result = dbInterface.deallocateRole(RoleName, UnitName, TargetAgentName, AgentName);
-						}
-						catch(THOMASException e)
-						{
-							throw new THOMASException("Error in deallocate role: "+ e);
-							throw e; // en el caso de que me devuelva una THOMASException.
+							throw new THOMASException(result);
 						}
 					}
 					else
 					{
-						throw new THOMASException("Not allowed. The Agent "+ AgentName + " is not inside the unit.");
+						throw new THOMASException("Not allowed. The Agent "+ AgentName + " is not inside the unit "+UnitName+".");
 					}
 				}else if (type.equals("flat"))
 				{
@@ -796,34 +642,26 @@ public class OMSInterface {
 
 						if (dbInterface.checkPositionInUnit(AgentName, "member", UnitName) || dbInterface.checkPositionInUnit(AgentName, "creator", UnitName))
 						{
-							try
+							result = dbInterface.deallocateRole(RoleName, UnitName, TargetAgentName, AgentName);
+							if (result.contains("Error"))
 							{
-								result = dbInterface.deallocateRole(RoleName, UnitName, TargetAgentName, AgentName);
-							}
-							catch(THOMASException e)
-							{
-								throw new THOMASException("Error in deallocate role: "+ e);
-								throw e; // en el caso de que me devuelva una THOMASException.
+								throw new THOMASException(result);
 							}
 						}
 						else
 						{
-							throw new THOMASException("Not allowed. The Agent "+ AgentName + " not play any rol with position member or creator.");
+							throw new THOMASException("Not allowed. The Agent "+ AgentName + " not play any rol with position member or creator in unit "+UnitName+".");
 						}
 
 					}
 					else
 					{
-						if (dbInterface.checkAgentPosition(AgentName, "creator"))
+						if (dbInterface.checkPosition(AgentName, "creator"))
 						{
-							try
+							result = dbInterface.deallocateRole(RoleName, UnitName, TargetAgentName, AgentName);
+							if (result.contains("Error"))
 							{
-								result = dbInterface.deallocateRole(RoleName, UnitName, TargetAgentName, AgentName);
-							}
-							catch(THOMASException e)
-							{
-								throw new THOMASException("Error in deallocate role: "+ e);
-								throw e; // en el caso de que me devuelva una THOMASException.
+								throw new THOMASException(result);
 							}
 						}
 						else
@@ -852,7 +690,7 @@ public class OMSInterface {
 
 	}
 
-	public String jointUnit(String UnitName, String ParentName, String AgentName) throws THOMASException
+	public String jointUnit(String UnitName, String ParentName, String AgentName) throws THOMASException, SQLException
 	{
 		String result = "";
 		if (dbInterface.checkUnit(UnitName))
@@ -866,18 +704,15 @@ public class OMSInterface {
 				//TODO control de normas
 				if (dbInterface.checkAgentInUnit(AgentName, UnitName))
 				{
-					if (dbInterface.checkAgentPositionInUnit(AgentName, "creator", UnitName))
+					if (dbInterface.checkPositionInUnit(AgentName, "creator", UnitName))
 					{
-						if (dbInterface.checkAgentPositionInUnit(AgentName, "creator", ParentName))
+						if (dbInterface.checkPositionInUnit(AgentName, "creator", ParentName))
 						{
-							try
+
+							result = dbInterface.jointUnit(UnitName, ParentName, AgentName);
+							if (result.contains("Error"))
 							{
-								result = dbInterface.jointUnit(UnitName, ParentName, AgentName);
-							}
-							catch(THOMASException e)
-							{
-								throw new THOMASException("Error in joint unit: "+ e);
-								throw e; // en el caso de que me devuelva una THOMASException.
+								throw new THOMASException(result);
 							}
 						}
 						else
@@ -908,20 +743,17 @@ public class OMSInterface {
 		return result;
 	}
 
-	public String informAgentRole(String RequestedAgentName,String AgentName) throws THOMASException
+	public String informAgentRole(String RequestedAgentName,String AgentName) throws THOMASException, SQLException
 	{
 		String result = "";
 		if (dbInterface.checkAgent(RequestedAgentName))
 		{
 			//TODO Control de normas
-			try
+
+			result = dbInterface.getInformAgentRole(RequestedAgentName, AgentName);
+			if (result.contains("Error"))
 			{
-				result = dbInterface.getInformAgentRole(RequestedAgentName, AgentName);
-			}
-			catch(THOMASException e)
-			{
-				throw new THOMASException("Error in joint unit: "+ e);
-				throw e; // en el caso de que me devuelva una THOMASException.
+				throw new THOMASException(result);
 			}
 		}
 		else
@@ -933,31 +765,34 @@ public class OMSInterface {
 	}
 
 
-	public String informMembers(String UnitName, String RoleName, String PositionValue, String AgentName) throws THOMASException
+	public String informMembers(String UnitName, String RoleName, String PositionValue, String AgentName) throws THOMASException, SQLException
 	{
 		String result = "";
 
 		Flags flag = Flags.CASE_A;
 
+		String roleInfo = dbInterface.getInformRole(RoleName, UnitName, AgentName);
+		//TODO Comprobar el parseado.
+		String visibility = roleInfo.split(" ")[3];
+		String position = roleInfo.split(" ")[5];
 
 		if (dbInterface.checkUnit(UnitName))
 		{
 			if (dbInterface.checkAgent(AgentName))
 			{
 				if (RoleName != null)
-				{
+				{//No contien el roleName
 					if (!RoleName.equals(""))
 					{
-						if (!dbInterface.checkRoleInUnit(RoleName, UnitName))
+						if (!dbInterface.checkRole(RoleName, UnitName))
 						{
 							throw new THOMASException("Not found. Role "+ RoleName + " is not inside the unit.");
 						}
 						else
 						{
 							flag = Flags.CASE_B;
-							String roleInfo = dbInterface.getInformAgentRole(RoleName, UnitName, AgentName);
 
-							if (!roleInfo.contains("public"))
+							if (!visibility.equals("public"))
 							{
 								if (!dbInterface.checkAgentInUnit(AgentName, UnitName));
 								{
@@ -986,16 +821,13 @@ public class OMSInterface {
 						if (unitType.equals("flat") || unitType.equals("team"))
 						{
 
-							String informRole = dbInterface.getInformRole(RoleName, UnitName, AgentName));
-
-							if (!informRole.contains("member") && !informRole.contains("creator"))
+							if (!position.equals("member") && !position.equals("creator"))
 							{
 								throw new THOMASException("Invalid. Role "+ RoleName + " position is not member or creator.");
 							}		
 						}else if (unitType.equals("hierarchy"))
 						{
-							String informRole = dbInterface.getInformRole(RoleName, UnitName, AgentName));
-							if (!informRole.contains("supervisor") && !informRole.contains("creator") && !informRole.contains("subordinate"))
+							if (!position.equals("supervisor") && !position.equals("creator") && !position.equals("subordinate"))
 							{
 								throw new THOMASException("Invalid. Role "+ RoleName + " position is not supervisor, subordinate or creator.");
 							}
@@ -1012,24 +844,36 @@ public class OMSInterface {
 				switch (flag){
 
 				case CASE_A: 
-					try{
-						result = dbInterface.getAgentsRolesInUnit(UnitName, AgentName);
-					}catch(THOMASException e){throw e;};
+
+					result = dbInterface.getAgentsRolesInUnit(UnitName, AgentName);
+					if (result.contains("Error"))
+					{
+						throw new THOMASException(result);
+					}
 					break;//No se incluye ni el parametro role name ni position name. 
 				case CASE_B: 
-					try{
-						result = dbInterface.getAgentsPlayingRoleInUnit(UnitName, RoleName, AgentName);
-					}catch(THOMASException e){throw e;};
+
+					result = dbInterface.getAgentsPlayingRoleInUnit(UnitName, RoleName, AgentName);
+					if (result.contains("Error"))
+					{
+						throw new THOMASException(result);
+					}
 					break;//Solo se incluye el roleName
 				case CASE_C: 
-					try{	
-						result = dbInterface.getAgentsPlayingPositionInUnit(UnitName, PositionValue, AgentName);
-					}catch(THOMASException e){throw e;};
+
+					result = dbInterface.getAgentsPlayingPositionInUnit(UnitName, PositionValue, AgentName);
+					if (result.contains("Error"))
+					{
+						throw new THOMASException(result);
+					}
 					break;//No se incluye el rolename pero si el postionName
 				case CASE_D: 
-					try{
-						result = dbInterface.getAgentsPlayingRolePositionInUnit(UnitName, RoleName, PositionValue, AgentName);
-					}catch(THOMASException e){throw e;};
+
+					result = dbInterface.getAgentsPlayingRolePositionInUnit(UnitName, RoleName, PositionValue, AgentName);
+					if (result.contains("Error"))
+					{
+						throw new THOMASException(result);
+					}
 					break; //Se incluyen todos los parametros
 				}
 
@@ -1048,11 +892,15 @@ public class OMSInterface {
 		return result;
 	}
 
-	public String quantityMembers(String UnitName, String RoleName, String PositionValue, String AgentName) throws THOMASException
+	public String quantityMembers(String UnitName, String RoleName, String PositionValue, String AgentName) throws THOMASException, SQLException
 	{
 		String result = "";
 		Flags flag = Flags.CASE_A;
 
+		String roleInfo = dbInterface.getInformRole(RoleName, UnitName, AgentName);
+		//TODO Comprobar el parseado.
+		String visibility = roleInfo.split(" ")[3];
+		String position = roleInfo.split(" ")[5];
 
 		if (dbInterface.checkUnit(UnitName))
 		{
@@ -1062,16 +910,15 @@ public class OMSInterface {
 				{
 					if (!RoleName.equals(""))
 					{
-						if (!dbInterface.checkRoleInUnit(RoleName, UnitName))
+						if (!dbInterface.checkRole(RoleName, UnitName))
 						{
 							throw new THOMASException("Not found. Role "+ RoleName + " is not inside the unit.");
 						}
 						else
 						{
 							flag = Flags.CASE_B;
-							String roleInfo = dbInterface.getInformAgentRole(RoleName, UnitName, AgentName);
 
-							if (!roleInfo.contains("public"))
+							if (!visibility.equals("public"))
 							{
 								if (!dbInterface.checkAgentInUnit(AgentName, UnitName));
 								{
@@ -1100,16 +947,15 @@ public class OMSInterface {
 						if (unitType.equals("flat") || unitType.equals("team"))
 						{
 
-							String informRole = dbInterface.getInformRole(RoleName, UnitName, AgentName));
 
-							if (!informRole.contains("member") && !informRole.contains("creator"))
+							if (!position.equals("member") && !position.equals("creator"))
 							{
 								throw new THOMASException("Invalid. Role "+ RoleName + " position is not member or creator.");
 							}		
 						}else if (unitType.equals("hierarchy"))
 						{
-							String informRole = dbInterface.getInformRole(RoleName, UnitName, AgentName));
-							if (!informRole.contains("supervisor") && !informRole.contains("creator") && !informRole.contains("subordinate"))
+
+							if (!position.equals("supervisor") && !position.equals("creator") && !position.equals("subordinate"))
 							{
 								throw new THOMASException("Invalid. Role "+ RoleName + " position is not supervisor, subordinate or creator.");
 							}
@@ -1126,24 +972,36 @@ public class OMSInterface {
 				switch (flag){
 
 				case CASE_A: 
-					try{
-						result = dbInterface.getQuantityAgentsInUnit(UnitName, AgentName);
-					}catch(THOMASException e){throw e;};
+
+					result = dbInterface.getQuantityAgentsInUnit(UnitName, AgentName);
+					if (result.contains("Error"))
+					{
+						throw new THOMASException(result);
+					}
 					break;//No se incluye ni el parametro role name ni position name. 
 				case CASE_B: 
-					try{
-						result = dbInterface.getQuantityPlayingRoleInUnit(UnitName, RoleName, AgentName);
-					}catch(THOMASException e){throw e;};
+
+					result = dbInterface.getQuantityPlayingRoleInUnit(UnitName, RoleName, AgentName);
+					if (result.contains("Error"))
+					{
+						throw new THOMASException(result);
+					}
 					break;//Solo se incluye el roleName
 				case CASE_C: 
-					try{	
-						result = dbInterface.getQuantityPlayingPositionInUnit(UnitName, PositionValue, AgentName);
-					}catch(THOMASException e){throw e;};
+
+					result = dbInterface.getQuantityPlayingPositionInUnit(UnitName, PositionValue, AgentName);
+					if (result.contains("Error"))
+					{
+						throw new THOMASException(result);
+					}
 					break;//No se incluye el rolename pero si el postionName
 				case CASE_D: 
-					try{
-						result = dbInterface.getQuantityPlayingRolePositionInUnit(UnitName, RoleName, PositionValue, AgentName);
-					}catch(THOMASException e){throw e;};
+
+					result = dbInterface.getQuantityPlayingRolePositionInUnit(UnitName, RoleName, PositionValue, AgentName);
+					if (result.contains("Error"))
+					{
+						throw new THOMASException(result);
+					}
 					break; //Se incluyen todos los parametros
 				}
 
@@ -1163,7 +1021,7 @@ public class OMSInterface {
 
 	}
 
-	public String informUnit(String UnitName, String AgentName) throws THOMASException
+	public String informUnit(String UnitName, String AgentName) throws THOMASException, SQLException
 	{
 		String result = "";
 
@@ -1186,12 +1044,11 @@ public class OMSInterface {
 				throw new THOMASException("Invalid. Unit type not valid." );
 			}
 
-			try
+			result = dbInterface.getInformUnit(UnitName);
+
+			if (result.contains("Error"))
 			{
-				result = dbInterface.getInformUnit(UnitName);
-			}catch(THOMASException e)
-			{
-				throw e;
+				throw new THOMASException(result);
 			}
 
 		}
@@ -1201,20 +1058,17 @@ public class OMSInterface {
 		}
 
 	}
-	public String informUnitRoles(String UnitName, String AgentName) throws THOMASException
+	public String informUnitRoles(String UnitName, String AgentName) throws THOMASException, SQLException
 	{
 		String result = "";
 		if (dbInterface.checkUnit(UnitName))
 		{
 			//TODO Control de normas
-			try
+			result = dbInterface.getInformUnitRoles(UnitName, AgentName);		
+			if (result.contains("Error"))
 			{
-				result = dbInterface.getInformUnitRoles(UnitName, AgentName);
-			}catch(THOMASException e)
-			{
-				throw e;
+				throw new THOMASException(result);
 			}
-
 		}
 		else
 		{
@@ -1223,17 +1077,17 @@ public class OMSInterface {
 		return result;
 	}
 
-	public String informRole(String RoleName, String UnitName, String AgentName) throws THOMASException
+	public String informRole(String RoleName, String UnitName, String AgentName) throws THOMASException, SQLException
 	{
 		String result = "";
 		if (dbInterface.checkUnit(UnitName))
 		{
-			if (dbInterface.checkRoleInUnit(RoleName, UnitName))
+			if (dbInterface.checkRole(RoleName, UnitName))
 			{
 				//TODO Control de normas
-				
+
 				String unitType = dbInterface.getUnitType(UnitName);
-				
+
 				if (unitType.equals("team") || unitType.equals("hierarchy"))
 				{
 					String ParentUnitName = dbInterface.getParentsUnit(UnitName);
@@ -1248,12 +1102,11 @@ public class OMSInterface {
 					throw new THOMASException("Invalid. Unit type not valid." );
 				}
 
-				try
+				result = dbInterface.getInformRole(RoleName, UnitName, AgentName);
+				
+				if (result.contains("Error"))
 				{
-					result = dbInterface.getInformRole(RoleName, UnitName, AgentName);
-				}catch(THOMASException e)
-				{
-					throw e;
+					throw new THOMASException(result);
 				}
 			}
 			else
