@@ -5,9 +5,10 @@
       <xsd:element name="DeregisterNorm">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="NormID" type="xsd:string"/>
-            <xsd:element name="AgentID" type="xsd:string"/>
-          </xsd:sequence>
+          	<xsd:element name="NormID" type="xsd:string" />
+          	<xsd:element name="AgentID" type="xsd:string" />
+                        <xsd:element name="UnitName" type="xsd:string"></xsd:element>
+                    </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
       <xsd:element name="DeregisterNormResponse">
