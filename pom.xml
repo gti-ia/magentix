@@ -17,7 +17,7 @@
 	</parent>
 	<build>
 		<finalName>omsservices</finalName>
-	</build>
+
 	<!-- 
 	<reporting>
 		<plugins>
@@ -32,4 +32,69 @@
 		</plugins>
 	</reporting>
 	 -->
+	 <plugins> <!-- mvn clean axis2-wsdl2code:wsdl2code-->
+	     <plugin>
+				<groupId>org.apache.axis2</groupId>
+				<artifactId>axis2-wsdl2code-maven-plugin</artifactId>
+				<version>1.4</version>
+				<configuration>
+					<packageName>
+						wtp
+					</packageName>
+					
+						<wsdlFile>
+						./src/main/webapp/WEB-INF/services/InformRole/META-INF/InformRole.wsdl
+					</wsdlFile>
+				
+				
+					
+					<databindingName>adb</databindingName>
+					<generateServerSide>true</generateServerSide>
+					<generateServicesXml>true</generateServicesXml>
+					<namespaceURIs>
+						<namespaceURI>
+							<uri>http://wtp/</uri>
+							<packageName>wtp</packageName>
+						</namespaceURI>
+					</namespaceURIs>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.1</version>
+
+				<configuration>
+					<tasks>
+						<copy todir="src/main/java">
+							<fileset
+								dir="./target/generated-sources/axis2/wsdl2code/src/">
+								<include name="**/*" />
+							<!-- 
+								<exclude
+									name="**/PruebaBorrarSkeleton.java" />
+									 -->
+
+							</fileset>
+						</copy>
+						<mkdir
+							dir="src/main/webapp/WEB-INF/services/AcquiereRole/META-INF/" />
+						<mkdir
+							dir="src/main/webapp/WEB-INF/services/AllocateRole/META-INF/" />
+						
+						<copy
+							todir="src/main/webapp/WEB-INF/services/AcquiereRole/META-INF/">
+							<fileset
+								dir="./target/generated-sources/axis2/wsdl2code/resources/">
+								<include name="**/*" />
+							</fileset>
+						</copy>
+						<delete
+							dir="./target/generated-sources" />
+					</tasks>
+				</configuration>
+			</plugin>
+
+		</plugins>
+			</build>
 </project>
