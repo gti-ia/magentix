@@ -4,6 +4,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class DataBaseInterface
 {
@@ -810,6 +812,177 @@ public class DataBaseInterface
 		}		
 		return result;
 	}
+	
+	public String getQuantityAgentsRolesInUnit(String unitName, String agentName)  throws SQLException{
+		// TODO retorne un String? Lo normal no seria un int?
+		int idPublicVisibility;
+		int idroleListt;
+		boolean playsRole = false;
+		int idunitList;
+
+		Statement st = db.connection.createStatement();
+		ResultSet res = st.executeQuery("SELECT idVisibility FROM visibility WHERE visibility ='public'");
+		if(res.next())
+			idPublicVisibility = res.getInt("idVisibility");
+		else
+			return "Error: visibility public not found in database";
+
+		Statement st2 = db.connection.createStatement();
+		ResultSet res2 = st2.executeQuery("SELECT idunitList FROM unitList WHERE unitName ='"+ unitName+"'");
+		if(res2.next())
+			idunitList = res2.getInt("idunitList");
+		else
+			return "Error : unit "+unitName+" not found in database";
+
+		Statement st6 = db.connection.createStatement();
+		ResultSet res6 = st6.executeQuery("SELECT idroleListt FROM agentPlayList WHERE agentName ='"+agentName+"'");
+		while(res6.next()){
+			int idroleListt2 = res6.getInt("idroleListt");
+			Statement st7 = db.connection.createStatement();
+			ResultSet res7 = st7.executeQuery("SELECT * FROM roleList WHERE idroleListt ="+idroleListt2+" AND idunitList="+idunitList);
+			if(res7.next()){
+				playsRole = true;
+				break;
+			}
+		}
+
+		Set<String> agentNames = new HashSet<String>();
+		Statement st5 = db.connection.createStatement();
+		ResultSet res5;
+		if(playsRole)
+			res5 = st5.executeQuery("SELECT idroleListt FROM roleList WHERE idunitList="+idunitList);
+		else
+			res5 = st5.executeQuery("SELECT idroleListt FROM roleList WHERE idunitList="+idunitList+" AND idVisiblity ="+idPublicVisibility);
+		while(res5.next()){
+			idroleListt = res5.getInt("idroleListt");	
+			Statement st10 = db.connection.createStatement();
+			ResultSet res10 = st10.executeQuery("SELECT agentName FROM agentPlayList WHERE idroleListt ="+idroleListt);
+			while(res10.next()){
+				agentNames.add(res10.getString("agentName"));
+			}
+		}
+		return String.valueOf(agentNames.size());
+	}
+	
+	public String getQuantityAgentsPlayingRoleInUnit(String unitName, String roleName, String agentName) throws SQLException{
+		// TODO retorne un String? Lo normal no seria un int?
+		int cont = 0;
+		int idPublicVisibility;
+		int idPrivateVisbility;
+		int idroleListt;
+		boolean playsRole = false;
+		int idunitList;
+
+		Statement st = db.connection.createStatement();
+		ResultSet res = st.executeQuery("SELECT idVisibility FROM visibility WHERE visibility ='public'");
+		if(res.next())
+			idPublicVisibility = res.getInt("idVisibility");
+		else
+			return "Error: visibility public not found in database";
+
+		Statement st3 = db.connection.createStatement();
+		ResultSet res3 = st3.executeQuery("SELECT idVisibility FROM visibility WHERE visibility ='private'");
+		if(res3.next())
+			idPrivateVisbility = res.getInt("idVisibility");
+		else
+			return "Error: visibility private not found in database";
+
+		Statement st2 = db.connection.createStatement();
+		ResultSet res2 = st2.executeQuery("SELECT idunitList FROM unitList WHERE unitName ='"+ unitName+"'");
+		if(res2.next())
+			idunitList = res2.getInt("idunitList");
+		else
+			return "Error : unit "+unitName+" not found in database";
+
+		Statement st6 = db.connection.createStatement();
+		ResultSet res6 = st6.executeQuery("SELECT idroleListt FROM agentPlayList WHERE agentName ='"+agentName+"'");
+		while(res6.next()){
+			int idroleListt2 = res6.getInt("idroleListt");
+			Statement st7 = db.connection.createStatement();
+			ResultSet res7 = st7.executeQuery("SELECT * FROM roleList WHERE idroleListt ="+idroleListt2+" AND idunitList="+idunitList);
+			if(res7.next()){
+				playsRole = true;
+				break;
+			}
+		}
+
+		Statement st5 = db.connection.createStatement();
+		ResultSet res5;
+		if(playsRole)
+			res5 = st5.executeQuery("SELECT idroleListt FROM roleList WHERE roleName ='"+ roleName+"' AND (idVisibility ="+idPrivateVisbility+" OR idVisiblity ="+idPublicVisibility+")");
+		else
+			res5 = st5.executeQuery("SELECT idroleListt FROM roleList WHERE roleName ='"+ roleName+"' AND idVisiblity ="+idPublicVisibility);
+		if(res5.next())
+			idroleListt = res5.getInt("idroleListt");
+		else
+			return "0";
+
+		Statement st10 = db.connection.createStatement();
+		ResultSet res10 = st10.executeQuery("SELECT DISTINCT agentName FROM agentPlayList WHERE idroleListt ="+idroleListt);
+		while(res10.next()){
+			cont++;
+		}
+		return String.valueOf(cont);
+	}
+	
+	public String getQuantityAgentsPlayingPositionInUnit(String unitName, String positionValue, String agentName)  throws SQLException{
+		// TODO retorne un String? Lo normal no seria un int?
+		int idPublicVisibility;
+		int idposition;
+		int idroleListt;
+		boolean playsRole = false;
+		int idunitList;
+
+		Statement st = db.connection.createStatement();
+		ResultSet res = st.executeQuery("SELECT idVisibility FROM visibility WHERE visibility ='public'");
+		if(res.next())
+			idPublicVisibility = res.getInt("idVisibility");
+		else
+			return "Error: visibility public not found in database";
+
+		Statement st2 = db.connection.createStatement();
+		ResultSet res2 = st2.executeQuery("SELECT idunitList FROM unitList WHERE unitName ='"+ unitName+"'");
+		if(res2.next())
+			idunitList = res2.getInt("idunitList");
+		else
+			return "Error : unit "+unitName+" not found in database";
+
+		Statement st4 = db.connection.createStatement();
+		ResultSet res4 = st4.executeQuery("SELECT idposition FROM position WHERE position ='"+ positionValue+"'");
+		if(res4.next())
+			idposition = res4.getInt("idposition");
+		else
+			return "Error : position "+positionValue+" not found in database";
+
+		Statement st6 = db.connection.createStatement();
+		ResultSet res6 = st6.executeQuery("SELECT idroleListt FROM agentPlayList WHERE agentName ='"+agentName+"'");
+		while(res6.next()){
+			int idroleListt2 = res6.getInt("idroleListt");
+			Statement st7 = db.connection.createStatement();
+			ResultSet res7 = st7.executeQuery("SELECT * FROM roleList WHERE idroleListt ="+idroleListt2+" AND idunitList="+idunitList);
+			if(res7.next()){
+				playsRole = true;
+				break;
+			}
+		}
+
+		Set<String> agentNames = new HashSet<String>();
+		Statement st5 = db.connection.createStatement();
+		ResultSet res5;
+		if(playsRole)
+			res5 = st5.executeQuery("SELECT idroleListt FROM roleList WHERE idposition ="+idposition);
+		else
+			res5 = st5.executeQuery("SELECT idroleListt FROM roleList WHERE idposition ="+idposition+" AND idVisiblity ="+idPublicVisibility);
+		while(res5.next()){
+			idroleListt = res5.getInt("idroleListt");
+			Statement st10 = db.connection.createStatement();
+			ResultSet res10 = st10.executeQuery("SELECT agentName FROM agentPlayList WHERE idroleListt ="+idroleListt);
+			while(res10.next()){
+				agentNames.add(res10.getString("agentName"));
+			}
+		}
+		return String.valueOf(agentNames.size());
+	}
 
 	public String getQuantityAgentsPlayingRolePositionInUnit(String unitName, String roleName, String positionValue, String agentName) throws SQLException{
 		// TODO retorne un String? Lo normal no seria un int?
@@ -870,7 +1043,7 @@ public class DataBaseInterface
 		if(res5.next())
 			idroleListt = res5.getInt("idroleListt");
 		else
-			return "Error : role "+roleName+" not found in database";
+			return "0";
 
 		Statement st10 = db.connection.createStatement();
 		ResultSet res10 = st10.executeQuery("SELECT agentName FROM agentPlayList WHERE idroleListt ="+idroleListt);
