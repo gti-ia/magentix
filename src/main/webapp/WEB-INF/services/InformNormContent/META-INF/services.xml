@@ -2,16 +2,16 @@
 <!-- This file was auto-generated from WSDL -->
 <!-- by the Apache Axis2 version: 1.4  Built on : Apr 26, 2008 (06:24:30 EDT) -->
 <serviceGroup>
-    <service name="InformNormContent">
+    <service name="InformNorm">
         <messageReceivers>
-            <messageReceiver mep="http://www.w3.org/ns/wsdl/in-out" class="wtp.InformNormContentMessageReceiverInOut"/>
+            <messageReceiver mep="http://www.w3.org/ns/wsdl/in-out" class="wtp.InformNormMessageReceiverInOut"/>
         </messageReceivers>
-        <parameter name="ServiceClass">wtp.InformNormContentSkeleton</parameter>
+        <parameter name="ServiceClass">wtp.InformNormSkeleton</parameter>
         <parameter name="useOriginalwsdl">true</parameter>
         <parameter name="modifyUserWSDLPortAddress">true</parameter>
-        <operation name="InformNormContent" mep="http://www.w3.org/ns/wsdl/in-out" namespace="http://wtp">
+        <operation name="InformNorm" mep="http://www.w3.org/ns/wsdl/in-out" namespace="http://wtp">
             <actionMapping>http://wtp</actionMapping>
-            <outputActionMapping>http://wtp/InformNormContentPortType/InformNormContentResponse</outputActionMapping>
+            <outputActionMapping>http://wtp/InformNormPortType/InformNormResponse</outputActionMapping>
         </operation>
     </service>
 </serviceGroup>
