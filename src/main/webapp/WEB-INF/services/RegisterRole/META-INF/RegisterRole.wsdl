@@ -10,7 +10,6 @@
              <xsd:element name="Position" type="xsd:string"/>
              <xsd:element name="Accessibility" type="xsd:string"/>
              <xsd:element name="Visibility" type="xsd:string"/>
-             <xsd:element name="Inheritance" type="xsd:string"/>
              <xsd:element name="AgentID" type="xsd:string"/>
           </xsd:sequence>
         </xsd:complexType>
