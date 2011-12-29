@@ -63,42 +63,47 @@ public class OMSInterface {
 	{
 
 		String result="";
-
-		if (dbInterface.checkUnit(UnitName))
+		try
 		{
-			if (ParentUnitName != null)
+			if (dbInterface.checkUnit(UnitName))
 			{
-				if (!dbInterface.checkUnit(ParentUnitName))
+				if (ParentUnitName != null)
 				{
-					throw new THOMASException("Not found. Parent unit "+ ParentUnitName + " not found.");
+					if (!dbInterface.checkUnit(ParentUnitName))
+					{
+						throw new THOMASException("Not found. Parent unit "+ ParentUnitName + " not found.");
+					}
 				}
+				else
+				{
+					ParentUnitName = "virtual";
+				}
+				//TODO comprobar las normas. Por ahora se acepta siempre
+
+				if (dbInterface.checkPositionInUnit(AgentName,"creator",ParentUnitName))
+				{
+					result = dbInterface.createUnit(UnitName, UnitType, ParentUnitName, AgentName, CreatorName);
+
+					if (result.contains("Error"))
+					{
+						throw new THOMASException(result);
+					}
+				}
+				else
+				{
+					throw new THOMASException("Not allowed. The agent does not play any role with creator position in the parent unit.");
+				}
+
 			}
 			else
 			{
-				ParentUnitName = "virtual";
-			}
-			//TODO comprobar las normas. Por ahora se acepta siempre
-
-			if (dbInterface.checkPositionInUnit(AgentName,"creator",ParentUnitName))
-			{
-				result = dbInterface.createUnit(UnitName, UnitType, ParentUnitName, AgentName, CreatorName);
-
-				if (result.contains("Error"))
-				{
-					throw new THOMASException(result);
-				}
-			}
-			else
-			{
-				throw new THOMASException("Not allowed. The agent does not play any role with creator position in the parent unit.");
+				throw new THOMASException("Not found. Unit "+ UnitName + " not found.");
 			}
 
-		}
-		else
+		}catch(SQLException e)
 		{
-			throw new THOMASException("Not found. Unit "+ UnitName + " not found.");
+			throw e;
 		}
-
 
 		return result;
 	}
@@ -1024,20 +1029,20 @@ public class OMSInterface {
 		return result;
 	}
 
-	
-	 /**
-	  * Method used for requesting the number of current members of a specific unit. If a
+
+	/**
+	 * Method used for requesting the number of current members of a specific unit. If a
 	 * 	role is specified only the members playing that role are taken into account. If a position
 	 *  is specified only the members playing that position are taken into account.
 	 * 
-	  * @param UnitName
-	  * @param RoleName
-	  * @param PositionValue
-	  * @param AgentName
-	  * @return
-	  * @throws THOMASException
-	  * @throws SQLException
-	  */
+	 * @param UnitName
+	 * @param RoleName
+	 * @param PositionValue
+	 * @param AgentName
+	 * @return
+	 * @throws THOMASException
+	 * @throws SQLException
+	 */
 	public String quantityMembers(String UnitName, String RoleName, String PositionValue, String AgentName) throws THOMASException, SQLException
 	{
 		String result = "";
@@ -1274,7 +1279,7 @@ public class OMSInterface {
 				}
 
 				result = dbInterface.getInformRole(RoleName, UnitName, AgentName);
-				
+
 				if (result.contains("Error"))
 				{
 					throw new THOMASException(result);
