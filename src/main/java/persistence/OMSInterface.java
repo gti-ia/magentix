@@ -1,8 +1,16 @@
 package persistence;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 
+/**
+ * This class gives us the support to accede to the services of the OMS. The OMS
+ * provides a group of services for registering or deregistering structural
+ * components, specific roles, norms and units. It also offers services for
+ * reporting on these components.
+ * 
+ * @author Joan Bellver Faus, jbellver@dsic.upv.es
+ *
+ */
 public class OMSInterface {
 
 	private DataBaseInterface dbInterface;
@@ -12,6 +20,17 @@ public class OMSInterface {
 	{
 		dbInterface = new DataBaseInterface();
 	}
+	/**
+	 * Creates a new empty unit in the organization, with a specific type and creatorName.
+	 * 
+	 * @param UnitName
+	 * @param UnitType
+	 * @param AgentName
+	 * @param CreatorName
+	 * @return Returns <unitname + " created">
+	 * @throws THOMASException
+	 * @throws SQLException
+	 */
 	public String registerUnit(String UnitName, String UnitType, String AgentName, String CreatorName) throws THOMASException, SQLException
 	{
 		String result = "";
@@ -23,15 +42,27 @@ public class OMSInterface {
 		{
 			throw e;
 		}
+		catch(SQLException e)
+		{
+			throw e;
+		}
 		return result;
 	}
+	/**
+	 * Creates a new empty unit in the organization, with a specific type, parent unit and creatorName.
+	 * @param UnitName
+	 * @param UnitType
+	 * @param ParentUnitName
+	 * @param AgentName
+	 * @param CreatorName
+	 * @return Returns <unitname + " created">
+	 * @throws THOMASException
+	 * @throws SQLException
+	 */
 	public String registerUnit(String UnitName, String UnitType, String ParentUnitName, String AgentName, String CreatorName) throws THOMASException, SQLException
 	{
 
 		String result="";
-
-
-
 
 		if (dbInterface.checkUnit(UnitName))
 		{
@@ -71,7 +102,15 @@ public class OMSInterface {
 
 		return result;
 	}
-
+	/**
+	 * Method used for deleting a unit in the organization
+	 * 
+	 * @param UnitName
+	 * @param AgentName
+	 * @return
+	 * @throws THOMASException
+	 * @throws SQLException
+	 */
 	public String deregisterUnit(String UnitName, String AgentName) throws THOMASException, SQLException
 	{
 		String result="";
@@ -131,6 +170,19 @@ public class OMSInterface {
 		return result;
 	}
 
+	/**
+	 * Method used for registering a new role inside a unit.
+	 * 
+	 * @param RoleName
+	 * @param UnitName
+	 * @param Accessibility
+	 * @param Visibility
+	 * @param Position
+	 * @param AgentName
+	 * @return
+	 * @throws THOMASException
+	 * @throws SQLException
+	 */
 	public String registerRole(String RoleName, String UnitName, String Accessibility, String Visibility, String Position, String AgentName) throws THOMASException, SQLException
 	{
 		String result = "";
@@ -243,6 +295,16 @@ public class OMSInterface {
 		return result;
 	}
 
+	/**
+	 * Method used to deregister a role 
+	 * 
+	 * @param RoleName
+	 * @param UnitName
+	 * @param AgentName
+	 * @return
+	 * @throws THOMASException
+	 * @throws SQLException
+	 */
 	public String deregisterRole(String RoleName, String UnitName, String AgentName) throws THOMASException, SQLException
 	{
 		String result = "";
@@ -346,11 +408,18 @@ public class OMSInterface {
 		return result;
 	}
 
+	/**
+	 * Method used for acquiring a role in a specific unit.
+	 * @param UnitName
+	 * @param RoleName
+	 * @param AgentName
+	 * @return
+	 * @throws THOMASException
+	 * @throws SQLException
+	 */
 	public String AcquireRole(String UnitName, String RoleName, String AgentName) throws THOMASException, SQLException
 	{
 		String result;
-		boolean exists = false;
-		ArrayList<String> agentRoles = new ArrayList<String>();
 		if (dbInterface.checkUnit(UnitName))
 		{
 			if (dbInterface.checkRole(RoleName, UnitName))
@@ -439,6 +508,16 @@ public class OMSInterface {
 		return result;
 	}
 
+	/**
+	 * Method used for an agent to leave a role in a unit.
+	 * 
+	 * @param UnitName
+	 * @param RoleName
+	 * @param AgentName
+	 * @return
+	 * @throws THOMASException
+	 * @throws SQLException
+	 */
 	public String leaveRole(String UnitName, String RoleName, String AgentName) throws THOMASException, SQLException
 	{
 		String result = "";
@@ -476,6 +555,16 @@ public class OMSInterface {
 		return result;
 	}
 
+	/**
+	 * Method used in order to assign a role to an agent inside a unit 
+	 * @param RoleName
+	 * @param UnitName
+	 * @param TargetAgentName
+	 * @param AgentName
+	 * @return
+	 * @throws THOMASException
+	 * @throws SQLException
+	 */
 	public String allocateRole(String RoleName, String UnitName, String TargetAgentName, String AgentName) throws THOMASException, SQLException
 	{
 		String result = "";
@@ -584,6 +673,17 @@ public class OMSInterface {
 	}
 
 
+	/**
+	 * Method used in order to remove a specific role to an agent inside a unit
+	 * 
+	 * @param RoleName
+	 * @param UnitName
+	 * @param TargetAgentName
+	 * @param AgentName
+	 * @return
+	 * @throws THOMASException
+	 * @throws SQLException
+	 */
 	public String deallocateRole(String RoleName, String UnitName, String TargetAgentName, String AgentName) throws THOMASException, SQLException
 	{
 		String result = "";
@@ -690,6 +790,15 @@ public class OMSInterface {
 
 	}
 
+	/**
+	 * Method used in order to change the parent unit. 
+	 * @param UnitName
+	 * @param ParentName
+	 * @param AgentName
+	 * @return
+	 * @throws THOMASException
+	 * @throws SQLException
+	 */
 	public String jointUnit(String UnitName, String ParentName, String AgentName) throws THOMASException, SQLException
 	{
 		String result = "";
@@ -743,6 +852,15 @@ public class OMSInterface {
 		return result;
 	}
 
+	/**
+	 * Method used for requesting the list of roles and units where an agent is, given the 
+	 * specific moment.
+	 * @param RequestedAgentName
+	 * @param AgentName
+	 * @return
+	 * @throws THOMASException
+	 * @throws SQLException
+	 */
 	public String informAgentRole(String RequestedAgentName,String AgentName) throws THOMASException, SQLException
 	{
 		String result = "";
@@ -765,6 +883,18 @@ public class OMSInterface {
 	}
 
 
+	/**
+	 *  Method used for requesting the list of entities that are members of a specific unit.
+	 * If a role is specified only the members playing this role are detailed. If a position is specified 
+	 * only the members playing this position are detailed.
+	 * @param UnitName
+	 * @param RoleName
+	 * @param PositionValue
+	 * @param AgentName
+	 * @return
+	 * @throws THOMASException
+	 * @throws SQLException
+	 */
 	public String informMembers(String UnitName, String RoleName, String PositionValue, String AgentName) throws THOMASException, SQLException
 	{
 		String result = "";
@@ -854,6 +984,7 @@ public class OMSInterface {
 				case CASE_B: 
 
 					result = dbInterface.getAgentsPlayingRoleInUnit(UnitName, RoleName, AgentName);
+					result = result + RoleName;
 					if (result.contains("Error"))
 					{
 						throw new THOMASException(result);
@@ -870,6 +1001,7 @@ public class OMSInterface {
 				case CASE_D: 
 
 					result = dbInterface.getAgentsPlayingRolePositionInUnit(UnitName, RoleName, PositionValue, AgentName);
+					result = result + RoleName;
 					if (result.contains("Error"))
 					{
 						throw new THOMASException(result);
@@ -892,6 +1024,20 @@ public class OMSInterface {
 		return result;
 	}
 
+	
+	 /**
+	  * Method used for requesting the number of current members of a specific unit. If a
+	 * 	role is specified only the members playing that role are taken into account. If a position
+	 *  is specified only the members playing that position are taken into account.
+	 * 
+	  * @param UnitName
+	  * @param RoleName
+	  * @param PositionValue
+	  * @param AgentName
+	  * @return
+	  * @throws THOMASException
+	  * @throws SQLException
+	  */
 	public String quantityMembers(String UnitName, String RoleName, String PositionValue, String AgentName) throws THOMASException, SQLException
 	{
 		String result = "";
@@ -973,7 +1119,7 @@ public class OMSInterface {
 
 				case CASE_A: 
 
-					result = dbInterface.getQuantityAgentsInUnit(UnitName, AgentName);
+					result = dbInterface.getQuantityAgentsRolesInUnit(UnitName, AgentName);
 					if (result.contains("Error"))
 					{
 						throw new THOMASException(result);
@@ -981,7 +1127,7 @@ public class OMSInterface {
 					break;//No se incluye ni el parametro role name ni position name. 
 				case CASE_B: 
 
-					result = dbInterface.getQuantityPlayingRoleInUnit(UnitName, RoleName, AgentName);
+					result = dbInterface.getQuantityAgentsPlayingRoleInUnit(UnitName, RoleName, AgentName);
 					if (result.contains("Error"))
 					{
 						throw new THOMASException(result);
@@ -989,7 +1135,7 @@ public class OMSInterface {
 					break;//Solo se incluye el roleName
 				case CASE_C: 
 
-					result = dbInterface.getQuantityPlayingPositionInUnit(UnitName, PositionValue, AgentName);
+					result = dbInterface.getQuantityAgentsPlayingPositionInUnit(UnitName, PositionValue, AgentName);
 					if (result.contains("Error"))
 					{
 						throw new THOMASException(result);
@@ -997,7 +1143,7 @@ public class OMSInterface {
 					break;//No se incluye el rolename pero si el postionName
 				case CASE_D: 
 
-					result = dbInterface.getQuantityPlayingRolePositionInUnit(UnitName, RoleName, PositionValue, AgentName);
+					result = dbInterface.getQuantityAgentsPlayingRolePositionInUnit(UnitName, RoleName, PositionValue, AgentName);
 					if (result.contains("Error"))
 					{
 						throw new THOMASException(result);
@@ -1020,7 +1166,14 @@ public class OMSInterface {
 		return result;
 
 	}
-
+	/**
+	 * Method used for requesting information about a specific unit.
+	 * @param UnitName
+	 * @param AgentName
+	 * @return
+	 * @throws THOMASException
+	 * @throws SQLException
+	 */
 	public String informUnit(String UnitName, String AgentName) throws THOMASException, SQLException
 	{
 		String result = "";
@@ -1056,8 +1209,16 @@ public class OMSInterface {
 		{
 			throw new THOMASException("Not found. Unit "+ UnitName + " not found.");
 		}
-
+		return result;
 	}
+	/**
+	 * Method used for requesting the list of roles that have been registered inside a unit.
+	 * @param UnitName
+	 * @param AgentName
+	 * @return
+	 * @throws THOMASException
+	 * @throws SQLException
+	 */
 	public String informUnitRoles(String UnitName, String AgentName) throws THOMASException, SQLException
 	{
 		String result = "";
@@ -1077,6 +1238,16 @@ public class OMSInterface {
 		return result;
 	}
 
+	/**
+	 * Method used for requesting information about a specific role.
+	 * 
+	 * @param RoleName
+	 * @param UnitName
+	 * @param AgentName
+	 * @return
+	 * @throws THOMASException
+	 * @throws SQLException
+	 */
 	public String informRole(String RoleName, String UnitName, String AgentName) throws THOMASException, SQLException
 	{
 		String result = "";
