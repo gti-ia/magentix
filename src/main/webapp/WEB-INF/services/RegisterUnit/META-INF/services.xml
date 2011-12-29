@@ -2,16 +2,16 @@
 <!-- This file was auto-generated from WSDL -->
 <!-- by the Apache Axis2 version: 1.4  Built on : Apr 26, 2008 (06:24:30 EDT) -->
 <serviceGroup>
-    <service name="RegisterUnit">
+    <service name="JointUnit">
         <messageReceivers>
-            <messageReceiver mep="http://www.w3.org/ns/wsdl/in-out" class="wtp.RegisterUnitMessageReceiverInOut"/>
+            <messageReceiver mep="http://www.w3.org/ns/wsdl/in-out" class="wtp.JointUnitMessageReceiverInOut"/>
         </messageReceivers>
-        <parameter name="ServiceClass">wtp.RegisterUnitSkeleton</parameter>
+        <parameter name="ServiceClass">wtp.JointUnitSkeleton</parameter>
         <parameter name="useOriginalwsdl">true</parameter>
         <parameter name="modifyUserWSDLPortAddress">true</parameter>
-        <operation name="RegisterUnit" mep="http://www.w3.org/ns/wsdl/in-out" namespace="http://wtp">
+        <operation name="JointUnit" mep="http://www.w3.org/ns/wsdl/in-out" namespace="http://wtp">
             <actionMapping>http://wtp</actionMapping>
-            <outputActionMapping>http://wtp/RegisterUnitPortType/RegisterUnitResponse</outputActionMapping>
+            <outputActionMapping>http://wtp/JointUnitPortType/JointUnitResponse</outputActionMapping>
         </operation>
     </service>
 </serviceGroup>
