@@ -29,25 +29,24 @@
     <owl:imports rdf:resource="&grounding;"/> 
 </owl:Ontology>
 
-<service:Service rdf:ID="RegisterUnitService">
-        <service:presents rdf:resource="#RegisterUnitProfile"/>
-        <service:describedBy rdf:resource="#RegisterUnitProcess"/>
-	<service:supports rdf:resource="#RegisterUnitGrounding"/>
+<service:Service rdf:ID="JointUnitService">
+        <service:presents rdf:resource="#JointUnitProfile"/>
+        <service:describedBy rdf:resource="#JointUnitProcess"/>
+	<service:supports rdf:resource="#JointUnitGrounding"/>
 </service:Service>
 
 
        
 
-<profile:Profile rdf:ID="RegisterUnitProfile">
-    <service:isPresentedBy rdf:resource="#RegisterUnitService"/>
-    <profile:serviceName xml:lang="en">RegisterUnit</profile:serviceName>
+<profile:Profile rdf:ID="JointUnitProfile">
+    <service:isPresentedBy rdf:resource="#JointUnitService"/>
+    <profile:serviceName xml:lang="en">JointUnit</profile:serviceName>
 
 
 
-    <profile:hasInput rdf:resource="#UnitID"/>
-    <profile:hasInput rdf:resource="#Type"/>
-    <profile:hasInput rdf:resource="#CreatorName"/>
-    <profile:hasInput rdf:resource="#ParentUnitID"/>
+    <profile:hasInput rdf:resource="#UnitName"/>
+    <profile:hasInput rdf:resource="#ParentName"/>
+    <profile:hasInput rdf:resource="#AgentId"/>
     <profile:hasOutput rdf:resource="#Status"/>
     <profile:hasOutput rdf:resource="#ErrorValue"/>   
 

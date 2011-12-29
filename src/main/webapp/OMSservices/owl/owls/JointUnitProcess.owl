@@ -11,15 +11,15 @@
   <!ENTITY process "http://www.daml.org/services/owl-s/1.1/Process.owl#">
   <!ENTITY grounding "http://www.daml.org/services/owl-s/1.1/Grounding.owl#">
   <!ENTITY xsd "http://www.w3.org/2001/XMLSchema">
-  <!ENTITY mind "http://localhost:8080/OMS/OWLS/RegisterUnit.owl">
-  <!ENTITY dir "http://localhost:8080/omsservices/services/RegisterUnit?wsdl">
+  <!ENTITY mind "http://localhost:8080/OMS/OWLS/JointUnit.owl">
+  <!ENTITY dir "http://localhost:8080/omsservices/services/JointUnit?wsdl">
 ]>
 
 
 <rdf:RDF xmlns:rdf="&rdf;" xmlns:rdfs="&rdfs;" xmlns:owl="&owl;" xmlns:xsd="&xsd;#" 
    xmlns:service="&service;" xmlns:process="&process;" xmlns:profile="&profile;" xmlns:grounding="&grounding;"
    xmlns:mind="&mind;#"      
-   xml:base="http://localhost:8080/OMS/OWLS/RegisterUnit.owl">
+   xml:base="http://localhost:8080/OMS/OWLS/JointUnit.owl">
 
 
 <owl:Ontology>
@@ -29,17 +29,17 @@
     <owl:imports rdf:resource="&grounding;"/> 
 </owl:Ontology>
 
-<service:Service rdf:ID="RegisterUnitService">
-        <service:presents rdf:resource="#RegisterUnitProfile"/>
-        <service:describedBy rdf:resource="#RegisterUnitProcess"/>
-	<service:supports rdf:resource="#RegisterUnitGrounding"/>
+<service:Service rdf:ID="JointUnitService">
+        <service:presents rdf:resource="#JointUnitProfile"/>
+        <service:describedBy rdf:resource="#JointUnitProcess"/>
+	<service:supports rdf:resource="#JointUnitGrounding"/>
 </service:Service>
 
 
       
 
-<process:AtomicProcess rdf:ID="RegisterUnitProcess">
-	<service:describes rdf:resource="#RegisterUnitService"/>  	
+<process:AtomicProcess rdf:ID="JointUnitProcess">
+	<service:describes rdf:resource="#JointUnitService"/>  	
 
       <process:hasInput rdf:resource="#UnitID"/>
       <process:hasInput rdf:resource="#Type"/>
@@ -81,66 +81,66 @@
     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
 </process:Output>         
 
-<grounding:WsdlGrounding rdf:ID="RegisterUnitGrounding">
-	<service:supportedBy rdf:resource="#RegisterUnitService"/>
-	<grounding:hasAtomicProcessGrounding rdf:resource="#RegisterUnitWsdlAtomicProcessGrounding"/>
+<grounding:WsdlGrounding rdf:ID="JointUnitGrounding">
+	<service:supportedBy rdf:resource="#JointUnitService"/>
+	<grounding:hasAtomicProcessGrounding rdf:resource="#JointUnitWsdlAtomicProcessGrounding"/>
 </grounding:WsdlGrounding>
 
-<grounding:WsdlAtomicProcessGrounding rdf:ID="RegisterUnitWsdlAtomicProcessGrounding">
-	<grounding:owlsProcess rdf:resource="#RegisterUnitProcess"/>
-	<grounding:wsdlDocument rdf:datatype="&xsd;anyURI">http://localhost:8080/omsservices/services/RegisterUnit?wsdl</grounding:wsdlDocument>
+<grounding:WsdlAtomicProcessGrounding rdf:ID="JointUnitWsdlAtomicProcessGrounding">
+	<grounding:owlsProcess rdf:resource="#JointUnitProcess"/>
+	<grounding:wsdlDocument rdf:datatype="&xsd;anyURI">http://localhost:8080/omsservices/services/JointUnit?wsdl</grounding:wsdlDocument>
 	<grounding:wsdlOperation>
             <grounding:WsdlOperationRef>
-                <grounding:portType rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/RegisterUnitOperationsPortType</grounding:portType>
-                <grounding:operation rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/RegisterUnit</grounding:operation>
+                <grounding:portType rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/JointUnitOperationsPortType</grounding:portType>
+                <grounding:operation rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/JointUnit</grounding:operation>
             </grounding:WsdlOperationRef>
         </grounding:wsdlOperation>
 
-	<grounding:wsdlInputMessage rdf:datatype="&xsd;anyURI">http://localhost:8080/omsservices/services/RegisterUnitMessage</grounding:wsdlInputMessage>
-        <grounding:wsdlOutputMessage rdf:datatype="&xsd;anyURI">http://localhost:8080/omsservices/services/RegisterUnitResponse</grounding:wsdlOutputMessage>
+	<grounding:wsdlInputMessage rdf:datatype="&xsd;anyURI">http://localhost:8080/omsservices/services/JointUnitMessage</grounding:wsdlInputMessage>
+        <grounding:wsdlOutputMessage rdf:datatype="&xsd;anyURI">http://localhost:8080/omsservices/services/JointUnitResponse</grounding:wsdlOutputMessage>
     
 	<grounding:wsdlInput>
                   <grounding:WsdlInputMessageMap>
                     <grounding:owlsParameter rdf:resource="#UnitID"/>
-                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/RegisterUnit/UnitID</grounding:wsdlMessagePart>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/JointUnit/UnitID</grounding:wsdlMessagePart>
                   </grounding:WsdlInputMessageMap>
         </grounding:wsdlInput>
 	<grounding:wsdlInput>
                   <grounding:WsdlInputMessageMap>
                     <grounding:owlsParameter rdf:resource="#Type"/>
-                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/RegisterUnit/Type</grounding:wsdlMessagePart>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/JointUnit/Type</grounding:wsdlMessagePart>
                   </grounding:WsdlInputMessageMap>
         </grounding:wsdlInput>
     <grounding:wsdlInput>
                   <grounding:WsdlInputMessageMap>
                     <grounding:owlsParameter rdf:resource="#CreatorName"/>
-                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/RegisterUnit/CreatorName</grounding:wsdlMessagePart>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/JointUnit/CreatorName</grounding:wsdlMessagePart>
                   </grounding:WsdlInputMessageMap>
         </grounding:wsdlInput>
 	<grounding:wsdlInput>
                   <grounding:WsdlInputMessageMap>
                     <grounding:owlsParameter rdf:resource="#ParentUnitID"/>
-                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/RegisterUnit/ParentUnitID</grounding:wsdlMessagePart>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/JointUnit/ParentUnitID</grounding:wsdlMessagePart>
                   </grounding:WsdlInputMessageMap>
         </grounding:wsdlInput>    
 	<grounding:wsdlInput>
                   <grounding:WsdlInputMessageMap>
                     <grounding:owlsParameter rdf:resource="#AgentID"/>
-                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/RegisterUnit/AgentID</grounding:wsdlMessagePart>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/JointUnit/AgentID</grounding:wsdlMessagePart>
                   </grounding:WsdlInputMessageMap>
         </grounding:wsdlInput>      
         
        <grounding:wsdlOutput>
                   <grounding:WsdlOutputMessageMap>
 		    <grounding:owlsParameter rdf:resource="#Status"/>
-                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/RegisterUnit/Status</grounding:wsdlMessagePart>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/JointUnit/Status</grounding:wsdlMessagePart>
                   </grounding:WsdlOutputMessageMap>
         </grounding:wsdlOutput>
 
 <grounding:wsdlOutput>
                   <grounding:WsdlOutputMessageMap>
 		    <grounding:owlsParameter rdf:resource="#ErrorValue"/>
-                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/RegisterUnit/ErrorValue</grounding:wsdlMessagePart>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/JointUnit/ErrorValue</grounding:wsdlMessagePart>
                   </grounding:WsdlOutputMessageMap>
         </grounding:wsdlOutput>
 

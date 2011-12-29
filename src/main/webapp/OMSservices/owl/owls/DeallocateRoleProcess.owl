@@ -11,15 +11,15 @@
   <!ENTITY process "http://www.daml.org/services/owl-s/1.1/Process.owl#">
   <!ENTITY grounding "http://www.daml.org/services/owl-s/1.1/Grounding.owl#">
   <!ENTITY xsd "http://www.w3.org/2001/XMLSchema">
-  <!ENTITY mind "http://localhost:8080/OMS/OWLS/Expulse.owl">
-  <!ENTITY dir "http://localhost:8080/omsservices/services/Expulse?wsdl">
+  <!ENTITY mind "http://localhost:8080/OMS/OWLS/DeallocateRole.owl">
+  <!ENTITY dir "http://localhost:8080/omsservices/services/DeallocateRole?wsdl">
 ]>
 
 
 <rdf:RDF xmlns:rdf="&rdf;" xmlns:rdfs="&rdfs;" xmlns:owl="&owl;" xmlns:xsd="&xsd;#" 
    xmlns:service="&service;" xmlns:process="&process;" xmlns:profile="&profile;" xmlns:grounding="&grounding;"
    xmlns:mind="&mind;#"      
-   xml:base="http://localhost:8080/OMS/OWLS/Expulse.owl">
+   xml:base="http://localhost:8080/OMS/OWLS/DeallocateRole.owl">
 
 
 <owl:Ontology>
@@ -29,36 +29,38 @@
     <owl:imports rdf:resource="&grounding;"/> 
 </owl:Ontology>
 
-<service:Service rdf:ID="ExpulseService">
-        <service:presents rdf:resource="#ExpulseProfile"/>
-        <service:describedBy rdf:resource="#ExpulseProcess"/>
-	<service:supports rdf:resource="#ExpulseGrounding"/>
+<service:Service rdf:ID="DeallocateRoleService">
+        <service:presents rdf:resource="#DeallocateRoleProfile"/>
+        <service:describedBy rdf:resource="#DeallocateRoleProcess"/>
+	<service:supports rdf:resource="#DeallocateRoleGrounding"/>
 </service:Service>
 
 
        
 
-<profile:Profile rdf:ID="ExpulseProfile">
-    <service:isPresentedBy rdf:resource="#ExpulseService"/>
-    <profile:serviceName xml:lang="en">Expulse</profile:serviceName>
+<profile:Profile rdf:ID="DeallocateRoleProfile">
+    <service:isPresentedBy rdf:resource="#DeallocateRoleService"/>
+    <profile:serviceName xml:lang="en">DeallocateRole</profile:serviceName>
 
 
 	<profile:hasInput rdf:resource="#AgentID"/>
-    <profile:hasInput rdf:resource="#UnitID"/>
-    <profile:hasInput rdf:resource="#RoleID"/>
-    <profile:hasInput rdf:resource="#ExpulsedAgentID"/>
+	<profile:hasInput rdf:resource="#TargetAgentName"/>
+    <profile:hasInput rdf:resource="#UnitName"/>
+    <profile:hasInput rdf:resource="#RoleName"/>
+    <profile:hasInput rdf:resource="#DeallocateRoledAgentID"/>
     <profile:hasOutput rdf:resource="#Status"/>
     <profile:hasOutput rdf:resource="#ErrorValue"/>   
 
 </profile:Profile>
 
-<process:AtomicProcess rdf:ID="ExpulseProcess">
-	<service:describes rdf:resource="#ExpulseService"/> 
+<process:AtomicProcess rdf:ID="DeallocateRoleProcess">
+	<service:describes rdf:resource="#DeallocateRoleService"/> 
 	 	
 	<process:hasInput rdf:resource="#AgentID"/>
-    <process:hasInput rdf:resource="#UnitID"/>
-    <process:hasInput rdf:resource="#RoleID"/>
-    <process:hasInput rdf:resource="#ExpulsedAgentID"/>
+	<process:hasInput rdf:resource="#TargetAgentName"/>
+    <process:hasInput rdf:resource="#UnitName"/>
+    <process:hasInput rdf:resource="#RoleName"/>
+    <process:hasInput rdf:resource="#DeallocateRoledAgentID"/>
 	<process:hasOutput rdf:resource="#Status"/>
 	<process:hasOutput rdf:resource="#ErrorValue"/>
 	<process:hasOutput rdf:resource="#EntityRoleList"/>
@@ -69,20 +71,20 @@
      <rdfs:label>AgentID</rdfs:label>
      <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
 </process:Input>
-<process:Input rdf:ID="ExpulsedAgentID">
-     <rdfs:label>ExpulsedAgentID</rdfs:label>
+<process:Input rdf:ID="TargetAgentName">
+     <rdfs:label>TargetAgentName</rdfs:label>
      <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
 </process:Input>
-<process:Input rdf:ID="UnitID">
-     <rdfs:label>UnitID</rdfs:label>
+<process:Input rdf:ID="UnitName">
+     <rdfs:label>UnitName</rdfs:label>
      <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
 </process:Input>
-<process:Input rdf:ID="RoleID">
-     <rdfs:label>RoleID</rdfs:label>
+<process:Input rdf:ID="RoleName">
+     <rdfs:label>RoleName</rdfs:label>
      <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
 </process:Input>
-<process:Input rdf:ID="RoleID">
-     <rdfs:label>ExpulsedAgentID</rdfs:label>
+<process:Input rdf:ID="RoleName">
+     <rdfs:label>DeallocateRoledAgentID</rdfs:label>
      <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
 </process:Input>
 
@@ -95,60 +97,60 @@
     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
 </process:Output>     
 
-<grounding:WsdlGrounding rdf:ID="ExpulseGrounding">
-	<service:supportedBy rdf:resource="#ExpulseService"/>
-	<grounding:hasAtomicProcessGrounding rdf:resource="#ExpulseWsdlAtomicProcessGrounding"/>
+<grounding:WsdlGrounding rdf:ID="DeallocateRoleGrounding">
+	<service:supportedBy rdf:resource="#DeallocateRoleService"/>
+	<grounding:hasAtomicProcessGrounding rdf:resource="#DeallocateRoleWsdlAtomicProcessGrounding"/>
 </grounding:WsdlGrounding>
 
-<grounding:WsdlAtomicProcessGrounding rdf:ID="ExpulseWsdlAtomicProcessGrounding">
-	<grounding:owlsProcess rdf:resource="#ExpulseProcess"/>
-	<grounding:wsdlDocument rdf:datatype="&xsd;anyURI">http://localhost:8080/omsservices/services/Expulse?wsdl</grounding:wsdlDocument>
+<grounding:WsdlAtomicProcessGrounding rdf:ID="DeallocateRoleWsdlAtomicProcessGrounding">
+	<grounding:owlsProcess rdf:resource="#DeallocateRoleProcess"/>
+	<grounding:wsdlDocument rdf:datatype="&xsd;anyURI">http://localhost:8080/omsservices/services/DeallocateRole?wsdl</grounding:wsdlDocument>
 	<grounding:wsdlOperation>
             <grounding:WsdlOperationRef>
-                <grounding:portType rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/ExpulseOperationsPortType</grounding:portType>
-                <grounding:operation rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/Expulse</grounding:operation>
+                <grounding:portType rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/DeallocateRoleOperationsPortType</grounding:portType>
+                <grounding:operation rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/DeallocateRole</grounding:operation>
             </grounding:WsdlOperationRef>
         </grounding:wsdlOperation>
 
-	<grounding:wsdlInputMessage rdf:datatype="&xsd;anyURI">http://localhost:8080/omsservices/services/ExpulseMessage</grounding:wsdlInputMessage>
-        <grounding:wsdlOutputMessage rdf:datatype="&xsd;anyURI">http://localhost:8080/omsservices/services/ExpulseResponse</grounding:wsdlOutputMessage>
+	<grounding:wsdlInputMessage rdf:datatype="&xsd;anyURI">http://localhost:8080/omsservices/services/DeallocateRoleMessage</grounding:wsdlInputMessage>
+        <grounding:wsdlOutputMessage rdf:datatype="&xsd;anyURI">http://localhost:8080/omsservices/services/DeallocateRoleResponse</grounding:wsdlOutputMessage>
     
 	<grounding:wsdlInput>
                   <grounding:WsdlInputMessageMap>
-                    <grounding:owlsParameter rdf:resource="#UnitID"/>
-                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/Expulse/UnitID</grounding:wsdlMessagePart>
+                    <grounding:owlsParameter rdf:resource="#UnitName"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/DeallocateRole/UnitName</grounding:wsdlMessagePart>
                   </grounding:WsdlInputMessageMap>
         </grounding:wsdlInput>
        <grounding:wsdlInput>
                   <grounding:WsdlInputMessageMap>
-                    <grounding:owlsParameter rdf:resource="#RoleID"/>
-                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/Expulse/RoleID</grounding:wsdlMessagePart>
+                    <grounding:owlsParameter rdf:resource="#RoleName"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/DeallocateRole/RoleName</grounding:wsdlMessagePart>
                   </grounding:WsdlInputMessageMap>
         </grounding:wsdlInput>
        <grounding:wsdlInput>
                   <grounding:WsdlInputMessageMap>
                     <grounding:owlsParameter rdf:resource="#AgentID"/>
-                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/Expulse/AgentID</grounding:wsdlMessagePart>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/DeallocateRole/AgentID</grounding:wsdlMessagePart>
                   </grounding:WsdlInputMessageMap>
         </grounding:wsdlInput>
        <grounding:wsdlInput>
                   <grounding:WsdlInputMessageMap>
-                    <grounding:owlsParameter rdf:resource="#ExpulsedAgentID"/>
-                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/Expulse/ExpulsedAgentID</grounding:wsdlMessagePart>
+                    <grounding:owlsParameter rdf:resource="#TargetAgentName"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/DeallocateRole/TargetAgentName</grounding:wsdlMessagePart>
                   </grounding:WsdlInputMessageMap>
         </grounding:wsdlInput>
     
        <grounding:wsdlOutput>
                   <grounding:WsdlOutputMessageMap>
 		    <grounding:owlsParameter rdf:resource="#Status"/>
-                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/Expulse/Status</grounding:wsdlMessagePart>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/DeallocateRole/Status</grounding:wsdlMessagePart>
                   </grounding:WsdlOutputMessageMap>
         </grounding:wsdlOutput>
 
 <grounding:wsdlOutput>
                   <grounding:WsdlOutputMessageMap>
 		    <grounding:owlsParameter rdf:resource="#ErrorValue"/>
-                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/Expulse/ErrorValue</grounding:wsdlMessagePart>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/DeallocateRole/ErrorValue</grounding:wsdlMessagePart>
                   </grounding:WsdlOutputMessageMap>
         </grounding:wsdlOutput>
         

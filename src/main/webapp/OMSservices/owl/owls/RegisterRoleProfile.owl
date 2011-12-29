@@ -48,7 +48,6 @@
     <profile:hasInput rdf:resource="#Accessibility"/>
     <profile:hasInput rdf:resource="#Position"/>
     <profile:hasInput rdf:resource="#Visibility"/>
-    <profile:hasInput rdf:resource="#Inheritance"/>
     <profile:hasOutput rdf:resource="#Status"/>
     <profile:hasOutput rdf:resource="#ErrorValue"/>   
 
@@ -62,7 +61,6 @@
     <process:hasInput rdf:resource="#Accessibility"/>
     <process:hasInput rdf:resource="#Position"/>
     <process:hasInput rdf:resource="#Visibility"/>
-    <process:hasInput rdf:resource="#Inheritance"/>
 	<process:hasOutput rdf:resource="#RegisterProfileOutputStatus"/>
 	<process:hasOutput rdf:resource="#RegisterProfileOutputErrorValue"/>
 </process:AtomicProcess>
@@ -87,10 +85,7 @@
      <rdfs:label>InputVisibility</rdfs:label>
      <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
 </process:Input>
-<process:Input rdf:ID="Inheritance">
-     <rdfs:label>InputInheritance</rdfs:label>
-     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
-</process:Input>
+
 
 <process:Output rdf:ID="Status">
     <rdfs:label>OutputStatus</rdfs:label>
@@ -147,12 +142,6 @@
                   <grounding:WsdlInputMessageMap>
                     <grounding:owlsParameter rdf:resource="#Visibility"/>
                     <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/RegisterRole/Visibility</grounding:wsdlMessagePart>
-                  </grounding:WsdlInputMessageMap>
-        </grounding:wsdlInput>
-	<grounding:wsdlInput>
-                  <grounding:WsdlInputMessageMap>
-                    <grounding:owlsParameter rdf:resource="#Inheritance"/>
-                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/RegisterRole/Inheritance</grounding:wsdlMessagePart>
                   </grounding:WsdlInputMessageMap>
         </grounding:wsdlInput>
         

@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+
+<!DOCTYPE uridef [
+  <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#">
+  <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <!ENTITY owl "http://www.w3.org/2002/07/owl#">
+  <!ENTITY service "http://www.daml.org/services/owl-s/1.1/Service.owl#">
+  <!ENTITY profile "http://www.daml.org/services/owl-s/1.1/Profile.owl#">
+  <!ENTITY process "http://www.daml.org/services/owl-s/1.1/Process.owl#">
+  <!ENTITY grounding "http://www.daml.org/services/owl-s/1.1/Grounding.owl#">
+  <!ENTITY xsd "http://www.w3.org/2001/XMLSchema">
+  <!ENTITY mind "http://localhost:8080/DeallocateRole/OWLS/DeallocateRole.owl">
+  <!ENTITY dir "http://localhost:8080/omsservices/services/DeallocateRole?wsdl">
+]>
+
+
+<rdf:RDF xmlns:rdf="&rdf;" xmlns:rdfs="&rdfs;" xmlns:owl="&owl;" xmlns:xsd="&xsd;#" 
+   xmlns:service="&service;" xmlns:process="&process;" xmlns:profile="&profile;" xmlns:grounding="&grounding;"
+   xmlns:mind="&mind;#"      
+   xml:base="http://localhost:8080/DeallocateRole/OWLS/DeallocateRole.owl">
+
+
+<owl:Ontology>
+    <owl:imports rdf:resource="&service;"/>
+    <owl:imports rdf:resource="&profile;"/>
+    <owl:imports rdf:resource="&process;"/>
+    <owl:imports rdf:resource="&grounding;"/> 
+</owl:Ontology>
+
+<service:Service rdf:ID="DeallocateRoleService">
+        <service:presents rdf:resource="#DeallocateRoleProfile"/>
+        <service:describedBy rdf:resource="#DeallocateRoleProcess"/>
+	<service:supports rdf:resource="#DeallocateRoleGrounding"/>
+</service:Service>
+
+
+       
+
+<profile:Profile rdf:ID="DeallocateRoleProfile">
+    <service:isPresentedBy rdf:resource="#DeallocateRoleService"/>
+    <profile:serviceName xml:lang="en">DeallocateRole</profile:serviceName>
+
+
+	<profile:hasInput rdf:resource="#AgentID"/>
+	<profile:hasInput rdf:resource="#TargetAgentName"/>
+    <profile:hasInput rdf:resource="#UnitName"/>
+    <profile:hasInput rdf:resource="#RoleName"/>
+    <profile:hasOutput rdf:resource="#Status"/>
+    <profile:hasOutput rdf:resource="#ErrorValue"/>   
+
+</profile:Profile>
+
+<process:AtomicProcess rdf:ID="DeallocateRoleProcess">
+	<service:describes rdf:resource="#DeallocateRoleService"/> 
+	 	
+	<process:hasInput rdf:resource="#AgentID"/>
+	<process:hasInput rdf:resource="#TargetAgentName"/>
+    <process:hasInput rdf:resource="#UnitName"/>
+    <process:hasInput rdf:resource="#RoleName"/>
+	<process:hasOutput rdf:resource="#Status"/>
+	<process:hasOutput rdf:resource="#ErrorValue"/>
+	<process:hasOutput rdf:resource="#EntityRoleList"/>
+	
+</process:AtomicProcess>
+
+<process:Input rdf:ID="AgentID">
+     <rdfs:label>AgentID</rdfs:label>
+     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
+</process:Input>
+<process:Input rdf:ID="TargetAgentName">
+     <rdfs:label>TargetAgentName</rdfs:label>
+     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
+</process:Input>
+<process:Input rdf:ID="UnitName">
+     <rdfs:label>UnitName</rdfs:label>
+     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
+</process:Input>
+<process:Input rdf:ID="RoleName">
+     <rdfs:label>RoleName</rdfs:label>
+     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
+</process:Input>
+
+<process:Output rdf:ID="Status">
+    <rdfs:label>Status</rdfs:label>
+    <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#integer</process:parameterType>
+</process:Output>  
+<process:Output rdf:ID="ErrorValue">
+    <rdfs:label>ErrorValue</rdfs:label>
+    <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
+</process:Output>     
+
+<grounding:WsdlGrounding rdf:ID="DeallocateRoleGrounding">
+	<service:supportedBy rdf:resource="#DeallocateRoleService"/>
+	<grounding:hasAtomicProcessGrounding rdf:resource="#DeallocateRoleWsdlAtomicProcessGrounding"/>
+</grounding:WsdlGrounding>
+
+<grounding:WsdlAtomicProcessGrounding rdf:ID="DeallocateRoleWsdlAtomicProcessGrounding">
+	<grounding:owlsProcess rdf:resource="#DeallocateRoleProcess"/>
+	<grounding:wsdlDocument rdf:datatype="&xsd;anyURI">http://localhost:8080/omsservices/services/DeallocateRole?wsdl</grounding:wsdlDocument>
+	<grounding:wsdlOperation>
+            <grounding:WsdlOperationRef>
+                <grounding:portType rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/DeallocateRoleOperationsPortType</grounding:portType>
+                <grounding:operation rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/DeallocateRole</grounding:operation>
+            </grounding:WsdlOperationRef>
+        </grounding:wsdlOperation>
+
+	<grounding:wsdlInputMessage rdf:datatype="&xsd;anyURI">http://localhost:8080/omsservices/services/DeallocateRoleMessage</grounding:wsdlInputMessage>
+        <grounding:wsdlOutputMessage rdf:datatype="&xsd;anyURI">http://localhost:8080/omsservices/services/DeallocateRoleResponse</grounding:wsdlOutputMessage>
+    
+	<grounding:wsdlInput>
+                  <grounding:WsdlInputMessageMap>
+                    <grounding:owlsParameter rdf:resource="#UnitName"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/DeallocateRole/UnitName</grounding:wsdlMessagePart>
+                  </grounding:WsdlInputMessageMap>
+        </grounding:wsdlInput>
+       <grounding:wsdlInput>
+                  <grounding:WsdlInputMessageMap>
+                    <grounding:owlsParameter rdf:resource="#RoleName"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/DeallocateRole/RoleName</grounding:wsdlMessagePart>
+                  </grounding:WsdlInputMessageMap>
+        </grounding:wsdlInput>
+              <grounding:wsdlInput>
+                  <grounding:WsdlInputMessageMap>
+                    <grounding:owlsParameter rdf:resource="#TargetAgentName"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/DeallocateRole/TargetAgentName</grounding:wsdlMessagePart>
+                  </grounding:WsdlInputMessageMap>
+        </grounding:wsdlInput>
+       <grounding:wsdlInput>
+                  <grounding:WsdlInputMessageMap>
+                    <grounding:owlsParameter rdf:resource="#AgentID"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/DeallocateRole/AgentID</grounding:wsdlMessagePart>
+                  </grounding:WsdlInputMessageMap>
+        </grounding:wsdlInput>
+        
+       <grounding:wsdlOutput>
+                  <grounding:WsdlOutputMessageMap>
+		    <grounding:owlsParameter rdf:resource="#Status"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/DeallocateRole/Status</grounding:wsdlMessagePart>
+                  </grounding:WsdlOutputMessageMap>
+        </grounding:wsdlOutput>
+
+<grounding:wsdlOutput>
+                  <grounding:WsdlOutputMessageMap>
+		    <grounding:owlsParameter rdf:resource="#ErrorValue"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/DeallocateRole/ErrorValue</grounding:wsdlMessagePart>
+                  </grounding:WsdlOutputMessageMap>
+        </grounding:wsdlOutput>
+        
+
+</grounding:WsdlAtomicProcessGrounding>
+
+</rdf:RDF> 

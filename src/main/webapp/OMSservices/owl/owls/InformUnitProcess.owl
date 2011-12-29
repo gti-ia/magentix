@@ -48,8 +48,7 @@
     <profile:hasInput rdf:resource="#AgentID"/>
     <profile:hasOutput rdf:resource="#Status"/>
     <profile:hasOutput rdf:resource="#ErrorValue"/>   
-    <profile:hasOutput rdf:resource="#UnitType"/>
-    <profile:hasOutput rdf:resource="#UnitGoal"/> 
+    <profile:hasOutput rdf:resource="#UnitType"/> 
     <profile:hasOutput rdf:resource="#ParentID"/> 
 
 </profile:Profile>
@@ -61,8 +60,7 @@
 	<process:hasInput rdf:resource="#AgentID"/>
 	<process:hasOutput rdf:resource="#Status"/>
 	<process:hasOutput rdf:resource="#ErrorValue"/>
-	<process:hasOutput rdf:resource="#UnitType"/>
-    <process:hasOutput rdf:resource="#UnitGoal"/> 
+	<process:hasOutput rdf:resource="#UnitType"/> 
     <process:hasOutput rdf:resource="#ParentID"/> 
 	
 </process:AtomicProcess>
@@ -87,10 +85,6 @@
 </process:Output>    
 <process:Output rdf:ID="UnitType">
     <rdfs:label>UnitType</rdfs:label>
-    <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
-</process:Output>
-<process:Output rdf:ID="UnitGoal">
-    <rdfs:label>UnitGoal</rdfs:label>
     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
 </process:Output>
 <process:Output rdf:ID="ParentID">
@@ -146,12 +140,6 @@
                   <grounding:WsdlOutputMessageMap>
 		    <grounding:owlsParameter rdf:resource="#UnitType"/>
                     <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/InformUnit/UnitType</grounding:wsdlMessagePart>
-                  </grounding:WsdlOutputMessageMap>
-        </grounding:wsdlOutput>
-        <grounding:wsdlOutput>
-                  <grounding:WsdlOutputMessageMap>
-		    <grounding:owlsParameter rdf:resource="#UnitGoal"/>
-                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/InformUnit/UnitGoal</grounding:wsdlMessagePart>
                   </grounding:WsdlOutputMessageMap>
         </grounding:wsdlOutput>
         <grounding:wsdlOutput>

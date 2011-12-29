@@ -45,6 +45,7 @@
 
 
     <profile:hasInput rdf:resource="#NormID"/>
+     <profile:hasInput rdf:resource="#UnitName"/>
     <profile:hasOutput rdf:resource="#Status"/>
     <profile:hasOutput rdf:resource="#ErrorValue"/>   
 
@@ -54,12 +55,18 @@
 	<service:describes rdf:resource="#DeregisterNormService"/>  	
 
       <process:hasInput rdf:resource="#NormID"/>
+      <profile:hasInput rdf:resource="#UnitName"/>
 	<process:hasOutput rdf:resource="#Status"/>
 	<process:hasOutput rdf:resource="#ErrorValue"/>
 </process:AtomicProcess>
 
 
 <process:Input rdf:ID="NormID">
+     <rdfs:label>NormID</rdfs:label>
+     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
+</process:Input>
+
+<process:Input rdf:ID="UnitName">
      <rdfs:label>NormID</rdfs:label>
      <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
 </process:Input>
@@ -95,6 +102,13 @@
                   <grounding:WsdlInputMessageMap>
                     <grounding:owlsParameter rdf:resource="#NormID"/>
                     <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/DeregisterNorm/NormID</grounding:wsdlMessagePart>
+                  </grounding:WsdlInputMessageMap>
+        </grounding:wsdlInput>
+        
+        	<grounding:wsdlInput>
+                  <grounding:WsdlInputMessageMap>
+                    <grounding:owlsParameter rdf:resource="#UnitName"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/DeregisterNorm/UnitName</grounding:wsdlMessagePart>
                   </grounding:WsdlInputMessageMap>
         </grounding:wsdlInput>
 

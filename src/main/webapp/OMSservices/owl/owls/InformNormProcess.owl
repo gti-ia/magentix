@@ -11,15 +11,15 @@
   <!ENTITY process "http://www.daml.org/services/owl-s/1.1/Process.owl#">
   <!ENTITY grounding "http://www.daml.org/services/owl-s/1.1/Grounding.owl#">
   <!ENTITY xsd "http://www.w3.org/2001/XMLSchema">
-  <!ENTITY mind "http://localhost:8080/OMS/OWLS/InformNormContent.owl">
-  <!ENTITY dir "http://localhost:8080/omsservices/services/InformNormContent?wsdl">
+  <!ENTITY mind "http://localhost:8080/OMS/OWLS/InformNorm.owl">
+  <!ENTITY dir "http://localhost:8080/omsservices/services/InformNorm?wsdl">
 ]>
 
 
 <rdf:RDF xmlns:rdf="&rdf;" xmlns:rdfs="&rdfs;" xmlns:owl="&owl;" xmlns:xsd="&xsd;#" 
    xmlns:service="&service;" xmlns:process="&process;" xmlns:profile="&profile;" xmlns:grounding="&grounding;"
    xmlns:mind="&mind;#"      
-   xml:base="http://localhost:8080/OMS/OWLS/InformNormContent.owl">
+   xml:base="http://localhost:8080/OMS/OWLS/InformNorm.owl">
 
 
 <owl:Ontology>
@@ -29,33 +29,35 @@
     <owl:imports rdf:resource="&grounding;"/> 
 </owl:Ontology>
 
-<service:Service rdf:ID="InformNormContentService">
-        <service:presents rdf:resource="#InformNormContentProfile"/>
-        <service:describedBy rdf:resource="#InformNormContentProcess"/>
-	<service:supports rdf:resource="#InformNormContentGrounding"/>
+<service:Service rdf:ID="InformNormService">
+        <service:presents rdf:resource="#InformNormProfile"/>
+        <service:describedBy rdf:resource="#InformNormProcess"/>
+	<service:supports rdf:resource="#InformNormGrounding"/>
 </service:Service>
 
 
        
 
-<profile:Profile rdf:ID="InformNormContentProfile">
-    <service:isPresentedBy rdf:resource="#InformNormContentService"/>
-    <profile:serviceName xml:lang="en">InformNormContent</profile:serviceName>
+<profile:Profile rdf:ID="InformNormProfile">
+    <service:isPresentedBy rdf:resource="#InformNormService"/>
+    <profile:serviceName xml:lang="en">InformNorm</profile:serviceName>
 
 
 	<profile:hasInput rdf:resource="#AgentID"/>
-    <profile:hasInput rdf:resource="#NormID"/>
+    <profile:hasInput rdf:resource="#NormName"/>
+    <profile:hasInput rdf:resource="#UnitName"/>
     <profile:hasOutput rdf:resource="#Status"/>
     <profile:hasOutput rdf:resource="#ErrorValue"/>   
     <profile:hasOutput rdf:resource="#Description"/>
 
 </profile:Profile>
 
-<process:AtomicProcess rdf:ID="InformNormContentProcess">
-	<service:describes rdf:resource="#InformNormContentService"/> 
+<process:AtomicProcess rdf:ID="InformNormProcess">
+	<service:describes rdf:resource="#InformNormService"/> 
 	 	
 	<process:hasInput rdf:resource="#AgentID"/>
-    <process:hasInput rdf:resource="#NormID"/>
+    <process:hasInput rdf:resource="#NormName"/>
+    <process:hasInput rdf:resource="#UnitName"/>
 	<process:hasOutput rdf:resource="#Status"/>
 	<process:hasOutput rdf:resource="#ErrorValue"/>
     <process:hasOutput rdf:resource="#Description"/>
@@ -66,11 +68,15 @@
      <rdfs:label>AgentID</rdfs:label>
      <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
 </process:Input>
-<process:Input rdf:ID="NormID">
-     <rdfs:label>NormID</rdfs:label>
+<process:Input rdf:ID="NormName">
+     <rdfs:label>NormName</rdfs:label>
      <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
 </process:Input>
 
+<process:Input rdf:ID="UnitName">
+     <rdfs:label>UnitName</rdfs:label>
+     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
+</process:Input>
 
 <process:Output rdf:ID="Status">
     <rdfs:label>Status</rdfs:label>
@@ -85,55 +91,61 @@
     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
 </process:Output>     
 
-<grounding:WsdlGrounding rdf:ID="InformNormContentGrounding">
-	<service:supportedBy rdf:resource="#InformNormContentService"/>
-	<grounding:hasAtomicProcessGrounding rdf:resource="#InformNormContentWsdlAtomicProcessGrounding"/>
+<grounding:WsdlGrounding rdf:ID="InformNormGrounding">
+	<service:supportedBy rdf:resource="#InformNormService"/>
+	<grounding:hasAtomicProcessGrounding rdf:resource="#InformNormWsdlAtomicProcessGrounding"/>
 </grounding:WsdlGrounding>
 
-<grounding:WsdlAtomicProcessGrounding rdf:ID="InformNormContentWsdlAtomicProcessGrounding">
-	<grounding:owlsProcess rdf:resource="#InformNormContentProcess"/>
-	<grounding:wsdlDocument rdf:datatype="&xsd;anyURI">http://localhost:8080/omsservices/services/InformNormContent?wsdl</grounding:wsdlDocument>
+<grounding:WsdlAtomicProcessGrounding rdf:ID="InformNormWsdlAtomicProcessGrounding">
+	<grounding:owlsProcess rdf:resource="#InformNormProcess"/>
+	<grounding:wsdlDocument rdf:datatype="&xsd;anyURI">http://localhost:8080/omsservices/services/InformNorm?wsdl</grounding:wsdlDocument>
 	<grounding:wsdlOperation>
             <grounding:WsdlOperationRef>
-                <grounding:portType rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/InformNormContentOperationsPortType</grounding:portType>
-                <grounding:operation rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/InformNormContent</grounding:operation>
+                <grounding:portType rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/InformNormOperationsPortType</grounding:portType>
+                <grounding:operation rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/InformNorm</grounding:operation>
             </grounding:WsdlOperationRef>
         </grounding:wsdlOperation>
 
-	<grounding:wsdlInputMessage rdf:datatype="&xsd;anyURI">http://localhost:8080/omsservices/services/InformNormContentMessage</grounding:wsdlInputMessage>
-        <grounding:wsdlOutputMessage rdf:datatype="&xsd;anyURI">http://localhost:8080/omsservices/services/InformNormContentResponse</grounding:wsdlOutputMessage>
+	<grounding:wsdlInputMessage rdf:datatype="&xsd;anyURI">http://localhost:8080/omsservices/services/InformNormMessage</grounding:wsdlInputMessage>
+        <grounding:wsdlOutputMessage rdf:datatype="&xsd;anyURI">http://localhost:8080/omsservices/services/InformNormResponse</grounding:wsdlOutputMessage>
     
 
        <grounding:wsdlInput>
                   <grounding:WsdlInputMessageMap>
-                    <grounding:owlsParameter rdf:resource="#NormID"/>
-                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/InformNormContent/NormID</grounding:wsdlMessagePart>
+                    <grounding:owlsParameter rdf:resource="#NormName"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/InformNorm/NormName</grounding:wsdlMessagePart>
+                  </grounding:WsdlInputMessageMap>
+        </grounding:wsdlInput>
+               <grounding:wsdlInput>
+                  <grounding:WsdlInputMessageMap>
+                    <grounding:owlsParameter rdf:resource="#UnitName"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/InformNorm/UnitName</grounding:wsdlMessagePart>
                   </grounding:WsdlInputMessageMap>
         </grounding:wsdlInput>
        <grounding:wsdlInput>
                   <grounding:WsdlInputMessageMap>
                     <grounding:owlsParameter rdf:resource="#AgentID"/>
-                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/InformNormContent/AgentID</grounding:wsdlMessagePart>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/InformNorm/AgentID</grounding:wsdlMessagePart>
                   </grounding:WsdlInputMessageMap>
         </grounding:wsdlInput>
         
        <grounding:wsdlOutput>
                   <grounding:WsdlOutputMessageMap>
 		    <grounding:owlsParameter rdf:resource="#Status"/>
-                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/InformNormContent/Status</grounding:wsdlMessagePart>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/InformNorm/Status</grounding:wsdlMessagePart>
                   </grounding:WsdlOutputMessageMap>
         </grounding:wsdlOutput>
 
 <grounding:wsdlOutput>
                   <grounding:WsdlOutputMessageMap>
 		    <grounding:owlsParameter rdf:resource="#ErrorValue"/>
-                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/InformNormContent/ErrorValue</grounding:wsdlMessagePart>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/InformNorm/ErrorValue</grounding:wsdlMessagePart>
                   </grounding:WsdlOutputMessageMap>
         </grounding:wsdlOutput>
         <grounding:wsdlOutput>
                   <grounding:WsdlOutputMessageMap>
 		    <grounding:owlsParameter rdf:resource="#Description"/>
-                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/InformNormContent/Description</grounding:wsdlMessagePart>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/InformNorm/Description</grounding:wsdlMessagePart>
                   </grounding:WsdlOutputMessageMap>
         </grounding:wsdlOutput>
         
