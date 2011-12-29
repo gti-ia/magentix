@@ -37,9 +37,27 @@ public class DataBaseInterface
 		return "Error: unit "+unitName+" not found in database";		
 	}
 
-	public String allocateRole(String roleName, String unitName, String targetAgentName, String agentName){
+	public String allocateRole(String roleName, String unitName, String targetAgentName, String agentName) throws SQLException{
 		// TODO no té molt de trellat la especificació, fa el mateix q l'anterior funció
-		return "";
+		Statement st;		
+		st = db.connection.createStatement();
+		ResultSet res = st.executeQuery("SELECT idunitList FROM unitList WHERE unitName ='"+ unitName+"'");
+		if(res.next()){
+			int idUnit = res.getInt("idunitList");
+			Statement st2 = db.connection.createStatement();
+			ResultSet res2 = st2.executeQuery("SELECT idroleListt FROM roleList WHERE roleName ='"+roleName+"' AND idunitList = "+idUnit);
+			if(res2.next()){
+				int idRole = res.getInt("idroleListt");
+				Statement st3 = db.connection.createStatement();
+				int res3 = st3.executeUpdate("INSERT INTO agentPlayList (agentName, idroleListt) VALUES ('"+agentName+"', "+idRole+")");
+				if(res3 != 0){
+					db.connection.commit();
+					return "<"+roleName+" + \"acquired\">";
+				}
+			}
+			return "Error: role "+roleName+" not found in unit "+unitName;
+		}
+		return "Error: unit "+unitName+" not found in database";		
 	}
 
 	public boolean checkAgent(String agentName) throws SQLException{
@@ -224,7 +242,7 @@ public class DataBaseInterface
 		return false;
 	}
 
-	public String createRole(String roleName, String unitName, String accessibility, String visibility, String position) throws SQLException{
+	public String createRole(String roleName, String unitName, String accessibility, String visibility, String position) throws SQLException, THOMASException{
 		Statement st;		
 		st = db.connection.createStatement();
 		ResultSet res = st.executeQuery("SELECT idunitList FROM unitList WHERE unitName ='"+ unitName+"'");
@@ -249,16 +267,16 @@ public class DataBaseInterface
 							return "<"+roleName+" + \"created\">";
 						}
 					}
-					return "Error: visibility "+position+" not found in database";
+					throw new THOMASException("Error: visibility "+position+" not found in database");
 				}
-				return "Error: accesibility "+position+" not found in database";
-			}			
-			return "Error: position "+position+" not found in database";
+				throw new THOMASException("Error: accesibility "+position+" not found in database");
+			}
+			throw new THOMASException("Error: position "+position+" not found in database");
 		}
-		return "Error: unit "+unitName+" not found in database";	
+		throw new THOMASException("Error: unit "+unitName+" not found in database");
 	}
 
-	public String createUnit(String unitName, String unitType, String parentUnitName, String agentName, String creatorAgentName) throws SQLException{
+	public String createUnit(String unitName, String unitType, String parentUnitName, String agentName, String creatorAgentName) throws SQLException, THOMASException{
 		Statement st;		
 		st = db.connection.createStatement();
 		ResultSet res = st.executeQuery("SELECT idunitType FROM unitType WHERE unitTypeName ='"+ unitType+"'");
@@ -295,26 +313,26 @@ public class DataBaseInterface
 											db.connection.commit();
 											return "<"+unitName+" + \"created\">";
 										}
-										return "Error: inserting new play list";
+										throw new THOMASException("Error: inserting new play list");
 									}
-									return "Error: inserting new role";
+									throw new THOMASException("Error: inserting new role");
 								}
-								return "Error: visibility private not found in database";
+								throw new THOMASException("Error: visibility private not found in database");
 							}
-							return "Error: accesibility internal not found in database";
+							throw new THOMASException("Error: accesibility internal not found in database");
 						}
-						return "Error: position creator not found in database";
+						throw new THOMASException("Error: position creator not found in database");
 					}
-					return "Error: inserting hierarchy";
+					throw new THOMASException("Error: inserting hierarchy");
 				}
-				return "Error: parent unit "+parentUnitName+" not found in database";
+				throw new THOMASException("Error: parent unit "+parentUnitName+" not found in database");
 			}			
-			return "Error: inserting new unit";
+			throw new THOMASException("Error: inserting new unit");
 		}
-		return "Error: unitType "+unitType+" not found in database";	
+		throw new THOMASException("Error: unitType "+unitType+" not found in database");
 	}
 
-	public String deallocateRole(String roleName, String unitName, String targetAgentName, String agentName) throws SQLException{
+	public String deallocateRole(String roleName, String unitName, String targetAgentName, String agentName) throws SQLException, THOMASException{
 		Statement st;		
 		st = db.connection.createStatement();
 		ResultSet res = st.executeQuery("SELECT idunitList FROM unitList WHERE unitName ='"+ unitName+"'");
@@ -330,14 +348,14 @@ public class DataBaseInterface
 					db.connection.commit();
 					return "<"+roleName+" + \"deallocated\">";
 				}
-				return "Error: mysql error "+res3;
+				throw new THOMASException("Error: mysql error "+res3);
 			}
-			return "Error: rolename "+roleName+" not found in database";
+			throw new THOMASException("Error: rolename "+roleName+" not found in database");
 		}
-		return "Error: unit "+unitName+" not found in database";
+		throw new THOMASException("Error: unit "+unitName+" not found in database");
 	}
 
-	public String deleteRole(String roleName, String unitName, String agentName) throws SQLException{
+	public String deleteRole(String roleName, String unitName, String agentName) throws SQLException, THOMASException{
 		Statement st;		
 		st = db.connection.createStatement();
 		ResultSet res = st.executeQuery("SELECT idunitList FROM unitList WHERE unitName ='"+ unitName+"'");
@@ -349,12 +367,12 @@ public class DataBaseInterface
 				db.connection.commit();
 				return "<"+roleName+" + \"deleted\">";
 			}
-			return "Error: mysql error "+res2;
+			throw new THOMASException("Error: mysql error "+res2);
 		}
-		return "Error: unit "+unitName+" not found in database";
+		throw new THOMASException("Error: unit "+unitName+" not found in database");
 	}
 
-	public String deleteUnit(String unitName, String agentName) throws SQLException{
+	public String deleteUnit(String unitName, String agentName) throws SQLException, THOMASException{
 		Statement st;		
 		st = db.connection.createStatement();
 		ResultSet res = st.executeQuery("SELECT idunitList FROM unitList WHERE unitName ='"+ unitName+"'");
@@ -371,7 +389,7 @@ public class DataBaseInterface
 					Statement st4 = db.connection.createStatement();
 					int res4 = st4.executeUpdate("DELETE FROM agentPlayList WHERE idroleListt ="+idroleListt);
 					if(res4 == 0)
-						return "Error: mysql error "+res4;
+						throw new THOMASException("Error: mysql error "+res4);
 				}
 				Statement st5 = db.connection.createStatement();
 				int res5 = st5.executeUpdate("DELETE FROM roleList WHERE idunitList ="+idunitList);
@@ -382,17 +400,16 @@ public class DataBaseInterface
 						db.connection.commit();
 						return "<"+unitName+" + \"deleted\">";
 					}
-					return "Error: mysql error "+res6;
+					throw new THOMASException("Error: mysql error "+res6);
 				}
-				return "Error: mysql error "+res5;
+				throw new THOMASException("Error: mysql error "+res5);
 			}
-			return "Error: position creator not found in database";
+			throw new THOMASException("Error: position creator not found in database");
 		}
-		return "Error: unit "+unitName+" not found in database";
+		throw new THOMASException("Error: unit "+unitName+" not found in database");
 	}
 
-	public String jointUnit(String unitName, String parentName, String agentName) throws SQLException{
-		// TODO per a que vols l'agentName?
+	public String jointUnit(String unitName, String parentName) throws SQLException, THOMASException{
 		Statement st;		
 		st = db.connection.createStatement();
 		ResultSet res = st.executeQuery("SELECT idunitList FROM unitList WHERE unitName ='"+ unitName+"'");
@@ -412,14 +429,14 @@ public class DataBaseInterface
 						return "<"+unitName+" + \"jointed to +\" "+parentName+">";
 					}
 				}
-				return "Error: mysql error "+res3;
+				throw new THOMASException("Error: mysql error "+res3);
 			}
-			return "Error: unit "+parentName+" not found in database";
+			throw new THOMASException("Error: unit "+parentName+" not found in database");
 		}
-		return "Error: unit "+unitName+" not found in database";
+		throw new THOMASException("Error: unit "+unitName+" not found in database");
 	}
 
-	public String leaveRole(String unitName, String roleName, String agentName) throws SQLException{
+	public String leaveRole(String unitName, String roleName, String agentName) throws SQLException, THOMASException{
 		Statement st;		
 		st = db.connection.createStatement();
 		ResultSet res = st.executeQuery("SELECT idunitList FROM unitList WHERE unitName ='"+ unitName+"'");
@@ -435,46 +452,14 @@ public class DataBaseInterface
 					db.connection.commit();
 					return "<"+roleName+" + \"left\">";			
 				}
-				return "Error: mysql error "+res3;
+				throw new THOMASException("Error: mysql error "+res3);
 			}
-			return "Error: unit "+roleName+" not found in unit "+unitName;
+			throw new THOMASException("Error: unit "+roleName+" not found in unit "+unitName);
 		}
-		return "Error: unit "+unitName+" not found in database";
+		throw new THOMASException("Error: unit "+unitName+" not found in database");
 	}
 
-	public String getUnitType(String unitName) throws SQLException{
-		Statement st;
-		String result = "";
-		st = db.connection.createStatement();
-		ResultSet res = st.executeQuery("SELECT idunitList FROM unitList WHERE unitName ='"+ unitName+"'");
-		if(res.next()){
-			int idunitList = res.getInt("idunitList");
-			Statement st2 = db.connection.createStatement();
-			ResultSet res2 = st2.executeQuery("SELECT * FROM roleList WHERE idunitList ="+idunitList);
-			while(res2.next()){
-				result = "<";
-				String roleName = res2.getString("roleName");
-				int idposition = res2.getInt("idposition");
-				int idroleListt = res2.getInt("idroleListt");
-				Statement st3 = db.connection.createStatement();
-				ResultSet res3 = st3.executeQuery("SELECT agentName FROM agentPlayList WHERE idroleListt ="+idroleListt);
-				if(res3.next())
-					result += res3.getString("agentName");
-				result += ","+roleName+",";
-				Statement st4 = db.connection.createStatement();
-				ResultSet res4 = st4.executeQuery("SELECT position FROM position WHERE idposition ="+idposition);
-				if(res4.next())
-					result += res4.getString("position");
-				result += ">";
-
-			}
-			return result;
-		}
-		return "Error: unit "+unitName+" not found in database";
-	}
-
-	public String getAgentsInUnit(String unitName) throws SQLException{
-		// TODO quin format de cadena volen?
+	public String getUnitType(String unitName) throws SQLException, THOMASException{
 		Statement st;
 		st = db.connection.createStatement();
 		ResultSet res = st.executeQuery("SELECT idunitType FROM unitList WHERE unitName ='"+ unitName+"'");
@@ -485,12 +470,42 @@ public class DataBaseInterface
 			if(res2.next()){
 				return res2.getString("unitTypeName");
 			}
-			return "Error: idunitType "+idunitType+" not found in database";
+			throw new THOMASException("Error: idunitType "+idunitType+" not found in database");
 		}
-		return "Error: unit "+unitName+" not found in database";
+		throw new THOMASException("Error: unit "+unitName+" not found in database");
 	}
 
-	public String getParentsUnit(String unitName) throws SQLException{
+	public ArrayList<ArrayList<String>> getAgentsInUnit(String unitName) throws SQLException, THOMASException{
+		ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
+		Statement st;
+		st = db.connection.createStatement();
+		ResultSet res = st.executeQuery("SELECT idunitList FROM unitList WHERE unitName ='"+ unitName+"'");
+		if(res.next()){
+			int idunitList = res.getInt("idunitList");
+			Statement st2 = db.connection.createStatement();
+			ResultSet res2 = st2.executeQuery("SELECT * FROM roleList WHERE idunitList ="+idunitList);
+			while(res2.next()){
+				ArrayList<String> aux = new ArrayList<String>();
+				String roleName = res2.getString("roleName");
+				int idposition = res2.getInt("idposition");
+				int idroleListt = res2.getInt("idroleListt");
+				Statement st3 = db.connection.createStatement();
+				ResultSet res3 = st3.executeQuery("SELECT agentName FROM agentPlayList WHERE idroleListt ="+idroleListt);
+				if(res3.next())
+					aux.add(res3.getString("agentName"));
+				aux.add(roleName);
+				Statement st4 = db.connection.createStatement();
+				ResultSet res4 = st4.executeQuery("SELECT position FROM position WHERE idposition ="+idposition);
+				if(res4.next())
+					aux.add(res4.getString("position"));
+				result.add(aux);
+			}
+			return result;
+		}
+		throw new THOMASException("Error: unit "+unitName+" not found in database");
+	}
+
+	public String getParentsUnit(String unitName) throws SQLException, THOMASException{
 		Statement st;		
 		st = db.connection.createStatement();
 		ResultSet res = st.executeQuery("SELECT idunitList FROM unitList WHERE unitName ='"+ unitName+"'");
@@ -508,11 +523,11 @@ public class DataBaseInterface
 			}
 			return "virtual";
 		}
-		return "Error: unit "+unitName+" not found in database";
+		throw new THOMASException("Error: unit "+unitName+" not found in database");
 	}
 
-	public String getInformAgentRole(String requestedAgentName, String agentName) throws SQLException{
-		String result = "";
+	public ArrayList<ArrayList<String>> getInformAgentRole(String requestedAgentName, String agentName) throws SQLException, THOMASException{
+		ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
 		Statement st;
 		Statement st2 = db.connection.createStatement();
 		int idVisibility;
@@ -520,7 +535,7 @@ public class DataBaseInterface
 		if(res2.next())
 			idVisibility = res2.getInt("idVisibility");
 		else
-			return "Error: visibility public not found in database";
+			throw new THOMASException("Error: visibility public not found in database");
 
 		st = db.connection.createStatement();
 		ResultSet res = st.executeQuery("SELECT idroleListt FROM agentPlayList WHERE agentName ='"+ requestedAgentName+"'");
@@ -529,16 +544,17 @@ public class DataBaseInterface
 			Statement st3 = db.connection.createStatement();
 			ResultSet res3 = st3.executeQuery("SELECT idunitList, roleName FROM roleList WHERE idroleListt ="+idroleListt+" AND idvisibility ="+idVisibility);
 			if(res3.next()){
-				result += "<";
+				ArrayList<String> aux = new ArrayList<String>();
 				int idunitList = res3.getInt("idunitList");
 				String roleName = res3.getString("roleName");		
 				Statement st4 = db.connection.createStatement();
 				ResultSet res4 = st4.executeQuery("SELECT unitName FROM unitList WHERE idunitList ="+idunitList);
 				if(res4.next()){
 					String unitName = res4.getString("unitName");
-					result += roleName+","+unitName;
+					aux.add(roleName);
+					aux.add(unitName);
+					result.add(aux);
 				}
-				result += ">";
 			}
 		}
 
@@ -549,7 +565,7 @@ public class DataBaseInterface
 		if(res6.next())
 			idVisibility = res6.getInt("idVisibility");
 		else
-			return "Error: visibility private not found in database";
+			throw new THOMASException("Error: visibility private not found in database");
 
 		Statement st7 = db.connection.createStatement();
 		ResultSet res7 = st7.executeQuery("SELECT idroleListt FROM agentPlayList WHERE agentName ='"+ requestedAgentName+"'");
@@ -578,6 +594,7 @@ public class DataBaseInterface
 				Statement st11 = db.connection.createStatement();
 				ResultSet res11 = st11.executeQuery("SELECT idroleListt FROM agentPlayList WHERE agentName ='"+ requestedAgentName+"'");
 				while(res11.next()){
+					ArrayList<String> aux = new ArrayList<String>();
 					int idroleListt = res11.getInt("idroleListt");
 					Statement st12 = db.connection.createStatement();
 					ResultSet res12 = st12.executeQuery("SELECT roleName FROM roleList WHERE idroleListt ="+idroleListt+" AND idvisibility ="+idVisibility+" AND idunitList="+unitid);
@@ -585,7 +602,9 @@ public class DataBaseInterface
 						Statement st13 = db.connection.createStatement();
 						ResultSet res13 = st13.executeQuery("SELECT unitName FROM unitList WHERE idunitList ="+unitid);
 						if(res13.next()){
-							result+= "<"+res12.getString("roleName")+","+res13.getString("unitName")+">";
+							aux.add(res12.getString("roleName"));
+							aux.add(res13.getString("unitName"));
+							result.add(aux);
 						}
 					}
 				}
@@ -594,8 +613,8 @@ public class DataBaseInterface
 		return result;
 	}
 
-	public String getAgentsRolesInUnit(String unitName, String agentName) throws SQLException{
-		String result = "";		
+	public ArrayList<ArrayList<String>> getAgentsRolesInUnit(String unitName, String agentName) throws SQLException, THOMASException{
+		ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
 		int idPublicVisibility;
 		int idPrivateVisbility;
 		boolean playsRole = false;
@@ -606,21 +625,21 @@ public class DataBaseInterface
 		if(res.next())
 			idPublicVisibility = res.getInt("idVisibility");
 		else
-			return "Error: visibility public not found in database";
+			throw new THOMASException("Error: visibility public not found in database");
 
 		Statement st3 = db.connection.createStatement();
 		ResultSet res3 = st3.executeQuery("SELECT idVisibility FROM visibility WHERE visibility ='private'");
 		if(res3.next())
 			idPrivateVisbility = res.getInt("idVisibility");
 		else
-			return "Error: visibility private not found in database";
+			throw new THOMASException("Error: visibility private not found in database");
 
 		Statement st2 = db.connection.createStatement();
 		ResultSet res2 = st2.executeQuery("SELECT idunitList FROM unitList WHERE unitName ='"+ unitName+"'");
 		if(res2.next())
 			idunitList = res2.getInt("idunitList");
 		else
-			return "Error : unit "+unitName+" not found in database";
+			throw new THOMASException("Error : unit "+unitName+" not found in database");
 
 
 		Statement st10 = db.connection.createStatement();
@@ -642,19 +661,22 @@ public class DataBaseInterface
 		else
 			res12 = st12.executeQuery("SELECT idroleListt, roleName FROM roleList WHERE idunitList ="+ idunitList+" AND idVisibility ="+idPublicVisibility);
 		while(res12.next()){
+			ArrayList<String> aux = new ArrayList<String>();
 			String roleName = res12.getString("roleName");
 			int idroleListt = res12.getInt("idroleListt");
 			Statement st13 = db.connection.createStatement();
 			ResultSet res13 = st13.executeQuery("SELECT agentName FROM agentPlayList WHERE idroleListt ="+idroleListt);
 			while(res13.next()){
-				result += "<"+res13.getString("agentName")+","+roleName+">";
+				aux.add(res13.getString("agentName"));
+				aux.add(roleName);
+				result.add(aux);
 			}
 		}
 		return result;
 	}
 
-	public String getAgentsPlayingRoleInUnit(String unitName, String roleName, String agentName) throws SQLException{
-		String result = "";		
+	public ArrayList<String> getAgentsPlayingRoleInUnit(String unitName, String roleName, String agentName) throws SQLException, THOMASException{
+		ArrayList<String> result = new ArrayList<String>();
 		int idPublicVisibility;
 		int idPrivateVisbility;
 		boolean playsRole = false;
@@ -665,21 +687,21 @@ public class DataBaseInterface
 		if(res.next())
 			idPublicVisibility = res.getInt("idVisibility");
 		else
-			return "Error: visibility public not found in database";
+			throw new THOMASException("Error: visibility public not found in database");
 
 		Statement st3 = db.connection.createStatement();
 		ResultSet res3 = st3.executeQuery("SELECT idVisibility FROM visibility WHERE visibility ='private'");
 		if(res3.next())
 			idPrivateVisbility = res.getInt("idVisibility");
 		else
-			return "Error: visibility private not found in database";
+			throw new THOMASException("Error: visibility private not found in database");
 
 		Statement st2 = db.connection.createStatement();
 		ResultSet res2 = st2.executeQuery("SELECT idunitList FROM unitList WHERE unitName ='"+ unitName+"'");
 		if(res2.next())
 			idunitList = res2.getInt("idunitList");
 		else
-			return "Error : unit "+unitName+" not found in database";
+			throw new THOMASException("Error : unit "+unitName+" not found in database");
 
 
 		Statement st10 = db.connection.createStatement();
@@ -705,15 +727,14 @@ public class DataBaseInterface
 			Statement st13 = db.connection.createStatement();
 			ResultSet res13 = st13.executeQuery("SELECT agentName FROM agentPlayList WHERE idroleListt ="+idroleListt);
 			while(res13.next()){
-				result += "<"+res13.getString("agentName")+">";
+				result.add(res13.getString("agentName"));
 			}
 		}
 		return result;
 	}
 
-	public String getAgentsPlayingPositionInUnit(String unitName,String positionValue, String agentName) throws SQLException{
-		// TODO per a que vols AgentName com a parametre?
-		String result = "";		
+	public ArrayList<ArrayList<String>> getAgentsPlayingPositionInUnit(String unitName,String positionValue) throws SQLException, THOMASException{
+		ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();		
 		int idposition;
 		int idunit;
 
@@ -722,14 +743,14 @@ public class DataBaseInterface
 		if(res.next())
 			idposition = res.getInt("idposition");
 		else
-			return "Error: position "+positionValue+" not found in database";
+			throw new THOMASException("Error: position "+positionValue+" not found in database");
 
 		Statement st2 = db.connection.createStatement();
 		ResultSet res2 = st2.executeQuery("SELECT idunitList FROM unitList WHERE unitName ='"+unitName+"'");
 		if(res2.next())
 			idunit = res.getInt("idunitList");
 		else
-			return "Error: unit "+unitName+" not found in database";
+			throw new THOMASException("Error: unit "+unitName+" not found in database");
 
 		Statement st3 = db.connection.createStatement();
 		ResultSet res3 = st3.executeQuery("SELECT idroleListt, roleName FROM roleList WHERE idunitList ="+idunit+" AND idposition ="+idposition);
@@ -738,15 +759,19 @@ public class DataBaseInterface
 			String roleName = res3.getString("roleName");
 			Statement st4 = db.connection.createStatement();
 			ResultSet res4 = st4.executeQuery("SELECT agentName FROM agentPlayList WHERE idroleListt ="+idroleListt);
-			while(res4.next())
-				result += "<"+res4.getString("agentName")+","+roleName+">";
+			while(res4.next()){
+				ArrayList<String>aux = new ArrayList<String>();
+				aux.add(res4.getString("agentName"));
+				aux.add(roleName);
+				result.add(aux);
+			}
 		}
 		return result;
 	}
 
-	public String getAgentsPlayingRolePositionInUnit(String unitName, String roleName, String positionValue, String agentName) throws SQLException{
+	public ArrayList<String> getAgentsPlayingRolePositionInUnit(String unitName, String roleName, String positionValue, String agentName) throws SQLException, THOMASException{
 		// TODO deurien tornarse els agents q juguen el role roleName, amb la posicio positionValue en la unitat unitName?
-		String result = "";		
+		ArrayList<String> result = new ArrayList<String>();		
 		int idPublicVisibility;
 		int idPrivateVisbility;
 		int idposition;
@@ -759,28 +784,28 @@ public class DataBaseInterface
 		if(res.next())
 			idPublicVisibility = res.getInt("idVisibility");
 		else
-			return "Error: visibility public not found in database";
+			throw new THOMASException("Error: visibility public not found in database");
 
 		Statement st3 = db.connection.createStatement();
 		ResultSet res3 = st3.executeQuery("SELECT idVisibility FROM visibility WHERE visibility ='private'");
 		if(res3.next())
 			idPrivateVisbility = res.getInt("idVisibility");
 		else
-			return "Error: visibility private not found in database";
+			throw new THOMASException("Error: visibility private not found in database");
 
 		Statement st2 = db.connection.createStatement();
 		ResultSet res2 = st2.executeQuery("SELECT idunitList FROM unitList WHERE unitName ='"+ unitName+"'");
 		if(res2.next())
 			idunitList = res2.getInt("idunitList");
 		else
-			return "Error : unit "+unitName+" not found in database";
+			throw new THOMASException("Error : unit "+unitName+" not found in database");
 
 		Statement st4 = db.connection.createStatement();
 		ResultSet res4 = st4.executeQuery("SELECT idposition FROM position WHERE position ='"+ positionValue+"'");
 		if(res4.next())
 			idposition = res4.getInt("idposition");
 		else
-			return "Error : position "+positionValue+" not found in database";
+			throw new THOMASException("Error : position "+positionValue+" not found in database");
 
 		Statement st6 = db.connection.createStatement();
 		ResultSet res6 = st6.executeQuery("SELECT idroleListt FROM agentPlayList WHERE agentName ='"+agentName+"'");
@@ -803,18 +828,17 @@ public class DataBaseInterface
 		if(res5.next())
 			idroleListt = res5.getInt("idroleListt");
 		else
-			return "Error : role "+roleName+" not found in database";
+			throw new THOMASException("Error : role "+roleName+" not found in database");
 
 		Statement st10 = db.connection.createStatement();
 		ResultSet res10 = st10.executeQuery("SELECT agentName FROM agentPlayList WHERE idroleListt ="+idroleListt);
 		while(res10.next()){
-			result += "<"+res10.getString("agentName")+">";
+			result.add(res10.getString("agentName"));
 		}		
 		return result;
 	}
 	
-	public String getQuantityAgentsRolesInUnit(String unitName, String agentName)  throws SQLException{
-		// TODO retorne un String? Lo normal no seria un int?
+	public int getQuantityAgentsRolesInUnit(String unitName, String agentName)  throws SQLException, THOMASException{
 		int idPublicVisibility;
 		int idroleListt;
 		boolean playsRole = false;
@@ -825,14 +849,14 @@ public class DataBaseInterface
 		if(res.next())
 			idPublicVisibility = res.getInt("idVisibility");
 		else
-			return "Error: visibility public not found in database";
+			throw new THOMASException("Error: visibility public not found in database");
 
 		Statement st2 = db.connection.createStatement();
 		ResultSet res2 = st2.executeQuery("SELECT idunitList FROM unitList WHERE unitName ='"+ unitName+"'");
 		if(res2.next())
 			idunitList = res2.getInt("idunitList");
 		else
-			return "Error : unit "+unitName+" not found in database";
+			throw new THOMASException("Error : unit "+unitName+" not found in database");
 
 		Statement st6 = db.connection.createStatement();
 		ResultSet res6 = st6.executeQuery("SELECT idroleListt FROM agentPlayList WHERE agentName ='"+agentName+"'");
@@ -861,11 +885,10 @@ public class DataBaseInterface
 				agentNames.add(res10.getString("agentName"));
 			}
 		}
-		return String.valueOf(agentNames.size());
+		return agentNames.size();
 	}
 	
-	public String getQuantityAgentsPlayingRoleInUnit(String unitName, String roleName, String agentName) throws SQLException{
-		// TODO retorne un String? Lo normal no seria un int?
+	public int getQuantityAgentsPlayingRoleInUnit(String unitName, String roleName, String agentName) throws SQLException, THOMASException{
 		int cont = 0;
 		int idPublicVisibility;
 		int idPrivateVisbility;
@@ -878,21 +901,21 @@ public class DataBaseInterface
 		if(res.next())
 			idPublicVisibility = res.getInt("idVisibility");
 		else
-			return "Error: visibility public not found in database";
+			throw new THOMASException("Error: visibility public not found in database");
 
 		Statement st3 = db.connection.createStatement();
 		ResultSet res3 = st3.executeQuery("SELECT idVisibility FROM visibility WHERE visibility ='private'");
 		if(res3.next())
 			idPrivateVisbility = res.getInt("idVisibility");
 		else
-			return "Error: visibility private not found in database";
+			throw new THOMASException("Error: visibility private not found in database");
 
 		Statement st2 = db.connection.createStatement();
 		ResultSet res2 = st2.executeQuery("SELECT idunitList FROM unitList WHERE unitName ='"+ unitName+"'");
 		if(res2.next())
 			idunitList = res2.getInt("idunitList");
 		else
-			return "Error : unit "+unitName+" not found in database";
+			throw new THOMASException("Error : unit "+unitName+" not found in database");
 
 		Statement st6 = db.connection.createStatement();
 		ResultSet res6 = st6.executeQuery("SELECT idroleListt FROM agentPlayList WHERE agentName ='"+agentName+"'");
@@ -915,18 +938,17 @@ public class DataBaseInterface
 		if(res5.next())
 			idroleListt = res5.getInt("idroleListt");
 		else
-			return "0";
+			return 0;
 
 		Statement st10 = db.connection.createStatement();
 		ResultSet res10 = st10.executeQuery("SELECT DISTINCT agentName FROM agentPlayList WHERE idroleListt ="+idroleListt);
 		while(res10.next()){
 			cont++;
 		}
-		return String.valueOf(cont);
+		return cont;
 	}
 	
-	public String getQuantityAgentsPlayingPositionInUnit(String unitName, String positionValue, String agentName)  throws SQLException{
-		// TODO retorne un String? Lo normal no seria un int?
+	public int getQuantityAgentsPlayingPositionInUnit(String unitName, String positionValue, String agentName)  throws SQLException, THOMASException{
 		int idPublicVisibility;
 		int idposition;
 		int idroleListt;
@@ -938,21 +960,21 @@ public class DataBaseInterface
 		if(res.next())
 			idPublicVisibility = res.getInt("idVisibility");
 		else
-			return "Error: visibility public not found in database";
+			throw new THOMASException("Error: visibility public not found in database");
 
 		Statement st2 = db.connection.createStatement();
 		ResultSet res2 = st2.executeQuery("SELECT idunitList FROM unitList WHERE unitName ='"+ unitName+"'");
 		if(res2.next())
 			idunitList = res2.getInt("idunitList");
 		else
-			return "Error : unit "+unitName+" not found in database";
+			throw new THOMASException("Error : unit "+unitName+" not found in database");
 
 		Statement st4 = db.connection.createStatement();
 		ResultSet res4 = st4.executeQuery("SELECT idposition FROM position WHERE position ='"+ positionValue+"'");
 		if(res4.next())
 			idposition = res4.getInt("idposition");
 		else
-			return "Error : position "+positionValue+" not found in database";
+			throw new THOMASException("Error : position "+positionValue+" not found in database");
 
 		Statement st6 = db.connection.createStatement();
 		ResultSet res6 = st6.executeQuery("SELECT idroleListt FROM agentPlayList WHERE agentName ='"+agentName+"'");
@@ -981,11 +1003,10 @@ public class DataBaseInterface
 				agentNames.add(res10.getString("agentName"));
 			}
 		}
-		return String.valueOf(agentNames.size());
+		return agentNames.size();
 	}
 
-	public String getQuantityAgentsPlayingRolePositionInUnit(String unitName, String roleName, String positionValue, String agentName) throws SQLException{
-		// TODO retorne un String? Lo normal no seria un int?
+	public int getQuantityAgentsPlayingRolePositionInUnit(String unitName, String roleName, String positionValue, String agentName) throws SQLException, THOMASException{
 		int cont = 0;
 		int idPublicVisibility;
 		int idPrivateVisbility;
@@ -999,28 +1020,28 @@ public class DataBaseInterface
 		if(res.next())
 			idPublicVisibility = res.getInt("idVisibility");
 		else
-			return "Error: visibility public not found in database";
+			throw new THOMASException("Error: visibility public not found in database");
 
 		Statement st3 = db.connection.createStatement();
 		ResultSet res3 = st3.executeQuery("SELECT idVisibility FROM visibility WHERE visibility ='private'");
 		if(res3.next())
 			idPrivateVisbility = res.getInt("idVisibility");
 		else
-			return "Error: visibility private not found in database";
+			throw new THOMASException("Error: visibility private not found in database");
 
 		Statement st2 = db.connection.createStatement();
 		ResultSet res2 = st2.executeQuery("SELECT idunitList FROM unitList WHERE unitName ='"+ unitName+"'");
 		if(res2.next())
 			idunitList = res2.getInt("idunitList");
 		else
-			return "Error : unit "+unitName+" not found in database";
+			throw new THOMASException("Error : unit "+unitName+" not found in database");
 
 		Statement st4 = db.connection.createStatement();
 		ResultSet res4 = st4.executeQuery("SELECT idposition FROM position WHERE position ='"+ positionValue+"'");
 		if(res4.next())
 			idposition = res4.getInt("idposition");
 		else
-			return "Error : position "+positionValue+" not found in database";
+			throw new THOMASException("Error : position "+positionValue+" not found in database");
 
 		Statement st6 = db.connection.createStatement();
 		ResultSet res6 = st6.executeQuery("SELECT idroleListt FROM agentPlayList WHERE agentName ='"+agentName+"'");
@@ -1043,44 +1064,46 @@ public class DataBaseInterface
 		if(res5.next())
 			idroleListt = res5.getInt("idroleListt");
 		else
-			return "0";
+			return 0;
 
 		Statement st10 = db.connection.createStatement();
 		ResultSet res10 = st10.executeQuery("SELECT agentName FROM agentPlayList WHERE idroleListt ="+idroleListt);
 		while(res10.next()){
 			cont++;
 		}		
-		return String.valueOf(cont);
+		return cont;
 	}
 	
-	public String getInformUnit(String unitName) throws SQLException{
+	public ArrayList<String> getInformUnit(String unitName) throws SQLException, THOMASException{
+		ArrayList<String> result = new ArrayList<String>();
 		int idunitList;
 		Statement st2 = db.connection.createStatement();
 		ResultSet res2 = st2.executeQuery("SELECT idunitList FROM unitList WHERE unitName ='"+ unitName+"'");
 		if(res2.next())
 			idunitList = res2.getInt("idunitList");
 		else
-			return "Error : unit "+unitName+" not found in database";
+			throw new THOMASException("Error : unit "+unitName+" not found in database");
 		
 		Statement st3 = db.connection.createStatement();
 		ResultSet res3 = st3.executeQuery("SELECT unitTypeName FROM unitType WHERE idunitType ="+ idunitList);
 		res3.next();
 		
-		String result = "<"+res3.getString("unitTypeName")+",";
+		result.add(res3.getString("unitTypeName"));
 		Statement st4 = db.connection.createStatement();
 		ResultSet res4 = st4.executeQuery("SELECT idParentUnit FROM unitHierarchy WHERE idChildUnit ="+ idunitList);
 		if(res4.next()){
 			Statement st5 = db.connection.createStatement();
 			ResultSet res5 = st5.executeQuery("SELECT unitName FROM unitList WHERE idunitList ="+ res4.getInt("idParentUnit"));
 			res5.next();
-			result += res5.getString("unitName");
+			result.add(res5.getString("unitName"));
 		}
-		result += ">";
+		else
+			result.add("");
 		return result;
 	}
 	
-	public String getInformUnitRoles(String unitName, String agentName) throws SQLException{
-		String result = "";
+	public ArrayList<ArrayList<String>> getInformUnitRoles(String unitName, String agentName) throws SQLException, THOMASException{
+		ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
 		int idPublicVisibility;
 		int idPrivateVisbility;
 		boolean playsRole = false;
@@ -1091,21 +1114,21 @@ public class DataBaseInterface
 		if(res.next())
 			idPublicVisibility = res.getInt("idVisibility");
 		else
-			return "Error: visibility public not found in database";
+			throw new THOMASException("Error: visibility public not found in database");
 
 		Statement st3 = db.connection.createStatement();
 		ResultSet res3 = st3.executeQuery("SELECT idVisibility FROM visibility WHERE visibility ='private'");
 		if(res3.next())
 			idPrivateVisbility = res.getInt("idVisibility");
 		else
-			return "Error: visibility private not found in database";
+			throw new THOMASException("Error: visibility private not found in database");
 
 		Statement st2 = db.connection.createStatement();
 		ResultSet res2 = st2.executeQuery("SELECT idunitList FROM unitList WHERE unitName ='"+ unitName+"'");
 		if(res2.next())
 			idunitList = res2.getInt("idunitList");
 		else
-			return "Error : unit "+unitName+" not found in database";
+			throw new THOMASException("Error : unit "+unitName+" not found in database");
 
 
 		Statement st6 = db.connection.createStatement();
@@ -1127,6 +1150,7 @@ public class DataBaseInterface
 		else
 			res8 = st8.executeQuery("SELECT roleName, idaccesibility, idvisiblity, idposition FROM roleList WHERE idunitList ="+idunitList+" AND idVisibility ="+idPublicVisibility);
 		while(res8.next()){
+			ArrayList<String>aux = new ArrayList<String>();
 			int idposition = res8.getInt("idposition");
 			int idaccesibility = res8.getInt("idaccesibility");
 			int idvisiblity = res8.getInt("idvisiblity");
@@ -1141,14 +1165,17 @@ public class DataBaseInterface
 			Statement st11 = db.connection.createStatement();
 			ResultSet res11 = st11.executeQuery("SELECT visibility FROM visibility WHERE idvisiblity ="+idvisiblity);
 			res11.next();
-			
-			result += "<"+res8.getString("roleName")+","+res10.getString("accesiblity")+","+res11.getString("visibility")+","+res9.getString("position")+">";
+			aux.add(res8.getString("roleName"));
+			aux.add(res10.getString("accesiblity"));
+			aux.add(res11.getString("visibility"));
+			aux.add(res11.getString("visibility"));
+			result.add(aux);
 		}
 		return result;		
 	}
 	
-	public String getInformRole(String roleName, String unitName, String agentName) throws SQLException{
-		// TODO per a que vull agentName?
+	public ArrayList<String> getInformRole(String roleName, String unitName) throws SQLException, THOMASException{
+		ArrayList<String> result = new ArrayList<String>();
 		int idunitList;
 
 		Statement st2 = db.connection.createStatement();
@@ -1156,7 +1183,7 @@ public class DataBaseInterface
 		if(res2.next())
 			idunitList = res2.getInt("idunitList");
 		else
-			return "Error : unit "+unitName+" not found in database";
+			throw new THOMASException("Error : unit "+unitName+" not found in database");
 
 
 		Statement st6 = db.connection.createStatement();
@@ -1176,9 +1203,11 @@ public class DataBaseInterface
 			Statement st11 = db.connection.createStatement();
 			ResultSet res11 = st11.executeQuery("SELECT visibility FROM visibility WHERE idvisiblity ="+idvisiblity);
 			res11.next();
-			
-			return "<"+res10.getString("accesiblity")+","+res11.getString("visibility")+","+res9.getString("position")+">";
+			result.add(res10.getString("accesiblity"));
+			result.add(res11.getString("visibility"));
+			result.add(res9.getString("position"));
+			return result;
 		}
-		return "Error : role "+roleName+" not found in database";
+		throw new THOMASException("Error : role "+roleName+" not found in database");
 	}
 }
