@@ -5,9 +5,10 @@
       <xsd:element name="QuantityMembers">
         <xsd:complexType>
           <xsd:sequence>
-             <xsd:element name="UnitID" type="xsd:string"/>
-             <xsd:element name="RoleID" type="xsd:string"/>
-             <xsd:element name="AgentID" type="xsd:string"/>
+          	<xsd:element name="UnitID" type="xsd:string" />
+          	<xsd:element name="RoleID" type="xsd:string" />
+          	<xsd:element name="PositionValue" type="xsd:string"></xsd:element>
+          	<xsd:element name="AgentID" type="xsd:string" />
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
@@ -16,7 +17,7 @@
           <xsd:sequence>
           	<xsd:element name="Status" type="xsd:string"/>
           	<xsd:element name="ErrorValue" type="xsd:string"/>
-          	<xsd:element name="Quantity" type="xsd:integer"/>
+          	<xsd:element name="Quantity" type="xsd:string"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
