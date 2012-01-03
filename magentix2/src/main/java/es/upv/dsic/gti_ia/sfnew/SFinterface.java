@@ -690,7 +690,6 @@ public class SFinterface {
 	public void RegisterService(String serviceURL){
 
 
-
 		ArrayList<String> inputs=getInputs(null, serviceURL);
 		ArrayList<String> outputs=getOutputs(null, serviceURL);
 
@@ -727,7 +726,7 @@ public class SFinterface {
 					break;
 			}
 			if(!found){//register the grounding
-				System.out.println("Register the grounding: "+groundingURI);
+				System.out.println("Register new grounding");
 
 				String fileName="tmp.owls";
 				writeProvidersGroundingOWLSFile(serviceURL, regServiceProfile, fileName);
@@ -751,25 +750,9 @@ public class SFinterface {
 					e.printStackTrace();
 				}
 
-				//1) crear un nuevo owls en el directorio local y cargarlo en jena
-				// 
-				//funciona, pero ojo con las URLs!! hay que poner el xml:base "URL"
-
-				//parsear el original
-				//extraer todo lo de <rdf:RDF .... >
-				//<grounding:WsdlGrounding
-				//<grounding:WsdlAtomicProcessGrounding
-
-				//guardar en archivo owls en el servidor
-				//cargar el archivo owls a Jena
-
-
-
-				//2) cargar el owls con Jena, y extraer uno a uno los datos que se quieren,
-				//ir añadiendolos al modelo mediante funciones m.add ... (esto se tiene que probar...)
 			}
 			else{
-				System.out.println("Not register this grounding: "+groundingURI);
+				System.out.println("Not register this grounding, already registered");
 			}
 
 
@@ -1255,7 +1238,8 @@ public class SFinterface {
 					"</grounding:WsdlGrounding>\n";
 
 			groundsOWLS+="<grounding:WsdlAtomicProcessGrounding rdf:about=\""+"#"+atomicProcessGroundingName+"\">\n"+
-					"<grounding:wsdlDocument rdf:datatype=\""+wsdlDatatype+"\">\n"+
+					"<grounding:wsdlDocument rdf:datatype=\""+wsdlDatatype+"\"\n>"+//the symbol ">" must go after the "\n", 
+					//if not, when Jena adds the info to the DB puts some "" and spaces that causes problems to queries
 					wsdlDoc+"</grounding:wsdlDocument>\n";
 			String owlsProcess=getGroundOwlsProcess(atomicProcessGrounding, null);
 			groundsOWLS+="<grounding:owlsProcess rdf:resource=\""+owlsProcess+"\"/>\n";
@@ -1371,7 +1355,8 @@ public class SFinterface {
 					"</grounding:WsdlGrounding>\n";
 
 			groundsOWLS+="<grounding:WsdlAtomicProcessGrounding rdf:about=\""+"#"+atomicProcessGroundingName+"\">\n"+
-					"<grounding:wsdlDocument rdf:datatype=\""+wsdlDatatype+"\">\n"+
+					"<grounding:wsdlDocument rdf:datatype=\""+wsdlDatatype+"\"\n>"+//the symbol ">" must go after the "\n", 
+					//if not, when Jena adds the info to the DB puts some "" and spaces that causes problems to queries
 					wsdlDoc+"</grounding:wsdlDocument>\n";
 			String owlsProcess=getGroundOwlsProcess(atomicProcessGrounding, serviceURL);
 			groundsOWLS+="<grounding:owlsProcess rdf:resource=\""+owlsProcess+"\"/>\n";
@@ -1814,7 +1799,6 @@ private String getGroundPortType(String atomicProcessGrounding, String serviceUR
 	}
 
 	
-	//TODO que no borre un provider de otro servicio
 	public void removeProvider(String serviceProfile, String providerName){
 		
 		StringTokenizer tokenServiceProf=new StringTokenizer(serviceProfile, "#");
@@ -1893,10 +1877,12 @@ private String getGroundPortType(String atomicProcessGrounding, String serviceUR
 		}
 	}
 
-	//TODO
-	public void deregisterService(String baseURL, String profileName){
 
-		String serviceProfile=baseURL+"#"+profileName;
+	public void deregisterService(String serviceProfile){
+
+		StringTokenizer servProfTok=new StringTokenizer(serviceProfile, "#");
+		String baseURL=servProfTok.nextToken();
+		String profileName=servProfTok.nextToken();
 		
 		String serviceURI=getServiceURI(serviceProfile, null);
 		StringTokenizer tokServURI=new StringTokenizer(serviceURI, "#");
@@ -1990,6 +1976,7 @@ private String getGroundPortType(String atomicProcessGrounding, String serviceUR
 
 	}
 
+	
 	
 	private ArrayList<String> getProviders(String serviceProfile){
 		ArrayList<String> providers=new ArrayList<String>();
@@ -2152,7 +2139,7 @@ private String getGroundPortType(String atomicProcessGrounding, String serviceUR
 	 * @param inputs  Specify the parameter type. Example: \"http://127.0.0.1/ontology/books.owl#Novel\"^^xsd:anyURI
 	 * @param outputs Specify the parameter type. Example: \"http://127.0.0.1/ontology/books.owl#Novel\"^^xsd:anyURI
 	 */
-	public void SearchServices(ArrayList<String> inputs, ArrayList<String> outputs){
+	public void SearchService(ArrayList<String> inputs, ArrayList<String> outputs){
 
 
 		ModelMaker maker = ModelFactory.createModelRDBMaker(conn);
@@ -2962,7 +2949,9 @@ private String getGroundPortType(String atomicProcessGrounding, String serviceUR
 		if (resultsServiceInputs != null) {
 			while (resultsServiceInputs.hasNext()) {
 				//To take only the name of the input
-				String result = resultsServiceInputs.next().toString();
+				//tring result = resultsServiceInputs.next().toString();
+				String result = resultsServiceInputs.next().getResource("x").toString();
+				String processInput=result;
 				StringTokenizer Tok = new StringTokenizer(result);
 				//String processInputResult = Tok.nextToken("#");
 				Tok.nextToken("#");
@@ -2970,7 +2959,8 @@ private String getGroundPortType(String atomicProcessGrounding, String serviceUR
 				processInputName = processInputName.replace(">", "");
 				processInputName = processInputName.replace(")", "");
 				if (DEBUG) {
-					System.out.println("Process Input: " + processInputName);
+					System.out.println("Process Input: "+processInput);
+					System.out.println("Process Input Name: " + processInputName);
 				}
 
 				// Delete input tuples related with the service process
@@ -3006,6 +2996,8 @@ private String getGroundPortType(String atomicProcessGrounding, String serviceUR
 								" filter ( ?y = grounding:owlsParameter " +
 								")" +
 								"?x ?y ?z}";
+				
+				
 
 				// Execute the query 
 				QuerySolution querysol=new QuerySolutionMap();

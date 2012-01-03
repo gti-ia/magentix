@@ -13,10 +13,16 @@ public class SFtesting {
 		sf.clean();
 //
 		sf.RegisterService("http://127.0.0.1/services/1.1/calculateSunriseTime.owls");
-		
-		sf.RegisterService("http://127.0.0.1/services/1.1/author_bookprice_service.owls");
-		
+//		
+//		sf.RegisterService("http://127.0.0.1/services/1.1/author_bookprice_service.owls");
+//		
 		sf.RegisterService("http://127.0.0.1/services/1.1/calculateSunriseTime2.owls");
+		sf.RegisterService("http://127.0.0.1/services/1.1/calculateSunriseTime2.owls");
+		
+//		sf.removeProvider("http://127.0.0.1/services/1.1/calculateSunriseTime.owls#CALCULATE_SUNRISE_PROFILE"
+//				, "Provider3");
+		
+		//sf.deregisterService("http://127.0.0.1/services/1.1/calculateSunriseTime.owls", "CALCULATE_SUNRISE_PROFILE");
 		
 		System.out.println("\n\nMODEL:\n\n");
 		sf.writeModel();
