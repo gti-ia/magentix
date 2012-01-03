@@ -132,13 +132,17 @@ public class OMSInterface {
 				{
 					play= true;
 				}
-				//TODO en un futuro se deberan ver para todas las unidades padre.
-				String parentsUnit = dbInterface.getParentsUnit(UnitName);
 
-				if (dbInterface.checkPositionInUnit(AgentName, "creator", parentsUnit))
+				ArrayList<String> parentsUnit = dbInterface.getParentsUnit(UnitName);
+
+				for(String parentUnit : parentsUnit)
 				{
-					play= true;
+					if (dbInterface.checkPositionInUnit(AgentName, "creator", parentUnit))
+					{
+						play= true;
+					}
 				}
+
 
 				if (play)
 				{
@@ -450,7 +454,7 @@ public class OMSInterface {
 						String accessibility = informRole.get(0);
 						String visibility = informRole.get(1);
 						String position = informRole.get(2);
-						
+
 
 						if (!dbInterface.checkPositionInUnit(AgentName, "member", UnitName) && 
 								!dbInterface.checkPositionInUnit(AgentName, "creator", UnitName) &&
@@ -598,7 +602,7 @@ public class OMSInterface {
 						{
 							if (dbInterface.checkPositionInUnit(AgentName, "supervisor", UnitName) || dbInterface.checkPositionInUnit(AgentName, "creator", UnitName))
 							{
-								result = dbInterface.allocateRole(RoleName, UnitName, TargetAgentName, AgentName);
+								result = dbInterface.acquireRole(UnitName, RoleName, TargetAgentName);
 
 							}
 							else
@@ -614,7 +618,7 @@ public class OMSInterface {
 					{
 						if (dbInterface.checkAgentInUnit(AgentName, UnitName))
 						{
-							result = dbInterface.allocateRole(RoleName, UnitName, TargetAgentName, AgentName);
+							result = dbInterface.acquireRole(UnitName, RoleName, TargetAgentName);
 
 						}
 						else
@@ -628,7 +632,7 @@ public class OMSInterface {
 
 							if (dbInterface.checkPositionInUnit(AgentName, "member", UnitName) || dbInterface.checkPositionInUnit(AgentName, "creator", UnitName))
 							{
-								result = dbInterface.allocateRole(RoleName, UnitName, TargetAgentName, AgentName);
+								result = dbInterface.acquireRole(UnitName, RoleName, TargetAgentName);
 
 							}
 							else
@@ -642,7 +646,7 @@ public class OMSInterface {
 							if (dbInterface.checkPosition(AgentName, "creator"))
 							{
 
-								result = dbInterface.allocateRole(RoleName, UnitName, TargetAgentName, AgentName);
+								result = dbInterface.acquireRole(UnitName, RoleName, TargetAgentName);
 
 							}
 							else
@@ -880,7 +884,7 @@ public class OMSInterface {
 				//TODO Control de normas
 
 				methodResult = dbInterface.getInformAgentRole(RequestedAgentName, AgentName);
-				
+
 				for (ArrayList<String> agentPair : methodResult)
 				{	//< RoleName , UnitName >
 					result = result + "< " + agentPair.get(0)+" , "+agentPair.get(1)+" > - "; 
@@ -922,7 +926,7 @@ public class OMSInterface {
 
 		try{
 			ArrayList<String> roleInfo = dbInterface.getInformRole(RoleName, UnitName);
-			
+
 			String visibility = roleInfo.get(1);
 			String position = roleInfo.get(2);
 
@@ -995,7 +999,7 @@ public class OMSInterface {
 
 					case CASE_A: 
 						methodResult = dbInterface.getAgentsRolesInUnit(UnitName, AgentName);
-						
+
 						for (ArrayList<String> agentPair : methodResult)
 						{	//< RequestesAgentName , RoleName >
 							result = result + "< " + agentPair.get(0)+" , "+agentPair.get(1)+" > - "; 
@@ -1004,12 +1008,12 @@ public class OMSInterface {
 					case CASE_B: 
 
 						arrayResult = dbInterface.getAgentsPlayingRoleInUnit(UnitName, RoleName, AgentName);
-						
+
 						for(String agent : arrayResult)
 						{	//< agentName , roleName >
 							result = result + "< " +agent+" , "+ RoleName+" > - ";	
 						}
-						
+
 						break;//Solo se incluye el roleName
 					case CASE_C: 
 
@@ -1023,7 +1027,7 @@ public class OMSInterface {
 					case CASE_D: 
 
 						arrayResult = dbInterface.getAgentsPlayingRolePositionInUnit(UnitName, RoleName, PositionValue, AgentName);
-						
+
 						for(String agent : arrayResult)
 						{	//< agentName , roleName >
 							result = result + "< " +agent+" , "+ RoleName+" > - ";	
@@ -1076,7 +1080,7 @@ public class OMSInterface {
 		try
 		{
 			ArrayList<String> roleInfo = dbInterface.getInformRole(RoleName, UnitName);
-			
+
 			String visibility = roleInfo.get(1);
 			String position = roleInfo.get(2);
 
@@ -1152,7 +1156,7 @@ public class OMSInterface {
 					case CASE_A: 
 
 						intResult = dbInterface.getQuantityAgentsRolesInUnit(UnitName, AgentName);
-						
+
 						result = intResult +"";
 
 						break;//No se incluye ni el parametro role name ni position name. 
@@ -1207,6 +1211,7 @@ public class OMSInterface {
 	{
 		String result = "";
 		ArrayList<String> arrayResult = new ArrayList<String>();
+		boolean play = false;
 
 		try
 		{
@@ -1217,9 +1222,22 @@ public class OMSInterface {
 
 				if (unitType.equals("team") || unitType.equals("hierarchy"))
 				{
-					String ParentUnitName = dbInterface.getParentsUnit(UnitName);
+					ArrayList<String> parentsUnitName = dbInterface.getParentsUnit(UnitName);
 
-					if (!dbInterface.checkAgentInUnit(AgentName, UnitName) && dbInterface.checkAgentInUnit(AgentName, ParentUnitName))
+					for(String parentUnit : parentsUnitName)
+					{
+						if (dbInterface.checkAgentInUnit(AgentName, parentUnit))
+						{
+							play = true;
+						}
+					}
+
+					if (dbInterface.checkAgentInUnit(AgentName, UnitName))
+					{
+						play = true;
+					}
+
+					if (!play)
 					{
 						throw new THOMASException("Invalid. Agent "+ AgentName + " not play any rol in unit or parent unit.");
 					}
@@ -1260,20 +1278,20 @@ public class OMSInterface {
 	{
 		String result = "";
 		ArrayList<ArrayList<String>> methodResult = new ArrayList<ArrayList<String>>();
-		
+
 		try
 		{
 			if (dbInterface.checkUnit(UnitName))
 			{
 				//TODO Control de normas
 				methodResult = dbInterface.getInformUnitRoles(UnitName, AgentName);		
-				
+
 				for (ArrayList<String> agentPair : methodResult)
 				{
 					//< RoleName , Accessibility , Visibility , Position >
 					result = result + "< " + agentPair.get(0)+" , "+agentPair.get(1)+" , "+ agentPair.get(2)+ " , "+ agentPair.get(3)+ " > - "; 
 				}
-				
+
 			}
 			else
 			{
@@ -1303,6 +1321,7 @@ public class OMSInterface {
 	{
 		String result = "";
 		ArrayList<String> arrayResult = new ArrayList<String>();
+		boolean play = false;
 		try
 		{
 			if (dbInterface.checkUnit(UnitName))
@@ -1315,9 +1334,22 @@ public class OMSInterface {
 
 					if (unitType.equals("team") || unitType.equals("hierarchy"))
 					{
-						String ParentUnitName = dbInterface.getParentsUnit(UnitName);
+						ArrayList<String> parentsUnitName = dbInterface.getParentsUnit(UnitName);
 
-						if (!dbInterface.checkAgentInUnit(AgentName, UnitName) && dbInterface.checkAgentInUnit(AgentName, ParentUnitName))
+						for(String parentUnit : parentsUnitName)
+						{
+							if (dbInterface.checkAgentInUnit(AgentName, parentUnit))
+							{
+								play = true;
+							}
+						}
+
+						if (dbInterface.checkAgentInUnit(AgentName, UnitName))
+						{
+							play = true;
+						}
+
+						if (!play)
 						{
 							throw new THOMASException("Invalid. Agent "+ AgentName + " not play any rol in unit or parent unit.");
 						}
@@ -1328,11 +1360,11 @@ public class OMSInterface {
 					}
 
 					arrayResult = dbInterface.getInformRole(RoleName, UnitName);
-					
+
 					//< Accessibility - Visibility - Position >
 					result = "< "+ arrayResult.get(0)+ " , "+ arrayResult.get(1)+ " , "+ arrayResult.get(2)+ " >";
-								
-				
+
+
 
 
 				}
