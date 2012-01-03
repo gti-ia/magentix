@@ -7,15 +7,15 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-public class DataBaseInterface
+class DataBaseInterface
 {
 	private DataBase	db;
-	public DataBaseInterface()
+	DataBaseInterface()
 	{
 		db = new DataBase();
 	}
 
-	public String acquireRole(String unitName, String roleName, String agentName) throws SQLException{
+	String acquireRole(String unitName, String roleName, String agentName) throws SQLException{
 		Statement st;		
 		st = db.connection.createStatement();
 		ResultSet res = st.executeQuery("SELECT idunitList FROM unitList WHERE unitName ='"+ unitName+"'");
@@ -37,7 +37,7 @@ public class DataBaseInterface
 		return "Error: unit "+unitName+" not found in database";		
 	}
 
-	public String allocateRole(String roleName, String unitName, String targetAgentName, String agentName) throws SQLException{
+	/*String allocateRole(String roleName, String unitName, String targetAgentName, String agentName) throws SQLException{
 		// TODO no té molt de trellat la especificació, fa el mateix q l'anterior funció
 		Statement st;		
 		st = db.connection.createStatement();
@@ -58,9 +58,9 @@ public class DataBaseInterface
 			return "Error: role "+roleName+" not found in unit "+unitName;
 		}
 		return "Error: unit "+unitName+" not found in database";		
-	}
+	}*/
 
-	public boolean checkAgent(String agentName) throws SQLException{
+	boolean checkAgent(String agentName) throws SQLException{
 		boolean exists = false;
 
 		Statement stmt = db.connection.createStatement();
@@ -73,7 +73,7 @@ public class DataBaseInterface
 		return exists;
 	}
 
-	public boolean checkAgentInUnit(String agentName, String unit) throws SQLException{
+	boolean checkAgentInUnit(String agentName, String unit) throws SQLException{
 		boolean exists = false;
 
 		Statement stmt = db.connection.createStatement();
@@ -90,7 +90,7 @@ public class DataBaseInterface
 		return exists;
 	}
 
-	public boolean checkAgentPlaysRole(String agentName, String role, String unit) throws SQLException{
+	boolean checkAgentPlaysRole(String agentName, String role, String unit) throws SQLException{
 		boolean exists = false;		
 		Statement stmt = db.connection.createStatement();
 		ResultSet rs = stmt.executeQuery("SELECT idunitList FROM unitList WHERE unitName ='"+unit+"'");
@@ -105,7 +105,7 @@ public class DataBaseInterface
 		return exists;
 	}
 
-	public boolean checkNoCreatorAgentsInUnit(String unit) throws SQLException{		
+	boolean checkNoCreatorAgentsInUnit(String unit) throws SQLException{		
 		Statement stmt = db.connection.createStatement();
 		ResultSet rs = stmt.executeQuery("SELECT idposition FROM position WHERE position ='creator'");
 		if(rs.next()){
@@ -122,7 +122,7 @@ public class DataBaseInterface
 		return false;
 	}
 
-	public boolean checkPlayedRoleInUnit(String role, String unit) throws SQLException{
+	boolean checkPlayedRoleInUnit(String role, String unit) throws SQLException{
 
 		Statement stmt = db.connection.createStatement();
 		ResultSet rs = stmt.executeQuery("SELECT idunitList FROM unitList WHERE unitName ='"+unit+"'");
@@ -137,12 +137,12 @@ public class DataBaseInterface
 		return false;
 	}
 
-	public boolean checkTargetRoleNorm(String role, String unit){
+	boolean checkTargetRoleNorm(String role, String unit){
 		// TODO on estan les normes
 		return true;
 	}
 
-	public boolean checkPosition(String agent, String position) throws SQLException{
+	boolean checkPosition(String agent, String position) throws SQLException{
 		Statement st;		
 		st = db.connection.createStatement();
 		ResultSet res = st.executeQuery("SELECT idroleListt FROM agentPlayList WHERE agentName ='"+ agent +"'");
@@ -162,7 +162,7 @@ public class DataBaseInterface
 		return false;
 	}
 
-	public boolean checkPositionInUnit(String agent, String position, String unit) throws SQLException{
+	boolean checkPositionInUnit(String agent, String position, String unit) throws SQLException{
 		Statement st;
 		int idUnit = -1;
 		st = db.connection.createStatement();
@@ -187,7 +187,7 @@ public class DataBaseInterface
 		return false;
 	}
 
-	public boolean checkRole(String role, String unit) throws SQLException{
+	boolean checkRole(String role, String unit) throws SQLException{
 		Statement st;
 		st = db.connection.createStatement();
 		ResultSet res = st.executeQuery("SELECT idunitList FROM unitList WHERE unitName ='"+ unit +"'");
@@ -202,7 +202,7 @@ public class DataBaseInterface
 		return false;
 	}
 
-	public boolean checkSubUnits(String unit) throws SQLException{
+	boolean checkSubUnits(String unit) throws SQLException{
 		Statement st;
 		st = db.connection.createStatement();
 		ResultSet res = st.executeQuery("SELECT idunitList FROM unitList WHERE unitName ='"+ unit +"'");
@@ -217,7 +217,7 @@ public class DataBaseInterface
 		return false;
 	}
 
-	public boolean checkUnit(String unit) throws SQLException{
+	boolean checkUnit(String unit) throws SQLException{
 		Statement st;
 		st = db.connection.createStatement();
 		ResultSet res = st.executeQuery("SELECT * FROM unitList WHERE unitName ='"+ unit +"'");
@@ -227,7 +227,7 @@ public class DataBaseInterface
 		return false;
 	}
 
-	public boolean checkVirtualUnit(String unit) throws SQLException{
+	boolean checkVirtualUnit(String unit) throws SQLException{
 		Statement st;
 		st = db.connection.createStatement();
 		ResultSet res = st.executeQuery("SELECT idunitType FROM unitType WHERE unitTypeName ='virtual'");
@@ -242,7 +242,7 @@ public class DataBaseInterface
 		return false;
 	}
 
-	public String createRole(String roleName, String unitName, String accessibility, String visibility, String position) throws SQLException, THOMASException{
+	String createRole(String roleName, String unitName, String accessibility, String visibility, String position) throws SQLException, THOMASException{
 		Statement st;		
 		st = db.connection.createStatement();
 		ResultSet res = st.executeQuery("SELECT idunitList FROM unitList WHERE unitName ='"+ unitName+"'");
@@ -276,7 +276,7 @@ public class DataBaseInterface
 		throw new THOMASException("Error: unit "+unitName+" not found in database");
 	}
 
-	public String createUnit(String unitName, String unitType, String parentUnitName, String agentName, String creatorAgentName) throws SQLException, THOMASException{
+	String createUnit(String unitName, String unitType, String parentUnitName, String agentName, String creatorAgentName) throws SQLException, THOMASException{
 		Statement st;		
 		st = db.connection.createStatement();
 		ResultSet res = st.executeQuery("SELECT idunitType FROM unitType WHERE unitTypeName ='"+ unitType+"'");
@@ -332,7 +332,7 @@ public class DataBaseInterface
 		throw new THOMASException("Error: unitType "+unitType+" not found in database");
 	}
 
-	public String deallocateRole(String roleName, String unitName, String targetAgentName, String agentName) throws SQLException, THOMASException{
+	String deallocateRole(String roleName, String unitName, String targetAgentName, String agentName) throws SQLException, THOMASException{
 		Statement st;		
 		st = db.connection.createStatement();
 		ResultSet res = st.executeQuery("SELECT idunitList FROM unitList WHERE unitName ='"+ unitName+"'");
@@ -355,7 +355,7 @@ public class DataBaseInterface
 		throw new THOMASException("Error: unit "+unitName+" not found in database");
 	}
 
-	public String deleteRole(String roleName, String unitName, String agentName) throws SQLException, THOMASException{
+	String deleteRole(String roleName, String unitName, String agentName) throws SQLException, THOMASException{
 		Statement st;		
 		st = db.connection.createStatement();
 		ResultSet res = st.executeQuery("SELECT idunitList FROM unitList WHERE unitName ='"+ unitName+"'");
@@ -372,7 +372,7 @@ public class DataBaseInterface
 		throw new THOMASException("Error: unit "+unitName+" not found in database");
 	}
 
-	public String deleteUnit(String unitName, String agentName) throws SQLException, THOMASException{
+	String deleteUnit(String unitName, String agentName) throws SQLException, THOMASException{
 		Statement st;		
 		st = db.connection.createStatement();
 		ResultSet res = st.executeQuery("SELECT idunitList FROM unitList WHERE unitName ='"+ unitName+"'");
@@ -409,7 +409,7 @@ public class DataBaseInterface
 		throw new THOMASException("Error: unit "+unitName+" not found in database");
 	}
 
-	public String jointUnit(String unitName, String parentName) throws SQLException, THOMASException{
+	String jointUnit(String unitName, String parentName) throws SQLException, THOMASException{
 		Statement st;		
 		st = db.connection.createStatement();
 		ResultSet res = st.executeQuery("SELECT idunitList FROM unitList WHERE unitName ='"+ unitName+"'");
@@ -436,7 +436,7 @@ public class DataBaseInterface
 		throw new THOMASException("Error: unit "+unitName+" not found in database");
 	}
 
-	public String leaveRole(String unitName, String roleName, String agentName) throws SQLException, THOMASException{
+	String leaveRole(String unitName, String roleName, String agentName) throws SQLException, THOMASException{
 		Statement st;		
 		st = db.connection.createStatement();
 		ResultSet res = st.executeQuery("SELECT idunitList FROM unitList WHERE unitName ='"+ unitName+"'");
@@ -459,7 +459,7 @@ public class DataBaseInterface
 		throw new THOMASException("Error: unit "+unitName+" not found in database");
 	}
 
-	public String getUnitType(String unitName) throws SQLException, THOMASException{
+	String getUnitType(String unitName) throws SQLException, THOMASException{
 		Statement st;
 		st = db.connection.createStatement();
 		ResultSet res = st.executeQuery("SELECT idunitType FROM unitList WHERE unitName ='"+ unitName+"'");
@@ -475,7 +475,7 @@ public class DataBaseInterface
 		throw new THOMASException("Error: unit "+unitName+" not found in database");
 	}
 
-	public ArrayList<ArrayList<String>> getAgentsInUnit(String unitName) throws SQLException, THOMASException{
+	ArrayList<ArrayList<String>> getAgentsInUnit(String unitName) throws SQLException, THOMASException{
 		ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
 		Statement st;
 		st = db.connection.createStatement();
@@ -505,8 +505,9 @@ public class DataBaseInterface
 		throw new THOMASException("Error: unit "+unitName+" not found in database");
 	}
 
-	public String getParentsUnit(String unitName) throws SQLException, THOMASException{
-		Statement st;		
+	ArrayList<String> getParentsUnit(String unitName) throws SQLException, THOMASException{
+		Statement st;	
+		ArrayList<String> result = new ArrayList<String>();
 		st = db.connection.createStatement();
 		ResultSet res = st.executeQuery("SELECT idunitList FROM unitList WHERE unitName ='"+ unitName+"'");
 		if(res.next()){
@@ -518,15 +519,17 @@ public class DataBaseInterface
 				Statement st3 = db.connection.createStatement();
 				ResultSet res3 = st3.executeQuery("SELECT unitName FROM unitList WHERE idunitList ="+idParentUnit);
 				if(res3.next()){
-					return res3.getString("unitName");
+					result.add(res3.getString("unitName"));
+					return result;
 				}
 			}
-			return "virtual";
+			result.add("virtual");
+			return result;
 		}
 		throw new THOMASException("Error: unit "+unitName+" not found in database");
 	}
 
-	public ArrayList<ArrayList<String>> getInformAgentRole(String requestedAgentName, String agentName) throws SQLException, THOMASException{
+	ArrayList<ArrayList<String>> getInformAgentRole(String requestedAgentName, String agentName) throws SQLException, THOMASException{
 		ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
 		Statement st;
 		Statement st2 = db.connection.createStatement();
@@ -613,7 +616,7 @@ public class DataBaseInterface
 		return result;
 	}
 
-	public ArrayList<ArrayList<String>> getAgentsRolesInUnit(String unitName, String agentName) throws SQLException, THOMASException{
+	ArrayList<ArrayList<String>> getAgentsRolesInUnit(String unitName, String agentName) throws SQLException, THOMASException{
 		ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
 		int idPublicVisibility;
 		int idPrivateVisbility;
@@ -675,7 +678,7 @@ public class DataBaseInterface
 		return result;
 	}
 
-	public ArrayList<String> getAgentsPlayingRoleInUnit(String unitName, String roleName, String agentName) throws SQLException, THOMASException{
+	ArrayList<String> getAgentsPlayingRoleInUnit(String unitName, String roleName, String agentName) throws SQLException, THOMASException{
 		ArrayList<String> result = new ArrayList<String>();
 		int idPublicVisibility;
 		int idPrivateVisbility;
@@ -733,7 +736,7 @@ public class DataBaseInterface
 		return result;
 	}
 
-	public ArrayList<ArrayList<String>> getAgentsPlayingPositionInUnit(String unitName,String positionValue) throws SQLException, THOMASException{
+	 ArrayList<ArrayList<String>> getAgentsPlayingPositionInUnit(String unitName,String positionValue) throws SQLException, THOMASException{
 		ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();		
 		int idposition;
 		int idunit;
@@ -769,7 +772,7 @@ public class DataBaseInterface
 		return result;
 	}
 
-	public ArrayList<String> getAgentsPlayingRolePositionInUnit(String unitName, String roleName, String positionValue, String agentName) throws SQLException, THOMASException{
+	ArrayList<String> getAgentsPlayingRolePositionInUnit(String unitName, String roleName, String positionValue, String agentName) throws SQLException, THOMASException{
 		// TODO deurien tornarse els agents q juguen el role roleName, amb la posicio positionValue en la unitat unitName?
 		ArrayList<String> result = new ArrayList<String>();		
 		int idPublicVisibility;
@@ -838,7 +841,7 @@ public class DataBaseInterface
 		return result;
 	}
 	
-	public int getQuantityAgentsRolesInUnit(String unitName, String agentName)  throws SQLException, THOMASException{
+	int getQuantityAgentsRolesInUnit(String unitName, String agentName)  throws SQLException, THOMASException{
 		int idPublicVisibility;
 		int idroleListt;
 		boolean playsRole = false;
@@ -888,7 +891,7 @@ public class DataBaseInterface
 		return agentNames.size();
 	}
 	
-	public int getQuantityAgentsPlayingRoleInUnit(String unitName, String roleName, String agentName) throws SQLException, THOMASException{
+	int getQuantityAgentsPlayingRoleInUnit(String unitName, String roleName, String agentName) throws SQLException, THOMASException{
 		int cont = 0;
 		int idPublicVisibility;
 		int idPrivateVisbility;
@@ -948,7 +951,7 @@ public class DataBaseInterface
 		return cont;
 	}
 	
-	public int getQuantityAgentsPlayingPositionInUnit(String unitName, String positionValue, String agentName)  throws SQLException, THOMASException{
+	int getQuantityAgentsPlayingPositionInUnit(String unitName, String positionValue, String agentName)  throws SQLException, THOMASException{
 		int idPublicVisibility;
 		int idposition;
 		int idroleListt;
@@ -1006,7 +1009,7 @@ public class DataBaseInterface
 		return agentNames.size();
 	}
 
-	public int getQuantityAgentsPlayingRolePositionInUnit(String unitName, String roleName, String positionValue, String agentName) throws SQLException, THOMASException{
+	int getQuantityAgentsPlayingRolePositionInUnit(String unitName, String roleName, String positionValue, String agentName) throws SQLException, THOMASException{
 		int cont = 0;
 		int idPublicVisibility;
 		int idPrivateVisbility;
@@ -1074,7 +1077,7 @@ public class DataBaseInterface
 		return cont;
 	}
 	
-	public ArrayList<String> getInformUnit(String unitName) throws SQLException, THOMASException{
+	ArrayList<String> getInformUnit(String unitName) throws SQLException, THOMASException{
 		ArrayList<String> result = new ArrayList<String>();
 		int idunitList;
 		Statement st2 = db.connection.createStatement();
@@ -1102,7 +1105,7 @@ public class DataBaseInterface
 		return result;
 	}
 	
-	public ArrayList<ArrayList<String>> getInformUnitRoles(String unitName, String agentName) throws SQLException, THOMASException{
+	ArrayList<ArrayList<String>> getInformUnitRoles(String unitName, String agentName) throws SQLException, THOMASException{
 		ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
 		int idPublicVisibility;
 		int idPrivateVisbility;
@@ -1174,7 +1177,7 @@ public class DataBaseInterface
 		return result;		
 	}
 	
-	public ArrayList<String> getInformRole(String roleName, String unitName) throws SQLException, THOMASException{
+	ArrayList<String> getInformRole(String roleName, String unitName) throws SQLException, THOMASException{
 		ArrayList<String> result = new ArrayList<String>();
 		int idunitList;
 
