@@ -1,11 +1,8 @@
 package persistence;
 
-import java.io.FileInputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.Properties;
-
-import configuration.Configuration;
 
 
 /**
@@ -27,7 +24,7 @@ public class DataBase {
 		
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 
-			properties.load(Configuration.class.getResourceAsStream("/"+"oms.properties"));
+			properties.load(DataBase.class.getResourceAsStream("/"+"oms.properties"));
 
 
 			String serverName = properties.getProperty("serverName");
