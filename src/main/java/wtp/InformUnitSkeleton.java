@@ -53,8 +53,10 @@ public class InformUnitSkeleton
 			result =omsInterface.informUnit(informUnit.getUnitID(),informUnit.getAgentID());
 			res.setStatus("Ok");
 			
-			res.setUnitType(result.split(",")[0].substring(1));
-			res.setParentID(result.split(",")[1].substring(1));
+			res.setUnitType(result.split(" ")[1]);
+			System.out.println("type: "+ result.split(" ")[1]);
+			res.setParentID(result.split(",")[3]);
+			System.out.println("ParentID: "+ result.split(" ")[3]);
 			res.setErrorValue("");
 			return res;
 		}catch(THOMASException e)

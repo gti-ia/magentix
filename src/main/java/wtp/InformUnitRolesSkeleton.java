@@ -5,9 +5,7 @@
 package wtp;
 
 import java.sql.SQLException;
-import java.util.List;
 
-import persistence.DataBaseInterface;
 import persistence.OMSInterface;
 import persistence.THOMASException;
 
