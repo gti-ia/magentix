@@ -14,7 +14,7 @@ public class SFtesting {
 //
 		sf.RegisterService("http://127.0.0.1/services/1.1/calculateSunriseTime.owls");
 //		
-//		sf.RegisterService("http://127.0.0.1/services/1.1/author_bookprice_service.owls");
+		sf.RegisterService("http://127.0.0.1/services/1.1/author_bookprice_service.owls");
 //		
 		sf.RegisterService("http://127.0.0.1/services/1.1/calculateSunriseTime2.owls");
 		sf.RegisterService("http://127.0.0.1/services/1.1/calculateSunriseTime2.owls");
