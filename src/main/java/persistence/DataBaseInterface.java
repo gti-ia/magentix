@@ -288,7 +288,7 @@ class DataBaseInterface
 				Statement st5 = db.connection.createStatement();
 				ResultSet res5 = st5.executeQuery("SELECT idunitList FROM unitList WHERE unitName ='"+ parentUnitName+"'");
 				if(res5.next()){
-					int idunitParent = res.getInt("idunitList");
+					int idunitParent = res5.getInt("idunitList");
 					Statement st6 = db.connection.createStatement();
 					int res6 = st6.executeUpdate("INSERT INTO unitHierarchy (idParentUnit, idChildUnit) VALUES ("+idunitParent+", "+res4+")");
 					if(res6 != 0){
