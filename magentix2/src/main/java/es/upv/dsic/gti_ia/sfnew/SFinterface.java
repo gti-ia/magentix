@@ -34,6 +34,11 @@ import com.hp.hpl.jena.rdf.model.ModelMaker;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.update.UpdateAction;
 
+/**
+ * This class implements the Service Facilitator (SF) services. 
+ * @author Jaume Jordan
+ *
+ */
 public class SFinterface {
 
 	private static boolean DEBUG = true;
@@ -58,21 +63,6 @@ public class SFinterface {
 
 
 	public void testQuery(){
-		//		ArrayList<String> inputs=new ArrayList<String>();
-		//		inputs.add("\"http://127.0.0.1/ontology/geographydataset.owl#Code\"^^xsd:anyURI");
-		//		inputs.add("\"http://127.0.0.1/ontology/protont.owl#longitude\"^^xsd:anyURI");
-		//		inputs.add("\"http://127.0.0.1/ontology/protonu.owl#Date\"^^xsd:anyURI");
-		//		inputs.add("\"http://127.0.0.1/ontology/protont.owl#latitude\"^^xsd:anyURI");
-		//		ArrayList<String> outputs=new ArrayList<String>();
-		//		outputs.add("\"http://127.0.0.1/ontology/geographydataset.owl#Sunrise\"^^xsd:anyURI");
-		//		String reg=searchRegisteredServices(inputs, outputs);
-		//		System.out.println("Registered: "+reg);
-		
-//		String atomicProcessGrounding="http://127.0.0.1/services/1.1/calculateSunriseTime.owls#CALCULATE_SUNRISE_AtomicProcessGrounding";
-//		String serviceURL="http://127.0.0.1/services/1.1/calculateSunriseTime.owls";
-//		
-//		System.out.println(getGroundingInputMessage(atomicProcessGrounding, serviceURL));
-//		System.out.println(getGroundingsOWLSfromFile("http://127.0.0.1/services/1.1/calculateSunriseTime.owls#CALCULATE_SUNRISE_PROFILE", "http://127.0.0.1/services/1.1/calculateSunriseTime.owls", "http://127.0.0.1/services/1.1/calculateSunriseTime.owls#CALCULATE_SUNRISE_SERVICE", "http://127.0.0.1/services/1.1/calculateSunriseTime.owls"));
 		
 
 	}
@@ -298,7 +288,7 @@ public class SFinterface {
 
 	/**
 	 * Returns the inputs of the given service profile
-	 * @param serviceProfile
+	 * @param serviceProfile URI to extract data from
 	 * @param serviceURL it specifies the service URL if the query is not to the Jena DB. <code>null</code> to query the Jena DB model. 
 	 * @return the inputs of the given service profile
 	 */
@@ -415,7 +405,7 @@ public class SFinterface {
 
 	/**
 	 * Returns the specification in OWL-S of the given input as a process part
-	 * @param input
+	 * @param input URI to extract data from
 	 * @return the specification in OWL-S of the given input as a process part
 	 */
 	private String getInputOWLS(String input){
@@ -461,7 +451,7 @@ public class SFinterface {
 
 	/**
 	 * Returns the outputs of the given service profile
-	 * @param serviceProfile
+	 * @param serviceProfile URI to extract data from
 	 * @param serviceURL it specifies the service URL if the query is not to the Jena DB. <code>null</code> to query the Jena DB model.
 	 * @return the outputs of the given service profile
 	 */
@@ -577,7 +567,7 @@ public class SFinterface {
 
 	/**
 	 * Returns the specification in OWL-S of the given output
-	 * @param output
+	 * @param output URI to extract data from
 	 * @return the specification in OWL-S of the given output
 	 */
 	private String getOutputOWLS(String output){
@@ -661,7 +651,7 @@ public class SFinterface {
 			String profile=getProfileURIfromURL(serviceURL);
 			
 			// it is not necessary to check if the providers are already registered, Jena does not write them two times
-			String providersOWLS=getProvidersOWLS(profile, serviceURL, baseURI);
+			String providersOWLS=getProvidersOWLS(profile, serviceURL);
 			
 			System.out.println("profile="+profile+"\nProvidersOWLS:\n"+providersOWLS);
 			
@@ -789,7 +779,7 @@ public class SFinterface {
 	
 	/**
 	 * Returns the profile URI of the service specification in the given service URL
-	 * @param serviceURL
+	 * @param serviceURL to extract data from
 	 * @return the profile URI of the service specification in the given service URL
 	 */
 	private String getProfileURIfromURL(String serviceURL){
@@ -831,7 +821,7 @@ public class SFinterface {
 
 	/**
 	 * Returns the profile service name of the given service profile
-	 * @param serviceProfile
+	 * @param serviceProfile  URI to extract data from
 	 * @return the profile service name of the given service profile
 	 */
 	private String getProfileServiceName(String serviceProfile){
@@ -870,7 +860,7 @@ public class SFinterface {
 
 	/**
 	 * Returns the profile text description of the given service profile
-	 * @param serviceProfile
+	 * @param serviceProfile URI to extract data from
 	 * @return the profile text description of the given service profile
 	 */
 	private String getProfileTextDescription(String serviceProfile){
@@ -909,7 +899,7 @@ public class SFinterface {
 
 	/**
 	 * Returns the service URI
-	 * @param serviceProfile
+	 * @param serviceProfile  URI to extract data from
 	 * @param serviceURL it specifies the service URL if the query is not to the Jena DB. <code>null</code> to query the Jena DB model.
 	 * @return the service URI
 	 */
@@ -963,7 +953,7 @@ public class SFinterface {
 	
 	/**
 	 * Returns the service process URI of the given service profile
-	 * @param serviceProfile
+	 * @param serviceProfile URI to extract data from
 	 * @param serviceURL it specifies the service URL if the query is not to the Jena DB. <code>null</code> to query the Jena DB model
 	 * @return the service process URI of the given service profile
 	 */
@@ -1017,7 +1007,7 @@ public class SFinterface {
 
 	/**
 	 * Returns an {@link ArrayList} with the grounding URIs of the given service URI 
-	 * @param serviceURI
+	 * @param serviceURI to extract data from
 	 * @param serviceURL it specifies the service URL if the query is not to the Jena DB. <code>null</code> to query the Jena DB model
 	 * @return an {@link ArrayList} with the grounding URIs of the given service URI
 	 */
@@ -1069,7 +1059,7 @@ public class SFinterface {
 
 	/**
 	 * Returns the atomic process grounding URI of the given grounding URI
-	 * @param groundingURI
+	 * @param groundingURI to extract data from
 	 * @param serviceURL it specifies the service URL if the query is not to the Jena DB. <code>null</code> to query the Jena DB model
 	 * @return the atomic process grounding URI of the given grounding URI
 	 */
@@ -1120,7 +1110,7 @@ public class SFinterface {
 
 	/**
 	 * Returns the WSDL document URI of the given atomic process grounding URI
-	 * @param atomicProcessGrounding
+	 * @param atomicProcessGrounding URI to extract data from
 	 * @param serviceURL it specifies the service URL if the query is not to the Jena DB. <code>null</code> to query the Jena DB model
 	 * @return the WSDL document URI of the given atomic process grounding URI
 	 */
@@ -1172,7 +1162,7 @@ public class SFinterface {
 
 	/**
 	 * Returns the WSDL document URI of the given service URL
-	 * @param serviceURL
+	 * @param serviceURL to extract data from
 	 * @return the WSDL document URI of the given service URL
 	 */
 	private ArrayList<String> getWSDLDocumentFromServiceURL(String serviceURL){
@@ -1219,7 +1209,7 @@ public class SFinterface {
 
 	/**
 	 * Returns a String containing the specification in OWL-S of all groundings of the given service profile
-	 * @param serviceProfile
+	 * @param serviceProfile URI to extract data from
 	 * @return a String containing the specification in OWL-S of all groundings of the given service profile
 	 */
 	private String getGroundingsOWLS(String serviceProfile){
@@ -1332,7 +1322,7 @@ public class SFinterface {
 	
 	/**
 	 * Returns a {@link String} containing the specification in OWL-S of all groundings of the given service URL
-	 * @param serviceProfile
+	 * @param serviceProfile URI to extract data from
 	 * @param serviceURL where the orginal OWL-S specification of the service is
 	 * @param registeredServiceURI the service URI of the corresponding registered service in the Jena DB
 	 * @param baseURI of the registered service in the Jena DB
@@ -1450,7 +1440,7 @@ public class SFinterface {
 
 	/**
 	 * Returns the grounding input message of the given atomic process grounding URI
-	 * @param atomicProcessGrounding URI
+	 * @param atomicProcessGrounding URI to extract data from
 	 * @param serviceURL it specifies the service URL if the query is not to the Jena DB. <code>null</code> to query the Jena DB model
 	 * @return the grounding input message of the given atomic process grounding URI
 	 */
@@ -1500,7 +1490,7 @@ public class SFinterface {
 	
 	/**
 	 * Returns the grounding output message of the given atomic process grounding URI
-	 * @param atomicProcessGrounding URI
+	 * @param atomicProcessGrounding URI to extract data from
 	 * @param serviceURL it specifies the service URL if the query is not to the Jena DB. <code>null</code> to query the Jena DB model
 	 * @return the grounding output message of the given atomic process grounding URI
 	 */
@@ -1549,10 +1539,10 @@ public class SFinterface {
 	}
 	
 	/**
-	 * 
-	 * @param atomicProcessGrounding
+	 * Returns the grounding owls process of the given atomic process grounding
+	 * @param atomicProcessGrounding URI to extract data from
 	 * @param serviceURL it specifies the service URL if the query is not to the Jena DB. <code>null</code> to query the Jena DB model
-	 * @return
+	 * @return the grounding owls process of the given atomic process grounding
 	 */
 	private String getGroundOwlsProcess(String atomicProcessGrounding, String serviceURL){
 		
@@ -1601,11 +1591,11 @@ public class SFinterface {
 	}
 	
 	/**
-	 * 
-	 * @param atomicProcessGrounding
+	 * Returns an {@link ArrayList} of {@link GroundingInOutput} with the data of the grounding inputs or outputs of the given atomic process grounding
+	 * @param atomicProcessGrounding URI to extract data from
 	 * @param serviceURL it specifies the service URL if the query is not to the Jena DB. <code>null</code> to query the Jena DB model
-	 * @param input
-	 * @return
+	 * @param input <code>true</code> to extract the data of the inputs, <code>false</code> to extract the data of the outputs
+	 * @return an {@link ArrayList} of {@link GroundingInOutput} with the data of the grounding inputs or outputs of the given atomic process grounding
 	 */
 	private ArrayList<GroundingInOutput> getGroundingInOutputs(String atomicProcessGrounding, String serviceURL, boolean input){
 		
@@ -1669,10 +1659,10 @@ public class SFinterface {
 	
 	
 	/**
-	 * 
-	 * @param atomicProcessGrounding
+	 * Returns the grounding operation of the given atomic process grounding
+	 * @param atomicProcessGrounding URI to extract data from
 	 * @param serviceURL it specifies the service URL if the query is not to the Jena DB. <code>null</code> to query the Jena DB model
-	 * @return
+	 * @return the grounding operation of the given atomic process grounding
 	 */
 	private String getGroundOperation(String atomicProcessGrounding, String serviceURL){
 		
@@ -1721,10 +1711,10 @@ public class SFinterface {
 	}
 	
 	/**
-	 * 
-	 * @param atomicProcessGrounding
+	 * Returns the grounding port type of the given atomic process grounding
+	 * @param atomicProcessGrounding URI to extract data from
 	 * @param serviceURL it specifies the service URL if the query is not to the Jena DB. <code>null</code> to query the Jena DB model
-	 * @return
+	 * @return the grounding port type of the given atomic process grounding
 	 */
 	private String getGroundPortType(String atomicProcessGrounding, String serviceURL){
 		
@@ -1775,7 +1765,7 @@ public class SFinterface {
 	
 	/**
 	 * Implementation of the SF service Get Service. It returns an OWL-S specification with the information of the given service.
-	 * @param serviceProfile
+	 * @param serviceProfile URI to extract data from
 	 * @return an OWL-S specification with the information of the given service.
 	 */
 	public String getService(String serviceProfile){
@@ -1805,10 +1795,8 @@ public class SFinterface {
 
 		//providers
 		//profile:contactInformation
-		//+
-		//<http://127.0.0.1/services/1.1/calculateSunriseTime.owls#Provider2>
 		//a       provider:Provider
-		owlsService+=getProvidersOWLS(serviceProfile, null, null);
+		owlsService+=getProvidersOWLS(serviceProfile, null);
 
 		//inputs and outputs of a process with their types
 		String processInputs="", processOutputs="";
@@ -1848,7 +1836,11 @@ public class SFinterface {
 		return owlsService;
 	}
 
-	
+	/**
+	 * Removes a provider from a registered service in the Jena DB
+	 * @param serviceProfile URI of the service to remove the provider
+	 * @param providerName of the provider to remove
+	 */
 	public void removeProvider(String serviceProfile, String providerName){
 		
 		StringTokenizer tokenServiceProf=new StringTokenizer(serviceProfile, "#");
@@ -1903,7 +1895,10 @@ public class SFinterface {
 
 	}
 
-
+	/**
+	 * Registers the services specified in the given file name if they are in the URL: http://127.0.0.1/services/1.1/
+	 * @param fileName with service names
+	 */
 	public void registerNServices(String fileName){
 		File file = null;
 		FileReader fr = null;
@@ -1928,6 +1923,10 @@ public class SFinterface {
 	}
 
 
+	/**
+	 * Deregister service of the SF. It removes a complete service given its service profile URI.
+	 * @param serviceProfile URI of the service to deregister
+	 */
 	public void deregisterService(String serviceProfile){
 
 		StringTokenizer servProfTok=new StringTokenizer(serviceProfile, "#");
@@ -2027,7 +2026,11 @@ public class SFinterface {
 	}
 
 	
-	
+	/**
+	 * Returns an {@link ArrayList} with the provider URIs of the given service profile URI
+	 * @param serviceProfile URI to extract its providers
+	 * @return an {@link ArrayList} with the provider URIs of the given service profile URI
+	 */
 	private ArrayList<String> getProviders(String serviceProfile){
 		ArrayList<String> providers=new ArrayList<String>();
 		
@@ -2058,13 +2061,12 @@ public class SFinterface {
 	}
 	
 	/**
-	 * 
-	 * @param serviceProfile
+	 * Returns the OWL-S specification of all providers and their information of the given service profile URI
+	 * @param serviceProfile URI to extract its providers
 	 * @param serviceURL it specifies the service URL if the query is not to the Jena DB. <code>null</code> to query the Jena DB model
-	 * @param baseURI
-	 * @return
+	 * @return the OWL-S specification of all providers and their information of the given service profile URI
 	 */
-	private String getProvidersOWLS(String serviceProfile, String serviceURL, String baseURI){
+	private String getProvidersOWLS(String serviceProfile, String serviceURL){
 
 		String providersOWLS="";
 		ModelMaker maker;
@@ -2108,7 +2110,6 @@ public class SFinterface {
 				StringTokenizer tokenProvURI=new StringTokenizer(providerURI,"#");
 				tokenProvURI.nextToken();
 				String providerName=tokenProvURI.nextToken();
-				//providerName=providerName;//baseURI+"#"+providerName;
 				
 				providersOWLS+="<profile:contactInformation>"+"\n"+
 						"<provider:Provider rdf:ID=\""+providerName+"\">"+"\n"+
@@ -2118,8 +2119,6 @@ public class SFinterface {
 						"<provider:performative rdf:datatype=\"^^xsd;string\">"+performative+"</provider:performative>"+"\n"+
 						"</provider:Provider>"+"\n"+
 						"</profile:contactInformation>"+"\n";
-
-				//System.out.println(providerURI+"\n"+entityID+" "+entityType+" "+language+" "+performative);
 
 			} 
 
@@ -2138,11 +2137,11 @@ public class SFinterface {
 
 
 	/**
-	 * 
-	 * @param providerURI
-	 * @param parameter
+	 * Returns the value of the given provider parameter 
+	 * @param providerURI to extract its parameter
+	 * @param parameter of the provider to extract
 	 * @param serviceURL it specifies the service URL if the query is not to the Jena DB. <code>null</code> to query the Jena DB model
-	 * @return
+	 * @return the value of the given provider parameter 
 	 */
 	private String getProviderParameter(String providerURI, String parameter, String serviceURL){
 
@@ -2184,18 +2183,14 @@ public class SFinterface {
 	}
 
 
-
-
-	//TODO idea: fer consulta primer per el process:parameterType per veure si coincideix i despres
+	// idea: fer consulta primer per el process:parameterType per veure si coincideix i despres
 	//agafar el profile:hasInput
 	//seria més elegant poder agafar directament el parameterType sabent que es Input...
-
-
-
 
 	//hacer una consulta por cada entrada deseada, guardando los servicios que tengan al menos una entrada (sin repetirlos en la lista)
 	//de cada servicio, comprobar exactamente cuantas entradas coinciden, y después las salidas
 	//sumar con algún tipo de ponderación
+
 	/**
 	 * 
 	 * @param inputs  Specify the parameter type. Example: \"http://127.0.0.1/ontology/books.owl#Novel\"^^xsd:anyURI
@@ -2276,7 +2271,7 @@ public class SFinterface {
 
 
 
-		//TODO guardar una lista de profiles con sus ponderaciones asociadas de semejanza al servicio
+		//store a list of profiles with their similarity weights to the service
 		ArrayList<Profile> profiles=new ArrayList<Profile>();
 
 		Iterator<String> iterCandidates=candidates.iterator();
@@ -2336,7 +2331,7 @@ public class SFinterface {
 					Resource resource=sol.getResource("x");
 					String input=resource.getURI();
 
-					//TODO mirar todas las entradas (consulta del tipo) buscando si esta está
+					//explore all inputs (searching their type) to find out if it is in the service
 					String queryStrType =
 							"prefix xsd: <http://www.w3.org/2001/XMLSchema#>"+
 									"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"+
@@ -2395,7 +2390,7 @@ public class SFinterface {
 					Resource resource=sol.getResource("x");
 					String output=resource.getURI();
 
-					//TODO mirar todas las entradas (consulta del tipo) buscando si esta está
+					//explore all outputs (searching their type) to find out if it is in the service
 					String queryStrType =
 							"prefix xsd: <http://www.w3.org/2001/XMLSchema#>"+
 									"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"+
@@ -2443,16 +2438,18 @@ public class SFinterface {
 		}
 
 
-
-
-
-
-
-
-
 	}
 
-	private int RemoveProcess(String urlProcessDoc, String processname, String urlProfileService, 
+	/**
+	 * Removes the given process from the Jena DB
+	 * @param urlProcessDoc
+	 * @param processname
+	 * @param urlProfileService
+	 * @param urlProcessService
+	 * @param serviceProfile
+	 * @param m Jena DB Model
+	 */
+	private void RemoveProcess(String urlProcessDoc, String processname, String urlProfileService, 
 			String urlProcessService, String serviceProfile, OntModel m){
 
 		if (DEBUG) {
@@ -2498,8 +2495,7 @@ public class SFinterface {
 		DeleteProcessGrounding(urlProcessDoc, processname, processGround, processGroundWSDL, m);
 		DeleteProcess(urlProcessDoc, processname, m);
 
-		return(1);
-
+		
 	}// end RemoveProcess
 
 
@@ -3293,6 +3289,10 @@ public class SFinterface {
 
 	}// DeleteProcess 
 
+	/**
+	 * Opens a Jena DB connection taking the configuration parameters from THOMASDemoConfiguration.xml file
+	 * @return {@link IDBConnection} to Jena DB
+	 */
 	private IDBConnection JenaDBConnection(){
 		IDBConnection conn = null;
 
@@ -3305,8 +3305,6 @@ public class SFinterface {
 		Properties properties = new Properties();
 
 		try {
-
-
 
 			FileInputStream fis = new FileInputStream("THOMASDemoConfiguration.xml");
 			//properties.loadFromXML(ProvaServeis1.class.getResourceAsStream("THOMASDemoConfiguration.xml"));
@@ -3359,6 +3357,9 @@ public class SFinterface {
 		return conn;
 	}
 
+	/**
+	 * Makes a clean to the connection of Jena DB. This deletes all the information in the Jena DB.
+	 */
 	public void clean(){
 		try {
 			conn.cleanDB();
@@ -3367,6 +3368,11 @@ public class SFinterface {
 		}
 	}
 
+	/**
+	 * Returns an {@link OntModelSpec} of Jena DB.
+	 * @param maker {@link ModelMaker} to create an {@link OntModelSpec}
+	 * @return an {@link OntModelSpec} of Jena DB
+	 */
 	private OntModelSpec getModelSpec(ModelMaker maker) {
 		// create a spec for the new ont model that will use no inference over
 		// models made by the given maker (which is where we get the persistent models from)
@@ -3376,6 +3382,9 @@ public class SFinterface {
 		return spec;
 	}
 
+	/**
+	 * Writes to the standard output the Jena DB Model
+	 */
 	public void writeModel(){
 		ModelMaker maker = ModelFactory.createModelRDBMaker(conn);
 		Model base = maker.createModel("http://example.org/ontologias");
