@@ -303,16 +303,16 @@ class DataBaseInterface
 								Statement st8 = db.connection.createStatement();
 								ResultSet res8 = st8.executeQuery("SELECT idaccesibility FROM accesibility WHERE accesibility ='internal'");
 								if(res8.next()){
-									int idaccesibility = res7.getInt("idaccesibility");
+									int idaccesibility = res8.getInt("idaccesibility");
 									Statement st9 = db.connection.createStatement();
 									ResultSet res9 = st9.executeQuery("SELECT idVisibility FROM visibility WHERE visibility ='private'");
 									if(res9.next()){
 										int idVisibility = res9.getInt("idVisibility");
 										Statement st10 = db.connection.createStatement();
-										int res10 = st10.executeUpdate("INSERT INTO roleList (roleName, idunitList, idposition, idaccesibility, idvisibility) VALUES ('CreatorName', "+insertedUnitId+", "+idposition+","+idaccesibility+","+idVisibility+")");
+										int res10 = st10.executeUpdate("INSERT INTO roleList (roleName, idunitList, idposition, idaccesibility, idvisibility) VALUES ('"+creatorAgentName+"', "+insertedUnitId+", "+idposition+","+idaccesibility+","+idVisibility+")");
 										if(res10 != 0){
 											Statement st11 = db.connection.createStatement();
-											int res11 = st11.executeUpdate("INSERT INTO agentPlayList (agentName, idroleListt) VALUES ('"+agentName+"', LAST_INSERT_ID())");
+											int res11 = st11.executeUpdate("INSERT INTO agentPlayList (agentName, idroleList) VALUES ('"+agentName+"', LAST_INSERT_ID())");
 											if(res11 != 0){
 												db.connection.commit();
 												return "<"+unitName+" + \"created\">";
