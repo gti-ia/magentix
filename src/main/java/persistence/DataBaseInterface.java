@@ -308,7 +308,7 @@ class DataBaseInterface
 									int res10 = st10.executeUpdate("INSERT INTO roleList (roleName, idunitList, idposition, idaccesibility, idvisibility) VALUES ('CreatorName', "+res4+", "+idposition+","+idaccesibility+","+idVisibility+")");
 									if(res10 != 0){
 										Statement st11 = db.connection.createStatement();
-										int res11 = st11.executeUpdate("INSERT INTO agentPlayList (agentName, idroleList) VALUES ('"+agentName+"', "+res10+")");
+										int res11 = st11.executeUpdate("INSERT INTO agentPlayList (agentName, idroleListt) VALUES ('"+agentName+"', LAST_INSERT_ID())");
 										if(res11 != 0){
 											db.connection.commit();
 											return "<"+unitName+" + \"created\">";
