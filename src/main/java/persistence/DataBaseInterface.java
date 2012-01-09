@@ -285,47 +285,52 @@ class DataBaseInterface
 			Statement st4 = db.connection.createStatement();
 			int res4 = st4.executeUpdate("INSERT INTO unitList (unitName, idunitType) VALUES ('"+unitName+"', "+idunitType+")");
 			if(res4 != 0){
-				Statement st5 = db.connection.createStatement();
-				ResultSet res5 = st5.executeQuery("SELECT idunitList FROM unitList WHERE unitName ='"+ parentUnitName+"'");
-				if(res5.next()){
-					int idunitParent = res5.getInt("idunitList");
-					Statement st6 = db.connection.createStatement();
-					int res6 = st6.executeUpdate("INSERT INTO unitHierarchy (idParentUnit, idChildUnit) VALUES ("+idunitParent+", "+res4+")");
-					if(res6 != 0){
-						Statement st7 = db.connection.createStatement();
-						ResultSet res7 = st7.executeQuery("SELECT idposition FROM position WHERE position ='creator'");
-						if(res7.next()){
-							int idposition = res7.getInt("idposition");
-							Statement st8 = db.connection.createStatement();
-							ResultSet res8 = st8.executeQuery("SELECT idaccesibility FROM accesibility WHERE accesibility ='internal'");
-							if(res8.next()){
-								int idaccesibility = res7.getInt("idaccesibility");
-								Statement st9 = db.connection.createStatement();
-								ResultSet res9 = st9.executeQuery("SELECT idVisibility FROM visibility WHERE visibility ='private'");
-								if(res9.next()){
-									int idVisibility = res9.getInt("idVisibility");
-									Statement st10 = db.connection.createStatement();
-									int res10 = st10.executeUpdate("INSERT INTO roleList (roleName, idunitList, idposition, idaccesibility, idvisibility) VALUES ('CreatorName', "+res4+", "+idposition+","+idaccesibility+","+idVisibility+")");
-									if(res10 != 0){
-										Statement st11 = db.connection.createStatement();
-										int res11 = st11.executeUpdate("INSERT INTO agentPlayList (agentName, idroleListt) VALUES ('"+agentName+"', LAST_INSERT_ID())");
-										if(res11 != 0){
-											db.connection.commit();
-											return "<"+unitName+" + \"created\">";
+				Statement st12 = db.connection.createStatement();
+				ResultSet res12 = st12.executeQuery("SELECT LAST_INSERT_ID()");
+				if(res12.next()){
+					int insertedUnitId = res12.getInt(1);
+					Statement st5 = db.connection.createStatement();
+					ResultSet res5 = st5.executeQuery("SELECT idunitList FROM unitList WHERE unitName ='"+ parentUnitName+"'");
+					if(res5.next()){
+						int idunitParent = res5.getInt("idunitList");
+						Statement st6 = db.connection.createStatement();
+						int res6 = st6.executeUpdate("INSERT INTO unitHierarchy (idParentUnit, idChildUnit) VALUES ("+idunitParent+", "+insertedUnitId+")");
+						if(res6 != 0){
+							Statement st7 = db.connection.createStatement();
+							ResultSet res7 = st7.executeQuery("SELECT idposition FROM position WHERE position ='creator'");
+							if(res7.next()){
+								int idposition = res7.getInt("idposition");
+								Statement st8 = db.connection.createStatement();
+								ResultSet res8 = st8.executeQuery("SELECT idaccesibility FROM accesibility WHERE accesibility ='internal'");
+								if(res8.next()){
+									int idaccesibility = res7.getInt("idaccesibility");
+									Statement st9 = db.connection.createStatement();
+									ResultSet res9 = st9.executeQuery("SELECT idVisibility FROM visibility WHERE visibility ='private'");
+									if(res9.next()){
+										int idVisibility = res9.getInt("idVisibility");
+										Statement st10 = db.connection.createStatement();
+										int res10 = st10.executeUpdate("INSERT INTO roleList (roleName, idunitList, idposition, idaccesibility, idvisibility) VALUES ('CreatorName', "+insertedUnitId+", "+idposition+","+idaccesibility+","+idVisibility+")");
+										if(res10 != 0){
+											Statement st11 = db.connection.createStatement();
+											int res11 = st11.executeUpdate("INSERT INTO agentPlayList (agentName, idroleListt) VALUES ('"+agentName+"', LAST_INSERT_ID())");
+											if(res11 != 0){
+												db.connection.commit();
+												return "<"+unitName+" + \"created\">";
+											}
+											throw new THOMASException("Error: inserting new play list");
 										}
-										throw new THOMASException("Error: inserting new play list");
+										throw new THOMASException("Error: inserting new role");
 									}
-									throw new THOMASException("Error: inserting new role");
+									throw new THOMASException("Error: visibility private not found in database");
 								}
-								throw new THOMASException("Error: visibility private not found in database");
+								throw new THOMASException("Error: accesibility internal not found in database");
 							}
-							throw new THOMASException("Error: accesibility internal not found in database");
+							throw new THOMASException("Error: position creator not found in database");
 						}
-						throw new THOMASException("Error: position creator not found in database");
+						throw new THOMASException("Error: inserting hierarchy");
 					}
-					throw new THOMASException("Error: inserting hierarchy");
+					throw new THOMASException("Error: parent unit "+parentUnitName+" not found in database");
 				}
-				throw new THOMASException("Error: parent unit "+parentUnitName+" not found in database");
 			}			
 			throw new THOMASException("Error: inserting new unit");
 		}
@@ -437,7 +442,7 @@ class DataBaseInterface
 	}
 
 	String leaveRole(String unitName, String roleName, String agentName) throws SQLException, THOMASException{
-		Statement st;		
+		Statement st;
 		st = db.connection.createStatement();
 		ResultSet res = st.executeQuery("SELECT idunitList FROM unitList WHERE unitName ='"+ unitName+"'");
 		if(res.next()){
