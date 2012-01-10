@@ -114,11 +114,19 @@ class DataBaseInterface
 			if (rs2.next())
 			{
 				int unitId = rs2.getInt("idunitList");
-				ResultSet rs3 = stmt.executeQuery("SELECT * FROM roleList WHERE idunitlist ="+unitId+" AND idposition !="+positionId);
-				if(rs3.next())
-					return true;
+				System.out.println("SELECT idroleList FROM roleList WHERE idunitlist ="+unitId+" AND idposition !="+positionId);
+				ResultSet rs3 = stmt.executeQuery("SELECT idroleList FROM roleList WHERE idunitlist ="+unitId+" AND idposition !="+positionId);
+				while(rs3.next())
+				{
+					System.out.println("Hay algun rol que no es creator en la unidad.");
+					int roleId = rs3.getInt("idroleList");
+					ResultSet rs4 = stmt.executeQuery("SELECT * FROM agentPlayList WHERE idroleList ="+roleId);
+					if (rs4.next())
+						return true;
+				}
 			}
-		}		
+		}	
+		System.out.println("Devuelvo falso.");
 		return false;
 	}
 
@@ -392,22 +400,28 @@ class DataBaseInterface
 				while(res3.next()){
 					int idroleList = res3.getInt("idroleList");
 					Statement st4 = db.connection.createStatement();
-					int res4 = st4.executeUpdate("DELETE FROM agentPlayList WHERE idroleList ="+idroleList);
-					if(res4 == 0)
-						throw new THOMASException("Error: mysql error "+res4);
+					st4.executeUpdate("DELETE FROM agentPlayList WHERE idroleList ="+idroleList);
+					//if(res4 == 0)//Puede que no haya nadie jugando ese rol, no tiene por que dar un error.
+					//throw new THOMASException("Error: mysql error in agentPlayList "+res4);
 				}
 				Statement st5 = db.connection.createStatement();
 				int res5 = st5.executeUpdate("DELETE FROM roleList WHERE idunitList ="+idunitList);
 				if(res5 != 0){
-					Statement st6 = db.connection.createStatement();
-					int res6 = st6.executeUpdate("DELETE FROM unitList WHERE idunitList ="+idunitList);
-					if(res6 != 0){
-						db.connection.commit();
-						return "<"+unitName+" + \"deleted\">";
+					Statement st7 = db.connection.createStatement();
+					int res7 = st7.executeUpdate("DELETE FROM unitHierarchy WHERE idChildUnit ="+idunitList);
+					if (res7 != 0)
+					{
+						Statement st6 = db.connection.createStatement();
+						int res6 = st6.executeUpdate("DELETE FROM unitList WHERE idunitList ="+idunitList);
+						if(res6 != 0){
+							db.connection.commit();
+							return "<"+unitName+" + \"deleted\">";
+						}
+						throw new THOMASException("Error: mysql error in delete from unitList "+res6);
 					}
-					throw new THOMASException("Error: mysql error "+res6);
+					throw new THOMASException("Error: mysql error in delete from unitHierarchy "+res7);
 				}
-				throw new THOMASException("Error: mysql error "+res5);
+				throw new THOMASException("Error: mysql error in delete from roleList "+res5);
 			}
 			throw new THOMASException("Error: position creator not found in database");
 		}
@@ -741,7 +755,7 @@ class DataBaseInterface
 		return result;
 	}
 
-	 ArrayList<ArrayList<String>> getAgentsPlayingPositionInUnit(String unitName,String positionValue) throws SQLException, THOMASException{
+	ArrayList<ArrayList<String>> getAgentsPlayingPositionInUnit(String unitName,String positionValue) throws SQLException, THOMASException{
 		ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();		
 		int idposition;
 		int idunit;
@@ -845,7 +859,7 @@ class DataBaseInterface
 		}		
 		return result;
 	}
-	
+
 	int getQuantityAgentsRolesInUnit(String unitName, String agentName)  throws SQLException, THOMASException{
 		int idPublicVisibility;
 		int idroleList;
@@ -895,7 +909,7 @@ class DataBaseInterface
 		}
 		return agentNames.size();
 	}
-	
+
 	int getQuantityAgentsPlayingRoleInUnit(String unitName, String roleName, String agentName) throws SQLException, THOMASException{
 		int cont = 0;
 		int idPublicVisibility;
@@ -955,7 +969,7 @@ class DataBaseInterface
 		}
 		return cont;
 	}
-	
+
 	int getQuantityAgentsPlayingPositionInUnit(String unitName, String positionValue, String agentName)  throws SQLException, THOMASException{
 		int idPublicVisibility;
 		int idposition;
@@ -1081,7 +1095,7 @@ class DataBaseInterface
 		}		
 		return cont;
 	}
-	
+
 	ArrayList<String> getInformUnit(String unitName) throws SQLException, THOMASException{
 		ArrayList<String> result = new ArrayList<String>();
 		int idunitList;
@@ -1091,11 +1105,11 @@ class DataBaseInterface
 			idunitList = res2.getInt("idunitList");
 		else
 			throw new THOMASException("Error : unit "+unitName+" not found in database");
-		
+
 		Statement st3 = db.connection.createStatement();
 		ResultSet res3 = st3.executeQuery("SELECT unitTypeName FROM unitType WHERE idunitType ="+ idunitList);
 		res3.next();
-		
+
 		result.add(res3.getString("unitTypeName"));
 		Statement st4 = db.connection.createStatement();
 		ResultSet res4 = st4.executeQuery("SELECT idParentUnit FROM unitHierarchy WHERE idChildUnit ="+ idunitList);
@@ -1109,7 +1123,7 @@ class DataBaseInterface
 			result.add("");
 		return result;
 	}
-	
+
 	ArrayList<ArrayList<String>> getInformUnitRoles(String unitName, String agentName) throws SQLException, THOMASException{
 		ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
 		int idPublicVisibility;
@@ -1150,7 +1164,7 @@ class DataBaseInterface
 				break;
 			}
 		}
-		
+
 		Statement st8 = db.connection.createStatement();
 		ResultSet res8;
 		if(playsRole)
@@ -1165,11 +1179,11 @@ class DataBaseInterface
 			Statement st9 = db.connection.createStatement();
 			ResultSet res9 = st9.executeQuery("SELECT position FROM position WHERE idposition ="+idposition);
 			res9.next();
-			
+
 			Statement st10 = db.connection.createStatement();
 			ResultSet res10 = st10.executeQuery("SELECT accesibility FROM accesibility WHERE idaccesibility ="+idaccesibility);
 			res10.next();
-			
+
 			Statement st11 = db.connection.createStatement();
 			ResultSet res11 = st11.executeQuery("SELECT visibility FROM visibility WHERE idvisiblity ="+idvisiblity);
 			res11.next();
@@ -1181,7 +1195,7 @@ class DataBaseInterface
 		}
 		return result;		
 	}
-	
+
 	ArrayList<String> getInformRole(String roleName, String unitName) throws SQLException, THOMASException{
 		ArrayList<String> result = new ArrayList<String>();
 		int idunitList;
@@ -1203,11 +1217,11 @@ class DataBaseInterface
 			Statement st9 = db.connection.createStatement();
 			ResultSet res9 = st9.executeQuery("SELECT position FROM position WHERE idposition ="+idposition);
 			res9.next();
-			
+
 			Statement st10 = db.connection.createStatement();
 			ResultSet res10 = st10.executeQuery("SELECT accesibility FROM accesibility WHERE idaccesibility ="+idaccesibility);
 			res10.next();
-			
+
 			Statement st11 = db.connection.createStatement();
 			ResultSet res11 = st11.executeQuery("SELECT visibility FROM visibility WHERE idvisiblity ="+idvisiblity);
 			res11.next();
