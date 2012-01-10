@@ -80,10 +80,17 @@ class DataBaseInterface
 		ResultSet rs = stmt.executeQuery("SELECT idunitList FROM unitList WHERE unitName ='"+unit+"'");
 		if(rs.next()){
 			int unitId = rs.getInt("idunitList");
-			ResultSet rs2 = stmt.executeQuery("SELECT * FROM roleList WHERE agentName ='"+ agentName +"' AND idunitList ="+unitId);
-			if (rs2.next())
+			ResultSet rs2 = stmt.executeQuery("SELECT idroleList FROM roleList WHERE idunitList ="+unitId);
+			while(rs2.next())
 			{
-				exists = true;
+				Statement stmt2 = db.connection.createStatement();
+				int idRole = rs2.getInt("idroleList");
+				ResultSet rs3 = stmt2.executeQuery("SELECT * FROM agentPlayList WHERE idroleList="+idRole+" AND agentName='"+agentName+"'");
+
+				if (rs3.next())
+				{
+					exists = true;
+				}
 			}
 		}
 
@@ -117,21 +124,21 @@ class DataBaseInterface
 				ResultSet rs3 = stmt.executeQuery("SELECT idroleList FROM roleList WHERE idunitlist ="+unitId+" AND idposition !="+positionId);
 				while(rs3.next())
 				{
-					
+
 					int roleId = rs3.getInt("idroleList");
-					
+
 					Statement stmt2 = db.connection.createStatement();
 					ResultSet rs4 = stmt2.executeQuery("SELECT * FROM agentPlayList WHERE idroleList ="+roleId);
-					
+
 					if (rs4.next())
 					{
-						
+
 						return true;
 					}
 				}
 			}
 		}	
-		
+
 		return false;
 	}
 
@@ -264,15 +271,15 @@ class DataBaseInterface
 			Statement st4 = db.connection.createStatement();
 			ResultSet res4 = st4.executeQuery("SELECT idposition FROM position WHERE position ='"+ position+"'");
 			if(res4.next()){
-				int idposition = res.getInt("idposition");
+				int idposition = res4.getInt("idposition");
 				Statement st5 = db.connection.createStatement();
 				ResultSet res5 = st5.executeQuery("SELECT idaccesibility FROM accesibility WHERE accesibility ='"+ accessibility+"'");
 				if(res5.next()){
-					int idaccesibility = res.getInt("idaccesibility");
+					int idaccesibility = res5.getInt("idaccesibility");
 					Statement st6 = db.connection.createStatement();
 					ResultSet res6 = st6.executeQuery("SELECT idvisibility FROM visibility WHERE visibility ='"+ visibility+"'");
 					if(res6.next()){
-						int idvisibility = res.getInt("idvisibility");
+						int idvisibility = res6.getInt("idvisibility");
 						Statement st3 = db.connection.createStatement();
 						int res3 = st3.executeUpdate("INSERT INTO roleList (roleName, idunitList, idposition, idaccesibility, idvisibility) VALUES ('"+roleName+"', "+idunit+","+idposition+","+idaccesibility+","+idvisibility+")");
 						if(res3 != 0){
