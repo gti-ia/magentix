@@ -114,19 +114,24 @@ class DataBaseInterface
 			if (rs2.next())
 			{
 				int unitId = rs2.getInt("idunitList");
-				System.out.println("SELECT idroleList FROM roleList WHERE idunitlist ="+unitId+" AND idposition !="+positionId);
 				ResultSet rs3 = stmt.executeQuery("SELECT idroleList FROM roleList WHERE idunitlist ="+unitId+" AND idposition !="+positionId);
 				while(rs3.next())
 				{
-					System.out.println("Hay algun rol que no es creator en la unidad.");
+					
 					int roleId = rs3.getInt("idroleList");
-					ResultSet rs4 = stmt.executeQuery("SELECT * FROM agentPlayList WHERE idroleList ="+roleId);
+					
+					Statement stmt2 = db.connection.createStatement();
+					ResultSet rs4 = stmt2.executeQuery("SELECT * FROM agentPlayList WHERE idroleList ="+roleId);
+					
 					if (rs4.next())
+					{
+						
 						return true;
+					}
 				}
 			}
 		}	
-		System.out.println("Devuelvo falso.");
+		
 		return false;
 	}
 
