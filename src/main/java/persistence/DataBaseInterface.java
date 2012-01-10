@@ -386,11 +386,11 @@ class DataBaseInterface
 			Statement st2 = db.connection.createStatement();
 			ResultSet res2 = st2.executeQuery("SELECT idposition FROM position WHERE position ='creator'");
 			if(res2.next()){
-				int idposition = res.getInt("idposition");
+				int idposition = res2.getInt("idposition");
 				Statement st3 = db.connection.createStatement();
-				ResultSet res3 = st3.executeQuery("SELECT idroleList FROM roleList WHERE idposition ="+idposition+" AND idunit ="+idunitList);
+				ResultSet res3 = st3.executeQuery("SELECT idroleList FROM roleList WHERE idposition ="+idposition+" AND idunitList ="+idunitList);
 				while(res3.next()){
-					int idroleList = res.getInt("idroleList");
+					int idroleList = res3.getInt("idroleList");
 					Statement st4 = db.connection.createStatement();
 					int res4 = st4.executeUpdate("DELETE FROM agentPlayList WHERE idroleList ="+idroleList);
 					if(res4 == 0)
@@ -520,7 +520,7 @@ class DataBaseInterface
 			Statement st2 = db.connection.createStatement();
 			ResultSet res2 = st2.executeQuery("SELECT idParentUnit FROM unitHierarchy WHERE idChildUnit ="+idunitList);
 			if(res2.next()){
-				int idParentUnit = res.getInt("idParentUnit");
+				int idParentUnit = res2.getInt("idParentUnit");
 				Statement st3 = db.connection.createStatement();
 				ResultSet res3 = st3.executeQuery("SELECT unitName FROM unitList WHERE idunitList ="+idParentUnit);
 				if(res3.next()){
