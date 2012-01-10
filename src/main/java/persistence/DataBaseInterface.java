@@ -405,23 +405,21 @@ class DataBaseInterface
 					//throw new THOMASException("Error: mysql error in agentPlayList "+res4);
 				}
 				Statement st5 = db.connection.createStatement();
-				int res5 = st5.executeUpdate("DELETE FROM roleList WHERE idunitList ="+idunitList);
-				if(res5 != 0){
-					Statement st7 = db.connection.createStatement();
-					int res7 = st7.executeUpdate("DELETE FROM unitHierarchy WHERE idChildUnit ="+idunitList);
-					if (res7 != 0)
-					{
-						Statement st6 = db.connection.createStatement();
-						int res6 = st6.executeUpdate("DELETE FROM unitList WHERE idunitList ="+idunitList);
-						if(res6 != 0){
-							db.connection.commit();
-							return "<"+unitName+" + \"deleted\">";
-						}
-						throw new THOMASException("Error: mysql error in delete from unitList "+res6);
+				st5.executeUpdate("DELETE FROM roleList WHERE idunitList ="+idunitList);
+				Statement st7 = db.connection.createStatement();
+				int res7 = st7.executeUpdate("DELETE FROM unitHierarchy WHERE idChildUnit ="+idunitList);
+				if (res7 != 0)
+				{
+					Statement st6 = db.connection.createStatement();
+					int res6 = st6.executeUpdate("DELETE FROM unitList WHERE idunitList ="+idunitList);
+					if(res6 != 0){
+						db.connection.commit();
+						return "<"+unitName+" + \"deleted\">";
 					}
-					throw new THOMASException("Error: mysql error in delete from unitHierarchy "+res7);
+					throw new THOMASException("Error: mysql error in delete from unitList "+res6);
 				}
-				throw new THOMASException("Error: mysql error in delete from roleList "+res5);
+				throw new THOMASException("Error: mysql error in delete from unitHierarchy "+res7);
+
 			}
 			throw new THOMASException("Error: position creator not found in database");
 		}
