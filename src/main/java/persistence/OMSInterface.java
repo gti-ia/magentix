@@ -21,6 +21,19 @@ public class OMSInterface {
 	{
 		dbInterface = new DataBaseInterface();
 	}
+
+	boolean checkParameter(String parameter)
+	{
+		if (parameter != null)
+		{
+			if (!parameter.equals(""))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
 	/**
 	 * Creates a new empty unit in the organization, with a specific type and creatorName.
 	 * 
@@ -34,12 +47,8 @@ public class OMSInterface {
 	 */
 	public String registerUnit(String UnitName, String UnitType, String AgentName, String CreatorName) throws THOMASException, SQLException
 	{
-		String result = "";
 
-
-		result = this.registerUnit(UnitName, UnitType, null, AgentName, CreatorName);
-
-		return result;
+		return this.registerUnit(UnitName, UnitType, null, AgentName, CreatorName);
 	}
 	/**
 	 * Creates a new empty unit in the organization, with a specific type, parent unit and creatorName.
@@ -55,41 +64,41 @@ public class OMSInterface {
 	public String registerUnit(String UnitName, String UnitType, String ParentUnitName, String AgentName, String CreatorName) throws THOMASException, SQLException
 	{
 
-		String result="";
-
-		if (!dbInterface.checkUnit(UnitName))
+		if (checkParameter(CreatorName) && checkParameter(UnitName))
 		{
-			if (ParentUnitName != null)
+
+			if (!dbInterface.checkUnit(UnitName))
 			{
-				if (!dbInterface.checkUnit(ParentUnitName))
+				if (ParentUnitName != null)
 				{
-					throw new THOMASException("Not found. Parent unit "+ ParentUnitName + " not found.");
+					if (!dbInterface.checkUnit(ParentUnitName))
+					{
+						throw new THOMASException("Not found. Parent unit "+ ParentUnitName + " not found.");
+					}
 				}
+				else
+				{
+					ParentUnitName = "virtual";
+				}
+				//TODO comprobar las normas. Por ahora se acepta siempre
+
+				if (dbInterface.checkPositionInUnit(AgentName,"creator",ParentUnitName))
+				{
+
+					return dbInterface.createUnit(UnitName, UnitType, ParentUnitName, AgentName, CreatorName);
+				}
+				else
+				{
+					throw new THOMASException("Not allowed. The agent does not play any role with creator position in the parent unit.");
+				}
+
 			}
 			else
 			{
-				ParentUnitName = "virtual";
+				throw new THOMASException("Invalid. Unit "+ UnitName + " exists.");
 			}
-			//TODO comprobar las normas. Por ahora se acepta siempre
-
-			if (dbInterface.checkPositionInUnit(AgentName,"creator",ParentUnitName))
-			{
-
-				result = dbInterface.createUnit(UnitName, UnitType, ParentUnitName, AgentName, CreatorName);
-			}
-			else
-			{
-				throw new THOMASException("Not allowed. The agent does not play any role with creator position in the parent unit.");
-			}
-
 		}
-		else
-		{
-			throw new THOMASException("Invalid. Unit "+ UnitName + " exists.");
-		}
-
-
-		return result;
+		throw new THOMASException("Invalid. Empty parameters.");
 	}
 	/**
 	 * Method used for deleting a unit in the organization
@@ -102,7 +111,7 @@ public class OMSInterface {
 	 */
 	public String deregisterUnit(String UnitName, String AgentName) throws THOMASException, SQLException
 	{
-		String result="";
+
 		boolean play = false;
 
 
@@ -142,7 +151,7 @@ public class OMSInterface {
 					else
 					{
 
-						result = dbInterface.deleteUnit(UnitName, AgentName);
+						return dbInterface.deleteUnit(UnitName, AgentName);
 
 					}
 				}
@@ -157,8 +166,6 @@ public class OMSInterface {
 			throw new THOMASException("Not found. Unit "+ UnitName + " not found or is the virtual unit.");
 		}
 
-
-		return result;
 	}
 
 	/**
@@ -166,7 +173,7 @@ public class OMSInterface {
 	 * 
 	 * @param RoleName
 	 * @param UnitName
-	 * @param Accessibility
+	 * @param Accesibility
 	 * @param Visibility
 	 * @param Position
 	 * @param AgentName
@@ -174,109 +181,110 @@ public class OMSInterface {
 	 * @throws THOMASException
 	 * @throws SQLException
 	 */
-	public String registerRole(String RoleName, String UnitName, String Accessibility, String Visibility, String Position, String AgentName) throws THOMASException, SQLException
+	public String registerRole(String RoleName, String UnitName, String Accesibility, String Visibility, String Position, String AgentName) throws THOMASException, SQLException
 	{
-		String result = "";
 		String unitType = "";
 
-
-
-		if (dbInterface.checkUnit(UnitName))
+		//Chekeo de parametros.
+		if (checkParameter(RoleName) && checkParameter(UnitName) && checkParameter(Accesibility) && checkParameter(Visibility) && checkParameter(Position))
 		{
-			if (!dbInterface.checkRole(RoleName, UnitName))
+			if (dbInterface.checkUnit(UnitName))
 			{
-				unitType = dbInterface.getUnitType(UnitName);
-
-				if (unitType.equals("hierarchy"))
+				if (!dbInterface.checkRole(RoleName, UnitName))
 				{
-					if (!Position.equals("supervisor") && !Position.equals("subordinate") && !Position.equals("creator"))
-					{
-						throw new THOMASException("Invalid. Position "+ Position + " not valid. Uses supervisor, subordinate or creator." );
-					}
+					unitType = dbInterface.getUnitType(UnitName);
 
-				}
-				else if (unitType.equals("team") || unitType.equals("flat"))
-				{
-
-					if (!Position.equals("member") && !Position.equals("creator"))
-					{
-						throw new THOMASException("Invalid. Position "+ Position + " not valid. Uses member or creator." );
-					}
-
-				}
-				else
-				{
-					throw new THOMASException("Invalid. Unit type not valid." );
-				}
-				//TODO control de normas.
-
-				if (dbInterface.checkAgentInUnit(AgentName, UnitName))
-				{
 					if (unitType.equals("hierarchy"))
 					{
-
-						if (dbInterface.checkPositionInUnit(AgentName, "creator", UnitName) || dbInterface.checkPositionInUnit(AgentName, "supervisor", UnitName))
+						if (!Position.equals("supervisor") && !Position.equals("subordinate") && !Position.equals("creator"))
 						{
-							result = dbInterface.createRole(RoleName, UnitName, Accessibility, Visibility, Position);
-
-						}
-						else
-						{
-							throw new THOMASException("Not allowed. The agent "+ AgentName + " is not playing any role with creator or superversior position." );
+							throw new THOMASException("Invalid. Position "+ Position + " not valid. Uses supervisor, subordinate or creator." );
 						}
 
-
-					}else if (unitType.equals("team") || unitType.equals("flat"))
-					{
-
-						if (dbInterface.checkPositionInUnit(AgentName, "creator", UnitName) || dbInterface.checkPositionInUnit(AgentName, "member", UnitName))
-						{
-							result = dbInterface.createRole(RoleName, UnitName, Accessibility, Visibility, Position);
-
-						}
-						else
-						{
-							throw new THOMASException("Not allowed. The agent "+ AgentName + " is not playing any role with creator or member position." );
-						}
-					}else
-					{
-						throw new THOMASException("Invalid. Unit type not valid." );
 					}
-				}
-				else
-				{
-					if (unitType.equals("flat"))
+					else if (unitType.equals("team") || unitType.equals("flat"))
 					{
 
-						if (dbInterface.checkPosition(AgentName, "creator"))
+						if (!Position.equals("member") && !Position.equals("creator"))
 						{
-							result = dbInterface.createRole(RoleName, UnitName, Accessibility, Visibility, Position);
-
+							throw new THOMASException("Invalid. Position "+ Position + " not valid. Uses member or creator." );
 						}
-						else
-						{
-							throw new THOMASException("Not allowed. The agent "+ AgentName + " is not playing any role with creator position." );
-						}
-
 
 					}
 					else
 					{
-						throw new THOMASException("Not allowed. The agent "+ AgentName + " is not inside the unit." );
+						throw new THOMASException("Invalid. Unit type not valid." );
+					}
+					//TODO control de normas.
+
+					if (dbInterface.checkAgentInUnit(AgentName, UnitName))
+					{
+						if (unitType.equals("hierarchy"))
+						{
+
+							if (dbInterface.checkPositionInUnit(AgentName, "creator", UnitName) || dbInterface.checkPositionInUnit(AgentName, "supervisor", UnitName))
+							{
+								return dbInterface.createRole(RoleName, UnitName, Accesibility, Visibility, Position);
+
+							}
+							else
+							{
+								throw new THOMASException("Not allowed. The agent "+ AgentName + " is not playing any role with creator or superversior position." );
+							}
+
+
+						}else if (unitType.equals("team") || unitType.equals("flat"))
+						{
+
+							if (dbInterface.checkPositionInUnit(AgentName, "creator", UnitName) || dbInterface.checkPositionInUnit(AgentName, "member", UnitName))
+							{
+								return dbInterface.createRole(RoleName, UnitName, Accesibility, Visibility, Position);
+
+							}
+							else
+							{
+								throw new THOMASException("Not allowed. The agent "+ AgentName + " is not playing any role with creator or member position." );
+							}
+						}else
+						{
+							throw new THOMASException("Invalid. Unit type not valid." );
+						}
+					}
+					else
+					{
+						if (unitType.equals("flat"))
+						{
+
+							if (dbInterface.checkPosition(AgentName, "creator"))
+							{
+								return dbInterface.createRole(RoleName, UnitName, Accesibility, Visibility, Position);
+
+							}
+							else
+							{
+								throw new THOMASException("Not allowed. The agent "+ AgentName + " is not playing any role with creator position." );
+							}
+
+
+						}
+						else
+						{
+							throw new THOMASException("Not allowed. The agent "+ AgentName + " is not inside the unit." );
+						}
 					}
 				}
+				else
+				{
+					throw new THOMASException("Not allowed. Role "+ RoleName + " is not registered in the unit.");			}
 			}
 			else
 			{
-				throw new THOMASException("Not allowed. Role "+ RoleName + " is not registered in the unit.");			}
-		}
-		else
-		{
-			throw new THOMASException("Not found. Unit "+ UnitName + " not found.");
-		}
+				throw new THOMASException("Not found. Unit "+ UnitName + " not found.");
+			}
 
+		}
+		throw new THOMASException("Invalid. Empty parameters.");
 
-		return result;
 	}
 
 	/**
