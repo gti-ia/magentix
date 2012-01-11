@@ -76,6 +76,12 @@ public class OMS extends CAgent {
 	private  final URI OMS_REGISTERUNIT_ID = URI.create(OWL_S_OMS_SERVICES + "RegisterUnitProfile.owl");
 	private  final URI OMS_REGISTERUNIT_GOAL = URI.create("RegisterUnit");
 
+	private  final URI OMS_JOINTUNIT_PROFILE = URI.create(OWL_S_OMS_SERVICES + "JointUnitProfile.owl");
+	private  final URI OMS_JOINTUNIT_PROCESS = URI.create(OWL_S_OMS_SERVICES + "JointUnitProcess.owl");
+	private  final URI OMS_JOINTUNIT_ID = URI.create(OWL_S_OMS_SERVICES + "JointUnitProfile.owl");
+	private  final URI OMS_JOINTUNIT_GOAL = URI.create("JointUnit");
+
+	
 	@SuppressWarnings("unused")
 	private  final URI OMS_REGISTERNORM_PROFILE = URI.create(OWL_S_OMS_SERVICES + "RegisterNormProfile.owl");
 	private  final URI OMS_REGISTERNORM_PROCESS = URI.create(OWL_S_OMS_SERVICES + "RegisterNormProcess.owl");
@@ -145,6 +151,20 @@ public class OMS extends CAgent {
 	private  final URI OMS_ACQUIREROLE_GOAL = URI.create("AcquireRole");
 	@SuppressWarnings("unused")
 	private  final URI OMS_ACQUIREROLE_PROVIDER = URI.create("Provider");
+	
+	
+	private  final URI OMS_ALLOCATEROLE_PROFILE = URI.create(OWL_S_OMS_SERVICES + "AllocateRoleProfile.owl");
+	private  final URI OMS_ALLOCATEROLE_PROCESS = URI.create(OWL_S_OMS_SERVICES + "AllocateRoleProcess.owl");
+	@SuppressWarnings("unused")
+	private  final URI OMS_ALLOCATEROLE_GROUNDING = URI.create(OWL_S_OMS_SERVICES + "AllocateRoleGrounding.owl");
+	@SuppressWarnings("unused")
+	private  final URI OMS_ALLOCATEROLE_ID = URI.create(OWL_S_OMS_SERVICES + "AllocateRoleProfile.owl#AllocateRoleProfile");
+	@SuppressWarnings("unused")
+	private  final URI OMS_ALLOCATEROLE_GOAL = URI.create("AllocateRole");
+	@SuppressWarnings("unused")
+	private  final URI OMS_ALLOCATEROLE_PROVIDER = URI.create("Provider");
+	
+	
 	@SuppressWarnings("unused")
 	private  final URI OMS_LEAVEROLE_PROFILE = URI.create(OWL_S_OMS_SERVICES + "LeaveRoleProfile.owl");
 	private  final URI OMS_LEAVEROLE_PROCESS = URI.create(OWL_S_OMS_SERVICES + "LeaveRoleProcess.owl");
@@ -157,16 +177,16 @@ public class OMS extends CAgent {
 	@SuppressWarnings("unused")
 	private  final URI OMS_LEAVEROLE_PROVIDER = URI.create("Provider");
 	@SuppressWarnings("unused")
-	private  final URI OMS_EXPULSE_PROFILE = URI.create(OWL_S_OMS_SERVICES + "ExpulseProfile.owl");
-	private  final URI OMS_EXPULSE_PROCESS = URI.create(OWL_S_OMS_SERVICES + "ExpulseProcess.owl");
+	private  final URI OMS_DEALLOCATEROLE_PROFILE = URI.create(OWL_S_OMS_SERVICES + "DeallocateRoleProfile.owl");
+	private  final URI OMS_DEALLOCATEROLE_PROCESS = URI.create(OWL_S_OMS_SERVICES + "DeallocateRoleProcess.owl");
 	@SuppressWarnings("unused")
-	private  final URI OMS_EXPULSE_GROUNDING = URI.create(OWL_S_OMS_SERVICES + "ExpulseGrounding.owl");
+	private  final URI OMS_DEALLOCATEROLE_GROUNDING = URI.create(OWL_S_OMS_SERVICES + "DeallocateRoleGrounding.owl");
 	@SuppressWarnings("unused")
-	private  final URI OMS_EXPULSE_ID = URI.create(OWL_S_OMS_SERVICES + "ExpulseProfile.owl#ExpulseProfile");
+	private  final URI OMS_DEALLOCATEROLE_ID = URI.create(OWL_S_OMS_SERVICES + "DeallocateRoleProfile.owl#DeallocateRoleProfile");
 	@SuppressWarnings("unused")
-	private  final URI OMS_EXPULSE_GOAL = URI.create("Expulse");
+	private  final URI OMS_DEALLOCATEROLE_GOAL = URI.create("DeallocateRole");
 	@SuppressWarnings("unused")
-	private  final URI OMS_EXPULSE_PROVIDER = URI.create("Provider");
+	private  final URI OMS_DEALLOCATEROLE_PROVIDER = URI.create("Provider");
 	//INFORMATIVE SERVICES
 	@SuppressWarnings("unused")
 	private  final URI OMS_INFORMUNIT_PROFILE = URI.create(OWL_S_OMS_SERVICES + "InformUnitProfile.owl");
@@ -180,7 +200,8 @@ public class OMS extends CAgent {
 	@SuppressWarnings("unused")
 	private  final URI OMS_INFORMUNIT_PROVIDER = URI.create("Provider");   
 
-	@SuppressWarnings("unused")
+	private  final URI OMS_INFORMNORM_PROCESS = URI.create(OWL_S_OMS_SERVICES + "InformNormProcess.owl");
+	
 	private  final URI OMS_INFORMROLE_PROFILE = URI.create(OWL_S_OMS_SERVICES + "InformRoleProfile.owl");
 	private  final URI OMS_INFORMROLE_PROCESS = URI.create(OWL_S_OMS_SERVICES + "InformRoleProcess.owl");
 	@SuppressWarnings("unused")
@@ -216,16 +237,16 @@ public class OMS extends CAgent {
 	private  final URI OMS_INFORMMEMBERS_PROVIDER = URI.create("Provider"); 
 
 	@SuppressWarnings("unused")
-	private  final URI OMS_INFORMROLENORMS_PROFILE = URI.create(OWL_S_OMS_SERVICES + "InformRoleNormsProfile.owl");
-	private  final URI OMS_INFORMROLENORMS_PROCESS = URI.create(OWL_S_OMS_SERVICES + "InformRoleNormsProcess.owl");
+	private  final URI OMS_INFORTARGETNORMS_PROFILE = URI.create(OWL_S_OMS_SERVICES + "InformTargetNormsProfile.owl");
+	private  final URI OMS_INFORMTARGETNORMS_PROCESS = URI.create(OWL_S_OMS_SERVICES + "InformTargetNormsProcess.owl");
 	@SuppressWarnings("unused")
-	private  final URI OMS_INFORMROLENORMS_GROUNDING = URI.create(OWL_S_OMS_SERVICES + "InformRoleNormsGrounding.owl");
+	private  final URI OMS_INFORMTARGETNORMS_GROUNDING = URI.create(OWL_S_OMS_SERVICES + "InformTargetNormsGrounding.owl");
 	@SuppressWarnings("unused")
-	private  final URI OMS_INFORMROLENORMS_ID = URI.create(OWL_S_OMS_SERVICES + "InformRoleNormsProfile.owl#InformRoleNormsProfile");
+	private  final URI OMS_INFORMTARGETNORMS_ID = URI.create(OWL_S_OMS_SERVICES + "InformTargetNormsProfile.owl#InformTargetNormsProfile");
 	@SuppressWarnings("unused")
-	private  final URI OMS_INFORMROLENORMS_GOAL = URI.create("InformRoleNorms");
+	private  final URI OMS_INFORMTARGETNORMS_GOAL = URI.create("InformTargetNorms");
 	@SuppressWarnings("unused")
-	private  final URI OMS_INFORMROLENORMS_PROVIDER = URI.create("Provider"); 
+	private  final URI OMS_INFORMTARGETNORMS_PROVIDER = URI.create("Provider"); 
 	@SuppressWarnings("unused")
 	private  final URI OMS_INFORMROLEPROFILES_PROFILE = URI.create(OWL_S_OMS_SERVICES + "InformRoleProfilesProfile.owl");
 	@SuppressWarnings("unused")
@@ -274,19 +295,22 @@ public class OMS extends CAgent {
 						OMS_INFORMROLE_ID,OMS_INFORMUNITROLES_ID,OMS_QUANTITYMEMBERS_ID*/};
 	// array with OMS service processes
 	URI[]OMSServicesProcess = {OMS_REGISTERUNIT_PROCESS,
+			OMS_JOINTUNIT_PROCESS,
 			OMS_REGISTERROLE_PROCESS,
 			OMS_REGISTERNORM_PROCESS,
 			OMS_DEREGISTERUNIT_PROCESS,
 			OMS_DEREGISTERROLE_PROCESS, 
 			OMS_DEREGISTERNORM_PROCESS,
 			OMS_ACQUIREROLE_PROCESS,
+			OMS_ALLOCATEROLE_PROCESS,
 			OMS_LEAVEROLE_PROCESS,
-			OMS_EXPULSE_PROCESS,
+			OMS_DEALLOCATEROLE_PROCESS,
 			OMS_INFORMAGENTROLE_PROCESS,
 			OMS_INFORMUNIT_PROCESS,
-			OMS_INFORMROLENORMS_PROCESS,
+			OMS_INFORMTARGETNORMS_PROCESS,
 			OMS_INFORMMEMBERS_PROCESS,
-			OMS_INFORMROLEPROFILES_PROCESS,
+			OMS_INFORMROLE_PROCESS,
+			OMS_INFORMNORM_PROCESS,
 			OMS_INFORMUNITROLES_PROCESS,
 			OMS_QUANTITYMEMBERS_PROCESS
 	};
