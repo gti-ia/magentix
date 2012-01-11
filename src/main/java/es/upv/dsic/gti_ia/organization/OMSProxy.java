@@ -65,8 +65,11 @@ public class OMSProxy extends THOMASProxy{
 	{
 
 		String position = null;
-		
-		
+
+		if (agent.equals("agente_creador") && unit.equals("calculin") && rol.equals("operador"))
+		{
+			return "member";
+		}
 		if (agent.equals("agente_creador") && unit.equals("calculin") && rol.equals("creador"))
 		{
 			position = "creator";
@@ -78,7 +81,7 @@ public class OMSProxy extends THOMASProxy{
 			if (rol.equals("manager") && unit.equals("externa"))
 				position = "member";
 
-		}if (agent.equals("agente_suma") || agent.equals("agente_producto"))
+		}if (agent.contains("agente_suma") || agent.contains("agente_producto"))
 		{
 			if (unit.equals("calculin") && rol.equals("operador"))
 			{
@@ -87,13 +90,13 @@ public class OMSProxy extends THOMASProxy{
 				else
 					position = "subordinate";	
 			}
-	
-		
-						
+
+
+
 		}	
 		if (agent.equals("agente_sumatorio") || agent.equals("agente_visor") || agent.equals("agente_sumaPotencias"))
 		{
-			
+
 			if  (unit.equals("calculin") && (rol.equals("manager")))
 			{
 				if (unitType.equals("flat") || unitType.equals("team"))
@@ -101,7 +104,7 @@ public class OMSProxy extends THOMASProxy{
 				else
 					position = "supervisor";
 			}
-				
+
 		}
 		return position;
 	}
@@ -141,9 +144,9 @@ public class OMSProxy extends THOMASProxy{
 
 		}else
 		{
-			
+
 			agentRole = this.informAgentRole(agent.getAid().name);
-			
+
 			if (agentRole.isEmpty())
 			{
 				throw new THOMASException("The agent not play any rol.");
@@ -306,14 +309,13 @@ public class OMSProxy extends THOMASProxy{
 	 * @return ArrayList<String> EntityRoleList
 	 */
 	@SuppressWarnings("unchecked")
-	public ArrayList<String> informMembers(String RoleID,
-			String UnitID){
+	public ArrayList<String> informMembers(String UnitID, String RoleID, String PositionValue){
 
 		serviceName ="InformMembersProcess";
 		listResults.clear();
 
 		call = ServiceDescriptionLocation + "InformMembersProcess.owl RoleID="
-		+ RoleID + " UnitID=" + UnitID;
+		+ RoleID + " UnitID=" + UnitID+ " PositionValue="+PositionValue;
 		return (ArrayList<String>) this.sendInform();
 
 	}
@@ -333,13 +335,24 @@ public class OMSProxy extends THOMASProxy{
 	 * @return ArrayList<String> NormList
 	 */
 	@SuppressWarnings("unchecked")
-	public ArrayList<String> informRoleNorms(String RoleID)
+	public ArrayList<String> informTargetNorms(String TargetName, String Type, String UnitName)
 	{
-		serviceName ="InformRoleNormsProcess";
+		serviceName ="InformTargetNormsProcess";
 		listResults.clear();
 
-		call = ServiceDescriptionLocation + "InformRoleNormsProcess.owl RoleID="
-		+ RoleID;
+		call = ServiceDescriptionLocation + "InformTargetNormsProcess.owl TargetName="
+		+ TargetName + " Type="+ Type+ " UnitName="+UnitName;
+		return (ArrayList<String>) this.sendInform();
+
+	}
+	@SuppressWarnings("unchecked")
+	public ArrayList<String> informNorm(String NormName, String UnitName)
+	{
+		serviceName ="InformNormProcess";
+		listResults.clear();
+
+		call = ServiceDescriptionLocation + "InformNormProcess.owl NormName="
+		+ NormName + " UnitName="+UnitName;
 		return (ArrayList<String>) this.sendInform();
 
 	}
@@ -360,6 +373,19 @@ public class OMSProxy extends THOMASProxy{
 
 		call = ServiceDescriptionLocation + "InformRoleProfilesProcess.owl UnitID="
 		+ UnitID;
+		return (ArrayList<String>) this.sendInform();
+
+	}
+
+
+	@SuppressWarnings("unchecked")
+	public ArrayList<String> informRole(String RoleName, String UnitName)
+	{
+		serviceName ="InformRoleProcess";
+		listResults.clear();
+
+		call = ServiceDescriptionLocation + "InformRoleProcess.owl UnitName="
+		+ UnitName + " RoleName="+RoleName;
 		return (ArrayList<String>) this.sendInform();
 
 	}
@@ -427,11 +453,11 @@ public class OMSProxy extends THOMASProxy{
 	 * 
 	 * @return Integer Quantity
 	 */
-	public int quantityMembers(String RoleID, String UnitID)
+	public int quantityMembers(String UnitID, String RoleID, String PositionValue)
 	{
 		serviceName ="QuantityMembersProcess";
 		call = ServiceDescriptionLocation + "QuantityMembersProcess.owl RoleID="
-		+ RoleID + " UnitID=" + UnitID;
+		+ RoleID + " UnitID=" + UnitID + " PositionValue="+ PositionValue;
 		return Integer.parseInt(this.sendInform().toString());
 
 
@@ -448,13 +474,15 @@ public class OMSProxy extends THOMASProxy{
 	 *            'role2ID')) Applications for registration of a rule is
 	 *            necessary to replace the spaces between the different words
 	 *            for "_".
+	 *@param UnitName
+	 *            Name of the unit
 	 * @return String Status ErrorValue
 	 */
 	public String registerNorm(String NormID,
-			String NormContent) {
+			String NormContent, String UnitName) {
 		serviceName ="RegisterNormProcess";
 		call = ServiceDescriptionLocation + "RegisterNormProcess.owl NormID="
-		+ NormID + " NormContent=" + NormContent;
+		+ NormID + " NormContent=" + NormContent+ " UnitName="+ UnitName;
 		return (String) this.sendInform();
 	}
 
@@ -489,25 +517,23 @@ public class OMSProxy extends THOMASProxy{
 	 *            indicates whether agents can obtain information of this role
 	 *            from outside the unit in which this role is defined (public)
 	 *            or from inside (private). Default is a Public.
-	 * @param Inheritance
-	 *            is the identifier of the parent role in the role hierarchy. Default is a Member.
+	 * 
 	 * @return String Status ErroValue
 	 */
 	public String registerRole(String RoleID, String UnitID,
-			String Accessibility, String Position, String Visibility,
-			String Inheritance){
+			String Accessibility, String Visibility, String Position){
 		serviceName ="RegisterRoleProcess";
 		call = ServiceDescriptionLocation + "RegisterRoleProcess.owl RoleID="
 		+ RoleID + " UnitID=" + UnitID + " Accessibility="
 		+ Accessibility + " Position=" + Position + " Visibility="
-		+ Visibility + " Inheritance=" + Inheritance;
+		+ Visibility;
 		return (String) this.sendInform();
 
 
 	}
 
 	/**
-	 * Creates a  new empty unit in the organization, with a specific structure, goal and parent unit.
+	 * Creates a new empty unit in the organization, with a specific structure, creatorName and parent unit.
 	 *
 	 *
 	 *The execution of this service checks:
@@ -529,19 +555,33 @@ public class OMSProxy extends THOMASProxy{
 	 *            Team, which are groups of agents that share a common goal,
 	 *            collaborating and cooperating between them; and (iii) Flat, in
 	 *            which there is none agent with control over other members. Default is a Flat.
-	 * @param Goal
-	 *            describes goals pursued by the unit
+	 * 
 	 * @param ParentUnitID
 	 *            is the identifier of the parent unit which contains the new
 	 *            unit. Default is a Virtual.
+	 * @param CreatorName
+	 *            The name of the new creator role 
 	 * @return String Status ErrorValue
 	 */
 	public String registerUnit(String UnitID, String Type,
-			String Goal, String ParentUnitID) {
+			String ParentUnitID, String CreatorName) {
 		serviceName ="RegisterUnitProcess";
-		call = ServiceDescriptionLocation + "RegisterUnitProcess.owl  UnitID="
-		+ UnitID + " Type=" + Type + " Goal=" + Goal + " ParentUnitID="
-		+ ParentUnitID;
+		if (ParentUnitID == null)
+			call = ServiceDescriptionLocation + "RegisterUnitProcess.owl  UnitID="
+			+ UnitID + " Type=" + Type + " CreatorName=" + CreatorName + " ParentUnitID=";
+		else
+			call = ServiceDescriptionLocation + "RegisterUnitProcess.owl  UnitID="
+			+ UnitID + " Type=" + Type + " CreatorName=" + CreatorName + " ParentUnitID="
+			+ ParentUnitID;
+
+		return 	(String) this.sendInform();
+
+	}
+
+	public String jointUnit(String UnitName, String ParentName) {
+		serviceName ="JointUnitProcess";
+		call = ServiceDescriptionLocation + "JointUnitProcess.owl  UnitName="
+		+ UnitName + " ParentName=" + ParentName;
 		return 	(String) this.sendInform();
 
 
@@ -557,13 +597,15 @@ public class OMSProxy extends THOMASProxy{
 	 * 
 	 * @param NormID
 	 *            norm name
+	 * @param UnitName
+	 *            Name of the unit
 	 * @return String Status ErrorValue
 	 */
-	public String deregisterNorm(String NormID)
+	public String deregisterNorm(String NormID, String UnitName)
 	{
 		serviceName ="DeregisterNormProcess";
 		call = ServiceDescriptionLocation + "DeregisterNormProcess.owl  NormID="
-		+ NormID;
+		+ NormID+ " UnitName="+ UnitName;
 		return 	(String) this.sendInform();
 
 
@@ -626,28 +668,39 @@ public class OMSProxy extends THOMASProxy{
 	 *		of this unit.
 	 *	– Deregister Agent - Role - Unit entry in EntityPlayList (using DeregisterAgentRole service)
 	 *
-	 * @param ExpulseAgentID
-	 *            entity,this agent is protocol://name@host:port
-	 *            ej.qpid://clientagent2@localhost:8080 , we can extract this
-	 *            inform with the method getAid().toString() for example.
-	 * @param RoleID
+	 * 
+	 * @param RoleName
 	 *            represent all required functionality needed in order to
 	 *            achieve the unit goal.
-	 * @param UnitID
+	 * @param UnitName
 	 *            organizational units (OUs), which represent groups of entities
 	 *            (agents or other units)
+	 * @param TargetAgentName
+	 *       	the agent deallocate role to agente with target agent name
 	 * @return String Status ErrorValue
 	 */
-	public String expulse(String ExpulseAgentID, String RoleID,
-			String UnitID) {
-		serviceName ="ExpulseProcess";
-		call = ServiceDescriptionLocation + "ExpulseProcess.owl ExpulsedAgentID=" + ExpulseAgentID
-		+ " RoleID=" + RoleID + " UnitID=" + UnitID;
+	public String deallocateRole(String RoleName, String UnitName, String TargetAgentName 
+	) {
+		serviceName ="DeallocateRoleProcess";
+		call = ServiceDescriptionLocation + "DeallocateRoleProcess.owl TargetAgentName=" + TargetAgentName
+		+ " RoleName=" + RoleName + " UnitName=" + UnitName;
 		return (String) this.sendInform();
 
 
 	}
 
+
+	public String allocateRole(String RoleName, String UnitName, String TargetAgentName)
+	{
+		serviceName ="AllocateRoleProcess";
+		call = ServiceDescriptionLocation + "AllocateRoleProcess.owl RoleName=" + RoleName
+		+ " UnitName=" + UnitName + " TargetAgentName="+ TargetAgentName;
+
+
+		return (String) this.sendInform();
+
+
+	}
 	/**
 	 * Requests the adoption of a specific role inside a unit
 	 * 
