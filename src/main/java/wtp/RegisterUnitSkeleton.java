@@ -46,22 +46,26 @@ public class RegisterUnitSkeleton{
 		res.setErrorValue("");
 		res.setStatus("Ok");
 		
-		if (registerUnit.getUnitID() == "" || registerUnit.getCreatorName() == "")
-		{
-			res.setErrorValue("Invalid. Empty parameters are not allowed");
-			res.setStatus("Error");
-			return res;
-		}
 		
 		try{
-			result =omsInterface.registerUnit(registerUnit.getUnitID(), registerUnit.getType(), registerUnit.getAgentID(), registerUnit.getCreatorName());
+			if (registerUnit.getParentUnitID().equals(""))
+			{
+				
+				result =omsInterface.registerUnit(registerUnit.getUnitID(), registerUnit.getType(), registerUnit.getAgentID(), registerUnit.getCreatorName());
+			}
+			else
+			{
+				
+				result =omsInterface.registerUnit(registerUnit.getUnitID(), registerUnit.getType(), registerUnit.getParentUnitID(), registerUnit.getAgentID(), registerUnit.getCreatorName());
+			}
+	
 			res.setStatus(result);
 			res.setErrorValue("");
 			return res;
 		}catch(THOMASException e)
 		{
 			res.setStatus("Error");
-			res.setErrorValue(e.getMessage());
+			res.setErrorValue(e.getContent());
 			return res;
 		}
 		catch(SQLException e)

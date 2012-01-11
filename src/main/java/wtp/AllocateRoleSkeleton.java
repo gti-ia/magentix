@@ -61,7 +61,7 @@ public class AllocateRoleSkeleton{
 		}catch(THOMASException e)
 		{
 			res.setStatus("Error");
-			res.setErrorValue(e.getMessage());
+			res.setErrorValue(e.getContent());
 			return res;
 		}
 		catch(SQLException e)

@@ -43,12 +43,13 @@ public class InformRoleSkeleton
 			return res;
 		}catch(THOMASException e)
 		{
-			res.setStatus("Error");
+			res.setStatus(e.getContent());
+		
 			return res;
 		}
 		catch(SQLException e)
 		{
-			res.setStatus("Error");
+			res.setStatus(e.getMessage());
 			return res;
 		}
 	}

@@ -49,23 +49,27 @@ public class RegisterRoleSkeleton{
 		}
 		res.setErrorValue("");
 		res.setStatus("Ok");
-
-		if (registerRole.getRoleID() == "" || registerRole.getUnitID() == "")
-		{
-			res.setErrorValue("Invalid. Role id or unit id parameters are empty.");
-			res.setStatus("Error");
-			return res;
-		}
 		
 		try{
-			result =omsInterface.registerRole(registerRole.getRoleID(), registerRole.getUnitID(), registerRole.getAccessibility(), registerRole.getVisibility(), registerRole.getPosition(), registerRole.getAgentID());
+			if (registerRole.getRoleID().equals("null"))
+				result =omsInterface.registerRole(null, registerRole.getUnitID(), registerRole.getAccessibility(), registerRole.getVisibility(), registerRole.getPosition(), registerRole.getAgentID());
+			else if (registerRole.getUnitID().equals("null"))
+				result =omsInterface.registerRole(registerRole.getRoleID(), null, registerRole.getAccessibility(), registerRole.getVisibility(), registerRole.getPosition(), registerRole.getAgentID());
+			else if (registerRole.getAccessibility().equals("null"))
+				result =omsInterface.registerRole(registerRole.getRoleID(), registerRole.getUnitID(), null, registerRole.getVisibility(), registerRole.getPosition(), registerRole.getAgentID());
+			else if (registerRole.getVisibility().equals("null"))
+				result =omsInterface.registerRole(registerRole.getRoleID(), registerRole.getUnitID(), registerRole.getAccessibility(), null, registerRole.getPosition(), registerRole.getAgentID());
+			else if (registerRole.getPosition().equals("null"))
+				result =omsInterface.registerRole(registerRole.getRoleID(), registerRole.getUnitID(), registerRole.getAccessibility(), registerRole.getVisibility(), null, registerRole.getAgentID());
+			else
+				result =omsInterface.registerRole(registerRole.getRoleID(), registerRole.getUnitID(), registerRole.getAccessibility(), registerRole.getVisibility(), registerRole.getPosition(), registerRole.getAgentID());
 			res.setStatus(result);
 			res.setErrorValue("");
 			return res;
 		}catch(THOMASException e)
 		{
 			res.setStatus("Error");
-			res.setErrorValue(e.getMessage());
+			res.setErrorValue(e.getContent());
 			return res;
 		}
 		catch(SQLException e)
