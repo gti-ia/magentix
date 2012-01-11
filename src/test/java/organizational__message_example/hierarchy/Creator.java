@@ -1,5 +1,6 @@
 package organizational__message_example.hierarchy;
 
+import es.upv.dsic.gti_ia.architecture.Monitor;
 import es.upv.dsic.gti_ia.architecture.QueueAgent;
 import es.upv.dsic.gti_ia.architecture.FIPANames.InteractionProtocol;
 import es.upv.dsic.gti_ia.core.ACLMessage;
@@ -11,6 +12,7 @@ import es.upv.dsic.gti_ia.organization.THOMASException;
 public class Creator extends QueueAgent {
 	
 	OMSProxy omsProxy = new OMSProxy(this);
+	Monitor m = new Monitor();
 	
 	public Creator(AgentID aid) throws Exception {
 		super(aid);
@@ -31,16 +33,37 @@ public class Creator extends QueueAgent {
 		
 		
 		
+		m.waiting();
+		
+		
 	}
 	
+	public void finalize()
+	{
+		omsProxy.leaveRole("creador", "calculin");
+		omsProxy.deregisterRole("operador", "calculin");
+		omsProxy.deregisterRole("manager", "calculin");
+		omsProxy.deregisterRole("creador", "calculin");
+		
+		omsProxy.deregisterUnit("calculin");
+		
+		omsProxy.leaveRole("member", "virtual");
+		
+		logger.info("[ "+this.getName()+" ] end execution!");
+	}
 	private void initialize_scenario()
 	{
 		omsProxy.registerUnit("calculin", "hierarchy", "unidad_calculin", "virtual");
 		
-		omsProxy.registerRole("creador", "calculin", "internal", "supervisor", "public","member"); 
-		omsProxy.registerRole("manager", "calculin", "internal", "supervisor", "public","member");
-		omsProxy.registerRole("operador", "calculin", "internal", "subordinate", "public","member");
+		omsProxy.registerRole("creador", "calculin", "supervisor", "public","member"); 
+		omsProxy.registerRole("manager", "calculin",  "supervisor", "public","member");
+		omsProxy.registerRole("operador", "calculin", "subordinate", "public","member");
 	
+	}
+	
+	public void conclude()
+	{
+		m.advise();
 	}
 	
 	public void send_request(int n1, int n2)

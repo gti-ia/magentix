@@ -1,4 +1,4 @@
-package organizational__message_example.flat;
+package omsTest.RegisterUnit;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
@@ -38,23 +38,14 @@ public class Run {
 			
 			oms.start();
 			sf.start();
-			
-			//Clean data base
-			CleanDB clean = new CleanDB();
-
-			clean.initialize_db();
+		
 			
 			/**
 			 * Instantiating agents
 			 */
 			
-			Creator iniAgent = new Creator(new AgentID("agente_creador"));
-			Noisy ruiAgent = new Noisy(new AgentID("agente_ruidoso"));
-			
-			
+			Creator iniAgent = new Creator(new AgentID("pruebas"));	
 			iniAgent.start();
-			Thread.sleep(10 * 1000);//Waiting for system initialization
-			ruiAgent.start();
 		
 			
 

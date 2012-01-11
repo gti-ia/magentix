@@ -34,11 +34,28 @@ public class Noisy extends QueueAgent {
 		omsProxy.acquireRole("creador","externa");
 
 		this.send_request(1,7);
+		
+		m.waiting();
 
-		m.waiting(); 
-
-		this.send_result(result+"");
-
+		
+	}
+	
+	public void conclude()
+	{
+		m.advise();
+	}
+	
+	public void finalize()
+	{
+	
+		omsProxy.leaveRole("manager", "externa");
+		omsProxy.leaveRole("creador", "externa");
+		omsProxy.deregisterRole("manager", "externa");
+		omsProxy.deregisterRole("creador", "externa");
+		omsProxy.deregisterUnit("externa");
+		omsProxy.leaveRole("member", "virtual");
+		
+		logger.info("[ "+this.getName()+" ] end execution!");
 	}
 
 	private void add_and_advise(ACLMessage msg)
@@ -75,8 +92,8 @@ public class Noisy extends QueueAgent {
 	{
 
 		omsProxy.registerUnit("externa", "flat", "unidad_externa_tipo_flat", "virtual");
-		omsProxy.registerRole("manager", "externa", "internal", "member", "public","member");
-		omsProxy.registerRole("creador", "externa", "internal", "member", "public","member"); 
+		omsProxy.registerRole("manager", "externa", "member", "public","member");
+		omsProxy.registerRole("creador", "externa",  "member", "public","member"); 
 	
 	}
 

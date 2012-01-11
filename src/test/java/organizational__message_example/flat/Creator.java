@@ -37,9 +37,9 @@ public class Creator extends QueueAgent {
 	{
 		omsProxy.registerUnit("calculin", "flat", "unidad_calculin", "virtual");
 		
-		omsProxy.registerRole("creador", "calculin", "internal", "member", "public","member"); 
-		omsProxy.registerRole("manager", "calculin", "internal", "member", "public","member");
-		omsProxy.registerRole("operador", "calculin", "internal", "member", "public","member");
+		omsProxy.registerRole("creador", "calculin", "public", "public","member"); 
+		omsProxy.registerRole("manager", "calculin", "member", "public","member");
+		omsProxy.registerRole("operador", "calculin", "member", "public","member");
 	
 	}
 	

@@ -12,9 +12,9 @@ public class Summation extends QueueAgent {
 
 	OMSProxy omsProxy = new OMSProxy(this);
 	int result = 0;
-	int expected = 2;
 	Monitor m = new Monitor();
-
+	long last = 0;
+	int recibidos = 0;
 	public Summation(AgentID aid) throws Exception {
 		super(aid);
 	}
@@ -26,12 +26,16 @@ public class Summation extends QueueAgent {
 		omsProxy.acquireRole("member", "virtual");
 		omsProxy.acquireRole("manager", "calculin");
 	
-	
+		long ini = System.currentTimeMillis();
+		
 		this.send_request(6,3);
-		m.waiting(10 * 1000); // Waiting the response with a timeout
+		m.waiting(); // Waiting the response with a timeout
 		this.send_result("" + result); // Inform the result.
 		
-		expected = 2; //Reset the result and messages expected
+		
+		double resultado = (last - ini)/1000;
+		System.out.println("Recibidos en un tiempo de: "+ resultado +" segundos.");
+		System.out.println("Recibidos : "+ recibidos);
 		result=0;
 		this.send_request(5,3);
 		m.waiting(10 * 1000); // Waiting the response with a timeout
@@ -41,12 +45,10 @@ public class Summation extends QueueAgent {
 
 	private void add_and_advise(ACLMessage msg) {
 		result += Integer.parseInt(msg.getContent());
-		expected--;
-		if (expected == 0) {
-			m.advise(); //When all message arrives, it notifies the main thread
-			
-			
-		}
+		last = System.currentTimeMillis();
+		recibidos++;
+		if (recibidos==4000)
+			m.advise();
 	}
 
 	public void onMessage(ACLMessage msg) {

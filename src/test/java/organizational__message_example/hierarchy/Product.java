@@ -7,10 +7,15 @@ import es.upv.dsic.gti_ia.architecture.QueueAgent;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.organization.OMSProxy;
+import es.upv.dsic.gti_ia.architecture.Monitor;
 
 
 public class Product extends QueueAgent {
 
+	OMSProxy omsProxy = new OMSProxy(this);
+	Responder responder = new Responder(this);
+	Monitor m = new Monitor();
+	
 	public Product(AgentID aid) throws Exception {
 		super(aid);
 
@@ -19,27 +24,40 @@ public class Product extends QueueAgent {
 	public void execute() {
 
 
-		OMSProxy omsProxy = new OMSProxy(this);
+		
 
 		omsProxy.acquireRole("member", "virtual");
 		omsProxy.acquireRole("operador", "calculin");
 		
 
-		Responder responder = new Responder(this);
+		
 
 		this.addTask(responder);
 
-		es.upv.dsic.gti_ia.architecture.Monitor mon = new es.upv.dsic.gti_ia.architecture.Monitor();
-		mon.waiting();
+		
+		m.waiting();
 
 	}
 
+	public void finalize()
+	{
+		omsProxy.leaveRole("operador", "calculin");
+		omsProxy.leaveRole("member", "virtual");
+		logger.info("[ "+this.getName()+" ] end execution!");
+	}
+	
+	public void conclude()
+	{
+		m.advise();
+	}
+	
 	/**
 	 * Manages the messages for the  agent provider services
 	 */
 	public class Responder extends FIPARequestResponder {
 
-
+		int n = 3; //Expected messages
+		
 		public Responder(QueueAgent agent) {
 			super(agent, new MessageTemplate(InteractionProtocol.FIPA_REQUEST));
 
@@ -82,11 +100,18 @@ public class Product extends QueueAgent {
 
 
 				msg.setContent(""+result);
+				
+				n--;
+				
+				if (n == 0)
+					m.advise();
+				
 			}catch(Exception e)
 			{
 				msg.setPerformative(ACLMessage.FAILURE);
 				msg.setContent(e.getMessage());
 			}
+		
 			return (msg);
 		} // end prepareResultNotification
 

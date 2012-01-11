@@ -1,5 +1,6 @@
 package organizational__message_example.team;
 
+import es.upv.dsic.gti_ia.architecture.Monitor;
 import es.upv.dsic.gti_ia.architecture.QueueAgent;
 import es.upv.dsic.gti_ia.architecture.FIPANames.InteractionProtocol;
 import es.upv.dsic.gti_ia.core.ACLMessage;
@@ -27,19 +28,29 @@ public class Creator extends QueueAgent {
 		
 		omsProxy.acquireRole("creador", "calculin");
 		
+		
 		this.send_request(4, 2);
+		omsProxy.acquireRole("operador", "calculin");
+		Monitor m = new Monitor();
+		m.waiting();
 		
 		
-		
+	}
+	
+	public void onMessage(ACLMessage msg) {
+
+		System.out.println("Me llega un mensaje de: "+msg.getSender() + " para: "+  msg.getReceiver());
+			super.onMessage(msg);
+
 	}
 	
 	private void initialize_scenario()
 	{
 		omsProxy.registerUnit("calculin", "team", "unidad_calculin", "virtual");
 	
-		omsProxy.registerRole("creador", "calculin", "internal",  "member", "public","member"); 
-		omsProxy.registerRole("manager", "calculin", "internal", "member", "public","member");
-		omsProxy.registerRole("operador", "calculin", "internal", "member", "public","member");
+		omsProxy.registerRole("creador", "calculin",   "member", "public","member"); 
+		omsProxy.registerRole("manager", "calculin",  "member", "public","member");
+		omsProxy.registerRole("operador", "calculin",  "member", "public","member");
 	
 	}
 	

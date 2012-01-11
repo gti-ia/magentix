@@ -9,38 +9,51 @@ import es.upv.dsic.gti_ia.architecture.QueueAgent;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.organization.OMSProxy;
-
+import es.upv.dsic.gti_ia.architecture.Monitor;
 
 public class Addition extends QueueAgent {
 
+	OMSProxy omsProxy = new OMSProxy(this);
+	Responder responder = null;
+	Monitor m = new Monitor();
+	
 	public Addition(AgentID aid) throws Exception {
 		super(aid);
 
 	}
 
+	
 	public void execute() {
 
 
-		OMSProxy omsProxy = new OMSProxy(this);
+		
 
 		//Acquire the member rol in virtual unit and operador inside the calculin unit
 		omsProxy.acquireRole("member", "virtual");
 		omsProxy.acquireRole("operador", "calculin");
 
-		Responder responder = new Responder(this);
+		//Create a new protocol FIPA Request
+		responder = new Responder(this);
 		
-		//Add a new protocol FIPA Request
+		//Add a protocol
 		this.addTask(responder);
 		
-		es.upv.dsic.gti_ia.architecture.Monitor mon = new es.upv.dsic.gti_ia.architecture.Monitor();
-		
 		//Waiting for messages.
-		mon.waiting();
+		m.waiting();
+		
+		
 
 	}
-
-
-
+	
+	public void conclude()
+	{
+		m.advise();
+	}
+	public void finalize()
+	{
+		omsProxy.leaveRole("member", "virtual");
+		logger.info("[ "+this.getName()+" ] end execution!");
+	}
 
 	/**
 	 * Manages the messages for the  agent provider services

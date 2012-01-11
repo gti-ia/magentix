@@ -18,8 +18,9 @@ public class Display extends QueueAgent {
 	OMSProxy omsProxy = new OMSProxy(this);
 	Monitor m = new Monitor();
 	ACLMessage receivedMsg = new ACLMessage();
-	private Queue<ACLMessage> messageList = new LinkedList<ACLMessage>();
-
+	Queue<ACLMessage> messageList = new LinkedList<ACLMessage>();
+	int active = 0;
+	
 	public Display(AgentID aid) throws Exception {
 		super(aid);
 
@@ -27,20 +28,31 @@ public class Display extends QueueAgent {
 
 	public void execute() {
 
-
+		
 
 		omsProxy.acquireRole("member", "virtual");
 		omsProxy.acquireRole("manager", "calculin");
 
-		do{
+		while(active < 6)
+		{
 			m.waiting();  //Waiting messages. The method onMessage is in charge of warning when a new message arrive
 			do{
 				this.displayMessage(messageList.poll());
+				
+				active++;
 			}while(messageList.size() != 0);
-		}while(true);
+		}
 
 
 
+	}
+	
+	public void finalize()
+	{
+		omsProxy.leaveRole("manager", "calculin");
+		omsProxy.leaveRole("member", "virtual");
+		
+		logger.info("[ "+this.getName()+" ] end execution!");
 	}
 
 	/**
@@ -58,7 +70,7 @@ public class Display extends QueueAgent {
 			For every role that exists in the unit calculin we extract the members who have this role
 		**/
 			String rol = unitRoleIterator.next();
-			ArrayList<String> roles = omsProxy.informMembers(rol,"calculin");			
+			ArrayList<String> roles = omsProxy.informMembers(rol,"calculin","");			
 			Iterator<String> i = roles.iterator();
 			String position = "";
 			
@@ -79,13 +91,17 @@ public class Display extends QueueAgent {
 	}
 
 
-
+	public void conclude()
+	{
+		m.advise();
+	}
 	public void onMessage(ACLMessage msg)
 	{
 		
 		if (msg.getReceiver().name.equals("calculin")) //Messages that come from the organization
 		{
-			messageList.add(msg);
+			
+			messageList.add(msg);	
 			m.advise(); //When a new message arrives, it advise the main thread
 		}
 		if (msg.getSender().name.equals("OMS") || msg.getSender().name.equals("SF"))

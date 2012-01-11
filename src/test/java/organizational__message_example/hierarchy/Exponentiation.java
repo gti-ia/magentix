@@ -39,12 +39,24 @@ public class Exponentiation extends QueueAgent {
 		result=0; //Reset the result and messages expected
 		expected = 0;
 		this.send_request(5, 3);
-		m.waiting(); // Waiting the response with a timeout 
-		this.send_result("" + result); // Inform the result.
+		
+		m.waiting();
 		
 
 	}
 
+	public void conclude()
+	{
+		m.advise();
+	}
+	
+	public void finalize()
+	{
+	
+		omsProxy.leaveRole("member", "virtual");
+		
+		logger.info("[ "+this.getName()+" ] end execution!");
+	}
 	private void add_and_advise(ACLMessage msg) {
 		result += Integer.parseInt(msg.getContent()) * Integer.parseInt(msg.getContent());
 		expected--;

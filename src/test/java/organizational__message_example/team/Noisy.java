@@ -75,8 +75,8 @@ public class Noisy extends QueueAgent {
 	{
 
 		omsProxy.registerUnit("externa", "flat", "unidad_externa_tipo_flat", "virtual");
-		omsProxy.registerRole("manager", "externa", "internal", "member", "public","member");
-		omsProxy.registerRole("creador", "externa", "internal", "member", "public","member"); 
+		omsProxy.registerRole("manager", "externa",  "member", "public","member");
+		omsProxy.registerRole("creador", "externa",  "member", "public","member"); 
 	
 	}
 

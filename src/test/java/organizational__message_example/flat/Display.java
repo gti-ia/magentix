@@ -49,7 +49,7 @@ public class Display extends QueueAgent {
 	public void displayMessage(ACLMessage _msg)
 	{
 		ACLMessage msg = _msg; 
-		ArrayList<String> roles = omsProxy.informMembers("manager","calculin");
+		ArrayList<String> roles = omsProxy.informMembers("manager","calculin","");
 		//If sender agent has rol manager, it shows the message
 		if (roles.contains(msg.getSender().name.toLowerCase()))
 			System.out.println("[ "+this.getName()+" ]  "+ msg.getSender().name+" says " + msg.getContent());

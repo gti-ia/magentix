@@ -28,8 +28,8 @@ public class AgentPayee extends QueueAgent {
 
 	System.out.println("[AgentPayee] Acquire Role member in virtual: "+omsProxy.acquireRole( "member", "virtual"));
 	System.out.println("[AgentPayee] Acquire Role payee in travelagency: "+omsProxy.acquireRole("payee", "travelagency"));
-	System.out.println("[AgentPayee] Register norm: "+omsProxy.registerNorm( "norma1",
-		    "FORBIDDEN_Member_REQUEST_acquireRole_MESSAGE(CONTENT(ROLE_'Payee'))"));
+//	System.out.println("[AgentPayee] Register norm: "+omsProxy.registerNorm( "norma1",
+//		    "FORBIDDEN_Member_REQUEST_acquireRole_MESSAGE(CONTENT(ROLE_'Payee'))"));
 
 
     }

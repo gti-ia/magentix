@@ -12,7 +12,7 @@ public class Summation extends QueueAgent {
 
 	OMSProxy omsProxy = new OMSProxy(this);
 	int result = 0;
-	int expected = 2;
+	int expected = 50;
 	Monitor m = new Monitor();
 
 	public Summation(AgentID aid) throws Exception {
@@ -28,7 +28,7 @@ public class Summation extends QueueAgent {
 	
 	
 		this.send_request(6,3);
-		m.waiting(10 * 1000); // Waiting the response with a timeout
+		m.waiting(30 * 1000); // Waiting the response with a timeout
 		this.send_result("" + result); // Inform the result.
 		
 		expected = 2; //Reset the result and messages expected
@@ -36,9 +36,24 @@ public class Summation extends QueueAgent {
 		this.send_request(5,3);
 		m.waiting(10 * 1000); // Waiting the response with a timeout
 		this.send_result("" + result); // Inform the result.
+		
+		m.waiting();
 
 	}
 
+	public void conclude()
+	{
+		m.advise();
+	}
+	
+	public void finalize()
+	{
+	
+		omsProxy.leaveRole("manager", "calculin");
+		omsProxy.leaveRole("member", "virtual");
+		
+		logger.info("[ "+this.getName()+" ] end execution!");
+	}
 	private void add_and_advise(ACLMessage msg) {
 		result += Integer.parseInt(msg.getContent());
 		expected--;
