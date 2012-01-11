@@ -287,9 +287,9 @@ class DataBaseInterface
 							return "<"+roleName+" + \"created\">";
 						}
 					}
-					throw new THOMASException("Error: visibility "+position+" not found in database");
+					throw new THOMASException("Error: visibility "+visibility+" not found in database");
 				}
-				throw new THOMASException("Error: accesibility "+position+" not found in database");
+				throw new THOMASException("Error: accesibility "+accessibility+" not found in database");
 			}
 			throw new THOMASException("Error: position "+position+" not found in database");
 		}
