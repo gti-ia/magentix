@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
-<properties>
-<comment>Propiedades de configuración de THOMAS</comment>
-<entry key="serverName">localhost</entry>
-<entry key="databaseName">thomas</entry>
-<entry key="userName">thomas</entry>
-<entry key="password">thomas</entry>
-</properties>
