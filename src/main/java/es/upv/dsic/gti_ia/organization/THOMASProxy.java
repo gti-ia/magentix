@@ -121,13 +121,14 @@ public class THOMASProxy {
 		//Add type for each service 
 		serviceType1.add("LeaveRoleProcess");
 		serviceType1.add("AcquireRoleProcess");
+		serviceType1.add("AllocateRoleProcess");
 		serviceType1.add("RegisterNormProcess");
 		serviceType1.add("RegisterRoleProcess");
 		serviceType1.add("RegisterUnitProcess");
 		serviceType1.add("DeregisterNormProcess");
 		serviceType1.add("DeregisterRoleProcess");
 		serviceType1.add("DeregisterUnitProcess");
-		serviceType1.add("ExpulseProcess");
+		serviceType1.add("DeallocateRoleProcess");
 		serviceType1.add("RemoveProviderProcess");
 		serviceType1.add("ModifyProcessProcess");
 		serviceType1.add("ModifyProfileProcess");
@@ -139,8 +140,9 @@ public class THOMASProxy {
 
 		serviceType2.add("InformAgentRoleProcess");
 		serviceType2.add("InformMembersProcess");
-		serviceType2.add("InformRoleNormsProcess");
-		serviceType2.add("InformRoleProfilesProcess");
+		serviceType2.add("InformTargetNormsProcess");
+		serviceType2.add("InformRoleProcess");
+		serviceType2.add("InformNormProcess");
 		serviceType2.add("InformUnitProcess");
 		serviceType2.add("InformUnitRolesProcess");
 		serviceType2.add("SearchServiceProcess");
@@ -210,13 +212,7 @@ public class THOMASProxy {
 		//Services that return a String.
 		if (serviceType1.contains(serviceName))
 		{
-			if (!Status) {
-				logger.error("["+agent.getName()+"] "+ serviceName+": " + this.value);
-				return "";
-			} else
-			{
 				return this.value;
-			}
 		}//Services that return a ArrayList<String>()
 		else if (serviceType2.contains(serviceName))
 		{
@@ -598,8 +594,9 @@ public class THOMASProxy {
 
 			if (serviceName.equals("InformAgentRoleProcess")
 					|| serviceName.equals("InformMembersProcess")
-					|| serviceName.equals("InformRoleNormsProcess")
-					|| serviceName.equals("InformRoleProfilesProcess")
+					|| serviceName.equals("InformTargetNormsProcess")
+					|| serviceName.equals("InformNormProcess")
+					|| serviceName.equals("InformRoleProcess")
 					|| serviceName.equals("InformUnitRolesProcess")) {
 
 
