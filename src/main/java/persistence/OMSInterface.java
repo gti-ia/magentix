@@ -22,6 +22,11 @@ public class OMSInterface {
 		dbInterface = new DataBaseInterface();
 	}
 
+	/**
+	 * Checks if parameter is null or empty	
+	 * @param parameter
+	 * @return true, the parameter is not null or empty, false: the parameter is null or empty 
+	 */
 	boolean checkParameter(String parameter)
 	{
 		if (parameter != null)
@@ -37,10 +42,10 @@ public class OMSInterface {
 	/**
 	 * Creates a new empty unit in the organization, with a specific type and creatorName.
 	 * 
-	 * @param UnitName
-	 * @param UnitType
-	 * @param AgentName
-	 * @param CreatorName
+	 * @param UnitName Identifier of the organization unit
+	 * @param UnitType Indicates the topology of the new unit: (i) Hierarchy, (ii)Team, (iii) Flat.
+	 * @param AgentName Identifier of the agent
+	 * @param CreatorName Identifier of the new role with creator position 
 	 * @return Returns <unitname + " created">
 	 * @throws THOMASException
 	 * @throws SQLException
@@ -52,12 +57,12 @@ public class OMSInterface {
 	}
 	/**
 	 * Creates a new empty unit in the organization, with a specific type, parent unit and creatorName.
-	 * @param UnitName
-	 * @param UnitType
-	 * @param ParentUnitName
-	 * @param AgentName
-	 * @param CreatorName
-	 * @return Returns <unitname + " created">
+	 * @param UnitName Identifier of the organization unit
+	 * @param UnitType Indicates the topology of the new unit: (i) Hierarchy, (ii)Team, (iii) Flat.
+	 * @param ParentUnitName Identifier of the parent organizational unit
+	 * @param AgentName Identifier of the agent
+	 * @param CreatorName Identifier of the new role with creator position
+	 * @return Returns <unitname +  created>
 	 * @throws THOMASException
 	 * @throws SQLException
 	 */
@@ -103,9 +108,9 @@ public class OMSInterface {
 	/**
 	 * Method used for deleting a unit in the organization
 	 * 
-	 * @param UnitName
-	 * @param AgentName
-	 * @return
+	 * @param UnitName Identifier of the unit
+	 * @param AgentName Identifier of the agent
+	 * @return Returns <unitName + deleted>
 	 * @throws THOMASException
 	 * @throws SQLException
 	 */
@@ -174,13 +179,13 @@ public class OMSInterface {
 	/**
 	 * Method used for registering a new role inside a unit.
 	 * 
-	 * @param RoleName
-	 * @param UnitName
-	 * @param Accesibility
-	 * @param Visibility
-	 * @param Position
-	 * @param AgentName
-	 * @return
+	 * @param RoleName Identifier of the new role
+	 * @param UnitName Identifier of the organizational unit
+	 * @param Accesibility Considers two types of roles: internal or external
+	 * @param Visibility Position inside the unit, such as member,supervisor or subordinate.
+	 * @param Position Is defined (public) or from inside (private)
+	 * @param AgentName Identifier of the agent
+	 * @return Returns <roleName + created>
 	 * @throws THOMASException
 	 * @throws SQLException
 	 */
@@ -293,10 +298,10 @@ public class OMSInterface {
 	/**
 	 * Method used to deregister a role 
 	 * 
-	 * @param RoleName
-	 * @param UnitName
-	 * @param AgentName
-	 * @return
+	 * @param RoleName Identifier of the role
+	 * @param UnitName Identifier of the unit
+	 * @param AgentName Identifier of the agent
+	 * @return Returns <roleName + deleted>
 	 * @throws THOMASException
 	 * @throws SQLException
 	 */
@@ -400,10 +405,10 @@ public class OMSInterface {
 
 	/**
 	 * Method used for acquiring a role in a specific unit.
-	 * @param UnitName
-	 * @param RoleName
-	 * @param AgentName
-	 * @return
+	 * @param UnitName Identifier of the organizational unit
+	 * @param RoleName Identifier of the role
+	 * @param AgentName Identifier of the agent
+	 * @return Returns <roleName + acquired>
 	 * @throws THOMASException
 	 * @throws SQLException
 	 */
@@ -486,10 +491,10 @@ public class OMSInterface {
 	/**
 	 * Method used for an agent to leave a role in a unit.
 	 * 
-	 * @param UnitName
-	 * @param RoleName
-	 * @param AgentName
-	 * @return
+	 * @param UnitName Identifier of the unit
+	 * @param RoleName Identifier of the role
+	 * @param AgentName Identifier of the agent
+	 * @return Returns <roleName + left>
 	 * @throws THOMASException
 	 * @throws SQLException
 	 */
@@ -530,11 +535,11 @@ public class OMSInterface {
 
 	/**
 	 * Method used in order to assign a role to an agent inside a unit 
-	 * @param RoleName
-	 * @param UnitName
-	 * @param TargetAgentName
-	 * @param AgentName
-	 * @return
+	 * @param RoleName Identifier of the role
+	 * @param UnitName Identifier of the unit
+	 * @param TargetAgentName Identifier of the target agent 
+	 * @param AgentName Identifier of the agent
+	 * @return Returns <roleName + acquired>
 	 * @throws THOMASException
 	 * @throws SQLException
 	 */
@@ -637,11 +642,11 @@ public class OMSInterface {
 	/**
 	 * Method used in order to remove a specific role to an agent inside a unit
 	 * 
-	 * @param RoleName
-	 * @param UnitName
-	 * @param TargetAgentName
-	 * @param AgentName
-	 * @return
+	 * @param RoleName Identifier of the role
+	 * @param UnitName Identifier of the unit
+	 * @param TargetAgentName Identifier of the target agent
+	 * @param AgentName Identifier of the agent
+	 * @return Returns <roleName + left>
 	 * @throws THOMASException
 	 * @throws SQLException
 	 */
@@ -743,10 +748,10 @@ public class OMSInterface {
 
 	/**
 	 * Method used in order to change the parent unit. 
-	 * @param UnitName
-	 * @param ParentName
-	 * @param AgentName
-	 * @return
+	 * @param UnitName Identifier of the unit
+	 * @param ParentName Identifier of the parent unit
+	 * @param AgentName Identifier of the agent
+	 * @return Returns <unitName + jointed to parentName>
 	 * @throws THOMASException
 	 * @throws SQLException
 	 */
@@ -806,9 +811,9 @@ public class OMSInterface {
 	/**
 	 * Method used for requesting the list of roles and units where an agent is, given the 
 	 * specific moment.
-	 * @param RequestedAgentName
-	 * @param AgentName
-	 * @return
+	 * @param RequestedAgentName Identifier of the agent requested 
+	 * @param AgentName Identifier of the agent
+	 * @return Returns a set of tuples formed by < roleName , UnitName > and separated by -  
 	 * @throws THOMASException
 	 * @throws SQLException
 	 */
@@ -842,11 +847,11 @@ public class OMSInterface {
 	 *  Method used for requesting the list of entities that are members of a specific unit.
 	 * If a role is specified only the members playing this role are detailed. If a position is specified 
 	 * only the members playing this position are detailed.
-	 * @param UnitName
-	 * @param RoleName
-	 * @param PositionValue
-	 * @param AgentName
-	 * @return
+	 * @param UnitName Identifier of the unit
+	 * @param RoleName Identifier of the role
+	 * @param PositionValue Position inside the unit, such as member, supervisor or subordinate
+	 * @param AgentName Identifier of the agent
+	 * @return Returns a set of tuples formed by < agentName , roleName > and separated by - 
 	 * @throws THOMASException
 	 * @throws SQLException
 	 */
@@ -990,11 +995,11 @@ public class OMSInterface {
 	 * 	role is specified only the members playing that role are taken into account. If a position
 	 *  is specified only the members playing that position are taken into account.
 	 * 
-	 * @param UnitName
-	 * @param RoleName
-	 * @param PositionValue
-	 * @param AgentName
-	 * @return
+	 * @param UnitName Identifier of the unit
+	 * @param RoleName Identifier of the role
+	 * @param PositionValue Position inside the unit, such as member, supervisor or subordinate
+	 * @param AgentName Identifier of the name
+	 * @return Returns a quantity of members
 	 * @throws THOMASException
 	 * @throws SQLException
 	 */
@@ -1121,9 +1126,9 @@ public class OMSInterface {
 	}
 	/**
 	 * Method used for requesting information about a specific unit.
-	 * @param UnitName
-	 * @param AgentName
-	 * @return
+	 * @param UnitName Identifier of the unit
+	 * @param AgentName Identifier of the agent
+	 * @return Returns < UnitType , ParentName >
 	 * @throws THOMASException
 	 * @throws SQLException
 	 */
@@ -1181,9 +1186,9 @@ public class OMSInterface {
 	}
 	/**
 	 * Method used for requesting the list of roles that have been registered inside a unit.
-	 * @param UnitName
-	 * @param AgentName
-	 * @return
+	 * @param UnitName Identifier of the unit
+	 * @param AgentName Identifier of the agent
+	 * @return Returns < RoleName , Accessibility , Visibility , Position >
 	 * @throws THOMASException
 	 * @throws SQLException
 	 */
@@ -1216,10 +1221,10 @@ public class OMSInterface {
 	/**
 	 * Method used for requesting information about a specific role.
 	 * 
-	 * @param RoleName
-	 * @param UnitName
-	 * @param AgentName
-	 * @return
+	 * @param RoleName Identifier of the role
+	 * @param UnitName Identifier of the unit
+	 * @param AgentName Identifier of the agent
+	 * @return Returns < Accessibility - Visibility - Position >
 	 * @throws THOMASException
 	 * @throws SQLException
 	 */
