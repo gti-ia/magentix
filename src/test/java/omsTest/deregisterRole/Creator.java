@@ -1,4 +1,4 @@
-package omsTest.registerRole;
+package omsTest.deregisterRole;
 
 import es.upv.dsic.gti_ia.architecture.QueueAgent;
 import es.upv.dsic.gti_ia.core.AgentID;
@@ -23,8 +23,9 @@ public class Creator extends QueueAgent {
 		
 		//1. Eliminar una unidad cuya unidad padre es virtual.
 		
-//		result = omsProxy.registerRole("Miembro", "plana","external", "public", "member");
-//		System.out.println(result);
+		result = omsProxy.deregisterRole("subordinado2", "jerarquia");
+		System.out.println(result);
+
 //
 //		result = omsProxy.registerRole("Creador2", "virtual","internal", "private", "creator");
 //		System.out.println(result);
@@ -125,14 +126,14 @@ public class Creator extends QueueAgent {
 //		result = omsProxy.registerRole("subordinado2", "jerarquia","external","public", "subordinate");
 //		System.out.println(result);
 		
-        result = omsProxy.registerRole("Miembro","Virtual","External","Public","Supervisor");
-        System.out.println(result);
-        result = omsProxy.registerRole("Miembro","Equipo","External","Public","Supervisor");
-        System.out.println(result);
-        result = omsProxy.registerRole("Miembro","Plana","External","Public","Subordinate");
-        System.out.println(result);
-        result = omsProxy.registerRole("Subordinado","Jerarquía","External","Public","member");
-        System.out.println(result);
+//        result = omsProxy.registerRole("Miembro","Virtual","External","Public","Supervisor");
+//        System.out.println(result);
+//        result = omsProxy.registerRole("Miembro","Equipo","External","Public","Supervisor");
+//        System.out.println(result);
+//        result = omsProxy.registerRole("Miembro","Plana","External","Public","Subordinate");
+//        System.out.println(result);
+//        result = omsProxy.registerRole("Subordinado","Jerarquía","External","Public","member");
+//        System.out.println(result);
 	}
 	
 	

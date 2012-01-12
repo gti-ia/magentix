@@ -1,4 +1,4 @@
-package omsTest.DeregisterUnit;
+package omsTest.deregisterUnit;
 
 import es.upv.dsic.gti_ia.architecture.QueueAgent;
 import es.upv.dsic.gti_ia.core.AgentID;
