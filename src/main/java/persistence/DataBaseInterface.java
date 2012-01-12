@@ -103,10 +103,14 @@ class DataBaseInterface
 		ResultSet rs = stmt.executeQuery("SELECT idunitList FROM unitList WHERE unitName ='"+unit+"'");
 		if(rs.next()){
 			int unitId = rs.getInt("idunitList");
-			ResultSet rs2 = stmt.executeQuery("SELECT * FROM roleList WHERE agentName ='"+ agentName +"' AND idunitList ="+unitId+" AND roleName ='"+role+"'");
-			if (rs2.next())
+			ResultSet rs2 = stmt.executeQuery("SELECT idroleList FROM roleList WHERE idunitList ="+unitId+" AND roleName ='"+role+"'");
+			while(rs2.next())
 			{
-				exists = true;
+				int roleId = rs2.getInt("idroleList");
+				Statement stmt2 = db.connection.createStatement();
+				ResultSet rs3 = stmt2.executeQuery("SELECT * FROM agentPlayList WHERE idroleList = "+roleId+" AND agentName='"+agentName+"'");
+				if (rs3.next())
+					exists = true;
 			}
 		}		
 		return exists;
@@ -148,10 +152,14 @@ class DataBaseInterface
 		ResultSet rs = stmt.executeQuery("SELECT idunitList FROM unitList WHERE unitName ='"+unit+"'");
 		if(rs.next()){
 			int unitId = rs.getInt("idunitList");
-			ResultSet rs2 = stmt.executeQuery("SELECT * FROM roleList WHERE idunitList ="+unitId+" AND roleName='"+role+"'");
+			ResultSet rs2 = stmt.executeQuery("SELECT idroleList FROM roleList WHERE idunitList ="+unitId+" AND roleName='"+role+"'");
 			if (rs2.next())
 			{
-				return true;
+				int roleId = rs2.getInt("idroleList");
+				Statement stmt2 = db.connection.createStatement();
+				ResultSet rs3 = stmt2.executeQuery("SELECT * FROM agentPlayList WHERE idroleList ="+roleId);
+				if (rs3.next())
+					return true;
 			}
 		}		
 		return false;
@@ -159,7 +167,7 @@ class DataBaseInterface
 
 	boolean checkTargetRoleNorm(String role, String unit){
 		// TODO on estan les normes
-		return true;
+		return false;
 	}
 
 	boolean checkPosition(String agent, String position) throws SQLException{
@@ -474,7 +482,7 @@ class DataBaseInterface
 			Statement st2 = db.connection.createStatement();
 			ResultSet res2 = st2.executeQuery("SELECT idroleList FROM roleList WHERE idunitList ="+idunitList+" AND roleName ='"+roleName+"'");
 			if(res2.next()){
-				int idroleList = res.getInt("idroleList");
+				int idroleList = res2.getInt("idroleList");
 				Statement st3 = db.connection.createStatement();
 				int res3 = st3.executeUpdate("DELETE FROM agentPlayList WHERE idroleList ="+idroleList);
 				if(res3 != 0){					
