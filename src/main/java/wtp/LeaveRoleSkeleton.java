@@ -41,15 +41,14 @@ public class LeaveRoleSkeleton
 		}
 		res.setStatus("Ok");
 		res.setErrorValue("");
-		if (leaveRole.getAgentID() == "" || leaveRole.getRoleID() == ""
-				|| leaveRole.getUnitID() == "")
-		{
-			res.setErrorValue("Invalid. Empty parameters are not allowed.");
-			res.setStatus("Error");
-			return res;
-		}
+
 		try{
-			result =omsInterface.leaveRole(leaveRole.getUnitID(), leaveRole.getRoleID(), leaveRole.getAgentID());
+			if (leaveRole.getRoleID().equals("null"))
+				result =omsInterface.leaveRole(null, leaveRole.getUnitID(),leaveRole.getAgentID());
+			else if (leaveRole.getUnitID().equals("null"))
+				result =omsInterface.leaveRole(leaveRole.getRoleID(), null,leaveRole.getAgentID());
+			else
+				result =omsInterface.leaveRole(leaveRole.getRoleID(), leaveRole.getUnitID(),leaveRole.getAgentID());
 			res.setStatus(result);
 			res.setErrorValue("");
 			return res;

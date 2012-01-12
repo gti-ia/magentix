@@ -18,7 +18,7 @@ public class DeregisterRoleSkeleton
 	private static OMSInterface omsInterface = new OMSInterface();
 
 	/**
-	 * Service used to deregister a norm. The role must exist, there must be no norm addressed to
+	 * Service used to deregister a role. The role must exist, there must be no norm addressed to
 	 * this role, this role must not be currently played by any agent, and the agent requesting
 	 * the deregistration must have enough permissions (depending on the type of the
 	 * organization) to deregister the role. If the type of this unit is 'FLAT' the agent is 
@@ -46,16 +46,6 @@ public class DeregisterRoleSkeleton
 		res.setErrorValue("");
 		res.setStatus("Ok");
 
-		//		if (deregisterRole.getRoleID() == ""
-		//				|| deregisterRole.getRoleID().equalsIgnoreCase("member")
-		//				|| deregisterRole.getUnitID() == "")
-		if (deregisterRole.getRoleID() == ""
-			|| deregisterRole.getUnitID() == "") // se permite borrar el rol member, ya que no se crea por defecto al crear una unidad.
-		{
-			res.setErrorValue("Invalid. Empty parameters are not allowed.");
-			res.setStatus("Error");
-			return res;
-		}
 
 		try{
 			result =omsInterface.deregisterRole(deregisterRole.getRoleID(), deregisterRole.getUnitID(), deregisterRole.getAgentID());

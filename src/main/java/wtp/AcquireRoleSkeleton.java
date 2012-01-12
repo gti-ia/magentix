@@ -51,7 +51,7 @@ public class AcquireRoleSkeleton
 			return res;
 		}
 		try{
-			result = omsInterface.AcquireRole(acquireRole.getUnitID(), acquireRole.getRoleID(), acquireRole.getAgentID());
+			result = omsInterface.AcquireRole(acquireRole.getRoleID(), acquireRole.getUnitID(),acquireRole.getAgentID());
 			
 			res.setStatus(result);
 			res.setErrorValue("");
