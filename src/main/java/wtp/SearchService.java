@@ -33,60 +33,60 @@
         
 
                         /**
-                        * field for ServicePurpose
+                        * field for Inputs
                         */
 
                         
-                                    protected java.lang.String localServicePurpose ;
+                                    protected java.lang.String localInputs ;
                                 
 
                            /**
                            * Auto generated getter method
                            * @return java.lang.String
                            */
-                           public  java.lang.String getServicePurpose(){
-                               return localServicePurpose;
+                           public  java.lang.String getInputs(){
+                               return localInputs;
                            }
 
                            
                         
                             /**
                                * Auto generated setter method
-                               * @param param ServicePurpose
+                               * @param param Inputs
                                */
-                               public void setServicePurpose(java.lang.String param){
+                               public void setInputs(java.lang.String param){
                             
-                                            this.localServicePurpose=param;
+                                            this.localInputs=param;
                                     
 
                                }
                             
 
                         /**
-                        * field for AgentID
+                        * field for Outputs
                         */
 
                         
-                                    protected java.lang.String localAgentID ;
+                                    protected java.lang.String localOutputs ;
                                 
 
                            /**
                            * Auto generated getter method
                            * @return java.lang.String
                            */
-                           public  java.lang.String getAgentID(){
-                               return localAgentID;
+                           public  java.lang.String getOutputs(){
+                               return localOutputs;
                            }
 
                            
                         
                             /**
                                * Auto generated setter method
-                               * @param param AgentID
+                               * @param param Outputs
                                */
-                               public void setAgentID(java.lang.String param){
+                               public void setOutputs(java.lang.String param){
                             
-                                            this.localAgentID=param;
+                                            this.localOutputs=param;
                                     
 
                                }
@@ -196,28 +196,28 @@
                                         if (prefix == null) {
                                             prefix = generatePrefix(namespace);
 
-                                            xmlWriter.writeStartElement(prefix,"ServicePurpose", namespace);
+                                            xmlWriter.writeStartElement(prefix,"Inputs", namespace);
                                             xmlWriter.writeNamespace(prefix, namespace);
                                             xmlWriter.setPrefix(prefix, namespace);
 
                                         } else {
-                                            xmlWriter.writeStartElement(namespace,"ServicePurpose");
+                                            xmlWriter.writeStartElement(namespace,"Inputs");
                                         }
 
                                     } else {
-                                        xmlWriter.writeStartElement("ServicePurpose");
+                                        xmlWriter.writeStartElement("Inputs");
                                     }
                                 
 
-                                          if (localServicePurpose==null){
+                                          if (localInputs==null){
                                               // write the nil attribute
                                               
-                                                     throw new org.apache.axis2.databinding.ADBException("ServicePurpose cannot be null!!");
+                                                     throw new org.apache.axis2.databinding.ADBException("Inputs cannot be null!!");
                                                   
                                           }else{
 
                                         
-                                                   xmlWriter.writeCharacters(localServicePurpose);
+                                                   xmlWriter.writeCharacters(localInputs);
                                             
                                           }
                                     
@@ -230,28 +230,28 @@
                                         if (prefix == null) {
                                             prefix = generatePrefix(namespace);
 
-                                            xmlWriter.writeStartElement(prefix,"AgentID", namespace);
+                                            xmlWriter.writeStartElement(prefix,"Outputs", namespace);
                                             xmlWriter.writeNamespace(prefix, namespace);
                                             xmlWriter.setPrefix(prefix, namespace);
 
                                         } else {
-                                            xmlWriter.writeStartElement(namespace,"AgentID");
+                                            xmlWriter.writeStartElement(namespace,"Outputs");
                                         }
 
                                     } else {
-                                        xmlWriter.writeStartElement("AgentID");
+                                        xmlWriter.writeStartElement("Outputs");
                                     }
                                 
 
-                                          if (localAgentID==null){
+                                          if (localOutputs==null){
                                               // write the nil attribute
                                               
-                                                     throw new org.apache.axis2.databinding.ADBException("AgentID cannot be null!!");
+                                                     throw new org.apache.axis2.databinding.ADBException("Outputs cannot be null!!");
                                                   
                                           }else{
 
                                         
-                                                   xmlWriter.writeCharacters(localAgentID);
+                                                   xmlWriter.writeCharacters(localOutputs);
                                             
                                           }
                                     
@@ -420,21 +420,21 @@
 
                 
                                       elementList.add(new javax.xml.namespace.QName("",
-                                                                      "ServicePurpose"));
+                                                                      "Inputs"));
                                  
-                                        if (localServicePurpose != null){
-                                            elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localServicePurpose));
+                                        if (localInputs != null){
+                                            elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localInputs));
                                         } else {
-                                           throw new org.apache.axis2.databinding.ADBException("ServicePurpose cannot be null!!");
+                                           throw new org.apache.axis2.databinding.ADBException("Inputs cannot be null!!");
                                         }
                                     
                                       elementList.add(new javax.xml.namespace.QName("",
-                                                                      "AgentID"));
+                                                                      "Outputs"));
                                  
-                                        if (localAgentID != null){
-                                            elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localAgentID));
+                                        if (localOutputs != null){
+                                            elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localOutputs));
                                         } else {
-                                           throw new org.apache.axis2.databinding.ADBException("AgentID cannot be null!!");
+                                           throw new org.apache.axis2.databinding.ADBException("Outputs cannot be null!!");
                                         }
                                     
 
@@ -515,11 +515,11 @@
                                     
                                     while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
                                 
-                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","ServicePurpose").equals(reader.getName())){
+                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","Inputs").equals(reader.getName())){
                                 
                                     java.lang.String content = reader.getElementText();
                                     
-                                              object.setServicePurpose(
+                                              object.setInputs(
                                                     org.apache.axis2.databinding.utils.ConverterUtil.convertToString(content));
                                               
                                         reader.next();
@@ -534,11 +534,11 @@
                                     
                                     while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
                                 
-                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","AgentID").equals(reader.getName())){
+                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","Outputs").equals(reader.getName())){
                                 
                                     java.lang.String content = reader.getElementText();
                                     
-                                              object.setAgentID(
+                                              object.setOutputs(
                                                     org.apache.axis2.databinding.utils.ConverterUtil.convertToString(content));
                                               
                                         reader.next();

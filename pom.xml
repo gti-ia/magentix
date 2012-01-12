@@ -17,7 +17,33 @@
 	</parent>
 	<build>
 		<finalName>sfservices</finalName>
+	
+	<plugins> <!-- mvn clean axis2-wsdl2code:wsdl2code -->
+	<plugin>
+		<groupId>org.apache.axis2</groupId>
+		<artifactId>axis2-wsdl2code-maven-plugin</artifactId>
+		<version>1.4</version>
+		<configuration>
+			<packageName>
+				wtp
+			</packageName>
+			<wsdlFile>
+				./src/main/webapp/WEB-INF/services/SearchService/META-INF/SearchService.wsdl
+			</wsdlFile>
+			<databindingName>adb</databindingName>
+			<generateServerSide>true</generateServerSide>
+			<generateServicesXml>true</generateServicesXml>
+			<namespaceURIs>
+				<namespaceURI>
+					<uri>http://wtp/</uri>
+					<packageName>wtp</packageName>
+				</namespaceURI>
+			</namespaceURIs>
+		</configuration>
+	</plugin>
+	</plugins>
 	</build>
+	
 	<!-- 
 	<reporting>
 		<plugins>
@@ -32,4 +58,5 @@
 		</plugins>
 	</reporting>
 	 -->
+
 </project>

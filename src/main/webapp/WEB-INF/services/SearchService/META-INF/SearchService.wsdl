@@ -5,8 +5,8 @@
       <xsd:element name="SearchService">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="ServicePurpose" type="xsd:string"/>
-            <xsd:element name="AgentID" type="xsd:string"/>
+            <xsd:element name="Inputs" type="xsd:string"/>
+            <xsd:element name="Outputs" type="xsd:string"/>
            
           </xsd:sequence>
         </xsd:complexType>
