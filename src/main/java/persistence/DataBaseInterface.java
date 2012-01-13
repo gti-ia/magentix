@@ -24,7 +24,7 @@ class DataBaseInterface
 			Statement st2 = db.connection.createStatement();
 			ResultSet res2 = st2.executeQuery("SELECT idroleList FROM roleList WHERE roleName ='"+roleName+"' AND idunitList = "+idUnit);
 			if(res2.next()){
-				int idRole = res.getInt("idroleList");
+				int idRole = res2.getInt("idroleList");
 				Statement st3 = db.connection.createStatement();
 				int res3 = st3.executeUpdate("INSERT INTO agentPlayList (agentName, idroleList) VALUES ('"+agentName+"', "+idRole+")");
 				if(res3 != 0){
@@ -862,9 +862,9 @@ class DataBaseInterface
 		Statement st5 = db.connection.createStatement();
 		ResultSet res5;
 		if(playsRole)
-			res5 = st5.executeQuery("SELECT idroleList FROM roleList WHERE roleName ='"+ roleName+"' AND idposition ="+idposition+" AND (idVisibility ="+idPrivateVisbility+" OR idVisiblity ="+idPublicVisibility+")");
+			res5 = st5.executeQuery("SELECT idroleList FROM roleList WHERE roleName ='"+ roleName+"' AND idposition ="+idposition+" AND (idvisibility ="+idPrivateVisbility+" OR idvisibility ="+idPublicVisibility+")");
 		else
-			res5 = st5.executeQuery("SELECT idroleList FROM roleList WHERE roleName ='"+ roleName+"' AND idposition ="+idposition+" AND idVisiblity ="+idPublicVisibility);
+			res5 = st5.executeQuery("SELECT idroleList FROM roleList WHERE roleName ='"+ roleName+"' AND idposition ="+idposition+" AND idVisibility ="+idPublicVisibility);
 		if(res5.next())
 			idroleList = res5.getInt("idroleList");
 		else
@@ -916,7 +916,7 @@ class DataBaseInterface
 		if(playsRole)
 			res5 = st5.executeQuery("SELECT idroleList FROM roleList WHERE idunitList="+idunitList);
 		else
-			res5 = st5.executeQuery("SELECT idroleList FROM roleList WHERE idunitList="+idunitList+" AND idVisiblity ="+idPublicVisibility);
+			res5 = st5.executeQuery("SELECT idroleList FROM roleList WHERE idunitList="+idunitList+" AND idVisibility ="+idPublicVisibility);
 		while(res5.next()){
 			idroleList = res5.getInt("idroleList");	
 			Statement st10 = db.connection.createStatement();
@@ -972,9 +972,9 @@ class DataBaseInterface
 		Statement st5 = db.connection.createStatement();
 		ResultSet res5;
 		if(playsRole)
-			res5 = st5.executeQuery("SELECT idroleList FROM roleList WHERE roleName ='"+ roleName+"' AND (idVisibility ="+idPrivateVisbility+" OR idVisiblity ="+idPublicVisibility+")");
+			res5 = st5.executeQuery("SELECT idroleList FROM roleList WHERE roleName ='"+ roleName+"' AND (idVisibility ="+idPrivateVisbility+" OR idvisibility ="+idPublicVisibility+")");
 		else
-			res5 = st5.executeQuery("SELECT idroleList FROM roleList WHERE roleName ='"+ roleName+"' AND idVisiblity ="+idPublicVisibility);
+			res5 = st5.executeQuery("SELECT idroleList FROM roleList WHERE roleName ='"+ roleName+"' AND idvisibility ="+idPublicVisibility);
 		if(res5.next())
 			idroleList = res5.getInt("idroleList");
 		else
@@ -1034,7 +1034,7 @@ class DataBaseInterface
 		if(playsRole)
 			res5 = st5.executeQuery("SELECT idroleList FROM roleList WHERE idposition ="+idposition);
 		else
-			res5 = st5.executeQuery("SELECT idroleList FROM roleList WHERE idposition ="+idposition+" AND idVisiblity ="+idPublicVisibility);
+			res5 = st5.executeQuery("SELECT idroleList FROM roleList WHERE idposition ="+idposition+" AND idvisibility ="+idPublicVisibility);
 		while(res5.next()){
 			idroleList = res5.getInt("idroleList");
 			Statement st10 = db.connection.createStatement();
@@ -1098,9 +1098,9 @@ class DataBaseInterface
 		Statement st5 = db.connection.createStatement();
 		ResultSet res5;
 		if(playsRole)
-			res5 = st5.executeQuery("SELECT idroleList FROM roleList WHERE roleName ='"+ roleName+"' AND idposition ="+idposition+" AND (idVisibility ="+idPrivateVisbility+" OR idVisiblity ="+idPublicVisibility+")");
+			res5 = st5.executeQuery("SELECT idroleList FROM roleList WHERE roleName ='"+ roleName+"' AND idposition ="+idposition+" AND (idVisibility ="+idPrivateVisbility+" OR idvisibility ="+idPublicVisibility+")");
 		else
-			res5 = st5.executeQuery("SELECT idroleList FROM roleList WHERE roleName ='"+ roleName+"' AND idposition ="+idposition+" AND idVisiblity ="+idPublicVisibility);
+			res5 = st5.executeQuery("SELECT idroleList FROM roleList WHERE roleName ='"+ roleName+"' AND idposition ="+idposition+" AND idvisibility ="+idPublicVisibility);
 		if(res5.next())
 			idroleList = res5.getInt("idroleList");
 		else
@@ -1186,14 +1186,14 @@ class DataBaseInterface
 		Statement st8 = db.connection.createStatement();
 		ResultSet res8;
 		if(playsRole)
-			res8 = st8.executeQuery("SELECT roleName, idaccesibility, idvisiblity, idposition FROM roleList WHERE idunitList ="+idunitList+" AND (idVisibility ="+idPrivateVisbility+" OR idVisibility ="+idPublicVisibility+")");
+			res8 = st8.executeQuery("SELECT roleName, idaccesibility, idvisibility, idposition FROM roleList WHERE idunitList ="+idunitList+" AND (idVisibility ="+idPrivateVisbility+" OR idVisibility ="+idPublicVisibility+")");
 		else
-			res8 = st8.executeQuery("SELECT roleName, idaccesibility, idvisiblity, idposition FROM roleList WHERE idunitList ="+idunitList+" AND idVisibility ="+idPublicVisibility);
+			res8 = st8.executeQuery("SELECT roleName, idaccesibility, idvisibility, idposition FROM roleList WHERE idunitList ="+idunitList+" AND idVisibility ="+idPublicVisibility);
 		while(res8.next()){
 			ArrayList<String>aux = new ArrayList<String>();
 			int idposition = res8.getInt("idposition");
 			int idaccesibility = res8.getInt("idaccesibility");
-			int idvisiblity = res8.getInt("idvisiblity");
+			int idvisibility = res8.getInt("idvisibility");
 			Statement st9 = db.connection.createStatement();
 			ResultSet res9 = st9.executeQuery("SELECT position FROM position WHERE idposition ="+idposition);
 			res9.next();
@@ -1203,7 +1203,7 @@ class DataBaseInterface
 			res10.next();
 
 			Statement st11 = db.connection.createStatement();
-			ResultSet res11 = st11.executeQuery("SELECT visibility FROM visibility WHERE idvisiblity ="+idvisiblity);
+			ResultSet res11 = st11.executeQuery("SELECT visibility FROM visibility WHERE idvisibility ="+idvisibility);
 			res11.next();
 			aux.add(res8.getString("roleName"));
 			aux.add(res10.getString("accesibility"));
@@ -1231,7 +1231,7 @@ class DataBaseInterface
 		if(res6.next()){
 			int idposition = res6.getInt("idposition");
 			int idaccesibility = res6.getInt("idaccesibility");
-			int idvisiblity = res6.getInt("idvisiblity");
+			int idvisibility = res6.getInt("idvisibility");
 			Statement st9 = db.connection.createStatement();
 			ResultSet res9 = st9.executeQuery("SELECT position FROM position WHERE idposition ="+idposition);
 			res9.next();
@@ -1241,7 +1241,7 @@ class DataBaseInterface
 			res10.next();
 
 			Statement st11 = db.connection.createStatement();
-			ResultSet res11 = st11.executeQuery("SELECT visibility FROM visibility WHERE idvisiblity ="+idvisiblity);
+			ResultSet res11 = st11.executeQuery("SELECT visibility FROM visibility WHERE idvisibility ="+idvisibility);
 			res11.next();
 			result.add(res10.getString("accesibility"));
 			result.add(res11.getString("visibility"));
