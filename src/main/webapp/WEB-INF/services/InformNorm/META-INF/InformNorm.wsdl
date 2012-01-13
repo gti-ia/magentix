@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="InformNorm" targetNamespace="http://wtp" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://wtp" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+    <wsdl:schema targetNamespace="http://wtp">
+      <wsdl:element name="InformNorm">
+        
+                <wsdl:complexType>
+          <wsdl:sequence>
+             <wsdl:element name="NormName" type="xsd:string" />
+             <wsdl:element name="UnitName" type="xsd:string" />
+             <wsdl:element name="AgentID" type="xsd:string" />
+          </wsdl:sequence>
+        </wsdl:complexType>
+            </wsdl:element>
+      <wsdl:element name="InformNormResponse">
+        
+                <wsdl:complexType>
+          <wsdl:sequence>
+          	<wsdl:element name="Description" type="xsd:string" />
+	      	<wsdl:element name="Status" type="xsd:string" />
+          	<wsdl:element name="ErrorValue" type="xsd:string" />
+          </wsdl:sequence>
+        </wsdl:complexType>
+            </wsdl:element>
+    </wsdl:schema>
+  </wsdl:types>
+  <wsdl:message name="InformNormResponse">
+    <wsdl:part name="parameters" element="tns:InformNormResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="InformNormMessage">
+    <wsdl:part name="parameters" element="tns:InformNorm">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="InformNormPortType">
+    <wsdl:operation name="InformNorm">
+      <wsdl:input message="tns:InformNormMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:InformNormResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="InformNormSOAP" type="tns:InformNormPortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="InformNorm">
+      <soap:operation soapAction="http://wtp"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="InformNorm">
+    <wsdl:port name="InformNormSOAP" binding="tns:InformNormSOAP">
+      <soap:address location="http://localhost:8080/OMS/services/InformNorm"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
