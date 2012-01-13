@@ -69,6 +69,9 @@ public class OMSInterface {
 	public String registerUnit(String UnitName, String UnitType, String ParentUnitName, String AgentName, String CreatorName) throws THOMASException, SQLException
 	{
 
+		//--------------------------------------------------------------------------------
+		//------------------- Section where the parameters are validated -----------------
+		//--------------------------------------------------------------------------------
 		if (checkParameter(CreatorName) && checkParameter(UnitName))
 		{
 
@@ -85,7 +88,14 @@ public class OMSInterface {
 				{
 					ParentUnitName = "virtual";
 				}
-				//TODO comprobar las normas. Por ahora se acepta siempre
+				
+				//--------------------------------------------------------------------------------
+				//------------------------- Checking domain-dependent norms ----------------------
+				//--------------------------------------------------------------------------------
+				//TODO
+				//--------------------------------------------------------------------------------
+				//------------------------- Checking structural norms ----------------------------
+				//--------------------------------------------------------------------------------
 
 				if (dbInterface.checkPositionInUnit(AgentName,"creator",ParentUnitName))
 				{
@@ -119,11 +129,20 @@ public class OMSInterface {
 
 		boolean play = false;
 
+		//--------------------------------------------------------------------------------
+		//------------------- Section where the parameters are validated -----------------
+		//--------------------------------------------------------------------------------
 		if (checkParameter(UnitName))
 		{
 			if (dbInterface.checkUnit(UnitName) && !UnitName.equals("virtual"))
 			{
-				//TODO control de normas.
+				//--------------------------------------------------------------------------------
+				//------------------------- Checking domain-dependent norms ----------------------
+				//--------------------------------------------------------------------------------
+				//TODO
+				//--------------------------------------------------------------------------------
+				//------------------------- Checking structural norms ----------------------------
+				//--------------------------------------------------------------------------------
 				if (dbInterface.checkPositionInUnit(AgentName, "creator", UnitName))
 				{
 					play= true;
@@ -193,13 +212,16 @@ public class OMSInterface {
 	{
 		String unitType = "";
 
-		//Chekeo de parametros.
+		//--------------------------------------------------------------------------------
+		//------------------- Section where the parameters are validated -----------------
+		//--------------------------------------------------------------------------------
 		if (checkParameter(RoleName) && checkParameter(UnitName) && checkParameter(Accesibility) && checkParameter(Visibility) && checkParameter(Position))
 		{
 			if (dbInterface.checkUnit(UnitName))
 			{
 				if (!dbInterface.checkRole(RoleName, UnitName))
 				{
+				
 					unitType = dbInterface.getUnitType(UnitName);
 
 					if (unitType.equals("hierarchy"))
@@ -223,7 +245,10 @@ public class OMSInterface {
 					{
 						throw new THOMASException("Invalid. Unit type not valid." );
 					}
-					//TODO control de normas.
+					//--------------------------------------------------------------------------------
+					//------------------------- Checking domain-dependent norms ----------------------
+					//--------------------------------------------------------------------------------
+					//TODO
 
 					if (dbInterface.checkAgentInUnit(AgentName, UnitName))
 					{
@@ -310,13 +335,19 @@ public class OMSInterface {
 
 		String unitType = "";
 
+		//--------------------------------------------------------------------------------
+		//------------------- Section where the parameters are validated -----------------
+		//--------------------------------------------------------------------------------
 		if (checkParameter(RoleName) && checkParameter(UnitName))
 		{
 			if (dbInterface.checkUnit(UnitName)) 
 			{
 				if (dbInterface.checkRole(RoleName, UnitName))
 				{
-					//TODO Control de normas.
+					//--------------------------------------------------------------------------------
+					//------------------------- Checking domain-dependent norms ----------------------
+					//--------------------------------------------------------------------------------
+					//TODO
 					if (!dbInterface.checkTargetRoleNorm(RoleName, UnitName))
 					{
 						if (!dbInterface.checkPlayedRoleInUnit(RoleName, UnitName))
@@ -426,11 +457,10 @@ public class OMSInterface {
 			{
 				if (dbInterface.checkRole(RoleName, UnitName))
 				{
-					//TODO
 					//--------------------------------------------------------------------------------
 					//------------------------- Checking domain-dependent norms ----------------------
 					//--------------------------------------------------------------------------------
-
+					//TODO
 					//--------------------------------------------------------------------------------
 					//------------------------- Checking structural norms ----------------------------
 					//--------------------------------------------------------------------------------
@@ -514,13 +544,19 @@ public class OMSInterface {
 	public String leaveRole(String RoleName, String UnitName, String AgentName) throws THOMASException, SQLException
 	{
 
+		//--------------------------------------------------------------------------------
+		//------------------- Section where the parameters are validated -----------------
+		//--------------------------------------------------------------------------------
 		if (checkParameter(RoleName) && checkParameter(UnitName))
 		{
 			if (dbInterface.checkUnit(UnitName))
 			{
 				if (dbInterface.checkRole(RoleName, UnitName))
 				{
-					//TODO Control de normas.
+					//--------------------------------------------------------------------------------
+					//------------------------- Checking domain-dependent norms ----------------------
+					//--------------------------------------------------------------------------------
+					//TODO
 					if (!dbInterface.checkAgentPlaysRole(AgentName, RoleName, UnitName))
 					{
 						//TODO Corregir ingles.
@@ -582,11 +618,10 @@ public class OMSInterface {
 						throw new THOMASException("Not allowed. The agent "+ AgentName + " is already playing the role.");
 					}
 
-					//TODO
 					//--------------------------------------------------------------------------------
 					//------------------------- Checking domain-dependent norms ----------------------
 					//--------------------------------------------------------------------------------
-
+					//TODO
 					//--------------------------------------------------------------------------------
 					//------------------------- Checking structural norms ----------------------------
 					//--------------------------------------------------------------------------------
@@ -708,11 +743,10 @@ public class OMSInterface {
 						throw new THOMASException("Not allowed. The agent "+ AgentName + " is already playing the role.");
 					}
 
-					//TODO
 					//--------------------------------------------------------------------------------
 					//------------------------- Checking domain-dependent norms ----------------------
 					//--------------------------------------------------------------------------------
-
+					//TODO
 					//--------------------------------------------------------------------------------
 					//------------------------- Checking structural norms ----------------------------
 					//--------------------------------------------------------------------------------
@@ -812,6 +846,9 @@ public class OMSInterface {
 		String result = "";
 
 
+		//--------------------------------------------------------------------------------
+		//------------------- Section where the parameters are validated -----------------
+		//--------------------------------------------------------------------------------
 		if (dbInterface.checkUnit(UnitName))
 		{
 			if (dbInterface.checkUnit(ParentName))
@@ -820,7 +857,10 @@ public class OMSInterface {
 				{
 					throw new THOMASException("Invalid. The parent unit is the same than unit.");
 				}
-				//TODO control de normas
+				//--------------------------------------------------------------------------------
+				//------------------------- Checking domain-dependent norms ----------------------
+				//--------------------------------------------------------------------------------
+				//TODO
 				if (dbInterface.checkAgentInUnit(AgentName, UnitName))
 				{
 					if (dbInterface.checkPositionInUnit(AgentName, "creator", UnitName))
@@ -877,7 +917,10 @@ public class OMSInterface {
 
 		if (dbInterface.checkAgent(RequestedAgentName))
 		{
-			//TODO Control de normas
+			//--------------------------------------------------------------------------------
+			//------------------------- Checking domain-dependent norms ----------------------
+			//--------------------------------------------------------------------------------
+			//TODO
 
 			methodResult = dbInterface.getInformAgentRole(RequestedAgentName, AgentName);
 
@@ -983,7 +1026,10 @@ public class OMSInterface {
 					}
 				}
 
-				//TODO Control de normas.
+				//--------------------------------------------------------------------------------
+				//------------------------- Checking domain-dependent norms ----------------------
+				//--------------------------------------------------------------------------------
+				//TODO
 
 				switch (flag){
 
@@ -1132,7 +1178,10 @@ public class OMSInterface {
 					}
 				}
 
-				//TODO Control de normas.
+				//--------------------------------------------------------------------------------
+				//------------------------- Checking domain-dependent norms ----------------------
+				//--------------------------------------------------------------------------------
+				//TODO
 
 				switch (flag){
 
@@ -1193,7 +1242,10 @@ public class OMSInterface {
 
 		if (dbInterface.checkUnit(UnitName))
 		{
-			//TODO Control de normas.
+			//--------------------------------------------------------------------------------
+			//------------------------- Checking domain-dependent norms ----------------------
+			//--------------------------------------------------------------------------------
+			//TODO
 			String unitType = dbInterface.getUnitType(UnitName);
 
 			if (unitType.equals("team") || unitType.equals("hierarchy"))
@@ -1252,7 +1304,10 @@ public class OMSInterface {
 
 		if (dbInterface.checkUnit(UnitName))
 		{
-			//TODO Control de normas
+			//--------------------------------------------------------------------------------
+			//------------------------- Checking domain-dependent norms ----------------------
+			//--------------------------------------------------------------------------------
+			//TODO
 			methodResult = dbInterface.getInformUnitRoles(UnitName, AgentName);		
 
 			for (ArrayList<String> agentPair : methodResult)
@@ -1290,7 +1345,10 @@ public class OMSInterface {
 		{
 			if (dbInterface.checkRole(RoleName, UnitName))
 			{
-				//TODO Control de normas
+				//--------------------------------------------------------------------------------
+				//------------------------- Checking domain-dependent norms ----------------------
+				//--------------------------------------------------------------------------------
+				//TODO
 
 				String unitType = dbInterface.getUnitType(UnitName);
 
