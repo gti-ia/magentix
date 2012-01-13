@@ -34,6 +34,8 @@ import com.hp.hpl.jena.rdf.model.ModelMaker;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.update.UpdateAction;
 
+import edu.emory.mathcs.backport.java.util.Collections;
+
 /**
  * This class implements the Service Facilitator (SF) services. 
  * @author Jaume Jordan
@@ -681,8 +683,10 @@ public class SFinterface {
 	 * The RegisterService tries to register the service that is specified as parameter. If it is already registered, it registers
 	 * the new providers and groundings.
 	 * @param serviceURL is the original URL of the OWL-S specification of the service
+	 * @return a {@link String} describing if the service has been entirely registered or the number of groundings added to an 
+	 * already registered service profile
 	 */
-	public void RegisterService(String serviceURL){
+	public String RegisterService(String serviceURL){
 
 
 		ArrayList<String> inputs=getInputs(null, serviceURL);
@@ -694,6 +698,7 @@ public class SFinterface {
 		String regServiceProfile=searchRegisteredServices(inputsParams, outputParams);
 		if(!regServiceProfile.equalsIgnoreCase("")){
 			System.out.println("Service already registered: "+regServiceProfile);
+			int nGrounds=0;
 
 			//obtain the registered wsdl docs and the one that has to be registered. 
 			//If the new wsdl doc is different, it is registered
@@ -722,6 +727,7 @@ public class SFinterface {
 			}
 			if(!found){//register the grounding
 				System.out.println("Register new grounding");
+				nGrounds++;
 
 				String fileName="tmp.owls";
 				writeProvidersGroundingOWLSFile(serviceURL, regServiceProfile, fileName);
@@ -750,6 +756,8 @@ public class SFinterface {
 				System.out.println("Not register this grounding, already registered");
 			}
 
+			
+			return nGrounds + " groundings registered to service profile: "+regServiceProfile;
 
 		}
 		else{
@@ -770,6 +778,7 @@ public class SFinterface {
 
 
 			System.out.println("Service registered: "+serviceURL);
+			return "Service registered: "+serviceURL;
 		}
 
 
@@ -2183,20 +2192,21 @@ public class SFinterface {
 	}
 
 
-	// idea: fer consulta primer per el process:parameterType per veure si coincideix i despres
-	//agafar el profile:hasInput
-	//seria més elegant poder agafar directament el parameterType sabent que es Input...
 
 	//hacer una consulta por cada entrada deseada, guardando los servicios que tengan al menos una entrada (sin repetirlos en la lista)
 	//de cada servicio, comprobar exactamente cuantas entradas coinciden, y después las salidas
 	//sumar con algún tipo de ponderación
 
 	/**
-	 * 
-	 * @param inputs  Specify the parameter type. Example: \"http://127.0.0.1/ontology/books.owl#Novel\"^^xsd:anyURI
-	 * @param outputs Specify the parameter type. Example: \"http://127.0.0.1/ontology/books.owl#Novel\"^^xsd:anyURI
+	 * The SearchService receives as parameters two lists with the data types of the inputs and outputs desired. 
+	 * With these parameters, the service searches in the Jena DB and returns the more similar services, that is, 
+	 * the services that have the same (or almost the same) data types as inputs and outputs, weighted in function 
+	 * of the amount of similarity.
+	 * @param inputs list of the desired input parameter type to search a similar servie. Example: \"http://127.0.0.1/ontology/books.owl#Novel\"^^xsd:anyURI
+	 * @param outputs list of the desired output parameter type to search a similar servie. Example: \"http://127.0.0.1/ontology/books.owl#Novel\"^^xsd:anyURI
+	 * @return a {@link Profile} {@link ArrayList} with the similar registered services with their similarity degree
 	 */
-	public void SearchService(ArrayList<String> inputs, ArrayList<String> outputs){
+	public ArrayList<Profile> SearchService(ArrayList<String> inputs, ArrayList<String> outputs){
 
 
 		ModelMaker maker = ModelFactory.createModelRDBMaker(conn);
@@ -2205,6 +2215,7 @@ public class SFinterface {
 
 		ArrayList<String> candidates=new ArrayList<String>();
 
+		//the service searches each input and add to a list each service that has an equal input as a candidate
 		Iterator<String> iterInputs=inputs.iterator();
 		while(iterInputs.hasNext()){
 
@@ -2217,17 +2228,6 @@ public class SFinterface {
 							"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"+
 							"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"+
 							"select ?x where { ?x a process:Input ; process:parameterType "+in+" . }";
-
-			//				String queryStr =
-			//				"prefix xsd: <http://www.w3.org/2001/XMLSchema#>"+
-			//				"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"+
-			//				"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"+
-			//				"select ?x where { ?x a process:Input { ?x process:parameterType "+in+" . } }";
-
-			//				String queryStr =
-			//					"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"+
-			//					"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"+
-			//					"select ?x where { ?x process:parameterType ?y }";
 
 			Query query = QueryFactory.create(queryStr);
 
@@ -2257,17 +2257,9 @@ public class SFinterface {
 			// close the query
 			querySearchInputs.close();
 
-			//				m.close();
-
 		}
 
 
-		//			System.out.println("****FINAL CANDIDATES:****");
-		//			Iterator<String> iterCandidates=candidates.iterator();
-		//			while(iterCandidates.hasNext()){
-		//				String cand=iterCandidates.next();
-		//				System.out.println(cand);
-		//			}
 
 
 
@@ -2303,6 +2295,16 @@ public class SFinterface {
 
 		}
 
+		
+		//For each candidate, search its inputs and outputs, and if the input/output is the same to the searched, 
+		//the similarity degree (similarityToAsked=sameInputs+sameOutputs/searchInputs+searchOutputs) 
+		//of the asked in the search will be greater
+		//Also, the similarity degree to the found service is obtained with this Formula: 
+		//similarityToFoundService=sameInputs+sameOutputs/foundServiceInputs+foundServiceOutputs
+		//The final similarity degree is calculated by Formula: 
+		//similarityDegree=0.5*similarityToAsked+0.5*similarityToFoundService
+		//taking into account the two similarity degrees defined previously.
+		
 		Iterator<Profile> iterProfiles=profiles.iterator();
 		while(iterProfiles.hasNext()){
 			Profile profile=iterProfiles.next();
@@ -2429,15 +2431,20 @@ public class SFinterface {
 
 			System.out.println(profile.getSuitability()+" "+inputs.size()+" "+outputs.size());
 
-			float adaptToAsked=profile.getSuitability()/(inputs.size()+outputs.size());
-			float adaptToFoundService=profile.getSuitability()/(inputsProfile+outputsProfile);
-			profile.setSuitability(0.5f*adaptToAsked+0.5f*adaptToFoundService);
+			//obtain the final similarity degree of the profile
+			float similarityToAsked=profile.getSuitability()/(inputs.size()+outputs.size());
+			float similarityToFoundService=profile.getSuitability()/(inputsProfile+outputsProfile);
+			profile.setSuitability(0.5f*similarityToAsked+0.5f*similarityToFoundService);
 
 			System.out.println(profile.getUrl()+" -> "+profile.getSuitability());
 
 		}
 
-
+		//sort the found candidate profiles by their similarity
+		Collections.sort(profiles);
+		
+		return profiles;
+		
 	}
 
 	/**
@@ -2455,32 +2462,6 @@ public class SFinterface {
 		if (DEBUG) {
 			System.out.println("Removing Process ... ");
 		}
-
-
-		//TODO esto hace algo???    
-		/**/
-		// Query to know if there are more process with the same profile
-		String queryStringServiceProcess =
-				"prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
-						+ "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>"
-						+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
-						+ "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
-						+ "prefix actor: <http://www.daml.org/services/owl-s/1.1/ActorDefault.owl#>"
-						+ "select ?x " 
-						+ "where {" 
-						+ "?x service:presents <"+serviceProfile+">" 
-						+ "}";
-
-		Query queryServiceProcess = QueryFactory.create(queryStringServiceProcess);
-
-		// Execute the query
-		QueryExecution qeServiceProcess = QueryExecutionFactory.create(queryServiceProcess, m);
-		ResultSet resultsServiceProcess = qeServiceProcess.execSelect();
-
-		while ( resultsServiceProcess.hasNext()) {
-			resultsServiceProcess.next();
-		}
-		/**/
 		
 		String processGround = GetServiceGrounding(urlProcessDoc, processname,urlProcessService, m);
 		String processGroundWSDL = GetServiceWSDLGrounding(urlProcessDoc, processGround, m);
