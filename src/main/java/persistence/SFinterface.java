@@ -3287,9 +3287,10 @@ public class SFinterface {
 
 		try {
 
-			FileInputStream fis = new FileInputStream("THOMASDemoConfiguration.xml");
+			//FileInputStream fis = new FileInputStream("/"+"THOMASDemoConfiguration.xml");
+			
 			//properties.loadFromXML(ProvaServeis1.class.getResourceAsStream("THOMASDemoConfiguration.xml"));
-			properties.loadFromXML(fis);
+			properties.loadFromXML(SFinterface.class.getResourceAsStream("/"+"THOMASDemoConfiguration.xml"));
 			for (Enumeration<Object>  e = properties.keys(); e.hasMoreElements() ; ) {
 				// Obtain the object
 				Object obj = e.nextElement();

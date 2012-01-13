@@ -19,6 +19,8 @@ import persistence.SFinterface;
  */
 public class SearchServiceSkeleton{
 
+	public static final Boolean DEBUG = true;
+	
 	SFinterface sfInterface=new SFinterface();
 	/**
 	 * Auto generated method signature
@@ -33,15 +35,27 @@ public class SearchServiceSkeleton{
 		ArrayList<String> inputs=new ArrayList<String>();
 		ArrayList<String> outputs=new ArrayList<String>();
 		
+		if(DEBUG){
+			System.out.println("SearchService Input parameters:");
+			System.out.println("\tInputs:");
+		}
 		StringTokenizer tokInputs=new StringTokenizer(searchService.getInputs(), "|");
 		while(tokInputs.hasMoreTokens()){
-			inputs.add(tokInputs.nextToken());
-		}
-		StringTokenizer tokOutputs=new StringTokenizer(searchService.getOutputs(), "|");
-		while(tokOutputs.hasMoreTokens()){
-			outputs.add(tokOutputs.nextToken());
+			String in=tokInputs.nextToken().trim();
+			inputs.add(in);
+			if(DEBUG)
+				System.out.println("\t\t"+in);
 		}
 		
+		if(DEBUG)
+			System.out.println("\tOutputs:");
+		StringTokenizer tokOutputs=new StringTokenizer(searchService.getOutputs(), "|");
+		while(tokOutputs.hasMoreTokens()){
+			String out=tokOutputs.nextToken().trim();
+			outputs.add(out);
+			if(DEBUG)
+				System.out.println("\t\t"+out);
+		}
 		
 		
 		ArrayList<Profile> foundServices=sfInterface.SearchService(inputs, outputs);
@@ -52,10 +66,11 @@ public class SearchServiceSkeleton{
 			servicesList+=prof.getUrl()+":"+prof.getSuitability()+" | ";
 		}
 		
+		if(DEBUG)
+			System.out.println("SearchService result: "+ servicesList);
+		
 		response.setServicesList(servicesList);
-		response.set_return(0);
-
-
+		response.set_return(foundServices.size());
 
 		return response;
 	}
