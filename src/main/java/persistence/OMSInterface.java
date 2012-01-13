@@ -414,78 +414,91 @@ public class OMSInterface {
 	 */
 	public String AcquireRole(String RoleName,String UnitName, String AgentName) throws THOMASException, SQLException
 	{
-		String result;
 
 
-		if (dbInterface.checkUnit(UnitName))
+		//--------------------------------------------------------------------------------
+		//------------------- Section where the parameters are validated -----------------
+		//--------------------------------------------------------------------------------
+
+		if (checkParameter(RoleName) && checkParameter(UnitName))
 		{
-			if (dbInterface.checkRole(RoleName, UnitName))
+			if (dbInterface.checkUnit(UnitName))
 			{
-				//TODO Control de normas.
-				if (dbInterface.checkAgentPlaysRole(AgentName, RoleName, UnitName))
+				if (dbInterface.checkRole(RoleName, UnitName))
 				{
-					//TODO Corregir ingles.
-					throw new THOMASException("Not allowed. The agent "+ AgentName + " is already playing the role.");
-				}
-				else
-				{
-					ArrayList<String> informRole = dbInterface.getInformRole(RoleName, UnitName);
-					String accessibility = informRole.get(0);
-					String visibility = informRole.get(1);
-					String position = informRole.get(2);
+					//TODO
+					//--------------------------------------------------------------------------------
+					//------------------------- Checking domain-dependent norms ----------------------
+					//--------------------------------------------------------------------------------
 
-
-					if (!dbInterface.checkPositionInUnit(AgentName, "member", UnitName) && 
-							!dbInterface.checkPositionInUnit(AgentName, "creator", UnitName) &&
-							!dbInterface.checkPositionInUnit(AgentName, "supervisor", UnitName))
+					//--------------------------------------------------------------------------------
+					//------------------------- Checking structural norms ----------------------------
+					//--------------------------------------------------------------------------------
+					if (dbInterface.checkAgentPlaysRole(AgentName, RoleName, UnitName))
 					{
-						//Solamente tiene el rol subordinate.
-						if (!position.equals("subordinate") && !position.equals("member"))
-						{
-							throw new THOMASException("Not allowed. The position role cannot be creator or supervisor.");
-						}
 
-
-					}
-
-					if (accessibility.equals("external"))
-					{
-						result = dbInterface.acquireRole(UnitName, RoleName, AgentName);
-
-
-					}
-					else if (visibility.equals("public"))
-					{
-						result = dbInterface.acquireRole(UnitName, RoleName, AgentName);
-
+						throw new THOMASException("Not allowed. The agent "+ AgentName + " is already playing the role.");
 					}
 					else
 					{
-						if (dbInterface.checkAgentInUnit(AgentName, UnitName))
+						ArrayList<String> informRole = dbInterface.getInformRole(RoleName, UnitName);
+						String accessibility = informRole.get(0);
+						String visibility = informRole.get(1);
+						String position = informRole.get(2);
+
+
+						if (!dbInterface.checkPositionInUnit(AgentName, "member", UnitName) && 
+								!dbInterface.checkPositionInUnit(AgentName, "creator", UnitName) &&
+								!dbInterface.checkPositionInUnit(AgentName, "supervisor", UnitName))
 						{
-							result = dbInterface.acquireRole(UnitName, RoleName, AgentName);
+							//Solamente tiene el rol subordinate.
+							if (!position.equals("subordinate") && !position.equals("member"))
+							{
+								throw new THOMASException("Not allowed. The position role cannot be creator or supervisor.");
+							}
+
+
+						}
+
+						if (accessibility.equals("external"))
+						{
+							return dbInterface.acquireRole(UnitName, RoleName, AgentName);
+
+
+						}
+						else if (visibility.equals("public"))
+						{
+							return dbInterface.acquireRole(UnitName, RoleName, AgentName);
 
 						}
 						else
 						{
-							throw new THOMASException("Not allowed. Agent "+ AgentName + " is not inside the unit.");
-						}
-					}
+							if (dbInterface.checkAgentInUnit(AgentName, UnitName))
+							{
+								return dbInterface.acquireRole(UnitName, RoleName, AgentName);
 
+							}
+							else
+							{
+								throw new THOMASException("Not allowed. Agent "+ AgentName + " is not inside the unit.");
+							}
+						}
+
+					}
+				}//checkRole
+				else
+				{
+					throw new THOMASException("Not allowed. Role "+ RoleName + " is not registered in the unit.");
 				}
-			}//checkRole
+			}
 			else
 			{
-				throw new THOMASException("Not allowed. Role "+ RoleName + " is not registered in the unit.");
+				throw new THOMASException("Not found. Unit "+ UnitName + " not found.");
 			}
-		}
-		else
-		{
-			throw new THOMASException("Not found. Unit "+ UnitName + " not found.");
-		}
 
+		}
+		throw new THOMASException("Invalid. Empty parameters.");
 
-		return result;
 	}
 
 	/**
@@ -545,97 +558,116 @@ public class OMSInterface {
 	 */
 	public String allocateRole(String RoleName, String UnitName, String TargetAgentName, String AgentName) throws THOMASException, SQLException
 	{
-		String result = "";
 
 
-		if (dbInterface.checkUnit(UnitName))
+		//--------------------------------------------------------------------------------
+		//------------------- Section where the parameters are validated -----------------
+		//--------------------------------------------------------------------------------
+
+		if (checkParameter(RoleName) && checkParameter(UnitName) && checkParameter(TargetAgentName))
 		{
-			if (dbInterface.checkRole(RoleName, UnitName))
+
+			if (dbInterface.checkUnit(UnitName))
 			{
-
-				if (TargetAgentName.equals(AgentName))
+				if (dbInterface.checkRole(RoleName, UnitName))
 				{
-					throw new THOMASException("Invalid. The TargetAgentName is the same than AgentName.");
-				}
 
-				//TODO Control de normas.
-				String type = dbInterface.getUnitType(UnitName);
-
-				if (type.equals("hierarchy"))
-				{
-					if (dbInterface.checkAgentInUnit(AgentName, UnitName))
+					if (TargetAgentName.equals(AgentName))
 					{
-						if (dbInterface.checkPositionInUnit(AgentName, "supervisor", UnitName) || dbInterface.checkPositionInUnit(AgentName, "creator", UnitName))
+						throw new THOMASException("Invalid. The TargetAgentName is the same than AgentName.");
+					}
+
+					if (dbInterface.checkAgentPlaysRole(TargetAgentName, RoleName, UnitName))
+					{
+						throw new THOMASException("Not allowed. The agent "+ AgentName + " is already playing the role.");
+					}
+
+					//TODO
+					//--------------------------------------------------------------------------------
+					//------------------------- Checking domain-dependent norms ----------------------
+					//--------------------------------------------------------------------------------
+
+					//--------------------------------------------------------------------------------
+					//------------------------- Checking structural norms ----------------------------
+					//--------------------------------------------------------------------------------
+
+					String type = dbInterface.getUnitType(UnitName);
+
+					if (type.equals("hierarchy"))
+					{
+						if (dbInterface.checkAgentInUnit(AgentName, UnitName))
 						{
-							result = dbInterface.acquireRole(UnitName, RoleName, TargetAgentName);
+							if (dbInterface.checkPositionInUnit(AgentName, "supervisor", UnitName) || dbInterface.checkPositionInUnit(AgentName, "creator", UnitName))
+							{
+								return dbInterface.acquireRole(UnitName, RoleName, TargetAgentName);
+
+							}
+							else
+							{
+								throw new THOMASException("Not allowed. The Agent "+ AgentName + " not play any rol with position supervisor or creator in unit "+ UnitName+".");
+							}
+						}
+						else
+						{
+							throw new THOMASException("Not allowed. The Agent "+ AgentName + " is not inside the unit.");
+						}
+					}else if (type.equals("team"))
+					{
+						if (dbInterface.checkAgentInUnit(AgentName, UnitName))
+						{
+							return dbInterface.acquireRole(UnitName, RoleName, TargetAgentName);
 
 						}
 						else
 						{
-							throw new THOMASException("Not allowed. The Agent "+ AgentName + " not play any rol with position supervisor or creator in unit "+ UnitName+".");
+							throw new THOMASException("Not allowed. The Agent "+ AgentName + " is not inside the unit.");
 						}
-					}
-					else
+					}else if (type.equals("flat"))
 					{
-						throw new THOMASException("Not allowed. The Agent "+ AgentName + " is not inside the unit.");
-					}
-				}else if (type.equals("team"))
-				{
-					if (dbInterface.checkAgentInUnit(AgentName, UnitName))
-					{
-						result = dbInterface.acquireRole(UnitName, RoleName, TargetAgentName);
-
-					}
-					else
-					{
-						throw new THOMASException("Not allowed. The Agent "+ AgentName + " is not inside the unit.");
-					}
-				}else if (type.equals("flat"))
-				{
-					if (dbInterface.checkAgentInUnit(AgentName, UnitName))
-					{
-
-						if (dbInterface.checkPositionInUnit(AgentName, "member", UnitName) || dbInterface.checkPositionInUnit(AgentName, "creator", UnitName))
+						if (dbInterface.checkAgentInUnit(AgentName, UnitName))
 						{
-							result = dbInterface.acquireRole(UnitName, RoleName, TargetAgentName);
+
+							if (dbInterface.checkPositionInUnit(AgentName, "member", UnitName) || dbInterface.checkPositionInUnit(AgentName, "creator", UnitName))
+							{
+								return dbInterface.acquireRole(UnitName, RoleName, TargetAgentName);
+
+							}
+							else
+							{
+								throw new THOMASException("Not allowed. The Agent "+ AgentName + " not play any rol with position member or creator in unit "+ UnitName+".");
+							}
 
 						}
 						else
 						{
-							throw new THOMASException("Not allowed. The Agent "+ AgentName + " not play any rol with position member or creator in unit "+ UnitName+".");
-						}
+							if (dbInterface.checkPosition(AgentName, "creator"))
+							{
 
+								return dbInterface.acquireRole(UnitName, RoleName, TargetAgentName);
+
+							}
+							else
+							{
+								throw new THOMASException("Not allowed. The Agent "+ AgentName + " not play any rol with position creator.");
+							}
+						}
 					}
 					else
 					{
-						if (dbInterface.checkPosition(AgentName, "creator"))
-						{
-
-							result = dbInterface.acquireRole(UnitName, RoleName, TargetAgentName);
-
-						}
-						else
-						{
-							throw new THOMASException("Not allowed. The Agent "+ AgentName + " not play any rol with position creator.");
-						}
+						throw new THOMASException("Invalid. Unit type not valid." );
 					}
 				}
 				else
 				{
-					throw new THOMASException("Invalid. Unit type not valid." );
+					throw new THOMASException("Not allowed. Role "+ RoleName + " is not registered in the unit.");
 				}
 			}
 			else
 			{
-				throw new THOMASException("Not allowed. Role "+ RoleName + " is not registered in the unit.");
+				throw new THOMASException("Not found. Unit "+ UnitName + " not found.");
 			}
 		}
-		else
-		{
-			throw new THOMASException("Not found. Unit "+ UnitName + " not found.");
-		}
-
-		return result;
+		throw new THOMASException("Invalid. Empty parameters.");
 	}
 
 
@@ -652,97 +684,117 @@ public class OMSInterface {
 	 */
 	public String deallocateRole(String RoleName, String UnitName, String TargetAgentName, String AgentName) throws THOMASException, SQLException
 	{
-		String result = "";
 
 
-		if (dbInterface.checkUnit(UnitName))
+		//--------------------------------------------------------------------------------
+		//------------------- Section where the parameters are validated -----------------
+		//--------------------------------------------------------------------------------
+
+		if (checkParameter(RoleName) && checkParameter(UnitName) && checkParameter(TargetAgentName))
 		{
-			if (dbInterface.checkRole(RoleName, UnitName))
+
+			if (dbInterface.checkUnit(UnitName))
 			{
-				//TODO Falta por hacer la comprobación del targetName, por ahora no se dispone de suficiente información para ello.
-				if (TargetAgentName.equals(AgentName))
+				if (dbInterface.checkRole(RoleName, UnitName))
 				{
-					throw new THOMASException("Not allowed. The TargetAgentName is the same than AgentName.");
-				}
-				//TODO Control de normas
-				String type = dbInterface.getUnitType(UnitName);
-
-				if (type.equals("hierarchy"))
-				{
-					if (dbInterface.checkAgentInUnit(AgentName, UnitName))
+					//TODO Falta por hacer la comprobación del targetName, por ahora no se dispone de suficiente información para ello.
+					if (TargetAgentName.equals(AgentName))
 					{
-						if (dbInterface.checkPositionInUnit(AgentName, "supervisor", UnitName) || dbInterface.checkPositionInUnit(AgentName, "creator", UnitName))
+						throw new THOMASException("Not allowed. The TargetAgentName is the same than AgentName.");
+					}
+
+					if (!dbInterface.checkAgentPlaysRole(TargetAgentName, RoleName, UnitName))
+					{
+						throw new THOMASException("Not allowed. The agent "+ AgentName + " is already playing the role.");
+					}
+
+					//TODO
+					//--------------------------------------------------------------------------------
+					//------------------------- Checking domain-dependent norms ----------------------
+					//--------------------------------------------------------------------------------
+
+					//--------------------------------------------------------------------------------
+					//------------------------- Checking structural norms ----------------------------
+					//--------------------------------------------------------------------------------
+					String type = dbInterface.getUnitType(UnitName);
+
+					if (type.equals("hierarchy"))
+					{
+						if (dbInterface.checkAgentInUnit(AgentName, UnitName))
 						{
-							result = dbInterface.deallocateRole(RoleName, UnitName, TargetAgentName, AgentName);
+							if (dbInterface.checkPositionInUnit(AgentName, "supervisor", UnitName) || dbInterface.checkPositionInUnit(AgentName, "creator", UnitName))
+							{
+								return dbInterface.deallocateRole(RoleName, UnitName, TargetAgentName, AgentName);
+
+							}
+							else
+							{
+								throw new THOMASException("Not allowed. The Agent "+ AgentName + " not play any rol with position supervisor or creator in unit "+ UnitName+".");
+							}
+						}
+						else
+						{
+							throw new THOMASException("Not allowed. The Agent "+ AgentName + " is not inside the unit.");
+						}
+					}
+					else if (type.equals("team"))
+					{
+						if (dbInterface.checkAgentInUnit(AgentName, UnitName))
+						{
+							return dbInterface.deallocateRole(RoleName, UnitName, TargetAgentName, AgentName);
 
 						}
 						else
 						{
-							throw new THOMASException("Not allowed. The Agent "+ AgentName + " not play any rol with position supervisor or creator in unit "+ UnitName+".");
+							throw new THOMASException("Not allowed. The Agent "+ AgentName + " is not inside the unit "+UnitName+".");
 						}
-					}
-					else
+					}else if (type.equals("flat"))
 					{
-						throw new THOMASException("Not allowed. The Agent "+ AgentName + " is not inside the unit.");
-					}
-				}
-				else if (type.equals("team"))
-				{
-					if (dbInterface.checkAgentInUnit(AgentName, UnitName))
-					{
-						result = dbInterface.deallocateRole(RoleName, UnitName, TargetAgentName, AgentName);
-
-					}
-					else
-					{
-						throw new THOMASException("Not allowed. The Agent "+ AgentName + " is not inside the unit "+UnitName+".");
-					}
-				}else if (type.equals("flat"))
-				{
-					if (dbInterface.checkAgentInUnit(AgentName, UnitName))
-					{
-
-						if (dbInterface.checkPositionInUnit(AgentName, "member", UnitName) || dbInterface.checkPositionInUnit(AgentName, "creator", UnitName))
+						if (dbInterface.checkAgentInUnit(AgentName, UnitName))
 						{
-							result = dbInterface.deallocateRole(RoleName, UnitName, TargetAgentName, AgentName);
+
+							if (dbInterface.checkPositionInUnit(AgentName, "member", UnitName) || dbInterface.checkPositionInUnit(AgentName, "creator", UnitName))
+							{
+								return dbInterface.deallocateRole(RoleName, UnitName, TargetAgentName, AgentName);
+
+							}
+							else
+							{
+								throw new THOMASException("Not allowed. The Agent "+ AgentName + " not play any rol with position member or creator in unit "+UnitName+".");
+							}
 
 						}
 						else
 						{
-							throw new THOMASException("Not allowed. The Agent "+ AgentName + " not play any rol with position member or creator in unit "+UnitName+".");
+							if (dbInterface.checkPosition(AgentName, "creator"))
+							{
+								return dbInterface.deallocateRole(RoleName, UnitName, TargetAgentName, AgentName);
+
+							}
+							else
+							{
+								throw new THOMASException("Not allowed. The Agent "+ AgentName + " not play any rol with position creator.");
+							}
 						}
 
 					}
 					else
 					{
-						if (dbInterface.checkPosition(AgentName, "creator"))
-						{
-							result = dbInterface.deallocateRole(RoleName, UnitName, TargetAgentName, AgentName);
-
-						}
-						else
-						{
-							throw new THOMASException("Not allowed. The Agent "+ AgentName + " not play any rol with position creator.");
-						}
+						throw new THOMASException("Invalid. Unit type not valid." );	
 					}
-
 				}
 				else
 				{
-					throw new THOMASException("Invalid. Unit type not valid." );	
+					throw new THOMASException("Not allowed. Role "+ RoleName + " is not registered in the unit.");
 				}
 			}
 			else
 			{
-				throw new THOMASException("Not allowed. Role "+ RoleName + " is not registered in the unit.");
+				throw new THOMASException("Not found. Unit "+ UnitName + " not found.");
 			}
 		}
-		else
-		{
-			throw new THOMASException("Not found. Unit "+ UnitName + " not found.");
-		}
+		throw new THOMASException("Invalid. Empty parameters.");
 
-		return result;
 
 	}
 
