@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="GetService" targetNamespace="http://wtp" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://wtp" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://wtp">
+      <xsd:element name="GetService">
+        <xsd:complexType>
+          <xsd:sequence>
+             <xsd:element name="ServiceID" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="GetServiceResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+          	<xsd:element name="return" type="xsd:int"/>
+            <xsd:element name="owlsSpecification" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="GetServiceResponse">
+    <wsdl:part name="parameters" element="tns:GetServiceResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="GetServiceMessage">
+    <wsdl:part name="parameters" element="tns:GetService">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="GetServicePortType">
+    <wsdl:operation name="GetService">
+      <wsdl:input message="tns:GetServiceMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:GetServiceResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="GetServiceSOAP" type="tns:GetServicePortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="GetService">
+      <soap:operation soapAction="http://wtp"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="GetService">
+    <wsdl:port name="GetServiceSOAP" binding="tns:GetServiceSOAP">
+      <soap:address location="http://localhost:8080/sfservices/services/GetService"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

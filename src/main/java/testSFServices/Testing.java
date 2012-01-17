@@ -37,8 +37,11 @@ public class Testing {
 		StringTokenizer tokenInputParams = new StringTokenizer(inputParams, "--");
 		while(tokenInputParams.hasMoreTokens()){
 			String inputToken=tokenInputParams.nextToken().trim();
-			String in=inputToken.split("=")[0];
-			String value=inputToken.split("=")[1];
+			StringTokenizer anInputToken=new StringTokenizer(inputToken, "=");
+			String in=anInputToken.nextToken().toLowerCase().trim();
+			String value="";
+			if(anInputToken.hasMoreTokens())
+				value=anInputToken.nextToken().trim();
 			if(paramsComplete.get(in)!=null){
 				paramsComplete.put(in, value);
 				System.out.println("inputParamName: "+in+" value: "+value);
@@ -137,20 +140,44 @@ public class Testing {
 	 */
 	public static void main(String[] args) {
 		
-		String inputInputs="\"http://127.0.0.1/ontology/geographydataset.owl#Code\"^^xsd:anyURI | "+
-		"\"http://127.0.0.1/ontology/protont.owl#longitude\"^^xsd:anyURI | "+
-		"\"http://127.0.0.1/ontology/protonu.owl#Date\"^^xsd:anyURI | "+
-		"\"http://127.0.0.1/ontology/protont.owl#latitude\"^^xsd:anyURI ";
+//		String inputInputs="\"http://127.0.0.1/ontology/geographydataset.owl#Code\"^^xsd:anyURI | "+
+//		"\"http://127.0.0.1/ontology/protont.owl#longitude\"^^xsd:anyURI | "+
+//		"\"http://127.0.0.1/ontology/protonu.owl#Date\"^^xsd:anyURI | "+
+//		"\"http://127.0.0.1/ontology/protont.owl#latitude\"^^xsd:anyURI ";
+//		
+//		String inputOutputs="\"http://127.0.0.1/ontology/geographydataset.owl#Sunrise\"^^xsd:anyURI";
+//		
+//		String paramsSearch="searchserviceinputinputs="+inputInputs +" -- "+ "searchserviceinputoutputs="+inputOutputs;
+//		
+//		String result=executeWithJavaX("http://localhost:8080/sfservices/SFservices/owl/owls/SearchService.owl", paramsSearch);
+//		
+//		System.out.println("RESULT: "+result);
 		
-		String inputOutputs="\"http://127.0.0.1/ontology/geographydataset.owl#Sunrise\"^^xsd:anyURI";
-		
-		String paramsSearch="searchserviceinputinputs="+inputInputs +" -- "+ "searchserviceinputoutputs="+inputOutputs;
-		
-		String result=executeWithJavaX("http://localhost:8080/sfservices/SFservices/owl/owls/SearchService.owl", paramsSearch);
-		
-		System.out.println("RESULT: "+result);
+//		String serviceID="http://127.0.0.1/services/1.1/calculateSunriseTime.owls#CALCULATE_SUNRISE_PROFILE";
+//		String getServiceInput="getserviceinputserviceid="+serviceID;
+//		String res=executeWithJavaX("http://localhost:8080/sfservices/SFservices/owl/owls/GetService.owl", getServiceInput);
 
+//		String serviceID="http://127.0.0.1/services/1.1/calculateSunriseTime.owls#CALCULATE_SUNRISE_PROFILE";
+//		String providerID="Provider2";
 		
+//		String inputParams="removeproviderinputserviceid="+serviceID+" -- "+"removeproviderinputproviderid="+providerID;
+//
+//		String res= executeWithJavaX("http://localhost:8080/sfservices/SFservices/owl/owls/RemoveProvider.owl", inputParams);
+
+		String serviceURL="";//"http://127.0.0.1/services/1.1/calculateSunriseTime2.owls";
+		
+		String inputParams="registerserviceinputserviceurl="+serviceURL;
+
+		String res= executeWithJavaX("http://localhost:8080/sfservices/SFservices/owl/owls/RegisterService.owl", inputParams);
+		
+//		String serviceURL="http://127.0.0.1/services/1.1/calculateSunriseTime.owls#CALCULATE_SUNRISE_PROFILE";
+//		
+//		String inputParams="deregisterserviceinputserviceid="+serviceURL;
+//
+//		String res= executeWithJavaX("http://localhost:8080/sfservices/SFservices/owl/owls/DeregisterService.owl", inputParams);
+		
+		System.out.println("res: "+res);
+	
 	}
 
 

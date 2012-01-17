@@ -13,6 +13,7 @@ import java.util.StringTokenizer;
 
 import persistence.Profile;
 import persistence.SFinterface;
+import persistence.THOMASException;
 
 /**
  *  SearchServiceSkeleton java skeleton for the axisService
@@ -58,13 +59,21 @@ public class SearchServiceSkeleton{
 		}
 		
 		
-		ArrayList<Profile> foundServices=sfInterface.SearchService(inputs, outputs);
-		Iterator<Profile> iterServices=foundServices.iterator();
+		ArrayList<Profile> foundServices=new ArrayList<Profile>();
 		String servicesList="";
-		while(iterServices.hasNext()){
-			Profile prof=iterServices.next();
-			servicesList+=prof.getUrl()+":"+prof.getSuitability()+" | ";
+		try {
+			foundServices = sfInterface.SearchService(inputs, outputs);
+			Iterator<Profile> iterServices=foundServices.iterator();
+			
+			while(iterServices.hasNext()){
+				Profile prof=iterServices.next();
+				servicesList+=prof.getUrl()+":"+prof.getSuitability()+" | ";
+			}
+		} catch (THOMASException e) {
+			servicesList=e.getContent();
+			e.printStackTrace();
 		}
+		
 		
 		if(DEBUG)
 			System.out.println("SearchService result: "+ servicesList);

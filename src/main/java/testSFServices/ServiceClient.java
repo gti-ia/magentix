@@ -3,6 +3,7 @@ package testSFServices;
 
 
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -98,8 +99,23 @@ public class ServiceClient {
 				j++;
 		    }
 		    
-		    String result = (String) call.invoke(params.toArray());
-	
+		    Object resultObject = call.invoke(params.toArray());
+		    String result;
+		    
+		    if (resultObject instanceof String) {
+				result=(String) resultObject;
+			}
+		    else if(resultObject instanceof Integer){
+		    	result=Integer.toString((Integer)resultObject);
+		    }
+		    else if(resultObject instanceof BigInteger){
+		    	BigInteger resBigInt=(BigInteger)resultObject;
+		    	result=Integer.toString(resBigInt.intValue());
+		    }
+		    else{
+		    	result=resultObject.toString();
+		    	System.err.println("BAD CONVERSION!!!");
+		    }
 		    
 		    ArrayList<String> results=new ArrayList<String>();
 		    //Montamos el resultado

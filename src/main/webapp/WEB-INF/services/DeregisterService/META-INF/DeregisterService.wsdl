@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="DeregisterService" targetNamespace="http://wtp" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://wtp" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://wtp">
+
+			<xsd:element name="DeregisterService">
+
+				<xsd:complexType>
+
+					<xsd:sequence>
+						<xsd:element name="ServiceID" type="xsd:string"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="DeregisterServiceResponse">
+
+				<xsd:complexType>
+
+					<xsd:sequence>
+						<xsd:element name="return" type="xsd:int"/>
+
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="DeregisterServiceMessage">
+    <wsdl:part name="parameters" element="tns:DeregisterService">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="DeregisterServiceResponse">
+    <wsdl:part name="parameters" element="tns:DeregisterServiceResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="DeregisterServicePortType">
+    <wsdl:operation name="DeregisterService">
+      <wsdl:input message="tns:DeregisterServiceMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:DeregisterServiceResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="DeregisterServiceSOAP" type="tns:DeregisterServicePortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="DeregisterService">
+      <soap:operation soapAction="http://wtp"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="DeregisterService">
+    <wsdl:port name="DeregisterServiceSOAP" binding="tns:DeregisterServiceSOAP">
+      <soap:address location="http://localhost:8080/sfservices/services/DeregisterService"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
