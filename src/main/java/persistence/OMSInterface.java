@@ -70,8 +70,9 @@ public class OMSInterface {
 	{
 
 		//--------------------------------------------------------------------------------
-		//------------------- Section where the parameters are validated -----------------
+		//------------------------- Checking input parameters ----------------------------
 		//--------------------------------------------------------------------------------
+
 		if (checkParameter(CreatorName) && checkParameter(UnitName))
 		{
 
@@ -88,7 +89,7 @@ public class OMSInterface {
 				{
 					ParentUnitName = "virtual";
 				}
-				
+
 				//--------------------------------------------------------------------------------
 				//------------------------- Checking domain-dependent norms ----------------------
 				//--------------------------------------------------------------------------------
@@ -130,8 +131,9 @@ public class OMSInterface {
 		boolean play = false;
 
 		//--------------------------------------------------------------------------------
-		//------------------- Section where the parameters are validated -----------------
+		//------------------------- Checking input parameters ----------------------------
 		//--------------------------------------------------------------------------------
+
 		if (checkParameter(UnitName))
 		{
 			if (dbInterface.checkUnit(UnitName) && !UnitName.equals("virtual"))
@@ -213,15 +215,16 @@ public class OMSInterface {
 		String unitType = "";
 
 		//--------------------------------------------------------------------------------
-		//------------------- Section where the parameters are validated -----------------
+		//------------------------- Checking input parameters ----------------------------
 		//--------------------------------------------------------------------------------
+
 		if (checkParameter(RoleName) && checkParameter(UnitName) && checkParameter(Accesibility) && checkParameter(Visibility) && checkParameter(Position))
 		{
 			if (dbInterface.checkUnit(UnitName))
 			{
 				if (!dbInterface.checkRole(RoleName, UnitName))
 				{
-				
+
 					unitType = dbInterface.getUnitType(UnitName);
 
 					if (unitType.equals("hierarchy"))
@@ -336,8 +339,9 @@ public class OMSInterface {
 		String unitType = "";
 
 		//--------------------------------------------------------------------------------
-		//------------------- Section where the parameters are validated -----------------
+		//------------------------- Checking input parameters ----------------------------
 		//--------------------------------------------------------------------------------
+
 		if (checkParameter(RoleName) && checkParameter(UnitName))
 		{
 			if (dbInterface.checkUnit(UnitName)) 
@@ -443,13 +447,14 @@ public class OMSInterface {
 	 * @throws THOMASException
 	 * @throws SQLException
 	 */
-	public String AcquireRole(String RoleName,String UnitName, String AgentName) throws THOMASException, SQLException
+	public String acquireRole(String RoleName,String UnitName, String AgentName) throws THOMASException, SQLException
 	{
 
+		ArrayList<String> positions = new ArrayList<String>();
+		//--------------------------------------------------------------------------------
+		//------------------------- Checking input parameters ----------------------------
+		//--------------------------------------------------------------------------------
 
-		//--------------------------------------------------------------------------------
-		//------------------- Section where the parameters are validated -----------------
-		//--------------------------------------------------------------------------------
 
 		if (checkParameter(RoleName) && checkParameter(UnitName))
 		{
@@ -473,18 +478,31 @@ public class OMSInterface {
 					{
 						ArrayList<String> informRole = dbInterface.getInformRole(RoleName, UnitName);
 						String accessibility = informRole.get(0);
-						String visibility = informRole.get(1);
 						String position = informRole.get(2);
 
+						ArrayList<ArrayList<String>> agentRoles = dbInterface.getInformAgentRole(AgentName, AgentName);
 
-						if (!dbInterface.checkPositionInUnit(AgentName, "member", UnitName) && 
-								!dbInterface.checkPositionInUnit(AgentName, "creator", UnitName) &&
-								!dbInterface.checkPositionInUnit(AgentName, "supervisor", UnitName))
+						for(ArrayList<String> a : agentRoles)
+						{
+							String role = a.get(0);
+							String unit = a.get(1);
+							ArrayList<String> pos = dbInterface.getInformRole(role, unit);
+							positions.add(pos.get(2));		
+
+						}
+
+
+
+
+
+						if (!positions.contains("member") &&
+								!positions.contains("creator") && 
+								!positions.contains("supervisor"))
 						{
 							//Solamente tiene el rol subordinate.
 							if (!position.equals("subordinate") && !position.equals("member"))
 							{
-								throw new THOMASException("Not allowed. The position role cannot be creator or supervisor.");
+								throw new THOMASException("Not allowed. The agent not have enough permissions for acquire role with position creator or supervisor.");
 							}
 
 
@@ -496,23 +514,16 @@ public class OMSInterface {
 
 
 						}
-						else if (visibility.equals("public"))
+						else if (dbInterface.checkAgentInUnit(AgentName, UnitName) || dbInterface.checkAgentInUnit(AgentName, dbInterface.getParentsUnit(UnitName).get(0)))//Check agent in parent unit
 						{
 							return dbInterface.acquireRole(UnitName, RoleName, AgentName);
 
 						}
 						else
 						{
-							if (dbInterface.checkAgentInUnit(AgentName, UnitName))
-							{
-								return dbInterface.acquireRole(UnitName, RoleName, AgentName);
-
-							}
-							else
-							{
-								throw new THOMASException("Not allowed. Agent "+ AgentName + " is not inside the unit.");
-							}
+							throw new THOMASException("Not allowed. Agent "+ AgentName + " is not inside the unit or parent unit.");
 						}
+
 
 					}
 				}//checkRole
@@ -545,8 +556,9 @@ public class OMSInterface {
 	{
 
 		//--------------------------------------------------------------------------------
-		//------------------- Section where the parameters are validated -----------------
+		//------------------------- Checking input parameters ----------------------------
 		//--------------------------------------------------------------------------------
+
 		if (checkParameter(RoleName) && checkParameter(UnitName))
 		{
 			if (dbInterface.checkUnit(UnitName))
@@ -597,7 +609,7 @@ public class OMSInterface {
 
 
 		//--------------------------------------------------------------------------------
-		//------------------- Section where the parameters are validated -----------------
+		//------------------------- Checking input parameters ----------------------------
 		//--------------------------------------------------------------------------------
 
 		if (checkParameter(RoleName) && checkParameter(UnitName) && checkParameter(TargetAgentName))
@@ -669,7 +681,7 @@ public class OMSInterface {
 							}
 							else
 							{
-								throw new THOMASException("Not allowed. The Agent "+ AgentName + " not play any rol with position member or creator in unit "+ UnitName+".");
+								throw new THOMASException("Not allowed. The Agent "+ AgentName + " not play any rol with position member or creator in unit.");
 							}
 
 						}
@@ -722,8 +734,9 @@ public class OMSInterface {
 
 
 		//--------------------------------------------------------------------------------
-		//------------------- Section where the parameters are validated -----------------
+		//------------------------- Checking input parameters ----------------------------
 		//--------------------------------------------------------------------------------
+
 
 		if (checkParameter(RoleName) && checkParameter(UnitName) && checkParameter(TargetAgentName))
 		{
@@ -847,8 +860,9 @@ public class OMSInterface {
 
 
 		//--------------------------------------------------------------------------------
-		//------------------- Section where the parameters are validated -----------------
+		//------------------------- Checking input parameters ----------------------------
 		//--------------------------------------------------------------------------------
+
 		if (dbInterface.checkUnit(UnitName))
 		{
 			if (dbInterface.checkUnit(ParentName))
@@ -914,6 +928,10 @@ public class OMSInterface {
 		String result = "";
 		ArrayList<ArrayList<String>> methodResult = new ArrayList<ArrayList<String>>();
 
+
+		//--------------------------------------------------------------------------------
+		//------------------------- Checking input parameters ----------------------------
+		//--------------------------------------------------------------------------------
 
 		if (dbInterface.checkAgent(RequestedAgentName))
 		{
