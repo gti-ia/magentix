@@ -455,7 +455,7 @@ class DataBaseInterface
 			Statement st2 = db.connection.createStatement();
 			ResultSet res2 = st2.executeQuery("SELECT idunitList FROM unitList WHERE unitName ='"+parentName+"'");
 			if(res2.next()){
-				int idParentUnit = res.getInt("idunitList");
+				int idParentUnit = res2.getInt("idunitList");
 				Statement st3 = db.connection.createStatement();
 				int res3 = st3.executeUpdate("DELETE FROM unitHierarchy WHERE idChildUnit ="+idunitList);
 				if(res3 != 0){
@@ -653,6 +653,13 @@ class DataBaseInterface
 		return result;
 	}
 
+	ArrayList<ArrayList<String>> getInformAgentRolesPlayedInUnit(String unitName, String agentName) throws SQLException, THOMASException{
+		ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
+		
+		
+		return result;
+		
+	}
 	ArrayList<ArrayList<String>> getAgentsRolesInUnit(String unitName, String agentName) throws SQLException, THOMASException{
 		ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
 		int idPublicVisibility;
@@ -670,7 +677,7 @@ class DataBaseInterface
 		Statement st3 = db.connection.createStatement();
 		ResultSet res3 = st3.executeQuery("SELECT idVisibility FROM visibility WHERE visibility ='private'");
 		if(res3.next())
-			idPrivateVisbility = res.getInt("idVisibility");
+			idPrivateVisbility = res3.getInt("idVisibility");
 		else
 			throw new THOMASException("Error: visibility private not found in database");
 
@@ -732,7 +739,7 @@ class DataBaseInterface
 		Statement st3 = db.connection.createStatement();
 		ResultSet res3 = st3.executeQuery("SELECT idVisibility FROM visibility WHERE visibility ='private'");
 		if(res3.next())
-			idPrivateVisbility = res.getInt("idVisibility");
+			idPrivateVisbility = res3.getInt("idVisibility");
 		else
 			throw new THOMASException("Error: visibility private not found in database");
 
@@ -788,7 +795,7 @@ class DataBaseInterface
 		Statement st2 = db.connection.createStatement();
 		ResultSet res2 = st2.executeQuery("SELECT idunitList FROM unitList WHERE unitName ='"+unitName+"'");
 		if(res2.next())
-			idunit = res.getInt("idunitList");
+			idunit = res2.getInt("idunitList");
 		else
 			throw new THOMASException("Error: unit "+unitName+" not found in database");
 
@@ -829,7 +836,7 @@ class DataBaseInterface
 		Statement st3 = db.connection.createStatement();
 		ResultSet res3 = st3.executeQuery("SELECT idVisibility FROM visibility WHERE visibility ='private'");
 		if(res3.next())
-			idPrivateVisbility = res.getInt("idVisibility");
+			idPrivateVisbility = res3.getInt("idVisibility");
 		else
 			throw new THOMASException("Error: visibility private not found in database");
 
@@ -946,7 +953,7 @@ class DataBaseInterface
 		Statement st3 = db.connection.createStatement();
 		ResultSet res3 = st3.executeQuery("SELECT idVisibility FROM visibility WHERE visibility ='private'");
 		if(res3.next())
-			idPrivateVisbility = res.getInt("idVisibility");
+			idPrivateVisbility = res3.getInt("idVisibility");
 		else
 			throw new THOMASException("Error: visibility private not found in database");
 
@@ -1065,7 +1072,7 @@ class DataBaseInterface
 		Statement st3 = db.connection.createStatement();
 		ResultSet res3 = st3.executeQuery("SELECT idVisibility FROM visibility WHERE visibility ='private'");
 		if(res3.next())
-			idPrivateVisbility = res.getInt("idVisibility");
+			idPrivateVisbility = res3.getInt("idVisibility");
 		else
 			throw new THOMASException("Error: visibility private not found in database");
 
@@ -1159,7 +1166,7 @@ class DataBaseInterface
 		Statement st3 = db.connection.createStatement();
 		ResultSet res3 = st3.executeQuery("SELECT idVisibility FROM visibility WHERE visibility ='private'");
 		if(res3.next())
-			idPrivateVisbility = res.getInt("idVisibility");
+			idPrivateVisbility = res3.getInt("idVisibility");
 		else
 			throw new THOMASException("Error: visibility private not found in database");
 
@@ -1208,7 +1215,7 @@ class DataBaseInterface
 			aux.add(res8.getString("roleName"));
 			aux.add(res10.getString("accesibility"));
 			aux.add(res11.getString("visibility"));
-			aux.add(res11.getString("visibility"));
+			aux.add(res9.getString("position"));
 			result.add(aux);
 		}
 		return result;		
