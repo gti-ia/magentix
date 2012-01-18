@@ -19,7 +19,7 @@ public class RegisterServiceSkeleton{
 	
 	SFinterface sfInterface=new SFinterface();
 	/**
-	 * Auto generated method signature
+	 * Register Service implementation
 	 * 
 	 * @param registerService
 	 */

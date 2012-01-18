@@ -19,7 +19,7 @@ public class RemoveProviderSkeleton{
 	
 	SFinterface sfInterface=new SFinterface();
 	/**
-	 * Auto generated method signature
+	 * Remove Provider implementation
 	 * 
 	 * @param removeProvider
 	 */

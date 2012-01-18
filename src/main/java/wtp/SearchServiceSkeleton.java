@@ -24,7 +24,7 @@ public class SearchServiceSkeleton{
 	
 	SFinterface sfInterface=new SFinterface();
 	/**
-	 * Auto generated method signature
+	 * Search Service implementation 
 	 * 
 	 * @param searchService
 	 */

@@ -21,8 +21,8 @@ public class GetServiceSkeleton{
 	SFinterface sfInterface=new SFinterface();
 
 	/**
-	 * Auto generated method signature
 	 * 
+	 * Get Service implementation
 	 * @param getService
 	 */
 

@@ -19,8 +19,8 @@ public class DeregisterServiceSkeleton{
 	
 	SFinterface sfInterface=new SFinterface();
 	/**
-	 * Auto generated method signature
 	 * 
+	 * Deregister Service implementation
 	 * @param deregisterService
 	 */
 
