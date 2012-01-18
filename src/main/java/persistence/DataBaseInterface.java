@@ -655,11 +655,56 @@ class DataBaseInterface
 
 	ArrayList<ArrayList<String>> getInformAgentRolesPlayedInUnit(String unitName, String agentName) throws SQLException, THOMASException{
 		ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
-		
-		
-		return result;
-		
+		int idunitList;
+
+		Statement st2 = db.connection.createStatement();
+		ResultSet res2 = st2.executeQuery("SELECT idunitList FROM unitList WHERE unitName ='"+ unitName+"'");
+		if(res2.next())
+			idunitList = res2.getInt("idunitList");
+		else
+			throw new THOMASException("Error : unit "+unitName+" not found in database");
+
+		Statement st10 = db.connection.createStatement();
+		ResultSet res10 = st10.executeQuery("SELECT idroleList FROM agentPlayList WHERE agentName ='"+agentName+"'");
+		while(res10.next()){
+			int idroleList = res10.getInt("idroleList");
+			Statement st11 = db.connection.createStatement();
+			ResultSet res11 = st11.executeQuery("SELECT * FROM roleList WHERE idroleList ="+idroleList+" AND idunitList="+idunitList);
+			if(res11.next()){
+				int idvisibility = res11.getInt("idvisibility");
+				int idaccesibility = res11.getInt("idaccesibility");
+				int idposition = res11.getInt("idposition");
+				String roleName = res11.getString("roleName");
+				String position = "";
+				String visibility = "";
+				String accesibility = "";
+				
+				Statement st12 = db.connection.createStatement();
+				ResultSet res12 = st12.executeQuery("SELECT * FROM position WHERE idposition ="+idposition);				
+				if(res12.next())
+					position = res12.getString("position");
+				
+				Statement st13 = db.connection.createStatement();
+				ResultSet res13 = st13.executeQuery("SELECT * FROM accesibility WHERE idaccesibility ="+idaccesibility);
+				if(res13.next())
+					accesibility = res13.getString("accesiblity");
+				
+				Statement st14 = db.connection.createStatement();
+				ResultSet res14 = st14.executeQuery("SELECT * FROM visibility WHERE idvisibility ="+idvisibility);
+				if(res14.next())
+					visibility = res14.getString("visibility");
+				
+				ArrayList<String>aux = new ArrayList<String>();
+				aux.add(roleName);
+				aux.add(visibility);
+				aux.add(accesibility);
+				aux.add(position);
+				result.add(aux);
+			}
+		}
+		return result;		
 	}
+	
 	ArrayList<ArrayList<String>> getAgentsRolesInUnit(String unitName, String agentName) throws SQLException, THOMASException{
 		ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
 		int idPublicVisibility;
