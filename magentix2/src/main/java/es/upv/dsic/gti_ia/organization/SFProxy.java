@@ -76,7 +76,7 @@ public class SFProxy extends THOMASProxy {
 	 */
 	@SuppressWarnings("unchecked")
 	public Hashtable<String, String> genericService(
-			AgentID agentProvider, String URLProfile, String URLProcess,
+			AgentID agentProvider, String URLProfile,
 			ArrayList<String> ArrayArguments){
 
 		isgenericSerice = true;
@@ -102,12 +102,12 @@ public class SFProxy extends THOMASProxy {
 		for (String s : inputs) {
 
 			if (i < ArrayArguments.size())
-				arguments = arguments + " " + s + "=" + ArrayArguments.get(i);
+				arguments = arguments + " -- " + s + "=" + ArrayArguments.get(i);
 			i++;
 		}
 
 		// build the message to service provider
-		call = URLProcess + arguments;
+		call = URLProfile+" -- "+arguments;
 
 		clientProvider = agentProvider.name;
 
@@ -129,20 +129,18 @@ public class SFProxy extends THOMASProxy {
 	 *         indicates if an error occurs (1:OK otherwise 0)
 	 */
 
-	public String removeProvider(
-			ProcessDescription ProcessDescription) {
-		this.processDescripcion = ProcessDescription;
-		serviceName = "RemoveProviderProcess";
+	public String removeProvider(String serviceProfile, String providerName) {
+		
+		serviceName = "RemoveProvider";
 
-		if (ProcessDescription.getImplementationID().equals("")) {
-			logger.error("ImplementationID is empty");
+		if (serviceProfile.equals("") ) {
+			logger.error("serviceProfile is empty");
 			return "";
 
 		}
-		call = ServiceDescriptionLocation
-		+ "RemoveProviderProcess.owl "
-		+ "RemoveProviderInputServiceImplementationID="
-		+ this.processDescripcion.getImplementationID()+" RemoveProviderInputProviderID="+agent.getAid().toString();
+		call = serviceName+" -- "+
+		" RemoveProviderInputServiceProfile="+ serviceProfile+" -- "+
+		" RemoveProviderInputProviderName="+providerName;
 
 		return (String) this.sendInform();
 	}
@@ -158,91 +156,18 @@ public class SFProxy extends THOMASProxy {
 	 *         indicates if an error occurs
 	 */
 	@SuppressWarnings("unchecked")
-	public ArrayList<String> searchService(String serviceGoal)
+	public String searchService(String inputs, String outputs)
 	{
 
-		serviceName = "SearchServiceProcess";
-		call = ServiceDescriptionLocation
-		+ "SearchServiceProcess.owl SearchServiceInputServicePurpose="
-		+ serviceGoal;
+		serviceName = "SearchService";
+		call = serviceName +" -- "+
+		" SearchServiceInputServiceInputs="+inputs+" -- "+
+		" SearchServiceInputServiceOutputs="+outputs;
 
-		return (ArrayList<String>) this.sendInform();	
+		return (String) this.sendInform();	
 	}
 
-	/**
-	 * It is used to modify the implementation of a registered service. The client specifies 
-	 * the part of the service to be modified. The service Id will not change.
-	 * @param ProcessDescription
-	 *            contains two elements: service implementation ID (is a string:
-	 *            serviceprofile@servicenumidagent), service model (is a
-	 *            string: urlprocess#processname, this parameter is entered when
-	 *            creating the instance of ProcessDescription)).
-	 * @return ModifyProcessResponse contains return which indicates if an error
-	 *         occurs (1:OK, otherwise 0).
-	 * 
-	 */
-	public String modifyProcess(
-			ProcessDescription ProcessDescription) 
-
-	{
-		this.processDescripcion = ProcessDescription;
-		serviceName = "ModifyProcessProcess";
-		if (ProcessDescription.getImplementationID().equals("")
-				|| ProcessDescription.getServiceModel().equals("")) {
-			logger.error("ImplementationID or Service Goal is  empty");
-			return "";
-
-		}
-
-		call = ServiceDescriptionLocation + "ModifyProcessProcess.owl"
-		+ " ModifyProcessInputServiceGrounding= "
-		+ " ModifyProcessInputServiceImplementationID="
-		+ this.processDescripcion.getImplementationID()
-		+ " ModifyProcessInputServiceModel="
-		+ this.processDescripcion.getServiceModel();
-
-		return (String) this.sendInform();
-
-	}
-
-	/**
-	 * It is used to modify the description (profile) of a registered service. The client specifies the part of the service 
-	 * to be modified. The service Id not change.
-	 * 
-	 * @param ProfileDescription
-	 *            contains three elements: service id (is a string: service
-	 *            profile id), service goal (currently is not in use),and
-	 *            service profile ( is a string urlprofile#profilename, this
-	 *            parameter is entered when creating the instance of
-	 *            ProfileDescription))
-	 * @return Status return which indicates if a problem occurs (1: ok, 0:
-	 *         there are provider which implement the profile, -1: the service
-	 *         id is not valid).
-	 */
-	public String modifyProfile(
-			ProfileDescription ProfileDescription){
-
-		this.profileDescription = ProfileDescription;
-		serviceName = "ModifyProfileProcess";
-
-		if (ProfileDescription.getServiceID().equals("")
-				|| ProfileDescription.getServiceProfile().equals("")) {
-			logger.error("ID or Service Goal is  empty");
-			return "";
-
-
-		}
-
-		call = ServiceDescriptionLocation + "ModifyProfileProcess.owl "
-		+ "ModifyProfileInputServiceID="
-		+ this.profileDescription.getServiceID()
-		+ " ModifyProfileInputServiceGoal=" + " "
-		+ " ModifyProfileInputServiceProfile="
-		+ this.profileDescription.getServiceProfile();
-
-		return (String) this.sendInform();
-
-	}
+	
 
 	/**
 	 * It is used to delete a service description.
@@ -252,148 +177,41 @@ public class SFProxy extends THOMASProxy {
 	 *            id)
 	 * @return Status  return indicates if an error occurs.
 	 */
-	public String deregisterProfile(
-			ProfileDescription ProfileDescription)  {
+	public String deregisterService(String serviceProfile)  {
 
-		this.profileDescription = ProfileDescription;
-		serviceName = "DeregisterProfileProcess";
-		if (ProfileDescription.getServiceID().equals("")) {
-			logger.error("ID is  empty");
+		
+		serviceName = "DeregisterService";
+		if (serviceProfile.equals("")) {
+			logger.error("serviceProfile is  empty");
 			return "";
 		}
 
-
-
-		call = ServiceDescriptionLocation
-		+ "DeregisterProfileProcess.owl DeregisterProfileInputServiceID="
-		+ profileDescription.getServiceID();
+		call = serviceName+" -- "+
+		" DeregisterServiceInputServiceProfile="+serviceProfile;
 
 		return (String) this.sendInform();
 
 	}
-
-	/**
-	 * This service returns the providers which implements the required profile.
-	 * 
-	 * @param serviceID
-	 *            the service ID (is a string: service profile id).
-	 * @return provider list (is a hashtable with a pair of key and value. 
-	 * The key is agent that offered the service and value is a URL process).
-	 */
-
-	@SuppressWarnings("unchecked")
-	public Hashtable<AgentID, String> getProcess(
-			String serviceID){
-
-		serviceName = "GetProcessProcess";
-		call = ServiceDescriptionLocation
-		+ "GetProcessProcess.owl GetProcessInputServiceID=" + serviceID;
-		/*
-		 * + sfAgentdescription.getURLProfile() + descripcion.getID() + ".owl#"
-		 * + descripcion.getID();
-		 */
-		return (Hashtable<AgentID, String>) this.sendInform();
-
-	}
-
-	/**
-	 * This service returns the URL of the required profile.
-	 * 
-
-	 * @param serviceID
-	 *            the service ID (is a string: service profile id)
-	 * @return Status contains three elements: service profile (is a string: the
-	 *         URL profile), or indicates if an error occurs.
-	 */
-	public String getProfile(String serviceID)
+	
+	public String getService(String serviceProfile)
 	{
-
-		call = ServiceDescriptionLocation
-		+ "GetProfileProcess.owl GetProfileInputServiceID=" + serviceID;
-
-		serviceName = "GetProfileProcess";
+		serviceName="GetService";
+		
+		call=serviceName+" -- "+
+		" GetServiceInputServiceProfile="+serviceProfile;
+		
 		return (String) this.sendInform();
-
+	}
+	
+	public String registerService(String serviceURL)
+	{
+		serviceName="RegisterService";
+		
+		call=serviceName+" -- "+
+		" RegisterServiceInputServiceURL="+serviceURL;
+		
+		return (String) this.sendInform();
 	}
 
-
-
-	/**
-	 * 
-	 * It is used when an autonomous entity wants to register a service description. To do this the following structure has
-	 * to be completed in order the service description (ProfileDescription).
-	 * This method assigns an Id to the structure ProfileDescription. This result implies that the service is publicly available.
-	 * 
-	 * The execution of this service implies:
-	 *	- Checks if ServiceProfile isn't null
-	 * @param ProfileDescription
-	 *            This parameter contains one element necessary: service profile ( is a
-	 *            string: urlprofile#profilename, this parameter is entered when
-	 *            creating the instance of ProfileDescription, therefore it is not necessary to be add it.) )
-	 * @return Status indicates if an error occurs (1:OK , 0: bad news).
-
-	 */
-	public String registerProfile(
-			ProfileDescription ProfileDescription){
-
-		this.profileDescription = ProfileDescription;
-		serviceName = "RegisterProfileProcess";
-		if (ProfileDescription.getServiceProfile().equals("")) {
-			logger.error("Service Profile or Service Goal is empty");
-			return "";
-
-		}
-
-
-		call = ServiceDescriptionLocation
-		+ "RegisterProfileProcess.owl "
-		+ "RegisterProfileInputServiceGoal= "
-		+ " RegisterProfileInputServiceProfile="
-		+ this.profileDescription.getServiceProfile();
-
-		return (String) this.sendInform();
-
-
-
-	}
-
-	/**
-	 * It is used when an agent wants to register a particular implementation of a given service.
-	 * Internally this method assigns an ImplementationId to the structure
-	 * ProcessDescription
-
-	 *@param ProcessDescription
-	 *            this parameter contains two elements necessary: service profile id,
-	 *            this parameter is returned when we call the method
-	 *            searchService (use ProcessDescription method setProfileID to add), and service model, this
-	 *            parameter is entered when creating the instance of
-	 *            ProcessDescription.
-	 * @return status indicates if an error occurs (1:OK , 0: bad news).
-	 */
-	public String registerProcess(
-			ProcessDescription ProcessDescription) {
-
-
-		this.processDescripcion = ProcessDescription;
-		serviceName = "RegisterProcessProcess";
-		if (this.processDescripcion.getProfileID().equals("")
-				|| this.processDescripcion.getServiceModel().equals("")) {
-			logger.error("ID or Service Model is empty");
-			return "";
-
-		}
-
-		call = ServiceDescriptionLocation
-		+ "RegisterProcessProcess.owl"
-		+ " RegisterProcessInputServiceID="
-		+ this.processDescripcion.getProfileID()
-		+ " RegisterProcessInputServiceModel="
-		+ this.processDescripcion.getServiceModel();
-
-		return (String) this.sendInform();
-
-
-	}
-
-
+	
 }

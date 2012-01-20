@@ -31,6 +31,7 @@ public class SF extends CAgent {
 	private static SF sf = null;
 	private String SFServiceDesciptionLocation = configuration.getSFServiceDesciptionLocation();
 
+	private static HashMap<String, String> sfServicesURLs=new HashMap<String, String>();
 	static Logger logger = Logger.getLogger(SF.class);
 	// create a kb
 //	OWLKnowledgeBase kb = OWLFactory.createKB();
@@ -241,6 +242,14 @@ public class SF extends CAgent {
 	private SF(AgentID aid) throws Exception {
 
 		super(aid);
+		
+		//TODO get from some configuration file...
+		
+		sfServicesURLs.put("RegisterService", "http://localhost:8080/sfservices/SFservices/owl/owls/RegisterService.owl");
+		sfServicesURLs.put("DeregisterService", "http://localhost:8080/sfservices/SFservices/owl/owls/DeregisterService.owl");
+		sfServicesURLs.put("GetService", "http://localhost:8080/sfservices/SFservices/owl/owls/GetService.owl");
+		sfServicesURLs.put("SearchService", "http://localhost:8080/sfservices/SFservices/owl/owls/SearchService.owl");
+		sfServicesURLs.put("RemoveProvider", "http://localhost:8080/sfservices/SFservices/owl/owls/RemoveProvider.owl");
 
 	}
 
@@ -302,6 +311,67 @@ public class SF extends CAgent {
 		}
 	}// end RegisterSFServiceProfiles
 
+	private static String executeWithJavaX(String inputParams){
+		
+		StringTokenizer tokenInputParams = new StringTokenizer(inputParams, "--");
+		String serviceURL=sfServicesURLs.get(tokenInputParams.nextToken().trim());
+		Oracle oracle = new Oracle();
+		oracle.setURLProcess(serviceURL);
+		
+		ArrayList<String> processInputs=oracle.getProcessInputs();
+		
+		HashMap<String,String> paramsComplete=new HashMap<String, String>();
+		Iterator<String> iterProcessInputs=processInputs.iterator();
+		while(iterProcessInputs.hasNext()){
+			String in=iterProcessInputs.next().toLowerCase();
+			//initialize the inputs
+			paramsComplete.put(in, "");
+		}
+		
+		
+		while(tokenInputParams.hasMoreTokens()){
+			String inputToken=tokenInputParams.nextToken().trim();
+			StringTokenizer anInputToken=new StringTokenizer(inputToken, "=");
+			String in=anInputToken.nextToken().toLowerCase().trim();
+			String value="";
+			if(anInputToken.hasMoreTokens())
+				value=anInputToken.nextToken().trim();
+			if(paramsComplete.get(in)!=null){
+				paramsComplete.put(in, value);
+				System.out.println("inputParamName: "+in+" value: "+value);
+			}
+		}
+		
+		
+		//construct params list with the value of the parameters ordered...
+		ArrayList<String> params = new ArrayList<String>();
+		Iterator<String> iterInputs=processInputs.iterator();
+		while(iterInputs.hasNext()){
+			String input=iterInputs.next().toLowerCase();
+			params.add(paramsComplete.get(input));
+			//System.out.println("inputParamValue: "+paramsComplete.get(input));
+		}
+		
+		ServiceClient serviceClient = new ServiceClient();
+	    ArrayList<String> results = serviceClient.invoke(serviceURL, params);
+	    
+	    //String process_localName="SearchServiceProcess"; //TODO no estic segur si es això...
+	    //String resultStr=process_localName+ "=" + "{";
+		String resultStr=serviceURL+"=" + "{";
+		for(int i=0;i<results.size();i++){
+			resultStr+=serviceURL+"#"+results.get(i);
+			if(i!=results.size()-1){
+				resultStr+=", ";
+			}
+			else{
+				resultStr+=" }";
+			}
+		}
+		
+		
+		return resultStr;
+	}
+	
 	@Override
 	protected void finalize(CProcessor firstProcessor,
 			ACLMessage finalizeMessage) {
@@ -319,16 +389,15 @@ public class SF extends CAgent {
 
 				try{
 				//TODO bad use of constructor
-				ProcessDescription processDescription= new ProcessDescription("", "");
-				String processURL=processDescription.getProcessURL(myProcessor.getLastReceivedMessage());
-				//extract process' local name
-				String process_localName = processDescription.getProcessLocalName(myProcessor.getLastReceivedMessage());
-				
-				logger.info("[SF]Doc OWL-S: " + processURL);
-				
-				
+//				ProcessDescription processDescription= new ProcessDescription("", "");
+//				String processURL=processDescription.getProcessURL(myProcessor.getLastReceivedMessage());
+//				//extract process' local name
+//				String process_localName = processDescription.getProcessLocalName(myProcessor.getLastReceivedMessage());
+//				
+//				logger.info("[SF]Doc OWL-S: " + processURL);
 				
 				
+				/**
 				StringTokenizer Tok = new StringTokenizer(myProcessor.getLastReceivedMessage().getContent());
 				Tok.nextElement().toString();
 				
@@ -342,7 +411,11 @@ public class SF extends CAgent {
 					paramsComplete.put(param, value);
 					//System.out.println("[Provider]Value: " + param);
 				}
+				**/
 				
+				String resultStr=executeWithJavaX(myProcessor.getLastReceivedMessage().getContent());
+				
+				/*****
 				
 				ThomasNOMindswap.Oracle oracle = new Oracle();
 				oracle.setURLProcess(processURL);
@@ -374,6 +447,7 @@ public class SF extends CAgent {
 					}
 				}
 				
+				****/
 				
 				
 //				// create an execution engine

@@ -19,9 +19,9 @@ public class SFtesting {
 //		long finalTime=System.currentTimeMillis()-initTime;
 //		System.out.println(finalTime + " millis " + finalTime/1000 + " seconds");
 		
-		sf.clean();
-
-		sf.RegisterService("http://127.0.0.1/services/1.1/calculateSunriseTime.owls");
+//		sf.clean();
+//
+//		sf.RegisterService("http://127.0.0.1/services/1.1/calculateSunriseTime.owls");
 //		
 //		sf.RegisterService("http://127.0.0.1/services/1.1/author_bookprice_service.owls");
 //		
@@ -33,8 +33,11 @@ public class SFtesting {
 		
 		//sf.deregisterService("http://127.0.0.1/services/1.1/calculateSunriseTime.owls", "CALCULATE_SUNRISE_PROFILE");
 		
-//		System.out.println("\n\nMODEL:\n\n");
-//		sf.writeModel();
+//		sf.removeProvider("http://127.0.0.1/services/1.1/calculateSunriseTime.owls#CALCULATE_SUNRISE_PROFILE"
+//				, "Provider2");
+		
+		System.out.println("\n\nMODEL:\n\n");
+		sf.writeModel();
 //		
 		
 //		sf.testQuery();
@@ -56,21 +59,21 @@ public class SFtesting {
 //		
 
 		
-		ArrayList<String> inputs=new ArrayList<String>();
-		inputs.add("\"http://127.0.0.1/ontology/geographydataset.owl#Code\"^^xsd:anyURI");
-		inputs.add("\"http://127.0.0.1/ontology/protont.owl#longitude\"^^xsd:anyURI");
-		inputs.add("\"http://127.0.0.1/ontology/protonu.owl#Date\"^^xsd:anyURI");
-		inputs.add("\"http://127.0.0.1/ontology/protont.owl#latitude\"^^xsd:anyURI");
-		ArrayList<String> outputs=new ArrayList<String>();
-		outputs.add("\"http://127.0.0.1/ontology/geographydataset.owl#Sunrise\"^^xsd:anyURI");
-		
-		
-		ArrayList<Profile> foundServices=sf.SearchService(inputs, outputs);
-		Iterator<Profile> iterProfs=foundServices.iterator();
-		while(iterProfs.hasNext()){
-			Profile prof=iterProfs.next();
-			System.out.println("Profile: "+prof.getUrl()+" similarity: "+prof.getSuitability());
-		}
+//		ArrayList<String> inputs=new ArrayList<String>();
+//		inputs.add("\"http://127.0.0.1/ontology/geographydataset.owl#Code\"^^xsd:anyURI");
+//		inputs.add("\"http://127.0.0.1/ontology/protont.owl#longitude\"^^xsd:anyURI");
+//		inputs.add("\"http://127.0.0.1/ontology/protonu.owl#Date\"^^xsd:anyURI");
+//		inputs.add("\"http://127.0.0.1/ontology/protont.owl#latitude\"^^xsd:anyURI");
+//		ArrayList<String> outputs=new ArrayList<String>();
+//		outputs.add("\"http://127.0.0.1/ontology/geographydataset.owl#Sunrise\"^^xsd:anyURI");
+//		
+//		
+//		ArrayList<Profile> foundServices=sf.SearchService(inputs, outputs);
+//		Iterator<Profile> iterProfs=foundServices.iterator();
+//		while(iterProfs.hasNext()){
+//			Profile prof=iterProfs.next();
+//			System.out.println("Profile: "+prof.getUrl()+" similarity: "+prof.getSuitability());
+//		}
 		
 		
 //		"http://127.0.0.1/ontology/geographydataset.owl#Code"^^xsd:anyURI
