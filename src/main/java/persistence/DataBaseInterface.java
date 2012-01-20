@@ -623,13 +623,15 @@ class DataBaseInterface
 		while(res9.next()){
 			int idroleList = res9.getInt("idroleList");
 			Statement st10 = db.connection.createStatement();
-			ResultSet res10 = st10.executeQuery("SELECT idunitList FROM roleList WHERE idroleList ="+idroleList+" AND idvisibility ="+idVisibility);
+			ResultSet res10 = st10.executeQuery("SELECT idunitList FROM roleList WHERE idroleList ="+idroleList);// AND idvisibility ="+idVisibility);
 			if(res10.next()){
 				idunits2.add(res10.getInt("idunitList"));
 			}
 		}
 
+	
 		for(int unitid : idunits1){
+			
 			if(idunits2.contains(unitid)){
 				Statement st11 = db.connection.createStatement();
 				ResultSet res11 = st11.executeQuery("SELECT idroleList FROM agentPlayList WHERE agentName ='"+ requestedAgentName+"'");
@@ -637,6 +639,7 @@ class DataBaseInterface
 					ArrayList<String> aux = new ArrayList<String>();
 					int idroleList = res11.getInt("idroleList");
 					Statement st12 = db.connection.createStatement();
+					
 					ResultSet res12 = st12.executeQuery("SELECT roleName FROM roleList WHERE idroleList ="+idroleList+" AND idvisibility ="+idVisibility+" AND idunitList="+unitid);
 					if(res12.next()){
 						Statement st13 = db.connection.createStatement();
@@ -653,7 +656,7 @@ class DataBaseInterface
 		return result;
 	}
 
-	ArrayList<ArrayList<String>> getInformAgentRolesPlayedInUnit(String unitName, String agentName) throws SQLException, THOMASException{
+	ArrayList<ArrayList<String>> getInformAgentRolesPlayedInUnit(String unitName, String targetAgentName) throws SQLException, THOMASException{
 		ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
 		int idunitList;
 
@@ -665,7 +668,7 @@ class DataBaseInterface
 			throw new THOMASException("Error : unit "+unitName+" not found in database");
 
 		Statement st10 = db.connection.createStatement();
-		ResultSet res10 = st10.executeQuery("SELECT idroleList FROM agentPlayList WHERE agentName ='"+agentName+"'");
+		ResultSet res10 = st10.executeQuery("SELECT idroleList FROM agentPlayList WHERE agentName ='"+targetAgentName+"'");
 		while(res10.next()){
 			int idroleList = res10.getInt("idroleList");
 			Statement st11 = db.connection.createStatement();
@@ -687,7 +690,7 @@ class DataBaseInterface
 				Statement st13 = db.connection.createStatement();
 				ResultSet res13 = st13.executeQuery("SELECT * FROM accesibility WHERE idaccesibility ="+idaccesibility);
 				if(res13.next())
-					accesibility = res13.getString("accesiblity");
+					accesibility = res13.getString("accesibility");
 				
 				Statement st14 = db.connection.createStatement();
 				ResultSet res14 = st14.executeQuery("SELECT * FROM visibility WHERE idvisibility ="+idvisibility);
