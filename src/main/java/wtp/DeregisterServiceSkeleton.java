@@ -38,7 +38,7 @@ public class DeregisterServiceSkeleton{
 		
 		boolean result;
 		try {
-			result = sfInterface.deregisterService(serviceID);
+			result = sfInterface.DeregisterService(serviceID);
 		} catch (THOMASException e) {
 			result = false;
 			e.printStackTrace();

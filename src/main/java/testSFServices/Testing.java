@@ -159,18 +159,16 @@ public class Testing {
 
 //		String serviceID="http://127.0.0.1/services/1.1/calculateSunriseTime.owls#CALCULATE_SUNRISE_PROFILE";
 //		String providerID="Provider2";
-		
+//		
 //		String inputParams="removeproviderinputserviceid="+serviceID+" -- "+"removeproviderinputproviderid="+providerID;
 //
 //		String res= executeWithJavaX("http://localhost:8080/sfservices/SFservices/owl/owls/RemoveProvider.owl", inputParams);
 
-		String serviceURL="";//"http://127.0.0.1/services/1.1/calculateSunriseTime2.owls";
-		
+		String serviceURL="http://127.0.0.1/services/1.1/calculateSunriseTime.owls";
 		String inputParams="registerserviceinputserviceurl="+serviceURL;
-
 		String res= executeWithJavaX("http://localhost:8080/sfservices/SFservices/owl/owls/RegisterService.owl", inputParams);
 		
-//		String serviceURL="http://127.0.0.1/services/1.1/calculateSunriseTime.owls#CALCULATE_SUNRISE_PROFILE";
+//		String serviceURL="http://127.0.0.1/services/1.1/calculateSunriseTime2.owls#CALCULATE_SUNRISE_PROFILE2";
 //		
 //		String inputParams="deregisterserviceinputserviceid="+serviceURL;
 //

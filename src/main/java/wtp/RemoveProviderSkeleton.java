@@ -47,7 +47,7 @@ public class RemoveProviderSkeleton{
 		
 		boolean result;
 		try {
-			result = sfInterface.removeProvider(serviceProfile, providerName);
+			result = sfInterface.RemoveProvider(serviceProfile, providerName);
 		} catch (THOMASException e) {
 			result = false;
 			e.printStackTrace();

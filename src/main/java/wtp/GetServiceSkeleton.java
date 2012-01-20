@@ -40,7 +40,7 @@ public class GetServiceSkeleton{
 		String owlsSpecification;
 		String exceptionContent="";
 		try {
-			owlsSpecification = sfInterface.getService(serviceID);
+			owlsSpecification = sfInterface.GetService(serviceID);
 		} catch (THOMASException e) {
 			owlsSpecification="";
 			e.printStackTrace();
