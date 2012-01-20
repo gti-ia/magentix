@@ -828,11 +828,28 @@ class DataBaseInterface
 		return result;
 	}
 
-	ArrayList<ArrayList<String>> getAgentsPlayingPositionInUnit(String unitName,String positionValue) throws SQLException, THOMASException{
+	ArrayList<ArrayList<String>> getAgentsPlayingPositionInUnit(String unitName,String positionValue, String agentName) throws SQLException, THOMASException{
 		ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();		
 		int idposition;
+		int idPublicVisibility;
+		int idPrivateVisbility;
+		boolean playsRole = false;
 		int idunit;
 
+		Statement st10 = db.connection.createStatement();
+		ResultSet res10 = st10.executeQuery("SELECT idVisibility FROM visibility WHERE visibility ='public'");
+		if(res10.next())
+			idPublicVisibility = res10.getInt("idVisibility");
+		else
+			throw new THOMASException("Error: visibility public not found in database");
+
+		Statement st11 = db.connection.createStatement();
+		ResultSet res11 = st11.executeQuery("SELECT idVisibility FROM visibility WHERE visibility ='private'");
+		if(res11.next())
+			idPrivateVisbility = res11.getInt("idVisibility");
+		else
+			throw new THOMASException("Error: visibility private not found in database");
+		
 		Statement st = db.connection.createStatement();
 		ResultSet res = st.executeQuery("SELECT idposition FROM position WHERE position ='"+positionValue+"'");
 		if(res.next())
@@ -846,9 +863,27 @@ class DataBaseInterface
 			idunit = res2.getInt("idunitList");
 		else
 			throw new THOMASException("Error: unit "+unitName+" not found in database");
+		
+		Statement st6 = db.connection.createStatement();
+		ResultSet res6 = st6.executeQuery("SELECT idroleList FROM agentPlayList WHERE agentName ='"+agentName+"'");
+		while(res6.next()){
+			int idroleList2 = res6.getInt("idroleList");
+			Statement st7 = db.connection.createStatement();
+			ResultSet res7 = st7.executeQuery("SELECT * FROM roleList WHERE idroleList ="+idroleList2+" AND idunitList="+idunit);
+			if(res7.next()){
+				playsRole = true;
+				break;
+			}
+		}
 
 		Statement st3 = db.connection.createStatement();
-		ResultSet res3 = st3.executeQuery("SELECT idroleList, roleName FROM roleList WHERE idunitList ="+idunit+" AND idposition ="+idposition);
+		ResultSet res3;
+		if(playsRole){
+			res3 = st3.executeQuery("SELECT idroleList, roleName FROM roleList WHERE idunitList ="+idunit+" AND idposition ="+idposition+" AND (idvisibility ="+idPrivateVisbility+" OR idvisibility ="+idPublicVisibility+")");
+		}
+		else{
+			res3 = st3.executeQuery("SELECT idroleList, roleName FROM roleList WHERE idunitList ="+idunit+" AND idposition ="+idposition+" AND idVisibility ="+idPublicVisibility);
+		}
 		while(res3.next()){
 			int idroleList = res3.getInt("idroleList");
 			String roleName = res3.getString("roleName");
