@@ -48,15 +48,16 @@ public class DeallocateRoleSkeleton{
 
 		res.setStatus("Ok");
 		res.setErrorValue("");
-		if (deallocateRole.getAgentID() == "" || deallocateRole.getRoleName() == ""
-			|| deallocateRole.getUnitName() == "" || deallocateRole.getTargetAgentName() == "")
-		{
-			res.setErrorValue("Invalid. Empty parameters are not allowed.");
-			res.setStatus("Error");
-			return res;
-		}
+
 		try{
-			result =omsInterface.deallocateRole(deallocateRole.getRoleName(),deallocateRole.getUnitName(),deallocateRole.getTargetAgentName(),deallocateRole.getAgentID());
+			if (deallocateRole.getRoleName().equals("null"))
+				result =omsInterface.deallocateRole(null,deallocateRole.getUnitName(),deallocateRole.getTargetAgentName(),deallocateRole.getAgentID());
+			else if (deallocateRole.getUnitName().equals("null"))
+				result =omsInterface.deallocateRole(deallocateRole.getRoleName(),null,deallocateRole.getTargetAgentName(),deallocateRole.getAgentID());
+			else if (deallocateRole.getTargetAgentName().equals("null"))
+				result =omsInterface.deallocateRole(deallocateRole.getRoleName(),deallocateRole.getUnitName(),null,deallocateRole.getAgentID());
+			else
+				result =omsInterface.deallocateRole(deallocateRole.getRoleName(),deallocateRole.getUnitName(),deallocateRole.getTargetAgentName(),deallocateRole.getAgentID());
 			res.setStatus(result);
 			res.setErrorValue("");
 			return res;

@@ -43,15 +43,15 @@ public class AcquireRoleSkeleton
 
 		res.setStatus("Ok");
 		res.setErrorValue("");
-		if (acquireRole.getAgentID() == "" || acquireRole.getRoleID() == ""
-			|| acquireRole.getUnitID() == "")
-		{
-			res.setErrorValue("Invalid. Empty parameters are not allowed.");
-			res.setStatus("Error");
-			return res;
-		}
+
 		try{
-			result = omsInterface.AcquireRole(acquireRole.getRoleID(), acquireRole.getUnitID(),acquireRole.getAgentID());
+			if (acquireRole.getRoleID().equals("null"))
+				result = omsInterface.acquireRole(null, acquireRole.getUnitID(),acquireRole.getAgentID());
+			else if (acquireRole.getUnitID().equals("null"))
+				result = omsInterface.acquireRole(acquireRole.getRoleID(), null,acquireRole.getAgentID());
+			else
+				result = omsInterface.acquireRole(acquireRole.getRoleID(), acquireRole.getUnitID(),acquireRole.getAgentID());
+			
 			
 			res.setStatus(result);
 			res.setErrorValue("");
@@ -60,6 +60,7 @@ public class AcquireRoleSkeleton
 		{
 			res.setStatus("Error");
 			res.setErrorValue(e.getContent());
+			System.out.println("Error value: "+ e.getMessage());
 			return res;
 		}
 		catch(SQLException e)

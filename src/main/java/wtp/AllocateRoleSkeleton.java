@@ -46,14 +46,15 @@ public class AllocateRoleSkeleton{
 
 		res.setStatus("Ok");
 		res.setErrorValue("");
-		if (allocateRole.getAgentId() == "" || allocateRole.getRoleName() == ""
-			|| allocateRole.getUnitName() == "" || allocateRole.getTargetAgentName() == "")
-		{
-			res.setErrorValue("Invalid. Empty parameters are not allowed.");
-			res.setStatus("Error");
-			return res;
-		}
+		
 		try{
+		if (allocateRole.getRoleName().equals("null"))
+			result =omsInterface.allocateRole(null, allocateRole.getUnitName(),allocateRole.getTargetAgentName(),allocateRole.getAgentId());
+		else if (allocateRole.getUnitName().equals("null"))
+			result =omsInterface.allocateRole(allocateRole.getRoleName(), null,allocateRole.getTargetAgentName(),allocateRole.getAgentId());
+		else if (allocateRole.getTargetAgentName().equals("null"))
+			result =omsInterface.allocateRole(allocateRole.getRoleName(), allocateRole.getUnitName(),null,allocateRole.getAgentId());
+		else
 			result =omsInterface.allocateRole(allocateRole.getRoleName(), allocateRole.getUnitName(),allocateRole.getTargetAgentName(),allocateRole.getAgentId());
 			res.setStatus(result);
 			res.setErrorValue("");

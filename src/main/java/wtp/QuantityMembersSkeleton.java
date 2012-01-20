@@ -42,16 +42,12 @@ public class QuantityMembersSkeleton
 		res.setErrorValue("");
 		res.setStatus("Ok");
 		res.setQuantity("0");
-		
-		if (quantityMembers.getUnitID() == "")
-		{
-			res.setErrorValue("Invalid. Empty parameters are not allowed.");
-			res.setStatus("Error");
-			return res;
-		}
-
+	
 		try{
-			result = omsInterface.quantityMembers(quantityMembers.getUnitID(),quantityMembers.getRoleID(), quantityMembers.getPositionValue(), quantityMembers.getAgentID());
+			if (quantityMembers.getUnitID().equals("null"))
+				result = omsInterface.quantityMembers(null,quantityMembers.getRoleID(), quantityMembers.getPositionValue(), quantityMembers.getAgentID());
+			else
+				result = omsInterface.quantityMembers(quantityMembers.getUnitID(),quantityMembers.getRoleID(), quantityMembers.getPositionValue(), quantityMembers.getAgentID());
 			res.setStatus("Ok");
 			res.setQuantity(result);
 			res.setErrorValue("");

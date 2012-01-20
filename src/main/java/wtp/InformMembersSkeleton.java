@@ -50,15 +50,14 @@ public class InformMembersSkeleton
 		res.setStatus("Ok");
 		res.setEntityRoleList("");
 		
-		if (informMembers.getUnitID() == "")
-		{
-			res.setErrorValue("Invalid. Empty parameters are not allowed.");
-			res.setStatus("Error");
-			return res;
-		}
+
 		try{
-			result =omsInterface.informMembers(informMembers.getUnitID(),informMembers.getRoleID(),informMembers.getPositionValue(),informMembers.getAgentID());
-			res.setStatus(result);
+			if (informMembers.getUnitID().equals("null"))
+				result =omsInterface.informMembers(null,informMembers.getRoleID(),informMembers.getPositionValue(),informMembers.getAgentID());
+			else
+				result =omsInterface.informMembers(informMembers.getUnitID(),informMembers.getRoleID(),informMembers.getPositionValue(),informMembers.getAgentID());
+			res.setStatus("Ok");
+			res.setEntityRoleList(result);
 			res.setErrorValue("");
 			return res;
 		}catch(THOMASException e)

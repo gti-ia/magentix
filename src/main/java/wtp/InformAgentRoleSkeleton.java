@@ -50,8 +50,12 @@ public class InformAgentRoleSkeleton
 			return res;
 		}
 		try{
-			result =omsInterface.informAgentRole(informAgentRole.getRequestedAgentID(),informAgentRole.getAgentID());
-			res.setStatus(result);
+			if (informAgentRole.getRequestedAgentID().equals("null"))
+				result =omsInterface.informAgentRole(null,informAgentRole.getAgentID());
+			else
+				result =omsInterface.informAgentRole(informAgentRole.getRequestedAgentID(),informAgentRole.getAgentID());
+			res.setRoleUnitList(result);
+			res.setStatus("Ok");
 			res.setErrorValue("");
 			return res;
 		}catch(THOMASException e)

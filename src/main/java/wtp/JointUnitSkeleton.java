@@ -16,7 +16,7 @@ import persistence.THOMASException;
  *  JointUnitSkeleton java skeleton for the axisService
  */
 public class JointUnitSkeleton{
-	
+
 	public static final Boolean		DEBUG		= true;
 	private static OMSInterface omsInterface = new OMSInterface();
 
@@ -35,26 +35,23 @@ public class JointUnitSkeleton{
 		String result = "";
 		if (DEBUG)
 		{
-			System.out.println("RegisterUnit :");
+			System.out.println("JointUnit :");
 			System.out.println("***AgentID..." + jointUnit.getAgentID());
 			System.out.println("***UnitID..." + jointUnit.getUnitName());
 			System.out.println("***ParentUnitID..."
 					+ jointUnit.getParentName());
-			
+
 		}
-		
+
 		res.setErrorValue("");
 		res.setStatus("Ok");
-		
-		if (jointUnit.getUnitName() == "" || jointUnit.getUnitName() == "")
-		{
-			res.setErrorValue("Invalid. Empty parameters are not allowed");
-			res.setStatus("Error");
-			return res;
-		}
-		
 		try{
-			result =omsInterface.jointUnit(jointUnit.getUnitName(), jointUnit.getParentName(), jointUnit.getAgentID());
+			if (jointUnit.getUnitName().equals("null"))
+				result =omsInterface.jointUnit(null, jointUnit.getParentName(), jointUnit.getAgentID());
+			else if (jointUnit.getParentName().equals("null"))
+				result =omsInterface.jointUnit(jointUnit.getUnitName(), null, jointUnit.getAgentID());
+			else
+				result =omsInterface.jointUnit(jointUnit.getUnitName(), jointUnit.getParentName(), jointUnit.getAgentID());
 			res.setStatus(result);
 			res.setErrorValue("");
 			return res;
@@ -70,7 +67,7 @@ public class JointUnitSkeleton{
 			res.setErrorValue(e.getMessage());
 			return res;
 		}
-		
+
 	}
 
 }
