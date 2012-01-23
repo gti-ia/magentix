@@ -85,10 +85,12 @@ class DataBaseInterface
 			{
 				Statement stmt2 = db.connection.createStatement();
 				int idRole = rs2.getInt("idroleList");
+				
 				ResultSet rs3 = stmt2.executeQuery("SELECT * FROM agentPlayList WHERE idroleList="+idRole+" AND agentName='"+agentName+"'");
 
 				if (rs3.next())
 				{
+				
 					exists = true;
 				}
 			}
@@ -756,16 +758,21 @@ class DataBaseInterface
 		else
 			res12 = st12.executeQuery("SELECT idroleList, roleName FROM roleList WHERE idunitList ="+ idunitList+" AND idVisibility ="+idPublicVisibility);
 		while(res12.next()){
-			ArrayList<String> aux = new ArrayList<String>();
+			
 			String roleName = res12.getString("roleName");
 			int idroleList = res12.getInt("idroleList");
 			Statement st13 = db.connection.createStatement();
+			
 			ResultSet res13 = st13.executeQuery("SELECT agentName FROM agentPlayList WHERE idroleList ="+idroleList);
+			
 			while(res13.next()){
+				ArrayList<String> aux = new ArrayList<String>();
 				aux.add(res13.getString("agentName"));
 				aux.add(roleName);
 				result.add(aux);
 			}
+	
+			
 		}
 		return result;
 	}
@@ -952,17 +959,25 @@ class DataBaseInterface
 		Statement st5 = db.connection.createStatement();
 		ResultSet res5;
 		if(playsRole)
-			res5 = st5.executeQuery("SELECT idroleList FROM roleList WHERE roleName ='"+ roleName+"' AND idposition ="+idposition+" AND (idvisibility ="+idPrivateVisbility+" OR idvisibility ="+idPublicVisibility+")");
+		{
+			
+			res5 = st5.executeQuery("SELECT idroleList FROM roleList WHERE idUnitList="+idunitList+" AND roleName ='"+ roleName+"' AND idposition ="+idposition+" AND (idvisibility ="+idPrivateVisbility+" OR idvisibility ="+idPublicVisibility+")");
+		}
 		else
-			res5 = st5.executeQuery("SELECT idroleList FROM roleList WHERE roleName ='"+ roleName+"' AND idposition ="+idposition+" AND idVisibility ="+idPublicVisibility);
+		{
+			
+			res5 = st5.executeQuery("SELECT idroleList FROM roleList WHERE idUnitList="+idunitList+" AND roleName ='"+ roleName+"' AND idposition ="+idposition+" AND idVisibility ="+idPublicVisibility);
+		}
 		if(res5.next())
 			idroleList = res5.getInt("idroleList");
 		else
 			throw new THOMASException("Error : role "+roleName+" not found in database");
 
 		Statement st10 = db.connection.createStatement();
+		System.out.println("SELECT agentName FROM agentPlayList WHERE idroleList ="+idroleList);
 		ResultSet res10 = st10.executeQuery("SELECT agentName FROM agentPlayList WHERE idroleList ="+idroleList);
 		while(res10.next()){
+			System.out.println("Agent name: "+ res10.getString("agentName"));
 			result.add(res10.getString("agentName"));
 		}		
 		return result;
