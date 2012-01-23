@@ -991,7 +991,9 @@ public class OMSInterface {
 		Flags flag = Flags.CASE_A;
 
 
-
+		//--------------------------------------------------------------------------------
+		//------------------------- Checking input parameters ----------------------------
+		//--------------------------------------------------------------------------------
 		if (checkParameter(UnitName))
 		{
 			if (dbInterface.checkUnit(UnitName))
@@ -1018,8 +1020,10 @@ public class OMSInterface {
 
 								if (!visibility.equals("public"))
 								{
-									if (!dbInterface.checkAgentInUnit(AgentName, UnitName));
+									
+									if (!dbInterface.checkAgentInUnit(AgentName, UnitName))
 									{
+										
 										throw new THOMASException("Not Allowed. Private info is not available if agent "+ AgentName + " is not inside the unit.");
 									}
 								}
@@ -1068,6 +1072,9 @@ public class OMSInterface {
 					//------------------------- Checking domain-dependent norms ----------------------
 					//--------------------------------------------------------------------------------
 					//TODO
+					//--------------------------------------------------------------------------------
+					//------------------------- Checking structural norms ----------------------------
+					//--------------------------------------------------------------------------------
 
 					switch (flag){
 
