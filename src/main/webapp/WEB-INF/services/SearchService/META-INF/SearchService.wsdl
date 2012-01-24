@@ -5,9 +5,10 @@
       <xsd:element name="SearchService">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="Inputs" type="xsd:string"/>
-            <xsd:element name="Outputs" type="xsd:string"/>
-           
+          	<xsd:element name="Inputs" type="xsd:string" />
+          	<xsd:element name="Outputs" type="xsd:string" />
+
+          	<xsd:element name="Keywords" type="xsd:string"></xsd:element>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>

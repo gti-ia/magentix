@@ -18,8 +18,7 @@ public class GetServiceSkeleton{
 
 	public static final Boolean DEBUG = true;
 
-	SFinterface sfInterface=new SFinterface();
-
+	
 	/**
 	 * 
 	 * Get Service implementation
@@ -28,6 +27,8 @@ public class GetServiceSkeleton{
 
 	public wtp.GetServiceResponse GetService(wtp.GetService getService)
 	{
+		SFinterface sfInterface=new SFinterface();
+		
 		wtp.GetServiceResponse response = new wtp.GetServiceResponse();
 
 		String serviceID=getService.getServiceID();
@@ -57,7 +58,6 @@ public class GetServiceSkeleton{
 			response.setOwlsSpecification(owlsSpecification);
 		}
 		
-
 		return response;
 	}
 

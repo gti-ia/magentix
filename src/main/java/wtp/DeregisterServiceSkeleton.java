@@ -17,7 +17,7 @@ public class DeregisterServiceSkeleton{
 
 	public static final Boolean DEBUG = true;
 	
-	SFinterface sfInterface=new SFinterface();
+	
 	/**
 	 * 
 	 * Deregister Service implementation
@@ -26,6 +26,8 @@ public class DeregisterServiceSkeleton{
 
 	public wtp.DeregisterServiceResponse DeregisterService(wtp.DeregisterService deregisterService)
 	{
+		SFinterface sfInterface=new SFinterface();
+		
 		wtp.DeregisterServiceResponse response=new wtp.DeregisterServiceResponse();
 		
 		String serviceID=deregisterService.getServiceID();
@@ -49,6 +51,7 @@ public class DeregisterServiceSkeleton{
 		if(DEBUG){
 			System.out.println("Deregister Service service result:\n\treturn: "+response.get_return());
 		}
+		
 		
 		return response;
 	}

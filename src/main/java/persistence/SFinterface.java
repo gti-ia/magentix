@@ -45,19 +45,19 @@ public class SFinterface {
 
 	private static boolean DEBUG = true;
 
-	private IDBConnection conn;
+	private IDBConnection conn=null;
 
 	public SFinterface(){
 		super();
 		conn=JenaDBConnection();
 	}
+	
 
 	/*
 	 * Observaciones:
 	 * - Valorar si hay que incluir los diferentes process en Jena, ya que pueden aportar 
 	 * resultados distintos, estar ligados a cada grounding y tener nombres de parámetros
 	 * distintos (lo que podría dar problemas también con el profile)
-	 * - Es necesario enganchar el proveedor con su grounding, para poder ejecutar luego??
 	 * - Las búsquedas deberían incluir el nombre del servicio, su descripción... etc, para
 	 * que fueran más reales. Ahora mismo, dos servicios de compra y venta, podrían tener los
 	 * mismos parámetros y los alinearíamos como si fueran el mismo...
@@ -133,6 +133,7 @@ public class SFinterface {
 		return conn;
 	}
 
+	
 	/**
 	 * Makes a clean to the connection of Jena DB. This deletes all the information in the Jena DB.
 	 */
@@ -169,7 +170,6 @@ public class SFinterface {
 		m.write(System.out, "N3");
 	}
 
-
 	/**
 	 * The RegisterService tries to register the service that is specified as parameter. If it is already registered, it registers
 	 * the new providers and groundings.
@@ -191,42 +191,31 @@ public class SFinterface {
 		if(!regServiceProfile.equalsIgnoreCase("")){
 			System.out.println("Service already registered: "+regServiceProfile);
 			int nGrounds=0, nProviders=0;
-
-			//obtain the registered wsdl docs and the one that has to be registered. 
-			//If the new wsdl doc is different, it is registered
-
-			ArrayList<String> wsdlsToRegister=getWSDLDocumentFromServiceURL(serviceURL);
-
-			String serviceURI=getServiceURI(regServiceProfile,null);
-			ArrayList<String> groundings=getGroundings(serviceURI,null);
-			Iterator<String> iterGrounds=groundings.iterator();
-			String groundingURI="";
-			boolean found=false;
-			while(iterGrounds.hasNext()){
-				groundingURI=iterGrounds.next();
-				String atomicProcessGrounding=getAtomicProcessGrounding(groundingURI,null);
-				String WSDLDocandDatatype=getWSDLDocument(atomicProcessGrounding,null);
-				Iterator<String> iterWsdlsToRegister=wsdlsToRegister.iterator();
-				while(iterWsdlsToRegister.hasNext()){
-					String wsdlToRegister=iterWsdlsToRegister.next();
-					if(WSDLDocandDatatype.equalsIgnoreCase(wsdlToRegister)){
-						found=true;
-						break;
-					}
-				}
-				if(found)
-					break;
-			} //TODO permitir registrar un provider simplemente
-			
 			ArrayList<String> newProviders=getProviders(null, serviceURL);
-			
-			if(!found){//register the grounding
-				System.out.println("Register new grounding");
-				nGrounds++;
-				nProviders=newProviders.size();
 
+
+
+
+			//try to register the providers if they are not registered
+			ArrayList<String> registeredProviders=getProviders(regServiceProfile,null);
+			ArrayList<String> registeredProvidersNames=new ArrayList<String>();
+			Iterator<String> iterRegsProvs=registeredProviders.iterator();
+			while(iterRegsProvs.hasNext()){
+				registeredProvidersNames.add(getName(iterRegsProvs.next()));
+			}
+			ArrayList<String> providersToAdd=new ArrayList<String>();
+			Iterator<String> iterNewProviders=newProviders.iterator();
+			while(iterNewProviders.hasNext()){
+				String newProv=getName(iterNewProviders.next());
+				if(!registeredProvidersNames.contains(newProv))
+					providersToAdd.add(newProv);
+			}
+
+			nProviders=providersToAdd.size();
+
+			if(!providersToAdd.isEmpty()){
 				String fileName="tmp.owls";
-				writeProvidersGroundingOWLSFile(serviceURL, regServiceProfile, fileName);
+				writeProvidersOWLSFile(serviceURL, regServiceProfile, fileName);
 
 				ModelMaker maker = ModelFactory.createModelRDBMaker(conn);
 				Model base = maker.createModel("http://example.org/ontologias");
@@ -246,31 +235,45 @@ public class SFinterface {
 
 					e.printStackTrace();
 				}
-
 			}
-			else{
-				System.out.println("Not register this grounding, already registered");
-				//try to register the providers if they are not registered
-				
-				ArrayList<String> registeredProviders=getProviders(regServiceProfile,null);
-				ArrayList<String> registeredProvidersNames=new ArrayList<String>();
-				Iterator<String> iterRegsProvs=registeredProviders.iterator();
-				while(iterRegsProvs.hasNext()){
-					registeredProvidersNames.add(getName(iterRegsProvs.next()));
+
+
+			//obtain the registered wsdl docs and the one that has to be registered. 
+			//If the new wsdl doc is different, it is registered
+
+			ArrayList<String> wsdlsToRegister=getWSDLDocumentFromServiceURL(serviceURL);
+			
+			String serviceURI=getServiceURI(regServiceProfile,null);
+			ArrayList<String> groundings=getGroundings(serviceURI,null);
+
+			Iterator<String> iterWsdlsToRegister=wsdlsToRegister.iterator();
+			while(iterWsdlsToRegister.hasNext()){
+				String wsdlToRegister=iterWsdlsToRegister.next();
+
+				Iterator<String> iterGrounds=groundings.iterator();
+				String groundingURI="";
+				boolean found=false;
+				while(iterGrounds.hasNext()){
+					groundingURI=iterGrounds.next();
+					String atomicProcessGrounding=getAtomicProcessGrounding(groundingURI,null);
+					String WSDLDocandDatatype=getWSDLDocument(atomicProcessGrounding,null);
+
+					if(WSDLDocandDatatype.equalsIgnoreCase(wsdlToRegister)){
+						found=true;
+						break;
+					}
 				}
-				ArrayList<String> providersToAdd=new ArrayList<String>();
-				Iterator<String> iterNewProviders=newProviders.iterator();
-				while(iterNewProviders.hasNext()){
-					String newProv=getName(iterNewProviders.next());
-					if(!registeredProvidersNames.contains(newProv))
-						providersToAdd.add(newProv);
-				}
-				
-				nProviders=providersToAdd.size();
-				
-				if(!providersToAdd.isEmpty()){
+				if(!found){
+					System.out.println("Register new grounding");
+					nGrounds++;
+					
+					StringTokenizer token=new StringTokenizer(wsdlToRegister,"^^");
+					String wsdlDoc=token.nextToken();
+					String wsdlDatatype=token.nextToken();
+					wsdlToRegister="\""+wsdlDoc+"\""+"^^xsd:anyURI";
+					
 					String fileName="tmp.owls";
-					writeProvidersOWLSFile(serviceURL, regServiceProfile, fileName);
+					writeGroundingOWLSFile(serviceURL, regServiceProfile, wsdlToRegister, fileName);
 
 					ModelMaker maker = ModelFactory.createModelRDBMaker(conn);
 					Model base = maker.createModel("http://example.org/ontologias");
@@ -291,7 +294,6 @@ public class SFinterface {
 						e.printStackTrace();
 					}
 				}
-				
 			}
 
 
@@ -527,7 +529,7 @@ public class SFinterface {
 		return owlsService;
 	}
 
-	
+
 	//hacer una consulta por cada entrada deseada, guardando los servicios que tengan al menos una entrada (sin repetirlos en la lista)
 	//de cada servicio, comprobar exactamente cuantas entradas coinciden, y después las salidas
 	//sumar con algún tipo de ponderación
@@ -537,12 +539,13 @@ public class SFinterface {
 	 * With these parameters, the service searches in the Jena DB and returns the more similar services, that is, 
 	 * the services that have the same (or almost the same) data types as inputs and outputs, weighted in function 
 	 * of the amount of similarity.
-	 * @param inputs list of the desired input parameter type to search a similar servie. Example: \"http://127.0.0.1/ontology/books.owl#Novel\"^^xsd:anyURI
-	 * @param outputs list of the desired output parameter type to search a similar servie. Example: \"http://127.0.0.1/ontology/books.owl#Novel\"^^xsd:anyURI
+	 * @param inputs list of the desired input parameter type to search a similar service. Example: \"http://127.0.0.1/ontology/books.owl#Novel\"^^xsd:anyURI
+	 * @param outputs list of the desired output parameter type to search a similar service. Example: \"http://127.0.0.1/ontology/books.owl#Novel\"^^xsd:anyURI
+	 * @param keywords list of the desired keywords that describes a service
 	 * @return a {@link Profile} {@link ArrayList} with the similar registered services with their similarity degree
 	 * @throws THOMASException
 	 */
-	public ArrayList<Profile> SearchService(ArrayList<String> inputs, ArrayList<String> outputs) throws THOMASException{
+	public ArrayList<Profile> SearchService(ArrayList<String> inputs, ArrayList<String> outputs, ArrayList<String> keywords) throws THOMASException{
 
 
 		ModelMaker maker = ModelFactory.createModelRDBMaker(conn);
@@ -764,17 +767,32 @@ public class SFinterface {
 					System.out.println("\toutput: "+output);
 				}
 			}
+			
+			
+			
+			//obtain the similarity of the searched keywords in the profile text description
+			String textDescription=getProfileTextDescription(profile.getUrl()).toLowerCase().trim();
+			int keywordsFound=0;
+			Iterator<String> iterKeywords=keywords.iterator();
+			while(iterKeywords.hasNext()){
+				String keyword=iterKeywords.next().toLowerCase().trim();
+				if(textDescription.contains(keyword))
+					keywordsFound++;
+			}
+			
+			
 
 			System.out.println(profile.getSuitability()+" "+inputs.size()+" "+outputs.size());
 
 			//obtain the final similarity degree of the profile
 			float similarityToAsked=profile.getSuitability()/(inputs.size()+outputs.size());
 			float similarityToFoundService=profile.getSuitability()/(inputsProfile+outputsProfile);
-			profile.setSuitability(0.5f*similarityToAsked+0.5f*similarityToFoundService);
+			float similarityToKeywords=(float)keywordsFound/keywords.size();
+			profile.setSuitability(0.33f*similarityToAsked+0.33f*similarityToFoundService+0.33f*similarityToKeywords);
 
 			System.out.println(profile.getUrl()+" -> "+profile.getSuitability());
 
-		}
+		}//end iterator profiles
 
 		//sort the found candidate profiles by their similarity
 		Collections.sort(profiles);
@@ -783,7 +801,7 @@ public class SFinterface {
 
 	}
 
-	
+
 	/**
 	 * Removes a provider from a registered service in the Jena DB
 	 * @param serviceProfile URI of the service to remove the provider
@@ -864,7 +882,7 @@ public class SFinterface {
 		return true;
 
 	}
-	
+
 
 	/**
 	 * Search in the Jena DB if it exists a registered service with the same given inputs and outputs
@@ -1037,9 +1055,9 @@ public class SFinterface {
 		}
 	}
 
-	
-	
-	
+
+
+
 
 	/**
 	 * Returns the profile URI of the given parameter name. 
@@ -1509,14 +1527,70 @@ public class SFinterface {
 		}
 
 	}
-	
-	
+
 	/**
 	 * Writes the OWL-S specification of the providers and groundings of the given service URL in a file given as parameter. 
 	 * This specification is attached (by the profile specification) to the given registered profile of the Jena DB.
 	 * @param serviceURL URL of the service to extract the providers and groundings
 	 * @param registeredProfile in the Jena DB to attach the new providers
 	 * @param fileName to store the OWL-S specification created with the providers and groundings
+	 */
+	private void writeGroundingOWLSFile(String serviceURL, String registeredProfile, String wsdlToRegister, String fileName){
+
+		StringTokenizer tokenProfile=new StringTokenizer(registeredProfile, "#");
+		String urlBase=tokenProfile.nextToken();
+		String regProfileName=tokenProfile.nextToken();
+
+		try {
+
+			FileWriter fstream = new FileWriter(fileName);
+			BufferedWriter out = new BufferedWriter(fstream);
+
+			out.write("<?xml version=\"1.0\" encoding=\"WINDOWS-1252\"?>"+"\n"+
+					"<rdf:RDF  xmlns:owl       = \"http://www.w3.org/2002/07/owl#\""+"\n"+
+					"xmlns:rdfs      = \"http://www.w3.org/2000/01/rdf-schema#\""+"\n"+
+					"xmlns:rdf       = \"http://www.w3.org/1999/02/22-rdf-syntax-ns#\""+"\n"+
+					"xmlns:xsd       = \"http://www.w3.org/2001/XMLSchema#\""+"\n"+
+					"xmlns:service   = \"http://www.daml.org/services/owl-s/1.1/Service.owl#\""+"\n"+
+					"xmlns:process   = \"http://www.daml.org/services/owl-s/1.1/Process.owl#\""+"\n"+
+					"xmlns:profile    = \"http://www.daml.org/services/owl-s/1.1/Profile.owl#\""+"\n"+
+					"xmlns:grounding = \"http://www.daml.org/services/owl-s/1.1/Grounding.owl#\""+"\n"+
+					"xmlns:provider = \"http://127.0.0.1/ontology/provider.owl#\""+"\n"+
+					"xml:base        = \""+urlBase+"\">"+"\n");
+
+			out.write("<profile:Profile rdf:ID=\""+regProfileName+"\">\n");
+
+			StringTokenizer tokenRegServ=new StringTokenizer(registeredProfile, "#");
+			String baseURI=tokenRegServ.nextToken();
+
+			String registeredServiceURI=getServiceURI(registeredProfile, null);
+			String profile=getProfileURIfromURL(serviceURL);
+
+			out.write("</profile:Profile>\n");
+
+			String groundOWLS=getGroundingOWLSfromFile(profile, serviceURL, registeredServiceURI, wsdlToRegister, baseURI);
+
+			System.out.println("groundOWLS:\n"+groundOWLS);
+
+			out.write(groundOWLS);
+			out.write("</rdf:RDF>\n");
+
+			out.close();
+
+		} catch (IOException e) {
+
+			e.printStackTrace();
+		}
+
+	}
+
+
+	/**
+	 * Writes the OWL-S specification of the providers of the given service URL in a file given as parameter. 
+	 * This specification is attached (by the profile specification) to the given registered profile of the Jena DB.
+	 * @param serviceURL URL of the service to extract the providers
+	 * @param registeredProfile in the Jena DB to attach the new providers
+	 * @param fileName to store the OWL-S specification created with the providers
 	 */
 	private void writeProvidersOWLSFile(String serviceURL, String registeredProfile, String fileName){
 
@@ -1565,10 +1639,10 @@ public class SFinterface {
 		}
 
 	}
-	
-	
-	
-	
+
+
+
+
 	//TODO llançar excepcions en tots els métodes...
 
 
@@ -1996,7 +2070,7 @@ public class SFinterface {
 			if(resultsSearchName.hasNext()) {
 				String wsdldoc=resultsSearchName.next().getLiteral("x").toString();
 				WSDLDocs.add(wsdldoc);
-				//System.out.println("wsdldoc="+WSDLDoc);
+				//System.out.println("wsdldoc="+wsdldoc);
 			} 
 
 		}//end if
@@ -2010,6 +2084,104 @@ public class SFinterface {
 		return WSDLDocs;
 	}
 
+	/**
+	 * Returns the atomic grounding URI URI of the given service URL and WSDL document
+	 * @param WSDLDoc that identifies the grounding
+	 * @param serviceURL to extract data from
+	 * @return the atomic grounding URI URI of the given service URL and WSDL document
+	 */
+	private String getAtomicGroundingURIFromWSDLDocumentFromServiceURL(String WSDLDoc, String serviceURL){
+		String atomicGroundingURI="";
+
+		ModelMaker maker = ModelFactory.createMemModelMaker();
+		Model base = maker.createModel("http://example.org/ontologias");
+		// now we plug that base model into an ontology model that also uses 
+		// the given model maker to create storage for imported models
+		OntModelSpec spec = new OntModelSpec(OntModelSpec.OWL_MEM);
+		spec.setImportModelMaker(maker);
+		OntModel m = ModelFactory.createOntologyModel(spec, base);
+		//load the service profile in the database
+		m.read(serviceURL);
+
+		String queryStringSearchName =
+				"prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>"+
+				"prefix xsd: <http://www.w3.org/2001/XMLSchema#>"+
+						"select ?x where { ?x grounding:wsdlDocument "+WSDLDoc+" }";
+
+		Query querySearchName = QueryFactory.create(queryStringSearchName);
+
+		QueryExecution qeSearchName = QueryExecutionFactory.create(querySearchName, m);
+		ResultSet resultsSearchName = qeSearchName.execSelect();
+
+
+		if (resultsSearchName != null) {
+
+			if(resultsSearchName.hasNext()) {
+				String wsdldoc=resultsSearchName.next().getResource("x").toString();
+				atomicGroundingURI=wsdldoc;
+				//System.out.println("wsdldoc="+WSDLDoc);
+			} 
+
+		}//end if
+		else{
+			System.out.println("resultsSearchName is null");
+		}
+
+		qeSearchName.close();
+		m.close();
+
+		return atomicGroundingURI;
+	}
+	
+	/**
+	 * Returns the atomic grounding URI URI of the given service URL and WSDL document
+	 * @param WSDLDoc that identifies the grounding
+	 * @param serviceURL to extract data from
+	 * @return the atomic grounding URI URI of the given service URL and WSDL document
+	 */
+	private String getGroundingURIFromAtomicGrounding(String atomicGroundingURI, String serviceURL){
+		String groundingURI="";
+
+		ModelMaker maker = ModelFactory.createMemModelMaker();
+		Model base = maker.createModel("http://example.org/ontologias");
+		// now we plug that base model into an ontology model that also uses 
+		// the given model maker to create storage for imported models
+		OntModelSpec spec = new OntModelSpec(OntModelSpec.OWL_MEM);
+		spec.setImportModelMaker(maker);
+		OntModel m = ModelFactory.createOntologyModel(spec, base);
+		//load the service profile in the database
+		m.read(serviceURL);
+
+		String queryStringSearchName =
+				"prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>"+
+				"prefix xsd: <http://www.w3.org/2001/XMLSchema#>"+
+						"select ?x where { ?x grounding:hasAtomicProcessGrounding <"+atomicGroundingURI+"> }";
+
+		Query querySearchName = QueryFactory.create(queryStringSearchName);
+
+		QueryExecution qeSearchName = QueryExecutionFactory.create(querySearchName, m);
+		ResultSet resultsSearchName = qeSearchName.execSelect();
+
+
+		if (resultsSearchName != null) {
+
+			if(resultsSearchName.hasNext()) {
+				groundingURI=resultsSearchName.next().getResource("x").toString();
+			} 
+
+		}//end if
+		else{
+			System.out.println("resultsSearchName is null");
+		}
+
+		qeSearchName.close();
+		m.close();
+
+		return groundingURI;
+	}
+
+	
+	
 	/**
 	 * Returns a String containing the specification in OWL-S of all groundings of the given service profile
 	 * @param serviceProfile URI to extract data from
@@ -2237,6 +2409,123 @@ public class SFinterface {
 
 			groundsOWLS+="</grounding:WsdlAtomicProcessGrounding>\n";
 		}
+
+		return groundsOWLS;
+	}
+
+	/**
+	 * Returns a {@link String} containing the specification in OWL-S of all groundings of the given service URL
+	 * @param serviceProfile URI to extract data from
+	 * @param serviceURL where the orginal OWL-S specification of the service is
+	 * @param registeredServiceURI the service URI of the corresponding registered service in the Jena DB
+	 * @param wsdlToRegister wsdl that represents the grounding
+	 * @param baseURI of the registered service in the Jena DB
+	 * @return a {@link String} containing the specification in OWL-S of all groundings of the given service URL
+	 */
+	private String getGroundingOWLSfromFile(String serviceProfile, String serviceURL, String registeredServiceURI, String wsdlToRegister, String baseURI){
+		String groundsOWLS="";
+		
+		String atomicProcessGrounding=getAtomicGroundingURIFromWSDLDocumentFromServiceURL(wsdlToRegister, serviceURL);
+		String groundingURI=getGroundingURIFromAtomicGrounding(atomicProcessGrounding, serviceURL);
+		
+		String WSDLDocandDatatype=getWSDLDocument(atomicProcessGrounding,serviceURL);
+		StringTokenizer token=new StringTokenizer(WSDLDocandDatatype,"^^");
+		String wsdlDoc=token.nextToken();
+		String wsdlDatatype=token.nextToken();
+		StringTokenizer tokenGroundURI=new StringTokenizer(groundingURI,"#");
+		tokenGroundURI.nextToken();
+		String groundingURIName=tokenGroundURI.nextToken();
+
+		StringTokenizer tokenRegServURI=new StringTokenizer(registeredServiceURI, "#");
+		tokenRegServURI.nextToken();
+		String registeredServiceURIName=tokenRegServURI.nextToken();
+
+		StringTokenizer tokenAtomicProcess=new StringTokenizer(atomicProcessGrounding, "#");
+		tokenAtomicProcess.nextToken();
+		String atomicProcessGroundingName=tokenAtomicProcess.nextToken();//baseURI+"#"+tokenAtomicProcess.nextToken();
+
+		groundsOWLS+="<grounding:WsdlGrounding rdf:ID=\""+groundingURIName+"\">\n"+ //"<grounding:WsdlGrounding rdf:ID=\""+baseURI+"#"+groundingURIName+"\">\n"+
+				"<service:supportedBy rdf:resource=\""+"#"+registeredServiceURIName+"\"/> \n"+
+				"<grounding:hasAtomicProcessGrounding>\n"+
+				"<grounding:WsdlAtomicProcessGrounding rdf:ID=\""+atomicProcessGroundingName+"\"/>"+
+				"</grounding:hasAtomicProcessGrounding>\n"+
+				"</grounding:WsdlGrounding>\n";
+
+		groundsOWLS+="<grounding:WsdlAtomicProcessGrounding rdf:about=\""+"#"+atomicProcessGroundingName+"\">\n"+
+				"<grounding:wsdlDocument rdf:datatype=\""+wsdlDatatype+"\"\n>"+//the symbol ">" must go after the "\n", 
+				//if not, when Jena adds the info to the DB puts some "" and spaces that causes problems to queries
+				wsdlDoc+"</grounding:wsdlDocument>\n";
+		String owlsProcess=getGroundOwlsProcess(atomicProcessGrounding, serviceURL);
+		groundsOWLS+="<grounding:owlsProcess rdf:resource=\""+owlsProcess+"\"/>\n";
+
+		String groundInputMessage=getGroundingInputMessage(atomicProcessGrounding, serviceURL);
+		StringTokenizer inputMessageTok=new StringTokenizer(
+				groundInputMessage, "^^");
+		String inputMessage=inputMessageTok.nextToken();
+		String inputMessageDatatype=inputMessageTok.nextToken();
+		groundsOWLS+="<grounding:wsdlInputMessage rdf:datatype=\""+inputMessageDatatype+"\">"+inputMessage+
+				"</grounding:wsdlInputMessage>\n";
+		StringTokenizer outputMessageTok=new StringTokenizer(
+				getGroundingOutputMessage(atomicProcessGrounding, serviceURL), "^^");
+		String outputMessage=outputMessageTok.nextToken();
+		String outputMessageDatatype=outputMessageTok.nextToken();
+		groundsOWLS+="<grounding:wsdlOutputMessage rdf:datatype=\""+outputMessageDatatype+"\">"+outputMessage+
+				"</grounding:wsdlOutputMessage>\n";
+
+
+		ArrayList<GroundingInOutput> groundInputs=
+				getGroundingInOutputs(atomicProcessGrounding, serviceURL, true);
+		Iterator<GroundingInOutput> iterIns=groundInputs.iterator();
+		while(iterIns.hasNext()){
+			GroundingInOutput in=iterIns.next();
+
+			groundsOWLS+="<grounding:wsdlInput>\n<grounding:WsdlInputMessageMap>\n";
+			groundsOWLS+="<grounding:owlsParameter rdf:resource=\""+in.getOwlsParameter()+"\"/>\n";
+
+			StringTokenizer messagePartTok=new StringTokenizer(in.getWsdlMessagePart(), "^^");
+			String messagePart=messagePartTok.nextToken();
+			String messagePartDatatype=messagePartTok.nextToken();
+			groundsOWLS+="<grounding:wsdlMessagePart rdf:datatype=\""+messagePartDatatype+"\">"+messagePart+"</grounding:wsdlMessagePart>\n";
+
+			groundsOWLS+="<grounding:xsltTransformationString>"+in.getXsltTransformationString()+"</grounding:xsltTransformationString>\n";
+			groundsOWLS+="</grounding:WsdlInputMessageMap>\n</grounding:wsdlInput>\n";
+		}
+
+		ArrayList<GroundingInOutput> groundOutputs=
+				getGroundingInOutputs(atomicProcessGrounding, serviceURL, false);
+		Iterator<GroundingInOutput> iterOuts=groundOutputs.iterator();
+		while(iterOuts.hasNext()){
+			GroundingInOutput out=iterOuts.next();
+
+			groundsOWLS+="<grounding:wsdlOutput>\n<grounding:WsdlOutputMessageMap>\n";
+			groundsOWLS+="<grounding:owlsParameter rdf:resource=\""+out.getOwlsParameter()+"\"/>\n";
+
+			StringTokenizer messagePartTok=new StringTokenizer(out.getWsdlMessagePart(), "^^");
+			String messagePart=messagePartTok.nextToken();
+			String messagePartDatatype=messagePartTok.nextToken();
+			groundsOWLS+="<grounding:wsdlMessagePart rdf:datatype=\""+messagePartDatatype+"\">"+messagePart+"</grounding:wsdlMessagePart>\n";
+
+			groundsOWLS+="<grounding:xsltTransformationString>"+out.getXsltTransformationString()+"</grounding:xsltTransformationString>\n";
+			groundsOWLS+="</grounding:WsdlOutputMessageMap>\n</grounding:wsdlOutput>\n";
+		}
+
+		String groundOperation=getGroundOperation(atomicProcessGrounding, serviceURL);
+		StringTokenizer operationTok=new StringTokenizer(groundOperation, "^^");
+		String operation=operationTok.nextToken();
+		String operationDatatype=operationTok.nextToken();
+		groundsOWLS+="<grounding:wsdlOperation>\n<grounding:WsdlOperationRef>\n";
+		groundsOWLS+="<grounding:operation rdf:datatype=\""+operationDatatype+"\">"+operation+"</grounding:operation>\n";
+
+		String groundPortType=getGroundPortType(atomicProcessGrounding, serviceURL);
+		StringTokenizer portTypeTok=new StringTokenizer(groundPortType, "^^");
+		String portType=portTypeTok.nextToken();
+		String portTypeDatatype=portTypeTok.nextToken();
+		groundsOWLS+="<grounding:portType rdf:datatype=\""+portTypeDatatype+"\">"+portType+"</grounding:portType>\n";
+		groundsOWLS+="</grounding:WsdlOperationRef>\n</grounding:wsdlOperation>\n";
+
+
+		groundsOWLS+="</grounding:WsdlAtomicProcessGrounding>\n";
+
 
 		return groundsOWLS;
 	}
@@ -2778,7 +3067,7 @@ public class SFinterface {
 		String name="";
 		if(strTok.hasMoreTokens())
 			name=strTok.nextToken();
-		
+
 		return name;
 	}
 

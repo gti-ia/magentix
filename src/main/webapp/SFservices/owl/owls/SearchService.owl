@@ -36,6 +36,7 @@
     <profile:serviceName xml:lang="en">SearchService</profile:serviceName>
     <profile:hasInput rdf:resource="#SearchServiceInputInputs"/>
     <profile:hasInput rdf:resource="#SearchServiceInputOutputs"/>
+    <profile:hasInput rdf:resource="#SearchServiceInputKeywords"/>
     <profile:hasOutput rdf:resource="#SearchServiceOutputServiceStatus"/>
     <profile:hasOutput rdf:resource="#SearchServiceOutputServicesList"/>
 </profile:Profile>
@@ -44,6 +45,7 @@
 	<service:describes rdf:resource="#SearchServiceService"/>
      	<process:hasInput rdf:resource="#SearchServiceInputInputs"/>
 	<process:hasInput rdf:resource="#SearchServiceInputOutputs"/>
+    	<process:hasInput rdf:resource="#SearchServiceInputKeywords"/>
     	<process:hasOutput rdf:resource="#SearchServiceOutputServiceStatus"/>
 	<process:hasOutput rdf:resource="#SearchServiceOutputServicesList"/>
 </process:AtomicProcess>
@@ -55,6 +57,11 @@
 
 <process:Input rdf:ID="SearchServiceInputOutputs">
      <rdfs:label>Outputs</rdfs:label>
+     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
+</process:Input>
+
+<process:Input rdf:ID="SearchServiceInputKeywords">
+     <rdfs:label>Keywords</rdfs:label>
      <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
 </process:Input>
 
@@ -96,6 +103,12 @@
                   <grounding:WsdlInputMessageMap>
                     <grounding:owlsParameter rdf:resource="#SearchServiceInputOutputs"/>
                     <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/sfservices/services/Outputs</grounding:wsdlMessagePart>
+                  </grounding:WsdlInputMessageMap>
+        </grounding:wsdlInput>
+	<grounding:wsdlInput>
+                  <grounding:WsdlInputMessageMap>
+                    <grounding:owlsParameter rdf:resource="#SearchServiceInputKeywords"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/sfservices/services/Keywords</grounding:wsdlMessagePart>
                   </grounding:WsdlInputMessageMap>
         </grounding:wsdlInput>
        <grounding:wsdlOutput>

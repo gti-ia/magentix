@@ -17,7 +17,7 @@ public class RegisterServiceSkeleton{
 
 	public static final Boolean DEBUG = true;
 	
-	SFinterface sfInterface=new SFinterface();
+	
 	/**
 	 * Register Service implementation
 	 * 
@@ -26,6 +26,8 @@ public class RegisterServiceSkeleton{
 
 	public wtp.RegisterServiceResponse RegisterService(wtp.RegisterService registerService)
 	{
+		SFinterface sfInterface=new SFinterface();
+		
 		wtp.RegisterServiceResponse response = new wtp.RegisterServiceResponse();
 		
 		String serviceURL=registerService.getServiceURL();

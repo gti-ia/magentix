@@ -17,7 +17,7 @@ public class RemoveProviderSkeleton{
 
 	public static final Boolean DEBUG = true;
 	
-	SFinterface sfInterface=new SFinterface();
+	
 	/**
 	 * Remove Provider implementation
 	 * 
@@ -26,6 +26,7 @@ public class RemoveProviderSkeleton{
 
 	public wtp.RemoveProviderResponse RemoveProvider(wtp.RemoveProvider removeProvider)
 	{
+		SFinterface sfInterface=new SFinterface();
 		
 		wtp.RemoveProviderResponse response=new wtp.RemoveProviderResponse();
 		
@@ -59,6 +60,7 @@ public class RemoveProviderSkeleton{
 		if(DEBUG){
 			System.out.println("Remove provider service result:\n\treturn: "+response.get_return());
 		}
+		
 		
 		return response;
 	}
