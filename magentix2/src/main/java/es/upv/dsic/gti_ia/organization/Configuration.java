@@ -19,7 +19,7 @@ public class Configuration {
 	private String databaseUser;
 	private String databasePassword;
 	private String OMSServiceDesciptionLocation;
-	private String SFServiceDesciptionLocation;
+	private String SFServiceDescriptionLocation;
 	private String qpidHost;
 	private String qpidPort;
 	private String qpidVhost;
@@ -125,9 +125,9 @@ public class Configuration {
 	 * Full path where are the owl's deployed the services of the SF
 	 * @return SFServiceDesciptionLocation
 	 */
-	public String getSFServiceDesciptionLocation()
+	public String getSFServiceDescriptionLocation()
 	{
-		return this.SFServiceDesciptionLocation;
+		return this.SFServiceDescriptionLocation;
 	}
 
 	/**
@@ -280,7 +280,7 @@ public class Configuration {
 				}
 				else    if (obj.toString().equalsIgnoreCase("SFServiceDesciptionLocation"))
 				{
-					SFServiceDesciptionLocation= properties.getProperty(obj.toString()); 	
+					SFServiceDescriptionLocation= properties.getProperty(obj.toString()); 	
 				}else    if (obj.toString().equalsIgnoreCase("host"))
 				{
 

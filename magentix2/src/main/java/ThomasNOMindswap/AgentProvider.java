@@ -17,6 +17,7 @@ import es.upv.dsic.gti_ia.organization.OMSProxy;
 import es.upv.dsic.gti_ia.organization.Oracle;
 import es.upv.dsic.gti_ia.organization.ProcessDescription;
 import es.upv.dsic.gti_ia.organization.SFProxy;
+import es.upv.dsic.gti_ia.organization.ServiceClient;
 
 public class AgentProvider extends QueueAgent {
 
@@ -47,46 +48,46 @@ public class AgentProvider extends QueueAgent {
 
 
 
-    public void escenario3() {
+//    public void escenario3() {
+//
+//	
+//
+//	    results = sfProxy.searchService("SearchCheapHotel");
+//
+//	    if (results.size() == 0) {
+//		System.out.println("profiles are not similar to SearchCheapHotel");
+//	    } else {
+//		// cogemos el primero por ejemplo
+//		String URLProfile = sfProxy.getProfile(results.get(0));
+//
+//		URL profile;
+//		try {
+//		    profile = new URL(URLProfile);
+//		    oracle = new Oracle(profile);
+//
+//		} catch (MalformedURLException e) {
+//		    logger.error("ERROR: Profile URL Malformed!");
+//		    e.printStackTrace();
+//		}
+//
+//	
+//		 System.out.println("[AgentProvider] Acquire Role "+oracle.getProviderList().get(0)+" in "+oracle.getProviderUnitList().get(0)+ " :"+omsProxy.acquireRole(oracle.getProviderList().get(0), oracle.getProviderUnitList().get(0)));
+//
+//	    }
+//
+//
+//    }
 
-	
-
-	    results = sfProxy.searchService("SearchCheapHotel");
-
-	    if (results.size() == 0) {
-		System.out.println("profiles are not similar to SearchCheapHotel");
-	    } else {
-		// cogemos el primero por ejemplo
-		String URLProfile = sfProxy.getProfile(results.get(0));
-
-		URL profile;
-		try {
-		    profile = new URL(URLProfile);
-		    oracle = new Oracle(profile);
-
-		} catch (MalformedURLException e) {
-		    logger.error("ERROR: Profile URL Malformed!");
-		    e.printStackTrace();
-		}
-
-	
-		 System.out.println("[AgentProvider] Acquire Role "+oracle.getProviderList().get(0)+" in "+oracle.getProviderUnitList().get(0)+ " :"+omsProxy.acquireRole(oracle.getProviderList().get(0), oracle.getProviderUnitList().get(0)));
-
-	    }
-
-
-    }
-
-    public void escenario4() {
-
-
-	    processDescription.setProfileID(results.get(0));
-
-	    System.out.println("[AgentProvider] RegisterProcess: "+ sfProxy.registerProcess(processDescription));
-
-
-
-    }
+//    public void escenario4() {
+//
+//
+//	    processDescription.setProfileID(results.get(0));
+//
+//	    System.out.println("[AgentProvider] RegisterProcess: "+ sfProxy.registerProcess(processDescription));
+//
+//
+//
+//    }
 
     public void escenario5(){
 	try{
@@ -113,8 +114,8 @@ public class AgentProvider extends QueueAgent {
 	
 
 	this.escenario1();
-	this.escenario3();
-	this.escenario4();
+//	this.escenario3();
+//	this.escenario4();
 	this.escenario5();
 	this.escenario6();
 

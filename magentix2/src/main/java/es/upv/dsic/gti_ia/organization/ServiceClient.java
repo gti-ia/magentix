@@ -1,4 +1,4 @@
-package ThomasNOMindswap;
+package es.upv.dsic.gti_ia.organization;
 
 
 

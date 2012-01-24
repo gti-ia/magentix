@@ -19,24 +19,15 @@ import es.upv.dsic.gti_ia.core.BaseAgent;
  */
 public class SFProxy extends THOMASProxy {
 
-
-
-
-
-//	private HashMap<String, String> tablaSearchServiceProfile = new HashMap<String, String>();
-
+	
 	/**
-	 *  This class gives us the support to accede to the services of the SF
-	 * 
-	 * @param agent
-	 *            is a Magentix2 Agent, this agent implemented the communication
-	 *            protocol.
-	 * @param SFServiceDesciptionLocation
-	 *            URLProcess The URL where the owl's document is located.
+	 * This class gives us the support to accede to the services of the SF
+	 * @param agent is a Magentix2 Agent, this agent implemented the communication protocol
+	 * @param SFServiceDescriptionLocation The URL where the owl-s documents are located
 	 */
-	public SFProxy(BaseAgent agent, String SFServiceDesciptionLocation) {
+	public SFProxy(BaseAgent agent, String SFServiceDescriptionLocation) {
 
-		super(agent,"SF",SFServiceDesciptionLocation);
+		super(agent,"SF",SFServiceDescriptionLocation);
 
 	}
 
@@ -45,20 +36,18 @@ public class SFProxy extends THOMASProxy {
 	 * This class gives us the support to accede to the services of the SF,
 	 * Checked that the data contained in the file configuration/Settings.xml, the URL
 	 * ServiceDescriptionLocation is not empty and is the correct path.
-	 * 
-	 * @param agent
-	 *            is a Magentix2 Agent, this agent implemented the communication
-	 *            protocol
-	 * 
+	 * @param agent is a Magentix2 Agent, this agent implemented the communication protocol
 	 * 
 	 */
 	public SFProxy(BaseAgent agent) {
 
 		super(agent, "SF");
-		ServiceDescriptionLocation = c.getSFServiceDesciptionLocation();
+		ServiceDescriptionLocation = c.getSFServiceDescriptionLocation();
 
 	}
 
+	
+	//TODO revisar esto...
 	/**
 	 * When the service is not SF or OMS service. This method is recommend used when an other provider agent offer a new service 
 	 * 
@@ -120,15 +109,11 @@ public class SFProxy extends THOMASProxy {
 
 
 	/**
-	 * It deletes a provider from a service implementation. If this is a last provider, the implementation is
-	 * automatically erased.
-	 * 
-	 * @param ProcessDescription
-	 *            Must have at least completed the field Implementation ID
-	 * @return status RemoveProviderResponse contains an element: return which
-	 *         indicates if an error occurs (1:OK otherwise 0)
+	 * Removes a provider from a registered service
+	 * @param serviceProfile URI of the service to remove the provider
+	 * @param providerName of the provider to remove
+	 * @return status which indicates if an error occurs (1:OK otherwise 0)
 	 */
-
 	public String removeProvider(String serviceProfile, String providerName) {
 		
 		serviceName = "RemoveProvider";
@@ -155,14 +140,14 @@ public class SFProxy extends THOMASProxy {
 	 *         profile id, ranking: ...) or return which
 	 *         indicates if an error occurs
 	 */
-	@SuppressWarnings("unchecked")
-	public String searchService(String inputs, String outputs)
+	public String searchService(String inputs, String outputs, String keywords)
 	{
 
 		serviceName = "SearchService";
 		call = serviceName +" -- "+
-		" SearchServiceInputServiceInputs="+inputs+" -- "+
-		" SearchServiceInputServiceOutputs="+outputs;
+		" SearchServiceInputInputs="+inputs+" -- "+
+		" SearchServiceInputOutputs="+outputs+" -- "+
+		" SearchServiceInputKeywords="+keywords;
 
 		return (String) this.sendInform();	
 	}

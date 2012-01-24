@@ -24,7 +24,7 @@ public class AgentClient extends QueueAgent {
 
 	// We create the class that will make us the agent proxy oms, facilitates
 	// access to the methods of the OMS
-	OMSProxy OMSservices = new OMSProxy(this);
+//	OMSProxy OMSservices = new OMSProxy(this);
 
 	// We create the class that will make us the agent proxy sf, facilitates
 	// access to the methods of the SF
@@ -41,37 +41,44 @@ public class AgentClient extends QueueAgent {
 
 	public void escenario1() {
 
-		result = OMSservices.acquireRole("member", "virtual");
-		System.out.println("[ClientAgent]Acquire Role member in virtual return: " + result + "\n");
+//		result = OMSservices.acquireRole("member", "virtual");
+//		System.out.println("[ClientAgent]Acquire Role member in virtual return: " + result + "\n");
 
 
+		String inputInputs="\"http://127.0.0.1/ontology/geographydataset.owl#Code\"^^xsd:anyURI | "+
+		"\"http://127.0.0.1/ontology/protont.owl#longitude\"^^xsd:anyURI | "+
+		"\"http://127.0.0.1/ontology/protonu.owl#Date\"^^xsd:anyURI | "+
+		"\"http://127.0.0.1/ontology/protont.owl#latitude\"^^xsd:anyURI ";
+		
+		String inputOutputs="\"http://127.0.0.1/ontology/geographydataset.owl#Sunrise\"^^xsd:anyURI";
+		String inputKeywords="sunrise | time";
+		String result="";
+//		do {
+			result = SFservices.searchService(inputInputs,inputOutputs,inputKeywords);
+			System.out.println("[ClientAgent] searchService"+ result);
+//		} while (result == "");
 
-		do {
-			results = SFservices.searchService("SearchCheapHotel");
-			System.out.println("[ClientAgent] searchService"+ results);
-		} while (results.size() == 0);
-
-		URLProfile = SFservices.getProfile(results.get(0));
-
-		System.out.println("[ClientAgent] getProfile: "+ URLProfile);
-		URL profile;
-		try {
-			profile = new URL(URLProfile);
-			oracle = new Oracle(profile);
-
-		} catch (MalformedURLException e) {
-			logger.error("ERROR: Profile URL Malformed!");
-			e.printStackTrace();
-		}
-
-
-
-		System.out.println("[ClientAgent] acquireRole "+oracle.getClientList().get(0)+" "+oracle.getClientUnitList().get(0)+":"+ 	    OMSservices.acquireRole( oracle.getClientList().get(0), oracle.getClientUnitList().get(0)));
-
-		agents = SFservices.getProcess(results.get(0));
-
-		System.out.println("[ClientAgent]agents that offered SearchCheapHotel service: "
-				+ agents.size() + "\n");
+//		URLProfile = SFservices.getProfile(results.get(0));
+//
+//		System.out.println("[ClientAgent] getProfile: "+ URLProfile);
+//		URL profile;
+//		try {
+//			profile = new URL(URLProfile);
+//			oracle = new Oracle(profile);
+//
+//		} catch (MalformedURLException e) {
+//			logger.error("ERROR: Profile URL Malformed!");
+//			e.printStackTrace();
+//		}
+//
+//
+//
+//		System.out.println("[ClientAgent] acquireRole "+oracle.getClientList().get(0)+" "+oracle.getClientUnitList().get(0)+":"+ 	    OMSservices.acquireRole( oracle.getClientList().get(0), oracle.getClientUnitList().get(0)));
+//
+//		agents = SFservices.getProcess(results.get(0));
+//
+//		System.out.println("[ClientAgent]agents that offered SearchCheapHotel service: "
+//				+ agents.size() + "\n");
 
 	}
 
@@ -108,7 +115,7 @@ public class AgentClient extends QueueAgent {
 		URLProcess = agents.get(agentToSend);
 
 		// call the service SearchCheapHotel
-		lista = SFservices.genericService(agentToSend, URLProfile, URLProcess, arg);
+		lista = SFservices.genericService(agentToSend, URLProfile, arg);
 
 		Enumeration<String> e = lista.keys();
 

@@ -16,7 +16,7 @@ public class AgentAnnouncement extends QueueAgent {
 
     // We create the class that will make us the agent proxy oms,facilitates
     // access to the methods of the OMS
-    OMSProxy OMSservices = new OMSProxy(this);
+//    OMSProxy OMSservices = new OMSProxy(this);
 
     // We create the class that will make us the agent proxy sf,facilitates
     // access to the methods of the SF
@@ -32,13 +32,18 @@ public class AgentAnnouncement extends QueueAgent {
 	String result;
 
 
-	    result = OMSservices.acquireRole("member", "virtual");
-	    System.out.println("[AgentAnnoucement] Acquire Role member in virtual: "+ result);
+//	    result = OMSservices.acquireRole("member", "virtual");
+//	    System.out.println("[AgentAnnoucement] Acquire Role member in virtual: "+ result);
 	
-	    SFservices.registerProfile(profile);
+//	    SFservices.registerProfile(profile);
+//	    
+//	    System.out.println("[AgentAnnoucement]The operation register Profile return: "
+//		    + profile.getServiceID() + "\n");
 	    
-	    System.out.println("[AgentAnnoucement]The operation register Profile return: "
-		    + profile.getServiceID() + "\n");
+	    String res=SFservices.registerService("http://127.0.0.1/services/1.1/calculateSunriseTime.owls");
+	    
+	    System.out.println("[AgentAnnoucement]The operation register service return: "
+		    + res + "\n");
 
     }
 }

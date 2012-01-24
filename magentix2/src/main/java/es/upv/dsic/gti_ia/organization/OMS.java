@@ -21,8 +21,6 @@ import java.util.StringTokenizer;
 
 import org.apache.log4j.Logger;
 
-import ThomasNOMindswap.Oracle;
-import ThomasNOMindswap.ServiceClient;
 import es.upv.dsic.gti_ia.cAgents.CAgent;
 import es.upv.dsic.gti_ia.cAgents.CFactory;
 import es.upv.dsic.gti_ia.cAgents.CProcessor;
@@ -45,7 +43,7 @@ public class OMS extends CAgent {
 		static private OMS oms = null;
 		
 	 	private String OMSServiceDesciptionLocation = configuration.getOMSServiceDesciptionLocation();
-	 	private String SFServiceDesciptionLocation = configuration.getSFServiceDesciptionLocation();
+	 	private String SFServiceDesciptionLocation = configuration.getSFServiceDescriptionLocation();
 	 	
 		static Logger logger = Logger.getLogger(OMS.class);
 		
@@ -405,7 +403,7 @@ public class OMS extends CAgent {
 					}
 					logger.info(paramsValuesStr);
 					
-					ThomasNOMindswap.Oracle oracle = new Oracle();
+					Oracle oracle = new Oracle();
 					oracle.setURLProcess(processURL);
 					
 //					ArrayList<String> processInputs=oracle.getProcessInputs();

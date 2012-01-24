@@ -9,6 +9,7 @@ import org.apache.log4j.xml.DOMConfigurator;
 import es.upv.dsic.gti_ia.architecture.Monitor;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
+import es.upv.dsic.gti_ia.organization.Oracle;
 
 public class TestService {
 

@@ -36,11 +36,11 @@ public class Run {
 		 * Clean database
 		 */
 
-		CleanDB clean = new CleanDB();
-
-
-		
-		clean.initialize_db();
+//		CleanDB clean = new CleanDB();
+//
+//
+//		
+//		clean.initialize_db();
 
 
 
@@ -61,20 +61,20 @@ public class Run {
 			 * Execute the agents
 			 */
 
-			AgentPayee payeeAgent = new AgentPayee(new AgentID("agentPayee"));
-
-			AgentProvider providerAgent = new AgentProvider(new AgentID("providerAgent"));
-
+//			AgentPayee payeeAgent = new AgentPayee(new AgentID("agentPayee"));
+//
+//			AgentProvider providerAgent = new AgentProvider(new AgentID("providerAgent"));
+//
 			AgentAnnouncement registerAgent = new AgentAnnouncement(new AgentID("registerAgent"));
 
 			AgentClient clientAgent = new AgentClient(new AgentID("clientAgent"));
 
 			registerAgent.start();
-			payeeAgent.start();
+//			payeeAgent.start();
 
 			Monitor m = new Monitor();
 			m.waiting(5 * 1000);
-			providerAgent.start();
+//			providerAgent.start();
 			m.waiting(5 * 1000);
 
 			clientAgent.start();

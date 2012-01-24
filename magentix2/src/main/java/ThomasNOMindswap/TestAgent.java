@@ -12,8 +12,6 @@ import java.util.StringTokenizer;
 import org.apache.log4j.xml.DOMConfigurator;
 
 
-import ThomasNOMindswap.ServiceClient;
-
 
 import es.upv.dsic.gti_ia.architecture.FIPARequestResponder;
 import es.upv.dsic.gti_ia.architecture.MessageTemplate;
@@ -25,6 +23,7 @@ import es.upv.dsic.gti_ia.organization.OMSProxy;
 import es.upv.dsic.gti_ia.organization.Oracle;
 import es.upv.dsic.gti_ia.organization.ProcessDescription;
 import es.upv.dsic.gti_ia.organization.SFProxy;
+import es.upv.dsic.gti_ia.organization.ServiceClient;
 
 public class TestAgent extends QueueAgent {
 

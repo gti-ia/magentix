@@ -131,13 +131,18 @@ public class THOMASProxy {
 		serviceType1.add("DeregisterRoleProcess");
 		serviceType1.add("DeregisterUnitProcess");
 		serviceType1.add("ExpulseProcess");
-		serviceType1.add("RemoveProviderProcess");
-		serviceType1.add("ModifyProcessProcess");
-		serviceType1.add("ModifyProfileProcess");
-		serviceType1.add("DeregisterProfileProcess");
-		serviceType1.add("GetProfileProcess");
-		serviceType1.add("RegisterProfileProcess");
-		serviceType1.add("RegisterProcessProcess");
+		
+		serviceType1.add("RegisterService");
+		serviceType1.add("GetService");
+		serviceType1.add("SearchService");
+		
+//		serviceType1.add("RemoveProviderProcess");
+//		serviceType1.add("ModifyProcessProcess");
+//		serviceType1.add("ModifyProfileProcess");
+//		serviceType1.add("DeregisterProfileProcess");
+//		serviceType1.add("GetProfileProcess");
+//		serviceType1.add("RegisterProfileProcess");
+//		serviceType1.add("RegisterProcessProcess");
 		
 		
 		serviceType2.add("InformAgentRoleProcess");
@@ -146,13 +151,17 @@ public class THOMASProxy {
 		serviceType2.add("InformRoleProfilesProcess");
 		serviceType2.add("InformUnitProcess");
 		serviceType2.add("InformUnitRolesProcess");
-		serviceType2.add("SearchServiceProcess");
+		
+//		serviceType2.add("SearchServiceProcess");
 
 		
 		
 		serviceType3.add("QuantityMembersProcess");
 		
-		serviceType4.add("GetProcessProcess");
+		serviceType3.add("DeregisterService");
+		serviceType3.add("RemoveProvider");
+		
+//		serviceType4.add("GetProcessProcess");
 		
 
 		
