@@ -3,6 +3,7 @@ package es.upv.dsic.gti_ia.organization;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.StringTokenizer;
 
 import org.apache.log4j.Logger;
 
@@ -125,6 +126,7 @@ public class THOMASProxy {
 		serviceType1.add("RegisterNormProcess");
 		serviceType1.add("RegisterRoleProcess");
 		serviceType1.add("RegisterUnitProcess");
+		serviceType1.add("JointUnitProcess");
 		serviceType1.add("DeregisterNormProcess");
 		serviceType1.add("DeregisterRoleProcess");
 		serviceType1.add("DeregisterUnitProcess");
@@ -212,7 +214,7 @@ public class THOMASProxy {
 		//Services that return a String.
 		if (serviceType1.contains(serviceName))
 		{
-				return this.value;
+			return this.value;
 		}//Services that return a ArrayList<String>()
 		else if (serviceType2.contains(serviceName))
 		{
@@ -387,7 +389,7 @@ public class THOMASProxy {
 
 			if (serviceName.equals("GetProcessProcess")) {
 				agentGetProcess = null;
-				
+
 				if (arg2.equals("0")) {
 					this.Status = false;
 					this.setValue(arg1);
@@ -563,13 +565,8 @@ public class THOMASProxy {
 						msg.getContent().indexOf("ParentID") + 9,
 						msg.getContent().indexOf(","));
 				this.addElementToList(arg);
-				argAux = msg.getContent().substring(
-						msg.getContent().indexOf("UnitGoal"),
-						msg.getContent().length());
-				arg = argAux.substring(argAux.indexOf("UnitGoal") + 9, argAux
-						.indexOf(","));
-				this.addElementToList(arg);
-				argAux = argAux.substring(argAux.indexOf("UnitType"), argAux
+
+				argAux = msg.getContent().substring(msg.getContent().indexOf("UnitType"), msg.getContent()
 						.length());
 				arg = argAux.substring(argAux.indexOf("UnitType") + 9, argAux
 						.indexOf("}"));
@@ -609,31 +606,41 @@ public class THOMASProxy {
 						this.Status = false;
 						this.addElementToList("EMPTY");
 					} else {
-						String arg3 = msg.getContent().substring(
-								msg.getContent().indexOf(",") + 1,
-								msg.getContent().length());
 
-						if (!arg3.contains("[]"))
+
+						if (!msg.getContent().contains("<EntityRoleList/>"))
 						{
-							arg3 = arg3.substring(arg3.indexOf("("), arg3.indexOf("]"));
+							String arg3 = msg.getContent().substring(
+									msg.getContent().indexOf("=< ")+1,
+									msg.getContent().indexOf("-,"));
 
-							elements = arg3.split(",");
+							StringTokenizer st = new StringTokenizer(arg3, "-");
 
-							int paridad = 0;
-
-							for (String e : elements) {
-								if ((paridad % 2) == 0)// is pair
-								{
-									argAux = e
-									.substring(e.indexOf("(") + 1, e.length());
-
-								} else {
-									argAux = e.substring(0, e.indexOf(")"));
-								}
-								this.addElementToList(argAux);
-								paridad++;
-							}
+							do{
+								this.addElementToList(st.nextToken());
+							}while(st.hasMoreTokens());
 						}
+						//						if (!arg3.contains("[]"))
+						//						{
+						//							arg3 = arg3.substring(arg3.indexOf("("), arg3.indexOf("]"));
+						//
+						//							elements = arg3.split(",");
+						//
+						//							int paridad = 0;
+						//
+						//							for (String e : elements) {
+						//								if ((paridad % 2) == 0)// is pair
+						//								{
+						//									argAux = e
+						//									.substring(e.indexOf("(") + 1, e.length());
+						//
+						//								} else {
+						//									argAux = e.substring(0, e.indexOf(")"));
+						//								}
+						//								this.addElementToList(argAux);
+						//								paridad++;
+						//							}
+						//						}
 
 					}
 				} else {
@@ -641,15 +648,46 @@ public class THOMASProxy {
 						this.Status = false;
 						this.addElementToList("EMPTY");
 					} else {
-						String arg3 = msg.getContent().substring(
-								msg.getContent().indexOf("[") + 1,
-								msg.getContent().indexOf("]"));
+						if (serviceName.equals("InformUnitRolesProcess"))
+						{
+							if (!msg.getContent().contains("<RoleList/>"))
+							{
+								String arg = msg.getContent().substring(msg.getContent().indexOf("=<")+1, msg.getContent().indexOf("-,"));
 
-						elements = arg3.split(",");
+								StringTokenizer st = new StringTokenizer(arg, "-");
 
-						for (String e : elements) {
-							this.addElementToList(e.trim());
+								while(st.hasMoreTokens())
+								{
+									this.addElementToList(st.nextToken());
 
+								}
+							}
+
+
+						}
+						else
+						{
+							if (serviceName.equals("InformRoleProcess"))
+							{
+								String arg = msg.getContent().substring(msg.getContent().indexOf("=<")+1, msg.getContent().indexOf(">,")+1);
+
+								this.addElementToList(arg);
+
+
+							}
+							else
+							{
+								String arg3 = msg.getContent().substring(
+										msg.getContent().indexOf("[") + 1,
+										msg.getContent().indexOf("]"));
+
+								elements = arg3.split(",");
+
+								for (String e : elements) {
+									this.addElementToList(e.trim());
+
+								}
+							}
 						}
 
 					}
