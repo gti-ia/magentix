@@ -43,14 +43,12 @@ public class InformUnitRolesSkeleton
 		res.setErrorValue("");
 		res.setStatus("Ok");
 		res.setRoleList("");
-		if (informUnitRoles.getUnitID() == "")
-		{
-			res.setErrorValue("Invalid");
-			res.setStatus("Error");
-			return res;
-		}
+
 		try{
-			result =omsInterface.informUnitRoles(informUnitRoles.getUnitID(),informUnitRoles.getAgentID());
+			if (informUnitRoles.getUnitID().equals("null"))
+				result =omsInterface.informUnitRoles(null,informUnitRoles.getAgentID());
+			else
+				result =omsInterface.informUnitRoles(informUnitRoles.getUnitID(),informUnitRoles.getAgentID());
 			res.setStatus("Ok");
 			res.setRoleList(result);
 			res.setErrorValue("");

@@ -5,6 +5,7 @@
 package wtp;
 
 import java.sql.SQLException;
+import java.util.StringTokenizer;
 
 import persistence.OMSInterface;
 import persistence.THOMASException;
@@ -42,21 +43,22 @@ public class InformUnitSkeleton
 		res.setParentID("");
 		res.setUnitType("");
 		
-		if (informUnit.getUnitID() == "")
-		{
-			res.setErrorValue("Invalid");
-			res.setStatus("Error. Empty parameters are not allowed.");
-			return res;
-		}
+		
 		
 		try{
-			result =omsInterface.informUnit(informUnit.getUnitID(),informUnit.getAgentID());
+			if (informUnit.getUnitID().equals("null"))
+				result =omsInterface.informUnit(null,informUnit.getAgentID());
+			else
+				result =omsInterface.informUnit(informUnit.getUnitID(),informUnit.getAgentID());
 			res.setStatus("Ok");
 			
-			res.setUnitType(result.split(" ")[1]);
-			System.out.println("type: "+ result.split(" ")[1]);
-			res.setParentID(result.split(",")[3]);
-			System.out.println("ParentID: "+ result.split(" ")[3]);
+			StringTokenizer st = new StringTokenizer(result," ");
+			
+			st.nextToken();
+
+			res.setUnitType(st.nextToken());
+			st.nextToken();
+			res.setParentID(st.nextToken());
 			res.setErrorValue("");
 			return res;
 		}catch(THOMASException e)

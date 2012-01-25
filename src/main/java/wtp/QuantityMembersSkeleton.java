@@ -44,13 +44,12 @@ public class QuantityMembersSkeleton
 		res.setQuantity("0");
 	
 		try{
+	
 			if (quantityMembers.getUnitID().equals("null"))
 				result = omsInterface.quantityMembers(null,quantityMembers.getRoleID(), quantityMembers.getPositionValue(), quantityMembers.getAgentID());
 			else
 				result = omsInterface.quantityMembers(quantityMembers.getUnitID(),quantityMembers.getRoleID(), quantityMembers.getPositionValue(), quantityMembers.getAgentID());
-			res.setStatus("Ok");
 			res.setQuantity(result);
-			res.setErrorValue("");
 			return res;
 		}catch(THOMASException e)
 		{
@@ -62,6 +61,7 @@ public class QuantityMembersSkeleton
 		{
 			res.setStatus("Error");
 			res.setErrorValue(e.getMessage());
+			
 			return res;
 		}
 		
