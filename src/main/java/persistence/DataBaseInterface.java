@@ -1077,9 +1077,9 @@ class DataBaseInterface
 		Statement st5 = db.connection.createStatement();
 		ResultSet res5;
 		if(playsRole)
-			res5 = st5.executeQuery("SELECT idroleList FROM roleList WHERE roleName ='"+ roleName+"' AND (idVisibility ="+idPrivateVisbility+" OR idvisibility ="+idPublicVisibility+")");
+			res5 = st5.executeQuery("SELECT idroleList FROM roleList WHERE idunitList ="+ idunitList+" AND roleName ='"+ roleName+"' AND (idVisibility ="+idPrivateVisbility+" OR idvisibility ="+idPublicVisibility+")");
 		else
-			res5 = st5.executeQuery("SELECT idroleList FROM roleList WHERE roleName ='"+ roleName+"' AND idvisibility ="+idPublicVisibility);
+			res5 = st5.executeQuery("SELECT idroleList FROM roleList WHERE idunitList ="+ idunitList+" AND roleName ='"+ roleName+"' AND idvisibility ="+idPublicVisibility);
 		if(res5.next())
 			idroleList = res5.getInt("idroleList");
 		else
@@ -1137,14 +1137,22 @@ class DataBaseInterface
 		Statement st5 = db.connection.createStatement();
 		ResultSet res5;
 		if(playsRole)
-			res5 = st5.executeQuery("SELECT idroleList FROM roleList WHERE idposition ="+idposition);
+		{
+			
+			res5 = st5.executeQuery("SELECT idroleList FROM roleList WHERE idunitList="+idunitList+" AND idposition ="+idposition);
+		}
 		else
-			res5 = st5.executeQuery("SELECT idroleList FROM roleList WHERE idposition ="+idposition+" AND idvisibility ="+idPublicVisibility);
+		{
+			
+			res5 = st5.executeQuery("SELECT idroleList FROM roleList WHERE idunitList="+idunitList+" AND idposition ="+idposition+" AND idvisibility ="+idPublicVisibility);
+		}
 		while(res5.next()){
 			idroleList = res5.getInt("idroleList");
 			Statement st10 = db.connection.createStatement();
+			System.out.println("SELECT agentName FROM agentPlayList WHERE idroleList ="+idroleList);
 			ResultSet res10 = st10.executeQuery("SELECT agentName FROM agentPlayList WHERE idroleList ="+idroleList);
 			while(res10.next()){
+				System.out.println("AgentName: "+res10.getString("agentName"));
 				agentNames.add(res10.getString("agentName"));
 			}
 		}
@@ -1203,9 +1211,9 @@ class DataBaseInterface
 		Statement st5 = db.connection.createStatement();
 		ResultSet res5;
 		if(playsRole)
-			res5 = st5.executeQuery("SELECT idroleList FROM roleList WHERE roleName ='"+ roleName+"' AND idposition ="+idposition+" AND (idVisibility ="+idPrivateVisbility+" OR idvisibility ="+idPublicVisibility+")");
+			res5 = st5.executeQuery("SELECT idroleList FROM roleList WHERE idunitList ="+ idunitList+" AND roleName ='"+ roleName+"' AND idposition ="+idposition+" AND (idVisibility ="+idPrivateVisbility+" OR idvisibility ="+idPublicVisibility+")");
 		else
-			res5 = st5.executeQuery("SELECT idroleList FROM roleList WHERE roleName ='"+ roleName+"' AND idposition ="+idposition+" AND idvisibility ="+idPublicVisibility);
+			res5 = st5.executeQuery("SELECT idroleList FROM roleList WHERE idunitList ="+ idunitList+" AND roleName ='"+ roleName+"' AND idposition ="+idposition+" AND idvisibility ="+idPublicVisibility);
 		if(res5.next())
 			idroleList = res5.getInt("idroleList");
 		else
@@ -1221,16 +1229,23 @@ class DataBaseInterface
 
 	ArrayList<String> getInformUnit(String unitName) throws SQLException, THOMASException{
 		ArrayList<String> result = new ArrayList<String>();
+		int idunitType;
 		int idunitList;
+		Statement st = db.connection.createStatement();
+		ResultSet res = st.executeQuery("SELECT idunitList FROM unitList WHERE unitName ='"+unitName+"'");
+		if (res.next())
+			idunitList = res.getInt("idunitList");
+		else
+			throw new THOMASException("Error : unit "+unitName+" not found in database");
 		Statement st2 = db.connection.createStatement();
-		ResultSet res2 = st2.executeQuery("SELECT idunitList FROM unitList WHERE unitName ='"+ unitName+"'");
+		ResultSet res2 = st2.executeQuery("SELECT idunitType FROM unitList WHERE unitName ='"+ unitName+"'");
 		if(res2.next())
-			idunitList = res2.getInt("idunitList");
+			idunitType = res2.getInt("idunitType");
 		else
 			throw new THOMASException("Error : unit "+unitName+" not found in database");
 
 		Statement st3 = db.connection.createStatement();
-		ResultSet res3 = st3.executeQuery("SELECT unitTypeName FROM unitType WHERE idunitType ="+ idunitList);
+		ResultSet res3 = st3.executeQuery("SELECT unitTypeName FROM unitType WHERE idunitType ="+ idunitType);
 		res3.next();
 
 		result.add(res3.getString("unitTypeName"));
