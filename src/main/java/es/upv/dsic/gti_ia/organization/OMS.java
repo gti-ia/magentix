@@ -534,7 +534,8 @@ public class OMS extends CAgent {
 
 					}
 
-
+					//TODO Realizar cuando los servicios informativos esten testados correctamente
+					/*
 					//Extract the parameters needed to create and delete binds
 					if (aProcess.toString().contains("AcquireRoleProcess"))
 					{
@@ -561,7 +562,8 @@ public class OMS extends CAgent {
 
 
 
-					}
+					}//TODO Comentado hasta que se testeen los servicios informativos
+					/*
 					else if (aProcess.toString().contains("LeaveRoleProcess"))
 					{
 
@@ -590,21 +592,25 @@ public class OMS extends CAgent {
 
 
 
-					}
+					}*/
 					//Execute the service requested by the agent
+					
+	
 					values = exec.execute(aProcess, values);
 
 
 					if(DEBUG)
 					{						
 						logger.info("[OMS]Values obtained... "+values.toString());
+						
 					}
 					if(DEBUG) 
 					{						
 						logger.info("[OMS]Creating inform message to send...");
 					}
 
-
+					//TODO Probar cuando los servicios informativos esten testeados
+					/*
 					//If acquire role is ok. If organization is virtual the agent position is considered creator
 					if (values.toString().contains("AcquireRole.owl#Status=Ok") && !organizationID.equals("virtual"))
 					{
@@ -631,7 +637,8 @@ public class OMS extends CAgent {
 						}
 
 					}
-
+					//TODO Comentar hasta que este revisado los servicios informativos.
+					/*
 					//If leave role is ok. If organization is virtual the agent position is considered creator
 					if (values.toString().contains("LeaveRole.owl#Status=Ok") && !organizationID.equals("virtual"))
 					{
@@ -686,7 +693,7 @@ public class OMS extends CAgent {
 
 
 
-					}
+					}*/
 					next = "INFORM";
 					if(DEBUG)
 					{						
