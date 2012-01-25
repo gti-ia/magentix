@@ -1326,7 +1326,7 @@ public class OMSInterface {
 
 					if (!play)
 					{
-						throw new THOMASException("Invalid. Agent "+ AgentName + " not play any role in unit or parent unit.");
+						throw new THOMASException("Not allowed. Agent "+ AgentName + " not play any role in unit or parent unit.");
 					}
 				}
 				else if (!unitType.equals("flat"))
@@ -1431,7 +1431,7 @@ public class OMSInterface {
 						if (!dbInterface.checkAgentInUnit(AgentName, UnitName))
 						{
 							
-							throw new THOMASException("Invalid. The visibility of the role is private and agent "+AgentName+" not play any role in the unit.");
+							throw new THOMASException("Not allowed. The visibility of the role is private and agent "+AgentName+" not play any role in the unit.");
 						}
 					}
 
@@ -1445,7 +1445,7 @@ public class OMSInterface {
 				}
 				else
 				{
-					throw new THOMASException("Not allowed. Role "+ RoleName + " is not registered in the unit.");
+					throw new THOMASException("Invalid. Role "+ RoleName + " is not registered in the unit.");
 				}
 			}
 			else
