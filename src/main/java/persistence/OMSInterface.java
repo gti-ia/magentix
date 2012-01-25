@@ -1004,7 +1004,7 @@ public class OMSInterface {
 					{
 						if (!RoleName.equals(""))
 						{
-						
+
 
 							if (!dbInterface.checkRole(RoleName, UnitName))
 							{
@@ -1015,15 +1015,15 @@ public class OMSInterface {
 								ArrayList<String> roleInfo = dbInterface.getInformRole(RoleName, UnitName);
 
 								String visibility = roleInfo.get(1);
-								
+
 								flag = Flags.CASE_B;
 
 								if (!visibility.equals("public"))
 								{
-									
+
 									if (!dbInterface.checkAgentInUnit(AgentName, UnitName))
 									{
-										
+
 										throw new THOMASException("Not Allowed. Private info is not available if agent "+ AgentName + " is not inside the unit.");
 									}
 								}
@@ -1156,6 +1156,9 @@ public class OMSInterface {
 
 
 
+		//--------------------------------------------------------------------------------
+		//------------------------- Checking input parameters ----------------------------
+		//--------------------------------------------------------------------------------
 		if (checkParameter(UnitName))
 		{
 			if (dbInterface.checkUnit(UnitName))
@@ -1166,7 +1169,7 @@ public class OMSInterface {
 					{
 						if (!RoleName.equals(""))
 						{
-							
+
 
 							if (!dbInterface.checkRole(RoleName, UnitName))
 							{
@@ -1181,9 +1184,9 @@ public class OMSInterface {
 
 								if (!visibility.equals("public"))
 								{
-									if (!dbInterface.checkAgentInUnit(AgentName, UnitName));
+									if (!dbInterface.checkAgentInUnit(AgentName, UnitName))
 									{
-										throw new THOMASException("Not Allowed. Agent "+ AgentName + " is not inside the unit.");
+										throw new THOMASException("Not Allowed. Private info is not available if agent "+ AgentName + " is not inside the unit.");
 									}
 								}
 							}
@@ -1291,53 +1294,58 @@ public class OMSInterface {
 		boolean play = false;
 
 
-		if (dbInterface.checkUnit(UnitName))
+		//--------------------------------------------------------------------------------
+		//------------------------- Checking input parameters ----------------------------
+		//--------------------------------------------------------------------------------
+		if (checkParameter(UnitName) && checkParameter(AgentName))
 		{
-			//--------------------------------------------------------------------------------
-			//------------------------- Checking domain-dependent norms ----------------------
-			//--------------------------------------------------------------------------------
-			//TODO
-			String unitType = dbInterface.getUnitType(UnitName);
-
-			if (unitType.equals("team") || unitType.equals("hierarchy"))
+			if (dbInterface.checkUnit(UnitName))
 			{
-				ArrayList<String> parentsUnitName = dbInterface.getParentsUnit(UnitName);
+				//--------------------------------------------------------------------------------
+				//------------------------- Checking domain-dependent norms ----------------------
+				//--------------------------------------------------------------------------------
+				//TODO
+				String unitType = dbInterface.getUnitType(UnitName);
 
-				for(String parentUnit : parentsUnitName)
+				if (unitType.equals("team") || unitType.equals("hierarchy"))
 				{
-					if (dbInterface.checkAgentInUnit(AgentName, parentUnit))
+					ArrayList<String> parentsUnitName = dbInterface.getParentsUnit(UnitName);
+
+					for(String parentUnit : parentsUnitName)
+					{
+						if (dbInterface.checkAgentInUnit(AgentName, parentUnit))
+						{
+							play = true;
+						}
+					}
+
+					if (dbInterface.checkAgentInUnit(AgentName, UnitName))
 					{
 						play = true;
 					}
+
+					if (!play)
+					{
+						throw new THOMASException("Invalid. Agent "+ AgentName + " not play any role in unit or parent unit.");
+					}
+				}
+				else if (!unitType.equals("flat"))
+				{
+					throw new THOMASException("Invalid. Unit type not valid." );
 				}
 
-				if (dbInterface.checkAgentInUnit(AgentName, UnitName))
-				{
-					play = true;
-				}
+				arrayResult = dbInterface.getInformUnit(UnitName);
+				//< UnitType , ParentName >
+				result = "< "+arrayResult.get(0)+" , "+ arrayResult.get(1)+" >";
 
-				if (!play)
-				{
-					throw new THOMASException("Invalid. Agent "+ AgentName + " not play any role in unit or parent unit.");
-				}
+				return result;
 			}
-			else if (!unitType.equals("flat"))
+			else
 			{
-				throw new THOMASException("Invalid. Unit type not valid." );
+				throw new THOMASException("Not found. Unit "+ UnitName + " not found.");
 			}
-
-			arrayResult = dbInterface.getInformUnit(UnitName);
-			//< UnitType , ParentName >
-			result = "< "+arrayResult.get(0)+" , "+ arrayResult.get(1)+" >";
-
 		}
-		else
-		{
-			throw new THOMASException("Not found. Unit "+ UnitName + " not found.");
-		}
-
-
-		return result;
+		throw new THOMASException("Invalid. Empty parameters.");
 	}
 	/**
 	 * Method used for requesting the list of roles that have been registered inside a unit.
@@ -1353,27 +1361,32 @@ public class OMSInterface {
 		ArrayList<ArrayList<String>> methodResult = new ArrayList<ArrayList<String>>();
 
 
-		if (dbInterface.checkUnit(UnitName))
+		//--------------------------------------------------------------------------------
+		//------------------------- Checking input parameters ----------------------------
+		//--------------------------------------------------------------------------------
+		if (checkParameter(UnitName) && checkParameter(AgentName))
 		{
-			//--------------------------------------------------------------------------------
-			//------------------------- Checking domain-dependent norms ----------------------
-			//--------------------------------------------------------------------------------
-			//TODO
-			methodResult = dbInterface.getInformUnitRoles(UnitName, AgentName);		
-
-			for (ArrayList<String> agentPair : methodResult)
+			if (dbInterface.checkUnit(UnitName))
 			{
-				//< RoleName , Accessibility , Visibility , Position >
-				result = result + "< " + agentPair.get(0)+" , "+agentPair.get(1)+" , "+ agentPair.get(2)+ " , "+ agentPair.get(3)+ " > - "; 
+				//--------------------------------------------------------------------------------
+				//------------------------- Checking domain-dependent norms ----------------------
+				//--------------------------------------------------------------------------------
+				//TODO
+				methodResult = dbInterface.getInformUnitRoles(UnitName, AgentName);		
+
+				for (ArrayList<String> agentPair : methodResult)
+				{
+					//< RoleName , Accessibility , Visibility , Position >
+					result = result + "< " + agentPair.get(0)+" , "+agentPair.get(1)+" , "+ agentPair.get(2)+ " , "+ agentPair.get(3)+ " > - "; 
+				}
+				return result;
 			}
-
+			else
+			{
+				throw new THOMASException("Not found. Unit "+ UnitName + " not found.");
+			}
 		}
-		else
-		{
-			throw new THOMASException("Not found. Unit "+ UnitName + " not found.");
-		}
-
-		return result;
+		throw new THOMASException("Invalid. Empty parameters.");
 	}
 
 	/**
@@ -1392,49 +1405,55 @@ public class OMSInterface {
 		ArrayList<String> arrayResult = new ArrayList<String>();
 
 
-		if (dbInterface.checkUnit(UnitName))
+		//--------------------------------------------------------------------------------
+		//------------------------- Checking input parameters ----------------------------
+		//--------------------------------------------------------------------------------
+		if (checkParameter(RoleName) && checkParameter(UnitName) && checkParameter(AgentName))
 		{
-			if (dbInterface.checkRole(RoleName, UnitName))
+			if (dbInterface.checkUnit(UnitName))
 			{
-				//--------------------------------------------------------------------------------
-				//------------------------- Checking domain-dependent norms ----------------------
-				//--------------------------------------------------------------------------------
-				//TODO
-
-
-				//--------------------------------------------------------------------------------
-				//------------------------- Checking structural norms ----------------------------
-				//--------------------------------------------------------------------------------
-
-				String roleVisibility = dbInterface.getInformRole(RoleName, UnitName).get(1);
-
-				if (!roleVisibility.equals("public"))
+				if (dbInterface.checkRole(RoleName, UnitName))
 				{
-					if (!dbInterface.checkAgentInUnit(AgentName, UnitName))
+					//--------------------------------------------------------------------------------
+					//------------------------- Checking domain-dependent norms ----------------------
+					//--------------------------------------------------------------------------------
+					//TODO
+
+
+					//--------------------------------------------------------------------------------
+					//------------------------- Checking structural norms ----------------------------
+					//--------------------------------------------------------------------------------
+
+					String roleVisibility = dbInterface.getInformRole(RoleName, UnitName).get(1);
+
+					if (!roleVisibility.equals("public"))
 					{
-						throw new THOMASException("Invalid. The role visibility is private and agent "+ AgentName + " not play any role in unit.");
+						if (!dbInterface.checkAgentInUnit(AgentName, UnitName))
+						{
+							
+							throw new THOMASException("Invalid. The visibility of the role is private and agent "+AgentName+" not play any role in the unit.");
+						}
 					}
+
+					arrayResult = dbInterface.getInformRole(RoleName, UnitName);
+
+					//< Accessibility - Visibility - Position >
+					result = "< "+ arrayResult.get(0)+ " , "+ arrayResult.get(1)+ " , "+ arrayResult.get(2)+ " >";
+
+					return result;
+
 				}
-
-				arrayResult = dbInterface.getInformRole(RoleName, UnitName);
-
-				//< Accessibility - Visibility - Position >
-				result = "< "+ arrayResult.get(0)+ " , "+ arrayResult.get(1)+ " , "+ arrayResult.get(2)+ " >";
-
-
-
+				else
+				{
+					throw new THOMASException("Not allowed. Role "+ RoleName + " is not registered in the unit.");
+				}
 			}
 			else
 			{
-				throw new THOMASException("Not allowed. Role "+ RoleName + " is not registered in the unit.");
+				throw new THOMASException("Not found. Unit "+ UnitName + " not found.");
 			}
 		}
-		else
-		{
-			throw new THOMASException("Not found. Unit "+ UnitName + " not found.");
-		}
-
-		return result;
+		throw new THOMASException("Invalid. Empty parameters.");
 	}
 
 }
