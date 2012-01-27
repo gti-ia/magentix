@@ -35,8 +35,6 @@ public class Run {
 		try {
 			
 			
-			DataBaseInterface db = new DataBaseInterface();
-			db.initialize_db();
 			
 			OMS oms = OMS.getOMS();
 			SF sf = SF.getSF();
@@ -59,15 +57,11 @@ public class Run {
 			
 			iniAgent.start();
 			
-			Thread.sleep(10 * 1000);//Waiting for system initialization
+			Thread.sleep(20 * 1000);//Waiting for system initialization
 			
 			ruiAgent.start();
-			for (int i=0; i < 50;i++)
-			{
-				Product proAgent = new Product(new AgentID("agente_producto"+i));
-				proAgent.start();
-				productores.add(proAgent);
-			}		
+			Product proAgent = new Product(new AgentID("agente_producto"));
+			proAgent.start();
 			sumAgent.start();
 			visAgent.start();
 			sumtAgent.start();
@@ -79,13 +73,9 @@ public class Run {
 			sumtAgent.conclude();
 			visAgent.conclude();
 			sumAgent.conclude();
-			for (int i=0; i < 50;i++)
-			{
-				productores.get(i).conclude();
-			}
-			
+			proAgent.conclude();
 			ruiAgent.conclude();
-			
+			Thread.sleep(60*1000);
 			iniAgent.finalize();
 
 

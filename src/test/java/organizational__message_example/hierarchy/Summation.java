@@ -23,12 +23,13 @@ public class Summation extends QueueAgent {
 
 		
 
-		omsProxy.acquireRole("member", "virtual");
-		omsProxy.acquireRole("manager", "calculin");
-	
+		String resultA = omsProxy.acquireRole("participant", "virtual");
+		System.out.println("["+this.getName()+"] Result acquire role participant: "+ resultA);
+		resultA = omsProxy.acquireRole("manager", "calculin");
+		System.out.println("["+this.getName()+"] Result acquire role manager: "+ resultA);
 	
 		this.send_request(6,3);
-		m.waiting(30 * 1000); // Waiting the response with a timeout
+		m.waiting(2 * 1000); // Waiting the response with a timeout
 		this.send_result("" + result); // Inform the result.
 		
 		expected = 2; //Reset the result and messages expected
@@ -49,8 +50,10 @@ public class Summation extends QueueAgent {
 	public void finalize()
 	{
 	
-		omsProxy.leaveRole("manager", "calculin");
-		omsProxy.leaveRole("member", "virtual");
+		String result = omsProxy.leaveRole("manager", "calculin");
+		System.out.println("["+this.getName()+"] Result leave role manager: "+ result);
+		result = omsProxy.leaveRole("participant", "virtual");
+		System.out.println("["+this.getName()+"] Result leave role participant: "+ result);
 		
 		logger.info("[ "+this.getName()+" ] end execution!");
 	}

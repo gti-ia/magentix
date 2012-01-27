@@ -22,12 +22,11 @@ public class Creator extends QueueAgent {
 
 
 
-		omsProxy.acquireRole("member", "virtual");
-		
+		String result = omsProxy.acquireRole("participant", "virtual");
+		System.out.println("["+this.getName()+"] Result acquire role participant: "+result);
 		
 		this.initialize_scenario();
 		
-		omsProxy.acquireRole("creador", "calculin");
 		
 		this.send_request(4, 2);
 		
@@ -40,24 +39,28 @@ public class Creator extends QueueAgent {
 	
 	public void finalize()
 	{
-		omsProxy.leaveRole("creador", "calculin");
-		omsProxy.deregisterRole("operador", "calculin");
-		omsProxy.deregisterRole("manager", "calculin");
+
+		String result = omsProxy.deregisterRole("operador", "calculin");
+		System.out.println("["+this.getName()+"] Result leave role operador: "+result);
+		result = omsProxy.deregisterRole("manager", "calculin");
+		System.out.println("["+this.getName()+"] Result leave role manager: "+result);
 		omsProxy.deregisterRole("creador", "calculin");
-		
-		omsProxy.deregisterUnit("calculin");
-		
-		omsProxy.leaveRole("member", "virtual");
-		
-		logger.info("[ "+this.getName()+" ] end execution!");
+		System.out.println("["+this.getName()+"] Result leave role creador: "+result);
+		result = omsProxy.deregisterUnit("calculin");
+		System.out.println("["+this.getName()+"] Result deregister unit calculin: "+result);
+		result = omsProxy.leaveRole("participant", "virtual");
+		System.out.println("["+this.getName()+"] Result leave role participant: "+result);
+		System.out.println("["+this.getName()+" ] end execution!");
 	}
 	private void initialize_scenario()
 	{
-		omsProxy.registerUnit("calculin", "hierarchy", "unidad_calculin", "virtual");
-		
-		omsProxy.registerRole("creador", "calculin", "supervisor", "public","member"); 
-		omsProxy.registerRole("manager", "calculin",  "supervisor", "public","member");
-		omsProxy.registerRole("operador", "calculin", "subordinate", "public","member");
+		String result = omsProxy.registerUnit("calculin", "hierarchy", "virtual", "creador");
+		System.out.println("["+this.getName()+"] Result register unit calculin: "+result);
+		 
+		result = omsProxy.registerRole("manager", "calculin",  "external", "public","supervisor");
+		System.out.println("["+this.getName()+"] Result register role subordinado: "+result);
+		result = omsProxy.registerRole("operador", "calculin", "external", "public","subordinate");
+		System.out.println("["+this.getName()+"] Result register role operador: "+result);
 	
 	}
 	
