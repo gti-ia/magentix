@@ -416,7 +416,7 @@ public class OMS extends CAgent {
 
 		Map<String, Object> arguments = new HashMap<String, Object>();
 
-		if (positionType.equals("participant") || positionType.equals("subordinate"))
+		if (positionType.equals("member") || positionType.equals("subordinate"))
 		{
 			arguments.put("x-match", "all");
 			arguments.put("participant", OrganizationID);
@@ -657,7 +657,7 @@ public class OMS extends CAgent {
 						//If position type is member then creates binding for participant
 						if (positionType.equals("member"))
 						{
-							createBinding(aidName, organizationID, "participant");
+							createBinding(aidName, organizationID, "member");
 						}//If position type is subordinate then creates binding for subordinate
 						else if (positionType.equals("subordinate"))
 						{
