@@ -2,7 +2,6 @@ package organizational__message_example.hierarchy;
 
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.StringTokenizer;

@@ -30,7 +30,7 @@ public class Run {
 		 * Connecting to Qpid Broker
 		 */
 		AgentsConnection.connect();
-		ArrayList<Product> productores = new ArrayList<Product>();
+
 
 		try {
 			
