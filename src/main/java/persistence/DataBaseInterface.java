@@ -67,6 +67,7 @@ class DataBaseInterface
 		ResultSet rs = stmt.executeQuery("SELECT * FROM agentPlayList WHERE agentName='"+ agentName + "'");
 		while (rs.next())
 		{
+			db.connection.commit();
 			exists = true;
 		}
 
@@ -90,7 +91,7 @@ class DataBaseInterface
 
 				if (rs3.next())
 				{
-				
+					db.connection.commit();
 					exists = true;
 				}
 			}
@@ -112,8 +113,12 @@ class DataBaseInterface
 				Statement stmt2 = db.connection.createStatement();
 				ResultSet rs3 = stmt2.executeQuery("SELECT * FROM agentPlayList WHERE idroleList = "+roleId+" AND agentName='"+agentName+"'");
 				if (rs3.next())
+				{
+					db.connection.commit();
 					exists = true;
+				}
 			}
+			db.connection.commit();
 		}		
 		return exists;
 	}
@@ -138,13 +143,13 @@ class DataBaseInterface
 
 					if (rs4.next())
 					{
-
+						db.connection.commit();
 						return true;
 					}
 				}
 			}
 		}	
-
+		db.connection.commit();
 		return false;
 	}
 
@@ -161,9 +166,13 @@ class DataBaseInterface
 				Statement stmt2 = db.connection.createStatement();
 				ResultSet rs3 = stmt2.executeQuery("SELECT * FROM agentPlayList WHERE idroleList ="+roleId);
 				if (rs3.next())
+				{
+					db.connection.commit();
 					return true;
+				}
 			}
-		}		
+		}
+		db.connection.commit();
 		return false;
 	}
 
@@ -185,6 +194,7 @@ class DataBaseInterface
 				Statement st3 = db.connection.createStatement();
 				ResultSet res3 = st3.executeQuery("SELECT * FROM position WHERE idposition ="+idPosition);
 				if(res3.next() && res3.getString("position").equalsIgnoreCase(position)){
+					db.connection.commit();
 					return true;
 				}
 			}
@@ -210,10 +220,12 @@ class DataBaseInterface
 				Statement st3 = db.connection.createStatement();
 				ResultSet res3 = st3.executeQuery("SELECT * FROM position WHERE idposition ="+idPosition);
 				if(res3.next() && res3.getString("position").equalsIgnoreCase(position)){
+					db.connection.commit();
 					return true;
 				}
 			}
 		}
+		db.connection.commit();
 		return false;
 	}
 
@@ -226,9 +238,11 @@ class DataBaseInterface
 			Statement st2 = db.connection.createStatement();
 			ResultSet res2 = st2.executeQuery("SELECT * FROM roleList WHERE idunitList ="+idUnit+" AND roleName ='"+role+"'");
 			if(res2.next()){
+				db.connection.commit();
 				return true;
 			}
 		}
+		db.connection.commit();
 		return false;
 	}
 
@@ -241,9 +255,11 @@ class DataBaseInterface
 			Statement st2 = db.connection.createStatement();
 			ResultSet res2 = st2.executeQuery("SELECT * FROM unitHierarchy WHERE idParentUnit ="+idUnit);
 			if(res2.next()){
+				db.connection.commit();
 				return true;
 			}
 		}
+		db.connection.commit();
 		return false;
 	}
 
@@ -252,8 +268,10 @@ class DataBaseInterface
 		st = db.connection.createStatement();
 		ResultSet res = st.executeQuery("SELECT * FROM unitList WHERE unitName ='"+ unit +"'");
 		if(res.next()){
+			db.connection.commit();
 			return true;
 		}
+		db.connection.commit();
 		return false;
 	}
 
@@ -266,9 +284,11 @@ class DataBaseInterface
 			Statement st2 = db.connection.createStatement();
 			ResultSet res2 = st2.executeQuery("SELECT * FROM unitList WHERE idunitType ="+idUnitType+" AND unitName ='"+unit+"'");
 			if(res2.next()){
+				db.connection.commit();
 				return true;
 			}
 		}
+		db.connection.commit();
 		return false;
 	}
 
@@ -486,7 +506,7 @@ class DataBaseInterface
 			if(res2.next()){
 				int idroleList = res2.getInt("idroleList");
 				Statement st3 = db.connection.createStatement();
-				int res3 = st3.executeUpdate("DELETE FROM agentPlayList WHERE idroleList ="+idroleList);
+				int res3 = st3.executeUpdate("DELETE FROM agentPlayList WHERE idroleList ="+idroleList +" AND agentName='"+agentName+"'");
 				if(res3 != 0){					
 					db.connection.commit();
 					return "<"+roleName+" + \"left\">";			
@@ -507,6 +527,7 @@ class DataBaseInterface
 			Statement st2 = db.connection.createStatement();
 			ResultSet res2 = st2.executeQuery("SELECT unitTypeName FROM unitType WHERE idunitType ="+idunitType);
 			if(res2.next()){
+				db.connection.commit();
 				return res2.getString("unitTypeName");
 			}
 			throw new THOMASException("Error: idunitType "+idunitType+" not found in database");
@@ -539,6 +560,7 @@ class DataBaseInterface
 					aux.add(res4.getString("position"));
 				result.add(aux);
 			}
+			db.connection.commit();
 			return result;
 		}
 		throw new THOMASException("Error: unit "+unitName+" not found in database");
@@ -559,10 +581,12 @@ class DataBaseInterface
 				ResultSet res3 = st3.executeQuery("SELECT unitName FROM unitList WHERE idunitList ="+idParentUnit);
 				if(res3.next()){
 					result.add(res3.getString("unitName"));
+					db.connection.commit();
 					return result;
 				}
 			}
 			result.add("virtual");
+			db.connection.commit();
 			return result;
 		}
 		throw new THOMASException("Error: unit "+unitName+" not found in database");
@@ -655,6 +679,7 @@ class DataBaseInterface
 				}
 			}
 		}
+		db.connection.commit();
 		return result;
 	}
 
@@ -707,6 +732,7 @@ class DataBaseInterface
 				result.add(aux);
 			}
 		}
+		db.connection.commit();
 		return result;		
 	}
 	
@@ -774,6 +800,7 @@ class DataBaseInterface
 	
 			
 		}
+		db.connection.commit();
 		return result;
 	}
 
@@ -832,6 +859,7 @@ class DataBaseInterface
 				result.add(res13.getString("agentName"));
 			}
 		}
+		db.connection.commit();
 		return result;
 	}
 
@@ -903,6 +931,7 @@ class DataBaseInterface
 				result.add(aux);
 			}
 		}
+		db.connection.commit();
 		return result;
 	}
 
@@ -979,7 +1008,8 @@ class DataBaseInterface
 		while(res10.next()){
 			System.out.println("Agent name: "+ res10.getString("agentName"));
 			result.add(res10.getString("agentName"));
-		}		
+		}
+		db.connection.commit();
 		return result;
 	}
 
@@ -1030,6 +1060,7 @@ class DataBaseInterface
 				agentNames.add(res10.getString("agentName"));
 			}
 		}
+		db.connection.commit();
 		return agentNames.size();
 	}
 
@@ -1090,6 +1121,7 @@ class DataBaseInterface
 		while(res10.next()){
 			cont++;
 		}
+		db.connection.commit();
 		return cont;
 	}
 
@@ -1156,6 +1188,7 @@ class DataBaseInterface
 				agentNames.add(res10.getString("agentName"));
 			}
 		}
+		db.connection.commit();
 		return agentNames.size();
 	}
 
@@ -1223,7 +1256,8 @@ class DataBaseInterface
 		ResultSet res10 = st10.executeQuery("SELECT agentName FROM agentPlayList WHERE idroleList ="+idroleList);
 		while(res10.next()){
 			cont++;
-		}		
+		}	
+		db.connection.commit();
 		return cont;
 	}
 
@@ -1259,6 +1293,7 @@ class DataBaseInterface
 		}
 		else
 			result.add("");
+		db.connection.commit();
 		return result;
 	}
 
@@ -1331,6 +1366,7 @@ class DataBaseInterface
 			aux.add(res9.getString("position"));
 			result.add(aux);
 		}
+		db.connection.commit();
 		return result;		
 	}
 
@@ -1366,6 +1402,7 @@ class DataBaseInterface
 			result.add(res10.getString("accesibility"));
 			result.add(res11.getString("visibility"));
 			result.add(res9.getString("position"));
+			db.connection.commit();
 			return result;
 		}
 		throw new THOMASException("Error : role "+roleName+" not found in database");
