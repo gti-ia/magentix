@@ -38,7 +38,7 @@ public class GetServiceSkeleton{
 			System.out.println("\tserviceID="+serviceID);
 		}
 
-		String owlsSpecification;
+		String owlsSpecification="";
 		String exceptionContent="";
 		try {
 			owlsSpecification = sfInterface.GetService(serviceID);
