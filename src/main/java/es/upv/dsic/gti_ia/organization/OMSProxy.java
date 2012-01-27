@@ -4,6 +4,7 @@ package es.upv.dsic.gti_ia.organization;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.StringTokenizer;
 
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
@@ -61,7 +62,7 @@ public class OMSProxy extends THOMASProxy{
 
 	//TODO Función ad hoc para el ejemplo. Se substituirá cuando el nuevo thomas
 	//tenga un servicio que devuelva la posición del agente.
-	public String getAgentPosition(String agent, String unit, String rol, String unitType)
+	/*public String getAgentPosition(String agent, String unit, String rol, String unitType)
 	{
 
 		String position = null;
@@ -107,7 +108,7 @@ public class OMSProxy extends THOMASProxy{
 
 		}
 		return position;
-	}
+	}*/
 
 
 	/**
@@ -127,7 +128,7 @@ public class OMSProxy extends THOMASProxy{
 		String unit_aux;
 
 		boolean insideUnit = false;
-
+		boolean containsPositonNoCreator = false;
 
 		//Create a new ACLMessage
 		ACLMessage msg = new ACLMessage();
@@ -154,83 +155,102 @@ public class OMSProxy extends THOMASProxy{
 			else
 			{
 
-				Iterator<String> iterator1 = agentRole.iterator();
-
-				while(iterator1.hasNext())
+				for (String s : agentRole)
 				{
-					rol_aux = iterator1.next();
-					unit_aux = iterator1.next();
+					StringTokenizer st = new StringTokenizer(s,"<,> ");
 
-					String position = getAgentPosition(agent.getName(),unit_aux,rol_aux, unit.get(2));
+					rol_aux = st.nextToken();
+					unit_aux = st.nextToken();
+
+
+					ArrayList<String> informRole = this.informRole(rol_aux, unit_aux);
+					//st = new StringTokenizer(informRole,"<>, ");
+
+
+					String position = informRole.get(2);
+
 					if (position!=null)
+					{
+						if (!position.equals("creator"))
+							containsPositonNoCreator = true;
 						agentPositions.add(position);
+					}
 
 				}
+				
 				// Comprobaremos si tiene solamente el rol con la posición creator, en ese caso no puede enviar nada a ningún grupo.
-				if (agentPositions.contains("creator") && agentPositions.size() == 1)
+				if (containsPositonNoCreator)
 				{
-					throw new THOMASException("Communication is not allowed to agents which only play the role creator.");
-				}
 
-				agentPositions.clear();
-				//The unit type is flat
-				if (unit.get(2).equals("flat"))
-				{
-					msg.putExchangeHeader("participant", OrganizationID);
-					msg.setReceiver(new AgentID(OrganizationID));
+
+					//agentPositions.clear();
+					//The unit type is flat
+					if (unit.get(1).equals("flat"))
+					{
+						msg.putExchangeHeader("participant", OrganizationID);
+						msg.setReceiver(new AgentID(OrganizationID));
+					}
+					else
+					{
+						for (String s : agentRole)
+						{
+							//Cogemos primero el rol, para que solamente compruebe la unidad que es el segundo elemento.
+							StringTokenizer st = new StringTokenizer(s,"<,> ");
+							rol_aux = st.nextToken();
+
+							//TODO agentPositions.add(this.informRole(rol_aux, unit.get(2)).split(regex));
+							//agentPositions.add(getAgentPosition(agent.getName(),OrganizationID,rol_aux, unit.get(2)));
+
+							if (st.nextToken().equals(OrganizationID))
+							{
+								insideUnit = true;
+							}
+							//						if (iterator1.next().equals(OrganizationID))
+							//						{
+							//							insideUnit = true;
+							//						}
+						}
+						if (insideUnit)
+						{
+							if (unit.get(1).equals("team"))
+							{
+								msg.putExchangeHeader("participant", OrganizationID);
+								msg.setReceiver(new AgentID(OrganizationID));
+							}
+							else if (unit.get(1).equals("hierarchy"))
+							{
+								//Sacamos la posición del agente
+								//Debemos elegir el de mayor
+
+								if (agentPositions.contains("supervisor"))
+								{
+									msg.putExchangeHeader("supervisor", OrganizationID);
+									msg.putExchangeHeader("participant", OrganizationID);
+								}
+								else if (agentPositions.contains("subordinate"))
+								{
+									msg.putExchangeHeader("supervisor", OrganizationID);
+
+								}
+
+								msg.setReceiver(new AgentID(OrganizationID));
+
+							}
+							else
+							{
+								throw new THOMASException("Unknown unit type.");
+							}
+						}
+						else //El agente no esta dentro de la unidad
+						{
+
+							throw new THOMASException("The agent is not inside the unit "+ OrganizationID+".");
+						}
+					}
 				}
 				else
-				{
-					iterator1 = agentRole.iterator();
-					while(iterator1.hasNext())
-					{
-						//Cogemos primero el rol, para que solamente compruebe la unidad que es el segundo elemento.
-						rol_aux = iterator1.next();
+					throw new THOMASException("Communication is not allowed to agents which only play the role creator.");
 
-						agentPositions.add(getAgentPosition(agent.getName(),OrganizationID,rol_aux, unit.get(2)));
-
-						if (iterator1.next().equals(OrganizationID))
-						{
-							insideUnit = true;
-						}
-					}
-					if (insideUnit)
-					{
-						if (unit.get(2).equals("team"))
-						{
-							msg.putExchangeHeader("participant", OrganizationID);
-							msg.setReceiver(new AgentID(OrganizationID));
-						}
-						else if (unit.get(2).equals("hierarchy"))
-						{
-							//Sacamos la posición del agente
-							//Debemos elegir el de mayor
-
-							if (agentPositions.contains("supervisor"))
-							{
-								msg.putExchangeHeader("supervisor", OrganizationID);
-								msg.putExchangeHeader("participant", OrganizationID);
-							}
-							else if (agentPositions.contains("subordinate"))
-							{
-								msg.putExchangeHeader("supervisor", OrganizationID);
-
-							}
-
-							msg.setReceiver(new AgentID(OrganizationID));
-
-						}
-						else
-						{
-							throw new THOMASException("Unknown unit type.");
-						}
-					}
-					else //El agente no esta dentro de la unidad
-					{
-
-						throw new THOMASException("The agent is not inside the unit "+ OrganizationID+".");
-					}
-				}
 
 			}
 

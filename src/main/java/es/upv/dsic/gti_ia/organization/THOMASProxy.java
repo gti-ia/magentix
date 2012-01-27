@@ -138,17 +138,17 @@ public class THOMASProxy {
 		serviceType1.add("GetProfileProcess");
 		serviceType1.add("RegisterProfileProcess");
 		serviceType1.add("RegisterProcessProcess");
+		
 
 
 		serviceType2.add("InformAgentRoleProcess");
 		serviceType2.add("InformMembersProcess");
 		serviceType2.add("InformTargetNormsProcess");
-		serviceType2.add("InformRoleProcess");
 		serviceType2.add("InformNormProcess");
 		serviceType2.add("InformUnitProcess");
 		serviceType2.add("InformUnitRolesProcess");
 		serviceType2.add("SearchServiceProcess");
-
+		serviceType2.add("InformRoleProcess");
 
 
 		serviceType3.add("QuantityMembersProcess");
@@ -670,8 +670,14 @@ public class THOMASProxy {
 							if (serviceName.equals("InformRoleProcess"))
 							{
 								String arg = msg.getContent().substring(msg.getContent().indexOf("=<")+1, msg.getContent().indexOf(">,")+1);
+			
+								StringTokenizer st = new StringTokenizer(arg, "<>, ");
 
-								this.addElementToList(arg);
+								while(st.hasMoreTokens())
+								{
+									this.addElementToList(st.nextToken());
+
+								}
 
 
 							}

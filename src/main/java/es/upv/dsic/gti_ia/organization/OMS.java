@@ -44,13 +44,12 @@ public class OMS extends CAgent {
 
 	static private OMS oms = null;
 
-	OMSProxy omsProxy = new OMSProxy(this);
+
 
 	private String OMSServiceDesciptionLocation = configuration.getOMSServiceDesciptionLocation();
 	private String SFServiceDesciptionLocation = configuration.getSFServiceDesciptionLocation();
 
 	static Logger logger = Logger.getLogger(OMS.class);
-
 
 
 	// create a kb
@@ -81,7 +80,7 @@ public class OMS extends CAgent {
 	private  final URI OMS_JOINTUNIT_ID = URI.create(OWL_S_OMS_SERVICES + "JointUnitProfile.owl");
 	private  final URI OMS_JOINTUNIT_GOAL = URI.create("JointUnit");
 
-	
+
 	@SuppressWarnings("unused")
 	private  final URI OMS_REGISTERNORM_PROFILE = URI.create(OWL_S_OMS_SERVICES + "RegisterNormProfile.owl");
 	private  final URI OMS_REGISTERNORM_PROCESS = URI.create(OWL_S_OMS_SERVICES + "RegisterNormProcess.owl");
@@ -151,8 +150,8 @@ public class OMS extends CAgent {
 	private  final URI OMS_ACQUIREROLE_GOAL = URI.create("AcquireRole");
 	@SuppressWarnings("unused")
 	private  final URI OMS_ACQUIREROLE_PROVIDER = URI.create("Provider");
-	
-	
+
+
 	private  final URI OMS_ALLOCATEROLE_PROFILE = URI.create(OWL_S_OMS_SERVICES + "AllocateRoleProfile.owl");
 	private  final URI OMS_ALLOCATEROLE_PROCESS = URI.create(OWL_S_OMS_SERVICES + "AllocateRoleProcess.owl");
 	@SuppressWarnings("unused")
@@ -163,8 +162,8 @@ public class OMS extends CAgent {
 	private  final URI OMS_ALLOCATEROLE_GOAL = URI.create("AllocateRole");
 	@SuppressWarnings("unused")
 	private  final URI OMS_ALLOCATEROLE_PROVIDER = URI.create("Provider");
-	
-	
+
+
 	@SuppressWarnings("unused")
 	private  final URI OMS_LEAVEROLE_PROFILE = URI.create(OWL_S_OMS_SERVICES + "LeaveRoleProfile.owl");
 	private  final URI OMS_LEAVEROLE_PROCESS = URI.create(OWL_S_OMS_SERVICES + "LeaveRoleProcess.owl");
@@ -201,7 +200,7 @@ public class OMS extends CAgent {
 	private  final URI OMS_INFORMUNIT_PROVIDER = URI.create("Provider");   
 
 	private  final URI OMS_INFORMNORM_PROCESS = URI.create(OWL_S_OMS_SERVICES + "InformNormProcess.owl");
-	
+
 	private  final URI OMS_INFORMROLE_PROFILE = URI.create(OWL_S_OMS_SERVICES + "InformRoleProfile.owl");
 	private  final URI OMS_INFORMROLE_PROCESS = URI.create(OWL_S_OMS_SERVICES + "InformRoleProcess.owl");
 	@SuppressWarnings("unused")
@@ -535,7 +534,7 @@ public class OMS extends CAgent {
 					}
 
 					//TODO Realizar cuando los servicios informativos esten testados correctamente
-					/*
+
 					//Extract the parameters needed to create and delete binds
 					if (aProcess.toString().contains("AcquireRoleProcess"))
 					{
@@ -563,7 +562,7 @@ public class OMS extends CAgent {
 
 
 					}//TODO Comentado hasta que se testeen los servicios informativos
-					/*
+
 					else if (aProcess.toString().contains("LeaveRoleProcess"))
 					{
 
@@ -572,7 +571,9 @@ public class OMS extends CAgent {
 						organizationID = values.getValues().toString().split(",")[1].trim();
 						rol = values.getValues().toString().replace("]", "").split(",")[2].trim();
 
-						ValueMap valueUnit = new ValueMap();;
+						ValueMap valueUnit = new ValueMap();
+
+						//-------------Inform Unit-----------------
 
 						Service aServiceUnit = kb.readService(OMS_INFORMUNIT_PROCESS);
 						Process aProcessUnit = aServiceUnit.getProcess();
@@ -587,22 +588,36 @@ public class OMS extends CAgent {
 						//Select the unit type of the unit
 						unitType = valueUnit.getValue("UnitType").toString();//.toString().split(" ");
 
+						//-------------Inform Role-----------------
 
-						positionType = omsProxy.getAgentPosition(aidName,organizationID, rol, unitType);
+						aServiceUnit = kb.readService(OMS_INFORMROLE_PROCESS);
+						aProcessUnit = aServiceUnit.getProcess();
+
+						valueUnit.setValue(aProcessUnit.getInputs().inputAt(0),EntityFactory.createDataValue(aidName));
+						valueUnit.setValue(aProcessUnit.getInputs().inputAt(1),EntityFactory.createDataValue(organizationID));
+						valueUnit.setValue(aProcessUnit.getInputs().inputAt(2),EntityFactory.createDataValue(rol));
+
+
+						//Execute service inform unit in order to select the unit type
+						valueUnit = exec.execute(aProcessUnit, valueUnit);
 
 
 
-					}*/
+						positionType = valueUnit.getValue("ProfileList").toString();
+
+						positionType = positionType.split(" ")[5];
+
+					}
 					//Execute the service requested by the agent
-					
-	
+
+
 					values = exec.execute(aProcess, values);
 
 
 					if(DEBUG)
 					{						
 						logger.info("[OMS]Values obtained... "+values.toString());
-						
+
 					}
 					if(DEBUG) 
 					{						
@@ -610,12 +625,34 @@ public class OMS extends CAgent {
 					}
 
 					//TODO Probar cuando los servicios informativos esten testeados
-					/*
+
 					//If acquire role is ok. If organization is virtual the agent position is considered creator
-					if (values.toString().contains("AcquireRole.owl#Status=Ok") && !organizationID.equals("virtual"))
+					if (values.toString().contains("acquired") && !organizationID.equals("virtual"))
 					{
 						//Gets position for the unit
-						positionType = omsProxy.getAgentPosition(aidName,organizationID, rol, unitType);
+
+						//< Accessibility - Visibility - Position >
+
+						//-------------Inform Role-----------------
+
+						ValueMap valueUnit = new ValueMap();
+
+						Service aServiceUnit = kb.readService(OMS_INFORMROLE_PROCESS);
+						Process aProcessUnit = aServiceUnit.getProcess();
+
+						valueUnit.setValue(aProcessUnit.getInputs().inputAt(0),EntityFactory.createDataValue(aidName));
+						valueUnit.setValue(aProcessUnit.getInputs().inputAt(1),EntityFactory.createDataValue(organizationID));
+						valueUnit.setValue(aProcessUnit.getInputs().inputAt(2),EntityFactory.createDataValue(rol));
+
+						//Execute service inform unit in order to select the unit type
+						valueUnit = exec.execute(aProcessUnit, valueUnit);
+
+
+
+						positionType = valueUnit.getValue("ProfileList").toString();
+
+						positionType = positionType.split(" ")[5];
+						//positionType = omsProxy.getAgentPosition(aidName,organizationID, rol, unitType);
 
 						//If position type is member then creates binding for participant
 						if (positionType.equals("member"))
@@ -638,9 +675,9 @@ public class OMS extends CAgent {
 
 					}
 					//TODO Comentar hasta que este revisado los servicios informativos.
-					/*
+
 					//If leave role is ok. If organization is virtual the agent position is considered creator
-					if (values.toString().contains("LeaveRole.owl#Status=Ok") && !organizationID.equals("virtual"))
+					if (values.toString().contains("left") && !organizationID.equals("virtual"))
 					{
 
 
@@ -657,25 +694,41 @@ public class OMS extends CAgent {
 						value = exec.execute(aProcess, value);
 
 						//Select the roles of the agent
-						String[] roles = value.getValue("RoleUnitList").toString().split(" ");
+						String roles = value.getValue("RoleUnitList").toString();
 
-						boolean exists_in_unit = false;
-
+						StringTokenizer st = new StringTokenizer(roles,"-<>, ");
 
 						String unit_aux;
 						String role_aux;
+						boolean exists_in_unit = false;
 
-
-						for(String r : roles)
+						while(st.hasMoreTokens())
 						{
-							role_aux = r.substring(r.indexOf("(")+1, r.indexOf(","));
-							unit_aux = r.substring(r.indexOf(",")+1, r.indexOf(")"));
+							role_aux = st.nextToken();
+							unit_aux = st.nextToken();
 
 							//If agent is inside the organization and the rol played is not creator
 							if (unit_aux.equals(organizationID) && !role_aux.equals("creator"))
 							{
 								//If position is equal of the agent position plays
-								if (positionType.equals(omsProxy.getAgentPosition(aidName,organizationID, role_aux, unitType)))
+								//< Accessibility - Visibility - Position >
+								aService = kb.readService(OMS_INFORMROLE_PROCESS);
+								aProcess = aService.getProcess();
+
+								value.setValue(aProcess.getInputs().inputAt(0),EntityFactory.createDataValue(aidName));
+								value.setValue(aProcess.getInputs().inputAt(1),EntityFactory.createDataValue(organizationID));
+								value.setValue(aProcess.getInputs().inputAt(2),EntityFactory.createDataValue(rol));
+
+								//Execute service inform unit in order to select the unit type
+								value = exec.execute(aProcess, value);
+
+
+
+								String pos = value.getValue("ProfileList").toString();
+
+								pos = pos.split(" ")[5];
+
+								if (positionType.equals(pos))//;omsProxy.getAgentPosition(aidName,organizationID, role_aux, unitType)))
 									exists_in_unit = true;
 							}
 
@@ -683,17 +736,15 @@ public class OMS extends CAgent {
 
 						if (!exists_in_unit)
 						{
-							if (positionType.equals("member"))
-								positionType = "participant";
 
 							deleteBinding(aidName, organizationID, positionType);
-						}
+						} 
 
 
 
 
 
-					}*/
+					}
 					next = "INFORM";
 					if(DEBUG)
 					{						
