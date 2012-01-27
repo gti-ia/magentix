@@ -4,6 +4,7 @@ package organizational__message_example.flat;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.StringTokenizer;
 
 import es.upv.dsic.gti_ia.architecture.Monitor;
 import es.upv.dsic.gti_ia.architecture.QueueAgent;
@@ -28,8 +29,10 @@ public class Display extends QueueAgent {
 
 
 
-		omsProxy.acquireRole("member", "virtual");
-		omsProxy.acquireRole("manager", "calculin");
+		String result = omsProxy.acquireRole("participant", "virtual");
+		System.out.println("["+this.getName()+"] result acquire role: "+ result);
+		result = omsProxy.acquireRole("manager", "calculin");
+		System.out.println("["+this.getName()+"] result acquire role: "+ result);
 
 		do{
 			m.waiting();  //Waiting messages. The method onMessage is in charge of warning when a new message arrive
@@ -49,10 +52,17 @@ public class Display extends QueueAgent {
 	public void displayMessage(ACLMessage _msg)
 	{
 		ACLMessage msg = _msg; 
-		ArrayList<String> roles = omsProxy.informMembers("manager","calculin","");
+		ArrayList<String> roles = omsProxy.informMembers("calculin","manager","");
+		
+		for(String im : roles)
+		{
+			StringTokenizer st1 = new StringTokenizer(im," ");
+			st1.nextToken();//Quitamos el <
+			String agent = st1.nextToken();
 		//If sender agent has rol manager, it shows the message
-		if (roles.contains(msg.getSender().name.toLowerCase()))
+		if (agent.toLowerCase().equals(msg.getSender().name.toLowerCase()))
 			System.out.println("[ "+this.getName()+" ]  "+ msg.getSender().name+" says " + msg.getContent());
+		}
 	}
 
 

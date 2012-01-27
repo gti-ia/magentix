@@ -23,19 +23,17 @@ public class Summation extends QueueAgent {
 
 		
 
-		omsProxy.acquireRole("member", "virtual");
-		omsProxy.acquireRole("manager", "calculin");
+		String resultA = omsProxy.acquireRole("participant", "virtual");
+		System.out.println("["+this.getName()+"] result acquire role: "+ resultA);
+		resultA = omsProxy.acquireRole("manager", "calculin");
+		System.out.println("["+this.getName()+"] result acquire role: "+ resultA);
 	
-		long ini = System.currentTimeMillis();
+		
 		
 		this.send_request(6,3);
 		m.waiting(); // Waiting the response with a timeout
 		this.send_result("" + result); // Inform the result.
 		
-		
-		double resultado = (last - ini)/1000;
-		System.out.println("Recibidos en un tiempo de: "+ resultado +" segundos.");
-		System.out.println("Recibidos : "+ recibidos);
 		result=0;
 		this.send_request(5,3);
 		m.waiting(10 * 1000); // Waiting the response with a timeout
@@ -47,7 +45,7 @@ public class Summation extends QueueAgent {
 		result += Integer.parseInt(msg.getContent());
 		last = System.currentTimeMillis();
 		recibidos++;
-		if (recibidos==4000)
+		if (recibidos==2)
 			m.advise();
 	}
 

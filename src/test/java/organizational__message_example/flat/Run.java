@@ -39,10 +39,7 @@ public class Run {
 			oms.start();
 			sf.start();
 			
-			//Clean data base
-			CleanDB clean = new CleanDB();
 
-			clean.initialize_db();
 			
 			/**
 			 * Instantiating agents
@@ -56,6 +53,20 @@ public class Run {
 			Thread.sleep(10 * 1000);//Waiting for system initialization
 			ruiAgent.start();
 		
+			
+			Summation sumtAgent = new Summation(new AgentID("agente_sumatorio"));
+			Display visAgent = new Display(new AgentID("agente_visor"));
+			
+			
+			Addition sumAgent = new Addition(new AgentID("agente_suma"));
+			Product proAgent = new Product(new AgentID("agente_producto"));
+			proAgent.start();
+			sumAgent.start();
+	
+			
+
+			visAgent.start();
+			sumtAgent.start();
 			
 
 		} catch (Exception e) {

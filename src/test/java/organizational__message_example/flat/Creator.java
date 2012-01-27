@@ -20,12 +20,11 @@ public class Creator extends QueueAgent {
 
 
 
-		omsProxy.acquireRole("member", "virtual");
+		String result = omsProxy.acquireRole("participant", "virtual");
 		
+		System.out.println("Result acquire role: "+ result);
 		
 		this.initialize_scenario();
-		
-		omsProxy.acquireRole("creador", "calculin");
 		
 		this.send_request(4, 2);
 		
@@ -35,11 +34,14 @@ public class Creator extends QueueAgent {
 	
 	private void initialize_scenario()
 	{
-		omsProxy.registerUnit("calculin", "flat", "unidad_calculin", "virtual");
+		String result = omsProxy.registerUnit("calculin", "flat", "virtual", "creador");
 		
-		omsProxy.registerRole("creador", "calculin", "public", "public","member"); 
-		omsProxy.registerRole("manager", "calculin", "member", "public","member");
-		omsProxy.registerRole("operador", "calculin", "member", "public","member");
+		System.out.println("Result register unit: "+ result);
+	
+		result = omsProxy.registerRole("manager", "calculin", "external", "public","member");
+		System.out.println("Result register role: "+ result);
+		result = omsProxy.registerRole("operador", "calculin", "external", "public","member");
+		System.out.println("Result register role: "+ result);
 	
 	}
 	

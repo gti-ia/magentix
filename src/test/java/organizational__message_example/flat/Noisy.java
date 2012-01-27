@@ -25,13 +25,14 @@ public class Noisy extends QueueAgent {
 	public void execute() {
 
 
-		omsProxy.acquireRole("member", "virtual");
-
+		String result = omsProxy.acquireRole("participant", "virtual");
+		System.out.println("["+this.getName()+"] result acquire role: "+ result);
 
 		this.initialize_scenario();
 
-		omsProxy.acquireRole("manager","externa");
-		omsProxy.acquireRole("creador","externa");
+		result = omsProxy.acquireRole("manager","externa");
+		System.out.println("["+this.getName()+"] result acquire role: "+ result);
+		
 
 		this.send_request(1,7);
 
@@ -71,9 +72,10 @@ public class Noisy extends QueueAgent {
 	private void initialize_scenario()
 	{
 
-		omsProxy.registerUnit("externa", "flat", "unidad_externa_tipo_flat", "virtual");
-		omsProxy.registerRole("manager", "externa",  "member", "public","member");
-		omsProxy.registerRole("creador", "externa",  "member", "public","member"); 
+		String result = omsProxy.registerUnit("externa", "flat", "virtual", "creador");
+		System.out.println("["+this.getName()+"] result register unit: "+ result);
+		result = omsProxy.registerRole("manager", "externa",  "external", "public","member");
+		System.out.println("["+this.getName()+"] result register role: "+ result); 
 	
 	}
 

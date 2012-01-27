@@ -21,8 +21,10 @@ public class Product extends QueueAgent {
 
 		OMSProxy omsProxy = new OMSProxy(this);
 
-		omsProxy.acquireRole("member", "virtual");
-		omsProxy.acquireRole("operador", "calculin");
+		String result = omsProxy.acquireRole("participant", "virtual");
+		System.out.println("["+this.getName()+"] result acquire role: "+ result);
+		result = omsProxy.acquireRole("operador", "calculin");
+		System.out.println("["+this.getName()+"] result acquire role: "+ result);
 		
 
 		Responder responder = new Responder(this);
