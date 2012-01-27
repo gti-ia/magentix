@@ -4,6 +4,7 @@ package organizational__message_example.team;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.StringTokenizer;
 
 import es.upv.dsic.gti_ia.architecture.Monitor;
 import es.upv.dsic.gti_ia.architecture.QueueAgent;
@@ -28,7 +29,7 @@ public class Display extends QueueAgent {
 
 
 
-		omsProxy.acquireRole("member", "virtual");
+		omsProxy.acquireRole("participant", "virtual");
 		omsProxy.acquireRole("manager", "calculin");
 
 		do{
@@ -49,10 +50,18 @@ public class Display extends QueueAgent {
 	public void displayMessage(ACLMessage _msg)
 	{
 		ACLMessage msg = _msg; 
-		ArrayList<String> roles = omsProxy.informMembers("manager","calculin","");
+		ArrayList<String> roles = omsProxy.informMembers("calculin","manager","");
 		//If sender agent has rol manager, it shows the message
-		if (roles.contains(msg.getSender().name.toLowerCase()))
-			System.out.println("[ "+this.getName()+" ]  "+ msg.getSender().name+" says " + msg.getContent());
+		
+		for(String im : roles)
+		{
+			StringTokenizer st1 = new StringTokenizer(im," ");
+			st1.nextToken();//Quitamos el <
+			String agent = st1.nextToken();
+			if (agent.toLowerCase().equals(msg.getSender().name.toLowerCase()))
+				System.out.println("[ "+this.getName()+" ]  "+ msg.getSender().name+" says " + msg.getContent());
+		}
+		
 	}
 
 

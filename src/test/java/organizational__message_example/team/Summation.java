@@ -23,7 +23,7 @@ public class Summation extends QueueAgent {
 
 		
 
-		omsProxy.acquireRole("member", "virtual");
+		omsProxy.acquireRole("participant", "virtual");
 		omsProxy.acquireRole("manager", "calculin");
 	
 	

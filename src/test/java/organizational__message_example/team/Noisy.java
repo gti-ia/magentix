@@ -25,13 +25,13 @@ public class Noisy extends QueueAgent {
 	public void execute() {
 
 
-		omsProxy.acquireRole("member", "virtual");
+		omsProxy.acquireRole("participant", "virtual");
 
 
 		this.initialize_scenario();
 
 		omsProxy.acquireRole("manager","externa");
-		omsProxy.acquireRole("creador","externa");
+
 
 		this.send_request(1,7);
 
@@ -74,9 +74,9 @@ public class Noisy extends QueueAgent {
 	private void initialize_scenario()
 	{
 
-		omsProxy.registerUnit("externa", "flat", "unidad_externa_tipo_flat", "virtual");
+		omsProxy.registerUnit("externa", "flat", "virtual", "creador");
 		omsProxy.registerRole("manager", "externa",  "member", "public","member");
-		omsProxy.registerRole("creador", "externa",  "member", "public","member"); 
+		 
 	
 	}
 

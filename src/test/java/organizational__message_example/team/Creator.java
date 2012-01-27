@@ -21,12 +21,11 @@ public class Creator extends QueueAgent {
 
 
 
-		omsProxy.acquireRole("member", "virtual");
+		omsProxy.acquireRole("participant", "virtual");
 		
 		
 		this.initialize_scenario();
 		
-		omsProxy.acquireRole("creador", "calculin");
 		
 		
 		this.send_request(4, 2);
@@ -39,18 +38,17 @@ public class Creator extends QueueAgent {
 	
 	public void onMessage(ACLMessage msg) {
 
-		System.out.println("Me llega un mensaje de: "+msg.getSender() + " para: "+  msg.getReceiver());
+
 			super.onMessage(msg);
 
 	}
 	
 	private void initialize_scenario()
 	{
-		omsProxy.registerUnit("calculin", "team", "unidad_calculin", "virtual");
+		omsProxy.registerUnit("calculin", "team", "virtual", "creador");
 	
-		omsProxy.registerRole("creador", "calculin",   "member", "public","member"); 
-		omsProxy.registerRole("manager", "calculin",  "member", "public","member");
-		omsProxy.registerRole("operador", "calculin",  "member", "public","member");
+		omsProxy.registerRole("manager", "calculin",  "external", "public","member");
+		omsProxy.registerRole("operador", "calculin",  "external", "public","member");
 	
 	}
 	

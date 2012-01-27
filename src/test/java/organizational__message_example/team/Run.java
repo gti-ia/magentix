@@ -3,7 +3,6 @@ package organizational__message_example.team;
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 
-import Thomas_Example.CleanDB;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
 import es.upv.dsic.gti_ia.organization.OMS;
@@ -39,10 +38,7 @@ public class Run {
 			oms.start();
 			sf.start();
 			
-			//Clean data base
-			CleanDB clean = new CleanDB();
 
-			clean.initialize_db();
 			
 			/**
 			 * Instantiating agents
