@@ -40,6 +40,19 @@ public class Summation extends QueueAgent {
 
 	}
 
+
+	
+	public void finalize()
+	{
+	
+		String result = omsProxy.leaveRole("manager", "calculin");
+		System.out.println("["+this.getName()+"] Result leave role manager: "+ result);
+		result = omsProxy.leaveRole("participant", "virtual");
+		System.out.println("["+this.getName()+"] Result leave role participant: "+ result);
+		
+		logger.info("[ "+this.getName()+" ] end execution!");
+	}
+	
 	private void add_and_advise(ACLMessage msg) {
 		
 		result += Integer.parseInt(msg.getContent());

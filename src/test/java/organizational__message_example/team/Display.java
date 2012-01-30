@@ -17,6 +17,7 @@ public class Display extends QueueAgent {
 
 	OMSProxy omsProxy = new OMSProxy(this);
 	Monitor m = new Monitor();
+	boolean active = true;
 	ACLMessage mensaje_recibido = new ACLMessage();
 	private Queue<ACLMessage> messageList = new LinkedList<ACLMessage>();
 
@@ -35,14 +36,32 @@ public class Display extends QueueAgent {
 		do{
 			m.waiting();  //Waiting messages. The method onMessage is in charge of warning when a new message arrive
 			do{
-				this.displayMessage(messageList.poll());
+				if (!messageList.isEmpty())
+					this.displayMessage(messageList.poll());
 			}while(messageList.size() != 0);
-		}while(true);
+		}while(active);
 
 
 
 	}
 
+	public void finalize()
+	{
+		String result = omsProxy.leaveRole("manager", "calculin");
+		System.out.println("["+this.getName()+"] Result leaven role manager: "+result);
+		result = omsProxy.leaveRole("participant", "virtual");
+		System.out.println("["+this.getName()+"] Result leave role participant: "+result);
+		
+		logger.info("["+this.getName()+" ] end execution!");
+	}
+	
+	public void conclude()
+	{
+		active = false;
+		m.advise();
+		
+	}
+	
 	/**
 	 * Display agent messages with position qual to supervisor 
 	 * @param _msg
