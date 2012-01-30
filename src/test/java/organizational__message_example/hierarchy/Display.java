@@ -31,9 +31,9 @@ public class Display extends QueueAgent {
 		
 
 		String result = omsProxy.acquireRole("participant", "virtual");
-		System.out.println("["+this.getName()+"] Result acquire role participant: "+result);
+		logger.info("["+this.getName()+"] Result acquire role participant: "+result);
 		result = omsProxy.acquireRole("manager", "calculin");
-		System.out.println("["+this.getName()+"] Result acquire role manager: "+result);
+		logger.info("["+this.getName()+"] Result acquire role manager: "+result);
 		while(active < 6)
 		{
 			m.waiting();  //Waiting messages. The method onMessage is in charge of warning when a new message arrive
@@ -51,11 +51,11 @@ public class Display extends QueueAgent {
 	public void finalize()
 	{
 		String result = omsProxy.leaveRole("manager", "calculin");
-		System.out.println("["+this.getName()+"] Result leaven role manager: "+result);
+		logger.info("["+this.getName()+"] Result leaven role manager: "+result);
 		result = omsProxy.leaveRole("participant", "virtual");
-		System.out.println("["+this.getName()+"] Result leave role participant: "+result);
+		logger.info("["+this.getName()+"] Result leave role participant: "+result);
 		
-		System.out.println("["+this.getName()+" ] end execution!");
+		logger.info("["+this.getName()+" ] end execution!");
 	}
 
 	/**

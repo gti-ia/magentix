@@ -22,9 +22,9 @@ public class Exponentiation extends QueueAgent {
 	public void execute() {
 
 		String resultA = omsProxy.acquireRole("participant", "virtual");
-		System.out.println("["+this.getName()+"] Result acquire role participant: "+resultA);
+		logger.info("["+this.getName()+"] Result acquire role participant: "+resultA);
 		resultA = omsProxy.acquireRole("manager", "calculin");
-		System.out.println("["+this.getName()+"] Result acquire role manager: "+resultA);
+		logger.info("["+this.getName()+"] Result acquire role manager: "+resultA);
 	
 
 		this.send_request(6, 3);//Send request
@@ -38,7 +38,7 @@ public class Exponentiation extends QueueAgent {
 		}
 		String resultL = omsProxy.leaveRole("manager", "calculin");
 		
-		System.out.println("["+this.getName()+"] Result leave role manager: "+resultL);
+		logger.info("["+this.getName()+"] Result leave role manager: "+resultL);
 		
 		result=0; //Reset the result and messages expected
 		expected = 0;
@@ -58,8 +58,8 @@ public class Exponentiation extends QueueAgent {
 	{
 	
 		String result = omsProxy.leaveRole("participant", "virtual");
-		System.out.println("["+this.getName()+"] Result leave role participant: "+result);
-		System.out.println("["+this.getName()+" ] end execution!");
+		logger.info("["+this.getName()+"] Result leave role participant: "+result);
+		logger.info("["+this.getName()+" ] end execution!");
 	}
 	private void add_and_advise(ACLMessage msg) {
 		result += Integer.parseInt(msg.getContent()) * Integer.parseInt(msg.getContent());
@@ -96,7 +96,7 @@ public class Exponentiation extends QueueAgent {
 
 			send(msg);
 		} catch (THOMASException e) {
-			System.out.println("ERROR.[ " + this.getName() + " ] " + e.getContent());
+			System.out.println("[ " + this.getName() + " ] " + e.getContent());
 
 		}
 	}

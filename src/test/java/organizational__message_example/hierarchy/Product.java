@@ -27,9 +27,9 @@ public class Product extends QueueAgent {
 		
 
 		String result = omsProxy.acquireRole("participant", "virtual");
-		System.out.println("["+this.getName()+"] Result acquire role participant: "+result);
+		logger.info("["+this.getName()+"] Result acquire role participant: "+result);
 		result = omsProxy.acquireRole("operador", "calculin");
-		System.out.println("["+this.getName()+"] Result acquire role operador: "+result);
+		logger.info("["+this.getName()+"] Result acquire role operador: "+result);
 		
 
 		
@@ -44,10 +44,10 @@ public class Product extends QueueAgent {
 	public void finalize()
 	{
 		String result = omsProxy.leaveRole("operador", "calculin");
-		System.out.println("["+this.getName()+"] Result leave role operador: "+result);
+		logger.info("["+this.getName()+"] Result leave role operador: "+result);
 		result = omsProxy.leaveRole("participant", "virtual");
-		System.out.println("["+this.getName()+"] Result leave role participant: "+result);
-		System.out.println("["+this.getName()+" ] end execution!");
+		logger.info("["+this.getName()+"] Result leave role participant: "+result);
+		logger.info("["+this.getName()+" ] end execution!");
 	}
 	
 	public void conclude()

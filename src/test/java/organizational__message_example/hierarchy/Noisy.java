@@ -26,12 +26,12 @@ public class Noisy extends QueueAgent {
 
 
 		String result = omsProxy.acquireRole("participant", "virtual");
-		System.out.println("["+this.getName()+"] Result acquire role participant: "+result);
+		logger.info("["+this.getName()+"] Result acquire role participant: "+result);
 
 		this.initialize_scenario();
 
 		result = omsProxy.acquireRole("manager","externa");
-		System.out.println("["+this.getName()+"] Result acquire role manager: "+result);
+		logger.info("["+this.getName()+"] Result acquire role manager: "+result);
 	
 		this.send_request(1,7);
 		
@@ -49,19 +49,19 @@ public class Noisy extends QueueAgent {
 	{
 	
 		String result = omsProxy.leaveRole("manager", "externa");
-		System.out.println("["+this.getName()+"] Result leave role manager: "+result);
+		logger.info("["+this.getName()+"] Result leave role manager: "+result);
 		result = omsProxy.leaveRole("creador", "externa");
-		System.out.println("["+this.getName()+"] Result leave role creador: "+result);
+		logger.info("["+this.getName()+"] Result leave role creador: "+result);
 		result = omsProxy.deregisterRole("manager", "externa");
-		System.out.println("["+this.getName()+"] Result deregister role manager: "+result);
+		logger.info("["+this.getName()+"] Result deregister role manager: "+result);
 		result = omsProxy.deregisterRole("creador", "externa");
-		System.out.println("["+this.getName()+"] Result deregister role creador: "+result);
+		logger.info("["+this.getName()+"] Result deregister role creador: "+result);
 		result = omsProxy.deregisterUnit("externa");
-		System.out.println("["+this.getName()+"] Result deregister unit externa: "+result);
+		logger.info("["+this.getName()+"] Result deregister unit externa: "+result);
 		result = omsProxy.leaveRole("participant", "virtual");
-		System.out.println("["+this.getName()+"] Result leave role participant: "+result);
+		logger.info("["+this.getName()+"] Result leave role participant: "+result);
 		
-		System.out.println("["+this.getName()+" ] end execution!");
+		logger.info("["+this.getName()+" ] end execution!");
 	}
 
 	private void add_and_advise(ACLMessage msg)
@@ -98,9 +98,9 @@ public class Noisy extends QueueAgent {
 	{
 
 		String result = omsProxy.registerUnit("externa", "flat", "virtual", "creador");
-		System.out.println("["+this.getName()+"] Result register unit externa: "+ result);
+		logger.info("["+this.getName()+"] Result register unit externa: "+ result);
 		result = omsProxy.registerRole("manager", "externa", "external", "public","member");
-		System.out.println("["+this.getName()+"] Result register role manager: "+ result);
+		logger.info("["+this.getName()+"] Result register role manager: "+ result);
 	
 	
 	}

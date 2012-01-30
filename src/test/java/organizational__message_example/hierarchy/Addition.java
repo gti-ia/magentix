@@ -30,10 +30,10 @@ public class Addition extends QueueAgent {
 
 		//Acquire the member rol in virtual unit and operador inside the calculin unit
 		String result = omsProxy.acquireRole("participant", "virtual");
-		System.out.println("["+this.getName()+"] Result acquire role: "+ result);
+		logger.info("["+this.getName()+"] Result acquire role: "+ result);
 		
 		result = omsProxy.acquireRole("operador", "calculin");
-		System.out.println("["+this.getName()+"] Result acquire role: "+ result);
+		logger.info("["+this.getName()+"] Result acquire role: "+ result);
 		//Create a new protocol FIPA Request
 		responder = new Responder(this);
 		
@@ -54,8 +54,8 @@ public class Addition extends QueueAgent {
 	public void finalize()
 	{
 		String result = omsProxy.leaveRole("participant", "virtual");
-		System.out.println("["+this.getName()+"] Result leave role participant: "+result);
-		System.out.println("[ "+this.getName()+" ] end execution!");
+		logger.info("["+this.getName()+"] Result leave role participant: "+result);
+		logger.info("[ "+this.getName()+" ] end execution!");
 	}
 
 	/**
@@ -117,7 +117,7 @@ public class Addition extends QueueAgent {
 				//Leave operador role
 					case 0: 
 						String resultado = omsProxy.leaveRole("operador", "calculin"); 
-						System.out.println("["+this.myAgent.getName()+"] Result leave role operador: "+resultado);
+						logger.info("["+this.myAgent.getName()+"] Result leave role operador: "+resultado);
 						break;
 				}
 
