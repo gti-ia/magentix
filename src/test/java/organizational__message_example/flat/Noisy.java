@@ -26,12 +26,12 @@ public class Noisy extends QueueAgent {
 
 
 		String result = omsProxy.acquireRole("participant", "virtual");
-		System.out.println("["+this.getName()+"] result acquire role: "+ result);
+		logger.info("["+this.getName()+"] result acquire role: "+ result);
 
 		this.initialize_scenario();
 
 		result = omsProxy.acquireRole("manager","externa");
-		System.out.println("["+this.getName()+"] result acquire role: "+ result);
+		logger.info("["+this.getName()+"] result acquire role: "+ result);
 		
 
 		this.send_request(1,7);
@@ -42,6 +42,35 @@ public class Noisy extends QueueAgent {
 
 	}
 
+	public void conclude()
+	{
+		m.advise();
+	}
+	
+	public void finalize()
+	{
+	
+		String result = omsProxy.leaveRole("manager", "externa");
+		System.out.println("["+this.getName()+"] Result leave role manager: "+result);
+		
+		result = omsProxy.leaveRole("creador", "externa");
+		System.out.println("["+this.getName()+"] Result leave role creador: "+result);
+		
+		result = omsProxy.deregisterRole("manager", "externa");
+		System.out.println("["+this.getName()+"] Result deregister role manager: "+result);
+		
+		result = omsProxy.deregisterRole("creador", "externa");
+		System.out.println("["+this.getName()+"] Result deregister role creador: "+result);
+		
+		result = omsProxy.deregisterUnit("externa");
+		System.out.println("["+this.getName()+"] Result deregister unit externa: "+result);
+		
+		result = omsProxy.leaveRole("participant", "virtual");
+		System.out.println("["+this.getName()+"] Result leave role participant: "+result);
+		
+		logger.info("["+this.getName()+" ] end execution!");
+	}
+	
 	private void add_and_advise(ACLMessage msg)
 	{
 		result+=Integer.parseInt(msg.getContent());
@@ -73,9 +102,9 @@ public class Noisy extends QueueAgent {
 	{
 
 		String result = omsProxy.registerUnit("externa", "flat", "virtual", "creador");
-		System.out.println("["+this.getName()+"] result register unit: "+ result);
+		logger.info("["+this.getName()+"] result register unit: "+ result);
 		result = omsProxy.registerRole("manager", "externa",  "external", "public","member");
-		System.out.println("["+this.getName()+"] result register role: "+ result); 
+		logger.info("["+this.getName()+"] result register role: "+ result); 
 	
 	}
 

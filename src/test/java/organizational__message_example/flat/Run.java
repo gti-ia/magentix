@@ -68,6 +68,17 @@ public class Run {
 			visAgent.start();
 			sumtAgent.start();
 			
+			Thread.sleep(60*1000);
+			
+			
+
+			visAgent.conclude();
+			sumAgent.conclude();
+			proAgent.conclude();
+			ruiAgent.conclude();
+			Thread.sleep(60*1000);
+			iniAgent.finalize();
+			
 
 		} catch (Exception e) {
 			logger.error("Error  " + e.getMessage());

@@ -3,6 +3,7 @@ package organizational__message_example.flat;
 import es.upv.dsic.gti_ia.architecture.FIPANames.InteractionProtocol;
 import es.upv.dsic.gti_ia.architecture.FIPARequestResponder;
 import es.upv.dsic.gti_ia.architecture.MessageTemplate;
+import es.upv.dsic.gti_ia.architecture.Monitor;
 import es.upv.dsic.gti_ia.architecture.QueueAgent;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
@@ -11,6 +12,11 @@ import es.upv.dsic.gti_ia.organization.OMSProxy;
 
 public class Product extends QueueAgent {
 
+	
+	OMSProxy omsProxy = new OMSProxy(this);
+	Monitor m = new Monitor();
+	Responder responder = new Responder(this);
+	
 	public Product(AgentID aid) throws Exception {
 		super(aid);
 
@@ -19,23 +25,39 @@ public class Product extends QueueAgent {
 	public void execute() {
 
 
-		OMSProxy omsProxy = new OMSProxy(this);
-
-		String result = omsProxy.acquireRole("participant", "virtual");
-		System.out.println("["+this.getName()+"] result acquire role: "+ result);
-		result = omsProxy.acquireRole("operador", "calculin");
-		System.out.println("["+this.getName()+"] result acquire role: "+ result);
 		
 
-		Responder responder = new Responder(this);
+		String result = omsProxy.acquireRole("participant", "virtual");
+		logger.info(""+this.getName()+"] result acquire role: "+ result);
+		result = omsProxy.acquireRole("operador", "calculin");
+		logger.info("["+this.getName()+"] result acquire role: "+ result);
+		
+
+		
 
 		this.addTask(responder);
 
-		es.upv.dsic.gti_ia.architecture.Monitor mon = new es.upv.dsic.gti_ia.architecture.Monitor();
-		mon.waiting();
+		m.waiting();
 
 	}
 
+	public void conclude()
+	{
+		responder.finish();
+		m.advise();
+	}
+	
+	public void finalize()
+	{
+		String result = omsProxy.leaveRole("operador", "calculin");
+		System.out.println("["+this.getName()+"] Result leave role operador: "+result);
+		
+		result = omsProxy.leaveRole("participant", "virtual");
+		System.out.println("["+this.getName()+"] Result leave role participant: "+result);
+		
+		logger.info("["+this.getName()+" ] end execution!");
+	}
+	
 	/**
 	 * Manages the messages for the  agent provider services
 	 */

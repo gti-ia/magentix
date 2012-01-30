@@ -1,5 +1,6 @@
 package organizational__message_example.flat;
 
+import es.upv.dsic.gti_ia.architecture.Monitor;
 import es.upv.dsic.gti_ia.architecture.QueueAgent;
 import es.upv.dsic.gti_ia.architecture.FIPANames.InteractionProtocol;
 import es.upv.dsic.gti_ia.core.ACLMessage;
@@ -11,6 +12,7 @@ import es.upv.dsic.gti_ia.organization.THOMASException;
 public class Creator extends QueueAgent {
 	
 	OMSProxy omsProxy = new OMSProxy(this);
+	Monitor m = new Monitor();
 	
 	public Creator(AgentID aid) throws Exception {
 		super(aid);
@@ -22,26 +24,53 @@ public class Creator extends QueueAgent {
 
 		String result = omsProxy.acquireRole("participant", "virtual");
 		
-		System.out.println("Result acquire role: "+ result);
+		logger.info("Result acquire role: "+ result);
 		
 		this.initialize_scenario();
 		
 		this.send_request(4, 2);
 		
-		
+		m.waiting();
 		
 	}
 	
+	public void conclude()
+	{
+		m.advise();
+	}
+	
+
+	
+	public void finalize()
+	{
+
+		String result = omsProxy.deregisterRole("operador", "calculin");
+		System.out.println("["+this.getName()+"] Result leave role operador: "+result);
+		
+		result = omsProxy.deregisterRole("manager", "calculin");
+		System.out.println("["+this.getName()+"] Result leave role manager: "+result);
+		
+		omsProxy.deregisterRole("creador", "calculin");
+		System.out.println("["+this.getName()+"] Result leave role creador: "+result);
+		
+		result = omsProxy.deregisterUnit("calculin");
+		System.out.println("["+this.getName()+"] Result deregister unit calculin: "+result);
+		
+		result = omsProxy.leaveRole("participant", "virtual");
+		System.out.println("["+this.getName()+"] Result leave role participant: "+result);
+		
+		logger.info("["+this.getName()+" ] end execution!");
+	}
 	private void initialize_scenario()
 	{
 		String result = omsProxy.registerUnit("calculin", "flat", "virtual", "creador");
 		
-		System.out.println("Result register unit: "+ result);
+		logger.info("Result register unit: "+ result);
 	
 		result = omsProxy.registerRole("manager", "calculin", "external", "public","member");
-		System.out.println("Result register role: "+ result);
+		logger.info("Result register role: "+ result);
 		result = omsProxy.registerRole("operador", "calculin", "external", "public","member");
-		System.out.println("Result register role: "+ result);
+		logger.info("Result register role: "+ result);
 	
 	}
 	

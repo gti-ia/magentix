@@ -13,6 +13,9 @@ import es.upv.dsic.gti_ia.organization.OMSProxy;
 
 public class Addition extends QueueAgent {
 
+	OMSProxy omsProxy = new OMSProxy(this);
+	es.upv.dsic.gti_ia.architecture.Monitor m = new es.upv.dsic.gti_ia.architecture.Monitor();
+	
 	public Addition(AgentID aid) throws Exception {
 		super(aid);
 
@@ -21,26 +24,36 @@ public class Addition extends QueueAgent {
 	public void execute() {
 
 
-		OMSProxy omsProxy = new OMSProxy(this);
+		
 
 		//Acquire the member rol in virtual unit and operador inside the  unit calculin
 		String result = omsProxy.acquireRole("participant", "virtual");
-		System.out.println("["+this.getName()+"] result acquire role: "+ result);
+		logger.info("["+this.getName()+"] result acquire role: "+ result);
 		
 		result = omsProxy.acquireRole("operador", "calculin");
-		System.out.println("["+this.getName()+"] result acquire role: "+ result);
+		logger.info("["+this.getName()+"] result acquire role: "+ result);
 		Responder responder = new Responder(this);
 		
 		//Add a new protocol FIPA Request
 		this.addTask(responder);
 		
-		es.upv.dsic.gti_ia.architecture.Monitor mon = new es.upv.dsic.gti_ia.architecture.Monitor();
+		
 		
 		//Waiting for messages.
-		mon.waiting();
+		m.waiting();
 
 	}
 
+	public void conclude()
+	{
+		m.advise();
+	}
+	public void finalize()
+	{
+		String result = omsProxy.leaveRole("participant", "virtual");
+		System.out.println("["+this.getName()+"] Result leave role participant: "+result);
+		logger.info("[ "+this.getName()+" ] end execution!");
+	}
 
 
 
