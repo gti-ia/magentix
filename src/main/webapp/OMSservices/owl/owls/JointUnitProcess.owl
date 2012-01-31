@@ -41,35 +41,25 @@
 <process:AtomicProcess rdf:ID="JointUnitProcess">
 	<service:describes rdf:resource="#JointUnitService"/>  	
 
-      <process:hasInput rdf:resource="#UnitID"/>
-      <process:hasInput rdf:resource="#Type"/>
-      <process:hasInput rdf:resource="#ParentUnitID"/>
+      <process:hasInput rdf:resource="#UnitName"/>
+      <process:hasInput rdf:resource="#ParentName"/>
     <process:hasInput rdf:resource="#AgentID"/>
-    <process:hasInput rdf:resource="#CreatorName"/>
 	<process:hasOutput rdf:resource="#Status"/>
 	<process:hasOutput rdf:resource="#ErrorValue"/>
 </process:AtomicProcess>
 
 
-<process:Input rdf:ID="UnitID">
-     <rdfs:label>UnitID</rdfs:label>
-     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
-</process:Input>
-<process:Input rdf:ID="Type">
-     <rdfs:label>Type</rdfs:label>
+<process:Input rdf:ID="UnitName">
+     <rdfs:label>UnitName</rdfs:label>
      <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
 </process:Input>
 
-<process:Input rdf:ID="ParentUnitID">
-     <rdfs:label>ParentUnitID</rdfs:label>
+<process:Input rdf:ID="ParentName">
+     <rdfs:label>ParentName</rdfs:label>
      <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
 </process:Input>
 <process:Input rdf:ID="AgentID">
      <rdfs:label>AgentID</rdfs:label>
-     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
-</process:Input>
-<process:Input rdf:ID="CreatorName">
-     <rdfs:label>CreatorName</rdfs:label>
      <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
 </process:Input>
 <process:Output rdf:ID="Status">
@@ -101,26 +91,14 @@
     
 	<grounding:wsdlInput>
                   <grounding:WsdlInputMessageMap>
-                    <grounding:owlsParameter rdf:resource="#UnitID"/>
-                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/JointUnit/UnitID</grounding:wsdlMessagePart>
+                    <grounding:owlsParameter rdf:resource="#UnitName"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/JointUnit/UnitName</grounding:wsdlMessagePart>
                   </grounding:WsdlInputMessageMap>
         </grounding:wsdlInput>
 	<grounding:wsdlInput>
                   <grounding:WsdlInputMessageMap>
-                    <grounding:owlsParameter rdf:resource="#Type"/>
-                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/JointUnit/Type</grounding:wsdlMessagePart>
-                  </grounding:WsdlInputMessageMap>
-        </grounding:wsdlInput>
-    <grounding:wsdlInput>
-                  <grounding:WsdlInputMessageMap>
-                    <grounding:owlsParameter rdf:resource="#CreatorName"/>
-                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/JointUnit/CreatorName</grounding:wsdlMessagePart>
-                  </grounding:WsdlInputMessageMap>
-        </grounding:wsdlInput>
-	<grounding:wsdlInput>
-                  <grounding:WsdlInputMessageMap>
-                    <grounding:owlsParameter rdf:resource="#ParentUnitID"/>
-                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/JointUnit/ParentUnitID</grounding:wsdlMessagePart>
+                    <grounding:owlsParameter rdf:resource="#ParentName"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/JointUnit/ParentName</grounding:wsdlMessagePart>
                   </grounding:WsdlInputMessageMap>
         </grounding:wsdlInput>    
 	<grounding:wsdlInput>
