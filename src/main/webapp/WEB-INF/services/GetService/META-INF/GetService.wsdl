@@ -12,8 +12,7 @@
       <xsd:element name="GetServiceResponse">
         <xsd:complexType>
           <xsd:sequence>
-          	<xsd:element name="return" type="xsd:int"/>
-            <xsd:element name="owlsSpecification" type="xsd:string"/>
+          	<xsd:element name="Result" type="xsd:string"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>

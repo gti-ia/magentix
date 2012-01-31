@@ -15,8 +15,7 @@
       <xsd:element name="SearchServiceResponse">
         <xsd:complexType>
           <xsd:sequence>
-          	<xsd:element name="return" type="xsd:int"/>
-            <xsd:element name="ServicesList" type="xsd:string"/>
+          	<xsd:element name="Result" type="xsd:string"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>

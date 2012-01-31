@@ -21,7 +21,12 @@
    xmlns:mind="&mind;#"      
    xml:base="http://localhost:8080/sfservices/SFservices/owl/owls/DeregisterService.owl">
 
-
+<owl:Ontology>
+    <owl:imports rdf:resource="&service;"/>
+    <owl:imports rdf:resource="&profile;"/>
+    <owl:imports rdf:resource="&process;"/>
+    <owl:imports rdf:resource="&grounding;"/> 
+</owl:Ontology>
 
 <service:Service rdf:ID="DeregisterServiceService">
         <service:presents rdf:resource="#DeregisterServiceProfile"/>
@@ -35,25 +40,26 @@
 <profile:Profile rdf:ID="DeregisterServiceProfile">
     <service:isPresentedBy rdf:resource="#DeregisterServiceService"/>
     <profile:serviceName xml:lang="en">DeregisterService</profile:serviceName>
-    <profile:hasInput rdf:resource="#DeregisterServiceInputServiceID"/>
-    <profile:hasOutput rdf:resource="#DeregisterServiceOutputServiceStatus"/>
+    <profile:hasInput rdf:resource="#ServiceID"/>
+    <profile:hasOutput rdf:resource="#Result"/>
 </profile:Profile>
 
 
 <process:AtomicProcess rdf:ID="DeregisterServiceProcess">
 	<service:describes rdf:resource="#DeregisterServiceService"/>
-     	<process:hasOutput rdf:resource="#DeregisterServiceOutputServiceStatus"/>
-     	<process:hasInput rdf:resource="#DeregisterServiceInputServiceID"/>
+	<process:hasInput rdf:resource="#ServiceID"/>
+     	<process:hasOutput rdf:resource="#Result"/>
+     	
 </process:AtomicProcess>
 
-<process:Input rdf:ID="DeregisterServiceInputServiceID">
-     <rdfs:label>InputServiceID</rdfs:label>
+<process:Input rdf:ID="ServiceID">
+     <rdfs:label>ServiceID</rdfs:label>
      <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
 </process:Input>
 
-<process:Output rdf:ID="DeregisterServiceOutputServiceStatus">
-    <rdfs:label>OutputServiceStatus</rdfs:label>
-    <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#integer</process:parameterType>
+<process:Output rdf:ID="Result">
+    <rdfs:label>Result</rdfs:label>
+    <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
 </process:Output>         
 
 <grounding:WsdlGrounding rdf:ID="DeregisterServiceGrounding">
@@ -76,7 +82,7 @@
        
 	<grounding:wsdlInput>
                   <grounding:WsdlInputMessageMap>
-                    <grounding:owlsParameter rdf:resource="#DeregisterServiceInputServiceID"/>
+                    <grounding:owlsParameter rdf:resource="#ServiceID"/>
                     <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/sfservices/services/ServiceID</grounding:wsdlMessagePart>
                   </grounding:WsdlInputMessageMap>
         </grounding:wsdlInput>
@@ -84,8 +90,8 @@
 	
        <grounding:wsdlOutput>
                   <grounding:WsdlOutputMessageMap>
-		    <grounding:owlsParameter rdf:resource="#DeregisterServiceOutputServiceStatus"/>
-                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/sfservices/services/return</grounding:wsdlMessagePart>
+		    <grounding:owlsParameter rdf:resource="#Result"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/sfservices/services/Result</grounding:wsdlMessagePart>
                   </grounding:WsdlOutputMessageMap>
         </grounding:wsdlOutput>
 </grounding:WsdlAtomicProcessGrounding>

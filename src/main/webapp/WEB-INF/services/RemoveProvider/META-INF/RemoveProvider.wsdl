@@ -13,7 +13,7 @@
   <xsd:element name="RemoveProviderResponse">
   <xsd:complexType>
   <xsd:sequence>
-  <xsd:element name="return" type="xsd:int"/> 
+  <xsd:element name="Result" type="xsd:string"/> 
   </xsd:sequence>
   </xsd:complexType>
   </xsd:element>

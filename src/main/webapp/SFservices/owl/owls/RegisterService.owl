@@ -21,6 +21,13 @@
    xmlns:mind="&mind;#"      
    xml:base="http://localhost:8080/sfservices/SFservices/owl/owls/RegisterService.owl">
 
+<owl:Ontology>
+    <owl:imports rdf:resource="&service;"/>
+    <owl:imports rdf:resource="&profile;"/>
+    <owl:imports rdf:resource="&process;"/>
+    <owl:imports rdf:resource="&grounding;"/> 
+</owl:Ontology>
+
 <service:Service rdf:ID="RegisterServiceService">
         <service:presents rdf:resource="#RegisterServiceProfile"/>
         <service:describedBy rdf:resource="#RegisterServiceProcess"/>
@@ -30,23 +37,23 @@
 
 <profile:Profile rdf:ID="RegisterServiceProfile">
     <profile:serviceName xml:lang="en">RegisterService</profile:serviceName>
-    <profile:hasInput rdf:resource="#RegisterServiceInputServiceURL"/>
-    <profile:hasOutput rdf:resource="#RegisterServiceOutputServiceStatus"/>  
+    <profile:hasInput rdf:resource="#ServiceURL"/>
+    <profile:hasOutput rdf:resource="#Result"/>  
 </profile:Profile>
 
 <process:AtomicProcess rdf:ID="RegisterServiceProcess"> 
 	<service:describes rdf:resource="#RegisterServiceService"/>  	
-	<process:hasInput rdf:resource="#RegisterServiceInputServiceURL"/>
-   	<process:hasOutput rdf:resource="#RegisterServiceOutputServiceStatus"/>
+	<process:hasInput rdf:resource="#ServiceURL"/>
+   	<process:hasOutput rdf:resource="#Result"/>
 </process:AtomicProcess>
 
-<process:Input rdf:ID="RegisterServiceInputServiceURL">
-     <rdfs:label>InputServiceURL</rdfs:label>
+<process:Input rdf:ID="ServiceURL">
+     <rdfs:label>ServiceURL</rdfs:label>
      <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
 </process:Input>
 
-<process:Output rdf:ID="RegisterServiceOutputServiceStatus">
-    <rdfs:label>OutputServiceStatus</rdfs:label>
+<process:Output rdf:ID="Result">
+    <rdfs:label>Result</rdfs:label>
     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
 </process:Output>  
 
@@ -71,15 +78,15 @@
     
 	<grounding:wsdlInput>
                   <grounding:WsdlInputMessageMap>
-                    <grounding:owlsParameter rdf:resource="#RegisterServiceInputServiceURL"/>
+                    <grounding:owlsParameter rdf:resource="#ServiceURL"/>
                     <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/sfservices/services/ServiceURL</grounding:wsdlMessagePart>
                   </grounding:WsdlInputMessageMap>
         </grounding:wsdlInput>
 
        <grounding:wsdlOutput>
                   <grounding:WsdlOutputMessageMap>
-		    <grounding:owlsParameter rdf:resource="#RegisterServiceOutputServiceStatus"/>
-                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/sfservices/services/return</grounding:wsdlMessagePart>
+		    <grounding:owlsParameter rdf:resource="#Result"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/sfservices/services/Result</grounding:wsdlMessagePart>
                   </grounding:WsdlOutputMessageMap>
         </grounding:wsdlOutput>
 
