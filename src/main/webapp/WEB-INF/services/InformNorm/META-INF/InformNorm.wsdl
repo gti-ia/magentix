@@ -1,28 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <wsdl:definitions name="InformNorm" targetNamespace="http://wtp" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://wtp" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
-  <wsdl:types>
-    <wsdl:schema targetNamespace="http://wtp">
-      <wsdl:element name="InformNorm">
+ <wsdl:types>
+  <xsd:schema targetNamespace="http://wtp">
+			<xsd:element name="InformNorm">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="NormName" type="xsd:string" />
+						<xsd:element name="UnitName" type="xsd:string" />
+						<xsd:element name="AgentID" type="xsd:string" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="InformNormResponse">
         
-                <wsdl:complexType>
-          <wsdl:sequence>
-             <wsdl:element name="NormName" type="xsd:string" />
-             <wsdl:element name="UnitName" type="xsd:string" />
-             <wsdl:element name="AgentID" type="xsd:string" />
-          </wsdl:sequence>
-        </wsdl:complexType>
-            </wsdl:element>
-      <wsdl:element name="InformNormResponse">
-        
-                <wsdl:complexType>
-          <wsdl:sequence>
-          	<wsdl:element name="Description" type="xsd:string" />
-	      	<wsdl:element name="Status" type="xsd:string" />
-          	<wsdl:element name="ErrorValue" type="xsd:string" />
-          </wsdl:sequence>
-        </wsdl:complexType>
-            </wsdl:element>
-    </wsdl:schema>
+                <xsd:complexType>
+          <xsd:sequence>
+          	<xsd:element name="Description" type="xsd:string" />
+	      	<xsd:element name="Status" type="xsd:string" />
+          	<xsd:element name="ErrorValue" type="xsd:string" />
+          </xsd:sequence>
+        </xsd:complexType>
+            </xsd:element>
+    </xsd:schema>
   </wsdl:types>
   <wsdl:message name="InformNormResponse">
     <wsdl:part name="parameters" element="tns:InformNormResponse">
