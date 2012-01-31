@@ -48,8 +48,8 @@
     <profile:hasInput rdf:resource="#Accessibility"/>
     <profile:hasInput rdf:resource="#Position"/>
     <profile:hasInput rdf:resource="#Visibility"/>
-    <profile:hasOutput rdf:resource="#Status"/>
-    <profile:hasOutput rdf:resource="#Description"/>   
+    <profile:hasOutput rdf:resource="#Result"/>
+ 
 
 </profile:Profile>
 
@@ -62,8 +62,8 @@
     <process:hasInput rdf:resource="#Position"/>
     <process:hasInput rdf:resource="#Visibility"/>
 
-	<process:hasOutput rdf:resource="#Status"/>
-	<process:hasOutput rdf:resource="#Description"/>
+	<process:hasOutput rdf:resource="#Result"/>
+	
 </process:AtomicProcess>
 
 <process:Input rdf:ID="RoleID">
@@ -88,14 +88,11 @@
 </process:Input>
 
 
-<process:Output rdf:ID="Status">
-    <rdfs:label>Status</rdfs:label>
-    <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#integer</process:parameterType>
-</process:Output>  
-<process:Output rdf:ID="Description">
-    <rdfs:label>Description</rdfs:label>
+<process:Output rdf:ID="Result">
+    <rdfs:label>Result</rdfs:label>
     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
-</process:Output>         
+</process:Output>  
+       
 
 <grounding:WsdlGrounding rdf:ID="RegisterRoleGrounding">
 	<service:supportedBy rdf:resource="#RegisterRoleService"/>
@@ -149,17 +146,11 @@
         
        <grounding:wsdlOutput>
                   <grounding:WsdlOutputMessageMap>
-		    <grounding:owlsParameter rdf:resource="#Status"/>
-                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/RegisterRole/Status</grounding:wsdlMessagePart>
+		    <grounding:owlsParameter rdf:resource="#Result"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/RegisterRole/Result</grounding:wsdlMessagePart>
                   </grounding:WsdlOutputMessageMap>
         </grounding:wsdlOutput>
 
-<grounding:wsdlOutput>
-                  <grounding:WsdlOutputMessageMap>
-		    <grounding:owlsParameter rdf:resource="#Description"/>
-                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/RegisterRole/Description</grounding:wsdlMessagePart>
-                  </grounding:WsdlOutputMessageMap>
-        </grounding:wsdlOutput>
 
 </grounding:WsdlAtomicProcessGrounding>
 
