@@ -47,7 +47,6 @@
 	<profile:hasInput rdf:resource="#TargetAgentName"/>
     <profile:hasInput rdf:resource="#UnitName"/>
     <profile:hasInput rdf:resource="#RoleName"/>
-    <profile:hasInput rdf:resource="#DeallocateRoledAgentID"/>
     <profile:hasOutput rdf:resource="#Status"/>
     <profile:hasOutput rdf:resource="#ErrorValue"/>   
 
@@ -60,7 +59,6 @@
 	<process:hasInput rdf:resource="#TargetAgentName"/>
     <process:hasInput rdf:resource="#UnitName"/>
     <process:hasInput rdf:resource="#RoleName"/>
-    <process:hasInput rdf:resource="#DeallocateRoledAgentID"/>
 	<process:hasOutput rdf:resource="#Status"/>
 	<process:hasOutput rdf:resource="#ErrorValue"/>
 	<process:hasOutput rdf:resource="#EntityRoleList"/>
@@ -83,10 +81,7 @@
      <rdfs:label>RoleName</rdfs:label>
      <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
 </process:Input>
-<process:Input rdf:ID="RoleName">
-     <rdfs:label>DeallocateRoledAgentID</rdfs:label>
-     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
-</process:Input>
+
 
 <process:Output rdf:ID="Status">
     <rdfs:label>Status</rdfs:label>
