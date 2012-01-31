@@ -15,7 +15,7 @@ public class THOMASException extends Exception {
 	private String content;
 	
 	public THOMASException(String message){
-		super();
+		super(message);
 		this.content = message;
 	}
 	

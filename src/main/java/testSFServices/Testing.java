@@ -14,7 +14,6 @@ import org.mindswap.owls.process.execution.ProcessExecutionEngine;
 import org.mindswap.owls.service.Service;
 import org.mindswap.query.ValueMap;
 
-import persistence.Profile;
 import persistence.SFinterface;
 import persistence.THOMASException;
 
@@ -194,15 +193,15 @@ public class Testing {
 
 
 
-		//			ArrayList<String> inputs=new ArrayList<String>();
-		//			inputs.add("\"http://127.0.0.1/ontology/geographydataset.owl#Code\"^^xsd:anyURI");
-		//			inputs.add("\"http://127.0.0.1/ontology/protont.owl#longitude\"^^xsd:anyURI");
-		//			inputs.add("\"http://127.0.0.1/ontology/protonu.owl#Date\"^^xsd:anyURI");
-		//			inputs.add("\"http://127.0.0.1/ontology/protont.owl#latitude\"^^xsd:anyURI");
-		//			ArrayList<String> outputs=new ArrayList<String>();
-		//			outputs.add("\"http://127.0.0.1/ontology/geographydataset.owl#Sunrise\"^^xsd:anyURI");
-		//			ArrayList<String> keywords=new ArrayList<String>();
-		//			keywords.add("sunrise");keywords.add("time");
+					ArrayList<String> inputs=new ArrayList<String>();
+					inputs.add("\"http://127.0.0.1/ontology/geographydataset.owl#Code\"^^xsd:anyURI");
+					inputs.add("\"http://127.0.0.1/ontology/protont.owl#longitude\"^^xsd:anyURI");
+					inputs.add("\"http://127.0.0.1/ontology/protonu.owl#Date\"^^xsd:anyURI");
+					inputs.add("\"http://127.0.0.1/ontology/protont.owl#latitude\"^^xsd:anyURI");
+					ArrayList<String> outputs=new ArrayList<String>();
+					outputs.add("\"http://127.0.0.1/ontology/geographydataset.owl#Sunrise\"^^xsd:anyURI");
+					ArrayList<String> keywords=new ArrayList<String>();
+					keywords.add("sunrise");keywords.add("time");
 		//			
 		//			ArrayList<Profile> foundServices=sf.SearchService(inputs, outputs, keywords);
 		//			Iterator<Profile> iterProfs=foundServices.iterator();
@@ -214,34 +213,23 @@ public class Testing {
 
 		String ground="http://127.0.0.1/services/1.1/calculateSunriseTime.owls#CALCULATE_SUNRISE_GROUNDING";
 
-//		try{	
-//
-//			sf.clean();
-//			sf.RegisterService("http://127.0.0.1/services/1.1/calculateSunriseTime.owls");
 
-			//sf.DeregisterService("http://127.0.0.1/services/1.1/calculateSunriseTime.owls#CALCULATE_SUNRISE_PROFILE");
+//		sf.clean();
+//		String r=sf.RegisterService("http://127.0.0.1/services/1.1/calculateSunriseTime.owls");
+//		System.out.println(r);
+//		r=sf.RegisterService("http://127.0.0.1/services/1.1/author_bookprice_service.owls");
+//		System.out.println(r);
+		
+//		String r=sf.SearchService(inputs, outputs, keywords);
+//		System.out.println(r);
+		
+		String r=sf.DeregisterService("http://127.0.0.1/services/1.1/author_bookprice_service.owls#AUTHOR_BOOKPRICE_PROFILE");
 
-			//		System.out.println("MODEL:");
-			//		sf.writeModel();
-			//		
-
-			//		sf.RemoveProvider("http://127.0.0.1/services/1.1/calculateSunriseTime.owls#CALCULATE_SUNRISE_PROFILE", ground);
-			//		
-			//		sf.writeModel();
-
-//		} catch (THOMASException e) {
-//			System.out.println("CAUSE: "+e.getContent());
-//			e.printStackTrace();
-//		}
-
-		String atomicProcessGrounding="http://127.0.0.1/services/1.1/calculateSunriseTime.owls#CALCULATE_SUNRISE_AtomicProcessGrounding";
-		//		sf.deleteWSDLInput(atomicProcessGrounding);
-		//				sf.removeGrounding(ground);
-
-
-		sf.search2(atomicProcessGrounding);
-//		sf.delete2(atomicProcessGrounding);
-
+//		String r=sf.RemoveProvider("http://127.0.0.1/services/1.1/calculateSunriseTime.owls#CALCULATE_SUNRISE_PROFILE", ground);
+//		String r=sf.RemoveProvider("http://127.0.0.1/services/1.1/calculateSunriseTime.owls#CALCULATE_SUNRISE_PROFILE", "Provider2");
+		
+		System.out.println(r);
+		
 		System.out.println("MODEL:");
 		sf.writeModel();
 	}
