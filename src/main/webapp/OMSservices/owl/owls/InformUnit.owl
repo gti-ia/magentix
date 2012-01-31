@@ -11,7 +11,7 @@
   <!ENTITY process "http://www.daml.org/services/owl-s/1.1/Process.owl#">
   <!ENTITY grounding "http://www.daml.org/services/owl-s/1.1/Grounding.owl#">
   <!ENTITY xsd "http://www.w3.org/2001/XMLSchema">
-  <!ENTITY mind "http://localhost:8080/OMS/OWLS/InformUnitRoles.owl">
+  <!ENTITY mind "http://localhost:8080/omsservices/OMSservices/owl/owls/InformUnitRoles.owl">
   <!ENTITY dir "http://localhost:8080/omsservices/services/InformUnitRoles?wsdl">
 ]>
 
@@ -19,7 +19,7 @@
 <rdf:RDF xmlns:rdf="&rdf;" xmlns:rdfs="&rdfs;" xmlns:owl="&owl;" xmlns:xsd="&xsd;#" 
    xmlns:service="&service;" xmlns:process="&process;" xmlns:profile="&profile;" xmlns:grounding="&grounding;"
    xmlns:mind="&mind;#"      
-   xml:base="http://localhost:8080/OMS/OWLS/InformUnitRoles.owl">
+   xml:base="http://localhost:8080/omsservices/OMSservices/owl/owls/InformUnitRoles.owl">
 
 
 <owl:Ontology>
@@ -46,8 +46,8 @@
 
     <profile:hasInput rdf:resource="#UnitID"/>
     <profile:hasOutput rdf:resource="#Status"/>
-    <profile:hasOutput rdf:resource="#ErrorValue"/>   
-    <profile:hasOutput rdf:resource="#RoleList"/> 
+    <profile:hasOutput rdf:resource="#Description"/>   
+
 
 </profile:Profile>
 
@@ -56,8 +56,7 @@
 
       <process:hasInput rdf:resource="#UnitID"/>
 	<process:hasOutput rdf:resource="#Status"/>
-	<process:hasOutput rdf:resource="#ErrorValue"/>
-	<process:hasOutput rdf:resource="#RoleList"/>
+	<process:hasOutput rdf:resource="#Description"/>
 	
 </process:AtomicProcess>
 
@@ -71,14 +70,10 @@
     <rdfs:label>Status</rdfs:label>
     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#integer</process:parameterType>
 </process:Output>  
-<process:Output rdf:ID="ErrorValue">
-    <rdfs:label>ErrorValue</rdfs:label>
+<process:Output rdf:ID="Description">
+    <rdfs:label>Description</rdfs:label>
     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
-</process:Output>    
-<process:Output rdf:ID="RoleList">
-    <rdfs:label>RoleList</rdfs:label>
-    <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
-</process:Output>      
+</process:Output>       
 
 <grounding:WsdlGrounding rdf:ID="InformUnitRolesGrounding">
 	<service:supportedBy rdf:resource="#InformUnitRolesService"/>
@@ -95,8 +90,8 @@
             </grounding:WsdlOperationRef>
         </grounding:wsdlOperation>
 
-	<grounding:wsdlInputMessage rdf:datatype="&xsd;anyURI">http://localhost:8080/omsservices/services/InformUnitRolesMessage</grounding:wsdlInputMessage>
-        <grounding:wsdlOutputMessage rdf:datatype="&xsd;anyURI">http://localhost:8080/omsservices/services/InformUnitRolesResponse</grounding:wsdlOutputMessage>
+	<grounding:wsdlInputMessage rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/InformUnitRolesMessage</grounding:wsdlInputMessage>
+        <grounding:wsdlOutputMessage rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/InformUnitRolesResponse</grounding:wsdlOutputMessage>
     
 	<grounding:wsdlInput>
                   <grounding:WsdlInputMessageMap>
@@ -114,14 +109,8 @@
 
 <grounding:wsdlOutput>
                   <grounding:WsdlOutputMessageMap>
-		    <grounding:owlsParameter rdf:resource="#ErrorValue"/>
-                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/InformUnitRoles/ErrorValue</grounding:wsdlMessagePart>
-                  </grounding:WsdlOutputMessageMap>
-        </grounding:wsdlOutput>
-        <grounding:wsdlOutput>
-                  <grounding:WsdlOutputMessageMap>
-		    <grounding:owlsParameter rdf:resource="#RoleList"/>
-                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/InformUnitRoles/RoleList</grounding:wsdlMessagePart>
+		    <grounding:owlsParameter rdf:resource="#Description"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/InformUnitRoles/Description</grounding:wsdlMessagePart>
                   </grounding:WsdlOutputMessageMap>
         </grounding:wsdlOutput>
         

@@ -11,7 +11,7 @@
   <!ENTITY process "http://www.daml.org/services/owl-s/1.1/Process.owl#">
   <!ENTITY grounding "http://www.daml.org/services/owl-s/1.1/Grounding.owl#">
   <!ENTITY xsd "http://www.w3.org/2001/XMLSchema">
-  <!ENTITY mind "http://localhost:8080/OMS/OWLS/RegisterNorm.owl">
+  <!ENTITY mind "http://localhost:8080/omsservices/OMSservices/owl/owls/RegisterNorm.owl">
   <!ENTITY dir "http://localhost:8080/RegisterNorm/services/RegisterNorm?wsdl">
 ]>
 
@@ -19,7 +19,7 @@
 <rdf:RDF xmlns:rdf="&rdf;" xmlns:rdfs="&rdfs;" xmlns:owl="&owl;" xmlns:xsd="&xsd;#" 
    xmlns:service="&service;" xmlns:process="&process;" xmlns:profile="&profile;" xmlns:grounding="&grounding;"
    xmlns:mind="&mind;#"      
-   xml:base="http://localhost:8080/OMS/OWLS/RegisterNorm.owl">
+   xml:base="http://localhost:8080/omsservices/OMSservices/owl/owls/RegisterNorm.owl">
 
 
 <owl:Ontology>
@@ -47,8 +47,8 @@
     <profile:hasInput rdf:resource="#NormContent"/>  
     <profile:hasInput rdf:resource="#AgentID"/> 
     <profile:hasInput rdf:resource="#UnitName"/>
-    <profile:hasOutput rdf:resource="#RegisterProfileOutputStatus"/>
-    <profile:hasOutput rdf:resource="#RegisterProfileOutputErrorValue"/>
+    <profile:hasOutput rdf:resource="#Status"/>
+    <profile:hasOutput rdf:resource="#Description"/>
 </profile:Profile>
 
 <process:AtomicProcess rdf:ID="RegisterNormProcess">
@@ -57,8 +57,8 @@
     <process:hasInput rdf:resource="#NormContent"/>
     <process:hasInput rdf:resource="#AgentID"/> 
     <process:hasInput rdf:resource="#UnitName"/>
-   		<process:hasOutput rdf:resource="#RegisterProfileOutputStatus"/>
-	<process:hasOutput rdf:resource="#RegisterProfileOutputErrorValue"/>
+   		<process:hasOutput rdf:resource="#Status"/>
+	<process:hasOutput rdf:resource="#Description"/>
 </process:AtomicProcess>
 
 <process:Input rdf:ID="NormID">
@@ -79,11 +79,11 @@
 </process:Input>
 
 <process:Output rdf:ID="Status">
-    <rdfs:label>OutputStatus</rdfs:label>
-    <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#integer</process:parameterType>
+    <rdfs:label>Status</rdfs:label>
+    <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#String</process:parameterType>
 </process:Output>  
-<process:Output rdf:ID="ErrorValue">
-    <rdfs:label>OutputErrorValue</rdfs:label>
+<process:Output rdf:ID="Description">
+    <rdfs:label>Description</rdfs:label>
     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
 </process:Output>         
 
@@ -141,8 +141,8 @@
 
 <grounding:wsdlOutput>
                   <grounding:WsdlOutputMessageMap>
-		    <grounding:owlsParameter rdf:resource="#ErrorValue"/>
-                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/RegisterNorm/ErrorValue</grounding:wsdlMessagePart>
+		    <grounding:owlsParameter rdf:resource="#Description"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/RegisterNorm/Description</grounding:wsdlMessagePart>
                   </grounding:WsdlOutputMessageMap>
         </grounding:wsdlOutput>
 

@@ -11,7 +11,7 @@
   <!ENTITY process "http://www.daml.org/services/owl-s/1.1/Process.owl#">
   <!ENTITY grounding "http://www.daml.org/services/owl-s/1.1/Grounding.owl#">
   <!ENTITY xsd "http://www.w3.org/2001/XMLSchema">
-  <!ENTITY mind "http://localhost:8080/OMS/OWLS/QuantityMembers.owl">
+  <!ENTITY mind "http://localhost:8080/omsservices/OMSservices/owl/owls/QuantityMembers.owl">
   <!ENTITY dir "http://localhost:8080/omsservices/services/QuantityMembers?wsdl">
 ]>
 
@@ -19,7 +19,7 @@
 <rdf:RDF xmlns:rdf="&rdf;" xmlns:rdfs="&rdfs;" xmlns:owl="&owl;" xmlns:xsd="&xsd;#" 
    xmlns:service="&service;" xmlns:process="&process;" xmlns:profile="&profile;" xmlns:grounding="&grounding;"
    xmlns:mind="&mind;#"      
-   xml:base="http://localhost:8080/OMS/OWLS/QuantityMembers.owl">
+   xml:base="http://localhost:8080/omsservices/OMSservices/owl/owls/QuantityMembers.owl">
 
 
 <owl:Ontology>
@@ -47,8 +47,7 @@
     <profile:hasInput rdf:resource="#UnitID"/>
     <profile:hasInput rdf:resource="#RoleID"/>
     <profile:hasOutput rdf:resource="#Status"/>
-    <profile:hasOutput rdf:resource="#ErrorValue"/>   
-    <profile:hasOutput rdf:resource="#Quantity"/> 
+    <profile:hasOutput rdf:resource="#Description"/>   
 
 </profile:Profile>
 
@@ -58,8 +57,7 @@
     <process:hasInput rdf:resource="#UnitID"/>
     <process:hasInput rdf:resource="#RoleID"/>
 	<process:hasOutput rdf:resource="#Status"/>
-	<process:hasOutput rdf:resource="#ErrorValue"/>
-	<process:hasOutput rdf:resource="#Quantity"/>
+	<process:hasOutput rdf:resource="#Description"/>
 	
 </process:AtomicProcess>
 
@@ -77,14 +75,11 @@
     <rdfs:label>Status</rdfs:label>
     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#integer</process:parameterType>
 </process:Output>  
-<process:Output rdf:ID="ErrorValue">
-    <rdfs:label>ErrorValue</rdfs:label>
+<process:Output rdf:ID="Description">
+    <rdfs:label>Description</rdfs:label>
     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
 </process:Output>    
-<process:Output rdf:ID="Quantity">
-    <rdfs:label>Quantity</rdfs:label>
-    <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
-</process:Output>      
+     
 
 <grounding:WsdlGrounding rdf:ID="QuantityMembersGrounding">
 	<service:supportedBy rdf:resource="#QuantityMembersService"/>
@@ -101,8 +96,8 @@
             </grounding:WsdlOperationRef>
         </grounding:wsdlOperation>
 
-	<grounding:wsdlInputMessage rdf:datatype="&xsd;anyURI">http://localhost:8080/omsservices/services/QuantityMembersMessage</grounding:wsdlInputMessage>
-        <grounding:wsdlOutputMessage rdf:datatype="&xsd;anyURI">http://localhost:8080/omsservices/services/QuantityMembersResponse</grounding:wsdlOutputMessage>
+	<grounding:wsdlInputMessage rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/QuantityMembersMessage</grounding:wsdlInputMessage>
+        <grounding:wsdlOutputMessage rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/QuantityMembersResponse</grounding:wsdlOutputMessage>
     
 	<grounding:wsdlInput>
                   <grounding:WsdlInputMessageMap>
@@ -126,16 +121,11 @@
 
 <grounding:wsdlOutput>
                   <grounding:WsdlOutputMessageMap>
-		    <grounding:owlsParameter rdf:resource="#ErrorValue"/>
-                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/QuantityMembers/ErrorValue</grounding:wsdlMessagePart>
+		    <grounding:owlsParameter rdf:resource="#Description"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/QuantityMembers/Description</grounding:wsdlMessagePart>
                   </grounding:WsdlOutputMessageMap>
         </grounding:wsdlOutput>
-        <grounding:wsdlOutput>
-                  <grounding:WsdlOutputMessageMap>
-		    <grounding:owlsParameter rdf:resource="#Quantity"/>
-                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/QuantityMembers/Quantity</grounding:wsdlMessagePart>
-                  </grounding:WsdlOutputMessageMap>
-        </grounding:wsdlOutput>
+
         
 
 </grounding:WsdlAtomicProcessGrounding>

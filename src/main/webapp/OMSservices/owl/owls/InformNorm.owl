@@ -11,7 +11,7 @@
   <!ENTITY process "http://www.daml.org/services/owl-s/1.1/Process.owl#">
   <!ENTITY grounding "http://www.daml.org/services/owl-s/1.1/Grounding.owl#">
   <!ENTITY xsd "http://www.w3.org/2001/XMLSchema">
-  <!ENTITY mind "http://localhost:8080/OMS/OWLS/InformNormContent.owl">
+  <!ENTITY mind "http://localhost:8080/omsservices/OMSservices/owl/owls/InformNormContent.owl">
   <!ENTITY dir "http://localhost:8080/omsservices/services/InformNormContent?wsdl">
 ]>
 
@@ -19,7 +19,7 @@
 <rdf:RDF xmlns:rdf="&rdf;" xmlns:rdfs="&rdfs;" xmlns:owl="&owl;" xmlns:xsd="&xsd;#" 
    xmlns:service="&service;" xmlns:process="&process;" xmlns:profile="&profile;" xmlns:grounding="&grounding;"
    xmlns:mind="&mind;#"      
-   xml:base="http://localhost:8080/OMS/OWLS/InformNormContent.owl">
+   xml:base="http://localhost:8080/omsservices/OMSservices/owl/owls/InformNormContent.owl">
 
 
 <owl:Ontology>
@@ -47,7 +47,6 @@
     <profile:hasInput rdf:resource="#AgentID"/>
     <profile:hasInput rdf:resource="#NormID"/>
     <profile:hasOutput rdf:resource="#Status"/>
-    <profile:hasOutput rdf:resource="#ErrorValue"/>
     <profile:hasOutput rdf:resource="#Description"/>   
 
 
@@ -59,7 +58,6 @@
     <profile:hasInput rdf:resource="#AgentID"/>
     <profile:hasInput rdf:resource="#NormID"/>
     <profile:hasOutput rdf:resource="#Status"/>
-    <profile:hasOutput rdf:resource="#ErrorValue"/>
     <profile:hasOutput rdf:resource="#Description"/> 
 	
 </process:AtomicProcess>
@@ -77,10 +75,6 @@
 <process:Output rdf:ID="Status">
     <rdfs:label>Status</rdfs:label>
     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#integer</process:parameterType>
-</process:Output>  
-<process:Output rdf:ID="ErrorValue">
-    <rdfs:label>ErrorValue</rdfs:label>
-    <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
 </process:Output>    
 <process:Output rdf:ID="Description">
     <rdfs:label>Description</rdfs:label>
@@ -102,8 +96,8 @@
             </grounding:WsdlOperationRef>
         </grounding:wsdlOperation>
 
-	<grounding:wsdlInputMessage rdf:datatype="&xsd;anyURI">http://localhost:8080/omsservices/services/InformNormContentMessage</grounding:wsdlInputMessage>
-        <grounding:wsdlOutputMessage rdf:datatype="&xsd;anyURI">http://localhost:8080/omsservices/services/InformNormContentResponse</grounding:wsdlOutputMessage>
+	<grounding:wsdlInputMessage rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/InformNormContentMessage</grounding:wsdlInputMessage>
+        <grounding:wsdlOutputMessage rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/InformNormContentResponse</grounding:wsdlOutputMessage>
     
 	<grounding:wsdlInput>
                   <grounding:WsdlInputMessageMap>
@@ -126,12 +120,6 @@
                   </grounding:WsdlOutputMessageMap>
         </grounding:wsdlOutput>
 
-<grounding:wsdlOutput>
-                  <grounding:WsdlOutputMessageMap>
-		    <grounding:owlsParameter rdf:resource="#ErrorValue"/>
-                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/InformNormContent/ErrorValue</grounding:wsdlMessagePart>
-                  </grounding:WsdlOutputMessageMap>
-        </grounding:wsdlOutput>
         <grounding:wsdlOutput>
                   <grounding:WsdlOutputMessageMap>
 		    <grounding:owlsParameter rdf:resource="#Description"/>
