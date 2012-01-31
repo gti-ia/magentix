@@ -46,7 +46,7 @@
 
     <profile:hasInput rdf:resource="#UnitName"/>
     <profile:hasInput rdf:resource="#ParentName"/>
-    <profile:hasInput rdf:resource="#AgentId"/>
+    <profile:hasInput rdf:resource="#AgentID"/>
     <profile:hasOutput rdf:resource="#Status"/>
     <profile:hasOutput rdf:resource="#ErrorValue"/>   
 
