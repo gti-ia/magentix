@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This file was auto-generated from WSDL -->
+<!-- by the Apache Axis2 version: 1.4  Built on : Apr 26, 2008 (06:24:30 EDT) -->
+<serviceGroup>
+    <service name="InformRole">
+        <messageReceivers>
+            <messageReceiver mep="http://www.w3.org/ns/wsdl/in-out" class="wtp.InformRoleMessageReceiverInOut"/>
+        </messageReceivers>
+        <parameter name="ServiceClass">wtp.InformRoleSkeleton</parameter>
+        <parameter name="useOriginalwsdl">true</parameter>
+        <parameter name="modifyUserWSDLPortAddress">true</parameter>
+        <operation name="InformRole" mep="http://www.w3.org/ns/wsdl/in-out" namespace="http://wtp">
+            <actionMapping>http://wtp</actionMapping>
+            <outputActionMapping>http://wtp/InformRolePortType/InformRoleResponse</outputActionMapping>
+        </operation>
+    </service>
+</serviceGroup>
