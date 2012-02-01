@@ -15,9 +15,7 @@
       <xsd:element name="InformMembersResponse">
         <xsd:complexType>
           <xsd:sequence>
-          	<xsd:element name="Status" type="xsd:string"/>
-          	<xsd:element name="ErrorValue" type="xsd:string"/>
-          	<xsd:element name="EntityRoleList" type="xsd:string"/>
+          	<xsd:element name="Result" type="xsd:string"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
