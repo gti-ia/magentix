@@ -102,7 +102,7 @@ public class OMSInterface {
 						
 						resultXML+="<status>Ok</status>\n";
 						resultXML+="<result>\n<description>"+result+"</description>\n</result>\n";
-						resultXML+="</root>";	
+						resultXML+="</response>";	
 						
 						return resultXML;
 					}
@@ -193,7 +193,7 @@ public class OMSInterface {
 								
 								resultXML+="<status>Ok</status>\n";
 								resultXML+="<result>\n<description>"+result+"</description>\n</result>\n";
-								resultXML+="</root>";
+								resultXML+="</response>";
 								
 								return resultXML;
 
@@ -286,7 +286,7 @@ public class OMSInterface {
 									
 									resultXML+="<status>Ok</status>\n";
 									resultXML+="<result>\n<description>"+result+"</description>\n</result>\n";
-									resultXML+="</root>";
+									resultXML+="</response>";
 									
 									return resultXML;
 
@@ -306,7 +306,7 @@ public class OMSInterface {
 									
 									resultXML+="<status>Ok</status>\n";
 									resultXML+="<result>\n<description>"+result+"</description>\n</result>\n";
-									resultXML+="</root>";
+									resultXML+="</response>";
 									
 									return resultXML;
 
@@ -331,7 +331,7 @@ public class OMSInterface {
 									
 									resultXML+="<status>Ok</status>\n";
 									resultXML+="<result>\n<description>"+result+"</description>\n</result>\n";
-									resultXML+="</root>";
+									resultXML+="</response>";
 									
 									return resultXML;
 
@@ -414,7 +414,7 @@ public class OMSInterface {
 											
 											resultXML+="<status>Ok</status>\n";
 											resultXML+="<result>\n<description>"+result+"</description>\n</result>\n";
-											resultXML+="</root>";
+											resultXML+="</response>";
 											
 											return resultXML;
 
@@ -433,7 +433,7 @@ public class OMSInterface {
 											
 											resultXML+="<status>Ok</status>\n";
 											resultXML+="<result>\n<description>"+result+"</description>\n</result>\n";
-											resultXML+="</root>";
+											resultXML+="</response>";
 											
 											return resultXML;
 
@@ -459,7 +459,7 @@ public class OMSInterface {
 											
 											resultXML+="<status>Ok</status>\n";
 											resultXML+="<result>\n<description>"+result+"</description>\n</result>\n";
-											resultXML+="</root>";
+											resultXML+="</response>";
 											
 											return resultXML;
 
@@ -568,7 +568,7 @@ public class OMSInterface {
 									
 									resultXML+="<status>Ok</status>\n";
 									resultXML+="<result>\n<description>"+result+"</description>\n</result>\n";
-									resultXML+="</root>";
+									resultXML+="</response>";
 									
 									return resultXML;
 								}
@@ -581,7 +581,7 @@ public class OMSInterface {
 										
 										resultXML+="<status>Ok</status>\n";
 										resultXML+="<result>\n<description>"+result+"</description>\n</result>\n";
-										resultXML+="</root>";
+										resultXML+="</response>";
 										
 										return resultXML;
 										
@@ -601,7 +601,7 @@ public class OMSInterface {
 									
 									resultXML+="<status>Ok</status>\n";
 									resultXML+="<result>\n<description>"+result+"</description>\n</result>\n";
-									resultXML+="</root>";
+									resultXML+="</response>";
 									
 									return resultXML;
 
@@ -613,7 +613,7 @@ public class OMSInterface {
 									
 									resultXML+="<status>Ok</status>\n";
 									resultXML+="<result>\n<description>"+result+"</description>\n</result>\n";
-									resultXML+="</root>";
+									resultXML+="</response>";
 									
 									return resultXML;
 
@@ -688,7 +688,7 @@ public class OMSInterface {
 							
 							resultXML+="<status>Ok</status>\n";
 							resultXML+="<result>\n<description>"+result+"</description>\n</result>\n";
-							resultXML+="</root>";
+							resultXML+="</response>";
 							
 							return resultXML;
 
@@ -770,7 +770,7 @@ public class OMSInterface {
 									
 									resultXML+="<status>Ok</status>\n";
 									resultXML+="<result>\n<description>"+result+"</description>\n</result>\n";
-									resultXML+="</root>";
+									resultXML+="</response>";
 									
 									return resultXML;
 
@@ -792,7 +792,7 @@ public class OMSInterface {
 								
 								resultXML+="<status>Ok</status>\n";
 								resultXML+="<result>\n<description>"+result+"</description>\n</result>\n";
-								resultXML+="</root>";
+								resultXML+="</response>";
 								
 								return resultXML;
 
@@ -812,7 +812,7 @@ public class OMSInterface {
 									
 									resultXML+="<status>Ok</status>\n";
 									resultXML+="<result>\n<description>"+result+"</description>\n</result>\n";
-									resultXML+="</root>";
+									resultXML+="</response>";
 									
 									return resultXML;
 
@@ -832,7 +832,7 @@ public class OMSInterface {
 									
 									resultXML+="<status>Ok</status>\n";
 									resultXML+="<result>\n<description>"+result+"</description>\n</result>\n";
-									resultXML+="</root>";
+									resultXML+="</response>";
 									
 									return resultXML;
 
@@ -925,7 +925,7 @@ public class OMSInterface {
 									
 									resultXML+="<status>Ok</status>\n";
 									resultXML+="<result>\n<description>"+result+"</description>\n</result>\n";
-									resultXML+="</root>";
+									resultXML+="</response>";
 									
 									return resultXML;
 
@@ -1053,7 +1053,7 @@ public class OMSInterface {
 									
 									resultXML+="<status>Ok</status>\n";
 									resultXML+="<result>\n<description>"+result+"</description>\n</result>\n";
-									resultXML+="</root>";
+									resultXML+="</response>";
 									
 									return resultXML;
 
@@ -1103,7 +1103,7 @@ public class OMSInterface {
 	 */
 	public String informAgentRole(String RequestedAgentName,String AgentName)
 	{
-		String result = "";
+
 		ArrayList<ArrayList<String>> methodResult = new ArrayList<ArrayList<String>>();
 		String resultXML="<response>\n<serviceName>InformAgentRole</serviceName>\n";
 
@@ -1123,11 +1123,19 @@ public class OMSInterface {
 
 					methodResult = dbInterface.getInformAgentRole(RequestedAgentName, AgentName);
 
+					resultXML+="<status>Ok</status>\n";
+					resultXML+="<result>\n";
 					for (ArrayList<String> agentPair : methodResult)
 					{	//< RoleName , UnitName >
-						result = result + "< " + agentPair.get(0)+" , "+agentPair.get(1)+" > - "; 
+						resultXML+="<item>\n";
+						resultXML+="<rolename>"+ agentPair.get(0)+"</rolename>\n";
+						resultXML+="<unitname>"+ agentPair.get(1)+"</unitname>\n"; 
+						resultXML+="</item>\n";
 					}
-					return result;
+					resultXML+="</result>\n";
+					resultXML+="</response>";
+					
+					return resultXML;
 				}
 				else
 				{
@@ -1158,7 +1166,7 @@ public class OMSInterface {
 	 */
 	public String informMembers(String UnitName, String RoleName, String PositionValue, String AgentName)
 	{
-		String result = "";
+		
 		ArrayList<ArrayList<String>> methodResult = new ArrayList<ArrayList<String>>();
 		ArrayList<String> arrayResult = new ArrayList<String>();
 		Flags flag = Flags.CASE_A;
@@ -1256,41 +1264,73 @@ public class OMSInterface {
 						case CASE_A: 
 							methodResult = dbInterface.getAgentsRolesInUnit(UnitName, AgentName);
 
+							resultXML+="<status>Ok</status>\n";
+							resultXML+="<result>\n";
+							
 							for (ArrayList<String> agentPair : methodResult)
-							{	//< RequestesAgentName , RoleName >
-								result = result + "< " + agentPair.get(0)+" , "+agentPair.get(1)+" > - "; 
+							{	//< agentName , RoleName >			
+								resultXML+="<item>\n";
+								resultXML+="<agentname>"+ agentPair.get(0)+"</agentname>\n";
+								resultXML+="<rolename>"+ agentPair.get(1)+"</rolename>\n"; 
+								resultXML+="</item>\n";
 							}
+							resultXML+="</result>\n";
+							resultXML+="</response>";
 							break;//No se incluye ni el parametro role name ni position name. 
 						case CASE_B: 
 
 							arrayResult = dbInterface.getAgentsPlayingRoleInUnit(UnitName, RoleName, AgentName);
 
+							resultXML+="<status>Ok</status>\n";
+							resultXML+="<result>\n";
+							
 							for(String agent : arrayResult)
 							{	//< agentName , roleName >
-								result = result + "< " +agent+" , "+ RoleName+" > - ";	
+								resultXML+="<item>\n";
+								resultXML+="<agentname>"+ agent+"</agentname>\n";
+								resultXML+="<rolename>"+ RoleName+"</rolename>\n"; 
+								resultXML+="</item>\n";
 							}
-
+							resultXML+="</result>\n";
+							resultXML+="</response>";
 							break;//Solo se incluye el roleName
 						case CASE_C: 
 
 							methodResult = dbInterface.getAgentsPlayingPositionInUnit(UnitName, PositionValue, AgentName);
+							
+							resultXML+="<status>Ok</status>\n";
+							resultXML+="<result>\n";
+							
 							for (ArrayList<String> agentPair : methodResult)
 							{
-								//< requestedAgentNameX , roleNameY >
-								result = result + "< " + agentPair.get(0)+" , "+agentPair.get(1)+" > - "; 
+								//< requestedAgentNameX , roleNameY > 
+								resultXML+="<item>\n";
+								resultXML+="<agentname>"+ agentPair.get(0)+"</agentname>\n";
+								resultXML+="<rolename>"+ agentPair.get(1)+"</rolename>\n"; 
+								resultXML+="</item>\n";
 							}
+							resultXML+="</result>\n";
+							resultXML+="</response>";
 							break;//No se incluye el rolename pero si el positionName
 						case CASE_D: 
 
 							arrayResult = dbInterface.getAgentsPlayingRolePositionInUnit(UnitName, RoleName, PositionValue, AgentName);
 
+							resultXML+="<status>Ok</status>\n";
+							resultXML+="<result>\n";
+							
 							for(String agent : arrayResult)
-							{	//< agentName , roleName >
-								result = result + "< " +agent+" , "+ RoleName+" > - ";	
+							{	//< agentName , roleName >	
+								resultXML+="<item>\n";
+								resultXML+="<agentname>"+ agent+"</agentname>\n";
+								resultXML+="<rolename>"+ RoleName+"</rolename>\n"; 
+								resultXML+="</item>\n";
 							}
+							resultXML+="</result>\n";
+							resultXML+="</response>";
 							break; //Se incluyen todos los parametros
 						}
-						return result;
+						return resultXML;
 
 					}
 					else
@@ -1330,7 +1370,7 @@ public class OMSInterface {
 	 */
 	public String quantityMembers(String UnitName, String RoleName, String PositionValue, String AgentName)
 	{
-		String result = "";
+		
 		int intResult = 0;
 		Flags flag = Flags.CASE_A;
 		String resultXML="<response>\n<serviceName>QuantityMembers</serviceName>\n";
@@ -1423,27 +1463,45 @@ public class OMSInterface {
 
 							intResult = dbInterface.getQuantityAgentsRolesInUnit(UnitName, AgentName);
 
-							result = intResult +"";
+							resultXML+="<status>Ok</status>\n";
+							resultXML+="<result>\n";
+							resultXML+="<quantity>"+ intResult+"</quantity>\n";
+							resultXML+="</result>\n";
+							resultXML+="</response>";
+							
+						
 
 							break;//No se incluye ni el parametro role name ni position name. 
 						case CASE_B: 
 
 							intResult = dbInterface.getQuantityAgentsPlayingRoleInUnit(UnitName, RoleName, AgentName);
-							result = intResult +"";
+							resultXML+="<status>Ok</status>\n";
+							resultXML+="<result>\n";
+							resultXML+="<quantity>"+ intResult+"</quantity>\n";
+							resultXML+="</result>\n";
+							resultXML+="</response>";
 							break;//Solo se incluye el roleName
 						case CASE_C: 
 
 							intResult = dbInterface.getQuantityAgentsPlayingPositionInUnit(UnitName, PositionValue, AgentName);
-							result = intResult +"";
+							resultXML+="<status>Ok</status>\n";
+							resultXML+="<result>\n";
+							resultXML+="<quantity>"+ intResult+"</quantity>\n";
+							resultXML+="</result>\n";
+							resultXML+="</response>";
 							break;//No se incluye el rolename pero si el postionName
 						case CASE_D: 
 
 							intResult = dbInterface.getQuantityAgentsPlayingRolePositionInUnit(UnitName, RoleName, PositionValue, AgentName);
-							result = intResult +"";
+							resultXML+="<status>Ok</status>\n";
+							resultXML+="<result>\n";
+							resultXML+="<quantity>"+ intResult+"</quantity>\n";
+							resultXML+="</result>\n";
+							resultXML+="</response>";
 							break; //Se incluyen todos los parametros
 						}
 
-						return result;
+						return resultXML;
 					}
 					else
 					{
@@ -1475,7 +1533,7 @@ public class OMSInterface {
 	 */
 	public String informUnit(String UnitName, String AgentName)
 	{
-		String result = "";
+		
 		ArrayList<String> arrayResult = new ArrayList<String>();
 		boolean play = false;
 		String resultXML="<response>\n<serviceName>InformUnit</serviceName>\n";
@@ -1524,9 +1582,14 @@ public class OMSInterface {
 
 					arrayResult = dbInterface.getInformUnit(UnitName);
 					//< UnitType , ParentName >
-					result = "< "+arrayResult.get(0)+" , "+ arrayResult.get(1)+" >";
+					resultXML+="<status>Ok</status>\n";
+					resultXML+="<result>\n";
+					resultXML+="<unittype>"+ arrayResult.get(0)+"</unittype>\n";
+					resultXML+="<parentName>"+ arrayResult.get(1)+"</parentName>\n";
+					resultXML+="</result>\n";
+					resultXML+="</response>";
 
-					return result;
+					return resultXML;
 				}
 				else
 				{
@@ -1550,7 +1613,7 @@ public class OMSInterface {
 	 */
 	public String informUnitRoles(String UnitName, String AgentName)
 	{
-		String result = "";
+		
 		ArrayList<ArrayList<String>> methodResult = new ArrayList<ArrayList<String>>();
 		String resultXML="<response>\n<serviceName>InformUnitRoles</serviceName>\n";
 
@@ -1569,12 +1632,23 @@ public class OMSInterface {
 					//TODO
 					methodResult = dbInterface.getInformUnitRoles(UnitName, AgentName);		
 
+					resultXML+="<status>Ok</status>\n";
+					resultXML+="<result>\n";
+					
 					for (ArrayList<String> agentPair : methodResult)
 					{
-						//< RoleName , Accessibility , Visibility , Position >
-						result = result + "< " + agentPair.get(0)+" , "+agentPair.get(1)+" , "+ agentPair.get(2)+ " , "+ agentPair.get(3)+ " > - "; 
+						//< RoleName , Accessibility , Visibility , Position 
+						resultXML+="<item>\n";
+						resultXML+="<rolename>"+  agentPair.get(0)+"</rolename>\n"; 
+						resultXML+="<position>"+  agentPair.get(3)+"</position>\n";
+						resultXML+="<visibility>"+  agentPair.get(2)+"</visibility>\n";
+						resultXML+="<accesibility>"+  agentPair.get(1)+"</accesibility>\n";
+						resultXML+="</item>\n";
 					}
-					return result;
+					resultXML+="</result>\n";
+					resultXML+="</response>";
+					
+					return resultXML;
 				}
 				else
 				{
@@ -1601,7 +1675,7 @@ public class OMSInterface {
 	 */
 	public String informRole(String RoleName, String UnitName, String AgentName)
 	{
-		String result = "";
+		
 		ArrayList<String> arrayResult = new ArrayList<String>();
 		String resultXML="<response>\n<serviceName>InformRole</serviceName>\n";
 		try
@@ -1639,9 +1713,15 @@ public class OMSInterface {
 						arrayResult = dbInterface.getInformRole(RoleName, UnitName);
 
 						//< Accessibility - Visibility - Position >
-						result = "< "+ arrayResult.get(0)+ " , "+ arrayResult.get(1)+ " , "+ arrayResult.get(2)+ " >";
-
-						return result;
+						resultXML+="<status>Ok</status>\n";
+						resultXML+="<result>\n";
+						resultXML+="<position>"+ arrayResult.get(2)+"</position>\n";
+						resultXML+="<visibility>"+ arrayResult.get(1)+"</visibility>\n";
+						resultXML+="<accesibility>"+ arrayResult.get(0)+"</accesibility>\n";
+						resultXML+="</result>\n";
+						resultXML+="</response>";
+						
+						return resultXML;
 
 					}
 					else
