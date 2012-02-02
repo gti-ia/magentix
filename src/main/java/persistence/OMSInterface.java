@@ -351,7 +351,7 @@ public class OMSInterface {
 					}
 					else
 					{
-						throw new THOMASException("Not allowed. Role "+ RoleName + " is not registered in the unit.");			}
+						throw new THOMASException("Not allowed. Role "+ RoleName + " is already registered in the unit.");			}
 				}
 				else
 				{
