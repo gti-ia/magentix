@@ -46,6 +46,7 @@
 
     <profile:hasInput rdf:resource="#RoleID"/>
     <profile:hasInput rdf:resource="#UnitID"/>
+    <profile:hasInput rdf:resource="#AgentID"/>
     <profile:hasOutput rdf:resource="#Result"/>  
 
 </profile:Profile>
@@ -55,6 +56,7 @@
 
       <process:hasInput rdf:resource="#RoleID"/>
      <process:hasInput rdf:resource="#UnitID"/>
+     <process:hasInput rdf:resource="#AgentID"/>
 	<process:hasOutput rdf:resource="#Result"/>
 </process:AtomicProcess>
 
@@ -67,7 +69,10 @@
      <rdfs:label>UnitID</rdfs:label>
      <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
 </process:Input>
-
+<process:Input rdf:ID="AgentID">
+     <rdfs:label>UnitID</rdfs:label>
+     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
+</process:Input>
 <process:Output rdf:ID="Result">
     <rdfs:label>Result</rdfs:label>
     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
@@ -101,6 +106,12 @@
                   <grounding:WsdlInputMessageMap>
                     <grounding:owlsParameter rdf:resource="#UnitID"/>
                     <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/DeregisterRole/UnitID</grounding:wsdlMessagePart>
+                  </grounding:WsdlInputMessageMap>
+        </grounding:wsdlInput>
+	<grounding:wsdlInput>
+                  <grounding:WsdlInputMessageMap>
+                    <grounding:owlsParameter rdf:resource="#AgentID"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/DeregisterRole/AgentID</grounding:wsdlMessagePart>
                   </grounding:WsdlInputMessageMap>
         </grounding:wsdlInput>
        <grounding:wsdlOutput>

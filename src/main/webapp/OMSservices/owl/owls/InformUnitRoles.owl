@@ -12,7 +12,7 @@
   <!ENTITY grounding "http://www.daml.org/services/owl-s/1.1/Grounding.owl#">
   <!ENTITY xsd "http://www.w3.org/2001/XMLSchema">
   <!ENTITY mind "http://localhost:8080/omsservices/OMSservices/owl/owls/InformUnitRoles.owl">
-  <!ENTITY dir "http://localhost:8080/InformUnitRoles/services/InformUnitRoles?wsdl">
+  <!ENTITY dir "http://localhost:8080/omsservices/services/InformUnitRoles?wsdl">
 ]>
 
 
@@ -45,6 +45,7 @@
 
 
     <profile:hasInput rdf:resource="#UnitID"/>
+    <profile:hasInput rdf:resource="#AgentID"/>
     <profile:hasOutput rdf:resource="#Result"/>
 
 
@@ -54,6 +55,7 @@
 	<service:describes rdf:resource="#InformUnitRolesService"/>  	
 
       <process:hasInput rdf:resource="#UnitID"/>
+	<process:hasInput rdf:resource="#AgentID"/>
 	<process:hasOutput rdf:resource="#Result"/>
 
 	
@@ -62,6 +64,11 @@
 
 <process:Input rdf:ID="UnitID">
      <rdfs:label>UnitID</rdfs:label>
+     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
+</process:Input>
+
+<process:Input rdf:ID="AgentID">
+     <rdfs:label>AgentID</rdfs:label>
      <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
 </process:Input>
 
@@ -77,28 +84,35 @@
 
 <grounding:WsdlAtomicProcessGrounding rdf:ID="InformUnitRolesWsdlAtomicProcessGrounding">
 	<grounding:owlsProcess rdf:resource="#InformUnitRolesProcess"/>
-	<grounding:wsdlDocument rdf:datatype="&xsd;anyURI">http://localhost:8080/InformUnitRoles/services/InformUnitRoles?wsdl</grounding:wsdlDocument>
+	<grounding:wsdlDocument rdf:datatype="&xsd;anyURI">http://localhost:8080/omsservices/services/InformUnitRoles?wsdl</grounding:wsdlDocument>
 	<grounding:wsdlOperation>
             <grounding:WsdlOperationRef>
-                <grounding:portType rdf:datatype="&xsd;#anyURI">http://localhost:8080/InformUnitRoles/services/InformUnitRolesOperationsPortType</grounding:portType>
-                <grounding:operation rdf:datatype="&xsd;#anyURI">http://localhost:8080/InformUnitRoles/services/InformUnitRoles</grounding:operation>
+                <grounding:portType rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/InformUnitRolesOperationsPortType</grounding:portType>
+                <grounding:operation rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/InformUnitRoles</grounding:operation>
             </grounding:WsdlOperationRef>
         </grounding:wsdlOperation>
 
-	<grounding:wsdlInputMessage rdf:datatype="&xsd;#anyURI">http://localhost:8080/InformUnitRoles/services/InformUnitRolesMessage</grounding:wsdlInputMessage>
-        <grounding:wsdlOutputMessage rdf:datatype="&xsd;#anyURI">http://localhost:8080/InformUnitRoles/services/InformUnitRolesResponse</grounding:wsdlOutputMessage>
+	<grounding:wsdlInputMessage rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/InformUnitRolesMessage</grounding:wsdlInputMessage>
+        <grounding:wsdlOutputMessage rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/InformUnitRolesResponse</grounding:wsdlOutputMessage>
     
 	<grounding:wsdlInput>
                   <grounding:WsdlInputMessageMap>
                     <grounding:owlsParameter rdf:resource="#UnitID"/>
-                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/InformUnitRoles/services/InformUnitRoles/UnitID</grounding:wsdlMessagePart>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/InformUnitRoles/UnitID</grounding:wsdlMessagePart>
+                  </grounding:WsdlInputMessageMap>
+        </grounding:wsdlInput>
+
+	<grounding:wsdlInput>
+                  <grounding:WsdlInputMessageMap>
+                    <grounding:owlsParameter rdf:resource="#AgentID"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/InformUnitRoles/AgentID</grounding:wsdlMessagePart>
                   </grounding:WsdlInputMessageMap>
         </grounding:wsdlInput>
 
        <grounding:wsdlOutput>
                   <grounding:WsdlOutputMessageMap>
 		    <grounding:owlsParameter rdf:resource="#Result"/>
-                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/InformUnitRoles/services/InformUnitRoles/Result</grounding:wsdlMessagePart>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/InformUnitRoles/Result</grounding:wsdlMessagePart>
                   </grounding:WsdlOutputMessageMap>
         </grounding:wsdlOutput>
 

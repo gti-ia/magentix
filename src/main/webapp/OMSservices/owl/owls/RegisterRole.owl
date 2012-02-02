@@ -43,11 +43,12 @@
     <profile:serviceName xml:lang="en">RegisterRole</profile:serviceName>
 
 
-    <profile:hasInput rdf:resource="#RegisterRoleInputRoleID"/>
+    <profile:hasInput rdf:resource="#RoleID"/>
     <profile:hasInput rdf:resource="#UnitID"/>
     <profile:hasInput rdf:resource="#Accessibility"/>
     <profile:hasInput rdf:resource="#Position"/>
     <profile:hasInput rdf:resource="#Visibility"/>
+    <profile:hasInput rdf:resource="#AgentID"/>
     <profile:hasOutput rdf:resource="#Result"/>
  
 
@@ -61,33 +62,37 @@
     <process:hasInput rdf:resource="#Accessibility"/>
     <process:hasInput rdf:resource="#Position"/>
     <process:hasInput rdf:resource="#Visibility"/>
+    <process:hasInput rdf:resource="#AgentID"/>
 
 	<process:hasOutput rdf:resource="#Result"/>
 	
 </process:AtomicProcess>
 
 <process:Input rdf:ID="RoleID">
-     <rdfs:label>InputRoleID</rdfs:label>
+     <rdfs:label>RoleID</rdfs:label>
      <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
 </process:Input> 
 <process:Input rdf:ID="UnitID">
-     <rdfs:label>InputUnitID</rdfs:label>
+     <rdfs:label>UnitID</rdfs:label>
      <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
 </process:Input>
 <process:Input rdf:ID="Accessibility">
-     <rdfs:label>InputAccessibility</rdfs:label>
+     <rdfs:label>Accessibility</rdfs:label>
      <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
 </process:Input>
 <process:Input rdf:ID="Position">
-     <rdfs:label>InputPosition</rdfs:label>
+     <rdfs:label>Position</rdfs:label>
      <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
 </process:Input>
 <process:Input rdf:ID="Visibility">
-     <rdfs:label>InputVisibility</rdfs:label>
+     <rdfs:label>Visibility</rdfs:label>
      <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
 </process:Input>
 
-
+<process:Input rdf:ID="AgentID">
+     <rdfs:label>AgentID</rdfs:label>
+     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
+</process:Input>
 <process:Output rdf:ID="Result">
     <rdfs:label>Result</rdfs:label>
     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
@@ -112,16 +117,17 @@
 	<grounding:wsdlInputMessage rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/RegisterRoleMessage</grounding:wsdlInputMessage>
         <grounding:wsdlOutputMessage rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/RegisterRoleResponse</grounding:wsdlOutputMessage>
     
-	<grounding:wsdlInput>
-                  <grounding:WsdlInputMessageMap>
-                    <grounding:owlsParameter rdf:resource="#UnitID"/>
-                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/RegisterRole/UnitID</grounding:wsdlMessagePart>
-                  </grounding:WsdlInputMessageMap>
-        </grounding:wsdlInput>
+
 	<grounding:wsdlInput>
                   <grounding:WsdlInputMessageMap>
                     <grounding:owlsParameter rdf:resource="#RoleID"/>
                     <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/RegisterRole/RoleID</grounding:wsdlMessagePart>
+                  </grounding:WsdlInputMessageMap>
+        </grounding:wsdlInput>
+	<grounding:wsdlInput>
+                  <grounding:WsdlInputMessageMap>
+                    <grounding:owlsParameter rdf:resource="#UnitID"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/RegisterRole/UnitID</grounding:wsdlMessagePart>
                   </grounding:WsdlInputMessageMap>
         </grounding:wsdlInput>
     <grounding:wsdlInput>
@@ -140,6 +146,13 @@
                   <grounding:WsdlInputMessageMap>
                     <grounding:owlsParameter rdf:resource="#Visibility"/>
                     <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/RegisterRole/Visibility</grounding:wsdlMessagePart>
+                  </grounding:WsdlInputMessageMap>
+        </grounding:wsdlInput>
+
+	<grounding:wsdlInput>
+                  <grounding:WsdlInputMessageMap>
+                    <grounding:owlsParameter rdf:resource="#AgentID"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/RegisterRole/AgentID</grounding:wsdlMessagePart>
                   </grounding:WsdlInputMessageMap>
         </grounding:wsdlInput>
 	

@@ -46,6 +46,8 @@
 
     <profile:hasInput rdf:resource="#UnitID"/>
     <profile:hasInput rdf:resource="#RoleID"/>
+    <profile:hasInput rdf:resource="#PositionValue"/>
+    <profile:hasInput rdf:resource="#AgentID"/>
     <profile:hasOutput rdf:resource="#Result"/>
 
 
@@ -56,6 +58,8 @@
 
     <process:hasInput rdf:resource="#UnitID"/>
     <process:hasInput rdf:resource="#RoleID"/>
+	<process:hasInput rdf:resource="#PositionValue"/>
+    <process:hasInput rdf:resource="#AgentID"/>
 	<process:hasOutput rdf:resource="#Result"/>
 
 	
@@ -68,6 +72,16 @@
 </process:Input>
 <process:Input rdf:ID="RoleID">
      <rdfs:label>RoleID</rdfs:label>
+     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
+</process:Input>
+
+<process:Input rdf:ID="PositionValue">
+     <rdfs:label>PositionValue</rdfs:label>
+     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
+</process:Input>
+
+<process:Input rdf:ID="AgentID">
+     <rdfs:label>AgentID</rdfs:label>
      <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
 </process:Input>
 
@@ -106,6 +120,20 @@
                   <grounding:WsdlInputMessageMap>
                     <grounding:owlsParameter rdf:resource="#RoleID"/>
                     <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/QuantityMembers/RoleID</grounding:wsdlMessagePart>
+                  </grounding:WsdlInputMessageMap>
+        </grounding:wsdlInput>
+
+       <grounding:wsdlInput>
+                  <grounding:WsdlInputMessageMap>
+                    <grounding:owlsParameter rdf:resource="#PositionValue"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/QuantityMembers/PositionValue</grounding:wsdlMessagePart>
+                  </grounding:WsdlInputMessageMap>
+        </grounding:wsdlInput>
+
+      <grounding:wsdlInput>
+                  <grounding:WsdlInputMessageMap>
+                    <grounding:owlsParameter rdf:resource="#AgentID"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/QuantityMembers/AgentID</grounding:wsdlMessagePart>
                   </grounding:WsdlInputMessageMap>
         </grounding:wsdlInput>
 

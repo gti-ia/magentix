@@ -12,7 +12,7 @@
   <!ENTITY grounding "http://www.daml.org/services/owl-s/1.1/Grounding.owl#">
   <!ENTITY xsd "http://www.w3.org/2001/XMLSchema">
   <!ENTITY mind "http://localhost:8080/omsservices/OMSservices/owl/owls/InformAgentRole.owl">
-  <!ENTITY dir "http://localhost:8080/InformAgentRole/services/InformAgentRole?wsdl">
+  <!ENTITY dir "http://localhost:8080/omsservices/services/InformAgentRole?wsdl">
 ]>
 
 
@@ -45,6 +45,7 @@
 
 
     <profile:hasInput rdf:resource="#AgentID"/>
+    <profile:hasInput rdf:resource="#RequestedAgentID"/>
     <profile:hasOutput rdf:resource="#Result"/>
 
 
@@ -53,7 +54,8 @@
 <process:AtomicProcess rdf:ID="InformAgentRoleProcess">
 	<service:describes rdf:resource="#InformAgentRoleService"/>  	
 
-      <process:hasInput rdf:resource="#AgentID"/>
+	<process:hasInput rdf:resource="#AgentID"/>
+	<process:hasInput rdf:resource="#RequestedAgentID"/>
 	<process:hasOutput rdf:resource="#Result"/>
 
 
@@ -65,6 +67,12 @@
      <rdfs:label>AgentID</rdfs:label>
      <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
 </process:Input>
+
+<process:Input rdf:ID="RequestedAgentID">
+     <rdfs:label>RequestedAgentID</rdfs:label>
+     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
+</process:Input>
+
 
 <process:Output rdf:ID="Result">
     <rdfs:label>Result</rdfs:label>
@@ -79,7 +87,7 @@
 
 <grounding:WsdlAtomicProcessGrounding rdf:ID="InformAgentRoleWsdlAtomicProcessGrounding">
 	<grounding:owlsProcess rdf:resource="#InformAgentRoleProcess"/>
-	<grounding:wsdlDocument rdf:datatype="&xsd;anyURI">http://localhost:8080/InformAgentRole/services/InformAgentRole?wsdl</grounding:wsdlDocument>
+	<grounding:wsdlDocument rdf:datatype="&xsd;anyURI">http://localhost:8080/omsservices/services/InformAgentRole?wsdl</grounding:wsdlDocument>
 	<grounding:wsdlOperation>
             <grounding:WsdlOperationRef>
                 <grounding:portType rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/InformAgentRoleOperationsPortType</grounding:portType>
@@ -94,6 +102,13 @@
                   <grounding:WsdlInputMessageMap>
                     <grounding:owlsParameter rdf:resource="#AgentID"/>
                     <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/InformAgentRole/AgentID</grounding:wsdlMessagePart>
+                  </grounding:WsdlInputMessageMap>
+        </grounding:wsdlInput>
+
+	<grounding:wsdlInput>
+                  <grounding:WsdlInputMessageMap>
+                    <grounding:owlsParameter rdf:resource="#RequestedAgentID"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/InformAgentRole/RequestedAgentID</grounding:wsdlMessagePart>
                   </grounding:WsdlInputMessageMap>
         </grounding:wsdlInput>
 
