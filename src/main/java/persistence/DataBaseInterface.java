@@ -29,7 +29,7 @@ class DataBaseInterface
 				int res3 = st3.executeUpdate("INSERT INTO agentPlayList (agentName, idroleList) VALUES ('"+agentName+"', "+idRole+")");
 				if(res3 != 0){
 					db.connection.commit();
-					return "<"+roleName+" + \"acquired\">";
+					return roleName+" acquired";
 				}
 			}
 			return "Error: role "+roleName+" not found in unit "+unitName;
@@ -314,7 +314,7 @@ class DataBaseInterface
 						int res3 = st3.executeUpdate("INSERT INTO roleList (roleName, idunitList, idposition, idaccesibility, idvisibility) VALUES ('"+roleName+"', "+idunit+","+idposition+","+idaccesibility+","+idvisibility+")");
 						if(res3 != 0){
 							db.connection.commit();
-							return "<"+roleName+" + \"created\">";
+							return roleName+" created";
 						}
 					}
 					throw new THOMASException("Error: visibility "+visibility+" not found in database");
@@ -365,7 +365,7 @@ class DataBaseInterface
 											int res11 = st11.executeUpdate("INSERT INTO agentPlayList (agentName, idroleList) VALUES ('"+agentName+"', LAST_INSERT_ID())");
 											if(res11 != 0){
 												db.connection.commit();
-												return "<"+unitName+" + \"created\">";
+												return unitName+ " created";
 											}
 											throw new THOMASException("Error: inserting new play list");
 										}
@@ -401,7 +401,7 @@ class DataBaseInterface
 				int res3 = st3.executeUpdate("DELETE FROM agentPlayList WHERE agentName = '"+targetAgentName+"' AND idroleList = "+idroleList);
 				if(res3 != 0){
 					db.connection.commit();
-					return "<"+roleName+" + \"deallocated\">";
+					return roleName+" deallocated";
 				}
 				throw new THOMASException("Error: mysql error "+res3);
 			}
@@ -420,7 +420,7 @@ class DataBaseInterface
 			int res2 = st2.executeUpdate("DELETE FROM roleList WHERE roleName ='"+roleName+"' AND idunitList ="+idunitList);
 			if(res2 != 0){				
 				db.connection.commit();
-				return "<"+roleName+" + \"deleted\">";
+				return roleName+" deleted";
 			}
 			throw new THOMASException("Error: mysql error "+res2);
 		}
@@ -456,7 +456,7 @@ class DataBaseInterface
 					int res6 = st6.executeUpdate("DELETE FROM unitList WHERE idunitList ="+idunitList);
 					if(res6 != 0){
 						db.connection.commit();
-						return "<"+unitName+" + \"deleted\">";
+						return unitName+" deleted";
 					}
 					throw new THOMASException("Error: mysql error in delete from unitList "+res6);
 				}
@@ -485,7 +485,7 @@ class DataBaseInterface
 					int res4 = st4.executeUpdate("INSERT INTO unitHierarchy (idParentUnit, idChildUnit) VALUES ("+idParentUnit+","+idunitList+")");
 					if(res4 != 0){
 						db.connection.commit();
-						return "<"+unitName+" + \"jointed to +\" "+parentName+">";
+						return unitName+" + jointed to "+parentName;
 					}
 				}
 				throw new THOMASException("Error: mysql error "+res3);
@@ -509,7 +509,7 @@ class DataBaseInterface
 				int res3 = st3.executeUpdate("DELETE FROM agentPlayList WHERE idroleList ="+idroleList +" AND agentName='"+agentName+"'");
 				if(res3 != 0){					
 					db.connection.commit();
-					return "<"+roleName+" + \"left\">";			
+					return roleName+" left";			
 				}
 				throw new THOMASException("Error: mysql error "+res3);
 			}
