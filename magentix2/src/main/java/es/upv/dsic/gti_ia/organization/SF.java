@@ -181,7 +181,7 @@ public class SF extends CAgent {
 		Oracle oracle = new Oracle();
 		oracle.setURLProcess(serviceURL);
 
-		ArrayList<String> processInputs=oracle.getProcessInputs();
+		ArrayList<String> processInputs=oracle.getWSDLInputs();
 
 		HashMap<String,String> paramsComplete=new HashMap<String, String>();
 		Iterator<String> iterProcessInputs=processInputs.iterator();
