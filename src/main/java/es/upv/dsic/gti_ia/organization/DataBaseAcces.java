@@ -12,17 +12,20 @@ import java.sql.Statement;
  */
 public class DataBaseAcces {
 
+	
+	
+	
 	/** 
 	 * 
 	 * The connection to the database 
 	 * */
-	public Connection conection = null;
+	public Connection connection = null;
 
 	/** 
 	 * This method sets the connection with the THOMAS database  
 	 * */
 	public void connect() {
-		if (conection != null)
+		if (connection != null)
 			return;
 
 		try {
@@ -36,7 +39,14 @@ public class DataBaseAcces {
 			String url = "jdbc:mysql://" + serverName + "/" + mydatabase; // a
 			String username = c.getdatabaseUser();
 			String password = c.getdatabasePassword();
-			conection = DriverManager.getConnection(url, username, password);
+			connection = DriverManager.getConnection(url, username, password);
+			
+			connection.setAutoCommit(false);
+			connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+
+			if (!connection.isClosed())
+				System.out.println("Successfully connected to "
+						+ "MySQL server using TCP/IP...");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -51,7 +61,7 @@ public class DataBaseAcces {
 		ResultSet rs = null;
 		try {
 			// Creates a Statement, to query
-			Statement s = conection.createStatement();
+			Statement s = connection.createStatement();
 
 			// Creates a query.The results are stored in ResultSet rs
 			String sql = "SELECT u1.unitid As UnitID, u1.type as type, u1.goal AS goal,u2.unitid As parentUnit FROM (thomas.unit u1 LEFT joIN thomas.unit u2 ON u1.parentunit=u2.id)";
@@ -75,7 +85,7 @@ public class DataBaseAcces {
 		try
 		{
 			//Create a Statement, to query
-			Statement s = conection.createStatement();
+			Statement s = connection.createStatement();
 
 			// Creates a query.The results are stored in ResultSet rs
 			String sql="SELECT u.unitid FROM unit u WHERE u.parentunit='"+idparentunit+"'  ";
@@ -97,7 +107,7 @@ public class DataBaseAcces {
 		ResultSet rs = null;
 		try {
 			// Se crea un Statement, para realizar la consulta
-			Statement s = conection.createStatement();
+			Statement s = connection.createStatement();
 
 			// Se realiza la consulta. Los resultados se guardan en el
 			// ResultSet rs
@@ -114,7 +124,7 @@ public class DataBaseAcces {
 	/** This method closes the connection with the database  */
 	public void closeConnection() {
 		try {
-			conection.close();
+			connection.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -128,7 +138,7 @@ public class DataBaseAcces {
 		ResultSet rs = null;
 		try {
 	
-			Statement s = conection.createStatement();
+			Statement s = connection.createStatement();
 
 			rs = s.executeQuery("select * from norm");
 		} catch (Exception e) {
@@ -145,7 +155,7 @@ public class DataBaseAcces {
 		ResultSet rs = null;
 		try {
 			// Se crea un Statement, para realizar la consulta
-			Statement s = conection.createStatement();
+			Statement s = connection.createStatement();
 
 			// Se realiza la consulta. Los resultados se guardan en el
 			// ResultSet rs
@@ -166,7 +176,7 @@ public class DataBaseAcces {
 		ResultSet rs = null;
 		try {
 			// Se crea un Statement, para realizar la consulta
-			Statement s = conection.createStatement();
+			Statement s = connection.createStatement();
 
 			// Se realiza la consulta. Los resultados se guardan en el
 			// ResultSet rs
@@ -192,7 +202,7 @@ public class DataBaseAcces {
 		try
 		{
 
-			Statement s = conection.createStatement();
+			Statement s = connection.createStatement();
 
 
 			String sql="SELECT s.serviceprocessid AS processID, s.processname AS process FROM serviceprocessid s WHERE s.serviceprofileid='"+profileid+"'  ";
@@ -215,7 +225,7 @@ public class DataBaseAcces {
 		try
 		{
 	
-			Statement s = conection.createStatement();
+			Statement s = connection.createStatement();
 
 		
 			String sql="SELECT s.serviceprocessid AS processID, s.processname AS process FROM serviceprocessid s ";
@@ -239,7 +249,7 @@ public class DataBaseAcces {
 		try
 		{
 			// Se crea un Statement, para realizar la consulta
-			Statement s = conection.createStatement();
+			Statement s = connection.createStatement();
 
 			// Se realiza la consulta. Los resultados se guardan en el
 			// ResultSet rs
@@ -264,7 +274,7 @@ public class DataBaseAcces {
 		try
 		{
 			// Se crea un Statement, para realizar la consulta
-			Statement s = conection.createStatement();
+			Statement s = connection.createStatement();
 
 			// Se realiza la consulta. Los resultados se guardan en el
 			// ResultSet rs
@@ -289,7 +299,7 @@ public class DataBaseAcces {
 		try
 		{
 			// Se crea un Statement, para realizar la consulta
-			Statement s = conection.createStatement();
+			Statement s = connection.createStatement();
 
 			// Se realiza la consulta. Los resultados se guardan en el
 			// ResultSet rs
@@ -315,7 +325,7 @@ public class DataBaseAcces {
 
 		String result = "[";
 		try {
-			Statement s = conection.createStatement();
+			Statement s = connection.createStatement();
 			ResultSet rs = s
 			.executeQuery("Select * from serviceprocessid where providername='"
 					+ agentID.toLowerCase() + "'");
