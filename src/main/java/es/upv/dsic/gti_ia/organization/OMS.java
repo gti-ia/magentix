@@ -13,22 +13,21 @@ package es.upv.dsic.gti_ia.organization;
 
 
 import java.net.URI;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.StringTokenizer;
 
-import es.upv.dsic.gti_ia.cAgents.*;
+import org.apache.log4j.Logger;
+
+
+import es.upv.dsic.gti_ia.cAgents.CAgent;
+import es.upv.dsic.gti_ia.cAgents.CFactory;
+import es.upv.dsic.gti_ia.cAgents.CProcessor;
 import es.upv.dsic.gti_ia.cAgents.protocols.FIPA_REQUEST_Participant;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
-
-import org.apache.log4j.Logger;
-import org.mindswap.owl.EntityFactory;
-import org.mindswap.owl.OWLFactory;
-import org.mindswap.owl.OWLKnowledgeBase;
-import org.mindswap.owls.OWLSFactory;
-import org.mindswap.owls.process.Process;
-import org.mindswap.owls.process.execution.ProcessExecutionEngine;
-import org.mindswap.owls.service.Service;
-import org.mindswap.query.ValueMap;
 
 
 /**
@@ -43,18 +42,19 @@ public class OMS extends CAgent {
 	Configuration configuration = Configuration.getConfiguration();
 
 	static private OMS oms = null;
+	
+	OMSInterface omsInterface = new OMSInterface();
 
+	ResponseParser responseParser = new ResponseParser();
 
-
+	String separatorToken=" ";
 	private String OMSServiceDesciptionLocation = configuration.getOMSServiceDesciptionLocation();
 	private String SFServiceDesciptionLocation = configuration.getSFServiceDesciptionLocation();
 
 	static Logger logger = Logger.getLogger(OMS.class);
 
 
-	// create a kb
-	OWLKnowledgeBase kb = OWLFactory.createKB();
-	OWLKnowledgeBase kbaux = OWLFactory.createKB();
+
 
 	// Debug
 	private static final Boolean DEBUG = true;
@@ -70,22 +70,22 @@ public class OMS extends CAgent {
 	//private final URI SF_REGISTERPROCESS_PROCESS = URI.create(OWL_S_SF_SERVICES + "RegisterProcessProcess.owl");
 
 	//STRUCTURAL SERVICES
-	private  final URI OMS_REGISTERUNIT_PROFILE = URI.create(OWL_S_OMS_SERVICES + "RegisterUnitProfile.owl");
-	private  final URI OMS_REGISTERUNIT_PROCESS = URI.create(OWL_S_OMS_SERVICES + "RegisterUnitProcess.owl");
-	private  final URI OMS_REGISTERUNIT_ID = URI.create(OWL_S_OMS_SERVICES + "RegisterUnitProfile.owl");
+	private  final URI OMS_REGISTERUNIT_PROFILE = URI.create(OWL_S_OMS_SERVICES + "RegisterUnit.owl");
+	private  final URI OMS_REGISTERUNIT_PROCESS = URI.create(OWL_S_OMS_SERVICES + "RegisterUnit.owl");
+	private  final URI OMS_REGISTERUNIT_ID = URI.create(OWL_S_OMS_SERVICES + "RegisterUnit.owl");
 	private  final URI OMS_REGISTERUNIT_GOAL = URI.create("RegisterUnit");
 
-	private  final URI OMS_JOINTUNIT_PROFILE = URI.create(OWL_S_OMS_SERVICES + "JointUnitProfile.owl");
-	private  final URI OMS_JOINTUNIT_PROCESS = URI.create(OWL_S_OMS_SERVICES + "JointUnitProcess.owl");
-	private  final URI OMS_JOINTUNIT_ID = URI.create(OWL_S_OMS_SERVICES + "JointUnitProfile.owl");
+	private  final URI OMS_JOINTUNIT_PROFILE = URI.create(OWL_S_OMS_SERVICES + "JointUnit.owl");
+	private  final URI OMS_JOINTUNIT_PROCESS = URI.create(OWL_S_OMS_SERVICES + "JointUnit.owl");
+	private  final URI OMS_JOINTUNIT_ID = URI.create(OWL_S_OMS_SERVICES + "JointUnit.owl");
 	private  final URI OMS_JOINTUNIT_GOAL = URI.create("JointUnit");
 
 
 	@SuppressWarnings("unused")
-	private  final URI OMS_REGISTERNORM_PROFILE = URI.create(OWL_S_OMS_SERVICES + "RegisterNormProfile.owl");
-	private  final URI OMS_REGISTERNORM_PROCESS = URI.create(OWL_S_OMS_SERVICES + "RegisterNormProcess.owl");
+	private  final URI OMS_REGISTERNORM_PROFILE = URI.create(OWL_S_OMS_SERVICES + "RegisterNorm.owl");
+	private  final URI OMS_REGISTERNORM_PROCESS = URI.create(OWL_S_OMS_SERVICES + "RegisterNorm.owl");
 	@SuppressWarnings("unused")
-	private  final URI OMS_REGISTERNORM_GROUNDING = URI.create(OWL_S_OMS_SERVICES + "RegisterNormGrounding.owl");
+	private  final URI OMS_REGISTERNORM_GROUNDING = URI.create(OWL_S_OMS_SERVICES + "RegisterNorm.owl");
 	@SuppressWarnings("unused")
 	private  final URI OMS_REGISTERNORM_ID = URI.create(OWL_S_OMS_SERVICES + "RegisterNormProfile.owl#RegisterNormProfile");
 	@SuppressWarnings("unused")
@@ -94,19 +94,19 @@ public class OMS extends CAgent {
 	private  final URI OMS_REGISTERNORM_PROVIDER = URI.create("Provider");    
 
 	@SuppressWarnings("unused")
-	private  final URI OMS_REGISTERROLE_PROFILE = URI.create(OWL_S_OMS_SERVICES + "RegisterRoleProfile.owl");
-	private  final URI OMS_REGISTERROLE_PROCESS = URI.create(OWL_S_OMS_SERVICES + "RegisterRoleProcess.owl");
+	private  final URI OMS_REGISTERROLE_PROFILE = URI.create(OWL_S_OMS_SERVICES + "RegisterRole.owl");
+	private  final URI OMS_REGISTERROLE_PROCESS = URI.create(OWL_S_OMS_SERVICES + "RegisterRole.owl");
 	@SuppressWarnings("unused")
 	private  final URI OMS_REGISTERROLE_GROUNDING = URI.create(OWL_S_OMS_SERVICES + "RegisterRoleGrounding.owl");
 	@SuppressWarnings("unused")
-	private  final URI OMS_REGISTERROLE_ID = URI.create(OWL_S_OMS_SERVICES + "RegisterRoleProfile.owl#RegisterRoleProfile");
+	private  final URI OMS_REGISTERROLE_ID = URI.create(OWL_S_OMS_SERVICES + "RegisterRoleProfile.owl#RegisterRole");
 	@SuppressWarnings("unused")
 	private  final URI OMS_REGISTERROLE_GOAL = URI.create("RegisterRole");
 	@SuppressWarnings("unused")
 	private  final URI OMS_REGISTERROLE_PROVIDER = URI.create("Provider"); 
 	@SuppressWarnings("unused")
-	private  final URI OMS_DEREGISTERUNIT_PROFILE = URI.create(OWL_S_OMS_SERVICES + "DeregisterUnitProfile.owl");
-	private  final URI OMS_DEREGISTERUNIT_PROCESS = URI.create(OWL_S_OMS_SERVICES + "DeregisterUnitProcess.owl");
+	private  final URI OMS_DEREGISTERUNIT_PROFILE = URI.create(OWL_S_OMS_SERVICES + "DeregisterUnit.owl");
+	private  final URI OMS_DEREGISTERUNIT_PROCESS = URI.create(OWL_S_OMS_SERVICES + "DeregisterUnit.owl");
 	@SuppressWarnings("unused")
 	private  final URI OMS_DEREGISTERUNIT_GROUNDING = URI.create(OWL_S_OMS_SERVICES + "DeregisterUnitGrounding.owl");
 	@SuppressWarnings("unused")
@@ -116,8 +116,8 @@ public class OMS extends CAgent {
 	@SuppressWarnings("unused")
 	private  final URI OMS_DEREGISTERUNIT_PROVIDER = URI.create("Provider");
 	@SuppressWarnings("unused")
-	private  final URI OMS_DEREGISTERNORM_PROFILE = URI.create(OWL_S_OMS_SERVICES + "DeregisterNormProfile.owl");
-	private  final URI OMS_DEREGISTERNORM_PROCESS = URI.create(OWL_S_OMS_SERVICES + "DeregisterNormProcess.owl");
+	private  final URI OMS_DEREGISTERNORM_PROFILE = URI.create(OWL_S_OMS_SERVICES + "DeregisterNorm.owl");
+	private  final URI OMS_DEREGISTERNORM_PROCESS = URI.create(OWL_S_OMS_SERVICES + "DeregisterNorm.owl");
 	@SuppressWarnings("unused")
 	private  final URI OMS_DEREGISTERNORM_GROUNDING = URI.create(OWL_S_OMS_SERVICES + "DeregisterNormGrounding.owl");
 	@SuppressWarnings("unused")
@@ -127,9 +127,9 @@ public class OMS extends CAgent {
 	@SuppressWarnings("unused")
 	private  final URI OMS_DEREGISTERNORM_PROVIDER = URI.create("Provider");    
 	@SuppressWarnings("unused")
-	private  final URI OMS_DEREGISTERROLE_PROFILE = URI.create(OWL_S_OMS_SERVICES + "DeregisterRoleProfile.owl");
+	private  final URI OMS_DEREGISTERROLE_PROFILE = URI.create(OWL_S_OMS_SERVICES + "DeregisterRole.owl");
 
-	private  final URI OMS_DEREGISTERROLE_PROCESS = URI.create(OWL_S_OMS_SERVICES + "DeregisterRoleProcess.owl");
+	private  final URI OMS_DEREGISTERROLE_PROCESS = URI.create(OWL_S_OMS_SERVICES + "DeregisterRole.owl");
 	@SuppressWarnings("unused")
 	private  final URI OMS_DEREGISTERROLE_GROUNDING = URI.create(OWL_S_OMS_SERVICES + "DeregisterRoleGrounding.owl");
 	@SuppressWarnings("unused")
@@ -140,8 +140,8 @@ public class OMS extends CAgent {
 	private  final URI OMS_DEREGISTERROLE_PROVIDER = URI.create("Provider"); 
 	//DYNAMIC SERVICES
 	@SuppressWarnings("unused")
-	private  final URI OMS_ACQUIREROLE_PROFILE = URI.create(OWL_S_OMS_SERVICES + "AcquireRoleProfile.owl");
-	private  final URI OMS_ACQUIREROLE_PROCESS = URI.create(OWL_S_OMS_SERVICES + "AcquireRoleProcess.owl");
+	private  final URI OMS_ACQUIREROLE_PROFILE = URI.create(OWL_S_OMS_SERVICES + "AcquireRole.owl");
+	private  final URI OMS_ACQUIREROLE_PROCESS = URI.create(OWL_S_OMS_SERVICES + "AcquireRole.owl");
 	@SuppressWarnings("unused")
 	private  final URI OMS_ACQUIREROLE_GROUNDING = URI.create(OWL_S_OMS_SERVICES + "AcquireRoleGrounding.owl");
 	@SuppressWarnings("unused")
@@ -152,8 +152,8 @@ public class OMS extends CAgent {
 	private  final URI OMS_ACQUIREROLE_PROVIDER = URI.create("Provider");
 
 
-	private  final URI OMS_ALLOCATEROLE_PROFILE = URI.create(OWL_S_OMS_SERVICES + "AllocateRoleProfile.owl");
-	private  final URI OMS_ALLOCATEROLE_PROCESS = URI.create(OWL_S_OMS_SERVICES + "AllocateRoleProcess.owl");
+	private  final URI OMS_ALLOCATEROLE_PROFILE = URI.create(OWL_S_OMS_SERVICES + "AllocateRole.owl");
+	private  final URI OMS_ALLOCATEROLE_PROCESS = URI.create(OWL_S_OMS_SERVICES + "AllocateRole.owl");
 	@SuppressWarnings("unused")
 	private  final URI OMS_ALLOCATEROLE_GROUNDING = URI.create(OWL_S_OMS_SERVICES + "AllocateRoleGrounding.owl");
 	@SuppressWarnings("unused")
@@ -165,8 +165,8 @@ public class OMS extends CAgent {
 
 
 	@SuppressWarnings("unused")
-	private  final URI OMS_LEAVEROLE_PROFILE = URI.create(OWL_S_OMS_SERVICES + "LeaveRoleProfile.owl");
-	private  final URI OMS_LEAVEROLE_PROCESS = URI.create(OWL_S_OMS_SERVICES + "LeaveRoleProcess.owl");
+	private  final URI OMS_LEAVEROLE_PROFILE = URI.create(OWL_S_OMS_SERVICES + "LeaveRole.owl");
+	private  final URI OMS_LEAVEROLE_PROCESS = URI.create(OWL_S_OMS_SERVICES + "LeaveRole.owl");
 	@SuppressWarnings("unused")
 	private  final URI OMS_LEAVEROLE_GROUNDING = URI.create(OWL_S_OMS_SERVICES + "LeaveRoleGrounding.owl");
 	@SuppressWarnings("unused")
@@ -176,8 +176,8 @@ public class OMS extends CAgent {
 	@SuppressWarnings("unused")
 	private  final URI OMS_LEAVEROLE_PROVIDER = URI.create("Provider");
 	@SuppressWarnings("unused")
-	private  final URI OMS_DEALLOCATEROLE_PROFILE = URI.create(OWL_S_OMS_SERVICES + "DeallocateRoleProfile.owl");
-	private  final URI OMS_DEALLOCATEROLE_PROCESS = URI.create(OWL_S_OMS_SERVICES + "DeallocateRoleProcess.owl");
+	private  final URI OMS_DEALLOCATEROLE_PROFILE = URI.create(OWL_S_OMS_SERVICES + "DeallocateRole.owl");
+	private  final URI OMS_DEALLOCATEROLE_PROCESS = URI.create(OWL_S_OMS_SERVICES + "DeallocateRole.owl");
 	@SuppressWarnings("unused")
 	private  final URI OMS_DEALLOCATEROLE_GROUNDING = URI.create(OWL_S_OMS_SERVICES + "DeallocateRoleGrounding.owl");
 	@SuppressWarnings("unused")
@@ -188,8 +188,8 @@ public class OMS extends CAgent {
 	private  final URI OMS_DEALLOCATEROLE_PROVIDER = URI.create("Provider");
 	//INFORMATIVE SERVICES
 	@SuppressWarnings("unused")
-	private  final URI OMS_INFORMUNIT_PROFILE = URI.create(OWL_S_OMS_SERVICES + "InformUnitProfile.owl");
-	private  final URI OMS_INFORMUNIT_PROCESS = URI.create(OWL_S_OMS_SERVICES + "InformUnitProcess.owl");
+	private  final URI OMS_INFORMUNIT_PROFILE = URI.create(OWL_S_OMS_SERVICES + "InformUnit.owl");
+	private  final URI OMS_INFORMUNIT_PROCESS = URI.create(OWL_S_OMS_SERVICES + "InformUnit.owl");
 	@SuppressWarnings("unused")
 	private  final URI OMS_INFORMUNIT_GROUNDING = URI.create(OWL_S_OMS_SERVICES + "InformUnitGrounding.owl");
 	@SuppressWarnings("unused")
@@ -199,10 +199,10 @@ public class OMS extends CAgent {
 	@SuppressWarnings("unused")
 	private  final URI OMS_INFORMUNIT_PROVIDER = URI.create("Provider");   
 
-	private  final URI OMS_INFORMNORM_PROCESS = URI.create(OWL_S_OMS_SERVICES + "InformNormProcess.owl");
+	private  final URI OMS_INFORMNORM_PROCESS = URI.create(OWL_S_OMS_SERVICES + "InformNorm.owl");
 
-	private  final URI OMS_INFORMROLE_PROFILE = URI.create(OWL_S_OMS_SERVICES + "InformRoleProfile.owl");
-	private  final URI OMS_INFORMROLE_PROCESS = URI.create(OWL_S_OMS_SERVICES + "InformRoleProcess.owl");
+	private  final URI OMS_INFORMROLE_PROFILE = URI.create(OWL_S_OMS_SERVICES + "InformRole.owl");
+	private  final URI OMS_INFORMROLE_PROCESS = URI.create(OWL_S_OMS_SERVICES + "InformRole.owl");
 	@SuppressWarnings("unused")
 	private  final URI OMS_INFORMROLE_GROUNDING = URI.create(OWL_S_OMS_SERVICES + "InformRoleGrounding.owl");
 	@SuppressWarnings("unused")
@@ -213,8 +213,8 @@ public class OMS extends CAgent {
 	private  final URI OMS_INFORMROLE_PROVIDER = URI.create("Provider");   
 
 	@SuppressWarnings("unused")
-	private  final URI OMS_INFORMAGENTROLE_PROFILE = URI.create(OWL_S_OMS_SERVICES + "InformAgentRoleProfile.owl");
-	private  final URI OMS_INFORMAGENTROLE_PROCESS = URI.create(OWL_S_OMS_SERVICES + "InformAgentRoleProcess.owl");
+	private  final URI OMS_INFORMAGENTROLE_PROFILE = URI.create(OWL_S_OMS_SERVICES + "InformAgentRole.owl");
+	private  final URI OMS_INFORMAGENTROLE_PROCESS = URI.create(OWL_S_OMS_SERVICES + "InformAgentRole.owl");
 	@SuppressWarnings("unused")
 	private  final URI OMS_INFORMAGENTROLE_GROUNDING = URI.create(OWL_S_OMS_SERVICES + "InformAgentRoleGrounding.owl");
 	@SuppressWarnings("unused")
@@ -224,8 +224,8 @@ public class OMS extends CAgent {
 	@SuppressWarnings("unused")
 	private  final URI OMS_INFORMAGENTROLE_PROVIDER = URI.create("Provider");  
 	@SuppressWarnings("unused")
-	private  final URI OMS_INFORMMEMBERS_PROFILE = URI.create(OWL_S_OMS_SERVICES + "InformMembersProfile.owl");
-	private  final URI OMS_INFORMMEMBERS_PROCESS = URI.create(OWL_S_OMS_SERVICES + "InformMembersProcess.owl");
+	private  final URI OMS_INFORMMEMBERS_PROFILE = URI.create(OWL_S_OMS_SERVICES + "InformMembers.owl");
+	private  final URI OMS_INFORMMEMBERS_PROCESS = URI.create(OWL_S_OMS_SERVICES + "InformMembers.owl");
 	@SuppressWarnings("unused")
 	private  final URI OMS_INFORMMEMBERS_GROUNDING = URI.create(OWL_S_OMS_SERVICES + "InformMembersGrounding.owl");
 	@SuppressWarnings("unused")
@@ -236,8 +236,8 @@ public class OMS extends CAgent {
 	private  final URI OMS_INFORMMEMBERS_PROVIDER = URI.create("Provider"); 
 
 	@SuppressWarnings("unused")
-	private  final URI OMS_INFORTARGETNORMS_PROFILE = URI.create(OWL_S_OMS_SERVICES + "InformTargetNormsProfile.owl");
-	private  final URI OMS_INFORMTARGETNORMS_PROCESS = URI.create(OWL_S_OMS_SERVICES + "InformTargetNormsProcess.owl");
+	private  final URI OMS_INFORTARGETNORMS_PROFILE = URI.create(OWL_S_OMS_SERVICES + "InformTargetNorms.owl");
+	private  final URI OMS_INFORMTARGETNORMS_PROCESS = URI.create(OWL_S_OMS_SERVICES + "InformTargetNorms.owl");
 	@SuppressWarnings("unused")
 	private  final URI OMS_INFORMTARGETNORMS_GROUNDING = URI.create(OWL_S_OMS_SERVICES + "InformTargetNormsGrounding.owl");
 	@SuppressWarnings("unused")
@@ -255,15 +255,15 @@ public class OMS extends CAgent {
 	private  final URI OMS_INFORMROLEPROFILES_GOAL = URI.create("InformRoleProfiles");@SuppressWarnings("unused")
 	private  final URI OMS_INFORMROLEPROFILES_PROVIDER = URI.create("Provider");@SuppressWarnings("unused")
 
-	private  final URI OMS_INFORMUNITROLES_PROFILE = URI.create(OWL_S_OMS_SERVICES + "InformUnitRolesProfile.owl");
-	private  final URI OMS_INFORMUNITROLES_PROCESS = URI.create(OWL_S_OMS_SERVICES + "InformUnitRolesProcess.owl");@SuppressWarnings("unused")
+	private  final URI OMS_INFORMUNITROLES_PROFILE = URI.create(OWL_S_OMS_SERVICES + "InformUnitRoles.owl");
+	private  final URI OMS_INFORMUNITROLES_PROCESS = URI.create(OWL_S_OMS_SERVICES + "InformUnitRoles.owl");@SuppressWarnings("unused")
 	private  final URI OMS_INFORMUNITROLES_GROUNDING = URI.create(OWL_S_OMS_SERVICES + "InformUnitRolesGrounding.owl");@SuppressWarnings("unused")
 	private  final URI OMS_INFORMUNITROLES_ID = URI.create(OWL_S_OMS_SERVICES + "InformUnitRolesProfile.owl#InformUnitRolesProfile");@SuppressWarnings("unused")
 	private  final URI OMS_INFORMUNITROLES_GOAL = URI.create("InformUnitRoles");@SuppressWarnings("unused")
 	private  final URI OMS_INFORMUNITROLES_PROVIDER = URI.create("Provider"); @SuppressWarnings("unused")
 
-	private  final URI OMS_QUANTITYMEMBERS_PROFILE = URI.create(OWL_S_OMS_SERVICES + "QuantityMembersProfile.owl");
-	private  final URI OMS_QUANTITYMEMBERS_PROCESS = URI.create(OWL_S_OMS_SERVICES + "QuantityMembersProcess.owl");@SuppressWarnings("unused")
+	private  final URI OMS_QUANTITYMEMBERS_PROFILE = URI.create(OWL_S_OMS_SERVICES + "QuantityMembers.owl");
+	private  final URI OMS_QUANTITYMEMBERS_PROCESS = URI.create(OWL_S_OMS_SERVICES + "QuantityMembers.owl");@SuppressWarnings("unused")
 	private  final URI OMS_QUANTITYMEMBERS_GROUNDING = URI.create(OWL_S_OMS_SERVICES + "QuantityMembersGrounding.owl");@SuppressWarnings("unused")
 	private  final URI OMS_QUANTITYMEMBERS_ID = URI.create(OWL_S_OMS_SERVICES + "QuantityMembersProfile.owl#QuantityMembersProfile");@SuppressWarnings("unused")
 	private  final URI OMS_QUANTITYMEMBERS_GOAL = URI.create("QuantityMembers");@SuppressWarnings("unused")
@@ -464,7 +464,103 @@ public class OMS extends CAgent {
 	}
 
 
+	
+//	private Document stringToDocument(String msg)
+//	{
+//		SAXBuilder builder = new SAXBuilder();
+//		
+//		String content = msg.substring(msg.indexOf("<response>"));
+//
+//		try {
+//			Document doc = builder.build(new StringReader(content));
+//
+//			return doc;
+//		
+//
+//		} catch (JDOMException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//			return null;
+//		} catch (IOException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//			return null;
+//		}
+//
+//	}
 
+	private String executeWithJavaX(ACLMessage msg){
+
+		//http://localhost:8080/omsservices/OMSservices/owl/owls/AcquireRole.owl RoleID=miembro2 UnitID=plana2
+		//
+		
+		String inputParams = msg.getContent();
+		StringTokenizer tokenInputParams = new StringTokenizer(inputParams, separatorToken);
+		String serviceURL=tokenInputParams.nextToken().trim();
+		//String serviceURL=sfServicesURLs.get(tokenInputParams.nextToken().trim());
+		Oracle oracle = new Oracle();
+		oracle.setURLProcess(serviceURL);
+
+		ArrayList<String> processInputs=oracle.getWSDLInputs();
+
+		HashMap<String,String> paramsComplete=new HashMap<String, String>();
+		Iterator<String> iterProcessInputs=processInputs.iterator();
+		while(iterProcessInputs.hasNext()){
+			String in=iterProcessInputs.next().toLowerCase();
+			//initialize the inputs
+			paramsComplete.put(in, "");
+		}
+
+
+		while(tokenInputParams.hasMoreTokens()){
+			String inputToken=tokenInputParams.nextToken().trim();
+			StringTokenizer anInputToken=new StringTokenizer(inputToken, "=");
+			String in=anInputToken.nextToken().toLowerCase().trim();
+			String value="";
+			if(anInputToken.hasMoreTokens())
+				value=anInputToken.nextToken().trim();
+			if(paramsComplete.get(in)!=null){
+				paramsComplete.put(in, value);
+				System.out.println("inputParamName: "+in+" value: "+value);
+			}
+		}
+		
+		if (paramsComplete.get(("agentid")) == null || paramsComplete.get("agentid").equals(""))
+		{
+			paramsComplete.put("agentid", msg.getSender().name);
+		}
+	
+
+
+		//construct params list with the value of the parameters ordered...
+		ArrayList<String> params = new ArrayList<String>();
+		Iterator<String> iterInputs=processInputs.iterator();
+		while(iterInputs.hasNext()){
+			String input=iterInputs.next().toLowerCase();
+			params.add(paramsComplete.get(input));
+			//System.out.println("inputParamValue: "+paramsComplete.get(input));
+		}
+
+		ServiceClient serviceClient = new ServiceClient();
+		ArrayList<String> results = serviceClient.invoke(serviceURL, params);
+
+		//String process_localName="SearchServiceProcess"; //TODO no estic segur si es això...
+		//String resultStr=process_localName+ "=" + "{";
+		String resultStr=serviceURL+"=" + "{";
+		for(int i=0;i<results.size();i++){
+			resultStr+=serviceURL+"#"+results.get(i);
+			if(i!=results.size()-1){
+				resultStr+=", ";
+			}
+			else{
+				resultStr+=" }";
+			}
+		}
+
+
+		return resultStr;
+	}
+	
 	@Override
 	protected void execution(CProcessor firstProcessor,
 			ACLMessage welcomeMessage) {
@@ -480,150 +576,80 @@ public class OMS extends CAgent {
 				String rol = "";
 				String positionType = "";
 				String unitType = "";
-				// create an execution engine
-				ProcessExecutionEngine exec = OWLSFactory.createExecutionEngine();
-
-
-				//read msg content
-				StringTokenizer Tok = new StringTokenizer(myProcessor.getLastReceivedMessage().getContent());
-
-				//read in the service description
-				String token_process = Tok.nextElement().toString();
-				if(DEBUG)
+				
+				try
 				{
-
-					logger.info("[OMS]Doc OWL-S: " + token_process);
-				}
-
-				try{
-					Service aService = kb.readService(token_process);		
-
-					//get the process for the server
-					Process aProcess = aService.getProcess();
-					//initialize the input values to be empty
-					ValueMap values = new ValueMap();
-
-
-					for(int i=0;i<aProcess.getInputs().size();i++){
-						if(aProcess.getInputs().inputAt(i).getLocalName().equalsIgnoreCase("AgentID")){
-							values.setValue(aProcess.getInputs().inputAt(i),EntityFactory.createDataValue(myProcessor.getLastReceivedMessage()
-									.getSender().name.replace('~', '@')));
-						}
-						else
-							values.setValue(aProcess.getInputs().inputAt(i),EntityFactory.createDataValue(""));
-					}
-					while (Tok.hasMoreElements()) {
-						String token = Tok.nextElement().toString();
-						for(int i=0;i<aProcess.getInputs().size();i++){
-							String paramName = aProcess.getInputs().inputAt(i).getLocalName().toLowerCase();
-							if(paramName.equalsIgnoreCase(token.split("=")[0].toLowerCase())){
-								if(token.split("=").length >= 2)
-									values.setValue(aProcess.getInputs().inputAt(i),EntityFactory.createDataValue(token.split("=")[1]));
-								else
-									values.setValue(aProcess.getInputs().inputAt(i),EntityFactory.createDataValue(""));
-							}
-
-						}
-					}//end while   
-
 					//execute the service
-					if(DEBUG)
-					{					
-						logger.info("[OMS]Executing... "+values.getValues().toString());
+			
+				StringTokenizer tokenInputParams = new StringTokenizer(myProcessor.getLastReceivedMessage().getContent(), separatorToken);
+				String serviceURL=tokenInputParams.nextToken().trim();
 
-					}
-
-					//TODO Realizar cuando los servicios informativos esten testados correctamente
-
+					
+//TODO
+				/*
 					//Extract the parameters needed to create and delete binds
-					if (aProcess.toString().contains("AcquireRoleProcess"))
+					if (serviceURL.contains("AcquireRole"))
 					{
 
 
 						rol = values.getValues().toString().replace("[", "").split(",")[0].trim();
-						organizationID = values.getValues().toString().split(",")[1].trim();
-						aidName = values.getValues().toString().replace("]", "").split(",")[2].trim();
+						aidName = values.getValues().toString().split(",")[1].trim();
+						organizationID = values.getValues().toString().replace("]", "").split(",")[2].trim();
 
-						ValueMap valueUnit = new ValueMap();;
+						
 
-						Service aServiceUnit = kb.readService(OMS_INFORMUNIT_PROCESS);
-						Process aProcessUnit = aServiceUnit.getProcess();
+						String content = omsInterface.informUnit(organizationID, aidName);
+						
+						responseParser.parseResponse(content);
 
-						valueUnit.setValue(aProcessUnit.getInputs().inputAt(0),EntityFactory.createDataValue(aidName));
-						valueUnit.setValue(aProcessUnit.getInputs().inputAt(1),EntityFactory.createDataValue(organizationID));
+						if (responseParser.getElementsList().size() != 0)
+							unitType = responseParser.getElementsList().get(0);
 
-
-						//Execute service inform unit in order to select the unit type 
-						valueUnit = exec.execute(aProcessUnit, valueUnit);
-
-						//Select the unit type of the unit
-						unitType = valueUnit.getValue("UnitType").toString();
-
-
-
-					}//TODO Comentado hasta que se testeen los servicios informativos
+					}
 
 					else if (aProcess.toString().contains("LeaveRoleProcess"))
 					{
 
 
 						aidName = values.getValues().toString().replace("[", "").split(",")[0].trim();
-						organizationID = values.getValues().toString().split(",")[1].trim();
-						rol = values.getValues().toString().replace("]", "").split(",")[2].trim();
+						rol = values.getValues().toString().split(",")[1].trim();
+						organizationID = values.getValues().toString().replace("]", "").split(",")[2].trim();
 
-						ValueMap valueUnit = new ValueMap();
-
-						//-------------Inform Unit-----------------
-
-						Service aServiceUnit = kb.readService(OMS_INFORMUNIT_PROCESS);
-						Process aProcessUnit = aServiceUnit.getProcess();
-
-						valueUnit.setValue(aProcessUnit.getInputs().inputAt(0),EntityFactory.createDataValue(aidName));
-						valueUnit.setValue(aProcessUnit.getInputs().inputAt(1),EntityFactory.createDataValue(organizationID));
-
-
-						//Execute service inform unit in order to select the unit type
-						valueUnit = exec.execute(aProcessUnit, valueUnit);
-
-						//Select the unit type of the unit
-						unitType = valueUnit.getValue("UnitType").toString();//.toString().split(" ");
+						
+						String content = omsInterface.informUnit(organizationID, aidName);
+						
+						responseParser.parseResponse(content);
+						
+						if (responseParser.getElementsList().size() != 0)
+							unitType = responseParser.getElementsList().get(0);
 
 						//-------------Inform Role-----------------
 
-						aServiceUnit = kb.readService(OMS_INFORMROLE_PROCESS);
-						aProcessUnit = aServiceUnit.getProcess();
-
-						valueUnit.setValue(aProcessUnit.getInputs().inputAt(0),EntityFactory.createDataValue(aidName));
-						valueUnit.setValue(aProcessUnit.getInputs().inputAt(1),EntityFactory.createDataValue(organizationID));
-						valueUnit.setValue(aProcessUnit.getInputs().inputAt(2),EntityFactory.createDataValue(rol));
-
-
-						//Execute service inform unit in order to select the unit type
-						valueUnit = exec.execute(aProcessUnit, valueUnit);
-
-
-
-						positionType = valueUnit.getValue("ProfileList").toString();
-
-						positionType = positionType.split(" ")[5];
+						
+						content = omsInterface.informRole(rol, organizationID, aidName);
+						
+						responseParser.parseResponse(content);
+						
+						
+						positionType = responseParser.getElementsList().get(0);
 
 					}
 					//Execute the service requested by the agent
 
+*/
+					String resultStr=executeWithJavaX(myProcessor.getLastReceivedMessage());
 
-					values = exec.execute(aProcess, values);
 
-
-					if(DEBUG)
-					{						
-						logger.info("[OMS]Values obtained... "+values.toString());
-
-					}
-					if(DEBUG) 
-					{						
-						logger.info("[OMS]Creating inform message to send...");
-					}
-
+//					if(DEBUG)
+//					{						
+//						logger.info("[OMS]Values obtained... "+values.toString());
+//
+//					}
+//					if(DEBUG) 
+//					{						
+//						logger.info("[OMS]Creating inform message to send...");
+//					}
+/*
 					//TODO Probar cuando los servicios informativos esten testeados
 
 					//If acquire role is ok. If organization is virtual the agent position is considered creator
@@ -635,23 +661,15 @@ public class OMS extends CAgent {
 
 						//-------------Inform Role-----------------
 
-						ValueMap valueUnit = new ValueMap();
-
-						Service aServiceUnit = kb.readService(OMS_INFORMROLE_PROCESS);
-						Process aProcessUnit = aServiceUnit.getProcess();
-
-						valueUnit.setValue(aProcessUnit.getInputs().inputAt(0),EntityFactory.createDataValue(aidName));
-						valueUnit.setValue(aProcessUnit.getInputs().inputAt(1),EntityFactory.createDataValue(organizationID));
-						valueUnit.setValue(aProcessUnit.getInputs().inputAt(2),EntityFactory.createDataValue(rol));
-
-						//Execute service inform unit in order to select the unit type
-						valueUnit = exec.execute(aProcessUnit, valueUnit);
-
-
-
-						positionType = valueUnit.getValue("ProfileList").toString();
-
-						positionType = positionType.split(" ")[5];
+	
+						
+						String content = omsInterface.informRole(rol, organizationID, aidName);
+						
+						responseParser.parseResponse(content);
+						
+						positionType = responseParser.getElementsList().get(0);
+						
+				
 						//positionType = omsProxy.getAgentPosition(aidName,organizationID, rol, unitType);
 
 						//If position type is member then creates binding for participant
@@ -681,59 +699,40 @@ public class OMS extends CAgent {
 					{
 
 
-						ValueMap value = new ValueMap();;
 
-						aService = kb.readService(OMS_INFORMAGENTROLE_PROCESS);
-						aProcess = aService.getProcess();
-
-						value.setValue(aProcess.getInputs().inputAt(0),EntityFactory.createDataValue(aidName));
-						value.setValue(aProcess.getInputs().inputAt(1),EntityFactory.createDataValue(aidName));
-
-
-						//Execute service inform agent role 
-						value = exec.execute(aProcess, value);
-
-						//Select the roles of the agent
-						String roles = value.getValue("RoleUnitList").toString();
-
-						StringTokenizer st = new StringTokenizer(roles,"-<>, ");
-
+						
+						String content = omsInterface.informAgentRole(aidName, aidName);
+						
+						responseParser.parseResponse(content);
+						
+						ArrayList<ArrayList<String>> agentsRole = responseParser.getItemsList();
+						
+						
 						String unit_aux;
 						String role_aux;
 						boolean exists_in_unit = false;
-
-						while(st.hasMoreTokens())
+						
+						for(ArrayList<String> agentRole : agentsRole)
 						{
-							role_aux = st.nextToken();
-							unit_aux = st.nextToken();
-
+							
+							role_aux = agentRole.get(0);
+							unit_aux = agentRole.get(1);
+							
 							//If agent is inside the organization and the rol played is not creator
 							if (unit_aux.equals(organizationID) && !role_aux.equals("creator"))
 							{
-								//If position is equal of the agent position plays
-								//< Accessibility - Visibility - Position >
-								aService = kb.readService(OMS_INFORMROLE_PROCESS);
-								aProcess = aService.getProcess();
-
-								value.setValue(aProcess.getInputs().inputAt(0),EntityFactory.createDataValue(aidName));
-								value.setValue(aProcess.getInputs().inputAt(1),EntityFactory.createDataValue(organizationID));
-								value.setValue(aProcess.getInputs().inputAt(2),EntityFactory.createDataValue(rol));
-
-								//Execute service inform unit in order to select the unit type
-								value = exec.execute(aProcess, value);
-
-
-
-								String pos = value.getValue("ProfileList").toString();
-
-								pos = pos.split(" ")[5];
+					
+								String contentRole = omsInterface.informRole(rol, organizationID, aidName);
+								responseParser.parseResponse(contentRole);
+								
+								String pos = responseParser.getElementsList().get(0);
+								
 
 								if (positionType.equals(pos))//;omsProxy.getAgentPosition(aidName,organizationID, role_aux, unitType)))
 									exists_in_unit = true;
 							}
-
 						}
-
+																		
 						if (!exists_in_unit)
 						{
 
@@ -745,17 +744,14 @@ public class OMS extends CAgent {
 
 
 					}
+					*/
 					next = "INFORM";
 					if(DEBUG)
 					{						
 						logger.info("[OMS]Before set message content...");						
 					}
-					myProcessor.getLastReceivedMessage().setContent(aProcess.getLocalName()+"="+values.toString());
+					myProcessor.getLastReceivedMessage().setContent(resultStr);
 
-				}catch(THOMASException e)
-				{
-					System.out.println(e.getContent());
-					next = "FAILURE";
 				}catch(Exception e){
 					if(DEBUG)
 					{	            		
