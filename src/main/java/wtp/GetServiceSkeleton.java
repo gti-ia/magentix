@@ -37,7 +37,7 @@ public class GetServiceSkeleton{
 			System.out.println("\tserviceID="+serviceID);
 		}
 
-		String result = sfInterface.GetService(serviceID);
+		String result = sfInterface.getService(serviceID);
 		
 		response.setResult(result);
 		

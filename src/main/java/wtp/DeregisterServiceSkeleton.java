@@ -37,7 +37,7 @@ public class DeregisterServiceSkeleton{
 			System.out.println("\tserviceID: "+serviceID);
 		}
 		
-		String result = sfInterface.DeregisterService(serviceID);
+		String result = sfInterface.deregisterService(serviceID);
 		
 		response.setResult(result);
 		

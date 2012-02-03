@@ -45,7 +45,7 @@ public class RemoveProviderSkeleton{
 			System.out.println("\tproviderName: "+providerName);
 		}
 		
-		String result = sfInterface.RemoveProvider(serviceProfile, providerName);
+		String result = sfInterface.removeProvider(serviceProfile, providerName);
 		
 		response.setResult(result);
 		

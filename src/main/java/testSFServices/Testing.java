@@ -193,23 +193,17 @@ public class Testing {
 
 
 
-					ArrayList<String> inputs=new ArrayList<String>();
-					inputs.add("\"http://127.0.0.1/ontology/geographydataset.owl#Code\"^^xsd:anyURI");
-					inputs.add("\"http://127.0.0.1/ontology/protont.owl#longitude\"^^xsd:anyURI");
-					inputs.add("\"http://127.0.0.1/ontology/protonu.owl#Date\"^^xsd:anyURI");
-					inputs.add("\"http://127.0.0.1/ontology/protont.owl#latitude\"^^xsd:anyURI");
-					ArrayList<String> outputs=new ArrayList<String>();
-					outputs.add("\"http://127.0.0.1/ontology/geographydataset.owl#Sunrise\"^^xsd:anyURI");
-					ArrayList<String> keywords=new ArrayList<String>();
-					keywords.add("sunrise");keywords.add("time");
+//		ArrayList<String> inputs=new ArrayList<String>();
+//		inputs.add("\"http://127.0.0.1/ontology/geographydataset.owl#Code\"^^xsd:anyURI");
+//		inputs.add("\"http://127.0.0.1/ontology/protont.owl#longitude\"^^xsd:anyURI");
+//		inputs.add("\"http://127.0.0.1/ontology/protonu.owl#Date\"^^xsd:anyURI");
+//		inputs.add("\"http://127.0.0.1/ontology/protont.owl#latitude\"^^xsd:anyURI");
+//		ArrayList<String> outputs=new ArrayList<String>();
+//		outputs.add("\"http://127.0.0.1/ontology/geographydataset.owl#Sunrise\"^^xsd:anyURI");
+//		ArrayList<String> keywords=new ArrayList<String>();
+//		keywords.add("sunrise");keywords.add("time");
 		//			
-		//			ArrayList<Profile> foundServices=sf.SearchService(inputs, outputs, keywords);
-		//			Iterator<Profile> iterProfs=foundServices.iterator();
-		//			while(iterProfs.hasNext()){
-		//				Profile prof=iterProfs.next();
-		//				System.out.println("Profile: "+prof.getUrl()+" similarity: "+prof.getSuitability());
-		//			}
-
+		
 
 		String ground="http://127.0.0.1/services/1.1/calculateSunriseTime.owls#CALCULATE_SUNRISE_GROUNDING";
 
@@ -217,18 +211,20 @@ public class Testing {
 //		sf.clean();
 //		String r=sf.RegisterService("http://127.0.0.1/services/1.1/calculateSunriseTime.owls");
 //		System.out.println(r);
-//		r=sf.RegisterService("http://127.0.0.1/services/1.1/author_bookprice_service.owls");
-//		System.out.println(r);
-		
-//		String r=sf.SearchService(inputs, outputs, keywords);
-//		System.out.println(r);
-		
-		String r=sf.DeregisterService("http://127.0.0.1/services/1.1/author_bookprice_service.owls#AUTHOR_BOOKPRICE_PROFILE");
+		//		r=sf.RegisterService("http://127.0.0.1/services/1.1/author_bookprice_service.owls");
+		//		System.out.println(r);
 
-//		String r=sf.RemoveProvider("http://127.0.0.1/services/1.1/calculateSunriseTime.owls#CALCULATE_SUNRISE_PROFILE", ground);
+		//		String r=sf.SearchService(inputs, outputs, keywords);
+		//		System.out.println(r);
+
+		String r2=sf.deregisterService("http://127.0.0.1/services/1.1/calculateSunriseTime.owls#CALCULATE_SUNRISE_PROFILE");
+		System.out.println(r2);
+		String r3=sf.removeProvider("http://127.0.0.1/services/1.1/calculateSunriseTime.owls#CALCULATE_SUNRISE_PROFILE", ground);
 //		String r=sf.RemoveProvider("http://127.0.0.1/services/1.1/calculateSunriseTime.owls#CALCULATE_SUNRISE_PROFILE", "Provider2");
+		System.out.println(r3);
 		
-		System.out.println(r);
+		String r4=sf.getService("http://127.0.0.1/services/1.1/calculateSunriseTime.owls#CALCULATE_SUNRISE_PROFILE");
+		System.out.println(r4);
 		
 		System.out.println("MODEL:");
 		sf.writeModel();

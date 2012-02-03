@@ -37,7 +37,7 @@ public class RegisterServiceSkeleton{
 			System.out.println("\tserviceURL: "+serviceURL);
 		}
 		
-		String result = sfInterface.RegisterService(serviceURL);
+		String result = sfInterface.registerService(serviceURL);
 		
 		response.setResult(result);
 		

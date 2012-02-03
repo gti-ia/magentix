@@ -67,7 +67,7 @@ public class SearchServiceSkeleton{
 				System.out.println("\t\t"+key);
 		}
 		
-		String result = sfInterface.SearchService(inputs, outputs,keywords);
+		String result = sfInterface.searchService(inputs, outputs,keywords);
 		
 		response.setResult(result);
 		
