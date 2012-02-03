@@ -29,6 +29,8 @@ public class SF extends CAgent {
 
 	private static HashMap<String, String> sfServicesURLs=new HashMap<String, String>();
 	static Logger logger = Logger.getLogger(SF.class);
+	
+	String separatorToken=" ";
 
 	// Debug
 	//private final Boolean DEBUG = true;
@@ -105,11 +107,77 @@ public class SF extends CAgent {
 		return this.SFServiceDescriptionLocation;
 	}
 
+	
+//	private static String executeWithJavaX(String inputParams){
+//
+//		//http://localhost:8080/omsservices/OMSservices/owl/owls/AcquireRole.owl RoleID=miembro2 UnitID=plana2
+//		//
+//		StringTokenizer tokenInputParams = new StringTokenizer(inputParams, separatorToken);
+//		String serviceURL=sfServicesURLs.get(tokenInputParams.nextToken().trim());
+//		Oracle oracle = new Oracle();
+//		oracle.setURLProcess(serviceURL);
+//
+//		ArrayList<String> processInputs=oracle.getProcessInputs();
+//
+//		HashMap<String,String> paramsComplete=new HashMap<String, String>();
+//		Iterator<String> iterProcessInputs=processInputs.iterator();
+//		while(iterProcessInputs.hasNext()){
+//			String in=iterProcessInputs.next().toLowerCase();
+//			//initialize the inputs
+//			paramsComplete.put(in, "");
+//		}
+//
+//
+//		while(tokenInputParams.hasMoreTokens()){
+//			String inputToken=tokenInputParams.nextToken().trim();
+//			StringTokenizer anInputToken=new StringTokenizer(inputToken, "=");
+//			String in=anInputToken.nextToken().toLowerCase().trim();
+//			String value="";
+//			if(anInputToken.hasMoreTokens())
+//				value=anInputToken.nextToken().trim();
+//			if(paramsComplete.get(in)!=null){
+//				paramsComplete.put(in, value);
+//				System.out.println("inputParamName: "+in+" value: "+value);
+//			}
+//		}
+//
+//
+//		//construct params list with the value of the parameters ordered...
+//		ArrayList<String> params = new ArrayList<String>();
+//		Iterator<String> iterInputs=processInputs.iterator();
+//		while(iterInputs.hasNext()){
+//			String input=iterInputs.next().toLowerCase();
+//			params.add(paramsComplete.get(input));
+//			//System.out.println("inputParamValue: "+paramsComplete.get(input));
+//		}
+//
+//		ServiceClient serviceClient = new ServiceClient();
+//		ArrayList<String> results = serviceClient.invoke(serviceURL, params);
+//
+//		//String process_localName="SearchServiceProcess"; //TODO no estic segur si es això...
+//		//String resultStr=process_localName+ "=" + "{";
+//		String resultStr=serviceURL+"=" + "{";
+//		for(int i=0;i<results.size();i++){
+//			resultStr+=serviceURL+"#"+results.get(i);
+//			if(i!=results.size()-1){
+//				resultStr+=", ";
+//			}
+//			else{
+//				resultStr+=" }";
+//			}
+//		}
+//
+//
+//		return resultStr;
+//	}
 
-	private static String executeWithJavaX(String inputParams){
+	private String executeWithJavaX(String inputParams){
 
-		StringTokenizer tokenInputParams = new StringTokenizer(inputParams, "--");
-		String serviceURL=sfServicesURLs.get(tokenInputParams.nextToken().trim());
+		//http://localhost:8080/omsservices/OMSservices/owl/owls/AcquireRole.owl RoleID=miembro2 UnitID=plana2
+		//
+		StringTokenizer tokenInputParams = new StringTokenizer(inputParams, separatorToken);
+		String serviceURL=tokenInputParams.nextToken().trim();
+		//String serviceURL=sfServicesURLs.get(tokenInputParams.nextToken().trim());
 		Oracle oracle = new Oracle();
 		oracle.setURLProcess(serviceURL);
 
@@ -224,14 +292,14 @@ public class SF extends CAgent {
 					try {
 
 						// read msg content
-						StringTokenizer msgContentTok = new StringTokenizer(msg.getContent(), "--");
+						StringTokenizer msgContentTok = new StringTokenizer(msg.getContent(), separatorToken);
 
 						String serviceName = msgContentTok.nextToken().trim();
 
 						logger.info("[SF]Doc OWL-S: " + serviceName);
 
 
-						if (sfServicesURLs.containsKey(serviceName))
+						if (sfServicesURLs.containsValue(serviceName)) //if (sfServicesURLs.containsKey(serviceName))
 						{
 
 							logger.info("AGREE");

@@ -159,10 +159,6 @@ public class ResponseParser {
 				}
 			}
 
-			System.out.println(n.getNodeName());
-			System.out.println(n.getFirstChild().getNodeValue());
-			System.out.println(n.getChildNodes().getLength());
-			System.out.println();
 		}
 		System.out.println("serviceName: "+serviceName);
 		System.out.println("status: "+status);

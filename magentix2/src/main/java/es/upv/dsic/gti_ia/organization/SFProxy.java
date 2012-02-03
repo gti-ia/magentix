@@ -7,6 +7,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 //import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Hashtable;
 
 import es.upv.dsic.gti_ia.core.AgentID;
@@ -19,6 +20,9 @@ import es.upv.dsic.gti_ia.core.BaseAgent;
  */
 public class SFProxy extends THOMASProxy {
 
+	//TODO this variables in a configuration file!!!
+	String separatorToken=" ";
+	private static HashMap<String, String> sfServicesURLs=new HashMap<String, String>();
 	
 	/**
 	 * This class gives us the support to accede to the services of the SF
@@ -28,6 +32,13 @@ public class SFProxy extends THOMASProxy {
 	public SFProxy(BaseAgent agent, String SFServiceDescriptionLocation) {
 
 		super(agent,"SF",SFServiceDescriptionLocation);
+		
+		//TODO in the config file!!!
+		sfServicesURLs.put("RegisterService", "http://localhost:8080/sfservices/SFservices/owl/owls/RegisterService.owl");
+		sfServicesURLs.put("DeregisterService", "http://localhost:8080/sfservices/SFservices/owl/owls/DeregisterService.owl");
+		sfServicesURLs.put("GetService", "http://localhost:8080/sfservices/SFservices/owl/owls/GetService.owl");
+		sfServicesURLs.put("SearchService", "http://localhost:8080/sfservices/SFservices/owl/owls/SearchService.owl");
+		sfServicesURLs.put("RemoveProvider", "http://localhost:8080/sfservices/SFservices/owl/owls/RemoveProvider.owl");
 
 	}
 
@@ -43,6 +54,12 @@ public class SFProxy extends THOMASProxy {
 
 		super(agent, "SF");
 		ServiceDescriptionLocation = c.getSFServiceDescriptionLocation();
+
+		sfServicesURLs.put("RegisterService", "http://localhost:8080/sfservices/SFservices/owl/owls/RegisterService.owl");
+		sfServicesURLs.put("DeregisterService", "http://localhost:8080/sfservices/SFservices/owl/owls/DeregisterService.owl");
+		sfServicesURLs.put("GetService", "http://localhost:8080/sfservices/SFservices/owl/owls/GetService.owl");
+		sfServicesURLs.put("SearchService", "http://localhost:8080/sfservices/SFservices/owl/owls/SearchService.owl");
+		sfServicesURLs.put("RemoveProvider", "http://localhost:8080/sfservices/SFservices/owl/owls/RemoveProvider.owl");
 
 	}
 
@@ -91,12 +108,12 @@ public class SFProxy extends THOMASProxy {
 		for (String s : inputs) {
 
 			if (i < ArrayArguments.size())
-				arguments = arguments + " -- " + s + "=" + ArrayArguments.get(i);
+				arguments = arguments + separatorToken + s + "=" + ArrayArguments.get(i);
 			i++;
 		}
 
 		// build the message to service provider
-		call = URLProfile+" -- "+arguments;
+		call = URLProfile+separatorToken+arguments;
 
 		clientProvider = agentProvider.name;
 
@@ -116,16 +133,16 @@ public class SFProxy extends THOMASProxy {
 	 */
 	public String removeProvider(String serviceProfile, String providerName) {
 		
-		serviceName = "RemoveProvider";
+		serviceName = sfServicesURLs.get("RemoveProvider");
 
 		if (serviceProfile.equals("") ) {
 			logger.error("serviceProfile is empty");
 			return "";
 
 		}
-		call = serviceName+" -- "+
-		" RemoveProviderInputServiceProfile="+ serviceProfile+" -- "+
-		" RemoveProviderInputProviderName="+providerName;
+		call = serviceName+separatorToken+
+		"ServiceProfile="+ serviceProfile+separatorToken+
+		"ProviderName="+providerName;
 
 		return (String) this.sendInform();
 	}
@@ -143,11 +160,11 @@ public class SFProxy extends THOMASProxy {
 	public String searchService(String inputs, String outputs, String keywords)
 	{
 
-		serviceName = "SearchService";
-		call = serviceName +" -- "+
-		" SearchServiceInputInputs="+inputs+" -- "+
-		" SearchServiceInputOutputs="+outputs+" -- "+
-		" SearchServiceInputKeywords="+keywords;
+		serviceName = sfServicesURLs.get("SearchService");
+		call = serviceName +separatorToken+
+		"Inputs="+inputs+separatorToken+
+		"Outputs="+outputs+separatorToken+
+		"Keywords="+keywords;
 
 		return (String) this.sendInform();	
 	}
@@ -165,14 +182,14 @@ public class SFProxy extends THOMASProxy {
 	public String deregisterService(String serviceProfile)  {
 
 		
-		serviceName = "DeregisterService";
+		serviceName = sfServicesURLs.get("DeregisterService");
 		if (serviceProfile.equals("")) {
 			logger.error("serviceProfile is  empty");
 			return "";
 		}
 
-		call = serviceName+" -- "+
-		" DeregisterServiceInputServiceProfile="+serviceProfile;
+		call = serviceName+separatorToken+
+		"ServiceProfile="+serviceProfile;
 
 		return (String) this.sendInform();
 
@@ -180,20 +197,20 @@ public class SFProxy extends THOMASProxy {
 	
 	public String getService(String serviceProfile)
 	{
-		serviceName="GetService";
+		serviceName=sfServicesURLs.get("GetService");
 		
-		call=serviceName+" -- "+
-		" GetServiceInputServiceProfile="+serviceProfile;
+		call=serviceName+separatorToken+
+		"ServiceProfile="+serviceProfile;
 		
 		return (String) this.sendInform();
 	}
 	
 	public String registerService(String serviceURL)
 	{
-		serviceName="RegisterService";
+		serviceName=sfServicesURLs.get("RegisterService");
 		
-		call=serviceName+" -- "+
-		" RegisterServiceInputServiceURL="+serviceURL;
+		call=serviceName+separatorToken+
+		"ServiceURL="+serviceURL;
 		
 		return (String) this.sendInform();
 	}
