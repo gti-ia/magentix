@@ -1,18 +1,20 @@
 package es.upv.dsic.gti_ia.organization;
 
 
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.StringTokenizer;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import es.upv.dsic.gti_ia.architecture.FIPANames.InteractionProtocol;
 import es.upv.dsic.gti_ia.architecture.FIPARequestInitiator;
 import es.upv.dsic.gti_ia.architecture.QueueAgent;
-import es.upv.dsic.gti_ia.architecture.FIPANames.InteractionProtocol;
 import es.upv.dsic.gti_ia.cAgents.CAgent;
-import es.upv.dsic.gti_ia.cAgents.CProcessor;
 import es.upv.dsic.gti_ia.cAgents.CFactory;
+import es.upv.dsic.gti_ia.cAgents.CProcessor;
 import es.upv.dsic.gti_ia.cAgents.protocols.FIPA_REQUEST_Initiator;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
@@ -26,7 +28,9 @@ public class THOMASProxy {
 
 
 
-	//******************************************VARIABLES*********************************************
+	//-------------------------------------------------------------------
+	//---------------------------VARIABLES-------------------------------
+	//-------------------------------------------------------------------
 
 	static Logger logger = Logger.getLogger(THOMASProxy.class);
 
@@ -43,8 +47,8 @@ public class THOMASProxy {
 	String[] elements;
 
 	Hashtable<AgentID, String> agents = new Hashtable<AgentID, String>();
-	ArrayList<String> listResults = new ArrayList<String>();
-
+	ArrayList<ArrayList<String>> listResults = new ArrayList<ArrayList<String>>();
+	ResponseParser responseParser = new ResponseParser();
 
 	ProcessDescription processDescripcion;
 	ProfileDescription profileDescription;
@@ -55,16 +59,19 @@ public class THOMASProxy {
 	private String[] agentGetProcess;
 	private boolean Status = true;
 
-	private ArrayList<String> serviceType1 = new ArrayList<String>();//This type return a String
-	private ArrayList<String> serviceType2 = new ArrayList<String>();//This type return a  Array of strings
-	private ArrayList<String> serviceType3 = new ArrayList<String>();//This type return a Integer
-	private ArrayList<String> serviceType4 = new ArrayList<String>();//This type return a  Hastable<AgentID, String>
+	private ArrayList<String> serviceType1 = new ArrayList<String>();//This type returns a String
+	private ArrayList<String> serviceType2 = new ArrayList<String>();//This type returns a Array of strings
+	private ArrayList<String> serviceType3 = new ArrayList<String>();//This type returns a Integer
+	private ArrayList<String> serviceType4 = new ArrayList<String>();//This type returns a Hastable<AgentID, String>
 
 
 
 
-	//**********************************CONSTRUCTORS******************************************
 
+
+	//-------------------------------------------------------------------
+	//---------------------------CONSTRUCTORS----------------------------
+	//-------------------------------------------------------------------
 	/**
 	 * This class gives us the support to accede to the services of the OMS and SF
 	 * @param agent, is a BaseAgent, this agent implemented the communication protocol          
@@ -101,7 +108,7 @@ public class THOMASProxy {
 	 * Adds a new element to list
 	 * @param element
 	 */
-	private void addElementToList(String element) {
+	private void addElementToList(ArrayList<String> element) {
 		this.listResults.add(element);
 	}
 
@@ -119,52 +126,58 @@ public class THOMASProxy {
 	private void initialize()
 	{
 
+
+
+
 		//Add type for each service 
-		serviceType1.add("LeaveRoleProcess");
-		serviceType1.add("AcquireRoleProcess");
-		serviceType1.add("AllocateRoleProcess");
-		serviceType1.add("RegisterNormProcess");
-		serviceType1.add("RegisterRoleProcess");
-		serviceType1.add("RegisterUnitProcess");
-		serviceType1.add("JointUnitProcess");
-		serviceType1.add("DeregisterNormProcess");
-		serviceType1.add("DeregisterRoleProcess");
-		serviceType1.add("DeregisterUnitProcess");
-		serviceType1.add("DeallocateRoleProcess");
-		serviceType1.add("RemoveProviderProcess");
-		serviceType1.add("ModifyProcessProcess");
-		serviceType1.add("ModifyProfileProcess");
-		serviceType1.add("DeregisterProfileProcess");
-		serviceType1.add("GetProfileProcess");
-		serviceType1.add("RegisterProfileProcess");
-		serviceType1.add("RegisterProcessProcess");
-		
+		serviceType1.add("LeaveRole");
+		serviceType1.add("AcquireRole");
+		serviceType1.add("AllocateRole");
+		serviceType1.add("RegisterNorm");
+		serviceType1.add("RegisterRole");
+		serviceType1.add("RegisterUnit");
+		serviceType1.add("JointUnit");
+		serviceType1.add("DeregisterNorm");
+		serviceType1.add("DeregisterRole");
+		serviceType1.add("DeregisterUnit");
+		serviceType1.add("DeallocateRole");
+		serviceType1.add("RemoveProvider");
+		serviceType1.add("ModifyProcess");
+		serviceType1.add("ModifyProfile");
+		serviceType1.add("DeregisterProfile");
+		serviceType1.add("GetProfile");
+		serviceType1.add("RegisterProfile");
+		serviceType1.add("RegisterProcess");
 
 
-		serviceType2.add("InformAgentRoleProcess");
-		serviceType2.add("InformMembersProcess");
-		serviceType2.add("InformTargetNormsProcess");
-		serviceType2.add("InformNormProcess");
-		serviceType2.add("InformUnitProcess");
-		serviceType2.add("InformUnitRolesProcess");
-		serviceType2.add("SearchServiceProcess");
-		serviceType2.add("InformRoleProcess");
 
+		serviceType2.add("InformAgentRole");
+		serviceType2.add("InformMembers");
+		serviceType2.add("InformUnitRoles");
+		serviceType2.add("InformRole");
+		serviceType2.add("InformUnit");
+		serviceType2.add("InformNorm");
+		serviceType2.add("InformTargetNorms");
+		serviceType2.add("SearchService");
 
-		serviceType3.add("QuantityMembersProcess");
+		serviceType3.add("QuantityMembers");
 
-		serviceType4.add("GetProcessProcess");
+		serviceType4.add("GetProcess");
 
 
 
 
 	}
-	//****************************************Common methods***************************************************
+
+
+	//-------------------------------------------------------------------
+	//---------------------------Common methods--------------------------
+	//-------------------------------------------------------------------
 
 	/**
 	 * This method builds the ACLMessage with the sender, content, protocol and receivers.
 	 */
-	Object sendInform() {
+	Object sendInform() throws THOMASException{
 
 		this.reset();
 
@@ -208,52 +221,48 @@ public class THOMASProxy {
 	 * a new or showed an error message if the operation is incorrect.
 	 * @return
 	 */
-	private Object returnResult()
+	private Object returnResult() throws THOMASException
 	{
 
 		//Services that return a String.
 		if (serviceType1.contains(serviceName))
 		{
-			return this.value;
+			if (!Status)
+				throw new THOMASException(value);
+
+			return  value;
+
+
 		}//Services that return a ArrayList<String>()
 		else if (serviceType2.contains(serviceName))
 		{
 
-			if (!Status) {
-				logger.error("["+agent.getName()+"] "+ serviceName+": " + this.value);
-				return new ArrayList<String>();
-			} else
-			{
-				return new ArrayList<String>(this.listResults);
-			}
+			if (!Status) 
+				throw new THOMASException(value);
+
+			return new ArrayList<ArrayList<String>>(this.listResults);
+
 		}//Services that return a Integer.
 		else  if (serviceType3.contains(serviceName))
 		{
-			if (!Status) {
-				logger.error("["+agent.getName()+"] "+ serviceName+": " + this.value);
-				return 0;
-			} else
-				return this.Quantity;
+			if (!Status)
+				throw new THOMASException(value);
+
+			return this.Quantity;
 		}//Services that return a Hashtable
 		else  if (serviceType4.contains(serviceName))
 		{
 			if (!Status)
-			{
-				logger.error("["+agent.getName()+"] "+ serviceName + this.value);
-				return new Hashtable<AgentID, String>();
-			}
-
-			else
-				return this.agents;
+				throw new THOMASException(value);
+			return this.agents;
 
 		}
 		else //If types is a genericService.  
 		{
-			if (!Status) {
-				logger.error("["+agent.getName()+"] "+ "Error in generic funcion: "+ this.value);
-				return new Hashtable<String, String>();
-			} else
-				return genericServiceList;
+			if (!Status)
+				throw new THOMASException(value);
+
+			return genericServiceList;
 
 		}
 
@@ -303,13 +312,49 @@ public class THOMASProxy {
 	 * Adds the Id profile when the search service is calls
 	 * @param id
 	 */
-	private void addIDSearchService(String id) {
+	private void addIDSearchService(ArrayList<String> id) {
 
 		this.listResults.add(id);
 
 	}
 
 
+	//	public Document string2DOM(String s)
+	//
+	//	{
+	//
+	//		Document tmpX=null;
+	//
+	//		DocumentBuilder builder = null;
+	//
+	//		try{
+	//
+	//			builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+	//
+	//		}catch(javax.xml.parsers.ParserConfigurationException error){
+	//
+	//			return null;
+	//		}
+	//
+	//		try{
+	//
+	//			tmpX=builder.parse(new ByteArrayInputStream(s.getBytes()));
+	//
+	//		}catch(org.xml.sax.SAXException error){
+	//
+	//
+	//			return null;
+	//
+	//		}catch(IOException error){
+	//
+	//
+	//			return null;
+	//
+	//		}
+	//
+	//		return tmpX;
+	//
+	//	}
 
 	/**
 	 * This function parses a result string for return a value. 
@@ -317,7 +362,10 @@ public class THOMASProxy {
 	private void extractInfo(ACLMessage msg)
 	{
 
-		//**************************************************SF parsing*******************************************************
+
+		//-------------------------------------------------------------------
+		//---------------------------SF parsing------------------------------
+		//-------------------------------------------------------------------
 
 
 		if (thomasAgent.equals("SF"))
@@ -461,7 +509,7 @@ public class THOMASProxy {
 
 					for (String a : agentGetProcess) {
 						a = a.substring(0,a.indexOf(" "));
-						this.addIDSearchService(a);
+						//TODO			this.addIDSearchService(a);
 					}
 
 				} else
@@ -554,7 +602,57 @@ public class THOMASProxy {
 		else
 		{
 
-			//**********************************************OMS parsing*********************************************
+
+
+			//-------------------------------------------------------------------
+			//---------------------------OMS parsing------------------------------
+			//-------------------------------------------------------------------
+
+
+		
+			String content = msg.getContent().substring(msg.getContent().indexOf("<response>"),msg.getContent().length()-1 );
+
+
+			responseParser.parseResponse(content);
+
+
+			//split by state
+			if (responseParser.getStatus().equals("Ok"))
+			{
+
+				if (serviceType1.contains(responseParser.getServiceName()))
+				{
+
+					value = responseParser.getDescription();
+				}
+				else if (responseParser.getServiceName().equals("InformRole") || responseParser.getServiceName().equals("InformUnit")
+						|| responseParser.getServiceName().equals("QuantityMembers"))
+				{
+					this.addElementToList(responseParser.getElementsList());
+				}
+				else if (responseParser.getServiceName().equals("InformUnitRoles") || responseParser.getServiceName().equals("InformMembers")
+						|| responseParser.getServiceName().equals("InformAgentRole"))
+				{
+					
+					for (ArrayList<String> al : responseParser.getItemsList())
+					{
+						this.addElementToList(al);
+					}
+
+				}
+				
+			}
+			else
+			{
+
+				value = responseParser.getDescription();
+				Status = false;
+			}
+
+
+
+			/*
+
 			if (serviceName.equals("InformUnitProcess")) {
 
 				String arg;
@@ -670,7 +768,7 @@ public class THOMASProxy {
 							if (serviceName.equals("InformRoleProcess"))
 							{
 								String arg = msg.getContent().substring(msg.getContent().indexOf("=<")+1, msg.getContent().indexOf(">,")+1);
-			
+
 								StringTokenizer st = new StringTokenizer(arg, "<>, ");
 
 								while(st.hasMoreTokens())
@@ -733,8 +831,9 @@ public class THOMASProxy {
 				this.Status = false;
 				this.setValue(status + " " + ErrorValue);
 			}
-
+			 */
 		}
+
 	}
 
 
