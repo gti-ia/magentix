@@ -9,6 +9,7 @@ import es.upv.dsic.gti_ia.architecture.QueueAgent;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.organization.OMSProxy;
+import es.upv.dsic.gti_ia.organization.THOMASException;
 import es.upv.dsic.gti_ia.architecture.Monitor;
 
 public class Addition extends QueueAgent {
@@ -27,7 +28,8 @@ public class Addition extends QueueAgent {
 
 
 		
-
+		try
+		{
 		//Acquire the member rol in virtual unit and operador inside the calculin unit
 		String result = omsProxy.acquireRole("participant", "virtual");
 		logger.info("["+this.getName()+"] Result acquire role: "+ result);
@@ -43,7 +45,10 @@ public class Addition extends QueueAgent {
 		//Waiting for messages.
 		m.waiting();
 		
-		
+		}catch(THOMASException e)
+		{
+			e.printStackTrace();
+		}
 
 	}
 	
@@ -53,9 +58,15 @@ public class Addition extends QueueAgent {
 	}
 	public void finalize()
 	{
+		try
+		{
 		String result = omsProxy.leaveRole("participant", "virtual");
 		logger.info("["+this.getName()+"] Result leave role participant: "+result);
 		logger.info("[ "+this.getName()+" ] end execution!");
+		}catch(THOMASException e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	/**

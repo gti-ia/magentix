@@ -3,6 +3,7 @@ package omsTest.registerUnit;
 import es.upv.dsic.gti_ia.architecture.QueueAgent;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.organization.OMSProxy;
+import es.upv.dsic.gti_ia.organization.THOMASException;
 
 
 public class Creator extends QueueAgent {
@@ -20,7 +21,15 @@ public class Creator extends QueueAgent {
 		
 
 		//1. Registrar una unidad dentro de virual proporcionando la unidad padre de manera explícita
-		//result = omsProxy.registerUnit("Jerarquia", "hierarchy", "virtual", "Creador");
+		try {
+		
+			result = omsProxy.registerUnit("plana3", "flat", "virtual", "Creador");
+			System.out.println("Result register unit: "+ result);
+		} catch (THOMASException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		//result = omsProxy.registerUnit("Equipo", "team", "virtual", "Creador");
 		//result = omsProxy.registerUnit("Plana", "flat", "virtual", "Creador");
 		
@@ -106,8 +115,8 @@ public class Creator extends QueueAgent {
 		
 		//2. Registrar una unidad sin indicar el nombre del rol a crear por defecto con posición creator.
 		
-		result = omsProxy.registerUnit("Plana", "flat", "virtual","");
-		System.out.println("Result register unit: "+ result);
+//		result = omsProxy.registerUnit("Plana", "flat", "virtual","");
+//		System.out.println("Result register unit: "+ result);
 		
 		//3. Registrar una unidad indicando un tipo de unidad inexistente.
 		

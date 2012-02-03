@@ -4,13 +4,13 @@ package organizational__message_example.team;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.StringTokenizer;
 
 import es.upv.dsic.gti_ia.architecture.Monitor;
 import es.upv.dsic.gti_ia.architecture.QueueAgent;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.organization.OMSProxy;
+import es.upv.dsic.gti_ia.organization.THOMASException;
 
 
 public class Display extends QueueAgent {
@@ -29,7 +29,8 @@ public class Display extends QueueAgent {
 	public void execute() {
 
 
-
+		try
+		{
 		omsProxy.acquireRole("participant", "virtual");
 		omsProxy.acquireRole("manager", "calculin");
 
@@ -41,18 +42,28 @@ public class Display extends QueueAgent {
 			}while(messageList.size() != 0);
 		}while(active);
 
-
+		}catch(THOMASException e)
+		{
+			e.printStackTrace();
+		}
 
 	}
 
 	public void finalize()
 	{
+		
+		try
+		{
 		String result = omsProxy.leaveRole("manager", "calculin");
 		System.out.println("["+this.getName()+"] Result leaven role manager: "+result);
 		result = omsProxy.leaveRole("participant", "virtual");
 		System.out.println("["+this.getName()+"] Result leave role participant: "+result);
 		
 		logger.info("["+this.getName()+" ] end execution!");
+		}catch(THOMASException e)
+		{
+			e.printStackTrace();
+		}
 	}
 	
 	public void conclude()
@@ -68,17 +79,24 @@ public class Display extends QueueAgent {
 	 */
 	public void displayMessage(ACLMessage _msg)
 	{
+		
+		try
+		{
 		ACLMessage msg = _msg; 
-		ArrayList<String> roles = omsProxy.informMembers("calculin","manager","");
+		ArrayList<ArrayList<String>> roles = omsProxy.informMembers("calculin","manager","");
 		//If sender agent has rol manager, it shows the message
 		
-		for(String im : roles)
+		for(ArrayList<String> im : roles)
 		{
-			StringTokenizer st1 = new StringTokenizer(im," ");
-			st1.nextToken();//Quitamos el <
-			String agent = st1.nextToken();
+		
+			String agent = im.get(0);
 			if (agent.toLowerCase().equals(msg.getSender().name.toLowerCase()))
 				System.out.println("[ "+this.getName()+" ]  "+ msg.getSender().name+" says " + msg.getContent());
+		}
+		
+		}catch(THOMASException e)
+		{
+			e.printStackTrace();
 		}
 		
 	}

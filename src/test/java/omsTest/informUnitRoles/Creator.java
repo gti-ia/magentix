@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import es.upv.dsic.gti_ia.architecture.QueueAgent;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.organization.OMSProxy;
+import es.upv.dsic.gti_ia.organization.THOMASException;
 
 
 public class Creator extends QueueAgent {
@@ -17,7 +18,7 @@ public class Creator extends QueueAgent {
 
 	public void execute() {
 
-		ArrayList<String> result = new ArrayList<String>();
+		ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
 
 		/** Parámetros correctos **/
 
@@ -25,12 +26,20 @@ public class Creator extends QueueAgent {
 
 		//a) la unidad jerarquia se convierte en la padre de las otras dos.
 		
-		result = omsProxy.informUnitRoles("jerarquia");
-//		
-		for(String s : result)
-		{
-			System.out.println("Result inform: "+ s);	
+		try {
+			result = omsProxy.informUnitRoles("jerarquia");
+			
+			for(ArrayList<String> s : result)
+			{
+				System.out.println("rolename: "+ s.get(0)+ " position: "+ s.get(1)+ " visibility: "+ s.get(2)+" accesibility: "+ s.get(3));	
+			}
+			
+		} catch (THOMASException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+//		
+		
 
 		
 		/** Parámetros incorrectos **/

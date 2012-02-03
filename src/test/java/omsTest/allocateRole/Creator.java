@@ -3,6 +3,7 @@ package omsTest.allocateRole;
 import es.upv.dsic.gti_ia.architecture.QueueAgent;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.organization.OMSProxy;
+import es.upv.dsic.gti_ia.organization.THOMASException;
 
 
 public class Creator extends QueueAgent {
@@ -207,7 +208,12 @@ public class Creator extends QueueAgent {
 //		System.out.println(result);
 		
 		//3. Asignar un rol en una jerarquia
-		result = omsProxy.allocateRole("subordinado","jerarquia", "pruebas2");
+		try {
+			result = omsProxy.allocateRole("subordinado","jerarquia", "pruebas2");
+		} catch (THOMASException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		System.out.println(result);
 	
 	}

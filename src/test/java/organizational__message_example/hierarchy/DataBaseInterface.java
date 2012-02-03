@@ -24,7 +24,7 @@ public class DataBaseInterface {
 			//Miramos si ya existen los roles del oms y el sf, si existen no hacemos nada, sino los creamos.
 
 
-			Statement s = bd.conection.createStatement();
+			Statement s = bd.connection.createStatement();
 
 			ResultSet rs = s.executeQuery("Select * from role where roleid='oms'");
 

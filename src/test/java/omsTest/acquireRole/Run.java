@@ -44,6 +44,9 @@ public class Run {
 			 * Instantiating agents
 			 */
 			
+		
+			
+			
 			Creator iniAgent = new Creator(new AgentID("pruebas"));	
 			iniAgent.start();
 		

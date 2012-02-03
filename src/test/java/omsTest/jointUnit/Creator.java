@@ -3,6 +3,7 @@ package omsTest.jointUnit;
 import es.upv.dsic.gti_ia.architecture.QueueAgent;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.organization.OMSProxy;
+import es.upv.dsic.gti_ia.organization.THOMASException;
 
 
 public class Creator extends QueueAgent {
@@ -22,8 +23,13 @@ public class Creator extends QueueAgent {
 		//1. Cambiar de padre a las unidades hijas de virtual
 
 		//a) la unidad jerarquia se convierte en la padre de las otras dos.
-//		result = omsProxy.jointUnit("equipo", "jerarquia");
-//		System.out.println("Result joint unit: "+ result);
+		try {
+			result = omsProxy.jointUnit("equipo", "jerarquia");
+		} catch (THOMASException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println("Result joint unit: "+ result);
 //		
 //		result = omsProxy.jointUnit("plana", "jerarquia");
 //		System.out.println("Result joint unit: "+ result);
@@ -96,11 +102,11 @@ public class Creator extends QueueAgent {
 		
 		/** Permisos incorrectos **/
 		
-		result = omsProxy.jointUnit("equipo", "jerarquia");
-		System.out.println("Result joint unit: "+ result);
-		
-		result = omsProxy.jointUnit("plana", "jerarquia");
-		System.out.println("Result joint unit: "+ result);
+//		result = omsProxy.jointUnit("equipo", "jerarquia");
+//		System.out.println("Result joint unit: "+ result);
+//		
+//		result = omsProxy.jointUnit("plana", "jerarquia");
+//		System.out.println("Result joint unit: "+ result);
 	}
 	
 	

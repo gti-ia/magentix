@@ -21,24 +21,30 @@ public class Summation extends QueueAgent {
 
 	public void execute() {
 
-		
 
-		String resultA = omsProxy.acquireRole("participant", "virtual");
-		logger.info("["+this.getName()+"] Result acquire role participant: "+ resultA);
-		resultA = omsProxy.acquireRole("manager", "calculin");
-		logger.info("["+this.getName()+"] Result acquire role manager: "+ resultA);
-	
-		this.send_request(6,3);
-		m.waiting(2 * 1000); // Waiting the response with a timeout
-		this.send_result("" + result); // Inform the result.
-		
-		expected = 2; //Reset the result and messages expected
-		result=0;
-		this.send_request(5,3);
-		m.waiting(10 * 1000); // Waiting the response with a timeout
-		this.send_result("" + result); // Inform the result.
-		
-		m.waiting();
+		try
+		{
+			String resultA = omsProxy.acquireRole("participant", "virtual");
+			logger.info("["+this.getName()+"] Result acquire role participant: "+ resultA);
+			resultA = omsProxy.acquireRole("manager", "calculin");
+			logger.info("["+this.getName()+"] Result acquire role manager: "+ resultA);
+
+			this.send_request(6,3);
+			m.waiting(2 * 1000); // Waiting the response with a timeout
+			this.send_result("" + result); // Inform the result.
+
+			expected = 2; //Reset the result and messages expected
+			result=0;
+			this.send_request(5,3);
+			m.waiting(10 * 1000); // Waiting the response with a timeout
+			this.send_result("" + result); // Inform the result.
+
+			m.waiting();
+
+		}catch(THOMASException e)
+		{
+			e.printStackTrace();
+		}
 
 	}
 
@@ -46,16 +52,22 @@ public class Summation extends QueueAgent {
 	{
 		m.advise();
 	}
-	
+
 	public void finalize()
 	{
-	
-		String result = omsProxy.leaveRole("manager", "calculin");
-		logger.info("["+this.getName()+"] Result leave role manager: "+ result);
-		result = omsProxy.leaveRole("participant", "virtual");
-		logger.info("["+this.getName()+"] Result leave role participant: "+ result);
-		
-		logger.info("[ "+this.getName()+" ] end execution!");
+
+		try
+		{
+			String result = omsProxy.leaveRole("manager", "calculin");
+			logger.info("["+this.getName()+"] Result leave role manager: "+ result);
+			result = omsProxy.leaveRole("participant", "virtual");
+			logger.info("["+this.getName()+"] Result leave role participant: "+ result);
+
+			logger.info("[ "+this.getName()+" ] end execution!");
+		}catch(THOMASException e)
+		{
+			e.printStackTrace();
+		}
 	}
 	private void add_and_advise(ACLMessage msg) {
 		result += Integer.parseInt(msg.getContent());
@@ -67,7 +79,7 @@ public class Summation extends QueueAgent {
 
 	public void onMessage(ACLMessage msg) {
 
-	
+
 		if (msg.getSender().name.equals("agente_suma") || msg.getSender().name.contains("agente_producto")) 
 		{
 			//When a message arrives, it select the message with a results

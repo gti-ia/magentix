@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import es.upv.dsic.gti_ia.architecture.QueueAgent;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.organization.OMSProxy;
+import es.upv.dsic.gti_ia.organization.THOMASException;
 
 
 public class Creator extends QueueAgent {
@@ -26,9 +27,16 @@ public class Creator extends QueueAgent {
 		//1. El agente pruebas sólo juega el rol participant en la unidad virtual
 
 
-//				result = omsProxy.quantityMembers("jerarquia", "", "");
-//				
-//				System.out.println("Resultado jerarquia: "+ result);
+				try {
+					result = omsProxy.quantityMembers("jerarquia", "", "");
+					
+					System.out.println("Resultado jerarquia: "+ result);
+				} catch (THOMASException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				
 //				
 //				result = omsProxy.quantityMembers("equipo", "", "");
 //				
@@ -95,11 +103,11 @@ public class Creator extends QueueAgent {
 
 		/** Parámetros incorrectos **/
 
-		result = omsProxy.quantityMembers("Noexiste", "subordinado","subordinate");
-
-		result = omsProxy.quantityMembers("", "subordinado","subordinate");
-
-		result = omsProxy.quantityMembers(null, "subordinado","subordinate");
+//		result = omsProxy.quantityMembers("Noexiste", "subordinado","subordinate");
+//
+//		result = omsProxy.quantityMembers("", "subordinado","subordinate");
+//
+//		result = omsProxy.quantityMembers(null, "subordinado","subordinate");
 
 	}
 

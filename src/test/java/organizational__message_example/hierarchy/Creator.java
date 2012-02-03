@@ -21,7 +21,8 @@ public class Creator extends QueueAgent {
 	public void execute() {
 
 
-
+		try
+		{
 		String result = omsProxy.acquireRole("participant", "virtual");
 		logger.info("["+this.getName()+"] Result acquire role participant: "+result);
 		
@@ -33,12 +34,17 @@ public class Creator extends QueueAgent {
 		
 		
 		m.waiting();
-		
+		}catch(THOMASException e)
+		{
+			e.printStackTrace();
+		}
 		
 	}
 	
 	public void finalize()
 	{
+		try
+		{
 
 		String result = omsProxy.deregisterRole("operador", "calculin");
 		logger.info("["+this.getName()+"] Result leave role operador: "+result);
@@ -51,9 +57,16 @@ public class Creator extends QueueAgent {
 		result = omsProxy.leaveRole("participant", "virtual");
 		logger.info("["+this.getName()+"] Result leave role participant: "+result);
 		logger.info("["+this.getName()+" ] end execution!");
+		
+		}catch(THOMASException e)
+		{
+			e.printStackTrace();
+		}
 	}
 	private void initialize_scenario()
 	{
+		try
+		{
 		String result = omsProxy.registerUnit("calculin", "hierarchy", "virtual", "creador");
 		logger.info("["+this.getName()+"] Result register unit calculin: "+result);
 		 
@@ -61,6 +74,10 @@ public class Creator extends QueueAgent {
 		logger.info("["+this.getName()+"] Result register role subordinado: "+result);
 		result = omsProxy.registerRole("operador", "calculin", "external", "public","subordinate");
 		logger.info("["+this.getName()+"] Result register role operador: "+result);
+		}catch(THOMASException e)
+		{
+			e.printStackTrace();
+		}
 	
 	}
 	

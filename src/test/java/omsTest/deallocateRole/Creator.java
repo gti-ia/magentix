@@ -3,6 +3,7 @@ package omsTest.deallocateRole;
 import es.upv.dsic.gti_ia.architecture.QueueAgent;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.organization.OMSProxy;
+import es.upv.dsic.gti_ia.organization.THOMASException;
 
 
 public class Creator extends QueueAgent {
@@ -209,7 +210,12 @@ public class Creator extends QueueAgent {
 //		result = omsProxy.deallocateRole("miembro", "equipo", "pruebas2");
 //		System.out.println(result);
 		
-		result = omsProxy.deallocateRole("subordinado", "jerarquia", "pruebas2");
+		try {
+			result = omsProxy.deallocateRole("subordinado", "jerarquia", "pruebas2");
+		} catch (THOMASException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		System.out.println(result);
 	}
 	

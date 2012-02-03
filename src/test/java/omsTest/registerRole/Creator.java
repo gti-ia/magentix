@@ -3,6 +3,7 @@ package omsTest.registerRole;
 import es.upv.dsic.gti_ia.architecture.QueueAgent;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.organization.OMSProxy;
+import es.upv.dsic.gti_ia.organization.THOMASException;
 
 
 public class Creator extends QueueAgent {
@@ -23,8 +24,15 @@ public class Creator extends QueueAgent {
 		
 		//1. Eliminar una unidad cuya unidad padre es virtual.
 		
-//		result = omsProxy.registerRole("Miembro", "plana","external", "public", "member");
-//		System.out.println(result);
+		try {
+			result = omsProxy.registerRole("Miembro3", "plana","external", "public", "member");
+			
+			System.out.println(result);
+		} catch (THOMASException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 //
 //		result = omsProxy.registerRole("Creador2", "virtual","internal", "private", "creator");
 //		System.out.println(result);
@@ -125,14 +133,14 @@ public class Creator extends QueueAgent {
 //		result = omsProxy.registerRole("subordinado2", "jerarquia","external","public", "subordinate");
 //		System.out.println(result);
 		
-        result = omsProxy.registerRole("Miembro","Virtual","External","Public","Supervisor");
-        System.out.println(result);
-        result = omsProxy.registerRole("Miembro","Equipo","External","Public","Supervisor");
-        System.out.println(result);
-        result = omsProxy.registerRole("Miembro","Plana","External","Public","Subordinate");
-        System.out.println(result);
-        result = omsProxy.registerRole("Subordinado","Jerarquía","External","Public","member");
-        System.out.println(result);
+//        result = omsProxy.registerRole("Miembro","Virtual","External","Public","Supervisor");
+//        System.out.println(result);
+//        result = omsProxy.registerRole("Miembro","Equipo","External","Public","Supervisor");
+//        System.out.println(result);
+//        result = omsProxy.registerRole("Miembro","Plana","External","Public","Subordinate");
+//        System.out.println(result);
+//        result = omsProxy.registerRole("Subordinado","Jerarquía","External","Public","member");
+//        System.out.println(result);
 	}
 	
 	

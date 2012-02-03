@@ -1,8 +1,11 @@
 package omsTest.acquireRole;
 
 import es.upv.dsic.gti_ia.architecture.QueueAgent;
+import es.upv.dsic.gti_ia.architecture.FIPANames.InteractionProtocol;
+import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.organization.OMSProxy;
+import es.upv.dsic.gti_ia.organization.THOMASException;
 
 
 public class Creator extends QueueAgent {
@@ -23,9 +26,28 @@ public class Creator extends QueueAgent {
 		
 		//1. Eliminar una unidad cuya unidad padre es virtual.
 		
-//		result = omsProxy.acquireRole("miembro2", "plana");
+		try{
+			
+		
+		result = omsProxy.acquireRole("miembro2", "plana2");
+		System.out.println(result);
+		
+		result = omsProxy.leaveRole("miembro2", "plana2");
+		System.out.println(result);
+		
+		}catch(THOMASException e)
+		{
+			System.out.println("Error: "+ e.getContent());
+			System.out.println("Error: "+ e.getMessage());
+		}
+//		result = omsProxy.acquireRole("creador", "plana2");
+//		System.out.println(result);
+		
+		
+//		result = omsProxy.leaveRole("miembro2", "plana2");
 //		System.out.println(result);
 
+		
 		//2. Se quiere adquirir el rol de la unidad hija, el agente existe solamente en la unidad padre.
 		
 		/*result = omsProxy.acquireRole("creador2", "plana");
@@ -144,8 +166,8 @@ public class Creator extends QueueAgent {
 //		result = omsProxy.acquireRole("creador2", "jerarquia2");
 //		System.out.println(result);
 		
-		result = omsProxy.acquireRole("creador", "jerarquia");
-		System.out.println(result);
+//		result = omsProxy.acquireRole("creador", "jerarquia");
+//		System.out.println(result);
 		
 //		result = omsProxy.acquireRole("supervisor2", "jerarquia2");
 //		System.out.println(result);
@@ -258,6 +280,9 @@ public class Creator extends QueueAgent {
 //        System.out.println(result);
 	}
 	
+	
+	
+
 	
 	
 

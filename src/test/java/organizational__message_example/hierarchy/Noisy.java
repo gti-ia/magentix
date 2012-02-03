@@ -24,44 +24,54 @@ public class Noisy extends QueueAgent {
 
 	public void execute() {
 
+		try
+		{
+			String result = omsProxy.acquireRole("participant", "virtual");
+			logger.info("["+this.getName()+"] Result acquire role participant: "+result);
 
-		String result = omsProxy.acquireRole("participant", "virtual");
-		logger.info("["+this.getName()+"] Result acquire role participant: "+result);
+			this.initialize_scenario();
 
-		this.initialize_scenario();
+			result = omsProxy.acquireRole("manager","externa");
+			logger.info("["+this.getName()+"] Result acquire role manager: "+result);
 
-		result = omsProxy.acquireRole("manager","externa");
-		logger.info("["+this.getName()+"] Result acquire role manager: "+result);
-	
-		this.send_request(1,7);
-		
-		m.waiting();
+			this.send_request(1,7);
 
-		
+			m.waiting();
+		}catch(THOMASException e)
+		{
+			e.printStackTrace();
+		}
+
 	}
-	
+
 	public void conclude()
 	{
 		m.advise();
 	}
-	
+
 	public void finalize()
 	{
-	
-		String result = omsProxy.leaveRole("manager", "externa");
-		logger.info("["+this.getName()+"] Result leave role manager: "+result);
-		result = omsProxy.leaveRole("creador", "externa");
-		logger.info("["+this.getName()+"] Result leave role creador: "+result);
-		result = omsProxy.deregisterRole("manager", "externa");
-		logger.info("["+this.getName()+"] Result deregister role manager: "+result);
-		result = omsProxy.deregisterRole("creador", "externa");
-		logger.info("["+this.getName()+"] Result deregister role creador: "+result);
-		result = omsProxy.deregisterUnit("externa");
-		logger.info("["+this.getName()+"] Result deregister unit externa: "+result);
-		result = omsProxy.leaveRole("participant", "virtual");
-		logger.info("["+this.getName()+"] Result leave role participant: "+result);
-		
-		logger.info("["+this.getName()+" ] end execution!");
+
+		try
+		{
+			String result = omsProxy.leaveRole("manager", "externa");
+			logger.info("["+this.getName()+"] Result leave role manager: "+result);
+			result = omsProxy.leaveRole("creador", "externa");
+			logger.info("["+this.getName()+"] Result leave role creador: "+result);
+			result = omsProxy.deregisterRole("manager", "externa");
+			logger.info("["+this.getName()+"] Result deregister role manager: "+result);
+			result = omsProxy.deregisterRole("creador", "externa");
+			logger.info("["+this.getName()+"] Result deregister role creador: "+result);
+			result = omsProxy.deregisterUnit("externa");
+			logger.info("["+this.getName()+"] Result deregister unit externa: "+result);
+			result = omsProxy.leaveRole("participant", "virtual");
+			logger.info("["+this.getName()+"] Result leave role participant: "+result);
+
+			logger.info("["+this.getName()+" ] end execution!");
+		}catch(THOMASException e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	private void add_and_advise(ACLMessage msg)
@@ -97,12 +107,17 @@ public class Noisy extends QueueAgent {
 	private void initialize_scenario()
 	{
 
-		String result = omsProxy.registerUnit("externa", "flat", "virtual", "creador");
-		logger.info("["+this.getName()+"] Result register unit externa: "+ result);
-		result = omsProxy.registerRole("manager", "externa", "external", "public","member");
-		logger.info("["+this.getName()+"] Result register role manager: "+ result);
-	
-	
+		try
+		{
+			String result = omsProxy.registerUnit("externa", "flat", "virtual", "creador");
+			logger.info("["+this.getName()+"] Result register unit externa: "+ result);
+			result = omsProxy.registerRole("manager", "externa", "external", "public","member");
+			logger.info("["+this.getName()+"] Result register role manager: "+ result);
+
+		}catch(THOMASException e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	private void send_request(int n1, int n2)
@@ -113,7 +128,7 @@ public class Noisy extends QueueAgent {
 			msg.setProtocol(InteractionProtocol.FIPA_REQUEST);
 			msg.setLanguage("ACL");
 			msg.setContent(n1+" "+ n2);
-			
+
 			System.out.println("[ "+this.getName()+" ] Sending a message!");
 			send(msg);
 		} catch (THOMASException e) {

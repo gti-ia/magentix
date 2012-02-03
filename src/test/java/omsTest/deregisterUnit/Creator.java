@@ -3,6 +3,7 @@ package omsTest.deregisterUnit;
 import es.upv.dsic.gti_ia.architecture.QueueAgent;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.organization.OMSProxy;
+import es.upv.dsic.gti_ia.organization.THOMASException;
 
 
 public class Creator extends QueueAgent {
@@ -17,7 +18,8 @@ public class Creator extends QueueAgent {
 
 		String result = "";
 
-		
+		try
+		{
 
 		/** Acceso correcto al servicio **/
 		
@@ -57,7 +59,10 @@ public class Creator extends QueueAgent {
 		
 		result = omsProxy.deregisterUnit("plana");
 		System.out.println("Deregister unit result: "+ result);
-		
+		} catch (THOMASException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	

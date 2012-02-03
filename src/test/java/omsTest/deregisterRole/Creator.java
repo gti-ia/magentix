@@ -3,6 +3,7 @@ package omsTest.deregisterRole;
 import es.upv.dsic.gti_ia.architecture.QueueAgent;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.organization.OMSProxy;
+import es.upv.dsic.gti_ia.organization.THOMASException;
 
 
 public class Creator extends QueueAgent {
@@ -23,7 +24,12 @@ public class Creator extends QueueAgent {
 		
 		//1. Eliminar una unidad cuya unidad padre es virtual.
 		
-		result = omsProxy.deregisterRole("subordinado2", "jerarquia");
+		try {
+			result = omsProxy.deregisterRole("subordinado2", "jerarquia");
+		} catch (THOMASException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		System.out.println(result);
 
 //

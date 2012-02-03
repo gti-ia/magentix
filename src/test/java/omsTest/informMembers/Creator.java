@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import es.upv.dsic.gti_ia.architecture.QueueAgent;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.organization.OMSProxy;
+import es.upv.dsic.gti_ia.organization.THOMASException;
 
 
 public class Creator extends QueueAgent {
@@ -17,7 +18,7 @@ public class Creator extends QueueAgent {
 
 	public void execute() {
 
-		ArrayList<String> result = new ArrayList<String>();
+		ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
 		
 		
 
@@ -25,14 +26,19 @@ public class Creator extends QueueAgent {
 
 		//1. El agente pruebas sólo juega el rol participant en la unidad virtual
 
-		
-/*		result = omsProxy.informMembers("jerarquia", "","");
-		
-		for (String s : result)
+		try
 		{
-			System.out.println("Jerarquia: "+ s);	
-		}
+		result = omsProxy.informMembers("noexiste", "","");
 		
+		for (ArrayList<String> s : result)
+		{
+			System.out.println("AgentName: "+ s.get(0)+ " RoleName: "+ s.get(1));	
+		}
+		}catch(THOMASException e)
+		{
+			System.out.println("Error: "+ e.getContent());
+		}
+		/*
 		result = omsProxy.informMembers("equipo", "","");
 		
 		for (String s : result)
@@ -145,11 +151,11 @@ public class Creator extends QueueAgent {
 		
 		/** Parámetros incorrectos **/
 		
-		result = omsProxy.informMembers("Noexiste", "subordinado","subordinate");
-		
-		result = omsProxy.informMembers("", "subordinado","subordinate");
-		
-		result = omsProxy.informMembers(null, "subordinado","subordinate");
+//		result = omsProxy.informMembers("Noexiste", "subordinado","subordinate");
+//		
+//		result = omsProxy.informMembers("", "subordinado","subordinate");
+//		
+//		result = omsProxy.informMembers(null, "subordinado","subordinate");
 
 	}
 	

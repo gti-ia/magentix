@@ -8,6 +8,7 @@ import es.upv.dsic.gti_ia.architecture.QueueAgent;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.organization.OMSProxy;
+import es.upv.dsic.gti_ia.organization.THOMASException;
 
 
 public class Product extends QueueAgent {
@@ -15,7 +16,7 @@ public class Product extends QueueAgent {
 	OMSProxy omsProxy = new OMSProxy(this);
 	Monitor m = new Monitor();
 	Responder responder = new Responder(this);
-	
+
 	public Product(AgentID aid) throws Exception {
 		super(aid);
 
@@ -24,18 +25,24 @@ public class Product extends QueueAgent {
 	public void execute() {
 
 
-		
 
-		omsProxy.acquireRole("participant", "virtual");
-		omsProxy.acquireRole("operador", "calculin");
-		
+		try
+		{
+			omsProxy.acquireRole("participant", "virtual");
+			omsProxy.acquireRole("operador", "calculin");
 
-		
 
-		this.addTask(responder);
 
-		
-		m.waiting();
+
+			this.addTask(responder);
+
+
+			m.waiting();
+
+		}catch(THOMASException e)
+		{
+			e.printStackTrace();
+		}
 
 	}
 
@@ -44,18 +51,26 @@ public class Product extends QueueAgent {
 		responder.finish();
 		m.advise();
 	}
-	
+
 	public void finalize()
 	{
-		String result = omsProxy.leaveRole("operador", "calculin");
-		System.out.println("["+this.getName()+"] Result leave role operador: "+result);
-		
-		result = omsProxy.leaveRole("participant", "virtual");
-		System.out.println("["+this.getName()+"] Result leave role participant: "+result);
-		
-		logger.info("["+this.getName()+" ] end execution!");
+
+		try
+		{
+			String result = omsProxy.leaveRole("operador", "calculin");
+			System.out.println("["+this.getName()+"] Result leave role operador: "+result);
+
+			result = omsProxy.leaveRole("participant", "virtual");
+			System.out.println("["+this.getName()+"] Result leave role participant: "+result);
+
+			logger.info("["+this.getName()+" ] end execution!");
+
+		}catch(THOMASException e)
+		{
+			e.printStackTrace();
+		}
 	}
-	
+
 	/**
 	 * Manages the messages for the  agent provider services
 	 */
@@ -77,7 +92,7 @@ public class Product extends QueueAgent {
 			response.setContent("OK");	
 
 
-		
+
 
 
 			return (response);

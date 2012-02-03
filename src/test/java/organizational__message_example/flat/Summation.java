@@ -21,23 +21,29 @@ public class Summation extends QueueAgent {
 
 	public void execute() {
 
-		
 
-		String resultA = omsProxy.acquireRole("participant", "virtual");
-		logger.info("["+this.getName()+"] result acquire role: "+ resultA);
-		resultA = omsProxy.acquireRole("manager", "calculin");
-		logger.info("["+this.getName()+"] result acquire role: "+ resultA);
-	
-		
-		
-		this.send_request(6,3);
-		m.waiting(); // Waiting the response with a timeout
-		this.send_result("" + result); // Inform the result.
-		
-		result=0;
-		this.send_request(5,3);
-		m.waiting(10 * 1000); // Waiting the response with a timeout
-		this.send_result("" + result); // Inform the result.
+		try
+		{
+			String resultA = omsProxy.acquireRole("participant", "virtual");
+			logger.info("["+this.getName()+"] result acquire role: "+ resultA);
+			resultA = omsProxy.acquireRole("manager", "calculin");
+			logger.info("["+this.getName()+"] result acquire role: "+ resultA);
+
+
+
+			this.send_request(6,3);
+			m.waiting(); // Waiting the response with a timeout
+			this.send_result("" + result); // Inform the result.
+
+			result=0;
+			this.send_request(5,3);
+			m.waiting(10 * 1000); // Waiting the response with a timeout
+			this.send_result("" + result); // Inform the result.
+
+		}catch(THOMASException e)
+		{
+			e.printStackTrace();
+		}
 
 	}
 
@@ -51,18 +57,24 @@ public class Summation extends QueueAgent {
 
 	public void finalize()
 	{
-	
-		String result = omsProxy.leaveRole("manager", "calculin");
-		System.out.println("["+this.getName()+"] Result leave role manager: "+ result);
-		result = omsProxy.leaveRole("participant", "virtual");
-		System.out.println("["+this.getName()+"] Result leave role participant: "+ result);
-		
-		logger.info("[ "+this.getName()+" ] end execution!");
+
+		try
+		{
+			String result = omsProxy.leaveRole("manager", "calculin");
+			System.out.println("["+this.getName()+"] Result leave role manager: "+ result);
+			result = omsProxy.leaveRole("participant", "virtual");
+			System.out.println("["+this.getName()+"] Result leave role participant: "+ result);
+
+			logger.info("[ "+this.getName()+" ] end execution!");
+		}catch(THOMASException e)
+		{
+			e.printStackTrace();
+		}
 	}
-	
+
 	public void onMessage(ACLMessage msg) {
 
-	
+
 		if (msg.getSender().name.equals("agente_suma") || msg.getSender().name.contains("agente_producto")) 
 		{
 			//When a message arrives, it select the message with a results
