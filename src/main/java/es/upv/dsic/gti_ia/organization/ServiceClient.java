@@ -84,7 +84,7 @@ public class ServiceClient {
 		    Iterator<Map.Entry<String,String>> itr = oracle.getElements().entrySet().iterator();
 	
 		    
-		    System.out.println("Input: "+ oracle.getProcessInputs());
+		//    System.out.println("Input: "+ oracle.getProcessInputs());
 		    
 		    
 		    int j = 0;

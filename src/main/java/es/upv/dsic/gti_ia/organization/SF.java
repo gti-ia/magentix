@@ -29,7 +29,7 @@ public class SF extends CAgent {
 
 
 	private static SF sf = null;
-	private String SFServiceDesciptionLocation = configuration.getSFServiceDesciptionLocation();
+	private String SFServiceDesciptionLocation = configuration.getSFServiceDescriptionLocation();
 
 	static Logger logger = Logger.getLogger(SF.class);
 	// create a kb

@@ -67,7 +67,7 @@ public class OMSProxy extends THOMASProxy{
 
 	public ACLMessage buildOrganizationalMessage(String OrganizationID) throws THOMASException
 	{
-		ArrayList<ArrayList<String>>  unit;
+		ArrayList<String>  unit;
 		ArrayList<ArrayList<String>> agentRoles = null;
 		ArrayList<String> agentPositions = new ArrayList<String>();
 
@@ -93,7 +93,7 @@ public class OMSProxy extends THOMASProxy{
 		}else
 		{
 			
-			String unitType = unit.get(0).get(0);
+			String unitType = unit.get(0);
 			agentRoles = this.informAgentRole(agent.getAid().name);
 
 			if (agentRoles.isEmpty())
@@ -110,11 +110,11 @@ public class OMSProxy extends THOMASProxy{
 					unit_aux = agentRole.get(1);
 
 
-					ArrayList<ArrayList<String>> informRole = this.informRole(rol_aux, unit_aux);
+					ArrayList<String> informRole = this.informRole(rol_aux, unit_aux);
 					//st = new StringTokenizer(informRole,"<>, ");
 
 
-					String position = informRole.get(0).get(0);
+					String position = informRole.get(0);
 
 					if (position!=null)
 					{
@@ -223,10 +223,12 @@ public class OMSProxy extends THOMASProxy{
 	 */
 	public String leaveRole(String RoleID,
 			String UnitID) throws THOMASException {
-		serviceName = "LeaveRole";
+	
 		call = ServiceDescriptionLocation + "LeaveRole.owl AgentID=" + agent.getAid().name.replace('~', '@')
 		+ " RoleID=" + RoleID + " UnitID=" + UnitID;
-		return (String) this.sendInform();
+		String result = new String();
+		result = (String) this.sendInform();
+		return result;
 	}
 
 	/**
@@ -247,12 +249,11 @@ public class OMSProxy extends THOMASProxy{
 	@SuppressWarnings("unchecked")
 	public ArrayList<ArrayList<String>> informAgentRole(String AgentID) throws THOMASException
 	{
-		serviceName = "InformAgentRole";
-		listResults.clear();
-
+		ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
 		call = ServiceDescriptionLocation
 		+ "InformAgentRole.owl RequestedAgentID=" + AgentID;
-		return (ArrayList<ArrayList<String>>) this.sendInform();
+		result = (ArrayList<ArrayList<String>>) this.sendInform();
+		return result;
 	}
 
 	/**
@@ -275,11 +276,11 @@ public class OMSProxy extends THOMASProxy{
 	public ArrayList<ArrayList<String>>  informMembers(String UnitID, String RoleID, String PositionValue) throws THOMASException
 	{
 
-		serviceName ="InformMembers";
-		listResults.clear();
-
-		call = ServiceDescriptionLocation + "InformMembers.owl RoleID="
-		+ RoleID + " UnitID=" + UnitID+ " PositionValue="+PositionValue;
+		call = ServiceDescriptionLocation + "InformMembers.owl "
+		+ "RoleID=" + RoleID 
+		+ " UnitID=" + UnitID
+		+ " PositionValue="+PositionValue;
+		
 		return (ArrayList<ArrayList<String>>) this.sendInform();
 
 	}
@@ -301,22 +302,21 @@ public class OMSProxy extends THOMASProxy{
 	@SuppressWarnings("unchecked")
 	public ArrayList<String> informTargetNorms(String TargetName, String Type, String UnitName) throws THOMASException
 	{
-		serviceName ="InformTargetNorms";
-		listResults.clear();
-
-		call = ServiceDescriptionLocation + "InformTargetNorms.owl TargetName="
-		+ TargetName + " Type="+ Type+ " UnitName="+UnitName;
+			call = ServiceDescriptionLocation + "InformTargetNorms.owl " 
+		+ "TargetName=" + TargetName 
+		+ " Type="+ Type
+		+ " UnitName="+ UnitName;
+			
 		return (ArrayList<String>) this.sendInform();
 
 	}
 	@SuppressWarnings("unchecked")
 	public ArrayList<String> informNorm(String NormName, String UnitName) throws THOMASException
-	{
-		serviceName ="InformNorm";
-		listResults.clear();
+	{		
 
-		call = ServiceDescriptionLocation + "InformNorm.owl NormName="
-		+ NormName + " UnitName="+UnitName;
+		call = ServiceDescriptionLocation + "InformNorm.owl"
+		+" NormName="+ NormName
+		+ " UnitName="+UnitName;
 		return (ArrayList<String>) this.sendInform();
 
 	}
@@ -332,25 +332,23 @@ public class OMSProxy extends THOMASProxy{
 	@SuppressWarnings("unchecked")
 	public ArrayList<String> informRoleProfiles(String UnitID) throws THOMASException
 	{
-		serviceName ="InformRoleProfiles";
-		listResults.clear();
-
-		call = ServiceDescriptionLocation + "InformRoleProfiles.owl UnitID="
-		+ UnitID;
+		call = ServiceDescriptionLocation + "InformRoleProfiles.owl "
+		+ "UnitID="+ UnitID;
 		return (ArrayList<String>) this.sendInform();
 
 	}
 
 
 	@SuppressWarnings("unchecked")
-	public ArrayList<ArrayList<String>>  informRole(String RoleName, String UnitName) throws THOMASException
+	public ArrayList<String>  informRole(String RoleName, String UnitName) throws THOMASException
 	{
-		serviceName ="InformRole";
-		listResults.clear();
-
-		call = ServiceDescriptionLocation + "InformRole.owl UnitName="
-		+ UnitName + " RoleName="+RoleName;
-		return (ArrayList<ArrayList<String>>) this.sendInform();
+		
+		ArrayList<String> result = new ArrayList<String>();
+		call = ServiceDescriptionLocation + "InformRole.owl " 
+		+"UnitName="+ UnitName
+		+ " RoleName="+RoleName;
+		result = (ArrayList<String>) this.sendInform();
+		return result;
 
 	}
 
@@ -367,13 +365,10 @@ public class OMSProxy extends THOMASProxy{
 	 * @return ArrayList<String> UnitType UnitGoal ParentID
 	 */
 	@SuppressWarnings("unchecked")
-	public ArrayList<ArrayList<String>>  informUnit(String UnitID) throws THOMASException
+	public ArrayList<String>  informUnit(String UnitID) throws THOMASException
 	{
-		serviceName ="InformUnit";
-		listResults.clear();
-
 		call = ServiceDescriptionLocation + "InformUnit.owl UnitID=" + UnitID;
-		return (ArrayList<ArrayList<String>>) this.sendInform();
+		return (ArrayList<String>) this.sendInform();
 
 
 	}
@@ -396,9 +391,6 @@ public class OMSProxy extends THOMASProxy{
 	@SuppressWarnings("unchecked")
 	public ArrayList<ArrayList<String>>  informUnitRoles(String UnitID) throws THOMASException
 	{
-		serviceName ="InformUnitRoles";
-		listResults.clear();
-
 		call = ServiceDescriptionLocation + "InformUnitRoles.owl UnitID="
 		+ UnitID;
 		return (ArrayList<ArrayList<String>>) this.sendInform();
@@ -419,10 +411,12 @@ public class OMSProxy extends THOMASProxy{
 	 */
 	public int quantityMembers(String UnitID, String RoleID, String PositionValue) throws THOMASException
 	{
-		serviceName ="QuantityMembers";
+		
 		call = ServiceDescriptionLocation + "QuantityMembers.owl RoleID="
 		+ RoleID + " UnitID=" + UnitID + " PositionValue="+ PositionValue;
-		return Integer.parseInt(this.sendInform().toString());
+		ArrayList<String> a = (ArrayList<String>) this.sendInform();
+		
+		return Integer.parseInt(a.get(0));
 
 
 	}
@@ -445,7 +439,7 @@ public class OMSProxy extends THOMASProxy{
 	public String registerNorm(String NormID,
 			String NormContent, String UnitName) throws THOMASException
 			{
-		serviceName ="RegisterNorm";
+		
 		call = ServiceDescriptionLocation + "RegisterNorm.owl NormID="
 		+ NormID + " NormContent=" + NormContent+ " UnitName="+ UnitName;
 		return (String) this.sendInform();
@@ -488,7 +482,7 @@ public class OMSProxy extends THOMASProxy{
 	public String registerRole(String RoleID, String UnitID,
 			String Accessibility, String Visibility, String Position) throws THOMASException
 			{
-		serviceName ="RegisterRole";
+		
 		call = ServiceDescriptionLocation + "RegisterRole.owl RoleID="
 		+ RoleID + " UnitID=" + UnitID + " Accessibility="
 		+ Accessibility + " Position=" + Position + " Visibility="
@@ -532,7 +526,7 @@ public class OMSProxy extends THOMASProxy{
 	public String registerUnit(String UnitID, String Type,
 			String ParentUnitID, String CreatorName) throws THOMASException
 			{
-		serviceName ="RegisterUnit";
+		
 		if (ParentUnitID == null)
 			call = ServiceDescriptionLocation + "RegisterUnit.owl  UnitID="
 			+ UnitID + " Type=" + Type + " CreatorName=" + CreatorName + " ParentUnitID=";
@@ -547,7 +541,7 @@ public class OMSProxy extends THOMASProxy{
 
 	public String jointUnit(String UnitName, String ParentName)throws THOMASException
 	{
-		serviceName ="JointUnit";
+	
 		call = ServiceDescriptionLocation + "JointUnit.owl  UnitName="
 		+ UnitName + " ParentName=" + ParentName;
 		return 	(String) this.sendInform();
@@ -571,7 +565,7 @@ public class OMSProxy extends THOMASProxy{
 	 */
 	public String deregisterNorm(String NormID, String UnitName) throws THOMASException
 	{
-		serviceName ="DeregisterNorm";
+	
 		call = ServiceDescriptionLocation + "DeregisterNorm.owl  NormID="
 		+ NormID+ " UnitName="+ UnitName;
 		return 	(String) this.sendInform();
@@ -598,7 +592,7 @@ public class OMSProxy extends THOMASProxy{
 	 */
 	public String deregisterRole(String RoleID, String UnitID) throws THOMASException
 	{
-		serviceName = "DeregisterRole";
+		
 		call = ServiceDescriptionLocation + "DeregisterRole.owl  RoleID="
 		+ RoleID + " UnitID=" + UnitID;
 		return	(String) this.sendInform();
@@ -616,7 +610,7 @@ public class OMSProxy extends THOMASProxy{
 	 */
 	public String deregisterUnit(String UnitID)throws THOMASException
 	{
-		serviceName ="DeregisterUnit";
+	
 		call = ServiceDescriptionLocation + "DeregisterUnit.owl  UnitID="
 		+ UnitID;
 		return (String) this.sendInform();
@@ -649,7 +643,7 @@ public class OMSProxy extends THOMASProxy{
 	 */
 	public String deallocateRole(String RoleName, String UnitName, String TargetAgentName) throws THOMASException
 	{
-		serviceName ="DeallocateRole";
+		
 		call = ServiceDescriptionLocation + "DeallocateRole.owl TargetAgentName=" + TargetAgentName
 		+ " RoleName=" + RoleName + " UnitName=" + UnitName;
 		return (String) this.sendInform();
@@ -660,7 +654,7 @@ public class OMSProxy extends THOMASProxy{
 
 	public String allocateRole(String RoleName, String UnitName, String TargetAgentName) throws THOMASException
 	{
-		serviceName ="AllocateRole";
+		
 		call = ServiceDescriptionLocation + "AllocateRole.owl RoleName=" + RoleName
 		+ " UnitName=" + UnitName + " TargetAgentName="+ TargetAgentName;
 
@@ -691,7 +685,7 @@ public class OMSProxy extends THOMASProxy{
 	 */
 	public String acquireRole(String RoleID, String UnitID) throws THOMASException
 	{
-		serviceName ="AcquireRole";
+		
 		call = ServiceDescriptionLocation + "AcquireRole.owl RoleID=" + RoleID
 		+ " UnitID=" + UnitID;
 

@@ -579,7 +579,7 @@ public class Oracle {
 		    	if(param.contains(serviceName))
 		    		break;
 		    	wsdlInputParams.add(param);
-		    	System.out.println("param: "+param);
+		    	//System.out.println("param: "+param);
 		    }
 	
 		} catch (FileNotFoundException e) {

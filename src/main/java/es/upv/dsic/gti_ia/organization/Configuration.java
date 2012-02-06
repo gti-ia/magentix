@@ -125,7 +125,7 @@ public class Configuration {
 	 * Full path where are the owl's deployed the services of the SF
 	 * @return SFServiceDesciptionLocation
 	 */
-	public String getSFServiceDesciptionLocation()
+	public String getSFServiceDescriptionLocation()
 	{
 		return this.SFServiceDesciptionLocation;
 	}
