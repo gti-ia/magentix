@@ -87,7 +87,7 @@
 
 <process:Output rdf:ID="Result">
     <rdfs:label>Result</rdfs:label>
-    <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#integer</process:parameterType>
+    <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
 </process:Output>  
  
      

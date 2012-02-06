@@ -44,9 +44,10 @@
     <profile:serviceName xml:lang="en">AcquireRole</profile:serviceName>
 
 
-	<profile:hasInput rdf:resource="#AgentID"/>
+	
     <profile:hasInput rdf:resource="#UnitID"/>
     <profile:hasInput rdf:resource="#RoleID"/>
+    <profile:hasInput rdf:resource="#AgentID"/>
     <profile:hasOutput rdf:resource="#Result"/>
 
 
@@ -55,25 +56,28 @@
 <process:AtomicProcess rdf:ID="AcquireRoleProcess">
 	<service:describes rdf:resource="#AcquireRoleService"/> 
 	 	
-	<process:hasInput rdf:resource="#AgentID"/>
-    <process:hasInput rdf:resource="#UnitID"/>
+	
+
     <process:hasInput rdf:resource="#RoleID"/>
+    <process:hasInput rdf:resource="#UnitID"/>
+    <process:hasInput rdf:resource="#AgentID"/>
 	<process:hasOutput rdf:resource="#Result"/>
 	
 	
 </process:AtomicProcess>
 
 
-<process:Input rdf:ID="AgentID">
-     <rdfs:label>AgentID</rdfs:label>
-     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
-</process:Input>
+
 <process:Input rdf:ID="UnitID">
      <rdfs:label>UnitID</rdfs:label>
      <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
 </process:Input>
 <process:Input rdf:ID="RoleID">
      <rdfs:label>RoleID</rdfs:label>
+     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
+</process:Input>
+<process:Input rdf:ID="AgentID">
+     <rdfs:label>AgentID</rdfs:label>
      <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
 </process:Input>
 

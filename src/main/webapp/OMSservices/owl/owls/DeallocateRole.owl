@@ -43,10 +43,11 @@
     <profile:serviceName xml:lang="en">DeallocateRole</profile:serviceName>
 
 
-	<profile:hasInput rdf:resource="#AgentID"/>
+	
     <profile:hasInput rdf:resource="#UnitName"/>
     <profile:hasInput rdf:resource="#RoleName"/>
     <profile:hasInput rdf:resource="#TargetAgentName"/>
+    <profile:hasInput rdf:resource="#AgentID"/>
     <profile:hasOutput rdf:resource="#Result"/>
 
 
@@ -55,30 +56,33 @@
 <process:AtomicProcess rdf:ID="DeallocateRoleProcess">
 	<service:describes rdf:resource="#DeallocateRoleService"/> 
 	 	
-	<process:hasInput rdf:resource="#AgentID"/>
+	
     <process:hasInput rdf:resource="#UnitName"/>
     <process:hasInput rdf:resource="#RoleName"/>
     <process:hasInput rdf:resource="#TargetAgentName"/>
+    <process:hasInput rdf:resource="#AgentID"/>
 	<process:hasOutput rdf:resource="#Result"/>
 	
 
 	
 </process:AtomicProcess>
 
-<process:Input rdf:ID="AgentID">
-     <rdfs:label>AgentID</rdfs:label>
-     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
-</process:Input>
-<process:Input rdf:ID="TargetAgentName">
-     <rdfs:label>TargetAgentName</rdfs:label>
-     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
-</process:Input>
+
+
 <process:Input rdf:ID="UnitName">
      <rdfs:label>UnitName</rdfs:label>
      <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
 </process:Input>
 <process:Input rdf:ID="RoleName">
      <rdfs:label>RoleName</rdfs:label>
+     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
+</process:Input>
+<process:Input rdf:ID="TargetAgentName">
+     <rdfs:label>TargetAgentName</rdfs:label>
+     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
+</process:Input>
+<process:Input rdf:ID="AgentID">
+     <rdfs:label>AgentID</rdfs:label>
      <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
 </process:Input>
 
