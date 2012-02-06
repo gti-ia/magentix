@@ -944,7 +944,14 @@ public class OMSInterface {
 						{
 							if (dbInterface.checkAgentInUnit(AgentName, UnitName))
 							{
-								return dbInterface.deallocateRole(RoleName, UnitName, TargetAgentName, AgentName);
+								
+								String result = dbInterface.deallocateRole(RoleName, UnitName, TargetAgentName, AgentName);
+								
+								resultXML+="<status>Ok</status>\n";
+								resultXML+="<result>\n<description>"+result+"</description>\n</result>\n";
+								resultXML+="</response>";
+								
+								return resultXML;
 
 							}
 							else
@@ -958,7 +965,13 @@ public class OMSInterface {
 
 								if (dbInterface.checkPositionInUnit(AgentName, "member", UnitName) || dbInterface.checkPositionInUnit(AgentName, "creator", UnitName))
 								{
-									return dbInterface.deallocateRole(RoleName, UnitName, TargetAgentName, AgentName);
+									String result = dbInterface.deallocateRole(RoleName, UnitName, TargetAgentName, AgentName);
+									
+									resultXML+="<status>Ok</status>\n";
+									resultXML+="<result>\n<description>"+result+"</description>\n</result>\n";
+									resultXML+="</response>";
+									
+									return resultXML;
 
 								}
 								else
@@ -971,7 +984,13 @@ public class OMSInterface {
 							{
 								if (dbInterface.checkPosition(AgentName, "creator"))
 								{
-									return dbInterface.deallocateRole(RoleName, UnitName, TargetAgentName, AgentName);
+									String result = dbInterface.deallocateRole(RoleName, UnitName, TargetAgentName, AgentName);
+									
+									resultXML+="<status>Ok</status>\n";
+									resultXML+="<result>\n<description>"+result+"</description>\n</result>\n";
+									resultXML+="</response>";
+									
+									return resultXML;
 
 								}
 								else
