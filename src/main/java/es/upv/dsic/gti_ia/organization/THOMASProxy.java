@@ -179,7 +179,7 @@ public class THOMASProxy {
 	}
 
 	/**
-	 * Clear values.
+	 * Reset values.
 	 */
 	private void reset()
 	{
