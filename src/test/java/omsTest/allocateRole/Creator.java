@@ -24,8 +24,13 @@ public class Creator extends QueueAgent {
 		
 		//1. Eliminar una unidad cuya unidad padre es virtual.
 		
-//		result = omsProxy.allocateRole("miembro", "virtual", "pruebas2");
-//		System.out.println(result);
+		try {
+			result = omsProxy.allocateRole("creador2", "plana2", "pruebas2");
+		} catch (THOMASException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println(result);
 //
 //		result = omsProxy.allocateRole("participant", "virtual", "pruebas2");
 //		System.out.println(result);
@@ -208,14 +213,14 @@ public class Creator extends QueueAgent {
 //		System.out.println(result);
 		
 		//3. Asignar un rol en una jerarquia
-		try {
-			result = omsProxy.allocateRole("subordinado","jerarquia", "pruebas2");
-		} catch (THOMASException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		System.out.println(result);
-	
+//		try {
+//			result = omsProxy.allocateRole("subordinado","jerarquia", "pruebas2");
+//		} catch (THOMASException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		System.out.println(result);
+//	
 	}
 	
 	

@@ -24,12 +24,16 @@ public class Creator extends QueueAgent {
 
 		//a) la unidad jerarquia se convierte en la padre de las otras dos.
 		try {
-			result = omsProxy.jointUnit("equipo", "jerarquia");
+		result = omsProxy.acquireRole("participant", "virtual");
+		System.out.println("Result joint unit: "+ result);
+			result = omsProxy.jointUnit("plana2", "virtual");
+			
+			System.out.println("Result joint unit: "+ result);
 		} catch (THOMASException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println("Result joint unit: "+ result);
+		
 //		
 //		result = omsProxy.jointUnit("plana", "jerarquia");
 //		System.out.println("Result joint unit: "+ result);

@@ -24,8 +24,13 @@ public class Creator extends QueueAgent {
 		
 		//1. Eliminar asignaciones de roles en la unidad virtual.
 		
-//		result = omsProxy.deallocateRole("miembro", "virtual", "pruebas2");
-//		System.out.println(result);
+		try {
+			result = omsProxy.deallocateRole("creador2", "plana2", "pruebas2");
+		} catch (THOMASException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		System.out.println(result);
 //
 //		result = omsProxy.deallocateRole("participant", "virtual", "pruebas2");
 //		System.out.println(result);
@@ -209,14 +214,14 @@ public class Creator extends QueueAgent {
 		
 //		result = omsProxy.deallocateRole("miembro", "equipo", "pruebas2");
 //		System.out.println(result);
-		
-		try {
-			result = omsProxy.deallocateRole("subordinado", "jerarquia", "pruebas2");
-		} catch (THOMASException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		System.out.println(result);
+//		
+//		try {
+//			result = omsProxy.deallocateRole("subordinado", "jerarquia", "pruebas2");
+//		} catch (THOMASException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		System.out.println(result);
 	}
 	
 	

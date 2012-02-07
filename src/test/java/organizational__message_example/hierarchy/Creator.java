@@ -46,14 +46,22 @@ public class Creator extends QueueAgent {
 		try
 		{
 
+		
 		String result = omsProxy.deregisterRole("operador", "calculin");
 		logger.info("["+this.getName()+"] Result leave role operador: "+result);
+		
 		result = omsProxy.deregisterRole("manager", "calculin");
 		logger.info("["+this.getName()+"] Result leave role manager: "+result);
-		omsProxy.deregisterRole("creador", "calculin");
-		logger.info("["+this.getName()+"] Result leave role creador: "+result);
+		
+//		result = omsProxy.leaveRole("creador", "calculin");
+//		logger.info("["+this.getName()+"] Result leave role participant: "+result);
+//		
+//		omsProxy.deregisterRole("creador", "calculin");
+//		logger.info("["+this.getName()+"] Result leave role creador: "+result);
+		
 		result = omsProxy.deregisterUnit("calculin");
 		logger.info("["+this.getName()+"] Result deregister unit calculin: "+result);
+		
 		result = omsProxy.leaveRole("participant", "virtual");
 		logger.info("["+this.getName()+"] Result leave role participant: "+result);
 		logger.info("["+this.getName()+" ] end execution!");

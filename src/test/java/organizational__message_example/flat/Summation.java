@@ -39,6 +39,7 @@ public class Summation extends QueueAgent {
 			this.send_request(5,3);
 			m.waiting(10 * 1000); // Waiting the response with a timeout
 			this.send_result("" + result); // Inform the result.
+			m.waiting(5 * 1000); // Waiting the response with a timeout
 
 		}catch(THOMASException e)
 		{

@@ -55,10 +55,7 @@ public class Creator extends QueueAgent {
 
 			result = omsProxy.deregisterRole("manager", "calculin");
 			System.out.println("["+this.getName()+"] Result leave role manager: "+result);
-
-			omsProxy.deregisterRole("creador", "calculin");
-			System.out.println("["+this.getName()+"] Result leave role creador: "+result);
-
+			
 			result = omsProxy.deregisterUnit("calculin");
 			System.out.println("["+this.getName()+"] Result deregister unit calculin: "+result);
 
@@ -69,6 +66,7 @@ public class Creator extends QueueAgent {
 		}catch(THOMASException e)
 		{
 			e.printStackTrace();
+		
 		}
 	}
 	private void initialize_scenario()

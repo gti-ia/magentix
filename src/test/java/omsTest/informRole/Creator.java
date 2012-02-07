@@ -18,7 +18,7 @@ public class Creator extends QueueAgent {
 
 	public void execute() {
 
-		ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
+		ArrayList<String> result = new ArrayList<String>();
 
 		/** Parámetros correctos **/
 
@@ -29,7 +29,7 @@ public class Creator extends QueueAgent {
 		try {
 			result = omsProxy.informRole("miembro2", "plana2");
 			
-			System.out.println("position "+ result.get(0).get(0)+ " visibilitiy: "+ result.get(0).get(1)+ " accesibility: "+ result.get(0).get(2));
+			System.out.println("position "+ result.get(0)+ " visibilitiy: "+ result.get(1)+ " accesibility: "+ result.get(2));
 		} catch (THOMASException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

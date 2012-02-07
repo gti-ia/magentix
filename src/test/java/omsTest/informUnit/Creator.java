@@ -18,7 +18,7 @@ public class Creator extends QueueAgent {
 
 	public void execute() {
 
-		ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
+		ArrayList<String> result = new ArrayList<String>();
 
 		/** Parámetros correctos **/
 
@@ -30,7 +30,7 @@ public class Creator extends QueueAgent {
 		{
 			result = omsProxy.informUnit("plana");
 
-			System.out.println("type "+ result.get(0).get(0)+ " parentName: "+ result.get(0).get(1));
+			System.out.println("type "+ result.get(0)+ " parentName: "+ result.get(1));
 		} catch (THOMASException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

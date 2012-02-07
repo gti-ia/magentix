@@ -28,7 +28,7 @@ public class Creator extends QueueAgent {
 
 
 				try {
-					result = omsProxy.quantityMembers("jerarquia", "", "");
+					result = omsProxy.quantityMembers("virtual", "", "");
 					
 					System.out.println("Resultado jerarquia: "+ result);
 				} catch (THOMASException e) {

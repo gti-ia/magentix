@@ -61,15 +61,11 @@ public class Noisy extends QueueAgent {
 			String result = omsProxy.leaveRole("manager", "externa");
 			System.out.println("["+this.getName()+"] Result leave role manager: "+result);
 
-			result = omsProxy.leaveRole("creador", "externa");
-			System.out.println("["+this.getName()+"] Result leave role creador: "+result);
-
+		
 			result = omsProxy.deregisterRole("manager", "externa");
 			System.out.println("["+this.getName()+"] Result deregister role manager: "+result);
 
-			result = omsProxy.deregisterRole("creador", "externa");
-			System.out.println("["+this.getName()+"] Result deregister role creador: "+result);
-
+		
 			result = omsProxy.deregisterUnit("externa");
 			System.out.println("["+this.getName()+"] Result deregister unit externa: "+result);
 

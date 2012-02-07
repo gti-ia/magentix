@@ -101,8 +101,8 @@ public class Display extends QueueAgent {
 					rol = im.get(1);
 					if (agent.toLowerCase().equals(msg.getSender().name.toLowerCase()))
 					{
-						ArrayList<ArrayList<String>> informRole = omsProxy.informRole(rol, "calculin"); 
-						position = informRole.get(0).get(0);
+						ArrayList<String> informRole = omsProxy.informRole(rol, "calculin"); 
+						position = informRole.get(0);
 					}
 				}
 
