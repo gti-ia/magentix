@@ -42,14 +42,15 @@ public class OMSProxy extends THOMASProxy{
 	}
 
 	/**
+	 * This class gives us the support to accede to the services of the OMS,
+	 * Checked that the data contained in the file configuration/Settings.xml, the URL
+	 * ServiceDescriptionLocation is not empty and is the correct path.
 	 * 
 	 *  @param agent
 	 *            is a Magentix2 Agent, this agent implemented the communication
 	 *            protocol
 	 *            
-	 * This class gives us the support to accede to the services of the OMS,
-	 * Checked that the data contained in the file configuration/Settings.xml, the URL
-	 * ServiceDescriptionLocation is not empty and is the correct path.
+	 * 
 	 */
 	public OMSProxy(BaseAgent agent) {
 
@@ -60,9 +61,11 @@ public class OMSProxy extends THOMASProxy{
 
 	/**
 	 * Builds a new organizational message with the appropriate receivers according to the type of unit and position of the role that the agent is performing
+	 * 
 	 * @param OrganizationID represents the ID of the organization to which the agent wants to send a message
 	 * @return returns the ACL message built 
-	 * @throws THOMASException  in order to show the cause of exception uses getContent
+	 * @throws THOMASException If unit not found, the agent is not inside the unit, the agent not play any role or 
+	 * the agent only play the role creator.
 	 */
 
 	public ACLMessage buildOrganizationalMessage(String OrganizationID) throws THOMASException
@@ -98,7 +101,7 @@ public class OMSProxy extends THOMASProxy{
 
 			if (agentRoles.isEmpty())
 			{
-				throw new THOMASException("The agent not play any rol.");
+				throw new THOMASException("The agent not play any role.");
 			}
 			else
 			{
@@ -111,9 +114,7 @@ public class OMSProxy extends THOMASProxy{
 
 
 					ArrayList<String> informRole = this.informRole(rol_aux, unit_aux);
-					//st = new StringTokenizer(informRole,"<>, ");
-
-
+			
 					String position = informRole.get(0);
 
 					if (position!=null)
@@ -125,7 +126,7 @@ public class OMSProxy extends THOMASProxy{
 
 				}
 
-				// Comprobaremos si tiene solamente el rol con la posición creator, en ese caso no puede enviar nada a ningún grupo.
+				//If only contains the role creator, then can not send a organizational message
 				if (containsPositonNoCreator)
 				{
 
@@ -183,7 +184,7 @@ public class OMSProxy extends THOMASProxy{
 								throw new THOMASException("Unknown unit type.");
 							}
 						}
-						else //El agente no esta dentro de la unidad
+						else //The agent is not inside the unit
 						{
 
 							throw new THOMASException("The agent is not inside the unit "+ OrganizationID+".");
@@ -206,20 +207,15 @@ public class OMSProxy extends THOMASProxy{
 
 
 	/**
-	 * Service used for leaving a role inside a specific unit. The agent plays this role inside the unit.
+	 * Service used for leaving a role inside a specific unit.
 	 * 
-	 * The execution of this service implies:
-	 *	– Check that the role and the unit exist (Preconditions Pre1 and Pre2).
-	 *	– Check that the agent plays this role inside the unit (Precondition Pre3).
-	 *	– Deregister Agent - Role - Unit entry in EntityPlayList (using DeregisterAgentRole service)
-	 *
-	 * @param RoleID
-	 *            represent all required functionality needed in order to
-	 *            achieve the unit goal.
-	 * @param UnitID
-	 *            organizational units (OUs), which represent groups of entities
-	 *            (agents or other units)
-	 * @return String Status ErrorValue
+	 * @param RoleID Identifier of the role
+	 * @param UnitID Identifier of the organization unit
+	 * 
+	 * @return Status if result is OK
+	 * 
+	 * @throws THOMASException If the role or unit not exists, 
+	 * 	the agent not play the role or some parameter is empty or is invalid
 	 */
 	public String leaveRole(String RoleID,
 			String UnitID) throws THOMASException {
@@ -234,43 +230,37 @@ public class OMSProxy extends THOMASProxy{
 	/**
 	 * Requesting the list of roles and units in which an agent is in a specific moment.
 	 * 
-	 *The execution of this service checks:
-	 *	– That the requested agent exists
-	 *	– Whether the agent (AgentID) asks information about its own roles (i.e.
-	 *		AgentID=RequestedAgentID).
-	 *
+	 * @param RequestedAgentName Identifier of the agent requested 
+	 *    
+	 * @return ArrayList<ArrayList<String>> The array list is formed by array lists of strings,
+	 * each array list is formed by the fields (strings) role and unit
 	 * 
-	 * @param AgentID
-	 *            entity,this agent is protocol://name@host:port
-	 *            ej.qpid://clientagent2@localhost:8080 , we can extract this
-	 *            inform with the method getAid().toString().
-	 * @return ArrayLis<String>t RoleUnitList [<role, unit>,<role, unit>]
+	 * @throws THOMASException If the agent not exists or some parameter is empty or is invalid
 	 */
 	@SuppressWarnings("unchecked")
-	public ArrayList<ArrayList<String>> informAgentRole(String AgentID) throws THOMASException
+	public ArrayList<ArrayList<String>> informAgentRole(String RequestedAgentName) throws THOMASException
 	{
 		ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
 		call = ServiceDescriptionLocation
-		+ "InformAgentRole.owl RequestedAgentID=" + AgentID;
+		+ "InformAgentRole.owl RequestedAgentID=" + RequestedAgentName;
 		result = (ArrayList<ArrayList<String>>) this.sendInform();
 		return result;
 	}
 
 	/**
-	 * Indicates entities that are members of a specific unit. Optionally, it is possible to specify a role of this unit, 
-	 * so then only members playing this role are detailed. 
+	 * Indicates entities that are members of a specific unit. Optionally, it is possible to specify a role and position of this unit, 
+	 * so then only members playing this role or position are detailed. 
 	 * 
-	 *  A agent can make use of this service, depending on the type of unit (UnitID): 
-	 *  if FLAT, the agent is allowed, if TEAM, he is only allowed if he is a member of this unit, if HIERARCHY, then he is
-	 *  only allowed if he is a supervisor of this unit.
+	 * @param UnitID Identifier of the unit
 	 * 
-	 * @param RoleID
-	 *            represent all required functionality needed in order to
-	 *            achieve the unit goal.
-	 * @param UnitID
-	 *            organizational units (OUs), which represent groups of entities
-	 *            (agents or other units)
-	 * @return ArrayList<String> EntityRoleList
+	 * @param RoleID Identifier of the role
+	 *         
+	 * @param Position Identifier of the position inside the unit, such as member, supervisor or subordinate
+	 *          
+	 * @return ArrayList<ArrayList<String>> The array list is formed by array list of strings, 
+	 * each array list is formed by the fields (strings) agent name and role name
+	 * 
+	 * @throws THOMASException If unit not found, the role is not inside the unit, the agent is not allowed or some parameter is empty or is invalid
 	 */
 	@SuppressWarnings("unchecked")
 	public ArrayList<ArrayList<String>>  informMembers(String UnitID, String RoleID, String PositionValue) throws THOMASException
@@ -285,60 +275,15 @@ public class OMSProxy extends THOMASProxy{
 
 	}
 
-	/**
-	 * Provides all norms addressed to a specific role.
-	 * 
-	 * The execution of this service checks:
-	 *	– That the role exists.
-	 *	– That the requester agent (AgentID) is member of THOMAS.
-	 *
-	 * 
-	 * @param RoleID
-	 *            represent all required functionality needed in order to
-	 *            achieve the unit goal.
-	 * 
-	 * @return ArrayList<String> NormList
-	 */
-	@SuppressWarnings("unchecked")
-	public ArrayList<String> informTargetNorms(String TargetName, String Type, String UnitName) throws THOMASException
-	{
-			call = ServiceDescriptionLocation + "InformTargetNorms.owl " 
-		+ "TargetName=" + TargetName 
-		+ " Type="+ Type
-		+ " UnitName="+ UnitName;
-			
-		return (ArrayList<String>) this.sendInform();
-
-	}
-	@SuppressWarnings("unchecked")
-	public ArrayList<String> informNorm(String NormName, String UnitName) throws THOMASException
-	{		
-
-		call = ServiceDescriptionLocation + "InformNorm.owl"
-		+" NormName="+ NormName
-		+ " UnitName="+UnitName;
-		return (ArrayList<String>) this.sendInform();
-
-	}
 
 	/**
-	 * Request profiles associated to a specific role
+	 * Provides a role description of a specific unit.
 	 * 
-	 * @param UnitID
-	 *            organizational units (OUs), which represent groups of entities
-	 *            (agents or other units)
-	 * @return ArrayList<String> ProfileList
+	 * @param RoleName Identifier of the role
+	 * @param UnitName Identifier of the unit
+	 * @return ArrayList<String> The array list is formed by the fields (strings) position, visibility and accessibility
+	 * @throws THOMASException If unit not found, the role is not is not registered in the unit, the agent is not allowed, or some parameter is empty or is invalid
 	 */
-	@SuppressWarnings("unchecked")
-	public ArrayList<String> informRoleProfiles(String UnitID) throws THOMASException
-	{
-		call = ServiceDescriptionLocation + "InformRoleProfiles.owl "
-		+ "UnitID="+ UnitID;
-		return (ArrayList<String>) this.sendInform();
-
-	}
-
-
 	@SuppressWarnings("unchecked")
 	public ArrayList<String>  informRole(String RoleName, String UnitName) throws THOMASException
 	{
@@ -353,16 +298,13 @@ public class OMSProxy extends THOMASProxy{
 	}
 
 	/**
-	 * Provides unit description
-	 * 
-	 * The execution of this service checks:
-	 *	– That the unit exists.
-	 *	– That the requester agent (AgentID) is member of the ParentUnit.
+	 * Provides unit description.
 	 *
-	 * @param UnitID
-	 *            organizational units (OUs), which represent groups of entities
-	 *            (agents or other units)
-	 * @return ArrayList<String> UnitType UnitGoal ParentID
+	 * @param UnitID Identifier of the unit
+	 *        
+	 * @return ArrayList<String> The array list is formed by the fields (strings) unit type and parent name
+	 * 
+	 * @throws THOMASException If unit not found, the agent not play any role in unit or parent unit or some parameter is empty or is invalid
 	 */
 	@SuppressWarnings("unchecked")
 	public ArrayList<String>  informUnit(String UnitID) throws THOMASException
@@ -374,19 +316,14 @@ public class OMSProxy extends THOMASProxy{
 	}
 
 	/**
-	 * Used for requesting the list of roles that have been registered inside a unit. 
+	 * Used for requesting the list of roles that have been registered inside a unit.  
 	 * 
-	 * Agent can make use of this service depending on the type of unit (UnitID):
+	 * @param UnitID Identifier of the unit
 	 * 
-	 * if FLAT, the agent is allowed, if TEAM or HIERARCHY he is only if he is a member
-	 * of this unit.
+	 * @return ArrayList<ArrayList<String>>  The array list is formed by array list of strings, 
+	 * each array list is formed by the fields (strings) role name, position, visibility and accessibility
 	 * 
-	 * 
-	 * @param UnitID
-	 *            organizational units (OUs), which represent groups of entities
-	 *            (agents or other units)
-	 * 
-	 * @return ArrayList<String> RoleList
+	 * @throws THOMASException If unit not found 
 	 */
 	@SuppressWarnings("unchecked")
 	public ArrayList<ArrayList<String>>  informUnitRoles(String UnitID) throws THOMASException
@@ -398,17 +335,20 @@ public class OMSProxy extends THOMASProxy{
 	}
 
 	/**
-	 * Provides the number of current members of a specific unit. Optionally, if a role is indicated then only the quantity of 
-	 * members of a specific unit.
+	 * Provides the number of current members of a specific unit. Optionally, if a role and position is indicated then only the quantity of 
+	 * members playing this roles or position is detailed.
 	 * 
-	 * @param RoleID
-	 *            if a role is indicated then only the quantity of members playing this roles is detailed.
-	 * @param UnitID
-	 *            organizational units (OUs), which represent groups of entities
-	 *            (agents or other units)
+ 	 * @param UnitID Identifier of the unit
 	 * 
-	 * @return Integer Quantity
+	 * @param RoleID Identifier of the role
+	 *         
+	 * @param Position Identifier of the position inside the unit, such as member, supervisor or subordinate
+	 *        
+	 * @return Integer Quantity of members
+	 * 
+	 * @throws THOMASException If unit not found, the role is not inside the unit, the agent is not allowed or some parameter is empty or is invalid
 	 */
+	@SuppressWarnings("unchecked")
 	public int quantityMembers(String UnitID, String RoleID, String PositionValue) throws THOMASException
 	{
 		
@@ -421,63 +361,29 @@ public class OMSProxy extends THOMASProxy{
 
 	}
 
-	/**
-	 * Includes a new norm inside a unit
-	 * 
-	 * @param NormID
-	 *            norm for controlling role actions
-	 * @param NormContent
-	 *            The syntax of the rules of incompatibility is the following:
-	 *            FORBIDDEN role1 REQUEST AcquireRole MESSAGE (CONTENT (role
-	 *            'role2ID')) Applications for registration of a rule is
-	 *            necessary to replace the spaces between the different words
-	 *            for "_".
-	 *@param UnitName
-	 *            Name of the unit
-	 * @return String Status ErrorValue
-	 */
-	public String registerNorm(String NormID,
-			String NormContent, String UnitName) throws THOMASException
-			{
-		
-		call = ServiceDescriptionLocation + "RegisterNorm.owl NormID="
-		+ NormID + " NormContent=" + NormContent+ " UnitName="+ UnitName;
-		return (String) this.sendInform();
-	}
 
 	/**
 	 * Creates a new role inside a unit
-	 * 
-	 * 
-	 * The execution of this service:
-	 *	– Checks that the unit exists (Precondition Pre2), but there is not any role
-	 *		inside this unit with the same name (Precondition Pre1).
-	 *	– If a parent role has been defined, using the inheritance parameter, then
-	 *		it checks that this parent role exists (Precondition Pre3).
-	 *	– Checks that the requester agent (AgentID) can make use of this service,
-	 *		depending on the type of the unit(indicated in UnitID): if FLAT, the
-	 *		agent is allowed; if TEAM, he is only allowed if he is a member of the unit;
-	 *		if HIERARCHY, then he can only register this role if he is a supervisor
-	 *		of this unit
 	 *
-	 * @param RoleID
-	 *            is the identifier of the new role
-	 * @param UnitID
-	 *            is the identifier of the organizational unit in which the new
-	 *            role is defined
+	 * @param RoleID Identifier of the role
+	 *            
+	 * @param UnitID Identifier of the unit
+	 *            
 	 * @param Accessibility
 	 *            considers two types of roles: (internal) internal roles, which are
 	 *            assigned to internal agents of the system platform; and (external)
-	 *            external roles, which can be enacted by any agent. Default is a External.
-	 * @param Position
-	 *            determines its structural position inside the unit, such as
-	 *            member, supervisor or subordinate. Default is a Member.
+	 *            external roles, which can be enacted by any agent.
 	 * @param Visibility
 	 *            indicates whether agents can obtain information of this role
 	 *            from outside the unit in which this role is defined (public)
-	 *            or from inside (private). Default is a Public.
+	 *            or from inside (private). 
+	 * @param Position
+	 *            determines its structural position inside the unit, such as
+	 *            member, supervisor or subordinate.
+	 *            
+	 * @return Status if result is OK
 	 * 
-	 * @return String Status ErroValue
+	 * @throws THOMASException If unit not found, the role is already registered in the unit, the agent is not allowed or some parameter is empty or is invalid
 	 */
 	public String registerRole(String RoleID, String UnitID,
 			String Accessibility, String Visibility, String Position) throws THOMASException
@@ -496,32 +402,22 @@ public class OMSProxy extends THOMASProxy{
 	 * Creates a new empty unit in the organization, with a specific structure, creatorName and parent unit.
 	 *
 	 *
-	 *The execution of this service checks:
-	 *	– That the unit (UnitID) does not exist (Precondition Pre1).
-	 *	– If a parent unit has been defined, then it checks that this parent unit
-	 *		exists (Precondition Pre2). If this paremeter is not included, then the
-	 *		"Virtual" unit is assumed as parent unit.
-	 *	– That the requester agent (AgentID) can make use of this service, de-
-	 *		pending on the type of the parent unit (indicated in ParentUnitID): if
-	 *		FLAT, the agent is allowed; if TEAM, he is only allowed if he is a mem-
-	 *		ber of the parent unit; if HIERARCHY, then he can only register this
-	 *		unit if he is a supervisor of the parent unit.
-	 *
-	 * @param UnitID
-	 *            is the identifier of the new unit
+	 * @param UnitID Identifier of the unit
+	 *            
 	 * @param Type
 	 *            indicates the topology of the new unit: (i) Hierarchy, in
 	 *            which a supervisor agent has control over other members; (ii)
 	 *            Team, which are groups of agents that share a common goal,
 	 *            collaborating and cooperating between them; and (iii) Flat, in
-	 *            which there is none agent with control over other members. Default is a Flat.
+	 *            which there is none agent with control over other members.
 	 * 
-	 * @param ParentUnitID
-	 *            is the identifier of the parent unit which contains the new
-	 *            unit. Default is a Virtual.
-	 * @param CreatorName
-	 *            The name of the new creator role 
-	 * @return String Status ErrorValue
+	 * @param ParentUnitID Identifier of the parent unit
+	 *             
+	 * @param CreatorName The name of the new creator role
+	 *             
+	 * @return Status if result is OK
+	 * 
+	 * @throws THOMASException If unit already exists, if the parent unit not exists, the agent is not allowed or some parameter is empty or is invalid
 	 */
 	public String registerUnit(String UnitID, String Type,
 			String ParentUnitID, String CreatorName) throws THOMASException
@@ -539,6 +435,15 @@ public class OMSProxy extends THOMASProxy{
 
 	}
 
+	/**
+	 * Update the parent unit
+	 * 
+	 * @param UnitName Identifier of the unit
+	 * @param ParentName Identifier of the new parent unit
+	 * @return Status if result is OK
+	 * 
+	 * @throws THOMASException If unit or parent unit not found, the unit and parent unit are the same, the agent is not allowed or some parameter is empty or is invalid
+	 */
 	public String jointUnit(String UnitName, String ParentName)throws THOMASException
 	{
 	
@@ -549,46 +454,16 @@ public class OMSProxy extends THOMASProxy{
 
 	}
 
+
 	/**
-	 * Removes a specific norm.
-	 * 
-	 * The execution of this service checks:
-	 *	– That the norm exists and the requester agent (AgentID) is member of
-	 *		THOMAS 
+	 * Removes a specific role from a unit. 
 	 *
+	 * @param RoleID Identifier of the role
+	 * @param UnitID Identifier of the unit
+	 *           
+	 * @return  Status if result is OK
 	 * 
-	 * @param NormID
-	 *            norm name
-	 * @param UnitName
-	 *            Name of the unit
-	 * @return String Status ErrorValue
-	 */
-	public String deregisterNorm(String NormID, String UnitName) throws THOMASException
-	{
-	
-		call = ServiceDescriptionLocation + "DeregisterNorm.owl  NormID="
-		+ NormID+ " UnitName="+ UnitName;
-		return 	(String) this.sendInform();
-
-
-	}
-
-	/**
-	 * Removes a specific role description from a unit. 
-	 * 
-	 * The execution of this service checks:
-	 * 
-	 * - There must not be any agent playing this role nor any norm addressed to it. 
-	 * - The agent can make use of this service, depending on the type of unit (UnitID). if FLAT, the agent
-	 * is allowed; if TEAM, he is only allowed if he is a member of this unit; if HIERARCHY, then he is only allowed if he is
-	 * a supervisor of this unit.
-	 * @param RoleID
-	 *            represent all required functionality needed in order to
-	 *            achieve the unit goal.
-	 * @param UnitID
-	 *            organizational units (OUs), which represent groups of entities
-	 *            (agents or other units)
-	 * @return String Status ErrorValue
+	 * @throws THOMASException If unit not found, the role is not registered in the unit, if not allowed or some parameter is empty or is invalid
 	 */
 	public String deregisterRole(String RoleID, String UnitID) throws THOMASException
 	{
@@ -603,10 +478,11 @@ public class OMSProxy extends THOMASProxy{
 	/**
 	 * Removes a unit from an organization
 	 * 
-	 * @param UnitID
-	 *            organizational units (OUs), which represent groups of entities
-	 *            (agents or other units)
-	 * @return String Status ErrorValue
+	 * @param UnitID Identifier of the unit
+	 *           
+	 * @return  Status if result is OK
+	 * 
+	 * @throws THOMASException If unit not found, if not allowed or some parameter is empty or is invalid
 	 */
 	public String deregisterUnit(String UnitID)throws THOMASException
 	{
@@ -620,26 +496,17 @@ public class OMSProxy extends THOMASProxy{
 
 	/**
 	 * Forces an agent to leave a specific role
-	 * 
-	 * 
-	 * The execution of this service implies:
-	 *	– Check that the specified agent (ExpulseAgentID) plays the indicated role inside the unit. 
-	 *	– Check that the requester agent (AgentID) can make use of this service,
-	 *		depending on the type of unit (UnitID): if FLAT, the agent is not allowed; 
-	 *		if TEAM or HIERARCHY, he is only allowed if he is a supervisor
-	 *		of this unit.
-	 *	– Deregister Agent - Role - Unit entry in EntityPlayList (using DeregisterAgentRole service)
 	 *
 	 * 
-	 * @param RoleName
-	 *            represent all required functionality needed in order to
-	 *            achieve the unit goal.
-	 * @param UnitName
-	 *            organizational units (OUs), which represent groups of entities
-	 *            (agents or other units)
-	 * @param TargetAgentName
-	 *       	the agent deallocate role to agente with target agent name
-	 * @return String Status ErrorValue
+	 * @param RoleName Identifier of the role
+	 *            
+	 * @param UnitName Identifier of the unit
+	 *        
+	 * @param TargetAgentName Identifier of the agent
+	 *       	
+	 * @return Status if result is OK
+	 * 
+	 * @throws THOMASException If unit or role not found, if target agent not play the role, the agent is not allowed or some parameter is empty or is invalid
 	 */
 	public String deallocateRole(String RoleName, String UnitName, String TargetAgentName) throws THOMASException
 	{
@@ -651,7 +518,20 @@ public class OMSProxy extends THOMASProxy{
 
 	}
 
-
+	/**
+	 * Forces an agent to acquire a specific role
+	 *
+	 * 
+	 * @param RoleName Identifier of the role
+	 *            
+	 * @param UnitName Identifier of the unit
+	 *        
+	 * @param TargetAgentName Identifier of the agent
+	 *       	
+	 * @return Status if result is OK
+	 * 
+	 * @throws THOMASException If unit or role not found, if target agent already play the role, the agent is not allowed or some parameter is empty or is invalid
+	 */
 	public String allocateRole(String RoleName, String UnitName, String TargetAgentName) throws THOMASException
 	{
 		
@@ -664,24 +544,15 @@ public class OMSProxy extends THOMASProxy{
 
 	}
 	/**
-	 * Requests the adoption of a specific role inside a unit
+	 * Service used for acquiring a role inside a specific unit.
 	 * 
-	 * The execution of this service implies:
-	 *	– Check that the requested role exits inside the unit.
-	 *	– Check that the agent is not already playing this role.
-	 *	– Check that the agent is inside its parent unit.
-	 *	– Check cardinality restrictions (maximum cardinality).
-	 *	– Check compatibility restrictions, i.e. the requested role is not incompatible with the other roles played by the agent.
-	 *	– Register Agent - Role - Unit entry in EntityPlayList (using RegisterAgentRole service)
-	 *	– Activate agent norms related with this requested role.
-	 *
+	 * @param RoleID Identifier of the role
+	 * @param UnitID Identifier of the organization unit
 	 * 
-	 * @param RoleID
-	 *            Role that the agent acquires inside the organization
-	 * @param UnitID
-	 *            Unit of which the agent was forming a part with the previous
-	 *            role
-	 * @return String Status ErrorValue
+	 * @return Status if result is OK
+	 * 
+	 * @throws THOMASException If the role or unit not exists, 
+	 * 	the agent play the role or some parameter is empty or is invalid
 	 */
 	public String acquireRole(String RoleID, String UnitID) throws THOMASException
 	{
