@@ -59,7 +59,7 @@ public class OMSInterface {
 	 * @param ParentUnitName Identifier of the parent organizational unit
 	 * @param AgentName Identifier of the agent
 	 * @param CreatorName Identifier of the new role with creator position
-	 * @return Returns <unitname +  created>
+	 * @return Returns XML
 	 */
 	public String registerUnit(String UnitName, String UnitType, String ParentUnitName, String AgentName, String CreatorName)
 	{
@@ -370,7 +370,7 @@ public class OMSInterface {
 	}
 
 	/**
-	 * Method used to deregister a role 
+	 * Removes a specific role from a unit.
 	 * 
 	 * @param RoleName Identifier of the role
 	 * @param UnitName Identifier of the unit
@@ -1181,7 +1181,7 @@ public class OMSInterface {
 	 * @param RoleName Identifier of the role
 	 * @param PositionValue Position inside the unit, such as member, supervisor or subordinate
 	 * @param AgentName Identifier of the agent
-	 * @return Returns a set of tuples formed by < agentName , roleName > and separated by - 
+	 * @return Returns a xml 
 	 */
 	public String informMembers(String UnitName, String RoleName, String PositionValue, String AgentName)
 	{
@@ -1690,7 +1690,7 @@ public class OMSInterface {
 	 * @param RoleName Identifier of the role
 	 * @param UnitName Identifier of the unit
 	 * @param AgentName Identifier of the agent
-	 * @return Returns < Accessibility - Visibility - Position >
+	 * @return Returns XML
 	 */
 	public String informRole(String RoleName, String UnitName, String AgentName)
 	{
