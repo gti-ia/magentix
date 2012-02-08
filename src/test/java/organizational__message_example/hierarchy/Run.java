@@ -7,6 +7,7 @@ import org.apache.log4j.xml.DOMConfigurator;
 
 
 
+import es.upv.dsic.gti_ia.architecture.Monitor;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
 import es.upv.dsic.gti_ia.organization.OMS;
@@ -54,29 +55,18 @@ public class Run {
 			Summation sumtAgent = new Summation(new AgentID("agente_sumatorio"));
 			Exponentiation sumPotAgent = new Exponentiation(new AgentID("agente_sumaPotencias"));
 			Display visAgent = new Display(new AgentID("agente_visor"));
+			Product proAgent = new Product(new AgentID("agente_producto"));
 			
 			iniAgent.start();
+			Monitor m = new Monitor();
 			
-			Thread.sleep(20 * 1000);//Waiting for system initialization
-			
+			m.waiting(5 * 1000);
 			ruiAgent.start();
-			Product proAgent = new Product(new AgentID("agente_producto"));
 			proAgent.start();
 			sumAgent.start();
 			visAgent.start();
 			sumtAgent.start();
 			sumPotAgent.start();
-			
-			Thread.sleep(60*1000);
-			
-			sumPotAgent.conclude();
-			sumtAgent.conclude();
-			visAgent.conclude();
-			sumAgent.conclude();
-			proAgent.conclude();
-			ruiAgent.conclude();
-			Thread.sleep(60*1000);
-			iniAgent.finalize();
 
 
 		} catch (Exception e) {

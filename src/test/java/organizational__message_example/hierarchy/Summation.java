@@ -1,5 +1,7 @@
 package organizational__message_example.hierarchy;
 
+import java.util.ArrayList;
+
 import es.upv.dsic.gti_ia.architecture.FIPANames.InteractionProtocol;
 import es.upv.dsic.gti_ia.architecture.Monitor;
 import es.upv.dsic.gti_ia.architecture.QueueAgent;
@@ -12,7 +14,7 @@ public class Summation extends QueueAgent {
 
 	OMSProxy omsProxy = new OMSProxy(this);
 	int result = 0;
-	int expected = 50;
+	int expected = 2;
 	Monitor m = new Monitor();
 
 	public Summation(AgentID aid) throws Exception {
@@ -22,54 +24,71 @@ public class Summation extends QueueAgent {
 	public void execute() {
 
 
-		try
-		{
-			String resultA = omsProxy.acquireRole("participant", "virtual");
-			logger.info("["+this.getName()+"] Result acquire role participant: "+ resultA);
-			resultA = omsProxy.acquireRole("manager", "calculin");
-			logger.info("["+this.getName()+"] Result acquire role manager: "+ resultA);
-
+		
+			
 			this.send_request(6,3);
-			m.waiting(2 * 1000); // Waiting the response with a timeout
+			m.waiting(); // Waiting the response with a timeout
 			this.send_result("" + result); // Inform the result.
 
-			expected = 2; //Reset the result and messages expected
+			expected = 1; //Reset the result and messages expected
 			result=0;
 			this.send_request(5,3);
-			m.waiting(10 * 1000); // Waiting the response with a timeout
+			m.waiting(); // Waiting the response with a timeout
 			this.send_result("" + result); // Inform the result.
 
-			m.waiting();
+			this.sendShutDown();
 
-		}catch(THOMASException e)
-		{
-			e.printStackTrace();
-		}
+			try {
+				omsProxy.leaveRole("manager", "calculin");
+			} catch (THOMASException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		
 
 	}
 
-	public void conclude()
+	
+	public void sendShutDown()
 	{
-		m.advise();
-	}
-
-	public void finalize()
-	{
-
 		try
 		{
-			String result = omsProxy.leaveRole("manager", "calculin");
-			logger.info("["+this.getName()+"] Result leave role manager: "+ result);
-			result = omsProxy.leaveRole("participant", "virtual");
-			logger.info("["+this.getName()+"] Result leave role participant: "+ result);
+		ACLMessage msg = new ACLMessage();
+		msg.setPerformative(InteractionProtocol.FIPA_REQUEST);
+		msg.setProtocol(InteractionProtocol.FIPA_REQUEST);
+		msg.setLanguage("ACL");
+		msg.setContent("shut down");
+		msg.setSender(this.getAid());
+		
+		ArrayList<ArrayList<String>> members = omsProxy.informMembers("calculin", "", "");
+		
+		for(ArrayList<String> member : members)
+		{
+			System.out.println("["+this.getName()+"] Send message to: "+ member.get(0));
+			msg.addReceiver(new AgentID(member.get(0)));
+			
+		}
+		
+		members = omsProxy.informMembers("externa", "", "");
+		
+		for(ArrayList<String> member : members)
+		{
+			System.out.println("["+this.getName()+"] Send message to: "+ member.get(0));
+			msg.addReceiver(new AgentID(member.get(0)));
+			
+		}
 
-			logger.info("[ "+this.getName()+" ] end execution!");
+		send(msg);
+		
 		}catch(THOMASException e)
 		{
 			e.printStackTrace();
 		}
 	}
+
+
 	private void add_and_advise(ACLMessage msg) {
+		System.out.println("Soy sumatorio: "+ msg.getContent() + " de: "+ msg.getSender().name);
 		result += Integer.parseInt(msg.getContent());
 		expected--;
 		if (expected == 0) {
@@ -79,7 +98,9 @@ public class Summation extends QueueAgent {
 
 	public void onMessage(ACLMessage msg) {
 
+	
 
+		
 		if (msg.getSender().name.equals("agente_suma") || msg.getSender().name.contains("agente_producto")) 
 		{
 			//When a message arrives, it select the message with a results
@@ -101,7 +122,7 @@ public class Summation extends QueueAgent {
 			msg.setProtocol(InteractionProtocol.FIPA_REQUEST);
 			msg.setLanguage("ACL");
 			msg.setContent(n1+" "+n2);
-
+			
 			send(msg);
 		} catch (THOMASException e) {
 			System.out.println("[ " + this.getName() + " ] " + e.getContent());
@@ -116,7 +137,7 @@ public class Summation extends QueueAgent {
 			msg.setPerformative(ACLMessage.INFORM);
 			msg.setLanguage("ACL");
 			msg.setContent(content);
-
+			System.out.println("[ " + this.getName() + " ] Sending result: "+ content);
 			send(msg);
 		} catch (THOMASException e) {
 			System.out.println("[ " + this.getName() + " ] " + e.getContent());

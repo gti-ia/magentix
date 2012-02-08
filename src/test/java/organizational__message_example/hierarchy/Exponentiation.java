@@ -23,21 +23,11 @@ public class Exponentiation extends QueueAgent {
 
 		try
 		{
-			String resultA = omsProxy.acquireRole("participant", "virtual");
-			logger.info("["+this.getName()+"] Result acquire role participant: "+resultA);
-			resultA = omsProxy.acquireRole("manager", "calculin");
-			logger.info("["+this.getName()+"] Result acquire role manager: "+resultA);
-
-
+		
 			this.send_request(6, 3);//Send request
-			m.waiting(10 * 1000); // Waiting the response with a timeout
+			m.waiting(); // Waiting the response with a timeout
 			this.send_result("" + result); // Inform the result.
 
-			try {
-				Thread.sleep(2 * 1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
 			String resultL = omsProxy.leaveRole("manager", "calculin");
 
 			logger.info("["+this.getName()+"] Result leave role manager: "+resultL);
@@ -46,7 +36,6 @@ public class Exponentiation extends QueueAgent {
 			expected = 0;
 			this.send_request(5, 3);
 
-			m.waiting();
 		}catch(THOMASException e)
 		{
 			e.printStackTrace();
@@ -54,24 +43,7 @@ public class Exponentiation extends QueueAgent {
 
 	}
 
-	public void conclude()
-	{
-		m.advise();
-	}
 
-	public void finalize()
-	{
-
-		try
-		{
-			String result = omsProxy.leaveRole("participant", "virtual");
-			logger.info("["+this.getName()+"] Result leave role participant: "+result);
-			logger.info("["+this.getName()+" ] end execution!");
-		}catch(THOMASException e)
-		{
-			e.printStackTrace();
-		}
-	}
 	private void add_and_advise(ACLMessage msg) {
 		result += Integer.parseInt(msg.getContent()) * Integer.parseInt(msg.getContent());
 		expected--;
@@ -83,7 +55,7 @@ public class Exponentiation extends QueueAgent {
 
 	public void onMessage(ACLMessage msg) {
 
-
+	
 		if (msg.getSender().name.equals("agente_suma") || msg.getSender().name.equals("agente_producto")) 
 		{
 			//When a message arrives, it select the message with a results

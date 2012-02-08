@@ -1,5 +1,7 @@
 package organizational__message_example.hierarchy;
 
+import java.util.ArrayList;
+
 import es.upv.dsic.gti_ia.architecture.FIPANames.InteractionProtocol;
 import es.upv.dsic.gti_ia.architecture.FIPARequestResponder;
 import es.upv.dsic.gti_ia.architecture.MessageTemplate;
@@ -16,7 +18,8 @@ public class Product extends QueueAgent {
 	OMSProxy omsProxy = new OMSProxy(this);
 	Responder responder = new Responder(this);
 	Monitor m = new Monitor();
-
+	boolean finished = false;
+	
 	public Product(AgentID aid) throws Exception {
 		super(aid);
 
@@ -28,18 +31,29 @@ public class Product extends QueueAgent {
 		try
 		{
 
-			String result = omsProxy.acquireRole("participant", "virtual");
-			logger.info("["+this.getName()+"] Result acquire role participant: "+result);
-			result = omsProxy.acquireRole("operador", "calculin");
-			logger.info("["+this.getName()+"] Result acquire role operador: "+result);
+			
+			ArrayList<ArrayList<String>> roles;
+			boolean exists = false;
+
+			do
+			{
+				roles = omsProxy.informUnitRoles("calculin");
+				for(ArrayList<String> role : roles)
+				{
+					if (role.get(0).equals("operador"))
+						exists = true;
+				}
+			}while(!exists);
 
 
 
-
+			omsProxy.acquireRole("operador", "calculin");
 			this.addTask(responder);
-
-
-			m.waiting();
+			do{
+				m.waiting();
+				//m.waiting(1*1000);
+			}while(!finished);
+			
 		}catch(THOMASException e)
 		{
 			e.printStackTrace();
@@ -47,32 +61,21 @@ public class Product extends QueueAgent {
 
 	}
 
-	public void finalize()
-	{
-		try
-		{
-			String result = omsProxy.leaveRole("operador", "calculin");
-			logger.info("["+this.getName()+"] Result leave role operador: "+result);
-			result = omsProxy.leaveRole("participant", "virtual");
-			logger.info("["+this.getName()+"] Result leave role participant: "+result);
-			logger.info("["+this.getName()+" ] end execution!");
-		}catch(THOMASException e)
-		{
-			e.printStackTrace();
-		}
-	}
+
 
 	public void conclude()
 	{
-		m.advise();
+		finished = true;
 	}
+
+
 
 	/**
 	 * Manages the messages for the  agent provider services
 	 */
 	public class Responder extends FIPARequestResponder {
 
-		int n = 3; //Expected messages
+
 
 		public Responder(QueueAgent agent) {
 			super(agent, new MessageTemplate(InteractionProtocol.FIPA_REQUEST));
@@ -84,14 +87,8 @@ public class Product extends QueueAgent {
 			ACLMessage response = msg.createReply();
 
 
-
 			response.setPerformative(ACLMessage.AGREE);
 			response.setContent("OK");	
-
-
-
-
-
 			return (response);
 
 		} // end prepareResponse
@@ -102,30 +99,35 @@ public class Product extends QueueAgent {
 
 
 			ACLMessage msg = inmsg.createReply();
-
-
-
-			int p1,p2, result;
-			try{
-				p1 = Integer.parseInt(inmsg.getContent().split(" ")[0]);
-				p2 = Integer.parseInt(inmsg.getContent().split(" ")[1]);
-
-				result = p1 * p2;
-
-				msg.setPerformative(ACLMessage.INFORM);
-
-
-				msg.setContent(""+result);
-
-				n--;
-
-				if (n == 0)
-					m.advise();
-
-			}catch(Exception e)
+			
+		
+			if (inmsg.getContent().equals("shut down"))
 			{
-				msg.setPerformative(ACLMessage.FAILURE);
-				msg.setContent(e.getMessage());
+				
+				((Product)this.getQueueAgent()).conclude();
+			}
+			else
+			{
+
+				int p1,p2, result;
+				try{
+					p1 = Integer.parseInt(inmsg.getContent().split(" ")[0]);
+					p2 = Integer.parseInt(inmsg.getContent().split(" ")[1]);
+
+					result = p1 * p2;
+
+					msg.setPerformative(ACLMessage.INFORM);
+
+
+					msg.setContent(""+result);
+
+
+
+				}catch(Exception e)
+				{
+					msg.setPerformative(ACLMessage.FAILURE);
+					msg.setContent(e.getMessage());
+				}
 			}
 
 			return (msg);

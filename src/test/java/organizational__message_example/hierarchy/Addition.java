@@ -2,6 +2,8 @@ package organizational__message_example.hierarchy;
 
 
 
+import java.util.ArrayList;
+
 import es.upv.dsic.gti_ia.architecture.FIPANames.InteractionProtocol;
 import es.upv.dsic.gti_ia.architecture.FIPARequestResponder;
 import es.upv.dsic.gti_ia.architecture.MessageTemplate;
@@ -17,6 +19,7 @@ public class Addition extends QueueAgent {
 	OMSProxy omsProxy = new OMSProxy(this);
 	Responder responder = null;
 	Monitor m = new Monitor();
+	boolean finished = false;
 	
 	public Addition(AgentID aid) throws Exception {
 		super(aid);
@@ -30,12 +33,24 @@ public class Addition extends QueueAgent {
 		
 		try
 		{
-		//Acquire the member rol in virtual unit and operador inside the calculin unit
-		String result = omsProxy.acquireRole("participant", "virtual");
-		logger.info("["+this.getName()+"] Result acquire role: "+ result);
 		
-		result = omsProxy.acquireRole("operador", "calculin");
-		logger.info("["+this.getName()+"] Result acquire role: "+ result);
+		ArrayList<ArrayList<String>> roles;
+
+		boolean exists = false;
+
+		do
+		{
+			roles = omsProxy.informUnitRoles("calculin");
+
+			for(ArrayList<String> role : roles)
+			{
+				if (role.get(0).equals("operador"))
+					exists = true;
+			}
+		}while(!exists);
+		
+		omsProxy.acquireRole("operador", "calculin");
+		
 		//Create a new protocol FIPA Request
 		responder = new Responder(this);
 		
@@ -43,7 +58,13 @@ public class Addition extends QueueAgent {
 		this.addTask(responder);
 		
 		//Waiting for messages.
-		m.waiting();
+		
+		do{
+			m.waiting();
+			//m.waiting(1*1000);
+		}while(!finished);
+		
+		System.out.println("Bye bye");
 		
 		}catch(THOMASException e)
 		{
@@ -54,20 +75,9 @@ public class Addition extends QueueAgent {
 	
 	public void conclude()
 	{
-		m.advise();
+		finished = true;
 	}
-	public void finalize()
-	{
-		try
-		{
-		String result = omsProxy.leaveRole("participant", "virtual");
-		logger.info("["+this.getName()+"] Result leave role participant: "+result);
-		logger.info("[ "+this.getName()+" ] end execution!");
-		}catch(THOMASException e)
-		{
-			e.printStackTrace();
-		}
-	}
+
 
 	/**
 	 * Manages the messages for the  agent provider services
@@ -129,7 +139,9 @@ public class Addition extends QueueAgent {
 					case 0: 
 						String resultado = omsProxy.leaveRole("operador", "calculin"); 
 						logger.info("["+this.myAgent.getName()+"] Result leave role operador: "+resultado);
-						break;
+					
+						((Addition)this.getQueueAgent()).conclude();
+					break;
 				}
 
 				n++;
@@ -140,6 +152,7 @@ public class Addition extends QueueAgent {
 				msg.setPerformative(ACLMessage.FAILURE);
 				msg.setContent(e.getMessage());
 			}
+			
 			return (msg);
 		} // end prepareResultNotification
 

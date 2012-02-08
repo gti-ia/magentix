@@ -31,10 +31,7 @@ public class Display extends QueueAgent {
 
 		try
 		{
-			String result = omsProxy.acquireRole("participant", "virtual");
-			logger.info("["+this.getName()+"] Result acquire role participant: "+result);
-			result = omsProxy.acquireRole("manager", "calculin");
-			logger.info("["+this.getName()+"] Result acquire role manager: "+result);
+	
 			while(active < 6)
 			{
 				m.waiting();  //Waiting messages. The method onMessage is in charge of warning when a new message arrive
@@ -44,6 +41,26 @@ public class Display extends QueueAgent {
 					active++;
 				}while(messageList.size() != 0);
 			}
+			
+			ArrayList<String> result = omsProxy.informUnit("externa");
+			
+			System.out.println("unit external type: "+ result.get(0));
+			System.out.println("unit external parent unit: "+ result.get(1));
+			
+			
+			ArrayList<ArrayList<String>> informUnitRoles = omsProxy.informUnitRoles("calculin");
+			
+			for(ArrayList<String> unitRole : informUnitRoles)
+			{
+				System.out.println("role name: "+ unitRole.get(0));
+				System.out.println("role position: "+ unitRole.get(1));
+				System.out.println("role visibility: "+ unitRole.get(2));
+				System.out.println("role accesibility: "+ unitRole.get(3));
+			}
+			
+			omsProxy.leaveRole("manager", "calculin");
+			
+			
 		}catch(THOMASException e)
 		{
 			e.printStackTrace();
@@ -52,21 +69,7 @@ public class Display extends QueueAgent {
 
 	}
 
-	public void finalize()
-	{
-		try
-		{
-			String result = omsProxy.leaveRole("manager", "calculin");
-			logger.info("["+this.getName()+"] Result leaven role manager: "+result);
-			result = omsProxy.leaveRole("participant", "virtual");
-			logger.info("["+this.getName()+"] Result leave role participant: "+result);
 
-			logger.info("["+this.getName()+" ] end execution!");
-		}catch(THOMASException e)
-		{
-			e.printStackTrace();
-		}
-	}
 
 	/**
 	 * Display agent messages with position qual to supervisor 
@@ -118,10 +121,7 @@ public class Display extends QueueAgent {
 	}
 
 
-	public void conclude()
-	{
-		m.advise();
-	}
+
 	public void onMessage(ACLMessage msg)
 	{
 
