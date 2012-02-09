@@ -23,9 +23,9 @@ public class Summation extends QueueAgent {
 
 	public void execute() {
 
+		try {
+			omsProxy.acquireRole("participant", "virtual");
 
-		
-			
 			this.send_request(6,3);
 			m.waiting(); // Waiting the response with a timeout
 			this.send_result("" + result); // Inform the result.
@@ -36,59 +36,28 @@ public class Summation extends QueueAgent {
 			m.waiting(); // Waiting the response with a timeout
 			this.send_result("" + result); // Inform the result.
 
-			this.sendShutDown();
-
-			try {
-				omsProxy.leaveRole("manager", "calculin");
-			} catch (THOMASException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		
-
-	}
-
-	
-	public void sendShutDown()
-	{
-		try
-		{
-		ACLMessage msg = new ACLMessage();
-		msg.setPerformative(InteractionProtocol.FIPA_REQUEST);
-		msg.setProtocol(InteractionProtocol.FIPA_REQUEST);
-		msg.setLanguage("ACL");
-		msg.setContent("shut down");
-		msg.setSender(this.getAid());
-		
-		ArrayList<ArrayList<String>> members = omsProxy.informMembers("calculin", "", "");
-		
-		for(ArrayList<String> member : members)
-		{
-			System.out.println("["+this.getName()+"] Send message to: "+ member.get(0));
-			msg.addReceiver(new AgentID(member.get(0)));
 			
-		}
-		
-		members = omsProxy.informMembers("externa", "", "");
-		
-		for(ArrayList<String> member : members)
-		{
-			System.out.println("["+this.getName()+"] Send message to: "+ member.get(0));
-			msg.addReceiver(new AgentID(member.get(0)));
-			
-		}
+			this.send_shutdown();
 
-		send(msg);
-		
-		}catch(THOMASException e)
-		{
+			m.waiting(1 * 1000);
+
+			omsProxy.leaveRole("manager", "calculin");
+
+			omsProxy.leaveRole("participant", "virtual");
+
+		} catch (THOMASException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
+
 	}
+
+
 
 
 	private void add_and_advise(ACLMessage msg) {
-		System.out.println("Soy sumatorio: "+ msg.getContent() + " de: "+ msg.getSender().name);
+		
 		result += Integer.parseInt(msg.getContent());
 		expected--;
 		if (expected == 0) {
@@ -98,13 +67,13 @@ public class Summation extends QueueAgent {
 
 	public void onMessage(ACLMessage msg) {
 
-	
 
-		
+
+
 		if (msg.getSender().name.equals("agente_suma") || msg.getSender().name.contains("agente_producto")) 
 		{
 			//When a message arrives, it select the message with a results
-			if (!msg.getContent().contains("OK")) 
+			if (!msg.getContent().equals("OK")) 
 			{
 				this.add_and_advise(msg);
 			}
@@ -122,7 +91,7 @@ public class Summation extends QueueAgent {
 			msg.setProtocol(InteractionProtocol.FIPA_REQUEST);
 			msg.setLanguage("ACL");
 			msg.setContent(n1+" "+n2);
-			
+
 			send(msg);
 		} catch (THOMASException e) {
 			System.out.println("[ " + this.getName() + " ] " + e.getContent());
@@ -130,6 +99,22 @@ public class Summation extends QueueAgent {
 		}
 	}
 
+	
+	private void send_shutdown()
+	{
+		try {
+			ACLMessage msg = omsProxy.buildOrganizationalMessage("calculin");
+			msg.setPerformative(InteractionProtocol.FIPA_REQUEST);
+			msg.setProtocol(InteractionProtocol.FIPA_REQUEST);
+			msg.setLanguage("ACL");
+			msg.setContent("shut down");
+
+			send(msg);
+		} catch (THOMASException e) {
+			System.out.println("[ " + this.getName() + " ] " + e.getContent());
+
+		}
+	}
 	private void send_result(String content) {
 		try {
 
@@ -137,7 +122,7 @@ public class Summation extends QueueAgent {
 			msg.setPerformative(ACLMessage.INFORM);
 			msg.setLanguage("ACL");
 			msg.setContent(content);
-			System.out.println("[ " + this.getName() + " ] Sending result: "+ content);
+			
 			send(msg);
 		} catch (THOMASException e) {
 			System.out.println("[ " + this.getName() + " ] " + e.getContent());

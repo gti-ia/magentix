@@ -19,7 +19,7 @@ public class Display extends QueueAgent {
 	Monitor m = new Monitor();
 	ACLMessage receivedMsg = new ACLMessage();
 	Queue<ACLMessage> messageList = new LinkedList<ACLMessage>();
-	int active = 0;
+	boolean finished = false;
 
 	public Display(AgentID aid) throws Exception {
 		super(aid);
@@ -31,36 +31,43 @@ public class Display extends QueueAgent {
 
 		try
 		{
-	
-			while(active < 6)
-			{
+			omsProxy.acquireRole("participant", "virtual");
+
+
+			do{
 				m.waiting();  //Waiting messages. The method onMessage is in charge of warning when a new message arrive
+
 				do{
 					this.displayMessage(messageList.poll());
-
-					active++;
 				}while(messageList.size() != 0);
-			}
-			
+			}while(!finished);
+
 			ArrayList<String> result = omsProxy.informUnit("externa");
-			
-			System.out.println("unit external type: "+ result.get(0));
-			System.out.println("unit external parent unit: "+ result.get(1));
-			
-			
+
+			System.out.println("---------------------");
+			System.out.println("unit external");
+			System.out.println("type: "+ result.get(0));
+			System.out.println("parent unit: "+ result.get(1));
+			System.out.println("---------------------");
+
 			ArrayList<ArrayList<String>> informUnitRoles = omsProxy.informUnitRoles("calculin");
-			
+
 			for(ArrayList<String> unitRole : informUnitRoles)
 			{
-				System.out.println("role name: "+ unitRole.get(0));
-				System.out.println("role position: "+ unitRole.get(1));
-				System.out.println("role visibility: "+ unitRole.get(2));
-				System.out.println("role accesibility: "+ unitRole.get(3));
+				System.out.println("---------------------");
+
+				System.out.println("role name: "+unitRole.get(0));
+				System.out.println("position: "+ unitRole.get(1));
+				System.out.println("visibility: "+ unitRole.get(2));
+				System.out.println("accesibility: "+ unitRole.get(3));
+
+				System.out.println("---------------------");
 			}
-			
+
 			omsProxy.leaveRole("manager", "calculin");
-			
-			
+
+			omsProxy.leaveRole("participant", "virtual");
+
 		}catch(THOMASException e)
 		{
 			e.printStackTrace();
@@ -80,39 +87,29 @@ public class Display extends QueueAgent {
 
 		try
 		{
+			
 			ACLMessage msg = _msg;
-			ArrayList<ArrayList<String>> unitRoles = omsProxy.informUnitRoles("calculin");
 
-
-			for(ArrayList<String> s : unitRoles)
-			{  /**
+			/**
 			For every role that exists in the unit calculin we extract the members who have this role
 			 **/
 
-				String rol = s.get(0);
 
-				ArrayList<ArrayList<String>> inforMembers = omsProxy.informMembers("calculin",rol,"");	
-
-
-				String position = "";
-
+			if (msg.getContent().equals("shut down"))
+				finished = true;
+			ArrayList<ArrayList<String>> informMembers = omsProxy.informMembers("calculin","","supervisor");
+		
+			
+			for(ArrayList<String> informMember : informMembers)
+			{
 				//If the agent is equal to the sender, then the position is extracted
-				for(ArrayList<String> im : inforMembers)
-				{
-					String agent = im.get(0);
-
-					rol = im.get(1);
-					if (agent.toLowerCase().equals(msg.getSender().name.toLowerCase()))
-					{
-						ArrayList<String> informRole = omsProxy.informRole(rol, "calculin"); 
-						position = informRole.get(0);
-					}
-				}
-
-				//If the position is equal to supervisor, it shows the message
-				if (position.equals("supervisor"))
+				if (informMember.get(0).equals(msg.getSender().name))
 					System.out.println("[ "+this.getName()+" ]  "+ msg.getSender().name+" says " + msg.getContent());
 			}
+
+			
+
+
 
 		}catch(THOMASException e)
 		{

@@ -31,6 +31,7 @@ public class Product extends QueueAgent {
 		try
 		{
 
+			omsProxy.acquireRole("participant", "virtual");
 			
 			ArrayList<ArrayList<String>> roles;
 			boolean exists = false;
@@ -50,9 +51,11 @@ public class Product extends QueueAgent {
 			omsProxy.acquireRole("operador", "calculin");
 			this.addTask(responder);
 			do{
-				m.waiting();
-				//m.waiting(1*1000);
+				m.waiting(5*1000);
+				
 			}while(!finished);
+			
+			omsProxy.leaveRole("participant", "virtual");
 			
 		}catch(THOMASException e)
 		{
@@ -66,6 +69,8 @@ public class Product extends QueueAgent {
 	public void conclude()
 	{
 		finished = true;
+		
+		
 	}
 
 
@@ -88,7 +93,8 @@ public class Product extends QueueAgent {
 
 
 			response.setPerformative(ACLMessage.AGREE);
-			response.setContent("OK");	
+			response.setContent("OK");
+			
 			return (response);
 
 		} // end prepareResponse
@@ -100,11 +106,18 @@ public class Product extends QueueAgent {
 
 			ACLMessage msg = inmsg.createReply();
 			
-		
+			
 			if (inmsg.getContent().equals("shut down"))
 			{
 				
+				
 				((Product)this.getQueueAgent()).conclude();
+				
+				msg.setPerformative(ACLMessage.INFORM);
+
+
+				msg.setContent("OK");
+
 			}
 			else
 			{

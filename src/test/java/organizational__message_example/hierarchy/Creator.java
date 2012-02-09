@@ -35,15 +35,14 @@ public class Creator extends QueueAgent {
 			
 			omsProxy.acquireRole("manager", "calculin");
 			
-			m.waiting();
+			m.waiting(); //Waiting the shut down message of the agent summation
 			
 			omsProxy.jointUnit("externa", "calculin");
 
 			boolean searching = true;
 			do{
 				int quantity = omsProxy.quantityMembers("calculin", "", "supervisor");
-				
-				System.out.println("Quantity: "+ quantity);
+			
 				if (quantity > 1)
 					m.waiting(3 * 1000);
 				else
@@ -56,7 +55,7 @@ public class Creator extends QueueAgent {
 			
 			for(ArrayList<String> member : members)
 			{
-				System.out.println("Deallocate :"+ member.get(1)+ " role: "+ member.get(0));
+				
 				omsProxy.deallocateRole(member.get(1), "calculin", member.get(0));
 			}
 			
@@ -66,19 +65,20 @@ public class Creator extends QueueAgent {
 			result = omsProxy.deregisterRole("manager", "calculin");
 			logger.info("["+this.getName()+"] Result leave role manager: "+result);
 			
-			ArrayList<ArrayList<String>> agentRole;
+		//	ArrayList<ArrayList<String>> agentRole;
 			
 			do
 			{
 				m.waiting(3 * 1000);
-				agentRole = omsProxy.informAgentRole("agente_ruidoso");
-			
-			}while(agentRole.size() != 0);
+				//agentRole = omsProxy.informAgentRole("agente_ruidoso");
+				members = omsProxy.informMembers("externa", "manager", "");
+			}while(members.contains("agente_ruidoso"));
 
-			result = omsProxy.deregisterUnit("calculin");
-			logger.info("["+this.getName()+"] Result deregister unit calculin: "+result);
 			
 			result = omsProxy.deregisterUnit("externa");
+			logger.info("["+this.getName()+"] Result deregister unit calculin: "+result);
+			
+			result = omsProxy.deregisterUnit("calculin");
 			logger.info("["+this.getName()+"] Result deregister unit calculin: "+result);
 
 			result = omsProxy.leaveRole("participant", "virtual");
@@ -97,23 +97,23 @@ public class Creator extends QueueAgent {
 	{
 		try
 		{
-			String result = omsProxy.registerUnit("calculin", "hierarchy", "virtual", "creador");
-			logger.info("["+this.getName()+"] Result register unit calculin: "+result);
+			omsProxy.registerUnit("calculin", "hierarchy", "virtual", "creador");
+			
 
-			result = omsProxy.registerRole("manager", "calculin",  "internal", "private","supervisor");
-			logger.info("["+this.getName()+"] Result register role subordinado: "+result);
+			omsProxy.registerRole("manager", "calculin",  "internal", "private","supervisor");
 			
-			result = omsProxy.registerRole("operador", "calculin", "external", "public","subordinate");
-			logger.info("["+this.getName()+"] Result register role operador: "+result);
 			
-			result = omsProxy.allocateRole("manager", "calculin", "agente_visor");
-			System.out.println("["+this.getName()+"] Result register role operador: "+result);
+			omsProxy.registerRole("operador", "calculin", "external", "public","subordinate");
 			
-			result = omsProxy.allocateRole("manager", "calculin", "agente_sumatorio");
-			System.out.println("["+this.getName()+"] Result register role operador: "+result);
 			
-			result = omsProxy.allocateRole("manager", "calculin", "agente_sumaPotencias");
-			System.out.println("["+this.getName()+"] Result register role operador: "+result);
+			omsProxy.allocateRole("manager", "calculin", "agente_visor");
+			
+			
+			omsProxy.allocateRole("manager", "calculin", "agente_sumatorio");
+			
+			
+			omsProxy.allocateRole("manager", "calculin", "agente_sumaPotencias");
+			
 		}catch(THOMASException e)
 		{
 			e.printStackTrace();
@@ -150,7 +150,7 @@ public class Creator extends QueueAgent {
 		
 		if (msg.getContent().equals("shut down")) //Messages that come from the organization
 		{
-			System.out.println("[ "+this.getName()+" ] Agent "+ msg.getSender()+" says: "+ msg.getContent());
+		
 			m.advise(); //When a new message arrives, it advise the main thread
 
 		}

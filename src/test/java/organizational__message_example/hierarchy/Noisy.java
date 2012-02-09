@@ -35,6 +35,8 @@ public class Noisy extends QueueAgent {
 			logger.info("["+this.getName()+"] Result acquire role manager: "+result);
 
 			this.send_request(1,7);
+			
+			omsProxy.allocateRole("creador", "externa", "agente_creador");
 
 		}catch(THOMASException e)
 		{

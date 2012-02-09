@@ -23,11 +23,13 @@ public class Exponentiation extends QueueAgent {
 
 		try
 		{
+			omsProxy.acquireRole("participant", "virtual");
 		
 			this.send_request(6, 3);//Send request
 			m.waiting(); // Waiting the response with a timeout
 			this.send_result("" + result); // Inform the result.
 
+			m.waiting(2*1000);
 			String resultL = omsProxy.leaveRole("manager", "calculin");
 
 			logger.info("["+this.getName()+"] Result leave role manager: "+resultL);
@@ -35,6 +37,8 @@ public class Exponentiation extends QueueAgent {
 			result=0; //Reset the result and messages expected
 			expected = 0;
 			this.send_request(5, 3);
+			
+			omsProxy.leaveRole("participant", "virtual");
 
 		}catch(THOMASException e)
 		{

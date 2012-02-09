@@ -38,6 +38,9 @@ public class Addition extends QueueAgent {
 
 		boolean exists = false;
 
+		String result = omsProxy.acquireRole("participant", "virtual");
+		logger.info("["+this.getName()+"] Result acquire role participant: "+result);
+		
 		do
 		{
 			roles = omsProxy.informUnitRoles("calculin");
@@ -60,11 +63,13 @@ public class Addition extends QueueAgent {
 		//Waiting for messages.
 		
 		do{
-			m.waiting();
-			//m.waiting(1*1000);
+			m.waiting(5*1000);
 		}while(!finished);
 		
-		System.out.println("Bye bye");
+		
+		
+		result = omsProxy.leaveRole("participant", "virtual");
+		logger.info("["+this.getName()+"] Result acquire role participant: "+result);
 		
 		}catch(THOMASException e)
 		{
@@ -136,7 +141,8 @@ public class Addition extends QueueAgent {
 				switch(n)
 				{
 				//Leave operador role
-					case 0: 
+					case 1: 
+						
 						String resultado = omsProxy.leaveRole("operador", "calculin"); 
 						logger.info("["+this.myAgent.getName()+"] Result leave role operador: "+resultado);
 					
