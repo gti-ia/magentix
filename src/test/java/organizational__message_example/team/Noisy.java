@@ -37,9 +37,7 @@ public class Noisy extends QueueAgent {
 
 			this.send_request(1,7);
 
-			m.waiting(); 
-
-			this.send_result(result+"");
+			omsProxy.allocateRole("creador", "externa", "agente_creador");
 
 		}catch(THOMASException e)
 		{
@@ -63,12 +61,8 @@ public class Noisy extends QueueAgent {
 			System.out.println("["+this.getName()+"] Result leave role manager: "+result);
 
 		
-			result = omsProxy.deregisterRole("manager", "externa");
+			result = omsProxy.leaveRole("creador", "externa");
 			System.out.println("["+this.getName()+"] Result deregister role manager: "+result);
-
-		
-			result = omsProxy.deregisterUnit("externa");
-			System.out.println("["+this.getName()+"] Result deregister unit externa: "+result);
 
 			result = omsProxy.leaveRole("participant", "virtual");
 			System.out.println("["+this.getName()+"] Result leave role participant: "+result);
@@ -117,7 +111,7 @@ public class Noisy extends QueueAgent {
 		try
 		{
 			omsProxy.registerUnit("externa", "flat", "virtual", "creador");
-			omsProxy.registerRole("manager", "externa",  "external", "public","member");
+			omsProxy.registerRole("manager", "externa",  "internal", "private","member");
 		}catch(THOMASException e)
 		{
 			e.printStackTrace();

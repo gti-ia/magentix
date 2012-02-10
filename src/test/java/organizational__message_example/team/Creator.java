@@ -1,5 +1,7 @@
 package organizational__message_example.team;
 
+import java.util.ArrayList;
+
 import es.upv.dsic.gti_ia.architecture.Monitor;
 import es.upv.dsic.gti_ia.architecture.QueueAgent;
 import es.upv.dsic.gti_ia.architecture.FIPANames.InteractionProtocol;
@@ -30,9 +32,61 @@ public class Creator extends QueueAgent {
 
 
 
-			this.send_request(4, 2);
+			
 
-			m.waiting();
+			this.send_request(4, 2);
+			
+			omsProxy.acquireRole("manager", "calculin");
+			
+			m.waiting(); //Waiting the shut down message of the agent summation
+			
+			System.out.println("Joint unit: " + omsProxy.jointUnit("externa", "calculin"));
+
+			boolean searching = true;
+			do{
+				int quantity = omsProxy.quantityMembers("calculin", "", "member");
+			
+				if (quantity > 2)
+					m.waiting(3 * 1000);
+				else
+					searching = false;
+			}while(searching);
+			
+			omsProxy.leaveRole("manager", "calculin");
+			
+			ArrayList<ArrayList<String>> members = omsProxy.informMembers("calculin", "", "member");
+			
+			for(ArrayList<String> member : members)
+			{
+				
+				omsProxy.deallocateRole(member.get(1), "calculin", member.get(0));
+			}
+			
+			omsProxy.deregisterRole("operador", "calculin");
+			
+
+			omsProxy.deregisterRole("manager", "calculin");
+			
+			
+		//	ArrayList<ArrayList<String>> agentRole;
+			
+			do
+			{
+				m.waiting(3 * 1000);
+				//agentRole = omsProxy.informAgentRole("agente_ruidoso");
+				members = omsProxy.informMembers("externa", "manager", "");
+			}while(members.contains("agente_ruidoso"));
+
+			
+			omsProxy.deregisterUnit("externa");
+			
+			
+			omsProxy.deregisterUnit("calculin");
+			
+
+			omsProxy.leaveRole("participant", "virtual");
+			
+			logger.info("["+this.getName()+" ] end execution!");
 
 		}catch(THOMASException e)
 		{
@@ -50,7 +104,15 @@ public class Creator extends QueueAgent {
 	public void onMessage(ACLMessage msg) {
 
 
-		super.onMessage(msg);
+
+		if (msg.getContent().equals("shut down")) //Messages that come from the organization
+		{
+		
+			m.advise(); //When a new message arrives, it advise the main thread
+
+		}
+		if (msg.getSender().name.equals("OMS") || msg.getSender().name.equals("SF"))
+			super.onMessage(msg);
 
 	}
 
@@ -86,8 +148,14 @@ public class Creator extends QueueAgent {
 		{
 			omsProxy.registerUnit("calculin", "team", "virtual", "creador");
 
-			omsProxy.registerRole("manager", "calculin",  "external", "public","member");
+			omsProxy.registerRole("manager", "calculin",  "internal", "private","member");
 			omsProxy.registerRole("operador", "calculin",  "external", "public","member");
+			
+			omsProxy.allocateRole("manager", "calculin", "agente_visor");
+			
+			
+			omsProxy.allocateRole("manager", "calculin", "agente_sumatorio");
+			
 
 		}catch(THOMASException e)
 		{

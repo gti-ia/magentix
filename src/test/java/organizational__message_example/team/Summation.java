@@ -25,19 +25,22 @@ public class Summation extends QueueAgent {
 		try
 		{
 			omsProxy.acquireRole("participant", "virtual");
-			omsProxy.acquireRole("manager", "calculin");
-
 
 			this.send_request(6,3);
-			m.waiting(10*1000); // Waiting the response with a timeout
+			m.waiting(); // Waiting the response with a timeout
 			this.send_result("" + result); // Inform the result.
 
-			expected = 2; //Reset the result and messages expected
+			expected = 1; //Reset the result and messages expected
 			result=0;
-
 			this.send_request(5,3);
-			m.waiting(10*1000); // Waiting the response with a timeout
+			m.waiting(); // Waiting the response with a timeout
 			this.send_result("" + result); // Inform the result.
+
+			
+			this.send_shutdown();
+
+
+
 
 		}catch(THOMASException e)
 		{
@@ -46,7 +49,21 @@ public class Summation extends QueueAgent {
 
 	}
 
+	private void send_shutdown()
+	{
+		try {
+			ACLMessage msg = omsProxy.buildOrganizationalMessage("calculin");
+			msg.setPerformative(InteractionProtocol.FIPA_REQUEST);
+			msg.setProtocol(InteractionProtocol.FIPA_REQUEST);
+			msg.setLanguage("ACL");
+			msg.setContent("shut down");
 
+			send(msg);
+		} catch (THOMASException e) {
+			System.out.println("[ " + this.getName() + " ] " + e.getContent());
+
+		}
+	}
 
 	public void finalize()
 	{

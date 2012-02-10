@@ -1,5 +1,9 @@
 package organizational__message_example.team;
 
+import java.util.ArrayList;
+
+
+
 import es.upv.dsic.gti_ia.architecture.FIPANames.InteractionProtocol;
 import es.upv.dsic.gti_ia.architecture.FIPARequestResponder;
 import es.upv.dsic.gti_ia.architecture.MessageTemplate;
@@ -16,6 +20,8 @@ public class Product extends QueueAgent {
 	OMSProxy omsProxy = new OMSProxy(this);
 	Monitor m = new Monitor();
 	Responder responder = new Responder(this);
+	boolean finished = false;
+	
 
 	public Product(AgentID aid) throws Exception {
 		super(aid);
@@ -29,6 +35,21 @@ public class Product extends QueueAgent {
 		try
 		{
 			omsProxy.acquireRole("participant", "virtual");
+			
+			ArrayList<ArrayList<String>> roles;
+			boolean exists = false;
+
+			do
+			{
+				roles = omsProxy.informUnitRoles("calculin");
+				for(ArrayList<String> role : roles)
+				{
+					if (role.get(0).equals("operador"))
+						exists = true;
+				}
+			}while(!exists);
+
+			
 			omsProxy.acquireRole("operador", "calculin");
 
 
@@ -36,6 +57,10 @@ public class Product extends QueueAgent {
 
 			this.addTask(responder);
 
+			do{
+				m.waiting(5*1000);
+				
+			}while(!finished);
 
 			m.waiting();
 
@@ -48,8 +73,7 @@ public class Product extends QueueAgent {
 
 	public void conclude()
 	{
-		responder.finish();
-		m.advise();
+		finished = true;
 	}
 
 	public void finalize()
@@ -101,29 +125,45 @@ public class Product extends QueueAgent {
 
 		protected ACLMessage prepareResultNotification(ACLMessage inmsg, ACLMessage outmsg) {
 
-
-
-
-			ACLMessage msg = inmsg.createReply();
-
-
-
-			int p1,p2, result;
-			try{
-				p1 = Integer.parseInt(inmsg.getContent().split(" ")[0]);
-				p2 = Integer.parseInt(inmsg.getContent().split(" ")[1]);
-
-				result = p1 * p2;
-
+ACLMessage msg = inmsg.createReply();
+			
+			
+			if (inmsg.getContent().equals("shut down"))
+			{
+				
+				
+				((Product)this.getQueueAgent()).conclude();
+				
 				msg.setPerformative(ACLMessage.INFORM);
 
 
-				msg.setContent(""+result);
-			}catch(Exception e)
-			{
-				msg.setPerformative(ACLMessage.FAILURE);
-				msg.setContent(e.getMessage());
+				msg.setContent("OK");
+
 			}
+			else
+			{
+
+				int p1,p2, result;
+				try{
+					p1 = Integer.parseInt(inmsg.getContent().split(" ")[0]);
+					p2 = Integer.parseInt(inmsg.getContent().split(" ")[1]);
+
+					result = p1 * p2;
+
+					msg.setPerformative(ACLMessage.INFORM);
+
+
+					msg.setContent(""+result);
+
+
+
+				}catch(Exception e)
+				{
+					msg.setPerformative(ACLMessage.FAILURE);
+					msg.setContent(e.getMessage());
+				}
+			}
+		
 			return (msg);
 		} // end prepareResultNotification
 

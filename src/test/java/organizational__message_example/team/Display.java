@@ -20,6 +20,7 @@ public class Display extends QueueAgent {
 	boolean active = true;
 	ACLMessage mensaje_recibido = new ACLMessage();
 	private Queue<ACLMessage> messageList = new LinkedList<ACLMessage>();
+	boolean finished = false;
 
 	public Display(AgentID aid) throws Exception {
 		super(aid);
@@ -28,19 +29,41 @@ public class Display extends QueueAgent {
 
 	public void execute() {
 
-
 		try
 		{
-		omsProxy.acquireRole("participant", "virtual");
-		omsProxy.acquireRole("manager", "calculin");
+			omsProxy.acquireRole("participant", "virtual");
 
-		do{
-			m.waiting();  //Waiting messages. The method onMessage is in charge of warning when a new message arrive
+
 			do{
-				if (!messageList.isEmpty())
+				m.waiting();  //Waiting messages. The method onMessage is in charge of warning when a new message arrive
+
+				do{
 					this.displayMessage(messageList.poll());
-			}while(messageList.size() != 0);
-		}while(active);
+				}while(messageList.size() != 0);
+			}while(!finished);
+
+			ArrayList<String> result = omsProxy.informUnit("externa");
+
+			System.out.println("---------------------");
+			System.out.println("unit external");
+			System.out.println("type: "+ result.get(0));
+			System.out.println("parent unit: "+ result.get(1));
+			System.out.println("---------------------");
+
+			ArrayList<ArrayList<String>> informUnitRoles = omsProxy.informUnitRoles("calculin");
+
+			for(ArrayList<String> unitRole : informUnitRoles)
+			{
+				System.out.println("---------------------");
+
+				System.out.println("role name: "+unitRole.get(0));
+				System.out.println("position: "+ unitRole.get(1));
+				System.out.println("visibility: "+ unitRole.get(2));
+				System.out.println("accesibility: "+ unitRole.get(3));
+
+				System.out.println("---------------------");
+			}
+
 
 		}catch(THOMASException e)
 		{
@@ -51,27 +74,28 @@ public class Display extends QueueAgent {
 
 	public void finalize()
 	{
-		
+
 		try
 		{
-		String result = omsProxy.leaveRole("manager", "calculin");
-		System.out.println("["+this.getName()+"] Result leaven role manager: "+result);
-		result = omsProxy.leaveRole("participant", "virtual");
-		System.out.println("["+this.getName()+"] Result leave role participant: "+result);
-		
-		logger.info("["+this.getName()+" ] end execution!");
+			String result = omsProxy.leaveRole("manager", "calculin");
+			System.out.println("["+this.getName()+"] Result leaven role manager: "+result);
+			result = omsProxy.leaveRole("participant", "virtual");
+			System.out.println("["+this.getName()+"] Result leave role participant: "+result);
+
+			logger.info("["+this.getName()+" ] end execution!");
 		}catch(THOMASException e)
 		{
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void conclude()
 	{
 		active = false;
 		m.advise();
-		
+
 	}
+
 	
 	/**
 	 * Display agent messages with position qual to supervisor 
@@ -79,33 +103,44 @@ public class Display extends QueueAgent {
 	 */
 	public void displayMessage(ACLMessage _msg)
 	{
-		
+
 		try
 		{
-		ACLMessage msg = _msg; 
-		ArrayList<ArrayList<String>> roles = omsProxy.informMembers("calculin","manager","");
-		//If sender agent has rol manager, it shows the message
+			
+			ACLMessage msg = _msg;
+
+			/**
+			For every role that exists in the unit calculin we extract the members who have this role
+			 **/
+
+
+			if (msg.getContent().equals("shut down"))
+				finished = true;
+			ArrayList<ArrayList<String>> informMembers = omsProxy.informMembers("calculin","manager","");
 		
-		for(ArrayList<String> im : roles)
-		{
-		
-			String agent = im.get(0);
-			if (agent.toLowerCase().equals(msg.getSender().name.toLowerCase()))
-				System.out.println("[ "+this.getName()+" ]  "+ msg.getSender().name+" says " + msg.getContent());
-		}
-		
+			
+			for(ArrayList<String> informMember : informMembers)
+			{
+				//If the agent is equal to the sender, then the position is extracted
+				if (informMember.get(0).equals(msg.getSender().name))
+					System.out.println("[ "+this.getName()+" ]  "+ msg.getSender().name+" says " + msg.getContent());
+			}
+
+			
+
+
+
 		}catch(THOMASException e)
 		{
 			e.printStackTrace();
 		}
-		
 	}
-
+	
 
 
 	public void onMessage(ACLMessage msg)
 	{
-		
+
 		if (msg.getReceiver().name.equals("calculin")) //Me interesan los mensajes que llegan de la organización
 		{
 			messageList.add(msg);

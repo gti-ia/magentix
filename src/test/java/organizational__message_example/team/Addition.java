@@ -4,6 +4,10 @@ package organizational__message_example.team;
 
 
 
+
+
+import java.util.ArrayList;
+
 import es.upv.dsic.gti_ia.architecture.FIPARequestResponder;
 import es.upv.dsic.gti_ia.architecture.MessageTemplate;
 import es.upv.dsic.gti_ia.architecture.Monitor;
@@ -21,6 +25,7 @@ public class Addition extends QueueAgent {
 	OMSProxy omsProxy = new OMSProxy(this);
 	Responder responder = null;
 	Monitor m = new Monitor();
+	boolean finished = false;
 
 	public Addition(AgentID aid) throws Exception {
 		super(aid);
@@ -32,11 +37,25 @@ public class Addition extends QueueAgent {
 
 		try
 		{
+			ArrayList<ArrayList<String>> roles;
 			OMSProxy omsProxy = new OMSProxy(this);
+			boolean exists = false;
 
 			//Acquire the participant role in virtual unit and operador inside the calculin unit
 			String result = omsProxy.acquireRole("participant", "virtual");
 			logger.info("["+this.getName()+"] Result acquire role participant: "+ result);
+			
+			do
+			{
+				roles = omsProxy.informUnitRoles("calculin");
+
+				for(ArrayList<String> role : roles)
+				{
+					if (role.get(0).equals("operador"))
+						exists = true;
+				}
+			}while(!exists);
+			
 
 			result = omsProxy.acquireRole("operador", "calculin");
 			logger.info("["+this.getName()+"] Result acquire role operador: "+ result);
@@ -46,9 +65,11 @@ public class Addition extends QueueAgent {
 			this.addTask(responder);
 
 
+			do{
+				m.waiting(5*1000);
+			}while(!finished);
+			
 
-			//Waiting for messages.
-			m.waiting();
 
 		}catch(THOMASException e)
 		{
@@ -130,6 +151,8 @@ public class Addition extends QueueAgent {
 				case 0: 
 					String resultado = omsProxy.leaveRole("operador", "calculin"); 
 					logger.info("["+this.getQueueAgent().getName()+"] Resultado leave role operador: "+ resultado);
+					
+					((Addition)this.getQueueAgent()).conclude();
 					break;
 				}
 
