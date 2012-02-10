@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+
+<!DOCTYPE uridef [
+  <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#">
+  <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <!ENTITY owl "http://www.w3.org/2002/07/owl#">
+  <!ENTITY service "http://www.daml.org/services/owl-s/1.1/Service.owl#">
+  <!ENTITY profile "http://www.daml.org/services/owl-s/1.1/Profile.owl#">
+  <!ENTITY process "http://www.daml.org/services/owl-s/1.1/Process.owl#">
+  <!ENTITY grounding "http://www.daml.org/services/owl-s/1.1/Grounding.owl#">
+  <!ENTITY xsd "http://www.w3.org/2001/XMLSchema">
+  <!ENTITY mind "http://localhost:8080/testSFservices/testSFservices/owl/owls/Addition.owl">
+  <!ENTITY dir "http://localhost:8080/testSFservices/services/Addition?wsdl">
+]>
+
+
+<rdf:RDF xmlns:rdf="&rdf;" xmlns:rdfs="&rdfs;" xmlns:owl="&owl;" xmlns:xsd="&xsd;#" 
+   xmlns:service="&service;" xmlns:process="&process;" xmlns:profile="&profile;" xmlns:grounding="&grounding;"
+   xmlns:mind="&mind;#"      
+   xml:base="http://localhost:8080/testSFservices/testSFservices/owl/owls/Addition.owl">
+
+<owl:Ontology>
+    <owl:imports rdf:resource="&service;"/>
+    <owl:imports rdf:resource="&profile;"/>
+    <owl:imports rdf:resource="&process;"/>
+    <owl:imports rdf:resource="&grounding;"/> 
+</owl:Ontology>
+
+<service:Service rdf:ID="AdditionService">
+        <service:presents rdf:resource="#AdditionProfile"/>
+	<service:describedBy rdf:resource="#AdditionProcess"/>
+	<service:supports rdf:resource="#AdditionGrounding"/>
+</service:Service>
+
+<profile:Profile rdf:ID="AdditionProfile">
+    <service:isPresentedBy rdf:resource="#AdditionService"/>
+    <profile:serviceName xml:lang="en">Addition</profile:serviceName>
+    <profile:hasInput rdf:resource="#x"/>
+    <profile:hasInput rdf:resource="#y"/>
+    <profile:hasOutput rdf:resource="#Result"/>
+</profile:Profile>
+
+
+<process:AtomicProcess rdf:ID="AdditionProcess">
+	<service:describes rdf:resource="#AdditionService"/>
+     	<process:hasInput rdf:resource="#x"/>
+	<process:hasInput rdf:resource="#y"/>
+	<process:hasOutput rdf:resource="#Result"/>
+</process:AtomicProcess>
+
+
+<process:Input rdf:ID="x">
+     <rdfs:label>x</rdfs:label>
+     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#double</process:parameterType>
+</process:Input>
+<process:Input rdf:ID="y">
+     <rdfs:label>y</rdfs:label>
+     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#double</process:parameterType>
+</process:Input>
+<process:Output rdf:ID="Result">
+    <rdfs:label>Result</rdfs:label>
+    <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#double</process:parameterType>
+</process:Output>         
+
+<grounding:WsdlGrounding rdf:ID="AdditionGrounding">
+	<service:supportedBy rdf:resource="#AdditionService"/>
+	<grounding:hasAtomicProcessGrounding rdf:resource="#AdditionWsdlAtomicProcessGrounding"/>
+</grounding:WsdlGrounding>
+
+
+<grounding:WsdlAtomicProcessGrounding rdf:ID="AdditionWsdlAtomicProcessGrounding">
+	<grounding:owlsProcess rdf:resource="#AdditionProcess"/>
+	<grounding:wsdlDocument rdf:datatype="&xsd;anyURI">http://localhost:8080/testSFservices/services/Addition?wsdl</grounding:wsdlDocument>
+	<grounding:wsdlOperation>
+            <grounding:WsdlOperationRef>
+                <grounding:portType rdf:datatype="&xsd;#anyURI">http://localhost:8080/testSFservices/services/AdditionOperationsPortType</grounding:portType>
+                <grounding:operation rdf:datatype="&xsd;#anyURI">http://localhost:8080/testSFservices/services/Addition</grounding:operation>
+            </grounding:WsdlOperationRef>
+        </grounding:wsdlOperation>
+
+	<grounding:wsdlInputMessage rdf:datatype="&xsd;anyURI">http://localhost:8080/testSFservices/services/AdditionMessage</grounding:wsdlInputMessage>
+        <grounding:wsdlOutputMessage rdf:datatype="&xsd;anyURI">http://localhost:8080/testSFservices/services/AdditionResponse</grounding:wsdlOutputMessage>
+       
+	<grounding:wsdlInput>
+                  <grounding:WsdlInputMessageMap>
+                    <grounding:owlsParameter rdf:resource="#x"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/testSFservices/services/x</grounding:wsdlMessagePart>
+                  </grounding:WsdlInputMessageMap>
+        </grounding:wsdlInput>
+
+	<grounding:wsdlInput>
+                  <grounding:WsdlInputMessageMap>
+                    <grounding:owlsParameter rdf:resource="#y"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/testSFservices/services/y</grounding:wsdlMessagePart>
+                  </grounding:WsdlInputMessageMap>
+        </grounding:wsdlInput>
+
+       <grounding:wsdlOutput>
+                  <grounding:WsdlOutputMessageMap>
+		    <grounding:owlsParameter rdf:resource="#Result"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/testSFservices/services/Result</grounding:wsdlMessagePart>
+                  </grounding:WsdlOutputMessageMap>
+        </grounding:wsdlOutput>
+</grounding:WsdlAtomicProcessGrounding>
+
+
+</rdf:RDF>

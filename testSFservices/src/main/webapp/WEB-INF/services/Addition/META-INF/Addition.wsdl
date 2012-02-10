@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="Addition" targetNamespace="http://wtp" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://wtp" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://wtp">
+  <xsd:element name="Addition">
+  <xsd:complexType>
+  <xsd:sequence>
+  <xsd:element name="x" type="xsd:double"/> 
+  <xsd:element name="y" type="xsd:double"/>  
+  </xsd:sequence>
+  </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="AdditionResponse">
+  <xsd:complexType>
+  <xsd:sequence>
+  <xsd:element name="Result" type="xsd:double"/> 
+  </xsd:sequence>
+  </xsd:complexType>
+  </xsd:element>
+  </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="AdditionResponse">
+    <wsdl:part name="parameters" element="tns:AdditionResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="AdditionMessage">
+    <wsdl:part name="parameters" element="tns:Addition">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="AdditionPortType">
+    <wsdl:operation name="Addition">
+      <wsdl:input message="tns:AdditionMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:AdditionResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="AdditionSOAP" type="tns:AdditionPortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="Addition">
+      <soap:operation soapAction="http://wtp"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="Addition">
+    <wsdl:port name="AdditionSOAP" binding="tns:AdditionSOAP">
+      <soap:address location="http://localhost:8080/sfservices/services/Addition"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
