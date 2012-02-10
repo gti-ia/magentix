@@ -28,7 +28,7 @@
 				wtp
 			</packageName>
 			<wsdlFile>
-				./src/main/webapp/WEB-INF/services/DeregisterService/META-INF/DeregisterService.wsdl
+				./src/main/webapp/WEB-INF/services/SearchService/META-INF/SearchService.wsdl
 			</wsdlFile>
 			<databindingName>adb</databindingName>
 			<generateServerSide>true</generateServerSide>
