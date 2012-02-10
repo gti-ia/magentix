@@ -111,6 +111,18 @@ public class ServiceClient {
 		    	BigInteger resBigInt=(BigInteger)resultObject;
 		    	result=Integer.toString(resBigInt.intValue());
 		    }
+		    else if(resultObject instanceof Double){
+		    	Double resDouble=(Double)resultObject;
+		    	result=Double.toString(resDouble);
+		    }
+		    else if(resultObject instanceof Float){
+		    	Float resFloat=(Float)resultObject;
+		    	result=Float.toString(resFloat);
+		    }
+		    else if(resultObject instanceof Boolean){
+		    	Boolean resBoolean=(Boolean)resultObject;
+		    	result=Boolean.toString(resBoolean);
+		    }
 		    else{
 		    	result=resultObject.toString();
 		    	System.err.println("BAD CONVERSION!!!");
