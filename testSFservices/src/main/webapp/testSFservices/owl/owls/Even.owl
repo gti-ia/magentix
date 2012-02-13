@@ -10,15 +10,16 @@
   <!ENTITY profile "http://www.daml.org/services/owl-s/1.1/Profile.owl#">
   <!ENTITY process "http://www.daml.org/services/owl-s/1.1/Process.owl#">
   <!ENTITY grounding "http://www.daml.org/services/owl-s/1.1/Grounding.owl#">
-  <!ENTITY xsd "http://www.w3.org/2001/XMLSchema">
+  <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#">
   <!ENTITY mind "http://localhost:8080/testSFservices/testSFservices/owl/owls/Even.owl">
   <!ENTITY dir "http://localhost:8080/testSFservices/services/Even?wsdl">
 ]>
 
 
-<rdf:RDF xmlns:rdf="&rdf;" xmlns:rdfs="&rdfs;" xmlns:owl="&owl;" xmlns:xsd="&xsd;#" 
+<rdf:RDF xmlns:rdf="&rdf;" xmlns:rdfs="&rdfs;" xmlns:owl="&owl;" xmlns:xsd="http://www.w3.org/2001/XMLSchema#" 
    xmlns:service="&service;" xmlns:process="&process;" xmlns:profile="&profile;" xmlns:grounding="&grounding;"
    xmlns:mind="&mind;#"      
+   xmlns:provider = "http://127.0.0.1/ontology/provider.owl#"
    xml:base="http://localhost:8080/testSFservices/testSFservices/owl/owls/Even.owl">
 
 <owl:Ontology>
@@ -26,17 +27,25 @@
     <owl:imports rdf:resource="&profile;"/>
     <owl:imports rdf:resource="&process;"/>
     <owl:imports rdf:resource="&grounding;"/> 
+    <owl:imports rdf:resource="http://127.0.0.1/ontology/provider.owl" />
 </owl:Ontology>
 
 <service:Service rdf:ID="EvenService">
         <service:presents rdf:resource="#EvenProfile"/>
 	<service:describedBy rdf:resource="#EvenProcess"/>
-	<service:supports rdf:resource="#EvenGrounding"/>
 </service:Service>
 
 <profile:Profile rdf:ID="EvenProfile">
     <service:isPresentedBy rdf:resource="#EvenService"/>
     <profile:serviceName xml:lang="en">Even</profile:serviceName>
+	<profile:contactInformation>
+	 <provider:Provider rdf:ID="EvenOrg">
+	   <provider:entityID rdf:datatype="^^xsd;string">EvenOrg</provider:entityID>
+	   <provider:entityType rdf:datatype="^^xsd;string">Organization</provider:entityType>
+	   <provider:language rdf:datatype="^^xsd;string">FIPA-ACL</provider:language>
+	   <provider:performative rdf:datatype="^^xsd;string">REQUEST</provider:performative>
+	 </provider:Provider>
+	</profile:contactInformation>
     <profile:hasInput rdf:resource="#x"/>
     <profile:hasOutput rdf:resource="#Result"/>
 </profile:Profile>
@@ -51,46 +60,13 @@
 
 <process:Input rdf:ID="x">
      <rdfs:label>x</rdfs:label>
-     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#double</process:parameterType>
+     <process:parameterType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.w3.org/2001/XMLSchema#double</process:parameterType>
 </process:Input>
 <process:Output rdf:ID="Result">
     <rdfs:label>Result</rdfs:label>
-    <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#boolean</process:parameterType>
+    <process:parameterType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.w3.org/2001/XMLSchema#boolean</process:parameterType>
 </process:Output>         
 
-<grounding:WsdlGrounding rdf:ID="EvenGrounding">
-	<service:supportedBy rdf:resource="#EvenService"/>
-	<grounding:hasAtomicProcessGrounding rdf:resource="#EvenWsdlAtomicProcessGrounding"/>
-</grounding:WsdlGrounding>
-
-
-<grounding:WsdlAtomicProcessGrounding rdf:ID="EvenWsdlAtomicProcessGrounding">
-	<grounding:owlsProcess rdf:resource="#EvenProcess"/>
-	<grounding:wsdlDocument rdf:datatype="&xsd;anyURI">http://localhost:8080/testSFservices/services/Even?wsdl</grounding:wsdlDocument>
-	<grounding:wsdlOperation>
-            <grounding:WsdlOperationRef>
-                <grounding:portType rdf:datatype="&xsd;#anyURI">http://localhost:8080/testSFservices/services/EvenOperationsPortType</grounding:portType>
-                <grounding:operation rdf:datatype="&xsd;#anyURI">http://localhost:8080/testSFservices/services/Even</grounding:operation>
-            </grounding:WsdlOperationRef>
-        </grounding:wsdlOperation>
-
-	<grounding:wsdlInputMessage rdf:datatype="&xsd;anyURI">http://localhost:8080/testSFservices/services/EvenMessage</grounding:wsdlInputMessage>
-        <grounding:wsdlOutputMessage rdf:datatype="&xsd;anyURI">http://localhost:8080/testSFservices/services/EvenResponse</grounding:wsdlOutputMessage>
-       
-	<grounding:wsdlInput>
-                  <grounding:WsdlInputMessageMap>
-                    <grounding:owlsParameter rdf:resource="#x"/>
-                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/testSFservices/services/x</grounding:wsdlMessagePart>
-                  </grounding:WsdlInputMessageMap>
-        </grounding:wsdlInput>
-
-       <grounding:wsdlOutput>
-                  <grounding:WsdlOutputMessageMap>
-		    <grounding:owlsParameter rdf:resource="#Result"/>
-                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/testSFservices/services/Result</grounding:wsdlMessagePart>
-                  </grounding:WsdlOutputMessageMap>
-        </grounding:wsdlOutput>
-</grounding:WsdlAtomicProcessGrounding>
 
 
 </rdf:RDF>

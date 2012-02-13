@@ -10,15 +10,16 @@
   <!ENTITY profile "http://www.daml.org/services/owl-s/1.1/Profile.owl#">
   <!ENTITY process "http://www.daml.org/services/owl-s/1.1/Process.owl#">
   <!ENTITY grounding "http://www.daml.org/services/owl-s/1.1/Grounding.owl#">
-  <!ENTITY xsd "http://www.w3.org/2001/XMLSchema">
+  <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#">
   <!ENTITY mind "http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl">
   <!ENTITY dir "http://localhost:8080/testSFservices/services/Product?wsdl">
 ]>
 
 
-<rdf:RDF xmlns:rdf="&rdf;" xmlns:rdfs="&rdfs;" xmlns:owl="&owl;" xmlns:xsd="&xsd;#" 
+<rdf:RDF xmlns:rdf="&rdf;" xmlns:rdfs="&rdfs;" xmlns:owl="&owl;" xmlns:xsd="http://www.w3.org/2001/XMLSchema#" 
    xmlns:service="&service;" xmlns:process="&process;" xmlns:profile="&profile;" xmlns:grounding="&grounding;"
-   xmlns:mind="&mind;#"      
+   xmlns:mind="&mind;#"   
+   xmlns:provider = "http://127.0.0.1/ontology/provider.owl#"   
    xml:base="http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl">
 
 <owl:Ontology>
@@ -26,6 +27,7 @@
     <owl:imports rdf:resource="&profile;"/>
     <owl:imports rdf:resource="&process;"/>
     <owl:imports rdf:resource="&grounding;"/> 
+    <owl:imports rdf:resource="http://127.0.0.1/ontology/provider.owl" />
 </owl:Ontology>
 
 <service:Service rdf:ID="ProductService">
@@ -37,6 +39,14 @@
 <profile:Profile rdf:ID="ProductProfile">
     <service:isPresentedBy rdf:resource="#ProductService"/>
     <profile:serviceName xml:lang="en">Product</profile:serviceName>
+	<profile:contactInformation>
+	 <provider:Provider rdf:ID="ProductAgent">
+	   <provider:entityID rdf:datatype="^^xsd;string">ProductAgent</provider:entityID>
+	   <provider:entityType rdf:datatype="^^xsd;string">Agent</provider:entityType>
+	   <provider:language rdf:datatype="^^xsd;string">FIPA-ACL</provider:language>
+	   <provider:performative rdf:datatype="^^xsd;string">REQUEST</provider:performative>
+	 </provider:Provider>
+	</profile:contactInformation>
     <profile:hasInput rdf:resource="#x"/>
     <profile:hasInput rdf:resource="#y"/>
     <profile:hasOutput rdf:resource="#Result"/>
@@ -53,15 +63,15 @@
 
 <process:Input rdf:ID="x">
      <rdfs:label>x</rdfs:label>
-     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#double</process:parameterType>
+     <process:parameterType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.w3.org/2001/XMLSchema#double</process:parameterType>
 </process:Input>
 <process:Input rdf:ID="y">
      <rdfs:label>y</rdfs:label>
-     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#double</process:parameterType>
+     <process:parameterType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.w3.org/2001/XMLSchema#double</process:parameterType>
 </process:Input>
 <process:Output rdf:ID="Result">
     <rdfs:label>Result</rdfs:label>
-    <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#double</process:parameterType>
+    <process:parameterType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.w3.org/2001/XMLSchema#double</process:parameterType>
 </process:Output>         
 
 <grounding:WsdlGrounding rdf:ID="ProductGrounding">
@@ -72,35 +82,35 @@
 
 <grounding:WsdlAtomicProcessGrounding rdf:ID="ProductWsdlAtomicProcessGrounding">
 	<grounding:owlsProcess rdf:resource="#ProductProcess"/>
-	<grounding:wsdlDocument rdf:datatype="&xsd;anyURI">http://localhost:8080/testSFservices/services/Product?wsdl</grounding:wsdlDocument>
+	<grounding:wsdlDocument rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://localhost:8080/testSFservices/services/Product?wsdl</grounding:wsdlDocument>
 	<grounding:wsdlOperation>
             <grounding:WsdlOperationRef>
-                <grounding:portType rdf:datatype="&xsd;#anyURI">http://localhost:8080/testSFservices/services/ProductOperationsPortType</grounding:portType>
-                <grounding:operation rdf:datatype="&xsd;#anyURI">http://localhost:8080/testSFservices/services/Product</grounding:operation>
+                <grounding:portType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://localhost:8080/testSFservices/services/ProductOperationsPortType</grounding:portType>
+                <grounding:operation rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://localhost:8080/testSFservices/services/Product</grounding:operation>
             </grounding:WsdlOperationRef>
         </grounding:wsdlOperation>
 
-	<grounding:wsdlInputMessage rdf:datatype="&xsd;anyURI">http://localhost:8080/testSFservices/services/ProductMessage</grounding:wsdlInputMessage>
-        <grounding:wsdlOutputMessage rdf:datatype="&xsd;anyURI">http://localhost:8080/testSFservices/services/ProductResponse</grounding:wsdlOutputMessage>
+	<grounding:wsdlInputMessage rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://localhost:8080/testSFservices/services/ProductMessage</grounding:wsdlInputMessage>
+        <grounding:wsdlOutputMessage rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://localhost:8080/testSFservices/services/ProductResponse</grounding:wsdlOutputMessage>
        
 	<grounding:wsdlInput>
                   <grounding:WsdlInputMessageMap>
                     <grounding:owlsParameter rdf:resource="#x"/>
-                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/testSFservices/services/x</grounding:wsdlMessagePart>
+                    <grounding:wsdlMessagePart rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://localhost:8080/testSFservices/services/x</grounding:wsdlMessagePart>
                   </grounding:WsdlInputMessageMap>
         </grounding:wsdlInput>
 
 	<grounding:wsdlInput>
                   <grounding:WsdlInputMessageMap>
                     <grounding:owlsParameter rdf:resource="#y"/>
-                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/testSFservices/services/y</grounding:wsdlMessagePart>
+                    <grounding:wsdlMessagePart rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://localhost:8080/testSFservices/services/y</grounding:wsdlMessagePart>
                   </grounding:WsdlInputMessageMap>
         </grounding:wsdlInput>
 
        <grounding:wsdlOutput>
                   <grounding:WsdlOutputMessageMap>
 		    <grounding:owlsParameter rdf:resource="#Result"/>
-                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/testSFservices/services/Result</grounding:wsdlMessagePart>
+                    <grounding:wsdlMessagePart rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://localhost:8080/testSFservices/services/Result</grounding:wsdlMessagePart>
                   </grounding:WsdlOutputMessageMap>
         </grounding:wsdlOutput>
 </grounding:WsdlAtomicProcessGrounding>
