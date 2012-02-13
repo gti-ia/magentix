@@ -337,6 +337,7 @@ public class SFinterface {
 			owlsService=getServiceOWLS(regServiceProfile);
 			
 		}catch(Exception e){
+			e.printStackTrace();
 			resultXML+="<status>Error</status>\n";
 			resultXML+="<result>\n<description>ERROR: "+e.getMessage()+"</description>\n</result>\n";
 
@@ -351,7 +352,7 @@ public class SFinterface {
 			resultXML+="<status>Ok</status>\n";
 		
 		resultXML+="<result>\n<description>"+description+"</description>\n"+
-				"<specification>\n"+owlsService+"\n</specification>\n</result>\n";
+				"<specification>\n<!-- "+owlsService+" -->\n</specification>\n</result>\n";
 
 		resultXML+="</response>";
 
@@ -448,7 +449,7 @@ public class SFinterface {
 		}
 		else{
 			resultXML+="<status>Ok</status>\n";
-			resultXML+="<result>\n<specification>\n"+owlsService+"\n</specification>\n</result>\n";
+			resultXML+="<result>\n<specification><!-- \n"+owlsService+" -->\n</specification>\n</result>\n";
 		}
 		resultXML+="</response>";
 
@@ -1779,7 +1780,8 @@ public class SFinterface {
 			}
 
 		}catch(Exception e){
-			throw new THOMASException(e.getMessage());
+//			e.printStackTrace();
+			throw new THOMASException(e.toString());
 		}
 		return serviceName;
 
@@ -2136,7 +2138,7 @@ public class SFinterface {
 
 		if (resultsSearchName != null) {
 
-			if(resultsSearchName.hasNext()) {
+			while(resultsSearchName.hasNext()) {
 				String wsdldoc=resultsSearchName.next().getLiteral("x").toString();
 				WSDLDocs.add(wsdldoc);
 				//System.out.println("wsdldoc="+wsdldoc);
@@ -2171,7 +2173,7 @@ public class SFinterface {
 		OntModel m = ModelFactory.createOntologyModel(spec, base);
 		//load the service profile in the database
 		m.read(serviceURL);
-
+		
 		String queryStringSearchName =
 				"prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>"+
 						"prefix xsd: <http://www.w3.org/2001/XMLSchema#>"+

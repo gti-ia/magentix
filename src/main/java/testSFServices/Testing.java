@@ -184,7 +184,7 @@ public class Testing {
 
 		//sf.writeModel();
 
-		//		sf.clean();
+//				sf.clean();
 
 		//		try {
 		//sf.DeregisterService("http://127.0.0.1/services/1.1/calculateSunriseTime.owls");
@@ -209,22 +209,24 @@ public class Testing {
 
 
 //		sf.clean();
-		String r=sf.registerService("http://127.0.0.1/services/1.1/calculateSunriseTime.owls");
-		System.out.println(r);
+//		String r=sf.registerService("http://127.0.0.1/services/1.1/calculateSunriseTime.owls");
+//		System.out.println(r);
 		//		r=sf.RegisterService("http://127.0.0.1/services/1.1/author_bookprice_service.owls");
 		//		System.out.println(r);
 
 		//		String r=sf.SearchService(inputs, outputs, keywords);
 		//		System.out.println(r);
 
-//		String r2=sf.deregisterService("http://127.0.0.1/services/1.1/calculateSunriseTime.owls#CALCULATE_SUNRISE_PROFILE");
-//		System.out.println(r2);
+		String r2=sf.deregisterService("http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#DivisionProfile");
+		System.out.println(r2);
+		String r=sf.registerService("http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl");
+		System.out.println(r);
 //		String r3=sf.removeProvider("http://127.0.0.1/services/1.1/calculateSunriseTime.owls#CALCULATE_SUNRISE_PROFILE", ground);
 ////		String r=sf.RemoveProvider("http://127.0.0.1/services/1.1/calculateSunriseTime.owls#CALCULATE_SUNRISE_PROFILE", "Provider2");
 //		System.out.println(r3);
 		
-		String r4=sf.getService("http://127.0.0.1/services/1.1/calculateSunriseTime.owls#CALCULATE_SUNRISE_PROFILE");
-		System.out.println(r4);
+//		String r4=sf.getService("http://127.0.0.1/services/1.1/calculateSunriseTime.owls#CALCULATE_SUNRISE_PROFILE");
+//		System.out.println(r4);
 		
 		System.out.println("MODEL:");
 		sf.writeModel();
