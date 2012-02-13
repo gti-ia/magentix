@@ -68,25 +68,17 @@ public class Creator extends QueueAgent {
 			omsProxy.deregisterRole("manager", "calculin");
 			
 			
-		//	ArrayList<ArrayList<String>> agentRole;
+	
 			
 			do
 			{
 				m.waiting(3 * 1000);
-				//agentRole = omsProxy.informAgentRole("agente_ruidoso");
+	
 				members = omsProxy.informMembers("externa", "manager", "");
 			}while(members.contains("agente_ruidoso"));
 
 			
-			omsProxy.deregisterUnit("externa");
-			
-			
-			omsProxy.deregisterUnit("calculin");
-			
-
-			omsProxy.leaveRole("participant", "virtual");
-			
-			logger.info("["+this.getName()+" ] end execution!");
+	
 
 		}catch(THOMASException e)
 		{
@@ -121,17 +113,14 @@ public class Creator extends QueueAgent {
 		try
 		{
 
-			String result = omsProxy.deregisterRole("operador", "calculin");
-			System.out.println("["+this.getName()+"] Result leave role operador: "+result);
-
-			result = omsProxy.deregisterRole("manager", "calculin");
-			System.out.println("["+this.getName()+"] Result leave role manager: "+result);
+			omsProxy.deregisterUnit("externa");
 			
-			result = omsProxy.deregisterUnit("calculin");
-			System.out.println("["+this.getName()+"] Result deregister unit calculin: "+result);
+			
+			omsProxy.deregisterUnit("calculin");
+			
 
-			result = omsProxy.leaveRole("participant", "virtual");
-			System.out.println("["+this.getName()+"] Result leave role participant: "+result);
+			omsProxy.leaveRole("participant", "virtual");
+			
 
 			logger.info("["+this.getName()+" ] end execution!");
 

@@ -52,23 +52,13 @@ public class Run {
 			Display visAgent = new Display(new AgentID("agente_visor"));
 			
 			iniAgent.start();
-			Thread.sleep(10 * 1000);//Esperamos a que se inicialize la estructura
+			Thread.sleep(5 * 1000);//Esperamos a que se inicialize la estructura
 			ruiAgent.start();
 			proAgent.start();
 			sumAgent.start();
 			visAgent.start();
 			sumtAgent.start();
 		
-			Thread.sleep(60*1000);
-			
-			
-
-			visAgent.conclude();
-			sumAgent.conclude();
-			proAgent.conclude();
-			ruiAgent.conclude();
-			Thread.sleep(60*1000);
-			iniAgent.finalize();
 			
 
 		} catch (Exception e) {

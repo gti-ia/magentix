@@ -62,7 +62,7 @@ public class Product extends QueueAgent {
 				
 			}while(!finished);
 
-			m.waiting();
+			
 
 		}catch(THOMASException e)
 		{
@@ -125,7 +125,7 @@ public class Product extends QueueAgent {
 
 		protected ACLMessage prepareResultNotification(ACLMessage inmsg, ACLMessage outmsg) {
 
-ACLMessage msg = inmsg.createReply();
+			ACLMessage msg = inmsg.createReply();
 			
 			
 			if (inmsg.getContent().equals("shut down"))

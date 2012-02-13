@@ -38,7 +38,8 @@ public class Summation extends QueueAgent {
 
 			
 			this.send_shutdown();
-
+			
+			m.waiting(1*1000);
 
 
 

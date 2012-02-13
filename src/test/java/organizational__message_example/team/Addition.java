@@ -81,7 +81,7 @@ public class Addition extends QueueAgent {
 
 	public void conclude()
 	{
-		m.advise();
+		finished=true;
 	}
 	public void finalize()
 	{
