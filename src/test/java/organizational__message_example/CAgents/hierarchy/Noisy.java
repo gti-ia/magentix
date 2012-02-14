@@ -27,6 +27,9 @@ public class Noisy extends CAgent {
 
 		try
 		{
+			OMSProxy omsProxy = new OMSProxy(this);
+
+			
 			String result = omsProxy.acquireRole("participant", "virtual");
 			logger.info("["+this.getName()+"] Result acquire role participant: "+result);
 
@@ -38,6 +41,19 @@ public class Noisy extends CAgent {
 			this.send_request(1,7);
 			
 			omsProxy.allocateRole("creador", "externa", "agente_creador");
+			
+			result = omsProxy.leaveRole("manager", "externa");
+			logger.info("["+this.getName()+"] Result leave role manager: "+result);
+			
+			result = omsProxy.leaveRole("creador", "externa");
+			logger.info("["+this.getName()+"] Result leave role manager: "+result);
+		
+			result = omsProxy.leaveRole("participant", "virtual");
+			logger.info("["+this.getName()+"] Result leave role participant: "+result);
+
+			logger.info("["+this.getName()+" ] end execution!");
+			
+			firstProcessor.ShutdownAgent();
 
 		}catch(THOMASException e)
 		{
@@ -84,22 +100,7 @@ public class Noisy extends CAgent {
 	@Override
 	protected void finalize(CProcessor firstProcessor,
 			ACLMessage finalizeMessage) {
-		try
-		{
-			String result = omsProxy.leaveRole("manager", "externa");
-			logger.info("["+this.getName()+"] Result leave role manager: "+result);
-			
-			result = omsProxy.leaveRole("creador", "externa");
-			logger.info("["+this.getName()+"] Result leave role manager: "+result);
-		
-			result = omsProxy.leaveRole("participant", "virtual");
-			logger.info("["+this.getName()+"] Result leave role participant: "+result);
 
-			logger.info("["+this.getName()+" ] end execution!");
-		}catch(THOMASException e)
-		{
-			e.printStackTrace();
-		}
 		
 	}
 

@@ -44,8 +44,9 @@ public class Creator extends CAgent {
 			
 			this.sendRequest(4, 6);
 
+			omsProxy.acquireRole("manager", "calculin");
 			MessageFilter filter_shutdown = new MessageFilter("shutdown = true");
-			MessageFilter filter_generic = new MessageFilter("shutdown = false");
+			
 			
 			
 			
@@ -77,7 +78,7 @@ public class Creator extends CAgent {
 			ReceiveState RECEIVE_GENERIC = new ReceiveState("RECEIVE_GENERIC");
 			
 			RECEIVE_SHUTDOWN.setAcceptFilter(filter_shutdown);
-			RECEIVE_GENERIC.setAcceptFilter(filter_generic);
+			RECEIVE_GENERIC.setAcceptFilter(null);
 			
 			RECEIVE_SHUTDOWN.setMethod(new RECEIVE_SHUTDOWN_Method());
 			RECEIVE_GENERIC.setMethod(new RECEIVE_GENERIC_Method());
@@ -151,10 +152,10 @@ public class Creator extends CAgent {
 			omsProxy.allocateRole("manager", "calculin", "agente_visor");
 //			
 //			
-	//		omsProxy.allocateRole("manager", "calculin", "agente_sumatorio");
+			omsProxy.allocateRole("manager", "calculin", "agente_sumatorio");
 //			
 //			
-			omsProxy.allocateRole("manager", "calculin", "agente_sumaPotencias");
+			//omsProxy.allocateRole("manager", "calculin", "agente_sumaPotencias");
 			
 		}catch(THOMASException e)
 		{
@@ -196,7 +197,7 @@ public class Creator extends CAgent {
 	class RECEIVE_SHUTDOWN_Method implements ReceiveStateMethod {
 
 		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
-			System.out.println("RECEIVE");
+			System.out.println("["+myProcessor.getMyAgent().getName()+"]RECEIVE SHUTDOWN");
 			String state = "FINAL";
 		
 			return state;
@@ -207,7 +208,7 @@ public class Creator extends CAgent {
 	class RECEIVE_GENERIC_Method implements ReceiveStateMethod {
 
 		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
-			System.out.println("RECEIVE");
+			System.out.println("["+myProcessor.getMyAgent().getName()+"]RECEIVE GENERIC");
 			String state = "WAIT";
 		
 			return state;
@@ -225,7 +226,7 @@ public class Creator extends CAgent {
 			try{
 				
 			
-			omsProxy.acquireRole("manager", "calculin");
+			
 			
 			omsProxy.jointUnit("externa", "calculin");
 			

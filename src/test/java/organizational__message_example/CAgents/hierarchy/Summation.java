@@ -83,16 +83,20 @@ public class Summation extends CAgent {
 
 
 			SendState SEND_RESULT = new SendState("SEND_RESULT");
+			SendState SEND_SHUTDOWN = new SendState("SEND_SHUTDOWN");
 			FinalState FINAL = new FinalState("FINAL");
 
 			talk.cProcessorTemplate().registerState(SEND_RESULT);
+			talk.cProcessorTemplate().registerState(SEND_SHUTDOWN);
 			FINAL.setMethod(new FINAL_Method());
 
 			talk.cProcessorTemplate().registerState(FINAL);
 
 			SEND_RESULT.setMethod(new RESPONSE_Method());
-
-			talk.cProcessorTemplate().addTransition(SEND_RESULT, FINAL);
+			SEND_SHUTDOWN.setMethod(new SEND_SHUTDOWN_Method());
+			
+			talk.cProcessorTemplate().addTransition(SEND_RESULT, SEND_SHUTDOWN);
+			talk.cProcessorTemplate().addTransition(SEND_SHUTDOWN, FINAL);
 			talk.cProcessorTemplate().addTransition(SEND_RESULT, REQUEST);
 			talk.cProcessorTemplate().addTransition(REQUEST, FINAL);
 			talk.cProcessorTemplate().addTransition(RECEIVE, FINAL);
@@ -109,9 +113,7 @@ public class Summation extends CAgent {
 
 
 			System.out.println("ACABE");
-			omsProxy.leaveRole("manager", "calculin");
-
-			omsProxy.leaveRole("participant", "virtual");
+		
 
 		} catch (THOMASException e) {
 			// TODO Auto-generated catch block
@@ -134,19 +136,6 @@ public class Summation extends CAgent {
 	}
 
 
-	private void send_request(int n1, int n2) {
-
-		ACLMessage msg = new ACLMessage();
-		msg.setPerformative(InteractionProtocol.FIPA_REQUEST);
-		msg.setProtocol(InteractionProtocol.FIPA_REQUEST);
-		msg.setLanguage("ACL");
-		msg.setContent(n1+" "+n2);
-		msg.setSender(this.getAid());
-		msg.setReceiver(new AgentID("agente_suma"));
-
-		send(msg);
-
-	}
 
 	@Override
 	protected void finalize(CProcessor firstProcessor,
@@ -260,9 +249,9 @@ public class Summation extends CAgent {
 
 
 			ACLMessage msg;
-			String state = "FINAL";
+			String state = "SEND_SHUTDOWN";
 			OMSProxy omsProxy = new OMSProxy(myProcessor);
-			logger.info("pool");
+			
 			try {
 				msg = omsProxy.buildOrganizationalMessage("calculin");
 
@@ -282,7 +271,7 @@ public class Summation extends CAgent {
 			} catch (THOMASException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-				state = "FINAL";
+				state = "SEND_SHUTDOWN";
 			}
 			return state;
 
@@ -290,27 +279,46 @@ public class Summation extends CAgent {
 
 	}
 
+	class SEND_SHUTDOWN_Method implements SendStateMethod
+	{
+
+		@Override
+		public String run(CProcessor myProcessor, ACLMessage messageToSend) {
+			OMSProxy omsProxy = new OMSProxy(myProcessor);
+			String state = "FINAL";
+			try {	
+				
+				ACLMessage msg = omsProxy.buildOrganizationalMessage("calculin");
+				messageToSend.copyFromAsTemplate(msg);
+				
+				messageToSend.setPerformative(InteractionProtocol.FIPA_REQUEST);
+				messageToSend.setProtocol(InteractionProtocol.FIPA_REQUEST);
+				messageToSend.setLanguage("ACL");
+				messageToSend.setContent("shut down");
+				
+				messageToSend.setHeader("shutdown", "true");
+
+				System.out.println("["+myProcessor.getMyAgent().getAid().name+"]Shutdown");
+
+				
+			} catch (THOMASException e) {
+				e.printStackTrace();
+
+			}	
+			return state;
+		}
+		
+	}
 	class FINAL_Method implements FinalStateMethod {
 		public void run(CProcessor myProcessor, ACLMessage responseMessage) {
 
 			OMSProxy omsProxy = new OMSProxy(myProcessor);
 
 			try {
-				ACLMessage msg = omsProxy.buildOrganizationalMessage("calculin");
-				responseMessage.copyFromAsTemplate(msg);
 				
-				responseMessage.setPerformative(InteractionProtocol.FIPA_REQUEST);
-				responseMessage.setProtocol(InteractionProtocol.FIPA_REQUEST);
-				responseMessage.setLanguage("ACL");
-				responseMessage.setContent("shut down");
-				
-				responseMessage.setHeader("shutdown", "true");
+				omsProxy.leaveRole("manager", "calculin");
 
-				
-
-				responseMessage = msg;
-				System.out.println("["+myProcessor.getMyAgent().getAid().name+"]Shutdown");
-
+				omsProxy.leaveRole("participant", "virtual");
 
 			} catch (THOMASException e) {
 				e.printStackTrace();

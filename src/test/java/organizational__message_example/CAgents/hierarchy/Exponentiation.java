@@ -261,6 +261,13 @@ public class Exponentiation extends CAgent {
 	class LEAVE_MANAGER_Method implements ActionStateMethod {
 		@Override
 		public String run(CProcessor myProcessor) {
+			
+			try {
+				Thread.sleep(1 * 1000);
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			String state = "REQUEST";
 			System.out.println("["+myProcessor.getMyAgent().getAid().name+"]LEAVE MANAGER: ");
 			try

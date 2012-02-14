@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import organizational__message_example.CAgents.hierarchy.Product.RECEIVE_Shutdown_Method;
+
 import es.upv.dsic.gti_ia.architecture.Monitor;
 import es.upv.dsic.gti_ia.cAgents.BeginState;
 import es.upv.dsic.gti_ia.cAgents.BeginStateMethod;
@@ -41,6 +43,7 @@ public class Display extends CAgent {
 
 		try
 		{
+			logger.info("pool");
 			omsProxy.acquireRole("participant", "virtual");
 
 			MessageFilter filter = new MessageFilter("performative = REQUEST OR performative = INFORM");
@@ -57,9 +60,18 @@ public class Display extends CAgent {
 
 
 			WaitState WAIT = new WaitState("WAIT", 0);
+			additionTalk.cProcessorTemplate().registerState(WAIT);
+			
+			ReceiveState RECEIVE_SHUTDOWN = new ReceiveState("RECEIVE_SHUTDOWN");
+			RECEIVE_SHUTDOWN.setAcceptFilter(new MessageFilter("shutdown = true")); // null -> accept any message
+			RECEIVE_SHUTDOWN.setMethod(new RECEIVE_Shutdown_Method());
+			additionTalk.cProcessorTemplate().registerState(RECEIVE_SHUTDOWN);
+			additionTalk.cProcessorTemplate().addTransition(WAIT, RECEIVE_SHUTDOWN);
+			
+			
 			
 			additionTalk.cProcessorTemplate().addTransition(BEGIN, WAIT);
-			additionTalk.cProcessorTemplate().registerState(WAIT);
+			
 
 			
 
@@ -82,7 +94,7 @@ public class Display extends CAgent {
 
 
 
-			additionTalk.cProcessorTemplate().addTransition(RECEIVE, FINAL);
+			additionTalk.cProcessorTemplate().addTransition(RECEIVE_SHUTDOWN, FINAL);
 			
 			this.addFactoryAsParticipant(additionTalk);
 		
@@ -125,18 +137,26 @@ public class Display extends CAgent {
 	}
 
 
+	class RECEIVE_Shutdown_Method implements ReceiveStateMethod
+	{
 
+		
+		public String run(CProcessor myProcessor, ACLMessage receivedMessage) {
+			
+			System.out.println("["+myProcessor.getMyAgent().getAid().name+"]SHUTDOWN");
+			String state = "FINAL";
+			
+			return state;
+		}
+		
+	}
+	
 	class RECEIVE_Method implements ReceiveStateMethod {
 		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
 
 			String state = "WAIT";
 
-			if (messageReceived.getContent().equals("shut down"))
-			{
-				state = "FINAL";
-			}
-			else
-			{
+		
 				ArrayList<ArrayList<String>> informMembers;
 				try {
 					informMembers = omsProxy.informMembers("calculin","","supervisor");
@@ -154,7 +174,7 @@ public class Display extends CAgent {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-			}
+		
 
 			return state;
 		}
