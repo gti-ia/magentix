@@ -6,10 +6,16 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 import es.upv.dsic.gti_ia.architecture.Monitor;
+import es.upv.dsic.gti_ia.cAgents.BeginState;
+import es.upv.dsic.gti_ia.cAgents.BeginStateMethod;
 import es.upv.dsic.gti_ia.cAgents.CAgent;
 import es.upv.dsic.gti_ia.cAgents.CFactory;
 import es.upv.dsic.gti_ia.cAgents.CProcessor;
-import es.upv.dsic.gti_ia.cAgents.protocols.FIPA_REQUEST_Participant;
+import es.upv.dsic.gti_ia.cAgents.FinalState;
+import es.upv.dsic.gti_ia.cAgents.FinalStateMethod;
+import es.upv.dsic.gti_ia.cAgents.ReceiveState;
+import es.upv.dsic.gti_ia.cAgents.ReceiveStateMethod;
+import es.upv.dsic.gti_ia.cAgents.WaitState;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.MessageFilter;
@@ -37,204 +43,61 @@ public class Display extends CAgent {
 		{
 			omsProxy.acquireRole("participant", "virtual");
 
+			MessageFilter filter = new MessageFilter("performative = REQUEST OR performative = INFORM");
 
-			class ShutdownAgentFIPA_REQUEST extends FIPA_REQUEST_Participant {
+			CFactory additionTalk = new CFactory("PRODUCT_TALK", filter, 1,this);
 
-				@Override
-				protected String doAction(CProcessor myProcessor) {
-					CAgent cAgent = myProcessor.getMyAgent();
-					return "INFORM";
-				}
 
-				@Override
-				protected void doInform(CProcessor myProcessor, ACLMessage response) {
-					CAgent cAgent = myProcessor.getMyAgent();
-					response.setSender(cAgent.getAid());
-					response.setReceiver(myProcessor.getLastReceivedMessage().getSender());
-					response.setHeader("shutdown", "ShutdownAgent");
-					response.setContent("All my published services have been removed and all played roles have been left.");
+			//----------------------------BEGIN STATE----------------------------------
+			BeginState BEGIN = (BeginState) additionTalk.cProcessorTemplate().getState("BEGIN");
+			BEGIN.setMethod(new BEGIN_Method());
 
-					myProcessor.ShutdownAgent();
-				}
-
-				@Override
-				protected String doReceiveRequest(CProcessor myProcessor, ACLMessage request) {
-					return "AGREE";
-				}
-
-				@Override
-				protected void doAgree(CProcessor myProcessor, ACLMessage messageToSend) {
-					messageToSend.setPerformative(ACLMessage.AGREE);
-					messageToSend.setHeader("shutdown", "ShutdownAgent");
-					messageToSend.setSender(myProcessor.getMyAgent().getAid());
-					messageToSend.setReceiver(myProcessor.getLastReceivedMessage().getSender());
-					messageToSend.setHeader("shutdown", "ShutdownAgent");
-					messageToSend.setContent("Received 'Shutdown' order.");
-				}
-			}
 
 			
-			MessageFilter shutdownFilter = new MessageFilter("performative = " + ACLMessage.getPerformative(ACLMessage.REQUEST) + "  AND shutdown = ShutdownAgent");
 
-			CFactory shutdownTalk = new ShutdownAgentFIPA_REQUEST().newFactory("ShutdownTalk", shutdownFilter, 1, firstProcessor.getMyAgent());
-			// The template processor is ready. We activate the factory
-			// as participant. Every message that arrives to the agent
-			// with the performative set to REQUEST will make the factory
-			// ShutdownTalk to create a processor in order to manage the
-			// conversation.
-			this.addFactoryAsParticipant(shutdownTalk);
+
+			WaitState WAIT = new WaitState("WAIT", 0);
 			
+			additionTalk.cProcessorTemplate().addTransition(BEGIN, WAIT);
+			additionTalk.cProcessorTemplate().registerState(WAIT);
+
 			
-			
-			// The agent creates the CFactory that manages every message which its
-			// performative is set to PROPOSE and filter is set to shutdown.
-
-			// The agent creates the CFactory that manages every message which its
-			// performative is set to REQUEST and filter is set to shutdown.
-
-			// We create a factory in order to manage ShutdownAgent orders
-			class agentFIPA_REQUEST extends FIPA_REQUEST_Participant {
-
-				int n=0;
-				@Override
-				protected String doAction(CProcessor myProcessor) {
-					CAgent cAgent = myProcessor.getMyAgent();
-					return "INFORM";
-				}
-
-				@Override
-				protected void doInform(CProcessor myProcessor, ACLMessage response) {
-					CAgent cAgent = myProcessor.getMyAgent();
-					response.setSender(cAgent.getAid());
-					response.setReceiver(myProcessor.getLastReceivedMessage().getSender());
-	
-				}
-
-				@Override
-				protected String doReceiveRequest(CProcessor myProcessor, ACLMessage request) {
-					return "AGREE";
-				}
-
-				@Override
-				protected void doAgree(CProcessor myProcessor, ACLMessage messageToSend) {
-					messageToSend.setPerformative(ACLMessage.AGREE);
-					messageToSend.setSender(myProcessor.getMyAgent().getAid());
-					messageToSend.setReceiver(myProcessor.getLastReceivedMessage().getSender());
-					messageToSend.setContent("OK");
-				}
-			}
-			
-			//Waiting for messages.
-
-			MessageFilter fipaRequestFilter = new MessageFilter("receiver = calculin OR shutdown = " );
-
-			CFactory shutdownTalk = new agentFIPA_REQUEST().newFactory("fipaRequestTalk", fipaRequestFilter, 1, firstProcessor.getMyAgent());
-			// The template processor is ready. We activate the factory
-			// as participant. Every message that arrives to the agent
-			// with the performative set to REQUEST will make the factory
-			// ShutdownTalk to create a processor in order to manage the
-			// conversation.
-			this.addFactoryAsParticipant(shutdownTalk);
-			
-			do{
-				m.waiting();  //Waiting messages. The method onMessage is in charge of warning when a new message arrive
-
-				do{
-					this.displayMessage(messageList.poll());
-				}while(messageList.size() != 0);
-			}while(!finished);
-
-			ArrayList<String> result = omsProxy.informUnit("externa");
-
-			System.out.println("---------------------");
-			System.out.println("unit external");
-			System.out.println("type: "+ result.get(0));
-			System.out.println("parent unit: "+ result.get(1));
-			System.out.println("---------------------");
-
-			ArrayList<ArrayList<String>> informUnitRoles = omsProxy.informUnitRoles("calculin");
-
-			for(ArrayList<String> unitRole : informUnitRoles)
-			{
-				System.out.println("---------------------");
-
-				System.out.println("role name: "+unitRole.get(0));
-				System.out.println("position: "+ unitRole.get(1));
-				System.out.println("visibility: "+ unitRole.get(2));
-				System.out.println("accesibility: "+ unitRole.get(3));
-
-				System.out.println("---------------------");
-			}
-
-			omsProxy.leaveRole("manager", "calculin");
-
-			omsProxy.leaveRole("participant", "virtual");
-
-		}catch(THOMASException e)
-		{
-			e.printStackTrace();
-		}
 
 
-	}
+			ReceiveState RECEIVE = new ReceiveState("RECEIVE");
+			RECEIVE.setAcceptFilter(filter); // null -> accept any message
+			RECEIVE.setMethod(new RECEIVE_Method());
+
+			additionTalk.cProcessorTemplate().registerState(RECEIVE);
+			additionTalk.cProcessorTemplate().addTransition(WAIT, RECEIVE);
+			additionTalk.cProcessorTemplate().addTransition(RECEIVE, WAIT);
 
 
-
-	/**
-	 * Display agent messages with position qual to supervisor 
-	 * @param _msg
-	 */
-	public void displayMessage(ACLMessage _msg)
-	{
-
-		try
-		{
-			
-			ACLMessage msg = _msg;
-
-			/**
-			For every role that exists in the unit calculin we extract the members who have this role
-			 **/
-
-
-			if (msg.getContent().equals("shut down"))
-				finished = true;
-			ArrayList<ArrayList<String>> informMembers = omsProxy.informMembers("calculin","","supervisor");
 		
 			
-			for(ArrayList<String> informMember : informMembers)
-			{
-				//If the agent is equal to the sender, then the position is extracted
-				if (informMember.get(0).equals(msg.getSender().name))
-					System.out.println("[ "+this.getName()+" ]  "+ msg.getSender().name+" says " + msg.getContent());
-			}
-
 			
+			FinalState FINAL = new FinalState("FINAL");
+			FINAL.setMethod(new FINAL_Method());
+			additionTalk.cProcessorTemplate().registerState(FINAL);
 
 
+
+			additionTalk.cProcessorTemplate().addTransition(RECEIVE, FINAL);
+			
+			this.addFactoryAsParticipant(additionTalk);
+		
+
+					
 
 		}catch(THOMASException e)
 		{
 			e.printStackTrace();
 		}
+
+
 	}
 
 
-
-	public void onMessage(ACLMessage msg)
-	{
-
-		if (msg.getReceiver().name.equals("calculin")) //Messages that come from the organization
-		{
-
-			messageList.add(msg);	
-			m.advise(); //When a new message arrives, it advise the main thread
-
-		}
-		if (msg.getSender().name.equals("OMS") || msg.getSender().name.equals("SF"))
-			super.onMessage(msg);
-
-	}
 
 	@Override
 	protected void finalize(CProcessor firstProcessor,
@@ -243,6 +106,106 @@ public class Display extends CAgent {
 		
 	}
 
+
+	//------------------------------------------------------------------------
+	//-----------------------CFactory implementation--------------------------
+	//------------------------------------------------------------------------
+
+
+
+	class BEGIN_Method implements BeginStateMethod {
+
+		public String run(CProcessor myProcessor, ACLMessage msg) {
+
+			// In this example there is nothing more to do than continue
+			// to the next state which will send the message.
+			return "WAIT";
+		};
+
+	}
+
+
+
+	class RECEIVE_Method implements ReceiveStateMethod {
+		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
+
+			String state = "WAIT";
+
+			if (messageReceived.getContent().equals("shut down"))
+			{
+				state = "FINAL";
+			}
+			else
+			{
+				ArrayList<ArrayList<String>> informMembers;
+				try {
+					informMembers = omsProxy.informMembers("calculin","","supervisor");
+				
+				
+				
+				for(ArrayList<String> informMember : informMembers)
+				{
+					//If the agent is equal to the sender, then the position is extracted
+					if (informMember.get(0).equals(messageReceived.getSender().name))
+						System.out.println("[ "+myProcessor.getMyAgent().getName()+" ]  "+ messageReceived.getSender().name+" says " + messageReceived.getContent());
+				}
+				
+				} catch (THOMASException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+
+			return state;
+		}
+
+	}
+
+
+
+	class FINAL_Method implements FinalStateMethod {
+		public void run(CProcessor myProcessor, ACLMessage responseMessage) {
+
+	
+			try {
+				
+
+				ArrayList<String> result = omsProxy.informUnit("externa");
+
+				System.out.println("---------------------");
+				System.out.println("unit external");
+				System.out.println("type: "+ result.get(0));
+				System.out.println("parent unit: "+ result.get(1));
+				System.out.println("---------------------");
+
+				ArrayList<ArrayList<String>> informUnitRoles = omsProxy.informUnitRoles("calculin");
+
+				for(ArrayList<String> unitRole : informUnitRoles)
+				{
+					System.out.println("---------------------");
+
+					System.out.println("role name: "+unitRole.get(0));
+					System.out.println("position: "+ unitRole.get(1));
+					System.out.println("visibility: "+ unitRole.get(2));
+					System.out.println("accesibility: "+ unitRole.get(3));
+
+					System.out.println("---------------------");
+				}
+
+				omsProxy.leaveRole("manager", "calculin");
+
+				omsProxy.leaveRole("participant", "virtual");
+
+			} catch (THOMASException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			myProcessor.ShutdownAgent();
+
+		}
+
+	}
 
 
 }

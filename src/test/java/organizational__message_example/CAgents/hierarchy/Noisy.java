@@ -47,38 +47,6 @@ public class Noisy extends CAgent {
 	}
 
 
-
-
-	private void add_and_advise(ACLMessage msg)
-	{
-		result+=Integer.parseInt(msg.getContent());
-		expected--;
-
-
-		if (expected == 0)
-		{
-
-			m.advise();
-		}
-	}
-
-	public void onMessage(ACLMessage msg)
-	{
-
-
-
-		if (msg.getSender().name.equals("agente_suma") || msg.getSender().name.equals("agente_producto"))
-		{
-			if (!msg.getContent().contains("OK"))
-			{
-				this.add_and_advise(msg);
-			}
-		}
-		if (msg.getSender().name.equals("OMS") || msg.getSender().name.equals("SF")) 
-			super.onMessage(msg);
-
-	}
-
 	private void initialize_scenario()
 	{
 

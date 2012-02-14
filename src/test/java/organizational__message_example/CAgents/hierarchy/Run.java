@@ -1,11 +1,7 @@
 package organizational__message_example.CAgents.hierarchy;
 
-import java.util.ArrayList;
-
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
-
-
 
 import es.upv.dsic.gti_ia.architecture.Monitor;
 import es.upv.dsic.gti_ia.core.AgentID;
@@ -65,7 +61,7 @@ public class Run {
 			proAgent.start();
 			sumAgent.start();
 			visAgent.start();
-			sumtAgent.start();
+			//sumtAgent.start();
 			sumPotAgent.start();
 
 

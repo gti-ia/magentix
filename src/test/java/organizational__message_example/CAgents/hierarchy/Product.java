@@ -2,37 +2,51 @@ package organizational__message_example.CAgents.hierarchy;
 
 import java.util.ArrayList;
 
-import es.upv.dsic.gti_ia.architecture.FIPANames.InteractionProtocol;
-import es.upv.dsic.gti_ia.architecture.FIPARequestResponder;
-import es.upv.dsic.gti_ia.architecture.MessageTemplate;
-import es.upv.dsic.gti_ia.architecture.QueueAgent;
+import organizational__message_example.CAgents.hierarchy.Summation.not_accepted;
+
+import es.upv.dsic.gti_ia.architecture.Monitor;
+import es.upv.dsic.gti_ia.cAgents.BeginState;
+import es.upv.dsic.gti_ia.cAgents.BeginStateMethod;
+import es.upv.dsic.gti_ia.cAgents.CAgent;
+import es.upv.dsic.gti_ia.cAgents.CFactory;
+import es.upv.dsic.gti_ia.cAgents.CProcessor;
+import es.upv.dsic.gti_ia.cAgents.FinalState;
+import es.upv.dsic.gti_ia.cAgents.FinalStateMethod;
+import es.upv.dsic.gti_ia.cAgents.NotAcceptedMessagesState;
+import es.upv.dsic.gti_ia.cAgents.ReceiveState;
+import es.upv.dsic.gti_ia.cAgents.ReceiveStateMethod;
+import es.upv.dsic.gti_ia.cAgents.SendState;
+import es.upv.dsic.gti_ia.cAgents.SendStateMethod;
+import es.upv.dsic.gti_ia.cAgents.WaitState;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
+import es.upv.dsic.gti_ia.core.MessageFilter;
 import es.upv.dsic.gti_ia.organization.OMSProxy;
 import es.upv.dsic.gti_ia.organization.THOMASException;
-import es.upv.dsic.gti_ia.architecture.Monitor;
 
 
-public class Product extends QueueAgent {
+public class Product extends CAgent {
 
 	OMSProxy omsProxy = new OMSProxy(this);
-	Responder responder = new Responder(this);
+
 	Monitor m = new Monitor();
 	boolean finished = false;
-	
+	int result=0;
+
 	public Product(AgentID aid) throws Exception {
 		super(aid);
 
 	}
 
-	public void execute() {
+	protected void execution(CProcessor firstProcessor, ACLMessage welcomeMessage) {
 
 
 		try
 		{
 
+			logger.info("pool");
 			omsProxy.acquireRole("participant", "virtual");
-			
+
 			ArrayList<ArrayList<String>> roles;
 			boolean exists = false;
 
@@ -49,14 +63,70 @@ public class Product extends QueueAgent {
 
 
 			omsProxy.acquireRole("operador", "calculin");
-			this.addTask(responder);
-			do{
-				m.waiting(5*1000);
-				
-			}while(!finished);
 			
-			omsProxy.leaveRole("participant", "virtual");
+			MessageFilter filter = new MessageFilter("performative = REQUEST");
+
+			CFactory additionTalk = new CFactory("PRODUCT_TALK", null, 1,this);
+
+
+			//----------------------------BEGIN STATE----------------------------------
+			BeginState BEGIN = (BeginState) additionTalk.cProcessorTemplate().getState("BEGIN");
+			BEGIN.setMethod(new BEGIN_Method());
+
+
 			
+
+
+			WaitState WAIT = new WaitState("WAIT", 0);
+			
+			additionTalk.cProcessorTemplate().addTransition(BEGIN, WAIT);
+			additionTalk.cProcessorTemplate().registerState(WAIT);
+
+			
+			additionTalk.cProcessorTemplate().registerState(new not_accepted());
+
+			ReceiveState RECEIVE = new ReceiveState("RECEIVE");
+			RECEIVE.setAcceptFilter(filter); // null -> accept any message
+			RECEIVE.setMethod(new RECEIVE_Method());
+			additionTalk.cProcessorTemplate().registerState(RECEIVE);
+			
+			
+			ReceiveState RECEIVE_SHUTDOWN = new ReceiveState("RECEIVE_SHUTDOWN");
+			RECEIVE_SHUTDOWN.setAcceptFilter(new MessageFilter("shutdown = true")); // null -> accept any message
+			RECEIVE_SHUTDOWN.setMethod(new RECEIVE_Shutdown_Method());
+			additionTalk.cProcessorTemplate().registerState(RECEIVE_SHUTDOWN);
+			additionTalk.cProcessorTemplate().addTransition(WAIT, RECEIVE_SHUTDOWN);
+			
+			
+			additionTalk.cProcessorTemplate().addTransition(WAIT, RECEIVE);
+			
+
+
+			SendState SEND_RESULT = new SendState("SEND_RESULT");
+			SEND_RESULT.setMethod(new RESPONSE_Method());
+			additionTalk.cProcessorTemplate().registerState(SEND_RESULT);
+			additionTalk.cProcessorTemplate().addTransition(RECEIVE, SEND_RESULT);
+			
+			FinalState FINAL = new FinalState("FINAL");
+			
+			additionTalk.cProcessorTemplate().addTransition(RECEIVE_SHUTDOWN, FINAL);
+			additionTalk.cProcessorTemplate().addTransition(RECEIVE, FINAL);
+			additionTalk.cProcessorTemplate().addTransition(SEND_RESULT, WAIT);
+			
+			
+
+			FINAL.setMethod(new FINAL_Method());
+
+			additionTalk.cProcessorTemplate().registerState(FINAL);
+
+			
+			
+
+			this.addFactoryAsParticipant(additionTalk);
+		
+
+			
+
 		}catch(THOMASException e)
 		{
 			e.printStackTrace();
@@ -66,87 +136,146 @@ public class Product extends QueueAgent {
 
 
 
-	public void conclude()
+	public void setResult(int r)
 	{
-		finished = true;
+		result = r;
+	}
+	
+	public int getResult()
+	{
+		return result;
+	}
+
+	//------------------------------------------------------------------------
+	//-----------------------CFactory implementation--------------------------
+	//------------------------------------------------------------------------
+
+
+	class not_accepted extends NotAcceptedMessagesState
+	{
+	
+		String content;
+		@Override
+		protected int run(ACLMessage exceptionMessage, String next) {
+			
+			content = exceptionMessage.getContent();
+			
+			return NotAcceptedMessagesState.IGNORE;
+		}
+
+		@Override
+		protected String getNext(String previousState) {
+			// TODO Auto-generated method stub
+			String state = "WAIT";
+	
+			return state;
+		}
 		
+	}
+	
+	class BEGIN_Method implements BeginStateMethod {
+
+		public String run(CProcessor myProcessor, ACLMessage msg) {
+
+			// In this example there is nothing more to do than continue
+			// to the next state which will send the message.
+			System.out.println("["+myProcessor.getMyAgent().getAid().name+"]BEGIN");
+			return "WAIT";
+		};
+
+	}
+
+	class RECEIVE_Shutdown_Method implements ReceiveStateMethod
+	{
+
+		@Override
+		public String run(CProcessor myProcessor, ACLMessage receivedMessage) {
+			
+			System.out.println("["+myProcessor.getMyAgent().getAid().name+"]SHUTDOWN");
+			String state = "FINAL";
+			
+			return state;
+		}
 		
 	}
 
+	class RECEIVE_Method implements ReceiveStateMethod {
+		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
 
+			String state = "SEND_RESULT";
 
-	/**
-	 * Manages the messages for the  agent provider services
-	 */
-	public class Responder extends FIPARequestResponder {
-
-
-
-		public Responder(QueueAgent agent) {
-			super(agent, new MessageTemplate(InteractionProtocol.FIPA_REQUEST));
-
-		}// SFResponder
-
-		protected ACLMessage prepareResponse(ACLMessage msg) {
-
-			ACLMessage response = msg.createReply();
-
-
-			response.setPerformative(ACLMessage.AGREE);
-			response.setContent("OK");
+			System.out.println("["+myProcessor.getMyAgent().getAid().name+"]RECEIVE");
 			
-			return (response);
-
-		} // end prepareResponse
-
-		protected ACLMessage prepareResultNotification(ACLMessage inmsg, ACLMessage outmsg) {
-
-
-
-
-			ACLMessage msg = inmsg.createReply();
-			
-			
-			if (inmsg.getContent().equals("shut down"))
-			{
-				
-				
-				((Product)this.getQueueAgent()).conclude();
-				
-				msg.setPerformative(ACLMessage.INFORM);
-
-
-				msg.setContent("OK");
-
-			}
-			else
-			{
-
 				int p1,p2, result;
-				try{
-					p1 = Integer.parseInt(inmsg.getContent().split(" ")[0]);
-					p2 = Integer.parseInt(inmsg.getContent().split(" ")[1]);
-
-					result = p1 * p2;
-
-					msg.setPerformative(ACLMessage.INFORM);
 
 
-					msg.setContent(""+result);
+				p1 = Integer.parseInt(messageReceived.getContent().split(" ")[0]);
+				p2 = Integer.parseInt(messageReceived.getContent().split(" ")[1]);
+
+				result = p1 * p2;
+
+				((Product)myProcessor.getMyAgent()).setResult(result);
+			
+
+			return state;
+		}
+
+	}
+
+	class RESPONSE_Method implements SendStateMethod {
+
+
+		public String run(CProcessor myProcessor, ACLMessage messageToSend) {
+
+			System.out.println("["+myProcessor.getMyAgent().getAid().name+"]RESPONSE");
+			String state = "WAIT";
+
+				
+			int result = ((Product)myProcessor.getMyAgent()).getResult();
+			
+			ACLMessage msgReply = myProcessor.getLastReceivedMessage().createReply();
+			
+			messageToSend.copyFromAsTemplate(msgReply);
+			messageToSend.setContent(""+result);
+			
+			messageToSend.setPerformative(ACLMessage.INFORM);
+			
+			messageToSend.setSender(myProcessor.getMyAgent().getAid());
 
 
 
-				}catch(Exception e)
-				{
-					msg.setPerformative(ACLMessage.FAILURE);
-					msg.setContent(e.getMessage());
-				}
+
+			return state;
+
+		}
+
+	}
+
+	class FINAL_Method implements FinalStateMethod {
+		public void run(CProcessor myProcessor, ACLMessage responseMessage) {
+
+			System.out.println("["+myProcessor.getMyAgent().getAid().name+"]FINAL");
+			try {
+				
+				omsProxy.leaveRole("participant", "virtual");
+			} catch (THOMASException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 
-			return (msg);
-		} // end prepareResultNotification
+			myProcessor.ShutdownAgent();
 
-	}// end class SFResponder
+		}
+
+	}
+
+	@Override
+	protected void finalize(CProcessor firstProcessor,
+			ACLMessage finalizeMessage) {
+		// TODO Auto-generated method stub
+
+	}
+
 
 }
 
