@@ -63,7 +63,7 @@ public class RegisterUTest {
 	 */
 	String incorrectParamTest3(){
 		
-		return sf.registerService("http://127.0.0.1/services/1.1/nonExistingService.owl");
+		return sf.registerService("http://localhost/services/1.1/nonExistingService.owl");
 	}
 	
 	/**
@@ -72,7 +72,7 @@ public class RegisterUTest {
 	 */
 	String appropiateParamsTest1(){
 		
-		return sf.registerService("http://127.0.0.1:8080/testSFservices/testSFservices/owl/owls/SumArray.owl");
+		return sf.registerService("http://localhost:8080/testSFservices/testSFservices/owl/owls/SumArray.owl");
 	}
 	
 	/**
@@ -82,7 +82,7 @@ public class RegisterUTest {
 	 */
 	String appropiateParamsTest2(){
 		
-		return sf.registerService("http://127.0.0.1:8080/testSFservices/testSFservices/owl/owls/Product.owl");
+		return sf.registerService("http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl");
 	}
 	
 	/**
@@ -91,7 +91,7 @@ public class RegisterUTest {
 	 * @return
 	 */
 	String appropiateParamsTest3(){
-		return sf.registerService("http://127.0.0.1:8080/testSFservices/testSFservices/owl/owls/Addition.owl");
+		return sf.registerService("http://localhost:8080/testSFservices/testSFservices/owl/owls/Addition.owl");
 	}
 	
 	/**
@@ -100,7 +100,7 @@ public class RegisterUTest {
 	 * @return
 	 */
 	String appropiateParamsTest4(){
-		return sf.registerService("http://127.0.0.1:8080/testSFservices/testSFservices/owl/owls/Square.owl");
+		return sf.registerService("http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl");
 	}
 	
 	/**
@@ -109,7 +109,7 @@ public class RegisterUTest {
 	 * @return
 	 */
 	String appropiateParamsTest5(){
-		return sf.registerService("http://127.0.0.1:8080/testSFservices/testSFservices/owl/owls/Division.owl");
+		return sf.registerService("http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl");
 	}
 	
 	/**
@@ -118,7 +118,7 @@ public class RegisterUTest {
 	 * @return
 	 */
 	String appropiateParamsTest6(){
-		return sf.registerService("http://127.0.0.1:8080/testSFservices/testSFservices/owl/owls/Even.owl");
+		return sf.registerService("http://localhost:8080/testSFservices/testSFservices/owl/owls/Even.owl");
 	}
 
 	/**
@@ -127,7 +127,7 @@ public class RegisterUTest {
 	 * @return
 	 */
 	String appropiateParamsTest7(){
-		return sf.registerService("http://127.0.0.1:8080/testSFservices/testSFservices/owl/owls/Sign.owl");
+		return sf.registerService("http://localhost:8080/testSFservices/testSFservices/owl/owls/Sign.owl");
 	}
 	
 	/**
@@ -139,9 +139,9 @@ public class RegisterUTest {
 	String appropiateParamsTest8(){
 		
 		String res="";
-		res+=sf.registerService("http://127.0.0.1:8080/testSFservices/testSFservices/owl/owls/SumArray.owl");
-		res+="\n"+sf.registerService("http://127.0.0.1:8080/testSFservices/testSFservices/owl/owls/Product.owl");
-		res+="\n"+sf.registerService("http://127.0.0.1:8080/testSFservices/testSFservices/owl/owls/Division.owl");
+		res+=sf.registerService("http://localhost:8080/testSFservices/testSFservices/owl/owls/SumArray.owl");
+		res+="\n"+sf.registerService("http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl");
+		res+="\n"+sf.registerService("http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl");
 		
 		return res;
 	}
@@ -152,7 +152,7 @@ public class RegisterUTest {
 	 * @return
 	 */
 	String appropiateParamsTest9(){
-		return sf.registerService("http://127.0.0.1:8080/testSFservices/testSFservices/owl/owls/Square.owl");
+		return sf.registerService("http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl");
 	}
 	
 	/**
@@ -161,7 +161,7 @@ public class RegisterUTest {
      * @return
 	 */
 	String appropiateParamsTest10(){
-		return sf.registerService("http://127.0.0.1:8080/testSFservices/testSFservices/owl/owls/Product.owl");
+		return sf.registerService("http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl");
 	}
 	
 	/**
@@ -171,7 +171,7 @@ public class RegisterUTest {
      * @return
 	 */
 	String appropiateParamsTest11(){
-		return sf.registerService("http://127.0.0.1:8080/testSFservices/testSFservices/owl/owls/Division2.owl");
+		return sf.registerService("http://localhost:8080/testSFservices/testSFservices/owl/owls/Division2.owl");
 	}
 	
 	/**
@@ -181,7 +181,7 @@ public class RegisterUTest {
      * @return
 	 */
 	String appropiateParamsTest12(){
-		return sf.registerService("http://127.0.0.1:8080/testSFservices/testSFservices/owl/owls/Division3.owl");
+		return sf.registerService("http://localhost:8080/testSFservices/testSFservices/owl/owls/Division3.owl");
 	}
 	
 	/**
@@ -201,39 +201,39 @@ public class RegisterUTest {
 //		System.out.println("incorrectParamTest3:\n"+res3);
 //		
 //		
-//		String resApp1=registerUTest.appropiateParamsTest1();
-//		System.out.println("appropiateParamsTest1:\n"+resApp1);
-//		
-//		String resApp2=registerUTest.appropiateParamsTest2();
-//		System.out.println("appropiateParamsTest2:\n"+resApp2);
-//		
-//		String resApp3=registerUTest.appropiateParamsTest3();
-//		System.out.println("appropiateParamsTest3:\n"+resApp3);
-//		
-//		String resApp4=registerUTest.appropiateParamsTest4();
-//		System.out.println("appropiateParamsTest4:\n"+resApp4);
-//		
-//		String resApp5=registerUTest.appropiateParamsTest5();
-//		System.out.println("appropiateParamsTest5:\n"+resApp5);
-//		
-//		String resApp6=registerUTest.appropiateParamsTest6();
-//		System.out.println("appropiateParamsTest6:\n"+resApp6);
-//		
-//		String resApp7=registerUTest.appropiateParamsTest7();
-//		System.out.println("appropiateParamsTest7:\n"+resApp7);
+		String resApp1=registerUTest.appropiateParamsTest1();
+		System.out.println("appropiateParamsTest1:\n"+resApp1);
 		
-//		String resApp8=registerUTest.appropiateParamsTest8();
-//		System.out.println("appropiateParamsTest8:\n"+resApp8);
-//		
-//		String resApp9=registerUTest.appropiateParamsTest9();
-//		System.out.println("appropiateParamsTest9:\n"+resApp9);
-//		
-//		String resApp10=registerUTest.appropiateParamsTest10();
-//		System.out.println("appropiateParamsTest10:\n"+resApp10);
-//		
-//		String resApp11=registerUTest.appropiateParamsTest11();
-//		System.out.println("appropiateParamsTest11:\n"+resApp11);
-//		
+		String resApp2=registerUTest.appropiateParamsTest2();
+		System.out.println("appropiateParamsTest2:\n"+resApp2);
+		
+		String resApp3=registerUTest.appropiateParamsTest3();
+		System.out.println("appropiateParamsTest3:\n"+resApp3);
+		
+		String resApp4=registerUTest.appropiateParamsTest4();
+		System.out.println("appropiateParamsTest4:\n"+resApp4);
+		
+		String resApp5=registerUTest.appropiateParamsTest5();
+		System.out.println("appropiateParamsTest5:\n"+resApp5);
+		
+		String resApp6=registerUTest.appropiateParamsTest6();
+		System.out.println("appropiateParamsTest6:\n"+resApp6);
+		
+		String resApp7=registerUTest.appropiateParamsTest7();
+		System.out.println("appropiateParamsTest7:\n"+resApp7);
+		
+		String resApp8=registerUTest.appropiateParamsTest8();
+		System.out.println("appropiateParamsTest8:\n"+resApp8);
+		
+		String resApp9=registerUTest.appropiateParamsTest9();
+		System.out.println("appropiateParamsTest9:\n"+resApp9);
+		
+		String resApp10=registerUTest.appropiateParamsTest10();
+		System.out.println("appropiateParamsTest10:\n"+resApp10);
+		
+		String resApp11=registerUTest.appropiateParamsTest11();
+		System.out.println("appropiateParamsTest11:\n"+resApp11);
+		
 		String resApp12=registerUTest.appropiateParamsTest12();
 		System.out.println("appropiateParamsTest12:\n"+resApp12);
 		
