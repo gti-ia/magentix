@@ -1,0 +1,112 @@
+incorrectParamTest1:
+<response>
+<serviceName>DeregisterService</serviceName>
+<status>Error</status>
+<result>
+<description>ERROR: Service dsic-upv-es does not exist</description>
+</result>
+</response>
+
+incorrectParamTest2:
+<response>
+<serviceName>DeregisterService</serviceName>
+<status>Error</status>
+<result>
+<description>ERROR: Service http://127.0.0.1/services/1.1/calculateSunriseTime.owls does not exist</description>
+</result>
+</response>
+
+incorrectParamTest3:
+<response>
+<serviceName>DeregisterService</serviceName>
+<status>Error</status>
+<result>
+<description>ERROR: Service http://127.0.0.1/services/1.1/calculateSunriseTime.owls#CALCULATESUNRISETIME_PROFILE does not exist</description>
+</result>
+</response>
+
+appropiateParamsTest2:
+<response>
+<serviceName>DeregisterService</serviceName>
+<status>Ok</status>
+<result>
+<description>Service http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#ProductProfile Deregistered</description>
+</result>
+</response>
+
+appropiateParamsTest3:
+<response>
+<serviceName>DeregisterService</serviceName>
+<status>Ok</status>
+<result>
+<description>Service http://localhost:8080/testSFservices/testSFservices/owl/owls/Addition.owl#AdditionProfile Deregistered</description>
+</result>
+</response>
+
+appropiateParamsTest4:
+<response>
+<serviceName>DeregisterService</serviceName>
+<status>Ok</status>
+<result>
+<description>Service http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl#SquareProfile Deregistered</description>
+</result>
+</response>
+
+appropiateParamsTest5:
+<response>
+<serviceName>DeregisterService</serviceName>
+<status>Ok</status>
+<result>
+<description>Service http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#DivisionProfile Deregistered</description>
+</result>
+</response>
+
+appropiateParamsTest6:
+<response>
+<serviceName>DeregisterService</serviceName>
+<status>Ok</status>
+<result>
+<description>Service http://localhost:8080/testSFservices/testSFservices/owl/owls/Even.owl#EvenProfile Deregistered</description>
+</result>
+</response>
+
+appropiateParamsTest7:
+<response>
+<serviceName>DeregisterService</serviceName>
+<status>Ok</status>
+<result>
+<description>Service http://localhost:8080/testSFservices/testSFservices/owl/owls/Sign.owl#SignProfile Deregistered</description>
+</result>
+</response>
+
+appropiateParamsTest8:
+<response>
+<serviceName>DeregisterService</serviceName>
+<status>Error</status>
+<result>
+<description>ERROR: Service http://localhost:8080/testSFservices/testSFservices/owl/owls/SumArray.owl#SumArrayProfile does not exist</description>
+</result>
+</response>
+<response>
+<serviceName>DeregisterService</serviceName>
+<status>Error</status>
+<result>
+<description>ERROR: Service http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#ProductProfile does not exist</description>
+</result>
+</response>
+<response>
+<serviceName>DeregisterService</serviceName>
+<status>Error</status>
+<result>
+<description>ERROR: Service http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#DivisionProfile does not exist</description>
+</result>
+</response>
+
+appropiateParamsTest9:
+<response>
+<serviceName>DeregisterService</serviceName>
+<status>Error</status>
+<result>
+<description>ERROR: Service http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl#SquareProfile does not exist</description>
+</result>
+</response>

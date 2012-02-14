@@ -1,0 +1,82 @@
+incorrectParamTest1:
+<response>
+<serviceName>RemoveProvider</serviceName>
+<status>Error</status>
+<result>
+<description>ERROR: null</description>
+</result>
+</response>
+
+incorrectParamTest2:
+<response>
+<serviceName>RemoveProvider</serviceName>
+<status>Error</status>
+<result>
+<description>ERROR: null</description>
+</result>
+</response>
+
+incorrectParamTest3:
+<response>
+<serviceName>RemoveProvider</serviceName>
+<status>Error</status>
+<result>
+<description>ERROR: Provider or grounding Provider not found</description>
+</result>
+</response>
+
+incorrectParamTest4:
+<response>
+<serviceName>RemoveProvider</serviceName>
+<status>Error</status>
+<result>
+<description>ERROR: Provider or grounding http://localhost/services/Tests/Square.owl#SQUARE_GROUNDING not found</description>
+</result>
+</response>
+
+incorrectParamTest5:
+<response>
+<serviceName>RemoveProvider</serviceName>
+<status>Error</status>
+<result>
+<description>ERROR: Provider or grounding ProductAgent not found</description>
+</result>
+</response>
+
+appropiateParamsTest1:
+<response>
+<serviceName>RemoveProvider</serviceName>
+<status>Ok</status>
+<result>
+<description>Provider or grounding ProductAgent removed</description>
+</result>
+</response>
+
+
+
+
+
+
+
+
+
+appropiateParamsTest4:
+<response>
+<serviceName>RemoveProvider</serviceName>
+<status>Ok</status>
+<result>
+<description>Provider or grounding http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl#SquareGrounding removed</description>
+</result>
+</response>
+
+appropiateParamsTest5:
+<response>
+<serviceName>RemoveProvider</serviceName>
+<status>Ok</status>
+<result>
+<description>Provider or grounding http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#ProductGrounding removed</description>
+</result>
+</response>
+
+
+
