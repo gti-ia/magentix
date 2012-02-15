@@ -13,8 +13,6 @@ import es.upv.dsic.gti_ia.cAgents.FinalState;
 import es.upv.dsic.gti_ia.cAgents.FinalStateMethod;
 import es.upv.dsic.gti_ia.cAgents.ReceiveState;
 import es.upv.dsic.gti_ia.cAgents.ReceiveStateMethod;
-import es.upv.dsic.gti_ia.cAgents.SendState;
-import es.upv.dsic.gti_ia.cAgents.SendStateMethod;
 import es.upv.dsic.gti_ia.cAgents.WaitState;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
@@ -188,7 +186,7 @@ public class Creator extends CAgent {
 
 			// In this example there is nothing more to do than continue
 			// to the next state which will send the message.
-			System.out.println("BEGIN: mensaje "+ msg.getContent()+" de: "+ msg.getSender());
+		
 			return "WAIT";
 		};
 
@@ -199,7 +197,7 @@ public class Creator extends CAgent {
 	class RECEIVE_SHUTDOWN_Method implements ReceiveStateMethod {
 
 		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
-			System.out.println("["+myProcessor.getMyAgent().getName()+"]RECEIVE SHUTDOWN");
+			
 			String state = "FINAL_SHUTDOWN";
 		
 			return state;
@@ -210,7 +208,7 @@ public class Creator extends CAgent {
 	class RECEIVE_GENERIC_Method implements ReceiveStateMethod {
 
 		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
-			System.out.println("["+myProcessor.getMyAgent().getName()+"]RECEIVE GENERIC. Content: "+messageReceived.getContent()+ " sender: "+ messageReceived.getSender().name);
+			
 			String state = "FINAL";
 		
 			return state;
@@ -232,7 +230,7 @@ public class Creator extends CAgent {
 		public void run(CProcessor myProcessor, ACLMessage responseMessage) {
 
 
-			System.out.println("FINAL");
+	
 			try{
 				
 			
@@ -257,7 +255,7 @@ public class Creator extends CAgent {
 			
 			for(ArrayList<String> member : members)
 			{
-				System.out.println("Deallocate role: "+ member.get(0));
+				
 				omsProxy.deallocateRole(member.get(1), "calculin", member.get(0));
 			}
 			
@@ -267,12 +265,12 @@ public class Creator extends CAgent {
 			omsProxy.deregisterRole("manager", "calculin");
 			
 			
-		//	ArrayList<ArrayList<String>> agentRole;
+	
 			
 			do
 			{
 				m.waiting(3 * 1000);
-				//agentRole = omsProxy.informAgentRole("agente_ruidoso");
+	
 				members = omsProxy.informMembers("externa", "manager", "");
 			}while(members.contains("agente_ruidoso"));
 

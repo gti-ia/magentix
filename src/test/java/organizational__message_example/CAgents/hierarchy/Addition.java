@@ -43,7 +43,7 @@ public class Addition extends CAgent {
 		try
 		{
 
-			logger.info("pool");
+			
 			ArrayList<ArrayList<String>> roles;
 
 			boolean exists = false;
@@ -74,10 +74,6 @@ public class Addition extends CAgent {
 			//----------------------------BEGIN STATE----------------------------------
 			BeginState BEGIN = (BeginState) additionTalk.cProcessorTemplate().getState("BEGIN");
 			BEGIN.setMethod(new BEGIN_Method());
-
-
-
-
 
 			WaitState WAIT = new WaitState("WAIT",0);
 
@@ -135,7 +131,6 @@ public class Addition extends CAgent {
 	synchronized public boolean exit()
 	{
 		received++;
-		System.out.println("Valor de received: "+ received);
 		if (received > 1)
 			return true;
 		else
@@ -154,9 +149,6 @@ public class Addition extends CAgent {
 	@Override
 	protected void finalize(CProcessor firstProcessor,
 			ACLMessage finalizeMessage) {
-		// TODO Auto-generated method stub
-		System.out.println("FINALIZO");
-
 	}
 
 
@@ -190,10 +182,6 @@ public class Addition extends CAgent {
 
 		public String run(CProcessor myProcessor, ACLMessage msg) {
 
-			// In this example there is nothing more to do than continue
-			// to the next state which will send the message.
-			System.out.println("["+myProcessor.getMyAgent().getAid().name+"]BEGIN");
-
 			return "WAIT";
 		};
 
@@ -205,8 +193,6 @@ public class Addition extends CAgent {
 		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
 
 			String state = "SEND_RESULT";
-
-			System.out.println("["+myProcessor.getMyAgent().getAid().name+"]RECEIVE de: "+ messageReceived.getSender());
 			int p1,p2, result = 0;
 
 
@@ -231,7 +217,7 @@ public class Addition extends CAgent {
 
 			String state = "FINAL";
 			int result = ((Addition)myProcessor.getMyAgent()).getResult();
-			System.out.println("["+myProcessor.getMyAgent().getAid().name+"]Send result: "+ result);
+			
 
 			ACLMessage msgReply = myProcessor.getLastReceivedMessage().createReply();
 
@@ -243,7 +229,7 @@ public class Addition extends CAgent {
 			messageToSend.setSender(myProcessor.getMyAgent().getAid());
 			
 			messageToSend.setHeader("result", "true");
-			System.out.println("["+myProcessor.getMyAgent().getAid().name+"] n: "+ n);
+		
 
 			return state;
 
@@ -260,7 +246,7 @@ public class Addition extends CAgent {
 			if (((Addition)myProcessor.getMyAgent()).exit())
 			{
 				OMSProxy omsProxy = new OMSProxy(myProcessor);
-				System.out.println("["+myProcessor.getMyAgent().getAid().name+"]Shutdown");
+			
 				try {
 					omsProxy.leaveRole("operador", "calculin");
 					omsProxy.leaveRole("participant", "virtual");

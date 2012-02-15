@@ -127,10 +127,6 @@ public class Exponentiation extends CAgent {
 			// Finally Harry starts the conversation.
 			this.startSyncConversation("EXPONENTIATION_REQUEST");
 
-
-
-
-			System.out.println("Fuera");
 		
 
 		}catch(THOMASException e)
@@ -218,7 +214,7 @@ public class Exponentiation extends CAgent {
 			String state = "WAIT";
 			OMSProxy omsProxy = new OMSProxy(myProcessor);
 			ACLMessage msg;
-			System.out.println("["+myProcessor.getMyAgent().getAid().name+"]REQUEST");
+			
 			try {
 				msg = omsProxy.buildOrganizationalMessage("calculin");
 
@@ -249,7 +245,7 @@ public class Exponentiation extends CAgent {
 		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
 
 			String state = "WAIT";
-			System.out.println("["+myProcessor.getMyAgent().getName()+"]Esto es lo que ha dicho el agente sumatorio: "+ messageReceived.getContent());
+		
 			return state;
 		}
 
@@ -260,7 +256,7 @@ public class Exponentiation extends CAgent {
 		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
 
 			String state = "SEND_RESULT";
-			System.out.println("["+myProcessor.getMyAgent().getAid().name+"]RECEIVE: "+ messageReceived.getContent());
+			
 			((Exponentiation)myProcessor.getMyAgent()).sumResult(Integer.parseInt(messageReceived.getContent()) * Integer.parseInt(messageReceived.getContent()));
 
 			if (n<1)
@@ -279,7 +275,7 @@ public class Exponentiation extends CAgent {
 			String state = "LEAVE_MANAGER";
 			ACLMessage msg;
 			OMSProxy omsProxy = new OMSProxy(myProcessor);
-			System.out.println("["+myProcessor.getMyAgent().getAid().name+"]RESPONSE: ");
+			
 			try {
 				msg = omsProxy.buildOrganizationalMessage("calculin");
 				messageToSend.copyFromAsTemplate(msg);
@@ -289,7 +285,7 @@ public class Exponentiation extends CAgent {
 				messageToSend.setContent(""+content);
 			
 
-				System.out.println("["+myProcessor.getMyAgent().getAid().name+"]RESPONSE: "+ content);
+				
 
 
 
@@ -314,7 +310,7 @@ public class Exponentiation extends CAgent {
 				e1.printStackTrace();
 			}
 			String state = "REQUEST";
-			System.out.println("["+myProcessor.getMyAgent().getAid().name+"]LEAVE MANAGER: ");
+		
 			try
 			{
 				OMSProxy omsProxy = new OMSProxy(myProcessor);
@@ -333,7 +329,7 @@ public class Exponentiation extends CAgent {
 
 	class FINAL_Method implements FinalStateMethod {
 		public void run(CProcessor myProcessor, ACLMessage responseMessage) {
-			System.out.println("["+myProcessor.getMyAgent().getAid().name+"]FINAL");
+			
 			
 			OMSProxy omsProxy = new OMSProxy(myProcessor);
 			try {

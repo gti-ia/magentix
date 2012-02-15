@@ -132,7 +132,7 @@ public class Summation extends CAgent {
 			this.startSyncConversation("SUMMATION_REQUEST");
 
 
-			System.out.println("ACABE");
+			
 
 
 		} catch (THOMASException e) {
@@ -172,7 +172,7 @@ public class Summation extends CAgent {
 		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
 
 			String state = "WAIT";
-			System.out.println("["+myProcessor.getMyAgent().getName()+"]Esto es lo que ha dicho el agente "+messageReceived.getSender().name+": "+ messageReceived.getContent());
+			
 			return state;
 		}
 
@@ -255,8 +255,8 @@ public class Summation extends CAgent {
 				else
 					messageToSend.setContent(5+" "+3);
 
-				System.out.println("----------------");
-				System.out.println("["+myProcessor.getMyAgent().getAid().name+"] Message to send: "+ messageToSend.getContent());
+			
+			
 				messageToSend.setHeader("organizational", "true");
 				n++;
 
@@ -281,10 +281,9 @@ public class Summation extends CAgent {
 
 			String state = "SEND_RESULT";
 
-			System.out.println("["+myProcessor.getMyAgent().getAid().name+"]Mensaje recibido: "+ messageReceived.getContent());
+			
 			((Summation)myProcessor.getMyAgent()).sumResult(Integer.parseInt(messageReceived.getContent()));
-			System.out.println("["+myProcessor.getMyAgent().getAid().name+"] count: "+ ((Summation)myProcessor.getMyAgent()).getCount());
-			System.out.println("["+myProcessor.getMyAgent().getAid().name+"] n: "+ n);
+			
 			if (((Summation)myProcessor.getMyAgent()).getCount() == 0)
 			{
 				if (n<1)
@@ -322,7 +321,7 @@ public class Summation extends CAgent {
 				messageToSend.setContent(""+content);
 
 				((Summation)myProcessor.getMyAgent()).addCount();
-				System.out.println("["+myProcessor.getMyAgent().getAid().name+"]Response");
+				
 				if (n<1)
 				{
 					n++;
@@ -359,7 +358,7 @@ public class Summation extends CAgent {
 
 				messageToSend.setHeader("shutdown", "true");
 
-				System.out.println("["+myProcessor.getMyAgent().getAid().name+"] Send Shutdown");
+				
 
 
 			} catch (THOMASException e) {

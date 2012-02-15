@@ -189,7 +189,7 @@ public class Product extends CAgent {
 
 			// In this example there is nothing more to do than continue
 			// to the next state which will send the message.
-			System.out.println("["+myProcessor.getMyAgent().getAid().name+"]BEGIN. Message: "+ msg.getContent() + " performative: "+ msg.getPerformative());
+		
 			return "WAIT";
 		};
 
@@ -201,7 +201,7 @@ public class Product extends CAgent {
 		@Override
 		public String run(CProcessor myProcessor, ACLMessage receivedMessage) {
 
-			System.out.println("["+myProcessor.getMyAgent().getAid().name+"]SHUTDOWN");
+			
 
 			String state = "FINAL_SHUTDOWN";
 
@@ -215,15 +215,15 @@ public class Product extends CAgent {
 
 			String state = "SEND_RESULT";
 
-			System.out.println("["+myProcessor.getMyAgent().getAid().name+"]RECEIVE");
+		
 
 			int p1,p2, result = 0;
 
 
-			System.out.println("["+myProcessor.getMyAgent().getName()+"]Mensaje recibido: "+ messageReceived.getContent());
+			
 			p1 = Integer.parseInt(messageReceived.getContent().split(" ")[0]);
 			p2 = Integer.parseInt(messageReceived.getContent().split(" ")[1]);
-			System.out.println("["+myProcessor.getMyAgent().getName()+"]p1: "+ p1+" p2: "+ p2);
+			
 			result = p1 * p2;
 
 			((Product)myProcessor.getMyAgent()).setResult(result);
@@ -240,7 +240,7 @@ public class Product extends CAgent {
 
 			String state = "FINAL";
 
-			System.out.println("Mensaje a la basura: "+ messageReceived.getContent());
+
 
 			return state;
 		}
@@ -252,7 +252,7 @@ public class Product extends CAgent {
 
 		public String run(CProcessor myProcessor, ACLMessage messageToSend) {
 
-			System.out.println("["+myProcessor.getMyAgent().getAid().name+"]RESPONSE");
+			
 			String state = "FINAL";
 
 
@@ -261,7 +261,7 @@ public class Product extends CAgent {
 			ACLMessage msgReply = myProcessor.getLastReceivedMessage().createReply();
 
 			messageToSend.copyFromAsTemplate(msgReply);
-			System.out.println("["+myProcessor.getMyAgent().getName()+"]result: "+ result);
+		
 			messageToSend.setContent(""+result);
 
 			messageToSend.setPerformative(ACLMessage.INFORM);
@@ -280,7 +280,7 @@ public class Product extends CAgent {
 	class FINAL_Method implements FinalStateMethod {
 		public void run(CProcessor myProcessor, ACLMessage responseMessage) {
 
-				System.out.println("["+myProcessor.getMyAgent().getAid().name+"]FINAL NORMAL");
+			
 
 
 		}
@@ -291,7 +291,7 @@ public class Product extends CAgent {
 		public void run(CProcessor myProcessor, ACLMessage responseMessage) {
 
 			
-				System.out.println("["+myProcessor.getMyAgent().getAid().name+"]FINAL SHUTDOWN");
+			
 				try {
 
 					omsProxy.leaveRole("participant", "virtual");
@@ -312,7 +312,7 @@ public class Product extends CAgent {
 			ACLMessage finalizeMessage) {
 		// TODO Auto-generated method stub
 		
-		System.out.println("Soy agente product, termino");
+	
 
 	}
 
