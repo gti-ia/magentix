@@ -4,8 +4,6 @@ package organizational__message_example.CAgents.hierarchy;
 
 import java.util.ArrayList;
 
-import organizational__message_example.CAgents.hierarchy.Exponentiation.RECEIVE_Method;
-import organizational__message_example.CAgents.hierarchy.Product.not_accepted;
 
 import es.upv.dsic.gti_ia.cAgents.BeginState;
 import es.upv.dsic.gti_ia.cAgents.BeginStateMethod;
@@ -30,6 +28,7 @@ public class Addition extends CAgent {
 
 	OMSProxy omsProxy = new OMSProxy(this);
 	int result=0;
+	int received=0;
 
 	public Addition(AgentID aid) throws Exception {
 		super(aid);
@@ -67,9 +66,9 @@ public class Addition extends CAgent {
 
 
 
-			MessageFilter filter = new MessageFilter("performative = " + ACLMessage.getPerformative(ACLMessage.REQUEST)); 
+			MessageFilter filter = new MessageFilter("performative = REQUEST"); 
 
-			CFactory additionTalk = new CFactory("ADDITION_TALK", null, 1,this);
+			CFactory additionTalk = new CFactory("ADDITION_TALK", null, 10,this);
 
 
 			//----------------------------BEGIN STATE----------------------------------
@@ -77,15 +76,16 @@ public class Addition extends CAgent {
 			BEGIN.setMethod(new BEGIN_Method());
 
 
-			
+
 
 
 			WaitState WAIT = new WaitState("WAIT",0);
-			
-			additionTalk.cProcessorTemplate().addTransition(BEGIN, WAIT);
-			additionTalk.cProcessorTemplate().registerState(WAIT);
 
-			
+			additionTalk.cProcessorTemplate().registerState(WAIT);
+			additionTalk.cProcessorTemplate().addTransition(BEGIN, WAIT);
+
+
+
 			additionTalk.cProcessorTemplate().registerState(new not_accepted());
 
 			ReceiveState RECEIVE = new ReceiveState("RECEIVE");
@@ -94,29 +94,30 @@ public class Addition extends CAgent {
 
 			additionTalk.cProcessorTemplate().registerState(RECEIVE);
 			additionTalk.cProcessorTemplate().addTransition(WAIT, RECEIVE);
-			
-			
+
+
 
 			SendState SEND_RESULT = new SendState("SEND_RESULT");
-			additionTalk.cProcessorTemplate().addTransition(RECEIVE, SEND_RESULT);
-			
-			FinalState FINAL = new FinalState("FINAL");
-			
 			additionTalk.cProcessorTemplate().registerState(SEND_RESULT);
+			additionTalk.cProcessorTemplate().addTransition(RECEIVE, SEND_RESULT);
+
+			FinalState FINAL = new FinalState("FINAL");
+
+
 
 			SEND_RESULT.setMethod(new RESPONSE_Method());
 
 			additionTalk.cProcessorTemplate().addTransition(SEND_RESULT, FINAL);
 			additionTalk.cProcessorTemplate().addTransition(SEND_RESULT, WAIT);
-			
-			
+
+
 
 			FINAL.setMethod(new FINAL_Method());
 
 			additionTalk.cProcessorTemplate().registerState(FINAL);
 
-			
-			
+
+
 
 			this.addFactoryAsParticipant(additionTalk);
 
@@ -131,12 +132,21 @@ public class Addition extends CAgent {
 
 	}
 
-	
+	synchronized public boolean exit()
+	{
+		received++;
+		System.out.println("Valor de received: "+ received);
+		if (received > 1)
+			return true;
+		else
+			return false;
+	}
+
 	public void setResult(int r)
 	{
 		result = r;
 	}
-	
+
 	public int getResult()
 	{
 		return result;
@@ -158,11 +168,11 @@ public class Addition extends CAgent {
 
 	class not_accepted extends NotAcceptedMessagesState
 	{
-	
+
 		String content;
 		@Override
 		protected int run(ACLMessage exceptionMessage, String next) {
-		
+
 			return NotAcceptedMessagesState.IGNORE;
 		}
 
@@ -170,12 +180,12 @@ public class Addition extends CAgent {
 		protected String getNext(String previousState) {
 			// TODO Auto-generated method stub
 			String state = "WAIT";
-	
+
 			return state;
 		}
-		
+
 	}
-	
+
 	class BEGIN_Method implements BeginStateMethod {
 
 		public String run(CProcessor myProcessor, ACLMessage msg) {
@@ -183,7 +193,7 @@ public class Addition extends CAgent {
 			// In this example there is nothing more to do than continue
 			// to the next state which will send the message.
 			System.out.println("["+myProcessor.getMyAgent().getAid().name+"]BEGIN");
-			
+
 			return "WAIT";
 		};
 
@@ -192,12 +202,12 @@ public class Addition extends CAgent {
 
 
 	class RECEIVE_Method implements ReceiveStateMethod {
-			public String run(CProcessor myProcessor, ACLMessage messageReceived) {
+		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
 
 			String state = "SEND_RESULT";
-			
+
 			System.out.println("["+myProcessor.getMyAgent().getAid().name+"]RECEIVE de: "+ messageReceived.getSender());
-			int p1,p2, result;
+			int p1,p2, result = 0;
 
 
 			p1 = Integer.parseInt(messageReceived.getContent().split(" ")[0]);
@@ -218,50 +228,50 @@ public class Addition extends CAgent {
 
 		public String run(CProcessor myProcessor, ACLMessage messageToSend) {
 
-			
+
 			String state = "FINAL";
 			int result = ((Addition)myProcessor.getMyAgent()).getResult();
 			System.out.println("["+myProcessor.getMyAgent().getAid().name+"]Send result: "+ result);
-			
+
 			ACLMessage msgReply = myProcessor.getLastReceivedMessage().createReply();
-			
+
 			messageToSend.copyFromAsTemplate(msgReply);
 			messageToSend.setContent(""+result);
-			
+
 			messageToSend.setPerformative(ACLMessage.INFORM);
-			
+
 			messageToSend.setSender(myProcessor.getMyAgent().getAid());
-			if (n<1)
-			{
-				
-				state = "WAIT";
-				n++;
-			}
+			
+			messageToSend.setHeader("result", "true");
+			System.out.println("["+myProcessor.getMyAgent().getAid().name+"] n: "+ n);
 
 			return state;
 
 		}
 
 	}
-	
-	
-	
+
+
+
 
 	class FINAL_Method implements FinalStateMethod {
 		public void run(CProcessor myProcessor, ACLMessage responseMessage) {
 
-			OMSProxy omsProxy = new OMSProxy(myProcessor);
-			System.out.println("["+myProcessor.getMyAgent().getAid().name+"]Shutdown");
-			try {
-				omsProxy.leaveRole("operador", "calculin");
-				omsProxy.leaveRole("participant", "virtual");
-			} catch (THOMASException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			if (((Addition)myProcessor.getMyAgent()).exit())
+			{
+				OMSProxy omsProxy = new OMSProxy(myProcessor);
+				System.out.println("["+myProcessor.getMyAgent().getAid().name+"]Shutdown");
+				try {
+					omsProxy.leaveRole("operador", "calculin");
+					omsProxy.leaveRole("participant", "virtual");
+				} catch (THOMASException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+
+				myProcessor.ShutdownAgent();
 			}
-
-
-			myProcessor.ShutdownAgent();
 
 		}
 

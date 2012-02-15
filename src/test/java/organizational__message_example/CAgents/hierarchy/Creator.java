@@ -78,7 +78,7 @@ public class Creator extends CAgent {
 			ReceiveState RECEIVE_GENERIC = new ReceiveState("RECEIVE_GENERIC");
 			
 			RECEIVE_SHUTDOWN.setAcceptFilter(filter_shutdown);
-			RECEIVE_GENERIC.setAcceptFilter(null);
+			RECEIVE_GENERIC.setAcceptFilter(new MessageFilter("performative = REQUEST OR performative = INFORM"));
 			
 			RECEIVE_SHUTDOWN.setMethod(new RECEIVE_SHUTDOWN_Method());
 			RECEIVE_GENERIC.setMethod(new RECEIVE_GENERIC_Method());
@@ -92,9 +92,11 @@ public class Creator extends CAgent {
 
 			
 			FinalState FINAL = new FinalState("FINAL");
-			
-			talk.cProcessorTemplate().addTransition(RECEIVE_GENERIC, WAIT);
-			talk.cProcessorTemplate().addTransition(RECEIVE_SHUTDOWN, FINAL);
+			FinalState FINAL_SHUTDOWN = new FinalState("FINAL_SHUTDOWN");
+			talk.cProcessorTemplate().registerState(FINAL_SHUTDOWN);
+			FINAL_SHUTDOWN.setMethod(new FINAL_SHUTDOWN_Method()); 
+			talk.cProcessorTemplate().addTransition(RECEIVE_GENERIC, FINAL);
+			talk.cProcessorTemplate().addTransition(RECEIVE_SHUTDOWN, FINAL_SHUTDOWN);
 			
 
 			FINAL.setMethod(new FINAL_Method());
@@ -155,7 +157,7 @@ public class Creator extends CAgent {
 			omsProxy.allocateRole("manager", "calculin", "agente_sumatorio");
 //			
 //			
-			//omsProxy.allocateRole("manager", "calculin", "agente_sumaPotencias");
+			omsProxy.allocateRole("manager", "calculin", "agente_sumaPotencias");
 			
 		}catch(THOMASException e)
 		{
@@ -186,7 +188,7 @@ public class Creator extends CAgent {
 
 			// In this example there is nothing more to do than continue
 			// to the next state which will send the message.
-			System.out.println("BEGIN");
+			System.out.println("BEGIN: mensaje "+ msg.getContent()+" de: "+ msg.getSender());
 			return "WAIT";
 		};
 
@@ -198,7 +200,7 @@ public class Creator extends CAgent {
 
 		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
 			System.out.println("["+myProcessor.getMyAgent().getName()+"]RECEIVE SHUTDOWN");
-			String state = "FINAL";
+			String state = "FINAL_SHUTDOWN";
 		
 			return state;
 		}
@@ -208,17 +210,25 @@ public class Creator extends CAgent {
 	class RECEIVE_GENERIC_Method implements ReceiveStateMethod {
 
 		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
-			System.out.println("["+myProcessor.getMyAgent().getName()+"]RECEIVE GENERIC");
-			String state = "WAIT";
+			System.out.println("["+myProcessor.getMyAgent().getName()+"]RECEIVE GENERIC. Content: "+messageReceived.getContent()+ " sender: "+ messageReceived.getSender().name);
+			String state = "FINAL";
 		
 			return state;
 		}
 
 	}
 
-
-
 	class FINAL_Method implements FinalStateMethod {
+
+		@Override
+		public void run(CProcessor myProcessor, ACLMessage messageToSend) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	}
+
+	class FINAL_SHUTDOWN_Method implements FinalStateMethod {
 		public void run(CProcessor myProcessor, ACLMessage responseMessage) {
 
 
@@ -243,10 +253,11 @@ public class Creator extends CAgent {
 			omsProxy.leaveRole("manager", "calculin");
 			
 			ArrayList<ArrayList<String>> members = omsProxy.informMembers("calculin", "", "subordinate");
+	
 			
 			for(ArrayList<String> member : members)
 			{
-				
+				System.out.println("Deallocate role: "+ member.get(0));
 				omsProxy.deallocateRole(member.get(1), "calculin", member.get(0));
 			}
 			

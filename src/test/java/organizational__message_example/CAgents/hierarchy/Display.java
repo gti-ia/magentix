@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import organizational__message_example.CAgents.hierarchy.Product.RECEIVE_Shutdown_Method;
 
 import es.upv.dsic.gti_ia.architecture.Monitor;
 import es.upv.dsic.gti_ia.cAgents.BeginState;
@@ -43,12 +42,12 @@ public class Display extends CAgent {
 
 		try
 		{
-			logger.info("pool");
+
 			omsProxy.acquireRole("participant", "virtual");
 
 			MessageFilter filter = new MessageFilter("performative = REQUEST OR performative = INFORM");
 
-			CFactory additionTalk = new CFactory("PRODUCT_TALK", filter, 1,this);
+			CFactory additionTalk = new CFactory("PRODUCT_TALK", null, 1,this);
 
 
 			//----------------------------BEGIN STATE----------------------------------
@@ -82,19 +81,23 @@ public class Display extends CAgent {
 
 			additionTalk.cProcessorTemplate().registerState(RECEIVE);
 			additionTalk.cProcessorTemplate().addTransition(WAIT, RECEIVE);
-			additionTalk.cProcessorTemplate().addTransition(RECEIVE, WAIT);
+			
 
 
 		
 			
 			
 			FinalState FINAL = new FinalState("FINAL");
+			FinalState FINAL_SHUTDOWN = new FinalState("FINAL_SHUTDOWN");
 			FINAL.setMethod(new FINAL_Method());
+			FINAL_SHUTDOWN.setMethod(new FINAL_SHUTDOWN_Method());
+			
+			additionTalk.cProcessorTemplate().registerState(FINAL_SHUTDOWN);
 			additionTalk.cProcessorTemplate().registerState(FINAL);
 
 
-
-			additionTalk.cProcessorTemplate().addTransition(RECEIVE_SHUTDOWN, FINAL);
+			additionTalk.cProcessorTemplate().addTransition(RECEIVE, FINAL);
+			additionTalk.cProcessorTemplate().addTransition(RECEIVE_SHUTDOWN, FINAL_SHUTDOWN);
 			
 			this.addFactoryAsParticipant(additionTalk);
 		
@@ -144,7 +147,7 @@ public class Display extends CAgent {
 		public String run(CProcessor myProcessor, ACLMessage receivedMessage) {
 			
 			System.out.println("["+myProcessor.getMyAgent().getAid().name+"]SHUTDOWN");
-			String state = "FINAL";
+			String state = "FINAL_SHUTDOWN";
 			
 			return state;
 		}
@@ -153,8 +156,8 @@ public class Display extends CAgent {
 	
 	class RECEIVE_Method implements ReceiveStateMethod {
 		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
-
-			String state = "WAIT";
+	
+			String state = "FINAL";
 
 		
 				ArrayList<ArrayList<String>> informMembers;
@@ -181,11 +184,19 @@ public class Display extends CAgent {
 
 	}
 
-
-
 	class FINAL_Method implements FinalStateMethod {
-		public void run(CProcessor myProcessor, ACLMessage responseMessage) {
 
+		@Override
+		public void run(CProcessor myProcessor, ACLMessage messageToSend) {
+			// TODO Auto-generated method stub
+			
+		}
+	
+	}
+
+	class FINAL_SHUTDOWN_Method implements FinalStateMethod {
+		public void run(CProcessor myProcessor, ACLMessage responseMessage) {
+			OMSProxy omsProxy = new OMSProxy(myProcessor);
 	
 			try {
 				

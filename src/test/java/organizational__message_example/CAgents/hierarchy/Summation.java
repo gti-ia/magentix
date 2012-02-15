@@ -2,7 +2,8 @@ package organizational__message_example.CAgents.hierarchy;
 
 
 
-import org.omg.PortableServer.POAManagerPackage.State;
+
+
 
 import es.upv.dsic.gti_ia.architecture.FIPANames.InteractionProtocol;
 import es.upv.dsic.gti_ia.architecture.Monitor;
@@ -30,6 +31,7 @@ public class Summation extends CAgent {
 	OMSProxy omsProxy = new OMSProxy(this);
 	int result = 0;
 	int expected = 2;
+	int count=0;
 	Monitor m = new Monitor();
 
 	public Summation(AgentID aid) throws Exception {
@@ -44,13 +46,40 @@ public class Summation extends CAgent {
 
 			omsProxy.acquireRole("participant", "virtual");
 
-			MessageFilter filter = new MessageFilter("performative = INFORM");
+
+
+
+			//-----------------------------Participant factory-----------------------
+
+			CFactory talk_Manager = new CFactory("RECEIVE_MANAGER", null, 1,this);
+			BeginState BEGIN_MANAGER = (BeginState) talk_Manager.cProcessorTemplate().getState("BEGIN");
+			BEGIN_MANAGER.setMethod(new BEGIN_MANAGER_Method());
+
+			WaitState WAIT = new WaitState("WAIT", 0);
+
+			talk_Manager.cProcessorTemplate().registerState(WAIT);
+			talk_Manager.cProcessorTemplate().addTransition(BEGIN_MANAGER, WAIT);
+			//Para capturar mensajes que vienen del otro agente manager.
+			ReceiveState RECEIVE_MANAGER = new ReceiveState("RECEIVE_MANAGER");
+			RECEIVE_MANAGER.setAcceptFilter(new MessageFilter("sender = agente_sumapotencias")); // null -> accept any message
+			RECEIVE_MANAGER.setMethod(new RECEIVE_MANAGER_Method());
+			talk_Manager.cProcessorTemplate().registerState(RECEIVE_MANAGER);
+
+			talk_Manager.cProcessorTemplate().addTransition(WAIT, RECEIVE_MANAGER);
+			talk_Manager.cProcessorTemplate().addTransition(RECEIVE_MANAGER, WAIT);
+
+			FinalState FINAL_MANAGER = new FinalState("FINAL");
+			talk_Manager.cProcessorTemplate().registerState(FINAL_MANAGER);
+			FINAL_MANAGER.setMethod(new FINAL_MANAGER_Method());
+
+
+			//----------------------------Initiator factory----------------------------------
+
+			MessageFilter filter = new MessageFilter("result = true");
 			CFactory talk = new CFactory("SUMMATION_REQUEST", filter, 1,this);
 
-			//----------------------------BEGIN STATE----------------------------------
 			BeginState BEGIN = (BeginState) talk.cProcessorTemplate().getState("BEGIN");
 			BEGIN.setMethod(new BEGIN_Method());
-
 
 			SendState REQUEST = new SendState("REQUEST");
 
@@ -58,19 +87,10 @@ public class Summation extends CAgent {
 			talk.cProcessorTemplate().registerState(REQUEST);
 			talk.cProcessorTemplate().addTransition(BEGIN, REQUEST);
 
-
-			WaitState WAIT = new WaitState("WAIT", 0);
 			talk.cProcessorTemplate().registerState(WAIT);
-
 			talk.cProcessorTemplate().addTransition(REQUEST, WAIT);
-			
-		
-			
 
-			
 			talk.cProcessorTemplate().registerState(new not_accepted());
-			
-			
 
 			ReceiveState RECEIVE = new ReceiveState("RECEIVE");
 			RECEIVE.setAcceptFilter(filter); // null -> accept any message
@@ -94,7 +114,7 @@ public class Summation extends CAgent {
 
 			SEND_RESULT.setMethod(new RESPONSE_Method());
 			SEND_SHUTDOWN.setMethod(new SEND_SHUTDOWN_Method());
-			
+
 			talk.cProcessorTemplate().addTransition(SEND_RESULT, SEND_SHUTDOWN);
 			talk.cProcessorTemplate().addTransition(SEND_SHUTDOWN, FINAL);
 			talk.cProcessorTemplate().addTransition(SEND_RESULT, REQUEST);
@@ -105,15 +125,15 @@ public class Summation extends CAgent {
 
 
 
-
+			this.addFactoryAsParticipant(talk_Manager);
 			this.addFactoryAsInitiator(talk);
-			//	this.send_request(5,6);
-			// Finally Harry starts the conversation.
+
+
 			this.startSyncConversation("SUMMATION_REQUEST");
 
 
 			System.out.println("ACABE");
-		
+
 
 		} catch (THOMASException e) {
 			// TODO Auto-generated catch block
@@ -123,7 +143,19 @@ public class Summation extends CAgent {
 
 	}
 
+	public void addCount()
+	{
+		count++;
+	}
 
+	public int getCount()
+	{
+		return count;
+	}
+	public void setResult(int n)
+	{
+		result = n;
+	}
 
 	public void sumResult(int n)
 	{
@@ -135,7 +167,16 @@ public class Summation extends CAgent {
 		return result;
 	}
 
+	class RECEIVE_MANAGER_Method implements ReceiveStateMethod {
 
+		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
+
+			String state = "WAIT";
+			System.out.println("["+myProcessor.getMyAgent().getName()+"]Esto es lo que ha dicho el agente "+messageReceived.getSender().name+": "+ messageReceived.getContent());
+			return state;
+		}
+
+	}
 
 	@Override
 	protected void finalize(CProcessor firstProcessor,
@@ -147,11 +188,11 @@ public class Summation extends CAgent {
 
 	class not_accepted extends NotAcceptedMessagesState
 	{
-	
+
 		String content;
 		@Override
 		protected int run(ACLMessage exceptionMessage, String next) {
-			
+
 			return NotAcceptedMessagesState.IGNORE;
 		}
 
@@ -159,15 +200,25 @@ public class Summation extends CAgent {
 		protected String getNext(String previousState) {
 			// TODO Auto-generated method stub
 			String state = "WAIT";
-			
+
 			return state;
 		}
-		
+
 	}
 	//------------------------------------------------------------------------
 	//-----------------------CFactory implementation--------------------------
 	//------------------------------------------------------------------------
 
+
+	class BEGIN_MANAGER_Method implements BeginStateMethod {
+
+		public String run(CProcessor myProcessor, ACLMessage msg) {
+
+
+			return "WAIT";
+		};
+
+	}
 
 
 
@@ -190,7 +241,7 @@ public class Summation extends CAgent {
 
 
 			OMSProxy omsProxy = new OMSProxy(myProcessor);
-			logger.info("pool");
+
 			ACLMessage msg;
 			String state = "WAIT";
 			try {
@@ -225,17 +276,25 @@ public class Summation extends CAgent {
 
 	class RECEIVE_Method implements ReceiveStateMethod {
 		int n=0;
+
 		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
 
 			String state = "SEND_RESULT";
-			logger.info("pool");
+
 			System.out.println("["+myProcessor.getMyAgent().getAid().name+"]Mensaje recibido: "+ messageReceived.getContent());
 			((Summation)myProcessor.getMyAgent()).sumResult(Integer.parseInt(messageReceived.getContent()));
-			if (n<1)
+			System.out.println("["+myProcessor.getMyAgent().getAid().name+"] count: "+ ((Summation)myProcessor.getMyAgent()).getCount());
+			System.out.println("["+myProcessor.getMyAgent().getAid().name+"] n: "+ n);
+			if (((Summation)myProcessor.getMyAgent()).getCount() == 0)
 			{
-				n++;
-				state = "WAIT";
+				if (n<1)
+				{
+					n++;
+					state = "WAIT";
+				}
 			}
+
+
 			return state;
 		}
 
@@ -251,7 +310,7 @@ public class Summation extends CAgent {
 			ACLMessage msg;
 			String state = "SEND_SHUTDOWN";
 			OMSProxy omsProxy = new OMSProxy(myProcessor);
-			
+
 			try {
 				msg = omsProxy.buildOrganizationalMessage("calculin");
 
@@ -259,8 +318,10 @@ public class Summation extends CAgent {
 				messageToSend.setPerformative(ACLMessage.INFORM);
 				messageToSend.setLanguage("ACL");
 				int content = ((Summation)myProcessor.getMyAgent()).getResult();
+				((Summation)myProcessor.getMyAgent()).setResult(0);
 				messageToSend.setContent(""+content);
-				
+
+				((Summation)myProcessor.getMyAgent()).addCount();
 				System.out.println("["+myProcessor.getMyAgent().getAid().name+"]Response");
 				if (n<1)
 				{
@@ -287,27 +348,27 @@ public class Summation extends CAgent {
 			OMSProxy omsProxy = new OMSProxy(myProcessor);
 			String state = "FINAL";
 			try {	
-				
+
 				ACLMessage msg = omsProxy.buildOrganizationalMessage("calculin");
 				messageToSend.copyFromAsTemplate(msg);
-				
+
 				messageToSend.setPerformative(InteractionProtocol.FIPA_REQUEST);
 				messageToSend.setProtocol(InteractionProtocol.FIPA_REQUEST);
 				messageToSend.setLanguage("ACL");
 				messageToSend.setContent("shut down");
-				
+
 				messageToSend.setHeader("shutdown", "true");
 
-				System.out.println("["+myProcessor.getMyAgent().getAid().name+"]Shutdown");
+				System.out.println("["+myProcessor.getMyAgent().getAid().name+"] Send Shutdown");
 
-				
+
 			} catch (THOMASException e) {
 				e.printStackTrace();
 
 			}	
 			return state;
 		}
-		
+
 	}
 	class FINAL_Method implements FinalStateMethod {
 		public void run(CProcessor myProcessor, ACLMessage responseMessage) {
@@ -315,7 +376,7 @@ public class Summation extends CAgent {
 			OMSProxy omsProxy = new OMSProxy(myProcessor);
 
 			try {
-				
+
 				omsProxy.leaveRole("manager", "calculin");
 
 				omsProxy.leaveRole("participant", "virtual");
@@ -327,6 +388,13 @@ public class Summation extends CAgent {
 
 
 			myProcessor.ShutdownAgent();
+
+		}
+
+	}
+
+	class FINAL_MANAGER_Method implements FinalStateMethod {
+		public void run(CProcessor myProcessor, ACLMessage responseMessage) {
 
 		}
 

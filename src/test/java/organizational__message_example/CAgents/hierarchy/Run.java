@@ -62,7 +62,7 @@ public class Run {
 			sumAgent.start();
 			visAgent.start();
 			sumtAgent.start();
-			//sumPotAgent.start();
+			sumPotAgent.start();
 
 
 		} catch (Exception e) {

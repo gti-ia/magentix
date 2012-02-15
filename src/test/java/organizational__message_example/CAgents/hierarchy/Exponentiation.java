@@ -1,12 +1,4 @@
 package organizational__message_example.CAgents.hierarchy;
-
-
-
-
-
-import organizational__message_example.CAgents.hierarchy.Addition.not_accepted;
-
-import es.upv.dsic.gti_ia.architecture.FIPANames.InteractionProtocol;
 import es.upv.dsic.gti_ia.architecture.Monitor;
 import es.upv.dsic.gti_ia.cAgents.ActionState;
 import es.upv.dsic.gti_ia.cAgents.ActionStateMethod;
@@ -47,14 +39,41 @@ public class Exponentiation extends CAgent {
 			omsProxy.acquireRole("participant", "virtual");
 
 
-			MessageFilter filter = new MessageFilter("performative = INFORM");
+			MessageFilter filter = new MessageFilter("result = true");
 			CFactory talk = new CFactory("EXPONENTIATION_REQUEST", filter, 1,this);
+			
+			
+	//-----------------------------Participant factory-----------------------
+			
+			CFactory talk_Manager = new CFactory("RECEIVE_MANAGER", null, 1,this);
+			BeginState BEGIN_MANAGER = (BeginState) talk_Manager.cProcessorTemplate().getState("BEGIN");
+			BEGIN_MANAGER.setMethod(new BEGIN_MANAGER_Method());
+			
+			WaitState WAIT = new WaitState("WAIT", 0);
+			
+			talk_Manager.cProcessorTemplate().registerState(WAIT);
+			talk_Manager.cProcessorTemplate().addTransition(BEGIN_MANAGER, WAIT);
+			//Para capturar mensajes que vienen del otro agente manager.
+			ReceiveState RECEIVE_MANAGER = new ReceiveState("RECEIVE_MANAGER");
+			RECEIVE_MANAGER.setAcceptFilter(new MessageFilter("sender = agente_sumatorio")); // null -> accept any message
+			RECEIVE_MANAGER.setMethod(new RECEIVE_MANAGER_Method());
+			talk_Manager.cProcessorTemplate().registerState(RECEIVE_MANAGER);
+
+			talk_Manager.cProcessorTemplate().addTransition(WAIT, RECEIVE_MANAGER);
+			talk_Manager.cProcessorTemplate().addTransition(RECEIVE_MANAGER, WAIT);
+			
+			FinalState FINAL_MANAGER = new FinalState("FINAL");
+			talk_Manager.cProcessorTemplate().registerState(FINAL_MANAGER);
+			FINAL_MANAGER.setMethod(new FINAL_MANAGER_Method());
+			
+			
+			
 
 			//----------------------------BEGIN STATE----------------------------------
 			BeginState BEGIN = (BeginState) talk.cProcessorTemplate().getState("BEGIN");
 			BEGIN.setMethod(new BEGIN_Method());
 
-			WaitState WAIT = new WaitState("WAIT", 0);
+			
 			talk.cProcessorTemplate().registerState(WAIT);
 
 			
@@ -68,6 +87,7 @@ public class Exponentiation extends CAgent {
 
 			talk.cProcessorTemplate().addTransition(REQUEST, WAIT);
 
+						
 
 			ReceiveState RECEIVE = new ReceiveState("RECEIVE");
 			RECEIVE.setAcceptFilter(filter); // null -> accept any message
@@ -101,7 +121,7 @@ public class Exponentiation extends CAgent {
 
 
 
-
+			this.addFactoryAsParticipant(talk_Manager);
 			this.addFactoryAsInitiator(talk);
 
 			// Finally Harry starts the conversation.
@@ -165,8 +185,22 @@ public class Exponentiation extends CAgent {
 	//-----------------------CFactory implementation--------------------------
 	//------------------------------------------------------------------------
 
+	class BEGIN_MANAGER_Method implements BeginStateMethod {
+
+		public String run(CProcessor myProcessor, ACLMessage msg) {
 
 
+			return "WAIT";
+		};
+
+	}
+
+	class FINAL_MANAGER_Method implements FinalStateMethod {
+		public void run(CProcessor myProcessor, ACLMessage responseMessage) {
+
+		}
+
+	}
 	class BEGIN_Method implements BeginStateMethod {
 
 		public String run(CProcessor myProcessor, ACLMessage msg) {
@@ -210,6 +244,17 @@ public class Exponentiation extends CAgent {
 
 	}
 
+	class RECEIVE_MANAGER_Method implements ReceiveStateMethod {
+		
+		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
+
+			String state = "WAIT";
+			System.out.println("["+myProcessor.getMyAgent().getName()+"]Esto es lo que ha dicho el agente sumatorio: "+ messageReceived.getContent());
+			return state;
+		}
+
+	}
+	
 	class RECEIVE_Method implements ReceiveStateMethod {
 		int n=0;
 		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
