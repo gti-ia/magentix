@@ -67,7 +67,7 @@ public class RemoveProvUTest {
 				"ProductAgent");
 	}
 	
-	/** TODO 
+	/**  
 	 * Remove a provider from a registered service with more providers. Concretely, 
 	 * the service Square is registered with two agent providers. One of them is removed.
 	 * @return
@@ -78,7 +78,7 @@ public class RemoveProvUTest {
 				"SquareAgent");
 	}
 	
-	/** TODO
+	/** 
 	 * Remove a provider from a registered service with more groundings. The service Product 
 	 * is provided by a web service and an agent behavior. In this case, the agent behavior 
 	 * is removed as a provider.
@@ -114,7 +114,7 @@ public class RemoveProvUTest {
 				"http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#ProductGrounding");
 	}
 	
-	/** TODO
+	/** 
 	 * Remove a grounding from a registered service with more groundings.In this case, 
 	 * the web service Square is provided by two different web services. One of them is 
 	 * removed as a suitable grounding.
@@ -123,7 +123,7 @@ public class RemoveProvUTest {
 	String appropiateParamsTest6(){
 		
 		return sf.removeProvider("http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl#SquareProfile",
-				"http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl#SquareGrounding2");
+				"http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl#SquareGrounding");
 	}
 	
 	/**

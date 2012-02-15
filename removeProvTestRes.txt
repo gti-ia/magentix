@@ -52,13 +52,23 @@ appropiateParamsTest1:
 </result>
 </response>
 
+appropiateParamsTest2:
+<response>
+<serviceName>RemoveProvider</serviceName>
+<status>Ok</status>
+<result>
+<description>Provider or grounding SquareAgent removed</description>
+</result>
+</response>
 
-
-
-
-
-
-
+appropiateParamsTest3:
+<response>
+<serviceName>RemoveProvider</serviceName>
+<status>Ok</status>
+<result>
+<description>Provider or grounding ProductAgent removed</description>
+</result>
+</response>
 
 appropiateParamsTest4:
 <response>
@@ -78,5 +88,13 @@ appropiateParamsTest5:
 </result>
 </response>
 
+appropiateParamsTest6:
+<response>
+<serviceName>RemoveProvider</serviceName>
+<status>Ok</status>
+<result>
+<description>Provider or grounding http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl#SquareGrounding removed</description>
+</result>
+</response>
 
 
