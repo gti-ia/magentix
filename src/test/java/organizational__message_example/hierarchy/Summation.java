@@ -1,7 +1,5 @@
 package organizational__message_example.hierarchy;
 
-import java.util.ArrayList;
-
 import es.upv.dsic.gti_ia.architecture.FIPANames.InteractionProtocol;
 import es.upv.dsic.gti_ia.architecture.Monitor;
 import es.upv.dsic.gti_ia.architecture.QueueAgent;
