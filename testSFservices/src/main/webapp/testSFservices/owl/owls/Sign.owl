@@ -38,6 +38,9 @@
 <profile:Profile rdf:ID="SignProfile">
     <service:isPresentedBy rdf:resource="#SignService"/>
     <profile:serviceName xml:lang="en">Sign</profile:serviceName>
+	<profile:textDescription xml:lang="en">
+	This service receives one number and returns the word: positive or negative
+	</profile:textDescription>
     <profile:contactInformation>
 	 <provider:Provider rdf:ID="SignAgent">
 	   <provider:entityID rdf:datatype="^^xsd;string">SignAgent</provider:entityID>

@@ -39,6 +39,9 @@
 <profile:Profile rdf:ID="SquareProfile">
     <service:isPresentedBy rdf:resource="#SquareService"/>
     <profile:serviceName xml:lang="en">Square</profile:serviceName>
+	<profile:textDescription xml:lang="en">
+	This service squares an input number and returns the result
+	</profile:textDescription>
 	<profile:contactInformation>
 	 <provider:Provider rdf:ID="SquareAgent">
 	   <provider:entityID rdf:datatype="^^xsd;string">SquareAgent</provider:entityID>

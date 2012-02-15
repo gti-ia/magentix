@@ -38,6 +38,9 @@
 <profile:Profile rdf:ID="DivisionProfile">
     <service:isPresentedBy rdf:resource="#DivisionService"/>
     <profile:serviceName xml:lang="en">Division</profile:serviceName>
+	<profile:textDescription xml:lang="en">
+	This service receives two numbers X and Y as inputs. Then, it calculates X divided by Y
+	</profile:textDescription>
 	<profile:contactInformation>
 	 <provider:Provider rdf:ID="DivisionAgent">
 	   <provider:entityID rdf:datatype="^^xsd;string">DivisionAgent</provider:entityID>

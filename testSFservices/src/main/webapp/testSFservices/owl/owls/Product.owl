@@ -39,6 +39,9 @@
 <profile:Profile rdf:ID="ProductProfile">
     <service:isPresentedBy rdf:resource="#ProductService"/>
     <profile:serviceName xml:lang="en">Product</profile:serviceName>
+	<profile:textDescription xml:lang="en">
+	This service multiplies two input numbers and returns the product
+	</profile:textDescription>
 	<profile:contactInformation>
 	 <provider:Provider rdf:ID="ProductAgent">
 	   <provider:entityID rdf:datatype="^^xsd;string">ProductAgent</provider:entityID>

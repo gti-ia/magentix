@@ -38,6 +38,9 @@
 <profile:Profile rdf:ID="AdditionProfile">
     <service:isPresentedBy rdf:resource="#AdditionService"/>
     <profile:serviceName xml:lang="en">Addition</profile:serviceName>
+	<profile:textDescription xml:lang="en">
+	This service adds two input numbers and returns the addition
+	</profile:textDescription>
 	<profile:contactInformation>
 	 <provider:Provider rdf:ID="AdditionAgent">
 	   <provider:entityID rdf:datatype="^^xsd;string">AdditionAgent</provider:entityID>

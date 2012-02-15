@@ -38,6 +38,9 @@
 <profile:Profile rdf:ID="EvenProfile">
     <service:isPresentedBy rdf:resource="#EvenService"/>
     <profile:serviceName xml:lang="en">Even</profile:serviceName>
+	<profile:textDescription xml:lang="en">
+	This service receives one number and returns true when it is even, otherwise it returns false
+	</profile:textDescription>
 	<profile:contactInformation>
 	 <provider:Provider rdf:ID="EvenOrg">
 	   <provider:entityID rdf:datatype="^^xsd;string">EvenOrg</provider:entityID>
