@@ -568,7 +568,7 @@ public class OMS extends CAgent {
 
 					//If leave role is ok. If organization is virtual the agent position is considered creator
 					if (responseParser.getStatus().equals("Ok")
-							&&  (responseParser.getServiceName().equals("LeaveRole") ||  responseParser.getServiceName().equals("AllocateRole"))
+							&&  (responseParser.getServiceName().equals("LeaveRole") ||  responseParser.getServiceName().equals("DeallocateRole"))
 							&& !organizationID.equals("virtual"))
 					{
 
