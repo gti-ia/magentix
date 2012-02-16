@@ -33,6 +33,7 @@ public class THOMASProxy {
 
 
 	BaseAgent agent = null;
+	CProcessor myProcessor = null;
 	Oracle oracle;
 
 	Configuration c;
@@ -81,6 +82,11 @@ public class THOMASProxy {
 		this.ServiceDescriptionLocation = ServiceDescriptionLocation;
 	}
 
+	THOMASProxy(CProcessor firstProcessor, String thomasAgent,String ServiceDescriptionLocation) {
+		this.agent = firstProcessor.getMyAgent();
+		this.myProcessor = firstProcessor;
+		this.ServiceDescriptionLocation = ServiceDescriptionLocation;
+	}
 	/**
 	 * This class gives us the support to access to the services of the OMS and SF.
 	 * Checked that the data contained in the file configuration/Settings.xml the URL
@@ -95,6 +101,15 @@ public class THOMASProxy {
 	THOMASProxy(BaseAgent agent, String thomasAgent) {
 
 		this.agent = agent;
+		this.thomasAgent = thomasAgent;
+		c = Configuration.getConfiguration();
+		this.initialize();
+
+	}
+	
+	THOMASProxy(CProcessor firstProcessor, String thomasAgent) {
+		this.agent = firstProcessor.getMyAgent();
+		this.myProcessor = firstProcessor;
 		this.thomasAgent = thomasAgent;
 		c = Configuration.getConfiguration();
 		this.initialize();
@@ -189,7 +204,7 @@ public class THOMASProxy {
 		serviceTypeResult2  = new ArrayList<String>();
 		serviceTypeResult3 = new ArrayList<ArrayList<String>>();
 		
-		ErrorValue = new String();;
+		ErrorValue = new String();
 		status = new String();	
 	}
 
@@ -212,7 +227,17 @@ public class THOMASProxy {
 	 */
 	private void initProxyProtocol(ACLMessage requestMsg)
 	{
-		if (agent instanceof QueueAgent)
+		if (this.myProcessor != null)
+		{			
+			//Initialization protocol  / conversation request.
+			CAgent myAgent = (CAgent)agent;
+			THOMASCAgentRequest protocol = new THOMASCAgentRequest(this);
+			CFactory talk = protocol.newFactory("THOMASRequest", null, requestMsg, 1, myAgent, 0);
+			myAgent.addFactoryAsInitiator(talk);
+			myProcessor.createSyncConversation(talk, myAgent.newConversationID());
+			myAgent.removeFactory(talk.getName());
+		}
+		else if (agent instanceof QueueAgent)
 		{
 			THOMASQAgentRequest test = new THOMASQAgentRequest((QueueAgent)agent, requestMsg, this);
 
@@ -232,6 +257,7 @@ public class THOMASProxy {
 			myAgent.startSyncConversation(talk.getName());
 			myAgent.removeFactory(talk.getName());
 		}
+	
 
 
 	}
