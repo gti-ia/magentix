@@ -176,7 +176,7 @@ public class Summation extends CAgent {
 	@Override
 	protected void finalize(CProcessor firstProcessor,
 			ACLMessage finalizeMessage) {
-		// TODO Auto-generated method stub
+		System.out.println("["+firstProcessor.getMyAgent().getName()+"] end execution!");
 
 	}
 
@@ -380,9 +380,9 @@ public class Summation extends CAgent {
 
 			}	
 
-
 			myProcessor.ShutdownAgent();
 
+			
 		}
 
 	}

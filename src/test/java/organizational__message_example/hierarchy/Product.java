@@ -57,6 +57,8 @@ public class Product extends QueueAgent {
 			
 			omsProxy.leaveRole("participant", "virtual");
 			
+			System.out.println("[ "+this.getName()+" ] end execution!");
+			
 		}catch(THOMASException e)
 		{
 			e.printStackTrace();

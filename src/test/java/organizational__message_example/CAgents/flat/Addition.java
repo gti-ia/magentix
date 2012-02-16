@@ -68,7 +68,9 @@ public class Addition extends CAgent {
 			//------------------------------------------------------------------------
 			//-----------------------CFactory definition------------------------------
 			//------------------------------------------------------------------------
-			MessageFilter filter = new MessageFilter("performative = REQUEST"); 
+			MessageFilter filter = new MessageFilter("performative = REQUEST AND sender != agente_ruidoso");
+			
+			MessageFilter filterAll = new MessageFilter("sender = agente_ruidoso");
 			CFactory additionTalk = new CFactory("ADDITION_TALK", null, 10,this);
 
 
@@ -89,6 +91,13 @@ public class Addition extends CAgent {
 			additionTalk.cProcessorTemplate().registerState(RECEIVE);
 			additionTalk.cProcessorTemplate().addTransition(WAIT, RECEIVE);
 
+			//----------------------------RECEIVE ALL STATE--------------------------------------
+			ReceiveState RECEIVE_ALL = new ReceiveState("RECEIVE_ALL");
+			RECEIVE_ALL.setAcceptFilter(filterAll); // null -> accept any message
+			RECEIVE_ALL.setMethod(new RECEIVE_ALL_Method());
+			additionTalk.cProcessorTemplate().registerState(RECEIVE_ALL);
+			additionTalk.cProcessorTemplate().addTransition(WAIT, RECEIVE_ALL);
+
 
 			//----------------------------SEND RESULT STATE----------------------------------
 			SendState SEND_RESULT = new SendState("SEND_RESULT");
@@ -102,6 +111,12 @@ public class Addition extends CAgent {
 			additionTalk.cProcessorTemplate().addTransition(SEND_RESULT, FINAL);
 			FINAL.setMethod(new FINAL_Method());
 			additionTalk.cProcessorTemplate().registerState(FINAL);
+			
+			//----------------------------FINAL ALL STATE----------------------------------
+			FinalState FINAL_ALL = new FinalState("FINAL_ALL");
+			additionTalk.cProcessorTemplate().addTransition(RECEIVE_ALL, FINAL_ALL);
+			FINAL_ALL.setMethod(new FINAL_ALL_Method());
+			additionTalk.cProcessorTemplate().registerState(FINAL_ALL);
 			
 			//----------------------------NOT ACCEPTED STATE----------------------------------
 			additionTalk.cProcessorTemplate().registerState(new not_accepted());
@@ -183,7 +198,7 @@ public class Addition extends CAgent {
 	//Method created in order to accept the addition and product messages
 	class RECEIVE_Method implements ReceiveStateMethod {
 		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
-
+			
 			String state = "SEND_RESULT";
 			int p1,p2, result = 0;
 
@@ -200,6 +215,18 @@ public class Addition extends CAgent {
 
 	}
 
+	
+	//Method created in order to accept the addition and product messages
+	class RECEIVE_ALL_Method implements ReceiveStateMethod {
+		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
+			
+			String state = "FINAL_ALL";
+
+			return state;
+		}
+
+	}
+	
 	//Method created in order to sum and send the result
 	class RESPONSE_Method implements SendStateMethod {
 
@@ -235,9 +262,10 @@ public class Addition extends CAgent {
 	//Leave role and shutdown agent
 	class FINAL_Method implements FinalStateMethod {
 		public void run(CProcessor myProcessor, ACLMessage responseMessage) {
-
+			
 			if (((Addition)myProcessor.getMyAgent()).exit())
 			{
+			
 				OMSProxy omsProxy = new OMSProxy(myProcessor);
 			
 				try {
@@ -252,6 +280,15 @@ public class Addition extends CAgent {
 				myProcessor.ShutdownAgent();
 			}
 
+		}
+
+	}
+	
+	
+	//Leave role and shutdown agent
+	class FINAL_ALL_Method implements FinalStateMethod {
+		public void run(CProcessor myProcessor, ACLMessage responseMessage) {
+			
 		}
 
 	}

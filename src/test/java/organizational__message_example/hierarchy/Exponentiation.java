@@ -39,6 +39,8 @@ public class Exponentiation extends QueueAgent {
 			this.send_request(5, 3);
 			
 			omsProxy.leaveRole("participant", "virtual");
+			
+			System.out.println("[ "+this.getName()+" ] end execution!");
 
 		}catch(THOMASException e)
 		{

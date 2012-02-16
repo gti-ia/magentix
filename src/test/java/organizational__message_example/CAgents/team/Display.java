@@ -101,8 +101,7 @@ public class Display extends CAgent {
 	@Override
 	protected void finalize(CProcessor firstProcessor,
 			ACLMessage finalizeMessage) {
-		// TODO Auto-generated method stub
-
+		System.out.println("["+firstProcessor.getMyAgent().getName()+"] end execution!");	 
 	}
 
 

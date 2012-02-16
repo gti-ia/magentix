@@ -101,7 +101,7 @@ public class Noisy extends CAgent {
 	protected void finalize(CProcessor firstProcessor,
 			ACLMessage finalizeMessage) {
 
-		
+		System.out.println("["+firstProcessor.getMyAgent().getName()+"] end execution!");
 	}
 
 

@@ -43,6 +43,7 @@ public class Summation extends QueueAgent {
 
 			omsProxy.leaveRole("participant", "virtual");
 
+			System.out.println("[ "+this.getName()+" ] end execution!");
 		} catch (THOMASException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

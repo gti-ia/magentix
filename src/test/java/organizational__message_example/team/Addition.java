@@ -88,9 +88,9 @@ public class Addition extends QueueAgent {
 
 		try
 		{
-			String result = omsProxy.leaveRole("participant", "virtual");
-			System.out.println("["+this.getName()+"] Result leave role participant: "+result);
-			logger.info("[ "+this.getName()+" ] end execution!");
+			omsProxy.leaveRole("participant", "virtual");
+			
+			System.out.println("[ "+this.getName()+" ] end execution!");
 
 		}catch(THOMASException e)
 		{

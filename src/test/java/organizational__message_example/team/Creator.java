@@ -122,7 +122,7 @@ public class Creator extends QueueAgent {
 			omsProxy.leaveRole("participant", "virtual");
 			
 
-			logger.info("["+this.getName()+" ] end execution!");
+			System.out.println("[ "+this.getName()+" ] end execution!");
 
 		}catch(THOMASException e)
 		{

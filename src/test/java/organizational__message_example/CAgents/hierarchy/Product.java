@@ -290,6 +290,14 @@ public class Product extends CAgent {
 
 			try {
 
+				//In order to agent creator deallocate the role of the agent product
+				try {
+					Thread.sleep(10*1000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
 				omsProxy.leaveRole("participant", "virtual");
 			} catch (THOMASException e) {
 				// TODO Auto-generated catch block
@@ -306,7 +314,7 @@ public class Product extends CAgent {
 	@Override
 	protected void finalize(CProcessor firstProcessor,
 			ACLMessage finalizeMessage) {
-		// TODO Auto-generated method stub
+		System.out.println("["+firstProcessor.getMyAgent().getName()+"] end execution!");	 
 
 
 

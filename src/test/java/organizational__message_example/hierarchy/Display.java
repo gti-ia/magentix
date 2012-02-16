@@ -67,6 +67,8 @@ public class Display extends QueueAgent {
 			omsProxy.leaveRole("manager", "calculin");
 
 			omsProxy.leaveRole("participant", "virtual");
+			
+			System.out.println("[ "+this.getName()+" ] end execution!");
 
 		}catch(THOMASException e)
 		{

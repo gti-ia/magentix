@@ -142,6 +142,7 @@ public class Addition extends CAgent {
 	@Override
 	protected void finalize(CProcessor firstProcessor,
 			ACLMessage finalizeMessage) {
+		System.out.println("["+firstProcessor.getMyAgent().getName()+"] end execution!");
 	}
 
 

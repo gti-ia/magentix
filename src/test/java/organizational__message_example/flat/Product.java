@@ -81,13 +81,18 @@ public class Product extends QueueAgent {
 
 		try
 		{
-			String result = omsProxy.leaveRole("operador", "calculin");
-			System.out.println("["+this.getName()+"] Result leave role operador: "+result);
+			//In order to agent creator deallocate the role of the agent product
+			try {
+				Thread.sleep(10*1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
-			result = omsProxy.leaveRole("participant", "virtual");
-			System.out.println("["+this.getName()+"] Result leave role participant: "+result);
+			omsProxy.leaveRole("participant", "virtual");
+			
 
-			logger.info("["+this.getName()+" ] end execution!");
+			System.out.println("[ "+this.getName()+" ] end execution!");
 
 		}catch(THOMASException e)
 		{
