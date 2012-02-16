@@ -146,7 +146,7 @@ public class Display extends CAgent {
 		
 		public String run(CProcessor myProcessor, ACLMessage receivedMessage) {
 			
-			System.out.println("["+myProcessor.getMyAgent().getAid().name+"]SHUTDOWN");
+		
 			String state = "FINAL_SHUTDOWN";
 			
 			return state;

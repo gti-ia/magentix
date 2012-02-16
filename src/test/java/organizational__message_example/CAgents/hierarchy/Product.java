@@ -2,7 +2,6 @@ package organizational__message_example.CAgents.hierarchy;
 
 import java.util.ArrayList;
 
-import organizational__message_example.CAgents.hierarchy.Summation.not_accepted;
 
 import es.upv.dsic.gti_ia.architecture.Monitor;
 import es.upv.dsic.gti_ia.cAgents.BeginState;
