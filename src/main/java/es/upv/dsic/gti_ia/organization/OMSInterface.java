@@ -59,7 +59,7 @@ public class OMSInterface {
 	 * @param ParentUnitName Identifier of the parent organizational unit
 	 * @param AgentName Identifier of the agent
 	 * @param CreatorName Identifier of the new role with creator position
-	 * @return Returns XML
+	 * @return Returns <unitname +  created>
 	 */
 	public String registerUnit(String UnitName, String UnitType, String ParentUnitName, String AgentName, String CreatorName)
 	{
@@ -370,7 +370,7 @@ public class OMSInterface {
 	}
 
 	/**
-	 * Removes a specific role from a unit.
+	 * Method used to deregister a role 
 	 * 
 	 * @param RoleName Identifier of the role
 	 * @param UnitName Identifier of the unit
@@ -944,14 +944,7 @@ public class OMSInterface {
 						{
 							if (dbInterface.checkAgentInUnit(AgentName, UnitName))
 							{
-								
-								String result = dbInterface.deallocateRole(RoleName, UnitName, TargetAgentName, AgentName);
-								
-								resultXML+="<status>Ok</status>\n";
-								resultXML+="<result>\n<description>"+result+"</description>\n</result>\n";
-								resultXML+="</response>";
-								
-								return resultXML;
+								return dbInterface.deallocateRole(RoleName, UnitName, TargetAgentName, AgentName);
 
 							}
 							else
@@ -965,13 +958,7 @@ public class OMSInterface {
 
 								if (dbInterface.checkPositionInUnit(AgentName, "member", UnitName) || dbInterface.checkPositionInUnit(AgentName, "creator", UnitName))
 								{
-									String result = dbInterface.deallocateRole(RoleName, UnitName, TargetAgentName, AgentName);
-									
-									resultXML+="<status>Ok</status>\n";
-									resultXML+="<result>\n<description>"+result+"</description>\n</result>\n";
-									resultXML+="</response>";
-									
-									return resultXML;
+									return dbInterface.deallocateRole(RoleName, UnitName, TargetAgentName, AgentName);
 
 								}
 								else
@@ -984,13 +971,7 @@ public class OMSInterface {
 							{
 								if (dbInterface.checkPosition(AgentName, "creator"))
 								{
-									String result = dbInterface.deallocateRole(RoleName, UnitName, TargetAgentName, AgentName);
-									
-									resultXML+="<status>Ok</status>\n";
-									resultXML+="<result>\n<description>"+result+"</description>\n</result>\n";
-									resultXML+="</response>";
-									
-									return resultXML;
+									return dbInterface.deallocateRole(RoleName, UnitName, TargetAgentName, AgentName);
 
 								}
 								else
@@ -1181,7 +1162,7 @@ public class OMSInterface {
 	 * @param RoleName Identifier of the role
 	 * @param PositionValue Position inside the unit, such as member, supervisor or subordinate
 	 * @param AgentName Identifier of the agent
-	 * @return Returns a xml 
+	 * @return Returns a set of tuples formed by < agentName , roleName > and separated by - 
 	 */
 	public String informMembers(String UnitName, String RoleName, String PositionValue, String AgentName)
 	{
@@ -1690,7 +1671,7 @@ public class OMSInterface {
 	 * @param RoleName Identifier of the role
 	 * @param UnitName Identifier of the unit
 	 * @param AgentName Identifier of the agent
-	 * @return Returns XML
+	 * @return Returns < Accessibility - Visibility - Position >
 	 */
 	public String informRole(String RoleName, String UnitName, String AgentName)
 	{
