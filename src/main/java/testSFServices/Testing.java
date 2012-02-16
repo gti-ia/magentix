@@ -14,6 +14,19 @@ import org.mindswap.owls.process.execution.ProcessExecutionEngine;
 import org.mindswap.owls.service.Service;
 import org.mindswap.query.ValueMap;
 
+import com.hp.hpl.jena.ontology.OntModel;
+import com.hp.hpl.jena.query.Query;
+import com.hp.hpl.jena.query.QueryExecution;
+import com.hp.hpl.jena.query.QueryExecutionFactory;
+import com.hp.hpl.jena.query.QueryFactory;
+import com.hp.hpl.jena.query.QuerySolution;
+import com.hp.hpl.jena.query.ResultSet;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.ModelMaker;
+import com.hp.hpl.jena.rdf.model.Resource;
+
+import persistence.Profile;
 import persistence.SFinterface;
 import persistence.THOMASException;
 
@@ -217,10 +230,10 @@ public class Testing {
 		//		String r=sf.SearchService(inputs, outputs, keywords);
 		//		System.out.println(r);
 
-		String r2=sf.deregisterService("http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#DivisionProfile");
-		System.out.println(r2);
-		String r=sf.registerService("http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl");
-		System.out.println(r);
+//		String r2=sf.deregisterService("http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#DivisionProfile");
+//		System.out.println(r2);
+//		String r=sf.registerService("http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl");
+//		System.out.println(r);
 //		String r3=sf.removeProvider("http://127.0.0.1/services/1.1/calculateSunriseTime.owls#CALCULATE_SUNRISE_PROFILE", ground);
 ////		String r=sf.RemoveProvider("http://127.0.0.1/services/1.1/calculateSunriseTime.owls#CALCULATE_SUNRISE_PROFILE", "Provider2");
 //		System.out.println(r3);
@@ -228,9 +241,28 @@ public class Testing {
 //		String r4=sf.getService("http://127.0.0.1/services/1.1/calculateSunriseTime.owls#CALCULATE_SUNRISE_PROFILE");
 //		System.out.println(r4);
 		
-		System.out.println("MODEL:");
-		sf.writeModel();
+		ArrayList<String> inputs=new ArrayList<String>();
+		inputs.add("\"http://www.w3.org/2001/XMLSchema#double\"^^xsd:anyURI");
+//		inputs.add("\"http://www.w3.org/2001/XMLSchema#double\"^^xsd:anyURI");
+		ArrayList<String> outputs=new ArrayList<String>();
+		outputs.add("\"http://www.w3.org/2001/XMLSchema#double\"^^xsd:anyURI");
+		ArrayList<String> keywords=new ArrayList<String>();
+		keywords.add("addition");
+		System.out.println(sf.searchService(inputs, null, null));
+		
+//		System.out.println("MODEL:");
+//		sf.writeModel();
+//		
+//		HashMap<String,String> textDescriptions=sf.getProfilesTextDescriptions();
+//		if(textDescriptions.isEmpty())
+//			System.out.println("empty");
+//		Iterator<String> iterTextDescriptions=textDescriptions.keySet().iterator();
+//		while(iterTextDescriptions.hasNext()){
+//			String profile=iterTextDescriptions.next();
+//			String textDescription=textDescriptions.get(profile).toLowerCase().trim();
+//			System.out.println(profile+"\n"+textDescription+"\n");
+//		}
+		
+
 	}
-
-
 }

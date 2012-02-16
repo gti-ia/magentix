@@ -12,6 +12,7 @@ import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Properties;
 import java.util.StringTokenizer;
@@ -56,6 +57,36 @@ public class SFinterface {
 		conn=JenaDBConnection();
 	}
 
+	public void testi(){
+		ModelMaker maker = ModelFactory.createModelRDBMaker(conn);
+		Model base = maker.createModel("http://example.org/ontologias");
+		OntModel m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
+		
+		Profile profile=new Profile("http://localhost:8080/testSFservices/testSFservices/owl/owls/Addition.owl#AdditionProfile", 0f);
+		String queryStr =
+				"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"+
+						"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"+
+						"select ?x where { "+"<"+profile.getUrl()+">"+" profile:hasInput ?x }";
+
+		Query query = QueryFactory.create(queryStr);
+
+		// Execute the query and obtain results
+		QueryExecution querySearchInputs = QueryExecutionFactory.create(query, m);
+		ResultSet resultsSearchInputs = querySearchInputs.execSelect();
+
+
+		if (resultsSearchInputs != null){
+
+			while(resultsSearchInputs.hasNext()) {
+				QuerySolution sol=resultsSearchInputs.next();
+			
+				Resource resource=sol.getResource("x");
+				String input=resource.getURI();
+				System.out.println(input);
+			}
+			
+		}
+	}
 
 	/*
 	 * Observaciones:
@@ -186,24 +217,24 @@ public class SFinterface {
 		int nGrounds=0, nProviders=0;
 		boolean fullRegister=false;
 		try{
-			
+
 			String serviceName=getProfileServiceName(null, serviceURL);
 			String textDescription=getProfileTextDescription(null, serviceURL);
-			
+
 			ArrayList<String> inputs=getInputs(null, serviceURL);
 			ArrayList<String> outputs=getOutputs(null, serviceURL);
 
 			ArrayList<String> inputsParams=getInputParameterTypes(inputs,serviceURL);
 			ArrayList<String> outputParams=getOutputParameterTypes(outputs,serviceURL);
 
-			
+
 			String regServiceProfile=searchRegisteredServices(serviceName, textDescription, inputsParams, outputParams);
 			if(!regServiceProfile.equalsIgnoreCase("")){
 				System.out.println("Service already registered: "+regServiceProfile);
-				
+
 				ArrayList<String> newProviders=getProviders(null, serviceURL);
 
-				
+
 				//try to register the providers if they are not registered
 				ArrayList<String> registeredProviders=getProviders(regServiceProfile,null);
 				ArrayList<String> registeredProvidersNames=new ArrayList<String>();
@@ -335,7 +366,7 @@ public class SFinterface {
 			}
 
 			owlsService=getServiceOWLS(regServiceProfile);
-			
+
 		}catch(Exception e){
 			e.printStackTrace();
 			resultXML+="<status>Error</status>\n";
@@ -350,7 +381,7 @@ public class SFinterface {
 			resultXML+="<status>Error</status>\n";
 		else
 			resultXML+="<status>Ok</status>\n";
-		
+
 		resultXML+="<result>\n<description>"+description+"</description>\n"+
 				"<specification>\n<!-- "+owlsService+" -->\n</specification>\n</result>\n";
 
@@ -383,7 +414,7 @@ public class SFinterface {
 
 				String serviceURI=getServiceURI(serviceProfile, null);				
 				String serviceProcess=getServiceProcess(serviceProfile, null);
-				
+
 				ArrayList<String> providers=getProviders(serviceProfile, null);
 				Iterator<String> iterProvs=providers.iterator();
 				while(iterProvs.hasNext()){
@@ -394,10 +425,10 @@ public class SFinterface {
 					removeProvider(serviceProfile, providerName);
 				}
 
-				
+
 				removeProcess(serviceProcess, serviceProfile);
 				removeProfile(serviceProfile, serviceURI);
-				
+
 			}
 
 		}catch(Exception e){
@@ -442,7 +473,7 @@ public class SFinterface {
 			return resultXML;
 		}
 
-		
+
 		if(owlsService==null || owlsService==""){
 			resultXML+="<status>Error</status>\n";
 			resultXML+="<result>\n<description>ERROR: service profile "+serviceProfile+" not found</description>\n</result>\n";
@@ -479,86 +510,184 @@ public class SFinterface {
 			Model base = maker.createModel("http://example.org/ontologias");
 			OntModel m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
 
-			ArrayList<String> candidates=new ArrayList<String>();
+			ArrayList<String> candidatesInputs=new ArrayList<String>();
 
-			//the service searches each input and add to a list each service that has an equal input as a candidate
-			Iterator<String> iterInputs=inputs.iterator();
-			while(iterInputs.hasNext()){
+			if(inputs!=null && !inputs.isEmpty()){
+				//the service searches each input and add to a list each service that has an equal input as a candidate
+				Iterator<String> iterInputs=inputs.iterator();
+				while(iterInputs.hasNext()){
+
+					String in=iterInputs.next();
+
+					String queryStr =
+							"prefix xsd: <http://www.w3.org/2001/XMLSchema#>"+
+									"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"+
+									"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"+
+									"select ?x where { ?x a process:Input ; process:parameterType "+in+" . }";
+
+					Query query = QueryFactory.create(queryStr);
+
+					// Execute the query and obtain results
+					QueryExecution querySearchInputs = QueryExecutionFactory.create(query, m);
+					ResultSet resultsSearchInputs = querySearchInputs.execSelect();
+
+					if (resultsSearchInputs != null) {
+
+						while (resultsSearchInputs.hasNext()) {
+
+							QuerySolution sol=resultsSearchInputs.next();
+
+
+							Resource resource=sol.getResource("x");
+							String cand=resource.getURI();
+							if(!candidatesInputs.contains(cand))
+								candidatesInputs.add(cand);
+
+							//System.out.println("candidate: "+cand);
 
 
 
-				String in=iterInputs.next();
+						}//end for 
+					}//end if
 
-				String queryStr =
-						"prefix xsd: <http://www.w3.org/2001/XMLSchema#>"+
-								"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"+
-								"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"+
-								"select ?x where { ?x a process:Input ; process:parameterType "+in+" . }";
+					// close the query
+					querySearchInputs.close();
 
-				Query query = QueryFactory.create(queryStr);
+				}
 
-				// Execute the query and obtain results
-				QueryExecution querySearchInputs = QueryExecutionFactory.create(query, m);
-				ResultSet resultsSearchInputs = querySearchInputs.execSelect();
 
-				if (resultsSearchInputs != null) {
+				//obtain the profileURL of each candidate and create their profiles
+				Iterator<String> iterCandidates=candidatesInputs.iterator();
+				while(iterCandidates.hasNext()){
+					String cand=iterCandidates.next();
 
-					while (resultsSearchInputs.hasNext()) {
+					String queryStr =
+							"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"+
+									"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"+
+									"select ?x where { ?x profile:hasInput "+"<"+cand+">"+" }";
 
+					Query query = QueryFactory.create(queryStr);
+
+					// Execute the query and obtain results
+					QueryExecution querySearchInputs = QueryExecutionFactory.create(query, m);
+					ResultSet resultsSearchInputs = querySearchInputs.execSelect();
+
+					if (resultsSearchInputs != null && resultsSearchInputs.hasNext()) {
 						QuerySolution sol=resultsSearchInputs.next();
 
-
 						Resource resource=sol.getResource("x");
-						String cand=resource.getURI();
-						if(!candidates.contains(cand))
-							candidates.add(cand);
+						String profileURL=resource.getURI();
+						Profile profile= new Profile(profileURL, 0f);
+						if(!profiles.contains(profile))
+							profiles.add(profile);
 
-						System.out.println("candidate: "+cand);
+						//System.out.println("profile: "+profile.getUrl());
+					}
 
-
-
-					}//end for 
-				}//end if
-
-				// close the query
-				querySearchInputs.close();
-
-			}
-
-
-
-
-
-			
-
-			Iterator<String> iterCandidates=candidates.iterator();
-			while(iterCandidates.hasNext()){
-				String cand=iterCandidates.next();
-
-				String queryStr =
-						"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"+
-								"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"+
-								"select ?x where { ?x profile:hasInput "+"<"+cand+">"+" }";
-
-				Query query = QueryFactory.create(queryStr);
-
-				// Execute the query and obtain results
-				QueryExecution querySearchInputs = QueryExecutionFactory.create(query, m);
-				ResultSet resultsSearchInputs = querySearchInputs.execSelect();
-
-				if (resultsSearchInputs != null && resultsSearchInputs.hasNext()) {
-					QuerySolution sol=resultsSearchInputs.next();
-
-					Resource resource=sol.getResource("x");
-					String profileURL=resource.getURI();
-					Profile profile= new Profile(profileURL, 0f);
-					if(!profiles.contains(profile))
-						profiles.add(profile);
-
-					System.out.println("profile: "+profile.getUrl());
 				}
 
 			}
+
+
+			ArrayList<String> candidatesOutputs=new ArrayList<String>();
+
+			if(outputs!=null && !outputs.isEmpty()){
+				//the service searches each output and add to a list each service that has an equal output as a candidate
+				Iterator<String> iterOutputs=outputs.iterator();
+				while(iterOutputs.hasNext()){
+
+					String in=iterOutputs.next();
+
+					String queryStr =
+							"prefix xsd: <http://www.w3.org/2001/XMLSchema#>"+
+									"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"+
+									"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"+
+									"select ?x where { ?x a process:Output ; process:parameterType "+in+" . }";
+
+					Query query = QueryFactory.create(queryStr);
+
+					// Execute the query and obtain results
+					QueryExecution querySearchInputs = QueryExecutionFactory.create(query, m);
+					ResultSet resultsSearchInputs = querySearchInputs.execSelect();
+
+					if (resultsSearchInputs != null) {
+
+						while (resultsSearchInputs.hasNext()) {
+
+							QuerySolution sol=resultsSearchInputs.next();
+
+
+							Resource resource=sol.getResource("x");
+							String cand=resource.getURI();
+							if(!candidatesOutputs.contains(cand))
+								candidatesOutputs.add(cand);
+
+							//System.out.println("candidate: "+cand);
+
+
+
+						}//end for 
+					}//end if
+
+					// close the query
+					querySearchInputs.close();
+
+				}
+
+				//obtain the profileURL of each candidate and create their profiles
+				Iterator<String> iterCandidates=candidatesOutputs.iterator();
+				while(iterCandidates.hasNext()){
+					String cand=iterCandidates.next();
+
+					String queryStr =
+							"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"+
+									"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"+
+									"select ?x where { ?x profile:hasOutput "+"<"+cand+">"+" }";
+
+					Query query = QueryFactory.create(queryStr);
+
+					// Execute the query and obtain results
+					QueryExecution querySearchInputs = QueryExecutionFactory.create(query, m);
+					ResultSet resultsSearchInputs = querySearchInputs.execSelect();
+
+					if (resultsSearchInputs != null && resultsSearchInputs.hasNext()) {
+						QuerySolution sol=resultsSearchInputs.next();
+
+						Resource resource=sol.getResource("x");
+						String profileURL=resource.getURI();
+						Profile profile= new Profile(profileURL, 0f);
+						if(!profiles.contains(profile))
+							profiles.add(profile);
+
+						//System.out.println("profile: "+profile.getUrl());
+					}
+
+				}
+
+			}
+
+
+			if(keywords!=null && !keywords.isEmpty()){
+				HashMap<String,String> textDescriptions=getProfilesTextDescriptions();
+
+				Iterator<String> iterTextDescriptions=textDescriptions.keySet().iterator();
+				while(iterTextDescriptions.hasNext()){
+					String profileURI=iterTextDescriptions.next();
+					String textDescription=textDescriptions.get(profileURI).toLowerCase().trim();
+					Iterator<String> iterKeywords=keywords.iterator();
+					while(iterKeywords.hasNext()){
+						String keyword=iterKeywords.next().toLowerCase().trim();
+						if(textDescription.contains(keyword)){
+							Profile profile=new Profile(profileURI, 0f);
+							if(!profiles.contains(profile))
+								profiles.add(profile);
+
+							//System.out.println("profile: "+profile.getUrl());
+						}
+					}
+				}
+			}
+
 
 
 			//For each candidate, search its inputs and outputs, and if the input/output is the same to the searched, 
@@ -575,6 +704,8 @@ public class SFinterface {
 				Profile profile=iterProfiles.next();
 				int inputsProfile=0;
 				int outputsProfile=0;
+				int sameInputs=0;
+				int sameOutputs=0;
 
 				//SEARCH INPUTS
 				String queryStr =
@@ -594,44 +725,47 @@ public class SFinterface {
 					while(resultsSearchInputs.hasNext()) {
 						inputsProfile++;
 						QuerySolution sol=resultsSearchInputs.next();
+						
+						if(inputs!=null && !inputs.isEmpty() && sameInputs<inputs.size()){
 
-						Resource resource=sol.getResource("x");
-						String input=resource.getURI();
+							Resource resource=sol.getResource("x");
+							String input=resource.getURI();
 
-						//explore all inputs (searching their type) to find out if it is in the service
-						String queryStrType =
-								"prefix xsd: <http://www.w3.org/2001/XMLSchema#>"+
-										"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"+
-										"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"+
-										"select ?x where { <"+input+"> a process:Input ; process:parameterType ?x . }";
+							//explore all inputs (searching their type) to find out if it is in the service
+							String queryStrType =
+									"prefix xsd: <http://www.w3.org/2001/XMLSchema#>"+
+											"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"+
+											"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"+
+											"select ?x where { <"+input+"> a process:Input ; process:parameterType ?x . }";
 
-						Query queryType = QueryFactory.create(queryStrType);
+							Query queryType = QueryFactory.create(queryStrType);
 
-						// Execute the query and obtain results
-						QueryExecution querySearchInputType = QueryExecutionFactory.create(queryType, m);
-						ResultSet resultsSearchInputType = querySearchInputType.execSelect();
+							// Execute the query and obtain results
+							QueryExecution querySearchInputType = QueryExecutionFactory.create(queryType, m);
+							ResultSet resultsSearchInputType = querySearchInputType.execSelect();
 
-						if (resultsSearchInputType != null && resultsSearchInputType.hasNext()) {
-							QuerySolution sol2=resultsSearchInputType.next();
+							if (resultsSearchInputType != null && resultsSearchInputType.hasNext()) {
+								QuerySolution sol2=resultsSearchInputType.next();
 
-							Literal literal2=sol2.getLiteral("x");
-							String parameterType=literal2.getString();
-							System.out.println("\t\tparameterType: "+parameterType);
-							Iterator<String> iterInputsSearch=inputs.iterator();
-							while(iterInputsSearch.hasNext()){
-								String inputSearch=iterInputsSearch.next();
-								String inputSearchModif=inputSearch.replaceAll("\"", "");
-								StringTokenizer stringTokenizer=new StringTokenizer(inputSearchModif, "^^");
-								inputSearchModif=stringTokenizer.nextToken();
-								if(inputSearchModif.equalsIgnoreCase(parameterType)){
-									profile.setSuitability(profile.getSuitability()+1);
-									break;
+								Literal literal2=sol2.getLiteral("x");
+								String parameterType=literal2.getString();
+								//System.out.println("\t\tparameterType: "+parameterType);
+								Iterator<String> iterInputsSearch=inputs.iterator();
+								while(iterInputsSearch.hasNext()){
+									String inputSearch=iterInputsSearch.next();
+									String inputSearchModif=inputSearch.replaceAll("\"", "");
+									StringTokenizer stringTokenizer=new StringTokenizer(inputSearchModif, "^^");
+									inputSearchModif=stringTokenizer.nextToken();
+									if(inputSearchModif.equalsIgnoreCase(parameterType)){
+										sameInputs++;
+										break;
+									}
 								}
+
 							}
 
+							//System.out.println("\tinput: "+input);
 						}
-
-						System.out.println("\tinput: "+input);
 					}
 				}
 
@@ -653,70 +787,92 @@ public class SFinterface {
 					while(resultsSearchOutputs.hasNext()) {
 						outputsProfile++;
 						QuerySolution sol=resultsSearchOutputs.next();
+						
+						if(outputs!=null && !outputs.isEmpty() && sameOutputs<outputs.size()){
+							
+							Resource resource=sol.getResource("x");
+							String output=resource.getURI();
 
-						Resource resource=sol.getResource("x");
-						String output=resource.getURI();
+							//explore all outputs (searching their type) to find out if it is in the service
+							String queryStrType =
+									"prefix xsd: <http://www.w3.org/2001/XMLSchema#>"+
+											"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"+
+											"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"+
+											"select ?x where { <"+output+"> a process:Output ; process:parameterType ?x . }";
 
-						//explore all outputs (searching their type) to find out if it is in the service
-						String queryStrType =
-								"prefix xsd: <http://www.w3.org/2001/XMLSchema#>"+
-										"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"+
-										"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"+
-										"select ?x where { <"+output+"> a process:Output ; process:parameterType ?x . }";
+							Query queryType = QueryFactory.create(queryStrType);
 
-						Query queryType = QueryFactory.create(queryStrType);
+							// Execute the query and obtain results
+							QueryExecution querySearchOutputType = QueryExecutionFactory.create(queryType, m);
+							ResultSet resultsSearchOutputType = querySearchOutputType.execSelect();
 
-						// Execute the query and obtain results
-						QueryExecution querySearchOutputType = QueryExecutionFactory.create(queryType, m);
-						ResultSet resultsSearchOutputType = querySearchOutputType.execSelect();
+							if (resultsSearchOutputType != null && resultsSearchOutputType.hasNext()) {
+								QuerySolution sol2=resultsSearchOutputType.next();
 
-						if (resultsSearchOutputType != null && resultsSearchOutputType.hasNext()) {
-							QuerySolution sol2=resultsSearchOutputType.next();
-
-							Literal literal2=sol2.getLiteral("x");
-							String parameterType=literal2.getString();
-							System.out.println("\t\tparameterType: "+parameterType);
-							Iterator<String> iterOutputsSearch=outputs.iterator();
-							while(iterOutputsSearch.hasNext()){
-								String outputSearch=iterOutputsSearch.next();
-								String outputSearchModif=outputSearch.replaceAll("\"", "");
-								StringTokenizer stringTokenizer=new StringTokenizer(outputSearchModif, "^^");
-								outputSearchModif=stringTokenizer.nextToken();
-								if(outputSearchModif.equalsIgnoreCase(parameterType)){
-									profile.setSuitability(profile.getSuitability()+1);
-									break;
+								Literal literal2=sol2.getLiteral("x");
+								String parameterType=literal2.getString();
+								//System.out.println("\t\tparameterType: "+parameterType);
+								Iterator<String> iterOutputsSearch=outputs.iterator();
+								while(iterOutputsSearch.hasNext()){
+									String outputSearch=iterOutputsSearch.next();
+									String outputSearchModif=outputSearch.replaceAll("\"", "");
+									StringTokenizer stringTokenizer=new StringTokenizer(outputSearchModif, "^^");
+									outputSearchModif=stringTokenizer.nextToken();
+									if(outputSearchModif.equalsIgnoreCase(parameterType)){
+										sameOutputs++;
+										break;
+									}
 								}
+
 							}
 
+							//System.out.println("\toutput: "+output);
 						}
+					}
+				}
 
-						System.out.println("\toutput: "+output);
+
+				int keywordsFound=0;
+				if(keywords!=null && !keywords.isEmpty()){
+					//obtain the similarity of the searched keywords in the profile text description
+					String textDescription=getProfileTextDescription(profile.getUrl(),null).toLowerCase().trim();
+					
+					Iterator<String> iterKeywords=keywords.iterator();
+					while(iterKeywords.hasNext()){
+						String keyword=iterKeywords.next().toLowerCase().trim();
+						if(textDescription.contains(keyword))
+							keywordsFound++;
 					}
 				}
 
 
 
-				//obtain the similarity of the searched keywords in the profile text description
-				String textDescription=getProfileTextDescription(profile.getUrl(),null).toLowerCase().trim();
-				int keywordsFound=0;
-				Iterator<String> iterKeywords=keywords.iterator();
-				while(iterKeywords.hasNext()){
-					String keyword=iterKeywords.next().toLowerCase().trim();
-					if(textDescription.contains(keyword))
-						keywordsFound++;
-				}
-
-
-
-				System.out.println(profile.getSuitability()+" "+inputs.size()+" "+outputs.size());
+				//System.out.println(profile.getSuitability()+" "+inputs.size()+" "+outputs.size());
 
 				//obtain the final similarity degree of the profile
-				float similarityToAsked=profile.getSuitability()/(inputs.size()+outputs.size());
-				float similarityToFoundService=profile.getSuitability()/(inputsProfile+outputsProfile);
-				float similarityToKeywords=(float)keywordsFound/keywords.size();
-				profile.setSuitability(0.33f*similarityToAsked+0.33f*similarityToFoundService+0.33f*similarityToKeywords);
+				//float similarityToAsked=profile.getSuitability()/(inputs.size()+outputs.size());
+				//float similarityToFoundService=profile.getSuitability()/(inputsProfile+outputsProfile);
 
-				System.out.println(profile.getUrl()+" -> "+profile.getSuitability());
+				float inputsSimilarity=0, outputsSimilarity=0, similarityToKeywords=0, similaritiesUsed=0;
+				if(inputs!=null && !inputs.isEmpty()){
+					inputsSimilarity=((float)sameInputs/inputsProfile)*((float)sameInputs/inputs.size());
+					similaritiesUsed++;
+				}
+				if(outputs!=null && !outputs.isEmpty()){
+					outputsSimilarity=((float)sameOutputs/outputsProfile)*((float)sameOutputs/outputs.size());
+					similaritiesUsed++;
+				}
+				if(keywords!=null && !keywords.isEmpty()){
+					similarityToKeywords=(float)keywordsFound/keywords.size();
+					similaritiesUsed++;
+				}
+				float suitability=(1.0f/similaritiesUsed) * inputsSimilarity+
+						(1.0f/similaritiesUsed) * outputsSimilarity+
+						(1.0f/similaritiesUsed) * similarityToKeywords;
+				profile.setSuitability(suitability);
+				//profile.setSuitability(0.33f*similarityToAsked+0.33f*similarityToFoundService+0.33f*similarityToKeywords);
+
+				//System.out.println(profile.getUrl()+" -> "+profile.getSuitability());
 
 			}//end iterator profiles
 
@@ -729,7 +885,18 @@ public class SFinterface {
 				itemsList+="\t<item>\n\t\t<profile>"+profile.getUrl()+"</profile>\n\t\t<quantity>"+profile.getSuitability()+"</quantity>\n\t</item>\n";
 			}
 
-		}catch(Exception e){
+		}
+		catch(com.hp.hpl.jena.query.QueryParseException e){
+			e.printStackTrace();
+			resultXML+="<status>Error</status>\n";
+			resultXML+="<result>\n<description>ERROR: incorrect input or output data type</description>\n</result>\n";
+
+			resultXML+="</response>";
+
+			return resultXML;
+		}
+		catch(Exception e){
+			e.printStackTrace();
 			resultXML+="<status>Error</status>\n";
 			resultXML+="<result>\n<description>ERROR: "+e.getMessage()+"</description>\n</result>\n";
 
@@ -766,7 +933,7 @@ public class SFinterface {
 	public String removeProvider(String serviceProfile, String providerName){
 		String resultXML="<response>\n<serviceName>RemoveProvider</serviceName>\n";
 		try{
-			
+
 			StringTokenizer tokenServiceProf=new StringTokenizer(serviceProfile, "#");
 			String baseURI=tokenServiceProf.nextToken();
 			String profileName=tokenServiceProf.nextToken();
@@ -891,7 +1058,7 @@ public class SFinterface {
 
 		try{
 
-			
+
 			//search the inputs
 
 			ModelMaker maker = ModelFactory.createModelRDBMaker(conn);
@@ -993,12 +1160,12 @@ public class SFinterface {
 			}
 			else{
 
-				
+
 				for(int i=0;i<candidates.size();i++){
 					String candidate=candidates.get(i);
 					String candServiceName=getProfileServiceName(candidate,null);
 					String candTextDescription=getProfileTextDescription(candidate,null);
-					
+
 					//check that the service name and text description are exactly the same
 					if(!candServiceName.equalsIgnoreCase(serviceName) ||
 							!candTextDescription.equalsIgnoreCase(textDescription)){
@@ -1024,7 +1191,7 @@ public class SFinterface {
 						boolean found=false;
 						while(iterInputCand.hasNext()){
 							String inCand=iterInputCand.next();
-							
+
 
 							Iterator<String> iterInput=inputs.iterator();
 							while(iterInput.hasNext()){
@@ -1040,7 +1207,7 @@ public class SFinterface {
 								i--;
 								break;
 							}
-								
+
 						}
 						if(!found) continue;
 
@@ -1048,7 +1215,7 @@ public class SFinterface {
 						found=false;
 						while(iterOutputCand.hasNext()){
 							String outCand=iterOutputCand.next();
-							
+
 
 							Iterator<String> iterOutput=outputs.iterator();
 							while(iterOutput.hasNext()){
@@ -1064,11 +1231,11 @@ public class SFinterface {
 								i--;
 								break;
 							}
-								
+
 						}
 						if(!found) continue;
 					}
-					
+
 				}
 
 				if(!candidates.isEmpty())
@@ -1155,7 +1322,7 @@ public class SFinterface {
 
 			owlsService+="</rdf:RDF>";
 		}
-		
+
 		return owlsService;
 	}
 
@@ -1741,7 +1908,7 @@ public class SFinterface {
 				maker = ModelFactory.createModelRDBMaker(conn);
 				base = maker.createModel("http://example.org/ontologias");
 				m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
-				
+
 				queryStringSearchName =
 						"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"+
 								"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"+
@@ -1752,14 +1919,14 @@ public class SFinterface {
 				base = maker.createModel("http://example.org/ontologias");
 				m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
 				m.read(serviceURL);
-				
+
 				queryStringSearchName =
 						"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"+
 								"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"+
 								"select ?x where { ?y profile:serviceName ?x }";
 			}
 
-			
+
 
 			Query querySearchName = QueryFactory.create(queryStringSearchName);
 
@@ -1780,7 +1947,7 @@ public class SFinterface {
 			}
 
 		}catch(Exception e){
-//			e.printStackTrace();
+			//			e.printStackTrace();
 			throw new THOMASException(e.toString());
 		}
 		return serviceName;
@@ -1801,7 +1968,7 @@ public class SFinterface {
 		OntModel m;
 
 		String queryStringSearchName;
-		
+
 		if(serviceURL==null){
 			maker = ModelFactory.createModelRDBMaker(conn);
 			base = maker.createModel("http://example.org/ontologias");
@@ -1822,7 +1989,7 @@ public class SFinterface {
 							"select ?x where { ?y profile:textDescription ?x }";
 		}
 
-		
+
 		Query querySearchName = QueryFactory.create(queryStringSearchName);
 
 		QueryExecution qeSearchName = QueryExecutionFactory.create(querySearchName, m);
@@ -1842,6 +2009,47 @@ public class SFinterface {
 		}
 
 		return textDescription;
+
+	}
+
+
+	/**
+	 * Returns the profiles text descriptions of all registered services in Jena DB
+	 * @return the profiles text descriptions of all registered services in Jena DB
+	 */
+	public HashMap<String,String> getProfilesTextDescriptions(){
+		HashMap<String,String> textDescriptions=new HashMap<String,String>();
+
+		ModelMaker maker = ModelFactory.createModelRDBMaker(conn);
+		Model base = maker.createModel("http://example.org/ontologias");
+		OntModel m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
+		String queryStringSearchName =
+				"prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"+
+						"prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"+
+						"select * where { ?y profile:textDescription ?x }";
+
+		Query querySearchName = QueryFactory.create(queryStringSearchName);
+
+		QueryExecution qeSearchName = QueryExecutionFactory.create(querySearchName, m);
+		ResultSet resultsSearchName = qeSearchName.execSelect();
+
+
+		if (resultsSearchName != null) {
+
+			while(resultsSearchName.hasNext()) {
+				QuerySolution qS=resultsSearchName.next();
+				String textDescription=qS.getLiteral("x").toString();
+				String profile=qS.getResource("y").toString();
+				textDescriptions.put(profile, textDescription);
+
+			} 
+
+		}//end if
+		else{
+			System.out.println("resultsSearchName is null");
+		}
+
+		return textDescriptions;
 
 	}
 
@@ -2173,7 +2381,7 @@ public class SFinterface {
 		OntModel m = ModelFactory.createOntologyModel(spec, base);
 		//load the service profile in the database
 		m.read(serviceURL);
-		
+
 		String queryStringSearchName =
 				"prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>"+
 						"prefix xsd: <http://www.w3.org/2001/XMLSchema#>"+
@@ -2843,7 +3051,7 @@ public class SFinterface {
 	/**
 	 * Returns an {@link ArrayList} with the provider URIs of the given service profile URI
 	 * @param serviceProfile URI to extract its providers
-     * @param serviceURL it specifies the service URL if the query is not to the Jena DB. <code>null</code> to query the Jena DB model.
+	 * @param serviceURL it specifies the service URL if the query is not to the Jena DB. <code>null</code> to query the Jena DB model.
 	 * @return an {@link ArrayList} with the provider URIs of the given service profile URI
 	 */
 	private ArrayList<String> getProviders(String serviceProfile, String serviceURL){
@@ -3039,7 +3247,7 @@ public class SFinterface {
 		deleteWSDLOperation(baseWSDLURL);
 
 		deleteProcessGrounding(grounding,atomicProcessGrounding);
-		
+
 	}
 
 	/**
@@ -3048,7 +3256,7 @@ public class SFinterface {
 	 * @param serviceProfile URI that it is attached the process to remove
 	 */
 	private void removeProcess(String serviceProcess, String serviceProfile){
-		
+
 		if (DEBUG) {
 			System.out.println("Removing groundings and process ... ");
 		}
@@ -3060,7 +3268,7 @@ public class SFinterface {
 			String groundingURI = iterGrounds.next();
 			removeGrounding(groundingURI);
 		}
-		
+
 		deleteProcessInputs(serviceProcess);
 		deleteProcessOutputs(serviceProcess);
 
@@ -3074,14 +3282,14 @@ public class SFinterface {
 	 * @param serviceURI of the service profile to remove
 	 */
 	private void removeProfile(String serviceProfile, String serviceURI){
-		
+
 		StringTokenizer servProfTok=new StringTokenizer(serviceProfile, "#");
 		String baseURL=servProfTok.nextToken();
-		
+
 		ModelMaker maker = ModelFactory.createModelRDBMaker(conn);
 		Model base = maker.createModel("http://example.org/ontologias");
 		OntModel m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
-		
+
 		// Delete profile tuples where the property is profile
 		String update =
 				"prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
@@ -3424,11 +3632,11 @@ public class SFinterface {
 	private void deleteProcessInputs(String serviceProcess) {
 
 		// Query to get the service inputs tuples related with the service process
-		
+
 		ModelMaker maker = ModelFactory.createModelRDBMaker(conn);
 		Model base = maker.createModel("http://example.org/ontologias");
 		OntModel m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
-		
+
 		String queryStr =
 				"prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
 						+ "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>"
@@ -3444,12 +3652,12 @@ public class SFinterface {
 		ResultSet resultSet = queryExec.execSelect();
 
 		// Execute the query and obtain the service process inputs
-		
+
 		// For each input, all the tuples related with the process are deleted
 		if (resultSet != null) {
 			while (resultSet.hasNext()) {
 				String processInput = resultSet.next().getResource("x").toString();
-				
+
 				if (DEBUG) {
 					System.out.println("Process Input: "+processInput);
 				}
@@ -3505,7 +3713,7 @@ public class SFinterface {
 		ModelMaker maker = ModelFactory.createModelRDBMaker(conn);
 		Model base = maker.createModel("http://example.org/ontologias");
 		OntModel m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
-		
+
 		String queryStr =
 				"prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
 						+ "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>"
@@ -3519,7 +3727,7 @@ public class SFinterface {
 
 		QueryExecution queryExec = QueryExecutionFactory.create(query, m);
 		ResultSet resultSet = queryExec.execSelect();
-		
+
 		if (resultSet != null) {
 			while (resultSet.hasNext()) {
 
@@ -3572,7 +3780,7 @@ public class SFinterface {
 		}//end if	
 	}
 
-	
+
 	public void search(String atomicProcessGrounding){
 		ModelMaker maker = ModelFactory.createModelRDBMaker(conn);
 		Model base = maker.createModel("http://example.org/ontologias");
@@ -3858,7 +4066,7 @@ public class SFinterface {
 		ModelMaker maker = ModelFactory.createModelRDBMaker(conn);
 		Model base = maker.createModel("http://example.org/ontologias");
 		OntModel m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
-		
+
 		//Delete the process general description
 		String updateProcess= 
 				"prefix xsd: <http://www.w3.org/2001/XMLSchema#>" +
