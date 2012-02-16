@@ -637,7 +637,15 @@ public class ACLMessage implements Serializable, Cloneable {
 		while (it.hasNext()) {
 			Map.Entry pairs = (Map.Entry)it.next();
 			this.setHeader(String.valueOf(pairs.getKey()), String.valueOf(pairs.getValue()));
+		}		
+		
+		Map<String,String> headers = msg.getExchangeHeaders();
+		
+		for (String key : headers.keySet())
+		{
+			this.putExchangeHeader(key, headers.get(key));
 		}
+		
 	}
 
 	/**
