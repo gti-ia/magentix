@@ -638,7 +638,7 @@ public class OMS extends CAgent {
 						myProcessor.getLastReceivedMessage().setContent(resultXML);
 						
 					}
-					next = "FAILURE";
+					//next = "FAILURE";
 				}				
 				return next;
 			}//
