@@ -63,65 +63,7 @@ public class SFProxy extends THOMASProxy {
 
 	}
 
-	
-	//TODO revisar esto...
-	/**
-	 * When the service is not SF or OMS service. This method is recommend used when an other provider agent offer a new service 
-	 * 
-	 * @param agentProvider
-	 *            The agent who offers the service. Returned by the method getProcess.
-	 * @param URLProfile
-	 *            Returned by method getProfile.
-	 * @param URLProcess
-	 *            Returned by method getProcess.
-	 * @param ArrayArguments
-	 *            Input arguments of the service.
-	 *             
-	 * @return Hashtable<String, String> is a Hashtable with a pair of key and value. 
-	 * The key is name of output, and value is the value returned.
-	 */
-	@SuppressWarnings("unchecked")
-//	public Hashtable<String, String> genericService(
-//			AgentID agentProvider, String URLProfile,
-//			ArrayList<String> ArrayArguments) throws THOMASException{
-//
-//		isgenericSerice = true;
-//		serviceName = "Generic";
-//
-//
-//		URL profile;
-//		try {
-//			profile = new URL(URLProfile);
-//		} catch (MalformedURLException e) {
-//			logger.error("ERROR: Profile URL Malformed!");
-//			e.printStackTrace();
-//			return new Hashtable<String,String>();
-//		}
-//		oracle = new Oracle(profile);
-//
-//		// Get inputs
-//		ArrayList<String> inputs = oracle.getInputs();
-//
-//		// Build call arguments
-//		String arguments = "";
-//		int i = 0;
-//		for (String s : inputs) {
-//
-//			if (i < ArrayArguments.size())
-//				arguments = arguments + separatorToken + s + "=" + ArrayArguments.get(i);
-//			i++;
-//		}
-//
-//		// build the message to service provider
-//		call = URLProfile+separatorToken+arguments;
-//
-//		clientProvider = agentProvider.name;
-//
-//
-//
-//		return  (Hashtable<String, String>) this.sendInform();
-//
-//	}
+
 
 
 
