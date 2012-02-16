@@ -4,6 +4,7 @@ package es.upv.dsic.gti_ia.organization;
 
 import java.util.ArrayList;
 
+import es.upv.dsic.gti_ia.cAgents.CProcessor;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.BaseAgent;
@@ -40,6 +41,12 @@ public class OMSProxy extends THOMASProxy{
 
 
 	}
+	
+	public OMSProxy(CProcessor agent, String OMSServiceDesciptionLocation) {
+		super(agent, "OMS",OMSServiceDesciptionLocation);
+
+
+	}
 
 	/**
 	 * This class gives us the support to accede to the services of the OMS,
@@ -55,6 +62,13 @@ public class OMSProxy extends THOMASProxy{
 	public OMSProxy(BaseAgent agent) {
 
 		super(agent,"OMS");
+		ServiceDescriptionLocation = c.getOMSServiceDesciptionLocation();
+
+	}
+	
+	public OMSProxy(CProcessor myProcessor) {
+
+		super(myProcessor,"OMS");
 		ServiceDescriptionLocation = c.getOMSServiceDesciptionLocation();
 
 	}
@@ -260,7 +274,7 @@ public class OMSProxy extends THOMASProxy{
 	 * @return ArrayList<ArrayList<String>> The array list is formed by array list of strings, 
 	 * each array list is formed by the fields (strings) agent name and role name
 	 * 
-	 * @throws THOMASException If unit not found, the role is not inside the unit, the agent is not allowed or some parameter is empty or is invalid
+	 * @throws THOMASException If unit not found, the role is not inside the unit, the agent is not allowed or some parameter is invalid
 	 */
 	@SuppressWarnings("unchecked")
 	public ArrayList<ArrayList<String>>  informMembers(String UnitID, String RoleID, String PositionValue) throws THOMASException
@@ -346,7 +360,7 @@ public class OMSProxy extends THOMASProxy{
 	 *        
 	 * @return Integer Quantity of members
 	 * 
-	 * @throws THOMASException If unit not found, the role is not inside the unit, the agent is not allowed or some parameter is empty or is invalid
+	 * @throws THOMASException If unit not found, the role is not inside the unit, the agent is not allowed or some parameter is invalid
 	 */
 	@SuppressWarnings("unchecked")
 	public int quantityMembers(String UnitID, String RoleID, String PositionValue) throws THOMASException
