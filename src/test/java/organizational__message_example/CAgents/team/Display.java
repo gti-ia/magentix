@@ -2,11 +2,7 @@ package organizational__message_example.CAgents.team;
 
 
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
 
-
-import es.upv.dsic.gti_ia.architecture.Monitor;
 import es.upv.dsic.gti_ia.cAgents.BeginState;
 import es.upv.dsic.gti_ia.cAgents.BeginStateMethod;
 import es.upv.dsic.gti_ia.cAgents.CAgent;
@@ -27,10 +23,10 @@ import es.upv.dsic.gti_ia.organization.THOMASException;
 public class Display extends CAgent {
 
 	OMSProxy omsProxy = new OMSProxy(this);
-	Monitor m = new Monitor();
-	ACLMessage receivedMsg = new ACLMessage();
-	Queue<ACLMessage> messageList = new LinkedList<ACLMessage>();
-	boolean finished = false;
+
+
+
+
 
 	public Display(AgentID aid) throws Exception {
 		super(aid);
@@ -45,8 +41,10 @@ public class Display extends CAgent {
 
 			omsProxy.acquireRole("participant", "virtual");
 
+			//------------------------------------------------------------------------
+			//-----------------------CFactory definition------------------------------
+			//------------------------------------------------------------------------
 			MessageFilter filter = new MessageFilter("performative = REQUEST OR performative = INFORM");
-
 			CFactory additionTalk = new CFactory("PRODUCT_TALK", null, 1,this);
 
 
@@ -54,55 +52,41 @@ public class Display extends CAgent {
 			BeginState BEGIN = (BeginState) additionTalk.cProcessorTemplate().getState("BEGIN");
 			BEGIN.setMethod(new BEGIN_Method());
 
-
-			
-
-
+			//----------------------------WAIT STATE----------------------------------
 			WaitState WAIT = new WaitState("WAIT", 0);
 			additionTalk.cProcessorTemplate().registerState(WAIT);
+			additionTalk.cProcessorTemplate().addTransition(BEGIN, WAIT);
 			
+			//----------------------------SHUTDOWN STATE----------------------------------
 			ReceiveState RECEIVE_SHUTDOWN = new ReceiveState("RECEIVE_SHUTDOWN");
 			RECEIVE_SHUTDOWN.setAcceptFilter(new MessageFilter("shutdown = true")); // null -> accept any message
 			RECEIVE_SHUTDOWN.setMethod(new RECEIVE_Shutdown_Method());
 			additionTalk.cProcessorTemplate().registerState(RECEIVE_SHUTDOWN);
 			additionTalk.cProcessorTemplate().addTransition(WAIT, RECEIVE_SHUTDOWN);
-			
-			
-			
-			additionTalk.cProcessorTemplate().addTransition(BEGIN, WAIT);
-			
 
-			
-
-
+			//----------------------------RECEIVE STATE----------------------------------
 			ReceiveState RECEIVE = new ReceiveState("RECEIVE");
 			RECEIVE.setAcceptFilter(filter); // null -> accept any message
 			RECEIVE.setMethod(new RECEIVE_Method());
-
 			additionTalk.cProcessorTemplate().registerState(RECEIVE);
 			additionTalk.cProcessorTemplate().addTransition(WAIT, RECEIVE);
-			
 
-
-		
-			
-			
+			//----------------------------FINAL STATE----------------------------------
 			FinalState FINAL = new FinalState("FINAL");
-			FinalState FINAL_SHUTDOWN = new FinalState("FINAL_SHUTDOWN");
 			FINAL.setMethod(new FINAL_Method());
-			FINAL_SHUTDOWN.setMethod(new FINAL_SHUTDOWN_Method());
-			
-			additionTalk.cProcessorTemplate().registerState(FINAL_SHUTDOWN);
 			additionTalk.cProcessorTemplate().registerState(FINAL);
-
-
 			additionTalk.cProcessorTemplate().addTransition(RECEIVE, FINAL);
-			additionTalk.cProcessorTemplate().addTransition(RECEIVE_SHUTDOWN, FINAL_SHUTDOWN);
 			
-			this.addFactoryAsParticipant(additionTalk);
-		
+			//----------------------------FINAL SHUTDOWN STATE----------------------------------
+			FinalState FINAL_SHUTDOWN = new FinalState("FINAL_SHUTDOWN");
+			FINAL_SHUTDOWN.setMethod(new FINAL_SHUTDOWN_Method());
+			additionTalk.cProcessorTemplate().registerState(FINAL_SHUTDOWN);
+			additionTalk.cProcessorTemplate().addTransition(RECEIVE_SHUTDOWN, FINAL_SHUTDOWN);
 
-					
+			this.addFactoryAsParticipant(additionTalk);
+
+
+
 
 		}catch(THOMASException e)
 		{
@@ -118,7 +102,7 @@ public class Display extends CAgent {
 	protected void finalize(CProcessor firstProcessor,
 			ACLMessage finalizeMessage) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 
@@ -143,41 +127,41 @@ public class Display extends CAgent {
 	class RECEIVE_Shutdown_Method implements ReceiveStateMethod
 	{
 
-		
+
 		public String run(CProcessor myProcessor, ACLMessage receivedMessage) {
-			
-			
+
+
 			String state = "FINAL_SHUTDOWN";
-			
+
 			return state;
 		}
-		
+
 	}
-	
+
 	class RECEIVE_Method implements ReceiveStateMethod {
 		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
-	
+
 			String state = "FINAL";
 
-		
-				ArrayList<ArrayList<String>> informMembers;
-				try {
-					informMembers = omsProxy.informMembers("calculin","manager","");
-				
-				
-				
+
+			ArrayList<ArrayList<String>> informMembers;
+			try {
+				informMembers = omsProxy.informMembers("calculin","manager","");
+
+
+
 				for(ArrayList<String> informMember : informMembers)
 				{
 					//If the agent is equal to the sender, then the position is extracted
 					if (informMember.get(0).equals(messageReceived.getSender().name))
 						System.out.println("[ "+myProcessor.getMyAgent().getName()+" ]  "+ messageReceived.getSender().name+" says " + messageReceived.getContent());
 				}
-				
-				} catch (THOMASException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-		
+
+			} catch (THOMASException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
 
 			return state;
 		}
@@ -189,17 +173,17 @@ public class Display extends CAgent {
 		@Override
 		public void run(CProcessor myProcessor, ACLMessage messageToSend) {
 			// TODO Auto-generated method stub
-			
+
 		}
-	
+
 	}
 
 	class FINAL_SHUTDOWN_Method implements FinalStateMethod {
 		public void run(CProcessor myProcessor, ACLMessage responseMessage) {
 			OMSProxy omsProxy = new OMSProxy(myProcessor);
-	
+
 			try {
-				
+
 
 				ArrayList<String> result = omsProxy.informUnit("externa");
 

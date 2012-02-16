@@ -2,9 +2,6 @@ package organizational__message_example.CAgents.team;
 
 import java.util.ArrayList;
 
-
-
-import es.upv.dsic.gti_ia.architecture.Monitor;
 import es.upv.dsic.gti_ia.cAgents.BeginState;
 import es.upv.dsic.gti_ia.cAgents.BeginStateMethod;
 import es.upv.dsic.gti_ia.cAgents.CAgent;
@@ -29,10 +26,10 @@ public class Product extends CAgent {
 
 	OMSProxy omsProxy = new OMSProxy(this);
 
-	Monitor m = new Monitor();
-	boolean finished = false;
+
+
 	int result=0;
-	
+
 
 	public Product(AgentID aid) throws Exception {
 		super(aid);
@@ -65,8 +62,10 @@ public class Product extends CAgent {
 
 			omsProxy.acquireRole("operador", "calculin");
 
+			//------------------------------------------------------------------------
+			//-----------------------Participant CFactory definition------------------
+			//------------------------------------------------------------------------
 			MessageFilter filter = new MessageFilter("performative = REQUEST");
-
 			CFactory additionTalk = new CFactory("PRODUCT_TALK", null, 1,this);
 
 
@@ -74,63 +73,56 @@ public class Product extends CAgent {
 			BeginState BEGIN = (BeginState) additionTalk.cProcessorTemplate().getState("BEGIN");
 			BEGIN.setMethod(new BEGIN_Method());
 
-
-
-
-
+			//----------------------------WAIT STATE----------------------------------
 			WaitState WAIT = new WaitState("WAIT", 0);
-
 			additionTalk.cProcessorTemplate().addTransition(BEGIN, WAIT);
 			additionTalk.cProcessorTemplate().registerState(WAIT);
 
-
+			//----------------------------NOT ACCEPTED STATE----------------------------------
 			additionTalk.cProcessorTemplate().registerState(new not_accepted());
 
+			//----------------------------RECEIVE STATE----------------------------------
 			ReceiveState RECEIVE = new ReceiveState("RECEIVE");
 			RECEIVE.setAcceptFilter(filter); // null -> accept any message
 			RECEIVE.setMethod(new RECEIVE_Method());
 			additionTalk.cProcessorTemplate().registerState(RECEIVE);
-
-
+			additionTalk.cProcessorTemplate().addTransition(WAIT, RECEIVE);
+			
+			//----------------------------RECEIVE SHUTDOWN STATE----------------------------------
 			ReceiveState RECEIVE_SHUTDOWN = new ReceiveState("RECEIVE_SHUTDOWN");
 			RECEIVE_SHUTDOWN.setAcceptFilter(new MessageFilter("shutdown = true")); // null -> accept any message
 			RECEIVE_SHUTDOWN.setMethod(new RECEIVE_Shutdown_Method());
 			additionTalk.cProcessorTemplate().registerState(RECEIVE_SHUTDOWN);
 			additionTalk.cProcessorTemplate().addTransition(WAIT, RECEIVE_SHUTDOWN);
 
-			
-			
+
+			//----------------------------RECEIVE OTHERS STATE----------------------------------
 			ReceiveState RECEIVE_OTHERS= new ReceiveState("RECEIVE_OTHERS");
 			RECEIVE_OTHERS.setAcceptFilter(new MessageFilter("performative = INFORM")); // null -> accept any message
 			RECEIVE_OTHERS.setMethod(new RECEIVE_OTHERS_Method());
 			additionTalk.cProcessorTemplate().registerState(RECEIVE_OTHERS);
 			additionTalk.cProcessorTemplate().addTransition(WAIT, RECEIVE_OTHERS);
-			
-
-			additionTalk.cProcessorTemplate().addTransition(WAIT, RECEIVE);
 
 
-
+			//----------------------------SEND RESULT STATE----------------------------------
 			SendState SEND_RESULT = new SendState("SEND_RESULT");
 			SEND_RESULT.setMethod(new RESPONSE_Method());
 			additionTalk.cProcessorTemplate().registerState(SEND_RESULT);
 			additionTalk.cProcessorTemplate().addTransition(RECEIVE, SEND_RESULT);
 
+			//----------------------------FINAL STATE----------------------------------
 			FinalState FINAL = new FinalState("FINAL");
-			FinalState FINAL_SHUTDOWN = new FinalState("FINAL_SHUTDOWN");
-
-			additionTalk.cProcessorTemplate().addTransition(RECEIVE_SHUTDOWN, FINAL_SHUTDOWN);
 			additionTalk.cProcessorTemplate().addTransition(RECEIVE, FINAL);
 			additionTalk.cProcessorTemplate().addTransition(SEND_RESULT, FINAL);
 			additionTalk.cProcessorTemplate().addTransition(RECEIVE_OTHERS, FINAL);
-
-			FINAL_SHUTDOWN.setMethod(new FINAL_SHUTDOWN_Method());
-			additionTalk.cProcessorTemplate().registerState(FINAL_SHUTDOWN);
-
 			FINAL.setMethod(new FINAL_Method());
 			additionTalk.cProcessorTemplate().registerState(FINAL);
-
-
+			
+			//----------------------------FINAL SHUTDOWN STATE----------------------------------
+			FinalState FINAL_SHUTDOWN = new FinalState("FINAL_SHUTDOWN");
+			additionTalk.cProcessorTemplate().addTransition(RECEIVE_SHUTDOWN, FINAL_SHUTDOWN);
+			FINAL_SHUTDOWN.setMethod(new FINAL_SHUTDOWN_Method());
+			additionTalk.cProcessorTemplate().registerState(FINAL_SHUTDOWN);
 
 
 			this.addFactoryAsParticipant(additionTalk);
@@ -157,7 +149,7 @@ public class Product extends CAgent {
 	}
 
 	//------------------------------------------------------------------------
-	//-----------------------CFactory implementation--------------------------
+	//-----------------------CFactory methods implementation--------------------------
 	//------------------------------------------------------------------------
 
 
@@ -189,7 +181,7 @@ public class Product extends CAgent {
 
 			// In this example there is nothing more to do than continue
 			// to the next state which will send the message.
-		
+
 			return "WAIT";
 		};
 
@@ -201,7 +193,7 @@ public class Product extends CAgent {
 		@Override
 		public String run(CProcessor myProcessor, ACLMessage receivedMessage) {
 
-			
+
 
 			String state = "FINAL_SHUTDOWN";
 
@@ -215,15 +207,15 @@ public class Product extends CAgent {
 
 			String state = "SEND_RESULT";
 
-		
+
 
 			int p1,p2, result = 0;
 
 
-			
+
 			p1 = Integer.parseInt(messageReceived.getContent().split(" ")[0]);
 			p2 = Integer.parseInt(messageReceived.getContent().split(" ")[1]);
-			
+
 			result = p1 * p2;
 
 			((Product)myProcessor.getMyAgent()).setResult(result);
@@ -233,8 +225,8 @@ public class Product extends CAgent {
 		}
 
 	}
-	
-	
+
+
 	class RECEIVE_OTHERS_Method implements ReceiveStateMethod {
 		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
 
@@ -252,7 +244,7 @@ public class Product extends CAgent {
 
 		public String run(CProcessor myProcessor, ACLMessage messageToSend) {
 
-			
+
 			String state = "FINAL";
 
 
@@ -261,7 +253,7 @@ public class Product extends CAgent {
 			ACLMessage msgReply = myProcessor.getLastReceivedMessage().createReply();
 
 			messageToSend.copyFromAsTemplate(msgReply);
-		
+
 			messageToSend.setContent(""+result);
 
 			messageToSend.setPerformative(ACLMessage.INFORM);
@@ -280,28 +272,28 @@ public class Product extends CAgent {
 	class FINAL_Method implements FinalStateMethod {
 		public void run(CProcessor myProcessor, ACLMessage responseMessage) {
 
-			
+
 
 
 		}
 
 	}
-	
+
 	class FINAL_SHUTDOWN_Method implements FinalStateMethod {
 		public void run(CProcessor myProcessor, ACLMessage responseMessage) {
 
-			
-			
-				try {
 
-					omsProxy.leaveRole("participant", "virtual");
-				} catch (THOMASException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
 
-				myProcessor.ShutdownAgent();
-			
+			try {
+
+				omsProxy.leaveRole("participant", "virtual");
+			} catch (THOMASException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			myProcessor.ShutdownAgent();
+
 
 		}
 
@@ -311,8 +303,8 @@ public class Product extends CAgent {
 	protected void finalize(CProcessor firstProcessor,
 			ACLMessage finalizeMessage) {
 		// TODO Auto-generated method stub
-		
-	
+
+
 
 	}
 

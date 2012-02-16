@@ -65,9 +65,10 @@ public class Addition extends CAgent {
 			omsProxy.acquireRole("operador", "calculin");
 
 
-
+			//------------------------------------------------------------------------
+			//-----------------------CFactory definition------------------------------
+			//------------------------------------------------------------------------
 			MessageFilter filter = new MessageFilter("performative = REQUEST"); 
-
 			CFactory additionTalk = new CFactory("ADDITION_TALK", null, 10,this);
 
 
@@ -75,43 +76,40 @@ public class Addition extends CAgent {
 			BeginState BEGIN = (BeginState) additionTalk.cProcessorTemplate().getState("BEGIN");
 			BEGIN.setMethod(new BEGIN_Method());
 
+			//----------------------------WIAT STATE----------------------------------
 			WaitState WAIT = new WaitState("WAIT",0);
-
 			additionTalk.cProcessorTemplate().registerState(WAIT);
 			additionTalk.cProcessorTemplate().addTransition(BEGIN, WAIT);
 
 
-
+			//----------------------------NOT ACCEPTED STATE----------------------------------
 			additionTalk.cProcessorTemplate().registerState(new not_accepted());
 
+			//----------------------------RECEIVE STATE----------------------------------
 			ReceiveState RECEIVE = new ReceiveState("RECEIVE");
 			RECEIVE.setAcceptFilter(filter); // null -> accept any message
 			RECEIVE.setMethod(new RECEIVE_Method());
-
 			additionTalk.cProcessorTemplate().registerState(RECEIVE);
 			additionTalk.cProcessorTemplate().addTransition(WAIT, RECEIVE);
 
 
-
+			//----------------------------SEND RESULT STATE----------------------------------
 			SendState SEND_RESULT = new SendState("SEND_RESULT");
 			additionTalk.cProcessorTemplate().registerState(SEND_RESULT);
 			additionTalk.cProcessorTemplate().addTransition(RECEIVE, SEND_RESULT);
-
-			FinalState FINAL = new FinalState("FINAL");
-
-
-
 			SEND_RESULT.setMethod(new RESPONSE_Method());
-
-			additionTalk.cProcessorTemplate().addTransition(SEND_RESULT, FINAL);
 			additionTalk.cProcessorTemplate().addTransition(SEND_RESULT, WAIT);
-
-
-
+			
+			//----------------------------FINAL STATE----------------------------------
+			FinalState FINAL = new FinalState("FINAL");
 			FINAL.setMethod(new FINAL_Method());
-
 			additionTalk.cProcessorTemplate().registerState(FINAL);
+			additionTalk.cProcessorTemplate().addTransition(SEND_RESULT, FINAL);
+			
 
+
+
+			
 
 
 

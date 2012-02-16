@@ -6,7 +6,6 @@ package organizational__message_example.CAgents.team;
 
 
 import es.upv.dsic.gti_ia.architecture.FIPANames.InteractionProtocol;
-import es.upv.dsic.gti_ia.architecture.Monitor;
 import es.upv.dsic.gti_ia.cAgents.BeginState;
 import es.upv.dsic.gti_ia.cAgents.BeginStateMethod;
 import es.upv.dsic.gti_ia.cAgents.CAgent;
@@ -30,9 +29,8 @@ public class Summation extends CAgent {
 
 	OMSProxy omsProxy = new OMSProxy(this);
 	int result = 0;
-	int expected = 2;
 	int count=0;
-	Monitor m = new Monitor();
+
 
 	public Summation(AgentID aid) throws Exception {
 		super(aid);
@@ -42,86 +40,83 @@ public class Summation extends CAgent {
 
 		try {
 
-			logger.info("pool");
 
 			omsProxy.acquireRole("participant", "virtual");
 
 
 
 
-			//-----------------------------Participant factory-----------------------
-
+			//------------------------------------------------------------------------
+			//-----------------------Participant CFactory definition------------------
+			//------------------------------------------------------------------------
+			
 			CFactory talk_Manager = new CFactory("RECEIVE_MANAGER", null, 1,this);
+			
+			//----------------------------BEGIN STATE----------------------------------
 			BeginState BEGIN_MANAGER = (BeginState) talk_Manager.cProcessorTemplate().getState("BEGIN");
-		//	BEGIN_MANAGER.setMethod(new BEGIN_MANAGER_Method());
-
+			
+			//----------------------------wait STATE----------------------------------
 			WaitState WAIT = new WaitState("WAIT", 0);
-
 			talk_Manager.cProcessorTemplate().registerState(WAIT);
 			talk_Manager.cProcessorTemplate().addTransition(BEGIN_MANAGER, WAIT);
-			//Para capturar mensajes que vienen del otro agente manager.
-			//ReceiveState RECEIVE_MANAGER = new ReceiveState("RECEIVE_MANAGER");
-			//RECEIVE_MANAGER.setAcceptFilter(new MessageFilter("sender = agente_sumapotencias")); // null -> accept any message
-			//RECEIVE_MANAGER.setMethod(new RECEIVE_MANAGER_Method());
-			//talk_Manager.cProcessorTemplate().registerState(RECEIVE_MANAGER);
+			
 
-			//talk_Manager.cProcessorTemplate().addTransition(WAIT, RECEIVE_MANAGER);
-			//talk_Manager.cProcessorTemplate().addTransition(RECEIVE_MANAGER, WAIT);
-
-			//FinalState FINAL_MANAGER = new FinalState("FINAL");
-			//talk_Manager.cProcessorTemplate().registerState(FINAL_MANAGER);
-			//FINAL_MANAGER.setMethod(new FINAL_MANAGER_Method());
-
-
-			//----------------------------Initiator factory----------------------------------
+			//------------------------------------------------------------------------
+			//-----------------------Initiator CFactory definition------------------
+			//------------------------------------------------------------------------
 
 			MessageFilter filter = new MessageFilter("result = true");
 			CFactory talk = new CFactory("SUMMATION_REQUEST", filter, 1,this);
 
+			//----------------------------BEGIN STATE----------------------------------
 			BeginState BEGIN = (BeginState) talk.cProcessorTemplate().getState("BEGIN");
 			BEGIN.setMethod(new BEGIN_Method());
 
+			
+			//----------------------------REQUEST STATE----------------------------------
 			SendState REQUEST = new SendState("REQUEST");
-
 			REQUEST.setMethod(new REQUEST_Method());
 			talk.cProcessorTemplate().registerState(REQUEST);
 			talk.cProcessorTemplate().addTransition(BEGIN, REQUEST);
 
+			//----------------------------WAIT STATE----------------------------------
 			talk.cProcessorTemplate().registerState(WAIT);
 			talk.cProcessorTemplate().addTransition(REQUEST, WAIT);
 
+			//----------------------------NOT ACCEPTED STATE----------------------------------
 			talk.cProcessorTemplate().registerState(new not_accepted());
 
+			//----------------------------RECEIVE STATE----------------------------------
 			ReceiveState RECEIVE = new ReceiveState("RECEIVE");
 			RECEIVE.setAcceptFilter(filter); // null -> accept any message
 			RECEIVE.setMethod(new RECEIVE_Method());
 			talk.cProcessorTemplate().registerState(RECEIVE);
-
-
 			talk.cProcessorTemplate().addTransition(WAIT, RECEIVE);
 			talk.cProcessorTemplate().addTransition(RECEIVE, WAIT);
 
 
+			//----------------------------SEND RESULT STATE----------------------------------
 			SendState SEND_RESULT = new SendState("SEND_RESULT");
-			SendState SEND_SHUTDOWN = new SendState("SEND_SHUTDOWN");
-			FinalState FINAL = new FinalState("FINAL");
-
 			talk.cProcessorTemplate().registerState(SEND_RESULT);
-			talk.cProcessorTemplate().registerState(SEND_SHUTDOWN);
-			FINAL.setMethod(new FINAL_Method());
-
-			talk.cProcessorTemplate().registerState(FINAL);
-
 			SEND_RESULT.setMethod(new RESPONSE_Method());
-			SEND_SHUTDOWN.setMethod(new SEND_SHUTDOWN_Method());
-
-			talk.cProcessorTemplate().addTransition(SEND_RESULT, SEND_SHUTDOWN);
-			talk.cProcessorTemplate().addTransition(SEND_SHUTDOWN, FINAL);
 			talk.cProcessorTemplate().addTransition(SEND_RESULT, REQUEST);
+			talk.cProcessorTemplate().addTransition(RECEIVE, SEND_RESULT);
+			
+			//----------------------------SEND SHUTDOWN STATE----------------------------------
+			SendState SEND_SHUTDOWN = new SendState("SEND_SHUTDOWN");
+			talk.cProcessorTemplate().registerState(SEND_SHUTDOWN);
+			SEND_SHUTDOWN.setMethod(new SEND_SHUTDOWN_Method());
+			talk.cProcessorTemplate().addTransition(SEND_RESULT, SEND_SHUTDOWN);
+			
+			//----------------------------FINAL STATE----------------------------------
+			FinalState FINAL = new FinalState("FINAL");
+			FINAL.setMethod(new FINAL_Method());
+			talk.cProcessorTemplate().registerState(FINAL);
+			talk.cProcessorTemplate().addTransition(SEND_SHUTDOWN, FINAL);
 			talk.cProcessorTemplate().addTransition(REQUEST, FINAL);
 			talk.cProcessorTemplate().addTransition(RECEIVE, FINAL);
 
-			talk.cProcessorTemplate().addTransition(RECEIVE, SEND_RESULT);
+			
 
 
 
@@ -132,7 +127,7 @@ public class Summation extends CAgent {
 			this.startSyncConversation("SUMMATION_REQUEST");
 
 
-			
+
 
 
 		} catch (THOMASException e) {
@@ -172,7 +167,7 @@ public class Summation extends CAgent {
 		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
 
 			String state = "WAIT";
-			
+
 			return state;
 		}
 
@@ -210,15 +205,15 @@ public class Summation extends CAgent {
 	//------------------------------------------------------------------------
 
 
-//	class BEGIN_MANAGER_Method implements BeginStateMethod {
-//
-//		public String run(CProcessor myProcessor, ACLMessage msg) {
-//
-//
-//			return "WAIT";
-//		};
-//
-//	}
+	//	class BEGIN_MANAGER_Method implements BeginStateMethod {
+	//
+	//		public String run(CProcessor myProcessor, ACLMessage msg) {
+	//
+	//
+	//			return "WAIT";
+	//		};
+	//
+	//	}
 
 
 
@@ -255,8 +250,8 @@ public class Summation extends CAgent {
 				else
 					messageToSend.setContent(5+" "+3);
 
-			
-			
+
+
 				messageToSend.setHeader("organizational", "true");
 				n++;
 
@@ -281,9 +276,9 @@ public class Summation extends CAgent {
 
 			String state = "SEND_RESULT";
 
-			
+
 			((Summation)myProcessor.getMyAgent()).sumResult(Integer.parseInt(messageReceived.getContent()));
-			
+
 			if (((Summation)myProcessor.getMyAgent()).getCount() == 0)
 			{
 				if (n<1)
@@ -321,7 +316,7 @@ public class Summation extends CAgent {
 				messageToSend.setContent(""+content);
 
 				((Summation)myProcessor.getMyAgent()).addCount();
-				
+
 				if (n<1)
 				{
 					n++;
@@ -358,7 +353,7 @@ public class Summation extends CAgent {
 
 				messageToSend.setHeader("shutdown", "true");
 
-				
+
 
 
 			} catch (THOMASException e) {
@@ -392,11 +387,11 @@ public class Summation extends CAgent {
 
 	}
 
-//	class FINAL_MANAGER_Method implements FinalStateMethod {
-//		public void run(CProcessor myProcessor, ACLMessage responseMessage) {
-//
-//		}
-//
-//	}
+	//	class FINAL_MANAGER_Method implements FinalStateMethod {
+	//		public void run(CProcessor myProcessor, ACLMessage responseMessage) {
+	//
+	//		}
+	//
+	//	}
 
 }
