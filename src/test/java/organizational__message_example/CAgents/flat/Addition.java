@@ -140,6 +140,8 @@ public class Addition extends CAgent {
 	
 	protected void finalize(CProcessor firstProcessor,
 			ACLMessage finalizeMessage) {
+		
+		System.out.println("[ "+this.getName()+" ] end execution!");
 	}
 
 
