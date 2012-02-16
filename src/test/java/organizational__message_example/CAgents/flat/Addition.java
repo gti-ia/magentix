@@ -65,55 +65,46 @@ public class Addition extends CAgent {
 			omsProxy.acquireRole("operador", "calculin");
 
 
-
+			//------------------------------------------------------------------------
+			//-----------------------CFactory definition------------------------------
+			//------------------------------------------------------------------------
 			MessageFilter filter = new MessageFilter("performative = REQUEST"); 
-
 			CFactory additionTalk = new CFactory("ADDITION_TALK", null, 10,this);
 
 
-			//----------------------------BEGIN STATE----------------------------------
+			//----------------------------BEGIN STATE----------------------------------------
 			BeginState BEGIN = (BeginState) additionTalk.cProcessorTemplate().getState("BEGIN");
 			BEGIN.setMethod(new BEGIN_Method());
 
+			//----------------------------WAIT STATE-----------------------------------------
 			WaitState WAIT = new WaitState("WAIT",0);
 
 			additionTalk.cProcessorTemplate().registerState(WAIT);
 			additionTalk.cProcessorTemplate().addTransition(BEGIN, WAIT);
 
-
-
-			additionTalk.cProcessorTemplate().registerState(new not_accepted());
-
+			//----------------------------RECEIVE STATE--------------------------------------
 			ReceiveState RECEIVE = new ReceiveState("RECEIVE");
 			RECEIVE.setAcceptFilter(filter); // null -> accept any message
 			RECEIVE.setMethod(new RECEIVE_Method());
-
 			additionTalk.cProcessorTemplate().registerState(RECEIVE);
 			additionTalk.cProcessorTemplate().addTransition(WAIT, RECEIVE);
 
 
-
+			//----------------------------SEND RESULT STATE----------------------------------
 			SendState SEND_RESULT = new SendState("SEND_RESULT");
 			additionTalk.cProcessorTemplate().registerState(SEND_RESULT);
 			additionTalk.cProcessorTemplate().addTransition(RECEIVE, SEND_RESULT);
-
-			FinalState FINAL = new FinalState("FINAL");
-
-
-
-			SEND_RESULT.setMethod(new RESPONSE_Method());
-
-			additionTalk.cProcessorTemplate().addTransition(SEND_RESULT, FINAL);
 			additionTalk.cProcessorTemplate().addTransition(SEND_RESULT, WAIT);
-
-
-
+			SEND_RESULT.setMethod(new RESPONSE_Method());
+			
+			//----------------------------FINAL STATE----------------------------------
+			FinalState FINAL = new FinalState("FINAL");
+			additionTalk.cProcessorTemplate().addTransition(SEND_RESULT, FINAL);
 			FINAL.setMethod(new FINAL_Method());
-
 			additionTalk.cProcessorTemplate().registerState(FINAL);
-
-
-
+			
+			//----------------------------NOT ACCEPTED STATE----------------------------------
+			additionTalk.cProcessorTemplate().registerState(new not_accepted());
 
 			this.addFactoryAsParticipant(additionTalk);
 
@@ -239,7 +230,7 @@ public class Addition extends CAgent {
 
 
 
-
+	//Leave role and shutdown agent
 	class FINAL_Method implements FinalStateMethod {
 		public void run(CProcessor myProcessor, ACLMessage responseMessage) {
 
