@@ -359,9 +359,9 @@ public class MessageFilter implements Cloneable{
 			else if(root.left.headerName.toLowerCase().equals("protocol"))
 				equalValue = msg.getProtocol().toLowerCase().equals(root.right.headerName.toLowerCase());
 			else if(root.left.headerName.toLowerCase().equals("sender"))
-				equalValue = msg.getSender().toString().toLowerCase().equals(root.right.headerName.toLowerCase());
+				equalValue = msg.getSender().name.toString().toLowerCase().equals(root.right.headerName.toLowerCase());
 			else if(root.left.headerName.toLowerCase().equals("receiver"))
-				equalValue = msg.getReceiver().toString().toLowerCase().equals(root.right.headerName.toLowerCase());
+				equalValue = msg.getReceiver().name.toString().toLowerCase().equals(root.right.headerName.toLowerCase());
 			else if(root.left.headerName.toLowerCase().equals("reply-to"))
 				equalValue = msg.getReplyTo().toString().toLowerCase().equals(root.right.headerName.toLowerCase());
 			else if(root.left.headerName.toLowerCase().equals("content"))
