@@ -63,11 +63,7 @@ public class OMS extends CAgent {
 
 
 	private final URI OWL_S_OMS_SERVICES = URI.create(OMSServiceDesciptionLocation);    
-	//private final URI OWL_S_SF_SERVICES = URI.create(SFServiceDesciptionLocation);    
 
-	// URI of each SF services description parameters are located 
-	//private final URI SF_REGISTERPROFILE_PROCESS = URI.create(OWL_S_SF_SERVICES + "RegisterProfileProcess.owl");
-	//private final URI SF_REGISTERPROCESS_PROCESS = URI.create(OWL_S_SF_SERVICES + "RegisterProcessProcess.owl");
 
 	//STRUCTURAL SERVICES
 
@@ -157,7 +153,7 @@ public class OMS extends CAgent {
 	}
 
 	/**
-	 * Change the URL where the owl's document is
+	 * Changes the URL where the owl's document is
 	 * located.
 	 * @param OMSUrl
 	 */
@@ -168,7 +164,7 @@ public class OMS extends CAgent {
 	}
 
 	/**
-	 * Change the URL where the owl's document is
+	 * Changes the URL where the owl's document is
 	 * located.
 	 * @param SFUrl
 	 */
@@ -178,7 +174,7 @@ public class OMS extends CAgent {
 	}
 
 	/**
-	 * Get the URL where the owl's document is
+	 * Gets the URL where the owl's document is
 	 * located.
 	 * @param OMSUrl
 	 */
@@ -189,7 +185,7 @@ public class OMS extends CAgent {
 	}
 
 	/**
-	 * Get the URL where the owl's document is
+	 * Gets the URL where the owl's document is
 	 * located.
 	 * @param SFUrl
 	 */
@@ -359,22 +355,62 @@ public class OMS extends CAgent {
 					StringTokenizer tokenInputParams = new StringTokenizer(myProcessor.getLastReceivedMessage().getContent(), separatorToken);
 					String serviceURL=tokenInputParams.nextToken().trim();
 
-
-
-
-					//TODO 
-
 					//Extract the parameters needed to create and delete binds
 					if (serviceURL.contains("AcquireRole") || serviceURL.contains("AllocateRole"))
 					{
 
-						if (myProcessor.getLastReceivedMessage().getContent().contains("AgentID")|| myProcessor.getLastReceivedMessage().getContent().contains("TargetAgentName"))
+						if (serviceURL.contains("AcquireRole"))
+						{
+							if (myProcessor.getLastReceivedMessage().getContent().contains("AgentID"))
+							{
+
+								while (tokenInputParams.hasMoreTokens())
+								{
+									String token = tokenInputParams.nextToken();
+									if (token.contains("Agent"))
+									{
+										aidName =  token.split("=")[1];
+									}
+									else if (token.contains("Role"))
+									{
+										rol = token.split("=")[1];	
+									}
+									else if (token.contains("Unit"))
+									{
+										organizationID = token.split("=")[1];
+									}
+								}
+
+
+
+							}
+							else
+							{
+								while (tokenInputParams.hasMoreTokens())
+								{
+									String token = tokenInputParams.nextToken();
+
+
+									if (token.contains("Role"))
+									{
+										rol = token.split("=")[1];	
+									}
+									else if (token.contains("Unit"))
+									{
+										organizationID = token.split("=")[1];
+									}
+								}
+								aidName = myProcessor.getLastReceivedMessage().getSender().name;
+
+							}
+						}
+						else if (serviceURL.contains("AllocateRole"))
 						{
 
 							while (tokenInputParams.hasMoreTokens())
 							{
 								String token = tokenInputParams.nextToken();
-								if (token.contains("Agent"))
+								if (token.contains("TargetAgentName"))
 								{
 									aidName =  token.split("=")[1];
 								}
@@ -389,27 +425,8 @@ public class OMS extends CAgent {
 							}
 
 
-
 						}
-						else
-						{
-							while (tokenInputParams.hasMoreTokens())
-							{
-								String token = tokenInputParams.nextToken();
 
-
-								if (token.contains("Role"))
-								{
-									rol = token.split("=")[1];	
-								}
-								else if (token.contains("Unit"))
-								{
-									organizationID = token.split("=")[1];
-								}
-							}
-							aidName = myProcessor.getLastReceivedMessage().getSender().name;
-
-						}
 
 
 					}
@@ -418,13 +435,54 @@ public class OMS extends CAgent {
 					{
 
 
-						if (myProcessor.getLastReceivedMessage().getContent().contains("AgentID") || myProcessor.getLastReceivedMessage().getContent().contains("TargetAgentName"))
+						if (serviceURL.contains("LeaveRole"))
+						{
+							if (myProcessor.getLastReceivedMessage().getContent().contains("AgentID"))
+							{
+
+								while (tokenInputParams.hasMoreTokens())
+								{
+									String token = tokenInputParams.nextToken();
+									if (token.contains("Agent"))
+									{
+										aidName =  token.split("=")[1];
+									}
+									else if (token.contains("Role"))
+									{
+										rol = token.split("=")[1];	
+									}
+									else if (token.contains("Unit"))
+									{
+										organizationID = token.split("=")[1];
+									}
+								}
+							}
+							else
+							{
+								while (tokenInputParams.hasMoreTokens())
+								{
+									String token = tokenInputParams.nextToken();
+
+
+									if (token.contains("Role"))
+									{
+										rol = token.split("=")[1];	
+									}
+									else if (token.contains("Unit"))
+									{
+										organizationID = token.split("=")[1];
+									}
+								}
+								aidName = myProcessor.getLastReceivedMessage().getSender().name;
+							}
+						}
+						else if (serviceURL.contains("DeallocateRole"))
 						{
 
 							while (tokenInputParams.hasMoreTokens())
 							{
 								String token = tokenInputParams.nextToken();
-								if (token.contains("Agent"))
+								if (token.contains("TargetAgentName"))
 								{
 									aidName =  token.split("=")[1];
 								}
@@ -437,218 +495,213 @@ public class OMS extends CAgent {
 									organizationID = token.split("=")[1];
 								}
 							}
+
 						}
-						else
-						{
-							while (tokenInputParams.hasMoreTokens())
-							{
-								String token = tokenInputParams.nextToken();
 
 
-								if (token.contains("Role"))
-								{
-									rol = token.split("=")[1];	
-								}
-								else if (token.contains("Unit"))
-								{
-									organizationID = token.split("=")[1];
-								}
-							}
-							aidName = myProcessor.getLastReceivedMessage().getSender().name;
+
+						//-------------Inform Role-----------------
+
+
+						String content = omsInterface.informRole(rol, organizationID, myProcessor.getLastReceivedMessage().getSender().name);
+
+						responseParser.parseResponse(content);
+
+						if (responseParser.getStatus().equals("Ok"))
+							positionType = responseParser.getElementsList().get(0);
+
 					}
+					//Execute the service requested by the agent
 
-					//-------------Inform Role-----------------
+					String resultStr=executeWithJavaX(myProcessor.getLastReceivedMessage());
 
 
-					String content = omsInterface.informRole(rol, organizationID, myProcessor.getLastReceivedMessage().getSender().name);
+					//Select result
+					String result = resultStr.split("Result=")[1].substring(0, resultStr.split("Result=")[1].length()-2);
 
-					responseParser.parseResponse(content);
+					responseParser.parseResponse(result);
 
-					if (responseParser.getStatus().equals("Ok"))
+
+					//If acquire role is ok. If organization is virtual the agent position is considered creator
+					if (responseParser.getStatus().equals("Ok") 
+							&& (responseParser.getServiceName().equals("AcquireRole") ||
+									responseParser.getServiceName().equals("AllocateRole"))
+									&&!organizationID.equals("virtual"))
+					{
+						//Gets position for the unit
+
+						//< Accessibility - Visibility - Position >
+
+						//-------------Inform Role-----------------
+
+
+
+						String content = omsInterface.informRole(rol, organizationID, myProcessor.getLastReceivedMessage().getSender().name);
+
+						responseParser.parseResponse(content);
+
 						positionType = responseParser.getElementsList().get(0);
 
-				}
-				//Execute the service requested by the agent
 
-				String resultStr=executeWithJavaX(myProcessor.getLastReceivedMessage());
+						//positionType = omsProxy.getAgentPosition(aidName,organizationID, rol, unitType);
 
+						//If position type is member then creates binding for participant
+						if (positionType.equals("member"))
+						{
+							createBinding(aidName, organizationID, "member");
+						}//If position type is subordinate then creates binding for subordinate
+						else if (positionType.equals("subordinate"))
+						{
+							createBinding(aidName, organizationID, "subordinate");
 
-				//Select result
-				String result = resultStr.split("Result=")[1].substring(0, resultStr.split("Result=")[1].length()-2);
+						}//If position type is supervisor then creates binding for supervisor
+						else if (positionType.equals("supervisor"))
+						{
+							createBinding(aidName, organizationID, "supervisor");
+						}//If not this one in any of the previous positions and it is not creator either
+						else if (!positionType.equals("creator"))
+						{
+							throw new THOMASException("Unknown position "+ positionType);
+						}
 
-				responseParser.parseResponse(result);
-
-
-				//If acquire role is ok. If organization is virtual the agent position is considered creator
-				if (responseParser.getStatus().equals("Ok") 
-						&& (responseParser.getServiceName().equals("AcquireRole") ||
-								responseParser.getServiceName().equals("AllocateRole"))
-								&&!organizationID.equals("virtual"))
-				{
-					//Gets position for the unit
-
-					//< Accessibility - Visibility - Position >
-
-					//-------------Inform Role-----------------
-
-
-
-					String content = omsInterface.informRole(rol, organizationID, myProcessor.getLastReceivedMessage().getSender().name);
-
-					responseParser.parseResponse(content);
-
-					positionType = responseParser.getElementsList().get(0);
-
-
-					//positionType = omsProxy.getAgentPosition(aidName,organizationID, rol, unitType);
-
-					//If position type is member then creates binding for participant
-					if (positionType.equals("member"))
-					{
-						createBinding(aidName, organizationID, "member");
-					}//If position type is subordinate then creates binding for subordinate
-					else if (positionType.equals("subordinate"))
-					{
-						createBinding(aidName, organizationID, "subordinate");
-
-					}//If position type is supervisor then creates binding for supervisor
-					else if (positionType.equals("supervisor"))
-					{
-						createBinding(aidName, organizationID, "supervisor");
-					}//If not this one in any of the previous positions and it is not creator either
-					else if (!positionType.equals("creator"))
-					{
-						throw new THOMASException("Unknown position "+ positionType);
 					}
 
-				}
-
-				//If leave role is ok. If organization is virtual the agent position is considered creator
-				if (responseParser.getStatus().equals("Ok")
-						&&  (responseParser.getServiceName().equals("LeaveRole") ||  responseParser.getServiceName().equals("AllocateRole"))
-						&& !organizationID.equals("virtual"))
-				{
-
-
-
-
-					String content = omsInterface.informAgentRole(aidName, aidName);
-
-					responseParser.parseResponse(content);
-
-					ArrayList<ArrayList<String>> agentsRole = responseParser.getItemsList();
-
-
-					String unit_aux;
-					String role_aux;
-					boolean exists_in_unit = false;
-
-					for(ArrayList<String> agentRole : agentsRole)
+					//If leave role is ok. If organization is virtual the agent position is considered creator
+					if (responseParser.getStatus().equals("Ok")
+							&&  (responseParser.getServiceName().equals("LeaveRole") ||  responseParser.getServiceName().equals("AllocateRole"))
+							&& !organizationID.equals("virtual"))
 					{
 
-						role_aux = agentRole.get(0);
-						unit_aux = agentRole.get(1);
 
-						//If agent is inside the organization and the rol played is not creator
-						if (unit_aux.equals(organizationID) && !role_aux.equals("creator"))
+
+
+						String content = omsInterface.informAgentRole(aidName, aidName);
+
+						responseParser.parseResponse(content);
+
+						ArrayList<ArrayList<String>> agentsRole = responseParser.getItemsList();
+
+
+						String unit_aux;
+						String role_aux;
+						boolean exists_in_unit = false;
+
+						for(ArrayList<String> agentRole : agentsRole)
 						{
 
-							String contentRole = omsInterface.informRole(rol, organizationID, myProcessor.getLastReceivedMessage().getSender().name);
-							responseParser.parseResponse(contentRole);
+							role_aux = agentRole.get(0);
+							unit_aux = agentRole.get(1);
 
-							String pos = responseParser.getElementsList().get(0);
+							//If agent is inside the organization and the rol played is not creator
+							if (unit_aux.equals(organizationID) && !role_aux.equals("creator"))
+							{
+
+								String contentRole = omsInterface.informRole(rol, organizationID, myProcessor.getLastReceivedMessage().getSender().name);
+								responseParser.parseResponse(contentRole);
+
+								String pos = responseParser.getElementsList().get(0);
 
 
-							if (positionType.equals(pos))//;omsProxy.getAgentPosition(aidName,organizationID, role_aux, unitType)))
-								exists_in_unit = true;
+								if (positionType.equals(pos))//;omsProxy.getAgentPosition(aidName,organizationID, role_aux, unitType)))
+									exists_in_unit = true;
+							}
 						}
+
+						if (!exists_in_unit)
+						{
+
+							deleteBinding(aidName, organizationID, positionType);
+						} 
+
 					}
 
-					if (!exists_in_unit)
-					{
 
-						deleteBinding(aidName, organizationID, positionType);
-					} 
+					next = "INFORM";
+					if(DEBUG)
+					{						
+						logger.info("[OMS]Before set message content...");						
+					}
+					myProcessor.getLastReceivedMessage().setContent(resultStr);
 
-				}
+				}catch(Exception e){
+					if(DEBUG)
+					{	      
+						StringTokenizer tokenInputParams = new StringTokenizer(myProcessor.getLastReceivedMessage().getContent(), separatorToken);
+						String serviceURL=tokenInputParams.nextToken().trim();
+						
+						String resultXML="<response>\n<serviceName>"+serviceURL+"</serviceName>\n";
+						resultXML+="<status>Error</status>\n";
+						resultXML+="<result>\n<description>"+e.getMessage()+"</description>\n</result>\n";
+						resultXML+="</response>";
+					
+						
+						myProcessor.getLastReceivedMessage().setContent(resultXML);
+						
+					}
+					next = "FAILURE";
+				}				
+				return next;
+			}//
+
+			@Override
+			protected void doInform(CProcessor myProcessor, ACLMessage response) {
+				ACLMessage lastReceivedMessage = myProcessor.getLastReceivedMessage();
+				response.setContent(lastReceivedMessage.getContent());		
+			}
+
+			@Override
+			protected String doReceiveRequest(CProcessor myProcessor,
+					ACLMessage request) {				
+				ACLMessage msg = request;
+				String next = "";
+
+				if (msg != null) {
+
+					try{					
+						//read msg content
+						StringTokenizer Tok = new StringTokenizer(msg.getContent());						
+						//read in the service description
+						String token_process = Tok.nextElement().toString();
+						Boolean exists=false;											
+						for(int i=0;i<OMSServicesProcess.length;i++){		
+
+							if(token_process.equals(OMSServicesProcess[i].toString())){
+								exists=true;
+							}
+						}
 
 
-				next = "INFORM";
-				if(DEBUG)
-				{						
-					logger.info("[OMS]Before set message content...");						
-				}
-				myProcessor.getLastReceivedMessage().setContent(resultStr);
 
-			}catch(Exception e){
-				if(DEBUG)
-				{	            		
-					logger.error(e.toString());
-				}
-				next = "FAILURE";
-			}				
-			return next;
-		}//
 
-		@Override
-		protected void doInform(CProcessor myProcessor, ACLMessage response) {
-			ACLMessage lastReceivedMessage = myProcessor.getLastReceivedMessage();
-			response.setContent(lastReceivedMessage.getContent());		
+						if(exists){							
+							logger.info("AGREE");
+							next = "AGREE";							
+						}else{	                       
+							logger.info("REFUSE");
+							next = "REFUSE";	
+						}
+
+					}catch(Exception e){	                   
+						logger.info("EXCEPTION");	                   
+						System.out.println(e);
+						e.printStackTrace();
+						throw new RuntimeException(e.getMessage());
+					}						
+				}else{	               
+					logger.info("NOTUNDERSTOOD");
+					next = "NOT_UNDERSTOOD";
+				}  
+
+				return next;
+			}
 		}
 
-		@Override
-		protected String doReceiveRequest(CProcessor myProcessor,
-				ACLMessage request) {				
-			ACLMessage msg = request;
-			String next = "";
+		CFactory talk = new myFIPA_REQUEST().newFactory("TALK", null,
+				1, firstProcessor.getMyAgent());
 
-			if (msg != null) {
-
-				try{					
-					//read msg content
-					StringTokenizer Tok = new StringTokenizer(msg.getContent());						
-					//read in the service description
-					String token_process = Tok.nextElement().toString();
-					Boolean exists=false;											
-					for(int i=0;i<OMSServicesProcess.length;i++){		
-
-						if(token_process.equals(OMSServicesProcess[i].toString())){
-							exists=true;
-						}
-					}
-
-
-
-
-					if(exists){							
-						logger.info("AGREE");
-						next = "AGREE";							
-					}else{	                       
-						logger.info("REFUSE");
-						next = "REFUSE";	
-					}
-
-				}catch(Exception e){	                   
-					logger.info("EXCEPTION");	                   
-					System.out.println(e);
-					e.printStackTrace();
-					throw new RuntimeException(e.getMessage());
-				}						
-			}else{	               
-				logger.info("NOTUNDERSTOOD");
-				next = "NOT_UNDERSTOOD";
-			}  
-
-			return next;
-		}
+		// Finally the factory is setup to answer to incoming messages that
+		// can start the participation of the agent in a new conversation
+		this.addFactoryAsParticipant(talk);		
 	}
-
-	CFactory talk = new myFIPA_REQUEST().newFactory("TALK", null,
-			1, firstProcessor.getMyAgent());
-
-	// Finally the factory is setup to answer to incoming messages that
-	// can start the participation of the agent in a new conversation
-	this.addFactoryAsParticipant(talk);		
-}
 
 } //end OMS Agent
