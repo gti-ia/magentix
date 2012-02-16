@@ -1,5 +1,4 @@
 package organizational__message_example.CAgents.hierarchy;
-import es.upv.dsic.gti_ia.architecture.Monitor;
 import es.upv.dsic.gti_ia.cAgents.ActionState;
 import es.upv.dsic.gti_ia.cAgents.ActionStateMethod;
 import es.upv.dsic.gti_ia.cAgents.BeginState;
@@ -25,8 +24,8 @@ public class Exponentiation extends CAgent {
 
 	OMSProxy omsProxy = new OMSProxy(this);
 	int result = 0;
-	int expected = 2;
-	Monitor m = new Monitor();
+
+
 
 	public Exponentiation(AgentID aid) throws Exception {
 		super(aid);
@@ -39,76 +38,86 @@ public class Exponentiation extends CAgent {
 			omsProxy.acquireRole("participant", "virtual");
 
 
-			MessageFilter filter = new MessageFilter("result = true");
-			CFactory talk = new CFactory("EXPONENTIATION_REQUEST", filter, 1,this);
-			
-			
-	//-----------------------------Participant factory-----------------------
-			
+		
+
+
+			//------------------------------------------------------------------------
+			//-----------------------Participant CFactory definition------------------
+			//------------------------------------------------------------------------
+
 			CFactory talk_Manager = new CFactory("RECEIVE_MANAGER", null, 1,this);
+			
+			//----------------------------BEGIN STATE----------------------------------
 			BeginState BEGIN_MANAGER = (BeginState) talk_Manager.cProcessorTemplate().getState("BEGIN");
 			BEGIN_MANAGER.setMethod(new BEGIN_MANAGER_Method());
-			
+
+			//----------------------------WAIT STATE----------------------------------
 			WaitState WAIT = new WaitState("WAIT", 0);
-			
 			talk_Manager.cProcessorTemplate().registerState(WAIT);
 			talk_Manager.cProcessorTemplate().addTransition(BEGIN_MANAGER, WAIT);
-			//Para capturar mensajes que vienen del otro agente manager.
+
+			//----------------------------RECEIVE MANAGER STATE----------------------------------
 			ReceiveState RECEIVE_MANAGER = new ReceiveState("RECEIVE_MANAGER");
 			RECEIVE_MANAGER.setAcceptFilter(new MessageFilter("sender = agente_sumatorio")); // null -> accept any message
 			RECEIVE_MANAGER.setMethod(new RECEIVE_MANAGER_Method());
 			talk_Manager.cProcessorTemplate().registerState(RECEIVE_MANAGER);
-
 			talk_Manager.cProcessorTemplate().addTransition(WAIT, RECEIVE_MANAGER);
 			talk_Manager.cProcessorTemplate().addTransition(RECEIVE_MANAGER, WAIT);
-			
+
+			//----------------------------FINAL STATE----------------------------------
 			FinalState FINAL_MANAGER = new FinalState("FINAL");
 			talk_Manager.cProcessorTemplate().registerState(FINAL_MANAGER);
 			FINAL_MANAGER.setMethod(new FINAL_MANAGER_Method());
-			
-			
-			
+
+
+			//------------------------------------------------------------------------
+			//-----------------------Initiator CFactory definition------------------------------
+			//------------------------------------------------------------------------
+			MessageFilter filter = new MessageFilter("result = true");
+			CFactory talk = new CFactory("EXPONENTIATION_REQUEST", filter, 1,this);
 
 			//----------------------------BEGIN STATE----------------------------------
 			BeginState BEGIN = (BeginState) talk.cProcessorTemplate().getState("BEGIN");
 			BEGIN.setMethod(new BEGIN_Method());
 
-			
+			//----------------------------WAIT STATE----------------------------------
 			talk.cProcessorTemplate().registerState(WAIT);
 
-			
+			//----------------------------REQUEST STATE----------------------------------
 			SendState REQUEST = new SendState("REQUEST");
 			REQUEST.setMethod(new REQUEST_Method());
 			talk.cProcessorTemplate().registerState(REQUEST);
 			talk.cProcessorTemplate().addTransition(BEGIN, REQUEST);
-
-			talk.cProcessorTemplate().registerState(new not_accepted());
-
-
 			talk.cProcessorTemplate().addTransition(REQUEST, WAIT);
 
-						
+			//----------------------------NOT ACCEPTED STATE----------------------------------
+			talk.cProcessorTemplate().registerState(new not_accepted());
 
+			//----------------------------RECEIVE STATE----------------------------------
 			ReceiveState RECEIVE = new ReceiveState("RECEIVE");
 			RECEIVE.setAcceptFilter(filter); // null -> accept any message
 			RECEIVE.setMethod(new RECEIVE_Method());
 			talk.cProcessorTemplate().registerState(RECEIVE);
-
 			talk.cProcessorTemplate().addTransition(WAIT, RECEIVE);
 			talk.cProcessorTemplate().addTransition(RECEIVE, WAIT);
 
 
+			//----------------------------SEND RESULT STATE----------------------------------
 			SendState SEND_RESULT = new SendState("SEND_RESULT");
-			ActionState LEAVE_MANAGER = new ActionState("LEAVE_MANAGER");
-			FinalState FINAL = new FinalState("FINAL");
-			
 			talk.cProcessorTemplate().registerState(SEND_RESULT);
-			talk.cProcessorTemplate().registerState(FINAL);
-			talk.cProcessorTemplate().registerState(LEAVE_MANAGER);
-
-			FINAL.setMethod(new FINAL_Method());			
 			SEND_RESULT.setMethod(new RESPONSE_Method());
+			
+			//----------------------------LEAVE MANAGER STATE----------------------------------
+			ActionState LEAVE_MANAGER = new ActionState("LEAVE_MANAGER");
+			talk.cProcessorTemplate().registerState(LEAVE_MANAGER);
 			LEAVE_MANAGER.setMethod(new LEAVE_MANAGER_Method());
+			
+			//----------------------------FINAL STATE----------------------------------
+			FinalState FINAL = new FinalState("FINAL");
+			talk.cProcessorTemplate().registerState(FINAL);
+			FINAL.setMethod(new FINAL_Method());			
+			
+			
 			
 			talk.cProcessorTemplate().addTransition(SEND_RESULT, FINAL);
 			talk.cProcessorTemplate().addTransition(SEND_RESULT, LEAVE_MANAGER);
@@ -116,7 +125,6 @@ public class Exponentiation extends CAgent {
 			talk.cProcessorTemplate().addTransition(LEAVE_MANAGER, FINAL);
 			talk.cProcessorTemplate().addTransition(REQUEST, FINAL);
 			talk.cProcessorTemplate().addTransition(RECEIVE, FINAL);
-
 			talk.cProcessorTemplate().addTransition(RECEIVE, SEND_RESULT);
 
 
@@ -127,7 +135,7 @@ public class Exponentiation extends CAgent {
 			// Finally Harry starts the conversation.
 			this.startSyncConversation("EXPONENTIATION_REQUEST");
 
-		
+
 
 		}catch(THOMASException e)
 		{
@@ -145,14 +153,14 @@ public class Exponentiation extends CAgent {
 	{
 		return result;
 	}
-	
+
 	class not_accepted extends NotAcceptedMessagesState
 	{
-	
+
 		String content;
 		@Override
 		protected int run(ACLMessage exceptionMessage, String next) {
-		
+
 			return NotAcceptedMessagesState.IGNORE;
 		}
 
@@ -160,10 +168,10 @@ public class Exponentiation extends CAgent {
 		protected String getNext(String previousState) {
 			// TODO Auto-generated method stub
 			String state = "WAIT";
-	
+
 			return state;
 		}
-		
+
 	}
 
 
@@ -171,9 +179,9 @@ public class Exponentiation extends CAgent {
 	@Override
 	protected void finalize(CProcessor firstProcessor,
 			ACLMessage finalizeMessage) {
-		
-	
-		
+
+
+
 
 	}
 
@@ -214,7 +222,7 @@ public class Exponentiation extends CAgent {
 			String state = "WAIT";
 			OMSProxy omsProxy = new OMSProxy(myProcessor);
 			ACLMessage msg;
-			
+
 			try {
 				msg = omsProxy.buildOrganizationalMessage("calculin");
 
@@ -224,7 +232,7 @@ public class Exponentiation extends CAgent {
 
 				messageToSend.setLanguage("ACL");
 				messageToSend.setContent(6+" "+3);
-				
+
 
 
 
@@ -241,22 +249,22 @@ public class Exponentiation extends CAgent {
 	}
 
 	class RECEIVE_MANAGER_Method implements ReceiveStateMethod {
-		
+
 		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
 
 			String state = "WAIT";
-		
+
 			return state;
 		}
 
 	}
-	
+
 	class RECEIVE_Method implements ReceiveStateMethod {
 		int n=0;
 		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
 
 			String state = "SEND_RESULT";
-			
+
 			((Exponentiation)myProcessor.getMyAgent()).sumResult(Integer.parseInt(messageReceived.getContent()) * Integer.parseInt(messageReceived.getContent()));
 
 			if (n<1)
@@ -271,11 +279,11 @@ public class Exponentiation extends CAgent {
 
 	class RESPONSE_Method implements SendStateMethod {
 		public String run(CProcessor myProcessor, ACLMessage messageToSend) {
-		
+
 			String state = "LEAVE_MANAGER";
 			ACLMessage msg;
 			OMSProxy omsProxy = new OMSProxy(myProcessor);
-			
+
 			try {
 				msg = omsProxy.buildOrganizationalMessage("calculin");
 				messageToSend.copyFromAsTemplate(msg);
@@ -283,9 +291,9 @@ public class Exponentiation extends CAgent {
 				messageToSend.setLanguage("ACL");
 				int content = ((Exponentiation)myProcessor.getMyAgent()).getResult();
 				messageToSend.setContent(""+content);
-			
 
-				
+
+
 
 
 
@@ -298,11 +306,11 @@ public class Exponentiation extends CAgent {
 		}
 
 	}
-	
+
 	class LEAVE_MANAGER_Method implements ActionStateMethod {
 		@Override
 		public String run(CProcessor myProcessor) {
-			
+
 			try {
 				Thread.sleep(1 * 1000);
 			} catch (InterruptedException e1) {
@@ -310,13 +318,13 @@ public class Exponentiation extends CAgent {
 				e1.printStackTrace();
 			}
 			String state = "REQUEST";
-		
+
 			try
 			{
 				OMSProxy omsProxy = new OMSProxy(myProcessor);
 				omsProxy.leaveRole("manager", "calculin");
 			} catch (THOMASException e) {
-				
+
 				System.out.println("[ "+myProcessor.getMyAgent().getName()+" ] "+ e.getContent());
 				state="FINAL";
 			}
@@ -325,12 +333,12 @@ public class Exponentiation extends CAgent {
 		}
 
 	}
-	
+
 
 	class FINAL_Method implements FinalStateMethod {
 		public void run(CProcessor myProcessor, ACLMessage responseMessage) {
-			
-			
+
+
 			OMSProxy omsProxy = new OMSProxy(myProcessor);
 			try {
 				omsProxy.leaveRole("participant", "virtual");
