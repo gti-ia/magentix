@@ -12,6 +12,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -21,6 +22,7 @@ public class ResponseParser {
 	String serviceName="";
 	String status="";
 	String description="";
+	String specification="";
 	ArrayList<ArrayList<String>> itemsList=new ArrayList<ArrayList<String>>();
 	ArrayList<String> elementsList=new ArrayList<String>();
 	
@@ -35,6 +37,10 @@ public class ResponseParser {
 
 	public String getDescription() {
 		return description;
+	}
+	
+	public String getSpecification() {
+		return specification;
 	}
 
 	public ArrayList<ArrayList<String>> getItemsList() {
@@ -144,6 +150,12 @@ public class ResponseParser {
 						}
 						itemsList.add(itemComponents);
 					}
+					else if(resNode.getNodeName().equalsIgnoreCase("specification")){
+						//the content is encapsulated in an XML comment <!-- -->
+						Node childN=resNode.getFirstChild();
+						specification=childN.getNodeValue().trim();
+						
+					}
 					else if(resNode.getNodeType()==Node.ELEMENT_NODE){
 						String name=resNode.getNodeName();
 						String value=resNode.getNodeValue();
@@ -163,6 +175,7 @@ public class ResponseParser {
 		System.out.println("serviceName: "+serviceName);
 		System.out.println("status: "+status);
 		System.out.println("description: "+description);
+		System.out.println("specification: "+specification);
 
 	}
 

@@ -63,65 +63,7 @@ public class SFProxy extends THOMASProxy {
 
 	}
 
-	
-	//TODO revisar esto...
-	/**
-	 * When the service is not SF or OMS service. This method is recommend used when an other provider agent offer a new service 
-	 * 
-	 * @param agentProvider
-	 *            The agent who offers the service. Returned by the method getProcess.
-	 * @param URLProfile
-	 *            Returned by method getProfile.
-	 * @param URLProcess
-	 *            Returned by method getProcess.
-	 * @param ArrayArguments
-	 *            Input arguments of the service.
-	 *             
-	 * @return Hashtable<String, String> is a Hashtable with a pair of key and value. 
-	 * The key is name of output, and value is the value returned.
-	 */
-	@SuppressWarnings("unchecked")
-	public Hashtable<String, String> genericService(
-			AgentID agentProvider, String URLProfile,
-			ArrayList<String> ArrayArguments){
 
-		isgenericSerice = true;
-		serviceName = "Generic";
-
-
-		URL profile;
-		try {
-			profile = new URL(URLProfile);
-		} catch (MalformedURLException e) {
-			logger.error("ERROR: Profile URL Malformed!");
-			e.printStackTrace();
-			return new Hashtable<String,String>();
-		}
-		oracle = new Oracle(profile);
-
-		// Get inputs
-		ArrayList<String> inputs = oracle.getInputs();
-
-		// Build call arguments
-		String arguments = "";
-		int i = 0;
-		for (String s : inputs) {
-
-			if (i < ArrayArguments.size())
-				arguments = arguments + separatorToken + s + "=" + ArrayArguments.get(i);
-			i++;
-		}
-
-		// build the message to service provider
-		call = URLProfile+separatorToken+arguments;
-
-		clientProvider = agentProvider.name;
-
-
-
-		return  (Hashtable<String, String>) this.sendInform();
-
-	}
 
 
 
@@ -131,7 +73,7 @@ public class SFProxy extends THOMASProxy {
 	 * @param providerName of the provider to remove
 	 * @return status which indicates if an error occurs (1:OK otherwise 0)
 	 */
-	public String removeProvider(String serviceProfile, String providerName) {
+	public String removeProvider(String serviceProfile, String providerName) throws THOMASException{
 		
 		serviceName = sfServicesURLs.get("RemoveProvider");
 
@@ -157,7 +99,7 @@ public class SFProxy extends THOMASProxy {
 	 *         profile id, ranking: ...) or return which
 	 *         indicates if an error occurs
 	 */
-	public String searchService(String inputs, String outputs, String keywords)
+	public ArrayList<ArrayList<String>> searchService(String inputs, String outputs, String keywords) throws THOMASException
 	{
 
 		serviceName = sfServicesURLs.get("SearchService");
@@ -166,7 +108,7 @@ public class SFProxy extends THOMASProxy {
 		"Outputs="+outputs+separatorToken+
 		"Keywords="+keywords;
 
-		return (String) this.sendInform();	
+		return (ArrayList<ArrayList<String>>) this.sendInform();
 	}
 
 	
@@ -179,7 +121,7 @@ public class SFProxy extends THOMASProxy {
 	 *            id)
 	 * @return Status  return indicates if an error occurs.
 	 */
-	public String deregisterService(String serviceProfile)  {
+	public String deregisterService(String serviceProfile) throws THOMASException {
 
 		
 		serviceName = sfServicesURLs.get("DeregisterService");
@@ -195,7 +137,7 @@ public class SFProxy extends THOMASProxy {
 
 	}
 	
-	public String getService(String serviceProfile)
+	public String getService(String serviceProfile) throws THOMASException
 	{
 		serviceName=sfServicesURLs.get("GetService");
 		
@@ -205,7 +147,7 @@ public class SFProxy extends THOMASProxy {
 		return (String) this.sendInform();
 	}
 	
-	public String registerService(String serviceURL)
+	public String registerService(String serviceURL) throws THOMASException
 	{
 		serviceName=sfServicesURLs.get("RegisterService");
 		
@@ -217,3 +159,4 @@ public class SFProxy extends THOMASProxy {
 
 	
 }
+
