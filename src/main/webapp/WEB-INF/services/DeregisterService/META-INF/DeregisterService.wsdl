@@ -8,7 +8,7 @@
 				<xsd:complexType>
 
 					<xsd:sequence>
-						<xsd:element name="ServiceID" type="xsd:string"/>
+						<xsd:element name="ServiceProfile" type="xsd:string"/>
 					</xsd:sequence>
 				</xsd:complexType>
 			</xsd:element>

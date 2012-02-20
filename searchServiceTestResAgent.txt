@@ -1,0 +1,520 @@
+2012-02-20 13:08:24,780 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:188) - 
+        [QueryAgent]Sms to send: http://localhost:8080/sfservices/SFservices/owl/owls/SearchService.owl Inputs=Notype| Outputs= Keywords=
+2012-02-20 13:08:24,782 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:189) - 
+        [QueryAgent]Sending... 
+2012-02-20 13:08:24,818 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:353) - 
+        TesterAgentSearch: OOH! SF Has agreed to excute the service!
+2012-02-20 13:08:24,882 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:368) - 
+        TesterAgentSearch:SF has informed me of the status of my request. They said : http://localhost:8080/sfservices/SFservices/owl/owls/SearchService.owl={http://localhost:8080/sfservices/SFservices/owl/owls/SearchService.owl#Result=<response>
+<serviceName>SearchService</serviceName>
+<status>Error</status>
+<result>
+<description>ERROR: incorrect input or output data type</description>
+</result>
+</response> }
+es.upv.dsic.gti_ia.organization.THOMASException: ERROR: incorrect input or output data type
+	at es.upv.dsic.gti_ia.organization.THOMASProxy.returnResult(THOMASProxy.java:219)
+	at es.upv.dsic.gti_ia.organization.THOMASProxy.sendInform(THOMASProxy.java:193)
+	at es.upv.dsic.gti_ia.organization.SFProxy.searchService(SFProxy.java:132)
+	at sfTest.TesterAgentSearch.incorrectParamTest1(TesterAgentSearch.java:214)
+	at sfTest.TesterAgentSearch.execute(TesterAgentSearch.java:23)
+	at es.upv.dsic.gti_ia.core.BaseAgent.run(BaseAgent.java:947)
+	at java.lang.Thread.run(Thread.java:636)
+incorrectParamTest1:
+null
+2012-02-20 13:08:24,886 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:188) - 
+        [QueryAgent]Sms to send: http://localhost:8080/sfservices/SFservices/owl/owls/SearchService.owl Inputs= Outputs=Notype| Keywords=
+2012-02-20 13:08:24,887 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:189) - 
+        [QueryAgent]Sending... 
+2012-02-20 13:08:24,925 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:353) - 
+        TesterAgentSearch: OOH! SF Has agreed to excute the service!
+2012-02-20 13:08:24,992 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:368) - 
+        TesterAgentSearch:SF has informed me of the status of my request. They said : http://localhost:8080/sfservices/SFservices/owl/owls/SearchService.owl={http://localhost:8080/sfservices/SFservices/owl/owls/SearchService.owl#Result=<response>
+<serviceName>SearchService</serviceName>
+<status>Error</status>
+<result>
+<description>ERROR: incorrect input or output data type</description>
+</result>
+</response> }
+es.upv.dsic.gti_ia.organization.THOMASException: ERROR: incorrect input or output data type
+	at es.upv.dsic.gti_ia.organization.THOMASProxy.returnResult(THOMASProxy.java:219)
+	at es.upv.dsic.gti_ia.organization.THOMASProxy.sendInform(THOMASProxy.java:193)
+	at es.upv.dsic.gti_ia.organization.SFProxy.searchService(SFProxy.java:132)
+	at sfTest.TesterAgentSearch.incorrectParamTest2(TesterAgentSearch.java:233)
+	at sfTest.TesterAgentSearch.execute(TesterAgentSearch.java:26)
+	at es.upv.dsic.gti_ia.core.BaseAgent.run(BaseAgent.java:947)
+	at java.lang.Thread.run(Thread.java:636)
+incorrectParamTest2:
+null
+2012-02-20 13:08:24,995 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:188) - 
+        [QueryAgent]Sms to send: http://localhost:8080/sfservices/SFservices/owl/owls/SearchService.owl Inputs="http://www.w3.org/2001/XMLSchema#double"^^xsd:anyURI| Outputs= Keywords=
+2012-02-20 13:08:24,996 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:189) - 
+        [QueryAgent]Sending... 
+2012-02-20 13:08:25,035 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:353) - 
+        TesterAgentSearch: OOH! SF Has agreed to excute the service!
+2012-02-20 13:08:25,151 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:368) - 
+        TesterAgentSearch:SF has informed me of the status of my request. They said : http://localhost:8080/sfservices/SFservices/owl/owls/SearchService.owl={http://localhost:8080/sfservices/SFservices/owl/owls/SearchService.owl#Result=<response>
+<serviceName>SearchService</serviceName>
+<status>Ok</status>
+<result>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl#SquareProfile</profile>
+		<quantity>1.0</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Even.owl#EvenProfile</profile>
+		<quantity>1.0</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Sign.owl#SignProfile</profile>
+		<quantity>1.0</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#ProductProfile</profile>
+		<quantity>0.5</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Addition.owl#AdditionProfile</profile>
+		<quantity>0.5</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#DivisionProfile</profile>
+		<quantity>0.5</quantity>
+	</item>
+</result>
+</response> }
+appropiateParamsTest1:
+http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl#SquareProfile 1.0 
+http://localhost:8080/testSFservices/testSFservices/owl/owls/Even.owl#EvenProfile 1.0 
+http://localhost:8080/testSFservices/testSFservices/owl/owls/Sign.owl#SignProfile 1.0 
+http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#ProductProfile 0.5 
+http://localhost:8080/testSFservices/testSFservices/owl/owls/Addition.owl#AdditionProfile 0.5 
+http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#DivisionProfile 0.5 
+
+2012-02-20 13:08:25,155 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:188) - 
+        [QueryAgent]Sms to send: http://localhost:8080/sfservices/SFservices/owl/owls/SearchService.owl Inputs="http://www.w3.org/2001/XMLSchema#double"^^xsd:anyURI|"http://www.w3.org/2001/XMLSchema#double"^^xsd:anyURI| Outputs= Keywords=
+2012-02-20 13:08:25,155 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:189) - 
+        [QueryAgent]Sending... 
+2012-02-20 13:08:25,201 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:353) - 
+        TesterAgentSearch: OOH! SF Has agreed to excute the service!
+2012-02-20 13:08:25,278 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:368) - 
+        TesterAgentSearch:SF has informed me of the status of my request. They said : http://localhost:8080/sfservices/SFservices/owl/owls/SearchService.owl={http://localhost:8080/sfservices/SFservices/owl/owls/SearchService.owl#Result=<response>
+<serviceName>SearchService</serviceName>
+<status>Ok</status>
+<result>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#ProductProfile</profile>
+		<quantity>1.0</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Addition.owl#AdditionProfile</profile>
+		<quantity>1.0</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#DivisionProfile</profile>
+		<quantity>1.0</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl#SquareProfile</profile>
+		<quantity>0.5</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Even.owl#EvenProfile</profile>
+		<quantity>0.5</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Sign.owl#SignProfile</profile>
+		<quantity>0.5</quantity>
+	</item>
+</result>
+</response> }
+appropiateParamsTest2:
+http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#ProductProfile 1.0 
+http://localhost:8080/testSFservices/testSFservices/owl/owls/Addition.owl#AdditionProfile 1.0 
+http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#DivisionProfile 1.0 
+http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl#SquareProfile 0.5 
+http://localhost:8080/testSFservices/testSFservices/owl/owls/Even.owl#EvenProfile 0.5 
+http://localhost:8080/testSFservices/testSFservices/owl/owls/Sign.owl#SignProfile 0.5 
+
+2012-02-20 13:08:25,281 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:188) - 
+        [QueryAgent]Sms to send: http://localhost:8080/sfservices/SFservices/owl/owls/SearchService.owl Inputs="http://www.w3.org/2001/XMLSchema#double"^^xsd:anyURI|"http://www.w3.org/2001/XMLSchema#double"^^xsd:anyURI|"http://www.w3.org/2001/XMLSchema#double"^^xsd:anyURI| Outputs= Keywords=
+2012-02-20 13:08:25,281 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:189) - 
+        [QueryAgent]Sending... 
+2012-02-20 13:08:25,319 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:353) - 
+        TesterAgentSearch: OOH! SF Has agreed to excute the service!
+2012-02-20 13:08:25,416 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:368) - 
+        TesterAgentSearch:SF has informed me of the status of my request. They said : http://localhost:8080/sfservices/SFservices/owl/owls/SearchService.owl={http://localhost:8080/sfservices/SFservices/owl/owls/SearchService.owl#Result=<response>
+<serviceName>SearchService</serviceName>
+<status>Ok</status>
+<result>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#ProductProfile</profile>
+		<quantity>0.6666667</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Addition.owl#AdditionProfile</profile>
+		<quantity>0.6666667</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#DivisionProfile</profile>
+		<quantity>0.6666667</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl#SquareProfile</profile>
+		<quantity>0.33333334</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Even.owl#EvenProfile</profile>
+		<quantity>0.33333334</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Sign.owl#SignProfile</profile>
+		<quantity>0.33333334</quantity>
+	</item>
+</result>
+</response> }
+appropiateParamsTest3:
+http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#ProductProfile 0.6666667 
+http://localhost:8080/testSFservices/testSFservices/owl/owls/Addition.owl#AdditionProfile 0.6666667 
+http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#DivisionProfile 0.6666667 
+http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl#SquareProfile 0.33333334 
+http://localhost:8080/testSFservices/testSFservices/owl/owls/Even.owl#EvenProfile 0.33333334 
+http://localhost:8080/testSFservices/testSFservices/owl/owls/Sign.owl#SignProfile 0.33333334 
+
+2012-02-20 13:08:25,419 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:188) - 
+        [QueryAgent]Sms to send: http://localhost:8080/sfservices/SFservices/owl/owls/SearchService.owl Inputs= Outputs="http://www.w3.org/2001/XMLSchema#double"^^xsd:anyURI| Keywords=
+2012-02-20 13:08:25,419 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:189) - 
+        [QueryAgent]Sending... 
+2012-02-20 13:08:25,460 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:353) - 
+        TesterAgentSearch: OOH! SF Has agreed to excute the service!
+2012-02-20 13:08:25,515 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:368) - 
+        TesterAgentSearch:SF has informed me of the status of my request. They said : http://localhost:8080/sfservices/SFservices/owl/owls/SearchService.owl={http://localhost:8080/sfservices/SFservices/owl/owls/SearchService.owl#Result=<response>
+<serviceName>SearchService</serviceName>
+<status>Ok</status>
+<result>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#ProductProfile</profile>
+		<quantity>1.0</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Addition.owl#AdditionProfile</profile>
+		<quantity>1.0</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl#SquareProfile</profile>
+		<quantity>1.0</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#DivisionProfile</profile>
+		<quantity>1.0</quantity>
+	</item>
+</result>
+</response> }
+appropiateParamsTest4:
+http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#ProductProfile 1.0 
+http://localhost:8080/testSFservices/testSFservices/owl/owls/Addition.owl#AdditionProfile 1.0 
+http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl#SquareProfile 1.0 
+http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#DivisionProfile 1.0 
+
+2012-02-20 13:08:25,518 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:188) - 
+        [QueryAgent]Sms to send: http://localhost:8080/sfservices/SFservices/owl/owls/SearchService.owl Inputs= Outputs="http://www.w3.org/2001/XMLSchema#double"^^xsd:anyURI|"http://www.w3.org/2001/XMLSchema#double"^^xsd:anyURI| Keywords=
+2012-02-20 13:08:25,518 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:189) - 
+        [QueryAgent]Sending... 
+2012-02-20 13:08:25,560 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:353) - 
+        TesterAgentSearch: OOH! SF Has agreed to excute the service!
+2012-02-20 13:08:25,633 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:368) - 
+        TesterAgentSearch:SF has informed me of the status of my request. They said : http://localhost:8080/sfservices/SFservices/owl/owls/SearchService.owl={http://localhost:8080/sfservices/SFservices/owl/owls/SearchService.owl#Result=<response>
+<serviceName>SearchService</serviceName>
+<status>Ok</status>
+<result>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#ProductProfile</profile>
+		<quantity>0.5</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Addition.owl#AdditionProfile</profile>
+		<quantity>0.5</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl#SquareProfile</profile>
+		<quantity>0.5</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#DivisionProfile</profile>
+		<quantity>0.5</quantity>
+	</item>
+</result>
+</response> }
+appropiateParamsTest5:
+http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#ProductProfile 0.5 
+http://localhost:8080/testSFservices/testSFservices/owl/owls/Addition.owl#AdditionProfile 0.5 
+http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl#SquareProfile 0.5 
+http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#DivisionProfile 0.5 
+
+2012-02-20 13:08:25,636 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:188) - 
+        [QueryAgent]Sms to send: http://localhost:8080/sfservices/SFservices/owl/owls/SearchService.owl Inputs= Outputs="http://www.w3.org/2001/XMLSchema#boolean"^^xsd:anyURI| Keywords=
+2012-02-20 13:08:25,637 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:189) - 
+        [QueryAgent]Sending... 
+2012-02-20 13:08:25,688 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:353) - 
+        TesterAgentSearch: OOH! SF Has agreed to excute the service!
+2012-02-20 13:08:25,738 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:368) - 
+        TesterAgentSearch:SF has informed me of the status of my request. They said : http://localhost:8080/sfservices/SFservices/owl/owls/SearchService.owl={http://localhost:8080/sfservices/SFservices/owl/owls/SearchService.owl#Result=<response>
+<serviceName>SearchService</serviceName>
+<status>Ok</status>
+<result>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Even.owl#EvenProfile</profile>
+		<quantity>1.0</quantity>
+	</item>
+</result>
+</response> }
+appropiateParamsTest6:
+http://localhost:8080/testSFservices/testSFservices/owl/owls/Even.owl#EvenProfile 1.0 
+
+2012-02-20 13:08:25,741 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:188) - 
+        [QueryAgent]Sms to send: http://localhost:8080/sfservices/SFservices/owl/owls/SearchService.owl Inputs= Outputs="http://www.w3.org/2001/XMLSchema#string"^^xsd:anyURI| Keywords=
+2012-02-20 13:08:25,741 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:189) - 
+        [QueryAgent]Sending... 
+2012-02-20 13:08:25,789 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:353) - 
+        TesterAgentSearch: OOH! SF Has agreed to excute the service!
+2012-02-20 13:08:25,825 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:368) - 
+        TesterAgentSearch:SF has informed me of the status of my request. They said : http://localhost:8080/sfservices/SFservices/owl/owls/SearchService.owl={http://localhost:8080/sfservices/SFservices/owl/owls/SearchService.owl#Result=<response>
+<serviceName>SearchService</serviceName>
+<status>Ok</status>
+<result>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Sign.owl#SignProfile</profile>
+		<quantity>1.0</quantity>
+	</item>
+</result>
+</response> }
+appropiateParamsTest7:
+http://localhost:8080/testSFservices/testSFservices/owl/owls/Sign.owl#SignProfile 1.0 
+
+2012-02-20 13:08:25,827 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:188) - 
+        [QueryAgent]Sms to send: http://localhost:8080/sfservices/SFservices/owl/owls/SearchService.owl Inputs= Outputs= Keywords=product|
+2012-02-20 13:08:25,827 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:189) - 
+        [QueryAgent]Sending... 
+2012-02-20 13:08:25,871 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:353) - 
+        TesterAgentSearch: OOH! SF Has agreed to excute the service!
+2012-02-20 13:08:25,951 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:368) - 
+        TesterAgentSearch:SF has informed me of the status of my request. They said : http://localhost:8080/sfservices/SFservices/owl/owls/SearchService.owl={http://localhost:8080/sfservices/SFservices/owl/owls/SearchService.owl#Result=<response>
+<serviceName>SearchService</serviceName>
+<status>Ok</status>
+<result>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#ProductProfile</profile>
+		<quantity>1.0</quantity>
+	</item>
+</result>
+</response> }
+appropiateParamsTest8:
+http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#ProductProfile 1.0 
+
+2012-02-20 13:08:25,953 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:188) - 
+        [QueryAgent]Sms to send: http://localhost:8080/sfservices/SFservices/owl/owls/SearchService.owl Inputs= Outputs= Keywords=returns the product|
+2012-02-20 13:08:25,953 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:189) - 
+        [QueryAgent]Sending... 
+2012-02-20 13:08:25,999 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:353) - 
+        TesterAgentSearch: OOH! SF Has agreed to excute the service!
+2012-02-20 13:08:26,077 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:368) - 
+        TesterAgentSearch:SF has informed me of the status of my request. They said : http://localhost:8080/sfservices/SFservices/owl/owls/SearchService.owl={http://localhost:8080/sfservices/SFservices/owl/owls/SearchService.owl#Result=<response>
+<serviceName>SearchService</serviceName>
+<status>Ok</status>
+<result>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Sign.owl#SignProfile</profile>
+		<quantity>1.0</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Addition.owl#AdditionProfile</profile>
+		<quantity>1.0</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl#SquareProfile</profile>
+		<quantity>1.0</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#ProductProfile</profile>
+		<quantity>1.0</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Even.owl#EvenProfile</profile>
+		<quantity>1.0</quantity>
+	</item>
+</result>
+</response> }
+appropiateParamsTest9:
+http://localhost:8080/testSFservices/testSFservices/owl/owls/Sign.owl#SignProfile 1.0 
+http://localhost:8080/testSFservices/testSFservices/owl/owls/Addition.owl#AdditionProfile 1.0 
+http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl#SquareProfile 1.0 
+http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#ProductProfile 1.0 
+http://localhost:8080/testSFservices/testSFservices/owl/owls/Even.owl#EvenProfile 1.0 
+
+2012-02-20 13:08:26,079 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:188) - 
+        [QueryAgent]Sms to send: http://localhost:8080/sfservices/SFservices/owl/owls/SearchService.owl Inputs= Outputs= Keywords=product|numbers|
+2012-02-20 13:08:26,079 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:189) - 
+        [QueryAgent]Sending... 
+2012-02-20 13:08:26,127 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:353) - 
+        TesterAgentSearch: OOH! SF Has agreed to excute the service!
+2012-02-20 13:08:26,183 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:368) - 
+        TesterAgentSearch:SF has informed me of the status of my request. They said : http://localhost:8080/sfservices/SFservices/owl/owls/SearchService.owl={http://localhost:8080/sfservices/SFservices/owl/owls/SearchService.owl#Result=<response>
+<serviceName>SearchService</serviceName>
+<status>Ok</status>
+<result>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#ProductProfile</profile>
+		<quantity>1.0</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Addition.owl#AdditionProfile</profile>
+		<quantity>0.5</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#DivisionProfile</profile>
+		<quantity>0.5</quantity>
+	</item>
+</result>
+</response> }
+appropiateParamsTest10:
+http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#ProductProfile 1.0 
+http://localhost:8080/testSFservices/testSFservices/owl/owls/Addition.owl#AdditionProfile 0.5 
+http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#DivisionProfile 0.5 
+
+2012-02-20 13:08:26,186 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:188) - 
+        [QueryAgent]Sms to send: http://localhost:8080/sfservices/SFservices/owl/owls/SearchService.owl Inputs="http://www.w3.org/2001/XMLSchema#double"^^xsd:anyURI| Outputs="http://www.w3.org/2001/XMLSchema#boolean"^^xsd:anyURI| Keywords=
+2012-02-20 13:08:26,186 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:189) - 
+        [QueryAgent]Sending... 
+2012-02-20 13:08:26,228 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:353) - 
+        TesterAgentSearch: OOH! SF Has agreed to excute the service!
+2012-02-20 13:08:26,331 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:368) - 
+        TesterAgentSearch:SF has informed me of the status of my request. They said : http://localhost:8080/sfservices/SFservices/owl/owls/SearchService.owl={http://localhost:8080/sfservices/SFservices/owl/owls/SearchService.owl#Result=<response>
+<serviceName>SearchService</serviceName>
+<status>Ok</status>
+<result>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Even.owl#EvenProfile</profile>
+		<quantity>1.0</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl#SquareProfile</profile>
+		<quantity>0.5</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Sign.owl#SignProfile</profile>
+		<quantity>0.5</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#ProductProfile</profile>
+		<quantity>0.25</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Addition.owl#AdditionProfile</profile>
+		<quantity>0.25</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#DivisionProfile</profile>
+		<quantity>0.25</quantity>
+	</item>
+</result>
+</response> }
+appropiateParamsTest11:
+http://localhost:8080/testSFservices/testSFservices/owl/owls/Even.owl#EvenProfile 1.0 
+http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl#SquareProfile 0.5 
+http://localhost:8080/testSFservices/testSFservices/owl/owls/Sign.owl#SignProfile 0.5 
+http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#ProductProfile 0.25 
+http://localhost:8080/testSFservices/testSFservices/owl/owls/Addition.owl#AdditionProfile 0.25 
+http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#DivisionProfile 0.25 
+
+2012-02-20 13:08:26,335 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:188) - 
+        [QueryAgent]Sms to send: http://localhost:8080/sfservices/SFservices/owl/owls/SearchService.owl Inputs="http://www.w3.org/2001/XMLSchema#double"^^xsd:anyURI| Outputs="http://www.w3.org/2001/XMLSchema#boolean"^^xsd:anyURI| Keywords=positive|
+2012-02-20 13:08:26,335 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:189) - 
+        [QueryAgent]Sending... 
+2012-02-20 13:08:26,377 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:353) - 
+        TesterAgentSearch: OOH! SF Has agreed to excute the service!
+2012-02-20 13:08:26,530 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:368) - 
+        TesterAgentSearch:SF has informed me of the status of my request. They said : http://localhost:8080/sfservices/SFservices/owl/owls/SearchService.owl={http://localhost:8080/sfservices/SFservices/owl/owls/SearchService.owl#Result=<response>
+<serviceName>SearchService</serviceName>
+<status>Ok</status>
+<result>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Even.owl#EvenProfile</profile>
+		<quantity>0.6666667</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Sign.owl#SignProfile</profile>
+		<quantity>0.6666667</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl#SquareProfile</profile>
+		<quantity>0.33333334</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#ProductProfile</profile>
+		<quantity>0.16666667</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Addition.owl#AdditionProfile</profile>
+		<quantity>0.16666667</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#DivisionProfile</profile>
+		<quantity>0.16666667</quantity>
+	</item>
+</result>
+</response> }
+appropiateParamsTest12:
+http://localhost:8080/testSFservices/testSFservices/owl/owls/Even.owl#EvenProfile 0.6666667 
+http://localhost:8080/testSFservices/testSFservices/owl/owls/Sign.owl#SignProfile 0.6666667 
+http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl#SquareProfile 0.33333334 
+http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#ProductProfile 0.16666667 
+http://localhost:8080/testSFservices/testSFservices/owl/owls/Addition.owl#AdditionProfile 0.16666667 
+http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#DivisionProfile 0.16666667 
+
+2012-02-20 13:08:26,532 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:188) - 
+        [QueryAgent]Sms to send: http://localhost:8080/sfservices/SFservices/owl/owls/SearchService.owl Inputs="http://www.w3.org/2001/XMLSchema#double"^^xsd:anyURI|"http://www.w3.org/2001/XMLSchema#double"^^xsd:anyURI| Outputs="http://www.w3.org/2001/XMLSchema#double"^^xsd:anyURI| Keywords=returns the addition|
+2012-02-20 13:08:26,533 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:189) - 
+        [QueryAgent]Sending... 
+2012-02-20 13:08:26,577 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:353) - 
+        TesterAgentSearch: OOH! SF Has agreed to excute the service!
+2012-02-20 13:08:26,744 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:368) - 
+        TesterAgentSearch:SF has informed me of the status of my request. They said : http://localhost:8080/sfservices/SFservices/owl/owls/SearchService.owl={http://localhost:8080/sfservices/SFservices/owl/owls/SearchService.owl#Result=<response>
+<serviceName>SearchService</serviceName>
+<status>Ok</status>
+<result>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#ProductProfile</profile>
+		<quantity>1.0</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Addition.owl#AdditionProfile</profile>
+		<quantity>1.0</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl#SquareProfile</profile>
+		<quantity>0.8333334</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#DivisionProfile</profile>
+		<quantity>0.6666667</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Even.owl#EvenProfile</profile>
+		<quantity>0.5</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Sign.owl#SignProfile</profile>
+		<quantity>0.5</quantity>
+	</item>
+</result>
+</response> }
+appropiateParamsTest13:
+http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#ProductProfile 1.0 
+http://localhost:8080/testSFservices/testSFservices/owl/owls/Addition.owl#AdditionProfile 1.0 
+http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl#SquareProfile 0.8333334 
+http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#DivisionProfile 0.6666667 
+http://localhost:8080/testSFservices/testSFservices/owl/owls/Even.owl#EvenProfile 0.5 
+http://localhost:8080/testSFservices/testSFservices/owl/owls/Sign.owl#SignProfile 0.5 
+
+2012-02-20 13:08:26,748 INFO  [Thread-2] architecture.QueueAgent (QueueAgent.java:301) - 
+        Finish ,active roles do not exist

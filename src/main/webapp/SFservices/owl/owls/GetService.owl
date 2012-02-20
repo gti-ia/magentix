@@ -40,20 +40,20 @@
 <profile:Profile rdf:ID="GetServiceProfile">
     <service:isPresentedBy rdf:resource="#GetServiceService"/>
     <profile:serviceName xml:lang="en">GetService</profile:serviceName>
-    <profile:hasInput rdf:resource="#ServiceID"/>
+    <profile:hasInput rdf:resource="#ServiceProfile"/>
     <profile:hasOutput rdf:resource="#Result"/>
 </profile:Profile>
 
 
 <process:AtomicProcess rdf:ID="GetServiceProcess">
 	<service:describes rdf:resource="#GetServiceService"/>
-     	<process:hasInput rdf:resource="#ServiceID"/>
+     	<process:hasInput rdf:resource="#ServiceProfile"/>
    	<process:hasOutput rdf:resource="#Result"/>
 </process:AtomicProcess>
 
 
-<process:Input rdf:ID="ServiceID">
-     <rdfs:label>ServiceID</rdfs:label>
+<process:Input rdf:ID="ServiceProfile">
+     <rdfs:label>ServiceProfile</rdfs:label>
      <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
 </process:Input>
 
@@ -82,8 +82,8 @@
        
 	<grounding:wsdlInput>
                   <grounding:WsdlInputMessageMap>
-                    <grounding:owlsParameter rdf:resource="#ServiceID"/>
-                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/sfservices/services/ServiceID</grounding:wsdlMessagePart>
+                    <grounding:owlsParameter rdf:resource="#ServiceProfile"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/sfservices/services/ServiceProfile</grounding:wsdlMessagePart>
                   </grounding:WsdlInputMessageMap>
         </grounding:wsdlInput>
 	

@@ -197,7 +197,7 @@ public class Testing {
 
 		//sf.writeModel();
 
-//				sf.clean();
+				sf.clean();
 
 		//		try {
 		//sf.DeregisterService("http://127.0.0.1/services/1.1/calculateSunriseTime.owls");
@@ -241,14 +241,14 @@ public class Testing {
 //		String r4=sf.getService("http://127.0.0.1/services/1.1/calculateSunriseTime.owls#CALCULATE_SUNRISE_PROFILE");
 //		System.out.println(r4);
 		
-		ArrayList<String> inputs=new ArrayList<String>();
-		inputs.add("\"http://www.w3.org/2001/XMLSchema#double\"^^xsd:anyURI");
+//		ArrayList<String> inputs=new ArrayList<String>();
 //		inputs.add("\"http://www.w3.org/2001/XMLSchema#double\"^^xsd:anyURI");
-		ArrayList<String> outputs=new ArrayList<String>();
-		outputs.add("\"http://www.w3.org/2001/XMLSchema#double\"^^xsd:anyURI");
-		ArrayList<String> keywords=new ArrayList<String>();
-		keywords.add("addition");
-		System.out.println(sf.searchService(inputs, null, null));
+////		inputs.add("\"http://www.w3.org/2001/XMLSchema#double\"^^xsd:anyURI");
+//		ArrayList<String> outputs=new ArrayList<String>();
+//		outputs.add("\"http://www.w3.org/2001/XMLSchema#double\"^^xsd:anyURI");
+//		ArrayList<String> keywords=new ArrayList<String>();
+//		keywords.add("addition");
+//		System.out.println(sf.searchService(inputs, null, null));
 		
 //		System.out.println("MODEL:");
 //		sf.writeModel();
