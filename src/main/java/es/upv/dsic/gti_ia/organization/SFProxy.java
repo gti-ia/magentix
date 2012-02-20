@@ -9,6 +9,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Iterator;
 
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.BaseAgent;
@@ -99,14 +100,34 @@ public class SFProxy extends THOMASProxy {
 	 *         profile id, ranking: ...) or return which
 	 *         indicates if an error occurs
 	 */
-	public ArrayList<ArrayList<String>> searchService(String inputs, String outputs, String keywords) throws THOMASException
+	public ArrayList<ArrayList<String>> searchService(ArrayList<String> inputs, ArrayList<String> outputs, ArrayList<String> keywords) throws THOMASException
 	{
 
+		String inputsStr="";
+		Iterator<String> iterInputs=inputs.iterator();
+		while(iterInputs.hasNext()){
+			String in=iterInputs.next();
+			inputsStr+=in+"|";
+		}
+		String outputsStr="";
+		Iterator<String> iterOutputs=outputs.iterator();
+		while(iterOutputs.hasNext()){
+			String out=iterOutputs.next();
+			outputsStr+=out+"|";
+		}
+		String keywordsStr="";
+		Iterator<String> iterKeywords=keywords.iterator();
+		while(iterKeywords.hasNext()){
+			String key=iterKeywords.next();
+			keywordsStr+=key+"|";
+		}
+		
+		
 		serviceName = sfServicesURLs.get("SearchService");
 		call = serviceName +separatorToken+
-		"Inputs="+inputs+separatorToken+
-		"Outputs="+outputs+separatorToken+
-		"Keywords="+keywords;
+		"Inputs="+inputsStr+separatorToken+
+		"Outputs="+outputsStr+separatorToken+
+		"Keywords="+keywordsStr;
 
 		return (ArrayList<ArrayList<String>>) this.sendInform();
 	}
