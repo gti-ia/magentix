@@ -66,10 +66,10 @@ public class SFProxy extends THOMASProxy {
 	/**
 	 * Removes a provider from a registered service
 	 * @param serviceProfile URI of the service to remove the provider
-	 * @param providerName of the provider to remove
+	 * @param providerID of the provider to remove
 	 * @return status which indicates if an error occurs (1:OK otherwise 0)
 	 */
-	public String removeProvider(String serviceProfile, String providerName) throws THOMASException{
+	public String removeProvider(String serviceProfile, String providerID) throws THOMASException{
 		
 		serviceName = sfServicesURLs.get("RemoveProvider");
 
@@ -80,7 +80,7 @@ public class SFProxy extends THOMASProxy {
 		}
 		call = serviceName+separatorToken+
 		"ServiceProfile="+ serviceProfile+separatorToken+
-		"ProviderName="+providerName;
+		"ProviderID="+providerID;
 
 		return (String) this.sendInform();
 	}
