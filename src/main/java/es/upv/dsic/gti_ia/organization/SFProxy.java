@@ -3,15 +3,10 @@
  */
 package es.upv.dsic.gti_ia.organization;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-//import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Iterator;
 
-import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.BaseAgent;
 
 /**
