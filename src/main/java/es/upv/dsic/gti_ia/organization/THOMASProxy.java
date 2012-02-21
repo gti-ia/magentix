@@ -38,7 +38,10 @@ public class THOMASProxy {
 
 	Configuration c;
 
-	String call,thomasAgent,clientProvider,serviceName,ErrorValue,status,ServiceDescriptionLocation;
+	String call;
+	String thomasAgent;
+	String serviceName;
+	String ServiceDescriptionLocation;
 	String value = ""; //Returned value
 
 	int Quantity;
@@ -49,10 +52,7 @@ public class THOMASProxy {
 	ArrayList<ArrayList<String>> serviceTypeResult3;
 	ResponseParser responseParser = new ResponseParser();
 
-	ProcessDescription processDescripcion;
-	ProfileDescription profileDescription;
-
-	boolean isgenericSerice = false;
+	
 	Object result = null;
 
 	private boolean Status = true;
@@ -175,14 +175,8 @@ public class THOMASProxy {
 		requestMsg.setSender(agent.getAid());
 		requestMsg.setContent(call);
 		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
-		if (isgenericSerice)//If is a genericService, Receiver is the provider to service.
-		{
-			requestMsg.setReceiver(new AgentID(clientProvider));
-		}
-		else
-		{
-			requestMsg.setReceiver(new AgentID(thomasAgent));	
-		}
+		requestMsg.setReceiver(new AgentID(thomasAgent));	
+	
 
 
 		logger.info("[QueryAgent]Sms to send: " + requestMsg.getContent());
@@ -203,9 +197,7 @@ public class THOMASProxy {
 
 		serviceTypeResult2  = new ArrayList<String>();
 		serviceTypeResult3 = new ArrayList<ArrayList<String>>();
-		
-		ErrorValue = new String();
-		status = new String();	
+	
 	}
 
 	/**
