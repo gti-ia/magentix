@@ -1,0 +1,200 @@
+2012-02-20 16:41:38,656 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:188) - 
+        [QueryAgent]Sms to send: http://localhost:8080/sfservices/SFservices/owl/owls/DeregisterService.owl ServiceProfile=dsic-upv-es
+2012-02-20 16:41:38,659 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:189) - 
+        [QueryAgent]Sending... 
+2012-02-20 16:41:38,697 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:353) - 
+        TesterAgentDeregister: OOH! SF Has agreed to excute the service!
+2012-02-20 16:41:38,809 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:368) - 
+        TesterAgentDeregister:SF has informed me of the status of my request. They said : http://localhost:8080/sfservices/SFservices/owl/owls/DeregisterService.owl={http://localhost:8080/sfservices/SFservices/owl/owls/DeregisterService.owl#Result=<response>
+<serviceName>DeregisterService</serviceName>
+<status>Error</status>
+<result>
+<description>ERROR: Service dsic-upv-es does not exist</description>
+</result>
+</response> }
+ERROR: Service dsic-upv-es does not existincorrectParamTest1:
+ERROR: Service dsic-upv-es does not exist
+
+2012-02-20 16:41:38,812 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:188) - 
+        [QueryAgent]Sms to send: http://localhost:8080/sfservices/SFservices/owl/owls/DeregisterService.owl ServiceProfile=http://localhost/services/1.1/calculateSunriseTime.owls
+2012-02-20 16:41:38,812 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:189) - 
+        [QueryAgent]Sending... 
+2012-02-20 16:41:38,850 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:353) - 
+        TesterAgentDeregister: OOH! SF Has agreed to excute the service!
+2012-02-20 16:41:38,899 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:368) - 
+        TesterAgentDeregister:SF has informed me of the status of my request. They said : http://localhost:8080/sfservices/SFservices/owl/owls/DeregisterService.owl={http://localhost:8080/sfservices/SFservices/owl/owls/DeregisterService.owl#Result=<response>
+<serviceName>DeregisterService</serviceName>
+<status>Error</status>
+<result>
+<description>ERROR: Service http://localhost/services/1.1/calculateSunriseTime.owls does not exist</description>
+</result>
+</response> }
+ERROR: Service http://localhost/services/1.1/calculateSunriseTime.owls does not exist
+incorrectParamTest2:
+ERROR: Service http://localhost/services/1.1/calculateSunriseTime.owls does not exist
+2012-02-20 16:41:38,902 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:188) - 
+        [QueryAgent]Sms to send: http://localhost:8080/sfservices/SFservices/owl/owls/DeregisterService.owl ServiceProfile=http://localhost/services/1.1/calculateSunriseTime.owls#CALCULATESUNRISETIME_PROFILE
+2012-02-20 16:41:38,902 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:189) - 
+        [QueryAgent]Sending... 
+2012-02-20 16:41:38,947 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:353) - 
+        TesterAgentDeregister: OOH! SF Has agreed to excute the service!
+2012-02-20 16:41:38,984 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:368) - 
+        TesterAgentDeregister:SF has informed me of the status of my request. They said : http://localhost:8080/sfservices/SFservices/owl/owls/DeregisterService.owl={http://localhost:8080/sfservices/SFservices/owl/owls/DeregisterService.owl#Result=<response>
+<serviceName>DeregisterService</serviceName>
+<status>Error</status>
+<result>
+<description>ERROR: Service http://localhost/services/1.1/calculateSunriseTime.owls#CALCULATESUNRISETIME_PROFILE does not exist</description>
+</result>
+</response> }
+ERROR: Service http://localhost/services/1.1/calculateSunriseTime.owls#CALCULATESUNRISETIME_PROFILE does not exist
+incorrectParamTest3:
+ERROR: Service http://localhost/services/1.1/calculateSunriseTime.owls#CALCULATESUNRISETIME_PROFILE does not exist
+2012-02-20 16:41:38,986 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:188) - 
+        [QueryAgent]Sms to send: http://localhost:8080/sfservices/SFservices/owl/owls/DeregisterService.owl ServiceProfile=http://localhost:8080/testSFservices/testSFservices/owl/owls/SumArray.owl#SumArrayProfile
+2012-02-20 16:41:38,987 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:189) - 
+        [QueryAgent]Sending... 
+2012-02-20 16:41:39,036 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:353) - 
+        TesterAgentDeregister: OOH! SF Has agreed to excute the service!
+2012-02-20 16:41:39,082 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:368) - 
+        TesterAgentDeregister:SF has informed me of the status of my request. They said : http://localhost:8080/sfservices/SFservices/owl/owls/DeregisterService.owl={http://localhost:8080/sfservices/SFservices/owl/owls/DeregisterService.owl#Result=<response>
+<serviceName>DeregisterService</serviceName>
+<status>Error</status>
+<result>
+<description>ERROR: Service http://localhost:8080/testSFservices/testSFservices/owl/owls/SumArray.owl#SumArrayProfile does not exist</description>
+</result>
+</response> }
+ERROR: Service http://localhost:8080/testSFservices/testSFservices/owl/owls/SumArray.owl#SumArrayProfile does not exist
+appropiateParamsTest1:
+ERROR: Service http://localhost:8080/testSFservices/testSFservices/owl/owls/SumArray.owl#SumArrayProfile does not exist
+2012-02-20 16:41:39,085 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:188) - 
+        [QueryAgent]Sms to send: http://localhost:8080/sfservices/SFservices/owl/owls/DeregisterService.owl ServiceProfile=http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#ProductProfile
+2012-02-20 16:41:39,085 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:189) - 
+        [QueryAgent]Sending... 
+2012-02-20 16:41:39,138 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:353) - 
+        TesterAgentDeregister: OOH! SF Has agreed to excute the service!
+2012-02-20 16:41:40,037 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:368) - 
+        TesterAgentDeregister:SF has informed me of the status of my request. They said : http://localhost:8080/sfservices/SFservices/owl/owls/DeregisterService.owl={http://localhost:8080/sfservices/SFservices/owl/owls/DeregisterService.owl#Result=<response>
+<serviceName>DeregisterService</serviceName>
+<status>Ok</status>
+<result>
+<description>Service http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#ProductProfile Deregistered</description>
+</result>
+</response> }
+appropiateParamsTest2:
+Service http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#ProductProfile Deregistered
+2012-02-20 16:41:40,039 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:188) - 
+        [QueryAgent]Sms to send: http://localhost:8080/sfservices/SFservices/owl/owls/DeregisterService.owl ServiceProfile=http://localhost:8080/testSFservices/testSFservices/owl/owls/Addition.owl#AdditionProfile
+2012-02-20 16:41:40,039 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:189) - 
+        [QueryAgent]Sending... 
+2012-02-20 16:41:40,087 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:353) - 
+        TesterAgentDeregister: OOH! SF Has agreed to excute the service!
+2012-02-20 16:41:40,476 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:368) - 
+        TesterAgentDeregister:SF has informed me of the status of my request. They said : http://localhost:8080/sfservices/SFservices/owl/owls/DeregisterService.owl={http://localhost:8080/sfservices/SFservices/owl/owls/DeregisterService.owl#Result=<response>
+<serviceName>DeregisterService</serviceName>
+<status>Ok</status>
+<result>
+<description>Service http://localhost:8080/testSFservices/testSFservices/owl/owls/Addition.owl#AdditionProfile Deregistered</description>
+</result>
+</response> }
+appropiateParamsTest3:
+Service http://localhost:8080/testSFservices/testSFservices/owl/owls/Addition.owl#AdditionProfile Deregistered
+2012-02-20 16:41:40,478 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:188) - 
+        [QueryAgent]Sms to send: http://localhost:8080/sfservices/SFservices/owl/owls/DeregisterService.owl ServiceProfile=http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl#SquareProfile
+2012-02-20 16:41:40,478 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:189) - 
+        [QueryAgent]Sending... 
+2012-02-20 16:41:40,517 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:353) - 
+        TesterAgentDeregister: OOH! SF Has agreed to excute the service!
+2012-02-20 16:41:41,221 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:368) - 
+        TesterAgentDeregister:SF has informed me of the status of my request. They said : http://localhost:8080/sfservices/SFservices/owl/owls/DeregisterService.owl={http://localhost:8080/sfservices/SFservices/owl/owls/DeregisterService.owl#Result=<response>
+<serviceName>DeregisterService</serviceName>
+<status>Ok</status>
+<result>
+<description>Service http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl#SquareProfile Deregistered</description>
+</result>
+</response> }
+appropiateParamsTest4:
+Service http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl#SquareProfile Deregistered
+2012-02-20 16:41:41,223 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:188) - 
+        [QueryAgent]Sms to send: http://localhost:8080/sfservices/SFservices/owl/owls/DeregisterService.owl ServiceProfile=http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#DivisionProfile
+2012-02-20 16:41:41,223 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:189) - 
+        [QueryAgent]Sending... 
+2012-02-20 16:41:41,267 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:353) - 
+        TesterAgentDeregister: OOH! SF Has agreed to excute the service!
+2012-02-20 16:41:42,356 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:368) - 
+        TesterAgentDeregister:SF has informed me of the status of my request. They said : http://localhost:8080/sfservices/SFservices/owl/owls/DeregisterService.owl={http://localhost:8080/sfservices/SFservices/owl/owls/DeregisterService.owl#Result=<response>
+<serviceName>DeregisterService</serviceName>
+<status>Ok</status>
+<result>
+<description>Service http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#DivisionProfile Deregistered</description>
+</result>
+</response> }
+appropiateParamsTest5:
+Service http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#DivisionProfile Deregistered
+2012-02-20 16:41:42,358 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:188) - 
+        [QueryAgent]Sms to send: http://localhost:8080/sfservices/SFservices/owl/owls/DeregisterService.owl ServiceProfile=http://localhost:8080/testSFservices/testSFservices/owl/owls/Even.owl#EvenProfile
+2012-02-20 16:41:42,358 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:189) - 
+        [QueryAgent]Sending... 
+2012-02-20 16:41:42,398 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:353) - 
+        TesterAgentDeregister: OOH! SF Has agreed to excute the service!
+2012-02-20 16:41:42,737 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:368) - 
+        TesterAgentDeregister:SF has informed me of the status of my request. They said : http://localhost:8080/sfservices/SFservices/owl/owls/DeregisterService.owl={http://localhost:8080/sfservices/SFservices/owl/owls/DeregisterService.owl#Result=<response>
+<serviceName>DeregisterService</serviceName>
+<status>Ok</status>
+<result>
+<description>Service http://localhost:8080/testSFservices/testSFservices/owl/owls/Even.owl#EvenProfile Deregistered</description>
+</result>
+</response> }
+appropiateParamsTest6:
+Service http://localhost:8080/testSFservices/testSFservices/owl/owls/Even.owl#EvenProfile Deregistered
+2012-02-20 16:41:42,739 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:188) - 
+        [QueryAgent]Sms to send: http://localhost:8080/sfservices/SFservices/owl/owls/DeregisterService.owl ServiceProfile=http://localhost:8080/testSFservices/testSFservices/owl/owls/Sign.owl#SignProfile
+2012-02-20 16:41:42,739 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:189) - 
+        [QueryAgent]Sending... 
+2012-02-20 16:41:42,780 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:353) - 
+        TesterAgentDeregister: OOH! SF Has agreed to excute the service!
+2012-02-20 16:41:43,126 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:368) - 
+        TesterAgentDeregister:SF has informed me of the status of my request. They said : http://localhost:8080/sfservices/SFservices/owl/owls/DeregisterService.owl={http://localhost:8080/sfservices/SFservices/owl/owls/DeregisterService.owl#Result=<response>
+<serviceName>DeregisterService</serviceName>
+<status>Ok</status>
+<result>
+<description>Service http://localhost:8080/testSFservices/testSFservices/owl/owls/Sign.owl#SignProfile Deregistered</description>
+</result>
+</response> }
+appropiateParamsTest7:
+Service http://localhost:8080/testSFservices/testSFservices/owl/owls/Sign.owl#SignProfile Deregistered
+2012-02-20 16:41:43,128 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:188) - 
+        [QueryAgent]Sms to send: http://localhost:8080/sfservices/SFservices/owl/owls/DeregisterService.owl ServiceProfile=http://localhost:8080/testSFservices/testSFservices/owl/owls/SumArray.owl#SumArrayProfile
+2012-02-20 16:41:43,128 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:189) - 
+        [QueryAgent]Sending... 
+2012-02-20 16:41:43,170 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:353) - 
+        TesterAgentDeregister: OOH! SF Has agreed to excute the service!
+2012-02-20 16:41:43,212 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:368) - 
+        TesterAgentDeregister:SF has informed me of the status of my request. They said : http://localhost:8080/sfservices/SFservices/owl/owls/DeregisterService.owl={http://localhost:8080/sfservices/SFservices/owl/owls/DeregisterService.owl#Result=<response>
+<serviceName>DeregisterService</serviceName>
+<status>Error</status>
+<result>
+<description>ERROR: Service http://localhost:8080/testSFservices/testSFservices/owl/owls/SumArray.owl#SumArrayProfile does not exist</description>
+</result>
+</response> }
+ERROR: Service http://localhost:8080/testSFservices/testSFservices/owl/owls/SumArray.owl#SumArrayProfile does not existappropiateParamsTest8:
+ERROR: Service http://localhost:8080/testSFservices/testSFservices/owl/owls/SumArray.owl#SumArrayProfile does not exist
+2012-02-20 16:41:43,214 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:188) - 
+        [QueryAgent]Sms to send: http://localhost:8080/sfservices/SFservices/owl/owls/DeregisterService.owl ServiceProfile=http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl#SquareProfile
+2012-02-20 16:41:43,214 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:189) - 
+        [QueryAgent]Sending... 
+
+2012-02-20 16:41:43,257 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:353) - 
+        TesterAgentDeregister: OOH! SF Has agreed to excute the service!
+ERROR: Service http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl#SquareProfile does not exist
+2012-02-20 16:41:43,289 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:368) - 
+        TesterAgentDeregister:SF has informed me of the status of my request. They said : http://localhost:8080/sfservices/SFservices/owl/owls/DeregisterService.owl={http://localhost:8080/sfservices/SFservices/owl/owls/DeregisterService.owl#Result=<response>
+<serviceName>DeregisterService</serviceName>
+<status>Error</status>
+<result>
+<description>ERROR: Service http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl#SquareProfile does not exist</description>
+</result>
+</response> }
+appropiateParamsTest9:
+ERROR: Service http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl#SquareProfile does not exist
+2012-02-20 16:41:43,291 INFO  [Thread-2] architecture.QueueAgent (QueueAgent.java:301) - 
+        Finish ,active roles do not exist

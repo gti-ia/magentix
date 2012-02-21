@@ -5,7 +5,7 @@
   <xsd:element name="RemoveProvider">
   <xsd:complexType>
   <xsd:sequence>
-  <xsd:element name="ServiceID" type="xsd:string"/> 
+  <xsd:element name="ServiceProfile" type="xsd:string"/> 
   <xsd:element name="ProviderID" type="xsd:string"/>  
   </xsd:sequence>
   </xsd:complexType>

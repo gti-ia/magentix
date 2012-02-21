@@ -132,36 +132,36 @@ public class RemoveProvUTest {
 	public static void main(String[] args) {
 		RemoveProvUTest removeProvUTest=new RemoveProvUTest();
 		
-//		String res1=removeProvUTest.incorrectParamTest1();
-//		System.out.println("incorrectParamTest1:\n"+res1);
-//		
-//		String res2=removeProvUTest.incorrectParamTest2();
-//		System.out.println("incorrectParamTest2:\n"+res2);
-//		
-//		String res3=removeProvUTest.incorrectParamTest3();
-//		System.out.println("incorrectParamTest3:\n"+res3);
-//		
-//		String res4=removeProvUTest.incorrectParamTest4();
-//		System.out.println("incorrectParamTest4:\n"+res4);
-//		
-//		String res5=removeProvUTest.incorrectParamTest5();
-//		System.out.println("incorrectParamTest5:\n"+res5);
-//		
-//		String resApp1=removeProvUTest.appropiateParamsTest1();
-//		System.out.println("appropiateParamsTest1:\n"+resApp1);
-//		
-//		String resApp2=removeProvUTest.appropiateParamsTest2();
-//		System.out.println("appropiateParamsTest2:\n"+resApp2);
-//		
-//		String resApp3=removeProvUTest.appropiateParamsTest3();
-//		System.out.println("appropiateParamsTest3:\n"+resApp3);
-//		
-//		String resApp4=removeProvUTest.appropiateParamsTest4();
-//		System.out.println("appropiateParamsTest4:\n"+resApp4);
-//		
-//		String resApp5=removeProvUTest.appropiateParamsTest5();
-//		System.out.println("appropiateParamsTest5:\n"+resApp5);
-//		
+		String res1=removeProvUTest.incorrectParamTest1();
+		System.out.println("incorrectParamTest1:\n"+res1);
+		
+		String res2=removeProvUTest.incorrectParamTest2();
+		System.out.println("incorrectParamTest2:\n"+res2);
+		
+		String res3=removeProvUTest.incorrectParamTest3();
+		System.out.println("incorrectParamTest3:\n"+res3);
+		
+		String res4=removeProvUTest.incorrectParamTest4();
+		System.out.println("incorrectParamTest4:\n"+res4);
+		
+		String res5=removeProvUTest.incorrectParamTest5();
+		System.out.println("incorrectParamTest5:\n"+res5);
+		
+		String resApp1=removeProvUTest.appropiateParamsTest1();
+		System.out.println("appropiateParamsTest1:\n"+resApp1);
+		
+		String resApp2=removeProvUTest.appropiateParamsTest2();
+		System.out.println("appropiateParamsTest2:\n"+resApp2);
+		
+		String resApp3=removeProvUTest.appropiateParamsTest3();
+		System.out.println("appropiateParamsTest3:\n"+resApp3);
+		
+		String resApp4=removeProvUTest.appropiateParamsTest4();
+		System.out.println("appropiateParamsTest4:\n"+resApp4);
+		
+		String resApp5=removeProvUTest.appropiateParamsTest5();
+		System.out.println("appropiateParamsTest5:\n"+resApp5);
+		
 		String resApp6=removeProvUTest.appropiateParamsTest6();
 		System.out.println("appropiateParamsTest6:\n"+resApp6);
 

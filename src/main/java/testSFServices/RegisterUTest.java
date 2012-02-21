@@ -191,16 +191,16 @@ public class RegisterUTest {
 		
 		RegisterUTest registerUTest=new RegisterUTest();
 		
-//		String res1=registerUTest.incorrectParamTest1();
-//		System.out.println("incorrectParamTest1:\n"+res1);
+		String res1=registerUTest.incorrectParamTest1();
+		System.out.println("incorrectParamTest1:\n"+res1);
 		
-//		String res2=registerUTest.incorrectParamTest2();
-//		System.out.println("incorrectParamTest2:\n"+res2);
-//		
-//		String res3=registerUTest.incorrectParamTest3();
-//		System.out.println("incorrectParamTest3:\n"+res3);
-//		
-//		
+		String res2=registerUTest.incorrectParamTest2();
+		System.out.println("incorrectParamTest2:\n"+res2);
+		
+		String res3=registerUTest.incorrectParamTest3();
+		System.out.println("incorrectParamTest3:\n"+res3);
+		
+		
 		String resApp1=registerUTest.appropiateParamsTest1();
 		System.out.println("appropiateParamsTest1:\n"+resApp1);
 		
