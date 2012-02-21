@@ -17,16 +17,16 @@ public class TesterAgentGetService extends QueueAgent{
 	
 	protected void execute() {
 		
-//		String res1=incorrectParamTest1();
-//		System.out.println("incorrectParamTest1:\n"+res1);
-//		
-//		String res2=incorrectParamTest2();
-//		System.out.println("incorrectParamTest2:\n"+res2);
-//		
-//		String res3=incorrectParamTest3();
-//		System.out.println("incorrectParamTest3:\n"+res3);
-//		
-//		
+		String res1=incorrectParamTest1();
+		System.out.println("incorrectParamTest1:\n"+res1);
+		
+		String res2=incorrectParamTest2();
+		System.out.println("incorrectParamTest2:\n"+res2);
+		
+		String res3=incorrectParamTest3();
+		System.out.println("incorrectParamTest3:\n"+res3);
+		
+		
 		String resApp1=appropiateParamsTest1();
 		System.out.println("appropiateParamsTest1:\n"+resApp1);
 		

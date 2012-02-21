@@ -17,36 +17,36 @@ public class TesterAgentRemove extends QueueAgent{
 	
 	protected void execute() {
 		
-//		String res1=incorrectParamTest1();
-//		System.out.println("incorrectParamTest1:\n"+res1);
-//		
-//		String res2=incorrectParamTest2();
-//		System.out.println("incorrectParamTest2:\n"+res2);
-//		
-//		String res3=incorrectParamTest3();
-//		System.out.println("incorrectParamTest3:\n"+res3);
-//		
-//		String res4=incorrectParamTest4();
-//		System.out.println("incorrectParamTest4:\n"+res4);
-//		
-//		String res5=incorrectParamTest5();
-//		System.out.println("incorrectParamTest5:\n"+res5);
-//		
-//		String resApp1=appropiateParamsTest1();
-//		System.out.println("appropiateParamsTest1:\n"+resApp1);
-//		
-//		String resApp2=appropiateParamsTest2();
-//		System.out.println("appropiateParamsTest2:\n"+resApp2);
-//		
-//		String resApp3=appropiateParamsTest3();
-//		System.out.println("appropiateParamsTest3:\n"+resApp3);
-//		
-//		String resApp4=appropiateParamsTest4();
-//		System.out.println("appropiateParamsTest4:\n"+resApp4);
-//		
-//		String resApp5=appropiateParamsTest5();
-//		System.out.println("appropiateParamsTest5:\n"+resApp5);
-//		
+		String res1=incorrectParamTest1();
+		System.out.println("incorrectParamTest1:\n"+res1);
+		
+		String res2=incorrectParamTest2();
+		System.out.println("incorrectParamTest2:\n"+res2);
+		
+		String res3=incorrectParamTest3();
+		System.out.println("incorrectParamTest3:\n"+res3);
+		
+		String res4=incorrectParamTest4();
+		System.out.println("incorrectParamTest4:\n"+res4);
+		
+		String res5=incorrectParamTest5();
+		System.out.println("incorrectParamTest5:\n"+res5);
+		
+		String resApp1=appropiateParamsTest1();
+		System.out.println("appropiateParamsTest1:\n"+resApp1);
+		
+		String resApp2=appropiateParamsTest2();
+		System.out.println("appropiateParamsTest2:\n"+resApp2);
+		
+		String resApp3=appropiateParamsTest3();
+		System.out.println("appropiateParamsTest3:\n"+resApp3);
+		
+		String resApp4=appropiateParamsTest4();
+		System.out.println("appropiateParamsTest4:\n"+resApp4);
+		
+		String resApp5=appropiateParamsTest5();
+		System.out.println("appropiateParamsTest5:\n"+resApp5);
+		
 		String resApp6=appropiateParamsTest6();
 		System.out.println("appropiateParamsTest6:\n"+resApp6);
 		

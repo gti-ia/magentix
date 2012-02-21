@@ -1,10 +1,12 @@
 package sfTest;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import es.upv.dsic.gti_ia.architecture.QueueAgent;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.organization.SFProxy;
+import es.upv.dsic.gti_ia.organization.THOMASException;
 
 public class TesterAgentSearch extends QueueAgent{
 	
@@ -18,50 +20,183 @@ public class TesterAgentSearch extends QueueAgent{
 	
 	protected void execute() {
 		
-//		String res1=incorrectParamTest1();
-//		System.out.println("incorrectParamTest1:\n"+res1);
+		ArrayList<ArrayList<String>> res1=incorrectParamTest1();
+		System.out.println("incorrectParamTest1:\n"+res1);
 		
-//		String res2=incorrectParamTest2();
-//		System.out.println("incorrectParamTest2:\n"+res2);
-//		
-		String resApp1=appropiateParamsTest1();
-		System.out.println("appropiateParamsTest1:\n"+resApp1);
+		ArrayList<ArrayList<String>> res2=incorrectParamTest2();
+		System.out.println("incorrectParamTest2:\n"+res2);
 		
-		String resApp2=appropiateParamsTest2();
-		System.out.println("appropiateParamsTest2:\n"+resApp2);
 		
-		String resApp3=appropiateParamsTest3();
-		System.out.println("appropiateParamsTest3:\n"+resApp3);
 		
-		String resApp4=appropiateParamsTest4();
-		System.out.println("appropiateParamsTest4:\n"+resApp4);
+		ArrayList<ArrayList<String>> resApp=appropiateParamsTest1();
+		Iterator<ArrayList<String>> iterItems=resApp.iterator();
+		String resStr="";
+		while(iterItems.hasNext()){
+			ArrayList<String> item=iterItems.next();
+			Iterator<String> iterStr=item.iterator();
+			while(iterStr.hasNext()){
+				resStr+=iterStr.next()+" ";
+			}
+			resStr+="\n";
+		}
+		System.out.println("appropiateParamsTest1:\n"+resStr);
 		
-		String resApp5=appropiateParamsTest5();
-		System.out.println("appropiateParamsTest5:\n"+resApp5);
+		resApp=appropiateParamsTest2();
+		iterItems=resApp.iterator();
+		resStr="";
+		while(iterItems.hasNext()){
+			ArrayList<String> item=iterItems.next();
+			Iterator<String> iterStr=item.iterator();
+			while(iterStr.hasNext()){
+				resStr+=iterStr.next()+" ";
+			}
+			resStr+="\n";
+		}
+		System.out.println("appropiateParamsTest2:\n"+resStr);
 		
-		String resApp6=appropiateParamsTest6();
-		System.out.println("appropiateParamsTest6:\n"+resApp6);
+		resApp=appropiateParamsTest3();
+		iterItems=resApp.iterator();
+		resStr="";
+		while(iterItems.hasNext()){
+			ArrayList<String> item=iterItems.next();
+			Iterator<String> iterStr=item.iterator();
+			while(iterStr.hasNext()){
+				resStr+=iterStr.next()+" ";
+			}
+			resStr+="\n";
+		}
+		System.out.println("appropiateParamsTest3:\n"+resStr);
 		
-		String resApp7=appropiateParamsTest7();
-		System.out.println("appropiateParamsTest7:\n"+resApp7);
+		resApp=appropiateParamsTest4();
+		iterItems=resApp.iterator();
+		resStr="";
+		while(iterItems.hasNext()){
+			ArrayList<String> item=iterItems.next();
+			Iterator<String> iterStr=item.iterator();
+			while(iterStr.hasNext()){
+				resStr+=iterStr.next()+" ";
+			}
+			resStr+="\n";
+		}
+		System.out.println("appropiateParamsTest4:\n"+resStr);
 		
-		String resApp8=appropiateParamsTest8();
-		System.out.println("appropiateParamsTest8:\n"+resApp8);
+		resApp=appropiateParamsTest5();
+		iterItems=resApp.iterator();
+		resStr="";
+		while(iterItems.hasNext()){
+			ArrayList<String> item=iterItems.next();
+			Iterator<String> iterStr=item.iterator();
+			while(iterStr.hasNext()){
+				resStr+=iterStr.next()+" ";
+			}
+			resStr+="\n";
+		}
+		System.out.println("appropiateParamsTest5:\n"+resStr);
 		
-		String resApp9=appropiateParamsTest9();
-		System.out.println("appropiateParamsTest9:\n"+resApp9);
+		resApp=appropiateParamsTest6();
+		iterItems=resApp.iterator();
+		resStr="";
+		while(iterItems.hasNext()){
+			ArrayList<String> item=iterItems.next();
+			Iterator<String> iterStr=item.iterator();
+			while(iterStr.hasNext()){
+				resStr+=iterStr.next()+" ";
+			}
+			resStr+="\n";
+		}
+		System.out.println("appropiateParamsTest6:\n"+resStr);
 		
-		String resApp10=appropiateParamsTest10();
-		System.out.println("appropiateParamsTest10:\n"+resApp10);
+		resApp=appropiateParamsTest7();
+		iterItems=resApp.iterator();
+		resStr="";
+		while(iterItems.hasNext()){
+			ArrayList<String> item=iterItems.next();
+			Iterator<String> iterStr=item.iterator();
+			while(iterStr.hasNext()){
+				resStr+=iterStr.next()+" ";
+			}
+			resStr+="\n";
+		}
+		System.out.println("appropiateParamsTest7:\n"+resStr);
 		
-		String resApp11=appropiateParamsTest11();
-		System.out.println("appropiateParamsTest11:\n"+resApp11);
+		resApp=appropiateParamsTest8();
+		iterItems=resApp.iterator();
+		resStr="";
+		while(iterItems.hasNext()){
+			ArrayList<String> item=iterItems.next();
+			Iterator<String> iterStr=item.iterator();
+			while(iterStr.hasNext()){
+				resStr+=iterStr.next()+" ";
+			}
+			resStr+="\n";
+		}
+		System.out.println("appropiateParamsTest8:\n"+resStr);
 		
-		String resApp12=appropiateParamsTest12();
-		System.out.println("appropiateParamsTest12:\n"+resApp12);
+		resApp=appropiateParamsTest9();
+		iterItems=resApp.iterator();
+		resStr="";
+		while(iterItems.hasNext()){
+			ArrayList<String> item=iterItems.next();
+			Iterator<String> iterStr=item.iterator();
+			while(iterStr.hasNext()){
+				resStr+=iterStr.next()+" ";
+			}
+			resStr+="\n";
+		}
+		System.out.println("appropiateParamsTest9:\n"+resStr);
 		
-		String resApp13=appropiateParamsTest13();
-		System.out.println("appropiateParamsTest13:\n"+resApp13);
+		resApp=appropiateParamsTest10();
+		iterItems=resApp.iterator();
+		resStr="";
+		while(iterItems.hasNext()){
+			ArrayList<String> item=iterItems.next();
+			Iterator<String> iterStr=item.iterator();
+			while(iterStr.hasNext()){
+				resStr+=iterStr.next()+" ";
+			}
+			resStr+="\n";
+		}
+		System.out.println("appropiateParamsTest10:\n"+resStr);
+		
+		resApp=appropiateParamsTest11();
+		iterItems=resApp.iterator();
+		resStr="";
+		while(iterItems.hasNext()){
+			ArrayList<String> item=iterItems.next();
+			Iterator<String> iterStr=item.iterator();
+			while(iterStr.hasNext()){
+				resStr+=iterStr.next()+" ";
+			}
+			resStr+="\n";
+		}
+		System.out.println("appropiateParamsTest11:\n"+resStr);
+		
+		resApp=appropiateParamsTest12();
+		iterItems=resApp.iterator();
+		resStr="";
+		while(iterItems.hasNext()){
+			ArrayList<String> item=iterItems.next();
+			Iterator<String> iterStr=item.iterator();
+			while(iterStr.hasNext()){
+				resStr+=iterStr.next()+" ";
+			}
+			resStr+="\n";
+		}
+		System.out.println("appropiateParamsTest12:\n"+resStr);
+		
+		resApp=appropiateParamsTest13();
+		iterItems=resApp.iterator();
+		resStr="";
+		while(iterItems.hasNext()){
+			ArrayList<String> item=iterItems.next();
+			Iterator<String> iterStr=item.iterator();
+			while(iterStr.hasNext()){
+				resStr+=iterStr.next()+" ";
+			}
+			resStr+="\n";
+		}
+		System.out.println("appropiateParamsTest13:\n"+resStr);
+	
 		
 	}
 	
@@ -70,12 +205,18 @@ public class TesterAgentSearch extends QueueAgent{
 	 * string which not represents an input data type.
 	 * @return
 	 */
-	String incorrectParamTest1(){
+	ArrayList<ArrayList<String>> incorrectParamTest1(){
 		ArrayList<String> inputs = new ArrayList<String>();
 		ArrayList<String> outputs = new ArrayList<String>();
 		ArrayList<String> keywords = new ArrayList<String>();
 		inputs.add("Notype");
-		return sfProxy.searchService(inputs,outputs,keywords);
+		try {
+			return sfProxy.searchService(inputs,outputs,keywords);
+		} catch (THOMASException e) {
+			
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	/**
@@ -83,150 +224,222 @@ public class TesterAgentSearch extends QueueAgent{
 	 * which not represents an output data type.
 	 * @return
 	 */
-	String incorrectParamTest2(){
+	ArrayList<ArrayList<String>> incorrectParamTest2(){
 		ArrayList <String> inputs = new ArrayList <String>();
 		ArrayList <String> outputs = new ArrayList <String>();
 		ArrayList <String> keywords = new ArrayList <String>();
 		outputs.add("Notype");
-		return sfProxy.searchService(inputs,outputs,keywords);
+		try {
+			return sfProxy.searchService(inputs,outputs,keywords);
+		} catch (THOMASException e) {
+			
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
 	/**
 	 * Search for a service providing only one input parameter of type double.
 	 * @return
 	 */
-	String appropiateParamsTest1(){
+	ArrayList<ArrayList<String>> appropiateParamsTest1(){
 		ArrayList <String> inputs = new ArrayList <String>();
 		ArrayList <String> outputs = new ArrayList <String>();
 		ArrayList <String> keywords = new ArrayList <String>();
 		inputs.add("\"http://www.w3.org/2001/XMLSchema#double\"^^xsd:anyURI");
-		return sfProxy.searchService(inputs,outputs,keywords);
+		try {
+			return sfProxy.searchService(inputs,outputs,keywords);
+		} catch (THOMASException e) {
+			
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
 	/**
 	 *  Search for a service providing two input parameters of type double.
 	 * @return
 	 */
-	String appropiateParamsTest2(){
+	ArrayList<ArrayList<String>> appropiateParamsTest2(){
 		ArrayList <String> inputs = new ArrayList <String>();
 		ArrayList <String> outputs = new ArrayList <String>();
 		ArrayList <String> keywords = new ArrayList <String>();
 		inputs.add("\"http://www.w3.org/2001/XMLSchema#double\"^^xsd:anyURI");
 		inputs.add("\"http://www.w3.org/2001/XMLSchema#double\"^^xsd:anyURI");
-		return sfProxy.searchService(inputs,outputs,keywords);
+		try {
+			return sfProxy.searchService(inputs,outputs,keywords);
+		} catch (THOMASException e) {
+			
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
 	/**
 	 * Search for a service providing three input parameters of type double.
 	 * @return
 	 */
-	String appropiateParamsTest3(){
+	ArrayList<ArrayList<String>> appropiateParamsTest3(){
 		ArrayList <String> inputs = new ArrayList <String>();
 		ArrayList <String> outputs = new ArrayList <String>();
 		ArrayList <String> keywords = new ArrayList <String>();
 		inputs.add("\"http://www.w3.org/2001/XMLSchema#double\"^^xsd:anyURI");
 		inputs.add("\"http://www.w3.org/2001/XMLSchema#double\"^^xsd:anyURI");
 		inputs.add("\"http://www.w3.org/2001/XMLSchema#double\"^^xsd:anyURI");
-		return sfProxy.searchService(inputs,outputs,keywords);
+		try {
+			return sfProxy.searchService(inputs,outputs,keywords);
+		} catch (THOMASException e) {
+			
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
 	/**
 	 * Search for a service providing only one output parameter of type double.
 	 * @return
 	 */
-	String appropiateParamsTest4(){
+	ArrayList<ArrayList<String>> appropiateParamsTest4(){
 		ArrayList <String> inputs = new ArrayList <String>();
 		ArrayList <String> outputs = new ArrayList <String>();
 		ArrayList <String> keywords = new ArrayList <String>();
 		outputs.add("\"http://www.w3.org/2001/XMLSchema#double\"^^xsd:anyURI");
-		return sfProxy.searchService(inputs,outputs,keywords);
+		try {
+			return sfProxy.searchService(inputs,outputs,keywords);
+		} catch (THOMASException e) {
+			
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
 	/**
 	 * Search for a service providing two output parameters of type double.
 	 * @return
 	 */
-	String appropiateParamsTest5(){
+	ArrayList<ArrayList<String>> appropiateParamsTest5(){
 		ArrayList <String> inputs = new ArrayList <String>();
 		ArrayList <String> outputs = new ArrayList <String>();
 		ArrayList <String> keywords = new ArrayList <String>();
 		outputs.add("\"http://www.w3.org/2001/XMLSchema#double\"^^xsd:anyURI");
 		outputs.add("\"http://www.w3.org/2001/XMLSchema#double\"^^xsd:anyURI");
-		return sfProxy.searchService(inputs,outputs,keywords);
+		try {
+			return sfProxy.searchService(inputs,outputs,keywords);
+		} catch (THOMASException e) {
+			
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
 	/**
 	 * Search for a service providing only one output parameter of type boolean.
 	 * @return
 	 */
-	String appropiateParamsTest6(){
+	ArrayList<ArrayList<String>> appropiateParamsTest6(){
 		ArrayList <String> inputs = new ArrayList <String>();
 		ArrayList <String> outputs = new ArrayList <String>();
 		ArrayList <String> keywords = new ArrayList <String>();
 		outputs.add("\"http://www.w3.org/2001/XMLSchema#boolean\"^^xsd:anyURI");		
-		return sfProxy.searchService(inputs,outputs,keywords);
+		try {
+			return sfProxy.searchService(inputs,outputs,keywords);
+		} catch (THOMASException e) {
+			
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	/**
 	 * Search for a service providing only one output parameter of type string.
 	 * @return
 	 */
-	String appropiateParamsTest7(){
+	ArrayList<ArrayList<String>> appropiateParamsTest7(){
 		ArrayList <String> inputs = new ArrayList <String>();
 		ArrayList <String> outputs = new ArrayList <String>();
 		ArrayList <String> keywords = new ArrayList <String>();
 		outputs.add("\"http://www.w3.org/2001/XMLSchema#string\"^^xsd:anyURI");		
-		return sfProxy.searchService(inputs,outputs,keywords);
+		try {
+			return sfProxy.searchService(inputs,outputs,keywords);
+		} catch (THOMASException e) {
+			
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
 	/**
 	 * Search for a service providing only one keyword.
 	 * @return
 	 */
-	String appropiateParamsTest8(){
+	ArrayList<ArrayList<String>> appropiateParamsTest8(){
 		ArrayList <String> inputs = new ArrayList <String>();
 		ArrayList <String> outputs = new ArrayList <String>();
 		ArrayList <String> keywords = new ArrayList <String>();
 		keywords.add("product");		
-		return sfProxy.searchService(inputs,outputs,keywords);
+		try {
+			return sfProxy.searchService(inputs,outputs,keywords);
+		} catch (THOMASException e) {
+			
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
 	/**
 	 * Search for a service providing only one keyword.
 	 * @return
 	 */
-	String appropiateParamsTest9(){
+	ArrayList<ArrayList<String>> appropiateParamsTest9(){
 		ArrayList <String> inputs = new ArrayList <String>();
 		ArrayList <String> outputs = new ArrayList <String>();
 		ArrayList <String> keywords = new ArrayList <String>();
 		keywords.add("returns the product");		
-		return sfProxy.searchService(inputs,outputs,keywords);
+		try {
+			return sfProxy.searchService(inputs,outputs,keywords);
+		} catch (THOMASException e) {
+			
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
 	/**
 	 * Search for a service providing two words as keywords.
 	 * @return
 	 */
-	String appropiateParamsTest10(){
+	ArrayList<ArrayList<String>> appropiateParamsTest10(){
 		ArrayList <String> inputs = new ArrayList <String>();
 		ArrayList <String> outputs = new ArrayList <String>();
 		ArrayList <String> keywords = new ArrayList <String>();
 		keywords.add("product");
 		keywords.add("numbers");
-		return sfProxy.searchService(inputs,outputs,keywords);
+		try {
+			return sfProxy.searchService(inputs,outputs,keywords);
+		} catch (THOMASException e) {
+			
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
 	/**
 	 * Search for a service providing two words as keywords.
 	 * @return
 	 */
-	String appropiateParamsTest11(){
+	ArrayList<ArrayList<String>> appropiateParamsTest11(){
 		ArrayList <String> inputs = new ArrayList <String>();
 		ArrayList <String> outputs = new ArrayList <String>();
 		ArrayList <String> keywords = new ArrayList <String>();
 		inputs.add("\"http://www.w3.org/2001/XMLSchema#double\"^^xsd:anyURI");
 		outputs.add("\"http://www.w3.org/2001/XMLSchema#boolean\"^^xsd:anyURI");
-		return sfProxy.searchService(inputs,outputs,keywords);
+		try {
+			return sfProxy.searchService(inputs,outputs,keywords);
+		} catch (THOMASException e) {
+			
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
 	/**
@@ -234,14 +447,20 @@ public class TesterAgentSearch extends QueueAgent{
 	 * parameter of type boolean and one keyword.
 	 * @return
 	 */
-	String appropiateParamsTest12(){
+	ArrayList<ArrayList<String>> appropiateParamsTest12(){
 		ArrayList <String> inputs = new ArrayList <String>();
 		ArrayList <String> outputs = new ArrayList <String>();
 		ArrayList <String> keywords = new ArrayList <String>();
 		inputs.add("\"http://www.w3.org/2001/XMLSchema#double\"^^xsd:anyURI");
 		outputs.add("\"http://www.w3.org/2001/XMLSchema#boolean\"^^xsd:anyURI");
 		keywords.add("positive");
-		return sfProxy.searchService(inputs,outputs,keywords);
+		try {
+			return sfProxy.searchService(inputs,outputs,keywords);
+		} catch (THOMASException e) {
+			
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
 	/**
@@ -249,7 +468,7 @@ public class TesterAgentSearch extends QueueAgent{
 	 * output parameter of type double and phrase as keyword.
 	 * @return
 	 */
-	String appropiateParamsTest13(){
+	ArrayList<ArrayList<String>> appropiateParamsTest13(){
 		ArrayList <String> inputs = new ArrayList <String>();
 		ArrayList <String> outputs = new ArrayList <String>();
 		ArrayList <String> keywords = new ArrayList <String>();
@@ -257,7 +476,13 @@ public class TesterAgentSearch extends QueueAgent{
 		inputs.add("\"http://www.w3.org/2001/XMLSchema#double\"^^xsd:anyURI");
 		outputs.add("\"http://www.w3.org/2001/XMLSchema#double\"^^xsd:anyURI");
 		keywords.add("returns the addition");
-		return sfProxy.searchService(inputs,outputs,keywords);
+		try {
+			return sfProxy.searchService(inputs,outputs,keywords);
+		} catch (THOMASException e) {
+			
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
 

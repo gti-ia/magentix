@@ -26,8 +26,20 @@ public class RunTest {
 		AgentsConnection.connect();
 
 		try {
-			TesterAgentRegister testerAgent=new TesterAgentRegister(new AgentID("TesterAgent"));
-			testerAgent.start();
+//			TesterAgentRegister testerAgent=new TesterAgentRegister(new AgentID("TesterAgent"));
+//			testerAgent.start();
+			
+//			TesterAgentSearch testerAgentSearch=new TesterAgentSearch(new AgentID("TesterAgentSearch"));
+//			testerAgentSearch.start();
+			
+//			TesterAgentGetService testerAgentGetService= new TesterAgentGetService(new AgentID("TesterAgentGetService"));
+//			testerAgentGetService.start();
+			
+//			TesterAgentDeregister testerAgentDeregister = new TesterAgentDeregister(new AgentID("TesterAgentDeregister"));
+//			testerAgentDeregister.start();
+			
+			TesterAgentRemove testerAgentRemove = new TesterAgentRemove(new AgentID("TesterAgentRemove"));
+			testerAgentRemove.start();
 			
 		} catch (Exception e) {
 			logger.error("Error  " + e.getMessage());
