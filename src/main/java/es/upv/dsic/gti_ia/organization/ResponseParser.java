@@ -161,17 +161,9 @@ public class ResponseParser {
 						//the content is encapsulated in an XML comment <!-- -->
 						Node childN=resNode.getFirstChild();
 						specification=childN.getNodeValue().trim();
-
 					}
 					else if(resNode.getNodeType()==Node.ELEMENT_NODE){
-						String name=resNode.getNodeName();
-						String value=resNode.getNodeValue();
-						String text=resNode.getTextContent().trim();
 						elementsList.add(resNode.getTextContent().trim());
-						short type=resNode.getNodeType();
-						System.out.println("name&Value: "+name +" "+ value +" "+text+" "+type);
-						//						String element=resNode.getFirstChild().getNodeValue().trim();
-						//						elementsList.add(element);
 					}
 
 

@@ -50,6 +50,7 @@ public class THOMASProxy {
 	Hashtable<AgentID, String> agents = new Hashtable<AgentID, String>();
 	ArrayList<String> serviceTypeResult2;
 	ArrayList<ArrayList<String>> serviceTypeResult3;
+	String serviceTypeResult4;
 	ResponseParser responseParser = new ResponseParser();
 
 	
@@ -60,7 +61,7 @@ public class THOMASProxy {
 	private ArrayList<String> serviceType1 = new ArrayList<String>();//This type returns a String
 	private ArrayList<String> serviceType2 = new ArrayList<String>();//This type returns a Array of String
 	private ArrayList<String> serviceType3 = new ArrayList<String>();//This type returns a Array of Array of strings
-
+	private ArrayList<String> serviceType4 = new ArrayList<String>();//This type returns a String with specification
 
 
 
@@ -136,9 +137,10 @@ public class THOMASProxy {
 		serviceType1.add("DeregisterUnit");
 		serviceType1.add("DeallocateRole");
 		serviceType1.add("RemoveProvider");
-		serviceType1.add("GetService");
-		serviceType1.add("RegisterService");
 		serviceType1.add("DeregisterService");
+		
+		
+		
 		
 
 		serviceType2.add("InformRole");
@@ -150,7 +152,8 @@ public class THOMASProxy {
 		serviceType3.add("InformUnitRoles");
 		serviceType3.add("SearchService");
 
-
+		serviceType4.add("GetService");
+		serviceType4.add("RegisterService");//TODO como devolver Description y Specification??
 
 
 
@@ -311,6 +314,14 @@ public class THOMASProxy {
 				
 				result = serviceTypeResult3;
 
+			}
+			else if (serviceType4.contains(serviceName))
+			{
+				
+				serviceTypeResult4=responseParser.getSpecification();
+				
+				result = serviceTypeResult4;
+			
 			}
 
 		}
