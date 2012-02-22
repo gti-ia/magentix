@@ -4,15 +4,18 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.*;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Document;
-import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -25,8 +28,8 @@ public class ResponseParser {
 	String specification="";
 	ArrayList<ArrayList<String>> itemsList=new ArrayList<ArrayList<String>>();
 	ArrayList<String> elementsList=new ArrayList<String>();
-	
-	
+	HashMap<String,String> keyAndValueList=new HashMap<String,String>();
+
 	public String getServiceName() {
 		return serviceName;
 	}
@@ -38,7 +41,7 @@ public class ResponseParser {
 	public String getDescription() {
 		return description;
 	}
-	
+
 	public String getSpecification() {
 		return specification;
 	}
@@ -49,6 +52,10 @@ public class ResponseParser {
 
 	public ArrayList<String> getElementsList() {
 		return elementsList;
+	}
+
+	public HashMap<String,String> getKeyAndValueList() {
+		return keyAndValueList;
 	}
 
 	public String DOM2String(Document doc)
@@ -122,7 +129,7 @@ public class ResponseParser {
 
 		itemsList=new ArrayList<ArrayList<String>>();
 		elementsList=new ArrayList<String>();
-		
+		keyAndValueList=new HashMap<String,String>();
 		NodeList nodeList=doc.getChildNodes().item(0).getChildNodes();
 		for(int i=0;i<nodeList.getLength();i++){
 			Node n=nodeList.item(i);
@@ -154,7 +161,7 @@ public class ResponseParser {
 						//the content is encapsulated in an XML comment <!-- -->
 						Node childN=resNode.getFirstChild();
 						specification=childN.getNodeValue().trim();
-						
+
 					}
 					else if(resNode.getNodeType()==Node.ELEMENT_NODE){
 						String name=resNode.getNodeName();
@@ -163,19 +170,32 @@ public class ResponseParser {
 						elementsList.add(resNode.getTextContent().trim());
 						short type=resNode.getNodeType();
 						System.out.println("name&Value: "+name +" "+ value +" "+text+" "+type);
-//						String element=resNode.getFirstChild().getNodeValue().trim();
-//						elementsList.add(element);
+						//						String element=resNode.getFirstChild().getNodeValue().trim();
+						//						elementsList.add(element);
 					}
-					
 
+
+				}
+			}
+			else if (n.getNodeName().equalsIgnoreCase("inputs"))
+			{
+				NodeList resultNodeList=n.getChildNodes();
+				for(int j=0;j<resultNodeList.getLength();j++){
+					{
+						Node resNode=resultNodeList.item(j);
+
+						if(resNode.getNodeType()==Node.ELEMENT_NODE)
+						{
+
+							keyAndValueList.put(resNode.getNodeName().trim(), resNode.getTextContent().trim());
+						}
+
+					}
 				}
 			}
 
 		}
-		System.out.println("serviceName: "+serviceName);
-		System.out.println("status: "+status);
-		System.out.println("description: "+description);
-		System.out.println("specification: "+specification);
+
 
 	}
 
