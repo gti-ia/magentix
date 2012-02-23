@@ -3,6 +3,7 @@ package es.upv.dsic.gti_ia.organization;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import es.upv.dsic.gti_ia.cAgents.CProcessor;
 import es.upv.dsic.gti_ia.core.ACLMessage;
@@ -24,7 +25,7 @@ import es.upv.dsic.gti_ia.core.BaseAgent;
  */
 public class OMSProxy extends THOMASProxy{
 
-
+	ServiceTools st = new ServiceTools();
 
 
 	/**
@@ -234,8 +235,17 @@ public class OMSProxy extends THOMASProxy{
 	public String leaveRole(String RoleID,
 			String UnitID) throws THOMASException {
 	
-		call = ServiceDescriptionLocation + "LeaveRole.owl AgentID=" + agent.getAid().name.replace('~', '@')
-		+ " RoleID=" + RoleID + " UnitID=" + UnitID;
+//		call = ServiceDescriptionLocation + "LeaveRole.owl AgentID=" + agent.getAid().name.replace('~', '@')
+//		+ " RoleID=" + RoleID + " UnitID=" + UnitID;
+		
+		HashMap<String, String> inputs = new HashMap<String,String>();
+		
+		inputs.put("AgentID", agent.getAid().name.replace('~', '@'));
+		inputs.put("RoleID", RoleID);
+		inputs.put("UnitID", UnitID);
+		
+		call = st.buildServiceContent("LeaveRole", inputs);
+		
 		String result = new String();
 		result = (String) this.sendInform();
 		return result;
@@ -255,8 +265,16 @@ public class OMSProxy extends THOMASProxy{
 	public ArrayList<ArrayList<String>> informAgentRole(String RequestedAgentName) throws THOMASException
 	{
 		ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
-		call = ServiceDescriptionLocation
-		+ "InformAgentRole.owl RequestedAgentID=" + RequestedAgentName;
+//		call = ServiceDescriptionLocation
+//		+ "InformAgentRole.owl RequestedAgentID=" + RequestedAgentName;
+		
+		HashMap<String, String> inputs = new HashMap<String,String>();
+		
+		inputs.put("AgentID", agent.getAid().name.replace('~', '@'));
+		inputs.put("RequestedAgentID", RequestedAgentName);
+		
+		call = st.buildServiceContent("InformAgentRole", inputs);
+		
 		result = (ArrayList<ArrayList<String>>) this.sendInform();
 		return result;
 	}
@@ -285,6 +303,15 @@ public class OMSProxy extends THOMASProxy{
 		+ " UnitID=" + UnitID
 		+ " PositionValue="+PositionValue;
 		
+		HashMap<String, String> inputs = new HashMap<String,String>();
+		
+		inputs.put("AgentID", agent.getAid().name.replace('~', '@'));
+		inputs.put("RoleID", RoleID);
+		inputs.put("UnitID", UnitID);
+		inputs.put("PositionValue", PositionValue);
+		
+		call = st.buildServiceContent("InformMembers", inputs);
+		
 		return (ArrayList<ArrayList<String>>) this.sendInform();
 
 	}
@@ -306,6 +333,15 @@ public class OMSProxy extends THOMASProxy{
 		call = ServiceDescriptionLocation + "InformRole.owl " 
 		+"UnitName="+ UnitName
 		+ " RoleName="+RoleName;
+		
+		HashMap<String, String> inputs = new HashMap<String,String>();
+		
+		inputs.put("AgentID", agent.getAid().name.replace('~', '@'));
+		inputs.put("UnitName", UnitName);
+		inputs.put("RoleName", RoleName);
+		
+		call = st.buildServiceContent("InformRole", inputs);
+		
 		result = (ArrayList<String>) this.sendInform();
 		return result;
 
@@ -324,6 +360,15 @@ public class OMSProxy extends THOMASProxy{
 	public ArrayList<String>  informUnit(String UnitID) throws THOMASException
 	{
 		call = ServiceDescriptionLocation + "InformUnit.owl UnitID=" + UnitID;
+		
+		HashMap<String, String> inputs = new HashMap<String,String>();
+		
+		inputs.put("AgentID", agent.getAid().name.replace('~', '@'));
+		inputs.put("UnitID", UnitID);
+		
+		
+		call = st.buildServiceContent("InformUnit", inputs);
+		
 		return (ArrayList<String>) this.sendInform();
 
 
@@ -344,6 +389,15 @@ public class OMSProxy extends THOMASProxy{
 	{
 		call = ServiceDescriptionLocation + "InformUnitRoles.owl UnitID="
 		+ UnitID;
+		
+		HashMap<String, String> inputs = new HashMap<String,String>();
+		
+		inputs.put("AgentID", agent.getAid().name.replace('~', '@'));
+		inputs.put("UnitID", UnitID);
+		
+		
+		call = st.buildServiceContent("InformUnitRoles", inputs);
+		
 		return (ArrayList<ArrayList<String>>) this.sendInform();
 
 	}
@@ -368,6 +422,17 @@ public class OMSProxy extends THOMASProxy{
 		
 		call = ServiceDescriptionLocation + "QuantityMembers.owl RoleID="
 		+ RoleID + " UnitID=" + UnitID + " PositionValue="+ PositionValue;
+		
+		HashMap<String, String> inputs = new HashMap<String,String>();
+		
+		inputs.put("AgentID", agent.getAid().name.replace('~', '@'));
+		inputs.put("RoleID", RoleID);
+		inputs.put("UnitID", UnitID);
+		inputs.put("PositionValue", PositionValue);
+		
+		
+		call = st.buildServiceContent("QuantityMembers", inputs);
+		
 		ArrayList<String> a = (ArrayList<String>) this.sendInform();
 		
 		return Integer.parseInt(a.get(0));
@@ -407,6 +472,18 @@ public class OMSProxy extends THOMASProxy{
 		+ RoleID + " UnitID=" + UnitID + " Accessibility="
 		+ Accessibility + " Position=" + Position + " Visibility="
 		+ Visibility;
+		
+		HashMap<String, String> inputs = new HashMap<String,String>();
+		
+		inputs.put("AgentID", agent.getAid().name.replace('~', '@'));
+		inputs.put("RoleID", RoleID);
+		inputs.put("UnitID", UnitID);
+		inputs.put("Accessibility", Accessibility);
+		inputs.put("Position", Position);
+		inputs.put("Visibility", Visibility);
+		
+		call = st.buildServiceContent("RegisterRole", inputs);
+		
 		return (String) this.sendInform();
 
 
@@ -438,12 +515,40 @@ public class OMSProxy extends THOMASProxy{
 			{
 		
 		if (ParentUnitID == null)
+		{
 			call = ServiceDescriptionLocation + "RegisterUnit.owl  UnitID="
 			+ UnitID + " Type=" + Type + " CreatorName=" + CreatorName + " ParentUnitID=";
+			
+			HashMap<String, String> inputs = new HashMap<String,String>();
+			
+			inputs.put("AgentID", agent.getAid().name.replace('~', '@'));
+			
+			inputs.put("UnitID", UnitID);
+			inputs.put("Type", Type);
+			inputs.put("CreatorName", CreatorName);
+			
+			
+			call = st.buildServiceContent("RegisterUnit", inputs);
+			
+		}
 		else
+		{
 			call = ServiceDescriptionLocation + "RegisterUnit.owl  UnitID="
 			+ UnitID + " Type=" + Type + " CreatorName=" + CreatorName + " ParentUnitID="
 			+ ParentUnitID;
+			
+			HashMap<String, String> inputs = new HashMap<String,String>();
+			
+			inputs.put("AgentID", agent.getAid().name.replace('~', '@'));
+			inputs.put("UnitID", UnitID);
+			inputs.put("Type", Type);
+			inputs.put("CreatorName", CreatorName);
+			inputs.put("ParentUnitID", ParentUnitID);
+			
+			
+			call = st.buildServiceContent("RegisterUnit", inputs);
+			
+		}
 
 		return 	(String) this.sendInform();
 
@@ -463,6 +568,15 @@ public class OMSProxy extends THOMASProxy{
 	
 		call = ServiceDescriptionLocation + "JointUnit.owl  UnitName="
 		+ UnitName + " ParentName=" + ParentName;
+		
+		HashMap<String, String> inputs = new HashMap<String,String>();
+		
+		inputs.put("AgentID", agent.getAid().name.replace('~', '@'));
+		inputs.put("UnitName", UnitName);
+		inputs.put("ParentName", ParentName);
+		
+		call = st.buildServiceContent("JointUnit", inputs);
+		
 		return 	(String) this.sendInform();
 
 
@@ -484,6 +598,15 @@ public class OMSProxy extends THOMASProxy{
 		
 		call = ServiceDescriptionLocation + "DeregisterRole.owl  RoleID="
 		+ RoleID + " UnitID=" + UnitID;
+		
+		HashMap<String, String> inputs = new HashMap<String,String>();
+		
+		inputs.put("AgentID", agent.getAid().name.replace('~', '@'));
+		inputs.put("RoleID", RoleID);
+		inputs.put("UnitID", UnitID);
+		
+		call = st.buildServiceContent("DeregisterRole", inputs);
+		
 		return	(String) this.sendInform();
 
 
@@ -503,6 +626,15 @@ public class OMSProxy extends THOMASProxy{
 	
 		call = ServiceDescriptionLocation + "DeregisterUnit.owl  UnitID="
 		+ UnitID;
+		
+		HashMap<String, String> inputs = new HashMap<String,String>();
+		
+		inputs.put("AgentID", agent.getAid().name.replace('~', '@'));
+		inputs.put("UnitID", UnitID);
+		
+		call = st.buildServiceContent("DeregisterUnit", inputs);
+		
+		
 		return (String) this.sendInform();
 
 
@@ -527,6 +659,16 @@ public class OMSProxy extends THOMASProxy{
 		
 		call = ServiceDescriptionLocation + "DeallocateRole.owl TargetAgentName=" + TargetAgentName
 		+ " RoleName=" + RoleName + " UnitName=" + UnitName;
+		
+		HashMap<String, String> inputs = new HashMap<String,String>();
+		
+		inputs.put("AgentID", agent.getAid().name.replace('~', '@'));
+		inputs.put("TargetAgentName", TargetAgentName);
+		inputs.put("RoleName", RoleName);
+		inputs.put("UnitName", UnitName);
+		
+		call = st.buildServiceContent("DeallocateRole", inputs);
+		
 		return (String) this.sendInform();
 
 
@@ -552,7 +694,15 @@ public class OMSProxy extends THOMASProxy{
 		call = ServiceDescriptionLocation + "AllocateRole.owl RoleName=" + RoleName
 		+ " UnitName=" + UnitName + " TargetAgentName="+ TargetAgentName;
 
-
+		HashMap<String, String> inputs = new HashMap<String,String>();
+		
+		inputs.put("AgentID", agent.getAid().name.replace('~', '@'));
+		inputs.put("RoleName", RoleName);
+		inputs.put("UnitName", UnitName);
+		inputs.put("TargetAgentName", TargetAgentName);
+		
+		call = st.buildServiceContent("AllocateRole", inputs);
+		
 		return (String) this.sendInform();
 
 
@@ -574,6 +724,15 @@ public class OMSProxy extends THOMASProxy{
 		call = ServiceDescriptionLocation + "AcquireRole.owl RoleID=" + RoleID
 		+ " UnitID=" + UnitID;
 
+		HashMap<String, String> inputs = new HashMap<String,String>();
+		
+		inputs.put("AgentID", agent.getAid().name.replace('~', '@'));
+		inputs.put("RoleID", RoleID);
+		inputs.put("UnitID", UnitID);
+		
+		
+		call = st.buildServiceContent("AcquireRole", inputs);
+		
 		return (String) this.sendInform();
 	}
 
