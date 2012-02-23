@@ -51,6 +51,7 @@ public class THOMASProxy {
 	ArrayList<String> serviceTypeResult2;
 	ArrayList<ArrayList<String>> serviceTypeResult3;
 	String serviceTypeResult4;
+	ArrayList<String> serviceTypeResult5;
 	ResponseParser responseParser = new ResponseParser();
 
 	
@@ -62,7 +63,7 @@ public class THOMASProxy {
 	private ArrayList<String> serviceType2 = new ArrayList<String>();//This type returns a Array of String
 	private ArrayList<String> serviceType3 = new ArrayList<String>();//This type returns a Array of Array of strings
 	private ArrayList<String> serviceType4 = new ArrayList<String>();//This type returns a String with specification
-
+	private ArrayList<String> serviceType5 = new ArrayList<String>();//This type returns a Array of String with description and specification
 
 
 
@@ -147,15 +148,16 @@ public class THOMASProxy {
 		serviceType2.add("InformUnit");
 		serviceType2.add("QuantityMembers");
 		
+		
 		serviceType3.add("InformAgentRole");
 		serviceType3.add("InformMembers");
 		serviceType3.add("InformUnitRoles");
 		serviceType3.add("SearchService");
 
 		serviceType4.add("GetService");
-		serviceType4.add("RegisterService");//TODO como devolver Description y Specification??
+		//TODO como devolver Description y Specification??
 
-
+		serviceType5.add("RegisterService");
 
 
 
@@ -322,6 +324,14 @@ public class THOMASProxy {
 				
 				result = serviceTypeResult4;
 			
+			}
+			else if (serviceType5.contains(serviceName))
+			{
+				serviceTypeResult5=new ArrayList<String>();
+				serviceTypeResult5.add(responseParser.getDescription());
+				serviceTypeResult5.add(responseParser.getSpecification());
+				
+				result = serviceTypeResult5;
 			}
 
 		}

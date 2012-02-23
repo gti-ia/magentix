@@ -163,14 +163,14 @@ public class SFProxy extends THOMASProxy {
 		return (String) this.sendInform();
 	}
 	
-	public String registerService(String serviceURL) throws THOMASException
+	public ArrayList<String> registerService(String serviceURL) throws THOMASException
 	{
 		serviceName=sfServicesURLs.get("RegisterService");
 		
 		call=serviceName+separatorToken+
 		"ServiceURL="+serviceURL;
 		
-		return (String) this.sendInform();
+		return (ArrayList<String>) this.sendInform();
 	}
 
 	
