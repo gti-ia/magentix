@@ -1,5 +1,7 @@
 package sfTest;
 
+import java.util.ArrayList;
+
 import es.upv.dsic.gti_ia.architecture.QueueAgent;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.organization.SFProxy;
@@ -18,12 +20,12 @@ public class TesterAgentRegister extends QueueAgent{
 	protected void execute() {
 
 
-//		String res1=incorrectParamTest1();
-//		System.out.println("incorrectParamTest1:\n"+res1);
+		String res1=incorrectParamTest1();
+		System.out.println("incorrectParamTest1:\n"+res1);
 
 
-//		String res2=incorrectParamTest2();
-//		System.out.println("incorrectParamTest2:\n"+res2);
+		String res2=incorrectParamTest2();
+		System.out.println("incorrectParamTest2:\n"+res2);
 
 		String res3=incorrectParamTest3();
 		System.out.println("incorrectParamTest3:\n"+res3);
@@ -74,7 +76,7 @@ public class TesterAgentRegister extends QueueAgent{
 	 * @return
 	 * @throws THOMASException 
 	 */
-	String incorrectParamTest1(){
+	ArrayList<String> incorrectParamTest1(){
 
 		try
 		{
@@ -92,7 +94,7 @@ public class TesterAgentRegister extends QueueAgent{
 	 * @return
 	 * @throws THOMASException 
 	 */
-	String incorrectParamTest2(){
+	ArrayList<String> incorrectParamTest2(){
 		try
 		{
 			//TODO mirar previamente si la URL contiene un XML
@@ -109,7 +111,7 @@ public class TesterAgentRegister extends QueueAgent{
 	 * @return
 	 * @throws THOMASException 
 	 */
-	String incorrectParamTest3(){
+	ArrayList<String> incorrectParamTest3(){
 		try
 		{
 			return sfProxy.registerService("http://localhost/services/1.1/nonExistingService.owl");
@@ -125,7 +127,7 @@ public class TesterAgentRegister extends QueueAgent{
 	 * @return
 	 * @throws THOMASException 
 	 */
-	String appropiateParamsTest1(){
+	ArrayList<String> appropiateParamsTest1(){
 		try
 		{
 			return sfProxy.registerService("http://localhost:8080/testSFservices/testSFservices/owl/owls/SumArray.owl");
@@ -142,7 +144,7 @@ public class TesterAgentRegister extends QueueAgent{
 	 * @return
 	 * @throws THOMASException 
 	 */
-	String appropiateParamsTest2(){
+	ArrayList<String> appropiateParamsTest2(){
 		try
 		{
 			return sfProxy.registerService("http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl");
@@ -159,7 +161,7 @@ public class TesterAgentRegister extends QueueAgent{
 	 * @return
 	 * @throws THOMASException 
 	 */
-	String appropiateParamsTest3(){
+	ArrayList<String> appropiateParamsTest3(){
 		try
 		{
 			return sfProxy.registerService("http://localhost:8080/testSFservices/testSFservices/owl/owls/Addition.owl");
@@ -176,7 +178,7 @@ public class TesterAgentRegister extends QueueAgent{
 	 * @return
 	 * @throws THOMASException 
 	 */
-	String appropiateParamsTest4(){
+	ArrayList<String> appropiateParamsTest4(){
 		try
 		{
 			return sfProxy.registerService("http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl");
@@ -193,7 +195,7 @@ public class TesterAgentRegister extends QueueAgent{
 	 * @return
 	 * @throws THOMASException 
 	 */
-	String appropiateParamsTest5(){
+	ArrayList<String> appropiateParamsTest5(){
 		try
 		{
 			return sfProxy.registerService("http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl");
@@ -210,7 +212,7 @@ public class TesterAgentRegister extends QueueAgent{
 	 * @return
 	 * @throws THOMASException 
 	 */
-	String appropiateParamsTest6(){
+	ArrayList<String> appropiateParamsTest6(){
 		try
 		{
 			return sfProxy.registerService("http://localhost:8080/testSFservices/testSFservices/owl/owls/Even.owl");
@@ -227,7 +229,7 @@ public class TesterAgentRegister extends QueueAgent{
 	 * @return
 	 * @throws THOMASException 
 	 */
-	String appropiateParamsTest7(){
+	ArrayList<String> appropiateParamsTest7(){
 		try
 		{
 			return sfProxy.registerService("http://localhost:8080/testSFservices/testSFservices/owl/owls/Sign.owl");
@@ -245,7 +247,7 @@ public class TesterAgentRegister extends QueueAgent{
 	 * @return
 	 * @throws THOMASException 
 	 */
-	String appropiateParamsTest8(){
+	ArrayList<String> appropiateParamsTest8(){
 		try
 		{
 
@@ -268,7 +270,7 @@ public class TesterAgentRegister extends QueueAgent{
 	 * @return
 	 * @throws THOMASException 
 	 */
-	String appropiateParamsTest9(){
+	ArrayList<String> appropiateParamsTest9(){
 		try
 		{
 			return sfProxy.registerService("http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl");
@@ -285,7 +287,7 @@ public class TesterAgentRegister extends QueueAgent{
 	 * @return
 	 * @throws THOMASException 
 	 */
-	String appropiateParamsTest10(){
+	ArrayList<String> appropiateParamsTest10(){
 		try
 		{
 			return sfProxy.registerService("http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl");
@@ -303,7 +305,7 @@ public class TesterAgentRegister extends QueueAgent{
 	 * @return
 	 * @throws THOMASException 
 	 */
-	String appropiateParamsTest11(){
+	ArrayList<String> appropiateParamsTest11(){
 		try
 		{
 			return sfProxy.registerService("http://localhost:8080/testSFservices/testSFservices/owl/owls/Division2.owl");
@@ -321,7 +323,7 @@ public class TesterAgentRegister extends QueueAgent{
 	 * @return
 	 * @throws THOMASException 
 	 */
-	String appropiateParamsTest12(){
+	ArrayList<String> appropiateParamsTest12(){
 		try
 		{
 			return sfProxy.registerService("http://localhost:8080/testSFservices/testSFservices/owl/owls/Division3.owl");
