@@ -1,7 +1,5 @@
 package es.upv.dsic.gti_ia.organization;
 
-
-
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -9,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -59,6 +58,10 @@ public class Oracle {
 	private ArrayList<String> outputProcess = new ArrayList<String>();
 
 	private ArrayList<String> wsdlInputParams = new ArrayList<String>();
+	private ArrayList<String> wsdlOutputParams = new ArrayList<String>();
+	
+	private HashMap<String,String> wsdlInputParamsAndTypes = new HashMap<String,String>();
+	private HashMap<String,String> wsdlOutputParamsAndTypes = new HashMap<String,String>();
 
 	private Map<String, String> elements = new LinkedHashMap<String, String>();
 
@@ -188,7 +191,7 @@ public class Oracle {
 	public ArrayList<String> getOutputs() {
 		return outputs;
 	}
-	
+
 	/**
 	 * Returns the list of providers of the service
 	 * 
@@ -198,7 +201,6 @@ public class Oracle {
 		return providers;
 	}
 
-	
 	/**
 	 * Returns the list of wsdl grounding providers of the service
 	 * 
@@ -207,7 +209,7 @@ public class Oracle {
 	public ArrayList<String> getProvidersGroundingWSDL() {
 		return providersGroundingWSDL;
 	}
-	
+
 	/**
 	 * Returns the list of roles available to provide the service
 	 * 
@@ -291,6 +293,20 @@ public class Oracle {
 	public ArrayList<String> getWSDLInputs() {
 		return wsdlInputParams;
 	}
+	
+	public ArrayList<String> getWSDLOutputs() {
+		return wsdlOutputParams;
+	}
+	
+	
+	public HashMap<String,String> getWsdlInputParamsAndTypes(){
+		return wsdlInputParamsAndTypes;
+	}
+	
+	public HashMap<String,String> getWsdlOutputParamsAndTypes(){
+		return wsdlOutputParamsAndTypes;
+	}
+	
 	/**
 	 * Method to parses an OWL-S file
 	 * 
@@ -339,10 +355,14 @@ public class Oracle {
 	public Oracle(String s) {
 		try {
 			doc = string2DOM(s);
+			// doc.normalizeDocument();
 
-			visit(doc, 0);
-			
-			visitNodeProcess(doc, 0);//TODO added to parse wsdl part of owl-s specification
+			// System.out.println("***************String:\n" + s);
+			// System.out.println("***************DOC:\n" + xmlToString(doc));
+			// visit(doc, 0);
+
+			visitNodeProcess(doc, 0);// TODO added to parse wsdl part of owl-s
+			// specification
 
 			// Change flags
 			// behaviour = true;
@@ -353,36 +373,56 @@ public class Oracle {
 		}
 	}
 
+	// public static String xmlToString(Node node) {
+	// try {
+	// Source source = new DOMSource(node);
+	// StringWriter stringWriter = new StringWriter();
+	// Result result = new StreamResult(stringWriter);
+	// TransformerFactory factory = TransformerFactory.newInstance();
+	// Transformer transformer = factory.newTransformer();
+	// transformer.transform(source, result);
+	// return stringWriter.getBuffer().toString();
+	// } catch (TransformerConfigurationException e) {
+	// e.printStackTrace();
+	// } catch (TransformerException e) {
+	// e.printStackTrace();
+	// }
+	// return null;
+	// }
+
 	public Oracle() {
 
 	}
 
-	private Document string2DOM(String s)
-	{
-		int coderror=0;
-		String msgerror="";
+	private Document string2DOM(String s) {
+		int coderror = 0;
+		String msgerror = "";
 
-		Document tmpX=null;
+		Document tmpX = null;
 		DocumentBuilder builder = null;
-		try{
+		try {
 			builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-		}catch(javax.xml.parsers.ParserConfigurationException error){
-			coderror=10;
-			msgerror="Error crando factory String2DOM "+error.getMessage();
+		} catch (javax.xml.parsers.ParserConfigurationException error) {
+			coderror = 10;
+			msgerror = "Error crando factory String2DOM " + error.getMessage();
 			return null;
 		}
-		try{
-			tmpX=builder.parse(new ByteArrayInputStream(s.getBytes()));
-		}catch(org.xml.sax.SAXException error){
-			coderror=10;
-			msgerror="Error parseo SAX String2DOM "+error.getMessage();
+		try {
+			tmpX = builder.parse(new ByteArrayInputStream(s.getBytes()));
+		} catch (org.xml.sax.SAXException error) {
+			coderror = 10;
+			msgerror = "Error parseo SAX String2DOM " + error.getMessage();
 			return null;
-		}catch(IOException error){
-			coderror=10;
-			msgerror="Error generando Bytes String2DOM "+error.getMessage();
+		} catch (IOException error) {
+			coderror = 10;
+			msgerror = "Error generando Bytes String2DOM " + error.getMessage();
 			return null;
 		}
 		return tmpX;
+	}
+	
+	public void parseWSDL(String wsdlURL){
+		visitWSDL(wsdlURL);
 	}
 
 	public void setURLProcess(String _URLProcess) {
@@ -418,8 +458,7 @@ public class Oracle {
 		GetMethod method = new GetMethod(url);
 
 		// Provide custom retry handler is necessary
-		method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER,
-				new DefaultHttpMethodRetryHandler(3, false));
+		method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new DefaultHttpMethodRetryHandler(3, false));
 
 		try {
 			// Execute the method.
@@ -430,9 +469,9 @@ public class Oracle {
 			}
 
 			// Read the response body.
-			//	    byte[] responseBody = method.getResponseBody();
+			// byte[] responseBody = method.getResponseBody();
 
-			//	    InputStream is = new ByteArrayInputStream(responseBody);
+			// InputStream is = new ByteArrayInputStream(responseBody);
 
 			InputStream is = method.getResponseBodyAsStream();
 
@@ -442,17 +481,15 @@ public class Oracle {
 			while (reader.getEventType() != XMLStreamConstants.END_DOCUMENT) {
 				switch (reader.next()) {
 				case XMLStreamConstants.START_ELEMENT:
-					//System.out.println("LocalName: "+reader.getLocalName()+" prefix: "+ reader.getPrefix() + " text: ");
+					// System.out.println("LocalName: "+reader.getLocalName()+" prefix: "+
+					// reader.getPrefix() + " text: ");
 
 					if (reader.getLocalName().equals("hasInput") && reader.getPrefix().equals("process")) {
-						inputProcess.add(reader.getAttributeValue(0).substring(
-								reader.getAttributeValue(0).indexOf("#") + 1));
+						inputProcess.add(reader.getAttributeValue(0).substring(reader.getAttributeValue(0).indexOf("#") + 1));
 					} else if (reader.getLocalName().equals("hasOutput") && reader.getPrefix().equals("process")) {
-						outputProcess.add(reader.getAttributeValue(0).substring(
-								reader.getAttributeValue(0).indexOf("#") + 1));
+						outputProcess.add(reader.getAttributeValue(0).substring(reader.getAttributeValue(0).indexOf("#") + 1));
 					} else if (reader.getLocalName().equals("owlsProcess")) {
-						processLocalName = reader.getAttributeValue(0).substring(
-								reader.getAttributeValue(0).indexOf("#") + 1);
+						processLocalName = reader.getAttributeValue(0).substring(reader.getAttributeValue(0).indexOf("#") + 1);
 					}
 					break;
 
@@ -460,16 +497,16 @@ public class Oracle {
 			}
 
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		} catch (XMLStreamException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		} catch (HttpException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 
@@ -487,8 +524,7 @@ public class Oracle {
 		GetMethod method = new GetMethod(url);
 
 		// Provide custom retry handler is necessary
-		method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER,
-				new DefaultHttpMethodRetryHandler(3, false));
+		method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new DefaultHttpMethodRetryHandler(3, false));
 
 		try {
 			// Execute the method.
@@ -499,11 +535,11 @@ public class Oracle {
 			}
 
 			// Read the response body.
-			//	    byte[] responseBody = method.getResponseBody();
+			// byte[] responseBody = method.getResponseBody();
 
-			//	    InputStream is = new ByteArrayInputStream(responseBody);
+			// InputStream is = new ByteArrayInputStream(responseBody);
 
-			InputStream is =  method.getResponseBodyAsStream();
+			InputStream is = method.getResponseBodyAsStream();
 
 			XMLInputFactory factory = XMLInputFactory.newInstance();
 			XMLStreamReader reader = factory.createXMLStreamReader(is);
@@ -526,20 +562,17 @@ public class Oracle {
 					if (reader.getLocalName().equals(element) & element.equals("part")) {
 
 						if (first_input) {
-							input_message_WSDL = reader.getAttributeValue(1).substring(
-									reader.getAttributeValue(1).indexOf(":") + 1);
+							input_message_WSDL = reader.getAttributeValue(1).substring(reader.getAttributeValue(1).indexOf(":") + 1);
 							first_input = false;
 						} else {
 
-							output_message_WSDL = reader.getAttributeValue(1).substring(
-									reader.getAttributeValue(1).indexOf(":") + 1);
+							output_message_WSDL = reader.getAttributeValue(1).substring(reader.getAttributeValue(1).indexOf(":") + 1);
 							first_input = true;
 						}
 					} else if (reader.getLocalName().equals(element) & element.equals("input")) {
 
 						if (first) {
-							input_Name_WSDL = reader.getAttributeValue(0).substring(
-									reader.getAttributeValue(0).indexOf(":") + 1);
+							input_Name_WSDL = reader.getAttributeValue(0).substring(reader.getAttributeValue(0).indexOf(":") + 1);
 							first = false;
 						}
 					}
@@ -547,8 +580,7 @@ public class Oracle {
 					else if (reader.getLocalName().equals(element) & element.equals("output")) {
 
 						if (first) {
-							output_Name_WSDL = reader.getAttributeValue(0).substring(
-									reader.getAttributeValue(0).indexOf(":") + 1);
+							output_Name_WSDL = reader.getAttributeValue(0).substring(reader.getAttributeValue(0).indexOf(":") + 1);
 							first = false;
 						}
 					}
@@ -559,16 +591,16 @@ public class Oracle {
 			}
 
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		} catch (XMLStreamException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		} catch (HttpException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 	}
@@ -584,8 +616,7 @@ public class Oracle {
 		GetMethod method = new GetMethod(url);
 
 		// Provide custom retry handler is necessary
-		method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER,
-				new DefaultHttpMethodRetryHandler(3, false));
+		method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new DefaultHttpMethodRetryHandler(3, false));
 
 		try {
 			// Execute the method.
@@ -596,46 +627,62 @@ public class Oracle {
 			}
 
 			// Read the response body.
-			//	    byte[] responseBody = method.getResponseBody();
+			// byte[] responseBody = method.getResponseBody();
 
-			//	    InputStream is = new ByteArrayInputStream(responseBody);
+			// InputStream is = new ByteArrayInputStream(responseBody);
 
 			InputStream is = method.getResponseBodyAsStream();
 
 			XMLInputFactory factory = XMLInputFactory.newInstance();
 			XMLStreamReader reader = factory.createXMLStreamReader(is);
 
-			ArrayList<String> parameters=new ArrayList<String>();
+			ArrayList<String> parameters = new ArrayList<String>();
+			int inputsRead=0;
 
 			while (reader.getEventType() != XMLStreamConstants.END_DOCUMENT) {
 				switch (reader.next()) {
 				case XMLStreamConstants.START_ELEMENT:
-					//					System.out.println(reader.getPrefix()+" "+reader.getLocalName());
+					// System.out.println(reader.getPrefix()+" "+reader.getLocalName());
 					if (reader.getLocalName().equals("service")) {
 						// Sacamos el name="...
 						// System.out.println("Type: " +
 						// reader.getAttributeLocalName(0));
 						qnameService = reader.getAttributeLocalName(0);
-					} 
-					else if (reader.getLocalName().equals("portType")) {
+					} else if (reader.getLocalName().equals("portType")) {
 						qnamePort = reader.getAttributeValue(0);
-					} 
-					else if (reader.getLocalName().equals("operation")
-							& reader.getPrefix().equals("wsdl")) {
+					} else if (reader.getLocalName().equals("operation") & reader.getPrefix().equals("wsdl")) {
 						operation = reader.getAttributeValue(0);
-					}
-					else if (reader.getLocalName().equals("element")) {
-						if(reader.getPrefix().equals("xsd")){
+					} else if (reader.getLocalName().equals("element")) {
+						if (reader.getPrefix().equals("xsd")) {
+							if(reader.getAttributeValue(0).equalsIgnoreCase(serviceName))
 							parameters.add(reader.getAttributeValue(0));
-							//				    		System.out.println("XXX "+reader.getAttributeValue(0));
+							
+							if(reader.getAttributeCount()>1){
+								
+								String inOut=reader.getAttributeValue(0);
+								String type=reader.getAttributeValue(1).substring(reader.getAttributeValue(1).indexOf(":")+1);
+								if(inputsRead<=1){
+									wsdlInputParams.add(inOut);
+									inputTypes.add(type);
+									wsdlInputParamsAndTypes.put(inOut, type);
+								}
+								else{
+									wsdlOutputParams.add(inOut);
+									outputTypes.add(type);
+									wsdlOutputParamsAndTypes.put(inOut, type);
+								}
+							}
+							else{
+								inputsRead++;
+							}
+							// System.out.println("XXX "+reader.getAttributeValue(0));
 						}
 						// Deja de leer
 						if (reader.getAttributeValue(0).equals(output_message_WSDL))
 							open = false;
 						// if (reader.getPrefix())
 						if (reader.getAttributeCount() == 2 & open) {
-							elements.put(reader.getAttributeValue(0), reader.getAttributeValue(1)
-									.substring(reader.getAttributeValue(1).indexOf(":") + 1));
+							elements.put(reader.getAttributeValue(0), reader.getAttributeValue(1).substring(reader.getAttributeValue(1).indexOf(":") + 1));
 						}
 						// elements.add(reader.getAttributeValue(0));
 					}
@@ -645,27 +692,31 @@ public class Oracle {
 				}
 			}
 
-			String serviceName=parameters.remove(0);
-			Iterator<String> iterParams=parameters.iterator();
-			while(iterParams.hasNext()){
-				String param=iterParams.next();
-				if(param.contains(serviceName))
-					break;
-				wsdlInputParams.add(param);
-				//System.out.println("param: "+param);
-			}
+//			String serviceName = parameters.remove(0);
+//			Iterator<String> iterParams = parameters.iterator();
+//			while (iterParams.hasNext()) {
+//				String param = iterParams.next();
+//				if (param.contains(serviceName))
+//					break;
+//				wsdlInputParams.add(param);
+//				// System.out.println("param: "+param);
+//			}
+//			while(iterParams.hasNext()){
+//				String outputParam=iterParams.next();
+//				wsdlOut //TODO 
+//			}
 
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		} catch (XMLStreamException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		} catch (HttpException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 	}
@@ -690,8 +741,7 @@ public class Oracle {
 					for (int k = 0; k < n1.getLength(); k++) {
 						if (n1.item(k).getNodeName().equalsIgnoreCase("process:parameterType")) {
 
-							String type = n1.item(k).getTextContent()
-									.substring(n1.item(k).getTextContent().indexOf("#") + 1);
+							String type = n1.item(k).getTextContent().substring(n1.item(k).getTextContent().indexOf("#") + 1);
 							inputTypes.add(type);
 						}
 
@@ -704,8 +754,7 @@ public class Oracle {
 					for (int k = 0; k < n1.getLength(); k++) {
 						if (n1.item(k).getNodeName().equalsIgnoreCase("process:parameterType")) {
 
-							String type = n1.item(k).getTextContent()
-									.substring(n1.item(k).getTextContent().indexOf("#") + 1);
+							String type = n1.item(k).getTextContent().substring(n1.item(k).getTextContent().indexOf("#") + 1);
 							outputTypes.add(type);
 						}
 
@@ -713,19 +762,17 @@ public class Oracle {
 
 				}
 
-				else if (n.item(j).getNodeName()
-						.equalsIgnoreCase("grounding:WsdlAtomicProcessGrounding")) {
+				else if (n.item(j).getNodeName().equalsIgnoreCase("grounding:WsdlAtomicProcessGrounding")) {
 					NodeList n1 = n.item(j).getChildNodes();
 
 					for (int k = 0; k < n1.getLength(); k++) {
 						if (n1.item(k).getNodeName().equalsIgnoreCase("grounding:wsdlDocument")) {
 
-							wsdl = n1.item(k).getTextContent()
-									.substring(0, n1.item(k).getTextContent().indexOf("?"));
-							if(providersGroundingWSDL==null)
-								providersGroundingWSDL=new ArrayList<String>();
+							wsdl = n1.item(k).getTextContent().substring(0, n1.item(k).getTextContent().indexOf("?"));
+							if (providersGroundingWSDL == null)
+								providersGroundingWSDL = new ArrayList<String>();
 							providersGroundingWSDL.add(wsdl);
-							System.out.println("****************** "+wsdl);
+							System.out.println("****************** " + wsdl);
 
 						}
 
@@ -799,46 +846,44 @@ public class Oracle {
 			// It is an provider
 			else if (childNode.getNodeName().equalsIgnoreCase("profile:contactInformation")) {
 
-				if(childNode.hasChildNodes()){
-					NodeList childs=childNode.getChildNodes();
-					for(int prov=0;prov<childs.getLength();prov++){
-						Node provNode=childs.item(prov);
-						NodeList provChilds=provNode.getChildNodes();
-						Provider provider=new Provider();
-						for(int provChild=0;provChild<provChilds.getLength();provChild++){
-							Node provParamNode=provChilds.item(provChild);
-							if(provParamNode.getNodeName().equalsIgnoreCase("provider:entityID")){
-								String entityID=provParamNode.getTextContent();
-								provider.setEntityID(entityID);
-								
+				if (childNode.hasChildNodes()) {
+					NodeList childs = childNode.getChildNodes();
+					for (int prov = 0; prov < childs.getLength(); prov++) {
+						Node provNode = childs.item(prov);
+						if (provNode.hasAttributes()) {
+
+							NodeList provChilds = provNode.getChildNodes();
+							Provider provider = new Provider();
+							for (int provChild = 0; provChild < provChilds.getLength(); provChild++) {
+								Node provParamNode = provChilds.item(provChild);
+								if (provParamNode.getNodeName().equalsIgnoreCase("provider:entityID")) {
+									String entityID = provParamNode.getTextContent();
+									provider.setEntityID(entityID);
+
+								} else if (provParamNode.getNodeName().equalsIgnoreCase("provider:entityType")) {
+									String entityType = provParamNode.getTextContent();
+									provider.setEntityType(entityType);
+
+								} else if (provParamNode.getNodeName().equalsIgnoreCase("provider:language")) {
+									String language = provParamNode.getTextContent();
+									provider.setLanguage(language);
+
+								} else if (provParamNode.getNodeName().equalsIgnoreCase("provider:performative")) {
+									String performative = provParamNode.getTextContent();
+									provider.setPerformative(performative);
+
+								}
 							}
-							else if(provParamNode.getNodeName().equalsIgnoreCase("provider:entityType")){
-								String entityType=provParamNode.getTextContent();
-								provider.setEntityType(entityType);
-								
-							}
-							else if(provParamNode.getNodeName().equalsIgnoreCase("provider:language")){
-								String language=provParamNode.getTextContent();
-								provider.setLanguage(language);
-								
-							}
-							else if(provParamNode.getNodeName().equalsIgnoreCase("provider:performative")){
-								String performative=provParamNode.getTextContent();
-								provider.setPerformative(performative);
-								
-							}
+							if (providers == null)
+								providers = new ArrayList<Provider>();
+							providers.add(provider);
 						}
-						if(providers==null)
-							providers=new ArrayList<Provider>();
-						providers.add(provider);
 					}
 				}
 			}
 
 			// It is a role of provider list
-			else if (childNode.getNodeName().equalsIgnoreCase("role:role_list")
-					&& childNode.getAttributes().item(0).getNodeValue()
-					.equalsIgnoreCase("provider_list")) {
+			else if (childNode.getNodeName().equalsIgnoreCase("role:role_list") && childNode.getAttributes().item(0).getNodeValue().equalsIgnoreCase("provider_list")) {
 
 				// Extract list of grandson
 				NodeList grandsonList = childNode.getChildNodes();
@@ -855,8 +900,7 @@ public class Oracle {
 								providerList = new ArrayList<String>();
 
 							// Check node's ID Value before add to ArrayList
-							String nodeIDValue = grandsonNode.getAttributes().item(0)
-									.getNodeValue();
+							String nodeIDValue = grandsonNode.getAttributes().item(0).getNodeValue();
 
 							if (nodeIDValue.contains("#"))
 								nodeIDValue = nodeIDValue.substring(nodeIDValue.indexOf("#") + 1);
@@ -873,8 +917,7 @@ public class Oracle {
 							// Greatgrandson Node examined
 							Node greatgrandsonNode = greatgrandsonNodeList.item(k);
 
-							if (greatgrandsonNode.getNodeName()
-									.equalsIgnoreCase("role:isDefinedIn")) {
+							if (greatgrandsonNode.getNodeName().equalsIgnoreCase("role:isDefinedIn")) {
 
 								// Check node's attributes before add to
 								// ArrayList
@@ -884,12 +927,10 @@ public class Oracle {
 
 									// Check node's ID Value before add to
 									// ArrayList
-									String nodeIDValue = greatgrandsonNode.getAttributes().item(0)
-											.getNodeValue();
+									String nodeIDValue = greatgrandsonNode.getAttributes().item(0).getNodeValue();
 
 									if (nodeIDValue.contains("#"))
-										nodeIDValue = nodeIDValue.substring(nodeIDValue
-												.indexOf("#") + 1);
+										nodeIDValue = nodeIDValue.substring(nodeIDValue.indexOf("#") + 1);
 
 									providerunitList.add(nodeIDValue);
 								}
@@ -903,9 +944,7 @@ public class Oracle {
 			}
 
 			// It is a role of client list
-			else if (childNode.getNodeName().equalsIgnoreCase("role:role_list")
-					&& childNode.getAttributes().item(0).getNodeValue()
-					.equalsIgnoreCase("client_list")) {
+			else if (childNode.getNodeName().equalsIgnoreCase("role:role_list") && childNode.getAttributes().item(0).getNodeValue().equalsIgnoreCase("client_list")) {
 
 				// Extract list of grandson
 				NodeList grandsonList = childNode.getChildNodes();
@@ -922,8 +961,7 @@ public class Oracle {
 								clientList = new ArrayList<String>();
 
 							// Check node's ID Value before add to ArrayList
-							String nodeIDValue = grandsonNode.getAttributes().item(0)
-									.getNodeValue();
+							String nodeIDValue = grandsonNode.getAttributes().item(0).getNodeValue();
 
 							if (nodeIDValue.contains("#"))
 								nodeIDValue = nodeIDValue.substring(nodeIDValue.indexOf("#") + 1);
@@ -940,8 +978,7 @@ public class Oracle {
 							// Greatgrandson Node examined
 							Node greatgrandsonNode = greatgrandsonNodeList.item(k);
 
-							if (greatgrandsonNode.getNodeName()
-									.equalsIgnoreCase("role:isDefinedIn")) {
+							if (greatgrandsonNode.getNodeName().equalsIgnoreCase("role:isDefinedIn")) {
 
 								// Check node's attributes before add to
 								// ArrayList
@@ -951,12 +988,10 @@ public class Oracle {
 
 									// Check node's ID Value before add to
 									// ArrayList
-									String nodeIDValue = greatgrandsonNode.getAttributes().item(0)
-											.getNodeValue();
+									String nodeIDValue = greatgrandsonNode.getAttributes().item(0).getNodeValue();
 
 									if (nodeIDValue.contains("#"))
-										nodeIDValue = nodeIDValue.substring(nodeIDValue
-												.indexOf("#") + 1);
+										nodeIDValue = nodeIDValue.substring(nodeIDValue.indexOf("#") + 1);
 
 									clientunitList.add(nodeIDValue);
 								}
@@ -982,8 +1017,7 @@ public class Oracle {
 	 * @throws IOException
 	 * @throws ParserConfigurationException
 	 */
-	private Document parserXML(File file) throws SAXException, IOException,
-	ParserConfigurationException {
+	private Document parserXML(File file) throws SAXException, IOException, ParserConfigurationException {
 		return DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(file);
 	}
 
@@ -996,8 +1030,7 @@ public class Oracle {
 	 * @throws IOException
 	 * @throws ParserConfigurationException
 	 */
-	private Document parserXML(URL url) throws SAXException, IOException,
-	ParserConfigurationException {
+	private Document parserXML(URL url) throws SAXException, IOException, ParserConfigurationException {
 		return DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(url.openStream());
 	}
 }

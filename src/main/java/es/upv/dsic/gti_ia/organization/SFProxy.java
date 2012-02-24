@@ -16,9 +16,7 @@ import es.upv.dsic.gti_ia.core.BaseAgent;
  */
 public class SFProxy extends THOMASProxy {
 
-	//TODO this variables in a configuration file!!!
-	String separatorToken=" ";
-	private static HashMap<String, String> sfServicesURLs=new HashMap<String, String>();
+	ServiceTools st = new ServiceTools();
 	
 	/**
 	 * This class gives us the support to accede to the services of the SF
@@ -29,13 +27,6 @@ public class SFProxy extends THOMASProxy {
 
 		super(agent,"SF",SFServiceDescriptionLocation);
 		
-		//TODO in the config file!!!
-		sfServicesURLs.put("RegisterService", "http://localhost:8080/sfservices/SFservices/owl/owls/RegisterService.owl");
-		sfServicesURLs.put("DeregisterService", "http://localhost:8080/sfservices/SFservices/owl/owls/DeregisterService.owl");
-		sfServicesURLs.put("GetService", "http://localhost:8080/sfservices/SFservices/owl/owls/GetService.owl");
-		sfServicesURLs.put("SearchService", "http://localhost:8080/sfservices/SFservices/owl/owls/SearchService.owl");
-		sfServicesURLs.put("RemoveProvider", "http://localhost:8080/sfservices/SFservices/owl/owls/RemoveProvider.owl");
-
 	}
 
 	/**
@@ -51,50 +42,48 @@ public class SFProxy extends THOMASProxy {
 		super(agent, "SF");
 		ServiceDescriptionLocation = c.getSFServiceDescriptionLocation();
 
-		sfServicesURLs.put("RegisterService", "http://localhost:8080/sfservices/SFservices/owl/owls/RegisterService.owl");
-		sfServicesURLs.put("DeregisterService", "http://localhost:8080/sfservices/SFservices/owl/owls/DeregisterService.owl");
-		sfServicesURLs.put("GetService", "http://localhost:8080/sfservices/SFservices/owl/owls/GetService.owl");
-		sfServicesURLs.put("SearchService", "http://localhost:8080/sfservices/SFservices/owl/owls/SearchService.owl");
-		sfServicesURLs.put("RemoveProvider", "http://localhost:8080/sfservices/SFservices/owl/owls/RemoveProvider.owl");
-
 	}
 
 
-
-
-
-	/**
-	 * Removes a provider from a registered service
-	 * @param serviceProfile URI of the service to remove the provider
-	 * @param providerID of the provider to remove
-	 * @return status which indicates if an error occurs (1:OK otherwise 0)
-	 */
-	public String removeProvider(String serviceProfile, String providerID) throws THOMASException{
+	
+	public ArrayList<String> registerService(String serviceURL) throws THOMASException
+	{
 		
-		serviceName = sfServicesURLs.get("RemoveProvider");
+		HashMap<String, String> inputs = new HashMap<String,String>();
+		inputs.put("ServiceURL", serviceURL);
+		
+		call = st.buildServiceContent("RegisterService", inputs);
+		
+		return (ArrayList<String>) this.sendInform();
+	}
+	
+	
+	public String deregisterService(String serviceProfile) throws THOMASException {
 
-		if (serviceProfile.equals("") ) {
-			logger.error("serviceProfile is empty");
+		if (serviceProfile.equals("")) {
+			logger.error("serviceProfile is  empty");
 			return "";
-
 		}
-		call = serviceName+separatorToken+
-		"ServiceProfile="+ serviceProfile+separatorToken+
-		"ProviderID="+providerID;
 
+		HashMap<String, String> inputs = new HashMap<String,String>();
+		inputs.put("ServiceProfile", serviceProfile);
+		
+		call = st.buildServiceContent("DeregisterService", inputs);
+		return (String) this.sendInform();
+
+	}
+	
+	public String getService(String serviceProfile) throws THOMASException
+	{
+		
+		HashMap<String, String> inputs = new HashMap<String,String>();
+		inputs.put("ServiceProfile", serviceProfile);
+		
+		call = st.buildServiceContent("GetService", inputs);
+		
 		return (String) this.sendInform();
 	}
-
-	/**
-	 * It searches a service whose description satisfies the client request. 
-	 * 
-
-	 * @param serviceGoal
-	 *            service purpose (is a string: the service description).
-	 * @return services list (is a list of service profile id, ranking: service
-	 *         profile id, ranking: ...) or return which
-	 *         indicates if an error occurs
-	 */
+	
 	public ArrayList<ArrayList<String>> searchService(ArrayList<String> inputs, ArrayList<String> outputs, ArrayList<String> keywords) throws THOMASException
 	{
 
@@ -117,61 +106,40 @@ public class SFProxy extends THOMASProxy {
 			keywordsStr+=key+"|";
 		}
 		
+		HashMap<String, String> inputsService = new HashMap<String,String>();
+		inputsService.put("Inputs", inputsStr);
+		inputsService.put("Outputs", outputsStr);
+		inputsService.put("Keywords", keywordsStr);
 		
-		serviceName = sfServicesURLs.get("SearchService");
-		call = serviceName +separatorToken+
-		"Inputs="+inputsStr+separatorToken+
-		"Outputs="+outputsStr+separatorToken+
-		"Keywords="+keywordsStr;
+		call = st.buildServiceContent("SearchService", inputsService);
 
 		return (ArrayList<ArrayList<String>>) this.sendInform();
 	}
-
 	
-
 	/**
-	 * It is used to delete a service description.
-	 * 
-	 * @param ProfileDescription
-	 *            in this structure a one element is required: service id (is a string: service profile
-	 *            id)
-	 * @return Status  return indicates if an error occurs.
+	 * Removes a provider from a registered service
+	 * @param serviceProfile URI of the service to remove the provider
+	 * @param providerID of the provider to remove
+	 * @return status which indicates if an error occurs (1:OK otherwise 0)
 	 */
-	public String deregisterService(String serviceProfile) throws THOMASException {
-
+	public String removeProvider(String serviceProfile, String providerID) throws THOMASException{
 		
-		serviceName = sfServicesURLs.get("DeregisterService");
-		if (serviceProfile.equals("")) {
-			logger.error("serviceProfile is  empty");
+		
+		if (serviceProfile.equals("") ) {
+			logger.error("serviceProfile is empty");
 			return "";
+
 		}
-
-		call = serviceName+separatorToken+
-		"ServiceProfile="+serviceProfile;
-
-		return (String) this.sendInform();
-
-	}
-	
-	public String getService(String serviceProfile) throws THOMASException
-	{
-		serviceName=sfServicesURLs.get("GetService");
 		
-		call=serviceName+separatorToken+
-		"ServiceProfile="+serviceProfile;
+		HashMap<String, String> inputs = new HashMap<String,String>();
+		inputs.put("ServiceProfile", serviceProfile);
+		inputs.put("ProviderID", providerID);
 		
+		call = st.buildServiceContent("RemoveProvider", inputs);
+
 		return (String) this.sendInform();
 	}
 	
-	public ArrayList<String> registerService(String serviceURL) throws THOMASException
-	{
-		serviceName=sfServicesURLs.get("RegisterService");
-		
-		call=serviceName+separatorToken+
-		"ServiceURL="+serviceURL;
-		
-		return (ArrayList<String>) this.sendInform();
-	}
 
 	
 }

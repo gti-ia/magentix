@@ -31,6 +31,7 @@ public class SF extends CAgent {
 	static Logger logger = Logger.getLogger(SF.class);
 	
 	String separatorToken=" ";
+	ServiceTools st=new ServiceTools();
 
 	// Debug
 	//private final Boolean DEBUG = true;
@@ -81,11 +82,11 @@ public class SF extends CAgent {
 		super(aid);
 
 		//TODO get from some configuration file...
-		sfServicesURLs.put("RegisterService", "http://localhost:8080/sfservices/SFservices/owl/owls/RegisterService.owl");
-		sfServicesURLs.put("DeregisterService", "http://localhost:8080/sfservices/SFservices/owl/owls/DeregisterService.owl");
-		sfServicesURLs.put("GetService", "http://localhost:8080/sfservices/SFservices/owl/owls/GetService.owl");
-		sfServicesURLs.put("SearchService", "http://localhost:8080/sfservices/SFservices/owl/owls/SearchService.owl");
-		sfServicesURLs.put("RemoveProvider", "http://localhost:8080/sfservices/SFservices/owl/owls/RemoveProvider.owl");
+		sfServicesURLs.put("RegisterService", "http://localhost:8080/sfservices/services/RegisterService?wsdl");
+		sfServicesURLs.put("DeregisterService", "http://localhost:8080/sfservices/services/DeregisterService?wsdl");
+		sfServicesURLs.put("GetService", "http://localhost:8080/sfservices/services/GetService?wsdl");
+		sfServicesURLs.put("SearchService", "http://localhost:8080/sfservices/services/SearchService?wsdl");
+		sfServicesURLs.put("RemoveProvider", "http://localhost:8080/sfservices/services/RemoveProvider?wsdl");
 
 	}
 
@@ -108,133 +109,7 @@ public class SF extends CAgent {
 	}
 
 	
-//	private static String executeWithJavaX(String inputParams){
-//
-//		//http://localhost:8080/omsservices/OMSservices/owl/owls/AcquireRole.owl RoleID=miembro2 UnitID=plana2
-//		//
-//		StringTokenizer tokenInputParams = new StringTokenizer(inputParams, separatorToken);
-//		String serviceURL=sfServicesURLs.get(tokenInputParams.nextToken().trim());
-//		Oracle oracle = new Oracle();
-//		oracle.setURLProcess(serviceURL);
-//
-//		ArrayList<String> processInputs=oracle.getProcessInputs();
-//
-//		HashMap<String,String> paramsComplete=new HashMap<String, String>();
-//		Iterator<String> iterProcessInputs=processInputs.iterator();
-//		while(iterProcessInputs.hasNext()){
-//			String in=iterProcessInputs.next().toLowerCase();
-//			//initialize the inputs
-//			paramsComplete.put(in, "");
-//		}
-//
-//
-//		while(tokenInputParams.hasMoreTokens()){
-//			String inputToken=tokenInputParams.nextToken().trim();
-//			StringTokenizer anInputToken=new StringTokenizer(inputToken, "=");
-//			String in=anInputToken.nextToken().toLowerCase().trim();
-//			String value="";
-//			if(anInputToken.hasMoreTokens())
-//				value=anInputToken.nextToken().trim();
-//			if(paramsComplete.get(in)!=null){
-//				paramsComplete.put(in, value);
-//				System.out.println("inputParamName: "+in+" value: "+value);
-//			}
-//		}
-//
-//
-//		//construct params list with the value of the parameters ordered...
-//		ArrayList<String> params = new ArrayList<String>();
-//		Iterator<String> iterInputs=processInputs.iterator();
-//		while(iterInputs.hasNext()){
-//			String input=iterInputs.next().toLowerCase();
-//			params.add(paramsComplete.get(input));
-//			//System.out.println("inputParamValue: "+paramsComplete.get(input));
-//		}
-//
-//		ServiceClient serviceClient = new ServiceClient();
-//		ArrayList<String> results = serviceClient.invoke(serviceURL, params);
-//
-//		//String process_localName="SearchServiceProcess"; //TODO no estic segur si es això...
-//		//String resultStr=process_localName+ "=" + "{";
-//		String resultStr=serviceURL+"=" + "{";
-//		for(int i=0;i<results.size();i++){
-//			resultStr+=serviceURL+"#"+results.get(i);
-//			if(i!=results.size()-1){
-//				resultStr+=", ";
-//			}
-//			else{
-//				resultStr+=" }";
-//			}
-//		}
-//
-//
-//		return resultStr;
-//	}
-
-	private String executeWithJavaX(String inputParams){
-
-		//http://localhost:8080/omsservices/OMSservices/owl/owls/AcquireRole.owl RoleID=miembro2 UnitID=plana2
-		//
-		StringTokenizer tokenInputParams = new StringTokenizer(inputParams, separatorToken);
-		String serviceURL=tokenInputParams.nextToken().trim();
-		//String serviceURL=sfServicesURLs.get(tokenInputParams.nextToken().trim());
-		Oracle oracle = new Oracle();
-		oracle.setURLProcess(serviceURL);
-
-		ArrayList<String> processInputs=oracle.getWSDLInputs();
-
-		HashMap<String,String> paramsComplete=new HashMap<String, String>();
-		Iterator<String> iterProcessInputs=processInputs.iterator();
-		while(iterProcessInputs.hasNext()){
-			String in=iterProcessInputs.next().toLowerCase();
-			//initialize the inputs
-			paramsComplete.put(in, "");
-		}
-
-
-		while(tokenInputParams.hasMoreTokens()){
-			String inputToken=tokenInputParams.nextToken().trim();
-			StringTokenizer anInputToken=new StringTokenizer(inputToken, "=");
-			String in=anInputToken.nextToken().toLowerCase().trim();
-			String value="";
-			if(anInputToken.hasMoreTokens())
-				value=anInputToken.nextToken().trim();
-			if(paramsComplete.get(in)!=null){
-				paramsComplete.put(in, value);
-				System.out.println("inputParamName: "+in+" value: "+value);
-			}
-		}
-
-
-		//construct params list with the value of the parameters ordered...
-		ArrayList<String> params = new ArrayList<String>();
-		Iterator<String> iterInputs=processInputs.iterator();
-		while(iterInputs.hasNext()){
-			String input=iterInputs.next().toLowerCase();
-			params.add(paramsComplete.get(input));
-			//System.out.println("inputParamValue: "+paramsComplete.get(input));
-		}
-
-		ServiceClient serviceClient = new ServiceClient();
-		ArrayList<String> results = serviceClient.invoke(serviceURL, params);
-
-		//String process_localName="SearchServiceProcess"; //TODO no estic segur si es això...
-		//String resultStr=process_localName+ "=" + "{";
-		String resultStr=serviceURL+"=" + "{";
-		for(int i=0;i<results.size();i++){
-			resultStr+=serviceURL+"#"+results.get(i);
-			if(i!=results.size()-1){
-				resultStr+=", ";
-			}
-			else{
-				resultStr+=" }";
-			}
-		}
-
-
-		return resultStr;
-	}
-
+	
 	@Override
 	protected void finalize(CProcessor firstProcessor,
 			ACLMessage finalizeMessage) {
@@ -252,11 +127,12 @@ public class SF extends CAgent {
 
 				try{
 
-
-
-					String resultStr=executeWithJavaX(myProcessor.getLastReceivedMessage().getContent());
-
-
+					HashMap<String,String> inputs=new HashMap<String, String>();
+					
+					String serviceName=st.extractServiceContent(myProcessor.getLastReceivedMessage().getContent(),inputs);
+					String serviceWSDLURL=sfServicesURLs.get(serviceName);
+					HashMap<String,Object> result=st.executeWebService(serviceWSDLURL, inputs);
+					
 					logger.info("[SF]Values obtained... ");
 
 					logger.info("[SF]Creating inform message to send...");
@@ -264,9 +140,9 @@ public class SF extends CAgent {
 					next = "INFORM";
 
 					logger.info("[SF]Before set message content...");
-					//					myProcessor.getLastReceivedMessage().setContent(aProcess.getLocalName() + "="
-					//							+ values.toString());
-					myProcessor.getLastReceivedMessage().setContent(resultStr);
+					
+					String resultContent=(String)result.get("Result");
+					myProcessor.getLastReceivedMessage().setContent(resultContent);
 
 				} catch (Exception e) {
 					next = "FAILURE";
@@ -290,16 +166,15 @@ public class SF extends CAgent {
 				if (msg != null) {
 
 					try {
+						
+						
+						HashMap<String,String> inputs=new HashMap<String, String>();
+						String serviceName = st.extractServiceContent(msg.getContent(), inputs);
 
-						// read msg content
-						StringTokenizer msgContentTok = new StringTokenizer(msg.getContent(), separatorToken);
-
-						String serviceName = msgContentTok.nextToken().trim();
-
-						logger.info("[SF]Doc OWL-S: " + serviceName);
+						logger.info("[SF]Service Name: " + serviceName);
 
 
-						if (sfServicesURLs.containsValue(serviceName)) //if (sfServicesURLs.containsKey(serviceName))
+						if (sfServicesURLs.containsKey(serviceName)) //if (sfServicesURLs.containsKey(serviceName))
 						{
 
 							logger.info("AGREE");

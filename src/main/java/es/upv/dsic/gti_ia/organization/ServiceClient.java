@@ -4,9 +4,11 @@ package es.upv.dsic.gti_ia.organization;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 
 import javax.xml.rpc.Call;
@@ -35,22 +37,14 @@ public class ServiceClient {
     private static String URI_ENCODING = "http://schemas.xmlsoap.org/soap/encoding/";
     private Oracle oracle;
 
-    public ArrayList<String> invoke(String URLProcess, List<String> params) {
+    public HashMap<String, Object> invoke(String wsdlURL, List<String> params) {
 
-		// Lo sacaremos del parser (sin el wsdl)
-		String URLString = "";
-	
 		try {
 		   
 		    oracle = new Oracle();
 	
-		    //Necesitamos algunos valores definidos en el process como la ruta del wsdl.
-		    oracle.setURLProcess(URLProcess);
-	
+		    oracle.parseWSDL(wsdlURL);
 		    
-		    URLString = oracle.getWSDL();
-	
-	
 		    qnameService = oracle.getWSDLNameService();
 	
 		    qnamePort = oracle.getNamePort();
@@ -66,7 +60,7 @@ public class ServiceClient {
 		    QName port = new QName(qnamePort);
 	
 		    Call call = service.createCall(port);
-		    call.setTargetEndpointAddress(URLString);
+		    call.setTargetEndpointAddress(wsdlURL);
 	
 		    
 		    call.setProperty(Call.SOAPACTION_USE_PROPERTY, new Boolean(true));
@@ -81,37 +75,41 @@ public class ServiceClient {
 	
 		    // Debemos montar con el getInputTyps y los argumentos de entrada
 		    // del agente
-		    Iterator<Map.Entry<String,String>> itr = oracle.getElements().entrySet().iterator();
+//		    Iterator<Map.Entry<String,String>> itr = oracle.getElements().entrySet().iterator();
 	
 		    
 		//    System.out.println("Input: "+ oracle.getProcessInputs());
 		    
 		    
-		    int j = 0;
-		    while (itr.hasNext()) {
-			
-				Map.Entry<String,String> e = (Map.Entry<String,String>) itr.next();
-				
-				
-				call.addParameter(e.getKey().toString(),
-					new QName(NS_XSD, e.getValue().toString()), ParameterMode.IN);
-				j++;
-		    }
 		    
-		    String result = (String) call.invoke(params.toArray());
+//		    while (itr.hasNext()) {
+//			
+//				Map.Entry<String,String> e = (Map.Entry<String,String>) itr.next();
+//				
+//				
+//				call.addParameter(e.getKey().toString(),
+//					new QName(NS_XSD, e.getValue().toString()), ParameterMode.IN);
+//				
+//		    }
+		    
+		    HashMap<String,String> inputsAndTypes=oracle.getWsdlInputParamsAndTypes();
+		    for (Entry<String,String> e: inputsAndTypes.entrySet()) {
+			    
+		    	call.addParameter(e.getKey().toString(),
+						new QName(NS_XSD, e.getValue().toString()), ParameterMode.IN);
+			}
+		    
+		    Object firstResult = call.invoke(params.toArray());
 	
+		  //Build result
+		    HashMap<String, Object> results=new HashMap<String, Object>();
 		    
-		    ArrayList<String> results=new ArrayList<String>();
-		    //Montamos el resultado
+		    results.put(oracle.getWSDLOutputs().get(0), firstResult);
+		    for (int i=1; i< oracle.getWSDLOutputs().size();i++){
+		    	results.put(oracle.getWSDLOutputs().get(i), call.getOutputValues().get(i-1));
+			}
 		    
-		    results.add(oracle.getProcessOutputs().get(0)+ "="+ result);
-		    for (int i=1; i< oracle.getProcessOutputs().size();i++){
-				results.add(oracle.getProcessOutputs().get(i)+ "="+call.getOutputValues().get(i-1));
-		    }
-		    if (call.getOutputValues().size() != 0)
-		    	return results;
-		    else
-		    	return results;
+		    return results;
 		} catch (Exception ex) {
 		    ex.printStackTrace();
 		    return null;

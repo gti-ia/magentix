@@ -279,10 +279,10 @@ public class THOMASProxy {
 	{
 
 
-		String content = msg.getContent().substring(msg.getContent().indexOf("<response>"),msg.getContent().length()-1 );
+		//String content = msg.getContent().substring(msg.getContent().indexOf("<response>"),msg.getContent().length()-1 );
 
 
-		responseParser.parseResponse(content);
+		responseParser.parseResponse(msg.getContent());
 		
 		serviceName = responseParser.getServiceName();
 
