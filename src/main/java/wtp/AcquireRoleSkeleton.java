@@ -7,10 +7,10 @@
  */
 package wtp;
 
-import java.sql.SQLException;
-
+import org.apache.log4j.Logger;
+import org.apache.log4j.xml.DOMConfigurator;
 import persistence.OMSInterface;
-import persistence.THOMASException;
+
 
 /**
  *  AcquireRoleSkeleton java skeleton for the axisService
@@ -39,13 +39,14 @@ public class AcquireRoleSkeleton{
 		wtp.AcquireRoleResponse res = new AcquireRoleResponse();
 		String result;
 
-		if (DEBUG)
-		{
-			System.out.println("AcquireRole :");
-			System.out.println("***AgentID..." + acquireRole.getAgentID());
-			System.out.println("***RoleID()..." + acquireRole.getRoleID());
-			System.out.println("***UnitID()..." + acquireRole.getUnitID());
-		}
+
+		DOMConfigurator.configure(AcquireRoleSkeleton.class.getResource("/"+"loggin.xml"));
+		Logger logger = Logger.getLogger(AcquireRoleSkeleton.class);
+
+		logger.info("AcquireRole:");
+		logger.info("***AgentID..." + acquireRole.getAgentID());
+		logger.info("***RoleID()..." + acquireRole.getRoleID());
+		logger.info("***UnitID()..." + acquireRole.getUnitID());
 
 
 		if (acquireRole.getRoleID().equals("null"))

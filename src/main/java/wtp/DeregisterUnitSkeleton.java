@@ -7,10 +7,10 @@
  */
 package wtp;
 
-import java.sql.SQLException;
+import org.apache.log4j.Logger;
+import org.apache.log4j.xml.DOMConfigurator;
 
 import persistence.OMSInterface;
-import persistence.THOMASException;
 
 /**
  *  DeregisterUnitSkeleton java skeleton for the axisService
@@ -18,7 +18,7 @@ import persistence.THOMASException;
 public class DeregisterUnitSkeleton{
 
 
-	public static final Boolean		DEBUG		= true;
+	
 	private static OMSInterface omsInterface = new OMSInterface();
 
 	/**
@@ -35,12 +35,13 @@ public class DeregisterUnitSkeleton{
 		wtp.DeregisterUnitResponse res = new DeregisterUnitResponse();
 		String result = "";
 
-		if (DEBUG)
-		{
-			System.out.println("DeregisterUnit :");
-			System.out.println("***AgentID..." + deregisterUnit.getAgentID());
-			System.out.println("*** UnitID()..." + deregisterUnit.getUnitID());
-		}
+		DOMConfigurator.configure(DeregisterUnitSkeleton.class.getResource("/"+"loggin.xml"));
+		Logger logger = Logger.getLogger(DeregisterUnitSkeleton.class);
+	
+		logger.info("DeregisterUnit :");
+		logger.info("***AgentID..." + deregisterUnit.getAgentID());
+		logger.info("*** UnitID()..." + deregisterUnit.getUnitID());
+	
 
 
 		if (deregisterUnit.getUnitID().equals("null"))

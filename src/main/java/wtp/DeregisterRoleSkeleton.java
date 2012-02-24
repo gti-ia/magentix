@@ -7,17 +7,17 @@
  */
 package wtp;
 
-import java.sql.SQLException;
+import org.apache.log4j.Logger;
+import org.apache.log4j.xml.DOMConfigurator;
 
 import persistence.OMSInterface;
-import persistence.THOMASException;
 
 /**
  *  DeregisterRoleSkeleton java skeleton for the axisService
  */
 public class DeregisterRoleSkeleton{
 
-	public static final Boolean		DEBUG		= true;
+	
 	private static OMSInterface omsInterface = new OMSInterface();
 
 	/**
@@ -34,13 +34,14 @@ public class DeregisterRoleSkeleton{
 		wtp.DeregisterRoleResponse res = new DeregisterRoleResponse();
 		String result= "";
 
-		if (DEBUG)
-		{
-			System.out.println("DeregisterRole :");
-			System.out.println("***AgentID..." + deregisterRole.getAgentID());
-			System.out.println("*** RoleID()..." + deregisterRole.getRoleID());
-			System.out.println("*** UnitID()..." + deregisterRole.getUnitID());
-		}
+		DOMConfigurator.configure(DeregisterRoleSkeleton.class.getResource("/"+"loggin.xml"));
+		Logger logger = Logger.getLogger(DeregisterRoleSkeleton.class);
+
+		logger.info("DeregisterRole :");
+		logger.info("***AgentID..." + deregisterRole.getAgentID());
+		logger.info("*** RoleID()..." + deregisterRole.getRoleID());
+		logger.info("*** UnitID()..." + deregisterRole.getUnitID());
+
 
 		result =omsInterface.deregisterRole(deregisterRole.getRoleID(), deregisterRole.getUnitID(), deregisterRole.getAgentID());
 		res.setResult(result);
