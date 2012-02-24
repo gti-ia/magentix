@@ -5,8 +5,8 @@
       <xsd:element name="JointUnit">
         <xsd:complexType>
           <xsd:sequence>
-             <xsd:element name="UnitName" type="xsd:string"/>
-             <xsd:element name="ParentName" type="xsd:string"/>
+             <xsd:element name="UnitID" type="xsd:string"/>
+             <xsd:element name="ParentUnitID" type="xsd:string"/>
              <xsd:element name="AgentID" type="xsd:string"/>
              </xsd:sequence>
         </xsd:complexType>

@@ -7,7 +7,7 @@
           <xsd:sequence>
           	<xsd:element name="UnitID" type="xsd:string" />
           	<xsd:element name="RoleID" type="xsd:string" />
-          	<xsd:element name="PositionValue" type="xsd:string"></xsd:element>
+          	<xsd:element name="PositionID" type="xsd:string"></xsd:element>
           	<xsd:element name="AgentID" type="xsd:string" />
           </xsd:sequence>
         </xsd:complexType>

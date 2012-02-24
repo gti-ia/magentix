@@ -6,10 +6,10 @@
         <xsd:complexType>
           <xsd:sequence>
              <xsd:element name="UnitID" type="xsd:string"/>
-             <xsd:element name="Type" type="xsd:string"/>
+             <xsd:element name="TypeID" type="xsd:string"/>
              <xsd:element name="ParentUnitID" type="xsd:string"/>
              <xsd:element name="AgentID" type="xsd:string"/>
-                        <xsd:element name="CreatorName" type="xsd:string" />
+                        <xsd:element name="CreatorID" type="xsd:string" />
                     </xsd:sequence>
         </xsd:complexType>
       </xsd:element>

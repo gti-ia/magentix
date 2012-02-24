@@ -5,8 +5,8 @@
       <xsd:element name="InformRole">
         <xsd:complexType>
           <xsd:sequence>
-             <xsd:element name="RoleName" type="xsd:string"/>
-             <xsd:element name="UnitName" type="xsd:string"/>
+             <xsd:element name="RoleID" type="xsd:string"/>
+             <xsd:element name="UnitID" type="xsd:string"/>
              <xsd:element name="AgentID" type="xsd:string"/>
           </xsd:sequence>
         </xsd:complexType>

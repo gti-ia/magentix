@@ -7,9 +7,9 @@
           <xsd:sequence>
             <xsd:element name="RoleID" type="xsd:string"/>
              <xsd:element name="UnitID" type="xsd:string"/>
-             <xsd:element name="Position" type="xsd:string"/>
-             <xsd:element name="Accessibility" type="xsd:string"/>
-             <xsd:element name="Visibility" type="xsd:string"/>
+             <xsd:element name="PositionID" type="xsd:string"/>
+             <xsd:element name="AccessibilityID" type="xsd:string"/>
+             <xsd:element name="VisibilityID" type="xsd:string"/>
              <xsd:element name="AgentID" type="xsd:string"/>
           </xsd:sequence>
         </xsd:complexType>
