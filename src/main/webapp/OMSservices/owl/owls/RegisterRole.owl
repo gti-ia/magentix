@@ -45,9 +45,9 @@
 
     <profile:hasInput rdf:resource="#RoleID"/>
     <profile:hasInput rdf:resource="#UnitID"/>
-    <profile:hasInput rdf:resource="#Accessibility"/>
-    <profile:hasInput rdf:resource="#Position"/>
-    <profile:hasInput rdf:resource="#Visibility"/>
+    <profile:hasInput rdf:resource="#AccessibilityID"/>
+    <profile:hasInput rdf:resource="#PositionID"/>
+    <profile:hasInput rdf:resource="#VisibilityID"/>
     <profile:hasInput rdf:resource="#AgentID"/>
     <profile:hasOutput rdf:resource="#Result"/>
  
@@ -59,9 +59,9 @@
 
    	<process:hasInput rdf:resource="#RoleID"/>
     <process:hasInput rdf:resource="#UnitID"/>
-    <process:hasInput rdf:resource="#Accessibility"/>
-    <process:hasInput rdf:resource="#Position"/>
-    <process:hasInput rdf:resource="#Visibility"/>
+    <process:hasInput rdf:resource="#AccessibilityID"/>
+    <process:hasInput rdf:resource="#PositionID"/>
+    <process:hasInput rdf:resource="#VisibilityID"/>
     <process:hasInput rdf:resource="#AgentID"/>
 
 	<process:hasOutput rdf:resource="#Result"/>
@@ -76,16 +76,16 @@
      <rdfs:label>UnitID</rdfs:label>
      <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
 </process:Input>
-<process:Input rdf:ID="Accessibility">
-     <rdfs:label>Accessibility</rdfs:label>
+<process:Input rdf:ID="AccessibilityID">
+     <rdfs:label>AccessibilityID</rdfs:label>
      <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
 </process:Input>
-<process:Input rdf:ID="Position">
-     <rdfs:label>Position</rdfs:label>
+<process:Input rdf:ID="PositionID">
+     <rdfs:label>PositionID</rdfs:label>
      <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
 </process:Input>
-<process:Input rdf:ID="Visibility">
-     <rdfs:label>Visibility</rdfs:label>
+<process:Input rdf:ID="VisibilityID">
+     <rdfs:label>VisibilityID</rdfs:label>
      <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
 </process:Input>
 
@@ -132,20 +132,20 @@
         </grounding:wsdlInput>
     <grounding:wsdlInput>
                   <grounding:WsdlInputMessageMap>
-                    <grounding:owlsParameter rdf:resource="#Accessibility"/>
-                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/RegisterRole/Accessibility</grounding:wsdlMessagePart>
+                    <grounding:owlsParameter rdf:resource="#AccessibilityID"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/RegisterRole/AccessibilityID</grounding:wsdlMessagePart>
                   </grounding:WsdlInputMessageMap>
         </grounding:wsdlInput>
 	<grounding:wsdlInput>
                   <grounding:WsdlInputMessageMap>
-                    <grounding:owlsParameter rdf:resource="#Position"/>
-                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/RegisterRole/Position</grounding:wsdlMessagePart>
+                    <grounding:owlsParameter rdf:resource="#PositionID"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/RegisterRole/PositionID</grounding:wsdlMessagePart>
                   </grounding:WsdlInputMessageMap>
         </grounding:wsdlInput>        
 	<grounding:wsdlInput>
                   <grounding:WsdlInputMessageMap>
-                    <grounding:owlsParameter rdf:resource="#Visibility"/>
-                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/RegisterRole/Visibility</grounding:wsdlMessagePart>
+                    <grounding:owlsParameter rdf:resource="#VisibilityID"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/RegisterRole/VisibilityID</grounding:wsdlMessagePart>
                   </grounding:WsdlInputMessageMap>
         </grounding:wsdlInput>
 

@@ -44,8 +44,8 @@
 
 
 
-    <profile:hasInput rdf:resource="#RoleName"/>
-    <profile:hasInput rdf:resource="#UnitName"/>
+    <profile:hasInput rdf:resource="#RoleID"/>
+    <profile:hasInput rdf:resource="#UnitID"/>
     <profile:hasInput rdf:resource="#AgentID"/>
     <profile:hasOutput rdf:resource="#Result"/>
 
@@ -55,19 +55,19 @@
 	<service:describes rdf:resource="#InformRoleService"/>
 	  	
     <process:hasInput rdf:resource="#AgentID"/>
-    <process:hasInput rdf:resource="#UnitName"/>
-    <process:hasInput rdf:resource="#RoleName"/>
+    <process:hasInput rdf:resource="#UnitID"/>
+    <process:hasInput rdf:resource="#RoleID"/>
 	<process:hasOutput rdf:resource="#Result"/>
 	
 </process:AtomicProcess>
 
 
-<process:Input rdf:ID="UnitName">
-     <rdfs:label>UnitName</rdfs:label>
+<process:Input rdf:ID="UnitID">
+     <rdfs:label>UnitID</rdfs:label>
      <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
 </process:Input>
-<process:Input rdf:ID="RoleName">
-     <rdfs:label>RoleName</rdfs:label>
+<process:Input rdf:ID="RoleID">
+     <rdfs:label>RoleID</rdfs:label>
      <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
 </process:Input>
 <process:Input rdf:ID="AgentID">
@@ -102,15 +102,15 @@
     
 	<grounding:wsdlInput>
                   <grounding:WsdlInputMessageMap>
-                    <grounding:owlsParameter rdf:resource="#UnitName"/>
-                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/InformRole/UnitName</grounding:wsdlMessagePart>
+                    <grounding:owlsParameter rdf:resource="#UnitID"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/InformRole/UnitID</grounding:wsdlMessagePart>
                   </grounding:WsdlInputMessageMap>
         </grounding:wsdlInput>
         
         	<grounding:wsdlInput>
                   <grounding:WsdlInputMessageMap>
-                    <grounding:owlsParameter rdf:resource="#RoleName"/>
-                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/InformRole/RoleName</grounding:wsdlMessagePart>
+                    <grounding:owlsParameter rdf:resource="#RoleID"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/InformRole/RoleID</grounding:wsdlMessagePart>
                   </grounding:WsdlInputMessageMap>
         </grounding:wsdlInput>
         

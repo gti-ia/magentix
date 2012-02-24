@@ -46,7 +46,7 @@
 
     <profile:hasInput rdf:resource="#UnitID"/>
     <profile:hasInput rdf:resource="#RoleID"/>
-    <profile:hasInput rdf:resource="#PositionValue"/>
+    <profile:hasInput rdf:resource="#PositionID"/>
     <profile:hasInput rdf:resource="#AgentID"/>
     <profile:hasOutput rdf:resource="#Result"/>
 
@@ -58,7 +58,7 @@
 
     <process:hasInput rdf:resource="#UnitID"/>
     <process:hasInput rdf:resource="#RoleID"/>
-	<process:hasInput rdf:resource="#PositionValue"/>
+	<process:hasInput rdf:resource="#PositionID"/>
     <process:hasInput rdf:resource="#AgentID"/>
 	<process:hasOutput rdf:resource="#Result"/>
 
@@ -75,8 +75,8 @@
      <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
 </process:Input>
 
-<process:Input rdf:ID="PositionValue">
-     <rdfs:label>PositionValue</rdfs:label>
+<process:Input rdf:ID="PositionID">
+     <rdfs:label>PositionID</rdfs:label>
      <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
 </process:Input>
 
@@ -125,8 +125,8 @@
 
        <grounding:wsdlInput>
                   <grounding:WsdlInputMessageMap>
-                    <grounding:owlsParameter rdf:resource="#PositionValue"/>
-                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/QuantityMembers/PositionValue</grounding:wsdlMessagePart>
+                    <grounding:owlsParameter rdf:resource="#PositionID"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/QuantityMembers/PositionID</grounding:wsdlMessagePart>
                   </grounding:WsdlInputMessageMap>
         </grounding:wsdlInput>
 
