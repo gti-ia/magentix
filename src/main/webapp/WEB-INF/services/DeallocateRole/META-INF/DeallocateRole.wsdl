@@ -5,9 +5,9 @@
       <xsd:element name="DeallocateRole">
         <xsd:complexType>
           <xsd:sequence>
-          	 <xsd:element name="RoleName" type="xsd:string"/>
-             <xsd:element name="UnitName" type="xsd:string"/>
-             <xsd:element name="TargetAgentName" type="xsd:string"/>
+          	 <xsd:element name="RoleID" type="xsd:string"/>
+             <xsd:element name="UnitID" type="xsd:string"/>
+             <xsd:element name="TargetAgentID" type="xsd:string"/>
              <xsd:element name="AgentID" type="xsd:string"/>
           </xsd:sequence>
         </xsd:complexType>
