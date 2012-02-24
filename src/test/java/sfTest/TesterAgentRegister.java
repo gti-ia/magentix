@@ -20,64 +20,93 @@ public class TesterAgentRegister extends QueueAgent{
 	protected void execute() {
 
 
-		String res1=incorrectParamTest1();
-		System.out.println("incorrectParamTest1:\n"+res1);
+		ArrayList<String> res1=incorrectParamTest1();
 
 
-		String res2=incorrectParamTest2();
-		System.out.println("incorrectParamTest2:\n"+res2);
+		ArrayList<String> res2=incorrectParamTest2();
 
-		String res3=incorrectParamTest3();
-		System.out.println("incorrectParamTest3:\n"+res3);
+		ArrayList<String> res3=incorrectParamTest3();
 
 
-//		String resApp1=appropiateParamsTest1();
-//		System.out.println("appropiateParamsTest1:\n"+resApp1);
-//
-//		String resApp2=appropiateParamsTest2();
-//		System.out.println("appropiateParamsTest2:\n"+resApp2);
-//
-//		String resApp3=appropiateParamsTest3();
-//		System.out.println("appropiateParamsTest3:\n"+resApp3);
-//
-//		String resApp4=appropiateParamsTest4();
-//		System.out.println("appropiateParamsTest4:\n"+resApp4);
-//
-//		String resApp5=appropiateParamsTest5();
-//		System.out.println("appropiateParamsTest5:\n"+resApp5);
-//
-//		String resApp6=appropiateParamsTest6();
-//		System.out.println("appropiateParamsTest6:\n"+resApp6);
-//
-//		String resApp7=appropiateParamsTest7();
-//		System.out.println("appropiateParamsTest7:\n"+resApp7);
-//
-//		String resApp8=appropiateParamsTest8();
-//		System.out.println("appropiateParamsTest8:\n"+resApp8);
-//
-//		String resApp9=appropiateParamsTest9();
-//		System.out.println("appropiateParamsTest9:\n"+resApp9);
-//
-//		String resApp10=appropiateParamsTest10();
-//		System.out.println("appropiateParamsTest10:\n"+resApp10);
-//
-//		String resApp11=appropiateParamsTest11();
-//		System.out.println("appropiateParamsTest11:\n"+resApp11);
-//
-//		String resApp12=appropiateParamsTest12();
-//		System.out.println("appropiateParamsTest12:\n"+resApp12);
+		ArrayList<String> resApp1=appropiateParamsTest1();
 
+
+		ArrayList<String> resApp2=appropiateParamsTest2();
+
+
+		ArrayList<String> resApp3=appropiateParamsTest3();
+		if (resApp3!=null)
+		{
+		System.out.println("appropiateParamsTest3 (description):\n"+resApp3.get(0));
+		System.out.println("appropiateParamsTest3 (specfication):\n"+resApp3.get(1));
+		}
+
+		ArrayList<String> resApp4=appropiateParamsTest4();
+		if (resApp4!=null)
+		{
+		System.out.println("appropiateParamsTest4 (description):\n"+resApp4.get(0));
+		System.out.println("appropiateParamsTest4 (specfication):\n"+resApp4.get(1));
+		}
+		ArrayList<String> resApp5=appropiateParamsTest5();
+		if (resApp5!=null)
+		{
+		System.out.println("appropiateParamsTest5 (description):\n"+resApp5.get(0));
+		System.out.println("appropiateParamsTest5 (specfication):\n"+resApp5.get(1));
+		}
+	
+		ArrayList<String> resApp6=appropiateParamsTest6();
+		if (resApp6!=null)
+		{
+		System.out.println("appropiateParamsTest6 (description):\n"+resApp6.get(0));
+		System.out.println("appropiateParamsTest6 (specfication):\n"+resApp6.get(1));
+		}
+		ArrayList<String> resApp7=appropiateParamsTest7();
+		if (resApp7!=null)
+		{
+		System.out.println("appropiateParamsTest7 (description):\n"+resApp7.get(0));
+		System.out.println("appropiateParamsTest7 (specfication):\n"+resApp7.get(1));
+		}
+		String resApp8=appropiateParamsTest8();
+		if (resApp8!=null)
+		{
+		System.out.println("appropiateParamsTest8 (description):\n"+resApp8);
+		}
+		ArrayList<String> resApp9=appropiateParamsTest9();
+		if (resApp9!=null)
+		{
+		System.out.println("appropiateParamsTest9 (description):\n"+resApp9.get(0));
+		System.out.println("appropiateParamsTest9 (specfication):\n"+resApp9.get(1));
+		}
+		ArrayList<String> resApp10=appropiateParamsTest10();
+		if (resApp10!=null)
+		{
+		System.out.println("appropiateParamsTest10 (description):\n"+resApp10.get(0));
+		System.out.println("appropiateParamsTest10 (specfication):\n"+resApp10.get(1));
+		}
+		ArrayList<String> resApp11=appropiateParamsTest11();
+		if (resApp11!=null)
+		{
+		System.out.println("appropiateParamsTest11 (description):\n"+resApp11.get(0));
+		System.out.println("appropiateParamsTest11 (specfication):\n"+resApp11.get(1));
+		}
+		ArrayList<String> resApp12=appropiateParamsTest12();
+		if (resApp12!=null)
+		{
+		System.out.println("appropiateParamsTest12 (description):\n"+resApp12.get(0));
+		System.out.println("appropiateParamsTest12 (specfication):\n"+resApp12.get(1));
+		}
 
 
 	}
 
 	/**
 	 * Incorrect URL. The registerService method is called with a string which not represents a URL
+	 * @return 
 	 * @return
 	 * @throws THOMASException 
 	 */
 	ArrayList<String> incorrectParamTest1(){
-
+		
 		try
 		{
 			return sfProxy.registerService("dsic-upv-es");
@@ -247,7 +276,7 @@ public class TesterAgentRegister extends QueueAgent{
 	 * @return
 	 * @throws THOMASException 
 	 */
-	ArrayList<String> appropiateParamsTest8(){
+	String appropiateParamsTest8(){
 		try
 		{
 
