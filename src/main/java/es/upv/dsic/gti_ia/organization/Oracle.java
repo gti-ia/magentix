@@ -8,7 +8,6 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -51,8 +50,8 @@ public class Oracle {
 	private ArrayList<String> clientList;
 	private ArrayList<String> clientunitList;
 	private ArrayList<String> providerunitList;
-	private ArrayList<String> inputTypes = new ArrayList<String>();
-	private ArrayList<String> outputTypes = new ArrayList<String>();
+	private ArrayList<String> wsdlInputTypes = new ArrayList<String>();
+	private ArrayList<String> wsdlOutputTypes = new ArrayList<String>();
 
 	private ArrayList<String> inputProcess = new ArrayList<String>();
 	private ArrayList<String> outputProcess = new ArrayList<String>();
@@ -60,8 +59,6 @@ public class Oracle {
 	private ArrayList<String> wsdlInputParams = new ArrayList<String>();
 	private ArrayList<String> wsdlOutputParams = new ArrayList<String>();
 	
-	private HashMap<String,String> wsdlInputParamsAndTypes = new HashMap<String,String>();
-	private HashMap<String,String> wsdlOutputParamsAndTypes = new HashMap<String,String>();
 
 	private Map<String, String> elements = new LinkedHashMap<String, String>();
 
@@ -143,8 +140,8 @@ public class Oracle {
 	 * 
 	 * @return Returns the input parameters of owls file parsed
 	 */
-	public ArrayList<String> getOutputsTypes() {
-		return outputTypes;
+	public ArrayList<String> getWsdlOutputsTypes() {
+		return wsdlOutputTypes;
 	}
 
 	/**
@@ -152,8 +149,8 @@ public class Oracle {
 	 * 
 	 * @return Returns the input parameters of owls file parsed
 	 */
-	public ArrayList<String> getInputsTypes() {
-		return inputTypes;
+	public ArrayList<String> getWsdlInputsTypes() {
+		return wsdlInputTypes;
 	}
 
 	/**
@@ -299,14 +296,6 @@ public class Oracle {
 	}
 	
 	
-	public HashMap<String,String> getWsdlInputParamsAndTypes(){
-		return wsdlInputParamsAndTypes;
-	}
-	
-	public HashMap<String,String> getWsdlOutputParamsAndTypes(){
-		return wsdlOutputParamsAndTypes;
-	}
-	
 	/**
 	 * Method to parses an OWL-S file
 	 * 
@@ -355,15 +344,9 @@ public class Oracle {
 	public Oracle(String s) {
 		try {
 			doc = string2DOM(s);
-			// doc.normalizeDocument();
-
-			// System.out.println("***************String:\n" + s);
-			// System.out.println("***************DOC:\n" + xmlToString(doc));
-			// visit(doc, 0);
-
-			visitNodeProcess(doc, 0);// TODO added to parse wsdl part of owl-s
-			// specification
-
+			
+			visitNodeProcess(doc, 0);
+			
 			// Change flags
 			// behaviour = true;
 			// webService = false;
@@ -373,54 +356,38 @@ public class Oracle {
 		}
 	}
 
-	// public static String xmlToString(Node node) {
-	// try {
-	// Source source = new DOMSource(node);
-	// StringWriter stringWriter = new StringWriter();
-	// Result result = new StreamResult(stringWriter);
-	// TransformerFactory factory = TransformerFactory.newInstance();
-	// Transformer transformer = factory.newTransformer();
-	// transformer.transform(source, result);
-	// return stringWriter.getBuffer().toString();
-	// } catch (TransformerConfigurationException e) {
-	// e.printStackTrace();
-	// } catch (TransformerException e) {
-	// e.printStackTrace();
-	// }
-	// return null;
-	// }
-
+	
 	public Oracle() {
 
 	}
 
 	private Document string2DOM(String s) {
-		int coderror = 0;
-		String msgerror = "";
+		
 
 		Document tmpX = null;
 		DocumentBuilder builder = null;
 		try {
 			builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 		} catch (javax.xml.parsers.ParserConfigurationException error) {
-			coderror = 10;
-			msgerror = "Error crando factory String2DOM " + error.getMessage();
+			error.printStackTrace();
 			return null;
 		}
 		try {
 			tmpX = builder.parse(new ByteArrayInputStream(s.getBytes()));
 		} catch (org.xml.sax.SAXException error) {
-			coderror = 10;
-			msgerror = "Error parseo SAX String2DOM " + error.getMessage();
+			error.printStackTrace();
 			return null;
 		} catch (IOException error) {
-			coderror = 10;
-			msgerror = "Error generando Bytes String2DOM " + error.getMessage();
+			error.printStackTrace();
 			return null;
 		}
 		return tmpX;
 	}
 	
+	/**
+	 * Parses only a wsdl file
+	 * @param wsdlURL
+	 */
 	public void parseWSDL(String wsdlURL){
 		visitWSDL(wsdlURL);
 	}
@@ -663,13 +630,11 @@ public class Oracle {
 								String type=reader.getAttributeValue(1).substring(reader.getAttributeValue(1).indexOf(":")+1);
 								if(inputsRead<=1){
 									wsdlInputParams.add(inOut);
-									inputTypes.add(type);
-									wsdlInputParamsAndTypes.put(inOut, type);
+									wsdlInputTypes.add(type);
 								}
 								else{
 									wsdlOutputParams.add(inOut);
-									outputTypes.add(type);
-									wsdlOutputParamsAndTypes.put(inOut, type);
+									wsdlOutputTypes.add(type);
 								}
 							}
 							else{
@@ -692,20 +657,6 @@ public class Oracle {
 				}
 			}
 
-//			String serviceName = parameters.remove(0);
-//			Iterator<String> iterParams = parameters.iterator();
-//			while (iterParams.hasNext()) {
-//				String param = iterParams.next();
-//				if (param.contains(serviceName))
-//					break;
-//				wsdlInputParams.add(param);
-//				// System.out.println("param: "+param);
-//			}
-//			while(iterParams.hasNext()){
-//				String outputParam=iterParams.next();
-//				wsdlOut //TODO 
-//			}
-
 		} catch (FileNotFoundException e) {
 
 			e.printStackTrace();
@@ -724,7 +675,7 @@ public class Oracle {
 	private void visitNodeProcess(Node node, int level) {
 		NodeList nl = node.getChildNodes();
 
-		inputTypes.clear();
+		wsdlInputTypes.clear();
 		for (int i = 0, cnt = nl.getLength(); i < cnt; i++) {
 			// Child node examined
 			Node childNode = nl.item(i);
@@ -742,7 +693,7 @@ public class Oracle {
 						if (n1.item(k).getNodeName().equalsIgnoreCase("process:parameterType")) {
 
 							String type = n1.item(k).getTextContent().substring(n1.item(k).getTextContent().indexOf("#") + 1);
-							inputTypes.add(type);
+							wsdlInputTypes.add(type);
 						}
 
 					}
@@ -755,7 +706,7 @@ public class Oracle {
 						if (n1.item(k).getNodeName().equalsIgnoreCase("process:parameterType")) {
 
 							String type = n1.item(k).getTextContent().substring(n1.item(k).getTextContent().indexOf("#") + 1);
-							outputTypes.add(type);
+							wsdlOutputTypes.add(type);
 						}
 
 					}
@@ -796,8 +747,6 @@ public class Oracle {
 			// It is the service name (aka provider's behaviour to execute)
 			if (childNode.getNodeName().equalsIgnoreCase("profile:serviceName")) {
 
-				int acumulador = 0;
-				acumulador++;
 				// Check node's Value before assign
 				String nodeTextContent = childNode.getFirstChild().getNodeValue();
 

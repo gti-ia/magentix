@@ -51,8 +51,6 @@ public class ServiceClient {
 	
 		    operationName = oracle.getOperation();
 		    
-		    
-	
 		    ServiceFactory factory = ServiceFactory.newInstance();
 	
 		    Service service = factory.createService(new QName(qnameService));
@@ -61,47 +59,22 @@ public class ServiceClient {
 	
 		    Call call = service.createCall(port);
 		    call.setTargetEndpointAddress(wsdlURL);
-	
-		    
 		    call.setProperty(Call.SOAPACTION_USE_PROPERTY, new Boolean(true));
 		    call.setProperty(Call.SOAPACTION_URI_PROPERTY, "");
 		    call.setProperty(ENCODING_STYLE_PROPERTY, URI_ENCODING);
-	
-		
-	
-		    call.setReturnType(new QName(NS_XSD, oracle.getOutputsTypes().get(oracle.getOutputsTypes().size()-1)));
-	
+		    call.setReturnType(new QName(NS_XSD, oracle.getWsdlOutputsTypes().get(oracle.getWsdlOutputsTypes().size()-1)));
 		    call.setOperationName(new QName(BODY_NAMESPACE_VALUE, operationName));
 	
-		    // Debemos montar con el getInputTyps y los argumentos de entrada
-		    // del agente
-//		    Iterator<Map.Entry<String,String>> itr = oracle.getElements().entrySet().iterator();
-	
-		    
-		//    System.out.println("Input: "+ oracle.getProcessInputs());
-		    
-		    
-		    
-//		    while (itr.hasNext()) {
-//			
-//				Map.Entry<String,String> e = (Map.Entry<String,String>) itr.next();
-//				
-//				
-//				call.addParameter(e.getKey().toString(),
-//					new QName(NS_XSD, e.getValue().toString()), ParameterMode.IN);
-//				
-//		    }
-		    
-		    HashMap<String,String> inputsAndTypes=oracle.getWsdlInputParamsAndTypes();
-		    for (Entry<String,String> e: inputsAndTypes.entrySet()) {
-			    
-		    	call.addParameter(e.getKey().toString(),
-						new QName(NS_XSD, e.getValue().toString()), ParameterMode.IN);
+		    ArrayList<String> inputNames=oracle.getWSDLInputs();
+		    ArrayList<String> inputTypes=oracle.getWsdlInputsTypes();
+		    for (int i=0;i<inputNames.size();i++) {
+		    	call.addParameter(inputNames.get(i),
+						new QName(NS_XSD, inputTypes.get(i)), ParameterMode.IN);
 			}
 		    
 		    Object firstResult = call.invoke(params.toArray());
 	
-		  //Build result
+		    //Build result
 		    HashMap<String, Object> results=new HashMap<String, Object>();
 		    
 		    results.put(oracle.getWSDLOutputs().get(0), firstResult);
