@@ -7,6 +7,9 @@
  */
 package wtp;
 
+import org.apache.log4j.Logger;
+import org.apache.log4j.xml.DOMConfigurator;
+
 import persistence.OMSInterface;
 
 /**
@@ -15,7 +18,7 @@ import persistence.OMSInterface;
 public class InformUnitSkeleton{
 
 
-	public static final Boolean		DEBUG		= true;
+	
 	private static OMSInterface omsInterface = new OMSInterface();
 
 	/**
@@ -31,13 +34,15 @@ public class InformUnitSkeleton{
 	{
 		wtp.InformUnitResponse res = new InformUnitResponse();
 		String result = "";
-		if (DEBUG)
-		{
-			System.out.println("InformUnit :");
-			System.out.println("***AgentID..." + informUnit.getAgentID());
-			System.out.println("***UnitID()..." + informUnit.getUnitID());
+		DOMConfigurator.configure(InformUnit.class.getResource("/"+"loggin.xml"));
+		Logger logger = Logger.getLogger(InformUnit.class);
+		
+		
+		logger.info("InformUnit :");
+		logger.info("***AgentID..." + informUnit.getAgentID());
+		logger.info("***UnitID()..." + informUnit.getUnitID());
 
-		}
+		
 
 
 		if (informUnit.getUnitID().equals("null"))

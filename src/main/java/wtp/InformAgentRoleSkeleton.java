@@ -7,6 +7,9 @@
  */
 package wtp;
 
+import org.apache.log4j.Logger;
+import org.apache.log4j.xml.DOMConfigurator;
+
 import persistence.OMSInterface;
 
 /**
@@ -15,7 +18,7 @@ import persistence.OMSInterface;
 public class InformAgentRoleSkeleton{
 
 
-	public static final Boolean	DEBUG	= true;
+	
 	private static OMSInterface omsInterface = new OMSInterface();
 
 	/**
@@ -31,13 +34,16 @@ public class InformAgentRoleSkeleton{
 	{
 		String result = "";
 		wtp.InformAgentRoleResponse res = new InformAgentRoleResponse();
-		if (DEBUG)
-		{
-			System.out.println("InformAgentRole :");
-			System.out.println("***AgentID..." + informAgentRole.getAgentID());
-			System.out.println("***RequestedAgentID()..."
+		
+		DOMConfigurator.configure(InformAgentRole.class.getResource("/"+"loggin.xml"));
+		Logger logger = Logger.getLogger(InformAgentRole.class);
+		
+	
+		logger.info("InformAgentRole :");
+		logger.info("***AgentID..." + informAgentRole.getAgentID());
+		logger.info("***RequestedAgentID()..."
 					+ informAgentRole.getRequestedAgentID());
-		}
+	
 
 
 
