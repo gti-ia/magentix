@@ -45,7 +45,7 @@ public class OMS extends CAgent {
 	ResponseParser responseParser = new ResponseParser();
 
 	String separatorToken=" ";
-	private String OMSServiceDesciptionLocation = configuration.getOMSServiceDesciptionLocation();
+	private String OMSServiceDescriptionLocation = configuration.getOMSServiceDescriptionLocation();
 	private static HashMap<String, String> omsServicesURLs=new HashMap<String, String>();
 	ServiceTools st=new ServiceTools();
 	static Logger logger = Logger.getLogger(OMS.class);
@@ -94,21 +94,21 @@ public class OMS extends CAgent {
 		super(aid);
 
 
-		omsServicesURLs.put("RegisterUnit", OMSServiceDesciptionLocation+"RegisterUnit?wsdl");
-		omsServicesURLs.put("JointUnit", OMSServiceDesciptionLocation+"JointUnit?wsdl");
-		omsServicesURLs.put("RegisterRole", OMSServiceDesciptionLocation+"RegisterRole?wsdl");
-		omsServicesURLs.put("DeregisterUnit", OMSServiceDesciptionLocation+"DeregisterUnit?wsdl");
-		omsServicesURLs.put("DeregisterRole", OMSServiceDesciptionLocation+"DeregisterRole?wsdl");
-		omsServicesURLs.put("AcquireRole", OMSServiceDesciptionLocation+"AcquireRole?wsdl");
-		omsServicesURLs.put("AllocateRole", OMSServiceDesciptionLocation+"AllocateRole?wsdl");
-		omsServicesURLs.put("DeallocateRole", OMSServiceDesciptionLocation+"DeallocateRole?wsdl");
-		omsServicesURLs.put("LeaveRole", OMSServiceDesciptionLocation+"LeaveRole?wsdl");
-		omsServicesURLs.put("InformUnit", OMSServiceDesciptionLocation+"InformUnit?wsdl");
-		omsServicesURLs.put("InformRole", OMSServiceDesciptionLocation+"InformRole?wsdl");
-		omsServicesURLs.put("InformAgentRole", OMSServiceDesciptionLocation+"InformAgentRole?wsdl");
-		omsServicesURLs.put("InformMembers", OMSServiceDesciptionLocation+"InformMembers?wsdl");
-		omsServicesURLs.put("InformUnitRoles", OMSServiceDesciptionLocation+"InformUnitRoles?wsdl");
-		omsServicesURLs.put("QuantityMembers", OMSServiceDesciptionLocation+"QuantityMembers?wsdl");
+		omsServicesURLs.put("RegisterUnit", OMSServiceDescriptionLocation+"RegisterUnit?wsdl");
+		omsServicesURLs.put("JointUnit", OMSServiceDescriptionLocation+"JointUnit?wsdl");
+		omsServicesURLs.put("RegisterRole", OMSServiceDescriptionLocation+"RegisterRole?wsdl");
+		omsServicesURLs.put("DeregisterUnit", OMSServiceDescriptionLocation+"DeregisterUnit?wsdl");
+		omsServicesURLs.put("DeregisterRole", OMSServiceDescriptionLocation+"DeregisterRole?wsdl");
+		omsServicesURLs.put("AcquireRole", OMSServiceDescriptionLocation+"AcquireRole?wsdl");
+		omsServicesURLs.put("AllocateRole", OMSServiceDescriptionLocation+"AllocateRole?wsdl");
+		omsServicesURLs.put("DeallocateRole", OMSServiceDescriptionLocation+"DeallocateRole?wsdl");
+		omsServicesURLs.put("LeaveRole", OMSServiceDescriptionLocation+"LeaveRole?wsdl");
+		omsServicesURLs.put("InformUnit", OMSServiceDescriptionLocation+"InformUnit?wsdl");
+		omsServicesURLs.put("InformRole", OMSServiceDescriptionLocation+"InformRole?wsdl");
+		omsServicesURLs.put("InformAgentRole", OMSServiceDescriptionLocation+"InformAgentRole?wsdl");
+		omsServicesURLs.put("InformMembers", OMSServiceDescriptionLocation+"InformMembers?wsdl");
+		omsServicesURLs.put("InformUnitRoles", OMSServiceDescriptionLocation+"InformUnitRoles?wsdl");
+		omsServicesURLs.put("QuantityMembers", OMSServiceDescriptionLocation+"QuantityMembers?wsdl");
 
 	}
 
@@ -120,7 +120,7 @@ public class OMS extends CAgent {
 	public void setOMSServiceDesciptionLocation(String OMSUrl)
 	{
 
-		this.OMSServiceDesciptionLocation = OMSUrl; 
+		this.OMSServiceDescriptionLocation = OMSUrl; 
 	}
 
 
@@ -132,7 +132,7 @@ public class OMS extends CAgent {
 	public String getOMSServiceDesciptionLocation()
 	{
 
-		return OMSServiceDesciptionLocation; 
+		return OMSServiceDescriptionLocation; 
 	}
 
 

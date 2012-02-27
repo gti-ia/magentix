@@ -1,9 +1,6 @@
 package es.upv.dsic.gti_ia.organization;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.StringTokenizer;
 
 import org.apache.log4j.Logger;
 
@@ -23,20 +20,13 @@ public class SF extends CAgent {
 
 	Configuration configuration = Configuration.getConfiguration();
 
-
 	private static SF sf = null;
 	private String SFServiceDescriptionLocation = configuration.getSFServiceDescriptionLocation();
 
 	private static HashMap<String, String> sfServicesURLs=new HashMap<String, String>();
 	static Logger logger = Logger.getLogger(SF.class);
 	
-	String separatorToken=" ";
 	ServiceTools st=new ServiceTools();
-
-	// Debug
-	//private final Boolean DEBUG = true;
-
-
 
 	/**
 	 * Returns an instance of the agents SF
@@ -66,7 +56,6 @@ public class SF extends CAgent {
 		}catch(Exception e){logger.error(e);}
 		return sf;
 
-
 	}
 
 
@@ -81,12 +70,11 @@ public class SF extends CAgent {
 
 		super(aid);
 
-		//TODO get from some configuration file...
-		sfServicesURLs.put("RegisterService", "http://localhost:8080/sfservices/services/RegisterService?wsdl");
-		sfServicesURLs.put("DeregisterService", "http://localhost:8080/sfservices/services/DeregisterService?wsdl");
-		sfServicesURLs.put("GetService", "http://localhost:8080/sfservices/services/GetService?wsdl");
-		sfServicesURLs.put("SearchService", "http://localhost:8080/sfservices/services/SearchService?wsdl");
-		sfServicesURLs.put("RemoveProvider", "http://localhost:8080/sfservices/services/RemoveProvider?wsdl");
+		sfServicesURLs.put("RegisterService", SFServiceDescriptionLocation+"RegisterService?wsdl");
+		sfServicesURLs.put("DeregisterService", SFServiceDescriptionLocation+"DeregisterService?wsdl");
+		sfServicesURLs.put("GetService", SFServiceDescriptionLocation+"GetService?wsdl");
+		sfServicesURLs.put("SearchService", SFServiceDescriptionLocation+"SearchService?wsdl");
+		sfServicesURLs.put("RemoveProvider", SFServiceDescriptionLocation+"RemoveProvider?wsdl");
 
 	}
 

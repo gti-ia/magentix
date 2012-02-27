@@ -63,14 +63,14 @@ public class OMSProxy extends THOMASProxy{
 	public OMSProxy(BaseAgent agent) {
 
 		super(agent,"OMS");
-		ServiceDescriptionLocation = c.getOMSServiceDesciptionLocation();
+		ServiceDescriptionLocation = c.getOMSServiceDescriptionLocation();
 
 	}
 	
 	public OMSProxy(CProcessor myProcessor) {
 
 		super(myProcessor,"OMS");
-		ServiceDescriptionLocation = c.getOMSServiceDesciptionLocation();
+		ServiceDescriptionLocation = c.getOMSServiceDescriptionLocation();
 
 	}
 
