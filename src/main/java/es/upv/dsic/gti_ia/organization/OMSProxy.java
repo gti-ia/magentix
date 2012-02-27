@@ -235,8 +235,6 @@ public class OMSProxy extends THOMASProxy{
 	public String leaveRole(String RoleID,
 			String UnitID) throws THOMASException {
 	
-//		call = ServiceDescriptionLocation + "LeaveRole.owl AgentID=" + agent.getAid().name.replace('~', '@')
-//		+ " RoleID=" + RoleID + " UnitID=" + UnitID;
 		
 		HashMap<String, String> inputs = new HashMap<String,String>();
 		
@@ -254,7 +252,7 @@ public class OMSProxy extends THOMASProxy{
 	/**
 	 * Requesting the list of roles and units in which an agent is in a specific moment.
 	 * 
-	 * @param RequestedAgentName Identifier of the agent requested 
+	 * @param RequestedAgentID Identifier of the agent requested 
 	 *    
 	 * @return ArrayList<ArrayList<String>> The array list is formed by array lists of strings,
 	 * each array list is formed by the fields (strings) role and unit
@@ -262,16 +260,15 @@ public class OMSProxy extends THOMASProxy{
 	 * @throws THOMASException If the agent not exists or some parameter is empty or is invalid
 	 */
 	@SuppressWarnings("unchecked")
-	public ArrayList<ArrayList<String>> informAgentRole(String RequestedAgentName) throws THOMASException
+	public ArrayList<ArrayList<String>> informAgentRole(String RequestedAgentID) throws THOMASException
 	{
 		ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
-//		call = ServiceDescriptionLocation
-//		+ "InformAgentRole.owl RequestedAgentID=" + RequestedAgentName;
+
 		
 		HashMap<String, String> inputs = new HashMap<String,String>();
 		
 		inputs.put("AgentID", agent.getAid().name.replace('~', '@'));
-		inputs.put("RequestedAgentID", RequestedAgentName);
+		inputs.put("RequestedAgentID", RequestedAgentID);
 		
 		call = st.buildServiceContent("InformAgentRole", inputs);
 		
@@ -287,7 +284,7 @@ public class OMSProxy extends THOMASProxy{
 	 * 
 	 * @param RoleID Identifier of the role
 	 *         
-	 * @param Position Identifier of the position inside the unit, such as member, supervisor or subordinate
+	 * @param PositionID Identifier of the position inside the unit, such as member, supervisor or subordinate
 	 *          
 	 * @return ArrayList<ArrayList<String>> The array list is formed by array list of strings, 
 	 * each array list is formed by the fields (strings) agent name and role name
@@ -295,20 +292,16 @@ public class OMSProxy extends THOMASProxy{
 	 * @throws THOMASException If unit not found, the role is not inside the unit, the agent is not allowed or some parameter is invalid
 	 */
 	@SuppressWarnings("unchecked")
-	public ArrayList<ArrayList<String>>  informMembers(String UnitID, String RoleID, String PositionValue) throws THOMASException
+	public ArrayList<ArrayList<String>>  informMembers(String UnitID, String RoleID, String PositionID) throws THOMASException
 	{
 
-		call = ServiceDescriptionLocation + "InformMembers.owl "
-		+ "RoleID=" + RoleID 
-		+ " UnitID=" + UnitID
-		+ " PositionValue="+PositionValue;
 		
 		HashMap<String, String> inputs = new HashMap<String,String>();
 		
 		inputs.put("AgentID", agent.getAid().name.replace('~', '@'));
 		inputs.put("RoleID", RoleID);
 		inputs.put("UnitID", UnitID);
-		inputs.put("PositionValue", PositionValue);
+		inputs.put("PositionID", PositionID);
 		
 		call = st.buildServiceContent("InformMembers", inputs);
 		
@@ -320,25 +313,22 @@ public class OMSProxy extends THOMASProxy{
 	/**
 	 * Provides a role description of a specific unit.
 	 * 
-	 * @param RoleName Identifier of the role
-	 * @param UnitName Identifier of the unit
+	 * @param RoleID Identifier of the role
+	 * @param UnitID Identifier of the unit
 	 * @return ArrayList<String> The array list is formed by the fields (strings) position, visibility and accessibility
 	 * @throws THOMASException If unit not found, the role is not is not registered in the unit, the agent is not allowed, or some parameter is empty or is invalid
 	 */
 	@SuppressWarnings("unchecked")
-	public ArrayList<String>  informRole(String RoleName, String UnitName) throws THOMASException
+	public ArrayList<String>  informRole(String RoleID, String UnitID) throws THOMASException
 	{
 		
 		ArrayList<String> result = new ArrayList<String>();
-		call = ServiceDescriptionLocation + "InformRole.owl " 
-		+"UnitName="+ UnitName
-		+ " RoleName="+RoleName;
 		
 		HashMap<String, String> inputs = new HashMap<String,String>();
 		
 		inputs.put("AgentID", agent.getAid().name.replace('~', '@'));
-		inputs.put("UnitName", UnitName);
-		inputs.put("RoleName", RoleName);
+		inputs.put("UnitID", UnitID);
+		inputs.put("RoleID", RoleID);
 		
 		call = st.buildServiceContent("InformRole", inputs);
 		
@@ -359,7 +349,7 @@ public class OMSProxy extends THOMASProxy{
 	@SuppressWarnings("unchecked")
 	public ArrayList<String>  informUnit(String UnitID) throws THOMASException
 	{
-		call = ServiceDescriptionLocation + "InformUnit.owl UnitID=" + UnitID;
+		
 		
 		HashMap<String, String> inputs = new HashMap<String,String>();
 		
@@ -387,8 +377,6 @@ public class OMSProxy extends THOMASProxy{
 	@SuppressWarnings("unchecked")
 	public ArrayList<ArrayList<String>>  informUnitRoles(String UnitID) throws THOMASException
 	{
-		call = ServiceDescriptionLocation + "InformUnitRoles.owl UnitID="
-		+ UnitID;
 		
 		HashMap<String, String> inputs = new HashMap<String,String>();
 		
@@ -410,25 +398,23 @@ public class OMSProxy extends THOMASProxy{
 	 * 
 	 * @param RoleID Identifier of the role
 	 *         
-	 * @param Position Identifier of the position inside the unit, such as member, supervisor or subordinate
+	 * @param PositionID Identifier of the position inside the unit, such as member, supervisor or subordinate
 	 *        
 	 * @return Integer Quantity of members
 	 * 
 	 * @throws THOMASException If unit not found, the role is not inside the unit, the agent is not allowed or some parameter is invalid
 	 */
 	@SuppressWarnings("unchecked")
-	public int quantityMembers(String UnitID, String RoleID, String PositionValue) throws THOMASException
+	public int quantityMembers(String UnitID, String RoleID, String PositionID) throws THOMASException
 	{
 		
-		call = ServiceDescriptionLocation + "QuantityMembers.owl RoleID="
-		+ RoleID + " UnitID=" + UnitID + " PositionValue="+ PositionValue;
 		
 		HashMap<String, String> inputs = new HashMap<String,String>();
 		
 		inputs.put("AgentID", agent.getAid().name.replace('~', '@'));
 		inputs.put("RoleID", RoleID);
 		inputs.put("UnitID", UnitID);
-		inputs.put("PositionValue", PositionValue);
+		inputs.put("PositionID", PositionID);
 		
 		
 		call = st.buildServiceContent("QuantityMembers", inputs);
@@ -448,15 +434,15 @@ public class OMSProxy extends THOMASProxy{
 	 *            
 	 * @param UnitID Identifier of the unit
 	 *            
-	 * @param Accessibility
+	 * @param AccessibilityID
 	 *            considers two types of roles: (internal) internal roles, which are
 	 *            assigned to internal agents of the system platform; and (external)
 	 *            external roles, which can be enacted by any agent.
-	 * @param Visibility
+	 * @param VisibilityID
 	 *            indicates whether agents can obtain information of this role
 	 *            from outside the unit in which this role is defined (public)
 	 *            or from inside (private). 
-	 * @param Position
+	 * @param PositionID
 	 *            determines its structural position inside the unit, such as
 	 *            member, supervisor or subordinate.
 	 *            
@@ -465,22 +451,19 @@ public class OMSProxy extends THOMASProxy{
 	 * @throws THOMASException If unit not found, the role is already registered in the unit, the agent is not allowed or some parameter is empty or is invalid
 	 */
 	public String registerRole(String RoleID, String UnitID,
-			String Accessibility, String Visibility, String Position) throws THOMASException
+			String AccessibilityID, String VisibilityID, String PositionID) throws THOMASException
 			{
 		
-		call = ServiceDescriptionLocation + "RegisterRole.owl RoleID="
-		+ RoleID + " UnitID=" + UnitID + " Accessibility="
-		+ Accessibility + " Position=" + Position + " Visibility="
-		+ Visibility;
+
 		
 		HashMap<String, String> inputs = new HashMap<String,String>();
 		
 		inputs.put("AgentID", agent.getAid().name.replace('~', '@'));
 		inputs.put("RoleID", RoleID);
 		inputs.put("UnitID", UnitID);
-		inputs.put("Accessibility", Accessibility);
-		inputs.put("Position", Position);
-		inputs.put("Visibility", Visibility);
+		inputs.put("AccessibilityID", AccessibilityID);
+		inputs.put("PositionID", PositionID);
+		inputs.put("VisibilityID", VisibilityID);
 		
 		call = st.buildServiceContent("RegisterRole", inputs);
 		
@@ -495,7 +478,7 @@ public class OMSProxy extends THOMASProxy{
 	 *
 	 * @param UnitID Identifier of the unit
 	 *            
-	 * @param Type
+	 * @param TypeID
 	 *            indicates the topology of the new unit: (i) Hierarchy, in
 	 *            which a supervisor agent has control over other members; (ii)
 	 *            Team, which are groups of agents that share a common goal,
@@ -504,28 +487,25 @@ public class OMSProxy extends THOMASProxy{
 	 * 
 	 * @param ParentUnitID Identifier of the parent unit
 	 *             
-	 * @param CreatorName The name of the new creator role
+	 * @param CreatorID The name of the new creator role
 	 *             
 	 * @return Status if result is OK
 	 * 
 	 * @throws THOMASException If unit already exists, if the parent unit not exists, the agent is not allowed or some parameter is empty or is invalid
 	 */
-	public String registerUnit(String UnitID, String Type,
-			String ParentUnitID, String CreatorName) throws THOMASException
+	public String registerUnit(String UnitID, String TypeID,
+			String ParentUnitID, String CreatorID) throws THOMASException
 			{
 		
 		if (ParentUnitID == null)
 		{
-			call = ServiceDescriptionLocation + "RegisterUnit.owl  UnitID="
-			+ UnitID + " Type=" + Type + " CreatorName=" + CreatorName + " ParentUnitID=";
 			
 			HashMap<String, String> inputs = new HashMap<String,String>();
 			
 			inputs.put("AgentID", agent.getAid().name.replace('~', '@'));
-			
 			inputs.put("UnitID", UnitID);
-			inputs.put("Type", Type);
-			inputs.put("CreatorName", CreatorName);
+			inputs.put("TypeID", TypeID);
+			inputs.put("CreatorID", CreatorID);
 			
 			
 			call = st.buildServiceContent("RegisterUnit", inputs);
@@ -533,16 +513,14 @@ public class OMSProxy extends THOMASProxy{
 		}
 		else
 		{
-			call = ServiceDescriptionLocation + "RegisterUnit.owl  UnitID="
-			+ UnitID + " Type=" + Type + " CreatorName=" + CreatorName + " ParentUnitID="
-			+ ParentUnitID;
+
 			
 			HashMap<String, String> inputs = new HashMap<String,String>();
 			
 			inputs.put("AgentID", agent.getAid().name.replace('~', '@'));
 			inputs.put("UnitID", UnitID);
-			inputs.put("Type", Type);
-			inputs.put("CreatorName", CreatorName);
+			inputs.put("TypeID", TypeID);
+			inputs.put("CreatorID", CreatorID);
 			inputs.put("ParentUnitID", ParentUnitID);
 			
 			
@@ -557,23 +535,21 @@ public class OMSProxy extends THOMASProxy{
 	/**
 	 * Update the parent unit
 	 * 
-	 * @param UnitName Identifier of the unit
-	 * @param ParentName Identifier of the new parent unit
+	 * @param UnitID Identifier of the unit
+	 * @param ParentUnitID Identifier of the new parent unit
 	 * @return Status if result is OK
 	 * 
 	 * @throws THOMASException If unit or parent unit not found, the unit and parent unit are the same, the agent is not allowed or some parameter is empty or is invalid
 	 */
-	public String jointUnit(String UnitName, String ParentName)throws THOMASException
+	public String jointUnit(String UnitID, String ParentUnitID)throws THOMASException
 	{
 	
-		call = ServiceDescriptionLocation + "JointUnit.owl  UnitName="
-		+ UnitName + " ParentName=" + ParentName;
 		
 		HashMap<String, String> inputs = new HashMap<String,String>();
 		
 		inputs.put("AgentID", agent.getAid().name.replace('~', '@'));
-		inputs.put("UnitName", UnitName);
-		inputs.put("ParentName", ParentName);
+		inputs.put("UnitID", UnitID);
+		inputs.put("ParentUnitID", ParentUnitID);
 		
 		call = st.buildServiceContent("JointUnit", inputs);
 		
@@ -596,8 +572,6 @@ public class OMSProxy extends THOMASProxy{
 	public String deregisterRole(String RoleID, String UnitID) throws THOMASException
 	{
 		
-		call = ServiceDescriptionLocation + "DeregisterRole.owl  RoleID="
-		+ RoleID + " UnitID=" + UnitID;
 		
 		HashMap<String, String> inputs = new HashMap<String,String>();
 		
@@ -623,9 +597,7 @@ public class OMSProxy extends THOMASProxy{
 	 */
 	public String deregisterUnit(String UnitID)throws THOMASException
 	{
-	
-		call = ServiceDescriptionLocation + "DeregisterUnit.owl  UnitID="
-		+ UnitID;
+
 		
 		HashMap<String, String> inputs = new HashMap<String,String>();
 		
@@ -644,28 +616,26 @@ public class OMSProxy extends THOMASProxy{
 	 * Forces an agent to leave a specific role
 	 *
 	 * 
-	 * @param RoleName Identifier of the role
+	 * @param RoleID Identifier of the role
 	 *            
-	 * @param UnitName Identifier of the unit
+	 * @param UnitID Identifier of the unit
 	 *        
-	 * @param TargetAgentName Identifier of the agent
+	 * @param TargetAgentID Identifier of the agent
 	 *       	
 	 * @return Status if result is OK
 	 * 
 	 * @throws THOMASException If unit or role not found, if target agent not play the role, the agent is not allowed or some parameter is empty or is invalid
 	 */
-	public String deallocateRole(String RoleName, String UnitName, String TargetAgentName) throws THOMASException
+	public String deallocateRole(String RoleID, String UnitID, String TargetAgentID) throws THOMASException
 	{
 		
-		call = ServiceDescriptionLocation + "DeallocateRole.owl TargetAgentName=" + TargetAgentName
-		+ " RoleName=" + RoleName + " UnitName=" + UnitName;
 		
 		HashMap<String, String> inputs = new HashMap<String,String>();
 		
 		inputs.put("AgentID", agent.getAid().name.replace('~', '@'));
-		inputs.put("TargetAgentName", TargetAgentName);
-		inputs.put("RoleName", RoleName);
-		inputs.put("UnitName", UnitName);
+		inputs.put("TargetAgentID", TargetAgentID);
+		inputs.put("RoleID", RoleID);
+		inputs.put("UnitID", UnitID);
 		
 		call = st.buildServiceContent("DeallocateRole", inputs);
 		
@@ -678,28 +648,25 @@ public class OMSProxy extends THOMASProxy{
 	 * Forces an agent to acquire a specific role
 	 *
 	 * 
-	 * @param RoleName Identifier of the role
+	 * @param RoleID Identifier of the role
 	 *            
-	 * @param UnitName Identifier of the unit
+	 * @param UnitID Identifier of the unit
 	 *        
-	 * @param TargetAgentName Identifier of the agent
+	 * @param TargetAgentID Identifier of the agent
 	 *       	
 	 * @return Status if result is OK
 	 * 
 	 * @throws THOMASException If unit or role not found, if target agent already play the role, the agent is not allowed or some parameter is empty or is invalid
 	 */
-	public String allocateRole(String RoleName, String UnitName, String TargetAgentName) throws THOMASException
+	public String allocateRole(String RoleID, String UnitID, String TargetAgentID) throws THOMASException
 	{
 		
-		call = ServiceDescriptionLocation + "AllocateRole.owl RoleName=" + RoleName
-		+ " UnitName=" + UnitName + " TargetAgentName="+ TargetAgentName;
-
 		HashMap<String, String> inputs = new HashMap<String,String>();
 		
 		inputs.put("AgentID", agent.getAid().name.replace('~', '@'));
-		inputs.put("RoleName", RoleName);
-		inputs.put("UnitName", UnitName);
-		inputs.put("TargetAgentName", TargetAgentName);
+		inputs.put("RoleID", RoleID);
+		inputs.put("UnitID", UnitID);
+		inputs.put("TargetAgentID", TargetAgentID);
 		
 		call = st.buildServiceContent("AllocateRole", inputs);
 		
@@ -720,9 +687,7 @@ public class OMSProxy extends THOMASProxy{
 	 */
 	public String acquireRole(String RoleID, String UnitID) throws THOMASException
 	{
-		
-		call = ServiceDescriptionLocation + "AcquireRole.owl RoleID=" + RoleID
-		+ " UnitID=" + UnitID;
+	
 
 		HashMap<String, String> inputs = new HashMap<String,String>();
 		
