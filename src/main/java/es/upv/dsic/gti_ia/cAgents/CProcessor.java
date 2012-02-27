@@ -733,6 +733,7 @@ public class CProcessor implements Runnable, Cloneable {
 		this.lockMyAgent();
 		this.syncConversationResponse = response;
 		syncConversationFinished.signal();
+		syncConversationFinished.signalAll();
 		this.unlockMyAgent();
 	}
 
