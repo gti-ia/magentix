@@ -12,15 +12,12 @@ package es.upv.dsic.gti_ia.organization;
 
 
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.StringTokenizer;
 
 import org.apache.log4j.Logger;
-
 
 import es.upv.dsic.gti_ia.cAgents.CAgent;
 import es.upv.dsic.gti_ia.cAgents.CFactory;
@@ -49,67 +46,12 @@ public class OMS extends CAgent {
 
 	String separatorToken=" ";
 	private String OMSServiceDesciptionLocation = configuration.getOMSServiceDesciptionLocation();
-	private String SFServiceDesciptionLocation = configuration.getSFServiceDescriptionLocation();
-
+	private static HashMap<String, String> omsServicesURLs=new HashMap<String, String>();
+	ServiceTools st=new ServiceTools();
 	static Logger logger = Logger.getLogger(OMS.class);
 
 
-
-
-	// Debug
-	private static final Boolean DEBUG = true;
-
 	// URI where the SF service descriptions are located 
-
-
-	private final URI OWL_S_OMS_SERVICES = URI.create(OMSServiceDesciptionLocation);    
-
-
-	//STRUCTURAL SERVICES
-
-	private  final URI OMS_REGISTERUNIT_PROCESS = URI.create(OWL_S_OMS_SERVICES + "RegisterUnit.owl");
-	private  final URI OMS_JOINTUNIT_PROCESS = URI.create(OWL_S_OMS_SERVICES + "JointUnit.owl");
-	private  final URI OMS_REGISTERNORM_PROCESS = URI.create(OWL_S_OMS_SERVICES + "RegisterNorm.owl");
-	private  final URI OMS_REGISTERROLE_PROCESS = URI.create(OWL_S_OMS_SERVICES + "RegisterRole.owl");
-	private  final URI OMS_DEREGISTERUNIT_PROCESS = URI.create(OWL_S_OMS_SERVICES + "DeregisterUnit.owl");
-	private  final URI OMS_DEREGISTERNORM_PROCESS = URI.create(OWL_S_OMS_SERVICES + "DeregisterNorm.owl");
-	private  final URI OMS_DEREGISTERROLE_PROCESS = URI.create(OWL_S_OMS_SERVICES + "DeregisterRole.owl");
-	//DYNAMIC SERVICES
-	private  final URI OMS_ACQUIREROLE_PROCESS = URI.create(OWL_S_OMS_SERVICES + "AcquireRole.owl");
-	private  final URI OMS_ALLOCATEROLE_PROCESS = URI.create(OWL_S_OMS_SERVICES + "AllocateRole.owl");
-	private  final URI OMS_LEAVEROLE_PROCESS = URI.create(OWL_S_OMS_SERVICES + "LeaveRole.owl");
-	private  final URI OMS_DEALLOCATEROLE_PROCESS = URI.create(OWL_S_OMS_SERVICES + "DeallocateRole.owl");
-	//INFORMATIVE SERVICES
-	private  final URI OMS_INFORMUNIT_PROCESS = URI.create(OWL_S_OMS_SERVICES + "InformUnit.owl");
-	private  final URI OMS_INFORMNORM_PROCESS = URI.create(OWL_S_OMS_SERVICES + "InformNorm.owl");
-	private  final URI OMS_INFORMROLE_PROCESS = URI.create(OWL_S_OMS_SERVICES + "InformRole.owl");
-	private  final URI OMS_INFORMAGENTROLE_PROCESS = URI.create(OWL_S_OMS_SERVICES + "InformAgentRole.owl");
-	private  final URI OMS_INFORMMEMBERS_PROCESS = URI.create(OWL_S_OMS_SERVICES + "InformMembers.owl");
-	private  final URI OMS_INFORMTARGETNORMS_PROCESS = URI.create(OWL_S_OMS_SERVICES + "InformTargetNorms.owl");
-	private  final URI OMS_INFORMUNITROLES_PROCESS = URI.create(OWL_S_OMS_SERVICES + "InformUnitRoles.owl");
-	private  final URI OMS_QUANTITYMEMBERS_PROCESS = URI.create(OWL_S_OMS_SERVICES + "QuantityMembers.owl");
-
-
-	URI[]OMSServicesProcess = {OMS_REGISTERUNIT_PROCESS,
-			OMS_JOINTUNIT_PROCESS,
-			OMS_REGISTERROLE_PROCESS,
-			OMS_REGISTERNORM_PROCESS,
-			OMS_DEREGISTERUNIT_PROCESS,
-			OMS_DEREGISTERROLE_PROCESS, 
-			OMS_DEREGISTERNORM_PROCESS,
-			OMS_ACQUIREROLE_PROCESS,
-			OMS_ALLOCATEROLE_PROCESS,
-			OMS_LEAVEROLE_PROCESS,
-			OMS_DEALLOCATEROLE_PROCESS,
-			OMS_INFORMAGENTROLE_PROCESS,
-			OMS_INFORMUNIT_PROCESS,
-			OMS_INFORMTARGETNORMS_PROCESS,
-			OMS_INFORMMEMBERS_PROCESS,
-			OMS_INFORMROLE_PROCESS,
-			OMS_INFORMNORM_PROCESS,
-			OMS_INFORMUNITROLES_PROCESS,
-			OMS_QUANTITYMEMBERS_PROCESS
-	};
 
 
 
@@ -150,6 +92,24 @@ public class OMS extends CAgent {
 	 */
 	private OMS(AgentID aid)throws Exception{
 		super(aid);
+
+
+		omsServicesURLs.put("RegisterUnit", OMSServiceDesciptionLocation+"RegisterUnit?wsdl");
+		omsServicesURLs.put("JointUnit", OMSServiceDesciptionLocation+"JointUnit?wsdl");
+		omsServicesURLs.put("RegisterRole", OMSServiceDesciptionLocation+"RegisterRole?wsdl");
+		omsServicesURLs.put("DeregisterUnit", OMSServiceDesciptionLocation+"DeregisterUnit?wsdl");
+		omsServicesURLs.put("DeregisterRole", OMSServiceDesciptionLocation+"DeregisterRole?wsdl");
+		omsServicesURLs.put("AcquireRole", OMSServiceDesciptionLocation+"AcquireRole?wsdl");
+		omsServicesURLs.put("AllocateRole", OMSServiceDesciptionLocation+"AllocateRole?wsdl");
+		omsServicesURLs.put("DeallocateRole", OMSServiceDesciptionLocation+"DeallocateRole?wsdl");
+		omsServicesURLs.put("LeaveRole", OMSServiceDesciptionLocation+"LeaveRole?wsdl");
+		omsServicesURLs.put("InformUnit", OMSServiceDesciptionLocation+"InformUnit?wsdl");
+		omsServicesURLs.put("InformRole", OMSServiceDesciptionLocation+"InformRole?wsdl");
+		omsServicesURLs.put("InformAgentRole", OMSServiceDesciptionLocation+"InformAgentRole?wsdl");
+		omsServicesURLs.put("InformMembers", OMSServiceDesciptionLocation+"InformMembers?wsdl");
+		omsServicesURLs.put("InformUnitRoles", OMSServiceDesciptionLocation+"InformUnitRoles?wsdl");
+		omsServicesURLs.put("QuantityMembers", OMSServiceDesciptionLocation+"QuantityMembers?wsdl");
+
 	}
 
 	/**
@@ -163,15 +123,6 @@ public class OMS extends CAgent {
 		this.OMSServiceDesciptionLocation = OMSUrl; 
 	}
 
-	/**
-	 * Changes the URL where the owl's document is
-	 * located.
-	 * @param SFUrl
-	 */
-	public void setSFServiceDesciptionLocation(String SFUrl)
-	{
-		this.SFServiceDesciptionLocation = SFUrl;	
-	}
 
 	/**
 	 * Gets the URL where the owl's document is
@@ -184,15 +135,6 @@ public class OMS extends CAgent {
 		return OMSServiceDesciptionLocation; 
 	}
 
-	/**
-	 * Gets the URL where the owl's document is
-	 * located.
-	 * @param SFUrl
-	 */
-	public String getSFServiceDesciptionLocation()
-	{
-		return this.SFServiceDesciptionLocation;	
-	}
 
 	@Override
 	protected void finalize(CProcessor firstProcessor,
@@ -260,78 +202,6 @@ public class OMS extends CAgent {
 
 	}
 
-
-	private String executeWithJavaX(ACLMessage msg){
-
-		//http://localhost:8080/omsservices/OMSservices/owl/owls/AcquireRole.owl RoleID=miembro2 UnitID=plana2
-		//
-
-		String inputParams = msg.getContent();
-		StringTokenizer tokenInputParams = new StringTokenizer(inputParams, separatorToken);
-		String serviceURL=tokenInputParams.nextToken().trim();
-		//String serviceURL=sfServicesURLs.get(tokenInputParams.nextToken().trim());
-		Oracle oracle = new Oracle();
-		oracle.setURLProcess(serviceURL);
-
-		ArrayList<String> processInputs=oracle.getWSDLInputs();
-
-		HashMap<String,String> paramsComplete=new HashMap<String, String>();
-		Iterator<String> iterProcessInputs=processInputs.iterator();
-		while(iterProcessInputs.hasNext()){
-			String in=iterProcessInputs.next().toLowerCase();
-			//initialize the inputs
-			paramsComplete.put(in, "");
-		}
-
-
-		while(tokenInputParams.hasMoreTokens()){
-			String inputToken=tokenInputParams.nextToken().trim();
-			StringTokenizer anInputToken=new StringTokenizer(inputToken, "=");
-			String in=anInputToken.nextToken().toLowerCase().trim();
-			String value="";
-			if(anInputToken.hasMoreTokens())
-				value=anInputToken.nextToken().trim();
-			if(paramsComplete.get(in)!=null){
-				paramsComplete.put(in, value);
-			}
-		}
-
-		if (paramsComplete.get(("agentid")) == null || paramsComplete.get("agentid").equals(""))
-		{
-			paramsComplete.put("agentid", msg.getSender().name);
-		}
-
-
-
-		//construct params list with the value of the parameters ordered...
-		ArrayList<String> params = new ArrayList<String>();
-		Iterator<String> iterInputs=processInputs.iterator();
-		while(iterInputs.hasNext()){
-			String input=iterInputs.next().toLowerCase();
-			params.add(paramsComplete.get(input));
-			//System.out.println("inputParamValue: "+paramsComplete.get(input));
-		}
-
-		ServiceClient serviceClient = new ServiceClient();
-		ArrayList<String> results = serviceClient.invoke(serviceURL, params);
-
-		//String process_localName="SearchServiceProcess"; //TODO no estic segur si es això...
-		//String resultStr=process_localName+ "=" + "{";
-		String resultStr=serviceURL+"=" + "{";
-		for(int i=0;i<results.size();i++){
-			resultStr+=serviceURL+"#"+results.get(i);
-			if(i!=results.size()-1){
-				resultStr+=", ";
-			}
-			else{
-				resultStr+=" }";
-			}
-		}
-
-
-		return resultStr;
-	}
-
 	@Override
 	protected void execution(CProcessor firstProcessor,
 			ACLMessage welcomeMessage) {
@@ -352,154 +222,46 @@ public class OMS extends CAgent {
 				{
 					//execute the service
 
-					StringTokenizer tokenInputParams = new StringTokenizer(myProcessor.getLastReceivedMessage().getContent(), separatorToken);
-					String serviceURL=tokenInputParams.nextToken().trim();
+
+					responseParser.parseResponse(myProcessor.getLastReceivedMessage().getContent());
+					String serviceName= responseParser.getServiceName();
+
+					HashMap<String, String> inputs = responseParser.getKeyAndValueList();
 
 					//Extract the parameters needed to create and delete binds
-					if (serviceURL.contains("AcquireRole") || serviceURL.contains("AllocateRole"))
+					if (serviceName.equals("AcquireRole") || serviceName.equals("LeaveRole"))
 					{
 
-						if (serviceURL.contains("AcquireRole"))
+
+						if (inputs.containsKey("AgentID"))
 						{
-							if (myProcessor.getLastReceivedMessage().getContent().contains("AgentID"))
-							{
-
-								while (tokenInputParams.hasMoreTokens())
-								{
-									String token = tokenInputParams.nextToken();
-									if (token.contains("Agent"))
-									{
-										aidName =  token.split("=")[1];
-									}
-									else if (token.contains("Role"))
-									{
-										rol = token.split("=")[1];	
-									}
-									else if (token.contains("Unit"))
-									{
-										organizationID = token.split("=")[1];
-									}
-								}
-
-
-
-							}
-							else
-							{
-								while (tokenInputParams.hasMoreTokens())
-								{
-									String token = tokenInputParams.nextToken();
-
-
-									if (token.contains("Role"))
-									{
-										rol = token.split("=")[1];	
-									}
-									else if (token.contains("Unit"))
-									{
-										organizationID = token.split("=")[1];
-									}
-								}
-								aidName = myProcessor.getLastReceivedMessage().getSender().name;
-
-							}
+							aidName = inputs.get("AgentID");
+							rol = inputs.get("RoleID");
+							organizationID = inputs.get("UnitID");
 						}
-						else if (serviceURL.contains("AllocateRole"))
+						else
 						{
-
-							while (tokenInputParams.hasMoreTokens())
-							{
-								String token = tokenInputParams.nextToken();
-								if (token.contains("TargetAgentName"))
-								{
-									aidName =  token.split("=")[1];
-								}
-								else if (token.contains("Role"))
-								{
-									rol = token.split("=")[1];	
-								}
-								else if (token.contains("Unit"))
-								{
-									organizationID = token.split("=")[1];
-								}
-							}
-
+							rol = inputs.get("RoleID");
+							organizationID = inputs.get("UnitID");					
+							aidName = myProcessor.getLastReceivedMessage().getSender().name;
 
 						}
+						//-------------Inform Role-----------------
 
 
+						String content = omsInterface.informRole(rol, organizationID, myProcessor.getLastReceivedMessage().getSender().name);
 
+						responseParser.parseResponse(content);
+
+						if (responseParser.getStatus().equals("Ok"))
+							positionType = responseParser.getElementsList().get(0);
 					}
-
-					else if (serviceURL.toString().contains("LeaveRole") || serviceURL.contains("DeallocateRole"))
+					else if (serviceName.equals("AllocateRole") || serviceName.equals("DeallocateRole"))
 					{
 
-
-						if (serviceURL.contains("LeaveRole"))
-						{
-							if (myProcessor.getLastReceivedMessage().getContent().contains("AgentID"))
-							{
-
-								while (tokenInputParams.hasMoreTokens())
-								{
-									String token = tokenInputParams.nextToken();
-									if (token.contains("Agent"))
-									{
-										aidName =  token.split("=")[1];
-									}
-									else if (token.contains("Role"))
-									{
-										rol = token.split("=")[1];	
-									}
-									else if (token.contains("Unit"))
-									{
-										organizationID = token.split("=")[1];
-									}
-								}
-							}
-							else
-							{
-								while (tokenInputParams.hasMoreTokens())
-								{
-									String token = tokenInputParams.nextToken();
-
-
-									if (token.contains("Role"))
-									{
-										rol = token.split("=")[1];	
-									}
-									else if (token.contains("Unit"))
-									{
-										organizationID = token.split("=")[1];
-									}
-								}
-								aidName = myProcessor.getLastReceivedMessage().getSender().name;
-							}
-						}
-						else if (serviceURL.contains("DeallocateRole"))
-						{
-
-							while (tokenInputParams.hasMoreTokens())
-							{
-								String token = tokenInputParams.nextToken();
-								if (token.contains("TargetAgentName"))
-								{
-									aidName =  token.split("=")[1];
-								}
-								else if (token.contains("Role"))
-								{
-									rol = token.split("=")[1];	
-								}
-								else if (token.contains("Unit"))
-								{
-									organizationID = token.split("=")[1];
-								}
-							}
-
-						}
-
-
-
+						aidName = inputs.get("TargetAgentID");
+						rol = inputs.get("RoleID");
+						organizationID = inputs.get("UnitID");	
 						//-------------Inform Role-----------------
 
 
@@ -511,15 +273,15 @@ public class OMS extends CAgent {
 							positionType = responseParser.getElementsList().get(0);
 
 					}
+
 					//Execute the service requested by the agent
 
-					String resultStr=executeWithJavaX(myProcessor.getLastReceivedMessage());
+					String serviceWSDLURL=omsServicesURLs.get(serviceName);
+					HashMap<String,Object> result=st.executeWebService(serviceWSDLURL, inputs);
 
+					String resultContent=(String)result.get("Result");
 
-					//Select result
-					String result = resultStr.split("Result=")[1].substring(0, resultStr.split("Result=")[1].length()-2);
-
-					responseParser.parseResponse(result);
+					responseParser.parseResponse(resultContent);
 
 
 					//If acquire role is ok. If organization is virtual the agent position is considered creator
@@ -617,27 +379,24 @@ public class OMS extends CAgent {
 
 
 					next = "INFORM";
-					if(DEBUG)
-					{						
-						logger.info("[OMS]Before set message content...");						
-					}
-					myProcessor.getLastReceivedMessage().setContent(resultStr);
+											
+					logger.info("[OMS]Before set message content...");						
+					
+					myProcessor.getLastReceivedMessage().setContent(resultContent);
 
 				}catch(Exception e){
-					if(DEBUG)
-					{	      
 						StringTokenizer tokenInputParams = new StringTokenizer(myProcessor.getLastReceivedMessage().getContent(), separatorToken);
 						String serviceURL=tokenInputParams.nextToken().trim();
-						
+
 						String resultXML="<response>\n<serviceName>"+serviceURL+"</serviceName>\n";
 						resultXML+="<status>Error</status>\n";
 						resultXML+="<result>\n<description>"+e.getMessage()+"</description>\n</result>\n";
 						resultXML+="</response>";
-					
-						
+
+
 						myProcessor.getLastReceivedMessage().setContent(resultXML);
-						
-					}
+
+					
 					//next = "FAILURE";
 				}				
 				return next;
@@ -658,27 +417,22 @@ public class OMS extends CAgent {
 				if (msg != null) {
 
 					try{					
-						//read msg content
-						StringTokenizer Tok = new StringTokenizer(msg.getContent());						
-						//read in the service description
-						String token_process = Tok.nextElement().toString();
-						Boolean exists=false;											
-						for(int i=0;i<OMSServicesProcess.length;i++){		
+						HashMap<String,String> inputs=new HashMap<String, String>();
+						String serviceName = st.extractServiceContent(msg.getContent(), inputs);
 
-							if(token_process.equals(OMSServicesProcess[i].toString())){
-								exists=true;
-							}
-						}
+						logger.info("[SF]Service Name: " + serviceName);
 
 
+						if (omsServicesURLs.containsKey(serviceName)) //if (sfServicesURLs.containsKey(serviceName))
+						{
 
-
-						if(exists){							
 							logger.info("AGREE");
-							next = "AGREE";							
-						}else{	                       
+							next = "AGREE";
+
+						} else {
+
 							logger.info("REFUSE");
-							next = "REFUSE";	
+							next = "REFUSE";
 						}
 
 					}catch(Exception e){	                   
