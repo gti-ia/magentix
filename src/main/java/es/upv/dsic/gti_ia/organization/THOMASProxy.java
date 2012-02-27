@@ -124,9 +124,6 @@ public class THOMASProxy {
 	private void initialize()
 	{
 
-
-
-
 		//Add type for each service 
 		serviceType1.add("LeaveRole");
 		serviceType1.add("AcquireRole");
@@ -141,9 +138,6 @@ public class THOMASProxy {
 		serviceType1.add("DeregisterService");
 		
 		
-		
-		
-
 		serviceType2.add("InformRole");
 		serviceType2.add("InformUnit");
 		serviceType2.add("QuantityMembers");
@@ -154,13 +148,11 @@ public class THOMASProxy {
 		serviceType3.add("InformUnitRoles");
 		serviceType3.add("SearchService");
 
+		
 		serviceType4.add("GetService");
-		//TODO como devolver Description y Specification??
 
+		
 		serviceType5.add("RegisterService");
-
-
-
 
 	}
 
@@ -200,8 +192,10 @@ public class THOMASProxy {
 		value = new String();
 		this.Status = true;
 
-		serviceTypeResult2  = new ArrayList<String>();
+		serviceTypeResult2 = new ArrayList<String>();
 		serviceTypeResult3 = new ArrayList<ArrayList<String>>();
+		serviceTypeResult4 = "";
+		serviceTypeResult5 = new ArrayList<String>();
 	
 	}
 
@@ -277,10 +271,6 @@ public class THOMASProxy {
 	 */
 	private void extractInfo(ACLMessage msg)
 	{
-
-
-		//String content = msg.getContent().substring(msg.getContent().indexOf("<response>"),msg.getContent().length()-1 );
-
 
 		responseParser.parseResponse(msg.getContent());
 		

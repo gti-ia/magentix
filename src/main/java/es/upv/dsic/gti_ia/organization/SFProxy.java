@@ -51,6 +51,23 @@ public class SFProxy extends THOMASProxy {
 
 	}
 
+	/**
+	 * The Register Service tries to register the service that is specified as
+	 * parameter. In the specification, if there is one or more groundings, it
+	 * means that the service is provided by a Web Service. If one or more
+	 * providers (agents or organization) are specified in the
+	 * profile:contactInformation of the service, it means that the service is
+	 * provided by agents or/and organizations
+	 * 
+	 * @param serviceURL
+	 *            the original URL of the OWL-S specification of the service
+	 * @return A description of the changes made, and an OWL-S specification of
+	 *         the registered services or all data of the already registered
+	 *         service in the SF
+	 * @throws THOMASException
+	 *             If there is any error result
+	 */
+	@SuppressWarnings("unchecked")
 	public ArrayList<String> registerService(String serviceURL) throws THOMASException {
 
 		HashMap<String, String> inputs = new HashMap<String, String>();
@@ -61,12 +78,17 @@ public class SFProxy extends THOMASProxy {
 		return (ArrayList<String>) this.sendInform();
 	}
 
+	/**
+	 * The Deregister Service deregisters the specified service deleting all the
+	 * related data from the SF.
+	 * 
+	 * @param serviceProfile
+	 *            the URI representing the service profile to deregister
+	 * @return A description of the result of the service execution.
+	 * @throws THOMASException
+	 *             If there is any error result
+	 */
 	public String deregisterService(String serviceProfile) throws THOMASException {
-
-		if (serviceProfile.equals("")) {
-			logger.error("serviceProfile is  empty");
-			return "";
-		}
 
 		HashMap<String, String> inputs = new HashMap<String, String>();
 		inputs.put("ServiceProfile", serviceProfile);
@@ -76,6 +98,40 @@ public class SFProxy extends THOMASProxy {
 
 	}
 
+	/**
+	 * Removes a provider: agent, organization or web service (grounding); from
+	 * a registered service profile
+	 * 
+	 * @param serviceProfile
+	 *            URI of the service profile to remove the provider
+	 * @param providerID
+	 *            of the provider to remove (provider name or grounding ID)
+	 * @return A description of the result of the service execution
+	 * @throws THOMASException
+	 *             If there is any error result
+	 */
+	public String removeProvider(String serviceProfile, String providerID) throws THOMASException {
+
+		HashMap<String, String> inputs = new HashMap<String, String>();
+		inputs.put("ServiceProfile", serviceProfile);
+		inputs.put("ProviderID", providerID);
+
+		call = st.buildServiceContent("RemoveProvider", inputs);
+
+		return (String) this.sendInform();
+	}
+
+	/**
+	 * Returns an OWL-S specification with the all data of the specified service
+	 * profile as parameter
+	 * 
+	 * @param serviceProfile
+	 *            URI of the service profile to get its OWL-S specification
+	 * @return an OWL-S specification with the all data of the specified service
+	 *         profile as parameter
+	 * @throws THOMASException
+	 *             If there is any error result
+	 */
 	public String getService(String serviceProfile) throws THOMASException {
 
 		HashMap<String, String> inputs = new HashMap<String, String>();
@@ -86,6 +142,27 @@ public class SFProxy extends THOMASProxy {
 		return (String) this.sendInform();
 	}
 
+	/**
+	 * Searches the most similar services profiles to the given data type
+	 * inputs, data type outputs and keywords in the description. Returns an
+	 * ordered list of the services found with a similarity degree obtained in
+	 * function of the similarity to the given parameters.
+	 * 
+	 * @param inputs
+	 *            data type inputs to search a service with these inputs.
+	 *            Example:
+	 *            \"http://127.0.0.1/ontology/books.owl#Novel\"^^xsd:anyURI
+	 * @param outputs
+	 *            data type outputs to search a service with these outputs.
+	 *            Example:
+	 *            \"http://127.0.0.1/ontology/books.owl#Novel\"^^xsd:anyURI
+	 * @param keywords
+	 *            list to search in the text description of the service
+	 * @return an ordered list of the services found with a similarity degree
+	 * @throws THOMASException
+	 *             If there is any error result
+	 */
+	@SuppressWarnings("unchecked")
 	public ArrayList<ArrayList<String>> searchService(ArrayList<String> inputs, ArrayList<String> outputs, ArrayList<String> keywords) throws THOMASException {
 
 		String inputsStr = "";
@@ -121,32 +198,6 @@ public class SFProxy extends THOMASProxy {
 		call = st.buildServiceContent("SearchService", inputsService);
 
 		return (ArrayList<ArrayList<String>>) this.sendInform();
-	}
-
-	/**
-	 * Removes a provider from a registered service
-	 * 
-	 * @param serviceProfile
-	 *            URI of the service to remove the provider
-	 * @param providerID
-	 *            of the provider to remove
-	 * @return status which indicates if an error occurs (1:OK otherwise 0)
-	 */
-	public String removeProvider(String serviceProfile, String providerID) throws THOMASException {
-
-		if (serviceProfile.equals("")) {
-			logger.error("serviceProfile is empty");
-			return "";
-
-		}
-
-		HashMap<String, String> inputs = new HashMap<String, String>();
-		inputs.put("ServiceProfile", serviceProfile);
-		inputs.put("ProviderID", providerID);
-
-		call = st.buildServiceContent("RemoveProvider", inputs);
-
-		return (String) this.sendInform();
 	}
 
 }
