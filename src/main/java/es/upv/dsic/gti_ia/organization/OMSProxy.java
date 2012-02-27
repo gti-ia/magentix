@@ -37,14 +37,14 @@ public class OMSProxy extends THOMASProxy{
 	 * @param OMSServiceDesciptionLocation
 	 *            The URL where the owl's document is located.
 	 */
-	public OMSProxy(BaseAgent agent, String OMSServiceDesciptionLocation) {
-		super(agent, "OMS",OMSServiceDesciptionLocation);
+	public OMSProxy(BaseAgent agent, String OMSServiceDescriptionLocation) {
+		super(agent, "OMS",OMSServiceDescriptionLocation);
 
 
 	}
 	
-	public OMSProxy(CProcessor agent, String OMSServiceDesciptionLocation) {
-		super(agent, "OMS",OMSServiceDesciptionLocation);
+	public OMSProxy(CProcessor agent, String OMSServiceDescriptionLocation) {
+		super(agent, "OMS",OMSServiceDescriptionLocation);
 
 
 	}
