@@ -27,7 +27,7 @@ import es.upv.dsic.gti_ia.argAgents.knowledgeResources.SocialContext;
 import es.upv.dsic.gti_ia.argAgents.knowledgeResources.Solution;
 
 /**
- * This class implements the argumentation CBR. This CBR stores argument cases that
+ * This class implements the argumentation CBR. This CBR stores argument-cases that
  * represent past argumentation experiences and their final outcome.
  * @author Jaume Jordan
  *
@@ -38,31 +38,20 @@ public class ArgCBR {
 	
 	private String initialFilePath;
 	private String storingFilePath;
-//	private OWLArgCBRParser owlArgCBRparser;
 	
 	/**
 	 * Constructor that initializes the ArgCBR creating the HashMap structure and 
 	 * loading the argument-cases stored in the indicated path.
-	 * @param initialOWLFilePath Path of the OWL file with the argument-cases to load
-	 * @param storingOWLFilePath Path of the OWL file to store the argument-cases
+	 * @param initialDataFilePath Path of the data file with the argument-cases to load
+	 * @param storingDataFilePath Path of the data file to store the argument-cases
 	 */
-	public ArgCBR(String initialOWLFilePath, String storingOWLFilePath) {
+	public ArgCBR(String initialDataFilePath, String storingDataFilePath) {
 		
-		this.initialFilePath=initialOWLFilePath;
-		this.storingFilePath=storingOWLFilePath;
+		this.initialFilePath=initialDataFilePath;
+		this.storingFilePath=storingDataFilePath;
 
 		argCB=new HashMap<Integer, ArrayList<ArgumentCase>>();
-/*		owlArgCBRparser=new OWLArgCBRParser();
-		try {
-			Vector<ArgumentCase> argCases=owlArgCBRparser.parseArgCBROnto(this.initialOWLFilePath);
-			Iterator<ArgumentCase> iterArgCases=argCases.iterator();
-			while(iterArgCases.hasNext()){
-				addCase(iterArgCases.next());
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		*/
+
 		int ncases=0;
 		try {
 			
@@ -100,15 +89,15 @@ public class ArgCBR {
 	}
 	
 	/**
-	 * Adds a new argument case to the case base.
-	 * If the argument case is in case base, the associated domain cases and the attacks received are added to that argument case.
-	 * Two cases are considered equal if they have the same domain context, social context, conclusion and state of acceptability.
-	 * @param newArgCase A new argument case to add to the case base.
-	 * @return <code>true</code> if the argument case is added, otherwise <code>false</code>.
+	 * Adds a new argument-case to the case-base.
+	 * If the argument-case is in case-base, the associated domain-cases and the attacks received are added to that argument-case.
+	 * Two cases are considered equal if they have the same domain context, social context, conclusion and status of acceptability.
+	 * @param newArgCase A new argument-case to add to the case-base.
+	 * @return <code>true</code> if the argument-case is added, otherwise <code>false</code>.
 	 */
 	public boolean addCase(ArgumentCase newArgCase){
 		//two cases are equal if they have the same domain context, social context, conclusion and state of acceptability
-		//if two cases are equal, also the domain cases associated and attacks received must be added to the corresponding argument case
+		//if two cases are equal, also the domain-cases associated and attacks received must be added to the corresponding argument-case
 		
 		HashMap<Integer, Premise> newCasePremises=newArgCase.getArgumentProblem().getDomainContext().getPremises();
 		
@@ -134,7 +123,7 @@ public class ArgCBR {
 							newArgCase.getArgumentSolution().getConclusion().getID()==argCase.getArgumentSolution().getConclusion().getID() &&
 							newArgCase.getArgumentSolution().getAcceptabilityState().compareTo(argCase.getArgumentSolution().getAcceptabilityState())==0 ){
 						
-						//it is the same argument case, so it is not introduced
+						//it is the same argument-case, so it is not introduced
 						//but we add associated cases and attacks received, and dialogue graphs and increase timesUsed
 						
 						// increase timesUsed
@@ -153,7 +142,7 @@ public class ArgCBR {
 							for(int i=0;i<newDistinguishingPremises.size();i++){
 								boolean addPremise=true;
 								for(int j=0;j<distinguishingPremises.size();j++){
-									//TODO check that distinguishingPremises are NEVER translated to HashMap (there are several dp with the same ID but different content in the ArrayList)
+									//Take care that distinguishingPremises are NEVER translated to HashMap (there are several dp with the same ID but different content in the ArrayList)
 									if(newDistinguishingPremises.get(i).getID()==distinguishingPremises.get(j).getID() 
 											&& newDistinguishingPremises.get(i).getContent().equalsIgnoreCase(distinguishingPremises.get(j).getContent())){
 										addPremise=false;
@@ -212,7 +201,7 @@ public class ArgCBR {
 							argCase.getArgumentSolution().setDistinguishingPremises(presumptions);
 						}
 						
-						//counter examples domain case ids
+						//counter examples domain-case ids
 						ArrayList<Long> counterExamplesDCIds=argCase.getArgumentSolution().getCounterExamplesDomCaseIDList();
 						ArrayList<Long> newCounterExamplesDCIds=newArgCase.getArgumentSolution().getCounterExamplesDomCaseIDList();
 						if (newCounterExamplesDCIds == null)
@@ -234,7 +223,7 @@ public class ArgCBR {
 							argCase.getArgumentSolution().setCounterExamplesDomCaseIDList(counterExamplesDCIds);
 						}
 						
-						//counter examples arg case ids
+						//counter examples argument-case ids
 						ArrayList<Long> counterExamplesArgCIds=argCase.getArgumentSolution().getCounterExamplesArgCaseIDList();
 						ArrayList<Long> newCounterExamplesArgCIds=newArgCase.getArgumentSolution().getCounterExamplesArgCaseIDList();
 						if (newCounterExamplesArgCIds == null)
@@ -257,7 +246,7 @@ public class ArgCBR {
 						}
 						
 						
-						//associated domain cases
+						//associated domain-cases
 						ArrayList<Long> domCases=argCase.getArgumentJustification().getDomainCasesIDs();
 						ArrayList<Long> newDomCases=newArgCase.getArgumentJustification().getDomainCasesIDs();
 						if (newDomCases == null)
@@ -279,7 +268,7 @@ public class ArgCBR {
 							argCase.getArgumentJustification().setDomainCases(domCases);
 						}
 						
-						//associated arg cases
+						//associated argument-cases
 						ArrayList<Long> argCases=argCase.getArgumentJustification().getArgumentCasesIDs();
 						ArrayList<Long> newArgCases=newArgCase.getArgumentJustification().getArgumentCasesIDs();
 						if (newArgCases == null)
@@ -404,17 +393,17 @@ public class ArgCBR {
 			riskDegree= argAccCAtt / argAccC;
 		
 		
-		//TODO this is inefficient because for each position it is calculated the attack degrees of allPositions...
+		//Here we foster simplicity over efficiency, since for each position it is calculated the attack degrees of allPositions
 		float attackDegree=0f;
 		ArrayList<Float> attackDegrees=getAttackDegree(sameProblemAcceptedArgCases, allPositions);
 		attackDegree=attackDegrees.get(index);
 		
-		//TODO this is inefficient because for each position it is calculated the efficiency degree of allPositions...
+		//Here we foster simplicity over efficiency, since for each position it is calculated the efficiency degree of allPositions
 		float efficiencyDegree=0f;
 		ArrayList<Float> efficiencyDegrees=getEfficiencyDegree(sameProblemAcceptedArgCases, allPositions);
 		efficiencyDegree=efficiencyDegrees.get(index);
 		
-		//TODO this is inefficient because for each position it is calculated the explanatory power of allPositions...
+		//Here we foster simplicity over efficiency, since for each position it is calculated the explanatory power of allPositions
 		float explanatoryPower=0f;
 		ArrayList<Float> explanatoryPowers=getExplanatoryPower(sameProblemAcceptedArgCases, allPositions);
 		explanatoryPower=explanatoryPowers.get(index);
@@ -431,16 +420,16 @@ public class ArgCBR {
 	}
 	
 	/**
-	 * Get similar argument cases to the given one with the same problem description and accepted
-	 * @param sameProblemArgCases {@link ArrayList} with argument cases with the same problem description
-	 * @return {@link ArrayList} of similar argument cases with the same problem description and accepted
+	 * Get similar argument-cases to the given one with the same problem description and that were accepted in the past
+	 * @param sameProblemArgCases {@link ArrayList} with argument-cases with the same problem description
+	 * @return {@link ArrayList} of similar argument-cases with the same problem description and that were accepted 
 	 */
 	private ArrayList<SimilarArgumentCase> getSameProblemAcceptedArgCases(ArrayList<SimilarArgumentCase> sameProblemArgCases){
 		
 		ArrayList<SimilarArgumentCase> returnList = new ArrayList<SimilarArgumentCase>();
 		
 		for(int i=0;i<sameProblemArgCases.size();i++){
-			// if case is accepted, add it to the list
+			// if the case was accepted, add it to the list
 			if(sameProblemArgCases.get(i).getArgumentCase().getArgumentSolution().getAcceptabilityState().compareTo(AcceptabilityStatus.ACCEPTABLE)==0){
 				returnList.add(sameProblemArgCases.get(i));
 			}
@@ -449,10 +438,10 @@ public class ArgCBR {
 	}
 	
 	/**
-	 * Get similar argument cases to the given one with the same problem description and conclusion
-	 * @param sameProblemArgCases {@link ArrayList} with argument cases with the same problem description
-	 * @param solution the conclusion that must have the argument cases returned 
-	 * @return ArrayList of similar argument cases with the same problem description and conclusion
+	 * Get similar argument-cases to the given one with the same problem description and conclusion
+	 * @param sameProblemArgCases {@link ArrayList} with argument-cases with the same problem description
+	 * @param solution the conclusion that must have the argument-cases retrieved 
+	 * @return ArrayList of similar argument-cases with the same problem description and conclusion
 	 */
 	private ArrayList<SimilarArgumentCase> getSameProblemConclusionArgCases(ArrayList<SimilarArgumentCase> sameProblemArgCases, Solution solution){
 		
@@ -469,16 +458,16 @@ public class ArgCBR {
 	
 	
 	/**
-	 * Get similar argument cases to the given one with the same problem description, conclusion and accepted
-	 * @param sameProblemConclusionArgCases {@link ArrayList} with argument cases with the same problem description and conclusion
-	 * @return {@link ArrayList} of similar argument cases with the same problem description, conclusion and accepted
+	 * Get similar argument-cases to the given one with the same problem description, conclusion and that were accepted in the past
+	 * @param sameProblemConclusionArgCases {@link ArrayList} with argument-cases with the same problem description and conclusion
+	 * @return {@link ArrayList} of similar argument-cases with the same problem description, conclusion and that were accepted
 	 */
 	private ArrayList<SimilarArgumentCase> getSameProblemConclusionAcceptedArgCases(ArrayList<SimilarArgumentCase> sameProblemConclusionArgCases){
 		
 		ArrayList<SimilarArgumentCase> returnList = new ArrayList<SimilarArgumentCase>();
 		
 		for(int i=0;i<sameProblemConclusionArgCases.size();i++){
-			// if case is accepted, add it to the list
+			// if the case was accepted, add it to the list
 			if(sameProblemConclusionArgCases.get(i).getArgumentCase().getArgumentSolution().getAcceptabilityState().compareTo(AcceptabilityStatus.ACCEPTABLE)==0){
 				returnList.add(sameProblemConclusionArgCases.get(i));
 			}
@@ -487,16 +476,16 @@ public class ArgCBR {
 	}
 	
 	/**
-	 * Get similar argument cases to the given one with the same problem description, conclusion, accepted and with attacks
-	 * @param sameProblemConclusionAcceptedArgCases {@link ArrayList} with argument cases with the same problem description, conclusion and accepted
-	 * @return {@link ArrayList} of similar argument cases with the same problem description, conclusion, accepted and with attacks
+	 * Get similar argument-cases to the given one with the same problem description, conclusion, that were accepted and that received attacks
+	 * @param sameProblemConclusionAcceptedArgCases {@link ArrayList} with argument-cases with the same problem description, conclusion and that were accepted
+	 * @return {@link ArrayList} of similar argument-cases with the same problem description, conclusion, that were accepted and that received attacks
 	 */
 	private ArrayList<SimilarArgumentCase> getSameProblemConclusionAcceptedAttackedArgCases(ArrayList<SimilarArgumentCase> sameProblemConclusionAcceptedArgCases){
 		
 		ArrayList<SimilarArgumentCase> returnList = new ArrayList<SimilarArgumentCase>();
 		
 		for(int i=0;i<sameProblemConclusionAcceptedArgCases.size();i++){
-			// if case is attacked, add it to the list
+			// if the case was attacked, add it to the list
 			if(sameProblemConclusionAcceptedArgCases.get(i).getArgumentCase().getArgumentSolution().getCounterExamplesDomCaseIDList().size()>0 ||
 					sameProblemConclusionAcceptedArgCases.get(i).getArgumentCase().getArgumentSolution().getCounterExamplesArgCaseIDList().size()>0 ||
 					sameProblemConclusionAcceptedArgCases.get(i).getArgumentCase().getArgumentSolution().getDistinguishingPremises().size()>0 ||
@@ -511,15 +500,15 @@ public class ArgCBR {
 	
 	
 	/**
-	 * Return all the argument cases of the different given positions that have the same conclusion in each case
-	 * @param sameProblemAcceptedArgCases argument cases with the same problem description and accepted
-	 * @param initialPositions argument cases with different initial positions 
-	 * @return an {@link ArrayList} of {@link ArrayList} of argument cases for each initial position
+	 * Return all the argument-cases that have the same conclusion of the different given positions
+	 * @param sameProblemAcceptedArgCases argument-cases with the same problem description and that were accepted
+	 * @param initialPositions argument-cases with different initial positions 
+	 * @return an {@link ArrayList} of {@link ArrayList} of similar argument-cases for each initial position
 	 */
 	
 	private ArrayList<ArrayList<SimilarArgumentCase>> getAllPositionArgCases(ArrayList<SimilarArgumentCase> sameProblemAcceptedArgCases, ArrayList<Position> initialPositions){
 		
-		// classify the arg cases, with same problem description and accepted, by its conclusion
+		// classify the argument-cases, with same problem description and that were accepted, by its conclusion
 		HashMap<Long,ArrayList<SimilarArgumentCase>> conclusionSets=new HashMap<Long, ArrayList<SimilarArgumentCase>>();
 		Iterator<SimilarArgumentCase> iterSimCases=sameProblemAcceptedArgCases.iterator();
 		while(iterSimCases.hasNext()){
@@ -531,7 +520,7 @@ public class ArgCBR {
 			list.add(simArgCase);
 			conclusionSets.put(conclusionID, list);
 		}
-		// put a list of argument case for each initial position
+		// put a list of argument-cases for each initial position
 		ArrayList<ArrayList<SimilarArgumentCase>> allPositions= new ArrayList<ArrayList<SimilarArgumentCase>>();
 		Iterator<Position> iterPositions=initialPositions.iterator();
 		while(iterPositions.hasNext()){
@@ -552,12 +541,12 @@ public class ArgCBR {
 	
 	/**
 	 * Returns the attack degree of each given {@link Position}
-	 * @param sameProblemAcceptedArgCases argument cases with the same problem description and accepted
+	 * @param sameProblemAcceptedArgCases argument-cases with the same problem description and that were accepted
 	 * @param initialPositions {@link ArrayList} with different positions, but with the same problem description
 	 * @return an {@link ArrayList} of {@link Float} with the attack degree of each initial position
 	 */
 	public ArrayList<Float> getAttackDegree(ArrayList<SimilarArgumentCase> sameProblemAcceptedArgCases, ArrayList<Position> initialPositions){
-		//TODO it could be join attackDegree, efficiency degree and explanatory power in only one function
+
 		ArrayList<ArrayList<SimilarArgumentCase>> allPositionsCases=getAllPositionArgCases(sameProblemAcceptedArgCases, initialPositions);
 		
 		
@@ -607,7 +596,7 @@ public class ArgCBR {
 	
 	/**
 	 * Returns the efficiency degree of each initial position
-	 * @param sameProblemAcceptedArgCases argument cases with the same problem description and accepted
+	 * @param sameProblemAcceptedArgCases argument-cases with the same problem description and that were accepted
 	 * @param initialPositions {@link ArrayList} with different positions, but with the same problem description
 	 * @return an {@link ArrayList} of {@link Float} with the efficiency degree of each initial position
 	 */
@@ -675,7 +664,7 @@ public class ArgCBR {
 	
 	/**
 	 * Returns the explanatory power of the given positions 
-	 * @param sameProblemAcceptedArgCases argument cases with the same problem description and accepted
+	 * @param sameProblemAcceptedArgCases argument-cases with the same problem description and that were accepted
 	 * @param initialPositions {@link ArrayList} with different positions, but with the same problem description
 	 * @return an {@link ArrayList} of {@link Float} with the explanatory power of each initial position
 	 */
@@ -685,7 +674,7 @@ public class ArgCBR {
 		
 		ArrayList<Float> kRAverages=new ArrayList<Float>();
 		
-		// calculate min and max knowledge resources
+		// calculate min and max number of used knowledge resources
 		int minKR=Integer.MAX_VALUE;
 		int maxKR=Integer.MIN_VALUE;
 		Iterator<ArrayList<SimilarArgumentCase>> iterListAllPositions= allPositionsCases.iterator();
@@ -724,7 +713,7 @@ public class ArgCBR {
 	
 	
 	/**
-	 * Returns the argument-cases with the same domain and social context that have been accepted
+	 * Returns the argument-cases with the same domain and social context that have been accepted in teh past
 	 * @param premises {@link HashMap} of the premises that describe the domain context
 	 * @param solution {@link Solution} of the problem
 	 * @param socialContext {@link SocialContext} of the current situation
@@ -759,7 +748,6 @@ public class ArgCBR {
 				if(socialContext.getGroup().getValPref().getPreferred().equalsIgnoreCase(currentArgCase.getArgumentProblem().getSocialContext().getGroup().getValPref().getPreferred()))
 					groupPrefcomp=c.argCBRgroupprefweight;
 				
-				//System.err.println(proponentIDcomp+" "+proponentPrefcomp+" "+opponentIDcomp+" "+opponentPrefcomp+" "+groupIDcomp+" "+groupPrefcomp);
 				suitability=(proponentIDcomp+proponentPrefcomp+opponentIDcomp+opponentPrefcomp+groupIDcomp+groupPrefcomp)/
 				(c.argCBRproponentidweight+c.argCBRproponentprefweight+c.argCBRopponentidweight+c.argCBRopponentprefweight+c.argCBRgroupidweight+c.argCBRgroupprefweight);
 			
@@ -771,7 +759,7 @@ public class ArgCBR {
 			
 		}
 		
-		//only with the same solution id, and promoted value
+		//only with the same solution id, and the same promoted value
 		for(int i=0;i<finalArgCases.size();i++){
 			if(finalArgCases.get(i).getArgumentCase().getArgumentSolution().getConclusion().getID() != solution.getConclusion().getID() || 
 					!finalArgCases.get(i).getArgumentCase().getArgumentSolution().getPromotesValue().equalsIgnoreCase(solution.getPromotesValue())){
@@ -782,7 +770,7 @@ public class ArgCBR {
 		
 		//only accepted cases
 		for(int i=0;i<finalArgCases.size();i++){
-			// if case is not accepted, remove it from list
+			// if the case is not accepted, remove it from list
 			if(finalArgCases.get(i).getArgumentCase().getArgumentSolution().getAcceptabilityState().compareTo(AcceptabilityStatus.ACCEPTABLE)!=0){
 				finalArgCases.remove(i);
 				i--;
@@ -795,10 +783,10 @@ public class ArgCBR {
 	}
 	
 	/**
-	 * Get the argument cases with the same domain context as the given argument case and the same dependency relation.
-	 * The returned argument cases are pondered with a degree of suitability depending on the coincidence of the social context.
-	 * @param argProblem The argument problem with a determined domain context and social context that the returned argument cases have to be similar 
-	 * @return an {@link ArrayList} of {@link SimilarArgumentCase} that have he same domain context as the given argument case and the same dependency relation, pondered with a suitability 
+	 * Get the argument-cases with the same domain context as the given argument-case and the same dependency relation.
+	 * The returned argument-cases are weighted with a degree of suitability that depends on the degree of similarity with the social context of the given argument-case
+	 * @param argProblem The argument problem with a specific domain context and social context that the returned argument-cases have to be similar 
+	 * @return an {@link ArrayList} of {@link SimilarArgumentCase} that have the same domain context as the given argument-case and the same dependency relation, weighted with a suitability degree 
 	 */
 	public ArrayList<SimilarArgumentCase> getMostSimilarArgCases(ArgumentProblem argProblem){
 		ArrayList<SimilarArgumentCase> mostSimilarArgCases=new ArrayList<SimilarArgumentCase>();
@@ -813,7 +801,7 @@ public class ArgCBR {
 			SocialContext socialContext=argProblem.getSocialContext();
 			//if there is a social context
 			if(socialContext!=null){
-				// if dependency relation is the same
+				// if the dependency relation is the same
 				if(argProblem.getSocialContext().getDependencyRelation() == null || argProblem.getSocialContext().getDependencyRelation().compareTo(currentArgCase.getArgumentProblem().getSocialContext().getDependencyRelation())==0){
 					float proponentIDcomp=0f, proponentPrefcomp=0f,opponentIDcomp=0f,opponentPrefcomp=0f,groupIDcomp=0f,groupPrefcomp=0f;
 					try {
@@ -873,9 +861,9 @@ public class ArgCBR {
 	}
 	
 	/**
-	 * Returns an {@link ArrayList} with argument cases with the same given premises (id and content) in the domain context
+	 * Returns an {@link ArrayList} with argument-cases with the same given premises (id and content) in the domain context
 	 * @param desiredPremises {@link HashMap} with the desired premises  
-	 * @return argument cases with the same given premises in the domain context
+	 * @return argument-cases with the same given premises in the domain context
 	 */
 	private ArrayList<ArgumentCase> getDomainSimilarArgCases(HashMap<Integer,Premise> desiredPremises){
 		ArrayList<ArgumentCase> domainSimilarCases= new ArrayList<ArgumentCase>();
@@ -899,7 +887,7 @@ public class ArgCBR {
 					ArgumentCase argCase=iterArgCases.next();
 					HashMap<Integer,Premise> argCasePremises=argCase.getArgumentProblem().getDomainContext().getPremises();
 					
-					//if the premises are the same with the same content, it is a similar argument case, add it to final list
+					//if the premises are the same with the same content, it is a similar argument-case. Add it to final list
 					if(isSameDomainContext(desiredPremisesList, argCasePremises))
 						domainSimilarCases.add(argCase);
 					
@@ -924,7 +912,7 @@ public class ArgCBR {
 		while(iterPremises1.hasNext()){
 			Premise currentPremise1=iterPremises1.next();
 			Premise currentPremise2=premises2.get(currentPremise1.getID());
-			//if premise not exists or the content is different, this case is not valid
+			//if a premise does not exist or the content is different, this case is not valid
 			if( currentPremise2==null || !currentPremise2.getContent().equalsIgnoreCase(currentPremise1.getContent()) ){
 				return false;
 			}
@@ -934,7 +922,7 @@ public class ArgCBR {
 	}
 	
 	/**
-	 * Returns <code>true</code> if all the premises in the given {@link ArrayList} are the same (id and content) in the {@link HashMap} and there are not anymore. 
+	 * Returns <code>true</code> if all the premises in the given {@link ArrayList} are the same (id and content) in the {@link HashMap} and there are not any premise more 
 	 * @param premises1 {@link ArrayList} with premises
 	 * @param premises2 {@link HashMap} with premises
 	 * @return <code>true</code> if it is the same domain context, otherwise <code>false</code>
@@ -949,7 +937,7 @@ public class ArgCBR {
 		while(iterPremises1.hasNext()){
 			Premise currentPremise1=iterPremises1.next();
 			Premise currentPremise2=premises2.get(currentPremise1.getID());
-			//if premise not exists or the content is different, this case is not valid
+			//if a premise does not exist or the content is different, this case is not valid
 			if( currentPremise2==null || !currentPremise2.getContent().equalsIgnoreCase(currentPremise1.getContent()) ){
 				return false;
 			}
@@ -966,7 +954,7 @@ public class ArgCBR {
 	 */
 	private boolean isSameSocialContext(SocialContext socialContext1, SocialContext socialContext2){
 		
-		//TODO add list of proponents, opponents and groups (checking that norms and valprefs are the same)
+		//If used in teh application domain, add list of proponents, opponents and groups (checking that norms and valprefs are the same)
 		if(socialContext1.getDependencyRelation().compareTo(socialContext2.getDependencyRelation())!=0)
 			return false;
 		if(socialContext1.getGroup().getID()!=socialContext2.getGroup().getID())
@@ -1007,14 +995,9 @@ public class ArgCBR {
 	}
 	
 	/**
-	 * Stores the argument-case case-base in the path specified in the creation of the class
+	 * Stores the argument-case case-base in the file path specified in the creation of the class
 	 */
 	public void doCache(){
-//		try {
-//			owlArgCBRparser.saveArgumentationOntology(getAllCasesVector(), initialOWLFilePath, storingOWLFilePath);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
 		
 		
 		try {
@@ -1043,15 +1026,10 @@ public class ArgCBR {
 	}
 	
 	/**
-	 * Stores the argument-case case-base in the path specified as argument
-	 * @param fileName Path to store the case-base
+	 * Stores the argument-case case-base in the file path specified as argument
+	 * @param fileName File path to store the case-base
 	 */
 	public void doCache(String fileName){
-//		try {
-//			owlArgCBRparser.saveArgumentationOntology(getAllCasesVector(), initialOWLFilePath, storingOWLFilePath);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
 		
 		
 		try {
@@ -1075,12 +1053,12 @@ public class ArgCBR {
 
 	}
 	
+	
+	/**
+	 * Stores the argument-case case-base in the file path specified in the creation of the class, but keeping all previous information of that file
+	 */
 	public void doCacheInc(){
-//		try {
-//			owlArgCBRparser.saveArgumentationOntology(getAllCasesVector(), initialOWLFilePath, storingOWLFilePath);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
+
 		
 		try {
 			
