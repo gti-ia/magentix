@@ -20,7 +20,7 @@ import es.upv.dsic.gti_ia.core.MessageFilter;
 
 /**
  * Abstract class that defines the protocol that the Commitment Store follows to attend
- * the petitions of the agents.
+ * the requests of the agents.
  * @author Jaume Jordan
  *
  */
@@ -32,7 +32,7 @@ public abstract class CommitmentStore_Protocol {
 	
 	/**
 	 * Begin method executed to begin the conversation
-	 * @param myProcessor {@link CProcessor} that manage the conversation
+	 * @param myProcessor {@link CProcessor} that manages the conversation
 	 * @param msg initial message
 	 */
 	protected void doBegin(CProcessor myProcessor, ACLMessage msg) {
@@ -47,10 +47,10 @@ public abstract class CommitmentStore_Protocol {
 	}
 
 	/**
-	 * Creates a response depending on the petition received previously in the {@link ACLMessage} parameter
-	 * @param myProcessor {@link CProcessor} that manage the conversation
-	 * @param msgReceived {@link ACLMessage} received as a petition by other agent
-	 * @return {@link ACLMessage} with the response to give or null if it is not necessary to respond
+	 * Creates a response depending on the request received previously in the {@link ACLMessage} parameter
+	 * @param myProcessor {@link CProcessor} that manages the conversation
+	 * @param msgReceived {@link ACLMessage} received as a request by other agent
+	 * @return {@link ACLMessage} with the response to give, or null if it is not necessary to respond
 	 */
 	protected abstract ACLMessage doRespond(CProcessor myProcessor, ACLMessage msgReceived);
 	
@@ -77,7 +77,7 @@ public abstract class CommitmentStore_Protocol {
 	
 	/**
 	 * Actions to perform when the DIE message is received.
-	 * @param myProcessor {@link CProcessor} that manage the conversation
+	 * @param myProcessor {@link CProcessor} that manages the conversation
 	 */
 	protected abstract void doDie(CProcessor myProcessor);
 	
@@ -145,9 +145,9 @@ public abstract class CommitmentStore_Protocol {
 		
 	}
 	/**
-	 * Copies all contents of the msg2 to the msg1
-	 * @param msg {@link ACLMessage}
-	 * @param msg2 {@link ACLMessage}
+	 * Copies all contents from one message to another
+	 * @param msg {@link ACLMessage} copied message
+	 * @param msg2 {@link ACLMessage} original message
 	 */
 	private void copyMessages(ACLMessage msg, ACLMessage msg2){
 		msg.setSender(msg2.getSender());

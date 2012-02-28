@@ -46,7 +46,7 @@ public abstract class Argumentation_Participant {
 	
 	/**
 	 * Begin method executed to begin the conversation
-	 * @param myProcessor {@link CProcessor} that manage the conversation
+	 * @param myProcessor {@link CProcessor} that manages the conversation
 	 * @param msg initial message
 	 */
 	protected void doBegin(CProcessor myProcessor, ACLMessage msg) {
@@ -82,7 +82,7 @@ public abstract class Argumentation_Participant {
 	
 	
 	/**
-	 * Evaluates if the agent can enter in the dialogue offering a solution. If it can not, it does a withdraw dialogue.
+	 * Evaluates if the agent can enter in the dialogue offering a solution. If it cannot, the agent withdraws from the dialogue.
 	 * @param myProcessor {@link CProcessor} that manage the conversation
 	 * @param msg {@link ACLMessage} to send to Commitment Store, with locution ENTERDIALOGUE or WITHDRAWDIALOGUE
 	 * @return <code>true</code> if it makes an ENTERDIALOGUE, <code>false</code> if it makes a WITHDRAWDIALOGUE
@@ -101,7 +101,7 @@ public abstract class Argumentation_Participant {
 	
 	
 	/**
-	 * Proposes a {@link Position} to defend in the dialogue. If it can not, it does a withdraw dialogue.
+	 * Proposes a {@link Position} to defend in the dialogue. If it cannot, the agent withdraws from dialogue.
 	 * @param myProcessor {@link CProcessor} that manage the conversation
 	 * @param msg {@link ACLMessage} to send with the {@link Position} to propose (ADDPOSITION) or WITHDRAWDIALOGUE
 	 * @return <code>true</code> if it makes an ADDPOSITION, <code>false</code> if it makes a WITHDRAWDIALOGUE
@@ -119,14 +119,14 @@ public abstract class Argumentation_Participant {
 	
 	/**
 	 * Actions to be executed when the dialogue has to finish
-	 * @param myProcessor {@link CProcessor} that manage the conversation
+	 * @param myProcessor {@link CProcessor} that manages the conversation
 	 * @param msg {@link ACLMessage} received with the locution FINISHDIALOGUE
 	 */
 	protected abstract void doFinishDialogue(CProcessor myProcessor, ACLMessage msg);
 	
 	/**
 	 * Actions to perform when the position of the agent has been accepted.
-	 * @param myProcessor {@link CProcessor} that manage the conversation
+	 * @param myProcessor {@link CProcessor} that manages the conversation
 	 * @param messageReceived {@link ACLMessage} with the locution ACCEPT
 	 */
 	protected abstract void doMyPositionAccepted(CProcessor myProcessor, ACLMessage messageReceived);
@@ -151,7 +151,7 @@ public abstract class Argumentation_Participant {
 	
 	/**
 	 * Sends an {@link ACLMessage} with the {@link Position} defended by the agent 
-	 * @param myProcessor {@link CProcessor} that manage the conversation
+	 * @param myProcessor {@link CProcessor} that manages the conversation
 	 * @param msg an {@link ACLMessage} to send with the {@link Position} defended by the agent 
 	 */
 	protected abstract void doSendPosition(CProcessor myProcessor, ACLMessage msg);
@@ -166,7 +166,7 @@ public abstract class Argumentation_Participant {
 	
 	/**
 	 * Actions to perform when the final solution to the current problem to solve arrives in an {@link ACLMessage}
-	 * @param myProcessor {@link CProcessor} that manage the conversation
+	 * @param myProcessor {@link CProcessor} that manages the conversation
 	 * @param msg an {@link ACLMessage} received with the solution to the current problem
 	 */
 	protected abstract void doSolution(CProcessor myProcessor, ACLMessage msg);
@@ -180,8 +180,8 @@ public abstract class Argumentation_Participant {
 	}
 	
 	/**
-	 * Try to assert a support argument to respond to the WHY received previously.
-	 * @param myProcessor {@link CProcessor} that manage the conversation
+	 * Try to assert a support argument to respond to the WHY locution received previously.
+	 * @param myProcessor {@link CProcessor} that manages the conversation
 	 * @param msg an {@link ACLMessage} to send with an {@link Argument} and locution ASSERT, a locution NOCOMMIT, or a locution NOTHING
 	 * @param whyAgentID agent identifier that has made the WHY
 	 * @return A {@link String} describing if it makes an ASSERT, NOCOMMIT or, WAIT_CENTRAL
@@ -218,7 +218,7 @@ public abstract class Argumentation_Participant {
 	
 	/**
 	 * Actions to perform to generate an attack argument against an attack or assert received
-	 * @param myProcessor {@link CProcessor} that manage the conversation
+	 * @param myProcessor {@link CProcessor} that manages the conversation
 	 * @param msgToSend {@link ACLMessage} to send with the attack argument or a NOCOMMIT
 	 * @param msgReceived {@link ACLMessage} received with an attack or assert
 	 * @param defending indicates if it is defending its position or attacking another agent position
@@ -239,7 +239,7 @@ public abstract class Argumentation_Participant {
 	
 	/**
 	 * Creates an {@link ACLMessage} to send with the locution NOCOMMIT
-	 * @param myProcessor {@link CProcessor} that manage the conversation
+	 * @param myProcessor {@link CProcessor} that manages the conversation
 	 * @param msg {@link ACLMessage} to send with the locution NOCOMMIT
 	 */
 	protected abstract void doNoCommit(CProcessor myProcessor, ACLMessage msg);
@@ -258,8 +258,8 @@ public abstract class Argumentation_Participant {
 	}
 	
 	/**
-	 * Creates a message to send to the Commitment Store with locution GETALLPOSITIONS to obtain all the positions of the dialogue
-	 * @param myProcessor {@link CProcessor} that manage the conversation
+	 * Creates a message to send to the Commitment Store with locution GETALLPOSITIONS to obtain all current positions of the dialogue
+	 * @param myProcessor {@link CProcessor} that manages the conversation
 	 * @param msg {@link ACLMessage} to send to the Commitment Store with locution GETALLPOSITIONS
 	 */
 	protected abstract void doQueryPositions(CProcessor myProcessor, ACLMessage msg);
@@ -281,7 +281,7 @@ public abstract class Argumentation_Participant {
 	/**
 	 * Get the positions of the agents in the dialogue sent by the Commitment Store as an object
 	 * in the {@link ACLMessage} parameter
-	 * @param myProcessor {@link CProcessor} that manage the conversation
+	 * @param myProcessor {@link CProcessor} that manages the conversation
 	 * @param msg {@link ACLMessage} with locution GETALLPOSITIONS and the positions of other agents in the dialogue
 	 */
 	protected abstract void doGetPositions(CProcessor myProcessor, ACLMessage msgReceived);
@@ -304,7 +304,7 @@ public abstract class Argumentation_Participant {
 	
 	/**
 	 * Choose a {@link Position} to send a WHY message if it can, or NOTHING
-	 * @param myProcessor {@link CProcessor} that manage the conversation
+	 * @param myProcessor {@link CProcessor} that manages the conversation
 	 * @param msg {@link ACLMessage} to send a WHY, or NOTHING if there is not any {@link Position} to ask
 	 * @return code>true</code> if it makes a WHY, <code>false</code> if it makes a NOTHING
 	 */
@@ -337,7 +337,7 @@ public abstract class Argumentation_Participant {
 	
 	/**
 	 * Actions to perform and send an {@link ACLMessage} accepting the other agent's position or argument
-	 * @param myProcessor {@link CProcessor} that manage the conversation
+	 * @param myProcessor {@link CProcessor} that manages the conversation
 	 * @param msgToSend {@link ACLMessage} accepting the other agent's position or argument
 	 */
 	protected abstract void doAccept(CProcessor myProcessor, ACLMessage msgToSend);
@@ -367,9 +367,8 @@ public abstract class Argumentation_Participant {
 	/**
 	 * This class manages the unexpected messages that arrive to an state.
 	 * The messages with locutions FINISHDIALOGUE and DIE are not expected in any
-	 * state, this is because we prefer to manage and change the behaviour of the
+	 * state. This is because we prefer to manage and change the behaviour of the
 	 * agent in any WAIT state where these messages can be received.
-	 * 
 	 *
 	 */
 	class NotAcceptedMessagesState2 extends NotAcceptedMessagesState {
@@ -421,7 +420,7 @@ public abstract class Argumentation_Participant {
 		
 	/**
 	 * Actions to perform when the message with locution DIE is received.
-	 * @param myProcessor {@link CProcessor} that manage the conversation
+	 * @param myProcessor {@link CProcessor} that manages the conversation
 	 */
 	protected abstract void doDie(CProcessor myProcessor);
 	
@@ -434,9 +433,9 @@ public abstract class Argumentation_Participant {
 	
 	
 	/**
-	 * Copies all contents from the msg2 to the msg
-	 * @param msg {@link ACLMessage}
-	 * @param msg2 {@link ACLMessage}
+	 * Copies all contents from the one message to another
+	 * @param msg {@link ACLMessage} copied message
+	 * @param msg2 {@link ACLMessage} original message
 	 */
 	private void copyMessages(ACLMessage msg, ACLMessage msg2){
 		msg.setSender(msg2.getSender());
