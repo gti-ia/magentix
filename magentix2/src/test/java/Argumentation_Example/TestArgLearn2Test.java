@@ -17,8 +17,15 @@ import es.upv.dsic.gti_ia.argAgents.knowledgeResources.ValPref;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
 
+/**
+ * This class launches a test with argumentative agents, including the
+ * Commitment Store and a tester agent that acts as initiator
+ * 
+ * @author Jaume Jordan
+ * 
+ */
 public class TestArgLearn2Test {
-	
+
 	/**
 	 * @param args
 	 */
@@ -35,84 +42,105 @@ public class TestArgLearn2Test {
 		AgentsConnection.connect();
 
 		try {
-						
-			int nTickets=1;
-			
-			int nOperators=3;
-			int nExperts=0;
-			int nManagers=0;
-			
-			String testerAgentID="testerAgent";
-			String finishFileName="testArgLearnAgfinished";
-			
-			ArrayList<String> iniDomainFiles=new ArrayList<String>();
-			ArrayList<String> iniArgFileNames=new ArrayList<String>();
-			
-			
-			Vector<DomainCase> tickets=CreatePartitions.getTestDomainCases();
-						
-			for(nOperators = 7; nOperators <= 7; nOperators+=2){	
-			
-				int nArgCases=10;
-			
-				iniArgFileNames=new ArrayList<String>();
-				for(int i=0;i<nOperators;i++){
-					iniArgFileNames.add("partArgInc/partArg"+"Operator"+i+".dat");
+			int nTestCases = 1;
+
+			int nOperators = 3;
+			int nExperts = 0;
+			int nManagers = 0;
+
+			String testerAgentID = "testerAgent";
+			//fileName where it will be write if the tets has been finished
+			String finishFileName = "testArgLearnAgfinished";
+
+			//initial domain-cases file names
+			ArrayList<String> iniDomainFiles = new ArrayList<String>();
+			//initial argument-cases file names
+			ArrayList<String> iniArgFileNames = new ArrayList<String>();
+
+			//test domain-cases
+			Vector<DomainCase> testDomainCases = CreatePartitions.getTestDomainCases();
+
+			//repeated test for different number of operators
+			for (nOperators = 3; nOperators <= 9; nOperators += 2) {
+				
+				//init the argument-cases file names
+				iniArgFileNames = new ArrayList<String>();
+				for (int i = 0; i < nOperators; i++) {
+					iniArgFileNames.add("partArgInc/partArg" + "Operator" + i + ".dat");
 				}
+				//empty argument-cases partitions
 				AgentsCreation.createEmptyArgCasesPartitions(iniArgFileNames);
 				
-			
-				ArrayList<SocialEntity> socialEntities=AgentsCreation.createSocialEntities("ArgLearnCAg",nOperators, nExperts, nManagers);
-				ArrayList<ArrayList<SocialEntity>> friendsLists=AgentsCreation.createFriendsLists(socialEntities);
-				ArrayList<ArrayList<DependencyRelation>> depenRelsLists=AgentsCreation.createDependencyRelations(nOperators, nExperts, nManagers);
 				
-				ArrayList<String> values=new ArrayList<String>();
-				values.add("ahorro");values.add("rapidez");values.add("calidad");
-				Group group=new Group(1, "group1", new ValPref(values), socialEntities);
-				
-				for(int cases=40;cases<=45;cases+=5){
-				
-					iniDomainFiles=new ArrayList<String>();
-					for(int i=0;i<nOperators;i++){
-						iniDomainFiles.add("partitionsInc/partContinuous"+cases+"cas"+i+"op.dat");
-					}
-						
-					for(int repetition=0;repetition<tickets.size();repetition++){
+				//create the social entities, friends list, and dependency relation between all agents
+				ArrayList<SocialEntity> socialEntities = AgentsCreation.createSocialEntities("ArgLearnCAg", nOperators,
+						nExperts, nManagers);
+				ArrayList<ArrayList<SocialEntity>> friendsLists = AgentsCreation.createFriendsLists(socialEntities);
+				ArrayList<ArrayList<DependencyRelation>> depenRelsLists = AgentsCreation.createDependencyRelations(
+						nOperators, nExperts, nManagers);
 
-						Vector<DomainCase> aTicket=new Vector<DomainCase>();
-						aTicket.add(tickets.get(repetition));
-				
-						CommitmentStore commitmentStore = new CommitmentStore(new AgentID("qpid://commitmentStore@localhost:8080"));
+				//preferred values of the group
+				ArrayList<String> values = new ArrayList<String>();
+				values.add("ahorro");
+				values.add("rapidez");
+				values.add("calidad");
+				Group group = new Group(1, "group1", new ValPref(values), socialEntities);
+
+				//repeated tests for different number of domain-cases for each argumentative agent
+				for (int cases = 5; cases <= 45; cases += 5) {
+
+					iniDomainFiles = new ArrayList<String>();
+					for (int i = 0; i < nOperators; i++) {
+						iniDomainFiles.add("partitionsInc/partContinuous" + cases + "cas" + i + "op.dat");
+					}
+
+					//repetitions with different test domain-cases for the same partitions
+					for (int repetition = 0; repetition < testDomainCases.size(); repetition++) {
+
+						Vector<DomainCase> aTestDomCase = new Vector<DomainCase>();
+						aTestDomCase.add(testDomainCases.get(repetition));
+
+						//Create and start the Commitment Store
+						CommitmentStore commitmentStore = new CommitmentStore(new AgentID(
+								"qpid://commitmentStore@localhost:8080"));
 						commitmentStore.start();
-						
-						ArrayList<ArgCAgent> agents = AgentsCreation.createArgLearnAgentsInc(socialEntities, friendsLists, depenRelsLists, 
-								group, iniDomainFiles, iniDomainFiles, 0, 0.5f, iniArgFileNames, iniArgFileNames, nArgCases, testerAgentID, 1f, 1f,1f,1f,1f,1f);
-							
-						TesterAgentArgLearn1and2 testerAgent= new TesterAgentArgLearn1and2(new AgentID("qpid://"+testerAgentID+"@localhost:8080"), nTickets, 
-								socialEntities, commitmentStore.getName(), "results/performance/test1and2Inc/argLearnContinuousLL5DC+0AC+Per-"+nOperators+"ag.txt",
-								finishFileName, cases, repetition, aTicket, new ArrayList<String>(), agents);
+
+						//Create the argumentative agents
+						ArrayList<ArgCAgent> agents = AgentsCreation.createArgLearnAgentsInc(socialEntities,
+								friendsLists, depenRelsLists, group, iniDomainFiles, iniDomainFiles, 0, 0.5f,
+								iniArgFileNames, iniArgFileNames, testerAgentID, 1f, 1f, 1f, 1f, 1f, 1f);
+
+						//Create the tester agent that sends the test domain-case to solve to the group of agents
+						//and acts as initiator of the dialogue
+						TesterAgentArgLearn1and2 testerAgent = new TesterAgentArgLearn1and2(new AgentID("qpid://"
+								+ testerAgentID + "@localhost:8080"), nTestCases, socialEntities,
+								commitmentStore.getName(),
+								"results/performance/test1and2Inc/argLearnContinuousLL5DC+0AC+Per-" + nOperators
+										+ "ag.txt", finishFileName, cases, repetition, aTestDomCase,
+								new ArrayList<String>(), agents);
 						testerAgent.start();
-						
-						while(true){
+
+						//check every second if the test has finished
+						while (true) {
 							Thread.sleep(1000);
-							try{
+							try {
 								FileReader fstream = new FileReader(finishFileName);
 								BufferedReader file = new BufferedReader(fstream);
-								String line=file.readLine();
+								String line = file.readLine();
 								file.close();
-								if(line!=null && !line.equals(""))
+								if (line != null && !line.equals(""))
 									break;
-							}catch (Exception e){//Catch exception if any
+							} catch (Exception e) {// Catch exception if any
 								System.err.println("Error reading file: " + e.getMessage());
 								e.printStackTrace();
 							}
 						}
-				
+
 					}
 
 				}
 
-			}//while
+			}// while
 
 		} catch (Exception e) {
 			logger.error("Error  " + e.getMessage());
