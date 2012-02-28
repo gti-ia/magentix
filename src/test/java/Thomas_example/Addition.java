@@ -114,7 +114,6 @@ public class Addition extends CAgent {
 				
 				myProcessor.getLastReceivedMessage().setContent(""+resultXML);
 
-				myProcessor.getMyAgent().Shutdown();
 			} catch (Exception e) {
 				next = "FAILURE";
 			}
