@@ -21,7 +21,7 @@ public class AgentsCreation {
 
 	/**
 	 * Gets an {@link ArrayList} of {@link ValPref} with the different
-	 * combinations of (ahorro, calidad, rapidez)
+	 * combinations of the following values: savings, quality and speed.
 	 * 
 	 * @return an {@link ArrayList} of {@link ValPref}
 	 */
@@ -29,34 +29,34 @@ public class AgentsCreation {
 		ArrayList<ValPref> preferredValues = new ArrayList<ValPref>();
 
 		ArrayList<String> preferredValues0 = new ArrayList<String>();
-		preferredValues0.add(new String("ahorro"));
-		preferredValues0.add(new String("calidad"));
-		preferredValues0.add(new String("rapidez"));
+		preferredValues0.add(new String("savings"));
+		preferredValues0.add(new String("quality"));
+		preferredValues0.add(new String("speed"));
 
 		ArrayList<String> preferredValues1 = new ArrayList<String>();
-		preferredValues1.add(new String("calidad"));
-		preferredValues1.add(new String("rapidez"));
-		preferredValues1.add(new String("ahorro"));
+		preferredValues1.add(new String("quality"));
+		preferredValues1.add(new String("speed"));
+		preferredValues1.add(new String("savings"));
 
 		ArrayList<String> preferredValues2 = new ArrayList<String>();
-		preferredValues2.add(new String("rapidez"));
-		preferredValues2.add(new String("ahorro"));
-		preferredValues2.add(new String("calidad"));
+		preferredValues2.add(new String("speed"));
+		preferredValues2.add(new String("savings"));
+		preferredValues2.add(new String("quality"));
 
 		ArrayList<String> preferredValues3 = new ArrayList<String>();
-		preferredValues3.add(new String("ahorro"));
-		preferredValues3.add(new String("rapidez"));
-		preferredValues3.add(new String("calidad"));
+		preferredValues3.add(new String("savings"));
+		preferredValues3.add(new String("speed"));
+		preferredValues3.add(new String("quality"));
 
 		ArrayList<String> preferredValues4 = new ArrayList<String>();
-		preferredValues4.add(new String("calidad"));
-		preferredValues4.add(new String("ahorro"));
-		preferredValues4.add(new String("rapidez"));
+		preferredValues4.add(new String("quality"));
+		preferredValues4.add(new String("savings"));
+		preferredValues4.add(new String("speed"));
 
 		ArrayList<String> preferredValues5 = new ArrayList<String>();
-		preferredValues5.add(new String("rapidez"));
-		preferredValues5.add(new String("calidad"));
-		preferredValues5.add(new String("ahorro"));
+		preferredValues5.add(new String("speed"));
+		preferredValues5.add(new String("quality"));
+		preferredValues5.add(new String("savings"));
 
 		preferredValues.add(new ValPref(preferredValues0));
 		preferredValues.add(new ValPref(preferredValues1));
@@ -83,7 +83,7 @@ public class AgentsCreation {
 	}
 
 	/**
-	 * Creates empty {@link ArgumentCase} partitions in the specified file names
+	 * Creates an empty {@link ArgumentCase} partitions in the specified file names
 	 * 
 	 * @param destFileNames
 	 *            {@link ArrayList} of file names
@@ -103,7 +103,7 @@ public class AgentsCreation {
 	}
 
 	/**
-	 * Creates {@link SocialEntity} with the given base name and the number of
+	 * Creates a {@link SocialEntity} with the given base name and the number of
 	 * operators, experts and managers specified
 	 * 
 	 * @param baseName
@@ -137,7 +137,7 @@ public class AgentsCreation {
 	}
 
 	/**
-	 * Creates {@link SocialEntity} with different value preferences the given
+	 * Creates a {@link SocialEntity} with different value preferences, the given
 	 * base name and the number of operators, experts and managers specified
 	 * 
 	 * @param baseName
@@ -194,7 +194,7 @@ public class AgentsCreation {
 	}
 
 	/**
-	 * Creates {@link SocialEntity} with the given list of preferences, base
+	 * Creates a {@link SocialEntity} with the given list of preferences, base
 	 * name and the number of operators, experts and managers specified
 	 * 
 	 * @param baseName
@@ -235,7 +235,7 @@ public class AgentsCreation {
 	}
 
 	/**
-	 * Creates {@link SocialEntity} with void values, the given base name and
+	 * Creates a {@link SocialEntity} with void values, the given base name and
 	 * the number of operators, experts and managers specified
 	 * 
 	 * @param baseName
@@ -305,8 +305,7 @@ public class AgentsCreation {
 
 	/**
 	 * Creates an {@link ArrayList} for each {@link SocialEntity} given in the
-	 * parameters. Each {@link ArrayList} represents the agents of the group in
-	 * the view of one of them
+	 * parameters. Each {@link ArrayList} represents a list of friends for each agent
 	 * 
 	 * @param socialEntities
 	 *            {@link ArrayList} of {@link SocialEntity} to create the lists.
@@ -458,7 +457,7 @@ public class AgentsCreation {
 	 * {@link SocialEntity}
 	 * 
 	 * @param socialEntities
-	 *            {@link ArrayList} of {@link SocialEntity} that define the
+	 *            {@link ArrayList} of {@link SocialEntity} that defines the
 	 *            agents to create
 	 * @param friendsLists
 	 *            {@link ArrayList} of {@link ArrayList} of {@link SocialEntity}

@@ -27,7 +27,7 @@ import es.upv.dsic.gti_ia.argAgents.knowledgeResources.DomainCase;
 public class CreatePartitions {
 
 	/**
-	 * Creates the data files with the domainCases serialized as Java Objects
+	 * Creates the data files with the domain-cases serialized as Java Objects
 	 * 
 	 * @param nCases
 	 *            Creates different files, from 0 to nCases
@@ -55,8 +55,7 @@ public class CreatePartitions {
 						usedIndex.add(index);
 					}
 
-					// save the list currentPartition in the given file, using
-					// the function of domain onto parser
+					// save the list currentPartition in the given file
 					writeDomainCases(currentPartition, "partitionsInc/part" + cases + "cas" + op + "op.dat");
 
 				}
@@ -69,7 +68,7 @@ public class CreatePartitions {
 	}
 
 	/**
-	 * Creates the data files with the domainCases, serialized as Java Objects.
+	 * Creates the data files with the domain-cases, serialized as Java Objects.
 	 * It takes a concrete order to create continuous and incremental
 	 * partitions.
 	 * 
@@ -89,17 +88,14 @@ public class CreatePartitions {
 				ArrayList<DomainCase> currentPartition = new ArrayList<DomainCase>();
 				for (int cases = 0; cases < nCases; cases += 5) {
 					System.out.println("Partition cases = " + (cases + 5));
-					for (int i = cases; i < cases + 5; i++) {// 5 cases per
-																// incremental
-																// iteration
+					for (int i = cases; i < cases + 5; i++) {// 5 cases per incremental iteration
 						int index = (op + i) % allCases.size();
 						casesList.add(index);
 						currentPartition.add(allCases.get(index));
 						System.out.println(index);
 					}
 					System.out.println("current partition size = " + currentPartition.size());
-					// save the list currentPartition in the given file, using
-					// the function of domain onto parser
+					// save the list currentPartition in the given file
 					writeDomainCases(currentPartition, "partitionsInc/partContinuous" + (cases + 5) + "cas" + op + "op.dat");
 
 				}
@@ -119,11 +115,11 @@ public class CreatePartitions {
 	}
 
 	/**
-	 * Creates the data files with the ArgumentCases of each
+	 * Creates the data files with the argument-cases of each
 	 * {@link SocialEntity}, serialized as Java Objects
 	 * 
 	 * @param file
-	 *            The original file with ArgumentCases to read (if any)
+	 *            The original file with argument-cases to read (if any)
 	 * @param inc
 	 *            The number of cases that is added to each new file
 	 * @param operator
@@ -144,7 +140,7 @@ public class CreatePartitions {
 			ArrayList<Integer> usedIndex = new ArrayList<Integer>();
 			for (int cases = 2; cases <= nCases; cases += inc) {
 
-				for (int i = 0; i < inc; i++) {// inc cases per incremental
+				for (int i = 0; i < inc; i++) {// inc number of cases per incremental
 												// iteration
 					int index = (int) (Math.random() * allCases.size());
 					while (usedIndex.contains(index)) {
@@ -155,9 +151,7 @@ public class CreatePartitions {
 					usedIndex.add(index);
 				}
 
-				// save the list currentPartition in the given file, using the
-				// function of domain onto parser
-
+				// save the list currentPartition in the given file
 				writeArgCasesFile(currentPartition, "partArgInc/partArg" + cases + "cas" + operator + "op.dat");
 
 			}

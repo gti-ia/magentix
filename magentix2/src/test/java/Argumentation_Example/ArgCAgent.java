@@ -46,8 +46,15 @@ import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 
 /**
- * This class implements the argumentative agent as a CAgent. It can join in an
+ * This class implements the argumentative agent as a CAgent. It can engage in an
  * argumentation dialogue to solve a problem.
+ * The agent can follow different argumentation tactics by setting different values for the weights of the support factor (SF):
+ * - Persuasive tactic: wPD = 1; rest of weights = 0
+ * - Maximise-support tactic: wSD = 1; rest of weights = 0
+ * - Minimise-risk tactic: wRD = 1; rest of weights = 0
+ * - Minimise-attack tactic: wAD = 1; rest of weights = 0
+ * - Maximise-efficiency tactic: wED = 1; rest of weights = 0
+ * - Explanatory tactic: wEP = 1; rest of weights = 0
  * 
  * @author Jaume Jordan
  * 
@@ -145,16 +152,16 @@ public class ArgCAgent extends CAgent {
 	 * @param testerAgentID
 	 *            ID of the TesterAgent to run tests in the system
 	 * @param iniDomCasesFilePath
-	 *            File with the original DomainCases case-base
+	 *            File with the original Domain-Cases case-base
 	 * @param finDomCasesFilePath
-	 *            File to write the updated DomainCases case-base
+	 *            File to write the updated Domain-Cases case-base
 	 * @param iniArgCasesFilePath
-	 *            File with the original ArgumentCases case-base
+	 *            File with the original Argument-Cases case-base
 	 * @param finArgCasesFilePath
-	 *            File with the updated ArgumentCases case-base
+	 *            File with the updated Argument-Cases case-base
 	 * @param threshold
-	 *            Similarity threshold over which a DomainCase is retrieved from
-	 *            the DomainCases case-base
+	 *            Similarity threshold over which a Domain-Case is retrieved from
+	 *            the Domain-Cases case-base
 	 * @param wPD
 	 *            Weight of the Persuasion Degree
 	 * @param wSD
@@ -192,7 +199,7 @@ public class ArgCAgent extends CAgent {
 		this.wED = wED;
 		this.wEP = wEP;
 
-		// init domainCBR and argCBR
+		// initialise domainCBR and argCBR
 		domainCBR = new DomainCBR(iniDomCasesFilePath, finDomCasesFilePath, domCBRindex);
 		argCBR = new ArgCBR(iniArgCasesFilePath, finArgCasesFilePath);
 
@@ -228,7 +235,7 @@ public class ArgCAgent extends CAgent {
 
 		/**
 		 * This class extends the Argumentation Participant protocol
-		 * implementing all the needed functions to perform the dialogue.
+		 * implementing all the needed functions to engage in the dialogue.
 		 * 
 		 * @author Jaume Jordan
 		 * 
@@ -315,7 +322,7 @@ public class ArgCAgent extends CAgent {
 					return "WAIT_CENTRAL"; // send message with locution NOTHING
 											// to noOne (non existing agent)
 				} else {
-					// try to generate a support argument
+					// try to generate a support argument with:
 					// 1) Argument-cases 2) domain-cases 3) premises
 
 					ArrayList<Argument> supportArgs = generateSupportArguments(currentPosition, whyAgentID);
@@ -499,14 +506,14 @@ public class ArgCAgent extends CAgent {
 					 * If the agent cannot generate another attack, it retracts
 					 * its attack argument. If it has no more attacks, it has to
 					 * retract the support argument, if it has no more support
-					 * arguments, it has to noCommit position
+					 * arguments, it has to withdraw its position with a noCommit locution
 					 */
 
 					// search my last attack argument, the one I told this agent
 					ArrayList<Argument> attackArgs = myUsedAttackArguments.get(subDialogueAgentID);
 					if (attackArgs != null && !attackArgs.isEmpty()) {
 						Argument myLastAttackArg = attackArgs.get(attackArgs.size() - 1);
-						// put acceptability state to Unacceptable
+						// put acceptability status to Unacceptable
 						myLastAttackArg.setAcceptabilityState(AcceptabilityStatus.UNACCEPTABLE);
 						// retract my last attack argument
 						ArrayList<Argument> storeList = storeArguments.get(subDialogueAgentID);
@@ -638,7 +645,7 @@ public class ArgCAgent extends CAgent {
 						+ currentPosition.getSolution().getConclusion().getID() + " currentVotes="
 						+ currentPosition.getTimesAccepted() + "\n");
 
-				// change my support argument acceptability state
+				// change my support argument acceptability status
 				// search my support argument, the one I told this agent.
 				ArrayList<Argument> supportArgs = myUsedSupportArguments
 						.get(messageReceived.getSender().getLocalName());
@@ -689,7 +696,7 @@ public class ArgCAgent extends CAgent {
 
 		}
 
-		// The agent creates the CFactory that creates processors that initiate
+		// The agent creates the CFactory that creates processors that initialise
 		// conversations. In this example the CFactory gets the name "TALK".
 		// We limit the number of simultaneous processors to 1.
 
@@ -731,7 +738,7 @@ public class ArgCAgent extends CAgent {
 	}
 
 	/**
-	 * Evaluates if the agent can enter in the dialogue offering a solution. It
+	 * Evaluates if the agent can enter in the dialogue offering a solution. If
 	 * it can, it returns an {@link ACLMessage} with the locution ENTERDIALOGUE.
 	 * If not, it returns the {@link ACLMessage} with the locution
 	 * WITHDRAWDIALOGUE.
@@ -741,13 +748,13 @@ public class ArgCAgent extends CAgent {
 	 * @param dialogueID
 	 *            dialogue identifier
 	 * @return {@link ACLMessage} with the corresponding locution depending if
-	 *         it can enter or not to the dialogue
+	 *         it can enter or not in the dialogue
 	 */
 	private ACLMessage enter_dialogue(DomainCase domCase, String dialogueID) {
 
 		currentDomCase2Solve = domCase;
 		/*
-		 * each agent adds domain-cases with the agreed solution ONLY!!! at the
+		 * each agent adds domain-cases with the agreed solution at the
 		 * end of the dialogue
 		 */
 
@@ -821,10 +828,10 @@ public class ArgCAgent extends CAgent {
 	}
 
 	/**
-	 * Returns an {@link ACLMessage} with locution WHY to the given position
+	 * Returns an {@link ACLMessage} with locution WHY to challenge the given position
 	 * 
 	 * @param agentIDr
-	 *            agent identifier to ask WHY is defending a {@link Position}
+	 *            agent identifier to ask it WHY is defending a {@link Position}
 	 * @param pos
 	 *            {@link Position} of the agent to ask WHY
 	 * @return an {@link ACLMessage} with locution WHY to the given position
@@ -836,7 +843,7 @@ public class ArgCAgent extends CAgent {
 	}
 
 	/**
-	 * Returns an {@link ACLMessage} with locution NOCOMMIT to the given
+	 * Returns an {@link ACLMessage} with locution NOCOMMIT to withdraw the given
 	 * position
 	 * 
 	 * @param agentIDr
@@ -864,19 +871,19 @@ public class ArgCAgent extends CAgent {
 
 	/**
 	 * Returns an {@link ACLMessage} with locution ASSERT and the corresponding
-	 * assert argument to respond another agent about a WHY
+	 * asserted argument to respond another agent a WHY challenge
 	 * 
 	 * @param agentIDr
 	 *            agent identifier to tell that this agent makes an ASSERT to
 	 *            respond its WHY
 	 * @param arg
-	 *            assert argument that use the agent
+	 *            asserted argument that the agent uses
 	 * @return an {@link ACLMessage} with locution ASSERT and the corresponding
-	 *         assert argument
+	 *         asserted argument
 	 */
 	private ACLMessage asserts(String agentIDr, Argument arg) {
 		myUsedLocutions++;
-		// send it to the other agent and add the argument to commitment store
+		// send it to the other agent and add the argument to the commitment store
 		// (the assert is received also by the Commitment Store)
 		return createMessage(agentIDr, ASSERT, currentDialogueID, arg);
 
@@ -915,9 +922,9 @@ public class ArgCAgent extends CAgent {
 	}
 
 	/**
-	 * Returns an {@link ACLMessage} with locution NOTHING to send it to no one
+	 * Returns an {@link ACLMessage} with locution NOTHING to send to any agent
 	 * 
-	 * @return an {@link ACLMessage} with locution NOTHING to send it to no one
+	 * @return an {@link ACLMessage} with locution NOTHING to send to any agent
 	 */
 	private ACLMessage nothingMsg() {
 		ACLMessage msg = new ACLMessage();
@@ -968,7 +975,7 @@ public class ArgCAgent extends CAgent {
 	/**
 	 * Returns an {@link ArrayList} of {@link Position} with all generated
 	 * positions to solve the specified problem, ordered from more to less
-	 * suitable to the problem.
+	 * suitability degree to the problem.
 	 * 
 	 * @param prob
 	 *            {@link Problem} to solve.
@@ -976,17 +983,16 @@ public class ArgCAgent extends CAgent {
 	 *         positions
 	 */
 	private ArrayList<Position> generatePositions(Problem prob) {
-		// the agent will get the first position always, removing it. when it is
-		// out of positions, has to withdraw
+		// The agent will always get the first position, removing it from its list of generated positions. When it has run
+		// out of positions, it has to withdraw from the dialogue
 
-		// generate all positions and store them in a list, ordered by Promoted
-		// Value, and then Suitability = w*SimDegree + w2*SuitFactor arg
+		// Generate all positions and store them in a list, ordered by Promoted
+		// Value, and then, by Suitability = w*SimDegree + w2*SuitFactor
 
-		// so, at first we need make a query to DomainCBR to the possible
+		// At first we need make a query to DomainCBR to generate the possible
 		// solutions
-		// then, with each solution, create a Position
-		// with each position, query the argCBR calculating the SuitFactor Arg
-		// (PD + ....)
+		// Then, with each solution, create a Position.
+		// With each position, query the argCBR calculating the suppot factor for each position
 
 		ArrayList<Position> finalPositions = new ArrayList<Position>();
 
@@ -994,11 +1000,11 @@ public class ArgCAgent extends CAgent {
 			logger.info("\n" + this.getName() + ": " + " NO similar domain cases" + "\n");
 
 		// similarDomainCases has been initialized in enter_dialogue, with the
-		// similar domain cases to the problem
+		// similar domain-cases to the problem
 		if (similarDomainCases != null && similarDomainCases.size() > 0) {
 
-			// create a list of position list
-			// in each list of positions will be stored the positions with same
+			// create a list of positions
+			// in each list of positions will be stored the positions with the same
 			// Promoted Values
 			ArrayList<ArrayList<Position>> positionsLists = new ArrayList<ArrayList<Position>>();
 			for (int i = 0; i < preferedValues.size(); i++) {
@@ -1046,7 +1052,7 @@ public class ArgCAgent extends CAgent {
 				}
 			}
 
-			// store all positions in a list, to calculate attack degree,
+			// store all positions in a list, to calculate the attack degree,
 			// efficiency degree and explanatory power
 			ArrayList<Position> allPositions = new ArrayList<Position>();
 			Iterator<ArrayList<Position>> iterPositionsLists2 = positionsLists.iterator();
@@ -1081,7 +1087,7 @@ public class ArgCAgent extends CAgent {
 					position.setArgSuitabilityFactor(argSuitabilityFactor);
 
 					// Assign weights in accordance with the quantity of
-					// knowledge
+					// knowledge of each type
 					int domCases = similarDomainCases.size();
 					int arguCases;
 					try {
@@ -1148,12 +1154,12 @@ public class ArgCAgent extends CAgent {
 		SocialEntity opponent = myFriends.get(friendIndex);
 		DependencyRelation relation = depenRelations.get(friendIndex);
 
-		// try to generate a support argument
+		// try to generate a support argument of the type:
 		// 1) Argument-cases 2) domain-cases 3) premises
 
 		SocialContext socialContext = new SocialContext(mySocialEntity, opponent, myGroup, relation);
 
-		// create arg case with the domain case
+		// create argument-case with the domain-case
 		ArgumentProblem argProblem = new ArgumentProblem(new DomainContext(currentPosition.getPremises()),
 				socialContext);
 		ArgumentSolution argSolution = new ArgumentSolution();
@@ -1168,25 +1174,24 @@ public class ArgCAgent extends CAgent {
 		ArgumentCase argCasefromDomainCase = new ArgumentCase(System.nanoTime(),
 				new Date(System.currentTimeMillis()).toString(), argProblem, argSolution, argJustification, 0);
 
-		// create arg case with just the premises
+		// create argument-case with just the premises
 		ArgumentJustification argJustificationPremises = new ArgumentJustification();
 		ArgumentCase argCasePremises = new ArgumentCase(System.nanoTime(),
 				new Date(System.currentTimeMillis()).toString(), argProblem, argSolution, argJustificationPremises, 0);
 
-		// extract argument cases
+		// extract argument-cases
 		ArrayList<SimilarArgumentCase> argCases = argCBR.getSameDomainAndSocialContextAccepted(myPos.getPremises(),
 				myPos.getSolution(), socialContext);
 		usedArgCases += argCases.size();
 
-		// add arg case with the domain case and arg case with just the premises
+		// add an argument-case with the domain-case and an argument-case with just the premises
 
 		argCases.add(new SimilarArgumentCase(argCasefromDomainCase, 1));
 		argCases.add(new SimilarArgumentCase(argCasePremises, 1));
 
 		Iterator<SimilarArgumentCase> iterArgCases = argCases.iterator();
-		// this list contains positions that represent the different arg cases
-		// extracted
-		// just to calculate the degrees with the same function getDegrees()
+		// this list contains positions that represent the different argument-cases
+		// extracted just to calculate the degrees with the function getDegrees()
 		ArrayList<Position> allPositions = new ArrayList<Position>();
 		while (iterArgCases.hasNext()) {
 			SimilarArgumentCase simArgCase = iterArgCases.next();
@@ -1239,9 +1244,8 @@ public class ArgCAgent extends CAgent {
 			simArgCase.setSuitability((argSuitabilityFactor * wArgSuitFactor + simArgCase.getSuitability()
 					* wSimilarity));
 
-			//
-			// calculate suitability: with the current similarity in
-			// SimilarArgCase, and the suitability obtained of argumentation
+			// calculate suitability degree: with the current similarity in
+			// SimilarArgCase, and the suitability obtained from the Argumentation CBR
 
 		}
 
@@ -1261,7 +1265,7 @@ public class ArgCAgent extends CAgent {
 		ArrayList<DomainCase> counterExamplesdomainCases = new ArrayList<DomainCase>();
 		ArrayList<ArgumentCase> counterExamplesargumentCases = new ArrayList<ArgumentCase>();
 
-		// create support argument with premises or domain-cases, not directly
+		// create a support argument with premises or domain-cases, not directly
 		// with argument-cases
 
 		for (int i = 0; i < argCases.size(); i++) {
@@ -1276,9 +1280,9 @@ public class ArgCAgent extends CAgent {
 				ArrayList<ArgumentationScheme> argSchemes = argJustification2.getArgumentationSchemes();
 				ArrayList<DialogueGraph> dialogueGraphs = argJustification2.getDialogueGraphs();
 
-				// detect if it is the domain Case justification argument
+				// detect if it is the domain-case justification argument
 				if (domCasesJustification != null && domCasesJustification.size() > 0) {
-					// add the domain case that justifies the position, because
+					// add the domain-case that justifies the position, since
 					// it is this argument: argCasefromDomainCase
 					domainCases = currentPosition.getDomainCases();
 				}
@@ -1288,7 +1292,7 @@ public class ArgCAgent extends CAgent {
 						&& (domCasesJustification == null || domCasesJustification.size() == 0)
 						&& (argCasesJustification == null || argCasesJustification.size() == 0)) {
 					// premises already in the premises list
-					// do not add as an argument case
+					// do not add as a new argument-case
 				} else {
 					argumentCases.add(bestArgCase);
 				}
@@ -1320,8 +1324,7 @@ public class ArgCAgent extends CAgent {
 	 *         <code>null</code> if it is not possible
 	 */
 	private Argument generateAttackArgument(Argument incArgument, String agentID) {
-		// try to generate an attack argument: Distinguishing premise or Counter
-		// Example, depending on the attack received
+		// try to generate an attack argument: Distinguishing premise or Counter-Example, depending on the attack received
 
 		try {
 
@@ -1366,9 +1369,8 @@ public class ArgCAgent extends CAgent {
 			}
 
 			Iterator<SimilarArgumentCase> iterArgCases = argCases.iterator();
-			// this list contains positions that represent the different arg
-			// cases extracted
-			// just to calculate the degrees with the same function getDegrees()
+			// this list contains positions that represent the different argument-cases extracted
+			// just to calculate the degrees with the function getDegrees()
 			ArrayList<Position> allPositions = new ArrayList<Position>();
 			while (iterArgCases.hasNext()) {
 				SimilarArgumentCase simArgCase = iterArgCases.next();
@@ -1419,8 +1421,8 @@ public class ArgCAgent extends CAgent {
 				simArgCase.setSuitability((argSuitabilityFactor * wArgSuitFactor + simArgCase.getSuitability()
 						* wSimilarity));
 
-				// calculate suitability: with the current similarity in
-				// SimilarArgCase, and the suitability obtained of argumentation
+				// calculate suitability degree: with the current similarity in
+				// SimilarArgCase, and the suitability obtained from the Argumentation CBR
 
 			}
 
@@ -1651,8 +1653,8 @@ public class ArgCAgent extends CAgent {
 
 	/**
 	 * Returns a {@link HashMap} of the useful premises of the agent of the
-	 * current problem to solve (the premises of the {@link Position} that are
-	 * in the problem).
+	 * current problem to solve (the premises of the {@link Position} that are specified
+	 * in the problem characterisation).
 	 * 
 	 * @param problemPremises
 	 *            {@link HashMap} with the premises of the problem to solve
@@ -1670,12 +1672,8 @@ public class ArgCAgent extends CAgent {
 		while (iterMyPremises.hasNext()) {
 			Premise premise = iterMyPremises.next();
 			Premise problemPremise = problemPremises.get(premise.getID());
-			if (problemPremise != null && problemPremise.getContent().equalsIgnoreCase(premise.getContent())) {// this
-																												// premise
-																												// is
-																												// in
-																												// the
-																												// problem
+			if (problemPremise != null && problemPremise.getContent().equalsIgnoreCase(premise.getContent())) {// this premise is in the problem
+																									
 				usefulPremises.put(premise.getID(), premise);
 			}
 		}
@@ -1926,7 +1924,7 @@ public class ArgCAgent extends CAgent {
 
 	/**
 	 * Returns an {@link ACLMessage} with the locution ADDPOSITION and a
-	 * {@link Position} to send to Commitment Store
+	 * {@link Position} to send to the Commitment Store
 	 * 
 	 * @param pos
 	 *            {@link Position} to add in the Commitment Store
@@ -1995,11 +1993,11 @@ public class ArgCAgent extends CAgent {
 	}
 
 	/**
-	 * Returns an {@link ACLMessage} with the locution ENTERDIALOGUE to send to
+	 * Returns an {@link ACLMessage} with the locution ENTERDIALOGUE to send to the
 	 * Commitment Store
 	 * 
 	 * @param dialogueID
-	 *            id of the dialogue to join
+	 *            id of the dialogue to engage in
 	 * @return an {@link ACLMessage} with the locution ENTERDIALOGUE
 	 */
 	private ACLMessage enterDialogue(String dialogueID) {
@@ -2008,10 +2006,10 @@ public class ArgCAgent extends CAgent {
 	}
 
 	/**
-	 * Returns the list of IDs of the given domain cases
+	 * Returns the list of IDs of the given domain-cases
 	 * 
 	 * @param domainCases
-	 * @return the list of IDs of the given domain cases
+	 * @return the list of IDs of the given domain-cases
 	 */
 	private ArrayList<Long> domCasestoLongIDs(ArrayList<DomainCase> domainCases) {
 		ArrayList<Long> longListIDs = new ArrayList<Long>();
@@ -2024,10 +2022,10 @@ public class ArgCAgent extends CAgent {
 	}
 
 	/**
-	 * Returns the list of IDs of the given argument cases
+	 * Returns the list of IDs of the given argument-cases
 	 * 
 	 * @param argCases
-	 * @return the list of IDs of the given argument cases
+	 * @return the list of IDs of the given argument-cases
 	 */
 	private ArrayList<Long> argCasestoLongIDs(ArrayList<ArgumentCase> argCases) {
 		ArrayList<Long> longListIDs = new ArrayList<Long>();
@@ -2039,9 +2037,9 @@ public class ArgCAgent extends CAgent {
 	}
 
 	/**
-	 * Adds the final solution to the current ticket and adds it in the domain
+	 * Adds the final solution to the current ticket and adds it in the domain-cases
 	 * case-base. Also, stores all the generated argumentation data in the
-	 * argumentation case-base. Finally, makes a cache of the domain CBR and the
+	 * argument-cases case-base. Finally, makes a cache of the domain CBR and the
 	 * argumentation CBR.
 	 * 
 	 * @param solution
@@ -2060,7 +2058,7 @@ public class ArgCAgent extends CAgent {
 				logger.info(this.getName() + ": " + "Domain-case Updated");
 			}
 		}
-		// add argument cases generated during the dialogue
+		// add argument-cases generated during the dialogue
 
 		DomainContext domainContext = new DomainContext(currentDomCase2Solve.getProblem().getDomainContext()
 				.getPremises());
@@ -2193,7 +2191,7 @@ public class ArgCAgent extends CAgent {
 
 	/**
 	 * 
-	 * @return used locutions in the current dialogue
+	 * @return the used locutions in the current dialogue
 	 */
 	public int getMyUsedLocutions() {
 		return myUsedLocutions;
@@ -2291,7 +2289,7 @@ public class ArgCAgent extends CAgent {
 
 	/**
 	 * 
-	 * @return number of used argument-cases
+	 * @return number of argument-cases used
 	 */
 	public int getUsedArgCases() {
 		return usedArgCases;

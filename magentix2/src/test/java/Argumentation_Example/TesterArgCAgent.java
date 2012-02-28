@@ -29,7 +29,7 @@ import es.upv.dsic.gti_ia.core.SingleAgent;
  * @author Jaume Jordan
  * 
  */
-public class TesterAgentArgLearn1and2 extends SingleAgent {
+public class TesterArgCAgent extends SingleAgent {
 
 	int totalDomCases;
 	ArrayList<SocialEntity> socialEntities;
@@ -72,7 +72,7 @@ public class TesterAgentArgLearn1and2 extends SingleAgent {
 	 *            list of the argumentative agents of the group
 	 * @throws Exception
 	 */
-	public TesterAgentArgLearn1and2(AgentID aid, int totalDomCases, ArrayList<SocialEntity> socialEntities,
+	public TesterArgCAgent(AgentID aid, int totalDomCases, ArrayList<SocialEntity> socialEntities,
 			String commitmentStoreID, String resultFileName, String finishFileName, int casesPerAgent, int iteration,
 			Vector<DomainCase> domCases, ArrayList<String> argCasesFiles, ArrayList<ArgCAgent> agents) throws Exception {
 		super(aid);

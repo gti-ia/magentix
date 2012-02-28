@@ -24,7 +24,7 @@ import es.upv.dsic.gti_ia.core.AgentsConnection;
  * @author Jaume Jordan
  * 
  */
-public class TestArgLearn2Test {
+public class TestArgCAgent {
 
 	/**
 	 * @param args
@@ -34,7 +34,7 @@ public class TestArgLearn2Test {
 		 * Setting the Logger
 		 */
 		DOMConfigurator.configure("configuration/loggin.xml");
-		Logger logger = Logger.getLogger(TestArgLearn2Test.class);
+		Logger logger = Logger.getLogger(TestArgCAgent.class);
 
 		/**
 		 * Connecting to Qpid Broker
@@ -112,7 +112,7 @@ public class TestArgLearn2Test {
 
 						//Create the tester agent that sends the test domain-case to solve to the group of agents
 						//and acts as initiator of the dialogue
-						TesterAgentArgLearn1and2 testerAgent = new TesterAgentArgLearn1and2(new AgentID("qpid://"
+						TesterArgCAgent testerAgent = new TesterArgCAgent(new AgentID("qpid://"
 								+ testerAgentID + "@localhost:8080"), nTestCases, socialEntities,
 								commitmentStore.getName(),
 								"results/performance/test1and2Inc/argLearnContinuousLL5DC+0AC+Per-" + nOperators
