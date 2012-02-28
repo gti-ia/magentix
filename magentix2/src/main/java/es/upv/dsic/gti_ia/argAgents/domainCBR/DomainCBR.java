@@ -28,7 +28,7 @@ import es.upv.dsic.gti_ia.argAgents.knowledgeResources.SimilarDomainCase;
 import es.upv.dsic.gti_ia.argAgents.knowledgeResources.Solution;
 
 /**
- * It is a CBR that stores domain knowledge of previous solved problems. 
+ * This class implements the domain CBR. This CBR stores domain knowledge of previously solved problems. 
  * It is used by the argumentative agent to generate and select 
  * the {@link Position} (solution) to defend in an argumentation dialogue.
  * @author Jaume Jordan
@@ -44,11 +44,11 @@ public class DomainCBR {
 	private int index=-1;
 	
 	/**
-	 * Constructor of the DomainCBR. Initializes the structures and loads the cases of the given filePath.
+	 * Constructor of the DomainCBR. Initializes the structures and loads the cases of the given data filePath.
 	 * It also establishes the storingFilePath to the case-base.
 	 * @param filePath path of the file to load the initial domain-cases
 	 * @param storingFilePath path of the file to store the final domain-cases
-	 * @param index identifier of the premise which value will be used as a hash index. To not use index put -1
+	 * @param index identifier of the premise which value will be used as a hash index. If no indexation is used, just set this value to -1
 	 */
 	public DomainCBR(String filePath, String storingFilePath, int index) {
 		
@@ -104,19 +104,17 @@ public class DomainCBR {
 	
 	
 	/** 
-	 * Retrieves the most similar domain-cases to the given one with a similarity greater or equal to the given threshold. 
-	 * Also, it retains a new domain-case if the premises of the domain-case are not exactly the same of any domain-case.  
+	 * Retrieves the most similar domain-cases to the given one with a similarity degree greater or equal than a given threshold. 
+	 * Also, it retains a new domain-case if the premises of the domain-case are not exactly the same of any existent domain-case in the case-base.  
 	 * @param domCase The domain-case (representing a problem to solve) that needs a solution from the CBR 
-	 * @param threshold The threshold of minimum similarity of the domain-cases to return
+	 * @param threshold The threshold of minimum degree of similarity of the domain-cases to return
 	 * @return an {@link ArrayList} of {@link SimilarDomainCase}
 	 */	
 	public ArrayList<SimilarDomainCase> retrieveAndRetain(DomainCase domCase,float threshold){
 		
-		/**
-		 * TODO
-		 *  Increase timesUsed. If we return a list of possible cases and possible solutions for each case, what solution has to be increased?
-		 *
-		 */
+
+		 //The parameter timesUsed can be also increased depending of the application domain
+
 		
 		Configuration c= new Configuration();
 		ArrayList<SimilarDomainCase> similarCases=getMostSimilar(domCase.getProblem().getDomainContext().getPremises(),threshold, c.domainCBRSimilarity);
@@ -148,18 +146,15 @@ public class DomainCBR {
 	}
 	
 	/**
-	 * Retrieves the most similar domain-cases to the given premises with a similarity greater or equal to the given threshold.
+	 * Retrieves the most similar domain-cases to the given premises with a similarity degree greater or equal than a given threshold.
 	 * @param premises {@link HashMap} of premises that describe the problem to solve
-	 * @param threshold The threshold of minimum similarity of the domain-cases to return
+	 * @param threshold The threshold of minimum degree of similarity of the domain-cases to return
 	 * @return an {@link ArrayList} of {@link SimilarDomainCase}
 	 */
 	public ArrayList<SimilarDomainCase> retrieve(HashMap<Integer, Premise> premises, float threshold){
 		
-		/**
-		 * TODO
-		 *  Increase timesUsed. If we return a list of possible cases and possible solutions for each case, what solution has to be increased?
-		 *
-		 */
+		//The parameter timesUsed can be also increased depending of the application domain
+
 		
 		Configuration c= new Configuration();
 		ArrayList<SimilarDomainCase> similarCases=getMostSimilar(premises,threshold, c.domainCBRSimilarity);
@@ -170,7 +165,7 @@ public class DomainCBR {
 	
 	/**
 	 * Adds a new domain-case to domain case-base.
-	 * Otherwise, if it exists the same domain-case in case-base, adds the relevant data to the existing one.
+	 * Otherwise, if the same domain-case exists in the case-base, adds the relevant data to the existing domain-case.
 	 * @param newCase {@link DomainCase} that could be added.
 	 * @return <code>true</code> if the domain-case is added, else <code>false</code>.
 	 */
@@ -237,7 +232,7 @@ public class DomainCBR {
 			
 			if(equal){//same premises with same content
 				
-				//add the new solutions to the case if there are
+				//add the new solutions to the case if there are some
 				Iterator<Solution> caseSolutions=newCase.getSolutions().iterator();
 				while(caseSolutions.hasNext()){
 					Solution aSolution=caseSolutions.next();
@@ -261,12 +256,12 @@ public class DomainCBR {
 				
 				
 				found=true;
-				return false; //We do not introduce it because it already is in the case-base
+				return false; //We do not introduce it because it is already in the case-base
 			}
 			
 			
 		}
-		if(!found){//It does not exist equal, we introduce it
+		if(!found){//It an equal case does not exist, we introduce it
 			cases.add(newCase);
 			return true;
 		}
@@ -277,11 +272,11 @@ public class DomainCBR {
 	
 	
 	/**
-	 * Gets the most similar domain-cases of the given premises with a similarity degree greater or equal to the given threshold.
+	 * Gets the most similar domain-cases to the given premises with a similarity degree greater or equal than a given threshold.
 	 * The similarity algorithm is determined by an integer parameter.
 	 * @param premises {@link HashMap} of premises for retrieving cases from case base.
 	 * @param threshold The threshold of minimum similarity of the cases to return.
-	 * @param similarityType A {@link String} to specify which similarity algorithm has to be used.
+	 * @param similarityType A {@link String} to specify which similarity algorithm has to be used (i.e. normalizedEuclidean, weightedEuclidean or normalizedTversky).
 	 * @return An {@link ArrayList} of {@link SimilarDomainCase} with similarity degree greater or equal to the threshold.
 	 */
 	private ArrayList<SimilarDomainCase> getMostSimilar(HashMap<Integer,Premise> premises, float threshold, String similarityType){
@@ -318,7 +313,7 @@ public class DomainCBR {
 	}
 	
 	/**
-	 * Obtains the similarity between two {@link HashMap} of premises using the similarity type specified in the configuration.
+	 * Obtains the similarity between two {@link HashMap} of premises using the similarity algorithm specified in the configuration of this class.
 	 * @param premises1 {@link HashMap} of premises 1
 	 * @param premises2 {@link HashMap} of premises 2
 	 * @return float with the similarity
@@ -377,15 +372,10 @@ public class DomainCBR {
 	}
 	
 	/**
-	 * Stores the current domain-cases case-base to the storing file path in an incremental way
+	 * Stores the current domain-cases case-base to the storing file path, but keeping the contents of that file
 	 */
 	public void doCacheInc(){
 		
-//		try {
-//			owlArgCBRparser.saveArgumentationOntology(getAllCasesVector(), initialOWLFilePath, storingOWLFilePath);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
 		
 		try {
 			
@@ -449,9 +439,9 @@ public class DomainCBR {
 	}
 	
 	/**
-	 * Gets a {@link DomainCase} {@link ArrayList} with the domain-cases that fits the given premises
+	 * Gets a {@link DomainCase} {@link ArrayList} with the domain-cases that fit the given premises
 	 * @param premises {@link HashMap} of {@link Premise} that describe the problem
-	 * @return A {@link DomainCase} {@link ArrayList} with the domain-cases that fits the given premises
+	 * @return A {@link DomainCase} {@link ArrayList} with the domain-cases that fit the given premises
 	 */
 	private ArrayList<DomainCase> getCandidateCases(HashMap<Integer,Premise> premises){
 		
