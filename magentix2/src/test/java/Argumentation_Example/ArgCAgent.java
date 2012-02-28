@@ -54,7 +54,7 @@ import es.upv.dsic.gti_ia.core.AgentID;
  */
 public class ArgCAgent extends CAgent {
 
-	private final int multTimeFactor = 10; // 1000 will be seconds
+	// locutions
 	private final String ENTERDIALOGUE = "ENTERDIALOGUE";
 	private final String WITHDRAWDIALOGUE = "WITHDRAWDIALOGUE";
 	private final String WHY = "WHY";
@@ -62,10 +62,10 @@ public class ArgCAgent extends CAgent {
 	private final String ASSERT = "ASSERT";
 	private final String ACCEPT = "ACCEPT";
 	private final String ATTACK = "ATTACK";
-	private final String LOCUTION = "locution";
-
 	private final String ADDPOSITION = "ADDPOSITION";
 	private final String GETALLPOSITIONS = "GETALLPOSITIONS";
+
+	private final String LOCUTION = "locution";
 
 	private String myID;
 	private ArrayList<String> preferedValues;
@@ -118,10 +118,6 @@ public class ArgCAgent extends CAgent {
 	private HashMap<String, ArrayList<Argument>> mySupportArguments;
 	private int myUsedLocutions = 0;
 
-	// we do not use a list of attack arguments because we only generate a
-	// counter example or distinguishing premises arguments
-	// and that don't cause efficiency problems
-	// private HashMap<String,ArrayList<Argument>> myAttackArguments;
 	private HashMap<String, ArrayList<Argument>> myUsedSupportArguments;
 	private HashMap<String, ArrayList<Argument>> myUsedAttackArguments;
 
@@ -196,6 +192,7 @@ public class ArgCAgent extends CAgent {
 		this.wED = wED;
 		this.wEP = wEP;
 
+		// init domainCBR and argCBR
 		domainCBR = new DomainCBR(iniDomCasesFilePath, finDomCasesFilePath, domCBRindex);
 		argCBR = new ArgCBR(iniArgCasesFilePath, finArgCasesFilePath);
 
@@ -282,8 +279,6 @@ public class ArgCAgent extends CAgent {
 					mySupportArguments = new HashMap<String, ArrayList<Argument>>();
 					myUsedSupportArguments = new HashMap<String, ArrayList<Argument>>();
 					myUsedAttackArguments = new HashMap<String, ArrayList<Argument>>();
-					// dialogueGraphs= new HashMap<String,
-					// ArrayList<DialogueGraph>>();
 					currentDialogueGraph = null;
 				}
 				if (currentPosition != null) {
@@ -446,8 +441,7 @@ public class ArgCAgent extends CAgent {
 						}
 
 					} else
-						attackedNode.addChildArgCaseID(againstArgument.getID());// aquí
-																				// petaba!!!
+						attackedNode.addChildArgCaseID(againstArgument.getID());
 				}
 				currentDialogueGraph.addNode(argNode);
 
@@ -994,19 +988,6 @@ public class ArgCAgent extends CAgent {
 		// with each position, query the argCBR calculating the SuitFactor Arg
 		// (PD + ....)
 
-		// First, assign weights in accordance with the quantity of knowledge
-		// int domCases = domainCBR.getAllCasesVector().size();
-		// int arguCases = argCBR.getAllCasesVector().size();
-		// int totalCases = domCases + arguCases;
-		//
-		// if (totalCases != 0){
-		// wSimilarity = (float) domCases / (float) totalCases;
-		// wArgSuitFactor = (float) arguCases / (float) totalCases;
-		// }else{
-		// wSimilarity = 0.5f;
-		// wArgSuitFactor = 0.5f;
-		// }
-
 		ArrayList<Position> finalPositions = new ArrayList<Position>();
 
 		if (similarDomainCases == null || similarDomainCases.size() == 0)
@@ -1074,8 +1055,6 @@ public class ArgCAgent extends CAgent {
 				allPositions.addAll(positions);
 			}
 
-			// logger.info("\n"+this.getName()+": "+allPositions.size()+" initial positions"+"\n");
-
 			Iterator<ArrayList<Position>> iterPositionsLists = positionsLists.iterator();
 			while (iterPositionsLists.hasNext()) {
 				ArrayList<Position> positions = iterPositionsLists.next();
@@ -1096,11 +1075,6 @@ public class ArgCAgent extends CAgent {
 
 					// SF =( (wPD * PD + wSD * SD + wRD * (1 - RD) + wAD * (1 -
 					// AD) + wED * ED + wEP * EP) )/6
-					// float argSuitabilityFactor =
-					// (wPD * persuasivenessDegree + wSD * supportDegree + wRD *
-					// (1 - riskDegree)
-					// + wAD * (1 - attackDegree) + wED * efficiencyDegree + wEP
-					// * explanatoryPower) /6;
 					float argSuitabilityFactor = (wPD * persuasivenessDegree + wSD * supportDegree + wRD
 							* (1 - riskDegree) + wAD * (1 - attackDegree) + wED * efficiencyDegree + wEP
 							* explanatoryPower);
@@ -1128,9 +1102,6 @@ public class ArgCAgent extends CAgent {
 						wArgSuitFactor = 0.5f;
 					}
 
-					// float
-					// finalSuitability=(position.getDomainCaseSimilarity()*wSimilarity
-					// + argSuitabilityFactor*wArgSuitFactor)/2;
 					float finalSuitability = (position.getDomainCaseSimilarity() * wSimilarity + argSuitabilityFactor
 							* wArgSuitFactor);
 
@@ -1170,17 +1141,6 @@ public class ArgCAgent extends CAgent {
 	 */
 	private ArrayList<Argument> generateSupportArguments(Position myPos, String agentID) {
 		// Fist, assign weights in accordance with the quantity of knowledge
-		// int domCases = domainCBR.getAllCasesVector().size();
-		// int arguCases = argCBR.getAllCasesVector().size();
-		// int totalCases = domCases + arguCases;
-		//
-		// if (totalCases != 0){
-		// wSimilarity = (float) domCases / (float) totalCases;
-		// wArgSuitFactor = (float) arguCases / (float) totalCases;
-		// }else{
-		// wSimilarity = 0.5f;
-		// wArgSuitFactor = 0.5f;
-		// }
 
 		ArrayList<Argument> finalSupportArguments = new ArrayList<Argument>();
 
@@ -1255,8 +1215,6 @@ public class ArgCAgent extends CAgent {
 
 			float argSuitabilityFactor = (wPD * persuasivenessDegree + wSD * supportDegree + wRD * (1 - riskDegree)
 					+ wAD * (1 - attackDegree) + wED * efficiencyDegree + wEP * explanatoryPower);
-			// simArgCase.setSuitability((argSuitabilityFactor * wArgSuitFactor
-			// + simArgCase.getSuitability() * wSimilarity)/2);
 
 			// Assign weights in accordance with the quantity of knowledge
 			int domCases = similarDomainCases.size();
@@ -1285,8 +1243,6 @@ public class ArgCAgent extends CAgent {
 			// calculate suitability: with the current similarity in
 			// SimilarArgCase, and the suitability obtained of argumentation
 
-			// simArgCase.setSuitability(simArgCase.getSuitability());//TODO
-			// this avoids argumentation knowledge to the support arg...
 		}
 
 		Collections.sort(argCases);
@@ -1364,42 +1320,9 @@ public class ArgCAgent extends CAgent {
 	 *         <code>null</code> if it is not possible
 	 */
 	private Argument generateAttackArgument(Argument incArgument, String agentID) {
-		// Fist, assign weights in accordance with the quantity of knowledge
-		// int domCases = domainCBR.getAllCasesVector().size();
-		// int arguCases = argCBR.getAllCasesVector().size();
-		// int totalCases = domCases + arguCases;
-		//
-		// if (totalCases != 0){
-		// wSimilarity = (float) domCases / (float) totalCases;
-		// wArgSuitFactor = (float) arguCases / (float) totalCases;
-		// }else{
-		// wSimilarity = 0.5f;
-		// wArgSuitFactor = 0.5f;
-		// }
-
 		// try to generate an attack argument: Distinguishing premise or Counter
 		// Example, depending on the attack received
 
-		// againstPos.getSolution().getConclusion().getID();
-		//
-		// SocialContext socialContext= new SocialContext(mySocialEntity,
-		// opponent, myGroup, relation);
-		// //create arg case with the domain case
-		// ArgumentProblem argProblem=new ArgumentProblem(new
-		// DomainContext(currentPosition.getPremises()), socialContext);
-		// ArgumentSolution argSolution=new ArgumentSolution();
-		// argSolution.setConclusion(currentPosition.getSolution().getConclusion());
-		// argSolution.setPromotesValue(currentPosition.getSolution().getPromotesValue());
-		// argSolution.setTimesUsed(currentPosition.getSolution().getTimesUsed());
-		// ArgumentJustification argJustification=new ArgumentJustification();
-		// argJustification.addCase(currentPosition.getDomainCase());
-		//
-		// ArgumentCase argCasefromDomainCase=
-		// new ArgumentCase(System.nanoTime(), new
-		// Date(System.currentTimeMillis()), argProblem, argSolution,
-		// argJustification, 0);
-		//
-		//
 		try {
 
 			int friendInd = getFriendIndex(agentID);
@@ -1474,9 +1397,6 @@ public class ArgCAgent extends CAgent {
 
 				float argSuitabilityFactor = (wPD * persuasivenessDegree + wSD * supportDegree + wRD * (1 - riskDegree)
 						+ wAD * (1 - attackDegree) + wED * efficiencyDegree + wEP * explanatoryPower);
-				// simArgCase.setSuitability((argSuitabilityFactor *
-				// wArgSuitFactor + simArgCase.getSuitability() *
-				// wSimilarity)/2);
 
 				// Assign weights in accordance with the quantity of knowledge
 				int domCases = similarDomainCases.size();
@@ -1517,7 +1437,7 @@ public class ArgCAgent extends CAgent {
 
 			if (support) {
 				// incoming argument is a support argument
-				// TODO attack argumentation scheme
+				// attack argumentation scheme
 				if (!incSS.getDomainCases().isEmpty()) {
 					attack = generateCEAttack(argCases, incSS.getDomainCases().get(0).getProblem().getDomainContext()
 							.getPremises(), relation, agentID);
@@ -1544,7 +1464,7 @@ public class ArgCAgent extends CAgent {
 				}
 			} else {
 				// incoming argument is an attack argument
-				// TODO attack presumptions and exceptions
+				// attack presumptions and exceptions
 				if (!incSS.getCounterExamplesDomCases().isEmpty()) {
 					attack = generateCEAttack(argCases, incSS.getCounterExamplesDomCases().get(0).getProblem()
 							.getDomainContext().getPremises(), relation, agentID);
@@ -1625,7 +1545,6 @@ public class ArgCAgent extends CAgent {
 				ArrayList<DomainCase> domainCases = new ArrayList<DomainCase>();
 				ArrayList<ArgumentCase> argumentCases = new ArrayList<ArgumentCase>();
 				ArrayList<ArgumentationScheme> schemes = new ArrayList<ArgumentationScheme>();
-				// ArrayList<Premise> distPremises=new ArrayList<Premise>();
 				ArrayList<Premise> presumptions = new ArrayList<Premise>();
 				ArrayList<Premise> exceptions = new ArrayList<Premise>();
 				ArrayList<DomainCase> counterExamplesdomainCases = new ArrayList<DomainCase>();
@@ -1820,7 +1739,6 @@ public class ArgCAgent extends CAgent {
 					ArrayList<ArgumentCase> cases = argSupp.getArgumentCases();
 					ArrayList<ArgumentCase> cases2 = currentArgSupp.getArgumentCases();
 					if (cases != null && cases2 != null && cases.size() > 0 && cases2.size() > 0) {
-						// logger.info(this.getName()+": "+" argument cases\n");
 						if (cases.get(0).equals(cases2.get(0))) {
 							logger.info(this.getName() + ": " + " SAME arg cases\n");
 							return true;
@@ -1832,7 +1750,6 @@ public class ArgCAgent extends CAgent {
 					ArrayList<DomainCase> cases = argSupp.getDomainCases();
 					ArrayList<DomainCase> cases2 = currentArgSupp.getDomainCases();
 					if (cases != null && cases2 != null && cases.size() > 0 && cases2.size() > 0) {
-						// logger.info(this.getName()+": "+" domain cases\n");
 						if (cases.get(0).equals(cases2.get(0))) {
 							logger.info(this.getName() + ": " + " SAME domain cases\n");
 							return true;
@@ -1845,7 +1762,6 @@ public class ArgCAgent extends CAgent {
 					ArrayList<DomainCase> cases = argSupp.getCounterExamplesDomCases();
 					ArrayList<DomainCase> cases2 = currentArgSupp.getCounterExamplesDomCases();
 					if (cases != null && cases2 != null && cases.size() > 0 && cases2.size() > 0) {
-						// logger.info(this.getName()+": "+" counter example cases\n");
 						if (cases.get(0).equals(cases2.get(0))) {
 							logger.info(this.getName() + ": " + " SAME counter example domain cases\n");
 							return true;
@@ -1858,8 +1774,6 @@ public class ArgCAgent extends CAgent {
 					ArrayList<ArgumentCase> cases = argSupp.getCounterExamplesArgCases();
 					ArrayList<ArgumentCase> cases2 = currentArgSupp.getCounterExamplesArgCases();
 					if (cases != null && cases2 != null && cases.size() > 0 && cases2.size() > 0) {
-						// logger.info(this.getName()+": "+" counter example cases:\n"+
-						// cases.get(0).toString()+"\n"+cases2.get(0).toString());
 
 						ArgumentCase case1 = cases.get(0);
 						ArgumentCase case2 = cases2.get(0);
@@ -2152,7 +2066,6 @@ public class ArgCAgent extends CAgent {
 				.getPremises());
 
 		for (int i = 0; i < myFriends.size(); i++) {
-			// logger.info(this.getName()+": "+"friend="+i);
 			SocialEntity friend = myFriends.get(i);
 			DependencyRelation relation = depenRelations.get(i);
 			SocialContext socialContext = new SocialContext(mySocialEntity, friend, myGroup, relation);
@@ -2163,7 +2076,6 @@ public class ArgCAgent extends CAgent {
 			ArrayList<Argument> listArgs = storeArguments.get(friend.getName());
 			if (listArgs != null) {// if there are used support arguments with
 									// this friend
-				// logger.info(this.getName()+": "+"friend="+i+" -> "+listArgs.size()+" support args to add.");
 				Iterator<Argument> iterArgs = listArgs.iterator();
 				while (iterArgs.hasNext()) {
 					Argument arg = iterArgs.next();
@@ -2178,7 +2090,7 @@ public class ArgCAgent extends CAgent {
 						countExDom.addAll(domCasestoLongIDs(a.getSupportSet().getCounterExamplesDomCases()));
 						countExArg.addAll(argCasestoLongIDs(a.getSupportSet().getCounterExamplesArgCases()));
 					}
-					// TODO put presumptions and exceptions
+					// put presumptions and exceptions
 					ArgumentSolution argSol = new ArgumentSolution(ArgumentType.INDUCTIVE, arg.getAcceptabilityState(),
 							distP, new ArrayList<Premise>(), new ArrayList<Premise>(), countExDom, countExArg);
 					argSol.setPromotesValue(arg.getPromotesValue());
@@ -2307,7 +2219,7 @@ public class ArgCAgent extends CAgent {
 	 * 
 	 * @return dialogue time
 	 */
-	public float getDialogueTime() { // TODO not working...
+	public float getDialogueTime() { // not working...
 		return dialogueTime;
 	}
 
