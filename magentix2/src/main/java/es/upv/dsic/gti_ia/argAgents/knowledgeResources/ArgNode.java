@@ -4,8 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
- * Implementation of the OWL concept <i>ArgNode</i>
- * @author stella
+ * Implementation of the concept <i>ArgNode</i>
+ * @author Stella Heras
  *
  */
 

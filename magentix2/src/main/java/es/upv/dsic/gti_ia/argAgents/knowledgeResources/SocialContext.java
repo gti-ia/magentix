@@ -3,14 +3,11 @@ package es.upv.dsic.gti_ia.argAgents.knowledgeResources;
 import java.io.Serializable;
 
 /**
- * Implementation of the owl concept <i>SocialContext</i>
+ * Implementation of the concept <i>SocialContext</i>
  *
  */
 public class SocialContext extends Context implements Serializable{
-	
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = -7633680027995522766L;
 	private SocialEntity proponent;
 	private SocialEntity opponent;

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 
 /**
- * Implementation of the owl concept <i>Group</i>
+ * Implementation of the concept <i>Group</i>
  * 
  */
 public class Group extends SocialEntity implements Serializable{
@@ -33,10 +33,6 @@ public class Group extends SocialEntity implements Serializable{
         return agents;
     }
 
-
-    //public Iterator listHasMember() {
-    //    return listPropertyValuesAs(getHasMemberProperty(), Agent.class);
-    //}
 
 
     public void addMember(SocialEntity newMember) {

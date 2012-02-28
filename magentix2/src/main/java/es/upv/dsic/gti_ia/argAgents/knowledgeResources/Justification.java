@@ -4,14 +4,11 @@ import java.io.Serializable;
 
 
 /**
- * Implementation of the owl concept <i>Justification</i>
+ * Implementation of the concept <i>Justification</i>
  */
 
 public class Justification extends CaseComponent implements Serializable{
-	
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 452106433940723360L;
 	private String description;
 

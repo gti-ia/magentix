@@ -1,6 +1,9 @@
 package es.upv.dsic.gti_ia.argAgents.knowledgeResources;
 
-
+/**
+ * Structure to store the degree of similarity of a domain-case
+ *
+ */
 public class SimilarDomainCase implements Comparable<Object>{
 	private DomainCase caseb;
 	private Float similarity;

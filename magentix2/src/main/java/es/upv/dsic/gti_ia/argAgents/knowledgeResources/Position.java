@@ -4,14 +4,15 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * Implementation of the concept <i>Position</i>
+ *
+ */
+
 public class Position implements Comparable<Object>, Serializable{
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 3807582996756957849L;
-	/**
-	 * 
-	 */
+
 	
 	private String agentID;
 	private String dialogueID;

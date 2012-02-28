@@ -5,15 +5,13 @@ import java.util.*;
 
 
 /**
- * Implementation of the owl concept <i>SocialEntity</i>
+ * Implementation of the concept <i>SocialEntity</i>
  * 
  */
 
 public class SocialEntity implements Serializable{
 	
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = -5802164428293153519L;
 	private long id;
 	private String name;
@@ -65,11 +63,6 @@ public class SocialEntity implements Serializable{
 	public ArrayList<Norm> getNorms() {
         return norms;
     }
-
-
-    //public Iterator listHasNorm() {
-    //    return listPropertyValuesAs(getHasNormProperty(), Norm.class);
-    //}
 
 
     public void addNorm(Norm newNorm) {

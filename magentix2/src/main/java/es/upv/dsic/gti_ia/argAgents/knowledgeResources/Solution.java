@@ -4,15 +4,12 @@ import java.io.Serializable;
 
 
 /**
- * Implementation of the owl concept <i>Solution</i>
+ * Implementation of the concept <i>Solution</i>
  * 
  */
 
 public class Solution extends CaseComponent implements Serializable{
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -1151493950021017493L;
 	private Conclusion conclusion;
 	private String value;

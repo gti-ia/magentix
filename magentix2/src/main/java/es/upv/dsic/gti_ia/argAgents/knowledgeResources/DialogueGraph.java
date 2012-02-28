@@ -9,7 +9,7 @@ import es.upv.dsic.gti_ia.argAgents.knowledgeResources.ArgNode.NodeType;
 
 
 /**
- * Implementation of the owl concept <i>DialogueGraph</i>
+ * Implementation of the concept <i>DialogueGraph</i>
  * 
  */
 public class DialogueGraph implements Serializable{
@@ -21,9 +21,9 @@ public class DialogueGraph implements Serializable{
 	private ArrayList<ArgNode> nodes;
 	
 	/*
-	 * TODO each argument given by an agent, and received, will be stored as a argnode in a list
+	 * Each argument given by an agent, and received, will be stored as a argnode in a list
 	 * of dialogue graphs of the current dialogue (take into account that a dialogue includes a lot
-	 * of subdialogues between two agents, this is why we store a list of dialogue graphs.
+	 * of subdialogues between two agents, this is why we store a list of dialogue graphs).
 	 * Then, when the agent stores all the arguments of the whole dialogue, will use the dialogue graphs
 	 * to introduce it in every corresponding argument case
 	 */
@@ -41,11 +41,6 @@ public class DialogueGraph implements Serializable{
     public ArrayList<ArgNode> getNodes() {
         return nodes;
     }
-
-
-    //public Iterator listHasNode() {
-    //    return listPropertyValuesAs(getHasNodeProperty(), ArgumentNode.class);
-    //}
 
 
     public void addNode(ArgNode newNode) {

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 
 /**
- * Implementation of the owl concept <i>ArgumentSolution</i>
+ * Implementation of the concept <i>ArgumentSolution</i>
  * 
  */
 public class ArgumentSolution extends Solution {
@@ -15,23 +15,19 @@ public class ArgumentSolution extends Solution {
 	private static final long serialVersionUID = -1756923394620376629L;
 	public enum ArgumentType {INDUCTIVE, PRESUMTIVE, MIXED};
 	private ArgumentType argumentType;
-	private AcceptabilityStatus acceptabilityState;
+	private AcceptabilityStatus acceptabilityStatus;
 	private ArrayList<Premise> distPremises;
 	private ArrayList<Premise> presumptions;
 	private ArrayList<Premise> exceptions;
 	
-	// TODO Ask Jaume the best structure
-	// probably, could be better to store an structure with the Long that represents the ID of the case, 
-	//and other Long (or int) with the first (lower) premise id (category node id in the case of domain case)
-	//with this it will be easier to search the cases in the case-bases
 	private ArrayList<Long> counterExamplesArgCaseIDList;
 	private ArrayList<Long> counterExamplesDomCaseIDList;
 	
-    public ArgumentSolution(ArgumentType argumentType, AcceptabilityStatus acceptabilityState,
+    public ArgumentSolution(ArgumentType argumentType, AcceptabilityStatus acceptabilityStatus,
     		ArrayList<Premise> distPremises, ArrayList<Premise> presumptions, ArrayList<Premise> exceptions,
     		ArrayList<Long> counterExamplesDomCaseID, ArrayList<Long> counterExamplesArgCaseID) {
         this.argumentType = argumentType;
-        this.acceptabilityState = acceptabilityState;
+        this.acceptabilityStatus = acceptabilityStatus;
         this.distPremises = distPremises;
         this.presumptions = presumptions;
         this.exceptions = exceptions;
@@ -42,7 +38,7 @@ public class ArgumentSolution extends Solution {
 
     public ArgumentSolution() {
     	argumentType = null;
-    	acceptabilityState = AcceptabilityStatus.UNDECIDED;
+    	acceptabilityStatus = AcceptabilityStatus.UNDECIDED;
     	distPremises = new ArrayList<Premise>();
     	presumptions = new ArrayList<Premise>();
     	exceptions = new ArrayList<Premise>();
@@ -54,12 +50,12 @@ public class ArgumentSolution extends Solution {
     // Property hasAcceptabilityState
 
     public AcceptabilityStatus getAcceptabilityState() {
-        return acceptabilityState;
+        return acceptabilityStatus;
     }
 
 
     public void setAcceptabilityState(AcceptabilityStatus newAcceptabilityState) {
-        acceptabilityState = newAcceptabilityState;
+        acceptabilityStatus = newAcceptabilityState;
     }
 
 
@@ -81,11 +77,9 @@ public class ArgumentSolution extends Solution {
     	try {
 			argumentType = ArgumentType.valueOf(newArgumentType);
 		} catch (Exception e) {
-			// TODO: handle exception
 			e.printStackTrace();
 		}
     }
-
 
     // Property hasCounterExampleArgCaseIDList
 
@@ -137,11 +131,6 @@ public class ArgumentSolution extends Solution {
     }
 
 
-    //public Iterator listHasDistinguishingPremise() {
-    //    return listPropertyValuesAs(getHasDistinguishingPremiseProperty(), Premise.class);
-    //}
-
-
     public void addDistinguishingPremise(Premise newDistinguishingPremise) {
         distPremises.add(newDistinguishingPremise);
     }
@@ -164,11 +153,6 @@ public class ArgumentSolution extends Solution {
     }
 
 
-    //public Iterator listHasException() {
-    //    return listPropertyValuesAs(getHasExceptionProperty(), Premise.class);
-    //}
-
-
     public void addException(Premise newException) {
         exceptions.add(newException);
     }
@@ -188,11 +172,6 @@ public class ArgumentSolution extends Solution {
     public ArrayList<Premise> getPresumptions() {
         return presumptions;
     }
-
-
-    //public Iterator listHasPresumption() {
-    //    return listPropertyValuesAs(getHasPresumptionProperty(), Premise.class);
-    //}
 
 
     public void addPresumption(Premise newPresumption) {

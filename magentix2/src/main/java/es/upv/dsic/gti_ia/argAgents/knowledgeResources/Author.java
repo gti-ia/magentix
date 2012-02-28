@@ -1,7 +1,7 @@
 package es.upv.dsic.gti_ia.argAgents.knowledgeResources;
 
 /**
- * Implementation of the owl concept <i>Author</i>
+ * Implementation of the concept <i>Author</i>
  * 
  */
 public class Author {

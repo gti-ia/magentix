@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 
 /**
- * Implementation of the owl concept <i>Case</i>
+ * Implementation of the concept <i>Case</i>
  * 
  */
 public class Case implements Serializable{

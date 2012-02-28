@@ -3,7 +3,7 @@ package es.upv.dsic.gti_ia.argAgents.knowledgeResources;
 import java.io.Serializable;
 
 /**
- * Implementation of the owl concept <i>Problem</i>
+ * Implementation of the concept <i>Problem</i>
  * 
  */
 

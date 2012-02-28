@@ -3,11 +3,12 @@ package es.upv.dsic.gti_ia.argAgents.knowledgeResources;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-
+/**
+ * Implementation of the concept <i>Dialogue</i>
+ *
+ */
 public class Dialogue implements Serializable{
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 1225273417907906956L;
 	private String dialogueID;
 	private ArrayList<String> agentIDs;

@@ -5,7 +5,7 @@ import java.util.*;
 
 
 /**
- * Implementation of the owl concept <i>DomainContext</i>
+ * Implementation of the concept <i>DomainContext</i>
  * 
  */
 public class DomainContext extends Context implements Serializable{
@@ -30,9 +30,6 @@ public class DomainContext extends Context implements Serializable{
         return premises;
     }
 
-    //public Iterator listPremises() {
-    //    return listPropertyValuesAs(getHasPremiseProperty(), Premise.class);
-    //}
 
     public void addPremise(Premise newPremise) {
         premises.put(newPremise.getID(), newPremise);

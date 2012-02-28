@@ -1,7 +1,7 @@
 package es.upv.dsic.gti_ia.argAgents.knowledgeResources;
 
 /**
- * Implementation of the owl concept <i>CaseComponent</i>
+ * Implementation of the concept <i>CaseComponent</i>
  * 
  */
 public class CaseComponent {

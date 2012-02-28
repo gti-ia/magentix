@@ -1,11 +1,13 @@
 package es.upv.dsic.gti_ia.argAgents.knowledgeResources;
 
 /**
- * Implementation of the owl concept <i>Norm</i>
- *
+ * Implementation of the concept <i>Norm</i>
+ * In this version of the API, Norms are not considered, 
+ * but this class can be used to include normative knowledge in further implementations.
  */
 
 public class Norm {
+	
 	
 	private long id;
 	private String description;

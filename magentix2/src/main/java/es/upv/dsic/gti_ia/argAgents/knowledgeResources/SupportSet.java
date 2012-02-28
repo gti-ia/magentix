@@ -5,7 +5,7 @@ import java.util.*;
 
 
 /**
- * Implementation of the owl concept <i>SupportSet</i>
+ * Implementation of the concept <i>SupportSet</i>
  *
  */
 
@@ -22,7 +22,7 @@ public class SupportSet implements Serializable{
 	private ArrayList<Premise> distPremises;
 	private ArrayList<Premise> presumptions;
 	private ArrayList<Premise> exceptions;
-	//TODO not sure of doing this like that
+
 	private ArrayList<DomainCase> counterExamplesDomCases;
 	private ArrayList<ArgumentCase> counterExamplesArgCases;
 
@@ -60,11 +60,6 @@ public class SupportSet implements Serializable{
         return argumentCases;
     }
 
-    //public Iterator listHasArgumentCase() {
-    //    return listPropertyValuesAs(getHasArgumentCaseProperty(), ArgumentCase.class);
-    //}
-
-
     public void addArgumentCase(ArgumentCase newArgumentCase) {
         argumentCases.add(newArgumentCase);
     }
@@ -85,12 +80,6 @@ public class SupportSet implements Serializable{
     public ArrayList<ArgumentationScheme> getArgumentationSchemes() {
         return schemes;
     }
-
-
-    //public Iterator listHasArgumentationScheme() {
-    //    return listPropertyValuesAs(getHasArgumentationSchemeProperty(), ArgumentationScheme.class);
-    //}
-
 
     public void addArgumentationScheme(ArgumentationScheme newArgumentationScheme) {
         schemes.add(newArgumentationScheme);
@@ -115,11 +104,6 @@ public class SupportSet implements Serializable{
     }
 
 
-    //public Iterator listHasDistinguishingPremise() {
-    //    return listPropertyValuesAs(getHasDistinguishingPremiseProperty(), Premise.class);
-    //}
-
-
     public void addDistinguishingPremise(Premise newDistinguishingPremise) {
         distPremises.add(newDistinguishingPremise);
     }
@@ -142,11 +126,6 @@ public class SupportSet implements Serializable{
     }
 
 
-    //public Iterator listHasDomainCase() {
-    //    return listPropertyValuesAs(getHasDomainCaseProperty(), DomainCase.class);
-    //}
-
-
     public void addDomainCase(DomainCase newDomainCase) {
         domainCases.add(newDomainCase);
     }
@@ -167,11 +146,6 @@ public class SupportSet implements Serializable{
     public ArrayList<Premise> getPremises() {
         return premises;
     }
-
-    //public Iterator listHasPremise() {
-    //    return listPropertyValuesAs(getHasPremiseProperty(), Premise.class);
-    //}
-
 
     public void addPremise(Premise newPremise) {
         premises.add(newPremise);
@@ -266,6 +240,7 @@ public class SupportSet implements Serializable{
 		this.counterExamplesArgCases = counterExamplesArgCases;
 	}
     
+	// Prints the data of the support-set
     public String toString(){
     	String str="";
     	if(this.premises!=null && !this.premises.isEmpty()){
@@ -296,14 +271,6 @@ public class SupportSet implements Serializable{
     	return str;
     }
 
-//  public void addCounterExample(Case newCounterExample) {
-//      counterExamples.add(newCounterExample);
-//  }
-//
-//
-//  public void removeCounterExample(Case oldCounterExample) {
-//      counterExamples.remove(oldCounterExample);
-//  }
 
     
 }

@@ -1,5 +1,9 @@
 package es.upv.dsic.gti_ia.argAgents.knowledgeResources;
 
+/**
+ * Structure to store the degree of similarity of an argument-case
+ *
+ */
 public class SimilarArgumentCase implements Comparable<Object>{
 	private ArgumentCase argumentCase;
 	private float suitability;

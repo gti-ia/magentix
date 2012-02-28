@@ -6,6 +6,9 @@ import java.util.ArrayList;
 /**
  * Implementation of the interface <i>ArgumentationScheme</i>
  * @see {@link es.upv.dsic.gti_ia.argAgents.knowledgeResources.ArgumentationScheme}
+ * 
+ * In this version of the API, Argumentation-Schemes are not considered, 
+ * but this class can be used to include general knowledge in further implementations.
  */
 public class ArgumentationScheme {
 	
@@ -91,9 +94,6 @@ public class ArgumentationScheme {
         return exceptions;
     }
 
-    //public Iterator listHasException() {
-    //    return listPropertyValuesAs(getHasExceptionProperty(), Premise.class);
-    //}
 
 
     public void addException(Premise newException) {
@@ -127,9 +127,6 @@ public class ArgumentationScheme {
         return premises;
     }
 
-   // public Iterator listHasPremise() {
-   //     return listPropertyValuesAs(getHasPremiseProperty(), Premise.class);
-   // }
 
 
     public void addPremise(Premise newPremise) {
@@ -153,9 +150,6 @@ public class ArgumentationScheme {
         return presumptions;
     }
 
-    //public Iterator listHasPresumption() {
-    //    return listPropertyValuesAs(getHasPresumptionProperty(), Premise.class);
-    //}
 
 
     public void addPresumption(Premise newPresumption) {

@@ -5,7 +5,7 @@ import java.util.*;
 
 
 /**
- * Implementation of the owl concept <i>ValueNode</i>
+ * Implementation of the concept <i>ValueNode</i>
  * 
  */
 public class ValPref implements Serializable{
@@ -46,10 +46,6 @@ public class ValPref implements Serializable{
     	this.values = values;
     }
 
-
-    //public Iterator listHasValueNode() {
-    //    return listPropertyValuesAs(getHasValueNodeProperty(), ValueNode.class);
-    //}
 
 
     public void addValue(String newValue) {

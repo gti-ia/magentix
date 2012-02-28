@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
- * Implementation of the owl concept <i>DomainCase</i>
+ * Implementation of the concept <i>DomainCase</i>
  * 
  */
 public class DomainCase extends Case implements Serializable{

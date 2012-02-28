@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 
 /**
- * Implementation of the owl concept <i>ArgumentJustification</i>
+ * Implementation of the concept <i>ArgumentJustification</i>
  * 
  */
 
@@ -18,7 +18,6 @@ public class ArgumentJustification extends Justification {
 	private ArrayList<Long> argumentCasesIDs;
 	private ArrayList<ArgumentationScheme> schemes;
 	private ArrayList<DialogueGraph> dialogueGraphs;
-//	private ArrayList<Integer> positionsInDialogueGraphs; //TODO mirar como lo implementamos
 
     public ArgumentJustification(ArrayList<Long> domainCasesIDs, ArrayList<Long> argumentCasesIDs, ArrayList<ArgumentationScheme> schemes, ArrayList<DialogueGraph> dialogueGraphs){
     	this.domainCasesIDs = domainCasesIDs;
@@ -43,11 +42,6 @@ public class ArgumentJustification extends Justification {
     }
 
 
-    //public Iterator listHasArgumentationScheme() {
-    //    return listPropertyValuesAs(getHasArgumentationSchemeProperty(), ArgumentationScheme.class);
-    //}
-
-
     public void addArgumentationScheme(ArgumentationScheme newArgumentationScheme) {
         schemes.add(newArgumentationScheme);
     }
@@ -68,11 +62,6 @@ public class ArgumentJustification extends Justification {
         return domainCasesIDs;
     }
 
-    //public Iterator listHasCase() {
-    //    return listPropertyValuesAs(getHasCaseProperty(), Case.class);
-    //}
-
-
     public void addDomainCase(Long newDomainCase) {
     	domainCasesIDs.add(newDomainCase);
     }
@@ -92,10 +81,6 @@ public class ArgumentJustification extends Justification {
     public ArrayList<Long> getArgumentCasesIDs() {
         return argumentCasesIDs;
     }
-
-    //public Iterator listHasCase() {
-    //    return listPropertyValuesAs(getHasCaseProperty(), Case.class);
-    //}
 
 
     public void addArgumentCase(Long newArgumentCase) {
@@ -119,9 +104,6 @@ public class ArgumentJustification extends Justification {
     }
 
 
-    //public Iterator listHasDialogueGraph() {
-    //    return listPropertyValuesAs(getHasDialogueGraphProperty(), DialogueGraph.class);
-    //}
 
 
     public void addDialogueGraph(DialogueGraph newDialogueGraph) {

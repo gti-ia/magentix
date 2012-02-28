@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 
 /**
- * Implementation of the owl concept <i>Conclusion</i>
+ * Implementation of the concept <i>Conclusion</i>
  * 
  */
 public class Conclusion implements Serializable{

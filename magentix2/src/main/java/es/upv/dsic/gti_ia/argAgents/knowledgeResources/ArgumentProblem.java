@@ -1,7 +1,7 @@
 package es.upv.dsic.gti_ia.argAgents.knowledgeResources;
 
 /**
- * Implementation of the owl concept <i>ArgumentProblem</i>
+ * Implementation of the concept <i>ArgumentProblem</i>
  * 
  */
 public class ArgumentProblem extends Problem {

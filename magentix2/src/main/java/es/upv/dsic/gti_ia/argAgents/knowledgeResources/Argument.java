@@ -8,14 +8,12 @@ import es.upv.dsic.gti_ia.argAgents.knowledgeResources.SocialContext.DependencyR
 
 
 /**
- * Implementation of the owl concept <i>Argument</i>
+ * Implementation of the concept <i>Argument</i>
  *
  */
 public class Argument implements Serializable {
 	
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = -496726263059322323L;
 	private long id;
 	private Conclusion conclusion;

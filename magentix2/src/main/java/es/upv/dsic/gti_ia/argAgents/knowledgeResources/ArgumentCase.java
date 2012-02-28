@@ -7,7 +7,7 @@ import java.util.Iterator;
 
 
 /**
- * Implementation of the owl concept <i>ArgumentCase</i>
+ * Implementation of the concept <i>ArgumentCase</i>
  * 
  */
 public class ArgumentCase extends Case implements Serializable{
@@ -83,6 +83,11 @@ public class ArgumentCase extends Case implements Serializable{
 	public void setTimesUsed(int timesUsed) {
 		this.timesUsed = timesUsed;
 	}
+	
+	/**
+	 * Prints the data of the argument-case specified
+	 * @param argCase
+	 */
 	
 	public void printArgumentCase(ArgumentCase argCase){
 		System.out.println(" ********************* ArgumentCase hasID: " + argCase.getID() + "************************");
