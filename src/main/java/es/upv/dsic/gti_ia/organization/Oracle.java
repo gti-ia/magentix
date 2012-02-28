@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -719,12 +718,10 @@ public class Oracle {
 					for (int k = 0; k < n1.getLength(); k++) {
 						if (n1.item(k).getNodeName().equalsIgnoreCase("grounding:wsdlDocument")) {
 
-							wsdl = n1.item(k).getTextContent().substring(0, n1.item(k).getTextContent().indexOf("?"));
+							wsdl = n1.item(k).getTextContent().trim();
 							if (providersGroundingWSDL == null)
 								providersGroundingWSDL = new ArrayList<String>();
 							providersGroundingWSDL.add(wsdl);
-							System.out.println("****************** " + wsdl);
-
 						}
 
 					}
