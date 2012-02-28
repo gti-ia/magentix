@@ -11,6 +11,14 @@ public class ServiceTools {
 
 	ResponseParser rp = new ResponseParser();
 
+	/**
+	 * Builds a new string with a XML format. This XML is formed by servicename and list of the 
+	 * inputs
+	 * 
+	 * @param serviceName The name of the service
+	 * @param inputs is a HashMap formed by keys and values
+	 * @return string with a XML format.
+	 */
 	public String buildServiceContent(String serviceName, HashMap<String, String> inputs) {
 		String resultXML = "";
 
@@ -26,6 +34,13 @@ public class ServiceTools {
 
 	}
 
+	/**
+	 * Parses a XML in order to extract the service name and fill the HashMap with the service inputs
+	 * 
+	 * @param string with a XML format, in this XML will be contained the service name and inputs of the service
+	 * @param inputs is a new HashMap. In this HashMap the inputs are added
+	 * @return service name
+	 */
 	public String extractServiceContent(String xml, HashMap<String, String> inputs) {
 
 		rp.parseResponse(xml);
@@ -67,7 +82,7 @@ public class ServiceTools {
 
 			if (paramsComplete.get(e.getKey()) != null) {
 				paramsComplete.put(e.getKey(), e.getValue());
-				System.out.println("inputParamName: " + e.getKey() + " value: " + e.getValue());
+			//	System.out.println("inputParamName: " + e.getKey() + " value: " + e.getValue());
 			}
 		}
 
