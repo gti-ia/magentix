@@ -53,7 +53,7 @@ public class TesterArgCAgent extends SingleAgent {
 	 * @param totalDomCases
 	 *            total domain-cases
 	 * @param socialEntities
-	 *            that represent the group of agents of the dialogue
+	 *            that represent the group of the agents of the dialogue
 	 * @param commitmentStoreID
 	 *            Commitment Store identifier to send messages
 	 * @param resultFileName
@@ -111,7 +111,7 @@ public class TesterArgCAgent extends SingleAgent {
 			}
 			int nDomCase = 0;
 
-			// create a new instance of the DomainCase without the solutions
+			// create a new instance of the domain-case without the solutions, to act as a new problem to solve
 			DomainCase auxDomCase = domCases.get(nDomCase);
 
 			DomainCase domCaseToSend = auxDomCase;
@@ -121,7 +121,7 @@ public class TesterArgCAgent extends SingleAgent {
 			ArrayList<String> agentIDs = new ArrayList<String>();
 			Dialogue dialogue = new Dialogue(currentDialogueID, agentIDs, domCaseToSend.getProblem());
 
-			// store the init date of dialogue
+			// store the initial date of dialogue
 			dialogueInitTime = System.currentTimeMillis();
 
 			// add dialogue to Commitment Store
@@ -147,7 +147,7 @@ public class TesterArgCAgent extends SingleAgent {
 				Thread.sleep(100 * multTimeFactor);
 
 				// ask to commitment store the elapsed milliseconds since the
-				// last modification (new arguments or positions)
+				// last modification (check if there are new arguments or positions)
 				sendMessage(commitmentStoreID, "LASTMODIFICATIONDATE", currentDialogueID, null);
 				ArrayList<String> locutions = new ArrayList<String>();
 				locutions.add("LASTMODIFICATIONDATE");
@@ -171,8 +171,8 @@ public class TesterArgCAgent extends SingleAgent {
 						sendMessage(socialEntity.getName(), "FINISHDIALOGUE", currentDialogueID, null);
 					}
 
-					// wait to give time to the agents to send its position
-					// (with the timesAccepted updated) to commitment Store
+					// wait to give time to the agents to send their position
+					// (with the timesAccepted updated) to the Commitment Store
 					try {
 						Thread.sleep(10 * multTimeFactor);
 					} catch (InterruptedException e) {
@@ -180,7 +180,7 @@ public class TesterArgCAgent extends SingleAgent {
 					}
 
 					// Select the most frequent position (or the most voted in
-					// case of draw). Random by default
+					// case of draw). Make a random choice otherwise
 
 					ArrayList<Position> allPositions = getAllPositions(currentDialogueID);
 
@@ -194,10 +194,7 @@ public class TesterArgCAgent extends SingleAgent {
 						Long solID = pos.getSolution().getConclusion().getID();
 						Solution sol = possibleSolutions.get(solID);
 
-						if (sol != null) {// solution already in
-											// possibleSolutions, increment
-											// counts
-							// increment frequent
+						if (sol != null) {// solution already in possibleSolutions, increment votes, increment frequency
 							int frequency = frequentPositions.get(solID);
 							frequency++;
 							frequentPositions.put(solID, frequency);
@@ -211,7 +208,7 @@ public class TesterArgCAgent extends SingleAgent {
 							positions.add(pos);
 							positionsPerSolution.put(solID, positions);
 						} else {// add solution to possibleSolutions
-								// initializing all necessary
+								// initializing all necessary parameters
 							possibleSolutions.put(solID, pos.getSolution());
 							frequentPositions.put(solID, 1);
 							votedPositions.put(solID, pos.getTimesAccepted());
@@ -223,7 +220,7 @@ public class TesterArgCAgent extends SingleAgent {
 
 					}
 
-					// obtain most voted position
+					// obtain the most voted position
 					Set<Long> keySet = votedPositions.keySet();
 					Iterator<Long> iterKeySet = keySet.iterator();
 					int maxVotes = Integer.MIN_VALUE;
@@ -245,13 +242,13 @@ public class TesterArgCAgent extends SingleAgent {
 					}
 
 					// if there is not draw in voted positions, take the most
-					// voted as a final solution
+					// voted position as the final solution
 					if (drawSolutions.size() == 0) {
 						finalSolution = possibleSolutions.get(maxVotedSolID);
 					}
-					// if there is draw in voted positions, obtain the most
+					// if there is a draw in voted positions, obtain the most
 					// frequent position
-					// if there is another draw, will take the position with
+					// if there is again draw, take the position with
 					// bigger index of the most frequent positions
 					else {
 						Iterator<Long> iterDrawSol = drawSolutions.iterator();
@@ -273,7 +270,7 @@ public class TesterArgCAgent extends SingleAgent {
 						}
 						if (drawsInFreq.size() == 0)
 							finalSolution = possibleSolutions.get(maxFrequentSolID);
-						else {// choose a solution if are in draw with votes and
+						else {// choose a solution if there is a draw in votes and
 								// frequency
 
 							long maxIndSol = drawsInFreq.size() - 1;
@@ -328,7 +325,7 @@ public class TesterArgCAgent extends SingleAgent {
 
 					}
 
-					// send the solution to all agents, if solution is correct
+					// send the solution to all agents, if the solution is correct
 					iterAgents = socialEntities.iterator();
 					while (iterAgents.hasNext()) {
 						SocialEntity socialEntitie = iterAgents.next();
@@ -379,7 +376,7 @@ public class TesterArgCAgent extends SingleAgent {
 
 			try {
 				Thread.sleep(500);// wait 0.5 seconds to give time to agents to
-									// update its CBs
+									// update its case-bases
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -391,7 +388,7 @@ public class TesterArgCAgent extends SingleAgent {
 				totalLocutions += agent.getMyUsedLocutions();
 			}
 
-			// Compute the number of Domain-Cases per agent
+			// Compute the number of domain-cases per agent
 			Vector<Integer> domCasesSize = new Vector<Integer>();
 
 			for (int i = 0; i < agents.size(); i++) {
@@ -404,7 +401,7 @@ public class TesterArgCAgent extends SingleAgent {
 			}
 			domCases = domCases / domCasesSize.size();
 
-			// Compute the number of Argument-Cases per agent
+			// Compute the number of argument-cases per agent
 			Vector<Integer> argCasesSize = new Vector<Integer>();
 
 			for (int i = 0; i < agents.size(); i++) {
@@ -474,7 +471,7 @@ public class TesterArgCAgent extends SingleAgent {
 				}
 			}
 
-			// print solution into a file
+			// print the solution into a file
 			try {
 
 				logger.info(this.getName() + ": " + "finishing and writing the file");

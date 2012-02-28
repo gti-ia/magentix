@@ -49,7 +49,7 @@ public class TestArgCAgent {
 			int nManagers = 0;
 
 			String testerAgentID = "testerAgent";
-			//fileName where it will be write if the tets has been finished
+			//fileName to write if the test has finished
 			String finishFileName = "testArgLearnAgfinished";
 
 			//initial domain-cases file names
@@ -60,10 +60,10 @@ public class TestArgCAgent {
 			//test domain-cases
 			Vector<DomainCase> testDomainCases = CreatePartitions.getTestDomainCases();
 
-			//repeated test for different number of operators
+			//repeat test for different number of operators
 			for (nOperators = 3; nOperators <= 9; nOperators += 2) {
 				
-				//init the argument-cases file names
+				//initialise the argument-cases file names
 				iniArgFileNames = new ArrayList<String>();
 				for (int i = 0; i < nOperators; i++) {
 					iniArgFileNames.add("partArgInc/partArg" + "Operator" + i + ".dat");
@@ -86,7 +86,7 @@ public class TestArgCAgent {
 				values.add("calidad");
 				Group group = new Group(1, "group1", new ValPref(values), socialEntities);
 
-				//repeated tests for different number of domain-cases for each argumentative agent
+				//repeat tests for different number of domain-cases for each argumentative agent
 				for (int cases = 5; cases <= 45; cases += 5) {
 
 					iniDomainFiles = new ArrayList<String>();
