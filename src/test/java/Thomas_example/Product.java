@@ -1,6 +1,15 @@
 package Thomas_example;
 
-
+/**
+ * In this class the agent product is represented. 
+ * Functions:
+ *  -	Acquire role operation inside the unit calculator.
+ *  - 	Register a new service square. This service is executed by the client.
+ * 	-	Register a new service product. The function of this service is to multiply the values of entry and to return the result.
+ *  - 	Provide the execution of the service product.
+ *  - 	Implements a new FIPA REQUEST protocol in order to accept the client requests for the service product.
+ *  
+ */
 
 import java.util.HashMap;
 import java.util.Map.Entry;

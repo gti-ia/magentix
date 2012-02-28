@@ -1,7 +1,15 @@
 package Thomas_example;
 
 
-
+/**
+ * In this class the agent James is represented. 
+ * Functions:
+ *  -	Acquire role student inside the unit school.
+ *  -	Search service addition, product and square.
+ *  -	Request the execution of the addition service.
+ *  -	Request the execution of the product service.
+ *  -	Execute service Square.
+ */
 
 
 
@@ -139,11 +147,13 @@ public class James extends CAgent {
 
 
 			//---------------------------------------------------
-			//--------------Executing service--------------------
+			//--------------Executing service square--------------------
 			//---------------------------------------------------
 
 
 			service = sfProxy.getService(resApp.get(2).get(0));
+			
+			
 			oracle = null;
 			oracle = new Oracle(service);
 

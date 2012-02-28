@@ -1,6 +1,13 @@
 package Thomas_example;
 
-import es.upv.dsic.gti_ia.architecture.Monitor;
+
+/**
+ * In this class the agent initiator is represented. 
+ * Functions:
+ *  -	Acquire role participant inside the unit virtual.
+ * 	-	Initialize the organization. This organization is formed by two units (calculator and school) 
+ * 		and two roles (operator and student)
+ */
 import es.upv.dsic.gti_ia.cAgents.CAgent;
 import es.upv.dsic.gti_ia.cAgents.CProcessor;
 import es.upv.dsic.gti_ia.core.ACLMessage;
@@ -12,7 +19,7 @@ import es.upv.dsic.gti_ia.organization.THOMASException;
 public class InitiatorAgent extends CAgent {
 
 	OMSProxy omsProxy = new OMSProxy(this);
-	Monitor m = new Monitor();
+	
 
 	public InitiatorAgent(AgentID aid) throws Exception {
 		super(aid);
@@ -41,9 +48,10 @@ public class InitiatorAgent extends CAgent {
 	{
 		try
 		{
+			
 			omsProxy.registerUnit("calculator", "team", "virtual", "creator");
 
-			omsProxy.registerUnit("school", "team", "virtual", "creator");
+			omsProxy.registerUnit("school", "flat", "virtual", "creator");
 
 			omsProxy.registerRole("operation", "calculator",  "external", "public","member");
 

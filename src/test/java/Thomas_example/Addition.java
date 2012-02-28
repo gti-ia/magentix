@@ -1,5 +1,13 @@
 package Thomas_example;
-
+/**
+ * In this class the agent addition is represented. 
+ * Functions:
+ *  -	Acquire role operation inside the unit calculator.
+ * 	-	Registers a new service. The function of this service is to add the values of entry and to return the result.
+ *  - 	Provide the execution of the service addition.
+ *  - 	Implements a new FIPA REQUEST protocol in order to accept the client requests and execute the service.
+ *  
+ */
 
 
 import java.util.HashMap;
@@ -44,7 +52,7 @@ public class Addition extends CAgent {
 
 
 			this.addFactoryAsParticipant(additionTalk);
-
+			
 
 		}catch(THOMASException e)
 		{
@@ -57,7 +65,16 @@ public class Addition extends CAgent {
 	@Override
 	protected void finalize(CProcessor firstProcessor,
 			ACLMessage finalizeMessage) {
-		System.out.println("["+firstProcessor.getMyAgent().getName()+"] end execution!");	 
+		System.out.println("["+firstProcessor.getMyAgent().getName()+"] end execution!");	
+		
+		try {
+			sfProxy.deregisterService("http://localhost:8080/testSFservices/testSFservices/owl/owls/Addition.owl");
+		
+			omsProxy.leaveRole("operation", "calculator");
+		} catch (THOMASException e) {
+			
+			e.printStackTrace();
+		}
 	}
 
 
@@ -97,6 +114,7 @@ public class Addition extends CAgent {
 				
 				myProcessor.getLastReceivedMessage().setContent(""+resultXML);
 
+				myProcessor.getMyAgent().Shutdown();
 			} catch (Exception e) {
 				next = "FAILURE";
 			}
