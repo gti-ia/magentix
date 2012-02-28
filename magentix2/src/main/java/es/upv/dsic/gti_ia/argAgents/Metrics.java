@@ -5,7 +5,7 @@ import java.util.Date;
 
 /**
  * This class contains metrics that are used in the CBR algorithm
- * to measure distances between case attributes. 
+ * to measure the similarity between case attributes, base on their distance. 
  */
 public class Metrics {
 	

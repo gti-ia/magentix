@@ -11,7 +11,7 @@ import es.upv.dsic.gti_ia.argAgents.knowledgeResources.SimilarDomainCase;
 
 
 /**
- * This class contains algorithms to calculate cases similarity.
+ * This class contains algorithms to calculate similarity measures between cases.
  * @author Jaume Jordan 
  */
 public class SimilarityAlgorithms {

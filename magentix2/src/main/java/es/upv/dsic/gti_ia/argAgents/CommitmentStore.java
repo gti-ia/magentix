@@ -17,7 +17,7 @@ import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 
 /**
- * This agent stores all the information about the dialogues, including: 
+ * This agent, named CommitmentStore, stores all the information about the dialogues, including: 
  * positions, arguments and modification times.
  * It responds to the petitions of the agents in the dialogue process.
  * @author Jaume Jordan
@@ -45,7 +45,7 @@ public class CommitmentStore extends CAgent {
 	private final String WITHDRAWDIALOGUE="WITHDRAWDIALOGUE";
 
 	/**
-	 * Constructor of the Commitment Store. It takes the agent id as a parameter 
+	 * Constructor of the CommitmentStore. It takes the agent id as a parameter 
 	 * and it initializes all the structures.
 	 * @param aid Agent identifier
 	 * @throws Exception
@@ -70,7 +70,7 @@ public class CommitmentStore extends CAgent {
 			ACLMessage welcomeMessage) {
 		
 		/**
-		 * This class extends the Commitment Store protocol to do the necessary 
+		 * This class extends the CommitmentStore protocol to do the necessary 
 		 * functionalities of this agent implementing the abstract methods.
 		 * @author Jaume Jordan
 		 *
@@ -225,7 +225,7 @@ public class CommitmentStore extends CAgent {
 	}
 	
 	/**
-	 * Returns an {@link Argument} that has used an agent in a dialogue.
+	 * Removes an {@link Argument} that has used an agent in a dialogue.
 	 * @param arg {@link Argument} to remove
 	 * @param agentID Agent identifier of the agent that use the {@link Argument}
 	 * @param dialogueID Dialogue identifier where the Argument is used
@@ -277,7 +277,7 @@ public class CommitmentStore extends CAgent {
 	
 	/**
 	 * Returns all the positions of a dialogue 
-	 * (not including the position of the agent specified in the second parameter, normally the requester)
+	 * (it does not includes the position of the agent specified in the second parameter, normally the requester)
 	 * @param dialogueID dialogue identifier
 	 * @param myAgentID agent identifier
 	 * @return all the positions of the given dialogue
