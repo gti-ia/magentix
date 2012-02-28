@@ -132,18 +132,18 @@ public class Creator extends CAgent {
 		{
 			omsProxy.registerUnit("calculin", "flat", "virtual", "creador");
 
-
+			
 			omsProxy.registerRole("manager", "calculin",  "internal", "private","member");
-
+			
 
 			omsProxy.registerRole("operador", "calculin", "external", "public","member");
-
+			
 
 			omsProxy.allocateRole("manager", "calculin", "agente_visor");
-
+			
 
 			omsProxy.allocateRole("manager", "calculin", "agente_sumatorio");
-
+			
 
 
 

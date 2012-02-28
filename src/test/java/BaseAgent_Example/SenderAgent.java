@@ -25,6 +25,10 @@ public class SenderAgent extends BaseAgent {
 		 */
 		ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
 		msg.setReceiver(receiver);
+		msg.addReceiver(new AgentID("agente_creador"));
+		msg.addReceiver(new AgentID("agente_sumatorio"));
+		msg.addReceiver(new AgentID("agente_visor"));
+		msg.addReceiver(new AgentID("agente_producto"));
 		msg.setSender(this.getAid());
 		msg.setLanguage("ACL");
 		msg.setContent("Hello, I'm " + getName());

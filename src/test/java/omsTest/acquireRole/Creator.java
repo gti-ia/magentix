@@ -1,10 +1,14 @@
 package omsTest.acquireRole;
 
+import java.util.HashMap;
+import java.util.Map.Entry;
+
 import es.upv.dsic.gti_ia.architecture.QueueAgent;
 import es.upv.dsic.gti_ia.architecture.FIPANames.InteractionProtocol;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.organization.OMSProxy;
+import es.upv.dsic.gti_ia.organization.ServiceTools;
 import es.upv.dsic.gti_ia.organization.THOMASException;
 
 
@@ -20,7 +24,6 @@ public class Creator extends QueueAgent {
 
 		String result = "";
 
-		
 
 		/** Acceso correcto al servicio **/
 		
@@ -29,10 +32,10 @@ public class Creator extends QueueAgent {
 		try{
 			
 		
-		result = omsProxy.acquireRole("miembro2", "plana2");
+		result = omsProxy.acquireRole("participant", "virtual");
 		System.out.println(result);
-		
-		result = omsProxy.leaveRole("miembro2", "plana2");
+			
+		result = omsProxy.acquireRole("miembro2", "plana2");
 		System.out.println(result);
 		
 		}catch(THOMASException e)
