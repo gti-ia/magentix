@@ -1,4 +1,3 @@
-
 /**
  * EvenSkeleton.java
  *
@@ -6,11 +5,11 @@
  * by the Apache Axis2 version: 1.4  Built on : Apr 26, 2008 (06:24:30 EDT)
  */
 package wtp;
-/**
- *  EvenSkeleton java skeleton for the axisService
- */
-public class EvenSkeleton{
 
+/**
+ * EvenSkeleton java skeleton for the axisService
+ */
+public class EvenSkeleton {
 
 	/**
 	 * Auto generated method signature
@@ -18,17 +17,15 @@ public class EvenSkeleton{
 	 * @param even
 	 */
 
-	public wtp.EvenResponse Even
-	(wtp.Even even)
-	{
-		EvenResponse response=new EvenResponse();
-		
-		boolean result=even.getX()%2==0;
-		
-		System.out.println("Even result: "+result);
-		
+	public wtp.EvenResponse Even(wtp.Even even) {
+		EvenResponse response = new EvenResponse();
+
+		boolean result = even.getX() % 2 == 0;
+
+		System.out.println("Even result: " + result);
+
 		response.setResult(result);
-	
+
 		return response;
 	}
 
