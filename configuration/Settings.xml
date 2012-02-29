@@ -5,8 +5,8 @@
 
 
 <!-- Properties thomas -->
-<entry key="OMSServiceDesciptionLocation">http://localhost:8080/omsservices/OMSservices/owl/owls/</entry>
-<entry key="SFServiceDesciptionLocation">http://localhost:8080/sfservices/SFservices/owl/owls/</entry>
+<entry key="OMSServiceDescriptionLocation">http://localhost:8080/omsservices/services/</entry>
+<entry key="SFServiceDescriptionLocation">http://localhost:8080/sfservices/services/</entry>
 
 
 <!-- Properties servlets server -->
