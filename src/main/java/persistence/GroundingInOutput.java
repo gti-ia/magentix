@@ -1,5 +1,10 @@
 package persistence;
 
+/**
+ * This class represents the parameters of an input or output of a grounding.
+ * @author Jaume Jordan
+ *
+ */
 public class GroundingInOutput {
 
 	private String owlsParameter;

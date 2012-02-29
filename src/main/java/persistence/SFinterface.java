@@ -224,7 +224,8 @@ public class SFinterface {
 			ArrayList<String> inputsParams = getInputParameterTypes(inputs, serviceURL);
 			ArrayList<String> outputParams = getOutputParameterTypes(outputs, serviceURL);
 
-			String regServiceProfile = searchRegisteredServices(serviceName, textDescription, inputsParams, outputParams);
+			String regServiceProfile = searchRegisteredServices(serviceName, textDescription, inputsParams,
+					outputParams);
 			if (!regServiceProfile.equalsIgnoreCase("")) {
 				System.out.println("Service already registered: " + regServiceProfile);
 
@@ -332,8 +333,10 @@ public class SFinterface {
 				if (nGrounds == 0 && nProviders == 0)
 					description = "ERROR: All information already registered in service profile: " + regServiceProfile;
 				else
-					description = nGrounds + " groundings and " + nProviders + " providers registered to service profile: " + regServiceProfile;
-				System.out.println(nGrounds + " groundings and " + nProviders + " providers registered to service profile: " + regServiceProfile);
+					description = nGrounds + " groundings and " + nProviders
+							+ " providers registered to service profile: " + regServiceProfile;
+				System.out.println(nGrounds + " groundings and " + nProviders
+						+ " providers registered to service profile: " + regServiceProfile);
 
 			} else {
 				ModelMaker maker = ModelFactory.createModelRDBMaker(conn);
@@ -381,7 +384,8 @@ public class SFinterface {
 		else
 			resultXML += "<status>Ok</status>\n";
 
-		resultXML += "<result>\n<description>" + description + "</description>\n" + "<specification>\n<!-- " + owlsService + " -->\n</specification>\n</result>\n";
+		resultXML += "<result>\n<description>" + description + "</description>\n" + "<specification>\n<!-- "
+				+ owlsService + " -->\n</specification>\n</result>\n";
 
 		resultXML += "</response>";
 
@@ -408,7 +412,8 @@ public class SFinterface {
 																	// does not
 																	// exist
 				resultXML += "<status>Error</status>\n";
-				resultXML += "<result>\n<description>" + "ERROR: Service " + serviceProfile + " does not exist" + "</description>\n</result>\n";
+				resultXML += "<result>\n<description>" + "ERROR: Service " + serviceProfile + " does not exist"
+						+ "</description>\n</result>\n";
 				resultXML += "</response>";
 
 				return resultXML;
@@ -479,7 +484,8 @@ public class SFinterface {
 
 		if (owlsService == null || owlsService == "") {
 			resultXML += "<status>Error</status>\n";
-			resultXML += "<result>\n<description>ERROR: service profile " + serviceProfile + " not found</description>\n</result>\n";
+			resultXML += "<result>\n<description>ERROR: service profile " + serviceProfile
+					+ " not found</description>\n</result>\n";
 		} else {
 			resultXML += "<status>Ok</status>\n";
 			resultXML += "<result>\n<specification><!-- \n" + owlsService + " -->\n</specification>\n</result>\n";
@@ -532,7 +538,10 @@ public class SFinterface {
 
 					String in = iterInputs.next();
 
-					String queryStr = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>" + "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" + "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" + "select ?x where { ?x a process:Input ; process:parameterType " + in + " . }";
+					String queryStr = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
+							+ "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
+							+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
+							+ "select ?x where { ?x a process:Input ; process:parameterType " + in + " . }";
 
 					Query query = QueryFactory.create(queryStr);
 
@@ -565,7 +574,9 @@ public class SFinterface {
 				while (iterCandidates.hasNext()) {
 					String cand = iterCandidates.next();
 
-					String queryStr = "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" + "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" + "select ?x where { ?x profile:hasInput " + "<" + cand + ">" + " }";
+					String queryStr = "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
+							+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
+							+ "select ?x where { ?x profile:hasInput " + "<" + cand + ">" + " }";
 
 					Query query = QueryFactory.create(queryStr);
 
@@ -598,7 +609,10 @@ public class SFinterface {
 
 					String in = iterOutputs.next();
 
-					String queryStr = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>" + "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" + "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" + "select ?x where { ?x a process:Output ; process:parameterType " + in + " . }";
+					String queryStr = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
+							+ "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
+							+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
+							+ "select ?x where { ?x a process:Output ; process:parameterType " + in + " . }";
 
 					Query query = QueryFactory.create(queryStr);
 
@@ -631,7 +645,9 @@ public class SFinterface {
 				while (iterCandidates.hasNext()) {
 					String cand = iterCandidates.next();
 
-					String queryStr = "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" + "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" + "select ?x where { ?x profile:hasOutput " + "<" + cand + ">" + " }";
+					String queryStr = "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
+							+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
+							+ "select ?x where { ?x profile:hasOutput " + "<" + cand + ">" + " }";
 
 					Query query = QueryFactory.create(queryStr);
 
@@ -683,7 +699,9 @@ public class SFinterface {
 				int sameOutputs = 0;
 
 				// SEARCH INPUTS
-				String queryStr = "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" + "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" + "select ?x where { " + "<" + profile.getUrl() + ">" + " profile:hasInput ?x }";
+				String queryStr = "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
+						+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
+						+ "select ?x where { " + "<" + profile.getUrl() + ">" + " profile:hasInput ?x }";
 
 				Query query = QueryFactory.create(queryStr);
 
@@ -704,7 +722,11 @@ public class SFinterface {
 
 							// explore all inputs (searching their type) to find
 							// out if it is in the service
-							String queryStrType = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>" + "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" + "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" + "select ?x where { <" + input + "> a process:Input ; process:parameterType ?x . }";
+							String queryStrType = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
+									+ "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
+									+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
+									+ "select ?x where { <" + input
+									+ "> a process:Input ; process:parameterType ?x . }";
 
 							Query queryType = QueryFactory.create(queryStrType);
 
@@ -736,7 +758,9 @@ public class SFinterface {
 				}
 
 				// SEARCH OUTPUTS
-				String queryStrOutputs = "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" + "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" + "select ?x where { " + "<" + profile.getUrl() + ">" + " profile:hasOutput ?x }";
+				String queryStrOutputs = "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
+						+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
+						+ "select ?x where { " + "<" + profile.getUrl() + ">" + " profile:hasOutput ?x }";
 
 				Query queryOutputs = QueryFactory.create(queryStrOutputs);
 
@@ -757,7 +781,11 @@ public class SFinterface {
 
 							// explore all outputs (searching their type) to
 							// find out if it is in the service
-							String queryStrType = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>" + "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" + "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" + "select ?x where { <" + output + "> a process:Output ; process:parameterType ?x . }";
+							String queryStrType = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
+									+ "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
+									+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
+									+ "select ?x where { <" + output
+									+ "> a process:Output ; process:parameterType ?x . }";
 
 							Query queryType = QueryFactory.create(queryStrType);
 
@@ -817,7 +845,8 @@ public class SFinterface {
 					similarityToKeywords = (float) keywordsFound / keywords.size();
 					similaritiesUsed++;
 				}
-				float similarity = (1.0f / similaritiesUsed) * inputsSimilarity + (1.0f / similaritiesUsed) * outputsSimilarity + (1.0f / similaritiesUsed) * similarityToKeywords;
+				float similarity = (1.0f / similaritiesUsed) * inputsSimilarity + (1.0f / similaritiesUsed)
+						* outputsSimilarity + (1.0f / similaritiesUsed) * similarityToKeywords;
 				profile.setSuitability(similarity);
 
 			}// end iterator profiles
@@ -828,7 +857,8 @@ public class SFinterface {
 			iterProfiles = profiles.iterator();
 			while (iterProfiles.hasNext()) {
 				Profile profile = iterProfiles.next();
-				itemsList += "\t<item>\n\t\t<profile>" + profile.getUrl() + "</profile>\n\t\t<quantity>" + profile.getSuitability() + "</quantity>\n\t</item>\n";
+				itemsList += "\t<item>\n\t\t<profile>" + profile.getUrl() + "</profile>\n\t\t<quantity>"
+						+ profile.getSuitability() + "</quantity>\n\t</item>\n";
 			}
 
 		} catch (com.hp.hpl.jena.query.QueryParseException e) {
@@ -919,7 +949,8 @@ public class SFinterface {
 				}
 				if (!foundGround) {
 					resultXML += "<status>Error</status>\n";
-					resultXML += "<result>\n<description>" + "ERROR: Provider or grounding " + providerName + " not found" + "</description>\n</result>\n";
+					resultXML += "<result>\n<description>" + "ERROR: Provider or grounding " + providerName
+							+ " not found" + "</description>\n</result>\n";
 
 					resultXML += "</response>";
 
@@ -930,9 +961,26 @@ public class SFinterface {
 			} else {
 
 				// Delete provider
-				String delete = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>" + "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>" + "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" + "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" + "prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>" + "prefix mind: <" + baseURI + "#>" + "delete {?x ?y ?z} " + "where" + "{mind:" + profileName + " ?y ?z" + " filter ( ?y = profile:contactInformation " + "&& ?z = <" + baseURI + "#" + providerName + ">" + ")" + "?x ?y ?z}";
+				String delete = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
+						+ "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>"
+						+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
+						+ "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
+						+ "prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>" + "prefix mind: <" + baseURI + "#>"
+						+ "delete {?x ?y ?z} " + "where" + "{mind:" + profileName + " ?y ?z"
+						+ " filter ( ?y = profile:contactInformation " + "&& ?z = <" + baseURI + "#" + providerName
+						+ ">" + ")" + "?x ?y ?z}";
 
-				String delete2 = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>" + "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>" + "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" + "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" + "prefix provider: <http://127.0.0.1/ontology/provider.owl#>" + "prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>" + "prefix mind: <" + baseURI + "#>" + "delete {?x ?y ?z} " + "where" + "{mind:" + providerName + " ?y ?z" + " filter ( ( ?y = provider:entityID " + "|| ?y = provider:entityType " + "|| ?y = provider:language " + "|| ?y = provider:performative " + "|| ?z = provider:Provider )" + "&& ?x = <" + baseURI + "#" + providerName + ">" + ")" + "?x ?y ?z}";
+				String delete2 = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
+						+ "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>"
+						+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
+						+ "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
+						+ "prefix provider: <http://127.0.0.1/ontology/provider.owl#>"
+						+ "prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>" + "prefix mind: <" + baseURI + "#>"
+						+ "delete {?x ?y ?z} " + "where" + "{mind:" + providerName + " ?y ?z"
+						+ " filter ( ( ?y = provider:entityID " + "|| ?y = provider:entityType "
+						+ "|| ?y = provider:language " + "|| ?y = provider:performative "
+						+ "|| ?z = provider:Provider )" + "&& ?x = <" + baseURI + "#" + providerName + ">" + ")"
+						+ "?x ?y ?z}";
 
 				QuerySolution querysol = new QuerySolutionMap();
 				UpdateAction.parseExecute(delete, m, querysol);
@@ -955,7 +1003,8 @@ public class SFinterface {
 		}
 
 		resultXML += "<status>Ok</status>\n";
-		resultXML += "<result>\n<description>" + "Provider or grounding " + providerName + " removed" + "</description>\n</result>\n";
+		resultXML += "<result>\n<description>" + "Provider or grounding " + providerName + " removed"
+				+ "</description>\n</result>\n";
 		resultXML += "</response>";
 
 		return resultXML;
@@ -978,7 +1027,8 @@ public class SFinterface {
 	 *         empty String if not
 	 * @throws THOMASException
 	 */
-	private String searchRegisteredServices(String serviceName, String textDescription, ArrayList<String> inputs, ArrayList<String> outputs) throws THOMASException {
+	private String searchRegisteredServices(String serviceName, String textDescription, ArrayList<String> inputs,
+			ArrayList<String> outputs) throws THOMASException {
 
 		try {
 
@@ -997,7 +1047,10 @@ public class SFinterface {
 
 				ArrayList<String> candN = new ArrayList<String>();
 
-				String queryStr = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>" + "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" + "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" + "select ?x where { ?x a process:Input ; process:parameterType " + in + " . }";
+				String queryStr = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
+						+ "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
+						+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
+						+ "select ?x where { ?x a process:Input ; process:parameterType " + in + " . }";
 
 				Query query = QueryFactory.create(queryStr);
 
@@ -1038,7 +1091,10 @@ public class SFinterface {
 
 				ArrayList<String> candN = new ArrayList<String>();
 
-				String queryStr = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>" + "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" + "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" + "select ?x where { ?x a process:Output ; process:parameterType " + out + " . }";
+				String queryStr = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
+						+ "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
+						+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
+						+ "select ?x where { ?x a process:Output ; process:parameterType " + out + " . }";
 
 				Query query = QueryFactory.create(queryStr);
 
@@ -1079,7 +1135,8 @@ public class SFinterface {
 
 					// check that the service name and text description are
 					// exactly the same
-					if (!candServiceName.equalsIgnoreCase(serviceName) || !candTextDescription.equalsIgnoreCase(textDescription)) {
+					if (!candServiceName.equalsIgnoreCase(serviceName)
+							|| !candTextDescription.equalsIgnoreCase(textDescription)) {
 						candidates.remove(i);
 						i--;
 						continue;
@@ -1177,14 +1234,25 @@ public class SFinterface {
 
 		if (profileServiceName != null && profileServiceName != "") {
 			// headers
-			owlsService += "<?xml version=\"1.0\" encoding=\"WINDOWS-1252\"?>" + "\n" + "<rdf:RDF  xmlns:owl       = \"http://www.w3.org/2002/07/owl#\"" + "\n" + "xmlns:rdfs      = \"http://www.w3.org/2000/01/rdf-schema#\"" + "\n" + "xmlns:rdf       = \"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"" + "\n" + "xmlns:xsd       = \"http://www.w3.org/2001/XMLSchema#\"" + "\n" + "xmlns:service   = \"http://www.daml.org/services/owl-s/1.1/Service.owl#\"" + "\n" + "xmlns:process   = \"http://www.daml.org/services/owl-s/1.1/Process.owl#\"" + "\n" + "xmlns:profile    = \"http://www.daml.org/services/owl-s/1.1/Profile.owl#\"" + "\n" + "xmlns:grounding = \"http://www.daml.org/services/owl-s/1.1/Grounding.owl#\"" + "\n" + "xmlns:provider = \"http://127.0.0.1/ontology/provider.owl#\">" + "\n";
+			owlsService += "<?xml version=\"1.0\" encoding=\"WINDOWS-1252\"?>" + "\n"
+					+ "<rdf:RDF  xmlns:owl       = \"http://www.w3.org/2002/07/owl#\"" + "\n"
+					+ "xmlns:rdfs      = \"http://www.w3.org/2000/01/rdf-schema#\"" + "\n"
+					+ "xmlns:rdf       = \"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"" + "\n"
+					+ "xmlns:xsd       = \"http://www.w3.org/2001/XMLSchema#\"" + "\n"
+					+ "xmlns:service   = \"http://www.daml.org/services/owl-s/1.1/Service.owl#\"" + "\n"
+					+ "xmlns:process   = \"http://www.daml.org/services/owl-s/1.1/Process.owl#\"" + "\n"
+					+ "xmlns:profile    = \"http://www.daml.org/services/owl-s/1.1/Profile.owl#\"" + "\n"
+					+ "xmlns:grounding = \"http://www.daml.org/services/owl-s/1.1/Grounding.owl#\"" + "\n"
+					+ "xmlns:provider = \"http://127.0.0.1/ontology/provider.owl#\">" + "\n";
 
 			// profile descriptions...
 			// profile:serviceName
 			// profile:textDescription
-			owlsService += "<profile:Profile rdf:ID=\"" + serviceProfile + "\">\n" + "\t<profile:serviceName xml:lang=\"en\">" + profileServiceName + "</profile:serviceName>" + "\n";
+			owlsService += "<profile:Profile rdf:ID=\"" + serviceProfile + "\">\n"
+					+ "\t<profile:serviceName xml:lang=\"en\">" + profileServiceName + "</profile:serviceName>" + "\n";
 
-			owlsService += "\t<profile:textDescription xml:lang=\"en\">" + getProfileTextDescription(serviceProfile, null) + "</profile:textDescription>" + "\n";
+			owlsService += "\t<profile:textDescription xml:lang=\"en\">"
+					+ getProfileTextDescription(serviceProfile, null) + "</profile:textDescription>" + "\n";
 
 			// providers
 			// profile:contactInformation
@@ -1246,9 +1314,15 @@ public class SFinterface {
 
 		String queryStringSearchName;
 		if (input)
-			queryStringSearchName = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>" + "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" + "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" + "select ?x where { ?x profile:hasInput <" + paramName + "> }";
+			queryStringSearchName = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
+					+ "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
+					+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
+					+ "select ?x where { ?x profile:hasInput <" + paramName + "> }";
 		else
-			queryStringSearchName = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>" + "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" + "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" + "select ?x where { ?x profile:hasOutput <" + paramName + "> }";
+			queryStringSearchName = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
+					+ "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
+					+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
+					+ "select ?x where { ?x profile:hasOutput <" + paramName + "> }";
 
 		Query querySearchName = QueryFactory.create(queryStringSearchName);
 
@@ -1297,7 +1371,10 @@ public class SFinterface {
 				maker = ModelFactory.createModelRDBMaker(conn);
 				base = maker.createModel("http://example.org/ontologias");
 				m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
-				queryStringSearchName = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>" + "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" + "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" + "select ?x where { <" + serviceProfile + "> profile:hasInput ?x }";
+				queryStringSearchName = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
+						+ "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
+						+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
+						+ "select ?x where { <" + serviceProfile + "> profile:hasInput ?x }";
 			} else {
 				maker = ModelFactory.createMemModelMaker();
 				base = maker.createModel("http://example.org/ontologias");
@@ -1305,7 +1382,10 @@ public class SFinterface {
 
 				m.read(serviceURL);
 
-				queryStringSearchName = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>" + "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" + "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" + "select ?x where { ?y profile:hasInput ?x }";
+				queryStringSearchName = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
+						+ "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
+						+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
+						+ "select ?x where { ?y profile:hasInput ?x }";
 			}
 
 			Query querySearchName = QueryFactory.create(queryStringSearchName);
@@ -1346,7 +1426,8 @@ public class SFinterface {
 	 * @return the inputs parameter type of the given inputs
 	 * @throws THOMASException
 	 */
-	private ArrayList<String> getInputParameterTypes(ArrayList<String> inputs, String serviceURL) throws THOMASException {
+	private ArrayList<String> getInputParameterTypes(ArrayList<String> inputs, String serviceURL)
+			throws THOMASException {
 		ArrayList<String> inputParamsRegistered = new ArrayList<String>();
 
 		try {
@@ -1369,7 +1450,10 @@ public class SFinterface {
 			while (iterInputs.hasNext()) {
 
 				String in = iterInputs.next();
-				String queryStr = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>" + "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" + "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" + "select ?x where { <" + in + "> a process:Input ; process:parameterType ?x . }";
+				String queryStr = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
+						+ "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
+						+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
+						+ "select ?x where { <" + in + "> a process:Input ; process:parameterType ?x . }";
 
 				Query query = QueryFactory.create(queryStr);
 
@@ -1382,7 +1466,11 @@ public class SFinterface {
 					while (resultsSearchInputs.hasNext()) {
 						QuerySolution sol = resultsSearchInputs.next();
 
-						String param = "\"" + sol.getLiteral("x").getString() + "\"^^" + sol.getLiteral("x").getDatatypeURI().replace("http://www.w3.org/2001/XMLSchema#", "xsd:");
+						String param = "\""
+								+ sol.getLiteral("x").getString()
+								+ "\"^^"
+								+ sol.getLiteral("x").getDatatypeURI()
+										.replace("http://www.w3.org/2001/XMLSchema#", "xsd:");
 						// System.out.println(param);
 						inputParamsRegistered.add(param);
 
@@ -1414,7 +1502,9 @@ public class SFinterface {
 		Model base = maker.createModel("http://example.org/ontologias");
 		OntModel m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
 
-		String queryStringSearchName = "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" + "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" + "select ?x where { <" + input + "> a process:Input ; process:parameterType ?x . }";
+		String queryStringSearchName = "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
+				+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" + "select ?x where { <"
+				+ input + "> a process:Input ; process:parameterType ?x . }";
 
 		Query querySearchName = QueryFactory.create(queryStringSearchName);
 
@@ -1435,7 +1525,8 @@ public class SFinterface {
 		String paramType = strToken.nextToken();
 		String paramDataType = strToken.nextToken();
 
-		inputOWLS = "\t<process:Input rdf:ID=\"" + input + "\">" + "\n" + "\t\t<process:parameterType rdf:datatype=\"" + paramDataType + "\">" + paramType + "</process:parameterType>" + "\n" + "\t</process:Input>\n";
+		inputOWLS = "\t<process:Input rdf:ID=\"" + input + "\">" + "\n" + "\t\t<process:parameterType rdf:datatype=\""
+				+ paramDataType + "\">" + paramType + "</process:parameterType>" + "\n" + "\t</process:Input>\n";
 
 		return inputOWLS;
 
@@ -1464,13 +1555,19 @@ public class SFinterface {
 				maker = ModelFactory.createModelRDBMaker(conn);
 				base = maker.createModel("http://example.org/ontologias");
 				m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
-				queryStringSearchName = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>" + "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" + "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" + "select ?x where { <" + serviceProfile + "> profile:hasOutput ?x }";
+				queryStringSearchName = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
+						+ "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
+						+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
+						+ "select ?x where { <" + serviceProfile + "> profile:hasOutput ?x }";
 			} else {
 				maker = ModelFactory.createMemModelMaker();
 				base = maker.createModel("http://example.org/ontologias");
 				m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
 				m.read(serviceURL);
-				queryStringSearchName = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>" + "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" + "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" + "select ?x where { ?y profile:hasOutput ?x }";
+				queryStringSearchName = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
+						+ "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
+						+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
+						+ "select ?x where { ?y profile:hasOutput ?x }";
 			}
 
 			Query querySearchName = QueryFactory.create(queryStringSearchName);
@@ -1511,7 +1608,8 @@ public class SFinterface {
 	 * @return the outputs parameter type of the given outputs
 	 * @throws THOMASException
 	 */
-	private ArrayList<String> getOutputParameterTypes(ArrayList<String> outputs, String serviceURL) throws THOMASException {
+	private ArrayList<String> getOutputParameterTypes(ArrayList<String> outputs, String serviceURL)
+			throws THOMASException {
 		ArrayList<String> outputParamsRegistered = new ArrayList<String>();
 
 		try {
@@ -1534,7 +1632,10 @@ public class SFinterface {
 			while (iterOutputs.hasNext()) {
 
 				String out = iterOutputs.next();
-				String queryStr = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>" + "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" + "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" + "select ?x where { <" + out + "> a process:Output ; process:parameterType ?x . }";
+				String queryStr = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
+						+ "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
+						+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
+						+ "select ?x where { <" + out + "> a process:Output ; process:parameterType ?x . }";
 
 				Query query = QueryFactory.create(queryStr);
 
@@ -1547,7 +1648,11 @@ public class SFinterface {
 					while (resultsSearchInputs.hasNext()) {
 						QuerySolution sol = resultsSearchInputs.next();
 
-						String param = "\"" + sol.getLiteral("x").getString() + "\"^^" + sol.getLiteral("x").getDatatypeURI().replace("http://www.w3.org/2001/XMLSchema#", "xsd:");
+						String param = "\""
+								+ sol.getLiteral("x").getString()
+								+ "\"^^"
+								+ sol.getLiteral("x").getDatatypeURI()
+										.replace("http://www.w3.org/2001/XMLSchema#", "xsd:");
 						outputParamsRegistered.add(param);
 
 					}// end for
@@ -1579,7 +1684,9 @@ public class SFinterface {
 		Model base = maker.createModel("http://example.org/ontologias");
 		OntModel m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
 
-		String queryStringSearchName = "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" + "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" + "select ?x where { <" + output + "> a process:Output ; process:parameterType ?x . }";
+		String queryStringSearchName = "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
+				+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" + "select ?x where { <"
+				+ output + "> a process:Output ; process:parameterType ?x . }";
 
 		Query querySearchName = QueryFactory.create(queryStringSearchName);
 
@@ -1600,7 +1707,9 @@ public class SFinterface {
 		String paramType = strToken.nextToken();
 		String paramDataType = strToken.nextToken();
 
-		outputOWLS = "\t<process:Output rdf:ID=\"" + output + "\">" + "\n" + "\t\t<process:parameterType rdf:datatype=\"" + paramDataType + "\">" + paramType + "</process:parameterType>" + "\n" + "\t</process:Output>";
+		outputOWLS = "\t<process:Output rdf:ID=\"" + output + "\">" + "\n"
+				+ "\t\t<process:parameterType rdf:datatype=\"" + paramDataType + "\">" + paramType
+				+ "</process:parameterType>" + "\n" + "\t</process:Output>";
 
 		return outputOWLS;
 
@@ -1620,7 +1729,8 @@ public class SFinterface {
 	 * @param fileName
 	 *            to store the OWL-S specification created with groundings
 	 */
-	private void writeGroundingOWLSFile(String serviceURL, String registeredProfile, String wsdlToRegister, String fileName) {
+	private void writeGroundingOWLSFile(String serviceURL, String registeredProfile, String wsdlToRegister,
+			String fileName) {
 
 		StringTokenizer tokenProfile = new StringTokenizer(registeredProfile, "#");
 		String urlBase = tokenProfile.nextToken();
@@ -1631,8 +1741,17 @@ public class SFinterface {
 			FileWriter fstream = new FileWriter(fileName);
 			BufferedWriter out = new BufferedWriter(fstream);
 
-			out.write("<?xml version=\"1.0\" encoding=\"WINDOWS-1252\"?>" + "\n" + "<rdf:RDF  xmlns:owl       = \"http://www.w3.org/2002/07/owl#\"" + "\n" + "xmlns:rdfs      = \"http://www.w3.org/2000/01/rdf-schema#\"" + "\n" + "xmlns:rdf       = \"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"" + "\n" + "xmlns:xsd       = \"http://www.w3.org/2001/XMLSchema#\"" + "\n" + "xmlns:service   = \"http://www.daml.org/services/owl-s/1.1/Service.owl#\"" + "\n" + "xmlns:process   = \"http://www.daml.org/services/owl-s/1.1/Process.owl#\"" + "\n" + "xmlns:profile    = \"http://www.daml.org/services/owl-s/1.1/Profile.owl#\"" + "\n" + "xmlns:grounding = \"http://www.daml.org/services/owl-s/1.1/Grounding.owl#\"" + "\n" + "xmlns:provider = \"http://127.0.0.1/ontology/provider.owl#\"" + "\n"
-					+ "xml:base        = \"" + urlBase + "\">" + "\n");
+			out.write("<?xml version=\"1.0\" encoding=\"WINDOWS-1252\"?>" + "\n"
+					+ "<rdf:RDF  xmlns:owl       = \"http://www.w3.org/2002/07/owl#\"" + "\n"
+					+ "xmlns:rdfs      = \"http://www.w3.org/2000/01/rdf-schema#\"" + "\n"
+					+ "xmlns:rdf       = \"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"" + "\n"
+					+ "xmlns:xsd       = \"http://www.w3.org/2001/XMLSchema#\"" + "\n"
+					+ "xmlns:service   = \"http://www.daml.org/services/owl-s/1.1/Service.owl#\"" + "\n"
+					+ "xmlns:process   = \"http://www.daml.org/services/owl-s/1.1/Process.owl#\"" + "\n"
+					+ "xmlns:profile    = \"http://www.daml.org/services/owl-s/1.1/Profile.owl#\"" + "\n"
+					+ "xmlns:grounding = \"http://www.daml.org/services/owl-s/1.1/Grounding.owl#\"" + "\n"
+					+ "xmlns:provider = \"http://127.0.0.1/ontology/provider.owl#\"" + "\n" + "xml:base        = \""
+					+ urlBase + "\">" + "\n");
 
 			out.write("<profile:Profile rdf:ID=\"" + regProfileName + "\">\n");
 
@@ -1644,7 +1763,8 @@ public class SFinterface {
 
 			out.write("</profile:Profile>\n");
 
-			String groundOWLS = getGroundingOWLSfromFile(profile, serviceURL, registeredServiceURI, wsdlToRegister, baseURI);
+			String groundOWLS = getGroundingOWLSfromFile(profile, serviceURL, registeredServiceURI, wsdlToRegister,
+					baseURI);
 
 			System.out.println("groundOWLS:\n" + groundOWLS);
 
@@ -1683,8 +1803,17 @@ public class SFinterface {
 			FileWriter fstream = new FileWriter(fileName);
 			BufferedWriter out = new BufferedWriter(fstream);
 
-			out.write("<?xml version=\"1.0\" encoding=\"WINDOWS-1252\"?>" + "\n" + "<rdf:RDF  xmlns:owl       = \"http://www.w3.org/2002/07/owl#\"" + "\n" + "xmlns:rdfs      = \"http://www.w3.org/2000/01/rdf-schema#\"" + "\n" + "xmlns:rdf       = \"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"" + "\n" + "xmlns:xsd       = \"http://www.w3.org/2001/XMLSchema#\"" + "\n" + "xmlns:service   = \"http://www.daml.org/services/owl-s/1.1/Service.owl#\"" + "\n" + "xmlns:process   = \"http://www.daml.org/services/owl-s/1.1/Process.owl#\"" + "\n" + "xmlns:profile    = \"http://www.daml.org/services/owl-s/1.1/Profile.owl#\"" + "\n" + "xmlns:grounding = \"http://www.daml.org/services/owl-s/1.1/Grounding.owl#\"" + "\n" + "xmlns:provider = \"http://127.0.0.1/ontology/provider.owl#\"" + "\n"
-					+ "xml:base        = \"" + urlBase + "\">" + "\n");
+			out.write("<?xml version=\"1.0\" encoding=\"WINDOWS-1252\"?>" + "\n"
+					+ "<rdf:RDF  xmlns:owl       = \"http://www.w3.org/2002/07/owl#\"" + "\n"
+					+ "xmlns:rdfs      = \"http://www.w3.org/2000/01/rdf-schema#\"" + "\n"
+					+ "xmlns:rdf       = \"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"" + "\n"
+					+ "xmlns:xsd       = \"http://www.w3.org/2001/XMLSchema#\"" + "\n"
+					+ "xmlns:service   = \"http://www.daml.org/services/owl-s/1.1/Service.owl#\"" + "\n"
+					+ "xmlns:process   = \"http://www.daml.org/services/owl-s/1.1/Process.owl#\"" + "\n"
+					+ "xmlns:profile    = \"http://www.daml.org/services/owl-s/1.1/Profile.owl#\"" + "\n"
+					+ "xmlns:grounding = \"http://www.daml.org/services/owl-s/1.1/Grounding.owl#\"" + "\n"
+					+ "xmlns:provider = \"http://127.0.0.1/ontology/provider.owl#\"" + "\n" + "xml:base        = \""
+					+ urlBase + "\">" + "\n");
 
 			out.write("<profile:Profile rdf:ID=\"" + regProfileName + "\">\n");
 
@@ -1727,7 +1856,9 @@ public class SFinterface {
 
 		m.read(serviceURL);
 
-		String queryStringSearchName = "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" + "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" + "select ?x where { ?x a profile:Profile }";
+		String queryStringSearchName = "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
+				+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
+				+ "select ?x where { ?x a profile:Profile }";
 
 		Query querySearchName = QueryFactory.create(queryStringSearchName);
 
@@ -1777,14 +1908,18 @@ public class SFinterface {
 				base = maker.createModel("http://example.org/ontologias");
 				m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
 
-				queryStringSearchName = "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" + "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" + "select ?x where { " + "<" + serviceProfile + ">" + " profile:serviceName ?x }";
+				queryStringSearchName = "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
+						+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
+						+ "select ?x where { " + "<" + serviceProfile + ">" + " profile:serviceName ?x }";
 			} else {
 				maker = ModelFactory.createMemModelMaker();
 				base = maker.createModel("http://example.org/ontologias");
 				m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
 				m.read(serviceURL);
 
-				queryStringSearchName = "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" + "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" + "select ?x where { ?y profile:serviceName ?x }";
+				queryStringSearchName = "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
+						+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
+						+ "select ?x where { ?y profile:serviceName ?x }";
 			}
 
 			Query querySearchName = QueryFactory.create(queryStringSearchName);
@@ -1835,13 +1970,17 @@ public class SFinterface {
 			maker = ModelFactory.createModelRDBMaker(conn);
 			base = maker.createModel("http://example.org/ontologias");
 			m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
-			queryStringSearchName = "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" + "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" + "select ?x where { " + "<" + serviceProfile + ">" + " profile:textDescription ?x }";
+			queryStringSearchName = "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
+					+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" + "select ?x where { "
+					+ "<" + serviceProfile + ">" + " profile:textDescription ?x }";
 		} else {
 			maker = ModelFactory.createMemModelMaker();
 			base = maker.createModel("http://example.org/ontologias");
 			m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
 			m.read(serviceURL);
-			queryStringSearchName = "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" + "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" + "select ?x where { ?y profile:textDescription ?x }";
+			queryStringSearchName = "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
+					+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
+					+ "select ?x where { ?y profile:textDescription ?x }";
 		}
 
 		Query querySearchName = QueryFactory.create(queryStringSearchName);
@@ -1878,7 +2017,9 @@ public class SFinterface {
 		ModelMaker maker = ModelFactory.createModelRDBMaker(conn);
 		Model base = maker.createModel("http://example.org/ontologias");
 		OntModel m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
-		String queryStringSearchName = "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" + "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" + "select * where { ?y profile:textDescription ?x }";
+		String queryStringSearchName = "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
+				+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
+				+ "select * where { ?y profile:textDescription ?x }";
 
 		Query querySearchName = QueryFactory.create(queryStringSearchName);
 
@@ -1931,7 +2072,8 @@ public class SFinterface {
 			m.read(serviceURL);
 		}
 
-		String queryStringSearchName = "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>" + "select ?x where { ?x service:presents <" + serviceProfile + "> }";
+		String queryStringSearchName = "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>"
+				+ "select ?x where { ?x service:presents <" + serviceProfile + "> }";
 
 		Query querySearchName = QueryFactory.create(queryStringSearchName);
 
@@ -1982,7 +2124,9 @@ public class SFinterface {
 			m.read(serviceURL);
 		}
 
-		String queryStringSearchName = "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>" + "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" + "select ?x where { ?x  a process:AtomicProcess }";
+		String queryStringSearchName = "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>"
+				+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
+				+ "select ?x where { ?x  a process:AtomicProcess }";
 
 		Query querySearchName = QueryFactory.create(queryStringSearchName);
 
@@ -2035,7 +2179,8 @@ public class SFinterface {
 			m.read(serviceURL);
 		}
 
-		String queryStringSearchName = "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>" + "select ?x where { ?x service:supportedBy <" + serviceURI + "> }";
+		String queryStringSearchName = "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>"
+				+ "select ?x where { ?x service:supportedBy <" + serviceURI + "> }";
 
 		Query querySearchName = QueryFactory.create(queryStringSearchName);
 
@@ -2087,7 +2232,8 @@ public class SFinterface {
 			m.read(serviceURL);
 		}
 
-		String queryStringSearchName = "prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>" + "select ?x where { <" + groundingURI + "> grounding:hasAtomicProcessGrounding ?x }";
+		String queryStringSearchName = "prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>"
+				+ "select ?x where { <" + groundingURI + "> grounding:hasAtomicProcessGrounding ?x }";
 
 		Query querySearchName = QueryFactory.create(queryStringSearchName);
 
@@ -2138,7 +2284,8 @@ public class SFinterface {
 			m.read(serviceURL);
 		}
 
-		String queryStringSearchName = "prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>" + "select ?x where { <" + atomicProcessGrounding + "> grounding:wsdlDocument ?x }";
+		String queryStringSearchName = "prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>"
+				+ "select ?x where { <" + atomicProcessGrounding + "> grounding:wsdlDocument ?x }";
 
 		Query querySearchName = QueryFactory.create(queryStringSearchName);
 
@@ -2182,7 +2329,8 @@ public class SFinterface {
 		// load the service profile in the database
 		m.read(serviceURL);
 
-		String queryStringSearchName = "prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>" + "select ?x where { ?y grounding:wsdlDocument ?x }";
+		String queryStringSearchName = "prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>"
+				+ "select ?x where { ?y grounding:wsdlDocument ?x }";
 
 		Query querySearchName = QueryFactory.create(queryStringSearchName);
 
@@ -2232,7 +2380,9 @@ public class SFinterface {
 		// load the service profile in the database
 		m.read(serviceURL);
 
-		String queryStringSearchName = "prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>" + "prefix xsd: <http://www.w3.org/2001/XMLSchema#>" + "select ?x where { ?x grounding:wsdlDocument " + WSDLDoc + " }";
+		String queryStringSearchName = "prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>"
+				+ "prefix xsd: <http://www.w3.org/2001/XMLSchema#>" + "select ?x where { ?x grounding:wsdlDocument "
+				+ WSDLDoc + " }";
 
 		Query querySearchName = QueryFactory.create(queryStringSearchName);
 
@@ -2281,7 +2431,9 @@ public class SFinterface {
 		// load the service profile in the database
 		m.read(serviceURL);
 
-		String queryStringSearchName = "prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>" + "prefix xsd: <http://www.w3.org/2001/XMLSchema#>" + "select ?x where { ?x grounding:hasAtomicProcessGrounding <" + atomicGroundingURI + "> }";
+		String queryStringSearchName = "prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>"
+				+ "prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
+				+ "select ?x where { ?x grounding:hasAtomicProcessGrounding <" + atomicGroundingURI + "> }";
 
 		Query querySearchName = QueryFactory.create(queryStringSearchName);
 
@@ -2334,17 +2486,24 @@ public class SFinterface {
 			tokenAtomicProcess.nextToken();
 			String atomicProcessGroundingName = tokenAtomicProcess.nextToken();// baseURI+"#"+tokenAtomicProcess.nextToken();
 
-			groundsOWLS += "<grounding:WsdlGrounding rdf:ID=\"" + groundingURIName + "\">\n" + // "<grounding:WsdlGrounding rdf:ID=\""+baseURI+"#"+groundingURIName+"\">\n"+
-					"\t<service:supportedBy rdf:resource=\"" + "#" + serviceURI + "\"/> \n" + "\t<grounding:hasAtomicProcessGrounding>\n" + "\t<grounding:WsdlAtomicProcessGrounding rdf:ID=\"" + atomicProcessGroundingName + "\"/>" + "\t</grounding:hasAtomicProcessGrounding>\n" + "</grounding:WsdlGrounding>\n";
+			groundsOWLS += "<grounding:WsdlGrounding rdf:ID=\""
+					+ groundingURIName
+					+ "\">\n"
+					+ // "<grounding:WsdlGrounding rdf:ID=\""+baseURI+"#"+groundingURIName+"\">\n"+
+					"\t<service:supportedBy rdf:resource=\"" + "#" + serviceURI + "\"/> \n"
+					+ "\t<grounding:hasAtomicProcessGrounding>\n" + "\t<grounding:WsdlAtomicProcessGrounding rdf:ID=\""
+					+ atomicProcessGroundingName + "\"/>" + "\t</grounding:hasAtomicProcessGrounding>\n"
+					+ "</grounding:WsdlGrounding>\n";
 
-			groundsOWLS += "<grounding:WsdlAtomicProcessGrounding rdf:about=\"" + "#" + atomicProcessGroundingName + "\">\n" + "\t<grounding:wsdlDocument rdf:datatype=\"" + wsdlDatatype + "\"\n>" + // the
-																																																		// symbol
-																																																		// ">"
-																																																		// must
-																																																		// go
-																																																		// after
-																																																		// the
-																																																		// "\n",
+			groundsOWLS += "<grounding:WsdlAtomicProcessGrounding rdf:about=\"" + "#" + atomicProcessGroundingName
+					+ "\">\n" + "\t<grounding:wsdlDocument rdf:datatype=\"" + wsdlDatatype + "\"\n>" + // the
+																										// symbol
+																										// ">"
+																										// must
+																										// go
+																										// after
+																										// the
+																										// "\n",
 					// if not, when Jena adds the info to the DB puts some ""
 					// and spaces that causes problems to queries
 					wsdlDoc + "</grounding:wsdlDocument>\n";
@@ -2355,11 +2514,14 @@ public class SFinterface {
 			StringTokenizer inputMessageTok = new StringTokenizer(groundInputMessage, "^^");
 			String inputMessage = inputMessageTok.nextToken();
 			String inputMessageDatatype = inputMessageTok.nextToken();
-			groundsOWLS += "\t<grounding:wsdlInputMessage rdf:datatype=\"" + inputMessageDatatype + "\">" + inputMessage + "</grounding:wsdlInputMessage>\n";
-			StringTokenizer outputMessageTok = new StringTokenizer(getGroundingOutputMessage(atomicProcessGrounding, null), "^^");
+			groundsOWLS += "\t<grounding:wsdlInputMessage rdf:datatype=\"" + inputMessageDatatype + "\">"
+					+ inputMessage + "</grounding:wsdlInputMessage>\n";
+			StringTokenizer outputMessageTok = new StringTokenizer(getGroundingOutputMessage(atomicProcessGrounding,
+					null), "^^");
 			String outputMessage = outputMessageTok.nextToken();
 			String outputMessageDatatype = outputMessageTok.nextToken();
-			groundsOWLS += "\t<grounding:wsdlOutputMessage rdf:datatype=\"" + outputMessageDatatype + "\">" + outputMessage + "</grounding:wsdlOutputMessage>\n";
+			groundsOWLS += "\t<grounding:wsdlOutputMessage rdf:datatype=\"" + outputMessageDatatype + "\">"
+					+ outputMessage + "</grounding:wsdlOutputMessage>\n";
 
 			ArrayList<GroundingInOutput> groundInputs = getGroundingInOutputs(atomicProcessGrounding, null, true);
 			Iterator<GroundingInOutput> iterIns = groundInputs.iterator();
@@ -2372,9 +2534,11 @@ public class SFinterface {
 				StringTokenizer messagePartTok = new StringTokenizer(in.getWsdlMessagePart(), "^^");
 				String messagePart = messagePartTok.nextToken();
 				String messagePartDatatype = messagePartTok.nextToken();
-				groundsOWLS += "\t\t<grounding:wsdlMessagePart rdf:datatype=\"" + messagePartDatatype + "\">" + messagePart + "</grounding:wsdlMessagePart>\n";
+				groundsOWLS += "\t\t<grounding:wsdlMessagePart rdf:datatype=\"" + messagePartDatatype + "\">"
+						+ messagePart + "</grounding:wsdlMessagePart>\n";
 
-				groundsOWLS += "\t\t<grounding:xsltTransformationString>" + in.getXsltTransformationString() + "</grounding:xsltTransformationString>\n";
+				groundsOWLS += "\t\t<grounding:xsltTransformationString>" + in.getXsltTransformationString()
+						+ "</grounding:xsltTransformationString>\n";
 				groundsOWLS += "\t\t</grounding:WsdlInputMessageMap>\n\t</grounding:wsdlInput>\n";
 			}
 
@@ -2389,9 +2553,11 @@ public class SFinterface {
 				StringTokenizer messagePartTok = new StringTokenizer(out.getWsdlMessagePart(), "^^");
 				String messagePart = messagePartTok.nextToken();
 				String messagePartDatatype = messagePartTok.nextToken();
-				groundsOWLS += "\t\t<grounding:wsdlMessagePart rdf:datatype=\"" + messagePartDatatype + "\">" + messagePart + "</grounding:wsdlMessagePart>\n";
+				groundsOWLS += "\t\t<grounding:wsdlMessagePart rdf:datatype=\"" + messagePartDatatype + "\">"
+						+ messagePart + "</grounding:wsdlMessagePart>\n";
 
-				groundsOWLS += "\t\t<grounding:xsltTransformationString>" + out.getXsltTransformationString() + "</grounding:xsltTransformationString>\n";
+				groundsOWLS += "\t\t<grounding:xsltTransformationString>" + out.getXsltTransformationString()
+						+ "</grounding:xsltTransformationString>\n";
 				groundsOWLS += "\t\t</grounding:WsdlOutputMessageMap>\n\t</grounding:wsdlOutput>\n";
 			}
 
@@ -2400,13 +2566,15 @@ public class SFinterface {
 			String operation = operationTok.nextToken();
 			String operationDatatype = operationTok.nextToken();
 			groundsOWLS += "\t<grounding:wsdlOperation>\n\t<grounding:WsdlOperationRef>\n";
-			groundsOWLS += "\t<grounding:operation rdf:datatype=\"" + operationDatatype + "\">" + operation + "</grounding:operation>\n";
+			groundsOWLS += "\t<grounding:operation rdf:datatype=\"" + operationDatatype + "\">" + operation
+					+ "</grounding:operation>\n";
 
 			String groundPortType = getGroundPortType(atomicProcessGrounding, null);
 			StringTokenizer portTypeTok = new StringTokenizer(groundPortType, "^^");
 			String portType = portTypeTok.nextToken();
 			String portTypeDatatype = portTypeTok.nextToken();
-			groundsOWLS += "\t<grounding:portType rdf:datatype=\"" + portTypeDatatype + "\">" + portType + "</grounding:portType>\n";
+			groundsOWLS += "\t<grounding:portType rdf:datatype=\"" + portTypeDatatype + "\">" + portType
+					+ "</grounding:portType>\n";
 			groundsOWLS += "\t</grounding:WsdlOperationRef>\n\t</grounding:wsdlOperation>\n";
 
 			groundsOWLS += "</grounding:WsdlAtomicProcessGrounding>\n";
@@ -2434,7 +2602,8 @@ public class SFinterface {
 	 * @return a {@link String} containing the specification in OWL-S of all
 	 *         groundings of the given service URL
 	 */
-	private String getGroundingOWLSfromFile(String serviceProfile, String serviceURL, String registeredServiceURI, String wsdlToRegister, String baseURI) {
+	private String getGroundingOWLSfromFile(String serviceProfile, String serviceURL, String registeredServiceURI,
+			String wsdlToRegister, String baseURI) {
 		String groundsOWLS = "";
 
 		String atomicProcessGrounding = getAtomicGroundingURIFromWSDLDocumentFromServiceURL(wsdlToRegister, serviceURL);
@@ -2456,17 +2625,24 @@ public class SFinterface {
 		tokenAtomicProcess.nextToken();
 		String atomicProcessGroundingName = tokenAtomicProcess.nextToken();// baseURI+"#"+tokenAtomicProcess.nextToken();
 
-		groundsOWLS += "<grounding:WsdlGrounding rdf:ID=\"" + groundingURIName + "\">\n" + // "<grounding:WsdlGrounding rdf:ID=\""+baseURI+"#"+groundingURIName+"\">\n"+
-				"<service:supportedBy rdf:resource=\"" + "#" + registeredServiceURIName + "\"/> \n" + "<grounding:hasAtomicProcessGrounding>\n" + "<grounding:WsdlAtomicProcessGrounding rdf:ID=\"" + atomicProcessGroundingName + "\"/>" + "</grounding:hasAtomicProcessGrounding>\n" + "</grounding:WsdlGrounding>\n";
+		groundsOWLS += "<grounding:WsdlGrounding rdf:ID=\""
+				+ groundingURIName
+				+ "\">\n"
+				+ // "<grounding:WsdlGrounding rdf:ID=\""+baseURI+"#"+groundingURIName+"\">\n"+
+				"<service:supportedBy rdf:resource=\"" + "#" + registeredServiceURIName + "\"/> \n"
+				+ "<grounding:hasAtomicProcessGrounding>\n" + "<grounding:WsdlAtomicProcessGrounding rdf:ID=\""
+				+ atomicProcessGroundingName + "\"/>" + "</grounding:hasAtomicProcessGrounding>\n"
+				+ "</grounding:WsdlGrounding>\n";
 
-		groundsOWLS += "<grounding:WsdlAtomicProcessGrounding rdf:about=\"" + "#" + atomicProcessGroundingName + "\">\n" + "<grounding:wsdlDocument rdf:datatype=\"" + wsdlDatatype + "\"\n>" + // the
-																																																// symbol
-																																																// ">"
-																																																// must
-																																																// go
-																																																// after
-																																																// the
-																																																// "\n",
+		groundsOWLS += "<grounding:WsdlAtomicProcessGrounding rdf:about=\"" + "#" + atomicProcessGroundingName
+				+ "\">\n" + "<grounding:wsdlDocument rdf:datatype=\"" + wsdlDatatype + "\"\n>" + // the
+																									// symbol
+																									// ">"
+																									// must
+																									// go
+																									// after
+																									// the
+																									// "\n",
 				// if not, when Jena adds the info to the DB puts some "" and
 				// spaces that causes problems to queries
 				wsdlDoc + "</grounding:wsdlDocument>\n";
@@ -2477,11 +2653,14 @@ public class SFinterface {
 		StringTokenizer inputMessageTok = new StringTokenizer(groundInputMessage, "^^");
 		String inputMessage = inputMessageTok.nextToken();
 		String inputMessageDatatype = inputMessageTok.nextToken();
-		groundsOWLS += "<grounding:wsdlInputMessage rdf:datatype=\"" + inputMessageDatatype + "\">" + inputMessage + "</grounding:wsdlInputMessage>\n";
-		StringTokenizer outputMessageTok = new StringTokenizer(getGroundingOutputMessage(atomicProcessGrounding, serviceURL), "^^");
+		groundsOWLS += "<grounding:wsdlInputMessage rdf:datatype=\"" + inputMessageDatatype + "\">" + inputMessage
+				+ "</grounding:wsdlInputMessage>\n";
+		StringTokenizer outputMessageTok = new StringTokenizer(getGroundingOutputMessage(atomicProcessGrounding,
+				serviceURL), "^^");
 		String outputMessage = outputMessageTok.nextToken();
 		String outputMessageDatatype = outputMessageTok.nextToken();
-		groundsOWLS += "<grounding:wsdlOutputMessage rdf:datatype=\"" + outputMessageDatatype + "\">" + outputMessage + "</grounding:wsdlOutputMessage>\n";
+		groundsOWLS += "<grounding:wsdlOutputMessage rdf:datatype=\"" + outputMessageDatatype + "\">" + outputMessage
+				+ "</grounding:wsdlOutputMessage>\n";
 
 		ArrayList<GroundingInOutput> groundInputs = getGroundingInOutputs(atomicProcessGrounding, serviceURL, true);
 		Iterator<GroundingInOutput> iterIns = groundInputs.iterator();
@@ -2494,9 +2673,11 @@ public class SFinterface {
 			StringTokenizer messagePartTok = new StringTokenizer(in.getWsdlMessagePart(), "^^");
 			String messagePart = messagePartTok.nextToken();
 			String messagePartDatatype = messagePartTok.nextToken();
-			groundsOWLS += "<grounding:wsdlMessagePart rdf:datatype=\"" + messagePartDatatype + "\">" + messagePart + "</grounding:wsdlMessagePart>\n";
+			groundsOWLS += "<grounding:wsdlMessagePart rdf:datatype=\"" + messagePartDatatype + "\">" + messagePart
+					+ "</grounding:wsdlMessagePart>\n";
 
-			groundsOWLS += "<grounding:xsltTransformationString>" + in.getXsltTransformationString() + "</grounding:xsltTransformationString>\n";
+			groundsOWLS += "<grounding:xsltTransformationString>" + in.getXsltTransformationString()
+					+ "</grounding:xsltTransformationString>\n";
 			groundsOWLS += "</grounding:WsdlInputMessageMap>\n</grounding:wsdlInput>\n";
 		}
 
@@ -2511,9 +2692,11 @@ public class SFinterface {
 			StringTokenizer messagePartTok = new StringTokenizer(out.getWsdlMessagePart(), "^^");
 			String messagePart = messagePartTok.nextToken();
 			String messagePartDatatype = messagePartTok.nextToken();
-			groundsOWLS += "<grounding:wsdlMessagePart rdf:datatype=\"" + messagePartDatatype + "\">" + messagePart + "</grounding:wsdlMessagePart>\n";
+			groundsOWLS += "<grounding:wsdlMessagePart rdf:datatype=\"" + messagePartDatatype + "\">" + messagePart
+					+ "</grounding:wsdlMessagePart>\n";
 
-			groundsOWLS += "<grounding:xsltTransformationString>" + out.getXsltTransformationString() + "</grounding:xsltTransformationString>\n";
+			groundsOWLS += "<grounding:xsltTransformationString>" + out.getXsltTransformationString()
+					+ "</grounding:xsltTransformationString>\n";
 			groundsOWLS += "</grounding:WsdlOutputMessageMap>\n</grounding:wsdlOutput>\n";
 		}
 
@@ -2522,13 +2705,15 @@ public class SFinterface {
 		String operation = operationTok.nextToken();
 		String operationDatatype = operationTok.nextToken();
 		groundsOWLS += "<grounding:wsdlOperation>\n<grounding:WsdlOperationRef>\n";
-		groundsOWLS += "<grounding:operation rdf:datatype=\"" + operationDatatype + "\">" + operation + "</grounding:operation>\n";
+		groundsOWLS += "<grounding:operation rdf:datatype=\"" + operationDatatype + "\">" + operation
+				+ "</grounding:operation>\n";
 
 		String groundPortType = getGroundPortType(atomicProcessGrounding, serviceURL);
 		StringTokenizer portTypeTok = new StringTokenizer(groundPortType, "^^");
 		String portType = portTypeTok.nextToken();
 		String portTypeDatatype = portTypeTok.nextToken();
-		groundsOWLS += "<grounding:portType rdf:datatype=\"" + portTypeDatatype + "\">" + portType + "</grounding:portType>\n";
+		groundsOWLS += "<grounding:portType rdf:datatype=\"" + portTypeDatatype + "\">" + portType
+				+ "</grounding:portType>\n";
 		groundsOWLS += "</grounding:WsdlOperationRef>\n</grounding:wsdlOperation>\n";
 
 		groundsOWLS += "</grounding:WsdlAtomicProcessGrounding>\n";
@@ -2564,7 +2749,8 @@ public class SFinterface {
 			m.read(serviceURL);
 		}
 
-		String queryStringSearchName = "prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>" + "select ?x where { <" + atomicProcessGrounding + "> grounding:wsdlInputMessage ?x }";
+		String queryStringSearchName = "prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>"
+				+ "select ?x where { <" + atomicProcessGrounding + "> grounding:wsdlInputMessage ?x }";
 
 		Query querySearchName = QueryFactory.create(queryStringSearchName);
 
@@ -2616,7 +2802,8 @@ public class SFinterface {
 			m.read(serviceURL);
 		}
 
-		String queryStringSearchName = "prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>" + "select ?x where { <" + atomicProcessGrounding + "> grounding:wsdlOutputMessage ?x }";
+		String queryStringSearchName = "prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>"
+				+ "select ?x where { <" + atomicProcessGrounding + "> grounding:wsdlOutputMessage ?x }";
 
 		Query querySearchName = QueryFactory.create(queryStringSearchName);
 
@@ -2667,7 +2854,8 @@ public class SFinterface {
 			m.read(serviceURL);
 		}
 
-		String queryStringSearchName = "prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>" + "select ?x where { <" + atomicProcessGrounding + "> grounding:owlsProcess ?x }";
+		String queryStringSearchName = "prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>"
+				+ "select ?x where { <" + atomicProcessGrounding + "> grounding:owlsProcess ?x }";
 
 		Query querySearchName = QueryFactory.create(queryStringSearchName);
 
@@ -2708,7 +2896,8 @@ public class SFinterface {
 	 *         of the grounding inputs or outputs of the given atomic process
 	 *         grounding
 	 */
-	private ArrayList<GroundingInOutput> getGroundingInOutputs(String atomicProcessGrounding, String serviceURL, boolean input) {
+	private ArrayList<GroundingInOutput> getGroundingInOutputs(String atomicProcessGrounding, String serviceURL,
+			boolean input) {
 
 		ArrayList<GroundingInOutput> groundInputs = new ArrayList<GroundingInOutput>();
 
@@ -2733,7 +2922,12 @@ public class SFinterface {
 			wsdlInputOutput = "grounding:wsdlOutput";
 		}
 
-		String queryStringSearchName = "prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>" + "select ?x ?y ?z where { <" + atomicProcessGrounding + "> " + wsdlInputOutput + "[  grounding:owlsParameter ?x ; grounding:wsdlMessagePart ?y ; grounding:xsltTransformationString ?z ] }";
+		String queryStringSearchName = "prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>"
+				+ "select ?x ?y ?z where { <"
+				+ atomicProcessGrounding
+				+ "> "
+				+ wsdlInputOutput
+				+ "[  grounding:owlsParameter ?x ; grounding:wsdlMessagePart ?y ; grounding:xsltTransformationString ?z ] }";
 
 		Query querySearchName = QueryFactory.create(queryStringSearchName);
 
@@ -2748,7 +2942,8 @@ public class SFinterface {
 				owlsParameter = qSol.getResource("x").toString();
 				wsdlMessagePart = qSol.getLiteral("y").toString();
 				xsltTransformationString = qSol.getLiteral("z").toString();
-				GroundingInOutput groundIn = new GroundingInOutput(owlsParameter, wsdlMessagePart, xsltTransformationString);
+				GroundingInOutput groundIn = new GroundingInOutput(owlsParameter, wsdlMessagePart,
+						xsltTransformationString);
 				groundInputs.add(groundIn);
 			}
 
@@ -2790,7 +2985,9 @@ public class SFinterface {
 			m.read(serviceURL);
 		}
 
-		String queryStringSearchName = "prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>" + "select ?x where { <" + atomicProcessGrounding + "> grounding:wsdlOperation" + "[  grounding:operation ?x ; ] }";
+		String queryStringSearchName = "prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>"
+				+ "select ?x where { <" + atomicProcessGrounding + "> grounding:wsdlOperation"
+				+ "[  grounding:operation ?x ; ] }";
 
 		Query querySearchName = QueryFactory.create(queryStringSearchName);
 
@@ -2841,7 +3038,9 @@ public class SFinterface {
 			m.read(serviceURL);
 		}
 
-		String queryStringSearchName = "prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>" + "select ?x where { <" + atomicProcessGrounding + "> grounding:wsdlOperation" + "[  grounding:portType ?x ; ] }";
+		String queryStringSearchName = "prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>"
+				+ "select ?x where { <" + atomicProcessGrounding + "> grounding:wsdlOperation"
+				+ "[  grounding:portType ?x ; ] }";
 
 		Query querySearchName = QueryFactory.create(queryStringSearchName);
 
@@ -2895,7 +3094,9 @@ public class SFinterface {
 			serviceProfile = getProfileURIfromURL(serviceURL);
 		}
 
-		String queryStringSearchName = "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" + "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" + "select ?x where { " + "<" + serviceProfile + ">" + " profile:contactInformation ?x }";
+		String queryStringSearchName = "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
+				+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" + "select ?x where { " + "<"
+				+ serviceProfile + ">" + " profile:contactInformation ?x }";
 
 		Query querySearchName = QueryFactory.create(queryStringSearchName);
 
@@ -2943,7 +3144,9 @@ public class SFinterface {
 			m.read(serviceURL);
 		}
 
-		String queryStringSearchName = "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" + "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" + "select ?x where { " + "<" + serviceProfile + ">" + " profile:contactInformation ?x }";
+		String queryStringSearchName = "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
+				+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" + "select ?x where { " + "<"
+				+ serviceProfile + ">" + " profile:contactInformation ?x }";
 
 		Query querySearchName = QueryFactory.create(queryStringSearchName);
 
@@ -2966,7 +3169,15 @@ public class SFinterface {
 				tokenProvURI.nextToken();
 				String providerName = tokenProvURI.nextToken();
 
-				providersOWLS += "<profile:contactInformation>" + "\n" + "\t<provider:Provider rdf:ID=\"" + providerName + "\">" + "\n" + "\t\t<provider:entityID rdf:datatype=\"^^xsd;string\">" + entityID + "</provider:entityID>" + "\n" + "\t\t<provider:entityType rdf:datatype=\"^^xsd;string\">" + entityType + "</provider:entityType>" + "\n" + "\t\t<provider:language rdf:datatype=\"^^xsd;string\">" + language + "</provider:language>" + "\n" + "\t\t<provider:performative rdf:datatype=\"^^xsd;string\">" + performative + "</provider:performative>" + "\n" + "\t</provider:Provider>" + "\n" + "</profile:contactInformation>" + "\n";
+				providersOWLS += "<profile:contactInformation>" + "\n" + "\t<provider:Provider rdf:ID=\""
+						+ providerName + "\">" + "\n" + "\t\t<provider:entityID rdf:datatype=\"^^xsd;string\">"
+						+ entityID + "</provider:entityID>" + "\n"
+						+ "\t\t<provider:entityType rdf:datatype=\"^^xsd;string\">" + entityType
+						+ "</provider:entityType>" + "\n" + "\t\t<provider:language rdf:datatype=\"^^xsd;string\">"
+						+ language + "</provider:language>" + "\n"
+						+ "\t\t<provider:performative rdf:datatype=\"^^xsd;string\">" + performative
+						+ "</provider:performative>" + "\n" + "\t</provider:Provider>" + "\n"
+						+ "</profile:contactInformation>" + "\n";
 
 			}
 
@@ -3010,7 +3221,10 @@ public class SFinterface {
 			m.read(serviceURL);
 		}
 
-		String queryStringSearchName2 = "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" + "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" + "prefix provider: <http://127.0.0.1/ontology/provider.owl#>" + "select ?x where { <" + providerURI + "> provider:" + parameter + " ?x }";
+		String queryStringSearchName2 = "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
+				+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
+				+ "prefix provider: <http://127.0.0.1/ontology/provider.owl#>" + "select ?x where { <" + providerURI
+				+ "> provider:" + parameter + " ?x }";
 
 		Query querySearchName2 = QueryFactory.create(queryStringSearchName2);
 
@@ -3110,11 +3324,26 @@ public class SFinterface {
 		OntModel m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
 
 		// Delete profile tuples where the property is profile
-		String update = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>" + "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>" + "prefix proc: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" + "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" + " delete {?x ?y ?z}" + " where { <" + serviceProfile + "> ?y ?z" + " filter ( ?y = profile:hasInput " + "|| ?y = profile:hasOutput " + "|| ?y = profile:serviceName " + "|| ?y = profile:textDescription " + "|| ?y = profile:has_process " + "|| ?y = service:isPresentedBy " + "|| ?y = service:presents " + "|| ?y = profile:contactInformation " + "|| ?z = profile:Profile " + ")" + "?x ?y ?z}";
+		String update = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
+				+ "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>"
+				+ "prefix proc: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
+				+ "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" + " delete {?x ?y ?z}"
+				+ " where { <" + serviceProfile + "> ?y ?z" + " filter ( ?y = profile:hasInput "
+				+ "|| ?y = profile:hasOutput " + "|| ?y = profile:serviceName " + "|| ?y = profile:textDescription "
+				+ "|| ?y = profile:has_process " + "|| ?y = service:isPresentedBy " + "|| ?y = service:presents "
+				+ "|| ?y = profile:contactInformation " + "|| ?z = profile:Profile " + ")" + "?x ?y ?z}";
 
-		String update2 = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>" + "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>" + "prefix proc: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" + "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" + "delete {?x ?y ?z}" + " where { <" + serviceURI + "> ?y ?z" + " filter ( ?z = service:Service " + "|| ?y = service:presents " + ")" + "?x ?y ?z}";
+		String update2 = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
+				+ "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>"
+				+ "prefix proc: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
+				+ "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" + "delete {?x ?y ?z}"
+				+ " where { <" + serviceURI + "> ?y ?z" + " filter ( ?z = service:Service "
+				+ "|| ?y = service:presents " + ")" + "?x ?y ?z}";
 
-		String update3 = "prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>" + "prefix owl: <http://www.w3.org/2002/07/owl#>" + "delete {?x ?y ?z} " + "where" + "{ <" + baseURL + "> ?y ?z" + " filter ( ( ?y = owl:imports" + "|| ?z = owl:Ontology )" + "&& ?x = <" + baseURL + ">" + ")" + "?x ?y ?z}";
+		String update3 = "prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
+				+ "prefix owl: <http://www.w3.org/2002/07/owl#>" + "delete {?x ?y ?z} " + "where" + "{ <" + baseURL
+				+ "> ?y ?z" + " filter ( ( ?y = owl:imports" + "|| ?z = owl:Ontology )" + "&& ?x = <" + baseURL + ">"
+				+ ")" + "?x ?y ?z}";
 
 		// Execute the query and obtain results
 		QuerySolution querysol = new QuerySolutionMap();
@@ -3139,7 +3368,12 @@ public class SFinterface {
 		Model base = maker.createModel("http://example.org/ontologias");
 		OntModel m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
 
-		String queryStringDocWSDL = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>" + "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>" + "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" + "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" + "prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>" + " select ?x " + "where {" + "<" + atomicProcessGrounding + ">" + " grounding:wsdlInputMessage ?x" + "}";
+		String queryStringDocWSDL = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
+				+ "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>"
+				+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
+				+ "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
+				+ "prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>" + " select ?x "
+				+ "where {" + "<" + atomicProcessGrounding + ">" + " grounding:wsdlInputMessage ?x" + "}";
 
 		Query querySearchName = QueryFactory.create(queryStringDocWSDL);
 
@@ -3176,7 +3410,12 @@ public class SFinterface {
 		Model base = maker.createModel("http://example.org/ontologias");
 		OntModel m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
 
-		String queryStr = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>" + "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>" + "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" + "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" + "prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>" + "select ?y " + "where {" + "?x grounding:wsdlMessagePart ?y " + "}";
+		String queryStr = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
+				+ "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>"
+				+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
+				+ "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
+				+ "prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>" + "select ?y "
+				+ "where {" + "?x grounding:wsdlMessagePart ?y " + "}";
 
 		Query query = QueryFactory.create(queryStr);
 
@@ -3203,7 +3442,14 @@ public class SFinterface {
 				if (wsdlInOutput.contains(baseWSDLURL)) {
 					// Delete the WsdlMessageMap tuple related with the service
 					// grounding
-					String updateWSDLMessageMap = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>" + "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>" + "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" + "prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>" + "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" + "prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>" + "delete {?x ?y ?z}" + "where" + "{?x ?y " + wsdlInOutput + " filter ( ?y = grounding:wsdlMessagePart " + ")" + "?x ?y ?z}";
+					String updateWSDLMessageMap = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
+							+ "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>"
+							+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
+							+ "prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>"
+							+ "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
+							+ "prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>" + "delete {?x ?y ?z}" + "where"
+							+ "{?x ?y " + wsdlInOutput + " filter ( ?y = grounding:wsdlMessagePart " + ")"
+							+ "?x ?y ?z}";
 
 					// Execute the query
 					QuerySolution querysol = new QuerySolutionMap();
@@ -3233,7 +3479,12 @@ public class SFinterface {
 		Model base = maker.createModel("http://example.org/ontologias");
 		OntModel m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
 
-		String queryStr = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>" + "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>" + "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" + "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" + "prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>" + "select ?y " + "where {" + "?x grounding:portType ?y " + "}";
+		String queryStr = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
+				+ "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>"
+				+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
+				+ "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
+				+ "prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>" + "select ?y "
+				+ "where {" + "?x grounding:portType ?y " + "}";
 
 		Query query = QueryFactory.create(queryStr);
 
@@ -3260,7 +3511,13 @@ public class SFinterface {
 				if (wsdlInOutput.contains(baseWSDLURL)) {
 					// Delete the WsdlMessageMap tuple related with the service
 					// grounding
-					String updateWSDLMessageMap = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>" + "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>" + "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" + "prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>" + "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" + "prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>" + "delete {?x ?y ?z}" + "where" + "{?x ?y " + wsdlInOutput + " filter ( ?y = grounding:portType " + ")" + "?x ?y ?z}";
+					String updateWSDLMessageMap = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
+							+ "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>"
+							+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
+							+ "prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>"
+							+ "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
+							+ "prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>" + "delete {?x ?y ?z}" + "where"
+							+ "{?x ?y " + wsdlInOutput + " filter ( ?y = grounding:portType " + ")" + "?x ?y ?z}";
 
 					// Execute the query
 					QuerySolution querysol = new QuerySolutionMap();
@@ -3290,7 +3547,12 @@ public class SFinterface {
 		Model base = maker.createModel("http://example.org/ontologias");
 		OntModel m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
 
-		String queryStr = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>" + "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>" + "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" + "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" + "prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>" + "select ?y " + "where {" + "?x grounding:operation ?y " + "}";
+		String queryStr = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
+				+ "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>"
+				+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
+				+ "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
+				+ "prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>" + "select ?y "
+				+ "where {" + "?x grounding:operation ?y " + "}";
 
 		Query query = QueryFactory.create(queryStr);
 
@@ -3317,7 +3579,13 @@ public class SFinterface {
 				if (wsdlInOutput.contains(baseWSDLURL)) {
 					// Delete the WsdlMessageMap tuple related with the service
 					// grounding
-					String updateWSDLMessageMap = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>" + "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>" + "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" + "prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>" + "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" + "prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>" + "delete {?x ?y ?z}" + "where" + "{?x ?y " + wsdlInOutput + " filter ( ?y = grounding:operation " + ")" + "?x ?y ?z}";
+					String updateWSDLMessageMap = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
+							+ "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>"
+							+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
+							+ "prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>"
+							+ "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
+							+ "prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>" + "delete {?x ?y ?z}" + "where"
+							+ "{?x ?y " + wsdlInOutput + " filter ( ?y = grounding:operation " + ")" + "?x ?y ?z}";
 
 					// Execute the query
 					QuerySolution querysol = new QuerySolutionMap();
@@ -3350,7 +3618,12 @@ public class SFinterface {
 		Model base = maker.createModel("http://example.org/ontologias");
 		OntModel m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
 
-		String queryStr = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>" + "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>" + "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" + "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" + "prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>" + " select ?x " + "where { <" + serviceProcess + "> process:hasInput ?x }";
+		String queryStr = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
+				+ "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>"
+				+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
+				+ "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
+				+ "prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>" + " select ?x "
+				+ "where { <" + serviceProcess + "> process:hasInput ?x }";
 
 		Query query = QueryFactory.create(queryStr);
 
@@ -3369,10 +3642,23 @@ public class SFinterface {
 				}
 
 				// Delete input tuples related with the service process
-				String updateInput = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>" + "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>" + "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" + "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" + "prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>" + "delete {?x ?y ?z}" + "where" + "{ <" + processInput + "> ?y ?z" + " filter ( ?y = rdfs:label " + "|| ?y = process:parameterType " + "|| ?z = process:Input " + ")" + "?x ?y ?z}";
+				String updateInput = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
+						+ "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>"
+						+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
+						+ "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
+						+ "prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>" + "delete {?x ?y ?z}" + "where"
+						+ "{ <" + processInput + "> ?y ?z" + " filter ( ?y = rdfs:label "
+						+ "|| ?y = process:parameterType " + "|| ?z = process:Input " + ")" + "?x ?y ?z}";
 
 				// Delete the output tuple related with the service grounding
-				String updateGroundInput = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>" + "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>" + "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" + "prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>" + "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" + "prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>" + "delete {?x ?y ?z}" + "where" + "{?x ?y <" + processInput + ">" + " filter ( ?y = grounding:owlsParameter " + ")" + "?x ?y ?z}";
+				String updateGroundInput = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
+						+ "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>"
+						+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
+						+ "prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>"
+						+ "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
+						+ "prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>" + "delete {?x ?y ?z}" + "where"
+						+ "{?x ?y <" + processInput + ">" + " filter ( ?y = grounding:owlsParameter " + ")"
+						+ "?x ?y ?z}";
 
 				// Execute the query
 				QuerySolution querysol = new QuerySolutionMap();
@@ -3395,7 +3681,12 @@ public class SFinterface {
 		Model base = maker.createModel("http://example.org/ontologias");
 		OntModel m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
 
-		String queryStr = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>" + "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>" + "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" + "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" + "prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>" + " select ?x " + "where { <" + serviceProcess + "> process:hasOutput ?x }";
+		String queryStr = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
+				+ "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>"
+				+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
+				+ "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
+				+ "prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>" + " select ?x "
+				+ "where { <" + serviceProcess + "> process:hasOutput ?x }";
 
 		Query query = QueryFactory.create(queryStr);
 
@@ -3412,10 +3703,23 @@ public class SFinterface {
 				}
 
 				// Delete the output tuple related with the service process
-				String updateOutput = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>" + "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>" + "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" + "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" + "prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>" + "delete {?x ?y ?z}" + "where" + "{ <" + processOutput + "> ?y ?z" + " filter ( ?y = rdfs:label " + "|| ?y = process:parameterType " + "|| ?z = process:Output " + ")" + "?x ?y ?z}";
+				String updateOutput = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
+						+ "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>"
+						+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
+						+ "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
+						+ "prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>" + "delete {?x ?y ?z}" + "where"
+						+ "{ <" + processOutput + "> ?y ?z" + " filter ( ?y = rdfs:label "
+						+ "|| ?y = process:parameterType " + "|| ?z = process:Output " + ")" + "?x ?y ?z}";
 
 				// Delete the output tuple related with the service grounding
-				String updateGroundOutput = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>" + "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>" + "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" + "prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>" + "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" + "prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>" + "delete {?x ?y ?z}" + "where" + "{?x ?y <" + processOutput + ">" + " filter ( ?y = grounding:owlsParameter " + ")" + "?x ?y ?z}";
+				String updateGroundOutput = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
+						+ "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>"
+						+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
+						+ "prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>"
+						+ "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
+						+ "prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>" + "delete {?x ?y ?z}" + "where"
+						+ "{?x ?y <" + processOutput + ">" + " filter ( ?y = grounding:owlsParameter " + ")"
+						+ "?x ?y ?z}";
 
 				// Execute the query
 				QuerySolution querysol = new QuerySolutionMap();
@@ -3441,12 +3745,37 @@ public class SFinterface {
 		OntModel m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
 
 		// Deletes Query Strings
-		String updateGround = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>" + "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>" + "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" + "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" + "prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>" + "prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>" + "delete {?x ?y ?z .}" + "where" + "{ <" + grounding + "> ?y ?z ." + " filter ( ?y = grounding:owlsProcess" + "|| ?y = grounding:hasAtomicProcessGrounding " + "|| ?y = service:supportedBy " + "|| ?z = grounding:WsdlGrounding " + ")" + "?x ?y ?z .}";
+		String updateGround = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
+				+ "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>"
+				+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
+				+ "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
+				+ "prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>"
+				+ "prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>" + "delete {?x ?y ?z .}" + "where" + "{ <"
+				+ grounding + "> ?y ?z ." + " filter ( ?y = grounding:owlsProcess"
+				+ "|| ?y = grounding:hasAtomicProcessGrounding " + "|| ?y = service:supportedBy "
+				+ "|| ?z = grounding:WsdlGrounding " + ")" + "?x ?y ?z .}";
 
-		String updateGroundWSDL = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>" + "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>" + "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" + "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" + "prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>" + "prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>" + "delete {?x ?y ?z .}" + "where" + "{ <" + atomicProcessGrounding + "> ?y ?z ." + " filter ( ?y = grounding:owlsProcess" + "|| ?y = grounding:wsdlDocument " + "|| ?y = grounding:wsdlInput " + "|| ?y = grounding:wsdlInputMessage " + "|| ?y = grounding:wsdlOperation " + "|| ?y = grounding:wsdlOutput " + "|| ?y = grounding:wsdlOutputMessage "
-				+ "|| ?y = grounding:xsltTransformationString " + "|| ?z = grounding:WsdlInputMessageMap " + "|| ?z = grounding:WsdlOutputMessageMap " + "|| ?z = grounding:WsdlAtomicProcessGrounding " + ")" + "?x ?y ?z .} ";
+		String updateGroundWSDL = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
+				+ "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>"
+				+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
+				+ "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
+				+ "prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>"
+				+ "prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>" + "delete {?x ?y ?z .}" + "where" + "{ <"
+				+ atomicProcessGrounding + "> ?y ?z ." + " filter ( ?y = grounding:owlsProcess"
+				+ "|| ?y = grounding:wsdlDocument " + "|| ?y = grounding:wsdlInput "
+				+ "|| ?y = grounding:wsdlInputMessage " + "|| ?y = grounding:wsdlOperation "
+				+ "|| ?y = grounding:wsdlOutput " + "|| ?y = grounding:wsdlOutputMessage "
+				+ "|| ?y = grounding:xsltTransformationString " + "|| ?z = grounding:WsdlInputMessageMap "
+				+ "|| ?z = grounding:WsdlOutputMessageMap " + "|| ?z = grounding:WsdlAtomicProcessGrounding " + ")"
+				+ "?x ?y ?z .} ";
 
-		String updateGroundSupportsProperty = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>" + "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>" + "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" + "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" + "prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>" + "prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>" + "delete {?x ?y ?z}" + "where" + "{?x ?y <" + grounding + ">" + " filter ( ?y = service:supports" + ")" + "?x ?y ?z}";
+		String updateGroundSupportsProperty = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
+				+ "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>"
+				+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
+				+ "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
+				+ "prefix grounding: <http://www.daml.org/services/owl-s/1.1/Grounding.owl#>"
+				+ "prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>" + "delete {?x ?y ?z}" + "where" + "{?x ?y <"
+				+ grounding + ">" + " filter ( ?y = service:supports" + ")" + "?x ?y ?z}";
 
 		// Execute the deletes
 		QuerySolution querysol = new QuerySolutionMap();
@@ -3468,10 +3797,22 @@ public class SFinterface {
 		OntModel m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
 
 		// Delete the process general description
-		String updateProcess = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>" + "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>" + "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" + "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" + "prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>" + "delete {?x ?y ?z}" + "where" + "{ <" + serviceProcess + "> ?y ?z" + " filter ( ?y = process:hasOutput " + "|| ?y = process:hasInput " + "|| ?y = service:describes " + "|| ?y = process:hasPrecondition " + "|| ?z = process:AtomicProcess " + ")" + "?x ?y ?z}";
+		String updateProcess = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
+				+ "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>"
+				+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
+				+ "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
+				+ "prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>" + "delete {?x ?y ?z}" + "where" + "{ <"
+				+ serviceProcess + "> ?y ?z" + " filter ( ?y = process:hasOutput " + "|| ?y = process:hasInput "
+				+ "|| ?y = service:describes " + "|| ?y = process:hasPrecondition " + "|| ?z = process:AtomicProcess "
+				+ ")" + "?x ?y ?z}";
 
 		// Delete the profile property where the process appears
-		String updateDescribedByProperty = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>" + "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>" + "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" + "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>" + "prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>" + "delete {?x ?y ?z}" + "where" + "{?x ?y <" + serviceProcess + ">" + " filter ( ?y = service:describedBy " + ")" + "?x ?y ?z}";
+		String updateDescribedByProperty = "prefix xsd: <http://www.w3.org/2001/XMLSchema#>"
+				+ "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>"
+				+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
+				+ "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
+				+ "prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>" + "delete {?x ?y ?z}" + "where" + "{?x ?y <"
+				+ serviceProcess + ">" + " filter ( ?y = service:describedBy " + ")" + "?x ?y ?z}";
 
 		// Execute the query
 		QuerySolution querysol = new QuerySolutionMap();

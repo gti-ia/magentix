@@ -134,16 +134,16 @@ SFinterface sf=new SFinterface();
 
 		GetServiceUTest getServiceUTest=new GetServiceUTest();
 		
-//		String res1=getServiceUTest.incorrectParamTest1();
-//		System.out.println("incorrectParamTest1:\n"+res1);
-//		
-//		String res2=getServiceUTest.incorrectParamTest2();
-//		System.out.println("incorrectParamTest2:\n"+res2);
-//		
-//		String res3=getServiceUTest.incorrectParamTest3();
-//		System.out.println("incorrectParamTest3:\n"+res3);
-//		
-//		
+		String res1=getServiceUTest.incorrectParamTest1();
+		System.out.println("incorrectParamTest1:\n"+res1);
+		
+		String res2=getServiceUTest.incorrectParamTest2();
+		System.out.println("incorrectParamTest2:\n"+res2);
+		
+		String res3=getServiceUTest.incorrectParamTest3();
+		System.out.println("incorrectParamTest3:\n"+res3);
+		
+		
 		String resApp1=getServiceUTest.appropiateParamsTest1();
 		System.out.println("appropiateParamsTest1:\n"+resApp1);
 		
@@ -170,31 +170,6 @@ SFinterface sf=new SFinterface();
 		
 		String resApp9=getServiceUTest.appropiateParamsTest9();
 		System.out.println("appropiateParamsTest9:\n"+resApp9);
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		
 		
 		
