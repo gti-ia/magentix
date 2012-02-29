@@ -6,12 +6,12 @@ import java.util.Hashtable;
 
 import org.apache.log4j.Logger;
 
+import es.upv.dsic.gti_ia.architecture.FIPANames.InteractionProtocol;
 import es.upv.dsic.gti_ia.architecture.FIPARequestInitiator;
 import es.upv.dsic.gti_ia.architecture.QueueAgent;
-import es.upv.dsic.gti_ia.architecture.FIPANames.InteractionProtocol;
 import es.upv.dsic.gti_ia.cAgents.CAgent;
-import es.upv.dsic.gti_ia.cAgents.CProcessor;
 import es.upv.dsic.gti_ia.cAgents.CFactory;
+import es.upv.dsic.gti_ia.cAgents.CProcessor;
 import es.upv.dsic.gti_ia.cAgents.protocols.FIPA_REQUEST_Initiator;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
@@ -25,45 +25,53 @@ public class THOMASProxy {
 
 
 
-	//******************************************VARIABLES*********************************************
+	//-------------------------------------------------------------------
+	//---------------------------VARIABLES-------------------------------
+	//-------------------------------------------------------------------
 
 	static Logger logger = Logger.getLogger(THOMASProxy.class);
 
 
 	BaseAgent agent = null;
+	CProcessor myProcessor = null;
 	Oracle oracle;
 
 	Configuration c;
 
-	String call,thomasAgent,clientProvider,serviceName,ErrorValue,status,ServiceDescriptionLocation;
+	String call;
+	String thomasAgent;
+	String serviceName;
+	String ServiceDescriptionLocation;
 	String value = ""; //Returned value
 
 	int Quantity;
 	String[] elements;
 
 	Hashtable<AgentID, String> agents = new Hashtable<AgentID, String>();
-	ArrayList<String> listResults = new ArrayList<String>();
+	ArrayList<String> serviceTypeResult2;
+	ArrayList<ArrayList<String>> serviceTypeResult3;
+	String serviceTypeResult4;
+	ArrayList<String> serviceTypeResult5;
+	ResponseParser responseParser = new ResponseParser();
 
+	
+	Object result = null;
 
-	ProcessDescription processDescripcion;
-	ProfileDescription profileDescription;
-
-	boolean isgenericSerice = false;
-
-	private Hashtable<String, String> genericServiceList = new Hashtable<String, String>();
-	private String[] agentGetProcess;
 	private boolean Status = true;
 
-	private ArrayList<String> serviceType1 = new ArrayList<String>();//This type return a String
-	private ArrayList<String> serviceType2 = new ArrayList<String>();//This type return a  Array of strings
-	private ArrayList<String> serviceType3 = new ArrayList<String>();//This type return a Integer
-	private ArrayList<String> serviceType4 = new ArrayList<String>();//This type return a  Hastable<AgentID, String>
+	private ArrayList<String> serviceType1 = new ArrayList<String>();//This type returns a String
+	private ArrayList<String> serviceType2 = new ArrayList<String>();//This type returns a Array of String
+	private ArrayList<String> serviceType3 = new ArrayList<String>();//This type returns a Array of Array of strings
+	private ArrayList<String> serviceType4 = new ArrayList<String>();//This type returns a String with specification
+	private ArrayList<String> serviceType5 = new ArrayList<String>();//This type returns a Array of String with description and specification
 
 
 
 
-	//**********************************CONSTRUCTORS******************************************
 
+	//-------------------------------------------------------------------
+	//---------------------------CONSTRUCTORS----------------------------
+	//-------------------------------------------------------------------
 	/**
 	 * This class gives us the support to accede to the services of the OMS and SF
 	 * @param agent, is a BaseAgent, this agent implemented the communication protocol          
@@ -76,6 +84,11 @@ public class THOMASProxy {
 		this.ServiceDescriptionLocation = ServiceDescriptionLocation;
 	}
 
+	THOMASProxy(CProcessor firstProcessor, String thomasAgent,String ServiceDescriptionLocation) {
+		this.agent = firstProcessor.getMyAgent();
+		this.myProcessor = firstProcessor;
+		this.ServiceDescriptionLocation = ServiceDescriptionLocation;
+	}
 	/**
 	 * This class gives us the support to access to the services of the OMS and SF.
 	 * Checked that the data contained in the file configuration/Settings.xml the URL
@@ -95,21 +108,14 @@ public class THOMASProxy {
 		this.initialize();
 
 	}
+	
+	THOMASProxy(CProcessor firstProcessor, String thomasAgent) {
+		this.agent = firstProcessor.getMyAgent();
+		this.myProcessor = firstProcessor;
+		this.thomasAgent = thomasAgent;
+		c = Configuration.getConfiguration();
+		this.initialize();
 
-	/**
-	 * Adds a new element to list
-	 * @param element
-	 */
-	private void addElementToList(String element) {
-		this.listResults.add(element);
-	}
-
-	/**
-	 * Sets quantity 
-	 * @param Quantity
-	 */
-	private void setQuantity(int Quantity) {
-		this.Quantity = Quantity;
 	}
 
 	/**
@@ -119,48 +125,46 @@ public class THOMASProxy {
 	{
 
 		//Add type for each service 
-		serviceType1.add("LeaveRoleProcess");
-		serviceType1.add("AcquireRoleProcess");
-		serviceType1.add("RegisterNormProcess");
-		serviceType1.add("RegisterRoleProcess");
-		serviceType1.add("RegisterUnitProcess");
-		serviceType1.add("DeregisterNormProcess");
-		serviceType1.add("DeregisterRoleProcess");
-		serviceType1.add("DeregisterUnitProcess");
-		serviceType1.add("ExpulseProcess");
-		serviceType1.add("RemoveProviderProcess");
-		serviceType1.add("ModifyProcessProcess");
-		serviceType1.add("ModifyProfileProcess");
-		serviceType1.add("DeregisterProfileProcess");
-		serviceType1.add("GetProfileProcess");
-		serviceType1.add("RegisterProfileProcess");
-		serviceType1.add("RegisterProcessProcess");
+		serviceType1.add("LeaveRole");
+		serviceType1.add("AcquireRole");
+		serviceType1.add("AllocateRole");
+		serviceType1.add("RegisterRole");
+		serviceType1.add("RegisterUnit");
+		serviceType1.add("JointUnit");
+		serviceType1.add("DeregisterRole");
+		serviceType1.add("DeregisterUnit");
+		serviceType1.add("DeallocateRole");
+		serviceType1.add("RemoveProvider");
+		serviceType1.add("DeregisterService");
+		
+		
+		serviceType2.add("InformRole");
+		serviceType2.add("InformUnit");
+		serviceType2.add("QuantityMembers");
+		
+		
+		serviceType3.add("InformAgentRole");
+		serviceType3.add("InformMembers");
+		serviceType3.add("InformUnitRoles");
+		serviceType3.add("SearchService");
 
+		
+		serviceType4.add("GetService");
 
-		serviceType2.add("InformAgentRoleProcess");
-		serviceType2.add("InformMembersProcess");
-		serviceType2.add("InformRoleNormsProcess");
-		serviceType2.add("InformRoleProfilesProcess");
-		serviceType2.add("InformUnitProcess");
-		serviceType2.add("InformUnitRolesProcess");
-		serviceType2.add("SearchServiceProcess");
-
-
-
-		serviceType3.add("QuantityMembersProcess");
-
-		serviceType4.add("GetProcessProcess");
-
-
-
+		
+		serviceType5.add("RegisterService");
 
 	}
-	//****************************************Common methods***************************************************
+
+
+	//-------------------------------------------------------------------
+	//---------------------------Common methods--------------------------
+	//-------------------------------------------------------------------
 
 	/**
 	 * This method builds the ACLMessage with the sender, content, protocol and receivers.
 	 */
-	Object sendInform() {
+	Object sendInform() throws THOMASException{
 
 		this.reset();
 
@@ -168,14 +172,8 @@ public class THOMASProxy {
 		requestMsg.setSender(agent.getAid());
 		requestMsg.setContent(call);
 		requestMsg.setProtocol(InteractionProtocol.FIPA_REQUEST);
-		if (isgenericSerice)//If is a genericService, Receiver is the provider to service.
-		{
-			requestMsg.setReceiver(new AgentID(clientProvider));
-		}
-		else
-		{
-			requestMsg.setReceiver(new AgentID(thomasAgent));	
-		}
+		requestMsg.setReceiver(new AgentID(thomasAgent));	
+	
 
 
 		logger.info("[QueryAgent]Sms to send: " + requestMsg.getContent());
@@ -187,16 +185,18 @@ public class THOMASProxy {
 	}
 
 	/**
-	 * Clear values.
+	 * Reset values.
 	 */
 	private void reset()
 	{
-		this.setValue("");	
+		value = new String();
 		this.Status = true;
-		this.listResults.clear();
-		this.agents.clear();
-		ErrorValue = "";
-		status = "";	
+
+		serviceTypeResult2 = new ArrayList<String>();
+		serviceTypeResult3 = new ArrayList<ArrayList<String>>();
+		serviceTypeResult4 = "";
+		serviceTypeResult5 = new ArrayList<String>();
+	
 	}
 
 	/**
@@ -204,60 +204,11 @@ public class THOMASProxy {
 	 * a new or showed an error message if the operation is incorrect.
 	 * @return
 	 */
-	private Object returnResult()
+	private Object returnResult() throws THOMASException
 	{
-
-		//Services that return a String.
-		if (serviceType1.contains(serviceName))
-		{
-			if (!Status) {
-				logger.error("["+agent.getName()+"] "+ serviceName+": " + this.value);
-				return "";
-			} else
-			{
-				return this.value;
-			}
-		}//Services that return a ArrayList<String>()
-		else if (serviceType2.contains(serviceName))
-		{
-
-			if (!Status) {
-				logger.error("["+agent.getName()+"] "+ serviceName+": " + this.value);
-				return new ArrayList<String>();
-			} else
-			{
-				return new ArrayList<String>(this.listResults);
-			}
-		}//Services that return a Integer.
-		else  if (serviceType3.contains(serviceName))
-		{
-			if (!Status) {
-				logger.error("["+agent.getName()+"] "+ serviceName+": " + this.value);
-				return 0;
-			} else
-				return this.Quantity;
-		}//Services that return a Hashtable
-		else  if (serviceType4.contains(serviceName))
-		{
-			if (!Status)
-			{
-				logger.error("["+agent.getName()+"] "+ serviceName + this.value);
-				return new Hashtable<AgentID, String>();
-			}
-
-			else
-				return this.agents;
-
-		}
-		else //If types is a genericService.  
-		{
-			if (!Status) {
-				logger.error("["+agent.getName()+"] "+ "Error in generic funcion: "+ this.value);
-				return new Hashtable<String, String>();
-			} else
-				return genericServiceList;
-
-		}
+		if (!Status)
+			throw new THOMASException(value);
+		return result;
 
 	}
 
@@ -267,7 +218,17 @@ public class THOMASProxy {
 	 */
 	private void initProxyProtocol(ACLMessage requestMsg)
 	{
-		if (agent instanceof QueueAgent)
+		if (this.myProcessor != null)
+		{			
+			//Initialization protocol  / conversation request.
+			CAgent myAgent = (CAgent)agent;
+			THOMASCAgentRequest protocol = new THOMASCAgentRequest(this);
+			CFactory talk = protocol.newFactory("THOMASRequest", null, requestMsg, 1, myAgent, 0);
+			myAgent.addFactoryAsInitiator(talk);
+			myProcessor.createSyncConversation(talk, myAgent.newConversationID());
+			myAgent.removeFactory(talk.getName());
+		}
+		else if (agent instanceof QueueAgent)
 		{
 			THOMASQAgentRequest test = new THOMASQAgentRequest((QueueAgent)agent, requestMsg, this);
 
@@ -287,6 +248,7 @@ public class THOMASProxy {
 			myAgent.startSyncConversation(talk.getName());
 			myAgent.removeFactory(talk.getName());
 		}
+	
 
 
 	}
@@ -297,19 +259,10 @@ public class THOMASProxy {
 	 */
 	private void setValue(String msg)
 	{
-		this.value = msg;
-
+		this.result = msg;
+		
 	}
 
-	/**
-	 * Adds the Id profile when the search service is calls
-	 * @param id
-	 */
-	private void addIDSearchService(String id) {
-
-		this.listResults.add(id);
-
-	}
 
 
 
@@ -319,381 +272,67 @@ public class THOMASProxy {
 	private void extractInfo(ACLMessage msg)
 	{
 
-		//**************************************************SF parsing*******************************************************
+		responseParser.parseResponse(msg.getContent());
+		
+		serviceName = responseParser.getServiceName();
 
 
-		if (thomasAgent.equals("SF"))
+		//split by state
+		if (responseParser.getStatus().equals("Ok"))
 		{
 
-			String arg1 ="";
-
-			//if first argument is a DeregisterProfileProcess, not extract the arg1
-			if (!serviceName.equals("DeregisterProfileProcess")
-					&& !serviceName.equals("ModifyProfileProcess")
-					&& !serviceName.equals("ModifyProcessProcess")
-					&& !serviceName.equals("GetProcessProcess")
-					&& !serviceName.equals("RemoveProviderProcess")) {
-				arg1 = msg.getContent().substring(
-						msg.getContent().indexOf("=") + 1,
-						msg.getContent().length());
-				arg1 = arg1.substring(arg1.indexOf("=") + 1, arg1.indexOf(","));
-			}
-
-			//Second argument
-			String arg2 = msg.getContent();
-			arg2 = arg2.substring((arg2.lastIndexOf("=")) + 1, arg2.length() - 1);
-
-
-
-			if (serviceName.equals("RegisterProcessProcess")) {
-				if (arg2.equals("1")) {
-					this.processDescripcion.setImplementationID(arg1);
-					this.setValue(arg1);
-
-				} else {
-					this.Status = false;
-					this.setValue(arg1);
-				}
-
-			}
-
-
-			if (serviceName.equals("GetProfileProcess")) {
-				arg2 = msg.getContent().substring(
-						msg.getContent().indexOf(",") + 1,
-						msg.getContent().length());
-				arg2 = arg2.substring(arg2.indexOf("=") + 1, arg2.indexOf(","));
-
-				if (arg2.equals("1"))// Is correct
-				{
-					this.setValue(arg1);
-				} else {
-					this.Status = false;
-					this.setValue(arg1);
-				}
-
-			}
-
-
-			if (serviceName.equals("DeregisterProfileProcess")) {
-
-				if (arg2.equals("1"))// Is correct
-				{
-					this.setValue(arg2);
-				} else //Not right
-				{
-					this.Status = false;
-					this.setValue("The error is caused for there are process associated with the profile or the id profile not exist.");
-				}
-
-			}
-
-
-			if (serviceName.equals("GetProcessProcess")) {
-				agentGetProcess = null;
+			if (serviceType1.contains(serviceName))
+			{
 				
-				if (arg2.equals("0")) {
-					this.Status = false;
-					this.setValue(arg1);
-
-				} else {
-					//Extract the providers of the message content.
-					String base = msg.getContent().substring(msg.getContent().indexOf("=")+1);
-					for (String s : base.split(","))
-					{
-						if (s.contains("@") && s.contains("="))
-						{
-							arg1 = s.substring(
-									s.indexOf("=") + 1,
-									s.length());
-
-
-							String arg_aux = arg1.substring(arg1.indexOf(" ") + 1, arg1
-									.length());
-
-							//arg1 = s.substring(0, arg1.indexOf(" "));
-							arg1 = arg1.substring(arg1.indexOf("-") + 1, arg1.indexOf(" "));
-
-
-							//We have control if exist zero, one o more providers.
-							if (!arg1.equals("null"))//Exist any provider
-							{
-
-								this.agents.put(new AgentID(arg1), arg_aux);
-							}
-
-						}
-						else if (s.contains("@"))
-						{
-
-
-							int index = s.indexOf(" ", 1);
-
-							String arg_aux = s.substring(index, s
-									.length());
-
-
-
-							arg1 = s.substring(1, index);
-
-							arg1 = arg1.substring(arg1.indexOf("-") + 1, arg1.length());
-
-
-							//We have control if exist zero, one o more providers.
-							if (!arg1.equals("null"))//Exist any provider
-							{
-
-								this.agents.put(new AgentID(arg1), arg_aux);
-							}
-
-						}
-					}
-
-				}
-
+				this.setValue(responseParser.getDescription());
+			
 			}
+			else if (serviceType2.contains(serviceName))
+			{
 
 
-			if (serviceName.equals("SearchServiceProcess")) {
-
-				agentGetProcess = null;
-
-				if (arg2.equals("1")) {
-					this.agentGetProcess = arg1.split(",");
-
-					for (String a : agentGetProcess) {
-						a = a.substring(0,a.indexOf(" "));
-						this.addIDSearchService(a);
-					}
-
-				} else
-				{
-					this.Status = false;
-
-					this.setValue(arg1);
-				}
-
+				serviceTypeResult2 = responseParser.getElementsList();
+				
+				result = serviceTypeResult2;
 			}
+			else if (serviceType3.contains(serviceName))
+			{
 
-			if (serviceName.equals("RegisterProfileProcess")) {
-				if (arg1.equals("1")) {
-					this.profileDescription.setServiceID(arg2);
-					this.setValue(arg2);
-
-
-				} else {
-					this.Status = false;
-					this.setValue(arg2);
-				}
-
-			}
-
-			if (serviceName.equals("ModifyProfileProcess")) {
-				if (arg2.equals("1"))
-				{
-					this.setValue(arg2);
-
-				} else if (arg2.equals("0"))
-				{
-					this.Status = false;
-					this.setValue(arg2);
-				} else
+				for (ArrayList<String> al : responseParser.getItemsList())
 				{
 
-					this.setValue(arg1);
+					serviceTypeResult3.add(al);
 				}
+				
+				result = serviceTypeResult3;
 
 			}
-
-
-			if (serviceName.equals("ModifyProcessProcess")) {
-				this.setValue(arg2);
-
+			else if (serviceType4.contains(serviceName))
+			{
+				
+				serviceTypeResult4=responseParser.getSpecification();
+				
+				result = serviceTypeResult4;
+			
+			}
+			else if (serviceType5.contains(serviceName))
+			{
+				serviceTypeResult5=new ArrayList<String>();
+				serviceTypeResult5.add(responseParser.getDescription());
+				serviceTypeResult5.add(responseParser.getSpecification());
+				
+				result = serviceTypeResult5;
 			}
 
-			if (serviceName.equals("RemoveProviderProcess")) {
-				if (arg2.equals("1"))
-					this.setValue(arg2);
-				else
-					this.setValue("Service process id does not exist");
-			}
-
-
-			if (this.isgenericSerice) {
-
-				//If not is a OMS or SF services, according to outputs extract the results.
-				String sub = msg.getContent().substring(
-						msg.getContent().indexOf("=") + 1);
-				String[] aux = sub.split(",");
-
-				for (String output : oracle.getOutputs()) {
-					for (int i = 0; i < aux.length; i++) {
-						String a = aux[i];
-
-						if (i != (aux.length - 1))
-						{
-							if (a.substring(a.indexOf("#") + 1, a.indexOf("="))
-									.equals(output)) {
-								this.genericServiceList.put(output, a
-										.substring(a.indexOf("=") + 1));
-							}
-						} else {
-							if (a.substring(a.indexOf("#") + 1, a.indexOf("="))
-									.equals(output)) {
-								this.genericServiceList.put(output, a.substring(
-										a.indexOf("=") + 1, (a.length() - 1)));
-
-							}
-
-						}
-					}
-				}
-
-				this.isgenericSerice = false;
-
-			}
 		}
 		else
 		{
 
-			//**********************************************OMS parsing*********************************************
-			if (serviceName.equals("InformUnitProcess")) {
-
-				String arg;
-				String argAux;
-
-
-				arg = msg.getContent().substring(
-						msg.getContent().indexOf("ParentID") + 9,
-						msg.getContent().indexOf(","));
-				this.addElementToList(arg);
-				argAux = msg.getContent().substring(
-						msg.getContent().indexOf("UnitGoal"),
-						msg.getContent().length());
-				arg = argAux.substring(argAux.indexOf("UnitGoal") + 9, argAux
-						.indexOf(","));
-				this.addElementToList(arg);
-				argAux = argAux.substring(argAux.indexOf("UnitType"), argAux
-						.length());
-				arg = argAux.substring(argAux.indexOf("UnitType") + 9, argAux
-						.indexOf("}"));
-				this.addElementToList(arg);
-
-			}
-
-			//We extract status
-			int n = msg.getContent().indexOf(",")
-			- msg.getContent().indexOf("Status");
-
-			if (n > 0) {
-				status = msg.getContent().substring(
-						msg.getContent().indexOf("Status") + 7,
-						msg.getContent().indexOf(","));
-			} else {
-				status = msg.getContent().substring(
-						msg.getContent().indexOf("Status") + 7,
-						msg.getContent().indexOf("}"));
-
-			}
-
-			if (serviceName.equals("InformAgentRoleProcess")
-					|| serviceName.equals("InformMembersProcess")
-					|| serviceName.equals("InformRoleNormsProcess")
-					|| serviceName.equals("InformRoleProfilesProcess")
-					|| serviceName.equals("InformUnitRolesProcess")) {
-
-
-				String argAux;
-
-				if (serviceName.equals("InformAgentRoleProcess")
-						|| serviceName.equals("InformMembersProcess")) {
-
-					if (!status.equals("Ok")) {
-						this.Status = false;
-						this.addElementToList("EMPTY");
-					} else {
-						String arg3 = msg.getContent().substring(
-								msg.getContent().indexOf(",") + 1,
-								msg.getContent().length());
-
-						if (!arg3.contains("[]"))
-						{
-							arg3 = arg3.substring(arg3.indexOf("("), arg3.indexOf("]"));
-
-							elements = arg3.split(",");
-
-							int paridad = 0;
-
-							for (String e : elements) {
-								if ((paridad % 2) == 0)// is pair
-								{
-									argAux = e
-									.substring(e.indexOf("(") + 1, e.length());
-
-								} else {
-									argAux = e.substring(0, e.indexOf(")"));
-								}
-								this.addElementToList(argAux);
-								paridad++;
-							}
-						}
-
-					}
-				} else {
-					if (!status.equals("Ok")) {
-						this.Status = false;
-						this.addElementToList("EMPTY");
-					} else {
-						String arg3 = msg.getContent().substring(
-								msg.getContent().indexOf("[") + 1,
-								msg.getContent().indexOf("]"));
-
-						elements = arg3.split(",");
-
-						for (String e : elements) {
-							this.addElementToList(e.trim());
-
-						}
-
-					}
-
-				}
-			}
-
-			ErrorValue = msg.getContent();
-
-			n = msg.getContent().indexOf(",")
-			- msg.getContent().indexOf("ErrorValue");
-
-			if (n > 0) {
-				ErrorValue = msg.getContent().substring(
-						msg.getContent().indexOf("ErrorValue") + 11,
-						msg.getContent().indexOf(","));
-			} else {
-				ErrorValue = msg.getContent().substring(
-						msg.getContent().indexOf("ErrorValue") + 11,
-						msg.getContent().indexOf("}"));
-
-			}
-
-			if (status.contains("Ok")) {
-
-				if (serviceName.equals("QuantityMembersProcess")) {
-
-					String quantity = msg.getContent().substring(
-							msg.getContent().indexOf("Quantity=") + 9,
-							msg.getContent().indexOf("}"));
-					this.setQuantity(Integer.parseInt(quantity));
-				}
-
-
-				this.setValue(status);
-			} else {
-				this.Status = false;
-				this.setValue(status + " " + ErrorValue);
-			}
-
+			value = responseParser.getDescription();
+			Status = false;
 		}
+
+
 	}
 
 
