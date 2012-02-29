@@ -210,11 +210,13 @@ public abstract class CAgent extends BaseAgent {
 	}
 
 	public void send(ACLMessage msg) {
+	
 		this.logger.info(this.getName() + " sends " + msg.getReceiver().name + " the message "
 				+ msg.getPerformative() + " " + msg.getContent());
 		this.lock();
 		super.send(msg);
 		this.unlock();
+	
 
 	}
 
@@ -577,7 +579,8 @@ public abstract class CAgent extends BaseAgent {
 	 * Gets a new conversation identifier
 	 * @return new conversation identifier
 	 */
-	protected synchronized String newConversationID() {
+	//protected synchronized String newConversationID() {
+	public synchronized String newConversationID() {
 		//return this.getName() + "." + UUID.randomUUID().toString();
 		this.conversationCounter++;
 		return this.getName() + "." + this.conversationCounter;
