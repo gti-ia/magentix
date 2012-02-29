@@ -678,6 +678,14 @@ public class CProcessor implements Runnable, Cloneable {
 		messageQueue.add(msg);
 	}
 	
+	/**
+	 * Deletes the messages from the messageQueue that have the given agentID (as sender), 
+	 * header title and the contents of this header
+	 * @param agentID of the sender
+	 * @param headerTitle to search in the headers of the messages
+	 * @param headerContents of the given header title to delete the message from queue
+	 * @return number of messages deleted
+	 */
 	public int cleanMessagesQueue(String agentID, String headerTitle, ArrayList<String> headerContents){
 		ArrayList<ACLMessage> toRemove=new ArrayList<ACLMessage>();
 		Iterator<ACLMessage> iterQueue=messageQueue.iterator();
