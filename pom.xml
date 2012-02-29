@@ -306,6 +306,11 @@
 			<artifactId>jettison</artifactId>
 			<version>1.2</version>
 		</dependency>
+		<dependency>
+			<groupId>codehaus</groupId>
+			<artifactId>stax</artifactId>
+			<version>1.2.0</version>
+		</dependency>
 	</dependencies>
 
 
