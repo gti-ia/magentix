@@ -23,25 +23,25 @@ public class CleanBD {
 			DataBaseAcces bd = new DataBaseAcces();
 			bd.connect();
 			// Clean 
-			Statement s = bd.conection.createStatement();
+			Statement s = bd.connection.createStatement();
 			s.executeUpdate("Delete from unit where id<>1");
-			s = bd.conection.createStatement();
+			s = bd.connection.createStatement();
 			s.executeUpdate("Delete from role where id<>1");
-			s = bd.conection.createStatement();
+			s = bd.connection.createStatement();
 			s.executeUpdate("Delete from norm");
-			s = bd.conection.createStatement();
+			s = bd.connection.createStatement();
 			s.executeUpdate("Delete from simplerequestnorm");
-			s = bd.conection.createStatement();
+			s = bd.connection.createStatement();
 			s.executeUpdate("Delete from maxcardinalitynorm");
-			s = bd.conection.createStatement();
+			s = bd.connection.createStatement();
 			s.executeUpdate("Delete from incompatibilitynorm");
-			s = bd.conection.createStatement();
+			s = bd.connection.createStatement();
 			s.executeUpdate("Delete from entity");
-			s = bd.conection.createStatement();
+			s = bd.connection.createStatement();
 			s.executeUpdate("Delete from entityplaylist");
-			s = bd.conection.createStatement();
+			s = bd.connection.createStatement();
 			s.executeUpdate("Delete from serviceprofileid");
-			s = bd.conection.createStatement();
+			s = bd.connection.createStatement();
 			s.executeUpdate("Delete from serviceprocessid");
 
 
