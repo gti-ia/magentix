@@ -10,15 +10,7 @@ import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.xml.stream.XMLStreamException;
-
-import jsonTest.XStreamTest.Prova;
-
 import org.apache.log4j.xml.DOMConfigurator;
-import org.codehaus.jettison.AbstractXMLStreamReader;
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
-import org.codehaus.jettison.mapped.MappedXMLStreamReader;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver;
@@ -68,7 +60,7 @@ public class HttpInterface {
 				XStream xstream = new XStream(new JettisonMappedXmlDriver());
 				xstream.alias("jsonObject", JSONMessage.class);
 				JSONMessage jsonMessage = (JSONMessage)xstream.fromXML(jsonString);				
-				logger.info("InterfaceAgent: Message to send: Agent name: "+jsonMessage.agent_name+" conversation id: "+jsonMessage.conversation_id+" content: "+jsonMessage.content);
+				logger.info("InterfaceAgent: Message to send: Agent name: "+jsonMessage.agent_name+" conversation id: "+jsonMessage.conversation_id);
 
 				// enviem missatge al agent destí
 				ACLMessage pregunta = new ACLMessage(ACLMessage.REQUEST);
@@ -95,7 +87,7 @@ public class HttpInterface {
 						+ "X-Powered-By:	PHP/5.3.2-1ubuntu4.9\r\n"
 						+ "Vary:	Accept-Encoding\r\n"
 						+ "Content-Encoding:	gzip\r\n" + "Content-Length:	"
-						+ resposta.getContent().length() + "\r\n"
+						+ resposta.getContent().length()*2 + "\r\n"
 						+ "Connection:	close\r\n" + "Content-Type:	text/html\n\n"
 						+ resposta.getContent();
 
@@ -104,7 +96,7 @@ public class HttpInterface {
 
 				// Cerrar
 				os.close();
-				is.close();
+				//is.close(); no tanquem el inputstream o no funciona be
 				socket.close();
 			}
 			catch (IOException ex) {
@@ -199,7 +191,7 @@ public class HttpInterface {
 		try {
 
 			ServerSocket skServidor = new ServerSocket(PUERTO);
-			System.out.println("webinterface service started. Listening port " + PUERTO);
+			System.out.println("HTTPInterface service started. Listening port " + PUERTO);
 			DOMConfigurator.configure("configuration/loggin.xml");
 			AgentsConnection.connect();
 
