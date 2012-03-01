@@ -12,22 +12,34 @@ import java.util.logging.Logger;
 
 import javax.xml.stream.XMLStreamException;
 
+import jsonTest.XStreamTest.Prova;
+
 import org.apache.log4j.xml.DOMConfigurator;
 import org.codehaus.jettison.AbstractXMLStreamReader;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.codehaus.jettison.mapped.MappedXMLStreamReader;
 
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver;
+
 /**
  * 
  * @author ricard
  */
-public class WebInterface {
+public class HttpInterface {
 
 	static final int PUERTO = 8081;
 	private long petitions = 0;
 
 	private class ServerAgent extends SingleAgent {
+		
+		private class JSONMessage {
+
+			public String agent_name;
+			public String conversation_id;
+			public String content;
+		}
 
 		Socket socket;
 
@@ -42,8 +54,7 @@ public class WebInterface {
 				is = socket.getInputStream();
 				String mensaje = this.pop(is);
 				logger.info("InterfaceAgent: HTTP request received "+mensaje);
-				BufferedReader reader = new BufferedReader(new StringReader(
-						mensaje));
+				BufferedReader reader = new BufferedReader(new StringReader(mensaje));
 				boolean stop = false;
 				String content;
 				while (!stop) {
@@ -53,19 +64,18 @@ public class WebInterface {
 				}
 				reader.readLine();
 				content = reader.readLine();
-				JSONObject obj = new JSONObject(content);
-				AbstractXMLStreamReader reader2 = new MappedXMLStreamReader(obj);
-				String agent_name = reader2.getText();
-
 				String jsonString = "{\"jsonObject\":" + content + "}";
-				logger.info("InterfaceAgent: JSON object received "+jsonString);
+				XStream xstream = new XStream(new JettisonMappedXmlDriver());
+				xstream.alias("jsonObject", JSONMessage.class);
+				JSONMessage jsonMessage = (JSONMessage)xstream.fromXML(jsonString);				
+				logger.info("InterfaceAgent: Message to send: Agent name: "+jsonMessage.agent_name+" conversation id: "+jsonMessage.conversation_id+" content: "+jsonMessage.content);
 
 				// enviem missatge al agent destí
 				ACLMessage pregunta = new ACLMessage(ACLMessage.REQUEST);
 				pregunta.setProtocol("web");
-				pregunta.setReceiver(new AgentID(agent_name));
+				pregunta.setReceiver(new AgentID(jsonMessage.agent_name));
 				pregunta.setSender(this.getAid());
-				pregunta.setConversationId(this.getAid().toString());
+				pregunta.setConversationId(jsonMessage.conversation_id);
 				pregunta.setContent(jsonString);
 				this.send(pregunta);
 
@@ -98,20 +108,14 @@ public class WebInterface {
 				socket.close();
 			}
 			catch (IOException ex) {
-				Logger.getLogger(WebInterface.class.getName()).log(Level.SEVERE, null, ex);
-			} 
-			catch (JSONException e) {
-				e.printStackTrace();
-			} 
-			catch (XMLStreamException e) {
-				e.printStackTrace();
+				Logger.getLogger(HttpInterface.class.getName()).log(Level.SEVERE, null, ex);
 			} 
 			finally {
 				try {
 					is.close();
 				} 
 				catch (IOException ex) {
-					Logger.getLogger(WebInterface.class.getName()).log(Level.SEVERE, null, ex);
+					Logger.getLogger(HttpInterface.class.getName()).log(Level.SEVERE, null, ex);
 				}
 			}
 		}
