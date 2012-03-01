@@ -185,6 +185,22 @@ public class ResponseParser {
 					}
 				}
 			}
+			else if (n.getNodeName().equalsIgnoreCase("outputs"))
+			{
+				NodeList resultNodeList=n.getChildNodes();
+				for(int j=0;j<resultNodeList.getLength();j++){
+					{
+						Node resNode=resultNodeList.item(j);
+
+						if(resNode.getNodeType()==Node.ELEMENT_NODE)
+						{
+
+							keyAndValueList.put(resNode.getNodeName().trim(), resNode.getTextContent().trim());
+						}
+
+					}
+				}
+			}
 
 		}
 

@@ -64,6 +64,8 @@ public class Run {
 			m.waiting(5 * 1000);
 			proAgent.start();
 			addAgent.start();
+			
+			m.waiting(15 * 1000);
 			jamAgent.start();
 
 

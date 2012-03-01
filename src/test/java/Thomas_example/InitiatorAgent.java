@@ -34,6 +34,8 @@ public class InitiatorAgent extends CAgent {
 			logger.info("["+this.getName()+"] Result acquire role participant: "+result);
 
 			this.initialize_scenario();
+			
+			
 
 		}catch(THOMASException e)
 		{
@@ -49,14 +51,17 @@ public class InitiatorAgent extends CAgent {
 		try
 		{
 			
-			omsProxy.registerUnit("calculator", "team", "virtual", "creator");
+			String result = omsProxy.registerUnit("calculator", "team", "virtual", "creator");
+			logger.info("["+this.getName()+"] Result register unit calculator: "+result);
 
-			omsProxy.registerUnit("school", "flat", "virtual", "creator");
-
-			omsProxy.registerRole("operation", "calculator",  "external", "public","member");
-
-			omsProxy.registerRole("student", "school", "external", "public","member");
-
+			result = omsProxy.registerUnit("school", "flat", "virtual", "creator");
+			logger.info("["+this.getName()+"] Result register unit school: "+result);
+			
+			result = omsProxy.registerRole("operation", "calculator",  "external", "public","member");
+			logger.info("["+this.getName()+"] Result register role operation: "+result);
+			
+			result = omsProxy.registerRole("student", "school", "external", "public","member");
+			logger.info("["+this.getName()+"] Result register role student: "+result);
 
 		}catch(THOMASException e)
 		{

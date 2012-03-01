@@ -25,6 +25,7 @@ import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.organization.OMSProxy;
 import es.upv.dsic.gti_ia.organization.Oracle;
 import es.upv.dsic.gti_ia.organization.Provider;
+import es.upv.dsic.gti_ia.organization.ResponseParser;
 import es.upv.dsic.gti_ia.organization.SFProxy;
 import es.upv.dsic.gti_ia.organization.ServiceTools;
 import es.upv.dsic.gti_ia.organization.THOMASException;
@@ -35,7 +36,7 @@ public class James extends CAgent {
 	SFProxy sfProxy = new SFProxy(this);
 	ServiceTools st = new ServiceTools();
 	
-	
+	String requestResult="";
 
 
 	public James(AgentID aid) throws Exception {
@@ -46,42 +47,49 @@ public class James extends CAgent {
 
 		try {
 
+			//James has to resolve the equation (5 * (3 + 4))^2
 
-			omsProxy.acquireRole("student","school");
+			String result = omsProxy.acquireRole("student","school");
+			logger.info("["+this.getName()+"] Result acquire role student: "+result);
 
-			ArrayList <String> search_inputs = new ArrayList <String>();
-			ArrayList <String> outputs = new ArrayList <String>();
-			ArrayList <String> keywords = new ArrayList <String>();
-
-			search_inputs.add("\"http://www.w3.org/2001/XMLSchema#double\"^^xsd:anyURI");
-			search_inputs.add("\"http://www.w3.org/2001/XMLSchema#double\"^^xsd:anyURI");
-
-			ArrayList<ArrayList<String>> resApp;
-			
 			
 			//---------------------------------------------------------------------
-			//---------------------Searching for the services----------------------
+			//---------------------Searching for the Addition service----------------------
 			//---------------------------------------------------------------------
+			
+			ArrayList <String> searchInputs = new ArrayList <String>();
+			ArrayList <String> searchOutputs = new ArrayList <String>();
+			ArrayList <String> searchKeywords = new ArrayList <String>();
+
+			searchInputs.add("\"http://www.w3.org/2001/XMLSchema#double\"^^xsd:anyURI");
+			searchInputs.add("\"http://www.w3.org/2001/XMLSchema#double\"^^xsd:anyURI");
+			
+			searchOutputs.add("\"http://www.w3.org/2001/XMLSchema#double\"^^xsd:anyURI");
+			
+			searchKeywords.add("addition");
+			
+			ArrayList<ArrayList<String>> foundServices;
+			
 			do{
 				//Waiting for services
 				try {
-					Thread.sleep(5*1000);
+					Thread.sleep(2*1000);
 				} catch (InterruptedException e) {
 
 					e.printStackTrace();
 				}
-				resApp = sfProxy.searchService(search_inputs, outputs, keywords);
+				foundServices = sfProxy.searchService(searchInputs, searchOutputs, searchKeywords);
 
-			}while(resApp.size() != 3);
+			}while(foundServices.isEmpty());
 
 
 			//-----------------------------------------------------------------------------
-			//-------------------Requesting the execution of the first service-------------
+			//-------------------Requesting the execution of the addition service-------------
 			//-----------------------------------------------------------------------------
 			
-			String service = sfProxy.getService(resApp.get(0).get(0));
+			String serviceOWLS = sfProxy.getService(foundServices.get(0).get(0));
 			
-			Oracle oracle = new Oracle(service);
+			Oracle oracle = new Oracle(serviceOWLS);
 			
 			ArrayList<Provider> providers = oracle.getProviders();
 
@@ -91,7 +99,12 @@ public class James extends CAgent {
 			
 			for(String input : service_inputs)
 			{
-				agent_inputs.put(input,"4");
+				if(input.equalsIgnoreCase("x"))
+					agent_inputs.put(input,"3");
+				else if(input.equalsIgnoreCase("y"))
+					agent_inputs.put(input,"4");
+				else 
+					agent_inputs.put(input,"0");
 			}
 
 
@@ -107,16 +120,44 @@ public class James extends CAgent {
 			msg.setContent(content);
 
 			this.send_request(msg);
+			
+			System.err.println(requestResult);
+			ResponseParser rp=new ResponseParser();
+			rp.parseResponse(requestResult);
+			System.err.println(rp.getKeyAndValueList().get("Result"));
+			String resultEquation=rp.getKeyAndValueList().get("Result");
 
+			//---------------------------------------------------------------------
+			//---------------------Searching for the Product service----------------------
+			//---------------------------------------------------------------------
+			
+			searchKeywords.clear();
+			searchKeywords.add("multiplies");
+			
+			foundServices.clear();
+			
+			
+			do{
+				//Waiting for services
+				try {
+					Thread.sleep(2*1000);
+				} catch (InterruptedException e) {
+
+					e.printStackTrace();
+				}
+				foundServices = sfProxy.searchService(searchInputs, searchOutputs, searchKeywords);
+
+			}while(foundServices.isEmpty());
+			
 			//-----------------------------------------------------------------------------
-			//-------------------Requesting the execution of the second service-------------
+			//-------------------Requesting the execution of the Product service-------------
 			//-----------------------------------------------------------------------------
 
 
-			service = sfProxy.getService(resApp.get(1).get(0));
+			serviceOWLS = sfProxy.getService(foundServices.get(0).get(0));
 
 			oracle = null;
-			oracle = new Oracle(service);
+			oracle = new Oracle(serviceOWLS);
 
 			providers.clear();
 			providers = oracle.getProviders();
@@ -128,7 +169,12 @@ public class James extends CAgent {
 			agent_inputs = new HashMap<String,String>();
 			for(String input : service_inputs)
 			{
-				agent_inputs.put(input,"3");
+				if(input.equalsIgnoreCase("x"))
+					agent_inputs.put(input,"5");
+				else if(input.equalsIgnoreCase("y"))
+					agent_inputs.put(input,resultEquation);
+				else 
+					agent_inputs.put(input,"0");
 			}
 
 
@@ -145,17 +191,46 @@ public class James extends CAgent {
 			
 			this.send_request(msg);
 
+			System.err.println(requestResult);
+			rp=new ResponseParser();
+			rp.parseResponse(requestResult);
+			System.err.println(rp.getKeyAndValueList().get("Result"));
+			resultEquation=rp.getKeyAndValueList().get("Result");
+			
+			//---------------------------------------------------------------------
+			//---------------------Searching for the Square service----------------------
+			//---------------------------------------------------------------------
+			
+			searchInputs.clear();
+			searchInputs.add("\"http://www.w3.org/2001/XMLSchema#double\"^^xsd:anyURI");
+			searchKeywords.clear();
+			searchKeywords.add("squares");
+			
+			foundServices.clear();
+			
+			do{
+				//Waiting for services
+				try {
+					Thread.sleep(2*1000);
+				} catch (InterruptedException e) {
 
+					e.printStackTrace();
+				}
+				foundServices = sfProxy.searchService(searchInputs, searchOutputs, searchKeywords);
+
+			}while(foundServices.isEmpty());
+			
+			
 			//---------------------------------------------------
 			//--------------Executing service square--------------------
 			//---------------------------------------------------
 
 
-			service = sfProxy.getService(resApp.get(2).get(0));
+			serviceOWLS = sfProxy.getService(foundServices.get(0).get(0));
 			
 			
 			oracle = null;
-			oracle = new Oracle(service);
+			oracle = new Oracle(serviceOWLS);
 
 			ArrayList<String> providersGrounding = oracle.getProvidersGroundingWSDL();
 
@@ -166,18 +241,27 @@ public class James extends CAgent {
 			agent_inputs = new HashMap<String,String>();
 			for(String input : service_inputs)
 			{
-				agent_inputs.put(input,"2");
+				agent_inputs.put(input,resultEquation);
 			}
 
 
-			HashMap<String,Object> result=st.executeWebService(providersGrounding.get(0), agent_inputs);
+			HashMap<String,Object> resultExecution=st.executeWebService(providersGrounding.get(0), agent_inputs);
 
-			Double resultContent=(Double)result.get("Result");
+			Double resultContent=(Double)resultExecution.get("Result");
 
-			System.out.println("Square service result: "+ resultContent);
+			logger.info("\n\n["+this.getName()+"] Final result: "+resultContent+"\n\n");
+			
+			
+			String finishContent="<inform>"+
+					"<content>"+"EXAMPLE ENDED"+"</content>"+
+					"</inform>";
+			ACLMessage msgFinish=new ACLMessage(ACLMessage.INFORM);
+			msgFinish.addReceiver(new AgentID("InitiatorAgent"));
+			msg.setContent(finishContent);
+			
+			send(msgFinish);
+			
 			myProcessor.ShutdownAgent();
-
-
 
 
 		} catch (THOMASException e) {
@@ -223,6 +307,7 @@ public class James extends CAgent {
 			System.out.println(myProcessor.getMyAgent().getName() + ": "
 					+ msg.getSender().name + " informs me \n"
 					+ msg.getContent());
+			requestResult=msg.getContent();
 		}
 	}
 

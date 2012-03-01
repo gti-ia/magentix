@@ -11,7 +11,9 @@ package Thomas_example;
  *  
  */
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map.Entry;
 
 import es.upv.dsic.gti_ia.cAgents.CAgent;
@@ -47,10 +49,23 @@ public class Product extends CAgent {
 			String result = omsProxy.acquireRole("operation", "calculator");
 			logger.info("["+this.getName()+"] Result acquire role participant: "+result);
 
-
-			sfProxy.registerService("http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl");
-			sfProxy.registerService("http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl");
-
+			
+			ArrayList<String> resultRegister = sfProxy.registerService("http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl");
+			Iterator<String> iterRes=resultRegister.iterator();
+			String registerRes="";
+			while(iterRes.hasNext()){
+				registerRes+=iterRes.next()+"\n";
+			}
+			logger.info("["+this.getName()+"] Result registerService: "+registerRes);
+			
+			
+			resultRegister = sfProxy.registerService("http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl");
+			iterRes=resultRegister.iterator();
+			registerRes="";
+			while(iterRes.hasNext()){
+				registerRes+=iterRes.next()+"\n";
+			}
+			logger.info("["+this.getName()+"] Result registerService: "+registerRes);
 
 			CFactory additionTalk = new myFIPA_REQUEST().newFactory("PRODUCT_TALK", null,
 					0, myProcessor.getMyAgent());

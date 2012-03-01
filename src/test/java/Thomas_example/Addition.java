@@ -10,7 +10,9 @@ package Thomas_example;
  */
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import es.upv.dsic.gti_ia.cAgents.CAgent;
 import es.upv.dsic.gti_ia.cAgents.CFactory;
@@ -44,8 +46,13 @@ public class Addition extends CAgent {
 			String result = omsProxy.acquireRole("operation", "calculator");
 			logger.info("["+this.getName()+"] Result acquire role participant: "+result);
 
-			sfProxy.registerService("http://localhost:8080/testSFservices/testSFservices/owl/owls/Addition.owl");
-
+			ArrayList<String> resultRegister=sfProxy.registerService("http://localhost:8080/testSFservices/testSFservices/owl/owls/Addition.owl");
+			Iterator<String> iterRes=resultRegister.iterator();
+			String registerRes="";
+			while(iterRes.hasNext()){
+				registerRes+=iterRes.next()+"\n";
+			}
+			logger.info("["+this.getName()+"] Result registerService: "+registerRes);
 
 			CFactory additionTalk = new myFIPA_REQUEST().newFactory("ADDITION_TALK", null,
 					0, myProcessor.getMyAgent());
@@ -68,9 +75,10 @@ public class Addition extends CAgent {
 		System.out.println("["+firstProcessor.getMyAgent().getName()+"] end execution!");	
 		
 		try {
-			sfProxy.deregisterService("http://localhost:8080/testSFservices/testSFservices/owl/owls/Addition.owl");
-		
-			omsProxy.leaveRole("operation", "calculator");
+			String resultDeregister = sfProxy.deregisterService("http://localhost:8080/testSFservices/testSFservices/owl/owls/Addition.owl");
+			logger.info("["+this.getName()+"] Result deregisterService: "+resultDeregister);
+			String resultLeaveRole =omsProxy.leaveRole("operation", "calculator");
+			logger.info("["+this.getName()+"] Result leave role operation: "+resultLeaveRole);
 		} catch (THOMASException e) {
 			
 			e.printStackTrace();
