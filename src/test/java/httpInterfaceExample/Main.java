@@ -1,4 +1,4 @@
-package httpInterfaceTest;
+package httpInterfaceExample;
 
 import org.apache.log4j.xml.DOMConfigurator;
 

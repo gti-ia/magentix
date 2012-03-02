@@ -1,4 +1,4 @@
-package httpInterfaceTest;
+package httpInterfaceExample;
 
 import java.io.Writer;
 

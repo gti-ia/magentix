@@ -1,4 +1,4 @@
-package httpInterfaceTest;
+package httpInterfaceExample;
 
 /**
  * Class that will store our response and will be transformed into
