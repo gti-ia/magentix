@@ -121,10 +121,9 @@ public class James extends CAgent {
 
 			this.send_request(msg);
 			
-			System.err.println(requestResult);
+			
 			ResponseParser rp=new ResponseParser();
 			rp.parseResponse(requestResult);
-			System.err.println(rp.getKeyAndValueList().get("Result"));
 			String resultEquation=rp.getKeyAndValueList().get("Result");
 
 			//---------------------------------------------------------------------
@@ -191,10 +190,9 @@ public class James extends CAgent {
 			
 			this.send_request(msg);
 
-			System.err.println(requestResult);
+			
 			rp=new ResponseParser();
 			rp.parseResponse(requestResult);
-			System.err.println(rp.getKeyAndValueList().get("Result"));
 			resultEquation=rp.getKeyAndValueList().get("Result");
 			
 			//---------------------------------------------------------------------
@@ -252,18 +250,20 @@ public class James extends CAgent {
 			logger.info("\n\n["+this.getName()+"] Final result: "+resultContent+"\n\n");
 			
 			
+			
 			String finishContent="<inform>"+
 					"<content>"+"EXAMPLE ENDED"+"</content>"+
 					"</inform>";
-			ACLMessage msgFinish=new ACLMessage(ACLMessage.INFORM);
-			msgFinish.addReceiver(new AgentID("InitiatorAgent"));
-			msg.setContent(finishContent);
+			ACLMessage msgFinish=new ACLMessage(ACLMessage.REQUEST);
+			msgFinish.setHeader("EXAMPLEENDED", "EXAMPLEENDED");
+			msgFinish.setReceiver(new AgentID("InitiatorAgent"));
+			msgFinish.setProtocol("fipa-request");
+			msgFinish.setSender(getAid());
+			msgFinish.setContent(finishContent);
 			
-			send(msgFinish);
+			this.send_request(msgFinish);
 			
-			myProcessor.ShutdownAgent();
-
-
+			
 		} catch (THOMASException e) {
 
 			e.printStackTrace();
@@ -309,6 +309,15 @@ public class James extends CAgent {
 					+ msg.getContent());
 			requestResult=msg.getContent();
 		}
+		
+//		@Override
+//		protected void doFinal(CProcessor myProcessor, ACLMessage messageToSend){
+//			ACLMessage msg=myProcessor.getLastReceivedMessage();
+//			if(msg.getHeaderValue("EXAMPLEENDED")!=null)
+//				myProcessor.ShutdownAgent();
+//			else
+//				messageToSend=myProcessor.getLastSentMessage();
+//		}
 	}
 
 

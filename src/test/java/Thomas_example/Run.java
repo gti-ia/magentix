@@ -68,8 +68,6 @@ public class Run {
 			m.waiting(15 * 1000);
 			jamAgent.start();
 
-
-
 		} catch (Exception e) {
 			logger.error("Error  " + e.getMessage());
 		}

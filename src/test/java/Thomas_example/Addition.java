@@ -74,15 +74,15 @@ public class Addition extends CAgent {
 			ACLMessage finalizeMessage) {
 		System.out.println("["+firstProcessor.getMyAgent().getName()+"] end execution!");	
 		
-		try {
-			String resultDeregister = sfProxy.deregisterService("http://localhost:8080/testSFservices/testSFservices/owl/owls/Addition.owl");
-			logger.info("["+this.getName()+"] Result deregisterService: "+resultDeregister);
-			String resultLeaveRole =omsProxy.leaveRole("operation", "calculator");
-			logger.info("["+this.getName()+"] Result leave role operation: "+resultLeaveRole);
-		} catch (THOMASException e) {
-			
-			e.printStackTrace();
-		}
+//		try {
+//			String resultDeregister = sfProxy.deregisterService("http://localhost:8080/testSFservices/testSFservices/owl/owls/Addition.owl");
+//			logger.info("["+this.getName()+"] Result deregisterService: "+resultDeregister);
+//			String resultLeaveRole =omsProxy.leaveRole("operation", "calculator");
+//			logger.info("["+this.getName()+"] Result leave role operation: "+resultLeaveRole);
+//		} catch (THOMASException e) {
+//			
+//			e.printStackTrace();
+//		}
 	}
 
 
