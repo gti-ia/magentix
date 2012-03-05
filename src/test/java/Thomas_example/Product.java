@@ -112,9 +112,6 @@ public class Product extends CAgent {
 			double result=1;
 			try{
 
-
-
-
 				for (Entry<String, String> e : inputs.entrySet()) {
 
 					result *= Double.parseDouble(e.getValue()); 

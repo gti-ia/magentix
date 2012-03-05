@@ -312,14 +312,6 @@ public class James extends CAgent {
 			requestResult=msg.getContent();
 		}
 		
-//		@Override
-//		protected void doFinal(CProcessor myProcessor, ACLMessage messageToSend){
-//			ACLMessage msg=myProcessor.getLastReceivedMessage();
-//			if(msg.getHeaderValue("EXAMPLEENDED")!=null)
-//				myProcessor.ShutdownAgent();
-//			else
-//				messageToSend=myProcessor.getLastSentMessage();
-//		}
 	}
 
 
