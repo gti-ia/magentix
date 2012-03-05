@@ -4,7 +4,6 @@ import org.apache.log4j.xml.DOMConfigurator;
 
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
-import es.upv.dsic.gti_ia.core.HttpInterface;
 
 public class Main {
 
@@ -23,10 +22,10 @@ public class Main {
 		 */
 		AgentsConnection.connect();
 		
-		HttpInterface httpInterface = new HttpInterface();
+		
 		MarketAgent marketAgent = new MarketAgent(new AgentID("MarketAgent"));
 		marketAgent.start();
-		httpInterface.execute();
+		
 	}
 
 }
