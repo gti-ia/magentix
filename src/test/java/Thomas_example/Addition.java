@@ -44,8 +44,10 @@ public class Addition extends CAgent {
 		{
 
 			String result = omsProxy.acquireRole("operation", "calculator");
-			logger.info("["+this.getName()+"] Result acquire role participant: "+result);
-
+			logger.info("["+this.getName()+"] Result acquire role operation: "+result);
+			
+			System.out.println("["+this.getName()+"]"+" operation (calculator) role acquired");
+			
 			ArrayList<String> resultRegister=sfProxy.registerService("http://localhost:8080/testSFservices/testSFservices/owl/owls/Addition.owl");
 			Iterator<String> iterRes=resultRegister.iterator();
 			String registerRes="";
@@ -53,6 +55,8 @@ public class Addition extends CAgent {
 				registerRes+=iterRes.next()+"\n";
 			}
 			logger.info("["+this.getName()+"] Result registerService: "+registerRes);
+			
+			System.out.println("["+this.getName()+"] "+ "Addition service registered. Waiting Request");
 
 			CFactory additionTalk = new myFIPA_REQUEST().newFactory("ADDITION_TALK", null,
 					0, myProcessor.getMyAgent());

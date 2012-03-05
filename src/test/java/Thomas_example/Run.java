@@ -6,8 +6,6 @@ import org.apache.log4j.xml.DOMConfigurator;
 import es.upv.dsic.gti_ia.architecture.Monitor;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
-import es.upv.dsic.gti_ia.organization.OMS;
-import es.upv.dsic.gti_ia.organization.SF;
 
 
 public class Run {
@@ -30,16 +28,6 @@ public class Run {
 
 
 		try {
-			
-			
-			/**
-			 * Instantiating and execute the OMS and SF agents
-			 */
-			OMS oms = OMS.getOMS();
-			SF sf = SF.getSF();
-			
-			oms.start();
-			sf.start();
 			
 			
 			/**

@@ -51,7 +51,7 @@ public class James extends CAgent {
 
 			String result = omsProxy.acquireRole("student","school");
 			logger.info("["+this.getName()+"] Result acquire role student: "+result);
-
+			System.out.println("["+this.getName()+"]"+" student role (school) acquired");
 			
 			//---------------------------------------------------------------------
 			//---------------------Searching for the Addition service----------------------
@@ -107,7 +107,8 @@ public class James extends CAgent {
 					agent_inputs.put(input,"0");
 			}
 
-
+			System.out.println("["+this.getName()+"]"+" Requesting Addition Service");
+			
 			//Building the ACL message
 			ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
 			msg.setReceiver(new AgentID(providers.get(0).getEntityID()));
@@ -176,7 +177,7 @@ public class James extends CAgent {
 					agent_inputs.put(input,"0");
 			}
 
-
+			System.out.println("["+this.getName()+"]"+" Requesting Product Service");
 			msg=null;
 
 			msg = new ACLMessage(ACLMessage.REQUEST);
@@ -242,13 +243,14 @@ public class James extends CAgent {
 				agent_inputs.put(input,resultEquation);
 			}
 
-
+			System.out.println("["+this.getName()+"]"+" Executing Square Service");
+			
 			HashMap<String,Object> resultExecution=st.executeWebService(providersGrounding.get(0), agent_inputs);
 
 			Double resultContent=(Double)resultExecution.get("Result");
 
 			logger.info("\n\n["+this.getName()+"] Final result: "+resultContent+"\n\n");
-			
+			System.out.println("\n\n["+this.getName()+"] Final result: "+resultContent+"\n\n");
 			
 			
 			String finishContent="<inform>"+
@@ -304,7 +306,7 @@ public class James extends CAgent {
 	 */
 	class myFIPA_REQUEST extends FIPA_REQUEST_Initiator {
 		protected void doInform(CProcessor myProcessor, ACLMessage msg) {
-			System.out.println(myProcessor.getMyAgent().getName() + ": "
+			System.out.println("["+myProcessor.getMyAgent().getName()+"]"
 					+ msg.getSender().name + " informs me \n"
 					+ msg.getContent());
 			requestResult=msg.getContent();

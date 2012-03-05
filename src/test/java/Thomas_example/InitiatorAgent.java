@@ -33,6 +33,8 @@ public class InitiatorAgent extends CAgent {
 
 		try
 		{
+			System.out.println("["+this.getName()+"]"+" Initializing Example");
+			
 			String result = omsProxy.acquireRole("participant", "virtual");
 			logger.info("["+this.getName()+"] Result acquire role participant: "+result);
 
@@ -70,6 +72,7 @@ public class InitiatorAgent extends CAgent {
 			result = omsProxy.registerRole("student", "school", "external", "public","member");
 			logger.info("["+this.getName()+"] Result register role student: "+result);
 
+			System.out.println("["+this.getName()+"] "+ "Scenario initialized");
 			
 		}catch(THOMASException e)
 		{
@@ -83,7 +86,7 @@ public class InitiatorAgent extends CAgent {
 	@Override
 	protected void finalize(CProcessor firstProcessor,
 			ACLMessage finalizeMessage) {
-		System.out.println("["+firstProcessor.getMyAgent().getName()+"] end execution!");	 
+		System.out.println("["+firstProcessor.getMyAgent().getName()+"] End execution");	 
 
 	}
 	
@@ -122,6 +125,10 @@ public class InitiatorAgent extends CAgent {
 				sfProxy.deregisterService("http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#ProductProfile");
 				sfProxy.deregisterService("http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl#SquareProfile");
 				sfProxy.deregisterService("http://localhost:8080/testSFservices/testSFservices/owl/owls/Addition.owl#AdditionProfile");
+				
+				omsProxy.leaveRole("participant", "virtual");
+				
+				System.out.println("["+myProcessor.getMyAgent().getName()+"]"+" Example Ended. Roles, Units and Services deregistered");
 				
 			} catch (THOMASException e) {
 				

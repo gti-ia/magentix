@@ -47,8 +47,9 @@ public class Product extends CAgent {
 		{
 
 			String result = omsProxy.acquireRole("operation", "calculator");
-			logger.info("["+this.getName()+"] Result acquire role participant: "+result);
+			logger.info("["+this.getName()+"] Result acquire role operation: "+result);
 
+			System.out.println("["+this.getName()+"]"+" operation (calculator) role acquired");
 			
 			ArrayList<String> resultRegister = sfProxy.registerService("http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl");
 			Iterator<String> iterRes=resultRegister.iterator();
@@ -66,6 +67,8 @@ public class Product extends CAgent {
 				registerRes+=iterRes.next()+"\n";
 			}
 			logger.info("["+this.getName()+"] Result registerService: "+registerRes);
+			
+			System.out.println("["+this.getName()+"] "+ "Product and Square services registered. Waiting Request");
 
 			CFactory additionTalk = new myFIPA_REQUEST().newFactory("PRODUCT_TALK", null,
 					0, myProcessor.getMyAgent());
