@@ -49,6 +49,9 @@ public class James extends CAgent {
 
 			//James has to resolve the equation (5 * (3 + 4))^2
 
+			System.out.println("["+this.getName()+"]"+" I want to resolve the equation (5 * (3 + 4))^2");
+			
+			
 			String result = omsProxy.acquireRole("student","school");
 			logger.info("["+this.getName()+"] Result acquire role student: "+result);
 			System.out.println("["+this.getName()+"]"+" student role (school) acquired");
@@ -107,7 +110,7 @@ public class James extends CAgent {
 					agent_inputs.put(input,"0");
 			}
 
-			System.out.println("["+this.getName()+"]"+" Requesting Addition Service");
+			System.out.println("["+this.getName()+"]"+" Requesting Addition Service (3+4)");
 			
 			//Building the ACL message
 			ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
@@ -177,7 +180,7 @@ public class James extends CAgent {
 					agent_inputs.put(input,"0");
 			}
 
-			System.out.println("["+this.getName()+"]"+" Requesting Product Service");
+			System.out.println("["+this.getName()+"]"+" Requesting Product Service (5*7)");
 			msg=null;
 
 			msg = new ACLMessage(ACLMessage.REQUEST);
@@ -243,7 +246,7 @@ public class James extends CAgent {
 				agent_inputs.put(input,resultEquation);
 			}
 
-			System.out.println("["+this.getName()+"]"+" Executing Square Service");
+			System.out.println("["+this.getName()+"]"+" Executing Square Service (35^2)");
 			
 			HashMap<String,Object> resultExecution=st.executeWebService(providersGrounding.get(0), agent_inputs);
 
