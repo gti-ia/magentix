@@ -44,7 +44,7 @@ public class TestArgCAgent {
 		try {
 			int nTestCases = 1;
 
-			int nOperators = 3;
+			int nOperators = 7;
 			int nExperts = 0;
 			int nManagers = 0;
 
@@ -63,14 +63,13 @@ public class TestArgCAgent {
 			//repeat test for different number of operators
 			for (nOperators = 7; nOperators <= 7; nOperators += 2) {
 				
-				//initialise the argument-cases file names
+				//initialize the argument-cases file names
 				iniArgFileNames = new ArrayList<String>();
 				for (int i = 0; i < nOperators; i++) {
 					iniArgFileNames.add("testArgumentation/partArgInc/partArg" + "Operator" + i + ".dat");
 				}
 				//empty argument-cases partitions
 				AgentsCreation.createEmptyArgCasesPartitions(iniArgFileNames);
-				//TODO que no cree buit!
 				
 				//create the social entities, friends list, and dependency relation between all agents
 				ArrayList<SocialEntity> socialEntities = AgentsCreation.createSocialEntities("ArgLearnCAg", nOperators,
@@ -87,7 +86,7 @@ public class TestArgCAgent {
 				Group group = new Group(1, "group1", new ValPref(values), socialEntities);
 
 				//repeat tests for different number of domain-cases for each argumentative agent
-				for (int cases = 40; cases <= 45; cases += 5) {
+				for (int cases = 5; cases <= 45; cases += 5) {
 
 					iniDomainFiles = new ArrayList<String>();
 					for (int i = 0; i < nOperators; i++) {
