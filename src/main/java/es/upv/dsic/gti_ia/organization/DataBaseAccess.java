@@ -10,7 +10,7 @@ import java.sql.Statement;
  * This class is responsible for connection and database queries.
  * 
  */
-public class DataBaseAcces {
+public class DataBaseAccess {
 
 	
 	
@@ -106,10 +106,10 @@ public class DataBaseAcces {
 	public ResultSet getRoleList() {
 		ResultSet rs = null;
 		try {
-			// Se crea un Statement, para realizar la consulta
+			// Create Statement to make the query
 			Statement s = connection.createStatement();
 
-			// Se realiza la consulta. Los resultados se guardan en el
+			// Make the query. Results obtained in
 			// ResultSet rs
 			String sql="select r1.RoleID, r1.Position, r1.Accessibility, r1.Visibility, r2.RoleID as Inheritance, un.UnitID from (role r1 left join role r2 on r1.inheritance=r2.id) left join unit un on r1.unit=un.ID";
 			sql.toLowerCase();
@@ -154,10 +154,10 @@ public class DataBaseAcces {
 	public ResultSet getListEntityPlay() {
 		ResultSet rs = null;
 		try {
-			// Se crea un Statement, para realizar la consulta
+			// Create Statement to make the query
 			Statement s = connection.createStatement();
 
-			// Se realiza la consulta. Los resultados se guardan en el
+			// Make the query. Results obtained in
 			// ResultSet rs
 			String sql = "select R.RoleID, U.UnitID, E.EntityID from EntityPLayList EPL, Role R, Unit U, Entity E Where EPL.Role=R.ID AND EPL.Unit=U.ID AND EPL.Entity=E.ID";
 			sql = sql.toLowerCase();
@@ -175,12 +175,11 @@ public class DataBaseAcces {
 	public ResultSet getListProfileId() {
 		ResultSet rs = null;
 		try {
-			// Se crea un Statement, para realizar la consulta
+			// Create Statement to make the query
 			Statement s = connection.createStatement();
 
-			// Se realiza la consulta. Los resultados se guardan en el
+			// Make the query. Results obtained in
 			// ResultSet rs
-
 			String sql="SELECT s.serviceprofileid AS profileID,s.profilename AS profile, s.urlprofile AS URL FROM serviceprofileid s";
 			sql.toLowerCase();
 			rs = s.executeQuery(sql);
@@ -201,10 +200,11 @@ public class DataBaseAcces {
 		ResultSet rs = null;
 		try
 		{
-
+			// Create Statement to make the query
 			Statement s = connection.createStatement();
 
-
+			// Make the query. Results obtained in
+			// ResultSet rs
 			String sql="SELECT s.serviceprocessid AS processID, s.processname AS process FROM serviceprocessid s WHERE s.serviceprofileid='"+profileid+"'  ";
 			sql.toLowerCase();
 			rs = s.executeQuery(sql);
@@ -224,10 +224,11 @@ public class DataBaseAcces {
 		ResultSet rs = null;
 		try
 		{
-	
+			// Create Statement to make the query
 			Statement s = connection.createStatement();
 
-		
+			// Make the query. Results obtained in
+			// ResultSet rs
 			String sql="SELECT s.serviceprocessid AS processID, s.processname AS process FROM serviceprocessid s ";
 			sql.toLowerCase();
 			rs = s.executeQuery(sql);
@@ -248,10 +249,10 @@ public class DataBaseAcces {
 		ResultSet rs = null;
 		try
 		{
-			// Se crea un Statement, para realizar la consulta
+			// Create Statement to make the query
 			Statement s = connection.createStatement();
 
-			// Se realiza la consulta. Los resultados se guardan en el
+			// Make the query. Results obtained in
 			// ResultSet rs
 			String sql="SELECT e.entityId FROM entityplaylist u join entity e on u.entity = e.id WHERE u.unit='"+unit+"'  ";
 			sql.toLowerCase();
@@ -273,10 +274,10 @@ public class DataBaseAcces {
 		ResultSet rs = null;
 		try
 		{
-			// Se crea un Statement, para realizar la consulta
+			// Create Statement to make the query
 			Statement s = connection.createStatement();
 
-			// Se realiza la consulta. Los resultados se guardan en el
+			// Make the query. Results obtained in
 			// ResultSet rs
 			String sql="SELECT u.id FROM unit u WHERE u.unitid='"+unit+"'  ";
 			sql.toLowerCase();
@@ -298,10 +299,10 @@ public class DataBaseAcces {
 		ResultSet rs = null;
 		try
 		{
-			// Se crea un Statement, para realizar la consulta
+			// Create Statement to make the query
 			Statement s = connection.createStatement();
 
-			// Se realiza la consulta. Los resultados se guardan en el
+			// Make the query. Results obtained in
 			// ResultSet rs
 			String sql="SELECT u.serviceprofileid FROM serviceprofileid u WHERE u.urlprofile='"+url+"'  ";
 			sql.toLowerCase();

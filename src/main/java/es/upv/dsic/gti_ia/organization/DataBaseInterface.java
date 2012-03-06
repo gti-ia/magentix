@@ -9,10 +9,10 @@ import java.util.Set;
 
 class DataBaseInterface
 {
-	private DataBaseAcces	db;
+	private DataBaseAccess	db;
 	DataBaseInterface()
 	{
-		db = new DataBaseAcces();
+		db = new DataBaseAccess();
 		
 		db.connect();
 	}

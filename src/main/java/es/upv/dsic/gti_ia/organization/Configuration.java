@@ -83,7 +83,7 @@ public class Configuration {
 
 	/**
 	 * Name of the database server
-	 * @return serverName ej. localhost 
+	 * @return serverName ex. localhost 
 	 */
 	public String getdatabaseServer()
 	{

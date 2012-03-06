@@ -30,8 +30,8 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
- * This class allows us to parse a OWL-S and WSDL files in order to extract relevant
- * information, such as service inputs, outputs, list of roles for both
+ * This class allows us to parse a OWL-S and WSDL files in order to extract
+ * relevant information, such as service inputs, outputs, list of roles for both
  * providers, such as customers.
  * 
  */
@@ -41,24 +41,24 @@ public class Oracle {
 	 * Attributes
 	 */
 	private Document doc = null;
-	
+
 	private ArrayList<String> owlsProfileInputs;
 	private ArrayList<String> owlsProfileOutputs;
-	
+
 	private ArrayList<String> wsdlInputParams = new ArrayList<String>();
 	private ArrayList<String> wsdlOutputParams = new ArrayList<String>();
-	
+
 	private ArrayList<String> wsdlInputTypes = new ArrayList<String>();
 	private ArrayList<String> wsdlOutputTypes = new ArrayList<String>();
-	
+
 	private ArrayList<Provider> providers;
 	private ArrayList<String> providersGroundingWSDL;
-	
+
 	private ArrayList<String> providerList;
 	private ArrayList<String> clientList;
 	private ArrayList<String> clientunitList;
 	private ArrayList<String> providerunitList;
-	
+
 	private Map<String, String> elements = new LinkedHashMap<String, String>();
 
 	private String wsdl;
@@ -71,10 +71,9 @@ public class Oracle {
 	private String output_message_WSDL;
 
 	private String processLocalName;
-	
+
 	private boolean open = true;
 
-	
 	/**
 	 * Method to parses an OWL-S file
 	 * 
@@ -115,50 +114,46 @@ public class Oracle {
 	public Oracle(String s) {
 		try {
 			doc = string2DOM(s);
-			
+
 			visitNodeProcess(doc, 0);
-			
+
 		} catch (Exception error) {
 			error.printStackTrace();
 		}
 	}
 
-	
 	public Oracle() {
 
 	}
 
-	
 	/**
 	 * Parses only a WSDL file
-	 * @param wsdlURL to parse
+	 * 
+	 * @param wsdlURL
+	 *            to parse
 	 */
-	public void parseWSDL(String wsdlURL){
+	public void parseWSDL(String wsdlURL) {
 		visitWSDL(wsdlURL);
 	}
-	
-	
-	
-	
-	
+
 	/**
-	 * Returns the profile input parameters of an OWL-S parsed file 
+	 * Returns the profile input parameters of an OWL-S parsed file
 	 * 
-	 * @return the profile input parameters of an OWL-S parsed file 
+	 * @return the profile input parameters of an OWL-S parsed file
 	 */
 	public ArrayList<String> getOwlsProfileInputs() {
 		return owlsProfileInputs;
 	}
 
 	/**
-	 * Returns the profile output parameters of an OWL-S parsed file 
+	 * Returns the profile output parameters of an OWL-S parsed file
 	 * 
 	 * @return the profile output parameters of an OWL-S parsed file
 	 */
 	public ArrayList<String> getOwlsProfileOutputs() {
 		return owlsProfileOutputs;
 	}
-	
+
 	/**
 	 * Returns the WSDL input type parameters of WSDL parsed file
 	 * 
@@ -167,7 +162,7 @@ public class Oracle {
 	public ArrayList<String> getWsdlInputsTypes() {
 		return wsdlInputTypes;
 	}
-		
+
 	/**
 	 * Returns the WSDL output type parameters of WSDL parsed file
 	 * 
@@ -179,20 +174,22 @@ public class Oracle {
 
 	/**
 	 * Returns the WSDL input parameters of WSDL parsed file
+	 * 
 	 * @return the WSDL input parameters of WSDL parsed file
 	 */
 	public ArrayList<String> getWSDLInputs() {
 		return wsdlInputParams;
 	}
-	
+
 	/**
 	 * Returns the WSDL output parameters of WSDL parsed file
+	 * 
 	 * @return the WSDL output parameters of WSDL parsed file
 	 */
 	public ArrayList<String> getWSDLOutputs() {
 		return wsdlOutputParams;
 	}
-	
+
 	/**
 	 * Returns the list of providers (agents or organizations) of the service
 	 * 
@@ -210,7 +207,7 @@ public class Oracle {
 	public ArrayList<String> getProvidersGroundingWSDL() {
 		return providersGroundingWSDL;
 	}
-	
+
 	/**
 	 * Returns the Name Service parameter of WSDL file parsed
 	 * 
@@ -256,9 +253,6 @@ public class Oracle {
 		return elements;
 	}
 
-	
-	
-
 	/**
 	 * Returns the list of roles available to provide the service
 	 * 
@@ -286,7 +280,6 @@ public class Oracle {
 	public String getServiceName() {
 		return serviceName;
 	}
-
 
 	/**
 	 * Returns providerUnitList is a unit where the role client is defined
@@ -318,7 +311,7 @@ public class Oracle {
 	}
 
 	/**
-	 * Sets unitList 
+	 * Sets unitList
 	 * 
 	 * @param unitList
 	 *            this parameter is a unit where the role provider is defined
@@ -329,16 +322,18 @@ public class Oracle {
 
 	/**
 	 * Returns the process local name
+	 * 
 	 * @return the process local name
 	 */
 	public String getProcessLocalName() {
 		return processLocalName;
 	}
 
-
 	/**
 	 * Parses and extract data from a WSDL file in the given URL
-	 * @param url of the WSDL to extract data
+	 * 
+	 * @param url
+	 *            of the WSDL to extract data
 	 */
 	private void visitWSDL(String url) {
 
@@ -367,12 +362,12 @@ public class Oracle {
 			XMLStreamReader reader = factory.createXMLStreamReader(is);
 
 			ArrayList<String> parameters = new ArrayList<String>();
-			int inputsRead=0;
+			int inputsRead = 0;
 
 			while (reader.getEventType() != XMLStreamConstants.END_DOCUMENT) {
 				switch (reader.next()) {
 				case XMLStreamConstants.START_ELEMENT:
-					
+
 					if (reader.getLocalName().equals("service")) {
 						qnameService = reader.getAttributeLocalName(0);
 					} else if (reader.getLocalName().equals("portType")) {
@@ -381,32 +376,32 @@ public class Oracle {
 						operation = reader.getAttributeValue(0);
 					} else if (reader.getLocalName().equals("element")) {
 						if (reader.getPrefix().equals("xsd")) {
-							if(reader.getAttributeValue(0).equalsIgnoreCase(serviceName))
-							parameters.add(reader.getAttributeValue(0));
-							
-							if(reader.getAttributeCount()>1){
-								
-								String inOut=reader.getAttributeValue(0);
-								String type=reader.getAttributeValue(1).substring(reader.getAttributeValue(1).indexOf(":")+1);
-								if(inputsRead<=1){
+							if (reader.getAttributeValue(0).equalsIgnoreCase(serviceName))
+								parameters.add(reader.getAttributeValue(0));
+
+							if (reader.getAttributeCount() > 1) {
+
+								String inOut = reader.getAttributeValue(0);
+								String type = reader.getAttributeValue(1).substring(
+										reader.getAttributeValue(1).indexOf(":") + 1);
+								if (inputsRead <= 1) {
 									wsdlInputParams.add(inOut);
 									wsdlInputTypes.add(type);
-								}
-								else{
+								} else {
 									wsdlOutputParams.add(inOut);
 									wsdlOutputTypes.add(type);
 								}
-							}
-							else{
+							} else {
 								inputsRead++;
 							}
-							
+
 						}
 						// Stop reading
 						if (reader.getAttributeValue(0).equals(output_message_WSDL))
 							open = false;
 						if (reader.getAttributeCount() == 2 & open) {
-							elements.put(reader.getAttributeValue(0), reader.getAttributeValue(1).substring(reader.getAttributeValue(1).indexOf(":") + 1));
+							elements.put(reader.getAttributeValue(0),
+									reader.getAttributeValue(1).substring(reader.getAttributeValue(1).indexOf(":") + 1));
 						}
 
 					}
@@ -433,8 +428,11 @@ public class Oracle {
 
 	/**
 	 * Parses a node of the process part of an OWL-S document
-	 * @param node to parse
-	 * @param level of the parser
+	 * 
+	 * @param node
+	 *            to parse
+	 * @param level
+	 *            of the parser
 	 */
 	private void visitNodeProcess(Node node, int level) {
 		NodeList nl = node.getChildNodes();
@@ -447,7 +445,6 @@ public class Oracle {
 			NodeList n = childNode.getChildNodes();
 			for (int j = 0; j < n.getLength(); j++) {
 
-				
 				// It is the service name (aka provider's behaviour to execute)
 				if (n.item(j).getNodeName().equalsIgnoreCase("process:Input")) {
 
@@ -456,7 +453,8 @@ public class Oracle {
 					for (int k = 0; k < n1.getLength(); k++) {
 						if (n1.item(k).getNodeName().equalsIgnoreCase("process:parameterType")) {
 
-							String type = n1.item(k).getTextContent().substring(n1.item(k).getTextContent().indexOf("#") + 1);
+							String type = n1.item(k).getTextContent()
+									.substring(n1.item(k).getTextContent().indexOf("#") + 1);
 							wsdlInputTypes.add(type);
 						}
 
@@ -469,7 +467,8 @@ public class Oracle {
 					for (int k = 0; k < n1.getLength(); k++) {
 						if (n1.item(k).getNodeName().equalsIgnoreCase("process:parameterType")) {
 
-							String type = n1.item(k).getTextContent().substring(n1.item(k).getTextContent().indexOf("#") + 1);
+							String type = n1.item(k).getTextContent()
+									.substring(n1.item(k).getTextContent().indexOf("#") + 1);
 							wsdlOutputTypes.add(type);
 						}
 
@@ -494,15 +493,18 @@ public class Oracle {
 
 			}
 
-			//visit the child node
+			// visit the child node
 			visit(childNode, level + 1);
 		}
 	}
 
 	/**
 	 * Parses a node of the profile part of an OWL-S document
-	 * @param node to parse
-	 * @param level of the parser
+	 * 
+	 * @param node
+	 *            to parse
+	 * @param level
+	 *            of the parser
 	 */
 	private void visit(Node node, int level) {
 		NodeList nl = node.getChildNodes();
@@ -600,7 +602,8 @@ public class Oracle {
 			}
 
 			// It is a role of provider list
-			else if (childNode.getNodeName().equalsIgnoreCase("role:role_list") && childNode.getAttributes().item(0).getNodeValue().equalsIgnoreCase("provider_list")) {
+			else if (childNode.getNodeName().equalsIgnoreCase("role:role_list")
+					&& childNode.getAttributes().item(0).getNodeValue().equalsIgnoreCase("provider_list")) {
 
 				// Extract list of grandson
 				NodeList grandsonList = childNode.getChildNodes();
@@ -625,7 +628,8 @@ public class Oracle {
 							providerList.add(nodeIDValue);
 						}
 
-						// Check the necessary Unit to acquire this role (first child)
+						// Check the necessary Unit to acquire this role (first
+						// child)
 						NodeList greatgrandsonNodeList = grandsonNode.getChildNodes();
 
 						int listLength = greatgrandsonNodeList.getLength();
@@ -660,7 +664,8 @@ public class Oracle {
 			}
 
 			// It is a role of client list
-			else if (childNode.getNodeName().equalsIgnoreCase("role:role_list") && childNode.getAttributes().item(0).getNodeValue().equalsIgnoreCase("client_list")) {
+			else if (childNode.getNodeName().equalsIgnoreCase("role:role_list")
+					&& childNode.getAttributes().item(0).getNodeValue().equalsIgnoreCase("client_list")) {
 
 				// Extract list of grandson
 				NodeList grandsonList = childNode.getChildNodes();
@@ -685,7 +690,8 @@ public class Oracle {
 							clientList.add(nodeIDValue);
 						}
 
-						// Check the necessary Unit to acquire this role (first child)
+						// Check the necessary Unit to acquire this role (first
+						// child)
 						NodeList greatgrandsonNodeList = grandsonNode.getChildNodes();
 
 						int listLength = greatgrandsonNodeList.getLength();
@@ -717,19 +723,21 @@ public class Oracle {
 				}
 
 			}
-			
-			//visit the child node
+
+			// visit the child node
 			visit(childNode, level + 1);
 		}
 	}
 
 	/**
 	 * Converts an {@link String} to a {@link Document} to parse
-	 * @param s String to convert
+	 * 
+	 * @param s
+	 *            String to convert
 	 * @return {@link Document} that can be parsed
 	 */
 	private Document string2DOM(String s) {
-		
+
 		Document tmpX = null;
 		DocumentBuilder builder = null;
 		try {
@@ -748,9 +756,9 @@ public class Oracle {
 			return null;
 		}
 		return tmpX;
-		
+
 	}
-	
+
 	/**
 	 * Converts a file to {@link org.w3c.dom.Document}
 	 * 

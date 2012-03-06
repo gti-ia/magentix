@@ -11,10 +11,9 @@ import es.upv.dsic.gti_ia.cAgents.protocols.FIPA_REQUEST_Participant;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 
-
 /**
  * SF agent is responsible for managing all the request messages from other
- * entities SF agent follows a FIPA-Request protocol
+ * entities. It follows a FIPA-Request protocol
  */
 public class SF extends CAgent {
 
@@ -23,46 +22,47 @@ public class SF extends CAgent {
 	private static SF sf = null;
 	private String SFServiceDescriptionLocation = configuration.getSFServiceDescriptionLocation();
 
-	private static HashMap<String, String> sfServicesURLs=new HashMap<String, String>();
+	private static HashMap<String, String> sfServicesURLs = new HashMap<String, String>();
 	static Logger logger = Logger.getLogger(SF.class);
-	
-	ServiceTools st=new ServiceTools();
+
+	ServiceTools st = new ServiceTools();
 
 	/**
 	 * Returns an instance of the agents SF
+	 * 
 	 * @param agent
 	 * @return sf
 	 */
-	static public SF getSF(AgentID agent)
-	{
+	static public SF getSF(AgentID agent) {
 		if (sf == null)
-			try
-		{
+			try {
 				sf = new SF(agent);
-		}catch(Exception e){logger.error(e);}
-		return sf;		
+			} catch (Exception e) {
+				logger.error(e);
+			}
+		return sf;
 	}
 
 	/**
-	 *  Returns an instance of the agents SF
+	 * Returns an instance of the agents SF
+	 * 
 	 * @return sf
 	 */
-	static public SF getSF()
-	{
+	static public SF getSF() {
 		if (sf == null)
-			try
-		{
+			try {
 				sf = new SF(new AgentID("SF"));
-		}catch(Exception e){logger.error(e);}
+			} catch (Exception e) {
+				logger.error(e);
+			}
 		return sf;
 
 	}
 
-
 	/**
 	 * Initial registration of the SF service profiles
 	 * 
-	 * @param
+	 * @param aid
 	 * @throws RuntimeException
 	 */
 
@@ -70,17 +70,17 @@ public class SF extends CAgent {
 
 		super(aid);
 
-		sfServicesURLs.put("RegisterService", SFServiceDescriptionLocation+"RegisterService?wsdl");
-		sfServicesURLs.put("DeregisterService", SFServiceDescriptionLocation+"DeregisterService?wsdl");
-		sfServicesURLs.put("GetService", SFServiceDescriptionLocation+"GetService?wsdl");
-		sfServicesURLs.put("SearchService", SFServiceDescriptionLocation+"SearchService?wsdl");
-		sfServicesURLs.put("RemoveProvider", SFServiceDescriptionLocation+"RemoveProvider?wsdl");
+		sfServicesURLs.put("RegisterService", SFServiceDescriptionLocation + "RegisterService?wsdl");
+		sfServicesURLs.put("DeregisterService", SFServiceDescriptionLocation + "DeregisterService?wsdl");
+		sfServicesURLs.put("GetService", SFServiceDescriptionLocation + "GetService?wsdl");
+		sfServicesURLs.put("SearchService", SFServiceDescriptionLocation + "SearchService?wsdl");
+		sfServicesURLs.put("RemoveProvider", SFServiceDescriptionLocation + "RemoveProvider?wsdl");
 
 	}
 
 	/**
-	 * Change the URL where the owl's document is
-	 * located.
+	 * Change the URL where the OWL-S document is located.
+	 * 
 	 * @param SFUrl
 	 */
 	public void setSFServiceDescriptionLocation(String SFUrl) {
@@ -88,24 +88,20 @@ public class SF extends CAgent {
 	}
 
 	/**
-	 * get the URL where the owl's document is
-	 * located.
+	 * get the URL where the OWL-S document is located.
+	 * 
 	 * @param SFUrl
 	 */
 	public String getSFServiceDescriptionLocation() {
 		return this.SFServiceDescriptionLocation;
 	}
 
-	
-	
 	@Override
-	protected void finalize(CProcessor firstProcessor,
-			ACLMessage finalizeMessage) {
+	protected void finalize(CProcessor firstProcessor, ACLMessage finalizeMessage) {
 	}
 
 	@Override
-	protected void execution(CProcessor firstProcessor,
-			ACLMessage welcomeMessage) {
+	protected void execution(CProcessor firstProcessor, ACLMessage welcomeMessage) {
 
 		class myFIPA_REQUEST extends FIPA_REQUEST_Participant {
 
@@ -113,23 +109,26 @@ public class SF extends CAgent {
 			protected String doAction(CProcessor myProcessor) {
 				String next = "";
 
-				try{
+				try {
 
-					HashMap<String,String> inputs=new HashMap<String, String>();
-					
-					String serviceName=st.extractServiceContent(myProcessor.getLastReceivedMessage().getContent(),inputs);
-					String serviceWSDLURL=sfServicesURLs.get(serviceName);
-					HashMap<String,Object> result=st.executeWebService(serviceWSDLURL, inputs);
-					
-					logger.info("[SF]Values obtained... ");
+					HashMap<String, String> inputs = new HashMap<String, String>();
 
-					logger.info("[SF]Creating inform message to send...");
+					// Extract the service name and inputs of the request
+					String serviceName = st.extractServiceContent(myProcessor.getLastReceivedMessage().getContent(),
+							inputs);
+					// get the SF service WSDL URL
+					String serviceWSDLURL = sfServicesURLs.get(serviceName);
+					// execute the SF service Requested
+					HashMap<String, Object> result = st.executeWebService(serviceWSDLURL, inputs);
+
+					logger.info("[SF] Values obtained... ");
+
+					logger.info("[SF] Creating inform message to send...");
 
 					next = "INFORM";
 
-					logger.info("[SF]Before set message content...");
-					
-					String resultContent=(String)result.get("Result");
+					// get the result and put it in the response
+					String resultContent = (String) result.get("Result");
 					myProcessor.getLastReceivedMessage().setContent(resultContent);
 
 				} catch (Exception e) {
@@ -142,34 +141,30 @@ public class SF extends CAgent {
 			@Override
 			protected void doInform(CProcessor myProcessor, ACLMessage response) {
 				ACLMessage lastReceivedMessage = myProcessor.getLastReceivedMessage();
-				response.setContent(lastReceivedMessage.getContent());				
+				response.setContent(lastReceivedMessage.getContent());
 			}
 
 			@Override
-			protected String doReceiveRequest(CProcessor myProcessor,
-					ACLMessage request) {
+			protected String doReceiveRequest(CProcessor myProcessor, ACLMessage request) {
 				String next = "";
 				ACLMessage msg = request;
 
 				if (msg != null) {
 
 					try {
-						
-						
-						HashMap<String,String> inputs=new HashMap<String, String>();
+
+						// extract the data of the request to check if the
+						// requested service is one of the SF services
+						HashMap<String, String> inputs = new HashMap<String, String>();
 						String serviceName = st.extractServiceContent(msg.getContent(), inputs);
 
-						logger.info("[SF]Service Name: " + serviceName);
+						logger.info("[SF] Service Name: " + serviceName);
 
-
-						if (sfServicesURLs.containsKey(serviceName)) //if (sfServicesURLs.containsKey(serviceName))
-						{
-
+						if (sfServicesURLs.containsKey(serviceName)) {
 							logger.info("AGREE");
 							next = "AGREE";
 
 						} else {
-
 							logger.info("REFUSE");
 							next = "REFUSE";
 						}
@@ -189,14 +184,13 @@ public class SF extends CAgent {
 					next = "NOT_UNDERSTOOD";
 				}
 
-				logger.info("[SF]Sending First message:" + next);
+				logger.info("[SF] Sending First message:" + next);
 
 				return next;
 			}
 		}
 
-		CFactory talk = new myFIPA_REQUEST().newFactory("TALK", null,
-				1, firstProcessor.getMyAgent());
+		CFactory talk = new myFIPA_REQUEST().newFactory("TALK", null, 1, firstProcessor.getMyAgent());
 
 		// Finally the factory is setup to answer to incoming messages that
 		// can start the participation of the agent in a new conversation
