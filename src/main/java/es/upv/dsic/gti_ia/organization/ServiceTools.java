@@ -1,5 +1,9 @@
 package es.upv.dsic.gti_ia.organization;
 
+
+/**
+ * This class provides tools in order to facilitate the execution of the services.
+ */
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -10,7 +14,7 @@ public class ServiceTools {
 	ResponseParser rp = new ResponseParser();
 
 	/**
-	 * Builds a new string with a XML format. This XML is formed by servicename and list of the 
+	 * Builds a new string with a XML format. This XML is formed by service name and list of the 
 	 * inputs
 	 * 
 	 * @param serviceName The name of the service
@@ -33,13 +37,13 @@ public class ServiceTools {
 	}
 
 	/**
-	 * Parses a XML in order to extract the service name and fill the HashMap with the service inputs
+	 * Parses a XML in order to extract the service name and fill the HashMap with the service outputs
 	 * 
-	 * @param string with a XML format, in this XML will be contained the service name and inputs of the service
-	 * @param inputs is a new HashMap. In this HashMap the inputs are added
+	 * @param string with a XML format, in this XML will be contained the service name and service outputs
+	 * @param outputs is a new HashMap. In this HashMap the service outputs are added
 	 * @return service name
 	 */
-	public String extractServiceContent(String xml, HashMap<String, String> inputs) {
+	public String extractServiceContent(String xml, HashMap<String, String> outputs) {
 
 		rp.parseResponse(xml);
 
@@ -49,7 +53,7 @@ public class ServiceTools {
 
 		for (Entry<String, String> e : outputAux.entrySet()) {
 
-			inputs.put(e.getKey(), e.getValue());
+			outputs.put(e.getKey(), e.getValue());
 		}
 
 		return serviceName;

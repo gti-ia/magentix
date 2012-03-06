@@ -1,6 +1,8 @@
 package es.upv.dsic.gti_ia.organization;
 
-
+/**
+ * This class provides support to the execution of the services.
+ */
 
 
 import java.util.ArrayList;
