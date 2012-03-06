@@ -1,5 +1,13 @@
 package es.upv.dsic.gti_ia.organization;
 
+
+
+/**
+ * This class allows us to parse a service response in order to extract relevant
+ * information, such as service name, status, and result.
+ * 
+ */
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.StringWriter;
@@ -19,7 +27,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class ResponseParser {
+class ResponseParser {
 
 
 	String serviceName="";
@@ -30,35 +38,35 @@ public class ResponseParser {
 	ArrayList<String> elementsList=new ArrayList<String>();
 	HashMap<String,String> keyAndValueList=new HashMap<String,String>();
 
-	public String getServiceName() {
+	String getServiceName() {
 		return serviceName;
 	}
 
-	public String getStatus() {
+	String getStatus() {
 		return status;
 	}
 
-	public String getDescription() {
+	String getDescription() {
 		return description;
 	}
 
-	public String getSpecification() {
+	String getSpecification() {
 		return specification;
 	}
 
-	public ArrayList<ArrayList<String>> getItemsList() {
+	ArrayList<ArrayList<String>> getItemsList() {
 		return itemsList;
 	}
 
-	public ArrayList<String> getElementsList() {
+	ArrayList<String> getElementsList() {
 		return elementsList;
 	}
 
-	public HashMap<String,String> getKeyAndValueList() {
+	HashMap<String,String> getKeyAndValueList() {
 		return keyAndValueList;
 	}
 
-	public String DOM2String(Document doc)
+	String DOM2String(Document doc)
 	{
 		int coderror=0;
 		String msgerror="";
@@ -89,7 +97,7 @@ public class ResponseParser {
 		return s;
 	}
 
-	public static Document string2DOM(String s)
+	static Document string2DOM(String s)
 	{
 		int coderror=0;
 		String msgerror="";
@@ -118,7 +126,7 @@ public class ResponseParser {
 	}
 
 
-	public void parseResponse(String response){
+	void parseResponse(String response){
 		Document doc=string2DOM(response);
 
 		if(!doc.hasChildNodes() || !doc.getChildNodes().item(0).hasChildNodes()){
@@ -204,11 +212,5 @@ public class ResponseParser {
 
 		}
 
-
 	}
-
-
-
-
-
 }
