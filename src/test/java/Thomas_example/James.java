@@ -25,7 +25,7 @@ import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.organization.OMSProxy;
 import es.upv.dsic.gti_ia.organization.Oracle;
 import es.upv.dsic.gti_ia.organization.Provider;
-import es.upv.dsic.gti_ia.organization.ResponseParser;
+//import es.upv.dsic.gti_ia.organization.ResponseParser;
 import es.upv.dsic.gti_ia.organization.SFProxy;
 import es.upv.dsic.gti_ia.organization.ServiceTools;
 import es.upv.dsic.gti_ia.organization.THOMASException;
@@ -126,9 +126,12 @@ public class James extends CAgent {
 			this.send_request(msg);
 			
 			
-			ResponseParser rp=new ResponseParser();
-			rp.parseResponse(requestResult);
-			String resultEquation=rp.getKeyAndValueList().get("Result");
+			//ResponseParser rp=new ResponseParser();
+			ServiceTools st = new ServiceTools();
+			HashMap<String,String> inputs = new HashMap<String,String>();
+			st.extractServiceContent(requestResult, inputs);
+			//rp.parseResponse(requestResult);
+			String resultEquation=inputs.get("Result");// rp.getKeyAndValueList().get("Result");
 
 			//---------------------------------------------------------------------
 			//---------------------Searching for the Product service----------------------
@@ -195,9 +198,12 @@ public class James extends CAgent {
 			this.send_request(msg);
 
 			
-			rp=new ResponseParser();
-			rp.parseResponse(requestResult);
-			resultEquation=rp.getKeyAndValueList().get("Result");
+			//rp=new ResponseParser();
+			//rp.parseResponse(requestResult);
+			
+			inputs.clear();
+			st.extractServiceContent(requestResult, inputs);
+			resultEquation=inputs.get("Result");// rp.getKeyAndValueList().get("Result");
 			
 			//---------------------------------------------------------------------
 			//---------------------Searching for the Square service----------------------
