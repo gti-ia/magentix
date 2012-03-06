@@ -31,101 +31,90 @@ public class Product extends CAgent {
 
 	OMSProxy omsProxy = new OMSProxy(this);
 	SFProxy sfProxy = new SFProxy(this);
-	
 
 	public Product(AgentID aid) throws Exception {
 		super(aid);
 
 	}
 
-
 	protected void execution(CProcessor myProcessor, ACLMessage welcomeMessage) {
 
+		try {
 
-
-		try
-		{
+			CFactory informTalk = new myInform_Protocol().newFactory("Inform_TALK", 1, myProcessor.getMyAgent());
+			this.addFactoryAsParticipant(informTalk);
 
 			String result = omsProxy.acquireRole("operation", "calculator");
-			logger.info("["+this.getName()+"] Result acquire role operation: "+result);
+			logger.info("[" + this.getName() + "] Result acquire role operation: " + result);
 
-			System.out.println("["+this.getName()+"]"+" operation (calculator) role acquired");
-			
-			ArrayList<String> resultRegister = sfProxy.registerService("http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl");
-			Iterator<String> iterRes=resultRegister.iterator();
-			String registerRes="";
-			while(iterRes.hasNext()){
-				registerRes+=iterRes.next()+"\n";
+			System.out.println("[" + this.getName() + "]" + " operation (calculator) role acquired");
+
+			ArrayList<String> resultRegister = sfProxy
+					.registerService("http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl");
+			Iterator<String> iterRes = resultRegister.iterator();
+			String registerRes = "";
+			while (iterRes.hasNext()) {
+				registerRes += iterRes.next() + "\n";
 			}
-			logger.info("["+this.getName()+"] Result registerService: "+registerRes);
-			
-			
-			resultRegister = sfProxy.registerService("http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl");
-			iterRes=resultRegister.iterator();
-			registerRes="";
-			while(iterRes.hasNext()){
-				registerRes+=iterRes.next()+"\n";
+			logger.info("[" + this.getName() + "] Result registerService: " + registerRes);
+
+			resultRegister = sfProxy
+					.registerService("http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl");
+			iterRes = resultRegister.iterator();
+			registerRes = "";
+			while (iterRes.hasNext()) {
+				registerRes += iterRes.next() + "\n";
 			}
-			logger.info("["+this.getName()+"] Result registerService: "+registerRes);
-			
-			System.out.println("["+this.getName()+"] "+ "Product and Square services registered. Waiting Request");
+			logger.info("[" + this.getName() + "] Result registerService: " + registerRes);
 
-			CFactory additionTalk = new myFIPA_REQUEST().newFactory("PRODUCT_TALK", null,
-					0, myProcessor.getMyAgent());
+			System.out.println("[" + this.getName() + "] " + "Product and Square services registered. Waiting Request");
 
+			CFactory additionTalk = new myFIPA_REQUEST().newFactory("PRODUCT_TALK", null, 0, myProcessor.getMyAgent());
 
 			this.addFactoryAsParticipant(additionTalk);
 
-
-		}catch(THOMASException e)
-		{
+		} catch (THOMASException e) {
 			e.printStackTrace();
 		}
 
 	}
 
-
 	@Override
-	protected void finalize(CProcessor firstProcessor,
-			ACLMessage finalizeMessage) {
-		System.out.println("["+firstProcessor.getMyAgent().getName()+"] end execution!");	 
+	protected void finalize(CProcessor firstProcessor, ACLMessage finalizeMessage) {
+		System.out.println("[" + firstProcessor.getMyAgent().getName() + "] End execution");
 	}
 
-
-	//------------------------------------------------------------------------
-	//-----------------------CFactory implementation--------------------------
-	//------------------------------------------------------------------------
-
-
+	// ------------------------------------------------------------------------
+	// -----------------------CFactory implementation--------------------------
+	// ------------------------------------------------------------------------
 
 	class myFIPA_REQUEST extends FIPA_REQUEST_Participant {
 
-		ServiceTools st=new ServiceTools();
-		HashMap<String,String> inputs=new HashMap<String, String>();
-		String serviceName="";
-
+		ServiceTools st = new ServiceTools();
+		HashMap<String, String> inputs = new HashMap<String, String>();
+		String serviceName = "";
 
 		@Override
 		protected String doAction(CProcessor myProcessor) {
 			String next = "";
-			
-			double result=1;
-			try{
+
+			double result = 1;
+			try {
 
 				for (Entry<String, String> e : inputs.entrySet()) {
 
-					result *= Double.parseDouble(e.getValue()); 
+					result *= Double.parseDouble(e.getValue());
 				}
 
 				next = "INFORM";
-				String resultXML ="";
+				String resultXML = "";
 				resultXML += "<serviceOutput>\n";
-				resultXML += "<serviceName>"+serviceName+"</serviceName>\n";
+				resultXML += "<serviceName>" + serviceName + "</serviceName>\n";
 				resultXML += "<outputs>\n";
-				resultXML += "<Result>"+result+"</Result>\n";
+				resultXML += "<Result>" + result + "</Result>\n";
 				resultXML += "</outputs>\n";
 				resultXML += "</serviceOutput>\n";
-				
+
 				myProcessor.getLastReceivedMessage().setContent(resultXML);
 
 			} catch (Exception e) {
@@ -138,12 +127,11 @@ public class Product extends CAgent {
 		@Override
 		protected void doInform(CProcessor myProcessor, ACLMessage response) {
 			ACLMessage lastReceivedMessage = myProcessor.getLastReceivedMessage();
-			response.setContent(lastReceivedMessage.getContent());				
+			response.setContent(lastReceivedMessage.getContent());
 		}
 
 		@Override
-		protected String doReceiveRequest(CProcessor myProcessor,
-				ACLMessage request) {
+		protected String doReceiveRequest(CProcessor myProcessor, ACLMessage request) {
 			String next = "";
 			ACLMessage msg = request;
 
@@ -151,12 +139,10 @@ public class Product extends CAgent {
 
 				try {
 
-
 					inputs.clear();
 					serviceName = st.extractServiceContent(msg.getContent(), inputs);
 
-					if (serviceName.toLowerCase().contains("product"))
-					{
+					if (serviceName.toLowerCase().contains("product")) {
 
 						logger.info("AGREE");
 						next = "AGREE";
@@ -188,10 +174,22 @@ public class Product extends CAgent {
 		}
 	}
 
+	class myInform_Protocol extends ExampleEndedInform {
 
+		@Override
+		protected boolean doFinish(CProcessor myProcessor, ACLMessage msgReceived) {
+			if (msgReceived.getHeaderValue("EXAMPLEENDED") != null)
+				return true;
+			else
+				return false;
+		}
 
+		@Override
+		protected void doDie(CProcessor myProcessor) {
+			myProcessor.ShutdownAgent();
 
+		}
+
+	}
 
 }
-
-

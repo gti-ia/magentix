@@ -11,6 +11,18 @@ import java.util.Map.Entry;
  */
 public class ServiceTools {
 
+	/**
+	 * Constants defining the ontological types of XMLSchema
+	 * 
+	 */
+	public class OntologicalTypesConstants {
+		public final static String STRING = "\"http://www.w3.org/2001/XMLSchema#string\"^^xsd:anyURI";
+		public final static String INTEGER = "\"http://www.w3.org/2001/XMLSchema#integer\"^^xsd:anyURI";
+		public final static String DOUBLE = "\"http://www.w3.org/2001/XMLSchema#double\"^^xsd:anyURI";
+		public final static String FLOAT = "\"http://www.w3.org/2001/XMLSchema#float\"^^xsd:anyURI";
+		public final static String BOOLEAN = "\"http://www.w3.org/2001/XMLSchema#boolean\"^^xsd:anyURI";
+	}
+
 	ResponseParser rp = new ResponseParser();
 
 	/**
