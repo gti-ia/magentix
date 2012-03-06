@@ -30,7 +30,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
- * This class allows us to parse a profile in order to extract relevant
+ * This class allows us to parse a OWL-S and WSDL files in order to extract relevant
  * information, such as service inputs, outputs, list of roles for both
  * providers, such as customers.
  * 
@@ -41,24 +41,24 @@ public class Oracle {
 	 * Attributes
 	 */
 	private Document doc = null;
-	private ArrayList<String> inputs;
-	private ArrayList<String> outputs;
+	
+	private ArrayList<String> owlsProfileInputs;
+	private ArrayList<String> owlsProfileOutputs;
+	
+	private ArrayList<String> wsdlInputParams = new ArrayList<String>();
+	private ArrayList<String> wsdlOutputParams = new ArrayList<String>();
+	
+	private ArrayList<String> wsdlInputTypes = new ArrayList<String>();
+	private ArrayList<String> wsdlOutputTypes = new ArrayList<String>();
+	
 	private ArrayList<Provider> providers;
 	private ArrayList<String> providersGroundingWSDL;
+	
 	private ArrayList<String> providerList;
 	private ArrayList<String> clientList;
 	private ArrayList<String> clientunitList;
 	private ArrayList<String> providerunitList;
-	private ArrayList<String> wsdlInputTypes = new ArrayList<String>();
-	private ArrayList<String> wsdlOutputTypes = new ArrayList<String>();
-
-	private ArrayList<String> inputProcess = new ArrayList<String>();
-	private ArrayList<String> outputProcess = new ArrayList<String>();
-
-	private ArrayList<String> wsdlInputParams = new ArrayList<String>();
-	private ArrayList<String> wsdlOutputParams = new ArrayList<String>();
 	
-
 	private Map<String, String> elements = new LinkedHashMap<String, String>();
 
 	private String wsdl;
@@ -68,27 +68,149 @@ public class Oracle {
 
 	private String serviceName;
 
-	private String input_message_WSDL;
 	private String output_message_WSDL;
 
-	private String input_Name_WSDL;
-	private String output_Name_WSDL;
-
 	private String processLocalName;
-
-	private boolean first = true;
-
+	
 	private boolean open = true;
 
-	private String URLProcess;
-
-	// private boolean webService;
-	// private boolean behaviour;
-
-	/*
-	 * Methods
+	
+	/**
+	 * Method to parses an OWL-S file
+	 * 
+	 * @param file
 	 */
+	public Oracle(File file) {
+		try {
+			doc = parserXML(file);
 
+			visit(doc, 0);
+
+		} catch (Exception error) {
+			error.printStackTrace();
+		}
+	}
+
+	/**
+	 * Method to parses an OWL-S URL
+	 * 
+	 * @param url
+	 */
+	public Oracle(URL url) {
+		try {
+			doc = parserXML(url);
+
+			visit(doc, 0);
+
+		} catch (Exception error) {
+			error.printStackTrace();
+		}
+	}
+
+	/**
+	 * Method to parses an OWL-S string
+	 * 
+	 * @param file
+	 */
+	public Oracle(String s) {
+		try {
+			doc = string2DOM(s);
+			
+			visitNodeProcess(doc, 0);
+			
+		} catch (Exception error) {
+			error.printStackTrace();
+		}
+	}
+
+	
+	public Oracle() {
+
+	}
+
+	
+	/**
+	 * Parses only a WSDL file
+	 * @param wsdlURL to parse
+	 */
+	public void parseWSDL(String wsdlURL){
+		visitWSDL(wsdlURL);
+	}
+	
+	
+	
+	
+	
+	/**
+	 * Returns the profile input parameters of an OWL-S parsed file 
+	 * 
+	 * @return the profile input parameters of an OWL-S parsed file 
+	 */
+	public ArrayList<String> getOwlsProfileInputs() {
+		return owlsProfileInputs;
+	}
+
+	/**
+	 * Returns the profile output parameters of an OWL-S parsed file 
+	 * 
+	 * @return the profile output parameters of an OWL-S parsed file
+	 */
+	public ArrayList<String> getOwlsProfileOutputs() {
+		return owlsProfileOutputs;
+	}
+	
+	/**
+	 * Returns the WSDL input type parameters of WSDL parsed file
+	 * 
+	 * @return the WSDL input type parameters of WSDL parsed file
+	 */
+	public ArrayList<String> getWsdlInputsTypes() {
+		return wsdlInputTypes;
+	}
+		
+	/**
+	 * Returns the WSDL output type parameters of WSDL parsed file
+	 * 
+	 * @return the WSDL output type parameters of WSDL parsed file
+	 */
+	public ArrayList<String> getWsdlOutputsTypes() {
+		return wsdlOutputTypes;
+	}
+
+	/**
+	 * Returns the WSDL input parameters of WSDL parsed file
+	 * @return the WSDL input parameters of WSDL parsed file
+	 */
+	public ArrayList<String> getWSDLInputs() {
+		return wsdlInputParams;
+	}
+	
+	/**
+	 * Returns the WSDL output parameters of WSDL parsed file
+	 * @return the WSDL output parameters of WSDL parsed file
+	 */
+	public ArrayList<String> getWSDLOutputs() {
+		return wsdlOutputParams;
+	}
+	
+	/**
+	 * Returns the list of providers (agents or organizations) of the service
+	 * 
+	 * @return Returns the list of providers of the service
+	 */
+	public ArrayList<Provider> getProviders() {
+		return providers;
+	}
+
+	/**
+	 * Returns the list of WSDL grounding providers of the service
+	 * 
+	 * @return Returns the list of WSDL grounding providers of the service
+	 */
+	public ArrayList<String> getProvidersGroundingWSDL() {
+		return providersGroundingWSDL;
+	}
+	
 	/**
 	 * Returns the Name Service parameter of WSDL file parsed
 	 * 
@@ -103,7 +225,7 @@ public class Oracle {
 	 * 
 	 * @return Returns the Name Port parameter of WSDL file parsed
 	 */
-	public String getNamePort() {
+	public String getWSDLNamePort() {
 		return qnamePort;
 	}
 
@@ -112,7 +234,7 @@ public class Oracle {
 	 * 
 	 * @return Returns the Operation parameter of WSDL file parsed
 	 */
-	public String getOperation() {
+	public String getWSDLOperation() {
 		return operation;
 	}
 
@@ -134,77 +256,8 @@ public class Oracle {
 		return elements;
 	}
 
-	/**
-	 * Returns the Output types parameters of owls file parsed
-	 * 
-	 * @return Returns the input parameters of owls file parsed
-	 */
-	public ArrayList<String> getWsdlOutputsTypes() {
-		return wsdlOutputTypes;
-	}
-
-	/**
-	 * Returns the input types parameters of owls file parsed
-	 * 
-	 * @return Returns the input parameters of owls file parsed
-	 */
-	public ArrayList<String> getWsdlInputsTypes() {
-		return wsdlInputTypes;
-	}
-
-	/**
-	 * Returns the input parameters of owls file parsed
-	 * 
-	 * @return Returns the input parameters of owls file parsed
-	 */
-	public ArrayList<String> getInputs() {
-		return inputs;
-	}
-
-	/**
-	 * Returns the input parameters of owls file parsed
-	 * 
-	 * @return Returns the input parameters of owls file parsed
-	 */
-	public ArrayList<String> getProcessOutputs() {
-		return outputProcess;
-	}
-
-	/**
-	 * Returns the input parameters of owls file parsed
-	 * 
-	 * @return Returns the input parameters of owls file parsed
-	 */
-	public ArrayList<String> getProcessInputs() {
-		return inputProcess;
-	}
-
-	/**
-	 * Returns the output parameters of owls file parsed
-	 * 
-	 * @return Returns the output parameters of owls file parsed
-	 */
-	public ArrayList<String> getOutputs() {
-		return outputs;
-	}
-
-	/**
-	 * Returns the list of providers of the service
-	 * 
-	 * @return Returns the list of providers of the service
-	 */
-	public ArrayList<Provider> getProviders() {
-		return providers;
-	}
-
-	/**
-	 * Returns the list of wsdl grounding providers of the service
-	 * 
-	 * @return Returns the list of wsdl grounding providers of the service
-	 */
-	public ArrayList<String> getProvidersGroundingWSDL() {
-		return providersGroundingWSDL;
-	}
+	
+	
 
 	/**
 	 * Returns the list of roles available to provide the service
@@ -234,13 +287,6 @@ public class Oracle {
 		return serviceName;
 	}
 
-	// boolean isWebService() {
-	// return webService;
-	// }
-	//
-	// public boolean isBehaviour() {
-	// return behaviour;
-	// }
 
 	/**
 	 * Returns providerUnitList is a unit where the role client is defined
@@ -272,8 +318,7 @@ public class Oracle {
 	}
 
 	/**
-	 * Returns unitList this parameter is a unit where the role provider is
-	 * defined
+	 * Sets unitList 
 	 * 
 	 * @param unitList
 	 *            this parameter is a unit where the role provider is defined
@@ -282,295 +327,19 @@ public class Oracle {
 		this.providerunitList = unitList;
 	}
 
+	/**
+	 * Returns the process local name
+	 * @return the process local name
+	 */
 	public String getProcessLocalName() {
 		return processLocalName;
 	}
 
-	public ArrayList<String> getWSDLInputs() {
-		return wsdlInputParams;
-	}
-	
-	public ArrayList<String> getWSDLOutputs() {
-		return wsdlOutputParams;
-	}
-	
-	
-	/**
-	 * Method to parses an OWL-S file
-	 * 
-	 * @param file
-	 */
-	public Oracle(File file) {
-		try {
-			doc = parserXML(file);
-
-			visit(doc, 0);
-
-			// Change flags
-			// behaviour = true;
-			// webService = false;
-
-		} catch (Exception error) {
-			error.printStackTrace();
-		}
-	}
 
 	/**
-	 * Method to parses an OWL-S URL
-	 * 
-	 * @param url
+	 * Parses and extract data from a WSDL file in the given URL
+	 * @param url of the WSDL to extract data
 	 */
-	public Oracle(URL url) {
-		try {
-			doc = parserXML(url);
-
-			visit(doc, 0);
-
-			// Change flags
-			// behaviour = false;
-			// webService = true;
-
-		} catch (Exception error) {
-			error.printStackTrace();
-		}
-	}
-
-	/**
-	 * Method to parses an OWL-S string
-	 * 
-	 * @param file
-	 */
-	public Oracle(String s) {
-		try {
-			doc = string2DOM(s);
-			
-			visitNodeProcess(doc, 0);
-			
-			// Change flags
-			// behaviour = true;
-			// webService = false;
-
-		} catch (Exception error) {
-			error.printStackTrace();
-		}
-	}
-
-	
-	public Oracle() {
-
-	}
-
-	private Document string2DOM(String s) {
-		
-
-		Document tmpX = null;
-		DocumentBuilder builder = null;
-		try {
-			builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-		} catch (javax.xml.parsers.ParserConfigurationException error) {
-			error.printStackTrace();
-			return null;
-		}
-		try {
-			tmpX = builder.parse(new ByteArrayInputStream(s.getBytes()));
-		} catch (org.xml.sax.SAXException error) {
-			error.printStackTrace();
-			return null;
-		} catch (IOException error) {
-			error.printStackTrace();
-			return null;
-		}
-		return tmpX;
-	}
-	
-	/**
-	 * Parses only a wsdl file
-	 * @param wsdlURL
-	 */
-	public void parseWSDL(String wsdlURL){
-		visitWSDL(wsdlURL);
-	}
-
-	public void setURLProcess(String _URLProcess) {
-
-		URL process;
-		URLProcess = _URLProcess;
-		try {
-
-			process = new URL(URLProcess);
-
-			doc = parserXML(process);
-
-			visitNodeProcess(doc, 0);
-
-			visitProcess(process.toString());
-
-			this.visitWSDL_extract(wsdl + "?.wsdl", "input");
-			this.visitWSDL_extract(wsdl + "?.wsdl", "output");
-			this.visitWSDL_extract(wsdl + "?.wsdl", "part");
-
-			this.visitWSDL(wsdl + "?.wsdl");
-
-		} catch (Exception error) {
-			error.printStackTrace();
-		}
-	}
-
-	private void visitProcess(String url) {
-		// Create an instance of HttpClient.
-		HttpClient client = new HttpClient();
-
-		// Create a method instance.
-		GetMethod method = new GetMethod(url);
-
-		// Provide custom retry handler is necessary
-		method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new DefaultHttpMethodRetryHandler(3, false));
-
-		try {
-			// Execute the method.
-			int statusCode = client.executeMethod(method);
-
-			if (statusCode != HttpStatus.SC_OK) {
-				System.err.println("Method failed: " + method.getStatusLine());
-			}
-
-			// Read the response body.
-			// byte[] responseBody = method.getResponseBody();
-
-			// InputStream is = new ByteArrayInputStream(responseBody);
-
-			InputStream is = method.getResponseBodyAsStream();
-
-			XMLInputFactory factory = XMLInputFactory.newInstance();
-			XMLStreamReader reader = factory.createXMLStreamReader(is);
-
-			while (reader.getEventType() != XMLStreamConstants.END_DOCUMENT) {
-				switch (reader.next()) {
-				case XMLStreamConstants.START_ELEMENT:
-					// System.out.println("LocalName: "+reader.getLocalName()+" prefix: "+
-					// reader.getPrefix() + " text: ");
-
-					if (reader.getLocalName().equals("hasInput") && reader.getPrefix().equals("process")) {
-						inputProcess.add(reader.getAttributeValue(0).substring(reader.getAttributeValue(0).indexOf("#") + 1));
-					} else if (reader.getLocalName().equals("hasOutput") && reader.getPrefix().equals("process")) {
-						outputProcess.add(reader.getAttributeValue(0).substring(reader.getAttributeValue(0).indexOf("#") + 1));
-					} else if (reader.getLocalName().equals("owlsProcess")) {
-						processLocalName = reader.getAttributeValue(0).substring(reader.getAttributeValue(0).indexOf("#") + 1);
-					}
-					break;
-
-				}
-			}
-
-		} catch (FileNotFoundException e) {
-
-			e.printStackTrace();
-		} catch (XMLStreamException e) {
-
-			e.printStackTrace();
-		} catch (HttpException e) {
-
-			e.printStackTrace();
-		} catch (IOException e) {
-
-			e.printStackTrace();
-		}
-
-	}
-
-	private void visitWSDL_extract(String url, String element) {
-
-		first = true;
-		boolean first_input = false;
-		boolean mutex = true;
-		// Create an instance of HttpClient.
-		HttpClient client = new HttpClient();
-
-		// Create a method instance.
-		GetMethod method = new GetMethod(url);
-
-		// Provide custom retry handler is necessary
-		method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new DefaultHttpMethodRetryHandler(3, false));
-
-		try {
-			// Execute the method.
-			int statusCode = client.executeMethod(method);
-
-			if (statusCode != HttpStatus.SC_OK) {
-				System.err.println("Method failed: " + method.getStatusLine());
-			}
-
-			// Read the response body.
-			// byte[] responseBody = method.getResponseBody();
-
-			// InputStream is = new ByteArrayInputStream(responseBody);
-
-			InputStream is = method.getResponseBodyAsStream();
-
-			XMLInputFactory factory = XMLInputFactory.newInstance();
-			XMLStreamReader reader = factory.createXMLStreamReader(is);
-
-			while (reader.getEventType() != XMLStreamConstants.END_DOCUMENT) {
-				switch (reader.next()) {
-				case XMLStreamConstants.START_ELEMENT:
-
-					if (reader.getLocalName().equals("message") & element.equals("part")) {
-
-						// Si se encuentra este primero el input va delante.
-						if (mutex) {
-							if (reader.getAttributeValue(0).equals(input_Name_WSDL))
-								first_input = true;
-							mutex = false;
-						}
-
-					}
-
-					if (reader.getLocalName().equals(element) & element.equals("part")) {
-
-						if (first_input) {
-							input_message_WSDL = reader.getAttributeValue(1).substring(reader.getAttributeValue(1).indexOf(":") + 1);
-							first_input = false;
-						} else {
-
-							output_message_WSDL = reader.getAttributeValue(1).substring(reader.getAttributeValue(1).indexOf(":") + 1);
-							first_input = true;
-						}
-					} else if (reader.getLocalName().equals(element) & element.equals("input")) {
-
-						if (first) {
-							input_Name_WSDL = reader.getAttributeValue(0).substring(reader.getAttributeValue(0).indexOf(":") + 1);
-							first = false;
-						}
-					}
-
-					else if (reader.getLocalName().equals(element) & element.equals("output")) {
-
-						if (first) {
-							output_Name_WSDL = reader.getAttributeValue(0).substring(reader.getAttributeValue(0).indexOf(":") + 1);
-							first = false;
-						}
-					}
-
-					break;
-
-				}
-			}
-
-		} catch (FileNotFoundException e) {
-
-			e.printStackTrace();
-		} catch (XMLStreamException e) {
-
-			e.printStackTrace();
-		} catch (HttpException e) {
-
-			e.printStackTrace();
-		} catch (IOException e) {
-
-			e.printStackTrace();
-		}
-	}
-
 	private void visitWSDL(String url) {
 
 		open = true;
@@ -592,11 +361,6 @@ public class Oracle {
 				System.err.println("Method failed: " + method.getStatusLine());
 			}
 
-			// Read the response body.
-			// byte[] responseBody = method.getResponseBody();
-
-			// InputStream is = new ByteArrayInputStream(responseBody);
-
 			InputStream is = method.getResponseBodyAsStream();
 
 			XMLInputFactory factory = XMLInputFactory.newInstance();
@@ -608,11 +372,8 @@ public class Oracle {
 			while (reader.getEventType() != XMLStreamConstants.END_DOCUMENT) {
 				switch (reader.next()) {
 				case XMLStreamConstants.START_ELEMENT:
-					// System.out.println(reader.getPrefix()+" "+reader.getLocalName());
+					
 					if (reader.getLocalName().equals("service")) {
-						// Sacamos el name="...
-						// System.out.println("Type: " +
-						// reader.getAttributeLocalName(0));
 						qnameService = reader.getAttributeLocalName(0);
 					} else if (reader.getLocalName().equals("portType")) {
 						qnamePort = reader.getAttributeValue(0);
@@ -639,16 +400,15 @@ public class Oracle {
 							else{
 								inputsRead++;
 							}
-							// System.out.println("XXX "+reader.getAttributeValue(0));
+							
 						}
-						// Deja de leer
+						// Stop reading
 						if (reader.getAttributeValue(0).equals(output_message_WSDL))
 							open = false;
-						// if (reader.getPrefix())
 						if (reader.getAttributeCount() == 2 & open) {
 							elements.put(reader.getAttributeValue(0), reader.getAttributeValue(1).substring(reader.getAttributeValue(1).indexOf(":") + 1));
 						}
-						// elements.add(reader.getAttributeValue(0));
+
 					}
 
 					break;
@@ -671,6 +431,11 @@ public class Oracle {
 		}
 	}
 
+	/**
+	 * Parses a node of the process part of an OWL-S document
+	 * @param node to parse
+	 * @param level of the parser
+	 */
 	private void visitNodeProcess(Node node, int level) {
 		NodeList nl = node.getChildNodes();
 
@@ -678,11 +443,11 @@ public class Oracle {
 		for (int i = 0, cnt = nl.getLength(); i < cnt; i++) {
 			// Child node examined
 			Node childNode = nl.item(i);
-			// System.out.println("Node: "+ childNode.getTextContent());
+
 			NodeList n = childNode.getChildNodes();
 			for (int j = 0; j < n.getLength(); j++) {
 
-				// System.out.println("Node Name: "+ childNode.getChildNodes());
+				
 				// It is the service name (aka provider's behaviour to execute)
 				if (n.item(j).getNodeName().equalsIgnoreCase("process:Input")) {
 
@@ -729,10 +494,16 @@ public class Oracle {
 
 			}
 
+			//visit the child node
 			visit(childNode, level + 1);
 		}
 	}
 
+	/**
+	 * Parses a node of the profile part of an OWL-S document
+	 * @param node to parse
+	 * @param level of the parser
+	 */
 	private void visit(Node node, int level) {
 		NodeList nl = node.getChildNodes();
 
@@ -758,8 +529,8 @@ public class Oracle {
 
 				// Check node's attributes before add to ArrayList
 				if (childNode.hasAttributes()) {
-					if (inputs == null)
-						inputs = new ArrayList<String>();
+					if (owlsProfileInputs == null)
+						owlsProfileInputs = new ArrayList<String>();
 
 					// Check node's ID Value before add to ArrayList
 					String nodeIDValue = childNode.getAttributes().item(0).getNodeValue();
@@ -767,7 +538,7 @@ public class Oracle {
 					if (nodeIDValue.contains("#"))
 						nodeIDValue = nodeIDValue.substring(nodeIDValue.indexOf("#") + 1);
 
-					inputs.add(nodeIDValue);
+					owlsProfileInputs.add(nodeIDValue);
 				}
 			}
 
@@ -776,8 +547,8 @@ public class Oracle {
 
 				// Check node's attributes before add to ArrayList
 				if (childNode.hasAttributes()) {
-					if (outputs == null)
-						outputs = new ArrayList<String>();
+					if (owlsProfileOutputs == null)
+						owlsProfileOutputs = new ArrayList<String>();
 
 					// Check node's ID Value before add to ArrayList
 					String nodeIDValue = childNode.getAttributes().item(0).getNodeValue();
@@ -785,11 +556,11 @@ public class Oracle {
 					if (nodeIDValue.contains("#"))
 						nodeIDValue = nodeIDValue.substring(nodeIDValue.indexOf("#") + 1);
 
-					outputs.add(nodeIDValue);
+					owlsProfileOutputs.add(nodeIDValue);
 				}
 			}
 
-			// It is an provider
+			// It is a provider
 			else if (childNode.getNodeName().equalsIgnoreCase("profile:contactInformation")) {
 
 				if (childNode.hasChildNodes()) {
@@ -854,8 +625,7 @@ public class Oracle {
 							providerList.add(nodeIDValue);
 						}
 
-						// Check the necessary Unit to acquire this role (first
-						// child)
+						// Check the necessary Unit to acquire this role (first child)
 						NodeList greatgrandsonNodeList = grandsonNode.getChildNodes();
 
 						int listLength = greatgrandsonNodeList.getLength();
@@ -915,8 +685,7 @@ public class Oracle {
 							clientList.add(nodeIDValue);
 						}
 
-						// Check the necessary Unit to acquire this role (first
-						// child)
+						// Check the necessary Unit to acquire this role (first child)
 						NodeList greatgrandsonNodeList = grandsonNode.getChildNodes();
 
 						int listLength = greatgrandsonNodeList.getLength();
@@ -948,17 +717,45 @@ public class Oracle {
 				}
 
 			}
-			// System.out.println("[" + nl.item(i) + "]");
-
+			
+			//visit the child node
 			visit(childNode, level + 1);
 		}
 	}
 
 	/**
-	 * Converts a file to org.w3c.dom.Document.
+	 * Converts an {@link String} to a {@link Document} to parse
+	 * @param s String to convert
+	 * @return {@link Document} that can be parsed
+	 */
+	private Document string2DOM(String s) {
+		
+		Document tmpX = null;
+		DocumentBuilder builder = null;
+		try {
+			builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+		} catch (javax.xml.parsers.ParserConfigurationException error) {
+			error.printStackTrace();
+			return null;
+		}
+		try {
+			tmpX = builder.parse(new ByteArrayInputStream(s.getBytes()));
+		} catch (org.xml.sax.SAXException error) {
+			error.printStackTrace();
+			return null;
+		} catch (IOException error) {
+			error.printStackTrace();
+			return null;
+		}
+		return tmpX;
+		
+	}
+	
+	/**
+	 * Converts a file to {@link org.w3c.dom.Document}
 	 * 
 	 * @param file
-	 * @return org.w3c.dom.Document
+	 * @return {@link Document}
 	 * @throws SAXException
 	 * @throws IOException
 	 * @throws ParserConfigurationException
@@ -968,10 +765,10 @@ public class Oracle {
 	}
 
 	/**
-	 * Converts a URL to org.w3c.dom.Document
+	 * Converts a URL to {@link Document}
 	 * 
 	 * @param url
-	 * @return org.w3c.dom.Document
+	 * @return {@link Document}
 	 * @throws SAXException
 	 * @throws IOException
 	 * @throws ParserConfigurationException
