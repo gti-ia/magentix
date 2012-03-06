@@ -1,14 +1,14 @@
 package es.upv.dsic.gti_ia.organization;
 
-
-/**
- * This class provides tools in order to facilitate the execution of the services.
- */
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
+
+/**
+ * This class provides tools in order to facilitate the execution of the services.
+ */
 public class ServiceTools {
 
 	ResponseParser rp = new ResponseParser();

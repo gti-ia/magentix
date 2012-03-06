@@ -1,8 +1,5 @@
 package es.upv.dsic.gti_ia.organization;
 
-/**
- * This class provides support to the execution of the services.
- */
 
 
 import java.util.ArrayList;
@@ -20,6 +17,9 @@ import javax.xml.rpc.ServiceFactory;
 import javax.xml.rpc.ParameterMode;
 
 
+/**
+ * This class provides support to the execution of the services.
+ */
 
 public class ServiceClient {
 

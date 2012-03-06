@@ -1,7 +1,4 @@
 package es.upv.dsic.gti_ia.organization;
-
-
-
 /**
  * This class allows us to parse a service response in order to extract relevant
  * information, such as service name, status, and result.
