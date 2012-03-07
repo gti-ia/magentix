@@ -12,16 +12,11 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Map.Entry;
-import java.util.Set;
 import java.util.Vector;
-
-import org.apache.commons.collections.iterators.EntrySetMapIterator;
 
 import es.upv.dsic.gti_ia.argAgents.knowledgeResources.ArgumentCase;
 import es.upv.dsic.gti_ia.argAgents.knowledgeResources.DomainCase;
-import es.upv.dsic.gti_ia.argAgents.knowledgeResources.Premise;
-import es.upv.dsic.gti_ia.argAgents.knowledgeResources.Solution;
+import es.upv.dsic.gti_ia.argAgents.knowledgeResources.SocialEntity;
 
 /**
  * This class creates different partitions of domain-cases and argument-cases to
@@ -224,7 +219,6 @@ public class CreatePartitions {
 	 * @return {@link Vector} of {@link DomainCase}
 	 */
 	public static Vector<DomainCase> readDomainCasesFile(String fileName) {
-		int ncases = 0;
 		Vector<DomainCase> cases = new Vector<DomainCase>();
 		try {
 
@@ -236,7 +230,6 @@ public class CreatePartitions {
 			// While there are objects
 			while (aux != null) {
 				if (aux instanceof DomainCase) {
-					ncases++;
 					DomainCase acase = (DomainCase) aux;
 					cases.add(acase);
 
@@ -255,8 +248,6 @@ public class CreatePartitions {
 			e.printStackTrace();
 		}
 
-		System.out.println("cases=" + ncases);
-
 		return cases;
 
 	}
@@ -269,7 +260,6 @@ public class CreatePartitions {
 	 * @return {@link Vector} of {@link ArgumentCase}
 	 */
 	public static Vector<ArgumentCase> readArgCasesFile(String fileName) {
-		int ncases = 0;
 		Vector<ArgumentCase> cases = new Vector<ArgumentCase>();
 		try {
 
@@ -281,7 +271,6 @@ public class CreatePartitions {
 			// While there are objects
 			while (aux != null) {
 				if (aux instanceof ArgumentCase) {
-					ncases++;
 					ArgumentCase acase = (ArgumentCase) aux;
 					cases.add(acase);
 
@@ -300,7 +289,6 @@ public class CreatePartitions {
 			e.printStackTrace();
 		}
 
-		System.out.println("Argument-cases=" + ncases);
 
 		return cases;
 
@@ -343,7 +331,6 @@ public class CreatePartitions {
 		Vector<DomainCase> domCases = new Vector<DomainCase>();
 		try {
 			domCases = readDomainCasesFile("testArgumentation/Helpdesk-DomainCases.dat");
-			System.out.println("domain cases= " + domCases.size());
 		} catch (Exception e) {// Catch exception if any
 			System.err.println("Error reading file: " + e.getMessage());
 			e.printStackTrace();
