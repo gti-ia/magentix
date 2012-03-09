@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+
+
 class DataBaseInterface
 {
 	private DataBaseAccess	db;
@@ -19,6 +21,11 @@ class DataBaseInterface
 
 	String acquireRole(String unitName, String roleName, String agentName) throws SQLException{
 		Statement st;		
+		if (db.connection.isClosed())
+		{
+			db = null;
+			db = new DataBaseAccess();
+		}
 		st = db.connection.createStatement();
 		ResultSet res = st.executeQuery("SELECT idunitList FROM unitList WHERE unitName ='"+ unitName+"'");
 		if(res.next()){
@@ -64,21 +71,30 @@ class DataBaseInterface
 
 	boolean checkAgent(String agentName) throws SQLException{
 		boolean exists = false;
-
+		if (db.connection.isClosed())
+		{
+			db = null;
+			db = new DataBaseAccess();
+		}
 		Statement stmt = db.connection.createStatement();
 		ResultSet rs = stmt.executeQuery("SELECT * FROM agentPlayList WHERE agentName='"+ agentName + "'");
 		while (rs.next())
 		{
-			db.connection.commit();
+		
 			exists = true;
 		}
 
+		db.connection.commit();
 		return exists;
 	}
 
 	boolean checkAgentInUnit(String agentName, String unit) throws SQLException{
 		boolean exists = false;
-
+		if (db.connection.isClosed())
+		{
+			db = null;
+			db = new DataBaseAccess();
+		}
 		Statement stmt = db.connection.createStatement();
 		ResultSet rs = stmt.executeQuery("SELECT idunitList FROM unitList WHERE unitName ='"+unit+"'");
 		if(rs.next()){
@@ -93,17 +109,22 @@ class DataBaseInterface
 
 				if (rs3.next())
 				{
-					db.connection.commit();
 					exists = true;
 				}
 			}
 		}
 
+		db.connection.commit();
 		return exists;
 	}
 
 	boolean checkAgentPlaysRole(String agentName, String role, String unit) throws SQLException{
-		boolean exists = false;		
+		boolean exists = false;	
+		if (db.connection.isClosed())
+		{
+			db = null;
+			db = new DataBaseAccess();
+		}
 		Statement stmt = db.connection.createStatement();
 		ResultSet rs = stmt.executeQuery("SELECT idunitList FROM unitList WHERE unitName ='"+unit+"'");
 		if(rs.next()){
@@ -116,16 +137,22 @@ class DataBaseInterface
 				ResultSet rs3 = stmt2.executeQuery("SELECT * FROM agentPlayList WHERE idroleList = "+roleId+" AND agentName='"+agentName+"'");
 				if (rs3.next())
 				{
-					db.connection.commit();
+				
 					exists = true;
 				}
 			}
-			db.connection.commit();
-		}		
+			
+		}	
+		db.connection.commit();
 		return exists;
 	}
 
 	boolean checkNoCreatorAgentsInUnit(String unit) throws SQLException{		
+		if (db.connection.isClosed())
+		{
+			db = null;
+			db = new DataBaseAccess();
+		}
 		Statement stmt = db.connection.createStatement();
 		ResultSet rs = stmt.executeQuery("SELECT idposition FROM position WHERE position ='creator'");
 		if(rs.next()){
@@ -156,7 +183,11 @@ class DataBaseInterface
 	}
 
 	boolean checkPlayedRoleInUnit(String role, String unit) throws SQLException{
-
+		if (db.connection.isClosed())
+		{
+			db = null;
+			db = new DataBaseAccess();
+		}
 		Statement stmt = db.connection.createStatement();
 		ResultSet rs = stmt.executeQuery("SELECT idunitList FROM unitList WHERE unitName ='"+unit+"'");
 		if(rs.next()){
@@ -184,7 +215,12 @@ class DataBaseInterface
 	}
 
 	boolean checkPosition(String agent, String position) throws SQLException{
-		Statement st;		
+		Statement st;
+		if (db.connection.isClosed())
+		{
+			db = null;
+			db = new DataBaseAccess();
+		}
 		st = db.connection.createStatement();
 		ResultSet res = st.executeQuery("SELECT idroleList FROM agentPlayList WHERE agentName ='"+ agent +"'");
 		while(res.next()){
@@ -201,12 +237,18 @@ class DataBaseInterface
 				}
 			}
 		}
+		db.connection.commit();
 		return false;
 	}
 
 	boolean checkPositionInUnit(String agent, String position, String unit) throws SQLException{
 		Statement st;
 		int idUnit = -1;
+		if (db.connection.isClosed())
+		{
+			db = null;
+			db = new DataBaseAccess();
+		}
 		st = db.connection.createStatement();
 		ResultSet res = st.executeQuery("SELECT idroleList FROM agentPlayList WHERE agentName ='"+ agent +"'");
 		Statement st4 = db.connection.createStatement();
@@ -233,6 +275,11 @@ class DataBaseInterface
 
 	boolean checkRole(String role, String unit) throws SQLException{
 		Statement st;
+		if (db.connection.isClosed())
+		{
+			db = null;
+			db = new DataBaseAccess();
+		}
 		st = db.connection.createStatement();
 		ResultSet res = st.executeQuery("SELECT idunitList FROM unitList WHERE unitName ='"+ unit +"'");
 		if(res.next()){
@@ -250,6 +297,11 @@ class DataBaseInterface
 
 	boolean checkSubUnits(String unit) throws SQLException{
 		Statement st;
+		if (db.connection.isClosed())
+		{
+			db = null;
+			db = new DataBaseAccess();
+		}
 		st = db.connection.createStatement();
 		ResultSet res = st.executeQuery("SELECT idunitList FROM unitList WHERE unitName ='"+ unit +"'");
 		if(res.next()){
@@ -267,6 +319,11 @@ class DataBaseInterface
 
 	boolean checkUnit(String unit) throws SQLException{
 		Statement st;
+		if (db.connection.isClosed())
+		{
+			db = null;
+			db = new DataBaseAccess();
+		}
 		st = db.connection.createStatement();
 		ResultSet res = st.executeQuery("SELECT * FROM unitList WHERE unitName ='"+ unit +"'");
 		if(res.next()){
@@ -279,6 +336,11 @@ class DataBaseInterface
 
 	boolean checkVirtualUnit(String unit) throws SQLException{
 		Statement st;
+		if (db.connection.isClosed())
+		{
+			db = null;
+			db = new DataBaseAccess();
+		}
 		st = db.connection.createStatement();
 		ResultSet res = st.executeQuery("SELECT idunitType FROM unitType WHERE unitTypeName ='virtual'");
 		if(res.next()){
@@ -296,6 +358,11 @@ class DataBaseInterface
 
 	String createRole(String roleName, String unitName, String accessibility, String visibility, String position) throws SQLException, THOMASException{
 		Statement st;		
+		if (db.connection.isClosed())
+		{
+			db = null;
+			db = new DataBaseAccess();
+		}
 		st = db.connection.createStatement();
 		ResultSet res = st.executeQuery("SELECT idunitList FROM unitList WHERE unitName ='"+ unitName+"'");
 		if(res.next()){
@@ -329,7 +396,12 @@ class DataBaseInterface
 	}
 
 	String createUnit(String unitName, String unitType, String parentUnitName, String agentName, String creatorAgentName) throws SQLException, THOMASException{
-		Statement st;		
+		Statement st;	
+		if (db.connection.isClosed())
+		{
+			db = null;
+			db = new DataBaseAccess();
+		}
 		st = db.connection.createStatement();
 		ResultSet res = st.executeQuery("SELECT idunitType FROM unitType WHERE unitTypeName ='"+ unitType+"'");
 		if(res.next()){
@@ -391,6 +463,11 @@ class DataBaseInterface
 
 	String deallocateRole(String roleName, String unitName, String targetAgentName, String agentName) throws SQLException, THOMASException{
 		Statement st;		
+		if (db.connection.isClosed())
+		{
+			db = null;
+			db = new DataBaseAccess();
+		}
 		st = db.connection.createStatement();
 		ResultSet res = st.executeQuery("SELECT idunitList FROM unitList WHERE unitName ='"+ unitName+"'");
 		if(res.next()){
@@ -413,7 +490,12 @@ class DataBaseInterface
 	}
 
 	String deleteRole(String roleName, String unitName, String agentName) throws SQLException, THOMASException{
-		Statement st;		
+		Statement st;	
+		if (db.connection.isClosed())
+		{
+			db = null;
+			db = new DataBaseAccess();
+		}
 		st = db.connection.createStatement();
 		ResultSet res = st.executeQuery("SELECT idunitList FROM unitList WHERE unitName ='"+ unitName+"'");
 		if(res.next()){
@@ -430,7 +512,12 @@ class DataBaseInterface
 	}
 
 	String deleteUnit(String unitName, String agentName) throws SQLException, THOMASException{
-		Statement st;		
+		Statement st;
+		if (db.connection.isClosed())
+		{
+			db = null;
+			db = new DataBaseAccess();
+		}
 		st = db.connection.createStatement();
 		ResultSet res = st.executeQuery("SELECT idunitList FROM unitList WHERE unitName ='"+ unitName+"'");
 		if(res.next()){
@@ -471,7 +558,12 @@ class DataBaseInterface
 	}
 
 	String jointUnit(String unitName, String parentName) throws SQLException, THOMASException{
-		Statement st;		
+		Statement st;	
+		if (db.connection.isClosed())
+		{
+			db = null;
+			db = new DataBaseAccess();
+		}
 		st = db.connection.createStatement();
 		ResultSet res = st.executeQuery("SELECT idunitList FROM unitList WHERE unitName ='"+ unitName+"'");
 		if(res.next()){
@@ -499,6 +591,11 @@ class DataBaseInterface
 
 	String leaveRole(String unitName, String roleName, String agentName) throws SQLException, THOMASException{
 		Statement st;
+		if (db.connection.isClosed())
+		{
+			db = null;
+			db = new DataBaseAccess();
+		}
 		st = db.connection.createStatement();
 		ResultSet res = st.executeQuery("SELECT idunitList FROM unitList WHERE unitName ='"+ unitName+"'");
 		if(res.next()){
@@ -522,6 +619,11 @@ class DataBaseInterface
 
 	String getUnitType(String unitName) throws SQLException, THOMASException{
 		Statement st;
+		if (db.connection.isClosed())
+		{
+			db = null;
+			db = new DataBaseAccess();
+		}
 		st = db.connection.createStatement();
 		ResultSet res = st.executeQuery("SELECT idunitType FROM unitList WHERE unitName ='"+ unitName+"'");
 		if(res.next()){
@@ -540,6 +642,11 @@ class DataBaseInterface
 	ArrayList<ArrayList<String>> getAgentsInUnit(String unitName) throws SQLException, THOMASException{
 		ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
 		Statement st;
+		if (db.connection.isClosed())
+		{
+			db = null;
+			db = new DataBaseAccess();
+		}
 		st = db.connection.createStatement();
 		ResultSet res = st.executeQuery("SELECT idunitList FROM unitList WHERE unitName ='"+ unitName+"'");
 		if(res.next()){
@@ -571,6 +678,11 @@ class DataBaseInterface
 	ArrayList<String> getParentsUnit(String unitName) throws SQLException, THOMASException{
 		Statement st;	
 		ArrayList<String> result = new ArrayList<String>();
+		if (db.connection.isClosed())
+		{
+			db = null;
+			db = new DataBaseAccess();
+		}
 		st = db.connection.createStatement();
 		ResultSet res = st.executeQuery("SELECT idunitList FROM unitList WHERE unitName ='"+ unitName+"'");
 		if(res.next()){
@@ -597,6 +709,11 @@ class DataBaseInterface
 	ArrayList<ArrayList<String>> getInformAgentRole(String requestedAgentName, String agentName) throws SQLException, THOMASException{
 		ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
 		Statement st;
+		if (db.connection.isClosed())
+		{
+			db = null;
+			db = new DataBaseAccess();
+		}
 		Statement st2 = db.connection.createStatement();
 		int idVisibility;
 		ResultSet res2 = st2.executeQuery("SELECT idVisibility FROM visibility WHERE visibility ='public'");
@@ -688,7 +805,11 @@ class DataBaseInterface
 	ArrayList<ArrayList<String>> getInformAgentRolesPlayedInUnit(String unitName, String targetAgentName) throws SQLException, THOMASException{
 		ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
 		int idunitList;
-
+		if (db.connection.isClosed())
+		{
+			db = null;
+			db = new DataBaseAccess();
+		}
 		Statement st2 = db.connection.createStatement();
 		ResultSet res2 = st2.executeQuery("SELECT idunitList FROM unitList WHERE unitName ='"+ unitName+"'");
 		if(res2.next())
@@ -744,7 +865,11 @@ class DataBaseInterface
 		int idPrivateVisbility;
 		boolean playsRole = false;
 		int idunitList;
-
+		if (db.connection.isClosed())
+		{
+			db = null;
+			db = new DataBaseAccess();
+		}
 		Statement st = db.connection.createStatement();
 		ResultSet res = st.executeQuery("SELECT idVisibility FROM visibility WHERE visibility ='public'");
 		if(res.next())
@@ -812,7 +937,11 @@ class DataBaseInterface
 		int idPrivateVisbility;
 		boolean playsRole = false;
 		int idunitList;
-
+		if (db.connection.isClosed())
+		{
+			db = null;
+			db = new DataBaseAccess();
+		}
 		Statement st = db.connection.createStatement();
 		ResultSet res = st.executeQuery("SELECT idVisibility FROM visibility WHERE visibility ='public'");
 		if(res.next())
@@ -872,7 +1001,11 @@ class DataBaseInterface
 		int idPrivateVisbility;
 		boolean playsRole = false;
 		int idunit;
-
+		if (db.connection.isClosed())
+		{
+			db = null;
+			db = new DataBaseAccess();
+		}
 		Statement st10 = db.connection.createStatement();
 		ResultSet res10 = st10.executeQuery("SELECT idVisibility FROM visibility WHERE visibility ='public'");
 		if(res10.next())
@@ -946,7 +1079,11 @@ class DataBaseInterface
 		int idroleList;
 		boolean playsRole = false;
 		int idunitList;
-
+		if (db.connection.isClosed())
+		{
+			db = null;
+			db = new DataBaseAccess();
+		}
 		Statement st = db.connection.createStatement();
 		ResultSet res = st.executeQuery("SELECT idVisibility FROM visibility WHERE visibility ='public'");
 		if(res.next())
@@ -1020,7 +1157,11 @@ class DataBaseInterface
 		int idroleList;
 		boolean playsRole = false;
 		int idunitList;
-
+		if (db.connection.isClosed())
+		{
+			db = null;
+			db = new DataBaseAccess();
+		}
 		Statement st = db.connection.createStatement();
 		ResultSet res = st.executeQuery("SELECT idVisibility FROM visibility WHERE visibility ='public'");
 		if(res.next())
@@ -1073,7 +1214,11 @@ class DataBaseInterface
 		int idroleList;
 		boolean playsRole = false;
 		int idunitList;
-
+		if (db.connection.isClosed())
+		{
+			db = null;
+			db = new DataBaseAccess();
+		}
 		Statement st = db.connection.createStatement();
 		ResultSet res = st.executeQuery("SELECT idVisibility FROM visibility WHERE visibility ='public'");
 		if(res.next())
@@ -1133,7 +1278,11 @@ class DataBaseInterface
 		int idroleList;
 		boolean playsRole = false;
 		int idunitList;
-
+		if (db.connection.isClosed())
+		{
+			db = null;
+			db = new DataBaseAccess();
+		}
 		Statement st = db.connection.createStatement();
 		ResultSet res = st.executeQuery("SELECT idVisibility FROM visibility WHERE visibility ='public'");
 		if(res.next())
@@ -1202,7 +1351,11 @@ class DataBaseInterface
 		int idroleList;
 		boolean playsRole = false;
 		int idunitList;
-
+		if (db.connection.isClosed())
+		{
+			db = null;
+			db = new DataBaseAccess();
+		}
 		Statement st = db.connection.createStatement();
 		ResultSet res = st.executeQuery("SELECT idVisibility FROM visibility WHERE visibility ='public'");
 		if(res.next())
@@ -1267,6 +1420,11 @@ class DataBaseInterface
 		ArrayList<String> result = new ArrayList<String>();
 		int idunitType;
 		int idunitList;
+		if (db.connection.isClosed())
+		{
+			db = null;
+			db = new DataBaseAccess();
+		}
 		Statement st = db.connection.createStatement();
 		ResultSet res = st.executeQuery("SELECT idunitList FROM unitList WHERE unitName ='"+unitName+"'");
 		if (res.next())
@@ -1305,7 +1463,11 @@ class DataBaseInterface
 		int idPrivateVisbility;
 		boolean playsRole = false;
 		int idunitList;
-
+		if (db.connection.isClosed())
+		{
+			db = null;
+			db = new DataBaseAccess();
+		}
 		Statement st = db.connection.createStatement();
 		ResultSet res = st.executeQuery("SELECT idVisibility FROM visibility WHERE visibility ='public'");
 		if(res.next())
@@ -1375,7 +1537,11 @@ class DataBaseInterface
 	ArrayList<String> getInformRole(String roleName, String unitName) throws SQLException, THOMASException{
 		ArrayList<String> result = new ArrayList<String>();
 		int idunitList;
-
+		if (db.connection.isClosed())
+		{
+			db = null;
+			db = new DataBaseAccess();
+		}
 		Statement st2 = db.connection.createStatement();
 		ResultSet res2 = st2.executeQuery("SELECT idunitList FROM unitList WHERE unitName ='"+ unitName+"'");
 		if(res2.next())
