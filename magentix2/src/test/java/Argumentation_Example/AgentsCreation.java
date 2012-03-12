@@ -510,10 +510,10 @@ public class AgentsCreation {
 
 			for (int i = 0; i < totalAgents; i++) {
 				ArgCAgent argLeanAgent = new ArgCAgent(new AgentID("qpid://" + socialEntities.get(i).getName()
-						+ "@localhost:8080"), false, socialEntities.get(i), friendsLists.get(i), dependencyRels.get(i),
-						group, "commitmentStore", null, iniDomainFileNames.get(i), finDomainFileNames.get(i),
-						domCBRindex, domCBRthreshold, iniArgFileNames.get(i), finArgFileNames.get(i), wPD, wSD, wRD,
-						wAD, wED, wEP);
+						+ "@localhost:8080"), socialEntities.get(i), friendsLists.get(i), dependencyRels.get(i), group,
+						"commitmentStore", null, iniDomainFileNames.get(i), finDomainFileNames.get(i), domCBRindex,
+						domCBRthreshold, iniArgFileNames.get(i), finArgFileNames.get(i), wPD, wSD, wRD, wAD,
+						wED, wEP);
 				argLeanAgent.start();
 				agents.add(argLeanAgent);
 			}
