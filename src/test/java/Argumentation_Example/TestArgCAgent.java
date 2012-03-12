@@ -105,7 +105,7 @@ public class TestArgCAgent {
 						commitmentStore.start();
 
 						//Create the argumentative agents
-						ArrayList<ArgCAgent> agents = AgentsCreation.createArgLearnAgentsInc(socialEntities,
+						ArrayList<ArgCAgent> agents = AgentsCreation.createArgCAgentsInc(socialEntities,
 								friendsLists, depenRelsLists, group, iniDomainFiles, iniDomainFiles, 0, 0.5f,
 								iniArgFileNames, iniArgFileNames, testerAgentID, 1f, 1f, 1f, 1f, 1f, 1f);
 
@@ -119,7 +119,7 @@ public class TestArgCAgent {
 								new ArrayList<String>(), agents);
 						testerAgent.start();
 
-						//check every second if the test has finished
+						//check every second if the test has finished by reading the finish file
 						while (true) {
 							Thread.sleep(1000);
 							try {

@@ -496,7 +496,7 @@ public class AgentsCreation {
 	 *            Weight of the Explanatory Power
 	 * @return list of ArgCAgents created with the given parameters
 	 */
-	public static ArrayList<ArgCAgent> createArgLearnAgentsInc(ArrayList<SocialEntity> socialEntities,
+	public static ArrayList<ArgCAgent> createArgCAgentsInc(ArrayList<SocialEntity> socialEntities,
 			ArrayList<ArrayList<SocialEntity>> friendsLists, ArrayList<ArrayList<DependencyRelation>> dependencyRels,
 			Group group, ArrayList<String> iniDomainFileNames, ArrayList<String> finDomainFileNames, int domCBRindex,
 			float domCBRthreshold, ArrayList<String> iniArgFileNames, ArrayList<String> finArgFileNames,
@@ -509,13 +509,13 @@ public class AgentsCreation {
 		try {
 
 			for (int i = 0; i < totalAgents; i++) {
-				ArgCAgent argLeanAgent = new ArgCAgent(new AgentID("qpid://" + socialEntities.get(i).getName()
+				ArgCAgent argCAgent = new ArgCAgent(new AgentID("qpid://" + socialEntities.get(i).getName()
 						+ "@localhost:8080"), socialEntities.get(i), friendsLists.get(i), dependencyRels.get(i), group,
 						"commitmentStore", null, iniDomainFileNames.get(i), finDomainFileNames.get(i), domCBRindex,
 						domCBRthreshold, iniArgFileNames.get(i), finArgFileNames.get(i), wPD, wSD, wRD, wAD,
 						wED, wEP);
-				argLeanAgent.start();
-				agents.add(argLeanAgent);
+				argCAgent.start();
+				agents.add(argCAgent);
 			}
 
 		} catch (Exception e) {
