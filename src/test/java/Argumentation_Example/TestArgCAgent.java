@@ -50,7 +50,7 @@ public class TestArgCAgent {
 
 			String testerAgentID = "testerAgent";
 			//fileName to write if the test has finished
-			String finishFileName = "testArgumentation/testArgLearnAgfinished";
+			String finishFileName = "testArgumentation/testArgCAgentfinished";
 
 			//initial domain-cases file names
 			ArrayList<String> iniDomainFiles = new ArrayList<String>();
@@ -72,7 +72,7 @@ public class TestArgCAgent {
 				AgentsCreation.createEmptyArgCasesPartitions(iniArgFileNames);
 				
 				//create the social entities, friends list, and dependency relation between all agents
-				ArrayList<SocialEntity> socialEntities = AgentsCreation.createSocialEntities("ArgLearnCAg", nOperators,
+				ArrayList<SocialEntity> socialEntities = AgentsCreation.createSocialEntities("ArgCAgent", nOperators,
 						nExperts, nManagers);
 				ArrayList<ArrayList<SocialEntity>> friendsLists = AgentsCreation.createFriendsLists(socialEntities);
 				ArrayList<ArrayList<DependencyRelation>> depenRelsLists = AgentsCreation.createDependencyRelations(

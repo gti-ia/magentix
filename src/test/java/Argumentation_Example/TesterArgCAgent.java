@@ -494,7 +494,7 @@ public class TesterArgCAgent extends SingleAgent {
 				// Create file
 				FileWriter fstream = new FileWriter(finishFileName, false);
 				BufferedWriter outFile = new BufferedWriter(fstream);
-				outFile.write("test2 finished");
+				outFile.write("test finished");
 				outFile.newLine();
 				// Close the output stream
 				outFile.close();
