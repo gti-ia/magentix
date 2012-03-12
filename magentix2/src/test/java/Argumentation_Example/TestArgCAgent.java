@@ -56,6 +56,11 @@ public class TestArgCAgent {
 			ArrayList<String> iniDomainFiles = new ArrayList<String>();
 			//initial argument-cases file names
 			ArrayList<String> iniArgFileNames = new ArrayList<String>();
+			
+			//initial domain-cases file names
+			// ArrayList<String> finDomainFiles = new ArrayList<String>();
+			//initial argument-cases file names
+			// ArrayList<String> finArgFileNames = new ArrayList<String>();
 
 			//test domain-cases
 			Vector<DomainCase> testDomainCases = CreatePartitions.getTestDomainCases();
