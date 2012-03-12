@@ -135,8 +135,6 @@ public class ArgCAgent extends CAgent {
 	 * 
 	 * @param aid
 	 *            Agent {@link AID}
-	 * @param isInitiator
-	 *            Flag to set the Initiator role
 	 * @param mySocialEntity
 	 *            {@link SocialEntity} of the Agent
 	 * @param myFriends
@@ -159,9 +157,6 @@ public class ArgCAgent extends CAgent {
 	 *            File with the original Argument-Cases case-base
 	 * @param finArgCasesFilePath
 	 *            File with the updated Argument-Cases case-base
-	 * @param threshold
-	 *            Similarity threshold over which a Domain-Case is retrieved from
-	 *            the Domain-Cases case-base
 	 * @param wPD
 	 *            Weight of the Persuasion Degree
 	 * @param wSD
@@ -174,13 +169,16 @@ public class ArgCAgent extends CAgent {
 	 *            Weight of the Efficiency Degree
 	 * @param wEP
 	 *            Weight of the Explanatory Power
+	 * @param threshold
+	 *            Similarity threshold over which a Domain-Case is retrieved from
+	 *            the Domain-Cases case-base
 	 * @throws Exception
 	 */
-	public ArgCAgent(AgentID aid, boolean isInitiator, SocialEntity mySocialEntity, ArrayList<SocialEntity> myFriends,
-			ArrayList<DependencyRelation> depenRelations, Group group, String commitmentStoreID, String testerAgentID,
-			String iniDomCasesFilePath, String finDomCasesFilePath, int domCBRindex, float domCBRthreshold,
-			String iniArgCasesFilePath, String finArgCasesFilePath, float wPD, float wSD, float wRD, float wAD,
-			float wED, float wEP) throws Exception {
+	public ArgCAgent(AgentID aid, SocialEntity mySocialEntity, ArrayList<SocialEntity> myFriends, ArrayList<DependencyRelation> depenRelations,
+			Group group, String commitmentStoreID, String testerAgentID, String iniDomCasesFilePath,
+			String finDomCasesFilePath, int domCBRindex, float domCBRthreshold, String iniArgCasesFilePath,
+			String finArgCasesFilePath, float wPD, float wSD, float wRD, float wAD, float wED,
+			float wEP) throws Exception {
 
 		super(aid);
 
