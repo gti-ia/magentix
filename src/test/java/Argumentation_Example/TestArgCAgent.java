@@ -96,8 +96,8 @@ public class TestArgCAgent {
 					//repetitions with different test domain-cases for the same partitions
 					for (int repetition = 0; repetition < testDomainCases.size(); repetition++) {
 
-						Vector<DomainCase> aTestDomCase = new Vector<DomainCase>();
-						aTestDomCase.add(testDomainCases.get(repetition));
+						Vector<DomainCase> domCasesVector = new Vector<DomainCase>();
+						domCasesVector.add(testDomainCases.get(repetition));
 
 						//Create and start the Commitment Store
 						CommitmentStore commitmentStore = new CommitmentStore(new AgentID(
@@ -112,11 +112,10 @@ public class TestArgCAgent {
 						//Create the tester agent that sends the test domain-case to solve to the group of agents
 						//and acts as initiator of the dialogue
 						TesterArgCAgent testerAgent = new TesterArgCAgent(new AgentID("qpid://"
-								+ testerAgentID + "@localhost:8080"), nTestCases, socialEntities,
-								commitmentStore.getName(),
+								+ testerAgentID + "@localhost:8080"), socialEntities, commitmentStore.getName(),
 								"testArgumentation/results/argTestRes" + nOperators
-										+ "ag.txt", finishFileName, cases, repetition, aTestDomCase,
-								new ArrayList<String>(), agents);
+										+ "ag.txt",
+								finishFileName, cases, repetition, domCasesVector, agents);
 						testerAgent.start();
 
 						//check every second if the test has finished by reading the finish file

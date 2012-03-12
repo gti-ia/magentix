@@ -31,27 +31,23 @@ import es.upv.dsic.gti_ia.core.SingleAgent;
  */
 public class TesterArgCAgent extends SingleAgent {
 
-	int totalDomCases;
-	ArrayList<SocialEntity> socialEntities;
-	String resultFileName;
-	String finishFileName;
-	int casesPerAgent;
-	int iteration;
-	Vector<DomainCase> domCases;
-	ArrayList<String> argCasesFiles;
-	ArrayList<ArgCAgent> agents;
-	String currentDialogueID = "";
-	long dialogueInitTime = 0;
-	String commitmentStoreID;
-	long multTimeFactor = 10;
+	private ArrayList<SocialEntity> socialEntities;
+	private String resultFileName;
+	private String finishFileName;
+	private int casesPerAgent;
+	private int iteration;
+	private Vector<DomainCase> domCases;
+	private ArrayList<ArgCAgent> agents;
+	private String currentDialogueID = "";
+	private long dialogueInitTime = 0;
+	private String commitmentStoreID;
+	private long multTimeFactor = 10;
 
 	/**
 	 * Constructor of the tester agent
 	 * 
 	 * @param aid
 	 *            agent identifier
-	 * @param totalDomCases
-	 *            total domain-cases
 	 * @param socialEntities
 	 *            that represent the group of the agents of the dialogue
 	 * @param commitmentStoreID
@@ -66,19 +62,16 @@ public class TesterArgCAgent extends SingleAgent {
 	 *            number of iteration in the current test
 	 * @param domCases
 	 *            domain-cases
-	 * @param argCasesFiles
-	 *            argument-cases files
 	 * @param agents
 	 *            list of the argumentative agents of the group
 	 * @throws Exception
 	 */
-	public TesterArgCAgent(AgentID aid, int totalDomCases, ArrayList<SocialEntity> socialEntities,
-			String commitmentStoreID, String resultFileName, String finishFileName, int casesPerAgent, int iteration,
-			Vector<DomainCase> domCases, ArrayList<String> argCasesFiles, ArrayList<ArgCAgent> agents) throws Exception {
+	public TesterArgCAgent(AgentID aid, ArrayList<SocialEntity> socialEntities, String commitmentStoreID,
+			String resultFileName, String finishFileName, int casesPerAgent, int iteration, Vector<DomainCase> domCases,
+			ArrayList<ArgCAgent> agents) throws Exception {
 		super(aid);
 		logger.info(this.getName() + ": agent created");
 
-		this.totalDomCases = totalDomCases;
 		this.socialEntities = socialEntities;
 		this.commitmentStoreID = commitmentStoreID;
 		this.resultFileName = resultFileName;
@@ -86,7 +79,6 @@ public class TesterArgCAgent extends SingleAgent {
 		this.casesPerAgent = casesPerAgent;
 		this.iteration = iteration;
 		this.domCases = domCases;
-		this.argCasesFiles = argCasesFiles;
 		this.agents = agents;
 
 	}
