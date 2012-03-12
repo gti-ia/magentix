@@ -50,7 +50,7 @@ public class TestArgCAgent {
 
 			String testerAgentID = "testerAgent";
 			//fileName to write if the test has finished
-			String finishFileName = "testArgLearnAgfinished";
+			String finishFileName = "testArgCAgentFinished";
 
 			//initial domain-cases file names
 			ArrayList<String> iniDomainFiles = new ArrayList<String>();
