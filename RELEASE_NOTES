@@ -1,0 +1,10 @@
+-----------------------------------------
+	Magentix2 Release Notes
+-----------------------------------------
+
+2.0: The Magentix2 2.0 release support the new version of the THOMAS specification.
+You can access this specification from the Magentix 2.0 manual:
+
+http://gti-ia.upv.es/sma/tools/magentix2/documents.php
+
+2.01: Solved problems with the informative SQL queries and data base connections
