@@ -19,7 +19,7 @@
 <rdf:RDF xmlns:rdf="&rdf;" xmlns:rdfs="&rdfs;" xmlns:owl="&owl;" xmlns:xsd="http://www.w3.org/2001/XMLSchema#" 
    xmlns:service="&service;" xmlns:process="&process;" xmlns:profile="&profile;" xmlns:grounding="&grounding;"
    xmlns:mind="&mind;#"      
-   xmlns:provider = "http://127.0.0.1/ontology/provider.owl#"
+   xmlns:provider = "http://localhost:8080/ontologies/provider.owl#"
    xml:base="http://localhost:8080/testSFservices/testSFservices/owl/owls/Sign.owl">
 
 <owl:Ontology>
@@ -27,7 +27,7 @@
     <owl:imports rdf:resource="&profile;"/>
     <owl:imports rdf:resource="&process;"/>
     <owl:imports rdf:resource="&grounding;"/> 
-    <owl:imports rdf:resource="http://127.0.0.1/ontology/provider.owl" />
+    <owl:imports rdf:resource="http://localhost:8080/ontologies/provider.owl" />
 </owl:Ontology>
 
 <service:Service rdf:ID="SignService">
