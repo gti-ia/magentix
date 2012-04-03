@@ -42,8 +42,8 @@ public class Oracle {
 	 */
 	private Document doc = null;
 
-	private ArrayList<String> owlsProfileInputs;
-	private ArrayList<String> owlsProfileOutputs;
+	private ArrayList<String> owlsProfileInputs = new ArrayList<String>();
+	private ArrayList<String> owlsProfileOutputs = new ArrayList<String>();
 
 	private ArrayList<String> wsdlInputParams = new ArrayList<String>();
 	private ArrayList<String> wsdlOutputParams = new ArrayList<String>();
@@ -51,26 +51,26 @@ public class Oracle {
 	private ArrayList<String> wsdlInputTypes = new ArrayList<String>();
 	private ArrayList<String> wsdlOutputTypes = new ArrayList<String>();
 
-	private ArrayList<Provider> providers;
-	private ArrayList<String> providersGroundingWSDL;
+	private ArrayList<Provider> providers = new ArrayList<Provider>();
+	private ArrayList<String> providersGroundingWSDL = new ArrayList<String>();
 
-	private ArrayList<String> providerList;
-	private ArrayList<String> clientList;
-	private ArrayList<String> clientunitList;
-	private ArrayList<String> providerunitList;
+	private ArrayList<String> providerList = new ArrayList<String>();
+	private ArrayList<String> clientList = new ArrayList<String>();
+	private ArrayList<String> clientunitList = new ArrayList<String>();
+	private ArrayList<String> providerunitList = new ArrayList<String>();
 
 	private Map<String, String> elements = new LinkedHashMap<String, String>();
 
-	private String wsdl;
-	private String qnameService;
-	private String qnamePort;
-	private String operation;
+	private String wsdl = "";
+	private String qnameService = "";
+	private String qnamePort = "";
+	private String operation = "";
 
-	private String serviceName;
+	private String serviceName = "";
 
-	private String output_message_WSDL;
+	private String output_message_WSDL = "";
 
-	private String processLocalName;
+	private String processLocalName = "";
 
 	private boolean open = true;
 

@@ -43,6 +43,7 @@ public class James extends CAgent {
 		try {
 
 			// James has to resolve the equation (5 * (3 + 4))^2
+			String resultEquation="";
 
 			System.out.println("[" + this.getName() + "]" + " I want to resolve the equation (5 * (3 + 4))^2");
 
@@ -83,45 +84,69 @@ public class James extends CAgent {
 			// ---Requesting the execution of the Addition service-------------
 			// -----------------------------------------------------------------------------
 
+			//get the first service found because it is the most suitable
 			String serviceOWLS = sfProxy.getService(foundServices.get(0).get(0));
 
 			Oracle oracle = new Oracle(serviceOWLS);
 
-			ArrayList<Provider> providers = oracle.getProviders();
+			//get service inputs
+			ArrayList<String> serviceInputs = oracle.getOwlsProfileInputs();
 
-			ArrayList<String> service_inputs = oracle.getOwlsProfileInputs();
+			//put the service inputs values
+			HashMap<String, String> agentInputs = new HashMap<String, String>();
 
-			HashMap<String, String> agent_inputs = new HashMap<String, String>();
-
-			for (String input : service_inputs) {
+			for (String input : serviceInputs) {
 				if (input.equalsIgnoreCase("x"))
-					agent_inputs.put(input, "3");
+					agentInputs.put(input, "3");
 				else if (input.equalsIgnoreCase("y"))
-					agent_inputs.put(input, "4");
+					agentInputs.put(input, "4");
 				else
-					agent_inputs.put(input, "0");
+					agentInputs.put(input, "0");
+			}
+			
+			
+			//agents or organizations providers
+			ArrayList<Provider> providers = oracle.getProviders();
+			//web services providers
+			ArrayList<String> providersGroundingWSDL = oracle.getProvidersGroundingWSDL();
+			
+			if(!providers.isEmpty()){
+				System.out.println("[" + this.getName() + "]" + " Requesting Addition Service (3+4)");
+
+				// Building the ACL message
+				ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
+				msg.setReceiver(new AgentID(providers.get(0).getEntityID()));
+				msg.setProtocol("fipa-request");
+				msg.setSender(getAid());
+
+				String content = st.buildServiceContent(oracle.getServiceName(), agentInputs);
+
+				// ACL message content is formed by XML format with service name and
+				// inputs
+				msg.setContent(content);
+
+				this.send_request(msg);
+
+				ServiceTools st = new ServiceTools();
+				HashMap<String, String> outputs = new HashMap<String, String>();
+				st.extractServiceContent(requestResult, outputs);
+				resultEquation = outputs.get("Result");
+			}
+			else if(!providersGroundingWSDL.isEmpty()){
+				System.out.println("[" + this.getName() + "]" + " Executing Addition Service (3+4)");
+
+				HashMap<String, Object> resultExecution = st.executeWebService(providersGroundingWSDL.get(0), agentInputs);
+
+				Double resultDouble = (Double) resultExecution.get("Result");
+				resultEquation = resultDouble.toString();
+			}
+			else{//no providers for this service
+				System.out.println("[" + this.getName() + "]" + " No providers found for Addition Service (3+4)");
 			}
 
-			System.out.println("[" + this.getName() + "]" + " Requesting Addition Service (3+4)");
+			
 
-			// Building the ACL message
-			ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
-			msg.setReceiver(new AgentID(providers.get(0).getEntityID()));
-			msg.setProtocol("fipa-request");
-			msg.setSender(getAid());
-
-			String content = st.buildServiceContent(oracle.getServiceName(), agent_inputs);
-
-			// ACL message content is formed by XML format with service name and
-			// inputs
-			msg.setContent(content);
-
-			this.send_request(msg);
-
-			ServiceTools st = new ServiceTools();
-			HashMap<String, String> inputs = new HashMap<String, String>();
-			st.extractServiceContent(requestResult, inputs);
-			String resultEquation = inputs.get("Result");
+			
 
 			// ---------------------------------------------------------------------
 			// ---------Searching for the Product service----------------------
@@ -148,45 +173,62 @@ public class James extends CAgent {
 			// --Requesting the execution of the Product service-------------
 			// -----------------------------------------------------------------------------
 
+			//get the first service found because it is the most suitable
 			serviceOWLS = sfProxy.getService(foundServices.get(0).get(0));
 
 			oracle = null;
 			oracle = new Oracle(serviceOWLS);
 
-			providers.clear();
-			providers = oracle.getProviders();
+			//get service inputs
+			serviceInputs = oracle.getOwlsProfileInputs();
 
-			service_inputs.clear();
-			service_inputs = oracle.getOwlsProfileInputs();
-
-			agent_inputs.clear();
-			agent_inputs = new HashMap<String, String>();
-			for (String input : service_inputs) {
+			agentInputs.clear();
+			agentInputs = new HashMap<String, String>();
+			for (String input : serviceInputs) {
 				if (input.equalsIgnoreCase("x"))
-					agent_inputs.put(input, "5");
+					agentInputs.put(input, "5");
 				else if (input.equalsIgnoreCase("y"))
-					agent_inputs.put(input, resultEquation);
+					agentInputs.put(input, resultEquation);
 				else
-					agent_inputs.put(input, "0");
+					agentInputs.put(input, "0");
+			}
+			
+			//agents or organizations providers
+			providers = oracle.getProviders();
+			
+			//web services providers
+			providersGroundingWSDL = oracle.getProvidersGroundingWSDL();
+			
+			if(!providers.isEmpty()){
+				System.out.println("[" + this.getName() + "]" + " Requesting Product Service (5*7)");
+				
+				ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
+				msg.setReceiver(new AgentID(providers.get(0).getEntityID()));
+				msg.setProtocol("fipa-request");
+				msg.setSender(getAid());
+
+				String content = st.buildServiceContent(oracle.getServiceName(), agentInputs);
+				msg.setContent(content);
+
+				this.send_request(msg);
+
+				HashMap<String, String> outputs = new HashMap<String, String>();
+				st.extractServiceContent(requestResult, outputs);
+				resultEquation = outputs.get("Result");
+			}
+			else if(!providersGroundingWSDL.isEmpty()){
+				System.out.println("[" + this.getName() + "]" + " Executing Product Service (5*7)");
+
+				HashMap<String, Object> resultExecution = st.executeWebService(providersGroundingWSDL.get(0), agentInputs);
+
+				Double resultDouble = (Double) resultExecution.get("Result");
+				resultEquation = resultDouble.toString();
+			}
+			else{//no providers for this service
+				System.out.println("[" + this.getName() + "]" + " No providers found for Product Service (5*7)");
 			}
 
-			System.out.println("[" + this.getName() + "]" + " Requesting Product Service (5*7)");
-			msg = null;
-
-			msg = new ACLMessage(ACLMessage.REQUEST);
-			msg.setReceiver(new AgentID(providers.get(0).getEntityID()));
-			msg.setProtocol("fipa-request");
-			msg.setSender(getAid());
-
-			content = "";
-			content = st.buildServiceContent(oracle.getServiceName(), agent_inputs);
-			msg.setContent(content);
-
-			this.send_request(msg);
-
-			inputs.clear();
-			st.extractServiceContent(requestResult, inputs);
-			resultEquation = inputs.get("Result");
+			
 
 			// ---------------------------------------------------------------------
 			// -------Searching for the Square service----------------------
@@ -215,30 +257,63 @@ public class James extends CAgent {
 			// --------------Executing Square service ----------------
 			// ---------------------------------------------------
 
+			//get the first service found because it is the most suitable
 			serviceOWLS = sfProxy.getService(foundServices.get(0).get(0));
 
 			oracle = null;
 			oracle = new Oracle(serviceOWLS);
 
-			ArrayList<String> providersGrounding = oracle.getProvidersGroundingWSDL();
+			//get service inputs
+			serviceInputs = oracle.getOwlsProfileInputs();
 
-			service_inputs = oracle.getOwlsProfileInputs();
-
-			agent_inputs.clear();
-
-			agent_inputs = new HashMap<String, String>();
-			for (String input : service_inputs) {
-				agent_inputs.put(input, resultEquation);
+			agentInputs = new HashMap<String, String>();
+			for (String input : serviceInputs) {
+				agentInputs.put(input, resultEquation);
 			}
+			
+			//agents or organizations providers
+			providers = oracle.getProviders();
+			//web services providers
+			providersGroundingWSDL = oracle.getProvidersGroundingWSDL();
+			
+			if(!providers.isEmpty()){
+				System.out.println("[" + this.getName() + "]" + " Requesting Square Service (35^2)");
+				
+				ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
+				msg.setReceiver(new AgentID(providers.get(0).getEntityID()));
+				msg.setProtocol("fipa-request");
+				msg.setSender(getAid());
 
-			System.out.println("[" + this.getName() + "]" + " Executing Square Service (35^2)");
+				String content = st.buildServiceContent(oracle.getServiceName(), agentInputs);
+				msg.setContent(content);
 
-			HashMap<String, Object> resultExecution = st.executeWebService(providersGrounding.get(0), agent_inputs);
+				this.send_request(msg);
 
-			Double resultContent = (Double) resultExecution.get("Result");
+				HashMap<String, String> outputs = new HashMap<String, String>();
+				st.extractServiceContent(requestResult, outputs);
+				resultEquation = outputs.get("Result");
+				
+				
+			}
+			else if(!providersGroundingWSDL.isEmpty()){
+				
+				System.out.println("[" + this.getName() + "]" + " Executing Square Service (35^2)");
 
-			logger.info("\n\n[" + this.getName() + "] Final result: " + resultContent + "\n\n");
-			System.out.println("\n\n[" + this.getName() + "] Final result: " + resultContent + "\n\n");
+				HashMap<String, Object> resultExecution = st.executeWebService(providersGroundingWSDL.get(0), agentInputs);
+
+				Double resultDouble = (Double) resultExecution.get("Result");
+				resultEquation = resultDouble.toString();
+				
+			}
+			else{//no providers for this service
+				System.out.println("[" + this.getName() + "]" + " No providers found for Square Service (35^2)");
+			}
+			
+			
+			String finalResult= resultEquation;
+
+			logger.info("\n\n[" + this.getName() + "] Final result: " + finalResult + "\n\n");
+			System.out.println("\n\n[" + this.getName() + "] Final result: " + finalResult + "\n\n");
 
 			// send a request to the InitiatorAgent to notify that the Example
 			// is ended
