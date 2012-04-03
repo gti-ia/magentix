@@ -974,7 +974,7 @@ public class SFinterface {
 						+ "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>"
 						+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
 						+ "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
-						+ "prefix provider: <http://127.0.0.1/ontology/provider.owl#>"
+						+ "prefix provider: <http://localhost:8080/ontologies/provider.owl#>"
 						+ "prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>" + "prefix mind: <" + baseURI + "#>"
 						+ "delete {?x ?y ?z} " + "where" + "{mind:" + providerName + " ?y ?z"
 						+ " filter ( ( ?y = provider:entityID " + "|| ?y = provider:entityType "
@@ -1243,7 +1243,7 @@ public class SFinterface {
 					+ "xmlns:process   = \"http://www.daml.org/services/owl-s/1.1/Process.owl#\"" + "\n"
 					+ "xmlns:profile    = \"http://www.daml.org/services/owl-s/1.1/Profile.owl#\"" + "\n"
 					+ "xmlns:grounding = \"http://www.daml.org/services/owl-s/1.1/Grounding.owl#\"" + "\n"
-					+ "xmlns:provider = \"http://127.0.0.1/ontology/provider.owl#\">" + "\n";
+					+ "xmlns:provider = \"http://localhost:8080/ontologies/provider.owl#\">" + "\n";
 
 			// profile descriptions...
 			// profile:serviceName
@@ -1750,7 +1750,7 @@ public class SFinterface {
 					+ "xmlns:process   = \"http://www.daml.org/services/owl-s/1.1/Process.owl#\"" + "\n"
 					+ "xmlns:profile    = \"http://www.daml.org/services/owl-s/1.1/Profile.owl#\"" + "\n"
 					+ "xmlns:grounding = \"http://www.daml.org/services/owl-s/1.1/Grounding.owl#\"" + "\n"
-					+ "xmlns:provider = \"http://127.0.0.1/ontology/provider.owl#\"" + "\n" + "xml:base        = \""
+					+ "xmlns:provider = \"http://localhost:8080/ontologies/provider.owl#\"" + "\n" + "xml:base        = \""
 					+ urlBase + "\">" + "\n");
 
 			out.write("<profile:Profile rdf:ID=\"" + regProfileName + "\">\n");
@@ -1812,7 +1812,7 @@ public class SFinterface {
 					+ "xmlns:process   = \"http://www.daml.org/services/owl-s/1.1/Process.owl#\"" + "\n"
 					+ "xmlns:profile    = \"http://www.daml.org/services/owl-s/1.1/Profile.owl#\"" + "\n"
 					+ "xmlns:grounding = \"http://www.daml.org/services/owl-s/1.1/Grounding.owl#\"" + "\n"
-					+ "xmlns:provider = \"http://127.0.0.1/ontology/provider.owl#\"" + "\n" + "xml:base        = \""
+					+ "xmlns:provider = \"http://localhost:8080/ontologies/provider.owl#\"" + "\n" + "xml:base        = \""
 					+ urlBase + "\">" + "\n");
 
 			out.write("<profile:Profile rdf:ID=\"" + regProfileName + "\">\n");
@@ -3223,7 +3223,7 @@ public class SFinterface {
 
 		String queryStringSearchName2 = "prefix profile: <http://www.daml.org/services/owl-s/1.1/Profile.owl#>"
 				+ "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>"
-				+ "prefix provider: <http://127.0.0.1/ontology/provider.owl#>" + "select ?x where { <" + providerURI
+				+ "prefix provider: <http://localhost:8080/ontologies/provider.owl#>" + "select ?x where { <" + providerURI
 				+ "> provider:" + parameter + " ?x }";
 
 		Query querySearchName2 = QueryFactory.create(queryStringSearchName2);
