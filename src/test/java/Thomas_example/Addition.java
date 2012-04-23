@@ -1,4 +1,5 @@
 package Thomas_example;
+
 /**
  * In this class the agent addition is represented. 
  * Functions:
@@ -9,8 +10,9 @@ package Thomas_example;
  *  
  */
 
-
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import es.upv.dsic.gti_ia.cAgents.CAgent;
 import es.upv.dsic.gti_ia.cAgents.CFactory;
@@ -27,92 +29,83 @@ public class Addition extends CAgent {
 
 	OMSProxy omsProxy = new OMSProxy(this);
 	SFProxy sfProxy = new SFProxy(this);
-	
-	
 
 	public Addition(AgentID aid) throws Exception {
 		super(aid);
 
 	}
 
-
 	protected void execution(CProcessor myProcessor, ACLMessage welcomeMessage) {
 
-		try
-		{
+		try {
+
+			CFactory informTalk = new myInform_Protocol().newFactory("Inform_TALK", 1, myProcessor.getMyAgent());
+			this.addFactoryAsParticipant(informTalk);
 
 			String result = omsProxy.acquireRole("operation", "calculator");
-			logger.info("["+this.getName()+"] Result acquire role participant: "+result);
+			logger.info("[" + this.getName() + "] Result acquire role operation: " + result);
 
-			sfProxy.registerService("http://localhost:8080/testSFservices/testSFservices/owl/owls/Addition.owl");
+			System.out.println("[" + this.getName() + "]" + " operation (calculator) role acquired");
 
+			ArrayList<String> resultRegister = sfProxy
+					.registerService("http://localhost:8080/testSFservices/testSFservices/owl/owls/Addition.owl");
+			Iterator<String> iterRes = resultRegister.iterator();
+			String registerRes = "";
+			while (iterRes.hasNext()) {
+				registerRes += iterRes.next() + "\n";
+			}
+			logger.info("[" + this.getName() + "] Result registerService: " + registerRes);
 
-			CFactory additionTalk = new myFIPA_REQUEST().newFactory("ADDITION_TALK", null,
-					0, myProcessor.getMyAgent());
+			System.out.println("[" + this.getName() + "] " + "Addition service registered. Waiting Request");
 
+			CFactory additionTalk = new myFIPA_REQUEST().newFactory("ADDITION_TALK", null, 0, myProcessor.getMyAgent());
 
 			this.addFactoryAsParticipant(additionTalk);
-			
 
-		}catch(THOMASException e)
-		{
+		} catch (THOMASException e) {
 			e.printStackTrace();
 		}
 
 	}
-
 
 	@Override
-	protected void finalize(CProcessor firstProcessor,
-			ACLMessage finalizeMessage) {
-		System.out.println("["+firstProcessor.getMyAgent().getName()+"] end execution!");	
-		
-		try {
-			sfProxy.deregisterService("http://localhost:8080/testSFservices/testSFservices/owl/owls/Addition.owl");
-		
-			omsProxy.leaveRole("operation", "calculator");
-		} catch (THOMASException e) {
-			
-			e.printStackTrace();
-		}
+	protected void finalize(CProcessor firstProcessor, ACLMessage finalizeMessage) {
+		System.out.println("[" + firstProcessor.getMyAgent().getName() + "] End execution");
+
 	}
 
-
-	//------------------------------------------------------------------------
-	//-----------------------CFactory implementation--------------------------
-	//------------------------------------------------------------------------
-
-
+	// ------------------------------------------------------------------------
+	// -----------------------CFactory implementation--------------------------
+	// ------------------------------------------------------------------------
 
 	class myFIPA_REQUEST extends FIPA_REQUEST_Participant {
 
-		ServiceTools st=new ServiceTools();
-		HashMap<String,String> inputs=new HashMap<String, String>();
-		String serviceName="";
-
+		ServiceTools st = new ServiceTools();
+		HashMap<String, String> inputs = new HashMap<String, String>();
+		String serviceName = "";
 
 		@Override
 		protected String doAction(CProcessor myProcessor) {
 			String next = "";
 			Double resultContent = 0.0;
-			try{
+			try {
 
-				String serviceWSDLURL= "http://localhost:8080/testSFservices/services/Addition?wsdl";
-				HashMap<String,Object> result=st.executeWebService(serviceWSDLURL, inputs);
+				String serviceWSDLURL = "http://localhost:8080/testSFservices/services/Addition?wsdl";
+				HashMap<String, Object> result = st.executeWebService(serviceWSDLURL, inputs);
 
 				next = "INFORM";
 
-				resultContent=(Double)result.get("Result");
-				
-				String resultXML ="";
+				resultContent = (Double) result.get("Result");
+
+				String resultXML = "";
 				resultXML += "<serviceOutput>\n";
-				resultXML += "<serviceName>"+serviceName+"</serviceName>\n";
+				resultXML += "<serviceName>" + serviceName + "</serviceName>\n";
 				resultXML += "<outputs>\n";
-				resultXML += "<Result>"+resultContent+"</Result>\n";
+				resultXML += "<Result>" + resultContent + "</Result>\n";
 				resultXML += "</outputs>\n";
 				resultXML += "</serviceOutput>\n";
-				
-				myProcessor.getLastReceivedMessage().setContent(""+resultXML);
+
+				myProcessor.getLastReceivedMessage().setContent("" + resultXML);
 
 			} catch (Exception e) {
 				next = "FAILURE";
@@ -124,12 +117,11 @@ public class Addition extends CAgent {
 		@Override
 		protected void doInform(CProcessor myProcessor, ACLMessage response) {
 			ACLMessage lastReceivedMessage = myProcessor.getLastReceivedMessage();
-			response.setContent(lastReceivedMessage.getContent());				
+			response.setContent(lastReceivedMessage.getContent());
 		}
 
 		@Override
-		protected String doReceiveRequest(CProcessor myProcessor,
-				ACLMessage request) {
+		protected String doReceiveRequest(CProcessor myProcessor, ACLMessage request) {
 			String next = "";
 			ACLMessage msg = request;
 
@@ -140,8 +132,7 @@ public class Addition extends CAgent {
 					inputs.clear();
 					serviceName = st.extractServiceContent(msg.getContent(), inputs);
 
-					if (serviceName.toLowerCase().contains("addition"))
-					{
+					if (serviceName.toLowerCase().contains("addition")) {
 
 						logger.info("AGREE");
 						next = "AGREE";
@@ -172,6 +163,23 @@ public class Addition extends CAgent {
 			return next;
 		}
 	}
+
+	class myInform_Protocol extends ExampleEndedInform {
+
+		@Override
+		protected boolean doFinish(CProcessor myProcessor, ACLMessage msgReceived) {
+			if (msgReceived.getHeaderValue("EXAMPLEENDED") != null)
+				return true;
+			else
+				return false;
+		}
+
+		@Override
+		protected void doDie(CProcessor myProcessor) {
+			myProcessor.ShutdownAgent();
+
+		}
+
+	}
+
 }
-
-

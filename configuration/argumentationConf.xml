@@ -1,0 +1,20 @@
+<root>
+<server>
+	<name>localhost</name>
+	<database>argCBR</database>
+	<user>root</user>
+	<pass>1234</pass>
+</server>
+<domaincbr>
+	<similarity>normalizedEuclidean</similarity> <!-- normalizedEuclidean or weightedEuclidean or normalizedTversky -->
+</domaincbr>
+<argcbr>
+	<proponentidweight>1</proponentidweight>
+	<proponentprefweight>1</proponentprefweight>
+	<opponentidweight>1</opponentidweight>
+	<opponentprefweight>1</opponentprefweight>
+	<groupidweight>1</groupidweight>
+	<groupprefweight>1</groupprefweight>
+</argcbr>
+
+</root>

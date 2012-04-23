@@ -36,7 +36,7 @@ public class ConsumerAgent extends BaseAgent {
 		/**
 		 * When a message arrives, its shows on screen
 		 */
-		System.out.println("Mensaje received in " + this.getName()
+		logger.info("Mensaje received in " + this.getName()
 				+ " agent, by onMessage: " + msg.getContent());
 	}
 

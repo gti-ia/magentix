@@ -1,6 +1,5 @@
 package Thomas_example;
 
-
 /**
  * In this class the agent James is represented. 
  * Functions:
@@ -10,8 +9,6 @@ package Thomas_example;
  *  -	Request the execution of the product service.
  *  -	Execute service Square.
  */
-
-
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,9 +31,8 @@ public class James extends CAgent {
 	OMSProxy omsProxy = new OMSProxy(this);
 	SFProxy sfProxy = new SFProxy(this);
 	ServiceTools st = new ServiceTools();
-	
-	
 
+	String requestResult = "";
 
 	public James(AgentID aid) throws Exception {
 		super(aid);
@@ -46,192 +42,341 @@ public class James extends CAgent {
 
 		try {
 
+			// James has to resolve the equation (5 * (3 + 4))^2
+			String resultEquation="";
 
-			omsProxy.acquireRole("student","school");
+			System.out.println("[" + this.getName() + "]" + " I want to resolve the equation (5 * (3 + 4))^2");
 
-			ArrayList <String> search_inputs = new ArrayList <String>();
-			ArrayList <String> outputs = new ArrayList <String>();
-			ArrayList <String> keywords = new ArrayList <String>();
+			String result = omsProxy.acquireRole("student", "school");
+			logger.info("[" + this.getName() + "] Result acquire role student: " + result);
+			System.out.println("[" + this.getName() + "]" + " student role (school) acquired");
 
-			search_inputs.add("\"http://www.w3.org/2001/XMLSchema#double\"^^xsd:anyURI");
-			search_inputs.add("\"http://www.w3.org/2001/XMLSchema#double\"^^xsd:anyURI");
+			// ---------------------------------------------------------------------
+			// ---Searching for the Addition service----------------------
+			// ---------------------------------------------------------------------
 
-			ArrayList<ArrayList<String>> resApp;
-			
-			
-			//---------------------------------------------------------------------
-			//---------------------Searching for the services----------------------
-			//---------------------------------------------------------------------
-			do{
-				//Waiting for services
+			ArrayList<String> searchInputs = new ArrayList<String>();
+			ArrayList<String> searchOutputs = new ArrayList<String>();
+			ArrayList<String> searchKeywords = new ArrayList<String>();
+
+			searchInputs.add(ServiceTools.OntologicalTypesConstants.DOUBLE);
+			searchInputs.add(ServiceTools.OntologicalTypesConstants.DOUBLE);
+
+			searchOutputs.add(ServiceTools.OntologicalTypesConstants.DOUBLE);
+
+			searchKeywords.add("addition");
+
+			ArrayList<ArrayList<String>> foundServices;
+
+			do {
+				// Waiting for services
 				try {
-					Thread.sleep(5*1000);
+					Thread.sleep(2 * 1000);
 				} catch (InterruptedException e) {
 
 					e.printStackTrace();
 				}
-				resApp = sfProxy.searchService(search_inputs, outputs, keywords);
+				foundServices = sfProxy.searchService(searchInputs, searchOutputs, searchKeywords);
 
-			}while(resApp.size() != 3);
+			} while (foundServices.isEmpty());
 
+			// -----------------------------------------------------------------------------
+			// ---Requesting the execution of the Addition service-------------
+			// -----------------------------------------------------------------------------
 
-			//-----------------------------------------------------------------------------
-			//-------------------Requesting the execution of the first service-------------
-			//-----------------------------------------------------------------------------
+			//get the first service found because it is the most suitable
+			String serviceOWLS = sfProxy.getService(foundServices.get(0).get(0));
+
+			Oracle oracle = new Oracle(serviceOWLS);
+
+			//get service inputs
+			ArrayList<String> serviceInputs = oracle.getOwlsProfileInputs();
+
+			//put the service inputs values
+			HashMap<String, String> agentInputs = new HashMap<String, String>();
+
+			for (String input : serviceInputs) {
+				if (input.equalsIgnoreCase("x"))
+					agentInputs.put(input, "3");
+				else if (input.equalsIgnoreCase("y"))
+					agentInputs.put(input, "4");
+				else
+					agentInputs.put(input, "0");
+			}
 			
-			String service = sfProxy.getService(resApp.get(0).get(0));
 			
-			Oracle oracle = new Oracle(service);
-			
+			//agents or organizations providers
 			ArrayList<Provider> providers = oracle.getProviders();
-
-			ArrayList<String> service_inputs = oracle.getInputs();
-
-			HashMap<String,String> agent_inputs = new HashMap<String,String>();
+			//web services providers
+			ArrayList<String> providersGroundingWSDL = oracle.getProvidersGroundingWSDL();
 			
-			for(String input : service_inputs)
-			{
-				agent_inputs.put(input,"4");
+			if(!providers.isEmpty()){
+				System.out.println("[" + this.getName() + "]" + " Requesting Addition Service (3+4)");
+
+				// Building the ACL message
+				ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
+				msg.setReceiver(new AgentID(providers.get(0).getEntityID()));
+				msg.setProtocol("fipa-request");
+				msg.setSender(getAid());
+
+				String content = st.buildServiceContent(oracle.getServiceName(), agentInputs);
+
+				// ACL message content is formed by XML format with service name and
+				// inputs
+				msg.setContent(content);
+
+				this.send_request(msg);
+
+				ServiceTools st = new ServiceTools();
+				HashMap<String, String> outputs = new HashMap<String, String>();
+				st.extractServiceContent(requestResult, outputs);
+				resultEquation = outputs.get("Result");
+			}
+			else if(!providersGroundingWSDL.isEmpty()){
+				System.out.println("[" + this.getName() + "]" + " Executing Addition Service (3+4)");
+
+				HashMap<String, Object> resultExecution = st.executeWebService(providersGroundingWSDL.get(0), agentInputs);
+
+				Double resultDouble = (Double) resultExecution.get("Result");
+				resultEquation = resultDouble.toString();
+			}
+			else{//no providers for this service
+				System.out.println("[" + this.getName() + "]" + " No providers found for Addition Service (3+4)");
 			}
 
+			
 
-			//Building the ACL message
-			ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
-			msg.setReceiver(new AgentID(providers.get(0).getEntityID()));
-			msg.setProtocol("fipa-request");
-			msg.setSender(getAid());
+			
 
-			String content = st.buildServiceContent(oracle.getServiceName(), agent_inputs);
+			// ---------------------------------------------------------------------
+			// ---------Searching for the Product service----------------------
+			// ---------------------------------------------------------------------
 
-			//ACL message content is formed by XML format with service name and inputs
-			msg.setContent(content);
+			searchKeywords.clear();
+			searchKeywords.add("multiplies");
 
-			this.send_request(msg);
+			foundServices.clear();
 
-			//-----------------------------------------------------------------------------
-			//-------------------Requesting the execution of the second service-------------
-			//-----------------------------------------------------------------------------
+			do {
+				// Waiting for services
+				try {
+					Thread.sleep(2 * 1000);
+				} catch (InterruptedException e) {
 
+					e.printStackTrace();
+				}
+				foundServices = sfProxy.searchService(searchInputs, searchOutputs, searchKeywords);
 
-			service = sfProxy.getService(resApp.get(1).get(0));
+			} while (foundServices.isEmpty());
+
+			// -----------------------------------------------------------------------------
+			// --Requesting the execution of the Product service-------------
+			// -----------------------------------------------------------------------------
+
+			//get the first service found because it is the most suitable
+			serviceOWLS = sfProxy.getService(foundServices.get(0).get(0));
 
 			oracle = null;
-			oracle = new Oracle(service);
+			oracle = new Oracle(serviceOWLS);
 
-			providers.clear();
+			//get service inputs
+			serviceInputs = oracle.getOwlsProfileInputs();
+
+			agentInputs.clear();
+			agentInputs = new HashMap<String, String>();
+			for (String input : serviceInputs) {
+				if (input.equalsIgnoreCase("x"))
+					agentInputs.put(input, "5");
+				else if (input.equalsIgnoreCase("y"))
+					agentInputs.put(input, resultEquation);
+				else
+					agentInputs.put(input, "0");
+			}
+			
+			//agents or organizations providers
 			providers = oracle.getProviders();
+			
+			//web services providers
+			providersGroundingWSDL = oracle.getProvidersGroundingWSDL();
+			
+			if(!providers.isEmpty()){
+				System.out.println("[" + this.getName() + "]" + " Requesting Product Service (5*7)");
+				
+				ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
+				msg.setReceiver(new AgentID(providers.get(0).getEntityID()));
+				msg.setProtocol("fipa-request");
+				msg.setSender(getAid());
 
-			service_inputs.clear();
-			service_inputs = oracle.getInputs();
+				String content = st.buildServiceContent(oracle.getServiceName(), agentInputs);
+				msg.setContent(content);
 
-			agent_inputs.clear();
-			agent_inputs = new HashMap<String,String>();
-			for(String input : service_inputs)
-			{
-				agent_inputs.put(input,"3");
+				this.send_request(msg);
+
+				HashMap<String, String> outputs = new HashMap<String, String>();
+				st.extractServiceContent(requestResult, outputs);
+				resultEquation = outputs.get("Result");
+			}
+			else if(!providersGroundingWSDL.isEmpty()){
+				System.out.println("[" + this.getName() + "]" + " Executing Product Service (5*7)");
+
+				HashMap<String, Object> resultExecution = st.executeWebService(providersGroundingWSDL.get(0), agentInputs);
+
+				Double resultDouble = (Double) resultExecution.get("Result");
+				resultEquation = resultDouble.toString();
+			}
+			else{//no providers for this service
+				System.out.println("[" + this.getName() + "]" + " No providers found for Product Service (5*7)");
 			}
 
-
-			msg=null;
-
-			msg = new ACLMessage(ACLMessage.REQUEST);
-			msg.setReceiver(new AgentID(providers.get(0).getEntityID()));
-			msg.setProtocol("fipa-request");
-			msg.setSender(getAid());
-
-			content = "";
-			content = st.buildServiceContent(oracle.getServiceName(), agent_inputs);
-			msg.setContent(content);
 			
-			this.send_request(msg);
 
+			// ---------------------------------------------------------------------
+			// -------Searching for the Square service----------------------
+			// ---------------------------------------------------------------------
 
-			//---------------------------------------------------
-			//--------------Executing service square--------------------
-			//---------------------------------------------------
+			searchInputs.clear();
+			searchInputs.add(ServiceTools.OntologicalTypesConstants.DOUBLE);
+			searchKeywords.clear();
+			searchKeywords.add("squares");
 
+			foundServices.clear();
 
-			service = sfProxy.getService(resApp.get(2).get(0));
-			
-			
+			do {
+				// Waiting for services
+				try {
+					Thread.sleep(2 * 1000);
+				} catch (InterruptedException e) {
+
+					e.printStackTrace();
+				}
+				foundServices = sfProxy.searchService(searchInputs, searchOutputs, searchKeywords);
+
+			} while (foundServices.isEmpty());
+
+			// ---------------------------------------------------
+			// --------------Executing Square service ----------------
+			// ---------------------------------------------------
+
+			//get the first service found because it is the most suitable
+			serviceOWLS = sfProxy.getService(foundServices.get(0).get(0));
+
 			oracle = null;
-			oracle = new Oracle(service);
+			oracle = new Oracle(serviceOWLS);
 
-			ArrayList<String> providersGrounding = oracle.getProvidersGroundingWSDL();
+			//get service inputs
+			serviceInputs = oracle.getOwlsProfileInputs();
 
-			service_inputs = oracle.getInputs();
-
-			agent_inputs.clear();
-
-			agent_inputs = new HashMap<String,String>();
-			for(String input : service_inputs)
-			{
-				agent_inputs.put(input,"2");
+			agentInputs = new HashMap<String, String>();
+			for (String input : serviceInputs) {
+				agentInputs.put(input, resultEquation);
 			}
+			
+			//agents or organizations providers
+			providers = oracle.getProviders();
+			//web services providers
+			providersGroundingWSDL = oracle.getProvidersGroundingWSDL();
+			
+			if(!providers.isEmpty()){
+				System.out.println("[" + this.getName() + "]" + " Requesting Square Service (35^2)");
+				
+				ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
+				msg.setReceiver(new AgentID(providers.get(0).getEntityID()));
+				msg.setProtocol("fipa-request");
+				msg.setSender(getAid());
 
+				String content = st.buildServiceContent(oracle.getServiceName(), agentInputs);
+				msg.setContent(content);
 
-			HashMap<String,Object> result=st.executeWebService(providersGrounding.get(0), agent_inputs);
+				this.send_request(msg);
 
-			Double resultContent=(Double)result.get("Result");
+				HashMap<String, String> outputs = new HashMap<String, String>();
+				st.extractServiceContent(requestResult, outputs);
+				resultEquation = outputs.get("Result");
+				
+				
+			}
+			else if(!providersGroundingWSDL.isEmpty()){
+				
+				System.out.println("[" + this.getName() + "]" + " Executing Square Service (35^2)");
 
-			System.out.println("Square service result: "+ resultContent);
+				HashMap<String, Object> resultExecution = st.executeWebService(providersGroundingWSDL.get(0), agentInputs);
+
+				Double resultDouble = (Double) resultExecution.get("Result");
+				resultEquation = resultDouble.toString();
+				
+			}
+			else{//no providers for this service
+				System.out.println("[" + this.getName() + "]" + " No providers found for Square Service (35^2)");
+			}
+			
+			
+			String finalResult= resultEquation;
+
+			logger.info("\n\n[" + this.getName() + "] Final result: " + finalResult + "\n\n");
+			System.out.println("\n\n[" + this.getName() + "] Final result: " + finalResult + "\n\n");
+
+			// send a request to the InitiatorAgent to notify that the Example
+			// is ended
+			String finishContent = "<inform>" + "<content>" + "EXAMPLE ENDED" + "</content>" + "</inform>";
+			ACLMessage msgFinish = new ACLMessage(ACLMessage.REQUEST);
+			msgFinish.setHeader("EXAMPLEENDED", "EXAMPLEENDED");
+			msgFinish.setReceiver(new AgentID("InitiatorAgent"));
+			msgFinish.setProtocol("fipa-request");
+			msgFinish.setSender(getAid());
+			msgFinish.setContent(finishContent);
+
+			this.send_request(msgFinish);
+
 			myProcessor.ShutdownAgent();
-
-
-
 
 		} catch (THOMASException e) {
 
 			e.printStackTrace();
 		}
 
-
 	}
 
 	/**
-	 * This method creates a new FIPA REQUEST protocol in order to communicate with the 
-	 * service provider.
+	 * This method creates a new FIPA REQUEST protocol in order to communicate
+	 * with the service provider.
+	 * 
 	 * @param msg
 	 */
-	private void send_request(ACLMessage msg)
-	{
-		CFactory talk = new myFIPA_REQUEST().newFactory("TALK", null , msg,1, this, 0);
+	private void send_request(ACLMessage msg) {
+		CFactory talk = new myFIPA_REQUEST().newFactory("TALK", null, msg, 1, this, 0);
 
-		// The factory is setup to answer start conversation requests from the agent
+		// The factory is setup to answer start conversation requests from the
+		// agent
 		// using the REQUEST protocol.
 
 		this.addFactoryAsInitiator(talk);
 
-		// finally the new conversation starts. Because it is synchronous, 
+		// finally the new conversation starts. Because it is synchronous,
 		// the current interaction halts until the new conversation ends.
-		//myProcessor.createSyncConversation(msg);
 		this.startSyncConversation("TALK");
 
 		this.removeFactory("TALK");
 
-
 	}
 
-
 	/**
-	 * This class implements the FIPA REQUEST protocol, the method doInform will be overloaded
+	 * This class implements the FIPA REQUEST protocol, the method doInform will
+	 * be overloaded
+	 * 
 	 * @author joabelfa
-	 *
+	 * 
 	 */
 	class myFIPA_REQUEST extends FIPA_REQUEST_Initiator {
 		protected void doInform(CProcessor myProcessor, ACLMessage msg) {
-			System.out.println(myProcessor.getMyAgent().getName() + ": "
-					+ msg.getSender().name + " informs me \n"
-					+ msg.getContent());
+			System.out.println("[" + myProcessor.getMyAgent().getName() + "] " + msg.getSender().name
+					+ " informs me \n" + msg.getContent());
+			requestResult = msg.getContent();
 		}
+
 	}
 
-
-
 	@Override
-	protected void finalize(CProcessor firstProcessor,
-			ACLMessage finalizeMessage) {
-
+	protected void finalize(CProcessor firstProcessor, ACLMessage finalizeMessage) {
 
 	}
 

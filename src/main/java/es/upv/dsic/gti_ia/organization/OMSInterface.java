@@ -11,7 +11,7 @@ import java.util.ArrayList;
  * @author Joan Bellver Faus, jbellver@dsic.upv.es
  *
  */
-public class OMSInterface {
+class OMSInterface {
 
 	private DataBaseInterface dbInterface;
 	private enum Flags{CASE_A,CASE_B,CASE_C,CASE_D};
@@ -47,7 +47,7 @@ public class OMSInterface {
 	 * @param CreatorName Identifier of the new role with creator position 
 	 * @return Returns <unitname + " created">
 	 */
-	public String registerUnit(String UnitName, String UnitType, String AgentName, String CreatorName)
+	String registerUnit(String UnitName, String UnitType, String AgentName, String CreatorName)
 	{
 
 		return this.registerUnit(UnitName, UnitType, null, AgentName, CreatorName);
@@ -61,7 +61,7 @@ public class OMSInterface {
 	 * @param CreatorName Identifier of the new role with creator position
 	 * @return Returns <unitname +  created>
 	 */
-	public String registerUnit(String UnitName, String UnitType, String ParentUnitName, String AgentName, String CreatorName)
+	String registerUnit(String UnitName, String UnitType, String ParentUnitName, String AgentName, String CreatorName)
 	{
 
 		String resultXML="<response>\n<serviceName>RegisterUnit</serviceName>\n";
@@ -134,7 +134,7 @@ public class OMSInterface {
 	 * @param AgentName Identifier of the agent
 	 * @return Returns <unitName + deleted>
 	 */
-	public String deregisterUnit(String UnitName, String AgentName)
+	String deregisterUnit(String UnitName, String AgentName)
 	{
 
 		boolean play = false;
@@ -231,7 +231,7 @@ public class OMSInterface {
 	 * @param AgentName Identifier of the agent
 	 * @return Returns <roleName + created>
 	 */
-	public String registerRole(String RoleName, String UnitName, String Accesibility, String Visibility, String Position, String AgentName)
+	String registerRole(String RoleName, String UnitName, String Accesibility, String Visibility, String Position, String AgentName)
 	{
 		String unitType = "";
 		String resultXML="<response>\n<serviceName>RegisterRole</serviceName>\n";
@@ -377,7 +377,7 @@ public class OMSInterface {
 	 * @param AgentName Identifier of the agent
 	 * @return Returns <roleName + deleted>
 	 */
-	public String deregisterRole(String RoleName, String UnitName, String AgentName)
+	String deregisterRole(String RoleName, String UnitName, String AgentName)
 	{
 
 		String unitType = "";
@@ -514,7 +514,7 @@ public class OMSInterface {
 	 * @param AgentName Identifier of the agent
 	 * @return Returns <roleName + acquired>
 	 */
-	public String acquireRole(String RoleName,String UnitName, String AgentName)
+	String acquireRole(String RoleName,String UnitName, String AgentName)
 	{
 
 
@@ -658,7 +658,7 @@ public class OMSInterface {
 	 * @param AgentName Identifier of the agent
 	 * @return Returns <roleName + left>
 	 */
-	public String leaveRole(String RoleName, String UnitName, String AgentName)
+	String leaveRole(String RoleName, String UnitName, String AgentName)
 	{
 
 		String resultXML="<response>\n<serviceName>LeaveRole</serviceName>\n";
@@ -723,7 +723,7 @@ public class OMSInterface {
 	 * @param AgentName Identifier of the agent
 	 * @return Returns <roleName + acquired>
 	 */
-	public String allocateRole(String RoleName, String UnitName, String TargetAgentName, String AgentName)
+	String allocateRole(String RoleName, String UnitName, String TargetAgentName, String AgentName)
 	{
 
 		String resultXML="<response>\n<serviceName>AllocateRole</serviceName>\n";
@@ -879,7 +879,7 @@ public class OMSInterface {
 	 * @param AgentName Identifier of the agent
 	 * @return Returns <roleName + left>
 	 */
-	public String deallocateRole(String RoleName, String UnitName, String TargetAgentName, String AgentName)
+	String deallocateRole(String RoleName, String UnitName, String TargetAgentName, String AgentName)
 	{
 
 		String resultXML="<response>\n<serviceName>DeallocateRole</serviceName>\n";
@@ -1033,7 +1033,7 @@ public class OMSInterface {
 	 * @param AgentName Identifier of the agent
 	 * @return Returns <unitName + jointed to parentName>
 	 */
-	public String jointUnit(String UnitName, String ParentName, String AgentName)
+	String jointUnit(String UnitName, String ParentName, String AgentName)
 	{
 
 		String resultXML="<response>\n<serviceName>JointUnit</serviceName>\n";
@@ -1120,7 +1120,7 @@ public class OMSInterface {
 	 * @param AgentName Identifier of the agent
 	 * @return Returns a set of tuples formed by < roleName , UnitName > and separated by -  
 	 */
-	public String informAgentRole(String RequestedAgentName,String AgentName)
+	String informAgentRole(String RequestedAgentName,String AgentName)
 	{
 
 		ArrayList<ArrayList<String>> methodResult = new ArrayList<ArrayList<String>>();
@@ -1183,7 +1183,7 @@ public class OMSInterface {
 	 * @param AgentName Identifier of the agent
 	 * @return Returns a set of tuples formed by < agentName , roleName > and separated by - 
 	 */
-	public String informMembers(String UnitName, String RoleName, String PositionValue, String AgentName)
+	String informMembers(String UnitName, String RoleName, String PositionValue, String AgentName)
 	{
 		
 		ArrayList<ArrayList<String>> methodResult = new ArrayList<ArrayList<String>>();
@@ -1387,7 +1387,7 @@ public class OMSInterface {
 	 * @param AgentName Identifier of the name
 	 * @return Returns a quantity of members
 	 */
-	public String quantityMembers(String UnitName, String RoleName, String PositionValue, String AgentName)
+	String quantityMembers(String UnitName, String RoleName, String PositionValue, String AgentName)
 	{
 		
 		int intResult = 0;
@@ -1550,7 +1550,7 @@ public class OMSInterface {
 	 * @param AgentName Identifier of the agent
 	 * @return Returns < UnitType , ParentName >
 	 */
-	public String informUnit(String UnitName, String AgentName)
+	String informUnit(String UnitName, String AgentName)
 	{
 		
 		ArrayList<String> arrayResult = new ArrayList<String>();
@@ -1630,7 +1630,7 @@ public class OMSInterface {
 	 * @param AgentName Identifier of the agent
 	 * @return Returns < RoleName , Accessibility , Visibility , Position >
 	 */
-	public String informUnitRoles(String UnitName, String AgentName)
+	String informUnitRoles(String UnitName, String AgentName)
 	{
 		
 		ArrayList<ArrayList<String>> methodResult = new ArrayList<ArrayList<String>>();
@@ -1692,7 +1692,7 @@ public class OMSInterface {
 	 * @param AgentName Identifier of the agent
 	 * @return Returns < Accessibility - Visibility - Position >
 	 */
-	public String informRole(String RoleName, String UnitName, String AgentName)
+	String informRole(String RoleName, String UnitName, String AgentName)
 	{
 		
 		ArrayList<String> arrayResult = new ArrayList<String>();

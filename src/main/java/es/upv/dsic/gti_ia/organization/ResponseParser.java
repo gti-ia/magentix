@@ -1,183 +1,162 @@
 package es.upv.dsic.gti_ia.organization;
 
+/**
+ * This class allows us to parse a service response in order to extract relevant
+ * information, such as service name, status, and result.
+ * 
+ */
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.Result;
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class ResponseParser {
+class ResponseParser {
 
+	String serviceName = "";
+	String status = "";
+	String description = "";
+	String specification = "";
+	ArrayList<ArrayList<String>> itemsList = new ArrayList<ArrayList<String>>();
+	ArrayList<String> elementsList = new ArrayList<String>();
+	HashMap<String, String> keyAndValueList = new HashMap<String, String>();
 
-	String serviceName="";
-	String status="";
-	String description="";
-	String specification="";
-	ArrayList<ArrayList<String>> itemsList=new ArrayList<ArrayList<String>>();
-	ArrayList<String> elementsList=new ArrayList<String>();
-	HashMap<String,String> keyAndValueList=new HashMap<String,String>();
-
-	public String getServiceName() {
+	String getServiceName() {
 		return serviceName;
 	}
 
-	public String getStatus() {
+	String getStatus() {
 		return status;
 	}
 
-	public String getDescription() {
+	String getDescription() {
 		return description;
 	}
 
-	public String getSpecification() {
+	String getSpecification() {
 		return specification;
 	}
 
-	public ArrayList<ArrayList<String>> getItemsList() {
+	ArrayList<ArrayList<String>> getItemsList() {
 		return itemsList;
 	}
 
-	public ArrayList<String> getElementsList() {
+	ArrayList<String> getElementsList() {
 		return elementsList;
 	}
 
-	public HashMap<String,String> getKeyAndValueList() {
+	HashMap<String, String> getKeyAndValueList() {
 		return keyAndValueList;
 	}
 
-	public String DOM2String(Document doc)
-	{
-		int coderror=0;
-		String msgerror="";
+	/**
+	 * Converts an {@link String} to a {@link Document} to parse
+	 * 
+	 * @param s
+	 *            String to convert
+	 * @return {@link Document} that can be parsed
+	 */
+	private Document string2DOM(String s) {
 
-		TransformerFactory transformerFactory =TransformerFactory.newInstance();
-		Transformer transformer = null;
-		try{
-			transformer = transformerFactory.newTransformer();
-		}catch (javax.xml.transform.TransformerConfigurationException error){
-			coderror=123;
-			msgerror=error.getMessage();
-			return null;
-		}
-
-		Source source = new DOMSource(doc);
-
-		StringWriter writer = new StringWriter();
-		Result result = new StreamResult(writer);
-		try{
-			transformer.transform(source,result);
-		}catch (javax.xml.transform.TransformerException error){
-			coderror=123;
-			msgerror=error.getMessage();
-			return null;
-		}
-
-		String s = writer.toString();
-		return s;
-	}
-
-	public static Document string2DOM(String s)
-	{
-		int coderror=0;
-		String msgerror="";
-
-		Document tmpX=null;
+		Document tmpX = null;
 		DocumentBuilder builder = null;
-		try{
+		try {
 			builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-		}catch(javax.xml.parsers.ParserConfigurationException error){
-			coderror=10;
-			msgerror="Error crando factory String2DOM "+error.getMessage();
+		} catch (javax.xml.parsers.ParserConfigurationException error) {
+			error.printStackTrace();
 			return null;
 		}
-		try{
-			tmpX=builder.parse(new ByteArrayInputStream(s.getBytes()));
-		}catch(org.xml.sax.SAXException error){
-			coderror=10;
-			msgerror="Error parseo SAX String2DOM "+error.getMessage();
+		try {
+			tmpX = builder.parse(new ByteArrayInputStream(s.getBytes()));
+		} catch (org.xml.sax.SAXException error) {
+			error.printStackTrace();
 			return null;
-		}catch(IOException error){
-			coderror=10;
-			msgerror="Error generando Bytes String2DOM "+error.getMessage();
+		} catch (IOException error) {
+			error.printStackTrace();
 			return null;
 		}
 		return tmpX;
+
 	}
 
+	/**
+	 * Parses an XML response given as parameter to extract its data
+	 * 
+	 * @param response
+	 *            {@link String} to parse
+	 */
+	void parseResponse(String response) {
+		Document doc = string2DOM(response);
 
-	public void parseResponse(String response){
-		Document doc=string2DOM(response);
-
-		if(!doc.hasChildNodes() || !doc.getChildNodes().item(0).hasChildNodes()){
-			//incorrect specification
+		if (!doc.hasChildNodes() || !doc.getChildNodes().item(0).hasChildNodes()) {
+			// incorrect specification
 			System.err.println("incorrect specification");
 			return;
 		}
 
-		itemsList=new ArrayList<ArrayList<String>>();
-		elementsList=new ArrayList<String>();
-		keyAndValueList=new HashMap<String,String>();
-		NodeList nodeList=doc.getChildNodes().item(0).getChildNodes();
-		for(int i=0;i<nodeList.getLength();i++){
-			Node n=nodeList.item(i);
+		itemsList = new ArrayList<ArrayList<String>>();
+		elementsList = new ArrayList<String>();
+		keyAndValueList = new HashMap<String, String>();
+		NodeList nodeList = doc.getChildNodes().item(0).getChildNodes();
+		for (int i = 0; i < nodeList.getLength(); i++) {
+			Node n = nodeList.item(i);
 
-			if(n.getNodeName().equalsIgnoreCase("serviceName")){
-				serviceName=n.getFirstChild().getNodeValue().trim();
-			}
-			else if(n.getNodeName().equalsIgnoreCase("status")){
-				status=n.getFirstChild().getNodeValue().trim();
-			}
-			else if(n.getNodeName().equalsIgnoreCase("result")){
-				NodeList resultNodeList=n.getChildNodes();
-				for(int j=0;j<resultNodeList.getLength();j++){
-					Node resNode=resultNodeList.item(j);
-					if(resNode.getNodeName().equalsIgnoreCase("description")){
-						description=resNode.getFirstChild().getNodeValue().trim();
-					}
-					else if(resNode.getNodeName().equalsIgnoreCase("item")){
-						NodeList items=resNode.getChildNodes();
-						ArrayList<String> itemComponents=new ArrayList<String>();
-						for(int it=0;it<items.getLength();it++){
-							Node item=items.item(it);
-							if(item.getNodeType()==Node.ELEMENT_NODE)
+			if (n.getNodeName().equalsIgnoreCase("serviceName")) {
+				serviceName = n.getFirstChild().getNodeValue().trim();
+			} else if (n.getNodeName().equalsIgnoreCase("status")) {
+				status = n.getFirstChild().getNodeValue().trim();
+			} else if (n.getNodeName().equalsIgnoreCase("result")) {
+				NodeList resultNodeList = n.getChildNodes();
+				for (int j = 0; j < resultNodeList.getLength(); j++) {
+					Node resNode = resultNodeList.item(j);
+					if (resNode.getNodeName().equalsIgnoreCase("description")) {
+						description = resNode.getFirstChild().getNodeValue().trim();
+					} else if (resNode.getNodeName().equalsIgnoreCase("item")) {
+						NodeList items = resNode.getChildNodes();
+						ArrayList<String> itemComponents = new ArrayList<String>();
+						for (int it = 0; it < items.getLength(); it++) {
+							Node item = items.item(it);
+							if (item.getNodeType() == Node.ELEMENT_NODE)
 								itemComponents.add(item.getTextContent().trim());
 						}
 						itemsList.add(itemComponents);
-					}
-					else if(resNode.getNodeName().equalsIgnoreCase("specification")){
-						//the content is encapsulated in an XML comment <!-- -->
-						Node childN=resNode.getFirstChild();
-						specification=childN.getNodeValue().trim();
-					}
-					else if(resNode.getNodeType()==Node.ELEMENT_NODE){
+					} else if (resNode.getNodeName().equalsIgnoreCase("specification")) {
+						// the content is encapsulated in an XML comment <!--
+						// -->
+						Node childN = resNode.getFirstChild();
+						specification = childN.getNodeValue().trim();
+					} else if (resNode.getNodeType() == Node.ELEMENT_NODE) {
 						elementsList.add(resNode.getTextContent().trim());
 					}
 
-
 				}
-			}
-			else if (n.getNodeName().equalsIgnoreCase("inputs"))
-			{
-				NodeList resultNodeList=n.getChildNodes();
-				for(int j=0;j<resultNodeList.getLength();j++){
+			} else if (n.getNodeName().equalsIgnoreCase("inputs")) {
+				NodeList resultNodeList = n.getChildNodes();
+				for (int j = 0; j < resultNodeList.getLength(); j++) {
 					{
-						Node resNode=resultNodeList.item(j);
+						Node resNode = resultNodeList.item(j);
 
-						if(resNode.getNodeType()==Node.ELEMENT_NODE)
-						{
+						if (resNode.getNodeType() == Node.ELEMENT_NODE) {
+
+							keyAndValueList.put(resNode.getNodeName().trim(), resNode.getTextContent().trim());
+						}
+
+					}
+				}
+			} else if (n.getNodeName().equalsIgnoreCase("outputs")) {
+				NodeList resultNodeList = n.getChildNodes();
+				for (int j = 0; j < resultNodeList.getLength(); j++) {
+					{
+						Node resNode = resultNodeList.item(j);
+
+						if (resNode.getNodeType() == Node.ELEMENT_NODE) {
 
 							keyAndValueList.put(resNode.getNodeName().trim(), resNode.getTextContent().trim());
 						}
@@ -188,11 +167,5 @@ public class ResponseParser {
 
 		}
 
-
 	}
-
-
-
-
-
 }
