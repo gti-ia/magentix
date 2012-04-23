@@ -4,7 +4,6 @@
 	<groupId>es.upv.dsic.gti-ia</groupId>
 	<artifactId>magentix2</artifactId>
 	<packaging>jar</packaging>
-	<version>1.1</version>
 	<name>magentix2</name>
 	<url>http://maven.apache.org</url>
 	<contributors>
@@ -30,6 +29,7 @@
 			</roles>
 		</contributor>
 	</contributors>
+	<version>2.0</version>
 	<description>
 		Though many networking protocol needs have been addressed, a
 		large gap exists in common guaranteed-delivery messaging
@@ -125,6 +125,24 @@
 
 		</plugins>
 	</build>
+	<profiles>
+		<profile>
+		<id>metric</id>
+		<build>
+			<plugins>
+				<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>cobertura-maven-plugin</artifactId>
+				<version>2.5.1</version>
+				<configuration> <formats>
+					<format>html</format>
+					<format>xml</format> </formats>
+				</configuration>
+				</plugin>
+			</plugins>
+		</build>
+		</profile>
+	</profiles>
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
@@ -277,6 +295,21 @@
 			<artifactId>commons-dbcp</artifactId>
 			<version>1.2.2</version>
 			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.thoughtworks.xstream</groupId>
+			<artifactId>xstream</artifactId>
+			<version>1.4.2</version>
+		</dependency>
+		<dependency>
+			<groupId>jettison</groupId>
+			<artifactId>jettison</artifactId>
+			<version>1.2</version>
+		</dependency>
+		<dependency>
+			<groupId>codehaus</groupId>
+			<artifactId>stax</artifactId>
+			<version>1.2.0</version>
 		</dependency>
 	</dependencies>
 
