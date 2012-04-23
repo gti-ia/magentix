@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import es.upv.dsic.gti_ia.core.ISO8601;
 
@@ -633,9 +634,9 @@ public class ACLMessage implements Serializable, Cloneable {
 		
 		this.setReplyByDate(msg.getReplyByDate());
 		
-		Iterator it = this.headers.entrySet().iterator();
+		Iterator<Entry<String, String>> it = this.headers.entrySet().iterator();
 		while (it.hasNext()) {
-			Map.Entry pairs = (Map.Entry)it.next();
+			Map.Entry<String, String> pairs = (Map.Entry<String, String>)it.next();
 			this.setHeader(String.valueOf(pairs.getKey()), String.valueOf(pairs.getValue()));
 		}		
 		
@@ -646,6 +647,7 @@ public class ACLMessage implements Serializable, Cloneable {
 			this.putExchangeHeader(key, headers.get(key));
 		}
 		
+		this.setConversationId(msg.getConversationId());
 	}
 
 	/**
