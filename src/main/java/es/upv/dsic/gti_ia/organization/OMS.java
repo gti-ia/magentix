@@ -46,7 +46,7 @@ public class OMS extends CAgent {
 
 	String separatorToken=" ";
 	private String OMSServiceDescriptionLocation = configuration.getOMSServiceDescriptionLocation();
-	private static HashMap<String, String> omsServicesURLs=new HashMap<String, String>();
+	private static HashMap<String, Integer> omsServicesURLs=new HashMap<String, Integer>();
 	ServiceTools st=new ServiceTools();
 	static Logger logger = Logger.getLogger(OMS.class);
 
@@ -94,21 +94,37 @@ public class OMS extends CAgent {
 		super(aid);
 
 
-		omsServicesURLs.put("RegisterUnit", OMSServiceDescriptionLocation+"RegisterUnit?wsdl");
-		omsServicesURLs.put("JointUnit", OMSServiceDescriptionLocation+"JointUnit?wsdl");
-		omsServicesURLs.put("RegisterRole", OMSServiceDescriptionLocation+"RegisterRole?wsdl");
-		omsServicesURLs.put("DeregisterUnit", OMSServiceDescriptionLocation+"DeregisterUnit?wsdl");
-		omsServicesURLs.put("DeregisterRole", OMSServiceDescriptionLocation+"DeregisterRole?wsdl");
-		omsServicesURLs.put("AcquireRole", OMSServiceDescriptionLocation+"AcquireRole?wsdl");
-		omsServicesURLs.put("AllocateRole", OMSServiceDescriptionLocation+"AllocateRole?wsdl");
-		omsServicesURLs.put("DeallocateRole", OMSServiceDescriptionLocation+"DeallocateRole?wsdl");
-		omsServicesURLs.put("LeaveRole", OMSServiceDescriptionLocation+"LeaveRole?wsdl");
-		omsServicesURLs.put("InformUnit", OMSServiceDescriptionLocation+"InformUnit?wsdl");
-		omsServicesURLs.put("InformRole", OMSServiceDescriptionLocation+"InformRole?wsdl");
-		omsServicesURLs.put("InformAgentRole", OMSServiceDescriptionLocation+"InformAgentRole?wsdl");
-		omsServicesURLs.put("InformMembers", OMSServiceDescriptionLocation+"InformMembers?wsdl");
-		omsServicesURLs.put("InformUnitRoles", OMSServiceDescriptionLocation+"InformUnitRoles?wsdl");
-		omsServicesURLs.put("QuantityMembers", OMSServiceDescriptionLocation+"QuantityMembers?wsdl");
+//		omsServicesURLs.put("RegisterUnit", OMSServiceDescriptionLocation+"RegisterUnit?wsdl");
+//		omsServicesURLs.put("JointUnit", OMSServiceDescriptionLocation+"JointUnit?wsdl");
+//		omsServicesURLs.put("RegisterRole", OMSServiceDescriptionLocation+"RegisterRole?wsdl");
+//		omsServicesURLs.put("DeregisterUnit", OMSServiceDescriptionLocation+"DeregisterUnit?wsdl");
+//		omsServicesURLs.put("DeregisterRole", OMSServiceDescriptionLocation+"DeregisterRole?wsdl");
+//		omsServicesURLs.put("AcquireRole", OMSServiceDescriptionLocation+"AcquireRole?wsdl");
+//		omsServicesURLs.put("AllocateRole", OMSServiceDescriptionLocation+"AllocateRole?wsdl");
+//		omsServicesURLs.put("DeallocateRole", OMSServiceDescriptionLocation+"DeallocateRole?wsdl");
+//		omsServicesURLs.put("LeaveRole", OMSServiceDescriptionLocation+"LeaveRole?wsdl");
+//		omsServicesURLs.put("InformUnit", OMSServiceDescriptionLocation+"InformUnit?wsdl");
+//		omsServicesURLs.put("InformRole", OMSServiceDescriptionLocation+"InformRole?wsdl");
+//		omsServicesURLs.put("InformAgentRole", OMSServiceDescriptionLocation+"InformAgentRole?wsdl");
+//		omsServicesURLs.put("InformMembers", OMSServiceDescriptionLocation+"InformMembers?wsdl");
+//		omsServicesURLs.put("InformUnitRoles", OMSServiceDescriptionLocation+"InformUnitRoles?wsdl");
+//		omsServicesURLs.put("QuantityMembers", OMSServiceDescriptionLocation+"QuantityMembers?wsdl");
+		
+		omsServicesURLs.put("RegisterUnit", 1);
+		omsServicesURLs.put("JointUnit", 2);
+		omsServicesURLs.put("RegisterRole",3);
+		omsServicesURLs.put("DeregisterUnit",4);
+		omsServicesURLs.put("DeregisterRole", 5);
+		omsServicesURLs.put("AcquireRole", 6);
+		omsServicesURLs.put("AllocateRole", 7);
+		omsServicesURLs.put("DeallocateRole",8);
+		omsServicesURLs.put("LeaveRole", 9);
+		omsServicesURLs.put("InformUnit", 10);
+		omsServicesURLs.put("InformRole", 11);
+		omsServicesURLs.put("InformAgentRole", 12);
+		omsServicesURLs.put("InformMembers", 13);
+		omsServicesURLs.put("InformUnitRoles", 14);
+		omsServicesURLs.put("QuantityMembers", 15);
 
 	}
 
@@ -275,12 +291,147 @@ public class OMS extends CAgent {
 					}
 
 					//Execute the service requested by the agent
+					String resultContent = "";
+					switch(omsServicesURLs.get(serviceName))
+					{
+					case 1: //register unit service
+						if (inputs.get("ParentUnitID") == null)
+						{
 
-					String serviceWSDLURL=omsServicesURLs.get(serviceName);
-					HashMap<String,Object> result=st.executeWebService(serviceWSDLURL, inputs);
+							resultContent =omsInterface.registerUnit(inputs.get("UnitID"), inputs.get("TypeID"), inputs.get("AgentID"), inputs.get("CreatorID"));
+						}
+						else
+						{
+							resultContent =omsInterface.registerUnit(inputs.get("UnitID"), inputs.get("TypeID"), inputs.get("ParentUnitID"), inputs.get("AgentID"), inputs.get("CreatorID"));
+							
+						}
+						
+						break;
+					case 2: //joint unit service
+						if (inputs.get("UnitID") == null)
+							resultContent = omsInterface.jointUnit(null, inputs.get("ParentUnitID"), inputs.get("AgentID"));
+						else if (inputs.get("ParentUnitID") == null)
+							resultContent = omsInterface.jointUnit(inputs.get("UnitID"), null, inputs.get("AgentID"));
+						else
+							resultContent = omsInterface.jointUnit(inputs.get("UnitID"), inputs.get("ParentUnitID"), inputs.get("AgentID"));
+					
+						break;
+					case 3: //register role service
+						if (inputs.get("RoleID") == null)
+							resultContent =omsInterface.registerRole(null, inputs.get("UnitID"), inputs.get("AccessibilityID"), inputs.get("VisibilityID"), inputs.get("PositionID"), inputs.get("AgentID"));
+						else if (inputs.get("UnitID") == null)
+							resultContent =omsInterface.registerRole(inputs.get("RoleID"), null, inputs.get("AccessibilityID"), inputs.get("VisibilityID"), inputs.get("PositionID"), inputs.get("AgentID"));
+						else if (inputs.get("AccessibilityID") == null)
+							resultContent =omsInterface.registerRole(inputs.get("RoleID"), inputs.get("UnitID"), null, inputs.get("VisibilityID"), inputs.get("PositionID"), inputs.get("AgentID"));
+						else if (inputs.get("VisibilityID") == null)
+							resultContent =omsInterface.registerRole(inputs.get("RoleID"), inputs.get("UnitID"), inputs.get("AccessibilityID"), null, inputs.get("PositionID"), inputs.get("AgentID"));
+						else if (inputs.get("PositionID") == null)
+							resultContent =omsInterface.registerRole(inputs.get("RoleID"), inputs.get("UnitID"), inputs.get("AccessibilityID"), inputs.get("VisibilityID"), null, inputs.get("AgentID"));
+						else
+							resultContent =omsInterface.registerRole(inputs.get("RoleID"), inputs.get("UnitID"), inputs.get("AccessibilityID"), inputs.get("VisibilityID"), inputs.get("PositionID"), inputs.get("AgentID"));
 
-					String resultContent=(String)result.get("Result");
+						
+						break;
+					case 4: //deregister unit service
+						if (inputs.get("UnitID") == null)
+							resultContent = omsInterface.deregisterUnit(null, inputs.get("AgentID"));
+						else
+							resultContent  = omsInterface.deregisterUnit(inputs.get("UnitID"), inputs.get("AgentID"));
+							break;
+					case 5: //De-register role service
+						resultContent = omsInterface.deregisterRole(inputs.get("RoleID"), inputs.get("UnitID"), inputs.get("AgentID"));
+						break;
+					case 6: //acquire role service
+						if (inputs.get("RoleID") == null)
+							resultContent = omsInterface.acquireRole(null, inputs.get("UnitID"),inputs.get("AgentID"));
+						else if (inputs.get("UnitID") == null)
+							resultContent = omsInterface.acquireRole(inputs.get("RoleID"), null,inputs.get("AgentID"));
+						else
+							resultContent = omsInterface.acquireRole(inputs.get("RoleID"), inputs.get("UnitID"),inputs.get("AgentID"));
 
+						break;
+					case 7: //allocate role service 
+						if (inputs.get("RoleID") == null)
+							resultContent =omsInterface.allocateRole(null, inputs.get("UnitID"),inputs.get("TargetAgentID"),inputs.get("AgentID"));
+						else if (inputs.get("UnitID") == null)
+							resultContent =omsInterface.allocateRole(inputs.get("RoleID"), null,inputs.get("TargetAgentID"),inputs.get("AgentID"));
+						else if (inputs.get("TargetAgentID") == null)
+							resultContent =omsInterface.allocateRole(inputs.get("RoleID"), inputs.get("UnitID"),null,inputs.get("AgentID"));
+						else
+							resultContent =omsInterface.allocateRole(inputs.get("RoleID"), inputs.get("UnitID"),inputs.get("TargetAgentID"),inputs.get("AgentID"));
+					
+						break;
+					case 8: //deallocate role service 
+						if (inputs.get("RoleID") == null)
+							resultContent = omsInterface.deallocateRole(null,inputs.get("UnitID"),inputs.get("TargetAgentID"),inputs.get("AgentID"));
+						else if (inputs.get("UnitID") == null)
+							resultContent = omsInterface.deallocateRole(inputs.get("RoleID"),null,inputs.get("TargetAgentID"),inputs.get("AgentID"));
+						else if (inputs.get("TargetAgentID") == null)
+							resultContent = omsInterface.deallocateRole(inputs.get("RoleID"),inputs.get("UnitID"),null,inputs.get("AgentID"));
+						else
+							resultContent = omsInterface.deallocateRole(inputs.get("RoleID"),inputs.get("UnitID"),inputs.get("TargetAgentID"),inputs.get("AgentID"));
+					
+						break;
+					case 9: //leave role service
+						if (inputs.get("RoleID") == null)
+							resultContent = omsInterface.leaveRole(null, inputs.get("UnitID"),inputs.get("AgentID"));
+						else if (inputs.get("UnitID") == null)
+							resultContent = omsInterface.leaveRole(inputs.get("RoleID"), null,inputs.get("AgentID"));
+						else
+							resultContent = omsInterface.leaveRole(inputs.get("RoleID"), inputs.get("UnitID"),inputs.get("AgentID"));
+					
+						break;
+					case 10: //inform unit service
+						if (inputs.get("UnitID") == null)
+							resultContent = omsInterface.informUnit(null,inputs.get("AgentID"));
+						else
+							resultContent = omsInterface.informUnit(inputs.get("UnitID"),inputs.get("AgentID"));
+					
+						break;
+					case 11://inform role service 
+						
+						if (inputs.get("RoleID") == null)
+							resultContent = omsInterface.informRole(null,inputs.get("UnitID"),inputs.get("AgentID"));
+						else if (inputs.get("UnitID") == null)
+							resultContent = omsInterface.informRole(inputs.get("RoleID"),null,inputs.get("AgentID"));
+						else
+							resultContent = omsInterface.informRole(inputs.get("RoleID"),inputs.get("UnitID"),inputs.get("AgentID"));
+						break;
+					case 12: // inform agent role service
+						if (inputs.get("RequestedAgentID") == null)
+							resultContent = omsInterface.informAgentRole(null,inputs.get("AgentID"));
+						else
+							resultContent = omsInterface.informAgentRole(inputs.get("RequestedAgentID"),inputs.get("AgentID"));
+					
+						break;
+					case 13: //inform members service
+						if (inputs.get("UnitID") == null)
+							resultContent =omsInterface.informMembers(null,inputs.get("RoleID"),inputs.get("PositionID"),inputs.get("AgentID"));
+						else
+							resultContent =omsInterface.informMembers(inputs.get("UnitID"),inputs.get("RoleID"),inputs.get("PositionID"),inputs.get("AgentID"));
+					
+						break;
+					case 14://inform unit role service
+						
+						if (inputs.get("UnitID") == null)
+							resultContent = omsInterface.informUnitRoles(null,inputs.get("AgentID"));
+						else
+							resultContent = omsInterface.informUnitRoles(inputs.get("UnitID"),inputs.get("AgentID"));
+						
+						break;
+					case 15://quantity members service 
+						
+						if (inputs.get("UnitID") == null)
+							resultContent = omsInterface.quantityMembers(null,inputs.get("RoleID"), inputs.get("PositionID"), inputs.get("AgentID"));
+						else
+							resultContent = omsInterface.quantityMembers(inputs.get("UnitID"),inputs.get("RoleID"), inputs.get("PositionID"), inputs.get("AgentID"));
+						
+						break;
+					}
+				//	String serviceWSDLURL=omsServicesURLs.get(serviceName);
+					//HashMap<String,Object> result=st.executeWebService(serviceWSDLURL, inputs);
+
+				
 					responseParser.parseResponse(resultContent);
 
 
@@ -420,7 +571,7 @@ public class OMS extends CAgent {
 						HashMap<String,String> inputs=new HashMap<String, String>();
 						String serviceName = st.extractServiceContent(msg.getContent(), inputs);
 
-						logger.info("[SF]Service Name: " + serviceName);
+						logger.info("[OMS]Service Name: " + serviceName);
 
 
 						if (omsServicesURLs.containsKey(serviceName)) //if (sfServicesURLs.containsKey(serviceName))
