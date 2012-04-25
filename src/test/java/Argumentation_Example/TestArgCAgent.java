@@ -42,8 +42,7 @@ public class TestArgCAgent {
 		AgentsConnection.connect();
 
 		try {
-			int nTestCases = 1;
-
+			
 			int nOperators = 7;
 			int nExperts = 0;
 			int nManagers = 0;
