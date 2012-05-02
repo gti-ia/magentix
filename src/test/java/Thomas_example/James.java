@@ -33,11 +33,16 @@ public class James extends CAgent {
 	ServiceTools st = new ServiceTools();
 
 	String requestResult = "";
+	String message;
 
 	public James(AgentID aid) throws Exception {
 		super(aid);
 	}
 
+	public String getMessage()
+	{
+		return message;
+	}
 	protected void execution(CProcessor myProcessor, ACLMessage welcomeMessage) {
 
 		try {
@@ -332,6 +337,7 @@ public class James extends CAgent {
 		} catch (THOMASException e) {
 
 			e.printStackTrace();
+			message="ERROR";
 		}
 
 	}
@@ -377,7 +383,7 @@ public class James extends CAgent {
 
 	@Override
 	protected void finalize(CProcessor firstProcessor, ACLMessage finalizeMessage) {
-
+		message="OK";
 	}
 
 }

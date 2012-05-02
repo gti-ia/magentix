@@ -22,9 +22,16 @@ public class InitiatorAgent extends CAgent {
 
 	OMSProxy omsProxy = new OMSProxy(this);
 	SFProxy sfProxy = new SFProxy(this);
+	String message;
 
 	public InitiatorAgent(AgentID aid) throws Exception {
 		super(aid);
+	}
+	
+	
+	public String getMessage()
+	{
+		return message;
 	}
 
 	protected void execution(CProcessor firstProcessor, ACLMessage welcomeMessage) {
@@ -44,6 +51,7 @@ public class InitiatorAgent extends CAgent {
 
 		} catch (THOMASException e) {
 			e.printStackTrace();
+			message ="ERROR";
 		}
 
 	}
@@ -70,6 +78,7 @@ public class InitiatorAgent extends CAgent {
 
 		} catch (THOMASException e) {
 			System.out.println("[" + this.getName() + "] " + e.getContent());
+			message = "ERROR";
 		}
 
 	}
@@ -128,10 +137,14 @@ public class InitiatorAgent extends CAgent {
 
 				System.out.println("[" + myProcessor.getMyAgent().getName() + "]"
 						+ " Example Ended. Roles, Units and Services deregistered");
+				
+				message = "OK";
 
 			} catch (THOMASException e) {
 
 				e.printStackTrace();
+				
+				message = "ERROR";
 			}
 
 			return "INFORM";

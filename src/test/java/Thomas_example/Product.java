@@ -31,10 +31,16 @@ public class Product extends CAgent {
 
 	OMSProxy omsProxy = new OMSProxy(this);
 	SFProxy sfProxy = new SFProxy(this);
+	String message;
 
 	public Product(AgentID aid) throws Exception {
 		super(aid);
 
+	}
+	
+	public String getMessage()
+	{
+		return message;
 	}
 
 	protected void execution(CProcessor myProcessor, ACLMessage welcomeMessage) {
@@ -75,6 +81,7 @@ public class Product extends CAgent {
 
 		} catch (THOMASException e) {
 			e.printStackTrace();
+			message="ERROR";
 		}
 
 	}
@@ -82,6 +89,7 @@ public class Product extends CAgent {
 	@Override
 	protected void finalize(CProcessor firstProcessor, ACLMessage finalizeMessage) {
 		System.out.println("[" + firstProcessor.getMyAgent().getName() + "] End execution");
+		message="OK";
 	}
 
 	// ------------------------------------------------------------------------
@@ -119,6 +127,7 @@ public class Product extends CAgent {
 
 			} catch (Exception e) {
 				next = "FAILURE";
+				message="ERROR";
 			}
 
 			return next;
@@ -158,6 +167,7 @@ public class Product extends CAgent {
 					logger.info("EXCEPTION");
 					System.out.println(e);
 					e.printStackTrace();
+					message="ERROR";
 					throw new RuntimeException(e.getMessage());
 
 				}
