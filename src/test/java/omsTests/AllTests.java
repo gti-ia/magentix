@@ -26,7 +26,8 @@ public class AllTests {
 		//suite.addTestSuite(TestThomas.class);
 		//suite.addTestSuite(TestAcquireRole.class);
 		//suite.addTestSuite(TestRegisterUnit.class);
-		suite.addTestSuite(TestRegisterRole.class);
+		//suite.addTestSuite(TestRegisterRole.class);
+		suite.addTestSuite(TestDeRegisterRole.class);
 		//$JUnit-END$
 		return suite;
 	}
