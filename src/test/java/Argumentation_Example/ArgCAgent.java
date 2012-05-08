@@ -2035,7 +2035,7 @@ public class ArgCAgent extends CAgent {
 	}
 
 	/**
-	 * Adds the final solution to the current ticket and adds it in the domain-cases
+	 * Adds the final solution to the current problem and adds it in the domain-cases
 	 * case-base. Also, stores all the generated argumentation data in the
 	 * argument-cases case-base. Finally, makes a cache of the domain CBR and the
 	 * argumentation CBR.
