@@ -7,7 +7,7 @@ import es.upv.dsic.gti_ia.organization.OMSProxy;
 import es.upv.dsic.gti_ia.organization.THOMASException;
 
 
-public class TestAcquireRole extends TestCase {
+public class AcquireRole extends TestCase {
 
 	OMSProxy omsProxy = null;
 	DatabaseAccess dbA = null;
@@ -16,7 +16,7 @@ public class TestAcquireRole extends TestCase {
 	Agent agent = null;
 
 
-	public TestAcquireRole()
+	public AcquireRole()
 	{
 
 	}

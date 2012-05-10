@@ -8,7 +8,7 @@ import es.upv.dsic.gti_ia.organization.OMSProxy;
 import es.upv.dsic.gti_ia.organization.THOMASException;
 
 
-public class TestRegisterUnit extends TestCase {
+public class RegisterUnit extends TestCase {
 
 	OMSProxy omsProxy = null;
 	DatabaseAccess dbA = null;
@@ -17,7 +17,7 @@ public class TestRegisterUnit extends TestCase {
 	Agent agent = null;
 
 
-	public TestRegisterUnit()
+	public RegisterUnit()
 	{
 
 	}

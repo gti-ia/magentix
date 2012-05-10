@@ -1,6 +1,7 @@
 package omsTests;
 
 
+import Thomas_example.Thomas;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
 import es.upv.dsic.gti_ia.organization.OMS;
 import es.upv.dsic.gti_ia.organization.SF;
@@ -21,13 +22,19 @@ public class AllTests {
 		oms.start();
 		sf.start();
 		
-		TestSuite suite = new TestSuite(AllTests.class.getName());
+		TestSuite suite = new TestSuite();
 		//$JUnit-BEGIN$
-		//suite.addTestSuite(TestThomas.class);
-		//suite.addTestSuite(TestAcquireRole.class);
-		//suite.addTestSuite(TestRegisterUnit.class);
-		//suite.addTestSuite(TestRegisterRole.class);
-		suite.addTestSuite(TestDeRegisterRole.class);
+//		suite.addTestSuite(Thomas.class);
+//		suite.addTestSuite(AcquireRole.class);
+//		suite.addTestSuite(RegisterUnit.class);
+//		suite.addTestSuite(RegisterRole.class);
+//		suite.addTestSuite(DeRegisterRole.class);
+//		suite.addTestSuite(AllocateRole.class);
+//		suite.addTestSuite(DeAllocateRole.class);
+//		suite.addTestSuite(JointUnit.class);
+//		suite.addTestSuite(LeaveRole.class);
+		//suite.addTestSuite(InformAgentRole.class);
+		suite.addTestSuite(InformMembers.class);
 		//$JUnit-END$
 		return suite;
 	}

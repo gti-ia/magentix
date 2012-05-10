@@ -8,7 +8,7 @@ import es.upv.dsic.gti_ia.organization.OMSProxy;
 import es.upv.dsic.gti_ia.organization.THOMASException;
 
 
-public class TestDeRegisterUnit extends TestCase {
+public class DeRegisterUnit extends TestCase {
 
 	OMSProxy omsProxy = null;
 	DatabaseAccess dbA = null;
@@ -17,7 +17,7 @@ public class TestDeRegisterUnit extends TestCase {
 	Agent agent = null;
 
 
-	public TestDeRegisterUnit()
+	public DeRegisterUnit()
 	{
 
 	}
@@ -42,7 +42,7 @@ public class TestDeRegisterUnit extends TestCase {
 		super.setUp();
 
 
-		AgentsConnection.connect();
+
 
 
 		agent = new Agent(new AgentID("pruebas"));
