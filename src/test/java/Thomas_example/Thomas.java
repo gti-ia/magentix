@@ -10,14 +10,14 @@ import es.upv.dsic.gti_ia.organization.OMS;
 import es.upv.dsic.gti_ia.organization.SF;
 import junit.framework.TestCase;
 
-public class TestThomas extends TestCase {
+public class Thomas extends TestCase {
 
 	InitiatorAgent iniAgent = null;
 	Addition addAgent = null;
 	James jamAgent = null;
 	Product proAgent = null;
 
-	public TestThomas(String name) {
+	public Thomas(String name) {
 		super(name);
 	}
 
@@ -33,16 +33,10 @@ public class TestThomas extends TestCase {
 		/**
 		 * Connecting to Qpid Broker
 		 */
-		AgentsConnection.connect();
+		//AgentsConnection.connect();
 
 
-		//Lanzamos los agentes OMS y SF
-
-		OMS oms = OMS.getOMS();
-		SF sf = SF.getSF();
-
-		oms.start();
-		sf.start();
+	
 
 		/**
 		 * Instantiating agents
