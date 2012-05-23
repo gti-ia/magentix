@@ -216,6 +216,7 @@ public class THOMASMessages {
      */
     public THOMASMessages() {
         this(Locale.getDefault());
+
     } // End constructor 'THOMASMessages()'
 
     /**
@@ -228,8 +229,9 @@ public class THOMASMessages {
      *             If could not found the resources for the specified locale.
      */
     public THOMASMessages(Locale locale) {
-        String baseName = this.getClass().getName();
-        this.bundle = ResourceBundle.getBundle(baseName, locale);
+        
+        this.bundle = ResourceBundle.getBundle("THOMASMessages", locale);
+    
     } // End constructor 'THOMASMessages(Locale)'
 
     // -----------------------------------------------------------------
