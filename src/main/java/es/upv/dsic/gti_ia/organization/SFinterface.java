@@ -1400,7 +1400,7 @@ public class SFinterface {
 	 * @throws THOMASException
 	 */
 	private ArrayList<String> getInputParameterTypes(ArrayList<String> inputs, String serviceURL, OntModel m)
-	throws THOMASException {
+ throws THOMASException {
 		ArrayList<String> inputParamsRegistered = new ArrayList<String>();
 
 		try {

@@ -204,10 +204,10 @@ public class THOMASProxy {
 	 * a new or showed an error message if the operation is incorrect.
 	 * @return
 	 */
-	private Object returnResult() throws THOMASException
+	private Object returnResult() throws InvalidVisibilityException, THOMASException
 	{
 		if (!Status)
-			throw new THOMASException(value);
+			throw new InvalidVisibilityException(value);/*THOMASException(value);*/
 		return result;
 
 	}
