@@ -16,6 +16,7 @@ import es.upv.dsic.gti_ia.cAgents.protocols.FIPA_REQUEST_Initiator;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.BaseAgent;
+import es.upv.dsic.gti_ia.organization.THOMASMessages.MessageID;
 
 
 /**
@@ -207,7 +208,134 @@ public class THOMASProxy {
 	private Object returnResult() throws InvalidVisibilityException, THOMASException
 	{
 		if (!Status)
-			throw new InvalidVisibilityException(value);/*THOMASException(value);*/
+		{
+			//TODO Hacer un swithc, caputurar el error y lanzar la excepción que toque.
+			if (value.equals(MessageID.NOT_IN_UNIT_OR_PARENT_UNIT))
+				throw new NotInUnitOrParentUnitException(value);
+			
+			if (value.equals(MessageID.AGENT_NOT_EXISTS))
+				throw new AgentNotExistsException(value);
+			
+			if (value.equals(MessageID.AGENT_NOT_IN_UNIT))
+				throw new AgentNotInUnitException(value);
+			
+			if (value.equals(MessageID.DELETING_TABLE))
+				throw new DeletingTableException(value);
+			
+			if (value.equals(MessageID.EMPTY_PARAMETERS))
+				throw new EmptyParametersException(value);
+			
+			if (value.equals(MessageID.EXCHANGE_BIND))
+				throw new ExchangeBindException(value);
+			
+			if (value.equals(MessageID.EXCHANGE_UNBIND))
+				throw new ExchangeUnbindException(value);
+			
+			if (value.equals(MessageID.ID_UNIT_TYPE_NOT_FOUND))
+				throw new IDUnitTypeNotFoundException(value);
+			
+			if (value.equals(MessageID.INSERTING_TABLE))
+				throw new InsertingTableException(value);
+			
+			if (value.equals(MessageID.INVALID_ACCESSIBILITY))
+				throw new InvalidAccessibilityException(value);
+			
+			if (value.equals(MessageID.INVALID_POSITION))
+				throw new InvalidPositionException(value);
+			
+			if (value.equals(MessageID.INVALID_ROLE_POSITION))
+				throw new InvalidRolePositionException(value);
+			
+			if (value.equals(MessageID.INVALID_UNIT_TYPE))
+				throw new InvalidUnitTypeException(value);
+			
+			if (value.equals(MessageID.INVALID_VISIBILITY))
+				throw new InvalidVisibilityException(value);
+			
+			if (value.equals(MessageID.MYSQL))
+				throw new MySQLException(value);
+			
+			if (value.equals(MessageID.NOT_CREATOR))
+				throw new NotCreatorException(value);
+			
+			if (value.equals(MessageID.NOT_CREATOR_AGENT_IN_UNIT))
+				throw new NotCreatorAgentInUnitException(value);
+			
+			if (value.equals(MessageID.NOT_CREATOR_IN_PARENT_UNIT))
+				throw new NotCreatorInParentUnitException(value);
+			
+			if (value.equals(MessageID.NOT_CREATOR_IN_UNIT))
+				throw new NotCreatorInUnitException(value);
+			
+			if (value.equals(MessageID.NOT_CREATOR_IN_UNIT_OR_PARENT_UNIT))
+				throw new NotCreatorInUnitOrParentUnitException(value);
+			
+			if (value.equals(MessageID.NOT_IN_UNIT_AND_NOT_CREATOR))
+				throw new NotInUnitAndNotCreatorException(value);
+			
+			if (value.equals(MessageID.NOT_IN_UNIT_OR_PARENT_UNIT))
+				throw new NotInUnitOrParentUnitException(value);
+			
+			if (value.equals(MessageID.NOT_MEMBER_OR_CREATOR_IN_UNIT))
+				throw new NotMemberOrCreatorInUnitException(value);
+			
+			if (value.equals(MessageID.NOT_PLAYS_ANY_ROLE))
+				throw new NotPlaysAnyRoleException(value);
+			
+			if (value.equals(MessageID.NOT_PLAYS_ROLE))
+				throw new NotPlaysRoleException(value);
+			
+			if (value.equals(MessageID.NOT_SUPERVISOR_OR_CREATOR_IN_UNIT))
+				throw new NotSupervisorOrCreatorInUnitException(value);
+			
+			if (value.equals(MessageID.ONLY_PLAYS_CREATOR))
+				throw new OnlyPlaysCreatorException(value);
+			
+			if (value.equals(MessageID.PARENT_UNIT_NOT_EXISTS))
+				throw new ParentUnitNotExistsException(value);
+			
+			if (value.equals(MessageID.PLAYING_ROLE))
+				throw new PlayingRoleException(value);
+			
+			if (value.equals(MessageID.ROLE_CONTAINS_NORMS))
+				throw new RoleContainsNormsException(value);
+			
+			if (value.equals(MessageID.ROLE_EXISTS_IN_UNIT))
+				throw new RoleExistsInUnitException(value);
+			
+			if (value.equals(MessageID.ROLE_IN_USE))
+				throw new RoleInUseException(value);
+			
+			if (value.equals(MessageID.ROLE_NOT_EXISTS))
+				throw new RoleNotExistsException(value);
+			
+			if (value.equals(MessageID.SAME_AGENT_NAME))
+				throw new SameAgentNameException(value);
+			
+			if (value.equals(MessageID.SAME_UNIT))
+				throw new SameUnitException(value);
+			
+			if (value.equals(MessageID.SUBUNITS_IN_UNIT))
+				throw new SubunitsInUnitException(value);
+			
+			if (value.equals(MessageID.UNIT_EXISTS))
+				throw new UnitExistsException(value);
+			
+			if (value.equals(MessageID.UNIT_NOT_EXISTS))
+				throw new UnitNotExistsException(value);
+			
+			if (value.equals(MessageID.VIRTUAL_PARENT))
+				throw new VirtualParentException(value);
+			
+			if (value.equals(MessageID.VIRTUAL_UNIT))
+				throw new VirtualUnitException(value);
+			
+			if (value.equals(MessageID.VISIBILITY_ROLE))
+				throw new VisibilityRoleException(value);
+			
+			
+		}
+			//throw new InvalidVisibilityException(value);/*THOMASException(value);*/
 		return result;
 
 	}
