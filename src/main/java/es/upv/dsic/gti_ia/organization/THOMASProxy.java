@@ -54,6 +54,7 @@ public class THOMASProxy {
 	String serviceTypeResult4;
 	ArrayList<String> serviceTypeResult5;
 	ResponseParser responseParser = new ResponseParser();
+	private THOMASMessages    l10n;
 
 	
 	Object result = null;
@@ -106,6 +107,7 @@ public class THOMASProxy {
 		this.agent = agent;
 		this.thomasAgent = thomasAgent;
 		c = Configuration.getConfiguration();
+		l10n = new THOMASMessages();
 		this.initialize();
 
 	}
@@ -115,6 +117,7 @@ public class THOMASProxy {
 		this.myProcessor = firstProcessor;
 		this.thomasAgent = thomasAgent;
 		c = Configuration.getConfiguration();
+		l10n = new THOMASMessages();
 		this.initialize();
 
 	}
@@ -205,132 +208,139 @@ public class THOMASProxy {
 	 * a new or showed an error message if the operation is incorrect.
 	 * @return
 	 */
-	private Object returnResult() throws InvalidVisibilityException, THOMASException
+	private Object returnResult() throws THOMASException
 	{
+		
 		if (!Status)
 		{
-			//TODO Hacer un swithc, caputurar el error y lanzar la excepción que toque.
-			if (value.equals(MessageID.NOT_IN_UNIT_OR_PARENT_UNIT))
-				throw new NotInUnitOrParentUnitException(value);
+			String valueAux = value;
 			
-			if (value.equals(MessageID.AGENT_NOT_EXISTS))
+			
+			if (valueAux.contains("'"))
+				valueAux = valueAux.replace(valueAux.subSequence(valueAux.indexOf("'"), valueAux.indexOf("'", valueAux.indexOf("'")+1)+1), "{0}");
+			if (valueAux.contains("'"))
+				valueAux = valueAux.replace(valueAux.subSequence(valueAux.indexOf("'"), valueAux.lastIndexOf("'")+1), "{1}");
+			
+			valueAux = valueAux.replace("{", "'{");
+			valueAux = valueAux.replace("}", "}'");
+			if (valueAux.equals(l10n.getMessage(MessageID.AGENT_NOT_EXISTS)))
 				throw new AgentNotExistsException(value);
 			
-			if (value.equals(MessageID.AGENT_NOT_IN_UNIT))
+			if (valueAux.equals(l10n.getMessage(MessageID.AGENT_NOT_IN_UNIT)))
 				throw new AgentNotInUnitException(value);
 			
-			if (value.equals(MessageID.DELETING_TABLE))
+			if (valueAux.equals(l10n.getMessage(MessageID.DELETING_TABLE)))
 				throw new DeletingTableException(value);
 			
-			if (value.equals(MessageID.EMPTY_PARAMETERS))
+			if (valueAux.equals(l10n.getMessage(MessageID.EMPTY_PARAMETERS)))
 				throw new EmptyParametersException(value);
 			
-			if (value.equals(MessageID.EXCHANGE_BIND))
+			if (valueAux.equals(l10n.getMessage(MessageID.EXCHANGE_BIND)))
 				throw new ExchangeBindException(value);
 			
-			if (value.equals(MessageID.EXCHANGE_UNBIND))
+			if (valueAux.equals(l10n.getMessage(MessageID.EXCHANGE_UNBIND)))
 				throw new ExchangeUnbindException(value);
 			
-			if (value.equals(MessageID.ID_UNIT_TYPE_NOT_FOUND))
+			if (valueAux.equals(l10n.getMessage(MessageID.ID_UNIT_TYPE_NOT_FOUND)))
 				throw new IDUnitTypeNotFoundException(value);
 			
-			if (value.equals(MessageID.INSERTING_TABLE))
+			if (valueAux.equals(l10n.getMessage(MessageID.INSERTING_TABLE)))
 				throw new InsertingTableException(value);
 			
-			if (value.equals(MessageID.INVALID_ACCESSIBILITY))
+			if (valueAux.equals(l10n.getMessage(MessageID.INVALID_ACCESSIBILITY)))
 				throw new InvalidAccessibilityException(value);
 			
-			if (value.equals(MessageID.INVALID_POSITION))
+			if (valueAux.equals(l10n.getMessage(MessageID.INVALID_POSITION)))
 				throw new InvalidPositionException(value);
 			
-			if (value.equals(MessageID.INVALID_ROLE_POSITION))
+			if (valueAux.equals(l10n.getMessage(MessageID.INVALID_ROLE_POSITION)))
 				throw new InvalidRolePositionException(value);
 			
-			if (value.equals(MessageID.INVALID_UNIT_TYPE))
+			if (valueAux.equals(l10n.getMessage(MessageID.INVALID_UNIT_TYPE)))
 				throw new InvalidUnitTypeException(value);
 			
-			if (value.equals(MessageID.INVALID_VISIBILITY))
+			if (valueAux.equals(l10n.getMessage(MessageID.INVALID_VISIBILITY)))
 				throw new InvalidVisibilityException(value);
 			
-			if (value.equals(MessageID.MYSQL))
+			if (valueAux.equals(l10n.getMessage(MessageID.MYSQL)))
 				throw new MySQLException(value);
 			
-			if (value.equals(MessageID.NOT_CREATOR))
+			if (valueAux.equals(l10n.getMessage(MessageID.NOT_CREATOR)))
 				throw new NotCreatorException(value);
 			
-			if (value.equals(MessageID.NOT_CREATOR_AGENT_IN_UNIT))
+			if (valueAux.equals(l10n.getMessage(MessageID.NOT_CREATOR_AGENT_IN_UNIT)))//
 				throw new NotCreatorAgentInUnitException(value);
 			
-			if (value.equals(MessageID.NOT_CREATOR_IN_PARENT_UNIT))
+			if (valueAux.equals(l10n.getMessage(MessageID.NOT_CREATOR_IN_PARENT_UNIT)))
 				throw new NotCreatorInParentUnitException(value);
 			
-			if (value.equals(MessageID.NOT_CREATOR_IN_UNIT))
+			if (valueAux.equals(MessageID.NOT_CREATOR_IN_UNIT))
 				throw new NotCreatorInUnitException(value);
 			
-			if (value.equals(MessageID.NOT_CREATOR_IN_UNIT_OR_PARENT_UNIT))
+			if (valueAux.equals(l10n.getMessage(MessageID.NOT_CREATOR_IN_UNIT_OR_PARENT_UNIT)))
 				throw new NotCreatorInUnitOrParentUnitException(value);
 			
-			if (value.equals(MessageID.NOT_IN_UNIT_AND_NOT_CREATOR))
+			if (valueAux.equals(MessageID.NOT_IN_UNIT_AND_NOT_CREATOR))
 				throw new NotInUnitAndNotCreatorException(value);
 			
-			if (value.equals(MessageID.NOT_IN_UNIT_OR_PARENT_UNIT))
+			if (valueAux.equals(l10n.getMessage(MessageID.NOT_IN_UNIT_OR_PARENT_UNIT)))
 				throw new NotInUnitOrParentUnitException(value);
 			
-			if (value.equals(MessageID.NOT_MEMBER_OR_CREATOR_IN_UNIT))
+			if (valueAux.equals(MessageID.NOT_MEMBER_OR_CREATOR_IN_UNIT))
 				throw new NotMemberOrCreatorInUnitException(value);
 			
-			if (value.equals(MessageID.NOT_PLAYS_ANY_ROLE))
+			if (valueAux.equals(l10n.getMessage(MessageID.NOT_PLAYS_ANY_ROLE)))
 				throw new NotPlaysAnyRoleException(value);
 			
-			if (value.equals(MessageID.NOT_PLAYS_ROLE))
+			if (valueAux.equals(MessageID.NOT_PLAYS_ROLE))
 				throw new NotPlaysRoleException(value);
 			
-			if (value.equals(MessageID.NOT_SUPERVISOR_OR_CREATOR_IN_UNIT))
+			if (valueAux.equals(MessageID.NOT_SUPERVISOR_OR_CREATOR_IN_UNIT))
 				throw new NotSupervisorOrCreatorInUnitException(value);
 			
-			if (value.equals(MessageID.ONLY_PLAYS_CREATOR))
+			if (valueAux.equals(l10n.getMessage(MessageID.ONLY_PLAYS_CREATOR)))
 				throw new OnlyPlaysCreatorException(value);
 			
-			if (value.equals(MessageID.PARENT_UNIT_NOT_EXISTS))
+			if (valueAux.equals(l10n.getMessage(MessageID.PARENT_UNIT_NOT_EXISTS)))
 				throw new ParentUnitNotExistsException(value);
 			
-			if (value.equals(MessageID.PLAYING_ROLE))
+			if (valueAux.equals(l10n.getMessage(MessageID.PLAYING_ROLE)))
 				throw new PlayingRoleException(value);
 			
-			if (value.equals(MessageID.ROLE_CONTAINS_NORMS))
+			if (valueAux.equals(l10n.getMessage(MessageID.ROLE_CONTAINS_NORMS)))
 				throw new RoleContainsNormsException(value);
 			
-			if (value.equals(MessageID.ROLE_EXISTS_IN_UNIT))
+			if (valueAux.equals(l10n.getMessage(MessageID.ROLE_EXISTS_IN_UNIT)))
 				throw new RoleExistsInUnitException(value);
 			
-			if (value.equals(MessageID.ROLE_IN_USE))
+			if (valueAux.equals(l10n.getMessage(MessageID.ROLE_IN_USE)))
 				throw new RoleInUseException(value);
 			
-			if (value.equals(MessageID.ROLE_NOT_EXISTS))
+			if (valueAux.equals(MessageID.ROLE_NOT_EXISTS))
 				throw new RoleNotExistsException(value);
 			
-			if (value.equals(MessageID.SAME_AGENT_NAME))
+			if (valueAux.equals(l10n.getMessage(MessageID.SAME_AGENT_NAME)))
 				throw new SameAgentNameException(value);
 			
-			if (value.equals(MessageID.SAME_UNIT))
+			if (valueAux.equals(l10n.getMessage(MessageID.SAME_UNIT)))
 				throw new SameUnitException(value);
 			
-			if (value.equals(MessageID.SUBUNITS_IN_UNIT))
+			if (valueAux.equals(l10n.getMessage(MessageID.SUBUNITS_IN_UNIT)))
 				throw new SubunitsInUnitException(value);
 			
-			if (value.equals(MessageID.UNIT_EXISTS))
+			if (valueAux.equals(l10n.getMessage(MessageID.UNIT_EXISTS)))
 				throw new UnitExistsException(value);
 			
-			if (value.equals(MessageID.UNIT_NOT_EXISTS))
+			if (valueAux.equals(l10n.getMessage(MessageID.UNIT_NOT_EXISTS)))
 				throw new UnitNotExistsException(value);
 			
-			if (value.equals(MessageID.VIRTUAL_PARENT))
+			if (valueAux.equals(l10n.getMessage(MessageID.VIRTUAL_PARENT)))
 				throw new VirtualParentException(value);
 			
-			if (value.equals(MessageID.VIRTUAL_UNIT))
+			if (valueAux.equals(l10n.getMessage(MessageID.VIRTUAL_UNIT)))
 				throw new VirtualUnitException(value);
 			
-			if (value.equals(MessageID.VISIBILITY_ROLE))
+			if (valueAux.equals(MessageID.VISIBILITY_ROLE))
 				throw new VisibilityRoleException(value);
 			
 			
@@ -456,6 +466,7 @@ public class THOMASProxy {
 		else
 		{
 
+		
 			value = responseParser.getDescription();
 			Status = false;
 		}
