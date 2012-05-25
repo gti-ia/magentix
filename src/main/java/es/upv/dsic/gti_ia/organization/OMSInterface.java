@@ -93,14 +93,18 @@ class OMSInterface {
             // --------------------------------------------------------------------------------
             if (checkParameter(CreatorName) && checkParameter(UnitName)) {
 
-                if (!dbInterface.checkUnit(UnitName)) {
-                    if (ParentUnitName != null) {
-                        if (!dbInterface.checkUnit(ParentUnitName)) {
+                if (!dbInterface.checkUnit(UnitName)) 
+                {
+                    if (ParentUnitName != null && !ParentUnitName.equals("")) 
+                    {
+                        if (!dbInterface.checkUnit(ParentUnitName)) 
+                        {
                             String message = l10n.getMessage(MessageID.PARENT_UNIT_NOT_EXISTS, ParentUnitName);
                             throw new ParentUnitNotExistsException(message);
                         }
 
-                    } else {
+                    } else 
+                    {
                         ParentUnitName = "virtual";
                     }
 
