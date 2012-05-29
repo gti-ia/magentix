@@ -345,8 +345,8 @@ class OMSInterface {
                                     return resultXML;
 
                                 } else {
-                                    String message = l10n.getMessage(MessageID.NOT_CREATOR, AgentName);
-                                    throw new NotCreatorAgentInUnitException(message);
+                                    String message = l10n.getMessage(MessageID.NOT_IN_UNIT_AND_NOT_CREATOR, AgentName);
+                                    throw new NotInUnitAndNotCreatorException(message);
                                 }
 
                             } else {
@@ -455,8 +455,8 @@ class OMSInterface {
                                             return resultXML;
 
                                         } else {
-                                            String message = l10n.getMessage(MessageID.NOT_CREATOR);
-                                            throw new NotCreatorException(message);
+                                            String message = l10n.getMessage(MessageID.NOT_IN_UNIT_AND_NOT_CREATOR);
+                                            throw new NotInUnitAndNotCreatorException(message);
                                         }
                                     } else {
                                         String message = l10n.getMessage(MessageID.AGENT_NOT_IN_UNIT, unitType);
@@ -791,8 +791,8 @@ class OMSInterface {
                                     return resultXML;
 
                                 } else {
-                                    String message = l10n.getMessage(MessageID.NOT_CREATOR, AgentName);
-                                    throw new NotCreatorException(message);
+                                    String message = l10n.getMessage(MessageID.NOT_IN_UNIT_AND_NOT_CREATOR, AgentName);
+                                    throw new NotInUnitAndNotCreatorException(message);
                                 }
                             }
                         } else {
