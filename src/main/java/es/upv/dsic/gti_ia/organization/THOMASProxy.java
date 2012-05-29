@@ -274,28 +274,28 @@ public class THOMASProxy {
 			if (valueAux.equals(l10n.getMessage(MessageID.NOT_CREATOR_IN_PARENT_UNIT)))
 				throw new NotCreatorInParentUnitException(value);
 			
-			if (valueAux.equals(MessageID.NOT_CREATOR_IN_UNIT))
+			if (valueAux.equals(l10n.getMessage(MessageID.NOT_CREATOR_IN_UNIT)))
 				throw new NotCreatorInUnitException(value);
 			
 			if (valueAux.equals(l10n.getMessage(MessageID.NOT_CREATOR_IN_UNIT_OR_PARENT_UNIT)))
 				throw new NotCreatorInUnitOrParentUnitException(value);
 			
-			if (valueAux.equals(MessageID.NOT_IN_UNIT_AND_NOT_CREATOR))
+			if (valueAux.equals(l10n.getMessage(MessageID.NOT_IN_UNIT_AND_NOT_CREATOR)))
 				throw new NotInUnitAndNotCreatorException(value);
 			
 			if (valueAux.equals(l10n.getMessage(MessageID.NOT_IN_UNIT_OR_PARENT_UNIT)))
 				throw new NotInUnitOrParentUnitException(value);
 			
-			if (valueAux.equals(MessageID.NOT_MEMBER_OR_CREATOR_IN_UNIT))
+			if (valueAux.equals(l10n.getMessage(MessageID.NOT_MEMBER_OR_CREATOR_IN_UNIT)))
 				throw new NotMemberOrCreatorInUnitException(value);
 			
 			if (valueAux.equals(l10n.getMessage(MessageID.NOT_PLAYS_ANY_ROLE)))
 				throw new NotPlaysAnyRoleException(value);
 			
-			if (valueAux.equals(MessageID.NOT_PLAYS_ROLE))
+			if (valueAux.equals(l10n.getMessage(MessageID.NOT_PLAYS_ROLE)))
 				throw new NotPlaysRoleException(value);
 			
-			if (valueAux.equals(MessageID.NOT_SUPERVISOR_OR_CREATOR_IN_UNIT))
+			if (valueAux.equals(l10n.getMessage(MessageID.NOT_SUPERVISOR_OR_CREATOR_IN_UNIT)))
 				throw new NotSupervisorOrCreatorInUnitException(value);
 			
 			if (valueAux.equals(l10n.getMessage(MessageID.ONLY_PLAYS_CREATOR)))
@@ -316,7 +316,7 @@ public class THOMASProxy {
 			if (valueAux.equals(l10n.getMessage(MessageID.ROLE_IN_USE)))
 				throw new RoleInUseException(value);
 			
-			if (valueAux.equals(MessageID.ROLE_NOT_EXISTS))
+			if (valueAux.equals(l10n.getMessage(MessageID.ROLE_NOT_EXISTS)))
 				throw new RoleNotExistsException(value);
 			
 			if (valueAux.equals(l10n.getMessage(MessageID.SAME_AGENT_NAME)))
@@ -340,7 +340,7 @@ public class THOMASProxy {
 			if (valueAux.equals(l10n.getMessage(MessageID.VIRTUAL_UNIT)))
 				throw new VirtualUnitException(value);
 			
-			if (valueAux.equals(MessageID.VISIBILITY_ROLE))
+			if (valueAux.equals(l10n.getMessage(MessageID.VISIBILITY_ROLE)))
 				throw new VisibilityRoleException(value);
 			
 			
