@@ -92,15 +92,7 @@ public class LeaveRoleInCorrectPermissionsTest extends TestCase {
 		dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('Equipo2',(SELECT idunitType FROM unitType WHERE unitTypeName = 'team'))");
 		dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'equipo'),(SELECT idunitList FROM unitList WHERE unitName = 'Equipo2'))");
 
-		
-			
-		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
-				"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
-				"(SELECT idposition FROM position WHERE position = 'creator'), "+
-				"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
-		"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
-	
 		
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
 				"('rolNoJugado',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
@@ -197,7 +189,7 @@ public class LeaveRoleInCorrectPermissionsTest extends TestCase {
 			
 			String result = omsProxy.leaveRole("rolNoJugado", "plana");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(NotPlaysRoleException e)
 		{
@@ -226,7 +218,7 @@ public class LeaveRoleInCorrectPermissionsTest extends TestCase {
 			
 			String result = omsProxy.leaveRole("participante", "jerarquia2");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(NotPlaysRoleException e)
 		{
@@ -255,7 +247,7 @@ public class LeaveRoleInCorrectPermissionsTest extends TestCase {
 			
 			String result = omsProxy.leaveRole("participante", "equipo2");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(NotPlaysRoleException e)
 		{
@@ -283,7 +275,7 @@ public class LeaveRoleInCorrectPermissionsTest extends TestCase {
 			
 			String result = omsProxy.leaveRole("participante", "plana2");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(NotPlaysRoleException e)
 		{

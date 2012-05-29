@@ -87,14 +87,14 @@ public class RegisterRoleInCorrectParamTest extends TestCase {
 
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
 				"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
-				"(SELECT idpositmiembroion FROM position WHERE position = 'creator'), "+
+				"(SELECT idposition FROM position WHERE position = 'creator'), "+
 				"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 		"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 		
 
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
 				"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
-				"(SELECT idpositmiembroion FROM position WHERE position = 'creator'), "+
+				"(SELECT idposition FROM position WHERE position = 'creator'), "+
 				"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 		"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 		
@@ -129,7 +129,7 @@ public class RegisterRoleInCorrectParamTest extends TestCase {
 
 			String result = omsProxy.registerRole("", "virtual", "external", "public", "member");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(EmptyParametersException e)
 		{
@@ -145,7 +145,7 @@ public class RegisterRoleInCorrectParamTest extends TestCase {
 		try
 		{
 			String result = omsProxy.registerRole("", "equipo", "external", "public", "member");
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -161,7 +161,7 @@ public class RegisterRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.registerRole("", "plana", "external", "public", "member");
 
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -177,7 +177,7 @@ public class RegisterRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.registerRole("", "jerarquia", "external", "public", "member");
 
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -198,7 +198,7 @@ public class RegisterRoleInCorrectParamTest extends TestCase {
 
 			String result = omsProxy.registerRole(null, "virtual", "external", "public", "member");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(EmptyParametersException e)
 		{
@@ -214,7 +214,7 @@ public class RegisterRoleInCorrectParamTest extends TestCase {
 		try
 		{
 			String result = omsProxy.registerRole(null, "equipo", "external", "public", "member");
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -230,7 +230,7 @@ public class RegisterRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.registerRole(null, "plana", "external", "public", "member");
 
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -246,7 +246,7 @@ public class RegisterRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.registerRole(null, "jerarquia", "external", "public", "member");
 
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -259,75 +259,75 @@ public class RegisterRoleInCorrectParamTest extends TestCase {
 		}
 
 	}
-	
-	public void testRegisterRole3()
-	{
-		try
-		{
-
-			String result = omsProxy.registerRole("inexistente", "virtual", "external", "public", "member");
-
-			assertNull(result);
-
-		}catch(RoleNotExistsException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-		try
-		{
-			String result = omsProxy.registerRole("inexistente", "equipo", "external", "public", "member");
-			assertNull(result);
-		}catch(RoleNotExistsException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-		try
-		{
-			String result = omsProxy.registerRole("inexistente", "plana", "external", "public", "member");
-
-			assertNull(result);
-		}catch(RoleNotExistsException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-		
-		try
-		{
-			String result = omsProxy.registerRole("inexistente", "jerarquia", "external", "public", "member");
-
-			assertNull(result);
-		}catch(RoleNotExistsException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
+	//Esta prueba no tiene sentido, si que se puede registrar un rol con nombre inexistente.
+//	public void testRegisterRole3()
+//	{
+//		try
+//		{
+//
+//			String result = omsProxy.registerRole("inexistente", "virtual", "external", "public", "member");
+//
+//			fail(result);
+//
+//		}catch(RoleNotExistsException e)
+//		{
+//
+//			assertNotNull(e);
+//
+//		}
+//		catch(Exception e)
+//		{
+//			fail(e.getMessage());
+//		}
+//
+//		try
+//		{
+//			String result = omsProxy.registerRole("inexistente", "equipo", "external", "public", "member");
+//			fail(result);
+//		}catch(RoleNotExistsException e)
+//		{
+//
+//			assertNotNull(e);
+//
+//		}
+//		catch(Exception e)
+//		{
+//			fail(e.getMessage());
+//		}
+//
+//		try
+//		{
+//			String result = omsProxy.registerRole("inexistente", "plana", "external", "public", "member");
+//
+//			fail(result);
+//		}catch(RoleNotExistsException e)
+//		{
+//
+//			assertNotNull(e);
+//
+//		}
+//		catch(Exception e)
+//		{
+//			fail(e.getMessage());
+//		}
+//		
+//		try
+//		{
+//			String result = omsProxy.registerRole("inexistente", "jerarquia", "external", "public", "member");
+//
+//			fail(result);
+//		}catch(RoleNotExistsException e)
+//		{
+//
+//			assertNotNull(e);
+//
+//		}
+//		catch(Exception e)
+//		{
+//			fail(e.getMessage());
+//		}
+//
+//	}
 	public void testRegisterRole4()
 	{
 		try
@@ -335,7 +335,7 @@ public class RegisterRoleInCorrectParamTest extends TestCase {
 
 			String result = omsProxy.registerRole("miembro", "", "external", "public", "member");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(EmptyParametersException e)
 		{
@@ -351,7 +351,7 @@ public class RegisterRoleInCorrectParamTest extends TestCase {
 		try
 		{
 			String result = omsProxy.registerRole("miembro", "", "external", "public", "member");
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -367,7 +367,7 @@ public class RegisterRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.registerRole("miembro", "", "external", "public", "member");
 
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -383,7 +383,7 @@ public class RegisterRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.registerRole("subordinado", "", "external", "public", "member");
 
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -404,7 +404,7 @@ public class RegisterRoleInCorrectParamTest extends TestCase {
 
 			String result = omsProxy.registerRole("miembro", null, "external", "public", "member");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(EmptyParametersException e)
 		{
@@ -420,7 +420,7 @@ public class RegisterRoleInCorrectParamTest extends TestCase {
 		try
 		{
 			String result = omsProxy.registerRole("miembro", null, "external", "public", "member");
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -436,7 +436,7 @@ public class RegisterRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.registerRole("miembro", null, "external", "public", "member");
 
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -452,7 +452,7 @@ public class RegisterRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.registerRole("subordinado", null, "external", "public", "member");
 
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -473,7 +473,7 @@ public class RegisterRoleInCorrectParamTest extends TestCase {
 
 			String result = omsProxy.registerRole("miembro", "inexistente", "external", "public", "member");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(UnitNotExistsException e)
 		{
@@ -489,7 +489,7 @@ public class RegisterRoleInCorrectParamTest extends TestCase {
 		try
 		{
 			String result = omsProxy.registerRole("miembro", "inexistente", "external", "public", "member");
-			assertNull(result);
+			fail(result);
 		}catch(UnitNotExistsException e)
 		{
 
@@ -505,7 +505,7 @@ public class RegisterRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.registerRole("miembro", "inexistente", "external", "public", "member");
 
-			assertNull(result);
+			fail(result);
 		}catch(UnitNotExistsException e)
 		{
 
@@ -521,7 +521,7 @@ public class RegisterRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.registerRole("subordinado", "inexistente", "external", "public", "member");
 
-			assertNull(result);
+			fail(result);
 		}catch(UnitNotExistsException e)
 		{
 
@@ -542,7 +542,7 @@ public class RegisterRoleInCorrectParamTest extends TestCase {
 
 			String result = omsProxy.registerRole("miembro", "virtual", "", "public", "member");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(EmptyParametersException e)
 		{
@@ -558,7 +558,7 @@ public class RegisterRoleInCorrectParamTest extends TestCase {
 		try
 		{
 			String result = omsProxy.registerRole("miembro", "equipo", "", "public", "member");
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -574,7 +574,7 @@ public class RegisterRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.registerRole("miembro", "plana", "", "public", "member");
 
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -590,7 +590,7 @@ public class RegisterRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.registerRole("subordinado", "jerarquia", "", "public", "member");
 
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -611,7 +611,7 @@ public class RegisterRoleInCorrectParamTest extends TestCase {
 
 			String result = omsProxy.registerRole("miembro", "virtual", null, "public", "member");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(EmptyParametersException e)
 		{
@@ -627,7 +627,7 @@ public class RegisterRoleInCorrectParamTest extends TestCase {
 		try
 		{
 			String result = omsProxy.registerRole("miembro", "equipo", null, "public", "member");
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -643,7 +643,7 @@ public class RegisterRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.registerRole("miembro", "plana", null, "public", "member");
 
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -659,7 +659,7 @@ public class RegisterRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.registerRole("subordinado", "jerarquia", null, "public", "member");
 
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -680,7 +680,7 @@ public class RegisterRoleInCorrectParamTest extends TestCase {
 
 			String result = omsProxy.registerRole("miembro", "virtual", "inexistente", "public", "member");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(InvalidAccessibilityException e)
 		{
@@ -696,7 +696,7 @@ public class RegisterRoleInCorrectParamTest extends TestCase {
 		try
 		{
 			String result = omsProxy.registerRole("miembro", "equipo", "inexistente", "public", "member");
-			assertNull(result);
+			fail(result);
 		}catch(InvalidAccessibilityException e)
 		{
 
@@ -712,7 +712,7 @@ public class RegisterRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.registerRole("miembro", "plana", "inexistente", "public", "member");
 
-			assertNull(result);
+			fail(result);
 		}catch(InvalidAccessibilityException e)
 		{
 
@@ -726,9 +726,9 @@ public class RegisterRoleInCorrectParamTest extends TestCase {
 		
 		try
 		{
-			String result = omsProxy.registerRole("subordinado", "jerarquia", "inexistente", "public", "member");
+			String result = omsProxy.registerRole("subordinado", "jerarquia", "inexistente", "public", "subordinate");
 
-			assertNull(result);
+			fail(result);
 		}catch(InvalidAccessibilityException e)
 		{
 
@@ -749,7 +749,7 @@ public class RegisterRoleInCorrectParamTest extends TestCase {
 
 			String result = omsProxy.registerRole("miembro", "virtual", "external", "", "member");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(EmptyParametersException e)
 		{
@@ -765,7 +765,7 @@ public class RegisterRoleInCorrectParamTest extends TestCase {
 		try
 		{
 			String result = omsProxy.registerRole("miembro", "equipo", "external", "", "member");
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -781,7 +781,7 @@ public class RegisterRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.registerRole("miembro", "plana", "external", "", "member");
 
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -797,7 +797,7 @@ public class RegisterRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.registerRole("subordinado", "jerarquia", "external", "", "member");
 
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -818,7 +818,7 @@ public class RegisterRoleInCorrectParamTest extends TestCase {
 
 			String result = omsProxy.registerRole("miembro", "virtual", "external", null, "member");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(EmptyParametersException e)
 		{
@@ -834,7 +834,7 @@ public class RegisterRoleInCorrectParamTest extends TestCase {
 		try
 		{
 			String result = omsProxy.registerRole("miembro", "equipo", "external", null, "member");
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -850,7 +850,7 @@ public class RegisterRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.registerRole("miembro", "plana", "external", null, "member");
 
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -866,7 +866,7 @@ public class RegisterRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.registerRole("subordinado", "jerarquia", "external", null, "member");
 
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -887,7 +887,7 @@ public class RegisterRoleInCorrectParamTest extends TestCase {
 
 			String result = omsProxy.registerRole("miembro", "virtual", "external", "inexistente", "member");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(InvalidVisibilityException e)
 		{
@@ -903,7 +903,7 @@ public class RegisterRoleInCorrectParamTest extends TestCase {
 		try
 		{
 			String result = omsProxy.registerRole("miembro", "equipo", "external", "inexistente", "member");
-			assertNull(result);
+			fail(result);
 		}catch(InvalidVisibilityException e)
 		{
 
@@ -919,7 +919,7 @@ public class RegisterRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.registerRole("miembro", "plana", "external", "inexistente", "member");
 
-			assertNull(result);
+			fail(result);
 		}catch(InvalidVisibilityException e)
 		{
 
@@ -933,9 +933,9 @@ public class RegisterRoleInCorrectParamTest extends TestCase {
 		
 		try
 		{
-			String result = omsProxy.registerRole("subordinado", "jerarquia", "external", "inexistente", "member");
+			String result = omsProxy.registerRole("subordinado", "jerarquia", "external", "inexistente", "subordinate");
 
-			assertNull(result);
+			fail(result);
 		}catch(InvalidVisibilityException e)
 		{
 
@@ -956,7 +956,7 @@ public class RegisterRoleInCorrectParamTest extends TestCase {
 
 			String result = omsProxy.registerRole("miembro", "virtual", "external", "public", "");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(EmptyParametersException e)
 		{
@@ -972,7 +972,7 @@ public class RegisterRoleInCorrectParamTest extends TestCase {
 		try
 		{
 			String result = omsProxy.registerRole("miembro", "equipo", "external", "public", "");
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -988,7 +988,7 @@ public class RegisterRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.registerRole("miembro", "plana", "external", "public", "");
 
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -1004,7 +1004,7 @@ public class RegisterRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.registerRole("subordinado", "jerarquia", "external", "public", "");
 
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -1025,7 +1025,7 @@ public class RegisterRoleInCorrectParamTest extends TestCase {
 
 			String result = omsProxy.registerRole("miembro", "virtual", "external", "public", null);
 
-			assertNull(result);
+			fail(result);
 
 		}catch(EmptyParametersException e)
 		{
@@ -1041,7 +1041,7 @@ public class RegisterRoleInCorrectParamTest extends TestCase {
 		try
 		{
 			String result = omsProxy.registerRole("miembro", "equipo", "external", "public", null);
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -1057,7 +1057,7 @@ public class RegisterRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.registerRole("miembro", "plana", "external", "public", null);
 
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -1073,7 +1073,7 @@ public class RegisterRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.registerRole("subordinado", "jerarquia", "external", "public", null);
 
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -1094,7 +1094,7 @@ public class RegisterRoleInCorrectParamTest extends TestCase {
 
 			String result = omsProxy.registerRole("miembro", "virtual", "external", "public", "inexistente");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(InvalidPositionException e)
 		{
@@ -1110,7 +1110,7 @@ public class RegisterRoleInCorrectParamTest extends TestCase {
 		try
 		{
 			String result = omsProxy.registerRole("miembro", "equipo", "external", "public", "inexistente");
-			assertNull(result);
+			fail(result);
 		}catch(InvalidPositionException e)
 		{
 
@@ -1126,7 +1126,7 @@ public class RegisterRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.registerRole("miembro", "plana", "external", "public", "inexistente");
 
-			assertNull(result);
+			fail(result);
 		}catch(InvalidPositionException e)
 		{
 
@@ -1142,7 +1142,7 @@ public class RegisterRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.registerRole("subordinado", "jerarquia", "external", "public", "inexistente");
 
-			assertNull(result);
+			fail(result);
 		}catch(InvalidPositionException e)
 		{
 
@@ -1163,7 +1163,7 @@ public class RegisterRoleInCorrectParamTest extends TestCase {
 
 			String result = omsProxy.registerRole("miembro", "virtual", "external", "public", "supervisor");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(InvalidPositionException e)
 		{
@@ -1179,7 +1179,7 @@ public class RegisterRoleInCorrectParamTest extends TestCase {
 		try
 		{
 			String result = omsProxy.registerRole("miembro", "equipo", "external", "public", "supervisor");
-			assertNull(result);
+			fail(result);
 		}catch(InvalidPositionException e)
 		{
 
@@ -1195,7 +1195,7 @@ public class RegisterRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.registerRole("miembro", "plana", "external", "public", "subordinate");
 
-			assertNull(result);
+			fail(result);
 		}catch(InvalidPositionException e)
 		{
 
@@ -1211,7 +1211,7 @@ public class RegisterRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.registerRole("subordinado", "jerarquia", "external", "public", "member");
 
-			assertNull(result);
+			fail(result);
 		}catch(InvalidPositionException e)
 		{
 

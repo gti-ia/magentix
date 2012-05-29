@@ -82,8 +82,8 @@ public class AcquireRoleInCorrectParamTest extends TestCase {
 		{
 
 			String result = omsProxy.acquireRole("participante", "noexiste");
-
-			assertNull(result);
+			
+			fail(result);
 
 		}catch(UnitNotExistsException e)
 		{
@@ -105,7 +105,7 @@ public class AcquireRoleInCorrectParamTest extends TestCase {
 
 			String result = omsProxy.acquireRole("participante", "");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(EmptyParametersException e)
 		{
@@ -127,7 +127,7 @@ public class AcquireRoleInCorrectParamTest extends TestCase {
 
 			String result = omsProxy.acquireRole("participante", null);
 
-			assertNull(result);
+			fail(result);
 
 		}catch(EmptyParametersException e)
 		{
@@ -149,7 +149,7 @@ public class AcquireRoleInCorrectParamTest extends TestCase {
 
 			String result = omsProxy.acquireRole("noexiste", "virtual");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(RoleNotExistsException e)
 		{
@@ -171,7 +171,7 @@ public class AcquireRoleInCorrectParamTest extends TestCase {
 
 			String result = omsProxy.acquireRole("", "virtual");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(EmptyParametersException e)
 		{
@@ -193,7 +193,7 @@ public class AcquireRoleInCorrectParamTest extends TestCase {
 
 			String result = omsProxy.acquireRole(null, "virtual");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(EmptyParametersException e)
 		{

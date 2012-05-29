@@ -5,14 +5,9 @@ import java.util.ArrayList;
 import junit.framework.TestCase;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
-import es.upv.dsic.gti_ia.organization.EmptyParametersException;
-import es.upv.dsic.gti_ia.organization.NotPlaysAnyRoleException;
-import es.upv.dsic.gti_ia.organization.NotPlaysRoleException;
+import es.upv.dsic.gti_ia.organization.NotInUnitOrParentUnitException;
+import es.upv.dsic.gti_ia.organization.NotSupervisorOrCreatorInUnitException;
 import es.upv.dsic.gti_ia.organization.OMSProxy;
-import es.upv.dsic.gti_ia.organization.PlayingRoleException;
-import es.upv.dsic.gti_ia.organization.RoleNotExistsException;
-import es.upv.dsic.gti_ia.organization.SameAgentNameException;
-import es.upv.dsic.gti_ia.organization.UnitNotExistsException;
 import es.upv.dsic.gti_ia.organization.VisibilityRoleException;
 
 
@@ -91,30 +86,35 @@ public class AcquireRoleInCorrectPermissionsTest extends TestCase {
 
 		
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
-				"('miembro',(SELECT idunitList FROM unitList WHERE unitName = 'equipo2'),"+
-				"(SELECT idposition FROM position WHERE position = 'member'), "+
-				"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
-		"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
-		
-		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
 				"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'equipo2'),"+
 				"(SELECT idposition FROM position WHERE position = 'creator'), "+
 				"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 		"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
-				"('creador2',(SELECT idunitList FROM unitList WHERE unitName = 'equipo2'),"+
+				"('creador2',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
 				"(SELECT idposition FROM position WHERE position = 'creator'), "+
 				"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 		"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
+		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+				"('miembro',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
+				"(SELECT idposition FROM position WHERE position = 'member'), "+
+				"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+		"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 		
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
-				"('miembro',(SELECT idunitList FROM unitList WHERE unitName = 'plana2'),"+
+				"('miembro',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
 				"(SELECT idposition FROM position WHERE position = 'member'), "+
 				"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
 		"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 
+		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+				"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
+				"(SELECT idposition FROM position WHERE position = 'creator'), "+
+				"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+		"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
+		
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
 				"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'plana2'),"+
 				"(SELECT idposition FROM position WHERE position = 'creator'), "+
@@ -122,34 +122,29 @@ public class AcquireRoleInCorrectPermissionsTest extends TestCase {
 		"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
-				"('creador2',(SELECT idunitList FROM unitList WHERE unitName = 'plana2'),"+
+				"('creador2',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
 				"(SELECT idposition FROM position WHERE position = 'creator'), "+
 				"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
 		"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 		
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
-				"('subordinado',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'),"+
+				"('subordinado',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
 				"(SELECT idposition FROM position WHERE position = 'subordinate'), "+
 				"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
 		"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 		
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
-				"('supervisor',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'),"+
+				"('supervisor',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
 				"(SELECT idposition FROM position WHERE position = 'supervisor'), "+
 				"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
 		"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
-		
-		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
-				"('creador2',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'),"+
-				"(SELECT idposition FROM position WHERE position = 'creator'), "+
-				"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
-		"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 		
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
 				"('creador2',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
 				"(SELECT idposition FROM position WHERE position = 'creator'), "+
 				"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 		"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
+		
 		
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
 				"('subordinado2',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
@@ -166,21 +161,21 @@ public class AcquireRoleInCorrectPermissionsTest extends TestCase {
 		{
 
 			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
-					"('miembro2',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
+					"('miembro2',(SELECT idunitList FROM unitList WHERE unitName = 'plana2'),"+
 					"(SELECT idposition FROM position WHERE position = 'member'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
-			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
+					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 
 			
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana2'))))");
+			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana'))))");
 
 			
-			String result = omsProxy.acquireRole("miembro2","plana");
+			String result = omsProxy.acquireRole("miembro2","plana2");
 
-			assertNull(result);
+			fail(result);
 
-		}catch( VisibilityRoleException e)
+		}catch(NotInUnitOrParentUnitException e)
 		{
 
 			assertNotNull(e);
@@ -199,22 +194,22 @@ public class AcquireRoleInCorrectPermissionsTest extends TestCase {
 		{
 
 			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
-					"('miembro2',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
+					"('miembro2',(SELECT idunitList FROM unitList WHERE unitName = 'plana2'),"+
 					"(SELECT idposition FROM position WHERE position = 'member'), "+
 					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 			
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana2'))))");
+			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana'))))");
 
 			
-			ArrayList<String> result = omsProxy.informRole("miembro2","plana");
+			String result = omsProxy.acquireRole("miembro2","plana2");
 			
 
-			assertNull(result);
+			fail(result);
 
-		}catch( VisibilityRoleException e)
+		}catch(NotInUnitOrParentUnitException e)
 		{
 
 			assertNotNull(e);
@@ -233,22 +228,22 @@ public class AcquireRoleInCorrectPermissionsTest extends TestCase {
 		{
 
 			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
-					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
+					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = 'plana2'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
-			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
+					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 
 			
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana2'))))");
+			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana'))))");
 
 			
-			ArrayList<String> result = omsProxy.informRole("creador2","plana");
+			String result = omsProxy.acquireRole("creador2","plana2");
 			
 
-			assertNull(result);
+			fail(result);
 
-		}catch( VisibilityRoleException e)
+		}catch( NotInUnitOrParentUnitException e)
 		{
 
 			assertNotNull(e);
@@ -267,22 +262,22 @@ public class AcquireRoleInCorrectPermissionsTest extends TestCase {
 		{
 
 			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
-					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
+					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = 'plana2'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
 					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 			
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana2'))))");
+			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana'))))");
 
 			
-			ArrayList<String> result = omsProxy.informRole("creador2","plana");
+			String result = omsProxy.acquireRole("creador2","plana2");
 			
 
-			assertNull(result);
+			fail(result);
 
-		}catch( VisibilityRoleException e)
+		}catch( NotInUnitOrParentUnitException e)
 		{
 
 			assertNotNull(e);
@@ -302,22 +297,22 @@ public class AcquireRoleInCorrectPermissionsTest extends TestCase {
 		{
 
 			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
-					"('miembro',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
+					"('miembro',(SELECT idunitList FROM unitList WHERE unitName = 'plana2'),"+
 					"(SELECT idposition FROM position WHERE position = 'member'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
-			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
+					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 
 			
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana2'))))");
+			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana'))))");
 
 			
-			ArrayList<String> result = omsProxy.informRole("miembro","plana");
+			String result = omsProxy.acquireRole("miembro","plana2");
 			
 
-			assertNull(result);
+			fail(result);
 
-		}catch( VisibilityRoleException e)
+		}catch( NotInUnitOrParentUnitException e)
 		{
 
 			assertNotNull(e);
@@ -336,22 +331,22 @@ public class AcquireRoleInCorrectPermissionsTest extends TestCase {
 		{
 
 			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
-					"('miembro',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
+					"('miembro',(SELECT idunitList FROM unitList WHERE unitName = 'plana2'),"+
 					"(SELECT idposition FROM position WHERE position = 'member'), "+
 					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 			
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana2'))))");
+			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana'))))");
 
 			
-			ArrayList<String> result = omsProxy.informRole("miembro","plana");
+			String result = omsProxy.acquireRole("miembro","plana2");
 			
 
-			assertNull(result);
+			fail(result);
 
-		}catch( VisibilityRoleException e)
+		}catch( NotInUnitOrParentUnitException e)
 		{
 
 			assertNotNull(e);
@@ -370,22 +365,22 @@ public class AcquireRoleInCorrectPermissionsTest extends TestCase {
 		{
 
 			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
-					"('creador3',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
+					"('creador3',(SELECT idunitList FROM unitList WHERE unitName = 'plana2'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
-			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
+					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 
 			
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana2'))))");
+			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana'))))");
 
 			
-			ArrayList<String> result = omsProxy.informRole("creador3","plana");
+			String result = omsProxy.acquireRole("creador3","plana2");
 			
 
-			assertNull(result);
+			fail(result);
 
-		}catch( VisibilityRoleException e)
+		}catch( NotInUnitOrParentUnitException e)
 		{
 
 			assertNotNull(e);
@@ -404,22 +399,22 @@ public class AcquireRoleInCorrectPermissionsTest extends TestCase {
 		{
 
 			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
-					"('creador3',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
+					"('creador3',(SELECT idunitList FROM unitList WHERE unitName = 'plana2'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
 					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 			
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana2'))))");
+			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana'))))");
 
 			
-			ArrayList<String> result = omsProxy.informRole("creador3","plana");
+			String result = omsProxy.acquireRole("creador3","plana2");
 			
 
-			assertNull(result);
+			fail(result);
 
-		}catch( VisibilityRoleException e)
+		}catch( NotInUnitOrParentUnitException e)
 		{
 
 			assertNotNull(e);
@@ -438,22 +433,22 @@ public class AcquireRoleInCorrectPermissionsTest extends TestCase {
 		{
 
 			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
-					"('miembro2',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
+					"('miembro2',(SELECT idunitList FROM unitList WHERE unitName = 'equipo2'),"+
 					"(SELECT idposition FROM position WHERE position = 'member'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
-			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
+					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 
 			
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo2'))))");
+			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo'))))");
 
 			
-			ArrayList<String> result = omsProxy.informRole("miembro2","equipo");
+			String result = omsProxy.acquireRole("miembro2","equipo2");
 			
 
-			assertNull(result);
+			fail(result);
 
-		}catch( VisibilityRoleException e)
+		}catch( NotInUnitOrParentUnitException e)
 		{
 
 			assertNotNull(e);
@@ -472,22 +467,22 @@ public class AcquireRoleInCorrectPermissionsTest extends TestCase {
 		{
 
 			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
-					"('miembro2',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
+					"('miembro2',(SELECT idunitList FROM unitList WHERE unitName = 'equipo2'),"+
 					"(SELECT idposition FROM position WHERE position = 'member'), "+
 					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 			
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo2'))))");
+			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo'))))");
 
 			
-			ArrayList<String> result = omsProxy.informRole("miembro2","equipo");
+			String result = omsProxy.acquireRole("miembro2","equipo2");
 			
 
-			assertNull(result);
+			fail(result);
 
-		}catch( VisibilityRoleException e)
+		}catch( NotInUnitOrParentUnitException e)
 		{
 
 			assertNotNull(e);
@@ -506,22 +501,22 @@ public class AcquireRoleInCorrectPermissionsTest extends TestCase {
 		{
 
 			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
-					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
+					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = 'equipo2'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
-			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
+					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 
 			
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo2'))))");
+			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo'))))");
 
 			
-			ArrayList<String> result = omsProxy.informRole("creador2","equipo");
+			String result = omsProxy.acquireRole("creador2","equipo2");
 			
 
-			assertNull(result);
+			fail(result);
 
-		}catch( VisibilityRoleException e)
+		}catch( NotInUnitOrParentUnitException e)
 		{
 
 			assertNotNull(e);
@@ -540,22 +535,22 @@ public class AcquireRoleInCorrectPermissionsTest extends TestCase {
 		{
 
 			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
-					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
+					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = 'equipo2'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
 					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 			
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo2'))))");
+			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo'))))");
 
 			
-			ArrayList<String> result = omsProxy.informRole("creador2","equipo");
+			String result = omsProxy.acquireRole("creador2","equipo2");
 			
 
-			assertNull(result);
+			fail(result);
 
-		}catch( VisibilityRoleException e)
+		}catch( NotInUnitOrParentUnitException e)
 		{
 
 			assertNotNull(e);
@@ -574,22 +569,22 @@ public class AcquireRoleInCorrectPermissionsTest extends TestCase {
 		{
 
 			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
-					"('miembro',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
+					"('miembro',(SELECT idunitList FROM unitList WHERE unitName = 'equipo2'),"+
 					"(SELECT idposition FROM position WHERE position = 'member'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
-			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
+					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 
 			
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo2'))))");
+			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo'))))");
 
 			
-			ArrayList<String> result = omsProxy.informRole("miembro","equipo");
+			String result = omsProxy.acquireRole("miembro","equipo2");
 			
 
-			assertNull(result);
+			fail(result);
 
-		}catch( VisibilityRoleException e)
+		}catch( NotInUnitOrParentUnitException e)
 		{
 
 			assertNotNull(e);
@@ -608,21 +603,21 @@ public class AcquireRoleInCorrectPermissionsTest extends TestCase {
 		{
 
 			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
-					"('miembro',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
+					"('miembro',(SELECT idunitList FROM unitList WHERE unitName = 'equipo2'),"+
 					"(SELECT idposition FROM position WHERE position = 'member'), "+
 					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 			
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo2'))))");
+			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo'))))");
 
 			
-			ArrayList<String> result = omsProxy.informRole("miembro","equipo");
+			String result = omsProxy.acquireRole("miembro","equipo2");
 
-			assertNull(result);
+			fail(result);
 
-		}catch( VisibilityRoleException e)
+		}catch( NotInUnitOrParentUnitException e)
 		{
 
 			assertNotNull(e);
@@ -641,21 +636,21 @@ public class AcquireRoleInCorrectPermissionsTest extends TestCase {
 		{
 
 			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
-					"('creador3',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
+					"('creador3',(SELECT idunitList FROM unitList WHERE unitName = 'equipo2'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
-			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
+					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 
 			
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo2'))))");
+			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo'))))");
 
 			
-			ArrayList<String> result = omsProxy.informRole("creador3","equipo");
+			String result = omsProxy.acquireRole("creador3","equipo2");
 
-			assertNull(result);
+			fail(result);
 
-		}catch( VisibilityRoleException e)
+		}catch( NotInUnitOrParentUnitException e)
 		{
 
 			assertNotNull(e);
@@ -674,21 +669,21 @@ public class AcquireRoleInCorrectPermissionsTest extends TestCase {
 		{
 
 			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
-					"('creador3',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
+					"('creador3',(SELECT idunitList FROM unitList WHERE unitName = 'equipo2'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
 					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 			
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo2'))))");
+			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo'))))");
 
 			
-			ArrayList<String> result = omsProxy.informRole("creador3","equipo");
+			String result = omsProxy.acquireRole("creador3","equipo2");
 
-			assertNull(result);
+			fail(result);
 
-		}catch( VisibilityRoleException e)
+		}catch( NotInUnitOrParentUnitException e)
 		{
 
 			assertNotNull(e);
@@ -707,21 +702,21 @@ public class AcquireRoleInCorrectPermissionsTest extends TestCase {
 		{
 
 			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
-					"('subordinado2',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
+					"('subordinado2',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'),"+
 					"(SELECT idposition FROM position WHERE position = 'subordinate'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
-			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
+					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 
 			
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'subordinado' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
+			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'subordinado' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
 
 			
-			ArrayList<String> result = omsProxy.informRole("subordinado2","jerarquia");
+			String result = omsProxy.acquireRole("subordinado2","jerarquia2");
 
-			assertNull(result);
+			fail(result);
 
-		}catch( VisibilityRoleException e)
+		}catch( NotInUnitOrParentUnitException e)
 		{
 
 			assertNotNull(e);
@@ -740,21 +735,21 @@ public class AcquireRoleInCorrectPermissionsTest extends TestCase {
 		{
 
 			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
-					"('subordinado2',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
+					"('subordinado2',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'),"+
 					"(SELECT idposition FROM position WHERE position = 'subordinate'), "+
 					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 			
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'subordinado' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
+			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'subordinado' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
 
 			
-			ArrayList<String> result = omsProxy.informRole("subordinado2","jerarquia");
+			String result = omsProxy.acquireRole("subordinado2","jerarquia2");
 
-			assertNull(result);
+			fail(result);
 
-		}catch( VisibilityRoleException e)
+		}catch( NotInUnitOrParentUnitException e)
 		{
 
 			assertNotNull(e);
@@ -774,21 +769,21 @@ public class AcquireRoleInCorrectPermissionsTest extends TestCase {
 		{
 
 			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
-					"('subordinado',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
+					"('subordinado',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'),"+
 					"(SELECT idposition FROM position WHERE position = 'subordinate'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
-			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
+					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 
 			
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'supervisor' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
+			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'supervisor' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
 
 			
-			ArrayList<String> result = omsProxy.informRole("subordinado","jerarquia");
+			String result = omsProxy.acquireRole("subordinado","jerarquia2");
 
-			assertNull(result);
+			fail(result);
 
-		}catch( VisibilityRoleException e)
+		}catch( NotInUnitOrParentUnitException e)
 		{
 
 			assertNotNull(e);
@@ -807,21 +802,21 @@ public class AcquireRoleInCorrectPermissionsTest extends TestCase {
 		{
 
 			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
-					"('subordinado',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
+					"('subordinado',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'),"+
 					"(SELECT idposition FROM position WHERE position = 'subordinate'), "+
 					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 			
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'supervisor' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
+			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'supervisor' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
 
 			
-			ArrayList<String> result = omsProxy.informRole("subordinado","jerarquia");
+			String result = omsProxy.acquireRole("subordinado","jerarquia2");
 
-			assertNull(result);
+			fail(result);
 
-		}catch( VisibilityRoleException e)
+		}catch( NotInUnitOrParentUnitException e)
 		{
 
 			assertNotNull(e);
@@ -840,21 +835,21 @@ public class AcquireRoleInCorrectPermissionsTest extends TestCase {
 		{
 
 			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
-					"('subordinado',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
+					"('subordinado',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'),"+
 					"(SELECT idposition FROM position WHERE position = 'subordinate'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
-			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
+					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 
 			
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
+			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
 
 			
-			ArrayList<String> result = omsProxy.informRole("subordinado","jerarquia");
+			String result = omsProxy.acquireRole("subordinado","jerarquia2");
 
-			assertNull(result);
+			fail(result);
 
-		}catch( VisibilityRoleException e)
+		}catch( NotInUnitOrParentUnitException e)
 		{
 
 			assertNotNull(e);
@@ -873,21 +868,21 @@ public class AcquireRoleInCorrectPermissionsTest extends TestCase {
 		{
 
 			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
-					"('subordinado',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
+					"('subordinado',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'),"+
 					"(SELECT idposition FROM position WHERE position = 'subordinate'), "+
 					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 			
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
+			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
 
 			
-			ArrayList<String> result = omsProxy.informRole("subordinado","jerarquia");
+			String result = omsProxy.acquireRole("subordinado","jerarquia2");
 
-			assertNull(result);
+			fail(result);
 
-		}catch( VisibilityRoleException e)
+		}catch( NotInUnitOrParentUnitException e)
 		{
 
 			assertNotNull(e);
@@ -906,21 +901,21 @@ public class AcquireRoleInCorrectPermissionsTest extends TestCase {
 		{
 
 			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
-					"('supervisor',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
+					"('supervisor',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'),"+
 					"(SELECT idposition FROM position WHERE position = 'supervisor'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
-			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
+					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 
 			
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'subordinado' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
+			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'subordinado' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
 
 			
-			ArrayList<String> result = omsProxy.informRole("supervisor","jerarquia");
+			String result = omsProxy.acquireRole("supervisor","jerarquia2");
 
-			assertNull(result);
+			fail(result);
 
-		}catch( VisibilityRoleException e)
+		}catch( NotInUnitOrParentUnitException e)
 		{
 
 			assertNotNull(e);
@@ -939,21 +934,21 @@ public class AcquireRoleInCorrectPermissionsTest extends TestCase {
 		{
 
 			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
-					"('supervisor',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
+					"('supervisor',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'),"+
 					"(SELECT idposition FROM position WHERE position = 'supervisor'), "+
 					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 			
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'subordinado' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
+			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'subordinado' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
 
 			
-			ArrayList<String> result = omsProxy.informRole("supervisor","jerarquia");
+			String result = omsProxy.acquireRole("supervisor","jerarquia2");
 
-			assertNull(result);
+			fail(result);
 
-		}catch( VisibilityRoleException e)
+		}catch( NotInUnitOrParentUnitException e)
 		{
 
 			assertNotNull(e);
@@ -972,21 +967,21 @@ public class AcquireRoleInCorrectPermissionsTest extends TestCase {
 		{
 
 			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
-					"('supervisor2',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
+					"('supervisor2',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'),"+
 					"(SELECT idposition FROM position WHERE position = 'supervisor'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
-			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
+					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 
 			
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'supervisor' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
+			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'supervisor' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
 
 			
-			ArrayList<String> result = omsProxy.informRole("supervisor2","jerarquia");
+			String result = omsProxy.acquireRole("supervisor2","jerarquia2");
 
-			assertNull(result);
+			fail(result);
 
-		}catch( VisibilityRoleException e)
+		}catch( NotInUnitOrParentUnitException e)
 		{
 
 			assertNotNull(e);
@@ -1005,21 +1000,21 @@ public class AcquireRoleInCorrectPermissionsTest extends TestCase {
 		{
 
 			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
-					"('supervisor2',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
+					"('supervisor2',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'),"+
 					"(SELECT idposition FROM position WHERE position = 'supervisor'), "+
 					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 			
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'supervisor' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
+			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'supervisor' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
 
 			
-			ArrayList<String> result = omsProxy.informRole("supervisor2","jerarquia");
+			String result = omsProxy.acquireRole("supervisor2","jerarquia2");
 
-			assertNull(result);
+			fail(result);
 
-		}catch( VisibilityRoleException e)
+		}catch( NotInUnitOrParentUnitException e)
 		{
 
 			assertNotNull(e);
@@ -1038,21 +1033,21 @@ public class AcquireRoleInCorrectPermissionsTest extends TestCase {
 		{
 
 			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
-					"('supervisor',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
+					"('supervisor',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'),"+
 					"(SELECT idposition FROM position WHERE position = 'supervisor'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
-			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
+					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 
 			
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
+			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
 
 			
-			ArrayList<String> result = omsProxy.informRole("supervisor","jerarquia");
+			String result = omsProxy.acquireRole("supervisor","jerarquia2");
 
-			assertNull(result);
+			fail(result);
 
-		}catch( VisibilityRoleException e)
+		}catch( NotInUnitOrParentUnitException e)
 		{
 
 			assertNotNull(e);
@@ -1071,21 +1066,21 @@ public class AcquireRoleInCorrectPermissionsTest extends TestCase {
 		{
 
 			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
-					"('supervisor',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
+					"('supervisor',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'),"+
 					"(SELECT idposition FROM position WHERE position = 'supervisor'), "+
 					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 			
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
+			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
 
 			
-			ArrayList<String> result = omsProxy.informRole("supervisor","jerarquia");
+			String result = omsProxy.acquireRole("supervisor","jerarquia2");
 
-			assertNull(result);
+			fail(result);
 
-		}catch( VisibilityRoleException e)
+		}catch( NotInUnitOrParentUnitException e)
 		{
 
 			assertNotNull(e);
@@ -1104,21 +1099,21 @@ public class AcquireRoleInCorrectPermissionsTest extends TestCase {
 		{
 
 			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
-					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
+					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
-			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
+					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 
 			
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'subordinado' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
+			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'subordinado' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
 
 			
-			ArrayList<String> result = omsProxy.informRole("creador2","jerarquia");
+			String result = omsProxy.acquireRole("creador2","jerarquia2");
 
-			assertNull(result);
+			fail(result);
 
-		}catch( VisibilityRoleException e)
+		}catch( NotInUnitOrParentUnitException e)
 		{
 
 			assertNotNull(e);
@@ -1137,21 +1132,21 @@ public class AcquireRoleInCorrectPermissionsTest extends TestCase {
 		{
 
 			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
-					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
+					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
 					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 			
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'subordinado' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
+			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'subordinado' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
 
 			
-			ArrayList<String> result = omsProxy.informRole("creador2","jerarquia");
+			String result = omsProxy.acquireRole("creador2","jerarquia2");
 
-			assertNull(result);
+			fail(result);
 
-		}catch( VisibilityRoleException e)
+		}catch( NotInUnitOrParentUnitException e)
 		{
 
 			assertNotNull(e);
@@ -1170,21 +1165,21 @@ public class AcquireRoleInCorrectPermissionsTest extends TestCase {
 		{
 
 			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
-					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
+					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
-			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
+					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 
 			
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'supervisor' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
+			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'supervisor' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
 
 			
-			ArrayList<String> result = omsProxy.informRole("creador2","jerarquia");
+			String result = omsProxy.acquireRole("creador2","jerarquia2");
 
-			assertNull(result);
+			fail(result);
 
-		}catch( VisibilityRoleException e)
+		}catch( NotInUnitOrParentUnitException e)
 		{
 
 			assertNotNull(e);
@@ -1203,21 +1198,21 @@ public class AcquireRoleInCorrectPermissionsTest extends TestCase {
 		{
 
 			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
-					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
+					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
 					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 			
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'supervisor' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
+			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'supervisor' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
 
 			
-			ArrayList<String> result = omsProxy.informRole("creador2","jerarquia");
+			String result = omsProxy.acquireRole("creador2","jerarquia2");
 
-			assertNull(result);
+			fail(result);
 
-		}catch( VisibilityRoleException e)
+		}catch( NotInUnitOrParentUnitException e)
 		{
 
 			assertNotNull(e);
@@ -1236,21 +1231,21 @@ public class AcquireRoleInCorrectPermissionsTest extends TestCase {
 		{
 
 			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
-					"('creador3',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
+					"('creador3',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
-			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
+					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 
 			
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
+			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
 
 			
-			ArrayList<String> result = omsProxy.informRole("creador3","jerarquia");
+			String result = omsProxy.acquireRole("creador3","jerarquia2");
 
-			assertNull(result);
+			fail(result);
 
-		}catch( VisibilityRoleException e)
+		}catch( NotInUnitOrParentUnitException e)
 		{
 
 			assertNotNull(e);
@@ -1269,21 +1264,76 @@ public class AcquireRoleInCorrectPermissionsTest extends TestCase {
 		{
 
 			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
-					"('creador3',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
+					"('creador3',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
 					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 			
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
+			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
 
 			
-			ArrayList<String> result = omsProxy.informRole("creador3","jerarquia");
+			String result = omsProxy.acquireRole("creador3","jerarquia2");
 
-			assertNull(result);
+			fail(result);
 
-		}catch( VisibilityRoleException e)
+		}catch( NotInUnitOrParentUnitException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	
+	
+	public void testAcquireRole18()
+	{
+		try
+		{
+
+			
+			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
+			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'subordinado' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
+
+			
+			String result = omsProxy.acquireRole("creador2","jerarquia");
+
+			fail(result);
+
+		}catch( NotSupervisorOrCreatorInUnitException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	
+	public void testAcquireRole19()
+	{
+		try
+		{
+
+			
+			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
+			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'subordinado' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
+
+			
+			String result = omsProxy.acquireRole("supervisor","jerarquia");
+
+			fail(result);
+
+		}catch( NotSupervisorOrCreatorInUnitException e)
 		{
 
 			assertNotNull(e);

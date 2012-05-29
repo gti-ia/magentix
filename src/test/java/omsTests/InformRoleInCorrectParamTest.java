@@ -83,7 +83,7 @@ public class InformRoleInCorrectParamTest extends TestCase {
 
 			ArrayList<String> result = omsProxy.informRole("participante","noexiste");
 
-			assertNull(result);
+			fail();
 
 		}catch(UnitNotExistsException e)
 		{
@@ -105,7 +105,7 @@ public class InformRoleInCorrectParamTest extends TestCase {
 
 			ArrayList<String> result = omsProxy.informRole("participante","");
 
-			assertNull(result);
+			fail();
 
 		}catch(EmptyParametersException e)
 		{
@@ -127,7 +127,7 @@ public class InformRoleInCorrectParamTest extends TestCase {
 
 			ArrayList<String> result = omsProxy.informRole("participante",null);
 
-			assertNull(result);
+			fail();
 
 		}catch(EmptyParametersException e)
 		{
@@ -149,7 +149,7 @@ public class InformRoleInCorrectParamTest extends TestCase {
 
 			ArrayList<String> result = omsProxy.informRole("noexiste","virtual");
 
-			assertNull(result);
+			fail();
 
 		}catch(RoleNotExistsException e)
 		{
@@ -171,7 +171,7 @@ public class InformRoleInCorrectParamTest extends TestCase {
 
 			ArrayList<String> result = omsProxy.informRole("","virtual");
 
-			assertNull(result);
+			fail();
 
 		}catch(EmptyParametersException e)
 		{
@@ -193,7 +193,7 @@ public class InformRoleInCorrectParamTest extends TestCase {
 
 			ArrayList<String> result = omsProxy.informRole(null,"virtual");
 
-			assertNull(result);
+			fail();
 
 		}catch(EmptyParametersException e)
 		{

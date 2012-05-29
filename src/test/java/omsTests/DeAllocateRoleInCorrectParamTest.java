@@ -84,14 +84,14 @@ public class DeAllocateRoleInCorrectParamTest extends TestCase {
 
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
 				"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
-				"(SELECT idpositmiembroion FROM position WHERE position = 'creator'), "+
+				"(SELECT idposition FROM position WHERE position = 'creator'), "+
 				"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 		"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 		
 
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
 				"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
-				"(SELECT idpositmiembroion FROM position WHERE position = 'creator'), "+
+				"(SELECT idposition FROM position WHERE position = 'creator'), "+
 				"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 		"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 		
@@ -134,7 +134,7 @@ public class DeAllocateRoleInCorrectParamTest extends TestCase {
 
 			String result = omsProxy.deallocateRole("", "virtual", "pruebas2");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(EmptyParametersException e)
 		{
@@ -150,7 +150,7 @@ public class DeAllocateRoleInCorrectParamTest extends TestCase {
 		try
 		{
 			String result = omsProxy.deallocateRole("", "equipo", "pruebas2");
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -166,7 +166,7 @@ public class DeAllocateRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.deallocateRole("", "plana", "pruebas2");
 
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -182,7 +182,7 @@ public class DeAllocateRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.deallocateRole("", "jerarquia", "pruebas2");
 
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -203,7 +203,7 @@ public class DeAllocateRoleInCorrectParamTest extends TestCase {
 
 			String result = omsProxy.deallocateRole(null, "virtual", "pruebas2");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(EmptyParametersException e)
 		{
@@ -219,7 +219,7 @@ public class DeAllocateRoleInCorrectParamTest extends TestCase {
 		try
 		{
 			String result = omsProxy.deallocateRole(null, "equipo", "pruebas2");
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -235,7 +235,7 @@ public class DeAllocateRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.deallocateRole(null, "plana", "pruebas2");
 
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -251,7 +251,7 @@ public class DeAllocateRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.deallocateRole(null, "jerarquia", "pruebas2");
 
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -272,7 +272,7 @@ public class DeAllocateRoleInCorrectParamTest extends TestCase {
 
 			String result = omsProxy.deallocateRole("inexistente", "virtual", "pruebas2");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(RoleNotExistsException e)
 		{
@@ -288,7 +288,7 @@ public class DeAllocateRoleInCorrectParamTest extends TestCase {
 		try
 		{
 			String result = omsProxy.deallocateRole("inexistente", "equipo", "pruebas2");
-			assertNull(result);
+			fail(result);
 		}catch(RoleNotExistsException e)
 		{
 
@@ -304,7 +304,7 @@ public class DeAllocateRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.deallocateRole("inexistente", "plana", "pruebas2");
 
-			assertNull(result);
+			fail(result);
 		}catch(RoleNotExistsException e)
 		{
 
@@ -320,7 +320,7 @@ public class DeAllocateRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.deallocateRole("inexistente", "jerarquia", "pruebas2");
 
-			assertNull(result);
+			fail(result);
 		}catch(RoleNotExistsException e)
 		{
 
@@ -340,7 +340,7 @@ public class DeAllocateRoleInCorrectParamTest extends TestCase {
 
 			String result = omsProxy.deallocateRole("miembro", "", "pruebas2");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(EmptyParametersException e)
 		{
@@ -356,7 +356,7 @@ public class DeAllocateRoleInCorrectParamTest extends TestCase {
 		try
 		{
 			String result = omsProxy.deallocateRole("miembro", "", "pruebas2");
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -372,7 +372,7 @@ public class DeAllocateRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.deallocateRole("miembro", "", "pruebas2");
 
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -388,7 +388,7 @@ public class DeAllocateRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.deallocateRole("subordinado", "", "pruebas2");
 
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -409,7 +409,7 @@ public class DeAllocateRoleInCorrectParamTest extends TestCase {
 
 			String result = omsProxy.deallocateRole("miembro", null, "pruebas2");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(EmptyParametersException e)
 		{
@@ -425,7 +425,7 @@ public class DeAllocateRoleInCorrectParamTest extends TestCase {
 		try
 		{
 			String result = omsProxy.deallocateRole("miembro", null, "pruebas2");
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -441,7 +441,7 @@ public class DeAllocateRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.deallocateRole("miembro", null, "pruebas2");
 
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -457,7 +457,7 @@ public class DeAllocateRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.deallocateRole("subordinado", null, "pruebas2");
 
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -478,7 +478,7 @@ public class DeAllocateRoleInCorrectParamTest extends TestCase {
 
 			String result = omsProxy.deallocateRole("miembro", "inexistente", "pruebas2");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(UnitNotExistsException e)
 		{
@@ -494,7 +494,7 @@ public class DeAllocateRoleInCorrectParamTest extends TestCase {
 		try
 		{
 			String result = omsProxy.deallocateRole("miembro", "inexistente", "pruebas2");
-			assertNull(result);
+			fail(result);
 		}catch(UnitNotExistsException e)
 		{
 
@@ -510,7 +510,7 @@ public class DeAllocateRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.deallocateRole("miembro", "inexistente", "pruebas2");
 
-			assertNull(result);
+			fail(result);
 		}catch(UnitNotExistsException e)
 		{
 
@@ -526,7 +526,7 @@ public class DeAllocateRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.deallocateRole("subordinado", "inexistente", "pruebas2");
 
-			assertNull(result);
+			fail(result);
 		}catch(UnitNotExistsException e)
 		{
 
@@ -547,7 +547,7 @@ public class DeAllocateRoleInCorrectParamTest extends TestCase {
 
 			String result = omsProxy.deallocateRole("miembro", "virtual", "");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(EmptyParametersException e)
 		{
@@ -563,7 +563,7 @@ public class DeAllocateRoleInCorrectParamTest extends TestCase {
 		try
 		{
 			String result = omsProxy.deallocateRole("miembro", "equipo", "");
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -579,7 +579,7 @@ public class DeAllocateRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.deallocateRole("miembro", "plana", "");
 
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -595,7 +595,7 @@ public class DeAllocateRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.deallocateRole("subordinado", "jerarquia", "");
 
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -616,7 +616,7 @@ public class DeAllocateRoleInCorrectParamTest extends TestCase {
 
 			String result = omsProxy.deallocateRole("miembro", "virtual", null);
 
-			assertNull(result);
+			fail(result);
 
 		}catch(EmptyParametersException e)
 		{
@@ -632,7 +632,7 @@ public class DeAllocateRoleInCorrectParamTest extends TestCase {
 		try
 		{
 			String result = omsProxy.deallocateRole("miembro", "equipo", null);
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -648,7 +648,7 @@ public class DeAllocateRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.deallocateRole("miembro", "plana", null);
 
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -664,7 +664,7 @@ public class DeAllocateRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.deallocateRole("subordinado", "jerarquia", null);
 
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -682,17 +682,17 @@ public class DeAllocateRoleInCorrectParamTest extends TestCase {
 	{
 		try
 		{
-			dbA.executeSQL("DELETE FROM `agentPlayList` WHERE agentName = 'pruebas2' AND idroleList = (SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
+			dbA.executeSQL("DELETE FROM `agentPlayList` WHERE agentName = 'pruebas2' AND idroleList = (SELECT idroleList FROM roleList WHERE roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))");
 
-			dbA.executeSQL("DELETE FROM `agentPlayList` WHERE agentName = 'pruebas2' AND idroleList = (SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo'))))");
+			dbA.executeSQL("DELETE FROM `agentPlayList` WHERE agentName = 'pruebas2' AND idroleList = (SELECT idroleList FROM roleList WHERE roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo'))");
 			
-			dbA.executeSQL("DELETE FROM `agentPlayList` WHERE agentName = 'pruebas2' AND idroleList = (SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana'))))");
+			dbA.executeSQL("DELETE FROM `agentPlayList` WHERE agentName = 'pruebas2' AND idroleList = (SELECT idroleList FROM roleList WHERE roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana'))");
 			
-			dbA.executeSQL("DELETE FROM `agentPlayList` WHERE agentName = 'pruebas2' AND idroleList = (SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
+			dbA.executeSQL("DELETE FROM `agentPlayList` WHERE agentName = 'pruebas2' AND idroleList = (SELECT idroleList FROM roleList WHERE roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))");
 			
 			String result = omsProxy.deallocateRole("participant", "virtual", "pruebas2");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(NotPlaysRoleException e)
 		{
@@ -708,7 +708,7 @@ public class DeAllocateRoleInCorrectParamTest extends TestCase {
 		try
 		{
 			String result = omsProxy.deallocateRole("creador", "equipo", "pruebas2");
-			assertNull(result);
+			fail(result);
 		}catch(NotPlaysRoleException e)
 		{
 
@@ -724,7 +724,7 @@ public class DeAllocateRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.deallocateRole("creador", "plana", "pruebas2");
 
-			assertNull(result);
+			fail(result);
 		}catch(NotPlaysRoleException e)
 		{
 
@@ -740,7 +740,7 @@ public class DeAllocateRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.deallocateRole("creador", "jerarquia", "pruebas2");
 
-			assertNull(result);
+			fail(result);
 		}catch(NotPlaysRoleException e)
 		{
 
@@ -760,7 +760,7 @@ public class DeAllocateRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.deallocateRole("participant", "virtual", "pruebas");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(SameAgentNameException e)
 		{
@@ -776,7 +776,7 @@ public class DeAllocateRoleInCorrectParamTest extends TestCase {
 		try
 		{
 			String result = omsProxy.deallocateRole("creador", "equipo", "pruebas");
-			assertNull(result);
+			fail(result);
 		}catch(SameAgentNameException e)
 		{
 
@@ -792,7 +792,7 @@ public class DeAllocateRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.deallocateRole("creador", "plana", "pruebas");
 
-			assertNull(result);
+			fail(result);
 		}catch(SameAgentNameException e)
 		{
 
@@ -808,7 +808,7 @@ public class DeAllocateRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.deallocateRole("creador", "jerarquia", "pruebas");
 
-			assertNull(result);
+			fail(result);
 		}catch(SameAgentNameException e)
 		{
 

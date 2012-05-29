@@ -3,6 +3,7 @@ package omsTests;
 import junit.framework.TestCase;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
+import es.upv.dsic.gti_ia.organization.AgentNotInUnitException;
 import es.upv.dsic.gti_ia.organization.NotInUnitAndNotCreatorException;
 import es.upv.dsic.gti_ia.organization.NotPlaysAnyRoleException;
 import es.upv.dsic.gti_ia.organization.NotSupervisorOrCreatorInUnitException;
@@ -83,7 +84,7 @@ public class DeAllocateRoleInCorrectPermissionsTest extends TestCase {
 
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
 				"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
-				"(SELECT idpositmiembroion FROM position WHERE position = 'creator'), "+
+				"(SELECT idposition FROM position WHERE position = 'creator'), "+
 				"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 		"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 		
@@ -96,20 +97,20 @@ public class DeAllocateRoleInCorrectPermissionsTest extends TestCase {
 
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
 				"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
-				"(SELECT idpositmiembroion FROM position WHERE position = 'creator'), "+
+				"(SELECT idposition FROM position WHERE position = 'creator'), "+
 				"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 		"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 		
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
 				"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
-				"(SELECT idpositmiembroion FROM position WHERE position = 'creator'), "+
+				"(SELECT idposition FROM position WHERE position = 'creator'), "+
 				"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 		"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 		
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
 				"('subordinado',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
-				"(SELECT idpositmiembroion FROM position WHERE position = 'subordinate'), "+
+				"(SELECT idposition FROM position WHERE position = 'subordinate'), "+
 				"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
 		"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 
@@ -140,7 +141,7 @@ public class DeAllocateRoleInCorrectPermissionsTest extends TestCase {
 
 			String result = omsProxy.deallocateRole("miembro", "plana", "pruebas2");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(NotInUnitAndNotCreatorException e)
 		{
@@ -177,9 +178,9 @@ public class DeAllocateRoleInCorrectPermissionsTest extends TestCase {
 
 			String result = omsProxy.deallocateRole("miembro", "equipo", "pruebas2");
 
-			assertNull(result);
+			fail(result);
 
-		}catch(NotPlaysAnyRoleException e)
+		}catch(AgentNotInUnitException e)
 		{
 
 			assertNotNull(e);
@@ -214,7 +215,7 @@ public class DeAllocateRoleInCorrectPermissionsTest extends TestCase {
 
 			String result = omsProxy.deallocateRole("subordinado", "jerarquia", "pruebas2");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(NotSupervisorOrCreatorInUnitException e)
 		{

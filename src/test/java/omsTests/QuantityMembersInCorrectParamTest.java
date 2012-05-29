@@ -83,7 +83,7 @@ public class QuantityMembersInCorrectParamTest extends TestCase {
 
 			int result = omsProxy.quantityMembers("noexiste", "subordinado", "subordinate");
 
-			assertNull(result);
+			fail();
 
 		}catch(UnitNotExistsException e)
 		{
@@ -105,7 +105,7 @@ public class QuantityMembersInCorrectParamTest extends TestCase {
 
 			int result = omsProxy.quantityMembers("", "subordinado", "subordinate");
 
-			assertNull(result);
+			fail();
 
 		}catch(EmptyParametersException e)
 		{
@@ -127,7 +127,7 @@ public class QuantityMembersInCorrectParamTest extends TestCase {
 
 			int result = omsProxy.quantityMembers(null, "subordinado", "subordinate");
 
-			assertNull(result);
+			fail();
 
 		}catch(EmptyParametersException e)
 		{

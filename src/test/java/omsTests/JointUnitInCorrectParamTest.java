@@ -82,20 +82,20 @@ public class JointUnitInCorrectParamTest extends TestCase {
 
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
 				"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
-				"(SELECT idpositmiembroion FROM position WHERE position = 'creator'), "+
+				"(SELECT idposition FROM position WHERE position = 'creator'), "+
 				"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 		"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 		
 
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
 				"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
-				"(SELECT idpositmiembroion FROM position WHERE position = 'creator'), "+
+				"(SELECT idposition FROM position WHERE position = 'creator'), "+
 				"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 		"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 		
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
 				"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
-				"(SELECT idpositmiembroion FROM position WHERE position = 'creator'), "+
+				"(SELECT idposition FROM position WHERE position = 'creator'), "+
 				"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 		"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 		
@@ -124,7 +124,7 @@ public class JointUnitInCorrectParamTest extends TestCase {
 
 			String result = omsProxy.jointUnit("jerarquia", "jerarquia");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(SameUnitException e)
 		{
@@ -142,7 +142,7 @@ public class JointUnitInCorrectParamTest extends TestCase {
 
 			String result = omsProxy.jointUnit("equipo", "equipo");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(SameUnitException e)
 		{
@@ -160,7 +160,7 @@ public class JointUnitInCorrectParamTest extends TestCase {
 
 			String result = omsProxy.jointUnit("plana", "plana");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(SameUnitException e)
 		{
@@ -181,7 +181,7 @@ public class JointUnitInCorrectParamTest extends TestCase {
 
 			String result = omsProxy.jointUnit("virtual", "jerarquia");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(VirtualParentException e)
 		{
@@ -203,7 +203,7 @@ public class JointUnitInCorrectParamTest extends TestCase {
 
 			String result = omsProxy.jointUnit("inexistente", "jerarquia");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(UnitNotExistsException e)
 		{
@@ -225,7 +225,7 @@ public class JointUnitInCorrectParamTest extends TestCase {
 
 			String result = omsProxy.jointUnit("", "jerarquia");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(EmptyParametersException e)
 		{
@@ -247,7 +247,7 @@ public class JointUnitInCorrectParamTest extends TestCase {
 
 			String result = omsProxy.jointUnit(null, "jerarquia");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(EmptyParametersException e)
 		{
@@ -269,7 +269,7 @@ public class JointUnitInCorrectParamTest extends TestCase {
 
 			String result = omsProxy.jointUnit("equipo", "noexiste");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(ParentUnitNotExistsException e)
 		{
@@ -291,7 +291,7 @@ public class JointUnitInCorrectParamTest extends TestCase {
 
 			String result = omsProxy.jointUnit("equipo", "");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(EmptyParametersException e)
 		{
@@ -313,7 +313,7 @@ public class JointUnitInCorrectParamTest extends TestCase {
 
 			String result = omsProxy.jointUnit("equipo", null);
 
-			assertNull(result);
+			fail(result);
 
 		}catch(EmptyParametersException e)
 		{

@@ -83,7 +83,7 @@ public class LeaveRoleInCorrectParamTest extends TestCase {
 
 			String result = omsProxy.leaveRole("participante", "noexiste");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(UnitNotExistsException e)
 		{
@@ -105,7 +105,7 @@ public class LeaveRoleInCorrectParamTest extends TestCase {
 
 			String result = omsProxy.leaveRole("participante", "");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(EmptyParametersException e)
 		{
@@ -127,7 +127,7 @@ public class LeaveRoleInCorrectParamTest extends TestCase {
 
 			String result = omsProxy.leaveRole("participante", null);
 
-			assertNull(result);
+			fail(result);
 
 		}catch(EmptyParametersException e)
 		{
@@ -149,7 +149,7 @@ public class LeaveRoleInCorrectParamTest extends TestCase {
 
 			String result = omsProxy.leaveRole("noexiste", "virtual");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(RoleNotExistsException e)
 		{
@@ -171,7 +171,7 @@ public class LeaveRoleInCorrectParamTest extends TestCase {
 
 			String result = omsProxy.leaveRole("", "virtual");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(EmptyParametersException e)
 		{
@@ -193,7 +193,7 @@ public class LeaveRoleInCorrectParamTest extends TestCase {
 
 			String result = omsProxy.leaveRole(null, "virtual");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(EmptyParametersException e)
 		{

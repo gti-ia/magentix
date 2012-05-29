@@ -81,14 +81,14 @@ public class AllocateRoleInCorrectParamTest extends TestCase {
 
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
 				"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
-				"(SELECT idpositmiembroion FROM position WHERE position = 'creator'), "+
+				"(SELECT idposition FROM position WHERE position = 'creator'), "+
 				"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 		"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 		
 
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
 				"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
-				"(SELECT idpositmiembroion FROM position WHERE position = 'creator'), "+
+				"(SELECT idposition FROM position WHERE position = 'creator'), "+
 				"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 		"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 		
@@ -123,7 +123,7 @@ public class AllocateRoleInCorrectParamTest extends TestCase {
 
 			String result = omsProxy.allocateRole("", "virtual", "pruebas2");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(EmptyParametersException e)
 		{
@@ -139,7 +139,7 @@ public class AllocateRoleInCorrectParamTest extends TestCase {
 		try
 		{
 			String result = omsProxy.allocateRole("", "equipo", "pruebas2");
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -155,7 +155,7 @@ public class AllocateRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.allocateRole("", "plana", "pruebas2");
 
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -171,7 +171,7 @@ public class AllocateRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.allocateRole("", "jerarquia", "pruebas2");
 
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -192,7 +192,7 @@ public class AllocateRoleInCorrectParamTest extends TestCase {
 
 			String result = omsProxy.allocateRole(null, "virtual", "pruebas2");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(EmptyParametersException e)
 		{
@@ -208,7 +208,7 @@ public class AllocateRoleInCorrectParamTest extends TestCase {
 		try
 		{
 			String result = omsProxy.allocateRole(null, "equipo", "pruebas2");
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -224,7 +224,7 @@ public class AllocateRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.allocateRole(null, "plana", "pruebas2");
 
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -240,7 +240,7 @@ public class AllocateRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.allocateRole(null, "jerarquia", "pruebas2");
 
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -261,7 +261,7 @@ public class AllocateRoleInCorrectParamTest extends TestCase {
 
 			String result = omsProxy.allocateRole("inexistente", "virtual", "pruebas2");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(RoleNotExistsException e)
 		{
@@ -277,7 +277,7 @@ public class AllocateRoleInCorrectParamTest extends TestCase {
 		try
 		{
 			String result = omsProxy.allocateRole("inexistente", "equipo", "pruebas2");
-			assertNull(result);
+			fail(result);
 		}catch(RoleNotExistsException e)
 		{
 
@@ -293,7 +293,7 @@ public class AllocateRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.allocateRole("inexistente", "plana", "pruebas2");
 
-			assertNull(result);
+			fail(result);
 		}catch(RoleNotExistsException e)
 		{
 
@@ -309,7 +309,7 @@ public class AllocateRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.allocateRole("inexistente", "jerarquia", "pruebas2");
 
-			assertNull(result);
+			fail(result);
 		}catch(RoleNotExistsException e)
 		{
 
@@ -329,7 +329,7 @@ public class AllocateRoleInCorrectParamTest extends TestCase {
 
 			String result = omsProxy.allocateRole("miembro", "", "pruebas2");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(EmptyParametersException e)
 		{
@@ -345,7 +345,7 @@ public class AllocateRoleInCorrectParamTest extends TestCase {
 		try
 		{
 			String result = omsProxy.allocateRole("miembro", "", "pruebas2");
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -361,7 +361,7 @@ public class AllocateRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.allocateRole("miembro", "", "pruebas2");
 
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -377,7 +377,7 @@ public class AllocateRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.allocateRole("subordinado", "", "pruebas2");
 
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -398,7 +398,7 @@ public class AllocateRoleInCorrectParamTest extends TestCase {
 
 			String result = omsProxy.allocateRole("miembro", null, "pruebas2");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(EmptyParametersException e)
 		{
@@ -414,7 +414,7 @@ public class AllocateRoleInCorrectParamTest extends TestCase {
 		try
 		{
 			String result = omsProxy.allocateRole("miembro", null, "pruebas2");
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -430,7 +430,7 @@ public class AllocateRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.allocateRole("miembro", null, "pruebas2");
 
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -446,7 +446,7 @@ public class AllocateRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.allocateRole("subordinado", null, "pruebas2");
 
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -467,7 +467,7 @@ public class AllocateRoleInCorrectParamTest extends TestCase {
 
 			String result = omsProxy.allocateRole("miembro", "inexistente", "pruebas2");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(UnitNotExistsException e)
 		{
@@ -483,7 +483,7 @@ public class AllocateRoleInCorrectParamTest extends TestCase {
 		try
 		{
 			String result = omsProxy.allocateRole("miembro", "inexistente", "pruebas2");
-			assertNull(result);
+			fail(result);
 		}catch(UnitNotExistsException e)
 		{
 
@@ -499,7 +499,7 @@ public class AllocateRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.allocateRole("miembro", "inexistente", "pruebas2");
 
-			assertNull(result);
+			fail(result);
 		}catch(UnitNotExistsException e)
 		{
 
@@ -515,7 +515,7 @@ public class AllocateRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.allocateRole("subordinado", "inexistente", "pruebas2");
 
-			assertNull(result);
+			fail(result);
 		}catch(UnitNotExistsException e)
 		{
 
@@ -536,7 +536,7 @@ public class AllocateRoleInCorrectParamTest extends TestCase {
 
 			String result = omsProxy.allocateRole("miembro", "virtual", "");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(EmptyParametersException e)
 		{
@@ -552,7 +552,7 @@ public class AllocateRoleInCorrectParamTest extends TestCase {
 		try
 		{
 			String result = omsProxy.allocateRole("miembro", "equipo", "");
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -568,7 +568,7 @@ public class AllocateRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.allocateRole("miembro", "plana", "");
 
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -584,7 +584,7 @@ public class AllocateRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.allocateRole("subordinado", "jerarquia", "");
 
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -605,7 +605,7 @@ public class AllocateRoleInCorrectParamTest extends TestCase {
 
 			String result = omsProxy.allocateRole("miembro", "virtual", null);
 
-			assertNull(result);
+			fail(result);
 
 		}catch(EmptyParametersException e)
 		{
@@ -621,7 +621,7 @@ public class AllocateRoleInCorrectParamTest extends TestCase {
 		try
 		{
 			String result = omsProxy.allocateRole("miembro", "equipo", null);
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -637,7 +637,7 @@ public class AllocateRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.allocateRole("miembro", "plana", null);
 
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -653,7 +653,7 @@ public class AllocateRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.allocateRole("subordinado", "jerarquia", null);
 
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -685,7 +685,7 @@ public class AllocateRoleInCorrectParamTest extends TestCase {
 
 			String result = omsProxy.allocateRole("participant", "virtual", "pruebas2");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(PlayingRoleException e)
 		{
@@ -701,7 +701,7 @@ public class AllocateRoleInCorrectParamTest extends TestCase {
 		try
 		{
 			String result = omsProxy.allocateRole("creador", "equipo", "pruebas2");
-			assertNull(result);
+			fail(result);
 		}catch(PlayingRoleException e)
 		{
 
@@ -717,7 +717,7 @@ public class AllocateRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.allocateRole("creador", "plana", "pruebas2");
 
-			assertNull(result);
+			fail(result);
 		}catch(PlayingRoleException e)
 		{
 
@@ -733,7 +733,7 @@ public class AllocateRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.allocateRole("creador", "jerarquia", "pruebas2");
 
-			assertNull(result);
+			fail(result);
 		}catch(PlayingRoleException e)
 		{
 
@@ -753,7 +753,7 @@ public class AllocateRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.allocateRole("participant", "virtual", "pruebas");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(SameAgentNameException e)
 		{
@@ -769,7 +769,7 @@ public class AllocateRoleInCorrectParamTest extends TestCase {
 		try
 		{
 			String result = omsProxy.allocateRole("creador", "equipo", "pruebas");
-			assertNull(result);
+			fail(result);
 		}catch(SameAgentNameException e)
 		{
 
@@ -785,7 +785,7 @@ public class AllocateRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.allocateRole("creador", "plana", "pruebas");
 
-			assertNull(result);
+			fail(result);
 		}catch(SameAgentNameException e)
 		{
 
@@ -801,7 +801,7 @@ public class AllocateRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.allocateRole("creador", "jerarquia", "pruebas");
 
-			assertNull(result);
+			fail(result);
 		}catch(SameAgentNameException e)
 		{
 

@@ -150,12 +150,6 @@ public class InformRoleInCorrectPermissionsTest extends TestCase {
 				"(SELECT idposition FROM position WHERE position = 'creator'), "+
 				"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 		"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
-		
-		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
-				"('subordinado2',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
-				"(SELECT idposition FROM position WHERE position = 'subordinate'), "+
-				"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
-		"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 
 	}
 	
@@ -178,7 +172,7 @@ public class InformRoleInCorrectPermissionsTest extends TestCase {
 			
 			ArrayList<String> result = omsProxy.informRole("miembro2","plana");
 
-			assertNull(result);
+			fail();
 
 		}catch( VisibilityRoleException e)
 		{
@@ -211,7 +205,7 @@ public class InformRoleInCorrectPermissionsTest extends TestCase {
 			
 			ArrayList<String> result = omsProxy.informRole("miembro2","plana");
 
-			assertNull(result);
+			fail();
 
 		}catch( VisibilityRoleException e)
 		{
@@ -244,7 +238,7 @@ public class InformRoleInCorrectPermissionsTest extends TestCase {
 			
 			ArrayList<String> result = omsProxy.informRole("creador2","plana");
 
-			assertNull(result);
+			fail();
 
 		}catch( VisibilityRoleException e)
 		{
@@ -277,7 +271,7 @@ public class InformRoleInCorrectPermissionsTest extends TestCase {
 			
 			ArrayList<String> result = omsProxy.informRole("creador2","plana");
 
-			assertNull(result);
+			fail();
 
 		}catch( VisibilityRoleException e)
 		{
@@ -311,7 +305,7 @@ public class InformRoleInCorrectPermissionsTest extends TestCase {
 			
 			ArrayList<String> result = omsProxy.informRole("miembro","plana");
 
-			assertNull(result);
+			fail();
 
 		}catch( VisibilityRoleException e)
 		{
@@ -344,7 +338,7 @@ public class InformRoleInCorrectPermissionsTest extends TestCase {
 			
 			ArrayList<String> result = omsProxy.informRole("miembro","plana");
 
-			assertNull(result);
+			fail();
 
 		}catch( VisibilityRoleException e)
 		{
@@ -377,7 +371,7 @@ public class InformRoleInCorrectPermissionsTest extends TestCase {
 			
 			ArrayList<String> result = omsProxy.informRole("creador3","plana");
 
-			assertNull(result);
+			fail();
 
 		}catch( VisibilityRoleException e)
 		{
@@ -410,7 +404,7 @@ public class InformRoleInCorrectPermissionsTest extends TestCase {
 			
 			ArrayList<String> result = omsProxy.informRole("creador3","plana");
 
-			assertNull(result);
+			fail();
 
 		}catch( VisibilityRoleException e)
 		{
@@ -443,7 +437,7 @@ public class InformRoleInCorrectPermissionsTest extends TestCase {
 			
 			ArrayList<String> result = omsProxy.informRole("miembro2","equipo");
 
-			assertNull(result);
+			fail();
 
 		}catch( VisibilityRoleException e)
 		{
@@ -476,7 +470,7 @@ public class InformRoleInCorrectPermissionsTest extends TestCase {
 			
 			ArrayList<String> result = omsProxy.informRole("miembro2","equipo");
 
-			assertNull(result);
+			fail();
 
 		}catch( VisibilityRoleException e)
 		{
@@ -509,7 +503,7 @@ public class InformRoleInCorrectPermissionsTest extends TestCase {
 			
 			ArrayList<String> result = omsProxy.informRole("creador2","equipo");
 
-			assertNull(result);
+			fail();
 
 		}catch( VisibilityRoleException e)
 		{
@@ -542,7 +536,7 @@ public class InformRoleInCorrectPermissionsTest extends TestCase {
 			
 			ArrayList<String> result = omsProxy.informRole("creador2","equipo");
 
-			assertNull(result);
+			fail();
 
 		}catch( VisibilityRoleException e)
 		{
@@ -575,7 +569,7 @@ public class InformRoleInCorrectPermissionsTest extends TestCase {
 			
 			ArrayList<String> result = omsProxy.informRole("miembro","equipo");
 
-			assertNull(result);
+			fail();
 
 		}catch( VisibilityRoleException e)
 		{
@@ -608,7 +602,7 @@ public class InformRoleInCorrectPermissionsTest extends TestCase {
 			
 			ArrayList<String> result = omsProxy.informRole("miembro","equipo");
 
-			assertNull(result);
+			fail();
 
 		}catch( VisibilityRoleException e)
 		{
@@ -641,7 +635,7 @@ public class InformRoleInCorrectPermissionsTest extends TestCase {
 			
 			ArrayList<String> result = omsProxy.informRole("creador3","equipo");
 
-			assertNull(result);
+			fail();
 
 		}catch( VisibilityRoleException e)
 		{
@@ -674,7 +668,7 @@ public class InformRoleInCorrectPermissionsTest extends TestCase {
 			
 			ArrayList<String> result = omsProxy.informRole("creador3","equipo");
 
-			assertNull(result);
+			fail();
 
 		}catch( VisibilityRoleException e)
 		{
@@ -707,7 +701,7 @@ public class InformRoleInCorrectPermissionsTest extends TestCase {
 			
 			ArrayList<String> result = omsProxy.informRole("subordinado2","jerarquia");
 
-			assertNull(result);
+			fail();
 
 		}catch( VisibilityRoleException e)
 		{
@@ -740,7 +734,7 @@ public class InformRoleInCorrectPermissionsTest extends TestCase {
 			
 			ArrayList<String> result = omsProxy.informRole("subordinado2","jerarquia");
 
-			assertNull(result);
+			fail();
 
 		}catch( VisibilityRoleException e)
 		{
@@ -774,7 +768,7 @@ public class InformRoleInCorrectPermissionsTest extends TestCase {
 			
 			ArrayList<String> result = omsProxy.informRole("subordinado","jerarquia");
 
-			assertNull(result);
+			fail();
 
 		}catch( VisibilityRoleException e)
 		{
@@ -807,7 +801,7 @@ public class InformRoleInCorrectPermissionsTest extends TestCase {
 			
 			ArrayList<String> result = omsProxy.informRole("subordinado","jerarquia");
 
-			assertNull(result);
+			fail();
 
 		}catch( VisibilityRoleException e)
 		{
@@ -840,7 +834,7 @@ public class InformRoleInCorrectPermissionsTest extends TestCase {
 			
 			ArrayList<String> result = omsProxy.informRole("subordinado","jerarquia");
 
-			assertNull(result);
+			fail();
 
 		}catch( VisibilityRoleException e)
 		{
@@ -873,7 +867,7 @@ public class InformRoleInCorrectPermissionsTest extends TestCase {
 			
 			ArrayList<String> result = omsProxy.informRole("subordinado","jerarquia");
 
-			assertNull(result);
+			fail();
 
 		}catch( VisibilityRoleException e)
 		{
@@ -906,7 +900,7 @@ public class InformRoleInCorrectPermissionsTest extends TestCase {
 			
 			ArrayList<String> result = omsProxy.informRole("supervisor","jerarquia");
 
-			assertNull(result);
+			fail();
 
 		}catch( VisibilityRoleException e)
 		{
@@ -939,7 +933,7 @@ public class InformRoleInCorrectPermissionsTest extends TestCase {
 			
 			ArrayList<String> result = omsProxy.informRole("supervisor","jerarquia");
 
-			assertNull(result);
+			fail();
 
 		}catch( VisibilityRoleException e)
 		{
@@ -972,7 +966,7 @@ public class InformRoleInCorrectPermissionsTest extends TestCase {
 			
 			ArrayList<String> result = omsProxy.informRole("supervisor2","jerarquia");
 
-			assertNull(result);
+			fail();
 
 		}catch( VisibilityRoleException e)
 		{
@@ -1005,7 +999,7 @@ public class InformRoleInCorrectPermissionsTest extends TestCase {
 			
 			ArrayList<String> result = omsProxy.informRole("supervisor2","jerarquia");
 
-			assertNull(result);
+			fail();
 
 		}catch( VisibilityRoleException e)
 		{
@@ -1038,7 +1032,7 @@ public class InformRoleInCorrectPermissionsTest extends TestCase {
 			
 			ArrayList<String> result = omsProxy.informRole("supervisor","jerarquia");
 
-			assertNull(result);
+			fail();
 
 		}catch( VisibilityRoleException e)
 		{
@@ -1071,7 +1065,7 @@ public class InformRoleInCorrectPermissionsTest extends TestCase {
 			
 			ArrayList<String> result = omsProxy.informRole("supervisor","jerarquia");
 
-			assertNull(result);
+			fail();
 
 		}catch( VisibilityRoleException e)
 		{
@@ -1104,7 +1098,7 @@ public class InformRoleInCorrectPermissionsTest extends TestCase {
 			
 			ArrayList<String> result = omsProxy.informRole("creador2","jerarquia");
 
-			assertNull(result);
+			fail();
 
 		}catch( VisibilityRoleException e)
 		{
@@ -1137,7 +1131,7 @@ public class InformRoleInCorrectPermissionsTest extends TestCase {
 			
 			ArrayList<String> result = omsProxy.informRole("creador2","jerarquia");
 
-			assertNull(result);
+			fail();
 
 		}catch( VisibilityRoleException e)
 		{
@@ -1170,7 +1164,7 @@ public class InformRoleInCorrectPermissionsTest extends TestCase {
 			
 			ArrayList<String> result = omsProxy.informRole("creador2","jerarquia");
 
-			assertNull(result);
+			fail();
 
 		}catch( VisibilityRoleException e)
 		{
@@ -1203,7 +1197,7 @@ public class InformRoleInCorrectPermissionsTest extends TestCase {
 			
 			ArrayList<String> result = omsProxy.informRole("creador2","jerarquia");
 
-			assertNull(result);
+			fail();
 
 		}catch( VisibilityRoleException e)
 		{
@@ -1236,7 +1230,7 @@ public class InformRoleInCorrectPermissionsTest extends TestCase {
 			
 			ArrayList<String> result = omsProxy.informRole("creador3","jerarquia");
 
-			assertNull(result);
+			fail();
 
 		}catch( VisibilityRoleException e)
 		{
@@ -1269,7 +1263,7 @@ public class InformRoleInCorrectPermissionsTest extends TestCase {
 			
 			ArrayList<String> result = omsProxy.informRole("creador3","jerarquia");
 
-			assertNull(result);
+			fail();
 
 		}catch( VisibilityRoleException e)
 		{

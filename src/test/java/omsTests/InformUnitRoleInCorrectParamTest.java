@@ -83,7 +83,7 @@ public class InformUnitRoleInCorrectParamTest extends TestCase {
 
 			ArrayList<ArrayList<String>> result = omsProxy.informUnitRoles("noexiste");
 
-			assertNull(result);
+			fail();
 
 		}catch(UnitNotExistsException e)
 		{
@@ -105,7 +105,7 @@ public class InformUnitRoleInCorrectParamTest extends TestCase {
 
 			ArrayList<ArrayList<String>> result = omsProxy.informUnitRoles("");
 
-			assertNull(result);
+			fail();
 
 		}catch(EmptyParametersException e)
 		{
@@ -127,7 +127,7 @@ public class InformUnitRoleInCorrectParamTest extends TestCase {
 
 			ArrayList<ArrayList<String>> result = omsProxy.informUnitRoles(null);
 
-			assertNull(result);
+			fail();
 
 		}catch(EmptyParametersException e)
 		{

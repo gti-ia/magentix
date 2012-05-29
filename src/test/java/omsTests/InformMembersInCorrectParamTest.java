@@ -83,7 +83,7 @@ public class InformMembersInCorrectParamTest extends TestCase {
 
 			ArrayList<ArrayList<String>> result = omsProxy.informMembers("noexiste", "subordinado", "subordinate");
 
-			assertNull(result);
+			fail();
 
 		}catch(UnitNotExistsException e)
 		{
@@ -105,7 +105,7 @@ public class InformMembersInCorrectParamTest extends TestCase {
 
 			ArrayList<ArrayList<String>> result = omsProxy.informMembers("", "subordinado", "subordinate");
 
-			assertNull(result);
+			fail();
 
 		}catch(EmptyParametersException e)
 		{
@@ -127,7 +127,7 @@ public class InformMembersInCorrectParamTest extends TestCase {
 
 			ArrayList<ArrayList<String>> result = omsProxy.informMembers(null, "subordinado", "subordinate");
 
-			assertNull(result);
+			fail();
 
 		}catch(EmptyParametersException e)
 		{

@@ -64,6 +64,9 @@ public class RegisterUnitInCorrectParamTest extends TestCase {
 
 		//--------------------------------------------//
 
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
+		"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
+
 
 
 
@@ -76,7 +79,7 @@ public class RegisterUnitInCorrectParamTest extends TestCase {
 
 			String result = omsProxy.registerUnit("Plana", "hierarchy", "inexistente", "creador");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(ParentUnitNotExistsException e)
 		{
@@ -93,7 +96,7 @@ public class RegisterUnitInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.registerUnit("Equipo", "hierarchy", "inexistente", "creador");
 
-			assertNull(result);
+			fail(result);
 		}catch(ParentUnitNotExistsException e)
 		{
 
@@ -109,7 +112,7 @@ public class RegisterUnitInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.registerUnit("Jerarquia", "hierarchy", "inexistente", "creador");
 
-			assertNull(result);
+			fail(result);
 		}catch(ParentUnitNotExistsException e)
 		{
 
@@ -129,61 +132,9 @@ public class RegisterUnitInCorrectParamTest extends TestCase {
 		try
 		{
 
-			String result = omsProxy.registerUnit("Plana", "hierarchy", "inexistente", "");
+			String result = omsProxy.registerUnit("Plana", "flat", "virtual", "");
 
-			assertNull(result);
-
-		}catch(EmptyParametersException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-		try
-		{
-			String result = omsProxy.registerUnit("Equipo", "hierarchy", "inexistente", "");
-
-			assertNull(result);
-		}catch(EmptyParametersException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-		try
-		{
-			String result = omsProxy.registerUnit("Jerarquia", "hierarchy", "inexistente", "");
-
-			assertNull(result);
-		}catch(EmptyParametersException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-
-
-		try
-		{
-
-			String result = omsProxy.registerUnit("Plana", "hierarchy", "inexistente", null);
-
-			assertNull(result);
+			fail(result);
 
 		}catch(EmptyParametersException e)
 		{
@@ -198,9 +149,9 @@ public class RegisterUnitInCorrectParamTest extends TestCase {
 
 		try
 		{
-			String result = omsProxy.registerUnit("Equipo", "hierarchy", "inexistente", null);
+			String result = omsProxy.registerUnit("Equipo", "team", "virtual", "");
 
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -214,9 +165,61 @@ public class RegisterUnitInCorrectParamTest extends TestCase {
 
 		try
 		{
-			String result = omsProxy.registerUnit("Jerarquia", "hierarchy", "inexistente", null);
+			String result = omsProxy.registerUnit("Jerarquia", "hierarchy", "virtual", "");
 
-			assertNull(result);
+			fail(result);
+		}catch(EmptyParametersException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+
+
+		try
+		{
+
+			String result = omsProxy.registerUnit("Plana", "flat", "virtual", null);
+
+			fail(result);
+
+		}catch(EmptyParametersException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+		try
+		{
+			String result = omsProxy.registerUnit("Equipo", "team", "virtual", null);
+
+			fail(result);
+		}catch(EmptyParametersException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+		try
+		{
+			String result = omsProxy.registerUnit("Jerarquia", "hierarchy", "virtual", null);
+
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -237,7 +240,7 @@ public class RegisterUnitInCorrectParamTest extends TestCase {
 
 			String result = omsProxy.registerUnit("Plana", "insexistente", "virtual","Creador");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(InvalidUnitTypeException e)
 		{
@@ -254,7 +257,7 @@ public class RegisterUnitInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.registerUnit("Equipo", "insexistente", "virtual","Creador");
 
-			assertNull(result);
+			fail(result);
 		}catch(InvalidUnitTypeException e)
 		{
 
@@ -270,7 +273,7 @@ public class RegisterUnitInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.registerUnit("Jerarquía", "insexistente", "virtual","Creador");
 
-			assertNull(result);
+			fail(result);
 		}catch(InvalidUnitTypeException e)
 		{
 
@@ -289,9 +292,9 @@ public class RegisterUnitInCorrectParamTest extends TestCase {
 
 			String result = omsProxy.registerUnit("Plana", null, "virtual","Creador");
 
-			assertNull(result);
+			fail(result);
 
-		}catch(EmptyParametersException e)
+		}catch(InvalidUnitTypeException e)
 		{
 
 			assertNotNull(e);
@@ -306,8 +309,8 @@ public class RegisterUnitInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.registerUnit("Equipo", null, "virtual","Creador");
 
-			assertNull(result);
-		}catch(EmptyParametersException e)
+			fail(result);
+		}catch(InvalidUnitTypeException e)
 		{
 
 			assertNotNull(e);
@@ -322,8 +325,8 @@ public class RegisterUnitInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.registerUnit("Equipo", null, "virtual","Creador");
 
-			assertNull(result);
-		}catch(EmptyParametersException e)
+			fail(result);
+		}catch(InvalidUnitTypeException e)
 		{
 
 			assertNotNull(e);
@@ -343,7 +346,7 @@ public class RegisterUnitInCorrectParamTest extends TestCase {
 
 			String result = omsProxy.registerUnit("", "flat", "virtual","Creador");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(EmptyParametersException e)
 		{
@@ -360,7 +363,7 @@ public class RegisterUnitInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.registerUnit("", "team", "virtual","Creador");
 
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -376,7 +379,7 @@ public class RegisterUnitInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.registerUnit("", "hierarchy", "virtual","Creador");
 
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -395,7 +398,7 @@ public class RegisterUnitInCorrectParamTest extends TestCase {
 
 			String result = omsProxy.registerUnit(null, "flat", "virtual","Creador");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(EmptyParametersException e)
 		{
@@ -412,7 +415,7 @@ public class RegisterUnitInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.registerUnit(null, "team", "virtual","Creador");
 
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -428,7 +431,7 @@ public class RegisterUnitInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.registerUnit(null, "hierarchy", "virtual","Creador");
 
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 

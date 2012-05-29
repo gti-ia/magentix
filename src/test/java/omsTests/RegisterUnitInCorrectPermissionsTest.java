@@ -82,7 +82,7 @@ public class RegisterUnitInCorrectPermissionsTest extends TestCase {
 
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
 				"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
-				"(SELECT idpositmiembroion FROM position WHERE position = 'creator'), "+
+				"(SELECT idposition FROM position WHERE position = 'creator'), "+
 				"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 		"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 		
@@ -94,7 +94,7 @@ public class RegisterUnitInCorrectPermissionsTest extends TestCase {
 
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
 				"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
-				"(SELECT idpositmiembroion FROM position WHERE position = 'creator'), "+
+				"(SELECT idposition FROM position WHERE position = 'creator'), "+
 				"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 		"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 		
@@ -106,13 +106,13 @@ public class RegisterUnitInCorrectPermissionsTest extends TestCase {
 
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
 				"('supervisor',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
-				"(SELECT idpositmiembroion FROM position WHERE position = 'supervisor'), "+
+				"(SELECT idposition FROM position WHERE position = 'supervisor'), "+
 				"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
 		"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 		
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
 				"('subordinado',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
-				"(SELECT idpositmiembroion FROM position WHERE position = 'subordinate'), "+
+				"(SELECT idposition FROM position WHERE position = 'subordinate'), "+
 				"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
 		"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 
@@ -137,7 +137,7 @@ public class RegisterUnitInCorrectPermissionsTest extends TestCase {
 
 			String result = omsProxy.registerUnit(unit, unitType, parentUnit, "creador");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(NotCreatorInParentUnitException e)
 		{
@@ -170,7 +170,7 @@ public class RegisterUnitInCorrectPermissionsTest extends TestCase {
 
 			String result = omsProxy.registerUnit(unit, unitType, parentUnit, "creador");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(NotCreatorInParentUnitException e)
 		{
@@ -200,7 +200,7 @@ public class RegisterUnitInCorrectPermissionsTest extends TestCase {
 
 			String result = omsProxy.registerUnit(unit, unitType, parentUnit, "creador");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(NotCreatorInParentUnitException e)
 		{
@@ -228,7 +228,7 @@ public class RegisterUnitInCorrectPermissionsTest extends TestCase {
 
 			String result = omsProxy.registerUnit(unit, unitType, parentUnit, "creador");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(NotCreatorInParentUnitException e)
 		{
@@ -259,7 +259,7 @@ public class RegisterUnitInCorrectPermissionsTest extends TestCase {
 
 			String result = omsProxy.registerUnit(unit, unitType, parentUnit, "creador");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(NotCreatorInParentUnitException e)
 		{
@@ -289,7 +289,7 @@ public class RegisterUnitInCorrectPermissionsTest extends TestCase {
 
 			String result = omsProxy.registerUnit(unit, unitType, parentUnit, "creador");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(NotCreatorInParentUnitException e)
 		{
@@ -317,7 +317,7 @@ public class RegisterUnitInCorrectPermissionsTest extends TestCase {
 
 			String result = omsProxy.registerUnit(unit, unitType, parentUnit, "creador");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(NotCreatorInParentUnitException e)
 		{
@@ -348,7 +348,7 @@ public class RegisterUnitInCorrectPermissionsTest extends TestCase {
 
 			String result = omsProxy.registerUnit(unit, unitType, parentUnit, "creador");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(NotCreatorInParentUnitException e)
 		{
@@ -378,7 +378,7 @@ public class RegisterUnitInCorrectPermissionsTest extends TestCase {
 
 			String result = omsProxy.registerUnit(unit, unitType, parentUnit, "creador");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(NotCreatorInParentUnitException e)
 		{
@@ -406,7 +406,7 @@ public class RegisterUnitInCorrectPermissionsTest extends TestCase {
 
 			String result = omsProxy.registerUnit(unit, unitType, parentUnit, "creador");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(NotCreatorInParentUnitException e)
 		{
@@ -437,7 +437,7 @@ public class RegisterUnitInCorrectPermissionsTest extends TestCase {
 
 			String result = omsProxy.registerUnit(unit, unitType, parentUnit, "creador");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(NotCreatorInParentUnitException e)
 		{
@@ -465,7 +465,7 @@ public class RegisterUnitInCorrectPermissionsTest extends TestCase {
 
 			String result = omsProxy.registerUnit(unit, unitType, parentUnit, "creador");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(NotCreatorInParentUnitException e)
 		{
@@ -495,7 +495,7 @@ public class RegisterUnitInCorrectPermissionsTest extends TestCase {
 
 			String result = omsProxy.registerUnit(unit, unitType, parentUnit, "creador");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(NotCreatorInParentUnitException e)
 		{
@@ -523,7 +523,7 @@ public class RegisterUnitInCorrectPermissionsTest extends TestCase {
 
 			String result = omsProxy.registerUnit(unit, unitType, parentUnit, "creador");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(NotCreatorInParentUnitException e)
 		{
@@ -553,7 +553,7 @@ public class RegisterUnitInCorrectPermissionsTest extends TestCase {
 
 			String result = omsProxy.registerUnit(unit, unitType, parentUnit, "creador");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(NotCreatorInParentUnitException e)
 		{
@@ -581,7 +581,7 @@ public class RegisterUnitInCorrectPermissionsTest extends TestCase {
 
 			String result = omsProxy.registerUnit(unit, unitType, parentUnit, "creador");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(NotCreatorInParentUnitException e)
 		{
@@ -611,7 +611,7 @@ public class RegisterUnitInCorrectPermissionsTest extends TestCase {
 
 			String result = omsProxy.registerUnit(unit, unitType, parentUnit, "creador");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(NotCreatorInParentUnitException e)
 		{
@@ -639,7 +639,7 @@ public class RegisterUnitInCorrectPermissionsTest extends TestCase {
 
 			String result = omsProxy.registerUnit(unit, unitType, parentUnit, "creador");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(NotCreatorInParentUnitException e)
 		{
@@ -669,7 +669,7 @@ public class RegisterUnitInCorrectPermissionsTest extends TestCase {
 
 			String result = omsProxy.registerUnit(unit, unitType, parentUnit, "creador");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(NotCreatorInParentUnitException e)
 		{
@@ -697,7 +697,7 @@ public class RegisterUnitInCorrectPermissionsTest extends TestCase {
 
 			String result = omsProxy.registerUnit(unit, unitType, parentUnit, "creador");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(NotCreatorInParentUnitException e)
 		{
@@ -727,7 +727,7 @@ public class RegisterUnitInCorrectPermissionsTest extends TestCase {
 
 			String result = omsProxy.registerUnit(unit, unitType, parentUnit, "creador");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(NotCreatorInParentUnitException e)
 		{

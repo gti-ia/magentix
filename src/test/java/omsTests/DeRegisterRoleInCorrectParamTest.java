@@ -87,14 +87,14 @@ public class DeRegisterRoleInCorrectParamTest extends TestCase {
 
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
 				"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
-				"(SELECT idpositmiembroion FROM position WHERE position = 'creator'), "+
+				"(SELECT idposition FROM position WHERE position = 'creator'), "+
 				"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 		"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 		
 
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
 				"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
-				"(SELECT idpositmiembroion FROM position WHERE position = 'creator'), "+
+				"(SELECT idposition FROM position WHERE position = 'creator'), "+
 				"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 		"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 		
@@ -129,7 +129,7 @@ public class DeRegisterRoleInCorrectParamTest extends TestCase {
 
 			String result = omsProxy.deregisterRole("", "virtual");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(EmptyParametersException e)
 		{
@@ -145,7 +145,7 @@ public class DeRegisterRoleInCorrectParamTest extends TestCase {
 		try
 		{
 			String result = omsProxy.deregisterRole("", "equipo");
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -161,7 +161,7 @@ public class DeRegisterRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.deregisterRole("", "plana");
 
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -177,7 +177,7 @@ public class DeRegisterRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.deregisterRole("", "jerarquia");
 
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -198,7 +198,7 @@ public class DeRegisterRoleInCorrectParamTest extends TestCase {
 
 			String result = omsProxy.deregisterRole(null, "virtual");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(EmptyParametersException e)
 		{
@@ -214,7 +214,7 @@ public class DeRegisterRoleInCorrectParamTest extends TestCase {
 		try
 		{
 			String result = omsProxy.deregisterRole(null, "equipo");
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -230,7 +230,7 @@ public class DeRegisterRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.deregisterRole(null, "plana");
 
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -246,7 +246,7 @@ public class DeRegisterRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.deregisterRole(null, "jerarquia");
 
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -267,7 +267,7 @@ public class DeRegisterRoleInCorrectParamTest extends TestCase {
 
 			String result = omsProxy.deregisterRole("inexistente", "virtual");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(RoleNotExistsException e)
 		{
@@ -283,7 +283,7 @@ public class DeRegisterRoleInCorrectParamTest extends TestCase {
 		try
 		{
 			String result = omsProxy.deregisterRole("inexistente", "equipo");
-			assertNull(result);
+			fail(result);
 		}catch(RoleNotExistsException e)
 		{
 
@@ -299,7 +299,7 @@ public class DeRegisterRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.deregisterRole("inexistente", "plana");
 
-			assertNull(result);
+			fail(result);
 		}catch(RoleNotExistsException e)
 		{
 
@@ -315,7 +315,7 @@ public class DeRegisterRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.deregisterRole("inexistente", "jerarquia");
 
-			assertNull(result);
+			fail(result);
 		}catch(RoleNotExistsException e)
 		{
 
@@ -335,7 +335,7 @@ public class DeRegisterRoleInCorrectParamTest extends TestCase {
 
 			String result = omsProxy.deregisterRole("miembro", "");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(EmptyParametersException e)
 		{
@@ -351,7 +351,7 @@ public class DeRegisterRoleInCorrectParamTest extends TestCase {
 		try
 		{
 			String result = omsProxy.deregisterRole("miembro", "");
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -367,7 +367,7 @@ public class DeRegisterRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.deregisterRole("miembro", "");
 
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -383,7 +383,7 @@ public class DeRegisterRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.deregisterRole("subordinado", "");
 
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -404,7 +404,7 @@ public class DeRegisterRoleInCorrectParamTest extends TestCase {
 
 			String result = omsProxy.deregisterRole("miembro", null);
 
-			assertNull(result);
+			fail(result);
 
 		}catch(EmptyParametersException e)
 		{
@@ -420,7 +420,7 @@ public class DeRegisterRoleInCorrectParamTest extends TestCase {
 		try
 		{
 			String result = omsProxy.deregisterRole("miembro", null);
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -436,7 +436,7 @@ public class DeRegisterRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.deregisterRole("miembro", null);
 
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -452,7 +452,7 @@ public class DeRegisterRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.deregisterRole("subordinado", null);
 
-			assertNull(result);
+			fail(result);
 		}catch(EmptyParametersException e)
 		{
 
@@ -473,7 +473,7 @@ public class DeRegisterRoleInCorrectParamTest extends TestCase {
 
 			String result = omsProxy.deregisterRole("miembro", "inexistente");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(UnitNotExistsException e)
 		{
@@ -489,7 +489,7 @@ public class DeRegisterRoleInCorrectParamTest extends TestCase {
 		try
 		{
 			String result = omsProxy.deregisterRole("miembro", "inexistente");
-			assertNull(result);
+			fail(result);
 		}catch(UnitNotExistsException e)
 		{
 
@@ -505,7 +505,7 @@ public class DeRegisterRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.deregisterRole("miembro", "inexistente");
 
-			assertNull(result);
+			fail(result);
 		}catch(UnitNotExistsException e)
 		{
 
@@ -521,7 +521,7 @@ public class DeRegisterRoleInCorrectParamTest extends TestCase {
 		{
 			String result = omsProxy.deregisterRole("subordinado", "inexistente");
 
-			assertNull(result);
+			fail(result);
 		}catch(UnitNotExistsException e)
 		{
 

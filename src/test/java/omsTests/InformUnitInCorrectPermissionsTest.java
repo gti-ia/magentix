@@ -7,6 +7,7 @@ import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
 import es.upv.dsic.gti_ia.organization.AgentNotInUnitException;
 import es.upv.dsic.gti_ia.organization.EmptyParametersException;
+import es.upv.dsic.gti_ia.organization.NotInUnitOrParentUnitException;
 import es.upv.dsic.gti_ia.organization.NotPlaysAnyRoleException;
 import es.upv.dsic.gti_ia.organization.NotPlaysRoleException;
 import es.upv.dsic.gti_ia.organization.OMSProxy;
@@ -79,7 +80,7 @@ public class InformUnitInCorrectPermissionsTest extends TestCase {
 		dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('Jerarquia',(SELECT idunitType FROM unitType WHERE unitTypeName = 'hierarchy'))");
 		dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'virtual'),(SELECT idunitList FROM unitList WHERE unitName = 'Jerarquia'))");
 
-		dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('Plana',(SELECT idunitType FROM unitType WHERE unitTypeName = 'equipo2'))");
+		dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('Equipo2',(SELECT idunitType FROM unitType WHERE unitTypeName = 'team'))");
 		dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'virtual'),(SELECT idunitList FROM unitList WHERE unitName = 'equipo2'))");
 
 		dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('Jerarquia2',(SELECT idunitType FROM unitType WHERE unitTypeName = 'hierarchy'))");
@@ -88,48 +89,48 @@ public class InformUnitInCorrectPermissionsTest extends TestCase {
 		
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
 				"('miembro',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
-				"(SELECT idpositmiembroion FROM position WHERE position = 'member'), "+
+				"(SELECT idposition FROM position WHERE position = 'member'), "+
 				"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
 		"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 		
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
 				"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
-				"(SELECT idpositmiembroion FROM position WHERE position = 'creator'), "+
+				"(SELECT idposition FROM position WHERE position = 'creator'), "+
 				"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 		"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 		
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
 				"('miembro',(SELECT idunitList FROM unitList WHERE unitName = 'equipo2'),"+
-				"(SELECT idpositmiembroion FROM position WHERE position = 'member'), "+
+				"(SELECT idposition FROM position WHERE position = 'member'), "+
 				"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
 		"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 		
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
 				"('creador2',(SELECT idunitList FROM unitList WHERE unitName = 'equipo2'),"+
-				"(SELECT idpositmiembroion FROM position WHERE position = 'creator'), "+
+				"(SELECT idposition FROM position WHERE position = 'creator'), "+
 				"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 		"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 	
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
 				"('subordinado',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'),"+
-				"(SELECT idpositmiembroion FROM position WHERE position = 'subordinate'), "+
+				"(SELECT idposition FROM position WHERE position = 'subordinate'), "+
 				"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
 		"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 	
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
 				"('supervisor',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'),"+
-				"(SELECT idpositmiembroion FROM position WHERE position = 'supervisor'), "+
+				"(SELECT idposition FROM position WHERE position = 'supervisor'), "+
 				"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
 		"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 		
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
 				"('creador2',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'),"+
-				"(SELECT idpositmiembroion FROM position WHERE position = 'creator'), "+
+				"(SELECT idposition FROM position WHERE position = 'creator'), "+
 				"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
 		"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 	
-		dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-		"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
+//		dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
+//		"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
 
 		
 
@@ -146,9 +147,9 @@ public class InformUnitInCorrectPermissionsTest extends TestCase {
 			
 			ArrayList<String> result = omsProxy.informUnit("equipo");
 
-			assertNull(result);
+			fail();
 
-		}catch(AgentNotInUnitException e)
+		}catch(NotInUnitOrParentUnitException e)
 		{
 
 			assertNotNull(e);
@@ -172,9 +173,9 @@ public class InformUnitInCorrectPermissionsTest extends TestCase {
 			
 			ArrayList<String> result = omsProxy.informUnit("equipo");
 
-			assertNull(result);
+			fail();
 
-		}catch(AgentNotInUnitException e)
+		}catch(NotInUnitOrParentUnitException e)
 		{
 
 			assertNotNull(e);
@@ -198,9 +199,9 @@ public class InformUnitInCorrectPermissionsTest extends TestCase {
 			
 			ArrayList<String> result = omsProxy.informUnit("jerarquia");
 
-			assertNull(result);
+			fail();
 
-		}catch(AgentNotInUnitException e)
+		}catch(NotInUnitOrParentUnitException e)
 		{
 
 			assertNotNull(e);
@@ -224,9 +225,9 @@ public class InformUnitInCorrectPermissionsTest extends TestCase {
 			
 			ArrayList<String> result = omsProxy.informUnit("jerarquia");
 
-			assertNull(result);
+			fail();
 
-		}catch(AgentNotInUnitException e)
+		}catch(NotInUnitOrParentUnitException e)
 		{
 
 			assertNotNull(e);
@@ -250,9 +251,9 @@ public class InformUnitInCorrectPermissionsTest extends TestCase {
 			
 			ArrayList<String> result = omsProxy.informUnit("jerarquia");
 
-			assertNull(result);
+			fail();
 
-		}catch(AgentNotInUnitException e)
+		}catch(NotInUnitOrParentUnitException e)
 		{
 
 			assertNotNull(e);

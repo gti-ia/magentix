@@ -85,7 +85,7 @@ public class JointUnitInCorrectPermissionsTest extends TestCase {
 
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
 				"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
-				"(SELECT idpositmiembroion FROM position WHERE position = 'creator'), "+
+				"(SELECT idposition FROM position WHERE position = 'creator'), "+
 				"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 		"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 		
@@ -98,20 +98,20 @@ public class JointUnitInCorrectPermissionsTest extends TestCase {
 
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
 				"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
-				"(SELECT idpositmiembroion FROM position WHERE position = 'creator'), "+
+				"(SELECT idposition FROM position WHERE position = 'creator'), "+
 				"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 		"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 		
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
 				"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
-				"(SELECT idpositmiembroion FROM position WHERE position = 'creator'), "+
+				"(SELECT idposition FROM position WHERE position = 'creator'), "+
 				"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 		"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 		
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
 				"('subordinado',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
-				"(SELECT idpositmiembroion FROM position WHERE position = 'subordinate'), "+
+				"(SELECT idposition FROM position WHERE position = 'subordinate'), "+
 				"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
 		"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 
@@ -145,7 +145,7 @@ public class JointUnitInCorrectPermissionsTest extends TestCase {
 
 			String result = omsProxy.jointUnit("equipo", "jerarquia");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(NotCreatorInParentUnitException e)
 		{
@@ -164,7 +164,7 @@ public class JointUnitInCorrectPermissionsTest extends TestCase {
 	
 			String result = omsProxy.jointUnit("plana", "jerarquia");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(NotCreatorInParentUnitException e)
 		{
@@ -196,7 +196,7 @@ public class JointUnitInCorrectPermissionsTest extends TestCase {
 
 			
 
-			assertNull(result);
+			fail(result);
 
 		}catch(NotCreatorInUnitException e)
 		{
@@ -212,15 +212,13 @@ public class JointUnitInCorrectPermissionsTest extends TestCase {
 		try
 		{
 		
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
-			
+				
 		
 			String result = omsProxy.jointUnit("plana", "jerarquia");
 
 			
 
-			assertNull(result);
+			fail(result);
 
 		}catch(NotCreatorInUnitException e)
 		{
@@ -252,7 +250,7 @@ public class JointUnitInCorrectPermissionsTest extends TestCase {
 
 			
 
-			assertNull(result);
+			fail(result);
 
 		}catch(NotCreatorInUnitException e)
 		{
@@ -276,7 +274,7 @@ public class JointUnitInCorrectPermissionsTest extends TestCase {
 
 			
 
-			assertNull(result);
+			fail(result);
 
 		}catch(NotCreatorInUnitException e)
 		{

@@ -4,9 +4,11 @@ import junit.framework.TestCase;
 
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
+import es.upv.dsic.gti_ia.organization.NotCreatorAgentInUnitException;
 import es.upv.dsic.gti_ia.organization.NotCreatorInParentUnitException;
 import es.upv.dsic.gti_ia.organization.NotCreatorInUnitOrParentUnitException;
 import es.upv.dsic.gti_ia.organization.OMSProxy;
+import es.upv.dsic.gti_ia.organization.SubunitsInUnitException;
 import es.upv.dsic.gti_ia.organization.UnitNotExistsException;
 import es.upv.dsic.gti_ia.organization.VirtualUnitException;
 
@@ -86,7 +88,7 @@ public class DeRegisterUnitInCorrectPermissionsTest extends TestCase {
 
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
 				"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
-				"(SELECT idpositmiembroion FROM position WHERE position = 'creator'), "+
+				"(SELECT idposition FROM position WHERE position = 'creator'), "+
 				"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 		"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 		
@@ -98,7 +100,7 @@ public class DeRegisterUnitInCorrectPermissionsTest extends TestCase {
 
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
 				"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
-				"(SELECT idpositmiembroion FROM position WHERE position = 'creator'), "+
+				"(SELECT idposition FROM position WHERE position = 'creator'), "+
 				"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 		"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 		
@@ -110,13 +112,19 @@ public class DeRegisterUnitInCorrectPermissionsTest extends TestCase {
 
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
 				"('supervisor',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
-				"(SELECT idpositmiembroion FROM position WHERE position = 'supervisor'), "+
+				"(SELECT idposition FROM position WHERE position = 'supervisor'), "+
 				"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
 		"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 		
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
 				"('subordinado',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
-				"(SELECT idpositmiembroion FROM position WHERE position = 'subordinate'), "+
+				"(SELECT idposition FROM position WHERE position = 'subordinate'), "+
+				"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+		"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
+		
+		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+				"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
+				"(SELECT idposition FROM position WHERE position = 'creator'), "+
 				"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
 		"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 
@@ -136,7 +144,7 @@ public class DeRegisterUnitInCorrectPermissionsTest extends TestCase {
 		{
 			String result = omsProxy.deregisterUnit("inexistente");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(UnitNotExistsException e)
 		{
@@ -156,18 +164,18 @@ public class DeRegisterUnitInCorrectPermissionsTest extends TestCase {
 		
 		String unit = "jerarquia2";
 		String unitType = "hierarchy";
-		String parentUnit = "jerarquia";
+		String parentUnit = "Jerarquia";
 		
 		
 		try
 		{
 			dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('"+unit+"',(SELECT idunitType FROM unitType WHERE unitTypeName = '"+unitType+"'))");
-			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = '"+parentUnit+"'),(SELECT idunitList FROM unitList WHERE unitName = "+unit+"'))");
+			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = '"+parentUnit+"'),(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'))");
 
 
 			String result = omsProxy.deregisterUnit(unit);
 
-			assertNull(result);
+			fail(result);
 
 		}catch(NotCreatorInUnitOrParentUnitException e)
 		{
@@ -192,12 +200,12 @@ public class DeRegisterUnitInCorrectPermissionsTest extends TestCase {
 		try
 		{
 			dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('"+unit+"',(SELECT idunitType FROM unitType WHERE unitTypeName = '"+unitType+"'))");
-			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = '"+parentUnit+"'),(SELECT idunitList FROM unitList WHERE unitName = "+unit+"'))");
+			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = '"+parentUnit+"'),(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'))");
 
 
 			String result = omsProxy.deregisterUnit(unit);
 
-			assertNull(result);
+			fail(result);
 
 		}catch(NotCreatorInUnitOrParentUnitException e)
 		{
@@ -223,12 +231,12 @@ public class DeRegisterUnitInCorrectPermissionsTest extends TestCase {
 		try
 		{
 			dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('"+unit+"',(SELECT idunitType FROM unitType WHERE unitTypeName = '"+unitType+"'))");
-			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = '"+parentUnit+"'),(SELECT idunitList FROM unitList WHERE unitName = "+unit+"'))");
+			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = '"+parentUnit+"'),(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'))");
 
 
 			String result = omsProxy.deregisterUnit(unit);
 
-			assertNull(result);
+			fail(result);
 
 		}catch(NotCreatorInUnitOrParentUnitException e)
 		{
@@ -254,12 +262,12 @@ public class DeRegisterUnitInCorrectPermissionsTest extends TestCase {
 		try
 		{
 			dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('"+unit+"',(SELECT idunitType FROM unitType WHERE unitTypeName = '"+unitType+"'))");
-			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = '"+parentUnit+"'),(SELECT idunitList FROM unitList WHERE unitName = "+unit+"'))");
+			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = '"+parentUnit+"'),(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'))");
 
 
 			String result = omsProxy.deregisterUnit(unit);
 
-			assertNull(result);
+			fail(result);
 
 		}catch(NotCreatorInUnitOrParentUnitException e)
 		{
@@ -284,12 +292,12 @@ public class DeRegisterUnitInCorrectPermissionsTest extends TestCase {
 		try
 		{
 			dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('"+unit+"',(SELECT idunitType FROM unitType WHERE unitTypeName = '"+unitType+"'))");
-			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = '"+parentUnit+"'),(SELECT idunitList FROM unitList WHERE unitName = "+unit+"'))");
+			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = '"+parentUnit+"'),(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'))");
 
 
 			String result = omsProxy.deregisterUnit(unit);
 
-			assertNull(result);
+			fail(result);
 
 		}catch(NotCreatorInUnitOrParentUnitException e)
 		{
@@ -315,12 +323,12 @@ public class DeRegisterUnitInCorrectPermissionsTest extends TestCase {
 		try
 		{
 			dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('"+unit+"',(SELECT idunitType FROM unitType WHERE unitTypeName = '"+unitType+"'))");
-			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = '"+parentUnit+"'),(SELECT idunitList FROM unitList WHERE unitName = "+unit+"'))");
+			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = '"+parentUnit+"'),(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'))");
 
 
 			String result = omsProxy.deregisterUnit(unit);
 
-			assertNull(result);
+			fail(result);
 
 		}catch(NotCreatorInUnitOrParentUnitException e)
 		{
@@ -346,12 +354,12 @@ public class DeRegisterUnitInCorrectPermissionsTest extends TestCase {
 		try
 		{
 			dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('"+unit+"',(SELECT idunitType FROM unitType WHERE unitTypeName = '"+unitType+"'))");
-			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = '"+parentUnit+"'),(SELECT idunitList FROM unitList WHERE unitName = "+unit+"'))");
+			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = '"+parentUnit+"'),(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'))");
 
 
 			String result = omsProxy.deregisterUnit(unit);
 
-			assertNull(result);
+			fail(result);
 
 		}catch(NotCreatorInUnitOrParentUnitException e)
 		{
@@ -376,12 +384,12 @@ public class DeRegisterUnitInCorrectPermissionsTest extends TestCase {
 		try
 		{
 			dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('"+unit+"',(SELECT idunitType FROM unitType WHERE unitTypeName = '"+unitType+"'))");
-			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = '"+parentUnit+"'),(SELECT idunitList FROM unitList WHERE unitName = "+unit+"'))");
+			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = '"+parentUnit+"'),(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'))");
 
 
 			String result = omsProxy.deregisterUnit(unit);
 
-			assertNull(result);
+			fail(result);
 
 		}catch(NotCreatorInUnitOrParentUnitException e)
 		{
@@ -407,12 +415,12 @@ public class DeRegisterUnitInCorrectPermissionsTest extends TestCase {
 		try
 		{
 			dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('"+unit+"',(SELECT idunitType FROM unitType WHERE unitTypeName = '"+unitType+"'))");
-			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = '"+parentUnit+"'),(SELECT idunitList FROM unitList WHERE unitName = "+unit+"'))");
+			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = '"+parentUnit+"'),(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'))");
 
 
 			String result = omsProxy.deregisterUnit(unit);
 
-			assertNull(result);
+			fail(result);
 
 		}catch(NotCreatorInUnitOrParentUnitException e)
 		{
@@ -436,7 +444,7 @@ public class DeRegisterUnitInCorrectPermissionsTest extends TestCase {
 		
 			String result = omsProxy.deregisterUnit("virtual");
 
-			assertNull(result);
+			fail(result);
 
 		}catch(VirtualUnitException e)
 		{
@@ -462,8 +470,14 @@ public class DeRegisterUnitInCorrectPermissionsTest extends TestCase {
 		try
 		{
 			dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('"+unit+"',(SELECT idunitType FROM unitType WHERE unitTypeName = '"+unitType+"'))");
-			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = '"+parentUnit+"'),(SELECT idunitList FROM unitList WHERE unitName = "+unit+"'))");
+			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = '"+parentUnit+"'),(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'))");
 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+					"('supervisor',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
+					"(SELECT idposition FROM position WHERE position = 'supervisor'), "+
+					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
+		
 			
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
 			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = '"+parentUnit+"'))))");
@@ -475,9 +489,9 @@ public class DeRegisterUnitInCorrectPermissionsTest extends TestCase {
 
 			String result = omsProxy.deregisterUnit(unit);
 
-			assertNull(result);
+			fail(result);
 
-		}catch(NotCreatorInUnitOrParentUnitException e)
+		}catch(NotCreatorAgentInUnitException e)
 		{
 
 			assertNotNull(e);
@@ -501,8 +515,14 @@ public class DeRegisterUnitInCorrectPermissionsTest extends TestCase {
 		try
 		{
 			dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('"+unit+"',(SELECT idunitType FROM unitType WHERE unitTypeName = '"+unitType+"'))");
-			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = '"+parentUnit+"'),(SELECT idunitList FROM unitList WHERE unitName = "+unit+"'))");
+			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = '"+parentUnit+"'),(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'))");
 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+					"('supervisor',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
+					"(SELECT idposition FROM position WHERE position = 'supervisor'), "+
+					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
+	
 			
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
 			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = '"+parentUnit+"'))))");
@@ -514,9 +534,9 @@ public class DeRegisterUnitInCorrectPermissionsTest extends TestCase {
 
 			String result = omsProxy.deregisterUnit(unit);
 
-			assertNull(result);
+			fail(result);
 
-		}catch(NotCreatorInUnitOrParentUnitException e)
+		}catch(NotCreatorAgentInUnitException e)
 		{
 
 			assertNotNull(e);
@@ -540,9 +560,14 @@ public class DeRegisterUnitInCorrectPermissionsTest extends TestCase {
 		try
 		{
 			dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('"+unit+"',(SELECT idunitType FROM unitType WHERE unitTypeName = '"+unitType+"'))");
-			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = '"+parentUnit+"'),(SELECT idunitList FROM unitList WHERE unitName = "+unit+"'))");
+			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = '"+parentUnit+"'),(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'))");
 
-			
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+					"('supervisor',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
+					"(SELECT idposition FROM position WHERE position = 'supervisor'), "+
+					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
+	
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
 			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = '"+parentUnit+"'))))");
 
@@ -553,9 +578,9 @@ public class DeRegisterUnitInCorrectPermissionsTest extends TestCase {
 
 			String result = omsProxy.deregisterUnit(unit);
 
-			assertNull(result);
+			fail(result);
 
-		}catch(NotCreatorInUnitOrParentUnitException e)
+		}catch(NotCreatorAgentInUnitException e)
 		{
 
 			assertNotNull(e);
@@ -580,8 +605,14 @@ public class DeRegisterUnitInCorrectPermissionsTest extends TestCase {
 		try
 		{
 			dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('"+unit+"',(SELECT idunitType FROM unitType WHERE unitTypeName = '"+unitType+"'))");
-			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = '"+parentUnit+"'),(SELECT idunitList FROM unitList WHERE unitName = "+unit+"'))");
+			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = '"+parentUnit+"'),(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'))");
 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+					"('miembro',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
+					"(SELECT idposition FROM position WHERE position = 'member'), "+
+					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
+	
 			
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
 			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = '"+parentUnit+"'))))");
@@ -593,9 +624,9 @@ public class DeRegisterUnitInCorrectPermissionsTest extends TestCase {
 
 			String result = omsProxy.deregisterUnit(unit);
 
-			assertNull(result);
+			fail(result);
 
-		}catch(NotCreatorInUnitOrParentUnitException e)
+		}catch(NotCreatorAgentInUnitException e)
 		{
 
 			assertNotNull(e);
@@ -619,8 +650,13 @@ public class DeRegisterUnitInCorrectPermissionsTest extends TestCase {
 		try
 		{
 			dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('"+unit+"',(SELECT idunitType FROM unitType WHERE unitTypeName = '"+unitType+"'))");
-			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = '"+parentUnit+"'),(SELECT idunitList FROM unitList WHERE unitName = "+unit+"'))");
+			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = '"+parentUnit+"'),(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'))");
 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+					"('miembro',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
+					"(SELECT idposition FROM position WHERE position = 'member'), "+
+					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
 			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = '"+parentUnit+"'))))");
@@ -632,9 +668,9 @@ public class DeRegisterUnitInCorrectPermissionsTest extends TestCase {
 
 			String result = omsProxy.deregisterUnit(unit);
 
-			assertNull(result);
+			fail(result);
 
-		}catch(NotCreatorInUnitOrParentUnitException e)
+		}catch(NotCreatorAgentInUnitException e)
 		{
 
 			assertNotNull(e);
@@ -658,8 +694,13 @@ public class DeRegisterUnitInCorrectPermissionsTest extends TestCase {
 		try
 		{
 			dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('"+unit+"',(SELECT idunitType FROM unitType WHERE unitTypeName = '"+unitType+"'))");
-			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = '"+parentUnit+"'),(SELECT idunitList FROM unitList WHERE unitName = "+unit+"'))");
+			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = '"+parentUnit+"'),(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'))");
 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+					"('miembro',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
+					"(SELECT idposition FROM position WHERE position = 'member'), "+
+					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
 			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = '"+parentUnit+"'))))");
@@ -671,9 +712,9 @@ public class DeRegisterUnitInCorrectPermissionsTest extends TestCase {
 
 			String result = omsProxy.deregisterUnit(unit);
 
-			assertNull(result);
+			fail(result);
 
-		}catch(NotCreatorInUnitOrParentUnitException e)
+		}catch(NotCreatorAgentInUnitException e)
 		{
 
 			assertNotNull(e);
@@ -697,8 +738,13 @@ public class DeRegisterUnitInCorrectPermissionsTest extends TestCase {
 		try
 		{
 			dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('"+unit+"',(SELECT idunitType FROM unitType WHERE unitTypeName = '"+unitType+"'))");
-			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = '"+parentUnit+"'),(SELECT idunitList FROM unitList WHERE unitName = "+unit+"'))");
+			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = '"+parentUnit+"'),(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'))");
 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+					"('miembro',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
+					"(SELECT idposition FROM position WHERE position = 'member'), "+
+					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
 			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = '"+parentUnit+"'))))");
@@ -710,9 +756,9 @@ public class DeRegisterUnitInCorrectPermissionsTest extends TestCase {
 
 			String result = omsProxy.deregisterUnit(unit);
 
-			assertNull(result);
+			fail(result);
 
-		}catch(NotCreatorInUnitOrParentUnitException e)
+		}catch(NotCreatorAgentInUnitException e)
 		{
 
 			assertNotNull(e);
@@ -736,8 +782,13 @@ public class DeRegisterUnitInCorrectPermissionsTest extends TestCase {
 		try
 		{
 			dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('"+unit+"',(SELECT idunitType FROM unitType WHERE unitTypeName = '"+unitType+"'))");
-			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = '"+parentUnit+"'),(SELECT idunitList FROM unitList WHERE unitName = "+unit+"'))");
+			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = '"+parentUnit+"'),(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'))");
 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+					"('miembro',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
+					"(SELECT idposition FROM position WHERE position = 'member'), "+
+					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
 			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = '"+parentUnit+"'))))");
@@ -749,9 +800,9 @@ public class DeRegisterUnitInCorrectPermissionsTest extends TestCase {
 
 			String result = omsProxy.deregisterUnit(unit);
 
-			assertNull(result);
+			fail(result);
 
-		}catch(NotCreatorInUnitOrParentUnitException e)
+		}catch(NotCreatorAgentInUnitException e)
 		{
 
 			assertNotNull(e);
@@ -775,8 +826,13 @@ public class DeRegisterUnitInCorrectPermissionsTest extends TestCase {
 		try
 		{
 			dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('"+unit+"',(SELECT idunitType FROM unitType WHERE unitTypeName = '"+unitType+"'))");
-			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = '"+parentUnit+"'),(SELECT idunitList FROM unitList WHERE unitName = "+unit+"'))");
+			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = '"+parentUnit+"'),(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'))");
 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+					"('miembro',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
+					"(SELECT idposition FROM position WHERE position = 'member'), "+
+					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
 			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = '"+parentUnit+"'))))");
@@ -788,9 +844,9 @@ public class DeRegisterUnitInCorrectPermissionsTest extends TestCase {
 
 			String result = omsProxy.deregisterUnit(unit);
 
-			assertNull(result);
+			fail(result);
 
-		}catch(NotCreatorInUnitOrParentUnitException e)
+		}catch(NotCreatorAgentInUnitException e)
 		{
 
 			assertNotNull(e);
@@ -814,7 +870,7 @@ public class DeRegisterUnitInCorrectPermissionsTest extends TestCase {
 		try
 		{
 			dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('"+unit+"',(SELECT idunitType FROM unitType WHERE unitTypeName = '"+unitType+"'))");
-			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = '"+parentUnit+"'),(SELECT idunitList FROM unitList WHERE unitName = "+unit+"'))");
+			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = '"+parentUnit+"'),(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'))");
 
 			
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
@@ -823,11 +879,11 @@ public class DeRegisterUnitInCorrectPermissionsTest extends TestCase {
 			
 		
 
-			String result = omsProxy.deregisterUnit(unit);
+			String result = omsProxy.deregisterUnit(parentUnit);
 
-			assertNull(result);
+			fail(result);
 
-		}catch(NotCreatorInUnitOrParentUnitException e)
+		}catch(SubunitsInUnitException e)
 		{
 
 			assertNotNull(e);
@@ -851,7 +907,7 @@ public class DeRegisterUnitInCorrectPermissionsTest extends TestCase {
 		try
 		{
 			dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('"+unit+"',(SELECT idunitType FROM unitType WHERE unitTypeName = '"+unitType+"'))");
-			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = '"+parentUnit+"'),(SELECT idunitList FROM unitList WHERE unitName = "+unit+"'))");
+			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = '"+parentUnit+"'),(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'))");
 
 			
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
@@ -860,11 +916,11 @@ public class DeRegisterUnitInCorrectPermissionsTest extends TestCase {
 			
 		
 
-			String result = omsProxy.deregisterUnit(unit);
+			String result = omsProxy.deregisterUnit(parentUnit);
 
-			assertNull(result);
+			fail(result);
 
-		}catch(NotCreatorInUnitOrParentUnitException e)
+		}catch(SubunitsInUnitException e)
 		{
 
 			assertNotNull(e);
@@ -888,7 +944,7 @@ public class DeRegisterUnitInCorrectPermissionsTest extends TestCase {
 		try
 		{
 			dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('"+unit+"',(SELECT idunitType FROM unitType WHERE unitTypeName = '"+unitType+"'))");
-			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = '"+parentUnit+"'),(SELECT idunitList FROM unitList WHERE unitName = "+unit+"'))");
+			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = '"+parentUnit+"'),(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'))");
 
 			
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
@@ -897,11 +953,11 @@ public class DeRegisterUnitInCorrectPermissionsTest extends TestCase {
 			
 		
 
-			String result = omsProxy.deregisterUnit(unit);
+			String result = omsProxy.deregisterUnit(parentUnit);
 
-			assertNull(result);
+			fail(result);
 
-		}catch(NotCreatorInUnitOrParentUnitException e)
+		}catch(SubunitsInUnitException e)
 		{
 
 			assertNotNull(e);

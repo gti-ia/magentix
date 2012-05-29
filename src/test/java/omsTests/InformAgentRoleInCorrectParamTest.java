@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import junit.framework.TestCase;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
+import es.upv.dsic.gti_ia.organization.AgentNotExistsException;
 import es.upv.dsic.gti_ia.organization.EmptyParametersException;
 import es.upv.dsic.gti_ia.organization.NotPlaysAnyRoleException;
 import es.upv.dsic.gti_ia.organization.NotPlaysRoleException;
@@ -83,7 +84,7 @@ public class InformAgentRoleInCorrectParamTest extends TestCase {
 
 			ArrayList<ArrayList<String>> result = omsProxy.informAgentRole("");
 
-			assertNull(result);
+			fail();
 
 		}catch(EmptyParametersException e)
 		{
@@ -105,7 +106,7 @@ public class InformAgentRoleInCorrectParamTest extends TestCase {
 
 			ArrayList<ArrayList<String>> result = omsProxy.informAgentRole(null);
 
-			assertNull(result);
+			fail();
 
 		}catch(EmptyParametersException e)
 		{
@@ -127,9 +128,9 @@ public class InformAgentRoleInCorrectParamTest extends TestCase {
 
 			ArrayList<ArrayList<String>> result = omsProxy.informAgentRole("NoExiste");
 
-			assertNull(result);
+			fail();
 
-		}catch(NotPlaysAnyRoleException e)
+		}catch(AgentNotExistsException e)
 		{
 
 			assertNotNull(e);
