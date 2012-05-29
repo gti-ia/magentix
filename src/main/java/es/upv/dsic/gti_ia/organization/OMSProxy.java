@@ -661,7 +661,7 @@ public class OMSProxy extends THOMASProxy {
 	 *             is invalid
 	 */
 	public String registerRole(String RoleID, String UnitID, String AccessibilityID, String VisibilityID, String PositionID) throws EmptyParametersException,
-	UnitNotExistsException, RoleExistsInUnitException, AgentNotInUnitException, NotCreatorAgentInUnitException, InvalidUnitTypeException,
+	UnitNotExistsException, RoleExistsInUnitException, AgentNotInUnitException, NotInUnitAndNotCreatorException, InvalidUnitTypeException,
 	NotMemberOrCreatorInUnitException, NotSupervisorOrCreatorInUnitException, InvalidPositionException, 
 	 InvalidAccessibilityException, InvalidVisibilityException{
 
@@ -695,7 +695,7 @@ public class OMSProxy extends THOMASProxy {
 
 			throw e;
 		}
-		catch (NotCreatorAgentInUnitException e) {
+		catch (NotInUnitAndNotCreatorException e) {
 
 			throw e;
 		}
@@ -920,7 +920,7 @@ public class OMSProxy extends THOMASProxy {
 	 */
 	public String deregisterRole(String RoleID, String UnitID) throws EmptyParametersException, UnitNotExistsException,
 	RoleNotExistsException, RoleContainsNormsException, RoleInUseException, AgentNotInUnitException,
-	NotCreatorException, InvalidUnitTypeException, NotMemberOrCreatorInUnitException, NotSupervisorOrCreatorInUnitException, 
+	NotInUnitAndNotCreatorException, InvalidUnitTypeException, NotMemberOrCreatorInUnitException, NotSupervisorOrCreatorInUnitException, 
 	MySQLException{
 
 		HashMap<String, String> inputs = new HashMap<String, String>();
@@ -958,7 +958,7 @@ public class OMSProxy extends THOMASProxy {
 
 			throw e;
 		}
-		catch (NotCreatorException e) {
+		catch (NotInUnitAndNotCreatorException e) {
 
 			throw e;
 		}
@@ -1157,7 +1157,7 @@ public class OMSProxy extends THOMASProxy {
 	 *             is invalid
 	 */
 	public String allocateRole(String RoleID, String UnitID, String TargetAgentID) throws EmptyParametersException, 
-	UnitNotExistsException, RoleNotExistsException, InvalidUnitTypeException, NotCreatorException, 
+	UnitNotExistsException, RoleNotExistsException, InvalidUnitTypeException, NotInUnitAndNotCreatorException, 
 	NotMemberOrCreatorInUnitException, AgentNotInUnitException, NotSupervisorOrCreatorInUnitException,
 	PlayingRoleException, SameAgentNameException{
 
@@ -1189,7 +1189,7 @@ public class OMSProxy extends THOMASProxy {
 
 			throw e;
 		}
-		catch (NotCreatorException e) {
+		catch (NotInUnitAndNotCreatorException e) {
 
 			throw e;
 		}
