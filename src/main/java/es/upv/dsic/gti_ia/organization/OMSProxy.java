@@ -235,7 +235,7 @@ public class OMSProxy extends THOMASProxy {
 	 * @throws NotPlaysRoleException
 			   If agent does not play the role.
 	 * @throws MySQLException 
-	 * 		   the my sql exception
+	 * 		   If a MySql exception occurs.
 	 */
 	public String leaveRole(String RoleID, String UnitID) throws 
 	EmptyParametersException, UnitNotExistsException, RoleNotExistsException, NotPlaysRoleException, 
@@ -293,7 +293,7 @@ public class OMSProxy extends THOMASProxy {
 	 * @throws AgentNotExistsException
 	 * 		   If agent not exists.
 	 * @throws InvalidVisibilityException
-	 * 		   If visibility is invalid.
+	 * 		   If visibility is not valid.
 	 */
 	@SuppressWarnings("unchecked")
 	public ArrayList<ArrayList<String>> informAgentRole(String RequestedAgentID) throws 
@@ -341,21 +341,29 @@ public class OMSProxy extends THOMASProxy {
 	 * @return ArrayList<ArrayList<String>> The array list is formed by array
 	 * list of strings, each array list is formed by the fields
 	 * (strings) agent name and role name
-	 * @throws EmptyParametersException the empty parameters exception
-	 * @throws UnitNotExistsException the unit not exists exception
-	 * @throws AgentNotExistsException the agent not exists exception
-	 * @throws InvalidRolePositionException the invalid role position exception
-	 * @throws VisibilityRoleException the visibility role exception
-	 * @throws RoleNotExistsException the role not exists exception
-	 * @throws UnitNotExistsException the unit not exists exception
-	 * @throws RoleNotExistsException the role not exists exception
-	 * @throws IDUnitTypeNotFoundException the iD unit type not found exception
-	 * @throws InvalidVisibilityException the invalid visibility exception
+	 * @throws EmptyParametersException
+	 * 		   If any parameter is empty or null.
+	 * @throws UnitNotExistsException
+	 * 		   If unit not exists.
+	 * @throws AgentNotExistsException
+	 * 		   If agent not exists.
+	 * @throws InvalidRolePositionException
+	 *         If role position is invalid.
+	 * @throws VisibilityRoleException
+	 *         If visibility of the role is not valid.
+	 * @throws RoleNotExistsException
+	 * 		   If role not exists.
+	 * @throws UnitNotExistsException
+	 *         If unit not exists.			
+	 * @throws IDUnitTypeNotFoundException
+	 * 		   If id unit type does not found.
+	 * @throws InvalidVisibilityException
+	 * 		   If vibisility is not valid.
 	 */
 	@SuppressWarnings("unchecked")
 	public ArrayList<ArrayList<String>> informMembers(String UnitID, String RoleID, String PositionID) throws 
 	EmptyParametersException, UnitNotExistsException, AgentNotExistsException, InvalidRolePositionException,
-	VisibilityRoleException, RoleNotExistsException,  UnitNotExistsException, RoleNotExistsException, 
+	VisibilityRoleException, RoleNotExistsException,  UnitNotExistsException,  
 	 IDUnitTypeNotFoundException,  InvalidVisibilityException {
 
 		HashMap<String, String> inputs = new HashMap<String, String>();
@@ -419,10 +427,14 @@ public class OMSProxy extends THOMASProxy {
 	 * @param UnitID Identifier of the unit
 	 * @return ArrayList<String> The array list is formed by the fields
 	 * (strings) position, visibility and accessibility
-	 * @throws EmptyParametersException the empty parameters exception
-	 * @throws UnitNotExistsException the unit not exists exception
-	 * @throws RoleNotExistsException the role not exists exception
-	 * @throws VisibilityRoleException the visibility role exception
+	 * @throws EmptyParametersException
+	 * 		   If any parameter is empty or null.
+	 * @throws UnitNotExistsException
+	 * 		   If unit not exists.
+	 * @throws RoleNotExistsException
+	 * 		   If role not exists.
+	 * @throws VisibilityRoleException
+	 * 		   If visibility role is not valid.
 	 */
 	@SuppressWarnings("unchecked")
 	public ArrayList<String> informRole(String RoleID, String UnitID) throws EmptyParametersException,UnitNotExistsException
@@ -473,10 +485,14 @@ public class OMSProxy extends THOMASProxy {
 	 * @param UnitID Identifier of the unit
 	 * @return ArrayList<String> The array list is formed by the fields
 	 * (strings) unit type and parent name
-	 * @throws EmptyParametersException the empty parameters exception
-	 * @throws UnitNotExistsException the unit not exists exception
-	 * @throws InvalidUnitTypeException the invalid unit type exception
-	 * @throws NotInUnitOrParentUnitException the not in unit or parent unit exception
+	 * @throws EmptyParametersException
+	 * 		   If any parameter is empty or null.
+	 * @throws UnitNotExistsException
+	 * 		   If unit not exists.
+	 * @throws InvalidUnitTypeException
+	 * 		   If unit type is not valid.
+	 * @throws NotInUnitOrParentUnitException
+	 * 		   If agent does not play any role in unit or parent unit.
 	 */
 	@SuppressWarnings("unchecked")
 	public ArrayList<String> informUnit(String UnitID) throws EmptyParametersException,
@@ -525,9 +541,12 @@ public class OMSProxy extends THOMASProxy {
 	 * @return ArrayList<ArrayList<String>> The array list is formed by array
 	 * list of strings, each array list is formed by the fields
 	 * (strings) role name, position, visibility and accessibility
-	 * @throws EmptyParametersException the empty parameters exception
-	 * @throws UnitNotExistsException the unit not exists exception
-	 * @throws InvalidVisibilityException the invalid visibility exception
+	 * @throws EmptyParametersException
+	 *		   If any parameter is empty or null.
+	 * @throws UnitNotExistsException
+	 * 		   If unit not exists.
+	 * @throws InvalidVisibilityException
+	 * 		   If visibility is not valid.
 	 */
 	@SuppressWarnings("unchecked")
 	public ArrayList<ArrayList<String>> informUnitRoles(String UnitID) throws EmptyParametersException,
@@ -572,14 +591,22 @@ public class OMSProxy extends THOMASProxy {
 	 * @param PositionID Identifier of the position inside the unit, such as member,
 	 * supervisor or subordinate
 	 * @return Integer Quantity of members
-	 * @throws EmptyParametersException the empty parameters exception
-	 * @throws UnitNotExistsException the unit not exists exception
-	 * @throws AgentNotExistsException the agent not exists exception
-	 * @throws InvalidRolePositionException the invalid role position exception
-	 * @throws VisibilityRoleException the visibility role exception
-	 * @throws RoleNotExistsException the role not exists exception
-	 * @throws InvalidVisibilityException the invalid visibility exception
-	 * @throws InvalidPositionException the invalid position exception
+	 * @throws EmptyParametersException
+	 * 		   If any parameter is empty or null.
+	 * @throws UnitNotExistsException
+	 * 		   If unit not exists.
+	 * @throws AgentNotExistsException
+	 *         If agent not exists.
+	 * @throws InvalidRolePositionException
+	 *         If role position is not valid.
+	 * @throws VisibilityRoleException
+	 *         If role visibility is not valid.
+	 * @throws RoleNotExistsException 
+	 *         If role not exists.
+	 * @throws InvalidVisibilityException
+	 *         If visibility is not valid.
+	 * @throws InvalidPositionException
+	 *         If position is not valid.
 	 */
 	@SuppressWarnings("unchecked")
 	public int quantityMembers(String UnitID, String RoleID, String PositionID) throws EmptyParametersException,
@@ -653,17 +680,28 @@ public class OMSProxy extends THOMASProxy {
 	 * @param PositionID determines its structural position inside the unit, such as
 	 * member, supervisor or subordinate.
 	 * @return Status if result is OK
-	 * @throws EmptyParametersException the empty parameters exception
-	 * @throws UnitNotExistsException the unit not exists exception
-	 * @throws RoleExistsInUnitException the role exists in unit exception
-	 * @throws AgentNotInUnitException the agent not in unit exception
-	 * @throws NotInUnitAndNotCreatorException the not in unit and not creator exception
-	 * @throws InvalidUnitTypeException the invalid unit type exception
-	 * @throws NotMemberOrCreatorInUnitException the not member or creator in unit exception
-	 * @throws NotSupervisorOrCreatorInUnitException the not supervisor or creator in unit exception
-	 * @throws InvalidPositionException the invalid position exception
-	 * @throws InvalidAccessibilityException the invalid accessibility exception
-	 * @throws InvalidVisibilityException the invalid visibility exception
+	 * @throws EmptyParametersException
+	 * 		   If any parameter is empty or null.
+	 * @throws UnitNotExistsException
+	 * 		   If unit not exists.
+	 * @throws RoleExistsInUnitException
+	 * 		   If role not exists.
+	 * @throws AgentNotInUnitException
+	 * 		   If agent is not inside the unit.
+	 * @throws NotInUnitAndNotCreatorException
+	 * 		   If agent is not inside the unit and does not play any role with position creator.
+	 * @throws InvalidUnitTypeException
+	 * 		   If unit type is not valid.
+	 * @throws NotMemberOrCreatorInUnitException
+	 * 		   If agent does not play any role with position member or creator inside the unit. 
+	 * @throws NotSupervisorOrCreatorInUnitException
+	 *  	   If agent does not play any role with position supervisor or creatir inside the unit. 
+	 * @throws InvalidPositionException
+	 * 		   If position is not valid.
+	 * @throws InvalidAccessibilityException
+	 *         If accessibility is not valid.
+	 * @throws InvalidVisibilityException
+	 *         If visibility is not valid.
 	 */
 	public String registerRole(String RoleID, String UnitID, String AccessibilityID, String VisibilityID, String PositionID) throws EmptyParametersException,
 	UnitNotExistsException, RoleExistsInUnitException, AgentNotInUnitException, NotInUnitAndNotCreatorException, InvalidUnitTypeException,
@@ -748,15 +786,24 @@ public class OMSProxy extends THOMASProxy {
 	 * @param ParentUnitID Identifier of the parent unit
 	 * @param CreatorID The name of the new creator role
 	 * @return Status if result is OK
-	 * @throws EmptyParametersException the empty parameters exception
-	 * @throws UnitExistsException the unit exists exception
-	 * @throws NotCreatorInParentUnitException the not creator in parent unit exception
-	 * @throws ParentUnitNotExistsException the parent unit not exists exception
-	 * @throws InvalidVisibilityException the invalid visibility exception
-	 * @throws InvalidAccessibilityException the invalid accessibility exception
-	 * @throws InvalidPositionException the invalid position exception
-	 * @throws InsertingTableException the inserting table exception
-	 * @throws InvalidUnitTypeException the invalid unit type exception
+	 * @throws EmptyParametersException
+	 * 		   If any parameter is empty or null.
+	 * @throws UnitExistsException
+	 * 		   If unit exists.
+	 * @throws NotCreatorInParentUnitException
+	 * 		   If agent does not play any role with position creator inside the parent unit.
+	 * @throws ParentUnitNotExistsException
+	 *         If agent parent unit not exists.
+	 * @throws InvalidVisibilityException
+	 *         If visibility is not valid.
+	 * @throws InvalidAccessibilityException
+	 *         If accessibility is not valid.
+	 * @throws InvalidPositionException
+	 *         If position is not valid.
+	 * @throws InsertingTableException
+	 *         If any error occurs inserting table.
+	 * @throws InvalidUnitTypeException
+	 * 		   If unit type is invalid.
 	 */
 	public String registerUnit(String UnitID, String TypeID, String ParentUnitID, String CreatorID) throws EmptyParametersException,
 	UnitExistsException, NotCreatorInParentUnitException, ParentUnitNotExistsException, InvalidVisibilityException,
@@ -839,21 +886,27 @@ public class OMSProxy extends THOMASProxy {
 	 * @param UnitID Identifier of the unit
 	 * @param ParentUnitID Identifier of the new parent unit
 	 * @return Status if result is OK
-	 * @throws EmptyParametersException the empty parameters exception
-	 * @throws UnitNotExistsException the unit not exists exception
-	 * @throws ParentUnitNotExistsException the parent unit not exists exception
-	 * @throws AgentNotInUnitException the agent not in unit exception
-	 * @throws NotCreatorInUnitException the not creator in unit exception
-	 * @throws NotCreatorInParentUnitException the not creator in parent unit exception
-	 * @throws VirtualParentException the virtual parent exception
-	 * @throws SameUnitException the same unit exception
-	 * @throws MySQLException the my sql exception
-	 * @throws ParentUnitNotExistsException the parent unit not exists exception
-	 * @throws UnitNotExistsException the unit not exists exception
+	 * @throws EmptyParametersException
+	 * 		   If any parameter is empty or null.
+	 * @throws UnitNotExistsException
+	 *         If unit not exists.
+	 * @throws ParentUnitNotExistsException
+	 *         If parent unit not exists.
+	 * @throws AgentNotInUnitException
+	 *         If agent is not inside the unit.
+	 * @throws NotCreatorInUnitException
+	 *         If agent does not play any role with position creator inside the unit.
+	 * @throws NotCreatorInParentUnitException
+	 *         If agent does not play any role with position creator inside the parent unit.
+	 * @throws VirtualParentException
+	 *         The Parent Unit can not be changed.
+	 * @throws SameUnitException
+	 * 		   If the unit and the parent unit are same.
+	 * @throws MySQLException
 	 */
 	public String jointUnit(String UnitID, String ParentUnitID) throws EmptyParametersException,
 	UnitNotExistsException, ParentUnitNotExistsException, AgentNotInUnitException, NotCreatorInUnitException,
-	NotCreatorInParentUnitException, VirtualParentException, SameUnitException, MySQLException, ParentUnitNotExistsException, UnitNotExistsException{
+	NotCreatorInParentUnitException, VirtualParentException, SameUnitException, MySQLException{
 
 		HashMap<String, String> inputs = new HashMap<String, String>();
 
@@ -915,17 +968,28 @@ public class OMSProxy extends THOMASProxy {
 	 * @param RoleID Identifier of the role
 	 * @param UnitID Identifier of the unit
 	 * @return Status if result is OK
-	 * @throws EmptyParametersException the empty parameters exception
-	 * @throws UnitNotExistsException the unit not exists exception
-	 * @throws RoleNotExistsException the role not exists exception
-	 * @throws RoleContainsNormsException the role contains norms exception
-	 * @throws RoleInUseException the role in use exception
-	 * @throws AgentNotInUnitException the agent not in unit exception
-	 * @throws NotInUnitAndNotCreatorException the not in unit and not creator exception
-	 * @throws InvalidUnitTypeException the invalid unit type exception
-	 * @throws NotMemberOrCreatorInUnitException the not member or creator in unit exception
-	 * @throws NotSupervisorOrCreatorInUnitException the not supervisor or creator in unit exception
-	 * @throws MySQLException the my sql exception
+	 * @throws EmptyParametersException
+	 * 		   If any parameter is empty or null.
+	 * @throws UnitNotExistsException
+	 *         If unit not exists.
+	 * @throws RoleNotExistsException
+	 *         If role not exists.
+	 * @throws RoleContainsNormsException
+	 *         If role contains associated norms.
+	 * @throws RoleInUseException
+	 *         If role is played by some agents.
+	 * @throws AgentNotInUnitException
+	 *  	   If agent does not play any role in unit.
+	 * @throws NotInUnitAndNotCreatorException
+	 * 		   If agent does not play any role in unit and does not play any role with position creator.
+	 * @throws InvalidUnitTypeException
+	 *         If unit type is invalid.
+	 * @throws NotMemberOrCreatorInUnitException
+	 *         If agent does not play any role with position member or creator inside the unit.
+	 * @throws NotSupervisorOrCreatorInUnitException
+	 * 		   If agent does not play any role with position superverisor or creator inside the unit.
+	 * @throws MySQLException
+	 *          
 	 */
 	public String deregisterRole(String RoleID, String UnitID) throws EmptyParametersException, UnitNotExistsException,
 	RoleNotExistsException, RoleContainsNormsException, RoleInUseException, AgentNotInUnitException,
@@ -999,14 +1063,22 @@ public class OMSProxy extends THOMASProxy {
 	 *
 	 * @param UnitID Identifier of the unit
 	 * @return Status if result is OK
-	 * @throws EmptyParametersException the empty parameters exception
-	 * @throws UnitNotExistsException the unit not exists exception
-	 * @throws VirtualUnitException the virtual unit exception
-	 * @throws NotCreatorInUnitOrParentUnitException the not creator in unit or parent unit exception
-	 * @throws SubunitsInUnitException the subunits in unit exception
-	 * @throws NotCreatorAgentInUnitException the not creator agent in unit exception
-	 * @throws DeletingTableException the deleting table exception
-	 * @throws InvalidPositionException the invalid position exception
+	 * @throws EmptyParametersException
+	 * 		   If any parameter is empty or null.
+	 * @throws UnitNotExistsException
+	 *         Unit not exists.
+	 * @throws VirtualUnitException
+	 *         If unit is the virtual unit.
+	 * @throws NotCreatorInUnitOrParentUnitException
+	 *         The agent does not play any role with position creator in unit or parent unit.
+	 * @throws SubunitsInUnitException
+	 *         The unit contains subunits.
+	 * @throws NotCreatorAgentInUnitException
+	 *         If agent does not play any role with position creator in unit.
+	 * @throws DeletingTableException
+	 *         If any error occurs deleting table.
+	 * @throws InvalidPositionException
+	 * 		   If position is invalid.
 	 */
 	public String deregisterUnit(String UnitID) throws EmptyParametersException,
 	UnitNotExistsException, VirtualUnitException, NotCreatorInUnitOrParentUnitException,
@@ -1067,17 +1139,27 @@ public class OMSProxy extends THOMASProxy {
 	 * @param UnitID Identifier of the unit
 	 * @param TargetAgentID Identifier of the agent
 	 * @return Status if result is OK
-	 * @throws EmptyParametersException the empty parameters exception
-	 * @throws UnitNotExistsException the unit not exists exception
-	 * @throws RoleNotExistsException the role not exists exception
-	 * @throws InvalidUnitTypeException the invalid unit type exception
-	 * @throws NotInUnitAndNotCreatorException the not in unit and not creator exception
-	 * @throws NotMemberOrCreatorInUnitException the not member or creator in unit exception
-	 * @throws AgentNotInUnitException the agent not in unit exception
-	 * @throws NotSupervisorOrCreatorInUnitException the not supervisor or creator in unit exception
-	 * @throws NotPlaysRoleException the not plays role exception
-	 * @throws SameAgentNameException the same agent name exception
-	 * @throws MySQLException the my sql exception
+	 * @throws EmptyParametersException
+	 *		   If any parameter is empty or null.
+	 * @throws UnitNotExistsException
+	 *         If unit not exists.
+	 * @throws RoleNotExistsException
+	 *         If role not exists.
+	 * @throws InvalidUnitTypeException
+	 *         If unit type is not valid.
+	 * @throws NotInUnitAndNotCreatorException
+	 *         If agent does not play any role in unit and does not play any role with position creator.
+	 * @throws NotMemberOrCreatorInUnitException
+	 *         If agent does not play any role with position member or creator inside the unit.
+	 * @throws AgentNotInUnitException
+	 *         If agent does not play any role in unit.
+	 * @throws NotSupervisorOrCreatorInUnitException
+	 *         If agent does not play any role with position supervisor or creator in unit.
+	 * @throws NotPlaysRoleException
+	 *         If agent does not play the role.
+	 * @throws SameAgentNameException
+	 *         If the agent is the same than target agent.
+	 * @throws MySQLException
 	 */
 	public String deallocateRole(String RoleID, String UnitID, String TargetAgentID) throws EmptyParametersException,
 	UnitNotExistsException, RoleNotExistsException, InvalidUnitTypeException, NotInUnitAndNotCreatorException, 
@@ -1153,16 +1235,26 @@ public class OMSProxy extends THOMASProxy {
 	 * @param UnitID Identifier of the unit
 	 * @param TargetAgentID Identifier of the agent
 	 * @return Status if result is OK
-	 * @throws EmptyParametersException the empty parameters exception
-	 * @throws UnitNotExistsException the unit not exists exception
-	 * @throws RoleNotExistsException the role not exists exception
-	 * @throws InvalidUnitTypeException the invalid unit type exception
-	 * @throws NotInUnitAndNotCreatorException the not in unit and not creator exception
-	 * @throws NotMemberOrCreatorInUnitException the not member or creator in unit exception
-	 * @throws AgentNotInUnitException the agent not in unit exception
-	 * @throws NotSupervisorOrCreatorInUnitException the not supervisor or creator in unit exception
-	 * @throws PlayingRoleException the playing role exception
-	 * @throws SameAgentNameException the same agent name exception
+	 * @throws EmptyParametersException
+	 * 		   If any parameter is empty or null.
+	 * @throws UnitNotExistsException
+	 *         If unit not exists.
+	 * @throws RoleNotExistsException
+	 *         If role not exists.
+	 * @throws InvalidUnitTypeException
+	 *         If unit type is not valid.
+	 * @throws NotInUnitAndNotCreatorException
+	 *         If agent does not play any role in unit and does not play any role with position creator.
+	 * @throws NotMemberOrCreatorInUnitException
+	 *         If agent does not play any role with position member or creator inside the unit.
+	 * @throws AgentNotInUnitException
+	 *         If agent does not play any role inside the unit.
+	 * @throws NotSupervisorOrCreatorInUnitException
+	 *         If agent does not play any role with position supervisor or creator inside the unit.
+	 * @throws PlayingRoleException
+	 *         If agent is already playing the role.
+	 * @throws SameAgentNameException
+	 * 		   If the agent is the same than target agent.
 	 */
 	public String allocateRole(String RoleID, String UnitID, String TargetAgentID) throws EmptyParametersException, 
 	UnitNotExistsException, RoleNotExistsException, InvalidUnitTypeException, NotInUnitAndNotCreatorException, 
@@ -1233,12 +1325,18 @@ public class OMSProxy extends THOMASProxy {
 	 * @param RoleID Identifier of the role
 	 * @param UnitID Identifier of the organization unit
 	 * @return Status if result is OK
-	 * @throws EmptyParametersException the empty parameters exception
-	 * @throws UnitNotExistsException the unit not exists exception
-	 * @throws RoleNotExistsException the role not exists exception
-	 * @throws NotInUnitOrParentUnitException the not in unit or parent unit exception
-	 * @throws NotSupervisorOrCreatorInUnitException the not supervisor or creator in unit exception
-	 * @throws PlayingRoleException the playing role exception
+	 * @throws EmptyParametersException
+	 *         If any parameter is empty or null.
+	 * @throws UnitNotExistsException
+	 *         If unit not exists.
+	 * @throws RoleNotExistsException
+	 *         If role not exists.
+	 * @throws NotInUnitOrParentUnitException
+	 *         If agent does not play any role in unit or parent unit.
+	 * @throws NotSupervisorOrCreatorInUnitException
+	 *         If agent does not play any role with position supervisor or creator in unit.
+	 * @throws PlayingRoleException
+	 * 		   If agent is already playing the role.
 	 */
 	public String acquireRole(String RoleID, String UnitID) throws EmptyParametersException, 
 	UnitNotExistsException, RoleNotExistsException, NotInUnitOrParentUnitException, NotSupervisorOrCreatorInUnitException,
