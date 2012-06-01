@@ -95,7 +95,7 @@ public class OMS extends CAgent {
 	 *            new AgentID
 	 * @throws Exception
 	 */
-	private OMS(AgentID aid) throws Exception {
+	public OMS(AgentID aid) throws Exception {
 		super(aid);
 		l10n = new THOMASMessages();
 
@@ -611,4 +611,7 @@ public class OMS extends CAgent {
 		this.addFactoryAsParticipant(talk);
 	}
 
+	public void terminate() {
+		super.terminate();
+	}
 } // end OMS Agent
