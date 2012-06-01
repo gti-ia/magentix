@@ -69,7 +69,7 @@ public class SF extends CAgent {
 	 * @throws RuntimeException
 	 */
 
-	private SF(AgentID aid) throws Exception {
+	public SF(AgentID aid) throws Exception {
 
 		super(aid);
 
@@ -264,6 +264,10 @@ public class SF extends CAgent {
 		// can start the participation of the agent in a new conversation
 		this.addFactoryAsParticipant(talk);
 
+	}
+	
+	public void terminate() {
+		super.terminate();
 	}
 
 } // end SF Agent
