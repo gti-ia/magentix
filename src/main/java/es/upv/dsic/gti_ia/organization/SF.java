@@ -21,7 +21,7 @@ public class SF extends CAgent {
 
 	Configuration configuration = Configuration.getConfiguration();
 
-	private static SF sf = null;
+
 	private String SFServiceDescriptionLocation = configuration.getSFServiceDescriptionLocation();
 
 	private static HashMap<String, Integer> sfServicesURLs = new HashMap<String, Integer>();
@@ -30,56 +30,63 @@ public class SF extends CAgent {
 	ServiceTools st = new ServiceTools();
 	SFinterface sfInterface=new SFinterface();
 
-	/**
-	 * Returns an instance of the agents SF
-	 * 
-	 * @param agent
-	 * @return sf
-	 */
-	static public SF getSF(AgentID agent) {
-		if (sf == null)
-			try {
-				sf = new SF(agent);
-			} catch (Exception e) {
-				logger.error(e);
-			}
-			return sf;
-	}
+//	/**
+//	 * Returns an instance of the agents SF
+//	 * 
+//	 * @param agent
+//	 * @return sf
+//	 */
+//	static public SF getSF(AgentID agent) {
+//		if (sf == null)
+//			try {
+//				sf = new SF(agent);
+//			} catch (Exception e) {
+//				logger.error(e);
+//			}
+//			return sf;
+//	}
+//
+//	/**
+//	 * Returns an instance of the agents SF
+//	 * 
+//	 * @return sf
+//	 */
+//	static public SF getSF() {
+//		if (sf == null)
+//			try {
+//				sf = new SF(new AgentID("SF"));
+//			} catch (Exception e) {
+//				logger.error(e);
+//			}
+//			return sf;
+//
+//	}
 
 	/**
-	 * Returns an instance of the agents SF
+	 * Constructor which creates and initializes the SF agent.
 	 * 
-	 * @return sf
-	 */
-	static public SF getSF() {
-		if (sf == null)
-			try {
-				sf = new SF(new AgentID("SF"));
-			} catch (Exception e) {
-				logger.error(e);
-			}
-			return sf;
-
-	}
-
-	/**
-	 * Initial registration of the SF service profiles
+	 * @param aid	AgentID which will be used to create the agent
 	 * 
-	 * @param aid
-	 * @throws RuntimeException
+	 * @throws Exception
 	 */
-
 	public SF(AgentID aid) throws Exception {
 
 		super(aid);
-
-		//		sfServicesURLs.put("RegisterService", SFServiceDescriptionLocation + "RegisterService?wsdl");
-		//		sfServicesURLs.put("DeregisterService", SFServiceDescriptionLocation + "DeregisterService?wsdl");
-		//		sfServicesURLs.put("GetService", SFServiceDescriptionLocation + "GetService?wsdl");
-		//		sfServicesURLs.put("SearchService", SFServiceDescriptionLocation + "SearchService?wsdl");
-		//		sfServicesURLs.put("RemoveProvider", SFServiceDescriptionLocation + "RemoveProvider?wsdl");
-
-
+		sfServicesURLs.put("RegisterService", 1);
+		sfServicesURLs.put("DeregisterService",2);
+		sfServicesURLs.put("GetService", 3);
+		sfServicesURLs.put("SearchService", 4);
+		sfServicesURLs.put("RemoveProvider", 5);
+	}
+	
+	/**
+	 * Constructor which creates and initializes the OMS agent. In this case the agent ID is SF.
+	 * 
+	 * @throws Exception
+	 */
+	public SF() throws Exception {
+		
+		super(new AgentID("SF"));
 		sfServicesURLs.put("RegisterService", 1);
 		sfServicesURLs.put("DeregisterService",2);
 		sfServicesURLs.put("GetService", 3);

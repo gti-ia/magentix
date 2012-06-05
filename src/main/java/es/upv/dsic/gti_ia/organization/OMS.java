@@ -32,8 +32,6 @@ public class OMS extends CAgent {
 
 	Configuration                           configuration                 = Configuration.getConfiguration();
 
-	static private OMS                      oms                           = null;
-
 	OMSInterface                            omsInterface                  = new OMSInterface();
 
 	DataBaseInterface						dbInterface 				  = new DataBaseInterface();
@@ -52,84 +50,52 @@ public class OMS extends CAgent {
 
 	private THOMASMessages                  l10n;
 
-	// URI where the SF service descriptions are located
+//	// URI where the SF service descriptions are located
+//
+//	/**
+//	 * Returns an instance of the agents OMS
+//	 * 
+//	 * @param agent
+//	 *            a new Agent ID
+//	 * @return oms
+//	 */
+//	static public OMS getOMS(AgentID agent) {
+//		if (oms == null) {
+//			try {
+//				oms = new OMS(agent);
+//			} catch (Exception e) {
+//				logger.error(e);
+//			}
+//		}
+//		return oms;
+//	}
+//
+//	/**
+//	 * Returns an instance of the agents OMS
+//	 * 
+//	 * @return oms
+//	 */
+//	static public OMS getOMS() {
+//		if (oms == null) {
+//			try {
+//				oms = new OMS(new AgentID("OMS"));
+//			} catch (Exception e) {
+//				logger.error(e);
+//			}
+//		}
+//		return oms;
+//	}
 
 	/**
-	 * Returns an instance of the agents OMS
+	 * Constructor which creates and initializes the OMS agent.
 	 * 
-	 * @param agent
-	 *            a new Agent ID
-	 * @return oms
-	 */
-	static public OMS getOMS(AgentID agent) {
-		if (oms == null) {
-			try {
-				oms = new OMS(agent);
-			} catch (Exception e) {
-				logger.error(e);
-			}
-		}
-		return oms;
-	}
-
-	/**
-	 * Returns an instance of the agents OMS
+	 * @param aid	AgentID which will be used to create the agent
 	 * 
-	 * @return oms
-	 */
-	static public OMS getOMS() {
-		if (oms == null) {
-			try {
-				oms = new OMS(new AgentID("OMS"));
-			} catch (Exception e) {
-				logger.error(e);
-			}
-		}
-		return oms;
-	}
-
-	/**
-	 * Returns an instance of the agents OMS
-	 * 
-	 * @param aid
-	 *            new AgentID
 	 * @throws Exception
 	 */
 	public OMS(AgentID aid) throws Exception {
 		super(aid);
 		l10n = new THOMASMessages();
-
-		// omsServicesURLs.put("RegisterUnit",
-		// OMSServiceDescriptionLocation+"RegisterUnit?wsdl");
-		// omsServicesURLs.put("JointUnit",
-		// OMSServiceDescriptionLocation+"JointUnit?wsdl");
-		// omsServicesURLs.put("RegisterRole",
-		// OMSServiceDescriptionLocation+"RegisterRole?wsdl");
-		// omsServicesURLs.put("DeregisterUnit",
-		// OMSServiceDescriptionLocation+"DeregisterUnit?wsdl");
-		// omsServicesURLs.put("DeregisterRole",
-		// OMSServiceDescriptionLocation+"DeregisterRole?wsdl");
-		// omsServicesURLs.put("AcquireRole",
-		// OMSServiceDescriptionLocation+"AcquireRole?wsdl");
-		// omsServicesURLs.put("AllocateRole",
-		// OMSServiceDescriptionLocation+"AllocateRole?wsdl");
-		// omsServicesURLs.put("DeallocateRole",
-		// OMSServiceDescriptionLocation+"DeallocateRole?wsdl");
-		// omsServicesURLs.put("LeaveRole",
-		// OMSServiceDescriptionLocation+"LeaveRole?wsdl");
-		// omsServicesURLs.put("InformUnit",
-		// OMSServiceDescriptionLocation+"InformUnit?wsdl");
-		// omsServicesURLs.put("InformRole",
-		// OMSServiceDescriptionLocation+"InformRole?wsdl");
-		// omsServicesURLs.put("InformAgentRole",
-		// OMSServiceDescriptionLocation+"InformAgentRole?wsdl");
-		// omsServicesURLs.put("InformMembers",
-		// OMSServiceDescriptionLocation+"InformMembers?wsdl");
-		// omsServicesURLs.put("InformUnitRoles",
-		// OMSServiceDescriptionLocation+"InformUnitRoles?wsdl");
-		// omsServicesURLs.put("QuantityMembers",
-		// OMSServiceDescriptionLocation+"QuantityMembers?wsdl");
-
 		omsServicesURLs.put("RegisterUnit", 1);
 		omsServicesURLs.put("JointUnit", 2);
 		omsServicesURLs.put("RegisterRole", 3);
@@ -146,6 +112,31 @@ public class OMS extends CAgent {
 		omsServicesURLs.put("InformUnitRoles", 14);
 		omsServicesURLs.put("QuantityMembers", 15);
 
+	}
+	
+	/**
+	 * Constructor which creates and initializes the OMS agent. In this case the agent ID is OMS.
+	 * 
+	 * @throws Exception
+	 */
+	public OMS() throws Exception {
+		super(new AgentID("OMS"));
+		l10n = new THOMASMessages();
+		omsServicesURLs.put("RegisterUnit", 1);
+		omsServicesURLs.put("JointUnit", 2);
+		omsServicesURLs.put("RegisterRole", 3);
+		omsServicesURLs.put("DeregisterUnit", 4);
+		omsServicesURLs.put("DeregisterRole", 5);
+		omsServicesURLs.put("AcquireRole", 6);
+		omsServicesURLs.put("AllocateRole", 7);
+		omsServicesURLs.put("DeallocateRole", 8);
+		omsServicesURLs.put("LeaveRole", 9);
+		omsServicesURLs.put("InformUnit", 10);
+		omsServicesURLs.put("InformRole", 11);
+		omsServicesURLs.put("InformAgentRole", 12);
+		omsServicesURLs.put("InformMembers", 13);
+		omsServicesURLs.put("InformUnitRoles", 14);
+		omsServicesURLs.put("QuantityMembers", 15);
 	}
 
 	/**
