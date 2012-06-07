@@ -5,8 +5,8 @@
 
 
 <!-- Properties thomas -->
-<entry key="OMSServiceDescriptionLocation">http://locke.dsic.upv.es:8080/omsservices/services/</entry>
-<entry key="SFServiceDescriptionLocation">http://locke.dsic.upv.es:8080/sfservices/services/</entry>
+<entry key="OMSServiceDescriptionLocation">http://gtiiaprojects.dsic.upv.es:8080/omsservices/services/</entry>
+<entry key="SFServiceDescriptionLocation">http://gtiiaprojects.dsic.upv.es:8080/sfservices/services/</entry>
 
 
 <!-- Properties servlets server -->
@@ -15,7 +15,7 @@
 <entry key="pathTomcat">../apache-tomcat-6.0.20</entry>
 
 <!-- Properties mysql -->
-<entry key="serverName">locke.dsic.upv.es</entry>
+<entry key="serverName">gtiiaprojects.dsic.upv.es</entry>
 <entry key="databaseName">thomas</entry>
 <entry key="userName">thomas</entry>
 <entry key="password">thomas</entry>
@@ -23,7 +23,7 @@
 
 <!-- WITHOUT SECURITY -->
 <!-- Properties qpid broker -->
-<entry key="host">locke.dsic.upv.es</entry>
+<entry key="host">gtiiaprojects.dsic.upv.es</entry>
 <entry key="port">5672</entry>
 <entry key="vhost">test</entry>
 <entry key="user">guest</entry>
@@ -48,7 +48,7 @@
 
 
 <!-- Properties jena -->
-<entry key="dbURL">jdbc:mysql://locke.dsic.upv.es/thomas</entry>
+<entry key="dbURL">jdbc:mysql://gtiiaprojects.dsic.upv.es/thomas</entry>
 <entry key="dbType">MySQL</entry>
 <entry key="dbDriver">com.mysql.jdbc.Driver</entry>
 
