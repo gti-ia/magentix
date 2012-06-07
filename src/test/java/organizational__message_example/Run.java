@@ -33,8 +33,8 @@ public class Run {
 			
 			
 			
-			OMS oms = OMS.getOMS();
-			SF sf = SF.getSF();
+			OMS oms = new OMS();
+			SF sf = new SF();
 			
 			oms.start();
 			sf.start();
