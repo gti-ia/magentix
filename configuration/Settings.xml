@@ -15,7 +15,7 @@
 <entry key="pathTomcat">../apache-tomcat-6.0.20</entry>
 
 <!-- Properties mysql -->
-<entry key="serverName">http://locke.dsic.upv.es</entry>
+<entry key="serverName">locke.dsic.upv.es</entry>
 <entry key="databaseName">thomas</entry>
 <entry key="userName">thomas</entry>
 <entry key="password">thomas</entry>
@@ -23,7 +23,7 @@
 
 <!-- WITHOUT SECURITY -->
 <!-- Properties qpid broker -->
-<entry key="host">http://locke.dsic.upv.es</entry>
+<entry key="host">locke.dsic.upv.es</entry>
 <entry key="port">5672</entry>
 <entry key="vhost">test</entry>
 <entry key="user">guest</entry>
