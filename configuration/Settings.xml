@@ -23,7 +23,7 @@
 
 <!-- WITHOUT SECURITY -->
 <!-- Properties qpid broker -->
-<entry key="host">urano2.dsic.upv.es</entry>
+<entry key="host">localhost</entry>
 <entry key="port">5672</entry>
 <entry key="vhost">test</entry>
 <entry key="user">guest</entry>
