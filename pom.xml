@@ -138,6 +138,7 @@
 				<configuration> <formats>
 					<format>html</format>
 					<format>xml</format> </formats>
+					<argLine>-Xms512m -Xmx4096m -XX:MaxPermSize=4096m</argLine>
 				</configuration>
 				</plugin>
 			</plugins>
@@ -323,6 +324,12 @@
 		</repository>
 	</repositories>
 
-
+<properties>
+<cobertura.maxmem>8292M</cobertura.maxmem>
+<maven.cobertura.instrumentation.maxmemory>8192M</maven.cobertura.instrumentation.maxmemory>
+<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+<maven.compile.encoding>UTF-8</maven.compile.encoding>
+<maven.compile.fork>true</maven.compile.fork>
+</properties>
 
 </project>
