@@ -16,7 +16,7 @@ public class AgentsConnection {
 	 * Used to establish a communication with a Qpid broker. Can be initialized according to the parameters
 	 * specified in the settings for an agent.
 	 */
-	public static org.apache.qpid.transport.Connection connection;
+	public static org.apache.qpid.transport.Connection connection = null;
 
 	private static Configuration c = null;
 
@@ -29,6 +29,10 @@ public class AgentsConnection {
 		c =  Configuration.getConfiguration();
 		if (c.isSecureMode())
 			return;
+		
+		if (connection != null)
+			return;
+		
 		connection = new Connection();
 	
 		ConnectionSettings connectSettings = new ConnectionSettings();
