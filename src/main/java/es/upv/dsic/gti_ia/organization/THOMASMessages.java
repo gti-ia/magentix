@@ -32,6 +32,14 @@ public class THOMASMessages {
          */
         AGENT_NOT_IN_UNIT,
         /**
+         * Exception message when information is already included in service.
+         */
+        ALREADY_REGISTERED,
+        /**
+         * Exeption message when can not connect to DB.
+         */
+        DB_CONNECTION,
+        /**
          * Exception message when occurs and error trying to delete a value from
          * a table.
          */
@@ -62,6 +70,10 @@ public class THOMASMessages {
          */
         INVALID_ACCESSIBILITY,
         /**
+         * Exception message when data type of input or output is invalid.
+         */
+        INVALID_DATA_TYPE,
+        /**
          * Exception message when Position value is incorrect.
          */
         INVALID_POSITION,
@@ -70,8 +82,12 @@ public class THOMASMessages {
          */
         INVALID_ROLE_POSITION,
         /**
-         * Exception message when Unit Type value is incorrect.
+         * Exception message when service URL is not a valid OWL-S document.
          */
+        INVALID_SERVICE_URL,        
+        /**
+         * Exception message when Unit Type value is incorrect.
+         */        
         INVALID_UNIT_TYPE,
         /**
          * Exception message when Visibility value is incorrect.
@@ -172,8 +188,16 @@ public class THOMASMessages {
          */
         SAME_UNIT,
         /**
-         * Exception message when the are subunits inside the unit.
+         * Exception message when the profile of the service is not found in Jena DB.
          */
+        SERVICE_PROFILE_NOT_FOUND,
+        /**
+         * Exception message when the search of services does not return any value.
+         */
+        SERVICES_NOT_FOUND,        
+        /**
+         * Exception message when the are subunits inside the unit.
+         */             
         SUBUNITS_IN_UNIT,
         /**
          * Exception message when the unit is already registered.
