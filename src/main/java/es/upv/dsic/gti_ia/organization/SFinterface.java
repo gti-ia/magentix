@@ -67,40 +67,47 @@ public class SFinterface {
 	 */
 	private IDBConnection JenaDBConnection() throws Exception {
 		IDBConnection conn = null;
-
+		Configuration configuration = Configuration.getConfiguration();
+		
+		
 		String s_dbURL = "";
 		String s_dbUser = "";
 		String s_dbPw = "";
 		String s_dbType = "";
 		String s_dbDriver = "";
 
-		Properties properties = new Properties();
-		properties.loadFromXML(SFinterface.class.getResourceAsStream("/" + "THOMASDemoConfiguration.xml"));
-		for (Enumeration<Object> e = properties.keys(); e.hasMoreElements();) {
-			// Obtain the object
-			Object obj = e.nextElement();
-			if (obj.toString().equalsIgnoreCase("DB_URL")) {
-				s_dbURL = properties.getProperty(obj.toString());
-			} else if (obj.toString().equalsIgnoreCase("DB_USER")) {
-				s_dbUser = properties.getProperty(obj.toString());
-			} else if (obj.toString().equalsIgnoreCase("DB_PASSWD")) {
-				s_dbPw = properties.getProperty(obj.toString());
-			} else if (obj.toString().equalsIgnoreCase("DB")) {
-				s_dbType = properties.getProperty(obj.toString());
-			} else if (obj.toString().equalsIgnoreCase("DB_DRIVER")) {
-				s_dbDriver = properties.getProperty(obj.toString());
-			}
-		}
+
+
+
+
+
+		s_dbURL = configuration.getjenadbURL();
+
+		s_dbUser = configuration.getdatabaseUser();
+
+		s_dbPw = configuration.getdatabasePassword();
+
+		s_dbType = configuration.getjenadbType();
+
+		s_dbDriver = configuration.getjenadbDriver();
+
 
 		// ensure the JDBC driver class is loaded
-
-		s_dbDriver = "com.mysql.jdbc.Driver";
-		Class.forName(s_dbDriver);
+		try {
+			
+			Class.forName(s_dbDriver);
+		} catch (Exception e) {
+			System.err.println("Failed to load the driver for the database: " + e.getMessage());
+			System.err.println("Have you got the CLASSPATH set correctly?");
+		}
 
 		// Create database connection
-
-		conn = new DBConnection(s_dbURL, s_dbUser, s_dbPw, s_dbType);
-
+		try {
+			conn = new DBConnection(s_dbURL, s_dbUser, s_dbPw, s_dbType);
+		} catch (Exception e) {
+			e.printStackTrace();
+			conn = null;
+		}
 		return conn;
 	}
 
