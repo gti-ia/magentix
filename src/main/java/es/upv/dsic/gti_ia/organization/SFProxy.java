@@ -8,6 +8,13 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import es.upv.dsic.gti_ia.core.BaseAgent;
+import es.upv.dsic.gti_ia.organization.exception.AlreadyRegisteredException;
+import es.upv.dsic.gti_ia.organization.exception.DBConnectionException;
+import es.upv.dsic.gti_ia.organization.exception.InvalidDataTypeException;
+import es.upv.dsic.gti_ia.organization.exception.InvalidServiceURLException;
+import es.upv.dsic.gti_ia.organization.exception.ServiceProfileNotFoundException;
+import es.upv.dsic.gti_ia.organization.exception.ServicesNotFoundException;
+import es.upv.dsic.gti_ia.organization.exception.THOMASException;
 
 /**
  * This class provides access to services that implements the SF agent.
@@ -68,14 +75,32 @@ public class SFProxy extends THOMASProxy {
 	 *             If there is any error result
 	 */
 	@SuppressWarnings("unchecked")
-	public ArrayList<String> registerService(String serviceURL) throws THOMASException {
+	public ArrayList<String> registerService(String serviceURL) throws  DBConnectionException, AlreadyRegisteredException, InvalidServiceURLException{
 
 		HashMap<String, String> inputs = new HashMap<String, String>();
 		inputs.put("ServiceURL", serviceURL);
 
 		call = st.buildServiceContent("RegisterService", inputs);
 
-		return (ArrayList<String>) this.sendInform();
+		ArrayList<String> result = new ArrayList<String>();
+
+		try
+		{
+			result  = (ArrayList<String>) this.sendInform();
+
+		} catch (AlreadyRegisteredException e) {
+			throw e;
+		} catch (DBConnectionException e) {
+			throw e;
+		} 
+		catch (InvalidServiceURLException e) {
+			throw e;
+		}catch (THOMASException e) {
+
+			e.printStackTrace();
+		}
+
+		return result;
 	}
 
 	/**
@@ -88,13 +113,27 @@ public class SFProxy extends THOMASProxy {
 	 * @throws THOMASException
 	 *             If there is any error result
 	 */
-	public String deregisterService(String serviceProfile) throws THOMASException {
+	public String deregisterService(String serviceProfile) throws ServiceProfileNotFoundException, DBConnectionException {
 
 		HashMap<String, String> inputs = new HashMap<String, String>();
 		inputs.put("ServiceProfile", serviceProfile);
 
 		call = st.buildServiceContent("DeregisterService", inputs);
-		return (String) this.sendInform();
+		String result = new String();
+
+		try {
+			result = (String) this.sendInform();
+
+		} catch (ServiceProfileNotFoundException e) {
+			throw e;
+		} catch (DBConnectionException e) {
+			throw e;
+		} catch (THOMASException e) {
+
+			e.printStackTrace();
+		}
+
+		return result;
 
 	}
 
@@ -110,7 +149,7 @@ public class SFProxy extends THOMASProxy {
 	 * @throws THOMASException
 	 *             If there is any error result
 	 */
-	public String removeProvider(String serviceProfile, String providerID) throws THOMASException {
+	public String removeProvider(String serviceProfile, String providerID) throws  ServiceProfileNotFoundException, DBConnectionException{
 
 		HashMap<String, String> inputs = new HashMap<String, String>();
 		inputs.put("ServiceProfile", serviceProfile);
@@ -118,7 +157,20 @@ public class SFProxy extends THOMASProxy {
 
 		call = st.buildServiceContent("RemoveProvider", inputs);
 
-		return (String) this.sendInform();
+		String result = new String();
+
+		try {
+			result = (String) this.sendInform();
+
+		} catch (ServiceProfileNotFoundException e) {
+			throw e;
+		} catch (DBConnectionException e) {
+			throw e;
+		} catch (THOMASException e) {
+
+			e.printStackTrace();
+		}
+		return result;
 	}
 
 	/**
@@ -132,14 +184,27 @@ public class SFProxy extends THOMASProxy {
 	 * @throws THOMASException
 	 *             If there is any error result
 	 */
-	public String getService(String serviceProfile) throws THOMASException {
+	public String getService(String serviceProfile) throws  ServiceProfileNotFoundException, DBConnectionException{
 
 		HashMap<String, String> inputs = new HashMap<String, String>();
 		inputs.put("ServiceProfile", serviceProfile);
 
 		call = st.buildServiceContent("GetService", inputs);
 
-		return (String) this.sendInform();
+		String result = new String();
+
+		try {
+			result = (String) this.sendInform();
+
+		} catch (ServiceProfileNotFoundException e) {
+			throw e;
+		} catch (DBConnectionException e) {
+			throw e;
+		} catch (THOMASException e) {
+
+			e.printStackTrace();
+		}
+		return result;
 	}
 
 	/**
@@ -163,7 +228,7 @@ public class SFProxy extends THOMASProxy {
 	 *             If there is any error result
 	 */
 	@SuppressWarnings("unchecked")
-	public ArrayList<ArrayList<String>> searchService(ArrayList<String> inputs, ArrayList<String> outputs, ArrayList<String> keywords) throws THOMASException {
+	public ArrayList<ArrayList<String>> searchService(ArrayList<String> inputs, ArrayList<String> outputs, ArrayList<String> keywords) throws DBConnectionException, InvalidDataTypeException, ServicesNotFoundException {
 
 		String inputsStr = "";
 		if (inputs != null && !inputs.isEmpty()) {
@@ -196,8 +261,22 @@ public class SFProxy extends THOMASProxy {
 		inputsService.put("Keywords", keywordsStr);
 
 		call = st.buildServiceContent("SearchService", inputsService);
+		ArrayList<ArrayList<String>> result = new  ArrayList<ArrayList<String>> ();
 
-		return (ArrayList<ArrayList<String>>) this.sendInform();
+		try
+		{
+			result = (ArrayList<ArrayList<String>>)  this.sendInform();
+		} catch (ServicesNotFoundException e) {
+			throw e;
+		} catch (DBConnectionException e) {
+			throw e;
+		} catch (InvalidDataTypeException e) {
+			throw e;
+		}catch (THOMASException e) {
+
+			e.printStackTrace();
+		}
+		return result;
 	}
 
 }
