@@ -4,7 +4,6 @@ package organizational__message_example;
 
 import java.util.ArrayList;
 
-
 import es.upv.dsic.gti_ia.cAgents.BeginState;
 import es.upv.dsic.gti_ia.cAgents.BeginStateMethod;
 import es.upv.dsic.gti_ia.cAgents.CAgent;
@@ -22,7 +21,7 @@ import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.MessageFilter;
 import es.upv.dsic.gti_ia.organization.OMSProxy;
-import es.upv.dsic.gti_ia.organization.THOMASException;
+import es.upv.dsic.gti_ia.organization.exception.THOMASException;
 
 public class Addition extends CAgent {
 

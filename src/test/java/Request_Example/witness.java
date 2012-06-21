@@ -16,6 +16,7 @@ public class witness extends QueueAgent {
 	
 	private Monitor monitor = new Monitor();
 	
+	private String status = null;
 	
 	
 	public witness(AgentID aid) throws Exception {
@@ -35,7 +36,7 @@ public class witness extends QueueAgent {
 		// for (int i = 0; i < args.length; ++i)
 		msg.setReceiver(new AgentID("HospitalAgent"));
 		msg.setProtocol(InteractionProtocol.FIPA_REQUEST);
-		msg.setContent("accident to " + "10" + " km");
+		msg.setContent("accident to " + "2" + " km");
 		msg.setSender(this.getAid());
 
 		this.addTask(new ManejadorInitiator(this, msg));
@@ -81,6 +82,8 @@ public class witness extends QueueAgent {
 			System.out.println(" !!!!!!Hospital "
 					+ inform.getSender().getLocalName()
 					+ " It informs that they have attended to the accident.");
+			
+			status = "OK";
 		}
 
 		protected void handleFailure(ACLMessage fallo) {
@@ -96,5 +99,10 @@ public class witness extends QueueAgent {
 								fallo.getContent().length()));
 			}
 		}
+	}
+	
+	public String getStatus()
+	{
+		return status;
 	}
 }

@@ -3,11 +3,11 @@ package omsTests;
 import junit.framework.TestCase;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
-import es.upv.dsic.gti_ia.organization.NotInUnitOrParentUnitException;
-import es.upv.dsic.gti_ia.organization.NotSupervisorOrCreatorInUnitException;
 import es.upv.dsic.gti_ia.organization.OMS;
 import es.upv.dsic.gti_ia.organization.OMSProxy;
 import es.upv.dsic.gti_ia.organization.SF;
+import es.upv.dsic.gti_ia.organization.exception.NotInUnitOrParentUnitException;
+import es.upv.dsic.gti_ia.organization.exception.NotSupervisorOrCreatorInUnitException;
 
 
 public class TestAcquireRoleInCorrectPermissions extends TestCase {

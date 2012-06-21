@@ -42,7 +42,7 @@ public class Hospital extends QueueAgent {
 
 
 	protected void execute() {
-		DISTANCIA_MAX = (Math.random() * 10);
+		DISTANCIA_MAX = 5;//(Math.random() * 10);
 
 		MessageTemplate plantilla = new MessageTemplate(
 				InteractionProtocol.FIPA_REQUEST);

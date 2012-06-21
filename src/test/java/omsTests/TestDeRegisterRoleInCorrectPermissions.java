@@ -3,12 +3,12 @@ package omsTests;
 import junit.framework.TestCase;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
-import es.upv.dsic.gti_ia.organization.AgentNotInUnitException;
-import es.upv.dsic.gti_ia.organization.NotInUnitAndNotCreatorException;
-import es.upv.dsic.gti_ia.organization.NotSupervisorOrCreatorInUnitException;
 import es.upv.dsic.gti_ia.organization.OMS;
 import es.upv.dsic.gti_ia.organization.OMSProxy;
 import es.upv.dsic.gti_ia.organization.SF;
+import es.upv.dsic.gti_ia.organization.exception.AgentNotInUnitException;
+import es.upv.dsic.gti_ia.organization.exception.NotInUnitAndNotCreatorException;
+import es.upv.dsic.gti_ia.organization.exception.NotSupervisorOrCreatorInUnitException;
 
 
 public class TestDeRegisterRoleInCorrectPermissions extends TestCase {

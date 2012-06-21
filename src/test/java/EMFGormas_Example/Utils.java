@@ -13,7 +13,7 @@ import org.apache.log4j.Logger;
 
 import es.upv.dsic.gti_ia.cAgents.CAgent;
 import es.upv.dsic.gti_ia.organization.OMSProxy;
-import es.upv.dsic.gti_ia.organization.THOMASException;
+import es.upv.dsic.gti_ia.organization.exception.THOMASException;
 
 /**
  * Utilities class for manage everything related to Units, Roles, etc. in

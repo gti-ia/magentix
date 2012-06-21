@@ -3,14 +3,14 @@ package omsTests;
 import junit.framework.TestCase;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
-import es.upv.dsic.gti_ia.organization.NotCreatorAgentInUnitException;
-import es.upv.dsic.gti_ia.organization.NotCreatorInUnitOrParentUnitException;
 import es.upv.dsic.gti_ia.organization.OMS;
 import es.upv.dsic.gti_ia.organization.OMSProxy;
 import es.upv.dsic.gti_ia.organization.SF;
-import es.upv.dsic.gti_ia.organization.SubunitsInUnitException;
-import es.upv.dsic.gti_ia.organization.UnitNotExistsException;
-import es.upv.dsic.gti_ia.organization.VirtualUnitException;
+import es.upv.dsic.gti_ia.organization.exception.NotCreatorAgentInUnitException;
+import es.upv.dsic.gti_ia.organization.exception.NotCreatorInUnitOrParentUnitException;
+import es.upv.dsic.gti_ia.organization.exception.SubunitsInUnitException;
+import es.upv.dsic.gti_ia.organization.exception.UnitNotExistsException;
+import es.upv.dsic.gti_ia.organization.exception.VirtualUnitException;
 
 
 public class TestDeRegisterUnitInCorrectPermissions extends TestCase {

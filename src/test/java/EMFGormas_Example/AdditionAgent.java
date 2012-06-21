@@ -6,37 +6,24 @@
  */
 package EMFGormas_Example;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Iterator;
 
 import EMFGormas_Example.Utils.LocalData;
 import EMFGormas_Example.Utils.UnitRolePair;
-
-import es.upv.dsic.gti_ia.cAgents.BeginState;
-import es.upv.dsic.gti_ia.cAgents.BeginStateMethod;
 import es.upv.dsic.gti_ia.cAgents.CAgent;
 import es.upv.dsic.gti_ia.cAgents.CFactory;
 import es.upv.dsic.gti_ia.cAgents.CProcessor;
-import es.upv.dsic.gti_ia.cAgents.FinalState;
-import es.upv.dsic.gti_ia.cAgents.FinalStateMethod;
-import es.upv.dsic.gti_ia.cAgents.SendState;
-import es.upv.dsic.gti_ia.cAgents.SendStateMethod;
-import es.upv.dsic.gti_ia.cAgents.protocols.FIPA_REQUEST_Initiator;
 import es.upv.dsic.gti_ia.cAgents.protocols.FIPA_REQUEST_Participant;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.MessageFilter;
 import es.upv.dsic.gti_ia.organization.OMSProxy;
 import es.upv.dsic.gti_ia.organization.Oracle;
-import es.upv.dsic.gti_ia.organization.Provider;
 import es.upv.dsic.gti_ia.organization.SFProxy;
 import es.upv.dsic.gti_ia.organization.ServiceTools;
-import es.upv.dsic.gti_ia.organization.THOMASException;
+import es.upv.dsic.gti_ia.organization.exception.THOMASException;
 
 public class AdditionAgent extends CAgent {
 

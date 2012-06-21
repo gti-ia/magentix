@@ -16,7 +16,7 @@ import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.organization.OMSProxy;
 import es.upv.dsic.gti_ia.organization.SFProxy;
-import es.upv.dsic.gti_ia.organization.THOMASException;
+import es.upv.dsic.gti_ia.organization.exception.THOMASException;
 
 public class InitiatorAgent extends CAgent {
 

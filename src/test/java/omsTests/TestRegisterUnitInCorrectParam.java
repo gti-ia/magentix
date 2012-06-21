@@ -3,12 +3,12 @@ package omsTests;
 import junit.framework.TestCase;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
-import es.upv.dsic.gti_ia.organization.EmptyParametersException;
-import es.upv.dsic.gti_ia.organization.InvalidUnitTypeException;
 import es.upv.dsic.gti_ia.organization.OMS;
 import es.upv.dsic.gti_ia.organization.OMSProxy;
-import es.upv.dsic.gti_ia.organization.ParentUnitNotExistsException;
 import es.upv.dsic.gti_ia.organization.SF;
+import es.upv.dsic.gti_ia.organization.exception.EmptyParametersException;
+import es.upv.dsic.gti_ia.organization.exception.InvalidUnitTypeException;
+import es.upv.dsic.gti_ia.organization.exception.ParentUnitNotExistsException;
 
 
 public class TestRegisterUnitInCorrectParam extends TestCase {

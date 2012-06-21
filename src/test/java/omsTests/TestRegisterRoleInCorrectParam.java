@@ -3,14 +3,14 @@ package omsTests;
 import junit.framework.TestCase;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
-import es.upv.dsic.gti_ia.organization.EmptyParametersException;
-import es.upv.dsic.gti_ia.organization.InvalidAccessibilityException;
-import es.upv.dsic.gti_ia.organization.InvalidPositionException;
-import es.upv.dsic.gti_ia.organization.InvalidVisibilityException;
 import es.upv.dsic.gti_ia.organization.OMS;
 import es.upv.dsic.gti_ia.organization.OMSProxy;
 import es.upv.dsic.gti_ia.organization.SF;
-import es.upv.dsic.gti_ia.organization.UnitNotExistsException;
+import es.upv.dsic.gti_ia.organization.exception.EmptyParametersException;
+import es.upv.dsic.gti_ia.organization.exception.InvalidAccessibilityException;
+import es.upv.dsic.gti_ia.organization.exception.InvalidPositionException;
+import es.upv.dsic.gti_ia.organization.exception.InvalidVisibilityException;
+import es.upv.dsic.gti_ia.organization.exception.UnitNotExistsException;
 
 
 public class TestRegisterRoleInCorrectParam extends TestCase {

@@ -16,6 +16,7 @@ import es.upv.dsic.gti_ia.core.BaseAgent;
 public class ConsumerAgent extends BaseAgent {
 
 	LinkedBlockingQueue<MessageTransfer> internalQueue;
+	ACLMessage msg = null;
 
 	public ConsumerAgent(AgentID aid) throws Exception {
 		super(aid);
@@ -38,6 +39,12 @@ public class ConsumerAgent extends BaseAgent {
 		 */
 		logger.info("Mensaje received in " + this.getName()
 				+ " agent, by onMessage: " + msg.getContent());
+		this.msg = msg;
+	}
+	
+	public ACLMessage getMessage()
+	{
+		return msg;
 	}
 
 }
