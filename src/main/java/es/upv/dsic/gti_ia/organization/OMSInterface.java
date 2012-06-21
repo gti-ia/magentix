@@ -2,7 +2,38 @@ package es.upv.dsic.gti_ia.organization;
 
 import java.util.ArrayList;
 
-import es.upv.dsic.gti_ia.organization.THOMASMessages.MessageID;
+import es.upv.dsic.gti_ia.organization.exception.AgentNotExistsException;
+import es.upv.dsic.gti_ia.organization.exception.AgentNotInUnitException;
+import es.upv.dsic.gti_ia.organization.exception.EmptyParametersException;
+import es.upv.dsic.gti_ia.organization.exception.InvalidPositionException;
+import es.upv.dsic.gti_ia.organization.exception.InvalidRolePositionException;
+import es.upv.dsic.gti_ia.organization.exception.InvalidUnitTypeException;
+import es.upv.dsic.gti_ia.organization.exception.NotCreatorAgentInUnitException;
+import es.upv.dsic.gti_ia.organization.exception.NotCreatorInParentUnitException;
+import es.upv.dsic.gti_ia.organization.exception.NotCreatorInUnitException;
+import es.upv.dsic.gti_ia.organization.exception.NotCreatorInUnitOrParentUnitException;
+import es.upv.dsic.gti_ia.organization.exception.NotInUnitAndNotCreatorException;
+import es.upv.dsic.gti_ia.organization.exception.NotInUnitOrParentUnitException;
+import es.upv.dsic.gti_ia.organization.exception.NotMemberOrCreatorInUnitException;
+import es.upv.dsic.gti_ia.organization.exception.NotPlaysRoleException;
+import es.upv.dsic.gti_ia.organization.exception.NotSupervisorOrCreatorInUnitException;
+import es.upv.dsic.gti_ia.organization.exception.ParentUnitNotExistsException;
+import es.upv.dsic.gti_ia.organization.exception.PlayingRoleException;
+import es.upv.dsic.gti_ia.organization.exception.RoleContainsNormsException;
+import es.upv.dsic.gti_ia.organization.exception.RoleExistsInUnitException;
+import es.upv.dsic.gti_ia.organization.exception.RoleInUseException;
+import es.upv.dsic.gti_ia.organization.exception.RoleNotExistsException;
+import es.upv.dsic.gti_ia.organization.exception.SameAgentNameException;
+import es.upv.dsic.gti_ia.organization.exception.SameUnitException;
+import es.upv.dsic.gti_ia.organization.exception.SubunitsInUnitException;
+import es.upv.dsic.gti_ia.organization.exception.THOMASException;
+import es.upv.dsic.gti_ia.organization.exception.THOMASMessages;
+import es.upv.dsic.gti_ia.organization.exception.UnitExistsException;
+import es.upv.dsic.gti_ia.organization.exception.UnitNotExistsException;
+import es.upv.dsic.gti_ia.organization.exception.VirtualParentException;
+import es.upv.dsic.gti_ia.organization.exception.VirtualUnitException;
+import es.upv.dsic.gti_ia.organization.exception.VisibilityRoleException;
+import es.upv.dsic.gti_ia.organization.exception.THOMASMessages.MessageID;
 
 /**
  * This class gives us the support to accede to the services of the OMS. The OMS
@@ -93,18 +124,14 @@ class OMSInterface {
             // --------------------------------------------------------------------------------
             if (checkParameter(CreatorName) && checkParameter(UnitName)) {
 
-                if (!dbInterface.checkUnit(UnitName)) 
-                {
-                    if (ParentUnitName != null && !ParentUnitName.equals("")) 
-                    {
-                        if (!dbInterface.checkUnit(ParentUnitName)) 
-                        {
+                if (!dbInterface.checkUnit(UnitName)) {
+                    if (ParentUnitName != null && !ParentUnitName.equals("")) {
+                        if (!dbInterface.checkUnit(ParentUnitName)) {
                             String message = l10n.getMessage(MessageID.PARENT_UNIT_NOT_EXISTS, ParentUnitName);
                             throw new ParentUnitNotExistsException(message);
                         }
 
-                    } else 
-                    {
+                    } else {
                         ParentUnitName = "virtual";
                     }
 

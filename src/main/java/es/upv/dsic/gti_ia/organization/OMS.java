@@ -19,7 +19,11 @@ import es.upv.dsic.gti_ia.cAgents.CProcessor;
 import es.upv.dsic.gti_ia.cAgents.protocols.FIPA_REQUEST_Participant;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
-import es.upv.dsic.gti_ia.organization.THOMASMessages.MessageID;
+import es.upv.dsic.gti_ia.organization.exception.ExchangeBindException;
+import es.upv.dsic.gti_ia.organization.exception.ExchangeUnbindException;
+import es.upv.dsic.gti_ia.organization.exception.InvalidPositionException;
+import es.upv.dsic.gti_ia.organization.exception.THOMASMessages;
+import es.upv.dsic.gti_ia.organization.exception.THOMASMessages.MessageID;
 
 /**
  * OMS agent is responsible for managing all the request messages from other

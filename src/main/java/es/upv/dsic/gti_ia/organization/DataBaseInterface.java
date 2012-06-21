@@ -8,7 +8,19 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-import es.upv.dsic.gti_ia.organization.THOMASMessages.MessageID;
+import es.upv.dsic.gti_ia.organization.exception.DeletingTableException;
+import es.upv.dsic.gti_ia.organization.exception.IDUnitTypeNotFoundException;
+import es.upv.dsic.gti_ia.organization.exception.InsertingTableException;
+import es.upv.dsic.gti_ia.organization.exception.InvalidAccessibilityException;
+import es.upv.dsic.gti_ia.organization.exception.InvalidPositionException;
+import es.upv.dsic.gti_ia.organization.exception.InvalidUnitTypeException;
+import es.upv.dsic.gti_ia.organization.exception.InvalidVisibilityException;
+import es.upv.dsic.gti_ia.organization.exception.MySQLException;
+import es.upv.dsic.gti_ia.organization.exception.ParentUnitNotExistsException;
+import es.upv.dsic.gti_ia.organization.exception.RoleNotExistsException;
+import es.upv.dsic.gti_ia.organization.exception.THOMASMessages;
+import es.upv.dsic.gti_ia.organization.exception.UnitNotExistsException;
+import es.upv.dsic.gti_ia.organization.exception.THOMASMessages.MessageID;
 
 class DataBaseInterface {
     private DataBaseAccess db;

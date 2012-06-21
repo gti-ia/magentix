@@ -28,7 +28,7 @@ public class SF extends CAgent {
 	static Logger logger = Logger.getLogger(SF.class);
 
 	ServiceTools st = new ServiceTools();
-	SFinterface sfInterface=new SFinterface();
+	SFInterface sfInterface=new SFInterface();
 
 //	/**
 //	 * Returns an instance of the agents SF

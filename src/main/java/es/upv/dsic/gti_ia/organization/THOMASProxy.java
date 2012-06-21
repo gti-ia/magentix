@@ -6,9 +6,9 @@ import java.util.Hashtable;
 
 import org.apache.log4j.Logger;
 
-import es.upv.dsic.gti_ia.architecture.FIPANames.InteractionProtocol;
 import es.upv.dsic.gti_ia.architecture.FIPARequestInitiator;
 import es.upv.dsic.gti_ia.architecture.QueueAgent;
+import es.upv.dsic.gti_ia.architecture.FIPANames.InteractionProtocol;
 import es.upv.dsic.gti_ia.cAgents.CAgent;
 import es.upv.dsic.gti_ia.cAgents.CFactory;
 import es.upv.dsic.gti_ia.cAgents.CProcessor;
@@ -16,7 +16,55 @@ import es.upv.dsic.gti_ia.cAgents.protocols.FIPA_REQUEST_Initiator;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.BaseAgent;
-import es.upv.dsic.gti_ia.organization.THOMASMessages.MessageID;
+import es.upv.dsic.gti_ia.organization.exception.AgentNotExistsException;
+import es.upv.dsic.gti_ia.organization.exception.AgentNotInUnitException;
+import es.upv.dsic.gti_ia.organization.exception.AlreadyRegisteredException;
+import es.upv.dsic.gti_ia.organization.exception.DBConnectionException;
+import es.upv.dsic.gti_ia.organization.exception.DeletingTableException;
+import es.upv.dsic.gti_ia.organization.exception.EmptyParametersException;
+import es.upv.dsic.gti_ia.organization.exception.ExchangeBindException;
+import es.upv.dsic.gti_ia.organization.exception.ExchangeUnbindException;
+import es.upv.dsic.gti_ia.organization.exception.IDUnitTypeNotFoundException;
+import es.upv.dsic.gti_ia.organization.exception.InsertingTableException;
+import es.upv.dsic.gti_ia.organization.exception.InvalidAccessibilityException;
+import es.upv.dsic.gti_ia.organization.exception.InvalidDataTypeException;
+import es.upv.dsic.gti_ia.organization.exception.InvalidPositionException;
+import es.upv.dsic.gti_ia.organization.exception.InvalidRolePositionException;
+import es.upv.dsic.gti_ia.organization.exception.InvalidServiceURLException;
+import es.upv.dsic.gti_ia.organization.exception.InvalidUnitTypeException;
+import es.upv.dsic.gti_ia.organization.exception.InvalidVisibilityException;
+import es.upv.dsic.gti_ia.organization.exception.MySQLException;
+import es.upv.dsic.gti_ia.organization.exception.NotCreatorAgentInUnitException;
+import es.upv.dsic.gti_ia.organization.exception.NotCreatorException;
+import es.upv.dsic.gti_ia.organization.exception.NotCreatorInParentUnitException;
+import es.upv.dsic.gti_ia.organization.exception.NotCreatorInUnitException;
+import es.upv.dsic.gti_ia.organization.exception.NotCreatorInUnitOrParentUnitException;
+import es.upv.dsic.gti_ia.organization.exception.NotInUnitAndNotCreatorException;
+import es.upv.dsic.gti_ia.organization.exception.NotInUnitOrParentUnitException;
+import es.upv.dsic.gti_ia.organization.exception.NotMemberOrCreatorInUnitException;
+import es.upv.dsic.gti_ia.organization.exception.NotPlaysAnyRoleException;
+import es.upv.dsic.gti_ia.organization.exception.NotPlaysRoleException;
+import es.upv.dsic.gti_ia.organization.exception.NotSupervisorOrCreatorInUnitException;
+import es.upv.dsic.gti_ia.organization.exception.OnlyPlaysCreatorException;
+import es.upv.dsic.gti_ia.organization.exception.ParentUnitNotExistsException;
+import es.upv.dsic.gti_ia.organization.exception.PlayingRoleException;
+import es.upv.dsic.gti_ia.organization.exception.RoleContainsNormsException;
+import es.upv.dsic.gti_ia.organization.exception.RoleExistsInUnitException;
+import es.upv.dsic.gti_ia.organization.exception.RoleInUseException;
+import es.upv.dsic.gti_ia.organization.exception.RoleNotExistsException;
+import es.upv.dsic.gti_ia.organization.exception.SameAgentNameException;
+import es.upv.dsic.gti_ia.organization.exception.SameUnitException;
+import es.upv.dsic.gti_ia.organization.exception.ServiceProfileNotFoundException;
+import es.upv.dsic.gti_ia.organization.exception.ServicesNotFoundException;
+import es.upv.dsic.gti_ia.organization.exception.SubunitsInUnitException;
+import es.upv.dsic.gti_ia.organization.exception.THOMASException;
+import es.upv.dsic.gti_ia.organization.exception.THOMASMessages;
+import es.upv.dsic.gti_ia.organization.exception.UnitExistsException;
+import es.upv.dsic.gti_ia.organization.exception.UnitNotExistsException;
+import es.upv.dsic.gti_ia.organization.exception.VirtualParentException;
+import es.upv.dsic.gti_ia.organization.exception.VirtualUnitException;
+import es.upv.dsic.gti_ia.organization.exception.VisibilityRoleException;
+import es.upv.dsic.gti_ia.organization.exception.THOMASMessages.MessageID;
 
 
 /**
@@ -229,6 +277,12 @@ public class THOMASProxy {
 			if (valueAux.equals(l10n.getMessage(MessageID.AGENT_NOT_IN_UNIT)))
 				throw new AgentNotInUnitException(value);
 			
+			if (valueAux.equals(l10n.getMessage(MessageID.ALREADY_REGISTERED)))
+                throw new AlreadyRegisteredException(value);
+			
+			if (valueAux.equals(l10n.getMessage(MessageID.DB_CONNECTION)))
+                throw new DBConnectionException(value);
+			
 			if (valueAux.equals(l10n.getMessage(MessageID.DELETING_TABLE)))
 				throw new DeletingTableException(value);
 			
@@ -250,11 +304,17 @@ public class THOMASProxy {
 			if (valueAux.equals(l10n.getMessage(MessageID.INVALID_ACCESSIBILITY)))
 				throw new InvalidAccessibilityException(value);
 			
+			if (valueAux.equals(l10n.getMessage(MessageID.INVALID_DATA_TYPE)))
+                throw new InvalidDataTypeException(value);
+			
 			if (valueAux.equals(l10n.getMessage(MessageID.INVALID_POSITION)))
 				throw new InvalidPositionException(value);
 			
 			if (valueAux.equals(l10n.getMessage(MessageID.INVALID_ROLE_POSITION)))
 				throw new InvalidRolePositionException(value);
+			
+			if (valueAux.equals(l10n.getMessage(MessageID.INVALID_SERVICE_URL)))
+                throw new InvalidServiceURLException(value);
 			
 			if (valueAux.equals(l10n.getMessage(MessageID.INVALID_UNIT_TYPE)))
 				throw new InvalidUnitTypeException(value);
@@ -324,6 +384,12 @@ public class THOMASProxy {
 			
 			if (valueAux.equals(l10n.getMessage(MessageID.SAME_UNIT)))
 				throw new SameUnitException(value);
+			
+			if (valueAux.equals(l10n.getMessage(MessageID.SERVICE_PROFILE_NOT_FOUND)))
+                throw new ServiceProfileNotFoundException(value);
+			
+			if (valueAux.equals(l10n.getMessage(MessageID.SERVICES_NOT_FOUND)))
+                throw new ServicesNotFoundException(value);
 			
 			if (valueAux.equals(l10n.getMessage(MessageID.SUBUNITS_IN_UNIT)))
 				throw new SubunitsInUnitException(value);
