@@ -1,20 +1,11 @@
 package omsTests;
 
-import java.util.ArrayList;
-
 import junit.framework.TestCase;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
-import es.upv.dsic.gti_ia.organization.EmptyParametersException;
-import es.upv.dsic.gti_ia.organization.NotPlaysAnyRoleException;
-import es.upv.dsic.gti_ia.organization.NotPlaysRoleException;
 import es.upv.dsic.gti_ia.organization.OMS;
 import es.upv.dsic.gti_ia.organization.OMSProxy;
-import es.upv.dsic.gti_ia.organization.PlayingRoleException;
-import es.upv.dsic.gti_ia.organization.RoleNotExistsException;
 import es.upv.dsic.gti_ia.organization.SF;
-import es.upv.dsic.gti_ia.organization.SameAgentNameException;
-import es.upv.dsic.gti_ia.organization.UnitNotExistsException;
 import es.upv.dsic.gti_ia.organization.VisibilityRoleException;
 
 
@@ -186,7 +177,7 @@ public class TestInformRoleInCorrectPermissions extends TestCase {
 			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana2'))))");
 
 			
-			ArrayList<String> result = omsProxy.informRole("miembro2","plana");
+			omsProxy.informRole("miembro2","plana");
 
 			fail();
 
@@ -219,7 +210,7 @@ public class TestInformRoleInCorrectPermissions extends TestCase {
 			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana2'))))");
 
 			
-			ArrayList<String> result = omsProxy.informRole("miembro2","plana");
+			omsProxy.informRole("miembro2","plana");
 
 			fail();
 
@@ -252,7 +243,7 @@ public class TestInformRoleInCorrectPermissions extends TestCase {
 			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana2'))))");
 
 			
-			ArrayList<String> result = omsProxy.informRole("creador2","plana");
+			omsProxy.informRole("creador2","plana");
 
 			fail();
 
@@ -285,7 +276,7 @@ public class TestInformRoleInCorrectPermissions extends TestCase {
 			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana2'))))");
 
 			
-			ArrayList<String> result = omsProxy.informRole("creador2","plana");
+			omsProxy.informRole("creador2","plana");
 
 			fail();
 
@@ -319,7 +310,7 @@ public class TestInformRoleInCorrectPermissions extends TestCase {
 			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana2'))))");
 
 			
-			ArrayList<String> result = omsProxy.informRole("miembro","plana");
+			omsProxy.informRole("miembro","plana");
 
 			fail();
 
@@ -352,7 +343,7 @@ public class TestInformRoleInCorrectPermissions extends TestCase {
 			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana2'))))");
 
 			
-			ArrayList<String> result = omsProxy.informRole("miembro","plana");
+			omsProxy.informRole("miembro","plana");
 
 			fail();
 
@@ -385,7 +376,7 @@ public class TestInformRoleInCorrectPermissions extends TestCase {
 			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana2'))))");
 
 			
-			ArrayList<String> result = omsProxy.informRole("creador3","plana");
+			omsProxy.informRole("creador3","plana");
 
 			fail();
 
@@ -418,7 +409,7 @@ public class TestInformRoleInCorrectPermissions extends TestCase {
 			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana2'))))");
 
 			
-			ArrayList<String> result = omsProxy.informRole("creador3","plana");
+			omsProxy.informRole("creador3","plana");
 
 			fail();
 
@@ -451,7 +442,7 @@ public class TestInformRoleInCorrectPermissions extends TestCase {
 			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo2'))))");
 
 			
-			ArrayList<String> result = omsProxy.informRole("miembro2","equipo");
+			omsProxy.informRole("miembro2","equipo");
 
 			fail();
 
@@ -484,7 +475,7 @@ public class TestInformRoleInCorrectPermissions extends TestCase {
 			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo2'))))");
 
 			
-			ArrayList<String> result = omsProxy.informRole("miembro2","equipo");
+			omsProxy.informRole("miembro2","equipo");
 
 			fail();
 
@@ -517,7 +508,7 @@ public class TestInformRoleInCorrectPermissions extends TestCase {
 			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo2'))))");
 
 			
-			ArrayList<String> result = omsProxy.informRole("creador2","equipo");
+			omsProxy.informRole("creador2","equipo");
 
 			fail();
 
@@ -550,7 +541,7 @@ public class TestInformRoleInCorrectPermissions extends TestCase {
 			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo2'))))");
 
 			
-			ArrayList<String> result = omsProxy.informRole("creador2","equipo");
+			omsProxy.informRole("creador2","equipo");
 
 			fail();
 
@@ -583,7 +574,7 @@ public class TestInformRoleInCorrectPermissions extends TestCase {
 			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo2'))))");
 
 			
-			ArrayList<String> result = omsProxy.informRole("miembro","equipo");
+			omsProxy.informRole("miembro","equipo");
 
 			fail();
 
@@ -616,7 +607,7 @@ public class TestInformRoleInCorrectPermissions extends TestCase {
 			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo2'))))");
 
 			
-			ArrayList<String> result = omsProxy.informRole("miembro","equipo");
+			omsProxy.informRole("miembro","equipo");
 
 			fail();
 
@@ -649,7 +640,7 @@ public class TestInformRoleInCorrectPermissions extends TestCase {
 			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo2'))))");
 
 			
-			ArrayList<String> result = omsProxy.informRole("creador3","equipo");
+			omsProxy.informRole("creador3","equipo");
 
 			fail();
 
@@ -682,7 +673,7 @@ public class TestInformRoleInCorrectPermissions extends TestCase {
 			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo2'))))");
 
 			
-			ArrayList<String> result = omsProxy.informRole("creador3","equipo");
+			omsProxy.informRole("creador3","equipo");
 
 			fail();
 
@@ -715,7 +706,7 @@ public class TestInformRoleInCorrectPermissions extends TestCase {
 			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'subordinado' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
 
 			
-			ArrayList<String> result = omsProxy.informRole("subordinado2","jerarquia");
+			omsProxy.informRole("subordinado2","jerarquia");
 
 			fail();
 
@@ -748,7 +739,7 @@ public class TestInformRoleInCorrectPermissions extends TestCase {
 			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'subordinado' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
 
 			
-			ArrayList<String> result = omsProxy.informRole("subordinado2","jerarquia");
+			omsProxy.informRole("subordinado2","jerarquia");
 
 			fail();
 
@@ -782,7 +773,7 @@ public class TestInformRoleInCorrectPermissions extends TestCase {
 			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'supervisor' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
 
 			
-			ArrayList<String> result = omsProxy.informRole("subordinado","jerarquia");
+			omsProxy.informRole("subordinado","jerarquia");
 
 			fail();
 
@@ -815,7 +806,7 @@ public class TestInformRoleInCorrectPermissions extends TestCase {
 			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'supervisor' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
 
 			
-			ArrayList<String> result = omsProxy.informRole("subordinado","jerarquia");
+			omsProxy.informRole("subordinado","jerarquia");
 
 			fail();
 
@@ -848,7 +839,7 @@ public class TestInformRoleInCorrectPermissions extends TestCase {
 			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
 
 			
-			ArrayList<String> result = omsProxy.informRole("subordinado","jerarquia");
+			omsProxy.informRole("subordinado","jerarquia");
 
 			fail();
 
@@ -881,7 +872,7 @@ public class TestInformRoleInCorrectPermissions extends TestCase {
 			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
 
 			
-			ArrayList<String> result = omsProxy.informRole("subordinado","jerarquia");
+			omsProxy.informRole("subordinado","jerarquia");
 
 			fail();
 
@@ -914,7 +905,7 @@ public class TestInformRoleInCorrectPermissions extends TestCase {
 			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'subordinado' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
 
 			
-			ArrayList<String> result = omsProxy.informRole("supervisor","jerarquia");
+			omsProxy.informRole("supervisor","jerarquia");
 
 			fail();
 
@@ -947,7 +938,7 @@ public class TestInformRoleInCorrectPermissions extends TestCase {
 			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'subordinado' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
 
 			
-			ArrayList<String> result = omsProxy.informRole("supervisor","jerarquia");
+			omsProxy.informRole("supervisor","jerarquia");
 
 			fail();
 
@@ -980,7 +971,7 @@ public class TestInformRoleInCorrectPermissions extends TestCase {
 			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'supervisor' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
 
 			
-			ArrayList<String> result = omsProxy.informRole("supervisor2","jerarquia");
+			omsProxy.informRole("supervisor2","jerarquia");
 
 			fail();
 
@@ -1013,7 +1004,7 @@ public class TestInformRoleInCorrectPermissions extends TestCase {
 			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'supervisor' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
 
 			
-			ArrayList<String> result = omsProxy.informRole("supervisor2","jerarquia");
+			omsProxy.informRole("supervisor2","jerarquia");
 
 			fail();
 
@@ -1046,7 +1037,7 @@ public class TestInformRoleInCorrectPermissions extends TestCase {
 			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
 
 			
-			ArrayList<String> result = omsProxy.informRole("supervisor","jerarquia");
+			omsProxy.informRole("supervisor","jerarquia");
 
 			fail();
 
@@ -1079,7 +1070,7 @@ public class TestInformRoleInCorrectPermissions extends TestCase {
 			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
 
 			
-			ArrayList<String> result = omsProxy.informRole("supervisor","jerarquia");
+			omsProxy.informRole("supervisor","jerarquia");
 
 			fail();
 
@@ -1112,7 +1103,7 @@ public class TestInformRoleInCorrectPermissions extends TestCase {
 			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'subordinado' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
 
 			
-			ArrayList<String> result = omsProxy.informRole("creador2","jerarquia");
+			omsProxy.informRole("creador2","jerarquia");
 
 			fail();
 
@@ -1145,7 +1136,7 @@ public class TestInformRoleInCorrectPermissions extends TestCase {
 			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'subordinado' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
 
 			
-			ArrayList<String> result = omsProxy.informRole("creador2","jerarquia");
+			omsProxy.informRole("creador2","jerarquia");
 
 			fail();
 
@@ -1178,7 +1169,7 @@ public class TestInformRoleInCorrectPermissions extends TestCase {
 			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'supervisor' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
 
 			
-			ArrayList<String> result = omsProxy.informRole("creador2","jerarquia");
+			omsProxy.informRole("creador2","jerarquia");
 
 			fail();
 
@@ -1211,7 +1202,7 @@ public class TestInformRoleInCorrectPermissions extends TestCase {
 			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'supervisor' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
 
 			
-			ArrayList<String> result = omsProxy.informRole("creador2","jerarquia");
+			omsProxy.informRole("creador2","jerarquia");
 
 			fail();
 
@@ -1244,7 +1235,7 @@ public class TestInformRoleInCorrectPermissions extends TestCase {
 			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
 
 			
-			ArrayList<String> result = omsProxy.informRole("creador3","jerarquia");
+			omsProxy.informRole("creador3","jerarquia");
 
 			fail();
 
@@ -1277,7 +1268,7 @@ public class TestInformRoleInCorrectPermissions extends TestCase {
 			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
 
 			
-			ArrayList<String> result = omsProxy.informRole("creador3","jerarquia");
+			omsProxy.informRole("creador3","jerarquia");
 
 			fail();
 

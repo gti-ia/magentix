@@ -1,7 +1,5 @@
 package omsTests;
 
-import java.util.ArrayList;
-
 import junit.framework.TestCase;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
@@ -91,7 +89,7 @@ public class TestInformAgentRoleInCorrectParam extends TestCase {
 		try
 		{
 
-			ArrayList<ArrayList<String>> result = omsProxy.informAgentRole("");
+			omsProxy.informAgentRole("");
 
 			fail();
 
@@ -113,7 +111,7 @@ public class TestInformAgentRoleInCorrectParam extends TestCase {
 		try
 		{
 
-			ArrayList<ArrayList<String>> result = omsProxy.informAgentRole(null);
+			omsProxy.informAgentRole(null);
 
 			fail();
 
@@ -135,7 +133,7 @@ public class TestInformAgentRoleInCorrectParam extends TestCase {
 		try
 		{
 
-			ArrayList<ArrayList<String>> result = omsProxy.informAgentRole("NoExiste");
+			omsProxy.informAgentRole("NoExiste");
 
 			fail();
 

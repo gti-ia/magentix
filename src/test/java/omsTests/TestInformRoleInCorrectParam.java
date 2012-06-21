@@ -1,19 +1,13 @@
 package omsTests;
 
-import java.util.ArrayList;
-
 import junit.framework.TestCase;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
 import es.upv.dsic.gti_ia.organization.EmptyParametersException;
-import es.upv.dsic.gti_ia.organization.NotPlaysAnyRoleException;
-import es.upv.dsic.gti_ia.organization.NotPlaysRoleException;
 import es.upv.dsic.gti_ia.organization.OMS;
 import es.upv.dsic.gti_ia.organization.OMSProxy;
-import es.upv.dsic.gti_ia.organization.PlayingRoleException;
 import es.upv.dsic.gti_ia.organization.RoleNotExistsException;
 import es.upv.dsic.gti_ia.organization.SF;
-import es.upv.dsic.gti_ia.organization.SameAgentNameException;
 import es.upv.dsic.gti_ia.organization.UnitNotExistsException;
 
 
@@ -97,7 +91,7 @@ public class TestInformRoleInCorrectParam extends TestCase {
 		try
 		{
 
-			ArrayList<String> result = omsProxy.informRole("participante","noexiste");
+			omsProxy.informRole("participante","noexiste");
 
 			fail();
 
@@ -119,7 +113,7 @@ public class TestInformRoleInCorrectParam extends TestCase {
 		try
 		{
 
-			ArrayList<String> result = omsProxy.informRole("participante","");
+			omsProxy.informRole("participante","");
 
 			fail();
 
@@ -141,7 +135,7 @@ public class TestInformRoleInCorrectParam extends TestCase {
 		try
 		{
 
-			ArrayList<String> result = omsProxy.informRole("participante",null);
+			omsProxy.informRole("participante",null);
 
 			fail();
 
@@ -163,7 +157,7 @@ public class TestInformRoleInCorrectParam extends TestCase {
 		try
 		{
 
-			ArrayList<String> result = omsProxy.informRole("noexiste","virtual");
+			omsProxy.informRole("noexiste","virtual");
 
 			fail();
 
@@ -185,7 +179,7 @@ public class TestInformRoleInCorrectParam extends TestCase {
 		try
 		{
 
-			ArrayList<String> result = omsProxy.informRole("","virtual");
+			omsProxy.informRole("","virtual");
 
 			fail();
 
@@ -207,7 +201,7 @@ public class TestInformRoleInCorrectParam extends TestCase {
 		try
 		{
 
-			ArrayList<String> result = omsProxy.informRole(null,"virtual");
+			omsProxy.informRole(null,"virtual");
 
 			fail();
 

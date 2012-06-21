@@ -1,19 +1,12 @@
 package omsTests;
 
-import java.util.ArrayList;
-
 import junit.framework.TestCase;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
 import es.upv.dsic.gti_ia.organization.EmptyParametersException;
-import es.upv.dsic.gti_ia.organization.NotPlaysAnyRoleException;
-import es.upv.dsic.gti_ia.organization.NotPlaysRoleException;
 import es.upv.dsic.gti_ia.organization.OMS;
 import es.upv.dsic.gti_ia.organization.OMSProxy;
-import es.upv.dsic.gti_ia.organization.PlayingRoleException;
-import es.upv.dsic.gti_ia.organization.RoleNotExistsException;
 import es.upv.dsic.gti_ia.organization.SF;
-import es.upv.dsic.gti_ia.organization.SameAgentNameException;
 import es.upv.dsic.gti_ia.organization.UnitNotExistsException;
 
 
@@ -96,7 +89,7 @@ public class TestQuantityMembersInCorrectParam extends TestCase {
 		try
 		{
 
-			int result = omsProxy.quantityMembers("noexiste", "subordinado", "subordinate");
+			omsProxy.quantityMembers("noexiste", "subordinado", "subordinate");
 
 			fail();
 
@@ -118,7 +111,7 @@ public class TestQuantityMembersInCorrectParam extends TestCase {
 		try
 		{
 
-			int result = omsProxy.quantityMembers("", "subordinado", "subordinate");
+			omsProxy.quantityMembers("", "subordinado", "subordinate");
 
 			fail();
 
@@ -140,7 +133,7 @@ public class TestQuantityMembersInCorrectParam extends TestCase {
 		try
 		{
 
-			int result = omsProxy.quantityMembers(null, "subordinado", "subordinate");
+			omsProxy.quantityMembers(null, "subordinado", "subordinate");
 
 			fail();
 

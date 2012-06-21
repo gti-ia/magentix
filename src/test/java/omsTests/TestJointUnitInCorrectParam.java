@@ -1,17 +1,14 @@
 package omsTests;
 
 import junit.framework.TestCase;
-
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
 import es.upv.dsic.gti_ia.organization.EmptyParametersException;
-import es.upv.dsic.gti_ia.organization.InvalidUnitTypeException;
 import es.upv.dsic.gti_ia.organization.OMS;
 import es.upv.dsic.gti_ia.organization.OMSProxy;
 import es.upv.dsic.gti_ia.organization.ParentUnitNotExistsException;
 import es.upv.dsic.gti_ia.organization.SF;
 import es.upv.dsic.gti_ia.organization.SameUnitException;
-import es.upv.dsic.gti_ia.organization.THOMASException;
 import es.upv.dsic.gti_ia.organization.UnitNotExistsException;
 import es.upv.dsic.gti_ia.organization.VirtualParentException;
 

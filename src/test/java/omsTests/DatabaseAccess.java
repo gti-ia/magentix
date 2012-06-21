@@ -19,10 +19,11 @@ public class DatabaseAccess {
 	 * This method sets the connection with the THOMAS database  
 	 * */
 	public Connection connect() {
+		Configuration c = null;
 		try {
 
 
-			Configuration c = Configuration.getConfiguration();
+			c = Configuration.getConfiguration();
 			//Register a MySQL driver. 
 			String driverName = c.getjenadbDriver(); // MySQL MM JDBC
 			// driver
@@ -38,6 +39,7 @@ public class DatabaseAccess {
 			connection.setAutoCommit(true);
 			connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
 
+			
 			return connection;
 
 
@@ -46,8 +48,11 @@ public class DatabaseAccess {
 			e.printStackTrace();
 			return null;
 		}
+		finally{
+			c=null;
+		}
 	}
-
+	
 	
 	public boolean executeQuery(String sql) throws SQLException{
 		Statement st = null;	
@@ -81,15 +86,21 @@ public class DatabaseAccess {
 		finally
 		{
 			if (connection != null)
+			{
 				connection.close();
+				connection=null;
+			}
 			if (st != null)
+			{
 				st.close();
+				st=null;
+			}
 		}
 	}
 	
 	public void executeSQL(String sql) throws SQLException{
 		Statement st = null;	
-		int res;
+		
 		
 		Connection connection = null;
 
@@ -100,7 +111,7 @@ public class DatabaseAccess {
 
 
 			st = connection.createStatement();
-			res = st.executeUpdate(sql);
+			st.executeUpdate(sql);
 				
 		}
 		catch(SQLException e)
@@ -110,9 +121,15 @@ public class DatabaseAccess {
 		finally
 		{
 			if (connection != null)
+			{
 				connection.close();
+				connection = null;
+			}
 			if (st != null)
+			{
 				st.close();
+				st=null;
+			}
 		}
 	}
 	

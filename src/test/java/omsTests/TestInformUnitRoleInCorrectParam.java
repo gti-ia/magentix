@@ -1,19 +1,12 @@
 package omsTests;
 
-import java.util.ArrayList;
-
 import junit.framework.TestCase;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
 import es.upv.dsic.gti_ia.organization.EmptyParametersException;
-import es.upv.dsic.gti_ia.organization.NotPlaysAnyRoleException;
-import es.upv.dsic.gti_ia.organization.NotPlaysRoleException;
 import es.upv.dsic.gti_ia.organization.OMS;
 import es.upv.dsic.gti_ia.organization.OMSProxy;
-import es.upv.dsic.gti_ia.organization.PlayingRoleException;
-import es.upv.dsic.gti_ia.organization.RoleNotExistsException;
 import es.upv.dsic.gti_ia.organization.SF;
-import es.upv.dsic.gti_ia.organization.SameAgentNameException;
 import es.upv.dsic.gti_ia.organization.UnitNotExistsException;
 
 
@@ -97,7 +90,7 @@ public class TestInformUnitRoleInCorrectParam extends TestCase {
 		try
 		{
 
-			ArrayList<ArrayList<String>> result = omsProxy.informUnitRoles("noexiste");
+			omsProxy.informUnitRoles("noexiste");
 
 			fail();
 
@@ -119,7 +112,7 @@ public class TestInformUnitRoleInCorrectParam extends TestCase {
 		try
 		{
 
-			ArrayList<ArrayList<String>> result = omsProxy.informUnitRoles("");
+			omsProxy.informUnitRoles("");
 
 			fail();
 
@@ -141,7 +134,7 @@ public class TestInformUnitRoleInCorrectParam extends TestCase {
 		try
 		{
 
-			ArrayList<ArrayList<String>> result = omsProxy.informUnitRoles(null);
+			omsProxy.informUnitRoles(null);
 
 			fail();
 

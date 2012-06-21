@@ -1,22 +1,12 @@
 package omsTests;
 
-import java.util.ArrayList;
-
 import junit.framework.TestCase;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
-import es.upv.dsic.gti_ia.organization.AgentNotInUnitException;
-import es.upv.dsic.gti_ia.organization.EmptyParametersException;
 import es.upv.dsic.gti_ia.organization.NotInUnitOrParentUnitException;
-import es.upv.dsic.gti_ia.organization.NotPlaysAnyRoleException;
-import es.upv.dsic.gti_ia.organization.NotPlaysRoleException;
 import es.upv.dsic.gti_ia.organization.OMS;
 import es.upv.dsic.gti_ia.organization.OMSProxy;
-import es.upv.dsic.gti_ia.organization.PlayingRoleException;
-import es.upv.dsic.gti_ia.organization.RoleNotExistsException;
 import es.upv.dsic.gti_ia.organization.SF;
-import es.upv.dsic.gti_ia.organization.SameAgentNameException;
-import es.upv.dsic.gti_ia.organization.UnitNotExistsException;
 
 
 public class TestInformUnitInCorrectPermissions extends TestCase {
@@ -161,7 +151,7 @@ public class TestInformUnitInCorrectPermissions extends TestCase {
 			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo2'))))");
 
 			
-			ArrayList<String> result = omsProxy.informUnit("equipo");
+			omsProxy.informUnit("equipo");
 
 			fail();
 
@@ -187,7 +177,7 @@ public class TestInformUnitInCorrectPermissions extends TestCase {
 			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo2'))))");
 
 			
-			ArrayList<String> result = omsProxy.informUnit("equipo");
+			omsProxy.informUnit("equipo");
 
 			fail();
 
@@ -213,7 +203,7 @@ public class TestInformUnitInCorrectPermissions extends TestCase {
 			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'subordinado' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
 
 			
-			ArrayList<String> result = omsProxy.informUnit("jerarquia");
+			omsProxy.informUnit("jerarquia");
 
 			fail();
 
@@ -239,7 +229,7 @@ public class TestInformUnitInCorrectPermissions extends TestCase {
 			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'supervisor' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
 
 			
-			ArrayList<String> result = omsProxy.informUnit("jerarquia");
+			omsProxy.informUnit("jerarquia");
 
 			fail();
 
@@ -265,7 +255,7 @@ public class TestInformUnitInCorrectPermissions extends TestCase {
 			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
 
 			
-			ArrayList<String> result = omsProxy.informUnit("jerarquia");
+			omsProxy.informUnit("jerarquia");
 
 			fail();
 
