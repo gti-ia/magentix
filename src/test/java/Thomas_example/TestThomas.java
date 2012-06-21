@@ -1,6 +1,8 @@
 package Thomas_example;
 
 
+import omsTests.DatabaseAccess;
+
 import org.apache.log4j.xml.DOMConfigurator;
 
 import es.upv.dsic.gti_ia.architecture.Monitor;
@@ -20,6 +22,7 @@ public class TestThomas extends TestCase {
 	OMS oms = null;
 	SF sf = null;
 
+	DatabaseAccess dbA = null;
 	public TestThomas(String name) {
 		super(name);
 	}
@@ -45,6 +48,18 @@ public class TestThomas extends TestCase {
 
 		oms.start();
 		sf.start();
+		
+		dbA = new DatabaseAccess();
+
+		//------------------Clean Data Base -----------//
+		dbA.executeSQL("DELETE FROM agentPlayList");
+		dbA.executeSQL("DELETE FROM roleList WHERE idroleList != 1");
+		dbA.executeSQL("DELETE FROM unitHierarchy WHERE idChildUnit != 1");
+		dbA.executeSQL("DELETE FROM unitList WHERE idunitList != 1");
+
+		//--------------------------------------------//
+
+		dbA.removeJenaTables();
 
 
 	
