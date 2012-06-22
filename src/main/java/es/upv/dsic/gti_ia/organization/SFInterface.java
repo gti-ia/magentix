@@ -1798,7 +1798,7 @@ public class SFInterface {
      * @throws ServiceProfileNotFoundException
      */
     private String getProfileServiceName(String serviceProfile, String serviceURL, OntModel m) throws ServiceProfileNotFoundException {
-        String serviceName = "";
+        String serviceName = null;
 
         try {
 
@@ -1831,11 +1831,13 @@ public class SFInterface {
             else {
                 // System.out.println("resultsSearchName is null");
             }
+            if(serviceName==null)
+            	throw new Exception();
 
         } catch (Exception e) {
             throw new ServiceProfileNotFoundException(l10n.getMessage(MessageID.SERVICE_PROFILE_NOT_FOUND, serviceProfile));
         }
-
+        
         return serviceName;
 
     }
@@ -1854,7 +1856,7 @@ public class SFInterface {
      * @throws ServiceProfileNotFoundException
      */
     private String getProfileTextDescription(String serviceProfile, String serviceURL, OntModel m) throws ServiceProfileNotFoundException {
-        String textDescription = "";
+        String textDescription = null;
         try {
             String queryStringSearchName;
 
@@ -1885,6 +1887,9 @@ public class SFInterface {
                 System.out.println("resultsSearchName is null");
             }
 
+            if(textDescription==null)
+            	throw new Exception();
+            
         } catch (Exception e) {
             throw new ServiceProfileNotFoundException(l10n.getMessage(MessageID.SERVICE_PROFILE_NOT_FOUND, serviceProfile));
         }
@@ -1946,7 +1951,7 @@ public class SFInterface {
      */
     private String getServiceURI(String serviceProfile, String serviceURL, OntModel m) throws ServiceProfileNotFoundException {
 
-        String serviceURI = "";
+        String serviceURI = null;
         try {
             if (serviceURL == null) {
 
@@ -1976,6 +1981,10 @@ public class SFInterface {
             }
 
             // qeSearchName.close();
+            
+            if(serviceURI==null)
+            	throw new Exception();
+            
         } catch (Exception e) {
             throw new ServiceProfileNotFoundException(l10n.getMessage(MessageID.SERVICE_PROFILE_NOT_FOUND, serviceProfile));
         }
@@ -1997,7 +2006,7 @@ public class SFInterface {
      * @throws ServiceProfileNotFoundException
      */
     private String getServiceProcess(String serviceProfile, String serviceURL, OntModel m) throws ServiceProfileNotFoundException {
-        String serviceProcess = "";
+        String serviceProcess = null;
         try {
             if (serviceURL == null) {
 
@@ -2028,6 +2037,9 @@ public class SFInterface {
 
             qeSearchName.close();
 
+            if(serviceProcess==null)
+            	throw new Exception();
+            
         } catch (Exception e) {
             throw new ServiceProfileNotFoundException(l10n.getMessage(MessageID.SERVICE_PROFILE_NOT_FOUND, serviceProfile));
         }
