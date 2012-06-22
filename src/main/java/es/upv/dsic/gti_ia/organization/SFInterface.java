@@ -3063,6 +3063,7 @@ public class SFInterface {
      */
     private void removeProvider(String serviceProfile, String providerName, OntModel m) throws ServiceProfileNotFoundException {
 
+    	try{
         StringTokenizer tokenServiceProf = new StringTokenizer(serviceProfile, "#");
         String baseURI = tokenServiceProf.nextToken();
         String profileName = tokenServiceProf.nextToken();
@@ -3117,6 +3118,9 @@ public class SFInterface {
             UpdateAction.parseExecute(delete2, m, querysol);
 
         }
+    	}catch(Exception e){
+    		throw new ServiceProfileNotFoundException(l10n.getMessage(MessageID.SERVICE_PROFILE_NOT_FOUND, serviceProfile));
+    	}
 
     }
 
