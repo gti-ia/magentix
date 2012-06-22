@@ -143,7 +143,7 @@ public class OMSProxy extends THOMASProxy {
      * @throws InvalidVisibilityException
      *             If visibility is not valid.
      * @throws InvalidUnitTypeException
-     *             If unit type not is not valid.
+     *             If unit type  is not valid.
      */
 
     public ACLMessage buildOrganizationalMessage(String OrganizationID) throws UnitNotExistsException, AgentNotInUnitException, NotPlaysAnyRoleException, InvalidUnitTypeException, OnlyPlaysCreatorException, EmptyParametersException, NotInUnitOrParentUnitException, AgentNotExistsException, RoleNotExistsException, VisibilityRoleException, InvalidVisibilityException {

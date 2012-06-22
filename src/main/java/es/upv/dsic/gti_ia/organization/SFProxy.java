@@ -12,6 +12,7 @@ import es.upv.dsic.gti_ia.organization.exception.AlreadyRegisteredException;
 import es.upv.dsic.gti_ia.organization.exception.DBConnectionException;
 import es.upv.dsic.gti_ia.organization.exception.InvalidDataTypeException;
 import es.upv.dsic.gti_ia.organization.exception.InvalidServiceURLException;
+import es.upv.dsic.gti_ia.organization.exception.MySQLException;
 import es.upv.dsic.gti_ia.organization.exception.ServiceProfileNotFoundException;
 import es.upv.dsic.gti_ia.organization.exception.ServicesNotFoundException;
 import es.upv.dsic.gti_ia.organization.exception.THOMASException;
@@ -65,17 +66,21 @@ public class SFProxy extends THOMASProxy {
 	 * providers (agents or organization) are specified in the
 	 * profile:contactInformation of the service, it means that the service is
 	 * provided by agents or/and organizations
-	 * 
-	 * @param serviceURL
-	 *            the original URL of the OWL-S specification of the service
+	 *
+	 * @param serviceURL the original URL of the OWL-S specification of the service
 	 * @return A description of the changes made, and an OWL-S specification of
-	 *         the registered services or all data of the already registered
-	 *         service in the SF
-	 * @throws THOMASException
-	 *             If there is any error result
+	 * the registered services or all data of the already registered
+	 * service in the SF
+	 * @throws DBConnectionException If a data base connection exception occurs.
+	 * @throws AlreadyRegisteredException If information is already registered in service profile.
+	 * @throws InvalidServiceURLException If service URL is not a valid OWL-S document.
+	 * @throws ServiceProfileNotFoundException If service profile is not found in Jena DataBase.
+	 * @throws InvalidDataTypeException If input or output data type is invalid.
+	 * @throws MySQLException If a MySql exception occurs.
 	 */
 	@SuppressWarnings("unchecked")
-	public ArrayList<String> registerService(String serviceURL) throws  DBConnectionException, AlreadyRegisteredException, InvalidServiceURLException{
+	public ArrayList<String> registerService(String serviceURL) throws  DBConnectionException, AlreadyRegisteredException, InvalidServiceURLException, ServiceProfileNotFoundException,
+	InvalidDataTypeException, MySQLException{
 
 		HashMap<String, String> inputs = new HashMap<String, String>();
 		inputs.put("ServiceURL", serviceURL);
@@ -92,10 +97,18 @@ public class SFProxy extends THOMASProxy {
 			throw e;
 		} catch (DBConnectionException e) {
 			throw e;
+		} catch (InvalidDataTypeException e) {
+			throw e;
+		} catch (MySQLException e) {
+			throw e;
 		} 
 		catch (InvalidServiceURLException e) {
 			throw e;
-		}catch (THOMASException e) {
+		}
+		catch (ServiceProfileNotFoundException e) {
+			throw e;
+		}
+		catch (THOMASException e) {
 
 			e.printStackTrace();
 		}
@@ -106,14 +119,14 @@ public class SFProxy extends THOMASProxy {
 	/**
 	 * The Deregister Service deregisters the specified service deleting all the
 	 * related data from the SF.
-	 * 
-	 * @param serviceProfile
-	 *            the URI representing the service profile to deregister
+	 *
+	 * @param serviceProfile the URI representing the service profile to deregister
 	 * @return A description of the result of the service execution.
-	 * @throws THOMASException
-	 *             If there is any error result
+	 * @throws ServiceProfileNotFoundException If service profile is not found in Jena DataBase.
+	 * @throws DBConnectionException If a data base connection exception occurs.
+	 * @throws MySQLException If a MySql exception occurs.
 	 */
-	public String deregisterService(String serviceProfile) throws ServiceProfileNotFoundException, DBConnectionException {
+	public String deregisterService(String serviceProfile) throws ServiceProfileNotFoundException, DBConnectionException, MySQLException {
 
 		HashMap<String, String> inputs = new HashMap<String, String>();
 		inputs.put("ServiceProfile", serviceProfile);
@@ -128,7 +141,10 @@ public class SFProxy extends THOMASProxy {
 			throw e;
 		} catch (DBConnectionException e) {
 			throw e;
-		} catch (THOMASException e) {
+		}
+		catch (MySQLException e) {
+			throw e;
+		}catch (THOMASException e) {
 
 			e.printStackTrace();
 		}
@@ -139,15 +155,13 @@ public class SFProxy extends THOMASProxy {
 
 	/**
 	 * Removes a provider: agent, organization or web service (grounding); from
-	 * a registered service profile
-	 * 
-	 * @param serviceProfile
-	 *            URI of the service profile to remove the provider
-	 * @param providerID
-	 *            of the provider to remove (provider name or grounding ID)
+	 * a registered service profile.
+	 *
+	 * @param serviceProfile URI of the service profile to remove the provider
+	 * @param providerID of the provider to remove (provider name or grounding ID)
 	 * @return A description of the result of the service execution
-	 * @throws THOMASException
-	 *             If there is any error result
+	 * @throws ServiceProfileNotFoundException If service profile is not found in Jena DataBase.
+	 * @throws DBConnectionException If a data base connection exception occurs.
 	 */
 	public String removeProvider(String serviceProfile, String providerID) throws  ServiceProfileNotFoundException, DBConnectionException{
 
@@ -175,16 +189,16 @@ public class SFProxy extends THOMASProxy {
 
 	/**
 	 * Returns an OWL-S specification with the all data of the specified service
-	 * profile as parameter
-	 * 
-	 * @param serviceProfile
-	 *            URI of the service profile to get its OWL-S specification
+	 * profile as parameter.
+	 *
+	 * @param serviceProfile URI of the service profile to get its OWL-S specification
 	 * @return an OWL-S specification with the all data of the specified service
-	 *         profile as parameter
-	 * @throws THOMASException
-	 *             If there is any error result
+	 * profile as parameter
+	 * @throws ServiceProfileNotFoundException If service profile is not found in Jena DataBase.
+	 * @throws DBConnectionException If a data base connection exception occurs.
+	 * @throws MySQLException If a MySql exception occurs.
 	 */
-	public String getService(String serviceProfile) throws  ServiceProfileNotFoundException, DBConnectionException{
+	public String getService(String serviceProfile) throws  ServiceProfileNotFoundException, DBConnectionException, MySQLException{
 
 		HashMap<String, String> inputs = new HashMap<String, String>();
 		inputs.put("ServiceProfile", serviceProfile);
@@ -200,7 +214,10 @@ public class SFProxy extends THOMASProxy {
 			throw e;
 		} catch (DBConnectionException e) {
 			throw e;
-		} catch (THOMASException e) {
+		} 
+		catch (MySQLException e) {
+			throw e;
+		}catch (THOMASException e) {
 
 			e.printStackTrace();
 		}
@@ -212,23 +229,22 @@ public class SFProxy extends THOMASProxy {
 	 * inputs, data type outputs and keywords in the description. Returns an
 	 * ordered list of the services found with a similarity degree obtained in
 	 * function of the similarity to the given parameters.
-	 * 
-	 * @param inputs
-	 *            data type inputs to search a service with these inputs.
-	 *            Example:
-	 *            \"http://127.0.0.1/ontology/books.owl#Novel\"^^xsd:anyURI
-	 * @param outputs
-	 *            data type outputs to search a service with these outputs.
-	 *            Example:
-	 *            \"http://127.0.0.1/ontology/books.owl#Novel\"^^xsd:anyURI
-	 * @param keywords
-	 *            list to search in the text description of the service
+	 *
+	 * @param inputs data type inputs to search a service with these inputs.
+	 * Example:
+	 * \"http://127.0.0.1/ontology/books.owl#Novel\"^^xsd:anyURI
+	 * @param outputs data type outputs to search a service with these outputs.
+	 * Example:
+	 * \"http://127.0.0.1/ontology/books.owl#Novel\"^^xsd:anyURI
+	 * @param keywords list to search in the text description of the service
 	 * @return an ordered list of the services found with a similarity degree
-	 * @throws THOMASException
-	 *             If there is any error result
+	 * @throws DBConnectionException If a data base connection exception occurs.
+	 * @throws InvalidDataTypeException If input or output data type is invalid.
+	 * @throws ServicesNotFoundException If service is not found.
+	 * @throws MySQLException If a MySql exception occurs. 
 	 */
 	@SuppressWarnings("unchecked")
-	public ArrayList<ArrayList<String>> searchService(ArrayList<String> inputs, ArrayList<String> outputs, ArrayList<String> keywords) throws DBConnectionException, InvalidDataTypeException, ServicesNotFoundException {
+	public ArrayList<ArrayList<String>> searchService(ArrayList<String> inputs, ArrayList<String> outputs, ArrayList<String> keywords) throws DBConnectionException, InvalidDataTypeException, ServicesNotFoundException, MySQLException {
 
 		String inputsStr = "";
 		if (inputs != null && !inputs.isEmpty()) {
@@ -272,7 +288,11 @@ public class SFProxy extends THOMASProxy {
 			throw e;
 		} catch (InvalidDataTypeException e) {
 			throw e;
-		}catch (THOMASException e) {
+		}
+		catch (MySQLException e) {
+			throw e;
+		}
+		catch (THOMASException e) {
 
 			e.printStackTrace();
 		}
