@@ -41,6 +41,7 @@ import es.upv.dsic.gti_ia.organization.exception.InvalidDataTypeException;
 import es.upv.dsic.gti_ia.organization.exception.InvalidServiceURLException;
 import es.upv.dsic.gti_ia.organization.exception.MySQLException;
 import es.upv.dsic.gti_ia.organization.exception.ServiceProfileNotFoundException;
+import es.upv.dsic.gti_ia.organization.exception.ServiceURINotFoundException;
 import es.upv.dsic.gti_ia.organization.exception.THOMASException;
 import es.upv.dsic.gti_ia.organization.exception.THOMASMessages;
 import es.upv.dsic.gti_ia.organization.exception.THOMASMessages.MessageID;
@@ -2003,9 +2004,9 @@ public class SFInterface {
      * @param m
      *            Ontology model of Jena DB to query
      * @return the service process URI of the given service profile
-     * @throws ServiceProfileNotFoundException
+     * @throws ServiceURINotFoundException 
      */
-    private String getServiceProcess(String serviceURI, String serviceURL, OntModel m) throws ServiceProfileNotFoundException {
+    private String getServiceProcess(String serviceURI, String serviceURL, OntModel m) throws ServiceURINotFoundException {
         String serviceProcess = null;
         try {
             if (serviceURL == null) {
@@ -2043,7 +2044,7 @@ public class SFInterface {
             	throw new Exception();
             
         } catch (Exception e) {
-            throw new ServiceProfileNotFoundException(l10n.getMessage(MessageID.SERVICE_URI_NOT_FOUND, serviceURI));
+            throw new ServiceURINotFoundException(l10n.getMessage(MessageID.SERVICE_URI_NOT_FOUND, serviceURI));
         }
 
         return serviceProcess;
