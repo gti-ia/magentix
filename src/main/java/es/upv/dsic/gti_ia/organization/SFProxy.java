@@ -14,6 +14,7 @@ import es.upv.dsic.gti_ia.organization.exception.InvalidDataTypeException;
 import es.upv.dsic.gti_ia.organization.exception.InvalidServiceURLException;
 import es.upv.dsic.gti_ia.organization.exception.MySQLException;
 import es.upv.dsic.gti_ia.organization.exception.ServiceProfileNotFoundException;
+import es.upv.dsic.gti_ia.organization.exception.ServiceURINotFoundException;
 import es.upv.dsic.gti_ia.organization.exception.ServicesNotFoundException;
 import es.upv.dsic.gti_ia.organization.exception.THOMASException;
 
@@ -122,11 +123,12 @@ public class SFProxy extends THOMASProxy {
 	 *
 	 * @param serviceProfile the URI representing the service profile to deregister
 	 * @return A description of the result of the service execution.
+	 * @throws ServiceURINotFoundException If service URI is not found in Jena DataBase.
 	 * @throws ServiceProfileNotFoundException If service profile is not found in Jena DataBase.
 	 * @throws DBConnectionException If a data base connection exception occurs.
 	 * @throws MySQLException If a MySql exception occurs.
 	 */
-	public String deregisterService(String serviceProfile) throws ServiceProfileNotFoundException, DBConnectionException, MySQLException {
+	public String deregisterService(String serviceProfile) throws ServiceURINotFoundException, ServiceProfileNotFoundException, DBConnectionException, MySQLException {
 
 		HashMap<String, String> inputs = new HashMap<String, String>();
 		inputs.put("ServiceProfile", serviceProfile);
@@ -136,7 +138,8 @@ public class SFProxy extends THOMASProxy {
 
 		try {
 			result = (String) this.sendInform();
-
+		} catch (ServiceURINotFoundException e){
+			throw e;
 		} catch (ServiceProfileNotFoundException e) {
 			throw e;
 		} catch (DBConnectionException e) {

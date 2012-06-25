@@ -55,6 +55,7 @@ import es.upv.dsic.gti_ia.organization.exception.RoleNotExistsException;
 import es.upv.dsic.gti_ia.organization.exception.SameAgentNameException;
 import es.upv.dsic.gti_ia.organization.exception.SameUnitException;
 import es.upv.dsic.gti_ia.organization.exception.ServiceProfileNotFoundException;
+import es.upv.dsic.gti_ia.organization.exception.ServiceURINotFoundException;
 import es.upv.dsic.gti_ia.organization.exception.ServicesNotFoundException;
 import es.upv.dsic.gti_ia.organization.exception.SubunitsInUnitException;
 import es.upv.dsic.gti_ia.organization.exception.THOMASException;
@@ -387,6 +388,9 @@ public class THOMASProxy {
 			
 			if (valueAux.equals(l10n.getMessage(MessageID.SERVICE_PROFILE_NOT_FOUND)))
                 throw new ServiceProfileNotFoundException(value);
+			
+			if (valueAux.equals(l10n.getMessage(MessageID.SERVICE_URI_NOT_FOUND)))
+                throw new ServiceURINotFoundException(value);
 			
 			if (valueAux.equals(l10n.getMessage(MessageID.SERVICES_NOT_FOUND)))
                 throw new ServicesNotFoundException(value);

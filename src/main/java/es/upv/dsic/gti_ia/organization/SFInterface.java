@@ -458,11 +458,14 @@ public class SFInterface {
         ModelMaker maker = ModelFactory.createModelRDBMaker(conn);
         Model base = maker.createModel("http://example.org/ontologias");
         OntModel m = ModelFactory.createOntologyModel(getModelSpec(maker), base);
-
+        
+        String serviceURI="";
+        
         try {
 
             String profileServName = getProfileServiceName(serviceProfile, null, m);
-
+            
+            
             if (profileServName == null || profileServName == "") {
                 // service does not exist
                 resultXML += "<status>Error</status>\n";
@@ -473,7 +476,7 @@ public class SFInterface {
 
             } else {
 
-                String serviceURI = getServiceURI(serviceProfile, null, m);
+            	serviceURI = getServiceURI(serviceProfile, null, m);
                 String serviceProcess = getServiceProcess(serviceURI, null, m);
 
                 ArrayList<String> providers = getProviders(serviceProfile, null, m);
@@ -491,6 +494,13 @@ public class SFInterface {
 
             }
 
+        } catch (ServiceURINotFoundException e){
+        	resultXML += "<status>Error</status>\n";
+            resultXML += "<result>\n<description>" + l10n.getMessage(MessageID.SERVICE_URI_NOT_FOUND, serviceURI) + "</description>\n</result>\n";
+            resultXML += "</response>";
+
+            return resultXML;
+            
         } catch (Exception e) {
             resultXML += "<status>Error</status>\n";
             resultXML += "<result>\n<description>" + l10n.getMessage(MessageID.SERVICE_PROFILE_NOT_FOUND, serviceProfile) + "</description>\n</result>\n";
