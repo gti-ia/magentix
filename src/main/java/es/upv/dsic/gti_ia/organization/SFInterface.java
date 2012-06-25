@@ -473,7 +473,7 @@ public class SFInterface {
             } else {
 
                 String serviceURI = getServiceURI(serviceProfile, null, m);
-                String serviceProcess = getServiceProcess(serviceProfile, null, m);
+                String serviceProcess = getServiceProcess(serviceURI, null, m);
 
                 ArrayList<String> providers = getProviders(serviceProfile, null, m);
                 Iterator<String> iterProvs = providers.iterator();
@@ -1995,7 +1995,7 @@ public class SFInterface {
     /**
      * Returns the service process URI of the given service profile
      * 
-     * @param serviceProfile
+     * @param serviceURI
      *            URI to extract data from
      * @param serviceURL
      *            it specifies the service URL if the query is not to the Jena
@@ -2005,7 +2005,7 @@ public class SFInterface {
      * @return the service process URI of the given service profile
      * @throws ServiceProfileNotFoundException
      */
-    private String getServiceProcess(String serviceProfile, String serviceURL, OntModel m) throws ServiceProfileNotFoundException {
+    private String getServiceProcess(String serviceURI, String serviceURL, OntModel m) throws ServiceProfileNotFoundException {
         String serviceProcess = null;
         try {
             if (serviceURL == null) {
@@ -2017,7 +2017,9 @@ public class SFInterface {
                 m.read(serviceURL);
             }
 
-            String queryStringSearchName = "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>" + "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" + "select ?x where { ?x  a process:AtomicProcess }";
+            String queryStringSearchName = "prefix service: <http://www.daml.org/services/owl-s/1.1/Service.owl#>" + 
+            "prefix process: <http://www.daml.org/services/owl-s/1.1/Process.owl#>" + 
+            		"select ?x where { <"+serviceURI+"> service:describedBy ?x }";
 
             Query querySearchName = QueryFactory.create(queryStringSearchName);
 
@@ -2041,7 +2043,7 @@ public class SFInterface {
             	throw new Exception();
             
         } catch (Exception e) {
-            throw new ServiceProfileNotFoundException(l10n.getMessage(MessageID.SERVICE_PROFILE_NOT_FOUND, serviceProfile));
+            throw new ServiceProfileNotFoundException(l10n.getMessage(MessageID.SERVICE_URI_NOT_FOUND, serviceURI));
         }
 
         return serviceProcess;

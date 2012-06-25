@@ -192,6 +192,10 @@ public class THOMASMessages {
          */
         SERVICE_PROFILE_NOT_FOUND,
         /**
+         * Exception message when the URI of the service is not found in Jena DB.
+         */
+        SERVICE_URI_NOT_FOUND,
+        /**
          * Exception message when the search of services does not return any value.
          */
         SERVICES_NOT_FOUND,        
