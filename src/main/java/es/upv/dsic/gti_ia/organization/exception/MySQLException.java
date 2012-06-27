@@ -1,7 +1,7 @@
 /**
  * 
  */
-package exception;
+package es.upv.dsic.gti_ia.organization.exception;
 
 /**
  * This class represents the exception that is launched when occurs a MySQL
@@ -12,27 +12,27 @@ package exception;
  */
 public class MySQLException extends THOMASException {
 
-    // -----------------------------------------------------------------
-    // CONSTANTS of the class
-    // -----------------------------------------------------------------
+	// -----------------------------------------------------------------
+	// CONSTANTS of the class
+	// -----------------------------------------------------------------
 
-    /**
-     * Serialization identifier.
-     */
-    private static final long serialVersionUID = 1L;
+	/**
+	 * Serialization identifier.
+	 */
+	private static final long serialVersionUID = 1L;
 
-    // -----------------------------------------------------------------
-    // CONSTRUCTORS of the class
-    // -----------------------------------------------------------------
+	// -----------------------------------------------------------------
+	// CONSTRUCTORS of the class
+	// -----------------------------------------------------------------
 
-    /**
-     * Creates a new MySQLException using the specified message.
-     * 
-     * @param message
-     */
-    public MySQLException(String message) {
-        super(message);
-        this.content = message;
-    }
+	/**
+	 * Creates a new MySQLException using the specified message.
+	 * 
+	 * @param message
+	 */
+	public MySQLException(String message) {
+		super(message);
+		this.content = message;
+	}
 
 }
