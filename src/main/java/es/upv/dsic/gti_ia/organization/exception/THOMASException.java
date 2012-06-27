@@ -1,4 +1,4 @@
-package es.upv.dsic.gti_ia.organization.exception;
+package exception;
 
 /**
  * This class represents a generic THOMASException,

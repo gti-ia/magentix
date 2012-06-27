@@ -1,7 +1,7 @@
 /**
  * 
  */
-package es.upv.dsic.gti_ia.organization.exception;
+package exception;
 
 /**
  * This class represents the exception that is launched when the search of

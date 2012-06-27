@@ -1,7 +1,7 @@
 /**
  * 
  */
-package es.upv.dsic.gti_ia.organization.exception;
+package exception;
 
 import java.text.MessageFormat;
 import java.util.Locale;
