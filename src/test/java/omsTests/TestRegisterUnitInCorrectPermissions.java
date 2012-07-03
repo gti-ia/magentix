@@ -7,6 +7,7 @@ import es.upv.dsic.gti_ia.organization.OMS;
 import es.upv.dsic.gti_ia.organization.OMSProxy;
 import es.upv.dsic.gti_ia.organization.SF;
 import es.upv.dsic.gti_ia.organization.exception.NotCreatorInParentUnitException;
+import es.upv.dsic.gti_ia.organization.exception.UnitExistsException;
 
 
 public class TestRegisterUnitInCorrectPermissions extends TestCase {
@@ -745,6 +746,36 @@ public class TestRegisterUnitInCorrectPermissions extends TestCase {
 			fail(result);
 
 		}catch(NotCreatorInParentUnitException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	
+	public void testRegisterUnit10()
+	{
+		String unit = "Plana";
+		String parentUnit = "virtual";
+		String unitType = "flat";
+		
+		try
+		{
+			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
+			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana'))))");
+
+			
+
+			String result = omsProxy.registerUnit(unit, unitType, parentUnit, "creador");
+
+			fail(result);
+
+		}catch(UnitExistsException e)
 		{
 
 			assertNotNull(e);

@@ -8,7 +8,9 @@ import es.upv.dsic.gti_ia.organization.OMSProxy;
 import es.upv.dsic.gti_ia.organization.SF;
 import es.upv.dsic.gti_ia.organization.exception.AgentNotInUnitException;
 import es.upv.dsic.gti_ia.organization.exception.NotInUnitAndNotCreatorException;
+import es.upv.dsic.gti_ia.organization.exception.NotMemberOrCreatorInUnitException;
 import es.upv.dsic.gti_ia.organization.exception.NotSupervisorOrCreatorInUnitException;
+import es.upv.dsic.gti_ia.organization.exception.RoleExistsInUnitException;
 
 
 public class TestRegisterRoleInCorrectPermissions extends TestCase {
@@ -220,6 +222,33 @@ public class TestRegisterRoleInCorrectPermissions extends TestCase {
 			fail(result);
 
 		}catch(NotSupervisorOrCreatorInUnitException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	
+	public void testRegisterRole4()
+	{
+
+		try
+		{
+		
+			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
+			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
+			
+		
+			String result = omsProxy.registerRole("miembro", "plana", "external", "public", "member");
+
+			fail(result);
+
+		}catch(RoleExistsInUnitException e)
 		{
 
 			assertNotNull(e);
