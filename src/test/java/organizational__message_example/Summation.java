@@ -248,7 +248,15 @@ public class Summation extends CAgent {
 				if (n<1)
 					messageToSend.setContent(6+" "+3);
 				else
+				{
+					try {
+						Thread.sleep(1 * 1000);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					messageToSend.setContent(5+" "+3);
+				}
 
 
 

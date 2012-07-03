@@ -23,6 +23,7 @@ import es.upv.dsic.gti_ia.organization.exception.THOMASException;
 public class Display extends CAgent {
 
 	OMSProxy omsProxy = new OMSProxy(this);
+	public ArrayList<ACLMessage> messages = new ArrayList<ACLMessage>();
 
 
 
@@ -153,7 +154,11 @@ public class Display extends CAgent {
 				{
 					//If the agent is equal to the sender, then the position is extracted
 					if (informMember.get(0).equals(messageReceived.getSender().name))
+					{
+						messages.add(messageReceived);
 						System.out.println("[ "+myProcessor.getMyAgent().getName()+" ]  "+ messageReceived.getSender().name+" says " + messageReceived.getContent());
+						
+					}
 				}
 
 			} catch (THOMASException e) {

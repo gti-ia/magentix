@@ -33,11 +33,11 @@ public class Run {
 			
 			
 			
-			OMS oms = new OMS();
-			SF sf = new SF();
-			
-			oms.start();
-			sf.start();
+//			OMS oms = new OMS();
+//			SF sf = new SF();
+//			
+//			oms.start();
+//			sf.start();
 			
 			
 			/**
