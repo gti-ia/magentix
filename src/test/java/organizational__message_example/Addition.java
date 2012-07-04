@@ -128,7 +128,7 @@ public class Addition extends CAgent {
 	synchronized public boolean exit()
 	{
 		received++;
-		if (received > 1)
+		if (received >= 1)
 			return true;
 		else
 			return false;
@@ -193,6 +193,7 @@ public class Addition extends CAgent {
 			String state = "SEND_RESULT";
 			int p1,p2, result = 0;
 
+			System.out.println("Voy a sumar esto: "+ messageReceived.getContent());
 
 			p1 = Integer.parseInt(messageReceived.getContent().split(" ")[0]);
 			p2 = Integer.parseInt(messageReceived.getContent().split(" ")[1]);
