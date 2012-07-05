@@ -65,12 +65,18 @@ public class TestBaseAgent extends TestCase {
 
 	
 
-
+		
 
 		while(consumerAgent.getMessage() == null)
 		{
-
-			
+		//System.out.println("Busco:");
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	
 		}			
 		assertEquals("Hello, I'm emisor",consumerAgent.getMessage().getContent());
 
@@ -80,7 +86,7 @@ public class TestBaseAgent extends TestCase {
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		
-		
+		consumerAgent.finalize();
 		
 		
 	}
