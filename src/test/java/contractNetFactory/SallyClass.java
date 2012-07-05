@@ -10,6 +10,8 @@ import es.upv.dsic.gti_ia.cAgents.CFactory;
 import es.upv.dsic.gti_ia.cAgents.protocols.FIPA_CONTRACTNET_Participant;
 
 class SallyClass extends CAgent {
+	
+	public int propose = -1;
 
 	public SallyClass(AgentID aid) throws Exception {
 		super(aid);
@@ -60,7 +62,8 @@ class SallyClass extends CAgent {
 			protected void doSendProposal(CProcessor myProcessor,
 					ACLMessage messageToSend) {
 				Random rand = new Random(System.currentTimeMillis());
-				int x = rand.nextInt(100);				
+				int x = rand.nextInt(100);	
+				propose = x;
 				messageToSend.setSender(getAid());
 				messageToSend.setReceiver(myProcessor.getLastReceivedMessage().getSender());
 				messageToSend.setContent(String.valueOf(x));

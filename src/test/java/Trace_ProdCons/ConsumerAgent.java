@@ -1,5 +1,6 @@
 package Trace_ProdCons;
 
+import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
 import org.apache.qpid.transport.MessageTransfer;
 
@@ -22,6 +23,7 @@ import es.upv.dsic.gti_ia.trace.*;
 public class ConsumerAgent extends BaseAgent {
 
 	LinkedBlockingQueue<MessageTransfer> internalQueue;
+	ArrayList<TraceEvent> events;
 
 	public ConsumerAgent(AgentID aid) throws Exception {
 		super(aid);
@@ -29,6 +31,8 @@ public class ConsumerAgent extends BaseAgent {
 
 	public void execute() {
 		System.out.println("[CONSUMER " + getName() +"]: Executing...");
+		
+		events = new ArrayList<TraceEvent>();
 		/**
 		 * This agent has no definite work. Wait infinitely the arrival of new
 		 * messages.
@@ -63,10 +67,17 @@ public class ConsumerAgent extends BaseAgent {
 	}
 
 	public void onTraceEvent(TraceEvent tEvent) {
+		
+		events.add(tEvent);
 		System.out.println("[CONSUMER " + this.getName() + "]: Received from " + tEvent.getOriginEntity().getAid().toString() + ": " + tEvent.getTracingService() + " " + tEvent.getContent());
 	}
 	
 	public void onMessage(ACLMessage msg){
 		System.out.println("[CONSUMER " + this.getName() + "]: Received from " + msg.getSender().toString() + ": " + msg.getPerformative() + msg.getContent());
+	}
+	
+	public ArrayList<TraceEvent> getEvents()
+	{
+		return this.events;
 	}
 }

@@ -11,6 +11,7 @@ import es.upv.dsic.gti_ia.cAgents.protocols.FIPA_CONTRACTNET_Initiator;
 
 class HarryClass extends CAgent {
 
+	public ACLMessage propose = null;
 	public HarryClass(AgentID aid) throws Exception {
 		super(aid);
 	}
@@ -79,6 +80,7 @@ class HarryClass extends CAgent {
 			protected void doReceiveInform(CProcessor myProcessor,
 					ACLMessage msg) {
 				// receive accepted proposal result
+				propose = msg;
 				System.out.println(getName()+": I received the message: "+msg.getContent());
 				
 			}
