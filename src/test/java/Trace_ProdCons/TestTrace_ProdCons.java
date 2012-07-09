@@ -122,9 +122,8 @@ public class TestTrace_ProdCons extends TestCase {
 	}
 	protected void tearDown() throws Exception {
 		super.tearDown();
-
-
-
+		
+		tm.finalize();
 
 	}
 
