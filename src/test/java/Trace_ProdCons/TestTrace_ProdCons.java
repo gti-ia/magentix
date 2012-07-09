@@ -76,7 +76,7 @@ public class TestTrace_ProdCons extends TestCase {
 		
 
 		} catch (Exception e) {
-			fail();
+			fail(e.getMessage());
 		}
 
 
