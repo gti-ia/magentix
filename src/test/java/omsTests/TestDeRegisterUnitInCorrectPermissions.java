@@ -6,6 +6,7 @@ import es.upv.dsic.gti_ia.core.AgentsConnection;
 import es.upv.dsic.gti_ia.organization.OMS;
 import es.upv.dsic.gti_ia.organization.OMSProxy;
 import es.upv.dsic.gti_ia.organization.SF;
+import es.upv.dsic.gti_ia.organization.exception.EmptyParametersException;
 import es.upv.dsic.gti_ia.organization.exception.NotCreatorAgentInUnitException;
 import es.upv.dsic.gti_ia.organization.exception.NotCreatorInUnitOrParentUnitException;
 import es.upv.dsic.gti_ia.organization.exception.SubunitsInUnitException;
@@ -973,6 +974,80 @@ public class TestDeRegisterUnitInCorrectPermissions extends TestCase {
 			fail(result);
 
 		}catch(SubunitsInUnitException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	
+	public void testDeRegisterUnit5a()
+	{
+		
+		String unit = "plana2";
+		String unitType = "flat";
+		String parentUnit = "plana";
+		
+		
+		try
+		{
+			dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('"+unit+"',(SELECT idunitType FROM unitType WHERE unitTypeName = '"+unitType+"'))");
+			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = '"+parentUnit+"'),(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'))");
+
+			
+			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
+			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = '"+parentUnit+"'))))");
+			
+			
+		
+
+			String result = omsProxy.deregisterUnit(null);
+
+			fail(result);
+
+		}catch(EmptyParametersException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	
+	public void testDeRegisterUnit5b()
+	{
+		
+		String unit = "plana2";
+		String unitType = "flat";
+		String parentUnit = "plana";
+		
+		
+		try
+		{
+			dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('"+unit+"',(SELECT idunitType FROM unitType WHERE unitTypeName = '"+unitType+"'))");
+			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = '"+parentUnit+"'),(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'))");
+
+			
+			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
+			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = '"+parentUnit+"'))))");
+			
+			
+		
+
+			String result = omsProxy.deregisterUnit("");
+
+			fail(result);
+
+		}catch(EmptyParametersException e)
 		{
 
 			assertNotNull(e);

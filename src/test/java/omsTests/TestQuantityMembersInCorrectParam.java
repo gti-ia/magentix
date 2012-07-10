@@ -7,6 +7,8 @@ import es.upv.dsic.gti_ia.organization.OMS;
 import es.upv.dsic.gti_ia.organization.OMSProxy;
 import es.upv.dsic.gti_ia.organization.SF;
 import es.upv.dsic.gti_ia.organization.exception.EmptyParametersException;
+import es.upv.dsic.gti_ia.organization.exception.InvalidRolePositionException;
+import es.upv.dsic.gti_ia.organization.exception.RoleNotExistsException;
 import es.upv.dsic.gti_ia.organization.exception.UnitNotExistsException;
 
 
@@ -149,6 +151,74 @@ public class TestQuantityMembersInCorrectParam extends TestCase {
 		}
 
 	}
+	
+	
+	public void testInformMembers4()
+	{
+		try
+		{
+
+			omsProxy.quantityMembers("virtual", "noexiste", "subordinate");
+
+			fail();
+
+		}catch(RoleNotExistsException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	
+	public void testInformMembers5()
+	{
+		try
+		{
+
+			omsProxy.quantityMembers("virtual", null, "subordinate");
+
+			fail();
+
+		}catch(RoleNotExistsException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	
+	public void testInformMembers6()
+	{
+		try
+		{
+
+			omsProxy.quantityMembers("virtual", "participant", "subordinate");
+
+			fail();
+
+		}catch(InvalidRolePositionException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	
 	
 	
 	

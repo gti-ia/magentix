@@ -122,7 +122,7 @@ public class OMSProxy extends THOMASProxy {
      *            to send a message
      * @return returns the ACL message built
      * 
-     * @throws NotInUnitOrParentUnitException
+     * @throws UnitNotExistsException
      *             If unit not exists.
      * @throws AgentNotInUnitException
      *             If agent does not play any role in unit.

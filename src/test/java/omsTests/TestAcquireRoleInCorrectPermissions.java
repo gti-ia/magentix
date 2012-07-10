@@ -8,6 +8,7 @@ import es.upv.dsic.gti_ia.organization.OMSProxy;
 import es.upv.dsic.gti_ia.organization.SF;
 import es.upv.dsic.gti_ia.organization.exception.NotInUnitOrParentUnitException;
 import es.upv.dsic.gti_ia.organization.exception.NotSupervisorOrCreatorInUnitException;
+import es.upv.dsic.gti_ia.organization.exception.PlayingRoleException;
 
 
 public class TestAcquireRoleInCorrectPermissions extends TestCase {
@@ -1358,4 +1359,32 @@ public class TestAcquireRoleInCorrectPermissions extends TestCase {
 		}
 
 	}
+	
+	public void testAcquireRole20()
+	{
+		try
+		{
+
+			
+			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
+			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'subordinado' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
+
+			
+			String result = omsProxy.acquireRole("subordinado","jerarquia");
+
+			fail(result);
+
+		}catch(PlayingRoleException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	
 }

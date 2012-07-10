@@ -8,7 +8,6 @@ import es.upv.dsic.gti_ia.organization.OMSProxy;
 import es.upv.dsic.gti_ia.organization.SF;
 import es.upv.dsic.gti_ia.organization.exception.AgentNotInUnitException;
 import es.upv.dsic.gti_ia.organization.exception.NotInUnitAndNotCreatorException;
-import es.upv.dsic.gti_ia.organization.exception.NotMemberOrCreatorInUnitException;
 import es.upv.dsic.gti_ia.organization.exception.NotSupervisorOrCreatorInUnitException;
 import es.upv.dsic.gti_ia.organization.exception.RoleExistsInUnitException;
 
