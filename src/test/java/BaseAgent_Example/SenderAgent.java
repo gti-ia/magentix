@@ -18,7 +18,7 @@ public class SenderAgent extends BaseAgent {
 
 	public void execute() {
 		logger.info("Executing, I'm " + getName());
-		AgentID receiver = new AgentID("consumer");
+		AgentID receiver = new AgentID("consumerAgent");
 
 		/**
 		 * Building a ACLMessage

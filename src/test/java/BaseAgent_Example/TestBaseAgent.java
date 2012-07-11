@@ -45,7 +45,7 @@ public class TestBaseAgent extends TestCase {
 			/**
 			 * Instantiating a consumer agent
 			 */
-			consumerAgent  = new ConsumerAgent(new AgentID("consumer"));
+			consumerAgent  = new ConsumerAgent(new AgentID("consumerAgent"));
 
 			/**
 			 * Execute the agents
