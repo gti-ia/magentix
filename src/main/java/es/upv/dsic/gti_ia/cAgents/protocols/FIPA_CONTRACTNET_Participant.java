@@ -118,6 +118,21 @@ public abstract class FIPA_CONTRACTNET_Participant {
 			return "FINAL";
 		}
 	}
+        
+        /**
+	 * Method executed when the timeout is reached while the initiator was waiting for proposals
+	 * @param myProcessor the CProcessor managing the conversation
+	 * @param msg timeout message
+	 */
+	protected String doTimeout(CProcessor myProcessor, ACLMessage msg) {
+            return "FINAL";
+	}
+
+	class TIMEOUT_Method implements ReceiveStateMethod {
+		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
+			return doTimeout(myProcessor, messageReceived);
+		}
+	}
 	
 	/**
 	 * Method executed when the initiator accepts participant's proposal
@@ -307,6 +322,15 @@ public abstract class FIPA_CONTRACTNET_Participant {
 		WaitState WAIT_FOR_ACCEPT = new WaitState("WAIT_FOR_ACCEPT", timeout);
 		processor.registerState(WAIT_FOR_ACCEPT);
 		processor.addTransition(SEND_PROPOSAL, WAIT_FOR_ACCEPT);
+                
+                // TIMEOUT State
+
+		ReceiveState TIMEOUT = new ReceiveState("TIMEOUT");
+		TIMEOUT.setMethod(new TIMEOUT_Method());
+		filter = new MessageFilter("performative = INFORM AND purpose = waitMessage");
+		TIMEOUT.setAcceptFilter(filter);
+		processor.registerState(TIMEOUT);
+		processor.addTransition(WAIT_FOR_ACCEPT, TIMEOUT);
 
 		// RECEIVE_ACCEPT State
 
@@ -369,6 +393,7 @@ public abstract class FIPA_CONTRACTNET_Participant {
 		processor.addTransition(SEND_INFO, FINAL);
 		processor.addTransition(RECEIVE_REJECT, FINAL);
 		processor.addTransition(SEND_NOT_UNDERSTOOD, FINAL);
+                processor.addTransition(TIMEOUT, FINAL);
 				
 		return theFactory;
 	}
