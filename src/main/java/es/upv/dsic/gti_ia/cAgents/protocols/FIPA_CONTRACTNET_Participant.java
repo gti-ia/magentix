@@ -124,13 +124,13 @@ public abstract class FIPA_CONTRACTNET_Participant {
 	 * @param myProcessor the CProcessor managing the conversation
 	 * @param msg timeout message
 	 */
-	protected String doTimeout(CProcessor myProcessor, ACLMessage msg) {
-            return "FINAL";
+	protected void doTimeout(CProcessor myProcessor, ACLMessage msg) {
 	}
 
 	class TIMEOUT_Method implements ReceiveStateMethod {
 		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
-			return doTimeout(myProcessor, messageReceived);
+			doTimeout(myProcessor, messageReceived);
+                        return "FINAL";
 		}
 	}
 	
