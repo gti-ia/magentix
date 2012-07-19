@@ -75,6 +75,7 @@ public class TestOrganizationalMessageIncorrectPermissions extends TestCase {
 
 		//------------------Clean Data Base -----------//
 		dbA.executeSQL("DELETE FROM agentPlayList");
+		dbA.executeSQL("DELETE FROM agentList");
 		dbA.executeSQL("DELETE FROM roleList WHERE idroleList != 1");
 		dbA.executeSQL("DELETE FROM unitHierarchy WHERE idChildUnit != 1");
 		dbA.executeSQL("DELETE FROM unitList WHERE idunitList != 1");
@@ -137,7 +138,7 @@ public class TestOrganizationalMessageIncorrectPermissions extends TestCase {
 		"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 
 
-
+		dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
 
 	}
 
@@ -149,8 +150,8 @@ public class TestOrganizationalMessageIncorrectPermissions extends TestCase {
 		
 		try
 		{
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'subordinado' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
+			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'subordinado' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
 
 
 			omsProxy.buildOrganizationalMessage(unit);
@@ -178,8 +179,8 @@ public class TestOrganizationalMessageIncorrectPermissions extends TestCase {
 		
 		try
 		{
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo'))))");
+			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo'))))");
 
 
 			omsProxy.buildOrganizationalMessage(unit);
@@ -208,8 +209,8 @@ public class TestOrganizationalMessageIncorrectPermissions extends TestCase {
 		
 		try
 		{
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
+			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
 
 
 			omsProxy.buildOrganizationalMessage(unit);
@@ -294,7 +295,7 @@ public class TestOrganizationalMessageIncorrectPermissions extends TestCase {
 
 			fail();
 
-		}catch(AgentNotExistsException e)
+		}catch(NotPlaysAnyRoleException e)
 		{
 
 			assertNotNull(e);
