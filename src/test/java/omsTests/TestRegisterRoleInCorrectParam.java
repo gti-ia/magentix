@@ -10,6 +10,7 @@ import es.upv.dsic.gti_ia.organization.exception.EmptyParametersException;
 import es.upv.dsic.gti_ia.organization.exception.InvalidAccessibilityException;
 import es.upv.dsic.gti_ia.organization.exception.InvalidPositionException;
 import es.upv.dsic.gti_ia.organization.exception.InvalidVisibilityException;
+import es.upv.dsic.gti_ia.organization.exception.MySQLException;
 import es.upv.dsic.gti_ia.organization.exception.UnitNotExistsException;
 
 
@@ -73,15 +74,17 @@ public class TestRegisterRoleInCorrectParam extends TestCase {
 
 		//------------------Clean Data Base -----------//
 		dbA.executeSQL("DELETE FROM agentPlayList");
+		dbA.executeSQL("DELETE FROM agentList");
 		dbA.executeSQL("DELETE FROM roleList WHERE idroleList != 1");
 		dbA.executeSQL("DELETE FROM unitHierarchy WHERE idChildUnit != 1");
 		dbA.executeSQL("DELETE FROM unitList WHERE idunitList != 1");
 
 		//--------------------------------------------//
 		
+		dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
 		
-		dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-		"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+		"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
 
 		
 		dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('Plana',(SELECT idunitType FROM unitType WHERE unitTypeName = 'flat'))");
@@ -116,14 +119,14 @@ public class TestRegisterRoleInCorrectParam extends TestCase {
 
 
 
-		dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-		"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+		"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
 
-		dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-		"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo'))))");
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+		"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo'))))");
 
-		dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-		"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana'))))");
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+		"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana'))))");
 
 
 
@@ -691,7 +694,7 @@ public class TestRegisterRoleInCorrectParam extends TestCase {
 
 			fail(result);
 
-		}catch(InvalidAccessibilityException e)
+		}catch(MySQLException e)
 		{
 
 			assertNotNull(e);
@@ -706,7 +709,7 @@ public class TestRegisterRoleInCorrectParam extends TestCase {
 		{
 			String result = omsProxy.registerRole("miembro", "equipo", "inexistente", "public", "member");
 			fail(result);
-		}catch(InvalidAccessibilityException e)
+		}catch(MySQLException e)
 		{
 
 			assertNotNull(e);
@@ -722,7 +725,7 @@ public class TestRegisterRoleInCorrectParam extends TestCase {
 			String result = omsProxy.registerRole("miembro", "plana", "inexistente", "public", "member");
 
 			fail(result);
-		}catch(InvalidAccessibilityException e)
+		}catch(MySQLException e)
 		{
 
 			assertNotNull(e);
@@ -738,7 +741,7 @@ public class TestRegisterRoleInCorrectParam extends TestCase {
 			String result = omsProxy.registerRole("subordinado", "jerarquia", "inexistente", "public", "subordinate");
 
 			fail(result);
-		}catch(InvalidAccessibilityException e)
+		}catch(MySQLException e)
 		{
 
 			assertNotNull(e);
@@ -898,7 +901,7 @@ public class TestRegisterRoleInCorrectParam extends TestCase {
 
 			fail(result);
 
-		}catch(InvalidVisibilityException e)
+		}catch(MySQLException e)
 		{
 
 			assertNotNull(e);
@@ -913,7 +916,7 @@ public class TestRegisterRoleInCorrectParam extends TestCase {
 		{
 			String result = omsProxy.registerRole("miembro", "equipo", "external", "inexistente", "member");
 			fail(result);
-		}catch(InvalidVisibilityException e)
+		}catch(MySQLException e)
 		{
 
 			assertNotNull(e);
@@ -929,7 +932,7 @@ public class TestRegisterRoleInCorrectParam extends TestCase {
 			String result = omsProxy.registerRole("miembro", "plana", "external", "inexistente", "member");
 
 			fail(result);
-		}catch(InvalidVisibilityException e)
+		}catch(MySQLException e)
 		{
 
 			assertNotNull(e);
@@ -945,7 +948,7 @@ public class TestRegisterRoleInCorrectParam extends TestCase {
 			String result = omsProxy.registerRole("subordinado", "jerarquia", "external", "inexistente", "subordinate");
 
 			fail(result);
-		}catch(InvalidVisibilityException e)
+		}catch(MySQLException e)
 		{
 
 			assertNotNull(e);

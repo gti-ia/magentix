@@ -8,6 +8,7 @@ import es.upv.dsic.gti_ia.organization.OMSProxy;
 import es.upv.dsic.gti_ia.organization.SF;
 import es.upv.dsic.gti_ia.organization.exception.EmptyParametersException;
 import es.upv.dsic.gti_ia.organization.exception.InvalidUnitTypeException;
+import es.upv.dsic.gti_ia.organization.exception.MySQLException;
 import es.upv.dsic.gti_ia.organization.exception.ParentUnitNotExistsException;
 
 
@@ -72,14 +73,16 @@ public class TestRegisterUnitInCorrectParam extends TestCase {
 
 		//------------------Clean Data Base -----------//
 		dbA.executeSQL("DELETE FROM agentPlayList");
+		dbA.executeSQL("DELETE FROM agentList");
 		dbA.executeSQL("DELETE FROM roleList WHERE idroleList != 1");
 		dbA.executeSQL("DELETE FROM unitHierarchy WHERE idChildUnit != 1");
 		dbA.executeSQL("DELETE FROM unitList WHERE idunitList != 1");
 
 		//--------------------------------------------//
-
-		dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-		"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
+		dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
+		
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+		"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
 
 
 
@@ -256,7 +259,7 @@ public class TestRegisterUnitInCorrectParam extends TestCase {
 
 			fail(result);
 
-		}catch(InvalidUnitTypeException e)
+		}catch(MySQLException e)
 		{
 
 			assertNotNull(e);
@@ -272,7 +275,7 @@ public class TestRegisterUnitInCorrectParam extends TestCase {
 			String result = omsProxy.registerUnit("Equipo", "insexistente", "virtual","Creador");
 
 			fail(result);
-		}catch(InvalidUnitTypeException e)
+		}catch(MySQLException e)
 		{
 
 			assertNotNull(e);
@@ -288,7 +291,7 @@ public class TestRegisterUnitInCorrectParam extends TestCase {
 			String result = omsProxy.registerUnit("Jerarquía", "insexistente", "virtual","Creador");
 
 			fail(result);
-		}catch(InvalidUnitTypeException e)
+		}catch(MySQLException e)
 		{
 
 			assertNotNull(e);
@@ -308,7 +311,7 @@ public class TestRegisterUnitInCorrectParam extends TestCase {
 
 			fail(result);
 
-		}catch(InvalidUnitTypeException e)
+		}catch(MySQLException e)
 		{
 
 			assertNotNull(e);
@@ -324,7 +327,7 @@ public class TestRegisterUnitInCorrectParam extends TestCase {
 			String result = omsProxy.registerUnit("Equipo", null, "virtual","Creador");
 
 			fail(result);
-		}catch(InvalidUnitTypeException e)
+		}catch(MySQLException e)
 		{
 
 			assertNotNull(e);
@@ -340,7 +343,7 @@ public class TestRegisterUnitInCorrectParam extends TestCase {
 			String result = omsProxy.registerUnit("Equipo", null, "virtual","Creador");
 
 			fail(result);
-		}catch(InvalidUnitTypeException e)
+		}catch(MySQLException e)
 		{
 
 			assertNotNull(e);

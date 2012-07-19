@@ -70,6 +70,7 @@ public class TestDeRegisterRole extends TestCase {
 
 		//------------------Clean Data Base -----------//
 		dbA.executeSQL("DELETE FROM agentPlayList");
+		dbA.executeSQL("DELETE FROM agentList");
 		dbA.executeSQL("DELETE FROM roleList WHERE idroleList != 1");
 		dbA.executeSQL("DELETE FROM unitHierarchy WHERE idChildUnit != 1");
 		dbA.executeSQL("DELETE FROM unitList WHERE idunitList != 1");
@@ -89,8 +90,10 @@ public class TestDeRegisterRole extends TestCase {
 			String role = "miembro";
 			String unit = "virtual";
 		
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
+			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
+			
+			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
 
 			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
@@ -179,9 +182,10 @@ public class TestDeRegisterRole extends TestCase {
 					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 		
-		
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
+			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
+			
+			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
 
 
 			String result = omsProxy.deregisterRole(role, unit);
@@ -256,9 +260,10 @@ public class TestDeRegisterRole extends TestCase {
 					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 		
-		
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana'))))");
+			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
+			
+			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana'))))");
 
 
 			String result = omsProxy.deregisterRole(role, unit);
@@ -333,9 +338,10 @@ public class TestDeRegisterRole extends TestCase {
 					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 		
-		
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'participante' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana'))))");
+			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
+			
+			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participante' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana'))))");
 
 
 			String result = omsProxy.deregisterRole(role, unit);
@@ -410,9 +416,10 @@ public class TestDeRegisterRole extends TestCase {
 					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 		
-		
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo'))))");
+			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
+			
+			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo'))))");
 
 
 			String result = omsProxy.deregisterRole(role, unit);
@@ -478,9 +485,10 @@ public class TestDeRegisterRole extends TestCase {
 					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 		
-		
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'participante' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo'))))");
+			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
+			
+			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participante' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo'))))");
 
 
 			String result = omsProxy.deregisterRole(role, unit);
@@ -546,9 +554,10 @@ public class TestDeRegisterRole extends TestCase {
 					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 		
-		
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo'))))");
+			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
+			
+			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo'))))");
 
 
 			String result = omsProxy.deregisterRole(role, unit);
@@ -615,9 +624,10 @@ public class TestDeRegisterRole extends TestCase {
 					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 		
-		
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'supervisor' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
+			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
+			
+			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'supervisor' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
 
 
 			String result = omsProxy.deregisterRole(role, unit);
@@ -684,9 +694,10 @@ public class TestDeRegisterRole extends TestCase {
 					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 		
-		
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
+			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
+			
+			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
 
 
 			String result = omsProxy.deregisterRole(role, unit);
@@ -760,12 +771,13 @@ public class TestDeRegisterRole extends TestCase {
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
 			
-		
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana'))))");
+			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
+			
+			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana'))))");
 
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana'))))");
+			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana'))))");
 
 
 			String result = omsProxy.deregisterRole(role, "plana2");
@@ -833,13 +845,13 @@ public class TestDeRegisterRole extends TestCase {
 					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			
+			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
 		
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana'))))");
+			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana'))))");
 
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana2'))))");
+			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana2'))))");
 
 
 			String result = omsProxy.deregisterRole(role, "plana2");

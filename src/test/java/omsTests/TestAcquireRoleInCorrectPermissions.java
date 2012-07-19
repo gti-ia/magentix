@@ -72,6 +72,7 @@ public class TestAcquireRoleInCorrectPermissions extends TestCase {
 
 		//------------------Clean Data Base -----------//
 		dbA.executeSQL("DELETE FROM agentPlayList");
+		dbA.executeSQL("DELETE FROM agentList");
 		dbA.executeSQL("DELETE FROM roleList WHERE idroleList != 1");
 		dbA.executeSQL("DELETE FROM unitHierarchy WHERE idChildUnit != 1");
 		dbA.executeSQL("DELETE FROM unitList WHERE idunitList != 1");
@@ -180,9 +181,10 @@ public class TestAcquireRoleInCorrectPermissions extends TestCase {
 					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 
+			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
 			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana'))))");
+			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana'))))");
 
 			
 			String result = omsProxy.acquireRole("miembro2","plana2");
@@ -213,9 +215,10 @@ public class TestAcquireRoleInCorrectPermissions extends TestCase {
 					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
+			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
 			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana'))))");
+			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana'))))");
 
 			
 			String result = omsProxy.acquireRole("miembro2","plana2");
@@ -247,9 +250,10 @@ public class TestAcquireRoleInCorrectPermissions extends TestCase {
 					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 
+			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
 			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana'))))");
+			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana'))))");
 
 			
 			String result = omsProxy.acquireRole("creador2","plana2");
@@ -281,9 +285,10 @@ public class TestAcquireRoleInCorrectPermissions extends TestCase {
 					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
+			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
 			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana'))))");
+			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana'))))");
 
 			
 			String result = omsProxy.acquireRole("creador2","plana2");
@@ -316,9 +321,10 @@ public class TestAcquireRoleInCorrectPermissions extends TestCase {
 					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 
+			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
 			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana'))))");
+			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana'))))");
 
 			
 			String result = omsProxy.acquireRole("miembro","plana2");
@@ -350,9 +356,10 @@ public class TestAcquireRoleInCorrectPermissions extends TestCase {
 					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
+			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
 			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana'))))");
+			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana'))))");
 
 			
 			String result = omsProxy.acquireRole("miembro","plana2");
@@ -384,9 +391,10 @@ public class TestAcquireRoleInCorrectPermissions extends TestCase {
 					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 
+			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
 			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana'))))");
+			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana'))))");
 
 			
 			String result = omsProxy.acquireRole("creador3","plana2");
@@ -418,9 +426,10 @@ public class TestAcquireRoleInCorrectPermissions extends TestCase {
 					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
+			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
 			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana'))))");
+			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana'))))");
 
 			
 			String result = omsProxy.acquireRole("creador3","plana2");
@@ -452,9 +461,10 @@ public class TestAcquireRoleInCorrectPermissions extends TestCase {
 					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 
+			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
 			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo'))))");
+			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo'))))");
 
 			
 			String result = omsProxy.acquireRole("miembro2","equipo2");
@@ -486,9 +496,10 @@ public class TestAcquireRoleInCorrectPermissions extends TestCase {
 					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
+			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
 			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo'))))");
+			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo'))))");
 
 			
 			String result = omsProxy.acquireRole("miembro2","equipo2");
@@ -520,9 +531,10 @@ public class TestAcquireRoleInCorrectPermissions extends TestCase {
 					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 
+			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
 			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo'))))");
+			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo'))))");
 
 			
 			String result = omsProxy.acquireRole("creador2","equipo2");
@@ -554,9 +566,10 @@ public class TestAcquireRoleInCorrectPermissions extends TestCase {
 					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
+			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
 			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo'))))");
+			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo'))))");
 
 			
 			String result = omsProxy.acquireRole("creador2","equipo2");
@@ -588,9 +601,10 @@ public class TestAcquireRoleInCorrectPermissions extends TestCase {
 					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 
+			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
 			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo'))))");
+			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo'))))");
 
 			
 			String result = omsProxy.acquireRole("miembro","equipo2");
@@ -622,9 +636,10 @@ public class TestAcquireRoleInCorrectPermissions extends TestCase {
 					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
+			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
 			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo'))))");
+			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo'))))");
 
 			
 			String result = omsProxy.acquireRole("miembro","equipo2");
@@ -655,9 +670,10 @@ public class TestAcquireRoleInCorrectPermissions extends TestCase {
 					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 
+			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
 			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo'))))");
+			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo'))))");
 
 			
 			String result = omsProxy.acquireRole("creador3","equipo2");
@@ -688,9 +704,10 @@ public class TestAcquireRoleInCorrectPermissions extends TestCase {
 					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
+			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
 			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo'))))");
+			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo'))))");
 
 			
 			String result = omsProxy.acquireRole("creador3","equipo2");
@@ -721,9 +738,10 @@ public class TestAcquireRoleInCorrectPermissions extends TestCase {
 					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 
+			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
 			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'subordinado' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
+			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'subordinado' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
 
 			
 			String result = omsProxy.acquireRole("subordinado2","jerarquia2");
@@ -754,9 +772,10 @@ public class TestAcquireRoleInCorrectPermissions extends TestCase {
 					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
+			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
 			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'subordinado' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
+			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'subordinado' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
 
 			
 			String result = omsProxy.acquireRole("subordinado2","jerarquia2");
@@ -788,9 +807,10 @@ public class TestAcquireRoleInCorrectPermissions extends TestCase {
 					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 
+			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
 			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'supervisor' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
+			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'supervisor' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
 
 			
 			String result = omsProxy.acquireRole("subordinado","jerarquia2");
@@ -821,9 +841,10 @@ public class TestAcquireRoleInCorrectPermissions extends TestCase {
 					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
+			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
 			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'supervisor' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
+			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'supervisor' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
 
 			
 			String result = omsProxy.acquireRole("subordinado","jerarquia2");
@@ -854,9 +875,10 @@ public class TestAcquireRoleInCorrectPermissions extends TestCase {
 					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 
+			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
 			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
+			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
 
 			
 			String result = omsProxy.acquireRole("subordinado","jerarquia2");
@@ -887,9 +909,10 @@ public class TestAcquireRoleInCorrectPermissions extends TestCase {
 					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
+			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
 			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
+			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
 
 			
 			String result = omsProxy.acquireRole("subordinado","jerarquia2");
@@ -920,9 +943,10 @@ public class TestAcquireRoleInCorrectPermissions extends TestCase {
 					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 
+			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
 			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'subordinado' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
+			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'subordinado' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
 
 			
 			String result = omsProxy.acquireRole("supervisor","jerarquia2");
@@ -953,9 +977,10 @@ public class TestAcquireRoleInCorrectPermissions extends TestCase {
 					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
+			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
 			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'subordinado' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
+			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'subordinado' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
 
 			
 			String result = omsProxy.acquireRole("supervisor","jerarquia2");
@@ -986,9 +1011,10 @@ public class TestAcquireRoleInCorrectPermissions extends TestCase {
 					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 
+			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
 			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'supervisor' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
+			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'supervisor' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
 
 			
 			String result = omsProxy.acquireRole("supervisor2","jerarquia2");
@@ -1019,9 +1045,10 @@ public class TestAcquireRoleInCorrectPermissions extends TestCase {
 					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
+			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
 			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'supervisor' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
+			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'supervisor' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
 
 			
 			String result = omsProxy.acquireRole("supervisor2","jerarquia2");
@@ -1052,9 +1079,10 @@ public class TestAcquireRoleInCorrectPermissions extends TestCase {
 					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 
+			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
 			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
+			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
 
 			
 			String result = omsProxy.acquireRole("supervisor","jerarquia2");
@@ -1085,9 +1113,10 @@ public class TestAcquireRoleInCorrectPermissions extends TestCase {
 					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
+			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
 			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
+			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
 
 			
 			String result = omsProxy.acquireRole("supervisor","jerarquia2");
@@ -1118,9 +1147,10 @@ public class TestAcquireRoleInCorrectPermissions extends TestCase {
 					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 
+			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
 			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'subordinado' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
+			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'subordinado' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
 
 			
 			String result = omsProxy.acquireRole("creador2","jerarquia2");
@@ -1151,9 +1181,10 @@ public class TestAcquireRoleInCorrectPermissions extends TestCase {
 					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
+			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
 			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'subordinado' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
+			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'subordinado' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
 
 			
 			String result = omsProxy.acquireRole("creador2","jerarquia2");
@@ -1184,9 +1215,10 @@ public class TestAcquireRoleInCorrectPermissions extends TestCase {
 					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 
+			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
 			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'supervisor' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
+			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'supervisor' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
 
 			
 			String result = omsProxy.acquireRole("creador2","jerarquia2");
@@ -1217,9 +1249,10 @@ public class TestAcquireRoleInCorrectPermissions extends TestCase {
 					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
+			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
 			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'supervisor' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
+			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'supervisor' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
 
 			
 			String result = omsProxy.acquireRole("creador2","jerarquia2");
@@ -1250,9 +1283,10 @@ public class TestAcquireRoleInCorrectPermissions extends TestCase {
 					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 
+			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
 			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
+			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
 
 			
 			String result = omsProxy.acquireRole("creador3","jerarquia2");
@@ -1283,9 +1317,10 @@ public class TestAcquireRoleInCorrectPermissions extends TestCase {
 					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
+			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
 			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
+			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
 
 			
 			String result = omsProxy.acquireRole("creador3","jerarquia2");
@@ -1311,9 +1346,10 @@ public class TestAcquireRoleInCorrectPermissions extends TestCase {
 		try
 		{
 
+			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
 			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'subordinado' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
+			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'subordinado' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
 
 			
 			String result = omsProxy.acquireRole("creador2","jerarquia");
@@ -1338,9 +1374,10 @@ public class TestAcquireRoleInCorrectPermissions extends TestCase {
 		try
 		{
 
+			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
 			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'subordinado' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
+			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'subordinado' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
 
 			
 			String result = omsProxy.acquireRole("supervisor","jerarquia");
@@ -1365,9 +1402,10 @@ public class TestAcquireRoleInCorrectPermissions extends TestCase {
 		try
 		{
 
+			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
 			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`agentName`, `idroleList`) VALUES"+
-			"('pruebas',(SELECT idroleList FROM roleList WHERE (roleName = 'subordinado' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
+			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'subordinado' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
 
 			
 			String result = omsProxy.acquireRole("subordinado","jerarquia");
