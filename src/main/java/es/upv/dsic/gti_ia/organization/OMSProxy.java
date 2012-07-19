@@ -319,11 +319,9 @@ public class OMSProxy extends THOMASProxy {
      *             If any parameter is empty or null.
      * @throws AgentNotExistsException
      *             If agent not exists.
-     * @throws InvalidVisibilityException
-     *             If visibility is not valid.
      */
     @SuppressWarnings("unchecked")
-    public ArrayList<ArrayList<String>> informAgentRole(String RequestedAgentID) throws EmptyParametersException, AgentNotExistsException, InvalidVisibilityException {
+    public ArrayList<ArrayList<String>> informAgentRole(String RequestedAgentID) throws EmptyParametersException, AgentNotExistsException{
         ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
 
         HashMap<String, String> inputs = new HashMap<String, String>();
@@ -339,9 +337,6 @@ public class OMSProxy extends THOMASProxy {
 
             throw e;
         } catch (AgentNotExistsException e) {
-
-            throw e;
-        } catch (InvalidVisibilityException e) {
 
             throw e;
         } catch (THOMASException e) {
@@ -380,13 +375,9 @@ public class OMSProxy extends THOMASProxy {
      *             If role not exists.
      * @throws UnitNotExistsException
      *             If unit not exists.
-     * @throws IDUnitTypeNotFoundException
-     *             If id unit type does not found.
-     * @throws InvalidVisibilityException
-     *             If vibisility is not valid.
      */
     @SuppressWarnings("unchecked")
-    public ArrayList<ArrayList<String>> informMembers(String UnitID, String RoleID, String PositionID) throws EmptyParametersException, UnitNotExistsException, AgentNotExistsException, InvalidRolePositionException, VisibilityRoleException, RoleNotExistsException, UnitNotExistsException, IDUnitTypeNotFoundException, InvalidVisibilityException {
+    public ArrayList<ArrayList<String>> informMembers(String UnitID, String RoleID, String PositionID) throws EmptyParametersException, UnitNotExistsException, AgentNotExistsException, InvalidRolePositionException, VisibilityRoleException, RoleNotExistsException, UnitNotExistsException {
 
         HashMap<String, String> inputs = new HashMap<String, String>();
 
@@ -416,12 +407,6 @@ public class OMSProxy extends THOMASProxy {
 
             throw e;
         } catch (RoleNotExistsException e) {
-
-            throw e;
-        } catch (IDUnitTypeNotFoundException e) {
-
-            throw e;
-        } catch (InvalidVisibilityException e) {
 
             throw e;
         } catch (THOMASException e) {
@@ -699,8 +684,10 @@ public class OMSProxy extends THOMASProxy {
      *             If accessibility is not valid.
      * @throws InvalidVisibilityException
      *             If visibility is not valid.
+     * @throws MySQLException
+     *             If a MySql exception occurs.
      */
-    public String registerRole(String RoleID, String UnitID, String AccessibilityID, String VisibilityID, String PositionID) throws EmptyParametersException, UnitNotExistsException, RoleExistsInUnitException, AgentNotInUnitException, NotInUnitAndNotCreatorException, InvalidUnitTypeException, NotMemberOrCreatorInUnitException, NotSupervisorOrCreatorInUnitException, InvalidPositionException, InvalidAccessibilityException, InvalidVisibilityException {
+    public String registerRole(String RoleID, String UnitID, String AccessibilityID, String VisibilityID, String PositionID) throws EmptyParametersException, UnitNotExistsException, RoleExistsInUnitException, AgentNotInUnitException, NotInUnitAndNotCreatorException, InvalidUnitTypeException, NotMemberOrCreatorInUnitException, NotSupervisorOrCreatorInUnitException, InvalidPositionException, InvalidAccessibilityException, InvalidVisibilityException, MySQLException {
 
         HashMap<String, String> inputs = new HashMap<String, String>();
 
@@ -747,7 +734,11 @@ public class OMSProxy extends THOMASProxy {
         } catch (InvalidVisibilityException e) {
 
             throw e;
-        } catch (THOMASException e) {
+        }
+        catch (MySQLException e) {
+
+            throw e;
+        }catch (THOMASException e) {
 
             e.printStackTrace();
             return null;
@@ -791,7 +782,7 @@ public class OMSProxy extends THOMASProxy {
      * @throws InvalidUnitTypeException
      *             If unit type is invalid.
      */
-    public String registerUnit(String UnitID, String TypeID, String ParentUnitID, String CreatorID) throws EmptyParametersException, UnitExistsException, NotCreatorInParentUnitException, ParentUnitNotExistsException, InvalidVisibilityException, InvalidAccessibilityException, InvalidPositionException, InsertingTableException, InvalidUnitTypeException {
+    public String registerUnit(String UnitID, String TypeID, String ParentUnitID, String CreatorID) throws EmptyParametersException, UnitExistsException, NotCreatorInParentUnitException, ParentUnitNotExistsException, InvalidVisibilityException, InvalidAccessibilityException, InvalidPositionException, InsertingTableException, InvalidUnitTypeException, MySQLException {
 
         if (ParentUnitID == null) {
 
@@ -846,7 +837,11 @@ public class OMSProxy extends THOMASProxy {
         } catch (InvalidUnitTypeException e) {
 
             throw e;
-        } catch (THOMASException e) {
+        }
+        catch (MySQLException e) {
+
+            throw e;
+        }catch (THOMASException e) {
 
             e.printStackTrace();
             return null;
@@ -1036,7 +1031,7 @@ public class OMSProxy extends THOMASProxy {
      * @throws InvalidPositionException
      *             If position is invalid.
      */
-    public String deregisterUnit(String UnitID) throws EmptyParametersException, UnitNotExistsException, VirtualUnitException, NotCreatorInUnitOrParentUnitException, SubunitsInUnitException, NotCreatorAgentInUnitException, DeletingTableException, InvalidPositionException {
+    public String deregisterUnit(String UnitID) throws EmptyParametersException, UnitNotExistsException, VirtualUnitException, NotCreatorInUnitOrParentUnitException, SubunitsInUnitException, NotCreatorAgentInUnitException, DeletingTableException, InvalidPositionException, MySQLException{
 
         HashMap<String, String> inputs = new HashMap<String, String>();
 
@@ -1070,7 +1065,11 @@ public class OMSProxy extends THOMASProxy {
         } catch (InvalidPositionException e) {
 
             throw e;
-        } catch (THOMASException e) {
+    	} catch (MySQLException e) {
+
+        	throw e;
+        }
+        catch (THOMASException e) {
 
             e.printStackTrace();
             return null;

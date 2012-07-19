@@ -323,7 +323,7 @@ public class THOMASProxy {
 			if (valueAux.equals(l10n.getMessage(MessageID.INVALID_VISIBILITY)))
 				throw new InvalidVisibilityException(value);
 			
-			if (valueAux.equals(l10n.getMessage(MessageID.MYSQL)))
+			if (valueAux.contains(l10n.getMessage(MessageID.MYSQL).split(" ")[0]))
 				throw new MySQLException(value);
 			
 			if (valueAux.equals(l10n.getMessage(MessageID.NOT_CREATOR)))
