@@ -197,12 +197,17 @@ class OMSInterface {
 			if (checkParameter(UnitName)) {
 				if (dbInterface.checkUnit(UnitName)) {
 					if (!UnitName.equals("virtual")) {
-						// --------------------------------------------------------------------------------
-						// ------------------------- Checking domain-dependent
-						// norms
-						// ----------------------
-						// --------------------------------------------------------------------------------
-						// TODO
+						if (dbInterface.checkSubUnits(UnitName)) {
+							String message = l10n.getMessage(MessageID.SUBUNITS_IN_UNIT, UnitName);
+							throw new SubunitsInUnitException(message);
+						} else {
+
+							// --------------------------------------------------------------------------------
+							// ------------------------- Checking domain-dependent
+							// norms
+							// ----------------------
+							// --------------------------------------------------------------------------------
+							// TODO
 							// --------------------------------------------------------------------------------
 							// ------------------------- Checking structural norms
 							// ----------------------------
@@ -226,25 +231,22 @@ class OMSInterface {
 									throw new NotCreatorAgentInUnitException(message);
 								} else {
 
-									if (dbInterface.checkSubUnits(UnitName)) {
-										String message = l10n.getMessage(MessageID.SUBUNITS_IN_UNIT, UnitName);
-										throw new SubunitsInUnitException(message);
-									} else {
 
-										String result = dbInterface.deleteUnit(UnitName, AgentName);
+									String result = dbInterface.deleteUnit(UnitName, AgentName);
 
-										resultXML += "<status>Ok</status>\n";
-										resultXML += "<result>\n<description>" + result + "</description>\n</result>\n";
-										resultXML += "</response>";
+									resultXML += "<status>Ok</status>\n";
+									resultXML += "<result>\n<description>" + result + "</description>\n</result>\n";
+									resultXML += "</response>";
 
-										return resultXML;
+									return resultXML;
 
-									}
+
 								}
 							} else {
 								String message = l10n.getMessage(MessageID.NOT_CREATOR_IN_UNIT_OR_PARENT_UNIT);
 								throw new NotCreatorInUnitOrParentUnitException(message);
 							}
+						}
 					} else {
 						String message = l10n.getMessage(MessageID.VIRTUAL_UNIT);
 						throw new VirtualUnitException(message);
@@ -426,13 +428,16 @@ class OMSInterface {
 			if (checkParameter(RoleName) && checkParameter(UnitName)) {
 				if (dbInterface.checkUnit(UnitName)) {
 					if (dbInterface.checkRole(RoleName, UnitName)) {
-						// --------------------------------------------------------------------------------
-						// ------------------------- Checking domain-dependent
-						// norms ----------------------
-						// --------------------------------------------------------------------------------
-						// TODO
+						
 						if (!dbInterface.checkTargetRoleNorm(RoleName, UnitName)) {
 							if (!dbInterface.checkPlayedRoleInUnit(RoleName, UnitName)) {
+								
+								// --------------------------------------------------------------------------------
+								// ------------------------- Checking domain-dependent
+								// norms ----------------------
+								// --------------------------------------------------------------------------------
+								// TODO
+								
 								unitType = dbInterface.getUnitType(UnitName);
 
 								if (dbInterface.checkAgentInUnit(AgentName, UnitName)) {
@@ -670,15 +675,18 @@ class OMSInterface {
 			if (checkParameter(RoleName) && checkParameter(UnitName)) {
 				if (dbInterface.checkUnit(UnitName)) {
 					if (dbInterface.checkRole(RoleName, UnitName)) {
-						// --------------------------------------------------------------------------------
-						// ------------------------- Checking domain-dependent
-						// norms ----------------------
-						// --------------------------------------------------------------------------------
-						// TODO
+						
 						if (!dbInterface.checkAgentPlaysRole(AgentName, RoleName, UnitName)) {
 							String message = l10n.getMessage(MessageID.NOT_PLAYS_ROLE, AgentName, RoleName);
 							throw new NotPlaysRoleException(message);
 						} else {
+							
+							// --------------------------------------------------------------------------------
+							// ------------------------- Checking domain-dependent
+							// norms ----------------------
+							// --------------------------------------------------------------------------------
+							// TODO
+							
 							String result = dbInterface.leaveRole(UnitName, RoleName, AgentName);
 
 							resultXML += "<status>Ok</status>\n";
