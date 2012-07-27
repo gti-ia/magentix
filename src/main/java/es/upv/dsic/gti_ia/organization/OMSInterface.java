@@ -197,56 +197,51 @@ class OMSInterface {
 			if (checkParameter(UnitName)) {
 				if (dbInterface.checkUnit(UnitName)) {
 					if (!UnitName.equals("virtual")) {
+						if (dbInterface.checkNoCreatorAgentsInUnit(UnitName)) {
+							String message = l10n.getMessage(MessageID.NOT_CREATOR_AGENT_IN_UNIT);
+							throw new NotCreatorAgentInUnitException(message);
+						}
 						if (dbInterface.checkSubUnits(UnitName)) {
 							String message = l10n.getMessage(MessageID.SUBUNITS_IN_UNIT, UnitName);
 							throw new SubunitsInUnitException(message);
-						} else {
+						}
+						// --------------------------------------------------------------------------------
+						// ------------------------- Checking domain-dependent
+						// norms
+						// ----------------------
+						// --------------------------------------------------------------------------------
+						// TODO
+						// --------------------------------------------------------------------------------
+						// ------------------------- Checking structural norms
+						// ----------------------------
+						// --------------------------------------------------------------------------------
+						if (dbInterface.checkPositionInUnit(AgentName, "creator", UnitName)) {
+							play = true;
+						}
 
-							// --------------------------------------------------------------------------------
-							// ------------------------- Checking domain-dependent
-							// norms
-							// ----------------------
-							// --------------------------------------------------------------------------------
-							// TODO
-							// --------------------------------------------------------------------------------
-							// ------------------------- Checking structural norms
-							// ----------------------------
-							// --------------------------------------------------------------------------------
-							if (dbInterface.checkPositionInUnit(AgentName, "creator", UnitName)) {
+						ArrayList<String> parentsUnit = dbInterface.getParentsUnit(UnitName);
+
+						for (String parentUnit : parentsUnit) {
+							if (dbInterface.checkPositionInUnit(AgentName, "creator", parentUnit)) {
 								play = true;
 							}
-
-							ArrayList<String> parentsUnit = dbInterface.getParentsUnit(UnitName);
-
-							for (String parentUnit : parentsUnit) {
-								if (dbInterface.checkPositionInUnit(AgentName, "creator", parentUnit)) {
-									play = true;
-								}
-							}
-
-							if (play) {
-
-								if (dbInterface.checkNoCreatorAgentsInUnit(UnitName)) {
-									String message = l10n.getMessage(MessageID.NOT_CREATOR_AGENT_IN_UNIT);
-									throw new NotCreatorAgentInUnitException(message);
-								} else {
-
-
-									String result = dbInterface.deleteUnit(UnitName, AgentName);
-
-									resultXML += "<status>Ok</status>\n";
-									resultXML += "<result>\n<description>" + result + "</description>\n</result>\n";
-									resultXML += "</response>";
-
-									return resultXML;
-
-
-								}
-							} else {
-								String message = l10n.getMessage(MessageID.NOT_CREATOR_IN_UNIT_OR_PARENT_UNIT);
-								throw new NotCreatorInUnitOrParentUnitException(message);
-							}
 						}
+
+						if (play) {
+
+							String result = dbInterface.deleteUnit(UnitName, AgentName);
+
+							resultXML += "<status>Ok</status>\n";
+							resultXML += "<result>\n<description>" + result + "</description>\n</result>\n";
+							resultXML += "</response>";
+
+							return resultXML;
+
+						} else {
+							String message = l10n.getMessage(MessageID.NOT_CREATOR_IN_UNIT_OR_PARENT_UNIT);
+							throw new NotCreatorInUnitOrParentUnitException(message);
+						}
+
 					} else {
 						String message = l10n.getMessage(MessageID.VIRTUAL_UNIT);
 						throw new VirtualUnitException(message);
@@ -428,16 +423,16 @@ class OMSInterface {
 			if (checkParameter(RoleName) && checkParameter(UnitName)) {
 				if (dbInterface.checkUnit(UnitName)) {
 					if (dbInterface.checkRole(RoleName, UnitName)) {
-						
+
 						if (!dbInterface.checkTargetRoleNorm(RoleName, UnitName)) {
 							if (!dbInterface.checkPlayedRoleInUnit(RoleName, UnitName)) {
-								
+
 								// --------------------------------------------------------------------------------
 								// ------------------------- Checking domain-dependent
 								// norms ----------------------
 								// --------------------------------------------------------------------------------
 								// TODO
-								
+
 								unitType = dbInterface.getUnitType(UnitName);
 
 								if (dbInterface.checkAgentInUnit(AgentName, UnitName)) {
@@ -675,18 +670,18 @@ class OMSInterface {
 			if (checkParameter(RoleName) && checkParameter(UnitName)) {
 				if (dbInterface.checkUnit(UnitName)) {
 					if (dbInterface.checkRole(RoleName, UnitName)) {
-						
+
 						if (!dbInterface.checkAgentPlaysRole(AgentName, RoleName, UnitName)) {
 							String message = l10n.getMessage(MessageID.NOT_PLAYS_ROLE, AgentName, RoleName);
 							throw new NotPlaysRoleException(message);
 						} else {
-							
+
 							// --------------------------------------------------------------------------------
 							// ------------------------- Checking domain-dependent
 							// norms ----------------------
 							// --------------------------------------------------------------------------------
 							// TODO
-							
+
 							String result = dbInterface.leaveRole(UnitName, RoleName, AgentName);
 
 							resultXML += "<status>Ok</status>\n";
@@ -1082,6 +1077,107 @@ class OMSInterface {
 		}
 	}
 
+
+	private String informUnitAgentRole(String UnitName, String RequestedAgentName, String AgentName)
+	{
+		ArrayList<ArrayList<String>> methodResult = new ArrayList<ArrayList<String>>();
+		String resultXML = "";
+
+		try {
+			// --------------------------------------------------------------------------------
+			// ------------------------- Checking input parameters
+			// ----------------------------
+			// --------------------------------------------------------------------------------
+			if (checkParameter(RequestedAgentName)) {
+				if (dbInterface.checkAgent(RequestedAgentName)) {
+					// --------------------------------------------------------------------------------
+					// ------------------------- Checking domain-dependent norms
+					// ----------------------
+					// --------------------------------------------------------------------------------
+
+					if (!false)// TODO Check permit norm
+					{
+						if (!false) //TODO Check forbidden norm
+						{
+
+							if (dbInterface.checkAgentInUnit(AgentName, UnitName))
+							{
+								methodResult = dbInterface.getInformAgentRolesPlayedInUnit(UnitName, RequestedAgentName);
+
+							
+								
+								for (ArrayList<String> agentPair : methodResult) { // <
+									// RoleName
+									// ,
+									// UnitName
+									// >
+									resultXML += "<item>\n";
+									resultXML += "<rolename>" + agentPair.get(0) + "</rolename>\n";
+									resultXML += "<unitname>" + UnitName + "</unitname>\n";
+									resultXML += "</item>\n";
+								}
+								
+								return resultXML;
+							}
+							else
+							{
+								methodResult = dbInterface.getInformAgentRolesPlayedInUnit(UnitName, RequestedAgentName);
+
+								
+								for (ArrayList<String> agentPair : methodResult) { // <
+								
+									if (agentPair.get(1).equals("public"))
+									{
+										resultXML += "<item>\n";
+										resultXML += "<rolename>" + agentPair.get(0) + "</rolename>\n";
+										resultXML += "<unitname>" + UnitName + "</unitname>\n";
+										resultXML += "</item>\n";
+									}
+								}
+								
+								return resultXML;
+							}
+						}else
+						{
+							//TODO Norm forbidden exception
+							throw new THOMASException("");
+						}
+					}else
+					{
+						methodResult = dbInterface.getInformAgentRolesPlayedInUnit(UnitName, RequestedAgentName);
+
+						
+						
+						for (ArrayList<String> agentPair : methodResult) { // <
+							// RoleName
+							// ,
+							// UnitName
+							// >
+							resultXML += "<item>\n";
+							resultXML += "<rolename>" + agentPair.get(0) + "</rolename>\n";
+							resultXML += "<unitname>" + UnitName + "</unitname>\n";
+							resultXML += "</item>\n";
+						}
+						
+						return resultXML;
+					}
+				} else {
+					String message = l10n.getMessage(MessageID.AGENT_NOT_EXISTS, RequestedAgentName);
+					throw new AgentNotExistsException(message);
+				}
+
+			}
+			String message = l10n.getMessage(MessageID.EMPTY_PARAMETERS);
+			throw new EmptyParametersException(message);
+
+		} catch (Exception e) {
+			resultXML += "<status>Error</status>\n";
+			resultXML += "<result>\n<description>" + e.getMessage() + "</description>\n</result>\n";
+			resultXML += "</response>";
+			return resultXML;
+		}
+	}
+
 	/**
 	 * Method used for requesting the list of roles and units where an agent is,
 	 * given the specific moment.
@@ -1095,7 +1191,12 @@ class OMSInterface {
 	 */
 	String informAgentRole(String RequestedAgentName, String AgentName) {
 
-		ArrayList<ArrayList<String>> methodResult = new ArrayList<ArrayList<String>>();
+		
+		ArrayList<ArrayList<String>> agentRole = new ArrayList<ArrayList<String>>();
+		ArrayList<String> units = new ArrayList<String>();
+		
+		String resultInformUnitAgentRole = "";
+		
 		String resultXML = "<response>\n<serviceName>InformAgentRole</serviceName>\n";
 
 		try {
@@ -1105,26 +1206,31 @@ class OMSInterface {
 			// --------------------------------------------------------------------------------
 			if (checkParameter(RequestedAgentName)) {
 				if (dbInterface.checkAgent(RequestedAgentName)) {
-					// --------------------------------------------------------------------------------
-					// ------------------------- Checking domain-dependent norms
-					// ----------------------
-					// --------------------------------------------------------------------------------
-					// TODO
-
-					methodResult = dbInterface.getInformAgentRole(RequestedAgentName, AgentName);
+					
+						
+					agentRole = dbInterface.getInformAgentRole(RequestedAgentName, AgentName);
+					
+					for (ArrayList<String> agentPair : agentRole) { 
+						
+						if (!units.contains(agentPair.get(1)))
+						{
+							units.add(agentPair.get(1));
+						}
+					}
+					if (units.size() != 0)
+					{
+						for (String unit : units) { 
+							resultInformUnitAgentRole += informUnitAgentRole(unit, RequestedAgentName, AgentName);
+							
+						}
+						
+						
+					}
+					
 
 					resultXML += "<status>Ok</status>\n";
 					resultXML += "<result>\n";
-					for (ArrayList<String> agentPair : methodResult) { // <
-						// RoleName
-						// ,
-						// UnitName
-						// >
-						resultXML += "<item>\n";
-						resultXML += "<rolename>" + agentPair.get(0) + "</rolename>\n";
-						resultXML += "<unitname>" + agentPair.get(1) + "</unitname>\n";
-						resultXML += "</item>\n";
-					}
+					resultXML += resultInformUnitAgentRole;
 					resultXML += "</result>\n";
 					resultXML += "</response>";
 
