@@ -1908,9 +1908,9 @@ class OMSInterface {
 					// --------------------------------------------------------------------------------
 
 					
-					if (!true) //TODO Check permit norm
+					if (!false) //TODO Check permit norm
 					{
-						if (!true) //TODO Is forbidenn
+						if (false) //TODO Is forbidenn
 						{
 							//	//TODO Norm forbidden exception
 							throw new THOMASException("");
