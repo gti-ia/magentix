@@ -367,6 +367,8 @@ public class OMSProxy extends THOMASProxy {
      *             If unit not exists.
      * @throws AgentNotExistsException
      *             If agent not exists.
+     * @throws AgentNotInUnitException
+     *             If agent is not inside the unit.
      * @throws InvalidRolePositionException
      *             If role position is invalid.
      * @throws VisibilityRoleException
@@ -377,7 +379,7 @@ public class OMSProxy extends THOMASProxy {
      *             If unit not exists.
      */
     @SuppressWarnings("unchecked")
-    public ArrayList<ArrayList<String>> informMembers(String UnitID, String RoleID, String PositionID) throws EmptyParametersException, UnitNotExistsException, AgentNotExistsException, InvalidRolePositionException, VisibilityRoleException, RoleNotExistsException, UnitNotExistsException {
+    public ArrayList<ArrayList<String>> informMembers(String UnitID, String RoleID, String PositionID) throws EmptyParametersException, UnitNotExistsException, AgentNotExistsException, AgentNotInUnitException, InvalidRolePositionException, VisibilityRoleException, RoleNotExistsException, UnitNotExistsException {
 
         HashMap<String, String> inputs = new HashMap<String, String>();
 
@@ -400,7 +402,12 @@ public class OMSProxy extends THOMASProxy {
         } catch (AgentNotExistsException e) {
 
             throw e;
-        } catch (InvalidRolePositionException e) {
+        }
+    	catch (AgentNotInUnitException e) {
+
+    		throw e;
+    		
+    	}catch (InvalidRolePositionException e) {
 
             throw e;
         } catch (VisibilityRoleException e) {
@@ -582,6 +589,8 @@ public class OMSProxy extends THOMASProxy {
      *             If unit not exists.
      * @throws AgentNotExistsException
      *             If agent not exists.
+     * @throws AgentNotInUnitException
+     *             If agent is not inside the unit.
      * @throws InvalidRolePositionException
      *             If role position is not valid.
      * @throws VisibilityRoleException
@@ -594,7 +603,7 @@ public class OMSProxy extends THOMASProxy {
      *             If position is not valid.
      */
     @SuppressWarnings("unchecked")
-    public int quantityMembers(String UnitID, String RoleID, String PositionID) throws EmptyParametersException, UnitNotExistsException, AgentNotExistsException, InvalidRolePositionException, VisibilityRoleException, RoleNotExistsException, InvalidVisibilityException, InvalidPositionException {
+    public int quantityMembers(String UnitID, String RoleID, String PositionID) throws EmptyParametersException, UnitNotExistsException, AgentNotExistsException, AgentNotInUnitException, InvalidRolePositionException, VisibilityRoleException, RoleNotExistsException, InvalidVisibilityException, InvalidPositionException {
 
         HashMap<String, String> inputs = new HashMap<String, String>();
 
@@ -618,7 +627,12 @@ public class OMSProxy extends THOMASProxy {
         } catch (AgentNotExistsException e) {
 
             throw e;
-        } catch (InvalidRolePositionException e) {
+        } 
+    	catch (AgentNotInUnitException e) {
+
+    		throw e;
+    		
+    	}catch (InvalidRolePositionException e) {
 
             throw e;
         } catch (VisibilityRoleException e) {
