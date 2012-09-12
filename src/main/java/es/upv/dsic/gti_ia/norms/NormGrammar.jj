@@ -1,0 +1,300 @@
+/**
+ * JavaCC template file created by SF JavaCC plugin 1.5.17+ wizard for JavaCC 1.5.0+
+ */options{  JDK_VERSION = "1.5";  static = true;
+ /* SANITY_CHECK = false;*/}PARSER_BEGIN(Norms)package es.upv.dsic.gti_ia.norms;
+
+public class Norms{  public static void main(String args []) throws ParseException  {    Norms parser = new Norms(System.in);    while (true)    {      System.out.println("Reading from standard input...");      System.out.print("Enter an norm expression :");      try      {        switch (Norms.one_line())        {          case 0 :           System.out.println("OK.");          break;          case 1 :           System.out.println("Goodbye.");          break;          default :           break;        }      }      catch (Exception e)      {        System.out.println("NOK.");        System.out.println(e.getMessage());        Norms.ReInit(System.in);      }      catch (Error e)      {        System.out.println("Oops.");        System.out.println(e.getMessage());        break;      }    }  }}PARSER_END(Norms)SKIP :{
+  " "|  "\r"| "\t"| "\n"}
+TOKEN : /* OPERATORS */{
+
+  
+   			< deontic: "o" | "f" | "p" >
+| 	< targetType: "agentName" | "roleName" | "positionName" >
+|  	< AND: "&" >
+| 	< OR: "||" >
+| 	< NOT:	"not" >
+| 	< NOTEQUAL:	"\"==" >
+| 	< EQUALS:	"==" >
+| 	< LESS:	"<" >
+| 	< LESSOREQUAL: "<=" >
+| 	< HIGHER:	">" >
+| 	< HIGHEROREQUAL:	">=" >
+| 	< SUM:	"+" >
+| 	< SUBTRACTION:	"-" >
+| 	< MULTIPLICATION:	"*" >
+| 	< POWER:	"**" >
+| 	< DIVISION:	"/" >
+| 	< INTDIVISION:	"div" >
+| 	< MODULE:	"mod" >
+| 	< registerUnit: 	"registerUnit" >
+| 	< deregisterUnit: 	"deregisterUnit" >
+| 	< registerRole: 	"registerRole" >
+| 	< deregisterRole:	"deregisterRole" >
+| 	< registerNorm:	"registerNorm" >
+| 	< deregisterNorm:	"deregisterNorm" >
+| 	< allocateRole:	"allocateRole" >
+| 	< deallocateRole:	"deallocateRole" >
+| 	< jointUnit:	"jointUnit" >
+| 	< informAgentRole:	"informAgentRole" >
+| 	< informMembers:	"informMembers" >
+| 	< quantityMembers:	"quantityMembers" >
+| 	< informUnit:	"informUnit" >
+| 	< informUnitRoles:	"informUnitRoles" >
+| 	< informTargetNorms:	"informTargetNorms" >
+| 	< informRole:	"informRole" >
+| 	< informNorm:	"informNorm" >
+| 	< acquireRole: "acquireRole" >
+| 	< leaveRole:	"leaveRole" >
+| 	<  virtual: "virtual" >
+| 	<  participant: "participant" >
+/*| 	< OMSPositions: "creator" | "member" | "supervisor" | "subordinate">
+| 	< OMSAccesibility: "external" | "internal" >
+| 	< OMSVisibility:	"public" | "private" >*/
+|   < variable:  ["A"-"Z"](["a"-"z","A"-"Z","_","0"-"9"])* | " _ " >
+|   < stringConstant:  ["a"-"z"](["a"-"z","A"-"Z","_","0"-"9"])* >}int one_line() :{}{  norm() ";"  {    return 0;  }| ";"  {    return 1;  }}void norm() : {}{
+  "@"id()"["deontic()","target()","action()","activation()","expiration()"]"  }
+
+void id():{}
+{	 stringConstant()
+}
+
+void deontic():{}
+{
+   < deontic >	
+}
+
+void target() : {}
+{	"<" targetType() ":"  value()  ">"
+}
+
+void activation() : {}
+{
+	expression()
+}
+
+void expiration():
+{
+}
+{
+	expression()
+	
+}
+
+void targetType():{}
+{	  < targetType >
+
+}
+
+void value():{}
+{	 stringConstant()
+}
+
+void genAtomicCondition() : {}
+{
+
+	OMSCondition() | genAtomicFormula()
+}
+
+void genAtomicFormula() : {}
+{
+	(atom()| variable())["(" listOfTerms() ")"]
+	  
+}
+
+void action() : {}
+{	OMSAction() /*| genActionFormula()*/
+}
+
+void atom():{}
+{ 		OMSConstants() | stringConstant() 
+
+}
+
+void listOfTerms() : {}
+{
+	term()(","term())*
+}
+
+void term():{}
+{   constant() | variable() 
+}
+
+void expression() : {}
+{
+  	LOOKAHEAD(3)
+	simpleExpression() expressionRest() | < NOT > expression() expressionRest() |  "("expression()")" expressionRest()
+
+}
+
+void expressionRest() :
+{
+}
+{
+	
+	 "&" expression()
+	| "||" expression()
+	|  {}
+
+}
+
+void simpleExpression() : {}
+{
+LOOKAHEAD(3)
+	genAtomicCondition() | relExpression()
+}
+
+
+void relExpression() :
+{
+}
+{
+
+	relTerm()((< LESS >|< HIGHER>|< EQUALS >|< NOTEQUAL>|< LESSOREQUAL >|< HIGHEROREQUAL>)relTerm())+
+}
+
+void relTerm() :
+{
+}
+{
+  LOOKAHEAD(3)
+  genAtomicCondition() | arithExpression()
+
+}
+
+void arithExpression() :
+{
+}
+{
+	arithTerm()((<SUM >|< SUBTRACTION >|< MULTIPLICATION > |< POWER>|< DIVISION >|< INTDIVISION >|< MODULE >)arithTerm())+
+
+}
+
+void arithTerm():
+{
+}
+{
+	LOOKAHEAD(2)
+	 numericConstant() | variable() | "-" arithTerm() | "(" arithExpression() ")"
+
+}
+
+void variable():{}
+{ 	< variable >
+
+}
+
+void constant():{}
+{
+ 	 stringConstant() |  numericConstant() 
+}
+
+void numericConstant():{}
+{
+ 	 (< ["0"-"9"] >)+ 
+}
+
+void stringConstant():{}
+{
+ 	< stringConstant >
+
+}
+
+void OMSCondition() : {}
+{
+	OMSUnitPred() | OMSRolesPred() | OMSNormsPred() | OMSRoleEnactPred()
+
+}
+
+void OMSUnitPred() : {}
+{
+	"@isUnit" "("term()")" | "@hasType" "("term()","term()")" | "@hasParent" "(" term()","term()")"
+
+}
+
+void OMSRolesPred() : {}
+{
+	"@isRole" "("term()","term()")" | "@hasAccesibility" "("term()","term()")" | "@hasVisibility" "(" term()","term()")"
+	| "@hasPosition" "(" term()","term()")"
+}
+
+void OMSNormsPred() : {}
+{
+	"@isNorm" "("term()","term()")" | "@hasContent" "("term()","term()")" 
+}
+
+void OMSRoleEnactPred() : {}
+{
+	"@isAgent" "("term()")" | "@playsRole" "("term()","term()","term()")" | "@roleCardinality" "(" term()","term()","term()")"
+	| "@positionCardinality" "(" term()","term()","term()")"
+}
+
+
+void OMSAction() : {}
+{ 
+	"registerUnit" "("term()","term()","term()","term()","term()")"
+|   < deregisterUnit > "("term()","term()")"
+| 	< registerRole > "("term()","term()","term()","term()","term()","term()")"
+| 	< deregisterRole > "("term()","term()","term()")"
+| 	< registerNorm >	"("term()","term()","term()","term()",)"
+| 	< deregisterNorm > "("term()","term()","term()")"
+| 	< allocateRole > "("term()","term()","term()","term()",)"
+| 	< deallocateRole > "("term()","term()","term()","term()")"
+| 	< jointUnit >	"("term()","term()","term()")"
+| 	< informAgentRole > "(" term()","term()")"
+| 	< informMembers > "("term()","term()","term()","term()")"
+| 	< quantityMembers > "("term()","term()","term()","term()")"
+| 	< informUnit > "("term()","term()")"
+| 	< informUnitRoles > "("term()","term()")"
+| 	< informTargetNorms > "("term()","term()","term()","term()")"
+| 	< informRole > "("term()","term()","term()")"
+| 	< informNorm > "("term()","term()","term()")"
+| 	< acquireRole > "("term()","term()","term()")"
+| 	< leaveRole > "("term()","term()","term()")"
+
+}
+
+void OMSConstants():{}
+{ 	 OMSPositions() | OMSAccesibility() | OMSVisibility() |  OMSUnitTypes() | "@virtual" | "@participant"  
+
+}
+
+void OMSPositions():{}
+{
+  "@creator" | "@member" | "@supervisor" | "@subordinate" 
+}
+
+void OMSAccesibility():{}
+{
+ 	"@external" | "@internal"
+}
+void OMSVisibility():{}
+{ 	 
+	"@public" | "@private" 
+
+}
+void OMSUnitTypes():{}
+{
+	 "@flat" | "@team" | "@hierarchy" 
+}
+
+/*void genActionFormula() :{}*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
