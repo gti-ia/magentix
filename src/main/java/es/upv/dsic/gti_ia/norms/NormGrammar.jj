@@ -1,9 +1,30 @@
 /**
  * JavaCC template file created by SF JavaCC plugin 1.5.17+ wizard for JavaCC 1.5.0+
- */options{  JDK_VERSION = "1.5";  static = true;
- /* SANITY_CHECK = false;*/}PARSER_BEGIN(Norms)package es.upv.dsic.gti_ia.norms;
+ */
+options{  JDK_VERSION = "1.5";  static = false;
+ }PARSER_BEGIN(Norms)package es.upv.dsic.gti_ia.norms;
 
-public class Norms{  public static void main(String args []) throws ParseException  {    Norms parser = new Norms(System.in);    while (true)    {      System.out.println("Reading from standard input...");      System.out.print("Enter an norm expression :");      try      {        switch (Norms.one_line())        {          case 0 :           System.out.println("OK.");          break;          case 1 :           System.out.println("Goodbye.");          break;          default :           break;        }      }      catch (Exception e)      {        System.out.println("NOK.");        System.out.println(e.getMessage());        Norms.ReInit(System.in);      }      catch (Error e)      {        System.out.println("Oops.");        System.out.println(e.getMessage());        break;      }    }  }}PARSER_END(Norms)SKIP :{
+
+public class Norms{
+
+	public void parser(String norm) throws Exception, Error
+	{
+        switch (this.one_line())
+        {
+          case 0 : 
+          System.out.println("OK.");
+          break;
+          case 1 : 
+          System.out.println("Goodbye.");
+          break;
+          default : 
+          break;
+        }
+   }
+
+}
+
+  /*  public static void main(String args []) throws ParseException  {    Norms parser = new Norms(System.in);    while (true)    {      System.out.println("Reading from standard input...");      System.out.print("Enter an norm expression :");      try      {        switch (Norms.one_line())        {          case 0 :           System.out.println("OK.");          break;          case 1 :           System.out.println("Goodbye.");          break;          default :           break;        }      }      catch (Exception e)      {        System.out.println("NOK.");        System.out.println(e.getMessage());        Norms.ReInit(System.in);      }      catch (Error e)      {        System.out.println("Oops.");        System.out.println(e.getMessage());        break;      }    }  }*/PARSER_END(Norms)SKIP :{
   " "|  "\r"| "\t"| "\n"}
 TOKEN : /* OPERATORS */{
 
@@ -13,8 +34,8 @@ public class Norms{  public static void main(String args []) throws ParseExcep
 |  	< AND: "&" >
 | 	< OR: "||" >
 | 	< NOT:	"not" >
-| 	< NOTEQUAL:	"\"==" >
-| 	< EQUALS:	"==" >
+| 	< NOTEQUAL:	"!=" >
+| 	< EQUAL:	"==" >
 | 	< LESS:	"<" >
 | 	< LESSOREQUAL: "<=" >
 | 	< HIGHER:	">" >
@@ -45,14 +66,45 @@ public class Norms{  public static void main(String args []) throws ParseExcep
 | 	< informNorm:	"informNorm" >
 | 	< acquireRole: "acquireRole" >
 | 	< leaveRole:	"leaveRole" >
+
+/*
 | 	<  virtual: "virtual" >
 | 	<  participant: "participant" >
-/*| 	< OMSPositions: "creator" | "member" | "supervisor" | "subordinate">
+/*
+| 	< OMSPositions: "creator" | "member" | "supervisor" | "subordinate">
 | 	< OMSAccesibility: "external" | "internal" >
-| 	< OMSVisibility:	"public" | "private" >*/
+| 	< OMSVisibility:	"public" | "private" >
+| 	< OMSUnitTypes:	"flat" | "team" | "hierarchy" >*/
+/*
+| 	< CREATOR: "creator" >
+| 	< member: "member" >
+| 	< supervisor: "supervisor" >
+| 	< subordinate: "subordinate">
+| 	< external: "external" >
+| 	< internal: "internal" >
+| 	< PRIVATE: "private" >
+| 	< PUBLIC: "public" >
+| 	< flat: "flat" >
+| 	< team: "team" >
+| 	< hierarchy: "hierarchy" >*/
+
+| 	< isUnit:	"isUnit" >
+| 	< hasType:	"hasType" >
+| 	< hasParent:	"hasParent" > 
+| 	< isRole:	"isRole" >
+| 	< hasAccesibility:	"hasAccesibility" >
+| 	< hasVisibility:	"hasVisibility" >
+| 	< hasPosition:	"hasPosition" >
+| 	< isNorm:	"isNorm" >
+| 	< hasContent:	"hasContent" >  
+| 	< isAgent:	"isAgent" >
+| 	< playsRole:	"playsRole" >
+| 	< roleCardinality:	"roleCardinality" > 
+| 	< positionCardinality:	"positionCardinality" > 
+
 |   < variable:  ["A"-"Z"](["a"-"z","A"-"Z","_","0"-"9"])* | " _ " >
 |   < stringConstant:  ["a"-"z"](["a"-"z","A"-"Z","_","0"-"9"])* >}int one_line() :{}{  norm() ";"  {    return 0;  }| ";"  {    return 1;  }}void norm() : {}{
-  "@"id()"["deontic()","target()","action()","activation()","expiration()"]"  }
+  "@" id()"["deontic()","target()","action()","activation()","expiration()"]"  }
 
 void id():{}
 {	 stringConstant()
@@ -63,13 +115,16 @@ void deontic():{}
    < deontic >	
 }
 
-void target() : {}
+void target() :
+{
+  }
 {	"<" targetType() ":"  value()  ">"
 }
 
 void activation() : {}
 {
 	expression()
+|	{}
 }
 
 void expiration():
@@ -77,6 +132,7 @@ void expiration():
 }
 {
 	expression()
+|	{}
 	
 }
 
@@ -89,13 +145,15 @@ void value():{}
 {	 stringConstant()
 }
 
-void genAtomicCondition() : {}
+void genAtomicCondition() : {
+ }
 {
 
 	OMSCondition() | genAtomicFormula()
 }
 
-void genAtomicFormula() : {}
+void genAtomicFormula() : {
+ }
 {
 	(atom()| variable())["(" listOfTerms() ")"]
 	  
@@ -119,7 +177,8 @@ void term():{}
 {   constant() | variable() 
 }
 
-void expression() : {}
+void expression() : {
+  }
 {
   	LOOKAHEAD(3)
 	simpleExpression() expressionRest() | < NOT > expression() expressionRest() |  "("expression()")" expressionRest()
@@ -137,27 +196,33 @@ void expressionRest() :
 
 }
 
-void simpleExpression() : {}
+void simpleExpression() :
+{}
 {
-LOOKAHEAD(3)
-	genAtomicCondition() | relExpression()
+	LOOKAHEAD(relExpression())
+    relExpression()
+  | 
+  	LOOKAHEAD(genAtomicCondition())
+	genAtomicCondition()
+	
 }
 
 
 void relExpression() :
 {
+  
 }
 {
 
-	relTerm()((< LESS >|< HIGHER>|< EQUALS >|< NOTEQUAL>|< LESSOREQUAL >|< HIGHEROREQUAL>)relTerm())+
+	relTerm()((< LESS >|< HIGHER>| < EQUAL >|< NOTEQUAL>|< LESSOREQUAL >|< HIGHEROREQUAL>)relTerm())+
 }
 
 void relTerm() :
 {
 }
 {
-  LOOKAHEAD(3)
-  genAtomicCondition() | arithExpression()
+  LOOKAHEAD(2) genAtomicCondition()
+  | LOOKAHEAD(2) arithExpression()
 
 }
 
@@ -173,12 +238,13 @@ void arithTerm():
 {
 }
 {
-	LOOKAHEAD(2)
+
 	 numericConstant() | variable() | "-" arithTerm() | "(" arithExpression() ")"
 
 }
 
-void variable():{}
+void variable():{
+}
 { 	< variable >
 
 }
@@ -207,31 +273,33 @@ void OMSCondition() : {}
 
 void OMSUnitPred() : {}
 {
-	"@isUnit" "("term()")" | "@hasType" "("term()","term()")" | "@hasParent" "(" term()","term()")"
+	< isUnit > "("term()")" | < hasType > "("term()","term()")" | < hasParent > "(" term()","term()")"
 
 }
 
-void OMSRolesPred() : {}
+void OMSRolesPred() : {
+ }
 {
-	"@isRole" "("term()","term()")" | "@hasAccesibility" "("term()","term()")" | "@hasVisibility" "(" term()","term()")"
-	| "@hasPosition" "(" term()","term()")"
+	< isRole > "("term()","term()")" | < hasAccesibility > "("term()","term()")" | < hasVisibility > "(" term()","term()")"
+	| < hasPosition > "(" term()","term()","term()")"
 }
 
 void OMSNormsPred() : {}
 {
-	"@isNorm" "("term()","term()")" | "@hasContent" "("term()","term()")" 
+	< isNorm > "("term()","term()")" | < hasContent > "("term()","term()")" 
 }
 
-void OMSRoleEnactPred() : {}
+void OMSRoleEnactPred() :
+{}
 {
-	"@isAgent" "("term()")" | "@playsRole" "("term()","term()","term()")" | "@roleCardinality" "(" term()","term()","term()")"
-	| "@positionCardinality" "(" term()","term()","term()")"
+	< isAgent > "("term()")" | < playsRole > "("term()","term()","term()")" | < roleCardinality > "(" term()","term()","term()")"
+	| < positionCardinality > "(" term()","term()","term()")"
 }
 
 
 void OMSAction() : {}
 { 
-	"registerUnit" "("term()","term()","term()","term()","term()")"
+	< registerUnit > "("term()","term()","term()","term()","term()")"
 |   < deregisterUnit > "("term()","term()")"
 | 	< registerRole > "("term()","term()","term()","term()","term()","term()")"
 | 	< deregisterRole > "("term()","term()","term()")"
@@ -254,47 +322,37 @@ void OMSAction() : {}
 }
 
 void OMSConstants():{}
-{ 	 OMSPositions() | OMSAccesibility() | OMSVisibility() |  OMSUnitTypes() | "@virtual" | "@participant"  
+{ 	/* OMSPositions() | OMSAccesibility() | OMSVisibility() |  OMSUnitTypes() | < virtual > | < participant >*/
+ 	 OMSPositions() | OMSAccesibility() | OMSVisibility() |  OMSUnitTypes() | "virtual" | "participant"
 
 }
 
 void OMSPositions():{}
 {
-  "@creator" | "@member" | "@supervisor" | "@subordinate" 
-}
+	/*< CREATOR > | < member > | < supervisor > | < subordinate >*/
+	"creator" | "member" | "supervisor" | "subordinate"
+ 	}
 
 void OMSAccesibility():{}
-{
- 	"@external" | "@internal"
-}
+{
+ 	 /*< external > | < internal >*/
+
+		"external" | "internal"
+ 	 
+} 
 void OMSVisibility():{}
 { 	 
-	"@public" | "@private" 
+	/* < PUBLIC > | < PRIVATE  >*/
+
+	 "public" | "private"
 
 }
 void OMSUnitTypes():{}
 {
-	 "@flat" | "@team" | "@hierarchy" 
+ 	/*< flat > | < team > | < hierarchy >*/
+
+ 	"flat" | "team" | "hierarchy"
+
 }
 
 /*void genActionFormula() :{}*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
