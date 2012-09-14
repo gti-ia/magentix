@@ -7,7 +7,7 @@
 
 public class Norms{
 
-	public void parser(String norm) throws Exception, Error
+	public void parser() throws Exception, Error
 	{
         switch (this.one_line())
         {
