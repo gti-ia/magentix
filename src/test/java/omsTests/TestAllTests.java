@@ -51,7 +51,7 @@ public class TestAllTests {
 
 		TestSuite suite = new TestSuite();
 		//$JUnit-BEGIN$
-		suite.addTestSuite(TestThomas.class);
+		//suite.addTestSuite(TestThomas.class);
 
 		suite.addTestSuite(TestRegisterUnitCorrectParam.class);
 		suite.addTestSuite(TestRegisterUnitInCorrectParam.class);

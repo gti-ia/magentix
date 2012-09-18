@@ -160,7 +160,7 @@ public class TestJointUnitInCorrectPermissions extends TestCase {
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
 			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana'))))");
 
-			String result = omsProxy.jointUnit("equipo", "jerarquia");
+			String result = omsProxy.joinUnit("equipo", "jerarquia");
 
 			fail(result);
 
@@ -179,7 +179,7 @@ public class TestJointUnitInCorrectPermissions extends TestCase {
 		{
 		
 	
-			String result = omsProxy.jointUnit("plana", "jerarquia");
+			String result = omsProxy.joinUnit("plana", "jerarquia");
 
 			fail(result);
 
@@ -215,7 +215,7 @@ public class TestJointUnitInCorrectPermissions extends TestCase {
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
 			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana'))))");
 					
-			String result = omsProxy.jointUnit("equipo", "jerarquia");
+			String result = omsProxy.joinUnit("equipo", "jerarquia");
 
 			
 
@@ -237,7 +237,7 @@ public class TestJointUnitInCorrectPermissions extends TestCase {
 		
 				
 		
-			String result = omsProxy.jointUnit("plana", "jerarquia");
+			String result = omsProxy.joinUnit("plana", "jerarquia");
 
 			
 
@@ -274,7 +274,7 @@ public class TestJointUnitInCorrectPermissions extends TestCase {
 			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana'))))");
 
 		
-			String result = omsProxy.jointUnit("equipo", "jerarquia");
+			String result = omsProxy.joinUnit("equipo", "jerarquia");
 
 			
 
@@ -298,7 +298,7 @@ public class TestJointUnitInCorrectPermissions extends TestCase {
 			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
 			
 		
-			String result = omsProxy.jointUnit("plana", "jerarquia");
+			String result = omsProxy.joinUnit("plana", "jerarquia");
 
 			
 
@@ -335,7 +335,7 @@ public class TestJointUnitInCorrectPermissions extends TestCase {
 			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
 		
 			
-			String result = omsProxy.jointUnit("equipo", "jerarquia");
+			String result = omsProxy.joinUnit("equipo", "jerarquia");
 
 			
 

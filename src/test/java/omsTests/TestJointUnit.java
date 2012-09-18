@@ -147,12 +147,12 @@ public class TestJointUnit extends TestCase {
 			
 			
 			
-			String result = omsProxy.jointUnit(unit, unit3);
+			String result = omsProxy.joinUnit(unit, unit3);
 			assertEquals("El mensaje debe ser el siguiente:", unit+ " + jointed to "+unit3, result);
 			
 			
 			
-			result = omsProxy.jointUnit(unit2, unit3);
+			result = omsProxy.joinUnit(unit2, unit3);
 			assertEquals("El mensaje debe ser el siguiente:", unit2+ " + jointed to "+unit3, result);
 			
 			
@@ -235,12 +235,12 @@ public class TestJointUnit extends TestCase {
 			
 			
 			
-			String result = omsProxy.jointUnit(unit, unit2);
+			String result = omsProxy.joinUnit(unit, unit2);
 			assertEquals("El mensaje debe ser el siguiente:", unit+ " + jointed to "+unit2, result);
 			
 			
 			
-			result = omsProxy.jointUnit(unit3, unit2);
+			result = omsProxy.joinUnit(unit3, unit2);
 			assertEquals("El mensaje debe ser el siguiente:", unit3+ " + jointed to "+unit2, result);
 			
 			
@@ -322,12 +322,12 @@ public class TestJointUnit extends TestCase {
 			
 			
 			
-			String result = omsProxy.jointUnit(unit3, unit);
+			String result = omsProxy.joinUnit(unit3, unit);
 			assertEquals("El mensaje debe ser el siguiente:", unit3+ " + jointed to "+unit, result);
 			
 			
 			
-			result = omsProxy.jointUnit(unit2, unit);
+			result = omsProxy.joinUnit(unit2, unit);
 			assertEquals("El mensaje debe ser el siguiente:", unit2+ " + jointed to "+unit, result);
 			
 			
@@ -455,21 +455,21 @@ public class TestJointUnit extends TestCase {
 			
 			
 			
-			String result = omsProxy.jointUnit(unitEquipo2, unitJerarquia);
+			String result = omsProxy.joinUnit(unitEquipo2, unitJerarquia);
 			assertEquals("El mensaje debe ser el siguiente:", unitEquipo2+ " + jointed to "+unitJerarquia, result);
 			
 			
 			
-			result = omsProxy.jointUnit(unitJerarquia2, unitEquipo);
+			result = omsProxy.joinUnit(unitJerarquia2, unitEquipo);
 			assertEquals("El mensaje debe ser el siguiente:", unitJerarquia2+ " + jointed to "+unitEquipo, result);
 			
-			result = omsProxy.jointUnit(unitPlana2, unitEquipo);
+			result = omsProxy.joinUnit(unitPlana2, unitEquipo);
 			assertEquals("El mensaje debe ser el siguiente:", unitPlana2+ " + jointed to "+unitEquipo, result);
 			
-			result = omsProxy.jointUnit(unitPlana, unitJerarquia);
+			result = omsProxy.joinUnit(unitPlana, unitJerarquia);
 			assertEquals("El mensaje debe ser el siguiente:", unitPlana+ " + jointed to "+unitJerarquia, result);
 			
-			result = omsProxy.jointUnit(unitEquipo, unitJerarquia);
+			result = omsProxy.joinUnit(unitEquipo, unitJerarquia);
 			assertEquals("El mensaje debe ser el siguiente:", unitEquipo+ " + jointed to "+unitJerarquia, result);
 			
 			

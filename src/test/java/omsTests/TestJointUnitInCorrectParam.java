@@ -138,7 +138,7 @@ public class TestJointUnitInCorrectParam extends TestCase {
 		try
 		{
 
-			String result = omsProxy.jointUnit("jerarquia", "jerarquia");
+			String result = omsProxy.joinUnit("jerarquia", "jerarquia");
 
 			fail(result);
 
@@ -156,7 +156,7 @@ public class TestJointUnitInCorrectParam extends TestCase {
 		try
 		{
 
-			String result = omsProxy.jointUnit("equipo", "equipo");
+			String result = omsProxy.joinUnit("equipo", "equipo");
 
 			fail(result);
 
@@ -174,7 +174,7 @@ public class TestJointUnitInCorrectParam extends TestCase {
 		try
 		{
 
-			String result = omsProxy.jointUnit("plana", "plana");
+			String result = omsProxy.joinUnit("plana", "plana");
 
 			fail(result);
 
@@ -195,7 +195,7 @@ public class TestJointUnitInCorrectParam extends TestCase {
 		try
 		{
 
-			String result = omsProxy.jointUnit("virtual", "jerarquia");
+			String result = omsProxy.joinUnit("virtual", "jerarquia");
 
 			fail(result);
 
@@ -217,7 +217,7 @@ public class TestJointUnitInCorrectParam extends TestCase {
 		try
 		{
 
-			String result = omsProxy.jointUnit("inexistente", "jerarquia");
+			String result = omsProxy.joinUnit("inexistente", "jerarquia");
 
 			fail(result);
 
@@ -239,7 +239,7 @@ public class TestJointUnitInCorrectParam extends TestCase {
 		try
 		{
 
-			String result = omsProxy.jointUnit("", "jerarquia");
+			String result = omsProxy.joinUnit("", "jerarquia");
 
 			fail(result);
 
@@ -261,7 +261,7 @@ public class TestJointUnitInCorrectParam extends TestCase {
 		try
 		{
 
-			String result = omsProxy.jointUnit(null, "jerarquia");
+			String result = omsProxy.joinUnit(null, "jerarquia");
 
 			fail(result);
 
@@ -283,7 +283,7 @@ public class TestJointUnitInCorrectParam extends TestCase {
 		try
 		{
 
-			String result = omsProxy.jointUnit("equipo", "noexiste");
+			String result = omsProxy.joinUnit("equipo", "noexiste");
 
 			fail(result);
 
@@ -305,7 +305,7 @@ public class TestJointUnitInCorrectParam extends TestCase {
 		try
 		{
 
-			String result = omsProxy.jointUnit("equipo", "");
+			String result = omsProxy.joinUnit("equipo", "");
 
 			fail(result);
 
@@ -327,7 +327,7 @@ public class TestJointUnitInCorrectParam extends TestCase {
 		try
 		{
 
-			String result = omsProxy.jointUnit("equipo", null);
+			String result = omsProxy.joinUnit("equipo", null);
 
 			fail(result);
 
