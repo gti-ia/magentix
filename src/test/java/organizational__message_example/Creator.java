@@ -229,7 +229,7 @@ public class Creator extends CAgent {
 
 
 
-				omsProxy.jointUnit("externa", "calculin");
+				omsProxy.joinUnit("externa", "calculin");
 
 				boolean searching = true;
 				do{
