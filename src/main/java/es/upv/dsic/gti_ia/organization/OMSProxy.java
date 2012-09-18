@@ -890,7 +890,7 @@ public class OMSProxy extends THOMASProxy {
      *             If the unit and the parent unit are same.
      * @throws MySQLException
      */
-    public String jointUnit(String UnitID, String ParentUnitID) throws EmptyParametersException, UnitNotExistsException, ParentUnitNotExistsException, AgentNotInUnitException, NotCreatorInUnitException, NotCreatorInParentUnitException, VirtualParentException, SameUnitException, MySQLException {
+    public String joinUnit(String UnitID, String ParentUnitID) throws EmptyParametersException, UnitNotExistsException, ParentUnitNotExistsException, AgentNotInUnitException, NotCreatorInUnitException, NotCreatorInParentUnitException, VirtualParentException, SameUnitException, MySQLException {
 
         HashMap<String, String> inputs = new HashMap<String, String>();
 

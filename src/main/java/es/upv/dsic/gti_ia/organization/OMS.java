@@ -315,11 +315,11 @@ public class OMS extends CAgent {
 						break;
 					case 2: // joint unit service
 						if (inputs.get("UnitID").trim().equals("null"))
-							resultContent = omsInterface.jointUnit(null, inputs.get("ParentUnitID"), inputs.get("AgentID"));
+							resultContent = omsInterface.joinUnit(null, inputs.get("ParentUnitID"), inputs.get("AgentID"));
 						else if (inputs.get("ParentUnitID").trim().equals("null"))
-							resultContent = omsInterface.jointUnit(inputs.get("UnitID"), null, inputs.get("AgentID"));
+							resultContent = omsInterface.joinUnit(inputs.get("UnitID"), null, inputs.get("AgentID"));
 						else
-							resultContent = omsInterface.jointUnit(inputs.get("UnitID"), inputs.get("ParentUnitID"), inputs.get("AgentID"));
+							resultContent = omsInterface.joinUnit(inputs.get("UnitID"), inputs.get("ParentUnitID"), inputs.get("AgentID"));
 
 						break;
 					case 3: // register role service

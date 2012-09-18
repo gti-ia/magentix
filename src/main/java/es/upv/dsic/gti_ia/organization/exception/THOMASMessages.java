@@ -73,6 +73,12 @@ public class THOMASMessages {
 		 * Exception message when data type of input or output is invalid.
 		 */
 		INVALID_DATA_TYPE,
+		
+		/**
+		 * Exception message when parameters are not valid.
+		 */
+		INVALID_PARAMETERS,
+		
 		/**
 		 * Exception message when Position value is incorrect.
 		 */

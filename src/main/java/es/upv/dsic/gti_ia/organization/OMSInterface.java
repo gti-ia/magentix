@@ -1001,7 +1001,7 @@ class OMSInterface {
 	 *            Identifier of the agent
 	 * @return Returns <unitName + jointed to parentName>
 	 */
-	String jointUnit(String UnitName, String ParentName, String AgentName) {
+	String joinUnit(String UnitName, String ParentName, String AgentName) {
 
 		String resultXML = "<response>\n<serviceName>JointUnit</serviceName>\n";
 		try {
