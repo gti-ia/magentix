@@ -206,7 +206,7 @@ public class Display extends CAgent {
 					System.out.println("role name: "+unitRole.get(0));
 					System.out.println("position: "+ unitRole.get(1));
 					System.out.println("visibility: "+ unitRole.get(2));
-					System.out.println("accesibility: "+ unitRole.get(3));
+					System.out.println("accessibility: "+ unitRole.get(3));
 
 					System.out.println("---------------------");
 				}

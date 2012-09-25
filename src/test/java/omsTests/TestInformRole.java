@@ -138,26 +138,26 @@ public class TestInformRole extends TestCase {
 
 			String unit = "plana";
 			String position = "member";
-			String accesibility = "external";
+			String accessibility = "external";
 			String visibility = "public";
 			String roleName = "miembro2";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('miembro',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'member'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -182,7 +182,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -203,24 +203,24 @@ public class TestInformRole extends TestCase {
 		try
 		{
 			String visibility = "private";
-			String accesibility = "external";
+			String accessibility = "external";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('miembro',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
 					"(SELECT idposition FROM position WHERE position = 'member'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('miembro2',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
 					"(SELECT idposition FROM position WHERE position = 'member'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -245,7 +245,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals("member", result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -265,24 +265,24 @@ public class TestInformRole extends TestCase {
 		try
 		{
 			String visibility = "public";
-			String accesibility = "internal";
+			String accessibility = "internal";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('miembro',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
 					"(SELECT idposition FROM position WHERE position = 'member'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('miembro2',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
 					"(SELECT idposition FROM position WHERE position = 'member'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -307,7 +307,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals("member", result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -328,24 +328,24 @@ public class TestInformRole extends TestCase {
 		try
 		{
 			String visibility = "private";
-			String accesibility = "internal";
+			String accessibility = "internal";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('miembro',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
 					"(SELECT idposition FROM position WHERE position = 'member'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('miembro2',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
 					"(SELECT idposition FROM position WHERE position = 'member'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -370,7 +370,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals("member", result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -391,22 +391,22 @@ public class TestInformRole extends TestCase {
 		try
 		{
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('miembro',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
 					"(SELECT idposition FROM position WHERE position = 'member'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -452,24 +452,24 @@ public class TestInformRole extends TestCase {
 		try
 		{
 			String visibility = "private";
-			String accesibility = "external";
+			String accessibility = "external";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('miembro',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
 					"(SELECT idposition FROM position WHERE position = 'member'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -494,7 +494,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals("creator", result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -514,24 +514,24 @@ public class TestInformRole extends TestCase {
 		try
 		{
 			String visibility = "public";
-			String accesibility = "internal";
+			String accessibility = "internal";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('miembro',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
 					"(SELECT idposition FROM position WHERE position = 'member'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -556,7 +556,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals("creator", result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -577,24 +577,24 @@ public class TestInformRole extends TestCase {
 		try
 		{
 			String visibility = "private";
-			String accesibility = "internal";
+			String accessibility = "internal";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('miembro',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
 					"(SELECT idposition FROM position WHERE position = 'member'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -619,7 +619,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals("creator", result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -640,22 +640,22 @@ public class TestInformRole extends TestCase {
 		try
 		{
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('miembro',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
 					"(SELECT idposition FROM position WHERE position = 'member'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -701,24 +701,24 @@ public class TestInformRole extends TestCase {
 		try
 		{
 			String visibility = "private";
-			String accesibility = "external";
+			String accessibility = "external";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('miembro',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
 					"(SELECT idposition FROM position WHERE position = 'member'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -743,7 +743,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals("member", result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -763,24 +763,24 @@ public class TestInformRole extends TestCase {
 		try
 		{
 			String visibility = "public";
-			String accesibility = "internal";
+			String accessibility = "internal";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('miembro',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
 					"(SELECT idposition FROM position WHERE position = 'member'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -805,7 +805,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals("member", result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -826,24 +826,24 @@ public class TestInformRole extends TestCase {
 		try
 		{
 			String visibility = "private";
-			String accesibility = "internal";
+			String accessibility = "internal";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('miembro',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
 					"(SELECT idposition FROM position WHERE position = 'member'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -868,7 +868,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals("member", result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -889,22 +889,22 @@ public class TestInformRole extends TestCase {
 		try
 		{
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador3',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -950,24 +950,24 @@ public class TestInformRole extends TestCase {
 		try
 		{
 			String visibility = "private";
-			String accesibility = "external";
+			String accessibility = "external";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador3',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -992,7 +992,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals("creator", result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -1012,24 +1012,24 @@ public class TestInformRole extends TestCase {
 		try
 		{
 			String visibility = "public";
-			String accesibility = "internal";
+			String accessibility = "internal";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador3',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -1054,7 +1054,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals("creator", result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -1075,24 +1075,24 @@ public class TestInformRole extends TestCase {
 		try
 		{
 			String visibility = "private";
-			String accesibility = "internal";
+			String accessibility = "internal";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador3',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -1117,7 +1117,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals("creator", result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -1140,26 +1140,26 @@ public class TestInformRole extends TestCase {
 
 			String unit = "equipo";
 			String position = "member";
-			String accesibility = "external";
+			String accessibility = "external";
 			String visibility = "public";
 			String roleName = "miembro2";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('miembro',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'member'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -1184,7 +1184,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -1205,24 +1205,24 @@ public class TestInformRole extends TestCase {
 		try
 		{
 			String visibility = "private";
-			String accesibility = "external";
+			String accessibility = "external";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('miembro',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
 					"(SELECT idposition FROM position WHERE position = 'member'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('miembro2',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
 					"(SELECT idposition FROM position WHERE position = 'member'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -1247,7 +1247,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals("member", result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -1267,24 +1267,24 @@ public class TestInformRole extends TestCase {
 		try
 		{
 			String visibility = "public";
-			String accesibility = "internal";
+			String accessibility = "internal";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('miembro',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
 					"(SELECT idposition FROM position WHERE position = 'member'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('miembro2',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
 					"(SELECT idposition FROM position WHERE position = 'member'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -1309,7 +1309,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals("member", result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -1330,24 +1330,24 @@ public class TestInformRole extends TestCase {
 		try
 		{
 			String visibility = "private";
-			String accesibility = "internal";
+			String accessibility = "internal";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('miembro',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
 					"(SELECT idposition FROM position WHERE position = 'member'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('miembro2',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
 					"(SELECT idposition FROM position WHERE position = 'member'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -1372,7 +1372,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals("member", result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -1393,22 +1393,22 @@ public class TestInformRole extends TestCase {
 		try
 		{
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('miembro',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
 					"(SELECT idposition FROM position WHERE position = 'member'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -1454,24 +1454,24 @@ public class TestInformRole extends TestCase {
 		try
 		{
 			String visibility = "private";
-			String accesibility = "external";
+			String accessibility = "external";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('miembro',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
 					"(SELECT idposition FROM position WHERE position = 'member'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -1496,7 +1496,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals("creator", result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -1516,24 +1516,24 @@ public class TestInformRole extends TestCase {
 		try
 		{
 			String visibility = "public";
-			String accesibility = "internal";
+			String accessibility = "internal";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('miembro',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
 					"(SELECT idposition FROM position WHERE position = 'member'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -1558,7 +1558,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals("creator", result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -1579,24 +1579,24 @@ public class TestInformRole extends TestCase {
 		try
 		{
 			String visibility = "private";
-			String accesibility = "internal";
+			String accessibility = "internal";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('miembro',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
 					"(SELECT idposition FROM position WHERE position = 'member'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -1621,7 +1621,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals("creator", result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -1642,22 +1642,22 @@ public class TestInformRole extends TestCase {
 		try
 		{
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('miembro',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
 					"(SELECT idposition FROM position WHERE position = 'member'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -1703,24 +1703,24 @@ public class TestInformRole extends TestCase {
 		try
 		{
 			String visibility = "private";
-			String accesibility = "external";
+			String accessibility = "external";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('miembro',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
 					"(SELECT idposition FROM position WHERE position = 'member'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -1745,7 +1745,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals("member", result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -1765,24 +1765,24 @@ public class TestInformRole extends TestCase {
 		try
 		{
 			String visibility = "public";
-			String accesibility = "internal";
+			String accessibility = "internal";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('miembro',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
 					"(SELECT idposition FROM position WHERE position = 'member'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -1807,7 +1807,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals("member", result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -1828,24 +1828,24 @@ public class TestInformRole extends TestCase {
 		try
 		{
 			String visibility = "private";
-			String accesibility = "internal";
+			String accessibility = "internal";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('miembro',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
 					"(SELECT idposition FROM position WHERE position = 'member'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -1870,7 +1870,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals("member", result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -1891,22 +1891,22 @@ public class TestInformRole extends TestCase {
 		try
 		{
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador3',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -1952,24 +1952,24 @@ public class TestInformRole extends TestCase {
 		try
 		{
 			String visibility = "private";
-			String accesibility = "external";
+			String accessibility = "external";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador3',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -1994,7 +1994,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals("creator", result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -2014,24 +2014,24 @@ public class TestInformRole extends TestCase {
 		try
 		{
 			String visibility = "public";
-			String accesibility = "internal";
+			String accessibility = "internal";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador3',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -2056,7 +2056,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals("creator", result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -2077,24 +2077,24 @@ public class TestInformRole extends TestCase {
 		try
 		{
 			String visibility = "private";
-			String accesibility = "internal";
+			String accessibility = "internal";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador3',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -2119,7 +2119,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals("creator", result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -2143,26 +2143,26 @@ public class TestInformRole extends TestCase {
 
 			String unit = "jerarquia";
 			String position = "subordinate";
-			String accesibility = "external";
+			String accessibility = "external";
 			String visibility = "public";
 			String roleName = "subordinado2";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('subordinado',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'subordinate'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -2187,7 +2187,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -2209,26 +2209,26 @@ public class TestInformRole extends TestCase {
 
 			String unit = "jerarquia";
 			String position = "subordinate";
-			String accesibility = "external";
+			String accessibility = "external";
 			String visibility = "private";
 			String roleName = "subordinado2";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('subordinado',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'subordinate'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -2253,7 +2253,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -2275,26 +2275,26 @@ public class TestInformRole extends TestCase {
 
 			String unit = "jerarquia";
 			String position = "subordinate";
-			String accesibility = "internal";
+			String accessibility = "internal";
 			String visibility = "public";
 			String roleName = "subordinado2";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('subordinado',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'subordinate'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -2319,7 +2319,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -2341,26 +2341,26 @@ public class TestInformRole extends TestCase {
 
 			String unit = "jerarquia";
 			String position = "subordinate";
-			String accesibility = "internal";
+			String accessibility = "internal";
 			String visibility = "private";
 			String roleName = "subordinado2";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('subordinado',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'subordinate'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -2385,7 +2385,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -2408,26 +2408,26 @@ public class TestInformRole extends TestCase {
 
 			String unit = "jerarquia";
 			String position = "subordinate";
-			String accesibility = "external";
+			String accessibility = "external";
 			String visibility = "public";
 			String roleName = "subordinado";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('supervisor',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'supervisor'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -2452,7 +2452,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -2474,26 +2474,26 @@ public class TestInformRole extends TestCase {
 
 			String unit = "jerarquia";
 			String position = "subordinate";
-			String accesibility = "external";
+			String accessibility = "external";
 			String visibility = "private";
 			String roleName = "subordinado";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('supervisor',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'supervisor'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -2518,7 +2518,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -2540,26 +2540,26 @@ public class TestInformRole extends TestCase {
 
 			String unit = "jerarquia";
 			String position = "subordinate";
-			String accesibility = "internal";
+			String accessibility = "internal";
 			String visibility = "public";
 			String roleName = "subordinado";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('supervisor',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'supervisor'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -2584,7 +2584,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -2606,26 +2606,26 @@ public class TestInformRole extends TestCase {
 
 			String unit = "jerarquia";
 			String position = "subordinate";
-			String accesibility = "internal";
+			String accessibility = "internal";
 			String visibility = "private";
 			String roleName = "subordinado";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('supervisor',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'supervisor'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -2650,7 +2650,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -2673,26 +2673,26 @@ public class TestInformRole extends TestCase {
 
 			String unit = "jerarquia";
 			String position = "subordinate";
-			String accesibility = "external";
+			String accessibility = "external";
 			String visibility = "public";
 			String roleName = "subordinado";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -2717,7 +2717,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -2739,26 +2739,26 @@ public class TestInformRole extends TestCase {
 
 			String unit = "jerarquia";
 			String position = "subordinate";
-			String accesibility = "external";
+			String accessibility = "external";
 			String visibility = "private";
 			String roleName = "subordinado";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -2783,7 +2783,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -2805,26 +2805,26 @@ public class TestInformRole extends TestCase {
 
 			String unit = "jerarquia";
 			String position = "subordinate";
-			String accesibility = "internal";
+			String accessibility = "internal";
 			String visibility = "public";
 			String roleName = "subordinado";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -2849,7 +2849,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -2871,26 +2871,26 @@ public class TestInformRole extends TestCase {
 
 			String unit = "jerarquia";
 			String position = "subordinate";
-			String accesibility = "internal";
+			String accessibility = "internal";
 			String visibility = "private";
 			String roleName = "subordinado";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -2915,7 +2915,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -2938,26 +2938,26 @@ public class TestInformRole extends TestCase {
 
 			String unit = "jerarquia";
 			String position = "supervisor";
-			String accesibility = "external";
+			String accessibility = "external";
 			String visibility = "public";
 			String roleName = "supervisor";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('subordinado',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'subordinate'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -2982,7 +2982,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -3004,26 +3004,26 @@ public class TestInformRole extends TestCase {
 
 			String unit = "jerarquia";
 			String position = "supervisor";
-			String accesibility = "external";
+			String accessibility = "external";
 			String visibility = "private";
 			String roleName = "supervisor";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('subordinado',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'subordinate'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -3048,7 +3048,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -3070,26 +3070,26 @@ public class TestInformRole extends TestCase {
 
 			String unit = "jerarquia";
 			String position = "supervisor";
-			String accesibility = "internal";
+			String accessibility = "internal";
 			String visibility = "public";
 			String roleName = "supervisor";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('subordinado',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'subordinate'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -3114,7 +3114,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -3136,26 +3136,26 @@ public class TestInformRole extends TestCase {
 
 			String unit = "jerarquia";
 			String position = "supervisor";
-			String accesibility = "internal";
+			String accessibility = "internal";
 			String visibility = "private";
 			String roleName = "supervisor";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('subordinado',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'subordinate'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -3180,7 +3180,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -3203,26 +3203,26 @@ public class TestInformRole extends TestCase {
 
 			String unit = "jerarquia";
 			String position = "supervisor";
-			String accesibility = "external";
+			String accessibility = "external";
 			String visibility = "public";
 			String roleName = "supervisor2";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('supervisor',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'supervisor'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -3247,7 +3247,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -3269,26 +3269,26 @@ public class TestInformRole extends TestCase {
 
 			String unit = "jerarquia";
 			String position = "supervisor";
-			String accesibility = "external";
+			String accessibility = "external";
 			String visibility = "private";
 			String roleName = "supervisor2";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('supervisor',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'supervisor'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -3313,7 +3313,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -3335,26 +3335,26 @@ public class TestInformRole extends TestCase {
 
 			String unit = "jerarquia";
 			String position = "supervisor";
-			String accesibility = "internal";
+			String accessibility = "internal";
 			String visibility = "public";
 			String roleName = "supervisor2";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('supervisor',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'supervisor'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -3379,7 +3379,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -3401,26 +3401,26 @@ public class TestInformRole extends TestCase {
 
 			String unit = "jerarquia";
 			String position = "supervisor";
-			String accesibility = "internal";
+			String accessibility = "internal";
 			String visibility = "private";
 			String roleName = "supervisor2";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('supervisor',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'supervisor'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -3445,7 +3445,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -3468,26 +3468,26 @@ public class TestInformRole extends TestCase {
 
 			String unit = "jerarquia";
 			String position = "supervisor";
-			String accesibility = "external";
+			String accessibility = "external";
 			String visibility = "public";
 			String roleName = "supervisor";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -3512,7 +3512,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -3534,26 +3534,26 @@ public class TestInformRole extends TestCase {
 
 			String unit = "jerarquia";
 			String position = "supervisor";
-			String accesibility = "external";
+			String accessibility = "external";
 			String visibility = "private";
 			String roleName = "supervisor";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -3578,7 +3578,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -3600,26 +3600,26 @@ public class TestInformRole extends TestCase {
 
 			String unit = "jerarquia";
 			String position = "supervisor";
-			String accesibility = "internal";
+			String accessibility = "internal";
 			String visibility = "public";
 			String roleName = "supervisor";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -3644,7 +3644,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -3666,26 +3666,26 @@ public class TestInformRole extends TestCase {
 
 			String unit = "jerarquia";
 			String position = "supervisor";
-			String accesibility = "internal";
+			String accessibility = "internal";
 			String visibility = "private";
 			String roleName = "supervisor";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -3710,7 +3710,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -3733,26 +3733,26 @@ public class TestInformRole extends TestCase {
 
 			String unit = "jerarquia";
 			String position = "creator";
-			String accesibility = "external";
+			String accessibility = "external";
 			String visibility = "public";
 			String roleName = "creador2";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('subordinado',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'subordinate'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -3777,7 +3777,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -3799,26 +3799,26 @@ public class TestInformRole extends TestCase {
 
 			String unit = "jerarquia";
 			String position = "creator";
-			String accesibility = "external";
+			String accessibility = "external";
 			String visibility = "private";
 			String roleName = "creador2";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('subordinado',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'subordinate'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -3843,7 +3843,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -3865,26 +3865,26 @@ public class TestInformRole extends TestCase {
 
 			String unit = "jerarquia";
 			String position = "creator";
-			String accesibility = "internal";
+			String accessibility = "internal";
 			String visibility = "public";
 			String roleName = "creador2";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('subordinado',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'subordinate'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -3909,7 +3909,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -3931,26 +3931,26 @@ public class TestInformRole extends TestCase {
 
 			String unit = "jerarquia";
 			String position = "creator";
-			String accesibility = "internal";
+			String accessibility = "internal";
 			String visibility = "private";
 			String roleName = "creador2";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('subordinado',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'subordinate'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -3975,7 +3975,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -3998,26 +3998,26 @@ public class TestInformRole extends TestCase {
 
 			String unit = "jerarquia";
 			String position = "creator";
-			String accesibility = "external";
+			String accessibility = "external";
 			String visibility = "public";
 			String roleName = "creador2";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('supervisor',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'supervisor'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -4042,7 +4042,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -4064,26 +4064,26 @@ public class TestInformRole extends TestCase {
 
 			String unit = "jerarquia";
 			String position = "creator";
-			String accesibility = "external";
+			String accessibility = "external";
 			String visibility = "private";
 			String roleName = "creador2";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('supervisor',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'supervisor'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -4108,7 +4108,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -4130,26 +4130,26 @@ public class TestInformRole extends TestCase {
 
 			String unit = "jerarquia";
 			String position = "creator";
-			String accesibility = "internal";
+			String accessibility = "internal";
 			String visibility = "public";
 			String roleName = "creador2";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('supervisor',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'supervisor'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -4174,7 +4174,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -4196,26 +4196,26 @@ public class TestInformRole extends TestCase {
 
 			String unit = "jerarquia";
 			String position = "creator";
-			String accesibility = "internal";
+			String accessibility = "internal";
 			String visibility = "private";
 			String roleName = "creador2";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('supervisor',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'supervisor'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -4240,7 +4240,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -4262,26 +4262,26 @@ public class TestInformRole extends TestCase {
 
 			String unit = "jerarquia";
 			String position = "creator";
-			String accesibility = "external";
+			String accessibility = "external";
 			String visibility = "public";
 			String roleName = "creador3";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -4306,7 +4306,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -4328,26 +4328,26 @@ public class TestInformRole extends TestCase {
 
 			String unit = "jerarquia";
 			String position = "creator";
-			String accesibility = "external";
+			String accessibility = "external";
 			String visibility = "private";
 			String roleName = "creador3";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -4372,7 +4372,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -4394,26 +4394,26 @@ public class TestInformRole extends TestCase {
 
 			String unit = "jerarquia";
 			String position = "creator";
-			String accesibility = "internal";
+			String accessibility = "internal";
 			String visibility = "public";
 			String roleName = "creador3";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -4438,7 +4438,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -4460,26 +4460,26 @@ public class TestInformRole extends TestCase {
 
 			String unit = "jerarquia";
 			String position = "creator";
-			String accesibility = "internal";
+			String accessibility = "internal";
 			String visibility = "private";
 			String roleName = "creador3";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -4504,7 +4504,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -4528,26 +4528,26 @@ public class TestInformRole extends TestCase {
 			String unit = "plana";
 			String unit2 = "plana2";
 			String position = "member";
-			String accesibility = "external";
+			String accessibility = "external";
 			String visibility = "public";
 			String roleName = "miembro2";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('miembro',(SELECT idunitList FROM unitList WHERE unitName = '"+unit2+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'member'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -4572,7 +4572,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -4596,26 +4596,26 @@ public class TestInformRole extends TestCase {
 			String unit = "plana";
 			String unit2 = "plana2";
 			String position = "member";
-			String accesibility = "internal";
+			String accessibility = "internal";
 			String visibility = "public";
 			String roleName = "miembro2";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('miembro',(SELECT idunitList FROM unitList WHERE unitName = '"+unit2+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'member'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -4640,7 +4640,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -4664,26 +4664,26 @@ public class TestInformRole extends TestCase {
 			String unit = "plana";
 			String unit2 = "plana2";
 			String position = "creator";
-			String accesibility = "external";
+			String accessibility = "external";
 			String visibility = "public";
 			String roleName = "creador2";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('miembro',(SELECT idunitList FROM unitList WHERE unitName = '"+unit2+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'member'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -4708,7 +4708,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -4732,26 +4732,26 @@ public class TestInformRole extends TestCase {
 			String unit = "plana";
 			String unit2 = "plana2";
 			String position = "creator";
-			String accesibility = "internal";
+			String accessibility = "internal";
 			String visibility = "public";
 			String roleName = "creador2";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('miembro',(SELECT idunitList FROM unitList WHERE unitName = '"+unit2+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'member'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -4776,7 +4776,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -4800,26 +4800,26 @@ public class TestInformRole extends TestCase {
 			String unit = "plana";
 			String unit2 = "plana2";
 			String position = "member";
-			String accesibility = "external";
+			String accessibility = "external";
 			String visibility = "public";
 			String roleName = "miembro";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = '"+unit2+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -4844,7 +4844,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -4868,26 +4868,26 @@ public class TestInformRole extends TestCase {
 			String unit = "plana";
 			String unit2 = "plana2";
 			String position = "member";
-			String accesibility = "internal";
+			String accessibility = "internal";
 			String visibility = "public";
 			String roleName = "miembro";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = '"+unit2+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -4912,7 +4912,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -4936,26 +4936,26 @@ public class TestInformRole extends TestCase {
 			String unit = "plana";
 			String unit2 = "plana2";
 			String position = "creator";
-			String accesibility = "external";
+			String accessibility = "external";
 			String visibility = "public";
 			String roleName = "creador3";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = '"+unit2+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -4980,7 +4980,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -5004,26 +5004,26 @@ public class TestInformRole extends TestCase {
 			String unit = "plana";
 			String unit2 = "plana2";
 			String position = "creator";
-			String accesibility = "internal";
+			String accessibility = "internal";
 			String visibility = "public";
 			String roleName = "creador3";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = '"+unit2+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -5048,7 +5048,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -5072,26 +5072,26 @@ public class TestInformRole extends TestCase {
 			String unit = "equipo";
 			String unit2 = "equipo2";
 			String position = "member";
-			String accesibility = "external";
+			String accessibility = "external";
 			String visibility = "public";
 			String roleName = "miembro2";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('miembro',(SELECT idunitList FROM unitList WHERE unitName = '"+unit2+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'member'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -5116,7 +5116,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -5140,26 +5140,26 @@ public class TestInformRole extends TestCase {
 			String unit = "equipo";
 			String unit2 = "equipo2";
 			String position = "member";
-			String accesibility = "internal";
+			String accessibility = "internal";
 			String visibility = "public";
 			String roleName = "miembro2";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('miembro',(SELECT idunitList FROM unitList WHERE unitName = '"+unit2+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'member'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -5184,7 +5184,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -5208,26 +5208,26 @@ public class TestInformRole extends TestCase {
 			String unit = "equipo";
 			String unit2 = "equipo2";
 			String position = "creator";
-			String accesibility = "external";
+			String accessibility = "external";
 			String visibility = "public";
 			String roleName = "creador2";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('miembro',(SELECT idunitList FROM unitList WHERE unitName = '"+unit2+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'member'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -5252,7 +5252,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -5276,26 +5276,26 @@ public class TestInformRole extends TestCase {
 			String unit = "equipo";
 			String unit2 = "equipo2";
 			String position = "creator";
-			String accesibility = "internal";
+			String accessibility = "internal";
 			String visibility = "public";
 			String roleName = "creador2";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('miembro',(SELECT idunitList FROM unitList WHERE unitName = '"+unit2+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'member'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -5320,7 +5320,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -5344,26 +5344,26 @@ public class TestInformRole extends TestCase {
 			String unit = "equipo";
 			String unit2 = "equipo2";
 			String position = "member";
-			String accesibility = "external";
+			String accessibility = "external";
 			String visibility = "public";
 			String roleName = "miembro";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = '"+unit2+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -5388,7 +5388,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -5412,26 +5412,26 @@ public class TestInformRole extends TestCase {
 			String unit = "equipo";
 			String unit2 = "equipo2";
 			String position = "member";
-			String accesibility = "internal";
+			String accessibility = "internal";
 			String visibility = "public";
 			String roleName = "miembro";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = '"+unit2+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -5456,7 +5456,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -5480,26 +5480,26 @@ public class TestInformRole extends TestCase {
 			String unit = "equipo";
 			String unit2 = "equipo2";
 			String position = "creator";
-			String accesibility = "external";
+			String accessibility = "external";
 			String visibility = "public";
 			String roleName = "creador3";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = '"+unit2+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -5524,7 +5524,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -5548,26 +5548,26 @@ public class TestInformRole extends TestCase {
 			String unit = "equipo";
 			String unit2 = "equipo2";
 			String position = "creator";
-			String accesibility = "internal";
+			String accessibility = "internal";
 			String visibility = "public";
 			String roleName = "creador3";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = '"+unit2+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -5592,7 +5592,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -5616,26 +5616,26 @@ public class TestInformRole extends TestCase {
 			String unit = "jerarquia";
 			String unit2 = "jerarquia2";
 			String position = "subordinate";
-			String accesibility = "external";
+			String accessibility = "external";
 			String visibility = "public";
 			String roleName = "subordinado2";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('subordinado',(SELECT idunitList FROM unitList WHERE unitName = '"+unit2+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'subordinate'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -5660,7 +5660,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -5684,26 +5684,26 @@ public class TestInformRole extends TestCase {
 			String unit = "jerarquia";
 			String unit2 = "jerarquia2";
 			String position = "subordinate";
-			String accesibility = "internal";
+			String accessibility = "internal";
 			String visibility = "public";
 			String roleName = "subordinado2";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('subordinado',(SELECT idunitList FROM unitList WHERE unitName = '"+unit2+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'subordinate'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -5728,7 +5728,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -5752,26 +5752,26 @@ public class TestInformRole extends TestCase {
 			String unit = "jerarquia";
 			String unit2 = "jerarquia2";
 			String position = "subordinate";
-			String accesibility = "external";
+			String accessibility = "external";
 			String visibility = "public";
 			String roleName = "subordinado";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('supervisor',(SELECT idunitList FROM unitList WHERE unitName = '"+unit2+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'supervisor'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -5796,7 +5796,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -5820,26 +5820,26 @@ public class TestInformRole extends TestCase {
 			String unit = "jerarquia";
 			String unit2 = "jerarquia2";
 			String position = "subordinate";
-			String accesibility = "internal";
+			String accessibility = "internal";
 			String visibility = "public";
 			String roleName = "subordinado";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('supervisor',(SELECT idunitList FROM unitList WHERE unitName = '"+unit2+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'supervisor'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -5864,7 +5864,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -5888,26 +5888,26 @@ public class TestInformRole extends TestCase {
 			String unit = "jerarquia";
 			String unit2 = "jerarquia2";
 			String position = "subordinate";
-			String accesibility = "external";
+			String accessibility = "external";
 			String visibility = "public";
 			String roleName = "subordinado";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = '"+unit2+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -5932,7 +5932,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -5956,26 +5956,26 @@ public class TestInformRole extends TestCase {
 			String unit = "jerarquia";
 			String unit2 = "jerarquia2";
 			String position = "subordinate";
-			String accesibility = "internal";
+			String accessibility = "internal";
 			String visibility = "public";
 			String roleName = "subordinado";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = '"+unit2+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -6000,7 +6000,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -6024,26 +6024,26 @@ public class TestInformRole extends TestCase {
 			String unit = "jerarquia";
 			String unit2 = "jerarquia2";
 			String position = "supervisor";
-			String accesibility = "external";
+			String accessibility = "external";
 			String visibility = "public";
 			String roleName = "supervisor";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('subordinado',(SELECT idunitList FROM unitList WHERE unitName = '"+unit2+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'subordinate'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -6068,7 +6068,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -6092,26 +6092,26 @@ public class TestInformRole extends TestCase {
 			String unit = "jerarquia";
 			String unit2 = "jerarquia2";
 			String position = "supervisor";
-			String accesibility = "internal";
+			String accessibility = "internal";
 			String visibility = "public";
 			String roleName = "supervisor";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('subordinado',(SELECT idunitList FROM unitList WHERE unitName = '"+unit2+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'subordinate'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -6136,7 +6136,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -6160,26 +6160,26 @@ public class TestInformRole extends TestCase {
 			String unit = "jerarquia";
 			String unit2 = "jerarquia2";
 			String position = "supervisor";
-			String accesibility = "external";
+			String accessibility = "external";
 			String visibility = "public";
 			String roleName = "supervisor2";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('supervisor',(SELECT idunitList FROM unitList WHERE unitName = '"+unit2+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'supervisor'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -6204,7 +6204,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -6228,26 +6228,26 @@ public class TestInformRole extends TestCase {
 			String unit = "jerarquia";
 			String unit2 = "jerarquia2";
 			String position = "supervisor";
-			String accesibility = "internal";
+			String accessibility = "internal";
 			String visibility = "public";
 			String roleName = "supervisor2";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('supervisor',(SELECT idunitList FROM unitList WHERE unitName = '"+unit2+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'supervisor'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -6272,7 +6272,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -6296,26 +6296,26 @@ public class TestInformRole extends TestCase {
 			String unit = "jerarquia";
 			String unit2 = "jerarquia2";
 			String position = "supervisor";
-			String accesibility = "external";
+			String accessibility = "external";
 			String visibility = "public";
 			String roleName = "supervisor";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = '"+unit2+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -6340,7 +6340,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -6364,26 +6364,26 @@ public class TestInformRole extends TestCase {
 			String unit = "jerarquia";
 			String unit2 = "jerarquia2";
 			String position = "supervisor";
-			String accesibility = "internal";
+			String accessibility = "internal";
 			String visibility = "public";
 			String roleName = "supervisor";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = '"+unit2+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -6408,7 +6408,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -6432,26 +6432,26 @@ public class TestInformRole extends TestCase {
 			String unit = "jerarquia";
 			String unit2 = "jerarquia2";
 			String position = "creator";
-			String accesibility = "external";
+			String accessibility = "external";
 			String visibility = "public";
 			String roleName = "creador2";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('subordinado',(SELECT idunitList FROM unitList WHERE unitName = '"+unit2+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'subordinate'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -6476,7 +6476,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -6500,26 +6500,26 @@ public class TestInformRole extends TestCase {
 			String unit = "jerarquia";
 			String unit2 = "jerarquia2";
 			String position = "creator";
-			String accesibility = "internal";
+			String accessibility = "internal";
 			String visibility = "public";
 			String roleName = "creador2";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('subordinado',(SELECT idunitList FROM unitList WHERE unitName = '"+unit2+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'subordinate'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -6544,7 +6544,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -6568,26 +6568,26 @@ public class TestInformRole extends TestCase {
 			String unit = "jerarquia";
 			String unit2 = "jerarquia2";
 			String position = "creator";
-			String accesibility = "external";
+			String accessibility = "external";
 			String visibility = "public";
 			String roleName = "creador2";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('supervisor',(SELECT idunitList FROM unitList WHERE unitName = '"+unit2+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'supervisor'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -6612,7 +6612,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -6636,26 +6636,26 @@ public class TestInformRole extends TestCase {
 			String unit = "jerarquia";
 			String unit2 = "jerarquia2";
 			String position = "creator";
-			String accesibility = "internal";
+			String accessibility = "internal";
 			String visibility = "public";
 			String roleName = "creador2";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('supervisor',(SELECT idunitList FROM unitList WHERE unitName = '"+unit2+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'supervisor'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -6680,7 +6680,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -6704,26 +6704,26 @@ public class TestInformRole extends TestCase {
 			String unit = "jerarquia";
 			String unit2 = "jerarquia2";
 			String position = "creator";
-			String accesibility = "external";
+			String accessibility = "external";
 			String visibility = "public";
 			String roleName = "creador3";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = '"+unit2+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -6748,7 +6748,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 
@@ -6772,26 +6772,26 @@ public class TestInformRole extends TestCase {
 			String unit = "jerarquia";
 			String unit2 = "jerarquia2";
 			String position = "creator";
-			String accesibility = "internal";
+			String accessibility = "internal";
 			String visibility = "public";
 			String roleName = "creador3";
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = '"+unit2+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'external'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+roleName+"',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = '"+position+"'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = '"+accesibility+"'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = '"+accessibility+"'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = '"+visibility+"'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
@@ -6816,7 +6816,7 @@ public class TestInformRole extends TestCase {
 			
 			assertEquals(position, result.get(0));
 			assertEquals(visibility, result.get(1));
-			assertEquals(accesibility, result.get(2));//visibility
+			assertEquals(accessibility, result.get(2));//visibility
 			
 			
 

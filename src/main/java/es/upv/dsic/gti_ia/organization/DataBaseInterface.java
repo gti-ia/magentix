@@ -660,7 +660,7 @@ class DataBaseInterface {
 
 
 			st = connection.createStatement();
-			st.executeUpdate("INSERT INTO roleList (roleName, idunitList, idposition, idaccesibility, idvisibility) VALUES ('" + roleName + "', (SELECT idunitList FROM unitList WHERE unitName ='" + unitName + "'),(SELECT idposition FROM position WHERE position ='" + position + "'),(SELECT idaccesibility FROM accesibility WHERE accesibility ='" + accessibility + "'),(SELECT idvisibility FROM visibility WHERE visibility ='" + visibility + "'))");
+			st.executeUpdate("INSERT INTO roleList (roleName, idunitList, idposition, idaccessibility, idvisibility) VALUES ('" + roleName + "', (SELECT idunitList FROM unitList WHERE unitName ='" + unitName + "'),(SELECT idposition FROM position WHERE position ='" + position + "'),(SELECT idaccessibility FROM accessibility WHERE accessibility ='" + accessibility + "'),(SELECT idvisibility FROM visibility WHERE visibility ='" + visibility + "'))");
 
 			connection.commit();
 			return roleName + " created";
@@ -717,7 +717,7 @@ class DataBaseInterface {
 				st3.executeUpdate("INSERT INTO unitHierarchy (idParentUnit, idChildUnit) VALUES ((SELECT idunitList FROM unitList WHERE unitName ='" + parentUnitName + "'), " + insertedUnitId + ")");
 
 				st4 = connection.createStatement();
-				st4.executeUpdate("INSERT INTO roleList (roleName, idunitList, idposition, idaccesibility, idvisibility) VALUES ('" + creatorAgentName + "', " + insertedUnitId + ", (SELECT idposition FROM position WHERE position ='creator'),(SELECT idaccesibility FROM accesibility WHERE accesibility ='internal'), (SELECT idVisibility FROM visibility WHERE visibility ='private'))");
+				st4.executeUpdate("INSERT INTO roleList (roleName, idunitList, idposition, idaccessibility, idvisibility) VALUES ('" + creatorAgentName + "', " + insertedUnitId + ", (SELECT idposition FROM position WHERE position ='creator'),(SELECT idaccessibility FROM accessibility WHERE accessibility ='internal'), (SELECT idVisibility FROM visibility WHERE visibility ='private'))");
 
 				st5 = connection.createStatement();
 				st5.executeUpdate("INSERT INTO agentPlayList (idagentList, idroleList) VALUES ((SELECT idagentList FROM agentList WHERE agentName='" + agentName + "'), LAST_INSERT_ID())");
@@ -938,7 +938,7 @@ class DataBaseInterface {
 		}
 	}
 
-	String jointUnit(String unitName, String parentName) throws MySQLException, ParentUnitNotExistsException, UnitNotExistsException {
+	String joinUnit(String unitName, String parentName) throws MySQLException, ParentUnitNotExistsException, UnitNotExistsException {
 
 		Connection connection = null;
 		Statement st = null;
@@ -1098,7 +1098,7 @@ class DataBaseInterface {
 		}
 	}
 
-	ArrayList<ArrayList<String>> getAgentsInUnit(String unitName) throws MySQLException{
+/*	ArrayList<ArrayList<String>> getAgentsInUnit(String unitName) throws MySQLException{
 		ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
 
 		Connection connection = null;
@@ -1166,7 +1166,7 @@ class DataBaseInterface {
 
 		}
 	}
-
+*/
 	ArrayList<String> getParentsUnit(String unitName) throws MySQLException{
 
 		ArrayList<String> result = new ArrayList<String>();
@@ -1447,12 +1447,12 @@ class DataBaseInterface {
 				res11 = st11.executeQuery("SELECT * FROM roleList WHERE idroleList =" + idroleList + " AND idunitList=(SELECT idunitList FROM unitList WHERE unitName ='" + unitName + "')");
 				if (res11.next()) {
 					int idvisibility = res11.getInt("idvisibility");
-					int idaccesibility = res11.getInt("idaccesibility");
+					int idaccessibility = res11.getInt("idaccessibility");
 					int idposition = res11.getInt("idposition");
 					String roleName = res11.getString("roleName");
 					String position = "";
 					String visibility = "";
-					String accesibility = "";
+					String accessibility = "";
 
 					st12 = connection.createStatement();
 					res12 = st12.executeQuery("SELECT * FROM position WHERE idposition =" + idposition);
@@ -1460,9 +1460,9 @@ class DataBaseInterface {
 						position = res12.getString("position");
 
 					st13 = connection.createStatement();
-					res13 = st13.executeQuery("SELECT * FROM accesibility WHERE idaccesibility =" + idaccesibility);
+					res13 = st13.executeQuery("SELECT * FROM accessibility WHERE idaccessibility =" + idaccessibility);
 					if (res13.next())
-						accesibility = res13.getString("accesibility");
+						accessibility = res13.getString("accessibility");
 
 					st14 = connection.createStatement();
 					res14 = st14.executeQuery("SELECT * FROM visibility WHERE idvisibility =" + idvisibility);
@@ -1472,7 +1472,7 @@ class DataBaseInterface {
 					ArrayList<String> aux = new ArrayList<String>();
 					aux.add(roleName);
 					aux.add(visibility);
-					aux.add(accesibility);
+					aux.add(accessibility);
 					aux.add(position);
 					result.add(aux);
 				}
@@ -1519,17 +1519,12 @@ class DataBaseInterface {
 	ArrayList<ArrayList<String>> getAgentsRolesInUnit(String unitName, String agentName) throws MySQLException {
 		ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
 
-		boolean playsRole = false;
 
 		Connection connection = null;
-		Statement st10 = null;
-		Statement st11 = null;
 		Statement st12 = null;
 		Statement st13 = null;
 		Statement st14 = null;
 
-		ResultSet res10 = null;
-		ResultSet res11 = null;
 		ResultSet res12 = null;
 		ResultSet res13 = null;
 		ResultSet res14 = null;
@@ -1537,29 +1532,9 @@ class DataBaseInterface {
 		try {
 			connection = db.connect();
 
-
-
-
-
-
-			st10 = connection.createStatement();
-			res10 = st10.executeQuery("SELECT idroleList FROM agentPlayList WHERE idagentList = (SELECT idagentList FROM agentList WHERE agentName ='" + agentName + "')");
-			while (res10.next()) {
-				int idroleList = res10.getInt("idroleList");
-				st11 = connection.createStatement();
-				res11 = st11.executeQuery("SELECT * FROM roleList WHERE idroleList =" + idroleList + " AND idunitList=(SELECT idunitList FROM unitList WHERE unitName ='" + unitName + "')");
-				if (res11.next()) {
-					playsRole = true;
-					break;
-				}
-			}
-
 			st12 = connection.createStatement();
 
-			if (playsRole)
-				res12 = st12.executeQuery("SELECT idroleList, roleName FROM roleList WHERE idunitList = (SELECT idunitList FROM unitList WHERE unitName ='" + unitName + "') AND (idVisibility = (SELECT idVisibility FROM visibility WHERE visibility ='private') OR idVisibility =(SELECT idVisibility FROM visibility WHERE visibility ='public'))");
-			else
-				res12 = st12.executeQuery("SELECT idroleList, roleName FROM roleList WHERE idunitList = (SELECT idunitList FROM unitList WHERE unitName ='" + unitName + "') AND idVisibility = (SELECT idVisibility FROM visibility WHERE visibility ='public')");
+			res12 = st12.executeQuery("SELECT idroleList, roleName FROM roleList WHERE idunitList = (SELECT idunitList FROM unitList WHERE unitName ='" + unitName + "')");
 			while (res12.next()) {
 
 				String roleName = res12.getString("roleName");
@@ -1597,10 +1572,6 @@ class DataBaseInterface {
 			{
 				if (connection != null)
 					connection.close();
-				if (st10 != null)
-					st10.close();
-				if (st11 != null)
-					st11.close();
 				if (st12 != null)
 					st12.close();
 				if (st13 != null)
@@ -1608,10 +1579,90 @@ class DataBaseInterface {
 				if (st14 != null)
 					st14.close();
 
-				if (res10 != null)
-					res10.close();
-				if (res11 != null)
-					res11.close();
+				if (res12 != null)
+					res12.close();
+				if (res13 != null)
+					res13.close();
+				if (res14 != null)
+					res14.close();
+
+			}catch(SQLException e)
+			{
+				String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
+				throw new MySQLException(message);
+			}
+
+		}
+	}
+
+	ArrayList<ArrayList<String>> getAgentsVisibilityRolesInUnit(String unitName, String agentName) throws MySQLException {
+		ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
+
+		Connection connection = null;
+		Statement st12 = null;
+		Statement st13 = null;
+		Statement st14 = null;
+
+		ResultSet res12 = null;
+		ResultSet res13 = null;
+		ResultSet res14 = null;
+
+		try {
+			connection = db.connect();
+
+
+
+
+
+
+
+			st12 = connection.createStatement();
+
+			res12 = st12.executeQuery("SELECT idroleList, roleName FROM roleList WHERE idunitList = (SELECT idunitList FROM unitList WHERE unitName ='" + unitName + "') AND idVisibility = (SELECT idVisibility FROM visibility WHERE visibility ='public')");
+			while (res12.next()) {
+
+				String roleName = res12.getString("roleName");
+				int idroleList = res12.getInt("idroleList");
+
+
+				st14 = connection.createStatement();
+
+				res14 = st14.executeQuery("(SELECT idagentList FROM agentPlayList WHERE idroleList =" + idroleList+")");
+
+				while (res14.next())
+
+				{
+					st13 = connection.createStatement();
+					int idagentList = res14.getInt("idagentList");
+					res13 = st13.executeQuery("SELECT agentName FROM agentList WHERE idagentList = "+idagentList);
+
+					if (res13.next()) {
+						ArrayList<String> aux = new ArrayList<String>();
+						aux.add(res13.getString("agentName"));
+						aux.add(roleName);
+						result.add(aux);
+					}
+				}
+
+			}
+			connection.commit();
+			return result;
+		} catch (SQLException e) {
+			String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
+			throw new MySQLException(message);
+
+		}  finally {
+			try
+			{
+				if (connection != null)
+					connection.close();
+				if (st12 != null)
+					st12.close();
+				if (st13 != null)
+					st13.close();
+				if (st14 != null)
+					st14.close();
+
 				if (res12 != null)
 					res12.close();
 				if (res13 != null)
@@ -1631,17 +1682,13 @@ class DataBaseInterface {
 	ArrayList<String> getAgentsPlayingRoleInUnit(String unitName, String roleName, String agentName) throws MySQLException {
 		ArrayList<String> result = new ArrayList<String>();
 
-		boolean playsRole = false;
+
 
 		Connection connection = null;
-		Statement st10 = null;
-		Statement st11 = null;
 		Statement st12 = null;
 		Statement st13 = null;
 		Statement st14 = null;
 
-		ResultSet res10 = null;
-		ResultSet res11 = null;
 		ResultSet res12 = null;
 		ResultSet res13 = null;
 		ResultSet res14 = null;
@@ -1651,24 +1698,10 @@ class DataBaseInterface {
 
 
 
-			st10 = connection.createStatement();
-			res10 = st10.executeQuery("SELECT idroleList FROM agentPlayList WHERE idagentList = (SELECT idagentList FROM agentList WHERE agentName ='" + agentName + "')");
-			while (res10.next()) {
-				int idroleList = res10.getInt("idroleList");
-				st11 = connection.createStatement();
-				res11 = st11.executeQuery("SELECT * FROM roleList WHERE idroleList =" + idroleList + " AND idunitList= (SELECT idunitList FROM unitList WHERE unitName ='" + unitName + "')");
-				if (res11.next()) {
-					playsRole = true;
-					break;
-				}
-			}
 
 			st12 = connection.createStatement();
 
-			if (playsRole)
-				res12 = st12.executeQuery("SELECT idroleList FROM roleList WHERE idunitList = (SELECT idunitList FROM unitList WHERE unitName ='" + unitName + "') AND roleName ='" + roleName + "' AND (idVisibility = (SELECT idVisibility FROM visibility WHERE visibility ='private') OR idVisibility =(SELECT idVisibility FROM visibility WHERE visibility ='public'))");
-			else
-				res12 = st12.executeQuery("SELECT idroleList FROM roleList WHERE idunitList = (SELECT idunitList FROM unitList WHERE unitName ='" + unitName + "') AND roleName ='" + roleName + "' AND idVisibility = (SELECT idVisibility FROM visibility WHERE visibility ='public')");
+			res12 = st12.executeQuery("SELECT idroleList FROM roleList WHERE idunitList = (SELECT idunitList FROM unitList WHERE unitName ='" + unitName + "') AND roleName ='" + roleName + "'");
 			while (res12.next()) {
 				int idroleList = res12.getInt("idroleList");
 
@@ -1696,10 +1729,6 @@ class DataBaseInterface {
 			{
 				if (connection != null)
 					connection.close();
-				if (st10 != null)
-					st10.close();
-				if (st11 != null)
-					st11.close();
 				if (st12 != null)
 					st12.close();
 				if (st13 != null)
@@ -1707,10 +1736,6 @@ class DataBaseInterface {
 				if (st14 != null)
 					st14.close();
 
-				if (res10 != null)
-					res10.close();
-				if (res11 != null)
-					res11.close();
 				if (res12 != null)
 					res12.close();
 				if (res13 != null)
@@ -1731,45 +1756,27 @@ class DataBaseInterface {
 	ArrayList<ArrayList<String>> getAgentsPlayingPositionInUnit(String unitName, String positionValue, String agentName) throws MySQLException{
 		ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
 
-		boolean playsRole = false;
+
 
 
 		Connection connection = null;
 		Statement st3 = null;
 		Statement st4 = null;
 		Statement st5 = null;
-		Statement st6 = null;
-		Statement st7 = null;
 
 		ResultSet res3 = null;
 		ResultSet res4 = null;
 		ResultSet res5 = null;
-		ResultSet res6 = null;
-		ResultSet res7 = null;
 
 		try {
 			connection = db.connect();
 
 
-			st6 = connection.createStatement();
-			res6 = st6.executeQuery("SELECT idroleList FROM agentPlayList WHERE idagentList = (SELECT idagentList FROM agentList WHERE agentName ='" + agentName + "')");
-			while (res6.next()) {
-				int idroleList2 = res6.getInt("idroleList");
-				st7 = connection.createStatement();
-				res7 = st7.executeQuery("SELECT * FROM roleList WHERE idroleList =" + idroleList2 + " AND idunitList= (SELECT idunitList FROM unitList WHERE unitName ='" + unitName + "')");
-				if (res7.next()) {
-					playsRole = true;
-					break;
-				}
-			}
 
 			st3 = connection.createStatement();
 
-			if (playsRole) {
-				res3 = st3.executeQuery("SELECT idroleList, roleName FROM roleList WHERE idunitList = (SELECT idunitList FROM unitList WHERE unitName ='" + unitName + "') AND idposition = (SELECT idposition FROM position WHERE position ='" + positionValue + "') AND (idvisibility = (SELECT idVisibility FROM visibility WHERE visibility ='private') OR idvisibility = (SELECT idVisibility FROM visibility WHERE visibility ='public'))");
-			} else {
-				res3 = st3.executeQuery("SELECT idroleList, roleName FROM roleList WHERE idunitList = (SELECT idunitList FROM unitList WHERE unitName ='" + unitName + "') AND idposition = (SELECT idposition FROM position WHERE position ='" + positionValue + "') AND idVisibility = (SELECT idVisibility FROM visibility WHERE visibility ='public')");
-			}
+			res3 = st3.executeQuery("SELECT idroleList, roleName FROM roleList WHERE idunitList = (SELECT idunitList FROM unitList WHERE unitName ='" + unitName + "') AND idposition = (SELECT idposition FROM position WHERE position ='" + positionValue + "')");
+
 			while (res3.next()) {
 				int idroleList = res3.getInt("idroleList");
 				String roleName = res3.getString("roleName");
@@ -1809,10 +1816,6 @@ class DataBaseInterface {
 					st4.close();
 				if (st5 != null)
 					st5.close();
-				if (st6 != null)
-					st6.close();
-				if (st7 != null)
-					st7.close();
 
 				if (res3 != null)
 					res3.close();
@@ -1820,10 +1823,6 @@ class DataBaseInterface {
 					res4.close();
 				if (res5 != null)
 					res5.close();
-				if (res6 != null)
-					res6.close();
-				if (res7 != null)
-					res7.close();
 
 			}catch(SQLException e)
 			{
@@ -1839,17 +1838,13 @@ class DataBaseInterface {
 		// posicio positionValue en la unitat unitName?
 		ArrayList<String> result = new ArrayList<String>();
 
-		boolean playsRole = false;
+
 
 
 		Connection connection = null;
-		Statement st6 = null;
-		Statement st7 = null;
 		Statement st10 = null;
 		Statement st11 = null;
 
-		ResultSet res6 = null;
-		ResultSet res7 = null;
 		ResultSet res10 = null;
 		ResultSet res11 = null;
 
@@ -1858,48 +1853,21 @@ class DataBaseInterface {
 
 
 
-			st6 = connection.createStatement();
-			res6 = st6.executeQuery("SELECT idroleList FROM agentPlayList WHERE idagentList = (SELECT idagentList FROM agentList WHERE agentName ='" + agentName + "')");
-			while (res6.next()) {
-				int idroleList2 = res6.getInt("idroleList");
-				st7 = connection.createStatement();
-				res7 = st7.executeQuery("SELECT * FROM roleList WHERE idroleList =" + idroleList2 + " AND idunitList= (SELECT idunitList FROM unitList WHERE unitName ='" + unitName + "')");
-				if (res7.next()) {
-					playsRole = true;
-					break;
-				}
-			}
 
 			st11 = connection.createStatement();
 
 			st10 = connection.createStatement();
-			if (playsRole) {
 
-				res11 = st11.executeQuery("SELECT idagentList FROM agentPlayList WHERE idroleList = (SELECT idroleList FROM roleList WHERE idUnitList= (SELECT idunitList FROM unitList WHERE unitName ='" + unitName + "') AND roleName ='" + roleName + "' AND idposition = (SELECT idposition FROM position WHERE position ='" + positionValue + "') AND (idvisibility = (SELECT idVisibility FROM visibility WHERE visibility ='private') OR idvisibility =(SELECT idVisibility FROM visibility WHERE visibility ='public')))");
+			res11 = st11.executeQuery("SELECT idagentList FROM agentPlayList WHERE idroleList = (SELECT idroleList FROM roleList WHERE idUnitList= (SELECT idunitList FROM unitList WHERE unitName ='" + unitName + "') AND roleName ='" + roleName + "' AND idposition = (SELECT idposition FROM position WHERE position ='" + positionValue + "'))");
 
-				while(res11.next())
-				{
+			while(res11.next())
+			{
 
-					int idagentList = res11.getInt("idagentList");
-					res10 = st10.executeQuery("SELECT agentName FROM agentList WHERE idagentList = "+ idagentList);
-					if (res10.next()) {
+				int idagentList = res11.getInt("idagentList");
+				res10 = st10.executeQuery("SELECT agentName FROM agentList WHERE idagentList = "+ idagentList);
+				if (res10.next()) {
 
-						result.add(res10.getString("agentName"));
-					}
-				}
-			} else {
-
-				res11 = st11.executeQuery("SELECT idagentList FROM agentPlayList WHERE idroleList = (SELECT idroleList FROM roleList WHERE idUnitList= (SELECT idunitList FROM unitList WHERE unitName ='" + unitName + "') AND roleName ='" + roleName + "' AND idposition = (SELECT idposition FROM position WHERE position ='" + positionValue + "') AND idVisibility = (SELECT idVisibility FROM visibility WHERE visibility ='public'))");
-
-				while(res11.next())
-				{
-
-					int idagentList = res11.getInt("idagentList");
-					res10 = st10.executeQuery("SELECT agentName FROM agentList WHERE idagentList = "+ idagentList);
-					if (res10.next()) {
-
-						result.add(res10.getString("agentName"));
-					}
+					result.add(res10.getString("agentName"));
 				}
 			}
 
@@ -1915,19 +1883,11 @@ class DataBaseInterface {
 			{
 				if (connection != null)
 					connection.close();
-				if (st6 != null)
-					st6.close();
-				if (st7 != null)
-					st7.close();
 				if (st10 != null)
 					st10.close();
 				if (st11 != null)
 					st11.close();
 
-				if (res6 != null)
-					res6.close();
-				if (res7 != null)
-					res7.close();
 				if (res10 != null)
 					res10.close();
 				if (res11 != null)
@@ -1943,22 +1903,97 @@ class DataBaseInterface {
 		}
 	}
 
-	int getQuantityAgentsRolesInUnit(String unitName, String agentName) throws MySQLException{
+	ArrayList<ArrayList<String>> getAgentsPlayingVisibilityPositionInUnit(String unitName, String positionValue, String agentName) throws MySQLException{
+		ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
+
+
+
+
+		Connection connection = null;
+		Statement st3 = null;
+		Statement st4 = null;
+		Statement st5 = null;
+
+		ResultSet res3 = null;
+		ResultSet res4 = null;
+		ResultSet res5 = null;
+
+		try {
+			connection = db.connect();
+
+
+
+			st3 = connection.createStatement();
+
+			res3 = st3.executeQuery("SELECT idroleList, roleName FROM roleList WHERE idunitList = (SELECT idunitList FROM unitList WHERE unitName ='" + unitName + "') AND idposition = (SELECT idposition FROM position WHERE position ='" + positionValue + "') AND idVisibility = (SELECT idVisibility FROM visibility WHERE visibility ='public')");
+		
+
+			while (res3.next()) {
+				int idroleList = res3.getInt("idroleList");
+				String roleName = res3.getString("roleName");
+
+				st5 = connection.createStatement();
+				res5 = st5.executeQuery("(SELECT idagentList FROM agentPlayList WHERE idroleList =" + idroleList+")");
+
+				while(res5.next())
+				{
+					int idagentList = res5.getInt("idagentList");
+
+					st4 = connection.createStatement();
+					res4 = st4.executeQuery("SELECT agentName FROM agentList WHERE idagentList = " + idagentList);
+					if (res4.next()) {
+						ArrayList<String> aux = new ArrayList<String>();
+						aux.add(res4.getString("agentName"));
+						aux.add(roleName);
+						result.add(aux);
+					}
+				}
+			}
+			connection.commit();
+			return result;
+		} catch (SQLException e) {
+			String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
+			throw new MySQLException(message);
+
+		} finally {
+
+			try
+			{
+				if (connection != null)
+					connection.close();
+				if (st3 != null)
+					st3.close();
+				if (st4 != null)
+					st4.close();
+				if (st5 != null)
+					st5.close();
+
+				if (res3 != null)
+					res3.close();
+				if (res4 != null)
+					res4.close();
+				if (res5 != null)
+					res5.close();
+
+			}catch(SQLException e)
+			{
+				String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
+				throw new MySQLException(message);
+			}
+
+		}
+	}
+	int getInformQuantityAgentsRolesInUnit(String unitName, String agentName) throws MySQLException{
 
 		int idroleList;
-		boolean playsRole = false;
 
 		Connection connection = null;
 
 		Statement st5 = null;
-		Statement st6 = null;
-		Statement st7 = null;
 		Statement st10 = null;
 		Statement st11 = null;
 
 		ResultSet res5 = null;
-		ResultSet res6 = null;
-		ResultSet res7 = null;
 		ResultSet res10 = null;
 		ResultSet res11 = null;
 
@@ -1968,25 +2003,11 @@ class DataBaseInterface {
 
 
 
-			st6 = connection.createStatement();
-			res6 = st6.executeQuery("SELECT idroleList FROM agentPlayList WHERE idagentList = (SELECT idagentList FROM agentList WHERE agentName ='" + agentName + "')");
-			while (res6.next()) {
-				int idroleList2 = res6.getInt("idroleList");
-				st7 = connection.createStatement();
-				res7 = st7.executeQuery("SELECT * FROM roleList WHERE idroleList =" + idroleList2 + " AND idunitList=(SELECT idunitList FROM unitList WHERE unitName ='" + unitName + "')");
-				if (res7.next()) {
-					playsRole = true;
-					break;
-				}
-			}
 
 			Set<String> agentNames = new HashSet<String>();
 			st5 = connection.createStatement();
 
-			if (playsRole)
-				res5 = st5.executeQuery("SELECT idroleList FROM roleList WHERE idunitList= (SELECT idunitList FROM unitList WHERE unitName ='" + unitName + "')");
-			else
-				res5 = st5.executeQuery("SELECT idroleList FROM roleList WHERE idunitList= (SELECT idunitList FROM unitList WHERE unitName ='" + unitName + "') AND idVisibility =(SELECT idVisibility FROM visibility WHERE visibility ='public')");
+			res5 = st5.executeQuery("SELECT idroleList FROM roleList WHERE idunitList= (SELECT idunitList FROM unitList WHERE unitName ='" + unitName + "')");
 			while (res5.next()) {
 				idroleList = res5.getInt("idroleList");
 
@@ -2015,10 +2036,7 @@ class DataBaseInterface {
 			{
 				if (connection != null)
 					connection.close();
-				if (st6 != null)
-					st6.close();
-				if (st7 != null)
-					st7.close();
+
 				if (st10 != null)
 					st10.close();
 				if (st11 != null)
@@ -2026,10 +2044,7 @@ class DataBaseInterface {
 
 				if (res5 != null)
 					res5.close();
-				if (res6 != null)
-					res6.close();
-				if (res7 != null)
-					res7.close();
+
 				if (res10 != null)
 					res10.close();
 				if (res11 != null)
@@ -2043,21 +2058,20 @@ class DataBaseInterface {
 		}
 	}
 
-	int getQuantityAgentsPlayingRoleInUnit(String unitName, String roleName, String agentName) throws MySQLException {
-		int cont = 0;
+	int getInformQuantityAgentsVisibilityRolesInUnit(String unitName, String agentName) throws MySQLException{
+
 		int idroleList;
-		boolean playsRole = false;
+
 
 		Connection connection = null;
+
 		Statement st5 = null;
-		Statement st6 = null;
-		Statement st7 = null;
+
 		Statement st10 = null;
 		Statement st11 = null;
 
 		ResultSet res5 = null;
-		ResultSet res6 = null;
-		ResultSet res7 = null;
+
 		ResultSet res10 = null;
 		ResultSet res11 = null;
 
@@ -2067,24 +2081,83 @@ class DataBaseInterface {
 
 
 
-			st6 = connection.createStatement();
-			res6 = st6.executeQuery("SELECT idroleList FROM agentPlayList WHERE idagentList = (SELECT idagentList FROM agentList WHERE agentName ='" + agentName + "')");
-			while (res6.next()) {
-				int idroleList2 = res6.getInt("idroleList");
-				st7 = connection.createStatement();
-				res7 = st7.executeQuery("SELECT * FROM roleList WHERE idroleList =" + idroleList2 + " AND idunitList= (SELECT idunitList FROM unitList WHERE unitName ='" + unitName + "')");
-				if (res7.next()) {
-					playsRole = true;
-					break;
+
+			Set<String> agentNames = new HashSet<String>();
+			st5 = connection.createStatement();
+
+			res5 = st5.executeQuery("SELECT idroleList FROM roleList WHERE idunitList= (SELECT idunitList FROM unitList WHERE unitName ='" + unitName + "') AND idVisibility =(SELECT idVisibility FROM visibility WHERE visibility ='public')");
+			while (res5.next()) {
+				idroleList = res5.getInt("idroleList");
+
+				st11 = connection.createStatement();
+				res11 = st11.executeQuery("SELECT idagentList FROM agentPlayList WHERE idroleList =" + idroleList);
+
+				while(res11.next())
+				{
+					int idagentList = res11.getInt("idagentList");
+					st10 = connection.createStatement();
+					res10 = st10.executeQuery("SELECT agentName FROM agentList WHERE idagentList = " + idagentList);
+					if (res10.next()) {
+						agentNames.add(res10.getString("agentName"));
+					}
 				}
 			}
+			connection.commit();
+			return agentNames.size();
+		} catch (SQLException e) {
+			String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
+			throw new MySQLException(message);
+
+		} finally {
+
+			try
+			{
+				if (connection != null)
+					connection.close();
+				if (st10 != null)
+					st10.close();
+				if (st11 != null)
+					st11.close();
+
+				if (res5 != null)
+					res5.close();
+				if (res10 != null)
+					res10.close();
+				if (res11 != null)
+					res11.close();
+
+			}catch(SQLException e)
+			{
+				String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
+				throw new MySQLException(message);
+			}
+		}
+	}
+
+	int getInformQuantityAgentsPlayingRoleInUnit(String unitName, String roleName, String agentName) throws MySQLException {
+		int cont = 0;
+		int idroleList;
+
+
+		Connection connection = null;
+		Statement st5 = null;
+		Statement st10 = null;
+		Statement st11 = null;
+
+		ResultSet res5 = null;
+		ResultSet res10 = null;
+		ResultSet res11 = null;
+
+		try {
+			connection = db.connect();
+
+
+
+
 
 			st5 = connection.createStatement();
 
-			if (playsRole)
-				res5 = st5.executeQuery("SELECT idroleList FROM roleList WHERE idunitList = (SELECT idunitList FROM unitList WHERE unitName ='" + unitName + "') AND roleName ='" + roleName + "' AND (idVisibility = (SELECT idVisibility FROM visibility WHERE visibility ='private') OR idvisibility = (SELECT idVisibility FROM visibility WHERE visibility ='public'))");
-			else
-				res5 = st5.executeQuery("SELECT idroleList FROM roleList WHERE idunitList = (SELECT idunitList FROM unitList WHERE unitName ='" + unitName + "') AND roleName ='" + roleName + "' AND idvisibility = (SELECT idVisibility FROM visibility WHERE visibility ='public')");
+			res5 = st5.executeQuery("SELECT idroleList FROM roleList WHERE idunitList = (SELECT idunitList FROM unitList WHERE unitName ='" + unitName + "') AND roleName ='" + roleName + "'");
 			if (res5.next())
 				idroleList = res5.getInt("idroleList");
 			else
@@ -2117,10 +2190,7 @@ class DataBaseInterface {
 					connection.close();
 				if (st5 != null)
 					st5.close();
-				if (st6 != null)
-					st6.close();
-				if (st7 != null)
-					st7.close();
+
 				if (st10 != null)
 					st10.close();
 				if (st11 != null)
@@ -2128,10 +2198,7 @@ class DataBaseInterface {
 
 				if (res5 != null)
 					res5.close();
-				if (res6 != null)
-					res6.close();
-				if (res7 != null)
-					res7.close();
+
 				if (res10 != null)
 					res10.close();
 				if (res11 != null)
@@ -2145,21 +2212,15 @@ class DataBaseInterface {
 		}
 	}
 
-	int getQuantityAgentsPlayingPositionInUnit(String unitName, String positionValue, String agentName) throws MySQLException{
+	int getInformQuantityAgentsPlayingPositionInUnit(String unitName, String positionValue, String agentName) throws MySQLException{
 		int idroleList;
-		boolean playsRole = false;
-
 
 		Connection connection = null;
 		Statement st5 = null;
-		Statement st6 = null;
-		Statement st7 = null;
 		Statement st10 = null;
 		Statement st11 = null;
 
 		ResultSet res5 = null;
-		ResultSet res6 = null;
-		ResultSet res7 = null;
 		ResultSet res10 = null;
 		ResultSet res11 = null;
 
@@ -2169,28 +2230,13 @@ class DataBaseInterface {
 
 
 
-			st6 = connection.createStatement();
-			res6 = st6.executeQuery("SELECT idroleList FROM agentPlayList WHERE idagentList = (SELECT idagentList FROM agentList WHERE agentName ='" + agentName + "')");
-			while (res6.next()) {
-				int idroleList2 = res6.getInt("idroleList");
-				st7 = connection.createStatement();
-				res7 = st7.executeQuery("SELECT * FROM roleList WHERE idroleList =" + idroleList2 + " AND idunitList= (SELECT idunitList FROM unitList WHERE unitName ='" + unitName + "')");
-				if (res7.next()) {
-					playsRole = true;
-					break;
-				}
-			}
 
 			Set<String> agentNames = new HashSet<String>();
 			st5 = connection.createStatement();
 
-			if (playsRole) {
 
-				res5 = st5.executeQuery("SELECT idroleList FROM roleList WHERE idunitList= (SELECT idunitList FROM unitList WHERE unitName ='" + unitName + "') AND idposition = (SELECT idposition FROM position WHERE position ='" + positionValue + "')");
-			} else {
+			res5 = st5.executeQuery("SELECT idroleList FROM roleList WHERE idunitList= (SELECT idunitList FROM unitList WHERE unitName ='" + unitName + "') AND idposition = (SELECT idposition FROM position WHERE position ='" + positionValue + "')");
 
-				res5 = st5.executeQuery("SELECT idroleList FROM roleList WHERE idunitList= (SELECT idunitList FROM unitList WHERE unitName ='" + unitName + "') AND idposition = (SELECT idposition FROM position WHERE position ='" + positionValue + "') AND idvisibility = (SELECT idVisibility FROM visibility WHERE visibility ='public')");
-			}
 			while (res5.next()) {
 				idroleList = res5.getInt("idroleList");
 
@@ -2221,10 +2267,7 @@ class DataBaseInterface {
 					connection.close();
 				if (st5 != null)
 					st5.close();
-				if (st6 != null)
-					st6.close();
-				if (st7 != null)
-					st7.close();
+
 				if (st10 != null)
 					st10.close();
 				if (st11 != null)
@@ -2232,10 +2275,7 @@ class DataBaseInterface {
 
 				if (res5 != null)
 					res5.close();
-				if (res6 != null)
-					res6.close();
-				if (res7 != null)
-					res7.close();
+
 				if (res10 != null)
 					res10.close();
 				if (res11 != null)
@@ -2249,25 +2289,21 @@ class DataBaseInterface {
 		}
 	}
 
-	int getQuantityAgentsPlayingRolePositionInUnit(String unitName, String roleName, String positionValue, String agentName) throws MySQLException {
+	int getInformQuantityAgentsPlayingRolePositionInUnit(String unitName, String roleName, String positionValue, String agentName) throws MySQLException {
 		int cont = 0;
 
 		int idroleList;
-		boolean playsRole = false;
-
 
 		Connection connection = null;
-		Statement st4 = null;
+
 		Statement st5 = null;
-		Statement st6 = null;
-		Statement st7 = null;
+
 		Statement st10 = null;
 		Statement st11 = null;
 
-		ResultSet res4 = null;
+
 		ResultSet res5 = null;
-		ResultSet res6 = null;
-		ResultSet res7 = null;
+
 		ResultSet res10 = null;
 		ResultSet res11 = null;
 
@@ -2277,27 +2313,12 @@ class DataBaseInterface {
 
 
 
-			st4 = connection.createStatement();
-			res4 = st4.executeQuery("SELECT idposition FROM position WHERE position ='" + positionValue + "'");
 
-			st6 = connection.createStatement();
-			res6 = st6.executeQuery("SELECT idroleList FROM agentPlayList WHERE idagentList = (SELECT idagentList FROM agentList WHERE agentName ='" + agentName + "')");
-			while (res6.next()) {
-				int idroleList2 = res6.getInt("idroleList");
-				st7 = connection.createStatement();
-				res7 = st7.executeQuery("SELECT * FROM roleList WHERE idroleList =" + idroleList2 + " AND idunitList= (SELECT idunitList FROM unitList WHERE unitName ='" + unitName + "')");
-				if (res7.next()) {
-					playsRole = true;
-					break;
-				}
-			}
 
 			st5 = connection.createStatement();
 
-			if (playsRole)
-				res5 = st5.executeQuery("SELECT idroleList FROM roleList WHERE idunitList = (SELECT idunitList FROM unitList WHERE unitName ='" + unitName + "') AND roleName ='" + roleName + "' AND idposition = (SELECT idposition FROM position WHERE position ='" + positionValue + "') AND (idVisibility = (SELECT idVisibility FROM visibility WHERE visibility ='private') OR idvisibility = (SELECT idVisibility FROM visibility WHERE visibility ='public'))");
-			else
-				res5 = st5.executeQuery("SELECT idroleList FROM roleList WHERE idunitList = (SELECT idunitList FROM unitList WHERE unitName ='" + unitName + "') AND roleName ='" + roleName + "' AND idposition = (SELECT idposition FROM position WHERE position ='" + positionValue + "') AND idvisibility = (SELECT idVisibility FROM visibility WHERE visibility ='public')");
+
+			res5 = st5.executeQuery("SELECT idroleList FROM roleList WHERE idunitList = (SELECT idunitList FROM unitList WHERE unitName ='" + unitName + "') AND roleName ='" + roleName + "' AND idposition = (SELECT idposition FROM position WHERE position ='" + positionValue + "')");
 			if (res5.next())
 				idroleList = res5.getInt("idroleList");
 			else
@@ -2326,27 +2347,19 @@ class DataBaseInterface {
 			{
 				if (connection != null)
 					connection.close();
-				if (st4 != null)
-					st4.close();
+
 				if (st5 != null)
 					st5.close();
-				if (st6 != null)
-					st6.close();
-				if (st7 != null)
-					st7.close();
+
 				if (st10 != null)
 					st10.close();
 				if (st11 != null)
 					st11.close();
 
-				if (res4 != null)
-					res4.close();
+
 				if (res5 != null)
 					res5.close();
-				if (res6 != null)
-					res6.close();
-				if (res7 != null)
-					res7.close();
+
 				if (res10 != null)
 					res10.close();
 				if (res11 != null)
@@ -2360,6 +2373,83 @@ class DataBaseInterface {
 		}
 	}
 
+	int getInformQuantityAgentsPlayingVisibilityPositionInUnit(String unitName, String positionValue, String agentName) throws MySQLException{
+		int idroleList;
+
+		Connection connection = null;
+		Statement st5 = null;
+		Statement st10 = null;
+		Statement st11 = null;
+
+		ResultSet res5 = null;
+		ResultSet res10 = null;
+		ResultSet res11 = null;
+
+		try {
+			connection = db.connect();
+
+
+
+
+
+			Set<String> agentNames = new HashSet<String>();
+			st5 = connection.createStatement();
+
+			res5 = st5.executeQuery("SELECT idroleList FROM roleList WHERE idunitList= (SELECT idunitList FROM unitList WHERE unitName ='" + unitName + "') AND idposition = (SELECT idposition FROM position WHERE position ='" + positionValue + "') AND idvisibility = (SELECT idVisibility FROM visibility WHERE visibility ='public')");
+			
+
+			while (res5.next()) {
+				idroleList = res5.getInt("idroleList");
+
+				st11 = connection.createStatement();
+				res11 = st11.executeQuery("SELECT idagentList FROM agentPlayList WHERE idroleList =" + idroleList);
+
+				while(res11.next())
+				{
+					int idagentList = res11.getInt("idagentList");
+					st10 = connection.createStatement();
+					res10 = st10.executeQuery("SELECT agentName FROM agentList WHERE idagentList = " + idagentList);
+					if (res10.next()) {
+
+						agentNames.add(res10.getString("agentName"));
+					}
+				}
+			}
+			connection.commit();
+			return agentNames.size();
+		} catch (SQLException e) {
+			String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
+			throw new MySQLException(message);
+
+		} finally {
+			try
+			{
+				if (connection != null)
+					connection.close();
+				if (st5 != null)
+					st5.close();
+
+				if (st10 != null)
+					st10.close();
+				if (st11 != null)
+					st11.close();
+
+				if (res5 != null)
+					res5.close();
+
+				if (res10 != null)
+					res10.close();
+				if (res11 != null)
+					res11.close();
+
+			}catch(SQLException e)
+			{
+				String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
+				throw new MySQLException(message);
+			}
+		}
+	}
+	
 	ArrayList<String> getInformUnit(String unitName) throws MySQLException {
 		ArrayList<String> result = new ArrayList<String>();
 
@@ -2452,30 +2542,30 @@ class DataBaseInterface {
 
 			if (permitted)
 			{
-				
+
 				st8 = connection.createStatement();
 
-				
-				res8 = st8.executeQuery("SELECT roleName, idaccesibility, idvisibility, idposition FROM roleList WHERE idunitList = (SELECT idunitList FROM unitList WHERE unitName ='" + unitName + "')");
-				
+
+				res8 = st8.executeQuery("SELECT roleName, idaccessibility, idvisibility, idposition FROM roleList WHERE idunitList = (SELECT idunitList FROM unitList WHERE unitName ='" + unitName + "')");
+
 				while (res8.next()) {
 					ArrayList<String> aux = new ArrayList<String>();
 					int idposition = res8.getInt("idposition");
-					int idaccesibility = res8.getInt("idaccesibility");
+					int idaccessibility = res8.getInt("idaccessibility");
 					int idvisibility = res8.getInt("idvisibility");
 					st9 = connection.createStatement();
 					res9 = st9.executeQuery("SELECT position FROM position WHERE idposition =" + idposition);
 					res9.next();
 
 					st10 = connection.createStatement();
-					res10 = st10.executeQuery("SELECT accesibility FROM accesibility WHERE idaccesibility =" + idaccesibility);
+					res10 = st10.executeQuery("SELECT accessibility FROM accessibility WHERE idaccessibility =" + idaccessibility);
 					res10.next();
 
 					st11 = connection.createStatement();
 					res11 = st11.executeQuery("SELECT visibility FROM visibility WHERE idvisibility =" + idvisibility);
 					res11.next();
 					aux.add(res8.getString("roleName"));
-					aux.add(res10.getString("accesibility"));
+					aux.add(res10.getString("accessibility"));
 					aux.add(res11.getString("visibility"));
 					aux.add(res9.getString("position"));
 					result.add(aux);
@@ -2501,27 +2591,27 @@ class DataBaseInterface {
 				st8 = connection.createStatement();
 
 				if (playsRole)
-					res8 = st8.executeQuery("SELECT roleName, idaccesibility, idvisibility, idposition FROM roleList WHERE idunitList = (SELECT idunitList FROM unitList WHERE unitName ='" + unitName + "') AND (idVisibility = (SELECT idVisibility FROM visibility WHERE visibility ='private') OR idVisibility = (SELECT idVisibility FROM visibility WHERE visibility ='public'))");
+					res8 = st8.executeQuery("SELECT roleName, idaccessibility, idvisibility, idposition FROM roleList WHERE idunitList = (SELECT idunitList FROM unitList WHERE unitName ='" + unitName + "') AND (idVisibility = (SELECT idVisibility FROM visibility WHERE visibility ='private') OR idVisibility = (SELECT idVisibility FROM visibility WHERE visibility ='public'))");
 				else
-					res8 = st8.executeQuery("SELECT roleName, idaccesibility, idvisibility, idposition FROM roleList WHERE idunitList = (SELECT idunitList FROM unitList WHERE unitName ='" + unitName + "') AND idVisibility = (SELECT idVisibility FROM visibility WHERE visibility ='public')");
+					res8 = st8.executeQuery("SELECT roleName, idaccessibility, idvisibility, idposition FROM roleList WHERE idunitList = (SELECT idunitList FROM unitList WHERE unitName ='" + unitName + "') AND idVisibility = (SELECT idVisibility FROM visibility WHERE visibility ='public')");
 				while (res8.next()) {
 					ArrayList<String> aux = new ArrayList<String>();
 					int idposition = res8.getInt("idposition");
-					int idaccesibility = res8.getInt("idaccesibility");
+					int idaccessibility = res8.getInt("idaccessibility");
 					int idvisibility = res8.getInt("idvisibility");
 					st9 = connection.createStatement();
 					res9 = st9.executeQuery("SELECT position FROM position WHERE idposition =" + idposition);
 					res9.next();
 
 					st10 = connection.createStatement();
-					res10 = st10.executeQuery("SELECT accesibility FROM accesibility WHERE idaccesibility =" + idaccesibility);
+					res10 = st10.executeQuery("SELECT accessibility FROM accessibility WHERE idaccessibility =" + idaccessibility);
 					res10.next();
 
 					st11 = connection.createStatement();
 					res11 = st11.executeQuery("SELECT visibility FROM visibility WHERE idvisibility =" + idvisibility);
 					res11.next();
 					aux.add(res8.getString("roleName"));
-					aux.add(res10.getString("accesibility"));
+					aux.add(res10.getString("accessibility"));
 					aux.add(res11.getString("visibility"));
 					aux.add(res9.getString("position"));
 					result.add(aux);
@@ -2610,29 +2700,29 @@ class DataBaseInterface {
 			}
 
 			st6 = connection.createStatement();
-			res6 = st6.executeQuery("SELECT idaccesibility, idposition, idvisibility FROM roleList WHERE roleName ='" + roleName + "' AND idunitList =" + idunitList);
+			res6 = st6.executeQuery("SELECT idaccessibility, idposition, idvisibility FROM roleList WHERE roleName ='" + roleName + "' AND idunitList =" + idunitList);
 			if (res6.next()) {
 				int idposition = res6.getInt("idposition");
-				int idaccesibility = res6.getInt("idaccesibility");
+				int idaccessibility = res6.getInt("idaccessibility");
 				int idvisibility = res6.getInt("idvisibility");
 				st9 = connection.createStatement();
 				res9 = st9.executeQuery("SELECT position FROM position WHERE idposition =" + idposition);
 				res9.next();
 
 				st10 = connection.createStatement();
-				res10 = st10.executeQuery("SELECT accesibility FROM accesibility WHERE idaccesibility =" + idaccesibility);
+				res10 = st10.executeQuery("SELECT accessibility FROM accessibility WHERE idaccessibility =" + idaccessibility);
 				res10.next();
 
 				st11 = connection.createStatement();
 				res11 = st11.executeQuery("SELECT visibility FROM visibility WHERE idvisibility =" + idvisibility);
 				res11.next();
-				result.add(res10.getString("accesibility"));
+				result.add(res10.getString("accessibility"));
 				result.add(res11.getString("visibility"));
 				result.add(res9.getString("position"));
 				connection.commit();
 				return result;
 			}
-			String message = l10n.getMessage(MessageID.ROLE_NOT_EXISTS, roleName);
+			String message = l10n.getMessage(MessageID.ROLE_NOT_EXISTS, roleName, unitName);
 			throw new RoleNotExistsException(message);
 
 		} catch (SQLException e) {

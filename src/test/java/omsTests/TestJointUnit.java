@@ -111,22 +111,22 @@ public class TestJointUnit extends TestCase {
 			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
 
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit2+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit3+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 			
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
@@ -199,22 +199,22 @@ public class TestJointUnit extends TestCase {
 			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
 
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit2+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit3+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 			
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
@@ -286,22 +286,22 @@ public class TestJointUnit extends TestCase {
 			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
 
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit2+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit3+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 			
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
@@ -390,40 +390,40 @@ public class TestJointUnit extends TestCase {
 			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
 
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unitPlana+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unitEquipo+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unitJerarquia+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unitPlana2+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unitEquipo2+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccesibility`,`idvisibility`) VALUES"+ 
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unitJerarquia2+"'),"+
 					"(SELECT idposition FROM position WHERE position = 'creator'), "+
-					"(SELECT idaccesibility FROM accesibility WHERE accesibility = 'internal'),"+ 
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 			
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+

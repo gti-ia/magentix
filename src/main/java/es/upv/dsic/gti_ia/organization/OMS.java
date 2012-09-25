@@ -432,9 +432,9 @@ public class OMS extends CAgent {
 					case 15:// quantity members service
 
 						if (inputs.get("UnitID").trim().equals("null"))
-							resultContent = omsInterface.quantityMembers(null, inputs.get("RoleID"), inputs.get("PositionID"), inputs.get("AgentID"));
+							resultContent = omsInterface.informQuantityMembers(null, inputs.get("RoleID"), inputs.get("PositionID"), inputs.get("AgentID"));
 						else
-							resultContent = omsInterface.quantityMembers(inputs.get("UnitID"), inputs.get("RoleID"), inputs.get("PositionID"), inputs.get("AgentID"));
+							resultContent = omsInterface.informQuantityMembers(inputs.get("UnitID"), inputs.get("RoleID"), inputs.get("PositionID"), inputs.get("AgentID"));
 
 						break;
 					}
