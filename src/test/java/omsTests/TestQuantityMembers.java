@@ -222,19 +222,19 @@ public class TestQuantityMembers extends TestCase {
 
 
 
-			int result = omsProxy.quantityMembers("jerarquia", "", "");
+			int result = omsProxy.informQuantityMembers("jerarquia", "", "");
 
 			assertEquals("El resultado debe ser 1", 1, result);
 
 			//---------------------------------------------------------------------//
 
-			result = omsProxy.quantityMembers("equipo", "", "");
+			result = omsProxy.informQuantityMembers("equipo", "", "");
 
 			assertEquals("El resultado debe ser 1", 1, result);
 
 			//---------------------------------------------------------------------//
 
-			result = omsProxy.quantityMembers("plana", "", "");
+			result = omsProxy.informQuantityMembers("plana", "", "");
 
 			assertEquals("El resultado debe ser 1", 1, result);
 
@@ -273,19 +273,19 @@ public class TestQuantityMembers extends TestCase {
 
 
 
-			int result = omsProxy.quantityMembers("jerarquia", "supervisor", "");
+			int result = omsProxy.informQuantityMembers("jerarquia", "supervisor", "");
 
 			assertEquals("El resultado debe ser 1", 1, result);
 
 			//---------------------------------------------------------------------//
 
-			result = omsProxy.quantityMembers("equipo", "manager", "");
+			result = omsProxy.informQuantityMembers("equipo", "manager", "");
 
 			assertEquals("El resultado debe ser 1", 1, result);
 
 			//---------------------------------------------------------------------//
 
-			result = omsProxy.quantityMembers("plana", "miembro", "");
+			result = omsProxy.informQuantityMembers("plana", "miembro", "");
 
 			assertEquals("El resultado debe ser 1", 1, result);
 
@@ -307,7 +307,7 @@ public class TestQuantityMembers extends TestCase {
 		try
 		{
 
-			int result = omsProxy.quantityMembers("jerarquia", "creador", "");
+			int result = omsProxy.informQuantityMembers("jerarquia", "creador", "");
 
 
 
@@ -343,19 +343,19 @@ public class TestQuantityMembers extends TestCase {
 
 
 
-			int result = omsProxy.quantityMembers("jerarquia", "", "subordinate");
+			int result = omsProxy.informQuantityMembers("jerarquia", "", "subordinate");
 
 			assertEquals("El resultado debe ser 1", 1, result);
 
 			//---------------------------------------------------------------------//
 
-			result = omsProxy.quantityMembers("equipo", "", "member");
+			result = omsProxy.informQuantityMembers("equipo", "", "member");
 
 			assertEquals("El resultado debe ser 1", 1, result);
 
 			//---------------------------------------------------------------------//
 
-			result = omsProxy.quantityMembers("plana", "", "member");
+			result = omsProxy.informQuantityMembers("plana", "", "member");
 
 			assertEquals("El resultado debe ser 1", 1, result);
 
@@ -377,7 +377,7 @@ public class TestQuantityMembers extends TestCase {
 		try
 		{
 
-			int result = omsProxy.quantityMembers("jerarquia", "", "creator");
+			int result = omsProxy.informQuantityMembers("jerarquia", "", "creator");
 
 
 
@@ -412,19 +412,19 @@ public class TestQuantityMembers extends TestCase {
 
 
 
-			int result = omsProxy.quantityMembers("jerarquia", "subordinado", "subordinate");
+			int result = omsProxy.informQuantityMembers("jerarquia", "subordinado", "subordinate");
 
 			assertEquals("El resultado debe ser 1", 1, result);
 
 			//---------------------------------------------------------------------//
 
-			result = omsProxy.quantityMembers("equipo", "manager", "member");
+			result = omsProxy.informQuantityMembers("equipo", "manager", "member");
 
 			assertEquals("El resultado debe ser 1", 1, result);
 
 			//---------------------------------------------------------------------//
 
-			result = omsProxy.quantityMembers("plana", "miembro", "member");
+			result = omsProxy.informQuantityMembers("plana", "miembro", "member");
 
 			assertEquals("El resultado debe ser 1", 1, result);
 
@@ -446,7 +446,7 @@ public class TestQuantityMembers extends TestCase {
 		try
 		{
 
-			int result = omsProxy.quantityMembers("jerarquia", "creador", "creator");
+			int result = omsProxy.informQuantityMembers("jerarquia", "creador", "creator");
 
 
 
@@ -483,19 +483,19 @@ public class TestQuantityMembers extends TestCase {
 
 
 
-			int result = omsProxy.quantityMembers("jerarquia", "", "");
+			int result = omsProxy.informQuantityMembers("jerarquia", "", "");
 
 			assertEquals("El resultado debe ser 2", 2, result);
 
 			//---------------------------------------------------------------------//
 
-			result = omsProxy.quantityMembers("equipo", "", "");
+			result = omsProxy.informQuantityMembers("equipo", "", "");
 
 			assertEquals("El resultado debe ser 1", 1, result);
 
 			//---------------------------------------------------------------------//
 
-			result = omsProxy.quantityMembers("plana", "", "");
+			result = omsProxy.informQuantityMembers("plana", "", "");
 
 			assertEquals("El resultado debe ser 1", 1, result);
 
@@ -536,26 +536,26 @@ public class TestQuantityMembers extends TestCase {
 
 
 
-			int result = omsProxy.quantityMembers("jerarquia", "supervisor", "");
+			int result = omsProxy.informQuantityMembers("jerarquia", "supervisor", "");
 
 			assertEquals("El resultado debe ser 1", 1, result);
 
 			//---------------------------------------------------------------------//
 
-			result = omsProxy.quantityMembers("equipo", "manager", "");
+			result = omsProxy.informQuantityMembers("equipo", "manager", "");
 
 			assertEquals("El resultado debe ser 1", 1, result);
 
 			//---------------------------------------------------------------------//
 
-			result = omsProxy.quantityMembers("plana", "miembro", "");
+			result = omsProxy.informQuantityMembers("plana", "miembro", "");
 
 			assertEquals("El resultado debe ser 1", 1, result);
 
 
 			//---------------------------------------------------------------------//
 
-			result = omsProxy.quantityMembers("jerarquia", "creador", "");
+			result = omsProxy.informQuantityMembers("jerarquia", "creador", "");
 
 			assertEquals("El resultado debe ser 1", 1, result);
 
@@ -596,26 +596,26 @@ public class TestQuantityMembers extends TestCase {
 
 
 
-			int result = omsProxy.quantityMembers("jerarquia", "", "subordinate");
+			int result = omsProxy.informQuantityMembers("jerarquia", "", "subordinate");
 
 			assertEquals("El resultado debe ser 2", 2, result);
 
 			//---------------------------------------------------------------------//
 
-			result = omsProxy.quantityMembers("equipo", "", "member");
+			result = omsProxy.informQuantityMembers("equipo", "", "member");
 
 			assertEquals("El resultado debe ser 1", 1, result);
 
 			//---------------------------------------------------------------------//
 
-			result = omsProxy.quantityMembers("plana", "", "member");
+			result = omsProxy.informQuantityMembers("plana", "", "member");
 
 			assertEquals("El resultado debe ser 1", 1, result);
 
 
 			//---------------------------------------------------------------------//
 
-			result = omsProxy.quantityMembers("jerarquia", "", "creator");
+			result = omsProxy.informQuantityMembers("jerarquia", "", "creator");
 
 			assertEquals("El resultado debe ser 1", 1, result);
 
@@ -654,26 +654,26 @@ public class TestQuantityMembers extends TestCase {
 
 
 
-			int result = omsProxy.quantityMembers("jerarquia", "subordinado", "subordinate");
+			int result = omsProxy.informQuantityMembers("jerarquia", "subordinado", "subordinate");
 
 			assertEquals("El resultado debe ser 2", 2, result);
 
 			//---------------------------------------------------------------------//
 
-			result = omsProxy.quantityMembers("equipo", "manager", "member");
+			result = omsProxy.informQuantityMembers("equipo", "manager", "member");
 
 			assertEquals("El resultado debe ser 1", 1, result);
 
 			//---------------------------------------------------------------------//
 
-			result = omsProxy.quantityMembers("plana", "miembro", "member");
+			result = omsProxy.informQuantityMembers("plana", "miembro", "member");
 
 			assertEquals("El resultado debe ser 1", 1, result);
 
 
 			//---------------------------------------------------------------------//
 
-			result = omsProxy.quantityMembers("jerarquia", "creador", "creator");
+			result = omsProxy.informQuantityMembers("jerarquia", "creador", "creator");
 
 			assertEquals("El resultado debe ser 1", 1, result);
 
@@ -712,19 +712,19 @@ public class TestQuantityMembers extends TestCase {
 
 
 
-			int result = omsProxy.quantityMembers("jerarquia", "", "");
+			int result = omsProxy.informQuantityMembers("jerarquia", "", "");
 
 			assertEquals("El resultado debe ser 1", 1, result);
 
 			//---------------------------------------------------------------------//
 
-			result = omsProxy.quantityMembers("equipo", "", "");
+			result = omsProxy.informQuantityMembers("equipo", "", "");
 
 			assertEquals("El resultado debe ser 2", 2, result);
 
 			//---------------------------------------------------------------------//
 
-			result = omsProxy.quantityMembers("plana", "", "");
+			result = omsProxy.informQuantityMembers("plana", "", "");
 
 			assertEquals("El resultado debe ser 1", 1, result);
 
@@ -765,19 +765,19 @@ public class TestQuantityMembers extends TestCase {
 
 
 
-			int result = omsProxy.quantityMembers("jerarquia", "supervisor", "");
+			int result = omsProxy.informQuantityMembers("jerarquia", "supervisor", "");
 
 			assertEquals("El resultado debe ser 1", 1, result);
 
 			//---------------------------------------------------------------------//
 
-			result = omsProxy.quantityMembers("equipo", "manager", "");
+			result = omsProxy.informQuantityMembers("equipo", "manager", "");
 
 			assertEquals("El resultado debe ser 1", 1, result);
 
 			//---------------------------------------------------------------------//
 
-			result = omsProxy.quantityMembers("plana", "miembro", "");
+			result = omsProxy.informQuantityMembers("plana", "miembro", "");
 
 			assertEquals("El resultado debe ser 1", 1, result);
 
@@ -802,7 +802,7 @@ public class TestQuantityMembers extends TestCase {
 		try
 		{
 
-			omsProxy.quantityMembers("jerarquia", "creador", "");
+			omsProxy.informQuantityMembers("jerarquia", "creador", "");
 
 
 
@@ -842,19 +842,19 @@ public class TestQuantityMembers extends TestCase {
 
 
 
-			int result = omsProxy.quantityMembers("jerarquia", "", "subordinate");
+			int result = omsProxy.informQuantityMembers("jerarquia", "", "subordinate");
 
 			assertEquals("El resultado debe ser 1", 1, result);
 
 			//---------------------------------------------------------------------//
 
-			result = omsProxy.quantityMembers("equipo", "", "member");
+			result = omsProxy.informQuantityMembers("equipo", "", "member");
 
 			assertEquals("El resultado debe ser 2", 2, result);
 
 			//---------------------------------------------------------------------//
 
-			result = omsProxy.quantityMembers("plana", "", "member");
+			result = omsProxy.informQuantityMembers("plana", "", "member");
 
 			assertEquals("El resultado debe ser 1", 1, result);
 
@@ -878,7 +878,7 @@ public class TestQuantityMembers extends TestCase {
 		try
 		{
 
-			omsProxy.quantityMembers("jerarquia", "", "creator");
+			omsProxy.informQuantityMembers("jerarquia", "", "creator");
 
 
 
@@ -916,19 +916,19 @@ public class TestQuantityMembers extends TestCase {
 
 
 
-			int result = omsProxy.quantityMembers("jerarquia", "subordinado", "subordinate");
+			int result = omsProxy.informQuantityMembers("jerarquia", "subordinado", "subordinate");
 
 			assertEquals("El resultado debe ser 1", 1, result);
 
 			//---------------------------------------------------------------------//
 
-			result = omsProxy.quantityMembers("equipo", "manager", "member");
+			result = omsProxy.informQuantityMembers("equipo", "manager", "member");
 
 			assertEquals("El resultado debe ser 1", 1, result);
 
 			//---------------------------------------------------------------------//
 
-			result = omsProxy.quantityMembers("plana", "miembro", "member");
+			result = omsProxy.informQuantityMembers("plana", "miembro", "member");
 
 			assertEquals("El resultado debe ser 1", 1, result);
 
@@ -952,7 +952,7 @@ public class TestQuantityMembers extends TestCase {
 		try
 		{
 
-			omsProxy.quantityMembers("jerarquia", "creador", "creator");
+			omsProxy.informQuantityMembers("jerarquia", "creador", "creator");
 
 
 
@@ -990,19 +990,19 @@ public class TestQuantityMembers extends TestCase {
 
 
 
-			int result = omsProxy.quantityMembers("jerarquia", "", "");
+			int result = omsProxy.informQuantityMembers("jerarquia", "", "");
 
 			assertEquals("El resultado debe ser 1", 1, result);
 
 			//---------------------------------------------------------------------//
 
-			result = omsProxy.quantityMembers("equipo", "", "");
+			result = omsProxy.informQuantityMembers("equipo", "", "");
 
 			assertEquals("El resultado debe ser 1", 1, result);
 
 			//---------------------------------------------------------------------//
 
-			result = omsProxy.quantityMembers("plana", "", "");
+			result = omsProxy.informQuantityMembers("plana", "", "");
 
 			assertEquals("El resultado debe ser 2", 2, result);
 
@@ -1043,19 +1043,19 @@ public class TestQuantityMembers extends TestCase {
 
 
 
-			int result = omsProxy.quantityMembers("jerarquia", "supervisor", "");
+			int result = omsProxy.informQuantityMembers("jerarquia", "supervisor", "");
 
 			assertEquals("El resultado debe ser 1", 1, result);
 
 			//---------------------------------------------------------------------//
 
-			result = omsProxy.quantityMembers("equipo", "manager", "");
+			result = omsProxy.informQuantityMembers("equipo", "manager", "");
 
 			assertEquals("El resultado debe ser 1", 1, result);
 
 			//---------------------------------------------------------------------//
 
-			result = omsProxy.quantityMembers("plana", "miembro", "");
+			result = omsProxy.informQuantityMembers("plana", "miembro", "");
 
 			assertEquals("El resultado debe ser 2", 2, result);
 
@@ -1080,7 +1080,7 @@ public class TestQuantityMembers extends TestCase {
 		try
 		{
 
-			omsProxy.quantityMembers("jerarquia", "creador", "");
+			omsProxy.informQuantityMembers("jerarquia", "creador", "");
 
 
 
@@ -1120,19 +1120,19 @@ public class TestQuantityMembers extends TestCase {
 
 
 
-			int result = omsProxy.quantityMembers("jerarquia", "", "subordinate");
+			int result = omsProxy.informQuantityMembers("jerarquia", "", "subordinate");
 
 			assertEquals("El resultado debe ser 1", 1, result);
 
 			//---------------------------------------------------------------------//
 
-			result = omsProxy.quantityMembers("equipo", "", "member");
+			result = omsProxy.informQuantityMembers("equipo", "", "member");
 
 			assertEquals("El resultado debe ser 1", 1, result);
 
 			//---------------------------------------------------------------------//
 
-			result = omsProxy.quantityMembers("plana", "", "member");
+			result = omsProxy.informQuantityMembers("plana", "", "member");
 
 			assertEquals("El resultado debe ser 2", 2, result);
 
@@ -1156,7 +1156,7 @@ public class TestQuantityMembers extends TestCase {
 		try
 		{
 
-			omsProxy.quantityMembers("jerarquia", "", "creator");
+			omsProxy.informQuantityMembers("jerarquia", "", "creator");
 
 
 
@@ -1194,19 +1194,19 @@ public class TestQuantityMembers extends TestCase {
 
 
 
-			int result = omsProxy.quantityMembers("jerarquia", "subordinado", "subordinate");
+			int result = omsProxy.informQuantityMembers("jerarquia", "subordinado", "subordinate");
 
 			assertEquals("El resultado debe ser 1", 1, result);
 
 			//---------------------------------------------------------------------//
 
-			result = omsProxy.quantityMembers("equipo", "manager", "member");
+			result = omsProxy.informQuantityMembers("equipo", "manager", "member");
 
 			assertEquals("El resultado debe ser 1", 1, result);
 
 			//---------------------------------------------------------------------//
 
-			result = omsProxy.quantityMembers("plana", "miembro", "member");
+			result = omsProxy.informQuantityMembers("plana", "miembro", "member");
 
 			assertEquals("El resultado debe ser 2", 2, result);
 
@@ -1230,7 +1230,7 @@ public class TestQuantityMembers extends TestCase {
 		try
 		{
 
-			omsProxy.quantityMembers("jerarquia", "creador", "creator");
+			omsProxy.informQuantityMembers("jerarquia", "creador", "creator");
 
 
 
@@ -1269,19 +1269,19 @@ public class TestQuantityMembers extends TestCase {
 
 
 
-			int result = omsProxy.quantityMembers("jerarquia", "", "");
+			int result = omsProxy.informQuantityMembers("jerarquia", "", "");
 
 			assertEquals("El resultado debe ser 2", 2, result);
 
 			//---------------------------------------------------------------------//
 
-			result = omsProxy.quantityMembers("equipo", "", "");
+			result = omsProxy.informQuantityMembers("equipo", "", "");
 
 			assertEquals("El resultado debe ser 2", 2, result);
 
 			//---------------------------------------------------------------------//
 
-			result = omsProxy.quantityMembers("plana", "", "");
+			result = omsProxy.informQuantityMembers("plana", "", "");
 
 			assertEquals("El resultado debe ser 1", 1, result);
 
@@ -1325,26 +1325,26 @@ public class TestQuantityMembers extends TestCase {
 
 
 
-			int result = omsProxy.quantityMembers("jerarquia", "supervisor", "");
+			int result = omsProxy.informQuantityMembers("jerarquia", "supervisor", "");
 
 			assertEquals("El resultado debe ser 1", 1, result);
 
 			//---------------------------------------------------------------------//
 
-			result = omsProxy.quantityMembers("equipo", "manager", "");
+			result = omsProxy.informQuantityMembers("equipo", "manager", "");
 
 			assertEquals("El resultado debe ser 1", 1, result);
 
 			//---------------------------------------------------------------------//
 
-			result = omsProxy.quantityMembers("plana", "miembro", "");
+			result = omsProxy.informQuantityMembers("plana", "miembro", "");
 
 			assertEquals("El resultado debe ser 1", 1, result);
 
 
 			//---------------------------------------------------------------------//
 
-			result = omsProxy.quantityMembers("jerarquia", "creador", "");
+			result = omsProxy.informQuantityMembers("jerarquia", "creador", "");
 
 			assertEquals("El resultado debe ser 1", 1, result);
 
@@ -1388,26 +1388,26 @@ public class TestQuantityMembers extends TestCase {
 
 
 
-			int result = omsProxy.quantityMembers("jerarquia", "", "subordinate");
+			int result = omsProxy.informQuantityMembers("jerarquia", "", "subordinate");
 
 			assertEquals("El resultado debe ser 2", 2, result);
 
 			//---------------------------------------------------------------------//
 
-			result = omsProxy.quantityMembers("equipo", "", "member");
+			result = omsProxy.informQuantityMembers("equipo", "", "member");
 
 			assertEquals("El resultado debe ser 2", 2, result);
 
 			//---------------------------------------------------------------------//
 
-			result = omsProxy.quantityMembers("plana", "", "member");
+			result = omsProxy.informQuantityMembers("plana", "", "member");
 
 			assertEquals("El resultado debe ser 1", 1, result);
 
 
 			//---------------------------------------------------------------------//
 
-			result = omsProxy.quantityMembers("jerarquia", "", "creator");
+			result = omsProxy.informQuantityMembers("jerarquia", "", "creator");
 
 			assertEquals("El resultado debe ser 1", 1, result);
 
@@ -1448,26 +1448,26 @@ public class TestQuantityMembers extends TestCase {
 
 
 
-			int result = omsProxy.quantityMembers("jerarquia", "subordinado", "subordinate");
+			int result = omsProxy.informQuantityMembers("jerarquia", "subordinado", "subordinate");
 
 			assertEquals("El resultado debe ser 2", 2, result);
 
 			//---------------------------------------------------------------------//
 
-			result = omsProxy.quantityMembers("equipo", "manager", "member");
+			result = omsProxy.informQuantityMembers("equipo", "manager", "member");
 
 			assertEquals("El resultado debe ser 1", 1, result);
 
 			//---------------------------------------------------------------------//
 
-			result = omsProxy.quantityMembers("plana", "miembro", "member");
+			result = omsProxy.informQuantityMembers("plana", "miembro", "member");
 
 			assertEquals("El resultado debe ser 1", 1, result);
 
 
 			//---------------------------------------------------------------------//
 
-			result = omsProxy.quantityMembers("jerarquia", "creador", "creator");
+			result = omsProxy.informQuantityMembers("jerarquia", "creador", "creator");
 
 			assertEquals("El resultado debe ser 1", 1, result);
 
@@ -1510,19 +1510,19 @@ public class TestQuantityMembers extends TestCase {
 
 
 
-			int result = omsProxy.quantityMembers("jerarquia", "", "");
+			int result = omsProxy.informQuantityMembers("jerarquia", "", "");
 
 			assertEquals("El resultado debe ser 1", 1, result);
 
 			//---------------------------------------------------------------------//
 
-			result = omsProxy.quantityMembers("equipo", "", "");
+			result = omsProxy.informQuantityMembers("equipo", "", "");
 
 			assertEquals("El resultado debe ser 2", 2, result);
 
 			//---------------------------------------------------------------------//
 
-			result = omsProxy.quantityMembers("plana", "", "");
+			result = omsProxy.informQuantityMembers("plana", "", "");
 
 			assertEquals("El resultado debe ser 2", 2, result);
 
@@ -1566,19 +1566,19 @@ public class TestQuantityMembers extends TestCase {
 
 
 
-			int result = omsProxy.quantityMembers("jerarquia", "supervisor", "");
+			int result = omsProxy.informQuantityMembers("jerarquia", "supervisor", "");
 
 			assertEquals("El resultado debe ser 1", 1, result);
 
 			//---------------------------------------------------------------------//
 
-			result = omsProxy.quantityMembers("equipo", "manager", "");
+			result = omsProxy.informQuantityMembers("equipo", "manager", "");
 
 			assertEquals("El resultado debe ser 1", 1, result);
 
 			//---------------------------------------------------------------------//
 
-			result = omsProxy.quantityMembers("plana", "miembro", "");
+			result = omsProxy.informQuantityMembers("plana", "miembro", "");
 
 			assertEquals("El resultado debe ser 2", 2, result);
 
@@ -1603,7 +1603,7 @@ public class TestQuantityMembers extends TestCase {
 		try
 		{
 
-			omsProxy.quantityMembers("jerarquia", "creador", "");
+			omsProxy.informQuantityMembers("jerarquia", "creador", "");
 
 
 
@@ -1646,19 +1646,19 @@ public class TestQuantityMembers extends TestCase {
 
 
 
-			int result = omsProxy.quantityMembers("jerarquia", "", "subordinate");
+			int result = omsProxy.informQuantityMembers("jerarquia", "", "subordinate");
 
 			assertEquals("El resultado debe ser 1", 1, result);
 
 			//---------------------------------------------------------------------//
 
-			result = omsProxy.quantityMembers("equipo", "", "member");
+			result = omsProxy.informQuantityMembers("equipo", "", "member");
 
 			assertEquals("El resultado debe ser 2", 2, result);
 
 			//---------------------------------------------------------------------//
 
-			result = omsProxy.quantityMembers("plana", "", "member");
+			result = omsProxy.informQuantityMembers("plana", "", "member");
 
 			assertEquals("El resultado debe ser 2", 2, result);
 
@@ -1682,7 +1682,7 @@ public class TestQuantityMembers extends TestCase {
 		try
 		{
 
-			omsProxy.quantityMembers("jerarquia", "", "creator");
+			omsProxy.informQuantityMembers("jerarquia", "", "creator");
 
 
 
@@ -1724,19 +1724,19 @@ public class TestQuantityMembers extends TestCase {
 
 
 
-			int result = omsProxy.quantityMembers("jerarquia", "subordinado", "subordinate");
+			int result = omsProxy.informQuantityMembers("jerarquia", "subordinado", "subordinate");
 
 			assertEquals("El resultado debe ser 1", 1, result);
 
 			//---------------------------------------------------------------------//
 
-			result = omsProxy.quantityMembers("equipo", "manager", "member");
+			result = omsProxy.informQuantityMembers("equipo", "manager", "member");
 
 			assertEquals("El resultado debe ser 1", 1, result);
 
 			//---------------------------------------------------------------------//
 
-			result = omsProxy.quantityMembers("plana", "miembro", "member");
+			result = omsProxy.informQuantityMembers("plana", "miembro", "member");
 
 			assertEquals("El resultado debe ser 2", 2, result);
 
@@ -1760,7 +1760,7 @@ public class TestQuantityMembers extends TestCase {
 		try
 		{
 
-			omsProxy.quantityMembers("jerarquia", "creador", "creator");
+			omsProxy.informQuantityMembers("jerarquia", "creador", "creator");
 
 
 
@@ -1803,19 +1803,19 @@ public class TestQuantityMembers extends TestCase {
 
 
 
-			int result = omsProxy.quantityMembers("jerarquia", "", "");
+			int result = omsProxy.informQuantityMembers("jerarquia", "", "");
 
 			assertEquals("El resultado debe ser 2", 2, result);
 
 			//---------------------------------------------------------------------//
 
-			result = omsProxy.quantityMembers("equipo", "", "");
+			result = omsProxy.informQuantityMembers("equipo", "", "");
 
 			assertEquals("El resultado debe ser 2", 2, result);
 
 			//---------------------------------------------------------------------//
 
-			result = omsProxy.quantityMembers("plana", "", "");
+			result = omsProxy.informQuantityMembers("plana", "", "");
 
 			assertEquals("El resultado debe ser 2", 2, result);
 
@@ -1862,26 +1862,26 @@ public class TestQuantityMembers extends TestCase {
 
 
 
-			int result = omsProxy.quantityMembers("jerarquia", "supervisor", "");
+			int result = omsProxy.informQuantityMembers("jerarquia", "supervisor", "");
 
 			assertEquals("El resultado debe ser 1", 1, result);
 
 			//---------------------------------------------------------------------//
 
-			result = omsProxy.quantityMembers("equipo", "manager", "");
+			result = omsProxy.informQuantityMembers("equipo", "manager", "");
 
 			assertEquals("El resultado debe ser 1", 1, result);
 
 			//---------------------------------------------------------------------//
 
-			result = omsProxy.quantityMembers("plana", "miembro", "");
+			result = omsProxy.informQuantityMembers("plana", "miembro", "");
 
 			assertEquals("El resultado debe ser 2", 2, result);
 
 
 			//---------------------------------------------------------------------//
 
-			result = omsProxy.quantityMembers("jerarquia", "creador", "");
+			result = omsProxy.informQuantityMembers("jerarquia", "creador", "");
 
 			assertEquals("El resultado debe ser 1", 1, result);
 
@@ -1927,26 +1927,26 @@ public class TestQuantityMembers extends TestCase {
 
 
 
-			int result = omsProxy.quantityMembers("jerarquia", "", "subordinate");
+			int result = omsProxy.informQuantityMembers("jerarquia", "", "subordinate");
 
 			assertEquals("El resultado debe ser 2", 2, result);
 
 			//---------------------------------------------------------------------//
 
-			result = omsProxy.quantityMembers("equipo", "", "member");
+			result = omsProxy.informQuantityMembers("equipo", "", "member");
 
 			assertEquals("El resultado debe ser 2", 2, result);
 
 			//---------------------------------------------------------------------//
 
-			result = omsProxy.quantityMembers("plana", "", "member");
+			result = omsProxy.informQuantityMembers("plana", "", "member");
 
 			assertEquals("El resultado debe ser 2", 2, result);
 
 
 			//---------------------------------------------------------------------//
 
-			result = omsProxy.quantityMembers("jerarquia", "", "creator");
+			result = omsProxy.informQuantityMembers("jerarquia", "", "creator");
 
 			assertEquals("El resultado debe ser 1", 1, result);
 
@@ -1990,26 +1990,26 @@ public class TestQuantityMembers extends TestCase {
 
 
 
-			int result = omsProxy.quantityMembers("jerarquia", "subordinado", "subordinate");
+			int result = omsProxy.informQuantityMembers("jerarquia", "subordinado", "subordinate");
 
 			assertEquals("El resultado debe ser 2", 2, result);
 
 			//---------------------------------------------------------------------//
 
-			result = omsProxy.quantityMembers("equipo", "manager", "member");
+			result = omsProxy.informQuantityMembers("equipo", "manager", "member");
 
 			assertEquals("El resultado debe ser 1", 1, result);
 
 			//---------------------------------------------------------------------//
 
-			result = omsProxy.quantityMembers("plana", "miembro", "member");
+			result = omsProxy.informQuantityMembers("plana", "miembro", "member");
 
 			assertEquals("El resultado debe ser 2", 2, result);
 
 
 			//---------------------------------------------------------------------//
 
-			result = omsProxy.quantityMembers("jerarquia", "creador", "creator");
+			result = omsProxy.informQuantityMembers("jerarquia", "creador", "creator");
 
 			assertEquals("El resultado debe ser 1", 1, result);
 

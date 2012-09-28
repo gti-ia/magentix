@@ -233,7 +233,7 @@ public class Creator extends CAgent {
 
 				boolean searching = true;
 				do{
-					int quantity = omsProxy.quantityMembers("calculin", "", "member");
+					int quantity = omsProxy.informQuantityMembers("calculin", "", "member");
 
 					if (quantity > 2)
 						m.waiting(3 * 1000);

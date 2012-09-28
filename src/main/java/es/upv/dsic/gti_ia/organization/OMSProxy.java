@@ -603,7 +603,7 @@ public class OMSProxy extends THOMASProxy {
      *             If position is not valid.
      */
     @SuppressWarnings("unchecked")
-    public int quantityMembers(String UnitID, String RoleID, String PositionID) throws EmptyParametersException, UnitNotExistsException, AgentNotExistsException, AgentNotInUnitException, InvalidRolePositionException, VisibilityRoleException, RoleNotExistsException, InvalidVisibilityException, InvalidPositionException {
+    public int informQuantityMembers(String UnitID, String RoleID, String PositionID) throws EmptyParametersException, UnitNotExistsException, AgentNotExistsException, AgentNotInUnitException, InvalidRolePositionException, VisibilityRoleException, RoleNotExistsException, InvalidVisibilityException, InvalidPositionException {
 
         HashMap<String, String> inputs = new HashMap<String, String>();
 

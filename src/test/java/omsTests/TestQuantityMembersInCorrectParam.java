@@ -93,7 +93,7 @@ public class TestQuantityMembersInCorrectParam extends TestCase {
 		try
 		{
 
-			omsProxy.quantityMembers("noexiste", "subordinado", "subordinate");
+			omsProxy.informQuantityMembers("noexiste", "subordinado", "subordinate");
 
 			fail();
 
@@ -115,7 +115,7 @@ public class TestQuantityMembersInCorrectParam extends TestCase {
 		try
 		{
 
-			omsProxy.quantityMembers("", "subordinado", "subordinate");
+			omsProxy.informQuantityMembers("", "subordinado", "subordinate");
 
 			fail();
 
@@ -137,7 +137,7 @@ public class TestQuantityMembersInCorrectParam extends TestCase {
 		try
 		{
 
-			omsProxy.quantityMembers(null, "subordinado", "subordinate");
+			omsProxy.informQuantityMembers(null, "subordinado", "subordinate");
 
 			fail();
 
@@ -160,7 +160,7 @@ public class TestQuantityMembersInCorrectParam extends TestCase {
 		try
 		{
 
-			omsProxy.quantityMembers("virtual", "noexiste", "subordinate");
+			omsProxy.informQuantityMembers("virtual", "noexiste", "subordinate");
 
 			fail();
 
@@ -182,7 +182,7 @@ public class TestQuantityMembersInCorrectParam extends TestCase {
 		try
 		{
 
-			omsProxy.quantityMembers("virtual", null, "subordinate");
+			omsProxy.informQuantityMembers("virtual", null, "subordinate");
 
 			fail();
 
@@ -204,7 +204,7 @@ public class TestQuantityMembersInCorrectParam extends TestCase {
 		try
 		{
 
-			omsProxy.quantityMembers("virtual", "participant", "subordinate");
+			omsProxy.informQuantityMembers("virtual", "participant", "subordinate");
 
 			fail();
 
