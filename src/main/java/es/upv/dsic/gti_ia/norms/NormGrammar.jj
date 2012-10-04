@@ -2,13 +2,27 @@
  * JavaCC template file created by SF JavaCC plugin 1.5.17+ wizard for JavaCC 1.5.0+
  */
 options{  JDK_VERSION = "1.5";  static = false;
+ //CHOICE_AMBIGUITY_CHECK = 4;
+  DEBUG_PARSER = true;
+ // FORCE_LA_CHECK = true;
+ // LOOKAHEAD = 2;
  }PARSER_BEGIN(Norms)package es.upv.dsic.gti_ia.norms;
+
+import es.upv.dsic.gti_ia.organization.exception.THOMASMessages.MessageID;
+import es.upv.dsic.gti_ia.organization.exception.InvalidParametersException;
+import es.upv.dsic.gti_ia.organization.exception.THOMASMessages;
+import es.upv.dsic.gti_ia.organization.exception.NotCreatorInParentUnitException;
+import es.upv.dsic.gti_ia.organization.exception.THOMASException;
 
 
 public class Norms{
 
-	public void parser() throws Exception, Error
+private THOMASMessages    l10n;
+
+	public void parser() throws THOMASException, Exception, Error
 	{
+	  l10n = new THOMASMessages();
+	  
         switch (this.one_line())
         {
           case 0 : 
@@ -55,10 +69,10 @@ public class Norms{
 | 	< deregisterNorm:	"deregisterNorm" >
 | 	< allocateRole:	"allocateRole" >
 | 	< deallocateRole:	"deallocateRole" >
-| 	< jointUnit:	"jointUnit" >
+| 	< joinUnit:	"joinUnit" >
 | 	< informAgentRole:	"informAgentRole" >
 | 	< informMembers:	"informMembers" >
-| 	< quantityMembers:	"quantityMembers" >
+| 	< informQuantityMembers:	"informQuantityMembers" >
 | 	< informUnit:	"informUnit" >
 | 	< informUnitRoles:	"informUnitRoles" >
 | 	< informTargetNorms:	"informTargetNorms" >
@@ -66,15 +80,15 @@ public class Norms{
 | 	< informNorm:	"informNorm" >
 | 	< acquireRole: "acquireRole" >
 | 	< leaveRole:	"leaveRole" >
-
 /*
 | 	<  virtual: "virtual" >
 | 	<  participant: "participant" >
 /*
 | 	< OMSPositions: "creator" | "member" | "supervisor" | "subordinate">
-| 	< OMSAccesibility: "external" | "internal" >
+| 	< OMSaccessibility: "external" | "internal" >
 | 	< OMSVisibility:	"public" | "private" >
 | 	< OMSUnitTypes:	"flat" | "team" | "hierarchy" >*/
+
 /*
 | 	< CREATOR: "creator" >
 | 	< member: "member" >
@@ -92,7 +106,7 @@ public class Norms{
 | 	< hasType:	"hasType" >
 | 	< hasParent:	"hasParent" > 
 | 	< isRole:	"isRole" >
-| 	< hasAccesibility:	"hasAccesibility" >
+| 	< hasAccessibility:	"hasAccessibility" >
 | 	< hasVisibility:	"hasVisibility" >
 | 	< hasPosition:	"hasPosition" >
 | 	< isNorm:	"isNorm" >
@@ -100,11 +114,11 @@ public class Norms{
 | 	< isAgent:	"isAgent" >
 | 	< playsRole:	"playsRole" >
 | 	< roleCardinality:	"roleCardinality" > 
-| 	< positionCardinality:	"positionCardinality" > 
-
-|   < variable:  ["A"-"Z"](["a"-"z","A"-"Z","_","0"-"9"])* | " _ " >
-|   < stringConstant:  ["a"-"z"](["a"-"z","A"-"Z","_","0"-"9"])* >}int one_line() :{}{  norm() ";"  {    return 0;  }| ";"  {    return 1;  }}void norm() : {}{
-  "@" id()"["deontic()","target()","action()","activation()","expiration()"]"  }
+| 	< positionCardinality:	"positionCardinality" >
+| 	< numericConstant:  (["0"-"9"])+ >
+|   < variable:  ["A"-"Z"](["a"-"z","A"-"Z","_","0"-"9"])* >
+|   < stringConstant:  ["a"-"z"](["a"-"z","A"-"Z","_","0"-"9"])* >}int one_line() throws THOMASException:{}{  norm() ";"  {    return 0;  }| ";"  {    return 1;  }}void norm() throws THOMASException: {}{
+  "@"id()"["deontic()","target()","action()","activation()","expiration()"]"  }
 
 void id():{}
 {	 stringConstant()
@@ -121,18 +135,22 @@ void target() :
 {	"<" targetType() ":"  value()  ">"
 }
 
-void activation() : {}
+void activation() throws THOMASException: {}
 {
+  LOOKAHEAD(2)
 	expression()
+| "_"
 |	{}
 }
 
-void expiration():
+void expiration()throws THOMASException :
 {
 }
 {
+   LOOKAHEAD(2)
 	expression()
-|	{}
+|  "_"
+|	{} 
 	
 }
 
@@ -145,7 +163,8 @@ void value():{}
 {	 stringConstant()
 }
 
-void genAtomicCondition() : {
+void genAtomicCondition() throws THOMASException: {
+   
  }
 {
 
@@ -153,13 +172,16 @@ void genAtomicCondition() : {
 }
 
 void genAtomicFormula() : {
+ 
  }
 {
-	(atom()| variable())["(" listOfTerms() ")"]
+	//(atom()| variable())["(" listOfTerms() ")"]
+	
+	stringConstant()["(" listOfTerms() ")"]|variable()|OMSConstants()
 	  
 }
 
-void action() : {}
+void action() throws THOMASException: {}
 {	OMSAction() /*| genActionFormula()*/
 }
 
@@ -174,30 +196,32 @@ void listOfTerms() : {}
 }
 
 void term():{}
-{   constant() | variable() 
+{   constant() | variable() | OMSConstants()
 }
 
-void expression() : {
+void expression() throws THOMASException: {
   }
 {
-  	LOOKAHEAD(3)
+  	LOOKAHEAD(2)
 	simpleExpression() expressionRest() | < NOT > expression() expressionRest() |  "("expression()")" expressionRest()
 
 }
 
-void expressionRest() :
+void expressionRest() throws THOMASException:
 {
 }
 {
 	
-	 "&" expression()
-	| "||" expression()
+	 < AND > expression()
+	| < OR > expression()
 	|  {}
 
 }
 
-void simpleExpression() :
-{}
+void simpleExpression() throws THOMASException:
+{
+
+  }
 {
 	LOOKAHEAD(relExpression())
     relExpression()
@@ -208,44 +232,52 @@ void simpleExpression() :
 }
 
 
-void relExpression() :
+void relExpression() throws THOMASException:
+{
+ 
+}
+{
+
+	relTerm()((< LESS >| < HIGHER > | < EQUAL >| < NOTEQUAL >| < LESSOREQUAL >|< HIGHEROREQUAL >)relTerm())+
+}
+
+void relTerm() throws THOMASException:
 {
   
 }
 {
 
-	relTerm()((< LESS >|< HIGHER>| < EQUAL >|< NOTEQUAL>|< LESSOREQUAL >|< HIGHEROREQUAL>)relTerm())+
-}
 
-void relTerm() :
-{
-}
-{
-  LOOKAHEAD(2) genAtomicCondition()
-  | LOOKAHEAD(2) arithExpression()
+  LOOKAHEAD(arithExpression())
+   arithExpression()  
+|
+LOOKAHEAD(genAtomicFormula())
+  genAtomicFormula()  
 
 }
 
 void arithExpression() :
 {
+   
 }
 {
-	arithTerm()((<SUM >|< SUBTRACTION >|< MULTIPLICATION > |< POWER>|< DIVISION >|< INTDIVISION >|< MODULE >)arithTerm())+
+	arithTerm()((< SUM >|< SUBTRACTION >|< MULTIPLICATION > | < POWER >|< DIVISION >|< INTDIVISION >|< MODULE >)arithTerm())*
 
 }
 
 void arithTerm():
 {
+   
 }
 {
 
-	 numericConstant() | variable() | "-" arithTerm() | "(" arithExpression() ")"
+	 numericConstant() | variable() | < SUBTRACTION > arithTerm() | "(" arithExpression() ")"
 
 }
 
 void variable():{
-}
-{ 	< variable >
+  }
+{ 	< variable > | "_"
 
 }
 
@@ -254,9 +286,10 @@ void constant():{}
  	 stringConstant() |  numericConstant() 
 }
 
-void numericConstant():{}
+void numericConstant():{
+   }
 {
- 	 (< ["0"-"9"] >)+ 
+ 	 < numericConstant >
 }
 
 void stringConstant():{}
@@ -265,7 +298,14 @@ void stringConstant():{}
 
 }
 
-void OMSCondition() : {}
+void normContent() throws THOMASException:{
+  }
+{
+	"["(< deontic >|"_")","(target()|"_")","(action()|"_")","activation()","expiration()"]" | "_"
+
+}
+
+void OMSCondition() throws THOMASException: {}
 {
 	OMSUnitPred() | OMSRolesPred() | OMSNormsPred() | OMSRoleEnactPred()
 
@@ -277,16 +317,23 @@ void OMSUnitPred() : {}
 
 }
 
-void OMSRolesPred() : {
+void OMSRolesPred() throws THOMASException: {
  }
 {
-	< isRole > "("term()","term()")" | < hasAccesibility > "("term()","term()")" | < hasVisibility > "(" term()","term()")"
+  try
+  {    
+	< isRole > "("term()","term()")" | < hasAccessibility > "("term()","term()"," term()")" | < hasVisibility > "(" term()","term()"," term()")"
 	| < hasPosition > "(" term()","term()","term()")"
+  }catch(Exception e)
+  {
+		//String message = l10n.getMessage(MessageID.NOT_CREATOR_IN_PARENT_UNIT, "");
+		throw new NotCreatorInParentUnitException(e.getMessage());
+  }
 }
 
-void OMSNormsPred() : {}
+void OMSNormsPred() throws THOMASException: {}
 {
-	< isNorm > "("term()","term()")" | < hasContent > "("term()","term()")" 
+	< isNorm > "("term()","term()")" | < hasContent > "("term()","term() "," normContent()")" 
 }
 
 void OMSRoleEnactPred() :
@@ -297,20 +344,22 @@ void OMSRoleEnactPred() :
 }
 
 
-void OMSAction() : {}
+void OMSAction() throws THOMASException : {}
 { 
-	< registerUnit > "("term()","term()","term()","term()","term()")"
+ try
+  {
+	registerUnit()	//< registerUnit > "("term()","term()","term()","term()","term()")"
 |   < deregisterUnit > "("term()","term()")"
 | 	< registerRole > "("term()","term()","term()","term()","term()","term()")"
 | 	< deregisterRole > "("term()","term()","term()")"
-| 	< registerNorm >	"("term()","term()","term()","term()",)"
+| 	< registerNorm >	"("term()","term()","term()","term()")"
 | 	< deregisterNorm > "("term()","term()","term()")"
-| 	< allocateRole > "("term()","term()","term()","term()",)"
+| 	< allocateRole > "("term()","term()","term()","term()")"
 | 	< deallocateRole > "("term()","term()","term()","term()")"
-| 	< jointUnit >	"("term()","term()","term()")"
+| 	< joinUnit >	"("term()","term()","term()")"
 | 	< informAgentRole > "(" term()","term()")"
 | 	< informMembers > "("term()","term()","term()","term()")"
-| 	< quantityMembers > "("term()","term()","term()","term()")"
+| 	< informQuantityMembers > "("term()","term()","term()","term()")"
 | 	< informUnit > "("term()","term()")"
 | 	< informUnitRoles > "("term()","term()")"
 | 	< informTargetNorms > "("term()","term()","term()","term()")"
@@ -319,38 +368,58 @@ void OMSAction() : {}
 | 	< acquireRole > "("term()","term()","term()")"
 | 	< leaveRole > "("term()","term()","term()")"
 
+  }catch(ParseException e)
+  {
+    	System.out.println("----------Current token-----------");
+    	System.out.println("Current token: "+ e.currentToken);
+    	System.out.println("Current token begin line: "+ e.currentToken.beginLine);
+    	System.out.println("Current token begin column: "+ e.currentToken.beginColumn);
+		System.out.println("Current token end line: "+ e.currentToken.endLine);
+    	System.out.println("Current token end column: "+ e.currentToken.endColumn);
+    	
+    	
+    	System.out.println("----------------------------------");
+    	System.out.println("Excepted tokens: "+ e.expectedTokenSequences[0][0]);
+    	System.out.println("----ERROR----: "+ e.getMessage());
+		String message = l10n.getMessage(MessageID.NOT_CREATOR_IN_PARENT_UNIT, "");
+		throw new NotCreatorInParentUnitException(message);
+
+  }
+}
+
+void registerUnit():
+{}
+{	< registerUnit > "("term()","term()","term()","term()","term()")"
+
 }
 
 void OMSConstants():{}
-{ 	/* OMSPositions() | OMSAccesibility() | OMSVisibility() |  OMSUnitTypes() | < virtual > | < participant >*/
- 	 OMSPositions() | OMSAccesibility() | OMSVisibility() |  OMSUnitTypes() | "virtual" | "participant"
+{ 	/* OMSPositions() | OMSaccessibility() | OMSVisibility() |  OMSUnitTypes() | < virtual > | < participant >*/
+ 	 OMSPositions() | OMSaccessibility() | OMSVisibility() |  OMSUnitTypes() | " virtual " | " participant "
 
 }
 
 void OMSPositions():{}
 {
-	/*< CREATOR > | < member > | < supervisor > | < subordinate >*/
+	//< CREATOR > | < member > | < supervisor > | < subordinate >
 	"creator" | "member" | "supervisor" | "subordinate"
  	}
 
-void OMSAccesibility():{}
+void OMSaccessibility():{}
 {
- 	 /*< external > | < internal >*/
-
-		"external" | "internal"
+ 	// < external > | < internal >
+	 "external" | "internal"
  	 
 } 
 void OMSVisibility():{}
 { 	 
-	/* < PUBLIC > | < PRIVATE  >*/
-
+	//< PUBLIC > | < PRIVATE  >
 	 "public" | "private"
 
 }
 void OMSUnitTypes():{}
 {
- 	/*< flat > | < team > | < hierarchy >*/
-
+ 	//< flat > | < team > | < hierarchy >
  	"flat" | "team" | "hierarchy"
 
 }
