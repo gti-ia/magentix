@@ -31,15 +31,23 @@
 	</contributors>
 	<version>2.0</version>
 	<description>
-		Though many networking protocol needs have been addressed, a
+		Though many networking protocol needs have been addressed,
+		a
 		large gap exists in common guaranteed-delivery messaging
-		middleware. AMQP fills that gap. Advanced Message Queuing
-		Protocol, enables complete interoperability for messaging
-		middleware, both the networking protocol and the semantics of
-		broker services are defined in AMQP. The AMQP model explicitly
-		defines the server's semantics because interoperability demands
-		the same semantics for any server implementation. To enable
-		technology-neutral interoperability, AMQP defines an efficient
+		middleware.
+		AMQP fills that gap. Advanced Message Queuing
+		Protocol, enables
+		complete interoperability for messaging
+		middleware, both the networking
+		protocol and the semantics of
+		broker services are defined in AMQP. The
+		AMQP model explicitly
+		defines the server's semantics because
+		interoperability demands
+		the same semantics for any server
+		implementation. To enable
+		technology-neutral interoperability, AMQP
+		defines an efficient
 		wire-level format with modern features.
 	</description>
 	<licenses>
@@ -119,7 +127,7 @@
 						<!-- Sitio en el que esta el fichero anterior -->
 						<descriptor>src/main/assembly/dep.xml</descriptor>
 					</descriptors>
-					</configuration>
+				</configuration>
 
 			</plugin>
 			<plugin>
@@ -138,25 +146,46 @@
 				</configuration>
 			</plugin>
 
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>javacc-maven-plugin</artifactId>
+				<version>2.6</version>
+				<executions>
+					<execution>
+						<id>javacc</id>
+						<goals>
+							<goal>javacc</goal>
+						</goals>
+						<configuration>
+							<sourceDirectory>src/main/java/es/upv/dsic/gti_ia/norms
+							</sourceDirectory>
+							<outputDirectory>src/main/java/</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
 		</plugins>
 	</build>
 	<profiles>
 		<profile>
-		<id>metric</id>
-		<build>
-			<plugins>
-				<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>cobertura-maven-plugin</artifactId>
-				<version>2.5.1</version>
-				<configuration> <formats>
-					<format>html</format>
-					<format>xml</format> </formats>
-					<argLine>-Xms512m -Xmx4096m -XX:MaxPermSize=4096m</argLine>
-				</configuration>
-				</plugin>
-			</plugins>
-		</build>
+			<id>metric</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>cobertura-maven-plugin</artifactId>
+						<version>2.5.1</version>
+						<configuration>
+							<formats>
+								<format>html</format>
+								<format>xml</format>
+							</formats>
+							<argLine>-Xms512m -Xmx4096m -XX:MaxPermSize=4096m</argLine>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
 		</profile>
 	</profiles>
 	<dependencies>
@@ -338,12 +367,13 @@
 		</repository>
 	</repositories>
 
-<properties>
-<cobertura.maxmem>8292M</cobertura.maxmem>
-<maven.cobertura.instrumentation.maxmemory>8192M</maven.cobertura.instrumentation.maxmemory>
-<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-<maven.compile.encoding>UTF-8</maven.compile.encoding>
-<maven.compile.fork>true</maven.compile.fork>
-</properties>
+	<properties>
+		<cobertura.maxmem>8292M</cobertura.maxmem>
+		<maven.cobertura.instrumentation.maxmemory>8192M
+		</maven.cobertura.instrumentation.maxmemory>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compile.encoding>UTF-8</maven.compile.encoding>
+		<maven.compile.fork>true</maven.compile.fork>
+	</properties>
 
 </project>
