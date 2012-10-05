@@ -150,19 +150,19 @@
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>javacc-maven-plugin</artifactId>
 				<version>2.6</version>
-				<executions>
+				<!-- <executions>
 					<execution>
 						<id>javacc</id>
 						<goals>
 							<goal>javacc</goal>
-						</goals>
+						</goals>-->
 						<configuration>
 							<sourceDirectory>src/main/java/es/upv/dsic/gti_ia/norms
 							</sourceDirectory>
 							<outputDirectory>src/main/java/</outputDirectory>
 						</configuration>
-					</execution>
-				</executions>
+				<!-- 	</execution>
+				</executions>-->
 			</plugin>
 
 		</plugins>
