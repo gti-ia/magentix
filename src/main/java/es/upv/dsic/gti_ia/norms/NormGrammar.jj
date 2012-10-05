@@ -135,6 +135,11 @@ void target() :
 {	"<" targetType() ":"  value()  ">"
 }
 
+void targetContent():
+{
+}
+{	"<" targetType() ":"  (value() | variable()) ">"
+}
 void activation() throws THOMASException: {}
 {
   LOOKAHEAD(2)
@@ -301,7 +306,7 @@ void stringConstant():{}
 void normContent() throws THOMASException:{
   }
 {
-	"["(< deontic >|"_")","(target()|"_")","(action()|"_")","activation()","expiration()"]" | "_"
+	"["(< deontic >|"_")","(targetContent()|"_")","(action()|"_")","activation()","expiration()"]" | "_"
 
 }
 

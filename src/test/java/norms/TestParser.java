@@ -862,7 +862,57 @@ public class TestParser extends TestCase {
 	{
 		try
 		{
+			StringBuffer StringBuffer1 = new StringBuffer("@ allocateRole3[p,<positionName:member>,allocateRole(RoleName, UnitName, _,AgentName),not (isNorm(NormName, UnitName) & hasContent(NormName, UnitName, [_,<roleName:RoleName>,registerUnit(_,_,_,_,_),_,_])),isNorm(NormName,UnitName) & hasContent(NormName, UnitName, _)];");
+
+			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
+
+			parser = new Norms(input);
+
+			parser.parser();
+
+
+		}catch(Exception e)
+		{
+			e.printStackTrace();
+			fail(e.getMessage());
+
+		}
+		catch(Error e)
+		{
+			fail(e.getMessage());
+		}
+	}
+	
+	public void testNorm35()
+	{
+		try
+		{
 			StringBuffer StringBuffer1 = new StringBuffer("@ allocateRole3[p,<positionName:member>,allocateRole(RoleName, UnitName, _,AgentName),not (isNorm(NormName, UnitName) & hasContent(NormName, UnitName, [_,<roleName:rol>,registerUnit(_,_,_,_,_),_,_])),isNorm(NormName,UnitName) & hasContent(NormName, UnitName, _)];");
+
+			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
+
+			parser = new Norms(input);
+
+			parser.parser();
+
+
+		}catch(Exception e)
+		{
+			e.printStackTrace();
+			fail(e.getMessage());
+
+		}
+		catch(Error e)
+		{
+			fail(e.getMessage());
+		}
+	}
+	
+	public void testNorm36()
+	{
+		try
+		{
+			StringBuffer StringBuffer1 = new StringBuffer("@ informQuantityMembersNorm [f,<positionName:member>,informQuantityMembers(UnitName, RoleName, _,AgentName),playsRole(AgentName,RoleName,UnitName) & hasAccessibility (RoleName,UnitName,external),loquesea < numero & creator <= 5 mod 20 & public >=All - 5 & 123 div 5 > 10 & (ABC ** - Uno) < 15 & (UnitName / 20) != 20 & roleCardinality(RoleName, UnitName, Cardinality) & Cardinality < (5 div 1) mod 3 ];");
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
@@ -1154,31 +1204,7 @@ public class TestParser extends TestCase {
 
 
 
-	//ERROR: En el target el valor de value no puede començar por mayuscula.
-	public void testIncorrectNorm12()
-	{
-		try
-		{
-			StringBuffer StringBuffer1 = new StringBuffer("@ allocateRole3[p,<positionName:member>,allocateRole(RoleName, UnitName, _,AgentName),not (isNorm(NormName, UnitName) & hasContent(NormName, UnitName, [_,<roleName:RoleName>,registerUnit(_,_,_,_,_),_,_])),isNorm(NormName,UnitName) & hasContent(NormName, UnitName, _)];");
 
-			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
-
-			parser = new Norms(input);
-
-			parser.parser();
-
-			fail();
-
-
-		}catch(Exception e)
-		{
-
-			System.out.println(e.getMessage());
-			assertEquals(e.getMessage(), true, true);
-
-		}
-
-	}
 
 	public void testIncorrectNorm13()
 	{
