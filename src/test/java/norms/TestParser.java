@@ -1278,5 +1278,264 @@ public class TestParser extends TestCase {
 		}
 
 	}
+	//ERROR: El id empieza por un número.
+	public void testIncorrectNorm17()
+	{
+		try
+		{
+			StringBuffer StringBuffer1 = new StringBuffer("@12acces_RegisternotUnit[p, <positionName:creator>, registerUnit(Uni_tName, _,ParentUnitName, AgentName,_),, ];");
+
+			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
+
+			parser = new Norms(input);
+
+			parser.parser();
+
+			fail();
+
+
+		}catch(Exception e)
+		{
+
+			System.out.println(e.getMessage());
+			assertEquals(e.getMessage(), true, true);
+
+		}
+
+	}
+	
+	//ERROR: El deontinc distinto de f, o, p
+	public void testIncorrectNorm18()
+	{
+		try
+		{
+			StringBuffer StringBuffer1 = new StringBuffer("@acces_RegisternotUnit[i, <positionName:creator>, registerUnit(Uni_tName, _,ParentUnitName, AgentName,_),, ];");
+
+			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
+
+			parser = new Norms(input);
+
+			parser.parser();
+
+			fail();
+
+
+		}catch(Exception e)
+		{
+
+			System.out.println(e.getMessage());
+			assertEquals(e.getMessage(), true, true);
+
+		}
+
+	}
+	
+	//ERROR: no incluye dos elementos entre < >
+	public void testIncorrectNorm19()
+	{
+		try
+		{
+			StringBuffer StringBuffer1 = new StringBuffer("@acces_RegisternotUnit[p, <:creator>, registerUnit(Uni_tName, _,ParentUnitName, AgentName,_),, ];");
+
+			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
+
+			parser = new Norms(input);
+
+			parser.parser();
+
+			fail();
+
+
+		}catch(Exception e)
+		{
+
+			System.out.println(e.getMessage());
+			assertEquals(e.getMessage(), true, true);
+
+		}
+
+	}
+	
+	//ERROR: Los elementos dentro de < > no van separados por :
+	public void testIncorrectNorm20()
+	{
+		try
+		{
+			StringBuffer StringBuffer1 = new StringBuffer("@acces_RegisternotUnit[p, <positionName,creator>, registerUnit(Uni_tName, _,ParentUnitName, AgentName,_),, ];");
+
+			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
+
+			parser = new Norms(input);
+
+			parser.parser();
+
+			fail();
+
+
+		}catch(Exception e)
+		{
+
+			System.out.println(e.getMessage());
+			assertEquals(e.getMessage(), true, true);
+
+		}
+
+	}
+	
+	//ERROR: No tiene un targetType valido
+	public void testIncorrectNorm21()
+	{
+		try
+		{
+			StringBuffer StringBuffer1 = new StringBuffer("@acces_RegisternotUnit[p, <algo,creator>, registerUnit(Uni_tName, _,ParentUnitName, AgentName,_),, ];");
+
+			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
+
+			parser = new Norms(input);
+
+			parser.parser();
+
+			fail();
+
+
+		}catch(Exception e)
+		{
+
+			System.out.println(e.getMessage());
+			assertEquals(e.getMessage(), true, true);
+
+		}
+
+	}
+	
+	//ERROR: El value empieza por una letra.
+	public void testIncorrectNorm22()
+	{
+		try
+		{
+			StringBuffer StringBuffer1 = new StringBuffer("@acces_RegisternotUnit[p, <positionName,25creator>, registerUnit(Uni_tName, _,ParentUnitName, AgentName,_),, ];");
+
+			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
+
+			parser = new Norms(input);
+
+			parser.parser();
+
+			fail();
+
+
+		}catch(Exception e)
+		{
+
+			System.out.println(e.getMessage());
+			assertEquals(e.getMessage(), true, true);
+
+		}
+
+	}
+	
+	//ERROR: La norma no empieza por @.
+	public void testIncorrectNorm23()
+	{
+		try
+		{
+			StringBuffer StringBuffer1 = new StringBuffer("acces_RegisternotUnit[p, <positionName,creator>, registerUnit(Uni_tName, _,ParentUnitName, AgentName,_),, ];");
+
+			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
+
+			parser = new Norms(input);
+
+			parser.parser();
+
+			fail();
+
+
+		}catch(Exception e)
+		{
+
+			System.out.println(e.getMessage());
+			assertEquals(e.getMessage(), true, true);
+
+		}
+
+	}
+	
+	//ERROR: La norma no tiene identificador.
+	public void testIncorrectNorm24()
+	{
+		try
+		{
+			StringBuffer StringBuffer1 = new StringBuffer("@[p, <positionName,creator>, registerUnit(Uni_tName, _,ParentUnitName, AgentName,_),, ];");
+
+			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
+
+			parser = new Norms(input);
+
+			parser.parser();
+
+			fail();
+
+
+		}catch(Exception e)
+		{
+
+			System.out.println(e.getMessage());
+			assertEquals(e.getMessage(), true, true);
+
+		}
+
+	}
+	
+	//ERROR: La norma Le falta el corchete de delante.
+	public void testIncorrectNorm25()
+	{
+		try
+		{
+			StringBuffer StringBuffer1 = new StringBuffer("@acces_RegisternotUnit p, <positionName,creator>, registerUnit(Uni_tName, _,ParentUnitName, AgentName,_),, ];");
+
+			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
+
+			parser = new Norms(input);
+
+			parser.parser();
+
+			fail();
+
+
+		}catch(Exception e)
+		{
+
+			System.out.println(e.getMessage());
+			assertEquals(e.getMessage(), true, true);
+
+		}
+
+	}
+	
+	//ERROR: La norma Le falta el corchete de detras.
+	public void testIncorrectNorm26()
+	{
+		try
+		{
+			StringBuffer StringBuffer1 = new StringBuffer("@acces_RegisternotUnit[ p, <positionName,creator>, registerUnit(Uni_tName, _,ParentUnitName, AgentName,_),, ;");
+
+			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
+
+			parser = new Norms(input);
+
+			parser.parser();
+
+			fail();
+
+
+		}catch(Exception e)
+		{
+
+			System.out.println(e.getMessage());
+			assertEquals(e.getMessage(), true, true);
+
+		}
+
+	}
 
 }
