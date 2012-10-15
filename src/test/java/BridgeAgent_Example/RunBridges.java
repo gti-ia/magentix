@@ -32,7 +32,7 @@ public class RunBridges {
 			 * Instantiating a BridgeAgentInOut SingleAgent
 			 */
 			BridgeAgentInOut agenteInOut = new BridgeAgentInOut(new AgentID(
-					"BridgeAgentInOut", "qpid", "localhost", "5000"));
+					"BridgeAgentInOut", "qpid", "hostname.domain", "5000"));
 			/**
 			 * Instantiating a BridgeAgentOutIn SingleAgent
 			 */
