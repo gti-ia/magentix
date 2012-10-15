@@ -4,6 +4,7 @@ import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
 import es.upv.dsic.gti_ia.core.SingleAgent;
+import es.upv.dsic.gti_ia.organization.Configuration;
 
 import java.net.*;
 import java.io.*;
@@ -21,8 +22,13 @@ import com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver;
  */
 public class HttpInterface {
 
-	static final int PUERTO = 8081;
+	static int http_port;
 	private long petitions = 0;
+	Configuration configuration = Configuration.getConfiguration();
+	
+	public static int getHttp_port() {
+		return http_port;
+	}
 
 	private class ServerAgent extends SingleAgent {
 		
@@ -32,6 +38,8 @@ public class HttpInterface {
 			public String conversation_id;
 			public String content;
 		}
+		
+	
 
 		Socket socket;
 
@@ -187,11 +195,20 @@ public class HttpInterface {
 		}
 	}
 
+	public HttpInterface()
+	{
+		http_port = Integer.parseInt(configuration.getHttpInterfacepPort());
+	}
+	
+	public HttpInterface(int http_port)
+	{
+		HttpInterface.http_port = http_port;
+	}
 	public void execute() {
 		try {
 
-			ServerSocket skServidor = new ServerSocket(PUERTO);
-			System.out.println("HTTPInterface service started. Listening port " + PUERTO);
+			ServerSocket skServidor = new ServerSocket(http_port);
+			System.out.println("HTTPInterface service started. Listening port " + http_port);
 			DOMConfigurator.configure("configuration/loggin.xml");
 			AgentsConnection.connect();
 

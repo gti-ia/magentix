@@ -12,6 +12,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 
+import es.upv.dsic.gti_ia.organization.Configuration;
+
 /**
  * This agent routes messages from inside the platform to outside the platform.
  * 
@@ -23,18 +25,18 @@ public class BridgeAgentOutIn extends BaseAgent {
 	// private DatagramSocket socket;
 	private ServerSocket socket;
 	private Socket s;
+	
+	Configuration configuration = Configuration.getConfiguration();
+
 	/**
 	 * BridgeAgentOutIn runs on 8081 port
 	 */
-	public static int http_port = 8081;
+	static int http_port;
 
 	public static int getHttp_port() {
 		return http_port;
 	}
 
-	public static void setHttp_port(int http_port) {
-		BridgeAgentOutIn.http_port = http_port;
-	}
 
 	private boolean finalized = false;
 
@@ -50,8 +52,32 @@ public class BridgeAgentOutIn extends BaseAgent {
 
 		// crear objeto DatagramSocket para enviar y recibir paquetes
 		try {
+		//Sacamos el http port del properties.
+			BridgeAgentOutIn.http_port = Integer.parseInt(configuration.getBridgeHttpPort());
+			
 			// socket = new DatagramSocket(5000);
-			socket = new ServerSocket(http_port);
+			socket = new ServerSocket(BridgeAgentOutIn.http_port);
+			
+		
+		}
+
+		// procesar los problemas que pueden ocurrir al crear el objeto
+		// DatagramSocket
+		catch (SocketException excepcionSocket) {
+			excepcionSocket.printStackTrace();
+			System.exit(1);
+		}
+
+	}
+	
+	public BridgeAgentOutIn(AgentID aid, int http_port) throws Exception {
+		super(aid);
+
+		// crear objeto DatagramSocket para enviar y recibir paquetes
+		try {
+			BridgeAgentOutIn.http_port = http_port;
+			// socket = new DatagramSocket(5000);
+			socket = new ServerSocket(BridgeAgentOutIn.http_port);
 		}
 
 		// procesar los problemas que pueden ocurrir al crear el objeto
@@ -74,6 +100,8 @@ public class BridgeAgentOutIn extends BaseAgent {
 
 				InputStream is;
 
+			
+				
 				logger.info("BridgeAgentOutIn waiting receive external FIPA-Messages");
 				s = socket.accept(); // Socket Cliente
 
