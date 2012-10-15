@@ -33,6 +33,8 @@ public class Configuration {
 	private String isTomcat;
 	private String pathTomcat;
 	private String os;
+	private String Bridge_http_port;
+	private String HttpInterface_port;
 	private static Configuration configuration = null;
 	private boolean isSecure = false;
 
@@ -43,6 +45,25 @@ public class Configuration {
 
 	}
 
+	
+	/**
+	 * Http port where BridgeAgentOutIn runs.
+	 * @return 
+	 */
+	public String getBridgeHttpPort()
+	{
+		return this.Bridge_http_port;
+	}
+	
+	/**
+	 * Http port where HttpInterface runs.
+	 * @return 
+	 */
+	public String getHttpInterfacepPort()
+	{
+		return this.HttpInterface_port;
+	}
+	
 	/**
 	 * If the platform is in secure mode or not
 	 * @return isSecure
@@ -335,6 +356,14 @@ public class Configuration {
 				else    if (obj.toString().equalsIgnoreCase("os"))
 				{
 					this.os = properties.getProperty(obj.toString()); 	
+				}
+				else    if (obj.toString().equalsIgnoreCase("BridgeAgentOutInPort"))
+				{
+					this.Bridge_http_port = properties.getProperty(obj.toString()); 	
+				}
+				else    if (obj.toString().equalsIgnoreCase("HttpInterfacePort"))
+				{
+					this.HttpInterface_port = properties.getProperty(obj.toString()); 	
 				}
 				else    if (obj.toString().equalsIgnoreCase("secureMode"))
 				{
