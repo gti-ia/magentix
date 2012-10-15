@@ -32,12 +32,12 @@ public class RunBridges {
 			 * Instantiating a BridgeAgentInOut SingleAgent
 			 */
 			BridgeAgentInOut agenteInOut = new BridgeAgentInOut(new AgentID(
-					"BridgeAgentInOut", "qpid", "hostname.domain", "5000"));
+					"BridgeAgentInOut", "qpid", "localhost", "5000"));
 			/**
 			 * Instantiating a BridgeAgentOutIn SingleAgent
 			 */
 			BridgeAgentOutIn agenteOutIn = new BridgeAgentOutIn(new AgentID(
-					"BridgeAgentOutIn", "qpid", "hostname.domain", "5000"));
+					"BridgeAgentOutIn", "qpid", "localhost", "5000"));
 
 			/**
 			 * Instantiating a EmisorAgent BaseAgent
@@ -54,8 +54,10 @@ public class RunBridges {
 			 * Execute the four agents
 			 */
 			agenteInOut.start();
+			
 			agenteOutIn.start();
 
+			
 			agente2.start();
 		//	agente1.start();
 		} catch (Exception e) {
