@@ -33,6 +33,10 @@ public class BridgeAgentOutIn extends BaseAgent {
 	 */
 	static int http_port;
 
+	/**
+	 * Gets the HTTP port where agent is waiting
+	 * @return http port
+	 */
 	public static int getHttp_port() {
 		return http_port;
 	}
@@ -44,7 +48,6 @@ public class BridgeAgentOutIn extends BaseAgent {
 	 * Creates a new BrideAgentOutIn
 	 * 
 	 * @param aid
-	 * @param connection
 	 * @throws Exception
 	 */
 	public BridgeAgentOutIn(AgentID aid) throws Exception {
@@ -70,6 +73,13 @@ public class BridgeAgentOutIn extends BaseAgent {
 
 	}
 	
+	/**
+	 * Creates a new BrideAgentOutIn
+	 * 
+	 * @param aid
+	 * @param http port
+	 * @throws Exception
+	 */
 	public BridgeAgentOutIn(AgentID aid, int http_port) throws Exception {
 		super(aid);
 

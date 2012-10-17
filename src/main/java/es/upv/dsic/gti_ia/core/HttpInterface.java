@@ -26,6 +26,11 @@ public class HttpInterface {
 	private long petitions = 0;
 	Configuration configuration = Configuration.getConfiguration();
 	
+	
+	/**
+	 * Gets the HTTP port where agent is waiting
+	 * @return http port
+	 */
 	public static int getHttp_port() {
 		return http_port;
 	}
@@ -199,6 +204,13 @@ public class HttpInterface {
 	{
 		http_port = Integer.parseInt(configuration.getHttpInterfacepPort());
 	}
+	
+	/**
+	 * Creates a new HttpInterface
+	 * 
+	 * @param http port
+	 * 
+	 */
 	
 	public HttpInterface(int http_port)
 	{
