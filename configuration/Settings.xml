@@ -9,8 +9,8 @@
 <entry key="SFServiceDescriptionLocation">http://localhost:8080/sfservices/services/</entry>
 
 
-<entry key="BridgeAgentOutInPort">8081</entry>
-<entry key="HttpInterfacePort">8082</entry>
+<entry key="BridgeAgentOutInPort">8082</entry>
+<entry key="HttpInterfacePort">8081</entry>
 
 
 <!-- Properties servlets server -->
