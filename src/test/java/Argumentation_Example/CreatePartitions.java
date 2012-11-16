@@ -82,6 +82,7 @@ public class CreatePartitions {
 		try {
 
 			Vector<DomainCase> allCases = readDomainCasesFile("testArgumentation/Helpdesk-DomainCases.dat");
+			System.out.println("total cases loaded"+allCases.size());
 
 			for (int op = 0; op < nOperators; op++) {
 				System.out.println("Operator " + op);
@@ -90,7 +91,7 @@ public class CreatePartitions {
 				for (int cases = 0; cases < nCases; cases += 5) {
 					System.out.println("Partition cases = " + (cases + 5));
 					for (int i = cases; i < cases + 5; i++) {// 5 cases per incremental iteration
-						int index = (op + i) % allCases.size();
+						int index = (op*(cases + 5) + i) % allCases.size();
 						casesList.add(index);
 						currentPartition.add(allCases.get(index));
 						System.out.println(index);
@@ -239,7 +240,7 @@ public class CreatePartitions {
 			ois.close();
 
 		} catch (EOFException e) {
-
+			e.printStackTrace();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -340,7 +341,7 @@ public class CreatePartitions {
 
 	public static void main(String[] args) {
 
-		createDomCasesPartitionsContinued(45,9);
+		createDomCasesPartitionsContinued(45,10);
 		
 //		Vector<DomainCase> domCases=readDomainCasesFile("testArgumentation/Helpdesk-DomainCases2.dat");
 //		Iterator<DomainCase> iter=domCases.iterator();

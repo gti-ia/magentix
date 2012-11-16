@@ -11,6 +11,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.StringTokenizer;
 
+import org.apache.log4j.Logger;
+import org.apache.log4j.xml.DOMConfigurator;
+
 import es.upv.dsic.gti_ia.argAgents.CommitmentStore;
 import es.upv.dsic.gti_ia.argAgents.argCBR.ArgCBR;
 import es.upv.dsic.gti_ia.argAgents.domainCBR.DomainCBR;
@@ -129,6 +132,12 @@ public class ArgCAgent extends CAgent {
 	private HashMap<String, ArrayList<Argument>> myUsedAttackArguments;
 
 	private HashMap<String, ArrayList<Argument>> storeArguments;
+	
+	
+	Logger logger;
+	
+	FileWriter fstreamTrace;
+	BufferedWriter traceFile;
 
 	/**
 	 * Main method to build Argumentative Agents
@@ -217,19 +226,28 @@ public class ArgCAgent extends CAgent {
 		myUsedSupportArguments = new HashMap<String, ArrayList<Argument>>();
 		myUsedAttackArguments = new HashMap<String, ArrayList<Argument>>();
 		storeArguments = new HashMap<String, ArrayList<Argument>>();
+		
+		
+		DOMConfigurator.configure("configuration/logginArg.xml");
+		logger = Logger.getLogger(ArgCAgent.class);
+		
+		
+		
 	}
 
 	protected void execution(CProcessor myProcessor, ACLMessage welcomeMessage) {
 
 		try {
 			// Clean end file
-			FileWriter fstream = new FileWriter(this.getName(), false);
+			FileWriter fstream = new FileWriter("testArgumentation/"+this.getName(), false);
 			BufferedWriter outFile = new BufferedWriter(fstream);
 			// Close the output stream
 			outFile.close();
 		} catch (Exception e) {// Catch exception if any
 			System.err.println("Error: " + e.getMessage());
 		}
+		
+		
 
 		/**
 		 * This class extends the Argumentation Participant protocol
@@ -244,6 +262,14 @@ public class ArgCAgent extends CAgent {
 			protected void doOpenDialogue(CProcessor myProcessor, ACLMessage msg) {
 				currentDomCase2Solve = (DomainCase) msg.getContentObject();
 				currentDialogueID = msg.getConversationId();
+				
+				try {
+					fstreamTrace = new FileWriter("testArgumentation/"+currentDialogueID+"-"+myID, true);
+					traceFile = new BufferedWriter(fstreamTrace);
+					traceFile.close();
+				} catch (Exception e) {// Catch exception if any
+					logger.error("Error: " + e.getMessage());
+				}
 			}
 
 			@Override
@@ -290,10 +316,33 @@ public class ArgCAgent extends CAgent {
 
 					msg2 = propose(currentPosition, currentDialogueID);
 					copyMessages(msg, msg2);
+					try {
+						fstreamTrace = new FileWriter("testArgumentation/"+currentDialogueID+"-"+myID, true);
+						traceFile = new BufferedWriter(fstreamTrace);
+						traceFile.write(myID +"::propose::"+currentPosition.getSolution().getConclusion().getDescription()+"\n");
+						traceFile.close();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						logger.error(e.getMessage());
+					}
+					
 					return true;
 				} else {// no position generated, withdraw
 					msg2 = withdraw_dialogue();
 					copyMessages(msg, msg2);
+					
+					try {
+						fstreamTrace = new FileWriter("testArgumentation/"+currentDialogueID+"-"+myID, true);
+						traceFile = new BufferedWriter(fstreamTrace);
+						traceFile.write(myID +"::withdraw::"+"\n");
+						traceFile.close();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						logger.error(e.getMessage());
+					}
+					
 					return false;
 				}
 
@@ -304,6 +353,17 @@ public class ArgCAgent extends CAgent {
 
 				ACLMessage msg2;
 
+				try {
+					fstreamTrace = new FileWriter("testArgumentation/"+currentDialogueID+"-"+myID, true);
+					traceFile = new BufferedWriter(fstreamTrace);
+					traceFile.write(myID +"<-"+whyAgentID+"::why::"+currentPosition.getSolution().getConclusion().getDescription()+"\n");
+					traceFile.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					logger.error(e.getMessage());
+				}
+				
 				// clean other possible WHY sent by the same agent and attend
 				// only one
 				ArrayList<String> locutions = new ArrayList<String>();
@@ -333,6 +393,17 @@ public class ArgCAgent extends CAgent {
 						logger.info("*********************" + myID + ": "
 								+ " received WHY, generating suport arg. ASSERTING");
 
+						try {
+							fstreamTrace = new FileWriter("testArgumentation/"+currentDialogueID+"-"+myID, true);
+							traceFile = new BufferedWriter(fstreamTrace);
+							traceFile.write(myID +"->"+whyAgentID+"::assert::"+currentPosition.getSolution().getConclusion().getDescription()+"\n");
+							traceFile.close();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+							logger.error(e.getMessage());
+						}
+						
 						msg2 = asserts(whyAgentID, arg);
 						copyMessages(msg, msg2);
 
@@ -400,6 +471,17 @@ public class ArgCAgent extends CAgent {
 					askedPositions.add(hisPosition);
 					argNode = new ArgNode(againstArgument.getID(), new ArrayList<Long>(), -1, ArgNode.NodeType.FIRST);
 					currentDialogueGraph = new DialogueGraph();
+					
+					try {
+						fstreamTrace = new FileWriter("testArgumentation/"+currentDialogueID+"-"+myID, true);
+						traceFile = new BufferedWriter(fstreamTrace);
+						traceFile.write(myID +"<-"+subDialogueAgentID+"::assert::"+againstArgument.getHasConclusion().getDescription()+"\n");
+						traceFile.close();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						logger.error(e.getMessage());
+					}
 				} else {
 					if (defending) {
 						ArrayList<Position> myPositionsAsked = attendedWhyPetitions.get(subDialogueAgentID);
@@ -411,7 +493,21 @@ public class ArgCAgent extends CAgent {
 								myPositionsAsked.add(currentPosition);
 						}
 						attendedWhyPetitions.put(subDialogueAgentID, myPositionsAsked);
+						
 					}
+					
+					try {
+						fstreamTrace = new FileWriter("testArgumentation/"+currentDialogueID+"-"+myID, true);
+						traceFile = new BufferedWriter(fstreamTrace);
+						traceFile.write(myID +"<-"+subDialogueAgentID+"::attack::"+againstArgument.getHasConclusion().getDescription()+"\n");
+						traceFile.close();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						logger.error(e.getMessage());
+					}
+					
+					
 					// add the incoming attack argument in dialogue graph and
 					// child list of the last node
 					argNode = new ArgNode(againstArgument.getID(), new ArrayList<Long>(),
@@ -481,6 +577,17 @@ public class ArgCAgent extends CAgent {
 
 					logger.info("\n" + myID + ": myUsedAttackArgs with " + subDialogueAgentID + " " + attackArgs.size()
 							+ " " + myUsedAttackArguments.get(subDialogueAgentID).size() + "\n");
+					
+					try {
+						fstreamTrace = new FileWriter("testArgumentation/"+currentDialogueID+"-"+myID, true);
+						traceFile = new BufferedWriter(fstreamTrace);
+						traceFile.write(myID +"->"+subDialogueAgentID+"::attack::"+currentPosition.getSolution().getConclusion().getDescription()+"\n");
+						traceFile.close();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						logger.error(e.getMessage());
+					}
 
 					// add the attack argument to dialogue graph
 					ArgNode attNode = currentDialogueGraph.getNode(againstArgument.getID());
@@ -579,6 +686,18 @@ public class ArgCAgent extends CAgent {
 					msg2 = why(pos.getAgentID(), pos);
 					copyMessages(msg, msg2);
 					logger.info("------------ ------ " + myID + ": WHY to " + pos.getAgentID());
+					
+					try {
+						fstreamTrace = new FileWriter("testArgumentation/"+currentDialogueID+"-"+myID, true);
+						traceFile = new BufferedWriter(fstreamTrace);
+						traceFile.write(myID +"->"+pos.getAgentID()+"::why::"+pos.getSolution().getConclusion().getDescription()+"\n");
+						traceFile.close();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						logger.error(e.getMessage());
+					}
+					
 					return true;
 				} else {// nothing to challenge, remain in this state
 						// send NOTHING message
@@ -592,7 +711,7 @@ public class ArgCAgent extends CAgent {
 
 			@Override
 			protected void doFinishDialogue(CProcessor myProcessor, ACLMessage msg) {
-
+				
 			}
 
 			@Override
@@ -613,6 +732,8 @@ public class ArgCAgent extends CAgent {
 				logger.info(myID + ": " + "SOLUTION received" + " from: " + msg.getSender().getLocalName()
 						+ "\n domCases=" + domainCBR.getAllCasesList().size() + "\n argCases="
 						+ argCBR.getAllCasesVector().size());
+				
+				
 
 			}
 
@@ -620,14 +741,14 @@ public class ArgCAgent extends CAgent {
 			protected void doDie(CProcessor myProcessor) {
 				try {
 					// Create the end file
-					FileWriter fstream = new FileWriter(myID, false);
+					FileWriter fstream = new FileWriter("testArgumentation/"+myID, false);
 					BufferedWriter outFile = new BufferedWriter(fstream);
 					outFile.write("test finished");
 					outFile.newLine();
 					// Close the output stream
 					outFile.close();
 				} catch (Exception e) {// Catch exception if any
-					System.err.println("Error: " + e.getMessage());
+					logger.error("Error: " + e.getMessage());
 				}
 
 				myProcessor.getMyAgent().Shutdown();
@@ -642,6 +763,18 @@ public class ArgCAgent extends CAgent {
 				logger.info(myID + ": " + "increasing vote for my position. SolID="
 						+ currentPosition.getSolution().getConclusion().getID() + " currentVotes="
 						+ currentPosition.getTimesAccepted() + "\n");
+				
+				try {
+					fstreamTrace = new FileWriter("testArgumentation/"+currentDialogueID+"-"+myID, true);
+					traceFile = new BufferedWriter(fstreamTrace);
+					traceFile.write(myID +"<-"+messageReceived.getSender().name+"::accept::"+
+				currentPosition.getSolution().getConclusion().getDescription()+"::"+currentPosition.getTimesAccepted()+"\n");
+					traceFile.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					logger.error(e.getMessage());
+				}
 
 				// change my support argument acceptability status
 				// search my support argument, the one I told this agent.
@@ -683,13 +816,46 @@ public class ArgCAgent extends CAgent {
 			protected void doNoCommit(CProcessor myProcessor, ACLMessage msg) {
 				ACLMessage msg2 = noCommit(subDialogueAgentID, currentPosition);
 				copyMessages(msg, msg2);
+				try {
+					fstreamTrace = new FileWriter("testArgumentation/"+currentDialogueID+"-"+myID, true);
+					traceFile = new BufferedWriter(fstreamTrace);
+					traceFile.write(myID +"->"+subDialogueAgentID+"::noCommit::"+"\n");
+					traceFile.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+					logger.error(e.getMessage());
+					
+				}
 
+			}
+			
+			@Override
+			protected void doOtherNoCommit(CProcessor myProcessor, ACLMessage msgReceived){
+				try {
+					fstreamTrace = new FileWriter("testArgumentation/"+currentDialogueID+"-"+myID, true);
+					traceFile = new BufferedWriter(fstreamTrace);
+					traceFile.write(myID +"<-"+subDialogueAgentID+"::noCommit::"+"\n");
+					traceFile.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+					logger.error(e.getMessage());
+				}
 			}
 
 			@Override
 			protected void doAccept(CProcessor myProcessor, ACLMessage msg) {
 				ACLMessage msg2 = accept(subDialogueAgentID);
 				copyMessages(msg, msg2);
+				
+				try {
+					fstreamTrace = new FileWriter("testArgumentation/"+currentDialogueID+"-"+myID, true);
+					traceFile = new BufferedWriter(fstreamTrace);
+					traceFile.write(myID +"->"+subDialogueAgentID+"::accept::"+"\n");
+					traceFile.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+					logger.error(e.getMessage());
+				}
 			}
 
 		}
@@ -769,7 +935,7 @@ public class ArgCAgent extends CAgent {
 				lastPositionBeforeNull = new Position(currentPosition.getAgentID(), currentPosition.getDialogueID(),
 						currentPosition.getSolution(), currentPosition.getPremises(), currentPosition.getDomainCases(),
 						currentPosition.getDomainCaseSimilarity());
-			;
+			
 			currentPosition = null;
 			positionsGenerated = false;
 

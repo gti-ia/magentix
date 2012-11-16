@@ -353,11 +353,19 @@ public abstract class Argumentation_Participant {
 		};
 	}
 	
+	/**
+	 * Actions to perform after other's no commit.
+	 * @param myProcessor {@link CProcessor} that manage the conversation
+	 * @param msgReceived {@link ACLMessage} received with a NO COMMIT
+	 */
+	protected abstract void doOtherNoCommit(CProcessor myProcessor, ACLMessage msgReceived);
+	
 	class Attack2_Method implements ReceiveStateMethod {
 		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
 			if(messageReceived.getHeaderValue(LOCUTION).equalsIgnoreCase(ATTACKS))
 				return "ATTACK"; 
 			else if(messageReceived.getHeaderValue(LOCUTION).equalsIgnoreCase(NOCOMMIT)){
+				doOtherNoCommit(myProcessor,messageReceived);
 				return "WAIT_CENTRAL";
 			}
 			else return "WAIT_CENTRAL"; // should not happen

@@ -29,7 +29,7 @@ import es.upv.dsic.gti_ia.core.SingleAgent;
  * @author Jaume Jordan
  * 
  */
-public class TesterArgCAgent extends SingleAgent {
+public class TesterArgCAgentInterface extends SingleAgent {
 
 	private ArrayList<SocialEntity> socialEntities;
 	private String resultFileName;
@@ -41,6 +41,7 @@ public class TesterArgCAgent extends SingleAgent {
 	private String currentDialogueID = "";
 	private long dialogueInitTime = 0;
 	private String commitmentStoreID;
+	private String interfaceAgentID;
 	private long multTimeFactor = 10;
 
 	/**
@@ -66,7 +67,7 @@ public class TesterArgCAgent extends SingleAgent {
 	 *            list of the argumentative agents of the group
 	 * @throws Exception
 	 */
-	public TesterArgCAgent(AgentID aid, ArrayList<SocialEntity> socialEntities, String commitmentStoreID,
+	public TesterArgCAgentInterface(AgentID aid, ArrayList<SocialEntity> socialEntities, String commitmentStoreID, String interfaceAgentID,
 			String resultFileName, String finishFileName, int casesPerAgent, int iteration, Vector<DomainCase> domCases,
 			ArrayList<ArgCAgent> agents) throws Exception {
 		super(aid);
@@ -74,6 +75,7 @@ public class TesterArgCAgent extends SingleAgent {
 
 		this.socialEntities = socialEntities;
 		this.commitmentStoreID = commitmentStoreID;
+		this.interfaceAgentID = interfaceAgentID;
 		this.resultFileName = resultFileName;
 		this.finishFileName = finishFileName;
 		this.casesPerAgent = casesPerAgent;
@@ -323,6 +325,7 @@ public class TesterArgCAgent extends SingleAgent {
 						SocialEntity socialEntitie = iterAgents.next();
 						sendMessage(socialEntitie.getName(), "SOLUTION", currentDialogueID, finalSolution);
 					}
+					sendMessage(interfaceAgentID, "SOLUTION", currentDialogueID, finalSolution);
 
 					if (finalSolution.getConclusion().getID() != -1 && finalSolution.getConclusion().getID() != 0) {
 						

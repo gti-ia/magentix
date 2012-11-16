@@ -73,8 +73,10 @@ public class DomainCBR {
 	private void loadCaseBase() {
 		domainCB = new Hashtable<String, ArrayList<DomainCase>>();
 		int introduced = 0, notIntroduced = 0;
+		ObjectInputStream ois=null;
+		String strIDs="";
 		try {
-			ObjectInputStream ois = new ObjectInputStream(new FileInputStream(this.filePath));
+			ois = new ObjectInputStream(new FileInputStream(this.filePath));
 
 			// Read first object
 			Object aux = ois.readObject();
@@ -83,6 +85,7 @@ public class DomainCBR {
 			while (aux != null) {
 				if (aux instanceof DomainCase) {
 					DomainCase aCase = (DomainCase) aux;
+					strIDs+=aCase.getSolutions().get(0).getConclusion().getID()+" ";
 					boolean returnedValue = addCase(aCase);
 					if (returnedValue)
 						introduced++;
@@ -103,9 +106,16 @@ public class DomainCBR {
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
+		finally{
+			try {
+				ois.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 
-		System.out.println("domain-cases=" + (introduced + notIntroduced) + " introduced=" + introduced + " notIntroduced="
-				+ notIntroduced);
+		System.out.println(this.filePath+" domain-cases=" + (introduced + notIntroduced) + " introduced=" + introduced + " notIntroduced="
+				+ notIntroduced+" sols: "+strIDs);
 
 	}
 
@@ -185,7 +195,7 @@ public class DomainCBR {
 
 		Configuration c = new Configuration();
 		ArrayList<SimilarDomainCase> similarCases = getMostSimilar(premises, threshold, c.domainCBRSimilarity);
-
+		
 		return similarCases;
 	}
 
