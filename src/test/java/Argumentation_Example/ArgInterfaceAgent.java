@@ -257,10 +257,6 @@ public class ArgInterfaceAgent extends SingleAgent {
 	}
 
 	private String getTraceContent(String traceID, String techniciansIDsStr) {
-		InterfaceStructs is = new InterfaceStructs();
-		
-
-		
 		String trace = "";
 
 		StringTokenizer techsTok = new StringTokenizer(techniciansIDsStr, "@@@");
@@ -269,13 +265,13 @@ public class ArgInterfaceAgent extends SingleAgent {
 
 			try {
 
-				FileReader fstream = new FileReader("testArgumentation/" + traceID + "-" + aTech);
+				FileReader fstream = new FileReader("testArgumentation/tracesArg" + traceID + "-" + aTech);
 				BufferedReader reader = new BufferedReader(fstream);
 				String line = reader.readLine();
-				int lineCount = 0;
+				
 				while (line != null) {
 					trace += line + "###\n";
-					lineCount++;
+					
 					line = reader.readLine();
 				}
 				// if(lineCount==0)
@@ -309,13 +305,12 @@ public class ArgInterfaceAgent extends SingleAgent {
 
 			try {
 
-				FileReader fstream = new FileReader("testArgumentation/" + traceID + "-" + aTech);
+				FileReader fstream = new FileReader("testArgumentation/tracesArg/" + traceID + "-" + aTech);
 				BufferedReader reader = new BufferedReader(fstream);
 				String line = reader.readLine();
-				int lineCount = 0;
+				
 				while (line != null) {
 					trace += line + "###\n";
-					lineCount++;
 					line = reader.readLine();
 				}
 				// if(lineCount==0)

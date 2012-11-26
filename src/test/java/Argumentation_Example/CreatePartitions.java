@@ -11,6 +11,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
 
@@ -78,10 +79,10 @@ public class CreatePartitions {
 	 * @param nOperators
 	 *            number of operators
 	 */
-	public static void createDomCasesPartitionsContinued(int nCases, int nOperators) {
+	public static void createDomCasesPartitionsContinued(int nCases, int nOperators, String originalFile, String destinationFileStr) {
 		try {
 
-			Vector<DomainCase> allCases = readDomainCasesFile("testArgumentation/Helpdesk-DomainCases.dat");
+			Vector<DomainCase> allCases = readDomainCasesFile(originalFile);
 			System.out.println("total cases loaded"+allCases.size());
 
 			for (int op = 0; op < nOperators; op++) {
@@ -98,7 +99,7 @@ public class CreatePartitions {
 					}
 					System.out.println("current partition size = " + currentPartition.size());
 					// save the list currentPartition in the given file
-					writeDomainCases(currentPartition, "testArgumentation/partitionsInc/domCases" + (cases + 5) + "cas" + op + "op.dat");
+					writeDomainCases(currentPartition, destinationFileStr + (cases + 5) + "cas" + op + "op.dat");
 
 				}
 				if (op == 0) {
@@ -183,6 +184,75 @@ public class CreatePartitions {
 			}
 		}
 	}
+	
+	
+	public static Vector<DomainCase> createOrderedCaseBase(){
+		Vector<DomainCase> cases = readDomainCasesFile("testArgumentation/Helpdesk-DomainCases.dat");
+		HashMap<Integer,ArrayList<DomainCase>> casesByCategory=new HashMap<Integer, ArrayList<DomainCase>>();
+		
+		Iterator<DomainCase> iterCases=cases.iterator();
+		while(iterCases.hasNext()){
+			DomainCase acase=iterCases.next();
+			int categoryID=Integer.parseInt(acase.getProblem().getDomainContext().getPremises().get(0).getContent());
+			ArrayList<DomainCase> casesList=casesByCategory.get(categoryID);
+			if(casesList!=null && !casesList.isEmpty()){
+				casesList.add(acase);
+			}
+			else{
+				casesList=new ArrayList<DomainCase>();
+				casesList.add(acase);
+				casesByCategory.put(categoryID, casesList);
+			}
+		}
+		HashMap<Integer,ArrayList<Integer>> categoryQuantity= new HashMap<Integer, ArrayList<Integer>>();
+		Iterator<ArrayList<DomainCase>> iterCasesLists=casesByCategory.values().iterator();
+		while(iterCasesLists.hasNext()){
+			ArrayList<DomainCase> list= iterCasesLists.next();
+			ArrayList<Integer> categoriesList=categoryQuantity.get(list.size());
+			if(categoriesList!=null && !categoriesList.isEmpty())
+				categoriesList.add(Integer.parseInt(list.get(0).getProblem().getDomainContext().getPremises().get(0).getContent()));
+			else{
+				categoriesList=new ArrayList<Integer>();
+				categoriesList.add(Integer.parseInt(list.get(0).getProblem().getDomainContext().getPremises().get(0).getContent()));
+				categoryQuantity.put(list.size(), categoriesList);
+			}
+			
+		}
+		
+		ArrayList<Integer> categoriesOrdered=new ArrayList<Integer>();
+		Iterator<ArrayList<Integer>> iterCategoryQuantity= categoryQuantity.values().iterator();
+		while(iterCategoryQuantity.hasNext()){
+			ArrayList<Integer> categories= iterCategoryQuantity.next();
+			Iterator<Integer> iterCategories=categories.iterator();
+			while(iterCategories.hasNext()){
+				int category=iterCategories.next();
+				if(categoriesOrdered.isEmpty())
+					categoriesOrdered.add(category);
+				else 
+					categoriesOrdered.add(0, category);
+			
+			}
+		}
+		
+		Vector<DomainCase> casesByCategoryOrdered=new Vector<DomainCase>();
+		Iterator<Integer> iterCategoriesOrdered=categoriesOrdered.iterator();
+		while(iterCategoriesOrdered.hasNext()){
+			int category=iterCategoriesOrdered.next();
+			casesByCategoryOrdered.addAll(casesByCategory.get(category));
+		}
+		
+		Iterator<DomainCase> iterCasesByCategoryOrdered=casesByCategoryOrdered.iterator();
+		while(iterCasesByCategoryOrdered.hasNext()){
+			DomainCase acase=iterCasesByCategoryOrdered.next();
+			System.out.println(Integer.parseInt(acase.getProblem().getDomainContext().getPremises().get(0).getContent()));
+		}
+		
+		return casesByCategoryOrdered;
+	
+	}
+	
+	
+	
 
 	/**
 	 * Write the given domain-cases as a {@link Serializable} Java Objects in
@@ -222,7 +292,7 @@ public class CreatePartitions {
 	public static Vector<DomainCase> readDomainCasesFile(String fileName) {
 		Vector<DomainCase> cases = new Vector<DomainCase>();
 		try {
-
+			
 			ObjectInputStream ois = new ObjectInputStream(new FileInputStream(fileName));
 
 			// Read first object
@@ -240,7 +310,9 @@ public class CreatePartitions {
 			ois.close();
 
 		} catch (EOFException e) {
-			e.printStackTrace();
+			//TODO an EOFException happens when loading testArgumentation/Helpdesk-DomainCases.dat
+			//but it loads correctly the 48 cases
+			//e.printStackTrace();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -248,7 +320,7 @@ public class CreatePartitions {
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
-
+		//System.out.println("nCases="+cases.size());
 		return cases;
 
 	}
@@ -341,7 +413,14 @@ public class CreatePartitions {
 
 	public static void main(String[] args) {
 
-		createDomCasesPartitionsContinued(45,10);
+		
+//		createDomCasesPartitionsIncremental(45,10);
+//		Vector<DomainCase> casesOrdered=createOrderedCaseBase();
+//		writeDomainCases(casesOrdered, "testArgumentation/Helpdesk-DomainCasesOrdered.dat");
+//		
+//		createDomCasesPartitionsContinued(45,7,"testArgumentation/Helpdesk-DomainCasesOrdered.dat", "testArgumentation/partitionsInc/domCasesExp");
+		
+		//createDomCasesPartitionsContinued(45,10);
 		
 //		Vector<DomainCase> domCases=readDomainCasesFile("testArgumentation/Helpdesk-DomainCases2.dat");
 //		Iterator<DomainCase> iter=domCases.iterator();

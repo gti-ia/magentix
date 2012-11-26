@@ -264,7 +264,7 @@ public class ArgCAgent extends CAgent {
 				currentDialogueID = msg.getConversationId();
 				
 				try {
-					fstreamTrace = new FileWriter("testArgumentation/"+currentDialogueID+"-"+myID, true);
+					fstreamTrace = new FileWriter("testArgumentation/tracesArg/"+currentDialogueID+"-"+myID, true);
 					traceFile = new BufferedWriter(fstreamTrace);
 					traceFile.close();
 				} catch (Exception e) {// Catch exception if any
@@ -317,7 +317,7 @@ public class ArgCAgent extends CAgent {
 					msg2 = propose(currentPosition, currentDialogueID);
 					copyMessages(msg, msg2);
 					try {
-						fstreamTrace = new FileWriter("testArgumentation/"+currentDialogueID+"-"+myID, true);
+						fstreamTrace = new FileWriter("testArgumentation/tracesArg/"+currentDialogueID+"-"+myID, true);
 						traceFile = new BufferedWriter(fstreamTrace);
 						traceFile.write(myID +"::propose::"+currentPosition.getSolution().getConclusion().getDescription()+"\n");
 						traceFile.close();
@@ -333,7 +333,7 @@ public class ArgCAgent extends CAgent {
 					copyMessages(msg, msg2);
 					
 					try {
-						fstreamTrace = new FileWriter("testArgumentation/"+currentDialogueID+"-"+myID, true);
+						fstreamTrace = new FileWriter("testArgumentation/tracesArg/"+currentDialogueID+"-"+myID, true);
 						traceFile = new BufferedWriter(fstreamTrace);
 						traceFile.write(myID +"::withdraw::"+"\n");
 						traceFile.close();
@@ -354,7 +354,7 @@ public class ArgCAgent extends CAgent {
 				ACLMessage msg2;
 
 				try {
-					fstreamTrace = new FileWriter("testArgumentation/"+currentDialogueID+"-"+myID, true);
+					fstreamTrace = new FileWriter("testArgumentation/tracesArg/"+currentDialogueID+"-"+myID, true);
 					traceFile = new BufferedWriter(fstreamTrace);
 					traceFile.write(myID +"<-"+whyAgentID+"::why::"+currentPosition.getSolution().getConclusion().getDescription()+"\n");
 					traceFile.close();
@@ -394,7 +394,7 @@ public class ArgCAgent extends CAgent {
 								+ " received WHY, generating suport arg. ASSERTING");
 
 						try {
-							fstreamTrace = new FileWriter("testArgumentation/"+currentDialogueID+"-"+myID, true);
+							fstreamTrace = new FileWriter("testArgumentation/tracesArg/"+currentDialogueID+"-"+myID, true);
 							traceFile = new BufferedWriter(fstreamTrace);
 							traceFile.write(myID +"->"+whyAgentID+"::assert::"+currentPosition.getSolution().getConclusion().getDescription()+"\n");
 							traceFile.close();
@@ -473,7 +473,7 @@ public class ArgCAgent extends CAgent {
 					currentDialogueGraph = new DialogueGraph();
 					
 					try {
-						fstreamTrace = new FileWriter("testArgumentation/"+currentDialogueID+"-"+myID, true);
+						fstreamTrace = new FileWriter("testArgumentation/tracesArg/"+currentDialogueID+"-"+myID, true);
 						traceFile = new BufferedWriter(fstreamTrace);
 						traceFile.write(myID +"<-"+subDialogueAgentID+"::assert::"+againstArgument.getHasConclusion().getDescription()+"\n");
 						traceFile.close();
@@ -497,7 +497,7 @@ public class ArgCAgent extends CAgent {
 					}
 					
 					try {
-						fstreamTrace = new FileWriter("testArgumentation/"+currentDialogueID+"-"+myID, true);
+						fstreamTrace = new FileWriter("testArgumentation/tracesArg/"+currentDialogueID+"-"+myID, true);
 						traceFile = new BufferedWriter(fstreamTrace);
 						traceFile.write(myID +"<-"+subDialogueAgentID+"::attack::"+againstArgument.getHasConclusion().getDescription()+"\n");
 						traceFile.close();
@@ -579,7 +579,7 @@ public class ArgCAgent extends CAgent {
 							+ " " + myUsedAttackArguments.get(subDialogueAgentID).size() + "\n");
 					
 					try {
-						fstreamTrace = new FileWriter("testArgumentation/"+currentDialogueID+"-"+myID, true);
+						fstreamTrace = new FileWriter("testArgumentation/tracesArg/"+currentDialogueID+"-"+myID, true);
 						traceFile = new BufferedWriter(fstreamTrace);
 						traceFile.write(myID +"->"+subDialogueAgentID+"::attack::"+currentPosition.getSolution().getConclusion().getDescription()+"\n");
 						traceFile.close();
@@ -688,7 +688,7 @@ public class ArgCAgent extends CAgent {
 					logger.info("------------ ------ " + myID + ": WHY to " + pos.getAgentID());
 					
 					try {
-						fstreamTrace = new FileWriter("testArgumentation/"+currentDialogueID+"-"+myID, true);
+						fstreamTrace = new FileWriter("testArgumentation/tracesArg/"+currentDialogueID+"-"+myID, true);
 						traceFile = new BufferedWriter(fstreamTrace);
 						traceFile.write(myID +"->"+pos.getAgentID()+"::why::"+pos.getSolution().getConclusion().getDescription()+"\n");
 						traceFile.close();
@@ -765,7 +765,7 @@ public class ArgCAgent extends CAgent {
 						+ currentPosition.getTimesAccepted() + "\n");
 				
 				try {
-					fstreamTrace = new FileWriter("testArgumentation/"+currentDialogueID+"-"+myID, true);
+					fstreamTrace = new FileWriter("testArgumentation/tracesArg/"+currentDialogueID+"-"+myID, true);
 					traceFile = new BufferedWriter(fstreamTrace);
 					traceFile.write(myID +"<-"+messageReceived.getSender().name+"::accept::"+
 				currentPosition.getSolution().getConclusion().getDescription()+"::"+currentPosition.getTimesAccepted()+"\n");
@@ -817,7 +817,7 @@ public class ArgCAgent extends CAgent {
 				ACLMessage msg2 = noCommit(subDialogueAgentID, currentPosition);
 				copyMessages(msg, msg2);
 				try {
-					fstreamTrace = new FileWriter("testArgumentation/"+currentDialogueID+"-"+myID, true);
+					fstreamTrace = new FileWriter("testArgumentation/tracesArg/"+currentDialogueID+"-"+myID, true);
 					traceFile = new BufferedWriter(fstreamTrace);
 					traceFile.write(myID +"->"+subDialogueAgentID+"::noCommit::"+"\n");
 					traceFile.close();
@@ -832,7 +832,7 @@ public class ArgCAgent extends CAgent {
 			@Override
 			protected void doOtherNoCommit(CProcessor myProcessor, ACLMessage msgReceived){
 				try {
-					fstreamTrace = new FileWriter("testArgumentation/"+currentDialogueID+"-"+myID, true);
+					fstreamTrace = new FileWriter("testArgumentation/tracesArg/"+currentDialogueID+"-"+myID, true);
 					traceFile = new BufferedWriter(fstreamTrace);
 					traceFile.write(myID +"<-"+subDialogueAgentID+"::noCommit::"+"\n");
 					traceFile.close();
@@ -848,7 +848,7 @@ public class ArgCAgent extends CAgent {
 				copyMessages(msg, msg2);
 				
 				try {
-					fstreamTrace = new FileWriter("testArgumentation/"+currentDialogueID+"-"+myID, true);
+					fstreamTrace = new FileWriter("testArgumentation/tracesArg/"+currentDialogueID+"-"+myID, true);
 					traceFile = new BufferedWriter(fstreamTrace);
 					traceFile.write(myID +"->"+subDialogueAgentID+"::accept::"+"\n");
 					traceFile.close();

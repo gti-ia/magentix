@@ -133,6 +133,7 @@ public class TesterArgCAgent extends SingleAgent {
 					+ iteration + "\n\n********\n");
 
 			Solution finalSolution = new Solution();
+			String winPositionAgents = null;
 
 			while (true) {
 
@@ -274,8 +275,10 @@ public class TesterArgCAgent extends SingleAgent {
 							finalSolution = possibleSolutions.get(maxSolID);
 						}
 					}
-					if (finalSolution == null)
+					if (finalSolution == null){
 						finalSolution = new Solution();
+						winPositionAgents="";
+					} 
 					if (finalSolution.getConclusion().getID() != -1) {
 
 						// to print the agentIDs that proposed each position
@@ -286,6 +289,7 @@ public class TesterArgCAgent extends SingleAgent {
 							Position pos = iterPositionsSol.next();
 							agentIDs2 += pos.getAgentID() + " ";
 						}
+						winPositionAgents="["+agentIDs2+"]";
 						logger.info("\n++++++++++++++++\nFINAL SOLUTION:\n" + " solutionID="
 								+ finalSolution.getConclusion().getID() + " valuePromoted="
 								+ finalSolution.getPromotesValue() + " timesUsed=" + finalSolution.getTimesUsed()
@@ -473,7 +477,8 @@ public class TesterArgCAgent extends SingleAgent {
 				BufferedWriter outFile = new BufferedWriter(fstream);
 				outFile.write(domCases + " " + totalErrors + " " + solvedProblems + " " + argCases + " "
 						+ totalLocutions + " " + agreementReached + " " + frequency + " " + currPosAccepted + " "
-						+ votesPercentage + " " + selectedAsBest + " " + iniArgCases + " " + usedArgCases);
+						+ votesPercentage + " " + selectedAsBest + " " + iniArgCases + " " + usedArgCases
+						+ " " + winPositionAgents);
 				outFile.newLine();
 				// Close the output stream
 				outFile.close();
