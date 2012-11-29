@@ -754,73 +754,7 @@ class BeliefDataBaseInterface {
 
 		return percepts;
 	}
-	/**
-	 * Returns true if parameter is valid and false if not 
-	 * @param identifier
-	 * @return boolean
-	 * @throws MySQLException
-	 */
-	public boolean checkValidIdentifier(String identifier) throws MySQLException
-	{
-		boolean result= true;
-		
-		Connection connection = null;
-		Statement st = null;
-		ResultSet res = null;
-		
-		Pattern p = Pattern.compile("[0-9]+|[a-zA-Z][a-zA-Z_0-9]*");
-		Matcher ma = p.matcher(identifier);
-		boolean b = ma.matches();
-		
-		if(b)
-		{
-			result = true;
-		}
-		else
-		{
-			result = false;
-		}
-
-		try {
-
-			connection = db.connect();
-			st = connection.createStatement();
-			res = st.executeQuery("select * from reservedWordList where reservedWord = '"+identifier+"'");
-		
-			if (res.next())
-			{
-				result = false;
-			}
-			
-
-		} catch (SQLException e) {
-			String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
-			throw new MySQLException(message);
-		} finally {
-
-			try
-			{
-				if (connection != null)
-					connection.close();
-				if (st != null)
-					st.close();
-
-
-				if (res != null)
-					res.close();
-
-
-
-
-			}catch(SQLException e)
-			{
-				String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
-				throw new MySQLException(message);
-			}
-		}
-
-		return result;
-	}
+	
 
 
 
