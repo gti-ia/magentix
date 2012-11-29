@@ -1,12 +1,17 @@
 package es.upv.dsic.gti_ia.organization;
 
+import jason.asSyntax.Literal;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import es.upv.dsic.gti_ia.organization.exception.MySQLException;
 import es.upv.dsic.gti_ia.organization.exception.ParentUnitNotExistsException;
@@ -15,7 +20,7 @@ import es.upv.dsic.gti_ia.organization.exception.THOMASMessages;
 import es.upv.dsic.gti_ia.organization.exception.THOMASMessages.MessageID;
 import es.upv.dsic.gti_ia.organization.exception.UnitNotExistsException;
 
-class DataBaseInterface {
+public class DataBaseInterface {
 	private DataBaseAccess db;
 
 	/**
@@ -23,12 +28,444 @@ class DataBaseInterface {
 	 */
 	private THOMASMessages l10n;
 
-	DataBaseInterface() {
+	public DataBaseInterface() {
 		db = new DataBaseAccess();
 		l10n = new THOMASMessages();
 
 	}
 
+	
+	List<Literal> getPercepts() throws MySQLException {
+	
+		List<Literal> percepts = new ArrayList<Literal>();
+		
+		Statement st = null;
+		Statement st2 = null;
+		Statement st3 = null;
+		Statement st4 = null;
+		Statement st5 = null;
+		Statement st6 = null;
+		Statement st7 = null;
+		Statement st8 = null;
+		Statement st9 = null;
+		Statement st10 = null;
+		Statement st11 = null;
+		Statement st12 = null;
+		Statement st13 = null;
+		Statement st14 = null;
+		Statement st15 = null;
+		Statement st16 = null;
+		Statement st17 = null;
+		Statement st18 = null;
+		Statement st19 = null;
+		Statement st20 = null;
+		Statement st21 = null;
+		Statement st22 = null;
+		
+		
+		
+		ResultSet res = null;
+		ResultSet res2 = null;
+		ResultSet res3 = null;
+		ResultSet res4 = null;
+		ResultSet res5 = null;
+		ResultSet res6 = null;
+		ResultSet res7 = null;
+		ResultSet res8 = null;
+		ResultSet res9 = null;
+		ResultSet res10 = null;
+		ResultSet res11 = null;
+		ResultSet res12 = null;
+		ResultSet res13 = null;
+		ResultSet res14 = null;
+		ResultSet res15 = null;
+		ResultSet res16 = null;
+		ResultSet res17 = null;
+		ResultSet res18 = null;
+		ResultSet res19 = null;
+		ResultSet res20 = null;
+		ResultSet res21 = null;
+		ResultSet res22 = null;
+
+		Connection connection = null;
+
+		try {
+			connection = db.connect();
+			
+			
+			//------ Predicados de Unidad -----
+			st = connection.createStatement();
+			res = st.executeQuery("SELECT * FROM unitList");
+
+			
+			while (res.next())
+			{
+				 st2 = connection.createStatement();
+				 String unitName = res.getString("unitName");
+				 percepts.add(Literal.parseLiteral("isUnit("+unitName.toLowerCase()+")"));
+
+				 int idUnitType = res.getInt("idunitType");
+				 
+				 res2 = st2.executeQuery("SELECT * FROM unitType WHERE idunitType = "+ idUnitType);
+				 
+				 if (res2.next())
+				 {
+					 String unitType = res2.getString("unitTypeName");
+				 
+					 percepts.add(Literal.parseLiteral("hasType("+unitName.toLowerCase()+","+unitType+")"));
+				 	
+				 }
+				 
+				
+				 
+				 
+			}
+			
+			
+			st3 = connection.createStatement();
+			res3 = st3.executeQuery("SELECT * FROM unitHierarchy");
+			
+			while(res3.next())
+			{
+				int idParent = res3.getInt("idParentUnit");
+				int idChild = res3.getInt("idChildUnit");
+				String unitParent = "";
+				String unitChild = "";
+				
+				st4 = connection.createStatement();
+				res4 = st4.executeQuery("SELECT * FROM unitList WHERE idunitList = "+ idParent);
+				
+				if (res4.next())
+				{
+					unitParent = res4.getString("unitName");
+				}
+				
+				res4 = st4.executeQuery("SELECT * FROM unitList WHERE idunitList = "+ idChild);
+				
+				if (res4.next())
+				{
+					unitChild = res4.getString("unitName");
+				}
+				
+				percepts.add(Literal.parseLiteral("hasParent("+unitChild+","+unitParent+")"));
+				
+			}
+
+			
+			//------- Predicados de roles --------
+			st5 = connection.createStatement();
+			res5 = st5.executeQuery("SELECT * FROM roleList");
+			
+			while(res5.next())
+			{
+				 String roleName = res5.getString("roleName");
+				 String unitName = "";
+				 int idunitList = res5.getInt("idunitList");
+				 int idaccessibility = res5.getInt("idaccessibility");
+				 int idvisibility = res5.getInt("idvisibility");
+				 int idposition = res5.getInt("idposition");
+				 
+				 
+				 st6 = connection.createStatement();
+				 res6 = st6.executeQuery("SELECT * FROM unitList WHERE idunitList = "+ idunitList);
+				 
+				 st7 = connection.createStatement();
+				 res7 = st7.executeQuery("SELECT * FROM accessibility WHERE idaccessibility = "+ idaccessibility);
+				 
+				 st8 = connection.createStatement();
+				 res8 = st8.executeQuery("SELECT * FROM visibility WHERE idvisibility = "+ idvisibility);
+				 
+				 st9 = connection.createStatement();
+				 res9 = st9.executeQuery("SELECT * FROM position WHERE idposition = "+ idposition);
+				 
+				 
+				 if (res6.next())
+				 {
+					 unitName = res6.getString("unitName");
+					 percepts.add(Literal.parseLiteral("isRole("+roleName+","+unitName.toLowerCase()+")"));
+					 
+				 }
+				 
+				 if (res7.next())
+				 {
+					 String accessibility = res7.getString("accessibility");
+					 percepts.add(Literal.parseLiteral("hasAccessibility("+roleName+","+unitName.toLowerCase()+","+accessibility+")"));
+					 
+				 }
+				 
+				 if (res8.next())
+				 {
+					 String visibility = res8.getString("visibility");
+					 percepts.add(Literal.parseLiteral("hasVisibility("+roleName+","+unitName.toLowerCase()+","+visibility+")"));
+					 
+				 }
+				 
+				 if (res9.next())
+				 {
+					 String position = res9.getString("position");
+					 percepts.add(Literal.parseLiteral("hasPosition("+roleName+","+unitName.toLowerCase()+","+position+")"));
+					 
+				 }
+			}
+			
+			
+			
+			
+			//----- Predicados de Role Enactment
+			
+			st10 = connection.createStatement();
+			res10 = st10.executeQuery("SELECT * FROM agentList");
+			
+			String agentName = "";
+			String roleName = "";
+			
+			while(res10.next())
+			{
+				agentName = res10.getString("agentName");
+				int idagent = res10.getInt("idagentList");
+				percepts.add(Literal.parseLiteral("isAgent("+agentName+")"));
+					
+				st11 = connection.createStatement();
+				res11 = st11.executeQuery("SELECT * FROM agentPlayList WHERE idagentList = "+ idagent);
+				
+				while (res11.next())
+				{
+					int idrole = res11.getInt("idroleList");
+					st12 = connection.createStatement();
+					res12 = st12.executeQuery("SELECT * FROM roleList WHERE idroleList = "+ idrole);
+					
+					if (res12.next())
+					{
+						roleName = res12.getString("roleName");
+						int idunitList = res12.getInt("idunitList");
+						
+						st13 = connection.createStatement();
+						res13 = st13.executeQuery("SELECT * FROM unitList WHERE idunitList = "+ idunitList);
+						
+						if (res13.next())
+						{
+							String unitName = res13.getString("unitName");
+							percepts.add(Literal.parseLiteral("playsRole("+agentName+","+roleName+","+unitName.toLowerCase()+")"));
+						}
+							
+						
+					}
+						
+					
+				}
+				
+			}
+			
+			st14 = connection.createStatement();
+			res14 = st14.executeQuery("SELECT idroleList, count(*) FROM agentPlayList GROUP BY idroleList");
+			roleName = "";
+			String unitName = "";
+			int count;
+			
+			while(res14.next())
+			{
+				int idrole = res14.getInt("idroleList");
+				count = res14.getInt("count(*)");
+				st15 = connection.createStatement();
+				res15 = st15.executeQuery("SELECT * FROM roleList WHERE idroleList = "+ idrole);
+				
+				if (res15.next())
+				{
+					roleName = res15.getString("roleName");
+					int idunit = res15.getInt("idunitList");
+					
+					st16 = connection.createStatement();
+					res16 = st16.executeQuery("SELECT * FROM unitList WHERE idunitList = "+ idunit);
+					
+					if (res16.next())
+					{
+						unitName = res16.getString("unitName");
+						percepts.add(Literal.parseLiteral("roleCardinality("+roleName+","+unitName.toLowerCase()+","+count+")"));
+					}
+						
+					
+				}
+					
+			}
+			
+			
+			String position = "";
+			unitName = "";
+			
+			st17 = connection.createStatement();
+			res17 = st17.executeQuery("SELECT * FROM position");
+			
+			while(res17.next())
+			{
+				position = res17.getString("position");
+				int idposition = res17.getInt("idposition");
+				
+				st18 = connection.createStatement();
+				res18 = st18.executeQuery("SELECT * FROM roleList WHERE idposition = "+ idposition);
+				
+				while(res18.next())
+				{
+					int idrole = res18.getInt("idroleList");
+					int idunit = res18.getInt("idunitList");
+					
+					st20 = connection.createStatement();
+					res20 = st20.executeQuery("SELECT * FROM unitList WHERE idunitList = "+ idunit);
+					
+					if (res20.next())
+					{
+						unitName = res20.getString("unitName");
+					}
+					
+					st19 = connection.createStatement();
+					res19 = st19.executeQuery("SELECT *, count(*) FROM agentPlayList WHERE idroleList = "+ idrole+ " GROUP BY idroleList");
+					
+					if (res19.next())
+					{
+						count = res19.getInt("count(*)");
+						percepts.add(Literal.parseLiteral("positionCardinality("+position+","+unitName.toLowerCase()+","+count+")"));
+					}
+				}
+				
+				
+			}
+			
+			//----- Predicados de Normas
+			
+			st21 = connection.createStatement();
+			res21 = st21.executeQuery("SELECT * FROM normList");
+			
+			String norm = "";
+			String normContent = "";
+			
+			while(res21.next())
+			{
+				norm = res21.getString("normName");
+				normContent = res21.getString("normContent");
+				
+				int idunit = res21.getInt("idunitList");
+				
+				st22 = connection.createStatement();
+				res22 = st22.executeQuery("SELECT * FROM unitList WHERE idunitList = "+ idunit);
+				
+				if (res22.next())
+				{
+					unitName = res22.getString("unitName");
+					
+					percepts.add(Literal.parseLiteral("isNorm("+norm+","+unitName.toLowerCase()+")"));
+					percepts.add(Literal.parseLiteral("hasContent("+norm+","+unitName.toLowerCase()+","+normContent+")"));
+				}
+			}
+			
+		
+
+			
+			
+		} catch (SQLException e) {
+			String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
+			throw new MySQLException(message);
+		} finally {
+
+			try
+			{
+				if (connection != null)
+					connection.close();
+				if (st != null)
+					st.close();
+				if (st2 != null)
+					st2.close();
+				if (st3 != null)
+					st3.close();
+				if (st4 != null)
+					st4.close();
+				if (st5 != null)
+					st5.close();
+				if (st6 != null)
+					st6.close();
+				if (st7 != null)
+					st7.close();
+				if (st8 != null)
+					st8.close();
+				if (st9 != null)
+					st9.close();
+				if (st10 != null)
+					st10.close();
+				if (st11 != null)
+					st11.close();
+				if (st12 != null)
+					st12.close();
+				if (st13 != null)
+					st13.close();
+				if (st14 != null)
+					st14.close();
+				if (st15 != null)
+					st15.close();
+				if (st16 != null)
+					st16.close();
+				if (st17 != null)
+					st17.close();
+				if (st18 != null)
+					st18.close();
+				if (st19 != null)
+					st19.close();
+				if (st20 != null)
+					st20.close();
+			
+			
+				
+				
+				if (res != null)
+					res.close();
+				if (res2 != null)
+					res2.close();
+				if (res3 != null)
+					res3.close();
+				if (res4 != null)
+					res4.close();
+				if (res5 != null)
+					res5.close();
+				if (res6 != null)
+					res6.close();
+				if (res7 != null)
+					res7.close();
+				if (res8 != null)
+					res8.close();
+				if (res9 != null)
+					res9.close();
+				if (res10 != null)
+					res10.close();
+				if (res11 != null)
+					res11.close();
+				if (res12 != null)
+					res12.close();
+				if (res13 != null)
+					res13.close();
+				if (res14 != null)
+					res14.close();
+				if (res15 != null)
+					res15.close();
+				if (res16 != null)
+					res16.close();
+				if (res17 != null)
+					res17.close();
+				if (res18 != null)
+					res18.close();
+				if (res19 != null)
+					res19.close();
+				if (res20 != null)
+					res20.close();
+		
+				
+		
+		
+			}catch(SQLException e)
+			{
+				String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
+				throw new MySQLException(message);
+			}
+		}
+		return percepts;
+		
+	}
 	String acquireRole(String unitName, String roleName, String agentName) throws MySQLException {
 		Statement st = null;
 		Statement st2 = null;
@@ -2772,5 +3209,73 @@ class DataBaseInterface {
 				throw new MySQLException(message);
 			}
 		}
+	}
+	
+	/**
+	 * Returns true if parameter is valid and false if not 
+	 * @param identifier
+	 * @return boolean
+	 * @throws MySQLException
+	 */
+	public boolean checkValidIdentifier(String identifier) throws MySQLException
+	{
+		boolean result= true;
+		
+		Connection connection = null;
+		Statement st = null;
+		ResultSet res = null;
+		
+		Pattern p = Pattern.compile("[0-9]+|[a-zA-Z][a-zA-Z_0-9]*");
+		Matcher ma = p.matcher(identifier);
+		boolean b = ma.matches();
+		
+		if(b)
+		{
+			result = true;
+		}
+		else
+		{
+			result = false;
+		}
+
+		try {
+
+			connection = db.connect();
+			st = connection.createStatement();
+			res = st.executeQuery("select * from reservedWordList where reservedWord = '"+identifier+"'");
+		
+			if (res.next())
+			{
+				result = false;
+			}
+			
+
+		} catch (SQLException e) {
+			String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
+			throw new MySQLException(message);
+		} finally {
+
+			try
+			{
+				if (connection != null)
+					connection.close();
+				if (st != null)
+					st.close();
+
+
+				if (res != null)
+					res.close();
+
+
+
+
+			}catch(SQLException e)
+			{
+				String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
+				throw new MySQLException(message);
+			}
+		}
+
+		return result;
 	}
 }
