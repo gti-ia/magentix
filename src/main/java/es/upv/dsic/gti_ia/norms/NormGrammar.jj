@@ -3,52 +3,44 @@
  */
 options{  JDK_VERSION = "1.5";  static = false;
  //CHOICE_AMBIGUITY_CHECK = 4;
-  DEBUG_PARSER = true;
+ // DEBUG_PARSER = true;
  // FORCE_LA_CHECK = true;
  // LOOKAHEAD = 2;
- }PARSER_BEGIN(Norms)package es.upv.dsic.gti_ia.norms;
+ }PARSER_BEGIN(NormParser)package es.upv.dsic.gti_ia.norms;
 
 import es.upv.dsic.gti_ia.organization.exception.THOMASMessages.MessageID;
 import es.upv.dsic.gti_ia.organization.exception.InvalidParametersException;
 import es.upv.dsic.gti_ia.organization.exception.THOMASMessages;
 import es.upv.dsic.gti_ia.organization.exception.NotCreatorInParentUnitException;
 import es.upv.dsic.gti_ia.organization.exception.THOMASException;
+import java.util.ArrayList;
 
 
-public class Norms{
+public class NormParser{
 
 private THOMASMessages    l10n;
 
-	public void parser() throws THOMASException, Exception, Error
+	public Norm parser() throws THOMASException, Exception, Error
 	{
 	  l10n = new THOMASMessages();
-	  
-        switch (this.one_line())
-        {
-          case 0 : 
-          System.out.println("OK.");
-          break;
-          case 1 : 
-          System.out.println("Goodbye.");
-          break;
-          default : 
-          break;
-        }
+
+	  return norm();
    }
 
-}
-
-  /*  public static void main(String args []) throws ParseException  {    Norms parser = new Norms(System.in);    while (true)    {      System.out.println("Reading from standard input...");      System.out.print("Enter an norm expression :");      try      {        switch (Norms.one_line())        {          case 0 :           System.out.println("OK.");          break;          case 1 :           System.out.println("Goodbye.");          break;          default :           break;        }      }      catch (Exception e)      {        System.out.println("NOK.");        System.out.println(e.getMessage());        Norms.ReInit(System.in);      }      catch (Error e)      {        System.out.println("Oops.");        System.out.println(e.getMessage());        break;      }    }  }*/PARSER_END(Norms)SKIP :{
+}PARSER_END(NormParser)SKIP :{
   " "|  "\r"| "\t"| "\n"}
 TOKEN : /* OPERATORS */{
 
   
    			< deontic: "o" | "f" | "p" >
-| 	< targetType: "agentName" | "roleName" | "positionName" >
+//| 	< targetType: "agentName" | "roleName" | "positionName" >
+|	< agentName: "agentName" >
+|	< roleName: "roleName" >
+|	< positionName: "positionName" >
 |  	< AND: "&" >
-| 	< OR: "||" >
+| 	< OR: "|" >
 | 	< NOT:	"not" >
-| 	< NOTEQUAL:	"!=" >
+| 	< NOTEQUAL:	"\\==" >
 | 	< EQUAL:	"==" >
 | 	< LESS:	"<" >
 | 	< LESSOREQUAL: "<=" >
@@ -80,14 +72,12 @@ private THOMASMessages    l10n;
 | 	< informNorm:	"informNorm" >
 | 	< acquireRole: "acquireRole" >
 | 	< leaveRole:	"leaveRole" >
-/*
 | 	<  virtual: "virtual" >
 | 	<  participant: "participant" >
-/*
 | 	< OMSPositions: "creator" | "member" | "supervisor" | "subordinate">
 | 	< OMSaccessibility: "external" | "internal" >
 | 	< OMSVisibility:	"public" | "private" >
-| 	< OMSUnitTypes:	"flat" | "team" | "hierarchy" >*/
+| 	< OMSUnitTypes:	"flat" | "team" | "hierarchy" >
 
 /*
 | 	< CREATOR: "creator" >
@@ -110,225 +100,563 @@ private THOMASMessages    l10n;
 | 	< hasVisibility:	"hasVisibility" >
 | 	< hasPosition:	"hasPosition" >
 | 	< isNorm:	"isNorm" >
-| 	< hasContent:	"hasContent" >  
+| 	< hasDeontic:	"hasDeontic" >
+| 	< hasTarget:	"hasTarget" >
+| 	< hasAction:	"hasAction" >
 | 	< isAgent:	"isAgent" >
 | 	< playsRole:	"playsRole" >
 | 	< roleCardinality:	"roleCardinality" > 
 | 	< positionCardinality:	"positionCardinality" >
 | 	< numericConstant:  (["0"-"9"])+ >
 |   < variable:  ["A"-"Z"](["a"-"z","A"-"Z","_","0"-"9"])* >
-|   < stringConstant:  ["a"-"z"](["a"-"z","A"-"Z","_","0"-"9"])* >}int one_line() throws THOMASException:{}{  norm() ";"  {    return 0;  }| ";"  {    return 1;  }}void norm() throws THOMASException: {}{
-  "@"id()"["deontic()","target()","action()","activation()","expiration()"]"  }
+|   < stringConstant:  ["a"-"z"](["a"-"z","A"-"Z","_","0"-"9"])* >}
+ /**
+ norm ::= "@"id"["deontinc","target","action","activation","expiration"]"
+ */Norm norm() throws THOMASException: {
+	Norm norm = null;
+	String id, deontic, target, activation, expiration;
+	ArrayList<String > targetArray = new ArrayList<String >();
+	ArrayList<String > action = new ArrayList<String >();
+	ArrayList<String > actionParameters = new ArrayList<String >();
 
-void id():{}
-{	 stringConstant()
+	}	{
+
+    try
+    {      
+  		"@"id = id()"["deontic = deontic()","targetArray = target()","action = action()","activation = activation()","expiration = expiration()"]"  	{
+
+  	    norm = new Norm(id,deontic,targetArray.get(0), targetArray.get(1),action,activation,expiration);
+  		return norm;
+  	}
+    }catch(TokenMgrError err)
+    {		System.out.println("Lexical error detected: " + err.getMessage()); 
+	
+    }
+ 
+ }
+
+/**
+	id ::= stringConstant
+*/
+String id() throws THOMASException:{
+	String id ="";}
+{
+ 	try
+  	{    		 id = stringConstant(){return id;}
+  	}catch(ParseException e)
+  	{	
+		
+		//String message = l10n.getMessage(MessageID.NOT_CREATOR_IN_PARENT_UNIT, "");
+		throw new THOMASException("Error en el id,token que ha creador el error: "+ e.currentToken);
+	
+  	}
 }
 
-void deontic():{}
+/**
+	deontinc ::= "o"|"f"|"p"
+*/
+String deontic() throws THOMASException:{}
 {
-   < deontic >	
+ 	try
+  	{    
+   		< deontic >{return token.image;}
+ 	}catch(ParseException e)
+ 	{
+		Token t;
+		t=getNextToken();
+		
+		//String message = l10n.getMessage(MessageID.NOT_CREATOR_IN_PARENT_UNIT, "");
+		throw new THOMASException("Error en el deontic,token que ha creador el error: "+ t);
+ 	}
+   	
 }
 
-void target() :
+/**
+	target ::= "< "targetType ":" value " >"
+*/
+/*
+String target() :
 {
+  String targetType = "";
+  String value = "";
   }
-{	"<" targetType() ":"  value()  ">"
+{	"<" targetType = targetType() ":"  value = value()  ">"
+	{return "< " + targetType + ":" + value + " >";}
 }
 
-void targetContent():
+*/
+ArrayList<String > target() throws THOMASException:
 {
-}
-{	"<" targetType() ":"  (value() | variable()) ">"
-}
-void activation() throws THOMASException: {}
+  String targetType = "";
+  String value = "";
+  ArrayList<String > target = new ArrayList<String >();}
 {
-  LOOKAHEAD(2)
-	expression()
-| "_"
-|	{}
+
+  	try
+  	{
+ 		LOOKAHEAD(2)
+		"<"
+		(< agentName >{targetType = token.image;} | < roleName >{targetType = token.image;})
+   		":"
+  	
+  		try
+  		{    
+  			(value = stringConstant() | "_" {value = token.image;})
+  	
+  		}catch(ParseException exp)
+  		{
+			System.out.println("TargetValueException: "+ getNextToken());
+  		}
+  
+ 		">"
+		{
+		target.add(targetType);
+	  	target.add(value);
+	  	return target;}//"< " + targetType + ":" + value + " >";}
+		|
+
+  
+		LOOKAHEAD(2)
+		"<"
+  		< positionName >{targetType = token.image;}
+		":"
+  		try
+  		{    
+  			(value = OMSPositions() | "_" {value = token.image;})  ">"
+
+  		}catch(ParseException exp)
+  		{
+			System.out.println("TargetValueException: "+ getNextToken());
+  		}
+		{
+     		target.add(targetType);
+	  		target.add(value);
+	  		return target;		}
+	}catch(ParseException exp)
+  	{
+		System.out.println("TargetTypeException: "+ getToken(2));
+		throw exp;
+  	}	
 }
 
-void expiration()throws THOMASException :
+
+
+
+/*
+/**
+ 	targetContent ::= "<" targetType() ":"  (value() | variable()) ">"
+ */
+/*
+String targeContent():
 {
+  String targetTypeResult="";
+  String valueResult = "";
+  String variableResult = "";
 }
-{
-   LOOKAHEAD(2)
-	expression()
-|  "_"
-|	{} 
+{	"<" targetTypeResult = targetType() ":"  ( valueResult = value() | variableResult = variable()) ">"
+	{return "<"+ targetTypeResult + ":" + valueResult + ""+ variableResult + " >"; }
+	
 	
 }
-
-void targetType():{}
-{	  < targetType >
-
+*/
+/**
+	activation ::= expression | "_"
+*/
+String activation() throws THOMASException: {
+  String expression;
+  }
+{
+  	LOOKAHEAD(2)
+  	 "_" { return "";}
+| expression = expression(){ return expression;}
+|	{} { return "";}
 }
 
-void value():{}
-{	 stringConstant()
+/**
+	expiration := expression |“_”
+*/
+String expiration()throws THOMASException :
+{
+  String result = "";
 }
-
-void genAtomicCondition() throws THOMASException: {
+{
    
+   LOOKAHEAD(2)
+   "_"{return "";}
+| 	result = expression(){return result;}
+| {} {return "";}
+  	
+	
+}
+/**
+	targetType := “agentName” |“roleName” |“positionName”
+*/
+/*
+String targetType():{
+  String result = "";}
+{	  < targetType >{return token.image;}
+	  
+
+}*/
+/**
+	value := stringConstant | "_"
+*/
+String value():{
+  String result;}
+{	 result = stringConstant()
+	 {return result;}
+	| "_" {return token.image;}	   
+}
+/**
+	genAtomicCondition ::= OMSCondition |genAtomicFormula
+*/
+String genAtomicCondition() throws THOMASException: {
+   String result="";
  }
 {
 
-	OMSCondition() | genAtomicFormula()
+	result = OMSCondition()	{return result;}
+	|result = genAtomicFormula()
+	{return result;}
 }
-
-void genAtomicFormula() : {
- 
+/**
+	genAtomicFormula ::= stringConstant [ “(” listOfTerms “)”] |variable |OMSConstants
+*/
+String genAtomicFormula() : {
+  String stringConstantResult = "";
+  String listOfTermsResult = "";
+  String variableResult= "";
+  String OMSConstantsResult = "";
+  String op1 = "";
+  String op2 = "";
  }
 {
 	//(atom()| variable())["(" listOfTerms() ")"]
 	
-	stringConstant()["(" listOfTerms() ")"]|variable()|OMSConstants()
+	stringConstantResult = stringConstant()["("{op1 = token.image;} listOfTermsResult = listOfTerms() ")"{op2 = token.image;}]
+	{return stringConstantResult + op1 + listOfTermsResult + op2;}
+	|variableResult = variable()
+	{return variableResult;}
+	|OMSConstantsResult = OMSConstants()
+	{return OMSConstantsResult;}
 	  
 }
-
-void action() throws THOMASException: {}
-{	OMSAction() /*| genActionFormula()*/
-}
-
-void atom():{}
-{ 		OMSConstants() | stringConstant() 
-
-}
-
-void listOfTerms() : {}
-{
-	term()(","term())*
-}
-
-void term():{}
-{   constant() | variable() | OMSConstants()
-}
-
-void expression() throws THOMASException: {
+/**
+	action := OMSAction |genActionFormula
+*/
+ArrayList<String > action() throws THOMASException: {
+  ArrayList<String > result = new ArrayList<String >();
+  String t = token.image;
   }
 {
-  	LOOKAHEAD(2)
-	simpleExpression() expressionRest() | < NOT > expression() expressionRest() |  "("expression()")" expressionRest()
+ 	try
+ 	{ 	  	result = OMSAction() /*| genActionFormula()*/
+	{
+	  return result;}
+
+	}catch(ParseException pex)
+	{		
+		StringBuffer expected = new StringBuffer();
+		for (int i = 0; i < pex.expectedTokenSequences.length; i++) {
+    		for (int j = 0; j < pex.expectedTokenSequences[i].length; j++) {
+          		expected.append(tokenImage[pex.expectedTokenSequences[i][j]]).append(' ');
+        	}
+      	}
+
+      	System.out.println("Invalid action \""+getNextToken()+"\", expected: "+ expected.toString());
+	
+	}
+
 
 }
+/**
+	atom ::= OMSConstants | stringConstant
+*/
+String atom():{
+  String result = "";}
+{ 		result = OMSConstants()
+ 		{ return result;} 
+ 		| result = stringConstant()
+ 		{return result;} 
+ 		   
 
-void expressionRest() throws THOMASException:
+}
+/**
+	listOfTerms := term [ “,” term ] ∗
+*/
+String listOfTerms() : {
+	String term;
+	String term1 = "";
+	String coma = "";
+  }
 {
+	term = term()(","{coma = token.image;} term1 = term())*
+	{return term + coma + term1;}
+}
+/**
+	term := constant |variable |OMSConstants
+*/
+String term():{
+  String term="";
+  String constantString = "";
+  String variableString = "";
+  String OMSConstantsString = "";}
+{   constantString = constant(){return constantString;}
+   | variableString = variable() {return variableString;}
+   | OMSConstantsString = OMSConstants() {return OMSConstantsString;}
+}
+/**
+	expression := simpleExpression |“not” expression |expression “&” expression |expression “||”’ expression |“(” expression
+“)”
+*/
+String expression() throws THOMASException: {
+  String result="";
+  String simpleExpression = "";
+  String expressionRest = "";
+  String operator = "";
+  String expression = "";
+  }
+{
+  try
+  {    
+  	LOOKAHEAD(2)
+	simpleExpression = simpleExpression() expressionRest = expressionRest()
+	{return simpleExpression + " " + expressionRest;}
+	| < NOT > expression = expression() expressionRest = expressionRest()
+	{return operator +" " + expression + " " + expressionRest;}
+	|  "(" expression = expression()")" expressionRest = expressionRest()
+	{return "(" + expression + ")" + " " + expressionRest;}
+ }catch(ParseException pex)
+ {	System.out.println("Malformed exception: ");
+	
+ }
+
+}
+/**
+	expressionRest ::= "and" expression() | "or" expression() | vacio
+*/
+String expressionRest() throws THOMASException:
+{
+  String result="";
+  String operator = "";
 }
 {
 	
-	 < AND > expression()
-	| < OR > expression()
-	|  {}
+	 < AND >{operator = token.image;}	    result = expression()
+	    {return  operator + " "+  result;}    
+	| < OR >{operator = token.image;}
+	    result = expression()
+	    {return  operator + " " + result;}
+	|  {}	{return "";}
 
 }
-
-void simpleExpression() throws THOMASException:
+/**
+	simpleExpression := genAtomicCondition |relExpression
+*/
+String simpleExpression() throws THOMASException:
 {
-
+String result = "";
   }
 {
 	LOOKAHEAD(relExpression())
-    relExpression()
+    result = relExpression()
+    {return result;}      
   | 
   	LOOKAHEAD(genAtomicCondition())
-	genAtomicCondition()
+	result = genAtomicCondition()
+	{return result;}
 	
 }
 
-
-void relExpression() throws THOMASException:
+/**
+	relExpression := relTerm [ ( “ < ” |“ > ” |“==” |“! =” “ <= ” |“ >= ” ) relTerm ]+
+*/
+String relExpression() throws THOMASException:
 {
- 
+ String relTerm1, relTerm2, operator;
 }
 {
 
-	relTerm()((< LESS >| < HIGHER > | < EQUAL >| < NOTEQUAL >| < LESSOREQUAL >|< HIGHEROREQUAL >)relTerm())+
+	relTerm1 = relTerm()((< LESS >{operator = token.image;}| < HIGHER > {operator = token.image;}| < EQUAL >{operator = token.image;}| < NOTEQUAL >{operator = token.image;}| < LESSOREQUAL >{operator = token.image;}|< HIGHEROREQUAL >{operator = token.image;}) relTerm2 = relTerm())+
+	{return relTerm1 + operator + relTerm2;}
+	  
 }
-
-void relTerm() throws THOMASException:
+/**
+	relTerm := genAtomicFormula |arithExpression
+*/
+String relTerm() throws THOMASException:
 {
-  
+ 	String result=""; 
 }
 {
 
 
   LOOKAHEAD(arithExpression())
-   arithExpression()  
+   result = arithExpression()   {return result;   }
 |
 LOOKAHEAD(genAtomicFormula())
-  genAtomicFormula()  
+  result = genAtomicFormula()
+  {return result;  }  
 
 }
-
-void arithExpression() :
+/**
+	arithExpression := arithTerm [ ( “+” |“-” |“*” |“**” |“/” |“div” |“mod” ) artihTerm]*
+*/
+String arithExpression() :
 {
-   
-}
-{
-	arithTerm()((< SUM >|< SUBTRACTION >|< MULTIPLICATION > | < POWER >|< DIVISION >|< INTDIVISION >|< MODULE >)arithTerm())*
-
-}
-
-void arithTerm():
-{
-   
+  
+   String arithTerm = "";
+   String arithTerm2 = "";
+   String operator = "";
 }
 {
-
-	 numericConstant() | variable() | < SUBTRACTION > arithTerm() | "(" arithExpression() ")"
+	arithTerm = arithTerm()((< SUM >{operator = token.image;}|< SUBTRACTION >{operator = token.image;}|< MULTIPLICATION >{operator = token.image;} | < POWER >{operator = token.image;}|< DIVISION >{operator = token.image;}|< INTDIVISION >{operator = token.image;}|< MODULE >{operator = token.image;}) arithTerm2 = arithTerm())*
+	{return arithTerm + operator + arithTerm2;}
 
 }
+/**
+	arithTerm := numericConstant |variable |“-” arithTerm |“(” arithExpression “)”
+*/
+String arithTerm():
+{
+   String result ="";
+   String arithTerm, arithExpression;
+}
+{
 
-void variable():{
+	 result = numericConstant()	 {return result;}
+	 | result = variable()
+	 {return result;} 
+	 | < SUBTRACTION >{result = token.image;} arithTerm = arithTerm()
+	 {return result + arithTerm;}
+	 | "(" arithExpression = arithExpression() ")"
+	 {return "("+arithExpression+")";}
+
+}
+/**
+	variable := [A − Z] ([0 − Z])∗ |“_”
+*/
+String variable():{
   }
-{ 	< variable > | "_"
+{ 	< variable > 	{return token.image;}
+ 	| "_" {return token.image;}
 
 }
-
-void constant():{}
+/**
+	constant := numericConstant |stringConstant
+*/
+String constant():{
+  String result="";}
 {
- 	 stringConstant() |  numericConstant() 
+ 	 result = stringConstant() 	 {return result;}
+ 	 | result = numericConstant()
+ 	 {return result;}
+ 	  
 }
-
-void numericConstant():{
+/**
+	numericConstant := [0 − 9]+
+*/
+String numericConstant():{
    }
 {
- 	 < numericConstant >
+ 	 < numericConstant >{return token.image;}
 }
-
-void stringConstant():{}
+/**
+	stringConstant := [a − z] ([0 − Z])∗
+*/
+String stringConstant():{}
 {
- 	< stringConstant >
+ 	< stringConstant > {return token.image;}
 
 }
-
-void normContent() throws THOMASException:{
-  }
+/**
+	normContent ::=“[” (deontic |“ ”) “,” ( targetContent |“ ”) “,” (action |“ ”) “,” activation “,” expiration “]” | "_"
+*/
+/*
+String normContent() throws THOMASException:{
+  String result = "";
+  String deonticString, targetContent, action, activation, expiration;}
 {
-	"["(< deontic >|"_")","(targetContent()|"_")","(action()|"_")","activation()","expiration()"]" | "_"
+	"["(< deontic >{deonticString = token.image;}|"_"{deonticString = token.image;})","(targetContent = targetContent()|"_"{targetContent = token.image;})","(action = action()|"_"{action = token.image;})","activation = activation()","expiration = expiration()"]"	{ return "["+deonticString+","+targetContent+","+action+","+activation+","+expiration+"]";	}
+	| "_" {return token.image;}
+	
 
-}
-
-void OMSCondition() throws THOMASException: {}
+}*/
+/**
+	OMSCondition ::= OMSUnitPred |OMSRolesPred |OMSNormsPred |OMSRoleEnactPred
+*/
+String OMSCondition() throws THOMASException: {
+String result = "";
+  }
 {
-	OMSUnitPred() | OMSRolesPred() | OMSNormsPred() | OMSRoleEnactPred()
+	result = OMSUnitPred()	{return result;}
+	| result = OMSRolesPred()
+	{return result;}
+	| result = OMSNormsPred()
+	{return result;}
+	| result = OMSRoleEnactPred()
+	{return result;}
 
 }
-
-void OMSUnitPred() : {}
+/**
+	OMSUnitPred ::= “isUnit” “(” term “)” |“hasType” “(” term “,” term “)” |“hasParent” “(” term “,” term “)”
+*/
+String OMSUnitPred() : {
+	String result = "";
+	String param1, param2;
+  }
 {
-	< isUnit > "("term()")" | < hasType > "("term()","term()")" | < hasParent > "(" term()","term()")"
+  
+	< isUnit >{result = token.image;} "("param1 = term()")"
+	{return result = result + "("+param1+")";}
+	| < hasType >{result = token.image;} "("param1 = term()","param2 = OMSUnitTypesPred()")"
+	{return result = result + "("+param1+","+param2+")";}
+	| < hasParent >{result = token.image;} "("param1 = term()","param2 = term()")"
+	{return result = result + "("+param1+","+param2+")";}
 
 }
 
-void OMSRolesPred() throws THOMASException: {
+String OMSUnitTypesPred() :{
+  String result = "";}
+{
+	try  	{    		result = OMSUnitTypes()	{
+		return result;	}
+	
+	|
+		 
+		result = variable()
+	{
+	  return result;	}
+	}catch(ParseException pex)
+	{
+		System.out.println("Not variable: "+ getNextToken());
+
+		throw pex;
+	}
+
+}
+
+
+/**
+	“ isRole” “(” term “,” term “)” |“hasAccesibility” “(” term “,” term “,” term “)” |“hasVisibility” “(”
+term “,” term “,” term “)” |“hasPosition” “(” term “,” term “,” term “)”
+*/
+String OMSRolesPred() throws THOMASException: {
+  String result = "";
+  String param1, param2, param3;
+  
  }
 {
   try
   {    
-	< isRole > "("term()","term()")" | < hasAccessibility > "("term()","term()"," term()")" | < hasVisibility > "(" term()","term()"," term()")"
-	| < hasPosition > "(" term()","term()","term()")"
+	< isRole >{result = token.image;} "("param1 = term()","param2 = term()")"
+	{return result = result + "("+param1+","+param2+")";}
+	| < hasAccessibility >{result = token.image;} "("param1 = term()","param2 = term()","param3 = OMSAccessibilityPred()")"
+	{return result = result + "("+param1+","+param2+","+param3+")";}
+	| < hasVisibility >{result = token.image;} "(" param1 = term()","param2 = term()","param3 = OMSVisibilityPred()")"
+	{return result = result + "("+param1+","+param2+","+param3+")";}
+	| < hasPosition >{result = token.image;} "(" param1 = term()","param2 = term()","param3 = OMSPositionsPred()")"
+	{return result = result + "("+param1+","+param2+","+param3+")";}
   }catch(Exception e)
   {
 		//String message = l10n.getMessage(MessageID.NOT_CREATOR_IN_PARENT_UNIT, "");
@@ -336,96 +664,513 @@ void OMSRolesPred() throws THOMASException: {
   }
 }
 
-void OMSNormsPred() throws THOMASException: {}
+
+String OMSAccessibilityPred() :
 {
-	< isNorm > "("term()","term()")" | < hasContent > "("term()","term() "," normContent()")" 
+  String result = "";
+}
+{
+	result = OMSaccessibility()
+	{
+	  return result;
+	}|
+	result = variable()
+	{
+	  return result;
+	} 
+
 }
 
-void OMSRoleEnactPred() :
-{}
+String OMSPositionsPred() :
 {
-	< isAgent > "("term()")" | < playsRole > "("term()","term()","term()")" | < roleCardinality > "(" term()","term()","term()")"
-	| < positionCardinality > "(" term()","term()","term()")"
+  String result = "";
+}
+{
+	result = OMSPositions()
+	{
+	  return result;
+	}|
+	result = variable()
+	{
+	  return result;
+	} 
+
+}
+
+String OMSVisibilityPred() :
+{
+  String result = "";
+}
+{
+	result = OMSVisibility()
+	{
+	  return result;
+	}|
+	result = variable()
+	{
+	  return result;
+	} 
+
 }
 
 
-void OMSAction() throws THOMASException : {}
+/**
+	“ isNorm” “(” term , term “)” |“hasDeontic” “(” term , term , term “)”
+|  "hasTarget" "("term, term, term, term ")" | "hasAction" "("term, term, term")"
+*/
+String OMSNormsPred() throws THOMASException: {
+  String result="";
+  String param1, param2, param3, param4;}
+{
+	< isNorm >{ result = token.image;} "("param1 = term()"," param2 = term()")"{return result = result + "("+param1+","+ param2+")";}
+	| < hasDeontic > { result = token.image;} "("param1 = term()"," param2 = term() "," param3 = deonticPred()")"
+	{return result = result + "("+param1+","+ param2+","+ param3+")";}
+	| < hasTarget > { result = token.image;} "("param1 = term()"," param2 = term() "," param3 = targetTypePred() "," param4 = targetValuePred()")"
+	{return result = result + "("+param1+","+ param2+","+ param3+","+param4+")";}
+	| < hasAction > { result = token.image;} "("param1 = term()"," param2 = term() "," param3 = OMSActionNamePred()")"
+	{return result = result + "("+param1+","+ param2+","+ param3+")";}
+	
+}
+
+
+/**
+	deonticContent := deontic | "_"
+*/
+
+String deonticPred():
+{
+  String result = "";}
+{	< deontic >
+ 	{return token.image;}
+| result = variable() {return result;}
+
+}
+
+/**
+	targetTypeName := targetType | "_"
+*/
+
+String targetTypePred():
+{
+  String result = "";
+}
+{
+	< roleName >
+ 	{return token.image;}
+|
+	< agentName >
+ 	{return token.image;}
+|
+	< positionName >
+ 	{return token.image;}
+| result = variable() {return result;}
+
+}
+
+/**
+	valueTypeName := OMSPositions |constant |variable
+*/
+
+String targetValuePred():
+{
+  String result = "";
+}
+{
+	result = OMSPositions() {return result;}
+|result = constant() {return result;}
+| result = variable() {return result;}
+
+}
+
+String OMSActionNamePred():
+{
+  String result = "";}
+{
+	result = OMSActionName()
+| result = variable() {return result;}
+
+}
+
+/**
+OMSActionName ::= “registerUnit” |“deregisterUnit” |“registerRole” |“deregisterRole” |“registerNorm” |“deregisterNorm”
+|“allocateRole” |“deallocateRole” |“joinUnit” |“informAgentRole” |“informMembers” |“informQuantityMembers”
+|“informUnit” |“informUnitRoles” |“informTargetNorms” |“informRole” |“informNorm” |“acquireRole” |“leaveRole”
+
+*/
+
+String OMSActionName():
+{
+  String result = "";}
+{
+	
+	< registerUnit >{return token.image;} 
+|  < deregisterUnit >{return token.image;} 
+
+| 	< registerRole >{return token.image;} 
+
+| 	< deregisterRole >{return token.image;} 
+
+| 	< registerNorm >{return token.image;}	
+
+| 	< deregisterNorm >{return token.image;} 
+
+| 	< allocateRole >{return token.image;} 
+
+| 	< deallocateRole >{return token.image;}
+
+| 	< joinUnit >{return token.image;}	
+
+| 	< informAgentRole >{return token.image;} 
+
+| 	< informMembers >{return token.image;} 
+
+| 	< informQuantityMembers >{return token.image;} 
+
+| 	< informUnit > {return token.image;}
+
+| 	< informUnitRoles >{return token.image;}
+
+| 	< informTargetNorms >{return token.image;}
+
+| 	< informRole >{return token.image;} 
+
+| 	< informNorm >{return token.image;} 
+
+| 	< acquireRole > {return token.image;}
+
+| 	< leaveRole > {return token.image;}
+
+
+}
+
+
+/**
+	“ isAgent” “(” term “)” |“playsRole” “(” term “,” term “,” term “)” |“roleCardinality” “(” term
+“,” term “,” term “)” |“positionCardinality” “(” term “,” term “,” term “)”
+*/
+String OMSRoleEnactPred() :
+{
+	String result = "";
+	String param1 = "", param2 = "", param3 = "";
+	
+  }
+{
+	< isAgent >{result = token.image;} "("param1 = term()")"{return result = result +"("+param1+ ")";}
+	| < playsRole >{result = token.image;} "("param1 = term()"," param2 = term()","param3 = term()")"{
+	  				return result =  result +"("+param1+ ","+param2+ ","+param3+ ")";}
+	| < roleCardinality > "(" param1 = term()"," param2 = term()"," param3 = numericConstantPred()")" {
+	  				return result =  result +"("+param1+ ","+param2+ ","+param3+ ")";}
+	| < positionCardinality > "(" param1 = term()"," param2 = term()"," param3 = numericConstantPred()")" {
+	  				return result =  result +"("+param1+ ","+param2+ ","+param3+ ")";}
+}
+
+/**
+  numeriConstantPred::=numericConstant |variable
+
+*/
+
+String numericConstantPred():
+{
+  String result = "";}
+{	result = numericConstant(){return result;}| result = variable(){return result;}  		
+
+}
+
+
+/**
+	OMSAction ::= “registerUnit” “(” term “,” term “,” term “,” term “,” term “)” |
+“deregisterUnit” “(” term “,” term “)” |
+“registerRole” “(” term “,” term “,” term “,” term “,” term “,” term “)” |
+“deregisterRole” “(” term “,” term ”,” term “)” |
+“registerNorm” “(” term “,” term “,” term "," term “)” |
+“deregisterNorm” “(” term “,” term “,” term ”)” |
+“allocateRole” “(” term “,” term “,” term “,” term “)” |
+“deallocateRole” “(” term “,” term “,” term “,” term “)” |
+“joinUnit” “(” term “,” term “,” term “)” |
+“informAgentRole” “(” term “,” term “)” |
+
+“informMembers” “(” term “,” term “,” term “,” term “)” |
+“informQuantityMembers” “(” term “,” term “,” term “,” term “)” |
+“informUnit” “(” term “,” term “)” |
+“informUnitRoles” “(” term “,” term “)” |
+“informTargetNorms” “(” term “,” term “,” term “,” term “)” |
+“informRole” “(” term “,” term “,” term “)” |
+“informNorm” “(” term “,” term “,” term “)” |
+“acquireRole” “(” term “,” term “,” term “)” |
+“leaveRole” “(” term “,” term “,” term “)” |
+*/
+ArrayList<String> OMSAction() throws THOMASException : {
+
+	String result= "";
+	ArrayList<String > resultArray= new ArrayList<String >();
+	String service, param1, param2, param3, param4, param5, param6;
+	
+  }
 { 
- try
-  {
-	registerUnit()	//< registerUnit > "("term()","term()","term()","term()","term()")"
-|   < deregisterUnit > "("term()","term()")"
-| 	< registerRole > "("term()","term()","term()","term()","term()","term()")"
-| 	< deregisterRole > "("term()","term()","term()")"
-| 	< registerNorm >	"("term()","term()","term()","term()")"
-| 	< deregisterNorm > "("term()","term()","term()")"
-| 	< allocateRole > "("term()","term()","term()","term()")"
-| 	< deallocateRole > "("term()","term()","term()","term()")"
-| 	< joinUnit >	"("term()","term()","term()")"
-| 	< informAgentRole > "(" term()","term()")"
-| 	< informMembers > "("term()","term()","term()","term()")"
-| 	< informQuantityMembers > "("term()","term()","term()","term()")"
-| 	< informUnit > "("term()","term()")"
-| 	< informUnitRoles > "("term()","term()")"
-| 	< informTargetNorms > "("term()","term()","term()","term()")"
-| 	< informRole > "("term()","term()","term()")"
-| 	< informNorm > "("term()","term()","term()")"
-| 	< acquireRole > "("term()","term()","term()")"
-| 	< leaveRole > "("term()","term()","term()")"
 
-  }catch(ParseException e)
-  {
-    	System.out.println("----------Current token-----------");
-    	System.out.println("Current token: "+ e.currentToken);
-    	System.out.println("Current token begin line: "+ e.currentToken.beginLine);
-    	System.out.println("Current token begin column: "+ e.currentToken.beginColumn);
-		System.out.println("Current token end line: "+ e.currentToken.endLine);
-    	System.out.println("Current token end column: "+ e.currentToken.endColumn);
-    	
-    	
+	try
+	{	  		< registerUnit >{service = token.image;} "("param1 = term()","param2 = OMSUnitTypesPred()","param3 = term()","param4 = term()","param5 = term()")"
+		{
+		  resultArray.add(service);
+		  result = service +"("+ param1 + ","+ param2 + ","+ param3 + ","+ param4 + ","+ param5+ ")";
+		  resultArray.add(result);
+		  resultArray.add(param1);
+		  resultArray.add(param2);
+		  resultArray.add(param3);
+		  resultArray.add(param4);
+		  resultArray.add(param5);
+		  return resultArray;}
+	}catch(ParseException pex)
+	{		System.out.println("----------------------------------");
+    	System.out.println("Invalid parameter "+getToken(0)+" in OMS action registerUnit");
+		StringBuffer expected = new StringBuffer();
+		for (int i = 0; i < pex.expectedTokenSequences.length; i++) {
+    		for (int j = 0; j < pex.expectedTokenSequences[i].length; j++) {
+          		expected.append(tokenImage[pex.expectedTokenSequences[i][j]]).append(' ');
+        	}
+      	}
+
+      	System.out.println("Expected parameters: "+ expected.toString());
     	System.out.println("----------------------------------");
-    	System.out.println("Excepted tokens: "+ e.expectedTokenSequences[0][0]);
-    	System.out.println("----ERROR----: "+ e.getMessage());
 		String message = l10n.getMessage(MessageID.NOT_CREATOR_IN_PARENT_UNIT, "");
-		throw new NotCreatorInParentUnitException(message);
+		//throw new ParseException(message);
+		
+	}
+|   < deregisterUnit >{service = token.image;} "("param1 = term()"," param2 = term()")"
+{
+	resultArray.add(service);
+  	result = service +"("+ param1 + ","+ param2+ ")";
+  	resultArray.add(result);
+  	resultArray.add(param1);
+  	resultArray.add(param2);
+ 	return resultArray;}
+| 	< registerRole >{service = token.image;} "("param1 = term()","param2 =term()","param3 =OMSAccessibilityPred()","param4 =OMSVisibilityPred()","param5 =OMSPositionsPred()","param6 =term()")"
+{
+	resultArray.add(service);
+  	result = service +"("+ param1 + ","+ param2 + ","+ param3 + ","+ param4 + ","+ param5+"," + param6 +")";
+  	resultArray.add(result);
+  	resultArray.add(param1);
+  	resultArray.add(param2);
+  	resultArray.add(param3);
+  	resultArray.add(param4);
+  	resultArray.add(param5);
+  	resultArray.add(param6);
+	return resultArray;}
+| 	< deregisterRole >{service = token.image;} "("param1 = term()"," param2 = term()"," param3 = term()")"
+{
+	resultArray.add(service);
+  	result = service +"("+ param1 + ","+ param2 + ","+ param3 + ")";
+  	resultArray.add(result);
+  	resultArray.add(param1);
+  	resultArray.add(param2);
+  	resultArray.add(param3);
+	return resultArray;}
+| 	< registerNorm >{service = token.image;}	"("param1 = term()","param2 = term()"," param3 = term() "," param4 = term()")"
+{
+	resultArray.add(service);
+  	result = service +"("+ param1 + ","+ param2 + ","+ param3 +","+param4+")";
+  	resultArray.add(result);
+  	resultArray.add(param1);
+  	resultArray.add(param2);
+  	resultArray.add(param3);
+  	resultArray.add(param4);
+	return resultArray;}
+| 	< deregisterNorm >{service = token.image;} "("param1 = term()","param2 = term()","param3 = term()")"
+{
+	resultArray.add(service);
+  	result = service +"("+ param1 + ","+ param2 + ","+ param3 + ")";
+  	resultArray.add(result);
+  	resultArray.add(param1);
+  	resultArray.add(param2);
+  	resultArray.add(param3);
+	return resultArray;}
+| 	< allocateRole >{service = token.image;} "("param1 = term()","param2 = term()","param3 = term()","param4 = term()")"
+{
+	resultArray.add(service);
+  	result = service +"("+ param1 + ","+ param2 + ","+ param3 + ","+ param4 + ")";
+  	resultArray.add(result);
+  	resultArray.add(param1);
+  	resultArray.add(param2);
+  	resultArray.add(param3);
+  	resultArray.add(param4);
+	return resultArray;}
+| 	< deallocateRole >{service = token.image;} "("param1 = term()"," param2 = term()","param3 = term()","param4 = term()")"
+{
+	resultArray.add(service);
+  	result = service +"("+ param1 + ","+ param2 + ","+ param3 + ","+ param4 + ")";
+  	resultArray.add(result);
+  	resultArray.add(param1);
+  	resultArray.add(param2);
+  	resultArray.add(param3);
+  	resultArray.add(param4);
+	return resultArray;}
+| 	< joinUnit >{service = token.image;}	"("param1 = term()","param2 = term()","param3 = term()")"
+{
+	resultArray.add(service);
+  	result = service +"("+ param1 + ","+ param2 + ","+ param3 + ")";
+  	resultArray.add(result);
+  	resultArray.add(param1);
+  	resultArray.add(param2);
+  	resultArray.add(param3);
+	return resultArray;}
+| 	< informAgentRole >{service = token.image;} "(" param1 = term()"," param2 =term()")"
+{
+	resultArray.add(service);
+  	result = service +"("+ param1 + ","+ param2 + ")";
+  	resultArray.add(result);
+  	resultArray.add(param1);
+  	resultArray.add(param2);
+	return resultArray;}
+| 	< informMembers >{service = token.image;} "("param1 = term()","param2 = term()","param3 = OMSPositionsPred()"," param4 = term()")"
+{
+	resultArray.add(service);
+  	result = service +"("+ param1 + ","+ param2 + ","+ param3 + ","+ param4  +")";
+  	resultArray.add(result);
+  	resultArray.add(param1);
+  	resultArray.add(param2);
+  	resultArray.add(param3);
+  	resultArray.add(param4);
+	return resultArray;}
+| 	< informQuantityMembers >{service = token.image;} "("param1 = term()"," param2 = term()"," param3 = OMSPositionsPred()","param4 = term()")"
+{
+	resultArray.add(service);
+  	result = service +"("+ param1 + ","+ param2 + ","+ param3 + ","+ param4 + ")";
+  	resultArray.add(result);
+  	resultArray.add(param1);
+  	resultArray.add(param2);
+  	resultArray.add(param3);
+  	resultArray.add(param4);
+	return resultArray;}
+| 	< informUnit > {service = token.image;}"("param1 = term()","param2 = term()")"
+{
+	resultArray.add(service);
+  	result = service +"("+ param1 + ","+ param2 + ")";
+  	resultArray.add(result);
+  	resultArray.add(param1);
+  	resultArray.add(param2);
+	return resultArray;}
+| 	< informUnitRoles >{service = token.image;} "("param1 = term()","param2 = term()")"
+{
+	resultArray.add(service);
+  	result = service +"("+ param1 + ","+ param2 + ")";
+  	resultArray.add(result);
+  	resultArray.add(param1);
+  	resultArray.add(param2);
+	return resultArray;}
+| 	< informTargetNorms >{service = token.image;} "("param1 = targetValuePred()","param2 = targetTypePred()","param3 = term()","param4 =term()")"
+{
+	resultArray.add(service);
+  	result = service +"("+ param1 + ","+ param2 + ","+ param3 + ","+ param4 + ")";
+  	resultArray.add(result);
+  	resultArray.add(param1);
+  	resultArray.add(param2);
+  	resultArray.add(param3);
+  	resultArray.add(param4);
+	return resultArray;}
+| 	< informRole >{service = token.image;} "("param1 = term()"," param2 = term()","param3 = term()")"
+{
+	resultArray.add(service);
+  	result = service +"("+ param1 + ","+ param2 + ","+ param3 + ")";
+  	resultArray.add(result);
+  	resultArray.add(param1);
+  	resultArray.add(param2);
+  	resultArray.add(param3);
+	return resultArray;}
+| 	< informNorm >{service = token.image;} "("param1 = term()","param2 = term()","param3 = term()")"
+{
+	resultArray.add(service);
+  	result = service +"("+ param1 + ","+ param2 + ","+ param3 +  ")";
+  	resultArray.add(result);
+  	resultArray.add(param1);
+  	resultArray.add(param2);
+  	resultArray.add(param3);
+	return resultArray;}
+| 	< acquireRole > {service = token.image;}"("param1 = term()","param2 = term()","param3 = term()")"
+{
+	resultArray.add(service);
+  	result = service +"("+ param1 + ","+ param2 + ","+ param3 + ")";
+  	resultArray.add(result);
+  	resultArray.add(param1);
+  	resultArray.add(param2);
+  	resultArray.add(param3);
+	return resultArray;}
+| 	< leaveRole > {service = token.image;}"("param1 = term()"," param2 = term()","param3 = term()")"
+{
+	resultArray.add(service);
+  	result = service +"("+ param1 + ","+ param2 + ","+ param3 + ")";
+  	resultArray.add(result);
+  	resultArray.add(param1);
+  	resultArray.add(param2);
+  	resultArray.add(param3);
+	return resultArray;}
+
+}
+/**
+	OMSConstants ::= OMSPositions |OMSAccesibility |OMSVisibility |OMSUnitTypes |“virtual” |“participant”
+*/
+String OMSConstants():{
+  String result = "";}
+{ 	/* OMSPositions() | OMSaccessibility() | OMSVisibility() |  OMSUnitTypes() | < virtual > | < participant >*/
+
+ 	  result = OMSPositions() { return result;}
+ 	 |  result = OMSaccessibility() { return result;}
+ 	 |  result = OMSVisibility() { return result;}
+ 	 |  result = OMSUnitTypes() { return result;}
+ 	 | <  virtual > { return "virtual";}
+ 	 | <  participant > { return "participant";}
+
+}
+/**
+	OMSPositions ::= “creator” |“member” |“supervisor” |“subordinate”
+*/
+String OMSPositions():{
+   String variable="";}
+{
+	< OMSPositions >
+	{ return token.image;}
+
+ 	}
+/**
+	OMSAccesibility ::= “external” |“internal”
+*/
+String OMSaccessibility():{
+   String variable="";}
+{
+	< OMSaccessibility >
+	{ return token.image;}
+
+ 	 
+}
+
+/**
+	OMSVisibility ::= “public” |“private”
+*/
+String OMSVisibility():{
+   String variable="";}
+{ 	 
+	< OMSVisibility >
+	{ return token.image;}
+
+
+}
+
+/**
+	OMSUnitTypes ::= “ﬂat” |“team” |“hierarchy”
+*/
+String OMSUnitTypes():{
+  String variable="";}
+{
+  try
+  {    
+ 	//< flat > | < team > | < hierarchy >
+ 	< OMSUnitTypes > 	{ return token.image;}
 
   }
-}
+  catch(ParseException pex)
+  {	System.out.println("Unit type not found: "+ getNextToken());
+	
+  }
 
-void registerUnit():
-{}
-{	< registerUnit > "("term()","term()","term()","term()","term()")"
-
-}
-
-void OMSConstants():{}
-{ 	/* OMSPositions() | OMSaccessibility() | OMSVisibility() |  OMSUnitTypes() | < virtual > | < participant >*/
- 	 OMSPositions() | OMSaccessibility() | OMSVisibility() |  OMSUnitTypes() | " virtual " | " participant "
-
-}
-
-void OMSPositions():{}
-{
-	//< CREATOR > | < member > | < supervisor > | < subordinate >
-	"creator" | "member" | "supervisor" | "subordinate"
- 	}
-
-void OMSaccessibility():{}
-{
- 	// < external > | < internal >
-	 "external" | "internal"
- 	 
-} 
-void OMSVisibility():{}
-{ 	 
-	//< PUBLIC > | < PRIVATE  >
-	 "public" | "private"
-
-}
-void OMSUnitTypes():{}
-{
- 	//< flat > | < team > | < hierarchy >
- 	"flat" | "team" | "hierarchy"
 
 }
 
