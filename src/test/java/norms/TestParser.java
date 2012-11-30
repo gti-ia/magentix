@@ -11,7 +11,7 @@ public class TestParser extends TestCase {
 
 
 
-	Norms parser = null;
+	NormParser parser = null;
 
 	protected void tearDown() throws Exception {
 
@@ -30,15 +30,44 @@ public class TestParser extends TestCase {
 
 	}
 
+	//A partir de la prueba 13 es donde se realizán las pruebas del documento.
+	
+	public void testNormForo1()
+	{
+		try
+		{
+			StringBuffer StringBuffer1 = new StringBuffer("@controlDeregisterUnit[f, <roleName:moderador>, deregisterUnit(foro,Ag),playsRole(Ag, moderador, foro), ];");
+
+			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
+
+			parser = new NormParser(input);
+
+			parser.parser();
+
+
+		}catch(Exception e)
+		{
+
+			fail(e.getMessage());
+
+		}
+		catch(Error e)
+		{
+			fail(e.getMessage());
+		}
+	}
+	
 	public void testNorm1()
 	{
 		try
 		{
-			StringBuffer StringBuffer1 = new StringBuffer("@acces_RegisternotUnit[p, <positionName:creator>, registerUnit(Uni_tName, _,ParentUnitName, AgentName,_),, ];");
+			StringBuffer StringBuffer1 = new StringBuffer("@accesRegisternotUnit[p, <positionName:creator>, registerUnit(team,team,ParentUnitName, AgentName,_),, ];");
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
-			parser = new Norms(input);
+			parser = new NormParser(input);
+			
+			
 
 			parser.parser();
 
@@ -59,11 +88,11 @@ public class TestParser extends TestCase {
 	{
 		try
 		{
-			StringBuffer StringBuffer1 = new StringBuffer("@accesDeregisterUnit[p, <positionName:creat_or>,deregisterUnit(UnitName,AgentName),not(playsRole(_ , UnitName,RoleName) & hasPosition(RoleName, UnitName,Position) & Position != creator) & not(isUnit(SubUnitName) & hasParent(SubUnitName,UnitName)), ];");
+			StringBuffer StringBuffer1 = new StringBuffer("@accesDeregisterUnit[p, <positionName:creator>,deregisterUnit(UnitName,AgentName),not(playsRole(_ , UnitName,RoleName) & hasPosition(RoleName, UnitName,Position) & Position \\== creator) & not(isUnit(SubUnitName) & hasParent(SubUnitName,UnitName)), ];");
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
-			parser = new Norms(input);
+			parser = new NormParser(input);
 
 			parser.parser();
 
@@ -88,7 +117,7 @@ public class TestParser extends TestCase {
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
-			parser = new Norms(input);
+			parser = new NormParser(input);
 
 			parser.parser();
 
@@ -113,7 +142,7 @@ public class TestParser extends TestCase {
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
-			parser = new Norms(input);
+			parser = new NormParser(input);
 
 			parser.parser();
 
@@ -138,7 +167,7 @@ public class TestParser extends TestCase {
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
-			parser = new Norms(input);
+			parser = new NormParser(input);
 
 			parser.parser();
 
@@ -163,7 +192,7 @@ public class TestParser extends TestCase {
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
-			parser = new Norms(input);
+			parser = new NormParser(input);
 
 			parser.parser();
 
@@ -191,7 +220,7 @@ public class TestParser extends TestCase {
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
-			parser = new Norms(input);
+			parser = new NormParser(input);
 
 			parser.parser();
 
@@ -216,7 +245,7 @@ public class TestParser extends TestCase {
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
-			parser = new Norms(input);
+			parser = new NormParser(input);
 
 			parser.parser();
 
@@ -241,7 +270,7 @@ public class TestParser extends TestCase {
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
-			parser = new Norms(input);
+			parser = new NormParser(input);
 
 			parser.parser();
 
@@ -266,7 +295,7 @@ public class TestParser extends TestCase {
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
-			parser = new Norms(input);
+			parser = new NormParser(input);
 
 			parser.parser();
 
@@ -287,11 +316,11 @@ public class TestParser extends TestCase {
 	{
 		try
 		{
-			StringBuffer StringBuffer1 = new StringBuffer("@ deregisterUnit3 [p, <positionName:member>,deregisterUnit(UnitName, AgentName), not (playsRole( _ , UnitName,RoleName) & hasPosition(RoleName, UnitName,Position)) & Position!=Creador,(playsRole( _ , UnitName,RoleName2) & hasPosition(RoleName2, UnitName,Position2) & Position2 != creator) ];");
+			StringBuffer StringBuffer1 = new StringBuffer("@ deregisterUnit3 [p, <positionName:member>,deregisterUnit(UnitName, AgentName), not (playsRole( _ , UnitName,RoleName) & hasPosition(RoleName, UnitName,Position)) & Position \\== Creador,(playsRole( _ , UnitName,RoleName2) & hasPosition(RoleName2, UnitName,Position2) & Position2 \\== creator) ];");
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
-			parser = new Norms(input);
+			parser = new NormParser(input);
 
 			parser.parser();
 
@@ -312,11 +341,11 @@ public class TestParser extends TestCase {
 	{
 		try
 		{
-			StringBuffer StringBuffer1 = new StringBuffer("@registerRole1[p, <positionName:member>,registerRole(UnitName, AgentName, position, visibility, accessibility, creator), hasType(UnitName,hierarchy) & playsRole(AgentName,RoleName, UnitName) & hasPosition(RoleName,creator, otro), not playsRole(AgentName,RoleName, UnitName) ];");
+			StringBuffer StringBuffer1 = new StringBuffer("@registerRole1[p, <positionName:member>,registerRole(RoleName, UnitName, external, public, member, creator), hasType(UnitName,hierarchy) & playsRole(AgentName,RoleName, UnitName) & hasPosition(RoleName,UnitName, creator), not playsRole(AgentName,RoleName, UnitName) ];");
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
-			parser = new Norms(input);
+			parser = new NormParser(input);
 
 			parser.parser();
 
@@ -332,16 +361,16 @@ public class TestParser extends TestCase {
 			fail(e.getMessage());
 		}
 	}
-
-	public void testNorm13()
+//Descritas en el documento de pruebas.
+	public void testNorm1a()
 	{
 		try
 		{
-			StringBuffer StringBuffer1 = new StringBuffer("@registerUnitNorm[p,<positionName:member>,registerUnit(UnitName, _ ,ParentUnitName, AgentName, _ ),(playsRole(AgentName, ParentUnitName,RoleName) & isUnit(virtual) & hasPosition(RoleName, ParentUnitName,creator)),not isRole(RoleName,UnitName) ];");
+			StringBuffer StringBuffer1 = new StringBuffer("@registerUnitNorm[p,<positionName:member>,registerUnit(UnitName, _ ,ParentUnitName, AgentName, _ ),(playsRole(AgentName, RoleName,ParentUnitName) & isUnit(virtual) & hasPosition(RoleName, ParentUnitName,creator)),not isRole(RoleName,UnitName) ];");
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
-			parser = new Norms(input);
+			parser = new NormParser(input);
 
 			parser.parser();
 
@@ -358,15 +387,15 @@ public class TestParser extends TestCase {
 		}
 	}
 
-	public void testNorm14()
+	public void testNorm2a()
 	{
 		try
 		{
-			StringBuffer StringBuffer1 = new StringBuffer("@ deregisterUnitNorm [f,<agentName:omsServer>,deregisterUnit(UnitName, AgentName),(playsRole(AgentName, UnitName, RoleName) & hasPosition(RoleName, UnitName, creator)),not playsRole(AgentName, UnitName,RoleName) ];");
+			StringBuffer StringBuffer1 = new StringBuffer("@ deregisterUnitNorm [f,<agentName:omsServer>,deregisterUnit(UnitName, AgentName),(playsRole(AgentName, UnitName, RoleName) & hasPosition(RoleName, UnitName, creator)),not playsRole(AgentName, RoleName, UnitName) ];");
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
-			parser = new Norms(input);
+			parser = new NormParser(input);
 
 			parser.parser();
 
@@ -383,15 +412,15 @@ public class TestParser extends TestCase {
 		}
 	}
 
-	public void testNorm15()
+	public void testNorm3a()
 	{
 		try
 		{
-			StringBuffer StringBuffer1 = new StringBuffer("@ registerRoleNorm [f,<roleName:buyer>,registerRole(seller,_,_,_,_,AgentName),hasParent(UnitName,ParentName) & (playsRole(AgentName, ParentName, RoleName) & hasPosition(RoleName, ParentName, creator)),not hasVisibility(RoleName, UnitName,visible) ];");
+			StringBuffer StringBuffer1 = new StringBuffer("@ registerRoleNorm [f,<roleName:buyer>,registerRole(seller,_,_,_,_,AgentName),hasParent(UnitName,ParentName) & (playsRole(AgentName,RoleName, ParentName ) & hasPosition(RoleName, ParentName, creator)),not hasVisibility(RoleName, UnitName,public) ];");
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
-			parser = new Norms(input);
+			parser = new NormParser(input);
 
 			parser.parser();
 
@@ -408,15 +437,15 @@ public class TestParser extends TestCase {
 		}
 	}
 
-	public void testNorm16()
+	public void testNorm4a()
 	{
 		try
 		{
-			StringBuffer StringBuffer1 = new StringBuffer("@ deregisterRoleNorm [f,<positionName:member>,deregisterRole(_,_, AgentName),(not playsRole( _ , UnitName,RoleName) || not hasPosition(RoleName, UnitName,Position)) & Position!=Creador ,(playsRole( _ , UnitName,RoleName2) & hasPosition(RoleName2, UnitName,Position2)) & Position2!=creator ];");
+			StringBuffer StringBuffer1 = new StringBuffer("@ deregisterRoleNorm [f,<positionName:member>,deregisterRole(_,_, AgentName),(not playsRole( _ , RoleName, UnitName) | not hasPosition(RoleName, UnitName,Position)) & Position \\== Creador ,(playsRole( _ , RoleName2, UnitName) & hasPosition(RoleName2, UnitName,Position2)) & Position2 \\== creator ];");
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
-			parser = new Norms(input);
+			parser = new NormParser(input);
 
 			parser.parser();
 
@@ -432,15 +461,15 @@ public class TestParser extends TestCase {
 			fail(e.getMessage());
 		}
 	}
-	public void testNorm17()
+	public void testNorm5a()
 	{
 		try
 		{
-			StringBuffer StringBuffer1 = new StringBuffer("@ registerNormNorm[f,<positionName:member>,registerNorm (_,_,UnitName, AgentName),hasType(UnitName,hierarchy) & playsRole(AgentName,RoleName, UnitName) & hasPosition(RoleName,creator,_),not playsRole(AgentName,RoleName, UnitName) || not isAgent(AgentName) ];");
+			StringBuffer StringBuffer1 = new StringBuffer("@ registerNormNorm[f,<positionName:member>,registerNorm (_,UnitName, _, AgentName),hasType(UnitName,hierarchy) & playsRole(AgentName,RoleName, UnitName) & hasPosition(RoleName,_,creator),not playsRole(AgentName,RoleName, UnitName) | not isAgent(AgentName) ];");
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
-			parser = new Norms(input);
+			parser = new NormParser(input);
 
 			parser.parser();
 
@@ -457,15 +486,15 @@ public class TestParser extends TestCase {
 		}
 	}
 
-	public void testNorm18()
+	public void testNorm6a()
 	{
 		try
 		{
-			StringBuffer StringBuffer1 = new StringBuffer("@ deregisterNormNorm[p,<positionName:supervisor>,deregisterNorm (_,UnitName, AgentName),hasType(UnitName,hierarchy) & playsRole(AgentName,RoleName, UnitName) & hasPosition(RoleName,supervisor, _),not playsRole(AgentName,RoleName, UnitName) ];");
+			StringBuffer StringBuffer1 = new StringBuffer("@ deregisterNormNorm[p,<positionName:supervisor>,deregisterNorm (_,UnitName, AgentName),hasType(UnitName,hierarchy) & playsRole(AgentName,RoleName, UnitName) & hasPosition(RoleName,_,supervisor),not playsRole(AgentName,RoleName, UnitName) ];");
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
-			parser = new Norms(input);
+			parser = new NormParser(input);
 
 			parser.parser();
 
@@ -482,7 +511,7 @@ public class TestParser extends TestCase {
 		}
 	}
 
-	public void testNorm19()
+	public void testNorm7a()
 	{
 		try
 		{
@@ -490,7 +519,7 @@ public class TestParser extends TestCase {
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
-			parser = new Norms(input);
+			parser = new NormParser(input);
 
 			parser.parser();
 
@@ -507,15 +536,15 @@ public class TestParser extends TestCase {
 		}
 	}
 
-	public void testNorm20()
+	public void testNorm8a()
 	{
 		try
 		{
-			StringBuffer StringBuffer1 = new StringBuffer("@ deallocateRoleNorm[p,<positionName:member>,deallocateRole(RoleName, UnitName, _,AgentName),not (isNorm(NormName,UnitName) & hasContent(NormName, UnitName,[_,_,_,_,_]) & positionCardinality(member, UnitName, Cardinality)) ,(isNorm(NormName,UnitName) & hasContent(NormName,_,_)) ];");
+			StringBuffer StringBuffer1 = new StringBuffer("@ deallocateRoleNorm[p,<positionName:_>,deallocateRole(RoleName, UnitName, _,AgentName),not (isNorm(NormName,UnitName) & positionCardinality(member, UnitName, Cardinality)) ,(isNorm(NormName,UnitName) & hasAction(NormName,_,_)) ];");
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
-			parser = new Norms(input);
+			parser = new NormParser(input);
 
 			parser.parser();
 
@@ -532,15 +561,15 @@ public class TestParser extends TestCase {
 		}
 	}
 
-	public void testNorm21()
+	public void testNorm9a()
 	{
 		try
 		{
-			StringBuffer StringBuffer1 = new StringBuffer("@ joinUnitNorm[p,<positionName:member>,joinUnit(UnitName,ParentName, AgentName),playsRole(AgentName,RoleName,123) & hasPosition(RoleName,UnitName,creator) & playsRole(AgentName,RoleParentName, ParentName) & hasPosition(RoleParentName,ParentName,creator),not (playsRole(AgentName,RoleName,UnitName) & playsRole(AgentName, RoleParentName, ParentName))];");
+			StringBuffer StringBuffer1 = new StringBuffer("@ joinUnitNorm[p,<positionName:member>,joinUnit(UnitName, AgentName, ParentName),playsRole(AgentName,RoleName,123) & hasPosition(RoleName,UnitName,creator) & playsRole(AgentName,RoleParentName, ParentName) & hasPosition(RoleParentName,ParentName,creator),not (playsRole(AgentName,RoleName,UnitName) & playsRole(AgentName, RoleParentName, ParentName))];");
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
-			parser = new Norms(input);
+			parser = new NormParser(input);
 
 			parser.parser();
 
@@ -557,7 +586,7 @@ public class TestParser extends TestCase {
 		}
 	}
 
-	public void testNorm22()
+	public void testNorm10a()
 	{
 		try
 		{
@@ -565,7 +594,7 @@ public class TestParser extends TestCase {
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
-			parser = new Norms(input);
+			parser = new NormParser(input);
 
 			parser.parser();
 
@@ -582,15 +611,15 @@ public class TestParser extends TestCase {
 		}
 	}
 
-	public void testNorm23()
+	public void testNorm11a()
 	{
 		try
 		{
-			StringBuffer StringBuffer1 = new StringBuffer("@ leaveRoleNorm [f,<positionName:member>,acquireRole(UnitName, RoleName, AgentName),playsRole(AgentName,RoleName,UnitName) & hasAccessibility (RoleName,UnitName,external),_ ];");
+			StringBuffer StringBuffer1 = new StringBuffer("@ leaveRoleNorm [f,<roleName:_>,acquireRole( RoleName, UnitName,AgentName),playsRole(AgentName,RoleName,UnitName) & hasAccessibility (RoleName,UnitName,external),_ ];");
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
-			parser = new Norms(input);
+			parser = new NormParser(input);
 
 			parser.parser();
 
@@ -607,15 +636,15 @@ public class TestParser extends TestCase {
 		}
 	}
 
-	public void testNorm24()
+	public void testNorm12a()
 	{
 		try
 		{
-			StringBuffer StringBuffer1 = new StringBuffer("@ informAgentRoleNorm [o,<positionName:member>,informAgentRole(omsServer, AgentName),playsRole(AgentName,RoleName,UnitName) & hasAccessibility (RoleName,UnitName,external),_ ];");
+			StringBuffer StringBuffer1 = new StringBuffer("@ informAgentRoleNorm [o,<agentName:_>,informAgentRole(omsServer, AgentName),playsRole(AgentName,RoleName,UnitName) & hasAccessibility (RoleName,UnitName,external),_ ];");
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
-			parser = new Norms(input);
+			parser = new NormParser(input);
 
 			parser.parser();
 
@@ -632,7 +661,7 @@ public class TestParser extends TestCase {
 		}
 	}
 
-	public void testNorm25()
+	public void testNorm13a()
 	{
 		try
 		{
@@ -640,7 +669,7 @@ public class TestParser extends TestCase {
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
-			parser = new Norms(input);
+			parser = new NormParser(input);
 
 			parser.parser();
 
@@ -657,15 +686,15 @@ public class TestParser extends TestCase {
 		}
 	}
 
-	public void testNorm26()
+	public void testNorm14a()
 	{
 		try
 		{
-			StringBuffer StringBuffer1 = new StringBuffer("@ informQuantityMembersNorm [f,<positionName:member>,informQuantityMembers(UnitName, RoleName, _,AgentName),playsRole(AgentName,RoleName,UnitName) & hasAccessibility (RoleName,UnitName,external),loquesea < numero & creator <= 5 + 20 & public >=All - 5 & 123 * 5 > 10 & (ABC ** - Uno) < 15 & (UnitName / 20) != 20 & roleCardinality(RoleName, UnitName, Cardinality) & Cardinality < (5 div 1) mod 3 ];");
+			StringBuffer StringBuffer1 = new StringBuffer("@ informQuantityMembersNorm [f,<positionName:member>,informQuantityMembers(UnitName, RoleName, _,AgentName),playsRole(AgentName,RoleName,UnitName) & hasAccessibility (RoleName,UnitName,external),loquesea < numero & creator <= 5 + 20 & public >=All - 5 & 123 * 5 > 10 & (ABC ** - Uno) < 15 & (UnitName / 20) \\== 20 & roleCardinality(RoleName, UnitName, Cardinality) & Cardinality < (5 div 1) mod 3 | Cardinality == 5];");
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
-			parser = new Norms(input);
+			parser = new NormParser(input);
 
 			parser.parser();
 
@@ -682,15 +711,15 @@ public class TestParser extends TestCase {
 		}
 	}
 
-	public void testNorm27()
+	public void testNorm15a()
 	{
 		try
 		{
-			StringBuffer StringBuffer1 = new StringBuffer("@ informUnitNorm [o,<positionName:member>,informUnit(UnitName, AgentName),playsRole(AgentName,RoleName,UnitName) &hasAccessibility (RoleName,UnitName,external),_ ];");
+			StringBuffer StringBuffer1 = new StringBuffer("@ informUnitNorm [o,<positionName:member>,informUnit(UnitName, AgentName),playsRole(AgentName,RoleName,UnitName) & hasAccessibility (RoleName,UnitName,external),_ ];");
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
-			parser = new Norms(input);
+			parser = new NormParser(input);
 
 			parser.parser();
 
@@ -707,15 +736,15 @@ public class TestParser extends TestCase {
 		}
 	}
 
-	public void testNorm28()
+	public void testNorm16a()
 	{
 		try
 		{
-			StringBuffer StringBuffer1 = new StringBuffer("@ informUnitRolesNorm[p,<agentName:supervisor>,informUnitRoles(UnitName, AgentName),hasType(UnitName,hierarchy) & playsRole(AgentName,RoleName, UnitName) & hasPosition(RoleName,supervisor, _) & loquequieraponer021 & loquesea(a,B,_),not playsRole(AgentName,RoleName, UnitName) ];");
+			StringBuffer StringBuffer1 = new StringBuffer("@ informUnitRolesNorm[p,<agentName:123>,informUnitRoles(UnitName, AgentName),hasType(UnitName,hierarchy) & playsRole(AgentName,RoleName, UnitName) & hasPosition(RoleName,_,supervisor) & loquequieraponer021,not playsRole(AgentName,RoleName, UnitName) ];");
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
-			parser = new Norms(input);
+			parser = new NormParser(input);
 
 			parser.parser();
 
@@ -732,15 +761,15 @@ public class TestParser extends TestCase {
 		}
 	}
 
-	public void testNorm29()
+	public void testNorm17a()
 	{
 		try
 		{
-			StringBuffer StringBuffer1 = new StringBuffer("@ informTargetNormsNorm[f,<roleName:client100>,informTargetNorms (_,_,UnitName, AgentName),hasType(UnitName,hierarchy) & playsRole(AgentName,RoleName, UnitName) & hasPosition(RoleName,supervisor, _) || private & virtual ,not playsRole(AgentName,RoleName, UnitName) ];");
+			StringBuffer StringBuffer1 = new StringBuffer("@ informTargetNormParserNorm[f,<roleName:client100>,informTargetNorms (roleName,RoleX,UnitName, AgentName),hasType(UnitName,hierarchy) & playsRole(AgentName,RoleName, UnitName) & hasPosition(RoleName,_,supervisor) | private & virtual ,not playsRole(AgentName,RoleName, UnitName) ];");
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
-			parser = new Norms(input);
+			parser = new NormParser(input);
 
 			parser.parser();
 
@@ -757,15 +786,15 @@ public class TestParser extends TestCase {
 		}
 	}
 
-	public void testNorm30()
+	public void testNorm18a()
 	{
 		try
 		{
-			StringBuffer StringBuffer1 = new StringBuffer("@ informRoleNorm[p,<positionName:misupervisor>,informRole(RoleName,UnitName, AgentName),hasType(UnitName,hierarchy) & playsRole(AgentName,RoleName, UnitName) & hasPosition(RoleName,supervisor, _) & member(importante) & flat,not playsRole(AgentName,RoleName, UnitName) ];");
+			StringBuffer StringBuffer1 = new StringBuffer("@ informRoleNorm[p,<positionName:supervisor>,informRole(RoleName,UnitName, AgentName),hasType(UnitName,hierarchy) & playsRole(AgentName,RoleName, UnitName) & hasPosition(RoleName,UnitName, _)  & flat,not playsRole(AgentName,RoleName, UnitName) ];");
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
-			parser = new Norms(input);
+			parser = new NormParser(input);
 
 			parser.parser();
 
@@ -782,16 +811,16 @@ public class TestParser extends TestCase {
 		}
 	}
 
-	public void testNorm31()
+	public void testNorm19a()
 	{
 		try
 		{
 
-			StringBuffer StringBuffer1 = new StringBuffer("@informNormNorm[f,<positionName:team>,informNorm(_,UnitName, AgentName),hasType(UnitName,hierarchy) & playsRole(AgentName,RoleName, UnitName) & UnitName & _ & hasPosition(RoleName,supervisor, _) & creator == RoleName & subordinate & external,not playsRole(AgentName,RoleName, UnitName) ];");
+			StringBuffer StringBuffer1 = new StringBuffer("@informNormNorm[f,<positionName:subordinate>,informNorm(_,UnitName, AgentName),hasType(UnitName,hierarchy) & playsRole(AgentName,RoleName, UnitName) & UnitName & _ & hasPosition(RoleName,_, supervisor) & creator == RoleName & subordinate & external,not playsRole(AgentName,RoleName, UnitName) ];");
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
-			parser = new Norms(input);
+			parser = new NormParser(input);
 
 			parser.parser();
 
@@ -808,7 +837,7 @@ public class TestParser extends TestCase {
 		}
 	}
 
-	public void testNorm32()
+	public void testNorm20a()
 	{
 		try
 		{
@@ -816,7 +845,7 @@ public class TestParser extends TestCase {
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
-			parser = new Norms(input);
+			parser = new NormParser(input);
 
 			parser.parser();
 
@@ -833,15 +862,15 @@ public class TestParser extends TestCase {
 		}
 	}
 
-	public void testNorm33()
+	public void testNorm21a()
 	{
 		try
 		{
-			StringBuffer StringBuffer1 = new StringBuffer("@ deallocateRole2[p,<positionName:member>,deallocateRole(RoleName, UnitName, _,AgentName),positionCardinality(member, UnitName, Cardinality) & Cardinality==10,_];");
+			StringBuffer StringBuffer1 = new StringBuffer("@ deallocateRole2[p,<positionName:member>,deallocateRole(RoleName, UnitName, _,AgentName),positionCardinality(member, UnitName, 10),_];");
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
-			parser = new Norms(input);
+			parser = new NormParser(input);
 
 			parser.parser();
 
@@ -858,15 +887,15 @@ public class TestParser extends TestCase {
 		}
 	}
 
-	public void testNorm34()
+	public void testNorm22a()
 	{
 		try
 		{
-			StringBuffer StringBuffer1 = new StringBuffer("@ allocateRole3[p,<positionName:member>,allocateRole(RoleName, UnitName, _,AgentName),not (isNorm(NormName, UnitName) & hasContent(NormName, UnitName, [_,<roleName:RoleName>,registerUnit(_,_,_,_,_),_,_])),isNorm(NormName,UnitName) & hasContent(NormName, UnitName, _)];");
+			StringBuffer StringBuffer1 = new StringBuffer("@ allocateRole3[p,<positionName:_>,allocateRole(RoleName, UnitName, _,AgentName),not (isNorm(NormName, UnitName) & hasDeontic(NormName, UnitName, f) & hasTarget(NormName, UnitName, roleName, Rolename) & hasAction(NormName, UnitName, registerUnit)),_];");
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
-			parser = new Norms(input);
+			parser = new NormParser(input);
 
 			parser.parser();
 
@@ -883,15 +912,17 @@ public class TestParser extends TestCase {
 		}
 	}
 	
-	public void testNorm35()
+	
+	
+	public void testNorm23a()
 	{
 		try
 		{
-			StringBuffer StringBuffer1 = new StringBuffer("@ allocateRole3[p,<positionName:member>,allocateRole(RoleName, UnitName, _,AgentName),not (isNorm(NormName, UnitName) & hasContent(NormName, UnitName, [_,<roleName:rol>,registerUnit(_,_,_,_,_),_,_])),isNorm(NormName,UnitName) & hasContent(NormName, UnitName, _)];");
+			StringBuffer StringBuffer1 = new StringBuffer("@ registerUnitNormBis [f,<agentName:_>, registerUnit(participant,flat,team, public, private), (playsRole(hierarchy,external,internal) & isUnit(virtual) & hasPosition(creator,member,creator)) | not hasDeontic(supervisor, subordinate, f), not isRole(RoleName,UnitName) | hasAction(virtual, participant, acquireRole) ];");
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
-			parser = new Norms(input);
+			parser = new NormParser(input);
 
 			parser.parser();
 
@@ -908,30 +939,643 @@ public class TestParser extends TestCase {
 		}
 	}
 	
-	public void testNorm36()
+	
+	// Pruebas del manual
+	
+	public void testIncorrectNorm1a()
 	{
 		try
 		{
-			StringBuffer StringBuffer1 = new StringBuffer("@ informQuantityMembersNorm [f,<positionName:member>,informQuantityMembers(UnitName, RoleName, _,AgentName),playsRole(AgentName,RoleName,UnitName) & hasAccessibility (RoleName,UnitName,external),loquesea < numero & creator <= 5 mod 20 & public >=All - 5 & 123 div 5 > 10 & (ABC ** - Uno) < 15 & (UnitName / 20) != 20 & roleCardinality(RoleName, UnitName, Cardinality) & Cardinality < (5 div 1) mod 3 ];");
+			StringBuffer StringBuffer1 = new StringBuffer("@ informQuantityMembersWrongIsUnit[f,<positionName:member>,informQuantityMembers(UnitName, RoleName, _,AgentName),playsRole(AgentName,RoleName,UnitName) & isUnit(UnitName)== virtual,_];");
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
-			parser = new Norms(input);
+			parser = new NormParser(input);
 
 			parser.parser();
 
+			fail();
 
 		}catch(Exception e)
 		{
-			e.printStackTrace();
-			fail(e.getMessage());
+
+			System.out.println(e.getMessage());
+			assertEquals(e.getMessage(), true, true);
 
 		}
-		catch(Error e)
-		{
-			fail(e.getMessage());
-		}
+
 	}
+	
+	public void testIncorrectNorm2a()
+	{
+		try
+		{
+			StringBuffer StringBuffer1 = new StringBuffer("@ informQuantityMembersWrongIsUnit2[f,<positionName:member>,informQuantityMembers(UnitName, RoleName, _,AgentName),playsRole(AgentName,RoleName,UnitName) & UnitName!= virtual,_];");
+
+			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
+
+			parser = new NormParser(input);
+
+			parser.parser();
+
+			fail();
+
+		}
+		catch(Error er)
+		{
+			System.out.println(er.getMessage());
+			assertEquals(er.getMessage(), true, true);
+		
+		}catch(Exception e)
+		{
+
+			System.out.println(e.getMessage());
+			assertEquals(e.getMessage(), true, true);
+
+		}
+
+	}
+	
+	public void testIncorrectNorm3a()
+	{
+		try
+		{
+			StringBuffer StringBuffer1 = new StringBuffer("@ informQuantityMembersWrongIsUnit3[f,<positionName:member>,informQuantityMembers(UnitName, RoleName, _,AgentName),playsRole(AgentName,RoleName,UnitName) || UnitName\\== virtual,_];");
+
+			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
+
+			parser = new NormParser(input);
+
+			parser.parser();
+
+			fail();
+		}
+		catch(Error er)
+		{
+			System.out.println(er.getMessage());
+			assertEquals(er.getMessage(), true, true);
+		
+		}catch(Exception e)
+		{
+
+			System.out.println(e.getMessage());
+			assertEquals(e.getMessage(), true, true);
+
+		}
+
+	}
+	
+	public void testIncorrectNorm4a()
+	{
+		try
+		{
+			StringBuffer StringBuffer1 = new StringBuffer("@ informQuantityMembersWrongNumber [f,<positionName:member>,informQuantityMembers(UnitName, RoleName, _,AgentName),123,_];");
+
+			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
+
+			parser = new NormParser(input);
+
+			parser.parser();
+
+			fail();
+		}
+		catch(Error er)
+		{
+			System.out.println(er.getMessage());
+			assertEquals(er.getMessage(), true, true);
+		
+		}catch(Exception e)
+		{
+
+			System.out.println(e.getMessage());
+			assertEquals(e.getMessage(), true, true);
+
+		}
+
+	}
+	
+	public void testIncorrectNorm4b()
+	{
+		try
+		{
+			StringBuffer StringBuffer1 = new StringBuffer("@ informQuantityMembersWrongNumber [f,<positionName:member>,informQuantityMembers(UnitName, RoleName, _,AgentName),ABC * 5,_];");
+
+			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
+
+			parser = new NormParser(input);
+
+			parser.parser();
+
+			fail();
+		}
+		catch(Error er)
+		{
+			System.out.println(er.getMessage());
+			assertEquals(er.getMessage(), true, true);
+		
+		}catch(Exception e)
+		{
+
+			System.out.println(e.getMessage());
+			assertEquals(e.getMessage(), true, true);
+
+		}
+
+	}
+	
+	public void testIncorrectNorm5a()
+	{
+		try
+		{
+			StringBuffer StringBuffer1 = new StringBuffer("@ informTargetNormsWrong1[f,<roleName:client100>,informTargetNorms (_,_,UnitName, AgentName),hasType(UnitName,hierarchy)) & playsRole(AgentName,RoleName, UnitName) ,_ ];");
+
+			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
+
+			parser = new NormParser(input);
+
+			parser.parser();
+
+			fail();
+		}
+		catch(Error er)
+		{
+			System.out.println(er.getMessage());
+			assertEquals(er.getMessage(), true, true);
+		
+		}catch(Exception e)
+		{
+
+			System.out.println(e.getMessage());
+			assertEquals(e.getMessage(), true, true);
+
+		}
+
+	}
+	
+	public void testIncorrectNorm6a()
+	{
+		try
+		{
+			StringBuffer StringBuffer1 = new StringBuffer("@ informTargetNormsWrong2[f,<roleName:client100>,informTargetNorms (_,_,UnitName, AgentName),hasType(UnitName,hierarchy) & playsRole(AgentName,RoleName, UnitName) &hasPosition(RoleName,supervisor), _ ];");
+
+			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
+
+			parser = new NormParser(input);
+
+			parser.parser();
+
+			fail();
+		}
+		catch(Error er)
+		{
+			System.out.println(er.getMessage());
+			assertEquals(er.getMessage(), true, true);
+		
+		}catch(Exception e)
+		{
+
+			System.out.println(e.getMessage());
+			assertEquals(e.getMessage(), true, true);
+
+		}
+
+	}
+	
+	public void testIncorrectNorm7a()
+	{
+		try
+		{
+			StringBuffer StringBuffer1 = new StringBuffer("@ informTargetNormsWrong3[f,<roleName:client100>,informTargetNorms (_,_,UnitName, AgentName),hasType(UnitName,hierarchy) & playsRole(AgentName,RoleName, UnitName) &hasPosition(RoleName,supervisor) & supervisor(_,vale,123),_ ];");
+
+			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
+
+			parser = new NormParser(input);
+
+			parser.parser();
+
+			fail();
+		}
+		catch(Error er)
+		{
+			System.out.println(er.getMessage());
+			assertEquals(er.getMessage(), true, true);
+		
+		}catch(Exception e)
+		{
+
+			System.out.println(e.getMessage());
+			assertEquals(e.getMessage(), true, true);
+
+		}
+
+	}
+	
+	public void testIncorrectNorm8a()
+	{
+		try
+		{
+			StringBuffer StringBuffer1 = new StringBuffer("@ informRoleWrong1[p,<positionName:misupervisor>,informRole(RoleName,UnitName, AgentName),_, _ ];");
+
+			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
+
+			parser = new NormParser(input);
+
+			parser.parser();
+
+			fail();
+		}
+		catch(Error er)
+		{
+			System.out.println(er.getMessage());
+			assertEquals(er.getMessage(), true, true);
+		
+		}catch(Exception e)
+		{
+
+			System.out.println(e.getMessage());
+			assertEquals(e.getMessage(), true, true);
+
+		}
+
+	}
+	
+	public void testIncorrectNorm9a()
+	{
+		try
+		{
+			StringBuffer StringBuffer1 = new StringBuffer("@ informRoleWrong2[p,<positionName:supervisor>,informRole(RoleName,UnitName, AgentName),hasType(UnitName,jerarquia),_];");
+
+			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
+
+			parser = new NormParser(input);
+
+			parser.parser();
+
+			fail();
+		}
+		catch(Error er)
+		{
+			System.out.println(er.getMessage());
+			assertEquals(er.getMessage(), true, true);
+		
+		}catch(Exception e)
+		{
+
+			System.out.println(e.getMessage());
+			assertEquals(e.getMessage(), true, true);
+
+		}
+
+	}
+	
+	public void testIncorrectNorm10a()
+	{
+		try
+		{
+			StringBuffer StringBuffer1 = new StringBuffer("@ informRoleWrong3[p,<positionName:supervisor>,informRole(RoleName,UnitName, AgentName),hasType(UnitName,hierarchy) & playsRole(AgentName,RoleName),_) ];");
+
+			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
+
+			parser = new NormParser(input);
+
+			parser.parser();
+
+			fail();
+		}
+		catch(Error er)
+		{
+			System.out.println(er.getMessage());
+			assertEquals(er.getMessage(), true, true);
+		
+		}catch(Exception e)
+		{
+
+			System.out.println(e.getMessage());
+			assertEquals(e.getMessage(), true, true);
+
+		}
+
+	}
+	
+	public void testIncorrectNorm11a()
+	{
+		try
+		{
+			StringBuffer StringBuffer1 = new StringBuffer("@informNormWrong1[f,<positionName:team>,informNorm(_,UnitName, AgentName),_, _ ];");
+
+			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
+
+			parser = new NormParser(input);
+
+			parser.parser();
+
+			fail();
+		}
+		catch(Error er)
+		{
+			System.out.println(er.getMessage());
+			assertEquals(er.getMessage(), true, true);
+		
+		}catch(Exception e)
+		{
+
+			System.out.println(e.getMessage());
+			assertEquals(e.getMessage(), true, true);
+
+		}
+
+	}
+	
+	public void testIncorrectNorm12a()
+	{
+		try
+		{
+			StringBuffer StringBuffer1 = new StringBuffer("@informNormWrong2[f,<positionName:_>,informNorm(_,UnitName, AgentName),hasType(UnitName,hierarchy)) & playsRole(AgentName,RoleName, UnitName) &ParentName(hola,_,UnitName) ];");
+
+			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
+
+			parser = new NormParser(input);
+
+			parser.parser();
+
+			fail();
+		}
+		catch(Error er)
+		{
+			System.out.println(er.getMessage());
+			assertEquals(er.getMessage(), true, true);
+		
+		}catch(Exception e)
+		{
+
+			System.out.println(e.getMessage());
+			assertEquals(e.getMessage(), true, true);
+
+		}
+
+	}
+	
+	public void testIncorrectNorm13a()
+	{
+		try
+		{
+			StringBuffer StringBuffer1 = new StringBuffer("@informUnitRolesNormWrong1[p,<agentName:supervisor>,informUnitRoles(UnitName, AgentName),_,_];");
+
+			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
+
+			parser = new NormParser(input);
+
+			parser.parser();
+
+			fail();
+		}
+		catch(Error er)
+		{
+			System.out.println(er.getMessage());
+			assertEquals(er.getMessage(), true, true);
+		
+		}catch(Exception e)
+		{
+
+			System.out.println(e.getMessage());
+			assertEquals(e.getMessage(), true, true);
+
+		}
+
+	}
+	
+	public void testIncorrectNorm14a()
+	{
+		try
+		{
+			StringBuffer StringBuffer1 = new StringBuffer("@informUnitRolesNormWrong1[p,<positionName:123>,informUnitRoles(UnitName, AgentName),_,_];");
+
+			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
+
+			parser = new NormParser(input);
+
+			parser.parser();
+
+			fail();
+		}
+		catch(Error er)
+		{
+			System.out.println(er.getMessage());
+			assertEquals(er.getMessage(), true, true);
+		
+		}catch(Exception e)
+		{
+
+			System.out.println(e.getMessage());
+			assertEquals(e.getMessage(), true, true);
+
+		}
+
+	}
+	
+	public void testIncorrectNorm15a()
+	{
+		try
+		{
+			StringBuffer StringBuffer1 = new StringBuffer("informUnitRolesNormWrong2[p,<positionName:_>,informUnitRoles(UnitName, AgentName),_,_];");
+
+			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
+
+			parser = new NormParser(input);
+
+			parser.parser();
+
+			fail();
+		}
+		catch(Error er)
+		{
+			System.out.println(er.getMessage());
+			assertEquals(er.getMessage(), true, true);
+		
+		}catch(Exception e)
+		{
+
+			System.out.println(e.getMessage());
+			assertEquals(e.getMessage(), true, true);
+
+		}
+
+	}
+	
+	public void testIncorrectNorm16a()
+	{
+		try
+		{
+			StringBuffer StringBuffer1 = new StringBuffer("@[p,<positionName:_>,informUnitRoles(UnitName, AgentName),_,_];");
+
+			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
+
+			parser = new NormParser(input);
+
+			parser.parser();
+
+			fail();
+		}
+		catch(Error er)
+		{
+			System.out.println(er.getMessage());
+			assertEquals(er.getMessage(), true, true);
+		
+		}catch(Exception e)
+		{
+
+			System.out.println(e.getMessage());
+			assertEquals(e.getMessage(), true, true);
+
+		}
+
+	}
+	
+	public void testIncorrectNorm17a()
+	{
+		try
+		{
+			StringBuffer StringBuffer1 = new StringBuffer("@informUnitRolesWrongp,<positionName:_>,informUnitRoles(UnitName, AgentName),_,_];");
+
+			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
+
+			parser = new NormParser(input);
+
+			parser.parser();
+
+			fail();
+		}
+		catch(Error er)
+		{
+			System.out.println(er.getMessage());
+			assertEquals(er.getMessage(), true, true);
+		
+		}catch(Exception e)
+		{
+
+			System.out.println(e.getMessage());
+			assertEquals(e.getMessage(), true, true);
+
+		}
+
+	}
+	
+	public void testIncorrectNorm18a()
+	{
+		try
+		{
+			StringBuffer StringBuffer1 = new StringBuffer("@informUnitRolesWrong[p,<positionName:_>,informUnitRoles(UnitName, AgentName),_];");
+
+			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
+
+			parser = new NormParser(input);
+
+			parser.parser();
+
+			fail();
+		}
+		catch(Error er)
+		{
+			System.out.println(er.getMessage());
+			assertEquals(er.getMessage(), true, true);
+		
+		}catch(Exception e)
+		{
+
+			System.out.println(e.getMessage());
+			assertEquals(e.getMessage(), true, true);
+
+		}
+
+	}
+	
+	public void testIncorrectNorm19a()
+	{
+		try
+		{
+			StringBuffer StringBuffer1 = new StringBuffer("@123N[p,<positionName:_>,informUnitRoles(UnitName, AgentName),_, _];");
+
+			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
+
+			parser = new NormParser(input);
+
+			parser.parser();
+
+			fail();
+		}
+		catch(Error er)
+		{
+			System.out.println(er.getMessage());
+			assertEquals(er.getMessage(), true, true);
+		
+		}catch(Exception e)
+		{
+
+			System.out.println(e.getMessage());
+			assertEquals(e.getMessage(), true, true);
+
+		}
+
+	}
+	
+	public void testIncorrectNorm20a()
+	{
+		try
+		{
+			StringBuffer StringBuffer1 = new StringBuffer("@Norm1[forbidden,<positionName:_>,informUnitRoles(UnitName, AgentName),_, _];");
+
+			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
+
+			parser = new NormParser(input);
+
+			parser.parser();
+
+			fail();
+		}
+		catch(Error er)
+		{
+			System.out.println(er.getMessage());
+			assertEquals(er.getMessage(), true, true);
+		
+		}catch(Exception e)
+		{
+
+			System.out.println(e.getMessage());
+			assertEquals(e.getMessage(), true, true);
+
+		}
+
+	}
+	
+	public void testIncorrectNorm21a()
+	{
+		try
+		{
+			StringBuffer StringBuffer1 = new StringBuffer("@Norm1[forbidden,positionName:_,informUnitRoles(UnitName, AgentName),_, _];");
+
+			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
+
+			parser = new NormParser(input);
+
+			parser.parser();
+
+			fail();
+		}
+		catch(Error er)
+		{
+			System.out.println(er.getMessage());
+			assertEquals(er.getMessage(), true, true);
+		
+		}catch(Exception e)
+		{
+
+			System.out.println(e.getMessage());
+			assertEquals(e.getMessage(), true, true);
+
+		}
+
+	}
+	/*
 	public void testIncorrectNorm1()
 	{
 		try
@@ -940,7 +1584,7 @@ public class TestParser extends TestCase {
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
-			parser = new Norms(input);
+			parser = new NormParser(input);
 
 			parser.parser();
 
@@ -964,7 +1608,7 @@ public class TestParser extends TestCase {
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
-			parser = new Norms(input);
+			parser = new NormParser(input);
 
 			parser.parser();
 
@@ -988,7 +1632,7 @@ public class TestParser extends TestCase {
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
-			parser = new Norms(input);
+			parser = new NormParser(input);
 
 			parser.parser();
 
@@ -997,7 +1641,7 @@ public class TestParser extends TestCase {
 		}catch(Exception e)
 		{
 
-			System.out.println(e.getMessage());
+		
 			assertEquals(e.getMessage(), true, true);
 
 		}
@@ -1012,7 +1656,7 @@ public class TestParser extends TestCase {
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
-			parser = new Norms(input);
+			parser = new NormParser(input);
 
 			parser.parser();
 
@@ -1021,7 +1665,7 @@ public class TestParser extends TestCase {
 		}catch(Exception e)
 		{
 
-			System.out.println(e.getMessage());
+		
 			assertEquals(e.getMessage(), true, true);
 
 		}
@@ -1036,7 +1680,7 @@ public class TestParser extends TestCase {
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
-			parser = new Norms(input);
+			parser = new NormParser(input);
 
 			parser.parser();
 
@@ -1045,7 +1689,7 @@ public class TestParser extends TestCase {
 		}catch(Exception e)
 		{
 
-			System.out.println(e.getMessage());
+			
 			assertEquals(e.getMessage(), true, true);
 
 		}
@@ -1060,7 +1704,7 @@ public class TestParser extends TestCase {
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
-			parser = new Norms(input);
+			parser = new NormParser(input);
 
 			parser.parser();
 
@@ -1069,7 +1713,7 @@ public class TestParser extends TestCase {
 		}catch(Exception e)
 		{
 
-			System.out.println(e.getMessage());
+		
 			assertEquals(e.getMessage(), true, true);
 
 		}
@@ -1085,7 +1729,7 @@ public class TestParser extends TestCase {
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
-			parser = new Norms(input);
+			parser = new NormParser(input);
 
 			parser.parser();
 
@@ -1110,7 +1754,7 @@ public class TestParser extends TestCase {
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
-			parser = new Norms(input);
+			parser = new NormParser(input);
 
 			parser.parser();
 
@@ -1139,7 +1783,7 @@ public class TestParser extends TestCase {
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
-			parser = new Norms(input);
+			parser = new NormParser(input);
 
 			parser.parser();
 
@@ -1163,7 +1807,7 @@ public class TestParser extends TestCase {
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
-			parser = new Norms(input);
+			parser = new NormParser(input);
 
 			parser.parser();
 
@@ -1186,7 +1830,7 @@ public class TestParser extends TestCase {
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
-			parser = new Norms(input);
+			parser = new NormParser(input);
 
 			parser.parser();
 
@@ -1210,11 +1854,11 @@ public class TestParser extends TestCase {
 	{
 		try
 		{
-			StringBuffer StringBuffer1 = new StringBuffer("@ informQuantityMembers2 [f,<positionName:member>,informQuantityMembers(UnitName, RoleName, _,AgentName),playsRole(AgentName,RoleName,UnitName) & hasAccessibility (RoleName,UnitName,external),isUnit(_)!= creator || loquesea < numero & hasContent(_,_,Uno) == isAgent(Uno) & creator <= 5 + 20 & public >=All - 5 & 123 * 5 & ABC ** - Uno & (UnitName / 20) & roleCardinality(RoleName, UnitName, Cardinality) < (5 div 1) mod 3 ];");
+			StringBuffer StringBuffer1 = new StringBuffer("@ informQuantityMembers2 [f,<positionName:member>,informQuantityMembers(UnitName, RoleName, _,AgentName),playsRole(AgentName,RoleName,UnitName) & hasAccessibility (RoleName,UnitName,external),isUnit(_) \\== creator | loquesea < numero & hasContent(_,_,Uno) == isAgent(Uno) & creator <= 5 + 20 & public >=All - 5 & 123 * 5 & ABC ** - Uno & (UnitName / 20) & roleCardinality(RoleName, UnitName, Cardinality) < (5 div 1) mod 3 ];");
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
-			parser = new Norms(input);
+			parser = new NormParser(input);
 
 			parser.parser();
 
@@ -1234,11 +1878,11 @@ public class TestParser extends TestCase {
 	{
 		try
 		{
-			StringBuffer StringBuffer1 = new StringBuffer("@ informTargetNorms2[f,<roleName:client100>,informTargetNorms (_,_,UnitName, AgentName),hasType(UnitName,hierarchy)) & playsRole(AgentName,RoleName, UnitName) &hasPosition(RoleName,supervisor) & supervisor(_,vale,123) ||public(jaja) || private & virtual & participant(jeje,_,123) ,not playsRole(AgentName,RoleName, UnitName) ];");
+			StringBuffer StringBuffer1 = new StringBuffer("@ informTargetNormParser2[f,<roleName:client100>,informTargetNormParser (_,_,UnitName, AgentName),hasType(UnitName,hierarchy)) & playsRole(AgentName,RoleName, UnitName) &hasPosition(RoleName,supervisor) & supervisor(_,vale,123) ||public(jaja) || private & virtual & participant(jeje,_,123) ,not playsRole(AgentName,RoleName, UnitName) ];");
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
-			parser = new Norms(input);
+			parser = new NormParser(input);
 
 			parser.parser();
 
@@ -1263,7 +1907,7 @@ public class TestParser extends TestCase {
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
-			parser = new Norms(input);
+			parser = new NormParser(input);
 
 			parser.parser();
 
@@ -1288,7 +1932,7 @@ public class TestParser extends TestCase {
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
-			parser = new Norms(input);
+			parser = new NormParser(input);
 
 			parser.parser();
 
@@ -1313,7 +1957,7 @@ public class TestParser extends TestCase {
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
-			parser = new Norms(input);
+			parser = new NormParser(input);
 
 			parser.parser();
 
@@ -1339,7 +1983,7 @@ public class TestParser extends TestCase {
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
-			parser = new Norms(input);
+			parser = new NormParser(input);
 
 			parser.parser();
 
@@ -1365,7 +2009,7 @@ public class TestParser extends TestCase {
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
-			parser = new Norms(input);
+			parser = new NormParser(input);
 
 			parser.parser();
 
@@ -1391,7 +2035,7 @@ public class TestParser extends TestCase {
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
-			parser = new Norms(input);
+			parser = new NormParser(input);
 
 			parser.parser();
 
@@ -1417,7 +2061,7 @@ public class TestParser extends TestCase {
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
-			parser = new Norms(input);
+			parser = new NormParser(input);
 
 			parser.parser();
 
@@ -1443,7 +2087,7 @@ public class TestParser extends TestCase {
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
-			parser = new Norms(input);
+			parser = new NormParser(input);
 
 			parser.parser();
 
@@ -1469,7 +2113,7 @@ public class TestParser extends TestCase {
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
-			parser = new Norms(input);
+			parser = new NormParser(input);
 
 			parser.parser();
 
@@ -1495,7 +2139,7 @@ public class TestParser extends TestCase {
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
-			parser = new Norms(input);
+			parser = new NormParser(input);
 
 			parser.parser();
 
@@ -1521,7 +2165,7 @@ public class TestParser extends TestCase {
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
-			parser = new Norms(input);
+			parser = new NormParser(input);
 
 			parser.parser();
 
@@ -1547,7 +2191,7 @@ public class TestParser extends TestCase {
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
-			parser = new Norms(input);
+			parser = new NormParser(input);
 
 			parser.parser();
 
@@ -1562,6 +2206,6 @@ public class TestParser extends TestCase {
 
 		}
 
-	}
+	}*/
 
 }
