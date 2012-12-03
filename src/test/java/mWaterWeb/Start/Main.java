@@ -76,16 +76,19 @@ public class Main {
 
 		ConvMagentixAgArch archJGimeno = new ConvMagentixAgArch();
 		ConvJasonAgent JGimeno = new ConvJasonAgent(new AgentID("JGimeno"), "./src/webInterface/webCommParticipant.asl", archJGimeno,null,null);
-
+*/
 		ConvMagentixAgArch archABella = new ConvMagentixAgArch();
-		ConvJasonAgent ABella = new ConvJasonAgent(new AgentID("ABella"), "./src/mwaterJasonAgents/automatic_agent.asl", archABella,null,null);
+		ConvJasonAgent ABella = new ConvJasonAgent(new AgentID("ABella"), "./src/test/java/mWaterWeb/mwaterJasonAgents/automatic_agent.asl", archABella,null,null);
 
+/*
 		ConvMagentixAgArch archMJRamirez = new ConvMagentixAgArch();
 		ConvJasonAgent MJRamirez = new ConvJasonAgent(new AgentID("MJRamirez"), "./src/webInterface/webCommParticipant.asl", archMJRamirez,null,null);
+*/
 
 		ConvMagentixAgArch archEMDura = new ConvMagentixAgArch();
-		ConvJasonAgent EMDura = new ConvJasonAgent(new AgentID("EMDura"), "./src/mwaterJasonAgents/automatic_agent.asl", archEMDura,null,null);
+		ConvJasonAgent EMDura = new ConvJasonAgent(new AgentID("EMDura"), "./src/test/java/mWaterWeb/mwaterJasonAgents/automatic_agent.asl", archEMDura,null,null);
 
+/*
 		ConvMagentixAgArch archBAlfonso = new ConvMagentixAgArch();
 		ConvJasonAgent BAlfonso = new ConvJasonAgent(new AgentID("BAlfonso"), "./src/webInterface/webCommParticipant.asl", archBAlfonso,null,null);
 */
@@ -97,11 +100,11 @@ public class Main {
 		PNoriega.start();
 		FIgual.start();
 		AGarrido.start();
-		JGimeno.start();
+		JGimeno.start();*/
 		ABella.start();
-		MJRamirez.start();
+		/*MJRamirez.start();*/
 		EMDura.start();
-		BAlfonso.start();*/
+		/*BAlfonso.start();*/
 	}
 
 }

@@ -3,8 +3,14 @@ package es.upv.dsic.gti_ia.jason.conversationsFactory;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import es.upv.dsic.gti_ia.core.AgentID;
+
+/**
+ * This class stores the main elements to be tracked of a conversation under a 
+ * Fipa Subscribe Protocol
+ * @author Bexy Alfonso Espinosa
+ */
+
 
 public class FSConversation extends Conversation{
 	public String initialMessage = "";

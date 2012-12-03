@@ -14,6 +14,12 @@ import jason.asSyntax.Term;
 import jason.asSemantics.TransitionSystem;
 import jason.asSemantics.Unifier;
 
+/**
+ * This class represents the internal action to be used when adding a conversation to 
+ * a Jason agent under the Fipa Subscribe Protocol as participant
+ * @author Bexy Alfonso Espinosa
+ */
+
 public class ia_fipa_subscribe_Participant extends protocolInternalAction{
 
 	/**
@@ -86,15 +92,8 @@ public class ia_fipa_subscribe_Participant extends protocolInternalAction{
 					timeOut = getTermAsInt(args[1]);
 				}
 
-				//AgentID tmpid = ((ConvMagentixAgArch)ts.getUserAgArch()).getJasonAgent().getAid();
 				fsp = new Jason_Fipa_Subscribe_Participant(agName, ts);
 
-				// The agent creates the CFactory that manages every message which its
-				// performative is set to CFP and protocol set to CONTRACTNET. In this
-				// example the CFactory gets the name "TALK", we don't add any
-				// additional message acceptance criterion other than the required
-				// by the CONTRACTNET protocol (null) and we limit the number of simultaneous
-				// processors to 1, i.e. the requests will be attended one after another.
 				String factName = agentConversationID+"-FSFACTORY";
 				Protocol_Factory = fsp.newFactory(factName, null,1, 
 						((ConvMagentixAgArch)ts.getUserAgArch()).getJasonAgent());

@@ -26,6 +26,12 @@ import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.MessageFilter;
 
+/**
+ * This class represents a template for a Japanese Auction Protocol from the participant 
+ * perspective for being used in the Conversations Factory from Jason agents.
+ * @author Bexy Alfonso Espinosa
+ */
+
 public class Jason_JAuc_Participant {
 
 	protected TransitionSystem Ts; 

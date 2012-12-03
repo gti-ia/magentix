@@ -19,6 +19,11 @@ import es.upv.dsic.gti_ia.jason.conversationsFactory.Protocol_Template;
 import es.upv.dsic.gti_ia.jason.conversationsFactory.protocolInternalAction;
 import es.upv.dsic.gti_ia.jason.conversationsFactory.initiator.Jason_FCN_Initiator;
 
+/**
+ * This class represents the internal action to be used when adding a conversation to 
+ * a Jason agent under the Fipa Contract Net Protocol as initiator
+ * @author Bexy Alfonso Espinosa
+ */
 
 public class ia_FCN_Initiator extends protocolInternalAction {
 	/**
@@ -89,9 +94,6 @@ public class ia_FCN_Initiator extends protocolInternalAction {
 		protocolSteep = getTermAsString(args[0]);
 		
 		checkArguments(args);
-		// execute the internal action ".loadProtocol(P,callForProposal,"cnp",TO,CT,C1)" 
-		//contador++;
-		//ts.getAg().getLogger().info("Contador -> "+contador);
 
 		agName  = ts.getUserAgArch().getAgName();
 		
@@ -136,20 +138,12 @@ public class ia_FCN_Initiator extends protocolInternalAction {
 				msg.setContent(getTermAsString(proposal));
 				msg.setProtocol("fipa-contract-net");
 
-				/* The agent creates the CFactory that creates processors that initiate
-        		 CONTRACT_NET protocol conversations. In this
-        		 example the CFactory gets the name "TALK", we don't add any
-        		 additional message acceptance criterion other than the required
-        		 by the CONTRACT_NET protocol (null) and we do not limit the number of simultaneous
-        		 processors (value 0)*/
 				fcnp = new Jason_FCN_Initiator(agName, ts) ;
 
-//TODO: It's necessary to document that the maxium number of conversations with this CFactory is 30
+				//TODO: It's necessary to document that the maxium number of conversations with this CFactory is 30
 				Protocol_Factory = fcnp.newFactory("CNPFACTORY", null, 
 						msg, 1, ((ConvMagentixAgArch)ts.getUserAgArch()).getJasonAgent() ,
 						participantsNumber, deadLineTime,timeOut);
-				/* The factory is setup to answer start conversation requests from the agent
-       		 using the FIPA_REQUEST protocol.*/
 
 				((ConvMagentixAgArch)ts.getUserAgArch()).getJasonAgent().addFactoryAsInitiator(Protocol_Factory);
 				
@@ -199,7 +193,6 @@ public class ia_FCN_Initiator extends protocolInternalAction {
 					 * Releases the semaphore, and if there is a process waiting, it will take 
 					 * it again
 					 */
-										
 					conversationsList.get(agentConversationID).release_semaphore();
 				}
 

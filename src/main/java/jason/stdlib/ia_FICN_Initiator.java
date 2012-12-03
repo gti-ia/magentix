@@ -20,7 +20,12 @@ import es.upv.dsic.gti_ia.jason.conversationsFactory.Protocol_Template;
 import es.upv.dsic.gti_ia.jason.conversationsFactory.protocolInternalAction;
 import es.upv.dsic.gti_ia.jason.conversationsFactory.initiator.Jason_FICN_Initiator;
 
-
+/**
+ * This class represents the internal action to be used when adding a conversation to 
+ * a Jason agent under the Fipa Iterated Contract Net Protocol as initiator
+ * @author Bexy Alfonso Espinosa
+ */
+	
 public class ia_FICN_Initiator extends protocolInternalAction {
 	/**
 	 * 
@@ -29,7 +34,6 @@ public class ia_FICN_Initiator extends protocolInternalAction {
 	
 	Jason_FICN_Initiator fcnp = null;
     ACLMessage msg = new ACLMessage(ACLMessage.CFP); //This message acst as template for all conversations under this protocol
-	//private int contador = 0;
 
 
 	@Override public int getMinArgs() { return 2; };
@@ -95,16 +99,11 @@ public class ia_FICN_Initiator extends protocolInternalAction {
 		protocolSteep = getTermAsString(args[0]);
 		
 		checkArguments(args);
-		// execute the internal action ".loadProtocol(P,callForProposal,"cnp",TO,CT,C1)" 
-		//contador++;
-		//ts.getAg().getLogger().info("Contador -> "+contador);
 
 		agName  = ts.getUserAgArch().getAgName();
 		
 		ConvJasonAgent myag = ((ConvMagentixAgArch)ts.getUserAgArch()).getJasonAgent();
-		
-		
-		
+	
 		agentConversationID = getAtomAsString(args[args.length-1]);
 		
 		ts.getAg().getLogger().info("CALLING INTERNAL ACTION WITH STEEP: '"+protocolSteep+"'"+" CID: "+agentConversationID);
@@ -139,20 +138,13 @@ public class ia_FICN_Initiator extends protocolInternalAction {
 
 				msg.setContent(getTermAsString(proposal));
 				msg.setProtocol("fipa-iterated-contract-net");
-				/* The agent creates the CFactory that creates processors that initiate
-        		 CONTRACT_NET protocol conversations. In this
-        		 example the CFactory gets the name "TALK", we don't add any
-        		 additional message acceptance criterion other than the required
-        		 by the CONTRACT_NET protocol (null) and we do not limit the number of simultaneous
-        		 processors (value 0)*/
+
 				fcnp = new Jason_FICN_Initiator(agName, ts) ;
 
-//TODO: It's necessary to document that the maxium number of conversations with this CFactory is 30
+				//TODO: It's necessary to document that the maxium number of conversations with this CFactory is 30
 				Protocol_Factory = fcnp.newFactory("ICNPFACTORY", null, 
 						msg, 1, ((ConvMagentixAgArch)ts.getUserAgArch()).getJasonAgent() ,
 						participantsNumber, deadLineTime,timeOut);
-				/* The factory is setup to answer start conversation requests from the agent
-       		 using the FIPA_REQUEST protocol.*/
 
 				((ConvMagentixAgArch)ts.getUserAgArch()).getJasonAgent().addFactoryAsInitiator(Protocol_Factory);
 				
@@ -165,10 +157,6 @@ public class ia_FICN_Initiator extends protocolInternalAction {
 					((ConvMagentixAgArch)ts.getUserAgArch()).getJasonAgent().getAid()); //the internal id is unknown yet
 			ConvCProcessor processorTemplate = ((ConvCFactory)Protocol_Factory).cProcessorTemplate();
 			processorTemplate.setConversation(conv);
-			//It is necessary in each new conversation with the same protocol to update the template
-			/*if (processorTemplate.getState("SOLICIT_PROPOSALS")!=null){
-				((SendState)processorTemplate.getState("SOLICIT_PROPOSALS")).setMessageTemplate(msg);
-			}*/
 			
 			msg.setConversationId(ConvID);
 			ConvCProcessor convPprocessor =  myag.newConversation(msg, processorTemplate, false, Protocol_Factory);

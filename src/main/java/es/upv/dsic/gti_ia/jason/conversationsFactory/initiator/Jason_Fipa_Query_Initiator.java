@@ -26,13 +26,16 @@ import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.MessageFilter;
 
-
+/**
+ * This class represents a template for a Fipa Query If/Ref Protocol from the initiator 
+ * perspective for being used in the Conversations Factory from Jason agents.
+ * @author Bexy Alfonso Espinosa
+ */
 
 public class Jason_Fipa_Query_Initiator {
 
 
 	protected TransitionSystem Ts; 
-
 
 	
 	public Jason_Fipa_Query_Initiator(String sagName,
@@ -231,11 +234,9 @@ protected void doInform(ConvCProcessor myProcessor, ACLMessage msg) {
 
 	List<Literal> allperc = new ArrayList<Literal>();
 	conv.evaluationResult=msg.getContent();
-	
 	String percept = "queryResult("+conv.Participant+","+conv.evaluationResult+","+conv.jasonConvID+")[source(self)]";
 	allperc.add(Literal.parseLiteral(percept));
 	((ConvMagentixAgArch)Ts.getUserAgArch()).setPerception(allperc);
-	
 	conv.result = ACLMessage.getPerformative(ACLMessage.INFORM);
 
 	conv.aquire_semaphore();

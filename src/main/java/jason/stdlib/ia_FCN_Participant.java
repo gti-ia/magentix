@@ -12,6 +12,11 @@ import es.upv.dsic.gti_ia.jason.conversationsFactory.Protocol_Template;
 import es.upv.dsic.gti_ia.jason.conversationsFactory.protocolInternalAction;
 import es.upv.dsic.gti_ia.jason.conversationsFactory.participant.Jason_FCN_Participant;
 
+/**
+ * This class represents the internal action to be used when adding a conversation to 
+ * a Jason agent under the Fipa Contract Net Protocol as participant
+ * @author Bexy Alfonso Espinosa
+ */
 
 public class ia_FCN_Participant extends protocolInternalAction {
 	//this name of loadProtocol must be changed by another one like "InitiatorProtocolManager"
@@ -22,8 +27,6 @@ public class ia_FCN_Participant extends protocolInternalAction {
 	 */
 	private static final long serialVersionUID = 1L;
 	Jason_FCN_Participant fcnp;
-
-	//her there must be more factory fields
 
 	@Override public int getMinArgs() { return 2; };
 	@Override public int getMaxArgs() { return 5; };
@@ -63,15 +66,6 @@ public class ia_FCN_Participant extends protocolInternalAction {
 
 	@Override
 	public Object execute(TransitionSystem ts, Unifier un, Term[] args) throws Exception {
-		// execute the internal action ".loadProtocol(P,callForProposal,"cnp",TO,CT,C1)" 
-
-		/*ts: contiene toda la informaci�n del estado actual del agente
-		 un: funcion de unificacion determinada actualmente por:
-		   1. La ejecuci�n del plan donde la accion interna aparece 
-		   2. El chequeo de si el plan es aplicable. Esto depende de si 
-		   la accion interna que esta siendo ejecutada aparece en el cuerpo 
-		   o el contexto del plan.
-		 args: Terminos de la funcion		    */
 		
 		agName  = ts.getUserAgArch().getAgName();
 
@@ -104,23 +98,10 @@ public class ia_FCN_Participant extends protocolInternalAction {
 					timeOut = (int)((NumberTerm)args[1]).solve();
 				}
 
-				//AgentID tmpid = ((ConvMagentixAgArch)ts.getUserAgArch()).getJasonAgent().getAid();
-
-				fcnp = new Jason_FCN_Participant(agName, ts, timeOut);
-
-				// The agent creates the CFactory that manages every message which its
-				// performative is set to CFP and protocol set to CONTRACTNET. In this
-				// example the CFactory gets the name "TALK", we don't add any
-				// additional message acceptance criterion other than the required
-				// by the CONTRACTNET protocol (null) and we limit the number of simultaneous
-				// processors to 1, i.e. the requests will be attended one after another.
+				fcnp = new Jason_FCN_Participant(agName, ts);
 
 				Protocol_Factory = fcnp.newFactory(factName, null,null,1, 
 						((ConvMagentixAgArch)ts.getUserAgArch()).getJasonAgent(),timeOut);
-
-				//Conversation conv = new Conversation(agentConversationID,""); //the internal id is unknown yet
-				//((ConvCFactory)Protocol_Factory).cProcessorTemplate().setConversation(conv);
-
 
 
 				// Finally the factory is setup to answer to incoming messages that
@@ -128,7 +109,6 @@ public class ia_FCN_Participant extends protocolInternalAction {
 
 				((ConvMagentixAgArch)ts.getUserAgArch()).getJasonAgent().addFactoryAsParticipant(Protocol_Factory);
 
-				//This helps participant to finish joining in Magentix conversation thread.
 			}
 		}
 		else
@@ -163,7 +143,6 @@ public class ia_FCN_Participant extends protocolInternalAction {
 						((FCNConversation)conversationsList.get(agentConversationID)).kindOfAnswer = "notUnderstood";
 
 						conversationsList.get(agentConversationID).release_semaphore();
-						//fcnp = null;
 					}
 					else
 						if (protocolSteep.compareTo(Protocol_Template.TASK_DONE_STEP)==0){
@@ -174,7 +153,6 @@ public class ia_FCN_Participant extends protocolInternalAction {
 							((FCNConversation)conversationsList.get(agentConversationID)).taskDone = true;
 
 							conversationsList.get(agentConversationID).release_semaphore();
-							//fcnp = null;
 						}
 						else
 							if (protocolSteep.compareTo(Protocol_Template.TASK_NOT_DONE_STEP)==0){
@@ -184,12 +162,7 @@ public class ia_FCN_Participant extends protocolInternalAction {
 								((FCNConversation)conversationsList.get(agentConversationID)).taskDone = false;
 
 								conversationsList.get(agentConversationID).release_semaphore();
-								//fcnp = null;
 							}
-
-		/*if (true) { // just to show how to throw another kind of exception
-			throw new JasonException("not implemented!");
-		}*/
 
 		// everything ok, so returns true
 		return true;

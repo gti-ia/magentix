@@ -25,6 +25,11 @@ import es.upv.dsic.gti_ia.jason.conversationsFactory.ConvJasonAgent;
 import es.upv.dsic.gti_ia.jason.conversationsFactory.ConvMagentixAgArch;
 import es.upv.dsic.gti_ia.jason.conversationsFactory.FRCConversation;
 
+/**
+ * This class represents a template for a Fipa Recruiting Protocol from the initiator 
+ * perspective for being used in the Conversations Factory from Jason agents.
+ * @author Bexy Alfonso Espinosa
+ */
 
 public class Jason_Fipa_Recruiting_Initiator {
 
@@ -226,9 +231,6 @@ public class Jason_Fipa_Recruiting_Initiator {
 		
 		// Create factory
 
-		/*if (filter == null) {
-			filter = new MessageFilter("performative = REQUEST"); //falta AND protocol = fipa-request;
-		}*/
 		ConvCFactory theFactory = new ConvCFactory(name, filter,
 				availableConversations, myAgent);
 

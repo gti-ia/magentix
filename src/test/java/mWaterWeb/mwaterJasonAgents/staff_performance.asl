@@ -1,4 +1,6 @@
-// Agent staff in project mWater-Magentix-Jason
+// Agent staff_performance in project magentix2JasonConv
+
+
  { include("belief_builder.asl") }
 
 /* Initial beliefs and rules */
@@ -50,20 +52,21 @@ proposalsDeadLine(5000).
 
 
 /* Plans */
-!createConfiguration("Web simulation","japanese_auction",10,[27,2,2012],[27,2,2012]). //the second argument is 
-//!setConfiguration(81).
+//!createConfiguration("Web simulation","japanese_auction",10,[27,2,2012],[27,2,2012]). //the second argument is 
+!setConfiguration(556,1014,1014).
 
 /* ->  GENERAL PLANS  - */
 //Plan for executing a previous configuration
-+!setConfiguration(ConfID):configuration_structure(Conf)&configuration_Arguments_List(Conf,FieldsList,ConfID)
-<- .member(id(ConfID),FieldsList);
++!setConfiguration(ConfID,WMarketID,THallID):configuration_structure(Conf)&configuration_Arguments_List(Conf,FieldsList,ConfID)
+<- .setlogfile("logs/staff.log");//Form performance purposes only
+   .member(id(ConfID),FieldsList);
    ?configuration_Arguments_List(Conf,FieldsList,ConfID);
    ?Conf;
    .print("EXECUTTING CONFIGURATION: ",ConfID);
    //ontology
    +currentConfiguration(Conf);
-   	-+currentWaterMarket_id(ConfID);
-	-+currentTradinghall_id(ConfID).
+   -+currentWaterMarket_id(WMarketID);
+   -+currentTradinghall_id(THallID).
 
 //currentConfigurationID(ID)
 +!createConfiguration(Desc,ProtocolDescription,Participants,IniDate,EndDate)
@@ -79,11 +82,6 @@ proposalsDeadLine(5000).
 		final_date(EndDate),seller_timeout(0),seller_price(0),seller_percentage(0.0),
 		seller_wt(0),buyer_bid(0.0),buyer_enter(0.0),buyer_cont_enact(0.0),ba_agr_val(0),
 		ba_entitlement(0),mf_cont_enact(0.0),mf_accred(0),seller_th(0.0));
-	/*?configuration(id(ID),description(Desc),simulation_date([D,M,Y]),
-		negotiation_protocol(Protocol),group_selected(0),initial_date(IniDate),
-		final_date(EndDate),seller_timeout(0),seller_price(0),seller_percentage(0.0),
-		seller_wt(0),buyer_bid(0.0),buyer_enter(0.0),buyer_cont_enact(0.0),ba_agr_val(0),
-		ba_entitlement(0),mf_cont_enact(0.0),mf_accred(0),seller_th(0.0));*/
 		
 	+currentConfiguration(configuration(id(ID),description(Desc),simulation_date([D,M,Y]),
 		negotiation_protocol(Protocol),group_selected(0),initial_date(IniDate),
@@ -139,56 +137,12 @@ proposalsDeadLine(5000).
    
 
 
-/*+!buildRolMembersList([],AuxList,Members,Rol)
-<- Members = AuxList.
-+!buildRolMembersList([Head|Tail],AuxList,Members,Rol)
-<- Head =.. [Functor,Name,Rest];
-   if (Functor == Rol){.concat(AuxList,Name,NewAuxList);}
-   else {NewAuxList = AuxList};
-   !buildRolMembersList(Tail,NewAuxList,Members,Rol).
--!buildRolMembersList(List,AuxList,Members,Rol)
-<- Members = [].*/
-
-//new ID for the conversation when creating a new Trading table
-/*@pnewNTTID[atomic]
-+?newNTTID(WMarket,NewNTTconv)
-<-  ?currentConfigurationID(ConfID);
-	?getNewNTTID(ConfID,WMarket,ID);
-   .findall(ConvID,newNTTIDconv(S,ConvID),UsedIDs);
-   .concat("newNTTable",ID,IDtoVerify); 
-   if (.member(IDtoVerify,UsedIDs))
-   {	.sort(UsedIDs,SortedList);
-   		.length(SortedList,ListLength);
-   		LastIndex = ListLength -1;
-   		.nth(LastIndex,SortedList,LastId);
-   		NewID = ID +1;
-   }else{
-   		NewID = ID;
-   }
-   .concat("newNTTable",NewID,NewNTTconv).*/
-
 @pgetnewNTTID[atomic]
 +?getNewNTTID(ConfID,WMarket,NewID)//:openNTT(Tables)
-<- /*!makeNTTIdList(Tables,[],NewList);
-   .sort(NewList,SortedList);
-   .length(SortedList,ListLength);
-   LastIndex = ListLength -1;
-   .nth(LastIndex,SortedList,LastId);
-   NewID = LastId +1.*/
+<- 
    A = trading_table_new_id(configuration_id(ConfID),wmarket(WMarket),id(NewID));
-   //.print(A);
    ?A. //query in db
 
-
-
-/*+!makeNTTIdList([],List,NewList)
-<- NewList = List.
-
-+!makeNTTIdList([FirstTable|RestTables],List,NewList)
-<- 
-	?table_Arguments_List(FirstTable,ArgumentsList,TableID);
-   .concat(List,[TableID],TempList);
-   !makeNTTIdList(RestTables,TempList,NewList).*/
 
 @psubprotocolID[atomic]
 +?subprotocolID(ID,Prot,Sender):subprotocolConvIDLiteral(ID,Prot,ConvID)
@@ -347,11 +301,7 @@ request(accreditation,Action,ParamList) &
 .member(user_name(UserName),ParamList)&
 .member(wmarket(WMarketID),ParamList)
 //userInfo_Arguments_List(User,FieldsList,UserID)
-<- /*?user_structure(Usr);
-   ?userInfo_Arguments_List(UserInfo,UsrFieldsList,UserID);
-   .member(name(UserName),UsrFieldsList);
-   ?UserInfo; //user must exist
-   if (accrediteduser(UserID,WMarketID)){.print("Already accredited UserID: ",UserID," WMarketID: ",WMarketID); .fail;}*/
+<- 
    .ia_fipa_request_Participant("joinconversation",TO,ConvID).
 
 +request(Sender,Content,Data,ConvID):accreditConvIDLiteral(ConvID,_)&
@@ -359,13 +309,6 @@ possibleactions(L)&not .member(Content,L)
 <- .print("- I've received a request for doing: ",Content," but i don't understand. It is not inside the actions I can do.");
    -+taskStatus(Content,notunderstood,Sender,ConvID);
    .ia_fipa_request_Participant("notunderstood",ConvID).
-
-/*+request(Sender,Content,Data,ConvID):Content=accreditation&
-request(Content,Data,ParamList)&.member(user(User),ParamList)&.member(wmarket(WMarket),ParamList)&
-userInfo_Arguments_List(User,FieldsList,UserID)&accreditConvIDLiteral(ConvID,_)&.ground(UserID)&accrediteduser(UserID,WMarket)
-<- .print("- I've received a request for doing: ",Content," but I refuse. User ",Sender," is already accredited in this market.");
-   -+taskStatus(Content,refuse,Sender,ConvID);
-   .ia_fipa_request_Participant("refuse",ConvID).*/
 
 +request(Sender,Content,Data,ConvID):Content=accreditation&accreditConvIDLiteral(ConvID,_)&
 request(Content,Data,ParamList)&.member(user_name(UserName),ParamList)&.member(wmarket(WMarket),ParamList)//&
@@ -430,8 +373,7 @@ taskStatus(Content,refuse,Sender,ConvID)
 +!doTask(accreditation,Sender,Data,ConvID):Content=accreditation&accreditConvIDLiteral(ConvID,_)&
 request(Content,Data,ParamList)&
 .member(user_name(UserName),ParamList)&.member(wmarket(WMarketID),ParamList)
-<- //.concat([Sender],L,NewAccUsers);
-   //-+accreditedusers(NewAccUsers);
+<- 
    ?user_structure(User);
    ?userInfo_Arguments_List(User,UsrFieldsList,UserID);
    .concat("",UserName,StrUserName);
@@ -443,16 +385,59 @@ request(Content,Data,ParamList)&
    .member(trust_value(0),AccUFieldList);  
    .member(sanction_value("not-sanctioned"),AccUFieldList);
    .member(id(UserID),AccUFieldList);
-  
-   //.print("Before inserting...AccUser: ",AccUser);
-   +AccUser;  //adding it in the db
 
+   +AccUser;  //adding it in the db
    
    ?water_market_structure(WM);
    ?water_market_Arguments_List(WM,WMFieldsList,WMarketID);
    ?WM;
    .print("- Accredited: ",AccUser," WaterMarket ",WM);
-   +taskResult(Content,ConvID,Sender,accredited(User,WM)).
+   +taskResult(Content,ConvID,Sender,accredited(User,WM));
+
+   //-- FOR PERFORMANCE TESTING PURPOSES:
+   ?recruited_participant_structure(RPart);
+   ?recruited_participant_Arguments_List(RPart,RPFieldsList,RPID);
+   ?table_structure(Table);
+   ?table_Arguments_List(Table,TableFieldsList,TTID);
+   ?currentConfiguration(Conf);
+   ?configuration_Arguments_List(Conf,ConfFieldsList,ConfID);
+   .member(trading_table_id(TTID),RPFieldsList);
+   .member(wmarket(WMarketID),RPFieldsList);
+   .member(configuration_id(ConfID),RPFieldsList);
+   .member(user_id(UserID),RPFieldsList);
+   .member(id(TTID),TableFieldsList);
+   .member(wmarket(WMarketID),TableFieldsList);
+   .member(configuration_id(ConfID),TableFieldsList);
+   .findall(Table,RPart&Table,ParticipantTablesList);
+   .foreach (.member(T,ParticipantTablesList)){
+  			?table_Arguments_List(T,TFieldsList,TID);
+			?recruited_participant_structure(RPart2);
+   			?recruited_participant_Arguments_List(RPart2,RPFieldsList2,RPID2);
+   			.member(trading_table_id(TID),RPFieldsList2);
+   			.member(wmarket(WMarketID),RPFieldsList2);
+   			.member(configuration_id(ConfID),RPFieldsList2);
+   			.member(user_id(UserID2),RPFieldsList2);
+   			?accredited_user_structure(AccUser2);
+   			?accredited_user_Arguments_List(AccUser2,AccUFieldList2,UserID2,WMarketID);
+   			.findall(RPart2,RPart2&AccUser2&T,AccreditedPart);
+			//.print("xxxxTable: ",T," RParticipant: ",RPart2," AccUser2: ",AccUser2);   			
+   			.length(AccreditedPart,CountRPart);
+
+		   	?table_Arguments_List(T,TFieldsList,TID);
+		   	.member(opening_user(OpUserID),TFieldsList);
+		   	.member(num_participants(NumPart),TFieldsList);
+		    ?user_structure(OpeningUser);
+		    ?userInfo_Arguments_List(OpeningUser,OpeningUserFieldsList,OpUserID);
+		    ?OpeningUser;
+		    .member(name(OpeningUsername),OpeningUserFieldsList);
+		   	if (NumPart==CountRPart)
+		   	{
+		   		//.print("Enviando a ",OpeningUsername);
+		   		.send(OpeningUsername,tell,allmemberjoined(T,UserID,[],true));
+		   	};
+   }.
+
+   
 
 -!doTask(Content,Sender,Data,ConvID):Content=accreditation & accreditConvIDLiteral(ConvID,_)
 <- .ia_fipa_request_Participant("failure",Content,ConvID).
@@ -1164,7 +1149,7 @@ taskStatus(Content,_,Sender,ConvID)&request(Content,Data,ReqParamList)
 
 
 +?addParticipation(Table,Participant,ParticipationsNum)
-<-  .print("Adding participations ",ParticipationsNum," of ",Participant," in table: ",Table);
+<-  //.print("Adding participations ",ParticipationsNum," of ",Participant," in table: ",Table);
 	?table_Arguments_List(Table,TableFields,TableID);
    .member(configuration_id(ConfID),TableFields);
    .member(wmarket(WMarket),TableFields);

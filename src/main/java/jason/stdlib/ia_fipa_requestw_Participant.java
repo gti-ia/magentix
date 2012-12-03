@@ -11,6 +11,12 @@ import es.upv.dsic.gti_ia.jason.conversationsFactory.Protocol_Template;
 import es.upv.dsic.gti_ia.jason.conversationsFactory.protocolInternalAction;
 import es.upv.dsic.gti_ia.jason.conversationsFactory.participant.Jason_Fipa_RequestW_Participant;
 
+/**
+ * This class represents the internal action to be used when adding a conversation to 
+ * a Jason agent under the Fipa Request When Protocol as participant
+ * @author Bexy Alfonso Espinosa
+ */
+
 public class ia_fipa_requestw_Participant extends protocolInternalAction {
 	/**
 	 * 
@@ -66,8 +72,6 @@ public class ia_fipa_requestw_Participant extends protocolInternalAction {
 
 		agentConversationID = getAtomAsString(args[args.length-1]);
 		
-		//ConvJasonAgent myag = ((ConvMagentixAgArch)ts.getUserAgArch()).getJasonAgent();
-		
 		ts.getAg().getLogger().info("CALLING INTERNAL ACTION WITH STEEP: '"+protocolSteep+"'"+" CID: "+agentConversationID); 
 		
 		if (protocolSteep.compareTo(Protocol_Template.JOIN_STEP)==0){
@@ -81,13 +85,6 @@ public class ia_fipa_requestw_Participant extends protocolInternalAction {
 				AgentID tmpid = ((ConvMagentixAgArch)ts.getUserAgArch()).getJasonAgent().getAid();
 				frp = new Jason_Fipa_RequestW_Participant(agName, ts, tmpid, timeOut);
 
-				// The agent creates the CFactory that manages every message which its
-				// performative is set to CFP and protocol set to CONTRACTNET. In this
-				// example the CFactory gets the name "TALK", we don't add any
-				// additional message acceptance criterion other than the required
-				// by the CONTRACTNET protocol (null) and we limit the number of simultaneous
-				// processors to 1, i.e. the requests will be attended one after another.
-
 				Protocol_Factory = frp.newFactory("Protocol_Factory", null,1, 
 						((ConvMagentixAgArch)ts.getUserAgArch()).getJasonAgent());
 
@@ -95,10 +92,9 @@ public class ia_fipa_requestw_Participant extends protocolInternalAction {
 				// can start the participation of the agent in a new conversation
 
 				((ConvMagentixAgArch)ts.getUserAgArch()).getJasonAgent().addFactoryAsParticipant(Protocol_Factory);
-				//conversationsList.put(agentConversationID, conv);
+				//This must be substituted by a Wait state
 				int i = 0;
 				while (i>10000){i++;}
-				//ts.getLogger().info("Factoria añadida "+agentConversationID);
 				
 			}
 			
@@ -110,11 +106,6 @@ public class ia_fipa_requestw_Participant extends protocolInternalAction {
 			if (protocolSteep.compareTo(Protocol_Template.AGREE_STEP)==0){
 				
 				frp.RequestResult = Protocol_Template.AGREE_STEP;
-				//frp.Protocol_Semaphore.release();
-				//myag.getConversationByJasonID(agentConversationID).release_semaphore();
-
-				//Removing conversation from pending conversations list and adding it to the 
-				//list of conversations of the participant agent
 				Conversation conv = Protocol_Factory.removeConversationByJasonID(agentConversationID);
 				conversationsList.put(agentConversationID, conv);
 				
@@ -125,8 +116,6 @@ public class ia_fipa_requestw_Participant extends protocolInternalAction {
 				if (protocolSteep.compareTo(Protocol_Template.REFUSE_STEP)==0){
 
 					frp.RequestResult = Protocol_Template.REFUSE_STEP;					
-					//frp.Protocol_Semaphore.release();
-					//myag.getConversationByJasonID(agentConversationID).release_semaphore();
 					
 					Conversation conv = Protocol_Factory.removeConversationByJasonID(agentConversationID);
 					conversationsList.put(agentConversationID, conv);
@@ -137,8 +126,6 @@ public class ia_fipa_requestw_Participant extends protocolInternalAction {
 					if (protocolSteep.compareTo(Protocol_Template.NOT_UNDERSTOOD_STEP)==0){
 
 						frp.RequestResult = Protocol_Template.NOT_UNDERSTOOD_STEP;						
-						//frp.Protocol_Semaphore.release();
-						//myag.getConversationByJasonID(agentConversationID).release_semaphore();
 
 						Conversation conv = Protocol_Factory.removeConversationByJasonID(agentConversationID);
 						conversationsList.put(agentConversationID, conv);
@@ -147,23 +134,17 @@ public class ia_fipa_requestw_Participant extends protocolInternalAction {
 					}
 					else
 						if (protocolSteep.compareTo(Protocol_Template.INFORM_STEP)==0){
-							//getTermAsString(args[2]): has the task done
 							frp.TaskResult = getTermAsString(args[1]);
 							
 							frp.TaskDesition = Protocol_Template.INFORM_STEP;						
-							//frp.Protocol_Semaphore.release();
-							//myag.getConversationByJasonID(agentConversationID).release_semaphore();
 							
 							conversationsList.get(agentConversationID).release_semaphore();
 							
 						}
 						else
 							if (protocolSteep.compareTo(Protocol_Template.FAILURE_STEP)==0){
-								//getTermAsString(args[2]): has the task done
 
 								frp.TaskDesition = Protocol_Template.FAILURE_STEP;						
-								//frp.Protocol_Semaphore.release();
-								//myag.getConversationByJasonID(agentConversationID).release_semaphore();
 								
 								conversationsList.get(agentConversationID).release_semaphore();
 							}

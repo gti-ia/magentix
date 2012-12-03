@@ -1,7 +1,5 @@
 package jason.stdlib;
 
-
-
 import jason.JasonException;
 import jason.asSemantics.TransitionSystem;
 import jason.asSemantics.Unifier;
@@ -17,6 +15,11 @@ import es.upv.dsic.gti_ia.jason.conversationsFactory.initiator.Jason_Fipa_Reques
 
 import es.upv.dsic.gti_ia.core.ACLMessage;
 
+/**
+ * This class represents the internal action to be used when adding a conversation to 
+ * a Jason agent under the Fipa Request When Protocol as initiator
+ * @author Bexy Alfonso Espinosa
+ */
 
 public class ia_fipa_requestw_Initiator extends protocolInternalAction {
 	
@@ -110,32 +113,20 @@ public class ia_fipa_requestw_Initiator extends protocolInternalAction {
 			ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
 			msg.setProtocol("request-when");
 
-			//int participantsNumber = participants.size();
-
 			msg.setContent(agName+","+initialInfo+","+agentConversationID);
 
 			if (fri == null){
-				/* The agent creates the CFactory that creates processors that initiate
-        		 CONTRACT_NET protocol conversations. In this
-        		 example the CFactory gets the name "TALK", we don't add any
-        		 additional message acceptance criterion other than the required
-        		 by the CONTRACT_NET protocol (null) and we do not limit the number of simultaneous
-        		 processors (value 0)*/
 				fri = new Jason_Fipa_RequestW_Initiator(agName, ts);
 
 
 				Protocol_Factory = fri.newFactory("Protocol_Factory", null, 
 						msg, 1, ((ConvMagentixAgArch)ts.getUserAgArch()).getJasonAgent(),timeOut);
-				/* The factory is setup to answer start conversation requests from the agent
-       		 using the FIPA_REQUEST protocol.*/
 
 				((ConvMagentixAgArch)ts.getUserAgArch()).getJasonAgent().addFactoryAsInitiator(Protocol_Factory);
 				
 			}
 
 			/* finally the new conversation starts an asynchronous conversation.*/
-
-
 			
 			myag.lock();
 			String ConvID = myag.newConvID();
@@ -147,7 +138,6 @@ public class ia_fipa_requestw_Initiator extends protocolInternalAction {
 			
 			ConvCProcessor convPprocessor =  myag.newConversation(msg, processorTemplate, false, Protocol_Factory);
 			convPprocessor.setConversation(conv);
-			//myag.insertConversation( new Conversation(convPprocessor,agentConversationID,ConvID));
 			myag.unlock();
 
 			conversationsList.put(agentConversationID, conv);
@@ -157,7 +147,6 @@ public class ia_fipa_requestw_Initiator extends protocolInternalAction {
 			if(protocolSteep.compareTo(Protocol_Template.REQUEST_STEP)==0){
 
 				((FRWConversation)conversationsList.get(agentConversationID)).frMessage=getTermAsString(args[1]);
-				//conversationsList.get(agentConversationID).release_semaphore();
 				
 				ACLMessage requestmsg = new ACLMessage();
 				requestmsg.setSender(myag.getAid());

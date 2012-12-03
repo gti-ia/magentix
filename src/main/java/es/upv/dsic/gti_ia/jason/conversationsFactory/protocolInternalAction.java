@@ -8,11 +8,13 @@ import java.util.List;
 import jason.asSemantics.DefaultInternalAction;
 import jason.asSyntax.*;
 
+/**
+ * This class represents an abstract internal action with the main elements 
+ * of this type of action to be inherited when using conversations in Jason agents
+ * @author Bexy Alfonso Espinosa
+ */
+
 public abstract class protocolInternalAction extends DefaultInternalAction {
-
-
-	//MyFIPA_CONTRACTNET_Initiator fcnp;
-
 	/**
 	 * 
 	 */
@@ -22,6 +24,7 @@ public abstract class protocolInternalAction extends DefaultInternalAction {
 	protected String protocolSteep;
 	protected ConvCFactory Protocol_Factory;
 	protected int timeOut = 3000;
+	protected int joinTimeOut = 4000;
 	protected long conversationTime;
 	
 	protected String agName;

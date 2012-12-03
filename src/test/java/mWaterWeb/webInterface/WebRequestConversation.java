@@ -68,10 +68,11 @@ public class WebRequestConversation extends Conversation {
 						String wmarket = mWaterBB.searchFieldValueInTermList("trading_table","wmarket",((Literal)i).getTerms(),u);
 						String conf_id = mWaterBB.searchFieldValueInTermList("trading_table","configuration_id",((Literal)i).getTerms(),u);
 						String opDate = mWaterBB.searchFieldValueInTermList("trading_table","opening_date",((Literal)i).getTerms(),u);
+						String clDate = mWaterBB.searchFieldValueInTermList("trading_table","closing_date",((Literal)i).getTerms(),u);
 						String cond = mWaterBB.searchFieldValueInTermList("trading_table","conditions",((Literal)i).getTerms(),u);
 						String opUser = mWaterBB.searchFieldValueInTermList("trading_table","opening_user",((Literal)i).getTerms(),u);
 						String protType = mWaterBB.searchFieldValueInTermList("trading_table","protocol_type",((Literal)i).getTerms(),u);
-						invittoinsert = comm.new TradingTable(tableid, wmarket, conf_id, opDate, cond, opUser,protType);
+						invittoinsert = comm.new TradingTable(tableid, wmarket, conf_id, clDate, opDate, cond, opUser,protType);
 						((AccreditationOutJSONObject)conversationResult).content.invitations[cont] = invittoinsert;
 						cont++;
 					}
@@ -84,10 +85,11 @@ public class WebRequestConversation extends Conversation {
 						String wmarket = mWaterBB.searchFieldValueInTermList("trading_table","wmarket",((Literal)t).getTerms(),u);
 						String conf_id = mWaterBB.searchFieldValueInTermList("trading_table","configuration_id",((Literal)t).getTerms(),u);
 						String opDate = mWaterBB.searchFieldValueInTermList("trading_table","opening_date",((Literal)t).getTerms(),u);
+						String clDate = mWaterBB.searchFieldValueInTermList("trading_table","closing_date",((Literal)t).getTerms(),u);
 						String cond = mWaterBB.searchFieldValueInTermList("trading_table","conditions",((Literal)t).getTerms(),u);
 						String opUser = mWaterBB.searchFieldValueInTermList("trading_table","opening_user",((Literal)t).getTerms(),u);
 						String protType = mWaterBB.searchFieldValueInTermList("trading_table","protocol_type",((Literal)t).getTerms(),u);
-						tabletoinsert = comm.new TradingTable(tableid, wmarket, conf_id, opDate, cond, opUser,protType);
+						tabletoinsert = comm.new TradingTable(tableid, wmarket, conf_id, clDate, opDate, cond, opUser,protType);
 						((AccreditationOutJSONObject)conversationResult).content.tradingTables[cont] = tabletoinsert;
 
 						cont++;
@@ -108,10 +110,11 @@ public class WebRequestConversation extends Conversation {
 						String wmarket = mWaterBB.searchFieldValueInTermList("trading_table","wmarket",((Literal)tt).getTerms(),u);
 						String conf_id = mWaterBB.searchFieldValueInTermList("trading_table","configuration_id",((Literal)tt).getTerms(),u);
 						String opDate = mWaterBB.searchFieldValueInTermList("trading_table","opening_date",((Literal)tt).getTerms(),u);
+						String clDate = mWaterBB.searchFieldValueInTermList("trading_table","closing_date",((Literal)tt).getTerms(),u);
 						String cond = mWaterBB.searchFieldValueInTermList("trading_table","conditions",((Literal)tt).getTerms(),u);
 						String opUser = mWaterBB.searchFieldValueInTermList("trading_table","opening_user",((Literal)tt).getTerms(),u);
 						String protType = mWaterBB.searchFieldValueInTermList("trading_table","protocol_type",((Literal)tt).getTerms(),u);
-						tradingtable = comm.new TradingTable(tableid, wmarket, conf_id, opDate, cond, opUser,protType);
+						tradingtable = comm.new TradingTable(tableid, wmarket, conf_id, clDate, opDate, cond, opUser,protType);
 						((JoinTableOutJSONObject)conversationResult).content.tt=tradingtable;
 						
 						//Filling water rights

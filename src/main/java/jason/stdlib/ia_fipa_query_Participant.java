@@ -13,6 +13,12 @@ import es.upv.dsic.gti_ia.jason.conversationsFactory.protocolInternalAction;
 
 import es.upv.dsic.gti_ia.jason.conversationsFactory.participant.Jason_Fipa_Query_Participant;
 
+/**
+ * This class represents the internal action to be used when adding a conversation to 
+ * a Jason agent under the Fipa Query If/Ref Protocol as participant
+ * @author Bexy Alfonso Espinosa
+ */
+
 public class ia_fipa_query_Participant extends protocolInternalAction{
 
 	/**
@@ -20,16 +26,6 @@ public class ia_fipa_query_Participant extends protocolInternalAction{
 	 */
 	private static final long serialVersionUID = 1L;
 
-	/*jasonAgentsConversations.nconversationsFactory.participant.ia_fipa_query_Participant("joinconversation",TO,ConvID).
-	 * 		+query(Sender,Query,Kind,ConvID):not wantToAnswer(Sender,Protocol)
-	 *jasonAgentsConversations.nconversationsFactory.participant.ia_fipa_query_Participant("refuse",ConvID)
-	 *jasonAgentsConversations.nconversationsFactory.participant.ia_fipa_query_Participant("agree",Result,ConvID) 
-	 *jasonAgentsConversations.nconversationsFactory.participant.ia_fipa_query_Participant("failure",ConvID) 
-	 *jasonAgentsConversations.nconversationsFactory.participant.ia_fipa_query_Participant("notunderstood",ConvID) 
-	 * 
-	 * */
-	
-	
  	Jason_Fipa_Query_Participant fqp = null;
 
 
@@ -87,35 +83,14 @@ public class ia_fipa_query_Participant extends protocolInternalAction{
 					timeOut = getTermAsInt(args[1]);
 				}
 
-				//AgentID tmpid = ((ConvMagentixAgArch)ts.getUserAgArch()).getJasonAgent().getAid();
 				fqp = new Jason_Fipa_Query_Participant(agName, ts);
-
-				// The agent creates the CFactory that manages every message which its
-				// performative is set to CFP and protocol set to CONTRACTNET. In this
-				// example the CFactory gets the name "TALK", we don't add any
-				// additional message acceptance criterion other than the required
-				// by the CONTRACTNET protocol (null) and we limit the number of simultaneous
-				// processors to 1, i.e. the requests will be attended one after another.
 
 				Protocol_Factory = fqp.newFactory(factName, null,1, 
 						((ConvMagentixAgArch)ts.getUserAgArch()).getJasonAgent());
 
-				//Conversation conv = new Conversation(agentConversationID,""); //the internal id is unknown yet
-				//((ConvCFactory)Protocol_Factory).cProcessorTemplate().setConversation(conv);
-
-				// Finally the factory is setup to answer to incoming messages that
-				// can start the participation of the agent in a new conversation
-
 				((ConvMagentixAgArch)ts.getUserAgArch()).getJasonAgent().addFactoryAsParticipant(Protocol_Factory);
-				//conversationsList.put(agentConversationID, conv);
-				//int i = 0;
-				//while (i>10000){i++;}
 
 			}
-
-
-			
-
 		}
 		else
 			if (protocolSteep.compareTo(Protocol_Template.AGREE_STEP)==0){
@@ -137,7 +112,6 @@ public class ia_fipa_query_Participant extends protocolInternalAction{
 				}
 				
 				conv.release_semaphore();
-				//fqp = null;
 			}
 			else
 				if (protocolSteep.compareTo(Protocol_Template.REFUSE_STEP)==0){
@@ -147,7 +121,6 @@ public class ia_fipa_query_Participant extends protocolInternalAction{
 					FQConversation myConv = (FQConversation) conversationsList.get(agentConversationID);
 					myConv.result=ACLMessage.getPerformative(ACLMessage.REFUSE);
 					conversationsList.get(agentConversationID).release_semaphore();
-					//fqp = null;
 				}
 				else
 					if (protocolSteep.compareTo(Protocol_Template.NOT_UNDERSTOOD_STEP)==0){
@@ -157,7 +130,6 @@ public class ia_fipa_query_Participant extends protocolInternalAction{
 						FQConversation myConv = (FQConversation) conversationsList.get(agentConversationID);
 						myConv.result=ACLMessage.getPerformative(ACLMessage.NOT_UNDERSTOOD);
 						conversationsList.get(agentConversationID).release_semaphore();
-						//fqp = null;
 					}
 					else
 						if (protocolSteep.compareTo(Protocol_Template.FAILURE_STEP)==0){
@@ -166,7 +138,6 @@ public class ia_fipa_query_Participant extends protocolInternalAction{
 							FQConversation myConv = (FQConversation) conversationsList.get(agentConversationID);
 							myConv.result=ACLMessage.getPerformative(ACLMessage.FAILURE);
 							conversationsList.get(agentConversationID).release_semaphore();
-							// fqp = null;
 						}
 
 		return true;

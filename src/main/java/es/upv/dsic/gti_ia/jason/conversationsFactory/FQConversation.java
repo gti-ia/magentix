@@ -4,6 +4,12 @@ import jason.asSyntax.Literal;
 import jason.asSyntax.LiteralImpl;
 import es.upv.dsic.gti_ia.core.AgentID;
 
+/**
+ * This class stores the main elements to be tracked of a conversation under a 
+ * Fipa Query If/Ref Protocol
+ * @author Bexy Alfonso Espinosa
+ */
+
 public class FQConversation extends Conversation {
 
 	public String initialMessage = "";

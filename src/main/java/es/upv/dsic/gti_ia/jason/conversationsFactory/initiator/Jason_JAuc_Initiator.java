@@ -1,7 +1,5 @@
 package es.upv.dsic.gti_ia.jason.conversationsFactory.initiator;
 
-//String percept = "conversationended("+participations+","+winner+","+conv.NextBid+","+conv.jasonConvID+")[source(self)]";
-
 import jason.asSemantics.TransitionSystem;
 import jason.asSyntax.Literal;
 
@@ -27,6 +25,12 @@ import es.upv.dsic.gti_ia.cAgents.WaitState;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.MessageFilter;
+
+/**
+ * This class represents a template for a Japanese Auction Protocol from the initiator 
+ * perspective for being used in the Conversations Factory from Jason agents.
+ * @author Bexy Alfonso Espinosa
+ */
 
 public class Jason_JAuc_Initiator {
 
@@ -265,12 +269,13 @@ public class Jason_JAuc_Initiator {
 	 * @param availableConversations maximum number of conversation this CFactory can manage simultaneously
 	 * @param myAgent agent owner of this Cfactory
 	 * @param participants number of participants
-	 * @param timeout for waiting for answers
+	 * @param answ_timeout timeout for waiting for answers
+	 * @param join_timeout timeout for waiting for participants to join
 	 * @return the a new contract net initiator CFactory
 	 */
 	public ConvCFactory newFactory(String name, MessageFilter filter,
 			ACLMessage template, int availableConversations, ConvJasonAgent myAgent,
-			int participants, int timeout) {
+			int participants, int answ_timeout, int join_timeout) {
 
 		// Create factory
 
@@ -290,7 +295,7 @@ public class Jason_JAuc_Initiator {
 		BEGIN.setMethod(new BEGIN_Method());
 
 		
-		WaitState WAIT_FOR_PARTICIPANT_TO_JOIN = new WaitState("WAIT_FOR_PARTICIPANT_TO_JOIN", 4000);
+		WaitState WAIT_FOR_PARTICIPANT_TO_JOIN = new WaitState("WAIT_FOR_PARTICIPANT_TO_JOIN", join_timeout);
 		processor.registerState(WAIT_FOR_PARTICIPANT_TO_JOIN);
 		processor.addTransition(BEGIN, WAIT_FOR_PARTICIPANT_TO_JOIN);
 		
@@ -316,7 +321,7 @@ public class Jason_JAuc_Initiator {
 		processor.addTransition(RECEIVE_CANCEL_WAIT, BID_CALL);
 
 		// WAIT_FOR_ACCEPTANCES State
-		WaitState WAIT_FOR_ACCEPTANCES = new WaitState("WAIT_FOR_ACCEPTANCES", timeout);
+		WaitState WAIT_FOR_ACCEPTANCES = new WaitState("WAIT_FOR_ACCEPTANCES", answ_timeout);
 		//WAIT_FOR_ACCEPTANCES.setWaitType(WaitState.ABSOLUT);
 		processor.registerState(WAIT_FOR_ACCEPTANCES);
 		processor.addTransition(BID_CALL, WAIT_FOR_ACCEPTANCES);

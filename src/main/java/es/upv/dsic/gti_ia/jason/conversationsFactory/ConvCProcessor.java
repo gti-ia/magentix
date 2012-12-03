@@ -6,6 +6,11 @@ import es.upv.dsic.gti_ia.cAgents.CFactory;
 import es.upv.dsic.gti_ia.cAgents.CProcessor;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 
+/**
+ * This class represents a CProcessor for being used in the Conversations Factory from Jason agents.
+ * @author Bexy Alfonso Espinosa
+ */
+
 public class ConvCProcessor extends CProcessor{
 
 	Conversation JasonConversation = null;

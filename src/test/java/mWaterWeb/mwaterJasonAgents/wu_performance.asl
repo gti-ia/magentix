@@ -1,7 +1,7 @@
-// Agent wu in project mWater-Magentix-Jason
+// Agent wu_performance in project magentix2JasonConv
 
 /* Initial beliefs and rules */
-staffname(staff).  //This must be obtained in other way
+staffname(staff_performance).  //This must be obtained in other way
 
 //ontology: invitation(Sender,TableID,WMarket,ConfID)
 //pendingInvitations(TableID, WMarketID, PI):- .count(invitation(Table,SenderUser),PI). 
@@ -47,6 +47,7 @@ staffname(staff).  //This must be obtained in other way
 <- .send(Sn,askOne,subprotocoljoinTimeOut(Rol,TO),subprotocoljoinTimeOut(Rol,TO)).
 -!getSubprotocoljoinTimeOut(Rol,TO)
 <- TO = -1.
+
 
 +!getProposalsDeadLine(DL):staffname(Sn)
 <- .send(Sn,askOne,proposalsDeadLine(DL),proposalsDeadLine(DL)).
@@ -138,7 +139,6 @@ staffname(staff).  //This must be obtained in other way
 <- //!userlInfoFiledsToStructure(PersonalInfoList,UserInfo,UserID);
    if (WM==""){ .send(Sn,askOne,currentWaterMarket_id(WMarket),Reply);}
    else {Reply=currentWaterMarket_id(WM); }
-
    if (Reply==false){.fail;}
    else
 	{  ?Reply=currentWaterMarket_id(WMarket);
@@ -430,7 +430,7 @@ request(joinNTT, Request,[table(Table),user(MyUserInfo),rol(MyRol)] )
    .member(rol(Rol),ProtocolParameters);
    .member(table(Table),ProtocolParameters);
    if ((TO \== -1)&(DL \== -1 )&(ID \== -1))
-     {  .print("Starting subprotocol ",Protocol," as ",Rol," in table ",Table);
+     {  //.print("Starting subprotocol ",Protocol," as ",Rol," in table ",Table);
         if (ProtName == "contract_net")
         	{
    			.member(water_right_fields(WaterRightFieldsList),ProtocolParameters);
@@ -665,7 +665,7 @@ ProtName == "japanese_auction" //ontology
    ?protocol_request(ProtName,ProtID, PRequest, [water_right(WaterRight),table(Table),sender(Me),max_iterations(MaxIter),increment(Inc),initial_bid(IniBid)]);
    +subprotocolConv(Me,ProtName,PRequest,seller,SubProtConvID);
    !notifyParticipants(Buyers,SubProtConvID,ProtName);
-   .ia_JAuc_Initiator("start",JTO,TO, IniBid,Inc,MaxIter,"Starting japanese auction", Buyers,PRequest,SubProtConvID).
+   .ia_JAuc_Initiator("start", JTO,TO, IniBid,Inc,MaxIter,"Starting japanese auction", Buyers,PRequest,SubProtConvID).
 
 +conversationended(Participations,Winner,WinnerBid,SubProtConvID):myname(Me)&ProtName="japanese_auction"&
 subprotocolConv(Me,ProtName,PRequest,seller,SubProtConvID)
@@ -715,17 +715,20 @@ subprotocolConv(Me,ProtName,PRequest,seller,SubProtConvID)
 				if (.ground(Winner)){
 					//fifth param of auctionsummary is if there was winner
 					if (Participant\==Winner)
-					 { XX=auctionsummary(Me,ProtName,TableID,WRID,true,Winner,WinnerBid,SubProtConvID);
-					   .print("Sending auction summary to participant: ",Participant," the winner: ",Winner," : ",XX);
+					 {  
+					    XX=auctionsummary(Me,ProtName,TableID,WRID,true,Winner,WinnerBid,SubProtConvID);
+					   //.print("Sending auction summary to participant: ",Participant," the winner: ",Winner);//," : ",XX);
 					   .send(Participant,tell,XX);}
 				}else{
-				     XX=auctionsummary(Me,ProtName,TableID,WRID,false,Winner,WinnerBid,SubProtConvID);
-				    .print("NO WINNER!!! SENDING INFOMRATION TO : ",Participant," the winner: ",Winner," : ",XX);
+				     XX=auctionsummary(Me,ProtName,TableID,WRID,false,"",WinnerBid,SubProtConvID);
+				    .print("NO WINNER!!! SENDING INFOMRATION TO : ",Participant);//," the winner: ",Winner," : ",XX);
 					.send(Participant,tell,XX);
 				}
 			}
 		}
-		.print("Japanesea auction finished!!!").
+		.concat("Finishing- Table: ",TableID,Text);
+	    .ia_save_log(Text);
+		.print("Japanese auction finished!!!").
 	
   //.print("Conversation ",SubProtConvID," ENDED!  ++++++++++++++").
 
@@ -735,7 +738,7 @@ subprotocolConv(Me,ProtName,PRequest,seller,SubProtConvID)
 
 @pjoinja[atomic]
 +?joinprotocol(ProtName,SubProtConvID):ProtName == "japanese_auction"
-<- .print("I'm going to join protocol ",ProtName," SubProtConvID ",SubProtConvID); 
+<- .print("I'm going to join protocol ",ProtName);//," SubProtConvID ",SubProtConvID); 
 	!getSubprotocolTimeOut(participant,TO);
    .ia_JAuc_Participant("joinconversation",TO,SubProtConvID).
 
@@ -746,17 +749,18 @@ ProtName = "japanese_auction" & protocol_request(ProtName,Protocol, PRequest, Pa
         //.print("////callforbid  despues de de PRequest: ",PRequest);
     	.member(water_right(WRight),ParamList);
     	.time(H,M,S);
-    	.print("Call for bid received! Bid: ",Bid," WRight: ",WRight," Time: ",H,".",M,".",S);
+    	if (water_right_structure(Wright)){?waterRight_Arguments_List(Wright,WRFieldsList,WRID);};
+    	//.print("Call for bid received! Bid: ",Bid," WRight: ",WRID);//," Time: ",H,".",M,".",S);
 		.member(table(Table),ParamList);
 		?table_Arguments_List(Table,TableFieldsList,TableID);
     	.member(wmarket(WMarket),TableFieldsList);
     	
     	?acceptPrice(WRight,TableID,WMarket,Protocol,Bid,RemainingParticipants,Reply); //ontology: there must be a plan in the agent for this
     	if ((.ground(Reply))&(Reply = true))
-    		{.print("I'm agree with bid.");
+    		{.print("I'm agree with bid ",Bid);
     		 .ia_JAuc_Participant("agree",SubProtConvID);}
     	else
-    		{.print("Withdrawal!!! ");
+    		{.print("Withdrawal!!! Bid: ",Bid);
     		 .ia_JAuc_Participant("withdrawal",SubProtConvID);}.
     		   		
 +!goonwithbidagree(SubProtConvID)
@@ -787,10 +791,10 @@ ProtName = "japanese_auction" & protocol_request(ProtName,Protocol, PRequest, Pa
 //auctionsummary("VBotti",protocolrequest(4,water_right(owner(2),id(67),authorized_extraction_flow(23),authorization_date([21,4,2012]),authorized(true),type_of_water("energy"),initial_date_for_extraction([1,1,2010]),final_date_for_extraction([31,12,2014]),aggregation_right(0),season_unit(1),season(1),general_water_right(1)),trading_table(configuration_id(556),wmarket(1014),id(2),opening_date([28,2,2012]),closing_date([]),conditions(""),access_type("Public"),deal(""),protocol_parameters("timeout:1,price:13,percentage:0.05"),num_iter_until_agreem(0),time_until_agreem(0),num_participants(4),opening_user(2),protocol_type(4),role_when_opening_table("Seller"),number_of_opener_participations(0),th_id(1014)),"VBotti",12,5,1),false,Winner,6,subprotocol(4,"4.VBotti.2012.2.12.3.9.0")),mid194)
 
 +auctionsummary(Sender,ProtName,TableID,WRID,ThereWasWinner,Winn,WinnerBid,SubProtConvID):
-ProtName == "japanese_auction"  //&protocol_request(ProtName,Protocol, PRequest, ParamList)
+ProtName == "japanese_auction" //&protocol_request(ProtName,Protocol, PRequest, ParamList)
 <- 
    if (ThereWasWinner==true){
-		.print("I haven't won the auction in protocol: ",ProtName,". The winner was ",Winner," win bid ",WinnerBid);
+		.print("I haven't won the auction in protocol: ",ProtName,". The winner was ",Winn," win bid ",WinnerBid);
 	}else{.print("There was not winner in protocol: ",ProtName);}.
    
 /*  -  JAPANESE AUCTION PROTOCOL  <-  */
@@ -807,3 +811,4 @@ ProtName == "japanese_auction"  //&protocol_request(ProtName,Protocol, PRequest,
 
 
  { include("belief_builder.asl") }
+

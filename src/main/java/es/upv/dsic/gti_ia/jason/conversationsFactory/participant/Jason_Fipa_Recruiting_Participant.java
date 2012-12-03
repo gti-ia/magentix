@@ -29,21 +29,16 @@ import es.upv.dsic.gti_ia.jason.conversationsFactory.ConvMagentixAgArch;
 import es.upv.dsic.gti_ia.jason.conversationsFactory.Conversation;
 import es.upv.dsic.gti_ia.jason.conversationsFactory.FRCConversation;
 
-
-
+/**
+ * This class represents a template for a Fipa Recruiting Protocol from the participant 
+ * perspective for being used in the Conversations Factory from Jason agents.
+ * @author Bexy Alfonso Espinosa
+ */
 
 public class Jason_Fipa_Recruiting_Participant  {
 
 
-	//private String AgName;
-	//private AgentID AgID;
-	//private String JasonConversationID;
 	protected TransitionSystem Ts; 
-	//public int TimeOut ;
-	
-	//public Semaphore Protocol_Semaphore = new Semaphore(0,true);
-	
-
 	
 	public Jason_Fipa_Recruiting_Participant(TransitionSystem ts) {
 
@@ -230,8 +225,6 @@ public class Jason_Fipa_Recruiting_Participant  {
 		protected boolean resultOfSubProtocol(CProcessor myProcessor,
 				ACLMessage subProtocolMessageResult) {
 			// TODO Auto-generated method stub
-			
-
 			return true;
 		}			
 		class START_SUB_PROTOCOL_Method implements ActionStateMethod{
@@ -323,10 +316,6 @@ public class Jason_Fipa_Recruiting_Participant  {
 				doFinalRecruitingParticipant((ConvCProcessor) myProcessor, messageToSend);
 			}
 		}
-	
-
-	
-
 		
 	/**
 	 * Creates a new participant fipa recruiting CFactory

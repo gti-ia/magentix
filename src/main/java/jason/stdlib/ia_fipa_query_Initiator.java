@@ -16,25 +16,19 @@ import es.upv.dsic.gti_ia.jason.conversationsFactory.Protocol_Template;
 import es.upv.dsic.gti_ia.jason.conversationsFactory.protocolInternalAction;
 import es.upv.dsic.gti_ia.jason.conversationsFactory.initiator.Jason_Fipa_Query_Initiator;
 
+/**
+ * This class represents the internal action to be used when adding a conversation to 
+ * a Jason agent under the Fipa Query If/Ref Protocol as initiator
+ * @author Bexy Alfonso Espinosa
+ */
+
 public class ia_fipa_query_Initiator extends protocolInternalAction{
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-/*
- * 
- * jasonAgentsConversations.nconversationsFactory.initiator.ia_fipa_query_Initiator("start", P , TO, "Fipa query conversation started",ConvID);
- * jasonAgentsConversations.nconversationsFactory.initiator.ia_fipa_query_Initiator("if-query",FirstQuery,P, ConvID).
- * jasonAgentsConversations.nconversationsFactory.initiator.ia_fipa_query_Initiator("ref-query",FirstQuery,P, ConvID).
- * 		+queryResult(P,Result,ConvID)
- * jasonAgentsConversations.nconversationsFactory.initiator.ia_fipa_query_Initiator("inform",ConvID).
- * 
- * 		+conversationended(ConvID,Result)
- * */
-	
-	
-	
+
 
 	Jason_Fipa_Query_Initiator fqi = null;
 
@@ -149,14 +143,8 @@ public class ia_fipa_query_Initiator extends protocolInternalAction{
 			msg.setContent(initialInfo);
 
 			if (fqi == null){
-				/* The agent creates the CFactory that creates processors that initiate
-        		 CONTRACT_NET protocol conversations. In this
-        		 example the CFactory gets the name "TALK", we don't add any
-        		 additional message acceptance criterion other than the required
-        		 by the CONTRACT_NET protocol (null) and we do not limit the number of simultaneous
-        		 processors (value 0)*/
-				fqi = new Jason_Fipa_Query_Initiator(agName, ts);
 
+				fqi = new Jason_Fipa_Query_Initiator(agName, ts);
 				
 				Protocol_Factory = fqi.newFactory("FQFACTORY", null, 
 						msg, 1, ((ConvMagentixAgArch)ts.getUserAgArch()).getJasonAgent(),timeOut);
@@ -181,7 +169,7 @@ public class ia_fipa_query_Initiator extends protocolInternalAction{
 			msg.setConversationId(ConvID);
 			
 			ConvCProcessor convPprocessor =  myag.newConversation(msg, processorTemplate, false, Protocol_Factory);
-			//ts.getLogger().info("------------------------  ");
+
 			if (perf.toString().compareTo("fqip")==0){
 				conv.performative = ACLMessage.QUERY_IF;
 			}

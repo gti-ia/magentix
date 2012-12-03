@@ -177,8 +177,9 @@ webcommunication(true)
 +request("auctionstate",WRID,TableID,WMarket,Protocol,UserName,ConvID,ExternConvID)
 <- //.print("Recibido request ConvID: ",ConvID);
    if ( (  (winner(Sender,ProtocolRequest,FinalBid,SubProtConvID))|
-   		   (auctionsummary(Sender,ProtocolRequest,ThereWasWinner,Winner,WinnerBid,SubProtConvID) ))&
+   		   (auctionsummary(Sender,ProtName,TableID,WRID,ThereWasWinner,Winner,WinnerBid,SubProtConvID) ))& //OJO: cdo no hay WR no se q pasa
 	    protocol_request("japanese_auction",Protocolid, ProtocolRequest, PReqParamList)&
+	    ProtName == "japanese_auction" &
 	    .member(table(Table),PReqParamList)&
 	    .member(water_right(WR),PReqParamList)&
 	    table_Arguments_List(Table,TFieldsList,TableID)
@@ -193,17 +194,17 @@ webcommunication(true)
 	  		.abolish(memberjoined(Table,_,WR,_));
 	  		.abolish(winner(Sender,_,_,SubProtConvID));
 	   };
-	   if (auctionsummary(Sender,ProtocolRequest,true,Winner,WinnerBid,SubProtConvID))
+	   if (auctionsummary(Sender,ProtName,TableID,WRID,true,Winner,WinnerBid,SubProtConvID))
 	   {  .print("I HAVEN'T BEEN CHOOSEN AS WINNER. WINNER WAS: ",Winner);
 	      .ia_web_request("inform","auctionstate",result(ConvID,0,"true",[Winner],WRID,"",Winner,WinnerBid),ExternConvID);
 	      .abolish(memberjoined(Table,_,WR,_));
-	      .abolish(auctionsummary(Sender,_,true,Winner,WinnerBid,SubProtConvID));
+	      .abolish(auctionsummary(Sender,ProtName,TableID,_,true,Winner,WinnerBid,SubProtConvID));
 	    };
-	   if (auctionsummary(Sender,ProtocolRequest,false,Winner,WinnerBid,SubProtConvID))
+	   if (auctionsummary(Sender,ProtName,TableID,WRID,false,Winner,WinnerBid,SubProtConvID))
 	   { .print("THERE WAS NOT WINNER!");
 	     .ia_web_request("inform","auctionstate",result(ConvID,0,"true",[],WRID,"","",""),ExternConvID);
 	     .abolish(memberjoined(Table,_,WR,_));
-	     .abolish(auctionsummary(Sender,_,false,Winner,WinnerBid,SubProtConvID));
+	     .abolish(auctionsummary(Sender,ProtName,TableID,_,false,Winner,WinnerBid,SubProtConvID));
 	   };
 	    //.print("@@@ No winner y No auction summary...");
 	    

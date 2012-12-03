@@ -16,6 +16,11 @@ import jason.asSyntax.Term;
 import jason.asSemantics.Unifier;
 import jason.asSemantics.TransitionSystem;
 
+/**
+ * This class represents the internal action to be used when adding a conversation to 
+ * a Jason agent under the Fipa Recruiting Protocol as initiator
+ * @author Bexy Alfonso Espinosa
+ */
 
 public class ia_fipa_recruiting_Initiator extends protocolInternalAction {
 
@@ -104,8 +109,6 @@ public class ia_fipa_recruiting_Initiator extends protocolInternalAction {
 			//building message template
 			ACLMessage msg = new ACLMessage();
 			msg.setProtocol("fipa-recruiting");
-
-			//int participantsNumber = participants.size();
 			
 			msg.setContent(initialInfo);
 
@@ -117,13 +120,6 @@ public class ia_fipa_recruiting_Initiator extends protocolInternalAction {
 			
 			if (frci == null){
 
-
-				/* The agent creates the CFactory that creates processors that initiate
-        		 CONTRACT_NET protocol conversations. In this
-        		 example the CFactory gets the name "TALK", we don't add any
-        		 additional message acceptance criterion other than the required
-        		 by the CONTRACT_NET protocol (null) and we do not limit the number of simultaneous
-        		 processors (value 0)*/
 				frci = new Jason_Fipa_Recruiting_Initiator( ts);
 
 				Protocol_Factory = frci.newFactory("FRCFACTORY", null, 
@@ -135,13 +131,7 @@ public class ia_fipa_recruiting_Initiator extends protocolInternalAction {
 				
 
 			}
-			
-			/*			frci.initialMsg = initialInfo;
-						frci.Participant=participant;
-						frci.Condition  =  cond; 
-						frci.ParticipantsNumber =  particnumber;*/
-			
-			/* finally the new conversation starts an asynchronous conversation.*/
+
 			myag.lock();
 			String ConvID = myag.newConvID();
 			FRCConversation conv = new FRCConversation(agentConversationID,ConvID,initialInfo,timeOut,new AgentID(participant),

@@ -27,6 +27,12 @@ import es.upv.dsic.gti_ia.jason.conversationsFactory.ConvMagentixAgArch;
 import es.upv.dsic.gti_ia.jason.conversationsFactory.Conversation;
 import es.upv.dsic.gti_ia.jason.conversationsFactory.FSConversation;
 
+/**
+ * This class represents a template for a Fipa Subscribe Protocol from the participant 
+ * perspective for being used in the Conversations Factory from Jason agents.
+ * @author Bexy Alfonso Espinosa
+ */
+
 public class Jason_Fipa_Subscribe_Participant {
 
 	protected TransitionSystem Ts;
@@ -88,7 +94,6 @@ public class Jason_Fipa_Subscribe_Participant {
 		while (objIt.hasNext()) {
 			Entry<String, String> obj = (Entry<String, String>) objIt.next();
 			String key = obj.getKey();
-			// if (key.compareTo("jasonID")!=0)
 			percept = percept + key+",";
 		}
 		percept = percept.substring(0, percept.length()-1);

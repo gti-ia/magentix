@@ -9,7 +9,8 @@
 /* Plans */
 
 +!start:.my_name(Me)
-<- .print(Me, " joined to plataform. Waiting for web requests...");
+<- .setlogfile("logs/staff.log"); //Form performance purposes only
+   .print(Me, " joined to plataform. Waiting for web requests...");
    .ia_web_request("joinconversation").
    
    
@@ -29,4 +30,6 @@
 	.abolish(accreditationresult(Sender,_));
    .print("Accreditation result received.");
    .ia_web_request("inform","accreditation",Result,ConvID).
-
+   
++accreditationresult(Sender,Result)
+<- .print("Accreditation received!!!!! ",Sender," Result ",Result).

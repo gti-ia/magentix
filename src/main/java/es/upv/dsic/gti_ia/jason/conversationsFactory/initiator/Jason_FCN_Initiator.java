@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-//import conversationsFactory.initiator.Jason_FCN_Initiator.SOLICIT_PROPOSALS_Method;
-
 import jason.asSemantics.TransitionSystem;
 import jason.asSyntax.Literal;
 
@@ -33,6 +31,11 @@ import es.upv.dsic.gti_ia.cAgents.WaitState;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.MessageFilter;
 
+/**
+ * This class represents a template for a Fipa Contract Net Protocol from the initiator 
+ * perspective for being used in the Conversations Factory from Jason agents.
+ * @author Bexy Alfonso Espinosa
+ */
 
 public class Jason_FCN_Initiator {
 
@@ -82,7 +85,6 @@ public class Jason_FCN_Initiator {
 	protected void doSolicitProposals(ConvCProcessor myProcessor,
 			ACLMessage messageToSend) {
 		FCNConversation conv = (FCNConversation)myProcessor.getConversation();
-		//Ts.getLogger().info("**-*-**-**-**-* Sendind solicitude: "+conv.solicitude);
 		
 		messageToSend.setContent(conv.solicitude);
 		messageToSend.setProtocol("fipa-contract-net");
@@ -208,11 +210,9 @@ public class Jason_FCN_Initiator {
 			tmpproposal =  msg.getContent();
 			tmpsender = msg.getSender().name;
 			percept = "proposal("  +tmpproposal+ "," +tmpsender+ "," + conv.jasonConvID+")[source(self)]" ;
-			//ts.getAg().getLogger().info(percept);
 			allperc.add(Literal.parseLiteral(percept));
 		}
 		percept = "proposalsevaluationtime("+conv.jasonConvID+")[source(self)]";
-		//ts.getAg().getLogger().info(percept);
 		allperc.add(Literal.parseLiteral(percept));
 		
 		((ConvMagentixAgArch)Ts.getUserAgArch()).setPerception(allperc);
@@ -222,25 +222,21 @@ public class Jason_FCN_Initiator {
 		 * When this line is reached it is because the time
 		 * has expired or because the monitor was released and 
 		 * consequently the accepted and rejected proposals have
-		 * been updated. At this point the process go on with
+		 * been updated. At this point the process goes on with
 		 * the current values of "acceptances" and "rejections"
 		 */
 			
 		StringTokenizer argtokenacc = new StringTokenizer(
-					conv.myAcceptances.substring(1, conv.myAcceptances.length()-1),",");// 8,participan1,9,participant2,...
+					conv.myAcceptances.substring(1, conv.myAcceptances.length()-1),",");// 8,participant1,9,participant2,...
 	
 		StringTokenizer argtokenrej = new StringTokenizer(
-				conv.myRejections.substring(1, conv.myRejections.length()-1),",");// 8,participan1),(9,participant2),(...
+				conv.myRejections.substring(1, conv.myRejections.length()-1),",");// 8,participant1),(9,participant2),(...
 
 			String prop;
 			String sender;
 			while (argtokenacc.hasMoreTokens()) {
-				//propu = argtokenacc.nextToken(); // 8,participan1
-				//propu = propu.substring(1, propu.length() - 1);/
-				//elem = new StringTokenizer(argtokenacc,","); // 8,participan1
-				//Integer.parseInt(elem.nextToken()); // 8
 				prop = argtokenacc.nextToken().trim(); //8
-				sender = argtokenacc.nextToken().trim(); // participan1
+				sender = argtokenacc.nextToken().trim(); // participant1
 				int index = 0;
 				while (index<proposes.size()&&(!prop.equals(proposes.get(index).getContent()))&&(!sender.equals(proposes.get(index).getSender().name))){
 					index++;
@@ -254,15 +250,9 @@ public class Jason_FCN_Initiator {
 				acceptances.add(accept);
 			}
 
-			//String reje;
 			while (argtokenrej.hasMoreTokens()) {
-				//reje = argtokenrej.nextToken();// 8,participan1
-				//reje = reje.substring(1, reje.length() - 1);
-				//elem = new StringTokenizer(reje,",");
-				//Integer.parseInt(elem.nextToken()); // 8
-
 				prop = argtokenrej.nextToken().trim(); //8
-				sender = argtokenrej.nextToken().trim(); // participan1
+				sender = argtokenrej.nextToken().trim(); // participant1
 				int index = 0;
 				while (index<proposes.size()&&(!prop.equals(proposes.get(index).getContent()))&&(!sender.equals(proposes.get(index).getSender().name))){
 					index++;
@@ -298,7 +288,7 @@ public class Jason_FCN_Initiator {
 			ArrayList<ACLMessage> acceptances = new ArrayList<ACLMessage>();
 			ArrayList<ACLMessage> rejections = new ArrayList<ACLMessage>();
 			doEvaluateProposals((ConvCProcessor) myProcessor, proposes, acceptances, rejections);
-			//We create dinamically the send states
+			//We create dynamically the send states
 			SendState send;
 			boolean accept = false;
 			boolean reject = false;
@@ -414,8 +404,6 @@ public class Jason_FCN_Initiator {
 		List<Literal> allperc = new ArrayList<Literal>();
 		
 		String tmpsender = myProcessor.getLastReceivedMessage().getSender().name;
-		//Ts.getLogger().info("*********************************** sender del lastreceivedmessage: "+tmpsender+" y sender del msg: "+msg.getSender());
-		//Ts.getLogger().info("*********************************** msg.content: "+msg.getContent());
 		String percept = "taskDone("+tmpsender+","+conv.jasonConvID+")[source(self)]";
 		allperc.add(Literal.parseLiteral(percept));
 		((ConvMagentixAgArch)Ts.getUserAgArch()).setPerception(allperc);

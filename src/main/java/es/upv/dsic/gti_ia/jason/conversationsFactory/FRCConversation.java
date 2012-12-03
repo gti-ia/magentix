@@ -6,6 +6,11 @@ import jason.asSyntax.Literal;
 import jason.asSyntax.LiteralImpl;
 import es.upv.dsic.gti_ia.core.AgentID;
 
+/**
+ * This class stores the main elements to be tracked of a conversation under a 
+ * Fipa Recruiting Protocol
+ * @author Bexy Alfonso Espinosa
+ */
 
 public class FRCConversation extends Conversation{
 	public String initialMsg = "";

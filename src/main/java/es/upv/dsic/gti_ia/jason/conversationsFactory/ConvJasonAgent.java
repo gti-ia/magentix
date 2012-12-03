@@ -1,5 +1,6 @@
 package es.upv.dsic.gti_ia.jason.conversationsFactory;
 
+import org.apache.log4j.Logger;
 
 import jason.bb.BeliefBase;
 import es.upv.dsic.gti_ia.cAgents.BeginState;
@@ -14,13 +15,30 @@ import es.upv.dsic.gti_ia.core.AgentID;
 
 /**
  * 
- * @author Bexy Alfonso
+ * @author Bexy Alfonso Espinosa
  *
  */
 
 public class ConvJasonAgent extends CAgent{
 	
 	private ConvMagentixAgArch agArch; //Bexy
+	private static Logger convlogger ;
+	
+	/**
+	 * Sets an additional logger to the agent
+	 * @param log
+	 */
+	public void setconvLogger(Logger log){
+		convlogger = log;
+	}
+	
+	/**
+	 * Gets the additional logger to the agent
+	 * @param log
+	 */
+	public Logger getconvlogger(){
+		return convlogger;
+	}
 	
 	/**
 	 * Creates a new Jason Agent
@@ -62,7 +80,6 @@ public class ConvJasonAgent extends CAgent{
 	public void onMessage(ACLMessage msg) { //Redefinido por Bexy
 		super.onMessage(msg);
 
-		//if (msg.getConversationId().trim().compareTo("")==0)
 		if (msg.getHeaderValue("jason").compareTo("true")==0)
 				agArch.addMessage(msg);
 	}

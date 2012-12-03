@@ -9,6 +9,11 @@ import es.upv.dsic.gti_ia.cAgents.CProcessor;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.MessageFilter;
 
+/**
+ * This class represents a CFactory for being used in the Conversations Factory from Jason agents.
+ * @author Bexy Alfonso Espinosa
+ */
+
 public class ConvCFactory extends CFactory{
 
 	HashMap<String, Conversation> participantNoIdConv =  new HashMap<String, Conversation>(); //Bexy
@@ -36,7 +41,6 @@ public class ConvCFactory extends CFactory{
 		cloneProcessor.setConversation(conv);
 		participantNoIdConv.put(msg.getConversationId(), conv);			
 		}
-
 		
 		cloneProcessor.setConversationID(msg.getConversationId());
 		cloneProcessor.addMessage(msg);
@@ -86,7 +90,4 @@ public class ConvCFactory extends CFactory{
 		}
 		proc.setConversation(newConv);
 	}
-	
-
-
 }

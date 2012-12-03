@@ -7,9 +7,7 @@ import es.upv.dsic.gti_ia.jason.conversationsFactory.ConvCFactory;
 import es.upv.dsic.gti_ia.jason.conversationsFactory.ConvCProcessor;
 import es.upv.dsic.gti_ia.jason.conversationsFactory.ConvJasonAgent;
 import es.upv.dsic.gti_ia.jason.conversationsFactory.ConvMagentixAgArch;
-import es.upv.dsic.gti_ia.jason.conversationsFactory.Conversation;
 import es.upv.dsic.gti_ia.jason.conversationsFactory.FRConversation;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,36 +26,24 @@ import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.MessageFilter;
 
-
+/**
+ * This class represents a template for a Fipa Request Protocol from the initiator 
+ * perspective for being used in the Conversations Factory from Jason agents.
+ * @author Bexy Alfonso Espinosa
+ */
 
 public class Jason_Fipa_Request_Initiator {
 
-	//private String AgName;
-	//private String JasonConversationID;
 	protected TransitionSystem Ts; 
-	//private AgentID AgID;
-	//public int TimeOut ;
-	
-	//public Semaphore Protocol_Semaphore = new Semaphore(0,true);
-	
-	//public String initialMsg = "";
-	//public String requestMsg = "";
-	//public String Participant;
-	//public String myAcceptances;
-	//public String myRejections;
-
 	
 	public Jason_Fipa_Request_Initiator(String sagName,
 			TransitionSystem ts) {
-		//AgName = sagName;
-		//JasonConversationID = sagentConversationID;
+
 		Ts = ts;
-		//AgID = aid;
-		//TimeOut = iTO;
 		
 	}
 	
-/*-------------------------*/
+
 /**
  * Method to execute at the beginning of the conversation
  * @param myProcessor the CProcessor managing the conversation
@@ -103,15 +89,6 @@ protected void doRequest(ConvCProcessor myProcessor,
 	messageToSend.setHeader("data", conv.frData);
 	
 }
-/*protected void doRequest(CProcessor myProcessor,
-		ACLMessage messageToSend) {
-	/*ACLMessage aux = (ACLMessage) myProcessor.getInternalData().get(
-			"InitialMessage");
-	messageToSend.copyFromAsTemplate(aux);
-	messageToSend.setProtocol("fipa-request");
-	messageToSend.setPerformative(ACLMessage.REQUEST);
-	messageToSend.setSender(myProcessor.getMyAgent().getAid());
-}*/
 
 class REQUEST_Method implements SendStateMethod {
 	public String run(CProcessor myProcessor, ACLMessage messageToSend) {
@@ -192,15 +169,6 @@ class TIMEOUT_Method implements ReceiveStateMethod {
 		return "FINAL_REQUEST_INITIATOR";
 	}
 }
-/*protected void doSecondWait(CProcessor myProcessor, ACLMessage msg){		
-}
-
-class SECOND_WAIT_Method implements ReceiveStateMethod {
-	public String run(CProcessor myProcessor, ACLMessage messageReceived) {
-		doSecondWait(myProcessor, messageReceived);
-		return "SECOND_WAIT_REQUEST_INITIATOR";
-	}
-}*/
 
 /**
  * Method to execute when the initiator receives a failure message
@@ -256,9 +224,6 @@ class INFORM_Method implements ReceiveStateMethod {
  * @param messageToSend
  */
 protected void doFinal(ConvCProcessor myProcessor, ACLMessage messageToSend){
-	//ConvJasonAgent myag = ((ConvMagentixAgArch)Ts.getUserAgArch()).getJasonAgent();
-	
-	//Conversation conv = myag.getConversationByintID(myProcessor.getConversationID());
 	FRConversation conv = (FRConversation)myProcessor.getConversation();
 	
 	List<Literal> allperc = new ArrayList<Literal>();
@@ -269,19 +234,14 @@ protected void doFinal(ConvCProcessor myProcessor, ACLMessage messageToSend){
 	messageToSend = myProcessor.getLastSentMessage();
 	messageToSend.setProtocol("fipa-request");
 	messageToSend.setPerformative(ACLMessage.REQUEST);
-	//super.doFinal(myProcessor, messageToSend);
 	
 }
-/*protected void doFinal(CProcessor myProcessor, ACLMessage messageToSend) {
-	messageToSend = myProcessor.getLastSentMessage();
-}*/
 
 class FINAL_Method implements FinalStateMethod {
 	public void run(CProcessor myProcessor, ACLMessage messageToSend) {
 		doFinal((ConvCProcessor)myProcessor, messageToSend);
 	}
 }
-/*-------------------------*/
 	/**
 	 * Creates a new initiator fipa request cfactory
 	 * @param name factory's name

@@ -30,6 +30,12 @@ import es.upv.dsic.gti_ia.cAgents.CAgent;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 
+/**
+ * This class represents the architecture of the Jason agent for it 
+ * to keep conversations by using the Conversations Factory
+ * @author Bexy Alfonso Espinosa
+ */
+
 public class ConvMagentixAgArch extends AgArch{
 	
 	private ConvJasonAgent jasonAgent;
@@ -50,6 +56,7 @@ public class ConvMagentixAgArch extends AgArch{
 			Settings set = new Settings();//Bexy
 			set.setVerbose(0);//Bexy
 			new TransitionSystem(ag, new Circumstance(), new Settings(), this);
+			
 			if (bb!=null)
 			{
 				ag.setBB(bb);
@@ -68,12 +75,13 @@ public class ConvMagentixAgArch extends AgArch{
 		RunCentralisedMAS.setupLogger();
 		try {
 			while (isRunning()) {
-				// calls the Jason engine to perform one reasoning cycle
+				// Ricard: calls the Jason engine to perform one reasoning cycle
 				logger.fine("Reasoning....");
-				// parche para arreglar la sincronizacion, buscar mejor solucion y porque occure esto
+				// Ricard: parche para arreglar la sincronizacion, buscar mejor solucion y porque occure esto
 				if(this.jasonAgent.getMutexHoldCount() > 0)
 					this.jasonAgent.unlock();
 				getTS().reasoningCycle();
+				
 			}
 		} catch (Exception e) {
 			logger.log(Level.SEVERE, "Run error", e);
@@ -93,7 +101,7 @@ public class ConvMagentixAgArch extends AgArch{
 		}
 	}
 	
-	// TODO implementar agente environment y interacción de agentes con environment	
+	// TODO Ricard: implementar agente environment e interacción de agentes con environment	
 	/*
 	 * Bexy
 	 * */
@@ -101,13 +109,16 @@ public class ConvMagentixAgArch extends AgArch{
 	public List<Literal> perceive() 
 	{
 		//List<Literal> l = new ArrayList<Literal>();
-		List<Literal> tmpPerc = new ArrayList<Literal>(Perceptions);
+		List<Literal> tmpPerc;
+		if ((Perceptions!=null)&&(Perceptions.size()>0)){
+			tmpPerc = new ArrayList<Literal>(Perceptions);}
+		else { tmpPerc = new ArrayList<Literal>(); }
 		Perceptions.clear();
 		
 		return  new ArrayList<Literal>(tmpPerc);
 	}
 	
-	// TODO implementar agente environment y interacción de agentes con environment
+	// TODO Ricard: implementar agente environment y interacción de agentes con environment
 	@Override
 	public void act(ActionExec action, List<ActionExec> feedback)
 	{

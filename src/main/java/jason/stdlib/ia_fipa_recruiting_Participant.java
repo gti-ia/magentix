@@ -1,11 +1,6 @@
 package jason.stdlib;
-//("joinconversation",ConvID)
-//("agree",ConvID)
-//("withdrawal",ConvID)
-
 import java.util.ArrayList;
 import java.util.List;
-
 
 import jason.JasonException;
 import jason.asSemantics.TransitionSystem;
@@ -22,6 +17,11 @@ import es.upv.dsic.gti_ia.jason.conversationsFactory.participant.Jason_Fipa_Recr
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 
+/**
+ * This class represents the internal action to be used when adding a conversation to 
+ * a Jason agent under the Fipa Recruiting Protocol as participant
+ * @author Bexy Alfonso Espinosa
+ */
 
 public class ia_fipa_recruiting_Participant extends protocolInternalAction {
 
@@ -81,14 +81,10 @@ public class ia_fipa_recruiting_Participant extends protocolInternalAction {
 
 		if (protocolSteep.compareTo(Protocol_Template.JOIN_STEP)==0){
 
-			
-
 			if (args.length >2)
 			{					
 				timeOut = getTermAsInt(args[2]);
 			}
-
-			//AgentID tmpid =  ((ConvMagentixAgArch)ts.getUserAgArch()).getJasonAgent().getAid();
 
 			if (frcp == null){
 
@@ -97,12 +93,6 @@ public class ia_fipa_recruiting_Participant extends protocolInternalAction {
 				ACLMessage msg = new ACLMessage();
 				msg.setProtocol("fipa-recruiting");
 				msg.setContent("Joining fipa-recruiting conversation "+agentConversationID);
-				// The agent creates the CFactory that manages every message which its
-				// performative is set to CFP and protocol set to CONTRACTNET. In this
-				// example the CFactory gets the name "TALK", we don't add any
-				// additional message acceptance criterion other than the required
-				// by the CONTRACTNET protocol (null) and we limit the number of simultaneous
-				// processors to 1, i.e. the requests will be attended one after another.
 				String factName = agentConversationID+"-FRCFACTORY";
 				Protocol_Factory = frcp.newFactory(factName, null,msg,1, 
 						((ConvMagentixAgArch)ts.getUserAgArch()).getJasonAgent());
@@ -113,6 +103,7 @@ public class ia_fipa_recruiting_Participant extends protocolInternalAction {
 				((ConvMagentixAgArch)ts.getUserAgArch()).getJasonAgent().addFactoryAsParticipant(Protocol_Factory);
 
 				//This helps participant to finish joining in Magentix conversation thread.
+				//Must be substituted whith a Wait state
 				int i = 0;
 				while (i>900000000){i++;}
 			}

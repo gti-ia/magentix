@@ -1,7 +1,5 @@
 package jason.stdlib;
 
-
-
 import jason.JasonException;
 import jason.asSemantics.TransitionSystem;
 import jason.asSemantics.Unifier;
@@ -17,6 +15,11 @@ import es.upv.dsic.gti_ia.jason.conversationsFactory.initiator.Jason_Fipa_Reques
 
 import es.upv.dsic.gti_ia.core.ACLMessage;
 
+/**
+ * This class represents the internal action to be used when adding a conversation to 
+ * a Jason agent under the Fipa Request Protocol as initiator
+ * @author Bexy Alfonso Espinosa
+ */
 
 public class ia_fipa_request_Initiator extends protocolInternalAction {
 	
@@ -114,13 +117,12 @@ public class ia_fipa_request_Initiator extends protocolInternalAction {
 
 			String participant = getAtomAsString(args[1]);
 
-			//conversationTime = getTermAslong(args[2]);
-
 			timeOut = getTermAsInt(args[2]); 			
 
 			String initialInfo = getTermAsString(args[3]);
 
 			//This time allows participants to join the conversation
+			//Must be substituted by a Wait state
 			int wait = 0;
             while(wait<=100000){
             	wait++;
@@ -130,17 +132,10 @@ public class ia_fipa_request_Initiator extends protocolInternalAction {
 			ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
 			msg.setProtocol("fipa-request");
 
-			//int participantsNumber = participants.size();
-
 			msg.setContent(agName+","+initialInfo+","+agentConversationID);
 
 			if (fri == null){
-				/* The agent creates the CFactory that creates processors that initiate
-        		 CONTRACT_NET protocol conversations. In this
-        		 example the CFactory gets the name "TALK", we don't add any
-        		 additional message acceptance criterion other than the required
-        		 by the CONTRACT_NET protocol (null) and we do not limit the number of simultaneous
-        		 processors (value 0)*/
+
 				fri = new Jason_Fipa_Request_Initiator(agName, ts);
 
 
@@ -176,21 +171,14 @@ public class ia_fipa_request_Initiator extends protocolInternalAction {
 		}else
 			if(protocolSteep.compareTo(Protocol_Template.REQUEST_STEP)==0){
 
-				//fri.Participant = getAtomAsString(args[2]);
-				//fri.requestMsg = getTermAsString(args[1]);
-				//ts.getLogger().info("*/*/*/ Setting requestMsg: "+fri.requestMsg);
 				((FRConversation)conversationsList.get(agentConversationID)).frMessage=getTermAsString(args[1]);
 				((FRConversation)conversationsList.get(agentConversationID)).frData=getTermAsString (args[3]);
 				
 				conversationsList.get(agentConversationID).release_semaphore();	
 
-				//myag.getConversationByJasonID(agentConversationID).release_semaphore();
-				//fri.Protocol_Semaphore.release();
 			}else
 				if(protocolSteep.compareTo(Protocol_Template.TASK_DONE_STEP)==0){
-					//fri.Protocol_Semaphore.release();
-					
-					//myag.getConversationByJasonID(agentConversationID).release_semaphore();
+
 					conversationsList.get(agentConversationID).release_semaphore();
 					
 					// It's deleted because this is the last step of the conversation

@@ -31,6 +31,11 @@ import es.upv.dsic.gti_ia.cAgents.WaitState;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.MessageFilter;
 
+/**
+ * This class represents a template for a Fipa Contract Net Iterated Protocol from the initiator 
+ * perspective for being used in the Conversations Factory from Jason agents.
+ * @author Bexy Alfonso Espinosa
+ */
 
 public class Jason_FICN_Initiator {
 
@@ -193,11 +198,9 @@ public class Jason_FICN_Initiator {
 			tmpproposal =  msg.getContent();
 			tmpsender = msg.getSender().name;
 			percept = "proposal("  +tmpproposal+ "," +tmpsender+ "," + conv.jasonConvID+")[source(self)]" ;
-			//ts.getAg().getLogger().info(percept);
 			allperc.add(Literal.parseLiteral(percept));
 		}
 		percept = "proposalsevaluationtime("+conv.jasonConvID+")[source(self)]";
-		//ts.getAg().getLogger().info(percept);
 		allperc.add(Literal.parseLiteral(percept));
 		
 		((ConvMagentixAgArch)Ts.getUserAgArch()).setPerception(allperc);
@@ -220,10 +223,6 @@ public class Jason_FICN_Initiator {
 			String sender;
 			ACLMessage accept;
 			while (argtokenacc.hasMoreTokens()) {
-				//propu = argtokenacc.nextToken(); // 8,participan1
-				//propu = propu.substring(1, propu.length() - 1);/
-				//elem = new StringTokenizer(argtokenacc,","); // 8,participan1
-				//Integer.parseInt(elem.nextToken()); // 8
 				prop = argtokenacc.nextToken().trim(); //8
 				sender = argtokenacc.nextToken().trim(); // participan1
 				int index = 0;
@@ -241,13 +240,8 @@ public class Jason_FICN_Initiator {
 				acceptances.add(accept);
 			}
 
-			//String reje;
 			ACLMessage reject;
 			while (argtokenrej.hasMoreTokens()) {
-				//reje = argtokenrej.nextToken();// 8,participan1
-				//reje = reje.substring(1, reje.length() - 1);
-				//elem = new StringTokenizer(reje,",");
-				//Integer.parseInt(elem.nextToken()); // 8
 
 				prop = argtokenrej.nextToken().trim(); //8
 				sender = argtokenrej.nextToken().trim(); // participan1
@@ -435,8 +429,6 @@ public class Jason_FICN_Initiator {
 		List<Literal> allperc = new ArrayList<Literal>();
 		
 		String tmpsender = myProcessor.getLastReceivedMessage().getSender().name;
-		//Ts.getLogger().info("*********************************** sender del lastreceivedmessage: "+tmpsender+" y sender del msg: "+msg.getSender().name);
-		//Ts.getLogger().info("*********************************** msg.content: "+msg.getContent()+" msg.getConversationId "+msg.getConversationId()+"msg.getProtocol() - "+msg.getProtocol());
 		String percept = "taskDone("+tmpsender+","+conv.jasonConvID+")[source(self)]";
 		allperc.add(Literal.parseLiteral(percept));
 		((ConvMagentixAgArch)Ts.getUserAgArch()).setPerception(allperc);
@@ -464,23 +456,18 @@ public class Jason_FICN_Initiator {
 	 */
 	protected void doFinal(ConvCProcessor myProcessor, ACLMessage messageToSend) {
 		messageToSend = myProcessor.getLastSentMessage();
-		
 		FICNConversation conv = (FICNConversation) myProcessor.getConversation();
-		
 		List<Literal> allperc = new ArrayList<Literal>();
-		
 		String percept = "resultsreceived("+conv.jasonConvID+")[source(self)]";
 		allperc.add(Literal.parseLiteral(percept));
 		((ConvMagentixAgArch)Ts.getUserAgArch()).setPerception(allperc);
 		
 		conv.aquire_semaphore();
-		
+
 		percept = "conversationended("+conv.jasonConvID+")[source(self)]";
 		allperc.clear();
 		allperc.add(Literal.parseLiteral(percept));
 		((ConvMagentixAgArch)Ts.getUserAgArch()).setPerception(allperc);
-		
-		
 	}
 
 	class FINAL_Method implements FinalStateMethod {
@@ -509,9 +496,6 @@ public class Jason_FICN_Initiator {
 
 		if (filter == null) {
 			filter = new MessageFilter("performative = CFP"); // falta AND
-			// protocol
-			// =
-			// fipa-iterated-contract-net;
 		}
 		ConvCFactory theFactory = new ConvCFactory(name, filter,
 				availableConversations, myAgent);

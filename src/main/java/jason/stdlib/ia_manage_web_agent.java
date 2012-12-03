@@ -4,7 +4,6 @@ package jason.stdlib;
 
 import java.util.Hashtable;
 
-
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.jason.conversationsFactory.ConvJasonAgent;
 import es.upv.dsic.gti_ia.jason.conversationsFactory.ConvMagentixAgArch;
@@ -12,6 +11,12 @@ import es.upv.dsic.gti_ia.jason.conversationsFactory.ConvMagentixAgArch;
 import jason.*;
 import jason.asSemantics.*;
 import jason.asSyntax.*;
+
+/**
+ * This class represents the internal action to be used by the agent whose function
+ * is to create and kill agents in the mWater prototype
+ * @author Bexy Alfonso Espinosa
+ */
 
 public class ia_manage_web_agent extends DefaultInternalAction {
 	

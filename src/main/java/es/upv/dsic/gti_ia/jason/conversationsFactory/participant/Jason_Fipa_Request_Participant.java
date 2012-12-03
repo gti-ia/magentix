@@ -11,10 +11,8 @@ import es.upv.dsic.gti_ia.jason.conversationsFactory.Conversation;
 import es.upv.dsic.gti_ia.jason.conversationsFactory.FRConversation;
 import es.upv.dsic.gti_ia.jason.conversationsFactory.Protocol_Template;
 
-
 import java.util.ArrayList;
 import java.util.List;
-
 
 import es.upv.dsic.gti_ia.cAgents.ActionState;
 import es.upv.dsic.gti_ia.cAgents.BeginState;
@@ -31,27 +29,19 @@ import es.upv.dsic.gti_ia.cAgents.FinalStateMethod;
 import es.upv.dsic.gti_ia.cAgents.ReceiveStateMethod;
 import es.upv.dsic.gti_ia.cAgents.SendStateMethod;
 
+/**
+ * This class represents a template for a Fipa Request Protocol from the participant 
+ * perspective for being used in the Conversations Factory from Jason agents.
+ * @author Bexy Alfonso Espinosa
+ */
 
 public class Jason_Fipa_Request_Participant {
 
-	//private String AgName;
-	//private AgentID AgID;
-	//private String JasonConversationID;
 	protected TransitionSystem Ts; 
 	
-	public int TimeOut ;
-	
-	/*public String Initiator ;*/
-	//public String TaskResult = "" ;
-	//public String TaskDesition = "";
-	//public String RequestResult = "";
-	//public String Task = "" ;
-	
 	public Jason_Fipa_Request_Participant( 
-			TransitionSystem ts,  int iTO) {
-		//JasonConversationID = sagentConversationID;
+			TransitionSystem ts) {
 		Ts = ts;
-		TimeOut = iTO;
 		
 	}
 	
@@ -214,9 +204,6 @@ public class Jason_Fipa_Request_Participant {
 	 * @return next conversation state
 	 */
 	protected String doAction(ConvCProcessor myProcessor){
-		//ConvJasonAgent myag = ((ConvMagentixAgArch)Ts.getUserAgArch()).getJasonAgent();
-		
-		//Conversation conv = myag.getConversationByintID(myProcessor.getConversationID());
 		
 		FRConversation conv = (FRConversation)myProcessor.getConversation();
 		
@@ -225,11 +212,6 @@ public class Jason_Fipa_Request_Participant {
 		allperc.add(Literal.parseLiteral(percept));
 		((ConvMagentixAgArch)Ts.getUserAgArch()).setPerception(allperc);
 		
-//		try {
-//			Protocol_Semaphore.acquire();
-//		} catch (InterruptedException e) {
-//			e.printStackTrace();
-//		}
 		conv.aquire_semaphore();
 		
 		String result = null; 
@@ -356,6 +338,7 @@ public class Jason_Fipa_Request_Participant {
 		BEGIN.setMethod(new BEGIN_Method());
 		
 		// WAIT State
+		//It may be convenient to set a timeout instead of waiting indefinitely 
 		processor.registerState(new WaitState("WAIT", 0));
 		processor.addTransition("BEGIN", "WAIT");
 		
@@ -450,7 +433,6 @@ public class Jason_Fipa_Request_Participant {
 		processor.addTransition("FAILURE", "FINAL");
 		processor.addTransition("INFORM", "FINAL");
 
-		// Thath's all
 		return theFactory;
 				
 		

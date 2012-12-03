@@ -26,6 +26,11 @@ import es.upv.dsic.gti_ia.jason.conversationsFactory.ConvJasonAgent;
 import es.upv.dsic.gti_ia.jason.conversationsFactory.ConvMagentixAgArch;
 import es.upv.dsic.gti_ia.jason.conversationsFactory.FSConversation;
 
+/**
+ * This class represents a template for a Fipa Subscribe Protocol from the initiator 
+ * perspective for being used in the Conversations Factory from Jason agents.
+ * @author Bexy Alfonso Espinosa
+ */
 
 public class Jason_Fipa_Subscribe_Initiator {
 	
@@ -403,7 +408,6 @@ public class Jason_Fipa_Subscribe_Initiator {
 		FinalState FINAL = new FinalState("FINAL");
 		FINAL.setMethod(new FINAL_Method());
 		
-
 		processor.registerState(FINAL);
 		processor.addTransition(RECEIVE_REFUSE, FINAL);
 		processor.addTransition(RECEIVE_FAILURE, FINAL);

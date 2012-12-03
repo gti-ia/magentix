@@ -1,6 +1,5 @@
 package jason.stdlib;
 
-//("start",TO,InitialBid,Increment,MaxIter,"Starting Japanese auction",[final_agent1,final_agent3,final_agent4])
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -20,6 +19,12 @@ import es.upv.dsic.gti_ia.jason.conversationsFactory.protocolInternalAction;
 import es.upv.dsic.gti_ia.jason.conversationsFactory.initiator.Jason_JAuc_Initiator;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
+
+/**
+ * This class represents the internal action to be used when adding a conversation to 
+ * a Jason agent under the Japanese Auction Protocol as initiator
+ * @author Bexy Alfonso Espinosa
+ */
 
 public class ia_JAuc_Initiator extends protocolInternalAction{
 
@@ -50,17 +55,19 @@ public class ia_JAuc_Initiator extends protocolInternalAction{
 			int cont = 0; 
 			for (Term t:args){
 				switch (cont){
-				case 1:result = (result&&t.isNumeric());//timeout
+				case 1:result = (result&&t.isNumeric());//join timeout
 				break;
-				case 2:result = (result&&t.isNumeric());//initial bid
+				case 2:result = (result&&t.isNumeric());//timeout
 				break;
-				case 3:result = (result&&t.isNumeric());//increment
+				case 3:result = (result&&t.isNumeric());//initial bid
 				break;
-				case 4:result = (result&&t.isNumeric());//max iterations
+				case 4:result = (result&&t.isNumeric());//increment
 				break;
-				case 5:result = (result&&t.isString());//initial msg
+				case 5:result = (result&&t.isNumeric());//max iterations
 				break;
-				case 6:result = (result&&t.isList());//participants
+				case 6:result = (result&&t.isString());//initial msg
+				break;
+				case 7:result = (result&&t.isList());//participants
 				break;
 				//case 7:result = (result&&t.isLiteral());//request
 				//break;
@@ -98,23 +105,25 @@ public class ia_JAuc_Initiator extends protocolInternalAction{
 		//the first state in the conversation
 		if (protocolSteep.compareTo(Protocol_Template.START_STEP)==0){
 			
-			timeOut = getTermAsInt(args[1]); 	
+			joinTimeOut = getTermAsInt(args[1]); 
 			
-			double initialBid = getTermAsdouble(args[2]);
+			timeOut = getTermAsInt(args[2]); 	
 			
-			double increment = getTermAsdouble(args[3]);
+			double initialBid = getTermAsdouble(args[3]);
 			
-			int maxIterations = getTermAsInt(args[4]);
+			double increment = getTermAsdouble(args[4]);
 			
-			String initialMsg = getTermAsString(args[5]);
+			int maxIterations = getTermAsInt(args[5]);
 			
-			List<String> participants = getTermAsStringList(args[6]);
+			String initialMsg = getTermAsString(args[6]);
+			
+			List<String> participants = getTermAsStringList(args[7]);
 			List<AgentID> AIDparticipants =  new ArrayList<AgentID>();
 			Iterator<String> it = participants.iterator();
 			while (it.hasNext())
 				AIDparticipants.add(new AgentID(it.next()));
 			
-			String request = getTermAsString(args[7]);
+			String request = getTermAsString(args[8]);
 			
 			int particnumber = participants.size();
 			
@@ -134,7 +143,7 @@ public class ia_JAuc_Initiator extends protocolInternalAction{
 				jauci = new Jason_JAuc_Initiator( ts);
 
 				Protocol_Factory = jauci.newFactory("JAFACTORY", null, 
-						msg, 1, ((ConvMagentixAgArch)ts.getUserAgArch()).getJasonAgent(),particnumber,timeOut );
+						msg, 1, ((ConvMagentixAgArch)ts.getUserAgArch()).getJasonAgent(),particnumber,timeOut, joinTimeOut );
 
 				((ConvMagentixAgArch)ts.getUserAgArch()).getJasonAgent().addFactoryAsInitiator(Protocol_Factory);
 				

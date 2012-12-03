@@ -18,6 +18,13 @@ import jason.JasonException;
 import jason.asSyntax.Term;
 import jason.asSemantics.TransitionSystem;
 import jason.asSemantics.Unifier;
+
+/**
+ * This class represents the internal action to be used when adding a conversation to 
+ * a Jason agent under the Fipa Subscribe Protocol as initiator
+ * @author Bexy Alfonso Espinosa
+ */
+
 public class ia_fipa_subscribe_Initiator extends protocolInternalAction{
 
 	/**
@@ -117,12 +124,7 @@ public class ia_fipa_subscribe_Initiator extends protocolInternalAction{
 
 			msg.setContent(initialInfo);
 			if (fsi == null){
-				/* The agent creates the CFactory that creates processors that initiate
-        		 CONTRACT_NET protocol conversations. In this
-        		 example the CFactory gets the name "TALK", we don't add any
-        		 additional message acceptance criterion other than the required
-        		 by the CONTRACT_NET protocol (null) and we do not limit the number of simultaneous
-        		 processors (value 0)*/
+
 				fsi = new Jason_Fipa_Subscribe_Initiator(agName, ts);
 
 				

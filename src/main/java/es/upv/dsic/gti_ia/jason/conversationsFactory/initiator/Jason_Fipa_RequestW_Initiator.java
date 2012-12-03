@@ -7,7 +7,6 @@ import es.upv.dsic.gti_ia.jason.conversationsFactory.ConvCFactory;
 import es.upv.dsic.gti_ia.jason.conversationsFactory.ConvCProcessor;
 import es.upv.dsic.gti_ia.jason.conversationsFactory.ConvJasonAgent;
 import es.upv.dsic.gti_ia.jason.conversationsFactory.ConvMagentixAgArch;
-import es.upv.dsic.gti_ia.jason.conversationsFactory.Conversation;
 import es.upv.dsic.gti_ia.jason.conversationsFactory.FRWConversation;
 
 import java.util.ArrayList;
@@ -26,6 +25,12 @@ import es.upv.dsic.gti_ia.cAgents.WaitState;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.MessageFilter;
+
+/**
+ * This class represents a template for a Fipa Request When Protocol from the initiator 
+ * perspective for being used in the Conversations Factory from Jason agents.
+ * @author Bexy Alfonso Espinosa
+ */
 
 public class Jason_Fipa_RequestW_Initiator {
 
@@ -154,20 +159,6 @@ class AGREE_Method implements ReceiveStateMethod {
 	}
 }
 
-/**
- * Method to execute when the timeout is reached
- * @param myProcessor the CProcessor managing the conversation
- * @param msg timeout message
- */
-/*protected void doSecondWait(CProcessor myProcessor, ACLMessage msg){		
-}
-
-class SECOND_WAIT_Method implements ReceiveStateMethod {
-	public String run(CProcessor myProcessor, ACLMessage messageReceived) {
-		doSecondWait(myProcessor, messageReceived);
-		return "SECOND_WAIT_REQUEST_INITIATOR";
-	}
-}*/
 
 /**
  * Method to execute when the initiator receives a failure message
@@ -289,8 +280,6 @@ class FINAL_Method implements FinalStateMethod {
 		SendState REQUEST = new SendState("REQUEST_REQUEST_INITIATOR");
 
 		REQUEST.setMethod(new REQUEST_Method());
-		//requestMessage = new ACLMessage(ACLMessage.REQUEST);
-		//requestMessage.setProtocol("REQUEST");		
 		REQUEST.setMessageTemplate(requestMessage);
 		processor.registerState(REQUEST);
 		processor.addTransition("FULFILLED_CONDITION", "REQUEST_REQUEST_INITIATOR");

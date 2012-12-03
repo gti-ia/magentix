@@ -32,16 +32,18 @@ public class WebComm {
 		public String wmarket_id;
 		public String configuration_id;
 		public String opening_Date;
+		public String closing_Date;
 		public String conditions;
 		public String opening_User;
 		public String protocol_Type;
 		
 		public TradingTable(String atable_id, String awmarket_id , String aconfiguration_id,
-				 String aopeningDate,  String aconditions, String aopeningUser, String aprotocolType){
+				String aclosingDate, String aopeningDate,  String aconditions, String aopeningUser, String aprotocolType){
 			table_id = atable_id;
 			wmarket_id = awmarket_id;
 			configuration_id = aconfiguration_id;
 			opening_Date = aopeningDate;
+			closing_Date = aclosingDate;
 			conditions = aconditions;
 			opening_User = aopeningUser;
 			protocol_Type = aprotocolType;

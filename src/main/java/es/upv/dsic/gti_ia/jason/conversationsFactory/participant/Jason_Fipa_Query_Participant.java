@@ -12,7 +12,6 @@ import es.upv.dsic.gti_ia.jason.conversationsFactory.FQConversation;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import es.upv.dsic.gti_ia.cAgents.ActionState;
 import es.upv.dsic.gti_ia.cAgents.BeginState;
 import es.upv.dsic.gti_ia.cAgents.CProcessor;
@@ -28,6 +27,11 @@ import es.upv.dsic.gti_ia.cAgents.FinalStateMethod;
 import es.upv.dsic.gti_ia.cAgents.ReceiveStateMethod;
 import es.upv.dsic.gti_ia.cAgents.SendStateMethod;
 
+/**
+ * This class represents a template for a Fipa Query If/Ref Protocol from the participant 
+ * perspective for being used in the Conversations Factory from Jason agents.
+ * @author Bexy Alfonso Espinosa
+ */
 
 public class Jason_Fipa_Query_Participant {
 
@@ -239,19 +243,6 @@ public class Jason_Fipa_Query_Participant {
 	protected String doAction(ConvCProcessor myProcessor){
 		
 		FQConversation conv = (FQConversation) myProcessor.getConversation();
-		/*String queryKind ="";
-		if (conv.performative== ACLMessage.QUERY_IF){
-			queryKind ="if";
-		}
-		if (conv.performative== ACLMessage.QUERY_REF){
-			queryKind ="ref";
-		}
-		
-		List<Literal> allperc = new ArrayList<Literal>();
-		String percept = "timetoevaluatequery("+conv.query.toString()+","+queryKind +","+conv.jasonConvID+")[source(self)]";
-		allperc.add(Literal.parseLiteral(percept));
-		((ConvMagentixAgArch)Ts.getUserAgArch()).setPerception(allperc);*/
-
 		
 		String result = "FAILURE"; 
 		if (conv.evaluationResult.compareTo("")!= 0){
@@ -268,8 +259,6 @@ public class Jason_Fipa_Query_Participant {
 		}
 		
 	}
-	
-
 	
 	/**
 	 * Sets the inform message
@@ -292,7 +281,6 @@ public class Jason_Fipa_Query_Participant {
 		public String run(CProcessor myProcessor, ACLMessage messageToSend) {
 
 			doInform((ConvCProcessor)myProcessor, messageToSend);
-			//messageToSend.addReceiver(myProcessor.getLastReceivedMessage().getSender());
 			return "FINAL";
 		}
 	}
@@ -449,7 +437,6 @@ public class Jason_Fipa_Query_Participant {
 		processor.addTransition("INFORM", "FINAL");
 		processor.addTransition("TIMEOUT", "FINAL");
 
-		// Thath's all
 		return theFactory;
 				
 		

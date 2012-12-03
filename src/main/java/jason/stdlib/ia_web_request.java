@@ -14,6 +14,13 @@ import jason.asSyntax.Term;
 import jason.asSemantics.TransitionSystem;
 import jason.asSemantics.Unifier;
 
+/**
+ * This class represents the internal action to be used by the agent whose function
+ * is to be intermediary between the web interface and the MAS in the
+ * mWater prototype
+ * @author Bexy Alfonso Espinosa
+ */
+
 public class ia_web_request extends protocolInternalAction{
 	private static final long serialVersionUID = 1L;
 
@@ -28,11 +35,6 @@ public class ia_web_request extends protocolInternalAction{
 	{
 		super.checkArguments(args);
 		boolean result = false;
-
-		/*if (  (((Term)args[args.length-1]).isAtom())||
-				(((Term)args[args.length-1]).isString())||
-				(((Term)args[args.length-1]).isLiteral())||
-				(((Term)args[args.length-1]).isNumeric())){result=true;}*/
 
 		if (((Term)args[0]).isString()) {result = true;};
 

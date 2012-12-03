@@ -29,31 +29,19 @@ import es.upv.dsic.gti_ia.jason.conversationsFactory.ConvMagentixAgArch;
 import es.upv.dsic.gti_ia.jason.conversationsFactory.Conversation;
 import es.upv.dsic.gti_ia.jason.conversationsFactory.FICNConversation;
 
-
-
+/**
+ * This class represents a template for a Fipa Iterated Contract Net Protocol from the participant 
+ * perspective for being used in the Conversations Factory from Jason agents.
+ * @author Bexy Alfonso Espinosa
+ */
 
 public class Jason_FICN_Participant {
 
-	//private String AgName;
-	//private AgentID AgID;
-	//private AgentID Sender = null; //the one I must send my messages
-	//private String JasonConversationID;
 	protected TransitionSystem Ts; 
-	public int mutex = 0;
 	
-	public int TimeOut ;
-	
-	//block of results
-	//public String answerToProposal = "propose"; //it can change to "refuse" or "notUnderstood"
-	//public String myProposal = "";
-	//public String infoToSend = "";
-	//public boolean taskDone=true;
-	
-	
-	public Jason_FICN_Participant(String agName2, TransitionSystem ts2, int TO) {
+	public Jason_FICN_Participant(String agName2, TransitionSystem ts2) {
 
 		Ts = ts2;
-		TimeOut = TO;
 	
 	}
 	
@@ -133,7 +121,6 @@ public class Jason_FICN_Participant {
 		}else if (newConv.kindOfAnswer=="notUnderstood"){
 			result = "SEND_NOT_UNDERSTOOD";
 		}
-		//ts.getAg().getLogger().info("HE RECIBIDO SOLICITUD Y RESPUESTA ES : "+answerToProposal);	
 		return result;
 	}
 

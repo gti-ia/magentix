@@ -1,5 +1,10 @@
 package es.upv.dsic.gti_ia.jason.conversationsFactory;
 
+/**
+ * This class stores the constants to be used for the different kind of 
+ * steps of a conversation
+ * @author Bexy Alfonso Espinosa
+ */
 
 public class Protocol_Template {
 	

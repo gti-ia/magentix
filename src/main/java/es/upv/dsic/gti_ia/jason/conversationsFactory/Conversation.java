@@ -6,20 +6,17 @@ import java.util.concurrent.Semaphore;
 import es.upv.dsic.gti_ia.core.AgentID;
 
 /**
- * @author Bexy
  * This class represents a conversation of the Jason agent. It has associated a semaphore to control
  * the conversation. 
+ * @author Bexy Alfonso Espinosa
  */
 public class Conversation {
 	
-	//CProcessor processor ;
 	Semaphore Protocol_Semaphore;
 	public String jasonConvID;
 	public String internalConvID;
 	
 	public AgentID initiator;
-
-	
 	
 	public Conversation( String jasonID,  String internalID, AgentID initiatorAg){
 		Protocol_Semaphore = new Semaphore(0,true);
