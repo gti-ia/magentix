@@ -624,7 +624,8 @@ ProtName == "japanese_auction" //ontology
    ?protocol_request(ProtName,ProtID, PRequest, [water_right(WaterRight),table(Table),sender(Me),max_iterations(MaxIter),increment(Inc),initial_bid(IniBid)]);
    +subprotocolConv(Me,ProtName,PRequest,seller,SubProtConvID);
    !notifyParticipants(Buyers,SubProtConvID,ProtName);
-   .ia_JAuc_Initiator("start", TO, IniBid,Inc,MaxIter,"Starting japanese auction", Buyers,PRequest,SubProtConvID).
+	JTO=4000; //timeout for waiting for participants to join
+   .ia_JAuc_Initiator("start",JTO, TO, IniBid,Inc,MaxIter,"Starting japanese auction", Buyers,PRequest,SubProtConvID).
 
 +conversationended(Participations,Winner,WinnerBid,SubProtConvID):.my_name(Me)&ProtName="japanese_auction"&
 subprotocolConv(Me,ProtName,PRequest,seller,SubProtConvID)
