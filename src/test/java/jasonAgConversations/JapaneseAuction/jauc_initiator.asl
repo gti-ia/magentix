@@ -6,6 +6,7 @@ maxiter(30).
 increment(2).
 initialbid(1).
 timeout(3000).
+jointimeout(4000).
 jarequest("shoes").
 participants(P,ConvID):-P=[jauc_agent1,jauc_agent2,jauc_agent3,jauc_agent4,jauc_agent5].
 
@@ -35,14 +36,15 @@ participants(P,ConvID):-P=[jauc_agent1,jauc_agent2,jauc_agent3,jauc_agent4,jauc_
 	?increment(Increment);
 	?initialbid(InitialBid);
 	?timeout(TO);
+	?jointimeout(JTO);
 	//.print(" participants ",P);
-   	!startauction(TO,InitialBid,Increment,MaxIter,"Starting Japanese auction",P,ConvID).
+   	!startauction(JTO,TO,InitialBid,Increment,MaxIter,"Starting Japanese auction",P,ConvID).
    	
 -!start
 <- .print("Failure when starting conversation!!!").
 
-+!startauction(TO,InitialBid,Increment,MaxIter,InitialMsg,P,ConvID):jarequest(Req)
-<- .ia_JAuc_Initiator("start",TO,InitialBid,Increment,MaxIter,InitialMsg,P,jarequest(Req),ConvID).
++!startauction(JTO,TO,InitialBid,Increment,MaxIter,InitialMsg,P,ConvID):jarequest(Req)
+<- .ia_JAuc_Initiator("start",JTO,TO,InitialBid,Increment,MaxIter,InitialMsg,P,jarequest(Req),ConvID).
 
 +conversationended(Participations,Winner,Bid,ConvID):.my_name(Me)
 <- .print(" - Conversation ",ConvID," has ended! ");
