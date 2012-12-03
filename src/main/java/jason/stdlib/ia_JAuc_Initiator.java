@@ -35,8 +35,8 @@ public class ia_JAuc_Initiator extends protocolInternalAction{
 	
 	Jason_JAuc_Initiator jauci;
 
-	@Override public int getMinArgs() { return 9; };
-	@Override public int getMaxArgs() { return 9; };
+	@Override public int getMinArgs() { return 10; };
+	@Override public int getMaxArgs() { return 10; };
 
 	@Override
 	public void checkArguments(Term[] args) throws JasonException

@@ -428,7 +428,15 @@ request(joinNTT, Request,[table(Table),user(MyUserInfo),rol(MyRol)] )
    !getSubprotocolID(ID,Protocol);
    !protocoltype(Protocol,ProtName);
    .member(rol(Rol),ProtocolParameters);
-   .member(table(Table),ProtocolParameters);
+   .member(tableid(TableID),ProtocolParameters);
+   .member(wmarket(WMarket),ProtocolParameters);
+   .member(confid(ConfID),ProtocolParameters);
+   ?table_structure(Table);
+   ?table_Arguments_List(Table,TFieldsList,TableID);
+   .member(configuration_id(ConfID),TFieldsList);
+   .member(wmarket(WMarket),TFieldsList);
+
+   //.member(table(Table),ProtocolParameters);
    if ((TO \== -1)&(DL \== -1 )&(ID \== -1))
      {  .print("Starting subprotocol ",Protocol," as ",Rol," in table ",Table);
         if (ProtName == "contract_net")
@@ -715,11 +723,11 @@ subprotocolConv(Me,ProtName,PRequest,seller,SubProtConvID)
 				if (.ground(Winner)){
 					//fifth param of auctionsummary is if there was winner
 					if (Participant\==Winner)
-					 { XX=auctionsummary(Me,ProtName,TableID,WRID,true,Winner,WinnerBid,SubProtConvID);
+					 { XX=auctionsummary(Me,ProtID,ProtName,TableID,WRID,true,Winner,WinnerBid,SubProtConvID);
 					   .print("Sending auction summary to participant: ",Participant," the winner: ",Winner," : ",XX);
 					   .send(Participant,tell,XX);}
 				}else{
-				     XX=auctionsummary(Me,ProtName,TableID,WRID,false,Winner,WinnerBid,SubProtConvID);
+				     XX=auctionsummary(Me,ProtID,ProtName,TableID,WRID,false,Winner,WinnerBid,SubProtConvID);
 				    .print("NO WINNER!!! SENDING INFOMRATION TO : ",Participant," the winner: ",Winner," : ",XX);
 					.send(Participant,tell,XX);
 				}
@@ -786,7 +794,7 @@ ProtName = "japanese_auction" & protocol_request(ProtName,Protocol, PRequest, Pa
 //auctionsummary("VBotti",protocolrequest(...),false,Winner,25,subprotocol(4,"4.VBotti.2012.2.12.0.44.43"))
 //auctionsummary("VBotti",protocolrequest(4,water_right(owner(2),id(67),authorized_extraction_flow(23),authorization_date([21,4,2012]),authorized(true),type_of_water("energy"),initial_date_for_extraction([1,1,2010]),final_date_for_extraction([31,12,2014]),aggregation_right(0),season_unit(1),season(1),general_water_right(1)),trading_table(configuration_id(556),wmarket(1014),id(2),opening_date([28,2,2012]),closing_date([]),conditions(""),access_type("Public"),deal(""),protocol_parameters("timeout:1,price:13,percentage:0.05"),num_iter_until_agreem(0),time_until_agreem(0),num_participants(4),opening_user(2),protocol_type(4),role_when_opening_table("Seller"),number_of_opener_participations(0),th_id(1014)),"VBotti",12,5,1),false,Winner,6,subprotocol(4,"4.VBotti.2012.2.12.3.9.0")),mid194)
 
-+auctionsummary(Sender,ProtName,TableID,WRID,ThereWasWinner,Winn,WinnerBid,SubProtConvID):
++auctionsummary(Sender,ProtID,ProtName,TableID,WRID,ThereWasWinner,Winn,WinnerBid,SubProtConvID):
 ProtName == "japanese_auction"  //&protocol_request(ProtName,Protocol, PRequest, ParamList)
 <- 
    if (ThereWasWinner==true){

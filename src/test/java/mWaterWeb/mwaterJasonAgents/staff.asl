@@ -1039,6 +1039,7 @@ userInfo_Arguments_List(UserInfo,UserFieldsList,UserID)
      ?Table;
      //.send(OpUsrName,tell,memberjoined(NewRPart,Table));
      .member(num_participants(NumPart),TableFieldsList);
+     .member(protocol_type(ProtType),TableFieldsList);
      
      ?recruited_participant_structure(VerifRPart);
 	 ?recruited_participant_Arguments_List(VerifRPart,VerifRPFieldsList,VerifUserID);
@@ -1052,8 +1053,8 @@ userInfo_Arguments_List(UserInfo,UserFieldsList,UserID)
      ?tableownerwaterrights(WMarket,TTID,WRList); //if this doesn't fail
      if (WRList=[WR|WRTail]) //if there is a first water right
         {  
-     		.send(OpUsrName,tell,memberjoined(Table,UserID,WR,StartAuction));
-     	}else{   .send(OpUsrName,tell,memberjoined(Table,UserID,[],StartAuction));}.
+     		.send(OpUsrName,tell,memberjoined(TTID,WMarket,ConfID,ProtType,UserID,WR,StartAuction));
+     	}else{   .send(OpUsrName,tell,memberjoined(TableID,WMarket,ConfID,ProtType,UserID,[],StartAuction));}.
      
   //   .print("********* Message sent to ",OpUsrName," about joining of ",UserID) .
 
