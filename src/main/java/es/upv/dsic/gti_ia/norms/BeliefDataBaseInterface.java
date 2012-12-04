@@ -846,8 +846,7 @@ public class BeliefDataBaseInterface {
 		}
 		
 		 
-		ListTermImpl.parse(normLiteral);
-		
+	
 		
 		normRule = new Rule(Literal.parseLiteral(norm.getAction()),(LogicalFormula) ListTermImpl.parse(normLiteral));
 
