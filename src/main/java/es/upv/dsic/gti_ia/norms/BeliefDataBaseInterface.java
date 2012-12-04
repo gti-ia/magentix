@@ -974,15 +974,26 @@ public class BeliefDataBaseInterface {
 	public ArrayList<Literal> getRoleCardinality() throws MySQLException
 	{
 		ArrayList<Literal> percepts = new ArrayList<Literal>();
+		ArrayList<String> pe = new ArrayList<String>();
 		Connection connection = null;
 		Statement st = null;
+		Statement st2 = null;
+
 		ResultSet res = null;
+		ResultSet res2 = null;
 
 		try {
+
+
 
 			connection = db.connect();
 			st = connection.createStatement();
 			res = st.executeQuery("select rl.roleName,ul.unitName,count(*) from roleList rl inner join agentPlayList apl on rl.idroleList=apl.idroleList inner join unitList ul on rl.idunitList=ul.idunitList group by rl.idroleList");
+
+
+			st2 = connection.createStatement();
+			res2 = st2.executeQuery("select rl.roleName,ul.unitName from roleList rl inner join unitList ul on rl.idunitList=ul.idunitList");
+
 
 			while (res.next())
 			{
@@ -991,9 +1002,25 @@ public class BeliefDataBaseInterface {
 				String roleName = res.getString("roleName");
 				String unitName = res.getString("unitName");
 
+				pe.add(roleName+","+unitName);
+
 				percepts.add(Literal.parseLiteral("roleCardinality("+roleName.toLowerCase()+","+unitName.toLowerCase()+","+cardinalidad+")"));
 
 			}
+
+
+			while(res2.next())
+			{
+				String roleName = res2.getString("roleName");
+				String unitName = res2.getString("unitName");
+
+				if (!pe.contains(roleName+","+unitName))
+					percepts.add(Literal.parseLiteral("roleCardinality("+roleName.toLowerCase()+","+unitName.toLowerCase()+","+0+")"));
+
+
+			}
+
+
 
 
 		} catch (SQLException e) {
@@ -1007,10 +1034,14 @@ public class BeliefDataBaseInterface {
 					connection.close();
 				if (st != null)
 					st.close();
+				if (st2 != null)
+					st2.close();
 
 
 				if (res != null)
 					res.close();
+				if (res2 != null)
+					res2.close();
 
 
 
@@ -1033,15 +1064,26 @@ public class BeliefDataBaseInterface {
 	public ArrayList<Literal> getPositionCardinality() throws MySQLException
 	{
 		ArrayList<Literal> percepts = new ArrayList<Literal>();
+		ArrayList<String> pe = new ArrayList<String>();
+
 		Connection connection = null;
 		Statement st = null;
 		ResultSet res = null;
+
+		Statement st2 = null;
+		ResultSet res2 = null;
 
 		try {
 
 			connection = db.connect();
 			st = connection.createStatement();
 			res = st.executeQuery("select p.position,ul.unitName, count(*) from position p inner join roleList rl on p.idposition=rl.idposition inner join agentPlayList apl on rl.idroleList=apl.idroleList inner join unitList ul on rl.idunitList=ul.idunitList group by ul.idunitList, p.idposition");
+
+
+		
+			st2 = connection.createStatement();
+			res2 = st2.executeQuery("select p.position,ul.unitName from position p inner join roleList rl on p.idposition=rl.idposition inner join unitList ul on rl.idunitList=ul.idunitList");
+
 
 			while (res.next())
 			{
@@ -1050,7 +1092,21 @@ public class BeliefDataBaseInterface {
 				String positionName = res.getString("position");
 				String unitName = res.getString("unitName");
 
+				pe.add(positionName+","+unitName);
+
 				percepts.add(Literal.parseLiteral("positionCardinality("+positionName.toLowerCase()+","+unitName.toLowerCase()+","+cardinalidad+")"));
+
+			}
+
+			while(res2.next())
+			{
+				String positionName = res2.getString("position");
+				String unitName = res2.getString("unitName");
+
+				if (!pe.contains(positionName+","+unitName))
+					percepts.add(Literal.parseLiteral("positionCardinality("+positionName.toLowerCase()+","+unitName.toLowerCase()+","+0+")"));
+
+
 
 			}
 
@@ -1066,11 +1122,14 @@ public class BeliefDataBaseInterface {
 					connection.close();
 				if (st != null)
 					st.close();
+				if (st2 != null)
+					st2.close();
 
 
 				if (res != null)
 					res.close();
-
+				if (res2 != null)
+					res2.close();
 
 
 
