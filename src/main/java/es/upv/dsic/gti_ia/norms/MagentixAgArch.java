@@ -8,6 +8,7 @@ import jason.asSemantics.Circumstance;
 import jason.asSemantics.Message;
 import jason.asSemantics.TransitionSystem;
 import jason.asSyntax.ASSyntax;
+import jason.asSyntax.ListTermImpl;
 import jason.asSyntax.Literal;
 import jason.asSyntax.LogicalFormula;
 import jason.asSyntax.Rule;
@@ -196,14 +197,7 @@ public class MagentixAgArch extends AgArch{
 						System.out.println("Percepción: "+ l.toString());
 					}
 
-					if (dbi.checkValidIdentifier("registerUnit"))
-					{
-						System.out.println("Valido");
-					}
-					else
-					{
-						System.out.println("No Valido");
-					}
+					
 
 				} catch (MySQLException e1) {
 					// TODO Auto-generated catch block
@@ -227,9 +221,11 @@ public class MagentixAgArch extends AgArch{
 						im.setInReplyTo(irt);
 					}
 					// Añadimos las creencias y reglas
-					Literal normLiteral = Literal.parseLiteral("isAgent(Agent) & Agent \\== vb");
-					System.out.println("Body: "+ normLiteral);
-					Rule regla = new Rule(Literal.parseLiteral("deregisterUnit(UnitName, Agent)"),(LogicalFormula) normLiteral);
+					String normLiteral = "isAgent(Agent) & Agent \\== ea & UnitName \\==forum";
+					
+					
+					Rule regla = new Rule(Literal.parseLiteral("deregisterUnit(UnitName, Agent)"),(LogicalFormula) ListTermImpl.parse(normLiteral));
+					
 
 
 					System.out.println("Regla Functor: "+ regla.getFunctor());
