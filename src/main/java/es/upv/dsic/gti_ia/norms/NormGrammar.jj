@@ -858,9 +858,9 @@ String OMSRoleEnactPred() :
 	< isAgent >{result = token.image;} "("param1 = term()")"{return result = result +"("+param1+ ")";}
 	| < playsRole >{result = token.image;} "("param1 = term()"," param2 = term()","param3 = term()")"{
 	  				return result =  result +"("+param1+ ","+param2+ ","+param3+ ")";}
-	| < roleCardinality > "(" param1 = term()"," param2 = term()"," param3 = numericConstantPred()")" {
+	| < roleCardinality > {result = token.image;} "(" param1 = term()"," param2 = term()"," param3 = numericConstantPred()")" {
 	  				return result =  result +"("+param1+ ","+param2+ ","+param3+ ")";}
-	| < positionCardinality > "(" param1 = term()"," param2 = term()"," param3 = numericConstantPred()")" {
+	| < positionCardinality > {result = token.image;} "(" param1 = term()"," param2 = term()"," param3 = numericConstantPred()")" {
 	  				return result =  result +"("+param1+ ","+param2+ ","+param3+ ")";}
 }
 
