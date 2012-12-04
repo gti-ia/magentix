@@ -1,5 +1,7 @@
 package es.upv.dsic.gti_ia.norms;
 
+import jason.asSyntax.BodyLiteral;
+import jason.asSyntax.ListTermImpl;
 import jason.asSyntax.Literal;
 import jason.asSyntax.LogicalFormula;
 import jason.asSyntax.Rule;
@@ -642,7 +644,7 @@ public class BeliefDataBaseInterface {
 				}else if (targetName.equals("roleName"))
 				{
 					st2 = connection.createStatement();
-					res2 = st2.executeQuery("select rl.roleName from normList nl, roleList rl where nl.idnormList="+idnorma+" and rl.idroleList=nl.targetValue’");
+					res2 = st2.executeQuery("select rl.roleName from normList nl, roleList rl where nl.idnormList="+idnorma+" and rl.idroleList=nl.targetValue");
 
 					if (res2.next())
 					{
@@ -780,8 +782,9 @@ public class BeliefDataBaseInterface {
 
 			connection = db.connect();
 			st = connection.createStatement();
-			res = st.executeQuery("select nl.normRule from normList nl inner join unitList ul on ul.idunitList=nl.idunitList where nl.normName="+NormName+" and ul.unitName="+UnitName+")");
+			res = st.executeQuery("select nl.normRule from normList nl inner join unitList ul on ul.idunitList=nl.idunitList where nl.normName='"+NormName+"' and ul.unitName='"+UnitName+"'");
 
+			
 			while (res.next())
 			{
 
@@ -833,7 +836,7 @@ public class BeliefDataBaseInterface {
 
 		if (!norm.getActivation().equals("") && !norm.getExpiration().equals(""))
 		{
-			normLiteral = norm.getAction() + "&"+" not("+norm.getExpiration()+")";
+			normLiteral = norm.getActivation() + "&"+" not("+norm.getExpiration()+")";
 		}else if (norm.getActivation().equals("") && !norm.getExpiration().equals(""))
 		{
 			normLiteral = " not("+norm.getExpiration()+")";
@@ -841,10 +844,12 @@ public class BeliefDataBaseInterface {
 		{
 			normLiteral = norm.getActivation();
 		}
-
-		Literal body = Literal.parseLiteral(normLiteral);
-
-		normRule = new Rule(Literal.parseLiteral(norm.getAction()),(LogicalFormula) body);
+		
+		 
+		ListTermImpl.parse(normLiteral);
+		
+		
+		normRule = new Rule(Literal.parseLiteral(norm.getAction()),(LogicalFormula) ListTermImpl.parse(normLiteral));
 
 
 		return normRule;
