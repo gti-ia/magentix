@@ -74,6 +74,27 @@ public class THOMASMessages {
 		 */
 		INVALID_DATA_TYPE,
 		
+		
+		/**
+		 * Exception message when Deontic is not valid.
+		 */
+		INVALID_DEONTIC,
+		
+		/**
+		 * Exception message when ID is not valid.
+		 */
+		INVALID_ID,
+		
+		/**
+		 * Exception message when action is not a valid OMS action.
+		 */
+		INVALID_OMS_ACTION,
+		
+		/**
+		 * Exception message when expression is not valid.
+		 */
+		INVALID_EXPRESSION,
+		
 		/**
 		 * Exception message when parameters are not valid.
 		 */
@@ -92,8 +113,22 @@ public class THOMASMessages {
 		 */
 		INVALID_SERVICE_URL,
 		/**
+		 * Exception message when Target Type value is incorrect.
+		 */
+		
+		INVALID_TARGET_TYPE,
+		
+		/**
+		 * Exception message when Target value is incorrect.
+		 */
+		
+		INVALID_TARGET_VALUE,
+		
+		
+		/**
 		 * Exception message when Unit Type value is incorrect.
 		 */
+		
 		INVALID_UNIT_TYPE,
 		/**
 		 * Exception message when Visibility value is incorrect.
