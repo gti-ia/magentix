@@ -31,7 +31,6 @@ import java.util.logging.Logger;
 import es.upv.dsic.gti_ia.cAgents.CAgent;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
-import es.upv.dsic.gti_ia.organization.DataBaseInterface;
 import es.upv.dsic.gti_ia.organization.exception.MySQLException;
 
 /**
@@ -46,7 +45,6 @@ public class MagentixAgArch extends AgArch{
 	protected boolean running = true;
 	private Agent ag;
 	private BeliefDataBaseInterface bdbi = null;
-	private DataBaseInterface dbi = null;
 	/**
 	 * Starts the architecture
 	 * @param filename File with the AgentSepak code
@@ -59,7 +57,6 @@ public class MagentixAgArch extends AgArch{
 			new TransitionSystem(ag, new Circumstance(), new Settings(), this);
 			ag.initAg(filename);
 			bdbi = new BeliefDataBaseInterface();
-			dbi = new DataBaseInterface();
 		} catch (Exception e) {
 			logger.log(Level.SEVERE, "Init error", e);
 		}

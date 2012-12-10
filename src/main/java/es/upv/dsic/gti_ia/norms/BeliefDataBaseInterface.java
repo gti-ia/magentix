@@ -1,6 +1,5 @@
 package es.upv.dsic.gti_ia.norms;
 
-import jason.asSyntax.BodyLiteral;
 import jason.asSyntax.ListTermImpl;
 import jason.asSyntax.Literal;
 import jason.asSyntax.LogicalFormula;
