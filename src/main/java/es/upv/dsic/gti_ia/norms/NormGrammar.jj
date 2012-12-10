@@ -9,7 +9,12 @@
  }PARSER_BEGIN(NormParser)package es.upv.dsic.gti_ia.norms;
 
 import es.upv.dsic.gti_ia.organization.exception.THOMASMessages.MessageID;
-import es.upv.dsic.gti_ia.organization.exception.InvalidParametersException;
+import es.upv.dsic.gti_ia.organization.exception.InvalidIDException;
+import es.upv.dsic.gti_ia.organization.exception.InvalidDeonticException;
+import es.upv.dsic.gti_ia.organization.exception.InvalidTargetTypeException;
+import es.upv.dsic.gti_ia.organization.exception.InvalidTargetValueException;
+import es.upv.dsic.gti_ia.organization.exception.InvalidOMSActionException;
+import es.upv.dsic.gti_ia.organization.exception.InvalidExpressionException;
 import es.upv.dsic.gti_ia.organization.exception.THOMASMessages;
 import es.upv.dsic.gti_ia.organization.exception.NotCreatorInParentUnitException;
 import es.upv.dsic.gti_ia.organization.exception.THOMASException;
@@ -22,9 +27,17 @@ private THOMASMessages    l10n;
 
 	public Norm parser() throws THOMASException, Exception, Error
 	{
+	  try
+	  {	    
 	  l10n = new THOMASMessages();
 
 	  return norm();
+	  }
+	  catch(TokenMgrError err)
+      {
+		 String message = l10n.getMessage(MessageID.INVALID_EXPRESSION, err.getMessage());
+		 throw new InvalidExpressionException(message);
+       }
    }
 
 }PARSER_END(NormParser)SKIP :{
@@ -112,7 +125,7 @@ private THOMASMessages    l10n;
 |   < stringConstant:  ["a"-"z"](["a"-"z","A"-"Z","_","0"-"9"])* >}
  /**
  norm ::= "@"id"["deontinc","target","action","activation","expiration"]"
- */Norm norm() throws THOMASException: {
+ */Norm norm() throws InvalidIDException, Exception: {
 	Norm norm = null;
 	String id, deontic, target, activation, expiration;
 	ArrayList<String > targetArray = new ArrayList<String >();
@@ -128,10 +141,21 @@ private THOMASMessages    l10n;
   	    norm = new Norm(id,deontic,targetArray.get(0), targetArray.get(1),action,activation,expiration);
   		return norm;
   	}
+ 	}
+  	catch(ParseException pex)
+  	{
+
+		
+  	    String message = l10n.getMessage(MessageID.INVALID_EXPRESSION, pex.currentToken.next.beginLine, pex.currentToken.next.beginColumn, getToken(0)+" "+getToken(1)+" "+getToken(2));
+		throw new InvalidExpressionException(message);
+  	  
     }catch(TokenMgrError err)
-    {		System.out.println("Lexical error detected: " + err.getMessage()); 
+    {		 String message = l10n.getMessage(MessageID.INVALID_EXPRESSION, err.getMessage());
+		 throw new InvalidExpressionException(message);
+  	   
 	
     }
+    
  
  }
 
@@ -146,8 +170,8 @@ String id() throws THOMASException:{
   	}catch(ParseException e)
   	{	
 		
-		//String message = l10n.getMessage(MessageID.NOT_CREATOR_IN_PARENT_UNIT, "");
-		throw new THOMASException("Error en el id,token que ha creador el error: "+ e.currentToken);
+		String message = l10n.getMessage(MessageID.INVALID_ID, e.currentToken.next.beginLine, e.currentToken.next.beginColumn, getNextToken());
+		throw new InvalidIDException(message);
 	
   	}
 }
@@ -162,11 +186,9 @@ String deontic() throws THOMASException:{}
    		< deontic >{return token.image;}
  	}catch(ParseException e)
  	{
-		Token t;
-		t=getNextToken();
 		
-		//String message = l10n.getMessage(MessageID.NOT_CREATOR_IN_PARENT_UNIT, "");
-		throw new THOMASException("Error en el deontic,token que ha creador el error: "+ t);
+		String message = l10n.getMessage(MessageID.INVALID_DEONTIC, e.currentToken.next.beginLine, e.currentToken.next.beginColumn, getNextToken());
+		throw new InvalidDeonticException(message);
  	}
    	
 }
@@ -203,9 +225,10 @@ ArrayList<String > target() throws THOMASException:
   		{    
   			(value = constant() | "_" {value = token.image;})
   	
-  		}catch(ParseException exp)
+  		}catch(ParseException pex)
   		{
-			System.out.println("TargetValueException: "+ getNextToken());
+			String message = l10n.getMessage(MessageID.INVALID_TARGET_VALUE, pex.currentToken.next.beginLine, pex.currentToken.next.beginColumn,  getToken(1));
+			throw new InvalidTargetValueException(message);
   		}
   
  		">"
@@ -224,18 +247,19 @@ ArrayList<String > target() throws THOMASException:
   		{    
   			(value = OMSPositions() | "_" {value = token.image;})  ">"
 
-  		}catch(ParseException exp)
+  		}catch(ParseException pex)
   		{
-			System.out.println("TargetValueException: "+ getNextToken());
+			String message = l10n.getMessage(MessageID.INVALID_TARGET_VALUE, pex.currentToken.next.beginLine, pex.currentToken.next.beginColumn, getToken(1));
+			throw new InvalidTargetValueException(message);
   		}
 		{
      		target.add(targetType);
 	  		target.add(value);
 	  		return target;		}
-	}catch(ParseException exp)
+	}catch(ParseException pex)
   	{
-		System.out.println("TargetTypeException: "+ getToken(2));
-		throw exp;
+		String message = l10n.getMessage(MessageID.INVALID_TARGET_TYPE, pex.currentToken.next.beginLine, pex.currentToken.next.beginColumn, getToken(2));
+		throw new InvalidTargetTypeException(message);
   	}	
 }
 
@@ -332,13 +356,14 @@ String genAtomicFormula() : {
  }
 {
 	//(atom()| variable())["(" listOfTerms() ")"]
-	
+	  
 	stringConstantResult = stringConstant()["("{op1 = token.image;} listOfTermsResult = listOfTerms() ")"{op2 = token.image;}]
 	{return stringConstantResult + op1 + listOfTermsResult + op2;}
 	|variableResult = variable()
 	{return variableResult;}
 	|OMSConstantsResult = OMSConstants()
 	{return OMSConstantsResult;}
+
 	  
 }
 /**
@@ -363,7 +388,9 @@ ArrayList<String > action() throws THOMASException: {
         	}
       	}
 
-      	System.out.println("Invalid action \""+getNextToken()+"\", expected: "+ expected.toString());
+		String message = l10n.getMessage(MessageID.INVALID_OMS_ACTION, pex.currentToken.next.beginLine, pex.currentToken.next.beginColumn, getNextToken(), expected.toString());
+		throw new InvalidOMSActionException(message);
+      	
 	
 	}
 
@@ -409,7 +436,7 @@ String term():{
 	expression := simpleExpression |“not” expression |expression “&” expression |expression “||”’ expression |“(” expression
 “)”
 */
-String expression() throws THOMASException: {
+String expression()  throws THOMASException: {
   String result="";
   String simpleExpression = "";
   String expressionRest = "";
@@ -426,8 +453,11 @@ String expression() throws THOMASException: {
 	{return operator +" " + expression + " " + expressionRest;}
 	|  "(" expression = expression()")" expressionRest = expressionRest()
 	{return "(" + expression + ")" + " " + expressionRest;}
- }catch(ParseException pex)
- {	System.out.println("Malformed exception: ");
+ }
+ catch(ParseException pex)
+ {		
+      	String message = l10n.getMessage(MessageID.INVALID_EXPRESSION, pex.currentToken.next.beginLine, pex.currentToken.next.beginColumn, getNextToken());
+		throw new InvalidExpressionException(message);
 	
  }
 
@@ -441,13 +471,23 @@ String expressionRest() throws THOMASException:
   String operator = "";
 }
 {
-	
+	try
+	{	  
 	 < AND >{operator = token.image;}	    result = expression()
 	    {return  operator + " "+  result;}    
 	| < OR >{operator = token.image;}
 	    result = expression()
 	    {return  operator + " " + result;}
 	|  {}	{return "";}
+
+	 }
+ catch(ParseException pex)
+ {
+		
+      	String message = l10n.getMessage(MessageID.INVALID_EXPRESSION, pex.currentToken.next.beginLine, pex.currentToken.next.beginColumn, getNextToken());
+		throw new InvalidExpressionException(message);
+	
+ }
 
 }
 /**
@@ -476,9 +516,11 @@ String relExpression() throws THOMASException:
  String relTerm1, relTerm2, operator;
 }
 {
-
+	  
 	relTerm1 = relTerm()((< LESS >{operator = token.image;}| < HIGHER > {operator = token.image;}| < EQUAL >{operator = token.image;}| < NOTEQUAL >{operator = token.image;}| < LESSOREQUAL >{operator = token.image;}|< HIGHEROREQUAL >{operator = token.image;}) relTerm2 = relTerm())+
-	{return relTerm1 + operator + relTerm2;}
+	{return relTerm1 + operator + relTerm2;}
+
+
 	  
 }
 /**
@@ -510,8 +552,10 @@ String arithExpression() :
    String operator = "";
 }
 {
+
 	arithTerm = arithTerm()((< SUM >{operator = token.image;}|< SUBTRACTION >{operator = token.image;}|< MULTIPLICATION >{operator = token.image;} | < POWER >{operator = token.image;}|< DIVISION >{operator = token.image;}|< INTDIVISION >{operator = token.image;}|< MODULE >{operator = token.image;}) arithTerm2 = arithTerm())*
 	{return arithTerm + operator + arithTerm2;}
+
 
 }
 /**
@@ -619,7 +663,7 @@ String OMSUnitPred() : {
 String OMSUnitTypesPred() :{
   String result = "";}
 {
-	try  	{    		result = OMSUnitTypes()	{
+    		result = OMSUnitTypes()	{
 		return result;	}
 	
 	|
@@ -627,12 +671,7 @@ String OMSUnitTypesPred() :{
 		result = variable()
 	{
 	  return result;	}
-	}catch(ParseException pex)
-	{
-		System.out.println("Not variable: "+ getNextToken());
 
-		throw pex;
-	}
 
 }
 
@@ -641,14 +680,13 @@ String OMSUnitTypesPred() :{
 	“ isRole” “(” term “,” term “)” |“hasAccesibility” “(” term “,” term “,” term “)” |“hasVisibility” “(”
 term “,” term “,” term “)” |“hasPosition” “(” term “,” term “,” term “)”
 */
-String OMSRolesPred() throws THOMASException: {
+String OMSRolesPred(): {
   String result = "";
   String param1, param2, param3;
   
  }
 {
-  try
-  {    
+    {      System.out.println("ENTRO: "+ token.image);    }    
 	< isRole >{result = token.image;} "("param1 = term()","param2 = term()")"
 	{return result = result + "("+param1+","+param2+")";}
 	| < hasAccessibility >{result = token.image;} "("param1 = term()","param2 = term()","param3 = OMSAccessibilityPred()")"
@@ -657,11 +695,6 @@ String OMSRolesPred() throws THOMASException: {
 	{return result = result + "("+param1+","+param2+","+param3+")";}
 	| < hasPosition >{result = token.image;} "(" param1 = term()","param2 = term()","param3 = OMSPositionsPred()")"
 	{return result = result + "("+param1+","+param2+","+param3+")";}
-  }catch(Exception e)
-  {
-		//String message = l10n.getMessage(MessageID.NOT_CREATOR_IN_PARENT_UNIT, "");
-		throw new NotCreatorInParentUnitException(e.getMessage());
-  }
 }
 
 
@@ -718,7 +751,7 @@ String OMSVisibilityPred() :
 	“ isNorm” “(” term , term “)” |“hasDeontic” “(” term , term , term “)”
 |  "hasTarget" "("term, term, term, term ")" | "hasAction" "("term, term, term")"
 */
-String OMSNormsPred() throws THOMASException: {
+String OMSNormsPred(): {
   String result="";
   String param1, param2, param3, param4;}
 {
@@ -934,7 +967,7 @@ ArrayList<String> OMSAction() throws THOMASException : {
     	System.out.println("----------------------------------");
 		String message = l10n.getMessage(MessageID.NOT_CREATOR_IN_PARENT_UNIT, "");
 		//throw new ParseException(message);
-		
+		return null;
 	}
 |   < deregisterUnit >{service = token.image;} "("param1 = term()"," param2 = term()")"
 {
@@ -1167,7 +1200,7 @@ String OMSUnitTypes():{
   }
   catch(ParseException pex)
   {	System.out.println("Unit type not found: "+ getNextToken());
-	
+	return null;
   }
 
 
