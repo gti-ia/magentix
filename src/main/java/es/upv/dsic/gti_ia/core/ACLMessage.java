@@ -765,7 +765,7 @@ public class ACLMessage implements Serializable, Cloneable {
 	public Object getContentObject() {
 		
 		Object o = null;
-		if(content != null && content != "")
+		if(content != null && !content.equals(""))
 			return (Object)content;
 		else if(this.byteSequenceContent != null){
 			try{
