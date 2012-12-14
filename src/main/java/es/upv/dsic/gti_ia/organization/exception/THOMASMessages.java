@@ -186,6 +186,11 @@ public class THOMASMessages {
 		 * Exception message when the agent does not play the role.
 		 */
 		NOT_PLAYS_ROLE,
+		
+		/**
+		 * Exception message when the selected identifier is not allowed.
+		 */
+		NOT_VALID_IDENTIFIER,
 		/**
 		 * Exception message when the agent does not play any role with position
 		 * supervisor or creator in unit.
