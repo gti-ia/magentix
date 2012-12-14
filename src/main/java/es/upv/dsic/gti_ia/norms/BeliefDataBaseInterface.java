@@ -422,7 +422,7 @@ public class BeliefDataBaseInterface {
 
 			connection = db.connect();
 			st = connection.createStatement();
-			res = st.executeQuery("select r1.roleName, u1.unitName, p.position from roleList r1 inner join unitList u1 on r1.idunitList=u1.idunitList " +
+			res = st.executeQuery("select r1.roleName, u1.unitName, p.positionName from roleList r1 inner join unitList u1 on r1.idunitList=u1.idunitList " +
 			" inner join position p on p.idposition=r1.idposition");
 
 			while (res.next())
@@ -430,7 +430,7 @@ public class BeliefDataBaseInterface {
 
 				String roleName = res.getString("roleName");
 				String unitName = res.getString("unitName");
-				String position = res.getString("position");
+				String position = res.getString("positionName");
 
 
 
@@ -824,7 +824,7 @@ public class BeliefDataBaseInterface {
 
 
 	/**
-	 * Returns a Jason Rule, 
+	 * Builds a new Jason Rule with action := activation & not(expiration).
 	 * @param norm
 	 * @return
 	 */
@@ -844,11 +844,10 @@ public class BeliefDataBaseInterface {
 			normLiteral = norm.getActivation();
 		}
 		
-		 
-	
-		
-		normRule = new Rule(Literal.parseLiteral(norm.getAction()),(LogicalFormula) ListTermImpl.parse(normLiteral));
-
+		if (normLiteral.equals("")) 
+			normRule = new Rule(Literal.parseLiteral(norm.getAction()),null);
+		else
+			normRule = new Rule(Literal.parseLiteral(norm.getAction()),(LogicalFormula) ListTermImpl.parse(normLiteral));
 
 		return normRule;
 	}
@@ -1080,19 +1079,19 @@ public class BeliefDataBaseInterface {
 
 			connection = db.connect();
 			st = connection.createStatement();
-			res = st.executeQuery("select p.position,ul.unitName, count(*) from position p inner join roleList rl on p.idposition=rl.idposition inner join agentPlayList apl on rl.idroleList=apl.idroleList inner join unitList ul on rl.idunitList=ul.idunitList group by ul.idunitList, p.idposition");
+			res = st.executeQuery("select p.positionName,ul.unitName, count(*) from position p inner join roleList rl on p.idposition=rl.idposition inner join agentPlayList apl on rl.idroleList=apl.idroleList inner join unitList ul on rl.idunitList=ul.idunitList group by ul.idunitList, p.idposition");
 
 
 		
 			st2 = connection.createStatement();
-			res2 = st2.executeQuery("select p.position,ul.unitName from position p inner join roleList rl on p.idposition=rl.idposition inner join unitList ul on rl.idunitList=ul.idunitList");
+			res2 = st2.executeQuery("select p.positionName,ul.unitName from position p inner join roleList rl on p.idposition=rl.idposition inner join unitList ul on rl.idunitList=ul.idunitList");
 
 
 			while (res.next())
 			{
 
 				String cardinalidad = res.getString("count(*)");
-				String positionName = res.getString("position");
+				String positionName = res.getString("positionName");
 				String unitName = res.getString("unitName");
 
 				pe.add(positionName+","+unitName);
@@ -1103,7 +1102,7 @@ public class BeliefDataBaseInterface {
 
 			while(res2.next())
 			{
-				String positionName = res2.getString("position");
+				String positionName = res2.getString("positionName");
 				String unitName = res2.getString("unitName");
 
 				if (!pe.contains(positionName+","+unitName))
