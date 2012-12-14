@@ -1,12 +1,14 @@
 /**
  * JavaCC template file created by SF JavaCC plugin 1.5.17+ wizard for JavaCC 1.5.0+
  */
+
 options{  JDK_VERSION = "1.5";  static = false;
  //CHOICE_AMBIGUITY_CHECK = 4;
  // DEBUG_PARSER = true;
  // FORCE_LA_CHECK = true;
  // LOOKAHEAD = 2;
  }PARSER_BEGIN(NormParser)package es.upv.dsic.gti_ia.norms;
+
 
 import es.upv.dsic.gti_ia.organization.exception.THOMASMessages.MessageID;
 import es.upv.dsic.gti_ia.organization.exception.InvalidIDException;
@@ -138,6 +140,7 @@ private THOMASMessages    l10n;
     {      
   		"@"id = id()"["deontic = deontic()","targetArray = target()","action = action()","activation = activation()","expiration = expiration()"]"  	{
 
+		
   	    norm = new Norm(id,deontic,targetArray.get(0), targetArray.get(1),action,activation,expiration);
   		return norm;
   	}
@@ -686,7 +689,7 @@ String OMSRolesPred(): {
   
  }
 {
-    {      System.out.println("ENTRO: "+ token.image);    }    
+    
 	< isRole >{result = token.image;} "("param1 = term()","param2 = term()")"
 	{return result = result + "("+param1+","+param2+")";}
 	| < hasAccessibility >{result = token.image;} "("param1 = term()","param2 = term()","param3 = OMSAccessibilityPred()")"
