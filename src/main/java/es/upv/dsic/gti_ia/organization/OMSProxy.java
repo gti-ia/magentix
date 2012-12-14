@@ -11,7 +11,6 @@ import es.upv.dsic.gti_ia.organization.exception.AgentNotExistsException;
 import es.upv.dsic.gti_ia.organization.exception.AgentNotInUnitException;
 import es.upv.dsic.gti_ia.organization.exception.DeletingTableException;
 import es.upv.dsic.gti_ia.organization.exception.EmptyParametersException;
-import es.upv.dsic.gti_ia.organization.exception.IDUnitTypeNotFoundException;
 import es.upv.dsic.gti_ia.organization.exception.InsertingTableException;
 import es.upv.dsic.gti_ia.organization.exception.InvalidAccessibilityException;
 import es.upv.dsic.gti_ia.organization.exception.InvalidPositionException;
@@ -29,6 +28,7 @@ import es.upv.dsic.gti_ia.organization.exception.NotMemberOrCreatorInUnitExcepti
 import es.upv.dsic.gti_ia.organization.exception.NotPlaysAnyRoleException;
 import es.upv.dsic.gti_ia.organization.exception.NotPlaysRoleException;
 import es.upv.dsic.gti_ia.organization.exception.NotSupervisorOrCreatorInUnitException;
+import es.upv.dsic.gti_ia.organization.exception.NotValidIdentifierException;
 import es.upv.dsic.gti_ia.organization.exception.OnlyPlaysCreatorException;
 import es.upv.dsic.gti_ia.organization.exception.ParentUnitNotExistsException;
 import es.upv.dsic.gti_ia.organization.exception.PlayingRoleException;
@@ -41,12 +41,12 @@ import es.upv.dsic.gti_ia.organization.exception.SameUnitException;
 import es.upv.dsic.gti_ia.organization.exception.SubunitsInUnitException;
 import es.upv.dsic.gti_ia.organization.exception.THOMASException;
 import es.upv.dsic.gti_ia.organization.exception.THOMASMessages;
+import es.upv.dsic.gti_ia.organization.exception.THOMASMessages.MessageID;
 import es.upv.dsic.gti_ia.organization.exception.UnitExistsException;
 import es.upv.dsic.gti_ia.organization.exception.UnitNotExistsException;
 import es.upv.dsic.gti_ia.organization.exception.VirtualParentException;
 import es.upv.dsic.gti_ia.organization.exception.VirtualUnitException;
 import es.upv.dsic.gti_ia.organization.exception.VisibilityRoleException;
-import es.upv.dsic.gti_ia.organization.exception.THOMASMessages.MessageID;
 
 /**
  * This class gives us the support to accede to the services of the OMS. The OMS
@@ -701,7 +701,7 @@ public class OMSProxy extends THOMASProxy {
      * @throws MySQLException
      *             If a MySql exception occurs.
      */
-    public String registerRole(String RoleID, String UnitID, String AccessibilityID, String VisibilityID, String PositionID) throws EmptyParametersException, UnitNotExistsException, RoleExistsInUnitException, AgentNotInUnitException, NotInUnitAndNotCreatorException, InvalidUnitTypeException, NotMemberOrCreatorInUnitException, NotSupervisorOrCreatorInUnitException, InvalidPositionException, InvalidAccessibilityException, InvalidVisibilityException, MySQLException {
+    public String registerRole(String RoleID, String UnitID, String AccessibilityID, String VisibilityID, String PositionID) throws NotValidIdentifierException, EmptyParametersException, UnitNotExistsException, RoleExistsInUnitException, AgentNotInUnitException, NotInUnitAndNotCreatorException, InvalidUnitTypeException, NotMemberOrCreatorInUnitException, NotSupervisorOrCreatorInUnitException, InvalidPositionException, InvalidAccessibilityException, InvalidVisibilityException, MySQLException {
 
         HashMap<String, String> inputs = new HashMap<String, String>();
 
@@ -746,6 +746,9 @@ public class OMSProxy extends THOMASProxy {
 
             throw e;
         } catch (InvalidVisibilityException e) {
+
+            throw e;
+        }catch (NotValidIdentifierException e) {
 
             throw e;
         }
@@ -796,7 +799,7 @@ public class OMSProxy extends THOMASProxy {
      * @throws InvalidUnitTypeException
      *             If unit type is invalid.
      */
-    public String registerUnit(String UnitID, String TypeID, String ParentUnitID, String CreatorID) throws EmptyParametersException, UnitExistsException, NotCreatorInParentUnitException, ParentUnitNotExistsException, InvalidVisibilityException, InvalidAccessibilityException, InvalidPositionException, InsertingTableException, InvalidUnitTypeException, MySQLException {
+    public String registerUnit(String UnitID, String TypeID, String ParentUnitID, String CreatorID) throws NotValidIdentifierException, EmptyParametersException, UnitExistsException, NotCreatorInParentUnitException, ParentUnitNotExistsException, InvalidVisibilityException, InvalidAccessibilityException, InvalidPositionException, InsertingTableException, InvalidUnitTypeException, MySQLException {
 
         if (ParentUnitID == null) {
 
@@ -853,6 +856,10 @@ public class OMSProxy extends THOMASProxy {
             throw e;
         }
         catch (MySQLException e) {
+
+            throw e;
+        }
+        catch (NotValidIdentifierException e) {
 
             throw e;
         }catch (THOMASException e) {
@@ -1125,7 +1132,7 @@ public class OMSProxy extends THOMASProxy {
      *             If the agent is the same than target agent.
      * @throws MySQLException
      */
-    public String deallocateRole(String RoleID, String UnitID, String TargetAgentID) throws EmptyParametersException, UnitNotExistsException, RoleNotExistsException, InvalidUnitTypeException, NotInUnitAndNotCreatorException, NotMemberOrCreatorInUnitException, AgentNotInUnitException, NotSupervisorOrCreatorInUnitException, NotPlaysRoleException, SameAgentNameException, MySQLException {
+    public String deallocateRole(String RoleID, String UnitID, String TargetAgentID) throws  EmptyParametersException, UnitNotExistsException, RoleNotExistsException, InvalidUnitTypeException, NotInUnitAndNotCreatorException, NotMemberOrCreatorInUnitException, AgentNotInUnitException, NotSupervisorOrCreatorInUnitException, NotPlaysRoleException, SameAgentNameException, MySQLException {
 
         HashMap<String, String> inputs = new HashMap<String, String>();
 
@@ -1170,7 +1177,8 @@ public class OMSProxy extends THOMASProxy {
         } catch (MySQLException e) {
 
             throw e;
-        } catch (THOMASException e) {
+        }
+        catch (THOMASException e) {
 
             e.printStackTrace();
             return null;
@@ -1211,7 +1219,7 @@ public class OMSProxy extends THOMASProxy {
      * @throws SameAgentNameException
      *             If the agent is the same than target agent.
      */
-    public String allocateRole(String RoleID, String UnitID, String TargetAgentID) throws EmptyParametersException, UnitNotExistsException, RoleNotExistsException, InvalidUnitTypeException, NotInUnitAndNotCreatorException, NotMemberOrCreatorInUnitException, AgentNotInUnitException, NotSupervisorOrCreatorInUnitException, PlayingRoleException, SameAgentNameException {
+    public String allocateRole(String RoleID, String UnitID, String TargetAgentID) throws NotValidIdentifierException, EmptyParametersException, UnitNotExistsException, RoleNotExistsException, InvalidUnitTypeException, NotInUnitAndNotCreatorException, NotMemberOrCreatorInUnitException, AgentNotInUnitException, NotSupervisorOrCreatorInUnitException, PlayingRoleException, SameAgentNameException {
 
         HashMap<String, String> inputs = new HashMap<String, String>();
 
@@ -1253,7 +1261,11 @@ public class OMSProxy extends THOMASProxy {
         } catch (SameAgentNameException e) {
 
             throw e;
-        } catch (THOMASException e) {
+        }
+        catch (NotValidIdentifierException e) {
+
+            throw e;
+        }catch (THOMASException e) {
 
             e.printStackTrace();
             return null;

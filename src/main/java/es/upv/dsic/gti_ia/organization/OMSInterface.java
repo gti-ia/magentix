@@ -17,6 +17,7 @@ import es.upv.dsic.gti_ia.organization.exception.NotInUnitOrParentUnitException;
 import es.upv.dsic.gti_ia.organization.exception.NotMemberOrCreatorInUnitException;
 import es.upv.dsic.gti_ia.organization.exception.NotPlaysRoleException;
 import es.upv.dsic.gti_ia.organization.exception.NotSupervisorOrCreatorInUnitException;
+import es.upv.dsic.gti_ia.organization.exception.NotValidIdentifierException;
 import es.upv.dsic.gti_ia.organization.exception.ParentUnitNotExistsException;
 import es.upv.dsic.gti_ia.organization.exception.PlayingRoleException;
 import es.upv.dsic.gti_ia.organization.exception.RoleContainsNormsException;
@@ -28,12 +29,12 @@ import es.upv.dsic.gti_ia.organization.exception.SameUnitException;
 import es.upv.dsic.gti_ia.organization.exception.SubunitsInUnitException;
 import es.upv.dsic.gti_ia.organization.exception.THOMASException;
 import es.upv.dsic.gti_ia.organization.exception.THOMASMessages;
+import es.upv.dsic.gti_ia.organization.exception.THOMASMessages.MessageID;
 import es.upv.dsic.gti_ia.organization.exception.UnitExistsException;
 import es.upv.dsic.gti_ia.organization.exception.UnitNotExistsException;
 import es.upv.dsic.gti_ia.organization.exception.VirtualParentException;
 import es.upv.dsic.gti_ia.organization.exception.VirtualUnitException;
 import es.upv.dsic.gti_ia.organization.exception.VisibilityRoleException;
-import es.upv.dsic.gti_ia.organization.exception.THOMASMessages.MessageID;
 
 /**
  * This class gives us the support to accede to the services of the OMS. The OMS
@@ -123,7 +124,8 @@ class OMSInterface {
 			// ----------------------------
 			// --------------------------------------------------------------------------------
 			if (checkParameter(CreatorName) && checkParameter(UnitName)) {
-
+				if (dbInterface.checkValidIdentifier(UnitName))
+				{
 				if (!dbInterface.checkUnit(UnitName)) {
 					if (ParentUnitName != null && !ParentUnitName.equals("")) {
 						if (!dbInterface.checkUnit(ParentUnitName)) {
@@ -163,6 +165,9 @@ class OMSInterface {
 					String message = l10n.getMessage(MessageID.UNIT_EXISTS, UnitName);
 					throw new UnitExistsException(message);
 				}
+				}
+				String message = l10n.getMessage(MessageID.NOT_VALID_IDENTIFIER);
+				throw new NotValidIdentifierException(message);
 			}
 			String message = l10n.getMessage(MessageID.EMPTY_PARAMETERS);
 			throw new EmptyParametersException(message);
@@ -291,103 +296,109 @@ class OMSInterface {
 			// ----------------------------
 			// --------------------------------------------------------------------------------
 			if (checkParameter(RoleName) && checkParameter(UnitName) && checkParameter(accessibility) && checkParameter(Visibility) && checkParameter(Position)) {
-				if (dbInterface.checkUnit(UnitName)) {
-					if (!dbInterface.checkRole(RoleName, UnitName)) {
 
-						unitType = dbInterface.getUnitType(UnitName);
+				if (dbInterface.checkValidIdentifier(RoleName))
+				{
+					if (dbInterface.checkUnit(UnitName)) {
+						if (!dbInterface.checkRole(RoleName, UnitName)) {
 
-						if (unitType.equals("hierarchy")) {
-							if (!Position.equals("supervisor") && !Position.equals("subordinate") && !Position.equals("creator")) {
-								String message = l10n.getMessage(MessageID.INVALID_POSITION, Position);
-								throw new InvalidPositionException(message);
-							}
+							unitType = dbInterface.getUnitType(UnitName);
 
-						} else if (unitType.equals("team") || unitType.equals("flat")) {
-
-							if (!Position.equals("member") && !Position.equals("creator")) {
-								String message = l10n.getMessage(MessageID.INVALID_POSITION, Position);
-								throw new InvalidPositionException(message);
-							}
-
-						} else {
-							String message = l10n.getMessage(MessageID.INVALID_POSITION, Position);
-							throw new InvalidPositionException(message);
-						}
-						// --------------------------------------------------------------------------------
-						// ------------------------- Checking domain-dependent
-						// norms ----------------------
-						// --------------------------------------------------------------------------------
-						// TODO
-
-						if (dbInterface.checkAgentInUnit(AgentName, UnitName)) {
 							if (unitType.equals("hierarchy")) {
-
-								if (dbInterface.checkPositionInUnit(AgentName, "creator", UnitName) || dbInterface.checkPositionInUnit(AgentName, "supervisor", UnitName)) {
-									String result = dbInterface.createRole(RoleName, UnitName, accessibility, Visibility, Position);
-
-									resultXML += "<status>Ok</status>\n";
-									resultXML += "<result>\n<description>" + result + "</description>\n</result>\n";
-									resultXML += "</response>";
-
-									return resultXML;
-
-								} else {
-									String message = l10n.getMessage(MessageID.NOT_SUPERVISOR_OR_CREATOR_IN_UNIT, AgentName, UnitName);
-									throw new NotSupervisorOrCreatorInUnitException(message);
+								if (!Position.equals("supervisor") && !Position.equals("subordinate") && !Position.equals("creator")) {
+									String message = l10n.getMessage(MessageID.INVALID_POSITION, Position);
+									throw new InvalidPositionException(message);
 								}
 
 							} else if (unitType.equals("team") || unitType.equals("flat")) {
 
-								if (dbInterface.checkPositionInUnit(AgentName, "creator", UnitName) || dbInterface.checkPositionInUnit(AgentName, "member", UnitName)) {
-									String result = dbInterface.createRole(RoleName, UnitName, accessibility, Visibility, Position);
-
-									resultXML += "<status>Ok</status>\n";
-									resultXML += "<result>\n<description>" + result + "</description>\n</result>\n";
-									resultXML += "</response>";
-
-									return resultXML;
-
-								} else {
-									String message = l10n.getMessage(MessageID.NOT_MEMBER_OR_CREATOR_IN_UNIT, AgentName, UnitName);
-									throw new NotMemberOrCreatorInUnitException(message);
+								if (!Position.equals("member") && !Position.equals("creator")) {
+									String message = l10n.getMessage(MessageID.INVALID_POSITION, Position);
+									throw new InvalidPositionException(message);
 								}
 
 							} else {
-								String message = l10n.getMessage(MessageID.INVALID_UNIT_TYPE, unitType);
-								throw new InvalidUnitTypeException(message);
+								String message = l10n.getMessage(MessageID.INVALID_POSITION, Position);
+								throw new InvalidPositionException(message);
 							}
+							// --------------------------------------------------------------------------------
+							// ------------------------- Checking domain-dependent
+							// norms ----------------------
+							// --------------------------------------------------------------------------------
+							// TODO
 
+							if (dbInterface.checkAgentInUnit(AgentName, UnitName)) {
+								if (unitType.equals("hierarchy")) {
+
+									if (dbInterface.checkPositionInUnit(AgentName, "creator", UnitName) || dbInterface.checkPositionInUnit(AgentName, "supervisor", UnitName)) {
+										String result = dbInterface.createRole(RoleName, UnitName, accessibility, Visibility, Position);
+
+										resultXML += "<status>Ok</status>\n";
+										resultXML += "<result>\n<description>" + result + "</description>\n</result>\n";
+										resultXML += "</response>";
+
+										return resultXML;
+
+									} else {
+										String message = l10n.getMessage(MessageID.NOT_SUPERVISOR_OR_CREATOR_IN_UNIT, AgentName, UnitName);
+										throw new NotSupervisorOrCreatorInUnitException(message);
+									}
+
+								} else if (unitType.equals("team") || unitType.equals("flat")) {
+
+									if (dbInterface.checkPositionInUnit(AgentName, "creator", UnitName) || dbInterface.checkPositionInUnit(AgentName, "member", UnitName)) {
+										String result = dbInterface.createRole(RoleName, UnitName, accessibility, Visibility, Position);
+
+										resultXML += "<status>Ok</status>\n";
+										resultXML += "<result>\n<description>" + result + "</description>\n</result>\n";
+										resultXML += "</response>";
+
+										return resultXML;
+
+									} else {
+										String message = l10n.getMessage(MessageID.NOT_MEMBER_OR_CREATOR_IN_UNIT, AgentName, UnitName);
+										throw new NotMemberOrCreatorInUnitException(message);
+									}
+
+								} else {
+									String message = l10n.getMessage(MessageID.INVALID_UNIT_TYPE, unitType);
+									throw new InvalidUnitTypeException(message);
+								}
+
+							} else {
+								if (unitType.equals("flat")) {
+
+									if (dbInterface.checkPosition(AgentName, "creator")) {
+										String result = dbInterface.createRole(RoleName, UnitName, accessibility, Visibility, Position);
+
+										resultXML += "<status>Ok</status>\n";
+										resultXML += "<result>\n<description>" + result + "</description>\n</result>\n";
+										resultXML += "</response>";
+
+										return resultXML;
+
+									} else {
+										String message = l10n.getMessage(MessageID.NOT_IN_UNIT_AND_NOT_CREATOR, AgentName);
+										throw new NotInUnitAndNotCreatorException(message);
+									}
+
+								} else {
+									String message = l10n.getMessage(MessageID.AGENT_NOT_IN_UNIT, AgentName, UnitName);
+									throw new AgentNotInUnitException(message);
+								}
+							}
 						} else {
-							if (unitType.equals("flat")) {
-
-								if (dbInterface.checkPosition(AgentName, "creator")) {
-									String result = dbInterface.createRole(RoleName, UnitName, accessibility, Visibility, Position);
-
-									resultXML += "<status>Ok</status>\n";
-									resultXML += "<result>\n<description>" + result + "</description>\n</result>\n";
-									resultXML += "</response>";
-
-									return resultXML;
-
-								} else {
-									String message = l10n.getMessage(MessageID.NOT_IN_UNIT_AND_NOT_CREATOR, AgentName);
-									throw new NotInUnitAndNotCreatorException(message);
-								}
-
-							} else {
-								String message = l10n.getMessage(MessageID.AGENT_NOT_IN_UNIT, AgentName, UnitName);
-								throw new AgentNotInUnitException(message);
-							}
+							String message = l10n.getMessage(MessageID.ROLE_EXISTS_IN_UNIT, RoleName);
+							throw new RoleExistsInUnitException(message);
 						}
 					} else {
-						String message = l10n.getMessage(MessageID.ROLE_EXISTS_IN_UNIT, RoleName);
-						throw new RoleExistsInUnitException(message);
+						String message = l10n.getMessage(MessageID.UNIT_NOT_EXISTS, UnitName);
+						throw new UnitNotExistsException(message);
 					}
-				} else {
-					String message = l10n.getMessage(MessageID.UNIT_NOT_EXISTS, UnitName);
-					throw new UnitNotExistsException(message);
-				}
 
+				}
+				String message = l10n.getMessage(MessageID.NOT_VALID_IDENTIFIER);
+				throw new NotValidIdentifierException(message);
 			}
 			String message = l10n.getMessage(MessageID.EMPTY_PARAMETERS);
 			throw new EmptyParametersException(message);
@@ -729,74 +740,63 @@ class OMSInterface {
 
 		String resultXML = "<response>\n<serviceName>AllocateRole</serviceName>\n";
 		try {
+
+
+
 			// --------------------------------------------------------------------------------
 			// ------------------------- Checking input parameters
 			// ----------------------------
 			// --------------------------------------------------------------------------------
 			if (checkParameter(RoleName) && checkParameter(UnitName) && checkParameter(TargetAgentName)) {
+				if (dbInterface.checkValidIdentifier(TargetAgentName))
+				{
 
-				if (dbInterface.checkUnit(UnitName)) {
-					if (dbInterface.checkRole(RoleName, UnitName)) {
+					if (dbInterface.checkUnit(UnitName)) {
+						if (dbInterface.checkRole(RoleName, UnitName)) {
 
-						if (TargetAgentName.equals(AgentName)) {
-							String message = l10n.getMessage(MessageID.SAME_AGENT_NAME);
-							throw new SameAgentNameException(message);
-						}
-
-						if (dbInterface.checkAgentPlaysRole(TargetAgentName, RoleName, UnitName)) {
-							String message = l10n.getMessage(MessageID.PLAYING_ROLE, AgentName);
-							throw new PlayingRoleException(message);
-						}
-
-						// --------------------------------------------------------------------------------
-						// ------------------------- Checking domain-dependent
-						// norms ----------------------
-						// --------------------------------------------------------------------------------
-						// TODO
-						// --------------------------------------------------------------------------------
-						// ------------------------- Checking structural norms
-						// ----------------------------
-						// --------------------------------------------------------------------------------
-
-						String type = dbInterface.getUnitType(UnitName);
-
-						if (type.equals("hierarchy")) {
-							if (dbInterface.checkAgentInUnit(AgentName, UnitName)) {
-								if (dbInterface.checkPositionInUnit(AgentName, "supervisor", UnitName) || dbInterface.checkPositionInUnit(AgentName, "creator", UnitName)) {
-									String result = dbInterface.acquireRole(UnitName, RoleName, TargetAgentName);
-
-									resultXML += "<status>Ok</status>\n";
-									resultXML += "<result>\n<description>" + result + "</description>\n</result>\n";
-									resultXML += "</response>";
-
-									return resultXML;
-
-								} else {
-									String message = l10n.getMessage(MessageID.NOT_SUPERVISOR_OR_CREATOR_IN_UNIT, AgentName, UnitName);
-									throw new NotSupervisorOrCreatorInUnitException(message);
-								}
-							} else {
-								String message = l10n.getMessage(MessageID.AGENT_NOT_IN_UNIT, AgentName, UnitName);
-								throw new AgentNotInUnitException(message);
+							if (TargetAgentName.equals(AgentName)) {
+								String message = l10n.getMessage(MessageID.SAME_AGENT_NAME);
+								throw new SameAgentNameException(message);
 							}
-						} else if (type.equals("team")) {
-							if (dbInterface.checkAgentInUnit(AgentName, UnitName)) {
-								String result = dbInterface.acquireRole(UnitName, RoleName, TargetAgentName);
 
-								resultXML += "<status>Ok</status>\n";
-								resultXML += "<result>\n<description>" + result + "</description>\n</result>\n";
-								resultXML += "</response>";
-
-								return resultXML;
-
-							} else {
-								String message = l10n.getMessage(MessageID.AGENT_NOT_IN_UNIT, AgentName, UnitName);
-								throw new AgentNotInUnitException(message);
+							if (dbInterface.checkAgentPlaysRole(TargetAgentName, RoleName, UnitName)) {
+								String message = l10n.getMessage(MessageID.PLAYING_ROLE, AgentName);
+								throw new PlayingRoleException(message);
 							}
-						} else if (type.equals("flat")) {
-							if (dbInterface.checkAgentInUnit(AgentName, UnitName)) {
 
-								if (dbInterface.checkPositionInUnit(AgentName, "member", UnitName) || dbInterface.checkPositionInUnit(AgentName, "creator", UnitName)) {
+							// --------------------------------------------------------------------------------
+							// ------------------------- Checking domain-dependent
+							// norms ----------------------
+							// --------------------------------------------------------------------------------
+							// TODO
+							// --------------------------------------------------------------------------------
+							// ------------------------- Checking structural norms
+							// ----------------------------
+							// --------------------------------------------------------------------------------
+
+							String type = dbInterface.getUnitType(UnitName);
+
+							if (type.equals("hierarchy")) {
+								if (dbInterface.checkAgentInUnit(AgentName, UnitName)) {
+									if (dbInterface.checkPositionInUnit(AgentName, "supervisor", UnitName) || dbInterface.checkPositionInUnit(AgentName, "creator", UnitName)) {
+										String result = dbInterface.acquireRole(UnitName, RoleName, TargetAgentName);
+
+										resultXML += "<status>Ok</status>\n";
+										resultXML += "<result>\n<description>" + result + "</description>\n</result>\n";
+										resultXML += "</response>";
+
+										return resultXML;
+
+									} else {
+										String message = l10n.getMessage(MessageID.NOT_SUPERVISOR_OR_CREATOR_IN_UNIT, AgentName, UnitName);
+										throw new NotSupervisorOrCreatorInUnitException(message);
+									}
+								} else {
+									String message = l10n.getMessage(MessageID.AGENT_NOT_IN_UNIT, AgentName, UnitName);
+									throw new AgentNotInUnitException(message);
+								}
+							} else if (type.equals("team")) {
+								if (dbInterface.checkAgentInUnit(AgentName, UnitName)) {
 									String result = dbInterface.acquireRole(UnitName, RoleName, TargetAgentName);
 
 									resultXML += "<status>Ok</status>\n";
@@ -806,38 +806,57 @@ class OMSInterface {
 									return resultXML;
 
 								} else {
-									String message = l10n.getMessage(MessageID.NOT_MEMBER_OR_CREATOR_IN_UNIT, AgentName, UnitName);
-									throw new NotMemberOrCreatorInUnitException(message);
+									String message = l10n.getMessage(MessageID.AGENT_NOT_IN_UNIT, AgentName, UnitName);
+									throw new AgentNotInUnitException(message);
 								}
+							} else if (type.equals("flat")) {
+								if (dbInterface.checkAgentInUnit(AgentName, UnitName)) {
 
+									if (dbInterface.checkPositionInUnit(AgentName, "member", UnitName) || dbInterface.checkPositionInUnit(AgentName, "creator", UnitName)) {
+										String result = dbInterface.acquireRole(UnitName, RoleName, TargetAgentName);
+
+										resultXML += "<status>Ok</status>\n";
+										resultXML += "<result>\n<description>" + result + "</description>\n</result>\n";
+										resultXML += "</response>";
+
+										return resultXML;
+
+									} else {
+										String message = l10n.getMessage(MessageID.NOT_MEMBER_OR_CREATOR_IN_UNIT, AgentName, UnitName);
+										throw new NotMemberOrCreatorInUnitException(message);
+									}
+
+								} else {
+									if (dbInterface.checkPosition(AgentName, "creator")) {
+
+										String result = dbInterface.acquireRole(UnitName, RoleName, TargetAgentName);
+
+										resultXML += "<status>Ok</status>\n";
+										resultXML += "<result>\n<description>" + result + "</description>\n</result>\n";
+										resultXML += "</response>";
+
+										return resultXML;
+
+									} else {
+										String message = l10n.getMessage(MessageID.NOT_IN_UNIT_AND_NOT_CREATOR, AgentName);
+										throw new NotInUnitAndNotCreatorException(message);
+									}
+								}
 							} else {
-								if (dbInterface.checkPosition(AgentName, "creator")) {
-
-									String result = dbInterface.acquireRole(UnitName, RoleName, TargetAgentName);
-
-									resultXML += "<status>Ok</status>\n";
-									resultXML += "<result>\n<description>" + result + "</description>\n</result>\n";
-									resultXML += "</response>";
-
-									return resultXML;
-
-								} else {
-									String message = l10n.getMessage(MessageID.NOT_IN_UNIT_AND_NOT_CREATOR, AgentName);
-									throw new NotInUnitAndNotCreatorException(message);
-								}
+								String message = l10n.getMessage(MessageID.INVALID_UNIT_TYPE, type);
+								throw new InvalidUnitTypeException(message);
 							}
 						} else {
-							String message = l10n.getMessage(MessageID.INVALID_UNIT_TYPE, type);
-							throw new InvalidUnitTypeException(message);
+							String message = l10n.getMessage(MessageID.ROLE_NOT_EXISTS, RoleName, UnitName);
+							throw new RoleNotExistsException(message);
 						}
 					} else {
-						String message = l10n.getMessage(MessageID.ROLE_NOT_EXISTS, RoleName, UnitName);
-						throw new RoleNotExistsException(message);
+						String message = l10n.getMessage(MessageID.UNIT_NOT_EXISTS, UnitName);
+						throw new UnitNotExistsException(message);
 					}
-				} else {
-					String message = l10n.getMessage(MessageID.UNIT_NOT_EXISTS, UnitName);
-					throw new UnitNotExistsException(message);
 				}
+				String message = l10n.getMessage(MessageID.NOT_VALID_IDENTIFIER);
+				throw new NotValidIdentifierException(message);
 			}
 			String message = l10n.getMessage(MessageID.EMPTY_PARAMETERS);
 			throw new EmptyParametersException(message);
@@ -1511,7 +1530,7 @@ class OMSInterface {
 											throw new AgentNotInUnitException(message);
 										}
 									}
-									*/
+									 */
 									arrayResult = dbInterface.getAgentsPlayingRoleInUnit(UnitName, RoleName, AgentName);
 
 									resultXML += "<status>Ok</status>\n";
@@ -1561,7 +1580,7 @@ class OMSInterface {
 											throw new AgentNotInUnitException(message);
 										}
 									}
-									*/
+									 */
 									arrayResult = dbInterface.getAgentsPlayingRolePositionInUnit(UnitName, RoleName, PositionValue, AgentName);
 
 									resultXML += "<status>Ok</status>\n";
@@ -1809,7 +1828,7 @@ class OMSInterface {
 											throw new AgentNotInUnitException(message);
 										}
 									}
-									*/
+									 */
 									intResult = dbInterface.getInformQuantityAgentsPlayingRoleInUnit(UnitName, RoleName, AgentName);
 									resultXML += "<status>Ok</status>\n";
 									resultXML += "<result>\n";
@@ -1839,7 +1858,7 @@ class OMSInterface {
 											throw new AgentNotInUnitException(message);
 										}
 									}
-									*/
+									 */
 									intResult = dbInterface.getInformQuantityAgentsPlayingRolePositionInUnit(UnitName, RoleName, PositionValue, AgentName);
 									resultXML += "<status>Ok</status>\n";
 									resultXML += "<result>\n";

@@ -28,6 +28,7 @@ import es.upv.dsic.gti_ia.organization.exception.IDUnitTypeNotFoundException;
 import es.upv.dsic.gti_ia.organization.exception.InsertingTableException;
 import es.upv.dsic.gti_ia.organization.exception.InvalidAccessibilityException;
 import es.upv.dsic.gti_ia.organization.exception.InvalidDataTypeException;
+import es.upv.dsic.gti_ia.organization.exception.InvalidParametersException;
 import es.upv.dsic.gti_ia.organization.exception.InvalidPositionException;
 import es.upv.dsic.gti_ia.organization.exception.InvalidRolePositionException;
 import es.upv.dsic.gti_ia.organization.exception.InvalidServiceURLException;
@@ -45,6 +46,7 @@ import es.upv.dsic.gti_ia.organization.exception.NotMemberOrCreatorInUnitExcepti
 import es.upv.dsic.gti_ia.organization.exception.NotPlaysAnyRoleException;
 import es.upv.dsic.gti_ia.organization.exception.NotPlaysRoleException;
 import es.upv.dsic.gti_ia.organization.exception.NotSupervisorOrCreatorInUnitException;
+import es.upv.dsic.gti_ia.organization.exception.NotValidIdentifierException;
 import es.upv.dsic.gti_ia.organization.exception.OnlyPlaysCreatorException;
 import es.upv.dsic.gti_ia.organization.exception.ParentUnitNotExistsException;
 import es.upv.dsic.gti_ia.organization.exception.PlayingRoleException;
@@ -308,6 +310,9 @@ public class THOMASProxy {
 			if (valueAux.equals(l10n.getMessage(MessageID.INVALID_DATA_TYPE)))
                 throw new InvalidDataTypeException(value);
 			
+			if (valueAux.equals(l10n.getMessage(MessageID.INVALID_PARAMETERS)))
+				throw new InvalidParametersException(value);
+			
 			if (valueAux.equals(l10n.getMessage(MessageID.INVALID_POSITION)))
 				throw new InvalidPositionException(value);
 			
@@ -412,6 +417,9 @@ public class THOMASProxy {
 			
 			if (valueAux.equals(l10n.getMessage(MessageID.VISIBILITY_ROLE)))
 				throw new VisibilityRoleException(value);
+			if (valueAux.equals(l10n.getMessage(MessageID.NOT_VALID_IDENTIFIER)))
+				throw new NotValidIdentifierException(value);
+			
 			
 			
 		}
