@@ -72,7 +72,7 @@ CREATE  TABLE IF NOT EXISTS `thomas`.`position` (
   `idposition` INT NOT NULL AUTO_INCREMENT ,
   `positionName` VARCHAR(45) NOT NULL ,
   PRIMARY KEY (`idposition`) ,
-  UNIQUE INDEX `position_UNIQUE` (`position` ASC) )
+  UNIQUE INDEX `position_UNIQUE` (`positionName` ASC) )
 ENGINE = InnoDB;
 
 
@@ -203,6 +203,7 @@ CREATE  TABLE IF NOT EXISTS `thomas`.`targetType` (
   PRIMARY KEY (`idtargetType`) )
 ENGINE = InnoDB;
 
+
 -- -----------------------------------------------------
 -- Table `thomas`.`actionNorm`
 -- -----------------------------------------------------
@@ -320,13 +321,13 @@ INSERT INTO `unitType` (`unitTypeName`) VALUES
 -- Inserts position types
 -- (Member, Creator, Supervisor, Subordinate)
 -- -----------------------------------------------
-INSERT INTO `position` (`position`) VALUES
+INSERT INTO `position` (`positionName`) VALUES
   ('member');
-INSERT INTO `position` (`position`) VALUES
+INSERT INTO `position` (`positionName`) VALUES
   ('creator');
-INSERT INTO `position` (`position`) VALUES
+INSERT INTO `position` (`positionName`) VALUES
   ('supervisor');
-INSERT INTO `position` (`position`) VALUES
+INSERT INTO `position` (`positionName`) VALUES
   ('subordinate');
 
 -- -----------------------------------------------
@@ -372,7 +373,7 @@ INSERT INTO `roleList`
 (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`)
 VALUES
   ('participant',(SELECT idunitList FROM unitList WHERE unitName = 'virtual'),
-  (SELECT idposition FROM position WHERE position = 'creator'),
+  (SELECT idposition FROM position WHERE positionName = 'creator'),
   (SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),
   (SELECT idvisibility FROM visibility WHERE visibility = 'public'));
   
