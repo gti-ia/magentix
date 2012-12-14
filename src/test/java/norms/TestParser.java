@@ -4,7 +4,13 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 import junit.framework.TestCase;
-import es.upv.dsic.gti_ia.norms.*;
+import es.upv.dsic.gti_ia.norms.NormParser;
+import es.upv.dsic.gti_ia.organization.exception.InvalidDeonticException;
+import es.upv.dsic.gti_ia.organization.exception.InvalidExpressionException;
+import es.upv.dsic.gti_ia.organization.exception.InvalidIDException;
+import es.upv.dsic.gti_ia.organization.exception.InvalidOMSActionException;
+import es.upv.dsic.gti_ia.organization.exception.InvalidTargetTypeException;
+import es.upv.dsic.gti_ia.organization.exception.InvalidTargetValueException;
 
 
 public class TestParser extends TestCase {
@@ -31,7 +37,7 @@ public class TestParser extends TestCase {
 	}
 
 	//A partir de la prueba 13 es donde se realizán las pruebas del documento.
-	
+
 	public void testNormForo1()
 	{
 		try
@@ -56,7 +62,7 @@ public class TestParser extends TestCase {
 			fail(e.getMessage());
 		}
 	}
-	
+
 	public void testNorm1()
 	{
 		try
@@ -66,8 +72,8 @@ public class TestParser extends TestCase {
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
 			parser = new NormParser(input);
-			
-			
+
+
 
 			parser.parser();
 
@@ -361,7 +367,7 @@ public class TestParser extends TestCase {
 			fail(e.getMessage());
 		}
 	}
-//Descritas en el documento de pruebas.
+	//Descritas en el documento de pruebas.
 	public void testNorm1a()
 	{
 		try
@@ -911,9 +917,9 @@ public class TestParser extends TestCase {
 			fail(e.getMessage());
 		}
 	}
-	
-	
-	
+
+
+
 	public void testNorm23a()
 	{
 		try
@@ -938,10 +944,10 @@ public class TestParser extends TestCase {
 			fail(e.getMessage());
 		}
 	}
-	
-	
+
+
 	// Pruebas del manual
-	
+
 	public void testIncorrectNorm1a()
 	{
 		try
@@ -955,17 +961,21 @@ public class TestParser extends TestCase {
 			parser.parser();
 
 			fail();
-
-		}catch(Exception e)
+		}
+		catch(InvalidExpressionException e)
 		{
-
+			System.out.println("----------- Prueba 1 ----------");
 			System.out.println(e.getMessage());
+			System.out.println("--------------------------------");
 			assertEquals(e.getMessage(), true, true);
 
+		}catch (Exception e) {
+
+			e.printStackTrace();
 		}
 
 	}
-	
+
 	public void testIncorrectNorm2a()
 	{
 		try
@@ -985,7 +995,7 @@ public class TestParser extends TestCase {
 		{
 			System.out.println(er.getMessage());
 			assertEquals(er.getMessage(), true, true);
-		
+
 		}catch(Exception e)
 		{
 
@@ -995,7 +1005,7 @@ public class TestParser extends TestCase {
 		}
 
 	}
-	
+
 	public void testIncorrectNorm3a()
 	{
 		try
@@ -1010,21 +1020,20 @@ public class TestParser extends TestCase {
 
 			fail();
 		}
-		catch(Error er)
+		catch(InvalidExpressionException e)
 		{
-			System.out.println(er.getMessage());
-			assertEquals(er.getMessage(), true, true);
-		
-		}catch(Exception e)
-		{
-
+			System.out.println("----------- Prueba 3 ----------");
 			System.out.println(e.getMessage());
+			System.out.println("--------------------------------");
 			assertEquals(e.getMessage(), true, true);
 
+		}catch (Exception e) {
+
+			e.printStackTrace();
 		}
 
 	}
-	
+
 	public void testIncorrectNorm4a()
 	{
 		try
@@ -1039,21 +1048,20 @@ public class TestParser extends TestCase {
 
 			fail();
 		}
-		catch(Error er)
+		catch(InvalidExpressionException e)
 		{
-			System.out.println(er.getMessage());
-			assertEquals(er.getMessage(), true, true);
-		
-		}catch(Exception e)
-		{
-
+			System.out.println("----------- Prueba 4a----------");
 			System.out.println(e.getMessage());
+			System.out.println("--------------------------------");
 			assertEquals(e.getMessage(), true, true);
 
+		}catch (Exception e) {
+
+			e.printStackTrace();
 		}
 
 	}
-	
+
 	public void testIncorrectNorm4b()
 	{
 		try
@@ -1068,21 +1076,20 @@ public class TestParser extends TestCase {
 
 			fail();
 		}
-		catch(Error er)
+		catch(InvalidExpressionException e)
 		{
-			System.out.println(er.getMessage());
-			assertEquals(er.getMessage(), true, true);
-		
-		}catch(Exception e)
-		{
-
+			System.out.println("----------- Prueba 4b ----------");
 			System.out.println(e.getMessage());
+			System.out.println("--------------------------------");
 			assertEquals(e.getMessage(), true, true);
 
+		}catch (Exception e) {
+
+			e.printStackTrace();
 		}
 
 	}
-	
+
 	public void testIncorrectNorm5a()
 	{
 		try
@@ -1097,26 +1104,25 @@ public class TestParser extends TestCase {
 
 			fail();
 		}
-		catch(Error er)
+		catch(InvalidExpressionException e)
 		{
-			System.out.println(er.getMessage());
-			assertEquals(er.getMessage(), true, true);
-		
-		}catch(Exception e)
-		{
-
+			System.out.println("----------- Prueba 5 ----------");
 			System.out.println(e.getMessage());
+			System.out.println("--------------------------------");
 			assertEquals(e.getMessage(), true, true);
 
+		}catch (Exception e) {
+
+			e.printStackTrace();
 		}
 
 	}
-	
+
 	public void testIncorrectNorm6a()
 	{
 		try
 		{
-			StringBuffer StringBuffer1 = new StringBuffer("@ informTargetNormsWrong2[f,<roleName:client100>,informTargetNorms (_,_,UnitName, AgentName),hasType(UnitName,hierarchy) & playsRole(AgentName,RoleName, UnitName) &hasPosition(RoleName,supervisor), _ ];");
+			StringBuffer StringBuffer1 = new StringBuffer("@ informTargetNormsWrong2[f,<roleName:client100>,informTargetNorms (_,_,UnitName, AgentName),hasType(UnitName,hierarchy) & playsRole(AgentName,RoleName, UnitName) & hasPosition(RoleName,supervisor), _ ];");
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
@@ -1126,26 +1132,25 @@ public class TestParser extends TestCase {
 
 			fail();
 		}
-		catch(Error er)
+		catch(InvalidExpressionException e)
 		{
-			System.out.println(er.getMessage());
-			assertEquals(er.getMessage(), true, true);
-		
-		}catch(Exception e)
-		{
-
+			System.out.println("----------- Prueba 6 ----------");
 			System.out.println(e.getMessage());
+			System.out.println("--------------------------------");
 			assertEquals(e.getMessage(), true, true);
 
+		}catch (Exception e) {
+
+			e.printStackTrace();
 		}
 
 	}
-	
+
 	public void testIncorrectNorm7a()
 	{
 		try
 		{
-			StringBuffer StringBuffer1 = new StringBuffer("@ informTargetNormsWrong3[f,<roleName:client100>,informTargetNorms (_,_,UnitName, AgentName),hasType(UnitName,hierarchy) & playsRole(AgentName,RoleName, UnitName) &hasPosition(RoleName,supervisor) & supervisor(_,vale,123),_ ];");
+			StringBuffer StringBuffer1 = new StringBuffer("@ informTargetNormsWrong3[f,<roleName:client100>,informTargetNorms (_,_,UnitName, AgentName),hasType(UnitName,hierarchy) & playsRole(AgentName,RoleName, UnitName) &hasPosition(RoleName,supervisor, Value) & supervisor(_,vale,123),_ ];");
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
@@ -1155,21 +1160,20 @@ public class TestParser extends TestCase {
 
 			fail();
 		}
-		catch(Error er)
+		catch(InvalidExpressionException e)
 		{
-			System.out.println(er.getMessage());
-			assertEquals(er.getMessage(), true, true);
-		
-		}catch(Exception e)
-		{
-
+			System.out.println("----------- Prueba 7 ----------");
 			System.out.println(e.getMessage());
+			System.out.println("--------------------------------");
 			assertEquals(e.getMessage(), true, true);
 
+		}catch (Exception e) {
+
+			e.printStackTrace();
 		}
 
 	}
-	
+
 	public void testIncorrectNorm8a()
 	{
 		try
@@ -1184,21 +1188,26 @@ public class TestParser extends TestCase {
 
 			fail();
 		}
+		catch(InvalidTargetValueException e)
+		{
+			System.out.println("----------- Prueba 8 ----------");
+			System.out.println(e.getMessage());
+			System.out.println("--------------------------------");
+			assertEquals(e.getMessage(), true, true);
+
+		}catch (Exception e) {
+
+			e.printStackTrace();
+		}
 		catch(Error er)
 		{
 			System.out.println(er.getMessage());
 			assertEquals(er.getMessage(), true, true);
-		
-		}catch(Exception e)
-		{
-
-			System.out.println(e.getMessage());
-			assertEquals(e.getMessage(), true, true);
 
 		}
 
 	}
-	
+
 	public void testIncorrectNorm9a()
 	{
 		try
@@ -1213,21 +1222,20 @@ public class TestParser extends TestCase {
 
 			fail();
 		}
-		catch(Error er)
+		catch(InvalidExpressionException e)
 		{
-			System.out.println(er.getMessage());
-			assertEquals(er.getMessage(), true, true);
-		
-		}catch(Exception e)
-		{
-
+			System.out.println("----------- Prueba 9 ----------");
 			System.out.println(e.getMessage());
+			System.out.println("--------------------------------");
 			assertEquals(e.getMessage(), true, true);
 
+		}catch (Exception e) {
+
+			e.printStackTrace();
 		}
 
 	}
-	
+
 	public void testIncorrectNorm10a()
 	{
 		try
@@ -1242,21 +1250,20 @@ public class TestParser extends TestCase {
 
 			fail();
 		}
-		catch(Error er)
+		catch(InvalidExpressionException e)
 		{
-			System.out.println(er.getMessage());
-			assertEquals(er.getMessage(), true, true);
-		
-		}catch(Exception e)
-		{
-
+			System.out.println("----------- Prueba 10 ----------");
 			System.out.println(e.getMessage());
+			System.out.println("--------------------------------");
 			assertEquals(e.getMessage(), true, true);
 
+		}catch (Exception e) {
+
+			e.printStackTrace();
 		}
 
 	}
-	
+
 	public void testIncorrectNorm11a()
 	{
 		try
@@ -1271,26 +1278,31 @@ public class TestParser extends TestCase {
 
 			fail();
 		}
+		catch(InvalidTargetValueException e)
+		{
+			System.out.println("----------- Prueba 11 ----------");
+			System.out.println(e.getMessage());
+			System.out.println("--------------------------------");
+			assertEquals(e.getMessage(), true, true);
+
+		}catch (Exception e) {
+
+			e.printStackTrace();
+		}
 		catch(Error er)
 		{
 			System.out.println(er.getMessage());
 			assertEquals(er.getMessage(), true, true);
-		
-		}catch(Exception e)
-		{
-
-			System.out.println(e.getMessage());
-			assertEquals(e.getMessage(), true, true);
 
 		}
 
 	}
-	
+
 	public void testIncorrectNorm12a()
 	{
 		try
 		{
-			StringBuffer StringBuffer1 = new StringBuffer("@informNormWrong2[f,<positionName:_>,informNorm(_,UnitName, AgentName),hasType(UnitName,hierarchy)) & playsRole(AgentName,RoleName, UnitName) &ParentName(hola,_,UnitName) ];");
+			StringBuffer StringBuffer1 = new StringBuffer("@informNormWrong2[f,<positionName:_>,informNorm(_,UnitName, AgentName),hasType(UnitName,hierarchy) & playsRole(AgentName,RoleName, UnitName) &ParentName(hola,_,UnitName) ];");
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
@@ -1300,21 +1312,20 @@ public class TestParser extends TestCase {
 
 			fail();
 		}
-		catch(Error er)
+		catch(InvalidExpressionException e)
 		{
-			System.out.println(er.getMessage());
-			assertEquals(er.getMessage(), true, true);
-		
-		}catch(Exception e)
-		{
-
+			System.out.println("----------- Prueba 12 ----------");
 			System.out.println(e.getMessage());
+			System.out.println("--------------------------------");
 			assertEquals(e.getMessage(), true, true);
 
+		}catch (Exception e) {
+
+			e.printStackTrace();
 		}
 
 	}
-	
+
 	public void testIncorrectNorm13a()
 	{
 		try
@@ -1329,21 +1340,20 @@ public class TestParser extends TestCase {
 
 			fail();
 		}
-		catch(Error er)
+		catch(InvalidTargetValueException e)
 		{
-			System.out.println(er.getMessage());
-			assertEquals(er.getMessage(), true, true);
-		
-		}catch(Exception e)
-		{
-
+			System.out.println("----------- Prueba 13 ----------");
 			System.out.println(e.getMessage());
+			System.out.println("--------------------------------");
 			assertEquals(e.getMessage(), true, true);
 
+		}catch (Exception e) {
+
+			e.printStackTrace();
 		}
 
 	}
-	
+
 	public void testIncorrectNorm14a()
 	{
 		try
@@ -1358,21 +1368,25 @@ public class TestParser extends TestCase {
 
 			fail();
 		}
+		catch(InvalidTargetValueException e)
+		{
+			System.out.println("----------- Prueba 14 ----------");
+			System.out.println(e.getMessage());
+			System.out.println("--------------------------------");
+			assertEquals(e.getMessage(), true, true);
+
+		}catch (Exception e) {
+
+			e.printStackTrace();
+		}
 		catch(Error er)
 		{
 			System.out.println(er.getMessage());
 			assertEquals(er.getMessage(), true, true);
-		
-		}catch(Exception e)
-		{
-
-			System.out.println(e.getMessage());
-			assertEquals(e.getMessage(), true, true);
 
 		}
-
 	}
-	
+
 	public void testIncorrectNorm15a()
 	{
 		try
@@ -1387,50 +1401,58 @@ public class TestParser extends TestCase {
 
 			fail();
 		}
-		catch(Error er)
+		catch(InvalidExpressionException e)
 		{
-			System.out.println(er.getMessage());
-			assertEquals(er.getMessage(), true, true);
-		
-		}catch(Exception e)
-		{
-
+			System.out.println("----------- Prueba 15 ----------");
 			System.out.println(e.getMessage());
+			System.out.println("--------------------------------");
 			assertEquals(e.getMessage(), true, true);
 
+		}catch (Exception e) {
+
+			e.printStackTrace();
 		}
 
 	}
-	
+
 	public void testIncorrectNorm16a()
 	{
 		try
 		{
 			StringBuffer StringBuffer1 = new StringBuffer("@[p,<positionName:_>,informUnitRoles(UnitName, AgentName),_,_];");
 
-			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
+			InputStream input;
+
+			input = new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
+
 
 			parser = new NormParser(input);
 
 			parser.parser();
 
 			fail();
+
+		}
+		catch(InvalidIDException e)
+		{
+			System.out.println("----------- Prueba 16 ----------");
+			System.out.println(e.getMessage());
+			System.out.println("--------------------------------");
+			assertEquals(e.getMessage(), true, true);
+
+		}catch (Exception e) {
+
+			e.printStackTrace();
 		}
 		catch(Error er)
 		{
 			System.out.println(er.getMessage());
 			assertEquals(er.getMessage(), true, true);
-		
-		}catch(Exception e)
-		{
-
-			System.out.println(e.getMessage());
-			assertEquals(e.getMessage(), true, true);
 
 		}
 
 	}
-	
+
 	public void testIncorrectNorm17a()
 	{
 		try
@@ -1445,21 +1467,20 @@ public class TestParser extends TestCase {
 
 			fail();
 		}
-		catch(Error er)
+		catch(InvalidExpressionException e)
 		{
-			System.out.println(er.getMessage());
-			assertEquals(er.getMessage(), true, true);
-		
-		}catch(Exception e)
-		{
-
+			System.out.println("----------- Prueba 17 ----------");
 			System.out.println(e.getMessage());
+			System.out.println("--------------------------------");
 			assertEquals(e.getMessage(), true, true);
 
+		}catch (Exception e) {
+
+			e.printStackTrace();
 		}
 
 	}
-	
+
 	public void testIncorrectNorm18a()
 	{
 		try
@@ -1473,22 +1494,26 @@ public class TestParser extends TestCase {
 			parser.parser();
 
 			fail();
-		}
-		catch(Error er)
-		{
-			System.out.println(er.getMessage());
-			assertEquals(er.getMessage(), true, true);
 		
-		}catch(Exception e)
+		}catch (Error e) {
+		
+			e.printStackTrace();
+		}
+		
+		catch(InvalidExpressionException e)
 		{
-
+			System.out.println("----------- Prueba 18 ----------");
 			System.out.println(e.getMessage());
+			System.out.println("--------------------------------");
 			assertEquals(e.getMessage(), true, true);
 
+		}catch (Exception e) {
+
+			e.printStackTrace();
 		}
 
 	}
-	
+
 	public void testIncorrectNorm19a()
 	{
 		try
@@ -1503,26 +1528,31 @@ public class TestParser extends TestCase {
 
 			fail();
 		}
+
+		catch(InvalidIDException e)
+		{
+			System.out.println("----------- Prueba 19 ----------");
+			System.out.println(e.getMessage());
+			System.out.println("--------------------------------");
+			assertEquals(e.getMessage(), true, true);
+
+		}catch (Exception e) {
+
+			e.printStackTrace();
+		}
 		catch(Error er)
 		{
 			System.out.println(er.getMessage());
 			assertEquals(er.getMessage(), true, true);
-		
-		}catch(Exception e)
-		{
-
-			System.out.println(e.getMessage());
-			assertEquals(e.getMessage(), true, true);
 
 		}
-
 	}
-	
+
 	public void testIncorrectNorm20a()
 	{
 		try
 		{
-			StringBuffer StringBuffer1 = new StringBuffer("@Norm1[forbidden,<positionName:_>,informUnitRoles(UnitName, AgentName),_, _];");
+			StringBuffer StringBuffer1 = new StringBuffer("@norm1[forbidden,<positionName:_>,informUnitRoles(UnitName, AgentName),_, _];");
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
@@ -1532,26 +1562,32 @@ public class TestParser extends TestCase {
 
 			fail();
 		}
+
+		catch(InvalidDeonticException e)
+		{
+			System.out.println("----------- Prueba 20 ----------");
+			System.out.println(e.getMessage());
+			System.out.println("--------------------------------");
+			assertEquals(e.getMessage(), true, true);
+
+		}catch (Exception e) {
+
+			e.printStackTrace();
+		}
 		catch(Error er)
 		{
 			System.out.println(er.getMessage());
 			assertEquals(er.getMessage(), true, true);
-		
-		}catch(Exception e)
-		{
-
-			System.out.println(e.getMessage());
-			assertEquals(e.getMessage(), true, true);
 
 		}
 
 	}
-	
+
 	public void testIncorrectNorm21a()
 	{
 		try
 		{
-			StringBuffer StringBuffer1 = new StringBuffer("@Norm1[forbidden,positionName:_,informUnitRoles(UnitName, AgentName),_, _];");
+			StringBuffer StringBuffer1 = new StringBuffer("@norm1[p,positionName:_,informUnitRoles(UnitName, AgentName),_, _];");
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
@@ -1561,16 +1597,91 @@ public class TestParser extends TestCase {
 
 			fail();
 		}
+		catch(InvalidTargetTypeException e)
+		{
+			System.out.println("----------- Prueba 21 ----------");
+			System.out.println(e.getMessage());
+			System.out.println("--------------------------------");
+			assertEquals(e.getMessage(), true, true);
+
+		}catch (Exception e) {
+
+			e.printStackTrace();
+		}
 		catch(Error er)
 		{
 			System.out.println(er.getMessage());
 			assertEquals(er.getMessage(), true, true);
-		
-		}catch(Exception e)
-		{
 
+		}
+
+	}
+
+	public void testIncorrectNorm22a()
+	{
+		try
+		{
+			StringBuffer StringBuffer1 = new StringBuffer("@norm1[p,<invalid:_>,informUnitRoles(UnitName, AgentName),_, _];");
+
+			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
+
+			parser = new NormParser(input);
+
+			parser.parser();
+
+			fail();
+		}
+		catch(InvalidTargetTypeException e)
+		{
+			System.out.println("----------- Prueba 22 ----------");
 			System.out.println(e.getMessage());
+			System.out.println("--------------------------------");
 			assertEquals(e.getMessage(), true, true);
+
+		}catch (Exception e) {
+
+			e.printStackTrace();
+		}
+		catch(Error er)
+		{
+			System.out.println(er.getMessage());
+			assertEquals(er.getMessage(), true, true);
+
+		}
+
+	}
+	/**
+	 * The action is not a valid oms action.
+	 */
+	public void testIncorrectNorm23a()
+	{
+		try
+		{
+			StringBuffer StringBuffer1 = new StringBuffer("@norm1[p,<positionName:_>,informUnitRole(UnitName, AgentName),_, _];");
+
+			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
+
+			parser = new NormParser(input);
+
+			parser.parser();
+
+			fail();
+		}
+		catch(InvalidOMSActionException e)
+		{
+			System.out.println("----------- Prueba 23 ----------");
+			System.out.println(e.getMessage());
+			System.out.println("--------------------------------");
+			assertEquals(e.getMessage(), true, true);
+
+		}catch (Exception e) {
+
+			e.printStackTrace();
+		}
+		catch(Error er)
+		{
+			System.out.println(er.getMessage());
+			assertEquals(er.getMessage(), true, true);
 
 		}
 
@@ -1641,7 +1752,7 @@ public class TestParser extends TestCase {
 		}catch(Exception e)
 		{
 
-		
+
 			assertEquals(e.getMessage(), true, true);
 
 		}
@@ -1665,7 +1776,7 @@ public class TestParser extends TestCase {
 		}catch(Exception e)
 		{
 
-		
+
 			assertEquals(e.getMessage(), true, true);
 
 		}
@@ -1689,7 +1800,7 @@ public class TestParser extends TestCase {
 		}catch(Exception e)
 		{
 
-			
+
 			assertEquals(e.getMessage(), true, true);
 
 		}
@@ -1713,7 +1824,7 @@ public class TestParser extends TestCase {
 		}catch(Exception e)
 		{
 
-		
+
 			assertEquals(e.getMessage(), true, true);
 
 		}
@@ -1898,7 +2009,7 @@ public class TestParser extends TestCase {
 		}
 
 	}
-	
+
 	public void testIncorrectNorm15()
 	{
 		try
@@ -1923,7 +2034,7 @@ public class TestParser extends TestCase {
 		}
 
 	}
-	
+
 	public void testIncorrectNorm16()
 	{
 		try
@@ -1973,7 +2084,7 @@ public class TestParser extends TestCase {
 		}
 
 	}
-	
+
 	//ERROR: El deontinc distinto de f, o, p
 	public void testIncorrectNorm18()
 	{
@@ -1999,7 +2110,7 @@ public class TestParser extends TestCase {
 		}
 
 	}
-	
+
 	//ERROR: no incluye dos elementos entre < >
 	public void testIncorrectNorm19()
 	{
@@ -2025,7 +2136,7 @@ public class TestParser extends TestCase {
 		}
 
 	}
-	
+
 	//ERROR: Los elementos dentro de < > no van separados por :
 	public void testIncorrectNorm20()
 	{
@@ -2051,7 +2162,7 @@ public class TestParser extends TestCase {
 		}
 
 	}
-	
+
 	//ERROR: No tiene un targetType valido
 	public void testIncorrectNorm21()
 	{
@@ -2077,7 +2188,7 @@ public class TestParser extends TestCase {
 		}
 
 	}
-	
+
 	//ERROR: El value empieza por una letra.
 	public void testIncorrectNorm22()
 	{
@@ -2103,7 +2214,7 @@ public class TestParser extends TestCase {
 		}
 
 	}
-	
+
 	//ERROR: La norma no empieza por @.
 	public void testIncorrectNorm23()
 	{
@@ -2129,7 +2240,7 @@ public class TestParser extends TestCase {
 		}
 
 	}
-	
+
 	//ERROR: La norma no tiene identificador.
 	public void testIncorrectNorm24()
 	{
@@ -2155,7 +2266,7 @@ public class TestParser extends TestCase {
 		}
 
 	}
-	
+
 	//ERROR: La norma Le falta el corchete de delante.
 	public void testIncorrectNorm25()
 	{
@@ -2181,7 +2292,7 @@ public class TestParser extends TestCase {
 		}
 
 	}
-	
+
 	//ERROR: La norma Le falta el corchete de detras.
 	public void testIncorrectNorm26()
 	{

@@ -47,7 +47,7 @@ class SallyClass extends CAgent {
 				response.setContent("Yes, my number is 666 456 855");
 				System.out.println(myProcessor.getMyAgent().getName()
 						+ ": I send the answer to " + myProcessor.getLastReceivedMessage().getSender().name);
-				
+					myProcessor.ShutdownAgent();
 			}
 
 			@Override
@@ -75,5 +75,7 @@ class SallyClass extends CAgent {
 
 	protected void finalize(CProcessor firstProcessor,
 			ACLMessage finalizeMessage) {
+		System.out.println("Finalizo");
+	
 	}
 }

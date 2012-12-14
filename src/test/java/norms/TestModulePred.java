@@ -67,45 +67,45 @@ public class TestModulePred extends TestCase {
 		
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 				"('moderator',(SELECT idunitList FROM unitList WHERE unitName = 'forum'),"+
-				"(SELECT idposition FROM position WHERE position = 'supervisor'), "+
+				"(SELECT idposition FROM position WHERE positionName = 'supervisor'), "+
 				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 		"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 				"('participant',(SELECT idunitList FROM unitList WHERE unitName = 'forum'),"+
-				"(SELECT idposition FROM position WHERE position = 'subordinate'), "+
+				"(SELECT idposition FROM position WHERE positionName = 'subordinate'), "+
 				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 		"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 				"('brother',(SELECT idunitList FROM unitList WHERE unitName = 'fraternity'),"+
-				"(SELECT idposition FROM position WHERE position = 'member'), "+
+				"(SELECT idposition FROM position WHERE positionName = 'member'), "+
 				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 		"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 				"('president',(SELECT idunitList FROM unitList WHERE unitName = 'fraternity'),"+
-				"(SELECT idposition FROM position WHERE position = 'creator'), "+
+				"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
 				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 		"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 				"('reporter',(SELECT idunitList FROM unitList WHERE unitName = 'panel'),"+
-				"(SELECT idposition FROM position WHERE position = 'member'), "+
+				"(SELECT idposition FROM position WHERE positionName = 'member'), "+
 				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 		"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 				"('follower',(SELECT idunitList FROM unitList WHERE unitName = 'panel'),"+
-				"(SELECT idposition FROM position WHERE position = 'member'), "+
+				"(SELECT idposition FROM position WHERE positionName = 'member'), "+
 				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 		"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 		
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 				"('moderator',(SELECT idunitList FROM unitList WHERE unitName = 'panel'),"+
-				"(SELECT idposition FROM position WHERE position = 'creator'), "+
+				"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
 				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 		"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 

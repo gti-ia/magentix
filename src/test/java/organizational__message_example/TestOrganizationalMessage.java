@@ -56,6 +56,7 @@ public class TestOrganizationalMessage extends TestCase {
 
 		//------------------Clean Data Base -----------//
 		dbA.executeSQL("DELETE FROM agentPlayList");
+		dbA.executeSQL("DELETE FROM normList");
 		dbA.executeSQL("DELETE FROM roleList WHERE idroleList != 1");
 		dbA.executeSQL("DELETE FROM unitHierarchy WHERE idChildUnit != 1");
 		dbA.executeSQL("DELETE FROM unitList WHERE idunitList != 1");

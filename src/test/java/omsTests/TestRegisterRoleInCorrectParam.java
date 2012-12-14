@@ -7,10 +7,9 @@ import es.upv.dsic.gti_ia.organization.OMS;
 import es.upv.dsic.gti_ia.organization.OMSProxy;
 import es.upv.dsic.gti_ia.organization.SF;
 import es.upv.dsic.gti_ia.organization.exception.EmptyParametersException;
-import es.upv.dsic.gti_ia.organization.exception.InvalidAccessibilityException;
 import es.upv.dsic.gti_ia.organization.exception.InvalidPositionException;
-import es.upv.dsic.gti_ia.organization.exception.InvalidVisibilityException;
 import es.upv.dsic.gti_ia.organization.exception.MySQLException;
+import es.upv.dsic.gti_ia.organization.exception.NotValidIdentifierException;
 import es.upv.dsic.gti_ia.organization.exception.UnitNotExistsException;
 
 
@@ -99,20 +98,20 @@ public class TestRegisterRoleInCorrectParam extends TestCase {
 
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 				"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
-				"(SELECT idposition FROM position WHERE position = 'creator'), "+
+				"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
 				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 		"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 		
 
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 				"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
-				"(SELECT idposition FROM position WHERE position = 'creator'), "+
+				"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
 				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 		"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 		
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 				"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
-				"(SELECT idposition FROM position WHERE position = 'creator'), "+
+				"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
 				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 		"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 
@@ -409,7 +408,1316 @@ public class TestRegisterRoleInCorrectParam extends TestCase {
 
 	}
 	
-	public void testRegisterRole5()
+
+	public void testregisterRole5()
+	{
+		try
+		{
+
+			String result = omsProxy.registerRole("**Miunidad", "plana", "external", "public","member");
+
+			fail(result);
+
+		}catch(NotValidIdentifierException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	public void testregisterRole6()
+	{
+		try
+		{
+
+			String result = omsProxy.registerRole("team", "plana", "external", "public","member");
+
+			fail(result);
+
+		}catch(NotValidIdentifierException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	public void testregisterRole7()
+	{
+		try
+		{
+
+			String result = omsProxy.registerRole("flat", "plana", "external", "public","member");
+
+			fail(result);
+
+		}catch(NotValidIdentifierException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	public void testregisterRole8()
+	{
+		try
+		{
+
+			String result = omsProxy.registerRole("hierarchy", "plana", "external", "public","member");
+
+			fail(result);
+
+		}catch(NotValidIdentifierException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	public void testregisterRole9()
+	{
+		try
+		{
+
+			String result = omsProxy.registerRole("supervisor", "plana", "external", "public","member");
+
+			fail(result);
+
+		}catch(NotValidIdentifierException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	public void testregisterRole10()
+	{
+		try
+		{
+
+			String result = omsProxy.registerRole("subordinate", "plana", "external", "public","member");
+
+			fail(result);
+
+		}catch(NotValidIdentifierException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	public void testregisterRole11()
+	{
+		try
+		{
+
+			String result = omsProxy.registerRole("member", "plana", "external", "public","member");
+
+			fail(result);
+
+		}catch(NotValidIdentifierException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	public void testregisterRole12()
+	{
+		try
+		{
+
+			String result = omsProxy.registerRole("creator", "plana", "external", "public","member");
+
+			fail(result);
+
+		}catch(NotValidIdentifierException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	public void testregisterRole13()
+	{
+		try
+		{
+
+			String result = omsProxy.registerRole("private", "plana", "external", "public","member");
+
+			fail(result);
+
+		}catch(NotValidIdentifierException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	public void testregisterRole14()
+	{
+		try
+		{
+
+			String result = omsProxy.registerRole("public", "plana", "external", "public","member");
+
+			fail(result);
+
+		}catch(NotValidIdentifierException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	public void testregisterRole15()
+	{
+		try
+		{
+
+			String result = omsProxy.registerRole("external", "plana", "external", "public","member");
+
+			fail(result);
+
+		}catch(NotValidIdentifierException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	public void testregisterRole16()
+	{
+		try
+		{
+
+			String result = omsProxy.registerRole("internal", "plana", "external", "public","member");
+
+			fail(result);
+
+		}catch(NotValidIdentifierException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	public void testregisterRole17()
+	{
+		try
+		{
+
+			String result = omsProxy.registerRole("registerRole", "plana", "external", "public","member");
+
+			fail(result);
+
+		}catch(NotValidIdentifierException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	public void testregisterRole18()
+	{
+		try
+		{
+
+			String result = omsProxy.registerRole("deregisterRole", "plana", "external", "public","member");
+
+			fail(result);
+
+		}catch(NotValidIdentifierException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	public void testregisterRole19()
+	{
+		try
+		{
+
+			String result = omsProxy.registerRole("registerRole", "plana", "external", "public","member");
+
+			fail(result);
+
+		}catch(NotValidIdentifierException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	public void testregisterRole20()
+	{
+		try
+		{
+
+			String result = omsProxy.registerRole("deregisterRole", "plana", "external", "public","member");
+
+			fail(result);
+
+		}catch(NotValidIdentifierException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}	
+	
+	public void testregisterRole21()
+	{
+		try
+		{
+
+			String result = omsProxy.registerRole("registerNorm", "plana", "external", "public","member");
+
+			fail(result);
+
+		}catch(NotValidIdentifierException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	
+	public void testregisterRole22()
+	{
+		try
+		{
+
+			String result = omsProxy.registerRole("deregisterNorm", "plana", "external", "public","member");
+
+			fail(result);
+
+		}catch(NotValidIdentifierException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+
+	public void testregisterRole23()
+	{
+		try
+		{
+
+			String result = omsProxy.registerRole("allocateRole", "plana", "external", "public","member");
+
+			fail(result);
+
+		}catch(NotValidIdentifierException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	public void testregisterRole24()
+	{
+		try
+		{
+
+			String result = omsProxy.registerRole("deallocateRole", "plana", "external", "public","member");
+
+			fail(result);
+
+		}catch(NotValidIdentifierException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	public void testregisterRole25()
+	{
+		try
+		{
+
+			String result = omsProxy.registerRole("joinUnit", "plana", "external", "public","member");
+
+			fail(result);
+
+		}catch(NotValidIdentifierException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	public void testregisterRole26()
+	{
+		try
+		{
+
+			String result = omsProxy.registerRole("informAgentRole", "plana", "external", "public","member");
+
+			fail(result);
+
+		}catch(NotValidIdentifierException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	
+	public void testregisterRole27()
+	{
+		try
+		{
+
+			String result = omsProxy.registerRole("informMembers", "plana", "external", "public","member");
+
+			fail(result);
+
+		}catch(NotValidIdentifierException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	public void testregisterRole28()
+	{
+		try
+		{
+
+			String result = omsProxy.registerRole("informQuantityMembers", "plana", "external", "public","member");
+
+			fail(result);
+
+		}catch(NotValidIdentifierException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	public void testregisterRole29()
+	{
+		try
+		{
+
+			String result = omsProxy.registerRole("informUnit", "plana", "external", "public","member");
+
+			fail(result);
+
+		}catch(NotValidIdentifierException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	public void testregisterRole30()
+	{
+		try
+		{
+
+			String result = omsProxy.registerRole("informUnitRoles", "plana", "external", "public","member");
+
+			fail(result);
+
+		}catch(NotValidIdentifierException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	public void testregisterRole31()
+	{
+		try
+		{
+
+			String result = omsProxy.registerRole("informTargetNorms", "plana", "external", "public","member");
+
+			fail(result);
+
+		}catch(NotValidIdentifierException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	public void testregisterRole32()
+	{
+		try
+		{
+
+			String result = omsProxy.registerRole("informRole", "plana", "external", "public","member");
+
+			fail(result);
+
+		}catch(NotValidIdentifierException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	public void testregisterRole33()
+	{
+		try
+		{
+
+			String result = omsProxy.registerRole("informNorm", "plana", "external", "public","member");
+
+			fail(result);
+
+		}catch(NotValidIdentifierException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	public void testregisterRole34()
+	{
+		try
+		{
+
+			String result = omsProxy.registerRole("acquireRole", "plana", "external", "public","member");
+
+			fail(result);
+
+		}catch(NotValidIdentifierException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	public void testregisterRole35()
+	{
+		try
+		{
+
+			String result = omsProxy.registerRole("leaveRole", "plana", "external", "public","member");
+
+			fail(result);
+
+		}catch(NotValidIdentifierException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	public void testregisterRole36()
+	{
+		try
+		{
+
+			String result = omsProxy.registerRole("isNorm", "plana", "external", "public","member");
+
+			fail(result);
+
+		}catch(NotValidIdentifierException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	public void testregisterRole37()
+	{
+		try
+		{
+
+			String result = omsProxy.registerRole("hasDeontic", "plana", "external", "public","member");
+
+			fail(result);
+
+		}catch(NotValidIdentifierException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	public void testregisterRole38()
+	{
+		try
+		{
+
+			String result = omsProxy.registerRole("hasTarget", "plana", "external", "public","member");
+
+			fail(result);
+
+		}catch(NotValidIdentifierException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	public void testregisterRole39()
+	{
+		try
+		{
+
+			String result = omsProxy.registerRole("hasAction", "plana", "external", "public","member");
+
+			fail(result);
+
+		}catch(NotValidIdentifierException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	
+	public void testregisterRole40()
+	{
+		try
+		{
+
+			String result = omsProxy.registerRole("isRole", "plana", "external", "public","member");
+
+			fail(result);
+
+		}catch(NotValidIdentifierException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	public void testregisterRole41()
+	{
+		try
+		{
+
+			String result = omsProxy.registerRole("hasAccessibility", "plana", "external", "public","member");
+
+			fail(result);
+
+		}catch(NotValidIdentifierException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	public void testregisterRole42()
+	{
+		try
+		{
+
+			String result = omsProxy.registerRole("hasVisibility", "plana", "external", "public","member");
+
+			fail(result);
+
+		}catch(NotValidIdentifierException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	public void testregisterRole43()
+	{
+		try
+		{
+
+			String result = omsProxy.registerRole("hasPosition", "plana", "external", "public","member");
+
+			fail(result);
+
+		}catch(NotValidIdentifierException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	public void testregisterRole44()
+	{
+		try
+		{
+
+			String result = omsProxy.registerRole("isUnit", "plana", "external", "public","member");
+
+			fail(result);
+
+		}catch(NotValidIdentifierException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	public void testregisterRole45()
+	{
+		try
+		{
+
+			String result = omsProxy.registerRole("hasType", "plana", "external", "public","member");
+
+			fail(result);
+
+		}catch(NotValidIdentifierException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	public void testregisterRole46()
+	{
+		try
+		{
+
+			String result = omsProxy.registerRole("hasParent", "plana", "external", "public","member");
+
+			fail(result);
+
+		}catch(NotValidIdentifierException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	public void testregisterRole47()
+	{
+		try
+		{
+
+			String result = omsProxy.registerRole("div", "plana", "external", "public","member");
+
+			fail(result);
+
+		}catch(NotValidIdentifierException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	public void testregisterRole48()
+	{
+		try
+		{
+
+			String result = omsProxy.registerRole("mod", "plana", "external", "public","member");
+
+			fail(result);
+
+		}catch(NotValidIdentifierException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	public void testregisterRole49()
+	{
+		try
+		{
+
+			String result = omsProxy.registerRole("not", "plana", "external", "public","member");
+
+			fail(result);
+
+		}catch(NotValidIdentifierException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	public void testregisterRole50()
+	{
+		try
+		{
+
+			String result = omsProxy.registerRole("_", "plana", "external", "public","member");
+
+			fail(result);
+
+		}catch(NotValidIdentifierException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	public void testregisterRole51()
+	{
+		try
+		{
+
+			String result = omsProxy.registerRole("agentName", "plana", "external", "public","member");
+
+			fail(result);
+
+		}catch(NotValidIdentifierException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	public void testregisterRole52()
+	{
+		try
+		{
+
+			String result = omsProxy.registerRole("roleName", "plana", "external", "public","member");
+
+			fail(result);
+
+		}catch(NotValidIdentifierException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	public void testregisterRole53()
+	{
+		try
+		{
+
+			String result = omsProxy.registerRole("positionName", "plana", "external", "public","member");
+
+			fail(result);
+
+		}catch(NotValidIdentifierException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	public void testregisterRole54()
+	{
+		try
+		{
+
+			String result = omsProxy.registerRole("o", "plana", "external", "public","member");
+
+			fail(result);
+
+		}catch(NotValidIdentifierException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	public void testregisterRole55()
+	{
+		try
+		{
+
+			String result = omsProxy.registerRole("f", "plana", "external", "public","member");
+
+			fail(result);
+
+		}catch(NotValidIdentifierException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	public void testregisterRole56()
+	{
+		try
+		{
+
+			String result = omsProxy.registerRole("p", "plana", "external", "public","member");
+
+			fail(result);
+
+		}catch(NotValidIdentifierException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	public void testregisterRole57()
+	{
+		try
+		{
+
+			String result = omsProxy.registerRole("*invalido", "plana", "external", "public","member");
+
+			fail(result);
+
+		}catch(NotValidIdentifierException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	public void testregisterRole58()
+	{
+		try
+		{
+
+			String result = omsProxy.registerRole("+invalido", "plana", "external", "public","member");
+
+			fail(result);
+
+		}catch(NotValidIdentifierException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	public void testregisterRole59()
+	{
+		try
+		{
+
+			String result = omsProxy.registerRole("?invalido", "plana", "external", "public","member");
+
+			fail(result);
+
+		}catch(NotValidIdentifierException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	public void testregisterRole60()
+	{
+		try
+		{
+
+			String result = omsProxy.registerRole("!invalido", "plana", "external", "public","member");
+
+			fail(result);
+
+		}catch(NotValidIdentifierException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	public void testregisterRole61()
+	{
+		try
+		{
+
+			String result = omsProxy.registerRole("invalido!", "plana", "external", "public","member");
+
+			fail(result);
+
+		}catch(NotValidIdentifierException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	public void testregisterRole65()
+	{
+		try
+		{
+
+			String result = omsProxy.registerRole("invalido?", "plana", "external", "public","member");
+
+			fail(result);
+
+		}catch(NotValidIdentifierException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	public void testregisterRole66()
+	{
+		try
+		{
+
+			String result = omsProxy.registerRole("invalido*", "plana", "external", "public","member");
+
+			fail(result);
+
+		}catch(NotValidIdentifierException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	public void testregisterRole67()
+	{
+		try
+		{
+
+			String result = omsProxy.registerRole("invalido+", "plana", "external", "public","member");
+
+			fail(result);
+
+		}catch(NotValidIdentifierException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	public void testregisterRole68()
+	{
+		try
+		{
+
+			String result = omsProxy.registerRole("!invalido", "plana", "external", "public","member");
+
+			fail(result);
+
+		}catch(NotValidIdentifierException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	public void testregisterRole69()
+	{
+		try
+		{
+
+			String result = omsProxy.registerRole("invalido-invalido", "plana", "external", "public","member");
+
+			fail(result);
+
+		}catch(NotValidIdentifierException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+	
+	public void testRegisterRole70()
 	{
 		try
 		{
@@ -478,7 +1786,7 @@ public class TestRegisterRoleInCorrectParam extends TestCase {
 
 	}
 	
-	public void testRegisterRole6()
+	public void testRegisterRole71()
 	{
 		try
 		{
@@ -547,7 +1855,7 @@ public class TestRegisterRoleInCorrectParam extends TestCase {
 
 	}
 	
-	public void testRegisterRole7()
+	public void testRegisterRole72()
 	{
 		try
 		{
@@ -616,7 +1924,7 @@ public class TestRegisterRoleInCorrectParam extends TestCase {
 
 	}
 	
-	public void testRegisterRole8()
+	public void testRegisterRole73()
 	{
 		try
 		{
@@ -685,7 +1993,7 @@ public class TestRegisterRoleInCorrectParam extends TestCase {
 
 	}
 	
-	public void testRegisterRole9()
+	public void testRegisterRole74()
 	{
 		try
 		{
@@ -754,7 +2062,7 @@ public class TestRegisterRoleInCorrectParam extends TestCase {
 
 	}
 	
-	public void testRegisterRole10()
+	public void testRegisterRole75()
 	{
 		try
 		{
@@ -823,7 +2131,7 @@ public class TestRegisterRoleInCorrectParam extends TestCase {
 
 	}
 	
-	public void testRegisterRole11()
+	public void testRegisterRole76()
 	{
 		try
 		{
@@ -892,7 +2200,7 @@ public class TestRegisterRoleInCorrectParam extends TestCase {
 
 	}
 	
-	public void testRegisterRole12()
+	public void testRegisterRole77()
 	{
 		try
 		{
@@ -961,7 +2269,7 @@ public class TestRegisterRoleInCorrectParam extends TestCase {
 
 	}
 	
-	public void testRegisterRole13()
+	public void testRegisterRole78()
 	{
 		try
 		{
@@ -1030,7 +2338,7 @@ public class TestRegisterRoleInCorrectParam extends TestCase {
 
 	}
 	
-	public void testRegisterRole14()
+	public void testRegisterRole79()
 	{
 		try
 		{
@@ -1099,7 +2407,7 @@ public class TestRegisterRoleInCorrectParam extends TestCase {
 
 	}
 	
-	public void testRegisterRole15()
+	public void testRegisterRole80()
 	{
 		try
 		{
@@ -1168,7 +2476,7 @@ public class TestRegisterRoleInCorrectParam extends TestCase {
 
 	}
 	
-	public void testRegisterRole16()
+	public void testRegisterRole81()
 	{
 		try
 		{
@@ -1236,4 +2544,74 @@ public class TestRegisterRoleInCorrectParam extends TestCase {
 		}
 
 	}
+	
+	public void testRegisterRole82()
+	{
+		try
+		{
+
+			String result = omsProxy.registerRole("mi-embro", "virtual", "external", "public", "supervisor");
+
+			fail(result);
+
+		}catch(NotValidIdentifierException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+		try
+		{
+			String result = omsProxy.registerRole("miembro", "equipo", "external", "public", "supervisor");
+			fail(result);
+		}catch(InvalidPositionException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+		try
+		{
+			String result = omsProxy.registerRole("miembro", "plana", "external", "public", "subordinate");
+
+			fail(result);
+		}catch(InvalidPositionException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+		
+		try
+		{
+			String result = omsProxy.registerRole("subordinado", "jerarquia", "external", "public", "member");
+
+			fail(result);
+		}catch(InvalidPositionException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+	}
+
 }

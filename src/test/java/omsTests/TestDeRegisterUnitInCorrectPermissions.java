@@ -101,49 +101,49 @@ public class TestDeRegisterUnitInCorrectPermissions extends TestCase {
 
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 				"('miembro',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
-				"(SELECT idposition FROM position WHERE position = 'member'), "+
+				"(SELECT idposition FROM position WHERE positionName = 'member'), "+
 				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 		"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 				"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
-				"(SELECT idposition FROM position WHERE position = 'creator'), "+
+				"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
 				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 		"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 		
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 				"('miembro',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
-				"(SELECT idposition FROM position WHERE position = 'member'), "+
+				"(SELECT idposition FROM position WHERE positionName = 'member'), "+
 				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 		"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 				"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
-				"(SELECT idposition FROM position WHERE position = 'creator'), "+
+				"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
 				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 		"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 		
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 				"('miembro',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
-				"(SELECT idposition FROM position WHERE position = 'member'), "+
+				"(SELECT idposition FROM position WHERE positionName = 'member'), "+
 				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 		"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 				"('supervisor',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
-				"(SELECT idposition FROM position WHERE position = 'supervisor'), "+
+				"(SELECT idposition FROM position WHERE positionName = 'supervisor'), "+
 				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 		"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 		
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 				"('subordinado',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
-				"(SELECT idposition FROM position WHERE position = 'subordinate'), "+
+				"(SELECT idposition FROM position WHERE positionName = 'subordinate'), "+
 				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 		"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 		
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 				"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
-				"(SELECT idposition FROM position WHERE position = 'creator'), "+
+				"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
 				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 		"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 
@@ -495,7 +495,7 @@ public class TestDeRegisterUnitInCorrectPermissions extends TestCase {
 
 			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('supervisor',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
-					"(SELECT idposition FROM position WHERE position = 'supervisor'), "+
+					"(SELECT idposition FROM position WHERE positionName = 'supervisor'), "+
 					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 		
@@ -543,7 +543,7 @@ public class TestDeRegisterUnitInCorrectPermissions extends TestCase {
 
 			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('supervisor',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
-					"(SELECT idposition FROM position WHERE position = 'supervisor'), "+
+					"(SELECT idposition FROM position WHERE positionName = 'supervisor'), "+
 					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 	
@@ -591,7 +591,7 @@ public class TestDeRegisterUnitInCorrectPermissions extends TestCase {
 
 			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('supervisor',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
-					"(SELECT idposition FROM position WHERE position = 'supervisor'), "+
+					"(SELECT idposition FROM position WHERE positionName = 'supervisor'), "+
 					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 	
@@ -640,7 +640,7 @@ public class TestDeRegisterUnitInCorrectPermissions extends TestCase {
 
 			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('miembro',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
-					"(SELECT idposition FROM position WHERE position = 'member'), "+
+					"(SELECT idposition FROM position WHERE positionName = 'member'), "+
 					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 	
@@ -688,7 +688,7 @@ public class TestDeRegisterUnitInCorrectPermissions extends TestCase {
 
 			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('miembro',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
-					"(SELECT idposition FROM position WHERE position = 'member'), "+
+					"(SELECT idposition FROM position WHERE positionName = 'member'), "+
 					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
@@ -736,7 +736,7 @@ public class TestDeRegisterUnitInCorrectPermissions extends TestCase {
 
 			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('miembro',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
-					"(SELECT idposition FROM position WHERE position = 'member'), "+
+					"(SELECT idposition FROM position WHERE positionName = 'member'), "+
 					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
@@ -784,7 +784,7 @@ public class TestDeRegisterUnitInCorrectPermissions extends TestCase {
 
 			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('miembro',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
-					"(SELECT idposition FROM position WHERE position = 'member'), "+
+					"(SELECT idposition FROM position WHERE positionName = 'member'), "+
 					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
@@ -832,7 +832,7 @@ public class TestDeRegisterUnitInCorrectPermissions extends TestCase {
 
 			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('miembro',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
-					"(SELECT idposition FROM position WHERE position = 'member'), "+
+					"(SELECT idposition FROM position WHERE positionName = 'member'), "+
 					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
@@ -880,7 +880,7 @@ public class TestDeRegisterUnitInCorrectPermissions extends TestCase {
 
 			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('miembro',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
-					"(SELECT idposition FROM position WHERE position = 'member'), "+
+					"(SELECT idposition FROM position WHERE positionName = 'member'), "+
 					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			

@@ -7,6 +7,7 @@ import es.upv.dsic.gti_ia.organization.OMS;
 import es.upv.dsic.gti_ia.organization.OMSProxy;
 import es.upv.dsic.gti_ia.organization.SF;
 import es.upv.dsic.gti_ia.organization.exception.EmptyParametersException;
+import es.upv.dsic.gti_ia.organization.exception.InvalidParametersException;
 import es.upv.dsic.gti_ia.organization.exception.NotPlaysRoleException;
 import es.upv.dsic.gti_ia.organization.exception.RoleNotExistsException;
 import es.upv.dsic.gti_ia.organization.exception.SameAgentNameException;
@@ -104,20 +105,20 @@ public class TestDeAllocateRoleInCorrectParam extends TestCase {
 
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 				"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
-				"(SELECT idposition FROM position WHERE position = 'creator'), "+
+				"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
 				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 		"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 		
 
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 				"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
-				"(SELECT idposition FROM position WHERE position = 'creator'), "+
+				"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
 				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 		"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 		
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 				"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
-				"(SELECT idposition FROM position WHERE position = 'creator'), "+
+				"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
 				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 		"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 
@@ -844,4 +845,6 @@ public class TestDeAllocateRoleInCorrectParam extends TestCase {
 		}
 
 	}
+	
+	
 }
