@@ -202,7 +202,7 @@ public class DataBaseInterface {
 				 
 				 if (res9.next())
 				 {
-					 String position = res9.getString("position");
+					 String position = res9.getString("positionName");
 					 percepts.add(Literal.parseLiteral("hasPosition("+roleName+","+unitName.toLowerCase()+","+position+")"));
 					 
 				 }
@@ -297,7 +297,7 @@ public class DataBaseInterface {
 			
 			while(res17.next())
 			{
-				position = res17.getString("position");
+				position = res17.getString("positionName");
 				int idposition = res17.getInt("idposition");
 				
 				st18 = connection.createStatement();
@@ -714,7 +714,7 @@ public class DataBaseInterface {
 			connection = db.connect();
 
 			stmt = connection.createStatement();
-			rs3 = stmt.executeQuery("SELECT idroleList FROM roleList WHERE idunitlist = (SELECT idunitList FROM unitList WHERE unitName ='" + unit + "') AND idposition != (SELECT idposition FROM position WHERE position ='creator')");
+			rs3 = stmt.executeQuery("SELECT idroleList FROM roleList WHERE idunitlist = (SELECT idunitList FROM unitList WHERE unitName ='" + unit + "') AND idposition != (SELECT idposition FROM position WHERE positionName ='creator')");
 			while (rs3.next()) {
 
 				int roleId = rs3.getInt("idroleList");
@@ -822,7 +822,7 @@ public class DataBaseInterface {
 
 				st3 = connection.createStatement();
 				res3 = st3.executeQuery("SELECT * FROM position WHERE idposition = (SELECT idposition FROM roleList WHERE idroleList =" + idRole+")");
-				if (res3.next() && res3.getString("position").equalsIgnoreCase(position)) {
+				if (res3.next() && res3.getString("positionName").equalsIgnoreCase(position)) {
 					connection.commit();
 					return true;
 				}
@@ -877,7 +877,7 @@ public class DataBaseInterface {
 
 				st3 = connection.createStatement();
 				res3 = st3.executeQuery("SELECT * FROM position WHERE idposition = (SELECT idposition FROM roleList WHERE idroleList =" + idRole + " AND idunitList = (SELECT idunitList FROM unitList WHERE unitName ='" + unit + "'))");
-				if (res3.next() && res3.getString("position").equalsIgnoreCase(position)) {
+				if (res3.next() && res3.getString("positionName").equalsIgnoreCase(position)) {
 					connection.commit();
 					return true;
 				}
@@ -1097,7 +1097,7 @@ public class DataBaseInterface {
 
 
 			st = connection.createStatement();
-			st.executeUpdate("INSERT INTO roleList (roleName, idunitList, idposition, idaccessibility, idvisibility) VALUES ('" + roleName + "', (SELECT idunitList FROM unitList WHERE unitName ='" + unitName + "'),(SELECT idposition FROM position WHERE position ='" + position + "'),(SELECT idaccessibility FROM accessibility WHERE accessibility ='" + accessibility + "'),(SELECT idvisibility FROM visibility WHERE visibility ='" + visibility + "'))");
+			st.executeUpdate("INSERT INTO roleList (roleName, idunitList, idposition, idaccessibility, idvisibility) VALUES ('" + roleName + "', (SELECT idunitList FROM unitList WHERE unitName ='" + unitName + "'),(SELECT idposition FROM position WHERE positionName ='" + position + "'),(SELECT idaccessibility FROM accessibility WHERE accessibility ='" + accessibility + "'),(SELECT idvisibility FROM visibility WHERE visibility ='" + visibility + "'))");
 
 			connection.commit();
 			return roleName + " created";
@@ -1154,7 +1154,7 @@ public class DataBaseInterface {
 				st3.executeUpdate("INSERT INTO unitHierarchy (idParentUnit, idChildUnit) VALUES ((SELECT idunitList FROM unitList WHERE unitName ='" + parentUnitName + "'), " + insertedUnitId + ")");
 
 				st4 = connection.createStatement();
-				st4.executeUpdate("INSERT INTO roleList (roleName, idunitList, idposition, idaccessibility, idvisibility) VALUES ('" + creatorAgentName + "', " + insertedUnitId + ", (SELECT idposition FROM position WHERE position ='creator'),(SELECT idaccessibility FROM accessibility WHERE accessibility ='internal'), (SELECT idVisibility FROM visibility WHERE visibility ='private'))");
+				st4.executeUpdate("INSERT INTO roleList (roleName, idunitList, idposition, idaccessibility, idvisibility) VALUES ('" + creatorAgentName + "', " + insertedUnitId + ", (SELECT idposition FROM position WHERE positionName ='creator'),(SELECT idaccessibility FROM accessibility WHERE accessibility ='internal'), (SELECT idVisibility FROM visibility WHERE visibility ='private'))");
 
 				st5 = connection.createStatement();
 				st5.executeUpdate("INSERT INTO agentPlayList (idagentList, idroleList) VALUES ((SELECT idagentList FROM agentList WHERE agentName='" + agentName + "'), LAST_INSERT_ID())");
@@ -1310,7 +1310,7 @@ public class DataBaseInterface {
 			connection = db.connect();
 
 			st = connection.createStatement();
-			res = st.executeQuery("SELECT idroleList FROM roleList WHERE idposition = (SELECT idposition FROM position WHERE position ='creator') AND idunitList = (SELECT idunitList FROM unitList WHERE unitName ='" + unitName + "')");
+			res = st.executeQuery("SELECT idroleList FROM roleList WHERE idposition = (SELECT idposition FROM position WHERE positionName ='creator') AND idunitList = (SELECT idunitList FROM unitList WHERE unitName ='" + unitName + "')");
 			while (res.next()) {
 				int idroleList = res.getInt("idroleList");
 				st2 = connection.createStatement();
@@ -1894,7 +1894,7 @@ public class DataBaseInterface {
 					st12 = connection.createStatement();
 					res12 = st12.executeQuery("SELECT * FROM position WHERE idposition =" + idposition);
 					if (res12.next())
-						position = res12.getString("position");
+						position = res12.getString("positionName");
 
 					st13 = connection.createStatement();
 					res13 = st13.executeQuery("SELECT * FROM accessibility WHERE idaccessibility =" + idaccessibility);
@@ -2212,7 +2212,7 @@ public class DataBaseInterface {
 
 			st3 = connection.createStatement();
 
-			res3 = st3.executeQuery("SELECT idroleList, roleName FROM roleList WHERE idunitList = (SELECT idunitList FROM unitList WHERE unitName ='" + unitName + "') AND idposition = (SELECT idposition FROM position WHERE position ='" + positionValue + "')");
+			res3 = st3.executeQuery("SELECT idroleList, roleName FROM roleList WHERE idunitList = (SELECT idunitList FROM unitList WHERE unitName ='" + unitName + "') AND idposition = (SELECT idposition FROM position WHERE positionName ='" + positionValue + "')");
 
 			while (res3.next()) {
 				int idroleList = res3.getInt("idroleList");
@@ -2295,7 +2295,7 @@ public class DataBaseInterface {
 
 			st10 = connection.createStatement();
 
-			res11 = st11.executeQuery("SELECT idagentList FROM agentPlayList WHERE idroleList = (SELECT idroleList FROM roleList WHERE idUnitList= (SELECT idunitList FROM unitList WHERE unitName ='" + unitName + "') AND roleName ='" + roleName + "' AND idposition = (SELECT idposition FROM position WHERE position ='" + positionValue + "'))");
+			res11 = st11.executeQuery("SELECT idagentList FROM agentPlayList WHERE idroleList = (SELECT idroleList FROM roleList WHERE idUnitList= (SELECT idunitList FROM unitList WHERE unitName ='" + unitName + "') AND roleName ='" + roleName + "' AND idposition = (SELECT idposition FROM position WHERE positionName ='" + positionValue + "'))");
 
 			while(res11.next())
 			{
@@ -2362,7 +2362,7 @@ public class DataBaseInterface {
 
 			st3 = connection.createStatement();
 
-			res3 = st3.executeQuery("SELECT idroleList, roleName FROM roleList WHERE idunitList = (SELECT idunitList FROM unitList WHERE unitName ='" + unitName + "') AND idposition = (SELECT idposition FROM position WHERE position ='" + positionValue + "') AND idVisibility = (SELECT idVisibility FROM visibility WHERE visibility ='public')");
+			res3 = st3.executeQuery("SELECT idroleList, roleName FROM roleList WHERE idunitList = (SELECT idunitList FROM unitList WHERE unitName ='" + unitName + "') AND idposition = (SELECT idposition FROM position WHERE positionName ='" + positionValue + "') AND idVisibility = (SELECT idVisibility FROM visibility WHERE visibility ='public')");
 		
 
 			while (res3.next()) {
@@ -2672,7 +2672,7 @@ public class DataBaseInterface {
 			st5 = connection.createStatement();
 
 
-			res5 = st5.executeQuery("SELECT idroleList FROM roleList WHERE idunitList= (SELECT idunitList FROM unitList WHERE unitName ='" + unitName + "') AND idposition = (SELECT idposition FROM position WHERE position ='" + positionValue + "')");
+			res5 = st5.executeQuery("SELECT idroleList FROM roleList WHERE idunitList= (SELECT idunitList FROM unitList WHERE unitName ='" + unitName + "') AND idposition = (SELECT idposition FROM position WHERE positionName ='" + positionValue + "')");
 
 			while (res5.next()) {
 				idroleList = res5.getInt("idroleList");
@@ -2755,7 +2755,7 @@ public class DataBaseInterface {
 			st5 = connection.createStatement();
 
 
-			res5 = st5.executeQuery("SELECT idroleList FROM roleList WHERE idunitList = (SELECT idunitList FROM unitList WHERE unitName ='" + unitName + "') AND roleName ='" + roleName + "' AND idposition = (SELECT idposition FROM position WHERE position ='" + positionValue + "')");
+			res5 = st5.executeQuery("SELECT idroleList FROM roleList WHERE idunitList = (SELECT idunitList FROM unitList WHERE unitName ='" + unitName + "') AND roleName ='" + roleName + "' AND idposition = (SELECT idposition FROM position WHERE positionName ='" + positionValue + "')");
 			if (res5.next())
 				idroleList = res5.getInt("idroleList");
 			else
@@ -2832,7 +2832,7 @@ public class DataBaseInterface {
 			Set<String> agentNames = new HashSet<String>();
 			st5 = connection.createStatement();
 
-			res5 = st5.executeQuery("SELECT idroleList FROM roleList WHERE idunitList= (SELECT idunitList FROM unitList WHERE unitName ='" + unitName + "') AND idposition = (SELECT idposition FROM position WHERE position ='" + positionValue + "') AND idvisibility = (SELECT idVisibility FROM visibility WHERE visibility ='public')");
+			res5 = st5.executeQuery("SELECT idroleList FROM roleList WHERE idunitList= (SELECT idunitList FROM unitList WHERE unitName ='" + unitName + "') AND idposition = (SELECT idposition FROM position WHERE positionName ='" + positionValue + "') AND idvisibility = (SELECT idVisibility FROM visibility WHERE visibility ='public')");
 			
 
 			while (res5.next()) {
@@ -2991,7 +2991,7 @@ public class DataBaseInterface {
 					int idaccessibility = res8.getInt("idaccessibility");
 					int idvisibility = res8.getInt("idvisibility");
 					st9 = connection.createStatement();
-					res9 = st9.executeQuery("SELECT position FROM position WHERE idposition =" + idposition);
+					res9 = st9.executeQuery("SELECT positionName FROM position WHERE idposition =" + idposition);
 					res9.next();
 
 					st10 = connection.createStatement();
@@ -3004,7 +3004,7 @@ public class DataBaseInterface {
 					aux.add(res8.getString("roleName"));
 					aux.add(res10.getString("accessibility"));
 					aux.add(res11.getString("visibility"));
-					aux.add(res9.getString("position"));
+					aux.add(res9.getString("positionName"));
 					result.add(aux);
 				}
 				connection.commit();
@@ -3037,7 +3037,7 @@ public class DataBaseInterface {
 					int idaccessibility = res8.getInt("idaccessibility");
 					int idvisibility = res8.getInt("idvisibility");
 					st9 = connection.createStatement();
-					res9 = st9.executeQuery("SELECT position FROM position WHERE idposition =" + idposition);
+					res9 = st9.executeQuery("SELECT positionName FROM position WHERE idposition =" + idposition);
 					res9.next();
 
 					st10 = connection.createStatement();
@@ -3050,7 +3050,7 @@ public class DataBaseInterface {
 					aux.add(res8.getString("roleName"));
 					aux.add(res10.getString("accessibility"));
 					aux.add(res11.getString("visibility"));
-					aux.add(res9.getString("position"));
+					aux.add(res9.getString("positionName"));
 					result.add(aux);
 				}
 				connection.commit();
@@ -3143,7 +3143,7 @@ public class DataBaseInterface {
 				int idaccessibility = res6.getInt("idaccessibility");
 				int idvisibility = res6.getInt("idvisibility");
 				st9 = connection.createStatement();
-				res9 = st9.executeQuery("SELECT position FROM position WHERE idposition =" + idposition);
+				res9 = st9.executeQuery("SELECT positionName FROM position WHERE idposition =" + idposition);
 				res9.next();
 
 				st10 = connection.createStatement();
@@ -3155,7 +3155,7 @@ public class DataBaseInterface {
 				res11.next();
 				result.add(res10.getString("accessibility"));
 				result.add(res11.getString("visibility"));
-				result.add(res9.getString("position"));
+				result.add(res9.getString("positionName"));
 				connection.commit();
 				return result;
 			}
@@ -3212,12 +3212,12 @@ public class DataBaseInterface {
 	}
 	
 	/**
-	 * Returns true if parameter is valid and false if not 
+	 * Checks the compatibility with the Jason languaje. 
 	 * @param identifier
-	 * @return boolean
+	 * @return boolean true if is a valid parameter and false if not
 	 * @throws MySQLException
 	 */
-	public boolean checkValidIdentifier(String identifier) throws MySQLException
+	boolean checkValidIdentifier(String identifier) throws MySQLException
 	{
 		boolean result= true;
 		
