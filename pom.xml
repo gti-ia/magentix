@@ -142,6 +142,9 @@
 					</dependency>
 				</dependencies>
 				<configuration>
+					<formats>
+				    	<format>xml</format>
+				    </formats>  
 					<argLine>-Xms512m -Xmx4096m -XX:MaxPermSize=4096m</argLine>
 				</configuration>
 			</plugin>
