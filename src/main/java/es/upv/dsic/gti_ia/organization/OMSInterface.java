@@ -1,13 +1,22 @@
 package es.upv.dsic.gti_ia.organization;
 
+import jason.asSyntax.Rule;
+
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 
+import es.upv.dsic.gti_ia.norms.BeliefDataBaseInterface;
+import es.upv.dsic.gti_ia.norms.Norm;
+import es.upv.dsic.gti_ia.norms.NormParser;
 import es.upv.dsic.gti_ia.organization.exception.AgentNotExistsException;
 import es.upv.dsic.gti_ia.organization.exception.AgentNotInUnitException;
 import es.upv.dsic.gti_ia.organization.exception.EmptyParametersException;
+import es.upv.dsic.gti_ia.organization.exception.ForbiddenNormException;
 import es.upv.dsic.gti_ia.organization.exception.InvalidPositionException;
 import es.upv.dsic.gti_ia.organization.exception.InvalidRolePositionException;
 import es.upv.dsic.gti_ia.organization.exception.InvalidUnitTypeException;
+import es.upv.dsic.gti_ia.organization.exception.NormExistsInUnitException;
 import es.upv.dsic.gti_ia.organization.exception.NotCreatorAgentInUnitException;
 import es.upv.dsic.gti_ia.organization.exception.NotCreatorInParentUnitException;
 import es.upv.dsic.gti_ia.organization.exception.NotCreatorInUnitException;
@@ -48,6 +57,7 @@ import es.upv.dsic.gti_ia.organization.exception.VisibilityRoleException;
 class OMSInterface {
 
 	private DataBaseInterface dbInterface;
+	private BeliefDataBaseInterface belifeDbInterface;
 	/**
 	 * Used for retrieve local messages.
 	 */
@@ -59,6 +69,7 @@ class OMSInterface {
 
 	public OMSInterface() {
 		dbInterface = new DataBaseInterface();
+		belifeDbInterface = new BeliefDataBaseInterface();
 		l10n = new THOMASMessages();
 	}
 
@@ -126,45 +137,45 @@ class OMSInterface {
 			if (checkParameter(CreatorName) && checkParameter(UnitName)) {
 				if (dbInterface.checkValidIdentifier(UnitName))
 				{
-				if (!dbInterface.checkUnit(UnitName)) {
-					if (ParentUnitName != null && !ParentUnitName.equals("")) {
-						if (!dbInterface.checkUnit(ParentUnitName)) {
-							String message = l10n.getMessage(MessageID.PARENT_UNIT_NOT_EXISTS, ParentUnitName);
-							throw new ParentUnitNotExistsException(message);
+					if (!dbInterface.checkUnit(UnitName)) {
+						if (ParentUnitName != null && !ParentUnitName.equals("")) {
+							if (!dbInterface.checkUnit(ParentUnitName)) {
+								String message = l10n.getMessage(MessageID.PARENT_UNIT_NOT_EXISTS, ParentUnitName);
+								throw new ParentUnitNotExistsException(message);
+							}
+
+						} else {
+							ParentUnitName = "virtual";
+						}
+
+						// --------------------------------------------------------------------------------
+						// ------------------------- Checking domain-dependent norms
+						// ----------------------
+						// --------------------------------------------------------------------------------
+						// TODO
+						// --------------------------------------------------------------------------------
+						// ------------------------- Checking structural norms
+						// ----------------------------
+						// --------------------------------------------------------------------------------
+
+						if (dbInterface.checkPositionInUnit(AgentName, "creator", ParentUnitName)) {
+
+							String result = dbInterface.createUnit(UnitName, UnitType, ParentUnitName, AgentName, CreatorName);
+
+							resultXML += "<status>Ok</status>\n";
+							resultXML += "<result>\n<description>" + result + "</description>\n</result>\n";
+							resultXML += "</response>";
+
+							return resultXML;
+						} else {
+							String message = l10n.getMessage(MessageID.NOT_CREATOR_IN_PARENT_UNIT, AgentName);
+							throw new NotCreatorInParentUnitException(message);
 						}
 
 					} else {
-						ParentUnitName = "virtual";
+						String message = l10n.getMessage(MessageID.UNIT_EXISTS, UnitName);
+						throw new UnitExistsException(message);
 					}
-
-					// --------------------------------------------------------------------------------
-					// ------------------------- Checking domain-dependent norms
-					// ----------------------
-					// --------------------------------------------------------------------------------
-					// TODO
-					// --------------------------------------------------------------------------------
-					// ------------------------- Checking structural norms
-					// ----------------------------
-					// --------------------------------------------------------------------------------
-
-					if (dbInterface.checkPositionInUnit(AgentName, "creator", ParentUnitName)) {
-
-						String result = dbInterface.createUnit(UnitName, UnitType, ParentUnitName, AgentName, CreatorName);
-
-						resultXML += "<status>Ok</status>\n";
-						resultXML += "<result>\n<description>" + result + "</description>\n</result>\n";
-						resultXML += "</response>";
-
-						return resultXML;
-					} else {
-						String message = l10n.getMessage(MessageID.NOT_CREATOR_IN_PARENT_UNIT, AgentName);
-						throw new NotCreatorInParentUnitException(message);
-					}
-
-				} else {
-					String message = l10n.getMessage(MessageID.UNIT_EXISTS, UnitName);
-					throw new UnitExistsException(message);
-				}
 				}
 				String message = l10n.getMessage(MessageID.NOT_VALID_IDENTIFIER);
 				throw new NotValidIdentifierException(message);
@@ -528,7 +539,192 @@ class OMSInterface {
 			return resultXML;
 		}
 	}
+	/**
+	 * Method used to register a new norm
+	 * @param UnitName
+	 * @param NormContent
+	 * @param AgentName
+	 * @return Returns <norm + registered>
+	 */
+	String registerNorm(String UnitName, String NormContent, String AgentName)
+	{
+		String resultXML = "<response>\n<serviceName>RegisterNorm</serviceName>\n";
+		String unitType = "";
+		NormParser parser = null;
+		Norm parsedNorm = null;
 
+		try
+		{
+			// --------------------------------------------------------------------------------
+			// ------------------------- Checking input parameters
+			// ----------------------------
+			// --------------------------------------------------------------------------------
+			if (checkParameter(NormContent) && checkParameter(UnitName)) {
+				if (dbInterface.checkUnit(UnitName)) {
+
+
+					//-------------- norm parser------------------
+					StringBuffer StringBuffer1 = new StringBuffer(NormContent);
+
+					InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
+
+					parser = new NormParser(input);
+
+					//The method parser returns the norm.
+					parsedNorm = parser.parser();
+
+					//--------------------------------------------
+
+					String normName = parsedNorm.getId();
+
+					if (!dbInterface.checkNormInUnit(normName, UnitName))
+					{					
+						if (!parsedNorm.getTargetValue().equals("_"))
+						{
+							if (parsedNorm.getTargetType().equals("roleName"))
+							{
+								String roleName = parsedNorm.getTargetValue();
+								if (!dbInterface.checkRole(roleName, UnitName))
+								{
+									String message = l10n.getMessage(MessageID.ROLE_NOT_EXISTS, roleName, UnitName);
+									throw new RoleNotExistsException(message);
+								}		
+							}else if (parsedNorm.getTargetType().equals("positionName"))
+							{
+								String positionName = parsedNorm.getTargetValue();
+								unitType = dbInterface.getUnitType(UnitName);
+
+								if (unitType.equals("hierarchy"))
+								{
+									if (!positionName.equals("supervisor") && !positionName.equals("subordinate") &&
+											!positionName.equals("creator"))
+									{
+										String message = l10n.getMessage(MessageID.INVALID_POSITION, positionName);
+										throw new InvalidPositionException(message);
+									}	
+								}
+								else if (unitType.equals("team") || unitType.equals("flat"))
+								{
+									if (!positionName.equals("member") && !positionName.equals("creator"))
+									{
+										String message = l10n.getMessage(MessageID.INVALID_POSITION, positionName);
+										throw new InvalidPositionException(message);
+									}
+								}
+								else
+								{
+									String message = l10n.getMessage(MessageID.INVALID_UNIT_TYPE,unitType );
+									throw new InvalidUnitTypeException(message);
+								}
+							}
+						}
+						if (dbInterface.checkPermitNorms(AgentName, UnitName, "registerNorm"))
+						{
+
+							Rule normRule = belifeDbInterface.buildNormRule(parsedNorm);
+							String result = dbInterface.createNorm(UnitName, NormContent, parsedNorm, normRule);
+
+							resultXML += "<status>Ok</status>\n";
+							resultXML += "<result>\n<description>" + result + "</description>\n</result>\n";
+							resultXML += "</response>";
+
+							return resultXML;
+						}
+						else if (dbInterface.checkFordibbenNorms(AgentName, UnitName, "registerNorm"))
+						{
+							String message = l10n.getMessage(MessageID.FORBIDDEN_NORM);
+							throw new ForbiddenNormException(message);
+						}
+
+						unitType = dbInterface.getUnitType(UnitName);
+
+						if (dbInterface.checkAgentInUnit(AgentName, UnitName)) {
+
+							if (unitType.equals("hierarchy")) {
+
+								if (dbInterface.checkPositionInUnit(AgentName, "creator", UnitName) || dbInterface.checkPositionInUnit(AgentName, "supervisor", UnitName)) {
+
+									Rule normRule = belifeDbInterface.buildNormRule(parsedNorm);
+									String result = dbInterface.createNorm(UnitName, NormContent, parsedNorm, normRule);
+
+									resultXML += "<status>Ok</status>\n";
+									resultXML += "<result>\n<description>" + result + "</description>\n</result>\n";
+									resultXML += "</response>";
+
+									return resultXML;
+
+								} else {
+									String message = l10n.getMessage(MessageID.NOT_SUPERVISOR_OR_CREATOR_IN_UNIT, AgentName, UnitName);
+									throw new NotSupervisorOrCreatorInUnitException(message);
+								}
+
+							} else if (unitType.equals("team") || unitType.equals("flat")) {
+
+								if (dbInterface.checkPositionInUnit(AgentName, "creator", UnitName) || dbInterface.checkPositionInUnit(AgentName, "member", UnitName)) {
+
+									Rule normRule = belifeDbInterface.buildNormRule(parsedNorm);
+									String result = dbInterface.createNorm(UnitName, NormContent, parsedNorm, normRule);
+
+									resultXML += "<status>Ok</status>\n";
+									resultXML += "<result>\n<description>" + result + "</description>\n</result>\n";
+									resultXML += "</response>";
+
+									return resultXML;
+
+								} else {
+									String message = l10n.getMessage(MessageID.NOT_MEMBER_OR_CREATOR_IN_UNIT, AgentName, UnitName);
+									throw new NotMemberOrCreatorInUnitException(message);
+								}
+
+							} else {
+								String message = l10n.getMessage(MessageID.INVALID_UNIT_TYPE, unitType);
+								throw new InvalidUnitTypeException(message);
+							}
+
+						} else {
+							if (unitType.equals("flat")) {
+
+								if (dbInterface.checkPosition(AgentName, "creator")) {
+									Rule normRule = belifeDbInterface.buildNormRule(parsedNorm);
+									String result = dbInterface.createNorm(UnitName, NormContent, parsedNorm, normRule);
+
+									resultXML += "<status>Ok</status>\n";
+									resultXML += "<result>\n<description>" + result + "</description>\n</result>\n";
+									resultXML += "</response>";
+									return resultXML;
+
+								} else {
+									String message = l10n.getMessage(MessageID.NOT_IN_UNIT_AND_NOT_CREATOR, AgentName);
+									throw new NotInUnitAndNotCreatorException(message);
+								}
+
+							} else {
+								String message = l10n.getMessage(MessageID.AGENT_NOT_IN_UNIT, AgentName, UnitName);
+								throw new AgentNotInUnitException(message);
+							}
+						}
+
+					}
+					else {
+						String message = l10n.getMessage(MessageID.NORM_EXISTS_IN_UNIT, normName);
+						throw new NormExistsInUnitException(message);
+					}
+				} else {
+					String message = l10n.getMessage(MessageID.UNIT_NOT_EXISTS, UnitName);
+					throw new UnitNotExistsException(message);
+				}
+			}else
+			{
+				String message = l10n.getMessage(MessageID.EMPTY_PARAMETERS);
+				throw new EmptyParametersException(message);
+			}
+		} catch (Exception e) {
+			resultXML += "<status>Error</status>\n";
+			resultXML += "<result>\n<description>" + e.getMessage() + "</description>\n</result>\n";
+			resultXML += "</response>";
+			return resultXML;
+		}
+	}
 	/**
 	 * Method used for acquiring a role in a specific unit.
 	 * 

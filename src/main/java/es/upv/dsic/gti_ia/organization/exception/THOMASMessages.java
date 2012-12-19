@@ -44,6 +44,11 @@ public class THOMASMessages {
 		 * a table.
 		 */
 		DELETING_TABLE,
+		
+		/**
+		 * Exception message when occurs a norm forbidden the service execution.
+		 */
+		FORBIDDEN_NORM,
 		/**
 		 * Exception message when any parameter is empty.
 		 */
@@ -138,6 +143,10 @@ public class THOMASMessages {
 		 * Exception message when occurs a MySQL error.
 		 */
 		MYSQL,
+		/**
+		 * Exception message when the norm is already registered in the unit.
+		 */
+		NORM_EXISTS_IN_UNIT,
 		/**
 		 * Exception message when none of the agents in unit play roles with
 		 * position creator.
