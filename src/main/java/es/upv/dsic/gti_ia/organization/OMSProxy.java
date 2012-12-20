@@ -952,6 +952,49 @@ public class OMSProxy extends THOMASProxy {
     }
     
     
+    public String informNorm(String NormName, String UnitID) throws InvalidUnitTypeException,NotInUnitOrParentUnitException, ForbiddenNormException,NormNotExistsException,UnitNotExistsException,EmptyParametersException, MySQLException 
+    {
+    	 HashMap<String, String> inputs = new HashMap<String, String>();
+
+         inputs.put("AgentID", agent.getAid().name.replace('~', '@'));
+         inputs.put("UnitID", UnitID);
+         inputs.put("NormName", NormName);
+         
+
+         call = st.buildServiceContent("InformNorm", inputs);
+         
+         try {
+             return (String) this.sendInform();
+         } catch (NotInUnitOrParentUnitException e) {
+
+             throw e;
+         } catch (InvalidUnitTypeException e) {
+
+             throw e;
+         } catch (ForbiddenNormException e) {
+
+             throw e;
+         } catch (NormNotExistsException e) {
+
+             throw e;
+         }
+         catch (UnitNotExistsException e) {
+
+             throw e;
+         }
+         catch (EmptyParametersException e) {
+
+             throw e;
+         }
+         catch (MySQLException e) {
+
+             throw e;
+         }catch (THOMASException e) {
+
+             e.printStackTrace();
+             return null;
+         }
+    }
     public String deregisterNorm(String NormName, String UnitID) throws RoleNotExistsException,InvalidPositionException,InvalidUnitTypeException,ForbiddenNormException,NotSupervisorOrCreatorInUnitException,NotMemberOrCreatorInUnitException,NotInUnitAndNotCreatorException,AgentNotInUnitException,NormNotExistsException,UnitNotExistsException,EmptyParametersException, MySQLException {
 
         

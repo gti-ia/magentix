@@ -196,6 +196,7 @@ public class THOMASProxy {
 		serviceType1.add("DeregisterService");
 		serviceType1.add("RegisterNorm");
 		serviceType1.add("DeregisterNorm");
+		serviceType1.add("InformNorm");
 		
 		
 		serviceType2.add("InformRole");

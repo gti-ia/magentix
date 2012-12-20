@@ -2714,6 +2714,7 @@ public class DataBaseInterface {
 		}
 	}
 
+	
 	ArrayList<String> getInformRole(String roleName, String unitName) throws MySQLException, UnitNotExistsException, RoleNotExistsException {
 		ArrayList<String> result = new ArrayList<String>();
 		int idunitList;
@@ -2893,7 +2894,53 @@ public class DataBaseInterface {
 		return result;
 	}
 	
-	boolean checkNormInUnit(String NormName, String UnitName) throws MySQLException
+	String getNormContent(String NormName, String UnitName) throws MySQLException
+	{
+		String result = "";
+		Connection connection = null;
+		Statement st = null;
+		ResultSet res = null;
+		try
+		{
+			
+			connection = db.connect();
+			st = connection.createStatement();
+			res = st.executeQuery("SELECT n1.normContent FROM normList n1, unitList u1 WHERE n1.normname='"+NormName+"' AND u1.unitName='"+UnitName+"'");
+
+			if (res.next())
+			{
+				result = res.getString("normContent");
+			}
+			
+		} catch (SQLException e) {
+			String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
+			throw new MySQLException(message);
+		} finally {
+
+			try
+			{
+				if (connection != null)
+					connection.close();
+				if (st != null)
+					st.close();
+
+
+				if (res != null)
+					res.close();
+
+
+
+
+			}catch(SQLException e)
+			{
+				String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
+				throw new MySQLException(message);
+			}
+		}
+		return result;
+
+	}
+	boolean checkNormName(String NormName, String UnitName) throws MySQLException
 	{
 		boolean result = false;
 		Connection connection = null;

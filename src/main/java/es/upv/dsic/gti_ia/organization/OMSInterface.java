@@ -578,7 +578,7 @@ public class OMSInterface {
 
 					String normName = parsedNorm.getId();
 
-					if (!dbInterface.checkNormInUnit(normName, UnitName))
+					if (!dbInterface.checkNormName(normName, UnitName))
 					{					
 						if (!parsedNorm.getTargetValue().equals("_"))
 						{
@@ -746,12 +746,12 @@ public class OMSInterface {
 			// --------------------------------------------------------------------------------
 			if (checkParameter(NormName) && checkParameter(UnitName) && checkParameter(AgentName)) {
 				if (dbInterface.checkUnit(UnitName)) {
-					if (dbInterface.checkNormInUnit(NormName, UnitName))
+					if (dbInterface.checkNormName(NormName, UnitName))
 					{
 						if (dbInterface.checkPermitNorms(AgentName, UnitName, "deregisterNorm"))
 						{
 
-							
+
 							String result = dbInterface.deleteNorm(NormName, UnitName);
 
 							resultXML += "<status>Ok</status>\n";
@@ -765,8 +765,8 @@ public class OMSInterface {
 							String message = l10n.getMessage(MessageID.FORBIDDEN_NORM);
 							throw new ForbiddenNormException(message);
 						}
-						
-						
+
+
 						unitType = dbInterface.getUnitType(UnitName);
 
 						if (dbInterface.checkAgentInUnit(AgentName, UnitName)) {
@@ -775,7 +775,7 @@ public class OMSInterface {
 
 								if (dbInterface.checkPositionInUnit(AgentName, "creator", UnitName) || dbInterface.checkPositionInUnit(AgentName, "supervisor", UnitName)) {
 
-									
+
 									String result = dbInterface.deleteNorm(NormName, UnitName);
 
 									resultXML += "<status>Ok</status>\n";
@@ -793,7 +793,7 @@ public class OMSInterface {
 
 								if (dbInterface.checkPositionInUnit(AgentName, "creator", UnitName) || dbInterface.checkPositionInUnit(AgentName, "member", UnitName)) {
 
-									
+
 									String result = dbInterface.deleteNorm(NormName, UnitName);
 
 									resultXML += "<status>Ok</status>\n";
@@ -816,7 +816,7 @@ public class OMSInterface {
 							if (unitType.equals("flat")) {
 
 								if (dbInterface.checkPosition(AgentName, "creator")) {
-								
+
 									String result = dbInterface.deleteNorm(NormName, UnitName);
 
 									resultXML += "<status>Ok</status>\n";
@@ -835,8 +835,8 @@ public class OMSInterface {
 							}
 						}
 
-						
-						
+
+
 					}else {
 						String message = l10n.getMessage(MessageID.NORM_NOT_EXISTS, NormName, UnitName);
 						throw new NormNotExistsException(message);
@@ -1600,6 +1600,111 @@ public class OMSInterface {
 		}
 	}
 
+	public String informNorm(String NormName, String UnitName, String AgentName)
+	{
+		String resultXML = "<response>\n<serviceName>InformNorm</serviceName>\n";
+		String unitType = "";
+		try
+		{
+			// --------------------------------------------------------------------------------
+			// ------------------------- Checking input parameters
+			// ----------------------------
+			// --------------------------------------------------------------------------------
+			if (checkParameter(NormName) && checkParameter(UnitName)) {
+				if (dbInterface.checkUnit(UnitName)) {
+					if (dbInterface.checkNormName(NormName, UnitName))
+					{
+						if (dbInterface.checkPermitNorms(AgentName, UnitName, "informNorm"))
+						{
+
+						
+							String result = dbInterface.getNormContent(NormName, UnitName);
+
+							
+							resultXML += "<status>Ok</status>\n";
+							resultXML += "<result>\n";
+							resultXML += "<description><!-- " + result + " --></description>\n";
+							resultXML += "</result>\n";
+							resultXML += "</response>";
+
+							return resultXML;
+						}
+						else if (dbInterface.checkFordibbenNorms(AgentName, UnitName, "informNorm"))
+						{
+							String message = l10n.getMessage(MessageID.FORBIDDEN_NORM);
+							throw new ForbiddenNormException(message);
+						}
+						
+						unitType = dbInterface.getUnitType(UnitName);
+
+						if (unitType.equals("flat")) {
+							String result = dbInterface.getNormContent(NormName, UnitName);
+
+							
+							resultXML += "<status>Ok</status>\n";
+							resultXML += "<result>\n";
+							resultXML += "<description><!-- " + result + " --></description>\n";
+							resultXML += "</result>\n";
+							resultXML += "</response>";
+
+							return resultXML;
+							
+						}else if (unitType.equals("hierarchy") || unitType.equals("team"))
+						{
+							//Extracts the parent unit.
+							ArrayList<String> parentUnit = dbInterface.getInformUnit(UnitName);
+							
+							if (dbInterface.checkAgentInUnit(AgentName, UnitName) || dbInterface.checkAgentInUnit(AgentName, parentUnit.get(1)))
+							{
+								String result = dbInterface.getNormContent(NormName, UnitName);
+
+								
+								resultXML += "<status>Ok</status>\n";
+								resultXML += "<result>\n";
+								resultXML += "<description><!-- " + result + " --></description>\n";
+								resultXML += "</result>\n";
+								resultXML += "</response>";
+
+								return resultXML;
+							}
+							else
+							{
+								String message = l10n.getMessage(MessageID.NOT_IN_UNIT_OR_PARENT_UNIT, AgentName);
+								throw new NotInUnitOrParentUnitException(message);
+							}
+							
+						}
+						else
+						{
+							String message = l10n.getMessage(MessageID.INVALID_UNIT_TYPE, unitType);
+							throw new InvalidUnitTypeException(message);
+						}
+						
+
+						
+					}else {
+						String message = l10n.getMessage(MessageID.NORM_NOT_EXISTS, NormName, UnitName);
+						throw new NormNotExistsException(message);
+					}
+
+				}else {
+					String message = l10n.getMessage(MessageID.UNIT_NOT_EXISTS, UnitName);
+					throw new UnitNotExistsException(message);
+				}
+			}else
+			{
+				String message = l10n.getMessage(MessageID.EMPTY_PARAMETERS);
+				throw new EmptyParametersException(message);
+			}	
+
+		} catch (Exception e) {
+			resultXML += "<status>Error</status>\n";
+			resultXML += "<result>\n<description>" + e.getMessage() + "</description>\n</result>\n";
+			resultXML += "</response>";
+			return resultXML;
+		}
+	}
+
 	/**
 	 * Method used for requesting the list of entities that are members of a
 	 * specific unit. If a role is specified only the members playing this role
@@ -1618,7 +1723,7 @@ public class OMSInterface {
 	 * @return Returns a set of tuples formed by < agentName , roleName > and
 	 *         separated by -
 	 */
-	@SuppressWarnings("unused")
+
 	public String informMembers(String UnitName, String RoleName, String PositionValue, String AgentName) {
 
 		ArrayList<ArrayList<String>> methodResult = new ArrayList<ArrayList<String>>();

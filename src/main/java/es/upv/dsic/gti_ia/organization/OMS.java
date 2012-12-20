@@ -117,6 +117,7 @@ public class OMS extends CAgent {
 		omsServicesURLs.put("QuantityMembers", 15);
 		omsServicesURLs.put("RegisterNorm", 16);
 		omsServicesURLs.put("DeregisterNorm", 17);
+		omsServicesURLs.put("InformNorm", 18);
 
 	}
 	
@@ -145,6 +146,7 @@ public class OMS extends CAgent {
 		omsServicesURLs.put("QuantityMembers", 15);
 		omsServicesURLs.put("RegisterNorm", 16);
 		omsServicesURLs.put("DeregisterNorm", 17);
+		omsServicesURLs.put("InformNorm", 18);
 	}
 
 	/**
@@ -448,6 +450,10 @@ public class OMS extends CAgent {
 					case 17:// register norm service
 
 						resultContent = omsInterface.deregisterNorm(inputs.get("NormName"), inputs.get("UnitID"), inputs.get("AgentID"));
+						break;
+					case 18:// register norm service
+
+						resultContent = omsInterface.informNorm(inputs.get("NormName"), inputs.get("UnitID"), inputs.get("AgentID"));
 						break;
 						
 					}
