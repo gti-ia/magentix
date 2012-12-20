@@ -147,6 +147,12 @@ public class THOMASMessages {
 		 * Exception message when the norm is already registered in the unit.
 		 */
 		NORM_EXISTS_IN_UNIT,
+		
+		/**
+		 * Exception message when the norm not exists in unit.
+		 */
+		NORM_NOT_EXISTS,
+		
 		/**
 		 * Exception message when none of the agents in unit play roles with
 		 * position creator.

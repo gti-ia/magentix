@@ -115,6 +115,8 @@ public class OMS extends CAgent {
 		omsServicesURLs.put("InformMembers", 13);
 		omsServicesURLs.put("InformUnitRoles", 14);
 		omsServicesURLs.put("QuantityMembers", 15);
+		omsServicesURLs.put("RegisterNorm", 16);
+		omsServicesURLs.put("DeregisterNorm", 17);
 
 	}
 	
@@ -141,6 +143,8 @@ public class OMS extends CAgent {
 		omsServicesURLs.put("InformMembers", 13);
 		omsServicesURLs.put("InformUnitRoles", 14);
 		omsServicesURLs.put("QuantityMembers", 15);
+		omsServicesURLs.put("RegisterNorm", 16);
+		omsServicesURLs.put("DeregisterNorm", 17);
 	}
 
 	/**
@@ -437,6 +441,15 @@ public class OMS extends CAgent {
 							resultContent = omsInterface.informQuantityMembers(inputs.get("UnitID"), inputs.get("RoleID"), inputs.get("PositionID"), inputs.get("AgentID"));
 
 						break;
+					case 16:// register norm service
+
+						resultContent = omsInterface.registerNorm(inputs.get("UnitID"), inputs.get("NormContent"), inputs.get("AgentID"));
+						break;
+					case 17:// register norm service
+
+						resultContent = omsInterface.deregisterNorm(inputs.get("NormName"), inputs.get("UnitID"), inputs.get("AgentID"));
+						break;
+						
 					}
 					// String serviceWSDLURL=omsServicesURLs.get(serviceName);
 					// HashMap<String,Object>

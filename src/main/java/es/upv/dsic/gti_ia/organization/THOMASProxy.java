@@ -24,6 +24,7 @@ import es.upv.dsic.gti_ia.organization.exception.DeletingTableException;
 import es.upv.dsic.gti_ia.organization.exception.EmptyParametersException;
 import es.upv.dsic.gti_ia.organization.exception.ExchangeBindException;
 import es.upv.dsic.gti_ia.organization.exception.ExchangeUnbindException;
+import es.upv.dsic.gti_ia.organization.exception.ForbiddenNormException;
 import es.upv.dsic.gti_ia.organization.exception.IDUnitTypeNotFoundException;
 import es.upv.dsic.gti_ia.organization.exception.InsertingTableException;
 import es.upv.dsic.gti_ia.organization.exception.InvalidAccessibilityException;
@@ -35,6 +36,8 @@ import es.upv.dsic.gti_ia.organization.exception.InvalidServiceURLException;
 import es.upv.dsic.gti_ia.organization.exception.InvalidUnitTypeException;
 import es.upv.dsic.gti_ia.organization.exception.InvalidVisibilityException;
 import es.upv.dsic.gti_ia.organization.exception.MySQLException;
+import es.upv.dsic.gti_ia.organization.exception.NormExistsInUnitException;
+import es.upv.dsic.gti_ia.organization.exception.NormNotExistsException;
 import es.upv.dsic.gti_ia.organization.exception.NotCreatorAgentInUnitException;
 import es.upv.dsic.gti_ia.organization.exception.NotCreatorException;
 import es.upv.dsic.gti_ia.organization.exception.NotCreatorInParentUnitException;
@@ -191,6 +194,8 @@ public class THOMASProxy {
 		serviceType1.add("DeallocateRole");
 		serviceType1.add("RemoveProvider");
 		serviceType1.add("DeregisterService");
+		serviceType1.add("RegisterNorm");
+		serviceType1.add("DeregisterNorm");
 		
 		
 		serviceType2.add("InformRole");
@@ -331,6 +336,12 @@ public class THOMASProxy {
 			if (valueAux.contains(l10n.getMessage(MessageID.MYSQL).split(" ")[0]))
 				throw new MySQLException(value);
 			
+			if (valueAux.equals(l10n.getMessage(MessageID.NORM_EXISTS_IN_UNIT)))
+				throw new NormExistsInUnitException(value);
+			
+			if (valueAux.equals(l10n.getMessage(MessageID.NORM_NOT_EXISTS)))
+				throw new NormNotExistsException(value);
+			
 			if (valueAux.equals(l10n.getMessage(MessageID.NOT_CREATOR)))
 				throw new NotCreatorException(value);
 			
@@ -417,8 +428,16 @@ public class THOMASProxy {
 			
 			if (valueAux.equals(l10n.getMessage(MessageID.VISIBILITY_ROLE)))
 				throw new VisibilityRoleException(value);
+			
 			if (valueAux.equals(l10n.getMessage(MessageID.NOT_VALID_IDENTIFIER)))
 				throw new NotValidIdentifierException(value);
+			
+			if (valueAux.equals(l10n.getMessage(MessageID.FORBIDDEN_NORM)))
+				throw new ForbiddenNormException(value);
+			
+		
+			
+			
 			
 			
 			

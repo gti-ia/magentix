@@ -17,6 +17,7 @@ import es.upv.dsic.gti_ia.organization.exception.InvalidPositionException;
 import es.upv.dsic.gti_ia.organization.exception.InvalidRolePositionException;
 import es.upv.dsic.gti_ia.organization.exception.InvalidUnitTypeException;
 import es.upv.dsic.gti_ia.organization.exception.NormExistsInUnitException;
+import es.upv.dsic.gti_ia.organization.exception.NormNotExistsException;
 import es.upv.dsic.gti_ia.organization.exception.NotCreatorAgentInUnitException;
 import es.upv.dsic.gti_ia.organization.exception.NotCreatorInParentUnitException;
 import es.upv.dsic.gti_ia.organization.exception.NotCreatorInUnitException;
@@ -54,7 +55,7 @@ import es.upv.dsic.gti_ia.organization.exception.VisibilityRoleException;
  * @author Joan Bellver Faus, jbellver@dsic.upv.es
  * 
  */
-class OMSInterface {
+public class OMSInterface {
 
 	private DataBaseInterface dbInterface;
 	private BeliefDataBaseInterface belifeDbInterface;
@@ -104,7 +105,7 @@ class OMSInterface {
 	 *            Identifier of the new role with creator position
 	 * @return Returns <unitname + " created">
 	 */
-	String registerUnit(String UnitName, String UnitType, String AgentName, String CreatorName) {
+	public String registerUnit(String UnitName, String UnitType, String AgentName, String CreatorName) {
 
 		return this.registerUnit(UnitName, UnitType, null, AgentName, CreatorName);
 	}
@@ -126,7 +127,7 @@ class OMSInterface {
 	 *            Identifier of the new role with creator position
 	 * @return Returns <unitname + created>
 	 */
-	String registerUnit(String UnitName, String UnitType, String ParentUnitName, String AgentName, String CreatorName) {
+	public String registerUnit(String UnitName, String UnitType, String ParentUnitName, String AgentName, String CreatorName) {
 
 		String resultXML = "<response>\n<serviceName>RegisterUnit</serviceName>\n";
 		try {
@@ -200,7 +201,7 @@ class OMSInterface {
 	 *            Identifier of the agent
 	 * @return Returns <unitName + deleted>
 	 */
-	String deregisterUnit(String UnitName, String AgentName) {
+	public String deregisterUnit(String UnitName, String AgentName) {
 
 		boolean play = false;
 		String resultXML = "<response>\n<serviceName>DeregisterUnit</serviceName>\n";
@@ -298,7 +299,7 @@ class OMSInterface {
 	 *            Identifier of the agent
 	 * @return Returns <roleName + created>
 	 */
-	String registerRole(String RoleName, String UnitName, String accessibility, String Visibility, String Position, String AgentName) {
+	public String registerRole(String RoleName, String UnitName, String accessibility, String Visibility, String Position, String AgentName) {
 		String unitType = "";
 		String resultXML = "<response>\n<serviceName>RegisterRole</serviceName>\n";
 		try {
@@ -433,7 +434,7 @@ class OMSInterface {
 	 *            Identifier of the agent
 	 * @return Returns <roleName + deleted>
 	 */
-	String deregisterRole(String RoleName, String UnitName, String AgentName) {
+	public String deregisterRole(String RoleName, String UnitName, String AgentName) {
 
 		String unitType = "";
 		String resultXML = "<response>\n<serviceName>DeregisterRole</serviceName>\n";
@@ -546,7 +547,7 @@ class OMSInterface {
 	 * @param AgentName
 	 * @return Returns <norm + registered>
 	 */
-	String registerNorm(String UnitName, String NormContent, String AgentName)
+	public String registerNorm(String UnitName, String NormContent, String AgentName)
 	{
 		String resultXML = "<response>\n<serviceName>RegisterNorm</serviceName>\n";
 		String unitType = "";
@@ -726,6 +727,137 @@ class OMSInterface {
 		}
 	}
 	/**
+	 * Method used in order to deregister a norm.
+	 * 
+	 * @param NormName
+	 * @param UnitName
+	 * @param AgentName
+	 * @return Returns <norm + deleted>
+	 */
+	public String deregisterNorm(String NormName, String UnitName, String AgentName){
+		String resultXML = "<response>\n<serviceName>DeregisterNorm</serviceName>\n";
+		String unitType = "";
+		try
+		{
+
+			// --------------------------------------------------------------------------------
+			// ------------------------- Checking input parameters
+			// ----------------------------
+			// --------------------------------------------------------------------------------
+			if (checkParameter(NormName) && checkParameter(UnitName) && checkParameter(AgentName)) {
+				if (dbInterface.checkUnit(UnitName)) {
+					if (dbInterface.checkNormInUnit(NormName, UnitName))
+					{
+						if (dbInterface.checkPermitNorms(AgentName, UnitName, "deregisterNorm"))
+						{
+
+							
+							String result = dbInterface.deleteNorm(NormName, UnitName);
+
+							resultXML += "<status>Ok</status>\n";
+							resultXML += "<result>\n<description>" + result + "</description>\n</result>\n";
+							resultXML += "</response>";
+
+							return resultXML;
+						}
+						else if (dbInterface.checkFordibbenNorms(AgentName, UnitName, "deregisterNorm"))
+						{
+							String message = l10n.getMessage(MessageID.FORBIDDEN_NORM);
+							throw new ForbiddenNormException(message);
+						}
+						
+						
+						unitType = dbInterface.getUnitType(UnitName);
+
+						if (dbInterface.checkAgentInUnit(AgentName, UnitName)) {
+
+							if (unitType.equals("hierarchy")) {
+
+								if (dbInterface.checkPositionInUnit(AgentName, "creator", UnitName) || dbInterface.checkPositionInUnit(AgentName, "supervisor", UnitName)) {
+
+									
+									String result = dbInterface.deleteNorm(NormName, UnitName);
+
+									resultXML += "<status>Ok</status>\n";
+									resultXML += "<result>\n<description>" + result + "</description>\n</result>\n";
+									resultXML += "</response>";
+
+									return resultXML;
+
+								} else {
+									String message = l10n.getMessage(MessageID.NOT_SUPERVISOR_OR_CREATOR_IN_UNIT, AgentName, UnitName);
+									throw new NotSupervisorOrCreatorInUnitException(message);
+								}
+
+							} else if (unitType.equals("team") || unitType.equals("flat")) {
+
+								if (dbInterface.checkPositionInUnit(AgentName, "creator", UnitName) || dbInterface.checkPositionInUnit(AgentName, "member", UnitName)) {
+
+									
+									String result = dbInterface.deleteNorm(NormName, UnitName);
+
+									resultXML += "<status>Ok</status>\n";
+									resultXML += "<result>\n<description>" + result + "</description>\n</result>\n";
+									resultXML += "</response>";
+
+									return resultXML;
+
+								} else {
+									String message = l10n.getMessage(MessageID.NOT_MEMBER_OR_CREATOR_IN_UNIT, AgentName, UnitName);
+									throw new NotMemberOrCreatorInUnitException(message);
+								}
+
+							} else {
+								String message = l10n.getMessage(MessageID.INVALID_UNIT_TYPE, unitType);
+								throw new InvalidUnitTypeException(message);
+							}
+
+						} else {
+							if (unitType.equals("flat")) {
+
+								if (dbInterface.checkPosition(AgentName, "creator")) {
+								
+									String result = dbInterface.deleteNorm(NormName, UnitName);
+
+									resultXML += "<status>Ok</status>\n";
+									resultXML += "<result>\n<description>" + result + "</description>\n</result>\n";
+									resultXML += "</response>";
+									return resultXML;
+
+								} else {
+									String message = l10n.getMessage(MessageID.NOT_IN_UNIT_AND_NOT_CREATOR, AgentName);
+									throw new NotInUnitAndNotCreatorException(message);
+								}
+
+							} else {
+								String message = l10n.getMessage(MessageID.AGENT_NOT_IN_UNIT, AgentName, UnitName);
+								throw new AgentNotInUnitException(message);
+							}
+						}
+
+						
+						
+					}else {
+						String message = l10n.getMessage(MessageID.NORM_NOT_EXISTS, NormName, UnitName);
+						throw new NormNotExistsException(message);
+					}	
+				} else {
+					String message = l10n.getMessage(MessageID.UNIT_NOT_EXISTS, UnitName);
+					throw new UnitNotExistsException(message);
+				}
+			}else
+			{
+				String message = l10n.getMessage(MessageID.EMPTY_PARAMETERS);
+				throw new EmptyParametersException(message);
+			}
+		} catch (Exception e) {
+			resultXML += "<status>Error</status>\n";
+			resultXML += "<result>\n<description>" + e.getMessage() + "</description>\n</result>\n";
+			resultXML += "</response>";
+			return resultXML;
+		}
+	}
+	/**
 	 * Method used for acquiring a role in a specific unit.
 	 * 
 	 * @param UnitName
@@ -736,7 +868,7 @@ class OMSInterface {
 	 *            Identifier of the agent
 	 * @return Returns <roleName + acquired>
 	 */
-	String acquireRole(String RoleName, String UnitName, String AgentName) {
+	public String acquireRole(String RoleName, String UnitName, String AgentName) {
 
 		boolean contains = false;
 		String resultXML = "<response>\n<serviceName>AcquireRole</serviceName>\n";
@@ -866,7 +998,7 @@ class OMSInterface {
 	 *            Identifier of the agent
 	 * @return Returns <roleName + left>
 	 */
-	String leaveRole(String RoleName, String UnitName, String AgentName) {
+	public String leaveRole(String RoleName, String UnitName, String AgentName) {
 
 		String resultXML = "<response>\n<serviceName>LeaveRole</serviceName>\n";
 		try {
@@ -932,7 +1064,7 @@ class OMSInterface {
 	 *            Identifier of the agent
 	 * @return Returns <roleName + acquired>
 	 */
-	String allocateRole(String RoleName, String UnitName, String TargetAgentName, String AgentName) {
+	public String allocateRole(String RoleName, String UnitName, String TargetAgentName, String AgentName) {
 
 		String resultXML = "<response>\n<serviceName>AllocateRole</serviceName>\n";
 		try {
@@ -1078,7 +1210,7 @@ class OMSInterface {
 	 *            Identifier of the agent
 	 * @return Returns <roleName + left>
 	 */
-	String deallocateRole(String RoleName, String UnitName, String TargetAgentName, String AgentName) {
+	public String deallocateRole(String RoleName, String UnitName, String TargetAgentName, String AgentName) {
 
 		String resultXML = "<response>\n<serviceName>DeallocateRole</serviceName>\n";
 		try {
@@ -1216,7 +1348,7 @@ class OMSInterface {
 	 *            Identifier of the agent
 	 * @return Returns <unitName + jointed to parentName>
 	 */
-	String joinUnit(String UnitName, String ParentName, String AgentName) {
+	public String joinUnit(String UnitName, String ParentName, String AgentName) {
 
 		String resultXML = "<response>\n<serviceName>JointUnit</serviceName>\n";
 		try {
@@ -1405,7 +1537,7 @@ class OMSInterface {
 	 * @return Returns a set of tuples formed by < roleName , UnitName > and
 	 *         separated by -
 	 */
-	String informAgentRole(String RequestedAgentName, String AgentName) {
+	public String informAgentRole(String RequestedAgentName, String AgentName) {
 
 
 		ArrayList<ArrayList<String>> agentRole = new ArrayList<ArrayList<String>>();
@@ -1487,7 +1619,7 @@ class OMSInterface {
 	 *         separated by -
 	 */
 	@SuppressWarnings("unused")
-	String informMembers(String UnitName, String RoleName, String PositionValue, String AgentName) {
+	public String informMembers(String UnitName, String RoleName, String PositionValue, String AgentName) {
 
 		ArrayList<ArrayList<String>> methodResult = new ArrayList<ArrayList<String>>();
 		ArrayList<String> arrayResult = new ArrayList<String>();
@@ -1845,7 +1977,7 @@ class OMSInterface {
 	 * @return Returns a quantity of members
 	 */
 	@SuppressWarnings("unused")
-	String informQuantityMembers(String UnitName, String RoleName, String PositionValue, String AgentName) {
+	public String informQuantityMembers(String UnitName, String RoleName, String PositionValue, String AgentName) {
 
 		int intResult = 0;
 		Flags flag = Flags.CASE_A;
@@ -2099,7 +2231,7 @@ class OMSInterface {
 	 *            Identifier of the agent
 	 * @return Returns < UnitType , ParentName >
 	 */
-	String informUnit(String UnitName, String AgentName) {
+	public String informUnit(String UnitName, String AgentName) {
 
 		ArrayList<String> arrayResult = new ArrayList<String>();
 		boolean play = false;
@@ -2179,7 +2311,7 @@ class OMSInterface {
 	 * @return Returns < RoleName , Accessibility , Visibility , Position >
 	 */
 	@SuppressWarnings("unused")
-	String informUnitRoles(String UnitName, String AgentName) {
+	public String informUnitRoles(String UnitName, String AgentName) {
 
 		ArrayList<ArrayList<String>> methodResult = new ArrayList<ArrayList<String>>();
 		String resultXML = "<response>\n<serviceName>InformUnitRoles</serviceName>\n";
@@ -2277,7 +2409,7 @@ class OMSInterface {
 	 *            Identifier of the agent
 	 * @return Returns < Accessibility - Visibility - Position >
 	 */
-	String informRole(String RoleName, String UnitName, String AgentName) {
+	public String informRole(String RoleName, String UnitName, String AgentName) {
 
 		ArrayList<String> arrayResult = new ArrayList<String>();
 		String resultXML = "<response>\n<serviceName>InformRole</serviceName>\n";

@@ -145,7 +145,17 @@ class ResponseParser {
 
 						if (resNode.getNodeType() == Node.ELEMENT_NODE) {
 
-							keyAndValueList.put(resNode.getNodeName().trim(), resNode.getTextContent().trim());
+							if (resNode.getNodeName().equals("NormContent"))
+							{
+								Node childN = resNode.getFirstChild();
+								String s = childN.getNodeValue().trim();
+								
+								keyAndValueList.put(resNode.getNodeName().trim(), s);
+							}
+							else
+							{
+								keyAndValueList.put(resNode.getNodeName().trim(), resNode.getTextContent().trim());
+							}
 						}
 
 					}

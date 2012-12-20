@@ -11,6 +11,7 @@ import es.upv.dsic.gti_ia.organization.exception.AgentNotExistsException;
 import es.upv.dsic.gti_ia.organization.exception.AgentNotInUnitException;
 import es.upv.dsic.gti_ia.organization.exception.DeletingTableException;
 import es.upv.dsic.gti_ia.organization.exception.EmptyParametersException;
+import es.upv.dsic.gti_ia.organization.exception.ForbiddenNormException;
 import es.upv.dsic.gti_ia.organization.exception.InsertingTableException;
 import es.upv.dsic.gti_ia.organization.exception.InvalidAccessibilityException;
 import es.upv.dsic.gti_ia.organization.exception.InvalidPositionException;
@@ -18,6 +19,8 @@ import es.upv.dsic.gti_ia.organization.exception.InvalidRolePositionException;
 import es.upv.dsic.gti_ia.organization.exception.InvalidUnitTypeException;
 import es.upv.dsic.gti_ia.organization.exception.InvalidVisibilityException;
 import es.upv.dsic.gti_ia.organization.exception.MySQLException;
+import es.upv.dsic.gti_ia.organization.exception.NormExistsInUnitException;
+import es.upv.dsic.gti_ia.organization.exception.NormNotExistsException;
 import es.upv.dsic.gti_ia.organization.exception.NotCreatorAgentInUnitException;
 import es.upv.dsic.gti_ia.organization.exception.NotCreatorInParentUnitException;
 import es.upv.dsic.gti_ia.organization.exception.NotCreatorInUnitException;
@@ -868,6 +871,147 @@ public class OMSProxy extends THOMASProxy {
             return null;
         }
     }
+    
+    
+/**
+ * 
+ * @param UnitID
+ * @param NormContent
+ * @return
+ * @throws RoleNotExistsException
+ * @throws InvalidPositionException
+ * @throws InvalidUnitTypeException
+ * @throws ForbiddenNormException
+ * @throws NotSupervisorOrCreatorInUnitException
+ * @throws NotMemberOrCreatorInUnitException
+ * @throws NotInUnitAndNotCreatorException
+ * @throws AgentNotInUnitException
+ * @throws NormExistsInUnitException
+ * @throws UnitNotExistsException
+ * @throws EmptyParametersException
+ * @throws MySQLException
+ */
+    public String registerNorm(String UnitID, String NormContent) throws RoleNotExistsException,InvalidPositionException,InvalidUnitTypeException,ForbiddenNormException,NotSupervisorOrCreatorInUnitException,NotMemberOrCreatorInUnitException,NotInUnitAndNotCreatorException,AgentNotInUnitException,NormExistsInUnitException,UnitNotExistsException,EmptyParametersException, MySQLException {
+
+     
+            HashMap<String, String> inputs = new HashMap<String, String>();
+
+            inputs.put("AgentID", agent.getAid().name.replace('~', '@'));
+            inputs.put("UnitID", UnitID);
+            inputs.put("NormContent", "<!-- "+NormContent+" -->");
+            
+
+            call = st.buildServiceContent("RegisterNorm", inputs);
+
+        try {
+            return (String) this.sendInform();
+        } catch (RoleNotExistsException e) {
+
+            throw e;
+        } catch (InvalidPositionException e) {
+
+            throw e;
+        } catch (InvalidUnitTypeException e) {
+
+            throw e;
+        } catch (ForbiddenNormException e) {
+
+            throw e;
+        } catch (NotSupervisorOrCreatorInUnitException e) {
+
+            throw e;
+        } catch (NotMemberOrCreatorInUnitException e) {
+
+            throw e;
+        } catch (NotInUnitAndNotCreatorException e) {
+
+            throw e;
+        } catch (AgentNotInUnitException e) {
+
+            throw e;
+        } catch (NormExistsInUnitException e) {
+
+            throw e;
+        }
+        catch (UnitNotExistsException e) {
+
+            throw e;
+        }
+        catch (EmptyParametersException e) {
+
+            throw e;
+        }
+        catch (MySQLException e) {
+
+            throw e;
+        }catch (THOMASException e) {
+
+            e.printStackTrace();
+            return null;
+        }
+    }
+    
+    
+    public String deregisterNorm(String NormName, String UnitID) throws RoleNotExistsException,InvalidPositionException,InvalidUnitTypeException,ForbiddenNormException,NotSupervisorOrCreatorInUnitException,NotMemberOrCreatorInUnitException,NotInUnitAndNotCreatorException,AgentNotInUnitException,NormNotExistsException,UnitNotExistsException,EmptyParametersException, MySQLException {
+
+        
+        HashMap<String, String> inputs = new HashMap<String, String>();
+
+        inputs.put("AgentID", agent.getAid().name.replace('~', '@'));
+        inputs.put("UnitID", UnitID);
+        inputs.put("NormName", NormName);
+        
+
+        call = st.buildServiceContent("DeregisterNorm", inputs);
+
+    try {
+        return (String) this.sendInform();
+    } catch (RoleNotExistsException e) {
+
+        throw e;
+    } catch (InvalidPositionException e) {
+
+        throw e;
+    } catch (InvalidUnitTypeException e) {
+
+        throw e;
+    } catch (ForbiddenNormException e) {
+
+        throw e;
+    } catch (NotSupervisorOrCreatorInUnitException e) {
+
+        throw e;
+    } catch (NotMemberOrCreatorInUnitException e) {
+
+        throw e;
+    } catch (NotInUnitAndNotCreatorException e) {
+
+        throw e;
+    } catch (AgentNotInUnitException e) {
+
+        throw e;
+    } catch (NormNotExistsException e) {
+
+        throw e;
+    }
+    catch (UnitNotExistsException e) {
+
+        throw e;
+    }
+    catch (EmptyParametersException e) {
+
+        throw e;
+    }
+    catch (MySQLException e) {
+
+        throw e;
+    }catch (THOMASException e) {
+
+        e.printStackTrace();
+        return null;
+    }
+}
+    
 
     /**
      * Update the parent unit.

@@ -944,6 +944,51 @@ public class DataBaseInterface {
 		}
 	}
 
+	String deleteNorm(String NormName, String UnitName) throws MySQLException
+	{
+		Connection connection = null;
+		Statement st = null;
+
+		
+		try {
+			connection = db.connect();
+
+			st = connection.createStatement();
+			
+			st.executeUpdate("DELETE FROM actionNormParam USING actionNormParam INNER JOIN normList INNER JOIN unitList " +
+					"ON (actionNormParam.idnormList = normList.idnormList AND normList.idunitList=unitList.idunitList)" +
+					"WHERE unitName = '"+UnitName+"' AND normName = '"+NormName+"'");
+
+			st.executeUpdate("DELETE FROM normList USING normList INNER JOIN unitList ON (normList.idunitList=unitList.idunitList)" +
+					"WHERE unitName='"+UnitName+"' AND normName='"+NormName+"'");
+
+			
+			connection.commit();
+			return NormName + " deleted";
+
+
+
+		} catch (SQLException e) {
+			String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
+			throw new MySQLException(message);
+
+		}  finally {
+			try
+			{
+				if (connection != null)
+					connection.close();
+				if (st != null)
+					st.close();
+			
+			}catch(SQLException e)
+			{
+				String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
+				throw new MySQLException(message);
+			}
+
+		}
+
+	}
 	String joinUnit(String unitName, String parentName) throws MySQLException, ParentUnitNotExistsException, UnitNotExistsException {
 
 		Connection connection = null;
@@ -2966,7 +3011,8 @@ public class DataBaseInterface {
 
 			}
 			
-			typerowName = typeTableName.replace("List", "Name");
+			typerowName = typeTableName.replace("List", "");
+			typerowName = typeTableName + "Name";
 			
 			res4 = st.executeQuery("SELECT id"+typeTableName+" FROM "+typeTableName+" WHERE "+typerowName +"='"+parsedNorm.getTargetValue()+"'");
 			
@@ -2987,16 +3033,17 @@ public class DataBaseInterface {
 			}
 			
 
-			res6 = st.executeQuery("SELECT idaction FROM actionNorm WHERE description ='"+parsedNorm.getActionName()+"'");
+			res6 = st.executeQuery("SELECT idactionNorm FROM actionNorm WHERE description ='"+parsedNorm.getActionName()+"'");
 			
 			if (res6.next())
 			{
-				idAction = res6.getString("idaction");
+				idAction = res6.getString("idactionNorm");
 			}
 			
 			
-			st.executeUpdate("INSERT INTO normList (idunitList, normName, idDeontic, idTarget, targetValue, idactionNorm, normContent, normRule) " +
-					"VALUES (" + idUnit + ","+parsedNorm.getId()+","+idDeontic+","+idTarget+","+idTargetValue+","+idAction+",'"+NormContent+"','"+normRule.toString()+"')");
+			String sql = "INSERT INTO normList (idunitList, normName, iddeontic, idtargetType, targetValue, idactionnorm, normContent, normRule) " +
+			"VALUES (" + idUnit + ",'"+parsedNorm.getId()+"',"+idDeontic+","+idTarget+","+idTargetValue+","+idAction+",'"+NormContent+"','"+normRule.toString()+"')";
+			st.executeUpdate(sql);
 
 			
 			res7 = st.executeQuery("SELECT idnormList FROM normList WHERE normName ='"+parsedNorm.getId()+"'");
