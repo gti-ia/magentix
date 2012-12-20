@@ -1599,7 +1599,15 @@ public class OMSInterface {
 			return resultXML;
 		}
 	}
-
+	/**
+	 * 
+	 * Method used for requesting the content of the norm.
+	 * 
+	 * @param NormName
+	 * @param UnitName
+	 * @param AgentName
+	 * @return Returns a string with the content of the norm.
+	 */
 	public String informNorm(String NormName, String UnitName, String AgentName)
 	{
 		String resultXML = "<response>\n<serviceName>InformNorm</serviceName>\n";
