@@ -11,7 +11,7 @@ import es.upv.dsic.gti_ia.organization.Configuration;
 public class DatabaseAccess {
 
 
-	private Connection connection = null;
+	public Connection connection = null;
 
 
 
