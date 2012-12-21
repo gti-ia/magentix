@@ -1,21 +1,13 @@
 package es.upv.dsic.gti_ia.organization;
 
 
-import jason.asSyntax.Literal;
 import jason.asSyntax.Rule;
-import jason.asSyntax.Term;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.StringTokenizer;
-
-import organizational__message_example.Summation;
 
 import omsTests.DatabaseAccess;
-
-import es.upv.dsic.gti_ia.architecture.FIPANames.InteractionProtocol;
 import es.upv.dsic.gti_ia.cAgents.BeginState;
 import es.upv.dsic.gti_ia.cAgents.BeginStateMethod;
 import es.upv.dsic.gti_ia.cAgents.CAgent;
@@ -23,7 +15,6 @@ import es.upv.dsic.gti_ia.cAgents.CFactory;
 import es.upv.dsic.gti_ia.cAgents.CProcessor;
 import es.upv.dsic.gti_ia.cAgents.FinalState;
 import es.upv.dsic.gti_ia.cAgents.FinalStateMethod;
-import es.upv.dsic.gti_ia.cAgents.NotAcceptedMessagesState;
 import es.upv.dsic.gti_ia.cAgents.ReceiveState;
 import es.upv.dsic.gti_ia.cAgents.ReceiveStateMethod;
 import es.upv.dsic.gti_ia.cAgents.SendState;
@@ -32,12 +23,9 @@ import es.upv.dsic.gti_ia.cAgents.WaitState;
 import es.upv.dsic.gti_ia.cAgents.protocols.FIPA_REQUEST_Initiator;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
-import es.upv.dsic.gti_ia.core.MessageFilter;
 import es.upv.dsic.gti_ia.norms.BeliefDataBaseInterface;
 import es.upv.dsic.gti_ia.norms.Norm;
 import es.upv.dsic.gti_ia.norms.NormParser;
-import es.upv.dsic.gti_ia.organization.DataBaseInterface;
-import es.upv.dsic.gti_ia.organization.exception.THOMASException;
 
 
 
