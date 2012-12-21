@@ -45,6 +45,8 @@ public class MagentixAgArch extends AgArch{
 	protected boolean running = true;
 	private Agent ag;
 	private BeliefDataBaseInterface bdbi = null;
+	ArrayList<Literal> dataBasePercepts = null;
+	ArrayList<Rule> rules = null;
 	/**
 	 * Starts the architecture
 	 * @param filename File with the AgentSepak code
@@ -57,6 +59,7 @@ public class MagentixAgArch extends AgArch{
 			new TransitionSystem(ag, new Circumstance(), new Settings(), this);
 			ag.initAg(filename);
 			bdbi = new BeliefDataBaseInterface();
+			dataBasePercepts = new ArrayList<Literal>();
 		} catch (Exception e) {
 			logger.log(Level.SEVERE, "Init error", e);
 		}
@@ -141,6 +144,19 @@ public class MagentixAgArch extends AgArch{
 		{
 			acl.setHeader("activatedNorm", "false");
 		}
+		
+		//Removes the beliefs of the belief base
+		
+		for(Literal l : dataBasePercepts)
+		{
+			this.getTS().getAg().getBB().remove(l);
+		}
+		
+		//Removes the rules of the belief base
+		for (Rule r : rules)
+		{
+			this.getTS().getAg().getBB().remove(r);
+		}
 		acl.addReceiver(new AgentID(m.getReceiver()));
 		if (m.getInReplyTo() != null) {
 			String convid = conversationIds.get(m.getInReplyTo());
@@ -161,82 +177,76 @@ public class MagentixAgArch extends AgArch{
 			m = messageList.poll();
 
 			if(m != null){
+
 				String ilForce = aclToKqml(m.getPerformativeInt());
 				String sender = m.getSender().name;
 				String receiver = m.getReceiver().name;
 				String replyWith = m.getReplyWith();
 				String irt = m.getInReplyTo();
 
-
-				ArrayList<Literal> percepts = new ArrayList<Literal>();
-				try {
-					percepts.addAll(bdbi.getIsUnit());
-					percepts.addAll(bdbi.getHasType());
-					percepts.addAll(bdbi.getHasParent());
-
-					percepts.addAll(bdbi.getIsRole());
-					percepts.addAll(bdbi.getHasAccessibility());
-					percepts.addAll(bdbi.getHasVisibility());
-					percepts.addAll(bdbi.getHasPosition());
-
-					percepts.addAll(bdbi.getIsAgent());
-					percepts.addAll(bdbi.getPlaysRole());
-
-					percepts.addAll(bdbi.getRoleCardinality());
-					percepts.addAll(bdbi.getPositionCardinality());
-
-					percepts.addAll(bdbi.getIsNorm());
-					percepts.addAll(bdbi.getHasDeontic());
-
-					
-					for(Literal l : percepts)
+				
+				if (m.getContentObject() != null & m.getContentObject() instanceof ArrayList<?>)
+				{
+					rules = (ArrayList<Rule>) m.getContentObject();
+					for (Rule r : rules)
 					{
-						System.out.println("Percepción: "+ l.toString());
+						this.getTS().getAg().getBB().add(r);
 					}
-
-					
-
-				} catch (MySQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
 				}
-				System.out.println("Me llega un mensaje: "+ ilForce);
+				else
+				{
 
-				// also remembers conversation ID
-				if (replyWith != null && replyWith.length() > 0) {
-					if (m.getConversationId() != null) {
-						conversationIds.put(replyWith, m.getConversationId());
-					}
-				} else {
-					replyWith = "noid";
-				}
-
-				Object propCont = translateContentToJason(m);
-				if (propCont != null) {
-					jason.asSemantics.Message im = new jason.asSemantics.Message(ilForce, sender, receiver, propCont, replyWith);
-					if (irt != null) {
-						im.setInReplyTo(irt);
-					}
-					// Añadimos las creencias y reglas
-					String normLiteral = "isAgent(Agent) & Agent \\== ea & UnitName \\==forum";
-					
-					
-					Rule regla = new Rule(Literal.parseLiteral("deregisterUnit(UnitName, Agent)"),(LogicalFormula) ListTermImpl.parse(normLiteral));
-					
-
-
-					System.out.println("Regla Functor: "+ regla.getFunctor());
-
-					System.out.println("Regla Body: "+ regla.getBody());
 					try {
+						dataBasePercepts.addAll(bdbi.getIsUnit());
+						dataBasePercepts.addAll(bdbi.getHasType());
+						dataBasePercepts.addAll(bdbi.getHasParent());
 
-						this.getTS().getAg().addBel(Literal.parseLiteral("isAgent(vb)"));
-						this.getTS().getAg().addBel(regla);
-					} catch (RevisionFailedException e) {
+						dataBasePercepts.addAll(bdbi.getIsRole());
+						dataBasePercepts.addAll(bdbi.getHasAccessibility());
+						dataBasePercepts.addAll(bdbi.getHasVisibility());
+						dataBasePercepts.addAll(bdbi.getHasPosition());
+
+						dataBasePercepts.addAll(bdbi.getIsAgent());
+						dataBasePercepts.addAll(bdbi.getPlaysRole());
+
+						dataBasePercepts.addAll(bdbi.getRoleCardinality());
+						dataBasePercepts.addAll(bdbi.getPositionCardinality());
+
+						dataBasePercepts.addAll(bdbi.getIsNorm());
+						dataBasePercepts.addAll(bdbi.getHasDeontic());
+
+						
+
+
+					} catch (MySQLException e1) {
 						// TODO Auto-generated catch block
-						e.printStackTrace();
+						e1.printStackTrace();
 					}
-					this.getTS().getC().getMailBox().add(im);
+
+					for(Literal l : dataBasePercepts)
+					{
+						this.getTS().getAg().getBB().add(l);
+					}
+					System.out.println("Me llega un mensaje: "+ ilForce);
+
+					// also remembers conversation ID
+					if (replyWith != null && replyWith.length() > 0) {
+						if (m.getConversationId() != null) {
+							conversationIds.put(replyWith, m.getConversationId());
+						}
+					} else {
+						replyWith = "noid";
+					}
+
+					Object propCont = translateContentToJason(m);
+					if (propCont != null) {
+						jason.asSemantics.Message im = new jason.asSemantics.Message(ilForce, sender, receiver, propCont, replyWith);
+						if (irt != null) {
+							im.setInReplyTo(irt);
+						}
+
+						this.getTS().getC().getMailBox().add(im);
+					}
 				}
 			}
 		} while(m != null);

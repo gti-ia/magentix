@@ -13,6 +13,15 @@ import junit.framework.TestCase;
 import es.upv.dsic.gti_ia.norms.*;
 
 
+/**
+ * ----------------------------------------------
+ * 
+ * Test  with   Task#532
+ * ----------------------------------------------
+ * 
+ * @author root
+ *
+ */
 public class TestModulePred extends TestCase {
 
 

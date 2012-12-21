@@ -149,7 +149,7 @@ private THOMASMessages    l10n;
   	{
 
 		
-  	    String message = l10n.getMessage(MessageID.INVALID_EXPRESSION, pex.currentToken.next.beginLine, pex.currentToken.next.beginColumn, getToken(0)+" "+getToken(1)+" "+getToken(2));
+  	    String message = l10n.getMessage(MessageID.INVALID_EXPRESSION,  pex.currentToken.next.beginColumn, getToken(0)+" "+getToken(1)+" "+getToken(2));
 		throw new InvalidExpressionException(message);
   	  
     }catch(TokenMgrError err)
@@ -230,7 +230,7 @@ ArrayList<String > target() throws THOMASException:
   	
   		}catch(ParseException pex)
   		{
-			String message = l10n.getMessage(MessageID.INVALID_TARGET_VALUE, pex.currentToken.next.beginLine, pex.currentToken.next.beginColumn,  getToken(1));
+			String message = l10n.getMessage(MessageID.INVALID_TARGET_VALUE,  pex.currentToken.next.beginColumn,  getToken(1));
 			throw new InvalidTargetValueException(message);
   		}
   
@@ -252,7 +252,7 @@ ArrayList<String > target() throws THOMASException:
 
   		}catch(ParseException pex)
   		{
-			String message = l10n.getMessage(MessageID.INVALID_TARGET_VALUE, pex.currentToken.next.beginLine, pex.currentToken.next.beginColumn, getToken(1));
+			String message = l10n.getMessage(MessageID.INVALID_TARGET_VALUE,  pex.currentToken.next.beginColumn, getToken(1));
 			throw new InvalidTargetValueException(message);
   		}
 		{
@@ -261,7 +261,7 @@ ArrayList<String > target() throws THOMASException:
 	  		return target;		}
 	}catch(ParseException pex)
   	{
-		String message = l10n.getMessage(MessageID.INVALID_TARGET_TYPE, pex.currentToken.next.beginLine, pex.currentToken.next.beginColumn, getToken(2));
+		String message = l10n.getMessage(MessageID.INVALID_TARGET_TYPE,  pex.currentToken.next.beginColumn, getToken(2));
 		throw new InvalidTargetTypeException(message);
   	}	
 }
@@ -391,7 +391,7 @@ ArrayList<String > action() throws THOMASException: {
         	}
       	}
 
-		String message = l10n.getMessage(MessageID.INVALID_OMS_ACTION, pex.currentToken.next.beginLine, pex.currentToken.next.beginColumn, getNextToken(), expected.toString());
+		String message = l10n.getMessage(MessageID.INVALID_OMS_ACTION,  pex.currentToken.next.beginColumn, getNextToken(), expected.toString());
 		throw new InvalidOMSActionException(message);
       	
 	
@@ -459,7 +459,7 @@ String expression()  throws THOMASException: {
  }
  catch(ParseException pex)
  {		
-      	String message = l10n.getMessage(MessageID.INVALID_EXPRESSION, pex.currentToken.next.beginLine, pex.currentToken.next.beginColumn, getNextToken());
+      	String message = l10n.getMessage(MessageID.INVALID_EXPRESSION,  pex.currentToken.next.beginColumn, getNextToken());
 		throw new InvalidExpressionException(message);
 	
  }
@@ -487,7 +487,7 @@ String expressionRest() throws THOMASException:
  catch(ParseException pex)
  {
 		
-      	String message = l10n.getMessage(MessageID.INVALID_EXPRESSION, pex.currentToken.next.beginLine, pex.currentToken.next.beginColumn, getNextToken());
+      	String message = l10n.getMessage(MessageID.INVALID_EXPRESSION,  pex.currentToken.next.beginColumn, getNextToken());
 		throw new InvalidExpressionException(message);
 	
  }

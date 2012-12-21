@@ -29,10 +29,16 @@ import es.upv.dsic.gti_ia.organization.exception.IDUnitTypeNotFoundException;
 import es.upv.dsic.gti_ia.organization.exception.InsertingTableException;
 import es.upv.dsic.gti_ia.organization.exception.InvalidAccessibilityException;
 import es.upv.dsic.gti_ia.organization.exception.InvalidDataTypeException;
+import es.upv.dsic.gti_ia.organization.exception.InvalidDeonticException;
+import es.upv.dsic.gti_ia.organization.exception.InvalidExpressionException;
+import es.upv.dsic.gti_ia.organization.exception.InvalidIDException;
+import es.upv.dsic.gti_ia.organization.exception.InvalidOMSActionException;
 import es.upv.dsic.gti_ia.organization.exception.InvalidParametersException;
 import es.upv.dsic.gti_ia.organization.exception.InvalidPositionException;
 import es.upv.dsic.gti_ia.organization.exception.InvalidRolePositionException;
 import es.upv.dsic.gti_ia.organization.exception.InvalidServiceURLException;
+import es.upv.dsic.gti_ia.organization.exception.InvalidTargetTypeException;
+import es.upv.dsic.gti_ia.organization.exception.InvalidTargetValueException;
 import es.upv.dsic.gti_ia.organization.exception.InvalidUnitTypeException;
 import es.upv.dsic.gti_ia.organization.exception.InvalidVisibilityException;
 import es.upv.dsic.gti_ia.organization.exception.MySQLException;
@@ -267,16 +273,21 @@ public class THOMASProxy {
 	 */
 	private Object returnResult() throws THOMASException
 	{
-		
+ 
 		if (!Status)
 		{
+			//En caso de que el OMS nos devuelva un error, tenemos que extraer ese mensaje de error y convertirlo a la excepción correspondiente.
 			String valueAux = value;
+			
 			
 			
 			if (valueAux.contains("'"))
 				valueAux = valueAux.replace(valueAux.subSequence(valueAux.indexOf("'"), valueAux.indexOf("'", valueAux.indexOf("'")+1)+1), "{0}");
 			if (valueAux.contains("'"))
 				valueAux = valueAux.replace(valueAux.subSequence(valueAux.indexOf("'"), valueAux.lastIndexOf("'")+1), "{1}");
+//			if (valueAux.contains("'"))
+//				valueAux = valueAux.replace(valueAux.subSequence(valueAux.indexOf("'"), valueAux.lastIndexOf("'")+1), "{2}");
+//			
 			
 			valueAux = valueAux.replace("{", "'{");
 			valueAux = valueAux.replace("}", "}'");
@@ -435,6 +446,24 @@ public class THOMASProxy {
 			
 			if (valueAux.equals(l10n.getMessage(MessageID.FORBIDDEN_NORM)))
 				throw new ForbiddenNormException(value);
+			
+			if (valueAux.equals(l10n.getMessage(MessageID.INVALID_DEONTIC)))
+				throw new InvalidDeonticException(value);
+			
+			if (valueAux.equals(l10n.getMessage(MessageID.INVALID_ID)))
+				throw new InvalidIDException(value);
+			
+			if (valueAux.equals(l10n.getMessage(MessageID.INVALID_TARGET_TYPE)))
+				throw new InvalidTargetTypeException(value);
+			
+			if (valueAux.equals(l10n.getMessage(MessageID.INVALID_TARGET_VALUE)))
+				throw new InvalidTargetValueException(value);
+			
+			if (valueAux.equals(l10n.getMessage(MessageID.INVALID_OMS_ACTION)))
+				throw new InvalidOMSActionException(value);
+			
+			if (valueAux.equals(l10n.getMessage(MessageID.INVALID_EXPRESSION)))
+				throw new InvalidExpressionException(value);
 			
 		
 			

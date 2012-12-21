@@ -2992,7 +2992,7 @@ public class DataBaseInterface {
 	boolean checkPermitNorms(String AgentName, String UnitName, String ServiceName)
 	{
 		//TODO por implementar.
-		boolean result = true;
+		boolean result = false;
 		
 		return result;
 	}
@@ -3000,7 +3000,7 @@ public class DataBaseInterface {
 	boolean checkFordibbenNorms(String AgentName, String UnitName, String ServiceName)
 	{
 		//TODO por implementar.
-		boolean result = true;
+		boolean result = false;
 		
 		return result;
 	}
@@ -3059,7 +3059,7 @@ public class DataBaseInterface {
 			}
 			
 			typerowName = typeTableName.replace("List", "");
-			typerowName = typeTableName + "Name";
+			typerowName = typerowName + "Name";
 			
 			res4 = st.executeQuery("SELECT id"+typeTableName+" FROM "+typeTableName+" WHERE "+typerowName +"='"+parsedNorm.getTargetValue()+"'");
 			

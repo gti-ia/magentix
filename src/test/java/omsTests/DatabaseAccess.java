@@ -107,7 +107,7 @@ public class DatabaseAccess {
 
 	public boolean executeQuery(String sql) throws SQLException{
 		Statement st = null;	
-		ResultSet res;
+		ResultSet res = null;
 		boolean result = false;
 
 		Connection connection = null;
@@ -145,9 +145,14 @@ public class DatabaseAccess {
 			{
 				st.close();
 				st=null;
+				
+				res.close();
+				res = null;
 			}
 		}
 	}
+	
+
 
 	public void executeSQL(String sql) throws SQLException{
 		Statement st = null;	

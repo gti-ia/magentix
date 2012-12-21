@@ -14,8 +14,14 @@ import es.upv.dsic.gti_ia.organization.exception.EmptyParametersException;
 import es.upv.dsic.gti_ia.organization.exception.ForbiddenNormException;
 import es.upv.dsic.gti_ia.organization.exception.InsertingTableException;
 import es.upv.dsic.gti_ia.organization.exception.InvalidAccessibilityException;
+import es.upv.dsic.gti_ia.organization.exception.InvalidDeonticException;
+import es.upv.dsic.gti_ia.organization.exception.InvalidExpressionException;
+import es.upv.dsic.gti_ia.organization.exception.InvalidIDException;
+import es.upv.dsic.gti_ia.organization.exception.InvalidOMSActionException;
 import es.upv.dsic.gti_ia.organization.exception.InvalidPositionException;
 import es.upv.dsic.gti_ia.organization.exception.InvalidRolePositionException;
+import es.upv.dsic.gti_ia.organization.exception.InvalidTargetTypeException;
+import es.upv.dsic.gti_ia.organization.exception.InvalidTargetValueException;
 import es.upv.dsic.gti_ia.organization.exception.InvalidUnitTypeException;
 import es.upv.dsic.gti_ia.organization.exception.InvalidVisibilityException;
 import es.upv.dsic.gti_ia.organization.exception.MySQLException;
@@ -878,6 +884,12 @@ public class OMSProxy extends THOMASProxy {
  * @param UnitID
  * @param NormContent
  * @return
+ * @throws InvalidIDException
+ * @throws InvalidDeonticException
+ * @throws InvalidTargetTypeException
+ * @throws InvalidTargetValueException
+ * @throws InvalidOMSActionException
+ * @throws InvalidExpressionException
  * @throws RoleNotExistsException
  * @throws InvalidPositionException
  * @throws InvalidUnitTypeException
@@ -891,7 +903,7 @@ public class OMSProxy extends THOMASProxy {
  * @throws EmptyParametersException
  * @throws MySQLException
  */
-    public String registerNorm(String UnitID, String NormContent) throws RoleNotExistsException,InvalidPositionException,InvalidUnitTypeException,ForbiddenNormException,NotSupervisorOrCreatorInUnitException,NotMemberOrCreatorInUnitException,NotInUnitAndNotCreatorException,AgentNotInUnitException,NormExistsInUnitException,UnitNotExistsException,EmptyParametersException, MySQLException {
+    public String registerNorm(String UnitID, String NormContent) throws NotValidIdentifierException, InvalidIDException, InvalidDeonticException, InvalidTargetTypeException, InvalidTargetValueException,InvalidOMSActionException,InvalidExpressionException,RoleNotExistsException,InvalidPositionException,InvalidUnitTypeException,ForbiddenNormException,NotSupervisorOrCreatorInUnitException,NotMemberOrCreatorInUnitException,NotInUnitAndNotCreatorException,AgentNotInUnitException,NormExistsInUnitException,UnitNotExistsException,EmptyParametersException, MySQLException {
 
      
             HashMap<String, String> inputs = new HashMap<String, String>();
@@ -938,6 +950,34 @@ public class OMSProxy extends THOMASProxy {
             throw e;
         }
         catch (EmptyParametersException e) {
+
+            throw e;
+        }
+        catch (InvalidIDException e) {
+
+            throw e;
+        }
+        catch (InvalidDeonticException e) {
+
+            throw e;
+        }
+        catch (InvalidTargetTypeException e) {
+
+            throw e;
+        }
+        catch (InvalidTargetValueException e) {
+
+            throw e;
+        }
+        catch (InvalidOMSActionException e) {
+
+            throw e;
+        }
+        catch (InvalidExpressionException e) {
+
+            throw e;
+        }
+        catch (NotValidIdentifierException e) {
 
             throw e;
         }

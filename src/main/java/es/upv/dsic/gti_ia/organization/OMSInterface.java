@@ -561,6 +561,7 @@ public class OMSInterface {
 			// ----------------------------
 			// --------------------------------------------------------------------------------
 			if (checkParameter(NormContent) && checkParameter(UnitName)) {
+				
 				if (dbInterface.checkUnit(UnitName)) {
 
 
