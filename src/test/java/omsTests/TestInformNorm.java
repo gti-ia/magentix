@@ -6,7 +6,9 @@ import es.upv.dsic.gti_ia.core.AgentsConnection;
 import es.upv.dsic.gti_ia.organization.OMS;
 import es.upv.dsic.gti_ia.organization.OMSProxy;
 import es.upv.dsic.gti_ia.organization.SF;
+import es.upv.dsic.gti_ia.organization.exception.NormNotExistsException;
 import es.upv.dsic.gti_ia.organization.exception.THOMASException;
+import es.upv.dsic.gti_ia.organization.exception.UnitNotExistsException;
 
 
 public class TestInformNorm extends TestCase {
@@ -86,7 +88,48 @@ public class TestInformNorm extends TestCase {
 
 	}
 
-	public void testDeregisterUnit1()
+	public void testInformNorm1()
+	{
+		try
+		{
+			
+			String unit = "jerarquia";
+			
+			dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('"+unit+"',(SELECT idunitType FROM unitType WHERE unitTypeName = 'hierarchy'))");
+			
+			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'virtual'),(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'))");
+
+
+		
+			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
+			
+
+			dbA.executeSQL("INSERT INTO normList (idunitList, normName, iddeontic, idtargetType, targetValue, idactionnorm, normContent, normRule )" +
+					" VALUES ((SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'), 'accesRegisternotUnit', 3,3, 3, 1,'normContent' ,'registerUnit(_,_,_,_,_,) := null')");
+			
+			
+			String result = omsProxy.informNorm("accesRegisternotUnit", "invalida");
+			
+			fail(result);
+		
+
+			
+			//---------------------------------------------------------------------//
+
+
+		}catch(UnitNotExistsException e)
+		{
+
+			assertNotNull(e);
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+	}
+	
+	public void TestInformNorm2()
 	{
 		try
 		{
@@ -102,7 +145,7 @@ public class TestInformNorm extends TestCase {
 			
 			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'virtual'),(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'))");
 
-			
+		
 			
 			/**-----------
 			 * --1a							
@@ -115,18 +158,19 @@ public class TestInformNorm extends TestCase {
 			String result = omsProxy.registerNorm("jerarquia", "@accesRegisternotUnit[p, <positionName:creator>, registerUnit(team,team,ParentUnitName, AgentName,_),isUnit(jerarquia), ]");
 			assertEquals("El mensaje debe ser el siguiente:","accesRegisternotUnit created", result);
 		
-			result = omsProxy.informNorm("accesRegisternotUnit", "jerarquia");
+			result = omsProxy.informNorm("normaPruebaInexistente", "jerarquia");
 			
-			assertEquals("El mensaje debe ser el siguiente:","@accesRegisternotUnit[p, <positionName:creator>, registerUnit(team,team,ParentUnitName, AgentName,_),isUnit(jerarquia), ]", result);
+			fail(result);
 		
 
+			
 			//---------------------------------------------------------------------//
 
 
-		}catch(THOMASException e)
+		}catch(NormNotExistsException e)
 		{
 
-			fail(e.getMessage());
+			assertNotNull(e);
 
 		}
 		catch(Exception e)

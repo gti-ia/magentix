@@ -1594,7 +1594,7 @@ public class TestRegisterNorm extends TestCase {
 		catch(UnitNotExistsException e)
 		{
 
-			fail(e.getMessage());
+			assertNotNull(e);
 
 		}
 		catch(Exception e)
