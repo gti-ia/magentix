@@ -2599,7 +2599,7 @@ public class OMSInterface {
 	 */
 	public String informTargetNorms(String TargetTypeName, String TargetValueName, String UnitName, String AgentName)
 	{
-		String resultXML = "<response>\n<serviceName>InforTargetNorms</serviceName>\n";
+		String resultXML = "<response>\n<serviceName>InformTargetNorms</serviceName>\n";
 		ArrayList<ArrayList<String>> methodResult = new ArrayList<ArrayList<String>>();
 		boolean permitFlag = false;
 

@@ -3243,7 +3243,7 @@ public class DataBaseInterface {
 				st = connection.createStatement();
 
 
-				res = st.executeQuery("select nl.normName, ul.unitName, tt.targetName,al.agentName from normList nl inner join unitlist ul on nl.idunitlist=ul.idunitList inner join targettype tt on nl.idtargettype=tt.idtargetType inner join agentList al on nl. targetvalue=al.idagentList where tt.TargetName=’agentName’ and al.agentName='"+TargetValueName+"' and ul.unitName='"+ UnitName+"'");
+				res = st.executeQuery("select nl.normName, ul.unitName, tt.targetName,al.agentName from normList nl inner join unitList ul on nl.idunitList=ul.idunitList inner join targetType tt on nl.idtargetType=tt.idtargetType inner join agentList al on nl. targetvalue=al.idagentList where tt.targetName='agentName' and al.agentName='"+TargetValueName+"' and ul.unitName='"+ UnitName+"'");
 
 				while (res.next())
 				{
@@ -3314,7 +3314,7 @@ public class DataBaseInterface {
 			st = connection.createStatement();
 
 
-			res = st.executeQuery("select nl.normName, ul.unitName,tt.targetName,al.agentName from normList nl inner join unitlist ul on nl.idunitlist=ul.idunitList inner join targettype tt on nl.idtargettype=tt.idtargetType inner join agentList al on nl.targetvalue=al.idagentListwhere tt.TargetName=’agentName’ and ul.unitName='"+UnitName+"' ");
+			res = st.executeQuery("select nl.normName, ul.unitName,tt.targetName,al.agentName from normList nl inner join unitList ul on nl.idunitList=ul.idunitList inner join targetType tt on nl.idtargetType=tt.idtargetType inner join agentList al on nl.targetValue=al.idagentList where tt.targetName='agentName' and ul.unitName='"+UnitName+"'");
 
 			while (res.next())
 			{
@@ -3333,7 +3333,7 @@ public class DataBaseInterface {
 			}
 
 
-			res = st.executeQuery("select nl.normName, ul.unitName,tt.targetName,’_’ from normList nl inner join unitlist ul on nl.idunitlist=ul.idunitList inner jointargettype tt on nl.idtargettype=tt.idtargetType where tt.TargetName=’agentName’ and nl.targetvalue=-1 and ul.unitName='"+UnitName+"'");
+			res = st.executeQuery("select nl.normName, ul.unitName,tt.targetName,'_' from normList nl inner join unitList ul on nl.idunitList=ul.idunitList inner join targetType tt on nl.idtargetType=tt.idtargetType where tt.targetName='agentName' and nl.targetValue=-1 and ul.unitName='"+UnitName+"'");
 
 			while (res.next())
 			{
@@ -3405,7 +3405,7 @@ public class DataBaseInterface {
 				st = connection.createStatement();
 
 
-				res = st.executeQuery("SELECT m1.normName, u1.unitName, tt.targetName, '_' FROM normList n1 inner join unitList u1 on n1.idunitList = u1.idunitList inner join targetType tt on n1.idtargetType = yy.idtargetType WHERE tt.targetName='positionName' and n1.targetValue=-1 and u1.unitName='"+UnitName+"'");
+				res = st.executeQuery("SELECT n1.normName, u1.unitName, tt.targetName, '_' FROM normList n1 inner join unitList u1 on n1.idunitList = u1.idunitList inner join targetType tt on n1.idtargetType = tt.idtargetType WHERE tt.targetName='positionName' and n1.targetValue=-1 and u1.unitName='"+UnitName+"'");
 
 				while (res.next())
 				{
@@ -3430,7 +3430,7 @@ public class DataBaseInterface {
 				st = connection.createStatement();
 
 
-				res = st.executeQuery("select nl.normName, ul.unitName, tt.targetName,p.positionName from normList nl inner join unitlist ul on nl.idunitlist=ul.idunitList inner join targettype tt on nl.idtargettype=tt.idtargetType inner join position p on nl.targetvalue=p.idposition where tt.TargetName=’positionName’ and p.positionName='"+TargetValueName+"' and ul.unitName='"+ UnitName+"'");
+				res = st.executeQuery("select nl.normName, ul.unitName, tt.targetName,p.positionName from normList nl inner join unitList ul on nl.idunitList=ul.idunitList inner join targetType tt on nl.idtargetType=tt.idtargetType inner join position p on nl.targetValue=p.idposition where tt.targetName='positionName' and p.positionName='"+TargetValueName+"' and ul.unitName='"+ UnitName+"'");
 
 				while (res.next())
 				{
@@ -3500,7 +3500,7 @@ public class DataBaseInterface {
 			st = connection.createStatement();
 
 
-			res = st.executeQuery("select nl.normName, ul.unitName,tt.targetName,p.positionName from normList nl inner join unitlist ul on nl.idunitlist=ul.idunitList inner join targettype tt on nl.idtargettype=tt.idtargetType inner join position p on nl.targetvalue=p.idposition where tt.targetName=’positionName’ and ul.unitName='"+UnitName +"'");
+			res = st.executeQuery("select nl.normName, ul.unitName,tt.targetName,p.positionName from normList nl inner join unitList ul on nl.idunitList=ul.idunitList inner join targetType tt on nl.idtargetType=tt.idtargetType inner join position p on nl.targetValue=p.idposition where tt.targetName='positionName' and ul.unitName='"+UnitName +"'");
 
 			while (res.next())
 			{
@@ -3519,7 +3519,7 @@ public class DataBaseInterface {
 			}
 
 
-			res = st.executeQuery("select nl.normName, ul.unitName,tt.targetName,’_’ from normList nl inner join unitlist ul on nl.idunitlist=ul.idunitList inner join targettype tt on nl.idtargettype=tt.idtargetType where tt.targetName=’positionName’ and nl.targetvalue=-1 and ul.unitName='"+UnitName+"'");
+			res = st.executeQuery("select nl.normName, ul.unitName,tt.targetName,'_' from normList nl inner join unitList ul on nl.idunitList=ul.idunitList inner join targetType tt on nl.idtargetType=tt.idtargetType where tt.targetName='positionName' and nl.targetValue=-1 and ul.unitName='"+UnitName+"'");
 
 			while (res.next())
 			{
@@ -3590,7 +3590,7 @@ public class DataBaseInterface {
 				st = connection.createStatement();
 
 
-				res = st.executeQuery("select nl.normName, ul.unitName,tt.targetName,’_’ from normList nl inner join unitlist ul on nl.idunitlist=ul.idunitList inner join targettype tt on nl.idtargettype=tt.idtargetType where tt.targetName=’roleName’ and nl.targetvalue=-1 and ul.unitName='"+UnitName+"'");
+				res = st.executeQuery("select nl.normName, ul.unitName,tt.targetName,'_' from normList nl inner join unitList ul on nl.idunitList=ul.idunitList inner join targetType tt on nl.idtargetType=tt.idtargetType where tt.targetName='roleName' and nl.targetValue=-1 and ul.unitName='"+UnitName+"'");
 
 				while (res.next())
 				{
@@ -3615,7 +3615,7 @@ public class DataBaseInterface {
 				st = connection.createStatement();
 
 
-				res = st.executeQuery("select nl.normName, ul.unitName,tt.targetName,rl.roleName from normList nl inner join unitlist ul on nl.idunitlist=ul.idunitList inner join targettype tt on nl.idtargettype=tt.idtargetType inner join rolelist rl on nl.targetvalue=rl.idrolelist where tt.targetName=’roleName’ and rl.rolename='"+TargetValueName+"' and ul.unitName='"+UnitName+"'");
+				res = st.executeQuery("select nl.normName, ul.unitName,tt.targetName,rl.roleName from normList nl inner join unitList ul on nl.idunitList=ul.idunitList inner join targetType tt on nl.idtargetType=tt.idtargetType inner join roleList rl on nl.targetValue=rl.idroleList where tt.targetName='roleName' and rl.rolename='"+TargetValueName+"' and ul.unitName='"+UnitName+"'");
 
 				while (res.next())
 				{
@@ -3685,7 +3685,7 @@ public class DataBaseInterface {
 			st = connection.createStatement();
 
 
-			res = st.executeQuery("select nl.normName, ul.unitName,tt.targetName,rl.roleName from normList nl inner join unitlist ul on nl.idunitlist=ul.idunitList inner join targettype tt on nl.idtargettype=tt.idtargetType inner join rolelist rl on nl. targetvalue=rl.idrolelist where tt.targetName=’roleName’ and ul.unitName='"+UnitName +"'");
+			res = st.executeQuery("select nl.normName, ul.unitName,tt.targetName,rl.roleName from normList nl inner join unitList ul on nl.idunitList=ul.idunitList inner join targetType tt on nl.idtargetType=tt.idtargetType inner join roleList rl on nl. targetvalue=rl.idroleList where tt.targetName='roleName' and ul.unitName='"+UnitName +"'");
 
 			while (res.next())
 			{
@@ -3704,7 +3704,7 @@ public class DataBaseInterface {
 			}
 
 
-			res = st.executeQuery("select nl.normName, ul.unitName,tt.targetName,’_’ from normList nl inner join unitlist ul on nl.idunitlist=ul.idunitList inner join targettype tt on nl.idtargettype=tt.idtargetType where tt.targetName=’roleName’ and nl.targetvalue=-1 and ul.unitName='"+UnitName+"'");
+			res = st.executeQuery("select nl.normName, ul.unitName,tt.targetName,'_' from normList nl inner join unitList ul on nl.idunitList=ul.idunitList inner join targetType tt on nl.idtargetType=tt.idtargetType where tt.targetName='roleName' and nl.targetValue=-1 and ul.unitName='"+UnitName+"'");
 
 			while (res.next())
 			{
@@ -3774,7 +3774,7 @@ public class DataBaseInterface {
 			st = connection.createStatement();
 
 
-			res = st.executeQuery("select nl.normName, ul.unitName,tt.targetName,rl.rolename from normList nl inner join unitlist ul on nl.idunitlist=ul.idunitList inner join targettype tt on nl.idtargettype=tt.idtargetType inner join rolelist rl on nl. targetvalue=rl.idrolelist inner join visibility v on rl.idvisibility=v.idvisibility where tt.targetName=’roleName’ and v.visibility=’public’ and ul.unitName='"+UnitName+"'");
+			res = st.executeQuery("select nl.normName, ul.unitName,tt.targetName,rl.rolename from normList nl inner join unitList ul on nl.idunitList=ul.idunitList inner join targetType tt on nl.idtargetType=tt.idtargetType inner join roleList rl on nl. targetvalue=rl.idroleList inner join visibility v on rl.idvisibility=v.idvisibility where tt.targetName='roleName' and v.visibility='public' and ul.unitName='"+UnitName+"'");
 
 			while (res.next())
 			{
@@ -3793,7 +3793,7 @@ public class DataBaseInterface {
 			}
 
 
-			res = st.executeQuery("select nl.normName, ul.unitName,tt.targetName,’_’ from normList nl inner join unitlist ul on nl.idunitlist=ul.idunitList inner join targettype tt on nl.idtargettype=tt.idtargetType where tt.targetName=’roleName’ and nl.targetvalue=-1 and ul.unitName='"+UnitName+"'");
+			res = st.executeQuery("select nl.normName, ul.unitName,tt.targetName,'_' from normList nl inner join unitList ul on nl.idunitList=ul.idunitList inner join targetType tt on nl.idtargetType=tt.idtargetType where tt.targetName='roleName' and nl.targetValue=-1 and ul.unitName='"+UnitName+"'");
 
 			while (res.next())
 			{

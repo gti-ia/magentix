@@ -1036,7 +1036,7 @@ public class OMSProxy extends THOMASProxy {
          }
     }
     
-    public String informTargetNorms(String TargetTypeName, String TargetTypeValue, String UnitID) throws ForbiddenNormException, AgentNotInUnitException,InvalidTargetTypeException,UnitNotExistsException,EmptyParametersException, MySQLException 
+    public ArrayList<ArrayList<String>> informTargetNorms(String TargetTypeName, String TargetTypeValue, String UnitID) throws ForbiddenNormException, AgentNotInUnitException,InvalidTargetTypeException,UnitNotExistsException,EmptyParametersException, MySQLException 
     {
     	 HashMap<String, String> inputs = new HashMap<String, String>();
 
@@ -1049,7 +1049,7 @@ public class OMSProxy extends THOMASProxy {
          call = st.buildServiceContent("InformTargetNorms", inputs);
          
          try {
-             return (String) this.sendInform();
+             return (ArrayList<ArrayList<String>>) this.sendInform();
              
          }catch (ForbiddenNormException e) {
 
