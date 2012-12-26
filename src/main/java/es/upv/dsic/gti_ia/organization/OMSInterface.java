@@ -15,6 +15,7 @@ import es.upv.dsic.gti_ia.organization.exception.EmptyParametersException;
 import es.upv.dsic.gti_ia.organization.exception.ForbiddenNormException;
 import es.upv.dsic.gti_ia.organization.exception.InvalidPositionException;
 import es.upv.dsic.gti_ia.organization.exception.InvalidRolePositionException;
+import es.upv.dsic.gti_ia.organization.exception.InvalidTargetTypeException;
 import es.upv.dsic.gti_ia.organization.exception.InvalidUnitTypeException;
 import es.upv.dsic.gti_ia.organization.exception.NormExistsInUnitException;
 import es.upv.dsic.gti_ia.organization.exception.NormNotExistsException;
@@ -561,7 +562,7 @@ public class OMSInterface {
 			// ----------------------------
 			// --------------------------------------------------------------------------------
 			if (checkParameter(NormContent) && checkParameter(UnitName)) {
-				
+
 				if (dbInterface.checkUnit(UnitName)) {
 
 
@@ -1626,10 +1627,10 @@ public class OMSInterface {
 						if (dbInterface.checkPermitNorms(AgentName, UnitName, "informNorm"))
 						{
 
-						
+
 							String result = dbInterface.getNormContent(NormName, UnitName);
 
-							
+
 							resultXML += "<status>Ok</status>\n";
 							resultXML += "<result>\n";
 							resultXML += "<description><!-- " + result + " --></description>\n";
@@ -1643,13 +1644,13 @@ public class OMSInterface {
 							String message = l10n.getMessage(MessageID.FORBIDDEN_NORM);
 							throw new ForbiddenNormException(message);
 						}
-						
+
 						unitType = dbInterface.getUnitType(UnitName);
 
 						if (unitType.equals("flat")) {
 							String result = dbInterface.getNormContent(NormName, UnitName);
 
-							
+
 							resultXML += "<status>Ok</status>\n";
 							resultXML += "<result>\n";
 							resultXML += "<description><!-- " + result + " --></description>\n";
@@ -1657,17 +1658,17 @@ public class OMSInterface {
 							resultXML += "</response>";
 
 							return resultXML;
-							
+
 						}else if (unitType.equals("hierarchy") || unitType.equals("team"))
 						{
 							//Extracts the parent unit.
 							ArrayList<String> parentUnit = dbInterface.getInformUnit(UnitName);
-							
+
 							if (dbInterface.checkAgentInUnit(AgentName, UnitName) || dbInterface.checkAgentInUnit(AgentName, parentUnit.get(1)))
 							{
 								String result = dbInterface.getNormContent(NormName, UnitName);
 
-								
+
 								resultXML += "<status>Ok</status>\n";
 								resultXML += "<result>\n";
 								resultXML += "<description><!-- " + result + " --></description>\n";
@@ -1681,16 +1682,16 @@ public class OMSInterface {
 								String message = l10n.getMessage(MessageID.NOT_IN_UNIT_OR_PARENT_UNIT, AgentName);
 								throw new NotInUnitOrParentUnitException(message);
 							}
-							
+
 						}
 						else
 						{
 							String message = l10n.getMessage(MessageID.INVALID_UNIT_TYPE, unitType);
 							throw new InvalidUnitTypeException(message);
 						}
-						
 
-						
+
+
 					}else {
 						String message = l10n.getMessage(MessageID.NORM_NOT_EXISTS, NormName, UnitName);
 						throw new NormNotExistsException(message);
@@ -2585,6 +2586,331 @@ public class OMSInterface {
 			resultXML += "</response>";
 			return resultXML;
 		}
+	}
+
+	/**
+	 * Method used for requesting information about a specific norm.
+	 * 
+	 * @param TargetTypeName
+	 * @param TargetValueName
+	 * @param UnitName
+	 * @param AgentName
+	 * @return
+	 */
+	public String informTargetNorms(String TargetTypeName, String TargetValueName, String UnitName, String AgentName)
+	{
+		String resultXML = "<response>\n<serviceName>InforTargetNorms</serviceName>\n";
+		ArrayList<ArrayList<String>> methodResult = new ArrayList<ArrayList<String>>();
+		boolean permitFlag = false;
+
+		try
+		{
+			// --------------------------------------------------------------------------------
+			// ------------------------- Checking input parameters
+			// ----------------------------
+			// --------------------------------------------------------------------------------
+			if (checkParameter(UnitName) && checkParameter(AgentName)) {
+				if (dbInterface.checkUnit(UnitName)) {
+					if (dbInterface.checkTargetType(TargetTypeName))
+					{
+						if (dbInterface.checkPermitNorms(AgentName, UnitName, "informTargetNorms"))
+						{
+
+							permitFlag = true;
+						}
+						else
+							permitFlag = false;
+
+						if (dbInterface.checkFordibbenNorms(AgentName, UnitName, "registerNorm"))
+						{
+							String message = l10n.getMessage(MessageID.FORBIDDEN_NORM);
+							throw new ForbiddenNormException(message);
+						}
+
+						if (TargetTypeName.equals("agentName"))
+						{
+							if (TargetValueName.equals(""))
+							{
+								methodResult = dbInterface.getAgentNorms(UnitName);
+
+								resultXML += "<status>Ok</status>\n";
+								resultXML += "<result>\n";
+
+								for (ArrayList<String> agentPair : methodResult) { 
+
+									resultXML += "<item>\n";
+									resultXML += "<normname>" + agentPair.get(0) + "</normname>\n";
+									resultXML += "<unitname>" + agentPair.get(1) + "</unitname>\n";
+									resultXML += "<targetname>" + agentPair.get(2) + "</targetname>\n";
+									resultXML += "<targetvalue>" + agentPair.get(3) + "</targetvalue>\n";
+									resultXML += "</item>\n";
+								}
+								resultXML += "</result>\n";
+								resultXML += "</response>";
+								
+								return resultXML;
+							}
+							else
+							{
+								methodResult = dbInterface.getAgentNorms(TargetValueName, UnitName);
+
+								resultXML += "<status>Ok</status>\n";
+								resultXML += "<result>\n";
+
+								for (ArrayList<String> agentPair : methodResult) { 
+
+									resultXML += "<item>\n";
+									resultXML += "<normname>" + agentPair.get(0) + "</normname>\n";
+									resultXML += "<unitname>" + agentPair.get(1) + "</unitname>\n";
+									resultXML += "<targetname>" + agentPair.get(2) + "</targetname>\n";
+									resultXML += "<targetvalue>" + agentPair.get(3) + "</targetvalue>\n";
+									resultXML += "</item>\n";
+								}
+								resultXML += "</result>\n";
+								resultXML += "</response>";
+								
+								return resultXML;
+							}
+						}else if (TargetTypeName.equals("positionName"))
+						{
+							if (TargetValueName.equals(""))
+							{
+								methodResult = dbInterface.getPositionNorms(UnitName);
+
+								resultXML += "<status>Ok</status>\n";
+								resultXML += "<result>\n";
+
+								for (ArrayList<String> agentPair : methodResult) { 
+
+									resultXML += "<item>\n";
+									resultXML += "<normname>" + agentPair.get(0) + "</normname>\n";
+									resultXML += "<unitname>" + agentPair.get(1) + "</unitname>\n";
+									resultXML += "<targetname>" + agentPair.get(2) + "</targetname>\n";
+									resultXML += "<targetvalue>" + agentPair.get(3) + "</targetvalue>\n";
+									resultXML += "</item>\n";
+								}
+								resultXML += "</result>\n";
+								resultXML += "</response>";
+								
+								return resultXML;
+							}
+							else
+							{
+								methodResult = dbInterface.getPositionNorms(TargetValueName, UnitName);
+
+								resultXML += "<status>Ok</status>\n";
+								resultXML += "<result>\n";
+
+								for (ArrayList<String> agentPair : methodResult) { 
+
+									resultXML += "<item>\n";
+									resultXML += "<normname>" + agentPair.get(0) + "</normname>\n";
+									resultXML += "<unitname>" + agentPair.get(1) + "</unitname>\n";
+									resultXML += "<targetname>" + agentPair.get(2) + "</targetname>\n";
+									resultXML += "<targetvalue>" + agentPair.get(3) + "</targetvalue>\n";
+									resultXML += "</item>\n";
+								}
+								resultXML += "</result>\n";
+								resultXML += "</response>";
+								
+								return resultXML;
+							}
+						}else if (TargetTypeName.equals("roleName"))
+						{
+							if (permitFlag)
+							{
+								if (TargetValueName.equals(""))
+								{
+									methodResult = dbInterface.getRoleNorms(UnitName);
+
+									resultXML += "<status>Ok</status>\n";
+									resultXML += "<result>\n";
+
+									for (ArrayList<String> agentPair : methodResult) { 
+
+										resultXML += "<item>\n";
+										resultXML += "<normname>" + agentPair.get(0) + "</normname>\n";
+										resultXML += "<unitname>" + agentPair.get(1) + "</unitname>\n";
+										resultXML += "<targetname>" + agentPair.get(2) + "</targetname>\n";
+										resultXML += "<targetvalue>" + agentPair.get(3) + "</targetvalue>\n";
+										resultXML += "</item>\n";
+									}
+									resultXML += "</result>\n";
+									resultXML += "</response>";
+									
+									return resultXML;
+								}
+								else
+								{
+									methodResult = dbInterface.getRoleNorms(TargetValueName, UnitName);
+
+									resultXML += "<status>Ok</status>\n";
+									resultXML += "<result>\n";
+
+									for (ArrayList<String> agentPair : methodResult) { 
+
+										resultXML += "<item>\n";
+										resultXML += "<normname>" + agentPair.get(0) + "</normname>\n";
+										resultXML += "<unitname>" + agentPair.get(1) + "</unitname>\n";
+										resultXML += "<targetname>" + agentPair.get(2) + "</targetname>\n";
+										resultXML += "<targetvalue>" + agentPair.get(3) + "</targetvalue>\n";
+										resultXML += "</item>\n";
+									}
+									resultXML += "</result>\n";
+									resultXML += "</response>";
+									
+									return resultXML;
+								}	
+							}
+							else //else permitFlag
+							{
+								if (TargetValueName.equals(""))
+								{
+									if (dbInterface.checkAgentInUnit(AgentName, UnitName))
+									{
+
+										methodResult = dbInterface.getRoleNorms(UnitName);
+
+										resultXML += "<status>Ok</status>\n";
+										resultXML += "<result>\n";
+
+										for (ArrayList<String> agentPair : methodResult) { 
+
+											resultXML += "<item>\n";
+											resultXML += "<normname>" + agentPair.get(0) + "</normname>\n";
+											resultXML += "<unitname>" + agentPair.get(1) + "</unitname>\n";
+											resultXML += "<targetname>" + agentPair.get(2) + "</targetname>\n";
+											resultXML += "<targetvalue>" + agentPair.get(3) + "</targetvalue>\n";
+											resultXML += "</item>\n";
+										}
+										resultXML += "</result>\n";
+										resultXML += "</response>";
+										
+										return resultXML;
+									}
+									else
+									{
+										methodResult = dbInterface.getPublicRoleNorms(UnitName);
+
+										resultXML += "<status>Ok</status>\n";
+										resultXML += "<result>\n";
+
+										for (ArrayList<String> agentPair : methodResult) { 
+
+											resultXML += "<item>\n";
+											resultXML += "<normname>" + agentPair.get(0) + "</normname>\n";
+											resultXML += "<unitname>" + agentPair.get(1) + "</unitname>\n";
+											resultXML += "<targetname>" + agentPair.get(2) + "</targetname>\n";
+											resultXML += "<targetvalue>" + agentPair.get(3) + "</targetvalue>\n";
+											resultXML += "</item>\n";
+										}
+										resultXML += "</result>\n";
+										resultXML += "</response>";
+										
+										return resultXML;
+									}
+								}
+								else if (TargetValueName.equals("_"))
+								{
+									methodResult = dbInterface.getRoleNorms(TargetValueName, UnitName);
+
+									resultXML += "<status>Ok</status>\n";
+									resultXML += "<result>\n";
+
+									for (ArrayList<String> agentPair : methodResult) { 
+
+										resultXML += "<item>\n";
+										resultXML += "<normname>" + agentPair.get(0) + "</normname>\n";
+										resultXML += "<unitname>" + agentPair.get(1) + "</unitname>\n";
+										resultXML += "<targetname>" + agentPair.get(2) + "</targetname>\n";
+										resultXML += "<targetvalue>" + agentPair.get(3) + "</targetvalue>\n";
+										resultXML += "</item>\n";
+									}
+									resultXML += "</result>\n";
+									resultXML += "</response>";
+									
+									return resultXML;
+								}
+								else
+								{
+									String visibility = dbInterface.getInformRole(TargetValueName, UnitName).get(1);
+
+									if (visibility.equals("public"))
+									{
+										methodResult = dbInterface.getRoleNorms(TargetValueName, UnitName);
+
+										resultXML += "<status>Ok</status>\n";
+										resultXML += "<result>\n";
+
+										for (ArrayList<String> agentPair : methodResult) { 
+
+											resultXML += "<item>\n";
+											resultXML += "<normname>" + agentPair.get(0) + "</normname>\n";
+											resultXML += "<unitname>" + agentPair.get(1) + "</unitname>\n";
+											resultXML += "<targetname>" + agentPair.get(2) + "</targetname>\n";
+											resultXML += "<targetvalue>" + agentPair.get(3) + "</targetvalue>\n";
+											resultXML += "</item>\n";
+										}
+										resultXML += "</result>\n";
+										resultXML += "</response>";
+										
+										return resultXML;
+									}
+									else //else visibility
+									{
+										if (dbInterface.checkAgentInUnit(AgentName, UnitName))
+										{
+											methodResult = dbInterface.getRoleNorms(TargetValueName, UnitName);
+
+											resultXML += "<status>Ok</status>\n";
+											resultXML += "<result>\n";
+
+											for (ArrayList<String> agentPair : methodResult) { 
+
+												resultXML += "<item>\n";
+												resultXML += "<normname>" + agentPair.get(0) + "</normname>\n";
+												resultXML += "<unitname>" + agentPair.get(1) + "</unitname>\n";
+												resultXML += "<targetname>" + agentPair.get(2) + "</targetname>\n";
+												resultXML += "<targetvalue>" + agentPair.get(3) + "</targetvalue>\n";
+												resultXML += "</item>\n";
+											}
+											resultXML += "</result>\n";
+											resultXML += "</response>";
+											
+											return resultXML;
+										}
+										else
+										{
+											String message = l10n.getMessage(MessageID.AGENT_NOT_IN_UNIT);
+											throw new AgentNotInUnitException(message);
+										}
+										
+									}
+								}
+							}
+						}
+						
+
+					}else {
+						String message = l10n.getMessage(MessageID.INVALID_TARGET_TYPE, 1, TargetTypeName);
+						throw new InvalidTargetTypeException(message);
+					}
+
+				} else {
+					String message = l10n.getMessage(MessageID.UNIT_NOT_EXISTS, UnitName);
+					throw new UnitNotExistsException(message);
+				}
+			}
+			String message = l10n.getMessage(MessageID.EMPTY_PARAMETERS);
+			throw new EmptyParametersException(message);
+
+		} catch (Exception e) {
+			resultXML += "<status>Error</status>\n";
+			resultXML += "<result>\n<description>" + e.getMessage() + "</description>\n</result>\n";
+			resultXML += "</response>";
+			return resultXML;
+		}
+
 	}
 
 }
