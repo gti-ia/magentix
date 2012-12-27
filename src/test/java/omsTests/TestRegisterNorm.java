@@ -1604,4 +1604,7 @@ public class TestRegisterNorm extends TestCase {
 	}
 	
 	
+	
+	
+	
 }

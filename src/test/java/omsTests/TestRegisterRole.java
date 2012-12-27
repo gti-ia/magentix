@@ -7,6 +7,7 @@ import es.upv.dsic.gti_ia.organization.OMS;
 import es.upv.dsic.gti_ia.organization.OMSProxy;
 import es.upv.dsic.gti_ia.organization.SF;
 import es.upv.dsic.gti_ia.organization.exception.THOMASException;
+import es.upv.dsic.gti_ia.organization.exception.UnitNotExistsException;
 
 
 public class TestRegisterRole extends TestCase {
@@ -637,6 +638,57 @@ public class TestRegisterRole extends TestCase {
 		{
 
 			fail(e.getMessage());
+
+		}
+		catch(Exception e)
+		{
+			fail(e.getMessage());
+		}
+	}
+	
+	//Comprobación de normas dependientes del dominio.
+
+	public void testRegisterNorm5()
+	{
+	
+		
+		try
+		{
+
+			String unit = "jerarquia";
+			
+			dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('"+unit+"',(SELECT idunitType FROM unitType WHERE unitTypeName = 'hierarchy'))");
+			
+			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'virtual'),(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'))");
+		
+			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
+			
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
+					"('subordinado',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
+					"(SELECT idposition FROM position WHERE positionName = 'subordinate'), "+
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
+			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
+			
+			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+					"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'subordinado' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'))))");
+
+			
+			
+			dbA.executeSQL("INSERT INTO normList (idunitList, normName, iddeontic, idtargetType, targetValue, idactionnorm, normContent, normRule )" +
+					" VALUES ((SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'), 'normaprueba', 3,1,(SELECT idagentList FROM agentList WHERE agentName = 'Pruebas') , 3,'@normaPrueba[p, <agentName:pruebas>, registerRole(_,_,_,_,_,_),playsRole(pruebas, subordinado,jerarquia),_]' ,'registerRole(_,_,_,_,_,_) := playsRole(pruebas, subordinado,jerarquia)')");
+		
+			
+			
+			String result = omsProxy.registerRole("nuevorol", unit, "external", "public", "subordinate");
+				
+			
+			assertNotNull("normaprueba registered",result);
+			
+		}				
+		catch(UnitNotExistsException e)
+		{
+
+			assertNotNull(e);
 
 		}
 		catch(Exception e)
