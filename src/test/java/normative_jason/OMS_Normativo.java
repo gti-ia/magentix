@@ -4,6 +4,7 @@ package normative_jason;
 import jason.asSyntax.Rule;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
@@ -191,14 +192,14 @@ public class OMS_Normativo extends CAgent{
 			//----------------------------SEND RULES STATE----------------------------------
 			SendState SRULES = new SendState("SEND_RULES");
 			SRULES.setMethod(new Send_rules());
-			talk.cProcessorTemplate().registerState(SRULES);
-			talk.cProcessorTemplate().addTransition(BEGIN, SRULES);
+			//talk.cProcessorTemplate().registerState(SRULES);
+			//talk.cProcessorTemplate().addTransition(BEGIN, SRULES);
 
 			//----------------------------REQUEST STATE----------------------------------
 			SendState QUERY = new SendState("QUERY");
 			QUERY.setMethod(new QUERY_Method());
 			talk.cProcessorTemplate().registerState(QUERY);
-			talk.cProcessorTemplate().addTransition(SRULES, QUERY);
+			talk.cProcessorTemplate().addTransition(BEGIN, QUERY);
 
 			//----------------------------WAIT STATE----------------------------------
 			talk.cProcessorTemplate().registerState(WAIT);
@@ -348,7 +349,7 @@ public class OMS_Normativo extends CAgent{
 		public String run(CProcessor myProcessor, ACLMessage msg) {
 
 
-			return "SEND_RULES";
+			return "QUERY";
 		};
 
 	}
@@ -380,15 +381,20 @@ public class OMS_Normativo extends CAgent{
 
 				Rule rule = bdbi.buildNormRule(norma);
 				
-				ArrayList<Rule> rules = new ArrayList<Rule>();
-				rules.add(rule);
+//				ArrayList<Rule> rules = new ArrayList<Rule>();
+//				rules.add(rule);
 
 				System.out.println("---------------------------------");
 
 
 
 
-
+				ArrayList<String> rules = new ArrayList<String>();
+				
+				rules.add("allocateRole(participant, virtual,_,AgentName)");
+				
+				rules.add("allocateRole(RoleName, UnitName,_,AgentName) := isRole(RoleName, UnitName) & roleCardinality(RoleName,UnitName,Cardinality) & Cardinality >3 & not (isRole(moderator, forum)]");
+				
 
 				//Sends a message with rules.
 
@@ -396,7 +402,7 @@ public class OMS_Normativo extends CAgent{
 				messageToSend.setPerformative(ACLMessage.INFORM);
 				messageToSend.setLanguage("AgentSpeak");
 				messageToSend.setSender(myProcessor.getMyAgent().getAid());
-				messageToSend.setReceiver(new AgentID("JasonAgent"));
+				messageToSend.setReceiver(new AgentID("JasonNormativeAgent"));
 				messageToSend.setReplyWith(myProcessor.getConversationID());
 
 
@@ -432,12 +438,24 @@ public class OMS_Normativo extends CAgent{
 			messageToSend.setPerformative(ACLMessage.QUERY_REF);
 			messageToSend.setLanguage("AgentSpeak");
 			messageToSend.setSender(myProcessor.getMyAgent().getAid());
-			messageToSend.setReceiver(new AgentID("JasonAgent"));
+			messageToSend.setReceiver(new AgentID("JasonNormativeAgent"));
 			messageToSend.setReplyWith(myProcessor.getConversationID());
 
 
+			ArrayList<String> rules = new ArrayList<String>();
+			
+			rules.add("allocateRole(participant, virtual,_,AgentName)");
+			
+			rules.add("allocateRole(RoleName, UnitName,_,AgentName) := isRole(RoleName, UnitName) & roleCardinality(RoleName,UnitName,Cardinality) & Cardinality >1 & not (isRole(moderator, virtual))");
+			
 
-			messageToSend.setContent("allocateRole(participant, virtual,_,AgentName)");
+			try {
+				messageToSend.setContentObject(rules);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			//messageToSend.setContent("allocateRole(participant, virtual,_,AgentName)");
 
 
 			System.out.println("Voy a enviar un mensaje al agente Jason");

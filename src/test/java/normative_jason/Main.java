@@ -4,7 +4,7 @@ import org.apache.log4j.xml.DOMConfigurator;
 
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
-import es.upv.dsic.gti_ia.norms.JasonAgent;
+import es.upv.dsic.gti_ia.norms.JasonNormativeAgent;
 
 
 
@@ -44,7 +44,7 @@ public class Main {
 		//ejemplo.start();
 		
 		
-		JasonAgent ag = new JasonAgent(new AgentID("JasonAgent"), "./src/test/java/normative_jason/ejemplo.asl", archEjemplo);
+		JasonNormativeAgent ag = new JasonNormativeAgent(new AgentID("JasonNormativeAgent"), "./src/test/java/normative_jason/ejemplo.asl", archEjemplo);
 		ag.start();
 		
 		OMS_Normativo oms = new OMS_Normativo(new AgentID("NormativeOMS"));
