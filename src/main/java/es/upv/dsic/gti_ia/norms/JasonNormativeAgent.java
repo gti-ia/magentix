@@ -12,11 +12,11 @@ import es.upv.dsic.gti_ia.core.AgentID;
 
 /**
  * 
- * @author Ricard Lopez Fogues
+ * @author JBellver
  *
  */
 
-public class JasonAgent extends CAgent{
+public class JasonNormativeAgent extends CAgent{
 	
 	private MagentixAgArch agArch;
 	
@@ -27,7 +27,7 @@ public class JasonAgent extends CAgent{
 	 * @param arch Agent architecture
 	 * @throws Exception
 	 */
-	public JasonAgent(AgentID aid, String filename, MagentixAgArch arch) throws Exception {
+	public JasonNormativeAgent(AgentID aid, String filename, MagentixAgArch arch) throws Exception {
 		super(aid);
 		this.agArch = arch;
 		this.agArch.init(filename, this);
@@ -86,5 +86,10 @@ public class JasonAgent extends CAgent{
 		FINAL.setMethod(new F_Method());
 		defaultFactory.cProcessorTemplate().registerState(FINAL);
 		defaultFactory.cProcessorTemplate().addTransition(BEGIN, FINAL);
+	}
+	
+	public void terminate()
+	{
+		super.terminate();
 	}
 }

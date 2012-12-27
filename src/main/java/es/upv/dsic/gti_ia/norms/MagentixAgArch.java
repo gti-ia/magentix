@@ -25,6 +25,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -46,7 +47,7 @@ public class MagentixAgArch extends AgArch{
 	private Agent ag;
 	private BeliefDataBaseInterface bdbi = null;
 	ArrayList<Literal> dataBasePercepts = null;
-	ArrayList<Rule> rules = null;
+	ArrayList<Rule> rules = new ArrayList<Rule>();
 	/**
 	 * Starts the architecture
 	 * @param filename File with the AgentSepak code
@@ -144,14 +145,14 @@ public class MagentixAgArch extends AgArch{
 		{
 			acl.setHeader("activatedNorm", "false");
 		}
-		
+
 		//Removes the beliefs of the belief base
-		
+
 		for(Literal l : dataBasePercepts)
 		{
 			this.getTS().getAg().getBB().remove(l);
 		}
-		
+
 		//Removes the rules of the belief base
 		for (Rule r : rules)
 		{
@@ -184,198 +185,220 @@ public class MagentixAgArch extends AgArch{
 				String replyWith = m.getReplyWith();
 				String irt = m.getInReplyTo();
 
-				
-				if (m.getContentObject() != null & m.getContentObject() instanceof ArrayList<?>)
+
+
+				//Llega un mensaje con un arrayList de String. EL primer campo será la pregunta, el resto las reglas.
+
+
+				ArrayList<String> messageContent = (ArrayList<String>) m.getContentObject();
+
+				String actionQuery = messageContent.get(0);
+				messageContent.remove(0);
+
+				//Add to norm rules
+				for (String rule : messageContent)
 				{
-					rules = (ArrayList<Rule>) m.getContentObject();
-					for (Rule r : rules)
-					{
-						this.getTS().getAg().getBB().add(r);
-					}
+					StringTokenizer stRule = new StringTokenizer(rule, ":=");
+					String action = stRule.nextToken();
+					String description = stRule.nextToken();
+					Rule normRule = null;
+
+					if (description.equals("null")) 
+						normRule = new Rule(Literal.parseLiteral(action),null);
+					else
+						normRule = new Rule(Literal.parseLiteral(action),(LogicalFormula) ListTermImpl.parse(description));
+
+					rules.add(normRule);
+					
 				}
-				else
+
+				for (Rule normRule : rules)
+					this.getTS().getAg().getBB().add(normRule);
+				
+				
+				try {
+					dataBasePercepts.addAll(bdbi.getIsUnit());
+					dataBasePercepts.addAll(bdbi.getHasType());
+					dataBasePercepts.addAll(bdbi.getHasParent());
+
+					dataBasePercepts.addAll(bdbi.getIsRole());
+					dataBasePercepts.addAll(bdbi.getHasAccessibility());
+					dataBasePercepts.addAll(bdbi.getHasVisibility());
+					dataBasePercepts.addAll(bdbi.getHasPosition());
+
+					dataBasePercepts.addAll(bdbi.getIsAgent());
+					dataBasePercepts.addAll(bdbi.getPlaysRole());
+
+					dataBasePercepts.addAll(bdbi.getRoleCardinality());
+					dataBasePercepts.addAll(bdbi.getPositionCardinality());
+
+					dataBasePercepts.addAll(bdbi.getIsNorm());
+					dataBasePercepts.addAll(bdbi.getHasDeontic());
+
+
+
+
+				} catch (MySQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+
+				for(Literal l : dataBasePercepts)
 				{
-
-					try {
-						dataBasePercepts.addAll(bdbi.getIsUnit());
-						dataBasePercepts.addAll(bdbi.getHasType());
-						dataBasePercepts.addAll(bdbi.getHasParent());
-
-						dataBasePercepts.addAll(bdbi.getIsRole());
-						dataBasePercepts.addAll(bdbi.getHasAccessibility());
-						dataBasePercepts.addAll(bdbi.getHasVisibility());
-						dataBasePercepts.addAll(bdbi.getHasPosition());
-
-						dataBasePercepts.addAll(bdbi.getIsAgent());
-						dataBasePercepts.addAll(bdbi.getPlaysRole());
-
-						dataBasePercepts.addAll(bdbi.getRoleCardinality());
-						dataBasePercepts.addAll(bdbi.getPositionCardinality());
-
-						dataBasePercepts.addAll(bdbi.getIsNorm());
-						dataBasePercepts.addAll(bdbi.getHasDeontic());
-
-						
+					this.getTS().getAg().getBB().add(l);
+				}
 
 
-					} catch (MySQLException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+				m.setContent(actionQuery);
+				System.out.println("Me llega un mensaje: "+ ilForce);
+
+				// also remembers conversation ID
+				if (replyWith != null && replyWith.length() > 0) {
+					if (m.getConversationId() != null) {
+						conversationIds.put(replyWith, m.getConversationId());
+					}
+				} else {
+					replyWith = "noid";
+				}
+
+				Object propCont = translateContentToJason(m);
+				if (propCont != null) {
+					jason.asSemantics.Message im = new jason.asSemantics.Message(ilForce, sender, receiver, propCont, replyWith);
+					if (irt != null) {
+						im.setInReplyTo(irt);
 					}
 
-					for(Literal l : dataBasePercepts)
-					{
-						this.getTS().getAg().getBB().add(l);
-					}
-					System.out.println("Me llega un mensaje: "+ ilForce);
-
-					// also remembers conversation ID
-					if (replyWith != null && replyWith.length() > 0) {
-						if (m.getConversationId() != null) {
-							conversationIds.put(replyWith, m.getConversationId());
-						}
-					} else {
-						replyWith = "noid";
-					}
-
-					Object propCont = translateContentToJason(m);
-					if (propCont != null) {
-						jason.asSemantics.Message im = new jason.asSemantics.Message(ilForce, sender, receiver, propCont, replyWith);
-						if (irt != null) {
-							im.setInReplyTo(irt);
-						}
-
-						this.getTS().getC().getMailBox().add(im);
-					}
+					this.getTS().getC().getMailBox().add(im);
 				}
 			}
-		} while(m != null);
-	}
+		
+	} while(m != null);
+}
 
-	/** 
-	 * returns the content of the message m and implements some pro-processing of the content, if necessary 
-	 * @param m Message to translate
-	 * */
-	protected Object translateContentToJason(ACLMessage m) {
-		Object propCont = null;
-		try {
-			propCont = m.getContentObject();
-			if (propCont instanceof String) {
-				// try to parse as term
-				try {
-					propCont = ASSyntax.parseTerm((String)propCont);
-				} catch (Exception e) {  // no problem 
-				}
-			}            
-		} catch (Exception e) { // no problem try another thing
-		}
-
-		if (propCont == null) { // still null
+/** 
+ * returns the content of the message m and implements some pro-processing of the content, if necessary 
+ * @param m Message to translate
+ * */
+protected Object translateContentToJason(ACLMessage m) {
+	Object propCont = null;
+	try {
+		propCont = m.getContentObject();
+		if (propCont instanceof String) {
 			// try to parse as term
 			try {
-				propCont = ASSyntax.parseTerm(m.getContent());
-			} catch (Exception e) {
-				// not AS messages are treated as string 
-				propCont = new StringTermImpl(m.getContent());
+				propCont = ASSyntax.parseTerm((String)propCont);
+			} catch (Exception e) {  // no problem 
 			}
+		}            
+	} catch (Exception e) { // no problem try another thing
+	}
+
+	if (propCont == null) { // still null
+		// try to parse as term
+		try {
+			propCont = ASSyntax.parseTerm(m.getContent());
+		} catch (Exception e) {
+			// not AS messages are treated as string 
+			propCont = new StringTermImpl(m.getContent());
 		}
-		return propCont;
 	}
+	return propCont;
+}
 
 
-	@Override
-	public void broadcast(jason.asSemantics.Message m) throws Exception {
+@Override
+public void broadcast(jason.asSemantics.Message m) throws Exception {
+}
+
+/**
+ * Converts a jason message into an ACLMessage
+ * @param m
+ * @return
+ * @throws IOException
+ */
+private ACLMessage jasonToACL(Message m) throws IOException {
+	ACLMessage acl = new ACLMessage(kqmlToACL(m.getIlForce()));
+	// send content as string if it is a Term/String (it is better for interoperability)
+	if (m.getPropCont() instanceof Term || m.getPropCont() instanceof String) {
+		acl.setContent(m.getPropCont().toString());       
+	} else {
+		acl.setContentObject((Serializable)m.getPropCont());
 	}
-
-	/**
-	 * Converts a jason message into an ACLMessage
-	 * @param m
-	 * @return
-	 * @throws IOException
-	 */
-	private ACLMessage jasonToACL(Message m) throws IOException {
-		ACLMessage acl = new ACLMessage(kqmlToACL(m.getIlForce()));
-		// send content as string if it is a Term/String (it is better for interoperability)
-		if (m.getPropCont() instanceof Term || m.getPropCont() instanceof String) {
-			acl.setContent(m.getPropCont().toString());       
-		} else {
-			acl.setContentObject((Serializable)m.getPropCont());
-		}
-		acl.setReceiver(new AgentID(m.getReceiver()));
-		acl.setSender(this.jasonAgent.getAid());
-		acl.setReplyWith(m.getMsgId());
-		acl.setLanguage("AgentSpeak");
-		if (m.getInReplyTo() != null) {
-			acl.setInReplyTo(m.getInReplyTo());
-		}
-		return acl;
+	acl.setReceiver(new AgentID(m.getReceiver()));
+	acl.setSender(this.jasonAgent.getAid());
+	acl.setReplyWith(m.getMsgId());
+	acl.setLanguage("AgentSpeak");
+	if (m.getInReplyTo() != null) {
+		acl.setInReplyTo(m.getInReplyTo());
 	}
+	return acl;
+}
 
-	private static final int UNTELL    = 1001;
-	private static final int ASKALL    = 1002;
-	private static final int UNACHIEVE = 1003;
-	private static final int TELLHOW   = 1004;
-	private static final int UNTELLHOW = 1005;
-	private static final int ASKHOW    = 1006;
+private static final int UNTELL    = 1001;
+private static final int ASKALL    = 1002;
+private static final int UNACHIEVE = 1003;
+private static final int TELLHOW   = 1004;
+private static final int UNTELLHOW = 1005;
+private static final int ASKHOW    = 1006;
 
-	/**
-	 * Converts a kqml performative into a fipa performative
-	 * @param p
-	 * @return
-	 */
-	private static int kqmlToACL(String p) {
-		if (p.equals("tell")) {
-			return ACLMessage.INFORM;
-		} else if (p.equals("askOne")) {
-			return ACLMessage.QUERY_REF;
-		} else if (p.equals("achieve")) {
-			return ACLMessage.REQUEST;
-		} else if (p.equals("untell")) {
-			return ACLMessage.INFORM;
-		} else if (p.equals("unachieve")) {
-			return UNACHIEVE;
-		} else if (p.equals("askAll")) {
-			return ASKALL;
-		} else if (p.equals("askHow")) {
-			return ASKHOW;
-		} else if (p.equals("tellHow")) {
-			return TELLHOW;
-		} else if (p.equals("untellHow")) {
-			return UNTELLHOW;
-		}
-		return ACLMessage.getPerformative(p);       
+/**
+ * Converts a kqml performative into a fipa performative
+ * @param p
+ * @return
+ */
+private static int kqmlToACL(String p) {
+	if (p.equals("tell")) {
+		return ACLMessage.INFORM;
+	} else if (p.equals("askOne")) {
+		return ACLMessage.QUERY_REF;
+	} else if (p.equals("achieve")) {
+		return ACLMessage.REQUEST;
+	} else if (p.equals("untell")) {
+		return ACLMessage.INFORM;
+	} else if (p.equals("unachieve")) {
+		return UNACHIEVE;
+	} else if (p.equals("askAll")) {
+		return ASKALL;
+	} else if (p.equals("askHow")) {
+		return ASKHOW;
+	} else if (p.equals("tellHow")) {
+		return TELLHOW;
+	} else if (p.equals("untellHow")) {
+		return UNTELLHOW;
 	}
+	return ACLMessage.getPerformative(p);       
+}
 
-	/**
-	 * Converts a fipa performative into a kqml one
-	 * @param p
-	 * @return
-	 */
-	private static String aclToKqml(int p) {
-		switch(p) {
-		case ACLMessage.INFORM: return "tell"; 
-		case ACLMessage.QUERY_REF: return "askOne";
-		case ACLMessage.REQUEST: return "achieve";
-		case UNTELL: return "untell";
-		case UNACHIEVE: return "unachieve";
-		case ASKALL: return "askAll";
-		case ASKHOW: return "askHow";
-		case TELLHOW: return "tellHow";
-		case UNTELLHOW: return "untellHow";
-		}
-		return ACLMessage.getPerformative(p).toLowerCase().replaceAll("-", "_");
+/**
+ * Converts a fipa performative into a kqml one
+ * @param p
+ * @return
+ */
+private static String aclToKqml(int p) {
+	switch(p) {
+	case ACLMessage.INFORM: return "tell"; 
+	case ACLMessage.QUERY_REF: return "askOne";
+	case ACLMessage.REQUEST: return "achieve";
+	case UNTELL: return "untell";
+	case UNACHIEVE: return "unachieve";
+	case ASKALL: return "askAll";
+	case ASKHOW: return "askHow";
+	case TELLHOW: return "tellHow";
+	case UNTELLHOW: return "untellHow";
 	}
+	return ACLMessage.getPerformative(p).toLowerCase().replaceAll("-", "_");
+}
 
-	/**
-	 * Adds a message to the message list
-	 * @param msg
-	 */
-	protected void addMessage(ACLMessage msg){
-		this.messageList.add(msg);
-	}
+/**
+ * Adds a message to the message list
+ * @param msg
+ */
+protected void addMessage(ACLMessage msg){
+	this.messageList.add(msg);
+}
 
-	public void stopAg(){
-		running = false;
-	}
+public void stopAg(){
+	running = false;
+}
 
 }
