@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import normative_jason.SimpleArchitecture;
+
 import org.apache.log4j.Logger;
 
 import es.upv.dsic.gti_ia.cAgents.CAgent;
@@ -19,6 +21,7 @@ import es.upv.dsic.gti_ia.cAgents.CProcessor;
 import es.upv.dsic.gti_ia.cAgents.protocols.FIPA_REQUEST_Participant;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
+import es.upv.dsic.gti_ia.norms.JasonNormativeAgent;
 import es.upv.dsic.gti_ia.organization.exception.ExchangeBindException;
 import es.upv.dsic.gti_ia.organization.exception.ExchangeUnbindException;
 import es.upv.dsic.gti_ia.organization.exception.InvalidPositionException;
@@ -36,7 +39,7 @@ public class OMS extends CAgent {
 
 	Configuration                           configuration                 = Configuration.getConfiguration();
 
-	OMSInterface                            omsInterface                  = new OMSInterface();
+	OMSInterface                            omsInterface                  = new OMSInterface(this);
 
 	DataBaseInterface						dbInterface 				  = new DataBaseInterface();
 
@@ -53,6 +56,8 @@ public class OMS extends CAgent {
 	 */
 
 	private THOMASMessages                  l10n;
+	
+	JasonNormativeAgent ag;
 
 //	// URI where the SF service descriptions are located
 //
@@ -119,6 +124,12 @@ public class OMS extends CAgent {
 		omsServicesURLs.put("DeregisterNorm", 17);
 		omsServicesURLs.put("InformNorm", 18);
 		omsServicesURLs.put("InformTargetNorms", 19);
+		
+		//Launch Jason Agent
+		SimpleArchitecture archEjemplo = new SimpleArchitecture();
+		
+		ag = new JasonNormativeAgent(new AgentID("JasonNormativeAgent"), "./src/test/java/normative_jason/ejemplo.asl", archEjemplo);
+		ag.start();
 
 	}
 	
@@ -173,6 +184,7 @@ public class OMS extends CAgent {
 
 	@Override
 	protected void finalize(CProcessor firstProcessor, ACLMessage finalizeMessage) {
+		
 	}
 
 	/**
@@ -463,6 +475,8 @@ public class OMS extends CAgent {
 						break;
 						
 					}
+					
+					
 					// String serviceWSDLURL=omsServicesURLs.get(serviceName);
 					// HashMap<String,Object>
 					// result=st.executeWebService(serviceWSDLURL, inputs);
@@ -632,6 +646,8 @@ public class OMS extends CAgent {
 	}
 
 	public void terminate() {
+		
+		ag.terminate();
 		super.terminate();
 	}
 } // end OMS Agent

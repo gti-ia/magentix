@@ -5,10 +5,17 @@ import jason.asSyntax.Rule;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.StringTokenizer;
 
+import es.upv.dsic.gti_ia.cAgents.CAgent;
+import es.upv.dsic.gti_ia.cAgents.CFactory;
+import es.upv.dsic.gti_ia.cAgents.CProcessor;
+import es.upv.dsic.gti_ia.cAgents.protocols.FIPA_REQUEST_Initiator;
+import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.norms.BeliefDataBaseInterface;
 import es.upv.dsic.gti_ia.norms.Norm;
 import es.upv.dsic.gti_ia.norms.NormParser;
+import es.upv.dsic.gti_ia.norms.Normative_Protocol;
 import es.upv.dsic.gti_ia.organization.exception.AgentNotExistsException;
 import es.upv.dsic.gti_ia.organization.exception.AgentNotInUnitException;
 import es.upv.dsic.gti_ia.organization.exception.EmptyParametersException;
@@ -17,6 +24,7 @@ import es.upv.dsic.gti_ia.organization.exception.InvalidPositionException;
 import es.upv.dsic.gti_ia.organization.exception.InvalidRolePositionException;
 import es.upv.dsic.gti_ia.organization.exception.InvalidTargetTypeException;
 import es.upv.dsic.gti_ia.organization.exception.InvalidUnitTypeException;
+import es.upv.dsic.gti_ia.organization.exception.MySQLException;
 import es.upv.dsic.gti_ia.organization.exception.NormExistsInUnitException;
 import es.upv.dsic.gti_ia.organization.exception.NormNotExistsException;
 import es.upv.dsic.gti_ia.organization.exception.NotCreatorAgentInUnitException;
@@ -60,6 +68,7 @@ public class OMSInterface {
 
 	private DataBaseInterface dbInterface;
 	private BeliefDataBaseInterface belifeDbInterface;
+	private CAgent omsAgent = null;
 	/**
 	 * Used for retrieve local messages.
 	 */
@@ -69,10 +78,11 @@ public class OMSInterface {
 		CASE_A, CASE_B, CASE_C, CASE_D
 	};
 
-	public OMSInterface() {
+	public OMSInterface(CAgent oms) {
 		dbInterface = new DataBaseInterface();
 		belifeDbInterface = new BeliefDataBaseInterface();
 		l10n = new THOMASMessages();
+		omsAgent = oms;
 	}
 
 	/**
@@ -154,7 +164,23 @@ public class OMSInterface {
 						// ------------------------- Checking domain-dependent norms
 						// ----------------------
 						// --------------------------------------------------------------------------------
-						// TODO
+						if (checkPermitNorms(AgentName, UnitName, "registerUnit("+UnitName.toLowerCase()+","+UnitType.toLowerCase()+","+ParentUnitName.toLowerCase()+","+AgentName.toLowerCase()+","+CreatorName.toLowerCase()+")"))
+						{
+
+							String result = dbInterface.createUnit(UnitName, UnitType, ParentUnitName, AgentName, CreatorName);
+
+							resultXML += "<status>Ok</status>\n";
+							resultXML += "<result>\n<description>" + result + "</description>\n</result>\n";
+							resultXML += "</response>";
+
+							return resultXML;
+						}
+						else if (checkFordibbenNorms(AgentName, UnitName, "registerUnit("+UnitName.toLowerCase()+","+UnitType.toLowerCase()+","+ParentUnitName.toLowerCase()+","+AgentName.toLowerCase()+","+CreatorName.toLowerCase()+")"))
+						{
+							String message = l10n.getMessage(MessageID.FORBIDDEN_NORM);
+							throw new ForbiddenNormException(message);
+						}
+
 						// --------------------------------------------------------------------------------
 						// ------------------------- Checking structural norms
 						// ----------------------------
@@ -228,7 +254,22 @@ public class OMSInterface {
 						// norms
 						// ----------------------
 						// --------------------------------------------------------------------------------
-						// TODO
+						if (checkPermitNorms(AgentName, UnitName, "deregisterUnit("+UnitName.toLowerCase()+","+AgentName.toLowerCase()+")"))
+						{
+
+							String result = dbInterface.deleteUnit(UnitName, AgentName);
+
+							resultXML += "<status>Ok</status>\n";
+							resultXML += "<result>\n<description>" + result + "</description>\n</result>\n";
+							resultXML += "</response>";
+
+							return resultXML;
+						}
+						else if (checkFordibbenNorms(AgentName, UnitName, "deregisterUnit("+UnitName.toLowerCase()+","+AgentName.toLowerCase()+")"))
+						{
+							String message = l10n.getMessage(MessageID.FORBIDDEN_NORM);
+							throw new ForbiddenNormException(message);
+						}
 						// --------------------------------------------------------------------------------
 						// ------------------------- Checking structural norms
 						// ----------------------------
@@ -338,7 +379,22 @@ public class OMSInterface {
 							// ------------------------- Checking domain-dependent
 							// norms ----------------------
 							// --------------------------------------------------------------------------------
-							// TODO
+							if (checkPermitNorms(AgentName, UnitName, "registerRole("+RoleName.toLowerCase()+","+UnitName.toLowerCase()+","+accessibility.toLowerCase()+","+Visibility.toLowerCase()+","+Position.toLowerCase()+","+AgentName.toLowerCase()+")"))
+							{
+
+								String result = dbInterface.createRole(RoleName, UnitName, accessibility, Visibility, Position);
+
+								resultXML += "<status>Ok</status>\n";
+								resultXML += "<result>\n<description>" + result + "</description>\n</result>\n";
+								resultXML += "</response>";
+
+								return resultXML;
+							}
+							else if (checkFordibbenNorms(AgentName, UnitName, "registerRole("+RoleName.toLowerCase()+","+UnitName.toLowerCase()+","+accessibility.toLowerCase()+","+Visibility.toLowerCase()+","+Position.toLowerCase()+","+AgentName.toLowerCase()+")"))
+							{
+								String message = l10n.getMessage(MessageID.FORBIDDEN_NORM);
+								throw new ForbiddenNormException(message);
+							}
 
 							if (dbInterface.checkAgentInUnit(AgentName, UnitName)) {
 								if (unitType.equals("hierarchy")) {
@@ -455,7 +511,22 @@ public class OMSInterface {
 								// ------------------------- Checking domain-dependent
 								// norms ----------------------
 								// --------------------------------------------------------------------------------
-								// TODO
+								if (checkPermitNorms(AgentName, UnitName, "deregisterRole("+RoleName.toLowerCase()+","+UnitName.toLowerCase()+","+AgentName.toLowerCase()+")"))
+								{
+
+									String result = dbInterface.deleteRole(RoleName, UnitName, AgentName);
+
+									resultXML += "<status>Ok</status>\n";
+									resultXML += "<result>\n<description>" + result + "</description>\n</result>\n";
+									resultXML += "</response>";
+
+									return resultXML;
+								}
+								else if (checkFordibbenNorms(AgentName, UnitName, "deregisterRole("+RoleName.toLowerCase()+","+UnitName.toLowerCase()+","+AgentName.toLowerCase()+")"))
+								{
+									String message = l10n.getMessage(MessageID.FORBIDDEN_NORM);
+									throw new ForbiddenNormException(message);
+								}
 
 								unitType = dbInterface.getUnitType(UnitName);
 
@@ -621,7 +692,7 @@ public class OMSInterface {
 								}
 							}
 						}
-						if (dbInterface.checkPermitNorms(AgentName, UnitName, "registerNorm"))
+						if (checkPermitNorms(AgentName, UnitName, "registerNorm("+UnitName.toLowerCase()+","+NormContent.toLowerCase()+","+AgentName.toLowerCase()+")"))
 						{
 
 							Rule normRule = belifeDbInterface.buildNormRule(parsedNorm);
@@ -633,7 +704,7 @@ public class OMSInterface {
 
 							return resultXML;
 						}
-						else if (dbInterface.checkFordibbenNorms(AgentName, UnitName, "registerNorm"))
+						else if (checkFordibbenNorms(AgentName, UnitName, "registerNorm("+UnitName.toLowerCase()+","+NormContent.toLowerCase()+","+AgentName.toLowerCase()+")"))
 						{
 							String message = l10n.getMessage(MessageID.FORBIDDEN_NORM);
 							throw new ForbiddenNormException(message);
@@ -750,7 +821,7 @@ public class OMSInterface {
 				if (dbInterface.checkUnit(UnitName)) {
 					if (dbInterface.checkNormName(NormName, UnitName))
 					{
-						if (dbInterface.checkPermitNorms(AgentName, UnitName, "deregisterNorm"))
+						if (checkPermitNorms(AgentName, UnitName, "deregisterNorm("+NormName.toLowerCase()+","+UnitName.toLowerCase()+","+AgentName.toLowerCase()+")"))
 						{
 
 
@@ -762,7 +833,7 @@ public class OMSInterface {
 
 							return resultXML;
 						}
-						else if (dbInterface.checkFordibbenNorms(AgentName, UnitName, "deregisterNorm"))
+						else if (checkFordibbenNorms(AgentName, UnitName, "deregisterNorm("+NormName.toLowerCase()+","+UnitName.toLowerCase()+","+AgentName.toLowerCase()+")"))
 						{
 							String message = l10n.getMessage(MessageID.FORBIDDEN_NORM);
 							throw new ForbiddenNormException(message);
@@ -882,11 +953,7 @@ public class OMSInterface {
 			if (checkParameter(RoleName) && checkParameter(UnitName)) {
 				if (dbInterface.checkUnit(UnitName)) {
 					if (dbInterface.checkRole(RoleName, UnitName)) {
-						// --------------------------------------------------------------------------------
-						// ------------------------- Checking domain-dependent
-						// norms ----------------------
-						// --------------------------------------------------------------------------------
-						// TODO
+
 						// --------------------------------------------------------------------------------
 						// ------------------------- Checking structural norms
 						// ----------------------------
@@ -896,6 +963,27 @@ public class OMSInterface {
 							throw new PlayingRoleException(message);
 
 						} else {
+							// --------------------------------------------------------------------------------
+							// ------------------------- Checking domain-dependent
+							// norms ----------------------
+							// --------------------------------------------------------------------------------
+							if (checkPermitNorms(AgentName, UnitName, "acquireRole("+RoleName.toLowerCase()+","+UnitName.toLowerCase()+","+AgentName.toLowerCase()+")"))
+							{
+
+								String result = dbInterface.acquireRole(UnitName, RoleName, AgentName);
+
+								resultXML += "<status>Ok</status>\n";
+								resultXML += "<result>\n<description>" + result + "</description>\n</result>\n";
+								resultXML += "</response>";
+
+								return resultXML;
+							}
+							else if (checkFordibbenNorms(AgentName, UnitName, "acquireRole("+RoleName.toLowerCase()+","+UnitName.toLowerCase()+","+AgentName.toLowerCase()+")"))
+							{
+								String message = l10n.getMessage(MessageID.FORBIDDEN_NORM);
+								throw new ForbiddenNormException(message);
+							}
+
 							ArrayList<String> informRole = dbInterface.getInformRole(RoleName, UnitName);
 							String accessibility = informRole.get(0);
 							String position = informRole.get(2);
@@ -1021,7 +1109,22 @@ public class OMSInterface {
 							// ------------------------- Checking domain-dependent
 							// norms ----------------------
 							// --------------------------------------------------------------------------------
-							// TODO
+							if (checkPermitNorms(AgentName, UnitName, "leaveRole("+RoleName.toLowerCase()+","+UnitName.toLowerCase()+","+AgentName.toLowerCase()+")"))
+							{
+
+								String result = dbInterface.leaveRole(UnitName, RoleName, AgentName);
+
+								resultXML += "<status>Ok</status>\n";
+								resultXML += "<result>\n<description>" + result + "</description>\n</result>\n";
+								resultXML += "</response>";
+
+								return resultXML;
+							}
+							else if (checkFordibbenNorms(AgentName, UnitName, "leaveRole("+RoleName.toLowerCase()+","+UnitName.toLowerCase()+","+AgentName.toLowerCase()+")"))
+							{
+								String message = l10n.getMessage(MessageID.FORBIDDEN_NORM);
+								throw new ForbiddenNormException(message);
+							}
 
 							String result = dbInterface.leaveRole(UnitName, RoleName, AgentName);
 
@@ -1098,7 +1201,22 @@ public class OMSInterface {
 							// ------------------------- Checking domain-dependent
 							// norms ----------------------
 							// --------------------------------------------------------------------------------
-							// TODO
+							if (checkPermitNorms(AgentName, UnitName, "allocateRole("+RoleName.toLowerCase()+","+UnitName.toLowerCase()+","+TargetAgentName.toLowerCase()+","+AgentName.toLowerCase()+")"))
+							{
+
+								String result = dbInterface.acquireRole(UnitName, RoleName, TargetAgentName);
+
+								resultXML += "<status>Ok</status>\n";
+								resultXML += "<result>\n<description>" + result + "</description>\n</result>\n";
+								resultXML += "</response>";
+
+								return resultXML;
+							}
+							else if (checkFordibbenNorms(AgentName, UnitName, "allocateRole("+RoleName.toLowerCase()+","+UnitName.toLowerCase()+","+TargetAgentName.toLowerCase()+","+AgentName.toLowerCase()+")"))
+							{
+								String message = l10n.getMessage(MessageID.FORBIDDEN_NORM);
+								throw new ForbiddenNormException(message);
+							}
 							// --------------------------------------------------------------------------------
 							// ------------------------- Checking structural norms
 							// ----------------------------
@@ -1241,7 +1359,22 @@ public class OMSInterface {
 						// ------------------------- Checking domain-dependent
 						// norms ----------------------
 						// --------------------------------------------------------------------------------
-						// TODO
+						if (checkPermitNorms(AgentName, UnitName, "deallocateRole("+RoleName.toLowerCase()+","+UnitName.toLowerCase()+","+TargetAgentName.toLowerCase()+","+AgentName.toLowerCase()+")"))
+						{
+
+							String result = dbInterface.deallocateRole(RoleName, UnitName, TargetAgentName, AgentName);
+
+							resultXML += "<status>Ok</status>\n";
+							resultXML += "<result>\n<description>" + result + "</description>\n</result>\n";
+							resultXML += "</response>";
+
+							return resultXML;
+						}
+						else if (checkFordibbenNorms(AgentName, UnitName, "deallocateRole("+RoleName.toLowerCase()+","+UnitName.toLowerCase()+","+TargetAgentName.toLowerCase()+","+AgentName.toLowerCase()+")"))
+						{
+							String message = l10n.getMessage(MessageID.FORBIDDEN_NORM);
+							throw new ForbiddenNormException(message);
+						}
 						// --------------------------------------------------------------------------------
 						// ------------------------- Checking structural norms
 						// ----------------------------
@@ -1375,7 +1508,22 @@ public class OMSInterface {
 						// ------------------------- Checking domain-dependent
 						// norms ----------------------
 						// --------------------------------------------------------------------------------
-						// TODO
+						if (checkPermitNorms(AgentName, UnitName, "joinUnit("+UnitName.toLowerCase()+","+ParentName.toLowerCase()+","+AgentName.toLowerCase()+")"))
+						{
+
+							String result = dbInterface.joinUnit(UnitName, ParentName);
+
+							resultXML += "<status>Ok</status>\n";
+							resultXML += "<result>\n<description>" + result + "</description>\n</result>\n";
+							resultXML += "</response>";
+
+							return resultXML;
+						}
+						else if (checkFordibbenNorms(AgentName, UnitName, "joinUnit("+UnitName.toLowerCase()+","+ParentName.toLowerCase()+","+AgentName.toLowerCase()+")"))
+						{
+							String message = l10n.getMessage(MessageID.FORBIDDEN_NORM);
+							throw new ForbiddenNormException(message);
+						}
 						if (dbInterface.checkAgentInUnit(AgentName, UnitName)) {
 							if (dbInterface.checkPositionInUnit(AgentName, "creator", UnitName)) {
 								if (dbInterface.checkPositionInUnit(AgentName, "creator", ParentName)) {
@@ -1427,7 +1575,7 @@ public class OMSInterface {
 	}
 
 
-	@SuppressWarnings("unused")
+
 	private String informUnitAgentRole(String UnitName, String RequestedAgentName, String AgentName)
 	{
 		ArrayList<ArrayList<String>> methodResult = new ArrayList<ArrayList<String>>();
@@ -1445,54 +1593,14 @@ public class OMSInterface {
 					// ----------------------
 					// --------------------------------------------------------------------------------
 
-					if (!false)// TODO Check permit norm
-					{
-						if (!false) //TODO Check forbidden norm
+					if (!checkPermitNorms(AgentName, UnitName, "informUnitAgentRole("+UnitName.toLowerCase()+","+RequestedAgentName.toLowerCase()+","+AgentName.toLowerCase()+")"))
+						if (checkFordibbenNorms(AgentName, UnitName, "informUnitAgentRole("+UnitName.toLowerCase()+","+RequestedAgentName.toLowerCase()+","+AgentName.toLowerCase()+")"))
 						{
-
-							if (dbInterface.checkAgentInUnit(AgentName, UnitName))
-							{
-								methodResult = dbInterface.getInformAgentRolesPlayedInUnit(UnitName, RequestedAgentName);
-
-
-
-								for (ArrayList<String> agentPair : methodResult) { // <
-									// RoleName
-									// ,
-									// UnitName
-									// >
-									resultXML += "<item>\n";
-									resultXML += "<rolename>" + agentPair.get(0) + "</rolename>\n";
-									resultXML += "<unitname>" + UnitName + "</unitname>\n";
-									resultXML += "</item>\n";
-								}
-
-								return resultXML;
-							}
-							else
-							{
-								methodResult = dbInterface.getInformAgentRolesPlayedInUnit(UnitName, RequestedAgentName);
-
-
-								for (ArrayList<String> agentPair : methodResult) { // <
-
-									if (agentPair.get(1).equals("public"))
-									{
-										resultXML += "<item>\n";
-										resultXML += "<rolename>" + agentPair.get(0) + "</rolename>\n";
-										resultXML += "<unitname>" + UnitName + "</unitname>\n";
-										resultXML += "</item>\n";
-									}
-								}
-
-								return resultXML;
-							}
-						}else
-						{
-							//TODO Norm forbidden exception
-							throw new THOMASException("");
+							String message = l10n.getMessage(MessageID.FORBIDDEN_NORM);
+							throw new ForbiddenNormException(message);
 						}
-					}else
+
+					if (dbInterface.checkAgentInUnit(AgentName, UnitName))
 					{
 						methodResult = dbInterface.getInformAgentRolesPlayedInUnit(UnitName, RequestedAgentName);
 
@@ -1511,6 +1619,25 @@ public class OMSInterface {
 
 						return resultXML;
 					}
+					else
+					{
+						methodResult = dbInterface.getInformAgentRolesPlayedInUnit(UnitName, RequestedAgentName);
+
+
+						for (ArrayList<String> agentPair : methodResult) { // <
+
+							if (agentPair.get(1).equals("public"))
+							{
+								resultXML += "<item>\n";
+								resultXML += "<rolename>" + agentPair.get(0) + "</rolename>\n";
+								resultXML += "<unitname>" + UnitName + "</unitname>\n";
+								resultXML += "</item>\n";
+							}
+						}
+
+						return resultXML;
+					}
+
 				} else {
 					String message = l10n.getMessage(MessageID.AGENT_NOT_EXISTS, RequestedAgentName);
 					throw new AgentNotExistsException(message);
@@ -1624,7 +1751,7 @@ public class OMSInterface {
 				if (dbInterface.checkUnit(UnitName)) {
 					if (dbInterface.checkNormName(NormName, UnitName))
 					{
-						if (dbInterface.checkPermitNorms(AgentName, UnitName, "informNorm"))
+						if (checkPermitNorms(AgentName, UnitName, "informNorm("+NormName.toLowerCase()+","+UnitName.toLowerCase()+","+AgentName.toLowerCase()+")"))
 						{
 
 
@@ -1639,7 +1766,7 @@ public class OMSInterface {
 
 							return resultXML;
 						}
-						else if (dbInterface.checkFordibbenNorms(AgentName, UnitName, "informNorm"))
+						else if (checkFordibbenNorms(AgentName, UnitName, "informNorm("+NormName.toLowerCase()+","+UnitName.toLowerCase()+","+AgentName.toLowerCase()+")"))
 						{
 							String message = l10n.getMessage(MessageID.FORBIDDEN_NORM);
 							throw new ForbiddenNormException(message);
@@ -1798,182 +1925,72 @@ public class OMSInterface {
 						// --------------------------------------------------------------------------------
 
 
-						if (true)// TODO Check Permit Norm
+						if (!checkPermitNorms(AgentName, UnitName, "informMembers("+UnitName.toLowerCase()+","+RoleName.toLowerCase()+","+PositionValue.toLowerCase()+","+AgentName.toLowerCase()+")"))
 						{
-							// --------------------------------------------------------------------------------
-							// ------------------------- Checking structural norms
-							// ----------------------------
-							// --------------------------------------------------------------------------------
 
-							switch (flag) {
-
-							case CASE_A:
-
-								//Basado en la revisión 20
-								if (dbInterface.checkAgentInUnit(AgentName, UnitName))
-								{	
-
-									methodResult = dbInterface.getAgentsRolesInUnit(UnitName, AgentName);
-
-									resultXML += "<status>Ok</status>\n";
-									resultXML += "<result>\n";
-
-									for (ArrayList<String> agentPair : methodResult) { // <
-										// agentName
-										// ,
-										// RoleName
-										// >
-										resultXML += "<item>\n";
-										resultXML += "<agentname>" + agentPair.get(0) + "</agentname>\n";
-										resultXML += "<rolename>" + agentPair.get(1) + "</rolename>\n";
-										resultXML += "</item>\n";
-									}
-									resultXML += "</result>\n";
-									resultXML += "</response>";
-								}
-								else
-								{
-									methodResult = dbInterface.getAgentsVisibilityRolesInUnit(UnitName, AgentName);
-
-									resultXML += "<status>Ok</status>\n";
-									resultXML += "<result>\n";
-
-									for (ArrayList<String> agentPair : methodResult) { // <
-										// agentName
-										// ,
-										// RoleName
-										// >
-										resultXML += "<item>\n";
-										resultXML += "<agentname>" + agentPair.get(0) + "</agentname>\n";
-										resultXML += "<rolename>" + agentPair.get(1) + "</rolename>\n";
-										resultXML += "</item>\n";
-									}
-									resultXML += "</result>\n";
-									resultXML += "</response>";
-								}
-								break;// No se incluye ni el parametro role name ni
-								// position name.
-							case CASE_B:
-
-								arrayResult = dbInterface.getAgentsPlayingRoleInUnit(UnitName, RoleName, AgentName);
-
-								resultXML += "<status>Ok</status>\n";
-								resultXML += "<result>\n";
-
-								for (String agent : arrayResult) { // < agentName ,
-									// roleName >
-									resultXML += "<item>\n";
-									resultXML += "<agentname>" + agent + "</agentname>\n";
-									resultXML += "<rolename>" + RoleName + "</rolename>\n";
-									resultXML += "</item>\n";
-								}
-								resultXML += "</result>\n";
-								resultXML += "</response>";
-								break;// Solo se incluye el roleName
-							case CASE_C:
-
-								if (dbInterface.checkAgentInUnit(AgentName, UnitName))
-								{
-									methodResult = dbInterface.getAgentsPlayingPositionInUnit(UnitName, PositionValue, AgentName);
-
-									resultXML += "<status>Ok</status>\n";
-									resultXML += "<result>\n";
-
-									for (ArrayList<String> agentPair : methodResult) {
-										// < requestedAgentNameX , roleNameY >
-										resultXML += "<item>\n";
-										resultXML += "<agentname>" + agentPair.get(0) + "</agentname>\n";
-										resultXML += "<rolename>" + agentPair.get(1) + "</rolename>\n";
-										resultXML += "</item>\n";
-									}
-									resultXML += "</result>\n";
-									resultXML += "</response>";
-								}
-								else
-								{
-									methodResult = dbInterface.getAgentsPlayingVisibilityPositionInUnit(UnitName, PositionValue, AgentName);
-
-									resultXML += "<status>Ok</status>\n";
-									resultXML += "<result>\n";
-
-									for (ArrayList<String> agentPair : methodResult) {
-										// < requestedAgentNameX , roleNameY >
-										resultXML += "<item>\n";
-										resultXML += "<agentname>" + agentPair.get(0) + "</agentname>\n";
-										resultXML += "<rolename>" + agentPair.get(1) + "</rolename>\n";
-										resultXML += "</item>\n";
-									}
-									resultXML += "</result>\n";
-									resultXML += "</response>";
-								}
-								break;// No se incluye el rolename pero si el
-								// positionName
-							case CASE_D:
-
-								arrayResult = dbInterface.getAgentsPlayingRolePositionInUnit(UnitName, RoleName, PositionValue, AgentName);
-
-								resultXML += "<status>Ok</status>\n";
-								resultXML += "<result>\n";
-
-								for (String agent : arrayResult) { // < agentName ,
-									// roleName >
-									resultXML += "<item>\n";
-									resultXML += "<agentname>" + agent + "</agentname>\n";
-									resultXML += "<rolename>" + RoleName + "</rolename>\n";
-									resultXML += "</item>\n";
-								}
-								resultXML += "</result>\n";
-								resultXML += "</response>";
-								break; // Se incluyen todos los parametros
-							}
-							return resultXML;
-						}
-						else // Checm permit norm
-						{
-							if (!true) //TODO Check fordibben norm
+							if (checkFordibbenNorms(AgentName, UnitName, "informMembers("+UnitName.toLowerCase()+","+RoleName.toLowerCase()+","+PositionValue.toLowerCase()+","+AgentName.toLowerCase()+")"))
 							{
-								//	//TODO Norm forbidden exception
-								throw new THOMASException("");
+								String message = l10n.getMessage(MessageID.FORBIDDEN_NORM);
+								throw new ForbiddenNormException(message);
 							}
 							else
 							{
-								ArrayList<String> informRole = null;
+
+								// --------------------------------------------------------------------------------
+								// ------------------------- Checking structural norms
+								// ----------------------------
+								// --------------------------------------------------------------------------------
 
 								switch (flag) {
 
 								case CASE_A:
-									methodResult = dbInterface.getAgentsRolesInUnit(UnitName, AgentName);
 
-									resultXML += "<status>Ok</status>\n";
-									resultXML += "<result>\n";
+									//Basado en la revisión 20
+									if (dbInterface.checkAgentInUnit(AgentName, UnitName))
+									{	
 
-									for (ArrayList<String> agentPair : methodResult) { // <
-										// agentName
-										// ,
-										// RoleName
-										// >
-										resultXML += "<item>\n";
-										resultXML += "<agentname>" + agentPair.get(0) + "</agentname>\n";
-										resultXML += "<rolename>" + agentPair.get(1) + "</rolename>\n";
-										resultXML += "</item>\n";
+										methodResult = dbInterface.getAgentsRolesInUnit(UnitName, AgentName);
+
+										resultXML += "<status>Ok</status>\n";
+										resultXML += "<result>\n";
+
+										for (ArrayList<String> agentPair : methodResult) { // <
+											// agentName
+											// ,
+											// RoleName
+											// >
+											resultXML += "<item>\n";
+											resultXML += "<agentname>" + agentPair.get(0) + "</agentname>\n";
+											resultXML += "<rolename>" + agentPair.get(1) + "</rolename>\n";
+											resultXML += "</item>\n";
+										}
+										resultXML += "</result>\n";
+										resultXML += "</response>";
 									}
-									resultXML += "</result>\n";
-									resultXML += "</response>";
+									else
+									{
+										methodResult = dbInterface.getAgentsVisibilityRolesInUnit(UnitName, AgentName);
+
+										resultXML += "<status>Ok</status>\n";
+										resultXML += "<result>\n";
+
+										for (ArrayList<String> agentPair : methodResult) { // <
+											// agentName
+											// ,
+											// RoleName
+											// >
+											resultXML += "<item>\n";
+											resultXML += "<agentname>" + agentPair.get(0) + "</agentname>\n";
+											resultXML += "<rolename>" + agentPair.get(1) + "</rolename>\n";
+											resultXML += "</item>\n";
+										}
+										resultXML += "</result>\n";
+										resultXML += "</response>";
+									}
 									break;// No se incluye ni el parametro role name ni
 									// position name.
 								case CASE_B:
-									/*
-									informRole = dbInterface.getInformRole(RoleName, UnitName);
 
-									if (!informRole.get(1).equals("public"))
-									{
-										if (!dbInterface.checkAgentInUnit(AgentName, UnitName))
-										{
-											String message = l10n.getMessage(MessageID.AGENT_NOT_IN_UNIT, AgentName, UnitName);
-											throw new AgentNotInUnitException(message);
-										}
-									}
-									 */
 									arrayResult = dbInterface.getAgentsPlayingRoleInUnit(UnitName, RoleName, AgentName);
 
 									resultXML += "<status>Ok</status>\n";
@@ -1988,42 +2005,47 @@ public class OMSInterface {
 									}
 									resultXML += "</result>\n";
 									resultXML += "</response>";
-
 									break;// Solo se incluye el roleName
 								case CASE_C:
 
+									if (dbInterface.checkAgentInUnit(AgentName, UnitName))
+									{
+										methodResult = dbInterface.getAgentsPlayingPositionInUnit(UnitName, PositionValue, AgentName);
 
+										resultXML += "<status>Ok</status>\n";
+										resultXML += "<result>\n";
 
-									methodResult = dbInterface.getAgentsPlayingPositionInUnit(UnitName, PositionValue, AgentName);
-
-									resultXML += "<status>Ok</status>\n";
-									resultXML += "<result>\n";
-
-									for (ArrayList<String> agentPair : methodResult) {
-										// < requestedAgentNameX , roleNameY >
-										resultXML += "<item>\n";
-										resultXML += "<agentname>" + agentPair.get(0) + "</agentname>\n";
-										resultXML += "<rolename>" + agentPair.get(1) + "</rolename>\n";
-										resultXML += "</item>\n";
+										for (ArrayList<String> agentPair : methodResult) {
+											// < requestedAgentNameX , roleNameY >
+											resultXML += "<item>\n";
+											resultXML += "<agentname>" + agentPair.get(0) + "</agentname>\n";
+											resultXML += "<rolename>" + agentPair.get(1) + "</rolename>\n";
+											resultXML += "</item>\n";
+										}
+										resultXML += "</result>\n";
+										resultXML += "</response>";
 									}
-									resultXML += "</result>\n";
-									resultXML += "</response>";
+									else
+									{
+										methodResult = dbInterface.getAgentsPlayingVisibilityPositionInUnit(UnitName, PositionValue, AgentName);
+
+										resultXML += "<status>Ok</status>\n";
+										resultXML += "<result>\n";
+
+										for (ArrayList<String> agentPair : methodResult) {
+											// < requestedAgentNameX , roleNameY >
+											resultXML += "<item>\n";
+											resultXML += "<agentname>" + agentPair.get(0) + "</agentname>\n";
+											resultXML += "<rolename>" + agentPair.get(1) + "</rolename>\n";
+											resultXML += "</item>\n";
+										}
+										resultXML += "</result>\n";
+										resultXML += "</response>";
+									}
 									break;// No se incluye el rolename pero si el
 									// positionName
 								case CASE_D:
 
-									/*
-									informRole = dbInterface.getInformRole(RoleName, UnitName);
-
-									if (!informRole.get(1).equals("public"))
-									{
-										if (!dbInterface.checkAgentInUnit(AgentName, UnitName))
-										{
-											String message = l10n.getMessage(MessageID.AGENT_NOT_IN_UNIT, AgentName, UnitName);
-											throw new AgentNotInUnitException(message);
-										}
-									}
-									 */
 									arrayResult = dbInterface.getAgentsPlayingRolePositionInUnit(UnitName, RoleName, PositionValue, AgentName);
 
 									resultXML += "<status>Ok</status>\n";
@@ -2042,6 +2064,115 @@ public class OMSInterface {
 								}
 								return resultXML;
 							}
+						}
+						else // Check permit norm
+						{
+
+							ArrayList<String> informRole = null;
+
+							switch (flag) {
+
+							case CASE_A:
+								methodResult = dbInterface.getAgentsRolesInUnit(UnitName, AgentName);
+
+								resultXML += "<status>Ok</status>\n";
+								resultXML += "<result>\n";
+
+								for (ArrayList<String> agentPair : methodResult) { // <
+									// agentName
+									// ,
+									// RoleName
+									// >
+									resultXML += "<item>\n";
+									resultXML += "<agentname>" + agentPair.get(0) + "</agentname>\n";
+									resultXML += "<rolename>" + agentPair.get(1) + "</rolename>\n";
+									resultXML += "</item>\n";
+								}
+								resultXML += "</result>\n";
+								resultXML += "</response>";
+								break;// No se incluye ni el parametro role name ni
+								// position name.
+							case CASE_B:
+								/*
+									informRole = dbInterface.getInformRole(RoleName, UnitName);
+
+									if (!informRole.get(1).equals("public"))
+									{
+										if (!dbInterface.checkAgentInUnit(AgentName, UnitName))
+										{
+											String message = l10n.getMessage(MessageID.AGENT_NOT_IN_UNIT, AgentName, UnitName);
+											throw new AgentNotInUnitException(message);
+										}
+									}
+								 */
+								arrayResult = dbInterface.getAgentsPlayingRoleInUnit(UnitName, RoleName, AgentName);
+
+								resultXML += "<status>Ok</status>\n";
+								resultXML += "<result>\n";
+
+								for (String agent : arrayResult) { // < agentName ,
+									// roleName >
+									resultXML += "<item>\n";
+									resultXML += "<agentname>" + agent + "</agentname>\n";
+									resultXML += "<rolename>" + RoleName + "</rolename>\n";
+									resultXML += "</item>\n";
+								}
+								resultXML += "</result>\n";
+								resultXML += "</response>";
+
+								break;// Solo se incluye el roleName
+							case CASE_C:
+
+
+
+								methodResult = dbInterface.getAgentsPlayingPositionInUnit(UnitName, PositionValue, AgentName);
+
+								resultXML += "<status>Ok</status>\n";
+								resultXML += "<result>\n";
+
+								for (ArrayList<String> agentPair : methodResult) {
+									// < requestedAgentNameX , roleNameY >
+									resultXML += "<item>\n";
+									resultXML += "<agentname>" + agentPair.get(0) + "</agentname>\n";
+									resultXML += "<rolename>" + agentPair.get(1) + "</rolename>\n";
+									resultXML += "</item>\n";
+								}
+								resultXML += "</result>\n";
+								resultXML += "</response>";
+								break;// No se incluye el rolename pero si el
+								// positionName
+							case CASE_D:
+
+								/*
+									informRole = dbInterface.getInformRole(RoleName, UnitName);
+
+									if (!informRole.get(1).equals("public"))
+									{
+										if (!dbInterface.checkAgentInUnit(AgentName, UnitName))
+										{
+											String message = l10n.getMessage(MessageID.AGENT_NOT_IN_UNIT, AgentName, UnitName);
+											throw new AgentNotInUnitException(message);
+										}
+									}
+								 */
+								arrayResult = dbInterface.getAgentsPlayingRolePositionInUnit(UnitName, RoleName, PositionValue, AgentName);
+
+								resultXML += "<status>Ok</status>\n";
+								resultXML += "<result>\n";
+
+								for (String agent : arrayResult) { // < agentName ,
+									// roleName >
+									resultXML += "<item>\n";
+									resultXML += "<agentname>" + agent + "</agentname>\n";
+									resultXML += "<rolename>" + RoleName + "</rolename>\n";
+									resultXML += "</item>\n";
+								}
+								resultXML += "</result>\n";
+								resultXML += "</response>";
+								break; // Se incluyen todos los parametros
+							}
+							return resultXML;
+
 						}
 
 					} else {
@@ -2154,124 +2285,50 @@ public class OMSInterface {
 						// norms ----------------------
 						// --------------------------------------------------------------------------------
 
-						if (true)// TODO Check Permit Norm
+						if (!checkPermitNorms(AgentName, UnitName, "quantityMembers("+UnitName.toLowerCase()+","+RoleName.toLowerCase()+","+PositionValue.toLowerCase()+","+AgentName.toLowerCase()+")"))
 						{
+
 							// --------------------------------------------------------------------------------
 							// ------------------------- Checking structural norms
 							// ----------------------------
 							// --------------------------------------------------------------------------------
 
-
-							switch (flag) {
-
-							case CASE_A:
-
-								if (dbInterface.checkAgentInUnit(AgentName, UnitName))
-								{
-									intResult = dbInterface.getInformQuantityAgentsRolesInUnit(UnitName, AgentName);
-
-									resultXML += "<status>Ok</status>\n";
-									resultXML += "<result>\n";
-									resultXML += "<quantity>" + intResult + "</quantity>\n";
-									resultXML += "</result>\n";
-									resultXML += "</response>";
-
-								}
-								else
-								{
-									intResult = dbInterface.getInformQuantityAgentsVisibilityRolesInUnit(UnitName, AgentName);
-
-									resultXML += "<status>Ok</status>\n";
-									resultXML += "<result>\n";
-									resultXML += "<quantity>" + intResult + "</quantity>\n";
-									resultXML += "</result>\n";
-									resultXML += "</response>";
-								}
-								break;// No se incluye ni el parametro role name ni
-								// position name.
-							case CASE_B:
-
-								intResult = dbInterface.getInformQuantityAgentsPlayingRoleInUnit(UnitName, RoleName, AgentName);
-								resultXML += "<status>Ok</status>\n";
-								resultXML += "<result>\n";
-								resultXML += "<quantity>" + intResult + "</quantity>\n";
-								resultXML += "</result>\n";
-								resultXML += "</response>";
-								break;// Solo se incluye el roleName
-							case CASE_C:
-
-								if (dbInterface.checkAgentInUnit(AgentName, UnitName))
-								{
-									intResult = dbInterface.getInformQuantityAgentsPlayingPositionInUnit(UnitName, PositionValue, AgentName);
-									resultXML += "<status>Ok</status>\n";
-									resultXML += "<result>\n";
-									resultXML += "<quantity>" + intResult + "</quantity>\n";
-									resultXML += "</result>\n";
-									resultXML += "</response>";
-								}
-								else
-								{
-									intResult = dbInterface.getInformQuantityAgentsPlayingVisibilityPositionInUnit(UnitName, PositionValue, AgentName);
-									resultXML += "<status>Ok</status>\n";
-									resultXML += "<result>\n";
-									resultXML += "<quantity>" + intResult + "</quantity>\n";
-									resultXML += "</result>\n";
-									resultXML += "</response>";
-
-								}
-								break;// No se incluye el rolename pero si el
-								// postionName
-							case CASE_D:
-
-								intResult = dbInterface.getInformQuantityAgentsPlayingRolePositionInUnit(UnitName, RoleName, PositionValue, AgentName);
-								resultXML += "<status>Ok</status>\n";
-								resultXML += "<result>\n";
-								resultXML += "<quantity>" + intResult + "</quantity>\n";
-								resultXML += "</result>\n";
-								resultXML += "</response>";
-								break; // Se incluyen todos los parametros
-							}
-
-							return resultXML;
-						}
-						else // Check permit norm
-						{
-							if (!true) //TODO Check fordibben norm
+							if (checkFordibbenNorms(AgentName, UnitName, "quantityMembers("+UnitName.toLowerCase()+","+RoleName.toLowerCase()+","+PositionValue.toLowerCase()+","+AgentName.toLowerCase()+")"))
 							{
-								//	//TODO Norm forbidden exception
-								throw new THOMASException("");
+								String message = l10n.getMessage(MessageID.FORBIDDEN_NORM);
+								throw new ForbiddenNormException(message);
 							}
 							else
 							{
-								ArrayList<String> informRole = null;
-
 								switch (flag) {
 
 								case CASE_A:
 
-									intResult = dbInterface.getInformQuantityAgentsRolesInUnit(UnitName, AgentName);
+									if (dbInterface.checkAgentInUnit(AgentName, UnitName))
+									{
+										intResult = dbInterface.getInformQuantityAgentsRolesInUnit(UnitName, AgentName);
 
-									resultXML += "<status>Ok</status>\n";
-									resultXML += "<result>\n";
-									resultXML += "<quantity>" + intResult + "</quantity>\n";
-									resultXML += "</result>\n";
-									resultXML += "</response>";
+										resultXML += "<status>Ok</status>\n";
+										resultXML += "<result>\n";
+										resultXML += "<quantity>" + intResult + "</quantity>\n";
+										resultXML += "</result>\n";
+										resultXML += "</response>";
 
+									}
+									else
+									{
+										intResult = dbInterface.getInformQuantityAgentsVisibilityRolesInUnit(UnitName, AgentName);
+
+										resultXML += "<status>Ok</status>\n";
+										resultXML += "<result>\n";
+										resultXML += "<quantity>" + intResult + "</quantity>\n";
+										resultXML += "</result>\n";
+										resultXML += "</response>";
+									}
 									break;// No se incluye ni el parametro role name ni
 									// position name.
 								case CASE_B:
-									/*
-									informRole = dbInterface.getInformRole(RoleName, UnitName);
 
-									if (!informRole.get(1).equals("public"))
-									{
-										if (!dbInterface.checkAgentInUnit(AgentName, UnitName))
-										{
-											String message = l10n.getMessage(MessageID.AGENT_NOT_IN_UNIT, AgentName, UnitName);
-											throw new AgentNotInUnitException(message);
-										}
-									}
-									 */
 									intResult = dbInterface.getInformQuantityAgentsPlayingRoleInUnit(UnitName, RoleName, AgentName);
 									resultXML += "<status>Ok</status>\n";
 									resultXML += "<result>\n";
@@ -2281,27 +2338,29 @@ public class OMSInterface {
 									break;// Solo se incluye el roleName
 								case CASE_C:
 
-									intResult = dbInterface.getInformQuantityAgentsPlayingPositionInUnit(UnitName, PositionValue, AgentName);
-									resultXML += "<status>Ok</status>\n";
-									resultXML += "<result>\n";
-									resultXML += "<quantity>" + intResult + "</quantity>\n";
-									resultXML += "</result>\n";
-									resultXML += "</response>";
+									if (dbInterface.checkAgentInUnit(AgentName, UnitName))
+									{
+										intResult = dbInterface.getInformQuantityAgentsPlayingPositionInUnit(UnitName, PositionValue, AgentName);
+										resultXML += "<status>Ok</status>\n";
+										resultXML += "<result>\n";
+										resultXML += "<quantity>" + intResult + "</quantity>\n";
+										resultXML += "</result>\n";
+										resultXML += "</response>";
+									}
+									else
+									{
+										intResult = dbInterface.getInformQuantityAgentsPlayingVisibilityPositionInUnit(UnitName, PositionValue, AgentName);
+										resultXML += "<status>Ok</status>\n";
+										resultXML += "<result>\n";
+										resultXML += "<quantity>" + intResult + "</quantity>\n";
+										resultXML += "</result>\n";
+										resultXML += "</response>";
+
+									}
 									break;// No se incluye el rolename pero si el
 									// postionName
 								case CASE_D:
-									/*
-									informRole = dbInterface.getInformRole(RoleName, UnitName);
 
-									if (!informRole.get(1).equals("public"))
-									{
-										if (!dbInterface.checkAgentInUnit(AgentName, UnitName))
-										{
-											String message = l10n.getMessage(MessageID.AGENT_NOT_IN_UNIT, AgentName, UnitName);
-											throw new AgentNotInUnitException(message);
-										}
-									}
-									 */
 									intResult = dbInterface.getInformQuantityAgentsPlayingRolePositionInUnit(UnitName, RoleName, PositionValue, AgentName);
 									resultXML += "<status>Ok</status>\n";
 									resultXML += "<result>\n";
@@ -2313,6 +2372,80 @@ public class OMSInterface {
 
 								return resultXML;
 							}
+						}
+						else // Check permit norm
+						{
+
+							ArrayList<String> informRole = null;
+
+							switch (flag) {
+
+							case CASE_A:
+
+								intResult = dbInterface.getInformQuantityAgentsRolesInUnit(UnitName, AgentName);
+
+								resultXML += "<status>Ok</status>\n";
+								resultXML += "<result>\n";
+								resultXML += "<quantity>" + intResult + "</quantity>\n";
+								resultXML += "</result>\n";
+								resultXML += "</response>";
+
+								break;// No se incluye ni el parametro role name ni
+								// position name.
+							case CASE_B:
+								/*
+									informRole = dbInterface.getInformRole(RoleName, UnitName);
+
+									if (!informRole.get(1).equals("public"))
+									{
+										if (!dbInterface.checkAgentInUnit(AgentName, UnitName))
+										{
+											String message = l10n.getMessage(MessageID.AGENT_NOT_IN_UNIT, AgentName, UnitName);
+											throw new AgentNotInUnitException(message);
+										}
+									}
+								 */
+								intResult = dbInterface.getInformQuantityAgentsPlayingRoleInUnit(UnitName, RoleName, AgentName);
+								resultXML += "<status>Ok</status>\n";
+								resultXML += "<result>\n";
+								resultXML += "<quantity>" + intResult + "</quantity>\n";
+								resultXML += "</result>\n";
+								resultXML += "</response>";
+								break;// Solo se incluye el roleName
+							case CASE_C:
+
+								intResult = dbInterface.getInformQuantityAgentsPlayingPositionInUnit(UnitName, PositionValue, AgentName);
+								resultXML += "<status>Ok</status>\n";
+								resultXML += "<result>\n";
+								resultXML += "<quantity>" + intResult + "</quantity>\n";
+								resultXML += "</result>\n";
+								resultXML += "</response>";
+								break;// No se incluye el rolename pero si el
+								// postionName
+							case CASE_D:
+								/*
+									informRole = dbInterface.getInformRole(RoleName, UnitName);
+
+									if (!informRole.get(1).equals("public"))
+									{
+										if (!dbInterface.checkAgentInUnit(AgentName, UnitName))
+										{
+											String message = l10n.getMessage(MessageID.AGENT_NOT_IN_UNIT, AgentName, UnitName);
+											throw new AgentNotInUnitException(message);
+										}
+									}
+								 */
+								intResult = dbInterface.getInformQuantityAgentsPlayingRolePositionInUnit(UnitName, RoleName, PositionValue, AgentName);
+								resultXML += "<status>Ok</status>\n";
+								resultXML += "<result>\n";
+								resultXML += "<quantity>" + intResult + "</quantity>\n";
+								resultXML += "</result>\n";
+								resultXML += "</response>";
+								break; // Se incluyen todos los parametros
+							}
+
+							return resultXML;
+
 						}
 					} else {
 						String message = l10n.getMessage(MessageID.AGENT_NOT_EXISTS, AgentName);
@@ -2363,7 +2496,26 @@ public class OMSInterface {
 					// ------------------------- Checking domain-dependent norms
 					// ----------------------
 					// --------------------------------------------------------------------------------
-					// TODO
+					if (checkPermitNorms(AgentName, UnitName, "informUnit("+UnitName.toLowerCase()+","+AgentName.toLowerCase()+")"))
+					{
+
+
+						arrayResult = dbInterface.getInformUnit(UnitName);
+						// < UnitType , ParentName >
+						resultXML += "<status>Ok</status>\n";
+						resultXML += "<result>\n";
+						resultXML += "<unittype>" + arrayResult.get(0) + "</unittype>\n";
+						resultXML += "<parentName>" + arrayResult.get(1) + "</parentName>\n";
+						resultXML += "</result>\n";
+						resultXML += "</response>";
+
+						return resultXML;
+					}
+					else if (checkFordibbenNorms(AgentName, UnitName, "informUnit("+UnitName.toLowerCase()+","+AgentName.toLowerCase()+")"))
+					{
+						String message = l10n.getMessage(MessageID.FORBIDDEN_NORM);
+						throw new ForbiddenNormException(message);
+					}
 					String unitType = dbInterface.getUnitType(UnitName);
 
 					if (unitType.equals("team") || unitType.equals("hierarchy")) {
@@ -2425,7 +2577,7 @@ public class OMSInterface {
 	 *            Identifier of the agent
 	 * @return Returns < RoleName , Accessibility , Visibility , Position >
 	 */
-	@SuppressWarnings("unused")
+
 	public String informUnitRoles(String UnitName, String AgentName) {
 
 		ArrayList<ArrayList<String>> methodResult = new ArrayList<ArrayList<String>>();
@@ -2444,41 +2596,57 @@ public class OMSInterface {
 					// --------------------------------------------------------------------------------
 
 
-					if (!false) //TODO Check permit norm
+					if (checkPermitNorms(AgentName, UnitName, "informUnitRoles("+UnitName.toLowerCase()+","+AgentName.toLowerCase()+")"))
 					{
-						if (false) //TODO Is forbidenn
-						{
-							//	//TODO Norm forbidden exception
-							throw new THOMASException("");
+						methodResult = dbInterface.getInformUnitRoles(UnitName, AgentName, true);
 
+						resultXML += "<status>Ok</status>\n";
+						resultXML += "<result>\n";
+
+						for (ArrayList<String> agentPair : methodResult) {
+							// < RoleName , Accessibility , Visibility , Position
+							resultXML += "<item>\n";
+							resultXML += "<rolename>" + agentPair.get(0) + "</rolename>\n";
+							resultXML += "<position>" + agentPair.get(3) + "</position>\n";
+							resultXML += "<visibility>" + agentPair.get(2) + "</visibility>\n";
+							resultXML += "<accessibility>" + agentPair.get(1) + "</accessibility>\n";
+							resultXML += "</item>\n";
 						}
-						else
-						{
-							methodResult = dbInterface.getInformUnitRoles(UnitName, AgentName, false);
+						resultXML += "</result>\n";
+						resultXML += "</response>";
 
-							resultXML += "<status>Ok</status>\n";
-							resultXML += "<result>\n";
+						return resultXML;
+					}else if (checkFordibbenNorms(AgentName, UnitName, "informUnitRoles("+UnitName.toLowerCase()+","+AgentName.toLowerCase()+")"))
+					{
+						String message = l10n.getMessage(MessageID.FORBIDDEN_NORM);
+						throw new ForbiddenNormException(message);
+					}
 
-							for (ArrayList<String> agentPair : methodResult) {
-								// < RoleName , Accessibility , Visibility , Position
-								resultXML += "<item>\n";
-								resultXML += "<rolename>" + agentPair.get(0) + "</rolename>\n";
-								resultXML += "<position>" + agentPair.get(3) + "</position>\n";
-								resultXML += "<visibility>" + agentPair.get(2) + "</visibility>\n";
-								resultXML += "<accessibility>" + agentPair.get(1) + "</accessibility>\n";
-								resultXML += "</item>\n";
-							}
-							resultXML += "</result>\n";
-							resultXML += "</response>";
 
-							return resultXML;
+					if (dbInterface.checkAgentInUnit(AgentName, UnitName))
+					{
+						methodResult = dbInterface.getInformUnitRoles(UnitName, AgentName, true);
+
+						resultXML += "<status>Ok</status>\n";
+						resultXML += "<result>\n";
+
+						for (ArrayList<String> agentPair : methodResult) {
+							// < RoleName , Accessibility , Visibility , Position
+							resultXML += "<item>\n";
+							resultXML += "<rolename>" + agentPair.get(0) + "</rolename>\n";
+							resultXML += "<position>" + agentPair.get(3) + "</position>\n";
+							resultXML += "<visibility>" + agentPair.get(2) + "</visibility>\n";
+							resultXML += "<accessibility>" + agentPair.get(1) + "</accessibility>\n";
+							resultXML += "</item>\n";
 						}
+						resultXML += "</result>\n";
+						resultXML += "</response>";
+
+						return resultXML;
 					}
 					else
 					{
-
-
-						methodResult = dbInterface.getInformUnitRoles(UnitName, AgentName, true);
+						methodResult = dbInterface.getInformUnitRoles(UnitName, AgentName, false);
 
 						resultXML += "<status>Ok</status>\n";
 						resultXML += "<result>\n";
@@ -2540,7 +2708,28 @@ public class OMSInterface {
 						// ------------------------- Checking domain-dependent
 						// norms ----------------------
 						// --------------------------------------------------------------------------------
-						// TODO
+						if (checkPermitNorms(AgentName, UnitName, "informRole("+RoleName.toLowerCase()+","+UnitName.toLowerCase()+","+AgentName.toLowerCase()+")"))
+						{
+
+
+							arrayResult = dbInterface.getInformRole(RoleName, UnitName);
+
+							// < Accessibility - Visibility - Position >
+							resultXML += "<status>Ok</status>\n";
+							resultXML += "<result>\n";
+							resultXML += "<position>" + arrayResult.get(2) + "</position>\n";
+							resultXML += "<visibility>" + arrayResult.get(1) + "</visibility>\n";
+							resultXML += "<accessibility>" + arrayResult.get(0) + "</accessibility>\n";
+							resultXML += "</result>\n";
+							resultXML += "</response>";
+
+							return resultXML;
+						}
+						else if (checkFordibbenNorms(AgentName, UnitName, "informRole("+RoleName.toLowerCase()+","+UnitName.toLowerCase()+","+AgentName.toLowerCase()+")"))
+						{
+							String message = l10n.getMessage(MessageID.FORBIDDEN_NORM);
+							throw new ForbiddenNormException(message);
+						}
 
 						// --------------------------------------------------------------------------------
 						// ------------------------- Checking structural norms
@@ -2613,7 +2802,7 @@ public class OMSInterface {
 				if (dbInterface.checkUnit(UnitName)) {
 					if (dbInterface.checkTargetType(TargetTypeName))
 					{
-						if (dbInterface.checkPermitNorms(AgentName, UnitName, "informTargetNorms"))
+						if (checkPermitNorms(AgentName, UnitName, "informTargetNorms("+TargetTypeName.toLowerCase()+","+TargetValueName.toLowerCase()+","+UnitName.toLowerCase()+","+AgentName.toLowerCase()+")"))
 						{
 
 							permitFlag = true;
@@ -2621,7 +2810,7 @@ public class OMSInterface {
 						else
 							permitFlag = false;
 
-						if (dbInterface.checkFordibbenNorms(AgentName, UnitName, "registerNorm"))
+						if (checkFordibbenNorms(AgentName, UnitName, "informTargetNorms("+TargetTypeName.toLowerCase()+","+TargetValueName.toLowerCase()+","+UnitName.toLowerCase()+","+AgentName.toLowerCase()+")"))
 						{
 							String message = l10n.getMessage(MessageID.FORBIDDEN_NORM);
 							throw new ForbiddenNormException(message);
@@ -2647,7 +2836,7 @@ public class OMSInterface {
 								}
 								resultXML += "</result>\n";
 								resultXML += "</response>";
-								
+
 								return resultXML;
 							}
 							else
@@ -2668,7 +2857,7 @@ public class OMSInterface {
 								}
 								resultXML += "</result>\n";
 								resultXML += "</response>";
-								
+
 								return resultXML;
 							}
 						}else if (TargetTypeName.equals("positionName"))
@@ -2691,7 +2880,7 @@ public class OMSInterface {
 								}
 								resultXML += "</result>\n";
 								resultXML += "</response>";
-								
+
 								return resultXML;
 							}
 							else
@@ -2712,7 +2901,7 @@ public class OMSInterface {
 								}
 								resultXML += "</result>\n";
 								resultXML += "</response>";
-								
+
 								return resultXML;
 							}
 						}else if (TargetTypeName.equals("roleName"))
@@ -2737,7 +2926,7 @@ public class OMSInterface {
 									}
 									resultXML += "</result>\n";
 									resultXML += "</response>";
-									
+
 									return resultXML;
 								}
 								else
@@ -2758,7 +2947,7 @@ public class OMSInterface {
 									}
 									resultXML += "</result>\n";
 									resultXML += "</response>";
-									
+
 									return resultXML;
 								}	
 							}
@@ -2785,7 +2974,7 @@ public class OMSInterface {
 										}
 										resultXML += "</result>\n";
 										resultXML += "</response>";
-										
+
 										return resultXML;
 									}
 									else
@@ -2806,7 +2995,7 @@ public class OMSInterface {
 										}
 										resultXML += "</result>\n";
 										resultXML += "</response>";
-										
+
 										return resultXML;
 									}
 								}
@@ -2828,7 +3017,7 @@ public class OMSInterface {
 									}
 									resultXML += "</result>\n";
 									resultXML += "</response>";
-									
+
 									return resultXML;
 								}
 								else
@@ -2853,7 +3042,7 @@ public class OMSInterface {
 										}
 										resultXML += "</result>\n";
 										resultXML += "</response>";
-										
+
 										return resultXML;
 									}
 									else //else visibility
@@ -2876,7 +3065,7 @@ public class OMSInterface {
 											}
 											resultXML += "</result>\n";
 											resultXML += "</response>";
-											
+
 											return resultXML;
 										}
 										else
@@ -2884,12 +3073,12 @@ public class OMSInterface {
 											String message = l10n.getMessage(MessageID.AGENT_NOT_IN_UNIT);
 											throw new AgentNotInUnitException(message);
 										}
-										
+
 									}
 								}
 							}
 						}
-						
+
 
 					}else {
 						String message = l10n.getMessage(MessageID.INVALID_TARGET_TYPE, 1, TargetTypeName);
@@ -2911,6 +3100,159 @@ public class OMSInterface {
 			return resultXML;
 		}
 
+	}
+	
+	
+	boolean checkPermitNorms(String AgentName, String UnitName, String ServiceName)
+	{
+		
+		boolean result = false;
+		ArrayList<String> stringRules = new ArrayList<String>();
+		ArrayList<String> aux = new ArrayList<String>();
+		
+
+		StringTokenizer st = new StringTokenizer(ServiceName, "(");
+		String service = st.nextToken();
+		
+		stringRules.add(ServiceName);
+
+		try {
+			aux = dbInterface.getAgentNormRules(UnitName, AgentName, "p", service);
+
+			for (String rule : aux)
+			{
+				stringRules.add(rule);
+			}
+
+			if (dbInterface.checkAgentInUnit(AgentName, UnitName))
+			{
+
+				aux = dbInterface.getPositionNormRules(UnitName, AgentName, "p", service);
+
+				for (String rule : aux)
+				{
+					stringRules.add(rule);
+				}
+
+				aux = dbInterface.getRoleNormRules(UnitName, AgentName, "p", service);
+
+				for (String rule : aux)
+				{
+					stringRules.add(rule);
+				}
+			}
+			
+			if (stringRules.size() == 1)
+				return result;
+			
+			class myNormativeProtocol extends Normative_Protocol {
+				protected void doReceive(CProcessor myProcessor, ACLMessage msg) {
+					System.out.println("Lo tengo: "+ msg.getHeaderValue("activatedNorm"));
+					
+				}
+				
+			}
+			ArrayList<String> r = new ArrayList<String>();
+			
+			CFactory talk = new myNormativeProtocol().newFactory("TALK", null, 1, omsAgent, stringRules, "JasonNormativeAgent", r) ;
+			
+			omsAgent.addFactoryAsInitiator(talk);
+
+
+			omsAgent.startSyncConversation("TALK");
+			
+			System.out.println("RESULTADO: "+ r.get(0));
+
+			if (r.get(0).equals("false"))
+				result = false;
+			if (r.get(0).equals("true"))
+				result = true;
+			
+			
+
+		} catch (MySQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+
+
+		return result;
+	}
+
+	boolean checkFordibbenNorms(String AgentName, String UnitName, String ServiceName)
+	{
+	
+		boolean result = false;
+		ArrayList<String> stringRules = new ArrayList<String>();
+		ArrayList<String> aux = new ArrayList<String>();
+		
+
+		StringTokenizer st = new StringTokenizer(ServiceName, "(");
+		String service = st.nextToken();
+		
+		stringRules.add(ServiceName);
+
+		try {
+			aux = dbInterface.getAgentNormRules(UnitName, AgentName, "f", service);
+
+			for (String rule : aux)
+			{
+				stringRules.add(rule);
+			}
+
+			if (dbInterface.checkAgentInUnit(AgentName, UnitName))
+			{
+
+				aux = dbInterface.getPositionNormRules(UnitName, AgentName, "f", service);
+
+				for (String rule : aux)
+				{
+					stringRules.add(rule);
+				}
+
+				aux = dbInterface.getRoleNormRules(UnitName, AgentName, "f", service);
+
+				for (String rule : aux)
+				{
+					stringRules.add(rule);
+				}
+			}
+			
+			if (stringRules.size() == 1)
+				return result;
+			
+			class myNormativeProtocol extends Normative_Protocol {
+				protected void doReceive(CProcessor myProcessor, ACLMessage msg) {
+					System.out.println("Lo tengo: "+ msg.getHeaderValue("activatedNorm"));
+					
+				}
+				
+			}
+			ArrayList<String> r = new ArrayList<String>();
+			
+			CFactory talk = new myNormativeProtocol().newFactory("TALK", null, 1, omsAgent, stringRules, "JasonNormativeAgent", r) ;
+			
+			omsAgent.addFactoryAsInitiator(talk);
+
+
+			omsAgent.startSyncConversation("TALK");
+			
+			System.out.println("RESULTADO: "+ r.get(0));
+
+			if (r.get(0).equals("false"))
+				result = false;
+			if (r.get(0).equals("true"))
+				result = true;
+			
+			
+
+		} catch (MySQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return result;
 	}
 
 }

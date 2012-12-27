@@ -9,6 +9,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -283,7 +284,7 @@ public class DataBaseInterface {
 			connection = db.connect();
 
 			stmt = connection.createStatement();
-			rs3 = stmt.executeQuery("SELECT idroleList FROM roleList WHERE idunitlist = (SELECT idunitList FROM unitList WHERE unitName ='" + unit + "') AND idposition != (SELECT idposition FROM position WHERE positionName ='creator')");
+			rs3 = stmt.executeQuery("SELECT idroleList FROM roleList WHERE idunitList = (SELECT idunitList FROM unitList WHERE unitName ='" + unit + "') AND idposition != (SELECT idposition FROM position WHERE positionName ='creator')");
 			while (rs3.next()) {
 
 				int roleId = rs3.getInt("idroleList");
@@ -365,9 +366,46 @@ public class DataBaseInterface {
 		}
 	}
 
-	boolean checkTargetRoleNorm(String role, String unit) {
-		// TODO on estan les normes
-		return false;
+	boolean checkTargetRoleNorm(String role, String unit) throws MySQLException {
+		Connection connection = null;
+		Statement st = null;
+
+		ResultSet res = null;
+
+
+		try {
+			connection = db.connect();
+
+			st = connection.createStatement();
+			res = st.executeQuery("SELECT true FROM normList nl inner join unitList ul on nl.idunitList=ul.idunitList inner join targetType tt on tt.idtargetType=nl.idtargetType inner join roleList rl on rl.idroleList=nl.targetvalue where ul.unitName='"+unit+"' and tt.targetName='roleName' and rl.roleName='"+role+"'");
+			if (res.next()) {
+				return true;
+
+			}
+	
+			return false;
+		} catch (SQLException e) {
+			String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
+			throw new MySQLException(message);
+		} finally {
+
+			try
+			{
+				if (connection != null)
+					connection.close();
+				if (st != null)
+					st.close();
+			
+
+				if (res != null)
+					res.close();
+			
+			}catch(SQLException e)
+			{
+				String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
+				throw new MySQLException(message);
+			}
+		}
 	}
 
 	boolean checkPosition(String agent, String position) throws MySQLException {
@@ -456,10 +494,10 @@ public class DataBaseInterface {
 					connection.close();
 				if (st != null)
 					st.close();
-				
+
 				if (res != null)
 					res.close();
-				
+
 			}catch(SQLException e)
 			{
 				String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
@@ -3032,21 +3070,181 @@ public class DataBaseInterface {
 		return result;
 	}
 
-	boolean checkPermitNorms(String AgentName, String UnitName, String ServiceName)
+	ArrayList<String> getAgentNormRules(String UnitName, String AgentName, String Deontic, String Service) throws MySQLException
 	{
-		//TODO por implementar.
-		boolean result = false;
+		ArrayList<String> result = new ArrayList<String>();
 
-		return result;
+		Connection connection = null;
+		Statement st = null;
+		ResultSet res = null;
+		ResultSet res2 = null;
+
+		try
+		{
+			connection = db.connect();
+			st = connection.createStatement();
+			res = st.executeQuery("select distinct nl.normRule from normList nl inner join unitList ul on nl.idunitList=ul.idunitList inner join targetType tt on nl.idtargetType=tt.idtargetType inner join deontic d on d.iddeontic=nl.iddeontic inner join actionNorm an on an.idactionnorm=nl.idactionnorm" +
+					" where ul.unitName='"+UnitName+"' and d.deonticdesc='"+Deontic+"' and an.description='"+Service+"' and tt.targetName='agentName' and nl.targetValue=-1 ");
+
+			while (res.next())
+			{
+				result.add(res.getString("normRule"));
+			}
+
+			res2 = st.executeQuery("select distinct nl.normRule from normList nl inner join unitList ul on nl.idunitList=ul.idunitList inner join targetType tt on nl.idtargetType=tt.idtargetType inner join deontic d on d.iddeontic=nl.iddeontic inner join actionNorm an on an.idactionnorm=nl.idactionnorm inner join agentList al on nl.targetValue=al.idagentList" +
+					" where ul.unitName='"+UnitName+"' and d.deonticdesc='"+Deontic+"' and an.description='"+Service+"' and tt.targetName='agentName' and al.agentName='"+AgentName+"'");
+
+
+			while (res2.next())
+			{
+				result.add(res2.getString("normRule"));
+			}
+
+			return result;
+
+		} catch (SQLException e) {
+			String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
+			throw new MySQLException(message);
+		} finally {
+
+			try
+			{
+				if (connection != null)
+					connection.close();
+				if (st != null)
+					st.close();
+
+
+				if (res != null)
+					res.close();
+				if (res2 != null)
+					res2.close();
+
+			}catch(SQLException e)
+			{
+				String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
+				throw new MySQLException(message);
+			}
+		}
 	}
 
-	boolean checkFordibbenNorms(String AgentName, String UnitName, String ServiceName)
+	ArrayList<String> getPositionNormRules(String UnitName, String AgentName, String Deontic, String Service) throws MySQLException
 	{
-		//TODO por implementar.
-		boolean result = false;
+		ArrayList<String> result = new ArrayList<String>();
 
-		return result;
+		Connection connection = null;
+		Statement st = null;
+		ResultSet res = null;
+		ResultSet res2 = null;
+
+		try
+		{
+			connection = db.connect();
+			st = connection.createStatement();
+			res = st.executeQuery("select distinct nl.normRule from normList nl inner join unitList ul on nl.idunitList=ul.idunitList inner join targetType tt on nl.idtargetType=tt.idtargetType inner join deontic d on d.iddeontic=nl.iddeontic inner join actionNorm an on an.idactionnorm=nl.idactionnorm" +
+					" where ul.unitName='"+UnitName+"' and d.deonticdesc='"+Deontic+"' and an.description='"+Service+"' and tt.targetName='positionName' and nl.targetValue=-1");
+
+			while (res.next())
+			{
+				result.add(res.getString("normRule"));
+			}
+
+			res2 = st.executeQuery("select distinct nl.normRule from normList nl inner join unitList ul on nl.idunitList=ul.idunitList inner join deontic d on d.iddeontic=nl.iddeontic inner join actionNorm an on an.idactionnorm=nl.idactionnorm inner join targetType tt on nl.idtargetType=tt.idtargetType inner join position p on nl.targetValue=p.idposition inner join roleList rl on rl.idposition=p.idposition inner join agentPlayList apl on apl.idroleList=rl.idrolelist inner join agentList al on al.idagentList=apl.idagentList" +
+					" where ul.unitName='"+UnitName+"' and d.deonticdesc='"+Deontic+"' and an.description='"+Service+"' and tt.targetName='positionName' and rl.idunitList=nl.idunitList and al.agentName='"+AgentName+"'");
+
+
+			while (res2.next())
+			{
+				result.add(res2.getString("normRule"));
+			}
+
+			return result;
+
+		} catch (SQLException e) {
+			String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
+			throw new MySQLException(message);
+		} finally {
+
+			try
+			{
+				if (connection != null)
+					connection.close();
+				if (st != null)
+					st.close();
+
+
+				if (res != null)
+					res.close();
+				if (res2 != null)
+					res2.close();
+
+			}catch(SQLException e)
+			{
+				String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
+				throw new MySQLException(message);
+			}
+		}
 	}
+
+
+	ArrayList<String> getRoleNormRules(String UnitName, String AgentName, String Deontic, String Service) throws MySQLException
+	{
+		ArrayList<String> result = new ArrayList<String>();
+
+		Connection connection = null;
+		Statement st = null;
+		ResultSet res = null;
+		ResultSet res2 = null;
+
+		try
+		{
+			connection = db.connect();
+			st = connection.createStatement();
+			res = st.executeQuery("select distinct nl.normRule, nl.idnormlist from normList nl inner join unitList ul on nl.idunitList=ul.idunitList inner join targetType tt on nl.idtargetType=tt.idtargetType inner join deontic d on d.iddeontic=nl.iddeontic inner join actionNorm an on an.idactionnorm=nl.idactionnorm" +
+					" where ul.unitName='"+UnitName+"' and d.deonticdesc='"+Deontic+"' and an.description='"+Service+"' and tt.targetName='roleName' and nl.targetValue=-1");
+
+			while (res.next())
+			{
+				result.add(res.getString("normRule"));
+			}
+
+			res2 = st.executeQuery("select distinct nl.normRule from normList nl inner join unitList ul on nl.idunitList=ul.idunitList inner join deontic d on d.iddeontic=nl.iddeontic inner join actionNorm an on an.idactionnorm=nl.idactionnorm inner join targetType tt on nl.idtargetType=tt.idtargetType inner join roleList rl on rl.idroleList=nl.targetValue inner join agentPlayList apl on apl.idroleList=rl.idrolelist inner join agentList al on al.idagentList=apl.idagentList" +
+					" where ul.unitName='"+UnitName+"' and d.deonticdesc='"+Deontic+"' and an.description='"+Service+"' and tt.targetName='roleName' and rl.idunitList=nl.idunitList and al.agentName='"+AgentName+"'");
+
+
+			while (res2.next())
+			{
+				result.add(res2.getString("normRule"));
+			}
+
+			return result;
+
+		} catch (SQLException e) {
+			String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
+			throw new MySQLException(message);
+		} finally {
+
+			try
+			{
+				if (connection != null)
+					connection.close();
+				if (st != null)
+					st.close();
+
+
+				if (res != null)
+					res.close();
+				if (res2 != null)
+					res2.close();
+
+			}catch(SQLException e)
+			{
+				String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
+				throw new MySQLException(message);
+			}
+		}
+	}
+
 
 	String createNorm(String UnitName, String NormContent, Norm parsedNorm, Rule normRule) throws MySQLException
 	{
@@ -3243,7 +3441,7 @@ public class DataBaseInterface {
 				st = connection.createStatement();
 
 
-				res = st.executeQuery("select nl.normName, ul.unitName, tt.targetName,al.agentName from normList nl inner join unitList ul on nl.idunitList=ul.idunitList inner join targetType tt on nl.idtargetType=tt.idtargetType inner join agentList al on nl. targetvalue=al.idagentList where tt.targetName='agentName' and al.agentName='"+TargetValueName+"' and ul.unitName='"+ UnitName+"'");
+				res = st.executeQuery("select nl.normName, ul.unitName, tt.targetName,al.agentName from normList nl inner join unitList ul on nl.idunitList=ul.idunitList inner join targetType tt on nl.idtargetType=tt.idtargetType inner join agentList al on nl. targetValue=al.idagentList where tt.targetName='agentName' and al.agentName='"+TargetValueName+"' and ul.unitName='"+ UnitName+"'");
 
 				while (res.next())
 				{
@@ -3685,7 +3883,7 @@ public class DataBaseInterface {
 			st = connection.createStatement();
 
 
-			res = st.executeQuery("select nl.normName, ul.unitName,tt.targetName,rl.roleName from normList nl inner join unitList ul on nl.idunitList=ul.idunitList inner join targetType tt on nl.idtargetType=tt.idtargetType inner join roleList rl on nl. targetvalue=rl.idroleList where tt.targetName='roleName' and ul.unitName='"+UnitName +"'");
+			res = st.executeQuery("select nl.normName, ul.unitName,tt.targetName,rl.roleName from normList nl inner join unitList ul on nl.idunitList=ul.idunitList inner join targetType tt on nl.idtargetType=tt.idtargetType inner join roleList rl on nl. targetValue=rl.idroleList where tt.targetName='roleName' and ul.unitName='"+UnitName +"'");
 
 			while (res.next())
 			{
@@ -3774,7 +3972,7 @@ public class DataBaseInterface {
 			st = connection.createStatement();
 
 
-			res = st.executeQuery("select nl.normName, ul.unitName,tt.targetName,rl.rolename from normList nl inner join unitList ul on nl.idunitList=ul.idunitList inner join targetType tt on nl.idtargetType=tt.idtargetType inner join roleList rl on nl. targetvalue=rl.idroleList inner join visibility v on rl.idvisibility=v.idvisibility where tt.targetName='roleName' and v.visibility='public' and ul.unitName='"+UnitName+"'");
+			res = st.executeQuery("select nl.normName, ul.unitName,tt.targetName,rl.rolename from normList nl inner join unitList ul on nl.idunitList=ul.idunitList inner join targetType tt on nl.idtargetType=tt.idtargetType inner join roleList rl on nl. targetValue=rl.idroleList inner join visibility v on rl.idvisibility=v.idvisibility where tt.targetName='roleName' and v.visibility='public' and ul.unitName='"+UnitName+"'");
 
 			while (res.next())
 			{
