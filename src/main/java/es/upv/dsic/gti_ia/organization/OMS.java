@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-import normative_jason.SimpleArchitecture;
+//import normative_jason.SimpleArchitecture;
 
 import org.apache.log4j.Logger;
 
@@ -28,6 +28,7 @@ import es.upv.dsic.gti_ia.organization.exception.InvalidPositionException;
 import es.upv.dsic.gti_ia.organization.exception.THOMASMessages;
 import es.upv.dsic.gti_ia.organization.exception.THOMASMessages.MessageID;
 
+import es.upv.dsic.gti_ia.norms.MagentixAgArch;
 /**
  * OMS agent is responsible for managing all the request messages from other
  * entities OMS agent follows a FIPA-Request protocol
@@ -126,7 +127,8 @@ public class OMS extends CAgent {
 		omsServicesURLs.put("InformTargetNorms", 19);
 		
 		//Launch Jason Agent
-		SimpleArchitecture archEjemplo = new SimpleArchitecture();
+		//SimpleArchitecture archEjemplo = new SimpleArchitecture();
+		MagentixAgArch archEjemplo = new MagentixAgArch();
 		
 		ag = new JasonNormativeAgent(new AgentID("JasonNormativeAgent"), "./src/test/java/normative_jason/ejemplo.asl", archEjemplo);
 		ag.start();
