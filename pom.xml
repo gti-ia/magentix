@@ -155,8 +155,8 @@
 	</reporting>
 	<!-- Que proyectos son submodulos.-->
 	<modules>
-		<module>../sfservices</module><!-- ../ indica que están al mismo nivel,lo haremos asi para adpatarnos a las estructuras del eclipse. -->
-		<module>../omsservices</module>
+		<module>../../sfservices</module><!-- ../ indica que están al mismo nivel,lo haremos asi para adpatarnos a las estructuras del eclipse. -->
+		<module>../../omsservices</module>
 	</modules>
 	<build>
 		<plugins>
@@ -229,22 +229,12 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.mindswap</groupId>
-			<artifactId>owl-s</artifactId>
-			<version>1.1.0</version>
+			<groupId>es.upv.dsic.gti-ia</groupId>
+			<artifactId>magentix2</artifactId>
+			<version>2.0</version>
 		</dependency>
 
-		<dependency>
-			<groupId>org.jade</groupId>
-			<artifactId>jade</artifactId>
-			<version>3.6.1</version>
-		</dependency>
 
-		<dependency>
-			<groupId>org.jade</groupId>
-			<artifactId>jadeTools</artifactId>
-			<version>3.6.1</version>
-		</dependency>
 
 		<dependency>
 			<groupId>mysql</groupId>
@@ -282,4 +272,13 @@
 			<version>1.4</version>
 		</dependency>
 	</dependencies>
+
+        <repositories>
+                <repository>
+                        <id>GTI</id>
+                        <url>http://gti-ia.dsic.upv.es:8081/artifactory/remote-repos/</url>
+                </repository>
+        </repositories>
+
+
 </project>
