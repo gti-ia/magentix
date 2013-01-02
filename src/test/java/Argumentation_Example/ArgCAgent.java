@@ -322,7 +322,6 @@ public class ArgCAgent extends CAgent {
 						traceFile.write(myID +"::propose::"+currentPosition.getSolution().getConclusion().getDescription()+"\n");
 						traceFile.close();
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 						logger.error(e.getMessage());
 					}
@@ -338,7 +337,6 @@ public class ArgCAgent extends CAgent {
 						traceFile.write(myID +"::withdraw::"+"\n");
 						traceFile.close();
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 						logger.error(e.getMessage());
 					}
@@ -359,7 +357,6 @@ public class ArgCAgent extends CAgent {
 					traceFile.write(myID +"<-"+whyAgentID+"::why::"+currentPosition.getSolution().getConclusion().getDescription()+"\n");
 					traceFile.close();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 					logger.error(e.getMessage());
 				}
@@ -399,7 +396,6 @@ public class ArgCAgent extends CAgent {
 							traceFile.write(myID +"->"+whyAgentID+"::assert::"+currentPosition.getSolution().getConclusion().getDescription()+"\n");
 							traceFile.close();
 						} catch (IOException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 							logger.error(e.getMessage());
 						}
@@ -478,7 +474,6 @@ public class ArgCAgent extends CAgent {
 						traceFile.write(myID +"<-"+subDialogueAgentID+"::assert::"+againstArgument.getHasConclusion().getDescription()+"\n");
 						traceFile.close();
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 						logger.error(e.getMessage());
 					}
@@ -502,7 +497,6 @@ public class ArgCAgent extends CAgent {
 						traceFile.write(myID +"<-"+subDialogueAgentID+"::attack::"+againstArgument.getHasConclusion().getDescription()+"\n");
 						traceFile.close();
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 						logger.error(e.getMessage());
 					}
@@ -584,7 +578,6 @@ public class ArgCAgent extends CAgent {
 						traceFile.write(myID +"->"+subDialogueAgentID+"::attack::"+currentPosition.getSolution().getConclusion().getDescription()+"\n");
 						traceFile.close();
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 						logger.error(e.getMessage());
 					}
@@ -693,7 +686,6 @@ public class ArgCAgent extends CAgent {
 						traceFile.write(myID +"->"+pos.getAgentID()+"::why::"+pos.getSolution().getConclusion().getDescription()+"\n");
 						traceFile.close();
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 						logger.error(e.getMessage());
 					}
@@ -771,7 +763,6 @@ public class ArgCAgent extends CAgent {
 				currentPosition.getSolution().getConclusion().getDescription()+"::"+currentPosition.getTimesAccepted()+"\n");
 					traceFile.close();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 					logger.error(e.getMessage());
 				}
@@ -924,7 +915,7 @@ public class ArgCAgent extends CAgent {
 
 		// a test agent will give the initiator agent the problem to solve
 		similarDomainCases = domainCBR.retrieve(domCase.getProblem().getDomainContext().getPremises(), domCBRthreshold);
-
+		
 		currentDialogueID = dialogueID;
 
 		// has cases and solutions to enter in the dialogue
@@ -950,7 +941,7 @@ public class ArgCAgent extends CAgent {
 
 		}
 		// Not enter in the dialogue
-		else {
+		else { 
 			return withdraw_dialogue();
 		}
 	}
@@ -966,7 +957,7 @@ public class ArgCAgent extends CAgent {
 			lastPositionBeforeNull = new Position(currentPosition.getAgentID(), currentPosition.getDialogueID(),
 					currentPosition.getSolution(), currentPosition.getPremises(), currentPosition.getDomainCases(),
 					currentPosition.getDomainCaseSimilarity());
-		;
+		
 		currentPosition = null;
 		currentProblem = null;
 		positionsGenerated = false;

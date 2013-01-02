@@ -97,13 +97,13 @@ public class ArgInterfaceAgent extends SingleAgent {
 					iniArgFileNames.add(argFile);
 					finArgFileNames.add(argFile);
 				}
-				int nOperators = 0, nExperts = 0, nAdministrators = 0;
+				int nOperators = 0, nExperts = 0, nManagers = 0;
 				if (tech.getRole().equalsIgnoreCase("operator")) {
 					nOperators = Integer.parseInt(tech.getQuantity());
 				} else if (tech.getRole().equalsIgnoreCase("expert")) {
 					nExperts = Integer.parseInt(tech.getQuantity());
-				} else if (tech.getRole().equalsIgnoreCase("administrator")) {
-					nAdministrators = Integer.parseInt(tech.getQuantity());
+				} else if (tech.getRole().equalsIgnoreCase("manager")) {
+					nManagers = Integer.parseInt(tech.getQuantity());
 				}
 				// TODO change to the real value, tindre en compte que l'agent
 				// només tria les posicions que promouen un dels seus valors
@@ -113,7 +113,7 @@ public class ArgInterfaceAgent extends SingleAgent {
 				values.add("Quality");
 				values.add("Savings");
 				ArrayList<SocialEntity> socEnt = AgentsCreation.createSocialEntities(tech.getBaseID(), nOperators,
-						nExperts, nAdministrators, values);
+						nExperts, nManagers, values);
 				
 				
 				
@@ -265,7 +265,7 @@ public class ArgInterfaceAgent extends SingleAgent {
 
 			try {
 
-				FileReader fstream = new FileReader("testArgumentation/tracesArg" + traceID + "-" + aTech);
+				FileReader fstream = new FileReader("testArgumentation/tracesArg/" + traceID + "-" + aTech);
 				BufferedReader reader = new BufferedReader(fstream);
 				String line = reader.readLine();
 				

@@ -105,17 +105,17 @@ public class AgentsCreation {
 
 	/**
 	 * Creates a {@link SocialEntity} with the given base name and the number of
-	 * operators, experts and administrators specified
+	 * operators, experts and managers specified
 	 * 
 	 * @param baseName
 	 *            Name to put as base of the {@link SocialEntity} create.
 	 * @param nOperators
 	 * @param nExperts
-	 * @param nAdministrators
+	 * @param nManagers
 	 * @return {@link ArrayList} of {@link SocialEntity}
 	 */
 	public static ArrayList<SocialEntity> createSocialEntities(String baseName, int nOperators, int nExperts,
-			int nAdministrators) {
+			int nManagers) {
 		ArrayList<ValPref> preferredValues = AgentsCreation.getValPrefList();
 		ArrayList<SocialEntity> socialEntities = new ArrayList<SocialEntity>();
 		for (int i = 0; i < nOperators; i++) {
@@ -128,8 +128,8 @@ public class AgentsCreation {
 					preferredValues.get(1));
 			socialEntities.add(socialEntity);
 		}
-		for (int i = 0; i < nAdministrators; i++) {
-			SocialEntity socialEntity = new SocialEntity(i, baseName + "Administrator" + i, "administrator", null,
+		for (int i = 0; i < nManagers; i++) {
+			SocialEntity socialEntity = new SocialEntity(i, baseName + "Manager" + i, "manager", null,
 					preferredValues.get(1));
 			socialEntities.add(socialEntity);
 		}
@@ -139,20 +139,20 @@ public class AgentsCreation {
 	
 	/**
 	 * Creates a {@link SocialEntity} with the given base name and the number of
-	 * operators, experts and administrators specified, putting the given valpref
+	 * operators, experts and managers specified, putting the given valpref
 	 * 
 	 * @param baseName
 	 *            Name to put as base of the {@link SocialEntity} create.
 	 * @param nOperators
 	 * @param nExperts
-	 * @param nAdministrators
+	 * @param nManagers
 	 * @param value Main preferred value
 	 * @return {@link ArrayList} of {@link SocialEntity}
 	 */
 	public static ArrayList<SocialEntity> createSocialEntities(String baseName, int nOperators, int nExperts,
-			int nAdministrators, ArrayList<String> values) {
+			int nManagers, ArrayList<String> values) {
 		ValPref valPref=new ValPref(values);
-		ArrayList<SocialEntity> socialEntities = AgentsCreation.createSocialEntities(baseName, nOperators, nExperts, nAdministrators);
+		ArrayList<SocialEntity> socialEntities = AgentsCreation.createSocialEntities(baseName, nOperators, nExperts, nManagers);
 		Iterator<SocialEntity> iterSocEnt=socialEntities.iterator();
 		while(iterSocEnt.hasNext()){
 			SocialEntity soc=iterSocEnt.next();
@@ -164,16 +164,16 @@ public class AgentsCreation {
 
 	/**
 	 * Creates a {@link SocialEntity} with different value preferences, the given
-	 * base name and the number of operators, experts and administrators specified
+	 * base name and the number of operators, experts and managers specified
 	 * 
 	 * @param baseName
 	 *            Name to put as base of the {@link SocialEntity} create.
 	 * @param nOperators
 	 * @param nExperts
-	 * @param nAdministrators
+	 * @param nManagers
 	 * @return {@link ArrayList} of {@link SocialEntity}
 	 */
-	public static ArrayList<SocialEntity> createSocialEntitiesDifRoles(String baseName, int nAdministrators, int nExperts,
+	public static ArrayList<SocialEntity> createSocialEntitiesDifRoles(String baseName, int nManagers, int nExperts,
 			int nOperators) {
 		ArrayList<ValPref> preferredValues = AgentsCreation.getValPrefList();
 		ArrayList<SocialEntity> socialEntities = new ArrayList<SocialEntity>();
@@ -181,13 +181,13 @@ public class AgentsCreation {
 		int j = 0;
 		SocialEntity socialEntity;
 
-		for (int i = j; i < nAdministrators; i++) {
+		for (int i = j; i < nManagers; i++) {
 			int index = (int) (Math.random() * preferredValues.size());
 			if (index < 5)
-				socialEntity = new SocialEntity(i, baseName + "Administrator" + i, "administrator", null,
+				socialEntity = new SocialEntity(i, baseName + "Manager" + i, "manager", null,
 						preferredValues.get(index));
 			else
-				socialEntity = new SocialEntity(i, baseName + "Administrator" + i, "administrator", null, preferredValues.get(5));
+				socialEntity = new SocialEntity(i, baseName + "Manager" + i, "manager", null, preferredValues.get(5));
 
 			socialEntities.add(socialEntity);
 			j++;
@@ -221,16 +221,16 @@ public class AgentsCreation {
 
 	/**
 	 * Creates a {@link SocialEntity} with the given list of preferences, base
-	 * name and the number of operators, experts and administrators specified
+	 * name and the number of operators, experts and managers specified
 	 * 
 	 * @param baseName
 	 *            Name to put as base of the {@link SocialEntity} create.
 	 * @param nOperators
 	 * @param nExperts
-	 * @param nAdministrators
+	 * @param nManagers
 	 * @return {@link ArrayList} of {@link SocialEntity}
 	 */
-	public static ArrayList<SocialEntity> createSocialEntitiesDifRoles(int valList, String baseName, int nAdministrators,
+	public static ArrayList<SocialEntity> createSocialEntitiesDifRoles(int valList, String baseName, int nManagers,
 			int nExperts, int nOperators) {
 		ArrayList<ValPref> preferredValues = AgentsCreation.getValPrefList();
 		ArrayList<SocialEntity> socialEntities = new ArrayList<SocialEntity>();
@@ -238,8 +238,8 @@ public class AgentsCreation {
 		int j = 0;
 		SocialEntity socialEntity;
 
-		for (int i = j; i < nAdministrators; i++) {
-			socialEntity = new SocialEntity(i, baseName + "Administrator" + i, "administrator", null, preferredValues.get(valList));
+		for (int i = j; i < nManagers; i++) {
+			socialEntity = new SocialEntity(i, baseName + "Manager" + i, "manager", null, preferredValues.get(valList));
 			socialEntities.add(socialEntity);
 			j++;
 		}
@@ -262,16 +262,16 @@ public class AgentsCreation {
 
 	/**
 	 * Creates a {@link SocialEntity} with void values, the given base name and
-	 * the number of operators, experts and administrators specified
+	 * the number of operators, experts and managers specified
 	 * 
 	 * @param baseName
 	 *            Name to put as base of the {@link SocialEntity} create.
 	 * @param nOperators
 	 * @param nExperts
-	 * @param nAdministrators
+	 * @param nManagers
 	 * @return {@link ArrayList} of {@link SocialEntity}
 	 */
-	public static ArrayList<SocialEntity> createSocialEntitiesDifRolesVoidValues(String baseName, int nAdministrators,
+	public static ArrayList<SocialEntity> createSocialEntitiesDifRolesVoidValues(String baseName, int nManagers,
 			int nExperts, int nOperators) {
 		ArrayList<ValPref> preferredValues = AgentsCreation.getValPrefList();
 		ArrayList<ValPref> preferredValuesVoid = AgentsCreation.getValPrefVoidList();
@@ -280,16 +280,16 @@ public class AgentsCreation {
 		int j = 0;
 		SocialEntity socialEntity;
 
-		for (int i = j; i < nAdministrators; i++) {
+		for (int i = j; i < nManagers; i++) {
 			int index = (int) (Math.random() * preferredValues.size());
 
 			if (i == 0 && index < 5)
-				socialEntity = new SocialEntity(i, baseName + "Administrator" + i, "administrator", null,
+				socialEntity = new SocialEntity(i, baseName + "Manager" + i, "manager", null,
 						preferredValues.get(index));
 			else if (i == 0)
-				socialEntity = new SocialEntity(i, baseName + "Administrator" + i, "administrator", null, preferredValues.get(5));
+				socialEntity = new SocialEntity(i, baseName + "Manager" + i, "manager", null, preferredValues.get(5));
 			else
-				socialEntity = new SocialEntity(i, baseName + "Administrator" + i, "administrator", null,
+				socialEntity = new SocialEntity(i, baseName + "Manager" + i, "manager", null,
 						preferredValuesVoid.get(0));
 
 			socialEntities.add(socialEntity);
@@ -354,17 +354,17 @@ public class AgentsCreation {
 
 	/**
 	 * Creates an {@link ArrayList} with {@link ArrayList} of
-	 * {@link DependencyRelation} for each operator, expert and administrator
+	 * {@link DependencyRelation} for each operator, expert and manager
 	 * specified.
 	 * 
 	 * @param nOperators
 	 * @param nExperts
-	 * @param nAdministrators
+	 * @param nManagers
 	 * @return an {@link ArrayList} with {@link ArrayList} of
 	 *         {@link DependencyRelation}
 	 */
 	public static ArrayList<ArrayList<DependencyRelation>> createDependencyRelations(int nOperators, int nExperts,
-			int nAdministrators) {
+			int nManagers) {
 		ArrayList<ArrayList<DependencyRelation>> dependencyLists = new ArrayList<ArrayList<DependencyRelation>>();
 
 		for (int i = 0; i < nOperators; i++) {
@@ -375,7 +375,7 @@ public class AgentsCreation {
 			for (int j = 0; j < nExperts; j++) {
 				operatorDepenRels.add(DependencyRelation.CHARITY);
 			}
-			for (int j = 0; j < nAdministrators; j++) {
+			for (int j = 0; j < nManagers; j++) {
 				operatorDepenRels.add(DependencyRelation.CHARITY);
 			}
 
@@ -390,14 +390,14 @@ public class AgentsCreation {
 			for (int j = 0; j < nExperts - 1; j++) {
 				expertDepenRels.add(DependencyRelation.CHARITY);
 			}
-			for (int j = 0; j < nAdministrators; j++) {
+			for (int j = 0; j < nManagers; j++) {
 				expertDepenRels.add(DependencyRelation.CHARITY);
 			}
 
 			dependencyLists.add(expertDepenRels);
 		}
 
-		for (int i = 0; i < nAdministrators; i++) {
+		for (int i = 0; i < nManagers; i++) {
 			ArrayList<DependencyRelation> managerDepenRels = new ArrayList<DependencyRelation>();
 			for (int j = 0; j < nOperators; j++) {
 				managerDepenRels.add(DependencyRelation.POWER);
@@ -405,7 +405,7 @@ public class AgentsCreation {
 			for (int j = 0; j < nExperts; j++) {
 				managerDepenRels.add(DependencyRelation.POWER);
 			}
-			for (int j = 0; j < nAdministrators - 1; j++) {
+			for (int j = 0; j < nManagers - 1; j++) {
 				managerDepenRels.add(DependencyRelation.CHARITY);
 			}
 
@@ -417,20 +417,20 @@ public class AgentsCreation {
 
 	/**
 	 * Creates an {@link ArrayList} with {@link ArrayList} of
-	 * {@link DependencyRelation} for each administrator, expert and operator
+	 * {@link DependencyRelation} for each manager, expert and operator
 	 * specified.
 	 * 
 	 * @param nOperators
 	 * @param nExperts
-	 * @param nAdministrators
+	 * @param nManagers
 	 * @return an {@link ArrayList} with {@link ArrayList} of
 	 *         {@link DependencyRelation}
 	 */
-	public static ArrayList<ArrayList<DependencyRelation>> createDependencyRelationsDifRoles(int nAdministrators,
+	public static ArrayList<ArrayList<DependencyRelation>> createDependencyRelationsDifRoles(int nManagers,
 			int nExperts, int nOperators) {
 		ArrayList<ArrayList<DependencyRelation>> dependencyLists = new ArrayList<ArrayList<DependencyRelation>>();
 
-		for (int i = 0; i < nAdministrators; i++) {
+		for (int i = 0; i < nManagers; i++) {
 			ArrayList<DependencyRelation> managerDepenRels = new ArrayList<DependencyRelation>();
 			for (int j = 0; j < nOperators; j++) {
 				managerDepenRels.add(DependencyRelation.POWER);
@@ -438,7 +438,7 @@ public class AgentsCreation {
 			for (int j = 0; j < nExperts; j++) {
 				managerDepenRels.add(DependencyRelation.POWER);
 			}
-			for (int j = 0; j < nAdministrators - 1; j++) {
+			for (int j = 0; j < nManagers - 1; j++) {
 				managerDepenRels.add(DependencyRelation.CHARITY);
 			}
 
@@ -453,7 +453,7 @@ public class AgentsCreation {
 			for (int j = 0; j < nExperts - 1; j++) {
 				expertDepenRels.add(DependencyRelation.CHARITY);
 			}
-			for (int j = 0; j < nAdministrators; j++) {
+			for (int j = 0; j < nManagers; j++) {
 				expertDepenRels.add(DependencyRelation.CHARITY);
 			}
 
@@ -468,7 +468,7 @@ public class AgentsCreation {
 			for (int j = 0; j < nExperts; j++) {
 				operatorDepenRels.add(DependencyRelation.CHARITY);
 			}
-			for (int j = 0; j < nAdministrators; j++) {
+			for (int j = 0; j < nManagers; j++) {
 				operatorDepenRels.add(DependencyRelation.CHARITY);
 			}
 
@@ -503,7 +503,7 @@ public class AgentsCreation {
 				else if(socialEntities.get(i).getRole().equalsIgnoreCase("expert")){
 					deps.add(DependencyRelation.POWER);
 				}
-				else if(socialEntities.get(i).getRole().equalsIgnoreCase("administrator")){
+				else if(socialEntities.get(i).getRole().equalsIgnoreCase("manager")){
 					deps.add(DependencyRelation.CHARITY);
 				}
 				else 
