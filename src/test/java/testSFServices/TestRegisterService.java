@@ -59,6 +59,13 @@ public class TestRegisterService extends TestCase {
 	protected void tearDown() throws Exception {
 		super.tearDown();
 
+		//------------------Clean Data Base -----------//
+		dbA.executeSQL("DELETE FROM agentPlayList");
+		dbA.executeSQL("DELETE FROM roleList WHERE idroleList != 1");
+		dbA.executeSQL("DELETE FROM unitHierarchy WHERE idChildUnit != 1");
+		dbA.executeSQL("DELETE FROM unitList WHERE idunitList != 1");
+		dbA.removeJenaTables();
+		//--------------------------------------------//
 		
 		sfProxy = null;
 
