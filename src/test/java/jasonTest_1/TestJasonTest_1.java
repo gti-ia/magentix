@@ -25,7 +25,7 @@ public class TestJasonTest_1 extends TestCase {
 		/**
 		 * Setting the Logger
 		 */
-		DOMConfigurator.configure("configuration/loggin.xml");
+		//DOMConfigurator.configure("configuration/loggin.xml");
 
 
 		/**
@@ -53,7 +53,7 @@ public class TestJasonTest_1 extends TestCase {
 
 	
 
-		System.out.println("Test");
+		//System.out.println("Test");
 		
 
 	}
