@@ -41,7 +41,7 @@ public class TestTrace_ProdCons extends TestCase {
 		/**
 		 * Setting the Logger
 		 */
-		DOMConfigurator.configure("configuration/loggin.xml");
+		//DOMConfigurator.configure("configuration/loggin.xml");
 
 
 		/**
@@ -124,7 +124,8 @@ public class TestTrace_ProdCons extends TestCase {
 		super.tearDown();
 		
 		tm.finalize();
-
+		sender.finalize();
+		consumer.finalize();
 	}
 
 }

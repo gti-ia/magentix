@@ -23,7 +23,7 @@ public class TestBaseAgent extends TestCase {
 		/**
 		 * Setting the Logger
 		 */
-		DOMConfigurator.configure("configuration/loggin.xml");
+		//DOMConfigurator.configure("configuration/loggin.xml");
 
 
 		/**

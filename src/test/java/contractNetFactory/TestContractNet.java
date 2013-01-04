@@ -28,7 +28,7 @@ public class TestContractNet extends TestCase {
 		/**
 		 * Setting the Logger
 		 */
-		DOMConfigurator.configure("configuration/loggin.xml");
+		//DOMConfigurator.configure("configuration/loggin.xml");
 
 
 		/**
@@ -90,7 +90,9 @@ public class TestContractNet extends TestCase {
 	protected void tearDown() throws Exception {
 		super.tearDown();
 
-
+		Sally.finalize();
+		Sally2.finalize();
+		Harry.finalize();
 
 
 	}

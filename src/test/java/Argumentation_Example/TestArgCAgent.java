@@ -33,7 +33,7 @@ public class TestArgCAgent {
 		/**
 		 * Setting the Logger
 		 */
-		DOMConfigurator.configure("configuration/loggin.xml");
+		//DOMConfigurator.configure("configuration/loggin.xml");
 		Logger logger = Logger.getLogger(TestArgCAgent.class);
 
 		/**

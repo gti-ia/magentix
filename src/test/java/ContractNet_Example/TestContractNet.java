@@ -25,7 +25,7 @@ public class TestContractNet extends TestCase {
 		/**
 		 * Setting the Logger
 		 */
-		DOMConfigurator.configure("configuration/loggin.xml");
+		//DOMConfigurator.configure("configuration/loggin.xml");
 
 
 		/**
