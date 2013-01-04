@@ -58,7 +58,7 @@ public class ConvMagentixAgArch extends AgArch{
 	 * Runs the reasoning cycle
 	 */
 	public void run() {
-		RunCentralisedMAS.setupLogger();
+		//RunCentralisedMAS.setupLogger();
 		try {
 			while (isRunning()) {
 				// calls the Jason engine to perform one reasoning cycle
