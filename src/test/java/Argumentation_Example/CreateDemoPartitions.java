@@ -66,9 +66,14 @@ public class CreateDemoPartitions {
 		premises4.put(101, p101);
 		premises4.put(102, p102b);
 		premises4.put(103, p103);
-		Solution sol4=new Solution(new Conclusion(3004, "Reset your computer and if it doesn't work, reconfigure your wifi card"), 
-				"Quality", 1);		
-		DomainCase domCase4=createDomCase(premises4, sol4);
+		Solution sol4=new Solution(new Conclusion(3004, "Reset your computer"), 
+				"Speed", 1);
+		Solution sol5=new Solution(new Conclusion(3005, "Follow tutorial C32 on www.ourCompany.com/tutorials/C32 to reconfigure your network daemon"), 
+				"Quality", 1);
+		ArrayList<Solution> sols4=new ArrayList<Solution>();
+		sols4.add(sol4);
+		sols4.add(sol5);
+		DomainCase domCase4=createDomCase(premises4, sols4);
 		
 		Vector<DomainCase> domCases0=new Vector<DomainCase>();
 		Vector<DomainCase> domCases1=new Vector<DomainCase>();
@@ -77,19 +82,19 @@ public class CreateDemoPartitions {
 		Vector<DomainCase> domCases4=new Vector<DomainCase>();
 		Vector<DomainCase> domCases5=new Vector<DomainCase>();
 		Vector<DomainCase> domCases6=new Vector<DomainCase>();
-		Vector<DomainCase> domCases7=new Vector<DomainCase>();
-		Vector<DomainCase> domCases8=new Vector<DomainCase>();
-		Vector<DomainCase> domCases9=new Vector<DomainCase>();
+//		Vector<DomainCase> domCases7=new Vector<DomainCase>();
+//		Vector<DomainCase> domCases8=new Vector<DomainCase>();
+//		Vector<DomainCase> domCases9=new Vector<DomainCase>();
 		
 		
 		domCases0.add(domCase1);
-		domCases0.add(domCase2);
+		domCases0.add(domCase4);
 		
 		domCases1.add(domCase1);
-		domCases1.add(domCase2);
+		domCases1.add(domCase4);
 		
 		domCases2.add(domCase1);
-		domCases2.add(domCase3);
+		domCases2.add(domCase4);
 		
 		domCases3.add(domCase2);
 		domCases3.add(domCase3);
@@ -99,16 +104,7 @@ public class CreateDemoPartitions {
 		domCases5.add(domCase2);
 		
 		domCases6.add(domCase3);
-		domCases6.add(domCase4);
 		
-		domCases7.add(domCase3);
-		domCases7.add(domCase4);
-		
-		domCases8.add(domCase3);
-		domCases8.add(domCase4);
-		
-		domCases9.add(domCase1);
-		domCases9.add(domCase4);
 		
 		CreatePartitions.writeDomainCases(domCases0, "testArgumentation/partitionsInc/demoCases0.dat");
 		CreatePartitions.writeDomainCases(domCases1, "testArgumentation/partitionsInc/demoCases1.dat");
@@ -117,9 +113,9 @@ public class CreateDemoPartitions {
 		CreatePartitions.writeDomainCases(domCases4, "testArgumentation/partitionsInc/demoCases4.dat");
 		CreatePartitions.writeDomainCases(domCases5, "testArgumentation/partitionsInc/demoCases5.dat");
 		CreatePartitions.writeDomainCases(domCases6, "testArgumentation/partitionsInc/demoCases6.dat");
-		CreatePartitions.writeDomainCases(domCases7, "testArgumentation/partitionsInc/demoCases7.dat");
-		CreatePartitions.writeDomainCases(domCases8, "testArgumentation/partitionsInc/demoCases8.dat");
-		CreatePartitions.writeDomainCases(domCases9, "testArgumentation/partitionsInc/demoCases9.dat");
+//		CreatePartitions.writeDomainCases(domCases7, "testArgumentation/partitionsInc/demoCases7.dat");
+//		CreatePartitions.writeDomainCases(domCases8, "testArgumentation/partitionsInc/demoCases8.dat");
+//		CreatePartitions.writeDomainCases(domCases9, "testArgumentation/partitionsInc/demoCases9.dat");
 		
 		
 		
@@ -137,6 +133,18 @@ public class CreateDemoPartitions {
 		Justification justification=new Justification("");
 		
 		DomainCase domCase=new DomainCase(problem, solutions, justification);
+		
+		return domCase;
+	}
+	
+	private static DomainCase createDomCase(HashMap<Integer, Premise> premises, ArrayList<Solution> sols){
+		
+		
+		Problem problem=new Problem(new DomainContext(premises));
+		
+		Justification justification=new Justification("");
+		
+		DomainCase domCase=new DomainCase(problem, sols, justification);
 		
 		return domCase;
 	}

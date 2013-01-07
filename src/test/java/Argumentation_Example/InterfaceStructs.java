@@ -36,6 +36,14 @@ public class InterfaceStructs {
 			this.group = group;
 		}
 
+		public String getGroupStrategy() {
+			return groupStrategy;
+		}
+
+		public void setGroupStrategy(String groupStrategy) {
+			this.groupStrategy = groupStrategy;
+		}
+
 		public String getDecisionStrategy() {
 			return decisionStrategy;
 		}
@@ -104,19 +112,20 @@ public class InterfaceStructs {
 		String baseID;
 		String role;
 		String group;
+		String groupStrategy;
 		String decisionStrategy;
 		String initialDataPath;
 		int persuasiveness, support, risk, attack, efficiency, explanatoryPower;
 		
 		public Technician(){
 			quantity="";
-			baseID = role = group = decisionStrategy = initialDataPath = "";
+			baseID = role = group = groupStrategy = decisionStrategy = initialDataPath = "";
 			persuasiveness = support = risk = attack = efficiency = explanatoryPower = 0;
 		}
 		
 		
 		
-		public Technician(String quantity, String baseID, String role, String group, String decisionStrategy,
+		public Technician(String quantity, String baseID, String role, String group, String groupStrategy, String decisionStrategy,
 				String initialDataPath, int persuasiveness, int support, int risk, int attack, int efficiency,
 				int explanatoryPower) {
 			super();
@@ -124,6 +133,7 @@ public class InterfaceStructs {
 			this.baseID = baseID;
 			this.role = role;
 			this.group = group;
+			this.groupStrategy = groupStrategy;
 			this.decisionStrategy = decisionStrategy;
 			this.initialDataPath = initialDataPath;
 			this.persuasiveness = persuasiveness;
@@ -135,7 +145,7 @@ public class InterfaceStructs {
 		}
 
 		public String toString(){
-			return quantity+" "+baseID+" "+role+" "+group+" "+decisionStrategy+" "+initialDataPath+" "+
+			return quantity+" "+baseID+" "+role+" "+group+" "+groupStrategy+" "+decisionStrategy+" "+initialDataPath+" "+
 		persuasiveness+" "+support+" "+risk+" "+attack+" "+efficiency+" "+explanatoryPower;
 		}
 		
@@ -206,6 +216,7 @@ public class InterfaceStructs {
 		String solution;
 		String promotedValue;
 		String error;
+		String solTechnicians;
 		
 		public Solution(){
 			type="";
@@ -218,6 +229,7 @@ public class InterfaceStructs {
 			solution="";
 			promotedValue="";
 			error="";
+			solTechnicians="";
 		}
 	}
 	

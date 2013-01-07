@@ -135,7 +135,8 @@ public class TesterArgCAgentInterface extends SingleAgent {
 					+ iteration + "\n\n********\n");
 
 			Solution finalSolution = new Solution();
-
+			String winPositionAgents = null;
+			
 			while (true) {
 
 				Thread.sleep(100 * multTimeFactor);
@@ -276,8 +277,10 @@ public class TesterArgCAgentInterface extends SingleAgent {
 							finalSolution = possibleSolutions.get(maxSolID);
 						}
 					}
-					if (finalSolution == null)
+					if (finalSolution == null){
 						finalSolution = new Solution();
+						winPositionAgents="";
+					}
 					if (finalSolution.getConclusion().getID() != -1) {
 
 						// to print the agentIDs that proposed each position
@@ -288,6 +291,7 @@ public class TesterArgCAgentInterface extends SingleAgent {
 							Position pos = iterPositionsSol.next();
 							agentIDs2 += pos.getAgentID() + " ";
 						}
+						winPositionAgents=agentIDs2+"";
 						logger.info("\n++++++++++++++++\nFINAL SOLUTION:\n" + " solutionID="
 								+ finalSolution.getConclusion().getID() + " valuePromoted="
 								+ finalSolution.getPromotesValue() + " timesUsed=" + finalSolution.getTimesUsed()
@@ -325,7 +329,8 @@ public class TesterArgCAgentInterface extends SingleAgent {
 						SocialEntity socialEntitie = iterAgents.next();
 						sendMessage(socialEntitie.getName(), "SOLUTION", currentDialogueID, finalSolution);
 					}
-					sendMessage(interfaceAgentID, "SOLUTION", currentDialogueID, finalSolution);
+					
+					sendMessage(interfaceAgentID, "SOLUTION", currentDialogueID, finalSolution, winPositionAgents);
 
 					if (finalSolution.getConclusion().getID() != -1 && finalSolution.getConclusion().getID() != 0) {
 						
@@ -547,6 +552,36 @@ public class TesterArgCAgentInterface extends SingleAgent {
 		msg.setConversationId(conversationID);
 		msg.setPerformative(ACLMessage.INFORM);
 
+		try {
+			msg.setContentObject(contentObject);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		logger.info(this.getName() + ": " + "message to send to: " + msg.getReceiver().toString() + " dialogueID: "
+				+ msg.getConversationId() + " locution: " + msg.getHeaderValue("locution"));
+		send(msg);
+
+	}
+	
+	/**
+	 * Sends an {@link ACLMessage} with the given parameters
+	 * 
+	 * @param agentID
+	 * @param locution
+	 * @param conversationID
+	 * @param contentObject
+	 */
+	private void sendMessage(String agentID, String locution, String conversationID, Serializable contentObject, String solTechnicians) {
+
+		ACLMessage msg = new ACLMessage();
+		msg.setSender(getAid());
+		msg.setReceiver(new AgentID(agentID));
+		msg.setHeader("locution", locution);
+		msg.setConversationId(conversationID);
+		msg.setPerformative(ACLMessage.INFORM);
+
+		msg.setHeader("solTechnicians", solTechnicians);
 		try {
 			msg.setContentObject(contentObject);
 		} catch (IOException e) {

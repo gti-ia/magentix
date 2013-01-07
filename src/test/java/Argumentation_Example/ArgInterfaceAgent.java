@@ -48,7 +48,7 @@ public class ArgInterfaceAgent extends SingleAgent {
 		while (techsTok.hasMoreTokens()) {
 			StringTokenizer aTechTok = new StringTokenizer(techsTok.nextToken(), "##");
 			InterfaceStructs is = new InterfaceStructs();
-			Technician t = is.new Technician(aTechTok.nextToken(), aTechTok.nextToken(), aTechTok.nextToken(),
+			Technician t = is.new Technician(aTechTok.nextToken(), aTechTok.nextToken(), aTechTok.nextToken(), aTechTok.nextToken(),
 					aTechTok.nextToken(), aTechTok.nextToken(), aTechTok.nextToken(), Integer.parseInt(aTechTok
 							.nextToken()), Integer.parseInt(aTechTok.nextToken()), Integer.parseInt(aTechTok
 							.nextToken()), Integer.parseInt(aTechTok.nextToken()), Integer.parseInt(aTechTok
@@ -105,13 +105,17 @@ public class ArgInterfaceAgent extends SingleAgent {
 				} else if (tech.getRole().equalsIgnoreCase("manager")) {
 					nManagers = Integer.parseInt(tech.getQuantity());
 				}
-				// TODO change to the real value, tindre en compte que l'agent
+				// tindre en compte que l'agent
 				// només tria les posicions que promouen un dels seus valors
-				// tech.getDecisionStrategy();
+				
 				ArrayList<String> values = new ArrayList<String>();
 				values.add("Speed");
 				values.add("Quality");
 				values.add("Savings");
+				int index=values.indexOf(tech.getDecisionStrategy());
+				if(index!=-1) values.remove(index);
+				values.set(0, tech.getDecisionStrategy());
+				
 				ArrayList<SocialEntity> socEnt = AgentsCreation.createSocialEntities(tech.getBaseID(), nOperators,
 						nExperts, nManagers, values);
 				
@@ -124,8 +128,14 @@ public class ArgInterfaceAgent extends SingleAgent {
 					g.setMembers(members);
 				}
 				else{
-					// TODO change to the real value of the group from the interface
-					Group group = new Group(currentTechSet, tech.getGroup(), new ValPref(values), socEnt);
+					ArrayList<String> groupValues = new ArrayList<String>();
+					groupValues.add("Speed");
+					groupValues.add("Quality");
+					groupValues.add("Savings");
+					int indexGroup=groupValues.indexOf(tech.getDecisionStrategy());
+					if(indexGroup!=-1) groupValues.remove(index);
+					groupValues.set(0, tech.getGroupStrategy());
+					Group group = new Group(currentTechSet, tech.getGroup(), new ValPref(groupValues), socEnt);
 					groups.put(tech.getGroup(), group);
 				}
 				
@@ -232,6 +242,8 @@ public class ArgInterfaceAgent extends SingleAgent {
 				while (iterSocE.hasNext()) {
 					outJsonObject.result.techniciansIDs += iterSocE.next().getName() + "@@@";
 				}
+				
+				outJsonObject.result.solTechnicians = solMsg.getHeaderValue("solTechnicians");
 				
 				//*********************
 				outJsonObject.result.traceID = getTraceContent(solMsg.getConversationId(), outJsonObject.result.techniciansIDs);
