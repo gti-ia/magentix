@@ -49,7 +49,7 @@
   </wsdl:binding>
   <wsdl:service name="Addition">
     <wsdl:port name="AdditionSOAP" binding="tns:AdditionSOAP">
-      <soap:address location="http://localhost:8080/sfservices/services/Addition"/>
+      <soap:address location="http://localhost:8080/testSFservices/services/Addition"/>
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>
