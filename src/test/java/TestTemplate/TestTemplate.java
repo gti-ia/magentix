@@ -8,12 +8,15 @@ import junit.framework.TestCase;
 
 public class TestTemplate extends TestCase {
 
+	MessageFilter template = null;
+	ACLMessage msg = null;
+	
 	protected void setUp() throws Exception{
 		AgentsConnection.connect("localhost");
 		
-		MessageFilter template = new MessageFilter("performative = UNKNOWN AND purpose= vender");
+		template = new MessageFilter("performative = UNKNOWN AND purpose= vender");
 				
-		ACLMessage msg = new ACLMessage(ACLMessage.UNKNOWN);
+		msg = new ACLMessage(ACLMessage.UNKNOWN);
 		msg.setHeader("purpose", "vender");
 		msg.setHeader("object", "tv");
 		msg.setHeader("buyer", "ramon");
@@ -23,10 +26,8 @@ public class TestTemplate extends TestCase {
 	}
 	public void testTemplate() {
 
-		if(template.compareHeaders(msg))
-			return true;
-		else
-			fail("The filter is not passed");
-	}
+		if(!template.compareHeaders(msg))
+			fail("The template did not passed");
+}
 
 }
