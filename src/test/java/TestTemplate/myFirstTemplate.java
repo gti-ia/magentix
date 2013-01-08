@@ -1,18 +1,14 @@
-package filtros;
-
-import org.apache.log4j.xml.DOMConfigurator;
+package TestTemplate;
 
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
 import es.upv.dsic.gti_ia.core.MessageFilter;
 
-public class myFirstTemplate {
+import junit.framework.TestCase;
 
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		DOMConfigurator.configure("configuration/loggin.xml");
+public class TestTemplate extends TestCase {
+
+	protected void setUp() throws Exception{
 		AgentsConnection.connect("localhost");
 		
 		MessageFilter template = new MessageFilter("performative = UNKNOWN AND purpose= vender");
@@ -24,10 +20,13 @@ public class myFirstTemplate {
 		msg.setHeader("seller", "juan");
 		msg.setHeader("place", "mercado");
 		
+	}
+	public void testTemplate() {
+
 		if(template.compareHeaders(msg))
-			System.out.println("Pasa el filtro");
+			return true;
 		else
-			System.out.println("No pasa el filtro");
+			fail("The filter is not passed");
 	}
 
 }
