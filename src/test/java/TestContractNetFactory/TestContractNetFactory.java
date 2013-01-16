@@ -1,4 +1,4 @@
-package contractNetFactory;
+package TestContractNetFactory;
 
 
 import org.apache.log4j.xml.DOMConfigurator;
@@ -10,7 +10,7 @@ import es.upv.dsic.gti_ia.organization.OMS;
 import es.upv.dsic.gti_ia.organization.SF;
 import junit.framework.TestCase;
 
-public class TestContractNet extends TestCase {
+public class TestContractNetFactory extends TestCase {
 
 
 	SallyClass Sally = null;
@@ -18,7 +18,7 @@ public class TestContractNet extends TestCase {
 	HarryClass Harry = null;
 	
 	
-	public TestContractNet(String name) {
+	public TestContractNetFactory(String name) {
 		super(name);
 	}
 
@@ -41,13 +41,10 @@ public class TestContractNet extends TestCase {
 		try {
 
 			Sally = new SallyClass(new AgentID("Sally"));
-			Sally.start();
 			
 			Sally2 = new SallyClass(new AgentID("Mary"));
-			Sally2.start();
 
 			Harry = new HarryClass(new AgentID("Harry"));
-			Harry.start();
 		
 
 		} catch (Exception e) {
@@ -59,6 +56,9 @@ public class TestContractNet extends TestCase {
 
 	public void testContractNet()
 	{
+		Sally.start();
+		Sally2.start();
+		Harry.start();
 
 		while (Sally.propose == -1 && Sally2.propose != -1)
 		{
@@ -68,7 +68,7 @@ public class TestContractNet extends TestCase {
 				fail(e.getMessage());
 			}
 		}
-		
+
 		while (Harry.propose == null)
 		{
 			try {
@@ -78,21 +78,23 @@ public class TestContractNet extends TestCase {
 			}
 		}
 		
+
 		if (Sally.propose > Sally2.propose)
+			{
 			assertEquals("I'm Mary. Ok. See you tomorrow!", Harry.propose.getContent());
-		else
+			}
+		else 	{
 			assertEquals("I'm Sally. Ok. See you tomorrow!", Harry.propose.getContent());
-			
-		
+			}
 
 
 	}
 	protected void tearDown() throws Exception {
 		super.tearDown();
 
-		Sally.finalize();
-		Sally2.finalize();
-		Harry.finalize();
+		//Sally.finalize();
+		//Sally2.finalize();
+		//Harry.finalize();
 
 
 	}

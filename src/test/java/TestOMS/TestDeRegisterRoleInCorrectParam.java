@@ -1,4 +1,4 @@
-package omsTests;
+package TestOMS;
 
 import junit.framework.TestCase;
 import es.upv.dsic.gti_ia.core.AgentID;
@@ -33,10 +33,11 @@ public class TestDeRegisterRoleInCorrectParam extends TestCase {
 		//------------------Clean Data Base -----------//
 		dbA.executeSQL("DELETE FROM agentPlayList");
 		dbA.executeSQL("DELETE FROM agentList");
-		dbA.executeSQL("DELETE FROM normList");
 		dbA.executeSQL("DELETE FROM roleList WHERE idroleList != 1");
 		dbA.executeSQL("DELETE FROM unitHierarchy WHERE idChildUnit != 1");
 		dbA.executeSQL("DELETE FROM unitList WHERE idunitList != 1");
+
+		//--------------------------------------------//
 
 
 		dbA = null;

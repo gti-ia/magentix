@@ -1,4 +1,4 @@
-package omsTests;
+package TestOMS;
 
 import junit.framework.TestCase;
 import es.upv.dsic.gti_ia.core.AgentID;
@@ -667,7 +667,7 @@ public class TestRegisterRole extends TestCase {
 			
 			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'virtual'),(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'))");
 		
-			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
+			//dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
 			
 			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('subordinado',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+

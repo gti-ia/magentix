@@ -1,7 +1,7 @@
-package Thomas_example;
+package TestThomas;
 
 
-import omsTests.DatabaseAccess;
+//import omsTests.DatabaseAccess;
 
 import org.apache.log4j.xml.DOMConfigurator;
 

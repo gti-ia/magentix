@@ -1,4 +1,4 @@
-package jasonTest_1;
+package TestJasonTest_1;
 
 import jason.asSemantics.ActionExec;
 import jason.asSyntax.Literal;

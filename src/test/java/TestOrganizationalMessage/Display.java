@@ -1,4 +1,4 @@
-package organizational__message_example;
+package TestOrganizationalMessage;
 
 
 import java.util.ArrayList;

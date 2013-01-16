@@ -1,4 +1,4 @@
-package jasonTest_1;
+package TestJasonTest_1;
 
 
 import junit.framework.TestCase;
@@ -34,7 +34,11 @@ public class TestJasonTest_1 extends TestCase {
 		AgentsConnection.connect();
 
 
+	}
 
+	public void testBaseAgent()
+	{
+	
 		try {
 			arch = new SimpleArchitecture();
 			
@@ -44,16 +48,6 @@ public class TestJasonTest_1 extends TestCase {
 		} catch (Exception e) {
 			fail();
 		}
-
-
-	}
-
-	public void testBaseAgent()
-	{
-
-	
-
-		//System.out.println("Test");
 		
 
 	}

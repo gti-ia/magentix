@@ -1,4 +1,4 @@
-package omsTests;
+package TestOMS;
 
 import junit.framework.TestCase;
 import es.upv.dsic.gti_ia.core.AgentID;

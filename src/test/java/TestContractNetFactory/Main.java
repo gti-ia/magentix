@@ -1,4 +1,4 @@
-package contractNetFactory;
+package TestContractNetFactory;
 
 import org.apache.log4j.xml.DOMConfigurator;
 

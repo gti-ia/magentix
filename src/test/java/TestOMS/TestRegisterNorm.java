@@ -1,4 +1,4 @@
-package omsTests;
+package TestOMS;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -51,11 +51,16 @@ public class TestRegisterNorm extends TestCase {
 		//------------------Clean Data Base -----------//
 		dbA.executeSQL("DELETE FROM agentPlayList");
 		dbA.executeSQL("DELETE FROM agentList");
+		
+		dbA.executeSQL("DELETE FROM actionNormParam");
+		
 		dbA.executeSQL("DELETE FROM normList");
 		dbA.executeSQL("DELETE FROM roleList WHERE idroleList != 1");
 		dbA.executeSQL("DELETE FROM unitHierarchy WHERE idChildUnit != 1");
 		dbA.executeSQL("DELETE FROM unitList WHERE idunitList != 1");
 
+		//--------------------------------------------//
+		
 
 		dbA = null;
 		omsProxy = null;

@@ -1,4 +1,4 @@
-package Thomas_example;
+package TestThomas;
 
 /**
  * In this class the agent product is represented. 

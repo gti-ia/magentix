@@ -1,9 +1,4 @@
-package organizational__message_example;
-
-
-
-
-
+package TestOrganizationalMessage;
 
 import es.upv.dsic.gti_ia.architecture.FIPANames.InteractionProtocol;
 import es.upv.dsic.gti_ia.cAgents.BeginState;

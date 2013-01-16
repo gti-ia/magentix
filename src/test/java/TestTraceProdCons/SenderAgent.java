@@ -1,4 +1,4 @@
-package Trace_ProdCons;
+package TestTraceProdCons;
 
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;

@@ -1,4 +1,4 @@
-package norms;
+package TestNormsModule;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;

@@ -1,4 +1,4 @@
-package omsTests;
+package TestOMS;
 
 import java.util.ArrayList;
 

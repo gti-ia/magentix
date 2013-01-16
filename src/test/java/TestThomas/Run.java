@@ -1,4 +1,4 @@
-package Thomas_example;
+package TestThomas;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;

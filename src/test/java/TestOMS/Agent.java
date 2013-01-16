@@ -1,4 +1,4 @@
-package omsTests;
+package TestOMS;
 
 import es.upv.dsic.gti_ia.architecture.QueueAgent;
 import es.upv.dsic.gti_ia.core.AgentID;

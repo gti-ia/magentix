@@ -1,7 +1,7 @@
-package organizational__message_example;
+package TestOrganizationalMessage;
 
 
-import omsTests.DatabaseAccess;
+//import omsTests.DatabaseAccess;
 
 import org.apache.log4j.xml.DOMConfigurator;
 

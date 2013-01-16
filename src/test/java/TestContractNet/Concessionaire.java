@@ -1,4 +1,4 @@
-package ContractNet_Example;
+package TestContractNet;
 
 import es.upv.dsic.gti_ia.architecture.FIPAContractNetResponder;
 import es.upv.dsic.gti_ia.architecture.FIPANames;

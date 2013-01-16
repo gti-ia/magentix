@@ -1,8 +1,8 @@
-package testSFServices;
+package TestSF;
 
 import java.util.ArrayList;
 
-import omsTests.DatabaseAccess;
+//import omsTests.DatabaseAccess;
 
 import junit.framework.TestCase;
 import es.upv.dsic.gti_ia.core.AgentID;

@@ -1,4 +1,4 @@
-package TestOrganizationalMessage;
+package TestSF;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -11,7 +11,7 @@ import es.upv.dsic.gti_ia.organization.Configuration;
 public class DatabaseAccess {
 
 
-	private Connection connection = null;
+	public Connection connection = null;
 
 
 
@@ -107,7 +107,7 @@ public class DatabaseAccess {
 
 	public boolean executeQuery(String sql) throws SQLException{
 		Statement st = null;	
-		ResultSet res;
+		ResultSet res = null;
 		boolean result = false;
 
 		Connection connection = null;
@@ -145,9 +145,14 @@ public class DatabaseAccess {
 			{
 				st.close();
 				st=null;
+				
+				res.close();
+				res = null;
 			}
 		}
 	}
+	
+
 
 	public void executeSQL(String sql) throws SQLException{
 		Statement st = null;	

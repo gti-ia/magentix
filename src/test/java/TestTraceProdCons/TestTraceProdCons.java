@@ -1,4 +1,4 @@
-package Trace_ProdCons;
+package TestTraceProdCons;
 
 
 import org.apache.log4j.xml.DOMConfigurator;
@@ -10,7 +10,7 @@ import es.upv.dsic.gti_ia.core.TraceEvent;
 import es.upv.dsic.gti_ia.trace.TraceManager;
 import junit.framework.TestCase;
 
-public class TestTrace_ProdCons extends TestCase {
+public class TestTraceProdCons extends TestCase {
 
 
 	/**
@@ -31,7 +31,7 @@ public class TestTrace_ProdCons extends TestCase {
 
 	
 	
-	public TestTrace_ProdCons(String name) {
+	public TestTraceProdCons(String name) {
 		super(name);
 	}
 

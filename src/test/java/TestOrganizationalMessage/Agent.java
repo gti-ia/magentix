@@ -1,4 +1,4 @@
-package organizational__message_example;
+package TestOrganizationalMessage;
 
 import es.upv.dsic.gti_ia.architecture.QueueAgent;
 import es.upv.dsic.gti_ia.core.AgentID;

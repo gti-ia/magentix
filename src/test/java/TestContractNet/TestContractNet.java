@@ -1,4 +1,4 @@
-package ContractNet_Example;
+package TestContractNet;
 
 
 import org.apache.log4j.xml.DOMConfigurator;

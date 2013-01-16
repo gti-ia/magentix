@@ -1,4 +1,4 @@
-package Thomas_example;
+package TestThomas;
 
 import es.upv.dsic.gti_ia.cAgents.BeginState;
 import es.upv.dsic.gti_ia.cAgents.BeginStateMethod;

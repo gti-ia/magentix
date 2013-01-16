@@ -1,4 +1,4 @@
-package omsTests;
+package TestOMS;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

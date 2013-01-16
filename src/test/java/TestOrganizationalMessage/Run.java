@@ -1,4 +1,4 @@
-package organizational__message_example;
+package TestOrganizationalMessage;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;

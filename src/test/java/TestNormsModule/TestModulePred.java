@@ -1,4 +1,4 @@
-package norms;
+package TestNormsModule;
 
 import jason.asSyntax.Literal;
 import jason.asSyntax.Rule;
@@ -7,7 +7,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-import omsTests.DatabaseAccess;
+//import TestOMS.DatabaseAccess;
 
 import junit.framework.TestCase;
 import es.upv.dsic.gti_ia.norms.*;

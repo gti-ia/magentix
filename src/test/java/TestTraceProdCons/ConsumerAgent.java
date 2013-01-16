@@ -1,4 +1,4 @@
-package Trace_ProdCons;
+package TestTraceProdCons;
 
 import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingQueue;

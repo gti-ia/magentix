@@ -1,4 +1,4 @@
-package contractNetFactory;
+package TestContractNetFactory;
 
 import java.util.Random;
 
