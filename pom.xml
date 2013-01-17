@@ -157,9 +157,9 @@
 				    	<format>xml</format>
 				    </formats>  
 				    <argLine>-Xms512M -Xmx2650M -XX:MaxPermSize=4096M</argLine>
-				    <forkMode>always</forkMode>
-				    <threadCount>1</threadCount>
-				    <runOrder>random</runOrder>
+				    <forkMode>pertest</forkMode>
+				    <!--threadCount>1</threadCount-->
+				    <runOrder>alphabetical</runOrder>
 				</configuration>
 			</plugin>
 
