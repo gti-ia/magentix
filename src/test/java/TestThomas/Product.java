@@ -32,6 +32,7 @@ public class Product extends CAgent {
 	OMSProxy omsProxy = new OMSProxy(this);
 	SFProxy sfProxy = new SFProxy(this);
 	String message;
+	boolean started = false;
 
 	public Product(AgentID aid) throws Exception {
 		super(aid);
@@ -78,6 +79,8 @@ public class Product extends CAgent {
 			CFactory additionTalk = new myFIPA_REQUEST().newFactory("PRODUCT_TALK", null, 0, myProcessor.getMyAgent());
 
 			this.addFactoryAsParticipant(additionTalk);
+
+			this.started = true;
 
 		} catch (THOMASException e) {
 			e.printStackTrace();

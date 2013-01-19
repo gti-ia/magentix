@@ -31,6 +31,8 @@ public class Addition extends CAgent {
 	SFProxy sfProxy = new SFProxy(this);
 	String message;
 
+	boolean started = false;
+
 	public Addition(AgentID aid) throws Exception {
 		super(aid);
 
@@ -66,6 +68,8 @@ public class Addition extends CAgent {
 			CFactory additionTalk = new myFIPA_REQUEST().newFactory("ADDITION_TALK", null, 0, myProcessor.getMyAgent());
 
 			this.addFactoryAsParticipant(additionTalk);
+
+			this.started = true;
 
 		} catch (THOMASException e) {
 			e.printStackTrace();

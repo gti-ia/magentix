@@ -74,37 +74,67 @@ public class TestThomas extends TestCase {
 		proAgent = new Product(new AgentID("ProductAgent"));
 
 
-		/**
-		 * Execute the agents
-		 */
-		iniAgent.start();
-		Monitor m = new Monitor();
-
-		/**
-		 * Waiting the initialization
-		 */
-		m.waiting(5 * 1000);
-		proAgent.start();
-		addAgent.start();
-
-		m.waiting(15 * 1000);
-		jamAgent.start();
-
 
 	}
 
 	public void testThomas()
 	{
+		/**
+		 * Execute the agents
+		 */
+		iniAgent.start();
+		//Monitor m = new Monitor();
+		int counter = 20;
+		/**
+		 * Waiting the initialization
+		 */
+
+		while(!iniAgent.started)
+		{
+			try{
+				Thread.sleep(5*1000);
+			}catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			counter--;
+		}
+
+		assertTrue(iniAgent.started);
+
+		//m.waiting(5 * 1000);
+		proAgent.start();
+		addAgent.start();
+
+		counter = 20;
+		while (!addAgent.started && !proAgent.started && counter>0)
+		{
+			try{
+				Thread.sleep(5*1000);
+			}catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			counter--;
+		}
+
+		assertTrue(proAgent.started);
+		assertTrue(addAgent.started);
+		//m.waiting(30 * 1000);
+		jamAgent.start();
+
 
 		assertNotNull(iniAgent);
 
 
+		counter = 6;
 
-		while(jamAgent.getMessage() == null)
+		while(jamAgent.getMessage() == null && counter>0)
 		{
 
 			try {
 				Thread.sleep(5 * 1000);
+				counter--;
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -112,11 +142,13 @@ public class TestThomas extends TestCase {
 		}			
 		assertEquals("OK",jamAgent.getMessage());
 
-		while(iniAgent.getMessage() == null)
+		counter = 6;
+		while(iniAgent.getMessage() == null && counter>0)
 		{
 
 			try {
 				Thread.sleep(5 * 1000);
+				counter--;
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -125,11 +157,13 @@ public class TestThomas extends TestCase {
 
 		assertEquals("OK",iniAgent.getMessage());
 
-		while(addAgent.getMessage() == null)
+		counter=6;
+		while(addAgent.getMessage() == null && counter>0)
 		{
 
 			try {
 				Thread.sleep(5 * 1000);
+				counter--;
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -137,11 +171,13 @@ public class TestThomas extends TestCase {
 		}	
 		assertEquals("OK",addAgent.getMessage());
 
-		while(proAgent.getMessage() == null)
+		counter=6;
+		while(proAgent.getMessage() == null && counter>0)
 		{
 
 			try {
 				Thread.sleep(5 * 1000);
+				counter--;
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

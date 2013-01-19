@@ -23,6 +23,7 @@ public class InitiatorAgent extends CAgent {
 	OMSProxy omsProxy = new OMSProxy(this);
 	SFProxy sfProxy = new SFProxy(this);
 	String message;
+	boolean started = false;
 
 	public InitiatorAgent(AgentID aid) throws Exception {
 		super(aid);
@@ -48,6 +49,8 @@ public class InitiatorAgent extends CAgent {
 					firstProcessor.getMyAgent());
 
 			this.addFactoryAsParticipant(initiatorTalk);
+
+			this.started = true;
 
 		} catch (THOMASException e) {
 			e.printStackTrace();
