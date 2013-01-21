@@ -107,7 +107,7 @@ public class TestThomas extends TestCase {
 		addAgent.start();
 
 		counter = 20;
-		while (!addAgent.started && !proAgent.started && counter>0)
+		while ((!addAgent.started || !proAgent.started) && counter>0)
 		{
 			try{
 				Thread.sleep(5*1000);
