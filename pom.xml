@@ -156,7 +156,7 @@
 				    <formats>
 				    	<format>xml</format>
 				    </formats>  
-				    <argLine>-Xms512M -Xmx2650M -XX:MaxPermSize=4096M</argLine>
+				    <argLine>-Xms128M -Xmx2650M -XX:MaxPermSize=512M -XX:MaxHeapSize=256m</argLine><!---XX:PermSize=128M</argLine-->
 				    <forkMode>pertest</forkMode>
 				    <!--threadCount>1</threadCount-->
 				    <runOrder>alphabetical</runOrder>
