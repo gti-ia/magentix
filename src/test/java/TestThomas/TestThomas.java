@@ -50,12 +50,17 @@ public class TestThomas extends TestCase {
 
 		//------------------Clean Data Base -----------//
 		dbA.executeSQL("DELETE FROM agentPlayList");
+		dbA.executeSQL("DELETE FROM agentList");
 		dbA.executeSQL("DELETE FROM roleList WHERE idroleList != 1");
+		dbA.executeSQL("DELETE FROM normList");
 		dbA.executeSQL("DELETE FROM unitHierarchy WHERE idChildUnit != 1");
 		dbA.executeSQL("DELETE FROM unitList WHERE idunitList != 1");
 
 		//--------------------------------------------//
 
+		dbA = null;
+		omsProxy = null;
+		
 		dbA.removeJenaTables();
 
 
@@ -104,7 +109,7 @@ public class TestThomas extends TestCase {
 		proAgent.start();
 		addAgent.start();
 
-		counter = 20;
+		counter = 100;
 		while ((!addAgent.started) && counter>0)
 		{
 			try{
@@ -118,7 +123,7 @@ public class TestThomas extends TestCase {
 
 		//assertTrue(addAgent.started);
 		if (addAgent.started==false) fail("Addition Agent FAILED!");
-		counter = 40;
+		counter = 100;
 		while ((!proAgent.started) && counter>0)
 		{
 			try{
@@ -147,7 +152,7 @@ public class TestThomas extends TestCase {
 		assertNotNull(iniAgent);
 
 
-		counter = 10;
+		counter = 50;
 
 		while(jamAgent.getMessage() == null && counter>0)
 		{
@@ -211,13 +216,14 @@ public class TestThomas extends TestCase {
 		
 		//------------------Clean Data Base -----------//
 		dbA.executeSQL("DELETE FROM agentPlayList");
+		dbA.executeSQL("DELETE FROM agentList");
 		dbA.executeSQL("DELETE FROM roleList WHERE idroleList != 1");
+		dbA.executeSQL("DELETE FROM normList");
 		dbA.executeSQL("DELETE FROM unitHierarchy WHERE idChildUnit != 1");
 		dbA.executeSQL("DELETE FROM unitList WHERE idunitList != 1");
-
 		//--------------------------------------------//
 
-		//dbA.removeJenaTables();
+		dbA.removeJenaTables();
 
 		oms.terminate();
 		sf.terminate();
