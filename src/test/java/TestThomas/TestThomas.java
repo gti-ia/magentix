@@ -46,9 +46,6 @@ public class TestThomas extends TestCase {
 
 		sf =  new SF(new AgentID("SF"));
 
-		oms.start();
-		sf.start();
-		
 		dbA = new DatabaseAccess();
 
 		//------------------Clean Data Base -----------//
@@ -62,8 +59,9 @@ public class TestThomas extends TestCase {
 		dbA.removeJenaTables();
 
 
-	
-
+		oms.start();
+		sf.start();
+		
 		/**
 		 * Instantiating agents
 		 */
@@ -107,7 +105,7 @@ public class TestThomas extends TestCase {
 		addAgent.start();
 
 		counter = 20;
-		while ((!addAgent.started || !proAgent.started) && counter>0)
+		while ((!addAgent.started) && counter>0)
 		{
 			try{
 				Thread.sleep(5*1000);
@@ -118,16 +116,38 @@ public class TestThomas extends TestCase {
 			counter--;
 		}
 
-		assertTrue(proAgent.started);
-		assertTrue(addAgent.started);
+		//assertTrue(addAgent.started);
+		if (addAgent.started==false) fail("Addition Agent FAILED!");
+		counter = 40;
+		while ((!proAgent.started) && counter>0)
+		{
+			try{
+				Thread.sleep(5*1000);
+			}catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			counter--;
+		}
+
+		//assertTrue(proAgent.started);
+		if (proAgent.started==false) fail("Product Agent FAILED!");
 		//m.waiting(30 * 1000);
+
+
+		try{
+				Thread.sleep(10*1000);
+			}catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		jamAgent.start();
 
 
 		assertNotNull(iniAgent);
 
 
-		counter = 6;
+		counter = 10;
 
 		while(jamAgent.getMessage() == null && counter>0)
 		{
@@ -142,7 +162,7 @@ public class TestThomas extends TestCase {
 		}			
 		assertEquals("OK",jamAgent.getMessage());
 
-		counter = 6;
+		counter = 10;
 		while(iniAgent.getMessage() == null && counter>0)
 		{
 
@@ -157,7 +177,7 @@ public class TestThomas extends TestCase {
 
 		assertEquals("OK",iniAgent.getMessage());
 
-		counter=6;
+		counter=10;
 		while(addAgent.getMessage() == null && counter>0)
 		{
 
@@ -171,7 +191,7 @@ public class TestThomas extends TestCase {
 		}	
 		assertEquals("OK",addAgent.getMessage());
 
-		counter=6;
+		counter=10;
 		while(proAgent.getMessage() == null && counter>0)
 		{
 
@@ -197,7 +217,7 @@ public class TestThomas extends TestCase {
 
 		//--------------------------------------------//
 
-		dbA.removeJenaTables();
+		//dbA.removeJenaTables();
 
 		oms.terminate();
 		sf.terminate();

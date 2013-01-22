@@ -208,6 +208,7 @@ public class SF extends CAgent {
 
 				} catch (Exception e) {
 					next = "FAILURE";
+					logger.error("[SF] Error at doAction.");
 				}
 
 				return next;
