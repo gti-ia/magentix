@@ -58,9 +58,6 @@ public class TestThomas extends TestCase {
 
 		//--------------------------------------------//
 
-		dbA = null;
-		omsProxy = null;
-		
 		dbA.removeJenaTables();
 
 
