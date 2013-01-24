@@ -105,15 +105,35 @@ public class CreateDemoPartitions {
 		
 		domCases6.add(domCase3);
 		
-		
+		Vector<DomainCase> d0=CreatePartitions.readDomainCasesFile("testArgumentation/partitionsInc/domCases45cas0op.dat");
+		domCases0.addAll(d0);
 		CreatePartitions.writeDomainCases(domCases0, "testArgumentation/partitionsInc/demoCases0.dat");
+		
+		Vector<DomainCase> d1=CreatePartitions.readDomainCasesFile("testArgumentation/partitionsInc/domCases45cas1op.dat");
+		domCases1.addAll(d1);
 		CreatePartitions.writeDomainCases(domCases1, "testArgumentation/partitionsInc/demoCases1.dat");
+		
+		Vector<DomainCase> d2=CreatePartitions.readDomainCasesFile("testArgumentation/partitionsInc/domCases45cas2op.dat");
+		domCases2.addAll(d2);
 		CreatePartitions.writeDomainCases(domCases2, "testArgumentation/partitionsInc/demoCases2.dat");
+		
+		Vector<DomainCase> d3=CreatePartitions.readDomainCasesFile("testArgumentation/partitionsInc/domCases45cas3op.dat");
+		domCases3.addAll(d3);
 		CreatePartitions.writeDomainCases(domCases3, "testArgumentation/partitionsInc/demoCases3.dat");
+		
+		Vector<DomainCase> d4=CreatePartitions.readDomainCasesFile("testArgumentation/partitionsInc/domCases45cas4op.dat");
+		domCases4.addAll(d4);
 		CreatePartitions.writeDomainCases(domCases4, "testArgumentation/partitionsInc/demoCases4.dat");
+		
+		Vector<DomainCase> d5=CreatePartitions.readDomainCasesFile("testArgumentation/partitionsInc/domCases45cas5op.dat");
+		domCases5.addAll(d5);
 		CreatePartitions.writeDomainCases(domCases5, "testArgumentation/partitionsInc/demoCases5.dat");
+		
+		Vector<DomainCase> d6=CreatePartitions.readDomainCasesFile("testArgumentation/partitionsInc/domCases45cas6op.dat");
+		domCases6.addAll(d6);
 		CreatePartitions.writeDomainCases(domCases6, "testArgumentation/partitionsInc/demoCases6.dat");
-//		CreatePartitions.writeDomainCases(domCases7, "testArgumentation/partitionsInc/demoCases7.dat");
+
+		//		CreatePartitions.writeDomainCases(domCases7, "testArgumentation/partitionsInc/demoCases7.dat");
 //		CreatePartitions.writeDomainCases(domCases8, "testArgumentation/partitionsInc/demoCases8.dat");
 //		CreatePartitions.writeDomainCases(domCases9, "testArgumentation/partitionsInc/demoCases9.dat");
 		
