@@ -25,6 +25,12 @@ public class CreateDemoPartitions {
 	 */
 	public static void main(String[] args) {
 		
+		createDemoPartitions();
+		
+		
+	}
+
+	private static void createDemoPartitions(){
 		Premise p0=new Premise(0, "", "3002");
 		Premise p100=new Premise(100, "", "si");
 		Premise p100b=new Premise(100, "", "no");
@@ -80,8 +86,8 @@ public class CreateDemoPartitions {
 		Vector<DomainCase> domCases2=new Vector<DomainCase>();
 		Vector<DomainCase> domCases3=new Vector<DomainCase>();
 		Vector<DomainCase> domCases4=new Vector<DomainCase>();
-		Vector<DomainCase> domCases5=new Vector<DomainCase>();
-		Vector<DomainCase> domCases6=new Vector<DomainCase>();
+//		Vector<DomainCase> domCases5=new Vector<DomainCase>();
+//		Vector<DomainCase> domCases6=new Vector<DomainCase>();
 //		Vector<DomainCase> domCases7=new Vector<DomainCase>();
 //		Vector<DomainCase> domCases8=new Vector<DomainCase>();
 //		Vector<DomainCase> domCases9=new Vector<DomainCase>();
@@ -94,53 +100,97 @@ public class CreateDemoPartitions {
 		domCases1.add(domCase4);
 		
 		domCases2.add(domCase1);
-		domCases2.add(domCase4);
+		domCases2.add(domCase3);
 		
 		domCases3.add(domCase2);
 		domCases3.add(domCase3);
 		
 		domCases4.add(domCase2);
 		
-		domCases5.add(domCase2);
+//		domCases5.add(domCase2);
+//		
+//		domCases6.add(domCase3);
 		
-		domCases6.add(domCase3);
 		
-		Vector<DomainCase> d0=CreatePartitions.readDomainCasesFile("testArgumentation/partitionsInc/domCases45cas0op.dat");
-		domCases0.addAll(d0);
+		Vector<DomainCase> domCases=CreatePartitions.readDomainCasesFile("testArgumentation/Helpdesk-DomainCasesNew.dat");
+		int quantity=15;
+		int index=0;
+		for(int i=0;i<quantity;i++){
+			domCases0.add(domCases.get(index));
+			System.out.println(index);
+			index=(index+1)%domCases.size();
+		}
+		System.out.println();
+		for(int i=0;i<quantity;i++){
+			domCases1.add(domCases.get(index));
+			System.out.println(index);
+			index=(index+1)%domCases.size();
+		}
+		System.out.println();
+		for(int i=0;i<quantity;i++){
+			domCases2.add(domCases.get(index));
+			System.out.println(index);
+			index=(index+1)%domCases.size();
+		}
+		System.out.println();
+		for(int i=0;i<quantity;i++){
+			domCases3.add(domCases.get(index));
+			System.out.println(index);
+			index=(index+1)%domCases.size();
+		}
+		System.out.println();
+		for(int i=0;i<quantity;i++){
+			domCases4.add(domCases.get(index));
+			System.out.println(index);
+			index=(index+1)%domCases.size();
+		}
+//		System.out.println();
+//		for(int i=0;i<quantity;i++){
+//			domCases5.add(domCases.get(index));
+//			System.out.println(index);
+//			index=(index+1)%domCases.size();
+//		}
+//		System.out.println();
+//		for(int i=0;i<quantity;i++){
+//			domCases6.add(domCases.get(index));
+//			System.out.println(index);
+//			index=(index+1)%domCases.size();
+//		}
+		
+//		Vector<DomainCase> d0=CreatePartitions.readDomainCasesFile("testArgumentation/partitionsInc/domCases45cas0op.dat");
+//		domCases0.addAll(d0);
 		CreatePartitions.writeDomainCases(domCases0, "testArgumentation/partitionsInc/demoCases0.dat");
 		
-		Vector<DomainCase> d1=CreatePartitions.readDomainCasesFile("testArgumentation/partitionsInc/domCases45cas1op.dat");
-		domCases1.addAll(d1);
+//		Vector<DomainCase> d1=CreatePartitions.readDomainCasesFile("testArgumentation/partitionsInc/domCases45cas1op.dat");
+//		domCases1.addAll(d1);
 		CreatePartitions.writeDomainCases(domCases1, "testArgumentation/partitionsInc/demoCases1.dat");
 		
-		Vector<DomainCase> d2=CreatePartitions.readDomainCasesFile("testArgumentation/partitionsInc/domCases45cas2op.dat");
-		domCases2.addAll(d2);
+//		Vector<DomainCase> d2=CreatePartitions.readDomainCasesFile("testArgumentation/partitionsInc/domCases45cas2op.dat");
+//		domCases2.addAll(d2);
 		CreatePartitions.writeDomainCases(domCases2, "testArgumentation/partitionsInc/demoCases2.dat");
 		
-		Vector<DomainCase> d3=CreatePartitions.readDomainCasesFile("testArgumentation/partitionsInc/domCases45cas3op.dat");
-		domCases3.addAll(d3);
+//		Vector<DomainCase> d3=CreatePartitions.readDomainCasesFile("testArgumentation/partitionsInc/domCases45cas3op.dat");
+//		domCases3.addAll(d3);
 		CreatePartitions.writeDomainCases(domCases3, "testArgumentation/partitionsInc/demoCases3.dat");
 		
-		Vector<DomainCase> d4=CreatePartitions.readDomainCasesFile("testArgumentation/partitionsInc/domCases45cas4op.dat");
-		domCases4.addAll(d4);
+//		Vector<DomainCase> d4=CreatePartitions.readDomainCasesFile("testArgumentation/partitionsInc/domCases45cas4op.dat");
+//		domCases4.addAll(d4);
 		CreatePartitions.writeDomainCases(domCases4, "testArgumentation/partitionsInc/demoCases4.dat");
 		
-		Vector<DomainCase> d5=CreatePartitions.readDomainCasesFile("testArgumentation/partitionsInc/domCases45cas5op.dat");
-		domCases5.addAll(d5);
-		CreatePartitions.writeDomainCases(domCases5, "testArgumentation/partitionsInc/demoCases5.dat");
+//		Vector<DomainCase> d5=CreatePartitions.readDomainCasesFile("testArgumentation/partitionsInc/domCases45cas5op.dat");
+//		domCases5.addAll(d5);
+//		CreatePartitions.writeDomainCases(domCases5, "testArgumentation/partitionsInc/demoCases5.dat");
 		
-		Vector<DomainCase> d6=CreatePartitions.readDomainCasesFile("testArgumentation/partitionsInc/domCases45cas6op.dat");
-		domCases6.addAll(d6);
-		CreatePartitions.writeDomainCases(domCases6, "testArgumentation/partitionsInc/demoCases6.dat");
+//		Vector<DomainCase> d6=CreatePartitions.readDomainCasesFile("testArgumentation/partitionsInc/domCases45cas6op.dat");
+//		domCases6.addAll(d6);
+//		CreatePartitions.writeDomainCases(domCases6, "testArgumentation/partitionsInc/demoCases6.dat");
 
 		//		CreatePartitions.writeDomainCases(domCases7, "testArgumentation/partitionsInc/demoCases7.dat");
 //		CreatePartitions.writeDomainCases(domCases8, "testArgumentation/partitionsInc/demoCases8.dat");
 //		CreatePartitions.writeDomainCases(domCases9, "testArgumentation/partitionsInc/demoCases9.dat");
 		
-		
-		
 	}
-
+	
 	
 	private static DomainCase createDomCase(HashMap<Integer, Premise> premises, Solution sol){
 		
