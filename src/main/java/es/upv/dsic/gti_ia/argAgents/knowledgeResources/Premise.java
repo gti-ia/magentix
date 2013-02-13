@@ -7,7 +7,7 @@ import java.io.Serializable;
  * 
  */
 
-public class Premise implements Serializable{
+public class Premise implements Serializable, Comparable<Object>{
 	
 	/**
 	 * 
@@ -62,4 +62,11 @@ public class Premise implements Serializable{
     public void setName(String newName) {
         name = newName;
     }
+
+
+	@Override
+	public int compareTo(Object obj) {
+		Premise otherPremise= (Premise) obj;
+		return this.getID()-otherPremise.getID();
+	}
 }
