@@ -1,4 +1,4 @@
-package BaseAgent_Example;
+package TestBaseAgent;
 
 
 import junit.framework.TestCase;

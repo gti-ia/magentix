@@ -1,4 +1,4 @@
-package BaseAgent_Example;
+package TestBaseAgent;
 
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;

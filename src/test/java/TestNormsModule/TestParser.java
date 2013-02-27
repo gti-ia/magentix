@@ -471,8 +471,8 @@ public class TestParser extends TestCase {
 	{
 		try
 		{
-			StringBuffer StringBuffer1 = new StringBuffer("@ registerNormNorm[f,<positionName:member>,registerNorm (_,UnitName, _, AgentName),hasType(UnitName,hierarchy) & playsRole(AgentName,RoleName, UnitName) & hasPosition(RoleName,_,creator),not playsRole(AgentName,RoleName, UnitName) | not isAgent(AgentName) ];");
-
+			StringBuffer StringBuffer1 = new StringBuffer("@ registerNormNorm[f,<positionName:member>,registerNorm (_,UnitName, _,_,_,_, AgentName),hasType(UnitName,hierarchy) & playsRole(AgentName,RoleName, UnitName) & hasPosition(RoleName,_,creator),not playsRole(AgentName,RoleName, UnitName) | not isAgent(AgentName) ];");
+			
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
 			parser = new NormParser(input);

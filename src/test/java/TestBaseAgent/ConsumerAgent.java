@@ -1,4 +1,4 @@
-package BaseAgent_Example;
+package TestBaseAgent;
 
 import java.util.concurrent.LinkedBlockingQueue;
 import org.apache.qpid.transport.MessageTransfer;

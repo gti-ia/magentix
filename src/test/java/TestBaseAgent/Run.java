@@ -1,4 +1,4 @@
-package BaseAgent_Example;
+package TestBaseAgent;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;

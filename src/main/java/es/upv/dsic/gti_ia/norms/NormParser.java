@@ -1494,7 +1494,7 @@ OMSActionName ::= “registerUnit” |“deregisterUnit” |“registerRole” |
   final public ArrayList<String> OMSAction() throws ParseException, THOMASException {
         String result= "";
         ArrayList<String > resultArray= new ArrayList<String >();
-        String service, param1, param2, param3, param4, param5, param6;
+        String service, param1, param2, param3, param4, param5, param6, param7;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case registerUnit:
       try {
@@ -1605,9 +1605,15 @@ OMSActionName ::= “registerUnit” |“deregisterUnit” |“registerRole” |
       jj_consume_token(68);
       param2 = term();
       jj_consume_token(68);
-      param3 = term();
+      param3 = deonticPred();
       jj_consume_token(68);
-      param4 = term();
+      param4 = targetTypePred();
+      jj_consume_token(68);
+      param5 = targetValuePred();
+      jj_consume_token(68);
+      param6 = OMSActionNamePred();
+      jj_consume_token(68);
+      param7 = term();
       jj_consume_token(73);
         resultArray.add(service);
         result = service +"("+ param1 + ","+ param2 + ","+ param3 +","+param4+")";
@@ -1616,6 +1622,10 @@ OMSActionName ::= “registerUnit” |“deregisterUnit” |“registerRole” |
         resultArray.add(param2);
         resultArray.add(param3);
         resultArray.add(param4);
+        resultArray.add(param5);
+        resultArray.add(param6);
+        resultArray.add(param7);
+
         {if (true) return resultArray;}
       break;
     case deregisterNorm:
@@ -2617,6 +2627,11 @@ OMSActionName ::= “registerUnit” |“deregisterUnit” |“registerRole” |
     return false;
   }
 
+  private boolean jj_3R_70() {
+    if (jj_scan_token(OMSVisibility)) return true;
+    return false;
+  }
+
   private boolean jj_3R_97() {
     Token xsp;
     xsp = jj_scanpos;
@@ -2634,11 +2649,6 @@ OMSActionName ::= “registerUnit” |“deregisterUnit” |“registerRole” |
 
   private boolean jj_3R_15() {
     if (jj_scan_token(OR)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_70() {
-    if (jj_scan_token(OMSVisibility)) return true;
     return false;
   }
 
@@ -2683,6 +2693,11 @@ OMSActionName ::= “registerUnit” |“deregisterUnit” |“registerRole” |
     return false;
   }
 
+  private boolean jj_3R_69() {
+    if (jj_scan_token(OMSaccessibility)) return true;
+    return false;
+  }
+
   private boolean jj_3R_116() {
     if (jj_3R_48()) return true;
     return false;
@@ -2693,13 +2708,13 @@ OMSActionName ::= “registerUnit” |“deregisterUnit” |“registerRole” |
     return false;
   }
 
-  private boolean jj_3R_69() {
-    if (jj_scan_token(OMSaccessibility)) return true;
+  private boolean jj_3R_112() {
+    if (jj_scan_token(positionName)) return true;
     return false;
   }
 
-  private boolean jj_3R_112() {
-    if (jj_scan_token(positionName)) return true;
+  private boolean jj_3R_68() {
+    if (jj_scan_token(OMSPositions)) return true;
     return false;
   }
 
@@ -2710,11 +2725,6 @@ OMSActionName ::= “registerUnit” |“deregisterUnit” |“registerRole” |
 
   private boolean jj_3R_113() {
     if (jj_3R_48()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_68() {
-    if (jj_scan_token(OMSPositions)) return true;
     return false;
   }
 
@@ -2739,14 +2749,14 @@ OMSActionName ::= “registerUnit” |“deregisterUnit” |“registerRole” |
     return false;
   }
 
-  private boolean jj_3_5() {
-    if (jj_3R_6()) return true;
-    if (jj_3R_7()) return true;
+  private boolean jj_3R_61() {
+    if (jj_3R_71()) return true;
     return false;
   }
 
-  private boolean jj_3R_61() {
-    if (jj_3R_71()) return true;
+  private boolean jj_3_5() {
+    if (jj_3R_6()) return true;
+    if (jj_3R_7()) return true;
     return false;
   }
 
@@ -2757,11 +2767,6 @@ OMSActionName ::= “registerUnit” |“deregisterUnit” |“registerRole” |
 
   private boolean jj_3R_59() {
     if (jj_3R_69()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_45() {
-    if (jj_scan_token(MODULE)) return true;
     return false;
   }
 
@@ -2783,6 +2788,11 @@ OMSActionName ::= “registerUnit” |“deregisterUnit” |“registerRole” |
     }
     }
     }
+    return false;
+  }
+
+  private boolean jj_3R_45() {
+    if (jj_scan_token(MODULE)) return true;
     return false;
   }
 

@@ -692,7 +692,8 @@ public class OMSInterface {
 								}
 							}
 						}
-						if (checkPermitNorms(AgentName, UnitName, "registerNorm("+UnitName.toLowerCase()+","+NormContent.toLowerCase()+","+AgentName.toLowerCase()+")"))
+						
+						if (checkPermitNorms(AgentName, UnitName, "registerNorm("+UnitName.toLowerCase()+","+parsedNorm.getDeontic().toLowerCase()+","+parsedNorm.getTargetType().toLowerCase() +","+parsedNorm.getTargetValue().toLowerCase()+","+parsedNorm.getActionName().toLowerCase()+","+ AgentName.toLowerCase()+")"))
 						{
 
 							Rule normRule = belifeDbInterface.buildNormRule(parsedNorm);
@@ -704,7 +705,7 @@ public class OMSInterface {
 
 							return resultXML;
 						}
-						else if (checkFordibbenNorms(AgentName, UnitName, "registerNorm("+UnitName.toLowerCase()+","+NormContent.toLowerCase()+","+AgentName.toLowerCase()+")"))
+						else if (checkFordibbenNorms(AgentName, UnitName, "registerNorm("+UnitName.toLowerCase()+","+parsedNorm.getDeontic().toLowerCase()+","+parsedNorm.getTargetType().toLowerCase() +","+parsedNorm.getTargetValue().toLowerCase()+","+parsedNorm.getActionName().toLowerCase()+","+ AgentName.toLowerCase()+")"))
 						{
 							String message = l10n.getMessage(MessageID.FORBIDDEN_NORM);
 							throw new ForbiddenNormException(message);

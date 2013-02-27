@@ -939,7 +939,7 @@ ArrayList<String> OMSAction() throws THOMASException : {
 
 	String result= "";
 	ArrayList<String > resultArray= new ArrayList<String >();
-	String service, param1, param2, param3, param4, param5, param6;
+	String service, param1, param2, param3, param4, param5, param6, param7;
 	
   }
 { 
@@ -1001,7 +1001,7 @@ ArrayList<String> OMSAction() throws THOMASException : {
   	resultArray.add(param2);
   	resultArray.add(param3);
 	return resultArray;}
-| 	< registerNorm >{service = token.image;}	"("param1 = term()","param2 = term()"," param3 = term() "," param4 = term()")"
+| 	< registerNorm >{service = token.image;}	"("param1 = term()","param2 = term()"," param3 = deonticPred()"," param4=targetTypePred()"," param5=targetValuePred()"," param6=OMSActionNamePred()"," param7 = term()")"
 {
 	resultArray.add(service);
   	result = service +"("+ param1 + ","+ param2 + ","+ param3 +","+param4+")";
@@ -1010,12 +1010,16 @@ ArrayList<String> OMSAction() throws THOMASException : {
   	resultArray.add(param2);
   	resultArray.add(param3);
   	resultArray.add(param4);
+  	resultArray.add(param5);
+  	resultArray.add(param6);
+  	resultArray.add(param7);
+  	
 	return resultArray;}
 | 	< deregisterNorm >{service = token.image;} "("param1 = term()","param2 = term()","param3 = term()")"
 {
 	resultArray.add(service);
   	result = service +"("+ param1 + ","+ param2 + ","+ param3 + ")";
-  	resultArray.add(result);
+  	resultArray.add(result); 
   	resultArray.add(param1);
   	resultArray.add(param2);
   	resultArray.add(param3);

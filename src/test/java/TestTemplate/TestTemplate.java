@@ -12,7 +12,6 @@ public class TestTemplate extends TestCase {
 	ACLMessage msg = null;
 	
 	protected void setUp() throws Exception{
-		AgentsConnection.connect("localhost");
 		
 		template = new MessageFilter("performative = UNKNOWN AND purpose= vender");
 				
