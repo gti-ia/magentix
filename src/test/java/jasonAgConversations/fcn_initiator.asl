@@ -18,11 +18,11 @@ stuff([clothe,shoes,furniture,www,toys,electronic]).
 +!start : participants(P)&.my_name(Me)&stuff([FirstStuff|R])
 <- +conversationID(Me,cnp,FirstStuff);
    -+stuff(R);
-   !notifyParticipants(P,FirstStuff,cnp).
+   !notifyParticipants(P,FirstStuff,cnp);
+   !startConversation(FirstStuff,cnp).
 
 +!notifyParticipants([],ConvID,Protocol)
-<- .print("------- Participants notified.");
-	!startConversation(ConvID,Protocol).
+<- .print("------- Participants notified.").
 
 
 +!notifyParticipants([P|R],ConvID,Protocol): not notified(P,ConvID,Protocol)
@@ -30,11 +30,13 @@ stuff([clothe,shoes,furniture,www,toys,electronic]).
    +notified(P,ConvID,Protocol);
    !notifyParticipants(R,ConvID,Protocol).
 
+@p1[atomic]
 +!startConversation(ConvID,Protocol):participants(P)&timeOut(TO)&deadlineForProposals(DL)&
 	countnotified(CN,Protocol)&.length(P,CN)&stuff([FirstStuff|R])&.my_name(Me)
 <-  .print("******** Starting conversation ",ConvID,"."); 
     .ia_FCN_Initiator("start", TO, DL, P, ConvID,ConvID);
     .print("******** Starting conversation ",FirstStuff,".");
+     !notifyParticipants(P,FirstStuff,cnp);
     +conversationID(Me,cnp,FirstStuff);
     -+stuff(R);
     .ia_FCN_Initiator("start", TO, DL, P, FirstStuff,FirstStuff).
@@ -42,6 +44,7 @@ stuff([clothe,shoes,furniture,www,toys,electronic]).
 -!startConversation(ConvID)
 <- .print("------- The conversation could't be started.").
 
+@p2[atomic]
 +proposalsevaluationtime(ConvID):proposal(P,S,ConvID)&.my_name(Me)&conversationID(Me,cnp,ConvID)&
    stuff([FirstStuff|StuffR])&participants(PAR)&timeOut(TO)&deadlineForProposals(DL)
 <- .print("------- Proposals evaluation time. CID:",ConvID);
@@ -56,6 +59,7 @@ stuff([clothe,shoes,furniture,www,toys,electronic]).
    -+accepted([BP,SBP],ConvID);
    ?rejected(R,ConvID);
    .print("******** Starting conversation ",FirstStuff,".");
+    !notifyParticipants(PAR,FirstStuff,cnp);
    +conversationID(Me,cnp,ThirdStuff);
    -+stuff(StuffR);
    .ia_FCN_Initiator("start", TO, DL, PAR, FirstStuff,FirstStuff);
@@ -66,6 +70,7 @@ stuff([clothe,shoes,furniture,www,toys,electronic]).
    .ia_FCN_Initiator("proposalsevaluated",[],[],ConvID).
 
 //It was found a better propose than the one so far 
+@p3[atomic]
 +!evaluateProposals(ConvID):proposal(P,S,ConvID)&rejected(R,ConvID)&bestProposal(X,Sx,ConvID)&(P>X) 
 <- .print("------- Evaluating proposal ",P," from agent ",S," and updating best because ", P, " > ", X,". CID: ",ConvID);
    -proposal(P,S,ConvID);
@@ -76,6 +81,7 @@ stuff([clothe,shoes,furniture,www,toys,electronic]).
    !evaluateProposals(ConvID).
   
 //The propose found is not better than the one so far
+@p4[atomic]
 +!evaluateProposals(ConvID):proposal(P,S,ConvID)&bestProposal(X,Sx,ConvID)&rejected(R,ConvID) 
 <- .print("------- Evaluating proposal ",P," from agent ",S,". CID: ",ConvID);
    -proposal(P,S,ConvID);

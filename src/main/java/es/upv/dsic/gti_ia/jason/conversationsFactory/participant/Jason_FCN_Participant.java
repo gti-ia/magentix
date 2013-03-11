@@ -40,7 +40,6 @@ public class Jason_FCN_Participant {
 	protected TransitionSystem Ts; 
 	
 	public Jason_FCN_Participant(String agName2, TransitionSystem ts2) {
-
 		Ts = ts2;
 	}
 	
@@ -71,22 +70,17 @@ public class Jason_FCN_Participant {
 		String jasonConvID = msg.getHeaderValue("jasonID");
 		
 		Conversation conv = myProcessor.getConversation();
+		String factName = conv.factoryName;
 		//At this point the conversation associated to the CProcessor has no value
 		//for the internal conversation ID so it is updated
 		conv.jasonConvID = jasonConvID;
 		conv.initiator = msg.getSender();
-		
-		FCNConversation newConv = new FCNConversation(conv.jasonConvID, conv.internalConvID, "", conv.initiator);
+		FCNConversation newConv = new FCNConversation(conv.jasonConvID, conv.internalConvID, "", conv.initiator,factName);
 		((ConvCFactory)myProcessor.getMyFactory()).UpdateConv(newConv, myProcessor);
-		
 		String result = "";
 		AgentID Sender = myProcessor.getLastReceivedMessage().getSender();
-		
-		
 		String newMsgContent = "callforproposal"+"("+Sender.name+","+msg.getContent()+","+conv.jasonConvID+")[source(self)]";
-		
 		List<Literal> allpercep = new ArrayList<Literal>();
-		
 		allpercep.add(Literal.parseLiteral(newMsgContent));
 		((ConvMagentixAgArch)Ts.getUserAgArch()).setPerception(allpercep);
 		
@@ -116,9 +110,7 @@ public class Jason_FCN_Participant {
 	 */
 	protected void doSendProposal(ConvCProcessor myProcessor,
 			ACLMessage messageToSend){
-
 		FCNConversation conv = (FCNConversation)myProcessor.getConversation();
-		
 		messageToSend.setSender(myProcessor.getMyAgent().getAid());
 		messageToSend.setReceiver(conv.initiator);
 		messageToSend.setContent(conv.proposal);
@@ -217,9 +209,7 @@ public class Jason_FCN_Participant {
 	 */
 	protected String doTask(ConvCProcessor myProcessor, ACLMessage solicitMessage){
 		String result = ""; 
-		
 		FCNConversation conv = (FCNConversation)myProcessor.getConversation();
-		
 		List<Literal> allpercep = new ArrayList<Literal>();
 		allpercep.add(Literal.parseLiteral("timetodotask("+conv.initiator.name+","+conv.jasonConvID+")[source(self)]"));
 		((ConvMagentixAgArch)Ts.getUserAgArch()).setPerception(allpercep);
@@ -271,7 +261,6 @@ public class Jason_FCN_Participant {
 	protected void doSendInfo(ConvCProcessor myProcessor,
 			ACLMessage messageToSend){
 		FCNConversation conv = (FCNConversation)myProcessor.getConversation();
-		
 		messageToSend.setSender(myProcessor.getMyAgent().getAid());
 		messageToSend.setReceiver(myProcessor.getLastReceivedMessage().getSender());
 		messageToSend.setContent("I'm "+myProcessor.getMyAgent().getAid().name+": "+conv.infoToSend);
@@ -291,13 +280,15 @@ public class Jason_FCN_Participant {
 	 * @param myProcessor the CProcessor managing the conversation
 	 * @param messageToSend final message
 	 */
-	protected void doFinal(CProcessor myProcessor, ACLMessage messageToSend) {
+	protected void doFinal(ConvCProcessor myProcessor, ACLMessage messageToSend) {
+		FCNConversation conv = (FCNConversation)myProcessor.getConversation();
+		myProcessor.getMyAgent().removeFactory(conv.factoryName);
 		messageToSend = myProcessor.getLastSentMessage();
 	}
 
 	class FINAL_Method implements FinalStateMethod {
 		public void run(CProcessor myProcessor, ACLMessage messageToSend) {
-			doFinal(myProcessor, messageToSend);
+			doFinal((ConvCProcessor) myProcessor, messageToSend);
 		}
 	}
 	

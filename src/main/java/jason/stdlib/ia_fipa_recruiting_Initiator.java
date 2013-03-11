@@ -29,7 +29,7 @@ public class ia_fipa_recruiting_Initiator extends protocolInternalAction {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	
+
 	Jason_Fipa_Recruiting_Initiator frci;
 
 	@Override public int getMinArgs() { return 2; };
@@ -81,61 +81,52 @@ public class ia_fipa_recruiting_Initiator extends protocolInternalAction {
 		protocolSteep = getTermAsString(args[0]);
 
 		checkArguments(args);
-		
+
 		agentConversationID = getTermAsString(args[args.length-1]);
 		if (((Term)args[args.length-1]).isString()){
 			agentConversationID = "\""+agentConversationID+"\"";
 		}
-		
+
 		ConvJasonAgent myag = ((ConvMagentixAgArch)ts.getUserAgArch()).getJasonAgent();
 
 		agName  = ts.getUserAgArch().getAgName();
 		if (ts.getSettings().verbose()>1)
 			ts.getAg().getLogger().info("CALLING INTERNAL ACTION WITH STEEP: '"+protocolSteep+"'"+" CID: "+agentConversationID);
 
-		
+
 		//the first state in the conversation
 		if (protocolSteep.compareTo(Protocol_Template.START_STEP)==0){
-			
 			timeOut = getTermAsInt(args[1]); 	
 			LiteralImpl cond = new LiteralImpl(getTermAsLiteral(args[2]));
-				
 			int particnumber = getTermAsInt(args[3]);
-			
 			String participant = getAtomAsString(args[4]);
-			
 			String initialInfo = getTermAsString(args[5]);
-			
+
 			//building message template
 			ACLMessage msg = new ACLMessage();
 			msg.setProtocol("fipa-recruiting");
-			
 			msg.setContent(initialInfo);
-
-			//This time allows participants to join the conversation
-			int wait = 0;
-            while(wait<=100000){
-            	wait++;
-            }
-			
-			if (frci == null){
-
-				frci = new Jason_Fipa_Recruiting_Initiator( ts);
-
-				Protocol_Factory = frci.newFactory("FRCFACTORY", null, 
-						msg, 1, ((ConvMagentixAgArch)ts.getUserAgArch()).getJasonAgent(),timeOut);
-				/* The factory is setup to answer start conversation requests from the agent
+			String factName = getFactoryName(agentConversationID,"FRC",true);
+			frci = new Jason_Fipa_Recruiting_Initiator( ts);
+			String prevFactory = "";
+			if (Protocol_Factory!=null)
+				prevFactory = Protocol_Factory.getName();
+			if (prevFactory.compareTo(factName)!=0) // if it is a new conversation a create a new one. This verification is not strictly 
+				//necessary because it supposed that this condition will be always truth. This must be improved but, 
+				//as the participants can not distinguish between conversation of the same factory also one factory per conversation 
+				//is created with the initiator factory name as a filter. This implies one factory per conversation in the initiator too
+			{Protocol_Factory = frci.newFactory(factName, null, 
+					msg, 1, ((ConvMagentixAgArch)ts.getUserAgArch()).getJasonAgent(),timeOut);
+			/* The factory is setup to answer start conversation requests from the agent
        		 using the FIPA_REQUEST protocol.*/
 
-				((ConvMagentixAgArch)ts.getUserAgArch()).getJasonAgent().addFactoryAsInitiator(Protocol_Factory);
-				
-
+			((ConvMagentixAgArch)ts.getUserAgArch()).getJasonAgent().addFactoryAsInitiator(Protocol_Factory);
 			}
 
 			myag.lock();
 			String ConvID = myag.newConvID();
 			FRCConversation conv = new FRCConversation(agentConversationID,ConvID,initialInfo,timeOut,new AgentID(participant),
-					((ConvMagentixAgArch)ts.getUserAgArch()).getJasonAgent().getAid()); //the internal id is unknown yet
+					((ConvMagentixAgArch)ts.getUserAgArch()).getJasonAgent().getAid(),factName); //the internal id is unknown yet
 			conv.Condition = cond;
 			conv.participantsNumber = particnumber;
 			ConvCProcessor processorTemplate = ((ConvCFactory)Protocol_Factory).cProcessorTemplate();
@@ -149,7 +140,6 @@ public class ia_fipa_recruiting_Initiator extends protocolInternalAction {
 		}else
 			if(protocolSteep.compareTo(Protocol_Template.RECEIVE_INFORM_STEP)==0){
 				conversationsList.get(agentConversationID).release_semaphore();
-				
 			}
 
 		return true;

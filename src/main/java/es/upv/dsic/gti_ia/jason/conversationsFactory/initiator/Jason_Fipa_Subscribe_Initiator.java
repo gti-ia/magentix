@@ -56,8 +56,25 @@ public class Jason_Fipa_Subscribe_Initiator {
 	class BEGIN_Method implements BeginStateMethod {
 		public String run(CProcessor myProcessor, ACLMessage msg) {
 			doBegin((ConvCProcessor)myProcessor, msg);
-			return "SUBSCRIBE";
+			return "WAIT_FOR_PARTICIPANT_TO_JOIN";
 		};
+	}
+	
+	
+	/**
+	 * Method executed when the timeout for the participants to join finishes
+	 * @param myProcessor the CProcessor managing the conversation
+	 * @param messageReceived Message to send
+	 */
+	private void doReceiveCancelWait(ConvCProcessor myProcessor,
+			ACLMessage messageReceived) {
+		
+	}
+	class RECEIVE_CANCEL_WAIT_Method implements ReceiveStateMethod {
+		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
+			doReceiveCancelWait((ConvCProcessor)myProcessor, messageReceived);
+			return "SUBSCRIBE";
+		}
 	}
 	
 	/**
@@ -89,6 +106,7 @@ public class Jason_Fipa_Subscribe_Initiator {
 		messageToSend.setReceiver(conv.Participant); 
 		messageToSend.setSender(myProcessor.getMyAgent().getAid());
 		messageToSend.setHeader("jasonID", conv.jasonConvID);
+		messageToSend.setHeader("factoryname", conv.factoryName);
 		//Postcond: messageTosend must have as many headers as objects to subscribe
 	}
 
@@ -110,7 +128,6 @@ public class Jason_Fipa_Subscribe_Initiator {
 		FSConversation conv = (FSConversation) myProcessor.getConversation();
 		conv.firstResult =ACLMessage.getPerformative(ACLMessage.REFUSE);
 		conv.finalResult=ACLMessage.getPerformative(ACLMessage.REFUSE);
-
 	}
 
 	class REFUSE_Method implements ReceiveStateMethod {
@@ -185,18 +202,13 @@ public class Jason_Fipa_Subscribe_Initiator {
 			while (objIt.hasNext()) {
 				Entry<String, String> obj = objIt.next();
 				objkey = new LiteralImpl(Literal.parseLiteral(obj.getKey()));
-				
 				if (objkey.compareTo(headerkeyLit)==0){
 					obj.setValue(headerkey.getValue());
-					
 					percept = "inform("+msg.getSender().name+","+headerkey.getKey() +","+msg.getHeaderValue(headerkey.getKey() )+","+conv.jasonConvID+")[source(self)]";
 					allperc.add(Literal.parseLiteral(percept));
 				}
 			}
-			
-
 			((ConvMagentixAgArch)Ts.getUserAgArch()).setPerception(allperc);
-
 		}
 		return  "WAIT_FOR_INFORMATION";
 	}
@@ -204,24 +216,20 @@ public class Jason_Fipa_Subscribe_Initiator {
 	class INFORM_Method implements ReceiveStateMethod {
 		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
 			return doReceiveInform((ConvCProcessor)myProcessor, messageReceived);
-
 		}
 	}
 	
 	protected void doFinal(ConvCProcessor myProcessor, ACLMessage messageToSend){
-
 		FSConversation conv = (FSConversation) myProcessor.getConversation();
-
 		//To add a perception
 		List<Literal> allperc = new ArrayList<Literal>();
 		String percept = "conversationended("+conv.jasonConvID+","+'"'+ conv.finalResult.toLowerCase()+'"' +")[source(self)]";
 		allperc.add(Literal.parseLiteral(percept));
 		((ConvMagentixAgArch)Ts.getUserAgArch()).setPerception(allperc);
-
 		messageToSend = myProcessor.getLastSentMessage();
 		messageToSend.setProtocol("fipa-subscribe");
 		messageToSend.setPerformative(ACLMessage.SUBSCRIBE);
-
+		myProcessor.getMyAgent().removeFactory(conv.factoryName);
 	}
 
 	class FINAL_Method implements FinalStateMethod {
@@ -259,7 +267,6 @@ public class Jason_Fipa_Subscribe_Initiator {
 	 * @param msg Message received. 
 	 */
 	protected void doInformCancel(ConvCProcessor myProcessor, ACLMessage msg) {
-
 		FSConversation conv = (FSConversation) myProcessor.getConversation();
 		conv.finalResult=ACLMessage.getPerformative(ACLMessage.INFORM)+"_CANCEL";
 	}
@@ -277,7 +284,6 @@ public class Jason_Fipa_Subscribe_Initiator {
 	 * @param msg Message received. 
 	 */
 	protected void doFailureCancel(ConvCProcessor myProcessor, ACLMessage msg) {
-
 		FSConversation conv = (FSConversation) myProcessor.getConversation();
 		conv.finalResult=ACLMessage.getPerformative(ACLMessage.INFORM)+"_FAILURE";
 	}
@@ -311,7 +317,21 @@ public class Jason_Fipa_Subscribe_Initiator {
 		BeginState BEGIN = (BeginState) processor.getState("BEGIN");
 		BEGIN.setMethod(new BEGIN_Method());
 
-
+		// WAIT_FOR_PARTICIPANT_TO_JOIN state
+		WaitState WAIT_FOR_PARTICIPANT_TO_JOIN = new WaitState("WAIT_FOR_PARTICIPANT_TO_JOIN", 500);
+		processor.registerState(WAIT_FOR_PARTICIPANT_TO_JOIN);
+		processor.addTransition(BEGIN, WAIT_FOR_PARTICIPANT_TO_JOIN);
+		
+		// RECEIVE_CANCEL_WAIT State
+		//Header: purpose Value: waitMessage
+		ReceiveState RECEIVE_CANCEL_WAIT = new ReceiveState("RECEIVE_CANCEL_WAIT");
+		RECEIVE_CANCEL_WAIT.setMethod(new RECEIVE_CANCEL_WAIT_Method());
+		filter = new MessageFilter("purpose = waitMessage");  
+		RECEIVE_CANCEL_WAIT.setAcceptFilter(filter);
+		processor.registerState(RECEIVE_CANCEL_WAIT);
+		processor.addTransition(WAIT_FOR_PARTICIPANT_TO_JOIN,
+				RECEIVE_CANCEL_WAIT);
+		
 		//SUBSCRIBE
 		SendState SUBSCRIBE = new SendState("SUBSCRIBE");
 		SUBSCRIBE.setMethod(new SUBSCRIBE_Method());
@@ -319,7 +339,7 @@ public class Jason_Fipa_Subscribe_Initiator {
 		template.setPerformative(ACLMessage.SUBSCRIBE);
 		SUBSCRIBE.setMessageTemplate(template);
 		processor.registerState(SUBSCRIBE);
-		processor.addTransition("BEGIN", "SUBSCRIBE");
+		processor.addTransition("RECEIVE_CANCEL_WAIT", "SUBSCRIBE");
 
 		//WAIT
 		processor.registerState(new WaitState("WAIT_FOR_ACCEPTANCE", timeOut));

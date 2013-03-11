@@ -4,6 +4,7 @@ import jason.asSemantics.TransitionSystem;
 import jason.asSyntax.Literal;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -12,6 +13,7 @@ import es.upv.dsic.gti_ia.jason.conversationsFactory.ConvCProcessor;
 import es.upv.dsic.gti_ia.jason.conversationsFactory.ConvJasonAgent;
 import es.upv.dsic.gti_ia.jason.conversationsFactory.ConvMagentixAgArch;
 import es.upv.dsic.gti_ia.jason.conversationsFactory.JAucIniConversation;
+import es.upv.dsic.gti_ia.jason.conversationsFactory.JAucPartConversation;
 import es.upv.dsic.gti_ia.cAgents.BeginState;
 import es.upv.dsic.gti_ia.cAgents.BeginStateMethod;
 import es.upv.dsic.gti_ia.cAgents.CProcessor;
@@ -64,11 +66,72 @@ public class Jason_JAuc_Initiator {
 	 * @param myProcessor the CProcessor managing the conversation
 	 * @param messageReceived Message to send
 	 */
+	private void doReceiveCancelWait(ConvCProcessor myProcessor,
+			ACLMessage messageReceived) {
+
+		
+	}
 	class RECEIVE_CANCEL_WAIT_Method implements ReceiveStateMethod {
+		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
+			doReceiveCancelWait((ConvCProcessor)myProcessor, messageReceived);
+			return "SEND_START_DATA";
+		}
+
+
+	}
+	
+	
+	
+	//SEND_START_DATA
+	/**
+	 * Method executed when the initiator sends the conversation starting data information participants
+	 * @param myProcessor the CProcessor managing the conversation
+	 * @param messageToSend Message to send
+	 */
+	protected void doSendStartData(ConvCProcessor myProcessor,
+			ACLMessage messageToSend) {
+		JAucIniConversation conv = (JAucIniConversation)myProcessor.getConversation();
+		messageToSend.setProtocol("japanese-auction");
+		messageToSend.setPerformative(ACLMessage.INFORM);
+		messageToSend.setSender(myProcessor.getMyAgent().getAid());
+		messageToSend.setHeader("purpose", "startdata");
+		messageToSend.setHeader("jasonID", conv.jasonConvID);
+		messageToSend.setHeader("factoryname", conv.factoryName);
+		AgentID rec ;
+		if ((conv.PartParticipations!=null)&&(conv.PartParticipations.size()>0))
+		{
+			Iterator<AgentID> it = conv.ActiveParticipants.iterator();
+			while (it.hasNext())
+				{
+					rec = it.next();
+					messageToSend.addReceiver(rec);
+				}
+		}
+		
+	}
+	class SEND_START_DATA_Method implements SendStateMethod {
+		public String run(CProcessor myProcessor, ACLMessage messageToSend) {
+			doSendStartData((ConvCProcessor)myProcessor, messageToSend);
+			return "WAIT_FOR_PARTICIPANT_STORE_INI_DATA";
+		}
+	}
+	
+
+	//RECEIVE_CANCEL_WAIT_FOR_PARTICIPANT_STORE_INI_DATA
+	/**
+	 * Method executed when the timeout for the participants to store conversation starting data finishes 
+	 * @param myProcessor the CProcessor managing the conversation
+	 * @param messageReceived Message to send
+	 */
+
+	class RECEIVE_CANCEL_WAIT_FOR_PARTICIPANT_STORE_INI_DATA_Method implements ReceiveStateMethod {
 		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
 			return "BID_CALL";
 		}
+
+
 	}
+	
 	
 	/**
 	 * Method executed when the initiator sends the next bid to the remaining participants
@@ -77,17 +140,13 @@ public class Jason_JAuc_Initiator {
 	 */
 	protected void doBidCall(ConvCProcessor myProcessor,
 			ACLMessage messageToSend) {
-		
 		JAucIniConversation conv = (JAucIniConversation)myProcessor.getConversation();
-		
-		
 		messageToSend.setContent(conv.request); //it must have the right value
 		messageToSend.setProtocol("japanese-auction");
 		if (conv.AuctionLevel==0)
 			messageToSend.setHeader("purpose", "start");
 		else messageToSend.setHeader("purpose", "bid");
 		messageToSend.setHeader("bid", String.valueOf(conv.NextBid));
-		
 		messageToSend.setPerformative(ACLMessage.PROPOSE);
 		messageToSend.setSender(myProcessor.getMyAgent().getAid());
 		//Adding receivers. This data can change during the conversation
@@ -104,12 +163,11 @@ public class Jason_JAuc_Initiator {
 					receivers.add("\""+rec.name+"\"");
 				}
 		}
-		
 		messageToSend.setHeader("participants",receivers.toString());		
 		conv.AuctionLevel++;
 		conv.AcceptancesReceivedInCurrLevel.clear();
-		messageToSend.setHeader("jasonID", conv.jasonConvID);
 		messageToSend.setHeader("auctionlevel",""+conv.AuctionLevel);
+		
 	}
 	class BID_CALL_Method implements SendStateMethod {
 		public String run(CProcessor myProcessor, ACLMessage messageToSend) {
@@ -140,6 +198,9 @@ public class Jason_JAuc_Initiator {
 		String result = "";
 		if (conv.allActiveAcceptancesReceived()) //all active participants have answered
 		{
+			if (conv.AcceptancesReceivedInCurrLevel.size() == 1){
+				result = "SEND_WINNER";
+			}else
 			if (conv.AuctionLevel==conv.MaxIterations){//if the maximum number of iterations has been reached
 				{
 					result = "FINAL";
@@ -194,6 +255,7 @@ public class Jason_JAuc_Initiator {
 		}
 	}
 
+
 	
 	/**
 	 * Method executed when the initiator calls for proposals
@@ -230,9 +292,7 @@ public class Jason_JAuc_Initiator {
 	 */
 	protected void doFinal(ConvCProcessor myProcessor, ACLMessage messageToSend) {
 		messageToSend = myProcessor.getLastSentMessage();
-		
 		JAucIniConversation conv = (JAucIniConversation) myProcessor.getConversation();
-		
 		List<Literal> allperc = new ArrayList<Literal>();
 		Iterator<AgentID> it = conv.PartParticipations.keySet().iterator();//it must have the right value
 		AgentID currentag=null;
@@ -246,13 +306,32 @@ public class Jason_JAuc_Initiator {
 			}
 		participations = participations+"]";
 		String winner = "";
-		if (conv.winner!=null) {winner = "\""+conv.winner.name+"\"";}
-		else {winner = "Winner";}
-		
+		if (conv.winner!=null) 
+		{
+			winner = "\""+conv.winner.name+"\"";
+			}else {
+				winner = "Winner";
+				}
 		String percept = "conversationended("+participations+","+winner+","+conv.NextBid+","+conv.jasonConvID+")[source(self)]";
 		allperc.add(Literal.parseLiteral(percept));
 		((ConvMagentixAgArch)Ts.getUserAgArch()).setPerception(allperc);
+		//Sending final information to participants
+		ACLMessage tmpmsg = new ACLMessage();
+		tmpmsg.setConversationId(conv.internalConvID);
+		tmpmsg.setContent("Auction finished!");
+		tmpmsg.setProtocol("japanese-auction");
+		tmpmsg.setPerformative(ACLMessage.INFORM);
+		tmpmsg.setHeader("purpose", "end");
+		tmpmsg.setSender(myProcessor.getMyAgent().getAid());
+		int acceptances = conv.AcceptancesReceivedInCurrLevel.size();
+		for (int i=0; i<acceptances; i++){
+			tmpmsg.setReceiver(conv.AcceptancesReceivedInCurrLevel.get(i));
+			myProcessor.getMyAgent().lock();
+			myProcessor.getMyAgent().send(tmpmsg);
+			myProcessor.getMyAgent().unlock();
+		}
 		
+		myProcessor.getMyAgent().removeFactory(conv.factoryName);
 	}
 
 	class FINAL_Method implements FinalStateMethod {
@@ -309,6 +388,33 @@ public class Jason_JAuc_Initiator {
 		processor.addTransition(WAIT_FOR_PARTICIPANT_TO_JOIN,
 				RECEIVE_CANCEL_WAIT);
 		
+		// SEND_START_DATA Sate
+		SendState SEND_START_DATA = new SendState("SEND_START_DATA");
+
+		SEND_START_DATA.setMethod(new SEND_START_DATA_Method());
+		template.setProtocol("japanese-auction");
+		template.setPerformative(ACLMessage.INFORM);
+		SEND_START_DATA.setMessageTemplate(template);
+		processor.registerState(SEND_START_DATA);
+		processor.addTransition(RECEIVE_CANCEL_WAIT, SEND_START_DATA);
+		
+		
+		// WAIT_FOR_PARTICIPANT_STORE_INI_DATA state
+		WaitState WAIT_FOR_PARTICIPANT_STORE_INI_DATA = new WaitState("WAIT_FOR_PARTICIPANT_STORE_INI_DATA", 2000);
+		processor.registerState(WAIT_FOR_PARTICIPANT_STORE_INI_DATA);
+		processor.addTransition(SEND_START_DATA, WAIT_FOR_PARTICIPANT_STORE_INI_DATA);
+		
+		// RECEIVE_CANCEL_WAIT State
+		//Header: purpose Value: waitMessage
+		ReceiveState RECEIVE_CANCEL_WAIT_FOR_PARTICIPANT_STORE_INI_DATA = new ReceiveState("RECEIVE_CANCEL_WAIT_FOR_PARTICIPANT_STORE_INI_DATA");
+		RECEIVE_CANCEL_WAIT_FOR_PARTICIPANT_STORE_INI_DATA.setMethod(new RECEIVE_CANCEL_WAIT_FOR_PARTICIPANT_STORE_INI_DATA_Method());
+		filter = new MessageFilter("purpose = waitMessage");  
+		RECEIVE_CANCEL_WAIT_FOR_PARTICIPANT_STORE_INI_DATA.setAcceptFilter(filter);
+		processor.registerState(RECEIVE_CANCEL_WAIT_FOR_PARTICIPANT_STORE_INI_DATA);
+		processor.addTransition(WAIT_FOR_PARTICIPANT_STORE_INI_DATA,
+				RECEIVE_CANCEL_WAIT_FOR_PARTICIPANT_STORE_INI_DATA);
+		
+		
 		// BID_CALL State
 
 		SendState BID_CALL = new SendState("BID_CALL");
@@ -318,9 +424,10 @@ public class Jason_JAuc_Initiator {
 		template.setPerformative(ACLMessage.PROPOSE);
 		BID_CALL.setMessageTemplate(template);
 		processor.registerState(BID_CALL);
-		processor.addTransition(RECEIVE_CANCEL_WAIT, BID_CALL);
+		processor.addTransition(RECEIVE_CANCEL_WAIT_FOR_PARTICIPANT_STORE_INI_DATA, BID_CALL);
 
 		// WAIT_FOR_ACCEPTANCES State
+		
 		WaitState WAIT_FOR_ACCEPTANCES = new WaitState("WAIT_FOR_ACCEPTANCES", answ_timeout);
 		//WAIT_FOR_ACCEPTANCES.setWaitType(WaitState.ABSOLUT);
 		processor.registerState(WAIT_FOR_ACCEPTANCES);
@@ -348,7 +455,6 @@ public class Jason_JAuc_Initiator {
 		processor.addTransition(WAIT_FOR_ACCEPTANCES, TIMEOUT);
 		processor.addTransition(TIMEOUT, BID_CALL);
 
-		
 		// SEND_WINNER State
 
 		SendState SEND_WINNER = new SendState("SEND_WINNER");
@@ -359,19 +465,16 @@ public class Jason_JAuc_Initiator {
 		SEND_WINNER.setMessageTemplate(template);
 		processor.registerState(SEND_WINNER);
 		processor.addTransition(TIMEOUT, SEND_WINNER);
-		
+		processor.addTransition(RECEIVE_ACCEPTANCE, SEND_WINNER);
 
 		// FINAL State
 
 		FinalState FINAL = new FinalState("FINAL");
-
 		FINAL.setMethod(new FINAL_Method());
-
 		processor.registerState(FINAL);
 		processor.addTransition(TIMEOUT, FINAL);
 		processor.addTransition(SEND_WINNER, FINAL);	
 		processor.addTransition(RECEIVE_ACCEPTANCE, FINAL);
-
 		return theFactory;
 	}
 	

@@ -20,7 +20,7 @@ public class ConvCFactory extends CFactory{
 	ConvCProcessor myConvCProcessor; //template
 	ConvJasonAgent convAgent; 
 	public boolean convinitiator = false;
-	
+
 	public ConvCFactory(String name, MessageFilter filter,
 			int conversationsLimit, ConvJasonAgent myAgent) {
 		super(name, filter, conversationsLimit, myAgent);
@@ -28,20 +28,20 @@ public class ConvCFactory extends CFactory{
 		convAgent = myAgent;
 		setCProcessor(myConvCProcessor);
 	}
-	
+
 	public ConvCProcessor cProcessorTemplate() {
 		return this.myConvCProcessor;
 	}
-	
+
 	public ConvCProcessor startConversation(ACLMessage msg, CProcessor parent,  //Bexy: public
 			Boolean isSync) {
 		ConvCProcessor cloneProcessor = (ConvCProcessor) myConvCProcessor.clone();
 		if (!convinitiator){
-		Conversation conv = new Conversation("",msg.getConversationId(),null);
-		cloneProcessor.setConversation(conv);
-		participantNoIdConv.put(msg.getConversationId(), conv);			
+			Conversation conv = new Conversation("",msg.getConversationId(),null, this.getName());
+			cloneProcessor.setConversation(conv);
+			participantNoIdConv.put(msg.getConversationId(), conv);			
 		}
-		
+
 		cloneProcessor.setConversationID(msg.getConversationId());
 		cloneProcessor.addMessage(msg);
 		cloneProcessor.setIdle(false);
@@ -55,11 +55,11 @@ public class ConvCFactory extends CFactory{
 		convAgent.exec.execute(cloneProcessor);
 		return (cloneProcessor);
 	}
-	
+
 	protected boolean templateIsEqual(ACLMessage template) {
 		return super.templateIsEqual(template);
 	}
-	
+
 	public Conversation removeConversationByJasonID(String jasonID){
 		Collection<Conversation> c  = participantNoIdConv.values();
 		Iterator<Conversation> itr = c.iterator();
@@ -72,19 +72,17 @@ public class ConvCFactory extends CFactory{
 				result = participantNoIdConv.remove(conv.internalConvID);
 			}
 		}
-		
 		return result;
-
 	}
-	
+
 	public Conversation removeConversationByInternalID(String internalID){
 		return participantNoIdConv.remove(internalID);
 	}
-	
+
 	public void UpdateConv(Conversation newConv, ConvCProcessor proc){
 		Conversation tmpConv = null;
 		tmpConv = removeConversationByInternalID(newConv.internalConvID);
-		
+
 		if (tmpConv!=null){
 			participantNoIdConv.put(newConv.internalConvID, newConv);
 		}

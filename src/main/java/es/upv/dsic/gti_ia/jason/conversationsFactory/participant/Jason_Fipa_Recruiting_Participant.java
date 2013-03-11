@@ -41,9 +41,7 @@ public class Jason_Fipa_Recruiting_Participant  {
 	protected TransitionSystem Ts; 
 	
 	public Jason_Fipa_Recruiting_Participant(TransitionSystem ts) {
-
 		Ts = ts;
-		
 	}
 	
 	  	/**
@@ -70,13 +68,11 @@ public class Jason_Fipa_Recruiting_Participant  {
 		 */
 		protected String doReceiveProxy(ConvCProcessor myProcessor, ACLMessage msg) {
 			Conversation conv =  myProcessor.getConversation();
+			String factName = conv.factoryName;
 			FRCConversation newConv = new FRCConversation(conv.jasonConvID, conv.internalConvID, "" ,0,
-					myProcessor.getMyAgent().getAid(),conv.initiator);
-
+					myProcessor.getMyAgent().getAid(),conv.initiator,factName);
 			((ConvCFactory)myProcessor.getMyFactory()).UpdateConv(newConv, myProcessor);
-			
 			StringTokenizer msgContent = new StringTokenizer(msg.getContent(),",");
-
 			String tmp =  msgContent.nextToken();
 			LiteralImpl tmpcond = new LiteralImpl(LiteralImpl.parseLiteral(tmp));
 			newConv.Condition = tmpcond;
@@ -84,8 +80,6 @@ public class Jason_Fipa_Recruiting_Participant  {
 			newConv.timeOut = Integer.parseInt(msgContent.nextToken());
 			newConv.jasonConvID = msgContent.nextToken();
 			newConv.initiator = new AgentID(msg.getSender().name);
-			
-			
 			List<Literal> allperc = new ArrayList<Literal>();
 			String percept = "receiveproxy("+msg.getSender().name+","+tmpcond.toString()+","+(newConv.timeOut)+","+newConv.jasonConvID+")[source(self)]";
 			allperc.add(Literal.parseLiteral(percept));
@@ -94,10 +88,8 @@ public class Jason_Fipa_Recruiting_Participant  {
 			newConv.aquire_semaphore();
 
 			String result;
-			
 			if (newConv.ProxyAcceptance) {result = ACLMessage.getPerformative(ACLMessage.AGREE);}
 			else result = ACLMessage.getPerformative(ACLMessage.REFUSE);
-			
 			return result;
 		}
 
@@ -140,7 +132,6 @@ public class Jason_Fipa_Recruiting_Participant  {
 		protected void doAgree(ConvCProcessor myProcessor,ACLMessage messageToSend){
 			FRCConversation conv =  (FRCConversation) myProcessor.getConversation();
 			messageToSend.setReceiver(conv.initiator);
-			
 		}
 		
 		class AGREE_Method implements SendStateMethod {
@@ -177,7 +168,6 @@ public class Jason_Fipa_Recruiting_Participant  {
 				i++;
 			}
 			return result;
-			
 		}
 		
 		class LOCATE_AGENTS_Method implements ActionStateMethod{
@@ -308,6 +298,8 @@ public class Jason_Fipa_Recruiting_Participant  {
 			String percept = "conversationended("+myProcessor.getMyAgent().getName()+","+"\""+conv.FinalResult+"\""+","+conv.jasonConvID+")[source(self)]";
 			allperc.add(Literal.parseLiteral(percept));
 			((ConvMagentixAgArch)Ts.getUserAgArch()).setPerception(allperc);
+			
+			myProcessor.getMyAgent().removeFactory(conv.factoryName);
 
 		}
 
@@ -332,7 +324,7 @@ public class Jason_Fipa_Recruiting_Participant  {
 		// Create factory
 		long timeout = 0;
 		if (filter == null) {
-			filter = new MessageFilter("protocol = fipa-recruiting"); //falta AND protocol = fipa-request;
+			filter = new MessageFilter("protocol = fipa-recruiting");
 		}
 		ConvCFactory theFactory = new ConvCFactory(name, filter,
 				availableConversations, myAgent);

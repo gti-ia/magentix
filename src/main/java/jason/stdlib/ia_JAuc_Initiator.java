@@ -129,47 +129,53 @@ public class ia_JAuc_Initiator extends protocolInternalAction{
 			
 			//building message template
 			ACLMessage msg = new ACLMessage();
-			msg.setProtocol("fipa-recruiting");
+			msg.setProtocol("japanese-auction");
 
 			//int participantsNumber = participants.size();
 			
 			msg.setContent(initialMsg);
-
-			if (jauci == null){
-
-
+			String factName = getFactoryName(agentConversationID,"JAUC",true);
+			//if (jauci == null){
 				/* The agent creates the CFactory that creates processors that initiate
         		 the protocol conversations. */
-				jauci = new Jason_JAuc_Initiator( ts);
-
-				Protocol_Factory = jauci.newFactory("JAFACTORY", null, 
+			jauci = new Jason_JAuc_Initiator( ts);
+			
+			String prevFactory = "";
+			if (Protocol_Factory!=null)
+				prevFactory = Protocol_Factory.getName();
+			if (prevFactory.compareTo(factName)!=0) // if it is a new conversation a create a new one. This verification is not strictly 
+				//necessary because it supposed that this condition will be always truth. This must be improved but, 
+				//as the participants can not distinguish between conversation of the same factory also one factory per conversation 
+				//is created with the initiator factory name as a filter. This implies one factory per conversation in the initiator too
+			{	Protocol_Factory = jauci.newFactory(factName, null, 
 						msg, 1, ((ConvMagentixAgArch)ts.getUserAgArch()).getJasonAgent(),particnumber,timeOut, joinTimeOut );
-
 				((ConvMagentixAgArch)ts.getUserAgArch()).getJasonAgent().addFactoryAsInitiator(Protocol_Factory);
-				
-
 			}
+			//}
 			
 			/* finally the new conversation starts an asynchronous conversation.*/
 			myag.lock();
 			String ConvID = myag.newConvID();
 			JAucIniConversation conv = new JAucIniConversation(agentConversationID,ConvID,
 					((ConvMagentixAgArch)ts.getUserAgArch()).getJasonAgent().getAid(),
-					AIDparticipants,initialMsg,initialBid, increment,maxIterations); //the internal id is unknown yet
+					AIDparticipants,initialMsg,initialBid, increment,maxIterations,factName); //the internal id is unknown yet
 			ConvCProcessor processorTemplate = ((ConvCFactory)Protocol_Factory).cProcessorTemplate();
 			processorTemplate.setConversation(conv);
 			msg.setConversationId(ConvID);
+			if (myag.getName().compareTo("aut_agent20")==0)
+				System.out.println("20");
 			ConvCProcessor convPprocessor =  myag.newConversation(msg, processorTemplate, false, Protocol_Factory);
 			convPprocessor.setConversation(conv);
 			myag.unlock();
 			conv.request =  request;
-			conversationsList.put(agentConversationID, conv);
+			conversationsList.put(agentConversationID, conv); //TODO: Hay que gestionar el elimar de aquí cdo se termine la conversacion
 
 		}
 
 		return true;
 
 	}
+
 
 
 }

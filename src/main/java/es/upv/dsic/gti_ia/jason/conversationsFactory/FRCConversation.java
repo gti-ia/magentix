@@ -25,10 +25,10 @@ public class FRCConversation extends Conversation{
 	public String InfoToSend = "";
 	public String FinalResult = "";
 	public int timeOut ;
-	
+
 	public FRCConversation(String jasonID, String internalID, String iniMsg, int TO, AgentID part,
-			AgentID initiatorAg) {
-		super(jasonID, internalID, initiatorAg);
+			AgentID initiatorAg, String factName) {
+		super(jasonID, internalID, initiatorAg, factName);
 		initialMsg = iniMsg;
 		timeOut = TO;
 		participant = part;

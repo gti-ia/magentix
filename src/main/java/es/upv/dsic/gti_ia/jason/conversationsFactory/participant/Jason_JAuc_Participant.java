@@ -40,6 +40,9 @@ public class Jason_JAuc_Participant {
 		Ts = ts;
 	}
 	
+	
+	
+	
 	/**
 	 * Method executed at the beginning of the conversation
 	 * @param myProcessor the CProcessor managing the conversation
@@ -51,10 +54,41 @@ public class Jason_JAuc_Participant {
 	class BEGIN_Method implements BeginStateMethod {
 		public String run(CProcessor myProcessor, ACLMessage msg) {
 			doBegin(myProcessor, msg);
-			return "WAIT_FOR_BID_CALL";
+			return "WAIT_FOR_NEW_CONV_DATA";
 		};
 	}
 
+	/**
+	 * Method executed when the participant receives the new converstaion internal information
+	 * @param myProcessor the CProcessor managing the conversation
+	 * @param msg bid acceptance message
+	 * @return next state of this conversation
+	 */
+	protected String doReceiveNewConvData(ConvCProcessor myProcessor, ACLMessage msg){
+		JAucPartConversation newConv;
+		Conversation conv = myProcessor.getConversation();
+		if (conv.jasonConvID.compareTo("")==0){
+			String jasonConvID = msg.getHeaderValue("jasonID");
+			String factName = conv.factoryName;
+			//At this point the conversation associated to the CProcessor has no value
+			//for the internal conversation ID so it is updated. The factory name is already setted
+			conv.jasonConvID = jasonConvID;
+			conv.initiator = msg.getSender();
+			newConv = new JAucPartConversation(conv.jasonConvID, conv.internalConvID, conv.initiator,"",factName);
+			((ConvCFactory)myProcessor.getMyFactory()).UpdateConv(newConv, myProcessor);
+		}else{
+			newConv = (JAucPartConversation) myProcessor.getConversation();
+		}
+		return "WAIT_FOR_BID_CALL";
+	}
+	class RECEIVE_NEW_CONV_DATA_Method implements ReceiveStateMethod {
+		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
+			myProcessor.getInternalData().put("solicitMessage", messageReceived);
+			return doReceiveNewConvData((ConvCProcessor) myProcessor, messageReceived);
+		}
+	}
+	
+	
 	/**
 	 * Method executed when the participant receives a call for bid acceptance
 	 * @param myProcessor the CProcessor managing the conversation
@@ -62,22 +96,9 @@ public class Jason_JAuc_Participant {
 	 * @return next state of this conversation
 	 */
 	protected String doReceiveBidceCall(ConvCProcessor myProcessor, ACLMessage msg){
-		
-		JAucPartConversation newConv;
-		
-		Conversation conv = myProcessor.getConversation();
-		if (conv.jasonConvID.compareTo("")==0){
-			String jasonConvID = msg.getHeaderValue("jasonID");
-			//At this point the conversation associated to the CProcessor has no value
-			//for the internal conversation ID so it is updated
-			conv.jasonConvID = jasonConvID;
-			conv.initiator = msg.getSender();
-			newConv = new JAucPartConversation(conv.jasonConvID, conv.internalConvID, conv.initiator,"");
-			((ConvCFactory)myProcessor.getMyFactory()).UpdateConv(newConv, myProcessor);
-		}else{
-			newConv = (JAucPartConversation) myProcessor.getConversation();
-		}
-		newConv.AuctionLevel = msg.getHeaderValue("auctionlevel");
+		JAucPartConversation conv;
+		conv = (JAucPartConversation) myProcessor.getConversation();
+		conv.AuctionLevel = msg.getHeaderValue("auctionlevel");
 		String result = "";
 		AgentID Sender = myProcessor.getLastReceivedMessage().getSender();
 		String request = msg.getContent();
@@ -85,16 +106,14 @@ public class Jason_JAuc_Participant {
 		String participants = msg.getHeaderValue("participants");
 		String newMsgContent = "callforbid"+"("+Sender.name+","+request+","+participants+","+bid+","+conv.jasonConvID+")[source(self)]";
 		List<Literal> allpercep = new ArrayList<Literal>();
-		
 		allpercep.add(Literal.parseLiteral(newMsgContent));
 		((ConvMagentixAgArch)Ts.getUserAgArch()).setPerception(allpercep);
 		
-		newConv.aquire_semaphore();
+		conv.aquire_semaphore();
 		
-		if (newConv.Accept){  //it must be setted
-			result = "SEND_AGREE";
-		}else result = "FINAL";
-
+		if (conv.Accept){  //it must be setted
+			result = "SEND_AGREE"; 
+		}else result = "FINAL"; 
 		return result;
 	}
 	class RECEIVE_BID_CALL_Method implements ReceiveStateMethod {
@@ -111,9 +130,7 @@ public class Jason_JAuc_Participant {
 	 */
 	protected void doSendAgree(ConvCProcessor myProcessor,
 			ACLMessage messageToSend){
-
 		JAucPartConversation conv = (JAucPartConversation)myProcessor.getConversation();
-		
 		messageToSend.setSender(myProcessor.getMyAgent().getAid());
 		messageToSend.setReceiver(conv.initiator);
 		messageToSend.setContent("agree");
@@ -131,7 +148,6 @@ public class Jason_JAuc_Participant {
 	protected void doTimeout(ConvCProcessor myProcessor, ACLMessage msg) {
 
 	}
-
 	class TIMEOUT_Method implements ReceiveStateMethod {
 		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
 			doTimeout((ConvCProcessor) myProcessor, messageReceived);
@@ -145,16 +161,12 @@ public class Jason_JAuc_Participant {
 	 * @param msg accept message
 	 */
 	protected void doReceiveWinnerConfirm(ConvCProcessor myProcessor, ACLMessage msg){
-		
 		JAucPartConversation conv = (JAucPartConversation)myProcessor.getConversation();
-		
 		AgentID Sender = myProcessor.getLastReceivedMessage().getSender();
 		String finalbid =  msg.getContent();
 		String request = msg.getHeaderValue("request");
-		
 		String newMsgContent = "winner"+"(\""+Sender.name+"\","+request+","+finalbid+","+conv.jasonConvID+")[source(self)]";
 		List<Literal> allpercep = new ArrayList<Literal>();
-		
 		allpercep.add(Literal.parseLiteral(newMsgContent));
 		((ConvMagentixAgArch)Ts.getUserAgArch()).setPerception(allpercep);
 	}
@@ -166,19 +178,36 @@ public class Jason_JAuc_Participant {
 		}
 	}
 	
+	
+	/**
+	 * Class for receiving the end of protocol confirmation
+	 * @param myProcessor the CProcessor managing the conversation
+	 * @param receivedMessage received message
+	 */
+	class RECEIVE_END_CONFIRMATION_Method implements ReceiveStateMethod{
+		@Override
+		public String run(CProcessor myProcessor, ACLMessage receivedMessage) {
+			return "FINAL";
+		}
+		
+	}
+	
+	
+	
 	/**
 	 * Method executed when the conversation ends
 	 * @param myProcessor the CProcessor managing the conversation
 	 * @param messageToSend final message
 	 */
-	protected void doFinal(CProcessor myProcessor, ACLMessage messageToSend) {
+	protected void doFinal(ConvCProcessor myProcessor, ACLMessage messageToSend) {
+		JAucPartConversation conv = (JAucPartConversation)myProcessor.getConversation();
+		myProcessor.getMyAgent().removeFactory(conv.factoryName);
 		messageToSend = myProcessor.getLastSentMessage();
-
 	}
 
 	class FINAL_Method implements FinalStateMethod {
 		public void run(CProcessor myProcessor, ACLMessage messageToSend) {
-			doFinal(myProcessor, messageToSend);
+			doFinal((ConvCProcessor) myProcessor, messageToSend);
 		}
 	}
 	
@@ -200,7 +229,7 @@ public class Jason_JAuc_Participant {
 		// Create factory
 
 		if (filter == null) {
-			filter = new MessageFilter("protocol = japanese-auction AND purpose = start");
+			filter = new MessageFilter("protocol = japanese-auction AND purpose = startdata");
 		}
 		
 		ConvCFactory theFactory = new ConvCFactory(name, filter,
@@ -215,10 +244,25 @@ public class Jason_JAuc_Participant {
 		BeginState BEGIN = (BeginState) processor.getState("BEGIN");
 		BEGIN.setMethod(new BEGIN_Method());
 		
+		// WAIT_FOR_NEW_CONV_DATA State
+		WaitState WAIT_FOR_NEW_CONV_DATA = new WaitState("WAIT_FOR_NEW_CONV_DATA", 4000);
+		processor.registerState(WAIT_FOR_NEW_CONV_DATA);
+		processor.addTransition(BEGIN, WAIT_FOR_NEW_CONV_DATA);
+		
+		// RECEIVE_NEW_CONV_DATA State
+		ReceiveState RECEIVE_NEW_CONV_DATA = new ReceiveState(
+				"RECEIVE_NEW_CONV_DATA");
+		RECEIVE_NEW_CONV_DATA.setMethod(new RECEIVE_NEW_CONV_DATA_Method());
+		filter = new MessageFilter("performative = "+ACLMessage.getPerformative(ACLMessage.INFORM)+" AND purpose = startdata");
+		RECEIVE_NEW_CONV_DATA.setAcceptFilter(filter);
+		processor.registerState(RECEIVE_NEW_CONV_DATA);
+		processor.addTransition(WAIT_FOR_NEW_CONV_DATA,
+				RECEIVE_NEW_CONV_DATA);
+		
 		// WAIT_FOR_BID_CALL State
 		WaitState WAIT_FOR_BID_CALL = new WaitState("WAIT_FOR_BID_CALL", timeout);
 		processor.registerState(WAIT_FOR_BID_CALL);
-		processor.addTransition(BEGIN, WAIT_FOR_BID_CALL);
+		processor.addTransition(RECEIVE_NEW_CONV_DATA, WAIT_FOR_BID_CALL);
 		
 		// RECEIVE_BID_CALL State
 
@@ -254,9 +298,10 @@ public class Jason_JAuc_Participant {
 
 		ReceiveState TIMEOUT = new ReceiveState("TIMEOUT");
 		TIMEOUT.setMethod(new TIMEOUT_Method());
-		filter = new MessageFilter("performative = INFORM AND purpose = waitMessage");
+		filter = new MessageFilter("performative = "+ACLMessage.getPerformative(ACLMessage.INFORM)+" AND purpose = waitMessage");
 		TIMEOUT.setAcceptFilter(filter);
 		processor.registerState(TIMEOUT);
+		processor.addTransition(WAIT_FOR_NEW_CONV_DATA, TIMEOUT);
 		processor.addTransition(WAIT_FOR_BID_CALL, TIMEOUT);
 		processor.addTransition(WAIT_FOR_BID_CALL2, TIMEOUT);
 
@@ -273,7 +318,15 @@ public class Jason_JAuc_Participant {
 				RECEIVE_WINNER_CONFIRM);
 
 		
-
+		// RECEIVE_END_CONFIRMATION State
+		ReceiveState RECEIVE_END_CONFIRMATION = new ReceiveState(
+		"RECEIVE_END_CONFIRMATION");
+		RECEIVE_END_CONFIRMATION.setMethod(new RECEIVE_END_CONFIRMATION_Method());
+		filter = new MessageFilter("performative = "+ACLMessage.getPerformative(ACLMessage.INFORM)+" AND purpose = end");
+		RECEIVE_END_CONFIRMATION.setAcceptFilter(filter);
+		processor.registerState(RECEIVE_END_CONFIRMATION);
+		processor.addTransition(WAIT_FOR_BID_CALL2, RECEIVE_END_CONFIRMATION);
+		
 		// FINAL State
 
 		FinalState FINAL = new FinalState("FINAL");
@@ -284,6 +337,7 @@ public class Jason_JAuc_Participant {
 		processor.addTransition(RECEIVE_WINNER_CONFIRM, FINAL);			
 		processor.addTransition(RECEIVE_BID_CALL, FINAL);
 		processor.addTransition(TIMEOUT, FINAL);
+		processor.addTransition(RECEIVE_END_CONFIRMATION, FINAL);
 		return theFactory;
 	} 
 	

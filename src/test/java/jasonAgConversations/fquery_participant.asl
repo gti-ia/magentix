@@ -17,11 +17,10 @@ timeOut(5000).
 +query(Sender,Query,Protocol,ConvID):not wantToAnswer(Sender,Protocol)
 <- .print("------- I've received the query: ",Query," AND I REFUSE.");
    .ia_fipa_query_Participant("refuse",ConvID).
-
+//query(fquery_initiator,sex(female),fqip,fqp4)[source(self)]
 +query(Sender,Query,Protocol,ConvID):wantToAnswer(Sender,Protocol)
 <- 
    !verifyQuery(Query,Protocol,Result,Visibility);
-
    if (Visibility==public)
    	{.print("------- I've received the query: ",Query," AND I'M AGREE. Result: ",Result);
    	.ia_fipa_query_Participant("agree",Result,ConvID);}

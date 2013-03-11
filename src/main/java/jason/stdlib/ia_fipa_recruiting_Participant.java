@@ -7,6 +7,7 @@ import jason.asSemantics.TransitionSystem;
 import jason.asSemantics.Unifier;
 import jason.asSyntax.LiteralImpl;
 import jason.asSyntax.Term;
+import es.upv.dsic.gti_ia.jason.conversationsFactory.ConvCFactory;
 import es.upv.dsic.gti_ia.jason.conversationsFactory.ConvMagentixAgArch;
 import es.upv.dsic.gti_ia.jason.conversationsFactory.Conversation;
 import es.upv.dsic.gti_ia.jason.conversationsFactory.FRCConversation;
@@ -16,6 +17,7 @@ import es.upv.dsic.gti_ia.jason.conversationsFactory.participant.Jason_Fipa_Recr
 
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
+import es.upv.dsic.gti_ia.core.MessageFilter;
 
 /**
  * This class represents the internal action to be used when adding a conversation to 
@@ -69,63 +71,54 @@ public class ia_fipa_recruiting_Participant extends protocolInternalAction {
 
 	@Override
 	public Object execute(TransitionSystem ts, Unifier un, Term[] args) throws Exception {
-		
 		agentConversationID = getTermAsString( args[args.length-1]);
 		protocolSteep = getTermAsString(args[0]);
 		if (ts.getSettings().verbose()>1)
 			ts.getAg().getLogger().info("CALLING INTERNAL ACTION WITH STEEP: '"+protocolSteep+"'"+" CID: "+agentConversationID); 
-
 		checkArguments(args);
-
 		agName  = ts.getUserAgArch().getAgName();
-
 		if (protocolSteep.compareTo(Protocol_Template.JOIN_STEP)==0){
 
 			if (args.length >2)
 			{					
 				timeOut = getTermAsInt(args[2]);
 			}
-
 			if (frcp == null){
 
 				frcp = new Jason_Fipa_Recruiting_Participant( ts);
-
-				ACLMessage msg = new ACLMessage();
-				msg.setProtocol("fipa-recruiting");
-				msg.setContent("Joining fipa-recruiting conversation "+agentConversationID);
-				String factName = agentConversationID+"-FRCFACTORY";
-				Protocol_Factory = frcp.newFactory(factName, null,msg,1, 
-						((ConvMagentixAgArch)ts.getUserAgArch()).getJasonAgent());
-
-				// Finally the factory is setup to answer to incoming messages that
-				// can start the participation of the agent in a new conversation
-
-				((ConvMagentixAgArch)ts.getUserAgArch()).getJasonAgent().addFactoryAsParticipant(Protocol_Factory);
-
-				//This helps participant to finish joining in Magentix conversation thread.
-				//Must be substituted whith a Wait state
-				int i = 0;
-				while (i>900000000){i++;}
 			}
-
+			ACLMessage msg = new ACLMessage();
+			msg.setProtocol("fipa-recruiting");
+			msg.setContent("Joining fipa-recruiting conversation "+agentConversationID);
+			String myfactName = getFactoryName(agentConversationID,"FRC",false);
+			String inifactName = getFactoryName(agentConversationID,"FRC",true);
+			MessageFilter filter = new MessageFilter("protocol = fipa-recruiting AND factoryname = "+inifactName);
+			ConvCFactory tmpFactory = frcp.newFactory(myfactName, filter,msg,1, 
+					((ConvMagentixAgArch)ts.getUserAgArch()).getJasonAgent());
+			// Finally the factory is setup to answer to incoming messages that
+			// can start the participation of the agent in a new conversation
+			((ConvMagentixAgArch)ts.getUserAgArch()).getJasonAgent().addFactoryAsParticipant(tmpFactory);
+			CFactories.put(agentConversationID, tmpFactory);
 		}
 		else
 			if (protocolSteep.compareTo(Protocol_Template.AGREE_STEP)==0){
-				
-				Conversation conv = Protocol_Factory.removeConversationByJasonID(agentConversationID);
-
+				ConvCFactory tmpFactory = CFactories.get(agentConversationID);
+				Conversation conv = tmpFactory.removeConversationByJasonID(agentConversationID);
 				conversationsList.put(agentConversationID, conv);
-				
+				CFactories.remove(agentConversationID);
+
 				((FRCConversation)conversationsList.get(agentConversationID)).MsgProxyContent = (LiteralImpl)args[1];
 				((FRCConversation)conversationsList.get(agentConversationID)).ProxyAcceptance = true;
-				
+
 				conversationsList.get(agentConversationID).release_semaphore();
-				
+
 			}
 			else
 				if (protocolSteep.compareTo(Protocol_Template.REFUSE_STEP)==0){
-					Conversation conv = Protocol_Factory.removeConversationByJasonID(agentConversationID);
+					ConvCFactory tmpFactory = CFactories.get(agentConversationID);
+					Conversation conv = tmpFactory.removeConversationByJasonID(agentConversationID);
 					conversationsList.put(agentConversationID, conv);
+					CFactories.remove(agentConversationID);
 
 					((FRCConversation)conversationsList.get(agentConversationID)).MsgProxyContent = (LiteralImpl)args[1];
 					((FRCConversation)conversationsList.get(agentConversationID)).ProxyAcceptance = false;

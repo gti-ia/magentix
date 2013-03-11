@@ -79,12 +79,12 @@ public class ia_fipa_query_Initiator extends protocolInternalAction{
 				cont++;
 			}
 		}
-		
+
 		if (protocolSteep.compareTo(Protocol_Template.INFORM_STEP)==0)
 		{
 			//result = (result && (((Term)args[2]).isAtom()) );
 		}
-		
+
 		if (!result)
 		{
 			throw JasonException.createWrongArgument(this,"Parameters must be in correct format.");
@@ -95,19 +95,13 @@ public class ia_fipa_query_Initiator extends protocolInternalAction{
 
 	@Override
 	public Object execute(TransitionSystem ts, Unifier un, Term[] args) throws Exception {
-
-
 		protocolSteep = getTermAsString(args[0]);
-
 		checkArguments(args);
-		
 		agentConversationID = getTermAsString(args[args.length-1]);
 		if (((Term)args[args.length-1]).isString()){
 			agentConversationID = "\""+agentConversationID+"\"";
 		}
-		
 		agName  = ts.getUserAgArch().getAgName();
-
 		ConvJasonAgent myag = ((ConvMagentixAgArch)ts.getUserAgArch()).getJasonAgent();
 		if (ts.getSettings().verbose()>1)
 			ts.getAg().getLogger().info("CALLING INTERNAL ACTION WITH STEEP: '"+protocolSteep+"'"+" CID: "+agentConversationID);
@@ -115,20 +109,11 @@ public class ia_fipa_query_Initiator extends protocolInternalAction{
 		/*
 		 * When a FQ Protocol is taking place*/
 		if (protocolSteep.compareTo(Protocol_Template.START_STEP)==0){
-
 			String participant = getAtomAsString(args[1]);
-
 			timeOut = getTermAsInt(args[2]); 			
-
 			String initialInfo = getTermAsString(args[3]);
-
 			Literal perf = new LiteralImpl(getTermAsLiteral(args[4]));
-			//This time allows participants to join the conversation
-			int wait = 0;
-            while(wait<=100000){
-            	wait++;
-            }
-			
+
 			//building message template
 			ACLMessage msg = new ACLMessage();
 			msg.setProtocol("fipa-query");
@@ -141,35 +126,32 @@ public class ia_fipa_query_Initiator extends protocolInternalAction{
 				msg.setPerformative( ACLMessage.QUERY_REF);
 			}	
 			msg.setContent(initialInfo);
+			String factName = getFactoryName(agentConversationID,"FQ",true);
 
-			if (fqi == null){
+			fqi = new Jason_Fipa_Query_Initiator(agName, ts);
 
-				fqi = new Jason_Fipa_Query_Initiator(agName, ts);
-				
-				Protocol_Factory = fqi.newFactory("FQFACTORY", null, 
-						msg, 1, ((ConvMagentixAgArch)ts.getUserAgArch()).getJasonAgent(),timeOut);
-				
-				/* The factory is setup to answer start conversation requests from the agent
-       		 using the FIPA_REQUEST protocol.*/
-				((ConvMagentixAgArch)ts.getUserAgArch()).getJasonAgent().addFactoryAsInitiator(Protocol_Factory);
-
-				
+			String prevFactory = "";
+			if (Protocol_Factory!=null)
+				prevFactory = Protocol_Factory.getName();
+			if (prevFactory.compareTo(factName)!=0) // if it is a new conversation a create a new one. This verification is not strictly 
+				//necessary because it supposed that this condition will be always truth. This must be improved but, 
+				//as the participants can not distinguish between conversation of the same factory also one factory per conversation 
+				//is created with the initiator factory name as a filter. This implies one factory per conversation in the initiator too
+			{	Protocol_Factory = fqi.newFactory(factName, null, 
+					msg, 1, ((ConvMagentixAgArch)ts.getUserAgArch()).getJasonAgent(),timeOut);
+			((ConvMagentixAgArch)ts.getUserAgArch()).getJasonAgent().addFactoryAsInitiator(Protocol_Factory);
 			}
 
 			/* finally the new conversation starts an asynchronous conversation.*/
 
 			myag.lock();
 			String ConvID = myag.newConvID();
-
 			FQConversation conv = new FQConversation(agentConversationID,ConvID,participant,initialInfo,
-					((ConvMagentixAgArch)ts.getUserAgArch()).getJasonAgent().getAid()); 
+					((ConvMagentixAgArch)ts.getUserAgArch()).getJasonAgent().getAid(),factName); 
 			ConvCProcessor processorTemplate = ((ConvCFactory)Protocol_Factory).cProcessorTemplate();
 			processorTemplate.setConversation(conv);
-			
 			msg.setConversationId(ConvID);
-			
 			ConvCProcessor convPprocessor =  myag.newConversation(msg, processorTemplate, false, Protocol_Factory);
-
 			if (perf.toString().compareTo("fqip")==0){
 				conv.performative = ACLMessage.QUERY_IF;
 			}
@@ -177,33 +159,20 @@ public class ia_fipa_query_Initiator extends protocolInternalAction{
 				conv.performative = ACLMessage.QUERY_REF;
 			}			
 			convPprocessor.setConversation(conv);
-			
 			myag.unlock();
-			
 			conversationsList.put(agentConversationID, conv);
-
-			
 		}else
 			if ((protocolSteep.compareTo(Protocol_Template.QUERYIF_STEP)==0)||
 					(protocolSteep.compareTo(Protocol_Template.QUERYREF_STEP)==0)){
-
 				((FQConversation)conversationsList.get(agentConversationID)).query = getTermAsLiteral(args[1]);
 				((FQConversation)conversationsList.get(agentConversationID)).Participant = getTermAsString(args[2]);
 				conversationsList.get(agentConversationID).release_semaphore();	
-
 			}else
 				if(protocolSteep.compareTo(Protocol_Template.INFORM_STEP)==0){
-
 					conversationsList.get(agentConversationID).release_semaphore();
-					
 					conversationsList.remove(agentConversationID);
 				}
-
 		return true;
-
 	}
-
-
-
 
 }

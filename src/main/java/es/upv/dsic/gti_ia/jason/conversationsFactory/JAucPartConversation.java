@@ -16,11 +16,9 @@ public class JAucPartConversation extends Conversation{
 	public boolean Accept = false;
 
 	public JAucPartConversation(String jasonID, String internalID,
-			AgentID initiatorAg, String iniMsg) {
-		super(jasonID, internalID, initiatorAg);
-
+			AgentID initiatorAg, String iniMsg, String factName) {
+		super(jasonID, internalID, initiatorAg, factName);
 		initialMessage = iniMsg;
-
 	}
 
 }

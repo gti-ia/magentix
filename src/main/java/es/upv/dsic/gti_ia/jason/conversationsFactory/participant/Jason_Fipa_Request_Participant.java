@@ -42,7 +42,6 @@ public class Jason_Fipa_Request_Participant {
 	public Jason_Fipa_Request_Participant( 
 			TransitionSystem ts) {
 		Ts = ts;
-		
 	}
 	
 
@@ -70,21 +69,18 @@ public class Jason_Fipa_Request_Participant {
 	 */
 	protected String doReceiveRequest(ConvCProcessor myProcessor,
 			ACLMessage request){
-		
 		String jasonID = request.getHeaderValue("jasonID");
 		String data = request.getHeaderValue("data");
 		Conversation conv = myProcessor.getConversation();
 		conv.jasonConvID = jasonID;
 		conv.initiator = request.getSender();
-		
-		FRConversation newConv = new FRConversation(conv.jasonConvID, conv.internalConvID, 0, myProcessor.getMyAgent().getName(),"", conv.initiator);
+		String factName = conv.factoryName;
+		FRConversation newConv = new FRConversation(conv.jasonConvID, conv.internalConvID, 0, myProcessor.getMyAgent().getName(),"", conv.initiator,factName);
 		((ConvCFactory)myProcessor.getMyFactory()).UpdateConv(newConv, myProcessor);
-		
 		List<Literal> allperc = new ArrayList<Literal>();
 		newConv.Task = request.getContent();
 		newConv.frData = data;
-		String percept = "request("+request.getSender().name+","+newConv.Task +","+newConv.frData+","+jasonID+")[source(self)]";
-
+		String percept = "request("+"\""+request.getSender().name+"\""+","+newConv.Task +","+newConv.frData+","+jasonID+")[source(self)]";
 		allperc.add(Literal.parseLiteral(percept));
 		((ConvMagentixAgArch)Ts.getUserAgArch()).setPerception(allperc);
 		
@@ -145,7 +141,6 @@ public class Jason_Fipa_Request_Participant {
 		messageToSend.setSender(myProcessor.getMyAgent().getAid());
 		messageToSend.setReceiver(myProcessor.getLastReceivedMessage().getSender());
 		conv.FinalResult = '"'+ACLMessage.getPerformative(ACLMessage.NOT_UNDERSTOOD)+'"';
-		
 	}
 
 	class NOT_UNDERSTOOD_Method implements SendStateMethod {
@@ -188,7 +183,6 @@ public class Jason_Fipa_Request_Participant {
 		messageToSend.setPerformative(ACLMessage.AGREE);
 		messageToSend.setSender(myProcessor.getMyAgent().getAid());
 		messageToSend.setReceiver(myProcessor.getLastReceivedMessage().getSender());
-
 	}
 
 	class AGREE_Method implements SendStateMethod {
@@ -204,9 +198,7 @@ public class Jason_Fipa_Request_Participant {
 	 * @return next conversation state
 	 */
 	protected String doAction(ConvCProcessor myProcessor){
-		
 		FRConversation conv = (FRConversation)myProcessor.getConversation();
-		
 		List<Literal> allperc = new ArrayList<Literal>();
 		String percept = "timetodotask("+conv.Task+","+conv.frData+","+conv.jasonConvID+")[source(self)]";
 		allperc.add(Literal.parseLiteral(percept));
@@ -221,7 +213,6 @@ public class Jason_Fipa_Request_Participant {
 		if (conv.TaskDecision==Protocol_Template.FAILURE_STEP){
 			result = "FAILURE";
 		}
-			
 	  return result;
 	}
 	
@@ -246,7 +237,6 @@ public class Jason_Fipa_Request_Participant {
 		messageToSend.setReceiver(myProcessor.getLastReceivedMessage().getSender());
 		FRConversation conv = (FRConversation)myProcessor.getConversation();
 		conv.FinalResult = '"'+ACLMessage.getPerformative(ACLMessage.FAILURE)+'"';
-
 	}
 
 	class FAILURE_Method implements SendStateMethod {
@@ -263,19 +253,15 @@ public class Jason_Fipa_Request_Participant {
 	 */
 	protected void doInform(ConvCProcessor myProcessor, ACLMessage response){
 		FRConversation conv = (FRConversation)myProcessor.getConversation();
-		
 		response.setProtocol("fipa-request");
 		response.setPerformative(ACLMessage.INFORM);
 		response.setInReplyTo("request");
 		response.setContent(conv.TaskResult);
-	
 		conv.FinalResult = '"'+ACLMessage.getPerformative(ACLMessage.INFORM)+'"';
-
 	}
 
 	class INFORM_Method implements SendStateMethod {
 		public String run(CProcessor myProcessor, ACLMessage messageToSend) {
-
 			doInform((ConvCProcessor)myProcessor, messageToSend);
 			messageToSend.addReceiver(myProcessor.getLastReceivedMessage()
 					.getSender());
@@ -296,6 +282,8 @@ public class Jason_Fipa_Request_Participant {
 		allperc.add(Literal.parseLiteral(percept));
 		((ConvMagentixAgArch)Ts.getUserAgArch()).setPerception(allperc);
 
+		myProcessor.getMyAgent().removeFactory(conv.factoryName);
+		
 	}
 	
 	class FINAL_Method implements FinalStateMethod {
@@ -358,7 +346,6 @@ public class Jason_Fipa_Request_Participant {
 		TIMEOUT.setAcceptFilter(filter);
 		processor.registerState(TIMEOUT);
 		processor.addTransition("WAIT", "TIMEOUT");
-		
 		
 		// NOT_UNDERSTOOD State
 

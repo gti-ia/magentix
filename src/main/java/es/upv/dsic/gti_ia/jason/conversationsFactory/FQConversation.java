@@ -17,17 +17,17 @@ public class FQConversation extends Conversation {
 	public String Participant = "";
 	public String result = "";
 
-	
+
 	/**
 	 * This field will have 0 or 1 if the performative 
 	 * is IF or any result on the other hand
 	 * */
 	public String evaluationResult = ""; 
-	
+
 	public int performative ;
 	public FQConversation(String jasonID, String internalID, String Partic, String iniMsg,
-			AgentID initiator) {
-		super(jasonID, internalID, initiator);
+			AgentID initiator, String factName) {
+		super(jasonID, internalID, initiator, factName);
 		Participant = Partic;
 		initialMessage = iniMsg;
 

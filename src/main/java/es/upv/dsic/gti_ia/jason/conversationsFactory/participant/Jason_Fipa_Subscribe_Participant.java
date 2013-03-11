@@ -71,23 +71,20 @@ public class Jason_Fipa_Subscribe_Participant {
 	@SuppressWarnings("unchecked")
 	protected String doReceiveSubscribe(ConvCProcessor myProcessor,
 			ACLMessage subscribe){
-
 		String jasonID = subscribe.getHeaderValue("jasonID");
-
 		Conversation conv =  myProcessor.getConversation();
+		String factName = conv.factoryName;
 		conv.jasonConvID = jasonID;
 		conv.initiator = subscribe.getSender();
-
 		FSConversation newConv = new FSConversation(conv.jasonConvID,conv.internalConvID,myProcessor.getMyAgent().getAid(),
-				"",conv.initiator);
+				"",conv.initiator,factName);
 		((ConvCFactory)myProcessor.getMyFactory()).UpdateConv(newConv, myProcessor);
 
 		//Precond: subscribe message must have as many headers as objects 
 		//that the initiator is interested in
-
 		newConv.objects = subscribe.getHeaders();
+		newConv.objects.remove("factoryname");
 		newConv.objects.remove("jasonID"); 
-
 		List<Literal> allperc = new ArrayList<Literal>();
 		String percept = "subscriberequest("+newConv.initiator.name+",[";
 		Iterator objIt = newConv.objects.entrySet().iterator();
@@ -101,7 +98,6 @@ public class Jason_Fipa_Subscribe_Participant {
 		allperc.add(Literal.parseLiteral(percept));
 		((ConvMagentixAgArch)Ts.getUserAgArch()).setPerception(allperc);
 
-
 		newConv.aquire_semaphore();
 
 		//Precond: newConv.firstResult must have Refuse or agree values
@@ -112,14 +108,12 @@ public class Jason_Fipa_Subscribe_Participant {
 			if (newConv.firstResult.compareTo(ACLMessage.getPerformative(ACLMessage.AGREE))==0){
 				result = "AGREE";
 			}
-
 		return result;
 	}
 
 	class RECEIVE_SUBSCRIBE_Method implements ReceiveStateMethod {
 		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
 			return doReceiveSubscribe((ConvCProcessor)myProcessor, messageReceived);
-
 		}
 	}
 
@@ -168,7 +162,6 @@ public class Jason_Fipa_Subscribe_Participant {
 		while (objIt.hasNext()) {
 			Entry<String, String> obj =  objIt.next();
 			String key = obj.getKey();
-
 			percept = "subscribe("+conv.initiator.name+","+key+","+conv.jasonConvID+")[source(self)]";
 			allperc.add(Literal.parseLiteral(percept));
 		}
@@ -192,7 +185,6 @@ public class Jason_Fipa_Subscribe_Participant {
 
 	protected String doInform(ConvCProcessor myProcessor, ACLMessage messagereceived){
 		FSConversation conv = (FSConversation) myProcessor.getConversation();
-
 		ACLMessage informmsg = new ACLMessage();
 		informmsg.setSender(myProcessor.getMyAgent().getAid());
 		informmsg.setReceiver(conv.initiator);
@@ -200,11 +192,8 @@ public class Jason_Fipa_Subscribe_Participant {
 		informmsg.setPerformative(ACLMessage.INFORM);
 		informmsg.setContent("Informing changes.");
 		informmsg.setConversationId(myProcessor.getConversationID());
-
 		Literal headerkeyLit ;
 		Literal objkey ;
-
-
 		Iterator<Entry<String, String>> headIt = messagereceived.getHeaders().entrySet().iterator();
 		while (headIt.hasNext()){
 			Entry<String, String> headerkey =  headIt.next();
@@ -265,7 +254,6 @@ public class Jason_Fipa_Subscribe_Participant {
 	 */
 	protected String doCancel(ConvCProcessor myProcessor,ACLMessage messagereceived ){
 		FSConversation conv = (FSConversation) myProcessor.getConversation();
-
 		//To add a perception
 		List<Literal> allperc = new ArrayList<Literal>();
 		String percept = "conversationcanceledbyinitiator("+conv.jasonConvID+")[source(self)]";
@@ -274,10 +262,8 @@ public class Jason_Fipa_Subscribe_Participant {
 		conv.aquire_semaphore();
 		//Precond: conv.conversationCanceled must say if the conversation was right canceled 
 		String result ;
-		
 		if (conv.conversationCanceled){result = "CANCEL_INFORM";}
 		else {result = "CANCEL_FAILURE";}
-
 		return result;
 	}
 
@@ -301,7 +287,6 @@ public class Jason_Fipa_Subscribe_Participant {
 		response.setReceiver(conv.initiator);
 		response.setSender(myProcessor.getMyAgent().getAid());
 		response.setContent("Cancel done!.");
-
 	}
 
 	class CANCEL_INFORM_Method implements SendStateMethod {
@@ -317,7 +302,6 @@ public class Jason_Fipa_Subscribe_Participant {
 	 * @param response failure message. 
 	 */
 	protected void doCancelFailure(ConvCProcessor myProcessor, ACLMessage response){
-
 		FSConversation conv = (FSConversation) myProcessor.getConversation();
 		response.setProtocol("fipa-subscribe");
 		response.setPerformative(ACLMessage.FAILURE);
@@ -325,7 +309,6 @@ public class Jason_Fipa_Subscribe_Participant {
 		response.setReceiver(conv.initiator);
 		response.setSender(myProcessor.getMyAgent().getAid());
 		response.setContent("Cancel failed!.");
-
 	}
 
 	class CANCEL_FAILURE_Method implements SendStateMethod {
@@ -340,14 +323,15 @@ public class Jason_Fipa_Subscribe_Participant {
 	 * @param myProcessor the CProcessor managing the conversation
 	 * @param messageToSend final message
 	 */
-	protected void doFinal(CProcessor myProcessor, ACLMessage messageToSend) {
+	protected void doFinal(ConvCProcessor myProcessor, ACLMessage messageToSend) {
+		FSConversation conv = (FSConversation)myProcessor.getConversation();
+		myProcessor.getMyAgent().removeFactory(conv.factoryName);
 		messageToSend = myProcessor.getLastSentMessage();
-
 	}
 
 	class FINAL_Method implements FinalStateMethod {
 		public void run(CProcessor myProcessor, ACLMessage messageToSend) {
-			doFinal(myProcessor, messageToSend);
+			doFinal((ConvCProcessor) myProcessor, messageToSend);
 		}
 	}
 

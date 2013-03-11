@@ -40,15 +40,13 @@ import es.upv.dsic.gti_ia.core.MessageFilter;
 public class Jason_FICN_Initiator {
 
 	protected TransitionSystem Ts; 
-	
+
 	public Jason_FICN_Initiator(String sagName,
 			TransitionSystem ts) {
-
 		Ts = ts;
-		
 	}
 
- 	/**
+	/**
 	 * Method executed at the beginning of the conversation
 	 * @param myProcessor the CProcessor managing the conversation
 	 * @param msg first message to send in the conversation
@@ -62,10 +60,27 @@ public class Jason_FICN_Initiator {
 	class BEGIN_Method implements BeginStateMethod {
 		public String run(CProcessor myProcessor, ACLMessage msg) {
 			doBegin( (ConvCProcessor) myProcessor, msg);
-			return "SOLICIT_PROPOSALS";
+			return "WAIT_FOR_PARTICIPANT_TO_JOIN";
 		};
 	}
-	
+
+	/**
+	 * Method executed when the timeout for the participants to join finishes
+	 * @param myProcessor the CProcessor managing the conversation
+	 * @param messageReceived Message to send
+	 */
+	private void doReceiveCancelWait(ConvCProcessor myProcessor,
+			ACLMessage messageReceived) {
+
+	}
+	class RECEIVE_CANCEL_WAIT_Method implements ReceiveStateMethod {
+		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
+			doReceiveCancelWait((ConvCProcessor)myProcessor, messageReceived);
+			return "SOLICIT_PROPOSALS";
+		}
+	}
+
+
 	/**
 	 * Method executed when the initiator calls for proposals
 	 * @param myProcessor the CProcessor managing the conversation
@@ -79,6 +94,7 @@ public class Jason_FICN_Initiator {
 		messageToSend.setPerformative(ACLMessage.CFP);
 		messageToSend.setSender(myProcessor.getMyAgent().getAid());
 		messageToSend.setHeader("jasonID", conv.jasonConvID);
+		messageToSend.setHeader("factoryname", conv.factoryName);		
 	}
 
 	class SOLICIT_PROPOSALS_Method implements SendStateMethod {
@@ -159,7 +175,7 @@ public class Jason_FICN_Initiator {
 				return "WAIT_FOR_PROPOSALS";
 		}
 	}
-	
+
 	/**
 	 * Method executed when the timeout is reached while the initiator was waiting for proposals
 	 * @param myProcessor the CProcessor managing the conversation
@@ -173,7 +189,7 @@ public class Jason_FICN_Initiator {
 			return "EVALUATE_PROPOSALS";
 		}
 	}
-	
+
 	/**
 	 * Evaluate proposals. Each accepted proposal has to be added to the acceptances list.
 	 * Each rejected proposal has to be added to the rejected list
@@ -187,7 +203,7 @@ public class Jason_FICN_Initiator {
 			ArrayList<ACLMessage> acceptances,
 			ArrayList<ACLMessage> rejections) {
 		FICNConversation conv = (FICNConversation) myProcessor.getConversation();
-		
+
 		String tmpproposal;
 		String tmpsender;
 		String percept ;
@@ -202,7 +218,6 @@ public class Jason_FICN_Initiator {
 		}
 		percept = "proposalsevaluationtime("+conv.jasonConvID+")[source(self)]";
 		allperc.add(Literal.parseLiteral(percept));
-		
 		((ConvMagentixAgArch)Ts.getUserAgArch()).setPerception(allperc);
 
 		conv.aquire_semaphore();
@@ -213,53 +228,51 @@ public class Jason_FICN_Initiator {
 		 * been updated. At this point the process go on with
 		 * the current values of "acceptances" and "rejections"
 		 */
-		
+
 		StringTokenizer argtokenacc = new StringTokenizer(
-					conv.myAcceptances.substring(1, conv.myAcceptances.length()-1),",");// 8,participan1,9,participant2,...
-	
+				conv.myAcceptances.substring(1, conv.myAcceptances.length()-1),",");// 8,participan1,9,participant2,...
 		StringTokenizer argtokenrej = new StringTokenizer(
 				conv.myRejections.substring(1, conv.myRejections.length()-1),",");// 8,participan1),(9,participant2),(...
-			String prop;
-			String sender;
-			ACLMessage accept;
-			while (argtokenacc.hasMoreTokens()) {
-				prop = argtokenacc.nextToken().trim(); //8
-				sender = argtokenacc.nextToken().trim(); // participan1
-				int index = 0;
-				while (index<proposes.size()&&(!prop.equals(proposes.get(index).getContent()))&&(!sender.equals(proposes.get(index).getSender().name))){
-					index++;
-				}
-				accept = new ACLMessage(
-						ACLMessage.ACCEPT_PROPOSAL);
-				accept.setContent("I accept your proposal");
-				accept.setReceiver(proposes.get(index).getSender());
-				accept.setSender(myProcessor.getMyAgent().getAid());
-				accept.setProtocol("fipa-iterated-contract-net");
-				if (!conv.goOnIterating)
-					{accept.setContent("end");}
-				acceptances.add(accept);
+		String prop;
+		String sender;
+		ACLMessage accept;
+		while (argtokenacc.hasMoreTokens()) {
+			prop = argtokenacc.nextToken().trim(); //8
+			sender = argtokenacc.nextToken().trim(); // participan1
+			int index = 0;
+			while (index<proposes.size()&&(!prop.equals(proposes.get(index).getContent()))&&(!sender.equals(proposes.get(index).getSender().name))){
+				index++;
 			}
+			accept = new ACLMessage(
+					ACLMessage.ACCEPT_PROPOSAL);
+			accept.setContent("I accept your proposal");
+			accept.setReceiver(proposes.get(index).getSender());
+			accept.setSender(myProcessor.getMyAgent().getAid());
+			accept.setProtocol("fipa-iterated-contract-net");
+			if (!conv.goOnIterating)
+			{accept.setContent("end");}
+			acceptances.add(accept);
+		}
 
-			ACLMessage reject;
-			while (argtokenrej.hasMoreTokens()) {
+		ACLMessage reject;
+		while (argtokenrej.hasMoreTokens()) {
 
-				prop = argtokenrej.nextToken().trim(); //8
-				sender = argtokenrej.nextToken().trim(); // participan1
-				int index = 0;
-				while (index<proposes.size()&&(!prop.equals(proposes.get(index).getContent()))&&(!sender.equals(proposes.get(index).getSender().name))){
-					index++;
-				}
-				reject = new ACLMessage(
-						ACLMessage.REJECT_PROPOSAL);
-				reject.setContent("rejected");
-				reject.setReceiver(proposes.get(index).getSender());
-				reject.setSender(myProcessor.getMyAgent().getAid());
-				reject.setProtocol("fipa-iterated-contract-net");
-				if (!conv.goOnIterating)
-					{reject.setContent("end");}
-				rejections.add(reject);
+			prop = argtokenrej.nextToken().trim(); //8
+			sender = argtokenrej.nextToken().trim(); // participan1
+			int index = 0;
+			while (index<proposes.size()&&(!prop.equals(proposes.get(index).getContent()))&&(!sender.equals(proposes.get(index).getSender().name))){
+				index++;
 			}
-	
+			reject = new ACLMessage(ACLMessage.REJECT_PROPOSAL);
+			reject.setContent("rejected");
+			reject.setReceiver(proposes.get(index).getSender());
+			reject.setSender(myProcessor.getMyAgent().getAid());
+			reject.setProtocol("fipa-iterated-contract-net");
+			if (!conv.goOnIterating)
+			{reject.setContent("end");}
+			rejections.add(reject);
+		}
+
 
 		for (int i = 0; i < acceptances.size(); i++) {
 			System.out.println("I accept "
@@ -274,7 +287,7 @@ public class Jason_FICN_Initiator {
 					+ "'s proposal");
 		}
 	}
-	
+
 	class EVALUATE_PROPOSALS_Method implements ActionStateMethod {
 		@SuppressWarnings("unchecked")
 		public String run(CProcessor myProcessor) {
@@ -297,7 +310,6 @@ public class Jason_FICN_Initiator {
 				reject = true;
 
 			for(i=0; i< acceptances.size(); i++){
-				
 				send = new SendState("SEND_ACCEPTANCE_"+i);
 				send.setMethod(new SEND_Method("SEND_ACCEPTANCE_"+i));
 				send.setMessageTemplate(acceptances.get(i));
@@ -309,12 +321,12 @@ public class Jason_FICN_Initiator {
 			}
 
 			if(!reject && accept)
-				{
+			{
 				if (conv.goOnIterating)
-					{myProcessor.addTransition("SEND_ACCEPTANCE_"+(i-1), "SOLICIT_PROPOSALS");}
+				{myProcessor.addTransition("SEND_ACCEPTANCE_"+(i-1), "SOLICIT_PROPOSALS");}
 				else
-					{myProcessor.addTransition("SEND_ACCEPTANCE_"+(i-1), "WAIT_FOR_RESULTS");}
-				}
+				{myProcessor.addTransition("SEND_ACCEPTANCE_"+(i-1), "WAIT_FOR_RESULTS");}
+			}
 
 			int j;
 			for(j=0; j< rejections.size(); j++){
@@ -335,15 +347,15 @@ public class Jason_FICN_Initiator {
 			}
 
 			if(reject)
-				{
+			{
 				if (conv.goOnIterating)
-					{myProcessor.addTransition("SEND_REJECTION_"+(j-1), "SOLICIT_PROPOSALS");}
+				{myProcessor.addTransition("SEND_REJECTION_"+(j-1), "SOLICIT_PROPOSALS");}
 				else
-					{myProcessor.addTransition("SEND_REJECTION_"+(j-1), "WAIT_FOR_RESULTS");}
-				}
+				{myProcessor.addTransition("SEND_REJECTION_"+(j-1), "WAIT_FOR_RESULTS");}
+			}
 
 			String finalResult = "";			
-			
+
 			if(accept) 
 			{
 				finalResult= "SEND_ACCEPTANCE_0";
@@ -352,7 +364,7 @@ public class Jason_FICN_Initiator {
 				if(reject) 
 				{
 					finalResult = "SEND_REJECTION_0";
-					}
+				}
 				else {
 					if (conv.goOnIterating){finalResult = "SOLICIT_PROPOSALS"; }
 					else
@@ -391,12 +403,9 @@ public class Jason_FICN_Initiator {
 	 * @param msg the failure message
 	 */
 	protected void doReceiveFailure(ConvCProcessor myProcessor, ACLMessage msg) {
-
 		FICNConversation conv = (FICNConversation) myProcessor.getConversation();
-		
 		List<Literal> allperc = new ArrayList<Literal>();
 		String tmpsender = myProcessor.getLastReceivedMessage().getSender().name;
-		
 		String percept = "taskNotDone("+tmpsender+","+conv.jasonConvID+")[source(self)]";
 		allperc.add(Literal.parseLiteral(percept));
 		((ConvMagentixAgArch)Ts.getUserAgArch()).setPerception(allperc);
@@ -415,7 +424,7 @@ public class Jason_FICN_Initiator {
 				return "WAIT_FOR_RESULTS";
 		}
 	}
-	
+
 	/**
 	 * Method executed when the initiator receives a inform
 	 * @param myProcessor the CProcessor managing the conversation
@@ -423,11 +432,8 @@ public class Jason_FICN_Initiator {
 	 */
 	protected void doReceiveInform(ConvCProcessor myProcessor,
 			ACLMessage msg) {
-		
 		FICNConversation conv = (FICNConversation) myProcessor.getConversation();
-		
 		List<Literal> allperc = new ArrayList<Literal>();
-		
 		String tmpsender = myProcessor.getLastReceivedMessage().getSender().name;
 		String percept = "taskDone("+tmpsender+","+conv.jasonConvID+")[source(self)]";
 		allperc.add(Literal.parseLiteral(percept));
@@ -448,7 +454,7 @@ public class Jason_FICN_Initiator {
 				return "WAIT_FOR_RESULTS";
 		}
 	}
-	
+
 	/**
 	 * Method executed when the initiator ends the conversation
 	 * @param myProcessor the CProcessor managing the conversation
@@ -461,13 +467,15 @@ public class Jason_FICN_Initiator {
 		String percept = "resultsreceived("+conv.jasonConvID+")[source(self)]";
 		allperc.add(Literal.parseLiteral(percept));
 		((ConvMagentixAgArch)Ts.getUserAgArch()).setPerception(allperc);
-		
+
 		conv.aquire_semaphore();
 
 		percept = "conversationended("+conv.jasonConvID+")[source(self)]";
 		allperc.clear();
 		allperc.add(Literal.parseLiteral(percept));
 		((ConvMagentixAgArch)Ts.getUserAgArch()).setPerception(allperc);
+
+		myProcessor.getMyAgent().removeFactory(conv.factoryName);
 	}
 
 	class FINAL_Method implements FinalStateMethod {
@@ -475,7 +483,7 @@ public class Jason_FICN_Initiator {
 			doFinal((ConvCProcessor) myProcessor, messageToSend);
 		}
 	}
-	
+
 	/**
 	 * Creates a new contract net initiator factory
 	 * @param name of the factory
@@ -509,6 +517,22 @@ public class Jason_FICN_Initiator {
 		BeginState BEGIN = (BeginState) processor.getState("BEGIN");
 		BEGIN.setMethod(new BEGIN_Method());
 
+
+		// WAIT_FOR_PARTICIPANT_TO_JOIN state
+		WaitState WAIT_FOR_PARTICIPANT_TO_JOIN = new WaitState("WAIT_FOR_PARTICIPANT_TO_JOIN", 500);
+		processor.registerState(WAIT_FOR_PARTICIPANT_TO_JOIN);
+		processor.addTransition(BEGIN, WAIT_FOR_PARTICIPANT_TO_JOIN);
+
+		// RECEIVE_CANCEL_WAIT State
+		//Header: purpose Value: waitMessage
+		ReceiveState RECEIVE_CANCEL_WAIT = new ReceiveState("RECEIVE_CANCEL_WAIT");
+		RECEIVE_CANCEL_WAIT.setMethod(new RECEIVE_CANCEL_WAIT_Method());
+		filter = new MessageFilter("purpose = waitMessage");  
+		RECEIVE_CANCEL_WAIT.setAcceptFilter(filter);
+		processor.registerState(RECEIVE_CANCEL_WAIT);
+		processor.addTransition(WAIT_FOR_PARTICIPANT_TO_JOIN,
+				RECEIVE_CANCEL_WAIT);
+
 		// SOLICIT_PROPOSALS State
 
 		SendState SOLICIT_PROPOSALS = new SendState("SOLICIT_PROPOSALS");
@@ -518,7 +542,7 @@ public class Jason_FICN_Initiator {
 		template.setPerformative(ACLMessage.CFP);
 		SOLICIT_PROPOSALS.setMessageTemplate(template);
 		processor.registerState(SOLICIT_PROPOSALS);
-		processor.addTransition(BEGIN, SOLICIT_PROPOSALS);
+		processor.addTransition(RECEIVE_CANCEL_WAIT, SOLICIT_PROPOSALS);
 
 		// WAIT_FOR_PROPOSALS State
 		WaitState WAIT_FOR_PROPOSALS = new WaitState("WAIT_FOR_PROPOSALS", deadline);
@@ -577,7 +601,7 @@ public class Jason_FICN_Initiator {
 		processor.addTransition(RECEIVE_NOT_UNDERSTOOD, EVALUATE_PROPOSALS);
 		processor.addTransition(RECEIVE_REFUSE, EVALUATE_PROPOSALS);
 		processor.addTransition(TIMEOUT, EVALUATE_PROPOSALS);
-		
+
 		processor.addTransition(EVALUATE_PROPOSALS,SOLICIT_PROPOSALS );
 
 		//We don't need to register send rejections/acceptances. It is done 
@@ -635,6 +659,6 @@ public class Jason_FICN_Initiator {
 	}
 }
 
-	
+
 
 

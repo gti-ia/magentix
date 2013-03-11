@@ -114,12 +114,12 @@ public class ia_fipa_requestw_Initiator extends protocolInternalAction {
 			msg.setProtocol("request-when");
 
 			msg.setContent(agName+","+initialInfo+","+agentConversationID);
-
+			String factName = "Web_Protocol_Factory";
 			if (fri == null){
 				fri = new Jason_Fipa_RequestW_Initiator(agName, ts);
 
 
-				Protocol_Factory = fri.newFactory("Protocol_Factory", null, 
+				Protocol_Factory = fri.newFactory(factName, null, 
 						msg, 1, ((ConvMagentixAgArch)ts.getUserAgArch()).getJasonAgent(),timeOut);
 
 				((ConvMagentixAgArch)ts.getUserAgArch()).getJasonAgent().addFactoryAsInitiator(Protocol_Factory);
@@ -131,7 +131,7 @@ public class ia_fipa_requestw_Initiator extends protocolInternalAction {
 			myag.lock();
 			String ConvID = myag.newConvID();
 			FRWConversation conv = new FRWConversation(agentConversationID,ConvID,timeOut,participant,initialInfo,
-					((ConvMagentixAgArch)ts.getUserAgArch()).getJasonAgent().getAid()); //the internal id is unknown yet
+					((ConvMagentixAgArch)ts.getUserAgArch()).getJasonAgent().getAid(),factName); //the internal id is unknown yet
 			ConvCProcessor processorTemplate = ((ConvCFactory)Protocol_Factory).cProcessorTemplate();
 			processorTemplate.setConversation(conv);
 			msg.setConversationId(ConvID);

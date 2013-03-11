@@ -12,7 +12,7 @@ price(euro,pound,_).
 <- .ia_fipa_subscribe_Participant("joinconversation",ConvID).
 
 +subscriberequest(Sender,ObjectsList,ConvID):not wantToAnswer(Sender,Protocol)
-<- .print("------- I've received the subscribe request: ",Object," AND I REFUSE.");
+<- .print("------- I've received the subscribe request: ",ObjectsList," AND I REFUSE.");
    .ia_fipa_subscribe_Participant("refuse",ConvID).
 
 +subscriberequest(Sender,ObjectsList,ConvID):wantToAnswer(Sender,Protocol)

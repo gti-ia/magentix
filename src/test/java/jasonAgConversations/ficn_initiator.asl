@@ -20,6 +20,7 @@ stuff([clothe,shoes,furniture,www,toys,electronic]).
    +iterations(FirstStuff,0);
    -+stuff(R);
    !notifyParticipants(P,FirstStuff,cinp);
+   //.wait(500);
    !startConversation(FirstStuff,cinp).
 
 +!notifyParticipants([],ConvID,Protocol)
@@ -40,12 +41,13 @@ stuff([clothe,shoes,furniture,www,toys,electronic]).
     +iterations(SecondStuff,0);
     -+stuff(R);
     !notifyParticipants(P,SecondStuff,cinp);
+   // .wait(500);
     .ia_FICN_Initiator("start", TO, DL, P, SecondStuff,SecondStuff).
 
 -!startConversation(ConvID)
 <- .print("------- The conversation could't be started.").
 
-
+@p1[atomic]
 +proposalsevaluationtime(ConvID):proposal(P,S,ConvID)&.my_name(Me)&conversationID(Me,cinp,ConvID)
    //&stuff([ThirdStuff|StuffR])&timeOut(TO)&participants(PAR)&deadlineForProposals(DL)
 <- .print("------- Proposals evaluation time. CID:",ConvID);
@@ -84,9 +86,6 @@ stuff([clothe,shoes,furniture,www,toys,electronic]).
 
 +proposalsevaluationtime(ConvID):.my_name(Me)&conversationID(Me,cinp,ConvID)& not proposal(P,S,ConvID) 
 <- .print("------- No proposals to evaluate.");
-   //.findall(C,iterations(C,I),L);
-   //.findall(I1,iterations(C,I1),L1);
-   //.print("Iterations: ",L," count: ",L1);
    ?iterations(ConvID,I);
    NewI = I +1 ;
    -iterations(ConvID,I);
@@ -98,18 +97,9 @@ stuff([clothe,shoes,furniture,www,toys,electronic]).
      {.ia_FICN_Initiator("proposalsevaluated",[],[],end,ConvID);
      .print("PROPOSALS EVALUATED SIN END EN EL 2DO");}.
 
-/*
-+proposal(P,S,ConvID)
-<- .print("|||||||||||||||| - Adding ",P,",",S,",",ConvID).
-
-+proposal(P,S,ConvID,evaluated)
-<- .print("|||||||||||||||| - Adding evaluated",P,",",S,",",ConvID).
-
-  -proposal(P,S,ConvID,evaluated)
-<- .print("|||||||||||||||| - Removing evaluated ",P,",",S,",",ConvID).
-*/
 
 //It was found a better propose than the one so far 
+@p2[atomic]
 +!evaluateProposals(ConvID):proposal(P,S,ConvID)&rejected(R,ConvID)&bestProposal(X,Sx,ConvID)&(P>X) 
 <- .print("------- Evaluating proposal ",P," from agent ",S," and updating best because ", P, " > ", X,". CID: ",ConvID);
    -proposal(P,S,ConvID);
@@ -120,6 +110,7 @@ stuff([clothe,shoes,furniture,www,toys,electronic]).
    !evaluateProposals(ConvID).
   
 //The propose found is not better than the one so far
+@p3[atomic]
 +!evaluateProposals(ConvID):proposal(P,S,ConvID)&bestProposal(X,Sx,ConvID)&rejected(R,ConvID) 
 <- .print("------- Evaluating proposal ",P," from agent ",S,". CID: ",ConvID);
    ?bestProposal(BP,BS,BConvID);
@@ -142,13 +133,15 @@ stuff([clothe,shoes,furniture,www,toys,electronic]).
  <- .print("------- Processing results... CID: ",ConvID);
     !processResults(ConvID); 
     .ia_FICN_Initiator("resultsprocessed",ConvID).
-  
+
+@p4[atomic]  
 +!processResults(ConvID):taskDone(S,ConvID)
 <- .print("------- Agent ",S," did the task successfully! CID: ",ConvID);
     -taskDone(S,ConvID);
     +taskDone(S,ConvID,analized);
     !processResults(ConvID).
 
+@p5[atomic]
 +!processResults(ConvID):taskNotDone(S,ConvID)
 <- .print("------- Agent ",S," didn't make the task successfully! CID: ",ConvID);
     -taskNotDone(S,ConvID);

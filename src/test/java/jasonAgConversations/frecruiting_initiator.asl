@@ -20,9 +20,11 @@ conversations([frc1,frc2,frc3,frc4]).
 <- .print("------- Sending invitation to participant...");
    +conversationID(Me,frcp,C1);
    -+conversations(R);
-   .send(P,achieve,join(C1,frcp)).
+   .send(P,achieve,join(C1,frcp));
+   !startconversation(P,C1).
 
-+joined(ConvID)[source(P)] : recruiter(P)&timeOut(TO)&.my_name(Me)&
+//+joined(ConvID)[source(P)] : recruiter(P)&timeOut(TO)&.my_name(Me)&
++!startconversation(P,ConvID) : recruiter(P)&timeOut(TO)&.my_name(Me)&
 condition(Cond1)&maxnumberofagents(M)&conversations([C1,C2|R]) //C is the proxy message
 <- .print("******** Starting conversation ",ConvID,".");
    .ia_fipa_recruiting_Initiator("start",TO,Cond1,M,P, "askingForRecruiting",ConvID);
@@ -31,12 +33,14 @@ condition(Cond1)&maxnumberofagents(M)&conversations([C1,C2|R]) //C is the proxy 
    +conversationID(Me,frcp,C1);
    -+conversations([C2|R]);
    .print("******** Starting conversation ",C1,".");
+   .send(P,achieve,join(C1,frcp));
    .ia_fipa_recruiting_Initiator("start",TO,Cond2,M,P, "askingForRecruiting",C1);
    -condition(Cond2);
    ?condition(Cond3);
    +conversationID(Me,frcp,C2);
    -+conversations(R);
    .print("******** Starting conversation ",C2,".");
+   .send(P,achieve,join(C2,frcp));
    .ia_fipa_recruiting_Initiator("start",TO,Cond3,M,P, "askingForRecruiting",C2).
    
 

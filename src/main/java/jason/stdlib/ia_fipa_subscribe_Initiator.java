@@ -123,20 +123,28 @@ public class ia_fipa_subscribe_Initiator extends protocolInternalAction{
 			msg.setProtocol("fipa-subscribe");
 
 			msg.setContent(initialInfo);
-			if (fsi == null){
+			String factName = getFactoryName(agentConversationID,"FS",true);
+			//if (fsi == null){
 
 				fsi = new Jason_Fipa_Subscribe_Initiator(agName, ts);
 
-				
-				Protocol_Factory = fsi.newFactory("FSFACTORY", null, 
+				String prevFactory = "";
+				if (Protocol_Factory!=null)
+					prevFactory = Protocol_Factory.getName();
+				if (prevFactory.compareTo(factName)!=0) // if it is a new conversation a create a new one. This verification is not strictly 
+					//necessary because it supposed that this condition will be always truth. This must be improved but, 
+					//as the participants can not distinguish between conversation of the same factory also one factory per conversation 
+					//is created with the initiator factory name as a filter. This implies one factory per conversation in the initiator too
+				{
+					Protocol_Factory = fsi.newFactory(factName, null, 
 						1, ((ConvMagentixAgArch)ts.getUserAgArch()).getJasonAgent(),timeOut);
 
 				/* The factory is setup to answer start conversation requests from the agent
        		 using the FIPA_REQUEST protocol.*/
-				((ConvMagentixAgArch)ts.getUserAgArch()).getJasonAgent().addFactoryAsInitiator(Protocol_Factory);
-
+					((ConvMagentixAgArch)ts.getUserAgArch()).getJasonAgent().addFactoryAsInitiator(Protocol_Factory);
+				}
 				
-			}
+			//}
 
 			/* finally the new conversation starts an asynchronous conversation.*/
 
@@ -144,7 +152,7 @@ public class ia_fipa_subscribe_Initiator extends protocolInternalAction{
 			String ConvID = myag.newConvID();
 
 			FSConversation conv = new FSConversation(agentConversationID,ConvID,new AgentID(participant),initialInfo,
-					((ConvMagentixAgArch)ts.getUserAgArch()).getJasonAgent().getAid()); 
+					((ConvMagentixAgArch)ts.getUserAgArch()).getJasonAgent().getAid(),factName); 
 			ConvCProcessor processorTemplate = ((ConvCFactory)Protocol_Factory).cProcessorTemplate();
 			processorTemplate.setConversation(conv);
 			

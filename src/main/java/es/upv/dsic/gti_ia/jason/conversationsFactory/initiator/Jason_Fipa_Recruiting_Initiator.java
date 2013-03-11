@@ -33,14 +33,10 @@ import es.upv.dsic.gti_ia.jason.conversationsFactory.FRCConversation;
 
 public class Jason_Fipa_Recruiting_Initiator {
 
-
 	protected TransitionSystem Ts; 
-
 	
 	public Jason_Fipa_Recruiting_Initiator(	TransitionSystem ts) {
-
 		Ts = ts;
-
 	}	
 	
 	/**
@@ -55,11 +51,27 @@ public class Jason_Fipa_Recruiting_Initiator {
 	class BEGIN_Method implements BeginStateMethod {
 		public String run(CProcessor myProcessor, ACLMessage msg) {
 			doBegin((ConvCProcessor) myProcessor, msg);
-			return "SEND_PROXY";
+			return "WAIT_FOR_PARTICIPANT_TO_JOIN";
 		};
 	}
 	
-
+	/**
+	 * Method executed when the timeout for the participants to join finishes
+	 * @param myProcessor the CProcessor managing the conversation
+	 * @param messageReceived Message to send
+	 */
+	private void doReceiveCancelWait(ConvCProcessor myProcessor,
+			ACLMessage messageReceived) {
+		
+	}
+	class RECEIVE_CANCEL_WAIT_Method implements ReceiveStateMethod {
+		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
+			doReceiveCancelWait((ConvCProcessor)myProcessor, messageReceived);
+			return "SEND_PROXY";
+		}
+	}
+	
+	
 	/**
 	 * Set the proxy message
 	 * @param myProcessor the CProcessor managing the conversation
@@ -68,9 +80,11 @@ public class Jason_Fipa_Recruiting_Initiator {
 	protected void setProxyMessage(ConvCProcessor myProcessor,
 			ACLMessage messageToSend){
 		FRCConversation conv =  (FRCConversation) myProcessor.getConversation();
+		//poner lo siguiente en el header
 		messageToSend.setContent(conv.Condition.toString().trim()+","+conv.participantsNumber+","+conv.timeOut+","+conv.jasonConvID);
 		messageToSend.setPerformative(ACLMessage.INFORM);
 		messageToSend.setReceiver(conv.participant);
+		messageToSend.setHeader("factoryname", conv.factoryName);
 	}
 	
 	class SEND_PROXY_Method implements SendStateMethod {
@@ -172,7 +186,6 @@ public class Jason_Fipa_Recruiting_Initiator {
 	 */
 	protected void doReceiveInform(ConvCProcessor myProcessor, ACLMessage msg) {
 		FRCConversation conv =  (FRCConversation) myProcessor.getConversation();
-
 		List<Literal> allperc = new ArrayList<Literal>();
 		String percept = "receiveinform("+conv.participant.name+","+conv.jasonConvID+")[source(self)]";
 		allperc.add(Literal.parseLiteral(percept));
@@ -207,6 +220,7 @@ public class Jason_Fipa_Recruiting_Initiator {
 		String percept = "conversationended("+conv.participant.name+","+conv.jasonConvID+")[source(self)]";
 		allperc.add(Literal.parseLiteral(percept));
 		((ConvMagentixAgArch)Ts.getUserAgArch()).setPerception(allperc);
+		myProcessor.getMyAgent().removeFactory(conv.factoryName);
 	}
 
 	class FINAL_RECRUITING_INITIATOR_Method implements FinalStateMethod {
@@ -243,6 +257,22 @@ public class Jason_Fipa_Recruiting_Initiator {
 		BeginState BEGIN = (BeginState) processor.getState("BEGIN");
 		BEGIN.setMethod(new BEGIN_Method());
 		
+		// WAIT_FOR_PARTICIPANT_TO_JOIN state
+		WaitState WAIT_FOR_PARTICIPANT_TO_JOIN = new WaitState("WAIT_FOR_PARTICIPANT_TO_JOIN", 500);
+		processor.registerState(WAIT_FOR_PARTICIPANT_TO_JOIN);
+		processor.addTransition(BEGIN, WAIT_FOR_PARTICIPANT_TO_JOIN);
+		
+		// RECEIVE_CANCEL_WAIT State
+		//Header: purpose Value: waitMessage
+		ReceiveState RECEIVE_CANCEL_WAIT = new ReceiveState("RECEIVE_CANCEL_WAIT");
+		RECEIVE_CANCEL_WAIT.setMethod(new RECEIVE_CANCEL_WAIT_Method());
+		filter = new MessageFilter("purpose = waitMessage");  
+		RECEIVE_CANCEL_WAIT.setAcceptFilter(filter);
+		processor.registerState(RECEIVE_CANCEL_WAIT);
+		processor.addTransition(WAIT_FOR_PARTICIPANT_TO_JOIN,
+				RECEIVE_CANCEL_WAIT);
+		
+		
 		// SEND_PROXY State
 
 		SendState SEND_PROXY = new SendState("SEND_PROXY");
@@ -251,7 +281,7 @@ public class Jason_Fipa_Recruiting_Initiator {
 		template = new ACLMessage(ACLMessage.UNKNOWN);
 		SEND_PROXY.setMessageTemplate(template);
 		processor.registerState(SEND_PROXY);
-		processor.addTransition(BEGIN, SEND_PROXY);
+		processor.addTransition(RECEIVE_CANCEL_WAIT, SEND_PROXY);
 		
 		// WAIT_FOR_PROXY_ACCEPTANCE State
 

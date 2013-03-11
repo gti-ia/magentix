@@ -15,10 +15,9 @@ public class FRWConversation extends Conversation {
 	public String Participant = "";
 	public String finalResult = "";
 	public FRWConversation(String jasonID, String internalID, int TO, String Partic, String iniMsg,
-			AgentID initiator) {
-		super(jasonID, internalID, initiator);
+			AgentID initiator, String factName) {
+		super(jasonID, internalID, initiator, factName);
 		Participant = Partic;
 		initialMessage = iniMsg;
-
 	}
 }

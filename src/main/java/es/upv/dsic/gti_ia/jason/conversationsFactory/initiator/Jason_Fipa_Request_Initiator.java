@@ -38,9 +38,7 @@ public class Jason_Fipa_Request_Initiator {
 	
 	public Jason_Fipa_Request_Initiator(String sagName,
 			TransitionSystem ts) {
-
 		Ts = ts;
-		
 	}
 	
 
@@ -49,9 +47,6 @@ public class Jason_Fipa_Request_Initiator {
  * @param myProcessor the CProcessor managing the conversation
  * @param msg first message to send
  */
-/*protected void doBegin(CProcessor myProcessor, ACLMessage msg) {
-	myProcessor.getInternalData().put("InitialMessage", msg);		
-}*/
 
 protected void doBegin(ConvCProcessor myProcessor,
 		ACLMessage messageToSend) {
@@ -64,9 +59,27 @@ protected void doBegin(ConvCProcessor myProcessor,
 class BEGIN_Method implements BeginStateMethod {
 	public String run(CProcessor myProcessor, ACLMessage msg) {
 		doBegin((ConvCProcessor)myProcessor, msg);
-		return "REQUEST_REQUEST_INITIATOR";
+		return "WAIT_FOR_PARTICIPANT_TO_JOIN";
 	};
 }
+
+
+/**
+ * Method executed when the timeout for the participants to join finishes
+ * @param myProcessor the CProcessor managing the conversation
+ * @param messageReceived Message to send
+ */
+private void doReceiveCancelWait(ConvCProcessor myProcessor,
+		ACLMessage messageReceived) {
+	
+}
+class RECEIVE_CANCEL_WAIT_Method implements ReceiveStateMethod {
+	public String run(CProcessor myProcessor, ACLMessage messageReceived) {
+		doReceiveCancelWait((ConvCProcessor)myProcessor, messageReceived);
+		return "REQUEST_REQUEST_INITIATOR";
+	}
+}
+
 
 /**
  * Sets the request message
@@ -75,7 +88,6 @@ class BEGIN_Method implements BeginStateMethod {
  */
 protected void doRequest(ConvCProcessor myProcessor,
 		ACLMessage messageToSend) {
-	
 	FRConversation conv = (FRConversation) myProcessor.getConversation();
 
 	conv.aquire_semaphore();
@@ -87,7 +99,7 @@ protected void doRequest(ConvCProcessor myProcessor,
 	messageToSend.setSender(myProcessor.getMyAgent().getAid() );
 	messageToSend.setHeader("jasonID", conv.jasonConvID);
 	messageToSend.setHeader("data", conv.frData);
-	
+	messageToSend.setHeader("factoryname", conv.factoryName);
 }
 
 class REQUEST_Method implements SendStateMethod {
@@ -104,9 +116,7 @@ class REQUEST_Method implements SendStateMethod {
  */
 protected void doNotUnderstood(ConvCProcessor myProcessor, ACLMessage msg){
 	FRConversation conv = (FRConversation)myProcessor.getConversation();
-	
 	conv.FinalResult = '"'+ACLMessage.getPerformative(ACLMessage.NOT_UNDERSTOOD)+'"';
-
 }
 
 class NOT_UNDERSTOOD_Method implements ReceiveStateMethod {
@@ -124,7 +134,6 @@ class NOT_UNDERSTOOD_Method implements ReceiveStateMethod {
 protected void doRefuse(ConvCProcessor myProcessor, ACLMessage msg){
 	FRConversation conv = (FRConversation)myProcessor.getConversation();
 	conv.FinalResult = '"'+ACLMessage.getPerformative(ACLMessage.REFUSE)+'"';
-
 }
 
 class REFUSE_Method implements ReceiveStateMethod {
@@ -142,7 +151,6 @@ class REFUSE_Method implements ReceiveStateMethod {
 protected void doAgree(ConvCProcessor myProcessor, ACLMessage msg){
 	FRConversation conv = (FRConversation)myProcessor.getConversation();
 	conv.FinalResult = '"'+ACLMessage.getPerformative(ACLMessage.AGREE)+'"';
-
 }
 
 class AGREE_Method implements ReceiveStateMethod {
@@ -206,9 +214,7 @@ protected void doInform(ConvCProcessor myProcessor, ACLMessage msg) {
 	
 	msg.setProtocol("fipa-request");
 	msg.setPerformative(ACLMessage.REQUEST);
-	
 	conv.FinalResult = '"'+ACLMessage.getPerformative(ACLMessage.INFORM)+'"';
-
 }
 
 class INFORM_Method implements ReceiveStateMethod {
@@ -225,16 +231,15 @@ class INFORM_Method implements ReceiveStateMethod {
  */
 protected void doFinal(ConvCProcessor myProcessor, ACLMessage messageToSend){
 	FRConversation conv = (FRConversation)myProcessor.getConversation();
-	
 	List<Literal> allperc = new ArrayList<Literal>();
 	String percept = "conversationended("+conv.jasonConvID+","+conv.FinalResult+")[source(self)]";
 	allperc.add(Literal.parseLiteral(percept));
 	((ConvMagentixAgArch)Ts.getUserAgArch()).setPerception(allperc);
-	
 	messageToSend = myProcessor.getLastSentMessage();
 	messageToSend.setProtocol("fipa-request");
 	messageToSend.setPerformative(ACLMessage.REQUEST);
 	
+	myProcessor.getMyAgent().removeFactory(conv.factoryName);
 }
 
 class FINAL_Method implements FinalStateMethod {
@@ -271,7 +276,22 @@ class FINAL_Method implements FinalStateMethod {
 
 		BeginState BEGIN = (BeginState) processor.getState("BEGIN");
 		BEGIN.setMethod(new BEGIN_Method());
-
+		
+		// WAIT_FOR_PARTICIPANT_TO_JOIN state
+		WaitState WAIT_FOR_PARTICIPANT_TO_JOIN = new WaitState("WAIT_FOR_PARTICIPANT_TO_JOIN", 500);
+		processor.registerState(WAIT_FOR_PARTICIPANT_TO_JOIN);
+		processor.addTransition(BEGIN, WAIT_FOR_PARTICIPANT_TO_JOIN);
+		
+		// RECEIVE_CANCEL_WAIT State
+		//Header: purpose Value: waitMessage
+		ReceiveState RECEIVE_CANCEL_WAIT = new ReceiveState("RECEIVE_CANCEL_WAIT");
+		RECEIVE_CANCEL_WAIT.setMethod(new RECEIVE_CANCEL_WAIT_Method());
+		filter = new MessageFilter("purpose = waitMessage");  
+		RECEIVE_CANCEL_WAIT.setAcceptFilter(filter);
+		processor.registerState(RECEIVE_CANCEL_WAIT);
+		processor.addTransition(WAIT_FOR_PARTICIPANT_TO_JOIN,
+				RECEIVE_CANCEL_WAIT);
+		
 		// REQUEST State
 
 		SendState REQUEST = new SendState("REQUEST_REQUEST_INITIATOR");
@@ -281,7 +301,7 @@ class FINAL_Method implements FinalStateMethod {
 		//requestMessage.setProtocol("REQUEST");		
 		REQUEST.setMessageTemplate(requestMessage);
 		processor.registerState(REQUEST);
-		processor.addTransition("BEGIN", "REQUEST_REQUEST_INITIATOR");
+		processor.addTransition("RECEIVE_CANCEL_WAIT", "REQUEST_REQUEST_INITIATOR");
 
 		// FIRST_WAIT State
 

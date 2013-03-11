@@ -16,54 +16,54 @@ fqpcountConversations(C):-.count(conversationID(_,_,fqrp,_),Cr)&.count(conversat
 +!start : participants(P)&query(Protocol,FirstQuery,ConvID)&fqpcountConversations(C)
 <- .my_name(Me);
    +conversationID(ConvID,Me,Protocol,FirstQuery);
-   !notifyParticipants(P,ConvID,Protocol).
+   !notifyParticipants(P,ConvID,Protocol);
+   !startConversation(P,ConvID,Protocol).
 
 +!notifyParticipants([],ConvID,Protocol):notified(P,ConvID,Protocol)
-<- .print("------- Participants notified.");
-	+participantsNotified(P,ConvID,Protocol).
+<- .print("------- Participants notified.").
+	//+participantsNotified(P,ConvID,Protocol).
 
 +!notifyParticipants([P|R],ConvID,Protocol): not notified(P,ConvID,Protocol)
 <- .send(P,achieve,join(ConvID,Protocol));
    +notified(P,ConvID,Protocol);
    !notifyParticipants(R,ConvID,Protocol).
 
-+participantsNotified(P,ConvID,Protocol):timeOut(TO)&conversationID(ConvID,Me,Protocol,FirstQuery) & query(fqrp,FirstQuery,ConvID)
+//+participantsNotified(P,ConvID,Protocol):timeOut(TO)&conversationID(ConvID,Me,Protocol,FirstQuery) & query(fqrp,FirstQuery,ConvID)
++!startConversation([P],ConvID,Protocol):timeOut(TO)&conversationID(ConvID,Me,Protocol,FirstQuery) & query(fqrp,FirstQuery,ConvID)
 <- .print("------- Starting and making ref-query ",FirstQuery," to ",P);
    //New conversation
    .print("********* Starting: ", ConvID);
    .ia_fipa_query_Initiator("start", P , TO, "Fipa query conversation started",fqrp,ConvID);
-   .wait(500);
+   //.wait(500);
    .ia_fipa_query_Initiator("ref-query",FirstQuery,P, ConvID);
    -query(fqrp,_,ConvID);
    
    ?query(fqrp,SecondQuery,fqp2);
    .print("********* Starting: ", fqp2);
-   .ia_fipa_query_Initiator("start", P , TO, "Fipa query conversation started",fqrp,fqp2);
+   !notifyParticipants([P],fqp2,Protocol);
    +conversationID(fqp2,Me,fqrp,SecondQuery);
+   .ia_fipa_query_Initiator("start", P , TO, "Fipa query conversation started",fqrp,fqp2);
+   //.wait(500);
    .ia_fipa_query_Initiator("ref-query",SecondQuery,P, fqp2);
    -query(fqrp,_,fqp2);
    
    ?query(fqrp,ThirdQuery,fqp3);
    .print("********* Starting: ", fqp3);
-   .ia_fipa_query_Initiator("start", P , TO, "Fipa query conversation started",fqrp,fqp3);
+   !notifyParticipants([P],fqp3,Protocol);
    +conversationID(fqp3,Me,fqrp,ThirdQuery);
+   .ia_fipa_query_Initiator("start", P , TO, "Fipa query conversation started",fqrp,fqp3);
+   //.wait(500);
    .ia_fipa_query_Initiator("ref-query",ThirdQuery,P, fqp3);
    -query(fqrp,_,fqp3);
    
    ?query(fqip,FourthQuery,fqp4);
    .print("********* Starting: ", fqp4," Query: ",FourthQuery);
-   .ia_fipa_query_Initiator("start", P , TO, "Fipa query conversation started",fqip,fqp4);
+   !notifyParticipants([P],fqp4,Protocol);   
    +conversationID(fqp4,Me,fqip,FourthQuery);
+   .ia_fipa_query_Initiator("start", P , TO, "Fipa query conversation started",fqip,fqp4);
+   //.wait(500);
    .ia_fipa_query_Initiator("if-query",FourthQuery,P, fqp4);
    -query(fqip,_,fqp4).
-
-+participantsNotified(P,ConvID,Protocol):timeOut(TO) &conversationID(ConvID,Me,Protocol,FirstQuery)& query(fqip,FirstQuery,ConvID)
-<- .print("------- Starting and making if-query ",FirstQuery," to ",P);
-   //New conversation
-   .print("********* Starting: ", ConvID);
-   .ia_fipa_query_Initiator("start", P , TO, "Fipa query conversation started",fqip,ConvID);
-   .wait(500);
-   .ia_fipa_query_Initiator("if-query",FirstQuery,P, ConvID).
 
 +queryResult(P,Result,ConvID):.my_name(Me)&conversationID(ConvID,Me,fqip,Query)//&query(fqip,Query,ConvID)
 <- 

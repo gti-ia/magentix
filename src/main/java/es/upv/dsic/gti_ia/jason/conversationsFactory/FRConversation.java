@@ -19,10 +19,10 @@ public class FRConversation extends Conversation {
 	public String RequestResult = "";
 	public String FinalResult = "";
 	public String Task = "" ;
-	
+
 	public FRConversation(String jasonID, String internalID, int TO, String Partic, String iniMsg,
-			AgentID initiator) {
-		super(jasonID, internalID, initiator);
+			AgentID initiator, String factName) {
+		super(jasonID, internalID, initiator, factName);
 		Participant = Partic;
 		initialMessage = iniMsg;
 

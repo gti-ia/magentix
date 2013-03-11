@@ -18,7 +18,7 @@ public class JAucIniConversation extends Conversation{
 	public Hashtable<AgentID, Integer> PartParticipations = new Hashtable<AgentID, Integer>();
 	public List<AgentID> AcceptancesReceivedInCurrLevel = new ArrayList<AgentID>();
 	public List<AgentID> ActiveParticipants = new ArrayList<AgentID>();
-	
+
 	public int AuctionLevel = 0;
 	public double initialBid = 0;
 	public double NextBid = 0;
@@ -28,27 +28,24 @@ public class JAucIniConversation extends Conversation{
 	public int MaxIterations ;
 	public String request = "";
 
-
-	//public int performative ;
-
 	public JAucIniConversation(String jasonID, String internalID,
 			AgentID initiatorAg, List<AgentID> participants, String iniMsg, 
-			double iniBid, double inc, int maxIterNumber) {
-		super(jasonID, internalID, initiatorAg);
+			double iniBid, double inc, int maxIterNumber, String factName) {
+		super(jasonID, internalID, initiatorAg, factName);
 		Iterator<AgentID> it = participants.iterator();
 		while (it.hasNext())
-			{	
-				AgentID current = it.next();
-				PartParticipations.put(current, 0);
-				ActiveParticipants.add(current);
-			}
+		{	
+			AgentID current = it.next();
+			PartParticipations.put(current, 0);
+			ActiveParticipants.add(current);
+		}
 		initialMessage = iniMsg;
 		initialBid = iniBid;
 		NextBid = iniBid;
 		Increment = inc;
 		MaxIterations = maxIterNumber;
 	}
-	
+
 	public void updateActiveParticipants() {
 		Iterator<AgentID> it = PartParticipations.keySet().iterator();
 		ActiveParticipants.clear();
@@ -57,9 +54,9 @@ public class JAucIniConversation extends Conversation{
 			if (PartParticipations.get(current)==AuctionLevel)
 				ActiveParticipants.add(current);
 		}
-		
+
 	}
-	
+
 	public AgentID getParticipant(String Name){
 		Iterator<AgentID> it = PartParticipations.keySet().iterator();
 		AgentID result = null;
@@ -70,7 +67,7 @@ public class JAucIniConversation extends Conversation{
 		}
 		return result;
 	}
-	
+
 	public int getParticipation(String Name){
 		Iterator<AgentID> it = PartParticipations.keySet().iterator();
 		int result = -1;
@@ -81,7 +78,7 @@ public class JAucIniConversation extends Conversation{
 		}
 		return result;
 	}
-	
+
 	public AgentID setParticipations(String Name, int partic){
 		Iterator<AgentID> it = PartParticipations.keySet().iterator();
 		AgentID result = null;
@@ -92,7 +89,7 @@ public class JAucIniConversation extends Conversation{
 		}
 		return result;
 	}
-	
+
 	public boolean hasAcceptedInCurrLevel(String Name){
 		Iterator<AgentID> it = AcceptancesReceivedInCurrLevel.iterator();
 		boolean result = false;
@@ -103,7 +100,7 @@ public class JAucIniConversation extends Conversation{
 		}
 		return result;
 	}
-	
+
 	public boolean allActiveAcceptancesReceived(){
 		boolean result = true;
 		Iterator<AgentID> it = ActiveParticipants.iterator();
@@ -111,8 +108,6 @@ public class JAucIniConversation extends Conversation{
 			AgentID current = it.next();
 			result = result && (hasAcceptedInCurrLevel(current.name));
 		}
-		
 		return result;
-		
 	}
 }

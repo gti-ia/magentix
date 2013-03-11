@@ -33,16 +33,12 @@ import es.upv.dsic.gti_ia.core.MessageFilter;
  */
 
 public class Jason_Fipa_Query_Initiator {
-
-
 	protected TransitionSystem Ts; 
 
 	
 	public Jason_Fipa_Query_Initiator(String sagName,
 			TransitionSystem ts) {
-
 		Ts = ts;
-		
 	}
 	
 /**
@@ -53,11 +49,9 @@ public class Jason_Fipa_Query_Initiator {
 
 protected void doBegin(ConvCProcessor myProcessor,
 		ACLMessage messageToSend) {
-	
 	FQConversation conv =  (FQConversation) myProcessor.getConversation();
 	messageToSend.setContent(conv.initialMessage);
 	myProcessor.getInternalData().put("InitialMessage", messageToSend);
-	
 	if (messageToSend.getPerformativeInt()==ACLMessage.QUERY_IF){
 		conv.performative = ACLMessage.QUERY_IF; 
 	}else{
@@ -68,15 +62,34 @@ protected void doBegin(ConvCProcessor myProcessor,
 class BEGIN_Method implements BeginStateMethod {
 	public String run(CProcessor myProcessor, ACLMessage msg) {
 		doBegin((ConvCProcessor)myProcessor, msg);
-		String result = null; 
-		if (msg.getPerformativeInt()==ACLMessage.QUERY_IF){
-			result = "QUERY_IF_INITIATOR"; 
-		}else{
-			result = "QUERY_REF_INITIATOR"; 
-		}
-		
+		String result = "WAIT_FOR_PARTICIPANT_TO_JOIN"; 
 		return result;
-	};
+	}
+}
+
+
+/**
+ * Method executed when the timeout for the participants to join finishes
+ * @param myProcessor the CProcessor managing the conversation
+ * @param messageReceived Message to send
+ */
+private String doReceiveCancelWait(ConvCProcessor myProcessor,
+		ACLMessage messageReceived) {
+	FQConversation conv =  (FQConversation) myProcessor.getConversation();
+	String result;
+	if (conv.performative == ACLMessage.QUERY_IF){
+		result = "QUERY_IF_INITIATOR"; 
+	}else{  //conv.performative == ACLMessage.QUERY_REF
+		result = "QUERY_REF_INITIATOR"; 
+	}
+	return result;
+}
+	
+class RECEIVE_CANCEL_WAIT_Method implements ReceiveStateMethod {
+	public String run(CProcessor myProcessor, ACLMessage messageReceived) {
+		String result = doReceiveCancelWait((ConvCProcessor)myProcessor, messageReceived);
+		return result; //"REQUEST_REQUEST_INITIATOR";
+	}
 }
 
 /**
@@ -86,9 +99,7 @@ class BEGIN_Method implements BeginStateMethod {
  */
 protected void doQueryif(ConvCProcessor myProcessor,
 		ACLMessage messageToSend) {
-	
 	FQConversation conv = (FQConversation) myProcessor.getConversation();
-	
 	conv.aquire_semaphore();
 	messageToSend.setContent(conv.query.toString());
 	messageToSend.setProtocol("fipa-query");
@@ -96,7 +107,7 @@ protected void doQueryif(ConvCProcessor myProcessor,
 	messageToSend.setReceiver(new AgentID(conv.Participant)); 
 	messageToSend.setSender(myProcessor.getMyAgent().getAid());
 	messageToSend.setHeader("jasonID", conv.jasonConvID);
-	
+	messageToSend.setHeader("factoryname", conv.factoryName);
 }
 
 
@@ -114,9 +125,7 @@ class QUERY_IF_Method implements SendStateMethod {
  */
 protected void doQueryref(ConvCProcessor myProcessor,
 		ACLMessage messageToSend) {
-	
 	FQConversation conv = (FQConversation) myProcessor.getConversation();
-	
 	conv.aquire_semaphore();
 	messageToSend.setContent(conv.query.toString());
 	messageToSend.setProtocol("fipa-query");
@@ -124,7 +133,7 @@ protected void doQueryref(ConvCProcessor myProcessor,
 	messageToSend.setReceiver(new AgentID(conv.Participant)); 
 	messageToSend.setSender(myProcessor.getMyAgent().getAid());
 	messageToSend.setHeader("jasonID", conv.jasonConvID);
-	
+	messageToSend.setHeader("factoryname", conv.factoryName);
 }
 
 
@@ -177,7 +186,6 @@ class REFUSE_Method implements ReceiveStateMethod {
  */
 protected void doFailure(ConvCProcessor myProcessor, ACLMessage msg){
 	FQConversation conv = (FQConversation) myProcessor.getConversation();
-	
 	conv.result=ACLMessage.getPerformative(ACLMessage.FAILURE);
 }
 
@@ -229,9 +237,7 @@ class TIMEOUT_Method implements ReceiveStateMethod {
  * @param msg
  */
 protected void doInform(ConvCProcessor myProcessor, ACLMessage msg) {
-
 	FQConversation conv = (FQConversation) myProcessor.getConversation();
-
 	List<Literal> allperc = new ArrayList<Literal>();
 	conv.evaluationResult=msg.getContent();
 	String percept = "queryResult("+conv.Participant+","+conv.evaluationResult+","+conv.jasonConvID+")[source(self)]";
@@ -258,19 +264,15 @@ class INFORM_Method implements ReceiveStateMethod {
  * @param messageToSend
  */
 protected void doFinal(ConvCProcessor myProcessor, ACLMessage messageToSend){
-
 	FQConversation conv = (FQConversation) myProcessor.getConversation();
-	
 	List<Literal> allperc = new ArrayList<Literal>();
 	String percept = "conversationended("+conv.jasonConvID+","+'"'+ conv.result.toLowerCase()+'"' +")[source(self)]";
-	
 	allperc.add(Literal.parseLiteral(percept));
 	((ConvMagentixAgArch)Ts.getUserAgArch()).setPerception(allperc);
-	
 	messageToSend = myProcessor.getLastSentMessage();
 	messageToSend.setProtocol("fipa-query");
 	messageToSend.setPerformative(conv.performative);
-	
+	myProcessor.getMyAgent().removeFactory(conv.factoryName);
 }
 
 
@@ -310,6 +312,21 @@ class FINAL_Method implements FinalStateMethod {
 		BeginState BEGIN = (BeginState) processor.getState("BEGIN");
 		BEGIN.setMethod(new BEGIN_Method());
 
+		// WAIT_FOR_PARTICIPANT_TO_JOIN state
+		WaitState WAIT_FOR_PARTICIPANT_TO_JOIN = new WaitState("WAIT_FOR_PARTICIPANT_TO_JOIN", 500);
+		processor.registerState(WAIT_FOR_PARTICIPANT_TO_JOIN);
+		processor.addTransition(BEGIN, WAIT_FOR_PARTICIPANT_TO_JOIN);
+		
+		// RECEIVE_CANCEL_WAIT State
+		//Header: purpose Value: waitMessage
+		ReceiveState RECEIVE_CANCEL_WAIT = new ReceiveState("RECEIVE_CANCEL_WAIT");
+		RECEIVE_CANCEL_WAIT.setMethod(new RECEIVE_CANCEL_WAIT_Method());
+		filter = new MessageFilter("purpose = waitMessage");  
+		RECEIVE_CANCEL_WAIT.setAcceptFilter(filter);
+		processor.registerState(RECEIVE_CANCEL_WAIT);
+		processor.addTransition(WAIT_FOR_PARTICIPANT_TO_JOIN,
+				RECEIVE_CANCEL_WAIT);
+		
 		// QUERYIF State
 		
 		SendState QUERYIF = new SendState("QUERY_IF_INITIATOR");
@@ -319,7 +336,7 @@ class FINAL_Method implements FinalStateMethod {
 		requestMessage.setProtocol("fipa-request");		
 		QUERYIF.setMessageTemplate(requestMessage);
 		processor.registerState(QUERYIF);
-		processor.addTransition("BEGIN", "QUERY_IF_INITIATOR");
+		processor.addTransition("RECEIVE_CANCEL_WAIT", "QUERY_IF_INITIATOR");
 		
 		
 		// QUERYIF State
@@ -331,7 +348,7 @@ class FINAL_Method implements FinalStateMethod {
 		requestMessage.setProtocol("fipa-request");		
 		QUERYREF.setMessageTemplate(requestMessage);
 		processor.registerState(QUERYREF);
-		processor.addTransition("BEGIN", "QUERY_REF_INITIATOR");
+		processor.addTransition("RECEIVE_CANCEL_WAIT", "QUERY_REF_INITIATOR");
 
 		// WAIT_FOR_ACCEPTANCE State
 		
@@ -406,7 +423,6 @@ class FINAL_Method implements FinalStateMethod {
 		// FINAL State
 
 		FinalState FINAL = new FinalState("FINAL_QUERY_INITIATOR");
-
 		FINAL.setMethod(new FINAL_Method());
 		
 		processor.registerState(FINAL);

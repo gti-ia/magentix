@@ -19,19 +19,21 @@ cancell_all(false).
 /* Plans */
 +!start : participants(P)&subscribe(Id,Object,ConvID)&.my_name(Me)
 <- +conversationID(Me,_,fsp,ConvID);
-   !notifyParticipants(P,ConvID,fsp).
+   !notifyParticipants(P,ConvID,fsp);
+   !startconversation(P,ConvID,fsp).
 
 +!notifyParticipants([],ConvID,Protocol):notified(P,ConvID,Protocol)
-<- .print("------- Participants notified.");
-	+participantsNotified(P,ConvID,Protocol).
+<- .print("------- Participants notified.").
+	//+participantsNotified(P,ConvID,Protocol).
+	
 
 +!notifyParticipants([P|R],ConvID,Protocol): not notified(P,ConvID,Protocol)
 <- .send(P,achieve,join(ConvID,Protocol));
    +notified(P,ConvID,Protocol);
    !notifyParticipants(R,ConvID,Protocol).
 
-+participantsNotified(P,ConvID,Protocol):.my_name(Me)&timeOut(TO)&
-		conversationID(Me,_,fsp,ConvID)&countsubscribe(C,ConvID)
+//+participantsNotified(P,ConvID,Protocol):.my_name(Me)&timeOut(TO)&conversationID(Me,_,fsp,ConvID)&countsubscribe(C,ConvID)
++!startconversation([P],ConvID,Protocol):.my_name(Me)&timeOut(TO)&conversationID(Me,_,fsp,ConvID)&countsubscribe(C,ConvID)
 <- .print("------- Starting and requesting subscription ",ConvID," to ",P);
    //New conversation
    .print("********* Starting: ", ConvID);
@@ -45,7 +47,7 @@ cancell_all(false).
    Max = C * 2 ;
    +counter(ConvID,0,Max);
    .ia_fipa_subscribe_Initiator("start", P , TO, "Fipa subscribe conversation started",ConvID);
-   .wait(500);
+   //.wait(500);
    !updatingsubscriptions(ConvID);
    .ia_fipa_subscribe_Initiator("subscribe",ObjectsList,P, ConvID)}.
 
@@ -70,10 +72,11 @@ cancell_all(false).
    else
    {
       +conversationID(Me,mail_agent,fsp,NewConvID);
-     .send(mail_agent,achieve,join(NewConvID,fsp));
-     .print("********* Starting: ", NewConvID);
+      //.send(mail_agent,achieve,join(NewConvID,fsp));
+      !notifyParticipants([mail_agent],NewConvID,fsp);
+      .print("********* Starting: ", NewConvID);     
       .ia_fipa_subscribe_Initiator("start", mail_agent , TO, "Fipa subscribe conversation started",NewConvID);
-      wait(500);
+     // .wait(500);
       !updatingsubscriptions(NewConvID);
       .ia_fipa_subscribe_Initiator("subscribe",ObjectsList,mail_agent, NewConvID)
     }.

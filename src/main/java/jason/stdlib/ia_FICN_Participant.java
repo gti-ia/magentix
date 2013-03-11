@@ -5,6 +5,8 @@ package jason.stdlib;
 import jason.*;
 import jason.asSemantics.*;
 import jason.asSyntax.*;
+import es.upv.dsic.gti_ia.core.MessageFilter;
+import es.upv.dsic.gti_ia.jason.conversationsFactory.ConvCFactory;
 import es.upv.dsic.gti_ia.jason.conversationsFactory.ConvMagentixAgArch;
 import es.upv.dsic.gti_ia.jason.conversationsFactory.Conversation;
 import es.upv.dsic.gti_ia.jason.conversationsFactory.FICNConversation;
@@ -26,7 +28,7 @@ public class ia_FICN_Participant extends protocolInternalAction {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	Jason_FICN_Participant fcnp;
+	Jason_FICN_Participant ficnp;
 
 	//her there must be more factory fields
 
@@ -42,7 +44,7 @@ public class ia_FICN_Participant extends protocolInternalAction {
 		if (((Term)args[args.length-1]).isAtom()){result=true;}
 
 		result = (result && (((Term)args[0]).isString()) );
-		
+
 		if ((protocolSteep.compareTo(Protocol_Template.TASK_DONE_STEP)==0)||
 				(protocolSteep.compareTo(Protocol_Template.TASK_NOT_DONE_STEP)==0))
 		{
@@ -52,11 +54,6 @@ public class ia_FICN_Participant extends protocolInternalAction {
 		{
 			result = (result && (((Term)args[1]).isNumeric()||((Term)args[1]).isNumeric()) );
 		}		
-		/*if (protocolSteep.compareTo(Protocol_Template.JOIN_STEEP)==0)
-		{
-			result = (result && (((Term)args[1]).isNumeric()) );
-		}*/
-		
 		if (!result)
 		{
 			throw JasonException.createWrongArgument(this,"Parameters must be in correct format.");
@@ -65,7 +62,7 @@ public class ia_FICN_Participant extends protocolInternalAction {
 
 	@Override
 	public Object execute(TransitionSystem ts, Unifier un, Term[] args) throws Exception {
-		
+
 		agName  = ts.getUserAgArch().getAgName();
 
 		Term protSteep = args[0];
@@ -76,8 +73,8 @@ public class ia_FICN_Participant extends protocolInternalAction {
 
 		checkArguments(args);
 
-		ts.getAg().getLogger().info("CALLING INTERNAL ACTION WITH STEEP: '"+protocolSteep+"'"+" CID: "+agentConversationID); 
-		
+		ts.getAg().getLogger().fine("CALLING INTERNAL ACTION WITH STEEP: '"+protocolSteep+"'"+" CID: "+agentConversationID); 
+
 		//the first state in the conversation
 
 		if (protocolSteep.compareTo(Protocol_Template.JOIN_STEP)==0){
@@ -85,39 +82,35 @@ public class ia_FICN_Participant extends protocolInternalAction {
 			//in the Jason code of the participant this data is eliminated. Update examples in document. This value 
 			//must be greater than the wait_for_proposals deadline.
 			int timeOut = 80000;
-			
-			if (fcnp == null){
 
-				if (args.length >2)
-				{					
-					timeOut = (int)((NumberTerm)args[1]).solve();
-				}
-				
-				fcnp = new Jason_FICN_Participant(agName, ts);
-
-				Protocol_Factory = fcnp.newFactory("Protocol_Factory", null,null,1, 
-						((ConvMagentixAgArch)ts.getUserAgArch()).getJasonAgent(),timeOut);
-
-				((ConvMagentixAgArch)ts.getUserAgArch()).getJasonAgent().addFactoryAsParticipant(Protocol_Factory);
-				
-				//This helps participant to finish joining in Magentix conversation thread.
-				//Must be substituted with a wait state
-				int i = 0;
-				while (i>900000000){i++;}
-				
+			if (ficnp == null){
+				ficnp = new Jason_FICN_Participant(agName, ts);
 			}
+			if (args.length >2)
+			{					
+				timeOut = (int)((NumberTerm)args[1]).solve();
+			}
+
+			String myfactName = getFactoryName(agentConversationID,"FICN",false);
+			String inifactName = getFactoryName(agentConversationID,"FICN",true);
+			MessageFilter filter = new MessageFilter("performative = CFP AND protocol = fipa-iterated-contract-net AND factoryname = "+inifactName);
+
+			ConvCFactory tmpFactory = ficnp.newFactory(myfactName, filter,null,1, 
+					((ConvMagentixAgArch)ts.getUserAgArch()).getJasonAgent(),timeOut);
+
+			((ConvMagentixAgArch)ts.getUserAgArch()).getJasonAgent().addFactoryAsParticipant(tmpFactory);
+			CFactories.put(agentConversationID, tmpFactory);
 		}
 		else
 			if (protocolSteep.compareTo(Protocol_Template.MAKE_PROPOSAL_STEP)==0){
-				//the agent finished the evaluations of proposals
-				Conversation conv = conversationsList.get(agentConversationID);
-				
-				if (conv==null)
-					{conv = Protocol_Factory.removeConversationByJasonID(agentConversationID);
-					conversationsList.put(agentConversationID, conv);}
-				
+				if (conversationsList.get(agentConversationID) == null)
+				{	ConvCFactory tmpFactory = CFactories.get(agentConversationID);
+				{Conversation conv = tmpFactory.removeConversationByJasonID(agentConversationID);
+				conversationsList.put(agentConversationID, conv);}
+				CFactories.remove(agentConversationID);
+				}
 				Term proposal = args[1];
-				
+
 				((FICNConversation)conversationsList.get(agentConversationID)).kindOfAnswer = "propose";
 				((FICNConversation)conversationsList.get(agentConversationID)).proposal = getTermAsString(proposal);
 
@@ -125,32 +118,32 @@ public class ia_FICN_Participant extends protocolInternalAction {
 			}
 			else
 				if (protocolSteep.compareTo(Protocol_Template.REFUSE_STEP)==0){
-					Conversation conv = conversationsList.get(agentConversationID);
-					
-					if (conv==null)
-						{ conv = Protocol_Factory.removeConversationByJasonID(agentConversationID);
-						conversationsList.put(agentConversationID, conv);}
-					
-					((FICNConversation)conversationsList.get(agentConversationID)).kindOfAnswer = "refuse";
+					if (conversationsList.get(agentConversationID) == null)
+					{	ConvCFactory tmpFactory = CFactories.get(agentConversationID);
+					{Conversation conv = tmpFactory.removeConversationByJasonID(agentConversationID);
+					conversationsList.put(agentConversationID, conv);}
+					CFactories.remove(agentConversationID);
+					}
 
+					((FICNConversation)conversationsList.get(agentConversationID)).kindOfAnswer = "refuse";
 					conversationsList.get(agentConversationID).release_semaphore();
 
 				}
 				else
 					if (protocolSteep.compareTo(Protocol_Template.NOT_UNDERSTOOD_STEP)==0){
-						Conversation conv = conversationsList.get(agentConversationID);
-						
-						if (conv==null)
-							{ conv = Protocol_Factory.removeConversationByJasonID(agentConversationID);
-							conversationsList.put(agentConversationID, conv);}
-						
-						((FICNConversation)conversationsList.get(agentConversationID)).kindOfAnswer = "notUnderstood";
+						if (conversationsList.get(agentConversationID) == null)
+						{	ConvCFactory tmpFactory = CFactories.get(agentConversationID);
+						{ Conversation conv = tmpFactory.removeConversationByJasonID(agentConversationID);
+						conversationsList.put(agentConversationID, conv);}
+						CFactories.remove(agentConversationID);
+						}
 
+						((FICNConversation)conversationsList.get(agentConversationID)).kindOfAnswer = "notUnderstood";
 						conversationsList.get(agentConversationID).release_semaphore();
 					}
 					else
 						if (protocolSteep.compareTo(Protocol_Template.TASK_DONE_STEP)==0){
-							
+
 							Term finalInfo = args[1];
 
 							((FICNConversation)conversationsList.get(agentConversationID)).infoToSend = ((StringTerm)finalInfo).getString();

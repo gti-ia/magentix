@@ -40,9 +40,7 @@ public class Jason_FICN_Participant {
 	protected TransitionSystem Ts; 
 	
 	public Jason_FICN_Participant(String agName2, TransitionSystem ts2) {
-
 		Ts = ts2;
-	
 	}
 	
 	/**
@@ -85,8 +83,9 @@ public class Jason_FICN_Participant {
 	protected String doReceiveSolicit(ConvCProcessor myProcessor, ACLMessage msg){
 		// accept all the solicits
 		String jasonConvID = msg.getHeaderValue("jasonID");
-		
+
 		Conversation conv = myProcessor.getConversation();
+		String factName = conv.factoryName;
 		//At this point the conversation associated to the CProcessor has no value
 		//for the Jason conversation ID so it is updated
 		FICNConversation newConv;
@@ -94,8 +93,7 @@ public class Jason_FICN_Participant {
 		{
 			conv.jasonConvID = jasonConvID;
 			conv.initiator = msg.getSender();
-
-			newConv = new FICNConversation(conv.jasonConvID, conv.internalConvID, "", conv.initiator);
+			newConv = new FICNConversation(conv.jasonConvID, conv.internalConvID, "", conv.initiator,factName);
 			((ConvCFactory)myProcessor.getMyFactory()).UpdateConv(newConv, myProcessor);
 		}
 		else
@@ -105,12 +103,8 @@ public class Jason_FICN_Participant {
 		
 		String result = "";
 		AgentID Sender = myProcessor.getLastReceivedMessage().getSender();
-		
-		
 		String newMsgContent = "callforproposal"+"("+Sender.name+","+msg.getContent()+","+conv.jasonConvID+")[source(self)]";
-		
 		List<Literal> allpercep = new ArrayList<Literal>();
-		
 		allpercep.add(Literal.parseLiteral(newMsgContent));
 		((ConvMagentixAgArch)Ts.getUserAgArch()).setPerception(allpercep);
 		newConv.aquire_semaphore();
@@ -138,9 +132,7 @@ public class Jason_FICN_Participant {
 	 */
 	protected void doSendProposal(ConvCProcessor myProcessor,
 			ACLMessage messageToSend){
-
 		FICNConversation conv = (FICNConversation)myProcessor.getConversation();
-		
 		messageToSend.setSender(myProcessor.getMyAgent().getAid());
 		messageToSend.setReceiver(conv.initiator);
 		messageToSend.setContent(conv.proposal);
@@ -268,9 +260,7 @@ public class Jason_FICN_Participant {
 	 */
 	protected String doTask(ConvCProcessor myProcessor, ACLMessage solicitMessage){
 		String result = ""; 
-		
 		FICNConversation conv = (FICNConversation)myProcessor.getConversation();
-		
 		List<Literal> allpercep = new ArrayList<Literal>();
 		allpercep.add(Literal.parseLiteral("timetodotask("+conv.initiator.name+","+conv.jasonConvID+")[source(self)]"));
 		((ConvMagentixAgArch)Ts.getUserAgArch()).setPerception(allpercep);
@@ -322,7 +312,6 @@ public class Jason_FICN_Participant {
 	protected void doSendInfo(ConvCProcessor myProcessor,
 			ACLMessage messageToSend){
 		FICNConversation conv = (FICNConversation)myProcessor.getConversation();
-		
 		messageToSend.setSender(myProcessor.getMyAgent().getAid());
 		messageToSend.setReceiver(myProcessor.getLastReceivedMessage().getSender());
 		messageToSend.setContent("I'm "+myProcessor.getMyAgent().getAid().name+": "+conv.infoToSend);
@@ -344,15 +333,14 @@ public class Jason_FICN_Participant {
 	 */
 	protected void doFinal(ConvCProcessor myProcessor, ACLMessage messageToSend) {
 		messageToSend = myProcessor.getLastSentMessage();
-		
 		FICNConversation conv = (FICNConversation) myProcessor.getConversation();
-		
 		List<Literal> allperc = new ArrayList<Literal>();
-		
 		String percept = "conversationended("+conv.jasonConvID+")[source(self)]";
 		allperc.clear();
 		allperc.add(Literal.parseLiteral(percept));
 		((ConvMagentixAgArch)Ts.getUserAgArch()).setPerception(allperc);
+
+		myProcessor.getMyAgent().removeFactory(conv.factoryName);
 		
 	}
 
@@ -388,6 +376,7 @@ public class Jason_FICN_Participant {
 		
 		if (template == null){
 			template = new ACLMessage(ACLMessage.PROPOSE);
+			template.setProtocol("fipa-iterated-contract-net");
 		}
 		ConvCFactory theFactory = new ConvCFactory(name, filter,
 				availableConversations, myAgent);
@@ -432,7 +421,7 @@ public class Jason_FICN_Participant {
 		SendState SEND_PROPOSAL = new SendState("SEND_PROPOSAL");
 
 		SEND_PROPOSAL.setMethod(new SEND_PROPOSAL_Method());
-		template.setProtocol("fipa-iterated-contract-net");
+		//template.setProtocol("fipa-iterated-contract-net");
 		template.setPerformative(ACLMessage.PROPOSE);
 		SEND_PROPOSAL.setMessageTemplate(template);
 		processor.registerState(SEND_PROPOSAL);
@@ -443,7 +432,7 @@ public class Jason_FICN_Participant {
 		SendState SEND_REFUSE = new SendState("SEND_REFUSE");
 
 		SEND_REFUSE.setMethod(new SEND_REFUSE_Method());
-		template.setProtocol("fipa-iterated-contract-net");
+		//template.setProtocol("fipa-iterated-contract-net");
 		template.setPerformative(ACLMessage.REFUSE);
 		SEND_REFUSE.setMessageTemplate(template);
 		processor.registerState(SEND_REFUSE);
@@ -454,7 +443,7 @@ public class Jason_FICN_Participant {
 		SendState SEND_NOT_UNDERSTOOD = new SendState("SEND_NOT_UNDERSTOOD");
 
 		SEND_NOT_UNDERSTOOD.setMethod(new SEND_NOT_UNDERSTOOD_Method());
-		template.setProtocol("fipa-iterated-contract-net");
+		//template.setProtocol("fipa-iterated-contract-net");
 		template.setPerformative(ACLMessage.NOT_UNDERSTOOD);
 		SEND_NOT_UNDERSTOOD.setMessageTemplate(template);
 		processor.registerState(SEND_NOT_UNDERSTOOD);

@@ -21,10 +21,9 @@ public class FSConversation extends Conversation{
 	public boolean conversationCanceled = false;
 	public int performative ;
 	public FSConversation(String jasonID, String internalID, AgentID Partic, String iniMsg,
-			AgentID initiator) {
-		super(jasonID, internalID, initiator);
+			AgentID initiator, String factName) {
+		super(jasonID, internalID, initiator, factName);
 		Participant = Partic;
 		initialMessage = iniMsg;
-
 	}
 }

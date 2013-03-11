@@ -39,9 +39,7 @@ public class Jason_Fipa_Query_Participant {
 
 	public Jason_Fipa_Query_Participant(String sagName, 
 			TransitionSystem ts) {
-
 		Ts = ts;
-		
 	}
 	
 
@@ -69,17 +67,14 @@ public class Jason_Fipa_Query_Participant {
 	 */
 	protected String doReceiveQuery(ConvCProcessor myProcessor,
 			ACLMessage query){
-		
 		String jasonID = query.getHeaderValue("jasonID");
-		
 		Conversation conv =  myProcessor.getConversation();
+		String factName = conv.factoryName;
 		conv.jasonConvID = jasonID;
 		conv.initiator = query.getSender();
-		
 		FQConversation newConv = new FQConversation(conv.jasonConvID,conv.internalConvID,myProcessor.getMyAgent().getName(),
-				"",conv.initiator);
+				"",conv.initiator, factName);
 		((ConvCFactory)myProcessor.getMyFactory()).UpdateConv(newConv, myProcessor);
-		
 		newConv.query = Literal.parseLiteral(query.getContent());
 		String queryKind ="";
 		if (query.getPerformative().compareTo(ACLMessage.getPerformative(ACLMessage.QUERY_IF))==0){
@@ -91,9 +86,7 @@ public class Jason_Fipa_Query_Participant {
 			newConv.performative = ACLMessage.QUERY_REF;
 		}		
 		List<Literal> allperc = new ArrayList<Literal>();
-
 		String percept = "query("+newConv.initiator.name+","+newConv.query.toString()+","+queryKind+","+newConv.jasonConvID+")[source(self)]";
-		
 		allperc.add(Literal.parseLiteral(percept));
 		((ConvMagentixAgArch)Ts.getUserAgArch()).setPerception(allperc);
 		
@@ -154,7 +147,6 @@ public class Jason_Fipa_Query_Participant {
 		messageToSend.setPerformative(ACLMessage.NOT_UNDERSTOOD);
 		messageToSend.setSender(myProcessor.getMyAgent().getAid());
 		messageToSend.setReceiver(conv.initiator);
-		
 		conv.result = '"'+ACLMessage.getPerformative(ACLMessage.NOT_UNDERSTOOD)+'"';
 	}
 
@@ -177,7 +169,6 @@ public class Jason_Fipa_Query_Participant {
 		messageToSend.setPerformative(ACLMessage.REFUSE);
 		messageToSend.setSender(myProcessor.getMyAgent().getAid());
 		messageToSend.setReceiver(conv.initiator);
-		
 		conv.result = '"'+ACLMessage.getPerformative(ACLMessage.REFUSE)+'"';
 	}
 
@@ -200,9 +191,7 @@ public class Jason_Fipa_Query_Participant {
 		messageToSend.setPerformative(ACLMessage.FAILURE);
 		messageToSend.setSender(myProcessor.getMyAgent().getAid());
 		messageToSend.setReceiver(conv.initiator);
-		
 		conv.result = '"'+ACLMessage.getPerformative(ACLMessage.FAILURE)+'"';
-		
 	}
 
 	class FAILURE_Method implements SendStateMethod {
@@ -241,9 +230,7 @@ public class Jason_Fipa_Query_Participant {
 	 * @return next conversation state
 	 */
 	protected String doAction(ConvCProcessor myProcessor){
-		
 		FQConversation conv = (FQConversation) myProcessor.getConversation();
-		
 		String result = "FAILURE"; 
 		if (conv.evaluationResult.compareTo("")!= 0){
 			result="INFORM";
@@ -257,7 +244,6 @@ public class Jason_Fipa_Query_Participant {
 		public String run(CProcessor myProcessor) {
 			return doAction((ConvCProcessor)myProcessor);
 		}
-		
 	}
 	
 	/**
@@ -273,13 +259,11 @@ public class Jason_Fipa_Query_Participant {
 		response.setSender(myProcessor.getMyAgent().getAid());
 		response.setContent(conv.evaluationResult);
 		response.setInReplyTo("query");
-		
 		conv.result = '"'+ACLMessage.getPerformative(ACLMessage.INFORM)+'"';
 	}
 
 	class INFORM_Method implements SendStateMethod {
 		public String run(CProcessor myProcessor, ACLMessage messageToSend) {
-
 			doInform((ConvCProcessor)myProcessor, messageToSend);
 			return "FINAL";
 		}
@@ -292,13 +276,11 @@ public class Jason_Fipa_Query_Participant {
 	 */
 	protected void doFinal(ConvCProcessor myProcessor, ACLMessage messageToSend){
 		FQConversation conv = (FQConversation) myProcessor.getConversation();
-		
 		List<Literal> allperc = new ArrayList<Literal>();
 		String percept = "conversationended("+conv.jasonConvID+","+ conv.result.toLowerCase() +")[source(self)]";
-		
 		allperc.add(Literal.parseLiteral(percept));
 		((ConvMagentixAgArch)Ts.getUserAgArch()).setPerception(allperc);
-
+		myProcessor.getMyAgent().removeFactory(conv.factoryName);
 	}
 	
 	class FINAL_Method implements FinalStateMethod {

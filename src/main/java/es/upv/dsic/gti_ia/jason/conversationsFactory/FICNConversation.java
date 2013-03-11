@@ -16,11 +16,11 @@ public class FICNConversation extends Conversation{
 	public String proposal = "";
 	public String infoToSend = "";
 	public boolean taskDone = false;
-	
+
 	public boolean goOnIterating = true;
-	
-	public FICNConversation(String jasonID, String internalID, String iniMsg, AgentID initiator) {
-		super(jasonID, internalID, initiator);
+
+	public FICNConversation(String jasonID, String internalID, String iniMsg, AgentID initiator, String factName) {
+		super(jasonID, internalID, initiator,  factName);
 		initialMessage = iniMsg;
 	}
 }
