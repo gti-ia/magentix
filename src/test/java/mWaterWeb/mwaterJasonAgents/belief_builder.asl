@@ -1,10 +1,10 @@
 // Agent belief_builder in project mWater-Magentix-Jason2
 
 /* Initial beliefs and rules */
-currentWaterMarket_id(28).
-currentTradinghall_id(28).
-currentProtocol_id(4).
-
+//(28).
+//currentTradinghall_id(28).
+//currentProtocol_id(4).
+staffname(staff).  //This must be obtained in other way
 myname(Name):-.my_name(Me)&.concat("",Me,Name).
 // ontonology
 table_Arguments_List(Table,FieldsList,TableID):-
@@ -29,6 +29,21 @@ user_structure(User):-
 				User= water_user(id(ID),name(Name),user_type(UsrType),seller_timeout(SellerTO),seller_price(SellerPrice),
 				seller_percentage(SellerPerc),seller_wt(SellerWt),seller_th(SellerTh),buyer_bid(BuyerID),
 				buyer_enter(BuyerEnter),buyer_cont_enact(BuyerContEnact)).
+
+// ontonology
+userClass_Arguments_List(UserClass,FieldsList,ID):-
+		UserClass =.. [Functor,FieldsList,Rest]&IDFiled=id(ID)&
+		.member(IDFiled,FieldsList).
+user_class_structure(UserClass):-
+				UserClass= user_class(id(ID),description(ClassDesc),selling_probability(SProb),
+				buying_probability(BProb),invitation_acceptance_probability(InvAccProb)).
+
+// ontonology
+userHasClass_Arguments_List(UserHasClass,FieldsList,UserID):-
+		UserHasClass =.. [Functor,FieldsList,Rest]&IDFiled=user_id(UserID)&
+		.member(IDFiled,FieldsList).
+user_has_class_structure(UserHasClass):-
+				UserHasClass= user_has_class(user_id(ID),configuration_id(ConfID),user_class_id(UsrClassID)).
 
 // ontonology
 waterRight_Arguments_List(WaterRight,FieldsList,ID):- 
@@ -65,7 +80,8 @@ configuration_structure(Conf):-
 		group_selected(GrSelected),initial_date(InitDate), final_date(FinalDate), seller_timeout(SellerTO), 
 		seller_price(SellerPrice), seller_percentage(SellerPerc), seller_wt(SellerWT), buyer_bid(BuyerBid), 
 		buyer_enter(BuyerEnt), buyer_cont_enact(BuyerContEnact), ba_agr_val(BaAgrVal), 
-		ba_entitlement(BaEnt), mf_cont_enact(MfConEnac), mf_accred(MfAccr), seller_th(SellerTh)).
+		ba_entitlement(BaEnt), mf_cont_enact(MfConEnac), mf_accred(MfAccr), seller_th(SellerTh), human_interaction(HInt),
+		num_participants(NPart),num_seller_probability(SNProb)).
 		
 //ontology
 
@@ -123,9 +139,9 @@ request(accreditation,Request,ParamList):-
 		(.member(user_name(UserName),ParamList)&.member(wmarket(WMarket),ParamList))).
 //openNTTquery(Query,OpenNTTList,WMarket):-Query = openNTT(OpenNTTList,WMarket).
 query(openNTT,Query,ParamList):-
-		Query = openNTT(User,OpenNTTList,WMarket,THall)&
-		(.concat([openNTTList(OpenNTTList)],[wmarket(WMarket)],[th_id(THall)],[sender(User)],ParamList))|
-		(.member(openNTTList(OpenNTTList),ParamList)&.member(wmarket(WMarket),ParamList)&.member(th_id(THall),ParamList)&.member(sender(User),ParamList)).
+		Query = openNTT(User,OpenNTTList,WMarket,OpDate,THall)&
+		(.concat([openNTTList(OpenNTTList)],[wmarket(WMarket)],[th_id(THall)],[opening_date(OpDate)],[sender(User)],ParamList))|
+		(.member(openNTTList(OpenNTTList),ParamList)&.member(wmarket(WMarket),ParamList)&.member(th_id(THall),ParamList)&.member(opening_date(OpDate),ParamList)&.member(sender(User),ParamList)).
 //newNTTrequest( Request,Table, WMarket,Config ):- Request = newNTT(Table,WMarket,Config)&table_Arguments_List(Table,ArgumentsList,TableID).
 request(newNTT, Request, ParamList ):- 
 		Request = newNTT(Table,User,WaterRightIDsList)&
@@ -209,6 +225,7 @@ protocol_request("japanese_auction",ProtocolID, Request, ParamList):-
 -!findElem(Functor,L,Result,ValueResult,Index)
 <- Result = none.
 
+//Retruns -1 if first date is less than second, 0 if it is equal or 1 if it is greater 
  +!compareDates([D1,M1,Y1],[D2,M2,Y2],Result)
 <- if (Y1<Y2)
    {Result = -1}
@@ -253,5 +270,11 @@ protocol_request("japanese_auction",ProtocolID, Request, ParamList):-
    !isContained(B,L2,Result).
 -!isContained(L1,L2,Result)
 <- Result = false.
+
++!firstNElementsOfList(N,List,TmpList,ResultList): .length(TmpList,N)
+<-  ResultList = TmpList.
++!firstNElementsOfList(N,[H|T],TmpList,ResultList)
+<- .concat(TmpList,[H] ,NewList ); 
+   !firstNElementsOfList(N,T,NewList,ResultList).
 
 /* - GENERAL PLANS <-  */

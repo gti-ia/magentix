@@ -146,6 +146,26 @@ public class SQL
 	}
 	
 	//Bexy
+	public static String GET_USER_CLASS(String usrid) {
+		String result = "select * from user_class";
+		if (usrid.compareTo("")!=0)
+			result = result+ " where id = 2";
+		return result;
+	}
+	
+	//Bexy
+	public static String GET_USER_HAS_CLASS(String usrid, String confid) {
+		String result = "select * from user_has_class";
+		String and = "";
+		if ((usrid.compareTo("")!=0)||(confid.compareTo("")!=0)){
+			result = result + " WHERE";
+			if (usrid.compareTo("")!=0){ result = result + and + " user_id = " + usrid;  and = " AND ";}
+			if (confid.compareTo("")!=0){ result = result + and + " configuration_id = " + confid; }
+		}
+		return result;
+	}
+	
+	//Bexy
 	public static final String GET_PROTOCOLTYPE(String id, String name)
 	{
 		String result =  "SELECT * from mWaterDB.protocoltype ";
@@ -166,18 +186,22 @@ public class SQL
 		return result;
 	}
 	
+
+	
 	public static final String INSERT_CONFIGURATION(String description, String simulation_date, String negotiation_protocol, 
 			String group_selected, String initial_date, String final_date, String seller_timeout, String seller_price, 
 			String seller_percentage, String seller_wt, String buyer_bid, String buyer_enter, String buyer_cont_enact, 
-			String ba_agr_val, String ba_entitlement, String mf_cont_enact, String mf_accred, String seller_th)
+			String ba_agr_val, String ba_entitlement, String mf_cont_enact, String mf_accred, String seller_th, 
+			String humanInt, String noPart, String numSellerProb)
 	{
 		return "INSERT INTO mWaterDB.configuration (`id`, `description`, `simulation_date`, `negotiation_proto`, `group_selected`, " +
 				"`initial_date`, `final_date`, `seller_timeout`, `seller_price`, `seller_percentage`, `seller_wt`, `buyer_bid`, `buyer_enter`, " +
-				"`buyer_cont_enact`, `ba_agr_val`, `ba_entitlement`, `mf_cont_enact`, `mf_accred`, `seller_th`) VALUES " +
+				"`buyer_cont_enact`, `ba_agr_val`, `ba_entitlement`, `mf_cont_enact`, `mf_accred`, `seller_th`, " +
+				"`human_interaction`, `num_participants`,`num_seller_probability` ) VALUES " +
 				"(null, " + description + ", " + simulation_date + ", " + negotiation_protocol + ", " + group_selected + ", " + 
 				initial_date + ", " + final_date + ", " + seller_timeout + ", " + seller_price + ", " + seller_percentage + ", " + 
 				seller_wt + ", " + buyer_bid + ", " + buyer_enter + ", " + buyer_cont_enact + ", " + ba_agr_val + ", " + ba_entitlement + 
-				", " + mf_cont_enact + ", " + mf_accred + ", " + seller_th + ")";	
+				", " + mf_cont_enact + ", " + mf_accred + ", " + seller_th +","+humanInt+","+noPart+","+numSellerProb+ ")";	
 	}
 	
 	public static final String INSERT_WATERMAKET(String description, String version)
@@ -263,6 +287,12 @@ public class SQL
 				"VALUES (" + trading_table + ", " + mwater_market + ", " + configuration_id + ", " + user + ", " + 
 				invitation_condition + ", " + invitation_date +", "+accepted+", "+acceptance_date+ ", "+number_of_participations+")";
 	}
+
+
+
+
+
+
 
 
 

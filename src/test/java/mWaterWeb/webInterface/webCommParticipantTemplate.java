@@ -13,9 +13,12 @@ import mWaterWeb.webInterface.WebComm.AccreditationInJSONObject;
 import mWaterWeb.webInterface.WebComm.AccreditationOutJSONObject;
 import mWaterWeb.webInterface.WebComm.AuctionInJSONObject;
 import mWaterWeb.webInterface.WebComm.BidUpInJSONObject;
+import mWaterWeb.webInterface.WebComm.FinishedRoundInJSONObject;
+import mWaterWeb.webInterface.WebComm.GetWRInJSONObject;
 import mWaterWeb.webInterface.WebComm.InJsonObject;
 import mWaterWeb.webInterface.WebComm.JoinTableInJSONObject;
 import mWaterWeb.webInterface.WebComm.NewTableInJSONObject;
+import mWaterWeb.webInterface.WebComm.RoundStartedInJSONObject;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
@@ -85,6 +88,7 @@ public class webCommParticipantTemplate {
 		//for the internal conversation ID so it is updated
 		conv.jasonConvID = jasonConvID;
 		conv.initiator = request.getSender();
+		String factName = conv.factoryName;
 		XStream xstream = new XStream(new JettisonMappedXmlDriver());
 		
 		//xstream.alias("jsonObject", InJsonObject.class);
@@ -110,20 +114,79 @@ public class webCommParticipantTemplate {
 		//System.out.println("Antes de leer objeto.... "+purpose);
 
 
-		WebRequestConversation newConv = new WebRequestConversation(conv.jasonConvID, conv.internalConvID, conv.initiator,purpose);
+		WebRequestConversation newConv = new WebRequestConversation(conv.jasonConvID, conv.internalConvID, conv.initiator,purpose,factName);
 		List<Literal> allperc = new ArrayList<Literal>();
 		String percept="";
+		
+		if (purpose.compareTo("finishedround")==0){
+			xstream.alias("jsonObject", FinishedRoundInJSONObject.class);
+			newConv.conversationRequest = (FinishedRoundInJSONObject) xstream.fromXML(request.getContent());
+			String content = ((FinishedRoundInJSONObject)newConv.conversationRequest).content;;
+
+			//Add perception in order to start the right conversation
+			percept = "finishedround("+'"'+newConv.jasonConvID+'"'+")[source(self)]";
+	  
+		}
+		
+		if (purpose.compareTo("roundstarted")==0){
+			xstream.alias("jsonObject", RoundStartedInJSONObject.class);
+			newConv.conversationRequest = (RoundStartedInJSONObject) xstream.fromXML(request.getContent());
+			String userName = ((RoundStartedInJSONObject)newConv.conversationRequest).userName;
+
+			//Add perception in order to start the right conversation
+			percept = "roundstarted("+'"'+userName+'"'+","+'"'+newConv.jasonConvID+'"'+")[source(self)]";
+	  
+		}
+		
+		if (purpose.compareTo("WRList")==0){
+			xstream.alias("jsonObject", GetWRInJSONObject.class);
+			newConv.conversationRequest = (GetWRInJSONObject) xstream.fromXML(request.getContent());
+			String usrName = ((GetWRInJSONObject)newConv.conversationRequest).content.userName;
+			String wmarket = ((GetWRInJSONObject)newConv.conversationRequest).content.wmarket;
+			String rol = ((GetWRInJSONObject)newConv.conversationRequest).content.rol;
+			String w_right_id = ((GetWRInJSONObject)newConv.conversationRequest).content.wrightid;
+			
+			//Add perception in order to start the right conversation
+			
+			if ((wmarket.compareTo("")!=0)&&(w_right_id.compareTo("")!=0))
+				{	percept = "request("+'"'+purpose+'"'+","+'"'+usrName+'"'+","+wmarket+","+'"'+rol+'"'+","+w_right_id+","+'"'+newConv.jasonConvID+'"'+")[source(self)]";
+				}
+			else {
+				if ((wmarket.compareTo("")==0)&&(w_right_id.compareTo("")!=0))
+					percept = "request("+'"'+purpose+'"'+","+'"'+usrName+'"'+","+'"'+'"'+","+'"'+rol+'"'+","+w_right_id+","+'"'+newConv.jasonConvID+'"'+")[source(self)]";
+				if ((wmarket.compareTo("")!=0)&&(w_right_id.compareTo("")==0))
+					percept = "request("+'"'+purpose+'"'+","+'"'+usrName+'"'+","+wmarket+","+'"'+rol+'"'+","+'"'+'"'+","+'"'+newConv.jasonConvID+'"'+")[source(self)]";
+				if ((wmarket.compareTo("")==0)&&(w_right_id.compareTo("")==0))
+					percept = "request("+'"'+purpose+'"'+","+'"'+usrName+'"'+","+'"'+'"'+","+'"'+rol+'"'+","+'"'+'"'+","+'"'+newConv.jasonConvID+'"'+")[source(self)]";
+			}   
+		}
 		if (purpose.compareTo("accreditation")==0){
 			xstream.alias("jsonObject", AccreditationInJSONObject.class);
 			newConv.conversationRequest = (AccreditationInJSONObject) xstream.fromXML(request.getContent());
 			String usrName = ((AccreditationInJSONObject)newConv.conversationRequest).content.userName;
 			String wmarket = ((AccreditationInJSONObject)newConv.conversationRequest).content.wmarket;
+			String rol = ((AccreditationInJSONObject)newConv.conversationRequest).content.rol;
+			String w_right_id = ((AccreditationInJSONObject)newConv.conversationRequest).content.wrightid;
+			String date = ((AccreditationInJSONObject)newConv.conversationRequest).content.date;
 			//Add perception in order to start the right conversation
-			if (wmarket.compareTo("")!=0)
-				percept = "request("+'"'+purpose+'"'+","+'"'+usrName+'"'+","+wmarket+","+'"'+newConv.jasonConvID+'"'+")[source(self)]";
-			else percept = "request("+'"'+purpose+'"'+","+'"'+usrName+'"'+","+'"'+'"'+","+'"'+newConv.jasonConvID+'"'+")[source(self)]";
+			/*if (wmarket.compareTo("")!=0)
+				percept = "request("+'"'+purpose+'"'+","+'"'+usrName+'"'+","+wmarket+","+'"'+rol+'"'+","+w_right_id+","+'"'+newConv.jasonConvID+'"'+")[source(self)]";
+			else percept = "request("+'"'+purpose+'"'+","+'"'+usrName+'"'+","+'"'+'"'+","+'"'+rol+'"'+","+w_right_id+","+'"'+newConv.jasonConvID+'"'+")[source(self)]";*/
+
+			if ((wmarket.compareTo("")!=0)&&(w_right_id.compareTo("")!=0))
+			{	percept = "request("+'"'+purpose+'"'+","+'"'+usrName+'"'+","+wmarket+","+'"'+rol+'"'+","+w_right_id+","+date+","+'"'+newConv.jasonConvID+'"'+")[source(self)]";
+			}
+		else {
+			if ((wmarket.compareTo("")==0)&&(w_right_id.compareTo("")!=0))
+				percept = "request("+'"'+purpose+'"'+","+'"'+usrName+'"'+","+'"'+'"'+","+'"'+rol+'"'+","+w_right_id+","+date+","+'"'+newConv.jasonConvID+'"'+")[source(self)]";
+			if ((wmarket.compareTo("")!=0)&&(w_right_id.compareTo("")==0))
+				percept = "request("+'"'+purpose+'"'+","+'"'+usrName+'"'+","+wmarket+","+'"'+rol+'"'+","+'"'+'"'+","+date+","+'"'+newConv.jasonConvID+'"'+")[source(self)]";
+			if ((wmarket.compareTo("")==0)&&(w_right_id.compareTo("")==0))
+				percept = "request("+'"'+purpose+'"'+","+'"'+usrName+'"'+","+'"'+'"'+","+'"'+rol+'"'+","+'"'+'"'+","+date+","+'"'+newConv.jasonConvID+'"'+")[source(self)]";
+		}  
+		
 		}
-		if (purpose.compareTo("tradinghall")==0){
+		if ((purpose.compareTo("tradinghall")==0)||(purpose.compareTo("tradinghallstate")==0)){
 			xstream.alias("jsonObject", JoinTableInJSONObject.class);
 			newConv.conversationRequest = (JoinTableInJSONObject) xstream.fromXML(request.getContent());
 			String usrName = ((JoinTableInJSONObject)newConv.conversationRequest).content.userName;
@@ -464,8 +527,9 @@ public class webCommParticipantTemplate {
                 return new JsonWriter(writer, JsonWriter.DROP_ROOT_MODE);
             }
         });
-
+		
 		// Fill json object
+
 		response.setContent(xstream.toXML(conv.conversationResult));
 		//System.out.println("Response: "+response.getContent());
         response.setProtocol(myProtocol);

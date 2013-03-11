@@ -3,11 +3,14 @@ package mWaterWeb.webInterface;
 import java.util.Iterator;
 
 import mWaterWeb.webInterface.WebComm.AccreditationOutJSONObject;
+import mWaterWeb.webInterface.WebComm.FinishedRoundOutJSONObject;
+import mWaterWeb.webInterface.WebComm.GetWROutJSONObject;
 import mWaterWeb.webInterface.WebComm.InJsonObject;
 import mWaterWeb.webInterface.WebComm.JoinTableOutJSONObject;
 import mWaterWeb.webInterface.WebComm.NewTableOutJSONObject;
 import mWaterWeb.webInterface.WebComm.AuctionOutJSONObject;
 import mWaterWeb.webInterface.WebComm.OutJsonObject;
+import mWaterWeb.webInterface.WebComm.RoundStartedOutJSONObject;
 import mWaterWeb.webInterface.WebComm.TradingAgreement;
 import mWaterWeb.webInterface.WebComm.TradingTable;
 import mWaterWeb.webInterface.WebComm.WaterRight;
@@ -31,8 +34,8 @@ public class WebRequestConversation extends Conversation {
 	public String conversationPropose;
 	
 	public WebRequestConversation(String jasonID, String internalID,
-			AgentID initiatorAg, String convPurpose) {
-		super(jasonID, internalID, initiatorAg);
+			AgentID initiatorAg, String convPurpose, String factName) {
+		super(jasonID, internalID, initiatorAg,factName);
 		conversationPropose = convPurpose;
 		conversationRequest = new WebComm().new InJsonObject();
 		
@@ -52,16 +55,65 @@ public class WebRequestConversation extends Conversation {
 				Unifier u = new Unifier();
 				int cont = 0;
 				//result([recruited_participant(...),recruited_participant(...),...],[trading_table(...),trading_table(...),...]) 
+				//round(NewUser,LasR)
+				
+				if (purposeDescription.compareTo("roundstarted")==0)
+				{ //result(Started,LastRound,Date)
+					StringTermImpl started = (StringTermImpl) result.getTerm(0);
+					StringTermImpl lastround = (StringTermImpl) result.getTerm(1);
+					ListTermImpl date = (ListTermImpl) result.getTerm(2);
+					conversationResult = comm.new RoundStartedOutJSONObject("","","");
+					conversationResult.purpose = purposeDescription;
+					((RoundStartedOutJSONObject)conversationResult).started = started.getString();
+					((RoundStartedOutJSONObject)conversationResult).lastround = lastround.getString();
+					((RoundStartedOutJSONObject)conversationResult).date = date.toString();
+				}else
+				if (purposeDescription.compareTo("finishedround")==0)
+				{ 
+					StringTermImpl newusr = (StringTermImpl) result.getTerm(0);
+					StringTermImpl lastround = (StringTermImpl) result.getTerm(1);
+					conversationResult = comm.new FinishedRoundOutJSONObject("","");
+					conversationResult.purpose = purposeDescription;
+					((FinishedRoundOutJSONObject)conversationResult).newuser = newusr.getString();
+					((FinishedRoundOutJSONObject)conversationResult).lastround = lastround.getString();
+				}else
+				if (purposeDescription.compareTo("WRList")==0)
+				{ 
+				
+					ListTerm wrights_list = (ListTermImpl) result.getTerm(0);
+					conversationResult = comm.new GetWROutJSONObject(wrights_list.size(),"");
+					conversationResult.purpose = purposeDescription;
+					WaterRight wr ;
+					for (Term i: wrights_list){
+						/*water_right(owner(Own),id(ID),authorized_extraction_flow(AuthFlow),authorization_date(AuthDate),
+							authorized(Auth),type_of_water(WaterType),initial_date_for_extraction(IniDateExtract),
+							final_date_for_extraction(EndDayExtract),aggregation_right(AggregRight),season_unit(SeasonUnit),season(Season),
+							general_water_right(GralWR))*/
+						String owner = mWaterBB.searchFieldValueInTermList("water_right","owner",((Literal)i).getTerms(),u);
+						String id = mWaterBB.searchFieldValueInTermList("water_right","id",((Literal)i).getTerms(),u);
+						String authorized_extraction_flow = mWaterBB.searchFieldValueInTermList("water_right","authorized_extraction_flow",((Literal)i).getTerms(),u);
+						String authorization_date = mWaterBB.searchFieldValueInTermList("water_right","authorization_date",((Literal)i).getTerms(),u);
+						String type_of_water = mWaterBB.searchFieldValueInTermList("water_right","type_of_water",((Literal)i).getTerms(),u);
+						String initial_date_for_extraction = mWaterBB.searchFieldValueInTermList("water_right","initial_date_for_extraction",((Literal)i).getTerms(),u);
+						String final_date_for_extraction = mWaterBB.searchFieldValueInTermList("water_right","final_date_for_extraction",((Literal)i).getTerms(),u);
+						wr = comm.new WaterRight(id,owner,authorized_extraction_flow,authorization_date,type_of_water,initial_date_for_extraction,final_date_for_extraction);
+						((GetWROutJSONObject)conversationResult).content.water_rights[cont] = wr;
+						cont++;
+					}
+				
+				}else
 				if (purposeDescription.compareTo("accreditation")==0)
-				{
+				{// Result = result(Invitations,TTSelling,TTBuying,WMarketID);
 					ListTerm invitations = (ListTermImpl) result.getTerm(0);
-					ListTerm ttables = (ListTermImpl) result.getTerm(1);
-					Term wm = result.getTerm(2);
-					conversationResult = comm.new AccreditationOutJSONObject(invitations.size(),ttables.size(),wm.toString());
+					ListTerm ttselling = (ListTermImpl) result.getTerm(1);
+					ListTerm ttbuying = (ListTermImpl) result.getTerm(2);
+					Term wm = result.getTerm(3);
+					conversationResult = comm.new AccreditationOutJSONObject(invitations.size(),ttselling.size(),ttbuying.size(),wm.toString());
 					conversationResult.purpose = purposeDescription;
 					((AccreditationOutJSONObject)conversationResult).content.registeredUser = true;
 
 					//Filling invitations
+					cont = 0;
 					TradingTable invittoinsert;
 					for (Term i: invitations){ //i must have the format: recruited_participant(...)
 						String tableid = mWaterBB.searchFieldValueInTermList("trading_table","id",((Literal)i).getTerms(),u);
@@ -77,22 +129,40 @@ public class WebRequestConversation extends Conversation {
 						cont++;
 					}
 
-					//Filling tables
+					//Filling tables selling
 					cont = 0;
 					TradingTable tabletoinsert;
-					for (Term t: ttables){ //i must have the format: recruited_participant(...)
-						String tableid = mWaterBB.searchFieldValueInTermList("trading_table","id",((Literal)t).getTerms(),u);
-						String wmarket = mWaterBB.searchFieldValueInTermList("trading_table","wmarket",((Literal)t).getTerms(),u);
-						String conf_id = mWaterBB.searchFieldValueInTermList("trading_table","configuration_id",((Literal)t).getTerms(),u);
-						String opDate = mWaterBB.searchFieldValueInTermList("trading_table","opening_date",((Literal)t).getTerms(),u);
-						String clDate = mWaterBB.searchFieldValueInTermList("trading_table","closing_date",((Literal)t).getTerms(),u);
-						String cond = mWaterBB.searchFieldValueInTermList("trading_table","conditions",((Literal)t).getTerms(),u);
-						String opUser = mWaterBB.searchFieldValueInTermList("trading_table","opening_user",((Literal)t).getTerms(),u);
-						String protType = mWaterBB.searchFieldValueInTermList("trading_table","protocol_type",((Literal)t).getTerms(),u);
+					for (Term ts: ttselling){ //i must have the format: recruited_participant(...)
+						String tableid = mWaterBB.searchFieldValueInTermList("trading_table","id",((Literal)ts).getTerms(),u);
+						String wmarket = mWaterBB.searchFieldValueInTermList("trading_table","wmarket",((Literal)ts).getTerms(),u);
+						String conf_id = mWaterBB.searchFieldValueInTermList("trading_table","configuration_id",((Literal)ts).getTerms(),u);
+						String opDate = mWaterBB.searchFieldValueInTermList("trading_table","opening_date",((Literal)ts).getTerms(),u);
+						String clDate = mWaterBB.searchFieldValueInTermList("trading_table","closing_date",((Literal)ts).getTerms(),u);
+						String cond = mWaterBB.searchFieldValueInTermList("trading_table","conditions",((Literal)ts).getTerms(),u);
+						String opUser = mWaterBB.searchFieldValueInTermList("trading_table","opening_user",((Literal)ts).getTerms(),u);
+						String protType = mWaterBB.searchFieldValueInTermList("trading_table","protocol_type",((Literal)ts).getTerms(),u);
 						tabletoinsert = comm.new TradingTable(tableid, wmarket, conf_id, clDate, opDate, cond, opUser,protType);
-						((AccreditationOutJSONObject)conversationResult).content.tradingTables[cont] = tabletoinsert;
+						((AccreditationOutJSONObject)conversationResult).content.tablesselling[cont] = tabletoinsert;
 
 						cont++;
+					}
+					
+					//Filling tables buying
+					cont = 0;
+					for (Term tb: ttbuying){ //i must have the format: recruited_participant(...)
+						String tableid = mWaterBB.searchFieldValueInTermList("trading_table","id",((Literal)tb).getTerms(),u);
+						String wmarket = mWaterBB.searchFieldValueInTermList("trading_table","wmarket",((Literal)tb).getTerms(),u);
+						String conf_id = mWaterBB.searchFieldValueInTermList("trading_table","configuration_id",((Literal)tb).getTerms(),u);
+						String opDate = mWaterBB.searchFieldValueInTermList("trading_table","opening_date",((Literal)tb).getTerms(),u);
+						String clDate = mWaterBB.searchFieldValueInTermList("trading_table","closing_date",((Literal)tb).getTerms(),u);
+						String cond = mWaterBB.searchFieldValueInTermList("trading_table","conditions",((Literal)tb).getTerms(),u);
+						String opUser = mWaterBB.searchFieldValueInTermList("trading_table","opening_user",((Literal)tb).getTerms(),u);
+						String protType = mWaterBB.searchFieldValueInTermList("trading_table","protocol_type",((Literal)tb).getTerms(),u);
+						tabletoinsert = comm.new TradingTable(tableid, wmarket, conf_id, clDate, opDate, cond, opUser,protType);
+						((AccreditationOutJSONObject)conversationResult).content.ttablesbuying[cont] = tabletoinsert;
+
+						cont++;
+						
 					}
 
 				}else
@@ -102,7 +172,8 @@ public class WebRequestConversation extends Conversation {
 						Literal tt = (LiteralImpl) result.getTerm(0);
 						ListTerm wrights = (ListTermImpl) result.getTerm(1);
 						StringTermImpl rol = (StringTermImpl) result.getTerm(2);
-						conversationResult = comm.new JoinTableOutJSONObject(wrights.size(),rol.getString());
+						StringTermImpl joined = (StringTermImpl) result.getTerm(3);
+						conversationResult = comm.new JoinTableOutJSONObject(wrights.size(),rol.getString(),joined.toString());
 						conversationResult.purpose = purposeDescription;
 
 						TradingTable tradingtable;

@@ -111,6 +111,8 @@ public class mWaterBB extends JDBCPersistentBB {
 		mwFunctors.put("water_market","mwatermarket");
 		mwFunctors.put("general_water_right","generalwaterright");
 		mwFunctors.put("waterright_tt","tradingtable_has_waterright");
+		mwFunctors.put("user_class","user_class");
+		mwFunctors.put("user_has_class","user_has_class");
 	}
 
 	private void initializeFieldFunctor(String functor,String field, int type, String objFunctor){
@@ -187,7 +189,7 @@ public class mWaterBB extends JDBCPersistentBB {
 		initializeFieldFunctor( "id",  "id",Types.NUMERIC,"water_market");
 		initializeFieldFunctor( "description","description" ,Types.VARCHAR,"water_market");				
 		initializeFieldFunctor( "version", "version",Types.VARCHAR,"water_market");
-		
+		//Tradingtable
 		initializeFieldFunctor( "configuration_id",  "configuration_id",Types.NUMERIC,"trading_table");
 		initializeFieldFunctor( "wmarket","mwater_market" ,Types.NUMERIC,"trading_table");				
 		initializeFieldFunctor( "id", "trading_table_id",Types.NUMERIC,"trading_table");
@@ -209,8 +211,9 @@ public class mWaterBB extends JDBCPersistentBB {
 		initializeFieldFunctor( "number_of_opener_participations" ,"number_of_opener_participations" ,Types.NUMERIC,"trading_table");
 		initializeFieldFunctor( "th_id", "trading_hall_id",Types.NUMERIC,"trading_table");
 		
-		initializeFieldFunctor( "id", "trading_hall_id",Types.NUMERIC,"trading_hall");
 		
+		initializeFieldFunctor( "id", "trading_hall_id",Types.NUMERIC,"trading_hall");
+		//Configuration
 		initializeFieldFunctor( "id","id" ,Types.NUMERIC,"configuration");
 		initializeFieldFunctor( "description",  "description",Types.VARCHAR,"configuration");
 		initializeFieldFunctor( "simulation_date","simulation_date" ,Types.DATE,"configuration");
@@ -230,6 +233,10 @@ public class mWaterBB extends JDBCPersistentBB {
 		initializeFieldFunctor( "mf_cont_enact","mf_cont_enact" ,Types.NUMERIC,"configuration");
 		initializeFieldFunctor( "mf_accred","mf_accred" ,Types.NUMERIC,"configuration");
 		initializeFieldFunctor( "seller_th", "seller_th",Types.NUMERIC,"configuration");
+		initializeFieldFunctor( "human_interaction", "human_interaction",Types.BIT,"configuration");
+		initializeFieldFunctor( "num_participants", "num_participants",Types.NUMERIC,"configuration");
+		initializeFieldFunctor( "num_seller_probability", "num_seller_probability",Types.NUMERIC,"configuration");
+				
 		
 		initializeFieldFunctor( "id","id" ,Types.NUMERIC,"water_market");
 		initializeFieldFunctor( "description","description" ,Types.VARCHAR,"water_market");
@@ -271,6 +278,26 @@ public class mWaterBB extends JDBCPersistentBB {
 		initializeFieldFunctor( "wmarket",  "mwater_market",Types.NUMERIC,"waterright_tt");
 		initializeFieldFunctor( "configuration_id",  "configuration_id",Types.NUMERIC,"waterright_tt");
 		initializeFieldFunctor( "water_right_id",  "water_right",Types.NUMERIC,"waterright_tt");
+		
+		//user_class
+		initializeFieldFunctor( "id", "id",Types.NUMERIC,"user_class");
+		initializeFieldFunctor( "description", "description",Types.VARCHAR,"user_class");
+		initializeFieldFunctor( "selling_probability", "selling_probability",Types.NUMERIC,"user_class");
+		initializeFieldFunctor( "buying_probability", "buying_probability",Types.NUMERIC,"user_class");
+		initializeFieldFunctor( "invitation_acceptance_probability", "invitation_acceptance_probability",Types.NUMERIC,"user_class");
+		
+		//user_has_class
+		initializeFieldFunctor( "user_id", "user_id",Types.NUMERIC,"user_has_class");
+		initializeFieldFunctor( "user_class_id", "user_class_id",Types.NUMERIC,"user_has_class");
+		initializeFieldFunctor( "configuration_id", "configuration_id",Types.NUMERIC,"user_has_class");
+		
+		//waterright_tt
+		//waterright_tt(trading_table_id(1),wmarket(1014),configuration_id(556),water_right_id(1067))
+		initializeFieldFunctor( "trading_table_id", "trading_table_id",Types.NUMERIC,"waterright_tt");
+		initializeFieldFunctor( "wmarket", "wmarket",Types.NUMERIC,"waterright_tt");
+		initializeFieldFunctor( "configuration_id", "configuration_id",Types.NUMERIC,"waterright_tt");
+		initializeFieldFunctor( "water_right_id", "water_right_id",Types.NUMERIC,"waterright_tt");
+		
 	}
 
 	/**
@@ -329,6 +356,7 @@ public class mWaterBB extends JDBCPersistentBB {
 				if (xml!=null)
 					//{
 					result = XMLtoLiteralIterator(xml,functor );
+				    //Be careful with this 'result' variable!! In in tests it is necessary to do 'result.Next()' it will not work...
 					/*if (functor.compareTo("accredited_user")==0)
 					{
 						Iterator<Literal> tmp = XMLtoLiteralIterator(xml,functor );
@@ -408,11 +436,10 @@ public class mWaterBB extends JDBCPersistentBB {
 		//{
 		//found = true;
 		//ogger.info("Literal: "+literalFunctor+" Fieldfunctor:  "+Fieldfunctor);
-		currentValue = searchMatchingTermValInTermList(Fieldfunctor,args,u);
 
+		currentValue = searchMatchingTermValInTermList(Fieldfunctor,args,u);
 		if (!currentValue.isVar())
 		{
-			//logger.info("Literal: "+literalFunctor+" currentvalue:  "+currentValue.toString());
 			if ((mwFunctorsFields.get(literalFunctor+"."+Fieldfunctor).type==Types.VARCHAR)||
 					(mwFunctorsFields.get(literalFunctor+"."+Fieldfunctor).type==Types.CHAR))
 			{ //The value is a string
@@ -439,6 +466,7 @@ public class mWaterBB extends JDBCPersistentBB {
 		//}
 		//	i++;
 		//}
+
 		return value;
 	}
 	
@@ -456,6 +484,7 @@ public class mWaterBB extends JDBCPersistentBB {
 	}
 
 	private static Term searchMatchingTermValInTermList(String Fieldfunctor, List<Term> args, Unifier u){
+
 		int i = 0;
 		Term currentTerm = null;
 		Term result = null;
@@ -472,6 +501,7 @@ public class mWaterBB extends JDBCPersistentBB {
 			}
 			i++;
 		}
+
 		return result;
 	}
 	/** translates a SQL date into a term like "[D,M,Y]" */
@@ -492,19 +522,20 @@ public class mWaterBB extends JDBCPersistentBB {
         ListTerm resultDate = new ListTermImpl();
         int y,m,d,temp;
         if ((date!="")&&(date!=null)){
-    		StringTokenizer str = new StringTokenizer(date);
-    		temp= Integer.parseInt(str.nextToken("-"));
+    		StringTokenizer str = new StringTokenizer(date," ");
+    		StringTokenizer finalstrdate = new StringTokenizer(str.nextToken());
+    		temp= Integer.parseInt(finalstrdate.nextToken("-"));
     		if (temp>1000)//if it is a year
     		{
     			y=temp;
-    			m=Integer.parseInt(str.nextToken("-"));
-    			d=Integer.parseInt(str.nextToken("-"));
+    			m=Integer.parseInt(finalstrdate.nextToken("-"));
+    			d=Integer.parseInt(finalstrdate.nextToken("-"));
     		}
     		else
 			{
 				d=temp;
-				m=Integer.parseInt(str.nextToken("-"));
-				y=Integer.parseInt(str.nextToken("-"));
+				m=Integer.parseInt(finalstrdate.nextToken("-"));
+				y=Integer.parseInt(finalstrdate.nextToken("-"));
 			}
 			resultDate.add(new NumberTermImpl(d));
 			resultDate.add(new NumberTermImpl(m));
@@ -597,7 +628,9 @@ public class mWaterBB extends JDBCPersistentBB {
 			if(functor.compareTo("general_water_right")==0){
 				String owner = searchFieldValueInTermList(functor,"owner",args,u);
 				//result=XMLtoResultSet(dbAPI.getWaterRightsByOwner(owner));
+				
 				result = dbAPI.getGeneralWaterRightsByOwner(owner);
+				//System.out.println("DESPUÉS De "+result);
 				
 			}			
 			if(functor.compareTo("water_market")==0){
@@ -611,6 +644,7 @@ public class mWaterBB extends JDBCPersistentBB {
 				String id = searchFieldValueInTermList(functor,"id",args,u);
 				//result=XMLtoResultSet(dbAPI.getTradingTables(configuration_id, market));
 				result = dbAPI.getTradingTables(configuration_id, market, id);
+				
 			}
 	
 			if(functor.compareTo("accredited_user")==0){
@@ -653,6 +687,17 @@ public class mWaterBB extends JDBCPersistentBB {
 				result = dbAPI.getTransferAgreement(id);
 			}
 			
+			if (functor.compareTo("user_class")==0){
+				String id = searchFieldValueInTermList(functor, "id", args,u);
+				result = dbAPI.getUserClass(id);
+			}
+			
+			if (functor.compareTo("user_has_class")==0){
+				String userid = searchFieldValueInTermList(functor, "user_id", args,u);
+				String confid = searchFieldValueInTermList(functor, "configuration_id", args,u);
+				result = dbAPI.getUserHasClass(userid,confid);
+			}
+			
 			if(functor.compareTo("+configuration")==0){
 				
 				String description =  getFieldValueFromTermList("configuration","description",args,u);
@@ -677,10 +722,14 @@ public class mWaterBB extends JDBCPersistentBB {
 				String mf_cont_enact = getFieldValueFromTermList("configuration","mf_cont_enact",args,u);
 				String mf_accred = getFieldValueFromTermList("configuration","mf_accred",args,u);
 				String seller_th = getFieldValueFromTermList("configuration","seller_th",args,u);
+				String human_int = getFieldValueFromTermList("configuration","human_interaction",args,u);
+				String no_part = getFieldValueFromTermList("configuration","num_participants",args,u);
+				String num_seller_prob = getFieldValueFromTermList("configuration","num_seller_probability",args,u);
 				
 				result = dbAPI.insertConfiguration(description, simulation_date, negotiation_protocol, 
 						group_selected, initial_date, final_date, seller_timeout, seller_price, seller_percentage, 
-						seller_wt, buyer_bid, buyer_enter, buyer_cont_enact, ba_agr_val, ba_entitlement, mf_cont_enact, mf_accred, seller_th);
+						seller_wt, buyer_bid, buyer_enter, buyer_cont_enact, ba_agr_val, ba_entitlement, mf_cont_enact, 
+						mf_accred, seller_th, human_int, no_part, num_seller_prob);
 
 			}
 			if(functor.compareTo("+water_market")==0){
@@ -690,10 +739,11 @@ public class mWaterBB extends JDBCPersistentBB {
 
 			}		
 			if(functor.compareTo("+waterright_tt")==0){
-				String table = searchFieldValueInTermList(functor,"trading_table_id",args,u);
-				String wright = searchFieldValueInTermList(functor,"water_right_id",args,u);
-				String wmarket = searchFieldValueInTermList(functor,"wmarket",args,u);
-				String confid = searchFieldValueInTermList(functor,"configuration_id",args,u);
+
+				String table = searchFieldValueInTermList("waterright_tt","trading_table_id",args,u);
+				String wright = searchFieldValueInTermList("waterright_tt","water_right_id",args,u);
+				String wmarket = searchFieldValueInTermList("waterright_tt","wmarket",args,u);
+				String confid = searchFieldValueInTermList("waterright_tt","configuration_id",args,u);
 				result = dbAPI.insertWaterHasTradintable(table,wright,wmarket,confid);
 
 			}
@@ -958,6 +1008,13 @@ public class mWaterBB extends JDBCPersistentBB {
 			result.add("id");
 			result.add("wmarket");
 		}
+		if ((mwFunctors.containsKey(functor))&&(functor.compareTo("user_class")==0)){
+			result.add("id");
+		}
+		if ((mwFunctors.containsKey(functor))&&(functor.compareTo("user_has_class")==0)){
+			result.add("user_id");
+			result.add("configuration_id");
+		}
 		if ((mwFunctors.containsKey(functor))&&(functor.compareTo("water_right")==0)){
 			result.add("id");
 		}
@@ -1000,7 +1057,7 @@ public class mWaterBB extends JDBCPersistentBB {
 			result.add("trading_table_id");
 			result.add("wmarket");
 			result.add("configuration_id");
-			result.add("water_right");
+			result.add("water_right_id");
 		}
 		return result;
 		

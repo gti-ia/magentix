@@ -6,6 +6,34 @@ package mWaterWeb.webInterface;
 
 public class WebComm {
 
+	/*public class WaterRight{
+
+		public String id;
+		public String authorized_extraction_flow;
+		public String authorization_date;
+		public String type_of_water;
+		public String initial_date_for_extraction;
+		public String final_date_for_extraction;
+		public String season_unit;
+		public String season;
+		public String owner;
+		
+		public WaterRight(String id, String authorizedExtractionFlow,
+				String authorizationDate, String typeOfWater,
+				String initialDateForExtraction, String finalDateForExtraction,
+				String seasonUnit, String season, String owner) {
+			this.id = id;
+			authorized_extraction_flow = authorizedExtractionFlow;
+			authorization_date = authorizationDate;
+			type_of_water = typeOfWater;
+			initial_date_for_extraction = initialDateForExtraction;
+			final_date_for_extraction = finalDateForExtraction;
+			season_unit = seasonUnit;
+			this.season = season;
+			this.owner = owner;
+		}
+	}*/
+	
 	public class Invitation{
 		public String table_id;
 		public String wmarket_id;
@@ -93,10 +121,15 @@ public class WebComm {
 		
 	}
 	
+	
+	
 	public class UserData {
 	       // In
 	       public String userName;
 	       public String wmarket;
+	       public String rol;
+	       public String wrightid;
+	       public String date;
 
 	       /**
 	        * Constructor of the class
@@ -105,7 +138,9 @@ public class WebComm {
 	    	   
 		       userName = "";
 		       wmarket= "";
-    	   
+		       rol= "";
+		       wrightid = "";
+		       date = "";
 	       }
 	}
 	
@@ -179,22 +214,36 @@ public class WebComm {
 	       }
 	}
 	
+	public class WaterRightData {
+	       // In
+	       public WaterRight[] water_rights;  
+	       public String wmarket;
+	       
+	       public WaterRightData(int wrightcount, String wmarket) {
+	    	   this.wmarket = wmarket;
+	    	   water_rights = new WaterRight[wrightcount];
+	       }
+	}
+	
 	public class UserProfile {
 	       // Out
 	       public TradingTable[] invitations;
-	       public TradingTable[] tradingTables;
+	       public TradingTable[] tablesselling;
+	       public TradingTable[] ttablesbuying;
 	       public boolean registeredUser;
 	       public String wmarket;
 	 
 	       /**
 	        * Constructor of the class
 	        */
-	       public UserProfile(int invitNumber, int tablesNumber, String awmarket) {
+	       public UserProfile(int invitNumber, int tablesSelingNumber, int tablesBuyingNumber, String awmarket) {
 		       registeredUser = false;
 		       if (invitNumber>0)
 		    	   invitations = new TradingTable[invitNumber];
-		       if (tablesNumber>0)
-		    	   tradingTables = new TradingTable[tablesNumber];
+		       if (tablesSelingNumber>0)
+		    	   tablesselling = new TradingTable[tablesSelingNumber];
+		       if (tablesBuyingNumber>0)
+		    	   ttablesbuying = new TradingTable[tablesBuyingNumber];		       
 		       wmarket = awmarket;
 	       }
 	}
@@ -232,14 +281,16 @@ public class WebComm {
 	       public WaterRight[] water_rights;
 	       public TradingTable tt;
 	       public String rol;
+	       public String joined; //true or false
 	 
 	       /**
 	        * Constructor of the class
 	        */
-	       public ParticipantProfile(int wrNumber, String arol) {
+	       public ParticipantProfile(int wrNumber, String arol, String ajoined) {
 	    	   rol = arol;
 		       if (wrNumber>0)
 		    	   water_rights = new WaterRight[wrNumber];
+		       joined = ajoined;
 	       }
 	}
 	
@@ -283,9 +334,88 @@ public class WebComm {
 		/**
 		 * Constructor of the class
 		 */
-		public AccreditationOutJSONObject(int invNumber, int tablesNumber, String awmarket) {
+		public AccreditationOutJSONObject(int invNumber, int tablesSellingNumber, int tablesBuyingNumber, String awmarket) {
 			super();
-			content = new UserProfile(invNumber, tablesNumber, awmarket);
+			content = new UserProfile(invNumber, tablesSellingNumber,tablesBuyingNumber, awmarket);
+		}
+	}
+	
+	public class GetWRInJSONObject extends InJsonObject{
+
+		public UserData content;
+	       
+	    /**
+	    * Constructor of the class
+	    */
+	    public GetWRInJSONObject() {
+	    	super();
+	    	content = new UserData();
+	    }
+	}
+	
+	public class GetWROutJSONObject extends OutJsonObject{
+		
+		public WaterRightData content;
+		
+		/**
+		 * Constructor of the class
+		 */
+		public GetWROutJSONObject(int wrNumber, String wmarket) {
+			super();
+			content = new WaterRightData(wrNumber, wmarket);
+		}
+	}
+
+	public class RoundStartedInJSONObject extends InJsonObject{
+		public String userName; //it is not relevant
+	    /**
+	    * Constructor of the class
+	    */
+	    public RoundStartedInJSONObject() {
+	    	super();
+	    	userName = "";
+	    }
+	}
+	
+	public class RoundStartedOutJSONObject extends OutJsonObject{
+		
+		public String started;  //true or false if it is new user or not
+		public String lastround;  //true or false if it is the last round
+		public String date;
+		/**
+		 * Constructor of the class
+		 */
+		public RoundStartedOutJSONObject(String astarted,String alastround , String adate) {
+			super();
+			started = astarted;
+			lastround =alastround;
+			date = adate;
+		}
+	}
+	
+	
+	public class FinishedRoundInJSONObject extends InJsonObject{
+		public String content; //it is not relevant
+	    /**
+	    * Constructor of the class
+	    */
+	    public FinishedRoundInJSONObject() {
+	    	super();
+	    	content = "";
+	    }
+	}
+	
+	public class FinishedRoundOutJSONObject extends OutJsonObject{
+		
+		public String newuser;  //true or false if it is new user or not
+		public String lastround;  //true or false if it is the last round
+		/**
+		 * Constructor of the class
+		 */
+		public FinishedRoundOutJSONObject(String anewuser, String alastround) {
+			super();
+			newuser = anewuser;
+			lastround =alastround;
 		}
 	}
 	
@@ -309,12 +439,13 @@ public class WebComm {
 		/**
 		 * Constructor of the class
 		 */
-		public JoinTableOutJSONObject(int wrNumber, String rol) {
+		public JoinTableOutJSONObject(int wrNumber, String rol, String ajoined) {
 			super();
-			content = new ParticipantProfile(wrNumber, rol);
+			content = new ParticipantProfile(wrNumber, rol, ajoined);
 		}
 	}
 	
+
 	public class NewTableInJSONObject extends InJsonObject{
 
 		public NewTableData content;

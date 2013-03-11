@@ -466,6 +466,9 @@ public class DatabaseAPI
 	 * @param mf_cont_enact in {@code String} format.
 	 * @param mf_accred in {@code String} format.
 	 * @param seller_th in {@code String} format.
+	 * @param numSellerProb 
+	 * @param noPart 
+	 * @param humanInt 
 	 * 
 	 * @return {@code String} with the autoincrement id of the market in XML format.
 	 * 
@@ -474,13 +477,14 @@ public class DatabaseAPI
 	public String insertConfiguration(String description, String simulation_date, String negotiation_protocol, 
 			String group_selected, String initial_date, String final_date, String seller_timeout, String seller_price, 
 			String seller_percentage, String seller_wt, String buyer_bid, String buyer_enter, String buyer_cont_enact, 
-			String ba_agr_val, String ba_entitlement, String mf_cont_enact, String mf_accred, String seller_th) throws DataManagementException
+			String ba_agr_val, String ba_entitlement, String mf_cont_enact, String mf_accred, 
+			String seller_th, String humanInt, String noPart, String numSellerProb) throws DataManagementException
 	{
 		try 
 		{
 			return convertToXML(UpdateDB(SQL.INSERT_CONFIGURATION(description, simulation_date, negotiation_protocol, group_selected, 
 					initial_date, final_date, seller_timeout, seller_price, seller_percentage, seller_wt, buyer_bid, buyer_enter, 
-					buyer_cont_enact, ba_agr_val, ba_entitlement, mf_cont_enact, mf_accred, seller_th)));
+					buyer_cont_enact, ba_agr_val, ba_entitlement, mf_cont_enact, mf_accred, seller_th, humanInt, noPart, numSellerProb)));
 		} 
 		catch (SQLException e) 
 		{
@@ -603,6 +607,37 @@ public class DatabaseAPI
 		}
 	}
 	
+	/**
+	 * @param id User class identifier
+	 * @return {@code String} with the user class in XML format.
+	 */
+	public String getUserClass(String usrid) throws DataManagementException {
+		try 
+		{
+			return convertToXML(QueryDB(SQL.GET_USER_CLASS(usrid)));
+		} 
+		catch (SQLException e) 
+		{
+			throw new DataManagementException();
+		}
+	}
+	
+	/**
+	 * @param usrid User class identifier
+	 * @param confid Configuration identifier
+	 * @return {@code String} with the user class in XML format.
+	 */
+	public String getUserHasClass(String usrid, String confid) throws DataManagementException {
+		try 
+		{
+			return convertToXML(QueryDB(SQL.GET_USER_HAS_CLASS(usrid,confid)));
+		} 
+		catch (SQLException e) 
+		{
+			throw new DataManagementException();
+		}
+	}
+
 	
 	/**
 	 * Inserts a trading table. The connection must be open.
@@ -831,6 +866,7 @@ public class DatabaseAPI
 		}
 	}
 	
+	
 	/**
 	 * Converts to XML a given {@code ResultSet}.
 	 * 
@@ -909,6 +945,9 @@ public class DatabaseAPI
 			return null;	
 		}	
 	}
+
+
+
 	
 
 }
