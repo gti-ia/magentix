@@ -1,2 +1,2 @@
 from setuptools import setup
-setup(console=['install.py'])
+setup(console=['magentix2/magentix-setup.py'])
