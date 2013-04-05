@@ -85,3 +85,17 @@ pool-1-thread-1 INFO  cAgents.CProcessor - [OMS OMS.1 WAIT2]
 pool-1-thread-1 INFO  cAgents.CProcessor - OMS Empty queue
 pool-3-thread-1 INFO  cAgents.CProcessor - [SF SF.1 WAIT2]
 pool-3-thread-1 INFO  cAgents.CProcessor - SF Empty queue
+main INFO  core.BaseAgent - [TRACE MANAGER]: qpid://TM@localhost:8080 launched...
+pool-2-thread-1 INFO  cAgents.CProcessor - [JasonNormativeAgent JasonNormativeAgent.1 BEGIN]
+pool-2-thread-1 INFO  cAgents.CProcessor - [JasonNormativeAgent JasonNormativeAgent.1 WAIT]
+pool-2-thread-1 INFO  cAgents.CProcessor - [JasonNormativeAgent JasonNormativeAgent.1 RECEIVE_WELCOME]
+pool-3-thread-1 INFO  cAgents.CProcessor - [SF SF.1 BEGIN]
+pool-3-thread-1 INFO  cAgents.CProcessor - [SF SF.1 WAIT]
+pool-3-thread-1 INFO  cAgents.CProcessor - [SF SF.1 RECEIVE_WELCOME]
+pool-1-thread-1 INFO  cAgents.CProcessor - [OMS OMS.1 BEGIN]
+pool-1-thread-1 INFO  cAgents.CProcessor - [OMS OMS.1 WAIT]
+pool-1-thread-1 INFO  cAgents.CProcessor - [OMS OMS.1 RECEIVE_WELCOME]
+pool-1-thread-1 INFO  cAgents.CProcessor - [OMS OMS.1 WAIT2]
+pool-1-thread-1 INFO  cAgents.CProcessor - OMS Empty queue
+pool-3-thread-1 INFO  cAgents.CProcessor - [SF SF.1 WAIT2]
+pool-3-thread-1 INFO  cAgents.CProcessor - SF Empty queue

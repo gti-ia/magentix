@@ -13,9 +13,10 @@ import mysql
 #Try to connect to MySQL
 from mysql.connector import connection
 
-if os.name == "posix":
-	if not os.geteuid()==0:
-		sys.exit("\nThis script must be run as root\n")
+#if os.name == "posix":
+#	if not os.geteuid()==0:
+#		sys.exit("\nThis script must be run as root\n")
+
 dbpasswd = None
 
 def get_mysql_password():
@@ -31,7 +32,8 @@ def check_dependencies():
 		dbh = connection.MySQLConnection(host="localhost", user="root", password=dbpasswd)
 		dbh.close()
 	except:
-		sys.exit("Could not connect to MySQL server at localhost")
+		sys.exit("""Could not connect to MySQL server at localhost\n
+You need to have mysql-server installed and running.""")
 
 
 	tomcat_user = raw_input("Username for Tomcat admin [default=tomcat]:")
@@ -57,7 +59,7 @@ def check_dependencies():
 			)
 	
 	except urllib2.URLError, e:
-		sys.exit("Could not connect to Tomcat server: "+str(e.reason))
+		sys.exit("Could not connect to Tomcat server: "+str(e.reason) + "\n"+ """You need to have tomcat7 installed and running.""")
 
 	return dbpasswd, tomcat_user, tomcat_passwd
 
