@@ -130,7 +130,7 @@ public class OMS extends CAgent {
 		//SimpleArchitecture archEjemplo = new SimpleArchitecture();
 		MagentixAgArch archEjemplo = new MagentixAgArch();
 		
-		ag = new JasonNormativeAgent(new AgentID("JasonNormativeAgent"), "./src/main/java/es/upv/dsic/gti_ia/organization/NormativeAgent.asl", archEjemplo);
+		ag = new JasonNormativeAgent(new AgentID("JasonNormativeAgent"), "configuration/NormativeAgent.asl", archEjemplo);
 		ag.start();
 	}
 	
