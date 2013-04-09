@@ -9,7 +9,7 @@ sys.path.append("magentix2"+os.sep+"bin")
   
 setup(
 	name="Magentix2",
-	console=['magentix-setup.py'],
+	console=['magentix2'+os.sep+'magentix-setup.py'],
 	options = {'py2exe': {'bundle_files': 1, 'compressed': True}},
 	zipfile = None,
 	package_dir={"magentix2":"magentix2"},
