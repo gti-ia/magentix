@@ -122,5 +122,5 @@ print "Installing Magentix Database..."
 create_msql_schema(dbpasswd)
 print "Deploying THOMAS webapps..."
 install_webapps(tomcat_user, tomcat_passwd)
-print "Done."
+print "Magentix succesfully installed."
 
