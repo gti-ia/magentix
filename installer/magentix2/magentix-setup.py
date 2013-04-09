@@ -19,6 +19,11 @@ from mysql.connector import connection
 
 dbpasswd = None
 
+def exit(msg):
+	print msg
+	raw_input("Press [ENTER] to exit.")
+	sys.exit()
+
 def get_mysql_password():
 	dbpasswd = getpass.getpass(prompt="Password for mysql root user: ")
 	return dbpasswd
@@ -32,7 +37,7 @@ def check_dependencies():
 		dbh = connection.MySQLConnection(host="localhost", user="root", password=dbpasswd)
 		dbh.close()
 	except:
-		sys.exit("""Could not connect to MySQL server at localhost\n
+		exit("""Could not connect to MySQL server at localhost\n
 You need to have mysql-server installed and running.""")
 
 
@@ -52,14 +57,14 @@ You need to have mysql-server installed and running.""")
 		request.get_method = lambda: 'PUT'
 		url = opener.open(request)
 	except urllib2.HTTPError, e:
-		sys.exit("Could not auth to Tomcat server: "+str(e.reason)+ " ("+str(e.code)+")"
+		exit("Could not auth to Tomcat server: "+str(e.reason)+ " ("+str(e.code)+")"
 			+ "\nTIP: Has the tomcat user the role manager-script assigned in tomcat-users.xml?\n"
 			+ '''Eg: <role rolename="manager-script"/>
     <user username="tomcat" password="tomcat" roles="manager-script"/>'''
 			)
 	
 	except urllib2.URLError, e:
-		sys.exit("Could not connect to Tomcat server: "+str(e.reason) + "\n"+ """You need to have tomcat7 installed and running.""")
+		exit("Could not connect to Tomcat server: "+str(e.reason) + "\n"+ """You need to have tomcat7 installed and running.""")
 
 	return dbpasswd, tomcat_user, tomcat_passwd
 
@@ -88,7 +93,7 @@ def create_msql_schema(dbpasswd):
 		dbh.close()
 
 	except Exception, e:
-		print "Could not connect to MySQL server at localhost" + str(e)
+		exit("Could not connect to MySQL server at localhost" + str(e))
 
 
 def install_webapps(tomcat_user, tomcat_passwd):
