@@ -18,3 +18,4 @@
 <appender-ref ref="Fichero" ></appender-ref>
 </root>
 </log4j:configuration>
+

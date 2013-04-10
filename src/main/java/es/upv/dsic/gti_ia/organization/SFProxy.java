@@ -8,6 +8,15 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import es.upv.dsic.gti_ia.core.BaseAgent;
+import es.upv.dsic.gti_ia.organization.exception.AlreadyRegisteredException;
+import es.upv.dsic.gti_ia.organization.exception.DBConnectionException;
+import es.upv.dsic.gti_ia.organization.exception.InvalidDataTypeException;
+import es.upv.dsic.gti_ia.organization.exception.InvalidServiceURLException;
+import es.upv.dsic.gti_ia.organization.exception.MySQLException;
+import es.upv.dsic.gti_ia.organization.exception.ServiceProfileNotFoundException;
+import es.upv.dsic.gti_ia.organization.exception.ServiceURINotFoundException;
+import es.upv.dsic.gti_ia.organization.exception.ServicesNotFoundException;
+import es.upv.dsic.gti_ia.organization.exception.THOMASException;
 
 /**
  * This class provides access to services that implements the SF agent.
@@ -58,59 +67,106 @@ public class SFProxy extends THOMASProxy {
 	 * providers (agents or organization) are specified in the
 	 * profile:contactInformation of the service, it means that the service is
 	 * provided by agents or/and organizations
-	 * 
-	 * @param serviceURL
-	 *            the original URL of the OWL-S specification of the service
+	 *
+	 * @param serviceURL the original URL of the OWL-S specification of the service
 	 * @return A description of the changes made, and an OWL-S specification of
-	 *         the registered services or all data of the already registered
-	 *         service in the SF
-	 * @throws THOMASException
-	 *             If there is any error result
+	 * the registered services or all data of the already registered
+	 * service in the SF
+	 * @throws DBConnectionException If a data base connection exception occurs.
+	 * @throws AlreadyRegisteredException If information is already registered in service profile.
+	 * @throws InvalidServiceURLException If service URL is not a valid OWL-S document.
+	 * @throws ServiceProfileNotFoundException If service profile is not found in Jena DataBase.
+	 * @throws InvalidDataTypeException If input or output data type is invalid.
+	 * @throws MySQLException If a MySql exception occurs.
 	 */
 	@SuppressWarnings("unchecked")
-	public ArrayList<String> registerService(String serviceURL) throws THOMASException {
+	public ArrayList<String> registerService(String serviceURL) throws  DBConnectionException, AlreadyRegisteredException, InvalidServiceURLException, ServiceProfileNotFoundException,
+	InvalidDataTypeException, MySQLException{
 
 		HashMap<String, String> inputs = new HashMap<String, String>();
 		inputs.put("ServiceURL", serviceURL);
 
 		call = st.buildServiceContent("RegisterService", inputs);
 
-		return (ArrayList<String>) this.sendInform();
+		ArrayList<String> result = new ArrayList<String>();
+
+		try
+		{
+			result  = (ArrayList<String>) this.sendInform();
+
+		} catch (AlreadyRegisteredException e) {
+			throw e;
+		} catch (DBConnectionException e) {
+			throw e;
+		} catch (InvalidDataTypeException e) {
+			throw e;
+		} catch (MySQLException e) {
+			throw e;
+		} 
+		catch (InvalidServiceURLException e) {
+			throw e;
+		}
+		catch (ServiceProfileNotFoundException e) {
+			throw e;
+		}
+		catch (THOMASException e) {
+
+			e.printStackTrace();
+		}
+
+		return result;
 	}
 
 	/**
 	 * The Deregister Service deregisters the specified service deleting all the
 	 * related data from the SF.
-	 * 
-	 * @param serviceProfile
-	 *            the URI representing the service profile to deregister
+	 *
+	 * @param serviceProfile the URI representing the service profile to deregister
 	 * @return A description of the result of the service execution.
-	 * @throws THOMASException
-	 *             If there is any error result
+	 * @throws ServiceURINotFoundException If service URI is not found in Jena DataBase.
+	 * @throws ServiceProfileNotFoundException If service profile is not found in Jena DataBase.
+	 * @throws DBConnectionException If a data base connection exception occurs.
+	 * @throws MySQLException If a MySql exception occurs.
 	 */
-	public String deregisterService(String serviceProfile) throws THOMASException {
+	public String deregisterService(String serviceProfile) throws ServiceURINotFoundException, ServiceProfileNotFoundException, DBConnectionException, MySQLException {
 
 		HashMap<String, String> inputs = new HashMap<String, String>();
 		inputs.put("ServiceProfile", serviceProfile);
 
 		call = st.buildServiceContent("DeregisterService", inputs);
-		return (String) this.sendInform();
+		String result = new String();
+
+		try {
+			result = (String) this.sendInform();
+		} catch (ServiceURINotFoundException e){
+			throw e;
+		} catch (ServiceProfileNotFoundException e) {
+			throw e;
+		} catch (DBConnectionException e) {
+			throw e;
+		}
+		catch (MySQLException e) {
+			throw e;
+		}catch (THOMASException e) {
+
+			e.printStackTrace();
+		}
+
+		return result;
 
 	}
 
 	/**
 	 * Removes a provider: agent, organization or web service (grounding); from
-	 * a registered service profile
-	 * 
-	 * @param serviceProfile
-	 *            URI of the service profile to remove the provider
-	 * @param providerID
-	 *            of the provider to remove (provider name or grounding ID)
+	 * a registered service profile.
+	 *
+	 * @param serviceProfile URI of the service profile to remove the provider
+	 * @param providerID of the provider to remove (provider name or grounding ID)
 	 * @return A description of the result of the service execution
-	 * @throws THOMASException
-	 *             If there is any error result
+	 * @throws ServiceProfileNotFoundException If service profile is not found in Jena DataBase.
+	 * @throws DBConnectionException If a data base connection exception occurs.
 	 */
-	public String removeProvider(String serviceProfile, String providerID) throws THOMASException {
+	public String removeProvider(String serviceProfile, String providerID) throws  ServiceProfileNotFoundException, DBConnectionException{
 
 		HashMap<String, String> inputs = new HashMap<String, String>();
 		inputs.put("ServiceProfile", serviceProfile);
@@ -118,28 +174,57 @@ public class SFProxy extends THOMASProxy {
 
 		call = st.buildServiceContent("RemoveProvider", inputs);
 
-		return (String) this.sendInform();
+		String result = new String();
+
+		try {
+			result = (String) this.sendInform();
+
+		} catch (ServiceProfileNotFoundException e) {
+			throw e;
+		} catch (DBConnectionException e) {
+			throw e;
+		} catch (THOMASException e) {
+
+			e.printStackTrace();
+		}
+		return result;
 	}
 
 	/**
 	 * Returns an OWL-S specification with the all data of the specified service
-	 * profile as parameter
-	 * 
-	 * @param serviceProfile
-	 *            URI of the service profile to get its OWL-S specification
+	 * profile as parameter.
+	 *
+	 * @param serviceProfile URI of the service profile to get its OWL-S specification
 	 * @return an OWL-S specification with the all data of the specified service
-	 *         profile as parameter
-	 * @throws THOMASException
-	 *             If there is any error result
+	 * profile as parameter
+	 * @throws ServiceProfileNotFoundException If service profile is not found in Jena DataBase.
+	 * @throws DBConnectionException If a data base connection exception occurs.
+	 * @throws MySQLException If a MySql exception occurs.
 	 */
-	public String getService(String serviceProfile) throws THOMASException {
+	public String getService(String serviceProfile) throws  ServiceProfileNotFoundException, DBConnectionException, MySQLException{
 
 		HashMap<String, String> inputs = new HashMap<String, String>();
 		inputs.put("ServiceProfile", serviceProfile);
 
 		call = st.buildServiceContent("GetService", inputs);
 
-		return (String) this.sendInform();
+		String result = new String();
+
+		try {
+			result = (String) this.sendInform();
+
+		} catch (ServiceProfileNotFoundException e) {
+			throw e;
+		} catch (DBConnectionException e) {
+			throw e;
+		} 
+		catch (MySQLException e) {
+			throw e;
+		}catch (THOMASException e) {
+
+			e.printStackTrace();
+		}
+		return result;
 	}
 
 	/**
@@ -147,23 +232,22 @@ public class SFProxy extends THOMASProxy {
 	 * inputs, data type outputs and keywords in the description. Returns an
 	 * ordered list of the services found with a similarity degree obtained in
 	 * function of the similarity to the given parameters.
-	 * 
-	 * @param inputs
-	 *            data type inputs to search a service with these inputs.
-	 *            Example:
-	 *            \"http://127.0.0.1/ontology/books.owl#Novel\"^^xsd:anyURI
-	 * @param outputs
-	 *            data type outputs to search a service with these outputs.
-	 *            Example:
-	 *            \"http://127.0.0.1/ontology/books.owl#Novel\"^^xsd:anyURI
-	 * @param keywords
-	 *            list to search in the text description of the service
+	 *
+	 * @param inputs data type inputs to search a service with these inputs.
+	 * Example:
+	 * \"http://127.0.0.1/ontology/books.owl#Novel\"^^xsd:anyURI
+	 * @param outputs data type outputs to search a service with these outputs.
+	 * Example:
+	 * \"http://127.0.0.1/ontology/books.owl#Novel\"^^xsd:anyURI
+	 * @param keywords list to search in the text description of the service
 	 * @return an ordered list of the services found with a similarity degree
-	 * @throws THOMASException
-	 *             If there is any error result
+	 * @throws DBConnectionException If a data base connection exception occurs.
+	 * @throws InvalidDataTypeException If input or output data type is invalid.
+	 * @throws ServicesNotFoundException If service is not found.
+	 * @throws MySQLException If a MySql exception occurs. 
 	 */
 	@SuppressWarnings("unchecked")
-	public ArrayList<ArrayList<String>> searchService(ArrayList<String> inputs, ArrayList<String> outputs, ArrayList<String> keywords) throws THOMASException {
+	public ArrayList<ArrayList<String>> searchService(ArrayList<String> inputs, ArrayList<String> outputs, ArrayList<String> keywords) throws DBConnectionException, InvalidDataTypeException, ServicesNotFoundException, MySQLException {
 
 		String inputsStr = "";
 		if (inputs != null && !inputs.isEmpty()) {
@@ -196,8 +280,26 @@ public class SFProxy extends THOMASProxy {
 		inputsService.put("Keywords", keywordsStr);
 
 		call = st.buildServiceContent("SearchService", inputsService);
+		ArrayList<ArrayList<String>> result = new  ArrayList<ArrayList<String>> ();
 
-		return (ArrayList<ArrayList<String>>) this.sendInform();
+		try
+		{
+			result = (ArrayList<ArrayList<String>>)  this.sendInform();
+		} catch (ServicesNotFoundException e) {
+			throw e;
+		} catch (DBConnectionException e) {
+			throw e;
+		} catch (InvalidDataTypeException e) {
+			throw e;
+		}
+		catch (MySQLException e) {
+			throw e;
+		}
+		catch (THOMASException e) {
+
+			e.printStackTrace();
+		}
+		return result;
 	}
 
 }

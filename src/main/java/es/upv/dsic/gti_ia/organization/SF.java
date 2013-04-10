@@ -1,6 +1,8 @@
 package es.upv.dsic.gti_ia.organization;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.StringTokenizer;
 
 import org.apache.log4j.Logger;
 
@@ -19,63 +21,77 @@ public class SF extends CAgent {
 
 	Configuration configuration = Configuration.getConfiguration();
 
-	private static SF sf = null;
+
 	private String SFServiceDescriptionLocation = configuration.getSFServiceDescriptionLocation();
 
-	private static HashMap<String, String> sfServicesURLs = new HashMap<String, String>();
+	private static HashMap<String, Integer> sfServicesURLs = new HashMap<String, Integer>();
 	static Logger logger = Logger.getLogger(SF.class);
 
 	ServiceTools st = new ServiceTools();
+	SFInterface sfInterface=new SFInterface();
+
+//	/**
+//	 * Returns an instance of the agents SF
+//	 * 
+//	 * @param agent
+//	 * @return sf
+//	 */
+//	static public SF getSF(AgentID agent) {
+//		if (sf == null)
+//			try {
+//				sf = new SF(agent);
+//			} catch (Exception e) {
+//				logger.error(e);
+//			}
+//			return sf;
+//	}
+//
+//	/**
+//	 * Returns an instance of the agents SF
+//	 * 
+//	 * @return sf
+//	 */
+//	static public SF getSF() {
+//		if (sf == null)
+//			try {
+//				sf = new SF(new AgentID("SF"));
+//			} catch (Exception e) {
+//				logger.error(e);
+//			}
+//			return sf;
+//
+//	}
 
 	/**
-	 * Returns an instance of the agents SF
+	 * Constructor which creates and initializes the SF agent.
 	 * 
-	 * @param agent
-	 * @return sf
-	 */
-	static public SF getSF(AgentID agent) {
-		if (sf == null)
-			try {
-				sf = new SF(agent);
-			} catch (Exception e) {
-				logger.error(e);
-			}
-		return sf;
-	}
-
-	/**
-	 * Returns an instance of the agents SF
+	 * @param aid	AgentID which will be used to create the agent
 	 * 
-	 * @return sf
+	 * @throws Exception
 	 */
-	static public SF getSF() {
-		if (sf == null)
-			try {
-				sf = new SF(new AgentID("SF"));
-			} catch (Exception e) {
-				logger.error(e);
-			}
-		return sf;
-
-	}
-
-	/**
-	 * Initial registration of the SF service profiles
-	 * 
-	 * @param aid
-	 * @throws RuntimeException
-	 */
-
-	private SF(AgentID aid) throws Exception {
+	public SF(AgentID aid) throws Exception {
 
 		super(aid);
-
-		sfServicesURLs.put("RegisterService", SFServiceDescriptionLocation + "RegisterService?wsdl");
-		sfServicesURLs.put("DeregisterService", SFServiceDescriptionLocation + "DeregisterService?wsdl");
-		sfServicesURLs.put("GetService", SFServiceDescriptionLocation + "GetService?wsdl");
-		sfServicesURLs.put("SearchService", SFServiceDescriptionLocation + "SearchService?wsdl");
-		sfServicesURLs.put("RemoveProvider", SFServiceDescriptionLocation + "RemoveProvider?wsdl");
-
+		sfServicesURLs.put("RegisterService", 1);
+		sfServicesURLs.put("DeregisterService",2);
+		sfServicesURLs.put("GetService", 3);
+		sfServicesURLs.put("SearchService", 4);
+		sfServicesURLs.put("RemoveProvider", 5);
+	}
+	
+	/**
+	 * Constructor which creates and initializes the OMS agent. In this case the agent ID is SF.
+	 * 
+	 * @throws Exception
+	 */
+	public SF() throws Exception {
+		
+		super(new AgentID("SF"));
+		sfServicesURLs.put("RegisterService", 1);
+		sfServicesURLs.put("DeregisterService",2);
+		sfServicesURLs.put("GetService", 3);
+		sfServicesURLs.put("SearchService", 4);
+		sfServicesURLs.put("RemoveProvider", 5);
 	}
 
 	/**
@@ -116,10 +132,69 @@ public class SF extends CAgent {
 					// Extract the service name and inputs of the request
 					String serviceName = st.extractServiceContent(myProcessor.getLastReceivedMessage().getContent(),
 							inputs);
+
+					String resultContent = "";
+					switch(sfServicesURLs.get(serviceName))
+					{
+					case 1: //Register service  
+						resultContent = sfInterface.registerService(inputs.get("ServiceURL"));
+						break;
+					case 2: //De-register service
+						resultContent = sfInterface.deregisterService(inputs.get("ServiceProfile"));
+						break;
+					case 3: //Get service
+						resultContent = sfInterface.getService(inputs.get("ServiceProfile"));
+						break;
+					case 4: //Search service
+
+						ArrayList<String> inputsService=new ArrayList<String>();
+						ArrayList<String> outputsService=new ArrayList<String>();
+						ArrayList<String> keywordsService=new ArrayList<String>();
+
+						StringTokenizer tokInputs=new StringTokenizer(inputs.get("Inputs"), "|");
+						while(tokInputs.hasMoreTokens()){
+							String in=tokInputs.nextToken().trim();
+							inputsService.add(in);
+							logger.info("\t\t"+in);
+						}
+
+
+						logger.info("\tOutputs:");
+						StringTokenizer tokOutputs=new StringTokenizer(inputs.get("Outputs"), "|");
+						while(tokOutputs.hasMoreTokens()){
+							String out=tokOutputs.nextToken().trim();
+							outputsService.add(out);
+
+							logger.info("\t\t"+out);
+						}
+
+
+						logger.info("\tKeywords:");
+						StringTokenizer tokKeywords=new StringTokenizer(inputs.get("Keywords"), "|");
+						while(tokKeywords.hasMoreTokens()){
+							String key=tokKeywords.nextToken().trim();
+							keywordsService.add(key);
+
+							logger.info("\t\t"+key);
+						}
+
+						resultContent = sfInterface.searchService(inputsService, outputsService,keywordsService);
+
+						break;
+					case 5: //Remove provider
+
+						String serviceProfile=inputs.get("ServiceProfile").trim();
+						String providerID=inputs.get("ProviderID").trim();
+
+						resultContent = sfInterface.removeProvider(serviceProfile, providerID);
+						break;
+
+					}
+
 					// get the SF service WSDL URL
-					String serviceWSDLURL = sfServicesURLs.get(serviceName);
+					//	String serviceWSDLURL = sfServicesURLs.get(serviceName);
 					// execute the SF service Requested
-					HashMap<String, Object> result = st.executeWebService(serviceWSDLURL, inputs);
+					//	HashMap<String, Object> result = st.executeWebService(serviceWSDLURL, inputs);
 
 					logger.info("[SF] Values obtained... ");
 
@@ -128,11 +203,12 @@ public class SF extends CAgent {
 					next = "INFORM";
 
 					// get the result and put it in the response
-					String resultContent = (String) result.get("Result");
+					//String resultContent = (String) result.get("Result");
 					myProcessor.getLastReceivedMessage().setContent(resultContent);
 
 				} catch (Exception e) {
 					next = "FAILURE";
+					logger.error("[SF] Error at doAction.");
 				}
 
 				return next;
@@ -196,6 +272,10 @@ public class SF extends CAgent {
 		// can start the participation of the agent in a new conversation
 		this.addFactoryAsParticipant(talk);
 
+	}
+	
+	public void terminate() {
+		super.terminate();
 	}
 
 } // end SF Agent

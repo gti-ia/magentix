@@ -1,0 +1,5 @@
+Import this library in your java projects.
+
+To import the library in the Eclipse IDE:
+
+Pop-up menu project -> Properties -> Java Build Path -> Libraries -> Add External JARs...
