@@ -1,0 +1,68 @@
+<xfragment>
+	    <panel id="standard.input">
+	        <field type="title" txt="Configuration" bold="true" size="2" />
+	        <field type="divider" align="top"/>
+	
+	        <field type="text" align="left" variable="tomcat.admin.user" >
+	            <spec txt="Enter the tomcat admin username: " size="25" />
+	            <validator
+	                class="com.izforge.izpack.util.RegularExpressionValidator"
+	                txt="Invalid user name!">
+	                <param name="pattern"   value="[a-zA-Z0-9._-]+"/>
+	            </validator>
+	        </field>
+	
+	        <field type="space"/>
+	
+	        <field type="text" align="left"  variable="mysql.thomas.username" >
+            <spec txt="Magentix User to Create on Sql server: " size="25" />
+	            <validator
+                class="com.izforge.izpack.util.RegularExpressionValidator"
+	                txt="Invalid Database username!">
+	                <param name="pattern"   value="[a-zA-Z0-9._-]+"/>
+	            </validator>
+	        </field>
+	
+	        <field type="space"/>
+	
+	        <field type="password" align="left" variable="general.password">
+	            <spec>
+	                <pwd txt="Password(MySql):" size="25" variable="mysql.thomas.password"/>
+	                <pwd txt="Confirm Password:" size="25" />
+	            </spec>
+	
+	            <validator class="com.izforge.izpack.util.PasswordEqualityValidator" id="Passwords do not match"/>
+	
+	            <validator
+	                class="com.izforge.izpack.util.RegularExpressionValidator"
+	                txt="Invalid root password! Make Sure the Password has atleast Six characters">
+	                <param name="pattern"   value="[a-zA-Z0-9._~!@\[\]#$%^*()_+`\';/.,?:\|]{6,}"/>
+	            </validator>
+	        </field>
+	
+	
+	        <field type="space"/>
+	        <field type="space"/>
+	        <field type="staticText" align="left" txt="Port Configuration: "/>
+	        <field type="divider" align="top"/>
+	
+	        <!-- Mysql Port-->
+	        <field type="rule" align="left" variable="mysql.port">
+	            <spec txt="MySql Port:" layout="N:5:5" set="0:${mysql.port}"/>
+            <validator class="com.izforge.izpack.util.PortValidator" txt="The Specified &quot;MySql Port&quot; Might Be In Use Or Out Of Range!!!"/>
+	        </field>
+	
+	        <!-- Tomcat Port-->
+	        <field type="rule" align="left"  variable="tomcat.port" >
+	            <spec txt="Tomcat Port:" layout="N:5:5" set="0:${tomcat.port}"/>
+	            <validator class="com.izforge.izpack.util.PortValidator" txt="The Specified &quot;Tomcat Port&quot; Might Be In Use Or Out Of Range!!"/>
+	        </field>
+
+	        <!-- Tomcat Connector port-->
+	        <field type="rule" align="left"  variable="tomcat.shutdown.port" >
+	            <spec txt="Tomcat Shutdown Port:" layout="N:5:5" set="0:${tomcat.shutdown.port}"/>
+	            <validator class="com.izforge.izpack.util.PortValidator" txt="The Specified &quot;Tomcat Shutdown Port&quot; Might Be In Use Or Out Of Range!!"/>
+	        </field>
+	
+	    </panel>
+</xfragment>

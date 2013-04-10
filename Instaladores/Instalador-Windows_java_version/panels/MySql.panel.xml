@@ -1,0 +1,105 @@
+	<xfragment>
+	<panel id="MySql.panel">
+	        <createForUnselectedPack name="MySql" />
+	
+	        <field type="title" txt="MySql Connection Configuration" bold="true" size="2" />
+	
+	        <field type="divider" align="top"/>
+	
+	        <field type="staticText" align="left" txt="You selected not to install MySql"/>
+	
+	        <field type="staticText" align="left" txt="Please provide the following credentials for your MySql Server that Magentix will use"/>
+	
+	        <field type="text" align="left"  variable="mysql.host" >
+	            <spec txt="Host: " size="25" />
+	            <validator
+	                class="com.izforge.izpack.util.NotEmptyValidator"
+	                txt="Invalid Database name!">
+	            </validator>
+	        </field>
+	
+	        <field type="space"/>
+	
+	        <field type="rule" align="left" variable="mysql.port">
+	            <spec txt="MySql Port:" layout="N:5:5" set="0:3306"/>
+	            <validator class="com.izforge.izpack.util.NotEmptyValidator" txt="Invalid MySql Port"/>
+	            <validator class="com.izforge.izpack.util.IsPortValidator" txt="The Specified &quot;MySql Port&quot; is invalid"/>
+	        </field>
+	
+	        <field type="space"/>
+	
+	        <field type="text" align="left"  variable="mysql.username" >
+	            <spec txt="Username(super user account): " size="25" />
+	            <validator
+	                class="com.izforge.izpack.util.RegularExpressionValidator"
+	                txt="Invalid User Name For Your MySql Database!">
+	                <param name="pattern"   value="[a-zA-Z0-9._-]+"/>
+	            </validator>
+	        </field>
+	
+	        <field type="space"/>
+	
+	        <field type="password" align="left"  variable="mysql.password.user" >
+	            <spec>
+	                <pwd txt="Enter Your MySql Password:" size="25" />
+	            </spec>
+	            <validator class="com.izforge.izpack.util.PasswordEqualityValidator" txt="Password not match" id="Password do not match"/>
+	        </field>
+	
+	        <field type="space"/>
+
+	        <field type="divider" />
+
+	        <field type="staticText" align="center" bold="true" txt="THOMAS SETTINGS"/>
+	
+	        <field type="divider" />
+	
+	        <field type="staticText" align="left" txt="Ensure that the thomas username does not exist"/>
+	
+	        <field type="staticText" align="left" txt="If it exists then ensure that the provided password corresponds to the user name"/>
+	
+	        <field type="text" align="left"  variable="mysql.magentix.username" >
+	            <spec txt="thomas username to create on sql server: " size="25" />
+	            <validator
+	                class="com.izforge.izpack.util.RegularExpressionValidator"
+	                txt="Invalid Database username!">
+	                <param name="pattern"   value="[a-zA-Z0-9._-]+"/>
+	            </validator>
+	        </field>
+	
+	        <field type="space"/>
+	
+	        <field type="password" align="left"  variable="mysql.thomas.password" >
+	            <spec>
+	                <pwd txt="MySql password for thomas to use:" size="25" />
+	                <pwd txt="Confirm Password:" size="25" />
+	            </spec>
+	
+	            <validator class="com.izforge.izpack.util.PasswordEqualityValidator" txt="Password not match" id="MySql thomas Password do not match"/>
+	
+	            <validator
+	                class="com.izforge.izpack.util.RegularExpressionValidator"
+	                txt="Invalid password for thomas MySql user! Make Sure the password is more than characters">
+	                <param name="pattern"   value="[a-zA-Z0-9._~!@\[\]#$%^*()_+`\';/.,?:\|]{4,}"/>
+	            </validator>
+	
+	        </field>
+	
+	        <field type="space"/>
+	
+	
+	        <field type="staticText" align="left" txt="WARNING!!! The database name should not exist because it will be over written"/>
+	
+	        <field type="text" align="left"  variable="mysql.thomas.dbname" >
+	            <spec txt="Database name for thomas to use: " size="25" />
+	            <validator
+	                class="com.izforge.izpack.util.RegularExpressionValidator"
+	                txt="Invalid Database name!">
+	                <param name="pattern"   value="[a-zA-Z0-9._-]+"/>
+	            </validator>
+	        </field>
+	
+	        <field type="divider" />
+	
+	    </panel>
+</xfragment>

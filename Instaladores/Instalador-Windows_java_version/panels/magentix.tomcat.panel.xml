@@ -1,0 +1,49 @@
+<xfragment>
+	    <panel id="magentix.tomcat.panel">
+	        <!--<createForPack name="openXdata"/>-->
+	        <field type="title" txt="Tomcat Magentix Configuration" bold="true" size="2" />
+	        <field type="divider" align="top"/>
+	
+	        <!--   Tomacat admin user name      -->
+	
+	        <field type="text" align="left" variable="tomcat.admin.user" >
+	            <spec txt="Enter the tomcat admin username: " size="25" />
+	            <validator
+	                class="com.izforge.izpack.util.RegularExpressionValidator"
+	                txt="Invalid user name!">
+	                <param name="pattern"   value="[a-zA-Z0-9._-]+"/>
+	            </validator>
+	        </field>
+	
+	        <!--    Tomcat admin password   -->
+	        <field type="password" align="left"  variable="tomcat.admin.password" >
+	            <spec>
+	                <pwd txt="Enter your tomcat admin Password:" size="25" />
+	                <pwd txt="Confirm Password:" size="25" />
+	            </spec>
+	
+	            <validator class="com.izforge.izpack.util.PasswordEqualityValidator" txt="Password not match" id="Tomcat passwords do not match"/>
+	
+            <validator
+	                class="com.izforge.izpack.util.RegularExpressionValidator"
+	                txt="Invalid Password! Make Sure the password has atleast six characters">
+	                <param name="pattern"   value="[a-zA-Z0-9._~!@\[\]#$%^*()_+`\';/.,?:\|]{6,}"/>
+	            </validator>
+	        </field>
+	
+	
+	        <!-- Tomcat Port-->
+	        <field type="rule" align="left"  variable="tomcat.port" >
+	            <spec txt="Tomcat Port:" layout="N:5:5" set="0:${tomcat.port}"/>
+	            <validator class="com.izforge.izpack.util.PortValidator" txt="The Specified Tomcat Port Might Be in Use Or Might Be In Use"/>
+	        </field>
+
+	        <!-- Tomcat Connector port-->
+	        <field type="rule" align="left"  variable="tomcat.shutdown.port" >
+	            <spec txt="Tomcat Shutdown Port:" layout="N:5:5" set="0:${tomcat.shutdown.port}"/>
+	            <validator class="com.izforge.izpack.util.PortValidator" txt="The Specified &quot;Tomcat Shutdown Port&quot; Might Be In Use Or Out Of Range!!"/>
+	        </field>
+	
+	
+	    </panel>
+</xfragment>

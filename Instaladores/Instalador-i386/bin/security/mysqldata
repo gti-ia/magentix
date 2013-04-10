@@ -1,0 +1,3 @@
+GRANT ALL PRIVILEGES ON security.* TO 'mms'@'localhost' IDENTIFIED BY "mms" WITH GRANT OPTION;
+GRANT ALL PRIVILEGES ON security.* TO 'mms'@'%' IDENTIFIED BY "mms" WITH GRANT OPTION;
+FLUSH privileges;

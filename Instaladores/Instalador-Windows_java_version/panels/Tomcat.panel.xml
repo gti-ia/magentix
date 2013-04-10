@@ -1,0 +1,31 @@
+<xfragment>
+	    <panel id="Tomcat.panel">
+	        <createForUnselectedPack name="Tomcat7" />
+	
+	        <field type="title" txt="Tomcat Directory" bold="true" size="2" />
+	        <field type="divider" align="top"/>
+	
+	        <!--    Tomcat Directory Selection  -->
+	        <field  type="search" variable="tomcat.dir.user"  >
+	            <description align="left" txt="" id="Tomcat Directory"/>
+	            <spec txt="Path to Tomcat:" checkfilename="bin/bootstrap.jar"
+	                  type="directory" result="directory">
+	                <choice value="$APPLICATIONS_DEFAULT_ROOT\Apache Software Foundation\Apache Tomcat 6.0.18" os="windows" />
+	                <choice value="$APPLICATIONS_DEFAULT_ROOT\Apache Software Foundation\Tomcat6.0" os="windows" />
+	                <choice value="$APPLICATIONS_DEFAULT_ROOT\Apache Software Foundation\Tomcat6" os="windows" />
+	                <choice value="$APPLICATIONS_DEFAULT_ROOT\Apache Software Foundation\Tomcat 6.0" os="windows" />
+	                <choice value="$APPLICATIONS_DEFAULT_ROOT\Apache Software Foundation\Tomcat 6" os="windows" />
+	                <choice value="$APPLICATIONS_DEFAULT_ROOT\Apache\Tomcat" os="windows" />
+	                <choice value="$APPLICATIONS_DEFAULT_ROOT\Apache Software Foundation\Tomcat5.5" os="windows" />
+	                <choice value="$APPLICATIONS_DEFAULT_ROOT\Apache Software Foundation\Tomcat 5.5" os="windows" />
+	                <choice value="$APPLICATIONS_DEFAULT_ROOT\Apache Software Foundation\Tomcat 5" os="windows" />
+	                <choice value="$APPLICATIONS_DEFAULT_ROOT\openXdata\Tomcat6.0" os="windows" />
+	            </spec>
+	        </field>
+	        <!--    External Tomcat port    -->
+	        <field type="rule" align="left"  variable="tomcat.port" >
+	            <spec txt="Tomcat port your server uses: " layout="N:5:5" set="0:${tomcat.port}"/>
+	            <validator class="com.izforge.izpack.util.NotEmptyValidator" txt="Invalid Port"/>
+	        </field>
+	    </panel>
+</xfragment>

@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<title>HTTP Interface example</title>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.6.4.js"></script>
+<script src="jqm-docs.js"></script>
+<script src="jquery.mobile.themeswitcher.js"></script>
+<script type="text/javascript" src="http://code.jquery.com/mobile/1.0/jquery.mobile-1.0.min.js"></script>
+<script type="text/javascript" src="js/magentix2.js"></script>  
+<script type="text/javascript">
+
+function transformData(){
+	var pp=$("#f1").serializeArray();
+	var data=createJSONObject("MarketAgent", pp);
+	requestAppData(data);
+}
+
+function requestAppData(data){
+	$.post("redirect.php", data, function(result) {alert("Data Loaded: " + JSON.parse(result));}, "json");
+}
+</script>
+
+</head>
+<body>
+Select type and maximum price:
+<form id="f1">
+<SELECT NAME="type"> 
+   <OPTION VALUE="fruit">Fruit</OPTION> 
+   <OPTION VALUE="meat">Meat</OPTION> 
+</SELECT> <br/>
+Maximum price: <INPUT TYPE="text" NAME="max_price"><br/>
+
+<input name="Submit1" type="button" value="submit" onclick="transformData(); " data-inline="true"/>
+</form>
+
+</body>
+</html>

@@ -1,0 +1,20 @@
+<xfragment>
+	    <panel id="install.type.panel">
+	
+	        <field type="title" txt="Installation Type" bold="true" size="2" />
+	
+		<field type="staticText" align="left"  bold="true"
+		       txt="Select Full Installation for a complete installation. Not suitable if you already installed any of the following software:
+					 * MySQL * Apache Tomcat * Apache Qpid"/>
+	        <field type="divider" align="top"/>
+	
+	        <field type="radio" variable="setup.type">
+	            <description align="left" txt="Please Select The Setup Type:"/>
+	            <spec>
+	                <choice txt="Full Installation"  value="standard" set="true" />
+	                <choice txt="Custom Installation"  value="expert" />
+	            </spec>
+	        </field>
+	
+	    </panel>
+</xfragment>

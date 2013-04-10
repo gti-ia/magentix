@@ -1,0 +1,20 @@
+<xfragment>
+	    <panel id="platform.type.panel">
+	
+	        <field type="title" txt="Platform Type" bold="true" size="2" />
+	
+	        <field type="divider" align="top"/>
+	
+	        <field type="radio" variable="install.type">
+	            <description align="left" txt="Please Select Linux Platform Type:"/>
+	            <spec>
+	                <choice txt=".RPM Package"  value="rpm" set="true" />
+			<choice txt=".deb package"  value="deb" />
+	                <choice txt="Generic linux"  value="generic" />
+	   
+	            </spec>
+	        </field>
+	
+	    </panel>
+</xfragment>
+	

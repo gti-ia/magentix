@@ -1,0 +1,497 @@
+﻿<?xml version="1.0" encoding="iso-8859-1" standalone="yes"?>
+<installation version="1.0">
+	<info>
+		<appname>Magentix2</appname>
+		<appversion>2.0</appversion>
+		<authors>
+			<author email="" name="Grupo de Tecnologia Informatica-Inteligencia Artificial" />
+
+		</authors>
+		<url>http://users.dsic.upv.es/grupos/ia/ia.html</url>
+<!--		<uninstaller name="Uninstaller.jar" write="yes" />-->
+		<requiresjdk>no</requiresjdk>
+		<writeinstallationinformation>no</writeinstallationinformation>
+		<pack200 />
+		<run-privileged condition="izpack.windowsinstall.vista|izpack.windowsinstall.7" />
+		<webdir>http://users.dsic.upv.es/grupos/ia/sma/tools/magentix2/archivos</webdir>
+	</info>
+	<!--
+		<guiprefs height="480" resizable="no" width="640"> <modifier
+		key="useFlags" value="yes" /> <modifier key="langDisplayType"
+		value="default" /> </guiprefs>
+	-->
+	<guiprefs width="750" height="550" resizable="no">
+		<modifier key="useButtonIcons" value="yes" />
+		<modifier key="useLabelIcons" value="no" />
+		<modifier key="labelGap" value="2" />
+		<modifier key="layoutAnchor" value="NORTHWEST" />
+		<modifier key="useHeadingPanel" value="yes" />
+		<modifier key="headingImageOnLeft" value="yes" />
+		<modifier key="headingLineCount" value="1" />
+		<modifier key="headingFontSize" value="1.5" />
+		<modifier key="headingBackgroundColor" value="0x00ffffff" />
+		<modifier key="headingPanelCounter" value="text" />
+		<modifier key="headingPanelCounterPos" value="inHeading" />
+	</guiprefs>
+
+	<locale>
+		<langpack iso3="eng" />
+		<langpack iso3="spa" />
+		<langpack iso3="cat" />
+	</locale>
+	<resources>
+		<res id="HTMLInfoPanel.info" parse="yes" src="docs/HTMLInfoPanel.html" />
+		<res id="HTMLLicencePanel.licence" src="lgpl.html" />
+		<res id="installer.langsel.img" src="images/logo-magentix2.JPG" />
+		<!--
+			Cuando llegue al panel UserInputPanel que ejecute el contenido de
+			inputSpec.xml
+		-->
+		<res id="userInputSpec.xml" src="specs/inputSpec.xml" parsexml="yes" />
+
+		<!--<res id="userInputSpec.xml" src="specs/userInputSpec.xml" />-->
+
+		<res id="Heading.image" src="images/GTIIA_V2_RGB.jpg" />
+		<!--
+			Cuando llegue el process panel primero que ejecute lo que esta
+			definido en este xml
+		-->
+		<res id="ProcessPanel.Spec.xml" src="specs/processPanelSpec.xml" />
+
+		<res id="TargetPanel.dir" src="TargetDir.txt" />
+
+	</resources>
+
+	<conditions>
+		<condition type="variable" id="standardinstallation">
+			<name>setup.type</name>
+			<value>standard</value>
+		</condition>
+
+		<condition type="variable" id="expertinstallation">
+			<name>setup.type</name>
+			<value>expert</value>
+		</condition>
+
+		<condition type="variable" id="debpackage">
+			<name>install.type</name>
+			<value>deb</value>
+		</condition>
+	
+		<condition type="variable" id="rpmpackage">
+			<name>install.type</name>
+			<value>rpm</value>
+		</condition>
+
+		<condition type="variable" id="genericpackage">
+			<name>install.type</name>
+			<value>generic</value>
+		</condition>
+	   	<condition type="variable" id="is32bit">
+                	<name>SYSTEM_sun_arch_data_model</name>
+                	<value>32</value>
+	        </condition>
+
+
+
+
+
+	</conditions>
+
+	<variables>
+		<variable name="DesktopShortcutCheckboxEnabled" value="true" />
+		<variable name="ApplicationShortcutPath" value="ApplicationShortcuts" />
+		<variable name="data.validation.error.title" value="Error" />
+		<!--Disable Showing Create Directory Message on User Input Panel-->
+		<variable name="ShowCreateDirectoryMessage" value="false" />
+
+		<!-- Super user login credentials for external mysql server-->
+		<variable name="mysql.username" value="root" />
+		<variable name="mysql.password.user" value="" />
+		<variable name="mysql.host" value="localhost" />
+
+		<!-- Root password to set embedded MySqlServer -->
+		<variable name="mysql.root.password" value="" />
+
+		<!-- Login credentials MySql server for oxd -->
+		<variable name="mysql.thomas.username" value="thomas" />
+		<variable name="mysql.thomas.password" value="thomas" />
+		<variable name="mysql.thomas.dbname" value="thomas" />
+
+		<!-- Tomcat directory user selects -->
+		<variable name="tomcat.dir.user" value="" />
+
+		<!-- Ports -->
+		<variable name="tomcat.port" value="8080" />
+		<variable name="mysql.port" value="3306" />
+		<variable name="tomcat.shutdown.port" value="8005" />
+
+		<!-- Users for embeded tomcat server -->
+		<variable name="tomcat.admin.user" value="admin" />
+		<variable name="tomcat.admin.password" value="admin" />
+
+		<!-- Certificate Autority, broker and MMS passwords -->
+		<variable name="ca.password" value=""/>
+		<varibale name="broker.password" value=""/>
+		<variable name="mms.password" value=""/>
+
+		<variable name="setup.type" value="standard" />
+
+		<variable name="tomcat.dir" value="${INSTALL_PATH}/apache-tomcat-7.0.4" />
+		<variable name="mysql.dir" value="${INSTALL_PATH}" />
+
+		<!-- Variable que nos indicara que tipo de paquete queremos instalar -->
+
+		<variable name="install.type" value="genericpackage" />
+
+
+		<!--
+			general.password is used in the case of standard installation for
+			tomacat and mysql root user
+		-->
+		<variable name="general.password" value="" />
+	</variables>
+	<dynamicvariables>
+		<!--
+			Tomcat directory in which to install tomcat <variable
+			name="tomcat.dir" value="${INSTALL_PATH}/apache-tomcat-7.0.4"
+			condition="izpack.selected.Tomcat7" />
+		-->
+
+		<variable name="tomcat.dir" value="${tomcat.dir.user}"
+			condition="!izpack.selected.Tomcat7" />
+
+		<variable name="packs.required" value="yes" condition="standardinstallation" />
+		<variable name="packs.required" value="no" condition="expertinstallation" />
+
+
+		<!-- Root password to login into the sql server -->
+		<variable name="mysql.password" value="pass" condition="izpack.selected.MySql" />
+		<variable name="mysql.password" value="${mysql.password.user}"
+			condition="!izpack.selected.MySql" />
+
+		<variable name="mysql.selected.comment" value="--"
+			condition="!izpack.selected.MySql" />
+		<variable name="mysql.selected.comment" value=""
+			condition="izpack.selected.MySql" />
+
+		<variable name="mysql.script.comment" value="rem"
+			condition="!izpack.selected.MySql" />
+		<variable name="mysql.script.comment" value=""
+			condition="izpack.selected.MySql" />
+
+		<variable name="mysql.thomas.password.dy" value="${mysql.thomas.password}"
+			condition="expertinstallation" />
+		<variable name="mysql.thomas.password.dy" value="${general.password}"
+			condition="standardinstallation" />
+
+	</dynamicvariables>
+	<panels>
+		<!-- El id fa refencia al panels, ja que els hem afegit abans -->
+		<panel classname="CheckedHelloPanel" id="hellopanel" />
+		<panel classname="HTMLInfoPanel" />
+		<panel classname="HTMLLicencePanel" id="licensepanel" />
+		<!--<panel classname="UserInputPanel"/>-->
+		
+
+		<panel classname="TargetPanel" id="TargetPanel.dir"/>
+		
+		<panel classname="UserInputPanel" id="install.type.panel"/> 
+
+		<panel classname="PacksPanel" condition="expertinstallation"/>
+		<!--<panel classname="PacksPanel" id="packspanel"/>-->
+		
+
+		<!--
+			Si he seleccionado de los packs el mysql que se lance lo siguiente
+		-->
+		<!-- Id se refiere al panel que lanzare -->
+		<!--
+			La condicion nos indica que se a seleccionado MySql en los packs y
+			además estamos en modo experto
+		-->
+
+		<!--
+		<panel classname="UserInputPanel" id="platform.type.panel"
+			condition="izpack.selected.Qpid|izpack.selected.MySql"/>-->
+		
+		<!--
+		<panel classname="UserInputPanel" id="Tomcat.panel"
+			condition="izpack.selected.Tomcat7+expertinstallation"/>
+
+		<panel classname="UserInputPanel" id="magentix.qpid.panel"
+			condition="izpack.selected.Qpid+expertinstallation"/>
+		-->
+
+		<!-- Si no lo he seleccionado valido a ver si lo tengo y es correcto -->
+		<!-- En ese caso lanzare el panel MySql.panel -->
+		<!-- Valido si existe la bd, sino deberia dar un error -->
+		<!--
+			<panel classname="UserInputPanel" id="MySql.panel" condition
+			="!izpack.selected.MySql"> <validator
+			classname="es.upv.dsic.gti_ia.organization.JDBCValidator" /> </panel>
+		-->
+
+
+		<!-- Si he seleccionado instalar tomcat7 y estoy en modo exper -->
+		<!--
+			<panel classname="UserInputPanel" id="magentix.tomcat.panel"
+			condition="izpack.selected.Tomcat7+expertinstallation"/>
+		-->
+
+		<!-- Si no he seleccionado tomcat -->
+		<!--
+			<panel classname="UserInputPanel" id="Tomcat.panel" condition
+			="!izpack.selected.Tomcat7"/>
+		-->
+
+
+		<!--
+			<panel classname="SummaryPanel" id="summarypanel"
+			condition="expertinstallation"/>
+		-->
+
+		<panel classname="SummaryPanel" id="summarypanel" condition="expertinstallation"/>
+
+		<panel classname="InstallPanel" id="installpanel" />
+
+		<panel classname="ProcessPanel" />
+
+
+		<panel classname="SimpleFinishPanel" />
+
+	</panels>
+	<packs>
+
+		<!-- MySql Server pack -->
+		<pack name="MySql" required="no">
+			<description>
+If you already have MySql installed and want to integrate in thomas, please use the script Import-ThomasDB.sh.
+This script imports scheme thomas and creates a new user thomas. The location is in the directory bin/MySQL.
+	            </description>
+
+				<file src="thirdparty/mysql-5.5.21-win32.zip" targetdir="$INSTALL_PATH"
+				unpack="true"/>
+
+
+		
+
+			<executable targetfile="$INSTALL_PATH/bin/MySQL/Start-MySQL.bat"
+				stage="never" keep="true">
+				<os family="windows" />
+			</executable>
+
+
+	
+
+			<executable targetfile="$INSTALL_PATH/bin/MySQL/install-mysql-service-x86_64.bat"
+				stage="never" keep="true">
+				<os family="windows" />
+			</executable>
+
+			<executable targetfile="$INSTALL_PATH/mysql-5.1.53-linux-x86_64-glibc23/scripts/mysql_install_db"
+				stage="never" keep="true">
+				<os family="windows" />
+			</executable>
+
+			<executable targetfile="$INSTALL_PATH/mysql-5.1.53-linux-x86_64-glibc23/bin/mysqld_safe"
+				stage="never" keep="true">
+				<os family="windows" />
+			</executable>
+			<executable targetfile="$INSTALL_PATH/mysql-5.1.53-linux-x86_64-glibc23/bin/my_print_defaults"
+				stage="never" keep="true">
+				<os family="windows" />
+			</executable>
+			<executable targetfile="$INSTALL_PATH/mysql-5.1.53-linux-x86_64-glibc23/bin/mysql"
+				stage="never" keep="true">
+				<os family="windows" />
+			</executable>
+			<executable targetfile="$INSTALL_PATH/mysql-5.1.53-linux-x86_64-glibc23/bin/mysqladmin"
+				stage="never" keep="true">
+				<os family="windows" />
+			</executable>
+			<executable targetfile="$INSTALL_PATH/mysql-5.1.53-linux-x86_64-glibc23/bin/mysqlcheck"
+				stage="never" keep="true">
+				<os family="windows" />
+			</executable>
+			<executable targetfile="$INSTALL_PATH/mysql-5.1.53-linux-x86_64-glibc23/bin/mysqld"
+				stage="never" keep="true">
+				<os family="windows" />
+			</executable>
+			<executable targetfile="$INSTALL_PATH/mysql-5.1.53-linux-x86_64-glibc23/bin/mysqldump"
+				stage="never" keep="true">
+				<os family="windows" />
+			</executable>
+			<executable targetfile="$INSTALL_PATH/mysql-5.1.53-linux-x86_64-glibc23/bin/mysqlimport"
+				stage="never" keep="true">
+				<os family="windows" />
+			</executable>
+			<executable targetfile="$INSTALL_PATH/mysql-5.1.53-linux-x86_64-glibc23/bin/mysqlmanager"
+				stage="never" keep="true">
+				<os family="windows" />
+			</executable>	
+
+			<executable targetfile="$INSTALL_PATH/mysql-5.1.53-linux-x86_64-glibc23/bin/resolveip"
+				stage="never" keep="true">
+				<os family="windows" />
+			</executable>
+			<executable targetfile="$INSTALL_PATH/mysql-5.1.53-linux-x86_64-glibc23/bin/resolve_stack_dump"
+				stage="never" keep="true">
+				<os family="windows" />
+			</executable>		
+			<executable targetfile="$INSTALL_PATH/mysql-5.1.53-linux-x86_64-glibc23/bin/replace"
+				stage="never" keep="true">
+				<os family="windows" />
+			</executable>	
+			<executable targetfile="$INSTALL_PATH/mysql-5.1.53-linux-x86_64-glibc23/bin/mysqlaccess"
+				stage="never" keep="true">
+				<os family="windows" />
+			</executable>		
+
+
+
+		</pack>
+
+
+		<!-- Tomcat Server pack -->
+		<pack name="Tomcat7" required="no">
+			<description>
+	Copy the services from the thomas directory to your tomcat webapps directory.
+	            </description>
+
+			<!--
+				Para dar permisos <fileset dir="bin"
+				targetdir="$INSTALL_PATH/Tomcat7.0/apache-tomcat-7.0.4/bin">
+				<additionaldata key="permission.file" value="0766"/> <additionaldata
+				key="permission.dir" value="0777"/> </fileset>
+			-->
+
+			<file src="thirdparty/apache-tomcat-7.0.4.zip" targetdir="$INSTALL_PATH/"
+				unpack="true" />
+		
+
+			<!-- Los scritps que quiero que se ejecuten cuando termine -->
+
+			<executable targetfile="$INSTALL_PATH/apache-tomcat-7.0.4/bin/setclasspath.bat"
+				stage="never" keep="true">
+				<os family="windows" />
+			</executable>
+			<executable targetfile="$INSTALL_PATH/apache-tomcat-7.0.4/bin/catalina.bat"
+				stage="never" keep="true">
+				<os family="windows" />
+			</executable>
+			<executable targetfile="$INSTALL_PATH/apache-tomcat-7.0.4/bin/startup.bat"
+				stage="never" keep="true">
+				<os family="windows" />
+			</executable>
+			<executable targetfile="$INSTALL_PATH/apache-tomcat-7.0.4/bin/shutdown.bat"
+				stage="never" keep="true">
+				<os family="windows" />
+			</executable>
+			<executable targetfile="$INSTALL_PATH/bin/Tomcat/install-catalina.bat"
+				stage="never" keep="true">
+				<os family="windows" />
+			</executable>
+			<executable targetfile="$INSTALL_PATH/bin/Tomcat/Start-Catalina.bat"
+				stage="never" keep="true">
+				<os family="windows" />
+			</executable>
+
+
+
+			<!--
+				<executable
+				targetfile="$INSTALL_PATH/script/uninstall-tomcat-service.sh"
+				stage="uninstall" keep="true"> <os family="windows"/> </executable>
+			-->
+		</pack>
+		<!-- Qpid pack -->
+		<pack name="Qpid" required="no">
+			<description>Apache Qpid</description>
+			<file src="thirdparty/qpid-broker-0.14.zip" targetdir="$INSTALL_PATH/" unpack="true"/>
+
+			<executable targetfile="$INSTALL_PATH/qpid-broker-0.14/bin/qpid-server"
+				stage="never" keep="true">
+				<os family="windows" />
+			</executable>
+
+			<executable targetfile="$INSTALL_PATH/bin/Qpid/Start-Qpid.bat"
+				stage="never" keep="true">
+				<os family="windows" />
+			</executable>
+
+			<executable targetfile="$INSTALL_PATH/qpid-broker-0.14/bin/qpid.stop"
+				stage="never" keep="true">
+				<os family="windows" />
+			</executable>
+			
+<!--
+			<executable targetfile="$INSTALL_PATH/bin/Qpid/MagentixPKI.sh"
+				stage="never" keep="true">
+				<os family="windows" />
+			</executable>-->
+		</pack>
+
+
+		<pack name="bin" required="no">
+
+		<description>The bin files, this directory contains the execution files for Magentix platform and support infraestructure (MySQL, Qpid, Tomcat). </description>
+			<file src="bin" targetdir="$INSTALL_PATH" />
+		</pack>
+		
+		<pack name="lib" required="no">
+			<description>The magentix lib. This lib contains the Magentix API and requiered libraries.</description>
+			<file src="lib" targetdir="$INSTALL_PATH" unpack="false"/>
+			
+		</pack>
+
+		<!-- Docs pack -->
+		<pack name="Docs" required="no">
+			<description>The documentation</description>
+			<file src="docs" targetdir="$INSTALL_PATH" />
+			<!-- Reccursive adding -->
+		</pack>
+		<!-- Sources pack -->
+		<pack name="Sources" required="no">
+			<description>The sources</description>
+			<file src="src" targetdir="$INSTALL_PATH" />
+		</pack>
+
+		<!-- Examples pack -->
+		<pack name="examples" required="no">
+			<description>The examples: contains a set of magentix examples.</description>
+			<file src="examples" targetdir="$INSTALL_PATH" />
+
+			<executable targetfile="$INSTALL_PATH/examples/bin/Start-BasicExample.bat"
+				stage="never" keep="true">
+				<os family="windows" />
+			</executable>
+
+			<executable targetfile="$INSTALL_PATH/examples/bin/Start-ThomasExample.bat"
+				stage="never" keep="true">
+				<os family="windows" />
+			</executable>
+
+			<executable targetfile="$INSTALL_PATH/examples/bin/Start-OrganizationalExample.bat"
+				stage="never" keep="true">
+				<os family="windows" />
+			</executable>
+
+
+			<executable targetfile="$INSTALL_PATH/bin/Launch-MagentixAgents.bat"
+				stage="never" keep="true">
+				<os family="windows" />
+			</executable>
+		</pack>
+
+		<!-- Thomas pack -->
+		
+		<pack name="thomas" required="no">
+			<description>Contains thomas web services.</description>
+			<file src="thomas" targetdir="$INSTALL_PATH" />
+		</pack>
+		
+		
+	</packs>
+
+</installation>

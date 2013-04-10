@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="iso-8859-1" standalone="yes" ?>
+	<!--
+	IzPack Input Script for openXdata
+	Authour: Ronald.K
+	-->
+	<userInput xmlns:xi="http://www.w3.org/2001/XInclude">
+
+
+
+
+	    <xi:include href="../panels/platform.type.panel.xml" parse="xml"/>
+
+	    <xi:include href="../panels/magentix.qpid.panel.xml" parse="xml"/>
+	
+	    <!--
+	    Panel to select type of installation
+	    -->
+	    <xi:include href="../panels/install.type.panel.xml" parse="xml"/>
+	
+   	    <!--
+	    Main input panel displayed if bundled  mysql and tomcat are to be installed
+	    -->
+	    <xi:include href="../panels/standard.input.xml" parse="xml"/>
+	
+	    <!--
+	    Input panel displayed if bundled MySql is to be installed-->
+	    
+	    <xi:include href="../panels/magentix.mysql.panel.xml" parse="xml"/>
+	
+	    <!--
+	    Input panel displayed if bundled tomcat is to be installed
+	    -->
+	    <xi:include href="../panels/magentix.tomcat.panel.xml"/>
+	
+	    <!--
+	    Panel to select the already installed tomcat directory.
+	    -->
+	    <xi:include href="../panels/Tomcat.panel.xml"/>
+	
+	    <!--
+	    Panel to connect to already installed mysql database
+	   -->
+	    <xi:include href="../panels/MySql.panel.xml"/>
+	 
+	</userInput> 

@@ -1,0 +1,14 @@
+
+Haciendo ping a locke.dsic.upv.es [127.0.0.1] con 32 bytes de datos:
+
+Respuesta desde 127.0.0.1: bytes=32 tiempo<1m TTL=128
+Respuesta desde 127.0.0.1: bytes=32 tiempo<1m TTL=128
+Respuesta desde 127.0.0.1: bytes=32 tiempo<1m TTL=128
+Respuesta desde 127.0.0.1: bytes=32 tiempo<1m TTL=128
+Respuesta desde 127.0.0.1: bytes=32 tiempo<1m TTL=128
+
+Estad¡sticas de ping para 127.0.0.1:
+    Paquetes: enviados = 5, recibidos = 5, perdidos = 0
+    (0% perdidos),
+Tiempos aproximados de ida y vuelta en milisegundos:
+    M¡nimo = 0ms, M ximo = 0ms, Media = 0ms

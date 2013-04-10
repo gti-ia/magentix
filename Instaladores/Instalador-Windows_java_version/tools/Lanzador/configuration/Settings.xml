@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>Propiedades de configuración</comment>
+
+
+<!-- Properties thomas -->
+<entry key="OMSServiceDesciptionLocation">http://localhost:8080/omsservices/OMSservices/owl/owls/</entry>
+<entry key="SFServiceDesciptionLocation">http://localhost:8080/sfservices/SFservices/owl/owls/</entry>
+
+
+
+<!-- Properties mysql -->
+<entry key="serverName">localhost</entry>
+<entry key="databaseName">thomas</entry>
+<entry key="userName">thomas</entry>
+<entry key="password">thomas</entry>
+
+
+
+<!-- Properties qpid broker -->
+<entry key="host">gtiiaprojects2</entry>
+<entry key="port">5672</entry>
+<entry key="vhost">test</entry>
+<entry key="user">guest</entry>
+<entry key="pass">guest</entry>
+<entry key="ssl">false</entry>
+
+
+<!-- Properties jena -->
+<entry key="dbURL">jdbc:mysql://localhost/thomas</entry>
+<entry key="dbType">MySQL</entry>
+<entry key="dbDriver">com.mysql.jdbc.Driver</entry>
+
+
+
+
+
+</properties>

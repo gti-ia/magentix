@@ -1,0 +1,1 @@
+If the NSS provider is added to your JDK, /home/joabelfa/workspace/Java/jdk1.6.0_21/jre/lib/security/java.security, may cause problems with the security. Please, comment the next line: security.provider.9=sun.security.pkcs11.SunPKCS11

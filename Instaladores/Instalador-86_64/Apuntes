@@ -1,0 +1,30 @@
+
+
+
+
+Es podria disenyar un border
+//gastar desde web
+
+Traure la contrasenya de sudo, o demanar-la ( ix per linea de comando!!)
+
+
+
+Detectar que ja existixca MySql o tomcat.
+Donar permisos per a parar el tomcat, vore que passa  en la variable de entorno, si despres poder enxufar el tomcat quan reiniciem el ordinador, 
+podria posaro com un servici del sistema.
+Fer un script per a llançar la plataforma una vegada estiga instalada.
+Posar algun ejemple que s'ejecute per a comprobar la funcionalitat.
+
+MySql:
+
+- > Hi ha que avisar que el usuario root tendra la contraseña magentix o la que siga
+
+- > Precompilar y que tinga ja el usuari y la base de datos thomas.
+
+- > Precompilar
+	- > donar de alta el usuari
+	- > afegir thomas
+
+- > llançar
+
+

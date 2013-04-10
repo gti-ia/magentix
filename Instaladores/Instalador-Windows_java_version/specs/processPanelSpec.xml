@@ -1,0 +1,72 @@
+	<processing>	
+	    <job name="Install MySql service">
+	        <os family="windows" />
+	        <executeForPack name="MySql"/>
+	        <executefile name="$INSTALL_PATH/bin/MySQL/install-mysql-service-x86_64.bat">
+			<env>MYSQL_HOME=$INSTALL_PATH\mysql-5.5.21-win32</env>
+			<env>MAGENTIX_HOME=$INSTALL_PATH</env>
+		</executefile>
+	    </job> 
+	    <job name="Install Tomcat Service">
+	        <executeForPack name="Tomcat7"/>
+	        <os family="windows" />
+		
+	        <executefile name="$INSTALL_PATH/bin/Tomcat/install-catalina.bat">
+			<env>CATALINA_HOME=$INSTALL_PATH/apache-tomcat-7.0.4</env>
+			<env>CATALINA_BASE=$INSTALL_PATH/apache-tomcat-7.0.4</env>
+			<env>CATALINA_TMPDIR=$INSTALL_PATH/apache-tomcat-7.0.4/temp</env>
+			<env>THOMAS_PATH=$INSTALL_PATH/thomas</env>
+			<!--<arg>DIRECTORIO</arg><arg>$INSTALL_PATH</arg>-->
+		</executefile>	
+	
+	    </job>
+<!--
+	    <job name="Starting Apache Qpid">
+	        <executeForPack name="Qpid"/>
+		<os family="windows" />
+
+		<executefile name="$INSTALL_PATH/bin/Qpid/Start-Qpid.bat">
+			<arg>$ca.password</arg>
+			<arg>$broker.password</arg>
+			<arg>$mms.password</arg>
+			<env>SECURITY_PATH=$INSTALL_PATH</env>
+			<env>QPID_HOME=$INSTALL_PATH\qpid-broker-0.14</env>
+		</executefile>
+	    </job> 
+
+
+	   <job name="Starting Magentix Agents.">
+	        <os family="windows" />
+	        <executeForPack name="examples"/>
+	        <executefile name="$INSTALL_PATH/bin/Launch-MagentixAgents.bat">
+			<env>MAGENTIX_HOME=$INSTALL_PATH/bin</env>
+		</executefile>
+	    </job>
+  	   <job name="Executing Examples." condition="standardinstallation">
+	        <os family="windows" />
+	        <executeForPack name="examples"/>
+	        <executefile name="$INSTALL_PATH/examples/bin/Start-BasicExample.bat">
+			<env>EXAMPLES_HOME=$INSTALL_PATH/examples</env>
+		</executefile>
+	    </job> 
+-->
+<!--
+   	  <job name="Install MySql service: deb package"  condition="debpackage">
+	        <os family="unix" />
+	        <executeForPack name="MySql"/>
+	        <executefile name="$INSTALL_PATH/bin/MySQL/install-mysql-deb-service.bat">
+			<env>MYSQL_HOME=$INSTALL_PATH/mysql</env>
+		</executefile>
+	    </job> 
+
+
+	
+	    <job name="Import database">
+	        <executeForPack name="MySql"/>
+	        <executefile name="$INSTALL_PATH/bin/MySQL/import-db.bat"/>
+	    </job>-->
+
+	   
+	
+	    <!--<onSuccess previous="false" next="true" condition="!mycondition" />-->
+	</processing> 

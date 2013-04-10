@@ -1,0 +1,55 @@
+<xfragment>
+	    <panel id="magentix.qpid.panel">
+	        <!--<createForPack name="openXdata"/>-->
+	        <field type="title" txt="Secure Magentix Qpid Configuration" bold="true" size="2" />
+	        <field type="divider" align="top"/>
+	
+
+	
+	        <!--    CA admin password   -->
+	        <field type="password" align="left"  variable="ca.password" >
+	            <spec>
+	                <pwd txt="Enter Certificate Autority Password:" size="25" />
+	                <pwd txt="Confirm Password:" size="25" />
+	            </spec>
+		    <validator
+	                class="com.izforge.izpack.util.RegularExpressionValidator"
+	                txt="Invalid password for CA! Make Sure the password is more than characters">
+	                <param name="pattern"   value="[a-zA-Z0-9._~!@\[\]#$%^*()_+`\';/.,?:\|]{4,}"/>
+	            </validator>
+		    <validator class="com.izforge.izpack.util.NotEmptyValidator" txt="The password not may be empty"/>
+	        </field>
+
+		<!--    Broker password   -->
+	        <field type="password" align="left"  variable="broker.password" >
+	            <spec>
+	                <pwd txt="Enter Broker Password:" size="25" />
+	                <pwd txt="Confirm Password:" size="25" />
+	            </spec>
+		    <validator
+	                class="com.izforge.izpack.util.RegularExpressionValidator"
+	                txt="Invalid password for broker! Make Sure the password is more than characters">
+	                <param name="pattern"   value="[a-zA-Z0-9._~!@\[\]#$%^*()_+`\';/.,?:\|]{4,}"/>
+	            </validator>
+		    <validator class="com.izforge.izpack.util.NotEmptyValidator" txt="The password not may be empty"/>
+	        </field>
+
+
+		<!--    MMS password   -->
+	        <field type="password" align="left"  variable="mms.password" >
+	            <spec>
+	                <pwd txt="Enter MMS Password:" size="25" />
+	                <pwd txt="Confirm Password:" size="25" />
+	            </spec>
+		    <validator
+	                class="com.izforge.izpack.util.RegularExpressionValidator"
+	                txt="Invalid password for MMS! Make Sure the password is more than characters">
+	                <param name="pattern"   value="[a-zA-Z0-9._~!@\[\]#$%^*()_+`\';/.,?:\|]{4,}"/>
+	            </validator>
+		    <validator class="com.izforge.izpack.util.NotEmptyValidator" txt="The password not may be empty"/>
+	        </field>
+	
+	
+	       
+	    </panel>
+</xfragment>
