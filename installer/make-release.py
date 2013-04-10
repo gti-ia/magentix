@@ -56,6 +56,9 @@ shutil.copy("magentix2"+os.sep+"Stop-Magentix.sh", releasedir)
 shutil.copy("magentix2"+os.sep+"magentix-setup.py", releasedir)
 shutil.copy("magentix2"+os.sep+"magentix-setup.exe", releasedir)
 
+os.mkdir(releasedir+os.sep+"doc"+os.sep+"manual")
+shutil.copy(".."+os.sep+"doc"+os.sep+"manual"+os.sep+"Magentix2UserManual.pdf", releasedir+os.sep+"doc"+os.sep+"manual")
+
 #attach version to Start-Magentix scripts
 def line_prepender(filename,line):
     with open(filename,'r+') as f:
