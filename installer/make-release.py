@@ -29,7 +29,7 @@ os.mkdir(releasedir)
 
 #generate doc
 os.chdir("..")
-#os.system("doxygen Doxyfile")
+os.system("doxygen Doxyfile")
 os.chdir("installer")
 
 #zip sources
@@ -57,29 +57,16 @@ shutil.copy("magentix2"+os.sep+"magentix-setup.py", releasedir)
 shutil.copy("magentix2"+os.sep+"magentix-setup.exe", releasedir)
 
 #attach version to Start-Magentix scripts
-# read the current contents of the file
-f = open(releasedir+os.sep+"Start-Magentix.bat")
-text = f.read()
-f.close()
-# open the file again for writing
-f = open(releasedir+os.sep+"Start-Magentix.bat", 'w')
-f.write('set VERSION='+release+'\n\n')
-# write the original contents
-f.write(text)
-f.close()
-# read the current contents of the file
-f = open(releasedir+os.sep+"Start-Magentix.sh")
-text = f.read()
-f.close()
-# open the file again for writing
-f = open(releasedir+os.sep+"Start-Magentix.sh", 'w')
-f.write('VERSION='+release+'\n\n')
-# write the original contents
-f.write(text)
-f.close()
+def line_prepender(filename,line):
+    with open(filename,'r+') as f:
+        content = f.read()
+        f.seek(0,0)
+        f.write(line.rstrip('\r\n') + '\n' + content)
 
+line_prepender(releasedir+os.sep+"Start-Magentix.sh", 'VERSION='+release+'\n\n')
+line_prepender(releasedir+os.sep+"Start-Magentix.bat", 'set VERSION='+release+'\n\n')
 
 #zip release
-#zipdir(releasedir, releasedir)
+zipdir(releasedir, releasedir)
 #clean
-#shutil.rmtree(releasedir,ignore_errors=True)
+shutil.rmtree(releasedir,ignore_errors=True)
