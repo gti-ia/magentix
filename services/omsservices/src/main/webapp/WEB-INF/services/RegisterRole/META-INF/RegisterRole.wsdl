@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="RegisterRole" targetNamespace="http://wtp" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://wtp" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://wtp">
+      <xsd:element name="RegisterRole">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="RoleID" type="xsd:string"/>
+             <xsd:element name="UnitID" type="xsd:string"/>
+             <xsd:element name="PositionID" type="xsd:string"/>
+             <xsd:element name="AccessibilityID" type="xsd:string"/>
+             <xsd:element name="VisibilityID" type="xsd:string"/>
+             <xsd:element name="AgentID" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="RegisterRoleResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+          	<xsd:element name="Result" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="RegisterRoleMessage">
+    <wsdl:part name="parameters" element="tns:RegisterRole">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="RegisterRoleResponse">
+    <wsdl:part name="parameters" element="tns:RegisterRoleResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="RegisterRolePortType">
+    <wsdl:operation name="RegisterRole">
+      <wsdl:input message="tns:RegisterRoleMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:RegisterRoleResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="RegisterRoleSOAP" type="tns:RegisterRolePortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="RegisterRole">
+      <soap:operation soapAction="http://wtp"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="RegisterRole">
+    <wsdl:port name="RegisterRoleSOAP" binding="tns:RegisterRoleSOAP">
+      <soap:address location="http://localhost:8080/OMS/services/RegisterRole"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

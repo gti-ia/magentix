@@ -1,0 +1,626 @@
+incorrectParamTest1:
+<response>
+<serviceName>RegisterService</serviceName>
+<status>Error</status>
+<result>
+<description>ERROR: java.net.MalformedURLException: no protocol: dsic-upv-es</description>
+</result>
+</response>
+
+incorrectParamTest2:
+<response>
+<serviceName>RegisterService</serviceName>
+<status>Error</status>
+<result>
+<description>ERROR: com.hp.hpl.jena.shared.JenaException: java.net.NoRouteToHostException: No route to host</description>
+</result>
+</response>
+
+incorrectParamTest3:
+<response>
+<serviceName>RegisterService</serviceName>
+<status>Error</status>
+<result>
+<description>ERROR: com.hp.hpl.jena.shared.DoesNotExistException: http://127.0.0.1/services/1.1/nonExistingService.owls</description>
+</result>
+</response>
+
+appropiateParamsTest2:
+<response>
+<serviceName>RegisterService</serviceName>
+<status>Ok</status>
+<result>
+<description>Service registered: http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#ProductProfile</description>
+<specification>
+<!-- <?xml version="1.0" encoding="WINDOWS-1252"?>
+<rdf:RDF  xmlns:owl       = "http://www.w3.org/2002/07/owl#"
+xmlns:rdfs      = "http://www.w3.org/2000/01/rdf-schema#"
+xmlns:rdf       = "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+xmlns:xsd       = "http://www.w3.org/2001/XMLSchema#"
+xmlns:service   = "http://www.daml.org/services/owl-s/1.1/Service.owl#"
+xmlns:process   = "http://www.daml.org/services/owl-s/1.1/Process.owl#"
+xmlns:profile    = "http://www.daml.org/services/owl-s/1.1/Profile.owl#"
+xmlns:grounding = "http://www.daml.org/services/owl-s/1.1/Grounding.owl#"
+xmlns:provider = "http://127.0.0.1/ontology/provider.owl#">
+<profile:Profile rdf:ID="http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#ProductProfile">
+	<profile:serviceName xml:lang="en">Product@en</profile:serviceName>
+	<profile:textDescription xml:lang="en"></profile:textDescription>
+<profile:contactInformation>
+	<provider:Provider rdf:ID="ProductAgent">
+		<provider:entityID rdf:datatype="^^xsd;string">ProductAgent</provider:entityID>
+		<provider:entityType rdf:datatype="^^xsd;string">Agent</provider:entityType>
+		<provider:language rdf:datatype="^^xsd;string">FIPA-ACL</provider:language>
+		<provider:performative rdf:datatype="^^xsd;string">REQUEST</provider:performative>
+	</provider:Provider>
+</profile:contactInformation>
+	<profile:hasInput rdf:resource="http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#x"/>
+	<profile:hasInput rdf:resource="http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#y"/>
+	<profile:hasOutput rdf:resource="http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#Result"/>
+</profile:Profile>
+	<process:Input rdf:ID="http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#x">
+		<process:parameterType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.w3.org/2001/XMLSchema#double</process:parameterType>
+	</process:Input>
+	<process:Input rdf:ID="http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#y">
+		<process:parameterType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.w3.org/2001/XMLSchema#double</process:parameterType>
+	</process:Input>
+	<process:Output rdf:ID="http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#Result">
+		<process:parameterType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.w3.org/2001/XMLSchema#double</process:parameterType>
+	</process:Output>
+</rdf:RDF> -->
+</specification>
+</result>
+</response>
+
+appropiateParamsTest3:
+<response>
+<serviceName>RegisterService</serviceName>
+<status>Ok</status>
+<result>
+<description>Service registered: http://localhost:8080/testSFservices/testSFservices/owl/owls/Addition.owl#AdditionProfile</description>
+<specification>
+<!-- <?xml version="1.0" encoding="WINDOWS-1252"?>
+<rdf:RDF  xmlns:owl       = "http://www.w3.org/2002/07/owl#"
+xmlns:rdfs      = "http://www.w3.org/2000/01/rdf-schema#"
+xmlns:rdf       = "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+xmlns:xsd       = "http://www.w3.org/2001/XMLSchema#"
+xmlns:service   = "http://www.daml.org/services/owl-s/1.1/Service.owl#"
+xmlns:process   = "http://www.daml.org/services/owl-s/1.1/Process.owl#"
+xmlns:profile    = "http://www.daml.org/services/owl-s/1.1/Profile.owl#"
+xmlns:grounding = "http://www.daml.org/services/owl-s/1.1/Grounding.owl#"
+xmlns:provider = "http://127.0.0.1/ontology/provider.owl#">
+<profile:Profile rdf:ID="http://localhost:8080/testSFservices/testSFservices/owl/owls/Addition.owl#AdditionProfile">
+	<profile:serviceName xml:lang="en">Addition@en</profile:serviceName>
+	<profile:textDescription xml:lang="en"></profile:textDescription>
+<profile:contactInformation>
+	<provider:Provider rdf:ID="AdditionAgent">
+		<provider:entityID rdf:datatype="^^xsd;string">AdditionAgent</provider:entityID>
+		<provider:entityType rdf:datatype="^^xsd;string">Agent</provider:entityType>
+		<provider:language rdf:datatype="^^xsd;string">FIPA-ACL</provider:language>
+		<provider:performative rdf:datatype="^^xsd;string">REQUEST</provider:performative>
+	</provider:Provider>
+</profile:contactInformation>
+	<profile:hasInput rdf:resource="http://localhost:8080/testSFservices/testSFservices/owl/owls/Addition.owl#x"/>
+	<profile:hasInput rdf:resource="http://localhost:8080/testSFservices/testSFservices/owl/owls/Addition.owl#y"/>
+	<profile:hasOutput rdf:resource="http://localhost:8080/testSFservices/testSFservices/owl/owls/Addition.owl#Result"/>
+</profile:Profile>
+	<process:Input rdf:ID="http://localhost:8080/testSFservices/testSFservices/owl/owls/Addition.owl#x">
+		<process:parameterType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.w3.org/2001/XMLSchema#double</process:parameterType>
+	</process:Input>
+	<process:Input rdf:ID="http://localhost:8080/testSFservices/testSFservices/owl/owls/Addition.owl#y">
+		<process:parameterType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.w3.org/2001/XMLSchema#double</process:parameterType>
+	</process:Input>
+	<process:Output rdf:ID="http://localhost:8080/testSFservices/testSFservices/owl/owls/Addition.owl#Result">
+		<process:parameterType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.w3.org/2001/XMLSchema#double</process:parameterType>
+	</process:Output>
+</rdf:RDF> -->
+</specification>
+</result>
+</response>
+
+appropiateParamsTest4:
+<response>
+<serviceName>RegisterService</serviceName>
+<status>Ok</status>
+<result>
+<description>Service registered: http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl#SquareProfile</description>
+<specification>
+<!-- <?xml version="1.0" encoding="WINDOWS-1252"?>
+<rdf:RDF  xmlns:owl       = "http://www.w3.org/2002/07/owl#"
+xmlns:rdfs      = "http://www.w3.org/2000/01/rdf-schema#"
+xmlns:rdf       = "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+xmlns:xsd       = "http://www.w3.org/2001/XMLSchema#"
+xmlns:service   = "http://www.daml.org/services/owl-s/1.1/Service.owl#"
+xmlns:process   = "http://www.daml.org/services/owl-s/1.1/Process.owl#"
+xmlns:profile    = "http://www.daml.org/services/owl-s/1.1/Profile.owl#"
+xmlns:grounding = "http://www.daml.org/services/owl-s/1.1/Grounding.owl#"
+xmlns:provider = "http://127.0.0.1/ontology/provider.owl#">
+<profile:Profile rdf:ID="http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl#SquareProfile">
+	<profile:serviceName xml:lang="en">Square@en</profile:serviceName>
+	<profile:textDescription xml:lang="en"></profile:textDescription>
+	<profile:hasInput rdf:resource="http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl#x"/>
+	<profile:hasOutput rdf:resource="http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl#Result"/>
+</profile:Profile>
+	<process:Input rdf:ID="http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl#x">
+		<process:parameterType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.w3.org/2001/XMLSchema#double</process:parameterType>
+	</process:Input>
+	<process:Output rdf:ID="http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl#Result">
+		<process:parameterType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.w3.org/2001/XMLSchema#double</process:parameterType>
+	</process:Output>
+<grounding:WsdlGrounding rdf:ID="SquareGrounding">
+	<service:supportedBy rdf:resource="#http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl#SquareService"/> 
+	<grounding:hasAtomicProcessGrounding>
+	<grounding:WsdlAtomicProcessGrounding rdf:ID="SquareWsdlAtomicProcessGrounding"/>	</grounding:hasAtomicProcessGrounding>
+</grounding:WsdlGrounding>
+<grounding:WsdlAtomicProcessGrounding rdf:about="#SquareWsdlAtomicProcessGrounding">
+	<grounding:wsdlDocument rdf:datatype="http://www.w3.org/2001/XMLSchemaanyURI"
+>http://localhost:8080/testSFservices/services/Square?wsdl</grounding:wsdlDocument>
+	<grounding:owlsProcess rdf:resource="http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl#SquareProcess"/>
+	<grounding:wsdlInputMessage rdf:datatype="http://www.w3.org/2001/XMLSchemaanyURI">http://localhost:8080/testSFservices/services/SquareMessage</grounding:wsdlInputMessage>
+	<grounding:wsdlOutputMessage rdf:datatype="http://www.w3.org/2001/XMLSchemaanyURI">http://localhost:8080/testSFservices/services/SquareResponse</grounding:wsdlOutputMessage>
+	<grounding:wsdlOperation>
+	<grounding:WsdlOperationRef>
+	<grounding:operation rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://localhost:8080/testSFservices/services/Square</grounding:operation>
+	<grounding:portType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://localhost:8080/testSFservices/services/SquareOperationsPortType</grounding:portType>
+	</grounding:WsdlOperationRef>
+	</grounding:wsdlOperation>
+</grounding:WsdlAtomicProcessGrounding>
+</rdf:RDF> -->
+</specification>
+</result>
+</response>
+
+appropiateParamsTest5:
+<response>
+<serviceName>RegisterService</serviceName>
+<status>Ok</status>
+<result>
+<description>Service registered: http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#DivisionProfile</description>
+<specification>
+<!-- <?xml version="1.0" encoding="WINDOWS-1252"?>
+<rdf:RDF  xmlns:owl       = "http://www.w3.org/2002/07/owl#"
+xmlns:rdfs      = "http://www.w3.org/2000/01/rdf-schema#"
+xmlns:rdf       = "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+xmlns:xsd       = "http://www.w3.org/2001/XMLSchema#"
+xmlns:service   = "http://www.daml.org/services/owl-s/1.1/Service.owl#"
+xmlns:process   = "http://www.daml.org/services/owl-s/1.1/Process.owl#"
+xmlns:profile    = "http://www.daml.org/services/owl-s/1.1/Profile.owl#"
+xmlns:grounding = "http://www.daml.org/services/owl-s/1.1/Grounding.owl#"
+xmlns:provider = "http://127.0.0.1/ontology/provider.owl#">
+<profile:Profile rdf:ID="http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#DivisionProfile">
+	<profile:serviceName xml:lang="en">Division@en</profile:serviceName>
+	<profile:textDescription xml:lang="en"></profile:textDescription>
+	<profile:hasInput rdf:resource="http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#x"/>
+	<profile:hasInput rdf:resource="http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#y"/>
+	<profile:hasOutput rdf:resource="http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#Result"/>
+</profile:Profile>
+	<process:Input rdf:ID="http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#x">
+		<process:parameterType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.w3.org/2001/XMLSchema#double</process:parameterType>
+	</process:Input>
+	<process:Input rdf:ID="http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#y">
+		<process:parameterType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.w3.org/2001/XMLSchema#double</process:parameterType>
+	</process:Input>
+	<process:Output rdf:ID="http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#Result">
+		<process:parameterType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.w3.org/2001/XMLSchema#double</process:parameterType>
+	</process:Output>
+</rdf:RDF> -->
+</specification>
+</result>
+</response>
+
+appropiateParamsTest6:
+<response>
+<serviceName>RegisterService</serviceName>
+<status>Ok</status>
+<result>
+<description>Service registered: http://localhost:8080/testSFservices/testSFservices/owl/owls/Even.owl#EvenProfile</description>
+<specification>
+<!-- <?xml version="1.0" encoding="WINDOWS-1252"?>
+<rdf:RDF  xmlns:owl       = "http://www.w3.org/2002/07/owl#"
+xmlns:rdfs      = "http://www.w3.org/2000/01/rdf-schema#"
+xmlns:rdf       = "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+xmlns:xsd       = "http://www.w3.org/2001/XMLSchema#"
+xmlns:service   = "http://www.daml.org/services/owl-s/1.1/Service.owl#"
+xmlns:process   = "http://www.daml.org/services/owl-s/1.1/Process.owl#"
+xmlns:profile    = "http://www.daml.org/services/owl-s/1.1/Profile.owl#"
+xmlns:grounding = "http://www.daml.org/services/owl-s/1.1/Grounding.owl#"
+xmlns:provider = "http://127.0.0.1/ontology/provider.owl#">
+<profile:Profile rdf:ID="http://localhost:8080/testSFservices/testSFservices/owl/owls/Even.owl#EvenProfile">
+	<profile:serviceName xml:lang="en">Even@en</profile:serviceName>
+	<profile:textDescription xml:lang="en"></profile:textDescription>
+<profile:contactInformation>
+	<provider:Provider rdf:ID="EvenOrg">
+		<provider:entityID rdf:datatype="^^xsd;string">EvenOrg</provider:entityID>
+		<provider:entityType rdf:datatype="^^xsd;string">Organization</provider:entityType>
+		<provider:language rdf:datatype="^^xsd;string">FIPA-ACL</provider:language>
+		<provider:performative rdf:datatype="^^xsd;string">REQUEST</provider:performative>
+	</provider:Provider>
+</profile:contactInformation>
+	<profile:hasInput rdf:resource="http://localhost:8080/testSFservices/testSFservices/owl/owls/Even.owl#x"/>
+	<profile:hasOutput rdf:resource="http://localhost:8080/testSFservices/testSFservices/owl/owls/Even.owl#Result"/>
+</profile:Profile>
+	<process:Input rdf:ID="http://localhost:8080/testSFservices/testSFservices/owl/owls/Even.owl#x">
+		<process:parameterType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.w3.org/2001/XMLSchema#double</process:parameterType>
+	</process:Input>
+	<process:Output rdf:ID="http://localhost:8080/testSFservices/testSFservices/owl/owls/Even.owl#Result">
+		<process:parameterType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.w3.org/2001/XMLSchema#boolean</process:parameterType>
+	</process:Output>
+</rdf:RDF> -->
+</specification>
+</result>
+</response>
+
+appropiateParamsTest7:
+<response>
+<serviceName>RegisterService</serviceName>
+<status>Ok</status>
+<result>
+<description>Service registered: http://localhost:8080/testSFservices/testSFservices/owl/owls/Sign.owl#SignProfile</description>
+<specification>
+<!-- <?xml version="1.0" encoding="WINDOWS-1252"?>
+<rdf:RDF  xmlns:owl       = "http://www.w3.org/2002/07/owl#"
+xmlns:rdfs      = "http://www.w3.org/2000/01/rdf-schema#"
+xmlns:rdf       = "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+xmlns:xsd       = "http://www.w3.org/2001/XMLSchema#"
+xmlns:service   = "http://www.daml.org/services/owl-s/1.1/Service.owl#"
+xmlns:process   = "http://www.daml.org/services/owl-s/1.1/Process.owl#"
+xmlns:profile    = "http://www.daml.org/services/owl-s/1.1/Profile.owl#"
+xmlns:grounding = "http://www.daml.org/services/owl-s/1.1/Grounding.owl#"
+xmlns:provider = "http://127.0.0.1/ontology/provider.owl#">
+<profile:Profile rdf:ID="http://localhost:8080/testSFservices/testSFservices/owl/owls/Sign.owl#SignProfile">
+	<profile:serviceName xml:lang="en">Sign@en</profile:serviceName>
+	<profile:textDescription xml:lang="en"></profile:textDescription>
+<profile:contactInformation>
+	<provider:Provider rdf:ID="SignAgent">
+		<provider:entityID rdf:datatype="^^xsd;string">SignAgent</provider:entityID>
+		<provider:entityType rdf:datatype="^^xsd;string">Agent</provider:entityType>
+		<provider:language rdf:datatype="^^xsd;string">FIPA-ACL</provider:language>
+		<provider:performative rdf:datatype="^^xsd;string">REQUEST</provider:performative>
+	</provider:Provider>
+</profile:contactInformation>
+	<profile:hasInput rdf:resource="http://localhost:8080/testSFservices/testSFservices/owl/owls/Sign.owl#x"/>
+	<profile:hasOutput rdf:resource="http://localhost:8080/testSFservices/testSFservices/owl/owls/Sign.owl#Result"/>
+</profile:Profile>
+	<process:Input rdf:ID="http://localhost:8080/testSFservices/testSFservices/owl/owls/Sign.owl#x">
+		<process:parameterType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.w3.org/2001/XMLSchema#double</process:parameterType>
+	</process:Input>
+	<process:Output rdf:ID="http://localhost:8080/testSFservices/testSFservices/owl/owls/Sign.owl#Result">
+		<process:parameterType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.w3.org/2001/XMLSchema#string</process:parameterType>
+	</process:Output>
+</rdf:RDF> -->
+</specification>
+</result>
+</response>
+
+appropiateParamsTest8:
+<response>
+<serviceName>RegisterService</serviceName>
+<status>Error</status>
+<result>
+<description>ERROR: All information already registered in service profile: http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#ProductProfile</description>
+<specification>
+<!-- <?xml version="1.0" encoding="WINDOWS-1252"?>
+<rdf:RDF  xmlns:owl       = "http://www.w3.org/2002/07/owl#"
+xmlns:rdfs      = "http://www.w3.org/2000/01/rdf-schema#"
+xmlns:rdf       = "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+xmlns:xsd       = "http://www.w3.org/2001/XMLSchema#"
+xmlns:service   = "http://www.daml.org/services/owl-s/1.1/Service.owl#"
+xmlns:process   = "http://www.daml.org/services/owl-s/1.1/Process.owl#"
+xmlns:profile    = "http://www.daml.org/services/owl-s/1.1/Profile.owl#"
+xmlns:grounding = "http://www.daml.org/services/owl-s/1.1/Grounding.owl#"
+xmlns:provider = "http://127.0.0.1/ontology/provider.owl#">
+<profile:Profile rdf:ID="http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#ProductProfile">
+	<profile:serviceName xml:lang="en">Product@en</profile:serviceName>
+	<profile:textDescription xml:lang="en"></profile:textDescription>
+<profile:contactInformation>
+	<provider:Provider rdf:ID="ProductAgent">
+		<provider:entityID rdf:datatype="^^xsd;string">ProductAgent</provider:entityID>
+		<provider:entityType rdf:datatype="^^xsd;string">Agent</provider:entityType>
+		<provider:language rdf:datatype="^^xsd;string">FIPA-ACL</provider:language>
+		<provider:performative rdf:datatype="^^xsd;string">REQUEST</provider:performative>
+	</provider:Provider>
+</profile:contactInformation>
+	<profile:hasInput rdf:resource="http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#x"/>
+	<profile:hasInput rdf:resource="http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#y"/>
+	<profile:hasOutput rdf:resource="http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#Result"/>
+</profile:Profile>
+	<process:Input rdf:ID="http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#x">
+		<process:parameterType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.w3.org/2001/XMLSchema#double</process:parameterType>
+	</process:Input>
+	<process:Input rdf:ID="http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#y">
+		<process:parameterType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.w3.org/2001/XMLSchema#double</process:parameterType>
+	</process:Input>
+	<process:Output rdf:ID="http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#Result">
+		<process:parameterType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.w3.org/2001/XMLSchema#double</process:parameterType>
+	</process:Output>
+</rdf:RDF> -->
+</specification>
+</result>
+</response>
+<response>
+<serviceName>RegisterService</serviceName>
+<status>Error</status>
+<result>
+<description>ERROR: All information already registered in service profile: http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#DivisionProfile</description>
+<specification>
+<!-- <?xml version="1.0" encoding="WINDOWS-1252"?>
+<rdf:RDF  xmlns:owl       = "http://www.w3.org/2002/07/owl#"
+xmlns:rdfs      = "http://www.w3.org/2000/01/rdf-schema#"
+xmlns:rdf       = "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+xmlns:xsd       = "http://www.w3.org/2001/XMLSchema#"
+xmlns:service   = "http://www.daml.org/services/owl-s/1.1/Service.owl#"
+xmlns:process   = "http://www.daml.org/services/owl-s/1.1/Process.owl#"
+xmlns:profile    = "http://www.daml.org/services/owl-s/1.1/Profile.owl#"
+xmlns:grounding = "http://www.daml.org/services/owl-s/1.1/Grounding.owl#"
+xmlns:provider = "http://127.0.0.1/ontology/provider.owl#">
+<profile:Profile rdf:ID="http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#DivisionProfile">
+	<profile:serviceName xml:lang="en">Division@en</profile:serviceName>
+	<profile:textDescription xml:lang="en"></profile:textDescription>
+	<profile:hasInput rdf:resource="http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#x"/>
+	<profile:hasInput rdf:resource="http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#y"/>
+	<profile:hasOutput rdf:resource="http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#Result"/>
+</profile:Profile>
+	<process:Input rdf:ID="http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#x">
+		<process:parameterType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.w3.org/2001/XMLSchema#double</process:parameterType>
+	</process:Input>
+	<process:Input rdf:ID="http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#y">
+		<process:parameterType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.w3.org/2001/XMLSchema#double</process:parameterType>
+	</process:Input>
+	<process:Output rdf:ID="http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#Result">
+		<process:parameterType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.w3.org/2001/XMLSchema#double</process:parameterType>
+	</process:Output>
+</rdf:RDF> -->
+</specification>
+</result>
+</response>
+
+appropiateParamsTest9:
+<response>
+<serviceName>RegisterService</serviceName>
+<status>Ok</status>
+<result>
+<description>0 groundings and 1 providers registered to service profile: http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl#SquareProfile</description>
+<specification>
+<!-- <?xml version="1.0" encoding="WINDOWS-1252"?>
+<rdf:RDF  xmlns:owl       = "http://www.w3.org/2002/07/owl#"
+xmlns:rdfs      = "http://www.w3.org/2000/01/rdf-schema#"
+xmlns:rdf       = "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+xmlns:xsd       = "http://www.w3.org/2001/XMLSchema#"
+xmlns:service   = "http://www.daml.org/services/owl-s/1.1/Service.owl#"
+xmlns:process   = "http://www.daml.org/services/owl-s/1.1/Process.owl#"
+xmlns:profile    = "http://www.daml.org/services/owl-s/1.1/Profile.owl#"
+xmlns:grounding = "http://www.daml.org/services/owl-s/1.1/Grounding.owl#"
+xmlns:provider = "http://127.0.0.1/ontology/provider.owl#">
+<profile:Profile rdf:ID="http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl#SquareProfile">
+	<profile:serviceName xml:lang="en">Square@en</profile:serviceName>
+	<profile:textDescription xml:lang="en"></profile:textDescription>
+<profile:contactInformation>
+	<provider:Provider rdf:ID="SquareAgent">
+		<provider:entityID rdf:datatype="^^xsd;string">SquareAgent</provider:entityID>
+		<provider:entityType rdf:datatype="^^xsd;string">Agent</provider:entityType>
+		<provider:language rdf:datatype="^^xsd;string">FIPA-ACL</provider:language>
+		<provider:performative rdf:datatype="^^xsd;string">REQUEST</provider:performative>
+	</provider:Provider>
+</profile:contactInformation>
+	<profile:hasInput rdf:resource="http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl#x"/>
+	<profile:hasOutput rdf:resource="http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl#Result"/>
+</profile:Profile>
+	<process:Input rdf:ID="http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl#x">
+		<process:parameterType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.w3.org/2001/XMLSchema#double</process:parameterType>
+	</process:Input>
+	<process:Output rdf:ID="http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl#Result">
+		<process:parameterType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.w3.org/2001/XMLSchema#double</process:parameterType>
+	</process:Output>
+<grounding:WsdlGrounding rdf:ID="SquareGrounding">
+	<service:supportedBy rdf:resource="#http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl#SquareService"/> 
+	<grounding:hasAtomicProcessGrounding>
+	<grounding:WsdlAtomicProcessGrounding rdf:ID="SquareWsdlAtomicProcessGrounding"/>	</grounding:hasAtomicProcessGrounding>
+</grounding:WsdlGrounding>
+<grounding:WsdlAtomicProcessGrounding rdf:about="#SquareWsdlAtomicProcessGrounding">
+	<grounding:wsdlDocument rdf:datatype="http://www.w3.org/2001/XMLSchemaanyURI"
+>http://localhost:8080/testSFservices/services/Square?wsdl</grounding:wsdlDocument>
+	<grounding:owlsProcess rdf:resource="http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl#SquareProcess"/>
+	<grounding:wsdlInputMessage rdf:datatype="http://www.w3.org/2001/XMLSchemaanyURI">http://localhost:8080/testSFservices/services/SquareMessage</grounding:wsdlInputMessage>
+	<grounding:wsdlOutputMessage rdf:datatype="http://www.w3.org/2001/XMLSchemaanyURI">http://localhost:8080/testSFservices/services/SquareResponse</grounding:wsdlOutputMessage>
+	<grounding:wsdlOperation>
+	<grounding:WsdlOperationRef>
+	<grounding:operation rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://localhost:8080/testSFservices/services/Square</grounding:operation>
+	<grounding:portType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://localhost:8080/testSFservices/services/SquareOperationsPortType</grounding:portType>
+	</grounding:WsdlOperationRef>
+	</grounding:wsdlOperation>
+</grounding:WsdlAtomicProcessGrounding>
+</rdf:RDF> -->
+</specification>
+</result>
+</response>
+
+appropiateParamsTest10:
+<response>
+<serviceName>RegisterService</serviceName>
+<status>Ok</status>
+<result>
+<description>1 groundings and 0 providers registered to service profile: http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#ProductProfile</description>
+<specification>
+<!-- <?xml version="1.0" encoding="WINDOWS-1252"?>
+<rdf:RDF  xmlns:owl       = "http://www.w3.org/2002/07/owl#"
+xmlns:rdfs      = "http://www.w3.org/2000/01/rdf-schema#"
+xmlns:rdf       = "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+xmlns:xsd       = "http://www.w3.org/2001/XMLSchema#"
+xmlns:service   = "http://www.daml.org/services/owl-s/1.1/Service.owl#"
+xmlns:process   = "http://www.daml.org/services/owl-s/1.1/Process.owl#"
+xmlns:profile    = "http://www.daml.org/services/owl-s/1.1/Profile.owl#"
+xmlns:grounding = "http://www.daml.org/services/owl-s/1.1/Grounding.owl#"
+xmlns:provider = "http://127.0.0.1/ontology/provider.owl#">
+<profile:Profile rdf:ID="http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#ProductProfile">
+	<profile:serviceName xml:lang="en">Product@en</profile:serviceName>
+	<profile:textDescription xml:lang="en"></profile:textDescription>
+<profile:contactInformation>
+	<provider:Provider rdf:ID="ProductAgent">
+		<provider:entityID rdf:datatype="^^xsd;string">ProductAgent</provider:entityID>
+		<provider:entityType rdf:datatype="^^xsd;string">Agent</provider:entityType>
+		<provider:language rdf:datatype="^^xsd;string">FIPA-ACL</provider:language>
+		<provider:performative rdf:datatype="^^xsd;string">REQUEST</provider:performative>
+	</provider:Provider>
+</profile:contactInformation>
+	<profile:hasInput rdf:resource="http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#x"/>
+	<profile:hasInput rdf:resource="http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#y"/>
+	<profile:hasOutput rdf:resource="http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#Result"/>
+</profile:Profile>
+	<process:Input rdf:ID="http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#x">
+		<process:parameterType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.w3.org/2001/XMLSchema#double</process:parameterType>
+	</process:Input>
+	<process:Input rdf:ID="http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#y">
+		<process:parameterType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.w3.org/2001/XMLSchema#double</process:parameterType>
+	</process:Input>
+	<process:Output rdf:ID="http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#Result">
+		<process:parameterType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.w3.org/2001/XMLSchema#double</process:parameterType>
+	</process:Output>
+<grounding:WsdlGrounding rdf:ID="ProductGrounding">
+	<service:supportedBy rdf:resource="#http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#ProductService"/> 
+	<grounding:hasAtomicProcessGrounding>
+	<grounding:WsdlAtomicProcessGrounding rdf:ID="ProductWsdlAtomicProcessGrounding"/>	</grounding:hasAtomicProcessGrounding>
+</grounding:WsdlGrounding>
+<grounding:WsdlAtomicProcessGrounding rdf:about="#ProductWsdlAtomicProcessGrounding">
+	<grounding:wsdlDocument rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI"
+>http://localhost:8080/testSFservices/services/Product?wsdl</grounding:wsdlDocument>
+	<grounding:owlsProcess rdf:resource="http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#ProductProcess"/>
+	<grounding:wsdlInputMessage rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://localhost:8080/testSFservices/services/ProductMessage</grounding:wsdlInputMessage>
+	<grounding:wsdlOutputMessage rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://localhost:8080/testSFservices/services/ProductResponse</grounding:wsdlOutputMessage>
+	<grounding:wsdlOperation>
+	<grounding:WsdlOperationRef>
+	<grounding:operation rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://localhost:8080/testSFservices/services/Product</grounding:operation>
+	<grounding:portType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://localhost:8080/testSFservices/services/ProductOperationsPortType</grounding:portType>
+	</grounding:WsdlOperationRef>
+	</grounding:wsdlOperation>
+</grounding:WsdlAtomicProcessGrounding>
+</rdf:RDF> -->
+</specification>
+</result>
+</response>
+
+appropiateParamsTest11:
+<response>
+<serviceName>RegisterService</serviceName>
+<status>Ok</status>
+<result>
+<description>0 groundings and 2 providers registered to service profile: http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#DivisionProfile</description>
+<specification>
+<!-- <?xml version="1.0" encoding="WINDOWS-1252"?>
+<rdf:RDF  xmlns:owl       = "http://www.w3.org/2002/07/owl#"
+xmlns:rdfs      = "http://www.w3.org/2000/01/rdf-schema#"
+xmlns:rdf       = "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+xmlns:xsd       = "http://www.w3.org/2001/XMLSchema#"
+xmlns:service   = "http://www.daml.org/services/owl-s/1.1/Service.owl#"
+xmlns:process   = "http://www.daml.org/services/owl-s/1.1/Process.owl#"
+xmlns:profile    = "http://www.daml.org/services/owl-s/1.1/Profile.owl#"
+xmlns:grounding = "http://www.daml.org/services/owl-s/1.1/Grounding.owl#"
+xmlns:provider = "http://127.0.0.1/ontology/provider.owl#">
+<profile:Profile rdf:ID="http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#DivisionProfile">
+	<profile:serviceName xml:lang="en">Division@en</profile:serviceName>
+	<profile:textDescription xml:lang="en"></profile:textDescription>
+<profile:contactInformation>
+	<provider:Provider rdf:ID="DivisionOrg">
+		<provider:entityID rdf:datatype="^^xsd;string">DivisionOrg</provider:entityID>
+		<provider:entityType rdf:datatype="^^xsd;string">Organization</provider:entityType>
+		<provider:language rdf:datatype="^^xsd;string">FIPA-ACL</provider:language>
+		<provider:performative rdf:datatype="^^xsd;string">REQUEST</provider:performative>
+	</provider:Provider>
+</profile:contactInformation>
+<profile:contactInformation>
+	<provider:Provider rdf:ID="DivisionAgent">
+		<provider:entityID rdf:datatype="^^xsd;string">DivisionAgent</provider:entityID>
+		<provider:entityType rdf:datatype="^^xsd;string">Agent</provider:entityType>
+		<provider:language rdf:datatype="^^xsd;string">FIPA-ACL</provider:language>
+		<provider:performative rdf:datatype="^^xsd;string">REQUEST</provider:performative>
+	</provider:Provider>
+</profile:contactInformation>
+	<profile:hasInput rdf:resource="http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#x"/>
+	<profile:hasInput rdf:resource="http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#y"/>
+	<profile:hasOutput rdf:resource="http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#Result"/>
+</profile:Profile>
+	<process:Input rdf:ID="http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#x">
+		<process:parameterType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.w3.org/2001/XMLSchema#double</process:parameterType>
+	</process:Input>
+	<process:Input rdf:ID="http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#y">
+		<process:parameterType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.w3.org/2001/XMLSchema#double</process:parameterType>
+	</process:Input>
+	<process:Output rdf:ID="http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#Result">
+		<process:parameterType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.w3.org/2001/XMLSchema#double</process:parameterType>
+	</process:Output>
+</rdf:RDF> -->
+</specification>
+</result>
+</response>
+
+appropiateParamsTest12:
+<response>
+<serviceName>RegisterService</serviceName>
+<status>Ok</status>
+<result>
+<description>2 groundings and 0 providers registered to service profile: http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#DivisionProfile</description>
+<specification>
+<!-- <?xml version="1.0" encoding="WINDOWS-1252"?>
+<rdf:RDF  xmlns:owl       = "http://www.w3.org/2002/07/owl#"
+xmlns:rdfs      = "http://www.w3.org/2000/01/rdf-schema#"
+xmlns:rdf       = "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+xmlns:xsd       = "http://www.w3.org/2001/XMLSchema#"
+xmlns:service   = "http://www.daml.org/services/owl-s/1.1/Service.owl#"
+xmlns:process   = "http://www.daml.org/services/owl-s/1.1/Process.owl#"
+xmlns:profile    = "http://www.daml.org/services/owl-s/1.1/Profile.owl#"
+xmlns:grounding = "http://www.daml.org/services/owl-s/1.1/Grounding.owl#"
+xmlns:provider = "http://127.0.0.1/ontology/provider.owl#">
+<profile:Profile rdf:ID="http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#DivisionProfile">
+	<profile:serviceName xml:lang="en">Division@en</profile:serviceName>
+	<profile:textDescription xml:lang="en"></profile:textDescription>
+	<profile:hasInput rdf:resource="http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#x"/>
+	<profile:hasInput rdf:resource="http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#y"/>
+	<profile:hasOutput rdf:resource="http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#Result"/>
+</profile:Profile>
+	<process:Input rdf:ID="http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#x">
+		<process:parameterType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.w3.org/2001/XMLSchema#double</process:parameterType>
+	</process:Input>
+	<process:Input rdf:ID="http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#y">
+		<process:parameterType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.w3.org/2001/XMLSchema#double</process:parameterType>
+	</process:Input>
+	<process:Output rdf:ID="http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#Result">
+		<process:parameterType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://www.w3.org/2001/XMLSchema#double</process:parameterType>
+	</process:Output>
+<grounding:WsdlGrounding rdf:ID="DivisionGrounding2">
+	<service:supportedBy rdf:resource="#http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#DivisionService"/> 
+	<grounding:hasAtomicProcessGrounding>
+	<grounding:WsdlAtomicProcessGrounding rdf:ID="DivisionWsdlAtomicProcessGrounding2"/>	</grounding:hasAtomicProcessGrounding>
+</grounding:WsdlGrounding>
+<grounding:WsdlAtomicProcessGrounding rdf:about="#DivisionWsdlAtomicProcessGrounding2">
+	<grounding:wsdlDocument rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI"
+>http://localhost:8080/testSFservices/services/Division2?wsdl</grounding:wsdlDocument>
+	<grounding:owlsProcess rdf:resource="http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#DivisionProcess"/>
+	<grounding:wsdlInputMessage rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://localhost:8080/testSFservices/services/DivisionMessage</grounding:wsdlInputMessage>
+	<grounding:wsdlOutputMessage rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://localhost:8080/testSFservices/services/DivisionResponse</grounding:wsdlOutputMessage>
+	<grounding:wsdlOperation>
+	<grounding:WsdlOperationRef>
+	<grounding:operation rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://localhost:8080/testSFservices/services/Division</grounding:operation>
+	<grounding:portType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://localhost:8080/testSFservices/services/DivisionOperationsPortType</grounding:portType>
+	</grounding:WsdlOperationRef>
+	</grounding:wsdlOperation>
+</grounding:WsdlAtomicProcessGrounding>
+<grounding:WsdlGrounding rdf:ID="DivisionGrounding">
+	<service:supportedBy rdf:resource="#http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#DivisionService"/> 
+	<grounding:hasAtomicProcessGrounding>
+	<grounding:WsdlAtomicProcessGrounding rdf:ID="DivisionWsdlAtomicProcessGrounding"/>	</grounding:hasAtomicProcessGrounding>
+</grounding:WsdlGrounding>
+<grounding:WsdlAtomicProcessGrounding rdf:about="#DivisionWsdlAtomicProcessGrounding">
+	<grounding:wsdlDocument rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI"
+>http://localhost:8080/testSFservices/services/Division?wsdl</grounding:wsdlDocument>
+	<grounding:owlsProcess rdf:resource="http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#DivisionProcess"/>
+	<grounding:wsdlInputMessage rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://localhost:8080/testSFservices/services/DivisionMessage</grounding:wsdlInputMessage>
+	<grounding:wsdlOutputMessage rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://localhost:8080/testSFservices/services/DivisionResponse</grounding:wsdlOutputMessage>
+	<grounding:wsdlOperation>
+	<grounding:WsdlOperationRef>
+	<grounding:operation rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://localhost:8080/testSFservices/services/Division</grounding:operation>
+	<grounding:portType rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://localhost:8080/testSFservices/services/DivisionOperationsPortType</grounding:portType>
+	</grounding:WsdlOperationRef>
+	</grounding:wsdlOperation>
+</grounding:WsdlAtomicProcessGrounding>
+</rdf:RDF> -->
+</specification>
+</result>
+</response>

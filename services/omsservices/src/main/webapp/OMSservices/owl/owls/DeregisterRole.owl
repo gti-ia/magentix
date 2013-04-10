@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+
+<!DOCTYPE uridef [
+  <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#">
+  <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <!ENTITY owl "http://www.w3.org/2002/07/owl#">
+  <!ENTITY service "http://www.daml.org/services/owl-s/1.1/Service.owl#">
+  <!ENTITY profile "http://www.daml.org/services/owl-s/1.1/Profile.owl#">
+  <!ENTITY process "http://www.daml.org/services/owl-s/1.1/Process.owl#">
+  <!ENTITY grounding "http://www.daml.org/services/owl-s/1.1/Grounding.owl#">
+  <!ENTITY xsd "http://www.w3.org/2001/XMLSchema">
+  <!ENTITY mind "http://localhost:8080/omsservices/OMSservices/owl/owls/DeregisterRole.owl">
+  <!ENTITY dir "http://localhost:8080/omsservices/services/DeregisterRole?wsdl">
+]>
+
+
+<rdf:RDF xmlns:rdf="&rdf;" xmlns:rdfs="&rdfs;" xmlns:owl="&owl;" xmlns:xsd="&xsd;#" 
+   xmlns:service="&service;" xmlns:process="&process;" xmlns:profile="&profile;" xmlns:grounding="&grounding;"
+   xmlns:mind="&mind;#"      
+   xml:base="http://localhost:8080/omsservices/OMSservices/owl/owls/DeregisterRole.owl">
+
+
+<owl:Ontology>
+    <owl:imports rdf:resource="&service;"/>
+    <owl:imports rdf:resource="&profile;"/>
+    <owl:imports rdf:resource="&process;"/>
+    <owl:imports rdf:resource="&grounding;"/> 
+</owl:Ontology>
+
+<service:Service rdf:ID="DeregisterRoleService">
+        <service:presents rdf:resource="#DeregisterRoleProfile"/>
+        <service:describedBy rdf:resource="#DeregisterRoleProcess"/>
+	<service:supports rdf:resource="#DeregisterRoleGrounding"/>
+</service:Service>
+
+
+       
+
+<profile:Profile rdf:ID="DeregisterRoleProfile">
+    <service:isPresentedBy rdf:resource="#DeregisterRoleService"/>
+    <profile:serviceName xml:lang="en">DeregisterRole</profile:serviceName>
+
+
+
+    <profile:hasInput rdf:resource="#RoleID"/>
+    <profile:hasInput rdf:resource="#UnitID"/>
+    <profile:hasInput rdf:resource="#AgentID"/>
+    <profile:hasOutput rdf:resource="#Result"/>  
+
+</profile:Profile>
+
+<process:AtomicProcess rdf:ID="DeregisterRoleProcess">
+	<service:describes rdf:resource="#DeregisterRoleService"/>  	
+
+      <process:hasInput rdf:resource="#RoleID"/>
+     <process:hasInput rdf:resource="#UnitID"/>
+     <process:hasInput rdf:resource="#AgentID"/>
+	<process:hasOutput rdf:resource="#Result"/>
+</process:AtomicProcess>
+
+
+<process:Input rdf:ID="RoleID">
+     <rdfs:label>RoleID</rdfs:label>
+     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
+</process:Input>
+<process:Input rdf:ID="UnitID">
+     <rdfs:label>UnitID</rdfs:label>
+     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
+</process:Input>
+<process:Input rdf:ID="AgentID">
+     <rdfs:label>UnitID</rdfs:label>
+     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
+</process:Input>
+<process:Output rdf:ID="Result">
+    <rdfs:label>Result</rdfs:label>
+    <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
+</process:Output>  
+
+<grounding:WsdlGrounding rdf:ID="DeregisterRoleGrounding">
+	<service:supportedBy rdf:resource="#DeregisterRoleService"/>
+	<grounding:hasAtomicProcessGrounding rdf:resource="#DeregisterRoleWsdlAtomicProcessGrounding"/>
+</grounding:WsdlGrounding>
+
+<grounding:WsdlAtomicProcessGrounding rdf:ID="DeregisterRoleWsdlAtomicProcessGrounding">
+	<grounding:owlsProcess rdf:resource="#DeregisterRoleProcess"/>
+	<grounding:wsdlDocument rdf:datatype="&xsd;anyURI">http://localhost:8080/omsservices/services/DeregisterRole?wsdl</grounding:wsdlDocument>
+	<grounding:wsdlOperation>
+            <grounding:WsdlOperationRef>
+                <grounding:portType rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/DeregisterRoleOperationsPortType</grounding:portType>
+                <grounding:operation rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/DeregisterRole</grounding:operation>
+            </grounding:WsdlOperationRef>
+        </grounding:wsdlOperation>
+
+	<grounding:wsdlInputMessage rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/DeregisterRoleMessage</grounding:wsdlInputMessage>
+        <grounding:wsdlOutputMessage rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/DeregisterRoleResponse</grounding:wsdlOutputMessage>
+    
+	<grounding:wsdlInput>
+                  <grounding:WsdlInputMessageMap>
+                    <grounding:owlsParameter rdf:resource="#RoleID"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/DeregisterRole/RoleID</grounding:wsdlMessagePart>
+                  </grounding:WsdlInputMessageMap>
+        </grounding:wsdlInput>
+	<grounding:wsdlInput>
+                  <grounding:WsdlInputMessageMap>
+                    <grounding:owlsParameter rdf:resource="#UnitID"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/DeregisterRole/UnitID</grounding:wsdlMessagePart>
+                  </grounding:WsdlInputMessageMap>
+        </grounding:wsdlInput>
+	<grounding:wsdlInput>
+                  <grounding:WsdlInputMessageMap>
+                    <grounding:owlsParameter rdf:resource="#AgentID"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/DeregisterRole/AgentID</grounding:wsdlMessagePart>
+                  </grounding:WsdlInputMessageMap>
+        </grounding:wsdlInput>
+       <grounding:wsdlOutput>
+                  <grounding:WsdlOutputMessageMap>
+		    <grounding:owlsParameter rdf:resource="#Result"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/DeregisterRole/Result</grounding:wsdlMessagePart>
+                  </grounding:WsdlOutputMessageMap>
+        </grounding:wsdlOutput>
+
+</grounding:WsdlAtomicProcessGrounding>
+
+</rdf:RDF> 

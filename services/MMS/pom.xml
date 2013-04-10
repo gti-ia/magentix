@@ -1,0 +1,221 @@
+<project>
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>es.upv.dsic.gti-ia</groupId>
+	<artifactId>MMS</artifactId>
+	<packaging>war</packaging>
+	<version>1.0</version>
+	<name>Servicio Web Thomas</name>
+	<url>http://users.dsic.upv.es/grupos/ia/ia.html</url>
+	<!-- *********************************** -->
+	<!-- **** CONSTRUCCION DEL PROYECTO **** -->
+	<!-- *********************************** -->
+	<build>
+		<finalName>MMS</finalName>
+
+		<plugins>
+			<!-- Plugin que tiene como entrada un WSDL y genera un client o servidor 
+				del servicio web. -->
+			<!-- http://ws.apache.org/axis2/tools/1_2/maven-plugins/maven-wsdl2code-plugin.html -->
+			<plugin>
+				<groupId>org.apache.axis2</groupId>
+				<artifactId>axis2-wsdl2code-maven-plugin</artifactId>
+				<version>1.4</version>
+
+				<configuration>
+					<!-- Nombre del paquete para las funtes java generadas. -->
+					<packageName>
+						wtp
+					</packageName>
+					<!-- Localización del fichero WSDL. -->
+					<wsdlFile>
+						/home/joabelfa/workspace/java/workarea/MMS/src/main/resources/MMS.wsdl
+					</wsdlFile>
+					<!-- Data binding framework utilizado para generar las fuentes java. -->
+					<databindingName>adb</databindingName>
+					<!-- Si queremos crear las fuentes del lado del servidor. -->
+					<generateServerSide>true</generateServerSide>
+					<!-- Para creare el fichero "services.xml". -->
+					<generateServicesXml>true</generateServicesXml>
+					<!-- Mapa de namespace URI para los paquetes. -->
+					<namespaceURIs>
+						<namespaceURI>
+							<uri>http://wtp/</uri>
+							<packageName>wtp</packageName>
+						</namespaceURI>
+					</namespaceURIs>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.1</version>
+
+				<configuration>
+					<!-- Tareas que realizara el plugin al hacer mvn antrun:run, también 
+						podemos poner la tarea en alguna fase del ciclo de vida de maven, compie, 
+						package ... -->
+					<!-- http://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html -->
+					<tasks>
+						<!-- Copiamos al directorio de fuentes del proyecto omsservices, ya 
+							que estamos creando un servicio oms. -->
+						<copy todir="./src/main/java">
+							<!-- Copiamos las fuentes generadas con el plugin wsld2code. -->
+							<fileset dir="./target/generated-sources/axis2/wsdl2code/src/">
+								<include name="**/*" />
+								<!-- Siempre y cuando volvamos a crear el mismos servicio deberemos 
+									descomentar para que no nos vuelva a copiar la fuente Skeleton y podamos 
+									conservar la lógica del servicio. -->
+							<!-- <exclude name="**/MMSSkeleton.java" /> -->
+
+							</fileset>
+						</copy>
+						<!-- Debido a que aun no existe ningun arquetipo web services axis2 
+							deberemos crear la carpeta services/nombre_del_servico con el servicio y 
+							el fichero services.xml -->
+						<mkdir dir="./src/main/webapp/WEB-INF/services/MMS/META-INF/" />
+						<copy todir="./src/main/webapp/WEB-INF/services/MMS/META-INF/">
+							<fileset dir="./target/generated-sources/axis2/wsdl2code/resources/">
+								<include name="**/*" />
+							</fileset>
+						</copy>
+					</tasks>
+				</configuration>
+			</plugin>
+
+		</plugins>
+	</build>
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.1</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.axis2</groupId>
+			<artifactId>axis2-adb</artifactId>
+			<version>1.5.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>backport-util-concurrent</groupId>
+			<artifactId>backport-util-concurrent</artifactId>
+			<version>3.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.4</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>annogen</groupId>
+			<artifactId>annogen</artifactId>
+			<version>0.1.0</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.ws.commons</groupId>
+			<artifactId>XmlSchema</artifactId>
+			<version>1.1</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.axis2</groupId>
+			<artifactId>mex-impl</artifactId>
+			<version>1.3</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpcore</artifactId>
+			<version>4.0-alpha5</version>
+		</dependency>
+
+		<dependency>
+			<groupId>bouncycastle</groupId>
+			<artifactId>bcprov-jdk16</artifactId>
+			<version>140</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.axis2</groupId>
+			<artifactId>axis2-jaxws</artifactId>
+			<version>1.5.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache</groupId>
+			<artifactId>qpid-management-console-seguridad</artifactId>
+			<version>0.7</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache</groupId>
+			<artifactId>qpid-client-seguridad</artifactId>
+			<version>0.7</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache</groupId>
+			<artifactId>qpid-common-seguridad</artifactId>
+			<version>0.7</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.jms</groupId>
+			<artifactId>jms</artifactId>
+			<version>1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.mina</groupId>
+			<artifactId>mina-core</artifactId>
+			<version>1.0.0</version>
+			<scope>runtime</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.axis2</groupId>
+			<artifactId>axis2</artifactId>
+			<version>1.5.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.axis2</groupId>
+			<artifactId>mex</artifactId>
+			<version>1.5.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.rampart</groupId>
+			<artifactId>rampart-core</artifactId>
+			<version>1.5</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.rampart</groupId>
+			<artifactId>rampart-policy</artifactId>
+			<version>1.5</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.rampart</groupId>
+			<artifactId>rampart-trust</artifactId>
+			<version>1.5</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.ws.security</groupId>
+			<artifactId>wss4j</artifactId>
+			<version>1.5.8</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.axis2</groupId>
+			<artifactId>axis2-transport-local</artifactId>
+			<version>1.5.2</version>
+		</dependency>
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.6</version>
+		</dependency>
+	</dependencies>
+
+
+</project>

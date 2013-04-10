@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+
+<!DOCTYPE uridef [
+  <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#">
+  <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <!ENTITY owl "http://www.w3.org/2002/07/owl#">
+  <!ENTITY service "http://www.daml.org/services/owl-s/1.1/Service.owl#">
+  <!ENTITY profile "http://www.daml.org/services/owl-s/1.1/Profile.owl#">
+  <!ENTITY process "http://www.daml.org/services/owl-s/1.1/Process.owl#">
+  <!ENTITY grounding "http://www.daml.org/services/owl-s/1.1/Grounding.owl#">
+  <!ENTITY xsd "http://www.w3.org/2001/XMLSchema">
+  <!ENTITY mind "http://localhost:8080/omsservices/OMSservices/owl/owls/InformAgentRole.owl">
+  <!ENTITY dir "http://localhost:8080/omsservices/services/InformAgentRole?wsdl">
+]>
+
+
+<rdf:RDF xmlns:rdf="&rdf;" xmlns:rdfs="&rdfs;" xmlns:owl="&owl;" xmlns:xsd="&xsd;#" 
+   xmlns:service="&service;" xmlns:process="&process;" xmlns:profile="&profile;" xmlns:grounding="&grounding;"
+   xmlns:mind="&mind;#"      
+   xml:base="http://localhost:8080/omsservices/OMSservices/owl/owls/InformAgentRole.owl">
+
+
+<owl:Ontology>
+    <owl:imports rdf:resource="&service;"/>
+    <owl:imports rdf:resource="&profile;"/>
+    <owl:imports rdf:resource="&process;"/>
+    <owl:imports rdf:resource="&grounding;"/> 
+</owl:Ontology>
+
+<service:Service rdf:ID="InformAgentRoleService">
+        <service:presents rdf:resource="#InformAgentRoleProfile"/>
+        <service:describedBy rdf:resource="#InformAgentRoleProcess"/>
+	<service:supports rdf:resource="#InformAgentRoleGrounding"/>
+</service:Service>
+
+
+       
+
+<profile:Profile rdf:ID="InformAgentRoleProfile">
+    <service:isPresentedBy rdf:resource="#InformAgentRoleService"/>
+    <profile:serviceName xml:lang="en">InformAgentRole</profile:serviceName>
+
+
+
+    <profile:hasInput rdf:resource="#AgentID"/>
+    <profile:hasInput rdf:resource="#RequestedAgentID"/>
+    <profile:hasOutput rdf:resource="#Result"/>
+
+
+</profile:Profile>
+
+<process:AtomicProcess rdf:ID="InformAgentRoleProcess">
+	<service:describes rdf:resource="#InformAgentRoleService"/>  	
+
+	<process:hasInput rdf:resource="#AgentID"/>
+	<process:hasInput rdf:resource="#RequestedAgentID"/>
+	<process:hasOutput rdf:resource="#Result"/>
+
+
+	
+</process:AtomicProcess>
+
+
+<process:Input rdf:ID="AgentID">
+     <rdfs:label>AgentID</rdfs:label>
+     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
+</process:Input>
+
+<process:Input rdf:ID="RequestedAgentID">
+     <rdfs:label>RequestedAgentID</rdfs:label>
+     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
+</process:Input>
+
+
+<process:Output rdf:ID="Result">
+    <rdfs:label>Result</rdfs:label>
+    <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
+</process:Output>  
+  
+
+<grounding:WsdlGrounding rdf:ID="InformAgentRoleGrounding">
+	<service:supportedBy rdf:resource="#InformAgentRoleService"/>
+	<grounding:hasAtomicProcessGrounding rdf:resource="#InformAgentRoleWsdlAtomicProcessGrounding"/>
+</grounding:WsdlGrounding>
+
+<grounding:WsdlAtomicProcessGrounding rdf:ID="InformAgentRoleWsdlAtomicProcessGrounding">
+	<grounding:owlsProcess rdf:resource="#InformAgentRoleProcess"/>
+	<grounding:wsdlDocument rdf:datatype="&xsd;anyURI">http://localhost:8080/omsservices/services/InformAgentRole?wsdl</grounding:wsdlDocument>
+	<grounding:wsdlOperation>
+            <grounding:WsdlOperationRef>
+                <grounding:portType rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/InformAgentRoleOperationsPortType</grounding:portType>
+                <grounding:operation rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/InformAgentRole</grounding:operation>
+            </grounding:WsdlOperationRef>
+        </grounding:wsdlOperation>
+
+	<grounding:wsdlInputMessage rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/InformAgentRoleMessage</grounding:wsdlInputMessage>
+        <grounding:wsdlOutputMessage rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/InformAgentRoleResponse</grounding:wsdlOutputMessage>
+    
+	<grounding:wsdlInput>
+                  <grounding:WsdlInputMessageMap>
+                    <grounding:owlsParameter rdf:resource="#AgentID"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/InformAgentRole/AgentID</grounding:wsdlMessagePart>
+                  </grounding:WsdlInputMessageMap>
+        </grounding:wsdlInput>
+
+	<grounding:wsdlInput>
+                  <grounding:WsdlInputMessageMap>
+                    <grounding:owlsParameter rdf:resource="#RequestedAgentID"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/InformAgentRole/RequestedAgentID</grounding:wsdlMessagePart>
+                  </grounding:WsdlInputMessageMap>
+        </grounding:wsdlInput>
+
+       <grounding:wsdlOutput>
+                  <grounding:WsdlOutputMessageMap>
+		    <grounding:owlsParameter rdf:resource="#Result"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/InformAgentRole/Result</grounding:wsdlMessagePart>
+                  </grounding:WsdlOutputMessageMap>
+        </grounding:wsdlOutput>
+       
+
+</grounding:WsdlAtomicProcessGrounding>
+
+</rdf:RDF> 

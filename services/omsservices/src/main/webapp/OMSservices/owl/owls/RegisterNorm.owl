@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+
+<!DOCTYPE uridef [
+  <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#">
+  <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <!ENTITY owl "http://www.w3.org/2002/07/owl#">
+  <!ENTITY service "http://www.daml.org/services/owl-s/1.1/Service.owl#">
+  <!ENTITY profile "http://www.daml.org/services/owl-s/1.1/Profile.owl#">
+  <!ENTITY process "http://www.daml.org/services/owl-s/1.1/Process.owl#">
+  <!ENTITY grounding "http://www.daml.org/services/owl-s/1.1/Grounding.owl#">
+  <!ENTITY xsd "http://www.w3.org/2001/XMLSchema">
+  <!ENTITY mind "http://localhost:8080/omsservices/OMSservices/owl/owls/RegisterNorm.owl">
+  <!ENTITY dir "http://localhost:8080/omsservices/services/RegisterNorm?wsdl">
+]>
+
+
+<rdf:RDF xmlns:rdf="&rdf;" xmlns:rdfs="&rdfs;" xmlns:owl="&owl;" xmlns:xsd="&xsd;#" 
+   xmlns:service="&service;" xmlns:process="&process;" xmlns:profile="&profile;" xmlns:grounding="&grounding;"
+   xmlns:mind="&mind;#"      
+   xml:base="http://localhost:8080/omsservices/OMSservices/owl/owls/RegisterNorm.owl">
+
+
+<owl:Ontology>
+    <owl:imports rdf:resource="&service;"/>
+    <owl:imports rdf:resource="&profile;"/>
+    <owl:imports rdf:resource="&process;"/>
+    <owl:imports rdf:resource="&grounding;"/> 
+</owl:Ontology>
+
+<service:Service rdf:ID="RegisterNormService">
+        <service:presents rdf:resource="#RegisterNormProfile"/>
+        <service:describedBy rdf:resource="#RegisterNormProcess"/>
+	<service:supports rdf:resource="#RegisterNormGrounding"/>
+</service:Service>
+
+
+       
+
+<profile:Profile rdf:ID="RegisterNormProfile">
+    <service:isPresentedBy rdf:resource="#RegisterNormService"/>
+    <profile:serviceName xml:lang="en">RegisterNorm</profile:serviceName>
+
+
+    <profile:hasInput rdf:resource="#NormContent"/>  
+    <profile:hasInput rdf:resource="#AgentID"/> 
+    <profile:hasInput rdf:resource="#UnitID"/>
+    <profile:hasOutput rdf:resource="#Result"/>
+
+</profile:Profile>
+
+<process:AtomicProcess rdf:ID="RegisterNormProcess">
+	<service:describes rdf:resource="#RegisterNormService"/>  	
+    
+    <process:hasInput rdf:resource="#NormContent"/>
+    <process:hasInput rdf:resource="#AgentID"/> 
+    <process:hasInput rdf:resource="#UnitID"/>
+   		<process:hasOutput rdf:resource="#Result"/>
+
+</process:AtomicProcess>
+
+<process:Input rdf:ID="NormContent">
+     <rdfs:label>NormContent</rdfs:label>
+     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
+</process:Input>
+<process:Input rdf:ID="AgentID">
+     <rdfs:label>AgentID</rdfs:label>
+     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
+</process:Input>
+<process:Input rdf:ID="UnitID">
+     <rdfs:label>UnitID</rdfs:label>
+     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
+</process:Input>
+
+<process:Output rdf:ID="Result">
+    <rdfs:label>Result</rdfs:label>
+    <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#String</process:parameterType>
+</process:Output>  
+       
+
+<grounding:WsdlGrounding rdf:ID="RegisterNormGrounding">
+	<service:supportedBy rdf:resource="#RegisterNormService"/>
+	<grounding:hasAtomicProcessGrounding rdf:resource="#RegisterNormWsdlAtomicProcessGrounding"/>
+</grounding:WsdlGrounding>
+
+<grounding:WsdlAtomicProcessGrounding rdf:ID="RegisterNormWsdlAtomicProcessGrounding">
+	<grounding:owlsProcess rdf:resource="#RegisterNormProcess"/>
+	<grounding:wsdlDocument rdf:datatype="&xsd;anyURI">http://localhost:8080/omsservices/services/RegisterNorm?wsdl</grounding:wsdlDocument>
+	<grounding:wsdlOperation>
+            <grounding:WsdlOperationRef>
+                <grounding:portType rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/RegisterNormOperationsPortType</grounding:portType>
+                <grounding:operation rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/RegisterNorm</grounding:operation>
+            </grounding:WsdlOperationRef>
+        </grounding:wsdlOperation>
+
+	<grounding:wsdlInputMessage rdf:datatype="&xsd;anyURI">http://localhost:8080/omsservices/services/RegisterNormMessage</grounding:wsdlInputMessage>
+        <grounding:wsdlOutputMessage rdf:datatype="&xsd;anyURI">http://localhost:8080/omsservices/services/RegisterNormResponse</grounding:wsdlOutputMessage>
+    
+	<grounding:wsdlInput>
+                  <grounding:WsdlInputMessageMap>
+                    <grounding:owlsParameter rdf:resource="#NormContent"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/RegisterNorm/NormContent</grounding:wsdlMessagePart>
+                  </grounding:WsdlInputMessageMap>
+        </grounding:wsdlInput>
+	<grounding:wsdlInput>
+                  <grounding:WsdlInputMessageMap>
+                    <grounding:owlsParameter rdf:resource="#AgentID"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/RegisterNorm/AgentID</grounding:wsdlMessagePart>
+                  </grounding:WsdlInputMessageMap>
+        </grounding:wsdlInput>
+        
+        	<grounding:wsdlInput>
+                  <grounding:WsdlInputMessageMap>
+                    <grounding:owlsParameter rdf:resource="#UnitID"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/RegisterNorm/UnitID</grounding:wsdlMessagePart>
+                  </grounding:WsdlInputMessageMap>
+        </grounding:wsdlInput>
+        
+   
+       <grounding:wsdlOutput>
+                  <grounding:WsdlOutputMessageMap>
+		    <grounding:owlsParameter rdf:resource="#Result"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/RegisterNorm/Result</grounding:wsdlMessagePart>
+                  </grounding:WsdlOutputMessageMap>
+        </grounding:wsdlOutput>
+
+</grounding:WsdlAtomicProcessGrounding>
+
+</rdf:RDF> 

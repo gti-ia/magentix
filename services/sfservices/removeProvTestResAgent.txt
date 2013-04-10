@@ -1,0 +1,234 @@
+2012-02-21 13:21:45,930 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:188) - 
+        [QueryAgent]Sms to send: http://localhost:8080/sfservices/SFservices/owl/owls/RemoveProvider.owl ServiceProfile=dsic-upv-es ProviderID=AdditionAgent
+2012-02-21 13:21:45,932 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:189) - 
+        [QueryAgent]Sending... 
+2012-02-21 13:21:45,966 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:353) - 
+        TesterAgentRemove: OOH! SF Has agreed to excute the service!
+2012-02-21 13:21:46,718 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:368) - 
+        TesterAgentRemove:SF has informed me of the status of my request. They said : http://localhost:8080/sfservices/SFservices/owl/owls/RemoveProvider.owl={http://localhost:8080/sfservices/SFservices/owl/owls/RemoveProvider.owl#Result=<response>
+<serviceName>RemoveProvider</serviceName>
+<status>Error</status>
+<result>
+<description>ERROR: java.util.NoSuchElementException</description>
+</result>
+</response> }
+es.upv.dsic.gti_ia.organization.THOMASException: ERROR: java.util.NoSuchElementExceptionincorrectParamTest1:
+null
+2012-02-21 13:21:46,721 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:188) - 
+        [QueryAgent]Sms to send: http://localhost:8080/sfservices/SFservices/owl/owls/RemoveProvider.owl ServiceProfile=http://localhost/services/1.1/calculateSunriseTime.owls ProviderID=AdditionAgent
+2012-02-21 13:21:46,721 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:189) - 
+        [QueryAgent]Sending... 
+
+	at es.upv.dsic.gti_ia.organization.THOMASProxy.returnResult(THOMASProxy.java:219)
+	at es.upv.dsic.gti_ia.organization.THOMASProxy.sendInform(THOMASProxy.java:193)
+	at es.upv.dsic.gti_ia.organization.SFProxy.removeProvider(SFProxy.java:90)
+	at sfTest.TesterAgentRemove.incorrectParamTest1(TesterAgentRemove.java:63)
+	at sfTest.TesterAgentRemove.execute(TesterAgentRemove.java:20)
+	at es.upv.dsic.gti_ia.core.BaseAgent.run(BaseAgent.java:947)
+	at java.lang.Thread.run(Thread.java:636)
+2012-02-21 13:21:46,767 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:353) - 
+        TesterAgentRemove: OOH! SF Has agreed to excute the service!
+2012-02-21 13:21:46,778 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:368) - 
+        TesterAgentRemove:SF has informed me of the status of my request. They said : http://localhost:8080/sfservices/SFservices/owl/owls/RemoveProvider.owl={http://localhost:8080/sfservices/SFservices/owl/owls/RemoveProvider.owl#Result=<response>
+<serviceName>RemoveProvider</serviceName>
+<status>Error</status>
+<result>
+<description>ERROR: java.util.NoSuchElementException</description>
+</result>
+</response> }
+es.upv.dsic.gti_ia.organization.THOMASException: ERROR: java.util.NoSuchElementException
+	at es.upv.dsic.gti_ia.organization.THOMASProxy.returnResult(THOMASProxy.java:219)
+	at es.upv.dsic.gti_ia.organization.THOMASProxy.sendInform(THOMASProxy.java:193)
+	at es.upv.dsic.gti_ia.organization.SFProxy.removeProvider(SFProxy.java:90)
+	at sfTest.TesterAgentRemove.incorrectParamTest2(TesterAgentRemove.java:78)
+	at sfTest.TesterAgentRemove.execute(TesterAgentRemove.java:23)
+	at es.upv.dsic.gti_ia.core.BaseAgent.run(BaseAgent.java:947)
+	at java.lang.Thread.run(Thread.java:636)
+incorrectParamTest2:
+null
+2012-02-21 13:21:46,781 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:188) - 
+        [QueryAgent]Sms to send: http://localhost:8080/sfservices/SFservices/owl/owls/RemoveProvider.owl ServiceProfile=http://localhost/services/1.1/calculateSunriseTime.owls#CALCULATESUNRISETIME_PROFILE ProviderID=Provider
+2012-02-21 13:21:46,781 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:189) - 
+        [QueryAgent]Sending... 
+2012-02-21 13:21:46,821 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:353) - 
+        TesterAgentRemove: OOH! SF Has agreed to excute the service!
+2012-02-21 13:21:47,932 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:368) - 
+        TesterAgentRemove:SF has informed me of the status of my request. They said : http://localhost:8080/sfservices/SFservices/owl/owls/RemoveProvider.owl={http://localhost:8080/sfservices/SFservices/owl/owls/RemoveProvider.owl#Result=<response>
+<serviceName>RemoveProvider</serviceName>
+<status>Error</status>
+<result>
+<description>ERROR: Provider or grounding Provider not found</description>
+</result>
+</response> }
+es.upv.dsic.gti_ia.organization.THOMASException: ERROR: Provider or grounding Provider not found
+incorrectParamTest3:
+null
+2012-02-21 13:21:47,934 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:188) - 
+        [QueryAgent]Sms to send: http://localhost:8080/sfservices/SFservices/owl/owls/RemoveProvider.owl ServiceProfile=http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#ProductProfile ProviderID=http://localhost/services/Tests/Square.owl#SQUARE_GROUNDING
+2012-02-21 13:21:47,935 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:189) - 
+        [QueryAgent]Sending... 
+	at es.upv.dsic.gti_ia.organization.THOMASProxy.returnResult(THOMASProxy.java:219)
+	at es.upv.dsic.gti_ia.organization.THOMASProxy.sendInform(THOMASProxy.java:193)
+	at es.upv.dsic.gti_ia.organization.SFProxy.removeProvider(SFProxy.java:90)
+	at sfTest.TesterAgentRemove.incorrectParamTest3(TesterAgentRemove.java:93)
+	at sfTest.TesterAgentRemove.execute(TesterAgentRemove.java:26)
+	at es.upv.dsic.gti_ia.core.BaseAgent.run(BaseAgent.java:947)
+	at java.lang.Thread.run(Thread.java:636)
+2012-02-21 13:21:47,988 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:353) - 
+        TesterAgentRemove: OOH! SF Has agreed to excute the service!
+2012-02-21 13:21:48,285 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:368) - 
+        TesterAgentRemove:SF has informed me of the status of my request. They said : http://localhost:8080/sfservices/SFservices/owl/owls/RemoveProvider.owl={http://localhost:8080/sfservices/SFservices/owl/owls/RemoveProvider.owl#Result=<response>
+<serviceName>RemoveProvider</serviceName>
+<status>Error</status>
+<result>
+<description>ERROR: Provider or grounding http://localhost/services/Tests/Square.owl#SQUARE_GROUNDING not found</description>
+</result>
+</response> }
+es.upv.dsic.gti_ia.organization.THOMASException: ERROR: Provider or grounding http://localhost/services/Tests/Square.owl#SQUARE_GROUNDING not found
+	at es.upv.dsic.gti_ia.organization.THOMASProxy.returnResult(THOMASProxy.java:219)
+	at es.upv.dsic.gti_ia.organization.THOMASProxy.sendInform(THOMASProxy.java:193)
+	at es.upv.dsic.gti_ia.organization.SFProxy.removeProvider(SFProxy.java:90)
+	at sfTest.TesterAgentRemove.incorrectParamTest4(TesterAgentRemove.java:109)
+	at sfTest.TesterAgentRemove.execute(TesterAgentRemove.java:29)
+	at es.upv.dsic.gti_ia.core.BaseAgent.run(BaseAgent.java:947)
+	at java.lang.Thread.run(Thread.java:636)
+incorrectParamTest4:
+null
+2012-02-21 13:21:48,289 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:188) - 
+        [QueryAgent]Sms to send: http://localhost:8080/sfservices/SFservices/owl/owls/RemoveProvider.owl ServiceProfile=http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl#SquareProfile ProviderID=ProductAgent
+2012-02-21 13:21:48,289 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:189) - 
+        [QueryAgent]Sending... 
+2012-02-21 13:21:48,328 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:353) - 
+        TesterAgentRemove: OOH! SF Has agreed to excute the service!
+2012-02-21 13:21:48,553 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:368) - 
+        TesterAgentRemove:SF has informed me of the status of my request. They said : http://localhost:8080/sfservices/SFservices/owl/owls/RemoveProvider.owl={http://localhost:8080/sfservices/SFservices/owl/owls/RemoveProvider.owl#Result=<response>
+<serviceName>RemoveProvider</serviceName>
+<status>Error</status>
+<result>
+<description>ERROR: Provider or grounding ProductAgent not found</description>
+</result>
+</response> }
+es.upv.dsic.gti_ia.organization.THOMASException: ERROR: Provider or grounding ProductAgent not found
+	at es.upv.dsic.gti_ia.organization.THOMASProxy.returnResult(THOMASProxy.java:219)
+	at es.upv.dsic.gti_ia.organization.THOMASProxy.sendInform(THOMASProxy.java:193)
+	at es.upv.dsic.gti_ia.organization.SFProxy.removeProvider(SFProxy.java:90)
+	at sfTest.TesterAgentRemove.incorrectParamTest5(TesterAgentRemove.java:125)
+	at sfTest.TesterAgentRemove.execute(TesterAgentRemove.java:32)
+	at es.upv.dsic.gti_ia.core.BaseAgent.run(BaseAgent.java:947)
+	at java.lang.Thread.run(Thread.java:636)
+incorrectParamTest5:
+null
+2012-02-21 13:21:48,555 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:188) - 
+        [QueryAgent]Sms to send: http://localhost:8080/sfservices/SFservices/owl/owls/RemoveProvider.owl ServiceProfile=http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#ProductProfile ProviderID=ProductAgent
+2012-02-21 13:21:48,555 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:189) - 
+        [QueryAgent]Sending... 
+2012-02-21 13:21:48,607 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:353) - 
+        TesterAgentRemove: OOH! SF Has agreed to excute the service!
+2012-02-21 13:21:48,927 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:368) - 
+        TesterAgentRemove:SF has informed me of the status of my request. They said : http://localhost:8080/sfservices/SFservices/owl/owls/RemoveProvider.owl={http://localhost:8080/sfservices/SFservices/owl/owls/RemoveProvider.owl#Result=<response>
+<serviceName>RemoveProvider</serviceName>
+<status>Ok</status>
+<result>
+<description>Provider or grounding ProductAgent removed</description>
+</result>
+</response> }
+appropiateParamsTest1:
+Provider or grounding ProductAgent removed
+2012-02-21 13:21:48,930 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:188) - 
+        [QueryAgent]Sms to send: http://localhost:8080/sfservices/SFservices/owl/owls/RemoveProvider.owl ServiceProfile=http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl#SquareProfile ProviderID=SquareAgent
+2012-02-21 13:21:48,930 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:189) - 
+        [QueryAgent]Sending... 
+2012-02-21 13:21:48,969 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:353) - 
+        TesterAgentRemove: OOH! SF Has agreed to excute the service!
+2012-02-21 13:21:49,125 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:368) - 
+        TesterAgentRemove:SF has informed me of the status of my request. They said : http://localhost:8080/sfservices/SFservices/owl/owls/RemoveProvider.owl={http://localhost:8080/sfservices/SFservices/owl/owls/RemoveProvider.owl#Result=<response>
+<serviceName>RemoveProvider</serviceName>
+<status>Ok</status>
+<result>
+<description>Provider or grounding SquareAgent removed</description>
+</result>
+</response> }
+appropiateParamsTest2:
+Provider or grounding SquareAgent removed
+2012-02-21 13:21:49,127 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:188) - 
+        [QueryAgent]Sms to send: http://localhost:8080/sfservices/SFservices/owl/owls/RemoveProvider.owl ServiceProfile=http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#ProductProfile ProviderID=ProductAgent
+2012-02-21 13:21:49,127 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:189) - 
+        [QueryAgent]Sending... 
+2012-02-21 13:21:49,167 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:353) - 
+        TesterAgentRemove: OOH! SF Has agreed to excute the service!
+2012-02-21 13:21:49,320 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:368) - 
+        TesterAgentRemove:SF has informed me of the status of my request. They said : http://localhost:8080/sfservices/SFservices/owl/owls/RemoveProvider.owl={http://localhost:8080/sfservices/SFservices/owl/owls/RemoveProvider.owl#Result=<response>
+<serviceName>RemoveProvider</serviceName>
+<status>Error</status>
+<result>
+<description>ERROR: Provider or grounding ProductAgent not found</description>
+</result>
+</response> }
+es.upv.dsic.gti_ia.organization.THOMASException: ERROR: Provider or grounding ProductAgent not foundappropiateParamsTest3:
+null
+2012-02-21 13:21:49,322 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:188) - 
+        [QueryAgent]Sms to send: http://localhost:8080/sfservices/SFservices/owl/owls/RemoveProvider.owl ServiceProfile=http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl#SquareProfile ProviderID=http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl#SquareGrounding
+2012-02-21 13:21:49,323 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:189) - 
+        [QueryAgent]Sending... 
+
+	at es.upv.dsic.gti_ia.organization.THOMASProxy.returnResult(THOMASProxy.java:219)
+	at es.upv.dsic.gti_ia.organization.THOMASProxy.sendInform(THOMASProxy.java:193)
+	at es.upv.dsic.gti_ia.organization.SFProxy.removeProvider(SFProxy.java:90)
+	at sfTest.TesterAgentRemove.appropiateParamsTest3(TesterAgentRemove.java:177)
+	at sfTest.TesterAgentRemove.execute(TesterAgentRemove.java:41)
+	at es.upv.dsic.gti_ia.core.BaseAgent.run(BaseAgent.java:947)
+	at java.lang.Thread.run(Thread.java:636)
+2012-02-21 13:21:49,369 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:353) - 
+        TesterAgentRemove: OOH! SF Has agreed to excute the service!
+2012-02-21 13:21:49,993 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:368) - 
+        TesterAgentRemove:SF has informed me of the status of my request. They said : http://localhost:8080/sfservices/SFservices/owl/owls/RemoveProvider.owl={http://localhost:8080/sfservices/SFservices/owl/owls/RemoveProvider.owl#Result=<response>
+<serviceName>RemoveProvider</serviceName>
+<status>Ok</status>
+<result>
+<description>Provider or grounding http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl#SquareGrounding removed</description>
+</result>
+</response> }
+appropiateParamsTest4:
+Provider or grounding http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl#SquareGrounding removed
+2012-02-21 13:21:49,996 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:188) - 
+        [QueryAgent]Sms to send: http://localhost:8080/sfservices/SFservices/owl/owls/RemoveProvider.owl ServiceProfile=http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#ProductProfile ProviderID=http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#ProductGrounding
+2012-02-21 13:21:49,996 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:189) - 
+        [QueryAgent]Sending... 
+2012-02-21 13:21:50,037 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:353) - 
+        TesterAgentRemove: OOH! SF Has agreed to excute the service!
+2012-02-21 13:21:50,501 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:368) - 
+        TesterAgentRemove:SF has informed me of the status of my request. They said : http://localhost:8080/sfservices/SFservices/owl/owls/RemoveProvider.owl={http://localhost:8080/sfservices/SFservices/owl/owls/RemoveProvider.owl#Result=<response>
+<serviceName>RemoveProvider</serviceName>
+<status>Ok</status>
+<result>
+<description>Provider or grounding http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#ProductGrounding removed</description>
+</result>
+</response> }
+appropiateParamsTest5:
+Provider or grounding http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#ProductGrounding removed
+2012-02-21 13:21:50,503 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:188) - 
+        [QueryAgent]Sms to send: http://localhost:8080/sfservices/SFservices/owl/owls/RemoveProvider.owl ServiceProfile=http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl#SquareProfile ProviderID=http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl#SquareGrounding
+2012-02-21 13:21:50,504 INFO  [Thread-2] organization.THOMASProxy (THOMASProxy.java:189) - 
+        [QueryAgent]Sending... 
+2012-02-21 13:21:50,551 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:353) - 
+        TesterAgentRemove: OOH! SF Has agreed to excute the service!
+2012-02-21 13:21:50,641 INFO  [Thread-2] organization.THOMASProxy$THOMASQAgentRequest (THOMASProxy.java:368) - 
+        TesterAgentRemove:SF has informed me of the status of my request. They said : http://localhost:8080/sfservices/SFservices/owl/owls/RemoveProvider.owl={http://localhost:8080/sfservices/SFservices/owl/owls/RemoveProvider.owl#Result=<response>
+<serviceName>RemoveProvider</serviceName>
+<status>Error</status>
+<result>
+<description>ERROR: Provider or grounding http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl#SquareGrounding not found</description>
+</result>
+</response> }
+es.upv.dsic.gti_ia.organization.THOMASException: ERROR: Provider or grounding http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl#SquareGrounding not foundappropiateParamsTest6:
+null
+2012-02-21 13:21:50,643 INFO  [Thread-2] architecture.QueueAgent (QueueAgent.java:301) - 
+        Finish ,active roles do not exist
+
+	at es.upv.dsic.gti_ia.organization.THOMASProxy.returnResult(THOMASProxy.java:219)
+	at es.upv.dsic.gti_ia.organization.THOMASProxy.sendInform(THOMASProxy.java:193)
+	at es.upv.dsic.gti_ia.organization.SFProxy.removeProvider(SFProxy.java:90)
+	at sfTest.TesterAgentRemove.appropiateParamsTest6(TesterAgentRemove.java:231)
+	at sfTest.TesterAgentRemove.execute(TesterAgentRemove.java:50)
+	at es.upv.dsic.gti_ia.core.BaseAgent.run(BaseAgent.java:947)
+	at java.lang.Thread.run(Thread.java:636)

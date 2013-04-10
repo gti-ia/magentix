@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+
+<!DOCTYPE uridef [
+  <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#">
+  <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <!ENTITY owl "http://www.w3.org/2002/07/owl#">
+  <!ENTITY service "http://www.daml.org/services/owl-s/1.1/Service.owl#">
+  <!ENTITY profile "http://www.daml.org/services/owl-s/1.1/Profile.owl#">
+  <!ENTITY process "http://www.daml.org/services/owl-s/1.1/Process.owl#">
+  <!ENTITY grounding "http://www.daml.org/services/owl-s/1.1/Grounding.owl#">
+  <!ENTITY xsd "http://www.w3.org/2001/XMLSchema">
+  <!ENTITY mind "http://localhost:8080/omsservices/OMSservices/owl/owls/InformTargetNorms.owl">
+  <!ENTITY dir "http://localhost:8080/omsservices/services/InformTargetNorms?wsdl">
+]>
+
+
+<rdf:RDF xmlns:rdf="&rdf;" xmlns:rdfs="&rdfs;" xmlns:owl="&owl;" xmlns:xsd="&xsd;#" 
+   xmlns:service="&service;" xmlns:process="&process;" xmlns:profile="&profile;" xmlns:grounding="&grounding;"
+   xmlns:mind="&mind;#"      
+   xml:base="http://localhost:8080/omsservices/OMSservices/owl/owls/InformTargetNorms.owl">
+
+
+<owl:Ontology>
+    <owl:imports rdf:resource="&service;"/>
+    <owl:imports rdf:resource="&profile;"/>
+    <owl:imports rdf:resource="&process;"/>
+    <owl:imports rdf:resource="&grounding;"/> 
+</owl:Ontology>
+
+<service:Service rdf:ID="InformTargetNormsService">
+        <service:presents rdf:resource="#InformTargetNormsProfile"/>
+        <service:describedBy rdf:resource="#InformTargetNormsProcess"/>
+	<service:supports rdf:resource="#InformTargetNormsGrounding"/>
+</service:Service>
+
+
+       
+
+<profile:Profile rdf:ID="InformTargetNormsProfile">
+    <service:isPresentedBy rdf:resource="#InformTargetNormsService"/>
+    <profile:serviceName xml:lang="en">InformTargetNorms</profile:serviceName>
+
+
+
+    <profile:hasInput rdf:resource="#AgentID"/>
+    <profile:hasInput rdf:resource="#TargetTypeName"/>
+     <profile:hasInput rdf:resource="#TargetValueName"/>
+    <profile:hasInput rdf:resource="#UnitID"/>
+    <profile:hasOutput rdf:resource="#Result"/>
+  
+
+
+</profile:Profile>
+
+<process:AtomicProcess rdf:ID="InformTargetNormsProcess">
+	<service:describes rdf:resource="#InformTargetNormsService"/>  	
+
+    <profile:hasInput rdf:resource="#AgentID"/>
+    <profile:hasInput rdf:resource="#TargetTypeName"/>
+    <profile:hasInput rdf:resource="#TargetValueName"/>
+    <profile:hasInput rdf:resource="#UnitID"/>
+    <profile:hasOutput rdf:resource="#Result"/>
+
+	
+</process:AtomicProcess>
+
+
+<process:Input rdf:ID="AgentID">
+     <rdfs:label>AgentID</rdfs:label>
+     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
+</process:Input>
+<process:Input rdf:ID="TargetTypeName">
+     <rdfs:label>TargetTypeName</rdfs:label>
+     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
+</process:Input>
+<process:Input rdf:ID="TargetValueName">
+     <rdfs:label>TargetValueName</rdfs:label>
+     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
+</process:Input>
+<process:Input rdf:ID="UnitID">
+     <rdfs:label>UnitID</rdfs:label>
+     <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
+</process:Input>
+
+<process:Output rdf:ID="Result">
+    <rdfs:label>Result</rdfs:label>
+    <process:parameterType rdf:datatype="&xsd;#anyURI">&xsd;#string</process:parameterType>
+</process:Output>    
+     
+
+<grounding:WsdlGrounding rdf:ID="InformTargetNormsGrounding">
+	<service:supportedBy rdf:resource="#InformTargetNormsService"/>
+	<grounding:hasAtomicProcessGrounding rdf:resource="#InformTargetNormsWsdlAtomicProcessGrounding"/>
+</grounding:WsdlGrounding>
+
+<grounding:WsdlAtomicProcessGrounding rdf:ID="InformTargetNormsWsdlAtomicProcessGrounding">
+	<grounding:owlsProcess rdf:resource="#InformTargetNormsProcess"/>
+	<grounding:wsdlDocument rdf:datatype="&xsd;anyURI">http://localhost:8080/omsservices/services/InformTargetNorms?wsdl</grounding:wsdlDocument>
+	<grounding:wsdlOperation>
+            <grounding:WsdlOperationRef>
+                <grounding:portType rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/InformTargetNormsOperationsPortType</grounding:portType>
+                <grounding:operation rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/InformTargetNorms</grounding:operation>
+            </grounding:WsdlOperationRef>
+        </grounding:wsdlOperation>
+
+	<grounding:wsdlInputMessage rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/InformTargetNormsMessage</grounding:wsdlInputMessage>
+        <grounding:wsdlOutputMessage rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/InformTargetNormsResponse</grounding:wsdlOutputMessage>
+    
+	<grounding:wsdlInput>
+                  <grounding:WsdlInputMessageMap>
+                    <grounding:owlsParameter rdf:resource="#AgentID"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/InformTargetNorms/AgentID</grounding:wsdlMessagePart>
+                  </grounding:WsdlInputMessageMap>
+        </grounding:wsdlInput>
+        
+    <grounding:wsdlInput>
+                  <grounding:WsdlInputMessageMap>
+                    <grounding:owlsParameter rdf:resource="#TargetTypeName"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/InformTargetNorms/TargetTypeName</grounding:wsdlMessagePart>
+                  </grounding:WsdlInputMessageMap>
+        </grounding:wsdlInput>
+            <grounding:wsdlInput>
+                  <grounding:WsdlInputMessageMap>
+                    <grounding:owlsParameter rdf:resource="#TargetValueName"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/InformTargetNorms/TargetValueName</grounding:wsdlMessagePart>
+                  </grounding:WsdlInputMessageMap>
+        </grounding:wsdlInput>
+          <grounding:wsdlInput>
+                  <grounding:WsdlInputMessageMap>
+                    <grounding:owlsParameter rdf:resource="#UnitID"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/InformTargetNorms/UnitID</grounding:wsdlMessagePart>
+                  </grounding:WsdlInputMessageMap>
+        </grounding:wsdlInput>
+
+       <grounding:wsdlOutput>
+                  <grounding:WsdlOutputMessageMap>
+		    <grounding:owlsParameter rdf:resource="#Result"/>
+                    <grounding:wsdlMessagePart rdf:datatype="&xsd;#anyURI">http://localhost:8080/omsservices/services/InformTargetNorms/Result</grounding:wsdlMessagePart>
+                  </grounding:WsdlOutputMessageMap>
+        </grounding:wsdlOutput>
+
+</grounding:WsdlAtomicProcessGrounding>
+
+</rdf:RDF> 

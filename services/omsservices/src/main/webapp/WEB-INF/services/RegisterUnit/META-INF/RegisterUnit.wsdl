@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="RegisterUnit" targetNamespace="http://wtp" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://wtp" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://wtp">
+      <xsd:element name="RegisterUnit">
+        <xsd:complexType>
+          <xsd:sequence>
+             <xsd:element name="UnitID" type="xsd:string"/>
+             <xsd:element name="TypeID" type="xsd:string"/>
+             <xsd:element name="ParentUnitID" type="xsd:string"/>
+             <xsd:element name="AgentID" type="xsd:string"/>
+                        <xsd:element name="CreatorID" type="xsd:string" />
+                    </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="RegisterUnitResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+          	<xsd:element name="Result" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="RegisterUnitMessage">
+    <wsdl:part name="parameters" element="tns:RegisterUnit">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="RegisterUnitResponse">
+    <wsdl:part name="parameters" element="tns:RegisterUnitResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="RegisterUnitPortType">
+    <wsdl:operation name="RegisterUnit">
+      <wsdl:input message="tns:RegisterUnitMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:RegisterUnitResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="RegisterUnitSOAP" type="tns:RegisterUnitPortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="RegisterUnit">
+      <soap:operation soapAction="http://wtp"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="RegisterUnit">
+    <wsdl:port name="RegisterUnitSOAP" binding="tns:RegisterUnitSOAP">
+      <soap:address location="http://localhost:8080/OMS/services/RegisterUnit"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

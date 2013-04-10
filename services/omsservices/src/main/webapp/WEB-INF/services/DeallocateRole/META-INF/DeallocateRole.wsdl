@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="DeallocateRole" targetNamespace="http://wtp" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://wtp" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://wtp">
+      <xsd:element name="DeallocateRole">
+        <xsd:complexType>
+          <xsd:sequence>
+          	 <xsd:element name="RoleID" type="xsd:string"/>
+             <xsd:element name="UnitID" type="xsd:string"/>
+             <xsd:element name="TargetAgentID" type="xsd:string"/>
+             <xsd:element name="AgentID" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="DeallocateRoleResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+          	<xsd:element name="Result" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="DeallocateRoleMessage">
+    <wsdl:part name="parameters" element="tns:DeallocateRole">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="DeallocateRoleResponse">
+    <wsdl:part name="parameters" element="tns:DeallocateRoleResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="DeallocateRolePortType">
+    <wsdl:operation name="DeallocateRole">
+      <wsdl:input message="tns:DeallocateRoleMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:DeallocateRoleResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="DeallocateRoleSOAP" type="tns:DeallocateRolePortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="DeallocateRole">
+      <soap:operation soapAction="http://wtp"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="DeallocateRole">
+    <wsdl:port name="DeallocateRoleSOAP" binding="tns:DeallocateRoleSOAP">
+      <soap:address location="http://localhost:8080/OMS/services/DeallocateRole"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

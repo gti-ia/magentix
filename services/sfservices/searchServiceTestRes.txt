@@ -1,0 +1,326 @@
+incorrectParamTest1:
+<response>
+<serviceName>SearchService</serviceName>
+<status>Error</status>
+<result>
+<description>ERROR: incorrect input or output data type</description>
+</result>
+</response>
+
+incorrectParamTest2:
+<response>
+<serviceName>SearchService</serviceName>
+<status>Error</status>
+<result>
+<description>ERROR: incorrect input or output data type</description>
+</result>
+</response>
+
+appropiateParamsTest1:
+<response>
+<serviceName>SearchService</serviceName>
+<status>Ok</status>
+<result>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl#SquareProfile</profile>
+		<quantity>1.0</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Even.owl#EvenProfile</profile>
+		<quantity>1.0</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Sign.owl#SignProfile</profile>
+		<quantity>1.0</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#ProductProfile</profile>
+		<quantity>0.5</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Addition.owl#AdditionProfile</profile>
+		<quantity>0.5</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#DivisionProfile</profile>
+		<quantity>0.5</quantity>
+	</item>
+</result>
+</response>
+
+appropiateParamsTest2:
+<response>
+<serviceName>SearchService</serviceName>
+<status>Ok</status>
+<result>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#ProductProfile</profile>
+		<quantity>1.0</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Addition.owl#AdditionProfile</profile>
+		<quantity>1.0</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#DivisionProfile</profile>
+		<quantity>1.0</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl#SquareProfile</profile>
+		<quantity>0.5</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Even.owl#EvenProfile</profile>
+		<quantity>0.5</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Sign.owl#SignProfile</profile>
+		<quantity>0.5</quantity>
+	</item>
+</result>
+</response>
+
+appropiateParamsTest3:
+<response>
+<serviceName>SearchService</serviceName>
+<status>Ok</status>
+<result>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#ProductProfile</profile>
+		<quantity>0.6666667</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Addition.owl#AdditionProfile</profile>
+		<quantity>0.6666667</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#DivisionProfile</profile>
+		<quantity>0.6666667</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl#SquareProfile</profile>
+		<quantity>0.33333334</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Even.owl#EvenProfile</profile>
+		<quantity>0.33333334</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Sign.owl#SignProfile</profile>
+		<quantity>0.33333334</quantity>
+	</item>
+</result>
+</response>
+
+appropiateParamsTest4:
+<response>
+<serviceName>SearchService</serviceName>
+<status>Ok</status>
+<result>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#ProductProfile</profile>
+		<quantity>1.0</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Addition.owl#AdditionProfile</profile>
+		<quantity>1.0</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl#SquareProfile</profile>
+		<quantity>1.0</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#DivisionProfile</profile>
+		<quantity>1.0</quantity>
+	</item>
+</result>
+</response>
+
+appropiateParamsTest5:
+<response>
+<serviceName>SearchService</serviceName>
+<status>Ok</status>
+<result>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#ProductProfile</profile>
+		<quantity>0.5</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Addition.owl#AdditionProfile</profile>
+		<quantity>0.5</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl#SquareProfile</profile>
+		<quantity>0.5</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#DivisionProfile</profile>
+		<quantity>0.5</quantity>
+	</item>
+</result>
+</response>
+
+appropiateParamsTest6:
+<response>
+<serviceName>SearchService</serviceName>
+<status>Ok</status>
+<result>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Even.owl#EvenProfile</profile>
+		<quantity>1.0</quantity>
+	</item>
+</result>
+</response>
+
+appropiateParamsTest7:
+<response>
+<serviceName>SearchService</serviceName>
+<status>Ok</status>
+<result>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Sign.owl#SignProfile</profile>
+		<quantity>1.0</quantity>
+	</item>
+</result>
+</response>
+
+appropiateParamsTest8:
+<response>
+<serviceName>SearchService</serviceName>
+<status>Ok</status>
+<result>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#ProductProfile</profile>
+		<quantity>1.0</quantity>
+	</item>
+</result>
+</response>
+
+appropiateParamsTest9:
+<response>
+<serviceName>SearchService</serviceName>
+<status>Ok</status>
+<result>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#ProductProfile</profile>
+		<quantity>1.0</quantity>
+	</item>
+</result>
+</response>
+
+appropiateParamsTest10:
+<response>
+<serviceName>SearchService</serviceName>
+<status>Ok</status>
+<result>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#ProductProfile</profile>
+		<quantity>1.0</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Addition.owl#AdditionProfile</profile>
+		<quantity>0.5</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#DivisionProfile</profile>
+		<quantity>0.5</quantity>
+	</item>
+</result>
+</response>
+
+appropiateParamsTest11:
+<response>
+<serviceName>SearchService</serviceName>
+<status>Ok</status>
+<result>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Even.owl#EvenProfile</profile>
+		<quantity>1.0</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl#SquareProfile</profile>
+		<quantity>0.5</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Sign.owl#SignProfile</profile>
+		<quantity>0.5</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#ProductProfile</profile>
+		<quantity>0.25</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Addition.owl#AdditionProfile</profile>
+		<quantity>0.25</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#DivisionProfile</profile>
+		<quantity>0.25</quantity>
+	</item>
+</result>
+</response>
+
+appropiateParamsTest12:
+<response>
+<serviceName>SearchService</serviceName>
+<status>Ok</status>
+<result>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Even.owl#EvenProfile</profile>
+		<quantity>0.6666667</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Sign.owl#SignProfile</profile>
+		<quantity>0.6666667</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl#SquareProfile</profile>
+		<quantity>0.33333334</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#ProductProfile</profile>
+		<quantity>0.16666667</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Addition.owl#AdditionProfile</profile>
+		<quantity>0.16666667</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#DivisionProfile</profile>
+		<quantity>0.16666667</quantity>
+	</item>
+</result>
+</response>
+
+appropiateParamsTest13:
+<response>
+<serviceName>SearchService</serviceName>
+<status>Ok</status>
+<result>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Addition.owl#AdditionProfile</profile>
+		<quantity>1.0</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl#ProductProfile</profile>
+		<quantity>0.6666667</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl#DivisionProfile</profile>
+		<quantity>0.6666667</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl#SquareProfile</profile>
+		<quantity>0.5</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Even.owl#EvenProfile</profile>
+		<quantity>0.16666667</quantity>
+	</item>
+	<item>
+		<profile>http://localhost:8080/testSFservices/testSFservices/owl/owls/Sign.owl#SignProfile</profile>
+		<quantity>0.16666667</quantity>
+	</item>
+</result>
+</response>
+

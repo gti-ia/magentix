@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="InformUnitRoles" targetNamespace="http://wtp" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://wtp" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://wtp">
+      <xsd:element name="InformUnitRoles">
+        <xsd:complexType>
+          <xsd:sequence>
+             <xsd:element name="UnitID" type="xsd:string"/>
+             <xsd:element name="AgentID" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="InformUnitRolesResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+          	<xsd:element name="Result" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="InformUnitRolesResponse">
+    <wsdl:part name="parameters" element="tns:InformUnitRolesResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="InformUnitRolesMessage">
+    <wsdl:part name="parameters" element="tns:InformUnitRoles">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="InformUnitRolesPortType">
+    <wsdl:operation name="InformUnitRoles">
+      <wsdl:input message="tns:InformUnitRolesMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:InformUnitRolesResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="InformUnitRolesSOAP" type="tns:InformUnitRolesPortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="InformUnitRoles">
+      <soap:operation soapAction="http://wtp"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="InformUnitRoles">
+    <wsdl:port name="InformUnitRolesSOAP" binding="tns:InformUnitRolesSOAP">
+      <soap:address location="http://localhost:8080/OMS/services/InformUnitRoles"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

@@ -1,0 +1,279 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>es.upv.dsic.gti-ia</groupId>
+	<artifactId>thomas</artifactId>
+	<packaging>pom</packaging>
+	<name>THOMAS</name>
+	<url>http://www.thomas-tin.org/</url>
+	<contributors>
+		<contributor>
+			<name>Vicent Botti</name>
+			<email>vbotti@dsic.upv.es</email>
+			<roles>
+				<role>Head</role>
+			</roles>
+		</contributor>
+		<contributor>
+			<name>Vicente Julian</name>
+			<email>vinglada@dsic.upv.es</email>
+			<roles>
+				<role>Faculty</role>
+			</roles>
+		</contributor>
+	</contributors>
+	<description>
+		Technological evolution over recent years (Internet, www,
+		electronic commerce, wireless connection etc.) has led to a new
+		paradigm of computing as interaction. Under this paradigm,
+		computing is something that is carried out through the
+		communication between computational entities. In this sense,
+		computing is an inherently social activity rather than solitary,
+		leading to new forms of conceiving, designing, developing and
+		managing computational systems. One example of the influence of
+		this viewpoint is the emerging model of software as a service,
+		for example in service-oriented architectures. The technology of
+		agents/multiagent systems is particularly promising as a support
+		for this new computing as interaction paradigm. Dynamic agent
+		organisations that self-adjust in order to make the most of
+		their current environment are increasingly important. These
+		organisations could appear in dynamic or emerging societies of
+		agents such as Grid domains, peer-to-peer networks, or other
+		environments in which the agents coordinate in a dynamic way in
+		order to offer composite services. The social factors in the
+		organisation of multi-agent systems are also increasingly
+		important for structuring interactions in dynamic open worlds.
+		The aim of the present project is to advance and contribute
+		solutions in these areas, principally in the aspects related to
+		organisational structures. In this sense, the following is
+		proposed: to develop a multiagent system architecture that is
+		suitable for the generation of virtual organisations in open
+		environments, as well as a support platform that will allow
+		these systems to be implemented. to design a method for
+		developing open multiagent systems which is orientated towards
+		the concept of organisation, and which will cover the complete
+		life cycle of an open system, allowing the suitable management
+		of large scale complex systems and giving specific support in
+		order to meet the possible needs of these types of systems. to
+		develop a model of agents capable of taking decisions
+		autonomously, equipped with learning mechanisms and able to
+		respond to events, planning and replanning within runtime. to
+		develop intelligent service coordination techniques/methods
+		within open, decentralised multiagent systems: intelligent
+		service location (directory services, syntactic and semantic
+		comparison techniques for services) and generation and
+		adaptation of composed services. to develop mechanisms based on
+		organisational structures and virtual organisations that
+		optimise and regulate the coordination of services in open
+		multiagent systems. to define the mechanisms that allow the
+		interaction between agents in open distributed wireless systems
+		in which problems of communication and security may occur. to
+		develop and implement the necessary security and privacy
+		policies. to develop various prototypes in order to validate the
+		proposed architecture in collaboration with companies interested
+		in the proposal and in the results that are obtained from the
+		project.
+	</description>
+	<version>0.3</version>
+	<licenses>
+		<license>
+			<name>GNU</name>
+			<url>http://www.gnu.org/copyleft/gpl.html</url>
+		</license>
+	</licenses>
+	<organization>
+		<name>GTI-IA</name>
+		<url>http://users.dsic.upv.es/grupos/ia/ia.html</url>
+	</organization>
+	<developers>
+		<developer>
+			<name>Natalia Criado</name>
+			<email>ncriado@dsic.upv.es</email>
+			<roles>
+				<role>Researcher</role>
+				<role>Software Developer</role>
+			</roles>
+		</developer>
+		<developer>
+			<name>Elena del Val Noguera</name>
+			<email>edelval@dsic.upv.es</email>
+			<roles>
+				<role>Researcher</role>
+				<role>Software Developer</role>
+			</roles>
+		</developer>
+		<developer>
+			<name>Alberto Palomares</name>
+			<email>apalomares@dsic.upv.es</email>
+			<roles>
+				<role>Researcher</role>
+				<role>Project Manager</role>
+			</roles>
+		</developer>
+		<developer>
+			<name>Joan Bellver</name>
+			<email>jbellver@dsic.upv.es</email>
+			<roles>
+				<role>Software Developer</role>
+			</roles>
+		</developer>
+		<developer>
+			<name>Sergio Pajares</name>
+			<email>spajares@dsic.upv.es</email>
+			<roles>
+				<role>Software Developer</role>
+			</roles>
+		</developer>
+	</developers>
+	<mailingLists>
+		<mailingList>
+			<name>GTI-IA mailing List</name>
+			<post>gti@dsic.upv.es</post>
+		</mailingList>
+	</mailingLists>
+	<scm>
+		<developerConnection>
+			scm:svm:https://gti-ia.dsic.upv.es/svn/thomas
+		</developerConnection>
+	</scm>
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<configuration>
+					<minmemory>128m</minmemory>
+					<maxmemory>1g</maxmemory>
+				</configuration>
+			</plugin>
+			<plugin>
+			<groupId>org.codehaus.mojo</groupId>
+			<artifactId>jxr-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</reporting>
+	<!-- Que proyectos son submodulos.-->
+	<modules>
+		<module>../sfservices</module><!-- ../ indica que están al mismo nivel,lo haremos asi para adpatarnos a las estructuras del eclipse. -->
+		<module>../omsservices</module>
+	</modules>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.0.2</version>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+
+
+
+		<dependency>
+			<groupId>org.apache.axis2</groupId>
+			<artifactId>axis2-adb</artifactId>
+			<version>1.4.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>backport-util-concurrent</groupId>
+			<artifactId>backport-util-concurrent</artifactId>
+			<version>3.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.4</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>annogen</groupId>
+			<artifactId>annogen</artifactId>
+			<version>0.1.0</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.ws.commons</groupId>
+			<artifactId>XmlSchema</artifactId>
+			<version>1.1</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.axis2</groupId>
+			<artifactId>mex-impl</artifactId>
+			<version>1.3</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpcore</artifactId>
+			<version>4.0-alpha5</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.5.2</version>
+		</dependency>
+
+
+
+
+
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.6</version>
+		</dependency>
+		<dependency>
+			<groupId>com.hp.hpl.jena</groupId>
+			<artifactId>jena</artifactId>
+			<version>2.6.4</version>
+		</dependency>
+		<dependency>
+			<groupId>com.hp.hpl.jena</groupId>
+			<artifactId>arq</artifactId>
+			<version>2.8.7</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.axis</groupId>
+			<artifactId>axis-jaxrpc</artifactId>
+			<version>1.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.axis</groupId>
+			<artifactId>axis</artifactId>
+			<version>1.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-jci-core</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.rampart</groupId>
+			<artifactId>rampart-core</artifactId>
+			<version>1.4</version>
+		</dependency>
+	</dependencies>
+
+        <repositories>
+                <repository>
+                        <id>GTI</id>
+                        <url>http://gti-ia.dsic.upv.es:8081/artifactory/remote-repos/</url>
+                </repository>
+        </repositories>
+
+</project>

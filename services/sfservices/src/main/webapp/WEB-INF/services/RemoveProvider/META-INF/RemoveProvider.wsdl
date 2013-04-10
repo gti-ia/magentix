@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="RemoveProvider" targetNamespace="http://wtp" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://wtp" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://wtp">
+  <xsd:element name="RemoveProvider">
+  <xsd:complexType>
+  <xsd:sequence>
+  <xsd:element name="ServiceProfile" type="xsd:string"/> 
+  <xsd:element name="ProviderID" type="xsd:string"/>  
+  </xsd:sequence>
+  </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="RemoveProviderResponse">
+  <xsd:complexType>
+  <xsd:sequence>
+  <xsd:element name="Result" type="xsd:string"/> 
+  </xsd:sequence>
+  </xsd:complexType>
+  </xsd:element>
+  </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="RemoveProviderResponse">
+    <wsdl:part name="parameters" element="tns:RemoveProviderResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="RemoveProviderMessage">
+    <wsdl:part name="parameters" element="tns:RemoveProvider">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="RemoveProviderPortType">
+    <wsdl:operation name="RemoveProvider">
+      <wsdl:input message="tns:RemoveProviderMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:RemoveProviderResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="RemoveProviderSOAP" type="tns:RemoveProviderPortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="RemoveProvider">
+      <soap:operation soapAction="http://wtp"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="RemoveProvider">
+    <wsdl:port name="RemoveProviderSOAP" binding="tns:RemoveProviderSOAP">
+      <soap:address location="http://localhost:8080/sfservices/services/RemoveProvider"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

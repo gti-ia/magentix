@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="JoinUnit" targetNamespace="http://wtp" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://wtp" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://wtp">
+      <xsd:element name="JoinUnit">
+        <xsd:complexType>
+          <xsd:sequence>
+             <xsd:element name="UnitID" type="xsd:string"/>
+             <xsd:element name="ParentUnitID" type="xsd:string"/>
+             <xsd:element name="AgentID" type="xsd:string"/>
+             </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="JoinUnitResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+          	<xsd:element name="Result" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="JoinUnitMessage">
+    <wsdl:part name="parameters" element="tns:JoinUnit">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="JoinUnitResponse">
+    <wsdl:part name="parameters" element="tns:JoinUnitResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="JoinUnitPortType">
+    <wsdl:operation name="JoinUnit">
+      <wsdl:input message="tns:JoinUnitMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:JoinUnitResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="JoinUnitSOAP" type="tns:JoinUnitPortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="JoinUnit">
+      <soap:operation soapAction="http://wtp"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="JoinUnit">
+    <wsdl:port name="JoinUnitSOAP" binding="tns:JoinUnitSOAP">
+      <soap:address location="http://localhost:8080/OMS/services/JoinUnit"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

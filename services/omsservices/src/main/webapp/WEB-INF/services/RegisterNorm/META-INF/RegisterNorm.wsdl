@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="RegisterRole" targetNamespace="http://wtp" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://wtp" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://wtp">
+      <xsd:element name="RegisterNorm">
+        <xsd:complexType>
+          <xsd:sequence>
+          	
+          	<xsd:element name="NormContent" type="xsd:string" />
+          	<xsd:element name="AgentID" type="xsd:string" />
+            <xsd:element name="UnitID" type="xsd:string"></xsd:element>
+                    </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="RegisterNormResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+          	<xsd:element name="Result" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="RegisterNormMessage">
+    <wsdl:part name="parameters" element="tns:RegisterNorm">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="RegisterNormResponse">
+    <wsdl:part name="parameters" element="tns:RegisterNormResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="RegisterNormPortType">
+    <wsdl:operation name="RegisterNorm">
+      <wsdl:input message="tns:RegisterNormMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:RegisterNormResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="RegisterNormSOAP" type="tns:RegisterNormPortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="RegisterNorm">
+      <soap:operation soapAction="http://wtp"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="RegisterNorm">
+    <wsdl:port name="RegisterNormSOAP" binding="tns:RegisterNormSOAP">
+      <soap:address location="http://localhost:8080/OMS/services/RegisterNorm"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

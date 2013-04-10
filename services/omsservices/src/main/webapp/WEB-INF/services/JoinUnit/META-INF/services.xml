@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This file was auto-generated from WSDL -->
+<!-- by the Apache Axis2 version: 1.4  Built on : Apr 26, 2008 (06:24:30 EDT) -->
+<serviceGroup>
+    <service name="JoinUnit">
+        <messageReceivers>
+            <messageReceiver mep="http://www.w3.org/ns/wsdl/in-out" class="wtp.JoinUnitMessageReceiverInOut"/>
+        </messageReceivers>
+        <parameter name="ServiceClass">wtp.JoinUnitSkeleton</parameter>
+        <parameter name="useOriginalwsdl">true</parameter>
+        <parameter name="modifyUserWSDLPortAddress">true</parameter>
+        <operation name="JoinUnit" mep="http://www.w3.org/ns/wsdl/in-out" namespace="http://wtp">
+            <actionMapping>http://wtp</actionMapping>
+            <outputActionMapping>http://wtp/JoinUnitPortType/JoinUnitResponse</outputActionMapping>
+        </operation>
+    </service>
+</serviceGroup>

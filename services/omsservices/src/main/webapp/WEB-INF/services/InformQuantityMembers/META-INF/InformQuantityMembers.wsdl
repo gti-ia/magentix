@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="InformQuantityMembers" targetNamespace="http://wtp" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://wtp" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://wtp">
+      <xsd:element name="InformQuantityMembers">
+        <xsd:complexType>
+          <xsd:sequence>
+          	<xsd:element name="UnitID" type="xsd:string" />
+          	<xsd:element name="RoleID" type="xsd:string" />
+          	<xsd:element name="PositionID" type="xsd:string"></xsd:element>
+          	<xsd:element name="AgentID" type="xsd:string" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="InformQuantityMembersResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+          	<xsd:element name="Result" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="InformQuantityMembersMessage">
+    <wsdl:part name="parameters" element="tns:InformQuantityMembers">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="InformQuantityMembersResponse">
+    <wsdl:part name="parameters" element="tns:InformQuantityMembersResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="InformQuantityMembersPortType">
+    <wsdl:operation name="InformQuantityMembers">
+      <wsdl:input message="tns:InformQuantityMembersMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:InformQuantityMembersResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="InformQuantityMembersSOAP" type="tns:InformQuantityMembersPortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="InformQuantityMembers">
+      <soap:operation soapAction="http://wtp"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="InformQuantityMembers">
+    <wsdl:port name="InformQuantityMembersSOAP" binding="tns:InformQuantityMembersSOAP">
+      <soap:address location="http://localhost:8080/OMS/services/InformQuantityMembers"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

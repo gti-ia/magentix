@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="RegisterService" targetNamespace="http://wtp" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://wtp" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://wtp">
+
+	<xsd:element name="RegisterService">
+
+	<xsd:complexType>
+
+	<xsd:sequence>
+<xsd:element name="ServiceURL" type="xsd:string"/>
+</xsd:sequence>
+</xsd:complexType>
+</xsd:element>
+
+	<xsd:element name="RegisterServiceResponse">
+
+	<xsd:complexType>
+
+	<xsd:sequence>
+<xsd:element name="Result" type="xsd:string"/>
+</xsd:sequence>
+</xsd:complexType>
+</xsd:element>
+</xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="RegisterServiceMessage">
+    <wsdl:part name="parameters" element="tns:RegisterService">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="RegisterServiceResponse">
+    <wsdl:part name="parameters" element="tns:RegisterServiceResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="RegisterServicePortType">
+    <wsdl:operation name="RegisterService">
+      <wsdl:input message="tns:RegisterServiceMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:RegisterServiceResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="RegisterServiceSOAP" type="tns:RegisterServicePortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="RegisterService">
+      <soap:operation soapAction="http://wtp"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="RegisterService">
+    <wsdl:port name="RegisterServiceSOAP" binding="tns:RegisterServiceSOAP">
+      <soap:address location="http://localhost:8080/sfservices/services/RegisterService"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
