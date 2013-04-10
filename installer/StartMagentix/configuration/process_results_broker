@@ -1,0 +1,25 @@
+#!/bin/bash
+
+cat configuration/brokr_coordinator_result_log.txt > configuration/brokr_result_log.txt
+cat configuration/brokr_broker_result_log.txt > configuration/brokr_result_log.txt
+cat configuration/brokr_publisher0_result_log.txt > configuration/brokr_result_log.txt
+cat configuration/brokr_publisher1_result_log.txt > configuration/brokr_result_log.txt
+cat configuration/brokr_publisher2_result_log.txt > configuration/brokr_result_log.txt
+cat configuration/brokr_publisher3_result_log.txt > configuration/brokr_result_log.txt
+cat configuration/brokr_publisher4_result_log.txt > configuration/brokr_result_log.txt
+cat configuration/brokr_publisher5_result_log.txt > configuration/brokr_result_log.txt
+cat configuration/brokr_publisher6_result_log.txt > configuration/brokr_result_log.txt
+cat configuration/brokr_publisher7_result_log.txt > configuration/brokr_result_log.txt
+cat configuration/brokr_publisher8_result_log.txt > configuration/brokr_result_log.txt
+cat configuration/brokr_publisher9_result_log.txt > configuration/brokr_result_log.txt
+cat configuration/brokr_subscriber0_result_log.txt > configuration/brokr_result_log.txt
+cat configuration/brokr_subscriber1_result_log.txt > configuration/brokr_result_log.txt
+cat configuration/brokr_subscriber2_result_log.txt > configuration/brokr_result_log.txt
+cat configuration/brokr_subscriber3_result_log.txt > configuration/brokr_result_log.txt
+cat configuration/brokr_subscriber4_result_log.txt > configuration/brokr_result_log.txt
+cat configuration/brokr_subscriber5_result_log.txt > configuration/brokr_result_log.txt
+cat configuration/brokr_subscriber6_result_log.txt > configuration/brokr_result_log.txt
+cat configuration/brokr_subscriber7_result_log.txt > configuration/brokr_result_log.txt
+cat configuration/brokr_subscriber8_result_log.txt > configuration/brokr_result_log.txt
+cat configuration/brokr_subscriber9_result_log.txt > configuration/brokr_result_log.txt
+sort configuration/process_results_broker -o configuration/brokr_result_log.txt
