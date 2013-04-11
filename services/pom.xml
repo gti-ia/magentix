@@ -155,8 +155,8 @@
 	</reporting>
 	<!-- Que proyectos son submodulos.-->
 	<modules>
-		<module>../sfservices</module><!-- ../ indica que están al mismo nivel,lo haremos asi para adpatarnos a las estructuras del eclipse. -->
-		<module>../omsservices</module>
+		<module>sfservices</module><!-- ../ indica que están al mismo nivel,lo haremos asi para adpatarnos a las estructuras del eclipse. -->
+		<module>omsservices</module>
 	</modules>
 	<build>
 		<plugins>

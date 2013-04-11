@@ -13,7 +13,7 @@
 		<artifactId>thomas</artifactId>
 		<groupId>es.upv.dsic.gti-ia</groupId>
 		<version>0.3</version>
-		<relativePath>../thomas</relativePath>
+		<relativePath>..</relativePath>
 	</parent>
 	<build>
 		<finalName>sfservices</finalName>
