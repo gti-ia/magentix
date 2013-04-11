@@ -24,7 +24,15 @@ import es.upv.dsic.gti_ia.trace.TraceManager;
 
 public class RunTM {
 
+   	private static final Object lock = new Object();
 
+
+    	public static void await() throws InterruptedException {
+		synchronized (lock) {
+			lock.wait();
+		}
+	}
+	
 	public static void main(String[] args) {
 
 		DOMConfigurator.configure("configuration/loggin.xml");
@@ -44,8 +52,9 @@ public class RunTM {
 			 */
 			
 			TraceManager tm = new TraceManager(new AgentID("TM"));
-			
-			
+			tm.start();
+
+			await();			
 
 		} catch (Exception e) {
 			logger.error(e.getMessage());

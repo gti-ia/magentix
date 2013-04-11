@@ -24,7 +24,15 @@ import es.upv.dsic.gti_ia.trace.TraceManager;
 
 public class Run {
 
+   	private static final Object lock = new Object();
 
+
+    	public static void await() throws InterruptedException {
+		synchronized (lock) {
+			lock.wait();
+		}
+	}
+	
 	public static void main(String[] args) {
 
 		DOMConfigurator.configure("configuration/loggin.xml");
@@ -39,37 +47,34 @@ public class Run {
 		try {
 
 			/**
-			 * Instantiating a OMS and FS agent's
+			 * Starting OMS and SF agent's
 			 */
 
-			OMS agenteOMS = OMS.getOMS();
-			agenteOMS.start();
+	                OMS oms = new OMS(new AgentID("OMS"));
+	                SF sf =  new SF(new AgentID("SF"));
 
-			SF agenteSF = SF.getSF();
-			agenteSF.start();
-			
+	                oms.start();
+	                sf.start();
 
-
-			
-
-			
+ 
 			/**
-			 * Instantiating a BridgeAgentInOut SingleAgent
+			 * Starting a BridgeAgentInOut SingleAgent
 			 */
-			BridgeAgentInOut agentInOut = new BridgeAgentInOut(new AgentID(
-					"BridgeAgentInOut", "qpid", "localhost", "5000"));
-			agentInOut.start();
+			///BridgeAgentInOut agentInOut = new BridgeAgentInOut(new AgentID(
+			///		"BridgeAgentInOut", "qpid", "localhost", "5000"));
+			///agentInOut.start();
 			/**
-			 * Instantiating a BridgeAgentOutIn SingleAgent
+			 * Starting a BridgeAgentOutIn SingleAgent
 			 */
-			BridgeAgentOutIn agentOutIn = new BridgeAgentOutIn(new AgentID(
-					"BridgeAgentOutIn", "qpid", "localhost", "5000"));
-			agentOutIn.start();
+			///BridgeAgentOutIn agentOutIn = new BridgeAgentOutIn(new AgentID(
+			///		"BridgeAgentOutIn", "qpid", "localhost", "5000"));
+			///agentOutIn.start();
 			
-			
-	
-			
-			
+
+
+		
+			//Wait until is killed
+			await();			
 			
 
 		} catch (Exception e) {
