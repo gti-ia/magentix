@@ -12,6 +12,24 @@ def zipdir(path, zipname):
             zip.write(os.path.join(root, file))
     zip.close()
 
+def which(program):
+    import os
+    def is_exe(fpath):
+        return os.path.isfile(fpath) and os.access(fpath, os.X_OK)
+
+    fpath, fname = os.path.split(program)
+    if fpath:
+        if is_exe(program):
+            return program
+    else:
+        for path in os.environ["PATH"].split(os.pathsep):
+            path = path.strip('"')
+            exe_file = os.path.join(path, program)
+            if is_exe(exe_file):
+                return exe_file
+
+    return None
+
 
 try:
     release = sys.argv[1]
@@ -28,9 +46,12 @@ for f in glob.glob(releasedir+"*.zip"):
 os.mkdir(releasedir)
 
 #generate doc
-os.chdir("..")
-os.system("doxygen Doxyfile")
-os.chdir("installer")
+if which("doxygen")!=None:
+	os.chdir("..")
+	os.system("doxygen Doxyfile")
+	os.chdir("installer")
+else:
+	print "WARNING: Could not generate api documentation. Missing doxygen."
 
 #zip sources
 srcfile = "magentix2-"+str(release)+"-src"
@@ -39,24 +60,40 @@ os.mkdir(releasedir + os.sep + "src")
 shutil.move(srcfile + ".zip", releasedir +os.sep+ "src")
 
 #generate exe
-if sys.platform=="win32":
+if sys.platform=="win32" and which("python")!=None:
 	os.system("python setup.py py2exe")
 	shutil.copy("dist"+os.sep+"magentix-setup.exe", "magentix2")
 
+if which("svn") != None:
+	os.system("svn export magentix2 magentix2-export")
+	orig = "magentix2-export"
+else:
+	orig = "magentix2"
+	print "WARNING: could not export svn!"
 #copy files
-shutil.copytree("magentix2"+os.sep+"bin", releasedir+os.sep+"bin")
-shutil.copytree("magentix2"+os.sep+"doc", releasedir+os.sep+"doc")
-shutil.copytree("magentix2"+os.sep+"lib", releasedir+os.sep+"lib")
-shutil.copytree("magentix2"+os.sep+"webapps", releasedir+os.sep+"webapps")
-shutil.copytree("magentix2"+os.sep+"configuration", releasedir+os.sep+"configuration")
-shutil.copy("magentix2"+os.sep+"Start-Magentix.bat", releasedir)
-shutil.copy("magentix2"+os.sep+"Start-Magentix.sh", releasedir)
-shutil.copy("magentix2"+os.sep+"Stop-Magentix.bat", releasedir)
-shutil.copy("magentix2"+os.sep+"Stop-Magentix.sh", releasedir)
-shutil.copy("magentix2"+os.sep+"magentix-setup.py", releasedir)
-shutil.copy("magentix2"+os.sep+"magentix-setup.exe", releasedir)
+shutil.copytree(orig+os.sep+"bin", releasedir+os.sep+"bin")
+shutil.copytree(orig+os.sep+"doc", releasedir+os.sep+"doc")
+shutil.copytree(orig+os.sep+"lib", releasedir+os.sep+"lib")
+shutil.copytree(orig+os.sep+"webapps", releasedir+os.sep+"webapps")
+shutil.copytree(orig+os.sep+"configuration", releasedir+os.sep+"configuration")
+shutil.copy(orig+os.sep+"Start-Magentix.bat", releasedir)
+shutil.copy(orig+os.sep+"Start-Magentix.sh", releasedir)
+shutil.copy(orig+os.sep+"Stop-Magentix.bat", releasedir)
+shutil.copy(orig+os.sep+"Stop-Magentix.sh", releasedir)
+shutil.copy(orig+os.sep+"magentix-setup.py", releasedir)
+shutil.copy(orig+os.sep+"magentix-setup.exe", releasedir)
+shutil.copy(".."+os.sep+"LICENSE.txt", releasedir)
+shutil.copy(".."+os.sep+"RELEASE_NOTES", releasedir)
 
 os.mkdir(releasedir+os.sep+"doc"+os.sep+"manual")
+if sys.platform!="win32" and which("pdflatex")!=None:
+	os.chdir(".."+os.sep+"doc"+os.sep+"manual")
+	os.system("make")
+	os.system("make clean")
+	os.chdir(".."+os.sep+".."+os.sep+"installer")
+else:
+	print "WARNING: Could not compile the manual. Missing pdflatex. I'll use the last version of the manual."
+
 shutil.copy(".."+os.sep+"doc"+os.sep+"manual"+os.sep+"Magentix2UserManual.pdf", releasedir+os.sep+"doc"+os.sep+"manual")
 
 #attach version to Start-Magentix scripts
@@ -72,4 +109,8 @@ line_prepender(releasedir+os.sep+"Start-Magentix.bat", 'set VERSION='+release+'\
 #zip release
 zipdir(releasedir, releasedir)
 #clean
-shutil.rmtree(releasedir,ignore_errors=True)
+#shutil.rmtree(releasedir,ignore_errors=True)
+shutil.rmtree("magentix2-export",ignore_errors=True)
+
+print "Done."
+print "Your new release is magentix2-"+release+".zip"
