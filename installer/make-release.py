@@ -37,6 +37,7 @@ except:
     sys.exit("Missing parameter. Usage: " + sys.argv[0] + " releasenumber")
 
 
+shutil.rmtree("magentix2-export",ignore_errors=True)
 releasedir = "magentix2-"+str(release)
 shutil.rmtree(releasedir,ignore_errors=True)
 for f in glob.glob(releasedir+"*.zip"):
@@ -105,6 +106,12 @@ def line_prepender(filename,line):
 
 line_prepender(releasedir+os.sep+"Start-Magentix.sh", 'VERSION='+release+'\n\n')
 line_prepender(releasedir+os.sep+"Start-Magentix.bat", 'set VERSION='+release+'\n\n')
+
+#copy examples
+shutil.copy(".."+os.sep+"src"+os.sep+"examples"+os.sep+"target"+os.sep+"MagentixExamples.jar", releasedir+os.sep+"lib")
+os.mkdir(releasedir+os.sep+"examples")
+for filename in glob.glob(os.path.join(".."+os.sep+"src"+os.sep+"examples"+os.sep+"bin", '*.sh')):
+    shutil.copy(filename, releasedir+os.sep+"examples")
 
 #zip release
 zipdir(releasedir, releasedir)
