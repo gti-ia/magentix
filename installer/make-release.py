@@ -51,6 +51,10 @@ if which("doxygen")!=None:
 	os.chdir("..")
 	os.system("doxygen Doxyfile")
 	os.chdir("installer")
+elif which("/Applications/Doxygen.app/Contents/Resources/doxygen")!=None: #MacOS style
+	os.chdir("..")
+	os.system("/Applications/Doxygen.app/Contents/Resources/doxygen Doxyfile")
+	os.chdir("installer")
 else:
 	print "WARNING: Could not generate api documentation. Missing doxygen."
 
@@ -88,10 +92,14 @@ shutil.copy(".."+os.sep+"RELEASE_NOTES", releasedir)
 
 os.mkdir(releasedir+os.sep+"doc"+os.sep+"manual")
 if sys.platform!="win32" and which("pdflatex")!=None:
-	os.chdir(".."+os.sep+"doc"+os.sep+"manual")
-	os.system("make")
-	os.system("make clean")
-	os.chdir(".."+os.sep+".."+os.sep+"installer")
+
+	if which("pdftk")!=None:
+		os.chdir(".."+os.sep+"doc"+os.sep+"manual")
+		os.system("make")
+		os.system("make clean")
+		os.chdir(".."+os.sep+".."+os.sep+"installer")
+	else:
+		print "WARNING: Could not compile the manual. Missing pdftk. I'll use the last version of the manual."
 else:
 	print "WARNING: Could not compile the manual. Missing pdflatex. I'll use the last version of the manual."
 

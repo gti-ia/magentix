@@ -4,7 +4,8 @@ all:
 	pdflatex Magentix2UserManual.tex
 	bibtex Magentix2UserManual
 	pdflatex Magentix2UserManual.tex
-	gs -q -sPAPERSIZE=letter -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile=output.pdf Cover/Cover.pdf Magentix2UserManual.pdf
+	#gs -q -sPAPERSIZE=letter -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile=output.pdf Cover/Cover.pdf Magentix2UserManual.pdf
+	pdftk Cover/Cover.pdf Magentix2UserManual.pdf cat output output.pdf
 	mv output.pdf Magentix2UserManual.pdf
 
 clean:
