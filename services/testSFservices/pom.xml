@@ -1,0 +1,61 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>testSFservices</groupId>
+ 	<artifactId>testSFservices</artifactId>
+	<packaging>war</packaging>
+	<name>testSFservices</name>
+	<url>${basedir}/target/site</url>
+	<!-- Indica de que proyecto desciende, heredaremos su configuración, librerías, plugins ... -->
+	<parent>
+		<artifactId>thomas</artifactId>
+		<groupId>es.upv.dsic.gti-ia</groupId>
+		<version>0.3</version>
+		<relativePath>..</relativePath>
+	</parent>
+	<build>
+		<finalName>testSFservices</finalName>
+	
+	<plugins> <!-- mvn clean axis2-wsdl2code:wsdl2code -->
+	<plugin>
+		<groupId>org.apache.axis2</groupId>
+		<artifactId>axis2-wsdl2code-maven-plugin</artifactId>
+		<version>1.4</version>
+		<configuration>
+			<packageName>
+				wtp
+			</packageName>
+			<wsdlFile>
+				./src/main/webapp/WEB-INF/services/Sign/META-INF/Sign.wsdl
+			</wsdlFile>
+			<databindingName>adb</databindingName>
+			<generateServerSide>true</generateServerSide>
+			<generateServicesXml>true</generateServicesXml>
+			<namespaceURIs>
+				<namespaceURI>
+					<uri>http://wtp/</uri>
+					<packageName>wtp</packageName>
+				</namespaceURI>
+			</namespaceURIs>
+		</configuration>
+	</plugin>
+	</plugins>
+	</build>
+	
+	<!-- 
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<configuration>
+					<minmemory>128m</minmemory>
+					<maxmemory>1g</maxmemory>
+				</configuration>
+			</plugin>
+		</plugins>
+	</reporting>
+	 -->
+
+</project>

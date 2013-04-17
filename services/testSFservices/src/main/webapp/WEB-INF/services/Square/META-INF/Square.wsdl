@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="Square" targetNamespace="http://wtp" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://wtp" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://wtp">
+      <xsd:element name="Square">
+        <xsd:complexType>
+          <xsd:sequence>
+          	<xsd:element name="x" type="xsd:double" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="SquareResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+          	<xsd:element name="Result" type="xsd:double"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="SquareResponse">
+    <wsdl:part name="parameters" element="tns:SquareResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="SquareMessage">
+    <wsdl:part name="parameters" element="tns:Square">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="SquarePortType">
+    <wsdl:operation name="Square">
+      <wsdl:input message="tns:SquareMessage">
+    </wsdl:input>
+      <wsdl:output message="tns:SquareResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="SquareSOAP" type="tns:SquarePortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="Square">
+      <soap:operation soapAction="http://wtp"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="Square">
+    <wsdl:port name="SquareSOAP" binding="tns:SquareSOAP">
+      <soap:address location="http://localhost:8080/sfservices/services/Square"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
