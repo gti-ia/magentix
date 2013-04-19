@@ -223,7 +223,7 @@ public class ArgCAgent extends CAgent {
 		storeArguments = new HashMap<String, ArrayList<Argument>>();
 		
 		
-		DOMConfigurator.configure("configuration/logginArg.xml");
+		DOMConfigurator.configure("configuration/loggin.xml");
 		logger = Logger.getLogger(ArgCAgent.class);
 		
 		

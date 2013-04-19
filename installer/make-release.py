@@ -51,7 +51,7 @@ if which("doxygen")!=None:
 	os.chdir("..")
 	os.system("doxygen Doxyfile")
 	os.chdir("installer")
-elif which("/Applications/Doxygen.app/Contents/Resources/doxygen")!=None: #MacOS style
+elif False and which("/Applications/Doxygen.app/Contents/Resources/doxygen")!=None: #MacOS style
 	os.chdir("..")
 	os.system("/Applications/Doxygen.app/Contents/Resources/doxygen Doxyfile")
 	os.chdir("installer")
@@ -91,7 +91,7 @@ shutil.copy(".."+os.sep+"LICENSE.txt", releasedir)
 shutil.copy(".."+os.sep+"RELEASE_NOTES", releasedir)
 
 os.mkdir(releasedir+os.sep+"doc"+os.sep+"manual")
-if sys.platform!="win32" and which("pdflatex")!=None:
+if False and sys.platform!="win32" and which("pdflatex")!=None:
 
 	if which("pdftk")!=None:
 		os.chdir(".."+os.sep+"doc"+os.sep+"manual")
@@ -117,9 +117,7 @@ line_prepender(releasedir+os.sep+"Start-Magentix.bat", 'set VERSION='+release+'\
 
 #copy examples
 shutil.copy(".."+os.sep+"src"+os.sep+"examples"+os.sep+"target"+os.sep+"MagentixExamples.jar", releasedir+os.sep+"lib")
-os.mkdir(releasedir+os.sep+"examples")
-for filename in glob.glob(os.path.join(".."+os.sep+"src"+os.sep+"examples"+os.sep+"bin", '*.sh')):
-    shutil.copy(filename, releasedir+os.sep+"examples")
+shutil.copytree(orig+os.sep+"examples", releasedir+os.sep+"examples")
 
 #zip release
 zipdir(releasedir, releasedir)

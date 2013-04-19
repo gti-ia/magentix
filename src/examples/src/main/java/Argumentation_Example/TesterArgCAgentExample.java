@@ -1,0 +1,447 @@
+package Argumentation_Example;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.Vector;
+
+import es.upv.dsic.gti_ia.argAgents.ArgCAgent;
+import es.upv.dsic.gti_ia.argAgents.knowledgeResources.Dialogue;
+import es.upv.dsic.gti_ia.argAgents.knowledgeResources.DomainCase;
+import es.upv.dsic.gti_ia.argAgents.knowledgeResources.Position;
+import es.upv.dsic.gti_ia.argAgents.knowledgeResources.SocialEntity;
+import es.upv.dsic.gti_ia.argAgents.knowledgeResources.Solution;
+import es.upv.dsic.gti_ia.core.ACLMessage;
+import es.upv.dsic.gti_ia.core.AgentID;
+import es.upv.dsic.gti_ia.core.SingleAgent;
+
+/**
+ * This class represents a tester agent in charge of sending the test
+ * domain-case to solve to a group of agents and acts as the initiator of the
+ * dialogue
+ * 
+ * @author Jaume Jordan
+ * 
+ */
+public class TesterArgCAgentExample extends SingleAgent {
+
+	private ArrayList<SocialEntity> socialEntities;
+	private String finishFileName;
+	private Vector<DomainCase> domCases;
+	private ArrayList<ArgCAgent> agents;
+	private String currentDialogueID = "";
+	private long dialogueInitTime = 0;
+	private String commitmentStoreID;
+	private long multTimeFactor = 10;
+
+	/**
+	 * Constructor of the tester agent
+	 * 
+	 * @param aid
+	 *            agent identifier
+	 * @param socialEntities
+	 *            that represent the group of the agents of the dialogue
+	 * @param commitmentStoreID
+	 *            Commitment Store identifier to send messages
+	 * @param resultFileName
+	 *            to write the results
+	 * @param finishFileName
+	 *            to write when the dialogue is finished
+	 * @param casesPerAgent
+	 *            number of domain-cases per agent
+	 * @param iteration
+	 *            number of iteration in the current test
+	 * @param domCases
+	 *            domain-cases
+	 * @param agents
+	 *            list of the argumentative agents of the group
+	 * @throws Exception
+	 */
+	public TesterArgCAgentExample(AgentID aid, ArrayList<SocialEntity> socialEntities, String commitmentStoreID,
+			String finishFileName, Vector<DomainCase> domCases, ArrayList<ArgCAgent> agents) throws Exception {
+		super(aid);
+		logger.info(this.getName() + ": agent created");
+
+		this.socialEntities = socialEntities;
+		this.commitmentStoreID = commitmentStoreID;
+		this.finishFileName = finishFileName;
+		this.domCases = domCases;
+		this.agents = agents;
+
+	}
+
+	public void execute() {
+
+		try {
+			try {
+				// Create file
+				FileWriter fstream = new FileWriter(finishFileName, false);
+				BufferedWriter outFile = new BufferedWriter(fstream);
+				// Close the output stream
+				outFile.close();
+			} catch (Exception e) {// Catch exception if any
+				System.err.println("Error: " + e.getMessage());
+			}
+
+			try {
+				Thread.sleep(2 * 1000);// wait 2 seconds at the beginning
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			int nDomCase = 0;
+
+			// create a new instance of the domain-case without the solutions, to act as a new problem to solve
+			DomainCase auxDomCase = domCases.get(nDomCase);
+
+			DomainCase domCaseToSend = auxDomCase;
+
+			long time = System.nanoTime();
+			currentDialogueID = String.valueOf(time);
+			ArrayList<String> agentIDs = new ArrayList<String>();
+			Dialogue dialogue = new Dialogue(currentDialogueID, agentIDs, domCaseToSend.getProblem());
+
+			// store the initial date of dialogue
+			dialogueInitTime = System.currentTimeMillis();
+
+			// add dialogue to Commitment Store
+			sendMessage(commitmentStoreID, "ADDDIALOGUE", dialogue.getDialogueID(), dialogue);
+
+			// send the OPENDIALOGUE message to all agents with the test
+			// domain-case to solve
+			Iterator<SocialEntity> iterAgents = socialEntities.iterator();
+			while (iterAgents.hasNext()) {
+				SocialEntity socialEntity = iterAgents.next();
+				sendMessage(socialEntity.getName(), "OPENDIALOGUE", currentDialogueID, domCaseToSend);
+			}
+			nDomCase++;
+			
+
+			Solution finalSolution = new Solution();
+			String winPositionAgents = null;
+
+			while (true) {
+
+				Thread.sleep(100 * multTimeFactor);
+
+				// ask to commitment store the elapsed milliseconds since the
+				// last modification (check if there are new arguments or positions)
+				sendMessage(commitmentStoreID, "LASTMODIFICATIONDATE", currentDialogueID, null);
+				ArrayList<String> locutions = new ArrayList<String>();
+				locutions.add("LASTMODIFICATIONDATE");
+				ACLMessage msg = receiveACLMessage();
+
+				if (msg == null) {
+					logger.error(this.getName() + ": Commitment Store does not respond!!!");
+					continue;
+				}
+				Long millisDifference = (Long) msg.getContentObject();
+				logger.info("\n" + this.getName() + ": millis difference=" + millisDifference + "\n");
+
+				// dialogue must finish
+				if (millisDifference > 150 * multTimeFactor) {
+					logger.info(this.getName() + ": " + "DIALOGUE MUST FINISH!\n");
+
+					// send the FINISHDIALOGUE message to all agents
+					iterAgents = socialEntities.iterator();
+					while (iterAgents.hasNext()) {
+						SocialEntity socialEntity = iterAgents.next();
+						sendMessage(socialEntity.getName(), "FINISHDIALOGUE", currentDialogueID, null);
+					}
+
+					// wait to give time to the agents to send their position
+					// (with the timesAccepted updated) to the Commitment Store
+					try {
+						Thread.sleep(10 * multTimeFactor);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+
+					// Select the most frequent position (or the most voted in
+					// case of draw). Make a random choice otherwise
+
+					ArrayList<Position> allPositions = getAllPositions(currentDialogueID);
+
+					Iterator<Position> iterPositions = allPositions.iterator();
+					HashMap<Long, Solution> possibleSolutions = new HashMap<Long, Solution>();
+					HashMap<Long, Integer> frequentPositions = new HashMap<Long, Integer>();
+					HashMap<Long, Integer> votedPositions = new HashMap<Long, Integer>();
+					HashMap<Long, ArrayList<Position>> positionsPerSolution = new HashMap<Long, ArrayList<Position>>();
+					while (iterPositions.hasNext()) {
+						Position pos = iterPositions.next();
+						Long solID = pos.getSolution().getConclusion().getID();
+						Solution sol = possibleSolutions.get(solID);
+
+						if (sol != null) {// solution already in possibleSolutions, increment votes, increment frequency
+							int frequency = frequentPositions.get(solID);
+							frequency++;
+							frequentPositions.put(solID, frequency);
+							// sum votes
+							int votes = votedPositions.get(solID);
+							votes += pos.getTimesAccepted();
+							votedPositions.put(solID, votes);
+							// add this position to the other positions
+							// defending same solution
+							ArrayList<Position> positions = positionsPerSolution.get(solID);
+							positions.add(pos);
+							positionsPerSolution.put(solID, positions);
+						} else {// add solution to possibleSolutions
+								// initializing all necessary parameters
+							possibleSolutions.put(solID, pos.getSolution());
+							frequentPositions.put(solID, 1);
+							votedPositions.put(solID, pos.getTimesAccepted());
+
+							ArrayList<Position> positions = new ArrayList<Position>();
+							positions.add(pos);
+							positionsPerSolution.put(solID, positions);
+						}
+
+					}
+
+					// obtain the most voted position
+					Set<Long> keySet = votedPositions.keySet();
+					Iterator<Long> iterKeySet = keySet.iterator();
+					int maxVotes = Integer.MIN_VALUE;
+					Long maxVotedSolID = 0l;
+					ArrayList<Long> drawSolutions = new ArrayList<Long>();
+					while (iterKeySet.hasNext()) {
+						Long solID = iterKeySet.next();
+						int voteRate = votedPositions.get(solID);
+						if (voteRate > maxVotes) {
+							maxVotes = voteRate;
+							maxVotedSolID = solID;
+							drawSolutions = new ArrayList<Long>();// reset draw
+																	// solutions
+						} else if (voteRate == maxVotes) {
+							if (drawSolutions.size() == 0)
+								drawSolutions.add(maxVotedSolID);
+							drawSolutions.add(solID);
+						}
+					}
+
+					// if there is not draw in voted positions, take the most
+					// voted position as the final solution
+					if (drawSolutions.size() == 0) {
+						finalSolution = possibleSolutions.get(maxVotedSolID);
+					}
+					// if there is a draw in voted positions, obtain the most
+					// frequent position
+					// if there is again draw, take the position with
+					// bigger index of the most frequent positions
+					else {
+						Iterator<Long> iterDrawSol = drawSolutions.iterator();
+						int maxFrequency = Integer.MIN_VALUE;
+						Long maxFrequentSolID = 0l;
+						ArrayList<Long> drawsInFreq = new ArrayList<Long>();
+						while (iterDrawSol.hasNext()) {
+							Long solID = iterDrawSol.next();
+							int frequency = frequentPositions.get(solID);
+							if (frequency > maxFrequency) {
+								maxFrequency = frequency;
+								maxFrequentSolID = solID;
+								drawsInFreq = new ArrayList<Long>();
+							} else if (frequency == maxFrequency) {
+								if (drawsInFreq.size() == 0)
+									drawsInFreq.add(maxFrequentSolID);
+								drawsInFreq.add(solID);
+							}
+						}
+						if (drawsInFreq.size() == 0)
+							finalSolution = possibleSolutions.get(maxFrequentSolID);
+						else {// choose a solution if there is a draw in votes and
+								// frequency
+
+							long maxIndSol = drawsInFreq.size() - 1;
+							for (int i = 0; i < drawsInFreq.size(); i++) {
+								if (drawsInFreq.get(i) > drawsInFreq.get((int) maxIndSol))
+									maxIndSol = i;
+							}
+							long maxSolID = drawsInFreq.get((int) maxIndSol);
+							finalSolution = possibleSolutions.get(maxSolID);
+						}
+					}
+					if (finalSolution == null){
+						finalSolution = new Solution();
+						winPositionAgents="";
+					} 
+					if (finalSolution.getConclusion().getID() != -1) {
+
+						// to print the agentIDs that proposed each position
+						ArrayList<Position> positions = positionsPerSolution.get(finalSolution.getConclusion().getID());
+						Iterator<Position> iterPositionsSol = positions.iterator();
+						String agentIDs2 = "";
+						while (iterPositionsSol.hasNext()) {
+							Position pos = iterPositionsSol.next();
+							agentIDs2 += pos.getAgentID() + " ";
+						}
+						winPositionAgents="["+agentIDs2+"]";
+						logger.info("\n++++++++++++++++\nFINAL SOLUTION:\n" + " solutionID="
+								+ finalSolution.getConclusion().getID() + " valuePromoted="
+								+ finalSolution.getPromotesValue() + " timesUsed=" + finalSolution.getTimesUsed()
+								+ " proposingAgents: " + agentIDs2 + " frequency:"
+								+ frequentPositions.get(finalSolution.getConclusion().getID()) + " votes:"
+								+ votedPositions.get(finalSolution.getConclusion().getID()));
+						float dialogueTime = (System.currentTimeMillis() - dialogueInitTime) / 1000f;
+						logger.info("Dialogue elapsed time: " + dialogueTime + " seconds");
+						String posSolsString = "POSSIBLE SOLUTIONS:\n";
+						Iterator<Solution> iterPossibleSols = possibleSolutions.values().iterator();
+						while (iterPossibleSols.hasNext()) {
+							Solution sol = iterPossibleSols.next();
+							positions = positionsPerSolution.get(sol.getConclusion().getID());
+							iterPositionsSol = positions.iterator();
+							agentIDs2 = "";
+							while (iterPositionsSol.hasNext()) {
+								Position pos = iterPositionsSol.next();
+								agentIDs2 += pos.getAgentID() + " ";
+							}
+							posSolsString += " solutionID=" + sol.getConclusion().getID() + " valuePromoted="
+									+ sol.getPromotesValue() + " timesUsed=" + sol.getTimesUsed()
+									+ " proposingAgents: " + agentIDs2 + " frequency:"
+									+ frequentPositions.get(sol.getConclusion().getID()) + " votes:"
+									+ votedPositions.get(sol.getConclusion().getID()) + "\n";
+						}
+						posSolsString += "+++++++++++++++++\n";
+
+						logger.info(posSolsString);
+
+					}
+
+					// send the solution to all agents, if the solution is correct
+					iterAgents = socialEntities.iterator();
+					while (iterAgents.hasNext()) {
+						SocialEntity socialEntitie = iterAgents.next();
+						sendMessage(socialEntitie.getName(), "SOLUTION", currentDialogueID, finalSolution);
+					}
+
+					if (finalSolution.getConclusion().getID() != -1 && finalSolution.getConclusion().getID() != 0) {
+						
+						DomainCase ticketSent = domCases.get(nDomCase - 1);
+						
+						ArrayList<Solution> ticketSolutions = ticketSent.getSolutions();
+
+						String orgSolutions = "";
+						Iterator<Solution> ite = ticketSolutions.iterator();
+						while (ite.hasNext())
+							orgSolutions += ite.next().getConclusion().getID() + " ";
+
+						
+						logger.info("\n\n********\n" + this.getName() + ": " + "proposedSol=" + finalSolution.getConclusion().getID()
+								+ " by: "+winPositionAgents+" originalSolutions=" + orgSolutions +"\n\n********\n");
+						System.out.println("\n\n********\n" + this.getName() + ": " + "proposedSol=" + finalSolution.getConclusion().getID()
+								+ " by: "+winPositionAgents+" originalSolutions=" + orgSolutions +"\n\n********\n");
+					} else {// NO SOLUTION
+						
+						logger.info("\n\n********\n" + this.getName() + ": " +"NO OBTAINED SOLUTION" + "\n\n********\n");
+						System.out.println("\n\n********\n" + this.getName() + ": " +"NO OBTAINED SOLUTION" + "\n\n********\n");
+					}
+
+					break;
+
+				}
+
+			}
+
+			try {
+				Thread.sleep(500);// wait 0.5 seconds to give time to agents to
+									// update its case-bases
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+
+			
+			iterAgents = socialEntities.iterator();
+			while (iterAgents.hasNext()) {
+				SocialEntity socialEntity = iterAgents.next();
+				sendMessage(socialEntity.getName(), "DIE", currentDialogueID, null);
+			}
+			sendMessage(commitmentStoreID, "DIE", currentDialogueID, null);
+
+			try {
+				Thread.sleep(1000); //wait until agents are finished
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+
+
+			try {
+
+				// Create file
+				FileWriter fstream = new FileWriter(finishFileName, false);
+				BufferedWriter outFile = new BufferedWriter(fstream);
+				outFile.write("test finished");
+				outFile.newLine();
+				// Close the output stream
+				outFile.close();
+			} catch (Exception e) {// Catch exception if any
+				System.err.println("Error: " + e.getMessage());
+			}
+
+			// }
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error("Exception Tester " + e.getMessage());
+		}
+	}
+
+	/**
+	 * Sends an {@link ACLMessage} with locution GETALLPOSITIONS to the
+	 * Commitment Store and returns the positions in a list
+	 * 
+	 * @param dialogueID
+	 * @return positions in a list
+	 */
+	@SuppressWarnings("unchecked")
+	private ArrayList<Position> getAllPositions(String dialogueID) {
+		sendMessage(commitmentStoreID, "GETALLPOSITIONS", dialogueID, null);
+		ArrayList<String> locutions = new ArrayList<String>();
+		locutions.add("GETALLPOSITIONS");
+		ArrayList<Position> positions;
+		try {
+			ACLMessage msg = receiveACLMessage();
+			positions = (ArrayList<Position>) msg.getContentObject();
+		} catch (Exception e) {
+			positions = new ArrayList<Position>();
+			logger.error(this.getName() + ": Exception in getAllPositions\n" + e.toString());
+			e.printStackTrace();
+		}
+
+		return positions;
+	}
+
+	/**
+	 * Sends an {@link ACLMessage} with the given parameters
+	 * 
+	 * @param agentID
+	 * @param locution
+	 * @param conversationID
+	 * @param contentObject
+	 */
+	private void sendMessage(String agentID, String locution, String conversationID, Serializable contentObject) {
+
+		ACLMessage msg = new ACLMessage();
+		msg.setSender(getAid());
+		msg.setReceiver(new AgentID(agentID));
+		msg.setHeader("locution", locution);
+		msg.setConversationId(conversationID);
+		msg.setPerformative(ACLMessage.INFORM);
+
+		try {
+			msg.setContentObject(contentObject);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		logger.info(this.getName() + ": " + "message to send to: " + msg.getReceiver().toString() + " dialogueID: "
+				+ msg.getConversationId() + " locution: " + msg.getHeaderValue("locution"));
+		send(msg);
+
+	}
+
+}
