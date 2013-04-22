@@ -60,15 +60,15 @@ public class Run {
 			/**
 			 * Starting a BridgeAgentInOut SingleAgent
 			 */
-			///BridgeAgentInOut agentInOut = new BridgeAgentInOut(new AgentID(
-			///		"BridgeAgentInOut", "qpid", "localhost", "5000"));
-			///agentInOut.start();
+			BridgeAgentInOut agentInOut = new BridgeAgentInOut(new AgentID(
+					"BridgeAgentInOut", "qpid", "localhost", "5000"));
+			agentInOut.start();
 			/**
 			 * Starting a BridgeAgentOutIn SingleAgent
 			 */
-			///BridgeAgentOutIn agentOutIn = new BridgeAgentOutIn(new AgentID(
-			///		"BridgeAgentOutIn", "qpid", "localhost", "5000"));
-			///agentOutIn.start();
+			BridgeAgentOutIn agentOutIn = new BridgeAgentOutIn(new AgentID(
+					"BridgeAgentOutIn", "qpid", "localhost", "5000"));
+			agentOutIn.start();
 			
 
 

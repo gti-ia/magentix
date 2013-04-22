@@ -135,6 +135,8 @@ shutil.copy("target"+os.sep+"StartMagentix.jar", ".."+os.sep+releasedir+os.sep+"
 
 os.chdir(pwd)
 
+#copy example scripts
+shutil.copytree("magentix2"+os.sep+"examples", releasedir+os.sep+"examples")
 
 #zip release
 zipdir(releasedir, releasedir)
