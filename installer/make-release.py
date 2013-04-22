@@ -51,7 +51,7 @@ if which("doxygen")!=None:
 	os.chdir("..")
 	os.system("doxygen Doxyfile")
 	os.chdir("installer")
-elif False and which("/Applications/Doxygen.app/Contents/Resources/doxygen")!=None: #MacOS style
+elif which("/Applications/Doxygen.app/Contents/Resources/doxygen")!=None: #MacOS style
 	os.chdir("..")
 	os.system("/Applications/Doxygen.app/Contents/Resources/doxygen Doxyfile")
 	os.chdir("installer")
@@ -75,6 +75,7 @@ if which("svn") != None:
 else:
 	orig = "magentix2"
 	print "WARNING: could not export svn!"
+
 #copy files
 shutil.copytree(orig+os.sep+"bin", releasedir+os.sep+"bin")
 shutil.copytree(orig+os.sep+"doc", releasedir+os.sep+"doc")
@@ -91,7 +92,7 @@ shutil.copy(".."+os.sep+"LICENSE.txt", releasedir)
 shutil.copy(".."+os.sep+"RELEASE_NOTES", releasedir)
 
 os.mkdir(releasedir+os.sep+"doc"+os.sep+"manual")
-if False and sys.platform!="win32" and which("pdflatex")!=None:
+if sys.platform!="win32" and which("pdflatex")!=None:
 
 	if which("pdftk")!=None:
 		os.chdir(".."+os.sep+"doc"+os.sep+"manual")
@@ -115,9 +116,25 @@ def line_prepender(filename,line):
 line_prepender(releasedir+os.sep+"Start-Magentix.sh", 'VERSION='+release+'\n\n')
 line_prepender(releasedir+os.sep+"Start-Magentix.bat", 'set VERSION='+release+'\n\n')
 
-#copy examples
-shutil.copy(".."+os.sep+"src"+os.sep+"examples"+os.sep+"target"+os.sep+"MagentixExamples.jar", releasedir+os.sep+"lib")
-shutil.copytree(orig+os.sep+"examples", releasedir+os.sep+"examples")
+#Compile everything
+pwd = os.getcwd()
+#compile magentix...
+os.chdir("..")
+os.system("mvn package assembly:assembly -Dmaven.test.skip=true")
+shutil.copy("target"+os.sep+"magentix2-"+release+".jar", "installer"+os.sep+releasedir+os.sep+"lib")
+shutil.copy("target"+os.sep+"magentix2-"+release+"-jar-with-dependencies.zip", "installer"+os.sep+releasedir+os.sep+"lib")
+#compile Examples...
+os.chdir("src"+os.sep+"examples")
+os.system("mvn package -Dmaven.test.skip=true")
+shutil.copy("target"+os.sep+"MagentixExamples.jar", ".."+os.sep+".."+os.sep+"installer"+os.sep+releasedir+os.sep+"lib")
+#compile StartMagentix...
+os.chdir(pwd)
+os.chdir("StartMagentix")
+os.system("mvn package -Dmaven.test.skip=true")
+shutil.copy("target"+os.sep+"StartMagentix.jar", ".."+os.sep+releasedir+os.sep+"bin")
+
+os.chdir(pwd)
+
 
 #zip release
 zipdir(releasedir, releasedir)

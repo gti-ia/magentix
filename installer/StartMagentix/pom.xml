@@ -47,6 +47,16 @@
     	<artifactId>magentix2</artifactId>
     	<version>2.0.3</version>
     </dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-jci-core</artifactId>
+			<version>1.0</version>
+		</dependency>
+                <dependency>
+                        <groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+                        <version>1.5.2</version>
+                </dependency>
   </dependencies>
   
 
