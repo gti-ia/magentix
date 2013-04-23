@@ -120,17 +120,17 @@ line_prepender(releasedir+os.sep+"Start-Magentix.bat", 'set VERSION='+release+'\
 pwd = os.getcwd()
 #compile magentix...
 os.chdir("..")
-os.system("mvn package assembly:assembly -Dmaven.test.skip=true")
+os.system("mvn clean compile package assembly:assembly -Dmaven.test.skip=true")
 shutil.copy("target"+os.sep+"magentix2-"+release+".jar", "installer"+os.sep+releasedir+os.sep+"lib")
 shutil.copy("target"+os.sep+"magentix2-"+release+"-jar-with-dependencies.zip", "installer"+os.sep+releasedir+os.sep+"lib")
 #compile Examples...
 os.chdir("src"+os.sep+"examples")
-os.system("mvn package -Dmaven.test.skip=true")
+os.system("mvn clean compile package -Dmaven.test.skip=true")
 shutil.copy("target"+os.sep+"MagentixExamples.jar", ".."+os.sep+".."+os.sep+"installer"+os.sep+releasedir+os.sep+"lib")
 #compile StartMagentix...
 os.chdir(pwd)
 os.chdir("StartMagentix")
-os.system("mvn package -Dmaven.test.skip=true")
+os.system("mvn clean compile package -Dmaven.test.skip=true")
 shutil.copy("target"+os.sep+"StartMagentix.jar", ".."+os.sep+releasedir+os.sep+"bin")
 
 os.chdir(pwd)
