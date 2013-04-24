@@ -28,6 +28,12 @@
 				<role>Faculty</role>
 			</roles>
 		</contributor>
+		<contributor>
+			<name>Javi Palanca</name>
+			<email>jpalanca@dsic.upv.es</email>
+		</contributor>
+
+
 	</contributors>
 	<version>2.0.3</version>
 	<description>
