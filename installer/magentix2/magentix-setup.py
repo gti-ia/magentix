@@ -62,7 +62,7 @@ You need to have mysql-server installed and running.""")
 			+ '''Eg: <role rolename="manager-script"/>
     <user username="tomcat" password="tomcat" roles="manager-script"/>'''
 			)
-	
+
 	except urllib2.URLError, e:
 		exit("Could not connect to Tomcat server: "+str(e.reason) + "\n"+ """You need to have tomcat7 installed and running.""")
 
@@ -73,7 +73,7 @@ def create_msql_schema(dbpasswd):
 	try:
 		dbh = connection.MySQLConnection(host="localhost", user="root", password=dbpasswd)
 		cursor = dbh.cursor()
-		
+
 		with open("bin"+os.sep+"sql"+os.sep+"db-schema.sql") as f:
 			sql_text = f.read()
 			sql_stmts = sql_text.split(";")
@@ -127,5 +127,4 @@ print "Installing Magentix Database..."
 create_msql_schema(dbpasswd)
 print "Deploying THOMAS webapps..."
 install_webapps(tomcat_user, tomcat_passwd)
-print "Magentix succesfully installed."
-
+exit("Magentix succesfully installed.")
