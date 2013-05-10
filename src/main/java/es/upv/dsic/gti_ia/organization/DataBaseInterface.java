@@ -3299,27 +3299,34 @@ public class DataBaseInterface {
 
 			}
 
-			typerowName = typeTableName.replace("List", "");
-			typerowName = typerowName + "Name";
-
-			res4 = st.executeQuery("SELECT id"+typeTableName+" FROM "+typeTableName+" WHERE "+typerowName +"='"+parsedNorm.getTargetValue()+"'");
-
-			if (res4.next())
+			
+			if (typeTableName.equals("_"))
 			{
-				idTargetValue = res4.getString("id"+typeTableName);
+				idTargetValue = "-1";
 			}
-			else if (parsedNorm.getTargetType().equals("agentName"))
-			{				
-				st.executeUpdate("INSERT INTO agentList (agentName) VALUES ('" + parsedNorm.getTargetValue()+"')");
+			else{
 
-				res5 = st.executeQuery("SELECT id"+typeTableName+" FROM "+typeTableName+" WHERE "+typerowName +"='"+parsedNorm.getTargetValue()+"'");
+				typerowName = typeTableName.replace("List", "");
+				typerowName = typerowName + "Name";
 
-				if (res5.next())
+				res4 = st.executeQuery("SELECT id"+typeTableName+" FROM "+typeTableName+" WHERE "+typerowName +"='"+parsedNorm.getTargetValue()+"'");
+
+				if (res4.next())
 				{
-					idTargetValue = res5.getString("id"+typeTableName);
+					idTargetValue = res4.getString("id"+typeTableName);
+				}
+				else if (parsedNorm.getTargetType().equals("agentName"))
+				{				
+					st.executeUpdate("INSERT INTO agentList (agentName) VALUES ('" + parsedNorm.getTargetValue()+"')");
+
+					res5 = st.executeQuery("SELECT id"+typeTableName+" FROM "+typeTableName+" WHERE "+typerowName +"='"+parsedNorm.getTargetValue()+"'");
+
+					if (res5.next())
+					{
+						idTargetValue = res5.getString("id"+typeTableName);
+					}
 				}
 			}
-
 
 			res6 = st.executeQuery("SELECT idactionNorm FROM actionNorm WHERE description ='"+parsedNorm.getActionName()+"'");
 
