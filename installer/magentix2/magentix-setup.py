@@ -59,8 +59,9 @@ You need to have mysql-server installed and running.""")
 	except urllib2.HTTPError, e:
 		exit("Could not auth to Tomcat server: "+str(e.reason)+ " ("+str(e.code)+")"
 			+ "\nTIP: Has the tomcat user the role manager-script assigned in tomcat-users.xml?\n"
-			+ '''Eg: <role rolename="manager-script"/>
-    <user username="tomcat" password="tomcat" roles="manager-script"/>'''
+			+ '''\nEg: <role rolename="manager-script"/>
+    <user username="tomcat" password="tomcat" roles="manager-script"/>
+You may need to install the additional package tomcat-admin.'''
 			)
 
 	except urllib2.URLError, e:
