@@ -118,20 +118,23 @@ line_prepender(releasedir+os.sep+"Start-Magentix.bat", 'set VERSION='+release+'\
 
 #Compile everything
 pwd = os.getcwd()
-#compile magentix...
-os.chdir("..")
-os.system("mvn clean compile package assembly:assembly -Dmaven.test.skip=true")
-shutil.copy("target"+os.sep+"magentix2-"+release+".jar", "installer"+os.sep+releasedir+os.sep+"lib")
-shutil.copy("target"+os.sep+"magentix2-"+release+"-jar-with-dependencies.zip", "installer"+os.sep+releasedir+os.sep+"lib")
-#compile Examples...
-os.chdir("src"+os.sep+"examples")
-os.system("mvn clean compile package -Dmaven.test.skip=true")
-shutil.copy("target"+os.sep+"MagentixExamples.jar", ".."+os.sep+".."+os.sep+"installer"+os.sep+releasedir+os.sep+"lib")
-#compile StartMagentix...
-os.chdir(pwd)
-os.chdir("StartMagentix")
-os.system("mvn clean compile package -Dmaven.test.skip=true")
-shutil.copy("target"+os.sep+"StartMagentix.jar", ".."+os.sep+releasedir+os.sep+"bin")
+if which("mvn") != None:
+    #compile magentix...
+    os.chdir("..")
+    os.system("mvn clean compile package assembly:assembly -Dmaven.test.skip=true")
+    shutil.copy("target"+os.sep+"magentix2-"+release+".jar", "installer"+os.sep+releasedir+os.sep+"lib")
+    shutil.copy("target"+os.sep+"magentix2-"+release+"-jar-with-dependencies.zip", "installer"+os.sep+releasedir+os.sep+"lib")
+    #compile Examples...
+    os.chdir("src"+os.sep+"examples")
+    os.system("mvn clean compile package -Dmaven.test.skip=true")
+    shutil.copy("target"+os.sep+"MagentixExamples.jar", ".."+os.sep+".."+os.sep+"installer"+os.sep+releasedir+os.sep+"lib")
+    #compile StartMagentix...
+    os.chdir(pwd)
+    os.chdir("StartMagentix")
+    os.system("mvn clean compile package -Dmaven.test.skip=true")
+    shutil.copy("target"+os.sep+"StartMagentix.jar", ".."+os.sep+releasedir+os.sep+"bin")
+else:
+	print "WARNING: Could not compile the platform! You MUST install maven2."
 
 os.chdir(pwd)
 
