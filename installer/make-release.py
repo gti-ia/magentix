@@ -65,7 +65,7 @@ os.mkdir(releasedir + os.sep + "src")
 shutil.move(srcfile + ".zip", releasedir +os.sep+ "src")
 
 #generate exe
-if sys.platform=="win32" and which("python")!=None:
+if sys.platform=="win32":
 	os.system("python setup.py py2exe")
 	shutil.copy("dist"+os.sep+"magentix-setup.exe", "magentix2")
 
