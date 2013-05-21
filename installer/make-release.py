@@ -31,10 +31,20 @@ def which(program):
     return None
 
 
-try:
-    release = sys.argv[1]
-except:
-    sys.exit("Missing parameter. Usage: " + sys.argv[0] + " releasenumber")
+nodoc = "-nodoc" in sys.argv
+nomvn = "-nomvn" in sys.argv
+nosrc = "-nosrc" in sys.argv
+noexport = "-noexport" in sys.argv
+nozip = "-nozip" in sys.argv
+norm = "-norm" in sys.argv
+
+#try:
+#    release = sys.argv[1]
+#except:
+#    sys.exit("Missing parameter. Usage: " + sys.argv[0] + " releasenumber")
+
+from xml.etree.ElementTree import ElementTree
+release = ElementTree(file=".."+os.sep+"pom.xml").findtext("{http://maven.apache.org/POM/4.0.0}version")
 
 
 shutil.rmtree("magentix2-export",ignore_errors=True)
@@ -47,34 +57,37 @@ for f in glob.glob(releasedir+"*.zip"):
 os.mkdir(releasedir)
 
 #generate doc
-if which("doxygen")!=None:
-	os.chdir("..")
-	os.system("doxygen Doxyfile")
-	os.chdir("installer")
-elif which("/Applications/Doxygen.app/Contents/Resources/doxygen")!=None: #MacOS style
-	os.chdir("..")
-	os.system("/Applications/Doxygen.app/Contents/Resources/doxygen Doxyfile")
-	os.chdir("installer")
-else:
-	print "WARNING: Could not generate api documentation. Missing doxygen."
+if not nodoc:
+    if which("doxygen")!=None:
+    	os.chdir("..")
+    	os.system("doxygen Doxyfile")
+    	os.chdir("installer")
+    elif which("/Applications/Doxygen.app/Contents/Resources/doxygen")!=None: #MacOS style
+    	os.chdir("..")
+    	os.system("/Applications/Doxygen.app/Contents/Resources/doxygen Doxyfile")
+    	os.chdir("installer")
+    else:
+    	print "WARNING: Could not generate api documentation. Missing doxygen."
 
 #zip sources
-srcfile = "magentix2-"+str(release)+"-src"
-zipdir("src", srcfile)
-os.mkdir(releasedir + os.sep + "src")
-shutil.move(srcfile + ".zip", releasedir +os.sep+ "src")
+if not nosrc:
+    srcfile = "magentix2-"+str(release)+"-src"
+    zipdir("src", srcfile)
+    os.mkdir(releasedir + os.sep + "src")
+    shutil.move(srcfile + ".zip", releasedir +os.sep+ "src")
 
 #generate exe
 if sys.platform=="win32":
 	os.system("python setup.py py2exe")
 	shutil.copy("dist"+os.sep+"magentix-setup.exe", "magentix2")
 
-if which("svn") != None:
-	os.system("svn export magentix2 magentix2-export")
-	orig = "magentix2-export"
-else:
-	orig = "magentix2"
-	print "WARNING: could not export svn!"
+orig = "magentix2"
+if not noexport:
+    if which("svn") != None:
+    	os.system("svn export magentix2 magentix2-export")
+    	orig = "magentix2-export"
+    else:
+    	print "WARNING: could not export svn!"
 
 #copy files
 shutil.copytree(orig+os.sep+"bin", releasedir+os.sep+"bin")
@@ -91,20 +104,21 @@ shutil.copy(orig+os.sep+"magentix-setup.exe", releasedir)
 shutil.copy(".."+os.sep+"LICENSE.txt", releasedir)
 shutil.copy(".."+os.sep+"RELEASE_NOTES", releasedir)
 
-os.mkdir(releasedir+os.sep+"doc"+os.sep+"manual")
-if sys.platform!="win32" and which("pdflatex")!=None:
+if not nodoc:
+    os.mkdir(releasedir+os.sep+"doc"+os.sep+"manual")
+    if sys.platform!="win32" and which("pdflatex")!=None:
 
-	if which("pdftk")!=None:
-		os.chdir(".."+os.sep+"doc"+os.sep+"manual")
-		os.system("make")
-		os.system("make clean")
-		os.chdir(".."+os.sep+".."+os.sep+"installer")
-	else:
-		print "WARNING: Could not compile the manual. Missing pdftk. I'll use the last version of the manual."
-else:
-	print "WARNING: Could not compile the manual. Missing pdflatex. I'll use the last version of the manual."
+    	if which("pdftk")!=None:
+    		os.chdir(".."+os.sep+"doc"+os.sep+"manual")
+    		os.system("make")
+    		os.system("make clean")
+    		os.chdir(".."+os.sep+".."+os.sep+"installer")
+    	else:
+    		print "WARNING: Could not compile the manual. Missing pdftk. I'll use the last version of the manual."
+    else:
+    	print "WARNING: Could not compile the manual. Missing pdflatex. I'll use the last version of the manual."
 
-shutil.copy(".."+os.sep+"doc"+os.sep+"manual"+os.sep+"Magentix2UserManual.pdf", releasedir+os.sep+"doc"+os.sep+"manual")
+    shutil.copy(".."+os.sep+"doc"+os.sep+"manual"+os.sep+"Magentix2UserManual.pdf", releasedir+os.sep+"doc"+os.sep+"manual")
 
 #attach version to Start-Magentix scripts
 def line_prepender(filename,line):
@@ -118,23 +132,24 @@ line_prepender(releasedir+os.sep+"Start-Magentix.bat", 'set VERSION='+release+'\
 
 #Compile everything
 pwd = os.getcwd()
-if which("mvn") != None:
-    #compile magentix...
-    os.chdir("..")
-    os.system("mvn clean compile package assembly:assembly -Dmaven.test.skip=true")
-    shutil.copy("target"+os.sep+"magentix2-"+release+".jar", "installer"+os.sep+releasedir+os.sep+"lib")
-    shutil.copy("target"+os.sep+"magentix2-"+release+"-jar-with-dependencies.zip", "installer"+os.sep+releasedir+os.sep+"lib")
-    #compile Examples...
-    os.chdir("src"+os.sep+"examples")
-    os.system("mvn clean compile package -Dmaven.test.skip=true")
-    shutil.copy("target"+os.sep+"MagentixExamples.jar", ".."+os.sep+".."+os.sep+"installer"+os.sep+releasedir+os.sep+"lib")
-    #compile StartMagentix...
-    os.chdir(pwd)
-    os.chdir("StartMagentix")
-    os.system("mvn clean compile package -Dmaven.test.skip=true")
-    shutil.copy("target"+os.sep+"StartMagentix.jar", ".."+os.sep+releasedir+os.sep+"bin")
-else:
-	print "WARNING: Could not compile the platform! You MUST install maven2."
+if not nomvn:
+    if which("mvn") != None:
+        #compile magentix...
+        os.chdir("..")
+        os.system("mvn clean compile package assembly:assembly -Dmaven.test.skip=true")
+        shutil.copy("target"+os.sep+"magentix2-"+release+".jar", "installer"+os.sep+releasedir+os.sep+"lib")
+        shutil.copy("target"+os.sep+"magentix2-"+release+"-jar-with-dependencies.zip", "installer"+os.sep+releasedir+os.sep+"lib")
+        #compile Examples...
+        os.chdir("src"+os.sep+"examples")
+        os.system("mvn clean compile package -Dmaven.test.skip=true")
+        shutil.copy("target"+os.sep+"MagentixExamples.jar", ".."+os.sep+".."+os.sep+"installer"+os.sep+releasedir+os.sep+"lib")
+        #compile StartMagentix...
+        os.chdir(pwd)
+        os.chdir("StartMagentix")
+        os.system("mvn clean compile package -Dmaven.test.skip=true")
+        shutil.copy("target"+os.sep+"StartMagentix.jar", ".."+os.sep+releasedir+os.sep+"bin")
+    else:
+    	print "WARNING: Could not compile the platform! You MUST install maven2."
 
 os.chdir(pwd)
 
@@ -142,9 +157,12 @@ os.chdir(pwd)
 shutil.copytree("magentix2"+os.sep+"examples", releasedir+os.sep+"examples")
 
 #zip release
-zipdir(releasedir, releasedir)
+if not nozip:
+    zipdir(releasedir, releasedir)
 #clean
-#shutil.rmtree(releasedir,ignore_errors=True)
+if not norm:
+    shutil.rmtree(releasedir,ignore_errors=True)
+
 shutil.rmtree("magentix2-export",ignore_errors=True)
 
 print "Done."
