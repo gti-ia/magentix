@@ -28,10 +28,9 @@ public class TestSingleAgent extends TestCase {
 		super.setUp();
 
 		/**
-		 * Setting the Logger
+		 * Setting the configuration
 		 */
-		//DOMConfigurator.configure("configuration/loggin.xml");
-		//Logger logger = Logger.getLogger(Run.class);
+		DOMConfigurator.configure("configuration/loggin.xml");
 
 
 		/**
@@ -60,7 +59,6 @@ public class TestSingleAgent extends TestCase {
 			consumerAgent2.start();
 
 		} catch (Exception e) {
-			//logger.error("Error  " + e.getMessage());
 			System.out.println(e.getMessage());
 		}
 
