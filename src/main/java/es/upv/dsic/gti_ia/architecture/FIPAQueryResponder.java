@@ -7,6 +7,7 @@ import es.upv.dsic.gti_ia.core.ACLMessage;
  * This class implements the FIPA-Query interaction protocol, Role Responder.
  * 
  * @author  Joan Bellver Faus, GTI-IA, DSIC, UPV
+ * @author David Fernández Molina, GTI-IA, DSIC, UPV
  * @version 2009.9.07
  */
 public class FIPAQueryResponder {
@@ -55,7 +56,7 @@ public class FIPAQueryResponder {
 		 
 	 }
 
-	 int getState() {
+	 public int getState() {
 		return this.state;
 	}
 
