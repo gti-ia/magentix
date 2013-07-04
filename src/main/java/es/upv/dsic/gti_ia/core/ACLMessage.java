@@ -27,7 +27,7 @@ public class ACLMessage implements Serializable, Cloneable {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	// miembros
+	// Members
 	/** constant identifying the FIPA performative */
 	public static final int ACCEPT_PROPOSAL = 0;
 	/** constant identifying the FIPA performative */
@@ -169,7 +169,7 @@ public class ACLMessage implements Serializable, Cloneable {
 	private Map<String, String> headers = new HashMap<String, String>();
 	private Map<String, String> exchangeHeaders = new HashMap<String, String>();
 
-	// constructores
+	// constructors
 
 	/**
 	 * Empty constructor. The performative is set to UNKNOWN
@@ -510,7 +510,7 @@ public class ACLMessage implements Serializable, Cloneable {
 	 * @return -1 if the agent already exists in the list, 1 otherwise
 	 */
 	public int addReceiver(AgentID r) {
-		// Comprovem si existeix l'agent, si existeix tornem -1
+		// Test if the agent exists, if it exists return -1
 		for (int i = 0; i < receiver.size(); i++) {
 			if (receiver.get(i).name.equals(r.name)
 					&& receiver.get(i).host.equals(r.host)
@@ -579,7 +579,7 @@ public class ACLMessage implements Serializable, Cloneable {
 		m.setReplyByDate(null);
 		m.setContent("");
 		m.setEncoding("");
-		m.exchangeHeaders = new HashMap<String, String>();;
+		m.exchangeHeaders = new HashMap<String, String>();
 		// #CUSTOM_EXCLUDE_BEGIN
 		// Set the Aclrepresentation of the reply message to the
 		// aclrepresentation of the sent message
@@ -625,7 +625,7 @@ public class ACLMessage implements Serializable, Cloneable {
 		}
 		
 		if (msg.getConversationId() != null) {
-			this.setConversationId(this.getConversationId());
+			this.setConversationId(msg.getConversationId());
 		}
 		
 		this.setReplyWith(msg.getReplyWith());
@@ -646,8 +646,6 @@ public class ACLMessage implements Serializable, Cloneable {
 		{
 			this.putExchangeHeader(key, headers.get(key));
 		}
-		
-		this.setConversationId(msg.getConversationId());
 	}
 
 	/**
@@ -1010,15 +1008,32 @@ public class ACLMessage implements Serializable, Cloneable {
 		return msg;
 	}
 	
+	/**
+	 * Obtains the whole set of exchange headers in this message.
+	 * 
+	 * @return A Map containing all the exchange headers (and its contents) in this message
+	 */
 	public Map<String, String> getExchangeHeaders()
 	{
 		return this.exchangeHeaders;
 	}
 	
+	/**
+	 * Adds the value of a exchange header for this message.
+	 * 
+	 * @param key The name of the exchange header
+	 * @param value The content for the exchange header
+	 */
 	public void putExchangeHeader(String key, String value){
 		this.exchangeHeaders.put(key, value);
 	}
 	
+	/**
+	 * Gets the value of a exchange header for this message.
+	 * 
+	 * @param key The name of the exchange header
+	 * @return The value of the exchange header specified
+	 */
 	public String getExchangeHeader(String key){
 		return this.exchangeHeaders.get(key);
 	}
