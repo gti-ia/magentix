@@ -10,6 +10,8 @@ import java.net.*;
 import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import org.apache.log4j.xml.DOMConfigurator;
 
@@ -19,11 +21,12 @@ import com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver;
 /**
  * 
  * @author ricard
+ * @author Pedro Perez Sanchez
  */
 public class HttpInterface {
 
 	static int http_port;
-	private long petitions = 0;
+	private static ServerAgent interfaceAgent;
 	Configuration configuration = Configuration.getConfiguration();
 	
 	
@@ -33,6 +36,14 @@ public class HttpInterface {
 	 */
 	public static int getHttp_port() {
 		return http_port;
+	}
+
+	/**
+	 * Gets the ServerAgent that acts as interface agent for the HTTP interface
+	 * @return interface agent
+	 */
+	public static ServerAgent getInterfaceAgent() {
+		return interfaceAgent;
 	}
 
 	private class ServerAgent extends SingleAgent {
@@ -46,81 +57,101 @@ public class HttpInterface {
 		
 	
 
-		Socket socket;
+		private BlockingQueue<Socket> sockets;
+
+		public ServerAgent(AgentID aid) throws Exception {
+			super(aid);
+			sockets = new LinkedBlockingQueue<Socket>();
+		}
 
 		public ServerAgent(AgentID aid, Socket socket) throws Exception {
 			super(aid);
-			this.socket = socket;
+			sockets = new LinkedBlockingQueue<Socket>();
+			sockets.add(socket);
+		}
+
+		public void addSocket(Socket s) throws Exception {
+			sockets.add(s);
 		}
 
 		public void execute() {
 			InputStream is = null;
-			try {
-				is = socket.getInputStream();
-				String mensaje = this.pop(is);
-				logger.info("InterfaceAgent: HTTP request received "+mensaje);
-				BufferedReader reader = new BufferedReader(new StringReader(mensaje));
-				boolean stop = false;
-				String content;
-				while (!stop) {
-					if (reader.readLine().indexOf("Content-Length:") != -1) {
-						stop = true;
-					}
-				}
-				reader.readLine();
-				content = reader.readLine();
-				String jsonString = "{\"jsonObject\":" + content + "}";
-				XStream xstream = new XStream(new JettisonMappedXmlDriver());
-				xstream.alias("jsonObject", JSONMessage.class);
-				JSONMessage jsonMessage = (JSONMessage)xstream.fromXML(jsonString);				
-				logger.info("InterfaceAgent: Message to send: Agent name: "+jsonMessage.agent_name+" conversation id: "+jsonMessage.conversation_id);
-
-				// enviem missatge al agent destí
-				ACLMessage pregunta = new ACLMessage(ACLMessage.REQUEST);
-				pregunta.setProtocol("web");
-				pregunta.setReceiver(new AgentID(jsonMessage.agent_name));
-				pregunta.setSender(this.getAid());
-				pregunta.setConversationId(jsonMessage.conversation_id);
-				pregunta.setContent(jsonString);
-				this.send(pregunta);
-
-				// esperem a la resposta
-				ACLMessage resposta = null;
+			Socket socket = null;
+			while(true) {
 				try {
-					resposta = this.receiveACLMessage();
+					socket = sockets.take();
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-				logger.info("InterfaceAgent: HTTP Response to send: "+resposta.getContent());
-				OutputStream os = socket.getOutputStream();
-				
-				// Prova, acabar amb \r\n. Si no va, llevar \r
-				String OK = "HTTP/1.1 200 OK \r\n "
-						+ "Server:	Apache/2.2.14 (Ubuntu)\r\n"
-						+ "X-Powered-By:	PHP/5.3.2-1ubuntu4.9\r\n"
-						+ "Vary:	Accept-Encoding\r\n"
-						+ "Content-Encoding:	gzip\r\n" + "Content-Length:	"
-						+ resposta.getContent().length()*2 + "\r\n"
-						+ "Connection:	close\r\n" + "Content-Type:	text/html\n\n"
-						+ resposta.getContent();
-
-				byte a[] = OK.getBytes();
-				os.write(a);
-
-				// Cerrar
-				os.close();
-				//is.close(); no tanquem el inputstream o no funciona be
-				socket.close();
-			}
-			catch (IOException ex) {
-				Logger.getLogger(HttpInterface.class.getName()).log(Level.SEVERE, null, ex);
-			} 
-			finally {
 				try {
-					is.close();
-				} 
+					is = socket.getInputStream();
+					String mensaje = this.pop(is);
+					logger.info("InterfaceAgent: HTTP request received "+mensaje);
+					BufferedReader reader = new BufferedReader(new StringReader(mensaje));
+					boolean stop = false;
+					String content;
+					while (!stop) {
+						if (reader.readLine().indexOf("Content-Length:") != -1) {
+							stop = true;
+						}
+					}
+					reader.readLine();
+					content = reader.readLine();
+					String jsonString = "{\"jsonObject\":" + content + "}";
+					XStream xstream = new XStream(new JettisonMappedXmlDriver());
+					xstream.alias("jsonObject", JSONMessage.class);
+					JSONMessage jsonMessage = (JSONMessage)xstream.fromXML(jsonString);
+					if(jsonMessage.agent_name == null || jsonMessage.conversation_id == null) { // malformed query
+						logger.info("InterfaceAgent: The received request was malformed. Ignoring request.");
+						continue;		
+					}
+					logger.info("InterfaceAgent: Message to send: Agent name: "+jsonMessage.agent_name+" conversation id: "+jsonMessage.conversation_id);
+					// enviem missatge al agent destí
+					ACLMessage pregunta = new ACLMessage(ACLMessage.REQUEST);
+					pregunta.setProtocol("web");
+					pregunta.setReceiver(new AgentID(jsonMessage.agent_name));
+					pregunta.setSender(this.getAid());
+					pregunta.setConversationId(jsonMessage.conversation_id);
+					pregunta.setContent(jsonString);
+					this.send(pregunta);
+					// esperem a la resposta
+					ACLMessage resposta = null;
+					try {
+						resposta = this.receiveACLMessage();
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					logger.info("InterfaceAgent: HTTP Response to send: "+resposta.getContent());
+					OutputStream os = socket.getOutputStream();
+					
+					// Prova, acabar amb \r\n. Si no va, llevar \r
+					String OK = "HTTP/1.1 200 OK \r\n "
+							+ "Server:	Apache/2.2.14 (Ubuntu)\r\n"
+							+ "X-Powered-By:	PHP/5.3.2-1ubuntu4.9\r\n"
+							+ "Vary:	Accept-Encoding\r\n"
+							+ "Content-Encoding:	gzip\r\n" + "Content-Length:	"
+							+ resposta.getContent().length()*2 + "\r\n"
+							+ "Connection:	close\r\n" + "Content-Type:	text/html\n\n"
+							+ resposta.getContent();
+
+					byte a[] = OK.getBytes();
+					os.write(a);
+
+					// Cerrar
+					os.close();
+					//is.close(); no tanquem el inputstream o no funciona be
+					socket.close();
+				}
 				catch (IOException ex) {
 					Logger.getLogger(HttpInterface.class.getName()).log(Level.SEVERE, null, ex);
+				} 
+				finally {
+					try {
+						is.close();
+					} 
+					catch (IOException ex) {
+						Logger.getLogger(HttpInterface.class.getName()).log(Level.SEVERE, null, ex);
+					}
 				}
 			}
 		}
@@ -134,10 +165,10 @@ public class HttpInterface {
 		 *            The port destiny of the receiver.
 		 * @return The String containing the header
 		 */
-		private String Generate_Header(InetAddress hostDestiny,
+		private String Generate_Header(InetAddress socketIP, InetAddress hostDestiny,
 				int portDestiny, String content) {
 			String httpheader = "POST ";
-			httpheader += this.socket.getInetAddress();
+			httpheader += socketIP;
 			httpheader += " HTTP/1.1\r\n";
 			httpheader += "Cache-Control: no-cache\r\n";
 			httpheader += "Mime-Version: 1.0\r\n";
@@ -223,13 +254,17 @@ public class HttpInterface {
 			System.out.println("HTTPInterface service started. Listening port " + http_port);
 			DOMConfigurator.configure("configuration/loggin.xml");
 			AgentsConnection.connect();
+			interfaceAgent = new ServerAgent(new AgentID("interfaceAgent"));
+			interfaceAgent.start();
 
 			while (true) {
 				Socket skCliente = skServidor.accept(); // Crea objeto
-				this.petitions++;
-				ServerAgent serverAgent = new ServerAgent(new AgentID(
-						"interfaceAgent" + this.petitions), skCliente);
-				serverAgent.start();
+				try {
+					interfaceAgent.addSocket(skCliente);
+				}
+				catch(Exception ex) {
+					Logger.getLogger(HttpInterface.class.getName()).log(Level.SEVERE, null, ex);
+				}
 			}
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
