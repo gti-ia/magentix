@@ -20,8 +20,9 @@ then
 	rm /tmp/pid_magentix3
 fi
 
-#./bin/qpid-broker-0.20/bin/qpid.stop `ps -A | grep -m1 qpid-broker-0.20 | awk '{print $1}'`
-kill -9  `ps -A | grep -m1 qpid-broker-0.20 | awk '{print $1}'`
+# Using qpid.stop it works using Ubuntu and MacOX, more tests needed
+./bin/qpid-broker-0.20/bin/qpid.stop # `ps -A | grep -m1 qpid-broker-0.20 | awk '{print $1}'`
+# kill -9  `ps -A | grep -m1 qpid-broker-0.20 | awk '{print $1}'`
 
 echo "Magentix Agents stopped"
 echo "Qpid server stopped"

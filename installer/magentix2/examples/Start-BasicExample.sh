@@ -1,13 +1,3 @@
-
-#if [ "$EXAMPLES_HOME" != "" ]
-#then
-#	cd $EXAMPLES_HOME
-#else
-#	cd  ..
-#fi
-
-#sleep 5
-
 LIBS=$LIBS:../lib/magentix2-2.0.3-jar-with-dependencies.zip
 LIBS=$LIBS:../lib/MagentixExamples.jar
 #libs for security

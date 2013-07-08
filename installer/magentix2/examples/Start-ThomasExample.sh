@@ -1,4 +1,3 @@
-
 LIBS=$LIBS:../lib/magentix2-2.0.3-jar-with-dependencies.zip
 LIBS=$LIBS:../lib/MagentixExamples.jar
 #libs for security

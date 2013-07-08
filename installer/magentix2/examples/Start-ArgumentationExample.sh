@@ -7,5 +7,3 @@ LIBS=$LIBS:../lib/security/rampart-policy-1.4.jar
 
 java -cp "$LIBS" Argumentation_Example.TestArgCAgent
 
-
-
