@@ -230,12 +230,13 @@ public class DataBaseInterface {
 			stmt = connection.createStatement();
 
 			rs2 = stmt.executeQuery("SELECT idroleList FROM roleList WHERE idunitList = (SELECT idunitList FROM unitList WHERE unitName ='" + unit + "') AND roleName ='" + role + "'");
+			
 			while (rs2.next()) {
+				
 				int roleId = rs2.getInt("idroleList");
 				stmt2 = connection.createStatement();
 				rs3 = stmt2.executeQuery("SELECT * FROM agentPlayList WHERE idroleList = " + roleId + " AND idagentList = (SELECT idagentList FROM agentList WHERE agentName='" + agentName + "')");
 				if (rs3.next()) {
-
 					exists = true;
 				}
 			}
@@ -1029,21 +1030,39 @@ public class DataBaseInterface {
 	{
 		Connection connection = null;
 		Statement st = null;
-
+		Statement st2 = null;
+		Statement st3 = null;
+		ResultSet res = null;
+		ResultSet res2 = null;
 
 		try {
 			connection = db.connect();
-
+			
+			
 			st = connection.createStatement();
+			res = st.executeQuery("SELECT * FROM normList nl INNER JOIN targetType tt ON (nl.idtargettype=tt.idtargettype) " +
+					"INNER JOIN agentList al ON (al.idagentList=nl.targetValue) WHERE tt.targetName='agentName' and nl.normName='"+ NormName +"'" +
+					" and al.agentName=nl.targetValue");
 
-			st.executeUpdate("DELETE FROM actionNormParam USING actionNormParam INNER JOIN normList INNER JOIN unitList " +
+			st2 = connection.createStatement();
+			st2.executeUpdate("DELETE FROM actionNormParam USING actionNormParam INNER JOIN normList INNER JOIN unitList " +
 					"ON (actionNormParam.idnormList = normList.idnormList AND normList.idunitList=unitList.idunitList)" +
 					"WHERE unitName = '"+UnitName+"' AND normName = '"+NormName+"'");
-
-			st.executeUpdate("DELETE FROM normList USING normList INNER JOIN unitList ON (normList.idunitList=unitList.idunitList)" +
+			st2.executeUpdate("DELETE FROM normList USING normList INNER JOIN unitList ON (normList.idunitList=unitList.idunitList)" +
 					"WHERE unitName='"+UnitName+"' AND normName='"+NormName+"'");
 
-
+			if (res.next()) {
+				
+				int agentId = res.getInt("targetValue");
+				st3 = connection.createStatement();
+				res2 = st.executeQuery("SELECT * FROM agentList al INNER JOIN agentPlayList apl ON (al.idagentList=apl.idagentList) " +
+						"WHERE al.idAgentList="+ agentId );
+				
+				if (!res2.next()) {
+					st.executeUpdate("DELETE FROM agentList WHERE agentName = "+ agentId );
+				}
+			}
+			
 			connection.commit();
 			return NormName + " deleted";
 
@@ -1060,6 +1079,15 @@ public class DataBaseInterface {
 					connection.close();
 				if (st != null)
 					st.close();
+				if (st2 != null)
+					st2.close();
+				if (st3 != null)
+					st3.close();
+				
+				if (res != null)
+					res.close();
+				if (res2 != null)
+					res2.close();
 
 			}catch(SQLException e)
 			{
@@ -1119,29 +1147,31 @@ public class DataBaseInterface {
 		Statement st2 = null;
 		Statement st3 = null;
 		Statement st4 = null;
-		Statement st5 = null;
 
 		ResultSet res = null;
 		ResultSet res2 = null;
-		ResultSet res3 = null;
 
 		try {
 			connection = db.connect();
 
-			st3 = connection.createStatement();
-			st3.executeUpdate("DELETE FROM agentPlayList WHERE idroleList = (SELECT idroleList FROM roleList WHERE idunitList = (SELECT idunitList FROM unitList WHERE unitName ='" + unitName + "') AND roleName ='" + roleName + "') AND idagentList = (SELECT idagentList FROM agentList WHERE agentName='" + agentName + "')");
-
-
+			st = connection.createStatement();
+			st.executeUpdate("DELETE FROM agentPlayList WHERE idroleList = (SELECT idroleList FROM roleList WHERE idunitList = (SELECT idunitList FROM unitList WHERE unitName ='" + unitName + "') AND roleName ='" + roleName + "') AND idagentList = (SELECT idagentList FROM agentList WHERE agentName='" + agentName + "')");
 
 
 			//TODO Comprobar si es el último rol jugado, en ese caso eliminarlo de la tabla agentList
-			st4 = connection.createStatement();
-			res3 = st4.executeQuery("SELECT * FROM agentPlayList WHERE idagentList = (SELECT idagentList FROM agentList WHERE agentName = '"+agentName+"')");
+			st2 = connection.createStatement();
+			res = st2.executeQuery("SELECT * FROM agentPlayList WHERE idagentList = (SELECT idagentList FROM agentList WHERE agentName = '"+agentName+"')");
 
-			if (!res3.next())
+			if (!res.next())
 			{
-				st5 = connection.createStatement();
-				st5.executeUpdate("DELETE FROM agentList WHERE agentName = '"+agentName+"'");
+				st3 = connection.createStatement();
+				res2 = st3.executeQuery("SELECT * FROM normList nl INNER JOIN targetType tt ON (nl.idtargettype=tt.idtargettype) INNER JOIN" +
+						" agentList al ON (al.idagentList=nl.targetValue) where tt.targetName='"+ agentName +"' and al.agentName='"+ agentName +"'");
+				
+				if (!res2.next()) {
+					st4 = connection.createStatement();
+					st4.executeUpdate("DELETE FROM agentList WHERE agentName = '"+agentName+"'");
+				}
 			}
 
 			connection.commit();
@@ -1164,15 +1194,11 @@ public class DataBaseInterface {
 					st3.close();
 				if (st4 != null)
 					st4.close();
-				if (st5 != null)
-					st5.close();
 
 				if (res != null)
 					res.close();
 				if (res2 != null)
 					res2.close();
-				if (res3 != null)
-					res3.close();
 			}catch(SQLException e)
 			{
 				String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
