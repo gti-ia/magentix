@@ -746,8 +746,10 @@ public class ACLMessage implements Serializable, Cloneable {
 	 * @return The value of <code>:content</code> slot.
 	 */
 	public byte[] getByteSequenceContent() {
-		if (content != null) 
+		if (content != null) {
+			System.out.println(new StringBuffer(content).toString().getBytes());
 			return new StringBuffer(content).toString().getBytes();
+		}
 		else if (byteSequenceContent != null)
 			return byteSequenceContent;
 		return null;
@@ -1036,6 +1038,22 @@ public class ACLMessage implements Serializable, Cloneable {
 	 */
 	public String getExchangeHeader(String key){
 		return this.exchangeHeaders.get(key);
+	}
+	
+	/**
+	* Compares two ACLMessages
+	* 
+	* @param Message The message to compare with
+	* @return True if messages are equal, false if not
+	*/
+	@Override
+	public boolean equals(Object obj)
+	{
+		if ( obj == null ) return false;
+	    if ( this == obj ) return true;
+	    if ( ! (obj instanceof ACLMessage ) ) return false;
+	    ACLMessage mc = (ACLMessage) obj;
+	    return this.toString().equals(mc.toString());         
 	}
 	
 }
