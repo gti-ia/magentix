@@ -316,7 +316,7 @@ public class CProcessor implements Runnable, Cloneable {
 			}
 		}
 
-		// check if current state is Wait or Begin tpye, if not rise exception
+		// check if current state is Wait or Begin type, if not rise exception
 		if (currentStateType != State.BEGIN && currentStateType != State.WAIT) {
 			// error
 			System.out
@@ -484,7 +484,6 @@ public class CProcessor implements Runnable, Cloneable {
 					myAgent.endConversation(this.myFactory);
 					myAgent.removeProcessor(this.conversationID);
 					this.unlockMyAgent();
-					this.checkShutDown();
 					return;
 				case State.SENDING_ERRORS:
 					next = backState;
@@ -572,7 +571,6 @@ public class CProcessor implements Runnable, Cloneable {
 					currentState = next;
 					break;
 				}				
-				this.checkShutDown();
 				
 				// PENDIENTE Excepcion si no existe estado. Java no me permite
 				// enviar una excepcion desde este metodo?
@@ -607,12 +605,15 @@ public class CProcessor implements Runnable, Cloneable {
 		}
 	}
 	
+	/* Method not necessary with the last error
+	 * correction in the platform
 	private void checkShutDown(){
 		if(this.myAgent.inShutdown){
 			this.myAgent.notifyAgentEnd();
 			this.myAgent.exec.shutdownNow();			
 		}
 	}
+	*/
 
 	/**
 	 * Tries to end agent execution

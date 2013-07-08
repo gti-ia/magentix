@@ -104,6 +104,8 @@ public abstract class CAgent extends BaseAgent {
 	final Condition iAmFinished = mutex.newCondition();
 	final Condition cProcessorRemoved = mutex.newCondition();
 	boolean inShutdown = false;
+	boolean ready = false;   // Is CAgent ready to attend messages?
+    final Condition iAmReady = mutex.newCondition(); // Condition to stop the message processing until agent is ready
 	
 	private long conversationCounter = 0;
 	
@@ -201,6 +203,10 @@ public abstract class CAgent extends BaseAgent {
 			for (CProcessor c : processors.values()) {
 				if (!c.getMyFactory().equals(welcomeFactory)) {
 					c.addMessage(msg);
+					if (c.isIdle()) {
+						c.setIdle(false);
+						exec.execute(c);
+					}
 				}
 			}
 		} else {
@@ -302,6 +308,12 @@ public abstract class CAgent extends BaseAgent {
 				//myProcessor.getInternalData().put("AGENT_END_MSG",
 					//	receivedMessage);
 				me.execution(myProcessor, receivedMessage);
+				me.lock();
+				if (!ready) {
+					ready = true;
+					iAmReady.signal();
+				}
+				me.unlock();
 				return "WAIT2";
 			}
 		}
@@ -367,12 +379,28 @@ public abstract class CAgent extends BaseAgent {
 	}
 
 	/**
-	 * This method assigna a received message to a factory, an already running CProcessor
+	 * This method assigns a received message to a factory, an already running CProcessor
 	 * or to the default Factory
 	 * @param msg Message to be processed
 	 */
-	private void processMessage(ACLMessage msg) {
+	
+	private void processMessage(ACLMessage msg) {		
 		this.lock();
+		if ( ! ready ) {			
+	        try {	        	
+	            iAmReady.await();
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
+	    }  //With this we stop the message process until agent is ready
+		//Temporal code
+		this.logger.info("Agent: " + this.getName()
+				+ " processing message");
+		this.logger.info("Agent: " + this.getName()
+				+ " Number of processors: " + processors.size());
+		this.logger.info("Agent: " + this.getName()
+				+ " Number of Participant CFactories " + participantFactories.size());
+		//End of temporal code
 		CProcessor auxProcessor = processors.get(msg.getConversationId());
 		boolean accepted = false;
 		if (auxProcessor != null) {
@@ -421,9 +449,8 @@ public abstract class CAgent extends BaseAgent {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		this.exec.shutdownNow();
 		this.logger.info("Agent " + this.getName() + " ENDED");
-		if(!finalizeExecuted)
-			this.finalize(welcomeProcessor, null);
 		
 		this.unlock();
 	}
@@ -595,6 +622,10 @@ public abstract class CAgent extends BaseAgent {
 		msg.setHeader("PURPOSE", "AGENT_END");
 		msg.setContent("See you");
 		welcomeProcessor.addMessage(msg);
+		if (welcomeProcessor.isIdle()) {
+			welcomeProcessor.setIdle(false);
+			exec.execute(welcomeProcessor);
+		}
 		this.unlock();
 	}
 
@@ -657,6 +688,10 @@ public abstract class CAgent extends BaseAgent {
 	 */
 	public void startSyncConversation(String factoryName){
 		this.lock();
+		if (!ready) {
+            ready = true;
+            iAmReady.signal();
+         } 
 		for (int i = 0; i < initiatorFactories.size(); i++) {
 			if (initiatorFactories.get(i).name.equals(factoryName)) {
 				this.welcomeProcessor.createSyncConversation(initiatorFactories.get(i), newConversationID());
