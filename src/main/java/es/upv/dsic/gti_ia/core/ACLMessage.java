@@ -7,11 +7,14 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import es.upv.dsic.gti_ia.core.ISO8601;
 
@@ -1053,7 +1056,43 @@ public class ACLMessage implements Serializable, Cloneable {
 	    if ( this == obj ) return true;
 	    if ( ! (obj instanceof ACLMessage ) ) return false;
 	    ACLMessage mc = (ACLMessage) obj;
-	    return this.toString().equals(mc.toString());         
+	    if(!this.getPerformative().equals(mc.getPerformative())) return false;	    
+	    if(!this.getSender().toString().equals(mc.getSender().toString())) return false;
+	    if(!this.getReplyTo().toString().equals(mc.getReplyTo().toString())) return false;
+	    if(!this.getLanguage().equals(mc.getLanguage())) return false;
+	    if(!this.getEncoding().equals(mc.getEncoding())) return false;
+	    if(!this.getOntology().equals(mc.getOntology())) return false;
+	    if(!this.getProtocol().equals(mc.getProtocol())) return false;
+	    if(!this.getConversationId().equals(mc.getConversationId())) return false;
+	    if(!this.getReplyBy().equals(mc.getReplyBy())) return false;
+	    if(!this.getInReplyTo().equals(mc.getInReplyTo())) return false;
+	    
+	    
+	    //Compare byteSequenceContent, receivers, headers and exchangeHeaders
+	    //ByteSequence arrays should be totally equals (even in the order)
+	    byte [] msgBytes = this.getByteSequenceContent();		
+		byte [] mcBytes = mc.getByteSequenceContent();
+		if(msgBytes.length != mcBytes.length)//check different length
+			return false;
+		for(int i = 0; i<mcBytes.length; i++)//check different content
+			if(mcBytes[i] != msgBytes[i])
+				return false;
+		//Receivers and headers should be equal but not necessary in order
+		//use of set for efficiency reasons
+	    Set<AgentID> setReceivers = new HashSet<AgentID>(this.getReceiverList());
+	    Set<AgentID> setReceiversMc = new HashSet<AgentID>(mc.getReceiverList());
+	    if(!setReceivers.equals(setReceiversMc)) return false;
+	    Set<Map.Entry<String,String>> setHeaders = this.getHeaders().entrySet();
+	    Set<Map.Entry<String,String>> setHeadersMc = mc.getHeaders().entrySet();
+	    if(!setHeaders.equals(setHeadersMc)) return false;
+	    Set<Map.Entry<String,String>> setExchangeHeaders = this.getExchangeHeaders().entrySet();
+	    Set<Map.Entry<String,String>> setExchangeHeadersMc = mc.getExchangeHeaders().entrySet();
+	    if(!setExchangeHeaders.equals(setExchangeHeadersMc)) return false;
+	    
+	    return true;            
 	}
+	
+	
+	
 	
 }
