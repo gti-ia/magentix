@@ -36,7 +36,6 @@ nomvn = "-nomvn" in sys.argv
 nosrc = "-nosrc" in sys.argv
 noexport = "-noexport" in sys.argv
 nozip = "-nozip" in sys.argv
-norm = "-norm" in sys.argv
 
 #try:
 #    release = sys.argv[1]
@@ -136,17 +135,17 @@ if not nomvn:
     if which("mvn") != None:
         #compile magentix...
         os.chdir("..")
-        os.system("mvn clean compile package assembly:assembly -Dmaven.test.skip=true")
+        os.system("mvn compile package assembly:assembly -Dmaven.test.skip=true")
         shutil.copy("target"+os.sep+"magentix2-"+release+".jar", "installer"+os.sep+releasedir+os.sep+"lib")
         shutil.copy("target"+os.sep+"magentix2-"+release+"-jar-with-dependencies.zip", "installer"+os.sep+releasedir+os.sep+"lib")
         #compile Examples...
         os.chdir("src"+os.sep+"examples")
-        os.system("mvn clean compile package -Dmaven.test.skip=true")
+        os.system("mvn compile package -Dmaven.test.skip=true")
         shutil.copy("target"+os.sep+"MagentixExamples.jar", ".."+os.sep+".."+os.sep+"installer"+os.sep+releasedir+os.sep+"lib")
         #compile StartMagentix...
         os.chdir(pwd)
         os.chdir("StartMagentix")
-        os.system("mvn clean compile package -Dmaven.test.skip=true")
+        os.system("mvn compile package -Dmaven.test.skip=true")
         shutil.copy("target"+os.sep+"StartMagentix.jar", ".."+os.sep+releasedir+os.sep+"bin")
     else:
     	print "WARNING: Could not compile the platform! You MUST install maven2."
@@ -159,11 +158,13 @@ shutil.copytree("magentix2"+os.sep+"examples", releasedir+os.sep+"examples")
 #zip release
 if not nozip:
     zipdir(releasedir, releasedir)
-#clean
-if not norm:
     shutil.rmtree(releasedir,ignore_errors=True)
 
 shutil.rmtree("magentix2-export",ignore_errors=True)
 
 print "Done."
-print "Your new release is magentix2-"+release+".zip"
+
+if not nozip:
+    print "Your new release is magentix2-"+release+".zip"
+else:
+    print "Your new release is magentix2-"+release+"/"
