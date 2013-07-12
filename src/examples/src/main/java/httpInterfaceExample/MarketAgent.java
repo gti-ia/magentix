@@ -47,6 +47,7 @@ public class MarketAgent extends SingleAgent{
 				ACLMessage response = new ACLMessage(ACLMessage.INFORM);
 				response.setSender(getAid());
 				response.setReceiver(msg.getSender());
+				response.setConversationId(msg.getConversationId()); // this is important with the last version of HTTP Interface
 				Product product = new Product();
 				
 				// check which product fits the specifications

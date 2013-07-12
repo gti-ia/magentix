@@ -1,0 +1,98 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>HTTP Interface test</title>
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <script type="text/javascript" src="http://code.jquery.com/jquery-1.6.4.js"></script>
+        <script src="jqm-docs.js"></script>
+        <script type="text/javascript" src="http://code.jquery.com/mobile/1.0/jquery.mobile-1.0.min.js"></script>
+        <script type="text/javascript" src="js/magentix2.js"></script>  
+        <script type="text/javascript">
+            var nrequests = 0;
+            var nresponses = 0;
+            var start = 0;
+            var end = 0;
+            var playing = false;
+            var printing = true;
+            var lastSeconds = 0;
+            var lastResponses = 0;
+            var seconds = 0;
+            var throughput = 0;
+
+            function transformData(){
+                document.getElementById("testButton").style.display = "none";
+                document.getElementById("stopButton").style.display = "inline";
+                document.getElementById("stopButton").innerHTML = "Stop";
+                play();
+                start = new Date().getTime();
+                nrequests = 0;
+                nresponses = 0;
+                var rps = $("#f1").serializeArray()[0].value;
+                var pp = [ {name:"type", value:"fruit"}, {name:"max_price",value:"27"} ];
+                document.getElementById("results").innerHTML = "# Analyzing HTTP Interface throughput. Trying to send "+rps+" requests/s. Studying how fast the server processes the requests and sends responses back.";
+                document.getElementById("results").innerHTML += "\r\n# seconds\t\t\trequests\t\tresponses\t\tresponses/s";
+                setInterval( function() {
+                    if(playing) {
+                        var data=createJSONObject("MarketAgent", pp);
+                        requestAppData(data);
+                        ++nrequests;
+                    }
+                }, (1000/rps) );
+                setInterval( function() {
+                    end = new Date().getTime();
+                    seconds = (end-start)/1000;
+                    throughput = Math.round(((nresponses-lastResponses)/(seconds-lastSeconds))*1000)/1000;
+                    if(printing) {
+                        elem = document.getElementById("results");
+                        elem.innerHTML += "\r\n"+seconds+"\t\t\t"+nrequests+"\t\t\t"+nresponses+"\t\t\t"+throughput;
+                        elem.scrollTop = elem.scrollHeight;
+                    }
+                    lastResponses = nresponses;
+                    lastSeconds = seconds;
+                }, 5000 );
+            }
+
+            function requestAppData(data){
+                $.post("redirect.php", data, function(result) {
+                    ++nresponses;
+                });
+            }
+
+            function play() {
+                document.getElementById("pButton").style.display = "inline";
+                playing = true;
+                document.getElementById("pButton").innerHTML="Pause requests";
+            }
+
+            function pause() {
+                document.getElementById("pButton").style.display = "inline";
+                playing = false;
+                document.getElementById("pButton").innerHTML="Play requests";
+            }
+
+            function playPause() {
+                if(playing) pause();
+                else play();
+            }
+
+            function stop() {
+                printing = false;
+                pause();
+                document.getElementById("pButton").style.display = "none";
+                document.getElementById("stopButton").style.display = "none";
+            }
+        </script>
+    </head>
+    <body>
+        <form id="f1" method="post">
+            Requests per second: <input type="text" name="rps">
+            <button id="testButton" onclick="transformData();">Test</button>
+            <button id="stopButton" onclick="stop();" style="display:none;"></button>
+            <button id="pButton" onclick="playPause();" style="display:none;"></button>
+        </form>
+        </br>
+        Results:
+        <textarea readonly id="results" style="width:100%; height:200pt;"></textarea>
+    </body>
+</html>
