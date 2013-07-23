@@ -83,6 +83,10 @@ import es.upv.dsic.gti_ia.core.MessageFilter;
 /**
  * An agent has to extend this class in order to use the conversation support.
  * @author Ricard Lopez Fogues
+ * @author David Fernández - dfernandez@dsic.upv.es - 	Fixed CAgent porcessing 
+ * 														messages with default factory
+ * 														when a proper factory should
+ * 														process them
  * 
  */
 
@@ -307,13 +311,14 @@ public abstract class CAgent extends BaseAgent {
 			public String run(CProcessor myProcessor, ACLMessage receivedMessage) {
 				//myProcessor.getInternalData().put("AGENT_END_MSG",
 					//	receivedMessage);
-				me.execution(myProcessor, receivedMessage);
 				me.lock();
 				if (!ready) {
 					ready = true;
 					iAmReady.signal();
+					System.out.println("Despertando tras la welcome factory "+myProcessor.getMyAgent().getName());
 				}
 				me.unlock();
+				me.execution(myProcessor, receivedMessage);
 				return "WAIT2";
 			}
 		}
@@ -525,7 +530,7 @@ public abstract class CAgent extends BaseAgent {
 			}
 			deadline = new Date(auxDeadline);
 			DateFormat df = DateFormat.getTimeInstance();
-			this.logger.info("Deadline "+ df.format(deadline));
+			this.logger.info("Deadline "+this.getName()+" "+ df.format(deadline));
 			Timer timer = new Timer();
 			
 			timer.schedule(new TimerTask() {
@@ -688,10 +693,6 @@ public abstract class CAgent extends BaseAgent {
 	 */
 	public void startSyncConversation(String factoryName){
 		this.lock();
-		if (!ready) {
-            ready = true;
-            iAmReady.signal();
-         } 
 		for (int i = 0; i < initiatorFactories.size(); i++) {
 			if (initiatorFactories.get(i).name.equals(factoryName)) {
 				this.welcomeProcessor.createSyncConversation(initiatorFactories.get(i), newConversationID());
