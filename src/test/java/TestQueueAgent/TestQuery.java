@@ -11,7 +11,7 @@ import es.upv.dsic.gti_ia.core.AgentsConnection;
 import junit.framework.TestCase;
 
 /**
- * Test class for an example of QueueAgent, Qusing the FIPA Query Protocol
+ * Test class for an example of QueueAgent, using the FIPA Query Protocol
  * 
  * @author David Fernández - dfernandez@dsic.upv.es
  */
@@ -41,17 +41,6 @@ public class TestQuery extends TestCase{
 			* Connecting to Qpid Broker, default localhost.
 			*/	
 		    AgentsConnection.connect();
-		        
-		    /**
-			 * Instantiating an Airport agent
-			 */
-			airport = new Airport(new AgentID("ManisesAirPort"));
-			
-	
-			/**
-			 * Instantiating a Passenger agent
-			 */
-			passenger = new Passenger(new AgentID("Veronica"));
 		
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
@@ -65,6 +54,23 @@ public class TestQuery extends TestCase{
 	 * Testing Airport agree answer
 	 */
 	public void testAgreeAnswer(){
+		System.out.println("Agree test");
+		
+		try {
+			/**
+			 * Instantiating an Airport agent
+			 */
+			airport = new Airport(new AgentID("ManisesAirPort"));
+			
+			/**
+			 * Instantiating a Passenger agent
+			 */
+			passenger = new Passenger(new AgentID("Veronica"));
+		
+		} catch (Exception e1) {
+			fail();
+		}
+		
 		airport.ASSIST_PROB=0.4;//They will assist the passenger
 		airport.start();
 		passenger.start();
@@ -88,7 +94,21 @@ public class TestQuery extends TestCase{
 	 * Testing Airport refuse answer
 	 */
 	public void testRefuseAnswer(){
-		System.out.println("Comenzando 2º test");
+		System.out.println("Comenzando Refuse test");
+		try {
+			/**
+			 * Instantiating an Airport agent
+			 */
+			airport = new Airport(new AgentID("ManisesAirPort"));
+			
+			/**
+			 * Instantiating a Passenger agent
+			 */
+			passenger = new Passenger(new AgentID("Veronica"));
+		
+		} catch (Exception e1) {
+			fail();
+		}
 		airport.ASSIST_PROB=0.5;//They will not assist the passenger
 		airport.start();
 		passenger.start();
@@ -113,13 +133,27 @@ public class TestQuery extends TestCase{
 	 * Testing Airport successfull reservation
 	 */
 	public void testSuccesfullReservation(){
+		try {
+			/**
+			 * Instantiating an Airport agent
+			 */
+			airport = new Airport(new AgentID("ManisesAirPort"));
+			
+			/**
+			 * Instantiating a Passenger agent
+			 */
+			passenger = new Passenger(new AgentID("Veronica"));
+		
+		} catch (Exception e1) {
+			fail();
+		}
 		//Reservation will be successfull as "Veronica" has more than 5 caracters
 		airport.ASSIST_PROB=0.4;//They will not assist the passenger
 		airport.start();
 		passenger.start();
 		
 		//If passenger has not received answer wait
-		while(passenger.queryResult.equalsIgnoreCase("") || !airport.finished())
+		while(passenger.queryResult.equalsIgnoreCase("") || !airport.finished() || !passenger.finished())
 		{
 			try {
 				Thread.sleep(100);
@@ -134,17 +168,30 @@ public class TestQuery extends TestCase{
 	
 	/**
 	 * Testing Airport unsuccessfull reservation
-	 * @throws Exception 
+	 * 
 	 */
-	public void testUnsuccesfullReservation() throws Exception{
-		airport.ASSIST_PROB=0.4;//They will assist the passenger
-		passenger = new Passenger(new AgentID("Ana"));
-		//Reservation will be successfull as "Ana" has more than 5 caracters
+	public void testUnsuccesfullReservation(){
+		try {
+			/**
+			 * Instantiating an Airport agent
+			 */
+			airport = new Airport(new AgentID("ManisesAirPort"));
+			
+			/**
+			 * Instantiating a Passenger agent
+			 */
+			passenger = new Passenger(new AgentID("Ana"));
+		
+		} catch (Exception e1) {
+			fail();
+		}
+		airport.ASSIST_PROB=0.4;//They will assist the passenger			
+		//Reservation will be unsuccessfull as "Ana" has less than 5 caracters
 		airport.start();
 		passenger.start();
 		
 		//If passenger has not received answer wait
-		while(passenger.queryResult.equalsIgnoreCase("") || !airport.finished())
+		while(passenger.informResult.equalsIgnoreCase("") || !airport.finished() || !passenger.finished())
 		{
 			try {
 				Thread.sleep(100);

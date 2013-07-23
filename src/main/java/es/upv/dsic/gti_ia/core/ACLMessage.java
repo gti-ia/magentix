@@ -189,7 +189,6 @@ public class ACLMessage implements Serializable, Cloneable {
 	 */
 	public ACLMessage(int performative) {
 		this.performative = performative;
-		headers.put("ERROR", ""); // ???
 	}
 
 	/**
@@ -750,7 +749,6 @@ public class ACLMessage implements Serializable, Cloneable {
 	 */
 	public byte[] getByteSequenceContent() {
 		if (content != null) {
-			System.out.println(new StringBuffer(content).toString().getBytes());
 			return new StringBuffer(content).toString().getBytes();
 		}
 		else if (byteSequenceContent != null)
@@ -949,9 +947,13 @@ public class ACLMessage implements Serializable, Cloneable {
 			if (i == 0)
 				msg.setSender(aid);
 			if (i == 1)
-				msg.setReceiver(aid);
+				if(aid.protocol.equals("") && aid.name.equals("") && aid.host.equals(""))
+					msg.clearAllReceiver(); //let receivers empty
+				else
+					msg.setReceiver(aid);					
 			if (i == 2)
 				msg.setReplyTo(aid);
+				
 		}
 		indice1 = indice2 + 1 + tam;
 		indice2 = strMsg.indexOf('#', indice1);
@@ -1065,7 +1067,7 @@ public class ACLMessage implements Serializable, Cloneable {
 	    if(!this.getProtocol().equals(mc.getProtocol())) return false;
 	    if(!this.getConversationId().equals(mc.getConversationId())) return false;
 	    if(!this.getReplyBy().equals(mc.getReplyBy())) return false;
-	    if(!this.getInReplyTo().equals(mc.getInReplyTo())) return false;
+	    if(!this.getInReplyTo().equals(mc.getInReplyTo())) return false;	    
 	    
 	    
 	    //Compare byteSequenceContent, receivers, headers and exchangeHeaders
@@ -1077,6 +1079,7 @@ public class ACLMessage implements Serializable, Cloneable {
 		for(int i = 0; i<mcBytes.length; i++)//check different content
 			if(mcBytes[i] != msgBytes[i])
 				return false;
+		
 		//Receivers and headers should be equal but not necessary in order
 		//use of set for efficiency reasons
 	    Set<AgentID> setReceivers = new HashSet<AgentID>(this.getReceiverList());
@@ -1085,6 +1088,7 @@ public class ACLMessage implements Serializable, Cloneable {
 	    Set<Map.Entry<String,String>> setHeaders = this.getHeaders().entrySet();
 	    Set<Map.Entry<String,String>> setHeadersMc = mc.getHeaders().entrySet();
 	    if(!setHeaders.equals(setHeadersMc)) return false;
+	    System.out.println("HERE");
 	    Set<Map.Entry<String,String>> setExchangeHeaders = this.getExchangeHeaders().entrySet();
 	    Set<Map.Entry<String,String>> setExchangeHeadersMc = mc.getExchangeHeaders().entrySet();
 	    if(!setExchangeHeaders.equals(setExchangeHeadersMc)) return false;

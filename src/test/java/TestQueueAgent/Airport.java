@@ -38,8 +38,7 @@ public class Airport extends QueueAgent {
     protected void execute() {
         System.out.println(this.getName() + ": Opening unit...");
  
-        // Filtrado para recibir s�lo mensajes del protocolo FIPA-Query.
-           
+        // Filtered to only receive FIPA-Query messages.          
         
         MessageTemplate plantilla = new MessageTemplate(InteractionProtocol.FIPA_QUERY);
         responder = new ComprobarResponder(this, plantilla);
@@ -55,7 +54,7 @@ public class Airport extends QueueAgent {
     	}
     }
     
-    //Informs when the protocol is one of the final states
+    //Informs when the protocol is in one of the final states
     //RESET_STATE is the following state to SEND_RESULT_NOTIFICATION_STATE
     //it is needed to stop Airport after SEND_RESULT_NOTIFICATION_STATE
     //because if not it will not send the notification message
