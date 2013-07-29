@@ -91,8 +91,8 @@ public class TestJasonAgent2 extends TestCase {
 	 */
 	protected void tearDown() throws Exception {
 		super.tearDown();
-		 bob.Shutdown();
-		 maria.Shutdown();
+		bob.Shutdown();
+		maria.Shutdown();
 	}
 
 	/**
@@ -162,8 +162,8 @@ public class TestJasonAgent2 extends TestCase {
 			assertFalse("Fail in the beliefs of Maria", errorM);
 
 		} catch (Exception e) {
-			e.printStackTrace();
-			fail("Should not have failed");
+
+			fail("Should not have failed " + e.getMessage());
 		}
 
 	}

@@ -86,8 +86,8 @@ public class TestJasonAgent1 extends TestCase {
 			assertEquals("x(10)[source(percept)]", actual);
 
 		} catch (Exception e) {
-			e.printStackTrace();
-			fail("Should not have failed");
+			
+			fail("Should not have failed " + e.getMessage());
 		}
 
 	}
