@@ -16,14 +16,13 @@ import es.upv.dsic.gti_ia.core.SingleAgent;
 public class ConsumerAgent2 extends SingleAgent {
 
 	LinkedBlockingQueue<MessageTransfer> internalQueue;
-	ACLMessage msg2;
+	private ACLMessage msg2;
 
 	public ConsumerAgent2(AgentID aid) throws Exception {
 		super(aid);
 	}
 
 	public void execute() {
-		System.out.println("Executing, I'm " + getName());
 			/**
 			 * This agent has no definite work. Wait infinitely the arrival of
 			 * new messages.
@@ -36,12 +35,8 @@ public class ConsumerAgent2 extends SingleAgent {
 				 */
 				ACLMessage msg = receiveACLMessage();
 				msg2=msg;
-				System.out.println("Mensaje received in " + this.getName()
-						+ " agent, by receiveACLMessage: " + msg.getContent());
-				System.out.println(msg.getHeaderValue("Purpose"));
 			} catch (Exception e) {
 				logger.error(e.getMessage());
-				System.out.println(e.getMessage());
 				return;
 			}
 

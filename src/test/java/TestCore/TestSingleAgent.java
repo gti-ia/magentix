@@ -10,15 +10,15 @@ import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
 
 /**
- * Test class for example of BaseAgent, SingleAgent
+ * Test class for an example of BaseAgent, SingleAgent
  * 
  * @author David Fernández - dfernandez@dsic.upv.es
  */
 
 public class TestSingleAgent extends TestCase {
 
-	SenderAgent2 senderAgent2 = null;
-	ConsumerAgent2 consumerAgent2 = null;
+	SenderAgent2 senderAgent2;
+	ConsumerAgent2 consumerAgent2;
 	
 	public TestSingleAgent(String name) {
 		super(name);
@@ -50,7 +50,8 @@ public class TestSingleAgent extends TestCase {
 			/**
 			 * Instantiating a consumer agent
 			 */
-			consumerAgent2  = new ConsumerAgent2(new AgentID("qpid://consumer@localhost:8080"));
+			consumerAgent2  = new ConsumerAgent2(new AgentID(
+					"qpid://consumer@localhost:8080"));
 
 			/**
 			 * Execute the agents
@@ -65,12 +66,15 @@ public class TestSingleAgent extends TestCase {
 
 	}
 
+		
+	/**
+	 * Testing the message sent by senderAgent2
+	 */
 	public void testSingleAgent()
 	{		
 
 		while(consumerAgent2.getMessage() == null)
 		{
-		//System.out.println("Busco:");
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
@@ -79,7 +83,8 @@ public class TestSingleAgent extends TestCase {
 			}
 	
 		}			
-		assertEquals("Hello, I'm "+consumerAgent2.getMessage().getSender().getLocalName(),consumerAgent2.getMessage().getContent());
+		assertEquals("Hello, I'm "+consumerAgent2.getMessage().getSender().getLocalName()
+				,consumerAgent2.getMessage().getContent());
 
 	}
 }

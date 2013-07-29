@@ -98,9 +98,8 @@ public final class AgentID implements Serializable, Cloneable {
 	/**
 	 * @return The host and port separated by the ':' character.
 	 */
-	private String addresses_single() {
+	public String addresses_single() {
 		String cadena = host + ":" + port;
-		;
 		return cadena;
 	}
 
@@ -118,7 +117,4 @@ public final class AgentID implements Serializable, Cloneable {
 		else
 			return name.substring(0, atPos);
 	}
-	
-
-
 }

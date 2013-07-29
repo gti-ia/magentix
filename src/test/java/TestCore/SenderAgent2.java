@@ -20,7 +20,6 @@ public class SenderAgent2 extends SingleAgent {
 
 	public void execute() {
 		logger.info("Executing, I'm " + getName());
-		System.out.println("Executing, I'm " + getName());
 		AgentID receiver = new AgentID("consumer");
 
 		/**
