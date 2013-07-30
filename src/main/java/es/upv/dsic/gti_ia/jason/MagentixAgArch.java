@@ -1,5 +1,6 @@
 package es.upv.dsic.gti_ia.jason;
 
+import jason.JasonException;
 import jason.architecture.AgArch;
 import jason.asSemantics.ActionExec;
 import jason.asSemantics.Agent;
@@ -13,8 +14,12 @@ import jason.asSyntax.Term;
 import jason.infra.centralised.RunCentralisedMAS;
 import jason.runtime.Settings;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -27,45 +32,81 @@ import java.util.logging.Logger;
 import es.upv.dsic.gti_ia.cAgents.CAgent;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
+import es.upv.dsic.gti_ia.jason.exception.AgentSpeakNotFoundException;
 
 /**
  * @author Ricard Lopez Fogues
  */
 
-public class MagentixAgArch extends AgArch{
-	
+public class MagentixAgArch extends AgArch {
+
 	private CAgent jasonAgent;
-	private static Logger logger = Logger.getLogger(MagentixAgArch.class.getName());
+	private static Logger logger = Logger.getLogger(MagentixAgArch.class
+			.getName());
 	private Queue<ACLMessage> messageList = new LinkedList<ACLMessage>();
 	protected boolean running = true;
-	
+
 	/**
 	 * Starts the architecture
-	 * @param filename File with the AgentSepak code
-	 * @param agent Agent with this architecture
+	 * 
+	 * @param filename
+	 *            File with the AgentSepak code
+	 * @param agent
+	 *            Agent with this architecture
+	 * @throws AgentSpeakNotFoundException
+	 *             The filename is null or the file is not found
+	 * @throws JasonException
+	 * 
 	 */
-	protected void init(String filename, CAgent agent){
+
+	protected void init(String filename, CAgent agent)
+			throws AgentSpeakNotFoundException, JasonException {
+
+		if (filename == null)
+			throw new AgentSpeakNotFoundException(
+					"the AgentSpeak source file is null");
 		try {
+			filename = filename.replaceAll("\\\\", "/");
+			new URL(filename);
+		} catch (MalformedURLException e) {
+			try {
+				new FileInputStream(filename);
+			} catch (FileNotFoundException e1) {
+				throw new AgentSpeakNotFoundException(
+						"the AgentSpeak source file '" + filename
+								+ "' was not found!");
+			}
+		}
+
+		try {
+
 			this.jasonAgent = agent;
 			Agent ag = new Agent();
+
 			new TransitionSystem(ag, new Circumstance(), new Settings(), this);
+
 			ag.initAg(filename);
+
 		} catch (Exception e) {
 			logger.log(Level.SEVERE, "Init error", e);
+			throw new JasonException(
+					"Problem with the initialization of Jason agent!");
 		}
+
 	}
-	
+
 	/**
 	 * Runs the reasoning cycle
 	 */
 	public void run() {
-		//RunCentralisedMAS.setupLogger();
+		// RunCentralisedMAS.setupLogger();
 		try {
 			while (isRunning()) {
 				// calls the Jason engine to perform one reasoning cycle
 				logger.fine("Reasoning....");
-				// parche para arreglar la sincronizacion, buscar mejor solucion y porque occure esto
-				if(this.jasonAgent.getMutexHoldCount() > 0)
+				// parche para arreglar la sincronizacion, buscar mejor solucion
+				// y porque occure esto
+				if (this.jasonAgent.getMutexHoldCount() > 0)
 					this.jasonAgent.unlock();
 				getTS().reasoningCycle();
 			}
@@ -73,25 +114,26 @@ public class MagentixAgArch extends AgArch{
 			logger.log(Level.SEVERE, "Run error", e);
 		}
 	}
-	
+
 	public String getAgName() {
 		return jasonAgent.getAid().name;
 	}
-	
-	// TODO implementar agente environment y interacción de agentes con environment	
+
+	// TODO implementar agente environment y interacción de agentes con
+	// environment
 	@Override
-	public List<Literal> perceive() 
-	{
+	public List<Literal> perceive() {
 		List<Literal> l = new ArrayList<Literal>();
 		return l;
 	}
-	
-	// TODO implementar agente environment y interacción de agentes con environment
+
+	// TODO implementar agente environment y interacción de agentes con
+	// environment
 	@Override
-	public void act(ActionExec action, List<ActionExec> feedback)
-	{
-		getTS().getLogger().info("Agent " + getAgName() + 
-				" is doing: " + action.getActionTerm());
+	public void act(ActionExec action, List<ActionExec> feedback) {
+		getTS().getLogger()
+				.info("Agent " + getAgName() + " is doing: "
+						+ action.getActionTerm());
 		// return confirming the action execution was OK
 		action.setResult(true);
 		feedback.add(action);
@@ -101,7 +143,7 @@ public class MagentixAgArch extends AgArch{
 	public boolean canSleep() {
 		return true;
 	}
-	
+
 	@Override
 	public boolean isRunning() {
 		return running;
@@ -112,10 +154,11 @@ public class MagentixAgArch extends AgArch{
 	public void sleep() {
 		try {
 			Thread.sleep(100);
-		} catch (InterruptedException e) {}
+		} catch (InterruptedException e) {
+		}
 	}
-	
-	protected Map<String,String> conversationIds = new HashMap<String,String>();
+
+	protected Map<String, String> conversationIds = new HashMap<String, String>();
 
 	@Override
 	public void sendMsg(jason.asSemantics.Message m) throws Exception {
@@ -129,89 +172,95 @@ public class MagentixAgArch extends AgArch{
 		}
 		this.jasonAgent.send(acl);
 	}
-	
+
 	@Override
 	public void checkMail() {
 		ACLMessage m;
-		do{
+		do {
 			m = messageList.poll();
-			if(m != null){
+			if (m != null) {
 				String ilForce = aclToKqml(m.getPerformativeInt());
 				String sender = m.getSender().name;
 				String receiver = m.getReceiver().name;
 				String replyWith = m.getReplyWith();
 				String irt = m.getInReplyTo();
-				
-				 // also remembers conversation ID
-                if (replyWith != null && replyWith.length() > 0) {
-                    if (m.getConversationId() != null) {
-                        conversationIds.put(replyWith, m.getConversationId());
-                    }
-                } else {
-                    replyWith = "noid";
-                }
-				
+
+				// also remembers conversation ID
+				if (replyWith != null && replyWith.length() > 0) {
+					if (m.getConversationId() != null) {
+						conversationIds.put(replyWith, m.getConversationId());
+					}
+				} else {
+					replyWith = "noid";
+				}
+
 				Object propCont = translateContentToJason(m);
 				if (propCont != null) {
-					jason.asSemantics.Message im = new jason.asSemantics.Message(ilForce, sender, receiver, propCont, replyWith);
+					jason.asSemantics.Message im = new jason.asSemantics.Message(
+							ilForce, sender, receiver, propCont, replyWith);
 					if (irt != null) {
 						im.setInReplyTo(irt);
 					}
 					this.getTS().getC().getMailBox().add(im);
 				}
 			}
-		} while(m != null);
+		} while (m != null);
 	}
-	
-	/** 
-	 * returns the content of the message m and implements some pro-processing of the content, if necessary 
-	 * @param m Message to translate
-	 * */
-    protected Object translateContentToJason(ACLMessage m) {
-        Object propCont = null;
-        try {
-            propCont = m.getContentObject();
-            if (propCont instanceof String) {
-                // try to parse as term
-                try {
-                    propCont = ASSyntax.parseTerm((String)propCont);
-                } catch (Exception e) {  // no problem 
-                }
-            }            
-        } catch (Exception e) { // no problem try another thing
-        }
-        
-        if (propCont == null) { // still null
-            // try to parse as term
-            try {
-                propCont = ASSyntax.parseTerm(m.getContent());
-            } catch (Exception e) {
-                // not AS messages are treated as string 
-                propCont = new StringTermImpl(m.getContent());
-            }
-        }
-        return propCont;
-    }
 
-	
+	/**
+	 * returns the content of the message m and implements some pro-processing
+	 * of the content, if necessary
+	 * 
+	 * @param m
+	 *            Message to translate
+	 * */
+	protected Object translateContentToJason(ACLMessage m) {
+		Object propCont = null;
+		try {
+			propCont = m.getContentObject();
+			if (propCont instanceof String) {
+				// try to parse as term
+				try {
+					propCont = ASSyntax.parseTerm((String) propCont);
+				} catch (Exception e) { // no problem
+				}
+			}
+		} catch (Exception e) { // no problem try another thing
+		}
+
+		if (propCont == null) { // still null
+			// try to parse as term
+			try {
+				propCont = ASSyntax.parseTerm(m.getContent());
+			} catch (Exception e) {
+				// not AS messages are treated as string
+				propCont = new StringTermImpl(m.getContent());
+			}
+		}
+		return propCont;
+	}
+
 	@Override
 	public void broadcast(jason.asSemantics.Message m) throws Exception {
 	}
-	
+
 	/**
 	 * Converts a jason message into an ACLMessage
+	 * 
 	 * @param m
 	 * @return
 	 * @throws IOException
 	 */
 	private ACLMessage jasonToACL(Message m) throws IOException {
 		ACLMessage acl = new ACLMessage(kqmlToACL(m.getIlForce()));
-		// send content as string if it is a Term/String (it is better for interoperability)
-		if (m.getPropCont() instanceof Term || m.getPropCont() instanceof String) {
-			acl.setContent(m.getPropCont().toString());       
+		// send content as string if it is a Term/String (it is better for
+		// interoperability)
+		if (m.getPropCont() instanceof Term
+				|| m.getPropCont() instanceof String) {
+			acl.setContent(m.getPropCont().toString());
 		} else {
-        	acl.setContentObject((Serializable)m.getPropCont());
-        }
+			acl.setContentObject((Serializable) m.getPropCont());
+		}
 		acl.setReceiver(new AgentID(m.getReceiver()));
 		acl.setSender(this.jasonAgent.getAid());
 		acl.setReplyWith(m.getMsgId());
@@ -222,15 +271,16 @@ public class MagentixAgArch extends AgArch{
 		return acl;
 	}
 
-	private static final int UNTELL    = 1001;
-	private static final int ASKALL    = 1002;
+	private static final int UNTELL = 1001;
+	private static final int ASKALL = 1002;
 	private static final int UNACHIEVE = 1003;
-	private static final int TELLHOW   = 1004;
+	private static final int TELLHOW = 1004;
 	private static final int UNTELLHOW = 1005;
-	private static final int ASKHOW    = 1006;
+	private static final int ASKHOW = 1006;
 
 	/**
 	 * Converts a kqml performative into a fipa performative
+	 * 
 	 * @param p
 	 * @return
 	 */
@@ -254,38 +304,49 @@ public class MagentixAgArch extends AgArch{
 		} else if (p.equals("untellHow")) {
 			return UNTELLHOW;
 		}
-		return ACLMessage.getPerformative(p);       
+		return ACLMessage.getPerformative(p);
 	}
 
 	/**
 	 * Converts a fipa performative into a kqml one
+	 * 
 	 * @param p
 	 * @return
 	 */
 	private static String aclToKqml(int p) {
-		switch(p) {
-		case ACLMessage.INFORM: return "tell"; 
-		case ACLMessage.QUERY_REF: return "askOne";
-		case ACLMessage.REQUEST: return "achieve";
-		case UNTELL: return "untell";
-		case UNACHIEVE: return "unachieve";
-		case ASKALL: return "askAll";
-		case ASKHOW: return "askHow";
-		case TELLHOW: return "tellHow";
-		case UNTELLHOW: return "untellHow";
+		switch (p) {
+		case ACLMessage.INFORM:
+			return "tell";
+		case ACLMessage.QUERY_REF:
+			return "askOne";
+		case ACLMessage.REQUEST:
+			return "achieve";
+		case UNTELL:
+			return "untell";
+		case UNACHIEVE:
+			return "unachieve";
+		case ASKALL:
+			return "askAll";
+		case ASKHOW:
+			return "askHow";
+		case TELLHOW:
+			return "tellHow";
+		case UNTELLHOW:
+			return "untellHow";
 		}
 		return ACLMessage.getPerformative(p).toLowerCase().replaceAll("-", "_");
 	}
-	
+
 	/**
 	 * Adds a message to the message list
+	 * 
 	 * @param msg
 	 */
-	protected void addMessage(ACLMessage msg){
+	protected void addMessage(ACLMessage msg) {
 		this.messageList.add(msg);
 	}
-	
-	public void stopAg(){
+
+	public void stopAg() {
 		running = false;
 	}
 

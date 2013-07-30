@@ -49,6 +49,27 @@ public class JasonAgent extends CAgent{
 		agArch.run();		
 	}
 	
+	
+	
+	/**
+	 * Halts the reasoning and terminates the agent's execution
+	 */
+	@Override
+	public void Shutdown() {
+		this.stopReasoning();
+		super.Shutdown();
+	}
+
+	/**
+	 * Stop the reasoning of Jason agent
+	 * 
+	 * @return
+	 */
+	public void stopReasoning() {
+		this.agArch.stopAg();
+	}
+	
+	
 	/**
 	 * returns the architecture
 	 * @return
