@@ -446,50 +446,50 @@ public class TestInformUnitRoles extends TestCase {
 			assertEquals("private", result.get(1).get(2));//visibility
 			assertEquals("external", result.get(1).get(3));//Accessibility
 			
-			assertEquals("subordinado3", result.get(2).get(0));
-			assertEquals("subordinate", result.get(2).get(1));
-			assertEquals("public", result.get(2).get(2));//visibility
-			assertEquals("internal", result.get(2).get(3));//Accessibility
-			
-			assertEquals("subordinado4", result.get(3).get(0));
-			assertEquals("subordinate", result.get(3).get(1));
-			assertEquals("private", result.get(3).get(2));//visibility
-			assertEquals("internal", result.get(3).get(3));//Accessibility
-			
-			//---------------------------------------------------------------------//
-
-			assertEquals("supervisor", result.get(4).get(0));
-			assertEquals("supervisor", result.get(4).get(1));
-			assertEquals("public", result.get(4).get(2));//visibility
-			assertEquals("external", result.get(4).get(3));//Accessibility
-			
-			assertEquals("supervisor2", result.get(5).get(0));
-			assertEquals("supervisor", result.get(5).get(1));
-			assertEquals("private", result.get(5).get(2));//visibility
-			assertEquals("external", result.get(5).get(3));//Accessibility
-			
-			assertEquals("supervisor3", result.get(6).get(0));
-			assertEquals("supervisor", result.get(6).get(1));
+			assertEquals("subordinado3", result.get(6).get(0));
+			assertEquals("subordinate", result.get(6).get(1));
 			assertEquals("public", result.get(6).get(2));//visibility
 			assertEquals("internal", result.get(6).get(3));//Accessibility
 			
-			assertEquals("supervisor4", result.get(7).get(0));
-			assertEquals("supervisor", result.get(7).get(1));
+			assertEquals("subordinado4", result.get(7).get(0));
+			assertEquals("subordinate", result.get(7).get(1));
 			assertEquals("private", result.get(7).get(2));//visibility
 			assertEquals("internal", result.get(7).get(3));//Accessibility
+			
+			//---------------------------------------------------------------------//
+
+			assertEquals("supervisor", result.get(2).get(0));
+			assertEquals("supervisor", result.get(2).get(1));
+			assertEquals("public", result.get(2).get(2));//visibility
+			assertEquals("external", result.get(2).get(3));//Accessibility
+			
+			assertEquals("supervisor2", result.get(3).get(0));
+			assertEquals("supervisor", result.get(3).get(1));
+			assertEquals("private", result.get(3).get(2));//visibility
+			assertEquals("external", result.get(3).get(3));//Accessibility
+			
+			assertEquals("supervisor3", result.get(8).get(0));
+			assertEquals("supervisor", result.get(8).get(1));
+			assertEquals("public", result.get(8).get(2));//visibility
+			assertEquals("internal", result.get(8).get(3));//Accessibility
+			
+			assertEquals("supervisor4", result.get(9).get(0));
+			assertEquals("supervisor", result.get(9).get(1));
+			assertEquals("private", result.get(9).get(2));//visibility
+			assertEquals("internal", result.get(9).get(3));//Accessibility
 			
 
 			//---------------------------------------------------------------------//
 			
-			assertEquals("creador", result.get(8).get(0));
-			assertEquals("creator", result.get(8).get(1));
-			assertEquals("public", result.get(8).get(2));//visibility
-			assertEquals("external", result.get(8).get(3));//Accessibility
+			assertEquals("creador", result.get(4).get(0));
+			assertEquals("creator", result.get(4).get(1));
+			assertEquals("public", result.get(4).get(2));//visibility
+			assertEquals("external", result.get(4).get(3));//Accessibility
 			
-			assertEquals("creador2", result.get(9).get(0));
-			assertEquals("creator", result.get(9).get(1));
-			assertEquals("private", result.get(9).get(2));//visibility
-			assertEquals("external", result.get(9).get(3));//Accessibility
+			assertEquals("creador2", result.get(5).get(0));
+			assertEquals("creator", result.get(5).get(1));
+			assertEquals("private", result.get(5).get(2));//visibility
+			assertEquals("external", result.get(5).get(3));//Accessibility
 			
 			assertEquals("creador3", result.get(10).get(0));
 			assertEquals("creator", result.get(10).get(1));
@@ -623,50 +623,50 @@ public class TestInformUnitRoles extends TestCase {
 			assertEquals("private", result.get(1).get(2));//visibility
 			assertEquals("external", result.get(1).get(3));//Accessibility
 			
-			assertEquals("subordinado3", result.get(2).get(0));
-			assertEquals("subordinate", result.get(2).get(1));
-			assertEquals("public", result.get(2).get(2));//visibility
-			assertEquals("internal", result.get(2).get(3));//Accessibility
-			
-			assertEquals("subordinado4", result.get(3).get(0));
-			assertEquals("subordinate", result.get(3).get(1));
-			assertEquals("private", result.get(3).get(2));//visibility
-			assertEquals("internal", result.get(3).get(3));//Accessibility
-			
-			//---------------------------------------------------------------------//
-
-			assertEquals("supervisor", result.get(4).get(0));
-			assertEquals("supervisor", result.get(4).get(1));
-			assertEquals("public", result.get(4).get(2));//visibility
-			assertEquals("external", result.get(4).get(3));//Accessibility
-			
-			assertEquals("supervisor2", result.get(5).get(0));
-			assertEquals("supervisor", result.get(5).get(1));
-			assertEquals("private", result.get(5).get(2));//visibility
-			assertEquals("external", result.get(5).get(3));//Accessibility
-			
-			assertEquals("supervisor3", result.get(6).get(0));
-			assertEquals("supervisor", result.get(6).get(1));
+			assertEquals("subordinado3", result.get(6).get(0));
+			assertEquals("subordinate", result.get(6).get(1));
 			assertEquals("public", result.get(6).get(2));//visibility
 			assertEquals("internal", result.get(6).get(3));//Accessibility
 			
-			assertEquals("supervisor4", result.get(7).get(0));
-			assertEquals("supervisor", result.get(7).get(1));
+			assertEquals("subordinado4", result.get(7).get(0));
+			assertEquals("subordinate", result.get(7).get(1));
 			assertEquals("private", result.get(7).get(2));//visibility
 			assertEquals("internal", result.get(7).get(3));//Accessibility
+			
+			//---------------------------------------------------------------------//
+
+			assertEquals("supervisor", result.get(2).get(0));
+			assertEquals("supervisor", result.get(2).get(1));
+			assertEquals("public", result.get(2).get(2));//visibility
+			assertEquals("external", result.get(2).get(3));//Accessibility
+			
+			assertEquals("supervisor2", result.get(3).get(0));
+			assertEquals("supervisor", result.get(3).get(1));
+			assertEquals("private", result.get(3).get(2));//visibility
+			assertEquals("external", result.get(3).get(3));//Accessibility
+			
+			assertEquals("supervisor3", result.get(8).get(0));
+			assertEquals("supervisor", result.get(8).get(1));
+			assertEquals("public", result.get(8).get(2));//visibility
+			assertEquals("internal", result.get(8).get(3));//Accessibility
+			
+			assertEquals("supervisor4", result.get(9).get(0));
+			assertEquals("supervisor", result.get(9).get(1));
+			assertEquals("private", result.get(9).get(2));//visibility
+			assertEquals("internal", result.get(9).get(3));//Accessibility
 			
 
 			//---------------------------------------------------------------------//
 			
-			assertEquals("creador", result.get(8).get(0));
-			assertEquals("creator", result.get(8).get(1));
-			assertEquals("public", result.get(8).get(2));//visibility
-			assertEquals("external", result.get(8).get(3));//Accessibility
+			assertEquals("creador", result.get(4).get(0));
+			assertEquals("creator", result.get(4).get(1));
+			assertEquals("public", result.get(4).get(2));//visibility
+			assertEquals("external", result.get(4).get(3));//Accessibility
 			
-			assertEquals("creador2", result.get(9).get(0));
-			assertEquals("creator", result.get(9).get(1));
-			assertEquals("private", result.get(9).get(2));//visibility
-			assertEquals("external", result.get(9).get(3));//Accessibility
+			assertEquals("creador2", result.get(5).get(0));
+			assertEquals("creator", result.get(5).get(1));
+			assertEquals("private", result.get(5).get(2));//visibility
+			assertEquals("external", result.get(5).get(3));//Accessibility
 			
 			assertEquals("creador3", result.get(10).get(0));
 			assertEquals("creator", result.get(10).get(1));
@@ -800,50 +800,50 @@ public class TestInformUnitRoles extends TestCase {
 			assertEquals("private", result.get(1).get(2));//visibility
 			assertEquals("external", result.get(1).get(3));//Accessibility
 			
-			assertEquals("subordinado3", result.get(2).get(0));
-			assertEquals("subordinate", result.get(2).get(1));
-			assertEquals("public", result.get(2).get(2));//visibility
-			assertEquals("internal", result.get(2).get(3));//Accessibility
-			
-			assertEquals("subordinado4", result.get(3).get(0));
-			assertEquals("subordinate", result.get(3).get(1));
-			assertEquals("private", result.get(3).get(2));//visibility
-			assertEquals("internal", result.get(3).get(3));//Accessibility
-			
-			//---------------------------------------------------------------------//
-
-			assertEquals("supervisor", result.get(4).get(0));
-			assertEquals("supervisor", result.get(4).get(1));
-			assertEquals("public", result.get(4).get(2));//visibility
-			assertEquals("external", result.get(4).get(3));//Accessibility
-			
-			assertEquals("supervisor2", result.get(5).get(0));
-			assertEquals("supervisor", result.get(5).get(1));
-			assertEquals("private", result.get(5).get(2));//visibility
-			assertEquals("external", result.get(5).get(3));//Accessibility
-			
-			assertEquals("supervisor3", result.get(6).get(0));
-			assertEquals("supervisor", result.get(6).get(1));
+			assertEquals("subordinado3", result.get(6).get(0));
+			assertEquals("subordinate", result.get(6).get(1));
 			assertEquals("public", result.get(6).get(2));//visibility
 			assertEquals("internal", result.get(6).get(3));//Accessibility
 			
-			assertEquals("supervisor4", result.get(7).get(0));
-			assertEquals("supervisor", result.get(7).get(1));
+			assertEquals("subordinado4", result.get(7).get(0));
+			assertEquals("subordinate", result.get(7).get(1));
 			assertEquals("private", result.get(7).get(2));//visibility
 			assertEquals("internal", result.get(7).get(3));//Accessibility
+			
+			//---------------------------------------------------------------------//
+
+			assertEquals("supervisor", result.get(2).get(0));
+			assertEquals("supervisor", result.get(2).get(1));
+			assertEquals("public", result.get(2).get(2));//visibility
+			assertEquals("external", result.get(2).get(3));//Accessibility
+			
+			assertEquals("supervisor2", result.get(3).get(0));
+			assertEquals("supervisor", result.get(3).get(1));
+			assertEquals("private", result.get(3).get(2));//visibility
+			assertEquals("external", result.get(3).get(3));//Accessibility
+			
+			assertEquals("supervisor3", result.get(8).get(0));
+			assertEquals("supervisor", result.get(8).get(1));
+			assertEquals("public", result.get(8).get(2));//visibility
+			assertEquals("internal", result.get(8).get(3));//Accessibility
+			
+			assertEquals("supervisor4", result.get(9).get(0));
+			assertEquals("supervisor", result.get(9).get(1));
+			assertEquals("private", result.get(9).get(2));//visibility
+			assertEquals("internal", result.get(9).get(3));//Accessibility
 			
 
 			//---------------------------------------------------------------------//
 			
-			assertEquals("creador", result.get(8).get(0));
-			assertEquals("creator", result.get(8).get(1));
-			assertEquals("public", result.get(8).get(2));//visibility
-			assertEquals("external", result.get(8).get(3));//Accessibility
+			assertEquals("creador", result.get(4).get(0));
+			assertEquals("creator", result.get(4).get(1));
+			assertEquals("public", result.get(4).get(2));//visibility
+			assertEquals("external", result.get(4).get(3));//Accessibility
 			
-			assertEquals("creador2", result.get(9).get(0));
-			assertEquals("creator", result.get(9).get(1));
-			assertEquals("private", result.get(9).get(2));//visibility
-			assertEquals("external", result.get(9).get(3));//Accessibility
+			assertEquals("creador2", result.get(5).get(0));
+			assertEquals("creator", result.get(5).get(1));
+			assertEquals("private", result.get(5).get(2));//visibility
+			assertEquals("external", result.get(5).get(3));//Accessibility
 			
 			assertEquals("creador3", result.get(10).get(0));
 			assertEquals("creator", result.get(10).get(1));
@@ -1164,33 +1164,33 @@ public class TestInformUnitRoles extends TestCase {
 			assertEquals("public", result.get(0).get(2));//visibility
 			assertEquals("external", result.get(0).get(3));//Accessibility
 			
-			assertEquals("subordinado3", result.get(1).get(0));
-			assertEquals("subordinate", result.get(1).get(1));
-			assertEquals("public", result.get(1).get(2));//visibility
-			assertEquals("internal", result.get(1).get(3));//Accessibility
-			
-
-			
-			//---------------------------------------------------------------------//
-
-			assertEquals("supervisor", result.get(2).get(0));
-			assertEquals("supervisor", result.get(2).get(1));
-			assertEquals("public", result.get(2).get(2));//visibility
-			assertEquals("external", result.get(2).get(3));//Accessibility
-			
-			assertEquals("supervisor3", result.get(3).get(0));
-			assertEquals("supervisor", result.get(3).get(1));
+			assertEquals("subordinado3", result.get(3).get(0));
+			assertEquals("subordinate", result.get(3).get(1));
 			assertEquals("public", result.get(3).get(2));//visibility
 			assertEquals("internal", result.get(3).get(3));//Accessibility
 			
+
+			
+			//---------------------------------------------------------------------//
+
+			assertEquals("supervisor", result.get(1).get(0));
+			assertEquals("supervisor", result.get(1).get(1));
+			assertEquals("public", result.get(1).get(2));//visibility
+			assertEquals("external", result.get(1).get(3));//Accessibility
+			
+			assertEquals("supervisor3", result.get(4).get(0));
+			assertEquals("supervisor", result.get(4).get(1));
+			assertEquals("public", result.get(4).get(2));//visibility
+			assertEquals("internal", result.get(4).get(3));//Accessibility
+			
 			
 
 			//---------------------------------------------------------------------//
 			
-			assertEquals("creador2", result.get(4).get(0));
-			assertEquals("creator", result.get(4).get(1));
-			assertEquals("public", result.get(4).get(2));//visibility
-			assertEquals("external", result.get(4).get(3));//Accessibility
+			assertEquals("creador2", result.get(2).get(0));
+			assertEquals("creator", result.get(2).get(1));
+			assertEquals("public", result.get(2).get(2));//visibility
+			assertEquals("external", result.get(2).get(3));//Accessibility
 			
 			assertEquals("creador4", result.get(5).get(0));
 			assertEquals("creator", result.get(5).get(1));
@@ -1321,33 +1321,33 @@ public class TestInformUnitRoles extends TestCase {
 			assertEquals("public", result.get(0).get(2));//visibility
 			assertEquals("external", result.get(0).get(3));//Accessibility
 			
-			assertEquals("subordinado3", result.get(1).get(0));
-			assertEquals("subordinate", result.get(1).get(1));
-			assertEquals("public", result.get(1).get(2));//visibility
-			assertEquals("internal", result.get(1).get(3));//Accessibility
-			
-
-			
-			//---------------------------------------------------------------------//
-
-			assertEquals("supervisor", result.get(2).get(0));
-			assertEquals("supervisor", result.get(2).get(1));
-			assertEquals("public", result.get(2).get(2));//visibility
-			assertEquals("external", result.get(2).get(3));//Accessibility
-			
-			assertEquals("supervisor3", result.get(3).get(0));
-			assertEquals("supervisor", result.get(3).get(1));
+			assertEquals("subordinado3", result.get(3).get(0));
+			assertEquals("subordinate", result.get(3).get(1));
 			assertEquals("public", result.get(3).get(2));//visibility
 			assertEquals("internal", result.get(3).get(3));//Accessibility
 			
+
+			
+			//---------------------------------------------------------------------//
+
+			assertEquals("supervisor", result.get(1).get(0));
+			assertEquals("supervisor", result.get(1).get(1));
+			assertEquals("public", result.get(1).get(2));//visibility
+			assertEquals("external", result.get(1).get(3));//Accessibility
+			
+			assertEquals("supervisor3", result.get(4).get(0));
+			assertEquals("supervisor", result.get(4).get(1));
+			assertEquals("public", result.get(4).get(2));//visibility
+			assertEquals("internal", result.get(4).get(3));//Accessibility
+			
 			
 
 			//---------------------------------------------------------------------//
 			
-			assertEquals("creador2", result.get(4).get(0));
-			assertEquals("creator", result.get(4).get(1));
-			assertEquals("public", result.get(4).get(2));//visibility
-			assertEquals("external", result.get(4).get(3));//Accessibility
+			assertEquals("creador2", result.get(2).get(0));
+			assertEquals("creator", result.get(2).get(1));
+			assertEquals("public", result.get(2).get(2));//visibility
+			assertEquals("external", result.get(2).get(3));//Accessibility
 			
 			assertEquals("creador4", result.get(5).get(0));
 			assertEquals("creator", result.get(5).get(1));
@@ -1478,33 +1478,33 @@ public class TestInformUnitRoles extends TestCase {
 			assertEquals("public", result.get(0).get(2));//visibility
 			assertEquals("external", result.get(0).get(3));//Accessibility
 			
-			assertEquals("subordinado3", result.get(1).get(0));
-			assertEquals("subordinate", result.get(1).get(1));
-			assertEquals("public", result.get(1).get(2));//visibility
-			assertEquals("internal", result.get(1).get(3));//Accessibility
-			
-
-			
-			//---------------------------------------------------------------------//
-
-			assertEquals("supervisor", result.get(2).get(0));
-			assertEquals("supervisor", result.get(2).get(1));
-			assertEquals("public", result.get(2).get(2));//visibility
-			assertEquals("external", result.get(2).get(3));//Accessibility
-			
-			assertEquals("supervisor3", result.get(3).get(0));
-			assertEquals("supervisor", result.get(3).get(1));
+			assertEquals("subordinado3", result.get(3).get(0));
+			assertEquals("subordinate", result.get(3).get(1));
 			assertEquals("public", result.get(3).get(2));//visibility
 			assertEquals("internal", result.get(3).get(3));//Accessibility
 			
+
+			
+			//---------------------------------------------------------------------//
+
+			assertEquals("supervisor", result.get(1).get(0));
+			assertEquals("supervisor", result.get(1).get(1));
+			assertEquals("public", result.get(1).get(2));//visibility
+			assertEquals("external", result.get(1).get(3));//Accessibility
+			
+			assertEquals("supervisor3", result.get(4).get(0));
+			assertEquals("supervisor", result.get(4).get(1));
+			assertEquals("public", result.get(4).get(2));//visibility
+			assertEquals("internal", result.get(4).get(3));//Accessibility
+			
 			
 
 			//---------------------------------------------------------------------//
 			
-			assertEquals("creador2", result.get(4).get(0));
-			assertEquals("creator", result.get(4).get(1));
-			assertEquals("public", result.get(4).get(2));//visibility
-			assertEquals("external", result.get(4).get(3));//Accessibility
+			assertEquals("creador2", result.get(2).get(0));
+			assertEquals("creator", result.get(2).get(1));
+			assertEquals("public", result.get(2).get(2));//visibility
+			assertEquals("external", result.get(2).get(3));//Accessibility
 			
 			assertEquals("creador4", result.get(5).get(0));
 			assertEquals("creator", result.get(5).get(1));

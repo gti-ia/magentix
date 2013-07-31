@@ -257,7 +257,7 @@ public class OMSInterface {
 						if (checkPermitNorms(AgentName, UnitName, "deregisterUnit("+UnitName.toLowerCase()+","+AgentName.toLowerCase()+")"))
 						{
 
-							String result = dbInterface.deleteUnit(UnitName, AgentName);
+							String result = dbInterface.deleteUnit(UnitName);
 
 							resultXML += "<status>Ok</status>\n";
 							resultXML += "<result>\n<description>" + result + "</description>\n</result>\n";
@@ -288,7 +288,7 @@ public class OMSInterface {
 
 						if (play) {
 
-							String result = dbInterface.deleteUnit(UnitName, AgentName);
+							String result = dbInterface.deleteUnit(UnitName);
 
 							resultXML += "<status>Ok</status>\n";
 							resultXML += "<result>\n<description>" + result + "</description>\n</result>\n";
@@ -514,7 +514,7 @@ public class OMSInterface {
 								if (checkPermitNorms(AgentName, UnitName, "deregisterRole("+RoleName.toLowerCase()+","+UnitName.toLowerCase()+","+AgentName.toLowerCase()+")"))
 								{
 
-									String result = dbInterface.deleteRole(RoleName, UnitName, AgentName);
+									String result = dbInterface.deleteRole(RoleName, UnitName);
 
 									resultXML += "<status>Ok</status>\n";
 									resultXML += "<result>\n<description>" + result + "</description>\n</result>\n";
@@ -534,7 +534,7 @@ public class OMSInterface {
 									if (unitType.equals("hierarchy")) {
 
 										if (dbInterface.checkPositionInUnit(AgentName, "creator", UnitName) || dbInterface.checkPositionInUnit(AgentName, "supervisor", UnitName)) {
-											String result = dbInterface.deleteRole(RoleName, UnitName, AgentName);
+											String result = dbInterface.deleteRole(RoleName, UnitName);
 
 											resultXML += "<status>Ok</status>\n";
 											resultXML += "<result>\n<description>" + result + "</description>\n</result>\n";
@@ -549,7 +549,7 @@ public class OMSInterface {
 									} else if (unitType.equals("team") || unitType.equals("flat")) {
 
 										if (dbInterface.checkPositionInUnit(AgentName, "creator", UnitName) || dbInterface.checkPositionInUnit(AgentName, "member", UnitName)) {
-											String result = dbInterface.deleteRole(RoleName, UnitName, AgentName);
+											String result = dbInterface.deleteRole(RoleName, UnitName);
 
 											resultXML += "<status>Ok</status>\n";
 											resultXML += "<result>\n<description>" + result + "</description>\n</result>\n";
@@ -569,7 +569,7 @@ public class OMSInterface {
 								} else {
 									if (unitType.equals("flat")) {
 										if (dbInterface.checkPosition(AgentName, "creator")) {
-											String result = dbInterface.deleteRole(RoleName, UnitName, AgentName);
+											String result = dbInterface.deleteRole(RoleName, UnitName);
 
 											resultXML += "<status>Ok</status>\n";
 											resultXML += "<result>\n<description>" + result + "</description>\n</result>\n";
@@ -1363,7 +1363,7 @@ public class OMSInterface {
 						if (checkPermitNorms(AgentName, UnitName, "deallocateRole("+RoleName.toLowerCase()+","+UnitName.toLowerCase()+","+TargetAgentName.toLowerCase()+","+AgentName.toLowerCase()+")"))
 						{
 
-							String result = dbInterface.deallocateRole(RoleName, UnitName, TargetAgentName, AgentName);
+							String result = dbInterface.deallocateRole(RoleName, UnitName, TargetAgentName);
 
 							resultXML += "<status>Ok</status>\n";
 							resultXML += "<result>\n<description>" + result + "</description>\n</result>\n";
@@ -1385,7 +1385,7 @@ public class OMSInterface {
 						if (type.equals("hierarchy")) {
 							if (dbInterface.checkAgentInUnit(AgentName, UnitName)) {
 								if (dbInterface.checkPositionInUnit(AgentName, "supervisor", UnitName) || dbInterface.checkPositionInUnit(AgentName, "creator", UnitName)) {
-									String result = dbInterface.deallocateRole(RoleName, UnitName, TargetAgentName, AgentName);
+									String result = dbInterface.deallocateRole(RoleName, UnitName, TargetAgentName);
 
 									resultXML += "<status>Ok</status>\n";
 									resultXML += "<result>\n<description>" + result + "</description>\n</result>\n";
@@ -1404,7 +1404,7 @@ public class OMSInterface {
 						} else if (type.equals("team")) {
 							if (dbInterface.checkAgentInUnit(AgentName, UnitName)) {
 
-								String result = dbInterface.deallocateRole(RoleName, UnitName, TargetAgentName, AgentName);
+								String result = dbInterface.deallocateRole(RoleName, UnitName, TargetAgentName);
 
 								resultXML += "<status>Ok</status>\n";
 								resultXML += "<result>\n<description>" + result + "</description>\n</result>\n";
@@ -1420,7 +1420,7 @@ public class OMSInterface {
 							if (dbInterface.checkAgentInUnit(AgentName, UnitName)) {
 
 								if (dbInterface.checkPositionInUnit(AgentName, "member", UnitName) || dbInterface.checkPositionInUnit(AgentName, "creator", UnitName)) {
-									String result = dbInterface.deallocateRole(RoleName, UnitName, TargetAgentName, AgentName);
+									String result = dbInterface.deallocateRole(RoleName, UnitName, TargetAgentName);
 
 									resultXML += "<status>Ok</status>\n";
 									resultXML += "<result>\n<description>" + result + "</description>\n</result>\n";
@@ -1435,7 +1435,7 @@ public class OMSInterface {
 
 							} else {
 								if (dbInterface.checkPosition(AgentName, "creator")) {
-									String result = dbInterface.deallocateRole(RoleName, UnitName, TargetAgentName, AgentName);
+									String result = dbInterface.deallocateRole(RoleName, UnitName, TargetAgentName);
 
 									resultXML += "<status>Ok</status>\n";
 									resultXML += "<result>\n<description>" + result + "</description>\n</result>\n";
@@ -1950,7 +1950,7 @@ public class OMSInterface {
 									if (dbInterface.checkAgentInUnit(AgentName, UnitName))
 									{	
 
-										methodResult = dbInterface.getAgentsRolesInUnit(UnitName, AgentName);
+										methodResult = dbInterface.getAgentsRolesInUnit(UnitName);
 
 										resultXML += "<status>Ok</status>\n";
 										resultXML += "<result>\n";
@@ -1970,7 +1970,7 @@ public class OMSInterface {
 									}
 									else
 									{
-										methodResult = dbInterface.getAgentsVisibilityRolesInUnit(UnitName, AgentName);
+										methodResult = dbInterface.getAgentsVisibilityRolesInUnit(UnitName);
 
 										resultXML += "<status>Ok</status>\n";
 										resultXML += "<result>\n";
@@ -1992,7 +1992,7 @@ public class OMSInterface {
 									// position name.
 								case CASE_B:
 
-									arrayResult = dbInterface.getAgentsPlayingRoleInUnit(UnitName, RoleName, AgentName);
+									arrayResult = dbInterface.getAgentsPlayingRoleInUnit(UnitName, RoleName);
 
 									resultXML += "<status>Ok</status>\n";
 									resultXML += "<result>\n";
@@ -2011,7 +2011,7 @@ public class OMSInterface {
 
 									if (dbInterface.checkAgentInUnit(AgentName, UnitName))
 									{
-										methodResult = dbInterface.getAgentsPlayingPositionInUnit(UnitName, PositionValue, AgentName);
+										methodResult = dbInterface.getAgentsPlayingPositionInUnit(UnitName, PositionValue);
 
 										resultXML += "<status>Ok</status>\n";
 										resultXML += "<result>\n";
@@ -2028,7 +2028,7 @@ public class OMSInterface {
 									}
 									else
 									{
-										methodResult = dbInterface.getAgentsPlayingVisibilityPositionInUnit(UnitName, PositionValue, AgentName);
+										methodResult = dbInterface.getAgentsPlayingVisibilityPositionInUnit(UnitName, PositionValue);
 
 										resultXML += "<status>Ok</status>\n";
 										resultXML += "<result>\n";
@@ -2047,7 +2047,7 @@ public class OMSInterface {
 									// positionName
 								case CASE_D:
 
-									arrayResult = dbInterface.getAgentsPlayingRolePositionInUnit(UnitName, RoleName, PositionValue, AgentName);
+									arrayResult = dbInterface.getAgentsPlayingRolePositionInUnit(UnitName, RoleName, PositionValue);
 
 									resultXML += "<status>Ok</status>\n";
 									resultXML += "<result>\n";
@@ -2074,7 +2074,7 @@ public class OMSInterface {
 							switch (flag) {
 
 							case CASE_A:
-								methodResult = dbInterface.getAgentsRolesInUnit(UnitName, AgentName);
+								methodResult = dbInterface.getAgentsRolesInUnit(UnitName);
 
 								resultXML += "<status>Ok</status>\n";
 								resultXML += "<result>\n";
@@ -2106,7 +2106,7 @@ public class OMSInterface {
 										}
 									}
 								 */
-								arrayResult = dbInterface.getAgentsPlayingRoleInUnit(UnitName, RoleName, AgentName);
+								arrayResult = dbInterface.getAgentsPlayingRoleInUnit(UnitName, RoleName);
 
 								resultXML += "<status>Ok</status>\n";
 								resultXML += "<result>\n";
@@ -2126,7 +2126,7 @@ public class OMSInterface {
 
 
 
-								methodResult = dbInterface.getAgentsPlayingPositionInUnit(UnitName, PositionValue, AgentName);
+								methodResult = dbInterface.getAgentsPlayingPositionInUnit(UnitName, PositionValue);
 
 								resultXML += "<status>Ok</status>\n";
 								resultXML += "<result>\n";
@@ -2156,7 +2156,7 @@ public class OMSInterface {
 										}
 									}
 								 */
-								arrayResult = dbInterface.getAgentsPlayingRolePositionInUnit(UnitName, RoleName, PositionValue, AgentName);
+								arrayResult = dbInterface.getAgentsPlayingRolePositionInUnit(UnitName, RoleName, PositionValue);
 
 								resultXML += "<status>Ok</status>\n";
 								resultXML += "<result>\n";
@@ -2307,7 +2307,7 @@ public class OMSInterface {
 
 									if (dbInterface.checkAgentInUnit(AgentName, UnitName))
 									{
-										intResult = dbInterface.getInformQuantityAgentsRolesInUnit(UnitName, AgentName);
+										intResult = dbInterface.getInformQuantityAgentsRolesInUnit(UnitName);
 
 										resultXML += "<status>Ok</status>\n";
 										resultXML += "<result>\n";
@@ -2318,7 +2318,7 @@ public class OMSInterface {
 									}
 									else
 									{
-										intResult = dbInterface.getInformQuantityAgentsVisibilityRolesInUnit(UnitName, AgentName);
+										intResult = dbInterface.getInformQuantityAgentsVisibilityRolesInUnit(UnitName);
 
 										resultXML += "<status>Ok</status>\n";
 										resultXML += "<result>\n";
@@ -2330,7 +2330,7 @@ public class OMSInterface {
 									// position name.
 								case CASE_B:
 
-									intResult = dbInterface.getInformQuantityAgentsPlayingRoleInUnit(UnitName, RoleName, AgentName);
+									intResult = dbInterface.getInformQuantityAgentsPlayingRoleInUnit(UnitName, RoleName);
 									resultXML += "<status>Ok</status>\n";
 									resultXML += "<result>\n";
 									resultXML += "<quantity>" + intResult + "</quantity>\n";
@@ -2341,7 +2341,7 @@ public class OMSInterface {
 
 									if (dbInterface.checkAgentInUnit(AgentName, UnitName))
 									{
-										intResult = dbInterface.getInformQuantityAgentsPlayingPositionInUnit(UnitName, PositionValue, AgentName);
+										intResult = dbInterface.getInformQuantityAgentsPlayingPositionInUnit(UnitName, PositionValue);
 										resultXML += "<status>Ok</status>\n";
 										resultXML += "<result>\n";
 										resultXML += "<quantity>" + intResult + "</quantity>\n";
@@ -2350,7 +2350,7 @@ public class OMSInterface {
 									}
 									else
 									{
-										intResult = dbInterface.getInformQuantityAgentsPlayingVisibilityPositionInUnit(UnitName, PositionValue, AgentName);
+										intResult = dbInterface.getInformQuantityAgentsPlayingVisibilityPositionInUnit(UnitName, PositionValue);
 										resultXML += "<status>Ok</status>\n";
 										resultXML += "<result>\n";
 										resultXML += "<quantity>" + intResult + "</quantity>\n";
@@ -2362,7 +2362,7 @@ public class OMSInterface {
 									// postionName
 								case CASE_D:
 
-									intResult = dbInterface.getInformQuantityAgentsPlayingRolePositionInUnit(UnitName, RoleName, PositionValue, AgentName);
+									intResult = dbInterface.getInformQuantityAgentsPlayingRolePositionInUnit(UnitName, RoleName, PositionValue);
 									resultXML += "<status>Ok</status>\n";
 									resultXML += "<result>\n";
 									resultXML += "<quantity>" + intResult + "</quantity>\n";
@@ -2383,7 +2383,7 @@ public class OMSInterface {
 
 							case CASE_A:
 
-								intResult = dbInterface.getInformQuantityAgentsRolesInUnit(UnitName, AgentName);
+								intResult = dbInterface.getInformQuantityAgentsRolesInUnit(UnitName);
 
 								resultXML += "<status>Ok</status>\n";
 								resultXML += "<result>\n";
@@ -2406,7 +2406,7 @@ public class OMSInterface {
 										}
 									}
 								 */
-								intResult = dbInterface.getInformQuantityAgentsPlayingRoleInUnit(UnitName, RoleName, AgentName);
+								intResult = dbInterface.getInformQuantityAgentsPlayingRoleInUnit(UnitName, RoleName);
 								resultXML += "<status>Ok</status>\n";
 								resultXML += "<result>\n";
 								resultXML += "<quantity>" + intResult + "</quantity>\n";
@@ -2415,7 +2415,7 @@ public class OMSInterface {
 								break;// Solo se incluye el roleName
 							case CASE_C:
 
-								intResult = dbInterface.getInformQuantityAgentsPlayingPositionInUnit(UnitName, PositionValue, AgentName);
+								intResult = dbInterface.getInformQuantityAgentsPlayingPositionInUnit(UnitName, PositionValue);
 								resultXML += "<status>Ok</status>\n";
 								resultXML += "<result>\n";
 								resultXML += "<quantity>" + intResult + "</quantity>\n";
@@ -2436,7 +2436,7 @@ public class OMSInterface {
 										}
 									}
 								 */
-								intResult = dbInterface.getInformQuantityAgentsPlayingRolePositionInUnit(UnitName, RoleName, PositionValue, AgentName);
+								intResult = dbInterface.getInformQuantityAgentsPlayingRolePositionInUnit(UnitName, RoleName, PositionValue);
 								resultXML += "<status>Ok</status>\n";
 								resultXML += "<result>\n";
 								resultXML += "<quantity>" + intResult + "</quantity>\n";
@@ -2599,7 +2599,7 @@ public class OMSInterface {
 
 					if (checkPermitNorms(AgentName, UnitName, "informUnitRoles("+UnitName.toLowerCase()+","+AgentName.toLowerCase()+")"))
 					{
-						methodResult = dbInterface.getInformUnitRoles(UnitName, AgentName, true);
+						methodResult = dbInterface.getInformUnitRoles(UnitName, true);
 
 						resultXML += "<status>Ok</status>\n";
 						resultXML += "<result>\n";
@@ -2626,7 +2626,7 @@ public class OMSInterface {
 
 					if (dbInterface.checkAgentInUnit(AgentName, UnitName))
 					{
-						methodResult = dbInterface.getInformUnitRoles(UnitName, AgentName, true);
+						methodResult = dbInterface.getInformUnitRoles(UnitName, true);
 
 						resultXML += "<status>Ok</status>\n";
 						resultXML += "<result>\n";
@@ -2647,7 +2647,7 @@ public class OMSInterface {
 					}
 					else
 					{
-						methodResult = dbInterface.getInformUnitRoles(UnitName, AgentName, false);
+						methodResult = dbInterface.getInformUnitRoles(UnitName, false);
 
 						resultXML += "<status>Ok</status>\n";
 						resultXML += "<result>\n";

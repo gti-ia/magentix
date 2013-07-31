@@ -752,6 +752,7 @@ public class TestDeRegisterUnit extends TestCase {
 					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
+			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
 			
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
 					"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'))))");
@@ -789,6 +790,8 @@ public class TestDeRegisterUnit extends TestCase {
 					"(SELECT idposition FROM position WHERE positionName = 'member'), "+
 					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
+			
+			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
 			
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
 					"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'))))");
@@ -1721,10 +1724,7 @@ public class TestDeRegisterUnit extends TestCase {
 					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-
-			
-			
-				
+			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
 		
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
 					"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = '"+unit2+"'))))");
@@ -1766,11 +1766,8 @@ public class TestDeRegisterUnit extends TestCase {
 					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-
+			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
 			
-			
-				
-		
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
 					"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = '"+unit2+"'))))");
 		
@@ -1842,7 +1839,6 @@ public class TestDeRegisterUnit extends TestCase {
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
 			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
-				
 		
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
 					"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = '"+unit2+"'))))");
@@ -1885,10 +1881,7 @@ public class TestDeRegisterUnit extends TestCase {
 					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-
-			
-			
-				
+			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");	
 		
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
 					"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = '"+unit2+"'))))");
@@ -1930,11 +1923,8 @@ public class TestDeRegisterUnit extends TestCase {
 					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
+			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
 
-			
-			
-				
-		
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
 					"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = '"+unit2+"'))))");
 		
@@ -2049,11 +2039,8 @@ public class TestDeRegisterUnit extends TestCase {
 					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-
+			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
 			
-			
-				
-		
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
 					"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = '"+unit2+"'))))");
 		
@@ -2094,10 +2081,7 @@ public class TestDeRegisterUnit extends TestCase {
 					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
-
-			
-			
-				
+			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
 		
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
 					"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = '"+unit2+"'))))");
@@ -2204,6 +2188,8 @@ public class TestDeRegisterUnit extends TestCase {
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 					
 		
+			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('jugador')");
+			
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
 					"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = '"+unit2+"'))))");
 		
@@ -2241,6 +2227,8 @@ public class TestDeRegisterUnit extends TestCase {
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 			
 		
+			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('jugador')");
+			
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
 					"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = '"+unit2+"'))))");
 		
@@ -2345,6 +2333,7 @@ public class TestDeRegisterUnit extends TestCase {
 					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 		
+			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('jugador')");
 			
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
 					"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = '"+unit2+"'))))");
@@ -2383,7 +2372,7 @@ public class TestDeRegisterUnit extends TestCase {
 					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 			
-	
+			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('jugador')");
 		
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
 					"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = '"+unit2+"'))))");
@@ -2489,7 +2478,8 @@ public class TestDeRegisterUnit extends TestCase {
 					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 				
-		
+			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('jugador')");
+			
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
 					"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = '"+unit2+"'))))");
 		
@@ -2526,7 +2516,8 @@ public class TestDeRegisterUnit extends TestCase {
 					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 			
-
+			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('jugador')");
+			
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
 					"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = '"+unit2+"'))))");
 		
