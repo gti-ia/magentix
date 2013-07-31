@@ -13,7 +13,6 @@ def zipdir(path, zipname):
     zip.close()
 
 def which(program):
-    import os
     def is_exe(fpath):
         return os.path.isfile(fpath) and os.access(fpath, os.X_OK)
 
@@ -132,6 +131,7 @@ line_prepender(releasedir+os.sep+"Start-Magentix.bat", 'set VERSION='+release+'\
 #Compile everything
 pwd = os.getcwd()
 if not nomvn:
+  if which("javac") != None:
     if which("mvn") != None:
         #compile magentix...
         os.chdir("..")
@@ -149,6 +149,8 @@ if not nomvn:
         shutil.copy("target"+os.sep+"StartMagentix.jar", ".."+os.sep+releasedir+os.sep+"bin")
     else:
     	print "WARNING: Could not compile the platform! You MUST install maven2."
+  else:
+  	print "WARNING: javac not found! You MUST install a java JDK (>=1.7)."
 
 os.chdir(pwd)
 
