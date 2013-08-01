@@ -194,30 +194,45 @@ public class TestInformUnitRoles extends TestCase {
 
 			assertEquals("El resultado debe ser 5", 5, result.size());
 			
-			assertEquals("miembro", result.get(0).get(0));
-			assertEquals("member", result.get(0).get(1));
-			assertEquals("public", result.get(0).get(2));//visibility
-			assertEquals("external", result.get(0).get(3));//Accessibility
+			ArrayList<String> aux = new ArrayList<String>();
+			aux.add("miembro");
+			aux.add("member");
+			aux.add("public");//visibility
+			aux.add("external");//Accessibility
 			
-			assertEquals("miembro2", result.get(1).get(0));
-			assertEquals("member", result.get(1).get(1));
-			assertEquals("private", result.get(1).get(2));//visibility
-			assertEquals("external", result.get(1).get(3));//Accessibility
+			assertTrue(result.contains(aux));
 			
-			assertEquals("miembro4", result.get(2).get(0));
-			assertEquals("member", result.get(2).get(1));
-			assertEquals("public", result.get(2).get(2));//visibility
-			assertEquals("internal", result.get(2).get(3));//Accessibility
+			aux.clear();
+			aux.add("miembro2");
+			aux.add("member");
+			aux.add("private");//visibility
+			aux.add("external");//Accessibility
 			
-			assertEquals("miembro5", result.get(3).get(0));
-			assertEquals("member", result.get(3).get(1));
-			assertEquals("private", result.get(3).get(2));//visibility
-			assertEquals("internal", result.get(3).get(3));//Accessibility
+			assertTrue(result.contains(aux));
 			
-			assertEquals("creador", result.get(4).get(0));
-			assertEquals("creator", result.get(4).get(1));
-			assertEquals("private", result.get(4).get(2));//visibility
-			assertEquals("internal", result.get(4).get(3));//Accessibility
+			aux.clear();
+			aux.add("miembro4");
+			aux.add("member");
+			aux.add("public");//visibility
+			aux.add("internal");//Accessibility
+			
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("miembro5");
+			aux.add("member");
+			aux.add("private");//visibility
+			aux.add("internal");//Accessibility
+			
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("creador");
+			aux.add("creator");
+			aux.add("private");//visibility
+			aux.add("internal");//Accessibility
+			
+			assertTrue(result.contains(aux));
 
 			//---------------------------------------------------------------------//
 
@@ -293,31 +308,46 @@ public class TestInformUnitRoles extends TestCase {
 
 			assertEquals("El resultado debe ser 5", 5, result.size());
 			
-			assertEquals("miembro", result.get(0).get(0));
-			assertEquals("member", result.get(0).get(1));
-			assertEquals("public", result.get(0).get(2));//visibility
-			assertEquals("external", result.get(0).get(3));//Accessibility
+			ArrayList<String> aux = new ArrayList<String>();
+			aux.add("miembro");
+			aux.add("member");
+			aux.add("public");//visibility
+			aux.add("external");//Accessibility
 			
-			assertEquals("miembro2", result.get(1).get(0));
-			assertEquals("member", result.get(1).get(1));
-			assertEquals("private", result.get(1).get(2));//visibility
-			assertEquals("external", result.get(1).get(3));//Accessibility
+			assertTrue(result.contains(aux));
 			
-			assertEquals("miembro4", result.get(2).get(0));
-			assertEquals("member", result.get(2).get(1));
-			assertEquals("public", result.get(2).get(2));//visibility
-			assertEquals("internal", result.get(2).get(3));//Accessibility
+			aux.clear();
+			aux.add("miembro2");
+			aux.add("member");
+			aux.add("private");//visibility
+			aux.add("external");//Accessibility
 			
-			assertEquals("miembro5", result.get(3).get(0));
-			assertEquals("member", result.get(3).get(1));
-			assertEquals("private", result.get(3).get(2));//visibility
-			assertEquals("internal", result.get(3).get(3));//Accessibility
+			assertTrue(result.contains(aux));
 			
-			assertEquals("creador", result.get(4).get(0));
-			assertEquals("creator", result.get(4).get(1));
-			assertEquals("private", result.get(4).get(2));//visibility
-			assertEquals("internal", result.get(4).get(3));//Accessibility
-
+			aux.clear();
+			aux.add("miembro4");
+			aux.add("member");
+			aux.add("public");//visibility
+			aux.add("internal");//Accessibility
+			
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("miembro5");
+			aux.add("member");
+			aux.add("private");//visibility
+			aux.add("internal");//Accessibility
+			
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("creador");
+			aux.add("creator");
+			aux.add("private");//visibility
+			aux.add("internal");//Accessibility
+			
+			assertTrue(result.contains(aux));
+			
 			//---------------------------------------------------------------------//
 
 			
@@ -436,70 +466,106 @@ public class TestInformUnitRoles extends TestCase {
 
 			assertEquals("El resultado debe ser 12", 12, result.size());
 			
-			assertEquals("subordinado", result.get(0).get(0));
-			assertEquals("subordinate", result.get(0).get(1));
-			assertEquals("public", result.get(0).get(2));//visibility
-			assertEquals("external", result.get(0).get(3));//Accessibility
+			ArrayList<String> aux = new ArrayList<String>();
+			aux.add("subordinado");
+			aux.add("subordinate");
+			aux.add("public");//visibility
+			aux.add("external");//Accessibility
 			
-			assertEquals("subordinado2", result.get(1).get(0));
-			assertEquals("subordinate", result.get(1).get(1));
-			assertEquals("private", result.get(1).get(2));//visibility
-			assertEquals("external", result.get(1).get(3));//Accessibility
+			assertTrue(result.contains(aux));
 			
-			assertEquals("subordinado3", result.get(6).get(0));
-			assertEquals("subordinate", result.get(6).get(1));
-			assertEquals("public", result.get(6).get(2));//visibility
-			assertEquals("internal", result.get(6).get(3));//Accessibility
+			aux.clear();
+			aux.add("subordinado2");
+			aux.add("subordinate");
+			aux.add("private");//visibility
+			aux.add("external");//Accessibility
 			
-			assertEquals("subordinado4", result.get(7).get(0));
-			assertEquals("subordinate", result.get(7).get(1));
-			assertEquals("private", result.get(7).get(2));//visibility
-			assertEquals("internal", result.get(7).get(3));//Accessibility
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("subordinado3");
+			aux.add("subordinate");
+			aux.add("public");//visibility
+			aux.add("internal");//Accessibility
+			
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("subordinado4");
+			aux.add("subordinate");
+			aux.add("private");//visibility
+			aux.add("internal");//Accessibility
+			
+			assertTrue(result.contains(aux));
 			
 			//---------------------------------------------------------------------//
 
-			assertEquals("supervisor", result.get(2).get(0));
-			assertEquals("supervisor", result.get(2).get(1));
-			assertEquals("public", result.get(2).get(2));//visibility
-			assertEquals("external", result.get(2).get(3));//Accessibility
+			aux.clear();
+			aux.add("supervisor");
+			aux.add("supervisor");
+			aux.add("public");//visibility
+			aux.add("external");//Accessibility
 			
-			assertEquals("supervisor2", result.get(3).get(0));
-			assertEquals("supervisor", result.get(3).get(1));
-			assertEquals("private", result.get(3).get(2));//visibility
-			assertEquals("external", result.get(3).get(3));//Accessibility
+			assertTrue(result.contains(aux));
 			
-			assertEquals("supervisor3", result.get(8).get(0));
-			assertEquals("supervisor", result.get(8).get(1));
-			assertEquals("public", result.get(8).get(2));//visibility
-			assertEquals("internal", result.get(8).get(3));//Accessibility
+			aux.clear();
+			aux.add("supervisor2");
+			aux.add("supervisor");
+			aux.add("private");//visibility
+			aux.add("external");//Accessibility
 			
-			assertEquals("supervisor4", result.get(9).get(0));
-			assertEquals("supervisor", result.get(9).get(1));
-			assertEquals("private", result.get(9).get(2));//visibility
-			assertEquals("internal", result.get(9).get(3));//Accessibility
+			assertTrue(result.contains(aux));
 			
+			aux.clear();
+			aux.add("supervisor3");
+			aux.add("supervisor");
+			aux.add("public");//visibility
+			aux.add("internal");//Accessibility
+			
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("supervisor4");
+			aux.add("supervisor");
+			aux.add("private");//visibility
+			aux.add("internal");//Accessibility
+			
+			assertTrue(result.contains(aux));
 
 			//---------------------------------------------------------------------//
 			
-			assertEquals("creador", result.get(4).get(0));
-			assertEquals("creator", result.get(4).get(1));
-			assertEquals("public", result.get(4).get(2));//visibility
-			assertEquals("external", result.get(4).get(3));//Accessibility
+			aux.clear();
+			aux.add("creador");
+			aux.add("creator");
+			aux.add("public");//visibility
+			aux.add("external");//Accessibility
 			
-			assertEquals("creador2", result.get(5).get(0));
-			assertEquals("creator", result.get(5).get(1));
-			assertEquals("private", result.get(5).get(2));//visibility
-			assertEquals("external", result.get(5).get(3));//Accessibility
+			assertTrue(result.contains(aux));
 			
-			assertEquals("creador3", result.get(10).get(0));
-			assertEquals("creator", result.get(10).get(1));
-			assertEquals("public", result.get(10).get(2));//visibility
-			assertEquals("internal", result.get(10).get(3));//Accessibility
+			aux.clear();
+			aux.add("creador2");
+			aux.add("creator");
+			aux.add("private");//visibility
+			aux.add("external");//Accessibility
 			
-			assertEquals("creador4", result.get(11).get(0));
-			assertEquals("creator", result.get(11).get(1));
-			assertEquals("private", result.get(11).get(2));//visibility
-			assertEquals("internal", result.get(11).get(3));//Accessibility
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("creador3");
+			aux.add("creator");
+			aux.add("public");//visibility
+			aux.add("internal");//Accessibility
+			
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("creador4");
+			aux.add("creator");
+			aux.add("private");//visibility
+			aux.add("internal");//Accessibility
+			
+			assertTrue(result.contains(aux));
+			
 			//---------------------------------------------------------------------//
 
 		}catch(THOMASException e)
@@ -613,70 +679,106 @@ public class TestInformUnitRoles extends TestCase {
 
 			assertEquals("El resultado debe ser 12", 12, result.size());
 			
-			assertEquals("subordinado", result.get(0).get(0));
-			assertEquals("subordinate", result.get(0).get(1));
-			assertEquals("public", result.get(0).get(2));//visibility
-			assertEquals("external", result.get(0).get(3));//Accessibility
+			ArrayList<String> aux = new ArrayList<String>();
+			aux.add("subordinado");
+			aux.add("subordinate");
+			aux.add("public");//visibility
+			aux.add("external");//Accessibility
 			
-			assertEquals("subordinado2", result.get(1).get(0));
-			assertEquals("subordinate", result.get(1).get(1));
-			assertEquals("private", result.get(1).get(2));//visibility
-			assertEquals("external", result.get(1).get(3));//Accessibility
+			assertTrue(result.contains(aux));
 			
-			assertEquals("subordinado3", result.get(6).get(0));
-			assertEquals("subordinate", result.get(6).get(1));
-			assertEquals("public", result.get(6).get(2));//visibility
-			assertEquals("internal", result.get(6).get(3));//Accessibility
+			aux.clear();
+			aux.add("subordinado2");
+			aux.add("subordinate");
+			aux.add("private");//visibility
+			aux.add("external");//Accessibility
 			
-			assertEquals("subordinado4", result.get(7).get(0));
-			assertEquals("subordinate", result.get(7).get(1));
-			assertEquals("private", result.get(7).get(2));//visibility
-			assertEquals("internal", result.get(7).get(3));//Accessibility
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("subordinado3");
+			aux.add("subordinate");
+			aux.add("public");//visibility
+			aux.add("internal");//Accessibility
+			
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("subordinado4");
+			aux.add("subordinate");
+			aux.add("private");//visibility
+			aux.add("internal");//Accessibility
+			
+			assertTrue(result.contains(aux));
 			
 			//---------------------------------------------------------------------//
 
-			assertEquals("supervisor", result.get(2).get(0));
-			assertEquals("supervisor", result.get(2).get(1));
-			assertEquals("public", result.get(2).get(2));//visibility
-			assertEquals("external", result.get(2).get(3));//Accessibility
+			aux.clear();
+			aux.add("supervisor");
+			aux.add("supervisor");
+			aux.add("public");//visibility
+			aux.add("external");//Accessibility
 			
-			assertEquals("supervisor2", result.get(3).get(0));
-			assertEquals("supervisor", result.get(3).get(1));
-			assertEquals("private", result.get(3).get(2));//visibility
-			assertEquals("external", result.get(3).get(3));//Accessibility
+			assertTrue(result.contains(aux));
 			
-			assertEquals("supervisor3", result.get(8).get(0));
-			assertEquals("supervisor", result.get(8).get(1));
-			assertEquals("public", result.get(8).get(2));//visibility
-			assertEquals("internal", result.get(8).get(3));//Accessibility
+			aux.clear();
+			aux.add("supervisor2");
+			aux.add("supervisor");
+			aux.add("private");//visibility
+			aux.add("external");//Accessibility
 			
-			assertEquals("supervisor4", result.get(9).get(0));
-			assertEquals("supervisor", result.get(9).get(1));
-			assertEquals("private", result.get(9).get(2));//visibility
-			assertEquals("internal", result.get(9).get(3));//Accessibility
+			assertTrue(result.contains(aux));
 			
+			aux.clear();
+			aux.add("supervisor3");
+			aux.add("supervisor");
+			aux.add("public");//visibility
+			aux.add("internal");//Accessibility
+			
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("supervisor4");
+			aux.add("supervisor");
+			aux.add("private");//visibility
+			aux.add("internal");//Accessibility
+			
+			assertTrue(result.contains(aux));
 
 			//---------------------------------------------------------------------//
 			
-			assertEquals("creador", result.get(4).get(0));
-			assertEquals("creator", result.get(4).get(1));
-			assertEquals("public", result.get(4).get(2));//visibility
-			assertEquals("external", result.get(4).get(3));//Accessibility
+			aux.clear();
+			aux.add("creador");
+			aux.add("creator");
+			aux.add("public");//visibility
+			aux.add("external");//Accessibility
 			
-			assertEquals("creador2", result.get(5).get(0));
-			assertEquals("creator", result.get(5).get(1));
-			assertEquals("private", result.get(5).get(2));//visibility
-			assertEquals("external", result.get(5).get(3));//Accessibility
+			assertTrue(result.contains(aux));
 			
-			assertEquals("creador3", result.get(10).get(0));
-			assertEquals("creator", result.get(10).get(1));
-			assertEquals("public", result.get(10).get(2));//visibility
-			assertEquals("internal", result.get(10).get(3));//Accessibility
+			aux.clear();
+			aux.add("creador2");
+			aux.add("creator");
+			aux.add("private");//visibility
+			aux.add("external");//Accessibility
 			
-			assertEquals("creador4", result.get(11).get(0));
-			assertEquals("creator", result.get(11).get(1));
-			assertEquals("private", result.get(11).get(2));//visibility
-			assertEquals("internal", result.get(11).get(3));//Accessibility
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("creador3");
+			aux.add("creator");
+			aux.add("public");//visibility
+			aux.add("internal");//Accessibility
+			
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("creador4");
+			aux.add("creator");
+			aux.add("private");//visibility
+			aux.add("internal");//Accessibility
+			
+			assertTrue(result.contains(aux));
+			
 			//---------------------------------------------------------------------//
 
 		}catch(THOMASException e)
@@ -790,70 +892,106 @@ public class TestInformUnitRoles extends TestCase {
 
 			assertEquals("El resultado debe ser 12", 12, result.size());
 			
-			assertEquals("subordinado", result.get(0).get(0));
-			assertEquals("subordinate", result.get(0).get(1));
-			assertEquals("public", result.get(0).get(2));//visibility
-			assertEquals("external", result.get(0).get(3));//Accessibility
+			ArrayList<String> aux = new ArrayList<String>();
+			aux.add("subordinado");
+			aux.add("subordinate");
+			aux.add("public");//visibility
+			aux.add("external");//Accessibility
 			
-			assertEquals("subordinado2", result.get(1).get(0));
-			assertEquals("subordinate", result.get(1).get(1));
-			assertEquals("private", result.get(1).get(2));//visibility
-			assertEquals("external", result.get(1).get(3));//Accessibility
+			assertTrue(result.contains(aux));
 			
-			assertEquals("subordinado3", result.get(6).get(0));
-			assertEquals("subordinate", result.get(6).get(1));
-			assertEquals("public", result.get(6).get(2));//visibility
-			assertEquals("internal", result.get(6).get(3));//Accessibility
+			aux.clear();
+			aux.add("subordinado2");
+			aux.add("subordinate");
+			aux.add("private");//visibility
+			aux.add("external");//Accessibility
 			
-			assertEquals("subordinado4", result.get(7).get(0));
-			assertEquals("subordinate", result.get(7).get(1));
-			assertEquals("private", result.get(7).get(2));//visibility
-			assertEquals("internal", result.get(7).get(3));//Accessibility
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("subordinado3");
+			aux.add("subordinate");
+			aux.add("public");//visibility
+			aux.add("internal");//Accessibility
+			
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("subordinado4");
+			aux.add("subordinate");
+			aux.add("private");//visibility
+			aux.add("internal");//Accessibility
+			
+			assertTrue(result.contains(aux));
 			
 			//---------------------------------------------------------------------//
 
-			assertEquals("supervisor", result.get(2).get(0));
-			assertEquals("supervisor", result.get(2).get(1));
-			assertEquals("public", result.get(2).get(2));//visibility
-			assertEquals("external", result.get(2).get(3));//Accessibility
+			aux.clear();
+			aux.add("supervisor");
+			aux.add("supervisor");
+			aux.add("public");//visibility
+			aux.add("external");//Accessibility
 			
-			assertEquals("supervisor2", result.get(3).get(0));
-			assertEquals("supervisor", result.get(3).get(1));
-			assertEquals("private", result.get(3).get(2));//visibility
-			assertEquals("external", result.get(3).get(3));//Accessibility
+			assertTrue(result.contains(aux));
 			
-			assertEquals("supervisor3", result.get(8).get(0));
-			assertEquals("supervisor", result.get(8).get(1));
-			assertEquals("public", result.get(8).get(2));//visibility
-			assertEquals("internal", result.get(8).get(3));//Accessibility
+			aux.clear();
+			aux.add("supervisor2");
+			aux.add("supervisor");
+			aux.add("private");//visibility
+			aux.add("external");//Accessibility
 			
-			assertEquals("supervisor4", result.get(9).get(0));
-			assertEquals("supervisor", result.get(9).get(1));
-			assertEquals("private", result.get(9).get(2));//visibility
-			assertEquals("internal", result.get(9).get(3));//Accessibility
+			assertTrue(result.contains(aux));
 			
+			aux.clear();
+			aux.add("supervisor3");
+			aux.add("supervisor");
+			aux.add("public");//visibility
+			aux.add("internal");//Accessibility
+			
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("supervisor4");
+			aux.add("supervisor");
+			aux.add("private");//visibility
+			aux.add("internal");//Accessibility
+			
+			assertTrue(result.contains(aux));
 
 			//---------------------------------------------------------------------//
 			
-			assertEquals("creador", result.get(4).get(0));
-			assertEquals("creator", result.get(4).get(1));
-			assertEquals("public", result.get(4).get(2));//visibility
-			assertEquals("external", result.get(4).get(3));//Accessibility
+			aux.clear();
+			aux.add("creador");
+			aux.add("creator");
+			aux.add("public");//visibility
+			aux.add("external");//Accessibility
 			
-			assertEquals("creador2", result.get(5).get(0));
-			assertEquals("creator", result.get(5).get(1));
-			assertEquals("private", result.get(5).get(2));//visibility
-			assertEquals("external", result.get(5).get(3));//Accessibility
+			assertTrue(result.contains(aux));
 			
-			assertEquals("creador3", result.get(10).get(0));
-			assertEquals("creator", result.get(10).get(1));
-			assertEquals("public", result.get(10).get(2));//visibility
-			assertEquals("internal", result.get(10).get(3));//Accessibility
+			aux.clear();
+			aux.add("creador2");
+			aux.add("creator");
+			aux.add("private");//visibility
+			aux.add("external");//Accessibility
 			
-			assertEquals("creador4", result.get(11).get(0));
-			assertEquals("creator", result.get(11).get(1));
-			assertEquals("private", result.get(11).get(2));//visibility
-			assertEquals("internal", result.get(11).get(3));//Accessibility
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("creador3");
+			aux.add("creator");
+			aux.add("public");//visibility
+			aux.add("internal");//Accessibility
+			
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("creador4");
+			aux.add("creator");
+			aux.add("private");//visibility
+			aux.add("internal");//Accessibility
+			
+			assertTrue(result.contains(aux));
+			
 			//---------------------------------------------------------------------//
 
 		}catch(THOMASException e)
@@ -930,22 +1068,22 @@ public class TestInformUnitRoles extends TestCase {
 
 			assertEquals("El resultado debe ser 2", 2, result.size());
 			
-			assertEquals("miembro", result.get(0).get(0));
-			assertEquals("member", result.get(0).get(1));
-			assertEquals("public", result.get(0).get(2));//visibility
-			assertEquals("external", result.get(0).get(3));//Accessibility
+			ArrayList<String> aux = new ArrayList<String>();
+			aux.add("miembro");
+			aux.add("member");
+			aux.add("public");//visibility
+			aux.add("external");//Accessibility
 			
-			assertEquals("miembro4", result.get(1).get(0));
-			assertEquals("member", result.get(1).get(1));
-			assertEquals("public", result.get(1).get(2));//visibility
-			assertEquals("internal", result.get(1).get(3));//Accessibility
+			assertTrue(result.contains(aux));
 			
-	
-
-			//---------------------------------------------------------------------//
-
+			aux.clear();
+			aux.add("miembro4");
+			aux.add("member");
+			aux.add("public");//visibility
+			aux.add("internal");//Accessibility
 			
-
+			assertTrue(result.contains(aux));
+			
 			//---------------------------------------------------------------------//
 
 
@@ -1023,21 +1161,21 @@ public class TestInformUnitRoles extends TestCase {
 
 			assertEquals("El resultado debe ser 2", 2, result.size());
 			
-			assertEquals("miembro", result.get(0).get(0));
-			assertEquals("member", result.get(0).get(1));
-			assertEquals("public", result.get(0).get(2));//visibility
-			assertEquals("external", result.get(0).get(3));//Accessibility
+			ArrayList<String> aux = new ArrayList<String>();
+			aux.add("miembro");
+			aux.add("member");
+			aux.add("public");//visibility
+			aux.add("external");//Accessibility
 			
-			assertEquals("miembro4", result.get(1).get(0));
-			assertEquals("member", result.get(1).get(1));
-			assertEquals("public", result.get(1).get(2));//visibility
-			assertEquals("internal", result.get(1).get(3));//Accessibility
+			assertTrue(result.contains(aux));
 			
-	
-
-			//---------------------------------------------------------------------//
-
+			aux.clear();
+			aux.add("miembro4");
+			aux.add("member");
+			aux.add("public");//visibility
+			aux.add("internal");//Accessibility
 			
+			assertTrue(result.contains(aux));
 
 			//---------------------------------------------------------------------//
 
@@ -1159,43 +1297,57 @@ public class TestInformUnitRoles extends TestCase {
 
 			assertEquals("El resultado debe ser 6", 6, result.size());
 			
-			assertEquals("subordinado", result.get(0).get(0));
-			assertEquals("subordinate", result.get(0).get(1));
-			assertEquals("public", result.get(0).get(2));//visibility
-			assertEquals("external", result.get(0).get(3));//Accessibility
+			ArrayList<String> aux = new ArrayList<String>();
+			aux.add("subordinado");
+			aux.add("subordinate");
+			aux.add("public");//visibility
+			aux.add("external");//Accessibility
 			
-			assertEquals("subordinado3", result.get(3).get(0));
-			assertEquals("subordinate", result.get(3).get(1));
-			assertEquals("public", result.get(3).get(2));//visibility
-			assertEquals("internal", result.get(3).get(3));//Accessibility
+			assertTrue(result.contains(aux));
 			
-
+			aux.clear();
+			aux.add("subordinado3");
+			aux.add("subordinate");
+			aux.add("public");//visibility
+			aux.add("internal");//Accessibility
+			
+			assertTrue(result.contains(aux));
 			
 			//---------------------------------------------------------------------//
 
-			assertEquals("supervisor", result.get(1).get(0));
-			assertEquals("supervisor", result.get(1).get(1));
-			assertEquals("public", result.get(1).get(2));//visibility
-			assertEquals("external", result.get(1).get(3));//Accessibility
+			aux.clear();
+			aux.add("supervisor");
+			aux.add("supervisor");
+			aux.add("public");//visibility
+			aux.add("external");//Accessibility
 			
-			assertEquals("supervisor3", result.get(4).get(0));
-			assertEquals("supervisor", result.get(4).get(1));
-			assertEquals("public", result.get(4).get(2));//visibility
-			assertEquals("internal", result.get(4).get(3));//Accessibility
+			assertTrue(result.contains(aux));
 			
+			aux.clear();
+			aux.add("supervisor3");
+			aux.add("supervisor");
+			aux.add("public");//visibility
+			aux.add("internal");//Accessibility
 			
-
+			assertTrue(result.contains(aux));
+			
 			//---------------------------------------------------------------------//
 			
-			assertEquals("creador2", result.get(2).get(0));
-			assertEquals("creator", result.get(2).get(1));
-			assertEquals("public", result.get(2).get(2));//visibility
-			assertEquals("external", result.get(2).get(3));//Accessibility
+			aux.clear();
+			aux.add("creador2");
+			aux.add("creator");
+			aux.add("public");//visibility
+			aux.add("external");//Accessibility
 			
-			assertEquals("creador4", result.get(5).get(0));
-			assertEquals("creator", result.get(5).get(1));
-			assertEquals("public", result.get(5).get(2));//visibility
-			assertEquals("internal", result.get(5).get(3));//Accessibility
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("creador4");
+			aux.add("creator");
+			aux.add("public");//visibility
+			aux.add("internal");//Accessibility
+			
+			assertTrue(result.contains(aux));
 			
 			//---------------------------------------------------------------------//
 
@@ -1316,43 +1468,57 @@ public class TestInformUnitRoles extends TestCase {
 
 			assertEquals("El resultado debe ser 6", 6, result.size());
 			
-			assertEquals("subordinado", result.get(0).get(0));
-			assertEquals("subordinate", result.get(0).get(1));
-			assertEquals("public", result.get(0).get(2));//visibility
-			assertEquals("external", result.get(0).get(3));//Accessibility
+			ArrayList<String> aux = new ArrayList<String>();
+			aux.add("subordinado");
+			aux.add("subordinate");
+			aux.add("public");//visibility
+			aux.add("external");//Accessibility
 			
-			assertEquals("subordinado3", result.get(3).get(0));
-			assertEquals("subordinate", result.get(3).get(1));
-			assertEquals("public", result.get(3).get(2));//visibility
-			assertEquals("internal", result.get(3).get(3));//Accessibility
+			assertTrue(result.contains(aux));
 			
-
+			aux.clear();
+			aux.add("subordinado3");
+			aux.add("subordinate");
+			aux.add("public");//visibility
+			aux.add("internal");//Accessibility
+			
+			assertTrue(result.contains(aux));
 			
 			//---------------------------------------------------------------------//
 
-			assertEquals("supervisor", result.get(1).get(0));
-			assertEquals("supervisor", result.get(1).get(1));
-			assertEquals("public", result.get(1).get(2));//visibility
-			assertEquals("external", result.get(1).get(3));//Accessibility
+			aux.clear();
+			aux.add("supervisor");
+			aux.add("supervisor");
+			aux.add("public");//visibility
+			aux.add("external");//Accessibility
 			
-			assertEquals("supervisor3", result.get(4).get(0));
-			assertEquals("supervisor", result.get(4).get(1));
-			assertEquals("public", result.get(4).get(2));//visibility
-			assertEquals("internal", result.get(4).get(3));//Accessibility
+			assertTrue(result.contains(aux));
 			
+			aux.clear();
+			aux.add("supervisor3");
+			aux.add("supervisor");
+			aux.add("public");//visibility
+			aux.add("internal");//Accessibility
 			
+			assertTrue(result.contains(aux));
 
 			//---------------------------------------------------------------------//
 			
-			assertEquals("creador2", result.get(2).get(0));
-			assertEquals("creator", result.get(2).get(1));
-			assertEquals("public", result.get(2).get(2));//visibility
-			assertEquals("external", result.get(2).get(3));//Accessibility
+			aux.clear();
+			aux.add("creador2");
+			aux.add("creator");
+			aux.add("public");//visibility
+			aux.add("external");//Accessibility
 			
-			assertEquals("creador4", result.get(5).get(0));
-			assertEquals("creator", result.get(5).get(1));
-			assertEquals("public", result.get(5).get(2));//visibility
-			assertEquals("internal", result.get(5).get(3));//Accessibility
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("creador4");
+			aux.add("creator");
+			aux.add("public");//visibility
+			aux.add("internal");//Accessibility
+			
+			assertTrue(result.contains(aux));
 			
 			//---------------------------------------------------------------------//
 
@@ -1473,43 +1639,57 @@ public class TestInformUnitRoles extends TestCase {
 
 			assertEquals("El resultado debe ser 6", 6, result.size());
 			
-			assertEquals("subordinado", result.get(0).get(0));
-			assertEquals("subordinate", result.get(0).get(1));
-			assertEquals("public", result.get(0).get(2));//visibility
-			assertEquals("external", result.get(0).get(3));//Accessibility
+			ArrayList<String> aux = new ArrayList<String>();
+			aux.add("subordinado");
+			aux.add("subordinate");
+			aux.add("public");//visibility
+			aux.add("external");//Accessibility
 			
-			assertEquals("subordinado3", result.get(3).get(0));
-			assertEquals("subordinate", result.get(3).get(1));
-			assertEquals("public", result.get(3).get(2));//visibility
-			assertEquals("internal", result.get(3).get(3));//Accessibility
+			assertTrue(result.contains(aux));
 			
-
+			aux.clear();
+			aux.add("subordinado3");
+			aux.add("subordinate");
+			aux.add("public");//visibility
+			aux.add("internal");//Accessibility
+			
+			assertTrue(result.contains(aux));
 			
 			//---------------------------------------------------------------------//
 
-			assertEquals("supervisor", result.get(1).get(0));
-			assertEquals("supervisor", result.get(1).get(1));
-			assertEquals("public", result.get(1).get(2));//visibility
-			assertEquals("external", result.get(1).get(3));//Accessibility
+			aux.clear();
+			aux.add("supervisor");
+			aux.add("supervisor");
+			aux.add("public");//visibility
+			aux.add("external");//Accessibility
 			
-			assertEquals("supervisor3", result.get(4).get(0));
-			assertEquals("supervisor", result.get(4).get(1));
-			assertEquals("public", result.get(4).get(2));//visibility
-			assertEquals("internal", result.get(4).get(3));//Accessibility
+			assertTrue(result.contains(aux));
 			
+			aux.clear();
+			aux.add("supervisor3");
+			aux.add("supervisor");
+			aux.add("public");//visibility
+			aux.add("internal");//Accessibility
 			
+			assertTrue(result.contains(aux));
 
 			//---------------------------------------------------------------------//
 			
-			assertEquals("creador2", result.get(2).get(0));
-			assertEquals("creator", result.get(2).get(1));
-			assertEquals("public", result.get(2).get(2));//visibility
-			assertEquals("external", result.get(2).get(3));//Accessibility
+			aux.clear();
+			aux.add("creador2");
+			aux.add("creator");
+			aux.add("public");//visibility
+			aux.add("external");//Accessibility
 			
-			assertEquals("creador4", result.get(5).get(0));
-			assertEquals("creator", result.get(5).get(1));
-			assertEquals("public", result.get(5).get(2));//visibility
-			assertEquals("internal", result.get(5).get(3));//Accessibility
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("creador4");
+			aux.add("creator");
+			aux.add("public");//visibility
+			aux.add("internal");//Accessibility
+			
+			assertTrue(result.contains(aux));
 			
 			//---------------------------------------------------------------------//
 
