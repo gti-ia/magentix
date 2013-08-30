@@ -56,4 +56,7 @@
 <entry key="dbType">MySQL</entry>
 <entry key="dbDriver">com.mysql.jdbc.Driver</entry>
 
+<!-- Properties traces -->
+<entry key="traceMask">1111110100</entry>
+
 </properties>

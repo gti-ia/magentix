@@ -3,6 +3,7 @@ package es.upv.dsic.gti_ia.trace;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.BaseAgent;
+import es.upv.dsic.gti_ia.core.TracingService;
 
 /**
  * Methods to interact with the trace manager in order to publish and unpublish
@@ -77,14 +78,16 @@ public class TraceInteract {
 	 *            Name of the tracing service which is to be published
 	 * @param description
 	 *            Description of the tracing service to be published
+	 * @throws TraceServiceNotAllowedException
+	 *             if the custom tracing services are not allowed
 	 * 
 	 * @see es.upv.dsic.gti_ia.core.TracingService
 	 */
 	public static void publishTracingService(BaseAgent applicantAgent,
-			String serviceName, String description) {
-		String body = PUBLISH_LABEL + SEPARATION_CHAR + serviceName.length()
-				+ SEPARATION_CHAR + serviceName + description;
-		sendACLMessage(applicantAgent, ACLMessage.REQUEST, DEFAULT_TM_AID, body);
+			String serviceName, String description)
+			throws TraceServiceNotAllowedException {
+		publishTracingService(DEFAULT_TM_AID, applicantAgent, serviceName,
+				description);
 	}
 
 	/**
@@ -111,16 +114,25 @@ public class TraceInteract {
 	 *            Name of the tracing service which is to be published
 	 * @param description
 	 *            Description of the tracing service to be published
+	 * @throws TraceServiceNotAllowedException
+	 *             if the custom tracing services are not allowed
 	 * 
 	 * @see es.upv.dsic.gti_ia.core.TracingService
 	 * @see es.upv.dsic.gti_ia.core.AgentID
 	 */
 	public static void publishTracingService(AgentID tms_aid,
-			BaseAgent applicantAgent, String serviceName, String description) {
-		String body = PUBLISH_LABEL + SEPARATION_CHAR + serviceName.length()
-				+ SEPARATION_CHAR + serviceName + description;
-		;
-		sendACLMessage(applicantAgent, ACLMessage.REQUEST, tms_aid, body);
+			BaseAgent applicantAgent, String serviceName, String description)
+			throws TraceServiceNotAllowedException {
+		TraceMask traceMask = applicantAgent.getTraceMask();
+		// If the custom tracing services are not allowed.
+		if (traceMask.get(TraceMask.CUSTOM) == false) {
+			throw new TraceServiceNotAllowedException();
+		} else {
+			String body = PUBLISH_LABEL + SEPARATION_CHAR
+					+ serviceName.length() + SEPARATION_CHAR + serviceName
+					+ description;
+			sendACLMessage(applicantAgent, ACLMessage.REQUEST, tms_aid, body);
+		}
 	}
 
 	/**
@@ -143,11 +155,12 @@ public class TraceInteract {
 	 *            Agent which wants to unpublish the tracing service
 	 * @param serviceName
 	 *            Name of the tracing service which is to be unpublished
+	 * @throws TraceServiceNotAllowedException
+	 *             if the custom tracing services are not allowed
 	 */
 	public static void unpublishTracingService(BaseAgent applicantAgent,
-			String serviceName) {
-		String body = UNPUBLISH_LABEL + SEPARATION_CHAR + serviceName;
-		sendACLMessage(applicantAgent, ACLMessage.REQUEST, DEFAULT_TM_AID, body);
+			String serviceName) throws TraceServiceNotAllowedException {
+		unpublishTracingService(DEFAULT_TM_AID, applicantAgent, serviceName);
 	}
 
 	/**
@@ -173,11 +186,20 @@ public class TraceInteract {
 	 *            Agent which wants to unpublish the tracing service
 	 * @param serviceName
 	 *            Name of the tracing service which is to be unpublished
+	 * @throws TraceServiceNotAllowedException
+	 *             if the custom tracing services are not allowed
 	 */
 	public static void unpublishTracingService(AgentID tms_aid,
-			BaseAgent applicantAgent, String serviceName) {
-		String body = UNPUBLISH_LABEL + SEPARATION_CHAR + serviceName;
-		sendACLMessage(applicantAgent, ACLMessage.REQUEST, tms_aid, body);
+			BaseAgent applicantAgent, String serviceName)
+			throws TraceServiceNotAllowedException {
+		TraceMask traceMask = applicantAgent.getTraceMask();
+		// If the custom tracing services are not allowed.
+		if (traceMask.get(TraceMask.CUSTOM) == false) {
+			throw new TraceServiceNotAllowedException();
+		} else {
+			String body = UNPUBLISH_LABEL + SEPARATION_CHAR + serviceName;
+			sendACLMessage(applicantAgent, ACLMessage.REQUEST, tms_aid, body);
+		}
 	}
 
 	/**
@@ -205,18 +227,14 @@ public class TraceInteract {
 	 *            Agent which wants to request the tracing service
 	 * @param serviceName
 	 *            Name of the tracing service which is to be requested
+	 * @throws TraceServiceNotAllowedException
+	 *             if the tracing service cannot be requested
 	 * 
 	 * @see es.upv.dsic.gti_ia.core.TracingService
 	 */
 	public static void requestTracingService(BaseAgent requesterAgent,
-			String serviceName) {
-		/*
-		 * If the origin entity has not been specified, i.e., any entity is
-		 * valid, so use "any" label.
-		 */
-		String body = serviceName + SEPARATION_CHAR + ANY_LABEL;
-		sendACLMessage(requesterAgent, ACLMessage.SUBSCRIBE, DEFAULT_TM_AID,
-				body);
+			String serviceName) throws TraceServiceNotAllowedException {
+		requestTracingService(DEFAULT_TM_AID, requesterAgent, serviceName, null);
 	}
 
 	/**
@@ -248,14 +266,16 @@ public class TraceInteract {
 	 * @param originEntity
 	 *            AgentID of the tracing entity whose tracing service is
 	 *            requested
+	 * @throws TraceServiceNotAllowedException
+	 *             if the tracing service cannot be requested
 	 * 
 	 * @see es.upv.dsic.gti_ia.core.TracingService
 	 */
 	public static void requestTracingService(BaseAgent requesterAgent,
-			String serviceName, AgentID originEntity) {
-		String body = serviceName + SEPARATION_CHAR + originEntity.toString();
-		sendACLMessage(requesterAgent, ACLMessage.SUBSCRIBE, DEFAULT_TM_AID,
-				body);
+			String serviceName, AgentID originEntity)
+			throws TraceServiceNotAllowedException {
+		requestTracingService(DEFAULT_TM_AID, requesterAgent, serviceName,
+				originEntity);
 	}
 
 	/**
@@ -286,17 +306,15 @@ public class TraceInteract {
 	 *            Agent which wants to request the tracing service
 	 * @param serviceName
 	 *            Name of the tracing service which is to be requested
+	 * @throws TraceServiceNotAllowedException
+	 *             if the tracing service cannot be requested
 	 * 
 	 * @see es.upv.dsic.gti_ia.core.TracingService
 	 */
 	public static void requestTracingService(AgentID tms_aid,
-			BaseAgent requesterAgent, String serviceName) {
-		/*
-		 * If the origin entity has not been specified, i.e., any entity is
-		 * valid, so use "any" label.
-		 */
-		String body = serviceName + SEPARATION_CHAR + ANY_LABEL;
-		sendACLMessage(requesterAgent, ACLMessage.SUBSCRIBE, tms_aid, body);
+			BaseAgent requesterAgent, String serviceName)
+			throws TraceServiceNotAllowedException {
+		requestTracingService(tms_aid, requesterAgent, serviceName, null);
 	}
 
 	/**
@@ -330,12 +348,56 @@ public class TraceInteract {
 	 * @param originEntity
 	 *            AgentID of the tracing entity whose tracing service is
 	 *            requested
+	 * @throws TraceServiceNotAllowedException
+	 *             if the tracing service cannot be requested
 	 * 
 	 * @see es.upv.dsic.gti_ia.core.TracingService
 	 */
 	public static void requestTracingService(AgentID tms_aid,
-			BaseAgent requesterAgent, String serviceName, AgentID originEntity) {
-		String body = serviceName + SEPARATION_CHAR + originEntity.toString();
+			BaseAgent requesterAgent, String serviceName, AgentID originEntity)
+			throws TraceServiceNotAllowedException {
+		String body = null;
+		TraceMask traceMask = requesterAgent.getTraceMask();
+
+		// Check if the service requested is domain independent.
+		TracingService ts = TracingService
+				.getDITracingServiceByName(serviceName);
+
+		if (ts == null) {
+			/*
+			 * If it is not domain independent, it must be CUSTOM. Check that
+			 * bit in the mask.
+			 */
+			if (traceMask.get(TraceMask.CUSTOM) == false) {
+				throw new TraceServiceNotAllowedException();
+			}
+		} else {
+			/*
+			 * If it is domain independent, check the corresponding bit in the
+			 * mask.
+			 */
+			if (traceMask.get(ts.getMaskBitIndex()) == false) {
+				throw new TraceServiceNotAllowedException();
+			}
+		}
+
+		/*
+		 * The mask has been checked and the required bit is set. Proceed to
+		 * send the message.
+		 */
+		if (originEntity == null) {
+			/*
+			 * If the origin entity has not been specified, i.e., any entity is
+			 * valid, so use "any" label.
+			 */
+			body = serviceName + SEPARATION_CHAR + ANY_LABEL;
+		} else {
+			/*
+			 * The origin entity has been specified. Use it.
+			 */
+			body = serviceName + SEPARATION_CHAR + originEntity.toString();
+		}
+
 		sendACLMessage(requesterAgent, ACLMessage.SUBSCRIBE, tms_aid, body);
 	}
 
@@ -350,11 +412,12 @@ public class TraceInteract {
 	 * 
 	 * @param requesterAgent
 	 *            Agent which wants to request tracing services
+	 * @throws TraceServiceNotAllowedException
+	 *             if it is not possible to subscribe to all tracing services
 	 */
-	public static void requestAllTracingServices(BaseAgent requesterAgent) {
-		String body = ALL_LABEL;
-		sendACLMessage(requesterAgent, ACLMessage.SUBSCRIBE, DEFAULT_TM_AID,
-				body);
+	public static void requestAllTracingServices(BaseAgent requesterAgent)
+			throws TraceServiceNotAllowedException {
+		requestAllTracingServices(DEFAULT_TM_AID, requesterAgent);
 	}
 
 	/**
@@ -371,11 +434,19 @@ public class TraceInteract {
 	 *            request
 	 * @param requesterAgent
 	 *            Agent which wants to request tracing services
+	 * @throws TraceServiceNotAllowedException
+	 *             if it is not possible to subscribe to all tracing services
 	 */
 	public static void requestAllTracingServices(AgentID tms_aid,
-			BaseAgent requesterAgent) {
-		String body = ALL_LABEL;
-		sendACLMessage(requesterAgent, ACLMessage.SUBSCRIBE, tms_aid, body);
+			BaseAgent requesterAgent) throws TraceServiceNotAllowedException {
+		TraceMask traceMask = requesterAgent.getTraceMask();
+		// If it is not possible to subscribe to all tracing services.
+		if (traceMask.get(TraceMask.SUBSCRIBE_TO_ALL_SERVICES) == false) {
+			throw new TraceServiceNotAllowedException();
+		} else {
+			String body = ALL_LABEL;
+			sendACLMessage(requesterAgent, ACLMessage.SUBSCRIBE, tms_aid, body);
+		}
 	}
 
 	/**
@@ -396,15 +467,14 @@ public class TraceInteract {
 	 *            Agent which wants to cancel its subscription
 	 * @param serviceName
 	 *            Name of the tracing service to which the subscription was made
+	 * @throws TraceServiceNotAllowedException
+	 *             if the tracing service is not available
 	 */
 	public static void cancelTracingServiceSubscription(
-			BaseAgent requesterAgent, String serviceName) {
-		/*
-		 * If the origin entity has not been specified, i.e., any entity is
-		 * valid, so use "any" label.
-		 */
-		String body = serviceName + SEPARATION_CHAR + ANY_LABEL;
-		sendACLMessage(requesterAgent, ACLMessage.CANCEL, DEFAULT_TM_AID, body);
+			BaseAgent requesterAgent, String serviceName)
+			throws TraceServiceNotAllowedException {
+		cancelTracingServiceSubscription(DEFAULT_TM_AID, requesterAgent,
+				serviceName, null);
 	}
 
 	/**
@@ -428,11 +498,14 @@ public class TraceInteract {
 	 * @param originEntity
 	 *            AgentID of the tracing entity to which the subscription
 	 *            referred to
+	 * @throws TraceServiceNotAllowedException
+	 *             if the tracing service is not available
 	 */
 	public static void cancelTracingServiceSubscription(
-			BaseAgent requesterAgent, String serviceName, AgentID originEntity) {
-		String body = serviceName + SEPARATION_CHAR + originEntity.toString();
-		sendACLMessage(requesterAgent, ACLMessage.CANCEL, DEFAULT_TM_AID, body);
+			BaseAgent requesterAgent, String serviceName, AgentID originEntity)
+			throws TraceServiceNotAllowedException {
+		cancelTracingServiceSubscription(DEFAULT_TM_AID, requesterAgent,
+				serviceName, originEntity);
 	}
 
 	/**
@@ -456,15 +529,14 @@ public class TraceInteract {
 	 *            Agent which wants to cancel its subscription
 	 * @param serviceName
 	 *            Name of the tracing service to which the subscription was made
+	 * @throws TraceServiceNotAllowedException
+	 *             if the tracing service is not available
 	 */
 	public static void cancelTracingServiceSubscription(AgentID tms_aid,
-			BaseAgent requesterAgent, String serviceName) {
-		/*
-		 * If the origin entity has not been specified, i.e., any entity is
-		 * valid, so use "any" label.
-		 */
-		String body = serviceName + SEPARATION_CHAR + ANY_LABEL;
-		sendACLMessage(requesterAgent, ACLMessage.CANCEL, tms_aid, body);
+			BaseAgent requesterAgent, String serviceName)
+			throws TraceServiceNotAllowedException {
+		cancelTracingServiceSubscription(tms_aid, requesterAgent, serviceName,
+				null);
 	}
 
 	/**
@@ -491,10 +563,54 @@ public class TraceInteract {
 	 * @param originEntity
 	 *            AgentID of the tracing entity to which the subscription
 	 *            referred to
+	 * @throws TraceServiceNotAllowedException
+	 *             if the tracing service is not available
 	 */
 	public static void cancelTracingServiceSubscription(AgentID tms_aid,
-			BaseAgent requesterAgent, String serviceName, AgentID originEntity) {
-		String body = serviceName + SEPARATION_CHAR + originEntity.toString();
+			BaseAgent requesterAgent, String serviceName, AgentID originEntity)
+			throws TraceServiceNotAllowedException {
+		String body = null;
+		TraceMask traceMask = requesterAgent.getTraceMask();
+
+		// Check if the service requested is domain independent.
+		TracingService ts = TracingService
+				.getDITracingServiceByName(serviceName);
+
+		if (ts == null) {
+			/*
+			 * If it is not domain independent, it must be CUSTOM. Check that
+			 * bit in the mask.
+			 */
+			if (traceMask.get(TraceMask.CUSTOM) == false) {
+				throw new TraceServiceNotAllowedException();
+			}
+		} else {
+			/*
+			 * If it is domain independent, check the corresponding bit in the
+			 * mask.
+			 */
+			if (traceMask.get(ts.getMaskBitIndex()) == false) {
+				throw new TraceServiceNotAllowedException();
+			}
+		}
+
+		/*
+		 * The mask has been checked and the required bit is set. Proceed to
+		 * send the message.
+		 */
+		if (originEntity == null) {
+			/*
+			 * If the origin entity has not been specified, i.e., any entity is
+			 * valid, so use "any" label.
+			 */
+			body = serviceName + SEPARATION_CHAR + ANY_LABEL;
+		} else {
+			/*
+			 * The origin entity has been specified. Use it.
+			 */
+			body = serviceName + SEPARATION_CHAR + originEntity.toString();
+		}
+
 		sendACLMessage(requesterAgent, ACLMessage.CANCEL, tms_aid, body);
 	}
 
@@ -509,10 +625,11 @@ public class TraceInteract {
 	 * 
 	 * @param applicantAgent
 	 *            Agent which wants to receive the list of tracing entities
+	 * @throws TraceServiceNotAllowedException 
+	 *             if it is not possible to list all the entities
 	 */
-	public static void listTracingEntities(BaseAgent applicantAgent) {
-		String body = LIST_LABEL + SEPARATION_CHAR + ENTITIES_LABEL;
-		sendACLMessage(applicantAgent, ACLMessage.REQUEST, DEFAULT_TM_AID, body);
+	public static void listTracingEntities(BaseAgent applicantAgent) throws TraceServiceNotAllowedException {
+		listTracingEntities(DEFAULT_TM_AID, applicantAgent);
 	}
 
 	/**
@@ -530,11 +647,19 @@ public class TraceInteract {
 	 *            request
 	 * @param applicantAgent
 	 *            Agent which wants to receive the list of tracing entities
+	 * @throws TraceServiceNotAllowedException
+	 *             if it is not possible to list all the entities
 	 */
 	public static void listTracingEntities(AgentID tms_aid,
-			BaseAgent applicantAgent) {
-		String body = LIST_LABEL + SEPARATION_CHAR + ENTITIES_LABEL;
-		sendACLMessage(applicantAgent, ACLMessage.REQUEST, tms_aid, body);
+			BaseAgent applicantAgent) throws TraceServiceNotAllowedException {
+		TraceMask traceMask = applicantAgent.getTraceMask();
+		// If it is not possible to list all entities.
+		if (traceMask.get(TraceMask.LIST_ENTITIES) == false) {
+			throw new TraceServiceNotAllowedException();
+		} else {
+			String body = LIST_LABEL + SEPARATION_CHAR + ENTITIES_LABEL;
+			sendACLMessage(applicantAgent, ACLMessage.REQUEST, tms_aid, body);
+		}
 	}
 
 	/**
@@ -548,10 +673,11 @@ public class TraceInteract {
 	 * 
 	 * @param applicantAgent
 	 *            Agent which wants to receive the list of tracing services
+	 * @throws TraceServiceNotAllowedException 
+	 *             if it is not possible to list all the services
 	 */
-	public static void listTracingServices(BaseAgent applicantAgent) {
-		String body = LIST_LABEL + SEPARATION_CHAR + SERVICES_LABEL;
-		sendACLMessage(applicantAgent, ACLMessage.REQUEST, DEFAULT_TM_AID, body);
+	public static void listTracingServices(BaseAgent applicantAgent) throws TraceServiceNotAllowedException {
+		listTracingServices(DEFAULT_TM_AID, applicantAgent);
 	}
 
 	/**
@@ -568,10 +694,18 @@ public class TraceInteract {
 	 *            request
 	 * @param applicantAgent
 	 *            Agent which wants to receive the list of tracing services
+	 * @throws TraceServiceNotAllowedException 
+	 *             if it is not possible to list all the services
 	 */
 	public static void listTracingServices(AgentID tms_aid,
-			BaseAgent applicantAgent) {
-		String body = LIST_LABEL + SEPARATION_CHAR + SERVICES_LABEL;
-		sendACLMessage(applicantAgent, ACLMessage.REQUEST, tms_aid, body);
+			BaseAgent applicantAgent) throws TraceServiceNotAllowedException {
+		TraceMask traceMask = applicantAgent.getTraceMask();
+		// If it is not possible to list all entities.
+		if (traceMask.get(TraceMask.LIST_SERVICES) == false) {
+			throw new TraceServiceNotAllowedException();
+		} else {
+			String body = LIST_LABEL + SEPARATION_CHAR + SERVICES_LABEL;
+			sendACLMessage(applicantAgent, ACLMessage.REQUEST, tms_aid, body);
+		}
 	}
 }
