@@ -90,7 +90,7 @@ public class TestACLMessage extends TestCase {
 	 * tested but these three are enough
 	 */
 	public void testPerformativeConstructor()
-	{	
+	{
 		//Set the message with the constructor
 		msg = new ACLMessage(ACLMessage.AGREE);
 		
@@ -266,7 +266,11 @@ public class TestACLMessage extends TestCase {
 	public void testAddExistingReceiver()
 	{	
 		//Message with empty constructor by default receivers = empty
-		AgentID id = new AgentID("Agustin");
+		String agentName = "Agustin";
+		String protocol = "FIPA";
+		String host = "46019";
+		String port = "2840";
+		AgentID id = new AgentID(agentName, protocol, host, port);
 		int notExists = msg.addReceiver(id);
 		int exists = msg.addReceiver(id);
 		

@@ -23,7 +23,7 @@ import es.upv.dsic.gti_ia.core.ISO8601;
  * @author Ricard Lopez Fogues
  * @author Luis Burdalo (Added toString and fromString methods)
  */
-@SuppressWarnings("unchecked")
+//@SuppressWarnings("unchecked")
 public class ACLMessage implements Serializable, Cloneable {
 	/**
 	 * 
@@ -876,12 +876,8 @@ public class ACLMessage implements Serializable, Cloneable {
 			strMsg = strMsg + this.getInReplyTo().length() + "#" + this.getInReplyTo();
 		}
 		// reply by
-		if (this.getReplyBy() == null){
-			strMsg = strMsg + "0#";
-		}
-		else{
-			strMsg = strMsg + this.getReplyBy().length() + "#" + this.getReplyBy();
-		}
+		strMsg = strMsg + this.getReplyBy().length() + "#" + this.getReplyBy();
+		
 		// content
 		if (this.getContent() == null){
 			strMsg = strMsg + "0#";

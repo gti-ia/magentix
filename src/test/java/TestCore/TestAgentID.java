@@ -258,12 +258,12 @@ public class TestAgentID extends TestCase {
 		//agent is initialize in SetUp() with empty constructor by default
 
 		String id = "FIPA://David@16400:2480";
-		String name = "David";
+		String name = "David@Fernandez";
 		String protocol = "FIPA";
 		String host = "16400";
 		String port = "2840";
 
-		agent = new AgentID(id);
+		agent = new AgentID(name, protocol, host, port);
 
 		assertEquals(agent.getLocalName(), name);
 	}
