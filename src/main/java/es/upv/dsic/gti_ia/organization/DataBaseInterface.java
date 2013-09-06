@@ -31,6 +31,7 @@ import es.upv.dsic.gti_ia.organization.exception.UnitNotExistsException;
  * 
  * @author Jose Alemany Bordera  -  jalemany1@dsic.upv.es
  * 
+ * @autor Soledad Valero - svalero@dsic.upv.es
  */
 
 public class DataBaseInterface {
@@ -1215,7 +1216,7 @@ public class DataBaseInterface {
 			
 			st.executeUpdate("DELETE FROM agentPlayList WHERE idroleList = (SELECT idroleList FROM roleList WHERE idunitList = (SELECT idunitList FROM unitList WHERE unitName ='" + unitName + "') AND roleName ='" + roleName + "') AND idagentList = (SELECT idagentList FROM agentList WHERE agentName='" + agentName + "')");
 
-			//Check if last role played and has no associated norm, then remove it from the table agentList
+			//Check if last role played and has no associated norm or doesn't play any role, then remove it from the table agentList
 			if (!checkAgentActive(agentName))
 				deleteAgent(agentName);
 
