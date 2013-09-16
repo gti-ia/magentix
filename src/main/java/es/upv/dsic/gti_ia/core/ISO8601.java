@@ -166,9 +166,6 @@ public class ISO8601 {
 					* hour + Long.parseLong(dateTimeToken.substring(12, 14))
 					* minute + Long.parseLong(dateTimeToken.substring(14, 16))
 					* sec;
-			System.out.println("sign=" + sign + " millisec=" + millisec);
-			System.out.println(year + " " + month + " " + day + " " + hour);
-			System.out.println("currentTime=" + System.currentTimeMillis());
 			millisec = System.currentTimeMillis()
 					+ (sign == plus ? millisec : (-millisec));
 			return (new Date(millisec));
