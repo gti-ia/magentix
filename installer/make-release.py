@@ -67,13 +67,6 @@ if not nodoc:
     else:
     	print "WARNING: Could not generate api documentation. Missing doxygen."
 
-#zip sources
-if not nosrc:
-    srcfile = "magentix2-"+str(release)+"-src"
-    zipdir("src", srcfile)
-    os.mkdir(releasedir + os.sep + "src")
-    shutil.move(srcfile + ".zip", releasedir +os.sep+ "src")
-
 #generate exe
 if sys.platform=="win32":
 	os.system("python setup.py py2exe")
@@ -87,9 +80,16 @@ if not noexport:
     else:
     	print "WARNING: could not export svn!"
 
+#zip sources
+if not nosrc:
+    srcfile = "magentix2-"+str(release)+"-src"
+    zipdir(".."+os.sep+"src", srcfile)
+    os.mkdir(releasedir + os.sep + "src")
+    shutil.move(srcfile + ".zip", releasedir +os.sep+ "src")
+
 #copy files
 shutil.copytree(orig+os.sep+"bin", releasedir+os.sep+"bin")
-shutil.copytree(orig+os.sep+"doc", releasedir+os.sep+"doc")
+shutil.copytree("magentix2"+os.sep+"doc", releasedir+os.sep+"doc")
 shutil.copytree(orig+os.sep+"lib", releasedir+os.sep+"lib")
 shutil.copytree(orig+os.sep+"webapps", releasedir+os.sep+"webapps")
 shutil.copytree(orig+os.sep+"configuration", releasedir+os.sep+"configuration")
