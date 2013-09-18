@@ -46,13 +46,6 @@ public class TestAgentID extends TestCase {
 		 */
 		DOMConfigurator.configure("configuration/loggin.xml");
 
-
-		/**
-		 * Connecting to Qpid Broker
-		 */
-		AgentsConnection.connect();
-
-
 		/**
 		 * Instantiating the AgentID
 		 */
@@ -262,10 +255,13 @@ public class TestAgentID extends TestCase {
 		String protocol = "FIPA";
 		String host = "16400";
 		String port = "2840";
+		
+		int namePos = name.lastIndexOf('@');		
+		String expectedName = name.substring(0, namePos);
 
 		agent = new AgentID(name, protocol, host, port);
-
-		assertEquals(agent.getLocalName(), name);
+		
+		assertEquals(agent.getLocalName(), expectedName);
 	}
 
 	public void tearDown(){
