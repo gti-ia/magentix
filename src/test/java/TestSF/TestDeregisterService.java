@@ -1,5 +1,11 @@
 package TestSF;
 
+import com.hp.hpl.jena.db.IDBConnection;
+import com.hp.hpl.jena.ontology.OntModel;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.ModelMaker;
+
 import junit.framework.TestCase;
 //import omsTests.DatabaseAccess;
 import es.upv.dsic.gti_ia.core.AgentID;
@@ -7,6 +13,7 @@ import es.upv.dsic.gti_ia.core.AgentsConnection;
 import es.upv.dsic.gti_ia.organization.OMS;
 import es.upv.dsic.gti_ia.organization.SF;
 import es.upv.dsic.gti_ia.organization.SFProxy;
+import es.upv.dsic.gti_ia.organization.exception.DBConnectionException;
 import es.upv.dsic.gti_ia.organization.exception.ServiceProfileNotFoundException;
 import es.upv.dsic.gti_ia.organization.exception.THOMASException;
 
@@ -305,7 +312,36 @@ public class TestDeregisterService extends TestCase {
 		}
 	}
 
+	
+	/**
+	 * Deregister the service Proof, which has only been a provider registered that has been previously removed from service.
+	 * 
+	 * @return
+	 */
+	public void testAppropiateParamsTest8() {
+		
+		try {
+			
+			sfProxy.registerService("http://localhost:8080/testSFservices/testSFservices/owl/owls/Proof.owl");
+			
+			sfProxy.removeProvider("http://localhost:8080/testSFservices/testSFservices/owl/owls/Proof.owl#ProofProfile", "ProofAgent");
+			
+			String result = sfProxy.deregisterService("http://localhost:8080/testSFservices/testSFservices/owl/owls/Proof.owl#ProofProfile");
+			
+			assertEquals("Service http://localhost:8080/testSFservices/testSFservices/owl/owls/Proof.owl#ProofProfile Deregistered", result);
+		
+		} catch(THOMASException e) {
 
+			fail(e.getMessage());
+
+		} catch(Exception e) {
+			
+			fail(e.getMessage());
+		
+		}
+	}
+
+			
 /*	*//**
 	 * Deregister the web service Square, which is directly provided by a web
 	 * service and also by an agent behavior.

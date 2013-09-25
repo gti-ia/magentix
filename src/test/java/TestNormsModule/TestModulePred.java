@@ -688,7 +688,7 @@ public class TestModulePred extends TestCase {
 
 			norma = parser.parser();
 			
-			Rule actual = bdbi.buildNormRule(norma);
+			Rule actual = (Rule) bdbi.buildNormRule(norma);
 			
 		
 			
@@ -727,7 +727,7 @@ public class TestModulePred extends TestCase {
 
 			norma = parser.parser();
 			
-			Rule actual = bdbi.buildNormRule(norma);
+			Rule actual = (Rule) bdbi.buildNormRule(norma);
 			
 		
 			
@@ -766,7 +766,7 @@ public class TestModulePred extends TestCase {
 
 			norma = parser.parser();
 			
-			Rule actual = bdbi.buildNormRule(norma);
+			Rule actual = (Rule) bdbi.buildNormRule(norma);
 			
 		
 			

@@ -118,8 +118,25 @@ public class TestGetInformAgentRolesPlayedInUnit extends TestCase {
 		    parameters[1] = agentName;
 		    
 		    ArrayList<ArrayList<String>> result = (ArrayList<ArrayList<String>>) m.invoke(dbI, parameters);
-			assertEquals("The message should be:", "[["+ eRoleMember +", public, external, member], ["+ eRoleCreator +", private, internal, creator]]", result.toString());
-
+			
+		    assertEquals("The result should be 2", 2, result.size());
+		    
+			ArrayList<String> aux = new ArrayList<String>();
+			aux.add(eRoleMember);
+			aux.add("public");
+			aux.add("external");
+			aux.add("member");
+			
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add(eRoleCreator);
+			aux.add("private");
+			aux.add("internal");
+			aux.add("creator");
+			
+			assertTrue(result.contains(aux));
+			
 		} catch(InvocationTargetException e) {
 			
 			fail(e.getTargetException().getMessage());

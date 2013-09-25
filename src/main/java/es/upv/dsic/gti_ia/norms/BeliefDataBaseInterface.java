@@ -2,6 +2,7 @@ package es.upv.dsic.gti_ia.norms;
 
 import jason.asSyntax.ListTermImpl;
 import jason.asSyntax.Literal;
+import jason.asSyntax.LiteralImpl;
 import jason.asSyntax.LogicalFormula;
 import jason.asSyntax.Rule;
 
@@ -828,9 +829,9 @@ public class BeliefDataBaseInterface {
 	 * @param norm
 	 * @return
 	 */
-	public Rule buildNormRule(Norm norm)
+	public Literal buildNormRule(Norm norm)
 	{
-		Rule normRule = null;
+		Literal normRule = null;
 		String normLiteral = "";
 
 		if (!norm.getActivation().equals("") && !norm.getExpiration().equals(""))
@@ -845,7 +846,7 @@ public class BeliefDataBaseInterface {
 		}
 		
 		if (normLiteral.equals("")) 
-			normRule = new Rule(Literal.parseLiteral(norm.getAction()),null);
+			normRule = new LiteralImpl(Literal.parseLiteral(norm.getAction()));
 		else
 			normRule = new Rule(Literal.parseLiteral(norm.getAction()),(LogicalFormula) ListTermImpl.parse(normLiteral));
 

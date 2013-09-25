@@ -126,7 +126,32 @@ public class TestGetAgentsRolesInUnit extends TestCase {
 			parameters[0] = unit;
 		    
 		    ArrayList<ArrayList<String>> result = (ArrayList<ArrayList<String>>) m.invoke(dbI, parameters);
-			assertEquals("The message should be:", "[["+ eAgent +", "+ eRoleMember +"], ["+ eAgent2 +", "+ eRoleMember +"], ["+ eAgent +", "+ eRoleCreator +"], ["+ eAgent2 +", "+ eRoleCreator +"]]", result.toString());
+		    
+		    assertEquals("The result should be 4", 4, result.size());
+		    
+		    ArrayList<String> aux = new ArrayList<String>();
+			aux.add(eAgent);
+			aux.add(eRoleMember);
+			
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add(eAgent);
+			aux.add(eRoleCreator);
+			
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add(eAgent2);
+			aux.add(eRoleMember);
+			
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add(eAgent2);
+			aux.add(eRoleCreator);
+			
+			assertTrue(result.contains(aux));
 
 		} catch(InvocationTargetException e) {
 			

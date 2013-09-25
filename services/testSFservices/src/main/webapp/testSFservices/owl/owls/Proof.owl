@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+
+<!DOCTYPE uridef [
+  <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#">
+  <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <!ENTITY owl "http://www.w3.org/2002/07/owl#">
+  <!ENTITY service "http://www.daml.org/services/owl-s/1.1/Service.owl#">
+  <!ENTITY profile "http://www.daml.org/services/owl-s/1.1/Profile.owl#">
+  <!ENTITY process "http://www.daml.org/services/owl-s/1.1/Process.owl#">
+  <!ENTITY grounding "http://www.daml.org/services/owl-s/1.1/Grounding.owl#">
+  <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#">
+  <!ENTITY mind "http://localhost:8080/testSFservices/testSFservices/owl/owls/Proof.owl">
+  <!ENTITY dir "http://localhost:8080/testSFservices/services/Proof?wsdl">
+]>
+
+
+<rdf:RDF xmlns:rdf="&rdf;" xmlns:rdfs="&rdfs;" xmlns:owl="&owl;" xmlns:xsd="http://www.w3.org/2001/XMLSchema#" 
+   xmlns:service="&service;" xmlns:process="&process;" xmlns:profile="&profile;" xmlns:grounding="&grounding;"
+   xmlns:mind="&mind;#"      
+   xmlns:provider = "http://localhost:8080/ontologies/provider.owl#"
+   xml:base="http://localhost:8080/testSFservices/testSFservices/owl/owls/Proof.owl">
+
+<owl:Ontology>
+    <owl:imports rdf:resource="&service;"/>
+    <owl:imports rdf:resource="&profile;"/>
+    <owl:imports rdf:resource="&process;"/>
+    <owl:imports rdf:resource="&grounding;"/> 
+    <owl:imports rdf:resource="http://localhost:8080/ontologies/provider.owl" />
+</owl:Ontology>
+
+<service:Service rdf:ID="ProofService">
+        <service:presents rdf:resource="#ProofProfile"/>
+  <service:describedBy rdf:resource="#ProofProcess"/>
+</service:Service>
+
+<profile:Profile rdf:ID="ProofProfile">
+    <service:isPresentedBy rdf:resource="#ProofService"/>
+    <profile:serviceName xml:lang="en">Proof</profile:serviceName>
+  <profile:textDescription xml:lang="en">This service is a proof case of testSF that only has registered one profile(Task #419).</profile:textDescription>
+    <profile:contactInformation>
+   <provider:Provider rdf:ID="ProofAgent">
+     <provider:entityID rdf:datatype="^^xsd;string">ProofAgent</provider:entityID>
+     <provider:entityType rdf:datatype="^^xsd;string">Agent</provider:entityType>
+     <provider:language rdf:datatype="^^xsd;string">FIPA-ACL</provider:language>
+     <provider:performative rdf:datatype="^^xsd;string">REQUEST</provider:performative>
+   </provider:Provider>
+  </profile:contactInformation>
+</profile:Profile>
+
+</rdf:RDF>

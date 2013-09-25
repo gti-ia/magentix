@@ -1,5 +1,6 @@
 package es.upv.dsic.gti_ia.organization;
 
+import jason.asSyntax.Literal;
 import jason.asSyntax.Rule;
 
 import java.io.ByteArrayInputStream;
@@ -164,7 +165,7 @@ public class OMSInterface {
 						// ------------------------- Checking domain-dependent norms
 						// ----------------------
 						// --------------------------------------------------------------------------------
-						if (checkPermitNorms(AgentName, UnitName, "registerUnit("+UnitName.toLowerCase()+","+UnitType.toLowerCase()+","+ParentUnitName.toLowerCase()+","+AgentName.toLowerCase()+","+CreatorName.toLowerCase()+")"))
+						if (checkPermitNorms(AgentName, ParentUnitName, "registerUnit("+UnitName.toLowerCase()+","+UnitType.toLowerCase()+","+ParentUnitName.toLowerCase()+","+AgentName.toLowerCase()+","+CreatorName.toLowerCase()+")"))
 						{
 
 							String result = dbInterface.createUnit(UnitName, UnitType, ParentUnitName, AgentName, CreatorName);
@@ -696,7 +697,7 @@ public class OMSInterface {
 						if (checkPermitNorms(AgentName, UnitName, "registerNorm("+UnitName.toLowerCase()+","+parsedNorm.getDeontic().toLowerCase()+","+parsedNorm.getTargetType().toLowerCase() +","+parsedNorm.getTargetValue().toLowerCase()+","+parsedNorm.getActionName().toLowerCase()+","+ AgentName.toLowerCase()+")"))
 						{
 
-							Rule normRule = belifeDbInterface.buildNormRule(parsedNorm);
+							Literal normRule = belifeDbInterface.buildNormRule(parsedNorm);
 							String result = dbInterface.createNorm(UnitName, NormContent, parsedNorm, normRule);
 
 							resultXML += "<status>Ok</status>\n";
@@ -719,7 +720,7 @@ public class OMSInterface {
 
 								if (dbInterface.checkPositionInUnit(AgentName, "creator", UnitName) || dbInterface.checkPositionInUnit(AgentName, "supervisor", UnitName)) {
 
-									Rule normRule = belifeDbInterface.buildNormRule(parsedNorm);
+									Literal normRule = belifeDbInterface.buildNormRule(parsedNorm);
 									String result = dbInterface.createNorm(UnitName, NormContent, parsedNorm, normRule);
 
 									resultXML += "<status>Ok</status>\n";
@@ -737,7 +738,7 @@ public class OMSInterface {
 
 								if (dbInterface.checkPositionInUnit(AgentName, "creator", UnitName) || dbInterface.checkPositionInUnit(AgentName, "member", UnitName)) {
 
-									Rule normRule = belifeDbInterface.buildNormRule(parsedNorm);
+									Literal normRule = belifeDbInterface.buildNormRule(parsedNorm);
 									String result = dbInterface.createNorm(UnitName, NormContent, parsedNorm, normRule);
 
 									resultXML += "<status>Ok</status>\n";
@@ -760,7 +761,7 @@ public class OMSInterface {
 							if (unitType.equals("flat")) {
 
 								if (dbInterface.checkPosition(AgentName, "creator")) {
-									Rule normRule = belifeDbInterface.buildNormRule(parsedNorm);
+									Literal normRule = belifeDbInterface.buildNormRule(parsedNorm);
 									String result = dbInterface.createNorm(UnitName, NormContent, parsedNorm, normRule);
 
 									resultXML += "<status>Ok</status>\n";

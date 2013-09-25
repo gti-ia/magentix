@@ -10,6 +10,7 @@ import jason.asSemantics.TransitionSystem;
 import jason.asSyntax.ASSyntax;
 import jason.asSyntax.ListTermImpl;
 import jason.asSyntax.Literal;
+import jason.asSyntax.LiteralImpl;
 import jason.asSyntax.LogicalFormula;
 import jason.asSyntax.Rule;
 import jason.asSyntax.StringTermImpl;
@@ -195,28 +196,39 @@ public class MagentixAgArch extends AgArch{
 				String actionQuery = messageContent.get(0);
 				messageContent.remove(0);
 
-				//Add to norm rules
-				for (String rule : messageContent)
-				{
-					StringTokenizer stRule = new StringTokenizer(rule, ":=");
-					String action = stRule.nextToken();
-					String description = stRule.nextToken();
-					Rule normRule = null;
-
-					if (description.equals("null")) 
-						normRule = new Rule(Literal.parseLiteral(action),null);
-					else
-						normRule = new Rule(Literal.parseLiteral(action),(LogicalFormula) ListTermImpl.parse(description));
-
-					rules.add(normRule);
+				
+				for (String jasonSentence : messageContent) {
 					
-				}
+					if (jasonSentence.contains(":-")) { //Adding a normRule
+						
+						StringTokenizer stRule = new StringTokenizer(jasonSentence, ":-");
+						String action = stRule.nextToken();
+						String description = stRule.nextToken();
+						Rule normRule = null;
 
-				for (Rule normRule : rules)
-					this.getTS().getAg().getBB().add(normRule);
-				
-				
+						normRule = new Rule(Literal.parseLiteral(action),(LogicalFormula) ListTermImpl.parse(description));
+					
+						this.getTS().getAg().getBB().add(normRule); //We do here the action
+						
+						rules.add(normRule);
+						
+					} else { //Adding a belief
+						
+						StringTokenizer stBelief = new StringTokenizer(jasonSentence, ".");
+						String action = stBelief.nextToken();
+						Literal belief = null;
+						
+						belief = new LiteralImpl(Literal.parseLiteral(action));
+					
+						this.getTS().getAg().getBB().add(belief); //We do here the action
+						
+						dataBasePercepts.add(belief);
+						
+					}
+				}
+					
 				try {
+					
 					dataBasePercepts.addAll(bdbi.getIsUnit());
 					dataBasePercepts.addAll(bdbi.getHasType());
 					dataBasePercepts.addAll(bdbi.getHasParent());
@@ -234,9 +246,6 @@ public class MagentixAgArch extends AgArch{
 
 					dataBasePercepts.addAll(bdbi.getIsNorm());
 					dataBasePercepts.addAll(bdbi.getHasDeontic());
-
-
-
 
 				} catch (MySQLException e1) {
 					// TODO Auto-generated catch block

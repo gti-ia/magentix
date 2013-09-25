@@ -7,9 +7,10 @@ import java.util.ArrayList;
 import org.junit.*;
 
 import organization.TestDataBaseInterface.DatabaseAccess;
+import es.upv.dsic.gti_ia.norms.BeliefDataBaseInterface;
 import es.upv.dsic.gti_ia.norms.Norm;
 import jason.asSyntax.*;
-import jason.asSyntax.Rule;
+import jason.asSyntax.Literal;
 import es.upv.dsic.gti_ia.organization.DataBaseInterface;
 import es.upv.dsic.gti_ia.organization.exception.MySQLException;
 import junit.framework.TestCase;
@@ -22,8 +23,10 @@ import junit.framework.TestCase;
 
 public class TestCreateNorm extends TestCase {
 
-	DataBaseInterface dbI = null;
-	DatabaseAccess dbA = null;
+	private DataBaseInterface dbI = null;
+	private DatabaseAccess dbA = null;
+	private BeliefDataBaseInterface bdbi = null;
+	
 	private Method m = null;
 	
 	
@@ -35,11 +38,12 @@ public class TestCreateNorm extends TestCase {
 	    parameterTypes[0] = java.lang.String.class;
 	    parameterTypes[1] = java.lang.String.class;
 	    parameterTypes[2] = es.upv.dsic.gti_ia.norms.Norm.class;
-	    parameterTypes[3] = jason.asSyntax.Rule.class;
+	    parameterTypes[3] = jason.asSyntax.Literal.class;
 		
 	    m = DataBaseInterface.class.getDeclaredMethod("createNorm", parameterTypes);
 		m.setAccessible(true);
 		
+		bdbi = new BeliefDataBaseInterface();
 		dbA = new DatabaseAccess();
 
 		//-------------  Clean Data Base  ------------//
@@ -69,8 +73,8 @@ public class TestCreateNorm extends TestCase {
 		//--------------------------------------------//
 
 		dbA = null;
-		
 		dbI = null;
+		bdbi = null;
 		
 		m = null;
 	}
@@ -96,7 +100,7 @@ public class TestCreateNorm extends TestCase {
 			String normName = "proofNorm";
 			ArrayList<String> actions = new ArrayList<String>();
 				actions.add("registerUnit");
-				actions.add("");
+				actions.add("registerUnit");
 				actions.add("exampleUnitFlat");
 				actions.add("flat");
 				actions.add("virtual");
@@ -105,7 +109,7 @@ public class TestCreateNorm extends TestCase {
 			String eRoleCreator = "exampleRoleCreator";
 			String agentName = "exampleAgent";
 			Norm norm = new Norm(normName, "f", "agentName", "_", actions, "", "");
-			Rule rule = new Rule(Literal.parseLiteral("exampleLiteral"), null);
+			Literal rule = bdbi.buildNormRule(norm);
 			int count1, count2, count3;
 			//Data Base 
 			dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('"+ unit +"',(SELECT idunitType FROM unitType WHERE unitTypeName = 'flat'))");
@@ -167,7 +171,7 @@ public class TestCreateNorm extends TestCase {
 			String normName = "proofNorm";
 			ArrayList<String> actions = new ArrayList<String>();
 				actions.add("registerUnit");
-				actions.add("");
+				actions.add("registerUnit");
 				actions.add("exampleUnitFlat");
 				actions.add("flat");
 				actions.add("virtual");
@@ -176,7 +180,7 @@ public class TestCreateNorm extends TestCase {
 			String eRoleCreator = "exampleRoleCreator";
 			String eRoleMember = "exampleRoleMember";
 			Norm norm = new Norm(normName, "f", "roleName", "_", actions, "", "");
-			Rule rule = new Rule(Literal.parseLiteral("exampleLiteral"), null);
+			Literal rule = bdbi.buildNormRule(norm);
 			int count1, count2, count3;
 			//Data Base 
 			dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('"+ unit +"',(SELECT idunitType FROM unitType WHERE unitTypeName = 'flat'))");
@@ -241,7 +245,7 @@ public class TestCreateNorm extends TestCase {
 			String normName = "proofNorm";
 			ArrayList<String> actions = new ArrayList<String>();
 				actions.add("registerUnit");
-				actions.add("");
+				actions.add("registerUnit");
 				actions.add("exampleUnitFlat");
 				actions.add("flat");
 				actions.add("virtual");
@@ -250,7 +254,7 @@ public class TestCreateNorm extends TestCase {
 			String eRoleCreator = "exampleRoleCreator";
 			String eRoleMember = "exampleRoleMember";
 			Norm norm = new Norm(normName, "f", "positionName", "_", actions, "", "");
-			Rule rule = new Rule(Literal.parseLiteral("exampleLiteral"), null);
+			Literal rule = bdbi.buildNormRule(norm);
 			int count1, count2, count3;
 			//Data Base 
 			dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('"+ unit +"',(SELECT idunitType FROM unitType WHERE unitTypeName = 'flat'))");
@@ -315,7 +319,7 @@ public class TestCreateNorm extends TestCase {
 			String normName = "proofNorm";
 			ArrayList<String> actions = new ArrayList<String>();
 				actions.add("registerUnit");
-				actions.add("");
+				actions.add("registerUnit");
 				actions.add("exampleUnitFlat");
 				actions.add("flat");
 				actions.add("virtual");
@@ -324,7 +328,7 @@ public class TestCreateNorm extends TestCase {
 			String eRoleCreator = "exampleRoleCreator";
 			String agentName = "exampleAgent";
 			Norm norm = new Norm(normName, "f", "agentName", agentName, actions, "", "");
-			Rule rule = new Rule(Literal.parseLiteral("exampleLiteral"), null);
+			Literal rule = bdbi.buildNormRule(norm);
 			int count1, count2, count3;
 			//Data Base 
 			dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('"+ unit +"',(SELECT idunitType FROM unitType WHERE unitTypeName = 'flat'))");
@@ -387,7 +391,7 @@ public class TestCreateNorm extends TestCase {
 			String normName = "proofNorm";
 			ArrayList<String> actions = new ArrayList<String>();
 				actions.add("registerUnit");
-				actions.add("");
+				actions.add("registerUnit");
 				actions.add("exampleUnitFlat");
 				actions.add("flat");
 				actions.add("virtual");
@@ -396,7 +400,7 @@ public class TestCreateNorm extends TestCase {
 			String eRoleCreator = "exampleRoleCreator";
 			String agentName = "exampleAgent";
 			Norm norm = new Norm(normName, "f", "agentName", agentName, actions, "", "");
-			Rule rule = new Rule(Literal.parseLiteral("exampleLiteral"), null);
+			Literal rule = bdbi.buildNormRule(norm);
 			int count1, count2, count3;
 			//Data Base 
 			dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('"+ unit +"',(SELECT idunitType FROM unitType WHERE unitTypeName = 'flat'))");
@@ -455,7 +459,7 @@ public class TestCreateNorm extends TestCase {
 			String normName = "proofNorm";
 			ArrayList<String> actions = new ArrayList<String>();
 				actions.add("registerUnit");
-				actions.add("");
+				actions.add("registerUnit");
 				actions.add("exampleUnitFlat");
 				actions.add("flat");
 				actions.add("virtual");
@@ -464,7 +468,7 @@ public class TestCreateNorm extends TestCase {
 			String eRoleCreator = "exampleRoleCreator";
 			String eRoleMember = "exampleRoleMember";
 			Norm norm = new Norm(normName, "f", "roleName", eRoleMember, actions, "", "");
-			Rule rule = new Rule(Literal.parseLiteral("exampleLiteral"), null);
+			Literal rule = bdbi.buildNormRule(norm);
 			int count1, count2, count3;
 			//Data Base 
 			dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('"+ unit +"',(SELECT idunitType FROM unitType WHERE unitTypeName = 'flat'))");
@@ -528,7 +532,7 @@ public class TestCreateNorm extends TestCase {
 			String normName = "proofNorm";
 			ArrayList<String> actions = new ArrayList<String>();
 				actions.add("registerUnit");
-				actions.add("");
+				actions.add("registerUnit");
 				actions.add("exampleUnitFlat");
 				actions.add("flat");
 				actions.add("virtual");
@@ -538,7 +542,7 @@ public class TestCreateNorm extends TestCase {
 			String eRoleMember = "exampleRoleMember";
 			String pos = "member";
 			Norm norm = new Norm(normName, "f", "positionName", pos, actions, "", "");
-			Rule rule = new Rule(Literal.parseLiteral("exampleLiteral"), null);
+			Literal rule = bdbi.buildNormRule(norm);
 			int count1, count2, count3;
 			//Data Base 
 			dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('"+ unit +"',(SELECT idunitType FROM unitType WHERE unitTypeName = 'flat'))");
@@ -601,7 +605,7 @@ public class TestCreateNorm extends TestCase {
 			String normName = "proofNorm";
 			ArrayList<String> actions = new ArrayList<String>();
 				actions.add("registerUnit");
-				actions.add("");
+				actions.add("registerUnit");
 				actions.add("exampleUnitFlat");
 				actions.add("flat");
 				actions.add("virtual");
@@ -609,7 +613,7 @@ public class TestCreateNorm extends TestCase {
 				actions.add("exampleRoleCreator2");
 			String eRoleMember = "NotExists";
 			Norm norm = new Norm(normName, "f", "roleName", eRoleMember, actions, "", "");
-			Rule rule = new Rule(Literal.parseLiteral("exampleLiteral"), null);
+			Literal rule = bdbi.buildNormRule(norm);
 			//----------------------------------------------------------------------------------------------------------------//
 			
 			dbI = new DataBaseInterface();
@@ -654,7 +658,7 @@ public class TestCreateNorm extends TestCase {
 			String normName = "proofNorm";
 			ArrayList<String> actions = new ArrayList<String>();
 				actions.add("registerUnit");
-				actions.add("");
+				actions.add("registerUnit");
 				actions.add("exampleUnitFlat");
 				actions.add("flat");
 				actions.add("virtual");
@@ -663,7 +667,7 @@ public class TestCreateNorm extends TestCase {
 			String eRoleCreator = "exampleRoleCreator";
 			String eRoleMember = "exampleRoleMember";
 			Norm norm = new Norm(normName, "NotExists", "roleName", eRoleMember, actions, "", "");
-			Rule rule = new Rule(Literal.parseLiteral("exampleLiteral"), null);
+			Literal rule = bdbi.buildNormRule(norm);
 			//Data Base 
 			dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('"+ unit +"',(SELECT idunitType FROM unitType WHERE unitTypeName = 'flat'))");
 			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'virtual'),(SELECT idunitList FROM unitList WHERE unitName = '"+ unit +"'))");
@@ -721,7 +725,7 @@ public class TestCreateNorm extends TestCase {
 			String normName = "proofNorm";
 			ArrayList<String> actions = new ArrayList<String>();
 				actions.add("registerUnit");
-				actions.add("");
+				actions.add("registerUnit");
 				actions.add("exampleUnitFlat");
 				actions.add("flat");
 				actions.add("virtual");
@@ -730,7 +734,7 @@ public class TestCreateNorm extends TestCase {
 			String eRoleCreator = "exampleRoleCreator";
 			String eRoleMember = "exampleRoleMember";
 			Norm norm = new Norm(normName, "f", "NotExists", eRoleMember, actions, "", "");
-			Rule rule = new Rule(Literal.parseLiteral("exampleLiteral"), null);
+			Literal rule = bdbi.buildNormRule(norm);
 			//Data Base 
 			dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('"+ unit +"',(SELECT idunitType FROM unitType WHERE unitTypeName = 'flat'))");
 			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'virtual'),(SELECT idunitList FROM unitList WHERE unitName = '"+ unit +"'))");
@@ -788,7 +792,7 @@ public class TestCreateNorm extends TestCase {
 			String normName = "proofNorm";
 			ArrayList<String> actions = new ArrayList<String>();
 				actions.add("registerUnit");
-				actions.add("");
+				actions.add("registerUnit");
 				actions.add("exampleUnitFlat");
 				actions.add("flat");
 				actions.add("virtual");
@@ -797,7 +801,7 @@ public class TestCreateNorm extends TestCase {
 			String eRoleCreator = "exampleRoleCreator";
 			String eRoleMember = "NotExists";
 			Norm norm = new Norm(normName, "f", "roleName", eRoleMember, actions, "", "");
-			Rule rule = new Rule(Literal.parseLiteral("exampleLiteral"), null);
+			Literal rule = bdbi.buildNormRule(norm);
 			//Data Base 
 			dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('"+ unit +"',(SELECT idunitType FROM unitType WHERE unitTypeName = 'flat'))");
 			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'virtual'),(SELECT idunitList FROM unitList WHERE unitName = '"+ unit +"'))");
@@ -850,7 +854,7 @@ public class TestCreateNorm extends TestCase {
 			String normName = "proofNorm";
 			ArrayList<String> actions = new ArrayList<String>();
 				actions.add("registerUnit");
-				actions.add("");
+				actions.add("registerUnit");
 				actions.add("exampleUnitFlat");
 				actions.add("flat");
 				actions.add("virtual");
@@ -860,7 +864,7 @@ public class TestCreateNorm extends TestCase {
 			String eRoleMember = "exampleRoleMember";
 			String pos = "NotExists";
 			Norm norm = new Norm(normName, "f", "positionName", pos, actions, "", "");
-			Rule rule = new Rule(Literal.parseLiteral("exampleLiteral"), null);
+			Literal rule = bdbi.buildNormRule(norm);
 			//Data Base 
 			dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('"+ unit +"',(SELECT idunitType FROM unitType WHERE unitTypeName = 'flat'))");
 			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'virtual'),(SELECT idunitList FROM unitList WHERE unitName = '"+ unit +"'))");
@@ -917,8 +921,8 @@ public class TestCreateNorm extends TestCase {
 			String content = "proofContentNorm";
 			String normName = "proofNorm";
 			ArrayList<String> actions = new ArrayList<String>();
-				actions.add("NotExists");
-				actions.add("");
+				actions.add("notExists");
+				actions.add("notExists");
 				actions.add("exampleUnitFlat");
 				actions.add("flat");
 				actions.add("virtual");
@@ -927,7 +931,7 @@ public class TestCreateNorm extends TestCase {
 			String eRoleCreator = "exampleRoleCreator";
 			String eRoleMember = "exampleRoleMember";
 			Norm norm = new Norm(normName, "f", "roleName", eRoleMember, actions, "", "");
-			Rule rule = new Rule(Literal.parseLiteral("exampleLiteral"), null);
+			Literal rule = bdbi.buildNormRule(norm);
 			//Data Base 
 			dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('"+ unit +"',(SELECT idunitType FROM unitType WHERE unitTypeName = 'flat'))");
 			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'virtual'),(SELECT idunitList FROM unitList WHERE unitName = '"+ unit +"'))");

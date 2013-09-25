@@ -209,10 +209,9 @@ public class TestInformMembers extends TestCase {
 
 	}
 
-	public void testInformAgentRole1a()
-	{
-		try
-		{
+	public void testInformAgentRole1a() {
+		
+		try {
 
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
 			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
@@ -230,60 +229,71 @@ public class TestInformMembers extends TestCase {
 
 			ArrayList<ArrayList<String>> result = omsProxy.informMembers("jerarquia", "", "");
 
-			assertEquals("El resultado debe ser 2", 2, result.size());
+			assertEquals("The result should be 2", 2, result.size());
 
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("subordinado", result.get(0).get(1));
-
-
-			assertEquals("pruebas2", result.get(1).get(0));
-			assertEquals("supervisor", result.get(1).get(1));
+			ArrayList<String> aux = new ArrayList<String>();
+			aux.add("pruebas2");
+			aux.add("subordinado");
+			
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("supervisor");
+			
+			assertTrue(result.contains(aux));
 
 			//---------------------------------------------------------------------//
 
 			result = omsProxy.informMembers("equipo", "", "");
 
-			assertEquals("El resultado debe ser 2", 2, result.size());
+			assertEquals("The result should be 2", 2, result.size());
 
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("miembro", result.get(0).get(1));
-
-
-			assertEquals("pruebas2", result.get(1).get(0));
-			assertEquals("manager", result.get(1).get(1));
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("miembro");
+			
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("manager");
+			
+			assertTrue(result.contains(aux));
 
 			//---------------------------------------------------------------------//
 
 			result = omsProxy.informMembers("plana", "", "");
 
-			assertEquals("El resultado debe ser 2", 2, result.size());
+			assertEquals("The result should be 2", 2, result.size());
 
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("miembro", result.get(0).get(1));
-
-
-			assertEquals("pruebas2", result.get(1).get(0));
-			assertEquals("manager", result.get(1).get(1));
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("miembro");
+			
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("manager");
+			
+			assertTrue(result.contains(aux));
 
 			//---------------------------------------------------------------------//
-
-
-		}catch(THOMASException e)
-		{
+		} catch(THOMASException e) {
 
 			fail(e.getMessage());
 
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
+			
 			fail(e.getMessage());
+		
 		}
 	}
 
-	public void testInformAgentRole1b()
-	{
-		try
-		{
+	public void testInformAgentRole1b() {
+		
+		try {
 
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
 			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
@@ -301,71 +311,68 @@ public class TestInformMembers extends TestCase {
 
 			ArrayList<ArrayList<String>> result = omsProxy.informMembers("jerarquia", "supervisor", "");
 
-			assertEquals("El resultado debe ser 1", 1, result.size());
+			assertEquals("The result should be 1", 1, result.size());
 
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("supervisor", result.get(0).get(1));
-
+			ArrayList<String> aux = new ArrayList<String>();
+			aux.add("pruebas2");
+			aux.add("supervisor");
+			
+			assertTrue(result.contains(aux));
 
 			//---------------------------------------------------------------------//
 
 			result = omsProxy.informMembers("equipo", "manager", "");
 
-			assertEquals("El resultado debe ser 1", 1, result.size());
-
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("manager", result.get(0).get(1));
-
+			assertEquals("The result should be 1", 1, result.size());
+			
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("manager");
+			
+			assertTrue(result.contains(aux));
 
 			//---------------------------------------------------------------------//
 
 			result = omsProxy.informMembers("plana", "miembro", "");
 
-			assertEquals("El resultado debe ser 1", 1, result.size());
-
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("miembro", result.get(0).get(1));
+			assertEquals("The result should be 1", 1, result.size());
+			
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("miembro");
+			
+			assertTrue(result.contains(aux));
+			
 			//---------------------------------------------------------------------//
-
-
-
-
-		}catch(THOMASException e)
-		{
+		} catch(THOMASException e) {
 
 			fail(e.getMessage());
 
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
+			
 			fail(e.getMessage());
+		
 		}
 
-
-		try
-		{
+		try {
+			
 			omsProxy.informMembers("jerarquia", "creador", "");
 
-
-		}catch(AgentNotInUnitException e)
-		{
+		} catch(AgentNotInUnitException e) {
 
 			assertNotNull(e);
 
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
+			
 			fail(e.getMessage());
+		
 		}
-
-
 		//---------------------------------------------------------------------//
 	}
 
-	public void testInformAgentRole1c()
-	{
-		try
-		{
+	public void testInformAgentRole1c() {
+		
+		try {
 
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
 			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
@@ -383,77 +390,80 @@ public class TestInformMembers extends TestCase {
 
 			ArrayList<ArrayList<String>> result = omsProxy.informMembers("jerarquia", "", "subordinate");
 
-			assertEquals("El resultado debe ser 1", 1, result.size());
+			assertEquals("The result should be 1", 1, result.size());
 
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("subordinado", result.get(0).get(1));
-
+			ArrayList<String> aux = new ArrayList<String>();
+			aux.add("pruebas2");
+			aux.add("subordinado");
+			
+			assertTrue(result.contains(aux));
 
 			//---------------------------------------------------------------------//
 
 			result = omsProxy.informMembers("equipo", "", "member");
 
-			assertEquals("El resultado debe ser 2", 2, result.size());
+			assertEquals("The result should be 2", 2, result.size());
 
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("miembro", result.get(0).get(1));
-
-			assertEquals("pruebas2", result.get(1).get(0));
-			assertEquals("manager", result.get(1).get(1));
-
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("miembro");
+			
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("manager");
+			
+			assertTrue(result.contains(aux));
 
 			//---------------------------------------------------------------------//
 
 			result = omsProxy.informMembers("plana", "", "member");
 
-			assertEquals("El resultado debe ser 2", 2, result.size());
+			assertEquals("The result should be 2", 2, result.size());
 
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("miembro", result.get(0).get(1));
-
-			assertEquals("pruebas2", result.get(1).get(0));
-			assertEquals("manager", result.get(1).get(1));
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("miembro");
+			
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("manager");
+			
+			assertTrue(result.contains(aux));
+			
 			//---------------------------------------------------------------------//
-
-
-
-
-		}catch(THOMASException e)
-		{
+		} catch(THOMASException e) {
 
 			fail(e.getMessage());
 
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
+			
 			fail(e.getMessage());
+		
 		}
-
-
-		try
-		{
+		
+		try {
+			
 			omsProxy.informMembers("jerarquia", "", "creator");
 
-
-		}catch(THOMASException e)
-		{
+		} catch(THOMASException e) {
 
 			assertNotNull(e);
 
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
+			
 			fail(e.getMessage());
+		
 		}
-
-
 		//---------------------------------------------------------------------//
 	}
 
-	public void testInformAgentRole1d()
-	{
-		try
-		{
+	public void testInformAgentRole1d() {
+		
+		try {
 
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
 			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
@@ -471,75 +481,67 @@ public class TestInformMembers extends TestCase {
 
 			ArrayList<ArrayList<String>> result = omsProxy.informMembers("jerarquia", "subordinado", "subordinate");
 
-			assertEquals("El resultado debe ser 1", 1, result.size());
+			assertEquals("The result should be 1", 1, result.size());
 
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("subordinado", result.get(0).get(1));
-
+			ArrayList<String> aux = new ArrayList<String>();
+			aux.add("pruebas2");
+			aux.add("subordinado");
+			
+			assertTrue(result.contains(aux));
 
 			//---------------------------------------------------------------------//
 
 			result = omsProxy.informMembers("equipo", "manager", "member");
 
-			assertEquals("El resultado debe ser 1", 1, result.size());
-
-
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("manager", result.get(0).get(1));
-
-
+			assertEquals("The result should be 1", 1, result.size());
+			
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("manager");
+			
+			assertTrue(result.contains(aux));
+			
 			//---------------------------------------------------------------------//
 
 			result = omsProxy.informMembers("plana", "miembro", "member");
 
-			assertEquals("El resultado debe ser 1", 1, result.size());
+			assertEquals("The result should be 1", 1, result.size());
 
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("miembro", result.get(0).get(1));
-
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("miembro");
+			
+			assertTrue(result.contains(aux));
 
 			//---------------------------------------------------------------------//
-
-
-
-
-		}catch(THOMASException e)
-		{
+		} catch(THOMASException e) {
 
 			fail(e.getMessage());
 
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
+			
 			fail(e.getMessage());
 		}
 
-
-		try
-		{
+		try	{
+			
 			omsProxy.informMembers("jerarquia", "Creador", "creator");
 
-
-		}catch(THOMASException e)
-		{
+		} catch(THOMASException e) {
 
 			assertNotNull(e);
 
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
+			
 			fail(e.getMessage());
 		}
-
-
 		//---------------------------------------------------------------------//
 	}
 
 
-	public void testInformAgentRole2a()
-	{
-		try
-		{
+	public void testInformAgentRole2a() {
+		
+		try {
 
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
 			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
@@ -559,73 +561,84 @@ public class TestInformMembers extends TestCase {
 
 			ArrayList<ArrayList<String>> result = omsProxy.informMembers("jerarquia", "", "");
 
-			assertEquals("El resultado debe ser 4", 4, result.size());
+			assertEquals("The result should be 4", 4, result.size());
 
-
-
+			ArrayList<String> aux = new ArrayList<String>();
+			aux.add("pruebas2");
+			aux.add("subordinado");
 			
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("subordinado", result.get(0).get(1));
+			assertTrue(result.contains(aux));
 			
-			assertEquals("pruebas", result.get(1).get(0));
-			assertEquals("subordinado", result.get(1).get(1));
+			aux.clear();
+			aux.add("pruebas");
+			aux.add("subordinado");
+			
+			assertTrue(result.contains(aux));
 
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("creador");
+			
+			assertTrue(result.contains(aux));
 
-			assertEquals("pruebas2", result.get(2).get(0));
-			assertEquals("creador", result.get(2).get(1));
-
-
-
-			assertEquals("pruebas2", result.get(3).get(0));
-			assertEquals("supervisor", result.get(3).get(1));
-
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("supervisor");
+			
+			assertTrue(result.contains(aux));
 
 
 			//---------------------------------------------------------------------//
 
 			result = omsProxy.informMembers("equipo", "", "");
 
-			assertEquals("El resultado debe ser 2", 2, result.size());
+			assertEquals("The result should be 2", 2, result.size());
 
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("miembro", result.get(0).get(1));
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("miembro");
+			
+			assertTrue(result.contains(aux));
 
-
-			assertEquals("pruebas2", result.get(1).get(0));
-			assertEquals("manager", result.get(1).get(1));
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("manager");
+			
+			assertTrue(result.contains(aux));
 
 			//---------------------------------------------------------------------//
 
 			result = omsProxy.informMembers("plana", "", "");
 
-			assertEquals("El resultado debe ser 2", 2, result.size());
+			assertEquals("The result should be 2", 2, result.size());
 
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("miembro", result.get(0).get(1));
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("miembro");
+			
+			assertTrue(result.contains(aux));
 
-
-			assertEquals("pruebas2", result.get(1).get(0));
-			assertEquals("manager", result.get(1).get(1));
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("manager");
+			
+			assertTrue(result.contains(aux));
 
 			//---------------------------------------------------------------------//
-
-
-		}catch(THOMASException e)
-		{
+		} catch(THOMASException e) {
 
 			fail(e.getMessage());
 
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
+			
 			fail(e.getMessage());
+			
 		}
 	}
 
-	public void testInformAgentRole2b()
-	{
-		try
-		{
+	public void testInformAgentRole2b() {
+		
+		try {
 
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
 			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
@@ -645,58 +658,66 @@ public class TestInformMembers extends TestCase {
 
 			ArrayList<ArrayList<String>> result = omsProxy.informMembers("jerarquia", "supervisor", "");
 
-			assertEquals("El resultado debe ser 1", 1, result.size());
+			assertEquals("The result should be 1", 1, result.size());
 
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("supervisor", result.get(0).get(1));
-
+			ArrayList<String> aux = new ArrayList<String>();
+			aux.add("pruebas2");
+			aux.add("supervisor");
+			
+			assertTrue(result.contains(aux));
 
 			//---------------------------------------------------------------------//
 
 			result = omsProxy.informMembers("equipo", "manager", "");
 
-			assertEquals("El resultado debe ser 1", 1, result.size());
+			assertEquals("The result should be 1", 1, result.size());
 
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("manager", result.get(0).get(1));
-
-
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("manager");
+			
+			assertTrue(result.contains(aux));
+			
 			//---------------------------------------------------------------------//
 
 			result = omsProxy.informMembers("plana", "miembro", "");
 
-			assertEquals("El resultado debe ser 1", 1, result.size());
+			assertEquals("The result should be 1", 1, result.size());
 
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("miembro", result.get(0).get(1));
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("miembro");
+			
+			assertTrue(result.contains(aux));
+			
 			//---------------------------------------------------------------------//
 
 
 			result =  omsProxy.informMembers("jerarquia", "creador", "");
 
-			assertEquals("El resultado debe ser 1", 1, result.size());
+			assertEquals("The result should be 1", 1, result.size());
 
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("creador", result.get(0).get(1));
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("creador");
+			
+			assertTrue(result.contains(aux));
 
-		}catch(THOMASException e)
-		{
+		} catch(THOMASException e) {
 
 			fail(e.getMessage());
 
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
+			
 			fail(e.getMessage());
+			
 		}
-
 		//---------------------------------------------------------------------//
 	}
 
-	public void testInformAgentRole2c()
-	{
-		try
-		{
+	public void testInformAgentRole2c() {
+		
+		try {
 
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
 			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
@@ -716,68 +737,84 @@ public class TestInformMembers extends TestCase {
 
 			ArrayList<ArrayList<String>> result = omsProxy.informMembers("jerarquia", "", "subordinate");
 
-			assertEquals("El resultado debe ser 2", 2, result.size());
+			assertEquals("The result should be 2", 2, result.size());
 
+			ArrayList<String> aux = new ArrayList<String>();
+			aux.add("pruebas2");
+			aux.add("subordinado");
 			
-
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("subordinado", result.get(0).get(1));
+			assertTrue(result.contains(aux));
 			
-			assertEquals("pruebas", result.get(1).get(0));
-			assertEquals("subordinado", result.get(1).get(1));
+			aux.clear();
+			aux.add("pruebas");
+			aux.add("subordinado");
+			
+			assertTrue(result.contains(aux));
+			
 			//---------------------------------------------------------------------//
 
 			result = omsProxy.informMembers("equipo", "", "member");
 
-			assertEquals("El resultado debe ser 2", 2, result.size());
+			assertEquals("The result should be 2", 2, result.size());
 
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("miembro", result.get(0).get(1));
-
-			assertEquals("pruebas2", result.get(1).get(0));
-			assertEquals("manager", result.get(1).get(1));
-
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("miembro");
+			
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("manager");
+			
+			assertTrue(result.contains(aux));
 
 			//---------------------------------------------------------------------//
 
 			result = omsProxy.informMembers("plana", "", "member");
 
-			assertEquals("El resultado debe ser 2", 2, result.size());
+			assertEquals("The result should be 2", 2, result.size());
 
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("miembro", result.get(0).get(1));
-
-			assertEquals("pruebas2", result.get(1).get(0));
-			assertEquals("manager", result.get(1).get(1));
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("miembro");
+			
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("manager");
+			
+			assertTrue(result.contains(aux));
+			
 			//---------------------------------------------------------------------//
 
 
 			result = omsProxy.informMembers("jerarquia", "", "creator");
 
-			assertEquals("El resultado debe ser 1", 1, result.size());
+			assertEquals("The result should be 1", 1, result.size());
 
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("creador", result.get(0).get(1));
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("creador");
+			
+			assertTrue(result.contains(aux));
 
-
-		}catch(THOMASException e)
-		{
+		} catch(THOMASException e) {
 
 			fail(e.getMessage());
 
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
+			
 			fail(e.getMessage());
+			
 		}
-
 		//---------------------------------------------------------------------//
 	}
 
-	public void testInformAgentRole2d()
-	{
-		try
-		{
+	public void testInformAgentRole2d() {
+		
+		try {
 
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
 			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
@@ -797,64 +834,72 @@ public class TestInformMembers extends TestCase {
 
 			ArrayList<ArrayList<String>> result = omsProxy.informMembers("jerarquia", "subordinado", "subordinate");
 
-			assertEquals("El resultado debe ser 2", 2, result.size());
+			assertEquals("The result should be 2", 2, result.size());
 
-
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("subordinado", result.get(0).get(1));
+			ArrayList<String> aux = new ArrayList<String>();
+			aux.add("pruebas2");
+			aux.add("subordinado");
 			
-			assertEquals("pruebas", result.get(1).get(0));
-			assertEquals("subordinado", result.get(1).get(1));
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("pruebas");
+			aux.add("subordinado");
+			
+			assertTrue(result.contains(aux));
+			
 			//---------------------------------------------------------------------//
 
 			result = omsProxy.informMembers("equipo", "manager", "member");
 
-			assertEquals("El resultado debe ser 1", 1, result.size());
+			assertEquals("The result should be 1", 1, result.size());
 
-
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("manager", result.get(0).get(1));
-
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("manager");
+			
+			assertTrue(result.contains(aux));
 
 			//---------------------------------------------------------------------//
 
 			result = omsProxy.informMembers("plana", "miembro", "member");
 
-			assertEquals("El resultado debe ser 1", 1, result.size());
+			assertEquals("The result should be 1", 1, result.size());
 
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("miembro", result.get(0).get(1));
-
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("miembro");
+			
+			assertTrue(result.contains(aux));
 
 			//---------------------------------------------------------------------//
 
 			result = omsProxy.informMembers("jerarquia", "creador", "creator");
 
-			assertEquals("El resultado debe ser 1", 1, result.size());
+			assertEquals("The result should be 1", 1, result.size());
 
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("creador", result.get(0).get(1));
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("creador");
+			
+			assertTrue(result.contains(aux));
 
-
-		}catch(THOMASException e)
-		{
+		} catch(THOMASException e) {
 
 			fail(e.getMessage());
 
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
+			
 			fail(e.getMessage());
+			
 		}
-
 		//---------------------------------------------------------------------//
 	}
 
 
-	public void testInformAgentRole3a()
-	{
-		try
-		{
+	public void testInformAgentRole3a() {
+		
+		try {
 
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
 			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
@@ -874,64 +919,77 @@ public class TestInformMembers extends TestCase {
 
 			ArrayList<ArrayList<String>> result = omsProxy.informMembers("jerarquia", "", "");
 
-			assertEquals("El resultado debe ser 2", 2, result.size());
+			assertEquals("The result should be 2", 2, result.size());
 
-
-
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("subordinado", result.get(0).get(1));
-
-			assertEquals("pruebas2", result.get(1).get(0));
-			assertEquals("supervisor", result.get(1).get(1));
-
-
-
+			ArrayList<String> aux = new ArrayList<String>();
+			aux.add("pruebas2");
+			aux.add("subordinado");
+			
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("supervisor");
+			
+			assertTrue(result.contains(aux));
 
 			//---------------------------------------------------------------------//
 
 			result = omsProxy.informMembers("equipo", "", "");
 
-			assertEquals("El resultado debe ser 4", 4, result.size());
+			assertEquals("The result should be 4", 4, result.size());
 
-		
-
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("miembro", result.get(0).get(1));
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("miembro");
 			
-			assertEquals("pruebas", result.get(1).get(0));
-			assertEquals("miembro", result.get(1).get(1));
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("pruebas");
+			aux.add("miembro");
+			
+			assertTrue(result.contains(aux));
 
-			assertEquals("pruebas2", result.get(2).get(0));
-			assertEquals("creador", result.get(2).get(1));
-
-			assertEquals("pruebas2", result.get(3).get(0));
-			assertEquals("manager", result.get(3).get(1));
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("creador");
+			
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("manager");
+			
+			assertTrue(result.contains(aux));
 
 			//---------------------------------------------------------------------//
 
 			result = omsProxy.informMembers("plana", "", "");
 
-			assertEquals("El resultado debe ser 2", 2, result.size());
+			assertEquals("The result should be 2", 2, result.size());
 
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("miembro", result.get(0).get(1));
-
-
-			assertEquals("pruebas2", result.get(1).get(0));
-			assertEquals("manager", result.get(1).get(1));
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("miembro");
+			
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("manager");
+			
+			assertTrue(result.contains(aux));
 
 			//---------------------------------------------------------------------//
-
-
-		}catch(THOMASException e)
-		{
+		} catch(THOMASException e) {
 
 			fail(e.getMessage());
 
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
+			
 			fail(e.getMessage());
+			
 		}
 	}
 
@@ -958,69 +1016,68 @@ public class TestInformMembers extends TestCase {
 
 			ArrayList<ArrayList<String>> result = omsProxy.informMembers("jerarquia", "supervisor", "");
 
-			assertEquals("El resultado debe ser 1", 1, result.size());
+			assertEquals("The result should be 1", 1, result.size());
 
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("supervisor", result.get(0).get(1));
-
-
+			ArrayList<String> aux = new ArrayList<String>();
+			aux.add("pruebas2");
+			aux.add("supervisor");
+			
+			assertTrue(result.contains(aux));
+			
 			//---------------------------------------------------------------------//
 
 			result = omsProxy.informMembers("equipo", "manager", "");
 
-			assertEquals("El resultado debe ser 1", 1, result.size());
-
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("manager", result.get(0).get(1));
-
-
+			assertEquals("The result should be 1", 1, result.size());
+			
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("manager");
+			
+			assertTrue(result.contains(aux));
+			
 			//---------------------------------------------------------------------//
 
 			result = omsProxy.informMembers("plana", "miembro", "");
 
-			assertEquals("El resultado debe ser 1", 1, result.size());
-
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("miembro", result.get(0).get(1));
+			assertEquals("The result should be 1", 1, result.size());
+			
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("miembro");
+			
+			assertTrue(result.contains(aux));
+			
 			//---------------------------------------------------------------------//
-
-
-
-
-
-		}catch(THOMASException e)
-		{
+		} catch(THOMASException e) {
 
 			fail(e.getMessage());
 
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
+			
 			fail(e.getMessage());
+		
 		}
-		try
-		{
+		
+		try {
 
 			omsProxy.informMembers("jerarquia", "creador", "");
-		}catch(THOMASException e)
-		{
-
+		
+		} catch(THOMASException e) {
 
 			assertNotNull(e);
 
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
+			
 			fail(e.getMessage());
+		
 		}
-
 		//---------------------------------------------------------------------//
 	}
 
-	public void testInformAgentRole3c()
-	{
-		try
-		{
+	public void testInformAgentRole3c() {
+		
+		try {
 
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
 			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
@@ -1040,82 +1097,86 @@ public class TestInformMembers extends TestCase {
 
 			ArrayList<ArrayList<String>> result = omsProxy.informMembers("jerarquia", "", "subordinate");
 
-			assertEquals("El resultado debe ser 1", 1, result.size());
+			assertEquals("The result should be 1", 1, result.size());
 
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("subordinado", result.get(0).get(1));
-
+			ArrayList<String> aux = new ArrayList<String>();
+			aux.add("pruebas2");
+			aux.add("subordinado");
+			
+			assertTrue(result.contains(aux));
 
 			//---------------------------------------------------------------------//
 
 			result = omsProxy.informMembers("equipo", "", "member");
 
-			assertEquals("El resultado debe ser 3", 3, result.size());
+			assertEquals("The result should be 3", 3, result.size());
 
-	
-
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("miembro", result.get(0).get(1));
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("miembro");
 			
-			assertEquals("pruebas", result.get(1).get(0));
-			assertEquals("miembro", result.get(1).get(1));
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("pruebas");
+			aux.add("miembro");
+			
+			assertTrue(result.contains(aux));
 
-			assertEquals("pruebas2", result.get(2).get(0));
-			assertEquals("manager", result.get(2).get(1));
-
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("manager");
+			
+			assertTrue(result.contains(aux));
 
 			//---------------------------------------------------------------------//
 
 			result = omsProxy.informMembers("plana", "", "member");
 
-			assertEquals("El resultado debe ser 2", 2, result.size());
+			assertEquals("The result should be 2", 2, result.size());
 
-
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("miembro", result.get(0).get(1));
-
-			assertEquals("pruebas2", result.get(1).get(0));
-			assertEquals("manager", result.get(1).get(1));
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("miembro");
+			
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("manager");
+			
+			assertTrue(result.contains(aux));
+			
 			//---------------------------------------------------------------------//
-
-
-
-
-
-		}catch(THOMASException e)
-		{
+		} catch(THOMASException e) {
 
 			fail(e.getMessage());
 
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
+			
 			fail(e.getMessage());
+		
 		}
 
-		try
-		{
+		try {
+			
 			omsProxy.informMembers("jerarquia", "", "creator");
 
-		}catch(THOMASException e)
-		{
-
+		} catch(THOMASException e) {
 
 			assertNotNull(e);
 
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
+			
 			fail(e.getMessage());
+		
 		}
-
 		//---------------------------------------------------------------------//
 	}
 
-	public void testInformAgentRole3d()
-	{
-		try
-		{
+	public void testInformAgentRole3d() {
+		
+		try {
 
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
 			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
@@ -1135,72 +1196,69 @@ public class TestInformMembers extends TestCase {
 
 			ArrayList<ArrayList<String>> result = omsProxy.informMembers("jerarquia", "subordinado", "subordinate");
 
-			assertEquals("El resultado debe ser 1", 1, result.size());
+			assertEquals("The result should be 1", 1, result.size());
 
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("subordinado", result.get(0).get(1));
+			ArrayList<String> aux = new ArrayList<String>();
+			aux.add("pruebas2");
+			aux.add("subordinado");
+			
+			assertTrue(result.contains(aux));
 
 			//---------------------------------------------------------------------//
 
 			result = omsProxy.informMembers("equipo", "manager", "member");
 
-			assertEquals("El resultado debe ser 1", 1, result.size());
-
-
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("manager", result.get(0).get(1));
-
+			assertEquals("The result should be 1", 1, result.size());
+			
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("manager");
+			
+			assertTrue(result.contains(aux));
 
 			//---------------------------------------------------------------------//
 
 			result = omsProxy.informMembers("plana", "miembro", "member");
 
-			assertEquals("El resultado debe ser 1", 1, result.size());
-
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("miembro", result.get(0).get(1));
-
-
+			assertEquals("The result should be 1", 1, result.size());
+			
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("miembro");
+			
+			assertTrue(result.contains(aux));
+			
 			//---------------------------------------------------------------------//
-
-
-
-
-		}catch(THOMASException e)
-		{
+		} catch(THOMASException e) {
 
 			fail(e.getMessage());
 
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
+			
 			fail(e.getMessage());
+		
 		}
 
-		try
-		{
+		try {
+			
 			omsProxy.informMembers("jerarquia", "creador", "creator");
 
-		}catch(THOMASException e)
-		{
-
+		} catch(THOMASException e) {
 
 			assertNotNull(e);
 
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
+			
 			fail(e.getMessage());
+		
 		}
-
 		//---------------------------------------------------------------------//
 	}
 
 
-	public void testInformAgentRole4a()
-	{
-		try
-		{
+	public void testInformAgentRole4a() {
+		
+		try {
 
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
 			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
@@ -1220,69 +1278,82 @@ public class TestInformMembers extends TestCase {
 
 			ArrayList<ArrayList<String>> result = omsProxy.informMembers("jerarquia", "", "");
 
-			assertEquals("El resultado debe ser 2", 2, result.size());
+			assertEquals("The result should be 2", 2, result.size());
 
-
-
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("subordinado", result.get(0).get(1));
-
-			assertEquals("pruebas2", result.get(1).get(0));
-			assertEquals("supervisor", result.get(1).get(1));
-
-
-
-
-
+			ArrayList<String> aux = new ArrayList<String>();
+			aux.add("pruebas2");
+			aux.add("subordinado");
+			
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("supervisor");
+			
+			assertTrue(result.contains(aux));
 
 			//---------------------------------------------------------------------//
 
 			result = omsProxy.informMembers("equipo", "", "");
 
-			assertEquals("El resultado debe ser 2", 2, result.size());
+			assertEquals("The result should be 2", 2, result.size());
 
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("miembro", result.get(0).get(1));
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("miembro");
+			
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("manager");
+			
+			assertTrue(result.contains(aux));
 
-
-			assertEquals("pruebas2", result.get(1).get(0));
-			assertEquals("manager", result.get(1).get(1));
 			//---------------------------------------------------------------------//
 
 			result = omsProxy.informMembers("plana", "", "");
 
-			assertEquals("El resultado debe ser 4", 4, result.size());
+			assertEquals("The result should be 4", 4, result.size());
 
-		
-
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("miembro", result.get(0).get(1));
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("miembro");
 			
-			assertEquals("pruebas", result.get(1).get(0));
-			assertEquals("miembro", result.get(1).get(1));
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("pruebas");
+			aux.add("miembro");
+			
+			assertTrue(result.contains(aux));
+		
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("creador");
+			
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("manager");
+			
+			assertTrue(result.contains(aux));
 
-			assertEquals("pruebas2", result.get(2).get(0));
-			assertEquals("creador", result.get(2).get(1));
-
-			assertEquals("pruebas2", result.get(3).get(0));
-			assertEquals("manager", result.get(3).get(1));
-
-		}catch(THOMASException e)
-		{
+		} catch(THOMASException e) {
 
 			fail(e.getMessage());
 
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
+			
 			fail(e.getMessage());
+		
 		}
 	}
 
-	public void testInformAgentRole4b()
-	{
-		try
-		{
+	public void testInformAgentRole4b() {
+		
+		try {
 
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
 			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
@@ -1302,74 +1373,75 @@ public class TestInformMembers extends TestCase {
 
 			ArrayList<ArrayList<String>> result = omsProxy.informMembers("jerarquia", "supervisor", "");
 
-			assertEquals("El resultado debe ser 1", 1, result.size());
+			assertEquals("The result should be 1", 1, result.size());
 
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("supervisor", result.get(0).get(1));
-
-
+			ArrayList<String> aux = new ArrayList<String>();
+			aux.add("pruebas2");
+			aux.add("supervisor");
+			
+			assertTrue(result.contains(aux));
+			
 			//---------------------------------------------------------------------//
 
 			result = omsProxy.informMembers("equipo", "manager", "");
 
-			assertEquals("El resultado debe ser 1", 1, result.size());
-
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("manager", result.get(0).get(1));
-
+			assertEquals("The result should be 1", 1, result.size());
+			
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("manager");
+			
+			assertTrue(result.contains(aux));
 
 			//---------------------------------------------------------------------//
 
 			result = omsProxy.informMembers("plana", "miembro", "");
 
-			assertEquals("El resultado debe ser 2", 2, result.size());
+			assertEquals("The result should be 2", 2, result.size());
 
-		
-
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("miembro", result.get(0).get(1));
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("miembro");
 			
-			assertEquals("pruebas", result.get(1).get(0));
-			assertEquals("miembro", result.get(1).get(1));
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("pruebas");
+			aux.add("miembro");
+			
+			assertTrue(result.contains(aux));
+
 			//---------------------------------------------------------------------//
 
-
-
-
-
-		}catch(THOMASException e)
-		{
+		} catch(THOMASException e) {
 
 			fail(e.getMessage());
 
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
+			
 			fail(e.getMessage());
+		
 		}
-		try
-		{
+		
+		try {
 
 			omsProxy.informMembers("jerarquia", "creador", "");
-		}catch(THOMASException e)
-		{
-
+		
+		} catch(THOMASException e) {
 
 			assertNotNull(e);
 
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
+			
 			fail(e.getMessage());
+		
 		}
-
 		//---------------------------------------------------------------------//
 	}
 
-	public void testInformAgentRole4c()
-	{
-		try
-		{
+	public void testInformAgentRole4c() {
+		
+		try {
 
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
 			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
@@ -1389,81 +1461,87 @@ public class TestInformMembers extends TestCase {
 
 			ArrayList<ArrayList<String>> result = omsProxy.informMembers("jerarquia", "", "subordinate");
 
-			assertEquals("El resultado debe ser 1", 1, result.size());
+			assertEquals("The result should be 1", 1, result.size());
 
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("subordinado", result.get(0).get(1));
-
-
+			ArrayList<String> aux = new ArrayList<String>();
+			aux.add("pruebas2");
+			aux.add("subordinado");
+			
+			assertTrue(result.contains(aux));
+			
 			//---------------------------------------------------------------------//
 
 			result = omsProxy.informMembers("equipo", "", "member");
 
-			assertEquals("El resultado debe ser 2", 2, result.size());
+			assertEquals("The result should be 2", 2, result.size());
 
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("miembro", result.get(0).get(1));
-
-			assertEquals("pruebas2", result.get(1).get(0));
-			assertEquals("manager", result.get(1).get(1));
-
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("miembro");
+			
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("manager");
+			
+			assertTrue(result.contains(aux));
 
 			//---------------------------------------------------------------------//
 
 			result = omsProxy.informMembers("plana", "", "member");
 
-			assertEquals("El resultado debe ser 3", 3, result.size());
+			assertEquals("The result should be 3", 3, result.size());
 
-
-
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("miembro", result.get(0).get(1));
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("miembro");
 			
-			assertEquals("pruebas", result.get(1).get(0));
-			assertEquals("miembro", result.get(1).get(1));
-
-			assertEquals("pruebas2", result.get(2).get(0));
-			assertEquals("manager", result.get(2).get(1));
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("pruebas");
+			aux.add("miembro");
+			
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("manager");
+			
+			assertTrue(result.contains(aux));
+			
 			//---------------------------------------------------------------------//
 
-
-
-
-
-		}catch(THOMASException e)
-		{
+		} catch(THOMASException e) {
 
 			fail(e.getMessage());
 
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
+			
 			fail(e.getMessage());
+		
 		}
 
-		try
-		{
+		try {
+			
 			omsProxy.informMembers("jerarquia", "", "creator");
 
-		}catch(THOMASException e)
-		{
-
+		} catch(THOMASException e) {
 
 			assertNotNull(e);
 
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
+			
 			fail(e.getMessage());
+		
 		}
-
 		//---------------------------------------------------------------------//
 	}
 
-	public void testInformAgentRole4d()
-	{
-		try
-		{
+	public void testInformAgentRole4d() {
+		
+		try {
 
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
 			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
@@ -1483,77 +1561,75 @@ public class TestInformMembers extends TestCase {
 
 			ArrayList<ArrayList<String>> result = omsProxy.informMembers("jerarquia", "subordinado", "subordinate");
 
-			assertEquals("El resultado debe ser 1", 1, result.size());
+			assertEquals("The result should be 1", 1, result.size());
 
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("subordinado", result.get(0).get(1));
+			ArrayList<String> aux = new ArrayList<String>();
+			aux.add("pruebas2");
+			aux.add("subordinado");
+			
+			assertTrue(result.contains(aux));
 
 			//---------------------------------------------------------------------//
 
 			result = omsProxy.informMembers("equipo", "manager", "member");
 
-			assertEquals("El resultado debe ser 1", 1, result.size());
+			assertEquals("The result should be 1", 1, result.size());
 
-
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("manager", result.get(0).get(1));
-
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("manager");
+			
+			assertTrue(result.contains(aux));
 
 			//---------------------------------------------------------------------//
 
 			result = omsProxy.informMembers("plana", "miembro", "member");
 
-			assertEquals("El resultado debe ser 2", 2, result.size());
+			assertEquals("The result should be 2", 2, result.size());
 
-
-
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("miembro", result.get(0).get(1));
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("miembro");
 			
-			assertEquals("pruebas", result.get(1).get(0));
-			assertEquals("miembro", result.get(1).get(1));
-
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("pruebas");
+			aux.add("miembro");
+			
+			assertTrue(result.contains(aux));
 
 			//---------------------------------------------------------------------//
-
-
-
-
-		}catch(THOMASException e)
-		{
+		} catch(THOMASException e) {
 
 			fail(e.getMessage());
 
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
+			
 			fail(e.getMessage());
+		
 		}
 
-		try
-		{
+		try {
+			
 			omsProxy.informMembers("jerarquia", "creador", "creator");
 
-		}catch(THOMASException e)
-		{
-
+		} catch(THOMASException e) {
 
 			assertNotNull(e);
 
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
+			
 			fail(e.getMessage());
+		
 		}
-
 		//---------------------------------------------------------------------//
 	}
 
 
-	public void testInformAgentRole5a()
-	{
-		try
-		{
+	public void testInformAgentRole5a() {
+		
+		try {
 
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
 			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
@@ -1575,75 +1651,94 @@ public class TestInformMembers extends TestCase {
 
 			ArrayList<ArrayList<String>> result = omsProxy.informMembers("jerarquia", "", "");
 
-			assertEquals("El resultado debe ser 4", 4, result.size());
+			assertEquals("The result should be 4", 4, result.size());
 
-		
-
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("subordinado", result.get(0).get(1));
+			ArrayList<String> aux = new ArrayList<String>();
+			aux.add("pruebas2");
+			aux.add("subordinado");
 			
-			assertEquals("pruebas", result.get(1).get(0));
-			assertEquals("subordinado", result.get(1).get(1));
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("pruebas");
+			aux.add("subordinado");
+			
+			assertTrue(result.contains(aux));
 
-			assertEquals("pruebas2", result.get(2).get(0));
-			assertEquals("creador", result.get(2).get(1));
-
-			assertEquals("pruebas2", result.get(3).get(0));
-			assertEquals("supervisor", result.get(3).get(1));
-
-
-
-
-
-
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("creador");
+			
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("supervisor");
+			
+			assertTrue(result.contains(aux));
+			
 			//---------------------------------------------------------------------//
 
 			result = omsProxy.informMembers("equipo", "", "");
 
-			assertEquals("El resultado debe ser 4", 4, result.size());
+			assertEquals("The result should be 4", 4, result.size());
 
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("miembro");
 			
-
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("miembro", result.get(0).get(1));
+			assertTrue(result.contains(aux));
 			
-			assertEquals("pruebas", result.get(1).get(0));
-			assertEquals("miembro", result.get(1).get(1));
+			aux.clear();
+			aux.add("pruebas");
+			aux.add("miembro");
+			
+			assertTrue(result.contains(aux));
 
-			assertEquals("pruebas2", result.get(2).get(0));
-			assertEquals("creador", result.get(2).get(1));
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("creador");
+			
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("manager");
+			
+			assertTrue(result.contains(aux));
 
-			assertEquals("pruebas2", result.get(3).get(0));
-			assertEquals("manager", result.get(3).get(1));
 			//---------------------------------------------------------------------//
 
 			result = omsProxy.informMembers("plana", "", "");
 
-			assertEquals("El resultado debe ser ", 2, result.size());
+			assertEquals("The result should be 2", 2, result.size());
 
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("miembro");
+			
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("manager");
+			
+			assertTrue(result.contains(aux));
 
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("miembro", result.get(0).get(1));
-
-			assertEquals("pruebas2", result.get(1).get(0));
-			assertEquals("manager", result.get(1).get(1));
-
-		}catch(THOMASException e)
-		{
+		} catch(THOMASException e) {
 
 			fail(e.getMessage());
 
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
+			
 			fail(e.getMessage());
+		
 		}
 	}
 
-	public void testInformAgentRole5b()
-	{
-		try
-		{
+	public void testInformAgentRole5b() {
+		
+		try {
 
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
 			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
@@ -1667,70 +1762,68 @@ public class TestInformMembers extends TestCase {
 
 			ArrayList<ArrayList<String>> result = omsProxy.informMembers("jerarquia", "supervisor", "");
 
-			assertEquals("El resultado debe ser 1", 1, result.size());
+			assertEquals("The result should be 1", 1, result.size());
 
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("supervisor", result.get(0).get(1));
-
+			ArrayList<String> aux = new ArrayList<String>();
+			aux.add("pruebas2");
+			aux.add("supervisor");
+			
+			assertTrue(result.contains(aux));
 
 			//---------------------------------------------------------------------//
 
 			result = omsProxy.informMembers("equipo", "manager", "");
 
-			assertEquals("El resultado debe ser 1", 1, result.size());
-
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("manager", result.get(0).get(1));
-
+			assertEquals("The result should be 1", 1, result.size());
+			
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("manager");
+			
+			assertTrue(result.contains(aux));
 
 			//---------------------------------------------------------------------//
 
 			result = omsProxy.informMembers("plana", "miembro", "");
 
-			assertEquals("El resultado debe ser 1", 1, result.size());
-
-
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("miembro", result.get(0).get(1));
+			assertEquals("The result should be 1", 1, result.size());
+			
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("miembro");
+			
+			assertTrue(result.contains(aux));
 			//---------------------------------------------------------------------//
 
-
-
-
-
-		}catch(THOMASException e)
-		{
+		} catch(THOMASException e) {
 
 			fail(e.getMessage());
 
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
+			
 			fail(e.getMessage());
+		
 		}
-		try
-		{
+		
+		try {
 
 			omsProxy.informMembers("jerarquia", "creador", "");
-		}catch(THOMASException e)
-		{
-
+		
+		} catch(THOMASException e) {
 
 			assertNotNull(e);
 
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
+			
 			fail(e.getMessage());
+		
 		}
-
 		//---------------------------------------------------------------------//
 	}
 
-	public void testInformAgentRole5c()
-	{
-		try
-		{
+	public void testInformAgentRole5c() {
+		
+		try {
 
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
 			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
@@ -1753,76 +1846,90 @@ public class TestInformMembers extends TestCase {
 
 			ArrayList<ArrayList<String>> result = omsProxy.informMembers("jerarquia", "", "subordinate");
 
-			assertEquals("El resultado debe ser 2", 2, result.size());
+			assertEquals("The result should be 2", 2, result.size());
 
+			ArrayList<String> aux = new ArrayList<String>();
+			aux.add("pruebas2");
+			aux.add("subordinado");
 			
-
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("subordinado", result.get(0).get(1));
+			assertTrue(result.contains(aux));
 			
-			assertEquals("pruebas", result.get(1).get(0));
-			assertEquals("subordinado", result.get(1).get(1));
-
+			aux.clear();
+			aux.add("pruebas");
+			aux.add("subordinado");
+			
+			assertTrue(result.contains(aux));
 
 			//---------------------------------------------------------------------//
 
 			result = omsProxy.informMembers("equipo", "", "member");
 
-			assertEquals("El resultado debe ser 3", 3, result.size());
+			assertEquals("The result should be 3", 3, result.size());
 
-	
-
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("miembro", result.get(0).get(1));
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("miembro");
 			
-			assertEquals("pruebas", result.get(1).get(0));
-			assertEquals("miembro", result.get(1).get(1));
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("pruebas");
+			aux.add("miembro");
+			
+			assertTrue(result.contains(aux));
 
-			assertEquals("pruebas2", result.get(2).get(0));
-			assertEquals("manager", result.get(2).get(1));
-
-
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("manager");
+			
+			assertTrue(result.contains(aux));
+			
 			//---------------------------------------------------------------------//
 
 			result = omsProxy.informMembers("plana", "", "member");
 
-			assertEquals("El resultado debe ser 2", 2, result.size());
+			assertEquals("The result should be 2", 2, result.size());
 
-
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("miembro", result.get(0).get(1));
-
-			assertEquals("pruebas2", result.get(1).get(0));
-			assertEquals("manager", result.get(1).get(1));
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("miembro");
+			
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("manager");
+			
+			assertTrue(result.contains(aux));
+			
 			//---------------------------------------------------------------------//
 
 
 			result = omsProxy.informMembers("jerarquia", "", "creator");
 
-			assertEquals("El resultado debe ser 1", 1, result.size());
+			assertEquals("The result should be 1", 1, result.size());
+			
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("creador");
+			
+			assertTrue(result.contains(aux));
 
-
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("creador", result.get(0).get(1));
-
-		}catch(THOMASException e)
-		{
+		} catch(THOMASException e) {
 
 			fail(e.getMessage());
 
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
+			
 			fail(e.getMessage());
+		
 		}
-
 		//---------------------------------------------------------------------//
 	}
 
-	public void testInformAgentRole5d()
-	{
-		try
-		{
+	public void testInformAgentRole5d() {
+		
+		try {
 
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
 			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
@@ -1845,67 +1952,71 @@ public class TestInformMembers extends TestCase {
 
 			ArrayList<ArrayList<String>> result = omsProxy.informMembers("jerarquia", "subordinado", "subordinate");
 
-			assertEquals("El resultado debe ser 2", 2, result.size());
+			assertEquals("The result should be 2", 2, result.size());
 
+			ArrayList<String> aux = new ArrayList<String>();
+			aux.add("pruebas2");
+			aux.add("subordinado");
 			
-
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("subordinado", result.get(0).get(1));
+			assertTrue(result.contains(aux));
 			
-			assertEquals("pruebas", result.get(1).get(0));
-			assertEquals("subordinado", result.get(1).get(1));
+			aux.clear();
+			aux.add("pruebas");
+			aux.add("subordinado");
+			
+			assertTrue(result.contains(aux));
 
 			//---------------------------------------------------------------------//
 
 			result = omsProxy.informMembers("equipo", "manager", "member");
 
-			assertEquals("El resultado debe ser 1", 1, result.size());
-
-
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("manager", result.get(0).get(1));
-
+			assertEquals("The result should be 1", 1, result.size());
+			
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("manager");
+			
+			assertTrue(result.contains(aux));
 
 			//---------------------------------------------------------------------//
 
 			result = omsProxy.informMembers("plana", "miembro", "member");
 
-			assertEquals("El resultado debe ser 1", 1, result.size());
-
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("miembro", result.get(0).get(1));
-
+			assertEquals("The result should be 1", 1, result.size());
+			
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("miembro");
+			
+			assertTrue(result.contains(aux));
 
 			//---------------------------------------------------------------------//
-
 
 			result = omsProxy.informMembers("jerarquia", "creador", "creator");
 
-			assertEquals("El resultado debe ser 1", 1, result.size());
-
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("creador", result.get(0).get(1));
-
-
-		}catch(THOMASException e)
-		{
+			assertEquals("The result should be 1", 1, result.size());
+			
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("creador");
+			
+			assertTrue(result.contains(aux));
+			
+		} catch(THOMASException e) {
 
 			fail(e.getMessage());
 
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
+			
 			fail(e.getMessage());
+		
 		}
-
-
 		//---------------------------------------------------------------------//
 	}
 
-	public void testInformAgentRole6a()
-	{
-		try
-		{
+	public void testInformAgentRole6a() {
+		
+		try {
 
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
 			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
@@ -1927,75 +2038,94 @@ public class TestInformMembers extends TestCase {
 
 			ArrayList<ArrayList<String>> result = omsProxy.informMembers("jerarquia", "", "");
 
-			assertEquals("El resultado debe ser 2", 2, result.size());
+			assertEquals("The result should be 2", 2, result.size());
 
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("subordinado", result.get(0).get(1));
-
-			assertEquals("pruebas2", result.get(1).get(0));
-			assertEquals("supervisor", result.get(1).get(1));
-
-
-
-
-
+			ArrayList<String> aux = new ArrayList<String>();
+			aux.add("pruebas2");
+			aux.add("subordinado");
+			
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("supervisor");
+			
+			assertTrue(result.contains(aux));
 
 			//---------------------------------------------------------------------//
 
 			result = omsProxy.informMembers("equipo", "", "");
 
-			assertEquals("El resultado debe ser 4", 4, result.size());
+			assertEquals("The result should be 4", 4, result.size());
 
-	
-
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("miembro", result.get(0).get(1));
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("miembro");
 			
-			assertEquals("pruebas", result.get(1).get(0));
-			assertEquals("miembro", result.get(1).get(1));
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("pruebas");
+			aux.add("miembro");
+			
+			assertTrue(result.contains(aux));
 
-			assertEquals("pruebas2", result.get(2).get(0));
-			assertEquals("creador", result.get(2).get(1));
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("creador");
+			
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("manager");
+			
+			assertTrue(result.contains(aux));
 
-			assertEquals("pruebas2", result.get(3).get(0));
-			assertEquals("manager", result.get(3).get(1));
 			//---------------------------------------------------------------------//
 
 			result = omsProxy.informMembers("plana", "", "");
 
-			assertEquals("El resultado debe ser 4", 4, result.size());
+			assertEquals("The result should be 4", 4, result.size());
 
-	
-
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("miembro", result.get(0).get(1));
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("miembro");
 			
-			assertEquals("pruebas", result.get(1).get(0));
-			assertEquals("miembro", result.get(1).get(1));
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("pruebas");
+			aux.add("miembro");
+			
+			assertTrue(result.contains(aux));
 
-			assertEquals("pruebas2", result.get(2).get(0));
-			assertEquals("creador", result.get(2).get(1));
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("creador");
+			
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("manager");
+			
+			assertTrue(result.contains(aux));
 
-			assertEquals("pruebas2", result.get(3).get(0));
-			assertEquals("manager", result.get(3).get(1));
-
-
-		}catch(THOMASException e)
-		{
+		} catch(THOMASException e){
 
 			fail(e.getMessage());
 
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
+			
 			fail(e.getMessage());
+		
 		}
 	}
 
-	public void testInformAgentRole6b()
-	{
-		try
-		{
+	public void testInformAgentRole6b() {
+		
+		try {
 
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
 			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
@@ -2018,73 +2148,74 @@ public class TestInformMembers extends TestCase {
 
 			ArrayList<ArrayList<String>> result = omsProxy.informMembers("jerarquia", "supervisor", "");
 
-			assertEquals("El resultado debe ser 1", 1, result.size());
+			assertEquals("The result should be 1", 1, result.size());
 
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("supervisor", result.get(0).get(1));
-
+			ArrayList<String> aux = new ArrayList<String>();
+			aux.add("pruebas2");
+			aux.add("supervisor");
+			
+			assertTrue(result.contains(aux));
 
 			//---------------------------------------------------------------------//
 
 			result = omsProxy.informMembers("equipo", "manager", "");
 
-			assertEquals("El resultado debe ser 1", 1, result.size());
+			assertEquals("The result should be 1", 1, result.size());
 
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("manager", result.get(0).get(1));
-
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("manager");
+			
+			assertTrue(result.contains(aux));
 
 			//---------------------------------------------------------------------//
 
 			result = omsProxy.informMembers("plana", "miembro", "");
 
-			assertEquals("El resultado debe ser 2", 2, result.size());
+			assertEquals("The result should be 2", 2, result.size());
 
-
-		
-
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("miembro", result.get(0).get(1));
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("miembro");
 			
-			assertEquals("pruebas", result.get(1).get(0));
-			assertEquals("miembro", result.get(1).get(1));
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("pruebas");
+			aux.add("miembro");
+			
+			assertTrue(result.contains(aux));
+			
 			//---------------------------------------------------------------------//
-
-
-		}catch(THOMASException e)
-		{
+		} catch(THOMASException e) {
 
 			fail(e.getMessage());
 
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
+			
 			fail(e.getMessage());
+		
 		}
 		
-		try
-		{
+		try {
+			
 			omsProxy.informMembers("jerarquia", "", "creator");
 			
-			
-		}catch(THOMASException e)
-		{
+		} catch(THOMASException e) {
 
 			assertNotNull(e);
 
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
+			
 			fail(e.getMessage());
+		
 		}
-
 		//---------------------------------------------------------------------//
 	}
 
-	public void testInformAgentRole6c()
-	{
-		try
-		{
+	public void testInformAgentRole6c() {
+		
+		try {
 
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
 			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
@@ -2107,87 +2238,92 @@ public class TestInformMembers extends TestCase {
 
 			ArrayList<ArrayList<String>> result = omsProxy.informMembers("jerarquia", "", "subordinate");
 
-			assertEquals("El resultado debe ser 1", 1, result.size());
+			assertEquals("The result should be 1", 1, result.size());
 
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("subordinado", result.get(0).get(1));
-
-
+			ArrayList<String> aux = new ArrayList<String>();
+			aux.add("pruebas2");
+			aux.add("subordinado");
+			
+			assertTrue(result.contains(aux));
+			
 			//---------------------------------------------------------------------//
 
 			result = omsProxy.informMembers("equipo", "", "member");
 
-			assertEquals("El resultado debe ser 3", 3, result.size());
+			assertEquals("The result should be 3", 3, result.size());
 
-	
-
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("miembro", result.get(0).get(1));
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("miembro");
 			
-			assertEquals("pruebas", result.get(1).get(0));
-			assertEquals("miembro", result.get(1).get(1));
-
-			assertEquals("pruebas2", result.get(2).get(0));
-			assertEquals("manager", result.get(2).get(1));
-
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("pruebas");
+			aux.add("miembro");
+			
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("manager");
+			
+			assertTrue(result.contains(aux));
 
 			//---------------------------------------------------------------------//
 
 			result = omsProxy.informMembers("plana", "", "member");
 
-			assertEquals("El resultado debe ser 3", 3, result.size());
+			assertEquals("The result should be 3", 3, result.size());
 
-
-		
-
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("miembro", result.get(0).get(1));
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("miembro");
 			
-			assertEquals("pruebas", result.get(1).get(0));
-			assertEquals("miembro", result.get(1).get(1));
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("pruebas");
+			aux.add("miembro");
+			
+			assertTrue(result.contains(aux));
 
-			assertEquals("pruebas2", result.get(2).get(0));
-			assertEquals("manager", result.get(2).get(1));
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("manager");
+			
+			assertTrue(result.contains(aux));
+			
 			//---------------------------------------------------------------------//
-
-
-
-
-
-
-		}catch(THOMASException e)
-		{
+		} catch(THOMASException e) {
 
 			fail(e.getMessage());
 
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
+			
 			fail(e.getMessage());
+		
 		}
-		try
-		{
+		
+		try {
+			
 			omsProxy.informMembers("jerarquia", "", "creator");
 			
-			
-		}catch(THOMASException e)
-		{
+		} catch(THOMASException e) {
 
 			assertNotNull(e);
 
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
+			
 			fail(e.getMessage());
+		
 		}
-
 		//---------------------------------------------------------------------//
 	}
 
-	public void testInformAgentRole6d()
-	{
-		try
-		{
+	public void testInformAgentRole6d() {
+		
+		try {
 
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
 			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
@@ -2210,78 +2346,75 @@ public class TestInformMembers extends TestCase {
 
 			ArrayList<ArrayList<String>> result = omsProxy.informMembers("jerarquia", "subordinado", "subordinate");
 
-			assertEquals("El resultado debe ser 1", 1, result.size());
+			assertEquals("The result should be 1", 1, result.size());
 
-
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("subordinado", result.get(0).get(1));
-
+			ArrayList<String> aux = new ArrayList<String>();
+			aux.add("pruebas2");
+			aux.add("subordinado");
+			
+			assertTrue(result.contains(aux));
+			
 			//---------------------------------------------------------------------//
 
 			result = omsProxy.informMembers("equipo", "manager", "member");
 
-			assertEquals("El resultado debe ser 1", 1, result.size());
+			assertEquals("The result should be 1", 1, result.size());
 
-
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("manager", result.get(0).get(1));
-
-
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("manager");
+			
+			assertTrue(result.contains(aux));
+			
 			//---------------------------------------------------------------------//
 
 			result = omsProxy.informMembers("plana", "miembro", "member");
 
-			assertEquals("El resultado debe ser 2", 2, result.size());
+			assertEquals("The result should be 2", 2, result.size());
 
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("miembro");
 			
+			assertTrue(result.contains(aux));
 			
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("miembro", result.get(0).get(1));
+			aux.clear();
+			aux.add("pruebas");
+			aux.add("miembro");
 			
-			assertEquals("pruebas", result.get(1).get(0));
-			assertEquals("miembro", result.get(1).get(1));
-
+			assertTrue(result.contains(aux));
 
 			//---------------------------------------------------------------------//
-
-
-
-
-
-		}catch(THOMASException e)
-		{
+		} catch(THOMASException e) {
 
 			fail(e.getMessage());
 
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
+			
 			fail(e.getMessage());
+		
 		}
-		try
-		{
+		
+		try {
+			
 			omsProxy.informMembers("jerarquia", "", "creator");
 			
-			
-		}catch(THOMASException e)
-		{
+		} catch(THOMASException e) {
 
 			assertNotNull(e);
 
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
+			
 			fail(e.getMessage());
+		
 		}
-
 		//---------------------------------------------------------------------//
 	}
 	
 	
-	public void testInformAgentRole7a()
-	{
-		try
-		{
+	public void testInformAgentRole7a() {
+		
+		try {
 
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
 			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
@@ -2306,83 +2439,106 @@ public class TestInformMembers extends TestCase {
 
 			ArrayList<ArrayList<String>> result = omsProxy.informMembers("jerarquia", "", "");
 
-			assertEquals("El resultado debe ser 4", 4, result.size());
+			assertEquals("The result should be 4", 4, result.size());
 
-		
-
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("subordinado", result.get(0).get(1));
+			ArrayList<String> aux = new ArrayList<String>();
+			aux.add("pruebas2");
+			aux.add("subordinado");
 			
-			assertEquals("pruebas", result.get(1).get(0));
-			assertEquals("subordinado", result.get(1).get(1));
-
-			assertEquals("pruebas2", result.get(2).get(0));
-			assertEquals("creador", result.get(2).get(1));
-
-			assertEquals("pruebas2", result.get(3).get(0));
-			assertEquals("supervisor", result.get(3).get(1));
-
-
-
-
-
-
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("pruebas");
+			aux.add("subordinado");
+			
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("creador");
+			
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("supervisor");
+			
+			assertTrue(result.contains(aux));
+			
 			//---------------------------------------------------------------------//
 
 			result = omsProxy.informMembers("equipo", "", "");
 
-			assertEquals("El resultado debe ser 4", 4, result.size());
+			assertEquals("The result should be 4", 4, result.size());
 
-	
-
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("miembro", result.get(0).get(1));
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("miembro");
 			
-			assertEquals("pruebas", result.get(1).get(0));
-			assertEquals("miembro", result.get(1).get(1));
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("pruebas");
+			aux.add("miembro");
+			
+			assertTrue(result.contains(aux));
 
-			assertEquals("pruebas2", result.get(2).get(0));
-			assertEquals("creador", result.get(2).get(1));
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("creador");
+			
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("manager");
+			
+			assertTrue(result.contains(aux));
 
-			assertEquals("pruebas2", result.get(3).get(0));
-			assertEquals("manager", result.get(3).get(1));
 			//---------------------------------------------------------------------//
 
 			result = omsProxy.informMembers("plana", "", "");
 
-			assertEquals("El resultado debe ser 4", 4, result.size());
+			assertEquals("The result should be 4", 4, result.size());
 
-
-
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("miembro", result.get(0).get(1));
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("miembro");
 			
-			assertEquals("pruebas", result.get(1).get(0));
-			assertEquals("miembro", result.get(1).get(1));
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("pruebas");
+			aux.add("miembro");
+			
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("creador");
+			
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("manager");
+			
+			assertTrue(result.contains(aux));
 
-			assertEquals("pruebas2", result.get(2).get(0));
-			assertEquals("creador", result.get(2).get(1));
-
-			assertEquals("pruebas2", result.get(3).get(0));
-			assertEquals("manager", result.get(3).get(1));
-
-
-		}catch(THOMASException e)
-		{
+		} catch(THOMASException e) {
 
 			fail(e.getMessage());
 
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
+			
 			fail(e.getMessage());
+		
 		}
 	}
 
-	public void testInformAgentRole7b()
-	{
-		try
-		{
+	public void testInformAgentRole7b() {
+		
+		try {
 
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
 			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
@@ -2408,66 +2564,72 @@ public class TestInformMembers extends TestCase {
 
 			ArrayList<ArrayList<String>> result = omsProxy.informMembers("jerarquia", "supervisor", "");
 
-			assertEquals("El resultado debe ser 1", 1, result.size());
+			assertEquals("The result should be 1", 1, result.size());
 
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("supervisor", result.get(0).get(1));
-
-
+			ArrayList<String> aux = new ArrayList<String>();
+			aux.add("pruebas2");
+			aux.add("supervisor");
+			
+			assertTrue(result.contains(aux));
+			
 			//---------------------------------------------------------------------//
 
 			result = omsProxy.informMembers("equipo", "manager", "");
 
-			assertEquals("El resultado debe ser 1", 1, result.size());
-
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("manager", result.get(0).get(1));
-
+			assertEquals("The result should be 1", 1, result.size());
+			
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("manager");
+			
+			assertTrue(result.contains(aux));
 
 			//---------------------------------------------------------------------//
 
 			result = omsProxy.informMembers("plana", "miembro", "");
 
-			assertEquals("El resultado debe ser 2", 2, result.size());
+			assertEquals("The result should be 2", 2, result.size());
 
-
-		
-
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("miembro", result.get(0).get(1));
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("miembro");
 			
-			assertEquals("pruebas", result.get(1).get(0));
-			assertEquals("miembro", result.get(1).get(1));
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("pruebas");
+			aux.add("miembro");
+			
+			assertTrue(result.contains(aux));
+			
 			//---------------------------------------------------------------------//
 
 			
 			result = omsProxy.informMembers("jerarquia", "", "creator");
 			
-			assertEquals("El resultado debe ser 1", 1, result.size());
-
-
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("creador", result.get(0).get(1));
-
-		}catch(THOMASException e)
-		{
+			assertEquals("The result should be 1", 1, result.size());
+			
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("creador");
+			
+			assertTrue(result.contains(aux));
+			
+		} catch(THOMASException e) {
 
 			fail(e.getMessage());
 
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
+			
 			fail(e.getMessage());
+		
 		}
-	
-
 		//---------------------------------------------------------------------//
 	}
 
-	public void testInformAgentRole7c()
-	{
-		try
-		{
+	public void testInformAgentRole7c() {
+		
+		try {
 
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
 			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
@@ -2493,83 +2655,96 @@ public class TestInformMembers extends TestCase {
 
 			ArrayList<ArrayList<String>> result = omsProxy.informMembers("jerarquia", "", "subordinate");
 
-			assertEquals("El resultado debe ser 2", 2, result.size());
+			assertEquals("The result should be 2", 2, result.size());
 
-		
+			ArrayList<String> aux = new ArrayList<String>();
+			aux.add("pruebas2");
+			aux.add("subordinado");
 			
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("subordinado", result.get(0).get(1));
+			assertTrue(result.contains(aux));
 			
-			assertEquals("pruebas", result.get(1).get(0));
-			assertEquals("subordinado", result.get(1).get(1));
-
+			aux.clear();
+			aux.add("pruebas");
+			aux.add("subordinado");
+			
+			assertTrue(result.contains(aux));
 
 			//---------------------------------------------------------------------//
 
 			result = omsProxy.informMembers("equipo", "", "member");
 
-			assertEquals("El resultado debe ser 3", 3, result.size());
+			assertEquals("The result should be 3", 3, result.size());
 
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("miembro");
 			
-
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("miembro", result.get(0).get(1));
+			assertTrue(result.contains(aux));
 			
-			assertEquals("pruebas", result.get(1).get(0));
-			assertEquals("miembro", result.get(1).get(1));
-
-			assertEquals("pruebas2", result.get(2).get(0));
-			assertEquals("manager", result.get(2).get(1));
-
-
+			aux.clear();
+			aux.add("pruebas");
+			aux.add("miembro");
+			
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("manager");
+			
+			assertTrue(result.contains(aux));
+			
 			//---------------------------------------------------------------------//
 
 			result = omsProxy.informMembers("plana", "", "member");
 
-			assertEquals("El resultado debe ser 3", 3, result.size());
+			assertEquals("The result should be 3", 3, result.size());
 
-
-	
-
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("miembro", result.get(0).get(1));
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("miembro");
 			
-			assertEquals("pruebas", result.get(1).get(0));
-			assertEquals("miembro", result.get(1).get(1));
-
-			assertEquals("pruebas2", result.get(2).get(0));
-			assertEquals("manager", result.get(2).get(1));
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("pruebas");
+			aux.add("miembro");
+			
+			assertTrue(result.contains(aux));
+			
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("manager");
+			
+			assertTrue(result.contains(aux));
+			
 			//---------------------------------------------------------------------//
 
 
 			result = omsProxy.informMembers("jerarquia", "", "creator");
 			
-			assertEquals("El resultado debe ser 1", 1, result.size());
+			assertEquals("The result should be 1", 1, result.size());
+			
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("creador");
+			
+			assertTrue(result.contains(aux));
 
-
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("creador", result.get(0).get(1));
-
-
-
-		}catch(THOMASException e)
-		{
+		} catch(THOMASException e) {
 
 			fail(e.getMessage());
 
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
+			
 			fail(e.getMessage());
+		
 		}
-
 		//---------------------------------------------------------------------//
 	}
 
-	public void testInformAgentRole7d()
-	{
-		try
-		{
+	public void testInformAgentRole7d() {
+		
+		try {
 
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
 			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
@@ -2594,68 +2769,72 @@ public class TestInformMembers extends TestCase {
 
 			ArrayList<ArrayList<String>> result = omsProxy.informMembers("jerarquia", "subordinado", "subordinate");
 
-			assertEquals("El resultado debe ser 2", 2, result.size());
+			assertEquals("The result should be 2", 2, result.size());
 
-
-	
+			ArrayList<String> aux = new ArrayList<String>();
+			aux.add("pruebas2");
+			aux.add("subordinado");
 			
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("subordinado", result.get(0).get(1));
+			assertTrue(result.contains(aux));
 			
-			assertEquals("pruebas", result.get(1).get(0));
-			assertEquals("subordinado", result.get(1).get(1));
-
+			aux.clear();
+			aux.add("pruebas");
+			aux.add("subordinado");
+			
+			assertTrue(result.contains(aux));
+			
 			//---------------------------------------------------------------------//
 
 			result = omsProxy.informMembers("equipo", "manager", "member");
 
-			assertEquals("El resultado debe ser 1", 1, result.size());
-
-
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("manager", result.get(0).get(1));
-
-
+			assertEquals("The result should be 1", 1, result.size());
+			
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("manager");
+			
+			assertTrue(result.contains(aux));
+			
 			//---------------------------------------------------------------------//
 
 			result = omsProxy.informMembers("plana", "miembro", "member");
 
-			assertEquals("El resultado debe ser 2", 2, result.size());
+			assertEquals("The result should be 2", 2, result.size());
 
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("miembro");
 			
+			assertTrue(result.contains(aux));
 			
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("miembro", result.get(0).get(1));
+			aux.clear();
+			aux.add("pruebas");
+			aux.add("miembro");
 			
-			assertEquals("pruebas", result.get(1).get(0));
-			assertEquals("miembro", result.get(1).get(1));
-
-
+			assertTrue(result.contains(aux));
+			
 			//---------------------------------------------------------------------//
 
 
 			result = omsProxy.informMembers("jerarquia", "", "creator");
 			
-			assertEquals("El resultado debe ser 1", 1, result.size());
-
-
-			assertEquals("pruebas2", result.get(0).get(0));
-			assertEquals("creador", result.get(0).get(1));
-
-
-		}catch(THOMASException e)
-		{
+			assertEquals("The result should be 1", 1, result.size());
+			
+			aux.clear();
+			aux.add("pruebas2");
+			aux.add("creador");
+			
+			assertTrue(result.contains(aux));
+			
+		} catch(THOMASException e) {
 
 			fail(e.getMessage());
 
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
+			
 			fail(e.getMessage());
+		
 		}
-
 		//---------------------------------------------------------------------//
 	}
-	
-	
 }
