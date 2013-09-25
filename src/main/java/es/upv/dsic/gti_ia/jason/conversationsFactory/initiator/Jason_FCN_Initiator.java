@@ -563,8 +563,8 @@ public class Jason_FCN_Initiator {
 		processor.addTransition(RECEIVE_REFUSE, EVALUATE_PROPOSALS);
 		processor.addTransition(TIMEOUT, EVALUATE_PROPOSALS);
 
-		//We don't need to register send rejections/acceptances. It is done 
-		//dynamically by the EVALUATE_PROPOSALS State
+		// We don't need to register send rejections/acceptances. It is done 
+		// dynamically by the EVALUATE_PROPOSALS State
 
 		// WAIT_FOR_RESULTS State
 
@@ -617,7 +617,4 @@ public class Jason_FCN_Initiator {
 		return theFactory;
 	}
 }
-
-
-
 
