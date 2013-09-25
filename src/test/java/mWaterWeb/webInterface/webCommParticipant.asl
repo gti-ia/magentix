@@ -224,7 +224,7 @@ userInfo_Arguments_List(User,UFieldsList,UserID)&
 	-request("tradinghall",UserName,WMarketID,TableID,ConvID).
 
 	
-+!joined(Result): //.print("TABLE ACCEPTED")& //Result is a literal "participant(RPart,Table,Rol)"
++!joined(Result): //Result is a literal "participant(RPart,Table,Rol)"
 request("tradinghall",UserName,WMarketID,TableID,ConvID)& 
 accredited(User,WM)&
 water_market_Arguments_List(WM,WMFieldsList,WMarketID)&
@@ -274,26 +274,8 @@ request("accreditation",UsrName,CurrRol, CurrWRID,WMID,[D,M,Y],ConvID)
 
 /*-------------------auction-------------------------*/   
 /*-----------------seller-----------------------------*/
-/*
-+memberjoined(TableID,WMarket,ConfID,ProtType,UserID,WR,StartAuction)
-<- //what i do as seller
-   //.print("//////////////////////////// MEMBER JOINED!!! ",UserID);
-  //?table_Arguments_List(Table,FieldsList,TableID);
-   .print("---- dentro de memberjoined StartAuction ",StartAuction);
-   if (max_iteration_number(MaxIt) & bid_increment(BidInc ) & initial_bid(IniBid )  )
-   {RMaxIt = MaxIt; RBidInc = BidInc; RIniBid = IniBid;}
-   else {RMaxIt = 12; RBidInc = 5; RIniBid = 1;}
-   if (StartAuction==true) 
-   {
-	.abolish(memberjoined(TableID,WMarket,ConfID,ProtType,_,WR,_));
-	//.member(protocol_type(Prot),FieldsList);
-	.print("******** Enough users to start subprotocol. Starting ... ");
-	if (WR\==[]){ ?waterRight_Arguments_List(WR,WRFieldsList,WRID)  }else{  WRFieldsList=[];  }
-	//.print("**** WR: ",WR);
-   	.concat([rol(seller)],[water_right_fields(WRFieldsList)],[tableid(TableID)],[wmarket(WMarket)],[confid(ConfID)],[max_iterations(RMaxIt)],[increment(RBidInc)],[initial_bid(RIniBid)],ProtocolParameters);
-   	!startSubprotocol(ProtType,ProtocolParameters);
-   	
-   }.*/
+
+
 
 +!waitForParticipantsToJoinTable(Table):staffname(Sn)&myname(Me)
 <- 
@@ -306,21 +288,22 @@ request("accreditation",UsrName,CurrRol, CurrWRID,WMID,[D,M,Y],ConvID)
 	?table_Arguments_List(Table,TableArgList,TableID);
 	.member(wmarket(WMarket),TableArgList);
 	.member(configuration_id(ConfID),TableArgList);
-//.print("Table: ",Table);
-	//if (allmemberjoined(SS1,SS2,SS3,SS4,SS5,SS6,SS7,SS8)){.print("Hay un allmemeberjoined ",SS1," ",SS2," ",SS3," ",SS4," ",SS5," ",SS6," ",SS7," ",SS8);}
-//else{.print("No hay ningun allmemberjoined");}
-	if (allmemberjoined(TableID,WMarket,ConfID,ProtType,UserID,WR,MissingParticipants,ExecutionDate))
-	{ !!evaluateStartSubProt(TableID,WMarket,ConfID,ProtType,UserID,WR,MissingParticipants,ExecutionDate);	}
+
+	if (newmemberjoined(TableID,WMarket,ConfID,ProtType,UserID,WR,MissingParticipants,ExecutionDate))  //there is at least one participant
+	{ !!evaluateStartSubProt(TableID,WMarket,ConfID,ProtType,UserID,WR,ExecutionDate);	}
 	else
 	{	//.print("-------------------  no encontrado ");
-	    .print("No enough participants have joined. Closing table...");
+	    .print("No participants have joined. Closing table...");
 	    .send(Sn, achieve,closeTable(Table));
 	    .send(Sn,achieve,finishedRound(Me));
 	}.
    
 
-+!evaluateStartSubProt(TableID,WMarket,ConfID,ProtType,UserID,WR,MissingParticipants,ExecutionDate):staffname(Sn)
-<-  .print(" - All required member joined to my table ",TableID);
++!evaluateStartSubProt(TableID,WMarket,ConfID,ProtType,UserID,WR,ExecutionDate):staffname(Sn)&myname(Me)
+<-  //.print(" - All required member joined to my table ",TableID);
+   !decideStartSubprotocol(TableID,WMarket,ConfID,ProtType,UserID,WR,ExecutionDate,SPReply) ; //this must be included in the web interface
+    if (SPReply=true)
+   {
 	.send(Sn,askOne,japaneseauc_protocolparameters(ProtParam),ResultPP); //.print("ResultPP ",ResultPP);
    	if (ResultPP=japaneseauc_protocolparameters(ProtParam))
    	    { .member(max_iterations(MaxIt),ProtParam);
@@ -331,10 +314,25 @@ request("accreditation",UsrName,CurrRol, CurrWRID,WMID,[D,M,Y],ConvID)
 	if ( (WR\==[]) & (WR\==[""] ) ){ ?waterRight_Arguments_List(WR,WRFieldsList,WRID) ; }
 	else{  WRFieldsList=[];  }
    	.concat([rol(seller)],[water_right_fields(WRFieldsList)],[tableid(TableID)],[wmarket(WMarket)],[confid(ConfID)],[max_iterations(MaxIt)],[increment(Increm)],[initial_bid(IniBid)],ProtocolParameters);
-//.print("ProtocolParameters ",ProtocolParameters);
-   	.abolish(allmemberjoined(TableID,WMarket,ConfID,ProtType,_,_,_,ExecutionDate)); 
-   	!startSubprotocol(ProtType,ProtocolParameters).
-   	
+   	!startSubprotocol(ProtType,ProtocolParameters)
+   }else{ //I don't want to start a subprotocol
+	   ?table_structure(Table);
+	   ?table_Arguments_List(Table,TableArgList,TableID);
+	   .member(wmarket(WMarket),TableArgList);
+	   .member(configuration_id(ConfID),TableArgList);
+	   .print("Condition for starting not fulfilled. Closing table...");
+	   .send(Sn, achieve,closeTable(Table));
+	   .send(Sn,achieve,finishedRound(Me));
+   };
+   .abolish(newmemberjoined(TableID,WMarket,ConfID,ProtType,_,_,_,ExecutionDate)) .
+
+
++!decideStartSubprotocol(TableID,WMarket,ConfID,ProtType,UserID,WR,ExecutionDate,Reply)
+<- if ((newmemberjoined(TableID,WMarket,ConfID,ProtType,UserID,WR,MissingParticipants,ExecutionDate))&(MissingParticipants==0)){
+		.print("Starting subprotocol in table ",TableID);
+		Reply=true;
+	}
+	else {	Reply=false;}.   	
 /*-----------------buyer-----------------------------*/
 
 +callforbid(Sender,PRequest,RemainingParticipants,Bid,SubProtConvID):
@@ -382,20 +380,20 @@ webcommunication(true)
 			else {WROwner=owner(OwnID);};
 	  		.print("I'VE BEEN CHOOSEN AS WINNER. AGREEMENT! ",Agreement);
 	  		.ia_web_request("inform","auctionstate",result(ConvID,0,"true",[UserName],WRID,Agreement,UserName,FinalBid),ExternConvID);
-	  		.abolish(memberjoined(TableID,WMarket,ConfID,Protocolid,_,WR,_));
+	  		.abolish(newmemberjoined(TableID,WMarket,ConfID,Protocolid,_,_,WR,_));
 	  		.abolish(winner(Sender,_,_,SubProtConvID));
 	   }else
 	 {
 	  	 if (auctionsummary(Sender,Protocolid,ProtName,TableID,WRID,true,Winner,WinnerBid,SubProtConvID))
 	   	{  .print("I HAVEN'T BEEN CHOOSEN AS WINNER. WINNER WAS: ",Winner);
 	   	   .ia_web_request("inform","auctionstate",result(ConvID,0,"true",[Winner],WRID,"",Winner,WinnerBid),ExternConvID);
-	    	  .abolish(memberjoined(TableID,WMarket,ConfID,Protocolid,_,WR,_));
+	    	  .abolish(newmemberjoined(TableID,WMarket,ConfID,Protocolid,_,_,WR,_));
 	    	  .abolish(auctionsummary(Sender,Protocolid,ProtName,TableID,_,true,Winner,WinnerBid,SubProtConvID));
 	    	}else{
 	  		 if (auctionsummary(Sender,Protocolid,ProtName,TableID,WRID,false,Winner,WinnerBid,SubProtConvID))
 	   		{ .print("THERE WAS NOT WINNER!");
 	   	  	.ia_web_request("inform","auctionstate",result(ConvID,0,"true",[],WRID,"","",""),ExternConvID);
-	   	 	 .abolish(memberjoined(TableID,WMarket,ConfID,Protocolid,_,WR,_));
+	   	 	 .abolish(newmemberjoined(TableID,WMarket,ConfID,Protocolid,_,_,WR,_));
 	    	 	.abolish(auctionsummary(Sender,Protocolid,ProtName,TableID,_,false,Winner,WinnerBid,SubProtConvID));
 	  	 	}
 			else{  //probably is the seller
@@ -445,12 +443,12 @@ webcommunication(true)
 			if (Agr\==false){
 				 Agr=agreement(WR,WinnerBuyer,SenderAgreement,FinalAgrBid,TableID); 
 				.ia_web_request("inform","auctionstate",result(ConvID,0,"true",[WinnerBuyer],WRID,Agr,WinnerBuyer,"closed"),ExternConvID);
-				.abolish(memberjoined(TableID,WMarket,ConfID,Protocolid,_,WR,_));
+				.abolish(newmemberjoined(TableID,WMarket,ConfID,Protocolid,_,_,WR,_));
 				.abolish(auctionsummary(Sender,Protocolid,ProtName,TableID,_,true,Winner,WinnerBid,SubProtConvID));
 			}else{
 				 .print("THERE WAS NOT WINNER IN THE CLOSED TABLE!");							 
 			 .ia_web_request("inform","auctionstate",result(ConvID,0,"true",[],WRID,"","","closed"),ExternConvID);
-			 .abolish(memberjoined(TableID,WMarket,ConfID,Protocolid,_,WR,_));
+			 .abolish(newmemberjoined(TableID,WMarket,ConfID,Protocolid,_,_,WR,_));
 			 .abolish(auctionsummary(Sender,Protocolid,ProtName,TableID,_,false,Winner,WinnerBid,SubProtConvID));
 			};
 		}else

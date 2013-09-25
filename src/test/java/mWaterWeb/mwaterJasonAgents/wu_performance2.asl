@@ -160,12 +160,13 @@
 
 +!accredit(UserName,WM) : staffname(Sn)&myname(Me)
 <- //!userlInfoFiledsToStructure(PersonalInfoList,UserInfo,UserID);
-   if (WM==""){ .send(Sn,askOne,currentWaterMarket_id(WMarket),Reply); }
+
+   if (WM==""){ .send(Sn,askOne,currentWaterMarket_id(WMarket),Reply);}
    else {Reply=currentWaterMarket_id(WM);  }
 
-   if (Reply==false){.fail;}
+   if (Reply==false){ .fail;}
    else
-	{  ?Reply=currentWaterMarket_id(WMarket); 
+	{  ?Reply=currentWaterMarket_id(WMarket)[source(Sn)];  
 	   ?request_rule(accreditation, Request,[wmarket(WMarket),user_name(UserName)] ); 
 	   !getAccreditationConvID(ID); 
 	   if (not ID==-1)
@@ -425,7 +426,9 @@ request_rule(joinNTT, Request,[table(Table),user(MyUserInfo),rol(MyRol)] )
 		if (OpUsr==UserID) //seller
 		{MyRol="seller";}else{MyRol="buyer";}
 	}
+
 	!getJoinNTTConvID(ConvID,TableID,WMID,MyRol);
+
    if (not ConvID==-1)
    {	if (joinNTTConv(Me,TableID,frp,ConvID)){.fail;};
   		+joinNTTConv(Me,TableID,frp,ConvID);
@@ -557,9 +560,10 @@ request_rule(joinNTT, Request,[table(Table),user(MyUserInfo),rol(MyRol)] )
 +!manageStartSubProtocol(ProtID,ProtName,seller,WaterRight,Table,JTO,TO,DL,SubProtConvID,FirstRound):myname(Me)&
 ProtName == "contract_net" //ontology
 <- 
-   ?table_Arguments_List(Table,TableArgList,TableID);
+   ?table_Arguments_List(Table,TableArgList,TableID); 
    .member(wmarket(WMarket),TableArgList);
    !buyersoftable(TableID,WMarket,Buyers);
+//.print("............ Buyers of table ",Buyers);
    ?protocol_request(ProtName,ProtID, PRequest, [water_right(WaterRight),table(Table),sender(Me)]);
    +subprotocolConv(Me,ProtName,PRequest,seller,SubProtConvID);
    if (not FirstRound){!notifyParticipants(Buyers,SubProtConvID,ProtName);};
@@ -730,14 +734,12 @@ protocol_request(ProtName, ProtID, PRequest, ParamList)
 
 +!manageStartSubProtocol(ProtID,ProtName,seller,WaterRight,Table,MaxIter,Inc,IniBid,JTO,TO,SubProtConvID,FirstRound):myname(Me)&staffname(Sn)&
 ProtName == "japanese_auction" //ontology
-<- //.date(Y1,M1,D1); .time(HH1,MM1,SS1);
-   //.print("Starting auction: ",D1,"/",M1,"/",Y1," ",HH1,":",MM1,":",SS1);
+<- 
    +subprotocolstarted(TableID);
-  // .print("------------------- subprotocolstarted(TableID aded , TableID ",TableID);
    ?table_Arguments_List(Table,TableArgList,TableID);
    .member(wmarket(WMarket),TableArgList);
    .member(configuration_id(ConfID),TableArgList);
-    !buyersoftable(TableID,WMarket,Buyers);
+   !buyersoftable(TableID,WMarket,Buyers);
     
    ?protocol_request(ProtName,ProtID, PRequest, [water_right(WaterRight),table(Table),sender(Me),max_iterations(MaxIter),increment(Inc),initial_bid(IniBid)]);
    .send(Sn,tell,subprotocolstarted(TableID,ConfID,WMarket,Me));
@@ -763,7 +765,7 @@ subprotocolConv(Me,ProtName,PRequest,seller,SubProtConvID)
 	.member(wmarket(WMarket),TableFieldsList);	
 	.member(configuration_id(ConfID),TableFieldsList);
 //.print("wu owner table ",TableID,"Participations ",Participations,"-*-*-*-*-*-*-*-*-*-*-*-*");
-	for (.member(P,Participations))
+	/*for (.member(P,Participations))
 		{
 			if ((P = [Participant,ParticipationsNum])&(ParticipationsNum>0))
 			{//.print("ANTES DE MANDAR AGREEMENT '''''''''''''''''''''Table ''' ",Table);
@@ -774,21 +776,26 @@ subprotocolConv(Me,ProtName,PRequest,seller,SubProtConvID)
 	    		}
 	    		else{.print("Participations of ",Participant," were not registered! ");}
 			}
-		}
+		}*/
 	
-	if (.ground(Winner))
-	{
+	//if (.ground(Winner))
+	//{
 
 	    ?transfer_agreement_structure(TAgr);
 	    ?transfer_agreement_Arguments_List(TAgr,TAFieldsList,TAID);
-	    .member(agreed_price(WinnerBid),TAFieldsList);
-	    .member(water_right_id(WRID),TAFieldsList);
-	    .member(trading_table_id(TableID),TAFieldsList);
-	    .member(wmarket(WMarket),TAFieldsList);
-	    .member(configuration_id(ConfID),TAFieldsList);
-	    //.date(Y,M,D);
-	    //.member(signature_date([D,M,Y]),TAFieldsList);  //This must be filles by the staff
-	    .send(Sn,askOne,addTransferAgreement(TAgr,Winner),Reply); //ontology
+	    //.member(agreed_price(WinnerBid),TAFieldsList);
+	   // .member(water_right_id(WRID),TAFieldsList);
+	   // .member(trading_table_id(TableID),TAFieldsList);
+	   // .member(wmarket(WMarket),TAFieldsList);
+	   // .member(configuration_id(ConfID),TAFieldsList);
+	    
+	    .member(agreed_price(48),TAFieldsList);
+	    .member(water_right_id(48),TAFieldsList);
+	    .member(trading_table_id(1),TAFieldsList);
+	    .member(wmarket(1154),TAFieldsList);
+	    .member(configuration_id(694),TAFieldsList);
+
+	    .send(Sn,askOne,addTransferAgreement(TAgr,"aut_agent115"),Reply); //ontology
 	    if (Reply\==false){//.print("Transfer agreements of japanese auction successfully registered for table ",TableID,"! ");
 				.print("Action:RECEIVE TABLE SUMMARY | Input:[Protocol:",ProtName,",Table:",TableID,"] | Output:Agreement-performed");
 				}
@@ -796,11 +803,10 @@ subprotocolConv(Me,ProtName,PRequest,seller,SubProtConvID)
 		.print("Action:RECEIVE TABLE SUMMARY | Input:[Protocol:",ProtName,",Table:",TableID,"] | Output:Agreement-not-performed");
 		}
 
-	}else{
-		//.print("No winner in japanese auction for table ",TableID," in water market ",WMarket);
+	/*}else{
 		.print("Action:RECEIVE TABLE SUMMARY | Input[",TableID,",Water-market:",WMarket,"] | Output:No-winner");
 		.send(Sn, achieve,closeTable(Table));  //closing table
-		};
+		};*/
 	if (not .ground(WRID)){WRID=""};
 	for (.member(P,Participations))
 		{

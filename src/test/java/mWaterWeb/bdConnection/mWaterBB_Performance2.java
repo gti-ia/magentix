@@ -48,8 +48,8 @@ import jason.bb.JDBCPersistentBB;
  * This solution doesn't use the class "DatabaseAPI" 
  */
 
-public class mWaterBB extends JDBCPersistentBB {
-	private static Logger logger     = Logger.getLogger(mWaterBB.class.getName());
+public class mWaterBB_Performance2 extends JDBCPersistentBB {
+	private static Logger logger     = Logger.getLogger(mWaterBB_Performance2.class.getName());
 	private Hashtable<String,FieldObj> mwFieldFunctors = new Hashtable<String,FieldObj>();
 	
 	/**
@@ -114,8 +114,9 @@ public class mWaterBB extends JDBCPersistentBB {
 		mwFunctors.put("waterright_tt","tradingtable_has_waterright");
 		mwFunctors.put("user_class","user_class");
 		mwFunctors.put("user_has_class","user_has_class");
-		mwFunctors.put("q_accreditedUsersNames","q_accreditedUsersNames"); 
-		mwFunctors.put("q_namesOfTableMembers","q_namesOfTableMembers");
+		mwFunctors.put("performance","performance");
+		mwFunctors.put("q_accreditedUsersNames","q_accreditedUsersNames"); //q_accreditedUsersNames(WMarketID,NamesList)
+		mwFunctors.put("q_namesOfTableMembers","q_namesOfTableMembers");//q_namesOfTableMembers(trading_table_id(TableID),configuration_id(ConfID),wmarket(WMarketID),accepted(true),ResultList)
 		/*------------------- queries ----------------------*/
 		mwQueryFunctors.add("q_accreditedUsersNames");
 		mwQueryFunctors.add("q_namesOfTableMembers");
@@ -127,6 +128,7 @@ public class mWaterBB extends JDBCPersistentBB {
 		mwFieldFunctors.put(objFunctor+"."+field, obj);
 		obj = new FieldObj(field,type,objFunctor);
 		mwFunctorsFields.put( objFunctor+"."+functor,obj);	
+		//System.out.println(objFunctor+"."+functor+" /// "+mwFunctorsFields.get(objFunctor+"."+functor));
 	}
 	
 	private void initializemwFieldFunctors() {
@@ -302,6 +304,12 @@ public class mWaterBB extends JDBCPersistentBB {
 		initializeFieldFunctor( "wmarket", "wmarket",Types.NUMERIC,"waterright_tt");
 		initializeFieldFunctor( "configuration_id", "configuration_id",Types.NUMERIC,"waterright_tt");
 		initializeFieldFunctor( "water_right_id", "water_right_id",Types.NUMERIC,"waterright_tt");
+		
+		//performance
+		initializeFieldFunctor( "agent_id", "agent_id",Types.NUMERIC,"performance");
+		initializeFieldFunctor( "agent_name", "agent_name",Types.VARCHAR,"performance");
+		initializeFieldFunctor( "table_id", "table_id",Types.NUMERIC,"performance");
+		initializeFieldFunctor( "is_owner", "is_owner",Types.BIT,"performance");
 		//---------------- queries -----------------------
 		//q_accreditedUsersNames(WMarketID,NamesList)
 		initializeFieldFunctor( "wmarket", "wmarket",Types.NUMERIC,"q_accreditedUsersNames");
@@ -365,6 +373,7 @@ public class mWaterBB extends JDBCPersistentBB {
 		try {
 			Boolean onlykeys = true;
 			String xml = mapFunctortoXML(functor,onlykeys, l.getTerms(), u);
+			//result = resultSetToLiteralIterator(rs,l.getFunctor());
 			if (xml!=null)
 					result = XMLtoLiteralIterator(xml,functor );
 		} catch (DataManagementException e) {
@@ -376,17 +385,20 @@ public class mWaterBB extends JDBCPersistentBB {
 	
 	public Iterator<Literal> getCandidateBeliefs(Literal l, Unifier u) {
 		logger.fine("--- getCandidateBeliefs(Literal l, Unifier u)) "+l);
-
+		//int sss;
 		String functor = l.getFunctor();
-
+		//if (functor.compareTo("q_namesOfTableMembers")==0)
+			//sss=0;
+		//ResultSet rs = null;
 		Iterator<Literal> result1 = null;
 		Iterator<Literal> result =null;
 		if (mwFunctors.containsKey(functor)){
 			try {
-				l.apply(u);
-			
+				//rs = mapFunctortoResultSet(functor,l.getTerms(), u);
+				 l.apply(u);
+				
 				String xml = mapFunctortoXML(functor,false, l.getTerms(), u);
-
+				//result = resultSetToLiteralIterator(rs,l.getFunctor());
 				if (xml!=null)
 					{
 					result1 = XMLtoLiteralIterator(xml,functor );
@@ -398,6 +410,7 @@ public class mWaterBB extends JDBCPersistentBB {
 					/*if (functor.compareTo("accredited_user")==0)
 					{
 						Iterator<Literal> tmp = XMLtoLiteralIterator(xml,functor );
+						logger.info("###"+tmp.next().toString());
 					}*/
 					}
 			} catch (DataManagementException e) {
@@ -409,12 +422,14 @@ public class mWaterBB extends JDBCPersistentBB {
 		return result;
 	}
 	
+	//["q_accreditedUsersNames(name("aut_agent16"))[source(self)]","q_accreditedUsersNames(name("aut_agent17"))[source(self)]","q_accreditedUsersNames(name("aut_agent18"))[source(self)]","q_accreditedUsersNames(name("aut_agent19"))[source(self)]","q_accreditedUsersNames(name("aut_agent20"))[source(self)]","q_accreditedUsersNames(name("aut_agent21"))[source(self)]","q_accreditedUsersNames(name("aut_agent22"))[source(self)]"]
 	private Iterator<Literal> processResultIterator(Literal lit, String functor,
 			Iterator<Literal> iniresult, Unifier u) {
 		List<Literal> result = new ArrayList<Literal>();
 		Literal tmplit1 =new LiteralImpl(functor);
 		Literal tmplit2 ;
 		String litfunctor,tmpstr = "";
+		//q_accreditedUsersNames(name("aut_agent16"))[source(self)]
 		if ((functor.compareTo("q_accreditedUsersNames")==0)||(functor.compareTo("q_namesOfTableMembers")==0))
 		{	ListTerm namesList = new ListTermImpl();
 			while (iniresult.hasNext())
@@ -696,6 +711,7 @@ public class mWaterBB extends JDBCPersistentBB {
 			if(functor.compareTo("water_right")==0){
 				String id = searchFieldValueInTermList(functor,"id",keyargs,u);
 				String owner = searchFieldValueInTermList(functor,"owner",keyargs,u);
+				//result=XMLtoResultSet(dbAPI.getWaterRightsByOwner(owner));
 				result = dbAPI.getWaterRightsByOwner(owner,id);
 
 			}else
@@ -709,20 +725,22 @@ public class mWaterBB extends JDBCPersistentBB {
 			}else
 			if(functor.compareTo("general_water_right")==0){
 				String owner = searchFieldValueInTermList(functor,"owner",keyargs,u);
+				//result=XMLtoResultSet(dbAPI.getWaterRightsByOwner(owner));
 				
 				result = dbAPI.getGeneralWaterRightsByOwner(owner);
+				//System.out.println("DESPUÉS De "+result);
 				
 			}else	
 			if(functor.compareTo("water_market")==0){
 				String id = searchFieldValueInTermList(functor,"id",keyargs,u);
-
+				//result=XMLtoResultSet(dbAPI.getWaterRightsByOwner(owner));
 				result = dbAPI.getWaterMarketByID(id);
 			}else
 			if(functor.compareTo("trading_table")==0){
 				String configuration_id = searchFieldValueInTermList(functor,"configuration_id",keyargs,u);
 				String market = searchFieldValueInTermList(functor,"wmarket",keyargs,u);
 				String id = searchFieldValueInTermList(functor,"id",keyargs,u);
-
+				//result=XMLtoResultSet(dbAPI.getTradingTables(configuration_id, market));
 				result = dbAPI.getTradingTables(configuration_id, market, id);
 				
 			}else
@@ -730,7 +748,7 @@ public class mWaterBB extends JDBCPersistentBB {
 			if(functor.compareTo("accredited_user")==0){
 				String user_id = searchFieldValueInTermList("water_user","id",keyargs,u);
 				String wmarket = searchFieldValueInTermList(functor,"wmarket",keyargs,u);
-
+				//OJO: AGREGADO A API!!!
 				
 				result = dbAPI.getAccreditedWaterUserbyId(user_id, wmarket);
 			}else	
@@ -777,11 +795,19 @@ public class mWaterBB extends JDBCPersistentBB {
 				String confid = searchFieldValueInTermList(functor, "configuration_id", keyargs,u);
 				result = dbAPI.getUserHasClass(userid,confid);
 			}else
+			if (functor.compareTo("performance")==0){
+				String agentid = searchFieldValueInTermList(functor, "agent_id", keyargs,u);
+				String tableid = searchFieldValueInTermList(functor, "table_id", keyargs,u);
+				String agname = searchFieldValueInTermList(functor, "agent_name", keyargs,u);
+				String isOwner = searchFieldValueInTermList(functor, "is_owner", keyargs,u);
+				result = dbAPI.getPerformanceData(agentid,tableid,agname,isOwner);
+			}else				
 			if (functor.compareTo("q_accreditedUsersNames")==0){
 				String wmarket = keyargs.get(0).toString(); 
 				result = dbAPI.getAccreditedUsersNames(wmarket);
 			}else
 			if (functor.compareTo("q_namesOfTableMembers")==0){
+				//q_namesOfTableMembers(trading_table_id(TableID),configuration_id(ConfID),wmarket(WMarketID),accepted(true),ResultList)
 				String tableid = searchFieldValueInTermList(functor, "trading_table_id", keyargs,u);
 				String confid = searchFieldValueInTermList(functor, "configuration_id", keyargs,u);
 				String wmarket = searchFieldValueInTermList(functor, "wmarket", keyargs,u);
@@ -897,11 +923,12 @@ public class mWaterBB extends JDBCPersistentBB {
 			}else
 	
 			if(functor.compareTo("+accredited_user")==0){
-
+				//logger.info("*****");
 				String user_id = getFieldValueFromTermList("accredited_user","id",keyargs,u);
 				String wmarket = getFieldValueFromTermList("accredited_user","wmarket",keyargs,u);
 				String trust_value = getFieldValueFromTermList("accredited_user","trust_value",keyargs,u);
 				String sanction_value = getFieldValueFromTermList("accredited_user","sanction_value",keyargs,u);
+				//logger.info("***** - user_id: "+user_id+" wmarket: "+wmarket+" trust_value: "+trust_value+" sanction_value "+sanction_value);
 				result = dbAPI.insertAccreditedUser(user_id, wmarket, trust_value,sanction_value);
 			}else
 
@@ -923,92 +950,13 @@ public class mWaterBB extends JDBCPersistentBB {
 		} catch(IndexOutOfBoundsException iobe) {
 			logger.log(Level.SEVERE,"Number of arguments incorrect for retrieving the information from the beliefs base.");
 		} catch (DataManagementException e) {
+			 //logger.log(Level.SEVERE, "SQL Error in functor "+functor);
 			throw e;
 		}		
 
 		return result;
 	}
 	
-	/*public Iterator<Literal> resultSetToLiteralIterator(ResultSet rs,String functor){
-		List<Literal> result = new ArrayList<Literal>();
-
-		ResultSetMetaData rsmd;
-		try {
-			rsmd = rs.getMetaData();
-			int colCount = rsmd.getColumnCount();
-			String columnName;
-			Literal ldb ;
-			Literal auxLiteral;
-
-			while (rs.next()) // for each record
-			{
-				ldb = new LiteralImpl(functor);
-				for (int c = 1; c <= colCount; c++) // for each column
-				{
-				
-	            Term parsed = null;
-	            columnName = rsmd.getColumnName(c);		
-	            switch (rsmd.getColumnType(c)) {
-	            case Types.INTEGER:
-	            case Types.FLOAT:
-	            case Types.DECIMAL:
-	            case Types.DOUBLE:
-	                parsed = new NumberTermImpl(rs.getDouble(c));
-	                break;	            	
-	            case Types.NUMERIC:
-	            case Types.REAL:
-	                parsed = new NumberTermImpl(rs.getDouble(c));
-	                break;
-				case Types.DATE:
-					parsed = Date2ListTerm(rs.getDate(c));
-					break;
-	            case Types.TIMESTAMP:
-	                //parsed = timestamp2structure(rs.getTimestamp(c));
-	            	parsed = Date2ListTerm(rs.getDate(c));
-	                break;
-
-	            default:
-	                String sc = rs.getString(c);
-	                if (sc == null || sc.trim().length() == 0) {
-	                    parsed = new StringTermImpl("");
-	                } else if (Character.isUpperCase(sc.charAt(0))) {
-	                    // there is no var at BB
-	                    parsed = new StringTermImpl(sc);
-	                } else {
-	                    try {
-	                        parsed = ASSyntax.parseTerm(sc);
-	                    
-	                        // if the parsed term is not equals to sc, try it as string
-	                        if (!parsed.toString().equals(sc))
-	                            parsed = ASSyntax.parseTerm(sc = "\"" + sc + "\"");
-	                    } catch (ParseException e) {
-	                        // can not be parsed, be a string
-	                        parsed = new StringTermImpl(sc);
-	                    } catch (TokenMgrError e) {
-	                        // can not be parsed, be a string
-	                        parsed = new StringTermImpl(sc);                        
-	                    }
-	                }
-	                break;
-	            }
-
-				auxLiteral = new LiteralImpl(  getFieldFunctorFromFieldID(columnName, functor));
-	            auxLiteral.addTerm(parsed);
-	            ldb.addTerm(auxLiteral);
-			}
-				ldb.addAnnot(new LiteralImpl(Literal.parseLiteral("source(self)")));
-				result.add(ldb);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		if (result.size()==0){return null;}
-		else {return result.iterator();}
-	}*/
-	
-
-
 
 	@Override
 	public boolean add(Literal l) {
@@ -1020,8 +968,9 @@ public class mWaterBB extends JDBCPersistentBB {
 		boolean result = false;
 		if (mwFunctors.containsKey(functor)){
 			Unifier u = new Unifier();
-
+			//logger.info("Antes del getKeyFunctorFrommwFunctor ... functor: "+functor);
 			List<String> keysfunctors = getKeyFunctorFrommwFunctor(functor);
+			//logger.info("Despues del getKeyFunctorFrommwFunctor ... keyfunctor: "+keysfunctors.get(0));
 			boolean allKeysPresent = true;  int k = 0;
 			String keyValue = "";
 			while ((allKeysPresent)&&(k<keysfunctors.size())){
@@ -1043,7 +992,7 @@ public class mWaterBB extends JDBCPersistentBB {
 					
 					if (!candBel.hasNext())
 						return  update(l, firstBel, functor);
-
+						//logger.info("Despues del update ... ");
 						
 				}
 			}
@@ -1055,10 +1004,10 @@ public class mWaterBB extends JDBCPersistentBB {
 
 				String id = dbAPI.Extract_GeneratedKey_From_XML_String(xml);
 
-
+				//Literal newLiteral = updateLiteralId(l,id, u);
 				try
 				{currentIntentionUnifier = myag.getTS().getC().getSelectedIntention().peek().getUnif();}
-				catch (Exception e){
+				catch (Exception e){//logger.info("Error getting the current intention unifier");
 				}
 				if (currentIntentionUnifier!=null) //Trying to unify ID in the literal to add
 				{
@@ -1068,6 +1017,7 @@ public class mWaterBB extends JDBCPersistentBB {
 					try {
 						newkeyValue = ASSyntax.parseTerm(id);
 						currentIntentionUnifier.unifiesNoUndo(new VarTerm(keyTerm.toString()), newkeyValue);
+						//logger.info("Unificando "+keyTerm.toString()+" con valor "+newkeyValue+" keysfunctors.get(0) "+keysfunctors.get(0));
 					} catch (ParseException e) {
 						newkeyValue = Literal.parse(id);
 						currentIntentionUnifier.unifiesNoUndo(new VarTerm(keyTerm.toString()), newkeyValue);
@@ -1145,6 +1095,10 @@ public class mWaterBB extends JDBCPersistentBB {
 			result.add("wmarket");
 			result.add("configuration_id");
 			result.add("water_right_id");
+		}
+		if ((mwFunctors.containsKey(functor))&&(functor.compareTo("performance")==0)){
+			result.add("agent_id");
+			result.add("table_id");
 		}
 		return result;
 		
@@ -1253,8 +1207,9 @@ public class mWaterBB extends JDBCPersistentBB {
 					else
 						fieldValue = null;
 
-
+					//fields.item(j).getChildNodes().item(0).getNodeType()
 					fieldType = getFieldTypeFromFieldID(fieldName, functor);
+					//logger.info(" fieldName: "+fieldName+" fieldValue: "+fieldValue+" fieldType:"+fieldType);
 		            switch (fieldType) {
 		            case Types.INTEGER:
 		            case Types.FLOAT:
@@ -1281,6 +1236,7 @@ public class mWaterBB extends JDBCPersistentBB {
 						parsed = strDate2ListTerm(fieldValue);
 						break;
 		            case Types.TIMESTAMP:
+		                //parsed = timestamp2structure(rs.getTimestamp(c));
 		            	parsed = strDate2ListTerm(fieldValue);
 		                break;
 		            case Types.VARCHAR:
@@ -1323,7 +1279,7 @@ public class mWaterBB extends JDBCPersistentBB {
 
 				ldb.addAnnot(new LiteralImpl(Literal.parseLiteral("source(self)")));
 				result.add(ldb);
-
+				//logger.info("+++ "+ldb.toString());
 				}
 			
 			return result.iterator();
@@ -1347,6 +1303,7 @@ public class mWaterBB extends JDBCPersistentBB {
 				if (updSet.trim().compareTo("")!=0) //there is something to update
 					stmt.executeUpdate("update "+mwFunctors.get(functor)+getUpdateSet(newl, currentl, functor)+getRemoveUpdateWhere(currentl));
 					
+				//logger.info("update "+mwFunctors.get(functor)+"|"+getUpdateSet(newl, currentl, functor)+"|"+getRemoveUpdateWhere(currentl));
 				return true;                    
 			} catch (SQLException e) {
 				logger.log(Level.SEVERE, "SQL Error", e);
@@ -1374,6 +1331,7 @@ public class mWaterBB extends JDBCPersistentBB {
 				try {
 					stmt = conn.createStatement();
 					stmt.executeUpdate("delete from "+mwFunctors.get(functor)+getRemoveUpdateWhere(l));
+					//logger.info("delete from "+mwFunctors.get(functor)+getRemoveUpdateWhere(l));
 					return true;                    
 				} catch (SQLException e) {
 					logger.log(Level.SEVERE, "SQL Error", e);
@@ -1445,7 +1403,7 @@ public class mWaterBB extends JDBCPersistentBB {
 					allTermMatch=false;
 				i++;
 			}
-
+			//System.out.println(q.toString());
 			if (allTermMatch) 
 				{
 				return q.toString();
@@ -1468,7 +1426,7 @@ public class mWaterBB extends JDBCPersistentBB {
 				Term t = l.getTerm(i);  //term in the way 'fieldName(FieldValue)'
 				if (t.isLiteral()) {
 					fieldNamefunctor = ((LiteralImpl)t).getFunctor();
-
+					//fieldValue = ((LiteralImpl)t).getTerm(0).toString();
 					
 					fieldValue = searchFieldValueInTermList(literalFunctor,i,l.getTerms());
 					if ((fieldValue!=null)&&(fieldValue.compareTo("")!=0))
@@ -1481,7 +1439,7 @@ public class mWaterBB extends JDBCPersistentBB {
 				}
 			}
 
-
+			//System.out.println(q.toString());
 			if (and.length() > 0) 
 				return q.toString();
 			else

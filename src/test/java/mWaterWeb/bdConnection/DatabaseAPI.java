@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Logger;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -37,7 +38,7 @@ public class DatabaseAPI
 	private static final String OPEN_RESULTS = "Results";
 	private static final String OPEN_ITEM = "Item";
 	private static final String EMPTY_RESULTS = "<Results/>";
-	
+	private static Logger logger     = Logger.getLogger(DatabaseAPI.class.getName());
 	
 	// SQL connection to the database. Not as a singleton because we may have different connections 
 	private Connection connection;
@@ -61,7 +62,7 @@ public class DatabaseAPI
 		}
 		catch (Exception e) 
 		{
-			throw new DataManagementException();
+			throw new DataManagementException(e.getMessage());
 		}		
 	}
 
@@ -80,7 +81,7 @@ public class DatabaseAPI
 			}
 			catch (SQLException e) 
 			{
-				throw new DataManagementException();
+				throw new DataManagementException(e.getMessage());
 			}
 		}
 	}
@@ -157,11 +158,12 @@ public class DatabaseAPI
 	 * @throws SQLException 
 	 */
 	private ResultSet QueryDB(String query) throws SQLException
-	{
+	{	
 		if (connection != null)
 		{
 			try 
 			{
+				
 				return this.connection.createStatement().executeQuery(query);
 			} 
 			catch (SQLException e) 
@@ -206,10 +208,11 @@ public class DatabaseAPI
 	 * @throws SQLException
 	 */
 	private ResultSet UpdateDB(Statement st, String sentence) throws SQLException 
-	{		
+	{	
 		ResultSet rs = null;
 		try 
 		{
+			
 			st.execute(sentence, Statement.RETURN_GENERATED_KEYS);
 			rs = st.getGeneratedKeys(); 
 		} 
@@ -243,7 +246,7 @@ public class DatabaseAPI
 		} 
 		catch (SQLException e) 
 		{
-			throw new DataManagementException();
+			throw new DataManagementException(e.getMessage());
 		}
 	}
 	
@@ -256,7 +259,7 @@ public class DatabaseAPI
 		} 
 		catch (SQLException e) 
 		{
-			throw new DataManagementException();
+			throw new DataManagementException(e.getMessage());
 		}
 	}
 	
@@ -280,7 +283,7 @@ public class DatabaseAPI
 		} 
 		catch (SQLException e) 
 		{
-			throw new DataManagementException();
+			throw new DataManagementException(e.getMessage());
 		}
 	}
 	
@@ -291,15 +294,15 @@ public class DatabaseAPI
 	 * 
 	 * @throws DataManagementException 
 	 */
-	public String getWaterUsers() throws DataManagementException 
+	public String getWaterUsers(String id, String name) throws DataManagementException 
 	{
 		try 
 		{
-			return convertToXML(QueryDB(SQL.GET_WATERUSERS()));
+			return convertToXML(QueryDB(SQL.GET_WATERUSERS(id, name)));
 		} 
 		catch (SQLException e) 
 		{
-			throw new DataManagementException();
+			throw new DataManagementException(e.getMessage());
 		}
 	}
 	
@@ -316,15 +319,15 @@ public class DatabaseAPI
 	 * @throws DataManagementException 
 	 */
 	//Bexy
-	public String getRecruitedParticipants(String tradingTableId, String configuration, String market, String userId) throws DataManagementException 
+	public String getRecruitedParticipants(String tradingTableId, String configuration, String market, String userId, String accepted) throws DataManagementException 
 	{
 		try 
 		{
-			return convertToXML(QueryDB(SQL.GET_RECRUITED_PARTICIPANT(tradingTableId, configuration, market, userId)));
+			return convertToXML(QueryDB(SQL.GET_RECRUITED_PARTICIPANT(tradingTableId, configuration, market, userId, accepted)));
 		} 
 		catch (SQLException e) 
 		{
-			throw new DataManagementException();
+			throw new DataManagementException(e.getMessage());
 		}
 	}
 	
@@ -359,7 +362,7 @@ public class DatabaseAPI
 		} 
 		catch (SQLException e) 
 		{
-			throw new DataManagementException();
+			throw new DataManagementException(e.getMessage());
 		}		
 	}
 	
@@ -385,7 +388,7 @@ public class DatabaseAPI
 		} 
 		catch (SQLException e) 
 		{
-			throw new DataManagementException();
+			throw new DataManagementException(e.getMessage());
 		}
 	}
 	
@@ -399,7 +402,7 @@ public class DatabaseAPI
 		} 
 		catch (SQLException e) 
 		{
-			throw new DataManagementException();
+			throw new DataManagementException(e.getMessage());
 		}
 
 	}
@@ -413,7 +416,7 @@ public class DatabaseAPI
 		} 
 		catch (SQLException e) 
 		{
-			throw new DataManagementException();
+			throw new DataManagementException(e.getMessage());
 		}
 	}
 	
@@ -440,7 +443,7 @@ public class DatabaseAPI
 		} 
 		catch (SQLException e) 
 		{
-			throw new DataManagementException();
+			throw new DataManagementException(e.getMessage());
 		}
 	}
 	
@@ -488,7 +491,7 @@ public class DatabaseAPI
 		} 
 		catch (SQLException e) 
 		{
-			throw new DataManagementException();
+			throw new DataManagementException(e.getMessage());
 		}		
 	}
 	
@@ -515,7 +518,7 @@ public class DatabaseAPI
 		} 
 		catch (SQLException e) 
 		{
-			throw new DataManagementException();
+			throw new DataManagementException(e.getMessage());
 		}
 	}
 	
@@ -530,7 +533,7 @@ public class DatabaseAPI
 		} 
 		catch (SQLException e) 
 		{
-			throw new DataManagementException();
+			throw new DataManagementException(e.getMessage());
 		}
 	}
 
@@ -554,7 +557,7 @@ public class DatabaseAPI
 		} 
 		catch (SQLException e) 
 		{
-			throw new DataManagementException();
+			throw new DataManagementException(e.getMessage());
 		}		
 	}
 	
@@ -581,7 +584,7 @@ public class DatabaseAPI
 		} 
 		catch (SQLException e) 
 		{
-			throw new DataManagementException();
+			throw new DataManagementException(e.getMessage());
 		}
 	}
 	
@@ -603,7 +606,7 @@ public class DatabaseAPI
 		} 
 		catch (SQLException e) 
 		{
-			throw new DataManagementException();
+			throw new DataManagementException(e.getMessage());
 		}
 	}
 	
@@ -618,7 +621,7 @@ public class DatabaseAPI
 		} 
 		catch (SQLException e) 
 		{
-			throw new DataManagementException();
+			throw new DataManagementException(e.getMessage());
 		}
 	}
 	
@@ -634,7 +637,7 @@ public class DatabaseAPI
 		} 
 		catch (SQLException e) 
 		{
-			throw new DataManagementException();
+			throw new DataManagementException(e.getMessage());
 		}
 	}
 
@@ -676,7 +679,7 @@ public class DatabaseAPI
 		} 
 		catch (SQLException e) 
 		{
-			throw new DataManagementException();
+			throw new DataManagementException(e.getMessage());
 		}		
 	}
 	
@@ -700,7 +703,7 @@ public class DatabaseAPI
 		} 
 		catch (SQLException e) 
 		{
-			throw new DataManagementException();
+			throw new DataManagementException(e.getMessage());
 		}		
 	}
 	
@@ -727,8 +730,50 @@ public class DatabaseAPI
 		}
 		catch (SQLException e)
 		{
-			throw new DataManagementException();
+			throw new DataManagementException(e.getMessage());
 		}
+	}
+	
+	
+	//Bexy
+	/**
+	 * Gets the names of the users accredited in a market
+	 * @param wmarket Water market
+	 * @return A resulset with the names of the accredited users
+	 * @throws DataManagementException
+	 */
+	public String getAccreditedUsersNames(String wmarket) throws DataManagementException {
+		try
+		{
+			return convertToXML(QueryDB(SQL.GET_ACCREDITEDUSERSNMES(wmarket)));
+		}
+		catch (SQLException e)
+		{
+			throw new DataManagementException(e.getMessage());
+		}
+	}
+	
+	/**
+	 * Gets the names of the participants of a trading table
+	 * @param tableid Table id
+	 * @param confid Configuration id
+	 * @param wmarket Water market
+	 * @param acc This parameter has two possible values: "1" if the user has been accepted in the table
+	 * or "2" if not.
+	 * @return Names of the participants of a trading table
+	 * @throws DataManagementException 
+	 */
+	public String getNamesOfTableMembers(String tableid, String confid,
+			String wmarket, String acc) throws DataManagementException {
+		try
+		{
+			return convertToXML(QueryDB(SQL.GET_NAMESOFTABLEMEMBERS(tableid, confid, wmarket, acc)));
+		}
+		catch (SQLException e)
+		{
+			throw new DataManagementException(e.getMessage());
+		}
+
 	}
 	
 	/**
@@ -772,11 +817,11 @@ public class DatabaseAPI
 			try 
 			{
 				RollbackTransaction(st);
-				throw new DataManagementException();
+				throw new DataManagementException(e.getMessage());
 			} 
 			catch (SQLException e1) 
 			{
-				throw new DataManagementException();
+				throw new DataManagementException(e.getMessage());
 			}
 		}
 	}
@@ -829,11 +874,11 @@ public class DatabaseAPI
 			try 
 			{
 				RollbackTransaction(st);
-				throw new DataManagementException();
+				throw new DataManagementException(e.getMessage());
 			} 
 			catch (SQLException e1) 
 			{
-				throw new DataManagementException();
+				throw new DataManagementException(e.getMessage());
 			}
 		}		
 	}
@@ -862,7 +907,7 @@ public class DatabaseAPI
 		} 
 		catch (SQLException e) 
 		{
-			throw new DataManagementException();
+			throw new DataManagementException(e.getMessage());
 		}
 	}
 	
@@ -945,6 +990,23 @@ public class DatabaseAPI
 			return null;	
 		}	
 	}
+
+	//For performance tests only
+	public String getPerformanceData(String agentid, String tableid,
+			String agname, String isOwner) throws DataManagementException {
+		try 
+		{
+			return convertToXML(QueryDB(SQL.GET_PERFORMANCE_DATA(agentid,  tableid,	 agname, isOwner)));
+		} 
+		catch (SQLException e) 
+		{
+			throw new DataManagementException(e.getMessage());
+		}
+	}
+
+
+
+
 
 
 

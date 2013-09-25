@@ -6,9 +6,9 @@ package mWaterWeb.bdConnection;
  */
 public class DataManagementException extends Exception 
 {
-	public DataManagementException() 
+	public DataManagementException(String father_msg) 
 	{
-		super("Exception when managing data.");
+		super("Exception when managing data. "+father_msg);
 	}
 
 }

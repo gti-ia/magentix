@@ -9,9 +9,17 @@ package mWaterWeb.bdConnection;
  */
 public class SQL 
 {
-	public static final String GET_WATERUSERS()
+	public static final String GET_WATERUSERS(String user_id , String name)
 	{
-		return "SELECT * FROM mWaterDB.user";
+		String result = "SELECT * FROM mWaterDB.user";
+		String and="";
+		if ((user_id.compareTo("")!=0)||(name.compareTo("")!=0)){
+			result = result + " WHERE";
+			if (user_id.compareTo("")!=0){	result = result + and + " id = " + user_id;  and = " AND ";}
+			if (name.compareTo("")!=0)	result = result + and + " name = " + name ;
+		}
+		return result;
+		
 	}
 	
 	public static final String GET_WATERUSER_BY_ID(String id)
@@ -131,7 +139,7 @@ public class SQL
 	}
 	
 	//Bexy
-	public static final String GET_RECRUITED_PARTICIPANT(String tradingTableId, String configuration, String market, String userId)
+	public static final String GET_RECRUITED_PARTICIPANT(String tradingTableId, String configuration, String market, String userId, String accepted)
 	{
 		String result =  "SELECT * from mWaterDB.recruitedparticipant ";
 		String and = "";
@@ -140,6 +148,7 @@ public class SQL
 			if (userId.compareTo("")!=0){ result = result + and + " user = " + userId;  and = " AND ";}
 			if (market.compareTo("")!=0){result = result + and + " mwater_market = " + market ;  and = " AND ";}
 			if (configuration.compareTo("")!=0){result = result + and +  " configuration_id = " + configuration;  and = " AND ";}
+			if (accepted.compareTo("")!=0){result = result + and +  " accepted = " + accepted;  and = " AND ";}
 			if (tradingTableId.compareTo("")!=0){result = result + and + " trading_table = " + tradingTableId; }
 		}
 		return result;	
@@ -149,7 +158,7 @@ public class SQL
 	public static String GET_USER_CLASS(String usrid) {
 		String result = "select * from user_class";
 		if (usrid.compareTo("")!=0)
-			result = result+ " where id = 2";
+			result = result+ " where id = "+usrid;
 		return result;
 	}
 	
@@ -288,11 +297,34 @@ public class SQL
 				invitation_condition + ", " + invitation_date +", "+accepted+", "+acceptance_date+ ", "+number_of_participations+")";
 	}
 
+	//bEXY
+	public static String GET_ACCREDITEDUSERSNMES(String wmarket) {
 
+		return "SELECT u.name FROM accrediteduser au INNER JOIN user u ON au.user=u.id WHERE au.mwater_market = "+wmarket;
+	}
 
+	public static String GET_NAMESOFTABLEMEMBERS(String tableid, String confid,
+			String wmarket, String acc) {
+		
+		return "SELECT u.name FROM mWaterDB.recruitedparticipant rp INNER JOIN user u ON rp.user=u.id "+
+				"WHERE rp.trading_table = "+tableid+" AND configuration_id = "+confid+
+				" AND mwater_market = "+wmarket+" AND rp.accepted = "+acc;
+	}
 
-
-
+	//For perfomrance tests only
+	public static String GET_PERFORMANCE_DATA(String agentid, String tableid,
+			String agname, String isOwner) {
+		String result =  "SELECT * from mWaterDB.performance ";
+		String and = "";
+		if ((agentid.compareTo("")!=0)||(tableid.compareTo("")!=0)||(agname.compareTo("")!=0)||(isOwner.compareTo("")!=0)){
+			result = result + " WHERE";
+			if (agentid.compareTo("")!=0){ result = result + and + " agent_id = " + agentid;  and = " AND ";}
+			if (tableid.compareTo("")!=0){result = result + and + " table_id = " + tableid ;  and = " AND ";}
+			if (agname.compareTo("")!=0){result = result + and +  " agent_name = " + agname;  and = " AND ";}
+			if (isOwner.compareTo("")!=0){result = result + and + " is_owner = " + isOwner; }
+		}
+		return result;	
+	}
 
 
 

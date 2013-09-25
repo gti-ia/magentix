@@ -31,8 +31,8 @@
 	?accredited(User,WMarket);
 	?userInfo_Arguments_List(User,UsrFieldsList,UsrID);
 	?water_market_Arguments_List(WMarket,WMFieldsList,WMarketID);
-	!cleanBeliefsBase;
-    ?decideCreateTable(ExecutionDate);
+	!cleanBeliefsBase; 
+    ?decideCreateTable(ExecutionDate, UsrID);
 	if (max_iteration_number(MaxIt)  )
     	{RMaxIt = MaxIt;}
    	else 	{RMaxIt = 8}
@@ -83,25 +83,27 @@ staffname(Sn)&myname(Me)
 -!evaluateStartSubProt(TableID,WMarket,ConfID,ProtType,UserID,WR,MissingParticipants,ExecutionDate):staffname(Sn)
 <- -+firstRound(false).
 
-+invitation(Table, RequesterUser) //an invitation is received
++invitation(Table, RequesterUser, RemainingPart) //an invitation is received
 <-	
-	!decideInvitation(Table, RequesterUser).
+	!!decideInvitation(Table, RequesterUser, RemainingPart).
 
-+!decideInvitation(Table, RequesterUser)
-<- !decideIfAccept(Table, RequesterUser);
-   !joinNTT(Table,"").
++!decideInvitation(Table, RequesterUser, RemainingPart):RemainingPart>0
+<- //!decideIfAccept(Table, RequesterUser);
 
--!decideInvitation(Table, RequesterUser).//:staffname(Sn)
+   !joinNTT(Table,""); .
+
+-!decideInvitation(Table, RequesterUser, RemainingPart).//:staffname(Sn)
 //<-   ?currentExecutionDate(ExecutionDate); 
 //    .send(Sn,tell,invitationDeclined(Table,ExecutionDate)).
 
 
 //DECISION
-+?acceptPrice(WRight,TableID,WMarket,Protocol,Bid,Participants,Reply)
-<-
++?acceptPrice(WRight,TableID,WMarket,Protocol,Bid,Participants,Reply):myname(UserName)
+<- 
    if (buying_probability(BProb)){RAccRate = BProb}
    else {RAccRate = 0.5};
-   //.print("Deciding if to accept price. My buying probability: ",RAccRate); 
+  // if (UserName="aut_agent115"){.print("*/*/*/*/*/**/ Deciding RAccRate ",RAccRate);};
+  // .print("Deciding if to accept price. My buying probability: ",RAccRate); 
    .random(R);
    NewR = R * 100;
    PercAccRate = RAccRate * 100;
@@ -111,10 +113,10 @@ staffname(Sn)&myname(Me)
 	
 
 //DECISION	
-+?decideCreateTable(ExecutionDate):staffname(Sn)&myname(Me)
++?decideCreateTable(ExecutionDate, UsrId):staffname(Sn)&myname(Me)
 <-	
-    .send(Sn,askOne,canCreateTable(Me),Result);
-    if (Result = canCreateTable(Me)){
+    .send(Sn,askOne,canCreateTable(UsrId),Result); 
+    if (Result = canCreateTable(UsrId)[source(Sn)]){
 		.print("Action:TRADING TABLE CREATION | Input:[Sim-date:",ExecutionDate,"] | Output:Accepted")
 	}else{
 		.print("Action:TRADING TABLE CREATION | Input:[Sim-date:",ExecutionDate,"] | Output:Refused");
@@ -125,22 +127,18 @@ staffname(Sn)&myname(Me)
 +!decideIfAccept(Table, RequesterUser):staffname(Sn)&myname(Me)
 <-  if (invitation_acceptance_probability(IAProb)){RIAProb=IAProb}
     else {RIAProb = 1};
-   
-   	.random(R);
-	NewR = R * 100;
-	NewIAProb = RIAProb * 100;
-	?table_Arguments_List(Table,FieldsList,TableID);
-	//.print(" Deciding if to accept invitation. My invitation acceptance probability: ",NewIAProb); 
-	if (NewR < NewIAProb ) //I join table
-	{	.print("Action:INVITATION | Input:[Table:",TableID,"] | Output:Accepted");
-	    /* ?currentExecutionDate(ExecutionDate);
-        .send(Sn,tell,invitationAccepted(Me,Table,ExecutionDate)) ;*/
-	}
-	else{.print("Action:INVITATION | Input:[Table:",TableID,"] | Output:Refused");
-	     /* 
-	     ?currentExecutionDate(ExecutionDate); 
-    	 .send(Sn,tell,invitationDeclined(Me,Table,ExecutionDate)); */
-	     .fail; }.
+   //.print("RIAProb ",RIAProb);
+   .random(R);
+   NewR = R * 100;
+   NewIAProb = RIAProb * 100;
+   ?table_Arguments_List(Table,FieldsList,TableID);
+   if (NewR < NewIAProb ) //I join table
+   {	
+	.print("Action:INVITATION | Input:[Table:",TableID,"] | Output:Accepted");
+   }
+   else{
+	.print("Action:INVITATION | Input:[Table:",TableID,"] | Output:Refused");
+	.fail; }.
 
 +!sendfinishedround:staffname(Sn)
 <- .send(Sn,achieve,finishedRound(Me)).
@@ -150,9 +148,9 @@ staffname(Sn)&myname(Me)
 //    !getSubprotocolTimeOut(initiator,TO);
 //.print("waitForParticipantsToJoinTable +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
 	.send(Sn,askOne,invitationAcceptanceDeadline(TO),ReplyTO);
-	if (ReplyTO=invitationAcceptanceDeadline(TO)){ NewTO=TO;}
+	if (ReplyTO=invitationAcceptanceDeadline(TO)[source(Sn)]){ NewTO=TO;}
 	else {    NewTO = 50000 ;};
-
+     .print("-------- Start waiting for participants: ",NewTO);
 	.wait(NewTO);
 	
 	?table_structure(Table);
@@ -185,5 +183,4 @@ staffname(Sn)&myname(Me)
 
 
 
-  {include("wu.asl") }
- // {include("../webInterface/webCommParticipant.asl") }
+  {include("wu_performance2.asl") }

@@ -39,16 +39,38 @@ currentConfigurationID(ID):-
 
 /* Fixes beliefs */
 
-accreditationTimeOut(50000).
+accreditationTimeOut(180000).//50000
 openNTTQueryTimeOut(50000).
 newNTTTimeOut(75000).
-joinNTTTimeOut(75000).
+joinNTTTimeOut(1800000). //era 75000
 //subprotocoljoinTimeOut(initiator,4000). //this is added by the main class
 //subprotocolTimeOut(initiator,15000).  //this is added by the main class
 //subprotocolTimeOut(participant,50000).  //this is added by the main class
-invitationTimeOut(1800000).//45000
-proposalsDeadLine(60000).//15000
-invitationAcceptanceDeadline(10000).//20000  //This help to allow join more than the minimum required for each table
+invitationTimeOut(1900000).//45000
+proposalsDeadLine(1800000).//15000
+invitationAcceptanceDeadline(45000).//20000  //This helps to allow join more than the minimum required for each table
+
+/* Performance */
+/*perform_TablesNumber(1,1). //round and value
+perform_invToAccept(1,49).
+perform_TablesNumber(2,1).
+perform_invToAccept(2,99).
+perform_TablesNumber(3,1).
+perform_invToAccept(3,149).
+perform_TablesNumber(4,1).
+perform_invToAccept(4,199).
+perform_TablesNumber(5,1).
+perform_invToAccept(5,249).
+perform_TablesNumber(6,1).
+perform_invToAccept(6,299).
+perform_TablesNumber(7,1).
+perform_invToAccept(7,349).
+perform_TablesNumber(8,1).
+perform_invToAccept(8,399).
+perform_TablesNumber(9,1).
+perform_invToAccept(9,449).
+perform_TablesNumber(10,1).
+perform_invToAccept(10,499).*/
 
 
 
@@ -83,7 +105,7 @@ configuration_structure(Conf)&configuration_Arguments_List(Conf,FieldsList,ConfI
    		?Conf;
    		.print("EXECUTTING CONFIGURATION: ",ConfID," IN WATER MARKET ",WMarketID);
   		 //ontology
-   		+currentConfiguration(Conf)}
+   		+currentConfiguration(Conf);}
    	else{.print("NUMBER OF PARTICIPANTS REQUIRED!");}.
 
 
@@ -162,6 +184,7 @@ configuration_structure(Conf)&configuration_Arguments_List(Conf,FieldsList,ConfI
    !membersNamesofNTTable(TableID,WMarketID,MembersList);
    ?sellersoftable(TableID,WMarketID,Sellers);
    .difference(MembersList,Sellers,BuyersNames).
+   //.print("............. Buyers of table ",BuyersNames).
    
 
 +!membersNamesofNTTable(MyTableID,WMarketID,ResultList) //Names of Accepted agents in a table
@@ -484,8 +507,8 @@ ON wr.general_water_right = gwrinfo.gwrid;
 
 //To adjust the amount of trading tables to create to the probability in the configuration
 @pcancreate[atomic]
-+?canCreateTable(Sender)
-<- ?currentConfiguration(Conf);
++?canCreateTable(UsrId)
+<-/* ?currentConfiguration(Conf);
    ?configuration_Arguments_List(Conf,ConfFieldsList,ConfID);
    .member(num_seller_probability(NSP),ConfFieldsList);
    .random(R);
@@ -494,7 +517,17 @@ ON wr.general_water_right = gwrinfo.gwrid;
 	PercAccRate = NSP * 100;
 	if (NewR > PercAccRate ){
 		.fail;
-	}.
+	}.*/
+   //  ?configuration_date(Y,M,D);
+   //  ?perform_TablesNumber(M,Tn);
+   //  ?perform_TablesCreated(Tc);
+   //.print("me llega ",UsrId);
+XX=performance(agent_id(UsrId),table_id(TableID),agent_name(AgentName),is_owner(true));
+?XX.
+   //  if(Tc>=Tn){ .fail; }
+   //  else { NewTc = Tc + 1; -perform_TablesCreated(Tc); +perform_TablesCreated(NewTc);}.
+
+     
 
 
  //FOR MANAGING ROUNDS 
@@ -505,6 +538,7 @@ ON wr.general_water_right = gwrinfo.gwrid;
    NewValue = P - 1;
    -pending_round_users(P);
    +pending_round_users(NewValue);
+   .print("Updating pending users to ",NewValue);
    if (NewValue=0)
 	{//?configuration_date(Y,M,D);
 	.print(">>>>> Waiting for ",NewValue," remaining participants, <<<<<<");
@@ -672,6 +706,7 @@ request_rule(Content,Data,ParamList)&
      	FinalIAProb = 1;
    	}
    //sending information to user
+   //.print("*/*/*/*/*/**/ sending FinalBProb,FinalIAProb ",FinalBProb,",",FinalIAProb, " to ",UserName);
    .send(UserName,tell,selling_probability(FinalSProb));
    .send(UserName,tell,buying_probability(FinalBProb));
    .send(UserName,tell,invitation_acceptance_probability(FinalIAProb));
@@ -1143,69 +1178,58 @@ request_rule(Content,Request,ParamList)&
 .member(table(Table),ParamList)&
 .member(receivers(Receivers),ParamList)
 <- 
-   ?userInfo_Arguments_List(RequesterUser,RUFieldsList,RUID);
-   .member(name(RUName),RUFieldsList);
+ /*  ?userInfo_Arguments_List(RequesterUser,RUFieldsList,RUID);
+   .member(name(RUName),RUFieldsList);*/
 
    ?table_Arguments_List(Table,TableFieldsList,TableID);
    .member(wmarket(WMarket),TableFieldsList);
    
    if (Receivers==[])
    {
-
-	//Building recruited participant query
-	/*?recruited_participant_structure(RPart);
-	?recruited_participant_Arguments_List(RPart,RPFieldsList,UsrID);
-	.member(wmarket(WMarket),RPFieldsList);
-	.member(trading_table_id(TableID),RPFieldsList);
-	?currentConfigurationID(ConfID) ;
-    .member(configuration_id(ConfID),RPFieldsList);*/
-    
-    //Taking accredited in this market only
+/*	//Taking accredited in this market only
 	?accredited_user_structure(AccUser);
 	?accredited_user_Arguments_List(AccUser,AccUserList,UsrID,WMarket);
 	//Taking the name
     ?user_structure(CurrUser);
 	?userInfo_Arguments_List(CurrUser,CurrUsrList,UsrID); 
-	.member(name(Name),CurrUsrList);
+	.member(name(Name),CurrUsrList);*/
 	
 	?Table;
 	.print("INVITING PARTICIPANTS OF TABLE ",TableID," RUName ",RUName);
 	
-	if (accredited_users(ACCUSR) ){
+ 	/*if (accredited_users(ACCUSR) ){
 		.delete([RUID,RUName],ACCUSR,AccUSrsList);  }
-    else    {
+    	else    {
 		.findall([UsrID,Name],AccUser&CurrUser,ACCUSR); 
 		+accredited_users(ACCUSR);
 		.delete([RUID,RUName],ACCUSR,AccUSrsList); }
+    .length(AccUSrsList,PAPA);*/
 
-	?configuration_date(Y,M,D);
-	!inviteParticipantsList(AccUSrsList,Table,WMarket,[D,M,Y],RequesterUser);
-//.print("INTENCION DE INVITAR TERMINADA ++++++++++++++++++++++++++++++++++++++++++++++");
-	/*for ( .member([TmpUID,TmpUName],AccUSrsList) ) 
-	 {  	.print("Enviando a ",TmpUName, "invitacion a mesa ",TableID,"---------------");
-       		if (TmpUName \== RUName)
-        	{
-		.send(TmpUName,tell,invitation(Table, RequesterUser));//Name is maped with the user name in CurrUser
-       		//.print("--- Sending invitation from ",RUName," to ",Name);
-         	//.date(Y,M,D);
-         	?configuration_date(Y,M,D);
-		//.ia_add_to_date(Y,M,D,0,1,0,ResultY,ResultM,ResultD);
-         	.member(invitation_date([D,M,Y]),RPFieldsList);
-         	.member(accepted(false),RPFieldsList);
-         	.member(number_of_participations(0),RPFieldsList);
-		.member(user_id(TmpUID),RPFieldsList);
-         	+RPart;
-         	}
-	}*/
+    ?configuration_date(Y,M,D);
+	
+	XXX=performance(agent_id(UsrId),table_id(TableID),agent_name(AgentName),is_owner(false));
+    .findall([UsrId,AgentName],XXX,AccUSrsList);
+	//.print("Lista de reclutados: ",AccUSrsList);
+	//!inviteParticipantsList(AccUSrsList,Table,WMarket,[D,M,Y],RequesterUser);
+    !invitePerformance(AccUSrsList,Table,WMarket,[D,M,Y],RequesterUser);
+
    }else{ // list of receivers is not empty
     .print("THERE ARE SPECIFIC RECEIVERS: ",Receivers);
     for( .member(Name,Receivers) ){
     	.send(Name,tell,invitation(Table, RequesterUser));
+    	?user_structure(CurrUser);
+	    ?userInfo_Arguments_List(CurrUser,CurrUsrList,UsrID); 
+	    .member(name(Name),CurrUsrList);
     	?CurrUser; //to recover the user ID
     	.print("Sending invitation to ",Name);
-        //.date(Y,M,D);
         ?configuration_date(Y,M,D);
-	//.ia_add_to_date(Y,M,D,0,1,0,ResultY,ResultM,ResultD);
+        //------------
+		?recruited_participant_structure(RPart);
+		?recruited_participant_Arguments_List(RPart,RPFieldsList,UsrID);
+		.member(wmarket(WMarket),RPFieldsList);
+		.member(trading_table_id(TableID),RPFieldsList);
+		?currentConfigurationID(ConfID) ;
+        .member(configuration_id(ConfID),RPFieldsList);
         .member(invitation_date([D,M,Y]),RPFieldsList);
         .member(accepted(false),RPFieldsList);
         .member(number_of_participations(0),RPFieldsList);
@@ -1214,6 +1238,36 @@ request_rule(Content,Request,ParamList)&
    }
 
    +taskResult(Content,ConvID,Sender,Table).
+
++!invitePerformance([],Table,WMarket,[D,M,Y],RequesterUser).
+
++!invitePerformance([AccUSrsListHead|AccUSrsListTail],Table,WMarket,[D,M,Y],RequesterUser)
+<- 
+		//?perform_invToSend(InvToSend);
+		//NewInvToSend = InvToSend - 1 ;
+		//-perform_invToSend(_);
+		//+perform_invToSend(NewInvToSend);
+		.length([AccUSrsListHead|AccUSrsListTail], InvToSend);
+        .print("------------ Quedan ",InvToSend," por enviar");
+		?table_Arguments_List(Table,TableFieldsList,TableID);
+		?recruited_participant_structure(RPart);
+		?recruited_participant_Arguments_List(RPart,RPFieldsList,UsrID);
+		.member(wmarket(WMarket),RPFieldsList);
+		.member(trading_table_id(TableID),RPFieldsList);
+		?currentConfigurationID(ConfID) ;
+        .member(configuration_id(ConfID),RPFieldsList);
+        AccUSrsListHead=[TmpUID,TmpUName];
+		.send(TmpUName,tell,invitation(Table, RequesterUser, InvToSend));//Name is maped with the user name in CurrUser
+       	?configuration_date(Y,M,D);
+       	.member(invitation_date([D,M,Y]),RPFieldsList);
+       	.member(accepted(false),RPFieldsList);
+       	.member(number_of_participations(0),RPFieldsList);
+		.member(user_id(TmpUID),RPFieldsList);
+        +RPart;
+
+		!invitePerformance(AccUSrsListTail,Table,WMarket,[D,M,Y],RequesterUser).
+   
+
 
 +!inviteParticipantsList([],Table,WMarket,[D,M,Y],RequesterUser).
 
@@ -1227,7 +1281,7 @@ request_rule(Content,Request,ParamList)&
 	?currentConfigurationID(ConfID) ;
         .member(configuration_id(ConfID),RPFieldsList);
         AccUSrsListHead=[TmpUID,TmpUName];
-	.send(TmpUName,tell,invitation(Table, RequesterUser));//Name is maped with the user name in CurrUser.print("a");
+	.send(TmpUName,tell,invitation(Table, RequesterUser));//Name is maped with the user name in CurrUser
        	?configuration_date(Y,M,D);
        	.member(invitation_date([D,M,Y]),RPFieldsList);
        	.member(accepted(false),RPFieldsList);
@@ -1493,16 +1547,17 @@ userInfo_Arguments_List(UserInfo,UserFieldsList,UserID)
      Result = NewRPart;
      +taskResult(Content,ConvID,Sender,Result);
      //.print("sssss MissingParticipants ",MissingParticipants, " OpUsrName ",OpUsrName);
-if (MissingParticipants>=0) //when arriving to the minimum allowed participants. Any way more will be accepted until the negotiation starts
-{
-     ?tableownerwaterrights(WMarket,TTID,WRList); //if this doesn't fail
-     if (WRList=[WR|WRTail]) //if there is a first water right
+    //.print("------------ Se ha unido ",UserID," Quedan:  ",MissingParticipants);	
+     if (MissingParticipants>=0) //when arriving to the minimum allowed participants. Any way more will be accepted until the negotiation starts
+     {
+       ?tableownerwaterrights(WMarket,TTID,WRList); //if this doesn't fail
+       if (WRList=[WR|WRTail]) //if there is a first water right
         { XXX=newmemberjoined(TTID,WMarket,ConfID,ProtType,UserID,WR,MissingParticipants,[D,M,Y]); 
-     		.send(OpUsrName,tell,XXX);
+     	
+	  .send(OpUsrName,tell,XXX);
      	}else{   .send(OpUsrName,tell,newmemberjoined(TTID,WMarket,ConfID,ProtType,UserID,[],MissingParticipants,[D,M,Y])); }
    
-}
-.
+      }.
     
   //   .print("********* Message sent to ",OpUsrName," about joining of ",UserID) .
 
@@ -1536,7 +1591,7 @@ taskStatus(Content,_,Sender,ConvID)
 	?transfer_agreement_Arguments_List(TAgr,FieldsList,_TAID);
 
     //to insert it and recover the generated id it is necessary to create new variable inside the current plan
-        ?transfer_agreement_structure(TAgrNew);
+    ?transfer_agreement_structure(TAgrNew);
 	?transfer_agreement_Arguments_List(TAgrNew,FieldsListNew,TAIDNew);
 	
 	.member(agreed_price(AgreedPrice),FieldsList);
@@ -1740,14 +1795,23 @@ taskStatus(Content,_,Sender,ConvID)
 +!start_Round(FirstRound)
 <- 
   // if ((configuration_finished_tables(TFinished))&(configuration_tables(ConfTNumber)))
-	//{  		
-			?configuration_date(CY,CM,CD);
+	//{  			
+
+				?configuration_date(CY,CM,CD);
 
 				if (FirstRound=0) //Is not first round
 				{
 	   				.ia_add_to_date(CY,CM,CD,0,1,0,ResultY,ResultM,ResultD);
 	   				Y = ResultY; M=ResultM; D=ResultD;
 				}else{ Y = CY; M = CM; D = CD; }
+				/*Performance*/
+				/*if (perform_invToAccept(M,InvToAcc)){	
+					?perform_invToAccept(M,InvToAcc);			
+					+perform_TablesCreated(0);
+					-perform_invToSend(_);
+					+perform_invToSend(InvToAcc);
+				}*/
+				/* ------ */				
 				//?configuration_date(Y,M,D);
 				?configuration_end_date(EndY,EndM,EndD);
    				!compareDates([D,M,Y],[EndD,EndM,EndY],Result);

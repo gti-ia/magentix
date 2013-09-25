@@ -4,7 +4,7 @@
 //(28).
 //currentTradinghall_id(28).
 //currentProtocol_id(4).
-staffname(staff).  //This must be obtained in other way
+staffname(staff_performance2).  //This must be obtained in other way
 myname(Name):-.my_name(Me)&.concat("",Me,Name).
 // ontonology
 table_Arguments_List(Table,FieldsList,TableID):-
@@ -133,7 +133,7 @@ waterright_tt_structure(WMTT):-
 //OJO: REVISAR TODAS LAS CREENCIAS Y ADAPTARLAS AL NUEVO FORMATO!!!!
 /* Conversations rules */
 //accreditationRequest(accreditate(UserID,WMarket,THall),UserID,WMarket,THall).
-request(accreditation,Request,ParamList):- 
+request_rule(accreditation,Request,ParamList):- 
 		Request = accreditate(UserName,WMarket)&
 		(.concat([user_name(UserName)],[wmarket(WMarket)],ParamList)|
 		(.member(user_name(UserName),ParamList)&.member(wmarket(WMarket),ParamList))).
@@ -143,18 +143,18 @@ query(openNTT,Query,ParamList):-
 		(.concat([openNTTList(OpenNTTList)],[wmarket(WMarket)],[th_id(THall)],[opening_date(OpDate)],[sender(User)],ParamList))|
 		(.member(openNTTList(OpenNTTList),ParamList)&.member(wmarket(WMarket),ParamList)&.member(th_id(THall),ParamList)&.member(opening_date(OpDate),ParamList)&.member(sender(User),ParamList)).
 //newNTTrequest( Request,Table, WMarket,Config ):- Request = newNTT(Table,WMarket,Config)&table_Arguments_List(Table,ArgumentsList,TableID).
-request(newNTT, Request, ParamList ):- 
+request_rule(newNTT, Request, ParamList ):- 
 		Request = newNTT(Table,User,WaterRightIDsList)&
 		//table_Arguments_List(Table,ArgumentsList,TableID)&
 		(.concat([table(Table)],[user(User)],[water_right_ids(WaterRightIDsList)],ParamList))|
 		(.member(table(Table),ParamList)&.member(user(User),ParamList)&.member(water_right_ids(WaterRightIDsList),ParamList)). 
 //joinNTTrequest( joinNTT,Table ,TableID):- table_structure(Table)&table_Arguments_List(Table,ArgumentsList,TableID).
-request(joinNTT, Request, ParamList):- 
+request_rule(joinNTT, Request, ParamList):- 
 		Request = joinNTT(Table,User,Rol)&
 		//table_Arguments_List(Table,ArgumentsList,TableID)&
 		(.concat([table(Table)],[user(User)],[rol(Rol)],ParamList))|
 		(.member(table(Table),ParamList)&.member(user(User),ParamList)&.member(rol(Rol),ParamList)).
-request(invitation, Request, ParamList):- 
+request_rule(invitation, Request, ParamList):- 
 		Request = invitation(Table,SenderUser,ReceiversList)&
 		//table_Arguments_List(Table,TableFieldsList,TableID)&
 		//userInfo_Arguments_List(RequesterUser,UserFieldsList,UserID)&
