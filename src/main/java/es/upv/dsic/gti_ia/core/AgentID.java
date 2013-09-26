@@ -117,4 +117,23 @@ public final class AgentID implements Serializable, Cloneable {
 		else
 			return name.substring(0, atPos);
 	}
+	
+	/**
+	 * Compares two AgentID objects.
+	 * 
+	 * @return	True is objects are equals, False if not
+	 */
+	public boolean equals(Object otherAgentID) {
+		if(this == otherAgentID) return true;
+		if(!(otherAgentID instanceof AgentID)) return false;
+		
+		AgentID other = (AgentID) otherAgentID;		
+		if(!this.name.equals(other.name)) return false;
+		if(!this.protocol.equals(other.protocol)) return false;
+		if(!this.host.equals(other.host)) return false;
+		if(!this.port.equals(other.port)) return false;
+		
+		//Nothing has returned false then they are equal
+		return true;
+	}
 }

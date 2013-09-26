@@ -263,6 +263,70 @@ public class TestAgentID extends TestCase {
 		
 		assertEquals(agent.getLocalName(), expectedName);
 	}
+	
+	/**
+	 * Testing AgentID equals()
+	 * 
+	 * Tested when object parameters are not equals
+	 */
+	public void testEqualsClassParameters()
+	{
+		//agent is initialize in SetUp() with empty constructor by default
+
+		String name = "David";
+		String protocol = "FIPA";
+		String host = "16400";
+		String port = "2840";
+
+		agent = new AgentID(name, protocol, host, port);
+		AgentID otherAgent;
+		
+		//Test for name comparison
+		otherAgent = new AgentID("Salem",protocol, host, port);		
+		assertEquals(agent.equals(otherAgent),false);
+		
+		//Test for protocol comparison
+		otherAgent = new AgentID(name,"Request", host, port);				
+		assertEquals(agent.equals(otherAgent),false);
+		
+		//Test for host comparison
+		otherAgent = new AgentID(name,protocol, "46019", port);				
+		assertEquals(agent.equals(otherAgent),false);
+		
+		//Test for port comparison
+		otherAgent = new AgentID(name,protocol, host, "2338");				
+		assertEquals(agent.equals(otherAgent),false);
+		
+		//Test for all parameters equals
+		otherAgent = new AgentID(name,protocol, host, port);	
+		assertEquals(agent.equals(otherAgent),true);
+	}
+	
+	/**
+	 * Testing AgentID equals()
+	 * 
+	 *	Tested when object is not an instance of the same class
+	 *	and when two objects are the same instance
+	 */
+	public void testEqualsExceptions()
+	{
+		//agent is initialize in SetUp() with empty constructor by default
+
+		String name = "David";
+		String protocol = "FIPA";
+		String host = "16400";
+		String port = "2840";
+
+		agent = new AgentID(name, protocol, host, port);
+		AgentID otherAgent = agent;
+		ACLMessage kindOfAgent = new ACLMessage();
+		
+		//Test for object typeOf comparison
+		assertEquals(agent.equals(kindOfAgent),false);
+		
+		//Test for objects same instance comparison				
+		assertEquals(agent.equals(otherAgent),true);		
+	}
 
 	public void tearDown(){
 		agent = null;
