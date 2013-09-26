@@ -11,6 +11,7 @@ import es.upv.dsic.gti_ia.core.AgentID;
  * 		far beyond the constants defined in the class
  * 
  *  @author L Burdalo (lburdalo@dsic.upv.es)
+ *  @author David Fernández (dfernandez@dsic.upv.es) Equals method
  */
 public class TracingEntity implements Serializable{
 	private static final long serialVersionUID = 1L;
@@ -227,5 +228,24 @@ public class TracingEntity implements Serializable{
 				// ARTIFACT and AGGREGATION not supported
 				return null;
 		}
+	}
+	
+	/**
+	 * Compares two TracingEntity objects.
+	 * 
+	 * @return	True is objects are equal, False if not
+	 */
+	public boolean equals(Object otherEntity) {
+		if(this == otherEntity) return true;
+		if(!(otherEntity instanceof TracingEntity)) return false;
+		
+		TracingEntity other = (TracingEntity) otherEntity;		
+		if(!(this.type == other.type)) return false;
+		if(!this.aid.equals(other.aid)) return false;
+		if(!this.publishedTS.equals(other.publishedTS)) return false;
+		if(!this.subscribedToTS.equals(other.subscribedToTS)) return false;
+		
+		//Nothing has returned false, therefore they are equal
+		return true;
 	}
 }

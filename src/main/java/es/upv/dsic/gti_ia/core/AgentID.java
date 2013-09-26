@@ -5,6 +5,8 @@ import java.io.Serializable;
 /**
  * Represents an identifier used to univocally recognize an agent.
  * 
+ * 
+ * @author David Fernández (dfernandez@dsic.upv.es) Equals method
  */
 public final class AgentID implements Serializable, Cloneable {
 	/**
@@ -121,7 +123,7 @@ public final class AgentID implements Serializable, Cloneable {
 	/**
 	 * Compares two AgentID objects.
 	 * 
-	 * @return	True is objects are equals, False if not
+	 * @return	True is objects are equal, False if not
 	 */
 	public boolean equals(Object otherAgentID) {
 		if(this == otherAgentID) return true;
