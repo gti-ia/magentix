@@ -421,7 +421,7 @@ public class DataBaseInterface {
 			st = connection.createStatement();
 			res = st.executeQuery("SELECT * FROM agentPlayList apl INNER JOIN agentList al ON (apl.idagentList=al.idagentList) INNER JOIN "
 					+ "roleList rl ON (rl.idroleList=apl.idroleList) INNER JOIN position p ON (p.idposition=rl.idposition) INNER JOIN "
-					+ "unitlist ul ON (ul.idunitList=rl.idunitList) WHERE ul.unitName='" + unitName + "' and p.positionName !='creator'");
+					+ "unitList ul ON (ul.idunitList=rl.idunitList) WHERE ul.unitName='" + unitName + "' and p.positionName !='creator'");
 			
 			if (res.next())
 				return true;
