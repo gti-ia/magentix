@@ -1,4 +1,4 @@
-package TestTraceProdCons;
+package TestTrace.TestTraceProdCons;
 
 import java.text.ParseException;
 import java.util.ArrayList;

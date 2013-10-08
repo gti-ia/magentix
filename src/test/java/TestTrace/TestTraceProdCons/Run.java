@@ -1,4 +1,4 @@
-package TestTraceProdCons;
+package TestTrace.TestTraceProdCons;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;

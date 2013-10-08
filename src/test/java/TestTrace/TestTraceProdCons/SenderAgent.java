@@ -1,4 +1,4 @@
-package TestTraceProdCons;
+package TestTrace.TestTraceProdCons;
 
 import java.util.concurrent.Semaphore;
 
