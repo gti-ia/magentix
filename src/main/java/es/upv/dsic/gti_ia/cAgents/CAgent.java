@@ -70,6 +70,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.locks.Condition;
@@ -87,7 +88,7 @@ import es.upv.dsic.gti_ia.core.MessageFilter;
  * 														messages with default factory
  * 														when a proper factory should
  * 														process them
- * 
+ * @author Jose Alemany Bordera - jalemany1@dsic.upv.es
  */
 
 public abstract class CAgent extends BaseAgent {
@@ -106,8 +107,9 @@ public abstract class CAgent extends BaseAgent {
 	public ExecutorService exec; //Bexy: Added 'public'
 	// Semaphore availableSends = new Semaphore(1, true);
 	final Condition iAmFinished = mutex.newCondition();
+	final CountDownLatch agentEnd = new CountDownLatch(1);
 	final Condition cProcessorRemoved = mutex.newCondition();
-	boolean inShutdown = false;
+	public boolean inShutdown = false;
 	boolean ready = false;   // Is CAgent ready to attend messages?
     final Condition iAmReady = mutex.newCondition(); // Condition to stop the message processing until agent is ready
 	
@@ -374,12 +376,13 @@ public abstract class CAgent extends BaseAgent {
 	}
 
 	/**
-	 * This method signals the end of the agent in order to unlock
-	 * the main conversation thread
+	 * This method signals the end of the agent in order to unlock the main conversation thread
+	 * and remove the barrier if the user wants expects the agent finalizes
 	 */
 	protected void notifyAgentEnd() {
 		this.lock();
 		iAmFinished.signal();
+		agentEnd.countDown();
 		this.unlock();
 	}
 
@@ -465,16 +468,14 @@ public abstract class CAgent extends BaseAgent {
 	 * @param firstProcessor The CProcessor managing the welcome conversation
 	 * @param finalizeMessage The final message produced by this conversation
 	 */
-	protected abstract void finalize(CProcessor firstProcessor,
-			ACLMessage finalizeMessage);
+	protected abstract void finalize(CProcessor firstProcessor, ACLMessage finalizeMessage);
 
 	/**
 	 * This is the main method of the agent
 	 * @param firstProcessor The CProcessor managing the welcome conversation
 	 * @param welcomeMessage The message sent by the platform to the agent
 	 */
-	protected abstract void execution(CProcessor firstProcessor,
-			ACLMessage welcomeMessage);
+	protected abstract void execution(CProcessor firstProcessor, ACLMessage welcomeMessage);
 
 	/**
 	 * Adds a CProcessor to the agent
@@ -709,5 +710,16 @@ public abstract class CAgent extends BaseAgent {
 	 */
 	public int getMutexHoldCount(){
 		return this.mutex.getHoldCount();
+	}
+	
+	/**
+	 * Wait until the agent actually finalize
+	 */
+	public void await() {
+		try {
+			agentEnd.await();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 }

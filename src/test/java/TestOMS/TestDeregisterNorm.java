@@ -68,9 +68,11 @@ public class TestDeregisterNorm extends TestCase {
 		agentCreador.terminate();
 		agentCreador = null;
 
-
-		oms.terminate();
-		sf.terminate();
+		oms.Shutdown();
+		sf.Shutdown();
+		
+		oms.await();
+		sf.await();
 
 		oms = null;
 		sf = null;

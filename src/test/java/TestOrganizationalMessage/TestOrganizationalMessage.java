@@ -133,8 +133,11 @@ public class TestOrganizationalMessage extends TestCase {
 		dbA.executeSQL("DELETE FROM unitHierarchy WHERE idChildUnit != 1");
 		dbA.executeSQL("DELETE FROM unitList WHERE idunitList != 1");
 		
-		oms.terminate();
-		sf.terminate();
+		oms.Shutdown();
+		sf.Shutdown();
+		
+		oms.await();
+		sf.await();
 		
 		oms = null;
 		sf = null;

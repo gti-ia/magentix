@@ -48,9 +48,11 @@ public class TestInformRole extends TestCase {
 		agent2.terminate();
 		agent2 = null;
 
-
-		oms.terminate();
-		sf.terminate();
+		oms.Shutdown();
+		sf.Shutdown();
+		
+		oms.await();
+		sf.await();
 		
 		oms = null;
 		sf = null;

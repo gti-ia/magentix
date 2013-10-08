@@ -61,9 +61,11 @@ public class TestRemoveProvider extends TestCase {
 		agent.terminate();
 		agent = null;
 
-
-		oms.terminate();
-		sf.terminate();
+		oms.Shutdown();
+		sf.Shutdown();
+		
+		oms.await();
+		sf.await();
 		
 		oms = null;
 		sf = null;

@@ -16,6 +16,8 @@ import es.upv.dsic.gti_ia.core.AgentID;
 /**
  * SF agent is responsible for managing all the request messages from other
  * entities. It follows a FIPA-Request protocol
+ * 
+ * @author Jose Alemany Bordera - jalemany1@dsic.upv.es
  */
 public class SF extends CAgent {
 
@@ -272,10 +274,6 @@ public class SF extends CAgent {
 		// can start the participation of the agent in a new conversation
 		this.addFactoryAsParticipant(talk);
 
-	}
-	
-	public void terminate() {
-		super.terminate();
 	}
 
 } // end SF Agent

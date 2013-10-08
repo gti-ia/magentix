@@ -45,12 +45,14 @@ public class TestRegisterUnitPermissionsDomain extends TestCase {
 		agent = null;
 
 
-		oms.terminate();
-		sf.terminate();
+		oms.Shutdown();
+		sf.Shutdown();
+		
+		oms.await();
+		sf.await();
 		
 		oms = null;
 		sf = null;
-
 
 	}
 	protected void setUp() throws Exception {
@@ -67,10 +69,7 @@ public class TestRegisterUnitPermissionsDomain extends TestCase {
 		oms.start();
 		sf.start();
 
-
 		agent = new Agent(new AgentID("pruebas"));
-
-
 
 		omsProxy = new OMSProxy(agent);
 

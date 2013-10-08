@@ -13,6 +13,10 @@ import java.util.StringTokenizer;
 
 //import normative_jason.SimpleArchitecture;
 
+
+
+
+
 import org.apache.log4j.Logger;
 
 import es.upv.dsic.gti_ia.cAgents.CAgent;
@@ -21,17 +25,18 @@ import es.upv.dsic.gti_ia.cAgents.CProcessor;
 import es.upv.dsic.gti_ia.cAgents.protocols.FIPA_REQUEST_Participant;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
-import es.upv.dsic.gti_ia.norms.JasonNormativeAgent;
+import es.upv.dsic.gti_ia.jason.JasonAgent;
+import es.upv.dsic.gti_ia.norms.NormsMagentixAgArch;
 import es.upv.dsic.gti_ia.organization.exception.ExchangeBindException;
 import es.upv.dsic.gti_ia.organization.exception.ExchangeUnbindException;
 import es.upv.dsic.gti_ia.organization.exception.InvalidPositionException;
 import es.upv.dsic.gti_ia.organization.exception.THOMASMessages;
 import es.upv.dsic.gti_ia.organization.exception.THOMASMessages.MessageID;
-
-import es.upv.dsic.gti_ia.norms.MagentixAgArch;
 /**
  * OMS agent is responsible for managing all the request messages from other
  * entities OMS agent follows a FIPA-Request protocol
+ * 
+ * @author Jose Alemany Bordera - jalemany1@dsic.upv.es
  */
 public class OMS extends CAgent {
 
@@ -58,7 +63,7 @@ public class OMS extends CAgent {
 
 	private THOMASMessages                  l10n;
 	
-	JasonNormativeAgent ag;
+	JasonAgent ag;
 
 //	// URI where the SF service descriptions are located
 //
@@ -128,9 +133,9 @@ public class OMS extends CAgent {
 		
 		//Launch Jason Agent
 		//SimpleArchitecture archEjemplo = new SimpleArchitecture();
-		MagentixAgArch archEjemplo = new MagentixAgArch();
+		NormsMagentixAgArch archEjemplo = new NormsMagentixAgArch();
 		
-		ag = new JasonNormativeAgent(new AgentID("JasonNormativeAgent"), "configuration/NormativeAgent.asl", archEjemplo);
+		ag = new JasonAgent(new AgentID("JasonNormativeAgent"), "configuration/NormativeAgent.asl", archEjemplo);
 		ag.start();
 	}
 	
@@ -645,11 +650,16 @@ public class OMS extends CAgent {
 		// can start the participation of the agent in a new conversation
 		this.addFactoryAsParticipant(talk);
 	}
-
-	public void terminate() {
-		
-		ag.terminate();
-		super.terminate();
-		Shutdown();
+	
+	@Override
+	public void Shutdown() {
+		ag.Shutdown();
+		super.Shutdown();
+	}
+	
+	@Override
+	public void await() {
+		ag.await();
+		super.await();
 	}
 } // end OMS Agent

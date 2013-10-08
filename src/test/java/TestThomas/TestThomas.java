@@ -222,8 +222,11 @@ public class TestThomas extends TestCase {
 
 		dbA.removeJenaTables();
 
-		oms.terminate();
-		sf.terminate();
+		oms.Shutdown();
+		sf.Shutdown();
+		
+		oms.await();
+		sf.await();
 		
 		oms = null;
 		sf = null;

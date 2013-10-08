@@ -33,9 +33,11 @@ import es.upv.dsic.gti_ia.cAgents.CAgent;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.jason.exception.AgentSpeakNotFoundException;
+import es.upv.dsic.gti_ia.norms.BeliefDataBaseInterface;
 
 /**
  * @author Ricard Lopez Fogues
+ * @author Jose Alemany Bordera - jalemany1@dsic.upv.es
  */
 
 public class MagentixAgArch extends AgArch {
@@ -45,6 +47,8 @@ public class MagentixAgArch extends AgArch {
 			.getName());
 	private Queue<ACLMessage> messageList = new LinkedList<ACLMessage>();
 	protected boolean running = true;
+	private Agent ag;
+
 
 	/**
 	 * Starts the architecture
@@ -58,7 +62,6 @@ public class MagentixAgArch extends AgArch {
 	 * @throws JasonException
 	 * 
 	 */
-
 	protected void init(String filename, CAgent agent)
 			throws AgentSpeakNotFoundException, JasonException {
 
@@ -81,8 +84,8 @@ public class MagentixAgArch extends AgArch {
 		try {
 
 			this.jasonAgent = agent;
-			Agent ag = new Agent();
-
+			ag = new Agent();
+			
 			new TransitionSystem(ag, new Circumstance(), new Settings(), this);
 
 			ag.initAg(filename);
@@ -251,7 +254,7 @@ public class MagentixAgArch extends AgArch {
 	 * @return
 	 * @throws IOException
 	 */
-	private ACLMessage jasonToACL(Message m) throws IOException {
+	protected ACLMessage jasonToACL(Message m) throws IOException {
 		ACLMessage acl = new ACLMessage(kqmlToACL(m.getIlForce()));
 		// send content as string if it is a Term/String (it is better for
 		// interoperability)
@@ -284,7 +287,7 @@ public class MagentixAgArch extends AgArch {
 	 * @param p
 	 * @return
 	 */
-	private static int kqmlToACL(String p) {
+	protected static int kqmlToACL(String p) {
 		if (p.equals("tell")) {
 			return ACLMessage.INFORM;
 		} else if (p.equals("askOne")) {
@@ -313,7 +316,7 @@ public class MagentixAgArch extends AgArch {
 	 * @param p
 	 * @return
 	 */
-	private static String aclToKqml(int p) {
+	protected static String aclToKqml(int p) {
 		switch (p) {
 		case ACLMessage.INFORM:
 			return "tell";
@@ -348,6 +351,84 @@ public class MagentixAgArch extends AgArch {
 
 	public void stopAg() {
 		running = false;
+	}
+	
+
+	/**
+	 * @return the jasonAgent
+	 */
+	public CAgent getJasonAgent() {
+		return jasonAgent;
+	}
+
+	/**
+	 * @param jasonAgent the jasonAgent to set
+	 */
+	public void setJasonAgent(CAgent jasonAgent) {
+		this.jasonAgent = jasonAgent;
+	}
+
+	/**
+	 * @return the ag
+	 */
+	public Agent getAg() {
+		return ag;
+	}
+
+	/**
+	 * @param ag the ag to set
+	 */
+	public void setAg(Agent ag) {
+		this.ag = ag;
+	}
+
+	/**
+	 * @return the logger
+	 */
+	public static Logger getLogger() {
+		return logger;
+	}
+
+	/**
+	 * @param logger the logger to set
+	 */
+	public static void setLogger(Logger logger) {
+		MagentixAgArch.logger = logger;
+	}
+
+	/**
+	 * @return the messageList
+	 */
+	public Queue<ACLMessage> getMessageList() {
+		return messageList;
+	}
+
+	/**
+	 * @param messageList the messageList to set
+	 */
+	public void setMessageList(Queue<ACLMessage> messageList) {
+		this.messageList = messageList;
+	}
+
+	/**
+	 * @return the conversationIds
+	 */
+	public Map<String, String> getConversationIds() {
+		return conversationIds;
+	}
+
+	/**
+	 * @param conversationIds the conversationIds to set
+	 */
+	public void setConversationIds(Map<String, String> conversationIds) {
+		this.conversationIds = conversationIds;
+	}
+
+	/**
+	 * @param running the running to set
+	 */
+	public void setRunning(boolean running) {
+		this.running = running;
 	}
 
 }
