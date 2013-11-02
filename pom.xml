@@ -162,7 +162,7 @@
 				    <formats>
 				    	<format>xml</format>
 				    </formats>  
-				    <argLine>-Xms128M -Xmx4096M -XX:MaxPermSize=512M -XX:MaxHeapSize=256m</argLine><!---XX:PermSize=128M</argLine-->
+				    <argLine>-Xms128M -Xmx6144M -XX:MaxPermSize=512M -XX:MaxHeapSize=2048m</argLine><!---XX:PermSize=128M</argLine-->
 				    <forkMode>pertest</forkMode>
 				    <!--threadCount>1</threadCount-->
 				    <runOrder>alphabetical</runOrder>
@@ -204,7 +204,7 @@
 								<format>html</format>
 								<format>xml</format>
 							</formats>
-							<argLine>-Xms1000m -Xmx4096m -XX:MaxPermSize=4096m</argLine>
+							<argLine>-Xms1000m -Xmx6144m -XX:MaxPermSize=6144m</argLine>
 						</configuration>
 					</plugin>
 				</plugins>

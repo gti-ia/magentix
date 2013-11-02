@@ -31,7 +31,7 @@ public class SenderAgentLoop extends BaseAgent {
 	}
 
 	public void execute() {
-		// logger.info("Executing, I'm " + getName());
+		// //logger.info("Executing, I'm " + getName());
 
 		// It informs the controller that the agent is running
 		try {
@@ -47,7 +47,7 @@ public class SenderAgentLoop extends BaseAgent {
 		while (!end.get()) {
 		}
 
-		logger.info("acaba " + getName());
+		//logger.info("acaba " + getName());
 
 		// It notifies that the agent cycle is finished
 		msg = new ACLMessage(ACLMessage.INFORM);
@@ -60,13 +60,13 @@ public class SenderAgentLoop extends BaseAgent {
 
 		finished.countDown();
 
-		logger.info("Remaining " + finished.getCount());
+		//logger.info("Remaining " + finished.getCount());
 	}
 
 	public void onMessage(ACLMessage msg) {
 
 		if (msg.getContent().equals("end")) {
-			logger.info("Receiving end from controller");
+			//logger.info("Receiving end from controller");
 			// It ends the agent cycle
 			end.set(true);
 		} else {
@@ -74,7 +74,7 @@ public class SenderAgentLoop extends BaseAgent {
 			// It receives the message of the controller to start the task
 			if (msg.getContent().equals("Start")) {
 
-				// logger.info("Start finished, sending to... " + receiver);
+				// //logger.info("Start finished, sending to... " + receiver);
 
 				// The agent sends a message to the next agent
 				msg = new ACLMessage(ACLMessage.REQUEST);
@@ -89,7 +89,7 @@ public class SenderAgentLoop extends BaseAgent {
 				// The agent receives from the previous agent
 				this.msg = msg;
 
-				logger.info("Received from: " + msg.getSender());
+				//logger.info("Received from: " + msg.getSender());
 
 				// It notifies the controller about the reception of the message
 				msg = new ACLMessage(ACLMessage.INFORM);

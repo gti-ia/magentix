@@ -40,7 +40,7 @@ public class ControlAgent extends BaseAgent {
 	}
 
 	public void execute() {
-		// logger.info("Starting, I'm " + getName());
+		// //logger.info("Starting, I'm " + getName());
 
 		// It awaits for the execution of agents
 		try {
@@ -68,7 +68,7 @@ public class ControlAgent extends BaseAgent {
 		logger.info("Controller sending end to agents...");
 		
 		for (int i = 0; i < maxAgents; i++) {
-			// logger.info("Sending end message");
+			// //logger.info("Sending end message");
 			msg = new ACLMessage(ACLMessage.REQUEST);
 			msg.setReceiver(new AgentID("SendAg" + i));
 			msg.setSender(this.getAid());
@@ -100,15 +100,13 @@ public class ControlAgent extends BaseAgent {
 	public void onMessage(ACLMessage msg) {
 		if (msg.getContent().equals("agent end")) {
 
-			logger.info("Mensaje received in " + this.getName()
-					+ ", agent end = " + msg.getSender());
+			//logger.info("Mensaje received in " + this.getName() + ", agent end = " + msg.getSender());
 
 		} else {
 
-			logger.info("Mensaje received in " + this.getName()
-					+ ", task completed by : " + msg.getSender());
+			//logger.info("Mensaje received in " + this.getName() + ", task completed by : " + msg.getSender());
 			received.countDown();
-			logger.info("Quedan " + received.getCount() + "/" + maxAgents);
+			//logger.info("Quedan " + received.getCount() + "/" + maxAgents);
 
 		}
 
