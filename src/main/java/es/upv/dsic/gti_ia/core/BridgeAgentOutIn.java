@@ -56,7 +56,7 @@ public class BridgeAgentOutIn extends BaseAgent {
 		// crear objeto DatagramSocket para enviar y recibir paquetes
 		try {
 		//Sacamos el http port del properties.
-			BridgeAgentOutIn.http_port = Integer.parseInt(configuration.getBridgeHttpPort());
+			BridgeAgentOutIn.http_port = configuration.getBridgeHttpPort();
 			
 			// socket = new DatagramSocket(5000);
 			socket = new ServerSocket(BridgeAgentOutIn.http_port);

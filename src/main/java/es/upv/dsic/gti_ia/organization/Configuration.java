@@ -2,43 +2,78 @@ package es.upv.dsic.gti_ia.organization;
 
 import java.util.*;
 import java.io.*;
-import java.io.InputStream;
 
 /**
  * This class reads the contents of Settings.xml file that found in the
  * configuration directory
+ * 
+ * @author Jose Alemany Bordera - jalemany1@dsic.upv.es
  */
 public class Configuration {
-	private static final String TRACE_MASK_KEY = "traceMask";
+	
+	private static Configuration configuration = null;
 
+	private String OMSServiceDescriptionLocation;
+	private String SFServiceDescriptionLocation;
+	private int Bridge_http_port;
+	private int HttpInterface_port;
+	
+	private boolean isTomcat;
+	private String os;
+	private String pathTomcat;
+	
 	private String databaseServer;
 	private String databaseName;
 	private String databaseUser;
 	private String databasePassword;
-	private String OMSServiceDescriptionLocation;
-	private String SFServiceDescriptionLocation;
+	
 	private String qpidHost;
-	private String qpidPort;
+	private int qpidPort;
 	private String qpidVhost;
 	private String qpidUser;
 	private String qpidPassword;
-	private String qpidSsl;
+	private boolean qpidSsl;
+	private boolean isSecure;
 	private String saslMechs;
+	
 	private String jenadbURL;
 	private String jenadbType;
 	private String jenadbDriver;
-	private String isTomcat;
-	private String pathTomcat;
-	private String os;
-	private String Bridge_http_port;
-	private String HttpInterface_port;
-	private String traceMask;
-	private static Configuration configuration = null;
-	private boolean isSecure = false;
 
+	private char traceMask[] = new char[10];
+
+	
 	private Configuration() {
 		this.load();
+	}
 
+	/**
+	 * This method returns the instance configuration using singleton
+	 * 
+	 * @return configuration
+	 */
+	public static Configuration getConfiguration() {
+		if (configuration == null)
+			configuration = new Configuration();
+		return configuration;
+	}
+	
+	/**
+	 * Full path where are the owl's deployed the services of the OMS
+	 * 
+	 * @return OMSServiceDescriptionLocation
+	 */
+	public String getOMSServiceDescriptionLocation() {
+		return this.OMSServiceDescriptionLocation;
+	}
+
+	/**
+	 * Full path where are the owl's deployed the services of the SF
+	 * 
+	 * @return SFServiceDesciptionLocation
+	 */
+	public String getSFServiceDescriptionLocation() {
+		return this.SFServiceDescriptionLocation;
 	}
 
 	/**
@@ -46,7 +81,7 @@ public class Configuration {
 	 * 
 	 * @return
 	 */
-	public String getBridgeHttpPort() {
+	public int getBridgeHttpPort() {
 		return this.Bridge_http_port;
 	}
 
@@ -55,19 +90,19 @@ public class Configuration {
 	 * 
 	 * @return
 	 */
-	public String getHttpInterfacepPort() {
+	public int getHttpInterfacepPort() {
 		return this.HttpInterface_port;
 	}
-
+	
 	/**
-	 * If the platform is in secure mode or not
+	 * If TOMCAT is active
 	 * 
-	 * @return isSecure
+	 * @return
 	 */
-	public boolean isSecureMode() {
-		return this.isSecure;
+	public boolean getIsTomcat() {
+		return this.isTomcat;
 	}
-
+	
 	/**
 	 * Path where the TOMCAT is located
 	 * 
@@ -84,18 +119,6 @@ public class Configuration {
 	 */
 	public String getPathTomcat() {
 		return this.pathTomcat;
-	}
-
-	/**
-	 * If TOMCAT is active
-	 * 
-	 * @return
-	 */
-	public boolean getIsTomcat() {
-		if (this.isTomcat.equals("true"))
-			return true;
-		else
-			return false;
 	}
 
 	/**
@@ -135,24 +158,6 @@ public class Configuration {
 	}
 
 	/**
-	 * Full path where are the owl's deployed the services of the OMS
-	 * 
-	 * @return OMSServiceDescriptionLocation
-	 */
-	public String getOMSServiceDescriptionLocation() {
-		return this.OMSServiceDescriptionLocation;
-	}
-
-	/**
-	 * Full path where are the owl's deployed the services of the SF
-	 * 
-	 * @return SFServiceDesciptionLocation
-	 */
-	public String getSFServiceDescriptionLocation() {
-		return this.SFServiceDescriptionLocation;
-	}
-
-	/**
 	 * Qpid host
 	 * 
 	 * @return qpidHost
@@ -162,26 +167,13 @@ public class Configuration {
 	}
 
 	/**
-	 * This method returns the instance configuration using singleton
-	 * 
-	 * @return configuration
-	 */
-	public static Configuration getConfiguration() {
-
-		if (configuration == null)
-			configuration = new Configuration();
-		return configuration;
-
-	}
-
-	/**
 	 * Qpid port
 	 * 
 	 * @return port
 	 */
 	public int getqpidPort() {
 
-		return Integer.parseInt(this.qpidPort);
+		return this.qpidPort;
 
 	}
 
@@ -218,11 +210,17 @@ public class Configuration {
 	 * @return SSl
 	 */
 	public boolean getqpidSSL() {
-		if (this.qpidSsl.equals("true"))
-			return true;
-		else
-			return false;
+		return this.qpidSsl;
 
+	}
+
+	/**
+	 * If the platform is in secure mode or not
+	 * 
+	 * @return isSecure
+	 */
+	public boolean isSecureMode() {
+		return this.isSecure;
 	}
 
 	/**
@@ -265,7 +263,7 @@ public class Configuration {
 	 * @return an encoded string with the mask.
 	 */
 	public String getTraceMask() {
-		return traceMask;
+		return new String(this.traceMask);
 	}
 
 	/**
@@ -275,80 +273,56 @@ public class Configuration {
 		Properties properties = new Properties();
 
 		try {
+			
 			String fileName = "Settings.xml";
 
 			InputStream is = new FileInputStream("configuration/" + fileName);
 
 			properties.loadFromXML(is);
+		
+			//Thomas Properties
+			this.OMSServiceDescriptionLocation = properties.getProperty("OMSServiceDescriptionLocation", "http://localhost:8080/omsservices/services/");
+			this.SFServiceDescriptionLocation = properties.getProperty("SFServiceDescriptionLocation", "http://localhost:8080/sfservices/services/");
+			this.Bridge_http_port = Integer.parseInt(properties.getProperty("BridgeAgentOutInPort", "8082"));
+			this.HttpInterface_port = Integer.parseInt(properties.getProperty("HttpInterfacePort", "8081"));
 
-			for (Enumeration<Object> e = properties.keys(); e.hasMoreElements();) {
-				// Get the object
-				Object obj = e.nextElement();
-				if (obj.toString().equalsIgnoreCase("serverName")) {
-					this.databaseServer = properties
-							.getProperty(obj.toString());
-				} else if (obj.toString().equalsIgnoreCase("databaseName")) {
-					databaseName = properties.getProperty(obj.toString());
-				} else if (obj.toString().equalsIgnoreCase("userName")) {
-					this.databaseUser = properties.getProperty(obj.toString());
-				} else if (obj.toString().equalsIgnoreCase("password")) {
-					this.databasePassword = properties.getProperty(obj
-							.toString());
-				} else if (obj.toString().equalsIgnoreCase(
-						"OMSServiceDescriptionLocation")) {
-					OMSServiceDescriptionLocation = properties.getProperty(obj
-							.toString());
-				} else if (obj.toString().equalsIgnoreCase(
-						"SFServiceDescriptionLocation")) {
-					SFServiceDescriptionLocation = properties.getProperty(obj
-							.toString());
-				} else if (obj.toString().equalsIgnoreCase("host")) {
-
-					this.qpidHost = properties.getProperty(obj.toString());
-				} else if (obj.toString().equalsIgnoreCase("port")) {
-
-					this.qpidPort = properties.getProperty(obj.toString());
-				} else if (obj.toString().equalsIgnoreCase("vhost")) {
-					this.qpidVhost = properties.getProperty(obj.toString());
-				} else if (obj.toString().equalsIgnoreCase("user")) {
-					this.qpidUser = properties.getProperty(obj.toString());
-				} else if (obj.toString().equalsIgnoreCase("pass")) {
-					this.qpidPassword = properties.getProperty(obj.toString());
-				} else if (obj.toString().equalsIgnoreCase("ssl")) {
-					this.qpidSsl = properties.getProperty(obj.toString());
-				} else if (obj.toString().equalsIgnoreCase("saslMechs")) {
-					this.saslMechs = properties.getProperty(obj.toString());
-				} else if (obj.toString().equalsIgnoreCase("dbURL")) {
-					this.jenadbURL = properties.getProperty(obj.toString());
-				}
-
-				else if (obj.toString().equalsIgnoreCase("dbType")) {
-					this.jenadbType = properties.getProperty(obj.toString());
-				} else if (obj.toString().equalsIgnoreCase("dbDriver")) {
-					this.jenadbDriver = properties.getProperty(obj.toString());
-				} else if (obj.toString().equalsIgnoreCase("tomcat")) {
-					this.isTomcat = properties.getProperty(obj.toString());
-				} else if (obj.toString().equalsIgnoreCase("pathTomcat")) {
-					this.pathTomcat = properties.getProperty(obj.toString());
-				} else if (obj.toString().equalsIgnoreCase("os")) {
-					this.os = properties.getProperty(obj.toString());
-				} else if (obj.toString().equalsIgnoreCase(
-						"BridgeAgentOutInPort")) {
-					this.Bridge_http_port = properties.getProperty(obj
-							.toString());
-				} else if (obj.toString().equalsIgnoreCase("HttpInterfacePort")) {
-					this.HttpInterface_port = properties.getProperty(obj
-							.toString());
-				} else if (obj.toString().equalsIgnoreCase(TRACE_MASK_KEY)) {
-					this.traceMask = properties.getProperty(obj.toString());
-				} else if (obj.toString().equalsIgnoreCase("secureMode")) {
-					if (properties.getProperty(obj.toString()).equals("true"))
-						this.isSecure = true;
-					else
-						this.isSecure = false;
-				}
-
-			}
+			//Servlets Server Properties
+			this.isTomcat = Boolean.parseBoolean(properties.getProperty("tomcat", "false"));
+			this.os = properties.getProperty("os", "linux");
+			this.pathTomcat = properties.getProperty("pathTomcat", "../apache-tomcat-6.0.20");
+			
+			//MySQL Properties
+			this.databaseServer = properties.getProperty("serverName", "localhost");
+			this.databaseName = properties.getProperty("databaseName", "thomas");
+			this.databaseUser = properties.getProperty("userName", "thomas");
+			this.databasePassword = properties.getProperty("password", "thomas");
+			
+			//Qpid Broker Properties
+			this.qpidHost = properties.getProperty("host", "localhost");
+			this.qpidPort = Integer.parseInt(properties.getProperty("port", "5672"));
+			this.qpidVhost = properties.getProperty("vhost", "test");
+			this.qpidUser = properties.getProperty("user", "guest");
+			this.qpidPassword = properties.getProperty("pass", "guest");
+			this.qpidSsl = Boolean.parseBoolean(properties.getProperty("ssl", "false"));
+			this.isSecure = Boolean.parseBoolean(properties.getProperty("secureMode", "false"));
+			this.saslMechs = properties.getProperty("saslMechs", "EXTERNAL");
+			
+			//Jena Properties
+			this.jenadbURL = properties.getProperty("dbURL", "jdbc:mysql://localhost/thomas");
+			this.jenadbType = properties.getProperty("dbType", "MySQL");
+			this.jenadbDriver = properties.getProperty("dbDriver", "com.mysql.jdbc.Driver");
+			
+			//Trace Properties
+			this.traceMask[0] = Boolean.parseBoolean(properties.getProperty("TraceLifeCycleServices", "true")) ? '1' : '0';
+			this.traceMask[1] = Boolean.parseBoolean(properties.getProperty("TraceCustomServices", "true")) ? '1' : '0';
+			this.traceMask[2] = Boolean.parseBoolean(properties.getProperty("TraceMessages", "true")) ? '1' : '0';
+			this.traceMask[3] = Boolean.parseBoolean(properties.getProperty("TraceMessagesDetail", "true")) ? '1' : '0';
+			this.traceMask[4] = Boolean.parseBoolean(properties.getProperty("TraceListEntities", "true")) ? '1' : '0';
+			this.traceMask[5] = Boolean.parseBoolean(properties.getProperty("TraceListServices", "true")) ? '1' : '0';
+			this.traceMask[6] = Boolean.parseBoolean(properties.getProperty("TraceSubscribeToAllServices", "false")) ? '1' : '0';
+			this.traceMask[7] = Boolean.parseBoolean(properties.getProperty("TraceWelcomeServices", "true")) ? '1' : '0';
+			this.traceMask[8] = Boolean.parseBoolean(properties.getProperty("TraceUpdateServices", "false")) ? '1' : '0';
+			this.traceMask[9] = Boolean.parseBoolean(properties.getProperty("TraceDieServices", "false")) ? '1' : '0';
 
 		} catch (IOException e) {
 			System.out.print(e);

@@ -56,7 +56,16 @@
 <entry key="dbType">MySQL</entry>
 <entry key="dbDriver">com.mysql.jdbc.Driver</entry>
 
-<!-- Properties traces -->
-<entry key="traceMask">1111110100</entry>
+<!-- Properties traces (default TraceMask:1111110100) -->
+<entry key="TraceLifeCycleServices">true</entry>
+<entry key="TraceCustomServices">true</entry>
+<entry key="TraceMessages">true</entry>
+<entry key="TraceMessagesDetail">true</entry>
+<entry key="TraceListEntities">true</entry>
+<entry key="TraceListServices">true</entry>
+<entry key="TraceSubscribeToAllServices">false</entry>
+<!-- entry key="TraceWelcomeServices">true</entry -->
+<!-- entry key="TraceUpdateServices">false</entry -->
+<!-- entry key="TraceDieServices">false</entry -->
 
 </properties>

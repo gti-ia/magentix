@@ -206,7 +206,7 @@ public class HttpInterface {
 	 * Creates a new HttpInterface using the default port specified in the configuration file
 	 */
 	public HttpInterface() {
-		http_port = Integer.parseInt(configuration.getHttpInterfacepPort());
+		http_port = configuration.getHttpInterfacepPort();
 	}
 	
 	/**
