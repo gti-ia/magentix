@@ -83,33 +83,50 @@ public class TestGetNormContent extends TestCase {
 			
 			//------------------------------------------- Test Initialization  -----------------------------------------------//
 			//Test variables
-			String unit = "proofUnitFlat";
+			String unit = "unitTeam";
+			String unit2 = "unitTeam2";
 			String norm = "proofNorm";
 			String eRoleCreator = "exampleRoleCreator";
-			String eContent = "exampleContent";
+			String eAgent = "exampleAgent";
+			String eContent = "@proofNorm[f,agentName:exampleAgent,registerUnit(_,_,_,_,_),playsRole(exampleAgent,participant,virtual),_]";
+			String eContent2 = "@proofNorm[p,positionName:creator,alocateRole(_,unitTeam,_,_),_,_]";
 			//Data Base 
-			dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('"+ unit +"',(SELECT idunitType FROM unitType WHERE unitTypeName = 'flat'))");
+			dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('"+ unit +"',(SELECT idunitType FROM unitType WHERE unitTypeName = 'team'))");
 			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'virtual'),(SELECT idunitList FROM unitList WHERE unitName = '"+ unit +"'))");
+			
+			dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('"+ unit2 +"',(SELECT idunitType FROM unitType WHERE unitTypeName = 'team'))");
+			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'virtual'),(SELECT idunitList FROM unitList WHERE unitName = '"+ unit2 +"'))");
+			
 			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('"+ eRoleCreator +"',(SELECT idunitList FROM unitList WHERE unitName = '"+ unit +"'),"+
 					"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
 					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 					"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 			
+			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('"+ eAgent +"')");
+			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES ((SELECT idagentList FROM agentList " +
+					"WHERE agentName = '"+ eAgent +"'),(SELECT idroleList FROM roleList WHERE (roleName = '"+ eRoleCreator +"' AND " +
+					"idunitList = (SELECT idunitList FROM unitList WHERE unitName = '"+ unit +"'))))");
+			
 			dbA.executeSQL("INSERT INTO normList (idunitList, normName, iddeontic, idtargetType, targetValue, idactionNorm, normContent, normRule) " +
 					"VALUES ((SELECT idunitList FROM unitList WHERE unitName = '"+ unit +"'),'"+ norm +"', (SELECT iddeontic FROM deontic WHERE deonticdesc = 'f'), (SELECT idtargetType FROM " +
-					"targetType WHERE targetName = 'agentName'),(SELECT idroleList FROM roleList WHERE roleName = '"+ eRoleCreator +"'), (SELECT idactionNorm FROM actionNorm WHERE description = " +
-					"'registerUnit' AND numParams = 5), '"+ eContent +"', '')");
+					"targetType WHERE targetName = 'agentName'),(SELECT idagentList FROM agentList WHERE agentName = '"+ eAgent +"'), (SELECT idactionNorm FROM actionNorm WHERE description = " +
+					"'registerUnit' AND numParams = 5), '"+ eContent +"', 'registerUnit(_,_,_,_,_):-playsRole(pruebas,participant,virtual)')");
+			
+			dbA.executeSQL("INSERT INTO normList (idunitList, normName, iddeontic, idtargetType, targetValue, idactionNorm, normContent, normRule) " +
+					"VALUES ((SELECT idunitList FROM unitList WHERE unitName = '"+ unit2 +"'),'"+ norm +"', (SELECT iddeontic FROM deontic WHERE deonticdesc = 'p'), (SELECT idtargetType FROM " +
+					"targetType WHERE targetName = 'positionName'),(SELECT idposition FROM position WHERE positionName = 'creator'), (SELECT idactionNorm FROM actionNorm WHERE description = " +
+					"'allocateRole' AND numParams = 4), '"+ eContent2 +"', 'alocateRole(_,Plana,_,_)')");
 			//----------------------------------------------------------------------------------------------------------------//
 			
 			dbI = new DataBaseInterface();
 			
 			Object[] parameters = new Object[2];
 			parameters[0] = norm;
-			parameters[1] = unit;
+			parameters[1] = unit2;
 		    
 			String result = (String) m.invoke(dbI, parameters);
-			assertEquals("The message should be:", eContent, result);
+			assertEquals("The message should be:", eContent2, result);
 
 		} catch(InvocationTargetException e) {
 			

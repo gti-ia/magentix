@@ -109,6 +109,9 @@ public class TestGetInformQuantityAgentsPlayingRolePositionInUnit extends TestCa
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES ((SELECT idagentList FROM agentList " +
 					"WHERE agentName = '"+ eAgent +"'),(SELECT idroleList FROM roleList WHERE (roleName = '"+ role +"' AND " +
 					"idunitList = (SELECT idunitList FROM unitList WHERE unitName = '"+ unit +"'))))");
+			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES ((SELECT idagentList FROM agentList " +
+					"WHERE agentName = '"+ eAgent +"'),(SELECT idroleList FROM roleList WHERE (roleName = '"+ eRoleCreator +"' AND " +
+					"idunitList = (SELECT idunitList FROM unitList WHERE unitName = '"+ unit +"'))))");
 			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('"+ eAgent2 +"')");
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES ((SELECT idagentList FROM agentList " +
 					"WHERE agentName = '"+ eAgent2 +"'),(SELECT idroleList FROM roleList WHERE (roleName = '"+ role +"' AND " +

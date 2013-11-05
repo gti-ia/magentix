@@ -135,7 +135,85 @@ public class TestGetInformQuantityAgentsVisibilityRolesInUnit extends TestCase {
 	public void testGetInformQuantityAgentsVisibilityRolesInUnit2() {
 		
 		/**---------------------------------------------------------------------------------------------
-		 * --			2.	
+		 * --			1.	
+		 * --				- All parameters are correct
+		 * --				- Unit has several roles, 2 agent with visibility equal to public
+		 * --				  and the other agent with visibility equal to private
+		 * --				- Show correctly the information
+		 * ---------------------------------------------------------------------------------------------
+		 */
+		
+		try {	
+			
+			//------------------------------------------- Test Initialization  -----------------------------------------------//
+			//Test variables
+			String unit = "proofUnitTeam";
+			String eAgent = "exampleAgent";
+			String eAgent2 = "exampleAgent2";
+			String eAgent3 = "exampleAgent3";
+			String eRoleMember = "exampleRoleMember";
+			String eRoleMember2 = "exampleRoleMember2";
+			String eRoleCreator = "exampleRoleCreator";
+			//Data Base 
+			dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('"+ unit +"',(SELECT idunitType FROM unitType WHERE unitTypeName = 'team'))");
+			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'virtual'),(SELECT idunitList FROM unitList WHERE unitName = '"+ unit +"'))");
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
+					"('"+ eRoleMember +"',(SELECT idunitList FROM unitList WHERE unitName = '"+ unit +"'),"+
+					"(SELECT idposition FROM position WHERE positionName = 'member'), "+
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
+					"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
+					"('"+ eRoleMember2 +"',(SELECT idunitList FROM unitList WHERE unitName = '"+ unit +"'),"+
+					"(SELECT idposition FROM position WHERE positionName = 'member'), "+
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
+					"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
+			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
+					"('"+ eRoleCreator +"',(SELECT idunitList FROM unitList WHERE unitName = '"+ unit +"'),"+
+					"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
+					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
+					"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
+
+			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('"+ eAgent +"')");
+			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES ((SELECT idagentList FROM agentList " +
+					"WHERE agentName = '"+ eAgent +"'),(SELECT idroleList FROM roleList WHERE (roleName = '"+ eRoleMember +"' AND " +
+					"idunitList = (SELECT idunitList FROM unitList WHERE unitName = '"+ unit +"'))))");
+			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('"+ eAgent2 +"')");
+			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES ((SELECT idagentList FROM agentList " +
+					"WHERE agentName = '"+ eAgent2 +"'),(SELECT idroleList FROM roleList WHERE (roleName = '"+ eRoleCreator +"' AND " +
+					"idunitList = (SELECT idunitList FROM unitList WHERE unitName = '"+ unit +"'))))");
+			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('"+ eAgent3 +"')");
+			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES ((SELECT idagentList FROM agentList " +
+					"WHERE agentName = '"+ eAgent3 +"'),(SELECT idroleList FROM roleList WHERE (roleName = '"+ eRoleMember +"' AND " +
+					"idunitList = (SELECT idunitList FROM unitList WHERE unitName = '"+ unit +"'))))");
+			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES ((SELECT idagentList FROM agentList " +
+					"WHERE agentName = '"+ eAgent3 +"'),(SELECT idroleList FROM roleList WHERE (roleName = '"+ eRoleMember2 +"' AND " +
+					"idunitList = (SELECT idunitList FROM unitList WHERE unitName = '"+ unit +"'))))");
+			//----------------------------------------------------------------------------------------------------------------//
+			
+			dbI = new DataBaseInterface();
+			
+			Object[] parameters = new Object[1];
+			parameters[0] = unit;
+		    
+			int result = (Integer) m.invoke(dbI, parameters);
+			assertEquals("The message should be:", 2, result);
+
+		} catch(InvocationTargetException e) {
+			
+			fail(e.getTargetException().getMessage());
+			
+		} catch(Exception e) {
+			
+			fail(e.getMessage());
+			
+		}
+	}
+	
+	@Test
+	public void testGetInformQuantityAgentsVisibilityRolesInUnit3() {
+		
+		/**---------------------------------------------------------------------------------------------
+		 * --			3.	
 		 * --				- All parameters are correct
 		 * --				- Unit has several roles and 0 agents
 		 * --				- Show correctly the information
@@ -184,10 +262,10 @@ public class TestGetInformQuantityAgentsVisibilityRolesInUnit extends TestCase {
 	}
 	
 	@Test
-	public void testGetInformQuantityAgentsVisibilityRolesInUnit3() {
+	public void testGetInformQuantityAgentsVisibilityRolesInUnit4() {
 		
 		/**---------------------------------------------------------------------------------------------
-		 * --			3.	
+		 * --			4.	
 		 * --				- Any parameters are incorrect
 		 * --				- Unit doesn't exist
 		 * --				- Not return information

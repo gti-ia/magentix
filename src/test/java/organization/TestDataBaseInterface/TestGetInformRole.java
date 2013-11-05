@@ -164,11 +164,11 @@ public class TestGetInformRole extends TestCase {
 			parameters[1] = unit;
 		    
 			ArrayList<String> result = (ArrayList<String>) m.invoke(dbI, parameters);
-			fail(result.toString());
+			assertEquals("The message should be:", "[]", result.toString());
 
 		} catch(InvocationTargetException e) {
 			
-			assertTrue(e.getTargetException().getMessage(), e.getTargetException() instanceof RoleNotExistsException);
+			fail(e.getTargetException().getMessage());
 			
 		} catch(Exception e) {
 			
@@ -217,11 +217,11 @@ public class TestGetInformRole extends TestCase {
 			parameters[1] = "NotExists";
 		    
 			ArrayList<String> result = (ArrayList<String>) m.invoke(dbI, parameters);
-			fail(result.toString());
+			assertEquals("The message should be:", "[]", result.toString());
 
 		} catch(InvocationTargetException e) {
 			
-			assertTrue(e.getTargetException().getMessage(), e.getTargetException() instanceof UnitNotExistsException);
+			fail(e.getTargetException().getMessage());
 			
 		} catch(Exception e) {
 			
