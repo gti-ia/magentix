@@ -2786,6 +2786,7 @@ public class OMSInterface {
 	 * @param TargetValueName
 	 * @param UnitName
 	 * @param AgentName
+	 * 
 	 * @return
 	 */
 	public String informTargetNorms(String TargetTypeName, String TargetValueName, String UnitName, String AgentName)
@@ -3105,41 +3106,46 @@ public class OMSInterface {
 	}
 	
 	
-	boolean checkPermitNorms(String AgentName, String UnitName, String ServiceName)
-	{
+	/**
+	 * Check if exists any rule in the unit U which allows that agent A can request the service S.
+	 * 
+	 * @param AgentName 		Identifier of the agent A.
+	 * @param UnitName			Identifier of the organization unit U.
+	 * @param ServiceName		Service S fully instantiated.
+	 * 
+	 * @return					Returns True if exists any rule in the unit U which allows that agent A 
+	 * 							can request the service S. Otherwise, returns False.
+	 */
+	boolean checkPermitNorms(String AgentName, String UnitName, String ServiceName) {
 		
 		boolean result = false;
 		ArrayList<String> stringRules = new ArrayList<String>();
 		ArrayList<String> aux = new ArrayList<String>();
 		
-
 		StringTokenizer st = new StringTokenizer(ServiceName, "(");
 		String service = st.nextToken();
 		
 		stringRules.add(ServiceName);
 
 		try {
+			
 			aux = dbInterface.getAgentNormRules(UnitName, AgentName, "p", service);
 
-			for (String rule : aux)
-			{
+			for (String rule : aux) {
 				stringRules.add(rule);
 			}
 
-			if (dbInterface.checkAgentInUnit(AgentName, UnitName))
-			{
+			if (dbInterface.checkAgentInUnit(AgentName, UnitName)) {
 
 				aux = dbInterface.getPositionNormRules(UnitName, AgentName, "p", service);
 
-				for (String rule : aux)
-				{
+				for (String rule : aux) {
 					stringRules.add(rule);
 				}
 
 				aux = dbInterface.getRoleNormRules(UnitName, AgentName, "p", service);
 
-				for (String rule : aux)
-				{
+				for (String rule : aux) {
 					stringRules.add(rule);
 				}
 			}
@@ -3152,14 +3158,12 @@ public class OMSInterface {
 					System.out.println("Lo tengo: "+ msg.getHeaderValue("activatedNorm"));
 					
 				}
-				
 			}
-			ArrayList<String> r = new ArrayList<String>();
 			
+			ArrayList<String> r = new ArrayList<String>();
 			CFactory talk = new myNormativeProtocol().newFactory("TALK", null, 1, omsAgent, stringRules, "JasonNormativeAgent", r) ;
 			
 			omsAgent.addFactoryAsInitiator(talk);
-
 
 			omsAgent.startSyncConversation("TALK");
 			
@@ -3170,20 +3174,26 @@ public class OMSInterface {
 			if (r.get(0).equals("true"))
 				result = true;
 			
-			
-
 		} catch (MySQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
-
-
 		return result;
 	}
 
-	boolean checkFordibbenNorms(String AgentName, String UnitName, String ServiceName)
-	{
+	
+	/**
+	 * Check if exists any rule in the unit U which forbids that agent A can request the service S.
+	 * 
+	 * @param AgentName 		Identifier of the agent A.
+	 * @param UnitName			Identifier of the organization unit U.
+	 * @param ServiceName		Service S fully instantiated.
+	 * 
+	 * @return					Returns True if exists any rule in the unit U which forbids that agent A 
+	 * 							can request the service S. Otherwise, returns False.
+	 */
+	boolean checkFordibbenNorms(String AgentName, String UnitName, String ServiceName) {
 	
 		boolean result = false;
 		ArrayList<String> stringRules = new ArrayList<String>();
