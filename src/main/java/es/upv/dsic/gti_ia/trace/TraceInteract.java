@@ -4,6 +4,7 @@ import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.BaseAgent;
 import es.upv.dsic.gti_ia.core.TracingService;
+import es.upv.dsic.gti_ia.trace.exception.TraceServiceNotAllowedException;
 
 /**
  * Methods to interact with the trace manager in order to publish and unpublish
@@ -27,7 +28,7 @@ public class TraceInteract {
 
 	private static final String ACL_LABEL = "ACL";
 	private static final String DEFAULT_TM_NAME = "qpid://TM@localhost:8080";
-	private static final AgentID DEFAULT_TM_AID = new AgentID(DEFAULT_TM_NAME);
+	public static final AgentID DEFAULT_TM_AID = new AgentID(DEFAULT_TM_NAME);
 
 	/**
 	 * Send an ACL message with the given performative, body and receiver. The

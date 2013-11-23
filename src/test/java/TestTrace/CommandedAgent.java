@@ -16,7 +16,7 @@ import es.upv.dsic.gti_ia.core.TraceEvent;
 import es.upv.dsic.gti_ia.trace.TraceInteract;
 import es.upv.dsic.gti_ia.trace.TraceManager;
 import es.upv.dsic.gti_ia.trace.TraceMask;
-import es.upv.dsic.gti_ia.trace.TraceServiceNotAllowedException;
+import es.upv.dsic.gti_ia.trace.exception.TraceServiceNotAllowedException;
 
 /**
  * Agent commanded externally.

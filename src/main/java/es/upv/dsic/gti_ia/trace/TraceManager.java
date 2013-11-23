@@ -22,6 +22,7 @@ import es.upv.dsic.gti_ia.core.TraceEvent;
 import es.upv.dsic.gti_ia.core.TracingService;
 import es.upv.dsic.gti_ia.organization.Configuration;
 import es.upv.dsic.gti_ia.trace.TracingEntityList;
+import es.upv.dsic.gti_ia.trace.exception.TraceServiceNotAllowedException;
 
 /**
  * Trace Manager entity definition.
@@ -1079,6 +1080,16 @@ public class TraceManager extends BaseAgent {
 									+ msg.getReceiver().toString());
 						}
 					}
+				} else if (command.equals("UpdateMask")) {
+					/*
+					 * Building a ACLMessage
+					 */
+					response_msg = new ACLMessage(ACLMessage.AGREE);
+					response_msg.setSender(this.getAid());
+					response_msg.setReceiver(msg.getSender());
+					response_msg.setContent("UpdateMask#"+getTraceMask().toString());
+					response_msg.setConversationId(msg.getConversationId());
+					
 				} else {
 					/*
 					 * Building a ACLMessage

@@ -28,14 +28,17 @@ public class TracingService implements Serializable {
 	public static final int TRACE_ERROR = 0;
 	// public static final int TRACE_START = 1;
 	// public static final int TRACE_STOP = 2;
+	
 	/**
 	 * The ER entity subscribed to a tracing service
 	 */
 	public static final int SUBSCRIBE = 1;
+	
 	/**
 	 * The ER entity unsubscribed from a tracing service
 	 */
 	public static final int UNSUBSCRIBE = 2;
+	
 	/**
 	 * The tracing service which was requested does not exist or it has been un
 	 * published and thus, it is not available anymore
@@ -46,6 +49,7 @@ public class TracingService implements Serializable {
 	// public static final int STREAM_FLUSH_START = 8;
 	// public static final int STREAM_FLUSH_STOP = 9;
 	// Life cycle of Tracing Entities
+	
 	/**
 	 * A new agent was registered in the system
 	 */
@@ -54,6 +58,7 @@ public class TracingService implements Serializable {
 	// public static final int NEW_AGGREGATION = 12;
 	// public static final int AGENT_SUSPENDED = 11;
 	// public static final int AGENT_RESUMED = 12;
+	
 	/**
 	 * An agent was destroyed
 	 */
@@ -63,18 +68,22 @@ public class TracingService implements Serializable {
 	// public static final int ARTIFACT_ENTERS_AGGREGATION = 10;
 	// public static final int ARTIFACT_LEAVES_AGGREGATION = 10;
 	// Messaging among Tracing Entities
+	
 	/**
 	 * A FIPA-ACL message was sent
 	 */
 	public static final int MESSAGE_SENT = 6;
+	
 	/**
 	 * A FIPA-ACL message was sent. Message included in the event
 	 */
 	public static final int MESSAGE_SENT_DETAIL = 7;
+	
 	/**
 	 * A FIPA-ACL message was received
 	 */
 	public static final int MESSAGE_RECEIVED = 8;
+	
 	/**
 	 * A FIPA-ACL message was received. Message included in the event
 	 */
@@ -93,10 +102,12 @@ public class TracingService implements Serializable {
 	// public static final int ROLE_EXPULSION = 10;
 	// public static final int NORM_VIOLATION = 10;
 	// Tracing System related Tracing Services
+	
 	/**
 	 * A new tracing service has been published by an ES entity
 	 */
 	public static final int PUBLISHED_TRACING_SERVICE = 10;
+	
 	/**
 	 * A tracing service is not being offered by an ER entity
 	 */

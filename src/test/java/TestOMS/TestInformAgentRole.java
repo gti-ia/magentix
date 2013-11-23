@@ -56,9 +56,8 @@ public class TestInformAgentRole extends TestCase {
 		oms = null;
 		sf = null;
 
-
-
-	}
+	}	
+	
 	protected void setUp() throws Exception {
 		super.setUp();
 
@@ -198,29 +197,14 @@ public class TestInformAgentRole extends TestCase {
 		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
 		"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas2'),(SELECT idroleList FROM roleList WHERE (roleName = 'supervisor' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
 
-
-
-
-
-
-
-
-
-
 	}
 
-	public void testInformAgentRole1()
-	{
-		try
-		{
+	public void testInformAgentRole1() {
 		
-			
-			
+		try {
+		
 			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
 			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
-
-
-		
 			
 			/**-----------
 			 * --1a							
