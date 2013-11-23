@@ -80,7 +80,6 @@ public class TestACLMessage extends TestCase {
 		
 		assertEquals(msg.getPerformativeInt(),ACLMessage.UNKNOWN);
 		assertEquals(msg.getSender().toString(),new AgentID().toString());
-		assertEquals(msg.getConversationId(),"");
 	}
 	
 	/**
@@ -96,7 +95,6 @@ public class TestACLMessage extends TestCase {
 		
 		assertEquals(msg.getPerformativeInt(),ACLMessage.AGREE);
 		assertEquals(msg.getSender().toString(),new AgentID().toString());
-		assertEquals(msg.getConversationId(),"");
 	}
 	
 	/**
@@ -496,12 +494,12 @@ public class TestACLMessage extends TestCase {
 	 * Testing ACLMessage getConversationId()
 	 * 
 	 */
-	public void testGetConversationId()
+	/*public void testGetConversationId()
 	{	
 		//Message with empty constructor by default conversation_id = ""
 
 		assertEquals(msg.getConversationId(), "");
-	}
+	}*/
 
 	/**
 	 * Testing ACLMessage setReplyWith()

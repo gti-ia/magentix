@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.UUID;
 
 import es.upv.dsic.gti_ia.core.ISO8601;
 
@@ -180,6 +181,7 @@ public class ACLMessage implements Serializable, Cloneable {
 	 */
 	public ACLMessage() {
 		performative = UNKNOWN;
+		conversation_id = UUID.randomUUID().toString();
 	}
 
 	/**
@@ -189,6 +191,7 @@ public class ACLMessage implements Serializable, Cloneable {
 	 */
 	public ACLMessage(int performative) {
 		this.performative = performative;
+		conversation_id = UUID.randomUUID().toString();
 	}
 
 	/**
