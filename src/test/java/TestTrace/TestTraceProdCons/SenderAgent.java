@@ -8,7 +8,7 @@ import es.upv.dsic.gti_ia.core.BaseAgent;
 import es.upv.dsic.gti_ia.core.TraceEvent;
 import es.upv.dsic.gti_ia.core.TracingService;
 import es.upv.dsic.gti_ia.trace.TraceInteract;
-import es.upv.dsic.gti_ia.trace.TraceServiceNotAllowedException;
+import es.upv.dsic.gti_ia.trace.exception.TraceServiceNotAllowedException;
 
 /**
  * SenderAgent class defines the structure of a sender BaseAgent
@@ -77,11 +77,6 @@ public class SenderAgent extends BaseAgent {
 		
 		System.out.println("[SENDER " + getName() + "]: Bye!");
 		TestTraceProdCons.end.release();
-	}
-	
-	@Override
-	public void terminate() {
-		super.terminate();
 	}
 	
 	public void onTraceEvent(TraceEvent tEvent) {
