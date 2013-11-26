@@ -152,7 +152,7 @@ public class CustomizedJasonAgent extends Agent {
 
 
 								if (nbAnnotsB >= nbAnnots) {
-									annotsOptions =	belInBB.getAnnots().subSets(nbAnnots).iterator();
+									annotsOptions =	belInBB.getAnnots().subSets(nbAnnots);
 									get();
 
 									if (current != null) // if it get a value
