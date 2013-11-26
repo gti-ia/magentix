@@ -163,6 +163,7 @@ public class Jason_JAuc_Initiator {
 					receivers.add("\""+rec.name+"\"");
 				}
 		}
+		
 		messageToSend.setHeader("participants",receivers.toString());		
 		conv.AuctionLevel++;
 		conv.AcceptancesReceivedInCurrLevel.clear();
@@ -177,14 +178,18 @@ public class Jason_JAuc_Initiator {
 	}
 
 	/**
-	 * Method executed when the initiator receives the bidder acceptance
+	 * Method executed when the initiator receives the bidder answers
 	 * @param myProcessor the CProcessor managing the conversation
 	 * @param msg Acceptance message
 	 */
-	protected String doReceiveAcceptance(ConvCProcessor myProcessor, ACLMessage msg){
+	protected String doReceiveAnswer(ConvCProcessor myProcessor, ACLMessage msg){
 		JAucIniConversation conv = (JAucIniConversation)myProcessor.getConversation();
 		//incrementing participations
-		if (conv.getParticipant(msg.getSender().name)!=null)
+		boolean accepted=false;
+		if (msg.getPerformative().compareTo(ACLMessage.getPerformative(ACLMessage.ACCEPT_PROPOSAL))==0)
+			accepted=true;
+		
+		if ((conv.getParticipant(msg.getSender().name)!=null)&&(accepted))
 		{
 			int prevVal = conv.getParticipation(msg.getSender().name); 
 			conv.setParticipations(msg.getSender().name, prevVal+1);
@@ -193,21 +198,24 @@ public class Jason_JAuc_Initiator {
 
 		if ((senderlevel!=null)&&(senderlevel.compareTo(""+conv.AuctionLevel)==0))
 			{
-			conv.AcceptancesReceivedInCurrLevel.add(msg.getSender());
+			if (accepted)
+				conv.AcceptancesReceivedInCurrLevel.add(msg.getSender());
+			else
+				conv.RejectsReceivedInCurrLevel.add(msg.getSender());
 			}
 		String result = "";
-		if (conv.allActiveAcceptancesReceived()) //all active participants have answered
+		if (conv.allActiveAnswersReceived()) //all active participants have answered
 		{
-			if (conv.AcceptancesReceivedInCurrLevel.size() == 1){
-				result = "SEND_WINNER";
-			}else
-			if (conv.AuctionLevel==conv.MaxIterations){//if the maximum number of iterations has been reached
-				{
-					result = "FINAL";
-				}
+			if ((conv.AcceptancesReceivedInCurrLevel.size() == 0)||(conv.AuctionLevel==conv.MaxIterations))//if not acceptances or the maximum number of iterations has been reached
+			{
+				result = "FINAL";
 			}else{
-				conv.NextBid = conv.NextBid+conv.Increment;
-				result = "BID_CALL";
+				if (conv.AcceptancesReceivedInCurrLevel.size() == 1){
+					result = "SEND_WINNER";
+				}else{
+					conv.NextBid = conv.NextBid+conv.Increment;
+					result = "BID_CALL";
+				}
 			}
 		}
 		else
@@ -215,9 +223,9 @@ public class Jason_JAuc_Initiator {
 		return result;
 
 	}
-	class RECEIVE_ACCEPTANCE_Method implements ReceiveStateMethod {
+	class RECEIVE_ANSWER_Method implements ReceiveStateMethod {
 		public String run(CProcessor myProcessor, ACLMessage messageReceived) {
-			return doReceiveAcceptance((ConvCProcessor)myProcessor, messageReceived);
+			return doReceiveAnswer((ConvCProcessor)myProcessor, messageReceived);
 		}
 	}
 	
@@ -434,16 +442,16 @@ public class Jason_JAuc_Initiator {
 		processor.addTransition(BID_CALL, WAIT_FOR_ACCEPTANCES);
 
 
-		// RECEIVE_ACCEPTANCE State
+		// RECEIVE_ANSWER State
 
-		ReceiveState RECEIVE_ACCEPTANCE = new ReceiveState("RECEIVE_ACCEPTANCE");
-		RECEIVE_ACCEPTANCE.setMethod(new RECEIVE_ACCEPTANCE_Method());
-		filter = new MessageFilter("performative = "+ACLMessage.getPerformative(ACLMessage.ACCEPT_PROPOSAL));
-		RECEIVE_ACCEPTANCE.setAcceptFilter(filter);
-		processor.registerState(RECEIVE_ACCEPTANCE);
-		processor.addTransition(WAIT_FOR_ACCEPTANCES, RECEIVE_ACCEPTANCE);
-		processor.addTransition(RECEIVE_ACCEPTANCE, WAIT_FOR_ACCEPTANCES);
-		processor.addTransition(RECEIVE_ACCEPTANCE, BID_CALL);
+		ReceiveState RECEIVE_ANSWER = new ReceiveState("RECEIVE_ANSWER");
+		RECEIVE_ANSWER.setMethod(new RECEIVE_ANSWER_Method());
+		filter = new MessageFilter("performative = "+ACLMessage.getPerformative(ACLMessage.ACCEPT_PROPOSAL)+" OR performative = "+ACLMessage.getPerformative(ACLMessage.REJECT_PROPOSAL) );
+		RECEIVE_ANSWER.setAcceptFilter(filter);
+		processor.registerState(RECEIVE_ANSWER);
+		processor.addTransition(WAIT_FOR_ACCEPTANCES, RECEIVE_ANSWER);
+		processor.addTransition(RECEIVE_ANSWER, WAIT_FOR_ACCEPTANCES);
+		processor.addTransition(RECEIVE_ANSWER, BID_CALL);
 
 		// TIMEOUT State
 
@@ -465,7 +473,7 @@ public class Jason_JAuc_Initiator {
 		SEND_WINNER.setMessageTemplate(template);
 		processor.registerState(SEND_WINNER);
 		processor.addTransition(TIMEOUT, SEND_WINNER);
-		processor.addTransition(RECEIVE_ACCEPTANCE, SEND_WINNER);
+		processor.addTransition(RECEIVE_ANSWER, SEND_WINNER);
 
 		// FINAL State
 
@@ -474,7 +482,7 @@ public class Jason_JAuc_Initiator {
 		processor.registerState(FINAL);
 		processor.addTransition(TIMEOUT, FINAL);
 		processor.addTransition(SEND_WINNER, FINAL);	
-		processor.addTransition(RECEIVE_ACCEPTANCE, FINAL);
+		processor.addTransition(RECEIVE_ANSWER, FINAL);
 		return theFactory;
 	}
 	

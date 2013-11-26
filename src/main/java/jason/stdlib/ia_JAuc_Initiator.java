@@ -162,8 +162,8 @@ public class ia_JAuc_Initiator extends protocolInternalAction{
 			ConvCProcessor processorTemplate = ((ConvCFactory)Protocol_Factory).cProcessorTemplate();
 			processorTemplate.setConversation(conv);
 			msg.setConversationId(ConvID);
-			if (myag.getName().compareTo("aut_agent20")==0)
-				System.out.println("20");
+		/*	if (myag.getName().compareTo("aut_agent20")==0)
+				System.out.println("20");*/
 			ConvCProcessor convPprocessor =  myag.newConversation(msg, processorTemplate, false, Protocol_Factory);
 			convPprocessor.setConversation(conv);
 			myag.unlock();

@@ -111,9 +111,9 @@ public class Jason_JAuc_Participant {
 		
 		conv.aquire_semaphore();
 		
-		if (conv.Accept){  //it must be setted
-			result = "SEND_AGREE"; 
-		}else result = "FINAL"; 
+		//if (conv.Accept){  
+		result = "SEND_ANSWER"; //conv.Accept is true if accepted, false otherwise
+		//}else result = "FINAL"; 
 		return result;
 	}
 	class RECEIVE_BID_CALL_Method implements ReceiveStateMethod {
@@ -124,24 +124,34 @@ public class Jason_JAuc_Participant {
 	}
 
 	/**
-	 * Method executed when the participant sends a proposal
+	 * Method executed when the participant sends its answer
 	 * @param myProcessor the CProcessor managing the conversation
 	 * @param messageToSend proposal message
 	 */
-	protected void doSendAgree(ConvCProcessor myProcessor,
+	protected String doSendAnswer(ConvCProcessor myProcessor,
 			ACLMessage messageToSend){
 		JAucPartConversation conv = (JAucPartConversation)myProcessor.getConversation();
+		String result ="";
 		messageToSend.setSender(myProcessor.getMyAgent().getAid());
 		messageToSend.setReceiver(conv.initiator);
-		messageToSend.setContent("agree");
 		messageToSend.setHeader("auctionlevel", conv.AuctionLevel);
-		messageToSend.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
+		if (conv.Accept){
+			messageToSend.setContent("agree");
+			messageToSend.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
+			result="WAIT_FOR_BID_CALL2";
+		}else{
+			messageToSend.setContent("reject");
+			messageToSend.setPerformative(ACLMessage.REJECT_PROPOSAL);
+			result="FINAL";
+		}
+		
 		messageToSend.setProtocol("japanese-auction");
+		return result;
 	}
-	class SEND_AGREE_Method implements SendStateMethod {
+	class SEND_ANSWER_Method implements SendStateMethod {
 		public String run(CProcessor myProcessor, ACLMessage messageToSend) {
-			doSendAgree((ConvCProcessor) myProcessor, messageToSend);
-			return "WAIT_FOR_BID_CALL2";
+			
+			return doSendAnswer((ConvCProcessor) myProcessor, messageToSend);
 		}
 	}
 
@@ -275,23 +285,23 @@ public class Jason_JAuc_Participant {
 		processor.addTransition(WAIT_FOR_BID_CALL,
 				RECEIVE_BID_CALL);
 
-		// SEND_AGREE State
+		// SEND_ANSWER State
 
-		SendState SEND_AGREE = new SendState("SEND_AGREE");
+		SendState SEND_ANSWER = new SendState("SEND_ANSWER");
 
-		SEND_AGREE.setMethod(new SEND_AGREE_Method());
+		SEND_ANSWER.setMethod(new SEND_ANSWER_Method());
 		template.setProtocol("japanese-auction");
-		template.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
-		SEND_AGREE.setMessageTemplate(template);
-		processor.registerState(SEND_AGREE);
-		processor.addTransition(RECEIVE_BID_CALL, SEND_AGREE);
+		//template.setPerformative(ACLMessage.ACCEPT_PROPOSAL); //this will is setted in SEND_ANSWER_Method()
+		SEND_ANSWER.setMessageTemplate(template);
+		processor.registerState(SEND_ANSWER);
+		processor.addTransition(RECEIVE_BID_CALL, SEND_ANSWER);
 		
 		
 
 		// WAIT_FOR_BID_CALL2 State
 		WaitState WAIT_FOR_BID_CALL2 = new WaitState("WAIT_FOR_BID_CALL2", timeout);
 		processor.registerState(WAIT_FOR_BID_CALL2);
-		processor.addTransition(SEND_AGREE, WAIT_FOR_BID_CALL2);
+		processor.addTransition(SEND_ANSWER, WAIT_FOR_BID_CALL2);
 		processor.addTransition(WAIT_FOR_BID_CALL2,RECEIVE_BID_CALL);
 		
 		// TIMEOUT State
@@ -334,8 +344,9 @@ public class Jason_JAuc_Participant {
 		FINAL.setMethod(new FINAL_Method());
 
 		processor.registerState(FINAL);
-		processor.addTransition(RECEIVE_WINNER_CONFIRM, FINAL);			
-		processor.addTransition(RECEIVE_BID_CALL, FINAL);
+		processor.addTransition(RECEIVE_WINNER_CONFIRM, FINAL);	
+		processor.addTransition(SEND_ANSWER, FINAL);
+		//processor.addTransition(RECEIVE_BID_CALL, FINAL);
 		processor.addTransition(TIMEOUT, FINAL);
 		processor.addTransition(RECEIVE_END_CONFIRMATION, FINAL);
 		return theFactory;

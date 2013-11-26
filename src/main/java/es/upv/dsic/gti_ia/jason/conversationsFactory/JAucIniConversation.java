@@ -17,6 +17,7 @@ public class JAucIniConversation extends Conversation{
 	public String initialMessage = "";
 	public Hashtable<AgentID, Integer> PartParticipations = new Hashtable<AgentID, Integer>();
 	public List<AgentID> AcceptancesReceivedInCurrLevel = new ArrayList<AgentID>();
+	public List<AgentID> RejectsReceivedInCurrLevel = new ArrayList<AgentID>();
 	public List<AgentID> ActiveParticipants = new ArrayList<AgentID>();
 
 	public int AuctionLevel = 0;
@@ -89,7 +90,26 @@ public class JAucIniConversation extends Conversation{
 		}
 		return result;
 	}
-
+	
+	public boolean hasAnsweredInCurrLevel(String Name){
+		Iterator<AgentID> it = AcceptancesReceivedInCurrLevel.iterator();
+		Iterator<AgentID> rejit = RejectsReceivedInCurrLevel.iterator();
+		boolean result = false;
+		AgentID currentAcc;
+		while (it.hasNext()&&(!result)){
+			currentAcc = it.next();
+			if (currentAcc.name.compareTo(Name)==0)
+				result = true;
+		}
+		if (!result) //the agent hasn't accepted
+			while (rejit.hasNext()&&(!result)){
+				currentAcc = rejit.next();
+				if (currentAcc.name.compareTo(Name)==0)
+					result = true;
+			}
+		return result;
+	}
+	
 	public boolean hasAcceptedInCurrLevel(String Name){
 		Iterator<AgentID> it = AcceptancesReceivedInCurrLevel.iterator();
 		boolean result = false;
@@ -101,12 +121,12 @@ public class JAucIniConversation extends Conversation{
 		return result;
 	}
 
-	public boolean allActiveAcceptancesReceived(){
+	public boolean allActiveAnswersReceived(){
 		boolean result = true;
 		Iterator<AgentID> it = ActiveParticipants.iterator();
 		while (it.hasNext()){
 			AgentID current = it.next();
-			result = result && (hasAcceptedInCurrLevel(current.name));
+			result = result && (hasAnsweredInCurrLevel(current.name));
 		}
 		return result;
 	}
