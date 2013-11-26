@@ -204,7 +204,7 @@ public class TestTrace2 extends TestCase {
 			
 			j = jAux;
 			
-			while(subscribers[nS].getEvents().size() <= j || subscribers[nS].getMessages().size() <= j-20){
+			while(subscribers[nS].getEvents().size() <= j+1 || subscribers[nS].getMessages().size() <= j-20){
 				try {
 					Thread.sleep(1 * 50);
 				} catch (InterruptedException e) {

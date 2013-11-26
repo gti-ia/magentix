@@ -448,6 +448,62 @@ public class DataBaseInterface {
 			}
 		}
 	}
+	
+	
+	/**
+	 * This method accesses the database and check if there is a rule whose ID/name is N in the unit U.
+	 * 
+	 * @param normName			Identifier of the norm N.
+	 * @param unitName			Identifier of the organization unit U.
+	 * 
+	 * @return 					Returns true if exists, otherwise return false.
+	 * 
+	 * @throws MySQLException	If any errors happens with the database connection.
+	 * 
+	 */
+	boolean checkNormName(String normName, String unitName) throws MySQLException {
+		
+		Statement st = null;
+		ResultSet res = null;
+
+		boolean close = false;
+
+		try {
+			
+			if (connection == null || connection.isClosed()) {
+				connection = db.connect();
+				close = true;
+			}
+			
+			st = connection.createStatement();
+			res = st.executeQuery("SELECT * FROM normList nl INNER JOIN unitList ul ON (ul.idunitList=nl.idunitList) "
+					+ "WHERE nl.normName='" + normName + "' AND ul.unitName='" + unitName + "'");
+					
+			if(res.next())
+				return true;
+			
+			return false;
+			
+		} catch (SQLException e) {
+			String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
+			throw new MySQLException(message);
+		} finally {
+			try {
+				
+				if (close)
+					connection.close();
+				if (st != null)
+					st.close();
+
+				if (res != null)
+					res.close();
+
+			} catch(SQLException e) {
+				String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
+				throw new MySQLException(message);
+			}
+		}
+	}
 
 	
 	/**
@@ -508,63 +564,6 @@ public class DataBaseInterface {
 
 	
 	/**
-	 * Check if the role R within unit U has associated some norms, returning true in this case. Otherwise, it will return false.
-	 * 
-	 * @param roleName			Identifier of the role.
-	 * @param unitName			Identifier of the organization unit.
-	 * 
-	 * @return 					True if the role R within unit U has associated some norms, false otherwise.
-	 * 
-	 * @throws MySQLException	If any errors happens with the database connection.
-	 * 
-	 */
-	boolean checkTargetRoleNorm(String roleName, String unitName) throws MySQLException {
-		
-		Statement st = null;
-		ResultSet res = null;
-
-		boolean close = false;
-
-		try {
-			
-			if (connection == null || connection.isClosed()) {
-				connection = db.connect();
-				close = true;
-			}
-
-			st = connection.createStatement();
-			res = st.executeQuery("SELECT true FROM normList nl INNER JOIN unitList ul ON nl.idunitList=ul.idunitList INNER JOIN "
-					+ "targetType tt ON tt.idtargetType=nl.idtargetType INNER JOIN roleList rl ON rl.idroleList=nl.targetvalue WHERE "
-					+ "ul.unitName='"+ unitName +"' AND tt.targetName='roleName' AND rl.roleName='"+ roleName +"'");
-			
-			if (res.next())
-				return true;
-
-			return false;
-			
-		} catch (SQLException e) {
-			String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
-			throw new MySQLException(message);
-		} finally {
-			try {
-				
-				if (close)
-					connection.close();
-				if (st != null)
-					st.close();
-			
-				if (res != null)
-					res.close();
-			
-			} catch(SQLException e) {
-				String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
-				throw new MySQLException(message);
-			}
-		}
-	}
-
-	
-	/**
 	 * Check if the agent A play the position P, returning true in this case. Otherwise, it will return false.
 	 * 
 	 * @param agentName			Identifier of the agent to check.
@@ -613,61 +612,6 @@ public class DataBaseInterface {
 				if (res != null)
 					res.close();
 				
-			} catch(SQLException e) {
-				String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
-				throw new MySQLException(message);
-			}
-		}
-	}
-
-	
-	/**
-	 * Check if the parameter is a valid target type, returning true in this case. Otherwise, it will return false.
-	 * There are three target types: 'agentName', 'roleNorm' and 'positionName'.
-	 * 
-	 * @param targetType		Identifier of the targetType.
-	 * 
-	 * @return 					True if the parameter is a valid target type, false otherwise.
-	 * 
-	 * @throws MySQLException	If any errors happens with the database connection.
-	 * 
-	 */
-	boolean checkTargetType(String targetType) throws MySQLException {
-
-		Statement st = null;
-		ResultSet res = null;
-		
-		boolean close = false;
-
-		try {
-			
-			if (connection == null || connection.isClosed()) {
-				connection = db.connect();
-				close = true;
-			}
-			
-			st = connection.createStatement();
-			res = st.executeQuery("SELECT * FROM targetType WHERE targetName = '"+targetType+"'");
-
-			if (res.next())
-				return true;
-			
-			return false;
-
-		} catch (SQLException e) {
-			String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
-			throw new MySQLException(message);
-		} finally {
-			try {
-				
-				if (close)
-					connection.close();
-				if (st != null)
-					st.close();
-
-				if (res != null)
-					res.close();
-
 			} catch(SQLException e) {
 				String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
 				throw new MySQLException(message);
@@ -843,6 +787,118 @@ public class DataBaseInterface {
 			}
 		}
 	}
+	
+	
+	/**
+	 * Check if the role R within unit U has associated some norms, returning true in this case. Otherwise, it will return false.
+	 * 
+	 * @param roleName			Identifier of the role.
+	 * @param unitName			Identifier of the organization unit.
+	 * 
+	 * @return 					True if the role R within unit U has associated some norms, false otherwise.
+	 * 
+	 * @throws MySQLException	If any errors happens with the database connection.
+	 * 
+	 */
+	boolean checkTargetRoleNorm(String roleName, String unitName) throws MySQLException {
+		
+		Statement st = null;
+		ResultSet res = null;
+
+		boolean close = false;
+
+		try {
+			
+			if (connection == null || connection.isClosed()) {
+				connection = db.connect();
+				close = true;
+			}
+
+			st = connection.createStatement();
+			res = st.executeQuery("SELECT true FROM normList nl INNER JOIN unitList ul ON nl.idunitList=ul.idunitList INNER JOIN "
+					+ "targetType tt ON tt.idtargetType=nl.idtargetType INNER JOIN roleList rl ON rl.idroleList=nl.targetvalue WHERE "
+					+ "ul.unitName='"+ unitName +"' AND tt.targetName='roleName' AND rl.roleName='"+ roleName +"'");
+			
+			if (res.next())
+				return true;
+
+			return false;
+			
+		} catch (SQLException e) {
+			String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
+			throw new MySQLException(message);
+		} finally {
+			try {
+				
+				if (close)
+					connection.close();
+				if (st != null)
+					st.close();
+			
+				if (res != null)
+					res.close();
+			
+			} catch(SQLException e) {
+				String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
+				throw new MySQLException(message);
+			}
+		}
+	}
+
+	
+	/**
+	 * Check if the parameter is a valid target type, returning true in this case. Otherwise, it will return false.
+	 * There are three target types: 'agentName', 'roleNorm' and 'positionName'.
+	 * 
+	 * @param targetType		Identifier of the targetType.
+	 * 
+	 * @return 					True if the parameter is a valid target type, false otherwise.
+	 * 
+	 * @throws MySQLException	If any errors happens with the database connection.
+	 * 
+	 */
+	boolean checkTargetType(String targetType) throws MySQLException {
+
+		Statement st = null;
+		ResultSet res = null;
+		
+		boolean close = false;
+
+		try {
+			
+			if (connection == null || connection.isClosed()) {
+				connection = db.connect();
+				close = true;
+			}
+			
+			st = connection.createStatement();
+			res = st.executeQuery("SELECT * FROM targetType WHERE targetName = '"+targetType+"'");
+
+			if (res.next())
+				return true;
+			
+			return false;
+
+		} catch (SQLException e) {
+			String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
+			throw new MySQLException(message);
+		} finally {
+			try {
+				
+				if (close)
+					connection.close();
+				if (st != null)
+					st.close();
+
+				if (res != null)
+					res.close();
+
+			} catch(SQLException e) {
+				String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
+				throw new MySQLException(message);
+			}
+		}
+	}
 
 	
 	/**
@@ -904,6 +960,69 @@ public class DataBaseInterface {
 
 	
 	/**
+	 * Checks the compatibility with the Jason languaje. 
+	 * 
+	 * @param identifier		Identifier to check if is a valid parameter.
+	 * 
+	 * @return boolean 			Return true if is a valid parameter and false if not.
+	 * 
+	 * @throws MySQLException	If any errors happens with the database connection.
+	 */
+	boolean checkValidIdentifier(String identifier) throws MySQLException {
+
+		Statement st = null;
+		ResultSet res = null;
+
+		Pattern p = Pattern.compile("[0-9]+|[a-zA-Z][a-zA-Z_0-9]*");
+		Matcher ma = p.matcher(identifier);
+		boolean b = ma.matches();
+		
+		boolean result= true;
+		boolean close = false;
+
+		if(b)
+			result = true;
+		else
+			result = false;
+
+		try {
+			
+			if (connection == null || connection.isClosed()) {
+				connection = db.connect();
+				close = true;
+			}
+			
+			st = connection.createStatement();
+			res = st.executeQuery("SELECT * FROM reservedWordList WHERE reservedWord='" + identifier + "'");
+
+			if (res.next())
+				return false;
+			
+			return result;
+
+		} catch (SQLException e) {
+			String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
+			throw new MySQLException(message);
+		} finally {
+			try {
+				
+				if (close)
+					connection.close();
+				if (st != null)
+					st.close();
+
+				if (res != null)
+					res.close();
+				
+			} catch(SQLException e) {
+				String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
+				throw new MySQLException(message);
+			}
+		}
+	}
+
+	
+	/**
 	 * Check if the unit U is the virtual unit, returning true in this case. Otherwise, it will return false.
 	 * 
 	 * @param unitName			Identifier of the organization unit.
@@ -915,6 +1034,155 @@ public class DataBaseInterface {
 	 */
 	boolean checkVirtualUnit(String unitName) throws MySQLException {
 		return unitName.equalsIgnoreCase("virtual");
+	}
+
+
+	/**
+	 * This method inserts the necessary information in the database to register a norm.
+	 * 
+	 * @param unitName			Identifier of the organization unit U.
+	 * @param normContent		Contents of the norm expressed as <Deontic, Target, Action, Activation, Expiration>.
+	 * @param parsedNorm		Object type Norm with the parsed content <id, deontic, targetType, targetValue, actionName, actionParams, action, activation, expiration>.
+	 * @param normRule			The belief or norm parsed in Jason language.
+	 * 
+	 * @return 					Returns <normName + " created">.
+	 * 
+	 * @throws MySQLException	If any errors happens with the database connection.
+	 * 
+	 */
+	String createNorm(String unitName, String normContent, Norm parsedNorm, Literal normRule) throws MySQLException {
+
+		Statement st = null;
+		ResultSet res = null;
+		ResultSet res2 = null;
+		ResultSet res3 = null;
+		ResultSet res4 = null;
+		ResultSet res5 = null;
+		ResultSet res6 = null;
+		ResultSet res7 = null;
+
+		String idUnit = "";
+		String idDeontic = "";
+		String idTarget = "";
+		String typeTableName = "";
+		String typerowName = "";
+		String idTargetValue = "";
+		String idAction = "";
+		boolean close = false;
+
+		try {
+			
+			if (connection == null || connection.isClosed()) {
+				connection = db.connect();
+				close = true;
+			}
+			
+			st = connection.createStatement();
+			res = st.executeQuery("SELECT idunitList FROM unitList WHERE unitName='" + unitName + "'");
+
+			if (res.next())
+				idUnit = res.getString("idunitList");
+
+			res2 = st.executeQuery("SELECT iddeontic FROM deontic WHERE deonticdesc='" + parsedNorm.getDeontic() + "'");
+
+			if (res2.next())
+				idDeontic = res2.getString("iddeontic");
+
+			res3 = st.executeQuery("SELECT idtargetType, targetTable FROM targetType WHERE targetName='" + parsedNorm.getTargetType() + "'");
+
+			if (res3.next())
+				idTarget = res3.getString("idtargetType");
+				typeTableName = res3.getString("targetTable");
+
+			if (parsedNorm.getTargetValue().equals("_")) {
+				idTargetValue = "-1";
+			} else {
+
+				typerowName = typeTableName.replace("List", "") + "Name";
+
+				res4 = st.executeQuery("SELECT id"+typeTableName+" FROM "+typeTableName+" WHERE "+typerowName +"='"+parsedNorm.getTargetValue()+"'");
+
+				if (res4.next()) {
+					
+					idTargetValue = res4.getString("id"+typeTableName);
+					
+				} else if (parsedNorm.getTargetType().equals("agentName")) {
+					
+					st.executeUpdate("INSERT INTO agentList (agentName) VALUES ('" + parsedNorm.getTargetValue()+"')");
+
+					res5 = st.executeQuery("SELECT id"+typeTableName+" FROM "+typeTableName+" WHERE "+typerowName +"='"+parsedNorm.getTargetValue()+"'");
+
+					if (res5.next()) {
+						
+						idTargetValue = res5.getString("id"+typeTableName);
+					}
+				}
+			}
+
+			res6 = st.executeQuery("SELECT idactionNorm FROM actionNorm WHERE description ='"+parsedNorm.getActionName()+"'");
+
+			if (res6.next()) {
+				idAction = res6.getString("idactionNorm");
+			}
+			
+			st.addBatch("INSERT INTO normList (idunitList, normName, iddeontic, idtargetType, targetValue, idactionnorm, normContent, normRule) "
+					+ "VALUES (" + idUnit + ",'"+parsedNorm.getId()+"',"+idDeontic+","+idTarget+","+idTargetValue+","+idAction+",'"+normContent+"','"+normRule.toString()+"')");
+
+			for(String actionParam : parsedNorm.getActionParams()) {	
+				st.addBatch("INSERT INTO actionNormParam (idnormList, idactionNorm, value) VALUES ((SELECT idnormList FROM normList WHERE normName ='"+parsedNorm.getId()+"'),"+idAction+",'"+actionParam+"')");				
+			}
+
+			st.executeBatch();
+			
+			if (close)
+				connection.commit();
+
+			return parsedNorm.getId() + " created";
+
+		} catch(BatchUpdateException b) {                
+
+			//Extracts useful error information
+			String message = l10n.getMessage(MessageID.MYSQL, b.getMessage());
+			int [] bUpdateCounts = b.getUpdateCounts();
+			
+			for (int i = 0; i < bUpdateCounts.length; i++) {
+				if (bUpdateCounts[i] < 0)
+					message = message + "\nSQL statement number " + Integer.toString(bUpdateCounts.length - i) + " has failed.";
+			}
+
+			throw new MySQLException(message);
+			
+		} catch (SQLException e) {
+			String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
+			throw new MySQLException(message);
+		} finally {
+			try {
+				
+				if (close)
+					connection.close();
+				if (st != null)
+					st.close();
+
+				if (res != null)
+					res.close();
+				if (res2 != null)
+					res2.close();
+				if (res3 != null)
+					res3.close();
+				if (res4 != null)
+					res4.close();
+				if (res5 != null)
+					res5.close();
+				if (res6 != null)
+					res6.close();
+				if (res7 != null)
+					res7.close();
+
+			} catch(SQLException e) {
+				String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
+				throw new MySQLException(message);
+			}
+		}
 	}
 
 	
@@ -1118,6 +1386,154 @@ public class DataBaseInterface {
 
 	
 	/**
+	 * Accesses the database and delete the agent A with the information that is passed as arguments.
+	 * 
+	 * @param agentName			Identifier of the agent to delete.
+	 * 
+	 * @return 					Returns <agentName + " deleted">
+	 * 
+	 * @throws MySQLException	If any errors happens with the database connection.
+	 * 
+	 */
+	String deleteAgent(String agentName) throws MySQLException {
+		
+		Statement st = null;
+		
+		boolean close = false;
+
+		try {
+			
+			if (connection == null || connection.isClosed()) {
+				connection = db.connect();
+				close = true;
+			}
+			
+			st = connection.createStatement();
+			st.executeUpdate("DELETE FROM agentList WHERE agentName='"+ agentName +"'");
+			
+			if (close)
+				connection.commit();
+			
+			return agentName + " deleted";
+			
+		} catch (SQLException e) {
+			
+			String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
+			throw new MySQLException(message);
+			
+		} finally {
+			try {
+				
+				if (close)
+					connection.close();
+				if (st != null)
+					st.close();
+
+			} catch(SQLException e) {
+				
+				String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
+				throw new MySQLException(message);
+				
+			}
+		}
+	}
+	
+	
+	/**
+	 * Accesses the database and delete the norm N with the information that is passed as arguments.
+	 * To correct and complete elimination of the norm are carried out the following actions before removing this: delete information from two tables(actionNormParams and normList) and remove inactive agents (those who do not play any role or have rules associated).
+	 * 
+	 * @param normName			Identifier of the norm to delete.
+	 * @param unitName			Identifier of the organization unit to which the norm N belongs.
+	 * 
+	 * @return 					Returns <normName + " deleted">
+	 * 
+	 * @throws MySQLException	If any errors happens with the database connection.
+	 * 
+	 */
+	String deleteNorm(String normName, String unitName) throws MySQLException {
+		
+		Statement st = null;
+		Statement st2 = null;
+		ResultSet res = null;
+
+		boolean close = false;
+
+		try {
+			
+			if (connection == null || connection.isClosed()) {
+				connection = db.connect();
+				close = true;
+			}
+			
+			st = connection.createStatement();
+			res = st.executeQuery("SELECT al.agentName FROM normList nl INNER JOIN targetType tt ON (nl.idtargettype=tt.idtargettype) " +
+					"INNER JOIN agentList al ON (al.idagentList=nl.targetValue) WHERE tt.targetName='agentName' and nl.normName='"+ normName +"'");
+
+			st2 = connection.createStatement();
+			st2.addBatch("DELETE FROM actionNormParam USING actionNormParam INNER JOIN normList INNER JOIN unitList " +
+					"ON (actionNormParam.idnormList = normList.idnormList AND normList.idunitList=unitList.idunitList)" +
+					"WHERE unitName = '" + unitName + "' AND normName = '" + normName + "'");
+			st2.addBatch("DELETE FROM normList USING normList INNER JOIN unitList ON (normList.idunitList=unitList.idunitList)" +
+					"WHERE unitName='" + unitName + "' AND normName='" + normName + "'");
+			st2.executeBatch();
+			
+			if (res.next()) {
+				
+				String agentName = res.getString("agentName");
+				
+				//Check if last role played and has no associated norm, then remove it from the table agentList
+				if (!checkAgentActive(agentName))
+					deleteAgent(agentName);
+			}
+			
+			if (close)
+				connection.commit();
+			
+			return normName + " deleted";
+
+		} catch(BatchUpdateException b) {                
+
+			//Extracts useful error information
+			String message = l10n.getMessage(MessageID.MYSQL, b.getMessage());
+			int [] bUpdateCounts = b.getUpdateCounts();
+			
+			for (int i = 0; i < bUpdateCounts.length; i++) {
+				if (bUpdateCounts[i] < 0)
+					message = message + "\nSQL statement number " + Integer.toString(bUpdateCounts.length - i) + " has failed.";
+			}
+
+			throw new MySQLException(message);
+			
+		} catch (SQLException e) {
+			
+			String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
+			throw new MySQLException(message);
+			
+		} finally {
+			try {
+				
+				if (close)
+					connection.close();
+				if (st != null)
+					st.close();
+				if (st2 != null)
+					st2.close();
+				
+				if (res != null)
+					res.close();
+
+			} catch(SQLException e) {
+				
+				String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
+				throw new MySQLException(message);
+			
+			}
+		}
+	}
+
+	
+	/**
 	 * Accesses the database and delete the role R with the information that is passed as arguments.
 	 * 
 	 * @param roleName			Identifier of the role to delete.
@@ -1284,154 +1700,6 @@ public class DataBaseInterface {
 			}
 		}
 	}
-
-	
-	/**
-	 * Accesses the database and delete the agent A with the information that is passed as arguments.
-	 * 
-	 * @param agentName			Identifier of the agent to delete.
-	 * 
-	 * @return 					Returns <agentName + " deleted">
-	 * 
-	 * @throws MySQLException	If any errors happens with the database connection.
-	 * 
-	 */
-	String deleteAgent(String agentName) throws MySQLException {
-		
-		Statement st = null;
-		
-		boolean close = false;
-
-		try {
-			
-			if (connection == null || connection.isClosed()) {
-				connection = db.connect();
-				close = true;
-			}
-			
-			st = connection.createStatement();
-			st.executeUpdate("DELETE FROM agentList WHERE agentName='"+ agentName +"'");
-			
-			if (close)
-				connection.commit();
-			
-			return agentName + " deleted";
-			
-		} catch (SQLException e) {
-			
-			String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
-			throw new MySQLException(message);
-			
-		} finally {
-			try {
-				
-				if (close)
-					connection.close();
-				if (st != null)
-					st.close();
-
-			} catch(SQLException e) {
-				
-				String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
-				throw new MySQLException(message);
-				
-			}
-		}
-	}
-	
-	
-	/**
-	 * Accesses the database and delete the norm N with the information that is passed as arguments.
-	 * To correct and complete elimination of the norm are carried out the following actions before removing this: delete information from two tables(actionNormParams and normList) and remove inactive agents (those who do not play any role or have rules associated).
-	 * 
-	 * @param normName			Identifier of the norm to delete.
-	 * @param unitName			Identifier of the organization unit to which the norm N belongs.
-	 * 
-	 * @return 					Returns <normName + " deleted">
-	 * 
-	 * @throws MySQLException	If any errors happens with the database connection.
-	 * 
-	 */
-	String deleteNorm(String normName, String unitName) throws MySQLException {
-		
-		Statement st = null;
-		Statement st2 = null;
-		ResultSet res = null;
-
-		boolean close = false;
-
-		try {
-			
-			if (connection == null || connection.isClosed()) {
-				connection = db.connect();
-				close = true;
-			}
-			
-			st = connection.createStatement();
-			res = st.executeQuery("SELECT al.agentName FROM normList nl INNER JOIN targetType tt ON (nl.idtargettype=tt.idtargettype) " +
-					"INNER JOIN agentList al ON (al.idagentList=nl.targetValue) WHERE tt.targetName='agentName' and nl.normName='"+ normName +"'");
-
-			st2 = connection.createStatement();
-			st2.addBatch("DELETE FROM actionNormParam USING actionNormParam INNER JOIN normList INNER JOIN unitList " +
-					"ON (actionNormParam.idnormList = normList.idnormList AND normList.idunitList=unitList.idunitList)" +
-					"WHERE unitName = '" + unitName + "' AND normName = '" + normName + "'");
-			st2.addBatch("DELETE FROM normList USING normList INNER JOIN unitList ON (normList.idunitList=unitList.idunitList)" +
-					"WHERE unitName='" + unitName + "' AND normName='" + normName + "'");
-			st2.executeBatch();
-			
-			if (res.next()) {
-				
-				String agentName = res.getString("agentName");
-				
-				//Check if last role played and has no associated norm, then remove it from the table agentList
-				if (!checkAgentActive(agentName))
-					deleteAgent(agentName);
-			}
-			
-			if (close)
-				connection.commit();
-			
-			return normName + " deleted";
-
-		} catch(BatchUpdateException b) {                
-
-			//Extracts useful error information
-			String message = l10n.getMessage(MessageID.MYSQL, b.getMessage());
-			int [] bUpdateCounts = b.getUpdateCounts();
-			
-			for (int i = 0; i < bUpdateCounts.length; i++) {
-				if (bUpdateCounts[i] < 0)
-					message = message + "\nSQL statement number " + Integer.toString(bUpdateCounts.length - i) + " has failed.";
-			}
-
-			throw new MySQLException(message);
-			
-		} catch (SQLException e) {
-			
-			String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
-			throw new MySQLException(message);
-			
-		} finally {
-			try {
-				
-				if (close)
-					connection.close();
-				if (st != null)
-					st.close();
-				if (st2 != null)
-					st2.close();
-				
-				if (res != null)
-					res.close();
-
-			} catch(SQLException e) {
-				
-				String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
-				throw new MySQLException(message);
-			
-			}
-		}
-	}
 	
 	
 	/**
@@ -1565,77 +1833,28 @@ public class DataBaseInterface {
 		}
 	}
 	
-
-	/**
-	 * This function returns the type of the unit U.
-	 * The allowed values ​​are: hierarchy, team and flat.
-	 * 
-	 * @param unitName			Identifier of the organization unit.
-	 * 
-	 * @return 					Returns the type of the unit U.
-	 * 
-	 * @throws MySQLException	If any errors happens with the database connection.
-	 * 
-	 */
-	String getUnitType(String unitName) throws MySQLException {
-
-		Statement st = null;
-		ResultSet res = null;
-		
-		boolean close = false;
-
-		try {
-			
-			if (connection == null || connection.isClosed()) {
-				connection = db.connect();
-				close = true;
-			}
-			
-			st = connection.createStatement();
-			
-			res = st.executeQuery("SELECT unitTypeName FROM unitType WHERE idunitType = (SELECT idunitType FROM unitList WHERE unitName ='" + unitName + "')");
-
-			if (res.next())
-				return res.getString("unitTypeName");
-
-			return "";
-
-		} catch (SQLException e) {
-			String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
-			throw new MySQLException(message);
-		} finally {
-			try {
-				
-				if (close)
-					connection.close();
-				if (st != null)
-					st.close();
-
-				if (res != null)
-					res.close();
-
-			} catch(SQLException e) {
-				String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
-				throw new MySQLException(message);
-			}
-		}
-	}
-	
 	
 	/**
-	 * This function is responsible for returning a list of the parents units of the unit U.
+	 * This method returns a list with Jason rules associated with the norms registered in unit U, deontic D type.
+	 * Return the norms with...
+	 * 	- targetValue = '_', and
+	 * 	- targetValue = agentName, that can be activated for the agent A.
 	 * 
 	 * @param unitName			Identifier of the organization unit U.
+	 * @param agentName			Identifier of the agent A.
+	 * @param deontic			Type of the norm('d','p' o 'f').
+	 * @param service			Service affected by the norm.
 	 * 
-	 * @return 					Returns a list of the parent units of the unit U.
+	 * @return 					Returns an ArrayList with Jason rules.
 	 * 
 	 * @throws MySQLException	If any errors happens with the database connection.
 	 * 
 	 */
-	ArrayList<String> getParentsUnit(String unitName) throws MySQLException {
+	ArrayList<String> getAgentNormRules(String unitName, String agentName, String deontic, String service) throws MySQLException {
 
 		Statement st = null;
 		ResultSet res = null;
+		ResultSet res2 = null;
 
 		ArrayList<String> result = new ArrayList<String>();
 		boolean close = false;
@@ -1646,15 +1865,20 @@ public class DataBaseInterface {
 				connection = db.connect();
 				close = true;
 			}
-
+			
 			st = connection.createStatement();
-			
-			res = st.executeQuery("SELECT ul.unitName FROM unitList ul INNER JOIN unitHierarchy uh ON (ul.idunitList=uh.idParentUnit) "
-					+ "INNER JOIN unitList ul2 ON (ul2.idunitList=uh.idChildUnit) WHERE ul2.unitName='" + unitName + "'");
-			
-			while (res.next())
-				result.add(res.getString("unitName"));
-			
+			res = st.executeQuery("select distinct nl.normRule from normList nl inner join unitList ul on nl.idunitList=ul.idunitList inner join targetType tt on nl.idtargetType=tt.idtargetType inner join deontic d on d.iddeontic=nl.iddeontic inner join actionNorm an on an.idactionnorm=nl.idactionnorm" +
+					" where ul.unitName='"+unitName+"' and d.deonticdesc='"+deontic+"' and an.description='"+service+"' and tt.targetName='agentName' and nl.targetValue=-1 ");
+
+			while(res.next())
+				result.add(res.getString("normRule"));
+
+			res2 = st.executeQuery("select distinct nl.normRule from normList nl inner join unitList ul on nl.idunitList=ul.idunitList inner join targetType tt on nl.idtargetType=tt.idtargetType inner join deontic d on d.iddeontic=nl.iddeontic inner join actionNorm an on an.idactionnorm=nl.idactionnorm inner join agentList al on nl.targetValue=al.idagentList" +
+					" where ul.unitName='"+unitName+"' and d.deonticdesc='"+deontic+"' and an.description='"+service+"' and tt.targetName='agentName' and al.agentName='"+agentName+"'");
+
+			while(res2.next())
+				result.add(res2.getString("normRule"));
+
 			return result;
 
 		} catch (SQLException e) {
@@ -1670,7 +1894,542 @@ public class DataBaseInterface {
 
 				if (res != null)
 					res.close();
+				if (res2 != null)
+					res2.close();
+
+			} catch(SQLException e) {
+				String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
+				throw new MySQLException(message);
+			}
+		}
+	}
+
+
+	/**
+	 * This method retrieves the norms associated with unit U whose target is AgentName type and matches with the provided in targetValueName.
+	 * 
+	 * @param targetValueName	Identifier of the agent T.
+	 * @param unitName			Identifier of the organization unit U.
+	 * 
+	 * @return 					Returns the rules as <NormName, UnitName, TargetTypeName, TargetValueName>.
+	 * 
+	 * @throws MySQLException	If any errors happens with the database connection.
+	 * 
+	 */
+	ArrayList<ArrayList<String>> getAgentNorms(String targetValueName, String unitName) throws MySQLException {
+		
+		Statement st = null;
+		ResultSet res = null;
+
+		ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
+		boolean close = false;
+
+		try {
+			
+			if (connection == null || connection.isClosed()) {
+				connection = db.connect();
+				close = true;
+			}
+
+			st = connection.createStatement();
+			
+			if (targetValueName.equals("_"))
+				res = st.executeQuery("SELECT n1.normName, u1.unitName, tt.targetName, '_' FROM normList n1 INNER JOIN unitList u1 "
+						+ "ON n1.idunitList = u1.idunitList INNER JOIN targetType tt ON n1.idtargetType = tt.idtargetType WHERE "
+						+ "tt.targetName='agentName' AND n1.targetValue=-1 AND u1.unitName='"+unitName+"'");
+			else
+				res = st.executeQuery("SELECT nl.normName, ul.unitName, tt.targetName, al.agentName FROM normList nl INNER JOIN unitList ul "
+						+ "ON nl.idunitList=ul.idunitList INNER JOIN targetType tt ON nl.idtargetType=tt.idtargetType INNER JOIN agentList "
+						+ "al ON nl.targetValue=al.idagentList WHERE tt.targetName='agentName' AND al.agentName='"+targetValueName+"' AND "
+						+ "ul.unitName='"+ unitName+"'");
+
+			while (res.next()) {
 				
+				ArrayList<String> aux = new ArrayList<String>();
+				aux.add(res.getString(1));
+				aux.add(res.getString(2));
+				aux.add(res.getString(3));
+				aux.add(res.getString(4));
+				result.add(aux);
+			}
+			
+			return result;
+			
+		} catch (SQLException e) {
+			String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
+			throw new MySQLException(message);
+		} finally {
+			try {
+				
+				if (close)
+					connection.close();
+				if (st != null)
+					st.close();
+
+				if (res != null)
+					res.close();
+
+			} catch(SQLException e) {
+				String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
+				throw new MySQLException(message);
+			}
+		}
+	}
+
+
+	/**
+	 * This method retrieves the norms associated with unit U whose target is AgentName type.
+	 * First, get the set of tuples that are associated with some Agent and then recovers which are defined with value "_".
+	 * 
+	 * @param unitName			Identifier of the organization unit U.
+	 * 
+	 * @return 					Returns the rules as <NormName, UnitName, TargetTypeName, TargetValueName>.
+	 * 
+	 * @throws MySQLException	If any errors happens with the database connection.
+	 * 
+	 */
+	ArrayList<ArrayList<String>> getAgentNorms(String unitName) throws MySQLException {
+
+		Statement st = null;
+		ResultSet res = null;
+
+		ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
+		boolean close = false;
+
+		try {
+			
+			if (connection == null || connection.isClosed()) {
+				connection = db.connect();
+				close = true;
+			}
+
+			st = connection.createStatement();
+
+			res = st.executeQuery("SELECT nl.normName, ul.unitName, tt.targetName, al.agentName FROM normList nl INNER JOIN unitList ul ON "
+					+ "nl.idunitList=ul.idunitList INNER JOIN targetType tt ON nl.idtargetType=tt.idtargetType INNER JOIN agentList al ON "
+					+ "nl.targetValue=al.idagentList WHERE tt.targetName='agentName' AND ul.unitName='"+unitName+"'");
+
+			while (res.next()) {
+				
+				ArrayList<String> aux = new ArrayList<String>();
+				aux.add(res.getString(1));
+				aux.add(res.getString(2));
+				aux.add(res.getString(3));
+				aux.add(res.getString(4));
+				result.add(aux);
+			}
+
+			res = st.executeQuery("SELECT nl.normName, ul.unitName, tt.targetName, '_' FROM normList nl INNER JOIN unitList ul ON "
+					+ "nl.idunitList=ul.idunitList INNER JOIN targetType tt ON nl.idtargetType=tt.idtargetType WHERE "
+					+ "tt.targetName='agentName' AND nl.targetValue=-1 AND ul.unitName='"+unitName+"'");
+
+			while (res.next()) {
+				
+				ArrayList<String> aux = new ArrayList<String>();
+				aux.add(res.getString(1));
+				aux.add(res.getString(2));
+				aux.add(res.getString(3));
+				aux.add(res.getString(4));
+				result.add(aux);
+			}
+
+			return result; 
+
+		} catch (SQLException e) {
+			String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
+			throw new MySQLException(message);
+		} finally {
+			try {
+				
+				if (close)
+					connection.close();
+				if (st != null)
+					st.close();
+
+				if (res != null)
+					res.close();
+
+			} catch(SQLException e) {
+				String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
+				throw new MySQLException(message);
+			}
+		}
+	}
+
+	
+	/**
+	 * This method accesses the database and returning the set of agents and their roles which play a role within unit U with position P.
+	 * 
+	 * @param unitName			Identifier of the organization unit U.
+	 * @param positionValue		Identifier of the position P.
+	 * 
+	 * @return 					Returns a list (<requestedAgentName, roleName>) where agents play roles within unit U with position P.
+	 * 
+	 * @throws MySQLException	If any errors happens with the database connection.
+	 * 
+	 */
+	ArrayList<ArrayList<String>> getAgentsPlayingPositionInUnit(String unitName, String positionValue) throws MySQLException{
+
+		Statement st = null;
+		ResultSet res = null;
+
+		ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
+		boolean close = false;
+
+		try {
+			
+			if (connection == null || connection.isClosed()) {
+				connection = db.connect();
+				close = true;
+			}
+
+			st = connection.createStatement();
+
+			res = st.executeQuery("SELECT al.agentName, rl.roleName FROM agentList al INNER JOIN agentPlayList apl ON (apl.idagentList=al.idagentList) "
+					+ "INNER JOIN roleList rl ON (rl.idroleList=apl.idroleList) INNER JOIN position p ON (rl.idposition=p.idposition) "
+					+ "INNER JOIN unitList ul ON (ul.idunitList=rl.idunitList) WHERE ul.unitName='" + unitName + "' AND p.positionName='" + positionValue + "'");
+
+			while (res.next()) {
+				
+				ArrayList<String> aux = new ArrayList<String>();
+				aux.add(res.getString("agentName"));
+				aux.add(res.getString("roleName"));
+				result.add(aux);
+				
+			}
+			
+			return result;
+			
+		} catch (SQLException e) {
+			String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
+			throw new MySQLException(message);
+		} finally {
+			try {
+				
+				if (close)
+					connection.close();
+				if (st != null)
+					st.close();
+
+				if (res != null)
+					res.close();
+
+			} catch(SQLException e) {
+				String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
+				throw new MySQLException(message);
+			}
+		}
+	}
+
+	
+	/**
+	 * This method accesses the database and returning the set of agents playing the role R within unit U.
+	 * 
+	 * @param unitName			Identifier of the organization unit U.
+	 * @param roleName			Identifier of the role R.
+	 * 
+	 * @return 					Returns a list of agents playing the role R within unit U. 
+	 * 
+	 * @throws MySQLException	If any errors happens with the database connection.
+	 * 
+	 */
+	ArrayList<String> getAgentsPlayingRoleInUnit(String unitName, String roleName) throws MySQLException {
+
+		Statement st = null;
+		ResultSet res = null;
+
+		ArrayList<String> result = new ArrayList<String>();
+		boolean close = false;
+
+		try {
+			
+			if (connection == null || connection.isClosed()) {
+				connection = db.connect();
+				close = true;
+			}
+
+			st = connection.createStatement();
+
+			res = st.executeQuery("SELECT al.agentName FROM agentList al INNER JOIN agentPlayList apl ON (apl.idagentList=al.idagentList) "
+					+ "INNER JOIN roleList rl ON (rl.idroleList=apl.idroleList) INNER JOIN unitList ul ON (ul.idunitList=rl.idunitList) "
+					+ "WHERE ul.unitName='" + unitName + "' AND rl.roleName='" + roleName + "'");
+			
+			while (res.next())
+				result.add(res.getString("agentName"));
+			
+			return result;
+			
+		} catch (SQLException e) {
+			String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
+			throw new MySQLException(message);
+		} finally {
+			try {
+				
+				if (close)
+					connection.close();
+				if (st != null)
+					st.close();
+				
+				if (res != null)
+					res.close();
+
+			} catch(SQLException e) {
+				String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
+				throw new MySQLException(message);
+			}
+		}
+	}
+
+	
+	/**
+	 * This method accesses the database and returning a list with the names of all agents playing the role R, whose position is P.
+	 * 
+	 * @param unitName			Identifier of the organization unit U.
+	 * @param roleName			Identifier of the role R.
+	 * @param positionValue		Identifier of the position P.
+	 * 
+	 * @return 					Returns a agent list whose they play role R within unit U with position P.
+	 * 
+	 * @throws MySQLException	If any errors happens with the database connection.
+	 * 
+	 */
+	ArrayList<String> getAgentsPlayingRolePositionInUnit(String unitName, String roleName, String positionValue) throws MySQLException {
+		
+		Statement st = null;
+		ResultSet res = null;
+
+		ArrayList<String> result = new ArrayList<String>();
+		boolean close = false;
+
+		try {
+			
+			if (connection == null || connection.isClosed()) {
+				connection = db.connect();
+				close = true;
+			}
+
+			st = connection.createStatement();
+
+			res = st.executeQuery("SELECT al.agentname FROM agentList al INNER JOIN agentPlayList apl ON (apl.idagentList=al.idagentList) "
+					+ "INNER JOIN roleList rl ON (rl.idroleList=apl.idroleList) INNER JOIN position p ON (rl.idposition=p.idposition) "
+					+ "INNER JOIN unitList ul ON (ul.idunitList=rl.idunitList) WHERE ul.unitName='" + unitName + "' AND rl.roleName='" + roleName + "' "
+					+ "AND p.positionName='" + positionValue + "'");
+					
+			while(res.next()) {
+				result.add(res.getString("agentName"));
+			}
+
+			return result;
+		
+		} catch (SQLException e) {
+			String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
+			throw new MySQLException(message);
+		}  finally {
+			try {
+				
+				if (close)
+					connection.close();
+				if (st != null)
+					st.close();
+
+				if (res != null)
+					res.close();
+
+			} catch(SQLException e) {
+				String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
+				throw new MySQLException(message);
+			}
+		}
+	}
+
+	
+	/**
+	 * This method accesses the database and returning the set of agents and their roles which play a role within unit U with position P.
+	 * In addition, we must consider that only return those roles whose visibility is public.
+	 * 
+	 * @param unitName			Identifier of the organization unit U.
+	 * @param positionValue		Identifier of the position P.
+	 * 
+	 * @return 					Returns a list (<requestedAgentName, roleName>) where agents play roles whose visibility is public within unit U with position P.
+	 * 
+	 * @throws MySQLException	If any errors happens with the database connection.
+	 * 
+	 */
+	ArrayList<ArrayList<String>> getAgentsPlayingVisibilityPositionInUnit(String unitName, String positionValue) throws MySQLException {
+
+		Statement st = null;
+		ResultSet res = null;
+
+		ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
+		boolean close = false;
+
+		try {
+			
+			if (connection == null || connection.isClosed()) {
+				connection = db.connect();
+				close = true;
+			}
+
+			st = connection.createStatement();
+
+			res = st.executeQuery("SELECT al.agentName, rl.roleName FROM agentList al INNER JOIN agentPlayList apl ON "
+					+ "(apl.idagentList=al.idagentList) INNER JOIN roleList rl ON (rl.idroleList=apl.idroleList) INNER JOIN "
+					+ "position p ON (rl.idposition=p.idposition) INNER JOIN visibility v ON (rl.idvisibility=v.idvisibility) "
+					+ "INNER JOIN unitList ul ON (ul.idunitList=rl.idunitList) WHERE ul.unitName='" + unitName + "' AND "
+					+ "p.positionName='" + positionValue + "' AND v.visibility='public'");
+					
+			while (res.next()) {
+				
+				ArrayList<String> aux = new ArrayList<String>();
+				aux.add(res.getString("agentName"));
+				aux.add(res.getString("roleName"));
+				result.add(aux);
+				
+			}
+			
+			return result;
+			
+		} catch (SQLException e) {
+			String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
+			throw new MySQLException(message);
+		} finally {
+			try {
+				
+				if (close)
+					connection.close();
+				if (st != null)
+					st.close();
+
+				if (res != null)
+					res.close();
+
+			} catch(SQLException e) {
+				String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
+				throw new MySQLException(message);
+			}
+		}
+	}
+
+	
+	/**
+	 * This method accesses the database and returning the set of agents of unit U with their respective roles.
+	 * 
+	 * @param unitName			Identifier of the organization unit U.
+	 * 
+	 * @return 					For each agent within unit U, returns a tuple with the following information: agentName and roleName.
+	 * 
+	 * @throws MySQLException	If any errors happens with the database connection.
+	 * 
+	 */
+	ArrayList<ArrayList<String>> getAgentsRolesInUnit(String unitName) throws MySQLException {
+
+		Statement st = null;
+		ResultSet res = null;
+
+		ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
+		boolean close = false;
+
+		try {
+			
+			if (connection == null || connection.isClosed()) {
+				connection = db.connect();
+				close = true;
+			}
+
+			st = connection.createStatement();
+
+			res = st.executeQuery("SELECT rl.roleName, al.agentName FROM roleList rl INNER JOIN unitList ul ON (ul.idunitList=rl.idunitList) "
+					+ "INNER JOIN agentPlayList apl ON (apl.idroleList=rl.idroleList) INNER JOIN agentList al ON (apl.idagentList=al.idagentList) "
+					+ "WHERE ul.unitName='" + unitName + "'");
+			
+			while (res.next()) {
+
+				ArrayList<String> aux = new ArrayList<String>();
+				aux.add(res.getString("agentName"));
+				aux.add(res.getString("roleName"));
+				result.add(aux);
+				
+			}
+			
+			return result;
+			
+		} catch (SQLException e) {
+			String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
+			throw new MySQLException(message);
+		}  finally {
+			try {
+				
+				if (close)
+					connection.close();
+				if (st != null)
+					st.close();
+
+				if (res != null)
+					res.close();
+
+			} catch(SQLException e) {
+				String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
+				throw new MySQLException(message);
+			}
+		}
+	}
+
+	
+	/**
+	 * This method accesses the database and returning the set of agents playing roles of public visibility in unit U with their respective roles.
+	 * 
+	 * @param unitName			Identifier of the organization unit U.
+	 * 
+	 * @return 					For each agent playing roles of public visibility within unit U, returns a tuple with the following information: agentName and roleName.
+	 * 
+	 * @throws MySQLException	If any errors happens with the database connection.
+	 * 
+	 */
+	ArrayList<ArrayList<String>> getAgentsVisibilityRolesInUnit(String unitName) throws MySQLException {
+
+		Statement st = null;
+		ResultSet res = null;
+
+		ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
+		boolean close = false;
+
+		try {
+			
+			if (connection == null || connection.isClosed()) {
+				connection = db.connect();
+				close = true;
+			}
+
+			st = connection.createStatement();
+
+			res = st.executeQuery("SELECT al.agentName, rl.roleName FROM roleList rl INNER JOIN visibility v ON (v.idvisibility=rl.idvisibility) "
+					+ "INNER JOIN unitList ul ON (ul.idunitList=rl.idunitList) INNER JOIN agentPlayList apl ON (apl.idroleList=rl.idroleList) "
+					+ "INNER JOIN agentList al ON (apl.idagentList=al.idagentList) WHERE ul.unitName='" + unitName + "' AND v.visibility='public'");
+			
+			while (res.next()) {
+				
+				ArrayList<String> aux = new ArrayList<String>();
+				aux.add(res.getString("agentName"));
+				aux.add(res.getString("roleName"));
+				result.add(aux);
+
+			}
+			
+			return result;
+			
+		} catch (SQLException e) {
+			String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
+			throw new MySQLException(message);
+		} finally {
+			try {
+				if (close)
+					connection.close();
+				if (st != null)
+					st.close();
+
+				if (res != null)
+					res.close();
+
 			} catch(SQLException e) {
 				String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
 				throw new MySQLException(message);
@@ -1682,7 +2441,7 @@ public class DataBaseInterface {
 	/**
 	 * This function retrieves information from the roles played by the agent A1, attending to:
 	 *  - Returns all roles with public visibility played by agent A1 on any unit.
-	 *  - In addition, also returns the roles with private visibility played by agent A2 in all units where both agents (A1 and A2) play some role as well.
+	 *  - In addition, also returns the roles with private visibility played by agent A1 in all units where both agents (A1 and A2) play some role as well.
 	 * 
 	 * @param requestedAgentName	Agent identifier which you want to know the information.
 	 * @param agentName				Identifier of the agent requesting the service.
@@ -1839,24 +2598,24 @@ public class DataBaseInterface {
 			}
 		}
 	}
-
 	
+
 	/**
-	 * This method accesses the database and returning the set of agents of unit U with their respective roles.
+	 * This function returns the type of the unit U.
+	 * The allowed values ​​are: hierarchy, team and flat.
 	 * 
-	 * @param unitName			Identifier of the organization unit U.
+	 * @param unitName			Identifier of the organization unit.
 	 * 
-	 * @return 					For each agent within unit U, returns a tuple with the following information: agentName and roleName.
+	 * @return 					Returns the type of the unit U.
 	 * 
 	 * @throws MySQLException	If any errors happens with the database connection.
 	 * 
 	 */
-	ArrayList<ArrayList<String>> getAgentsRolesInUnit(String unitName) throws MySQLException {
+	String getUnitType(String unitName) throws MySQLException {
 
 		Statement st = null;
 		ResultSet res = null;
-
-		ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
+		
 		boolean close = false;
 
 		try {
@@ -1865,93 +2624,22 @@ public class DataBaseInterface {
 				connection = db.connect();
 				close = true;
 			}
-
+			
 			st = connection.createStatement();
-
-			res = st.executeQuery("SELECT rl.roleName, al.agentName FROM roleList rl INNER JOIN unitList ul ON (ul.idunitList=rl.idunitList) "
-					+ "INNER JOIN agentPlayList apl ON (apl.idroleList=rl.idroleList) INNER JOIN agentList al ON (apl.idagentList=al.idagentList) "
-					+ "WHERE ul.unitName='" + unitName + "'");
 			
-			while (res.next()) {
+			res = st.executeQuery("SELECT unitTypeName FROM unitType WHERE idunitType = (SELECT idunitType FROM unitList WHERE unitName ='" + unitName + "')");
 
-				ArrayList<String> aux = new ArrayList<String>();
-				aux.add(res.getString("agentName"));
-				aux.add(res.getString("roleName"));
-				result.add(aux);
-				
-			}
-			
-			return result;
-			
-		} catch (SQLException e) {
-			String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
-			throw new MySQLException(message);
-		}  finally {
-			try {
-				
-				if (close)
-					connection.close();
-				if (st != null)
-					st.close();
+			if (res.next())
+				return res.getString("unitTypeName");
 
-				if (res != null)
-					res.close();
+			return "";
 
-			} catch(SQLException e) {
-				String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
-				throw new MySQLException(message);
-			}
-		}
-	}
-
-	
-	/**
-	 * This method accesses the database and returning the set of agents playing roles of public visibility in unit U with their respective roles.
-	 * 
-	 * @param unitName			Identifier of the organization unit U.
-	 * 
-	 * @return 					For each agent playing roles of public visibility within unit U, returns a tuple with the following information: agentName and roleName.
-	 * 
-	 * @throws MySQLException	If any errors happens with the database connection.
-	 * 
-	 */
-	ArrayList<ArrayList<String>> getAgentsVisibilityRolesInUnit(String unitName) throws MySQLException {
-
-		Statement st = null;
-		ResultSet res = null;
-
-		ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
-		boolean close = false;
-
-		try {
-			
-			if (connection == null || connection.isClosed()) {
-				connection = db.connect();
-				close = true;
-			}
-
-			st = connection.createStatement();
-
-			res = st.executeQuery("SELECT al.agentName, rl.roleName FROM roleList rl INNER JOIN visibility v ON (v.idvisibility=rl.idvisibility) "
-					+ "INNER JOIN unitList ul ON (ul.idunitList=rl.idunitList) INNER JOIN agentPlayList apl ON (apl.idroleList=rl.idroleList) "
-					+ "INNER JOIN agentList al ON (apl.idagentList=al.idagentList) WHERE ul.unitName='" + unitName + "' AND v.visibility='public'");
-			
-			while (res.next()) {
-				
-				ArrayList<String> aux = new ArrayList<String>();
-				aux.add(res.getString("agentName"));
-				aux.add(res.getString("roleName"));
-				result.add(aux);
-
-			}
-			
-			return result;
-			
 		} catch (SQLException e) {
 			String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
 			throw new MySQLException(message);
 		} finally {
 			try {
+				
 				if (close)
 					connection.close();
 				if (st != null)
@@ -1966,20 +2654,19 @@ public class DataBaseInterface {
 			}
 		}
 	}
-
+	
 	
 	/**
-	 * This method accesses the database and returning the set of agents playing the role R within unit U.
+	 * This function is responsible for returning a list of the parents units of the unit U.
 	 * 
 	 * @param unitName			Identifier of the organization unit U.
-	 * @param roleName			Identifier of the role R.
 	 * 
-	 * @return 					Returns a list of agents playing the role R within unit U. 
+	 * @return 					Returns a list of the parent units of the unit U.
 	 * 
 	 * @throws MySQLException	If any errors happens with the database connection.
 	 * 
 	 */
-	ArrayList<String> getAgentsPlayingRoleInUnit(String unitName, String roleName) throws MySQLException {
+	ArrayList<String> getParentsUnit(String unitName) throws MySQLException {
 
 		Statement st = null;
 		ResultSet res = null;
@@ -1995,81 +2682,15 @@ public class DataBaseInterface {
 			}
 
 			st = connection.createStatement();
-
-			res = st.executeQuery("SELECT al.agentName FROM agentList al INNER JOIN agentPlayList apl ON (apl.idagentList=al.idagentList) "
-					+ "INNER JOIN roleList rl ON (rl.idroleList=apl.idroleList) INNER JOIN unitList ul ON (ul.idunitList=rl.idunitList) "
-					+ "WHERE ul.unitName='" + unitName + "' AND rl.roleName='" + roleName + "'");
+			
+			res = st.executeQuery("SELECT ul.unitName FROM unitList ul INNER JOIN unitHierarchy uh ON (ul.idunitList=uh.idParentUnit) "
+					+ "INNER JOIN unitList ul2 ON (ul2.idunitList=uh.idChildUnit) WHERE ul2.unitName='" + unitName + "'");
 			
 			while (res.next())
-				result.add(res.getString("agentName"));
+				result.add(res.getString("unitName"));
 			
 			return result;
-			
-		} catch (SQLException e) {
-			String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
-			throw new MySQLException(message);
-		} finally {
-			try {
-				
-				if (close)
-					connection.close();
-				if (st != null)
-					st.close();
-				
-				if (res != null)
-					res.close();
 
-			} catch(SQLException e) {
-				String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
-				throw new MySQLException(message);
-			}
-		}
-	}
-
-	
-	/**
-	 * This method accesses the database and returning the set of agents and their roles which play a role within unit U with position P.
-	 * 
-	 * @param unitName			Identifier of the organization unit U.
-	 * @param positionValue		Identifier of the position P.
-	 * 
-	 * @return 					Returns a list (<requestedAgentName, roleName>) where agents play roles within unit U with position P.
-	 * 
-	 * @throws MySQLException	If any errors happens with the database connection.
-	 * 
-	 */
-	ArrayList<ArrayList<String>> getAgentsPlayingPositionInUnit(String unitName, String positionValue) throws MySQLException{
-
-		Statement st = null;
-		ResultSet res = null;
-
-		ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
-		boolean close = false;
-
-		try {
-			
-			if (connection == null || connection.isClosed()) {
-				connection = db.connect();
-				close = true;
-			}
-
-			st = connection.createStatement();
-
-			res = st.executeQuery("SELECT al.agentName, rl.roleName FROM agentList al INNER JOIN agentPlayList apl ON (apl.idagentList=al.idagentList) "
-					+ "INNER JOIN roleList rl ON (rl.idroleList=apl.idroleList) INNER JOIN position p ON (rl.idposition=p.idposition) "
-					+ "INNER JOIN unitList ul ON (ul.idunitList=rl.idunitList) WHERE ul.unitName='" + unitName + "' AND p.positionName='" + positionValue + "'");
-
-			while (res.next()) {
-				
-				ArrayList<String> aux = new ArrayList<String>();
-				aux.add(res.getString("agentName"));
-				aux.add(res.getString("roleName"));
-				result.add(aux);
-				
-			}
-			
-			return result;
-			
 		} catch (SQLException e) {
 			String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
 			throw new MySQLException(message);
@@ -2083,137 +2704,7 @@ public class DataBaseInterface {
 
 				if (res != null)
 					res.close();
-
-			} catch(SQLException e) {
-				String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
-				throw new MySQLException(message);
-			}
-		}
-	}
-
-	
-	/**
-	 * This method accesses the database and returning a list with the names of all agents playing the role R, whose position is P.
-	 * 
-	 * @param unitName			Identifier of the organization unit U.
-	 * @param roleName			Identifier of the role R.
-	 * @param positionValue		Identifier of the position P.
-	 * 
-	 * @return 					Returns a agent list whose they play role R within unit U with position P.
-	 * 
-	 * @throws MySQLException	If any errors happens with the database connection.
-	 * 
-	 */
-	ArrayList<String> getAgentsPlayingRolePositionInUnit(String unitName, String roleName, String positionValue) throws MySQLException {
-		
-		Statement st = null;
-		ResultSet res = null;
-
-		ArrayList<String> result = new ArrayList<String>();
-		boolean close = false;
-
-		try {
-			
-			if (connection == null || connection.isClosed()) {
-				connection = db.connect();
-				close = true;
-			}
-
-			st = connection.createStatement();
-
-			res = st.executeQuery("SELECT al.agentname FROM agentList al INNER JOIN agentPlayList apl ON (apl.idagentList=al.idagentList) "
-					+ "INNER JOIN roleList rl ON (rl.idroleList=apl.idroleList) INNER JOIN position p ON (rl.idposition=p.idposition) "
-					+ "INNER JOIN unitList ul ON (ul.idunitList=rl.idunitList) WHERE ul.unitName='" + unitName + "' AND rl.roleName='" + roleName + "' "
-					+ "AND p.positionName='" + positionValue + "'");
-					
-			while(res.next()) {
-				result.add(res.getString("agentName"));
-			}
-
-			return result;
-		
-		} catch (SQLException e) {
-			String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
-			throw new MySQLException(message);
-		}  finally {
-			try {
 				
-				if (close)
-					connection.close();
-				if (st != null)
-					st.close();
-
-				if (res != null)
-					res.close();
-
-			} catch(SQLException e) {
-				String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
-				throw new MySQLException(message);
-			}
-		}
-	}
-
-	
-	/**
-	 * This method accesses the database and returning the set of agents and their roles which play a role within unit U with position P.
-	 * In addition, we must consider that only return those roles whose visibility is public.
-	 * 
-	 * @param unitName			Identifier of the organization unit U.
-	 * @param positionValue		Identifier of the position P.
-	 * 
-	 * @return 					Returns a list (<requestedAgentName, roleName>) where agents play roles whose visibility is public within unit U with position P.
-	 * 
-	 * @throws MySQLException	If any errors happens with the database connection.
-	 * 
-	 */
-	ArrayList<ArrayList<String>> getAgentsPlayingVisibilityPositionInUnit(String unitName, String positionValue) throws MySQLException {
-
-		Statement st = null;
-		ResultSet res = null;
-
-		ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
-		boolean close = false;
-
-		try {
-			
-			if (connection == null || connection.isClosed()) {
-				connection = db.connect();
-				close = true;
-			}
-
-			st = connection.createStatement();
-
-			res = st.executeQuery("SELECT al.agentName, rl.roleName FROM agentList al INNER JOIN agentPlayList apl ON "
-					+ "(apl.idagentList=al.idagentList) INNER JOIN roleList rl ON (rl.idroleList=apl.idroleList) INNER JOIN "
-					+ "position p ON (rl.idposition=p.idposition) INNER JOIN visibility v ON (rl.idvisibility=v.idvisibility) "
-					+ "INNER JOIN unitList ul ON (ul.idunitList=rl.idunitList) WHERE ul.unitName='" + unitName + "' AND "
-					+ "p.positionName='" + positionValue + "' AND v.visibility='public'");
-					
-			while (res.next()) {
-				
-				ArrayList<String> aux = new ArrayList<String>();
-				aux.add(res.getString("agentName"));
-				aux.add(res.getString("roleName"));
-				result.add(aux);
-				
-			}
-			
-			return result;
-			
-		} catch (SQLException e) {
-			String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
-			throw new MySQLException(message);
-		} finally {
-			try {
-				
-				if (close)
-					connection.close();
-				if (st != null)
-					st.close();
-
-				if (res != null)
-					res.close();
-
 			} catch(SQLException e) {
 				String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
 				throw new MySQLException(message);
@@ -2768,69 +3259,6 @@ public class DataBaseInterface {
 
 	
 	/**
-	 * Checks the compatibility with the Jason languaje. 
-	 * 
-	 * @param identifier		Identifier to check if is a valid parameter.
-	 * 
-	 * @return boolean 			Return true if is a valid parameter and false if not.
-	 * 
-	 * @throws MySQLException	If any errors happens with the database connection.
-	 */
-	boolean checkValidIdentifier(String identifier) throws MySQLException {
-
-		Statement st = null;
-		ResultSet res = null;
-
-		Pattern p = Pattern.compile("[0-9]+|[a-zA-Z][a-zA-Z_0-9]*");
-		Matcher ma = p.matcher(identifier);
-		boolean b = ma.matches();
-		
-		boolean result= true;
-		boolean close = false;
-
-		if(b)
-			result = true;
-		else
-			result = false;
-
-		try {
-			
-			if (connection == null || connection.isClosed()) {
-				connection = db.connect();
-				close = true;
-			}
-			
-			st = connection.createStatement();
-			res = st.executeQuery("SELECT * FROM reservedWordList WHERE reservedWord='" + identifier + "'");
-
-			if (res.next())
-				return false;
-			
-			return result;
-
-		} catch (SQLException e) {
-			String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
-			throw new MySQLException(message);
-		} finally {
-			try {
-				
-				if (close)
-					connection.close();
-				if (st != null)
-					st.close();
-
-				if (res != null)
-					res.close();
-				
-			} catch(SQLException e) {
-				String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
-				throw new MySQLException(message);
-			}
-		}
-	}
-
-	
-	/**
 	 * This method accesses the database and returning the contents of the norm associated with the unit U whose name is N.
 	 * 
 	 * @param normName			Identifier of the norm N.
@@ -2878,133 +3306,6 @@ public class DataBaseInterface {
 
 				if (res != null)
 					res.close();
-
-			} catch(SQLException e) {
-				String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
-				throw new MySQLException(message);
-			}
-		}
-	}
-	
-	
-	/**
-	 * This method accesses the database and check if there is a rule whose ID/name is N in the unit U.
-	 * 
-	 * @param normName			Identifier of the norm N.
-	 * @param unitName			Identifier of the organization unit U.
-	 * 
-	 * @return 					Returns true if exists, otherwise return false.
-	 * 
-	 * @throws MySQLException	If any errors happens with the database connection.
-	 * 
-	 */
-	boolean checkNormName(String normName, String unitName) throws MySQLException {
-		
-		Statement st = null;
-		ResultSet res = null;
-
-		boolean close = false;
-
-		try {
-			
-			if (connection == null || connection.isClosed()) {
-				connection = db.connect();
-				close = true;
-			}
-			
-			st = connection.createStatement();
-			res = st.executeQuery("SELECT * FROM normList nl INNER JOIN unitList ul ON (ul.idunitList=nl.idunitList) "
-					+ "WHERE nl.normName='" + normName + "' AND ul.unitName='" + unitName + "'");
-					
-			if(res.next())
-				return true;
-			
-			return false;
-			
-		} catch (SQLException e) {
-			String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
-			throw new MySQLException(message);
-		} finally {
-			try {
-				
-				if (close)
-					connection.close();
-				if (st != null)
-					st.close();
-
-				if (res != null)
-					res.close();
-
-			} catch(SQLException e) {
-				String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
-				throw new MySQLException(message);
-			}
-		}
-	}
-	
-	
-	/**
-	 * This method returns a list with Jason rules associated with the norms registered in unit U, deontic D type.
-	 * Return the norms with...
-	 * 	- targetValue = '_', and
-	 * 	- targetValue = agentName, that can be activated for the agent A.
-	 * 
-	 * @param unitName			Identifier of the organization unit U.
-	 * @param agentName			Identifier of the agent A.
-	 * @param deontic			Type of the norm('d','p' o 'f').
-	 * @param service			Service affected by the norm.
-	 * 
-	 * @return 					Returns an ArrayList with Jason rules.
-	 * 
-	 * @throws MySQLException	If any errors happens with the database connection.
-	 * 
-	 */
-	ArrayList<String> getAgentNormRules(String unitName, String agentName, String deontic, String service) throws MySQLException {
-
-		Statement st = null;
-		ResultSet res = null;
-		ResultSet res2 = null;
-
-		ArrayList<String> result = new ArrayList<String>();
-		boolean close = false;
-
-		try {
-			
-			if (connection == null || connection.isClosed()) {
-				connection = db.connect();
-				close = true;
-			}
-			
-			st = connection.createStatement();
-			res = st.executeQuery("select distinct nl.normRule from normList nl inner join unitList ul on nl.idunitList=ul.idunitList inner join targetType tt on nl.idtargetType=tt.idtargetType inner join deontic d on d.iddeontic=nl.iddeontic inner join actionNorm an on an.idactionnorm=nl.idactionnorm" +
-					" where ul.unitName='"+unitName+"' and d.deonticdesc='"+deontic+"' and an.description='"+service+"' and tt.targetName='agentName' and nl.targetValue=-1 ");
-
-			while(res.next())
-				result.add(res.getString("normRule"));
-
-			res2 = st.executeQuery("select distinct nl.normRule from normList nl inner join unitList ul on nl.idunitList=ul.idunitList inner join targetType tt on nl.idtargetType=tt.idtargetType inner join deontic d on d.iddeontic=nl.iddeontic inner join actionNorm an on an.idactionnorm=nl.idactionnorm inner join agentList al on nl.targetValue=al.idagentList" +
-					" where ul.unitName='"+unitName+"' and d.deonticdesc='"+deontic+"' and an.description='"+service+"' and tt.targetName='agentName' and al.agentName='"+agentName+"'");
-
-			while(res2.next())
-				result.add(res2.getString("normRule"));
-
-			return result;
-
-		} catch (SQLException e) {
-			String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
-			throw new MySQLException(message);
-		} finally {
-			try {
-				
-				if (close)
-					connection.close();
-				if (st != null)
-					st.close();
-
-				if (res != null)
-					res.close();
-				if (res2 != null)
-					res2.close();
 
 			} catch(SQLException e) {
 				String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
@@ -3148,307 +3449,6 @@ public class DataBaseInterface {
 					res.close();
 				if (res2 != null)
 					res2.close();
-
-			} catch(SQLException e) {
-				String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
-				throw new MySQLException(message);
-			}
-		}
-	}
-
-
-	/**
-	 * This method inserts the necessary information in the database to register a norm.
-	 * 
-	 * @param unitName			Identifier of the organization unit U.
-	 * @param normContent		Contents of the norm expressed as <Deontic, Target, Action, Activation, Expiration>.
-	 * @param parsedNorm		Object type Norm with the parsed content <id, deontic, targetType, targetValue, actionName, actionParams, action, activation, expiration>.
-	 * @param normRule			The belief or norm parsed in Jason language.
-	 * 
-	 * @return 					Returns <normName + " created">.
-	 * 
-	 * @throws MySQLException	If any errors happens with the database connection.
-	 * 
-	 */
-	String createNorm(String unitName, String normContent, Norm parsedNorm, Literal normRule) throws MySQLException {
-
-		Statement st = null;
-		ResultSet res = null;
-		ResultSet res2 = null;
-		ResultSet res3 = null;
-		ResultSet res4 = null;
-		ResultSet res5 = null;
-		ResultSet res6 = null;
-		ResultSet res7 = null;
-
-		String idUnit = "";
-		String idDeontic = "";
-		String idTarget = "";
-		String typeTableName = "";
-		String typerowName = "";
-		String idTargetValue = "";
-		String idAction = "";
-		boolean close = false;
-
-		try {
-			
-			if (connection == null || connection.isClosed()) {
-				connection = db.connect();
-				close = true;
-			}
-			
-			st = connection.createStatement();
-			res = st.executeQuery("SELECT idunitList FROM unitList WHERE unitName='" + unitName + "'");
-
-			if (res.next())
-				idUnit = res.getString("idunitList");
-
-			res2 = st.executeQuery("SELECT iddeontic FROM deontic WHERE deonticdesc='" + parsedNorm.getDeontic() + "'");
-
-			if (res2.next())
-				idDeontic = res2.getString("iddeontic");
-
-			res3 = st.executeQuery("SELECT idtargetType, targetTable FROM targetType WHERE targetName='" + parsedNorm.getTargetType() + "'");
-
-			if (res3.next())
-				idTarget = res3.getString("idtargetType");
-				typeTableName = res3.getString("targetTable");
-
-			if (parsedNorm.getTargetValue().equals("_")) {
-				idTargetValue = "-1";
-			} else {
-
-				typerowName = typeTableName.replace("List", "") + "Name";
-
-				res4 = st.executeQuery("SELECT id"+typeTableName+" FROM "+typeTableName+" WHERE "+typerowName +"='"+parsedNorm.getTargetValue()+"'");
-
-				if (res4.next()) {
-					
-					idTargetValue = res4.getString("id"+typeTableName);
-					
-				} else if (parsedNorm.getTargetType().equals("agentName")) {
-					
-					st.executeUpdate("INSERT INTO agentList (agentName) VALUES ('" + parsedNorm.getTargetValue()+"')");
-
-					res5 = st.executeQuery("SELECT id"+typeTableName+" FROM "+typeTableName+" WHERE "+typerowName +"='"+parsedNorm.getTargetValue()+"'");
-
-					if (res5.next()) {
-						
-						idTargetValue = res5.getString("id"+typeTableName);
-					}
-				}
-			}
-
-			res6 = st.executeQuery("SELECT idactionNorm FROM actionNorm WHERE description ='"+parsedNorm.getActionName()+"'");
-
-			if (res6.next()) {
-				idAction = res6.getString("idactionNorm");
-			}
-			
-			st.addBatch("INSERT INTO normList (idunitList, normName, iddeontic, idtargetType, targetValue, idactionnorm, normContent, normRule) "
-					+ "VALUES (" + idUnit + ",'"+parsedNorm.getId()+"',"+idDeontic+","+idTarget+","+idTargetValue+","+idAction+",'"+normContent+"','"+normRule.toString()+"')");
-
-			for(String actionParam : parsedNorm.getActionParams()) {	
-				st.addBatch("INSERT INTO actionNormParam (idnormList, idactionNorm, value) VALUES ((SELECT idnormList FROM normList WHERE normName ='"+parsedNorm.getId()+"'),"+idAction+",'"+actionParam+"')");				
-			}
-
-			st.executeBatch();
-			
-			if (close)
-				connection.commit();
-
-			return parsedNorm.getId() + " created";
-
-		} catch(BatchUpdateException b) {                
-
-			//Extracts useful error information
-			String message = l10n.getMessage(MessageID.MYSQL, b.getMessage());
-			int [] bUpdateCounts = b.getUpdateCounts();
-			
-			for (int i = 0; i < bUpdateCounts.length; i++) {
-				if (bUpdateCounts[i] < 0)
-					message = message + "\nSQL statement number " + Integer.toString(bUpdateCounts.length - i) + " has failed.";
-			}
-
-			throw new MySQLException(message);
-			
-		} catch (SQLException e) {
-			String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
-			throw new MySQLException(message);
-		} finally {
-			try {
-				
-				if (close)
-					connection.close();
-				if (st != null)
-					st.close();
-
-				if (res != null)
-					res.close();
-				if (res2 != null)
-					res2.close();
-				if (res3 != null)
-					res3.close();
-				if (res4 != null)
-					res4.close();
-				if (res5 != null)
-					res5.close();
-				if (res6 != null)
-					res6.close();
-				if (res7 != null)
-					res7.close();
-
-			} catch(SQLException e) {
-				String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
-				throw new MySQLException(message);
-			}
-		}
-	}
-
-
-	/**
-	 * This method retrieves the norms associated with unit U whose target is AgentName type and matches with the provided in targetValueName.
-	 * 
-	 * @param targetValueName	Identifier of the agent T.
-	 * @param unitName			Identifier of the organization unit U.
-	 * 
-	 * @return 					Returns the rules as <NormName, UnitName, TargetTypeName, TargetValueName>.
-	 * 
-	 * @throws MySQLException	If any errors happens with the database connection.
-	 * 
-	 */
-	ArrayList<ArrayList<String>> getAgentNorms(String targetValueName, String unitName) throws MySQLException {
-		
-		Statement st = null;
-		ResultSet res = null;
-
-		ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
-		boolean close = false;
-
-		try {
-			
-			if (connection == null || connection.isClosed()) {
-				connection = db.connect();
-				close = true;
-			}
-
-			st = connection.createStatement();
-			
-			if (targetValueName.equals("_"))
-				res = st.executeQuery("SELECT n1.normName, u1.unitName, tt.targetName, '_' FROM normList n1 INNER JOIN unitList u1 "
-						+ "ON n1.idunitList = u1.idunitList INNER JOIN targetType tt ON n1.idtargetType = tt.idtargetType WHERE "
-						+ "tt.targetName='agentName' AND n1.targetValue=-1 AND u1.unitName='"+unitName+"'");
-			else
-				res = st.executeQuery("SELECT nl.normName, ul.unitName, tt.targetName, al.agentName FROM normList nl INNER JOIN unitList ul "
-						+ "ON nl.idunitList=ul.idunitList INNER JOIN targetType tt ON nl.idtargetType=tt.idtargetType INNER JOIN agentList "
-						+ "al ON nl.targetValue=al.idagentList WHERE tt.targetName='agentName' AND al.agentName='"+targetValueName+"' AND "
-						+ "ul.unitName='"+ unitName+"'");
-
-			while (res.next()) {
-				
-				ArrayList<String> aux = new ArrayList<String>();
-				aux.add(res.getString(1));
-				aux.add(res.getString(2));
-				aux.add(res.getString(3));
-				aux.add(res.getString(4));
-				result.add(aux);
-			}
-			
-			return result;
-			
-		} catch (SQLException e) {
-			String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
-			throw new MySQLException(message);
-		} finally {
-			try {
-				
-				if (close)
-					connection.close();
-				if (st != null)
-					st.close();
-
-				if (res != null)
-					res.close();
-
-			} catch(SQLException e) {
-				String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
-				throw new MySQLException(message);
-			}
-		}
-	}
-
-
-	/**
-	 * This method retrieves the norms associated with unit U whose target is AgentName type.
-	 * First, get the set of tuples that are associated with some Agent and then recovers which are defined with value "_".
-	 * 
-	 * @param unitName			Identifier of the organization unit U.
-	 * 
-	 * @return 					Returns the rules as <NormName, UnitName, TargetTypeName, TargetValueName>.
-	 * 
-	 * @throws MySQLException	If any errors happens with the database connection.
-	 * 
-	 */
-	ArrayList<ArrayList<String>> getAgentNorms(String unitName) throws MySQLException {
-
-		Statement st = null;
-		ResultSet res = null;
-
-		ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
-		boolean close = false;
-
-		try {
-			
-			if (connection == null || connection.isClosed()) {
-				connection = db.connect();
-				close = true;
-			}
-
-			st = connection.createStatement();
-
-			res = st.executeQuery("SELECT nl.normName, ul.unitName, tt.targetName, al.agentName FROM normList nl INNER JOIN unitList ul ON "
-					+ "nl.idunitList=ul.idunitList INNER JOIN targetType tt ON nl.idtargetType=tt.idtargetType INNER JOIN agentList al ON "
-					+ "nl.targetValue=al.idagentList WHERE tt.targetName='agentName' AND ul.unitName='"+unitName+"'");
-
-			while (res.next()) {
-				
-				ArrayList<String> aux = new ArrayList<String>();
-				aux.add(res.getString(1));
-				aux.add(res.getString(2));
-				aux.add(res.getString(3));
-				aux.add(res.getString(4));
-				result.add(aux);
-			}
-
-			res = st.executeQuery("SELECT nl.normName, ul.unitName, tt.targetName, '_' FROM normList nl INNER JOIN unitList ul ON "
-					+ "nl.idunitList=ul.idunitList INNER JOIN targetType tt ON nl.idtargetType=tt.idtargetType WHERE "
-					+ "tt.targetName='agentName' AND nl.targetValue=-1 AND ul.unitName='"+unitName+"'");
-
-			while (res.next()) {
-				
-				ArrayList<String> aux = new ArrayList<String>();
-				aux.add(res.getString(1));
-				aux.add(res.getString(2));
-				aux.add(res.getString(3));
-				aux.add(res.getString(4));
-				result.add(aux);
-			}
-
-			return result; 
-
-		} catch (SQLException e) {
-			String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
-			throw new MySQLException(message);
-		} finally {
-			try {
-				
-				if (close)
-					connection.close();
-				if (st != null)
-					st.close();
-
-				if (res != null)
-					res.close();
 
 			} catch(SQLException e) {
 				String message = l10n.getMessage(MessageID.MYSQL, e.getMessage());
