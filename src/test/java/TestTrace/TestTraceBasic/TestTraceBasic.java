@@ -117,7 +117,7 @@ public class TestTraceBasic extends TestCase {
 		for(int k = 4; k < 9; k++) {
 			assertEquals("Received from "+ tm.getAid() +": AGREE publish#DD_Test_TS" + (k-3), controlPM.get(k));
 		}
-		assertTrue(controlPM.size()==9);
+		assertEquals(controlPM.size(), 9);
 		
 		//Check that Subscriber has received messages for subscriptions and subscriptions cancellations in its initialization.
 		ArrayList<ACLMessage> sMessages = subscriber.getMessages();
@@ -148,14 +148,14 @@ public class TestTraceBasic extends TestCase {
 		assertEquals("Msg from "+ tm.getAid() +": AGREE unsubscribe#11#DD_Test_TS1#"+ publisher.getAid(), controlSM.get(9));
 		assertEquals("Msg from "+ tm.getAid() +": AGREE unsubscribe#11#DD_Test_TS1#any", controlSM.get(10));
 		assertEquals("Msg from "+ tm.getAid() +": REFUSE unpublish#11#DD_Test_TS19", controlSM.get(11));
-		assertTrue(controlSM.size()==12);
+		assertEquals(controlSM.size(), 12);
 		
 		//Events for subscriptions and subscriptions cancellations that returning as agree.
 		assertEquals("SUBSCRIBE: DD_Test_TS1#38#Domain Dependent Test Tracing Service1#any", controlSE.get(0));
 		assertEquals("SUBSCRIBE: DD_Test_TS1#38#Domain Dependent Test Tracing Service1#" + publisher.getAid(), controlSE.get(1));
 		assertEquals("UNSUBSCRIBE: DD_Test_TS1#" + publisher.getAid(), controlSE.get(2));
 		assertEquals("UNSUBSCRIBE: DD_Test_TS1#any", controlSE.get(3));
-		assertTrue(controlSE.size()==4);
+		assertEquals(controlSE.size(), 4);
 
 		//Agents execution
 		Publisher.contExec.release();
@@ -212,6 +212,7 @@ public class TestTraceBasic extends TestCase {
 		//Subscriber cancels the subscription to DD_Test_TS1 and DD_Test_TS2.
 		//Then, Subscriber finalize.
 		subscriber.clearEvents();
+		subscriber.clearMessages();
 		Subscriber.contExec.release();
 		
 		while(subscriber.getEvents().size() < 2 || subscriber.getMessages().size() < 2){
@@ -228,7 +229,7 @@ public class TestTraceBasic extends TestCase {
 		controlSM.clear();
 		
 		for(i = 0; i < 2; i++){
-			msg = sMessages.get(j++);
+			msg = sMessages.get(i);
 			tEvent = sEvents.get(i);
 			controlSE.add(tEvent.getTracingService() + ": " + tEvent.getContent());
 			controlSM.add("Msg from " + msg.getSender().toString() + ": " + msg.getPerformative() + " " + msg.getContent());

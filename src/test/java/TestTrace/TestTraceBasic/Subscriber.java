@@ -234,4 +234,8 @@ public class Subscriber extends BaseAgent{
 	public void clearEvents() {
 		this.events.clear();
 	}
+	
+	public void clearMessages() {
+		this.messages.clear();
+	}
 }
