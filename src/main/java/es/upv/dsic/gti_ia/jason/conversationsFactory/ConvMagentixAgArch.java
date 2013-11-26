@@ -23,6 +23,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -40,7 +41,10 @@ public class ConvMagentixAgArch extends AgArch{
 	
 	private ConvJasonAgent jasonAgent;
 	private static Logger logger = Logger.getLogger(ConvMagentixAgArch.class.getName());
-	private Queue<ACLMessage> messageList = new LinkedList<ACLMessage>();
+	/**
+	 * Messages queue. It's a synchronized queue because an addition and a poll can occur at the same time  
+	 */
+	private ConcurrentLinkedQueue<ACLMessage> messageList = new ConcurrentLinkedQueue<ACLMessage>();
 	protected boolean running = true;
 	private Queue<Literal> Perceptions = new LinkedList<Literal>();	//Bexy
 
