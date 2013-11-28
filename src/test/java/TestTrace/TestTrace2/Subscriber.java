@@ -41,7 +41,7 @@ import es.upv.dsic.gti_ia.trace.exception.TraceServiceNotAllowedException;
 
 public class Subscriber extends BaseAgent{
 	
-	static Semaphore contExec;
+	public Semaphore contExec;
 	private ArrayList<ACLMessage> messages;
 	private ArrayList<TraceEvent> events;
 	private Random generator;

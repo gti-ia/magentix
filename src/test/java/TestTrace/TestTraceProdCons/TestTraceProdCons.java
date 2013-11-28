@@ -3,15 +3,16 @@ package TestTrace.TestTraceProdCons;
 import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 
-import org.junit.Test;
+import org.junit.*;
+import static org.junit.Assert.*;
 
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
 import es.upv.dsic.gti_ia.core.TraceEvent;
 import es.upv.dsic.gti_ia.trace.TraceManager;
-import junit.framework.TestCase;
 
-public class TestTraceProdCons extends TestCase {
+
+public class TestTraceProdCons {
 	
 	static Semaphore end;
 	
@@ -30,12 +31,8 @@ public class TestTraceProdCons extends TestCase {
 	 */
 	ConsumerAgent consumer = null;
 	
-	public TestTraceProdCons(String name) {
-		super(name);
-	}
-	
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 		
 		/**
 		 * Setting the Logger
@@ -74,7 +71,7 @@ public class TestTraceProdCons extends TestCase {
 	}
 	
 	
-	@Test(timeout=15000)
+	@Test(timeout = 25000)
 	public void testTraceProdCons() {
 		
 		while (consumer.getEvents() == null) {
@@ -106,8 +103,8 @@ public class TestTraceProdCons extends TestCase {
 		}
 	}
 	
-	protected void tearDown() throws Exception {
-		super.tearDown();
+	@After
+	public void tearDown() throws Exception {
 		
 		tm.shutdown();
 	}

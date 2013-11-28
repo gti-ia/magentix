@@ -3,25 +3,22 @@ package TestTrace.TestTraceBasic;
 import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 
-import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
-import org.junit.Test;
+import org.junit.*;
+import static org.junit.Assert.*;
 
-import TestTrace.TestTraceProdCons.ConsumerAgent;
-import TestTrace.TestTraceProdCons.SenderAgent;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
 import es.upv.dsic.gti_ia.core.TraceEvent;
 import es.upv.dsic.gti_ia.trace.TraceManager;
-import junit.framework.TestCase;
 
 /** 
  * @author Jose Alemany Bordera  -  jalemany1@dsic.upv.es
  * 
  */
 
-public class TestTraceBasic extends TestCase {
+public class TestTraceBasic {
 	
 	static Semaphore end;
 	
@@ -45,12 +42,8 @@ public class TestTraceBasic extends TestCase {
 	 */
 	Coordinator coordinator = null;
 	
-	public TestTraceBasic(String name) {
-		super(name);
-	}
-
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 		
 		/**
 		 * Setting the Logger
@@ -94,7 +87,7 @@ public class TestTraceBasic extends TestCase {
 		
 	}
 	
-	@Test(timeout=15000)
+	@Test(timeout = 25000)
 	public void testTraceBasic() {
 		//BEGIN
 		int i = 0, j = 0;
@@ -278,8 +271,8 @@ public class TestTraceBasic extends TestCase {
 		//END
 	}
 	
-	protected void tearDown() throws Exception {
-		super.tearDown();
+	@After
+	public void tearDown() throws Exception {
 		
 		tm.shutdown();
 	}

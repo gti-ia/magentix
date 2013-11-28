@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 
 import org.apache.log4j.xml.DOMConfigurator;
-import org.junit.Test;
+import static org.junit.Assert.*;
+import org.junit.*;
 
 import TestTrace.TestTrace2.Publisher;
 import TestTrace.TestTrace2.Subscriber;
@@ -14,14 +15,14 @@ import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
 import es.upv.dsic.gti_ia.core.TraceEvent;
 import es.upv.dsic.gti_ia.trace.TraceManager;
-import junit.framework.TestCase;
+
 
 /** 
  * @author Jose Alemany Bordera  -  jalemany1@dsic.upv.es
  * 
  */
 
-public class TestTrace2 extends TestCase {
+public class TestTrace2 {
 
 	static Semaphore end;
 	final int N_PUBLISHERS = 10, N_SUBSCRIBERS = 5;
@@ -41,12 +42,8 @@ public class TestTrace2 extends TestCase {
 	 */
 	Subscriber subscribers[] = new Subscriber[N_SUBSCRIBERS];
 	
-	public TestTrace2(String name) {
-		super(name);
-	}
-	
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 		
 		/**
 		 * Setting the Logger
@@ -92,7 +89,7 @@ public class TestTrace2 extends TestCase {
 		
 	}
 	
-	@Test(timeout=25000)
+	@Test(timeout = 25000)
 	public void testTrace2() {
 		//BEGIN
 		System.out.println("\nEXECUTIZING...");
@@ -268,8 +265,8 @@ public class TestTrace2 extends TestCase {
 		//END
 	}
 	
-	protected void tearDown() throws Exception {
-		super.tearDown();
+	@After
+	public void tearDown() throws Exception {
 		
 		tm.shutdown();
 	}

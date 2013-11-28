@@ -1,11 +1,11 @@
 package TestTrace.TestTraceDaddy;
 
 import java.util.ArrayList;
-import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.Semaphore;
 
 import org.apache.log4j.xml.DOMConfigurator;
-import org.junit.Test;
+import org.junit.*;
+import static org.junit.Assert.*;
 
 import edu.emory.mathcs.backport.java.util.Collections;
 import es.upv.dsic.gti_ia.core.ACLMessage;
@@ -13,14 +13,13 @@ import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
 import es.upv.dsic.gti_ia.core.TraceEvent;
 import es.upv.dsic.gti_ia.trace.TraceManager;
-import junit.framework.TestCase;
 
 /** 
  * @author Jose Alemany Bordera  -  jalemany1@dsic.upv.es
  * 
  */
 
-public class TestTraceDaddy extends TestCase {
+public class TestTraceDaddy {
 	
 	static Semaphore contExec;
 	static Semaphore end;
@@ -40,12 +39,8 @@ public class TestTraceDaddy extends TestCase {
 	 */
 	Boy olderSon = null, youngerSon = null;
 	
-	public TestTraceDaddy(String name) {
-		super(name);
-	}
-	
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 		
 		/**
 		 * Setting the Logger
@@ -88,7 +83,7 @@ public class TestTraceDaddy extends TestCase {
 		
 	}
 	
-	@Test(timeout=15000)
+	@Test(timeout = 25000)
 	public void testTraceDaddy() {
 		//BEGIN
 		
@@ -170,8 +165,9 @@ public class TestTraceDaddy extends TestCase {
 		//END
 	}
 	
-	protected void tearDown() throws Exception {
-		super.tearDown();
+	@After
+	public void tearDown() throws Exception {
+
 		tm.shutdown();
 	}
 }

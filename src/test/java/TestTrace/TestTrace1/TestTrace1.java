@@ -4,21 +4,22 @@ import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 
 import org.apache.log4j.xml.DOMConfigurator;
-import org.junit.Test;
+import org.junit.*;
+import static org.junit.Assert.*;
 
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
 import es.upv.dsic.gti_ia.core.TraceEvent;
 import es.upv.dsic.gti_ia.trace.TraceManager;
-import junit.framework.TestCase;
+
 
 /** 
  * @author Jose Alemany Bordera  -  jalemany1@dsic.upv.es
  * 
  */
 
-public class TestTrace1 extends TestCase {
+public class TestTrace1 {
 	
 	static Semaphore end;
 	
@@ -36,13 +37,9 @@ public class TestTrace1 extends TestCase {
 	 * Instantiating the subscriber agent
 	 */
 	Subscriber subscriber = null;
-	
-	public TestTrace1(String name) {
-		super(name);
-	}
 
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 		
 		/**
 		 * Setting the Logger
@@ -189,8 +186,8 @@ public class TestTrace1 extends TestCase {
 		//END
 	}
 	
-	protected void tearDown() throws Exception {
-		super.tearDown();
+	@After
+	public void tearDown() throws Exception {
 		
 		tm.shutdown();
 	}
