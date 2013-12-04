@@ -116,6 +116,16 @@ public class AgentsConnection {
 	}
 
 	/**
+	 * Disconnects the current connection
+	 * 
+	 */
+
+	public static void disconnect() {
+		connection.close();
+		connection = null;
+	}
+
+	/**
 	 * Method to obtain a connection, it creates a new one when the object have
 	 * more than 120 connections,
 	 * 
