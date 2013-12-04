@@ -22,6 +22,8 @@ public class AgentsConnection {
 	private static Configuration c = null;
 
 	private static int numConnections = 0;
+	
+	public static final int MAX_CONS_PER_CON = 120;
 
 	/**
 	 * Connects with a Qpid broker taking the input connection parameters from
@@ -134,7 +136,7 @@ public class AgentsConnection {
 	public static Connection getConnection() {
 
 		numConnections++;
-		if (numConnections < 120) {
+		if (numConnections < MAX_CONS_PER_CON) {
 			return connection;
 		} else {
 			numConnections = 0;
