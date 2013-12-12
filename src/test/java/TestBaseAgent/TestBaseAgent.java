@@ -1,10 +1,9 @@
 package TestBaseAgent;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
 import junit.framework.TestCase;
-
-import org.apache.log4j.xml.DOMConfigurator;
-
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
 
@@ -12,26 +11,33 @@ public class TestBaseAgent extends TestCase {
 
 	SenderAgent senderAgent = null;
 	ConsumerAgent consumerAgent = null;
-	
+	Process qpid_broker;
+
 	public TestBaseAgent(String name) {
 		super(name);
 	}
 
 	protected void setUp() throws Exception {
 		super.setUp();
+		qpid_broker = Runtime.getRuntime().exec(
+				"./installer/magentix2/bin/qpid-broker-0.20/bin/qpid-server");
+		BufferedReader reader = new BufferedReader(new InputStreamReader(
+				qpid_broker.getInputStream()));
+
+		String line = reader.readLine();
+		while (!line.contains("Qpid Broker Ready")) {
+			line = reader.readLine();
+		}
 
 		/**
 		 * Setting the Logger
 		 */
-		//DOMConfigurator.configure("configuration/loggin.xml");
-
+		// DOMConfigurator.configure("configuration/loggin.xml");
 
 		/**
 		 * Connecting to Qpid Broker
 		 */
 		AgentsConnection.connect();
-
-
 
 		try {
 			/**
@@ -43,7 +49,7 @@ public class TestBaseAgent extends TestCase {
 			/**
 			 * Instantiating a consumer agent
 			 */
-			consumerAgent  = new ConsumerAgent(new AgentID("consumerAgent"));
+			consumerAgent = new ConsumerAgent(new AgentID("consumerAgent"));
 
 			/**
 			 * Execute the agents
@@ -55,38 +61,34 @@ public class TestBaseAgent extends TestCase {
 			fail();
 		}
 
-
 	}
 
-	public void testBaseAgent()
-	{
+	public void testBaseAgent() {
 
-	
-
-		
-
-		while(consumerAgent.getMessage() == null)
-		{
-		//System.out.println("Busco:");
+		while (consumerAgent.getMessage() == null) {
+			// System.out.println("Busco:");
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-	
-		}			
-		assertEquals("Hello, I'm emisor",consumerAgent.getMessage().getContent());
 
-		
+		}
+		assertEquals("Hello, I'm emisor", consumerAgent.getMessage()
+				.getContent());
 
 	}
+
 	protected void tearDown() throws Exception {
 		super.tearDown();
-		
+
 		consumerAgent.finalize();
-		
-		
+
+		AgentsConnection.disconnect();
+
+		qpid_broker.destroy();
+
 	}
 
 }

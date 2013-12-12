@@ -1,6 +1,7 @@
 package TestCore;
 
-
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
 import junit.framework.TestCase;
 
@@ -19,26 +20,33 @@ public class TestSingleAgent extends TestCase {
 
 	SenderAgent2 senderAgent2;
 	ConsumerAgent2 consumerAgent2;
-	
+	Process qpid_broker;
+
 	public TestSingleAgent(String name) {
 		super(name);
 	}
 
 	protected void setUp() throws Exception {
 		super.setUp();
+		qpid_broker = Runtime.getRuntime().exec(
+				"./installer/magentix2/bin/qpid-broker-0.20/bin/qpid-server");
+		BufferedReader reader = new BufferedReader(new InputStreamReader(
+				qpid_broker.getInputStream()));
+
+		String line = reader.readLine();
+		while (!line.contains("Qpid Broker Ready")) {
+			line = reader.readLine();
+		}
 
 		/**
 		 * Setting the configuration
 		 */
 		DOMConfigurator.configure("configuration/loggin.xml");
 
-
 		/**
 		 * Connecting to Qpid Broker
 		 */
 		AgentsConnection.connect();
-
-
 
 		try {
 			/**
@@ -50,7 +58,7 @@ public class TestSingleAgent extends TestCase {
 			/**
 			 * Instantiating a consumer agent
 			 */
-			consumerAgent2  = new ConsumerAgent2(new AgentID(
+			consumerAgent2 = new ConsumerAgent2(new AgentID(
 					"qpid://consumer@localhost:8080"));
 
 			/**
@@ -62,29 +70,31 @@ public class TestSingleAgent extends TestCase {
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
-
-
 	}
 
-		
 	/**
 	 * Testing the message sent by senderAgent2
 	 */
-	public void testSingleAgent()
-	{		
+	public void testSingleAgent() {
 
-		while(consumerAgent2.getMessage() == null)
-		{
+		while (consumerAgent2.getMessage() == null) {
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-	
-		}			
-		assertEquals("Hello, I'm "+consumerAgent2.getMessage().getSender().getLocalName()
-				,consumerAgent2.getMessage().getContent());
 
+		}
+		assertEquals("Hello, I'm "
+				+ consumerAgent2.getMessage().getSender().getLocalName(),
+				consumerAgent2.getMessage().getContent());
+
+	}
+
+	protected void tierDown() throws Exception {
+		AgentsConnection.disconnect();
+
+		qpid_broker.destroy();
 	}
 }

@@ -69,7 +69,6 @@ public class Xml {
 	 * @return rootElement of the XML file
 	 */
 	private static Element rootElement(InputStream is, String rootName) {
-		FileInputStream fileInputStream = null;
 		try {
 			DocumentBuilderFactory builderFactory = DocumentBuilderFactory
 					.newInstance();
@@ -82,15 +81,8 @@ public class Xml {
 			return rootElement;
 		} catch (Exception exception) {
 			throw new RuntimeException(exception);
-		} finally {
-			if (fileInputStream != null) {
-				try {
-					fileInputStream.close();
-				} catch (Exception exception) {
-					throw new RuntimeException(exception);
-				}
-			}
 		}
+		
 	}
 
 	/**
