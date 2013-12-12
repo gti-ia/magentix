@@ -1,5 +1,8 @@
 package TestOMS;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
 import junit.framework.TestCase;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
@@ -20,10 +23,9 @@ public class TestDeRegisterRole extends TestCase {
 
 	OMS oms = null;
 	SF sf = null;
-	public TestDeRegisterRole()
-	{
-
-	}
+	
+	Process qpid_broker;
+	
 
 	protected void tearDown() throws Exception {
 
@@ -51,11 +53,20 @@ public class TestDeRegisterRole extends TestCase {
 		oms = null;
 		sf = null;
 
-
+		AgentsConnection.disconnect();
+		qpid_broker.destroy();
 	}
+	
 	protected void setUp() throws Exception {
 		super.setUp();
 
+		qpid_broker = Runtime.getRuntime().exec("./installer/magentix2/bin/qpid-broker-0.20/bin/qpid-server");
+		BufferedReader reader = new BufferedReader(new InputStreamReader(qpid_broker.getInputStream()));
+
+		String line = reader.readLine();
+		while (!line.contains("Qpid Broker Ready")) {
+			line = reader.readLine();
+		}
 
 		AgentsConnection.connect();
 

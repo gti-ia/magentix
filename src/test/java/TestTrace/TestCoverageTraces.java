@@ -2,6 +2,8 @@ package TestTrace;
 
 import static org.junit.Assert.*;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 import org.junit.After;
@@ -41,9 +43,21 @@ public class TestCoverageTraces {
 	private static CommandedAgent agent1 = null;
 	private static CommandedAgent agent2 = null;
 	
+	static Process qpid_broker;
+	
+	
 	/* Set up class and tear down class */
 	@BeforeClass
 	public static void setUpClass() throws Exception {
+		
+		qpid_broker = Runtime.getRuntime().exec("./installer/magentix2/bin/qpid-broker-0.20/bin/qpid-server");
+		BufferedReader reader = new BufferedReader(new InputStreamReader(qpid_broker.getInputStream()));
+
+		String line = reader.readLine();
+		while (!line.contains("Qpid Broker Ready")) {
+			line = reader.readLine();
+		}
+		
 		AgentsConnection.connect();		// Connecting to Qpid Broker.
 
 		defaultTM = new TraceManager(new AgentID(DEFAULT_TM_NAME));
@@ -63,6 +77,9 @@ public class TestCoverageTraces {
 		alternativeTM.shutdown();
 		agent1.addCommand(CommandedAgent.END);
 		agent2.addCommand(CommandedAgent.END);
+		
+		AgentsConnection.disconnect();
+		qpid_broker.destroy();
 	}
   
 	/* Test methods */

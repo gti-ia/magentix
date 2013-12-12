@@ -1,12 +1,14 @@
 package TestTrace.TestTrace1;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 
 import org.apache.log4j.xml.DOMConfigurator;
 import org.junit.*;
-import static org.junit.Assert.*;
 
+import static org.junit.Assert.*;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
@@ -37,6 +39,9 @@ public class TestTrace1 {
 	 * Instantiating the subscriber agent
 	 */
 	Subscriber subscriber = null;
+	
+	Process qpid_broker;
+	
 
 	@Before
 	public void setUp() throws Exception {
@@ -49,6 +54,14 @@ public class TestTrace1 {
 		/**
 		 * Connecting to Qpid Broker
 		 */
+		qpid_broker = Runtime.getRuntime().exec("./installer/magentix2/bin/qpid-broker-0.20/bin/qpid-server");
+		BufferedReader reader = new BufferedReader(new InputStreamReader(qpid_broker.getInputStream()));
+
+		String line = reader.readLine();
+		while (!line.contains("Qpid Broker Ready")) {
+			line = reader.readLine();
+		}
+		
 		AgentsConnection.connect();
 		
 		end = new Semaphore(0);
@@ -77,7 +90,7 @@ public class TestTrace1 {
 		
 	}
 	
-	@Test(timeout=15000)
+	@Test(timeout=50000)
 	public void testTrace1() {
 		//BEGIN
 		int i = 0, j = 0;
@@ -190,6 +203,9 @@ public class TestTrace1 {
 	public void tearDown() throws Exception {
 		
 		tm.shutdown();
+		
+		AgentsConnection.disconnect();
+		qpid_broker.destroy();
 	}
 }
 

@@ -2,6 +2,8 @@ package TestTrace;
 
 import static org.junit.Assert.*;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
@@ -30,9 +32,21 @@ public class TestTraceManager {
 	/* Attributes */
 	private static CommandedTraceManager[] commTraceManagers = {null, null};
 	
+	static Process qpid_broker;
+	
+	
 	/* Set up class and tear down class */
 	@BeforeClass
 	public static void setUpClass() throws Exception {
+		
+		qpid_broker = Runtime.getRuntime().exec("./installer/magentix2/bin/qpid-broker-0.20/bin/qpid-server");
+		BufferedReader reader = new BufferedReader(new InputStreamReader(qpid_broker.getInputStream()));
+
+		String line = reader.readLine();
+		while (!line.contains("Qpid Broker Ready")) {
+			line = reader.readLine();
+		}
+		
 		AgentsConnection.connect();		// Connecting to Qpid Broker.
 		
 		for(int i = 0; i < commTraceManagers.length; ++i) {
@@ -46,6 +60,9 @@ public class TestTraceManager {
 		for(int i = 0; i < commTraceManagers.length; ++i) {
 			commTraceManagers[i].addCommand(CommandedTraceManager.END);
 		}
+		
+		AgentsConnection.disconnect();
+		qpid_broker.destroy();
 	}
 
 	/* Test methods */

@@ -81,64 +81,57 @@ public class Subscriber extends BaseAgent{
 		 */
 		System.out.println("\n[SUBSCRIBER " + this.getName() + "]: Basic test start...");
 		
-		try {
+		System.out.println("[SUBSCRIBER " + this.getName() + "]: First, basic subscriptions and unsubscription operations:");
 			
-			System.out.println("[SUBSCRIBER " + this.getName() + "]: First, basic subscriptions and unsubscription operations:");
+		System.out.println("\n[SUBSCRIBER " + this.getName() + "]: Subscribing to DD_Test_TSSS1 from any entity (THIS SHOULD FAIL)...");
+		TraceInteract.requestTracingService(this, "DD_Test_TSSS1");
+		contExec.acquire();
 			
-			System.out.println("\n[SUBSCRIBER " + this.getName() + "]: Subscribing to DD_Test_TSSS1 from any entity (THIS SHOULD FAIL)...");
-			TraceInteract.requestTracingService(this, "DD_Test_TSSS1");
-			contExec.acquire();
+		System.out.println("\n[SUBSCRIBER " + this.getName() + "]: Subscribing to DD_Test_TSSS1 from 'publisher' entity (THIS SHOULD FAIL)...");
+		TraceInteract.requestTracingService(this, "DD_Test_TSSS1", publisherAid);
+		contExec.acquire();
 			
-			System.out.println("\n[SUBSCRIBER " + this.getName() + "]: Subscribing to DD_Test_TSSS1 from 'publisher' entity (THIS SHOULD FAIL)...");
-			TraceInteract.requestTracingService(this, "DD_Test_TSSS1", publisherAid);
-			contExec.acquire();
+		System.out.println("\n[SUBSCRIBER " + this.getName() + "]: Subscribing to DD_Test_TS1 from any entity...");
+		TraceInteract.requestTracingService(this, "DD_Test_TS1");
+		contExec.acquire();
 			
-			System.out.println("\n[SUBSCRIBER " + this.getName() + "]: Subscribing to DD_Test_TS1 from any entity...");
-			TraceInteract.requestTracingService(this, "DD_Test_TS1");
-			contExec.acquire();
+		System.out.println("\n[SUBSCRIBER " + this.getName() + "]: Subscribing AGAIN to DD_Test_TS1 from any entity (THIS SHOULD FAIL)...");
+		TraceInteract.requestTracingService(this, "DD_Test_TS1");
+		contExec.acquire();
 			
-			System.out.println("\n[SUBSCRIBER " + this.getName() + "]: Subscribing AGAIN to DD_Test_TS1 from any entity (THIS SHOULD FAIL)...");
-			TraceInteract.requestTracingService(this, "DD_Test_TS1");
-			contExec.acquire();
+		System.out.println("\n[SUBSCRIBER " + this.getName() + "]: Subscribing to DD_Test_TS1 from 'publisher' entity...");
+		TraceInteract.requestTracingService(this, "DD_Test_TS1", publisherAid);
+		contExec.acquire();
 			
-			System.out.println("\n[SUBSCRIBER " + this.getName() + "]: Subscribing to DD_Test_TS1 from 'publisher' entity...");
-			TraceInteract.requestTracingService(this, "DD_Test_TS1", publisherAid);
-			contExec.acquire();
+		System.out.println("\n[SUBSCRIBER " + this.getName() + "]: Subscribing AGAIN to DD_Test_TS1 from 'publisher' entity (THIS SHOULD FAIL)...");
+		TraceInteract.requestTracingService(this, "DD_Test_TS1", publisherAid);
+		contExec.acquire();
 			
-			System.out.println("\n[SUBSCRIBER " + this.getName() + "]: Subscribing AGAIN to DD_Test_TS1 from 'publisher' entity (THIS SHOULD FAIL)...");
-			TraceInteract.requestTracingService(this, "DD_Test_TS1", publisherAid);
-			contExec.acquire();
+		System.out.println("\n[SUBSCRIBER " + this.getName() + "]: Subscribing AGAIN to DD_Test_TS1 from a false provider (me myself) (THIS SHOULD FAIL)...");
+		TraceInteract.requestTracingService(this, "DD_Test_TS1", this.getAid());
+		contExec.acquire();
 			
-			System.out.println("\n[SUBSCRIBER " + this.getName() + "]: Subscribing AGAIN to DD_Test_TS1 from a false provider (me myself) (THIS SHOULD FAIL)...");
-			TraceInteract.requestTracingService(this, "DD_Test_TS1", this.getAid());
-			contExec.acquire();
+		System.out.println("\n[SUBSCRIBER " + this.getName() + "]: Now unsubscribing from tracing services...");
+		System.out.println("[SUBSCRIBER " + this.getName() + "]: Now unsubscribing from DD_Test_TS2 (THIS SHOULD FAIL)...");
+		TraceInteract.cancelTracingServiceSubscription(this, "DD_Test_TS2");
+		contExec.acquire();
+		
+		System.out.println("\n[SUBSCRIBER " + this.getName() + "]: Now unsubscribing from DD_Test_TS1 from a false publisher (me myself) (THIS SHOULD FAIL)...");
+		TraceInteract.cancelTracingServiceSubscription(this, "DD_Test_TS1", this.getAid());
+		contExec.acquire();
 			
-			System.out.println("\n[SUBSCRIBER " + this.getName() + "]: Now unsubscribing from tracing services...");
-			System.out.println("[SUBSCRIBER " + this.getName() + "]: Now unsubscribing from DD_Test_TS2 (THIS SHOULD FAIL)...");
-			TraceInteract.cancelTracingServiceSubscription(this, "DD_Test_TS2");
-			contExec.acquire();
+		System.out.println("\n[SUBSCRIBER " + this.getName() + "]: Now unsubscribing from DD_Test_TS1 from the real publisher...");
+		TraceInteract.cancelTracingServiceSubscription(this, "DD_Test_TS1", publisherAid);
+		contExec.acquire();
 			
-			System.out.println("\n[SUBSCRIBER " + this.getName() + "]: Now unsubscribing from DD_Test_TS1 from a false publisher (me myself) (THIS SHOULD FAIL)...");
-			TraceInteract.cancelTracingServiceSubscription(this, "DD_Test_TS1", this.getAid());
-			contExec.acquire();
+		System.out.println("\n[SUBSCRIBER " + this.getName() + "]: Now unsubscribing from DD_Test_TS1 from any publisher...");
+		TraceInteract.cancelTracingServiceSubscription(this, "DD_Test_TS1");
+		contExec.acquire();
 			
-			System.out.println("\n[SUBSCRIBER " + this.getName() + "]: Now unsubscribing from DD_Test_TS1 from the real publisher...");
-			TraceInteract.cancelTracingServiceSubscription(this, "DD_Test_TS1", publisherAid);
-			contExec.acquire();
-			
-			System.out.println("\n[SUBSCRIBER " + this.getName() + "]: Now unsubscribing from DD_Test_TS1 from any publisher...");
-			TraceInteract.cancelTracingServiceSubscription(this, "DD_Test_TS1");
-			contExec.acquire();
-			
-			System.out.println("\n[SUBSCRIBER " + this.getName() + "]: Now, we'll try to unpublish an existing tracing service which is not published:");
-			System.out.println("[SUBSCRIBER " + this.getName() + "]: Unpublishing DD_Test_TS1 (THIS SHOULD FAIL)...");
-			TraceInteract.unpublishTracingService(this, "DD_Test_TS1");
-			contExec.acquire();
-			
-		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+		System.out.println("\n[SUBSCRIBER " + this.getName() + "]: Now, we'll try to unpublish an existing tracing service which is not published:");
+		System.out.println("[SUBSCRIBER " + this.getName() + "]: Unpublishing DD_Test_TS1 (THIS SHOULD FAIL)...");
+		TraceInteract.unpublishTracingService(this, "DD_Test_TS1");
+		contExec.acquire();
 		
 		System.out.println("[SUBSCRIBER " + this.getName() + "]: OK! Ready to execute...");
 	}

@@ -1,10 +1,14 @@
 package TestTrace.TestTrace2;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 
 import org.apache.log4j.xml.DOMConfigurator;
+
 import static org.junit.Assert.*;
+
 import org.junit.*;
 
 import TestTrace.TestTrace2.Publisher;
@@ -42,6 +46,8 @@ public class TestTrace2 {
 	 */
 	Subscriber subscribers[] = new Subscriber[N_SUBSCRIBERS];
 	
+	Process qpid_broker;
+	
 	@Before
 	public void setUp() throws Exception {
 		
@@ -53,6 +59,14 @@ public class TestTrace2 {
 		/**
 		 * Connecting to Qpid Broker
 		 */
+		qpid_broker = Runtime.getRuntime().exec("./installer/magentix2/bin/qpid-broker-0.20/bin/qpid-server");
+		BufferedReader reader = new BufferedReader(new InputStreamReader(qpid_broker.getInputStream()));
+
+		String line = reader.readLine();
+		while (!line.contains("Qpid Broker Ready")) {
+			line = reader.readLine();
+		}
+		
 		AgentsConnection.connect();
 		
 		end = new Semaphore(0);
@@ -89,7 +103,7 @@ public class TestTrace2 {
 		
 	}
 	
-	@Test(timeout = 25000)
+	@Test(timeout = 50000)
 	public void testTrace2() {
 		//BEGIN
 		System.out.println("\nEXECUTIZING...");
@@ -269,5 +283,8 @@ public class TestTrace2 {
 	public void tearDown() throws Exception {
 		
 		tm.shutdown();
+		
+		AgentsConnection.disconnect();
+		qpid_broker.destroy();
 	}
 }

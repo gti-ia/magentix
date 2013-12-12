@@ -63,9 +63,12 @@ public class Observer extends BaseAgent {
 		
 		TraceInteract.cancelTracingServiceSubscription(this, "MESSAGE_SENT");
 		TraceInteract.cancelTracingServiceSubscription(this, "MESSAGE_RECEIVED");
+		
 	}
 
 	public void execute(){
+		
+		TestTrace3.end.release();
 		
 		try {
 			contExec.acquire();
@@ -110,8 +113,21 @@ public class Observer extends BaseAgent {
 		
 		messages.add(msg);
 		System.out.println("[OBSERVER " + this.getName() + "]: Msg from " + msg.getSender().toString() + ": " + msg.getPerformative() + ":" + msg.getContent());
-		
-		if (msg.getContent().contentEquals("STOP"))
-			contExec.release();
+	}
+	
+	public ArrayList<ACLMessage> getMessages() {
+		return this.messages;
+	}
+	
+	public ArrayList<TraceEvent> getEvents() {
+		return this.events;
+	}
+	
+	public void clearEvents() {
+		this.events.clear();
+	}
+	
+	public void clearMessages() {
+		this.messages.clear();
 	}
 }

@@ -8,22 +8,23 @@ import es.upv.dsic.gti_ia.organization.OMSProxy;
 import es.upv.dsic.gti_ia.organization.SF;
 import es.upv.dsic.gti_ia.organization.exception.THOMASException;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
 
 public class TestAcquireRole extends TestCase {
 
 	OMSProxy omsProxy = null;
 	DatabaseAccess dbA = null;
 
-
 	Agent agent = null;
 	OMS oms = null;
 	SF sf = null;
 	
+	Process qpid_broker;
 	
-
-
+	
 	protected void tearDown() throws Exception {
-
 
 		//------------------Clean Data Base -----------//
 		dbA.executeSQL("DELETE FROM agentPlayList");
@@ -49,13 +50,22 @@ public class TestAcquireRole extends TestCase {
 		oms = null;
 		sf = null;
 
+		AgentsConnection.disconnect();
+		qpid_broker.destroy();
 	}
+	
 	protected void setUp() throws Exception {
 		super.setUp();
 
-		
-		AgentsConnection.connect();
+		qpid_broker = Runtime.getRuntime().exec("./installer/magentix2/bin/qpid-broker-0.20/bin/qpid-server");
+		BufferedReader reader = new BufferedReader(new InputStreamReader(qpid_broker.getInputStream()));
 
+		String line = reader.readLine();
+		while (!line.contains("Qpid Broker Ready")) {
+			line = reader.readLine();
+		}
+
+		AgentsConnection.connect();
 
 		oms = new OMS(new AgentID("OMS"));
 
@@ -65,9 +75,7 @@ public class TestAcquireRole extends TestCase {
 		sf.start();
 
 		agent = new Agent(new AgentID("pruebas"));
-
-
-
+		
 		omsProxy = new OMSProxy(agent);
 
 		dbA = new DatabaseAccess();
@@ -81,10 +89,6 @@ public class TestAcquireRole extends TestCase {
 		dbA.executeSQL("DELETE FROM unitList WHERE idunitList != 1");
 
 		//--------------------------------------------//
-
-		
-
-
 	}
 
 	public void testAcquireRoleFlat()

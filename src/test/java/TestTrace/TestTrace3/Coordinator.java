@@ -21,6 +21,7 @@ public class Coordinator extends BaseAgent {
 	public Coordinator(AgentID aid, AgentID publisherAid, AgentID observerAid) throws Exception {
 		
 		super(aid);
+		contExec = new Semaphore(0);
 		this.publisherAid = publisherAid;
 		this.observerAid = observerAid;
 	
@@ -35,15 +36,10 @@ public class Coordinator extends BaseAgent {
 		}
 		
 		coordination_msg = new ACLMessage(ACLMessage.REQUEST);
+		coordination_msg.setSender(this.getAid());
 		coordination_msg.setReceiver(publisherAid);
 		coordination_msg.setContent("STOP");
 		send(coordination_msg);
-		
-		coordination_msg = new ACLMessage(ACLMessage.REQUEST);
-		coordination_msg.setReceiver(observerAid);
-		coordination_msg.setContent("STOP");
-		send(coordination_msg);
-	
 	}
 	
 }

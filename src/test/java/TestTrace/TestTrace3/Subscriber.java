@@ -71,7 +71,6 @@ public class Subscriber extends BaseAgent{
 		/**
 		 * Initializing tracing services and stuff
 		 */
-		contExec.acquire();
 		System.out.println("\n[SUBSCRIBER " + this.getName() + "]: Basic test start...");
 		System.out.println("[SUBSCRIBER " + this.getName() + "]: First, basic subscriptions and unsubscription operations:");
 			
@@ -130,38 +129,40 @@ public class Subscriber extends BaseAgent{
 
 	public void execute() {
 		
-		System.out.println("[SUBSCRIBER " + this.getName() + "]: Executing...");
+		TestTrace3.end.release();
 		
 		try {
 			
-			System.out.println("\n[SUBSCRIBER " + this.getName() + "]: Subscribing to DD_Test_TS1...\n\tReceiving [ DD_Test_TS1 ]\n");
+			contExec.acquire();
+			
+			System.out.println("\n[SUBSCRIBER " + this.getName() + "]: Executing...");
+			System.out.println("[SUBSCRIBER " + this.getName() + "]: Subscribing to DD_Test_TS1...\n\tReceiving [ DD_Test_TS1 ]\n");
 			TraceInteract.requestTracingService(this, "DD_Test_TS1");
-			Thread.sleep(3000);
+			contExec.acquire(2);
 			
 			System.out.println("\n[SUBSCRIBER " + this.getName() + "]: Subscribing to DD_Test_TS2...\n\tReceiving [ DD_Test_TS1 DD_Test_TS2 ]\n");
 			TraceInteract.requestTracingService(this, "DD_Test_TS2");
-			Thread.sleep(3000);
+			contExec.acquire(2);
 			
 			System.out.println("\n[SUBSCRIBER " + this.getName() + "]: Subscribing to DD_Test_TS3...\n\tReceiving [ DD_Test_TS1 DD_Test_TS2 DD_Test_TS3 ]\n");
 			TraceInteract.requestTracingService(this, "DD_Test_TS3");
-			Thread.sleep(3000);
+			contExec.acquire(2);
 			
 			System.out.println("\n[SUBSCRIBER " + this.getName() + "]: Sending message to PUBLISHER to request unpublication of DD_Test_TS3\n");
 			ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
 	    	msg.setSender(this.getAid());
 	    	msg.setReceiver(publisherAid);
-			msg.setContent("UNPUBLISH#DD_Test_TS3");
+			msg.setContent("unpublish#DD_Test_TS3");
 			send(msg);
 			System.out.println("\n[SUBSCRIBER " + this.getName() + "]: Message sent...\n\tReceiving [ DD_Test_TS1 DD_Test_TS2 ]\n");
-			Thread.sleep(3000);
-			
-		
 			System.out.println("[SUBSCRIBER " + this.getName() + "]: Done!");
+			contExec.acquire();
 		
 			System.out.println("[SUBSCRIBER " + this.getName() + "]: Now unsubscribing from tracing services...");
 			TraceInteract.cancelTracingServiceSubscription(this, "DD_Test_TS1");
 			TraceInteract.cancelTracingServiceSubscription(this, "DD_Test_TS2");
-		
+			contExec.acquire(2);
+			
     		System.out.println("[SUBSCRIBER " + this.getName() + "]: Done!");
     		System.out.println("[SUBSCRIBER " + this.getName() + "]: Bye!");
     		

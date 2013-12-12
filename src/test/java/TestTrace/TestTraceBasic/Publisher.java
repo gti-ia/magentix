@@ -90,15 +90,11 @@ public class Publisher extends BaseAgent {
 		System.out.println("\n[PUBLISHER " + this.getName() + "]: Ok, now publish 5 tracing services:");
 						
 		TraceInteract.publishTracingService(this, "DD_Test_TS1", "Domain Dependent Test Tracing Service1");
-		contExec.acquire();
 		TraceInteract.publishTracingService(this, "DD_Test_TS2", "Domain Dependent Test Tracing Service2");
-		contExec.acquire();
 		TraceInteract.publishTracingService(this, "DD_Test_TS3", "Domain Dependent Test Tracing Service3");
-		contExec.acquire();
 		TraceInteract.publishTracingService(this, "DD_Test_TS4", "Domain Dependent Test Tracing Service4");
-		contExec.acquire();
 		TraceInteract.publishTracingService(this, "DD_Test_TS5", "Domain Dependent Test Tracing Service5");
-		contExec.acquire();
+		contExec.acquire(5);
 		System.out.println("\n[PUBLISHER " + this.getName() + "]: Done!");
 		
 	}

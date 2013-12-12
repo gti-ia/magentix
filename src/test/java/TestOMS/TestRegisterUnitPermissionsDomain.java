@@ -1,5 +1,14 @@
 package TestOMS;
 
+import static org.junit.Assert.*;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
 import junit.framework.TestCase;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
@@ -15,18 +24,21 @@ import es.upv.dsic.gti_ia.organization.exception.THOMASException;
  */
 
 
-public class TestRegisterUnitPermissionsDomain extends TestCase {
+public class TestRegisterUnitPermissionsDomain {
 	
 	OMSProxy omsProxy = null;
 	DatabaseAccess dbA = null;
-
 
 	Agent agent = null;
 
 	OMS oms = null;
 	SF sf = null;
+	
+	Process qpid_broker;
+	
 
-	protected void tearDown() throws Exception {
+	@After
+	public void tearDown() throws Exception {
 
 		//------------------Clean Data Base -----------//
 		dbA.executeSQL("DELETE FROM agentPlayList");
@@ -54,10 +66,20 @@ public class TestRegisterUnitPermissionsDomain extends TestCase {
 		oms = null;
 		sf = null;
 
+		AgentsConnection.disconnect();
+		qpid_broker.destroy();
 	}
-	protected void setUp() throws Exception {
-		super.setUp();
+	
+	@Before
+	public void setUp() throws Exception {
 
+		qpid_broker = Runtime.getRuntime().exec("./installer/magentix2/bin/qpid-broker-0.20/bin/qpid-server");
+		BufferedReader reader = new BufferedReader(new InputStreamReader(qpid_broker.getInputStream()));
+
+		String line = reader.readLine();
+		while (!line.contains("Qpid Broker Ready")) {
+			line = reader.readLine();
+		}
 
 		AgentsConnection.connect();
 
@@ -90,242 +112,201 @@ public class TestRegisterUnitPermissionsDomain extends TestCase {
 		
 	}
 
-	
-	public void testRegisterUnitPermissionsDomain1() {
+	@Test
+	public void testRegisterUnitPermissionsDomain1() throws Exception {
 		
-		try{
+		//------------------------------------------- Test Initialization  -----------------------------------------------//
+		dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('plana',(SELECT idunitType FROM unitType WHERE unitTypeName = 'flat'))");
+		dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'virtual'),(SELECT idunitList FROM unitList WHERE unitName = 'plana'))");
+		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
+				"('miembro',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
+				"(SELECT idposition FROM position WHERE positionName = 'member'), "+
+				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
+				"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
+		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
+				"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
+				"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
+				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
+				"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 			
-			//------------------------------------------- Test Initialization  -----------------------------------------------//
-			dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('plana',(SELECT idunitType FROM unitType WHERE unitTypeName = 'flat'))");
-			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'virtual'),(SELECT idunitList FROM unitList WHERE unitName = 'plana'))");
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
-					"('miembro',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
-					"(SELECT idposition FROM position WHERE positionName = 'member'), "+
-					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
-					"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
-					"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
-					"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
-					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
-					"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
-			
-			dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('plana2',(SELECT idunitType FROM unitType WHERE unitTypeName = 'flat'))");
-			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'virtual'),(SELECT idunitList FROM unitList WHERE unitName = 'plana2'))");
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
-					"('miembro',(SELECT idunitList FROM unitList WHERE unitName = 'plana2'),"+
-					"(SELECT idposition FROM position WHERE positionName = 'member'), "+
-					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
-					"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
-					"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'plana2'),"+
-					"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
-					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
-					"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
-			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES ((SELECT idagentList FROM agentList WHERE "
-					+ "agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT "
-					+ "idunitList FROM unitList WHERE unitName = 'plana2'))))");
+		dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('plana2',(SELECT idunitType FROM unitType WHERE unitTypeName = 'flat'))");
+		dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'virtual'),(SELECT idunitList FROM unitList WHERE unitName = 'plana2'))");
+		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
+				"('miembro',(SELECT idunitList FROM unitList WHERE unitName = 'plana2'),"+
+				"(SELECT idposition FROM position WHERE positionName = 'member'), "+
+				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
+				"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
+		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
+				"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'plana2'),"+
+				"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
+				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
+				"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
+		
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES ((SELECT idagentList FROM agentList WHERE "
+				+ "agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT "
+				+ "idunitList FROM unitList WHERE unitName = 'plana2'))))");
 
-			dbA.executeSQL("INSERT INTO normList (idunitList, normName, iddeontic, idtargetType, targetValue, idactionNorm, normContent, normRule) " +
-					"VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'plana'),'permisoRegistrarUnidad', (SELECT iddeontic FROM deontic WHERE deonticdesc = 'p'), (SELECT idtargetType FROM " +
-					"targetType WHERE targetName = 'agentName'),(SELECT idagentList FROM agentList WHERE agentName = 'pruebas'), (SELECT idactionNorm FROM actionNorm WHERE description = " +
-					"'registerUnit' AND numParams = 5), '@permisoRegistrarUnidad[p,<agentName:pruebas>,registerUnit(_,_,plana,_,_),_,_]', 'registerUnit(_,_,plana,_,_)')");
-			dbA.executeSQL("INSERT INTO actionNormParam (idnormList, idactionNorm, value) VALUES ((SELECT idnormList FROM normList WHERE normName = 'permisoRegistrarUnidad'), (SELECT idactionNorm FROM actionNorm WHERE description = " +
-					"'registerUnit' AND numParams = 5), '_')");
-			dbA.executeSQL("INSERT INTO actionNormParam (idnormList, idactionNorm, value) VALUES ((SELECT idnormList FROM normList WHERE normName = 'permisoRegistrarUnidad'), (SELECT idactionNorm FROM actionNorm WHERE description = " +
-					"'registerUnit' AND numParams = 5), '_')");
-			dbA.executeSQL("INSERT INTO actionNormParam (idnormList, idactionNorm, value) VALUES ((SELECT idnormList FROM normList WHERE normName = 'permisoRegistrarUnidad'), (SELECT idactionNorm FROM actionNorm WHERE description = " +
-					"'registerUnit' AND numParams = 5), 'plana')");
-			dbA.executeSQL("INSERT INTO actionNormParam (idnormList, idactionNorm, value) VALUES ((SELECT idnormList FROM normList WHERE normName = 'permisoRegistrarUnidad'), (SELECT idactionNorm FROM actionNorm WHERE description = " +
-					"'registerUnit' AND numParams = 5), '_')");
-			dbA.executeSQL("INSERT INTO actionNormParam (idnormList, idactionNorm, value) VALUES ((SELECT idnormList FROM normList WHERE normName = 'permisoRegistrarUnidad'), (SELECT idactionNorm FROM actionNorm WHERE description = " +
-					"'registerUnit' AND numParams = 5), '_')");
-			//----------------------------------------------------------------------------------------------------------------//
+		dbA.executeSQL("INSERT INTO normList (idunitList, normName, iddeontic, idtargetType, targetValue, idactionNorm, normContent, normRule) " +
+				"VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'plana'),'permisoRegistrarUnidad', (SELECT iddeontic FROM deontic WHERE deonticdesc = 'p'), (SELECT idtargetType FROM " +
+				"targetType WHERE targetName = 'agentName'),(SELECT idagentList FROM agentList WHERE agentName = 'pruebas'), (SELECT idactionNorm FROM actionNorm WHERE description = " +
+				"'registerUnit' AND numParams = 5), '@permisoRegistrarUnidad[p,<agentName:pruebas>,registerUnit(_,_,plana,_,_),_,_]', 'registerUnit(_,_,plana,_,_)')");
+		dbA.executeSQL("INSERT INTO actionNormParam (idnormList, idactionNorm, value) VALUES ((SELECT idnormList FROM normList WHERE normName = 'permisoRegistrarUnidad'), (SELECT idactionNorm FROM actionNorm WHERE description = " +
+				"'registerUnit' AND numParams = 5), '_')");
+		dbA.executeSQL("INSERT INTO actionNormParam (idnormList, idactionNorm, value) VALUES ((SELECT idnormList FROM normList WHERE normName = 'permisoRegistrarUnidad'), (SELECT idactionNorm FROM actionNorm WHERE description = " +
+				"'registerUnit' AND numParams = 5), '_')");
+		dbA.executeSQL("INSERT INTO actionNormParam (idnormList, idactionNorm, value) VALUES ((SELECT idnormList FROM normList WHERE normName = 'permisoRegistrarUnidad'), (SELECT idactionNorm FROM actionNorm WHERE description = " +
+				"'registerUnit' AND numParams = 5), 'plana')");
+		dbA.executeSQL("INSERT INTO actionNormParam (idnormList, idactionNorm, value) VALUES ((SELECT idnormList FROM normList WHERE normName = 'permisoRegistrarUnidad'), (SELECT idactionNorm FROM actionNorm WHERE description = " +
+				"'registerUnit' AND numParams = 5), '_')");
+		dbA.executeSQL("INSERT INTO actionNormParam (idnormList, idactionNorm, value) VALUES ((SELECT idnormList FROM normList WHERE normName = 'permisoRegistrarUnidad'), (SELECT idactionNorm FROM actionNorm WHERE description = " +
+				"'registerUnit' AND numParams = 5), '_')");
+		//----------------------------------------------------------------------------------------------------------------//
 			
-			String result = omsProxy.registerUnit("plana3", "flat", "plana","creador");
-			assertEquals("The message should be:", "plana3 created", result);
+		String result = omsProxy.registerUnit("plana3", "flat", "plana","creador");
+		assertEquals("The message should be:", "plana3 created", result);
 			
-			boolean res = dbA.executeQuery("SELECT * FROM agentPlayList WHERE idroleList = (SELECT idroleList FROM roleList WHERE roleName = 'creador' and idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana3'))");
-			assertEquals(true,res);
-			
-		} catch(THOMASException e) {
-
-			fail(e.getMessage());
-
-		} catch(Exception e) {
-			
-			fail(e.getMessage());
-			
-		}
+		boolean res = dbA.executeQuery("SELECT * FROM agentPlayList WHERE idroleList = (SELECT idroleList FROM roleList WHERE roleName = 'creador' and idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana3'))");
+		assertEquals(true,res);
+		
 	}
 	
-	public void testRegisterUnitPermissionsDomain2() {
+	@Test
+	public void testRegisterUnitPermissionsDomain2() throws Exception {
 		
-		try{
+		//------------------------------------------- Test Initialization  -----------------------------------------------//
+		dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('equipo',(SELECT idunitType FROM unitType WHERE unitTypeName = 'team'))");
+		dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'virtual'),(SELECT idunitList FROM unitList WHERE unitName = 'equipo'))");
+		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
+				"('miembro',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
+				"(SELECT idposition FROM position WHERE positionName = 'member'), "+
+				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
+				"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
+		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
+				"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
+				"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
+				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
+				"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
+		
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES ((SELECT idagentList FROM agentList WHERE "
+				+ "agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT "
+				+ "idunitList FROM unitList WHERE unitName = 'equipo'))))");
 			
-			//------------------------------------------- Test Initialization  -----------------------------------------------//
-			dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('equipo',(SELECT idunitType FROM unitType WHERE unitTypeName = 'team'))");
-			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'virtual'),(SELECT idunitList FROM unitList WHERE unitName = 'equipo'))");
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
-					"('miembro',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
-					"(SELECT idposition FROM position WHERE positionName = 'member'), "+
-					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
-					"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
-					"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
-					"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
-					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
-					"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
+		dbA.executeSQL("INSERT INTO normList (idunitList, normName, iddeontic, idtargetType, targetValue, idactionNorm, normContent, normRule) " +
+				"VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'equipo'),'permisoRegistrarUnidad', (SELECT iddeontic FROM deontic WHERE deonticdesc = 'p'), (SELECT idtargetType FROM " +
+				"targetType WHERE targetName = 'positionName'),(SELECT idposition FROM position WHERE positionName = 'member'), (SELECT idactionNorm FROM actionNorm WHERE description = " +
+				"'registerUnit' AND numParams = 5), '@permisoRegistrarUnidad[p,<positionName:member>,registerUnit(_,_,equipo,_,_),_,_]', 'registerUnit(_,_,equipo,_,_)')");
+		dbA.executeSQL("INSERT INTO actionNormParam (idnormList, idactionNorm, value) VALUES ((SELECT idnormList FROM normList WHERE normName = 'permisoRegistrarUnidad'), (SELECT idactionNorm FROM actionNorm WHERE description = " +
+				"'registerUnit' AND numParams = 5), '_')");
+		dbA.executeSQL("INSERT INTO actionNormParam (idnormList, idactionNorm, value) VALUES ((SELECT idnormList FROM normList WHERE normName = 'permisoRegistrarUnidad'), (SELECT idactionNorm FROM actionNorm WHERE description = " +
+				"'registerUnit' AND numParams = 5), '_')");
+		dbA.executeSQL("INSERT INTO actionNormParam (idnormList, idactionNorm, value) VALUES ((SELECT idnormList FROM normList WHERE normName = 'permisoRegistrarUnidad'), (SELECT idactionNorm FROM actionNorm WHERE description = " +
+				"'registerUnit' AND numParams = 5), 'equipo')");
+		dbA.executeSQL("INSERT INTO actionNormParam (idnormList, idactionNorm, value) VALUES ((SELECT idnormList FROM normList WHERE normName = 'permisoRegistrarUnidad'), (SELECT idactionNorm FROM actionNorm WHERE description = " +
+				"'registerUnit' AND numParams = 5), '_')");
+		dbA.executeSQL("INSERT INTO actionNormParam (idnormList, idactionNorm, value) VALUES ((SELECT idnormList FROM normList WHERE normName = 'permisoRegistrarUnidad'), (SELECT idactionNorm FROM actionNorm WHERE description = " +
+				"'registerUnit' AND numParams = 5), '_')");
+		//----------------------------------------------------------------------------------------------------------------//
 			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES ((SELECT idagentList FROM agentList WHERE "
-					+ "agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT "
-					+ "idunitList FROM unitList WHERE unitName = 'equipo'))))");
-
-			dbA.executeSQL("INSERT INTO normList (idunitList, normName, iddeontic, idtargetType, targetValue, idactionNorm, normContent, normRule) " +
-					"VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'equipo'),'permisoRegistrarUnidad', (SELECT iddeontic FROM deontic WHERE deonticdesc = 'p'), (SELECT idtargetType FROM " +
-					"targetType WHERE targetName = 'positionName'),(SELECT idposition FROM position WHERE positionName = 'member'), (SELECT idactionNorm FROM actionNorm WHERE description = " +
-					"'registerUnit' AND numParams = 5), '@permisoRegistrarUnidad[p,<positionName:member>,registerUnit(_,_,equipo,_,_),_,_]', 'registerUnit(_,_,equipo,_,_)')");
-			dbA.executeSQL("INSERT INTO actionNormParam (idnormList, idactionNorm, value) VALUES ((SELECT idnormList FROM normList WHERE normName = 'permisoRegistrarUnidad'), (SELECT idactionNorm FROM actionNorm WHERE description = " +
-					"'registerUnit' AND numParams = 5), '_')");
-			dbA.executeSQL("INSERT INTO actionNormParam (idnormList, idactionNorm, value) VALUES ((SELECT idnormList FROM normList WHERE normName = 'permisoRegistrarUnidad'), (SELECT idactionNorm FROM actionNorm WHERE description = " +
-					"'registerUnit' AND numParams = 5), '_')");
-			dbA.executeSQL("INSERT INTO actionNormParam (idnormList, idactionNorm, value) VALUES ((SELECT idnormList FROM normList WHERE normName = 'permisoRegistrarUnidad'), (SELECT idactionNorm FROM actionNorm WHERE description = " +
-					"'registerUnit' AND numParams = 5), 'equipo')");
-			dbA.executeSQL("INSERT INTO actionNormParam (idnormList, idactionNorm, value) VALUES ((SELECT idnormList FROM normList WHERE normName = 'permisoRegistrarUnidad'), (SELECT idactionNorm FROM actionNorm WHERE description = " +
-					"'registerUnit' AND numParams = 5), '_')");
-			dbA.executeSQL("INSERT INTO actionNormParam (idnormList, idactionNorm, value) VALUES ((SELECT idnormList FROM normList WHERE normName = 'permisoRegistrarUnidad'), (SELECT idactionNorm FROM actionNorm WHERE description = " +
-					"'registerUnit' AND numParams = 5), '_')");
-			//----------------------------------------------------------------------------------------------------------------//
+		String result = omsProxy.registerUnit("plana", "flat", "equipo","creador");
+		assertEquals("The message should be:", "plana created", result);
 			
-			String result = omsProxy.registerUnit("plana", "flat", "equipo","creador");
-			assertEquals("The message should be:", "plana created", result);
-			
-			boolean res = dbA.executeQuery("SELECT * FROM agentPlayList WHERE idroleList = (SELECT idroleList FROM roleList WHERE roleName = 'creador' and idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana'))");
-			assertEquals(true,res);
-			
-		} catch(THOMASException e) {
-
-			fail(e.getMessage());
-
-		} catch(Exception e) {
-			
-			fail(e.getMessage());
-			
-		}
+		boolean res = dbA.executeQuery("SELECT * FROM agentPlayList WHERE idroleList = (SELECT idroleList FROM roleList WHERE roleName = 'creador' and idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana'))");
+		assertEquals(true,res);
+		
 	}
 	
-	public void testRegisterUnitPermissionsDomain3() {
+	@Test
+	public void testRegisterUnitPermissionsDomain3() throws Exception {
 		
-		try{
+		//------------------------------------------- Test Initialization  -----------------------------------------------//
+		dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('equipo',(SELECT idunitType FROM unitType WHERE unitTypeName = 'team'))");
+		dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'virtual'),(SELECT idunitList FROM unitList WHERE unitName = 'equipo'))");
+		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
+				"('miembro',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
+				"(SELECT idposition FROM position WHERE positionName = 'member'), "+
+				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
+				"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
+		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
+				"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
+				"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
+				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
+				"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 			
-			//------------------------------------------- Test Initialization  -----------------------------------------------//
-			dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('equipo',(SELECT idunitType FROM unitType WHERE unitTypeName = 'team'))");
-			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'virtual'),(SELECT idunitList FROM unitList WHERE unitName = 'equipo'))");
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
-					"('miembro',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
-					"(SELECT idposition FROM position WHERE positionName = 'member'), "+
-					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
-					"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
-					"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
-					"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
-					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
-					"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
-			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES ((SELECT idagentList FROM agentList WHERE "
-					+ "agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT "
-					+ "idunitList FROM unitList WHERE unitName = 'equipo'))))");
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES ((SELECT idagentList FROM agentList WHERE "
+				+ "agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT "
+				+ "idunitList FROM unitList WHERE unitName = 'equipo'))))");
 
-			dbA.executeSQL("INSERT INTO normList (idunitList, normName, iddeontic, idtargetType, targetValue, idactionNorm, normContent, normRule) " +
-					"VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'equipo'),'permisoRegistrarUnidad', (SELECT iddeontic FROM deontic WHERE deonticdesc = 'p'), (SELECT idtargetType FROM " +
-					"targetType WHERE targetName = 'positionName'),(SELECT idposition FROM position WHERE positionName = 'member'), (SELECT idactionNorm FROM actionNorm WHERE description = " +
-					"'registerUnit' AND numParams = 5), '@permisoRegistrarUnidad[p,<positionName:member>,registerUnit(_,_,equipo,_,_),_,_]', 'registerUnit(_,_,equipo,_,_)')");
-			dbA.executeSQL("INSERT INTO actionNormParam (idnormList, idactionNorm, value) VALUES ((SELECT idnormList FROM normList WHERE normName = 'permisoRegistrarUnidad'), (SELECT idactionNorm FROM actionNorm WHERE description = " +
-					"'registerUnit' AND numParams = 5), '_')");
-			dbA.executeSQL("INSERT INTO actionNormParam (idnormList, idactionNorm, value) VALUES ((SELECT idnormList FROM normList WHERE normName = 'permisoRegistrarUnidad'), (SELECT idactionNorm FROM actionNorm WHERE description = " +
-					"'registerUnit' AND numParams = 5), '_')");
-			dbA.executeSQL("INSERT INTO actionNormParam (idnormList, idactionNorm, value) VALUES ((SELECT idnormList FROM normList WHERE normName = 'permisoRegistrarUnidad'), (SELECT idactionNorm FROM actionNorm WHERE description = " +
-					"'registerUnit' AND numParams = 5), 'equipo')");
-			dbA.executeSQL("INSERT INTO actionNormParam (idnormList, idactionNorm, value) VALUES ((SELECT idnormList FROM normList WHERE normName = 'permisoRegistrarUnidad'), (SELECT idactionNorm FROM actionNorm WHERE description = " +
-					"'registerUnit' AND numParams = 5), '_')");
-			dbA.executeSQL("INSERT INTO actionNormParam (idnormList, idactionNorm, value) VALUES ((SELECT idnormList FROM normList WHERE normName = 'permisoRegistrarUnidad'), (SELECT idactionNorm FROM actionNorm WHERE description = " +
-					"'registerUnit' AND numParams = 5), '_')");
-			//----------------------------------------------------------------------------------------------------------------//
+		dbA.executeSQL("INSERT INTO normList (idunitList, normName, iddeontic, idtargetType, targetValue, idactionNorm, normContent, normRule) " +
+				"VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'equipo'),'permisoRegistrarUnidad', (SELECT iddeontic FROM deontic WHERE deonticdesc = 'p'), (SELECT idtargetType FROM " +
+				"targetType WHERE targetName = 'positionName'),(SELECT idposition FROM position WHERE positionName = 'member'), (SELECT idactionNorm FROM actionNorm WHERE description = " +
+				"'registerUnit' AND numParams = 5), '@permisoRegistrarUnidad[p,<positionName:member>,registerUnit(_,_,equipo,_,_),_,_]', 'registerUnit(_,_,equipo,_,_)')");
+		dbA.executeSQL("INSERT INTO actionNormParam (idnormList, idactionNorm, value) VALUES ((SELECT idnormList FROM normList WHERE normName = 'permisoRegistrarUnidad'), (SELECT idactionNorm FROM actionNorm WHERE description = " +
+				"'registerUnit' AND numParams = 5), '_')");
+		dbA.executeSQL("INSERT INTO actionNormParam (idnormList, idactionNorm, value) VALUES ((SELECT idnormList FROM normList WHERE normName = 'permisoRegistrarUnidad'), (SELECT idactionNorm FROM actionNorm WHERE description = " +
+				"'registerUnit' AND numParams = 5), '_')");
+		dbA.executeSQL("INSERT INTO actionNormParam (idnormList, idactionNorm, value) VALUES ((SELECT idnormList FROM normList WHERE normName = 'permisoRegistrarUnidad'), (SELECT idactionNorm FROM actionNorm WHERE description = " +
+				"'registerUnit' AND numParams = 5), 'equipo')");
+		dbA.executeSQL("INSERT INTO actionNormParam (idnormList, idactionNorm, value) VALUES ((SELECT idnormList FROM normList WHERE normName = 'permisoRegistrarUnidad'), (SELECT idactionNorm FROM actionNorm WHERE description = " +
+				"'registerUnit' AND numParams = 5), '_')");
+		dbA.executeSQL("INSERT INTO actionNormParam (idnormList, idactionNorm, value) VALUES ((SELECT idnormList FROM normList WHERE normName = 'permisoRegistrarUnidad'), (SELECT idactionNorm FROM actionNorm WHERE description = " +
+				"'registerUnit' AND numParams = 5), '_')");
+		//----------------------------------------------------------------------------------------------------------------//
 			
-			String result = omsProxy.registerUnit("plana", "flat", "equipo","creador");
-			assertEquals("The message should be:", "plana created", result);
+		String result = omsProxy.registerUnit("plana", "flat", "equipo","creador");
+		assertEquals("The message should be:", "plana created", result);
 			
-			boolean res = dbA.executeQuery("SELECT * FROM agentPlayList WHERE idroleList = (SELECT idroleList FROM roleList WHERE roleName = 'creador' and idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana'))");
-			assertEquals(true,res);
-			
-		} catch(THOMASException e) {
-
-			fail(e.getMessage());
-
-		} catch(Exception e) {
-			
-			fail(e.getMessage());
-			
-		}
+		boolean res = dbA.executeQuery("SELECT * FROM agentPlayList WHERE idroleList = (SELECT idroleList FROM roleList WHERE roleName = 'creador' and idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana'))");
+		assertEquals(true,res);
+		
 	}
 	
-	public void testRegisterUnitPermissionsDomain4() {
+	@Test
+	public void testRegisterUnitPermissionsDomain4() throws Exception {
 		
-		try{
+		//------------------------------------------- Test Initialization  -----------------------------------------------//
+		dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('jerarquia',(SELECT idunitType FROM unitType WHERE unitTypeName = 'hierarchy'))");
+		dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'virtual'),(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))");
+		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
+				"('subordinado',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
+				"(SELECT idposition FROM position WHERE positionName = 'subordinate'), "+
+				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
+				"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
+		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
+				"('supervisor',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
+				"(SELECT idposition FROM position WHERE positionName = 'supervisor'), "+
+				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
+				"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
+		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
+				"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
+				"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
+				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
+				"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 			
-			//------------------------------------------- Test Initialization  -----------------------------------------------//
-			dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('jerarquia',(SELECT idunitType FROM unitType WHERE unitTypeName = 'hierarchy'))");
-			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'virtual'),(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))");
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
-					"('subordinado',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
-					"(SELECT idposition FROM position WHERE positionName = 'subordinate'), "+
-					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
-					"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
-					"('supervisor',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
-					"(SELECT idposition FROM position WHERE positionName = 'supervisor'), "+
-					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
-					"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
-					"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
-					"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
-					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
-					"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES ((SELECT idagentList FROM agentList WHERE "
+				+ "agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'subordinado' AND idunitList = (SELECT "
+				+ "idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
+		
+		dbA.executeSQL("INSERT INTO normList (idunitList, normName, iddeontic, idtargetType, targetValue, idactionNorm, normContent, normRule) " +
+				"VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),'permisoRegistrarUnidad', (SELECT iddeontic FROM deontic WHERE deonticdesc = 'p'), (SELECT idtargetType FROM " +
+				"targetType WHERE targetName = 'roleName'),-1, (SELECT idactionNorm FROM actionNorm WHERE description = 'registerUnit' AND numParams = 5), "
+				+ "'@permisoRegistrarUnidad[p,<roleName:_>,registerUnit(_,_,jerarquia,_,_),_,_]', 'registerUnit(_,_,jerarquia,_,_)')");
+		dbA.executeSQL("INSERT INTO actionNormParam (idnormList, idactionNorm, value) VALUES ((SELECT idnormList FROM normList WHERE normName = 'permisoRegistrarUnidad'), (SELECT idactionNorm FROM actionNorm WHERE description = " +
+				"'registerUnit' AND numParams = 5), '_')");
+		dbA.executeSQL("INSERT INTO actionNormParam (idnormList, idactionNorm, value) VALUES ((SELECT idnormList FROM normList WHERE normName = 'permisoRegistrarUnidad'), (SELECT idactionNorm FROM actionNorm WHERE description = " +
+				"'registerUnit' AND numParams = 5), '_')");
+		dbA.executeSQL("INSERT INTO actionNormParam (idnormList, idactionNorm, value) VALUES ((SELECT idnormList FROM normList WHERE normName = 'permisoRegistrarUnidad'), (SELECT idactionNorm FROM actionNorm WHERE description = " +
+				"'registerUnit' AND numParams = 5), 'jerarquia')");
+		dbA.executeSQL("INSERT INTO actionNormParam (idnormList, idactionNorm, value) VALUES ((SELECT idnormList FROM normList WHERE normName = 'permisoRegistrarUnidad'), (SELECT idactionNorm FROM actionNorm WHERE description = " +
+				"'registerUnit' AND numParams = 5), '_')");
+		dbA.executeSQL("INSERT INTO actionNormParam (idnormList, idactionNorm, value) VALUES ((SELECT idnormList FROM normList WHERE normName = 'permisoRegistrarUnidad'), (SELECT idactionNorm FROM actionNorm WHERE description = " +
+				"'registerUnit' AND numParams = 5), '_')");
+		//----------------------------------------------------------------------------------------------------------------//
 			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES ((SELECT idagentList FROM agentList WHERE "
-					+ "agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'subordinado' AND idunitList = (SELECT "
-					+ "idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
-
-			dbA.executeSQL("INSERT INTO normList (idunitList, normName, iddeontic, idtargetType, targetValue, idactionNorm, normContent, normRule) " +
-					"VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),'permisoRegistrarUnidad', (SELECT iddeontic FROM deontic WHERE deonticdesc = 'p'), (SELECT idtargetType FROM " +
-					"targetType WHERE targetName = 'roleName'),-1, (SELECT idactionNorm FROM actionNorm WHERE description = 'registerUnit' AND numParams = 5), "
-					+ "'@permisoRegistrarUnidad[p,<roleName:_>,registerUnit(_,_,jerarquia,_,_),_,_]', 'registerUnit(_,_,jerarquia,_,_)')");
-			dbA.executeSQL("INSERT INTO actionNormParam (idnormList, idactionNorm, value) VALUES ((SELECT idnormList FROM normList WHERE normName = 'permisoRegistrarUnidad'), (SELECT idactionNorm FROM actionNorm WHERE description = " +
-					"'registerUnit' AND numParams = 5), '_')");
-			dbA.executeSQL("INSERT INTO actionNormParam (idnormList, idactionNorm, value) VALUES ((SELECT idnormList FROM normList WHERE normName = 'permisoRegistrarUnidad'), (SELECT idactionNorm FROM actionNorm WHERE description = " +
-					"'registerUnit' AND numParams = 5), '_')");
-			dbA.executeSQL("INSERT INTO actionNormParam (idnormList, idactionNorm, value) VALUES ((SELECT idnormList FROM normList WHERE normName = 'permisoRegistrarUnidad'), (SELECT idactionNorm FROM actionNorm WHERE description = " +
-					"'registerUnit' AND numParams = 5), 'jerarquia')");
-			dbA.executeSQL("INSERT INTO actionNormParam (idnormList, idactionNorm, value) VALUES ((SELECT idnormList FROM normList WHERE normName = 'permisoRegistrarUnidad'), (SELECT idactionNorm FROM actionNorm WHERE description = " +
-					"'registerUnit' AND numParams = 5), '_')");
-			dbA.executeSQL("INSERT INTO actionNormParam (idnormList, idactionNorm, value) VALUES ((SELECT idnormList FROM normList WHERE normName = 'permisoRegistrarUnidad'), (SELECT idactionNorm FROM actionNorm WHERE description = " +
-					"'registerUnit' AND numParams = 5), '_')");
-			//----------------------------------------------------------------------------------------------------------------//
+		String result = omsProxy.registerUnit("plana", "flat", "jerarquia","creador");
+		assertEquals("The message should be:", "plana created", result);
 			
-			String result = omsProxy.registerUnit("plana", "flat", "jerarquia","creador");
-			assertEquals("The message should be:", "plana created", result);
-			
-			boolean res = dbA.executeQuery("SELECT * FROM agentPlayList WHERE idroleList = (SELECT idroleList FROM roleList WHERE roleName = 'creador' and idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana'))");
-			assertEquals(true,res);
-			
-		} catch(THOMASException e) {
-
-			fail(e.getMessage());
-
-		} catch(Exception e) {
-			
-			fail(e.getMessage());
-			
-		}
+		boolean res = dbA.executeQuery("SELECT * FROM agentPlayList WHERE idroleList = (SELECT idroleList FROM roleList WHERE roleName = 'creador' and idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana'))");
+		assertEquals(true,res);
+		
 	}
 }

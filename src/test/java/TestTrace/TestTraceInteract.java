@@ -3,6 +3,8 @@ package TestTrace;
 import static org.junit.Assert.*;
 import jason.mas2j.parser.mas2j;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 import org.junit.AfterClass;
@@ -12,7 +14,6 @@ import org.junit.internal.runners.statements.Fail;
 
 import TestBaseAgent.ConsumerAgent;
 import TestBaseAgent.SenderAgent;
-
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
@@ -73,10 +74,22 @@ public class TestTraceInteract {
 
 	/* Attributes */
 	private static CommandedAgent[] agents = { null, null };
+	
+	static Process qpid_broker;
+	
 
 	/* Set up class and tear down class */
 	@BeforeClass
 	public static void setUpClass() throws Exception {
+		
+		qpid_broker = Runtime.getRuntime().exec("./installer/magentix2/bin/qpid-broker-0.20/bin/qpid-server");
+		BufferedReader reader = new BufferedReader(new InputStreamReader(qpid_broker.getInputStream()));
+
+		String line = reader.readLine();
+		while (!line.contains("Qpid Broker Ready")) {
+			line = reader.readLine();
+		}
+		
 		AgentsConnection.connect(); // Connecting to Qpid Broker.
 
 		for (int i = 0; i < agents.length; ++i) {
@@ -91,6 +104,9 @@ public class TestTraceInteract {
 		for (int i = 0; i < agents.length; ++i) {
 			agents[i].addCommand(CommandedAgent.END);
 		}
+		
+		AgentsConnection.disconnect();
+		qpid_broker.destroy();
 	}
 
 	/* Test methods */

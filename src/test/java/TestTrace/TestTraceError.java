@@ -1,12 +1,17 @@
 package TestTrace;
 
 import static org.junit.Assert.*;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
 import junit.framework.TestCase;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
 import es.upv.dsic.gti_ia.trace.TraceError;
 
 /**
@@ -28,6 +33,7 @@ public class TestTraceError {
 	/* Set up class */
 	@BeforeClass
 	public static void setUpClass() throws Exception {
+		
 		for(int i = 0; i < errors.length; ++i) {
 			errors[i] = new TraceError(NAMES[i], DESCRIPTIONS[i]);
 		}

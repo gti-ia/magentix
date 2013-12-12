@@ -63,7 +63,6 @@ public class Publisher extends BaseAgent {
 		/**
 		 * Initializing tracing services and stuff
 		 */
-		contExec.acquire();
 		System.out.println("\n[PUBLISHER " + this.getName() + "]: Basic test start...");
 		System.out.println("[PUBLISHER " + this.getName() + "]: First, basic publication and unpublication operations:");
 			
@@ -96,6 +95,14 @@ public class Publisher extends BaseAgent {
 
 	public void execute() {
 		
+		TestTrace3.end.release();
+		
+		try {
+			contExec.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
 		TraceEvent tEvent;
 		Random generator = new Random(System.currentTimeMillis());
 		
@@ -126,7 +133,7 @@ public class Publisher extends BaseAgent {
 
 		try {
 			
-			contExec.acquire();
+			contExec.acquire(4);
 			
 			System.out.println("[PUBLISHER " + this.getName() + "]: Now unpublishing tracing services\n\t(one of them will probably fail because it was already unpublished)...");
 			TraceInteract.unpublishTracingService(this, "DD_Test_TS1");
@@ -136,7 +143,7 @@ public class Publisher extends BaseAgent {
 			TraceInteract.unpublishTracingService(this, "DD_Test_TS4");
 			TraceInteract.unpublishTracingService(this, "DD_Test_TS5");
 		
-			contExec.acquire();
+			contExec.acquire(5);
 			
 		} catch (TraceServiceNotAllowedException e1) {
 			e1.printStackTrace();
@@ -171,6 +178,8 @@ public class Publisher extends BaseAgent {
 			}
 			else if (msg.getContent().contentEquals("STOP"))
 				finish = true;
-		}	
+		}
+		
+		contExec.release();
 	}
 }

@@ -1,5 +1,8 @@
 package TestOMS;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
 import junit.framework.TestCase;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
@@ -22,10 +25,7 @@ public class TestAcquireRoleInCorrectPermissions extends TestCase {
 	OMS oms = null;
 	SF sf = null;
 
-	public TestAcquireRoleInCorrectPermissions()
-	{
-
-	}
+	Process qpid_broker;
 
 	protected void tearDown() throws Exception {
 
@@ -53,14 +53,21 @@ public class TestAcquireRoleInCorrectPermissions extends TestCase {
 		oms = null;
 		sf = null;
 
-
+		AgentsConnection.disconnect();
+		qpid_broker.destroy();
 	}
 	protected void setUp() throws Exception {
 		super.setUp();
+		
+		qpid_broker = Runtime.getRuntime().exec("./installer/magentix2/bin/qpid-broker-0.20/bin/qpid-server");
+		BufferedReader reader = new BufferedReader(new InputStreamReader(qpid_broker.getInputStream()));
 
+		String line = reader.readLine();
+		while (!line.contains("Qpid Broker Ready")) {
+			line = reader.readLine();
+		}
 
 		AgentsConnection.connect();
-
 
 		oms = new OMS(new AgentID("OMS"));
 
@@ -69,13 +76,8 @@ public class TestAcquireRoleInCorrectPermissions extends TestCase {
 		oms.start();
 		sf.start();
 
-
 		agent = new Agent(new AgentID("pruebas"));
-
-
-
 		omsProxy = new OMSProxy(agent);
-
 		dbA = new DatabaseAccess();
 
 		//------------------Clean Data Base -----------//
@@ -87,14 +89,13 @@ public class TestAcquireRoleInCorrectPermissions extends TestCase {
 
 		//--------------------------------------------//
 		
-		
 		dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('Plana',(SELECT idunitType FROM unitType WHERE unitTypeName = 'flat'))");
 		dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'virtual'),(SELECT idunitList FROM unitList WHERE unitName = 'Plana'))");
 		
 		dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('Plana2',(SELECT idunitType FROM unitType WHERE unitTypeName = 'flat'))");
 		dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'virtual'),(SELECT idunitList FROM unitList WHERE unitName = 'Plana2'))");
 
-
+		
 		dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('Equipo',(SELECT idunitType FROM unitType WHERE unitTypeName = 'team'))");
 		dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'virtual'),(SELECT idunitList FROM unitList WHERE unitName = 'Equipo'))");
 
@@ -174,7 +175,6 @@ public class TestAcquireRoleInCorrectPermissions extends TestCase {
 				"(SELECT idposition FROM position WHERE positionName = 'subordinate'), "+
 				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 		"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
-
 	}
 	
 	
