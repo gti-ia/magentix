@@ -1,6 +1,9 @@
 package TestSF;
 
 //import omsTests.DatabaseAccess;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
 import junit.framework.TestCase;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
@@ -17,10 +20,19 @@ public class TestGetService extends TestCase {
 	OMS oms = null;
 	SF sf = null;
 	DatabaseAccess dbA = null;
+	Process qpid_broker;
 
 	protected void setUp() throws Exception {
 		super.setUp();
+		qpid_broker = Runtime.getRuntime().exec(
+				"./installer/magentix2/bin/qpid-broker-0.20/bin/qpid-server");
+		BufferedReader reader = new BufferedReader(new InputStreamReader(
+				qpid_broker.getInputStream()));
 
+		String line = reader.readLine();
+		while (!line.contains("Qpid Broker Ready")) {
+			line = reader.readLine();
+		}
 		AgentsConnection.connect();
 
 
@@ -45,7 +57,6 @@ public class TestGetService extends TestCase {
 
 	protected void tearDown() throws Exception {
 		super.tearDown();
-
 		//------------------Clean Data Base -----------//
 		dbA.executeSQL("DELETE FROM agentPlayList");
 		dbA.executeSQL("DELETE FROM roleList WHERE idroleList != 1");
@@ -67,6 +78,8 @@ public class TestGetService extends TestCase {
 		
 		oms = null;
 		sf = null;
+
+		qpid_broker.destroy();
 	}
 
 

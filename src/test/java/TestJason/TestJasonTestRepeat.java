@@ -22,7 +22,6 @@ public class TestJasonTestRepeat extends TestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
-
 		/**
 		 * Setting the Logger
 		 */
@@ -34,9 +33,9 @@ public class TestJasonTestRepeat extends TestCase {
 				qpid_broker.getInputStream()));
 
 		String line = reader.readLine();
-		
+
 		while (!line.contains("Qpid Broker Ready")) {
-			
+
 			line = reader.readLine();
 		}
 		/**
@@ -58,7 +57,7 @@ public class TestJasonTestRepeat extends TestCase {
 			try {
 				Thread.sleep(3 * 1000);
 			} catch (InterruptedException e) {
-				
+
 				e.printStackTrace();
 			}
 
@@ -67,7 +66,7 @@ public class TestJasonTestRepeat extends TestCase {
 			try {
 				Thread.sleep(3 * 1000);
 			} catch (InterruptedException e) {
-				
+
 				e.printStackTrace();
 			}
 
@@ -80,7 +79,7 @@ public class TestJasonTestRepeat extends TestCase {
 			try {
 				Thread.sleep(3 * 1000);
 			} catch (InterruptedException e) {
-				
+
 				e.printStackTrace();
 			}
 
@@ -89,7 +88,7 @@ public class TestJasonTestRepeat extends TestCase {
 			try {
 				Thread.sleep(3 * 1000);
 			} catch (InterruptedException e) {
-				
+
 				e.printStackTrace();
 			}
 
@@ -102,9 +101,7 @@ public class TestJasonTestRepeat extends TestCase {
 
 	protected void tearDown() throws Exception {
 		super.tearDown();
-
 		AgentsConnection.disconnect();
-
 		qpid_broker.destroy();
 
 	}

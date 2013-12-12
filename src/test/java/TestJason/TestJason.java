@@ -17,7 +17,7 @@ public class TestJason extends TestCase {
 	MagentixAgArch arch;
 	JasonAgent agent;
 	Process qpid_broker;
-	
+
 	public TestJason(String name) {
 		super(name);
 	}
@@ -28,18 +28,19 @@ public class TestJason extends TestCase {
 		/**
 		 * Setting the Logger
 		 */
+
 		// Comentarlo para test?
 		DOMConfigurator.configure("configuration/loggin.xml");
-		
+
 		qpid_broker = Runtime.getRuntime().exec(
 				"./installer/magentix2/bin/qpid-broker-0.20/bin/qpid-server");
 		BufferedReader reader = new BufferedReader(new InputStreamReader(
 				qpid_broker.getInputStream()));
 
 		String line = reader.readLine();
-		
+
 		while (!line.contains("Qpid Broker Ready")) {
-			
+
 			line = reader.readLine();
 		}
 		/**
@@ -51,9 +52,9 @@ public class TestJason extends TestCase {
 
 	protected void tearDown() throws Exception {
 		super.tearDown();
-		
+
 		AgentsConnection.disconnect();
-		
+
 		qpid_broker.destroy();
 	}
 
@@ -131,7 +132,7 @@ public class TestJason extends TestCase {
 			agent = new JasonAgent(new AgentID("test"),
 					"./src/test/java/TestJason/demo.asl", arch);
 		} catch (Exception e1) {
-			
+
 			e1.printStackTrace();
 		}
 
@@ -144,7 +145,7 @@ public class TestJason extends TestCase {
 			agent2 = new JasonAgent(new AgentID("sender"),
 					"./src/test/java/TestJason/demo2.asl", arch2);
 		} catch (Exception e1) {
-			
+
 			e1.printStackTrace();
 		}
 
@@ -166,7 +167,7 @@ public class TestJason extends TestCase {
 		try {
 			Thread.sleep(2 * 1000);
 		} catch (InterruptedException e) {
-			
+
 			e.printStackTrace();
 		}
 
@@ -180,30 +181,30 @@ public class TestJason extends TestCase {
 
 		try {
 			arch = new SimpleArchitecture();
-	
+
 			try {
 				agent = new JasonAgent(new AgentID("test"),
 						"./src/test/java/TestJason/demo.asl", arch);
 			} catch (Exception e1) {
-				
+
 				e1.printStackTrace();
 			}
-	
+
 			agent.start();
-	
+
 			agent.getAgArch().getTS().reasoningCycle();
-	
+
 			agent.stopReasoning();
-	
+
 			try {
 				Thread.sleep(2 * 1000);
 			} catch (InterruptedException e) {
-				
+
 				e.printStackTrace();
 			}
-	
+
 			agent.Shutdown();
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail("Fail in testExecution");
@@ -219,7 +220,7 @@ public class TestJason extends TestCase {
 			agent = new JasonAgent(new AgentID("test"),
 					"./src/test/java/TestJason/demo.asl", arch);
 		} catch (Exception e1) {
-			
+
 			e1.printStackTrace();
 		}
 
@@ -240,7 +241,7 @@ public class TestJason extends TestCase {
 		try {
 			Thread.sleep(2 * 1000);
 		} catch (InterruptedException e) {
-			
+
 			e.printStackTrace();
 		}
 
@@ -257,7 +258,7 @@ public class TestJason extends TestCase {
 			agent = new JasonAgent(new AgentID("test"),
 					"./src/test/java/TestJason/demo.asl", arch);
 		} catch (Exception e1) {
-			
+
 			e1.printStackTrace();
 		}
 
@@ -290,7 +291,7 @@ public class TestJason extends TestCase {
 		try {
 			Thread.sleep(2 * 1000);
 		} catch (InterruptedException e) {
-			
+
 			e.printStackTrace();
 		}
 
@@ -309,7 +310,7 @@ public class TestJason extends TestCase {
 
 			fail("Should have failed");
 		} catch (Exception e1) {
-			
+
 			assertTrue(true);
 		}
 
@@ -319,7 +320,7 @@ public class TestJason extends TestCase {
 
 			fail("Should have failed");
 		} catch (Exception e1) {
-			
+
 			assertTrue(true);
 		}
 
@@ -328,7 +329,7 @@ public class TestJason extends TestCase {
 
 			fail("Should have failed");
 		} catch (Exception e1) {
-			
+
 			assertTrue(true);
 		}
 
@@ -337,7 +338,7 @@ public class TestJason extends TestCase {
 
 			fail("Should have failed");
 		} catch (Exception e1) {
-			
+
 			assertTrue(true);
 		}
 
@@ -347,7 +348,7 @@ public class TestJason extends TestCase {
 
 			fail("Should have failed");
 		} catch (Exception e1) {
-			
+
 			assertTrue(true);
 		}
 
@@ -357,7 +358,7 @@ public class TestJason extends TestCase {
 
 			fail("Should have failed");
 		} catch (Exception e1) {
-			
+
 			assertTrue(true);
 		}
 
@@ -366,7 +367,7 @@ public class TestJason extends TestCase {
 
 			fail("Should have failed");
 		} catch (Exception e1) {
-			
+
 			assertTrue(true);
 		}
 
@@ -375,7 +376,7 @@ public class TestJason extends TestCase {
 
 			fail("Should have failed");
 		} catch (Exception e1) {
-			
+
 			assertTrue(true);
 		}
 
@@ -393,7 +394,7 @@ public class TestJason extends TestCase {
 			try {
 				Thread.sleep(1 * 1000);
 			} catch (InterruptedException e) {
-				
+
 				e.printStackTrace();
 			}
 
@@ -402,7 +403,7 @@ public class TestJason extends TestCase {
 			try {
 				Thread.sleep(2 * 1000);
 			} catch (InterruptedException e) {
-				
+
 				e.printStackTrace();
 			}
 
@@ -415,7 +416,7 @@ public class TestJason extends TestCase {
 			try {
 				Thread.sleep(1 * 1000);
 			} catch (InterruptedException e) {
-				
+
 				e.printStackTrace();
 			}
 
@@ -424,7 +425,7 @@ public class TestJason extends TestCase {
 			try {
 				Thread.sleep(2 * 1000);
 			} catch (InterruptedException e) {
-				
+
 				e.printStackTrace();
 			}
 
