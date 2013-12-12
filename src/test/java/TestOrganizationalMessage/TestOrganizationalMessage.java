@@ -139,7 +139,7 @@ public class TestOrganizationalMessage extends TestCase {
 
 		oms = null;
 		sf = null;
-		
+		AgentsConnection.disconnect();
 		qpid_broker.destroy();
 	}
 

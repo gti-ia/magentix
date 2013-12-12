@@ -85,7 +85,7 @@ public class TestRegisterService extends TestCase {
 		
 		oms = null;
 		sf = null;
-
+		AgentsConnection.disconnect();
 		qpid_broker.destroy();
 	}
 

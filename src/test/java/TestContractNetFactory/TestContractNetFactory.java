@@ -90,6 +90,7 @@ public class TestContractNetFactory extends TestCase {
 		// Sally.finalize();
 		// Sally2.finalize();
 		// Harry.finalize();
+		AgentsConnection.disconnect();
 		qpid_broker.destroy();
 	}
 

@@ -98,6 +98,7 @@ public class TestContractNet extends TestCase {
 	}
 	protected void tearDown() throws Exception {
 		super.tearDown();
+		AgentsConnection.disconnect();
 		qpid_broker.destroy();
 	}
 
