@@ -3,6 +3,8 @@ package TestJason.TestJason2;
 import jason.asSyntax.Literal;
 import jason.bb.BeliefBase;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -27,6 +29,7 @@ public class TestJasonAgent2 extends TestCase {
 	ArrayList<String> ExpectedBBMaria = null;
 	boolean errorB = false;
 	boolean errorM = false;
+	Process qpid_broker;
 
 	/**
 	 * @param name
@@ -52,6 +55,17 @@ public class TestJasonAgent2 extends TestCase {
 		/**
 		 * Connecting to Qpid Broker
 		 */
+		
+		qpid_broker = Runtime.getRuntime().exec(
+				"./installer/magentix2/bin/qpid-broker-0.20/bin/qpid-server");
+		BufferedReader reader = new BufferedReader(new InputStreamReader(
+				qpid_broker.getInputStream()));
+
+		String line = reader.readLine();
+		while (!line.contains("Qpid Broker Ready")) {
+			line = reader.readLine();
+		}
+		
 		AgentsConnection.connect();
 
 		ExpectedBBBob = new ArrayList<String>();
@@ -93,6 +107,8 @@ public class TestJasonAgent2 extends TestCase {
 		super.tearDown();
 		bob.Shutdown();
 		maria.Shutdown();
+		
+		qpid_broker.destroy();
 	}
 
 	/**

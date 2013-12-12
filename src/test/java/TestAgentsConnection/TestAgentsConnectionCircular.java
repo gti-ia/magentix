@@ -5,8 +5,8 @@ package TestAgentsConnection;
 
 import static org.junit.Assert.fail;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.CyclicBarrier;
@@ -19,11 +19,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import es.upv.dsic.gti_ia.cAgents.CAgent;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
-import es.upv.dsic.gti_ia.jason.JasonAgent;
-import es.upv.dsic.gti_ia.jason.MagentixAgArch;
 
 /**
  * @author Javier Jorge Cano
@@ -32,6 +29,7 @@ import es.upv.dsic.gti_ia.jason.MagentixAgArch;
 public class TestAgentsConnectionCircular {
 
 	private Logger logger;
+	Process qpid_broker;
 
 	public TestAgentsConnectionCircular() {
 	}
@@ -49,6 +47,18 @@ public class TestAgentsConnectionCircular {
 
 		logger = Logger.getLogger(TestAgentsConnectionCircular.class);
 
+		qpid_broker = Runtime.getRuntime().exec(
+				"./installer/magentix2/bin/qpid-broker-0.20/bin/qpid-server");
+		BufferedReader reader = new BufferedReader(new InputStreamReader(
+				qpid_broker.getInputStream()));
+
+		String line = reader.readLine();
+
+		while (!line.contains("Qpid Broker Ready")) {
+
+			line = reader.readLine();
+		}
+
 		/**
 		 * Connecting to Qpid Broker
 		 */
@@ -61,6 +71,9 @@ public class TestAgentsConnectionCircular {
 	 */
 	@After
 	public void tearDown() throws Exception {
+		AgentsConnection.disconnect();
+
+		qpid_broker.destroy();
 	}
 
 	/**
@@ -72,7 +85,7 @@ public class TestAgentsConnectionCircular {
 	 * Test method for
 	 * {@link es.upv.dsic.gti_ia.core.AgentsConnection#connect()}.
 	 */
-	@Test
+	@Test(timeout= 20 * 60 * 1000)
 	public void testMultipleBaseAgentsConnectionCircular() {
 
 		long now = System.currentTimeMillis();
@@ -87,8 +100,12 @@ public class TestAgentsConnectionCircular {
 
 		CountDownLatch finished = null;
 
-		int[] testNum = { 1, 100, 127, 128, 255, 256, 512, 1000};
-
+		// easy mode
+		// int[] testNum = { 1, 100, 127 };
+		// normal mode
+		int[] testNum = { 1, 100, 127, 128, 255, 256, 512, 1000 };
+		// hard mode
+		// int[] testNum = { 1000,2000,3000,4000 };
 		for (int agNumber : testNum) {
 
 			logger.info("Iteracion: " + agNumber);

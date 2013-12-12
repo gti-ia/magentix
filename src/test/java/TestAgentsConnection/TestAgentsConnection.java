@@ -5,6 +5,9 @@ package TestAgentsConnection;
 
 import static org.junit.Assert.fail;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BrokenBarrierException;
@@ -32,6 +35,7 @@ import es.upv.dsic.gti_ia.jason.MagentixAgArch;
 public class TestAgentsConnection {
 
 	private Logger logger;
+	Process qpid_broker;
 
 	public TestAgentsConnection() {
 	}
@@ -52,6 +56,17 @@ public class TestAgentsConnection {
 		/**
 		 * Connecting to Qpid Broker
 		 */
+
+		qpid_broker = Runtime.getRuntime().exec(
+				"./installer/magentix2/bin/qpid-broker-0.20/bin/qpid-server");
+		BufferedReader reader = new BufferedReader(new InputStreamReader(
+				qpid_broker.getInputStream()));
+
+		String line = reader.readLine();
+		while (!line.contains("Qpid Broker Ready")) {
+			line = reader.readLine();
+		}
+
 		AgentsConnection.connect();
 
 	}
@@ -61,6 +76,11 @@ public class TestAgentsConnection {
 	 */
 	@After
 	public void tearDown() throws Exception {
+
+		AgentsConnection.disconnect();
+
+		qpid_broker.destroy();
+
 	}
 
 	/**
@@ -68,7 +88,7 @@ public class TestAgentsConnection {
 	 * {@link es.upv.dsic.gti_ia.core.AgentsConnection#connect()}.
 	 */
 
-	@Test
+	@Test(timeout= 5 * 60 * 1000)
 	public void testMultipleJasonAgentsConnection() {
 
 		// Throws 1000 Jason agents
@@ -96,7 +116,6 @@ public class TestAgentsConnection {
 
 		}
 
-		
 		try {
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {
@@ -113,7 +132,7 @@ public class TestAgentsConnection {
 	 * Test method for
 	 * {@link es.upv.dsic.gti_ia.core.AgentsConnection#connect()}.
 	 */
-	@Test
+	@Test(timeout= 5 * 60 * 1000)
 	public void testMultipleCAgentsConnection() {
 
 		// Throws 1000 Cagents
@@ -135,8 +154,6 @@ public class TestAgentsConnection {
 			}
 			agent.start();
 
-		
-
 		}
 
 		try {
@@ -150,7 +167,5 @@ public class TestAgentsConnection {
 			agentList.get(i).Shutdown();
 
 	}
-
-
 
 }

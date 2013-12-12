@@ -3,15 +3,14 @@
  */
 package TestJason.TestJason1;
 
-import jason.asSyntax.Literal;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
-import org.apache.log4j.xml.DOMConfigurator;
-
+import junit.framework.TestCase;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
 import es.upv.dsic.gti_ia.jason.JasonAgent;
 import es.upv.dsic.gti_ia.jason.MagentixAgArch;
-import junit.framework.TestCase;
 
 /**
  * @author Javier Jorge Cano
@@ -21,7 +20,7 @@ public class TestJasonAgent1 extends TestCase {
 
 	SimpleArchitecture arch = null;
 	JasonAgent agent = null;
-
+	Process qpid_broker;
 	/**
 	 * @param name
 	 */
@@ -45,6 +44,17 @@ public class TestJasonAgent1 extends TestCase {
 		/**
 		 * Connecting to Qpid Broker
 		 */
+
+		qpid_broker = Runtime.getRuntime().exec(
+				"./installer/magentix2/bin/qpid-broker-0.20/bin/qpid-server");
+		BufferedReader reader = new BufferedReader(new InputStreamReader(
+				qpid_broker.getInputStream()));
+
+		String line = reader.readLine();
+		while (!line.contains("Qpid Broker Ready")) {
+			line = reader.readLine();
+		}
+
 		AgentsConnection.connect();
 
 	}
@@ -57,6 +67,8 @@ public class TestJasonAgent1 extends TestCase {
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		agent.Shutdown();
+
+		qpid_broker.destroy();
 	}
 
 	/**
@@ -74,19 +86,19 @@ public class TestJasonAgent1 extends TestCase {
 					"./src/test/java/TestJason/TestJason1/demo.asl", arch);
 
 			agent.start();
-//			Thread.sleep(6 * 1000);
-			
+			// Thread.sleep(6 * 1000);
+
 			// Execute a reasoning cycle
 			agent.getAgArch().getTS().reasoningCycle();
 
 			// Obtain the beliefs (a perception obtained is the belief expected)
 			String actual = agent.getAgArch().getTS().getAg().getBB()
-			.getPercepts().next().toString();
+					.getPercepts().next().toString();
 
 			assertEquals("x(10)[source(percept)]", actual);
 
 		} catch (Exception e) {
-			
+
 			fail("Should not have failed " + e.getMessage());
 		}
 
