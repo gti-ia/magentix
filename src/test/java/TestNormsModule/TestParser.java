@@ -20,7 +20,7 @@ public class TestParser extends TestCase {
 	NormParser parser = null;
 
 	protected void tearDown() throws Exception {
-
+		super.tearDown();
 
 		parser = null;
 
@@ -30,7 +30,7 @@ public class TestParser extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 
-
+		
 
 
 

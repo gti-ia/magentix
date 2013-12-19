@@ -41,16 +41,7 @@ public class TestAgentID extends TestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
-		qpid_broker = Runtime.getRuntime().exec(
-				"./installer/magentix2/bin/qpid-broker-0.20/bin/qpid-server");
-		BufferedReader reader = new BufferedReader(new InputStreamReader(
-				qpid_broker.getInputStream()));
-
-		String line = reader.readLine();
-		while (!line.contains("Qpid Broker Ready")) {
-			line = reader.readLine();
-		}
-
+		
 		/**
 		 * Setting the configuration
 		 */
@@ -325,10 +316,8 @@ public class TestAgentID extends TestCase {
 	}
 
 	public void tearDown() throws Exception {
+		super.tearDown();
 		agent = null;
 
-		AgentsConnection.disconnect();
-
-		qpid_broker.destroy();
-	}
+		}
 }

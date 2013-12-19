@@ -73,7 +73,7 @@ public class TestAgentsConnectionCircular {
 	public void tearDown() throws Exception {
 		AgentsConnection.disconnect();
 
-		qpid_broker.destroy();
+		qpidManager.UnixQpidManager.stopQpid(qpid_broker);
 	}
 
 	/**

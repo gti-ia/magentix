@@ -25,13 +25,7 @@ public class TestRemoveProvider extends TestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
-		  qpid_broker = Runtime.getRuntime().exec("./installer/magentix2/bin/qpid-broker-0.20/bin/qpid-server");
-		  BufferedReader reader = new BufferedReader(new InputStreamReader(qpid_broker.getInputStream()));
-
-		  String line = reader.readLine();
-		  while (!line.contains("Qpid Broker Ready")) {
-		    line = reader.readLine();
-		  }
+		qpid_broker = qpidManager.UnixQpidManager.startQpid(Runtime.getRuntime(), qpid_broker);
 		AgentsConnection.connect();
 
 
@@ -80,7 +74,7 @@ public class TestRemoveProvider extends TestCase {
 		oms = null;
 		sf = null;
 		AgentsConnection.disconnect();
-		qpid_broker.destroy();
+		qpidManager.UnixQpidManager.stopQpid(qpid_broker);
 	}
 
 	/**

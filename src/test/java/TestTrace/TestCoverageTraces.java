@@ -79,7 +79,7 @@ public class TestCoverageTraces {
 		agent2.addCommand(CommandedAgent.END);
 		
 		AgentsConnection.disconnect();
-		qpid_broker.destroy();
+		qpidManager.UnixQpidManager.stopQpid(qpid_broker);
 	}
   
 	/* Test methods */

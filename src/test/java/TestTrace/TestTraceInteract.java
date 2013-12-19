@@ -106,7 +106,7 @@ public class TestTraceInteract {
 		}
 		
 		AgentsConnection.disconnect();
-		qpid_broker.destroy();
+		qpidManager.UnixQpidManager.stopQpid(qpid_broker);
 	}
 
 	/* Test methods */

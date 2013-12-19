@@ -55,7 +55,7 @@ public class TestAllocateRoleInCorrectPermissions extends TestCase {
 		sf = null;
 
 		AgentsConnection.disconnect();
-		qpid_broker.destroy();
+		qpidManager.UnixQpidManager.stopQpid(qpid_broker);
 	}
 	
 	protected void setUp() throws Exception {

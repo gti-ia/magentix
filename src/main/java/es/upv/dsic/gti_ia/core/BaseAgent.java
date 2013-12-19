@@ -56,6 +56,7 @@ import es.upv.dsic.gti_ia.secure.SecurityTools;
  * @author Jose Vicente Ruiz Cepeda
  * @author Jose Alemany Bordera - jalemany1@dsic.upv.es
  * @author Javier Jorge Cano
+ * @author José Manuel Mejías Rodríguez
  */
 public class BaseAgent implements Runnable {
 	

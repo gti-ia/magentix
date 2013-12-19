@@ -79,7 +79,7 @@ public class TestAgentsConnection {
 
 		AgentsConnection.disconnect();
 
-		qpid_broker.destroy();
+		qpidManager.UnixQpidManager.stopQpid(qpid_broker);
 
 	}
 

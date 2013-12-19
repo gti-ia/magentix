@@ -290,6 +290,6 @@ public class TestTraceBasic {
 		tm.shutdown();
 		
 		AgentsConnection.disconnect();
-		qpid_broker.destroy();
+		qpidManager.UnixQpidManager.stopQpid(qpid_broker);
 	}
 }

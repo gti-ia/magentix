@@ -9,6 +9,7 @@ import es.upv.dsic.gti_ia.core.AgentID;
  * Example class HelloWOrldAgentClass modificated for a basic CAgent Test 
  * 
  * @author David Fernández - dfernandez@dsic.upv.es
+ * @author Paolo Rosso - prosso@dsic.upv.es
  */
 
 class HelloWorldAgentClass extends CAgent {

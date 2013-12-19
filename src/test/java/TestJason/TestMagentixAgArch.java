@@ -37,17 +37,7 @@ public class TestMagentixAgArch extends TestCase {
 		// Comentarlo para test?
 		DOMConfigurator.configure("configuration/loggin.xml");
 		
-		qpid_broker = Runtime.getRuntime().exec(
-				"./installer/magentix2/bin/qpid-broker-0.20/bin/qpid-server");
-		BufferedReader reader = new BufferedReader(new InputStreamReader(
-				qpid_broker.getInputStream()));
-
-		String line = reader.readLine();
-		
-		while (!line.contains("Qpid Broker Ready")) {
-			System.out.println(line);
-			line = reader.readLine();
-		}
+		qpid_broker = qpidManager.UnixQpidManager.startQpid(Runtime.getRuntime(), qpid_broker);
 
 		/**
 		 * Connecting to Qpid Broker
@@ -65,7 +55,7 @@ public class TestMagentixAgArch extends TestCase {
 		
 		AgentsConnection.disconnect();
 		
-		qpid_broker.destroy();
+		qpidManager.UnixQpidManager.stopQpid(qpid_broker);
 	
 	}
 

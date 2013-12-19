@@ -6,10 +6,8 @@ import java.io.InputStreamReader;
 import junit.framework.TestCase;
 
 import org.apache.log4j.xml.DOMConfigurator;
-import org.junit.Ignore;
 import org.junit.Test;
 
-import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
 
@@ -18,6 +16,7 @@ import es.upv.dsic.gti_ia.core.AgentsConnection;
  * myfirstCProcessorFactories
  * 
  * @author David Fernández - dfernandez@dsic.upv.es
+ * @author Paolo Rosso - prosso@dsic.upv.es
  */
 
 public class TestCProcessorFactories extends TestCase {
@@ -33,15 +32,7 @@ public class TestCProcessorFactories extends TestCase {
 
 	public void setUp() throws Exception {
 		super.setUp();
-		qpid_broker = Runtime.getRuntime().exec(
-				"./installer/magentix2/bin/qpid-broker-0.20/bin/qpid-server");
-		BufferedReader reader = new BufferedReader(new InputStreamReader(
-				qpid_broker.getInputStream()));
-
-		String line = reader.readLine();
-		while (!line.contains("Qpid Broker Ready")) {
-			line = reader.readLine();
-		}
+		qpid_broker = qpidManager.UnixQpidManager.startQpid(Runtime.getRuntime(), qpid_broker);
 		try {
 
 			/**
@@ -121,9 +112,9 @@ public class TestCProcessorFactories extends TestCase {
 		assertEquals("REFUSE: Maybe someday", Harry.receivedMsg);
 	}
 
-	protected void tierDown() throws Exception {
+	protected void tearDown() throws Exception {
+		super.tearDown();
 		AgentsConnection.disconnect();
-
-		qpid_broker.destroy();
+		qpidManager.UnixQpidManager.stopQpid(qpid_broker);
 	}
 }

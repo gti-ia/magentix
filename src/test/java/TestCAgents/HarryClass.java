@@ -20,6 +20,7 @@ import es.upv.dsic.gti_ia.core.MessageFilter;
  * Propose initiator factory class for the test of the example myfirstCProcessorFactories 
  * 
  * @author David Fernández - dfernandez@dsic.upv.es
+ * @author Paolo Rosso - prosso@dsic.upv.es
  */
 
 class HarryClass extends CAgent {

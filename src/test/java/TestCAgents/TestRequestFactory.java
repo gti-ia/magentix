@@ -18,6 +18,7 @@ import es.upv.dsic.gti_ia.core.AgentsConnection;
  * requestFactory
  * 
  * @author David Fernández - dfernandez@dsic.upv.es
+ * @author Paolo Rosso - prosso@dsic.upv.es
  */
 
 public class TestRequestFactory extends TestCase {
@@ -32,15 +33,8 @@ public class TestRequestFactory extends TestCase {
 
 	public void setUp() throws Exception {
 		super.setUp();
-		qpid_broker = Runtime.getRuntime().exec(
-				"./installer/magentix2/bin/qpid-broker-0.20/bin/qpid-server");
-		BufferedReader reader = new BufferedReader(new InputStreamReader(
-				qpid_broker.getInputStream()));
+		qpid_broker = qpidManager.UnixQpidManager.startQpid(Runtime.getRuntime(), qpid_broker);
 
-		String line = reader.readLine();
-		while (!line.contains("Qpid Broker Ready")) {
-			line = reader.readLine();
-		}
 
 		try {
 
@@ -109,9 +103,9 @@ public class TestRequestFactory extends TestCase {
 		assertTrue(Sally.acceptRequests);
 	}
 
-	protected void tierDown() throws Exception {
+	public void tearDown() throws Exception {
+		super.tearDown();
 		AgentsConnection.disconnect();
-
-		qpid_broker.destroy();
-	}
+		qpidManager.UnixQpidManager.stopQpid(qpid_broker);	
+		}
 }

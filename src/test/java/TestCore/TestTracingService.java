@@ -20,13 +20,16 @@ import junit.framework.TestCase;
 public class TestTracingService extends TestCase {
 	
 	TracingService tracingService;
+	private Process qpid_broker;
 	
 	protected void setUp() throws Exception {
 		super.setUp();
-		
 		tracingService = new TracingService();
 	}
 	
+	protected void tearown() throws Exception{
+		super.tearDown();
+	}
 	public TestTracingService(String name) {
 		super(name);
 	}

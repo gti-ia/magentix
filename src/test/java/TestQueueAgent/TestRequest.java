@@ -227,7 +227,7 @@ public class TestRequest extends TestCase {
 
         AgentsConnection.disconnect();
 
-        qpid_broker.destroy();
+        qpidManager.UnixQpidManager.stopQpid(qpid_broker);
 
     }
 }

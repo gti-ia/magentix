@@ -77,7 +77,7 @@ public class TestDeregisterService extends TestCase {
 		oms = null;
 		sf = null;
 		AgentsConnection.disconnect();
-		qpid_broker.destroy();
+		qpidManager.UnixQpidManager.stopQpid(qpid_broker);
 
 	}
 

@@ -67,7 +67,7 @@ public class TestRegisterUnitPermissionsDomain {
 		sf = null;
 
 		AgentsConnection.disconnect();
-		qpid_broker.destroy();
+		qpidManager.UnixQpidManager.stopQpid(qpid_broker);
 	}
 	
 	@Before
