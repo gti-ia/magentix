@@ -176,7 +176,7 @@ public class OMSInterface {
 
 							return resultXML;
 						}
-						else if (checkFordibbenNorms(AgentName, UnitName, "registerUnit("+UnitName.toLowerCase()+","+UnitType.toLowerCase()+","+ParentUnitName.toLowerCase()+","+AgentName.toLowerCase()+","+CreatorName.toLowerCase()+")"))
+						else if (checkFordibbenNorms(AgentName, ParentUnitName, "registerUnit("+UnitName.toLowerCase()+","+UnitType.toLowerCase()+","+ParentUnitName.toLowerCase()+","+AgentName.toLowerCase()+","+CreatorName.toLowerCase()+")"))
 						{
 							String message = l10n.getMessage(MessageID.FORBIDDEN_NORM);
 							throw new ForbiddenNormException(message);
@@ -3135,7 +3135,7 @@ public class OMSInterface {
 				stringRules.add(rule);
 			}
 
-			if (dbInterface.checkAgentInUnit(AgentName, UnitName)) {
+			//if (dbInterface.checkAgentInUnit(AgentName, UnitName)) {
 
 				aux = dbInterface.getPositionNormRules(UnitName, AgentName, "p", service);
 
@@ -3148,7 +3148,7 @@ public class OMSInterface {
 				for (String rule : aux) {
 					stringRules.add(rule);
 				}
-			}
+			//}
 			
 			if (stringRules.size() == 1)
 				return result;
@@ -3213,8 +3213,7 @@ public class OMSInterface {
 				stringRules.add(rule);
 			}
 
-			if (dbInterface.checkAgentInUnit(AgentName, UnitName))
-			{
+			//if (dbInterface.checkAgentInUnit(AgentName, UnitName)){
 
 				aux = dbInterface.getPositionNormRules(UnitName, AgentName, "f", service);
 
@@ -3229,7 +3228,7 @@ public class OMSInterface {
 				{
 					stringRules.add(rule);
 				}
-			}
+			//}
 			
 			if (stringRules.size() == 1)
 				return result;

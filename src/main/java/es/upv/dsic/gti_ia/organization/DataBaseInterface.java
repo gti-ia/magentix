@@ -3356,7 +3356,7 @@ public class DataBaseInterface {
 				result.add(res.getString("normRule"));
 
 			res2 = st.executeQuery("select distinct nl.normRule from normList nl inner join unitList ul on nl.idunitList=ul.idunitList inner join deontic d on d.iddeontic=nl.iddeontic inner join actionNorm an on an.idactionnorm=nl.idactionnorm inner join targetType tt on nl.idtargetType=tt.idtargetType inner join position p on nl.targetValue=p.idposition inner join roleList rl on rl.idposition=p.idposition inner join agentPlayList apl on apl.idroleList=rl.idrolelist inner join agentList al on al.idagentList=apl.idagentList" +
-					" where ul.unitName='"+unitName+"' and d.deonticdesc='"+deontic+"' and an.description='"+service+"' and tt.targetName='positionName' and rl.idunitList=nl.idunitList and al.agentName='"+agentName+"'");
+					" where ul.unitName='"+unitName+"' and d.deonticdesc='"+deontic+"' and an.description='"+service+"' and tt.targetName='positionName' and al.agentName='"+agentName+"'"); //This has been removed from the query ("and rl.idunitList=nl.idunitList").
 
 			while (res2.next())
 				result.add(res2.getString("normRule"));
@@ -3427,7 +3427,7 @@ public class DataBaseInterface {
 				result.add(res.getString("normRule"));
 
 			res2 = st.executeQuery("select distinct nl.normRule from normList nl inner join unitList ul on nl.idunitList=ul.idunitList inner join deontic d on d.iddeontic=nl.iddeontic inner join actionNorm an on an.idactionnorm=nl.idactionnorm inner join targetType tt on nl.idtargetType=tt.idtargetType inner join roleList rl on rl.idroleList=nl.targetValue inner join agentPlayList apl on apl.idroleList=rl.idrolelist inner join agentList al on al.idagentList=apl.idagentList" +
-					" where ul.unitName='"+unitName+"' and d.deonticdesc='"+deontic+"' and an.description='"+service+"' and tt.targetName='roleName' and rl.idunitList=nl.idunitList and al.agentName='"+agentName+"'");
+					" where ul.unitName='"+unitName+"' and d.deonticdesc='"+deontic+"' and an.description='"+service+"' and tt.targetName='roleName' and al.agentName='"+agentName+"'"); //This has been removed from the query (" and rl.idunitList=nl.idunitList").
 
 			while (res2.next())
 				result.add(res2.getString("normRule"));
