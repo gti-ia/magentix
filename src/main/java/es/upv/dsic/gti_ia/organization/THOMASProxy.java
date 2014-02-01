@@ -467,7 +467,8 @@ public class THOMASProxy {
 			if (valueAux.equals(l10n.getMessage(MessageID.INVALID_EXPRESSION)))
 				throw new InvalidExpressionException(value);
 			
-		
+			if (valueAux.equals(l10n.getMessage(MessageID.FORBIDDEN_NORM)))
+				throw new ForbiddenNormException(value);
 			
 			
 			

@@ -25,7 +25,7 @@ public class ForbiddenNormException extends THOMASException {
 	// -----------------------------------------------------------------
 
 	/**
-	 * Creates a new AgentNotExistsException using the specified message.
+	 * Creates a new ForbiddenNormException using the specified message.
 	 * 
 	 * @param message
 	 */
