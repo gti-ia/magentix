@@ -157,6 +157,7 @@ public class TestTrace3 {
 				msg = ACLMessage.fromString(tEvent.getContent());
 				controlOE.add(tEvent.getTracingService() + ":" + msg.getPerformative() + " from " + msg.getSender().toString() + " to " + msg.getReceiver() + ", " + msg.getContent());
 			} else {
+				if(tEvent.getContent().indexOf('#') == -1) System.out.println("DETECCION DE ERROR: "+tEvent.getContent().toUpperCase());
 				controlOE.add(tEvent.getTracingService() + ": " + ((j-1 < TracingService.MAX_DI_TS) ? tEvent.getContent().substring(0, tEvent.getContent().indexOf('#')) : tEvent.getContent()));
 			}
 			//if(j > 25 && j < 40) System.out.println(tEvent.getTracingService() + ": " + ((j-1 < TracingService.MAX_DI_TS) ? tEvent.getContent().substring(0, tEvent.getContent().indexOf('#')) : tEvent.getContent()));
