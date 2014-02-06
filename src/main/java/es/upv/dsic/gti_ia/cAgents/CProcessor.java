@@ -579,9 +579,9 @@ public class CProcessor implements Runnable, Cloneable {
 					logger.error(currentState + " state " + " doesn' exist");
 				}
 				// check if the current or previous state is not an error state
-				if(currentState != "SHUTDOW" && currentState != "SENDING_ERRORS" && currentState != "CANCEL_STATE" 
+				if(currentState != "SHUTDOWN" && currentState != "SENDING_ERRORS" && currentState != "CANCEL_STATE" 
 					&& currentState != "TERMINATED_FATHER" && currentState != "NOT_ACCEPTED_MESSAGES_STATE"
-					&& previousState != "SHUTDOW" && previousState != "SENDING_ERRORS" && previousState != "CANCEL_STATE" 
+					&& previousState != "SHUTDOWN" && previousState != "SENDING_ERRORS" && previousState != "CANCEL_STATE" 
 					&& previousState != "TERMINATED_FATHER" && previousState != "NOT_ACCEPTED_MESSAGES_STATE"){
 					if (!this.transitiontable.existsTransation(previousState, currentState)) {
 						this.logger.error(this.myAgent.getName() + " "
