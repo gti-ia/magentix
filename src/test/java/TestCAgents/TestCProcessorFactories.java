@@ -16,7 +16,7 @@ import es.upv.dsic.gti_ia.core.AgentsConnection;
  * myfirstCProcessorFactories
  * 
  * @author David Fernández - dfernandez@dsic.upv.es
- * @author Paolo Rosso - prosso@dsic.upv.es
+ * @author Jose Manuel Mejias Rodriguez - jmejias@dsic.upv.es
  */
 
 public class TestCProcessorFactories extends TestCase {

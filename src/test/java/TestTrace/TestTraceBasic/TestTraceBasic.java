@@ -58,13 +58,8 @@ public class TestTraceBasic {
 		/**
 		 * Connecting to Qpid Broker
 		 */
-		qpid_broker = Runtime.getRuntime().exec("./installer/magentix2/bin/qpid-broker-0.20/bin/qpid-server");
-		BufferedReader reader = new BufferedReader(new InputStreamReader(qpid_broker.getInputStream()));
-
-		String line = reader.readLine();
-		while (!line.contains("Qpid Broker Ready")) {
-			line = reader.readLine();
-		}
+		qpid_broker = qpidManager.UnixQpidManager.startQpid(Runtime.getRuntime(), qpid_broker);
+		
 		
 		AgentsConnection.connect();
 		

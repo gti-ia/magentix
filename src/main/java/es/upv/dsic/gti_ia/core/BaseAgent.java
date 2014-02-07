@@ -1228,10 +1228,12 @@ public class BaseAgent implements Runnable {
 				terminate();
 				logger.error(this.aid.getLocalName()
 						+ " ended execution incorrectly: " + ex);
+				ex.printStackTrace();
 			}
 			terminate();
 			logger.error(this.aid.getLocalName()
 					+ " ended execution incorrectly: " + e);
+			e.printStackTrace();
 		}
 	}
 	

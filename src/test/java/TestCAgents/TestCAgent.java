@@ -14,7 +14,7 @@ import es.upv.dsic.gti_ia.core.AgentsConnection;
  * Test class for a basic CAgent based on the example MyFirstCAgent
  * 
  * @author David Fernández - dfernandez@dsic.upv.es
- * @author Paolo Rosso - prosso@dsic.upv.es
+ * @author Jose Manuel Mejias Rodriguez - jmejias@dsic.upv.es
  */
 
 public class TestCAgent extends TestCase {
