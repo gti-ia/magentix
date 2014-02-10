@@ -3319,7 +3319,7 @@ public class DataBaseInterface {
 	 * This method returns a list with Jason rules associated with the norms registered in unit U, deontic D type.
 	 * Return the norms with...
 	 * 	- targetValue = '_', and
-	 * 	- targetValue = positionName, that can be activated for the agent A.
+	 * 	- targetValue = positionName, that can be activated for the agent A, which plays that position in any unit.
 	 * 
 	 * @param unitName			Identifier of the organization unit U.
 	 * @param agentName			Identifier of the agent A.
@@ -3356,7 +3356,7 @@ public class DataBaseInterface {
 				result.add(res.getString("normRule"));
 
 			res2 = st.executeQuery("select distinct nl.normRule from normList nl inner join unitList ul on nl.idunitList=ul.idunitList inner join deontic d on d.iddeontic=nl.iddeontic inner join actionNorm an on an.idactionnorm=nl.idactionnorm inner join targetType tt on nl.idtargetType=tt.idtargetType inner join position p on nl.targetValue=p.idposition inner join roleList rl on rl.idposition=p.idposition inner join agentPlayList apl on apl.idroleList=rl.idrolelist inner join agentList al on al.idagentList=apl.idagentList" +
-					" where ul.unitName='"+unitName+"' and d.deonticdesc='"+deontic+"' and an.description='"+service+"' and tt.targetName='positionName' and al.agentName='"+agentName+"'"); //This has been removed from the query ("and rl.idunitList=nl.idunitList").
+					" where ul.unitName='"+unitName+"' and d.deonticdesc='"+deontic+"' and an.description='"+service+"' and tt.targetName='positionName' and al.agentName='"+agentName+"'");
 
 			while (res2.next())
 				result.add(res2.getString("normRule"));
@@ -3391,7 +3391,7 @@ public class DataBaseInterface {
 	 * This method returns a list with Jason rules associated with the norms registered in unit U, deontic D type.
 	 * Return the norms with...
 	 * 	- targetValue = '_', and
-	 * 	- targetValue = roleName, that can be activated for the agent A.
+	 * 	- targetValue = roleName, that can be activated for the agent A, which plays that role in any unit.
 	 * 
 	 * @param unitName			Identifier of the organization unit U.
 	 * @param agentName			Identifier of the agent A.
@@ -3427,7 +3427,7 @@ public class DataBaseInterface {
 				result.add(res.getString("normRule"));
 
 			res2 = st.executeQuery("select distinct nl.normRule from normList nl inner join unitList ul on nl.idunitList=ul.idunitList inner join deontic d on d.iddeontic=nl.iddeontic inner join actionNorm an on an.idactionnorm=nl.idactionnorm inner join targetType tt on nl.idtargetType=tt.idtargetType inner join roleList rl on rl.idroleList=nl.targetValue inner join agentPlayList apl on apl.idroleList=rl.idrolelist inner join agentList al on al.idagentList=apl.idagentList" +
-					" where ul.unitName='"+unitName+"' and d.deonticdesc='"+deontic+"' and an.description='"+service+"' and tt.targetName='roleName' and al.agentName='"+agentName+"'"); //This has been removed from the query (" and rl.idunitList=nl.idunitList").
+					" where ul.unitName='"+unitName+"' and d.deonticdesc='"+deontic+"' and an.description='"+service+"' and tt.targetName='roleName' and al.agentName='"+agentName+"'");
 
 			while (res2.next())
 				result.add(res2.getString("normRule"));

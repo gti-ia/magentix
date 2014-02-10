@@ -2,17 +2,18 @@ package TestThomas;
 
 //import omsTests.DatabaseAccess;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
 import es.upv.dsic.gti_ia.organization.OMS;
 import es.upv.dsic.gti_ia.organization.SF;
 
-public class TestThomas extends TestCase {
-
+public class TestThomas {
+	
 	InitiatorAgent iniAgent = null;
 	Addition addAgent = null;
 	James jamAgent = null;
@@ -24,12 +25,9 @@ public class TestThomas extends TestCase {
 	DatabaseAccess dbA = null;
 	private Process qpid_broker;
 
-	public TestThomas(String name) {
-		super(name);
-	}
-
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
+		
 		qpid_broker = qpidManager.UnixQpidManager.startQpid(Runtime.getRuntime(), qpid_broker);
 		/**
 		 * Setting the Logger
@@ -73,131 +71,43 @@ public class TestThomas extends TestCase {
 
 	}
 
+	@Test(timeout=100000)
 	public void testThomas() {
 		/**
 		 * Execute the agents
 		 */
 		iniAgent.start();
-		// Monitor m = new Monitor();
-		int counter = 20;
 		/**
 		 * Waiting the initialization
 		 */
+		iniAgent.waitInitialization();
 
-		while (!iniAgent.started) {
-			try {
-				Thread.sleep(5 * 1000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			counter--;
-		}
-
-		assertTrue(iniAgent.started);
-
-		// m.waiting(5 * 1000);
 		proAgent.start();
 		addAgent.start();
 
-		counter = 100;
-		while ((!addAgent.started) && counter > 0) {
-			try {
-				Thread.sleep(5 * 1000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			counter--;
-		}
+		proAgent.waitInitialization();
+		addAgent.waitInitialization();
 
-		// assertTrue(addAgent.started);
-		if (addAgent.started == false)
-			fail("Addition Agent FAILED!");
-		counter = 100;
-		while ((!proAgent.started) && counter > 0) {
-			try {
-				Thread.sleep(5 * 1000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			counter--;
-		}
-
-		// assertTrue(proAgent.started);
-		if (proAgent.started == false)
-			fail("Product Agent FAILED!");
-		// m.waiting(30 * 1000);
-
-		try {
-			Thread.sleep(10 * 1000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		jamAgent.start();
 
 		assertNotNull(iniAgent);
 
-		counter = 50;
-
-		while (jamAgent.getMessage() == null && counter > 0) {
-
-			try {
-				Thread.sleep(5 * 1000);
-				counter--;
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
+		jamAgent.waitReplay();
 		assertEquals("OK", jamAgent.getMessage());
 
-		counter = 10;
-		while (iniAgent.getMessage() == null && counter > 0) {
-
-			try {
-				Thread.sleep(5 * 1000);
-				counter--;
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-
+		iniAgent.waitReplay();
 		assertEquals("OK", iniAgent.getMessage());
 
-		counter = 10;
-		while (addAgent.getMessage() == null && counter > 0) {
-
-			try {
-				Thread.sleep(5 * 1000);
-				counter--;
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
+		addAgent.waitReplay();
 		assertEquals("OK", addAgent.getMessage());
 
-		counter = 10;
-		while (proAgent.getMessage() == null && counter > 0) {
-
-			try {
-				Thread.sleep(5 * 1000);
-				counter--;
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
+		proAgent.waitReplay();
 		assertEquals("OK", proAgent.getMessage());
 
 	}
 
-	protected void tearDown() throws Exception {
-		super.tearDown();
+	@After
+	public void tearDown() throws Exception {
 
 		// ------------------Clean Data Base -----------//
 		dbA.executeSQL("DELETE FROM agentPlayList");

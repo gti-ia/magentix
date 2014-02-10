@@ -8,6 +8,8 @@ package TestThomas;
  * 		and two roles (operator and student)
  */
 
+import java.util.concurrent.CountDownLatch;
+
 import es.upv.dsic.gti_ia.cAgents.CAgent;
 import es.upv.dsic.gti_ia.cAgents.CFactory;
 import es.upv.dsic.gti_ia.cAgents.CProcessor;
@@ -20,13 +22,17 @@ import es.upv.dsic.gti_ia.organization.exception.THOMASException;
 
 public class InitiatorAgent extends CAgent {
 
+	private CountDownLatch init;
+	private CountDownLatch replay;
+	
 	OMSProxy omsProxy = new OMSProxy(this);
 	SFProxy sfProxy = new SFProxy(this);
 	String message;
-	boolean started = false;
 
 	public InitiatorAgent(AgentID aid) throws Exception {
 		super(aid);
+		init = new CountDownLatch(1);
+		replay = new CountDownLatch(1);
 	}
 	
 	
@@ -50,11 +56,12 @@ public class InitiatorAgent extends CAgent {
 
 			this.addFactoryAsParticipant(initiatorTalk);
 
-			this.started = true;
+			this.init.countDown();
 
 		} catch (THOMASException e) {
 			e.printStackTrace();
-			message ="ERROR";
+			this.message = "ERROR";
+			this.replay.countDown();
 		}
 
 	}
@@ -81,7 +88,8 @@ public class InitiatorAgent extends CAgent {
 
 		} catch (THOMASException e) {
 			System.out.println("[" + this.getName() + "] " + e.getContent());
-			message = "ERROR";
+			this.message = "ERROR";
+			this.replay.countDown();
 		}
 
 	}
@@ -90,6 +98,22 @@ public class InitiatorAgent extends CAgent {
 	protected void finalize(CProcessor firstProcessor, ACLMessage finalizeMessage) {
 		System.out.println("[" + firstProcessor.getMyAgent().getName() + "] End execution");
 
+	}
+	
+	public void waitInitialization(){
+		try {
+			this.init.await();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void waitReplay(){
+		try {
+			this.replay.await();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
 	class myFIPA_REQUEST_Participant extends FIPA_REQUEST_Participant {
@@ -142,12 +166,13 @@ public class InitiatorAgent extends CAgent {
 						+ " Example Ended. Roles, Units and Services deregistered");
 				
 				message = "OK";
+				replay.countDown();
 
 			} catch (THOMASException e) {
 
 				e.printStackTrace();
-				
 				message = "ERROR";
+				replay.countDown();
 			}
 
 			return "INFORM";

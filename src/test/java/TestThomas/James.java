@@ -12,6 +12,7 @@ package TestThomas;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.CountDownLatch;
 
 import es.upv.dsic.gti_ia.cAgents.CAgent;
 import es.upv.dsic.gti_ia.cAgents.CFactory;
@@ -28,6 +29,8 @@ import es.upv.dsic.gti_ia.organization.exception.THOMASException;
 
 public class James extends CAgent {
 
+	private CountDownLatch replay;
+	
 	OMSProxy omsProxy = new OMSProxy(this);
 	SFProxy sfProxy = new SFProxy(this);
 	ServiceTools st = new ServiceTools();
@@ -37,6 +40,7 @@ public class James extends CAgent {
 
 	public James(AgentID aid) throws Exception {
 		super(aid);
+		this.replay = new CountDownLatch(1);
 	}
 
 	public String getMessage()
@@ -337,7 +341,8 @@ public class James extends CAgent {
 		} catch (THOMASException e) {
 
 			e.printStackTrace();
-			message="ERROR";
+			this.message = "ERROR";
+			this.replay.countDown();
 		}
 
 	}
@@ -383,7 +388,15 @@ public class James extends CAgent {
 
 	@Override
 	protected void finalize(CProcessor firstProcessor, ACLMessage finalizeMessage) {
-		message="OK";
+		this.message = "OK";
+		this.replay.countDown();
 	}
 
+	public void waitReplay(){
+		try {
+			this.replay.await();;
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
 }

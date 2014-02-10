@@ -1,11 +1,8 @@
 package TestTrace.TestTrace3;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 
@@ -17,7 +14,6 @@ import TestTrace.TestTrace3.Subscriber;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
-import es.upv.dsic.gti_ia.core.BaseAgent;
 import es.upv.dsic.gti_ia.core.TraceEvent;
 import es.upv.dsic.gti_ia.core.TracingService;
 import es.upv.dsic.gti_ia.trace.TraceManager;
@@ -152,8 +148,8 @@ public class TestTrace3 {
 				msg = ACLMessage.fromString(tEvent.getContent());
 				controlOE.add(tEvent.getTracingService() + ":" + msg.getPerformative() + " from " + msg.getSender().toString() + " to " + msg.getReceiver() + ", " + msg.getContent());
 			} else {
-				if(tEvent.getContent().indexOf('#') == -1) System.out.println("DETECCION DE ERROR: "+tEvent.getContent().toUpperCase());
-				controlOE.add(tEvent.getTracingService() + ": " + ((j-1 < TracingService.MAX_DI_TS) ? tEvent.getContent().substring(0, tEvent.getContent().indexOf('#')) : tEvent.getContent()));
+				if(tEvent.getContent().indexOf('#') != -1)
+					controlOE.add(tEvent.getTracingService() + ": " + ((j-1 < TracingService.MAX_DI_TS) ? tEvent.getContent().substring(0, tEvent.getContent().indexOf('#')) : tEvent.getContent()));
 			}
 			//if(j > 25 && j < 40) System.out.println(tEvent.getTracingService() + ": " + ((j-1 < TracingService.MAX_DI_TS) ? tEvent.getContent().substring(0, tEvent.getContent().indexOf('#')) : tEvent.getContent()));
 			if(i < oMessages.size()) {

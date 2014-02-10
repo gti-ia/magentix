@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
+import java.util.concurrent.CountDownLatch;
 
 import es.upv.dsic.gti_ia.cAgents.CAgent;
 import es.upv.dsic.gti_ia.cAgents.CFactory;
@@ -29,14 +30,17 @@ import es.upv.dsic.gti_ia.organization.exception.THOMASException;
 
 public class Product extends CAgent {
 
+	private CountDownLatch init;
+	private CountDownLatch replay;
+	
 	OMSProxy omsProxy = new OMSProxy(this);
 	SFProxy sfProxy = new SFProxy(this);
 	String message;
-	boolean started = false;
 
 	public Product(AgentID aid) throws Exception {
 		super(aid);
-
+		init = new CountDownLatch(1);
+		replay = new CountDownLatch(1);
 	}
 	
 	public String getMessage()
@@ -80,11 +84,12 @@ public class Product extends CAgent {
 
 			this.addFactoryAsParticipant(additionTalk);
 
-			this.started = true;
+			this.init.countDown();
 
 		} catch (THOMASException e) {
 			e.printStackTrace();
-			message="ERROR";
+			this.message = "ERROR";
+			this.replay.countDown();
 		}
 
 	}
@@ -92,7 +97,24 @@ public class Product extends CAgent {
 	@Override
 	protected void finalize(CProcessor firstProcessor, ACLMessage finalizeMessage) {
 		System.out.println("[" + firstProcessor.getMyAgent().getName() + "] End execution");
-		message="OK";
+		this.message = "OK";
+		this.replay.countDown();
+	}
+	
+	public void waitInitialization(){
+		try {
+			this.init.await();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void waitReplay(){
+		try {
+			this.replay.await();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
 	// ------------------------------------------------------------------------
@@ -131,6 +153,7 @@ public class Product extends CAgent {
 			} catch (Exception e) {
 				next = "FAILURE";
 				message="ERROR";
+				replay.countDown();
 			}
 
 			return next;
