@@ -1,8 +1,5 @@
 package TestJason;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-
 import junit.framework.TestCase;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
@@ -27,7 +24,8 @@ public class TestJasonTestRepeat extends TestCase {
 		 */
 		// DOMConfigurator.configure("configuration/loggin.xml");
 
-		qpid_broker = qpidManager.UnixQpidManager.startQpid(Runtime.getRuntime(), qpid_broker);
+		qpid_broker = qpidManager.UnixQpidManager.startQpid(
+				Runtime.getRuntime(), qpid_broker);
 		/**
 		 * Connecting to Qpid Broker
 		 */

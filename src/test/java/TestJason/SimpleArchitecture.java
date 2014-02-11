@@ -1,6 +1,5 @@
 package TestJason;
 
-import jason.asSemantics.ActionExec;
 import jason.asSyntax.Literal;
 
 import java.util.ArrayList;

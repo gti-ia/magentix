@@ -11,7 +11,7 @@ import jason.asSyntax.ASSyntax;
 import jason.asSyntax.Literal;
 import jason.asSyntax.StringTermImpl;
 import jason.asSyntax.Term;
-import jason.infra.centralised.RunCentralisedMAS;
+
 import jason.runtime.Settings;
 
 import java.io.FileInputStream;
@@ -33,7 +33,6 @@ import es.upv.dsic.gti_ia.cAgents.CAgent;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.jason.exception.AgentSpeakNotFoundException;
-import es.upv.dsic.gti_ia.norms.BeliefDataBaseInterface;
 
 /**
  * @author Ricard Lopez Fogues
@@ -48,7 +47,6 @@ public class MagentixAgArch extends AgArch {
 	private Queue<ACLMessage> messageList = new LinkedList<ACLMessage>();
 	protected boolean running = true;
 	private Agent ag;
-
 
 	/**
 	 * Starts the architecture
@@ -85,7 +83,7 @@ public class MagentixAgArch extends AgArch {
 
 			this.jasonAgent = agent;
 			ag = new Agent();
-			
+
 			new TransitionSystem(ag, new Circumstance(), new Settings(), this);
 
 			ag.initAg(filename);
@@ -352,7 +350,6 @@ public class MagentixAgArch extends AgArch {
 	public void stopAg() {
 		running = false;
 	}
-	
 
 	/**
 	 * @return the jasonAgent
@@ -362,7 +359,8 @@ public class MagentixAgArch extends AgArch {
 	}
 
 	/**
-	 * @param jasonAgent the jasonAgent to set
+	 * @param jasonAgent
+	 *            the jasonAgent to set
 	 */
 	public void setJasonAgent(CAgent jasonAgent) {
 		this.jasonAgent = jasonAgent;
@@ -376,7 +374,8 @@ public class MagentixAgArch extends AgArch {
 	}
 
 	/**
-	 * @param ag the ag to set
+	 * @param ag
+	 *            the ag to set
 	 */
 	public void setAg(Agent ag) {
 		this.ag = ag;
@@ -390,7 +389,8 @@ public class MagentixAgArch extends AgArch {
 	}
 
 	/**
-	 * @param logger the logger to set
+	 * @param logger
+	 *            the logger to set
 	 */
 	public static void setLogger(Logger logger) {
 		MagentixAgArch.logger = logger;
@@ -404,7 +404,8 @@ public class MagentixAgArch extends AgArch {
 	}
 
 	/**
-	 * @param messageList the messageList to set
+	 * @param messageList
+	 *            the messageList to set
 	 */
 	public void setMessageList(Queue<ACLMessage> messageList) {
 		this.messageList = messageList;
@@ -418,14 +419,16 @@ public class MagentixAgArch extends AgArch {
 	}
 
 	/**
-	 * @param conversationIds the conversationIds to set
+	 * @param conversationIds
+	 *            the conversationIds to set
 	 */
 	public void setConversationIds(Map<String, String> conversationIds) {
 		this.conversationIds = conversationIds;
 	}
 
 	/**
-	 * @param running the running to set
+	 * @param running
+	 *            the running to set
 	 */
 	public void setRunning(boolean running) {
 		this.running = running;

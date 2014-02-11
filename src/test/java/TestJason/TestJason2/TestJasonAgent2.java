@@ -3,8 +3,6 @@ package TestJason.TestJason2;
 import jason.asSyntax.Literal;
 import jason.bb.BeliefBase;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -43,7 +41,6 @@ public class TestJasonAgent2 extends TestCase {
 	 * 
 	 * @see junit.framework.TestCase#setUp()
 	 */
-	@SuppressWarnings("serial")
 	protected void setUp() throws Exception {
 		super.setUp();
 		/**
@@ -55,9 +52,10 @@ public class TestJasonAgent2 extends TestCase {
 		/**
 		 * Connecting to Qpid Broker
 		 */
-		
-		qpid_broker = qpidManager.UnixQpidManager.startQpid(Runtime.getRuntime(), qpid_broker);
-		
+
+		qpid_broker = qpidManager.UnixQpidManager.startQpid(
+				Runtime.getRuntime(), qpid_broker);
+
 		AgentsConnection.connect();
 
 		ExpectedBBBob = new ArrayList<String>();
@@ -99,7 +97,7 @@ public class TestJasonAgent2 extends TestCase {
 		super.tearDown();
 		bob.Shutdown();
 		maria.Shutdown();
-		
+
 		qpidManager.UnixQpidManager.stopQpid(qpid_broker);
 	}
 

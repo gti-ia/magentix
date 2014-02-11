@@ -1,8 +1,5 @@
 package TestJason;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-
 import junit.framework.TestCase;
 
 import org.apache.log4j.xml.DOMConfigurator;
@@ -24,7 +21,8 @@ public class TestJason extends TestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
-		qpid_broker = qpidManager.UnixQpidManager.startQpid(Runtime.getRuntime(), qpid_broker);
+		qpid_broker = qpidManager.UnixQpidManager.startQpid(
+				Runtime.getRuntime(), qpid_broker);
 		/**
 		 * Setting the Logger
 		 */
@@ -72,7 +70,6 @@ public class TestJason extends TestCase {
 		String belief1 = null;
 		String belief2 = null;
 
-		// REVISAR ESTO
 		if (agent1.getAgArch().getTS().getAg().getBB().getPercepts().hasNext()) {
 			beliefI = agent1.getAgArch().getTS().getAg().getBB().getPercepts()
 					.next().toString();
@@ -290,6 +287,7 @@ public class TestJason extends TestCase {
 
 	public void testWrongConst() {
 
+		@SuppressWarnings("unused")
 		JasonAgent agentNoArch = null;
 		MagentixAgArch mA = new MagentixAgArch();
 

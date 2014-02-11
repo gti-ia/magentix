@@ -5,15 +5,8 @@ package TestAgentsConnection;
 
 import static org.junit.Assert.fail;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.BrokenBarrierException;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.CyclicBarrier;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
@@ -33,7 +26,6 @@ import es.upv.dsic.gti_ia.jason.MagentixAgArch;
  */
 public class TestAgentsConnection {
 
-	private Logger logger;
 	Process qpid_broker;
 
 	public TestAgentsConnection() {
@@ -50,14 +42,15 @@ public class TestAgentsConnection {
 		 */
 		DOMConfigurator.configure("configuration/loggin.xml");
 
-		logger = Logger.getLogger(TestAgentsConnection.class);
+		Logger.getLogger(TestAgentsConnection.class);
 
 		/**
 		 * Connecting to Qpid Broker
 		 */
 
-		qpid_broker = qpidManager.UnixQpidManager.startQpid(Runtime.getRuntime(), qpid_broker);
-		
+		qpid_broker = qpidManager.UnixQpidManager.startQpid(
+				Runtime.getRuntime(), qpid_broker);
+
 		AgentsConnection.connect();
 
 	}
@@ -79,7 +72,7 @@ public class TestAgentsConnection {
 	 * {@link es.upv.dsic.gti_ia.core.AgentsConnection#connect()}.
 	 */
 
-	@Test(timeout= 5 * 60 * 1000)
+	@Test(timeout = 5 * 60 * 1000)
 	public void testMultipleJasonAgentsConnection() {
 
 		// Throws 1000 Jason agents
@@ -123,7 +116,7 @@ public class TestAgentsConnection {
 	 * Test method for
 	 * {@link es.upv.dsic.gti_ia.core.AgentsConnection#connect()}.
 	 */
-	@Test(timeout= 5 * 60 * 1000)
+	@Test(timeout = 5 * 60 * 1000)
 	public void testMultipleCAgentsConnection() {
 
 		// Throws 1000 Cagents

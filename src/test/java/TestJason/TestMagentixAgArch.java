@@ -1,10 +1,10 @@
 package TestJason;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Queue;
 
-import jason.asSyntax.ASSyntax;
-import jason.asSyntax.StringTermImpl;
 import junit.framework.TestCase;
 
 import org.apache.log4j.xml.DOMConfigurator;
@@ -19,8 +19,7 @@ public class TestMagentixAgArch extends TestCase {
 
 	private SimpleArchitecture arch;
 	private JasonAgent agent;
-	private JasonAgent bob;
-	private JasonAgent maria;
+
 	private JasonAgent receiverJ;
 	private JasonAgent senderJ;
 	Process qpid_broker;
@@ -36,8 +35,9 @@ public class TestMagentixAgArch extends TestCase {
 		 */
 		// Comentarlo para test?
 		DOMConfigurator.configure("configuration/loggin.xml");
-		
-		qpid_broker = qpidManager.UnixQpidManager.startQpid(Runtime.getRuntime(), qpid_broker);
+
+		qpid_broker = qpidManager.UnixQpidManager.startQpid(
+				Runtime.getRuntime(), qpid_broker);
 
 		/**
 		 * Connecting to Qpid Broker
@@ -52,11 +52,11 @@ public class TestMagentixAgArch extends TestCase {
 
 	protected void tearDown() throws Exception {
 		super.tearDown();
-		
+
 		AgentsConnection.disconnect();
-		
+
 		qpidManager.UnixQpidManager.stopQpid(qpid_broker);
-	
+
 	}
 
 	public void testStopAg() {
@@ -183,47 +183,6 @@ public class TestMagentixAgArch extends TestCase {
 		agent.Shutdown();
 
 	}
-    /*
-	public void testCheckMail() {
-
-		try {
-			MagentixAgArch arch = new SimpleArchitecture();
-			bob = new JasonAgent(new AgentID("bob"),
-					"./src/test/java/TestJason/bob.asl", arch);
-
-			MagentixAgArch arch2 = new SimpleArchitecture();
-			maria = new JasonAgent(new AgentID("maria"),
-					"./src/test/java/TestJason/maria.asl", arch2);
-
-		} catch (Exception e) {
-
-			e.printStackTrace();
-		}
-
-		maria.start();
-
-		waitAg(3);
-
-		maria.getAgArch().checkMail();
-		System.out.println(maria.getAgArch().getTS().getC().getMailBox()
-				.toString());
-
-		waitAg(3);
-
-		bob.start();
-
-		waitAg(3);
-		// TODO
-
-		// while(maria.getAgArch().getTS().getC().getMailBox().isEmpty()){}
-
-		// System.out.println(maria.getAgArch().getTS().getC().getMailBox().toString());
-
-		maria.Shutdown();
-		bob.Shutdown();
-
-		assertTrue(true); // TODO
-	}*/
 
 	public void testSendMsgMessage() {
 		MagentixAgArch arch = null;
@@ -245,20 +204,42 @@ public class TestMagentixAgArch extends TestCase {
 		receiverJ.start();
 		senderJ.start();
 
-		ACLMessage m = new ACLMessage();
-
-		// Performative "Inform"
 		String ilForce = "tell";
 		String sender = senderJ.getName();
 		String receiver = receiverJ.getName();
 		String replyWith = "";
-		m.setContent("vl(10)");
-		Object propCont = translateContentToJason(m);
-		jason.asSemantics.Message im = new jason.asSemantics.Message(ilForce,
-				sender, receiver, propCont, replyWith);
 
+		ACLMessage m = new ACLMessage();
+		m.setContent("vl(10)");
+
+		Class<MagentixAgArch> magentixAgArch = MagentixAgArch.class;
 		try {
+			Method method = magentixAgArch.getDeclaredMethod(
+					"translateContentToJason", ACLMessage.class);
+			method.setAccessible(true);
+
+			// Performative "Inform"
+
+			// Object propCont = translateContentToJason(m);
+			Object propCont = method.invoke(new MagentixAgArch(), m);
+			jason.asSemantics.Message im = new jason.asSemantics.Message(
+					ilForce, sender, receiver, propCont, replyWith);
 			arch.sendMsg(im);
+		} catch (IllegalAccessException e1) {
+			fail("Reflection fail");
+			e1.printStackTrace();
+		} catch (IllegalArgumentException e1) {
+			fail("Reflection fail");
+			e1.printStackTrace();
+		} catch (InvocationTargetException e1) {
+			fail("Reflection fail");
+			e1.printStackTrace();
+		} catch (NoSuchMethodException e1) {
+			fail("Reflection fail");
+			e1.printStackTrace();
+		} catch (SecurityException e1) {
+			fail("Reflection fail");
+			e1.printStackTrace();
 		} catch (Exception e) {
 
 			e.printStackTrace();
@@ -277,32 +258,322 @@ public class TestMagentixAgArch extends TestCase {
 
 	}
 
+	public void testPerceive() {
+		arch = new SimpleArchitecture();
 
-	protected Object translateContentToJason(ACLMessage m) {
-		Object propCont = null;
 		try {
-			propCont = m.getContentObject();
-			if (propCont instanceof String) {
-				// try to parse as term
-				try {
-					propCont = ASSyntax.parseTerm((String) propCont);
-				} catch (Exception e) { // no problem
-				}
-			}
-		} catch (Exception e) { // no problem try another thing
+			agent = new JasonAgent(new AgentID("test"),
+					"./src/test/java/TestJason/demo.asl", arch);
+		} catch (Exception e1) {
+
+			e1.printStackTrace();
 		}
 
-		if (propCont == null) { // still null
-			// try to parse as term
-			try {
-				propCont = ASSyntax.parseTerm(m.getContent());
-			} catch (Exception e) {
-				// not AS messages are treated as string
-				propCont = new StringTermImpl(m.getContent());
-			}
+		agent.start();
+
+		MagentixAgArch mA = agent.getAgArch();
+
+		assertEquals("test", mA.getAgName());
+
+		agent.getAgArch().getTS().reasoningCycle();
+
+		// Stop the agent by means of architecture
+		mA.stopAg();
+
+		// Check if
+		assertEquals(false, agent.getAgArch().isRunning());
+
+		String belief = null;
+
+		if (agent.getAgArch().getTS().getAg().getBB().getPercepts().hasNext()) {
+			belief = agent.getAgArch().getTS().getAg().getBB().getPercepts()
+					.next().toString();
 		}
-		return propCont;
+
+		assertEquals("x(10)[source(percept)]", belief);
+
+		agent.stopReasoning();
+
+		try {
+			Thread.sleep(2 * 1000);
+		} catch (InterruptedException e) {
+
+			e.printStackTrace();
+		}
+
+		agent.Shutdown();
+
 	}
+
+	public void testRun() {
+		arch = new SimpleArchitecture();
+
+		try {
+			agent = new JasonAgent(new AgentID("test"),
+					"./src/test/java/TestJason/demo.asl", arch);
+		} catch (Exception e1) {
+
+			e1.printStackTrace();
+		}
+
+		agent.start();
+
+		MagentixAgArch mA = agent.getAgArch();
+
+		assertEquals("test", mA.getAgName());
+
+		agent.getAgArch().getTS().reasoningCycle();
+
+		// Stop the agent by means of architecture
+		assertEquals(true, agent.getAgArch().isRunning());
+
+		mA.stopAg();
+
+		// Check if
+		assertEquals(false, agent.getAgArch().isRunning());
+
+		agent.stopReasoning();
+
+		try {
+			Thread.sleep(2 * 1000);
+		} catch (InterruptedException e) {
+
+			e.printStackTrace();
+		}
+
+		agent.Shutdown();
+
+	}
+
+	public void testInit() {
+		@SuppressWarnings("unused")
+		JasonAgent agentNoArch = null;
+		MagentixAgArch mA = new MagentixAgArch();
+
+		try {
+			agentNoArch = new JasonAgent(new AgentID("testNoArch"),
+					"./src/test/java/TestJason/noexist.asl", mA);
+
+			fail("Should have failed");
+		} catch (Exception e1) {
+
+			assertTrue(true);
+		}
+
+		try {
+			agentNoArch = new JasonAgent(new AgentID("testNoArch"),
+					"./src/test/java/TestJason/demo.asl", null);
+
+			fail("Should have failed");
+		} catch (Exception e1) {
+
+			assertTrue(true);
+		}
+
+		try {
+			agentNoArch = new JasonAgent(new AgentID("testNoArch"), null, mA);
+
+			fail("Should have failed");
+		} catch (Exception e1) {
+
+			assertTrue(true);
+		}
+
+		try {
+			agentNoArch = new JasonAgent(new AgentID("testNoArch"), null, null);
+
+			fail("Should have failed");
+		} catch (Exception e1) {
+
+			assertTrue(true);
+		}
+
+		try {
+			agentNoArch = new JasonAgent(null,
+					"./src/test/java/TestJason/demo.asl", mA);
+
+			fail("Should have failed");
+		} catch (Exception e1) {
+
+			assertTrue(true);
+		}
+
+		try {
+			agentNoArch = new JasonAgent(null,
+					"./src/test/java/TestJason/demo.asl", null);
+
+			fail("Should have failed");
+		} catch (Exception e1) {
+
+			assertTrue(true);
+		}
+
+		try {
+			agentNoArch = new JasonAgent(null, null, mA);
+
+			fail("Should have failed");
+		} catch (Exception e1) {
+
+			assertTrue(true);
+		}
+
+		try {
+			agentNoArch = new JasonAgent(null, null, null);
+
+			fail("Should have failed");
+		} catch (Exception e1) {
+
+			assertTrue(true);
+		}
+
+	}
+
+	public void testTranslateContentToJason() {
+		MagentixAgArch arch = null;
+		MagentixAgArch arch2 = null;
+		try {
+			arch = new MagentixAgArch();
+			receiverJ = new JasonAgent(new AgentID("receiverJ"),
+					"./src/test/java/TestJason/receiver.asl", arch);
+
+			arch2 = new MagentixAgArch();
+			senderJ = new JasonAgent(new AgentID("senderJ"),
+					"./src/test/java/TestJason/sender.asl", arch2);
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+		}
+
+		receiverJ.start();
+		senderJ.start();
+
+		String ilForce = "tell";
+		String sender = senderJ.getName();
+		String receiver = receiverJ.getName();
+		String replyWith = "";
+
+		ACLMessage m = new ACLMessage();
+		m.setContent("vl(10)");
+
+		Class<MagentixAgArch> magentixAgArch = MagentixAgArch.class;
+		try {
+			Method method = magentixAgArch.getDeclaredMethod(
+					"translateContentToJason", ACLMessage.class);
+			method.setAccessible(true);
+
+			// Performative "Inform"
+
+			// Object propCont = translateContentToJason(m);
+			Object propCont = method.invoke(new MagentixAgArch(), m);
+			jason.asSemantics.Message im = new jason.asSemantics.Message(
+					ilForce, sender, receiver, propCont, replyWith);
+			arch.sendMsg(im);
+
+			assertEquals("vl(10)", propCont.toString());
+
+		} catch (IllegalAccessException e1) {
+			fail("Reflection fail");
+			e1.printStackTrace();
+		} catch (IllegalArgumentException e1) {
+			fail("Reflection fail");
+			e1.printStackTrace();
+		} catch (InvocationTargetException e1) {
+			fail("Reflection fail");
+			e1.printStackTrace();
+		} catch (NoSuchMethodException e1) {
+			fail("Reflection fail");
+			e1.printStackTrace();
+		} catch (SecurityException e1) {
+			fail("Reflection fail");
+			e1.printStackTrace();
+		} catch (Exception e) {
+
+			e.printStackTrace();
+		}
+
+		waitAg(5);
+
+		receiverJ.Shutdown();
+		senderJ.Shutdown();
+
+	}
+
+	public void testAddMessage() {
+		MagentixAgArch arch = null;
+		MagentixAgArch arch2 = null;
+		try {
+			arch = new MagentixAgArch();
+			receiverJ = new JasonAgent(new AgentID("receiverJ"),
+					"./src/test/java/TestJason/receiver.asl", arch);
+
+			arch2 = new MagentixAgArch();
+			senderJ = new JasonAgent(new AgentID("senderJ"),
+					"./src/test/java/TestJason/sender.asl", arch2);
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+		}
+
+		receiverJ.start();
+		senderJ.start();
+
+		String ilForce = "tell";
+		String sender = senderJ.getName();
+		String receiver = receiverJ.getName();
+		String replyWith = "";
+
+		ACLMessage m = new ACLMessage();
+		m.setContent("test");
+		m.setPerformative(ilForce);
+		m.setSender(new AgentID(sender));
+		m.setReceiver(new AgentID(receiver));
+		m.setReplyWith(replyWith);
+		Class<MagentixAgArch> magentixAgArch = MagentixAgArch.class;
+		Field field = null;
+		try {
+
+			Method method = magentixAgArch.getDeclaredMethod("addMessage",
+					ACLMessage.class);
+			method.setAccessible(true);
+			method.invoke(arch, m);
+
+			field = magentixAgArch.getDeclaredField("messageList");
+			field.setAccessible(true);
+
+			@SuppressWarnings("unchecked")
+			Queue<ACLMessage> messageList = (Queue<ACLMessage>) field.get(arch);
+
+			assertEquals("test", messageList.peek().getContent());
+
+		} catch (IllegalAccessException e1) {
+			fail("Reflection fail");
+			e1.printStackTrace();
+		} catch (IllegalArgumentException e1) {
+			fail("Reflection fail");
+			e1.printStackTrace();
+		} catch (InvocationTargetException e1) {
+			fail("Reflection fail");
+			e1.printStackTrace();
+		} catch (NoSuchMethodException e1) {
+			fail("Reflection fail");
+			e1.printStackTrace();
+		} catch (SecurityException e1) {
+			fail("Reflection fail");
+			e1.printStackTrace();
+		} catch (NoSuchFieldException e) {
+			fail("Reflection fail");
+			e.printStackTrace();
+		}
+
+		waitAg(5);
+
+		receiverJ.Shutdown();
+		senderJ.Shutdown();
+
+	}
+
 	private void waitAg(int seconds) {
 		try {
 			Thread.sleep(seconds * 1000);
@@ -312,33 +583,4 @@ public class TestMagentixAgArch extends TestCase {
 		}
 	}
 
-	/*
-	public void testInit() {
-		assertTrue(true); // TODO
-	}
-
-	public void testRun() {
-		assertTrue(true); // TODO
-	}
-
-	public void testPerceive() {
-		assertTrue(true); // TODO
-	}
-
-	public void testActActionExecListOfActionExec() {
-		assertTrue(true); // TODO
-	}
-
-	public void testTranslateContentToJason() {
-		assertTrue(true); // TODO
-	}
-
-	public void testBroadcastMessage() {
-		assertTrue(true); // TODO
-	}
-
-	public void testAddMessage() {
-		assertTrue(true); // TODO
-	}
-	*/
 }
