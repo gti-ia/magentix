@@ -82,7 +82,7 @@ public class Xml {
 		} catch (Exception exception) {
 			throw new RuntimeException(exception);
 		}
-		
+
 	}
 
 	/**
@@ -134,28 +134,32 @@ public class Xml {
 	}
 
 	/**
-	 * Ads an atribute to the root element
+	 * Adds an atribute to the root element
 	 * 
 	 * @param name
 	 * @param value
 	 */
 	private void addAttribute(String name, String value) {
-		nameAttributes.put(name, value);
+		if (name != null && name != "") {
+			nameAttributes.put(name, value);
+		}
 	}
 
 	/**
-	 * Ads a child to the root element
+	 * Adds a child to the root element
 	 * 
 	 * @param name
 	 * @param child
 	 */
 	private void addChild(String name, Xml child) {
-		List<Xml> children = nameChildren.get(name);
-		if (children == null) {
-			children = new ArrayList<Xml>();
-			nameChildren.put(name, children);
+		if (name != null && name != "") {
+			List<Xml> children = nameChildren.get(name);
+			if (children == null) {
+				children = new ArrayList<Xml>();
+				nameChildren.put(name, children);
+			}
+			children.add(child);
 		}
-		children.add(child);
 	}
 
 	/**

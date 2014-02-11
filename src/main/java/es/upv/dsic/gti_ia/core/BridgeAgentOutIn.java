@@ -15,7 +15,7 @@ import java.net.SocketException;
 import es.upv.dsic.gti_ia.organization.Configuration;
 
 /**
- * This agent routes messages from inside the platform to outside the platform.
+ * This agent routes messages from outside the platform to inside the platform.
  * 
  * @author Ricard Lopez Fogues
  */
