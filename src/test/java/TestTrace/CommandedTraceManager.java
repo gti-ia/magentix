@@ -8,14 +8,13 @@ import org.apache.log4j.Level;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.TraceEvent;
-import es.upv.dsic.gti_ia.trace.TraceInteract;
 import es.upv.dsic.gti_ia.trace.TraceManager;
 
 /**
  * Trace manager commanded externally.
  * 
  * @author Jose Vicente Ruiz (jruiz1@dsic.upv.es)
- * 
+ * @author Jose Alemany Bordera  -  jalemany1@dsic.upv.es
  */
 
 public class CommandedTraceManager extends TraceManager {
@@ -41,8 +40,8 @@ public class CommandedTraceManager extends TraceManager {
 	private ArrayList<TraceEvent> traceEvents;
 	
 	/* Constructor */
-	public CommandedTraceManager(AgentID aid) throws Exception{
-		super(aid);
+	public CommandedTraceManager(AgentID aid, Boolean monitorizable) throws Exception{
+		super(aid, monitorizable);
 		logger.setLevel(Level.DEBUG);
 		
 		commands = new ArrayList<Integer>();
@@ -84,7 +83,7 @@ public class CommandedTraceManager extends TraceManager {
 		logger.debug(this.getName() + " has received an ACL MESSAGE with this content: " + msg);
 		messagesReceived.add(msg);
 	}
-
+	
 	public synchronized void onTraceEvent(TraceEvent tEvent) {
 		logger.debug(this.getName() + " has received a TRACE EVENT with this content: " + tEvent);
 		traceEvents.add(tEvent);

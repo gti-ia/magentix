@@ -71,7 +71,7 @@ public class TestThomas {
 
 	}
 
-	@Test(timeout=100000)
+	@Test(timeout=200000)
 	public void testThomas() {
 		/**
 		 * Execute the agents

@@ -2,13 +2,9 @@ package TestTrace;
 
 import static org.junit.Assert.*;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -93,7 +89,7 @@ public class TestCoverageTraces {
 	 *  - Finally, Agent2 sends again a message to ask for a list with all the available
 	 *  trace services and checks that the service of Agent1 is NOT among them.
 	 */
-	@Test(timeout = 1000)
+	@Test(timeout = 10000)
 	public void testDefaultPublishAndUnpublishTracingService() {
 		boolean servicePublished = false;
 		boolean serviceAvailable = false;
@@ -106,13 +102,13 @@ public class TestCoverageTraces {
 		
 		// Check that the trace manager has answered Agent 1.
 		while(!servicePublished) {
-			messages = agent1.getReceivedMessages();
-			for(ACLMessage msg : messages) {
+			while(!agent1.emptyReceivedMessages()) {
 				/*
 				 * If the sender is the default trace manager and
 				 * the content starts with the publish prefix and
 				 * the agent1 service name is in the content...
 				 */
+				ACLMessage msg = agent1.popReceivedMessages();
 				if(msg.getSender().toString().equals(defaultTM.getAid().toString()) &&
 				   msg.getContent().startsWith(PUBLISH_PREFIX) &&
 				   msg.getContent().contains(AGENT1_SUBSCRIPTION_SERVICE_NAME)) {
@@ -132,12 +128,12 @@ public class TestCoverageTraces {
 		// It must have Agent 1 tracing service.
 		agent2.addCommand(CommandedAgent.LIST_SERVICES);
 		while(!serviceAvailable) {
-			messages = agent2.getReceivedMessages();
-			for(ACLMessage msg : messages) {
+			while(!agent2.emptyReceivedMessages()) {
 				/*  
 				 * If the sender is the default trace manager and
 				 * the content starts with the list of services prefix...
 				 */
+				ACLMessage msg = agent2.popReceivedMessages();
 				if(msg.getSender().toString().equals(defaultTM.getAid().toString()) && 
 				   msg.getContent().startsWith(LIST_SERVICES_PREFIX)) {
 					if(msg.getPerformativeInt() == ACLMessage.AGREE) {
@@ -163,13 +159,13 @@ public class TestCoverageTraces {
 		
 		// Check that the trace manager has answered Agent 1.
 		while(servicePublished) {
-			messages = agent1.getReceivedMessages();
-			for(ACLMessage msg : messages) {
+			while(!agent1.emptyReceivedMessages()) {
 				/*
 				 * If the sender is the default trace manager and
 				 * the content starts with the unpublished prefix and
 				 * the agent1 service name is in the content...
 				 */
+				ACLMessage msg = agent1.popReceivedMessages();
 				if(msg.getSender().toString().equals(defaultTM.getAid().toString()) &&
 				   msg.getContent().startsWith(UNPUBLISH_PREFIX) &&
 				   msg.getContent().contains(AGENT1_SUBSCRIPTION_SERVICE_NAME)) {
@@ -189,12 +185,12 @@ public class TestCoverageTraces {
 		// The tracing service of agent 1 should not be available.
 		agent2.addCommand(CommandedAgent.LIST_SERVICES);
 		while(serviceAvailable) {
-			messages = agent2.getReceivedMessages();
-			for(ACLMessage msg : messages) {
+			while(!agent2.emptyReceivedMessages()) {
 				/*  
 				 * If the sender is the default trace manager and
 				 * the content starts with the list of services prefix...
 				 */
+				ACLMessage msg = agent2.popReceivedMessages();
 				if(msg.getSender().toString().equals(defaultTM.getAid().toString()) && 
 				   msg.getContent().startsWith(LIST_SERVICES_PREFIX)) {
 					if(msg.getPerformativeInt() == ACLMessage.AGREE) {

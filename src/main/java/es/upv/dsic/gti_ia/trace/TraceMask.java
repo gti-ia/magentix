@@ -167,9 +167,7 @@ public class TraceMask {
 		 * of valid indexes, throw an exception.
 		 */
 		if (encodedTraceMask.length() != VALID_INDEXES.size())
-			throw new ParseException(
-					"Invalid codification of the trace mask: Incorrect size.",
-					-1);
+			throw new ParseException("Invalid codification of the trace mask: Incorrect size.",-1);
 		else {
 			/*
 			 * Cover the positions of the encoded mask that represent the
@@ -186,9 +184,7 @@ public class TraceMask {
 					case FALSE_CHAR:
 						break;
 					default:
-						throw new ParseException(
-								"Invalid codification of the trace mask: Invalid character.",
-								i);
+						throw new ParseException("Invalid codification of the trace mask: Invalid character.",i);
 				}
 				++i;
 			}
@@ -210,9 +206,7 @@ public class TraceMask {
 							 * A control bit has already been set. Invalid
 							 * encoding!
 							 */
-							throw new ParseException(
-									"Invalid codification of the trace mask: Several active control bits.",
-									-1);
+							throw new ParseException("Invalid codification of the trace mask: Several active control bits.",-1);
 						}
 						mask.set(VALID_INDEXES.get(i));
 						currentControl = VALID_INDEXES.get(i);
@@ -221,16 +215,12 @@ public class TraceMask {
 					case FALSE_CHAR:
 						break;
 					default:
-						throw new ParseException(
-								"Invalid codification of the trace mask: Invalid character.",
-								i);
+						throw new ParseException("Invalid codification of the trace mask: Invalid character.",i);
 				}
 				++i;
 			}
 			if (controlBit == false)
-				throw new ParseException(
-						"Invalid codification of the trace mask: No active control bit.",
-						-1);
+				throw new ParseException("Invalid codification of the trace mask: No active control bit.",-1);
 		}
 	}
 	
@@ -289,8 +279,7 @@ public class TraceMask {
 	 * @throws Exception
 	 *             if the active control bit is going to be set off.
 	 */
-	protected void set(int bitIndex, boolean value)
-			throws IndexOutOfBoundsException, Exception {
+	protected void set(int bitIndex, boolean value) throws IndexOutOfBoundsException, Exception {
 		if (VALID_INDEXES.contains(bitIndex)) {
 			if (CONTROL_INDEXES.contains(bitIndex)) {
 				if (value == true) {
@@ -306,8 +295,7 @@ public class TraceMask {
 					 * The only active control bit is going to be set off, so
 					 * throw an exception.
 					 */
-					throw new Exception(
-							"One of the control bits must be active.");
+					throw new Exception("One of the control bits must be active.");
 				}
 			}
 			mask.set(bitIndex, value);

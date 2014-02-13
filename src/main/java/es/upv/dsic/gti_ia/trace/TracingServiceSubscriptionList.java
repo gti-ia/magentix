@@ -9,6 +9,7 @@ import es.upv.dsic.gti_ia.core.TracingService;
  * List of tracing service subscriptions
  * 
  * @author L Burdalo (lburdalo@dsic.upv.es)
+ * @author Jose Alemany Bordera - jalemany1@dsic.upv.es (GetTSS method)
  * 
  * @see es.upv.dsic.gti_ia.trace.TracingServiceSubscription
  * @see java.util.Arraylist
@@ -33,27 +34,11 @@ public class TracingServiceSubscriptionList extends ArrayList<TracingServiceSubs
 		TracingServiceSubscription tServiceSubscription;
 		Iterator<TracingServiceSubscription> iter = this.iterator();
 		
-		if (originEntity == null){
-			while (iter.hasNext()){
-				tServiceSubscription=iter.next();
-				if (tServiceSubscription.getAnyProvider() &&
-					tServiceSubscription.getSubscriptorEntity().equals(subscriberEntity) &&
-					tServiceSubscription.getTracingService().equals(tService)){
-					return tServiceSubscription;
-				}
-			}
+		while (iter.hasNext()){
+			tServiceSubscription = iter.next();
+			if (tServiceSubscription.equals(new TracingServiceSubscription(subscriberEntity, originEntity, tService)))
+				return tServiceSubscription;
 		}
-		else{
-			while (iter.hasNext()){
-				tServiceSubscription=iter.next();
-				if (!tServiceSubscription.getAnyProvider() && tServiceSubscription.getOriginEntity().equals(originEntity) &&
-					tServiceSubscription.getSubscriptorEntity().equals(subscriberEntity) &&
-					tServiceSubscription.getTracingService().equals(tService)){
-					return tServiceSubscription;
-				}
-			}
-		}
-		
 		return null;
 	}
 }

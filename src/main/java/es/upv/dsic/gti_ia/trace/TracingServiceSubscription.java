@@ -8,6 +8,7 @@ import es.upv.dsic.gti_ia.core.TracingService;
  * Subscription to a tracing service
  * 
  * @author L Burdalo (lburdalo@dsic.upv.es)
+ * @author Jose Alemany Bordera - jalemany1@dsic.upv.es (Equals method)
  */
 public class TracingServiceSubscription implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -43,9 +44,9 @@ public class TracingServiceSubscription implements Serializable {
 	 * to null except for {@link es.upv.dsic.gti_ia.trace.TracingServiceSubscription#any_provider}, which is set to false
 	 */
 	public TracingServiceSubscription () {
-		this.subscriptorEntity=null;
-		this.any_provider=false;
-		this.originEntity=null;
+		this.subscriptorEntity = null;
+		this.any_provider = true;
+		this.originEntity = null;
 		this.tracingService = null;
 	}
 	
@@ -61,13 +62,13 @@ public class TracingServiceSubscription implements Serializable {
 	 * @param tracingService	Tracing service to which the subscription refers.
 	 */
 	public TracingServiceSubscription (TracingEntity subscriptor, TracingEntity originEntity, TracingService tracingService) {
-		this.subscriptorEntity=subscriptor;
+		this.subscriptorEntity = subscriptor;
 		if (originEntity == null){
-			this.any_provider=true;
+			this.any_provider = true;
 		}
 		else{
-			this.originEntity=originEntity;
-			this.any_provider=false;
+			this.originEntity = originEntity;
+			this.any_provider = false;
 		}
 		this.tracingService = tracingService;
 	}
@@ -107,5 +108,27 @@ public class TracingServiceSubscription implements Serializable {
 	 */
 	public TracingService getTracingService () {
 		return this.tracingService;
+	}
+	
+	/**
+	 * Compares two TracingServiceSubscription objects.
+	 * 
+	 * @return	True is objects are equal, False if not
+	 */
+	public boolean equals(Object otherServiceSubscription) {
+		if(this == otherServiceSubscription) return true;
+		if(!(otherServiceSubscription instanceof TracingServiceSubscription)) return false;
+		
+		TracingServiceSubscription other = (TracingServiceSubscription) otherServiceSubscription;
+		if(this.subscriptorEntity != null && !this.subscriptorEntity.equals(other.getSubscriptorEntity())) return false;
+		if(!(this.subscriptorEntity == other.getSubscriptorEntity())) return false;
+		if(!(this.any_provider == other.getAnyProvider())) return false;
+		if(this.originEntity != null && !this.originEntity.equals(other.getOriginEntity())) return false;
+		if(!(this.originEntity == other.getOriginEntity())) return false;
+		if(this.tracingService != null && !this.tracingService.equals(other.getTracingService())) return false;
+		if(!(this.tracingService == other.getTracingService())) return false;
+		
+		//Nothing has returned false, therefore they are equal
+		return true;
 	}
 }

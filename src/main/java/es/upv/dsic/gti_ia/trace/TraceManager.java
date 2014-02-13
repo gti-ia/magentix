@@ -136,21 +136,7 @@ public class TraceManager extends BaseAgent {
 	 * @throws Exception
 	 */
 	public TraceManager(AgentID aid) throws Exception {
-		super(aid);
-		
-		this.monitorizable = false;
-		
-		this.finishExecution = new Semaphore(0);
-		
-		logger.info("[TRACE MANAGER]: " + this.getAid().toString()
-				+ " launched...");
-		
-		logger.setLevel(Level.OFF);
-		
-		/* Obtain the trace mask from the configuration class */
-		this.traceMask = new TraceMask(conf.getTraceMask());
-		
-		initialize();
+		this(aid, false);
 	}
 	
 	/**
@@ -446,10 +432,10 @@ public class TraceManager extends BaseAgent {
 		 */
 	}
 	
-	@Override
 	/**
 	 * Inherited from the class BaseAgent.
 	 */
+	@Override
 	protected void execute() {
 		try {
 			this.finishExecution.acquire();

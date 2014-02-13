@@ -13,6 +13,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Semaphore;
 
 /*****************************************************************************************
@@ -47,6 +48,7 @@ import java.util.concurrent.Semaphore;
 public class Observer extends BaseAgent {
 	
 	static Semaphore contExec;
+	private CountDownLatch barrier;
 	private ArrayList<ACLMessage> messages;
 	private ArrayList<TraceEvent> events;
 	
@@ -54,6 +56,7 @@ public class Observer extends BaseAgent {
 		
 		super(aid);
 		contExec = new Semaphore(0);
+		barrier = new CountDownLatch(167);
 		messages = new ArrayList<ACLMessage>();
 		events = new ArrayList<TraceEvent>();
 		updateTraceMask();
@@ -67,6 +70,12 @@ public class Observer extends BaseAgent {
 	}
 
 	public void execute(){
+		
+		try {
+			barrier.await();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		
 		TestTrace3.end.release();
 		
@@ -107,12 +116,14 @@ public class Observer extends BaseAgent {
 				}
 			}
 		}
+		barrier.countDown();
 	}
 	
 	public void onMessage(ACLMessage msg){
 		
 		messages.add(msg);
 		System.out.println("[OBSERVER " + this.getName() + "]: Msg from " + msg.getSender().toString() + ": " + msg.getPerformative() + ":" + msg.getContent());
+		barrier.countDown();
 	}
 	
 	public ArrayList<ACLMessage> getMessages() {

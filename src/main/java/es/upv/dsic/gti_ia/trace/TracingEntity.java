@@ -12,6 +12,7 @@ import es.upv.dsic.gti_ia.core.AgentID;
  * 
  *  @author L Burdalo (lburdalo@dsic.upv.es)
  *  @author David Fernández (dfernandez@dsic.upv.es) Equals method
+ *  @author Jose Alemany Bordera - jalemany1@dsic.upv.es (Equals method modified)
  */
 public class TracingEntity implements Serializable{
 	private static final long serialVersionUID = 1L;
@@ -22,12 +23,12 @@ public class TracingEntity implements Serializable{
 	public static final int AGENT = 0;
 	
 	/**
-	 * Constant to identify the tracing entity as an agent
+	 * Constant to identify the tracing entity as an artifact
 	 */
 	public static final int ARTIFACT = 1;
 	
 	/**
-	 * Constant to identify the tracing entity as an agent
+	 * Constant to identify the tracing entity as an aggregation
 	 */
 	public static final int AGGREGATION = 2;
 	
@@ -77,7 +78,7 @@ public class TracingEntity implements Serializable{
 	 * an artifact or an aggregation, aid is set to null  
 	 */
 	public TracingEntity (int type, AgentID aid){
-		this.type=type;
+		this.type = (type < 0 || type > 2) ? -1 : type;
 		
 		if (type == AGENT){
 			this.aid=aid;
@@ -107,12 +108,7 @@ public class TracingEntity implements Serializable{
 	 * @return AgentID of the tracing entity if it is an agent or null otherwise
 	 */
 	public AgentID getAid(){
-		if (this.type == AGENT){
-			return this.aid;
-		}
-		else{
-			return null;
-		}
+		return ((this.type == AGENT) ? this.aid : null);
 	}
 	
 	/**
@@ -149,13 +145,7 @@ public class TracingEntity implements Serializable{
 	 * @return	Returns -1 if the type is not valid or 0 otherwise
 	 */
 	public int setType(int type){
-		if ((type < 0) || (type > 2)){
-			return -1;
-		}
-		else {
-			this.type=type;
-			return 0;
-		}
+		return (type < 0 || type > 2) ? -1 : 0;
 	}
 	
 	/**
@@ -198,15 +188,8 @@ public class TracingEntity implements Serializable{
 	 * 		the one specified in the parameters or false otherwise. 
 	 */
 	public boolean hasTheSameAidAs(AgentID aid){
-		if (this.getAid().host.contentEquals(aid.host) &&
-			this.getAid().name.contentEquals(aid.name) &&
-			this.getAid().port.contentEquals(aid.port) &&
-			this.getAid().protocol.contentEquals(aid.protocol)){
-			return true;
-		}
-		else{
-			return false;
-		}
+		if (this.type == AGENT) return this.aid.equals(aid);
+		return false;
 	}
 	
 	/**
@@ -241,9 +224,12 @@ public class TracingEntity implements Serializable{
 		
 		TracingEntity other = (TracingEntity) otherEntity;		
 		if(!(this.type == other.type)) return false;
-		if(!this.aid.equals(other.aid)) return false;
-		if(!this.publishedTS.equals(other.publishedTS)) return false;
-		if(!this.subscribedToTS.equals(other.subscribedToTS)) return false;
+		if(this.aid != null && !this.aid.equals(other.getAid())) return false;
+		//if(!(this.aid == other.getAid())) return false;
+		if(this.publishedTS != null && !this.publishedTS.equals(other.getPublishedTS())) return false;
+		//if(!(this.publishedTS == other.getPublishedTS())) return false;
+		if(this.subscribedToTS != null && !this.subscribedToTS.equals(other.getSubscribedToTS())) return false;
+		//if(!(this.subscribedToTS == other.getSubscribedToTS())) return false;
 		
 		//Nothing has returned false, therefore they are equal
 		return true;

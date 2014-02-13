@@ -2,19 +2,15 @@ package TestTrace;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.Semaphore;
-import java.util.logging.Logger;
 
 import org.apache.log4j.Level;
-import org.apache.qpid.transport.MessageTransfer;
 
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.BaseAgent;
 import es.upv.dsic.gti_ia.core.TraceEvent;
 import es.upv.dsic.gti_ia.trace.TraceInteract;
-import es.upv.dsic.gti_ia.trace.TraceManager;
 import es.upv.dsic.gti_ia.trace.TraceMask;
 import es.upv.dsic.gti_ia.trace.exception.TraceServiceNotAllowedException;
 
@@ -448,6 +444,16 @@ public class CommandedAgent extends BaseAgent {
 
 	public synchronized ArrayList<ACLMessage> getReceivedMessages() {
 		return messagesReceived;
+	}
+	
+	public synchronized boolean emptyReceivedMessages() {
+		return messagesReceived.size() == 0;
+	}
+	
+	public synchronized ACLMessage popReceivedMessages() {
+		ACLMessage msg = messagesReceived.get(messagesReceived.size()-1);
+		messagesReceived.remove(messagesReceived.size()-1);
+		return msg;
 	}
 
 	public synchronized void clearReceivedMessages() {
