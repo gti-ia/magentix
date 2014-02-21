@@ -32,10 +32,6 @@
 			<name>Javi Palanca</name>
 			<email>jpalanca@dsic.upv.es</email>
 		</contributor>
-		<contributor>
-			<name>Jose Manuel Mejias Rodriguez</name>
-			<email>jmejias@dsic.upv.es</email>
-		</contributor>
 
 
 	</contributors>
@@ -124,7 +120,7 @@
 				</configuration>
 			</plugin>
 
-
+			
 		</plugins>
 	</reporting>
 
@@ -163,14 +159,13 @@
 					</dependency>
 				</dependencies>
 				<configuration>
-					<formats>
-						<format>xml</format>
-					</formats>
-					<argLine>-Xms128M -Xmx6144M -XX:MaxPermSize=512M
-						-XX:MaxHeapSize=2048m</argLine><!---XX:PermSize=128M</argLine -->
-					<forkMode>pertest</forkMode>
-					<!--threadCount>1</threadCount -->
-					<runOrder>alphabetical</runOrder>
+				    <formats>
+				    	<format>xml</format>
+				    </formats>  
+				    <argLine>-Xms128M -Xmx6144M -XX:MaxPermSize=512M -XX:MaxHeapSize=2048m</argLine><!---XX:PermSize=128M</argLine-->
+				    <forkMode>pertest</forkMode>
+				    <!--threadCount>1</threadCount-->
+				    <runOrder>alphabetical</runOrder>
 				</configuration>
 			</plugin>
 
@@ -178,14 +173,19 @@
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>javacc-maven-plugin</artifactId>
 				<version>2.6</version>
-				<!-- <executions> <execution> <id>javacc</id> <goals> <goal>javacc</goal> 
-					</goals> -->
-				<configuration>
-					<sourceDirectory>src/main/java/es/upv/dsic/gti_ia/norms
-					</sourceDirectory>
-					<outputDirectory>src/main/java/</outputDirectory>
-				</configuration>
-				<!-- </execution> </executions> -->
+				<!-- <executions>
+					<execution>
+						<id>javacc</id>
+						<goals>
+							<goal>javacc</goal>
+						</goals>-->
+						<configuration>
+							<sourceDirectory>src/main/java/es/upv/dsic/gti_ia/norms
+							</sourceDirectory>
+							<outputDirectory>src/main/java/</outputDirectory>
+						</configuration>
+				<!-- 	</execution>
+				</executions>-->
 			</plugin>
 
 		</plugins>
@@ -234,12 +234,6 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-nop</artifactId>
 			<version>1.5.8</version>
-			<exclusions>
-				<exclusion>
-					<artifactId>slf4j-api</artifactId>
-					<groupId>org.slf4j</groupId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 
 		<dependency>
@@ -275,27 +269,11 @@
 			<groupId>com.hp.hpl.jena</groupId>
 			<artifactId>jena</artifactId>
 			<version>2.6.4</version>
-			<exclusions>
-				<exclusion>
-					<artifactId>slf4j-api</artifactId>
-					<groupId>org.slf4j</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>slf4j-log4j12</artifactId>
-					<groupId>org.slf4j</groupId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>com.hp.hpl.jena</groupId>
 			<artifactId>arq</artifactId>
 			<version>2.8.7</version>
-			<exclusions>
-				<exclusion>
-					<artifactId>slf4j-api</artifactId>
-					<groupId>org.slf4j</groupId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>com.hp.hpl.jena</groupId>
@@ -330,18 +308,6 @@
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-jci-core</artifactId>
 			<version>1.0</version>
-
-			<exclusions>
-				<exclusion>
-					<groupId>org.slf4j</groupId>
-					<artifactId>slf4j-log4j12</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>log4j</groupId>
-					<artifactId>log4j</artifactId>
-				</exclusion>
-			</exclusions>
-
 		</dependency>
 
 		<dependency>
@@ -358,74 +324,30 @@
 			<groupId>org.apache</groupId>
 			<artifactId>commons-collections</artifactId>
 			<version>3.2</version>
-
-			<exclusions>
-				<exclusion>
-					<groupId>org.slf4j</groupId>
-					<artifactId>slf4j-log4j12</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>log4j</groupId>
-					<artifactId>log4j</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 
-		<!--dependency> <groupId>org.apache</groupId> <artifactId>qpid-client-seguridad</artifactId> 
-			<version>0.7</version> <scope>compile</scope> </dependency> <dependency> 
-			<groupId>org.apache</groupId> <artifactId>qpid-common-seguridad</artifactId> 
-			<version>0.7</version> </dependency -->
+		<!--dependency>
+			<groupId>org.apache</groupId>
+			<artifactId>qpid-client-seguridad</artifactId>
+			<version>0.7</version>
+			<scope>compile</scope>
+		</dependency>
 		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-			<version>3.2.1</version>
+			<groupId>org.apache</groupId>
+			<artifactId>qpid-common-seguridad</artifactId>
+			<version>0.7</version>
+		</dependency-->
 
-			<exclusions>
-				<exclusion>
-					<groupId>org.slf4j</groupId>
-					<artifactId>slf4j-log4j12</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>log4j</groupId>
-					<artifactId>log4j</artifactId>
-				</exclusion>
-			</exclusions>
-
-		</dependency>
 		<dependency>
 			<groupId>org.apache</groupId>
 			<artifactId>qpid-client</artifactId>
 			<version>0.20</version>
 			<scope>compile</scope>
-
-			<exclusions>
-				<exclusion>
-					<groupId>org.slf4j</groupId>
-					<artifactId>slf4j-log4j12</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>log4j</groupId>
-					<artifactId>log4j</artifactId>
-				</exclusion>
-			</exclusions>
-
 		</dependency>
 		<dependency>
 			<groupId>org.apache</groupId>
 			<artifactId>qpid-common</artifactId>
 			<version>0.10</version>
-
-			<exclusions>
-				<exclusion>
-					<groupId>org.slf4j</groupId>
-					<artifactId>slf4j-log4j12</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>log4j</groupId>
-					<artifactId>log4j</artifactId>
-				</exclusion>
-			</exclusions>
-
 		</dependency>
 
 
@@ -433,52 +355,16 @@
 			<groupId>org.apache.rampart</groupId>
 			<artifactId>rampart-core</artifactId>
 			<version>1.4</version>
-
-			<exclusions>
-				<exclusion>
-					<groupId>org.slf4j</groupId>
-					<artifactId>slf4j-log4j12</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>log4j</groupId>
-					<artifactId>log4j</artifactId>
-				</exclusion>
-			</exclusions>
-
 		</dependency>
 		<dependency>
 			<groupId>org.apache.rampart</groupId>
 			<artifactId>rampart-policy</artifactId>
 			<version>1.4</version>
-
-			<exclusions>
-				<exclusion>
-					<groupId>org.slf4j</groupId>
-					<artifactId>slf4j-log4j12</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>log4j</groupId>
-					<artifactId>log4j</artifactId>
-				</exclusion>
-			</exclusions>
-
 		</dependency>
 		<dependency>
 			<groupId>org.apache.rampart</groupId>
 			<artifactId>rampart-trust</artifactId>
 			<version>1.4</version>
-
-			<exclusions>
-				<exclusion>
-					<groupId>org.slf4j</groupId>
-					<artifactId>slf4j-log4j12</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>log4j</groupId>
-					<artifactId>log4j</artifactId>
-				</exclusion>
-			</exclusions>
-			
 		</dependency>
 		<dependency>
 			<groupId>jason</groupId>
