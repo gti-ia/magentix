@@ -120,7 +120,7 @@
 				</configuration>
 			</plugin>
 
-			
+
 		</plugins>
 	</reporting>
 
@@ -159,13 +159,14 @@
 					</dependency>
 				</dependencies>
 				<configuration>
-				    <formats>
-				    	<format>xml</format>
-				    </formats>  
-				    <argLine>-Xms128M -Xmx6144M -XX:MaxPermSize=512M -XX:MaxHeapSize=2048m</argLine><!---XX:PermSize=128M</argLine-->
-				    <forkMode>pertest</forkMode>
-				    <!--threadCount>1</threadCount-->
-				    <runOrder>alphabetical</runOrder>
+					<formats>
+						<format>xml</format>
+					</formats>
+					<argLine>-Xms128M -Xmx6144M -XX:MaxPermSize=512M
+						-XX:MaxHeapSize=2048m</argLine><!---XX:PermSize=128M</argLine -->
+					<forkMode>pertest</forkMode>
+					<!--threadCount>1</threadCount -->
+					<runOrder>alphabetical</runOrder>
 				</configuration>
 			</plugin>
 
@@ -173,19 +174,14 @@
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>javacc-maven-plugin</artifactId>
 				<version>2.6</version>
-				<!-- <executions>
-					<execution>
-						<id>javacc</id>
-						<goals>
-							<goal>javacc</goal>
-						</goals>-->
-						<configuration>
-							<sourceDirectory>src/main/java/es/upv/dsic/gti_ia/norms
-							</sourceDirectory>
-							<outputDirectory>src/main/java/</outputDirectory>
-						</configuration>
-				<!-- 	</execution>
-				</executions>-->
+				<!-- <executions> <execution> <id>javacc</id> <goals> <goal>javacc</goal> 
+					</goals> -->
+				<configuration>
+					<sourceDirectory>src/main/java/es/upv/dsic/gti_ia/norms
+					</sourceDirectory>
+					<outputDirectory>src/main/java/</outputDirectory>
+				</configuration>
+				<!-- </execution> </executions> -->
 			</plugin>
 
 		</plugins>
@@ -242,7 +238,12 @@
 			<version>1.6.0_14</version>
 		</dependency>
 
-
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.2.1</version>
+		</dependency>
+		
 		<dependency>
 			<groupId>org.mozilla</groupId>
 			<artifactId>jss</artifactId>
@@ -326,17 +327,10 @@
 			<version>3.2</version>
 		</dependency>
 
-		<!--dependency>
-			<groupId>org.apache</groupId>
-			<artifactId>qpid-client-seguridad</artifactId>
-			<version>0.7</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.apache</groupId>
-			<artifactId>qpid-common-seguridad</artifactId>
-			<version>0.7</version>
-		</dependency-->
+		<!--dependency> <groupId>org.apache</groupId> <artifactId>qpid-client-seguridad</artifactId> 
+			<version>0.7</version> <scope>compile</scope> </dependency> <dependency> 
+			<groupId>org.apache</groupId> <artifactId>qpid-common-seguridad</artifactId> 
+			<version>0.7</version> </dependency -->
 
 		<dependency>
 			<groupId>org.apache</groupId>
