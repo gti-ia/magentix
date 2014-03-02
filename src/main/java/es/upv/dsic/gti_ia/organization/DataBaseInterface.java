@@ -1734,7 +1734,7 @@ public class DataBaseInterface {
 			if (close)
 				connection.commit();
 			
-			return unitName + " + jointed to " + parentUnitName;
+			return unitName + " joined to " + parentUnitName;
 
 		} catch(BatchUpdateException b) {                
 

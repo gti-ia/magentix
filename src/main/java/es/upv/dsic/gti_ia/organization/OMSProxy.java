@@ -1471,8 +1471,10 @@ public class OMSProxy extends THOMASProxy {
 		} catch (MySQLException e) {
 
 			throw e;
-		}
-		catch (THOMASException e) {
+		} catch (ForbiddenNormException e) {
+			
+			throw e;
+		} catch (THOMASException e) {
 
 			e.printStackTrace();
 			return null;
@@ -1555,13 +1557,13 @@ public class OMSProxy extends THOMASProxy {
 		} catch (SameAgentNameException e) {
 
 			throw e;
-		}
-		catch (NotValidIdentifierException e) {
+		} catch (NotValidIdentifierException e) {
 
 			throw e;
 		} catch (ForbiddenNormException e) {
+			
 			throw e;
-		}catch (THOMASException e) {
+		} catch (THOMASException e) {
 
 			e.printStackTrace();
 			return null;

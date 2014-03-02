@@ -129,7 +129,7 @@ public class TestJoinUnit extends TestCase {
 		    
 			count1 = dbA.countQuery("SELECT * FROM unitHierarchy");
 			
-		    assertTrue(result.equals(unit+ " + jointed to " +unitParent) && operation1 && count1==4);
+		    assertTrue(result.equals(unit+ " joined to " +unitParent) && operation1 && count1==4);
 
 		} catch(InvocationTargetException e) {
 			
