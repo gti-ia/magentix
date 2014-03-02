@@ -1,8 +1,5 @@
 package TestOMS;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-
 import junit.framework.TestCase;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
@@ -12,7 +9,7 @@ import es.upv.dsic.gti_ia.organization.SF;
 import es.upv.dsic.gti_ia.organization.exception.THOMASException;
 
 
-public class TestJointUnit extends TestCase {
+public class TestJoinUnit extends TestCase {
 
 	OMSProxy omsProxy = null;
 	DatabaseAccess dbA = null;
@@ -98,7 +95,7 @@ public class TestJointUnit extends TestCase {
 
 	}
 
-	public void testJointUnit1a()
+	public void testJoinUnit1a()
 	{
 		try
 		{
@@ -161,12 +158,12 @@ public class TestJointUnit extends TestCase {
 			
 			
 			String result = omsProxy.joinUnit(unit, unit3);
-			assertEquals("El mensaje debe ser el siguiente:", unit+ " + jointed to "+unit3, result);
+			assertEquals("El mensaje debe ser el siguiente:", unit+ " joined to "+unit3, result);
 			
 			
 			
 			result = omsProxy.joinUnit(unit2, unit3);
-			assertEquals("El mensaje debe ser el siguiente:", unit2+ " + jointed to "+unit3, result);
+			assertEquals("El mensaje debe ser el siguiente:", unit2+ " joined to "+unit3, result);
 			
 			
 
@@ -186,7 +183,7 @@ public class TestJointUnit extends TestCase {
 		}
 	}
 	
-	public void testJointUnit1b()
+	public void testJoinUnit1b()
 	{
 		try
 		{
@@ -249,12 +246,12 @@ public class TestJointUnit extends TestCase {
 			
 			
 			String result = omsProxy.joinUnit(unit, unit2);
-			assertEquals("El mensaje debe ser el siguiente:", unit+ " + jointed to "+unit2, result);
+			assertEquals("El mensaje debe ser el siguiente:", unit+ " joined to "+unit2, result);
 			
 			
 			
 			result = omsProxy.joinUnit(unit3, unit2);
-			assertEquals("El mensaje debe ser el siguiente:", unit3+ " + jointed to "+unit2, result);
+			assertEquals("El mensaje debe ser el siguiente:", unit3+ " joined to "+unit2, result);
 			
 			
 
@@ -273,7 +270,7 @@ public class TestJointUnit extends TestCase {
 			fail(e.getMessage());
 		}
 	}
-	public void testJointUnit1c()
+	public void testJoinUnit1c()
 	{
 		try
 		{
@@ -336,12 +333,12 @@ public class TestJointUnit extends TestCase {
 			
 			
 			String result = omsProxy.joinUnit(unit3, unit);
-			assertEquals("El mensaje debe ser el siguiente:", unit3+ " + jointed to "+unit, result);
+			assertEquals("El mensaje debe ser el siguiente:", unit3+ " joined to "+unit, result);
 			
 			
 			
 			result = omsProxy.joinUnit(unit2, unit);
-			assertEquals("El mensaje debe ser el siguiente:", unit2+ " + jointed to "+unit, result);
+			assertEquals("El mensaje debe ser el siguiente:", unit2+ " joined to "+unit, result);
 			
 			
 
@@ -362,7 +359,7 @@ public class TestJointUnit extends TestCase {
 	}
 	
 	
-	public void testJointUnit2()
+	public void testJoinUnit2()
 	{
 		try
 		{
@@ -469,21 +466,21 @@ public class TestJointUnit extends TestCase {
 			
 			
 			String result = omsProxy.joinUnit(unitEquipo2, unitJerarquia);
-			assertEquals("El mensaje debe ser el siguiente:", unitEquipo2+ " + jointed to "+unitJerarquia, result);
+			assertEquals("El mensaje debe ser el siguiente:", unitEquipo2+ " joined to "+unitJerarquia, result);
 			
 			
 			
 			result = omsProxy.joinUnit(unitJerarquia2, unitEquipo);
-			assertEquals("El mensaje debe ser el siguiente:", unitJerarquia2+ " + jointed to "+unitEquipo, result);
+			assertEquals("El mensaje debe ser el siguiente:", unitJerarquia2+ " joined to "+unitEquipo, result);
 			
 			result = omsProxy.joinUnit(unitPlana2, unitEquipo);
-			assertEquals("El mensaje debe ser el siguiente:", unitPlana2+ " + jointed to "+unitEquipo, result);
+			assertEquals("El mensaje debe ser el siguiente:", unitPlana2+ " joined to "+unitEquipo, result);
 			
 			result = omsProxy.joinUnit(unitPlana, unitJerarquia);
-			assertEquals("El mensaje debe ser el siguiente:", unitPlana+ " + jointed to "+unitJerarquia, result);
+			assertEquals("El mensaje debe ser el siguiente:", unitPlana+ " joined to "+unitJerarquia, result);
 			
 			result = omsProxy.joinUnit(unitEquipo, unitJerarquia);
-			assertEquals("El mensaje debe ser el siguiente:", unitEquipo+ " + jointed to "+unitJerarquia, result);
+			assertEquals("El mensaje debe ser el siguiente:", unitEquipo+ " joined to "+unitJerarquia, result);
 			
 			
 

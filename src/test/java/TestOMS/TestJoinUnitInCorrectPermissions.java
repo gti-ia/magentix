@@ -1,8 +1,5 @@
 package TestOMS;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-
 import junit.framework.TestCase;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
@@ -14,7 +11,7 @@ import es.upv.dsic.gti_ia.organization.exception.NotCreatorInParentUnitException
 import es.upv.dsic.gti_ia.organization.exception.NotCreatorInUnitException;
 
 
-public class TestJointUnitInCorrectPermissions extends TestCase {
+public class TestJoinUnitInCorrectPermissions extends TestCase {
 
 	OMSProxy omsProxy = null;
 	DatabaseAccess dbA = null;
@@ -157,7 +154,7 @@ public class TestJointUnitInCorrectPermissions extends TestCase {
 	}
 
 	
-	public void testJointUnit1()
+	public void testjoinUnit1()
 	{
 		
 
@@ -208,7 +205,7 @@ public class TestJointUnitInCorrectPermissions extends TestCase {
 
 	}		
 	
-	public void testJointUnit2()
+	public void testjoinUnit2()
 	{
 		
 
@@ -270,7 +267,7 @@ public class TestJointUnitInCorrectPermissions extends TestCase {
 	
 	//TODO Puede que salte la de que no es creador en la unidad hija o en la unidad padre, las dos son validas,
 	//dependiendo de cual sea la primer comprobación.
-	public void testJointUnit3()
+	public void testjoinUnit3()
 	{
 		
 
@@ -330,7 +327,7 @@ public class TestJointUnitInCorrectPermissions extends TestCase {
 	}	
 	
 	
-	public void testJointUnit4()
+	public void testjoinUnit4()
 	{
 		
 

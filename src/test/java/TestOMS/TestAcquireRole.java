@@ -8,10 +8,6 @@ import es.upv.dsic.gti_ia.organization.OMSProxy;
 import es.upv.dsic.gti_ia.organization.SF;
 import es.upv.dsic.gti_ia.organization.exception.THOMASException;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-
-
 public class TestAcquireRole extends TestCase {
 
 	OMSProxy omsProxy = null;

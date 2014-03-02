@@ -1,8 +1,5 @@
 package TestOMS;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-
 import junit.framework.TestCase;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
@@ -99,7 +96,7 @@ public class TestDeAllocateRole extends TestCase {
 
 	}
 
-	public void testDeAllocateRole1()
+	public void testDeallocateRole1()
 	{
 		try
 		{
@@ -160,7 +157,7 @@ public class TestDeAllocateRole extends TestCase {
 		}
 	}
 	
-	public void testAllocateRole2a()
+	public void testDeallocateRole2a()
 	{
 		try
 		{
@@ -246,7 +243,7 @@ public class TestDeAllocateRole extends TestCase {
 		}
 	}
 	
-	public void testAllocateRole2b()
+	public void testDeallocateRole2b()
 	{
 		try
 		{
@@ -332,7 +329,7 @@ public class TestDeAllocateRole extends TestCase {
 		}
 	}
 	
-	public void testAllocateRole2c()
+	public void testDeallocateRole2c()
 	{
 		try
 		{
@@ -417,7 +414,7 @@ public class TestDeAllocateRole extends TestCase {
 		}
 	}
 	
-	public void testAllocateRole2d()
+	public void testDeallocateRole2d()
 	{
 		try
 		{
@@ -503,7 +500,7 @@ public class TestDeAllocateRole extends TestCase {
 		}
 	}
 	
-	public void testAllocateRole3a()
+	public void testDeallocateRole3a()
 	{
 		try
 		{
@@ -579,7 +576,7 @@ public class TestDeAllocateRole extends TestCase {
 		}
 	}
 	
-	public void testAllocateRole3b()
+	public void testDeallocateRole3b()
 	{
 		try
 		{
@@ -655,7 +652,7 @@ public class TestDeAllocateRole extends TestCase {
 		}
 	}
 	
-	public void testAllocateRole4a()
+	public void testDeallocateRole4a()
 	{
 		try
 		{
@@ -746,7 +743,7 @@ public class TestDeAllocateRole extends TestCase {
 		}
 	}
 	
-	public void testAllocateRole4b()
+	public void testDeallocateRole4b()
 	{
 		try
 		{
@@ -836,7 +833,7 @@ public class TestDeAllocateRole extends TestCase {
 		}
 	}
 	
-	public void testAllocateRole5()
+	public void testDeallocateRole5()
 	{
 		try
 		{

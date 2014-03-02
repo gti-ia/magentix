@@ -1,8 +1,5 @@
 package TestOMS;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-
 import junit.framework.TestCase;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
@@ -112,7 +109,7 @@ public class TestAllocateRole extends TestCase {
 					"('miembro',(SELECT idunitList FROM unitList WHERE unitName = 'virtual'),"+
 					"(SELECT idposition FROM position WHERE positionName = 'member'), "+
 					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
-			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
+					"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 		
 			
 			/**-----------

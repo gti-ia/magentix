@@ -1,8 +1,5 @@
 package TestOMS;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-
 import junit.framework.TestCase;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
@@ -16,7 +13,7 @@ import es.upv.dsic.gti_ia.organization.exception.UnitNotExistsException;
 import es.upv.dsic.gti_ia.organization.exception.VirtualParentException;
 
 
-public class TestJointUnitInCorrectParam extends TestCase {
+public class TestJoinUnitInCorrectParam extends TestCase {
 
 	OMSProxy omsProxy = null;
 	DatabaseAccess dbA = null;
@@ -145,7 +142,7 @@ public class TestJointUnitInCorrectParam extends TestCase {
 
 	}
 
-	public void testJointUnit2()
+	public void testJoinUnit2()
 	{
 		try
 		{
@@ -202,7 +199,7 @@ public class TestJointUnitInCorrectParam extends TestCase {
 		}
 
 	}
-	public void testJointUnit3()
+	public void testJoinUnit3()
 	{
 		try
 		{
@@ -224,7 +221,7 @@ public class TestJointUnitInCorrectParam extends TestCase {
 
 	}
 	
-	public void testJointUnit4()
+	public void testjoinUnit4()
 	{
 		try
 		{
@@ -246,7 +243,7 @@ public class TestJointUnitInCorrectParam extends TestCase {
 
 	}
 	
-	public void testJointUnit5()
+	public void testjoinUnit5()
 	{
 		try
 		{
@@ -268,7 +265,7 @@ public class TestJointUnitInCorrectParam extends TestCase {
 
 	}
 	
-	public void testJointUnit6()
+	public void testjoinUnit6()
 	{
 		try
 		{
@@ -290,7 +287,7 @@ public class TestJointUnitInCorrectParam extends TestCase {
 
 	}
 	
-	public void testJointUnit7()
+	public void testjoinUnit7()
 	{
 		try
 		{
@@ -312,7 +309,7 @@ public class TestJointUnitInCorrectParam extends TestCase {
 
 	}
 	
-	public void testJointUnit8()
+	public void testjoinUnit8()
 	{
 		try
 		{
@@ -334,7 +331,7 @@ public class TestJointUnitInCorrectParam extends TestCase {
 
 	}
 	
-	public void testJointUnit9()
+	public void testjoinUnit9()
 	{
 		try
 		{
