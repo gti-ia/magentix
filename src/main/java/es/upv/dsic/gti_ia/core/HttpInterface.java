@@ -1,27 +1,29 @@
 package es.upv.dsic.gti_ia.core;
 
-import es.upv.dsic.gti_ia.core.ACLMessage;
-import es.upv.dsic.gti_ia.core.AgentID;
-import es.upv.dsic.gti_ia.core.AgentsConnection;
-import es.upv.dsic.gti_ia.core.SingleAgent;
-import es.upv.dsic.gti_ia.organization.Configuration;
-import jason.stdlib.foreach;
-
-import java.net.*;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Map.Entry;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.regex.Pattern;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.log4j.xml.DOMConfigurator;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver;
+
+import es.upv.dsic.gti_ia.organization.Configuration;
 
 /**
  * 
@@ -29,8 +31,9 @@ import com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver;
  * @author Pedro Perez Sanchez
  */
 public class HttpInterface {
-
+	private boolean active;
 	static int http_port;
+	private ServerSocket skServidor;
 	private static ServerAgent interfaceAgent;
 	Configuration configuration = Configuration.getConfiguration();
 
@@ -60,7 +63,7 @@ public class HttpInterface {
 			public String content;
 
 			public static JSONMessage fromString(String jsonString) {
-				
+
 				XStream xstream = new XStream(new JettisonMappedXmlDriver());
 				xstream.alias("jsonObject", JSONMessage.class);
 				JSONMessage jsonMessage = (JSONMessage) xstream
@@ -81,6 +84,7 @@ public class HttpInterface {
 															// to respond, given
 															// the conversation
 															// ID
+		private boolean active; // stores whether the agent is active or not
 
 		/**
 		 * Creates a new ServerAgent
@@ -92,6 +96,7 @@ public class HttpInterface {
 			super(aid);
 			sockets = new LinkedBlockingQueue<Socket>();
 			socketOfConversation = new HashMap<String, Socket>();
+			active = true;
 		}
 
 		/**
@@ -112,7 +117,7 @@ public class HttpInterface {
 			JSONMessage jsonMessage; // content converted to a json object
 			ACLMessage request; // content converted to an ACL Message
 			byte[] response; // HTTP response to be sent to the client
-			while (true) {
+			while (active) {
 				try {
 					socket = sockets.take();
 					is = socket.getInputStream();
@@ -187,6 +192,32 @@ public class HttpInterface {
 			}
 		}
 
+		public void shutdown() {
+
+			active = false;
+
+			try {
+				for (Socket s : sockets) {
+					s.close();
+					sockets.remove(s);
+				}
+				Iterator<Entry<String, Socket>> it = socketOfConversation
+						.entrySet().iterator();
+				while (it.hasNext()) {
+
+					Map.Entry<String, Socket> e = (Map.Entry<String, Socket>) it
+							.next();
+					e.getValue().close();
+
+					socketOfConversation.remove(e.getKey());
+				}
+			} catch (IOException ex) {
+				Logger.getLogger(HttpInterface.class.getName()).log(
+						Level.SEVERE, null, ex);
+			}
+
+		}
+
 		public void onMessage(ACLMessage msg) {
 			logger.info("InterfaceAgent: HTTP Response to send: "
 					+ msg.getContent());
@@ -213,13 +244,13 @@ public class HttpInterface {
 					new InputStreamReader(is));
 			String header;
 			header = reader.readLine();
-			while (header != null && header.indexOf("Content-Length:") != 0 ) { // header
-																					// =
-																					// Content-Length
-																					// HTTP
-				System.out.println(header);																	// header
+			while (header != null && header.indexOf("Content-Length:") != 0) { // header
+																				// =
+																				// Content-Length
+																				// HTTP
+				System.out.println(header); // header
 				header = reader.readLine();
-				
+
 			}
 			Matcher intInHeader = Pattern.compile("\\d+").matcher(header);
 			intInHeader.find(); // first int found in header
@@ -264,6 +295,7 @@ public class HttpInterface {
 	 */
 	public HttpInterface() {
 		http_port = configuration.getHttpInterfacepPort();
+		active = true;
 	}
 
 	/**
@@ -274,20 +306,19 @@ public class HttpInterface {
 	 */
 	public HttpInterface(int http_port) {
 		HttpInterface.http_port = http_port;
+		active = true;
 	}
 
 	public void execute() {
 		try {
-			ServerSocket skServidor = new ServerSocket(http_port);
-			System.out
-					.println("HTTPInterface service started. Listening on port "
-							+ http_port);
+			skServidor = new ServerSocket(http_port);
+			System.out.println("HTTPInterface service started. Listening on port " + http_port);
 			DOMConfigurator.configure("configuration/loggin.xml");
 			AgentsConnection.connect();
 			interfaceAgent = new ServerAgent(new AgentID("interfaceAgent"));
 			interfaceAgent.start();
 
-			while (true) {
+			while (active) {
 				Socket skCliente = skServidor.accept();
 				try {
 					interfaceAgent.addSocket(skCliente);
@@ -299,5 +330,19 @@ public class HttpInterface {
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
+	}
+
+	public void shutdown() {
+		interfaceAgent.shutdown();
+		active = false;
+		try {
+			skServidor.close();
+			System.out.println("HTTPInterface service killed on port "+ http_port);
+
+		} catch (IOException ex) {
+			Logger.getLogger(HttpInterface.class.getName()).log(
+					Level.SEVERE, null, ex);
+		}
+
 	}
 }
