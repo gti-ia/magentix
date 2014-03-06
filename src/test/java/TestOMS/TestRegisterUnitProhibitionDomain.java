@@ -1,10 +1,6 @@
 package TestOMS;
 
 import static org.junit.Assert.*;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -297,7 +293,7 @@ public class TestRegisterUnitProhibitionDomain {
 				"'registerUnit' AND numParams = 5), '_')");
 		//----------------------------------------------------------------------------------------------------------------//
 			
-		String result = omsProxy.registerUnit("plana", "flat", "jerarquia","creador");
+		omsProxy.registerUnit("plana", "flat", "jerarquia","creador");
 		
 		fail("Should have return an exception, product of a unit register not allowed.");
 		

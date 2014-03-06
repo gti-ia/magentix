@@ -2,9 +2,6 @@ package TestOMS;
 
 import static org.junit.Assert.fail;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -155,7 +152,7 @@ public class TestDeregisterUnitProhibitionDomain {
 			
 		omsProxy.deregisterUnit("plana2");
 		
-		fail("Should have return an exception, product of a unit deregister not allowed.");
+		fail("Should have return an exception, product of a deregisterUnit not allowed.");
 		
 	}
 	
@@ -206,7 +203,7 @@ public class TestDeregisterUnitProhibitionDomain {
 			
 		omsProxy.deregisterUnit("equipo2");
 		
-		fail("Should have return an exception, product of a unit deregister not allowed.");
+		fail("Should have return an exception, product of a deregisterUnit not allowed.");
 		
 	}
 	
@@ -271,7 +268,7 @@ public class TestDeregisterUnitProhibitionDomain {
 			
 		omsProxy.deregisterUnit("jerarquia2");
 		
-		fail("Should have return an exception, product of a unit deregister not allowed.");
+		fail("Should have return an exception, product of a deregisterUnit not allowed.");
 		
 	}
 }

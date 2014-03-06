@@ -1,7 +1,4 @@
-	package TestOMS;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+package TestOMS;
 
 import junit.framework.TestCase;
 import es.upv.dsic.gti_ia.core.AgentID;

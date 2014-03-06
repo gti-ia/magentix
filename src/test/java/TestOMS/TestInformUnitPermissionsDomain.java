@@ -1,6 +1,8 @@
 package TestOMS;
 
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertEquals;
+
+import java.util.ArrayList;
 
 import org.junit.After;
 import org.junit.Before;
@@ -11,20 +13,20 @@ import es.upv.dsic.gti_ia.core.AgentsConnection;
 import es.upv.dsic.gti_ia.organization.OMS;
 import es.upv.dsic.gti_ia.organization.OMSProxy;
 import es.upv.dsic.gti_ia.organization.SF;
-import es.upv.dsic.gti_ia.organization.exception.ForbiddenNormException;
 
 /** 
  * @author Jose Alemany Bordera  -  jalemany1@dsic.upv.es
  * 
  */
 
-public class TestDeregisterRoleProhibitionDomain {
+public class TestInformUnitPermissionsDomain {
 
 	OMSProxy omsProxy = null;
 	DatabaseAccess dbA = null;
 
-	Agent agent = null;
 
+	Agent agent = null;
+	
 	OMS oms = null;
 	SF sf = null;
 	
@@ -42,14 +44,13 @@ public class TestDeregisterRoleProhibitionDomain {
 		dbA.executeSQL("DELETE FROM roleList WHERE idroleList != 1");
 		dbA.executeSQL("DELETE FROM unitHierarchy WHERE idChildUnit != 1");
 		dbA.executeSQL("DELETE FROM unitList WHERE idunitList != 1");
-
-
+		
+		
 		dbA = null;
 		omsProxy = null;
 
 		agent.terminate();
 		agent = null;
-
 
 		oms.Shutdown();
 		sf.Shutdown();
@@ -61,15 +62,14 @@ public class TestDeregisterRoleProhibitionDomain {
 		sf = null;
 
 		AgentsConnection.disconnect();
-		qpid_broker.destroy();
-	}
+		qpidManager.UnixQpidManager.stopQpid(qpid_broker);
+	}	
 	
 	@Before
 	public void setUp() throws Exception {
 
 		qpid_broker = qpidManager.UnixQpidManager.startQpid(Runtime.getRuntime(), qpid_broker);
 		
-
 		AgentsConnection.connect();
 
 
@@ -81,6 +81,7 @@ public class TestDeregisterRoleProhibitionDomain {
 		sf.start();
 
 		agent = new Agent(new AgentID("pruebas"));
+
 
 		omsProxy = new OMSProxy(agent);
 
@@ -96,13 +97,13 @@ public class TestDeregisterRoleProhibitionDomain {
 		dbA.executeSQL("DELETE FROM unitList WHERE idunitList != 1");
 
 		//--------------------------------------------//
-
-		dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
 		
+		dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
+
 	}
 	
-	@Test(expected=ForbiddenNormException.class)
-	public void testDeregisterRoleProhibitionDomain1() throws Exception {
+	@Test
+	public void testInformUnitPermissionsDomain1() throws Exception {
 		
 		//------------------------------------------- Test Initialization  -----------------------------------------------//
 		dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('plana',(SELECT idunitType FROM unitType WHERE unitTypeName = 'flat'))");
@@ -117,34 +118,7 @@ public class TestDeregisterRoleProhibitionDomain {
 				"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
 				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
 				"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
-		
-		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES ((SELECT idagentList FROM agentList WHERE "
-				+ "agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT "
-				+ "idunitList FROM unitList WHERE unitName = 'plana'))))");
-		
-		dbA.executeSQL("INSERT INTO normList (idunitList, normName, iddeontic, idtargetType, targetValue, idactionNorm, normContent, normRule) " +
-				"VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'plana'),'prohibidoDeregistrarRol', (SELECT iddeontic FROM deontic WHERE deonticdesc = 'f'), (SELECT idtargetType FROM " +
-				"targetType WHERE targetName = 'agentName'),(SELECT idagentList FROM agentList WHERE agentName = 'pruebas'), (SELECT idactionNorm FROM actionNorm WHERE description = " +
-				"'deregisterRole' AND numParams = 3), '@prohibidoDeregistrarRol[f,<agentName:pruebas>,deregisterRole(_,plana,pruebas),isAgent(pruebas) & playsRole(pruebas,_,plana),_]',"
-				+ "'deregisterRole(_,plana,pruebas):-isAgent(pruebas) & playsRole(pruebas,_,plana)')");
-		dbA.executeSQL("INSERT INTO actionNormParam (idnormList, idactionNorm, value) VALUES ((SELECT idnormList FROM normList WHERE normName = 'prohibidoDeregistrarRol'), (SELECT idactionNorm FROM actionNorm WHERE description = " +
-				"'deregisterRole' AND numParams = 3), '_')");
-		dbA.executeSQL("INSERT INTO actionNormParam (idnormList, idactionNorm, value) VALUES ((SELECT idnormList FROM normList WHERE normName = 'prohibidoDeregistrarRol'), (SELECT idactionNorm FROM actionNorm WHERE description = " +
-				"'deregisterRole' AND numParams = 3), 'plana')");
-		dbA.executeSQL("INSERT INTO actionNormParam (idnormList, idactionNorm, value) VALUES ((SELECT idnormList FROM normList WHERE normName = 'prohibidoDeregistrarRol'), (SELECT idactionNorm FROM actionNorm WHERE description = " +
-				"'deregisterRole' AND numParams = 3), 'pruebas')");
-		//----------------------------------------------------------------------------------------------------------------//
 			
-		omsProxy.deregisterRole("creador","plana");
-		
-		fail("Should have return an exception, product of a deregisterRole not allowed.");
-		
-	}
-	
-	@Test(expected=ForbiddenNormException.class)
-	public void testDeregisterRoleProhibitionDomain2() throws Exception {
-		
-		//------------------------------------------- Test Initialization  -----------------------------------------------//
 		dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('equipo',(SELECT idunitType FROM unitType WHERE unitTypeName = 'team'))");
 		dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'virtual'),(SELECT idunitList FROM unitList WHERE unitName = 'equipo'))");
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
@@ -159,32 +133,39 @@ public class TestDeregisterRoleProhibitionDomain {
 				"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 		
 		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES ((SELECT idagentList FROM agentList WHERE "
-				+ "agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT "
-				+ "idunitList FROM unitList WHERE unitName = 'equipo'))))");
+				+ "agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT "
+				+ "idunitList FROM unitList WHERE unitName = 'plana'))))");
 		
 		dbA.executeSQL("INSERT INTO normList (idunitList, normName, iddeontic, idtargetType, targetValue, idactionNorm, normContent, normRule) " +
-				"VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'equipo'),'prohibidoDeregistrarRol', (SELECT iddeontic FROM deontic WHERE deonticdesc = 'f'), (SELECT idtargetType FROM " +
-				"targetType WHERE targetName = 'agentName'),-1, (SELECT idactionNorm FROM actionNorm WHERE description = " +
-				"'deregisterRole' AND numParams = 3), '@prohibidoDeregistrarRol[f,<agentName:_>,deregisterRole(_,equipo,Agent),isAgent(Agent) & playsRole(Agent,_,equipo),_]',"
-				+ "'deregisterRole(_,equipo,Agent):-isAgent(Agent) & playsRole(Agent,_,equipo)')");
-		dbA.executeSQL("INSERT INTO actionNormParam (idnormList, idactionNorm, value) VALUES ((SELECT idnormList FROM normList WHERE normName = 'prohibidoDeregistrarRol'), (SELECT idactionNorm FROM actionNorm WHERE description = " +
-				"'deregisterRole' AND numParams = 3), '_')");
-		dbA.executeSQL("INSERT INTO actionNormParam (idnormList, idactionNorm, value) VALUES ((SELECT idnormList FROM normList WHERE normName = 'prohibidoDeregistrarRol'), (SELECT idactionNorm FROM actionNorm WHERE description = " +
-				"'deregisterRole' AND numParams = 3), 'equipo')");
-		dbA.executeSQL("INSERT INTO actionNormParam (idnormList, idactionNorm, value) VALUES ((SELECT idnormList FROM normList WHERE normName = 'prohibidoDeregistrarRol'), (SELECT idactionNorm FROM actionNorm WHERE description = " +
-				"'deregisterRole' AND numParams = 3), 'Agent')");
+				"VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'equipo'),'permisoVerInformacionUnidadEquipo', (SELECT iddeontic FROM deontic WHERE deonticdesc = 'p'), (SELECT idtargetType FROM " +
+				"targetType WHERE targetName = 'agentName'), -1, (SELECT idactionNorm FROM actionNorm WHERE description = " +
+				"'informUnit' AND numParams = 2), '@permisoVerInformacionUnidadEquipo[p,<agentName:_>,informUnit(equipo,pruebas),isAgent(pruebas) & playsRole(pruebas,miembro,plana) & isRole(miembro,plana) & hasPosition(miembro,plana,member),_]',"
+				+ "'informUnit(equipo,pruebas):-isAgent(pruebas) & playsRole(pruebas,miembro,plana) & isRole(miembro,plana) & hasPosition(miembro,plana,member)')");
+		dbA.executeSQL("INSERT INTO actionNormParam (idnormList, idactionNorm, value) VALUES ((SELECT idnormList FROM normList WHERE normName = 'permisoVerInformacionUnidadEquipo'), (SELECT idactionNorm FROM actionNorm WHERE description = " +
+				"'informUnit' AND numParams = 2), 'equipo')");
+		dbA.executeSQL("INSERT INTO actionNormParam (idnormList, idactionNorm, value) VALUES ((SELECT idnormList FROM normList WHERE normName = 'permisoVerInformacionUnidadEquipo'), (SELECT idactionNorm FROM actionNorm WHERE description = " +
+				"'informUnit' AND numParams = 2), 'pruebas')");
 		//----------------------------------------------------------------------------------------------------------------//
 			
-		omsProxy.deregisterRole("miembro","equipo");
+		ArrayList<String> result = omsProxy.informUnit("equipo");
 		
-		fail("Should have return an exception, product of a deregisterRole not allowed.");
+		assertEquals("The message should be:", true, result.contains("team"));
+		assertEquals("The message should be:", true, result.contains("virtual"));
 		
 	}
 	
-	@Test(expected=ForbiddenNormException.class)
-	public void testDeregisterRoleProhibitionDomain3() throws Exception {
+	@Test
+	public void testInformUnitPermissionsDomain2() throws Exception {
 		
 		//------------------------------------------- Test Initialization  -----------------------------------------------//
+		dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('plana',(SELECT idunitType FROM unitType WHERE unitTypeName = 'flat'))");
+		dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'virtual'),(SELECT idunitList FROM unitList WHERE unitName = 'plana'))");
+		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
+				"('miembro',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
+				"(SELECT idposition FROM position WHERE positionName = 'member'), "+
+				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
+				"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
+			
 		dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('jerarquia',(SELECT idunitType FROM unitType WHERE unitTypeName = 'hierarchy'))");
 		dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'virtual'),(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))");
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
@@ -195,8 +176,8 @@ public class TestDeregisterRoleProhibitionDomain {
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 				"('jefe',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
 				"(SELECT idposition FROM position WHERE positionName = 'supervisor'), "+
-				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
-				"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
+				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
+				"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 				"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
 				"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
@@ -204,25 +185,24 @@ public class TestDeregisterRoleProhibitionDomain {
 				"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 		
 		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES ((SELECT idagentList FROM agentList WHERE "
-				+ "agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'jefe' AND idunitList = (SELECT "
-				+ "idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
+				+ "agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT "
+				+ "idunitList FROM unitList WHERE unitName = 'plana'))))");
 		
 		dbA.executeSQL("INSERT INTO normList (idunitList, normName, iddeontic, idtargetType, targetValue, idactionNorm, normContent, normRule) " +
-				"VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),'prohibidoDeregistrarRol', (SELECT iddeontic FROM deontic WHERE deonticdesc = 'f'), (SELECT idtargetType FROM " +
-				"targetType WHERE targetName = 'roleName'),(SELECT idroleList FROM roleList WHERE roleName = 'jefe'), (SELECT idactionNorm FROM actionNorm WHERE description = " +
-				"'deregisterRole' AND numParams = 3), '@prohibidoDeregistrarRol[f,<roleName:jefe>,deregisterRole(_,jerarquia,Agent),isAgent(Agent) & playsRole(Agent,Role,jerarquia) & hasPosition(Role,jerarquia,supervisor),_]',"
-				+ "'deregisterRole(_,jerarquia,Agent):-isAgent(Agent) & playsRole(Agent,Role,jerarquia) & hasPosition(Role,jerarquia,supervisor)')");
-		dbA.executeSQL("INSERT INTO actionNormParam (idnormList, idactionNorm, value) VALUES ((SELECT idnormList FROM normList WHERE normName = 'prohibidoDeregistrarRol'), (SELECT idactionNorm FROM actionNorm WHERE description = " +
-				"'deregisterRole' AND numParams = 3), '_')");
-		dbA.executeSQL("INSERT INTO actionNormParam (idnormList, idactionNorm, value) VALUES ((SELECT idnormList FROM normList WHERE normName = 'prohibidoDeregistrarRol'), (SELECT idactionNorm FROM actionNorm WHERE description = " +
-				"'deregisterRole' AND numParams = 3), 'jerarquia')");
-		dbA.executeSQL("INSERT INTO actionNormParam (idnormList, idactionNorm, value) VALUES ((SELECT idnormList FROM normList WHERE normName = 'prohibidoDeregistrarRol'), (SELECT idactionNorm FROM actionNorm WHERE description = " +
-				"'deregisterRole' AND numParams = 3), 'Agent')");
+				"VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),'permisoVerInformacionUnidadJerarquia', (SELECT iddeontic FROM deontic WHERE deonticdesc = 'p'), (SELECT idtargetType FROM " +
+				"targetType WHERE targetName = 'roleName'), (SELECT idroleList FROM roleList WHERE roleName = 'miembro'), (SELECT idactionNorm FROM actionNorm WHERE description = " +
+				"'informUnit' AND numParams = 2), '@permisoVerInformacionUnidadJerarquia[p,<roleName:miembro>,informUnit(jerarquia,Agent),isAgent(Agent) & playsRole(Agent,miembro,plana) & isRole(miembro,plana) & hasPosition(miembro,plana,member),_]',"
+				+ "'informUnit(jerarquia,Agent):-isAgent(Agent) & playsRole(Agent,miembro,plana) & isRole(miembro,plana) & hasPosition(miembro,plana,member)')");
+		dbA.executeSQL("INSERT INTO actionNormParam (idnormList, idactionNorm, value) VALUES ((SELECT idnormList FROM normList WHERE normName = 'permisoVerInformacionUnidadJerarquia'), (SELECT idactionNorm FROM actionNorm WHERE description = " +
+				"'informUnit' AND numParams = 2), 'jerarquia')");
+		dbA.executeSQL("INSERT INTO actionNormParam (idnormList, idactionNorm, value) VALUES ((SELECT idnormList FROM normList WHERE normName = 'permisoVerInformacionUnidadJerarquia'), (SELECT idactionNorm FROM actionNorm WHERE description = " +
+				"'informUnit' AND numParams = 2), 'Agent')");
 		//----------------------------------------------------------------------------------------------------------------//
 			
-		omsProxy.deregisterRole("subordinado","jerarquia");
+		ArrayList<String> result = omsProxy.informUnit("jerarquia");
 		
-		fail("Should have return an exception, product of a deregisterRole not allowed.");
+		assertEquals("The message should be:", true, result.contains("hierarchy"));
+		assertEquals("The message should be:", true, result.contains("virtual"));
 		
 	}
 }

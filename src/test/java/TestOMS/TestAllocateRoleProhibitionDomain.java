@@ -144,7 +144,7 @@ public class TestAllocateRoleProhibitionDomain {
 			
 		omsProxy.allocateRole("miembro","plana","pruebas2");
 			
-		fail("Should have return an exception, product of a unit deregister not allowed.");
+		fail("Should have return an exception, product of a allocateRole not allowed.");
 		
 	}
 	
@@ -190,7 +190,7 @@ public class TestAllocateRoleProhibitionDomain {
 			
 		omsProxy.allocateRole("miembro","equipo","pruebas2");
 		
-		fail("Should have return an exception, product of a unit deregister not allowed.");
+		fail("Should have return an exception, product of a allocateRole not allowed.");
 		
 	}
 	
@@ -237,7 +237,7 @@ public class TestAllocateRoleProhibitionDomain {
 			
 		omsProxy.allocateRole("subordinado","jerarquia","pruebas2");
 		
-		fail("Should have return an exception, product of a unit deregister not allowed.");
+		fail("Should have return an exception, product of a allocateRole not allowed.");
 		
 	}
 }

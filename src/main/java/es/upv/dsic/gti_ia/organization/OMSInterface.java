@@ -2287,7 +2287,7 @@ public class OMSInterface {
 						// norms ----------------------
 						// --------------------------------------------------------------------------------
 
-						if (!checkPermitNorms(AgentName, UnitName, "quantityMembers("+UnitName.toLowerCase()+","+RoleName.toLowerCase()+","+PositionValue.toLowerCase()+","+AgentName.toLowerCase()+")"))
+						if (!checkPermitNorms(AgentName, UnitName, "informQuantityMembers("+UnitName.toLowerCase()+","+RoleName.toLowerCase()+","+PositionValue.toLowerCase()+","+AgentName.toLowerCase()+")"))
 						{
 
 							// --------------------------------------------------------------------------------
@@ -2295,7 +2295,7 @@ public class OMSInterface {
 							// ----------------------------
 							// --------------------------------------------------------------------------------
 
-							if (checkFordibbenNorms(AgentName, UnitName, "quantityMembers("+UnitName.toLowerCase()+","+RoleName.toLowerCase()+","+PositionValue.toLowerCase()+","+AgentName.toLowerCase()+")"))
+							if (checkFordibbenNorms(AgentName, UnitName, "informQuantityMembers("+UnitName.toLowerCase()+","+RoleName.toLowerCase()+","+PositionValue.toLowerCase()+","+AgentName.toLowerCase()+")"))
 							{
 								String message = l10n.getMessage(MessageID.FORBIDDEN_NORM);
 								throw new ForbiddenNormException(message);

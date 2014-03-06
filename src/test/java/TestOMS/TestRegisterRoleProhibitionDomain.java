@@ -1,10 +1,6 @@
 package TestOMS;
 
 import static org.junit.Assert.fail;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
