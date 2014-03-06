@@ -1,8 +1,5 @@
 package TestOMS;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-
 import junit.framework.TestCase;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
@@ -12,7 +9,7 @@ import es.upv.dsic.gti_ia.organization.SF;
 import es.upv.dsic.gti_ia.organization.exception.THOMASException;
 
 
-public class TestQuantityMembers extends TestCase {
+public class TestInformQuantityMembers extends TestCase {
 
 	OMSProxy omsProxy = null;
 	DatabaseAccess dbA = null;
@@ -320,7 +317,7 @@ public class TestQuantityMembers extends TestCase {
 		try
 		{
 
-			int result = omsProxy.informQuantityMembers("jerarquia", "creador", "");
+			omsProxy.informQuantityMembers("jerarquia", "creador", "");
 
 
 
@@ -390,7 +387,7 @@ public class TestQuantityMembers extends TestCase {
 		try
 		{
 
-			int result = omsProxy.informQuantityMembers("jerarquia", "", "creator");
+			omsProxy.informQuantityMembers("jerarquia", "", "creator");
 
 
 
@@ -459,7 +456,7 @@ public class TestQuantityMembers extends TestCase {
 		try
 		{
 
-			int result = omsProxy.informQuantityMembers("jerarquia", "creador", "creator");
+			omsProxy.informQuantityMembers("jerarquia", "creador", "creator");
 
 
 
