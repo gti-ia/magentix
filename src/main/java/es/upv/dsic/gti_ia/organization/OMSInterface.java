@@ -1,7 +1,6 @@
 package es.upv.dsic.gti_ia.organization;
 
 import jason.asSyntax.Literal;
-import jason.asSyntax.Rule;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -11,7 +10,6 @@ import java.util.StringTokenizer;
 import es.upv.dsic.gti_ia.cAgents.CAgent;
 import es.upv.dsic.gti_ia.cAgents.CFactory;
 import es.upv.dsic.gti_ia.cAgents.CProcessor;
-import es.upv.dsic.gti_ia.cAgents.protocols.FIPA_REQUEST_Initiator;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.norms.BeliefDataBaseInterface;
 import es.upv.dsic.gti_ia.norms.Norm;
@@ -165,7 +163,7 @@ public class OMSInterface {
 						// ------------------------- Checking domain-dependent norms
 						// ----------------------
 						// --------------------------------------------------------------------------------
-						if (checkPermitNorms(AgentName, ParentUnitName, "registerUnit("+UnitName.toLowerCase()+","+UnitType.toLowerCase()+","+ParentUnitName.toLowerCase()+","+AgentName.toLowerCase()+","+CreatorName.toLowerCase()+")"))
+						if (checkPermitNorms(AgentName, ParentUnitName, buildAction("registerUnit", UnitName, UnitType, ParentUnitName, AgentName, CreatorName)))//"registerUnit("+UnitName.toLowerCase()+","+UnitType.toLowerCase()+","+ParentUnitName.toLowerCase()+","+AgentName.toLowerCase()+","+CreatorName.toLowerCase()+")"))
 						{
 
 							String result = dbInterface.createUnit(UnitName, UnitType, ParentUnitName, AgentName, CreatorName);
@@ -176,7 +174,7 @@ public class OMSInterface {
 
 							return resultXML;
 						}
-						else if (checkFordibbenNorms(AgentName, ParentUnitName, "registerUnit("+UnitName.toLowerCase()+","+UnitType.toLowerCase()+","+ParentUnitName.toLowerCase()+","+AgentName.toLowerCase()+","+CreatorName.toLowerCase()+")"))
+						else if (checkFordibbenNorms(AgentName, ParentUnitName, buildAction("registerUnit", UnitName, UnitType, ParentUnitName, AgentName, CreatorName)))//"registerUnit("+UnitName.toLowerCase()+","+UnitType.toLowerCase()+","+ParentUnitName.toLowerCase()+","+AgentName.toLowerCase()+","+CreatorName.toLowerCase()+")"))
 						{
 							String message = l10n.getMessage(MessageID.FORBIDDEN_NORM);
 							throw new ForbiddenNormException(message);
@@ -255,7 +253,7 @@ public class OMSInterface {
 						// norms
 						// ----------------------
 						// --------------------------------------------------------------------------------
-						if (checkPermitNorms(AgentName, UnitName, "deregisterUnit("+UnitName.toLowerCase()+","+AgentName.toLowerCase()+")"))
+						if (checkPermitNorms(AgentName, UnitName, buildAction("deregisterUnit", UnitName, AgentName)))//"deregisterUnit("+UnitName.toLowerCase()+","+AgentName.toLowerCase()+")"))
 						{
 
 							String result = dbInterface.deleteUnit(UnitName);
@@ -266,7 +264,7 @@ public class OMSInterface {
 
 							return resultXML;
 						}
-						else if (checkFordibbenNorms(AgentName, UnitName, "deregisterUnit("+UnitName.toLowerCase()+","+AgentName.toLowerCase()+")"))
+						else if (checkFordibbenNorms(AgentName, UnitName, buildAction("deregisterUnit", UnitName, AgentName)))//"deregisterUnit("+UnitName.toLowerCase()+","+AgentName.toLowerCase()+")"))
 						{
 							String message = l10n.getMessage(MessageID.FORBIDDEN_NORM);
 							throw new ForbiddenNormException(message);
@@ -380,7 +378,7 @@ public class OMSInterface {
 							// ------------------------- Checking domain-dependent
 							// norms ----------------------
 							// --------------------------------------------------------------------------------
-							if (checkPermitNorms(AgentName, UnitName, "registerRole("+RoleName.toLowerCase()+","+UnitName.toLowerCase()+","+accessibility.toLowerCase()+","+Visibility.toLowerCase()+","+Position.toLowerCase()+","+AgentName.toLowerCase()+")"))
+							if (checkPermitNorms(AgentName, UnitName, buildAction("registerRole", RoleName, UnitName, accessibility, Visibility, Position, AgentName)))//"registerRole("+RoleName.toLowerCase()+","+UnitName.toLowerCase()+","+accessibility.toLowerCase()+","+Visibility.toLowerCase()+","+Position.toLowerCase()+","+AgentName.toLowerCase()+")"))
 							{
 
 								String result = dbInterface.createRole(RoleName, UnitName, accessibility, Visibility, Position);
@@ -391,7 +389,7 @@ public class OMSInterface {
 
 								return resultXML;
 							}
-							else if (checkFordibbenNorms(AgentName, UnitName, "registerRole("+RoleName.toLowerCase()+","+UnitName.toLowerCase()+","+accessibility.toLowerCase()+","+Visibility.toLowerCase()+","+Position.toLowerCase()+","+AgentName.toLowerCase()+")"))
+							else if (checkFordibbenNorms(AgentName, UnitName, buildAction("registerRole", RoleName, UnitName, accessibility, Visibility, Position, AgentName)))//"registerRole("+RoleName.toLowerCase()+","+UnitName.toLowerCase()+","+accessibility.toLowerCase()+","+Visibility.toLowerCase()+","+Position.toLowerCase()+","+AgentName.toLowerCase()+")"))
 							{
 								String message = l10n.getMessage(MessageID.FORBIDDEN_NORM);
 								throw new ForbiddenNormException(message);
@@ -512,7 +510,7 @@ public class OMSInterface {
 								// ------------------------- Checking domain-dependent
 								// norms ----------------------
 								// --------------------------------------------------------------------------------
-								if (checkPermitNorms(AgentName, UnitName, "deregisterRole("+RoleName.toLowerCase()+","+UnitName.toLowerCase()+","+AgentName.toLowerCase()+")"))
+								if (checkPermitNorms(AgentName, UnitName, buildAction("deregisterRole", RoleName, UnitName, AgentName)))//"deregisterRole("+RoleName.toLowerCase()+","+UnitName.toLowerCase()+","+AgentName.toLowerCase()+")"))
 								{
 
 									String result = dbInterface.deleteRole(RoleName, UnitName);
@@ -523,7 +521,7 @@ public class OMSInterface {
 
 									return resultXML;
 								}
-								else if (checkFordibbenNorms(AgentName, UnitName, "deregisterRole("+RoleName.toLowerCase()+","+UnitName.toLowerCase()+","+AgentName.toLowerCase()+")"))
+								else if (checkFordibbenNorms(AgentName, UnitName, buildAction("deregisterRole", RoleName, UnitName, AgentName)))//"deregisterRole("+RoleName.toLowerCase()+","+UnitName.toLowerCase()+","+AgentName.toLowerCase()+")"))
 								{
 									String message = l10n.getMessage(MessageID.FORBIDDEN_NORM);
 									throw new ForbiddenNormException(message);
@@ -694,7 +692,7 @@ public class OMSInterface {
 							}
 						}
 						
-						if (checkPermitNorms(AgentName, UnitName, "registerNorm("+UnitName.toLowerCase()+","+parsedNorm.getDeontic().toLowerCase()+","+parsedNorm.getTargetType().toLowerCase() +","+parsedNorm.getTargetValue().toLowerCase()+","+parsedNorm.getActionName().toLowerCase()+","+ AgentName.toLowerCase()+")"))
+						if (checkPermitNorms(AgentName, UnitName, buildAction("registerNorm", UnitName, parsedNorm.getDeontic(), parsedNorm.getTargetType(), parsedNorm.getTargetValue(), parsedNorm.getActionName(), AgentName)))//"registerNorm("+UnitName.toLowerCase()+","+parsedNorm.getDeontic().toLowerCase()+","+parsedNorm.getTargetType().toLowerCase() +","+parsedNorm.getTargetValue().toLowerCase()+","+parsedNorm.getActionName().toLowerCase()+","+ AgentName.toLowerCase()+")"))
 						{
 
 							Literal normRule = belifeDbInterface.buildNormRule(parsedNorm);
@@ -706,7 +704,7 @@ public class OMSInterface {
 
 							return resultXML;
 						}
-						else if (checkFordibbenNorms(AgentName, UnitName, "registerNorm("+UnitName.toLowerCase()+","+parsedNorm.getDeontic().toLowerCase()+","+parsedNorm.getTargetType().toLowerCase() +","+parsedNorm.getTargetValue().toLowerCase()+","+parsedNorm.getActionName().toLowerCase()+","+ AgentName.toLowerCase()+")"))
+						else if (checkFordibbenNorms(AgentName, UnitName, buildAction("registerNorm", UnitName, parsedNorm.getDeontic(), parsedNorm.getTargetType(), parsedNorm.getTargetValue(), parsedNorm.getActionName(), AgentName)))//"registerNorm("+UnitName.toLowerCase()+","+parsedNorm.getDeontic().toLowerCase()+","+parsedNorm.getTargetType().toLowerCase() +","+parsedNorm.getTargetValue().toLowerCase()+","+parsedNorm.getActionName().toLowerCase()+","+ AgentName.toLowerCase()+")"))
 						{
 							String message = l10n.getMessage(MessageID.FORBIDDEN_NORM);
 							throw new ForbiddenNormException(message);
@@ -823,7 +821,7 @@ public class OMSInterface {
 				if (dbInterface.checkUnit(UnitName)) {
 					if (dbInterface.checkNormName(NormName, UnitName))
 					{
-						if (checkPermitNorms(AgentName, UnitName, "deregisterNorm("+NormName.toLowerCase()+","+UnitName.toLowerCase()+","+AgentName.toLowerCase()+")"))
+						if (checkPermitNorms(AgentName, UnitName, buildAction("deregisterNorm", NormName, UnitName, AgentName)))//"deregisterNorm("+NormName.toLowerCase()+","+UnitName.toLowerCase()+","+AgentName.toLowerCase()+")"))
 						{
 
 
@@ -835,7 +833,7 @@ public class OMSInterface {
 
 							return resultXML;
 						}
-						else if (checkFordibbenNorms(AgentName, UnitName, "deregisterNorm("+NormName.toLowerCase()+","+UnitName.toLowerCase()+","+AgentName.toLowerCase()+")"))
+						else if (checkFordibbenNorms(AgentName, UnitName, buildAction("deregisterNorm", NormName, UnitName, AgentName)))//"deregisterNorm("+NormName.toLowerCase()+","+UnitName.toLowerCase()+","+AgentName.toLowerCase()+")"))
 						{
 							String message = l10n.getMessage(MessageID.FORBIDDEN_NORM);
 							throw new ForbiddenNormException(message);
@@ -969,7 +967,7 @@ public class OMSInterface {
 							// ------------------------- Checking domain-dependent
 							// norms ----------------------
 							// --------------------------------------------------------------------------------
-							if (checkPermitNorms(AgentName, UnitName, "acquireRole("+RoleName.toLowerCase()+","+UnitName.toLowerCase()+","+AgentName.toLowerCase()+")"))
+							if (checkPermitNorms(AgentName, UnitName, buildAction("acquireRole", RoleName, UnitName, AgentName)))//"acquireRole("+RoleName.toLowerCase()+","+UnitName.toLowerCase()+","+AgentName.toLowerCase()+")"))
 							{
 
 								String result = dbInterface.acquireRole(UnitName, RoleName, AgentName);
@@ -980,7 +978,7 @@ public class OMSInterface {
 
 								return resultXML;
 							}
-							else if (checkFordibbenNorms(AgentName, UnitName, "acquireRole("+RoleName.toLowerCase()+","+UnitName.toLowerCase()+","+AgentName.toLowerCase()+")"))
+							else if (checkFordibbenNorms(AgentName, UnitName, buildAction("acquireRole", RoleName, UnitName, AgentName)))//"acquireRole("+RoleName.toLowerCase()+","+UnitName.toLowerCase()+","+AgentName.toLowerCase()+")"))
 							{
 								String message = l10n.getMessage(MessageID.FORBIDDEN_NORM);
 								throw new ForbiddenNormException(message);
@@ -1111,7 +1109,7 @@ public class OMSInterface {
 							// ------------------------- Checking domain-dependent
 							// norms ----------------------
 							// --------------------------------------------------------------------------------
-							if (checkPermitNorms(AgentName, UnitName, "leaveRole("+RoleName.toLowerCase()+","+UnitName.toLowerCase()+","+AgentName.toLowerCase()+")"))
+							if (checkPermitNorms(AgentName, UnitName, buildAction("leaveRole", RoleName, UnitName, AgentName)))//"leaveRole("+RoleName.toLowerCase()+","+UnitName.toLowerCase()+","+AgentName.toLowerCase()+")"))
 							{
 
 								String result = dbInterface.leaveRole(UnitName, RoleName, AgentName);
@@ -1122,7 +1120,7 @@ public class OMSInterface {
 
 								return resultXML;
 							}
-							else if (checkFordibbenNorms(AgentName, UnitName, "leaveRole("+RoleName.toLowerCase()+","+UnitName.toLowerCase()+","+AgentName.toLowerCase()+")"))
+							else if (checkFordibbenNorms(AgentName, UnitName, buildAction("leaveRole", RoleName, UnitName, AgentName)))//"leaveRole("+RoleName.toLowerCase()+","+UnitName.toLowerCase()+","+AgentName.toLowerCase()+")"))
 							{
 								String message = l10n.getMessage(MessageID.FORBIDDEN_NORM);
 								throw new ForbiddenNormException(message);
@@ -1203,7 +1201,7 @@ public class OMSInterface {
 							// ------------------------- Checking domain-dependent
 							// norms ----------------------
 							// --------------------------------------------------------------------------------
-							if (checkPermitNorms(AgentName, UnitName, "allocateRole("+RoleName.toLowerCase()+","+UnitName.toLowerCase()+","+TargetAgentName.toLowerCase()+","+AgentName.toLowerCase()+")"))
+							if (checkPermitNorms(AgentName, UnitName, buildAction("allocateRole", RoleName, UnitName, TargetAgentName, AgentName)))//"allocateRole("+RoleName.toLowerCase()+","+UnitName.toLowerCase()+","+TargetAgentName.toLowerCase()+","+AgentName.toLowerCase()+")"))
 							{
 
 								String result = dbInterface.acquireRole(UnitName, RoleName, TargetAgentName);
@@ -1214,7 +1212,7 @@ public class OMSInterface {
 
 								return resultXML;
 							}
-							else if (checkFordibbenNorms(AgentName, UnitName, "allocateRole("+RoleName.toLowerCase()+","+UnitName.toLowerCase()+","+TargetAgentName.toLowerCase()+","+AgentName.toLowerCase()+")"))
+							else if (checkFordibbenNorms(AgentName, UnitName, buildAction("allocateRole", RoleName, UnitName, TargetAgentName, AgentName)))//"allocateRole("+RoleName.toLowerCase()+","+UnitName.toLowerCase()+","+TargetAgentName.toLowerCase()+","+AgentName.toLowerCase()+")"))
 							{
 								String message = l10n.getMessage(MessageID.FORBIDDEN_NORM);
 								throw new ForbiddenNormException(message);
@@ -1361,7 +1359,7 @@ public class OMSInterface {
 						// ------------------------- Checking domain-dependent
 						// norms ----------------------
 						// --------------------------------------------------------------------------------
-						if (checkPermitNorms(AgentName, UnitName, "deallocateRole("+RoleName.toLowerCase()+","+UnitName.toLowerCase()+","+TargetAgentName.toLowerCase()+","+AgentName.toLowerCase()+")"))
+						if (checkPermitNorms(AgentName, UnitName, buildAction("deallocateRole", RoleName, UnitName, TargetAgentName, AgentName)))//"deallocateRole("+RoleName.toLowerCase()+","+UnitName.toLowerCase()+","+TargetAgentName.toLowerCase()+","+AgentName.toLowerCase()+")"))
 						{
 
 							String result = dbInterface.deallocateRole(RoleName, UnitName, TargetAgentName);
@@ -1372,7 +1370,7 @@ public class OMSInterface {
 
 							return resultXML;
 						}
-						else if (checkFordibbenNorms(AgentName, UnitName, "deallocateRole("+RoleName.toLowerCase()+","+UnitName.toLowerCase()+","+TargetAgentName.toLowerCase()+","+AgentName.toLowerCase()+")"))
+						else if (checkFordibbenNorms(AgentName, UnitName, buildAction("deallocateRole", RoleName, UnitName, TargetAgentName, AgentName)))//"deallocateRole("+RoleName.toLowerCase()+","+UnitName.toLowerCase()+","+TargetAgentName.toLowerCase()+","+AgentName.toLowerCase()+")"))
 						{
 							String message = l10n.getMessage(MessageID.FORBIDDEN_NORM);
 							throw new ForbiddenNormException(message);
@@ -1510,7 +1508,7 @@ public class OMSInterface {
 						// ------------------------- Checking domain-dependent
 						// norms ----------------------
 						// --------------------------------------------------------------------------------
-						if (checkPermitNorms(AgentName, UnitName, "joinUnit("+UnitName.toLowerCase()+","+ParentName.toLowerCase()+","+AgentName.toLowerCase()+")"))
+						if (checkPermitNorms(AgentName, UnitName, buildAction("joinUnit", UnitName, ParentName, AgentName)))//"joinUnit("+UnitName.toLowerCase()+","+ParentName.toLowerCase()+","+AgentName.toLowerCase()+")"))
 						{
 
 							String result = dbInterface.joinUnit(UnitName, ParentName);
@@ -1521,7 +1519,7 @@ public class OMSInterface {
 
 							return resultXML;
 						}
-						else if (checkFordibbenNorms(AgentName, UnitName, "joinUnit("+UnitName.toLowerCase()+","+ParentName.toLowerCase()+","+AgentName.toLowerCase()+")"))
+						else if (checkFordibbenNorms(AgentName, UnitName, buildAction("joinUnit", UnitName, ParentName, AgentName)))//"joinUnit("+UnitName.toLowerCase()+","+ParentName.toLowerCase()+","+AgentName.toLowerCase()+")"))
 						{
 							String message = l10n.getMessage(MessageID.FORBIDDEN_NORM);
 							throw new ForbiddenNormException(message);
@@ -1595,8 +1593,8 @@ public class OMSInterface {
 					// ----------------------
 					// --------------------------------------------------------------------------------
 
-					if (!checkPermitNorms(AgentName, UnitName, "informUnitAgentRole("+UnitName.toLowerCase()+","+RequestedAgentName.toLowerCase()+","+AgentName.toLowerCase()+")"))
-						if (checkFordibbenNorms(AgentName, UnitName, "informUnitAgentRole("+UnitName.toLowerCase()+","+RequestedAgentName.toLowerCase()+","+AgentName.toLowerCase()+")"))
+					if (!checkPermitNorms(AgentName, UnitName, buildAction("informAgentRole", RequestedAgentName, AgentName)))//"informAgentRole("+RequestedAgentName.toLowerCase()+","+AgentName.toLowerCase()+")"))
+						if (checkFordibbenNorms(AgentName, UnitName, buildAction("informAgentRole", RequestedAgentName, AgentName)))//"informAgentRole("+RequestedAgentName.toLowerCase()+","+AgentName.toLowerCase()+")"))
 						{
 							String message = l10n.getMessage(MessageID.FORBIDDEN_NORM);
 							throw new ForbiddenNormException(message);
@@ -1753,7 +1751,7 @@ public class OMSInterface {
 				if (dbInterface.checkUnit(UnitName)) {
 					if (dbInterface.checkNormName(NormName, UnitName))
 					{
-						if (checkPermitNorms(AgentName, UnitName, "informNorm("+NormName.toLowerCase()+","+UnitName.toLowerCase()+","+AgentName.toLowerCase()+")"))
+						if (checkPermitNorms(AgentName, UnitName, buildAction("informNorm", NormName, UnitName, AgentName)))//"informNorm("+NormName.toLowerCase()+","+UnitName.toLowerCase()+","+AgentName.toLowerCase()+")"))
 						{
 
 
@@ -1768,7 +1766,7 @@ public class OMSInterface {
 
 							return resultXML;
 						}
-						else if (checkFordibbenNorms(AgentName, UnitName, "informNorm("+NormName.toLowerCase()+","+UnitName.toLowerCase()+","+AgentName.toLowerCase()+")"))
+						else if (checkFordibbenNorms(AgentName, UnitName, buildAction("informNorm", NormName, UnitName, AgentName)))//"informNorm("+NormName.toLowerCase()+","+UnitName.toLowerCase()+","+AgentName.toLowerCase()+")"))
 						{
 							String message = l10n.getMessage(MessageID.FORBIDDEN_NORM);
 							throw new ForbiddenNormException(message);
@@ -1927,10 +1925,10 @@ public class OMSInterface {
 						// --------------------------------------------------------------------------------
 
 
-						if (!checkPermitNorms(AgentName, UnitName, "informMembers("+UnitName.toLowerCase()+","+RoleName.toLowerCase()+","+PositionValue.toLowerCase()+","+AgentName.toLowerCase()+")"))
+						if (!checkPermitNorms(AgentName, UnitName, buildAction("informMembers", UnitName, RoleName, PositionValue, AgentName)))//"informMembers("+UnitName.toLowerCase()+","+RoleName.toLowerCase()+","+PositionValue.toLowerCase()+","+AgentName.toLowerCase()+")"))
 						{
 
-							if (checkFordibbenNorms(AgentName, UnitName, "informMembers("+UnitName.toLowerCase()+","+RoleName.toLowerCase()+","+PositionValue.toLowerCase()+","+AgentName.toLowerCase()+")"))
+							if (checkFordibbenNorms(AgentName, UnitName, buildAction("informMembers", UnitName, RoleName, PositionValue, AgentName)))//"informMembers("+UnitName.toLowerCase()+","+RoleName.toLowerCase()+","+PositionValue.toLowerCase()+","+AgentName.toLowerCase()+")"))
 							{
 								String message = l10n.getMessage(MessageID.FORBIDDEN_NORM);
 								throw new ForbiddenNormException(message);
@@ -2069,8 +2067,6 @@ public class OMSInterface {
 						}
 						else // Check permit norm
 						{
-
-							ArrayList<String> informRole = null;
 
 							switch (flag) {
 
@@ -2287,7 +2283,7 @@ public class OMSInterface {
 						// norms ----------------------
 						// --------------------------------------------------------------------------------
 
-						if (!checkPermitNorms(AgentName, UnitName, "informQuantityMembers("+UnitName.toLowerCase()+","+RoleName.toLowerCase()+","+PositionValue.toLowerCase()+","+AgentName.toLowerCase()+")"))
+						if (!checkPermitNorms(AgentName, UnitName, buildAction("informQuantityMembers", UnitName, RoleName, PositionValue, AgentName)))//"informQuantityMembers("+UnitName.toLowerCase()+","+RoleName.toLowerCase()+","+PositionValue.toLowerCase()+","+AgentName.toLowerCase()+")"))
 						{
 
 							// --------------------------------------------------------------------------------
@@ -2295,7 +2291,7 @@ public class OMSInterface {
 							// ----------------------------
 							// --------------------------------------------------------------------------------
 
-							if (checkFordibbenNorms(AgentName, UnitName, "informQuantityMembers("+UnitName.toLowerCase()+","+RoleName.toLowerCase()+","+PositionValue.toLowerCase()+","+AgentName.toLowerCase()+")"))
+							if (checkFordibbenNorms(AgentName, UnitName, buildAction("informQuantityMembers", UnitName, RoleName, PositionValue, AgentName)))//"informQuantityMembers("+UnitName.toLowerCase()+","+RoleName.toLowerCase()+","+PositionValue.toLowerCase()+","+AgentName.toLowerCase()+")"))
 							{
 								String message = l10n.getMessage(MessageID.FORBIDDEN_NORM);
 								throw new ForbiddenNormException(message);
@@ -2498,7 +2494,7 @@ public class OMSInterface {
 					// ------------------------- Checking domain-dependent norms
 					// ----------------------
 					// --------------------------------------------------------------------------------
-					if (checkPermitNorms(AgentName, UnitName, "informUnit("+UnitName.toLowerCase()+","+AgentName.toLowerCase()+")"))
+					if (checkPermitNorms(AgentName, UnitName, buildAction("informUnit", UnitName, AgentName)))//"informUnit("+UnitName.toLowerCase()+","+AgentName.toLowerCase()+")"))
 					{
 
 
@@ -2513,7 +2509,7 @@ public class OMSInterface {
 
 						return resultXML;
 					}
-					else if (checkFordibbenNorms(AgentName, UnitName, "informUnit("+UnitName.toLowerCase()+","+AgentName.toLowerCase()+")"))
+					else if (checkFordibbenNorms(AgentName, UnitName, buildAction("informUnit", UnitName, AgentName)))//"informUnit("+UnitName.toLowerCase()+","+AgentName.toLowerCase()+")"))
 					{
 						String message = l10n.getMessage(MessageID.FORBIDDEN_NORM);
 						throw new ForbiddenNormException(message);
@@ -2598,7 +2594,7 @@ public class OMSInterface {
 					// --------------------------------------------------------------------------------
 
 
-					if (checkPermitNorms(AgentName, UnitName, "informUnitRoles("+UnitName.toLowerCase()+","+AgentName.toLowerCase()+")"))
+					if (checkPermitNorms(AgentName, UnitName, buildAction("informUnitRoles", UnitName, AgentName)))//"informUnitRoles("+UnitName.toLowerCase()+","+AgentName.toLowerCase()+")"))
 					{
 						methodResult = dbInterface.getInformUnitRoles(UnitName, true);
 
@@ -2618,7 +2614,7 @@ public class OMSInterface {
 						resultXML += "</response>";
 
 						return resultXML;
-					}else if (checkFordibbenNorms(AgentName, UnitName, "informUnitRoles("+UnitName.toLowerCase()+","+AgentName.toLowerCase()+")"))
+					}else if (checkFordibbenNorms(AgentName, UnitName, buildAction("informUnitRoles", UnitName, AgentName)))//"informUnitRoles("+UnitName.toLowerCase()+","+AgentName.toLowerCase()+")"))
 					{
 						String message = l10n.getMessage(MessageID.FORBIDDEN_NORM);
 						throw new ForbiddenNormException(message);
@@ -2710,7 +2706,7 @@ public class OMSInterface {
 						// ------------------------- Checking domain-dependent
 						// norms ----------------------
 						// --------------------------------------------------------------------------------
-						if (checkPermitNorms(AgentName, UnitName, "informRole("+RoleName.toLowerCase()+","+UnitName.toLowerCase()+","+AgentName.toLowerCase()+")"))
+						if (checkPermitNorms(AgentName, UnitName, buildAction("informRole", RoleName, UnitName, AgentName)))//"informRole("+RoleName.toLowerCase()+","+UnitName.toLowerCase()+","+AgentName.toLowerCase()+")"))
 						{
 
 
@@ -2727,7 +2723,7 @@ public class OMSInterface {
 
 							return resultXML;
 						}
-						else if (checkFordibbenNorms(AgentName, UnitName, "informRole("+RoleName.toLowerCase()+","+UnitName.toLowerCase()+","+AgentName.toLowerCase()+")"))
+						else if (checkFordibbenNorms(AgentName, UnitName, buildAction("informRole", RoleName, UnitName, AgentName)))//"informRole("+RoleName.toLowerCase()+","+UnitName.toLowerCase()+","+AgentName.toLowerCase()+")"))
 						{
 							String message = l10n.getMessage(MessageID.FORBIDDEN_NORM);
 							throw new ForbiddenNormException(message);
@@ -2805,7 +2801,7 @@ public class OMSInterface {
 				if (dbInterface.checkUnit(UnitName)) {
 					if (dbInterface.checkTargetType(TargetTypeName))
 					{
-						if (checkPermitNorms(AgentName, UnitName, "informTargetNorms("+TargetTypeName.toLowerCase()+","+TargetValueName.toLowerCase()+","+UnitName.toLowerCase()+","+AgentName.toLowerCase()+")"))
+						if (checkPermitNorms(AgentName, UnitName, buildAction("informTargetNorms", TargetTypeName, TargetValueName, UnitName, AgentName)))//"informTargetNorms("+TargetTypeName.toLowerCase()+","+TargetValueName.toLowerCase()+","+UnitName.toLowerCase()+","+AgentName.toLowerCase()+")"))
 						{
 
 							permitFlag = true;
@@ -2813,7 +2809,7 @@ public class OMSInterface {
 						else
 							permitFlag = false;
 
-						if (checkFordibbenNorms(AgentName, UnitName, "informTargetNorms("+TargetTypeName.toLowerCase()+","+TargetValueName.toLowerCase()+","+UnitName.toLowerCase()+","+AgentName.toLowerCase()+")"))
+						if (checkFordibbenNorms(AgentName, UnitName, buildAction("informTargetNorms", TargetTypeName, TargetValueName, UnitName, AgentName)))//"informTargetNorms("+TargetTypeName.toLowerCase()+","+TargetValueName.toLowerCase()+","+UnitName.toLowerCase()+","+AgentName.toLowerCase()+")"))
 						{
 							String message = l10n.getMessage(MessageID.FORBIDDEN_NORM);
 							throw new ForbiddenNormException(message);
@@ -3264,6 +3260,23 @@ public class OMSInterface {
 		}
 
 		return result;
+	}
+	
+	
+	/**
+	 * Check if exists any rule in the unit U which forbids that agent A can request the service S.
+	 * 
+	 * @param ServiceName		Service name for which the action will be built.
+	 * @param Parameters		Parameters that contain the action.
+	 * 
+	 * @return					Returns the Action in Jason syntax.
+	 */
+	private String buildAction(String ServiceName, String... Parameters)
+	{
+		String rule = ServiceName + "(";
+		for(String param : Parameters)
+			rule += ((checkParameter(param)) ? param.toLowerCase() : "_") + ",";
+		return rule.substring(0, rule.length()-1) + ")";
 	}
 
 }

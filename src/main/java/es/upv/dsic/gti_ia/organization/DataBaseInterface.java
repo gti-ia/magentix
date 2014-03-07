@@ -1,7 +1,6 @@
 package es.upv.dsic.gti_ia.organization;
 
 import jason.asSyntax.Literal;
-import jason.asSyntax.Rule;
 
 import java.sql.BatchUpdateException;
 import java.sql.Connection;
@@ -9,19 +8,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import es.upv.dsic.gti_ia.norms.Norm;
 import es.upv.dsic.gti_ia.organization.exception.MySQLException;
-import es.upv.dsic.gti_ia.organization.exception.ParentUnitNotExistsException;
-import es.upv.dsic.gti_ia.organization.exception.RoleNotExistsException;
 import es.upv.dsic.gti_ia.organization.exception.THOMASMessages;
 import es.upv.dsic.gti_ia.organization.exception.THOMASMessages.MessageID;
-import es.upv.dsic.gti_ia.organization.exception.UnitNotExistsException;
 
 
 /**
