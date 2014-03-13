@@ -117,7 +117,7 @@ public class TestTrace3 {
 	}
 	
 	
-	@Test(timeout = 50000)
+	@Test(timeout = 100000)
 	public void testTrace3() {
 		//BEGIN
 		
@@ -147,7 +147,10 @@ public class TestTrace3 {
 				tEvent.getTracingService().contentEquals("MESSAGE_RECEIVED_DETAIL")) {
 				msg = ACLMessage.fromString(tEvent.getContent());
 				controlOE.add(tEvent.getTracingService() + ":" + msg.getPerformative() + " from " + msg.getSender().toString() + " to " + msg.getReceiver() + ", " + msg.getContent());
-			} else {
+			} else if (tEvent.getTracingService().contentEquals("SUBSCRIBE") ||
+					tEvent.getTracingService().contentEquals("UNSUBSCRIBE") || tEvent.getTracingService().contentEquals("NEW_AGENT") ||
+					tEvent.getTracingService().contentEquals("PUBLISHED_TRACING_SERVICE") || tEvent.getTracingService().contentEquals("UNPUBLISHED_TRACING_SERVICE") ||
+					tEvent.getTracingService().contentEquals("UNAVAILABLE_TS")) {
 				controlOE.add(tEvent.getTracingService() + ": " + ((j-1 < TracingService.MAX_DI_TS) ? tEvent.getContent().substring(0, tEvent.getContent().indexOf('#')) : tEvent.getContent()));
 			}
 			//if(j > 25 && j < 40) System.out.println(tEvent.getTracingService() + ": " + ((j-1 < TracingService.MAX_DI_TS) ? tEvent.getContent().substring(0, tEvent.getContent().indexOf('#')) : tEvent.getContent()));

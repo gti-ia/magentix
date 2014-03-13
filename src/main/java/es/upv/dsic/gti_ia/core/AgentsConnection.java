@@ -123,7 +123,9 @@ public class AgentsConnection {
 	 */
 
 	public static void disconnect() {
-		connection.close();
+		try {
+			connection.close();
+		}catch(Exception e) {}
 		connection = null;
 	}
 
