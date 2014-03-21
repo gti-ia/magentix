@@ -115,7 +115,7 @@ public class BaseAgent implements Runnable {
 	/**
 	 * Bit mask used to manage the trace interactions.
 	 */
-	private TraceMask traceMask;
+	protected TraceMask traceMask;
 	
 	/**
 	 * Check if mask is updated.

@@ -16,7 +16,6 @@ import org.apache.qpid.transport.Option;
 
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
-import es.upv.dsic.gti_ia.core.AgentsConnection;
 import es.upv.dsic.gti_ia.core.BaseAgent;
 import es.upv.dsic.gti_ia.core.TraceEvent;
 import es.upv.dsic.gti_ia.core.TracingService;
@@ -91,10 +90,10 @@ public class TraceManager extends BaseAgent {
 	 */
 	private Semaphore finishExecution;
 	
-	/**
-	 * Bit mask used to manage the trace interactions.
+	/* Bit mask used to manage the trace interactions.
+	 *
+	 * private TraceMask traceMask;
 	 */
-	private TraceMask traceMask;
 	
 	/**
 	 * Instance of {@link es.upv.dsic.gti_ia.organization.Configuration} class
@@ -265,8 +264,7 @@ public class TraceManager extends BaseAgent {
 			logger.error("[TRACE MANAGER]: Error while initializing the tracing service list");
 		}
 		
-		// Add as provider of those tracing services which are mandatory and
-		// requestable
+		// Add as provider of those tracing services which are mandatory and requestable.
 		for (int i = 0; i < TracingService.MAX_DI_TS; i++) {
 			if (TracingService.DI_TracingServices[i].getRequestable()) {
 				tService = TracingServices
@@ -280,62 +278,42 @@ public class TraceManager extends BaseAgent {
 			}
 		}
 		
-		// In order to register tracing entities, the trace manager has to
-		// subscribe
-		// to certain tracing services: NEW_AGENT, AGENT_DESTROYED, NEW_ARTIFACT
-		// and NEW_AGGREGATION
-		// Subscriptions to these tracing services cannot be removed; so, it is
-		// not necessary to
-		// store them.
-		// TODO: ARTIFACTS and AGGREGATIONS are not supported yet
+		/* 
+		 * In order to register tracing entities, the trace manager has to subscribe
+		 * to certain tracing services: NEW_AGENT, AGENT_DESTROYED, NEW_ARTIFACT
+		 * and NEW_AGGREGATION.
+		 * Subscriptions to these tracing services cannot be removed; so, it is
+		 * not necessary to store them.
+		 * 
+		 * TODO: ARTIFACTS and AGGREGATIONS are not supported yet
+		 */
 		arguments.put("x-match", "all");
-		arguments.put("tracing_service",
-				TracingService.DI_TracingServices[TracingService.NEW_AGENT]
-						.getName());
-		this.traceSession.exchangeBind(
-				this.getAid().name + ".trace",
-				"amq.match",
-				TracingService.DI_TracingServices[TracingService.NEW_AGENT]
-						.getName() + "#any", arguments);
+		arguments.put("tracing_service", TracingService.DI_TracingServices[TracingService.NEW_AGENT].getName());
+		this.traceSession.exchangeBind(this.getAid().name + ".trace", "amq.match",
+				TracingService.DI_TracingServices[TracingService.NEW_AGENT].getName() + "#any", arguments);
 		arguments.clear();
 		
 		arguments.put("x-match", "all");
-		arguments
-				.put("tracing_service",
-						TracingService.DI_TracingServices[TracingService.AGENT_DESTROYED]
-								.getName());
-		this.traceSession
-				.exchangeBind(
-						this.getAid().name + ".trace",
-						"amq.match",
-						TracingService.DI_TracingServices[TracingService.AGENT_DESTROYED]
-								.getName() + "#any", arguments);
+		arguments.put("tracing_service", TracingService.DI_TracingServices[TracingService.AGENT_DESTROYED].getName());
+		this.traceSession.exchangeBind(this.getAid().name + ".trace", "amq.match",
+				TracingService.DI_TracingServices[TracingService.AGENT_DESTROYED].getName() + "#any", arguments);
 		arguments.clear();
 		
 		// Send WELCOME_TM trace event to all agents (null destination).
-		TraceEvent welcomeEvent = new TraceEvent(
-				TracingService.DI_TracingServices[TracingService.WELCOME_TM]
-						.getName(),
-				new AgentID(SYSTEM_NAME, this.getAid().protocol,
-						this.getAid().host, this.getAid().port), "");
+		TraceEvent welcomeEvent = new TraceEvent(TracingService.DI_TracingServices[TracingService.WELCOME_TM].getName(),
+				new AgentID(SYSTEM_NAME, this.getAid().protocol, this.getAid().host, this.getAid().port), "");
 		this.sendSystemTraceEvent(welcomeEvent, null);
 		
 		// arguments.put("x-match", "all");
-		// arguments.put("tracing_service",
-		// TracingService.DI_TracingServices[TracingService.NEW_ARTIFACT].getName());
-		// this.traceSession.exchangeBind(this.getAid().name+".trace",
-		// "amq.match",
-		// TracingService.DI_TracingServices[TracingService.NEW_ARTIFACT].getName()
-		// + "#any", arguments);
+		// arguments.put("tracing_service", TracingService.DI_TracingServices[TracingService.NEW_ARTIFACT].getName());
+		// this.traceSession.exchangeBind(this.getAid().name+".trace", "amq.match",
+		// 		TracingService.DI_TracingServices[TracingService.NEW_ARTIFACT].getName() + "#any", arguments);
 		// arguments.clear();
 		//
 		// arguments.put("x-match", "all");
-		// arguments.put("tracing_service",
-		// TracingService.DI_TracingServices[TracingService.NEW_AGGREGATION].getName());
-		// this.traceSession.exchangeBind(this.getAid().name+".trace",
-		// "amq.match",
-		// TracingService.DI_TracingServices[TracingService.NEW_AGGREGATION].getName()
-		// + "#any", arguments);
+		// arguments.put("tracing_service",	TracingService.DI_TracingServices[TracingService.NEW_AGGREGATION].getName());
+		// this.traceSession.exchangeBind(this.getAid().name+".trace", "amq.match",
+		// 		TracingService.DI_TracingServices[TracingService.NEW_AGGREGATION].getName() + "#any", arguments);
 		// arguments.clear();
 	}
 	
@@ -350,8 +328,8 @@ public class TraceManager extends BaseAgent {
 	 *            to null, the system trace event is understood to be directed
 	 *            to all tracing entities.
 	 */
-	private void sendSystemTraceEvent(TraceEvent tEvent,
-			TracingEntity destination) {
+	private void sendSystemTraceEvent(TraceEvent tEvent, TracingEntity destination) {
+		
 		MessageTransfer xfr = new MessageTransfer();
 		
 		xfr.destination("amq.match");
@@ -401,8 +379,8 @@ public class TraceManager extends BaseAgent {
 				header, xfr.getBodyString());
 		
 		/*
-		 * PRE-OPTIMIZATION OF EVENT TRANSMISSION MessageTransfer xfr = new
-		 * MessageTransfer();
+		 * PRE-OPTIMIZATION OF EVENT TRANSMISSION
+		 * MessageTransfer xfr = new MessageTransfer();
 		 * 
 		 * xfr.destination("amq.match");
 		 * xfr.acceptMode(MessageAcceptMode.EXPLICIT);
@@ -753,16 +731,10 @@ public class TraceManager extends BaseAgent {
 								while (TSS_iter.hasNext()) {
 									tServiceSubscription = TSS_iter.next();
 									
-									tServiceSubscription.getSubscriptorEntity()
-											.getSubscribedToTS()
-											.remove(tServiceSubscription);
-									if (tServiceSubscription
-											.getSubscriptorEntity()
-											.getSubscribedToTS().size() == 0) {
+									tServiceSubscription.getSubscriptorEntity().getSubscribedToTS().remove(tServiceSubscription);
+									if (tServiceSubscription.getSubscriptorEntity().getSubscribedToTS().size() == 0) {
 										synchronized (TSSubscriberEntities) {
-											TSSubscriberEntities
-													.remove(tServiceSubscription
-															.getSubscriptorEntity());
+											TSSubscriberEntities.remove(tServiceSubscription.getSubscriptorEntity());
 										}
 									}
 									TSS_iter.remove();
@@ -770,85 +742,44 @@ public class TraceManager extends BaseAgent {
 									if (tServiceSubscription.getAnyProvider()) {
 										tEventContent = serviceName + "#any";
 										// Remove subscription
-										this.traceSession.exchangeUnbind(
-												tServiceSubscription
-														.getSubscriptorEntity()
-														.getAid().name
-														+ ".trace",
-												"amq.match", serviceName
-														+ "#any", Option.NONE);
+										this.traceSession.exchangeUnbind(tServiceSubscription.getSubscriptorEntity().getAid().name + ".trace",
+												"amq.match", serviceName + "#any", Option.NONE);
 									} else {
-										tEventContent = serviceName
-												+ msg.getSender();
+										tEventContent = serviceName + msg.getSender();
 										// Remove subscription
-										this.traceSession.exchangeUnbind(
-												tServiceSubscription
-														.getSubscriptorEntity()
-														.getAid().name
-														+ ".trace",
-												"amq.match", serviceName + "#"
-														+ msg.getSender(),
-												Option.NONE);
+										this.traceSession.exchangeUnbind(tServiceSubscription.getSubscriptorEntity().getAid().name + ".trace",
+												"amq.match", serviceName + "#" + msg.getSender(), Option.NONE);
 									}
 									
-									tEvent = new TraceEvent(
-											TracingService.DI_TracingServices[TracingService.UNAVAILABLE_TS]
-													.getName(), new AgentID(
-													"system",
-													this.getAid().protocol,
-													this.getAid().host, this
-															.getAid().port),
+									tEvent = new TraceEvent(TracingService.DI_TracingServices[TracingService.UNAVAILABLE_TS].getName(),
+											new AgentID("system", this.getAid().protocol, this.getAid().host, this.getAid().port),
 											tEventContent);
-									sendSystemTraceEvent(tEvent,
-											tServiceSubscription
-													.getSubscriptorEntity());
+									sendSystemTraceEvent(tEvent,tServiceSubscription.getSubscriptorEntity());
 								}
 							} else {
 								while (TSS_iter.hasNext()) {
 									tServiceSubscription = TSS_iter.next();
-									if (!tServiceSubscription.getAnyProvider()
-											&& tServiceSubscription
-													.getOriginEntity().equals(
-															tEntity)) {
+									
+									if (!tServiceSubscription.getAnyProvider() && tServiceSubscription.getOriginEntity().equals(tEntity)) {
 										
-										tServiceSubscription
-												.getSubscriptorEntity()
-												.getSubscribedToTS()
-												.remove(tServiceSubscription);
-										if (tServiceSubscription
-												.getSubscriptorEntity()
-												.getSubscribedToTS().size() == 0) {
+										tServiceSubscription.getSubscriptorEntity().getSubscribedToTS().remove(tServiceSubscription);
+										
+										if (tServiceSubscription.getSubscriptorEntity().getSubscribedToTS().size() == 0) {
 											synchronized (TSSubscriberEntities) {
-												TSSubscriberEntities
-														.remove(tServiceSubscription
-																.getSubscriptorEntity());
+												TSSubscriberEntities.remove(tServiceSubscription.getSubscriptorEntity());
 											}
 										}
 										TSS_iter.remove();
 										
-										tEventContent = serviceName
-												+ msg.getSender();
+										tEventContent = serviceName + msg.getSender();
 										// Remove subscription
-										this.traceSession.exchangeUnbind(
-												tServiceSubscription
-														.getSubscriptorEntity()
-														.getAid().name
-														+ ".trace",
-												"amq.match", serviceName + "#"
-														+ msg.getSender(),
-												Option.NONE);
+										this.traceSession.exchangeUnbind(tServiceSubscription.getSubscriptorEntity().getAid().name + ".trace",
+												"amq.match", serviceName + "#" + msg.getSender(), Option.NONE);
 										
-										tEvent = new TraceEvent(
-												TracingService.DI_TracingServices[TracingService.UNAVAILABLE_TS]
-														.getName(),
-												new AgentID("system", this
-														.getAid().protocol,
-														this.getAid().host,
-														this.getAid().port),
+										tEvent = new TraceEvent(TracingService.DI_TracingServices[TracingService.UNAVAILABLE_TS].getName(),
+												new AgentID("system", this.getAid().protocol, this.getAid().host, this.getAid().port),
 												tEventContent);
-										sendSystemTraceEvent(tEvent,
-												tServiceSubscription
-														.getSubscriptorEntity());
+										sendSystemTraceEvent(tEvent, tServiceSubscription.getSubscriptorEntity());
 									}
 								}
 							}
@@ -1019,11 +950,11 @@ public class TraceManager extends BaseAgent {
 					// response_msg.setContent(content);
 					// }
 					else {
-						index = content.indexOf('#', 0);
-						specification = content.substring(0, index);
+						index2 = content.indexOf('#',index+1);
+						if(index2 > 0) specification = content.substring(index+1,index2);
 						if (specification.contentEquals("service")) {
 							// Return service description
-							serviceName = content.substring(index + 1);
+							serviceName = content.substring(index2 + 1);
 							if ((tService = TracingServices.getTS(serviceName)) == null
 									|| (tService.getMaskBitIndex() != null && this.traceMask
 											.get(tService.getMaskBitIndex()) == false)) {
@@ -1222,7 +1153,8 @@ public class TraceManager extends BaseAgent {
 					originEntity = content.substring(index + 1);
 					
 					if (!originEntity.contentEquals("any")) {
-						originAid = new AgentID();
+						originAid = new AgentID(originEntity);
+						/*originAid = new AgentID();
 						aidindice1 = 0;
 						aidindice2 = originEntity.indexOf(':');
 						if (aidindice2 - aidindice1 <= 0)
@@ -1244,7 +1176,7 @@ public class TraceManager extends BaseAgent {
 						else
 							originAid.host = originEntity.substring(aidindice1,
 									aidindice2);
-						originAid.port = originEntity.substring(aidindice2 + 1);
+						originAid.port = originEntity.substring(aidindice2 + 1);*/
 					} else {
 						originAid = null;
 						originTEntity = null;
@@ -1430,7 +1362,8 @@ public class TraceManager extends BaseAgent {
 				originEntity = content.substring(index + 1);
 				
 				if (!originEntity.contentEquals("any")) {
-					originAid = new AgentID();
+					originAid = new AgentID(originEntity);
+					/*originAid = new AgentID();
 					aidindice1 = 0;
 					aidindice2 = originEntity.indexOf(':');
 					if (aidindice2 - aidindice1 <= 0)
@@ -1452,7 +1385,7 @@ public class TraceManager extends BaseAgent {
 					else
 						originAid.host = originEntity.substring(aidindice1,
 								aidindice2);
-					originAid.port = originEntity.substring(aidindice2 + 1);
+					originAid.port = originEntity.substring(aidindice2 + 1);*/
 				} else {
 					originAid = null;
 					originTEntity = null;
@@ -1798,8 +1731,7 @@ public class TraceManager extends BaseAgent {
 			}
 		}
 	}
-	
-	public static void main(String args[]) throws Exception {
+	/*public static void main(String args[]) throws Exception {
 		AgentsConnection.connect();
 		TraceManager tm = new TraceManager(new AgentID("TM"));
 		System.out.println(tm.getTraceMask());
@@ -1808,5 +1740,5 @@ public class TraceManager extends BaseAgent {
 		System.out.println(tMask);
 		System.out.println(tm.getTraceMask());
 		tm.shutdown();
-	}
+	}*/
 }

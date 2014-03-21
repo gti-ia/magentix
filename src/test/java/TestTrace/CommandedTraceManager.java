@@ -45,7 +45,7 @@ public class CommandedTraceManager extends TraceManager {
 		logger.setLevel(Level.DEBUG);
 		
 		commands = new ArrayList<Integer>();
-		checkCommand = new Semaphore(0); 
+		checkCommand = new Semaphore(0);
 		messagesReceived = new ArrayList<ACLMessage>();
 		messagesSent = new ArrayList<ACLMessage>();
 		traceEvents = new ArrayList<TraceEvent>();
@@ -80,11 +80,13 @@ public class CommandedTraceManager extends TraceManager {
 	}
 	
 	public synchronized void onMessage(ACLMessage msg) {
+		super.onMessage(msg);
 		logger.debug(this.getName() + " has received an ACL MESSAGE with this content: " + msg);
 		messagesReceived.add(msg);
 	}
 	
 	public synchronized void onTraceEvent(TraceEvent tEvent) {
+		super.onTraceEvent(tEvent);
 		logger.debug(this.getName() + " has received a TRACE EVENT with this content: " + tEvent);
 		traceEvents.add(tEvent);
 	}
@@ -127,7 +129,7 @@ public class CommandedTraceManager extends TraceManager {
 		return traceEvents;
 	}
 	
-	public void clearTraceEvents() {
+	public synchronized void clearTraceEvents() {
 		traceEvents.clear();
 	}
 }

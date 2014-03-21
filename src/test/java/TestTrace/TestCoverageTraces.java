@@ -2,8 +2,6 @@ package TestTrace;
 
 import static org.junit.Assert.*;
 
-import java.util.ArrayList;
-
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -28,10 +26,8 @@ public class TestCoverageTraces {
 	private static final String AGENT2_NAME = "qpid://agent2@localhost:8080";
 	
 	private static final String AGENT1_SUBSCRIPTION_SERVICE_NAME = "AGENT1_MAGIC_SERVICE";
-	private static final String AGENT2_SUBSCRIPTION_SERVICE_NAME = "AGENT2_USELESS_TRACING";
 	
 	private static final String AGENT1_DESCRIPTION = "And now for something completely different";
-	private static final String AGENT2_DESCRIPTION = "Your advertisement goes here.";
 	
 	/* Attributes */
 	private static TraceManager defaultTM = null;
@@ -93,7 +89,6 @@ public class TestCoverageTraces {
 	public void testDefaultPublishAndUnpublishTracingService() {
 		boolean servicePublished = false;
 		boolean serviceAvailable = false;
-		ArrayList<ACLMessage> messages;
 		
 		// Agent 1 publishes a tracing service.
 		agent1.setServiceName(AGENT1_SUBSCRIPTION_SERVICE_NAME);

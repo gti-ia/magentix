@@ -1,25 +1,16 @@
 package TestTrace;
 
 import static org.junit.Assert.*;
-import jason.mas2j.parser.mas2j;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.internal.runners.statements.Fail;
 
-import TestBaseAgent.ConsumerAgent;
-import TestBaseAgent.SenderAgent;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
-import es.upv.dsic.gti_ia.core.TraceEvent;
-import es.upv.dsic.gti_ia.trace.TraceManager;
-import junit.framework.TestCase;
 
 /**
  * Unit tests of class TraceInteract. All methods are tested twice, first with

@@ -1576,12 +1576,12 @@ public class OMSInterface {
 
 
 
-	private String informUnitAgentRole(String UnitName, String RequestedAgentName, String AgentName)
+	private String informUnitAgentRole(String UnitName, String RequestedAgentName, String AgentName) throws ForbiddenNormException, AgentNotExistsException, EmptyParametersException, Exception
 	{
 		ArrayList<ArrayList<String>> methodResult = new ArrayList<ArrayList<String>>();
 		String resultXML = "";
 
-		try {
+		/*try {*/
 			// --------------------------------------------------------------------------------
 			// ------------------------- Checking input parameters
 			// ----------------------------
@@ -1647,12 +1647,12 @@ public class OMSInterface {
 			String message = l10n.getMessage(MessageID.EMPTY_PARAMETERS);
 			throw new EmptyParametersException(message);
 
-		} catch (Exception e) {
+		/*} catch (Exception e) {
 			resultXML += "<status>Error</status>\n";
 			resultXML += "<result>\n<description>" + e.getMessage() + "</description>\n</result>\n";
 			resultXML += "</response>";
 			return resultXML;
-		}
+		}*/
 	}
 
 	/**

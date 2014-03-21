@@ -6,8 +6,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.ParseException;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import es.upv.dsic.gti_ia.trace.TraceMask;
@@ -29,8 +29,8 @@ public class TestTraceMask {
 	/* Attributes */
 	private static TraceMask[] masks = {null, null, null};
 	
-	@BeforeClass
-	public static void setUpClass() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		
 		for(int i = 0; i < masks.length; ++i) {
 			switch(i){
@@ -47,8 +47,8 @@ public class TestTraceMask {
 		}
 	}
 	
-	@AfterClass
-	public static void tearDownClass() throws Exception {
+	@After
+	public void tearDown() throws Exception {
 		
 		for(int i = 0; i < masks.length; ++i) {
 			masks[i] = null;
@@ -61,7 +61,7 @@ public class TestTraceMask {
 	@Test(expected=ParseException.class)
 	public void testTraceMaskError1() throws Exception { theTestOfTraceMaskError(1); }
 	public void theTestOfTraceMaskError(int d) throws Exception {
-		TraceMask tMask = new TraceMask(INVALID_ENCODED_MASCKS[d]);
+		new TraceMask(INVALID_ENCODED_MASCKS[d]);
 	}
 	
 	@Test
