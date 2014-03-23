@@ -39,6 +39,9 @@ public class TestTraceManager {
 	/* Constants */
 	// Dependent of other classes (TraceManager).
 	private static final String TRACING_ENTITIES_VARIABLE_NAME = "TracingEntities";
+	private static final String TSPROVIDER_ENTITIES_VARIABLE_NAME = "TSProviderEntities";
+	private static final String TSSUBSCRIBER_ENTITIES_VARIABLE_NAME = "TSSubscriberEntities";
+	private static final String TRACING_SERVICES_VARIABLE_NAME = "TracingServices";
 	private static final String MONITORIZABLE_VARIABLE_NAME = "monitorizable";
 	private static final Configuration conf = Configuration.getConfiguration();
 	
@@ -73,8 +76,10 @@ public class TestTraceManager {
 		}
 		
 		// Agents creation.
-		for(int i = 0; i < commAgents.length; i++)
+		for(int i = 0; i < commAgents.length; i++) {
 			commAgents[i] = new CommandedAgent(new AgentID(COMMANDED_AGENTS[i]));
+			commAgents[i].start();
+		}
 		
 		try {
 			Thread.sleep(1000);
@@ -99,9 +104,9 @@ public class TestTraceManager {
 	/* Test methods */
 	
 	/* CONSTRUCTOR ---------------------------------- */
-	//@Test
+	@Test
 	public void testTraceManagerMonitorizable0() throws Exception { theTestOfTraceManagerMonitorizable(1); }
-	//@Test
+	@Test
 	public void testTraceManagerMonitorizable1() throws Exception { theTestOfTraceManagerMonitorizable(3); }
 	public void theTestOfTraceManagerMonitorizable (int d) throws Exception {
 		
@@ -111,17 +116,36 @@ public class TestTraceManager {
 	        
 	        if(fields[i].getName().equals(TRACING_ENTITIES_VARIABLE_NAME)) {
 	        	TracingEntityList tEntities = (TracingEntityList) fields[i].get(commTraceManagers[d]);
-		       	assertEquals("The list of tracing entities must contain one element.", 1, tEntities.size());
+	        	ArrayList<String> controlTE = new ArrayList<String>();
+	        	for(int j = 0; j < tEntities.size(); j++)
+	        		controlTE.add(tEntities.get(j).getAid().toString());
+	        	for(int j = 0; j < commTraceManagers.length; j++)
+	    			assertTrue(controlTE.contains(commTraceManagers[j].getAid().toString()));
+	        	for(int j = 0; j < commAgents.length; j++)
+	        		assertTrue(controlTE.contains(commAgents[j].getAid().toString()));
 		    }
+	        else if(fields[i].getName().equals(TSPROVIDER_ENTITIES_VARIABLE_NAME)) {
+	        	TracingEntityList tProviders = (TracingEntityList) fields[i].get(commTraceManagers[d]);
+	        	assertEquals("The list of providers entities must contain zero element.", 0, tProviders.size());
+	        }
+	        else if(fields[i].getName().equals(TSSUBSCRIBER_ENTITIES_VARIABLE_NAME)) {
+	        	TracingEntityList tSubscribers = (TracingEntityList) fields[i].get(commTraceManagers[d]);
+	        	assertEquals("The list of subscribers entities must contain zero element.", 0, tSubscribers.size());
+	        }
+	        else if(fields[i].getName().equals(TRACING_SERVICES_VARIABLE_NAME)) {
+	        	TracingServiceList tServices = (TracingServiceList) fields[i].get(commTraceManagers[d]);
+	        	for(int j = 0; j < TracingService.MAX_DI_TS; j++) assertTrue(tServices.contains(TracingService.DI_TracingServices[i]));
+	        }
 			else if(fields[i].getName().equals(MONITORIZABLE_VARIABLE_NAME)) {
-					assertTrue("Monitorizable flag must be set to true.", fields[i].getBoolean(commTraceManagers[d]));
+				boolean monitorizable = fields[i].getBoolean(commTraceManagers[d]);
+				assertTrue("Monitorizable flag must be set to true.", monitorizable);
 			} 
 	    }
 	}
 	
-	//@Test
+	@Test
 	public void testTraceManagerNotMonitorizable0() throws Exception { theTestOfTraceManagerNotMonitorizable(0); }
-	//@Test
+	@Test
 	public void testTraceManagerNotMonitorizable1() throws Exception { theTestOfTraceManagerNotMonitorizable(2); }
 	public void theTestOfTraceManagerNotMonitorizable (int d) throws Exception {
 		
@@ -131,10 +155,29 @@ public class TestTraceManager {
 	        
 	        if(fields[i].getName().equals(TRACING_ENTITIES_VARIABLE_NAME)) {
 	        	TracingEntityList tEntities = (TracingEntityList) fields[i].get(commTraceManagers[d]);
-		       	assertEquals("The list of tracing entities must contain one element.", 1, tEntities.size());
+	        	ArrayList<String> controlTE = new ArrayList<String>();
+	        	for(int j = 0; j < tEntities.size(); j++)
+	        		controlTE.add(tEntities.get(j).getAid().toString());
+	        	for(int j = 0; j < commTraceManagers.length; j++)
+	    			assertTrue(controlTE.contains(commTraceManagers[j].getAid().toString()));
+	        	for(int j = 0; j < commAgents.length; j++)
+	        		assertTrue(controlTE.contains(commAgents[j].getAid().toString()));
 		    }
+	        else if(fields[i].getName().equals(TSPROVIDER_ENTITIES_VARIABLE_NAME)) {
+	        	TracingEntityList tProviders = (TracingEntityList) fields[i].get(commTraceManagers[d]);
+	        	assertEquals("The list of providers entities must contain zero element.", 0, tProviders.size());
+	        }
+	        else if(fields[i].getName().equals(TSSUBSCRIBER_ENTITIES_VARIABLE_NAME)) {
+	        	TracingEntityList tSubscribers = (TracingEntityList) fields[i].get(commTraceManagers[d]);
+	        	assertEquals("The list of subscribers entities must contain zero element.", 0, tSubscribers.size());
+	        }
+	        else if(fields[i].getName().equals(TRACING_SERVICES_VARIABLE_NAME)) {
+	        	TracingServiceList tServices = (TracingServiceList) fields[i].get(commTraceManagers[d]);
+	        	for(int j = 0; j < TracingService.MAX_DI_TS; j++) assertTrue(tServices.contains(TracingService.DI_TracingServices[i]));
+	        }
 			else if(fields[i].getName().equals(MONITORIZABLE_VARIABLE_NAME)) {
-					assertFalse("Monitorizable flag must be set to false.", fields[i].getBoolean(commTraceManagers[d]));
+				boolean monitorizable = fields[i].getBoolean(commTraceManagers[d]);
+				assertFalse("Monitorizable flag must be set to false.", monitorizable);
 			} 
 	    }
 	}
@@ -429,24 +472,93 @@ public class TestTraceManager {
 		
 	}
 	
-	//@Test(timeout=100000) 807-854
+	@Test(timeout=20000)
 	public void testOnMessageRequestUnpublish6() throws Exception {
 		
-		//Return AGREE
+		ACLMessage msg;
+		
+		//Return AGREE to publish Service
+		msg = new ACLMessage(ACLMessage.REQUEST);
+		msg.setContent("publish#10#DD_Test_TSTest");
+		msg.setReceiver(commAgents[1].getAid());
+		msg.setSender(commAgents[0].getAid());
+					
+		commTraceManagers[1].onMessage(msg);
+					
+		checkOnMessage("AGREE: publish#DD_Test_TS", 0);
+		
+		//Return AGREE to subscription
+		msg = new ACLMessage(ACLMessage.SUBSCRIBE);
+		msg.setContent("DD_Test_TS#" + commAgents[0].getAid().toString());
+		msg.setReceiver(commAgents[0].getAid());
+		msg.setSender(commAgents[1].getAid());
+				
+		commTraceManagers[1].onMessage(msg);
+				
+		checkOnMessage("AGREE: subscribe#10#DD_Test_TS#" + commAgents[0].getAid().toString(), 1);
+		
+		//Return AGREE to subscription
+		msg = new ACLMessage(ACLMessage.SUBSCRIBE);
+		msg.setContent("DD_Test_TS#any");
+		msg.setReceiver(commAgents[0].getAid());
+		msg.setSender(commAgents[2].getAid());
+						
+		commTraceManagers[1].onMessage(msg);
+						
+		checkOnMessage("AGREE: subscribe#10#DD_Test_TS#any", 2);
+		
+		//Return AGREE to unpublish
+		msg = new ACLMessage(ACLMessage.REQUEST);
+		msg.setContent("unpublish#DD_Test_TS");
+		msg.setReceiver(commAgents[0].getAid());
+		msg.setSender(commAgents[0].getAid());
+				
+		commTraceManagers[1].onMessage(msg);
+				
+		checkOnMessage("AGREE: unpublish#DD_Test_TS", 0);
+		
+	}
+	
+	@Test(timeout=20000)
+	public void testOnMessageRequestUnpublish7() throws Exception {
+		
+		//Return AGREE to publish Service
+		ACLMessage msg;
 		for(int i = 0; i < commAgents.length; i++) {
-			ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
-			msg.setContent("publish#10#DD_Test_TS#Test");
-			msg.setReceiver(commAgents[2].getAid());
-			msg.setSender(commAgents[2].getAid());
+			msg = new ACLMessage(ACLMessage.REQUEST);
+			msg.setContent("publish#10#DD_Test_TSTest");
+			msg.setReceiver(commAgents[1].getAid());
+			msg.setSender(commAgents[i].getAid());
 					
 			commTraceManagers[3].onMessage(msg);
 					
-			checkOnMessage("AGREE: publish#DD_Test_TS", 2);
+			checkOnMessage("AGREE: publish#DD_Test_TS", i);
 		}
 		
-		ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
+		//Return AGREE to subscription
+		msg = new ACLMessage(ACLMessage.SUBSCRIBE);
+		msg.setContent("DD_Test_TS#" + commAgents[2].getAid().toString());
+		msg.setReceiver(commAgents[0].getAid());
+		msg.setSender(commAgents[2].getAid());
+				
+		commTraceManagers[3].onMessage(msg);
+				
+		checkOnMessage("AGREE: subscribe#10#DD_Test_TS#" + commAgents[2].getAid().toString(), 2);
+		
+		//Return AGREE to subscription
+		msg = new ACLMessage(ACLMessage.SUBSCRIBE);
+		msg.setContent("DD_Test_TS#any");
+		msg.setReceiver(commAgents[0].getAid());
+		msg.setSender(commAgents[0].getAid());
+						
+		commTraceManagers[3].onMessage(msg);
+						
+		checkOnMessage("AGREE: subscribe#10#DD_Test_TS#any", 0);
+		
+		//Return AGREE to unpublish
+		msg = new ACLMessage(ACLMessage.REQUEST);
 		msg.setContent("unpublish#DD_Test_TS");
-		msg.setReceiver(commAgents[2].getAid());
+		msg.setReceiver(commAgents[0].getAid());
 		msg.setSender(commAgents[2].getAid());
 				
 		commTraceManagers[3].onMessage(msg);
@@ -881,10 +993,30 @@ public class TestTraceManager {
 		}
 	}
 	
+	private void checkOnTraceEvent(String res, int... d){
+		for(int n : d) {
+			while(commAgents[n].getTraceEvents().size() < 1) {
+				try {
+					Thread.sleep(1 * 50);
+				} catch (InterruptedException e) {
+					fail(e.getMessage());
+				}
+			}
+			ArrayList<TraceEvent> tE = commAgents[n].getTraceEvents();
+			ArrayList<String> controlTE = new ArrayList<String>();
+			for(TraceEvent e : tE){
+				System.out.println(e.getTracingService() + ": " + e.getContent());
+				controlTE.add(e.getTracingService() + ": " + e.getContent());
+			}
+			assertTrue(controlTE.contains(res));
+			commAgents[n].clearTraceEvents();
+		}
+	}
+	
 	/* ON_TRACE_EVENT ---------------------------------- */
 	
 	@Test
-	public void testOnTraceEventNew_Agent() throws Exception {
+	public void testOnTraceEventNew_Agent0() throws Exception {
 		
 		// Check that all TraceManagers in the system receive NEW_AGENT Trace Event
 		for(int i = 0; i < commTraceManagers.length; i++) {
@@ -900,11 +1032,10 @@ public class TestTraceManager {
 		}
 	}
 	
-	
-	//@Test(timeout=20000)
-	public void testOnTraceEventAgent_Destroy() throws Exception {
+	@Test(timeout=20000)
+	public void testOnTraceEventAgent_Destroy0() throws Exception {
 		
-		// Check that all TraceManagers in the system receive NEW_AGENT Trace Event
+		// Check that all TraceManagers in the system receive AGENT_DESTROYED and cancel her subscriptions.
 		for(int i = 0; i < commTraceManagers.length; ++i)
 			commTraceManagers[i].clearTraceEvents();
 		
@@ -925,8 +1056,104 @@ public class TestTraceManager {
 				System.out.println(e.getTracingService() + ": " + e.getContent());
 				controlTE.add(e.getTracingService() + ": " + e.getContent());
 			}
-			//assertTrue(controlTE.contains(res));
+			for(int j = 0; j < commAgents.length; j++) {
+				assertTrue(controlTE.contains("AGENT_DESTROYED: " + commAgents[j].getAid().toString()));
+			}
 		}
 		
+	}
+	
+	@Test(timeout=20000)
+	public void testOnTraceEventAgent_Destroy1() throws Exception {
+		
+		//Check that, when the AGENT is DESTROYED, unpublish the service and remove subscribers.
+		//The service have 2 providers.
+			//Return AGREE to publish Service
+		ACLMessage msg;
+		for(int i = 0; i < commAgents.length-1; i++) {
+			msg = new ACLMessage(ACLMessage.REQUEST);
+			msg.setContent("publish#10#DD_Test_TSTest");
+			msg.setReceiver(commAgents[1].getAid());
+			msg.setSender(commAgents[i].getAid());
+							
+			commTraceManagers[3].onMessage(msg);
+							
+			checkOnMessage("AGREE: publish#DD_Test_TS", i);
+		}
+				
+			//Return AGREE to subscription
+		msg = new ACLMessage(ACLMessage.SUBSCRIBE);
+		msg.setContent("DD_Test_TS#" + commAgents[0].getAid().toString());
+		msg.setReceiver(commAgents[0].getAid());
+		msg.setSender(commAgents[1].getAid());
+						
+		commTraceManagers[3].onMessage(msg);
+						
+		checkOnMessage("AGREE: subscribe#10#DD_Test_TS#" + commAgents[0].getAid().toString(), 1);
+				
+			//Return AGREE to subscription
+		msg = new ACLMessage(ACLMessage.SUBSCRIBE);
+		msg.setContent("DD_Test_TS#any");
+		msg.setReceiver(commAgents[0].getAid());
+		msg.setSender(commAgents[2].getAid());
+								
+		commTraceManagers[3].onMessage(msg);
+								
+		checkOnMessage("AGREE: subscribe#10#DD_Test_TS#any", 2);
+				
+			//cleaning Agents traceEvets.
+		for(int i = 0; i < commAgents.length; i++)
+			commAgents[i].clearTraceEvents();
+		
+		commAgents[0].addCommand(CommandedAgent.END);
+		checkOnTraceEvent("UNAVAILABLE_TS: DD_Test_TS" + commAgents[0].getAid().toString(), 1);
+		
+		commAgents[1].addCommand(CommandedAgent.END);
+		checkOnTraceEvent("UNAVAILABLE_TS: DD_Test_TS#any", 2);
+	}
+	
+	@Test(timeout=20000)
+	public void testOnTraceEventAgent_Destroy2() throws Exception {
+		
+		//Check that, when the AGENT is DESTROYED, unpublish the service and remove subscribers.
+		//The service have 2 providers.
+			//Return AGREE to publish Service
+		ACLMessage msg;
+		msg = new ACLMessage(ACLMessage.REQUEST);
+		msg.setContent("publish#10#DD_Test_TSTest");
+		msg.setReceiver(commAgents[1].getAid());
+		msg.setSender(commAgents[0].getAid());
+							
+		commTraceManagers[1].onMessage(msg);
+							
+		checkOnMessage("AGREE: publish#DD_Test_TS", 0);
+				
+			//Return AGREE to subscription
+		msg = new ACLMessage(ACLMessage.SUBSCRIBE);
+		msg.setContent("DD_Test_TS#" + commAgents[0].getAid().toString());
+		msg.setReceiver(commAgents[0].getAid());
+		msg.setSender(commAgents[2].getAid());
+						
+		commTraceManagers[1].onMessage(msg);
+						
+		checkOnMessage("AGREE: subscribe#10#DD_Test_TS#" + commAgents[0].getAid().toString(), 2);
+				
+			//Return AGREE to subscription
+		msg = new ACLMessage(ACLMessage.SUBSCRIBE);
+		msg.setContent("DD_Test_TS#any");
+		msg.setReceiver(commAgents[0].getAid());
+		msg.setSender(commAgents[1].getAid());
+								
+		commTraceManagers[1].onMessage(msg);
+								
+		checkOnMessage("AGREE: subscribe#10#DD_Test_TS#any", 1);
+				
+			//cleaning Agents traceEvets.
+		for(int i = 0; i < commAgents.length; i++)
+			commAgents[i].clearTraceEvents();
+		
+		commAgents[0].addCommand(CommandedAgent.END);
+		checkOnTraceEvent("UNAVAILABLE_TS: DD_Test_TS" + commAgents[0].getAid().toString(), 2);
+		checkOnTraceEvent("UNAVAILABLE_TS: DD_Test_TS#any", 1);
 	}
 }
