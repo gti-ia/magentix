@@ -332,7 +332,7 @@ public class OMSProxy extends THOMASProxy {
 	 *             If agent not exists.
 	 */
 	@SuppressWarnings("unchecked")
-	public ArrayList<ArrayList<String>> informAgentRole(String RequestedAgentID) throws  EmptyParametersException, AgentNotExistsException{
+	public ArrayList<ArrayList<String>> informAgentRole(String RequestedAgentID) throws  EmptyParametersException, AgentNotExistsException, ForbiddenNormException{
 		ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
 
 		HashMap<String, String> inputs = new HashMap<String, String>();
@@ -349,6 +349,9 @@ public class OMSProxy extends THOMASProxy {
 			throw e;
 		} catch (AgentNotExistsException e) {
 
+			throw e;
+		}  catch (ForbiddenNormException e) {
+			
 			throw e;
 		} catch (THOMASException e) {
 

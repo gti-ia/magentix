@@ -1580,79 +1580,59 @@ public class OMSInterface {
 	{
 		ArrayList<ArrayList<String>> methodResult = new ArrayList<ArrayList<String>>();
 		String resultXML = "";
+		boolean permitNorms;
 
-		/*try {*/
-			// --------------------------------------------------------------------------------
-			// ------------------------- Checking input parameters
-			// ----------------------------
-			// --------------------------------------------------------------------------------
-			if (checkParameter(RequestedAgentName)) {
-				if (dbInterface.checkAgent(RequestedAgentName)) {
-					// --------------------------------------------------------------------------------
-					// ------------------------- Checking domain-dependent norms
-					// ----------------------
-					// --------------------------------------------------------------------------------
-
-					if (!checkPermitNorms(AgentName, UnitName, buildAction("informAgentRole", RequestedAgentName, AgentName)))//"informAgentRole("+RequestedAgentName.toLowerCase()+","+AgentName.toLowerCase()+")"))
-						if (checkFordibbenNorms(AgentName, UnitName, buildAction("informAgentRole", RequestedAgentName, AgentName)))//"informAgentRole("+RequestedAgentName.toLowerCase()+","+AgentName.toLowerCase()+")"))
-						{
-							String message = l10n.getMessage(MessageID.FORBIDDEN_NORM);
-							throw new ForbiddenNormException(message);
-						}
-
-					if (dbInterface.checkAgentInUnit(AgentName, UnitName))
+		// --------------------------------------------------------------------------------
+		// ------------------------- Checking input parameters
+		// ----------------------------
+		// --------------------------------------------------------------------------------
+		if (checkParameter(RequestedAgentName)) {
+			if (dbInterface.checkAgent(RequestedAgentName)) {
+				// --------------------------------------------------------------------------------
+				// ------------------------- Checking domain-dependent norms
+				// ----------------------
+				// --------------------------------------------------------------------------------
+				permitNorms = checkPermitNorms(AgentName, UnitName, buildAction("informAgentRole", RequestedAgentName, AgentName));
+				if (!permitNorms)
+					if (checkFordibbenNorms(AgentName, UnitName, buildAction("informAgentRole", RequestedAgentName, AgentName)))
 					{
-						methodResult = dbInterface.getInformAgentRolesPlayedInUnit(UnitName, RequestedAgentName);
+						String message = l10n.getMessage(MessageID.FORBIDDEN_NORM);
+						throw new ForbiddenNormException(message);
+					}
 
-
-
-						for (ArrayList<String> agentPair : methodResult) { // <
-							// RoleName
-							// ,
-							// UnitName
-							// >
+				methodResult = dbInterface.getInformAgentRolesPlayedInUnit(UnitName, RequestedAgentName);
+					
+				if (dbInterface.checkAgentInUnit(AgentName, UnitName) || permitNorms)
+				{
+					for (ArrayList<String> agentPair : methodResult) {
+						resultXML += "<item>\n";
+						resultXML += "<rolename>" + agentPair.get(0) + "</rolename>\n";
+						resultXML += "<unitname>" + UnitName + "</unitname>\n";
+						resultXML += "</item>\n";
+					}
+					return resultXML;
+				}
+				else
+				{
+					for (ArrayList<String> agentPair : methodResult) {
+						if (agentPair.get(1).equals("public"))
+						{
 							resultXML += "<item>\n";
 							resultXML += "<rolename>" + agentPair.get(0) + "</rolename>\n";
 							resultXML += "<unitname>" + UnitName + "</unitname>\n";
 							resultXML += "</item>\n";
 						}
-
-						return resultXML;
 					}
-					else
-					{
-						methodResult = dbInterface.getInformAgentRolesPlayedInUnit(UnitName, RequestedAgentName);
-
-
-						for (ArrayList<String> agentPair : methodResult) { // <
-
-							if (agentPair.get(1).equals("public"))
-							{
-								resultXML += "<item>\n";
-								resultXML += "<rolename>" + agentPair.get(0) + "</rolename>\n";
-								resultXML += "<unitname>" + UnitName + "</unitname>\n";
-								resultXML += "</item>\n";
-							}
-						}
-
-						return resultXML;
-					}
-
-				} else {
-					String message = l10n.getMessage(MessageID.AGENT_NOT_EXISTS, RequestedAgentName);
-					throw new AgentNotExistsException(message);
+					return resultXML;
 				}
-
+			} else {
+				String message = l10n.getMessage(MessageID.AGENT_NOT_EXISTS, RequestedAgentName);
+				throw new AgentNotExistsException(message);
 			}
-			String message = l10n.getMessage(MessageID.EMPTY_PARAMETERS);
-			throw new EmptyParametersException(message);
 
-		/*} catch (Exception e) {
-			resultXML += "<status>Error</status>\n";
-			resultXML += "<result>\n<description>" + e.getMessage() + "</description>\n</result>\n";
-			resultXML += "</response>";
-			return resultXML;
-		}*/
+		}
+		String message = l10n.getMessage(MessageID.EMPTY_PARAMETERS);
+		throw new EmptyParametersException(message);
 	}
 
 	/**
