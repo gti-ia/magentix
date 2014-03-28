@@ -1,7 +1,5 @@
 package TestTrace.TestTrace2;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 
@@ -242,6 +240,13 @@ public class TestTrace2 {
 		//Check that Publisher[nP] has cancel its publications.
 		for (int nP = 0; nP < N_PUBLISHERS; nP++)
 			publishers[nP].contExec.release();
+		
+		try {
+			//Wait to Publisher cancel its publications.
+			end.acquire(N_PUBLISHERS);
+		} catch (Exception e) {
+			fail(e.getMessage());
+		}
 		
 		int iAux = i;
 		

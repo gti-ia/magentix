@@ -99,6 +99,7 @@ public class Publisher extends BaseAgent {
 			TraceInteract.unpublishTracingService(this, this.getName()+"<DD_Test_TS_1>");
 			TraceInteract.unpublishTracingService(this, this.getName()+"<DD_Test_TS_2>");
 
+			TestTrace2.end.release();
 			contExec.acquire(2);
 			
 		} catch (TraceServiceNotAllowedException e1) {
