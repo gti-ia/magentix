@@ -45,7 +45,7 @@ public class Subscriber extends BaseAgent{
 	private ArrayList<ACLMessage> messages;
 	private ArrayList<TraceEvent> events;
 	private Random generator;
-	private final int N_PUBLISHERS = 10, N_SUBSCRIBERS = 5, N_EVENTS = 10;
+	private final int N_PUBLISHERS = 10, N_EVENTS = 10;
 	private int publisher_number1=0, publisher_number2=0;
 	private int service1=0, service2=0;
 	private int n_received1=0, n_received2=0;
