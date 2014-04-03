@@ -8,9 +8,9 @@ import es.upv.dsic.gti_ia.core.ACLMessage;
  *
  */
 
-public abstract class SendingErrorsStateMethod {
+public interface SendingErrorsStateMethod {
 
 
-	protected abstract String run(CProcessor myProcessor, ACLMessage errorMessage);
+	public abstract String run(CProcessor myProcessor, ACLMessage errorMessage);
 
 }
