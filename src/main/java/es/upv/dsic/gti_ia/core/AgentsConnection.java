@@ -1,5 +1,6 @@
 package es.upv.dsic.gti_ia.core;
 
+import org.apache.log4j.Logger;
 import org.apache.qpid.transport.Connection;
 import org.apache.qpid.transport.ConnectionSettings;
 
@@ -24,6 +25,12 @@ public class AgentsConnection {
 	private static int numConnections = 0;
 	
 	public static final int MAX_CONS_PER_CON = 120;
+	
+	/**
+	 * The logger variable considers to print any event that occurs by the agent
+	 */
+	protected static Logger logger = Logger.getLogger(AgentsConnection.class);
+	
 
 	/**
 	 * Connects with a Qpid broker taking the input connection parameters from
@@ -125,7 +132,9 @@ public class AgentsConnection {
 	public static void disconnect() {
 		try {
 			connection.close();
-		}catch(Exception e) {}
+		}catch(Exception e) {
+			logger.error(e);
+		}
 		connection = null;
 	}
 
