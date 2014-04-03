@@ -133,7 +133,7 @@ public class AgentsConnection {
 		try {
 			connection.close();
 		}catch(Exception e) {
-			logger.error(e);
+			logger.error("Error on disconnect=" + e);
 		}
 		connection = null;
 	}
