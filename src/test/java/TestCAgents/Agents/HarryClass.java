@@ -1,4 +1,4 @@
-package TestCAgents;
+package TestCAgents.Agents;
 
 import es.upv.dsic.gti_ia.cAgents.BeginState;
 import es.upv.dsic.gti_ia.cAgents.BeginStateMethod;
@@ -23,8 +23,8 @@ import es.upv.dsic.gti_ia.core.MessageFilter;
  * @author Jose Manuel Mejias Rodriguez - jmejias@dsic.upv.es
  */
 
-class HarryClass extends CAgent {
-
+public class HarryClass extends CAgent {
+	
 	//Variables for testing
 	public String receivedMsg;
 	public int msgPerformative;

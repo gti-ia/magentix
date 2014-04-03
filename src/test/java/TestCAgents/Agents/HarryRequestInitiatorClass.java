@@ -1,4 +1,4 @@
-package TestCAgents;
+package TestCAgents.Agents;
 
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
@@ -7,13 +7,13 @@ import es.upv.dsic.gti_ia.cAgents.CProcessor;
 import es.upv.dsic.gti_ia.cAgents.CFactory;
 import es.upv.dsic.gti_ia.cAgents.protocols.FIPA_REQUEST_Initiator;
 
-class HarryClass2 extends CAgent {
+public class HarryRequestInitiatorClass extends CAgent {
 
 	//Variables for testing
 	public String informMsg;
 	
 	
-	public HarryClass2(AgentID aid) throws Exception {
+	public HarryRequestInitiatorClass(AgentID aid) throws Exception {
 		super(aid);
 		
 		informMsg = "";

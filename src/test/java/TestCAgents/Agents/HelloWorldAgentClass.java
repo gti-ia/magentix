@@ -1,4 +1,4 @@
-package TestCAgents;
+package TestCAgents.Agents;
 
 import es.upv.dsic.gti_ia.cAgents.CAgent;
 import es.upv.dsic.gti_ia.cAgents.CProcessor;
@@ -12,7 +12,7 @@ import es.upv.dsic.gti_ia.core.AgentID;
  * @author Jose Manuel Mejias Rodriguez - jmejias@dsic.upv.es
  */
 
-class HelloWorldAgentClass extends CAgent {
+public class HelloWorldAgentClass extends CAgent {
 
 	//Public variables for the tests
 	public String welcomeMsg;

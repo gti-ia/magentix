@@ -9,6 +9,9 @@ import org.apache.log4j.xml.DOMConfigurator;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import TestCAgents.Agents.HarryRequestInitiatorClass;
+import TestCAgents.Agents.SallyRequestParticipantClass;
+
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
@@ -23,8 +26,8 @@ import es.upv.dsic.gti_ia.core.AgentsConnection;
 
 public class TestRequestFactory extends TestCase {
 
-	HarryClass2 Harry;
-	SallyClass2 Sally;
+	HarryRequestInitiatorClass Harry;
+	SallyRequestParticipantClass Sally;
 	Process qpid_broker;
 
 	public TestRequestFactory(String name) {
@@ -51,8 +54,8 @@ public class TestRequestFactory extends TestCase {
 			/**
 			 * Instantiating the CAgents
 			 */
-			Harry = new HarryClass2(new AgentID("Harry2"));
-			Sally = new SallyClass2(new AgentID("Sally2"));
+			Harry = new HarryRequestInitiatorClass(new AgentID("Harry2"));
+			Sally = new SallyRequestParticipantClass(new AgentID("Sally2"));
 
 		} catch (Exception e) {
 			System.out.println(e.getMessage());

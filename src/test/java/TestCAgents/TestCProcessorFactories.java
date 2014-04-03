@@ -1,13 +1,12 @@
 package TestCAgents;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-
 import junit.framework.TestCase;
 
 import org.apache.log4j.xml.DOMConfigurator;
 import org.junit.Test;
 
+import TestCAgents.Agents.HarryClass;
+import TestCAgents.Agents.SallyClass;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
 

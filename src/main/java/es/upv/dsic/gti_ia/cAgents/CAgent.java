@@ -63,9 +63,6 @@
 
 package es.upv.dsic.gti_ia.cAgents;
 
-import jason.asSyntax.LogExpr;
-import jason.functions.log;
-
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -226,9 +223,10 @@ public abstract class CAgent extends BaseAgent {
 
 	public void send(ACLMessage msg) {
 	
-		this.logger.info(this.getName() + " sends " + msg.getReceiver().name
+		this.logger.info(this.getName() + " sends " + msg.getReceiverList()
 				+ " the message " + msg.getPerformative() + " "
 				+ msg.getContent());
+		
 		this.lock();
 		super.send(msg);
 		this.unlock();

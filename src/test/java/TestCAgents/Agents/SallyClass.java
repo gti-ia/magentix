@@ -1,4 +1,4 @@
-package TestCAgents;
+package TestCAgents.Agents;
 
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
@@ -13,7 +13,7 @@ import es.upv.dsic.gti_ia.cAgents.*;
  * @author David Fernández - dfernandez@dsic.upv.es
  */
 
-class SallyClass extends CAgent {
+public class SallyClass extends CAgent {
 
 	//Variables for testing
 	public String receivedMsg;

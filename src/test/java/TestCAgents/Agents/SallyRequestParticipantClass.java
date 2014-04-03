@@ -1,4 +1,4 @@
-package TestCAgents;
+package TestCAgents.Agents;
 
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
@@ -7,12 +7,12 @@ import es.upv.dsic.gti_ia.cAgents.CProcessor;
 import es.upv.dsic.gti_ia.cAgents.CFactory;
 import es.upv.dsic.gti_ia.cAgents.protocols.FIPA_REQUEST_Participant;
 
-class SallyClass2 extends CAgent {
+public class SallyRequestParticipantClass extends CAgent {
 
 	//Variables for testing
 	public boolean acceptRequests;
 	
-	public SallyClass2(AgentID aid) throws Exception {
+	public SallyRequestParticipantClass(AgentID aid) throws Exception {
 		super(aid);
 		
 		acceptRequests = false;//False until the CFactory gets to the doReceiveRequestMethod

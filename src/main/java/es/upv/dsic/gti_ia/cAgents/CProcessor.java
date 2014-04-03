@@ -7,10 +7,11 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
-import java.util.concurrent.locks.Condition;
 import java.util.UUID;
+import java.util.concurrent.locks.Condition;
 
 import org.apache.log4j.Logger;
+import org.apache.qpid.transport.SenderException;
 import org.apache.qpid.transport.SessionException;
 
 import es.upv.dsic.gti_ia.core.ACLMessage;
@@ -421,7 +422,7 @@ public class CProcessor implements Runnable, Cloneable {
 					}
 					
 					this.unlockMyAgent();
-					//Added by jjorge
+					
 					backState = currentState;
 					currentState = sendState.getMethod().run(this,
 							messageToSend);
@@ -431,13 +432,27 @@ public class CProcessor implements Runnable, Cloneable {
 					try {
 						this.myAgent.send(messageToSend);
 
-					} catch (SessionException se) {
+					}catch (SenderException se) {
 						// se.printStackTrace();
 						logger.error("Error on sending=" + se.getMessage());
 						sent = false;
 						currentState = SENDING_ERRORS_STATE;
 
-					}
+					}catch (SessionException se) {
+						// se.printStackTrace();
+						logger.error("Error on sending=" + se.getMessage());
+						sent = false;
+						currentState = SENDING_ERRORS_STATE;
+
+					} 
+//					catch (SocketException se) {
+//						// se.printStackTrace();
+//						logger.error("Error on sending=" + se.getMessage());
+//						sent = false;
+//						currentState = SENDING_ERRORS_STATE;
+//
+//					}
+					
 
 					if (sent)
 						this.lastSentMessage = messageToSend;
