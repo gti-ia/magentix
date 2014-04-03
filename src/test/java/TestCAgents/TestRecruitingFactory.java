@@ -1,27 +1,6 @@
 package TestCAgents;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.ReentrantLock;
-
 import junit.framework.TestCase;
-
-import org.apache.log4j.xml.DOMConfigurator;
-import org.junit.Ignore;
-import org.junit.Test;
-
-import TestCAgents.Agents.HarryRecruitingInitiatorClass;
-import TestCAgents.Agents.HarryRequestInitiatorClass;
-import TestCAgents.Agents.OtherParticipantClass;
-import TestCAgents.Agents.SallyClass;
-import TestCAgents.Agents.SallyRecruitingParticipantClass;
-import TestCAgents.Agents.SallyRequestParticipantClass;
-
-import es.upv.dsic.gti_ia.core.ACLMessage;
-import es.upv.dsic.gti_ia.core.AgentID;
-import es.upv.dsic.gti_ia.core.AgentsConnection;
 
 /**
  * Test class for Request factory template (FIPA protocol) based on the example

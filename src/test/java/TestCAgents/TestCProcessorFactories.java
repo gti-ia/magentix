@@ -3,6 +3,8 @@ package TestCAgents;
 import junit.framework.TestCase;
 
 import org.apache.log4j.xml.DOMConfigurator;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import TestCAgents.Agents.HarryClass;
@@ -28,7 +30,7 @@ public class TestCProcessorFactories extends TestCase {
 		super(name);
 
 	}
-
+	@Before
 	public void setUp() throws Exception {
 		super.setUp();
 		qpid_broker = qpidManager.UnixQpidManager.startQpid(Runtime.getRuntime(), qpid_broker);
@@ -59,7 +61,7 @@ public class TestCProcessorFactories extends TestCase {
 	/**
 	 * Testing propose message sent by the initiator factory in Harry
 	 */
-	@Test
+	@Test(timeout = 30000)
 	public void testProposeMessage() {
 		Sally.start();
 		// Temporal wait for resolving issues
@@ -86,7 +88,7 @@ public class TestCProcessorFactories extends TestCase {
 	/**
 	 * Testing refuse message sent by the participant factory in Sally
 	 */
-	@Test
+	@Test(timeout = 30000)
 	public void testRefuseMessage() {
 		System.out.println("SEGUNDO TEST");
 
@@ -110,7 +112,7 @@ public class TestCProcessorFactories extends TestCase {
 
 		assertEquals("REFUSE: Maybe someday", Harry.receivedMsg);
 	}
-
+	@After
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		AgentsConnection.disconnect();

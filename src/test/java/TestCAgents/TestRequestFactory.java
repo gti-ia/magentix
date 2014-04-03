@@ -1,18 +1,14 @@
 package TestCAgents;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-
 import junit.framework.TestCase;
 
 import org.apache.log4j.xml.DOMConfigurator;
-import org.junit.Ignore;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import TestCAgents.Agents.HarryRequestInitiatorClass;
 import TestCAgents.Agents.SallyRequestParticipantClass;
-
-import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
 
@@ -33,7 +29,7 @@ public class TestRequestFactory extends TestCase {
 	public TestRequestFactory(String name) {
 		super(name);
 	}
-
+	@Before
 	public void setUp() throws Exception {
 		super.setUp();
 		qpid_broker = qpidManager.UnixQpidManager.startQpid(Runtime.getRuntime(), qpid_broker);
@@ -66,7 +62,7 @@ public class TestRequestFactory extends TestCase {
 	/**
 	 * Testing inform message sent by the participant Factory to Harry
 	 */
-	@Test
+	@Test(timeout = 30000)
 	public void testInformMessage() {
 		Sally.start();
 		Harry.start();
@@ -88,7 +84,7 @@ public class TestRequestFactory extends TestCase {
 	/**
 	 * Testing ReceiveRequest in participant Factory in Sally
 	 */
-	@Test
+	@Test(timeout = 30000)
 	public void testRefuseMessage() {
 		Sally.start();
 		Harry.start();
@@ -105,7 +101,7 @@ public class TestRequestFactory extends TestCase {
 
 		assertTrue(Sally.acceptRequests);
 	}
-
+	@After
 	public void tearDown() throws Exception {
 		super.tearDown();
 		AgentsConnection.disconnect();

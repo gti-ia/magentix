@@ -7,6 +7,8 @@ import java.util.concurrent.locks.ReentrantLock;
 import junit.framework.TestCase;
 
 import org.apache.log4j.xml.DOMConfigurator;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import TestCAgents.Agents.HarryContractNetInitiatorClass;
@@ -36,6 +38,7 @@ public class TestContractNetFactory extends TestCase {
 		super(name);
 	}
 
+	@Before
 	public void setUp() throws Exception {
 		super.setUp();
 		qpid_broker = qpidManager.UnixQpidManager.startQpid(
@@ -67,7 +70,7 @@ public class TestContractNetFactory extends TestCase {
 
 	}
 
-	@Test
+	@Test(timeout = 30000)
 	public void testProtocolMultipleAgents() {
 
 		finished = new CountDownLatch(4);
@@ -113,7 +116,7 @@ public class TestContractNetFactory extends TestCase {
 		finished = new CountDownLatch(2);
 	}
 
-	@Test
+	@Test(timeout = 30000)
 	public void testProtocolMultipleAgentsRefuse() {
 
 		finished = new CountDownLatch(4);
@@ -161,7 +164,7 @@ public class TestContractNetFactory extends TestCase {
 		finished = new CountDownLatch(2);
 	}
 
-	@Test
+	@Test(timeout = 30000)
 	public void testProtocolMultipleAgentsAccept() {
 
 		finished = new CountDownLatch(4);
@@ -204,7 +207,7 @@ public class TestContractNetFactory extends TestCase {
 		finished = new CountDownLatch(2);
 	}
 
-	@Test
+	@Test(timeout = 30000)
 	public void testProtocol() {
 		Sally.start();
 		Harry.start();
@@ -220,7 +223,7 @@ public class TestContractNetFactory extends TestCase {
 		assertEquals("COMPLETE", Sally.informMsg);
 	}
 
-	@Test
+	@Test(timeout = 30000)
 	public void testProtocolRefuseProposal() {
 
 		Sally.setMode(1); // REFUSE MODE
@@ -237,7 +240,7 @@ public class TestContractNetFactory extends TestCase {
 		assertEquals("refuse", Sally.refuseMsg);
 	}
 
-	@Test
+	@Test(timeout = 30000)
 	public void testProtocolRejectProposal() {
 
 		Sally.start();
@@ -257,7 +260,7 @@ public class TestContractNetFactory extends TestCase {
 		assertEquals("", Sally.rejectMsg);
 	}
 
-	@Test
+	@Test(timeout = 30000)
 	public void testProtocolAcceptProposal() {
 
 		Sally.start();
@@ -276,7 +279,7 @@ public class TestContractNetFactory extends TestCase {
 		assertEquals("OK", Sally.acceptMsg);
 	}
 
-	@Test
+	@Test(timeout = 30000)
 	public void testNotUnderstood() {
 		Sally.start();
 		Sally.FAIL = true;
@@ -295,7 +298,7 @@ public class TestContractNetFactory extends TestCase {
 		assertEquals(null, Sally.notUnderstood);
 	}
 
-	@Test
+	@Test(timeout = 30000)
 	public void testProtocolRcvFailure() {
 
 		Sally.start();
@@ -314,6 +317,7 @@ public class TestContractNetFactory extends TestCase {
 		assertEquals("Error", Sally.receiveFailure);
 	}
 
+	@After
 	public void tearDown() throws Exception {
 		super.tearDown();
 		AgentsConnection.disconnect();

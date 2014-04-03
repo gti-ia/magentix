@@ -3,6 +3,9 @@ package TestCAgents;
 import junit.framework.TestCase;
 
 import org.apache.log4j.xml.DOMConfigurator;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import TestCAgents.Agents.HelloWorldAgentClass;
 import es.upv.dsic.gti_ia.core.AgentID;
@@ -23,7 +26,7 @@ public class TestCAgent extends TestCase {
 	public TestCAgent(String name) {
 		super(name);
 	}
-
+	@Before
 	public void setUp() throws Exception {
 		super.setUp();
 		qpid_broker = qpidManager.UnixQpidManager.startQpid(Runtime.getRuntime(), qpid_broker);
@@ -55,6 +58,7 @@ public class TestCAgent extends TestCase {
 	 * 
 	 * /** Testing welcome message sent by the platform
 	 */
+	@Test(timeout = 30000)
 	public void testWelcomeMessage() {
 		helloWorldAgent.start();
 
@@ -78,6 +82,7 @@ public class TestCAgent extends TestCase {
 	/**
 	 * Testing finalize message sent by the platform
 	 */
+	@Test(timeout = 30000)
 	public void testFinalizeMessage() {
 		System.out.println("Segundo test");
 
@@ -98,7 +103,7 @@ public class TestCAgent extends TestCase {
 				+ ": the finalize message is See you",
 				helloWorldAgent.finalizeMsg);
 	}
-
+	@After
 	public void tearDown() throws Exception {
 		super.tearDown();
 		AgentsConnection.disconnect();
