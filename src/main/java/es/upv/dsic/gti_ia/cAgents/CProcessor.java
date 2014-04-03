@@ -419,20 +419,21 @@ public class CProcessor implements Runnable, Cloneable {
 						messageToSend
 								.copyFromAsTemplate(sendState.messageTemplate);
 					}
+					
 					this.unlockMyAgent();
+					//Added by jjorge
+					backState = currentState;
 					currentState = sendState.getMethod().run(this,
 							messageToSend);
 					this.lockMyAgent();
 					messageToSend.setConversationId(this.conversationID);
-
-					// Added by Javier
 					boolean sent = true;
 					try {
 						this.myAgent.send(messageToSend);
 
 					} catch (SessionException se) {
 						// se.printStackTrace();
-						logger.error("SENDING ERRORS");
+						logger.error("Error on sending=" + se.getMessage());
 						sent = false;
 						currentState = SENDING_ERRORS_STATE;
 
@@ -571,7 +572,7 @@ public class CProcessor implements Runnable, Cloneable {
 					this.unlockMyAgent();
 					return;
 				case State.SENDING_ERRORS:
-					next = backState;
+					
 					this.unlockMyAgent();
 					next = this.sendingErrorsState().getMethod()
 							.run(this, currentMessage);
@@ -582,7 +583,7 @@ public class CProcessor implements Runnable, Cloneable {
 					currentState = next;
 					break;
 				case State.SHUTDOWN:
-					next = backState;
+					
 					this.unlockMyAgent();
 					next = this.SHUTDOWN.getMethod().run(this, currentMessage);
 					this.lockMyAgent();
@@ -606,7 +607,7 @@ public class CProcessor implements Runnable, Cloneable {
 					currentState = next;
 					break;
 				case State.CANCEL:
-					next = backState;
+					
 					this.unlockMyAgent();
 					next = this.cancelState().getMethod()
 							.run(this, currentMessage);
