@@ -63,6 +63,9 @@
 
 package es.upv.dsic.gti_ia.cAgents;
 
+import jason.asSyntax.LogExpr;
+import jason.functions.log;
+
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -89,6 +92,7 @@ import es.upv.dsic.gti_ia.core.MessageFilter;
  * 														when a proper factory should
  * 														process them
  * @author Jose Alemany Bordera - jalemany1@dsic.upv.es
+ * @author Javier Jorge Cano - jjorge@dsic.upv.es
  */
 
 public abstract class CAgent extends BaseAgent {
@@ -102,8 +106,7 @@ public abstract class CAgent extends BaseAgent {
 	protected CFactory defaultFactory;
 	ArrayList<CFactory> initiatorFactories = new ArrayList<CFactory>();
 	ArrayList<CFactory> participantFactories = new ArrayList<CFactory>();
-	private boolean finalizeExecuted = false;
-
+	
 	public ExecutorService exec; //Bexy: Added 'public'
 	// Semaphore availableSends = new Semaphore(1, true);
 	final Condition iAmFinished = mutex.newCondition();
@@ -169,8 +172,8 @@ public abstract class CAgent extends BaseAgent {
 	 */
 	public void onMessage(ACLMessage msg) {
 
-		this.logger.info(this.getName() + " receives the message "
-				+ msg.getPerformative() + " " + msg.getContent());
+		// this.logger.info(this.getName() + " receives the message "
+		//		+ msg.getPerformative() + " " + msg.getContent());
 		this.processMessage(msg);
 	}
 
@@ -223,8 +226,9 @@ public abstract class CAgent extends BaseAgent {
 
 	public void send(ACLMessage msg) {
 	
-		this.logger.info(this.getName() + " sends " + msg.getReceiver().name + " the message "
-				+ msg.getPerformative() + " " + msg.getContent());
+		this.logger.info(this.getName() + " sends " + msg.getReceiver().name
+				+ " the message " + msg.getPerformative() + " "
+				+ msg.getContent());
 		this.lock();
 		super.send(msg);
 		this.unlock();
@@ -363,7 +367,6 @@ public abstract class CAgent extends BaseAgent {
 				msg.copyFromAsTemplate((ACLMessage) myProcessor
 						.getInternalData().get("AGENT_END_MSG"));
 				me.finalize(myProcessor, msg);
-				me.finalizeExecuted = true;
 				myProcessor.getMyAgent().notifyAgentEnd();
 			}
 		}
@@ -683,7 +686,7 @@ public abstract class CAgent extends BaseAgent {
 				return;
 			}
 		}
-		System.out.println("No hay factorias");
+		logger.error("There aren't factories that match with the message's template");
 		this.unlock();
 		// PENDIENTE: Lanzar excepci�n si no hay fabricas asociadas
 	}
@@ -701,6 +704,7 @@ public abstract class CAgent extends BaseAgent {
 				return;
 			}
 		}
+		logger.error("There aren't factories that match with the message's template");
 		this.unlock();
 	}
 	
