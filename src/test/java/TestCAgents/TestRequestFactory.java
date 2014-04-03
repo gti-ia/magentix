@@ -58,49 +58,49 @@ public class TestRequestFactory extends TestCase {
 		}
 
 	}
-
-	/**
-	 * Testing inform message sent by the participant Factory to Harry
-	 */
-	@Test(timeout = 30000)
-	public void testInformMessage() {
-		Sally.start();
-		Harry.start();
-
-		// If Agent has not received the inform message
-		while (Harry.informMsg.equalsIgnoreCase("")) {
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-
-		assertEquals(Harry.getName() + ": " + Sally.getName()
-				+ " informs me Yes, my number is 666 456 855", Harry.informMsg);
-	}
-
-	/**
-	 * Testing ReceiveRequest in participant Factory in Sally
-	 */
-	@Test(timeout = 30000)
-	public void testRefuseMessage() {
-		Sally.start();
-		Harry.start();
-
-		// If Agent has not received the inform message
-		while (Harry.informMsg.equalsIgnoreCase("")) {
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-
-		assertTrue(Sally.acceptRequests);
-	}
+//
+//	/**
+//	 * Testing inform message sent by the participant Factory to Harry
+//	 */
+//	@Test(timeout = 30000)
+//	public void testInformMessage() {
+//		Sally.start();
+//		Harry.start();
+//
+//		// If Agent has not received the inform message
+//		while (Harry.informMsg.equalsIgnoreCase("")) {
+//			try {
+//				Thread.sleep(100);
+//			} catch (InterruptedException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		}
+//
+//		assertEquals(Harry.getName() + ": " + Sally.getName()
+//				+ " informs me Yes, my number is 666 456 855", Harry.informMsg);
+//	}
+//
+//	/**
+//	 * Testing ReceiveRequest in participant Factory in Sally
+//	 */
+//	@Test(timeout = 30000)
+//	public void testRefuseMessage() {
+//		Sally.start();
+//		Harry.start();
+//
+//		// If Agent has not received the inform message
+//		while (Harry.informMsg.equalsIgnoreCase("")) {
+//			try {
+//				Thread.sleep(100);
+//			} catch (InterruptedException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		}
+//
+//		assertTrue(Sally.acceptRequests);
+//	}
 	@After
 	public void tearDown() throws Exception {
 		super.tearDown();
