@@ -1,5 +1,7 @@
 package TestCAgents.Agents;
 
+import java.util.concurrent.CountDownLatch;
+
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.MessageFilter;
@@ -7,21 +9,22 @@ import es.upv.dsic.gti_ia.core.MessageFilter;
 import es.upv.dsic.gti_ia.cAgents.*;
 
 /**
- * Propose participant factory class for the test 
- * of the example myfirstCProcessorFactories 
+ * Propose participant factory class for the test of the example
+ * myfirstCProcessorFactories
  * 
  * @author David Fernández - dfernandez@dsic.upv.es
  */
 
 public class SallyClass extends CAgent {
 
-	//Variables for testing
+	// Variables for testing
 	public String receivedMsg;
 	public boolean notAcceptedMessageState;
-	
-	public SallyClass(AgentID aid) throws Exception {
+	private CountDownLatch finished;
+
+	public SallyClass(AgentID aid, CountDownLatch finished) throws Exception {
 		super(aid);
-		
+		this.finished = finished;
 		receivedMsg = "";
 	}
 
@@ -34,14 +37,13 @@ public class SallyClass extends CAgent {
 
 		filter = new MessageFilter("performative = PROPOSE");
 
-		CFactory talk = new CFactory("TALK", filter, 1,
-				this);
+		CFactory talk = new CFactory("TALK", filter, 1, this);
 
 		// A CProcessor always starts in the predefined state BEGIN.
 		// We have to associate this state with a method that will be
 		// executed at the beginning of the conversation.
 
-		///////////////////////////////////////////////////////////////////////////////
+		// /////////////////////////////////////////////////////////////////////////////
 		// BEGIN state
 
 		BeginState BEGIN = (BeginState) talk.cProcessorTemplate().getState(
@@ -54,29 +56,29 @@ public class SallyClass extends CAgent {
 				return "WAIT";
 			};
 		}
-		
+
 		BEGIN.setMethod(new BEGIN_Method());
-		
+
 		talk.cProcessorTemplate().registerState(new WaitState("WAIT", 0));
 		talk.cProcessorTemplate().addTransition("BEGIN", "WAIT");
-		
+
 		class GETMESSAGE_Method implements ReceiveStateMethod {
 			public String run(CProcessor myProcessor, ACLMessage messageReceived) {
 				System.out.println("Getting message");
-				receivedMsg = messageReceived.getPerformative()+": "+messageReceived.getContent();
+				receivedMsg = messageReceived.getPerformative() + ": "
+						+ messageReceived.getContent();
 				return "REFUSE";
 			}
 		}
-		
+
 		ReceiveState GETMESSAGE = new ReceiveState("GETMESSAGE");
 		GETMESSAGE.setMethod(new GETMESSAGE_Method());
 		filter = new MessageFilter("performative = PROPOSE");
 		GETMESSAGE.setAcceptFilter(filter);
 		talk.cProcessorTemplate().registerState(GETMESSAGE);
 		talk.cProcessorTemplate().addTransition("WAIT", "GETMESSAGE");
-		
-		
-		///////////////////////////////////////////////////////////////////////////////
+
+		// /////////////////////////////////////////////////////////////////////////////
 		// REFUSE state
 
 		SendState REFUSE = new SendState("REFUSE");
@@ -85,21 +87,22 @@ public class SallyClass extends CAgent {
 			public String run(CProcessor myProcessor, ACLMessage messageToSend) {
 
 				messageToSend.setSender(myProcessor.getMyAgent().getAid());
-				messageToSend.setReceiver(myProcessor.getLastReceivedMessage().getSender());
+				messageToSend.setReceiver(myProcessor.getLastReceivedMessage()
+						.getSender());
 				messageToSend.setContent("Maybe someday");
 				return "FINAL";
 			}
 		}
-		
+
 		REFUSE.setMethod(new REFUSE_Method());
-		
+
 		template = new ACLMessage(ACLMessage.REFUSE);
 		REFUSE.setMessageTemplate(template);
 
 		talk.cProcessorTemplate().registerState(REFUSE);
 		talk.cProcessorTemplate().addTransition(GETMESSAGE, REFUSE);
 
-		///////////////////////////////////////////////////////////////////////////////
+		// /////////////////////////////////////////////////////////////////////////////
 		// FINAL state
 
 		FinalState FINAL = new FinalState("FINAL");
@@ -125,7 +128,7 @@ public class SallyClass extends CAgent {
 
 	protected void finalize(CProcessor firstProcessor,
 			ACLMessage finalizeMessage) {
-
+		finished.countDown();
 		System.out.println(finalizeMessage.getContent());
 	}
 }

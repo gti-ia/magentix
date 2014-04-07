@@ -1,6 +1,9 @@
 package TestCAgents;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import java.util.concurrent.CountDownLatch;
 
 import org.apache.log4j.xml.DOMConfigurator;
 import org.junit.After;
@@ -18,22 +21,21 @@ import es.upv.dsic.gti_ia.core.AgentsConnection;
  * 
  * @author David Fernández - dfernandez@dsic.upv.es
  * @author Jose Manuel Mejias Rodriguez - jmejias@dsic.upv.es
+ * @author Javier Jorge - jjorge@dsic.upv.es
  */
 
-public class TestRequestFactory extends TestCase {
+public class TestRequestFactory {
 
 	HarryRequestInitiatorClass Harry;
 	SallyRequestParticipantClass Sally;
+	CountDownLatch finished = new CountDownLatch(2);
 	Process qpid_broker;
 
-	public TestRequestFactory(String name) {
-		super(name);
-	}
 	@Before
 	public void setUp() throws Exception {
-		super.setUp();
-		qpid_broker = qpidManager.UnixQpidManager.startQpid(Runtime.getRuntime(), qpid_broker);
 
+		qpid_broker = qpidManager.UnixQpidManager.startQpid(
+				Runtime.getRuntime(), qpid_broker);
 
 		try {
 
@@ -50,61 +52,58 @@ public class TestRequestFactory extends TestCase {
 			/**
 			 * Instantiating the CAgents
 			 */
-			Harry = new HarryRequestInitiatorClass(new AgentID("Harry2"));
-			Sally = new SallyRequestParticipantClass(new AgentID("Sally2"));
+			Harry = new HarryRequestInitiatorClass(new AgentID("Harry2"),
+					finished);
+			Sally = new SallyRequestParticipantClass(new AgentID("Sally2"),
+					finished);
 
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
 
 	}
-//
-//	/**
-//	 * Testing inform message sent by the participant Factory to Harry
-//	 */
-//	@Test(timeout = 30000)
-//	public void testInformMessage() {
-//		Sally.start();
-//		Harry.start();
-//
-//		// If Agent has not received the inform message
-//		while (Harry.informMsg.equalsIgnoreCase("")) {
-//			try {
-//				Thread.sleep(100);
-//			} catch (InterruptedException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//		}
-//
-//		assertEquals(Harry.getName() + ": " + Sally.getName()
-//				+ " informs me Yes, my number is 666 456 855", Harry.informMsg);
-//	}
-//
-//	/**
-//	 * Testing ReceiveRequest in participant Factory in Sally
-//	 */
-//	@Test(timeout = 30000)
-//	public void testRefuseMessage() {
-//		Sally.start();
-//		Harry.start();
-//
-//		// If Agent has not received the inform message
-//		while (Harry.informMsg.equalsIgnoreCase("")) {
-//			try {
-//				Thread.sleep(100);
-//			} catch (InterruptedException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//		}
-//
-//		assertTrue(Sally.acceptRequests);
-//	}
+
+	/**
+	 * Testing inform message sent by the participant Factory to Harry
+	 */
+	@Test(timeout = 30000)
+	public void testInformMessage() {
+		Sally.start();
+		Harry.start();
+
+		try {
+			finished.await();
+		} catch (InterruptedException e) {
+
+			e.printStackTrace();
+		}
+
+		assertEquals(Harry.getName() + ": " + Sally.getName()
+				+ " informs me Yes, my number is 666 456 855", Harry.informMsg);
+	}
+
+	/**
+	 * Testing ReceiveRequest in participant Factory in Sally
+	 */
+	@Test(timeout = 30000)
+	public void testRefuseMessage() {
+		Sally.start();
+		Harry.start();
+
+		try {
+			finished.await();
+		} catch (InterruptedException e) {
+
+			e.printStackTrace();
+		}
+
+		assertTrue(Sally.acceptRequests);
+	}
+
 	@After
 	public void tearDown() throws Exception {
-		super.tearDown();
+
 		AgentsConnection.disconnect();
-		qpidManager.UnixQpidManager.stopQpid(qpid_broker);	
-		}
+		qpidManager.UnixQpidManager.stopQpid(qpid_broker);
+	}
 }

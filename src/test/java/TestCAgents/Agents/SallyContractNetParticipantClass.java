@@ -32,8 +32,7 @@ public class SallyContractNetParticipantClass extends CAgent {
 			throws Exception {
 		super(aid);
 		this.finished = finished;
-		acceptRequests = false;// False until the CFactory gets to the
-								// doReceiveRequestMethod
+		acceptRequests = false;
 	}
 
 	public void setMode(int mode) {
@@ -49,10 +48,7 @@ public class SallyContractNetParticipantClass extends CAgent {
 		System.out.println(myProcessor.getMyAgent().getName()
 				+ ": the welcome message is " + welcomeMessage.getContent());
 
-
 		class myFIPA_CONTRACTNET extends FIPA_CONTRACTNET_Participant {
-
-			
 
 			/**
 			 * Method executed at the beginning of the conversation
@@ -65,31 +61,6 @@ public class SallyContractNetParticipantClass extends CAgent {
 			protected void doBegin(CProcessor myProcessor, ACLMessage msg) {
 				myProcessor.getInternalData().put("InitialMessage", msg);
 			}
-
-			// /**
-			// * Method executed when the participant receives a call for
-			// * proposals
-			// *
-			// * @param myProcessor
-			// * the CProcessor managing the conversation
-			// * @param msg
-			// * call for proposals message
-			// * @return next state of this conversation
-			// */
-			// protected abstract String doReceiveSolicit(CProcessor
-			// myProcessor,
-			// ACLMessage msg);
-			//
-			// /**
-			// * Method executed when the participant sends a proposal
-			// *
-			// * @param myProcessor
-			// * the CProcessor managing the conversation
-			// * @param messageToSend
-			// * proposal message
-			// */
-			// protected abstract void doSendProposal(CProcessor myProcessor,
-			// ACLMessage messageToSend);
 
 			/**
 			 * Method executed when the timeout is reached while the initiator
@@ -126,23 +97,10 @@ public class SallyContractNetParticipantClass extends CAgent {
 			 */
 			protected void doReceiveReject(CProcessor myProcessor,
 					ACLMessage msg) {
-				
-				rejectMsg = msg.getContent();
-				
-			}
 
-			// /**
-			// * Perform the proposal's task
-			// *
-			// * @param myProcessor
-			// * the CProcessor managing the conversation
-			// * @param solicitMessage
-			// * the first message assigned to this conversation
-			// * containing the solicit of the initiator agent
-			// * @return next conversation state
-			// */
-			// protected abstract String doTask(CProcessor myProcessor,
-			// ACLMessage solicitMessage);
+				rejectMsg = msg.getContent();
+
+			}
 
 			/**
 			 * Method executed when the task failed
@@ -164,17 +122,6 @@ public class SallyContractNetParticipantClass extends CAgent {
 				messageToSend.setSender(myProcessor.getMyAgent().getAid());
 				messageToSend.setContent("Error");
 			}
-
-			// /**
-			// * Method executed when the task succeeded
-			// *
-			// * @param myProcessor
-			// * the CProcessor managing the conversation
-			// * @param messageToSend
-			// * inform message
-			// */
-			// protected abstract void doSendInfo(CProcessor myProcessor,
-			// ACLMessage messageToSend);
 
 			/**
 			 * Method executed when the conversation ends
@@ -201,8 +148,7 @@ public class SallyContractNetParticipantClass extends CAgent {
 					refuseMsg = "refuse";
 					return "SEND_REFUSE";
 				}
-				// DETERMINAR YO QUE PASO A
-				// return null;
+
 			}
 
 			@Override
@@ -227,7 +173,7 @@ public class SallyContractNetParticipantClass extends CAgent {
 				} catch (InterruptedException e) {
 
 				}
-				
+
 				boolean failure = FAIL;
 				boolean done = true;
 
@@ -237,7 +183,7 @@ public class SallyContractNetParticipantClass extends CAgent {
 					return "SEND_FAILURE";
 				} else if (done) {
 					return "SEND_INFORM";
-				} else {// RESULTS??
+				} else {
 					return "SEND_INFORM"; //
 				}
 			}
@@ -258,15 +204,6 @@ public class SallyContractNetParticipantClass extends CAgent {
 
 		}
 
-		// The agent creates the CFactory that manages every message which its
-		// performative is set to REQUEST and protocol set to REQUEST. In this
-		// example the CFactory gets the name "TALK", we don't add any
-		// additional message acceptance criterion other than the required
-		// by the REQUEST protocol (null) and we limit the number of
-		// simultaneous
-		// processors to 1, i.e. the requests will be attended one after
-		// another.
-
 		MessageFilter filter = null;
 		ACLMessage template = null;
 		int availableConversations = 1;
@@ -274,10 +211,7 @@ public class SallyContractNetParticipantClass extends CAgent {
 		CFactory contractnet = new myFIPA_CONTRACTNET().newFactory(
 				"CONTRACTNET", filter, template, availableConversations,
 				myProcessor.getMyAgent(), timeout);
-		// .newFactory("CONTRACTNET", null, 0, myProcessor.getMyAgent());
 
-		// Finally the factory is setup to answer to incoming messages that
-		// can start the participation of the agent in a new conversation
 		this.addFactoryAsParticipant(contractnet);
 
 	}

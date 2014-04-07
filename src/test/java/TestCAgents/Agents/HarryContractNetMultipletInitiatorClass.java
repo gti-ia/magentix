@@ -113,23 +113,6 @@ public class HarryContractNetMultipletInitiatorClass extends CAgent {
 				informMsg = "timeout";
 			}
 
-			//
-			// /**
-			// * Evaluate proposals. Each accepted proposal has to be added to
-			// the acceptances list.
-			// * Each rejected proposal has to be added to the rejected list
-			// * @param myProcessor the CProcessor managing the conversation
-			// * @param proposes Proposals
-			// * @param acceptances Accepted proposals
-			// * @param rejections Rejected proposals
-			// */
-			// protected abstract void doEvaluateProposals(CProcessor
-			// myProcessor,
-			// ArrayList<ACLMessage> proposes, ArrayList<ACLMessage>
-			// acceptances, ArrayList<ACLMessage> rejections);
-			//
-			//
-
 			/**
 			 * Method executed when the initiator receives a failure
 			 * 
@@ -143,17 +126,6 @@ public class HarryContractNetMultipletInitiatorClass extends CAgent {
 				receiveFailure = msg.getContent();
 			}
 
-			//
-			// /**
-			// * Method executed when the initiator receives a inform
-			// * @param myProcessor the CProcessor managing the conversation
-			// * @param msg inform message
-			// */
-			// protected abstract void doReceiveInform(CProcessor myProcessor,
-			// ACLMessage msg); // Method
-			// // to
-			// // implement
-
 			/**
 			 * Method executed when the initiator ends the conversation
 			 * 
@@ -164,8 +136,7 @@ public class HarryContractNetMultipletInitiatorClass extends CAgent {
 			 */
 			protected void doFinal(CProcessor myProcessor,
 					ACLMessage messageToSend) {
-				// messageToSend = myProcessor.getLastSentMessage();
-				// informMsg = messageToSend.getContent();
+
 				logger.info(myProcessor.getMyAgent().getName()
 						+ " says Goodbye");
 				myProcessor.getMyAgent().Shutdown();
@@ -197,7 +168,7 @@ public class HarryContractNetMultipletInitiatorClass extends CAgent {
 						}
 
 					} else {
-						//System.out.println(proposes.get(0).getContent());
+						// System.out.println(proposes.get(0).getContent());
 						ACLMessage messageToSend = new ACLMessage(
 								ACLMessage.REJECT_PROPOSAL);
 						messageToSend.setProtocol("fipa-contract-net");
@@ -238,18 +209,8 @@ public class HarryContractNetMultipletInitiatorClass extends CAgent {
 		CFactory contractnet = new myFIPA_CONTRACTNET().newFactory(
 				"CONTRACTNET", filter, template, availableConversations,
 				myProcessor.getMyAgent(), participants, deadline, timeout);
-		// .newFactory("TALK", null , msg,1, this, 0);
-		// REVISAR EL FILTER Y EL TEMPLATE Y PARTICIPANTS
-
-		// The factory is setup to answer start conversation requests from the
-		// agent
-		// using the REQUEST protocol.
-
 		this.addFactoryAsInitiator(contractnet);
 
-		// finally the new conversation starts. Because it is synchronous,
-		// the current interaction halts until the new conversation ends.
-		// myProcessor.createSyncConversation(msg);
 		this.startSyncConversation("CONTRACTNET");
 
 		myProcessor.ShutdownAgent();

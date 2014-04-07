@@ -32,7 +32,7 @@ public class CProcessor implements Runnable, Cloneable {
 	class SHUTDOWN_Method implements ShutdownStateMethod {
 
 		public String run(CProcessor myProcessor, ACLMessage msg) {
-			logger.info("I'm on SHUTDOWN!!");
+
 			return null;
 		}
 	}
@@ -42,7 +42,7 @@ public class CProcessor implements Runnable, Cloneable {
 
 		@Override
 		public String run(CProcessor myProcessor, ACLMessage errorMessage) {
-			logger.info("I'm on SENDING_ERRORS!!");
+
 			return null;
 		}
 	}
@@ -92,7 +92,7 @@ public class CProcessor implements Runnable, Cloneable {
 		this.myAgent = myAgent;
 		terminated = false;
 		BEGIN = new BeginState(BEGIN_STATE);
-		
+
 		CANCEL = new CancelState();
 		CANCEL.setName(CANCEL_STATE);
 
@@ -420,9 +420,9 @@ public class CProcessor implements Runnable, Cloneable {
 						messageToSend
 								.copyFromAsTemplate(sendState.messageTemplate);
 					}
-					
+
 					this.unlockMyAgent();
-					
+
 					backState = currentState;
 					currentState = sendState.getMethod().run(this,
 							messageToSend);
@@ -432,27 +432,26 @@ public class CProcessor implements Runnable, Cloneable {
 					try {
 						this.myAgent.send(messageToSend);
 
-					}catch (SenderException se) {
+					} catch (SenderException se) {
 						// se.printStackTrace();
 						logger.error("Error on sending=" + se.getMessage());
 						sent = false;
 						currentState = SENDING_ERRORS_STATE;
 
-					}catch (SessionException se) {
+					} catch (SessionException se) {
 						// se.printStackTrace();
 						logger.error("Error on sending=" + se.getMessage());
 						sent = false;
 						currentState = SENDING_ERRORS_STATE;
 
-					} 
-//					catch (SocketException se) {
-//						// se.printStackTrace();
-//						logger.error("Error on sending=" + se.getMessage());
-//						sent = false;
-//						currentState = SENDING_ERRORS_STATE;
-//
-//					}
-					
+					}
+					// catch (SocketException se) {
+					// // se.printStackTrace();
+					// logger.error("Error on sending=" + se.getMessage());
+					// sent = false;
+					// currentState = SENDING_ERRORS_STATE;
+					//
+					// }
 
 					if (sent)
 						this.lastSentMessage = messageToSend;
@@ -587,7 +586,7 @@ public class CProcessor implements Runnable, Cloneable {
 					this.unlockMyAgent();
 					return;
 				case State.SENDING_ERRORS:
-					
+
 					this.unlockMyAgent();
 					next = this.sendingErrorsState().getMethod()
 							.run(this, currentMessage);
@@ -598,7 +597,7 @@ public class CProcessor implements Runnable, Cloneable {
 					currentState = next;
 					break;
 				case State.SHUTDOWN:
-					
+
 					this.unlockMyAgent();
 					next = this.SHUTDOWN.getMethod().run(this, currentMessage);
 					this.lockMyAgent();
@@ -622,7 +621,7 @@ public class CProcessor implements Runnable, Cloneable {
 					currentState = next;
 					break;
 				case State.CANCEL:
-					
+
 					this.unlockMyAgent();
 					next = this.cancelState().getMethod()
 							.run(this, currentMessage);

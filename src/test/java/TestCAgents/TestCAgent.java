@@ -1,6 +1,8 @@
 package TestCAgents;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+
+import java.util.concurrent.CountDownLatch;
 
 import org.apache.log4j.xml.DOMConfigurator;
 import org.junit.After;
@@ -16,20 +18,20 @@ import es.upv.dsic.gti_ia.core.AgentsConnection;
  * 
  * @author David Fernández - dfernandez@dsic.upv.es
  * @author Jose Manuel Mejias Rodriguez - jmejias@dsic.upv.es
+ * @author Javier Jorge - jjorge@dsic.upv.es
  */
 
-public class TestCAgent extends TestCase {
+public class TestCAgent {
 
 	HelloWorldAgentClass helloWorldAgent;
 	Process qpid_broker;
+	CountDownLatch finished = new CountDownLatch(1);
 
-	public TestCAgent(String name) {
-		super(name);
-	}
 	@Before
 	public void setUp() throws Exception {
-		super.setUp();
-		qpid_broker = qpidManager.UnixQpidManager.startQpid(Runtime.getRuntime(), qpid_broker);
+
+		qpid_broker = qpidManager.UnixQpidManager.startQpid(
+				Runtime.getRuntime(), qpid_broker);
 		try {
 
 			/**
@@ -46,7 +48,7 @@ public class TestCAgent extends TestCase {
 			 * Instantiating the CAgent
 			 */
 			helloWorldAgent = new HelloWorldAgentClass(new AgentID(
-					"helloWorldAgent"));
+					"helloWorldAgent"), finished);
 
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
@@ -62,15 +64,13 @@ public class TestCAgent extends TestCase {
 	public void testWelcomeMessage() {
 		helloWorldAgent.start();
 
-		// If Agent has not received the welcome message
-		while (helloWorldAgent.welcomeMsg.equalsIgnoreCase("")) {
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		// If Agent has not received the message
+		System.out.println("Testing");
+		try {
+			finished.await();
+		} catch (InterruptedException e) {
 
+			e.printStackTrace();
 		}
 
 		assertEquals(helloWorldAgent.getName()
@@ -88,24 +88,22 @@ public class TestCAgent extends TestCase {
 
 		helloWorldAgent.start();
 
-		// If Agent has not received the finalize message
-		while (helloWorldAgent.finalizeMsg.equalsIgnoreCase("")) {
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		// If Agent has not received the message
+		try {
+			finished.await();
+		} catch (InterruptedException e) {
 
+			e.printStackTrace();
 		}
 
 		assertEquals(helloWorldAgent.getName()
 				+ ": the finalize message is See you",
 				helloWorldAgent.finalizeMsg);
 	}
+
 	@After
 	public void tearDown() throws Exception {
-		super.tearDown();
+
 		AgentsConnection.disconnect();
 		qpidManager.UnixQpidManager.stopQpid(qpid_broker);
 	}

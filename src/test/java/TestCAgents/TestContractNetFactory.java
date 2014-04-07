@@ -1,10 +1,11 @@
 package TestCAgents;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
-
-import junit.framework.TestCase;
 
 import org.apache.log4j.xml.DOMConfigurator;
 import org.junit.After;
@@ -21,11 +22,10 @@ import es.upv.dsic.gti_ia.core.AgentsConnection;
  * Test class for Request factory template (FIPA protocol) based on the example
  * requestFactory
  * 
- * @author David Fernández - dfernandez@dsic.upv.es
- * @author Jose Manuel Mejias Rodriguez - jmejias@dsic.upv.es
+ * @author Javier Jorge - jjorge@dsic.upv.es
  */
 
-public class TestContractNetFactory extends TestCase {
+public class TestContractNetFactory {
 
 	HarryContractNetInitiatorClass Harry;
 	SallyContractNetParticipantClass Sally;
@@ -34,13 +34,9 @@ public class TestContractNetFactory extends TestCase {
 	Process qpid_broker;
 	CountDownLatch finished = new CountDownLatch(2);
 
-	public TestContractNetFactory(String name) {
-		super(name);
-	}
-
 	@Before
 	public void setUp() throws Exception {
-		super.setUp();
+
 		qpid_broker = qpidManager.UnixQpidManager.startQpid(
 				Runtime.getRuntime(), qpid_broker);
 
@@ -319,7 +315,7 @@ public class TestContractNetFactory extends TestCase {
 
 	@After
 	public void tearDown() throws Exception {
-		super.tearDown();
+
 		AgentsConnection.disconnect();
 		qpidManager.UnixQpidManager.stopQpid(qpid_broker);
 	}
