@@ -27,6 +27,7 @@ public class SallyContractNetParticipantClass extends CAgent {
 	public String receiveFailure;
 	public String notUnderstood;
 	public String acceptMsg;
+	public String timeOutMsg;
 
 	public SallyContractNetParticipantClass(AgentID aid, CountDownLatch finished)
 			throws Exception {
@@ -72,6 +73,7 @@ public class SallyContractNetParticipantClass extends CAgent {
 			 *            timeout message
 			 */
 			protected void doTimeout(CProcessor myProcessor, ACLMessage msg) {
+				timeOutMsg = msg.getPerformative();
 			}
 
 			/**
@@ -207,7 +209,7 @@ public class SallyContractNetParticipantClass extends CAgent {
 		MessageFilter filter = null;
 		ACLMessage template = null;
 		int availableConversations = 1;
-		int timeout = 0;
+		int timeout = 10000;
 		CFactory contractnet = new myFIPA_CONTRACTNET().newFactory(
 				"CONTRACTNET", filter, template, availableConversations,
 				myProcessor.getMyAgent(), timeout);

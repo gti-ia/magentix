@@ -15,6 +15,7 @@ import org.junit.Test;
 import TestCAgents.Agents.HarryContractNetInitiatorClass;
 import TestCAgents.Agents.HarryContractNetMultipletInitiatorClass;
 import TestCAgents.Agents.SallyContractNetParticipantClass;
+import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
 
@@ -33,6 +34,10 @@ public class TestContractNetFactory {
 	SallyContractNetParticipantClass Sally3;
 	Process qpid_broker;
 	CountDownLatch finished = new CountDownLatch(2);
+	public final int ACCEPT = 0;
+	public final int REJECT = 1;
+	public final int REFUSE = 1;
+	public final int PASS = 2;
 
 	@Before
 	public void setUp() throws Exception {
@@ -90,9 +95,9 @@ public class TestContractNetFactory {
 			e1.printStackTrace();
 		}
 
-		Sally.setMode(1); // REFUSE MODE
+		Sally.setMode(REFUSE); // REFUSE MODE
 		Sally.start();
-		Sally2.setMode(1); // REFUSE MODE
+		Sally2.setMode(REFUSE); // REFUSE MODE
 		Sally2.start();
 		// ACCEPT MODE
 		Sally3.start();
@@ -136,11 +141,11 @@ public class TestContractNetFactory {
 			e1.printStackTrace();
 		}
 
-		Sally.setMode(1); // REFUSE MODE
+		Sally.setMode(REFUSE); // REFUSE MODE
 		Sally.start();
-		Sally2.setMode(1); // REFUSE MODE
+		Sally2.setMode(REFUSE); // REFUSE MODE
 		Sally2.start();
-		Sally3.setMode(1); // REFUSE MODE
+		Sally3.setMode(REFUSE); // REFUSE MODE
 		Sally3.start();
 
 		HarryM.start();
@@ -222,7 +227,7 @@ public class TestContractNetFactory {
 	@Test(timeout = 30000)
 	public void testProtocolRefuseProposal() {
 
-		Sally.setMode(1); // REFUSE MODE
+		Sally.setMode(REFUSE); // REFUSE MODE
 		Sally.start();
 		Harry.start();
 
@@ -240,7 +245,7 @@ public class TestContractNetFactory {
 	public void testProtocolRejectProposal() {
 
 		Sally.start();
-		Harry.setMode(1);
+		Harry.setMode(REFUSE);
 		Harry.start();
 
 		try {
@@ -250,10 +255,7 @@ public class TestContractNetFactory {
 			e.printStackTrace();
 		}
 		assertEquals("NO,THANKS", Harry.rejectMsg);
-		// REVISAR assertEquals("NO,THANKS", Sally.rejectMsg);// No se envia
-		// nada cuando se
-		// rechaza
-		assertEquals("", Sally.rejectMsg);
+		assertEquals("NO,THANKS", Sally.rejectMsg);
 	}
 
 	@Test(timeout = 30000)
@@ -261,7 +263,7 @@ public class TestContractNetFactory {
 
 		Sally.start();
 
-		Harry.setMode(0);
+		Harry.setMode(ACCEPT);
 
 		Harry.start();
 
@@ -312,6 +314,49 @@ public class TestContractNetFactory {
 		assertEquals("Error", Harry.receiveFailure);
 		assertEquals("Error", Sally.receiveFailure);
 	}
+
+	@Test(timeout = 30000)
+	public void testProtocolTimeOutParticipantII() {
+
+		Sally.start();
+
+		Sally.FAIL = true;
+
+		Harry.setMode(PASS);
+
+		Harry.start();
+
+		try {
+			finished.await();
+		} catch (InterruptedException e) {
+
+			e.printStackTrace();
+		}
+		assertEquals("mmmm...no", Harry.timeOutMsg);
+		assertEquals("INFORM", Sally.timeOutMsg);
+
+	}
+
+	// REVISAR, TIMEOUT INICIAL?
+	// @Test(timeout = 30000)
+	// public void testProtocolTimeOutParticipantI() {
+	//
+	// finished = new CountDownLatch(1);
+	//
+	// Sally.start();
+	//
+	// try {
+	// finished.await();
+	// } catch (InterruptedException e) {
+	//
+	// e.printStackTrace();
+	// }
+	// assertEquals("mmmm...no", Harry.timeOutMsg);
+	// assertEquals("INFORM", Sally.timeOutMsg);
+	//
+	// finished = new CountDownLatch(2);
+	//
+	// }
 
 	@After
 	public void tearDown() throws Exception {

@@ -22,6 +22,22 @@ public class HarryContractNetInitiatorClass extends CAgent {
 	public String rejectMsg;
 	public String receiveFailure;
 	public String notUnderstood;
+	public String timeOutMsg;
+
+	/**
+	 * @return the timeOutMsg
+	 */
+	public String getTimeOutMsg() {
+		return timeOutMsg;
+	}
+
+	/**
+	 * @param timeOutMsg
+	 *            the timeOutMsg to set
+	 */
+	public void setTimeOutMsg(String timeOutMsg) {
+		this.timeOutMsg = timeOutMsg;
+	}
 
 	public HarryContractNetInitiatorClass(AgentID aid, CountDownLatch finished)
 			throws Exception {
@@ -144,31 +160,42 @@ public class HarryContractNetInitiatorClass extends CAgent {
 				if (proposes.size() != 0) {
 
 					if (((HarryContractNetInitiatorClass) myProcessor
-							.getMyAgent()).getMode() == 0) {
-						System.out.println(proposes.get(0).getContent());
-						ACLMessage messageToSend = new ACLMessage(
-								ACLMessage.ACCEPT_PROPOSAL);
-						messageToSend.setProtocol("fipa-contract-net");
-						messageToSend.setReceiver(proposes.get(0).getSender());
-						messageToSend.setSender(myProcessor.getMyAgent()
-								.getAid());
-						acceptMsg = "OK";
-						messageToSend.setContent(acceptMsg);
+							.getMyAgent()).getMode() != 2) {
 
-						acceptances.add(messageToSend);
+						if (((HarryContractNetInitiatorClass) myProcessor
+								.getMyAgent()).getMode() == 0) {
+							System.out.println(proposes.get(0).getContent());
+							ACLMessage messageToSend = new ACLMessage(
+									ACLMessage.ACCEPT_PROPOSAL);
+							messageToSend.setProtocol("fipa-contract-net");
+							messageToSend.setReceiver(proposes.get(0)
+									.getSender());
+							messageToSend.setSender(myProcessor.getMyAgent()
+									.getAid());
+							acceptMsg = "OK";
+							messageToSend.setContent(acceptMsg);
+
+							acceptances.add(messageToSend);
+						} else {
+
+							ACLMessage messageToSend = new ACLMessage(
+									ACLMessage.REJECT_PROPOSAL);
+							messageToSend.setProtocol("fipa-contract-net");
+							messageToSend.setReceiver(proposes.get(0)
+									.getSender());
+							messageToSend.setSender(myProcessor.getMyAgent()
+									.getAid());
+							rejectMsg = "NO,THANKS";
+
+							messageToSend.setContent(rejectMsg);
+
+							rejections.add(messageToSend);
+
+						}
 					} else {
-						System.out.println(proposes.get(0).getContent());
-						ACLMessage messageToSend = new ACLMessage(
-								ACLMessage.REJECT_PROPOSAL);
-						messageToSend.setProtocol("fipa-contract-net");
-						messageToSend.setReceiver(proposes.get(0).getSender());
-						messageToSend.setSender(myProcessor.getMyAgent()
-								.getAid());
-						rejectMsg = "NO,THANKS";
-						messageToSend.setContent(refuseMsg);
-
-						rejections.add(messageToSend);
+						timeOutMsg = "mmmm...no";
 					}
+
 				}
 			}
 
