@@ -34,6 +34,13 @@ public class TestRecruitingFactory {
 	Condition HarryFinished = mutex.newCondition();
 	Condition SallyFinished = mutex.newCondition();
 	CountDownLatch finished = new CountDownLatch(2);
+	
+	public final int AGREE = 0;
+	public final int REFUSE = 1;
+	public final int LOCATE = 0;
+	public final int NO_LOCATE = 1;
+	public final int SUCCESS = 0;
+	public final int FAILURE = 1;
 
 	@Before
 	public void setUp() throws Exception {
@@ -68,56 +75,103 @@ public class TestRecruitingFactory {
 
 	}
 
-	@Test(timeout = 100)
-	public void testProtocol() {
+	@Test(timeout = 30000)
+	public void testAgreeAndInform() {
 		Sally.start();
-		Sally.setMode(1);
-		Harry.start();
-
-		try {
-			finished.await();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		// assertEquals("COMPLETE", Harry.informMsg);
-		// assertEquals("COMPLETE", Sally.informMsg);
-	}
-
-	@Test(timeout = 100)
-	public void testAgree() {
-		Sally.start();
-		Sally.setMode(0);
+		Sally.setMode(AGREE);
+		Sally.setModeLocate(LOCATE);
+		Sally.setResultOfSubprotocol(SUCCESS);
 		Harry.start();
 		theOther.start();
 
 		try {
 			finished.await();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 
-		assertEquals("Nup", Harry.agreeMsg);
-		assertEquals("Nup", Sally.agreeMsg);
+		assertEquals("Done (by other)", Harry.informMsg);
+		assertEquals("Done (by other)", Sally.informMsg);
 	}
 
-	@Test(timeout = 100)
+	@Test(timeout = 30000)
+	public void testAgreeAndFailure() {
+		Sally.start();
+		Sally.setMode(AGREE);
+		Sally.setModeLocate(LOCATE);
+		Sally.setResultOfSubprotocol(FAILURE);
+		Harry.start();
+		theOther.start();
+
+		try {
+			finished.await();
+		} catch (InterruptedException e) {
+
+			e.printStackTrace();
+		}
+
+		assertEquals("SubProtocol failed :(", Harry.failureProxyMsg);
+		assertEquals("SubProtocol failed :(", Sally.informMsg);
+	}
+
+	@Test(timeout = 30000)
 	public void testRefuse() {
 		Sally.start();
-		Sally.setMode(1);
+		Sally.setMode(REFUSE);
+		Sally.setModeLocate(LOCATE);
+		Sally.setResultOfSubprotocol(SUCCESS);
 		Harry.start();
 
 		try {
 			finished.await();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 
 		assertEquals("Nup", Harry.refuseMsg);
 		assertEquals("Nup", Sally.refuseMsg);
+	}
+
+	@Test(timeout = 30000)
+	public void testFailureNoMatch() {
+		Sally.start();
+		Sally.setMode(AGREE);
+		Sally.setModeLocate(NO_LOCATE);
+		Sally.setResultOfSubprotocol(SUCCESS);
+		Harry.start();
+		theOther.start();
+
+		try {
+			finished.await();
+		} catch (InterruptedException e) {
+
+			e.printStackTrace();
+		}
+
+		assertEquals("Agent not found", Harry.failureNoMatchMsg);
+		assertEquals("Agent not found", Sally.failureNoMatchMsg);
+	}
+
+	@Test(timeout = 30000)
+	public void testFailureProxy() {
+		Sally.start();
+		Sally.setMode(AGREE);
+		Sally.setModeLocate(LOCATE);
+		Sally.setResultOfSubprotocol(FAILURE);
+		Harry.start();
+		theOther.start();
+
+		try {
+			finished.await();
+		} catch (InterruptedException e) {
+
+			e.printStackTrace();
+		}
+
+		assertEquals("SubProtocol failed :(", Harry.failureProxyMsg);
+		assertEquals("SubProtocol failed :(", Sally.failureMsg);
 	}
 
 	@After

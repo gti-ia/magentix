@@ -4,11 +4,13 @@ import es.upv.dsic.gti_ia.architecture.FIPAContractNetInitiator;
 import es.upv.dsic.gti_ia.architecture.FIPANames;
 import es.upv.dsic.gti_ia.architecture.Monitor;
 import es.upv.dsic.gti_ia.architecture.QueueAgent;
+import es.upv.dsic.gti_ia.cAgents.CProcessor;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 
 import java.util.Date;
 import java.util.ArrayList;
+import java.util.concurrent.CountDownLatch;
 
 public class Client extends QueueAgent {
 
@@ -17,11 +19,12 @@ public class Client extends QueueAgent {
 
 	public String state = null;
 	public String status = null;
+	private CountDownLatch finished;
 
-	public Client(AgentID aid) throws Exception {
+	public Client(AgentID aid, CountDownLatch finished) throws Exception {
 
 		super(aid);
-
+		this.finished = finished;
 	}
 
 	protected void execute() {
@@ -41,7 +44,8 @@ public class Client extends QueueAgent {
 		mensajeCFP.setContent("I look for car, do you propose to prices?");
 
 		// Indicates how long we will wait for offers
-		mensajeCFP.setReplyByDate(new Date(System.currentTimeMillis() + 1500000));
+		mensajeCFP
+				.setReplyByDate(new Date(System.currentTimeMillis() + 1500000));
 
 		// Behavior is added to handle the bids
 
@@ -59,41 +63,45 @@ public class Client extends QueueAgent {
 		}
 
 		// handle of propositions.
-		protected void handlePropose(ACLMessage propuesta, ArrayList<ACLMessage> aceptadas) {
-			System.out.printf("%s: Received offer of cars %s. A car offers for %s Euros.\n",
-					this.myAgent.getName(), propuesta.getSender().getLocalName(), propuesta
-					.getContent());
-			
+		protected void handlePropose(ACLMessage propuesta,
+				ArrayList<ACLMessage> aceptadas) {
+			System.out
+					.printf("%s: Received offer of cars %s. A car offers for %s Euros.\n",
+							this.myAgent.getName(), propuesta.getSender()
+									.getLocalName(), propuesta.getContent());
+
 			status = propuesta.getContent();
 			state = "handle";
-			
 
 		}
 
 		// handel of rejections of propositions.
 		protected void handleRefuse(ACLMessage rechazo) {
-			System.out.printf("%s: Cars %s does not have cars that to offer.\n", this.myAgent
-					.getName(), rechazo.getSender().getLocalName());
+			System.out.printf(
+					"%s: Cars %s does not have cars that to offer.\n",
+					this.myAgent.getName(), rechazo.getSender().getLocalName());
 
 			status = rechazo.getContent();
 			state = "refuse";
-			
+
 		}
 
 		// Handle failure replies
 		protected void handleFailure(ACLMessage fallo) {
 
-			System.out.println("AMS: This sale of cars does not exist or is accessible");
+			System.out
+					.println("AMS: This sale of cars does not exist or is accessible");
 
-			System.out.printf("%s: Cars %s has been a failure.\n", this.myAgent.getName(), fallo
-					.getSender().getLocalName());
+			System.out.printf("%s: Cars %s has been a failure.\n",
+					this.myAgent.getName(), fallo.getSender().getLocalName());
 
 			// He failed, therefore, receive no response from this agent
 			Client.this.numeroDeOfertas--;
-			
+
 			status = fallo.getContent();
 			state = "failure";
-			
+			finished.countDown();
+
 		}
 
 		// Method collective called after end timeout or receive all proposals
@@ -103,8 +111,9 @@ public class Client extends QueueAgent {
 			// Check if a sale of cars passed the deadline for submission of
 			// tenders.
 			if (respuestas.size() < numeroDeOfertas) {
-				System.out.printf("%s: %d Car sales are late.\n", this.myAgent.getName(),
-						Client.this.numeroDeOfertas - respuestas.size());
+				System.out.printf("%s: %d Car sales are late.\n",
+						this.myAgent.getName(), Client.this.numeroDeOfertas
+								- respuestas.size());
 			}
 
 			// We choose the best offer
@@ -132,33 +141,37 @@ public class Client extends QueueAgent {
 
 			// If there is an accepted offer his performative is modified.
 			if (aceptado != null) {
-				System.out.printf("%s: Determined! Sell Car of the %s\n", this.myAgent.getName(),
-						mejorAutos.getLocalName());
+				System.out.printf("%s: Determined! Sell Car of the %s\n",
+						this.myAgent.getName(), mejorAutos.getLocalName());
 				aceptado.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
 			}
 		}
 
 		// Manager of information messages.
 		protected void handleInform(ACLMessage inform) {
-			System.out.printf("%s: %s has sent the contract.\n", this.myAgent.getName(), inform
-					.getSender().getLocalName());
+			System.out.printf("%s: %s has sent the contract.\n",
+					this.myAgent.getName(), inform.getSender().getLocalName());
 
 			status = inform.getContent();
-			
-			
+
 			state = "inform";
-			
+			finished.countDown();
+
 		}
 	}
 
-	public String getState()
-	{
+	public String getState() {
 		return state;
 	}
-	
-	public String getStatus()
-	{
-		
+
+	public String getStatus() {
+
 		return status;
 	}
+
+	protected void finalize(CProcessor firstProcessor,
+			ACLMessage finalizeMessage) {
+
+	}
+
 }

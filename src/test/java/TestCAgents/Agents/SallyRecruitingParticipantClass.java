@@ -31,8 +31,44 @@ public class SallyRecruitingParticipantClass extends CAgent {
 	private CountDownLatch finished;
 	public String agreeMsg;
 	private String receivedMsgFromOther;
+	public boolean resultOfSubprotocol;
+	private int modeLocate;
+	public String informMsg;
+	public String failureMsg;
+	public String failureNoMatchMsg;
 
-	public SallyRecruitingParticipantClass(AgentID aid, CountDownLatch finished) throws Exception {
+	/**
+	 * @return the modeLocate
+	 */
+	public int getModeLocate() {
+		return modeLocate;
+	}
+
+	/**
+	 * @param modeLocate
+	 *            the modeLocate to set
+	 */
+	public void setModeLocate(int modeLocate) {
+		this.modeLocate = modeLocate;
+	}
+
+	/**
+	 * @return the failureMsg
+	 */
+	public String getFailureMsg() {
+		return failureMsg;
+	}
+
+	/**
+	 * @param failureMsg
+	 *            the failureMsg to set
+	 */
+	public void setFailureMsg(String failureMsg) {
+		this.failureMsg = failureMsg;
+	}
+
+	public SallyRecruitingParticipantClass(AgentID aid, CountDownLatch finished)
+			throws Exception {
 		super(aid);
 		this.finished = finished;
 		acceptRequests = false;// False until the CFactory gets to the
@@ -44,26 +80,7 @@ public class SallyRecruitingParticipantClass extends CAgent {
 		System.out.println(myProcessor.getMyAgent().getName()
 				+ ": the welcome message is " + welcomeMessage.getContent());
 
-		// Each agent's conversation is carried out by a CProcessor.
-		// CProcessors are created by the CFactories in response
-		// to messages that start the agent's activity in a conversation
-
-		// An easy way to create CFactories is to create them from the
-		// predefined factories of package es.upv.dsi.gri_ia.cAgents.protocols
-		// Another option, not shown in this example, is that the agent
-		// designs her own factory and, therefore, a new interaction protocol
-
-		// In this example the agent is going to act as the participant in
-		// REQUESt protocol defined by FIPA.
-		// In order to do so, she has to extend the class
-		// FIPA_REQUEST_Participant
-		// implementing the method that receives the request (doRequest),
-		// the method that carries out the request (doAction) and
-		// the method that generates the answer (doInform)
-
 		class myFIPA_RECRUITING extends FIPA_RECRUITING_Participant {
-
-			private int modeLocate;
 
 			/**
 			 * Method executed at the beginning of the conversation
@@ -78,18 +95,6 @@ public class SallyRecruitingParticipantClass extends CAgent {
 			}
 
 			/**
-			 * Method executed when the participant receive a message to proxy
-			 * 
-			 * @param myProcessor
-			 *            the CProcessor managing the conversation
-			 * @param msg
-			 *            proxy message
-			 * @return next conversation state
-			 */
-			// protected abstract String doReceiveProxy(CProcessor myProcessor,
-			// ACLMessage msg);
-
-			/**
 			 * Sets the refuse message to a proxy action
 			 * 
 			 * @param myProcessor
@@ -101,8 +106,8 @@ public class SallyRecruitingParticipantClass extends CAgent {
 					ACLMessage messageToSend) {
 				messageToSend.setProtocol("fipa-recruiting");
 				messageToSend.setPerformative(ACLMessage.REFUSE);
-				//messageToSend.setReceiver(messageToSend.getSender());
-				//messageToSend.setSender(myProcessor.getMyAgent().getAid());
+				// messageToSend.setReceiver(messageToSend.getSender());
+				// messageToSend.setSender(myProcessor.getMyAgent().getAid());
 				refuseMsg = "Nup";
 				messageToSend.setContent(refuseMsg);
 
@@ -120,37 +125,11 @@ public class SallyRecruitingParticipantClass extends CAgent {
 					ACLMessage messageToSend) {
 				messageToSend.setProtocol("fipa-recruiting");
 				messageToSend.setPerformative(ACLMessage.AGREE);
-				//messageToSend.setReceiver(messageToSend.getSender());
-				//messageToSend.setSender(myProcessor.getMyAgent().getAid());
+				// messageToSend.setReceiver(messageToSend.getSender());
+				// messageToSend.setSender(myProcessor.getMyAgent().getAid());
 				agreeMsg = "ok, let me see...";
 				messageToSend.setContent(agreeMsg);
 			}
-
-			// /**
-			// * Locate agents to recruit
-			// * @param myProcessor the CProcessor managing the conversation
-			// * @param proxyMessage proxy message sent by the initiator
-			// * @return next conversation state
-			// */
-			// protected abstract ArrayList<AgentID> doLocateAgents(CProcessor
-			// myProcessor, ACLMessage proxyMessage);
-			//
-			// class LOCATE_AGENTS_Method implements ActionStateMethod{
-			// @Override
-			// public String run(CProcessor myProcessor) {
-			// ACLMessage proxyMessage = (ACLMessage)
-			// myProcessor.getInternalData().get("proxyMessage");
-			// ArrayList<AgentID> locatedAgents = doLocateAgents(myProcessor,
-			// proxyMessage);
-			// if(locatedAgents.size() == 0)
-			// return "FAILURE_NO_MATCH";
-			// else{
-			// myProcessor.getInternalData().put("locatedAgents",
-			// locatedAgents);
-			// return "START_SUB_PROTOCOL";
-			// }
-			// }
-			// }
 
 			/**
 			 * Method to execute when there is no agents to recruit
@@ -162,6 +141,8 @@ public class SallyRecruitingParticipantClass extends CAgent {
 			 */
 			protected void doFailureNoMatch(CProcessor myProcessor,
 					ACLMessage messageToSend) {
+				failureNoMatchMsg = "Agent not found";
+				messageToSend.setContent(failureNoMatchMsg);
 			}
 
 			/**
@@ -173,8 +154,6 @@ public class SallyRecruitingParticipantClass extends CAgent {
 			 *            result of the subprotocol
 			 * @return next conversation message
 			 */
-			// protected abstract boolean resultOfSubProtocol(CProcessor
-			// myProcessor, ACLMessage subProtocolMessageResult);
 
 			/**
 			 * Sets the failure message
@@ -186,6 +165,9 @@ public class SallyRecruitingParticipantClass extends CAgent {
 			 */
 			protected void doFailureProxy(CProcessor myProcessor,
 					ACLMessage messageToSend) {
+
+				failureMsg = "SubProtocol failed :(";
+				messageToSend.setContent(failureMsg);
 			}
 
 			/**
@@ -198,6 +180,8 @@ public class SallyRecruitingParticipantClass extends CAgent {
 			 */
 			protected void doInform(CProcessor myProcessor,
 					ACLMessage messageToSend) {
+				informMsg = "Done (by other)";
+				messageToSend.setContent(informMsg);
 			}
 
 			/**
@@ -211,7 +195,7 @@ public class SallyRecruitingParticipantClass extends CAgent {
 			protected void doFinalRecruitingParticipant(CProcessor myProcessor,
 					ACLMessage messageToSend) {
 				messageToSend = myProcessor.getLastSentMessage();
-				//Para acabar, Sally se apaga
+				// Para acabar, Sally se apaga
 				myProcessor.getMyAgent().Shutdown();
 			}
 
@@ -219,76 +203,56 @@ public class SallyRecruitingParticipantClass extends CAgent {
 			protected String doReceiveProxy(CProcessor myProcessor,
 					ACLMessage msg) {
 				if (mode == 0) {// Agree mode
-				
+
 					return "AGREE";
 				} else {
 					// Refuse mode
-					
+
 					return "REFUSE";
 
 				}
-				
+
 			}
 
 			@Override
 			protected ArrayList<AgentID> doLocateAgents(CProcessor myProcessor,
 					ACLMessage proxyMessage) {
-				ArrayList<AgentID> al =  new ArrayList<AgentID>();
-				if(modeLocate == 0){//Locate
-					//proxyMessage.setContent("TALK");
+				ArrayList<AgentID> al = new ArrayList<AgentID>();
+				if (modeLocate == 0) {// Locate
+
 					al.add(new AgentID("other"));
 				}
 				return al;
-				
+
 			}
 
 			@Override
 			protected boolean resultOfSubProtocol(CProcessor myProcessor,
 					ACLMessage subProtocolMessageResult) {
-				// TODO Auto-generated method stub
-				return false;
-			}
+				if (resultOfSubprotocol) {
 
-			/**
-			 * @return the modeLocate
-			 */
-			public int getModeLocate() {
-				return modeLocate;
-			}
-
-			/**
-			 * @param modeLocate the modeLocate to set
-			 */
-			public void setModeLocate(int modeLocate) {
-				this.modeLocate = modeLocate;
+					subProtocolMessageResult.setContent("Success :)");
+				} else {
+					informMsg = "SubProtocol failed :(";
+					subProtocolMessageResult.setContent(informMsg);
+				}
+				return resultOfSubprotocol;
 			}
 
 		}
 
-		// The agent creates the CFactory that manages every message which its
-		// performative is set to REQUEST and protocol set to REQUEST. In this
-		// example the CFactory gets the name "TALK", we don't add any
-		// additional message acceptance criterion other than the required
-		// by the REQUEST protocol (null) and we limit the number of
-		// simultaneous
-		// processors to 1, i.e. the requests will be attended one after
-		// another.
-
-		// REVISAR FILTER => null, template no se usa, eliminar del constructor?
 		CFactory recruiting = new myFIPA_RECRUITING().newFactory("RECRUITING",
 				null, null, 0, myProcessor.getMyAgent());
-		// .newFactory("TALK", null,0, myProcessor.getMyAgent());
 
-		// Finally the factory is setup to answer to incoming messages that
-		// can start the participation of the agent in a new conversation
 		this.addFactoryAsParticipant(recruiting);
-		
+
 		MessageFilter filter;
-		
-		// We create a factory in order to send a propose and wait for the answer
+
+		// We create a factory in order to send a propose and wait for the
+		// answer
 
 		filter = new MessageFilter("performative = PROPOSE");
-		
+
 		CFactory talk = new CFactory("Is anyone there?", filter, 1,
 				myProcessor.getMyAgent());
 
@@ -296,7 +260,7 @@ public class SallyRecruitingParticipantClass extends CAgent {
 		// We have to associate this state with a method that will be
 		// executed at the beginning of the conversation.
 
-		///////////////////////////////////////////////////////////////////////////////
+		// /////////////////////////////////////////////////////////////////////////////
 		// BEGIN state
 
 		BeginState BEGIN = (BeginState) talk.cProcessorTemplate().getState(
@@ -311,7 +275,7 @@ public class SallyRecruitingParticipantClass extends CAgent {
 		}
 		BEGIN.setMethod(new BEGIN_Method());
 
-		///////////////////////////////////////////////////////////////////////////////
+		// /////////////////////////////////////////////////////////////////////////////
 		// PURPOSE state
 
 		SendState PURPOSE = new SendState("PURPOSE");
@@ -322,8 +286,10 @@ public class SallyRecruitingParticipantClass extends CAgent {
 				messageToSend.setReceiver(new AgentID("other"));
 				messageToSend.setSender(myProcessor.getMyAgent().getAid());
 				messageToSend.setContent("Will you come with me to a movie?");
-				System.out.println(myProcessor.getMyAgent().getName() + " : I tell " + messageToSend.getReceiver().name + " "
-						+ messageToSend.getPerformative() + " " + messageToSend.getContent());
+				System.out.println(myProcessor.getMyAgent().getName()
+						+ " : I tell " + messageToSend.getReceiver().name + " "
+						+ messageToSend.getPerformative() + " "
+						+ messageToSend.getContent());
 
 				return "WAIT";
 			}
@@ -333,32 +299,32 @@ public class SallyRecruitingParticipantClass extends CAgent {
 		talk.cProcessorTemplate().registerState(PURPOSE);
 		talk.cProcessorTemplate().addTransition("BEGIN", "PURPOSE");
 
-		///////////////////////////////////////////////////////////////////////////////
+		// /////////////////////////////////////////////////////////////////////////////
 		// WAIT State
 
 		talk.cProcessorTemplate().registerState(new WaitState("WAIT", 0));
 		talk.cProcessorTemplate().addTransition("PURPOSE", "WAIT");
 
-		///////////////////////////////////////////////////////////////////////////////
+		// /////////////////////////////////////////////////////////////////////////////
 		// RECEIVE State
 
 		ReceiveState RECEIVE = new ReceiveState("RECEIVE");
 
 		class RECEIVE_Method implements ReceiveStateMethod {
-			
 
 			public String run(CProcessor myProcessor, ACLMessage messageReceived) {
-				receivedMsgFromOther=messageReceived.getPerformative()+": "+messageReceived.getContent();
+				receivedMsgFromOther = messageReceived.getPerformative() + ": "
+						+ messageReceived.getContent();
 				return "FINAL";
 			}
 		}
-		
+
 		RECEIVE.setAcceptFilter(null); // null -> accept any message
 		RECEIVE.setMethod(new RECEIVE_Method());
 		talk.cProcessorTemplate().registerState(RECEIVE);
 		talk.cProcessorTemplate().addTransition("WAIT", "RECEIVE");
 
-		///////////////////////////////////////////////////////////////////////////////
+		// /////////////////////////////////////////////////////////////////////////////
 		// FINAL state
 
 		FinalState FINAL = new FinalState("FINAL");
@@ -367,7 +333,7 @@ public class SallyRecruitingParticipantClass extends CAgent {
 			public void run(CProcessor myProcessor, ACLMessage messageToReturn) {
 				messageToReturn.copyFromAsTemplate(myProcessor
 						.getLastReceivedMessage());
-				//myProcessor.ShutdownAgent();
+				// myProcessor.ShutdownAgent();
 			}
 		}
 		FINAL.setMethod(new FINAL_Method());
@@ -376,13 +342,58 @@ public class SallyRecruitingParticipantClass extends CAgent {
 		talk.cProcessorTemplate().addTransition(RECEIVE, FINAL);
 		talk.cProcessorTemplate().addTransition("PURPOSE", "FINAL");
 
-		///////////////////////////////////////////////////////////////////////////////
-		
-		// The template processor is ready. We add the factory, in this case as a initiator one
+		// /////////////////////////////////////////////////////////////////////////////
+
+		// The template processor is ready. We add the factory, in this case as
+		// a initiator one
 
 		this.addFactoryAsInitiator(talk);
-		
 
+	}
+
+	/**
+	 * @return the failureNoMatchMsg
+	 */
+	public String getFailureNoMatchMsg() {
+		return failureNoMatchMsg;
+	}
+
+	/**
+	 * @param failureNoMatchMsg
+	 *            the failureNoMatchMsg to set
+	 */
+	public void setFailureNoMatchMsg(String failureNoMatchMsg) {
+		this.failureNoMatchMsg = failureNoMatchMsg;
+	}
+
+	/**
+	 * @return the informMsg
+	 */
+	public String getInformMsg() {
+		return informMsg;
+	}
+
+	/**
+	 * @param informMsg
+	 *            the informMsg to set
+	 */
+	public void setInformMsg(String informMsg) {
+		this.informMsg = informMsg;
+	}
+
+	/**
+	 * @return the resultOfSubprotocol
+	 */
+	public boolean isResultOfSubprotocol() {
+		return resultOfSubprotocol;
+	}
+
+	/**
+	 * @param resultOfSubprotocol
+	 *            the resultOfSubprotocol to set
+	 */
+	public void setResultOfSubprotocol(int resultOfSubprotocol) {
+		this.resultOfSubprotocol = resultOfSubprotocol == 0;
 	}
 
 	protected void finalize(CProcessor firstProcessor,

@@ -1,5 +1,7 @@
 package TestContractNet;
 
+import java.util.concurrent.CountDownLatch;
+
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 
@@ -18,45 +20,48 @@ import es.upv.dsic.gti_ia.core.AgentsConnection;
 
 public class Run {
 
-    /**
-     * @param args
-     */
-    public static void main(String[] args) {
+	static CountDownLatch finished = new CountDownLatch(1);
 
-	DOMConfigurator.configure("configuration/loggin.xml");
-	Logger logger = Logger.getLogger(Run.class);
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
 
-	try {
+		DOMConfigurator.configure("configuration/loggin.xml");
+		Logger logger = Logger.getLogger(Run.class);
 
-	    /**
-	     * Connecting to Qpid Broker, default localhost.
-	     */
-	    AgentsConnection.connect();
+		try {
 
-	    for (int i = 0; i < 5; i++) {
-		/**
-		 * Instantiating a consumer agent
-		 */
-		Concessionaire concesionario = new Concessionaire(new AgentID("Autos" + i));
-		/**
-		 * Execute the agents
-		 */
-		concesionario.start();
-	    }
+			/**
+			 * Connecting to Qpid Broker, default localhost.
+			 */
+			AgentsConnection.connect();
 
-	    /**
-	     * Instantiating a sender agent
-	     */
-	    Client cliente = new Client(new AgentID("Client"));
-	    /**
-	     * Execute the agents
-	     */
-	    cliente.start();
-	} catch (Exception e) {
+			for (int i = 0; i < 5; i++) {
+				/**
+				 * Instantiating a consumer agent
+				 */
+				Concessionaire concesionario = new Concessionaire(new AgentID(
+						"Autos" + i), finished);
+				/**
+				 * Execute the agents
+				 */
+				concesionario.start();
+			}
 
-	    logger.error(e.getMessage());
+			/**
+			 * Instantiating a sender agent
+			 */
+			Client cliente = new Client(new AgentID("Client"), finished);
+			/**
+			 * Execute the agents
+			 */
+			cliente.start();
+		} catch (Exception e) {
+
+			logger.error(e.getMessage());
+		}
+
 	}
-
-    }
 
 }

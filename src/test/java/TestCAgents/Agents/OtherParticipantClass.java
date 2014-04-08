@@ -109,8 +109,8 @@ public class OtherParticipantClass extends CAgent {
 				messageToSend.setReceiver(myProcessor.getLastReceivedMessage()
 						.getSender());
 				messageToSend.setContent("OK");
-				logger.error("INICIANDO CONVERSACION CON HARRY");
-				myProcessor.getMyAgent().startSyncConversation("TALK");
+				//logger.error("INICIANDO CONVERSACION CON HARRY");
+				//myProcessor.getMyAgent().startSyncConversation("TALK");
 
 				return "FINAL";
 			}
@@ -132,7 +132,8 @@ public class OtherParticipantClass extends CAgent {
 		class FINAL_Method implements FinalStateMethod {
 			public void run(CProcessor myProcessor, ACLMessage messageToSend) {
 				messageToSend.setContent("Done");
-				// myProcessor.getMyAgent().Shutdown();
+				
+				myProcessor.getMyAgent().Shutdown();
 			}
 		}
 		FINAL.setMethod(new FINAL_Method());
@@ -141,98 +142,6 @@ public class OtherParticipantClass extends CAgent {
 		talk.cProcessorTemplate().addTransition("AGREE", "FINAL");
 
 		this.addFactoryAsParticipant(talk);
-
-		MessageFilter filter_I;
-
-		filter_I = new MessageFilter("performative = PROPOSE");
-
-		CFactory talk_I = new CFactory("TALK", filter_I, 1,
-				myProcessor.getMyAgent());
-
-		// /////////////////////////////////////////////////////////////////////////////
-		// BEGIN state
-
-		BeginState BEGIN_I = (BeginState) talk.cProcessorTemplate().getState(
-				"BEGIN_I");
-
-		class BEGIN_I_Method implements BeginStateMethod {
-			public String run(CProcessor myProcessor, ACLMessage msg) {
-				// In this example there is nothing more to do than continue
-				// to the next state which will send the message.
-				return "PURPOSE_I";
-			};
-		}
-		BEGIN_I.setMethod(new BEGIN_I_Method());
-
-		// /////////////////////////////////////////////////////////////////////////////
-		// PURPOSE state
-
-		SendState PURPOSE_I = new SendState("PURPOSE_I");
-
-		class PURPOSE_I_Method implements SendStateMethod {
-			public String run(CProcessor myProcessor, ACLMessage messageToSend) {
-				messageToSend.setPerformative(ACLMessage.PROPOSE);
-				messageToSend.setReceiver(new AgentID("Harry"));
-				messageToSend.setSender(myProcessor.getMyAgent().getAid());
-				messageToSend.setContent("Will you come with me to a movie?");
-				System.out.println(myProcessor.getMyAgent().getName()
-						+ " : I tell " + messageToSend.getReceiver().name + " "
-						+ messageToSend.getPerformative() + " "
-						+ messageToSend.getContent());
-
-				return "WAIT_I";
-			}
-		}
-		PURPOSE_I.setMethod(new PURPOSE_I_Method());
-
-		talk.cProcessorTemplate().registerState(PURPOSE_I);
-		talk.cProcessorTemplate().addTransition("BEGIN_I", "PURPOSE_I");
-
-		// /////////////////////////////////////////////////////////////////////////////
-		// WAIT State
-
-		talk.cProcessorTemplate().registerState(new WaitState("WAIT_I", 0));
-		talk.cProcessorTemplate().addTransition("PURPOSE_I", "WAIT_I");
-
-		// /////////////////////////////////////////////////////////////////////////////
-		// RECEIVE State
-
-		ReceiveState RECEIVE_I = new ReceiveState("RECEIVE_I");
-
-		class RECEIVE_I_Method implements ReceiveStateMethod {
-			public String run(CProcessor myProcessor, ACLMessage messageReceived) {
-				receivedMsg = messageReceived.getPerformative() + ": "
-						+ messageReceived.getContent();
-				return "FINAL_I";
-			}
-		}
-
-		RECEIVE_I.setAcceptFilter(null); // null -> accept any message
-		RECEIVE_I.setMethod(new RECEIVE_I_Method());
-		talk.cProcessorTemplate().registerState(RECEIVE_I);
-		talk.cProcessorTemplate().addTransition("WAIT_I", "RECEIVE_I");
-
-		// /////////////////////////////////////////////////////////////////////////////
-		// FINAL state
-
-		FinalState FINAL_I = new FinalState("FINAL_I");
-
-		class FINAL_I_Method implements FinalStateMethod {
-			public void run(CProcessor myProcessor, ACLMessage messageToReturn) {
-				messageToReturn.copyFromAsTemplate(myProcessor
-						.getLastReceivedMessage());
-				myProcessor.ShutdownAgent();
-			}
-		}
-		FINAL_I.setMethod(new FINAL_I_Method());
-
-		talk.cProcessorTemplate().registerState(FINAL_I);
-		talk.cProcessorTemplate().addTransition(RECEIVE_I, FINAL_I);
-		talk.cProcessorTemplate().addTransition("PURPOSE_I", "FINAL_I");
-
-		// /////////////////////////////////////////////////////////////////////////////
-
-		this.addFactoryAsInitiator(talk);
 
 	}
 
