@@ -1038,21 +1038,19 @@ public class TestTraceManager {
 			commAgents[i].addCommand(CommandedAgent.END);
 		
 		for(int i = 0; i < commTraceManagers.length; i++) {
-			while(commTraceManagers[i].getTraceEvents().size() < 1) {
-				try {
-					Thread.sleep(1 * 50);
-				} catch (InterruptedException e) {
-					fail(e.getMessage());
-				}
-			}
-			ArrayList<TraceEvent> tE = commTraceManagers[i].getTraceEvents();
-			ArrayList<String> controlTE = new ArrayList<String>();
-			for(TraceEvent e : tE) {
-				System.out.println(e.getTracingService() + ": " + e.getContent());
-				controlTE.add(e.getTracingService() + ": " + e.getContent());
-			}
 			for(int j = 0; j < commAgents.length; j++) {
-				assertTrue(controlTE.contains("AGENT_DESTROYED: " + commAgents[j].getAid().toString()));
+				boolean ok = false;
+				do
+				{
+					ArrayList<TraceEvent> tE = commTraceManagers[i].getTraceEvents();
+					ArrayList<String> controlTE = new ArrayList<String>();
+					for(TraceEvent e : tE) {
+						System.out.println(e.getTracingService() + ": " + e.getContent());
+						controlTE.add(e.getTracingService() + ": " + e.getContent());
+					}
+				
+					if(controlTE.contains("AGENT_DESTROYED: " + commAgents[j].getAid().toString())) ok = true;
+				} while(!ok);
 			}
 		}
 		
