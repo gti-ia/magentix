@@ -1,8 +1,6 @@
 package TestNormsModule;
 
 import jason.asSyntax.Literal;
-import jason.asSyntax.Rule;
-
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -680,7 +678,7 @@ public class TestModulePred extends TestCase {
 		{
 			Norm norma = null;
 
-			StringBuffer StringBuffer1 = new StringBuffer("@ allocateRoleNorm[p,<positionName:member>,allocateRole(RoleName, UnitName, _,AgentName),isRole(RoleName, UnitName) & roleCardinality(RoleName,UnitName,Cardinality) & Cardinality >5,_ ];");
+			StringBuffer StringBuffer1 = new StringBuffer("@allocateRoleNorm[p,<positionName:member>,allocateRole(RoleName,UnitName,_,AgentName),isRole(RoleName,UnitName) & roleCardinality(RoleName,UnitName,Cardinality) & Cardinality >5,_ ];");
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
@@ -688,14 +686,9 @@ public class TestModulePred extends TestCase {
 
 			norma = parser.parser();
 			
-			Rule actual = (Rule) bdbi.buildNormRule(norma);
+			String actual = bdbi.buildNormRule(norma);
 			
-		
-			
-			
-			
-			
-			assertEquals("(isRole(RoleName,UnitName) & (roleCardinality(RoleName,UnitName,Cardinality) & (Cardinality > 5)))",actual.getBody().toString());
+			assertEquals("allocateRole(RoleName,UnitName,_,AgentName):-isRole(RoleName,UnitName) & roleCardinality(RoleName,UnitName,Cardinality) & Cardinality>5", actual);
 						
 	
 			
@@ -719,7 +712,7 @@ public class TestModulePred extends TestCase {
 		{
 			Norm norma = null;
 
-			StringBuffer StringBuffer1 = new StringBuffer("@ allocateRoleNorm[p,<positionName:member>,allocateRole(RoleName, UnitName, _,AgentName),isRole(RoleName, UnitName) & roleCardinality(RoleName,UnitName,Cardinality) & Cardinality >5, isUnit(virtual) ];");
+			StringBuffer StringBuffer1 = new StringBuffer("@allocateRoleNorm[p,<positionName:member>,allocateRole(RoleName,UnitName,_,AgentName),isRole(RoleName,UnitName) & roleCardinality(RoleName,UnitName,Cardinality) & Cardinality > 5,isUnit(virtual)];");
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
@@ -727,18 +720,10 @@ public class TestModulePred extends TestCase {
 
 			norma = parser.parser();
 			
-			Rule actual = (Rule) bdbi.buildNormRule(norma);
+			String actual = bdbi.buildNormRule(norma);
 			
-		
-			
-			
-			
-			
-			assertEquals("(isRole(RoleName,UnitName) & (roleCardinality(RoleName,UnitName,Cardinality) & ((Cardinality > 5) & not (isUnit(virtual)))))",actual.getBody().toString());
+			assertEquals("allocateRole(RoleName,UnitName,_,AgentName):-isRole(RoleName,UnitName) & roleCardinality(RoleName,UnitName,Cardinality) & Cardinality>5 & not(isUnit(virtual))",actual);
 						
-	
-			
-
 		}catch(Exception e)
 		{
 
@@ -758,7 +743,7 @@ public class TestModulePred extends TestCase {
 		{
 			Norm norma = null;
 
-			StringBuffer StringBuffer1 = new StringBuffer("@ allocateRoleNorm[p,<positionName:member>,allocateRole(RoleName, UnitName, _,AgentName),_, isUnit(virtual) ];");
+			StringBuffer StringBuffer1 = new StringBuffer("@allocateRoleNorm[p,<positionName:member>,allocateRole(RoleName,UnitName,_,AgentName),_,isUnit(virtual)];");
 
 			InputStream input =  new ByteArrayInputStream(StringBuffer1.toString().getBytes("UTF-8"));
 
@@ -766,14 +751,14 @@ public class TestModulePred extends TestCase {
 
 			norma = parser.parser();
 			
-			Rule actual = (Rule) bdbi.buildNormRule(norma);
+			String actual = bdbi.buildNormRule(norma);
 			
 		
 			
 			
 			
 			
-			assertEquals("not (isUnit(virtual))",actual.getBody().toString());
+			assertEquals("allocateRole(RoleName,UnitName,_,AgentName):-not(isUnit(virtual))", actual);
 						
 	
 			

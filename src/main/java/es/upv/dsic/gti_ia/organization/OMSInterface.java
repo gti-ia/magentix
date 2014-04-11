@@ -1,7 +1,5 @@
 package es.upv.dsic.gti_ia.organization;
 
-import jason.asSyntax.Literal;
-
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -692,10 +690,10 @@ public class OMSInterface {
 							}
 						}
 						
-						if (checkPermitNorms(AgentName, UnitName, buildAction("registerNorm", UnitName, parsedNorm.getDeontic(), parsedNorm.getTargetType(), parsedNorm.getTargetValue(), parsedNorm.getActionName(), AgentName)))//"registerNorm("+UnitName.toLowerCase()+","+parsedNorm.getDeontic().toLowerCase()+","+parsedNorm.getTargetType().toLowerCase() +","+parsedNorm.getTargetValue().toLowerCase()+","+parsedNorm.getActionName().toLowerCase()+","+ AgentName.toLowerCase()+")"))
+						if (checkPermitNorms(AgentName, UnitName, buildAction("registerNorm", normName, UnitName, parsedNorm.getDeontic(), parsedNorm.getTargetType(), parsedNorm.getTargetValue(), parsedNorm.getActionName(), AgentName)))//"registerNorm("+UnitName.toLowerCase()+","+parsedNorm.getDeontic().toLowerCase()+","+parsedNorm.getTargetType().toLowerCase() +","+parsedNorm.getTargetValue().toLowerCase()+","+parsedNorm.getActionName().toLowerCase()+","+ AgentName.toLowerCase()+")"))
 						{
 
-							Literal normRule = belifeDbInterface.buildNormRule(parsedNorm);
+							String normRule = belifeDbInterface.buildNormRule(parsedNorm);
 							String result = dbInterface.createNorm(UnitName, NormContent, parsedNorm, normRule);
 
 							resultXML += "<status>Ok</status>\n";
@@ -704,7 +702,7 @@ public class OMSInterface {
 
 							return resultXML;
 						}
-						else if (checkFordibbenNorms(AgentName, UnitName, buildAction("registerNorm", UnitName, parsedNorm.getDeontic(), parsedNorm.getTargetType(), parsedNorm.getTargetValue(), parsedNorm.getActionName(), AgentName)))//"registerNorm("+UnitName.toLowerCase()+","+parsedNorm.getDeontic().toLowerCase()+","+parsedNorm.getTargetType().toLowerCase() +","+parsedNorm.getTargetValue().toLowerCase()+","+parsedNorm.getActionName().toLowerCase()+","+ AgentName.toLowerCase()+")"))
+						else if (checkFordibbenNorms(AgentName, UnitName, buildAction("registerNorm", normName, UnitName, parsedNorm.getDeontic(), parsedNorm.getTargetType(), parsedNorm.getTargetValue(), parsedNorm.getActionName(), AgentName)))//"registerNorm("+UnitName.toLowerCase()+","+parsedNorm.getDeontic().toLowerCase()+","+parsedNorm.getTargetType().toLowerCase() +","+parsedNorm.getTargetValue().toLowerCase()+","+parsedNorm.getActionName().toLowerCase()+","+ AgentName.toLowerCase()+")"))
 						{
 							String message = l10n.getMessage(MessageID.FORBIDDEN_NORM);
 							throw new ForbiddenNormException(message);
@@ -718,7 +716,7 @@ public class OMSInterface {
 
 								if (dbInterface.checkPositionInUnit(AgentName, "creator", UnitName) || dbInterface.checkPositionInUnit(AgentName, "supervisor", UnitName)) {
 
-									Literal normRule = belifeDbInterface.buildNormRule(parsedNorm);
+									String normRule = belifeDbInterface.buildNormRule(parsedNorm);
 									String result = dbInterface.createNorm(UnitName, NormContent, parsedNorm, normRule);
 
 									resultXML += "<status>Ok</status>\n";
@@ -736,7 +734,7 @@ public class OMSInterface {
 
 								if (dbInterface.checkPositionInUnit(AgentName, "creator", UnitName) || dbInterface.checkPositionInUnit(AgentName, "member", UnitName)) {
 
-									Literal normRule = belifeDbInterface.buildNormRule(parsedNorm);
+									String normRule = belifeDbInterface.buildNormRule(parsedNorm);
 									String result = dbInterface.createNorm(UnitName, NormContent, parsedNorm, normRule);
 
 									resultXML += "<status>Ok</status>\n";
@@ -759,7 +757,7 @@ public class OMSInterface {
 							if (unitType.equals("flat")) {
 
 								if (dbInterface.checkPosition(AgentName, "creator")) {
-									Literal normRule = belifeDbInterface.buildNormRule(parsedNorm);
+									String normRule = belifeDbInterface.buildNormRule(parsedNorm);
 									String result = dbInterface.createNorm(UnitName, NormContent, parsedNorm, normRule);
 
 									resultXML += "<status>Ok</status>\n";

@@ -1,33 +1,24 @@
 package TestOMS;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
-import es.upv.dsic.gti_ia.organization.Configuration;
 import es.upv.dsic.gti_ia.organization.OMS;
 import es.upv.dsic.gti_ia.organization.OMSProxy;
 import es.upv.dsic.gti_ia.organization.SF;
-import es.upv.dsic.gti_ia.organization.exception.InvalidDeonticException;
-import es.upv.dsic.gti_ia.organization.exception.InvalidExpressionException;
-import es.upv.dsic.gti_ia.organization.exception.InvalidIDException;
-import es.upv.dsic.gti_ia.organization.exception.InvalidOMSActionException;
-import es.upv.dsic.gti_ia.organization.exception.InvalidPositionException;
-import es.upv.dsic.gti_ia.organization.exception.InvalidTargetTypeException;
-import es.upv.dsic.gti_ia.organization.exception.InvalidTargetValueException;
-import es.upv.dsic.gti_ia.organization.exception.NormExistsInUnitException;
-import es.upv.dsic.gti_ia.organization.exception.NotInUnitAndNotCreatorException;
-import es.upv.dsic.gti_ia.organization.exception.RoleNotExistsException;
-import es.upv.dsic.gti_ia.organization.exception.THOMASException;
-import es.upv.dsic.gti_ia.organization.exception.UnitNotExistsException;
 
+/** 
+ * @author Jose Alemany Bordera  -  jalemany1@dsic.upv.es
+ * 
+ */
 
-public class TestRegisterNorm extends TestCase {
+public class TestRegisterNorm {
 
 	OMSProxy omsProxy = null;
 	DatabaseAccess dbA = null;
@@ -38,13 +29,11 @@ public class TestRegisterNorm extends TestCase {
 	
 	OMS oms = null;
 	SF sf = null;
-	
-	private Connection connection = null;
 
 	Process qpid_broker;
 	
-
-	protected void tearDown() throws Exception {
+	@After
+	public void tearDown() throws Exception {
 
 		//------------------Clean Data Base -----------//
 		dbA.executeSQL("DELETE FROM agentPlayList");
@@ -56,7 +45,6 @@ public class TestRegisterNorm extends TestCase {
 		dbA.executeSQL("DELETE FROM roleList WHERE idroleList != 1");
 		dbA.executeSQL("DELETE FROM unitHierarchy WHERE idChildUnit != 1");
 		dbA.executeSQL("DELETE FROM unitList WHERE idunitList != 1");
-
 		//--------------------------------------------//
 		
 
@@ -78,17 +66,14 @@ public class TestRegisterNorm extends TestCase {
 		AgentsConnection.disconnect();
 		qpidManager.UnixQpidManager.stopQpid(qpid_broker);
 	}
-	protected void setUp() throws Exception {
-		super.setUp();
+	
+	@Before
+	public void setUp() throws Exception {
 
 		qpid_broker = qpidManager.UnixQpidManager.startQpid(Runtime.getRuntime(), qpid_broker);
-		
-
 		AgentsConnection.connect();
 
-
 		oms = new OMS(new AgentID("OMS"));
-
 		sf =  new SF(new AgentID("SF"));
 
 		oms.start();
@@ -96,8 +81,6 @@ public class TestRegisterNorm extends TestCase {
 
 
 		agent = new Agent(new AgentID("pruebas"));
-
-
 
 		omsProxy = new OMSProxy(agent);
 
@@ -113,1512 +96,200 @@ public class TestRegisterNorm extends TestCase {
 		dbA.executeSQL("DELETE FROM roleList WHERE idroleList != 1");
 		dbA.executeSQL("DELETE FROM unitHierarchy WHERE idChildUnit != 1");
 		dbA.executeSQL("DELETE FROM unitList WHERE idunitList != 1");
-
 		//--------------------------------------------//
-
-
-
-	}
-
-	/** 
-	 * This method sets the connection with the THOMAS database  
-	 * */
-	public Connection connect() {
-		Configuration c = null;
-		try {
-
-
-			c = Configuration.getConfiguration();
-			//Register a MySQL driver. 
-			String driverName = c.getjenadbDriver(); // MySQL MM JDBC
-			// driver
-			Class.forName(driverName).newInstance();
-
-			String serverName = c.getdatabaseServer();
-			String mydatabase = c.getdatabaseName();
-			String url = "jdbc:mysql://" + serverName + "/" + mydatabase; // a
-			String username = c.getdatabaseUser();
-			String password = c.getdatabasePassword();
-
-			connection = DriverManager.getConnection(url, username, password);
-			connection.setAutoCommit(true);
-			connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
-
-
-			return connection;
-
-
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-		finally{
-			c=null;
-		}
+		
+		dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
 	}
 	
-	public void testRegisterNorm1()
-	{
-		try
-		{
-			/*
-			String unit = "jerarquia";
+	@Test
+	public void testRegisterNorm1() throws Exception {
 		
-			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
+		//------------------------------------------- Test Initialization  -----------------------------------------------//
+		dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('plana',(SELECT idunitType FROM unitType WHERE unitTypeName = 'flat'))");
+		dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'virtual'),(SELECT idunitList FROM unitList WHERE unitName = 'plana'))");
+		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
+				"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
+				"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
+				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
+				"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
+		dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('jerarquia',(SELECT idunitType FROM unitType WHERE unitTypeName = 'hierarchy'))");
+		dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'virtual'),(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))");
+		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
+				"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
+				"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
+				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
+				"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
+		
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES ((SELECT idagentList FROM agentList WHERE "
+				+ "agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT "
+				+ "idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
+		//----------------------------------------------------------------------------------------------------------------//
 
-			dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('"+unit+"',(SELECT idunitType FROM unitType WHERE unitTypeName = 'hierarchy'))");
-			
-			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'virtual'),(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'))");
+		String NormaPrueba = "@permitidoAdquirirRol[p,<roleName:_>,acquireRole(creador,plana,_),_,_]";
+		
+		String result = omsProxy.registerNorm("plana", NormaPrueba);
+		assertEquals("permitidoAdquirirRol created", result);
+		
+		assertTrue(dbA.executeQuery("SELECT * FROM normList nl INNER JOIN unitList ul ON (nl.idunitList=ul.idunitList) "
+				+ "INNER JOIN deontic d ON (nl.iddeontic=d.iddeontic) INNER JOIN targetType tt ON (nl.idtargetType=tt.idtargetType) "
+				+ "INNER JOIN actionNorm an ON (nl.idactionNorm=an.idactionNorm) "
+				+ "WHERE nl.normName = 'permitidoAdquirirRol' AND ul.unitName = 'plana' AND d.deonticdesc = 'p' AND tt.targetName = 'roleName' AND an.description = 'acquireRole'"));
+		
+		assertTrue(dbA.executeQuery("SELECT * FROM normList WHERE normName = 'permitidoAdquirirRol' AND targetValue = -1"));
+		
+		assertTrue(dbA.executeQuery("SELECT * FROM normList WHERE normName = 'permitidoAdquirirRol' AND normContent = '"+ NormaPrueba +"'"));
+		
+		assertTrue(dbA.executeQuery("SELECT * FROM normList WHERE normName = 'permitidoAdquirirRol' AND normRule = 'acquireRole(creador,plana,_)'"));
 
-*/
-
-
-
-			String NormaPrueba = "@normaprueba[f,agentName:_,registerUnit(_,_,_,_,_),_,_]";
-
-
-			String result = omsProxy.registerNorm("Invalida", NormaPrueba);
-
-
-
-
-			fail(result);
-
-		}catch(UnitNotExistsException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
+		assertTrue(dbA.executeQuery("SELECT * FROM normList nl INNER JOIN actionNorm an ON (nl.idactionNorm=an.idactionNorm) INNER JOIN actionNormParam anp ON (an.idactionNorm=anp.idactionNorm) "
+				+ "WHERE nl.normName = 'permitidoAdquirirRol' AND an.description = 'acquireRole' AND anp.value = 'creador'"));
+		assertTrue(dbA.executeQuery("SELECT * FROM normList nl INNER JOIN actionNorm an ON (nl.idactionNorm=an.idactionNorm) INNER JOIN actionNormParam anp ON (an.idactionNorm=anp.idactionNorm) "
+				+ "WHERE nl.normName = 'permitidoAdquirirRol' AND an.description = 'acquireRole' AND anp.value = 'plana'"));
+		assertTrue(dbA.executeQuery("SELECT * FROM normList nl INNER JOIN actionNorm an ON (nl.idactionNorm=an.idactionNorm) INNER JOIN actionNormParam anp ON (an.idactionNorm=anp.idactionNorm) "
+				+ "WHERE nl.normName = 'permitidoAdquirirRol' AND an.description = 'acquireRole' AND anp.value = '_'"));
+		
 	}
 	
-	public void testRegisterNorm2()
-	{
-		Statement st = null;	
-		ResultSet res = null;
+	@Test
+	public void testRegisterNorm2() throws Exception {
 		
-		try
-		{
-
-			
-			
-			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
-			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
-
+		//------------------------------------------- Test Initialization  -----------------------------------------------//
+		dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('plana',(SELECT idunitType FROM unitType WHERE unitTypeName = 'flat'))");
+		dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'virtual'),(SELECT idunitList FROM unitList WHERE unitName = 'plana'))");
+		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
+				"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
+				"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
+				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
+				"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 		
-			String NormaPrueba = "@normaprueba[f,<agentName:_>,registerUnit(_,_,_,_,_),_,_]";
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES ((SELECT idagentList FROM agentList WHERE "
+				+ "agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT "
+				+ "idunitList FROM unitList WHERE unitName = 'plana'))))");
+		//----------------------------------------------------------------------------------------------------------------//
 
+		String NormaPrueba = "@prohibidoRegistrarRol[f,<agentName:pruebas>,registerRole(_,plana,_,_,_,pruebas),isAgent(pruebas) & playsRole(pruebas,_,plana),_]";
+		
+		String result = omsProxy.registerNorm("plana", NormaPrueba);
+		assertEquals("prohibidoRegistrarRol created", result);
+		
+		assertTrue(dbA.executeQuery("SELECT * FROM normList nl INNER JOIN unitList ul ON (nl.idunitList=ul.idunitList) "
+				+ "INNER JOIN deontic d ON (nl.iddeontic=d.iddeontic) INNER JOIN targetType tt ON (nl.idtargetType=tt.idtargetType) "
+				+ "INNER JOIN actionNorm an ON (nl.idactionNorm=an.idactionNorm) "
+				+ "WHERE nl.normName = 'prohibidoRegistrarRol' AND ul.unitName = 'plana' AND d.deonticdesc = 'f' AND tt.targetName = 'agentName' AND an.description = 'registerRole'"));
+		
+		assertTrue(dbA.executeQuery("SELECT * FROM normList rl INNER JOIN agentList al ON (rl.targetValue=al.idagentList) WHERE rl.normName = 'prohibidoRegistrarRol' AND al.agentName = 'pruebas'"));
+		
+		assertTrue(dbA.executeQuery("SELECT * FROM normList WHERE normName = 'prohibidoRegistrarRol' AND normContent = '"+ NormaPrueba +"'"));
+		
+		assertTrue(dbA.executeQuery("SELECT * FROM normList WHERE normName = 'prohibidoRegistrarRol' AND normRule = 'registerRole(_,plana,_,_,_,pruebas):-isAgent(pruebas) & playsRole(pruebas,_,plana)'"));
 
-			String result = omsProxy.registerNorm("virtual", NormaPrueba);
-			
-			
-			assertEquals("normaprueba created", result);
-			
-			
-			try
-			{
-				connection = connect();
+		assertTrue(dbA.executeQuery("SELECT * FROM normList nl INNER JOIN actionNorm an ON (nl.idactionNorm=an.idactionNorm) INNER JOIN actionNormParam anp ON (an.idactionNorm=anp.idactionNorm) "
+				+ "WHERE nl.normName = 'prohibidoRegistrarRol' AND an.description = 'registerRole' AND anp.value = '_'"));
+		assertTrue(dbA.executeQuery("SELECT * FROM normList nl INNER JOIN actionNorm an ON (nl.idactionNorm=an.idactionNorm) INNER JOIN actionNormParam anp ON (an.idactionNorm=anp.idactionNorm) "
+				+ "WHERE nl.normName = 'prohibidoRegistrarRol' AND an.description = 'registerRole' AND anp.value = 'plana'"));
+		assertTrue(dbA.executeQuery("SELECT * FROM normList nl INNER JOIN actionNorm an ON (nl.idactionNorm=an.idactionNorm) INNER JOIN actionNormParam anp ON (an.idactionNorm=anp.idactionNorm) "
+				+ "WHERE nl.normName = 'prohibidoRegistrarRol' AND an.description = 'registerRole' AND anp.value = '_'"));
+		assertTrue(dbA.executeQuery("SELECT * FROM normList nl INNER JOIN actionNorm an ON (nl.idactionNorm=an.idactionNorm) INNER JOIN actionNormParam anp ON (an.idactionNorm=anp.idactionNorm) "
+				+ "WHERE nl.normName = 'prohibidoRegistrarRol' AND an.description = 'registerRole' AND anp.value = '_'"));
+		assertTrue(dbA.executeQuery("SELECT * FROM normList nl INNER JOIN actionNorm an ON (nl.idactionNorm=an.idactionNorm) INNER JOIN actionNormParam anp ON (an.idactionNorm=anp.idactionNorm) "
+				+ "WHERE nl.normName = 'prohibidoRegistrarRol' AND an.description = 'registerRole' AND anp.value = '_'"));
+		assertTrue(dbA.executeQuery("SELECT * FROM normList nl INNER JOIN actionNorm an ON (nl.idactionNorm=an.idactionNorm) INNER JOIN actionNormParam anp ON (an.idactionNorm=anp.idactionNorm) "
+				+ "WHERE nl.normName = 'prohibidoRegistrarRol' AND an.description = 'registerRole' AND anp.value = 'pruebas'"));
+		
+	}
+		
+	@Test
+	public void testRegisterNorm3() throws Exception {
+		
+		//------------------------------------------- Test Initialization  -----------------------------------------------//
+		dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('equipo',(SELECT idunitType FROM unitType WHERE unitTypeName = 'team'))");
+		dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'virtual'),(SELECT idunitList FROM unitList WHERE unitName = 'equipo'))");
+		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
+				"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
+				"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
+				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
+				"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
+		
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES ((SELECT idagentList FROM agentList WHERE "
+				+ "agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT "
+				+ "idunitList FROM unitList WHERE unitName = 'equipo'))))");
+		//----------------------------------------------------------------------------------------------------------------//
 
+		String NormaPrueba = "@permitidoAdquirirRol[p,<roleName:creador>,acquireRole(creador,equipo,Agent),isAgent(Agent) & playsRole(Agent,subordinado,jerarquia) & isUnit(jerarquia) & hasType(jerarquia,hierarchy) & isRole(subordinado,jerarquia),playsRole(Agent,creador,equipo)]";
+		
+		String result = omsProxy.registerNorm("equipo", NormaPrueba);
+		assertEquals("permitidoAdquirirRol created", result);
+		
+		assertTrue(dbA.executeQuery("SELECT * FROM normList nl INNER JOIN unitList ul ON (nl.idunitList=ul.idunitList) "
+				+ "INNER JOIN deontic d ON (nl.iddeontic=d.iddeontic) INNER JOIN targetType tt ON (nl.idtargetType=tt.idtargetType) "
+				+ "INNER JOIN actionNorm an ON (nl.idactionNorm=an.idactionNorm) "
+				+ "WHERE nl.normName = 'permitidoAdquirirRol' AND ul.unitName = 'equipo' AND d.deonticdesc = 'p' AND tt.targetName = 'roleName' AND an.description = 'acquireRole'"));
+		
+		assertTrue(dbA.executeQuery("SELECT * FROM normList nl INNER JOIN roleList rl ON (nl.targetValue=rl.idroleList) WHERE nl.normName = 'permitidoAdquirirRol' AND rl.roleName = 'creador'"));
+		
+		assertTrue(dbA.executeQuery("SELECT * FROM normList WHERE normName = 'permitidoAdquirirRol' AND normContent = '"+ NormaPrueba +"'"));
+		
+		assertTrue(dbA.executeQuery("SELECT * FROM normList WHERE normName = 'permitidoAdquirirRol' AND normRule = 'acquireRole(creador,equipo,Agent):-isAgent(Agent) & playsRole(Agent,subordinado,jerarquia) & isUnit(jerarquia) & hasType(jerarquia,hierarchy) & isRole(subordinado,jerarquia) & not(playsRole(Agent,creador,equipo))'"));
 
-
-				st = connection.createStatement();
-				res = st.executeQuery("SELECT * FROM normList WHERE normName = 'normaprueba'");
-
-				if (res.next())
-				{
-					assertEquals("normaprueba", res.getString("normName"));
-				}
-
-				
-
-			}
-			catch(SQLException e)
-			{
-				throw e;
-
-			}
-			finally
-			{
-				if (connection != null)
-				{
-					connection.close();
-					connection=null;
-				}
-				if (st != null)
-				{
-					st.close();
-					st=null;
-					
-					res.close();
-					res = null;
-				}
-			}
-			
-						
-
-		}catch(THOMASException e)
-		{
-
-			fail(e.getMessage());
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
+		assertTrue(dbA.executeQuery("SELECT * FROM normList nl INNER JOIN actionNorm an ON (nl.idactionNorm=an.idactionNorm) INNER JOIN actionNormParam anp ON (an.idactionNorm=anp.idactionNorm) "
+				+ "WHERE nl.normName = 'permitidoAdquirirRol' AND an.description = 'acquireRole' AND anp.value = 'creador'"));
+		assertTrue(dbA.executeQuery("SELECT * FROM normList nl INNER JOIN actionNorm an ON (nl.idactionNorm=an.idactionNorm) INNER JOIN actionNormParam anp ON (an.idactionNorm=anp.idactionNorm) "
+				+ "WHERE nl.normName = 'permitidoAdquirirRol' AND an.description = 'acquireRole' AND anp.value = 'equipo'"));
+		assertTrue(dbA.executeQuery("SELECT * FROM normList nl INNER JOIN actionNorm an ON (nl.idactionNorm=an.idactionNorm) INNER JOIN actionNormParam anp ON (an.idactionNorm=anp.idactionNorm) "
+				+ "WHERE nl.normName = 'permitidoAdquirirRol' AND an.description = 'acquireRole' AND anp.value = 'Agent'"));
+		
 	}
 	
-	public void testRegisterNorm3()
-	{
-			
-		try
-		{
-
-			
-			
-			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
-			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
-
+	@Test
+	public void testRegisterNorm4() throws Exception {
 		
-			String NormaPrueba = "@normaprueba[f,<agentName:_>,registerUnit(_,_,_,_,_),_,_]";
-			String result = omsProxy.registerNorm("virtual", NormaPrueba);
-			
-			assertEquals("normaprueba created", result);
-			
-			result = omsProxy.registerNorm("virtual", NormaPrueba);
-			
-			fail(result);
-			
-						
-						
+		//------------------------------------------- Test Initialization  -----------------------------------------------//
+		dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('jerarquia',(SELECT idunitType FROM unitType WHERE unitTypeName = 'hierarchy'))");
+		dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'virtual'),(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))");
+		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
+				"('subordinado',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
+				"(SELECT idposition FROM position WHERE positionName = 'subordinate'), "+
+				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
+				"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
+		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
+				"('jefe',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
+				"(SELECT idposition FROM position WHERE positionName = 'supervisor'), "+
+				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
+				"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
+		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
+				"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
+				"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
+				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
+				"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
+		
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES ((SELECT idagentList FROM agentList WHERE "
+				+ "agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'jefe' AND idunitList = (SELECT "
+				+ "idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
+		//----------------------------------------------------------------------------------------------------------------//
 
-		}catch(NormExistsInUnitException e)
-		{
+		String NormaPrueba = "@prohibidoAdquirirRol[f,<roleName:creador>,acquireRole(_,jerarquia,Agent),isAgent(Agent) & playsRole(Agent,creador,jerarquia),_]";
+		
+		String result = omsProxy.registerNorm("jerarquia", NormaPrueba);
+		assertEquals("prohibidoAdquirirRol created", result);
+		
+		assertTrue(dbA.executeQuery("SELECT * FROM normList nl INNER JOIN unitList ul ON (nl.idunitList=ul.idunitList) "
+				+ "INNER JOIN deontic d ON (nl.iddeontic=d.iddeontic) INNER JOIN targetType tt ON (nl.idtargetType=tt.idtargetType) "
+				+ "INNER JOIN actionNorm an ON (nl.idactionNorm=an.idactionNorm) "
+				+ "WHERE nl.normName = 'prohibidoAdquirirRol' AND ul.unitName = 'jerarquia' AND d.deonticdesc = 'f' AND tt.targetName = 'roleName' AND an.description = 'acquireRole'"));
+		
+		assertTrue(dbA.executeQuery("SELECT * FROM normList nl INNER JOIN roleList rl ON (nl.targetValue=rl.idroleList) WHERE nl.normName = 'prohibidoAdquirirRol' AND rl.roleName = 'creador'"));
+		
+		assertTrue(dbA.executeQuery("SELECT * FROM normList WHERE normName = 'prohibidoAdquirirRol' AND normContent = '"+ NormaPrueba +"'"));
+		
+		assertTrue(dbA.executeQuery("SELECT * FROM normList WHERE normName = 'prohibidoAdquirirRol' AND normRule = 'acquireRole(_,jerarquia,Agent):-isAgent(Agent) & playsRole(Agent,creador,jerarquia)'"));
 
-			assertNotNull(e);
-
-		}catch(THOMASException e)
-		{
-
-			fail(e.getMessage());
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
+		assertTrue(dbA.executeQuery("SELECT * FROM normList nl INNER JOIN actionNorm an ON (nl.idactionNorm=an.idactionNorm) INNER JOIN actionNormParam anp ON (an.idactionNorm=anp.idactionNorm) "
+				+ "WHERE nl.normName = 'prohibidoAdquirirRol' AND an.description = 'acquireRole' AND anp.value = '_'"));
+		assertTrue(dbA.executeQuery("SELECT * FROM normList nl INNER JOIN actionNorm an ON (nl.idactionNorm=an.idactionNorm) INNER JOIN actionNormParam anp ON (an.idactionNorm=anp.idactionNorm) "
+				+ "WHERE nl.normName = 'prohibidoAdquirirRol' AND an.description = 'acquireRole' AND anp.value = 'jerarquia'"));
+		assertTrue(dbA.executeQuery("SELECT * FROM normList nl INNER JOIN actionNorm an ON (nl.idactionNorm=an.idactionNorm) INNER JOIN actionNormParam anp ON (an.idactionNorm=anp.idactionNorm) "
+				+ "WHERE nl.normName = 'prohibidoAdquirirRol' AND an.description = 'acquireRole' AND anp.value = 'Agent'"));
+		
 	}
-	
-	public void testRegisterNorm4()
-	{
-			
-		Statement st = null;	
-		ResultSet res = null;
-		
-		
-		try
-		{
-
-			
-			
-			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
-			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
-
-		
-			String NormaPrueba = "@normaprueba[f,<agentName:_>,registerUnit(_,_,_,_,_),_,_]";
-			String result = omsProxy.registerNorm("virtual", NormaPrueba);
-			
-			assertEquals("normaprueba created", result);
-			
-			String NormaPruebaRepitada = "@normapruebaRepetida[f,<agentName:_>,registerUnit(_,_,_,_,_),_,_]";
-			result = omsProxy.registerNorm("virtual", NormaPruebaRepitada);
-			
-			assertEquals("normapruebaRepetida created", result);
-			
-			
-			try
-			{
-				connection = connect();
-
-
-
-				st = connection.createStatement();
-				res = st.executeQuery("SELECT * FROM normList");
-
-				if (res.next())
-					assertEquals("normaprueba", res.getString("normName"));
-				if (res.next())
-					assertEquals("normapruebaRepetida", res.getString("normName"));
-					
-				
-				
-				
-
-				
-
-			}
-			catch(SQLException e)
-			{
-				throw e;
-
-			}
-			finally
-			{
-				if (connection != null)
-				{
-					connection.close();
-					connection=null;
-				}
-				if (st != null)
-				{
-					st.close();
-					st=null;
-					
-					res.close();
-					res = null;
-				}
-			}
-			
-		}				
-		catch(THOMASException e)
-		{
-
-			fail(e.getMessage());
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-	}
-	
-	
-	public void testRegisterNorm5()
-	{
-			
-		Statement st = null;	
-		ResultSet res = null;
-		
-		
-		try
-		{
-
-			
-			
-			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
-			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
-
-		
-			String NormaPrueba = "@normaprueba[f,<agentName:_>,registerUnit(_,_,_,_,_),_,_]";
-			String result = omsProxy.registerNorm("virtual", NormaPrueba);
-			
-			assertEquals("normaprueba created", result);
-			
-			String NormaPruebaRepitada = "@normapruebaRepetida[f,<agentName:_>,registerUnit(_,_,_,_,_),_,_]";
-			result = omsProxy.registerNorm("virtual", NormaPruebaRepitada);
-			
-			assertEquals("normapruebaRepetida created", result);
-			
-			
-			try
-			{
-				connection = connect();
-
-
-
-				st = connection.createStatement();
-				res = st.executeQuery("SELECT * FROM normList");
-
-				if (res.next())
-					assertEquals("normaprueba", res.getString("normName"));
-				if (res.next())
-					assertEquals("normapruebaRepetida", res.getString("normName"));
-					
-				
-				
-				
-
-				
-
-			}
-			catch(SQLException e)
-			{
-				throw e;
-
-			}
-			finally
-			{
-				if (connection != null)
-				{
-					connection.close();
-					connection=null;
-				}
-				if (st != null)
-				{
-					st.close();
-					st=null;
-					
-					res.close();
-					res = null;
-				}
-			}
-			
-		}				
-		catch(THOMASException e)
-		{
-
-			fail(e.getMessage());
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-	}
-	
-	public void testRegisterNorm5a()
-	{
-			
-		try
-		{
-
-			
-			
-			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
-			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
-
-		
-			String NormaPrueba = "@++normaprueba[f,<agentName:_>,registerUnit(_,_,_,_,_),_,_]";
-			String result = omsProxy.registerNorm("virtual", NormaPrueba);
-				
-			fail(result);
-			
-						
-						
-
-		}catch(InvalidIDException e)
-		{
-
-			assertNotNull(e);
-
-		}catch(THOMASException e)
-		{
-
-			fail(e.getMessage());
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-	}
-	
-	public void testRegisterNorm5b()
-	{
-			
-		try
-		{
-
-			
-			
-			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
-			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
-
-		
-			String NormaPrueba = "@normaprueba[f,<agentName:_>,registerUnit(_,_,_,_,_) = 5,_,_]";
-			String result = omsProxy.registerNorm("virtual", NormaPrueba);
-				
-			fail(result);
-			
-						
-						
-
-		}catch(InvalidExpressionException e)
-		{
-
-			assertNotNull(e);
-
-		}catch(THOMASException e)
-		{
-
-			fail(e.getMessage());
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-	}
-	public void testRegisterNorm5c()
-	{
-			
-		try
-		{
-
-			
-			
-			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
-			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
-
-		
-			String NormaPrueba = "@normaprueba[a,<agentName:_>,registerUnit(_,_,_,_,_),_,_]";
-			String result = omsProxy.registerNorm("virtual", NormaPrueba);
-				
-			fail(result);
-			
-						
-						
-
-		}catch(InvalidDeonticException e)
-		{
-
-			assertNotNull(e);
-
-		}catch(THOMASException e)
-		{
-
-			fail(e.getMessage());
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-	}
-	
-	public void testRegisterNorm5d()
-	{
-			
-		try
-		{
-
-			
-			
-			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
-			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
-
-		
-			String NormaPrueba = "@normaprueba[f,<InvalidTargetType:_>,registerUnit(_,_,_,_,_),_,_]";
-			String result = omsProxy.registerNorm("virtual", NormaPrueba);
-				
-			fail(result);
-			
-						
-						
-
-		}catch(InvalidTargetTypeException e)
-		{
-
-			assertNotNull(e);
-
-		}catch(THOMASException e)
-		{
-
-			fail(e.getMessage());
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-	}
-	
-	public void testRegisterNorm5e()
-	{
-			
-		try
-		{
-
-			
-			
-			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
-			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
-
-		
-			String NormaPrueba = "@normaprueba[f,<agentName:*>,registerUnit(_,_,_,_,_),_,_]";
-			String result = omsProxy.registerNorm("virtual", NormaPrueba);
-				
-			fail(result);
-			
-						
-						
-
-		}catch(InvalidTargetValueException e)
-		{
-
-			assertNotNull(e);
-
-		}catch(THOMASException e)
-		{
-
-			fail(e.getMessage());
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-	}
-	
-	//------------------------------------------------------------
-	//-------Restricciones de consistencia o integridad-----------
-	
-	public void testRegisterNorm6()
-	{
-			
-		try
-		{
-
-			
-			
-			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
-			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
-
-		
-			String NormaPrueba = "@normaprueba[f,<roleName:rolInvalido>,registerUnit(_,_,_,_,_),_,_]";
-			String result = omsProxy.registerNorm("virtual", NormaPrueba);
-				
-			fail(result);
-			
-						
-						
-
-		}catch(RoleNotExistsException e)
-		{
-
-			assertNotNull(e);
-
-		}catch(THOMASException e)
-		{
-
-			fail(e.getMessage());
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-	}
-	
-	public void testRegisterNorm7a()
-	{
-			
-		try
-		{
-
-			String unit = "jerarquia";
-			
-			dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('"+unit+"',(SELECT idunitType FROM unitType WHERE unitTypeName = 'hierarchy'))");
-			
-			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'virtual'),(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'))");
-
-			
-			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
-			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
-
-		
-			String NormaPrueba = "@normaprueba[f,<positionName:member>,registerUnit(_,_,_,_,_),_,_]";
-			String result = omsProxy.registerNorm("jerarquia", NormaPrueba);
-				
-			fail(result);
-			
-						
-						
-
-		}catch(InvalidPositionException e)
-		{
-
-			assertNotNull(e);
-
-		}catch(THOMASException e)
-		{
-
-			fail(e.getMessage());
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-	}
-	
-	public void testRegisterNorm7b()
-	{
-			
-		try
-		{
-
-			String unit = "jerarquia";
-			
-			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
-			
-			dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('"+unit+"',(SELECT idunitType FROM unitType WHERE unitTypeName = 'hierarchy'))");
-			
-			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'virtual'),(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'))");
-
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
-					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
-					"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
-					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
-			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
-	
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'))))");
-
-			
-		
-			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
-
-		
-			
-			String NormaPrueba = "@normaprueba[f,<positionName:supervisor>,registerUnit(_,_,_,_,_),_,_]";
-			String result = omsProxy.registerNorm("jerarquia", NormaPrueba);
-				
-			assertEquals("normaprueba created", result);
-			
-						
-						
-
-		}catch(THOMASException e)
-		{
-
-			fail(e.getMessage());
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-	}
-	
-	public void testRegisterNorm7c()
-	{
-			
-		try
-		{
-
-			String unit = "jerarquia";
-			
-			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
-			
-			dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('"+unit+"',(SELECT idunitType FROM unitType WHERE unitTypeName = 'hierarchy'))");
-			
-			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'virtual'),(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'))");
-
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
-					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
-					"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
-					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
-			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
-	
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'))))");
-
-			
-		
-			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
-
-		
-			
-			String NormaPrueba = "@normaprueba[f,<positionName:creator>,registerUnit(_,_,_,_,_),_,_]";
-			String result = omsProxy.registerNorm("jerarquia", NormaPrueba);
-				
-			assertEquals("normaprueba created", result);
-			
-						
-						
-
-		}catch(THOMASException e)
-		{
-
-			fail(e.getMessage());
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-	}
-	
-	public void testRegisterNorm7d()
-	{
-			
-		try
-		{
-
-			String unit = "jerarquia";
-			
-			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
-			
-			dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('"+unit+"',(SELECT idunitType FROM unitType WHERE unitTypeName = 'hierarchy'))");
-			
-			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'virtual'),(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'))");
-
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
-					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
-					"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
-					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
-			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
-	
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'))))");
-
-			
-		
-			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
-
-		
-			
-			String NormaPrueba = "@normaprueba[f,<positionName:subordinate>,registerUnit(_,_,_,_,_),_,_]";
-			String result = omsProxy.registerNorm("jerarquia", NormaPrueba);
-				
-			assertEquals("normaprueba created", result);
-			
-						
-						
-
-		}catch(THOMASException e)
-		{
-
-			fail(e.getMessage());
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-	}
-	
-	public void testRegisterNorm8a()
-	{
-			
-		try
-		{
-
-			String unit = "equipo";
-			
-			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
-			
-			dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('"+unit+"',(SELECT idunitType FROM unitType WHERE unitTypeName = 'team'))");
-			
-			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'virtual'),(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'))");
-
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
-					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
-					"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
-					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
-			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
-	
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'))))");
-
-			
-		
-			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
-
-		
-			
-			String NormaPrueba = "@normaprueba[f,<positionName:member>,registerUnit(_,_,_,_,_),_,_]";
-			String result = omsProxy.registerNorm(unit, NormaPrueba);
-				
-			assertEquals("normaprueba created", result);
-			
-						
-						
-
-		}catch(THOMASException e)
-		{
-
-			fail(e.getMessage());
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-	}
-	
-	public void testRegisterNorm8b()
-	{
-			
-		try
-		{
-
-			String unit = "equipo";
-			
-			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
-			
-			dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('"+unit+"',(SELECT idunitType FROM unitType WHERE unitTypeName = 'team'))");
-			
-			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'virtual'),(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'))");
-
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
-					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
-					"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
-					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
-			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
-	
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'))))");
-
-			
-		
-			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
-
-		
-			
-			String NormaPrueba = "@normaprueba[f,<positionName:creator>,registerUnit(_,_,_,_,_),_,_]";
-			String result = omsProxy.registerNorm(unit, NormaPrueba);
-				
-			assertEquals("normaprueba created", result);
-			
-						
-						
-
-		}catch(THOMASException e)
-		{
-
-			fail(e.getMessage());
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-	}
-	
-	public void testRegisterNorm8c()
-	{
-			
-		try
-		{
-
-			String unit = "equipo";
-			
-			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
-			
-			dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('"+unit+"',(SELECT idunitType FROM unitType WHERE unitTypeName = 'team'))");
-			
-			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'virtual'),(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'))");
-
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
-					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
-					"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
-					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
-			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
-	
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'))))");
-
-			
-		
-			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
-
-		
-		
-			String NormaPrueba = "@normaprueba[f,<positionName:supervisor>,registerUnit(_,_,_,_,_),_,_]";
-			String result = omsProxy.registerNorm(unit, NormaPrueba);
-				
-			fail(result);
-			
-						
-						
-
-		}catch(InvalidPositionException e)
-		{
-
-			assertNotNull(e);
-
-		}catch(THOMASException e)
-		{
-
-			fail(e.getMessage());
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-	}
-	
-	public void testRegisterNorm8d()
-	{
-			
-		try
-		{
-
-			String unit = "equipo";
-			
-			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
-			
-			dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('"+unit+"',(SELECT idunitType FROM unitType WHERE unitTypeName = 'team'))");
-			
-			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'virtual'),(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'))");
-
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
-					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
-					"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
-					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
-			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
-	
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'))))");
-
-			
-		
-			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
-
-		
-		
-			String NormaPrueba = "@normaprueba[f,<positionName:subordinate>,registerUnit(_,_,_,_,_),_,_]";
-			String result = omsProxy.registerNorm(unit, NormaPrueba);
-				
-			fail(result);
-			
-						
-						
-
-		}catch(InvalidPositionException e)
-		{
-
-			assertNotNull(e);
-
-		}catch(THOMASException e)
-		{
-
-			fail(e.getMessage());
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-	}
-	
-	public void testRegisterNorm9a()
-	{
-			
-		try
-		{
-
-			String unit = "plana";
-			
-			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
-			
-			dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('"+unit+"',(SELECT idunitType FROM unitType WHERE unitTypeName = 'flat'))");
-			
-			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'virtual'),(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'))");
-
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
-					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
-					"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
-					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
-			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
-	
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'))))");
-
-			
-		
-			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
-
-		
-			
-			String NormaPrueba = "@normaprueba[f,<positionName:member>,registerUnit(_,_,_,_,_),_,_]";
-			String result = omsProxy.registerNorm(unit, NormaPrueba);
-				
-			assertEquals("normaprueba created", result);
-			
-						
-						
-
-		}catch(THOMASException e)
-		{
-
-			fail(e.getMessage());
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-	}
-	
-	public void testRegisterNorm9b()
-	{
-			
-		try
-		{
-
-			String unit = "plana";
-			
-			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
-			
-			dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('"+unit+"',(SELECT idunitType FROM unitType WHERE unitTypeName = 'flat'))");
-			
-			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'virtual'),(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'))");
-
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
-					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
-					"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
-					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
-			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
-	
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'))))");
-
-			
-		
-			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
-
-		
-			
-			String NormaPrueba = "@normaprueba[f,<positionName:creator>,registerUnit(_,_,_,_,_),_,_]";
-			String result = omsProxy.registerNorm(unit, NormaPrueba);
-				
-			assertEquals("normaprueba created", result);
-			
-						
-						
-
-		}catch(THOMASException e)
-		{
-
-			fail(e.getMessage());
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-	}
-	
-	public void testRegisterNorm9c()
-	{
-			
-		try
-		{
-
-			String unit = "plana";
-			
-			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
-			
-			dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('"+unit+"',(SELECT idunitType FROM unitType WHERE unitTypeName = 'flat'))");
-			
-			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'virtual'),(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'))");
-
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
-					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
-					"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
-					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
-			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
-	
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'))))");
-
-			
-		
-			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
-
-		
-		
-			String NormaPrueba = "@normaprueba[f,<positionName:supervisor>,registerUnit(_,_,_,_,_),_,_]";
-			String result = omsProxy.registerNorm(unit, NormaPrueba);
-				
-			fail(result);
-			
-						
-						
-
-		}catch(InvalidPositionException e)
-		{
-
-			assertNotNull(e);
-
-		}catch(THOMASException e)
-		{
-
-			fail(e.getMessage());
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-	}
-	
-	public void testRegisterNorm9d()
-	{
-			
-		try
-		{
-
-			String unit = "plana";
-			
-			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
-			
-			dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('"+unit+"',(SELECT idunitType FROM unitType WHERE unitTypeName = 'flat'))");
-			
-			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'virtual'),(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'))");
-
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
-					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
-					"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
-					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
-			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
-	
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'))))");
-
-			
-		
-			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
-
-		
-		
-			String NormaPrueba = "@normaprueba[f,<positionName:subordinate>,registerUnit(_,_,_,_,_),_,_]";
-			String result = omsProxy.registerNorm(unit, NormaPrueba);
-				
-			fail(result);
-			
-						
-						
-
-		}catch(InvalidPositionException e)
-		{
-
-			assertNotNull(e);
-
-		}catch(THOMASException e)
-		{
-
-			fail(e.getMessage());
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-	}
-	
-	public void testRegisterNorm10()
-	{
-	
-		Statement st = null;	
-		ResultSet res = null;
-		
-		try
-		{
-
-			String unit = "virtual";
-			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
-				
-					
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
-
-		
-		
-			
-			String NormaPrueba = "@normaprueba[f,<agentName:inexistente>,registerUnit(_,_,_,_,_),_,_]";
-			String result = omsProxy.registerNorm(unit, NormaPrueba);
-				
-			assertEquals("normaprueba created", result);
-			
-			
-			try
-			{
-				connection = connect();
-
-
-
-				st = connection.createStatement();
-				res = st.executeQuery("SELECT * FROM agentList WHERE agentName = 'inexistente'");
-
-				if (res.next())
-				{
-					assertEquals("inexistente", res.getString("agentName"));
-				}
-
-				
-
-			}
-			catch(SQLException e)
-			{
-				throw e;
-
-			}
-			finally
-			{
-				if (connection != null)
-				{
-					connection.close();
-					connection=null;
-				}
-				if (st != null)
-				{
-					st.close();
-					st=null;
-					
-					res.close();
-					res = null;
-				}
-			}
-			
-						
-						
-
-		}catch(THOMASException e)
-		{
-
-			fail(e.getMessage());
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-	}
-	
-	
-	public void testRegisterNorm11()
-	{
-	
-		
-		try
-		{
-
-			String unit = "virtual";
-			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
-				
-					
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
-
-		
-		
-			
-			String NormaPrueba = "@normaprueba[f,<agentName:inexistente>,registerService(_,_,_,_,_),_,_]";
-			String result = omsProxy.registerNorm(unit, NormaPrueba);
-				
-			fail(result);
-			
-			
-		}				
-		catch(InvalidOMSActionException e)
-		{
-
-			assertNotNull(e);
-
-		}				
-		catch(THOMASException e)
-		{
-
-			fail(e.getMessage());
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-	}
-	
-	
-	// Comprobación de normas estructurales
-	
-	public void testRegisterNorm12()
-	{
-	
-		
-		try
-		{
-
-			String unit = "plana";
-			
-			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
-			
-			dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('"+unit+"',(SELECT idunitType FROM unitType WHERE unitTypeName = 'flat'))");
-			
-			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'virtual'),(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'))");
-
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
-					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
-					"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
-					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
-			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
-	
-//			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-//			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'))))");
-
-			
-			
-			String NormaPrueba = "@normaprueba[f,<agentName:_>,registerRole(_,_,_,_,_,_),_,_]";
-			String result = omsProxy.registerNorm(unit, NormaPrueba);
-				
-			fail(result);
-			
-			
-		}				
-		catch(NotInUnitAndNotCreatorException e)
-		{
-
-			assertNotNull(e);
-
-		}				
-		catch(THOMASException e)
-		{
-
-			fail(e.getMessage());
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-	}
-	
-	
-	
-	
-	public void testRegisterNorm13()
-	{
-	
-		
-		try
-		{
-
-			String unit = "plana";
-			
-			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
-			
-			dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('"+unit+"',(SELECT idunitType FROM unitType WHERE unitTypeName = 'flat'))");
-			
-			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'virtual'),(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'))");
-
-			dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('equipo',(SELECT idunitType FROM unitType WHERE unitTypeName = 'team'))");
-			
-			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'virtual'),(SELECT idunitList FROM unitList WHERE unitName = 'equipo'))");
-
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
-					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
-					"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
-					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
-			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
-			
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
-					"('creador',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
-					"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
-					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
-			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
-	
-	
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo'))))");
-
-			
-			
-			String NormaPrueba = "@normaprueba[f,<agentName:_>,registerRole(_,_,_,_,_,_),_,_]";
-			String result = omsProxy.registerNorm(unit, NormaPrueba);
-				
-			
-			assertNotNull("normaprueba registered",result);
-			
-		}				
-		catch(THOMASException e)
-		{
-
-			fail(e.getMessage());
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-	}
-	
-	public void testRegisterNorm14()
-	{
-	
-		
-		try
-		{
-
-			
-			
-			
-			String NormaPrueba = "@normaprueba[f,<agentName:_>,registerRole(_,_,_,_,_,_),_,_]";
-			String result = omsProxy.registerNorm("registerUnit", NormaPrueba);
-				
-			
-			assertNotNull("normaprueba registered",result);
-			
-		}				
-		catch(UnitNotExistsException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-	}
-	
-	
-	
-	
-	
 }

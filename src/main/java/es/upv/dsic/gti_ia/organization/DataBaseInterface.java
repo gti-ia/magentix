@@ -1,7 +1,5 @@
 package es.upv.dsic.gti_ia.organization;
 
-import jason.asSyntax.Literal;
-
 import java.sql.BatchUpdateException;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -1043,7 +1041,7 @@ public class DataBaseInterface {
 	 * @throws MySQLException	If any errors happens with the database connection.
 	 * 
 	 */
-	String createNorm(String unitName, String normContent, Norm parsedNorm, Literal normRule) throws MySQLException {
+	String createNorm(String unitName, String normContent, Norm parsedNorm, String normRule) throws MySQLException {
 
 		Statement st = null;
 		ResultSet res = null;
@@ -1119,7 +1117,7 @@ public class DataBaseInterface {
 			}
 			
 			st.addBatch("INSERT INTO normList (idunitList, normName, iddeontic, idtargetType, targetValue, idactionnorm, normContent, normRule) "
-					+ "VALUES (" + idUnit + ",'"+parsedNorm.getId()+"',"+idDeontic+","+idTarget+","+idTargetValue+","+idAction+",'"+normContent+"','"+normRule.toString()+"')");
+					+ "VALUES (" + idUnit + ",'"+parsedNorm.getId()+"',"+idDeontic+","+idTarget+","+idTargetValue+","+idAction+",'"+normContent+"','"+normRule+"')");
 
 			for(String actionParam : parsedNorm.getActionParams()) {	
 				st.addBatch("INSERT INTO actionNormParam (idnormList, idactionNorm, value) VALUES ((SELECT idnormList FROM normList WHERE normName ='"+parsedNorm.getId()+"'),"+idAction+",'"+actionParam+"')");				

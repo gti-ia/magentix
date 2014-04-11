@@ -1,10 +1,6 @@
 package es.upv.dsic.gti_ia.norms;
 
-import jason.asSyntax.ListTermImpl;
 import jason.asSyntax.Literal;
-import jason.asSyntax.LiteralImpl;
-import jason.asSyntax.LogicalFormula;
-import jason.asSyntax.Rule;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -829,28 +825,23 @@ public class BeliefDataBaseInterface {
 	 * @param norm
 	 * @return
 	 */
-	public Literal buildNormRule(Norm norm)
+	public String buildNormRule(Norm norm)
 	{
-		Literal normRule = null;
 		String normLiteral = "";
 
 		if (!norm.getActivation().equals("") && !norm.getExpiration().equals(""))
 		{
-			normLiteral = norm.getActivation() + "&"+" not("+norm.getExpiration()+")";
+			normLiteral = norm.getActivation().trim() + " & not("+norm.getExpiration().trim()+")";
 		}else if (norm.getActivation().equals("") && !norm.getExpiration().equals(""))
 		{
-			normLiteral = " not("+norm.getExpiration()+")";
+			normLiteral = "not("+norm.getExpiration().trim()+")";
 		}else if (!norm.getActivation().equals("") && norm.getExpiration().equals(""))
 		{
-			normLiteral = norm.getActivation();
+			normLiteral = norm.getActivation().trim();
 		}
 		
-		if (normLiteral.equals("")) 
-			normRule = new LiteralImpl(Literal.parseLiteral(norm.getAction()));
-		else
-			normRule = new Rule(Literal.parseLiteral(norm.getAction()),(LogicalFormula) ListTermImpl.parse(normLiteral));
-
-		return normRule;
+		if (normLiteral.equals("")) return norm.getAction();
+		else return norm.getAction().trim() +":-"+ normLiteral;
 	}
 
 	/**
