@@ -469,7 +469,7 @@ public class CommandedAgent extends BaseAgent {
 	}
 
 	public synchronized ArrayList<TraceEvent> getTraceEvents() {
-		return traceEvents;
+		return (ArrayList<TraceEvent>) traceEvents.clone();
 	}
 
 	public void clearTraceEvents() {
