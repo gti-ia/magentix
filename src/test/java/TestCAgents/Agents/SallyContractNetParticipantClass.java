@@ -46,7 +46,7 @@ public class SallyContractNetParticipantClass extends CAgent {
 
 	protected void execution(CProcessor myProcessor, ACLMessage welcomeMessage) {
 
-		System.out.println(myProcessor.getMyAgent().getName()
+		logger.info(myProcessor.getMyAgent().getName()
 				+ ": the welcome message is " + welcomeMessage.getContent());
 
 		class myFIPA_CONTRACTNET extends FIPA_CONTRACTNET_Participant {
@@ -142,7 +142,7 @@ public class SallyContractNetParticipantClass extends CAgent {
 			@Override
 			protected String doReceiveSolicit(CProcessor myProcessor,
 					ACLMessage msg) {
-				System.out.println("ME LLEGA UNA PETICION");
+				logger.info("ME LLEGA UNA PETICION");
 				proposal = msg.getContent();
 				if (mode == PROPOSE) {
 					return "SEND_PROPOSAL";
@@ -180,7 +180,7 @@ public class SallyContractNetParticipantClass extends CAgent {
 				boolean done = true;
 
 				if (failure) {
-					System.out.println("Error");
+					logger.info("Error");
 					receiveFailure = "Error";
 					return "SEND_FAILURE";
 				} else if (done) {

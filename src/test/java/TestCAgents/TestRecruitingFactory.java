@@ -6,6 +6,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
+import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 import org.junit.After;
 import org.junit.Before;
@@ -18,8 +19,7 @@ import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
 
 /**
- * Test class for Request factory template (FIPA protocol) based on the example
- * requestFactory
+ * Test class for Recruiting factory template (FIPA protocol)
  * 
  * @author Javier Jorge - jjorge@dsic.upv.es
  */
@@ -34,7 +34,8 @@ public class TestRecruitingFactory {
 	Condition HarryFinished = mutex.newCondition();
 	Condition SallyFinished = mutex.newCondition();
 	CountDownLatch finished = new CountDownLatch(2);
-	
+	Logger logger = Logger.getLogger(TestRecruitingFactory.class);
+
 	public final int AGREE = 0;
 	public final int REFUSE = 1;
 	public final int LOCATE = 0;
@@ -70,7 +71,8 @@ public class TestRecruitingFactory {
 			theOther = new OtherParticipantClass(new AgentID("other"));
 
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 
 	}
@@ -89,6 +91,7 @@ public class TestRecruitingFactory {
 		} catch (InterruptedException e) {
 
 			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 
 		assertEquals("Done (by other)", Harry.informMsg);
@@ -109,6 +112,7 @@ public class TestRecruitingFactory {
 		} catch (InterruptedException e) {
 
 			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 
 		assertEquals("SubProtocol failed :(", Harry.failureProxyMsg);
@@ -128,6 +132,7 @@ public class TestRecruitingFactory {
 		} catch (InterruptedException e) {
 
 			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 
 		assertEquals("Nup", Harry.refuseMsg);
@@ -148,6 +153,7 @@ public class TestRecruitingFactory {
 		} catch (InterruptedException e) {
 
 			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 
 		assertEquals("Agent not found", Harry.failureNoMatchMsg);
@@ -168,6 +174,7 @@ public class TestRecruitingFactory {
 		} catch (InterruptedException e) {
 
 			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 
 		assertEquals("SubProtocol failed :(", Harry.failureProxyMsg);

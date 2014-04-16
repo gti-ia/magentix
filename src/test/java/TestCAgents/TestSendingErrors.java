@@ -1,17 +1,20 @@
 package TestCAgents;
 
+import static org.junit.Assert.*;
 import static org.junit.Assert.fail;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
+import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import TestCAgents.Agents.HarrySendingErrorsClass;
+import TestCAgents.Agents.SallyClass;
 import TestCAgents.Agents.SallyContractNetParticipantClass;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
@@ -26,23 +29,54 @@ import es.upv.dsic.gti_ia.core.AgentsConnection;
 public class TestSendingErrors {
 
 	Process qpid_broker;
-	ReentrantLock mutex = new ReentrantLock();
-	Condition HarryFinished = mutex.newCondition();
-	Condition SallyFinished = mutex.newCondition();
 
-	SallyContractNetParticipantClass Sally;
+	SallyClass Sally;
 
 	CountDownLatch finished;
 
-	@Test(timeout = 100)
-	public void testSendingErrors() {
+	Logger logger = Logger.getLogger(TestSendingErrors.class);
+
+	@Test(timeout = 150000)
+	public void testSendingErrorsDefault() {
 
 		finished = new CountDownLatch(1);
 		HarrySendingErrorsClass HarryM = null;
+
 		try {
 
 			HarryM = new HarrySendingErrorsClass(new AgentID("HarryM"),
-					finished);
+					finished, true);
+
+			HarryM.start();
+
+		} catch (Exception e1) {
+			fail("Exception with Sending errors");
+			e1.printStackTrace();
+			logger.error(e1.getMessage());
+		}
+		try {
+			finished.await();
+		} catch (InterruptedException e) {
+
+			fail("timeout");
+			e.printStackTrace();
+			logger.error(e.getMessage());
+		}
+		// assertEquals("May you give me your phone number?", Harry.refuseMsg);
+		// assertEquals("refuse", Sally.refuseMsg);
+
+	}
+
+	@Test(timeout = 150000)
+	public void testSendingErrorsCustom() {
+
+		finished = new CountDownLatch(1);
+		HarrySendingErrorsClass HarryM = null;
+
+		try {
+
+			HarryM = new HarrySendingErrorsClass(new AgentID("HarryM"),
+					finished, false);
 
 			HarryM.start();
 
@@ -50,14 +84,15 @@ public class TestSendingErrors {
 			fail("Exception with Sending errors");
 			e1.printStackTrace();
 		}
+
 		try {
 			finished.await();
 		} catch (InterruptedException e) {
 
 			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
-		// assertEquals("May you give me your phone number?", Harry.refuseMsg);
-		// assertEquals("refuse", Sally.refuseMsg);
+		assertTrue(true);
 
 	}
 
@@ -77,11 +112,12 @@ public class TestSendingErrors {
 			 * Connecting to Qpid Broker, default localhost.
 			 */
 			AgentsConnection.connect();
-			Sally = new SallyContractNetParticipantClass(new AgentID("Sally1"),
-					finished);
+
+			Sally = new SallyClass(new AgentID("Sally"), finished);
 
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 
 	}

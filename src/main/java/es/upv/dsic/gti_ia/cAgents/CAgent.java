@@ -5,7 +5,6 @@
 // las conversaciones activas pasan a un nuevo estado de excepci�n llamado "SHUTDOWN".
 // Cuando todas las conversaciones acaban, finaliza la conversaci�n de bienvenida.
 
-
 // El estado tipo SEND ahora s�lo sirve para enviar mensajes a otros agentes.
 
 // Las conversaciones hijas se crean ahora llamando a m�todos.
@@ -49,7 +48,6 @@
 
 // Todos los m�todos tienen que estar protegidos por el mutex general del agente.
 
-
 // ASUNTOS PENDIENTES
 
 // Templates con AND, OR, NOT y () para estados Receive u f�bricas
@@ -83,11 +81,11 @@ import es.upv.dsic.gti_ia.core.MessageFilter;
 
 /**
  * An agent has to extend this class in order to use the conversation support.
+ * 
  * @author Ricard Lopez Fogues
- * @author David Fernández - dfernandez@dsic.upv.es - 	Fixed CAgent porcessing 
- * 														messages with default factory
- * 														when a proper factory should
- * 														process them
+ * @author David Fernández - dfernandez@dsic.upv.es - Fixed CAgent porcessing
+ *         messages with default factory when a proper factory should process
+ *         them
  * @author Jose Alemany Bordera - jalemany1@dsic.upv.es
  * @author Javier Jorge Cano - jjorge@dsic.upv.es
  */
@@ -103,20 +101,23 @@ public abstract class CAgent extends BaseAgent {
 	protected CFactory defaultFactory;
 	ArrayList<CFactory> initiatorFactories = new ArrayList<CFactory>();
 	ArrayList<CFactory> participantFactories = new ArrayList<CFactory>();
-	
-	public ExecutorService exec; //Bexy: Added 'public'
+
+	public ExecutorService exec; // Bexy: Added 'public'
 	// Semaphore availableSends = new Semaphore(1, true);
 	final Condition iAmFinished = mutex.newCondition();
 	final CountDownLatch agentEnd = new CountDownLatch(1);
 	final Condition cProcessorRemoved = mutex.newCondition();
 	public boolean inShutdown = false;
-	boolean ready = false;   // Is CAgent ready to attend messages?
-    final Condition iAmReady = mutex.newCondition(); // Condition to stop the message processing until agent is ready
-	
+	boolean ready = false; // Is CAgent ready to attend messages?
+	final Condition iAmReady = mutex.newCondition(); // Condition to stop the
+														// message processing
+														// until agent is ready
+
 	private long conversationCounter = 0;
-	
+
 	/**
 	 * Creates a new CAgent
+	 * 
 	 * @param aid
 	 * @throws Exception
 	 */
@@ -140,9 +141,11 @@ public abstract class CAgent extends BaseAgent {
 	}
 
 	/**
-	 * Add a new factory that will create conversations where this agent
-	 * will play the initiator role
-	 * @param factory to be added as a initiator one
+	 * Add a new factory that will create conversations where this agent will
+	 * play the initiator role
+	 * 
+	 * @param factory
+	 *            to be added as a initiator one
 	 */
 	public void addFactoryAsInitiator(CFactory factory) {
 		this.lock();
@@ -152,9 +155,11 @@ public abstract class CAgent extends BaseAgent {
 	}
 
 	/**
-	 * Add a new factory that will create conversations where this agent
-	 * will play the participant role
-	 * @param factory to be added as a participant one
+	 * Add a new factory that will create conversations where this agent will
+	 * play the participant role
+	 * 
+	 * @param factory
+	 *            to be added as a participant one
 	 */
 	public void addFactoryAsParticipant(CFactory factory) {
 		this.lock();
@@ -165,18 +170,22 @@ public abstract class CAgent extends BaseAgent {
 
 	/**
 	 * This method should not be modified.
-	 * @param msg message received by the agent
+	 * 
+	 * @param msg
+	 *            message received by the agent
 	 */
 	public void onMessage(ACLMessage msg) {
 
 		// this.logger.info(this.getName() + " receives the message "
-		//		+ msg.getPerformative() + " " + msg.getContent());
+		// + msg.getPerformative() + " " + msg.getContent());
 		this.processMessage(msg);
 	}
 
 	/**
 	 * Removes the specified factory
-	 * @param name of the factory to remove
+	 * 
+	 * @param name
+	 *            of the factory to remove
 	 */
 	public void removeFactory(String name) {
 		this.lock();
@@ -206,46 +215,51 @@ public abstract class CAgent extends BaseAgent {
 		ACLMessage msg = new ACLMessage(ACLMessage.UNKNOWN);
 		msg.setHeader("PURPOSE", "SHUTDOWN");
 		if (processors.size() > 1) {
+
 			for (CProcessor c : processors.values()) {
 				if (!c.getMyFactory().equals(welcomeFactory)) {
+
 					c.addMessage(msg);
 					if (c.isIdle()) {
 						c.setIdle(false);
 						exec.execute(c);
 					}
+
 				}
 			}
 		} else {
+
 			this.notifyLastProcessorRemoved();
 		}
 		this.unlock();
 	}
 
 	public void send(ACLMessage msg) {
-	
-		this.logger.info(this.getName() + " sends " + msg.getReceiverList()
-				+ " the message " + msg.getPerformative() + " "
-				+ msg.getContent());
-		
+
+		// this.logger.info(this.getName() + " sends " + msg.getReceiverList()
+		// + " the message " + msg.getPerformative() + " "
+		// + msg.getContent());
+
 		this.lock();
 		super.send(msg);
 		this.unlock();
-	
 
 	}
 
 	/**
-	 * This method creates the default factory that will manage the messages that
-	 * no other factory can
-	 * @param me The agent owner of this factory
+	 * This method creates the default factory that will manage the messages
+	 * that no other factory can
+	 * 
+	 * @param me
+	 *            The agent owner of this factory
 	 */
 	protected void createDefaultFactory(final CAgent me) {
 
 		// PENDIENTE
 		// Probar y definir defaultfactory
 
-		defaultFactory = new CFactory("DefaultFactory",
-				new MessageFilter("performative = UNKNWON"), 1,this);
+		defaultFactory = new CFactory("DefaultFactory", new MessageFilter(
+				"performative = UNKNWON"), 1, this);
 
 		// BEGIN STATE
 
@@ -253,8 +267,8 @@ public abstract class CAgent extends BaseAgent {
 				.getState("BEGIN");
 		class BEGIN_Method implements BeginStateMethod {
 			public String run(CProcessor myProcessor, ACLMessage msg) {
-				System.out.println("Default factory tratando mensaje "
-						+ msg.getContent() + " origen: " + msg.getSender()
+				logger.info("Default factory processing message "
+						+ msg.getContent() + " source: " + msg.getSender()
 						+ " ConversationID: " + msg.getConversationId());
 				return "FINAL";
 			}
@@ -267,8 +281,8 @@ public abstract class CAgent extends BaseAgent {
 
 		class F_Method implements FinalStateMethod {
 			public void run(CProcessor myProcessor, ACLMessage msg) {
-				System.out.println("Default factory tratando mensaje "
-						+ msg.getContent() + " origen: " + msg.getSender()
+				logger.info("Default factory processing message "
+						+ msg.getContent() + " sourse: " + msg.getSender()
 						+ " ConversationID: " + msg.getConversationId());
 			}
 		}
@@ -276,18 +290,26 @@ public abstract class CAgent extends BaseAgent {
 		defaultFactory.cProcessorTemplate().registerState(FINAL);
 		defaultFactory.cProcessorTemplate().addTransition("BEGIN", "FINAL");
 
-
 	}
 
 	/**
-	 * This method creates the factory that will control the execution of the agent
-	 * @param me The agent owner of this factory
+	 * This method creates the factory that will control the execution of the
+	 * agent
+	 * 
+	 * @param me
+	 *            The agent owner of this factory
 	 */
-	private void createWelcomeFactory(final CAgent me) { /* Cambio factoria welcome
-	para que sea coherente con el hecho de que se hace peek de los mensajes en los
-	estados begin y no remove*/
-		welcomeFactory = new CFactory("WelcomeFactory",
-				new MessageFilter("performative = UNKNOWN"), 1, this);
+	private void createWelcomeFactory(final CAgent me) { /*
+														 * Cambio factoria
+														 * welcome para que sea
+														 * coherente con el
+														 * hecho de que se hace
+														 * peek de los mensajes
+														 * en los estados begin
+														 * y no remove
+														 */
+		welcomeFactory = new CFactory("WelcomeFactory", new MessageFilter(
+				"performative = UNKNOWN"), 1, this);
 
 		// BEGIN STATE
 
@@ -296,7 +318,7 @@ public abstract class CAgent extends BaseAgent {
 		class BEGIN_Method implements BeginStateMethod {
 
 			public String run(CProcessor myProcessor, ACLMessage msg) {
-				//me.Initialize(myProcessor, msg);
+				// me.Initialize(myProcessor, msg);
 				return "WAIT";
 			};
 		}
@@ -307,19 +329,20 @@ public abstract class CAgent extends BaseAgent {
 		WaitState WAIT = new WaitState("WAIT", 0);
 		welcomeFactory.cProcessorTemplate().registerState(WAIT);
 		welcomeFactory.cProcessorTemplate().addTransition("BEGIN", "WAIT");
-		
+
 		// RECEIVE WELCOME STATE
 
 		ReceiveState RECEIVE_WELCOME = new ReceiveState("RECEIVE_WELCOME");
 		class RECEIVE_WELCOME_Method implements ReceiveStateMethod {
 			public String run(CProcessor myProcessor, ACLMessage receivedMessage) {
-				//myProcessor.getInternalData().put("AGENT_END_MSG",
-					//	receivedMessage);
+				// myProcessor.getInternalData().put("AGENT_END_MSG",
+				// receivedMessage);
 				me.lock();
 				if (!ready) {
 					ready = true;
 					iAmReady.signal();
-					System.out.println("Despertando tras la welcome factory "+myProcessor.getMyAgent().getName());
+					logger.info("Wake up after Welcome factory initialization"
+							+ myProcessor.getMyAgent().getName());
 				}
 				me.unlock();
 				me.execution(myProcessor, receivedMessage);
@@ -330,14 +353,15 @@ public abstract class CAgent extends BaseAgent {
 		MessageFilter filter = new MessageFilter("performative = INFORM");
 		RECEIVE_WELCOME.setAcceptFilter(filter);
 		welcomeFactory.cProcessorTemplate().registerState(RECEIVE_WELCOME);
-		welcomeFactory.cProcessorTemplate().addTransition("WAIT", "RECEIVE_WELCOME");
-		
+		welcomeFactory.cProcessorTemplate().addTransition("WAIT",
+				"RECEIVE_WELCOME");
+
 		// WAIT STATE 2
 
 		WaitState WAIT2 = new WaitState("WAIT2", 0);
 		welcomeFactory.cProcessorTemplate().registerState(WAIT2);
-		welcomeFactory.cProcessorTemplate().addTransition("RECEIVE_WELCOME", "WAIT2");
-		
+		welcomeFactory.cProcessorTemplate().addTransition("RECEIVE_WELCOME",
+				"WAIT2");
 
 		// RECEIVE STATE
 
@@ -350,7 +374,8 @@ public abstract class CAgent extends BaseAgent {
 			}
 		}
 		RECEIVE.setMethod(new RECEIVE_Method());
-		MessageFilter filter2 = new MessageFilter("performative = UNKNOWN AND PURPOSE = AGENT_END");
+		MessageFilter filter2 = new MessageFilter(
+				"performative = UNKNOWN AND PURPOSE = AGENT_END");
 		RECEIVE.setAcceptFilter(filter2);
 		welcomeFactory.cProcessorTemplate().registerState(RECEIVE);
 		welcomeFactory.cProcessorTemplate().addTransition("WAIT2", "RECEIVE");
@@ -377,8 +402,9 @@ public abstract class CAgent extends BaseAgent {
 	}
 
 	/**
-	 * This method signals the end of the agent in order to unlock the main conversation thread
-	 * and remove the barrier if the user wants expects the agent finalizes
+	 * This method signals the end of the agent in order to unlock the main
+	 * conversation thread and remove the barrier if the user wants expects the
+	 * agent finalizes
 	 */
 	protected void notifyAgentEnd() {
 		this.lock();
@@ -388,28 +414,30 @@ public abstract class CAgent extends BaseAgent {
 	}
 
 	/**
-	 * This method assigns a received message to a factory, an already running CProcessor
-	 * or to the default Factory
-	 * @param msg Message to be processed
+	 * This method assigns a received message to a factory, an already running
+	 * CProcessor or to the default Factory
+	 * 
+	 * @param msg
+	 *            Message to be processed
 	 */
-	
-	private void processMessage(ACLMessage msg) {		
+
+	private void processMessage(ACLMessage msg) {
 		this.lock();
-		if ( ! ready ) {			
-	        try {	        	
-	            iAmReady.await();
-	        } catch (InterruptedException e) {
-	            e.printStackTrace();
-	        }
-	    }  //With this we stop the message process until agent is ready
-		//Temporal code
+		if (!ready) {
+			try {
+				iAmReady.await();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		} // With this we stop the message process until agent is ready
+			// Temporal code
+		this.logger.info("Agent: " + this.getName() + " processing message");
+		this.logger.info("Agent: " + this.getName() + " Number of processors: "
+				+ processors.size());
 		this.logger.info("Agent: " + this.getName()
-				+ " processing message");
-		this.logger.info("Agent: " + this.getName()
-				+ " Number of processors: " + processors.size());
-		this.logger.info("Agent: " + this.getName()
-				+ " Number of Participant CFactories " + participantFactories.size());
-		//End of temporal code
+				+ " Number of Participant CFactories "
+				+ participantFactories.size());
+		// End of temporal code
 		CProcessor auxProcessor = processors.get(msg.getConversationId());
 		boolean accepted = false;
 		if (auxProcessor != null) {
@@ -418,7 +446,8 @@ public abstract class CAgent extends BaseAgent {
 				auxProcessor.setIdle(false);
 				if (!msg.getHeaderValue("Purpose").equals("WaitMessage"))
 					if (removeTimer(msg.getConversationId()))
-						this.logger.info(this.getName() + " " + msg.getConversationId()+ " Timer canceled");
+						this.logger.info(this.getName() + " "
+								+ msg.getConversationId() + " Timer canceled");
 				exec.execute(auxProcessor);
 			}
 		} else if (!inShutdown) {
@@ -440,8 +469,8 @@ public abstract class CAgent extends BaseAgent {
 	}
 
 	/**
-	 * This is the main method of the agent. It creates the default and welcome factories and starts
-	 * the welcome factory
+	 * This is the main method of the agent. It creates the default and welcome
+	 * factories and starts the welcome factory
 	 */
 	protected final void execute() {
 		this.lock();
@@ -460,28 +489,39 @@ public abstract class CAgent extends BaseAgent {
 		}
 		this.exec.shutdownNow();
 		this.logger.info("Agent " + this.getName() + " ENDED");
-		
+
 		this.unlock();
 	}
 
 	/**
 	 * This method is executed just before the agent ends its execution
-	 * @param firstProcessor The CProcessor managing the welcome conversation
-	 * @param finalizeMessage The final message produced by this conversation
+	 * 
+	 * @param firstProcessor
+	 *            The CProcessor managing the welcome conversation
+	 * @param finalizeMessage
+	 *            The final message produced by this conversation
 	 */
-	protected abstract void finalize(CProcessor firstProcessor, ACLMessage finalizeMessage);
+	protected abstract void finalize(CProcessor firstProcessor,
+			ACLMessage finalizeMessage);
 
 	/**
 	 * This is the main method of the agent
-	 * @param firstProcessor The CProcessor managing the welcome conversation
-	 * @param welcomeMessage The message sent by the platform to the agent
+	 * 
+	 * @param firstProcessor
+	 *            The CProcessor managing the welcome conversation
+	 * @param welcomeMessage
+	 *            The message sent by the platform to the agent
 	 */
-	protected abstract void execution(CProcessor firstProcessor, ACLMessage welcomeMessage);
+	protected abstract void execution(CProcessor firstProcessor,
+			ACLMessage welcomeMessage);
 
 	/**
 	 * Adds a CProcessor to the agent
-	 * @param conversationID of the conversation that the CProcessor will manage
-	 * @param processor The CProcessor to add
+	 * 
+	 * @param conversationID
+	 *            of the conversation that the CProcessor will manage
+	 * @param processor
+	 *            The CProcessor to add
 	 */
 	protected void addProcessor(String conversationID, CProcessor processor) {
 		// Ricard
@@ -492,19 +532,23 @@ public abstract class CAgent extends BaseAgent {
 
 	/**
 	 * Adds a timer in a CProcessor, this is called from a wait state
+	 * 
 	 * @param conversationId
 	 * @param stateName
-	 * @param period Time to wait
-	 * @param waitType Wait type (oneshot, absolut or periodic)
+	 * @param period
+	 *            Time to wait
+	 * @param waitType
+	 *            Wait type (oneshot, absolut or periodic)
 	 * @return true if a timer was added, false otherwise
 	 */
-	protected boolean addTimer(final String conversationId, String stateName, final long period, int waitType) {
+	protected boolean addTimer(final String conversationId, String stateName,
+			final long period, int waitType) {
 		this.lock();
 		final Date deadline;
-		if(waitType == WaitState.ONESHOT){		
+		if (waitType == WaitState.ONESHOT) {
 			deadline = new Date(System.currentTimeMillis() + period);
 			Timer timer = new Timer();
-			
+
 			timer.schedule(new TimerTask() {
 				public void run() {
 					DateFormat df = DateFormat.getDateInstance();
@@ -517,24 +561,34 @@ public abstract class CAgent extends BaseAgent {
 			}, deadline);
 			this.timers.put(conversationId, timer);
 			this.unlock();
-			return true;	
-		}
-		else if(waitType == WaitState.ABSOLUT){
+			return true;
+		} else if (waitType == WaitState.ABSOLUT) {
 			long auxDeadline;
-			if(this.deadlines.get(conversationId) == null)//the first timer for this conversation
+			if (this.deadlines.get(conversationId) == null)// the first timer
+															// for this
+															// conversation
 				auxDeadline = System.currentTimeMillis() + period;
-			else if(this.deadlines.get(conversationId).get(stateName) == null)//the first time the conversation passes through this state
+			else if (this.deadlines.get(conversationId).get(stateName) == null)// the
+																				// first
+																				// time
+																				// the
+																				// conversation
+																				// passes
+																				// through
+																				// this
+																				// state
 				auxDeadline = System.currentTimeMillis() + period;
-			else{
+			else {
 				auxDeadline = this.deadlines.get(conversationId).get(stateName);
-				if(auxDeadline <= System.currentTimeMillis())
+				if (auxDeadline <= System.currentTimeMillis())
 					auxDeadline = System.currentTimeMillis() + period;
 			}
 			deadline = new Date(auxDeadline);
 			DateFormat df = DateFormat.getTimeInstance();
-			this.logger.info("Deadline "+this.getName()+" "+ df.format(deadline));
+			this.logger.info("Deadline " + this.getName() + " "
+					+ df.format(deadline));
 			Timer timer = new Timer();
-			
+
 			timer.schedule(new TimerTask() {
 				public void run() {
 					DateFormat df = DateFormat.getDateInstance();
@@ -546,35 +600,45 @@ public abstract class CAgent extends BaseAgent {
 				}
 			}, deadline);
 			this.timers.put(conversationId, timer);
-			if(this.deadlines.get(conversationId) == null)
+			if (this.deadlines.get(conversationId) == null)
 				this.deadlines.put(conversationId, new HashMap<String, Long>());
-			this.deadlines.get(conversationId).put(stateName, new Long(auxDeadline));
+			this.deadlines.get(conversationId).put(stateName,
+					new Long(auxDeadline));
 			this.unlock();
 			return true;
-		}
-		else if(waitType == WaitState.PERIODIC){
+		} else if (waitType == WaitState.PERIODIC) {
 			this.unlock();
 			long auxDeadline;
-			if(this.deadlines.get(conversationId) == null)//the first timer for this conversation
+			if (this.deadlines.get(conversationId) == null)// the first timer
+															// for this
+															// conversation
 				auxDeadline = System.currentTimeMillis() + period;
-			else if(this.deadlines.get(conversationId).get(stateName) == null)//the first time the conversation passes through this state
+			else if (this.deadlines.get(conversationId).get(stateName) == null)// the
+																				// first
+																				// time
+																				// the
+																				// conversation
+																				// passes
+																				// through
+																				// this
+																				// state
 				auxDeadline = System.currentTimeMillis() + period;
-			else{
+			else {
 				auxDeadline = this.deadlines.get(conversationId).get(stateName);
-				if(auxDeadline <= System.currentTimeMillis()){
+				if (auxDeadline <= System.currentTimeMillis()) {
 					ACLMessage waitMessage = new ACLMessage(ACLMessage.INFORM);
 					waitMessage.setHeader("purpose", "waitMessage");
 					waitMessage.setConversationId(conversationId);
 					processMessage(waitMessage);
-					while(auxDeadline < System.currentTimeMillis())
+					while (auxDeadline < System.currentTimeMillis())
 						auxDeadline += period;
 				}
 			}
 			deadline = new Date(auxDeadline);
 			DateFormat df = DateFormat.getTimeInstance();
-			this.logger.info("Deadline "+ df.format(deadline));
+			this.logger.info("Deadline " + df.format(deadline));
 			Timer timer = new Timer();
-			
+
 			timer.schedule(new TimerTask() {
 				public void run() {
 					DateFormat df = DateFormat.getDateInstance();
@@ -586,20 +650,25 @@ public abstract class CAgent extends BaseAgent {
 				}
 			}, deadline);
 			this.timers.put(conversationId, timer);
-			if(this.deadlines.get(conversationId) == null)
+			if (this.deadlines.get(conversationId) == null)
 				this.deadlines.put(conversationId, new HashMap<String, Long>());
-			auxDeadline = auxDeadline + period;//we store the next deadline after the timer sends the message
-			this.deadlines.get(conversationId).put(stateName, new Long(auxDeadline));
-			//this.unlock();
+			auxDeadline = auxDeadline + period;// we store the next deadline
+												// after the timer sends the
+												// message
+			this.deadlines.get(conversationId).put(stateName,
+					new Long(auxDeadline));
+			// this.unlock();
 			return true;
 		}
-		//this.unlock();
+		// this.unlock();
 		return false;
 	}
-	
+
 	/**
 	 * Ends a conversation
-	 * @param theFactory managing the conversation that is going to be finished
+	 * 
+	 * @param theFactory
+	 *            managing the conversation that is going to be finished
 	 */
 	protected void endConversation(CFactory theFactory) {
 		this.lock();
@@ -611,11 +680,12 @@ public abstract class CAgent extends BaseAgent {
 
 	/**
 	 * Gets a new conversation identifier
+	 * 
 	 * @return new conversation identifier
 	 */
-	//protected synchronized String newConversationID() {
+	// protected synchronized String newConversationID() {
 	public synchronized String newConversationID() {
-		//return this.getName() + "." + UUID.randomUUID().toString();
+		// return this.getName() + "." + UUID.randomUUID().toString();
 		this.conversationCounter++;
 		return this.getName() + "." + this.conversationCounter;
 	}
@@ -638,11 +708,16 @@ public abstract class CAgent extends BaseAgent {
 
 	/**
 	 * Removes a processor identified by its conversation id
-	 * @param conversationID of the conversation that the CProcessor that is going to be removed is managing
+	 * 
+	 * @param conversationID
+	 *            of the conversation that the CProcessor that is going to be
+	 *            removed is managing
 	 */
 	protected void removeProcessor(String conversationID) {
 		this.lock();
+		
 		processors.remove(conversationID);
+		
 		if (inShutdown) {
 			if (processors.size() == 1) {
 				this.notifyLastProcessorRemoved();
@@ -653,7 +728,9 @@ public abstract class CAgent extends BaseAgent {
 
 	/**
 	 * Removes a timer of a CProcessor
-	 * @param conversationId of the conversation that the CProcessor is managing
+	 * 
+	 * @param conversationId
+	 *            of the conversation that the CProcessor is managing
 	 * @return true if a timer was removed, false otherwise
 	 */
 	private boolean removeTimer(String conversationId) {
@@ -671,11 +748,17 @@ public abstract class CAgent extends BaseAgent {
 
 	/**
 	 * Starts a conversation
-	 * @param msg Initial message
-	 * @param parent CProcessor
-	 * @param sync true if it is a synchronous conversation or false it is asynchronous
+	 * 
+	 * @param msg
+	 *            Initial message
+	 * @param parent
+	 *            CProcessor
+	 * @param sync
+	 *            true if it is a synchronous conversation or false it is
+	 *            asynchronous
 	 */
-	protected void startConversation(ACLMessage msg, CProcessor parent, Boolean sync) {
+	protected void startConversation(ACLMessage msg, CProcessor parent,
+			Boolean sync) {
 		this.lock();
 		for (int i = 0; i < initiatorFactories.size(); i++) {
 			if (initiatorFactories.get(i).templateIsEqual(msg)) {
@@ -688,32 +771,38 @@ public abstract class CAgent extends BaseAgent {
 		this.unlock();
 		// PENDIENTE: Lanzar excepci�n si no hay fabricas asociadas
 	}
-	
+
 	/**
 	 * Starts a new conversation asynchronously
-	 * @param factoryName Name of the initiator factory that will create the conversation
+	 * 
+	 * @param factoryName
+	 *            Name of the initiator factory that will create the
+	 *            conversation
 	 */
-	public void startSyncConversation(String factoryName){
+	public void startSyncConversation(String factoryName) {
 		this.lock();
 		for (int i = 0; i < initiatorFactories.size(); i++) {
 			if (initiatorFactories.get(i).name.equals(factoryName)) {
-				this.welcomeProcessor.createSyncConversation(initiatorFactories.get(i), newConversationID());
+				this.welcomeProcessor.createSyncConversation(
+						initiatorFactories.get(i), newConversationID());
 				this.unlock();
+
 				return;
 			}
 		}
 		logger.error("There aren't factories that match with the message's template");
 		this.unlock();
 	}
-	
+
 	/**
 	 * Gets the hold count of the agent's mutex
+	 * 
 	 * @return mutex hold count
 	 */
-	public int getMutexHoldCount(){
+	public int getMutexHoldCount() {
 		return this.mutex.getHoldCount();
 	}
-	
+
 	/**
 	 * Wait until the agent actually finalize
 	 */

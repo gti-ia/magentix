@@ -1,12 +1,13 @@
 package TestCAgents.Agents;
 
-import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
 
+import es.upv.dsic.gti_ia.cAgents.BeginState;
 import es.upv.dsic.gti_ia.cAgents.CAgent;
 import es.upv.dsic.gti_ia.cAgents.CFactory;
 import es.upv.dsic.gti_ia.cAgents.CProcessor;
-import es.upv.dsic.gti_ia.cAgents.protocols.FIPA_CONTRACTNET_Initiator;
+import es.upv.dsic.gti_ia.cAgents.SendingErrorsState;
+import es.upv.dsic.gti_ia.cAgents.SendingErrorsStateMethod;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.MessageFilter;
@@ -24,12 +25,14 @@ public class HarrySendingErrorsClass extends CAgent {
 	public String notUnderstood;
 	public int received = 0;
 	public boolean first = true;
-	public int counter;
+	public int counter = 0;
+	private boolean def = true;
 
-	public HarrySendingErrorsClass(AgentID aid, CountDownLatch finished)
-			throws Exception {
+	public HarrySendingErrorsClass(AgentID aid, CountDownLatch finished,
+			boolean def) throws Exception {
 		super(aid);
 		this.finished = finished;
+		this.def = def;
 		informMsg = "";
 	}
 
@@ -37,195 +40,97 @@ public class HarrySendingErrorsClass extends CAgent {
 
 		ACLMessage msg;
 
-		class mySending_Error extends SENDING_ERROR_PROTOCOL_Custom {
+		class mySendingErrorCustom extends SENDING_ERROR_PROTOCOL_Custom {
 
-			/**
-			 * Method executed at the beginning of the conversation
-			 * 
-			 * @param myProcessor
-			 *            the CProcessor managing the conversation
-			 * @param msg
-			 *            first message to send in the conversation
-			 */
 			protected void doBegin(CProcessor myProcessor, ACLMessage msg) {
 				myProcessor.getInternalData().put("InitialMessage", msg);
 			}
 
-			/**
-			 * Method executed when the initiator calls for proposals
-			 * 
-			 * @param myProcessor
-			 *            the CProcessor managing the conversation
-			 * @param messageToSend
-			 *            Message to send
-			 */
 			protected void doSolicitProposals(CProcessor myProcessor,
 					ACLMessage messageToSend) {
 
-				if (myProcessor.getLastSentMessage() == null)
-					counter++;
+				messageToSend.setProtocol("fipa-contract-net");
+				messageToSend.setPerformative(ACLMessage.CFP);
+				messageToSend.setSender(myProcessor.getMyAgent().getAid());
 
-				if (counter <= 15) {
-					messageToSend.setProtocol("fipa-contract-net");
-					messageToSend.setPerformative(ACLMessage.CFP);
-					messageToSend.setSender(myProcessor.getMyAgent().getAid());
+				StringBuffer sb = new StringBuffer();
+				for (int i = 0; i < 1000000; ++i) {
 
-					int participants = (Integer) myProcessor.getInternalData()
-							.get("participants");
-
-					messageToSend
-							.setContent("May you give me your phone number?");
-					for (int i = 1; i < participants; ++i) {
-						messageToSend.addReceiver(new AgentID("Sally" + i));
-					}
-					informMsg = "cfp";
-				} else {
-					myProcessor.getMyAgent().Shutdown();
+					sb.append(Math.random() * 1000);
 				}
 
+				messageToSend.setContent(sb.toString());
+				messageToSend.setReceiver(new AgentID("Sally"));
+				// messageToSend.setReceiver(null);
+
 			}
 
-			/**
-			 * Method executed when the initiator receives a not-understood
-			 * message
-			 * 
-			 * @param myProcessor
-			 *            the CProcessor managing the conversation
-			 * @param msg
-			 *            not-understood message
-			 */
-			protected void doReceiveNotUnderstood(CProcessor myProcessor,
-					ACLMessage msg) {
-				notUnderstood = msg.getPerformative();
-			}
-
-			/**
-			 * Method executed when the initiator receives a refuse message
-			 * 
-			 * @param myProcessor
-			 *            the CProcessor managing the conversation
-			 * @param msg
-			 *            refuse message
-			 */
-			protected void doReceiveRefuse(CProcessor myProcessor,
-					ACLMessage msg) {
-				refuseMsg = msg.getContent();
-			}
-
-			/**
-			 * Method executed when the timeout is reached while the initiator
-			 * was waiting for proposals
-			 * 
-			 * @param myProcessor
-			 *            the CProcessor managing the conversation
-			 * @param msg
-			 *            timeout message
-			 */
-			protected void doTimeout(CProcessor myProcessor, ACLMessage msg) {
-				informMsg = "timeout";
-			}
-
-			/**
-			 * Method executed when the initiator receives a failure
-			 * 
-			 * @param myProcessor
-			 *            the CProcessor managing the conversation
-			 * @param msg
-			 *            the failure message
-			 */
-			protected void doReceiveFailure(CProcessor myProcessor,
-					ACLMessage msg) {
-				receiveFailure = msg.getContent();
-			}
-
-			/**
-			 * Method executed when the initiator ends the conversation
-			 * 
-			 * @param myProcessor
-			 *            the CProcessor managing the conversation
-			 * @param messageToSend
-			 *            final message of this conversation
-			 */
 			protected void doFinal(CProcessor myProcessor,
 					ACLMessage messageToSend) {
-				// messageToSend = myProcessor.getLastSentMessage();
-				// informMsg = messageToSend.getContent();
+
 				logger.info(myProcessor.getMyAgent().getName()
 						+ " says Goodbye");
-				myProcessor.getMyAgent().Shutdown();
-			}
 
-			@Override
-			protected void doEvaluateProposals(CProcessor myProcessor,
-					ArrayList<ACLMessage> proposes,
-					ArrayList<ACLMessage> acceptances,
-					ArrayList<ACLMessage> rejections) {
-				informMsg = "evaluateProposals";
-
-				if (proposes.size() != 0) {
-
-					if (((HarrySendingErrorsClass) myProcessor.getMyAgent())
-							.getMode() == 0) {
-
-						ACLMessage messageToSend = new ACLMessage(
-								ACLMessage.ACCEPT_PROPOSAL);
-						messageToSend.setProtocol("fipa-contract-net");
-						for (ACLMessage msg : proposes) {
-							logger.error("RCV = > " + msg.getSender());
-							messageToSend.addReceiver(msg.getSender());
-							messageToSend.setSender(myProcessor.getMyAgent()
-									.getAid());
-							acceptMsg = "OK";
-							messageToSend.setContent(acceptMsg);
-							acceptances.add(messageToSend);
-						}
-
-					} else {
-						// System.out.println(proposes.get(0).getContent());
-						ACLMessage messageToSend = new ACLMessage(
-								ACLMessage.REJECT_PROPOSAL);
-						messageToSend.setProtocol("fipa-contract-net");
-						for (ACLMessage msg : proposes) {
-							logger.error("RCV = > " + msg.getSender());
-							messageToSend.addReceiver(msg.getSender());
-							messageToSend.setSender(myProcessor.getMyAgent()
-									.getAid());
-							rejectMsg = "NO,THANKS";
-							messageToSend.setContent(refuseMsg);
-							rejections.add(messageToSend);
-						}
-
-					}
-				}
-			}
-
-			@Override
-			protected void doReceiveInform(CProcessor myProcessor,
-					ACLMessage msg) {
-
-				informMsg = msg.getContent();
 			}
 
 		}
 
-		msg = new ACLMessage(ACLMessage.CFP);// REVISAR
+		class mySendingErrorDefault extends SENDING_ERROR_PROTOCOL_Default {
 
+			protected void doBegin(CProcessor myProcessor, ACLMessage msg) {
+				myProcessor.getInternalData().put("InitialMessage", msg);
+			}
+
+			protected void doSolicitProposals(CProcessor myProcessor,
+					ACLMessage messageToSend) {
+
+				messageToSend.setProtocol("fipa-contract-net");
+				messageToSend.setPerformative(ACLMessage.CFP);
+				messageToSend.setSender(myProcessor.getMyAgent().getAid());
+
+				StringBuffer sb = new StringBuffer();
+				for (int i = 0; i < 1000000; ++i) {
+
+					sb.append(Math.random() * 1000);
+				}
+
+				messageToSend.setContent(sb.toString());
+				messageToSend.setReceiver(new AgentID("Sally"));
+				// messageToSend.setReceiver(null);
+
+			}
+
+			protected void doFinal(CProcessor myProcessor,
+					ACLMessage messageToSend) {
+
+				logger.info(myProcessor.getMyAgent().getName()
+						+ " says Goodbye");
+
+			}
+
+		}
+
+		msg = new ACLMessage(ACLMessage.CFP);
 		msg.setProtocol("fipa-contract-net");
-		msg.setSender(getAid());
 
 		MessageFilter filter = null;
 		ACLMessage template = msg;
 		int availableConversations = 1;
-		int participants = 4;// ?
-		long deadline = 1000;
-		int timeout = 0;
-		CFactory contractnet = new mySending_Error().newFactory("CONTRACTNET",
-				filter, template, availableConversations,
-				myProcessor.getMyAgent(), participants, deadline, timeout);
 
-		this.addFactoryAsInitiator(contractnet);
+		CFactory mySendingError;
 
-		this.startSyncConversation("CONTRACTNET");
+		if (def)
+			mySendingError = new mySendingErrorCustom().newFactory(
+					"mySendingError", filter, template, availableConversations,
+					myProcessor.getMyAgent());
+		else
+			mySendingError = new mySendingErrorDefault().newFactory(
+					"mySendingError", filter, template, availableConversations,
+					myProcessor.getMyAgent());
+
+		this.addFactoryAsInitiator(mySendingError);
+
+		this.startSyncConversation("mySendingError");
 
 		myProcessor.ShutdownAgent();
 	}

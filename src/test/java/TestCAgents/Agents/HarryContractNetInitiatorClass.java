@@ -164,7 +164,7 @@ public class HarryContractNetInitiatorClass extends CAgent {
 
 						if (((HarryContractNetInitiatorClass) myProcessor
 								.getMyAgent()).getMode() == 0) {
-							System.out.println(proposes.get(0).getContent());
+							
 							ACLMessage messageToSend = new ACLMessage(
 									ACLMessage.ACCEPT_PROPOSAL);
 							messageToSend.setProtocol("fipa-contract-net");
@@ -202,7 +202,7 @@ public class HarryContractNetInitiatorClass extends CAgent {
 			@Override
 			protected void doReceiveInform(CProcessor myProcessor,
 					ACLMessage msg) {
-				System.out.println("finalizando...");
+				
 				informMsg = msg.getContent();
 			}
 

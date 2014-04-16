@@ -54,7 +54,7 @@ public class OtherParticipantClass extends CAgent {
 
 		class GETMESSAGE_Method implements ReceiveStateMethod {
 			public String run(CProcessor myProcessor, ACLMessage messageReceived) {
-				System.out.println("Getting message");
+				logger.info("Getting message");
 				receivedMsg = messageReceived.getPerformative() + ": "
 						+ messageReceived.getContent();
 				if (mode == 0) {
@@ -148,7 +148,7 @@ public class OtherParticipantClass extends CAgent {
 	protected void finalize(CProcessor firstProcessor,
 			ACLMessage finalizeMessage) {
 
-		System.out.println(finalizeMessage.getContent());
+		logger.info(finalizeMessage.getContent());
 	}
 
 	/**

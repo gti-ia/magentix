@@ -83,7 +83,7 @@ public class HarryClass extends CAgent {
 				messageToSend.setReceiver(new AgentID("Sally"));
 				messageToSend.setSender(myProcessor.getMyAgent().getAid());
 				messageToSend.setContent("Will you come with me to a movie?");
-				System.out.println(myProcessor.getMyAgent().getName()
+				logger.info(myProcessor.getMyAgent().getName()
 						+ " : I tell " + messageToSend.getReceiver().name + " "
 						+ messageToSend.getPerformative() + " "
 						+ messageToSend.getContent());
@@ -148,13 +148,13 @@ public class HarryClass extends CAgent {
 		// Finally Harry starts the conversation.
 		this.startSyncConversation("TALK");
 
-		// System.out.println(this.getAid().name + " : Sally tell me "
+		// logger.info(this.getAid().name + " : Sally tell me "
 		// + response.getPerformative() + " " + response.getContent());
 	}
 
 	protected void finalize(CProcessor firstProcessor,
 			ACLMessage finalizeMessage) {
 		finished.countDown();
-		System.out.println(finalizeMessage.getContent());
+		logger.info(finalizeMessage.getContent());
 	}
 }

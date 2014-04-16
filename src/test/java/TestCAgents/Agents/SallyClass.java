@@ -64,7 +64,7 @@ public class SallyClass extends CAgent {
 
 		class GETMESSAGE_Method implements ReceiveStateMethod {
 			public String run(CProcessor myProcessor, ACLMessage messageReceived) {
-				System.out.println("Getting message");
+				logger.info("Getting message");
 				receivedMsg = messageReceived.getPerformative() + ": "
 						+ messageReceived.getContent();
 				return "REFUSE";
@@ -129,6 +129,6 @@ public class SallyClass extends CAgent {
 	protected void finalize(CProcessor firstProcessor,
 			ACLMessage finalizeMessage) {
 		finished.countDown();
-		System.out.println(finalizeMessage.getContent());
+		logger.info(finalizeMessage.getContent());
 	}
 }

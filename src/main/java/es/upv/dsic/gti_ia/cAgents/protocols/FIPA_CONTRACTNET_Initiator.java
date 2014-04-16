@@ -29,7 +29,7 @@ import es.upv.dsic.gti_ia.core.MessageFilter;
  * modify the default behaviour
  * 
  * @author ricard
- * 
+ * @author Javier Jorge Cano - jjorge@dsic.upv.es
  */
 
 public abstract class FIPA_CONTRACTNET_Initiator {
@@ -237,6 +237,7 @@ public abstract class FIPA_CONTRACTNET_Initiator {
 				send = new SendState("SEND_REJECTION_" + j);
 				send.setMethod(new SEND_Method("SEND_REJECTION_" + j));
 				send.setMessageTemplate(rejections.get(j));
+
 				myProcessor.registerState(send);
 				if (j == 0)
 					if (accept) {

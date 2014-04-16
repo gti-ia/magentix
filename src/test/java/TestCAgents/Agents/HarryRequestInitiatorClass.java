@@ -26,7 +26,7 @@ public class HarryRequestInitiatorClass extends CAgent {
 
 		ACLMessage msg;
 
-		System.out.println(myProcessor.getMyAgent().getName()
+		logger.info(myProcessor.getMyAgent().getName()
 				+ ": the welcome message is " + welcomeMessage.getContent());
 
 		// Each agent's conversation is carried out by a CProcessor.
@@ -50,7 +50,7 @@ public class HarryRequestInitiatorClass extends CAgent {
 						+ msg.getSender().name + " informs me "
 						+ msg.getContent();
 
-				System.out.println(informMsg);
+				logger.info(informMsg);
 			}
 		}
 

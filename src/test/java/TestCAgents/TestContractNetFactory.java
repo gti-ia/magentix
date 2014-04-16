@@ -20,8 +20,7 @@ import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
 
 /**
- * Test class for Request factory template (FIPA protocol) based on the example
- * requestFactory
+ * Test class for Contract Net factory template (FIPA protocol) 
  * 
  * @author Javier Jorge - jjorge@dsic.upv.es
  */

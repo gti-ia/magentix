@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.concurrent.CountDownLatch;
 
+import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 import org.junit.After;
 import org.junit.Before;
@@ -18,7 +19,7 @@ import es.upv.dsic.gti_ia.core.AgentsConnection;
  * 
  * @author David Fernández - dfernandez@dsic.upv.es
  * @author Jose Manuel Mejias Rodriguez - jmejias@dsic.upv.es
- * @author Javier Jorge - jjorge@dsic.upv.es
+ * @author Javier Jorge Cano - jjorge@dsic.upv.es
  */
 
 public class TestCAgent {
@@ -26,7 +27,8 @@ public class TestCAgent {
 	HelloWorldAgentClass helloWorldAgent;
 	Process qpid_broker;
 	CountDownLatch finished = new CountDownLatch(1);
-
+	Logger logger = Logger.getLogger(TestCAgent.class);
+	
 	@Before
 	public void setUp() throws Exception {
 
@@ -43,6 +45,8 @@ public class TestCAgent {
 			 * Connecting to Qpid Broker, default localhost.
 			 */
 			AgentsConnection.connect();
+			
+			
 
 			/**
 			 * Instantiating the CAgent
@@ -51,7 +55,8 @@ public class TestCAgent {
 					"helloWorldAgent"), finished);
 
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 
 	}
@@ -64,13 +69,12 @@ public class TestCAgent {
 	public void testWelcomeMessage() {
 		helloWorldAgent.start();
 
-		// If Agent has not received the message
-		System.out.println("Testing");
 		try {
 			finished.await();
 		} catch (InterruptedException e) {
 
 			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 
 		assertEquals(helloWorldAgent.getName()
@@ -84,16 +88,15 @@ public class TestCAgent {
 	 */
 	@Test(timeout = 30000)
 	public void testFinalizeMessage() {
-		System.out.println("Segundo test");
 
 		helloWorldAgent.start();
 
-		// If Agent has not received the message
 		try {
 			finished.await();
 		} catch (InterruptedException e) {
 
 			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 
 		assertEquals(helloWorldAgent.getName()

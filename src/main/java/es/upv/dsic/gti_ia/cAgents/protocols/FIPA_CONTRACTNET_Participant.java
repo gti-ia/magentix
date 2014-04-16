@@ -24,7 +24,7 @@ import es.upv.dsic.gti_ia.core.MessageFilter;
  * order to modify the default behaviour
  * 
  * @author ricard
- * 
+ * @author Javier Jorge Cano - jjorge@dsic.upv.es
  */
 
 public abstract class FIPA_CONTRACTNET_Participant {
@@ -357,8 +357,9 @@ public abstract class FIPA_CONTRACTNET_Participant {
 		template.setPerformative(ACLMessage.REFUSE);
 		SEND_REFUSE.setMessageTemplate(template);
 		processor.registerState(SEND_REFUSE);
-		//WAIT_FOR_SOLICIT -> SEND_REFUSE debería ser RECEIVE_SOLICIT -> SEND_REFUSE?
-		//processor.addTransition(WAIT_FOR_SOLICIT, SEND_REFUSE);
+		// WAIT_FOR_SOLICIT -> SEND_REFUSE debería ser RECEIVE_SOLICIT ->
+		// SEND_REFUSE?
+		// processor.addTransition(WAIT_FOR_SOLICIT, SEND_REFUSE);
 		processor.addTransition(RECEIVE_SOLICIT, SEND_REFUSE);
 		// SEND_NOT_UNDERSTOOD State
 
@@ -385,6 +386,8 @@ public abstract class FIPA_CONTRACTNET_Participant {
 		TIMEOUT.setAcceptFilter(filter);
 		processor.registerState(TIMEOUT);
 		processor.addTransition(WAIT_FOR_ACCEPT, TIMEOUT);
+		// AGREGAR?
+		//processor.addTransition(WAIT_FOR_SOLICIT, TIMEOUT);
 
 		// RECEIVE_ACCEPT State
 
@@ -441,7 +444,7 @@ public abstract class FIPA_CONTRACTNET_Participant {
 
 		processor.registerState(FINAL);
 		processor.addTransition(SEND_FAILURE, FINAL);
-		//Added by Javier
+		// Added by Javier
 		processor.addTransition(SEND_REFUSE, FINAL);
 		processor.addTransition(SEND_INFO, FINAL);
 		processor.addTransition(RECEIVE_REJECT, FINAL);

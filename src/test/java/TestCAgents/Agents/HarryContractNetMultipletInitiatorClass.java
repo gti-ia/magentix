@@ -168,7 +168,7 @@ public class HarryContractNetMultipletInitiatorClass extends CAgent {
 						}
 
 					} else {
-						// System.out.println(proposes.get(0).getContent());
+						
 						ACLMessage messageToSend = new ACLMessage(
 								ACLMessage.REJECT_PROPOSAL);
 						messageToSend.setProtocol("fipa-contract-net");

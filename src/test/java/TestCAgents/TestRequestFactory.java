@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.concurrent.CountDownLatch;
 
+import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 import org.junit.After;
 import org.junit.Before;
@@ -30,6 +31,7 @@ public class TestRequestFactory {
 	SallyRequestParticipantClass Sally;
 	CountDownLatch finished = new CountDownLatch(2);
 	Process qpid_broker;
+	Logger logger = Logger.getLogger(TestRequestFactory.class);
 
 	@Before
 	public void setUp() throws Exception {
@@ -58,7 +60,8 @@ public class TestRequestFactory {
 					finished);
 
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 
 	}
@@ -76,6 +79,7 @@ public class TestRequestFactory {
 		} catch (InterruptedException e) {
 
 			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 
 		assertEquals(Harry.getName() + ": " + Sally.getName()
@@ -95,6 +99,7 @@ public class TestRequestFactory {
 		} catch (InterruptedException e) {
 
 			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 
 		assertTrue(Sally.acceptRequests);

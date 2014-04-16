@@ -25,7 +25,7 @@ import es.upv.dsic.gti_ia.core.MessageFilter;
  * transitions.
  * 
  * @author Ricard Lopez Fogues
- * 
+ * @author Javier Jorge Cano - jjorge@dsic.upv.es
  */
 
 public class CProcessor implements Runnable, Cloneable {
@@ -37,13 +37,12 @@ public class CProcessor implements Runnable, Cloneable {
 		}
 	}
 
-	// Added to SENDING_ERRORS state
 	class SENDING_ERRORS_Method implements SendingErrorsStateMethod {
 
 		@Override
 		public String run(CProcessor myProcessor, ACLMessage errorMessage) {
 
-			return null;
+			return "SHUTDOWN";
 		}
 	}
 
@@ -79,6 +78,7 @@ public class CProcessor implements Runnable, Cloneable {
 	private ACLMessage lastSentMessage;
 	private CFactory myFactory;
 	private boolean initiator;
+	private int maxSendingTries = 5;
 
 	Logger logger = Logger.getLogger(CProcessor.class);
 
@@ -101,8 +101,6 @@ public class CProcessor implements Runnable, Cloneable {
 
 		SENDING_ERRORS = new SendingErrorsState();
 		SENDING_ERRORS.setName(SENDING_ERRORS_STATE);
-		// Added to avoid NullPointer on state SENDING_ERRORS when run it is
-		// executed
 		SENDING_ERRORS.setMethod(new SENDING_ERRORS_Method());
 
 		this.registerFirstState(BEGIN);
@@ -210,7 +208,9 @@ public class CProcessor implements Runnable, Cloneable {
 		factory.startConversationWithID(id, this, true);
 
 		try {
+			
 			syncConversationFinished.await();
+			
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -381,9 +381,8 @@ public class CProcessor implements Runnable, Cloneable {
 		// check if current state is Wait or Begin type, if not rise exception
 		if (currentStateType != State.BEGIN && currentStateType != State.WAIT) {
 			// error
-			System.out
-					.println(this.myAgent.getName()
-							+ ": Error: starting conversation and currentState different from Wait or Begin");
+			logger.error(this.myAgent.getName()
+					+ ": Error: starting conversation and currentState different from Wait or Begin");
 		} else {
 			while (true) {
 				this.logger.info("[" + this.myAgent.getName() + " "
@@ -433,25 +432,27 @@ public class CProcessor implements Runnable, Cloneable {
 						this.myAgent.send(messageToSend);
 
 					} catch (SenderException se) {
-						// se.printStackTrace();
-						logger.error("Error on sending=" + se.getMessage());
+						this.unlockMyAgent();
+						logger.error("Error on sending(SenderException)="
+								+ se.getMessage());
 						sent = false;
 						currentState = SENDING_ERRORS_STATE;
 
 					} catch (SessionException se) {
-						// se.printStackTrace();
-						logger.error("Error on sending=" + se.getMessage());
+						this.unlockMyAgent();
+						logger.error("Error on sending(SessionException)="
+								+ se.getMessage());
+
 						sent = false;
 						currentState = SENDING_ERRORS_STATE;
-
+					} catch (Exception e) {
+						this.unlockMyAgent();
+						
+						logger.error("Error on sending(Exception)="
+								+ e.getMessage());
+						sent = false;
+						currentState = SENDING_ERRORS_STATE;
 					}
-					// catch (SocketException se) {
-					// // se.printStackTrace();
-					// logger.error("Error on sending=" + se.getMessage());
-					// sent = false;
-					// currentState = SENDING_ERRORS_STATE;
-					//
-					// }
 
 					if (sent)
 						this.lastSentMessage = messageToSend;
@@ -572,12 +573,13 @@ public class CProcessor implements Runnable, Cloneable {
 					finalState.getMethod().run(this, messageToSend);
 					this.lockMyAgent();
 					if (this.isSynchronized) {
+
 						this.parent
 								.notifySyncConversationFinished(messageToSend);
 					} else {
 						// PENDIENTE que hacer cuando es asincrona
 					}
-
+					
 					terminated = true;
 					// decrease the conversations counter in the processor's
 					// factory
@@ -602,7 +604,9 @@ public class CProcessor implements Runnable, Cloneable {
 					next = this.SHUTDOWN.getMethod().run(this, currentMessage);
 					this.lockMyAgent();
 					if (next == null) {
+
 						if (this.isSynchronized) {
+
 							this.parent
 									.notifySyncConversationFinished(currentMessage);
 						} else {
@@ -663,18 +667,33 @@ public class CProcessor implements Runnable, Cloneable {
 						cloneCurrentMessage.addReceiver(currentMessage
 								.getSender());
 
-						// Added by Javier
 						try {
+
 							this.myAgent.send(cloneCurrentMessage);
 
-						} catch (SessionException se) {
-							// se.printStackTrace();
-							logger.error("SENDING ERRORS");
+						} catch (SenderException se) {
+							this.unlockMyAgent();
+
+							logger.error("Error on sending(SenderException)="
+									+ se.getMessage());
 							sent = false;
 							currentState = SENDING_ERRORS_STATE;
 
-						}
+						} catch (SessionException se) {
+							this.unlockMyAgent();
 
+							logger.error("Error on sending(SessionException)="
+									+ se.getMessage());
+							sent = false;
+							currentState = SENDING_ERRORS_STATE;
+						} catch (Exception e) {
+							this.unlockMyAgent();
+
+							logger.error("Error on sending(Exception)="
+									+ e.getMessage());
+							sent = false;
+							currentState = SENDING_ERRORS_STATE;
+						}
 						break;
 					case NotAcceptedMessagesState.KEEP:
 						addMessage(currentMessage);
@@ -783,11 +802,12 @@ public class CProcessor implements Runnable, Cloneable {
 				try {
 					aux.transitiontable.addTransition(key, itTrans.next());
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
+
 					e.printStackTrace();
 				}
 			}
 		}
+
 		aux.syncConversationFinished = this.myAgent.mutex.newCondition();
 		return aux;
 	}
@@ -911,9 +931,11 @@ public class CProcessor implements Runnable, Cloneable {
 	 */
 	private void notifySyncConversationFinished(ACLMessage response) {
 		this.lockMyAgent();
+		
 		this.syncConversationResponse = response;
 		syncConversationFinished.signal();
 		syncConversationFinished.signalAll();
+		
 		this.unlockMyAgent();
 	}
 
@@ -1004,5 +1026,20 @@ public class CProcessor implements Runnable, Cloneable {
 	 */
 	protected boolean isInitiator() {
 		return this.initiator;
+	}
+
+	/**
+	 * @return the maxSendingTries
+	 */
+	public int getMaxSendingTries() {
+		return maxSendingTries;
+	}
+
+	/**
+	 * @param maxSendingTries
+	 *            the maxSendingTries to set
+	 */
+	public void setMaxSendingTries(int maxSendingTries) {
+		this.maxSendingTries = maxSendingTries;
 	}
 }

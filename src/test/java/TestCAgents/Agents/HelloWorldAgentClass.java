@@ -45,8 +45,8 @@ public class HelloWorldAgentClass extends CAgent {
 		welcomeMsg = myProcessor.getMyAgent().getName()
 				+ ": the welcome message is " + welcomeMessage.getContent();
 
-		System.out.println(welcomeMsg);
-		System.out.println(myProcessor.getMyAgent().getName()
+		logger.info(welcomeMsg);
+		logger.info(myProcessor.getMyAgent().getName()
 				+ ":  inevitably I have to say hello world");
 
 		processor.ShutdownAgent();
@@ -57,6 +57,6 @@ public class HelloWorldAgentClass extends CAgent {
 		finalizeMsg = myProcessor.getMyAgent().getName()
 				+ ": the finalize message is " + finalizeMessage.getContent();
 		finished.countDown();
-		System.out.println(finalizeMsg);
+		logger.info(finalizeMsg);
 	}
 }

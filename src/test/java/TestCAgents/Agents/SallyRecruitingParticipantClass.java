@@ -77,7 +77,7 @@ public class SallyRecruitingParticipantClass extends CAgent {
 
 	protected void execution(CProcessor myProcessor, ACLMessage welcomeMessage) {
 
-		System.out.println(myProcessor.getMyAgent().getName()
+		logger.info(myProcessor.getMyAgent().getName()
 				+ ": the welcome message is " + welcomeMessage.getContent());
 
 		class myFIPA_RECRUITING extends FIPA_RECRUITING_Participant {
@@ -286,7 +286,7 @@ public class SallyRecruitingParticipantClass extends CAgent {
 				messageToSend.setReceiver(new AgentID("other"));
 				messageToSend.setSender(myProcessor.getMyAgent().getAid());
 				messageToSend.setContent("Will you come with me to a movie?");
-				System.out.println(myProcessor.getMyAgent().getName()
+				logger.info(myProcessor.getMyAgent().getName()
 						+ " : I tell " + messageToSend.getReceiver().name + " "
 						+ messageToSend.getPerformative() + " "
 						+ messageToSend.getContent());

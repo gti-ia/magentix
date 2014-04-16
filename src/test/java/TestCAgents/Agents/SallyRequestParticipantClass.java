@@ -27,7 +27,7 @@ public class SallyRequestParticipantClass extends CAgent {
 
 	protected void execution(CProcessor myProcessor, ACLMessage welcomeMessage) {
 
-		System.out.println(myProcessor.getMyAgent().getName()
+		logger.info(myProcessor.getMyAgent().getName()
 				+ ": the welcome message is " + welcomeMessage.getContent());
 
 		// Each agent's conversation is carried out by a CProcessor.
@@ -75,7 +75,7 @@ public class SallyRequestParticipantClass extends CAgent {
 			protected String doReceiveRequest(CProcessor myProcessor,
 					ACLMessage request) {
 				acceptRequests = true;
-				System.out.println("Siempre aceptamos peticiones");
+				logger.info("Siempre aceptamos peticiones");
 				return "AGREE";
 			}
 		}

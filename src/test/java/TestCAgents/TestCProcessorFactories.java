@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.util.concurrent.CountDownLatch;
 
+import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 import org.junit.After;
 import org.junit.Before;
@@ -13,6 +14,7 @@ import TestCAgents.Agents.HarryClass;
 import TestCAgents.Agents.SallyClass;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
+import es.upv.dsic.gti_ia.core.BaseAgent;
 
 /**
  * Test class for CProcessor Factories based on the example
@@ -29,6 +31,7 @@ public class TestCProcessorFactories {
 	SallyClass Sally;
 	Process qpid_broker;
 	CountDownLatch finished = new CountDownLatch(2);
+	Logger logger = Logger.getLogger(TestCProcessorFactories.class);
 
 	@Before
 	public void setUp() throws Exception {
@@ -54,7 +57,8 @@ public class TestCProcessorFactories {
 			Sally = new SallyClass(new AgentID("Sally"), finished);
 
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 
 	}
@@ -74,6 +78,7 @@ public class TestCProcessorFactories {
 		} catch (InterruptedException e) {
 
 			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 
 		assertEquals("PROPOSE: Will you come with me to a movie?",
@@ -95,6 +100,7 @@ public class TestCProcessorFactories {
 		} catch (InterruptedException e) {
 
 			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 
 		assertEquals("REFUSE: Maybe someday", Harry.receivedMsg);

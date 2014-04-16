@@ -70,7 +70,7 @@ public class OtherInitiatorClass extends CAgent {
 				messageToSend.setReceiver(new AgentID("Sally"));
 				messageToSend.setSender(myProcessor.getMyAgent().getAid());
 				messageToSend.setContent("Will you come with me to a movie?");
-				System.out.println(myProcessor.getMyAgent().getName()
+				logger.info(myProcessor.getMyAgent().getName()
 						+ " : I tell " + messageToSend.getReceiver().name + " "
 						+ messageToSend.getPerformative() + " "
 						+ messageToSend.getContent());
@@ -137,6 +137,6 @@ public class OtherInitiatorClass extends CAgent {
 	protected void finalize(CProcessor firstProcessor,
 			ACLMessage finalizeMessage) {
 
-		System.out.println(finalizeMessage.getContent());
+		logger.info(finalizeMessage.getContent());
 	}
 }

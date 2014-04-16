@@ -34,7 +34,7 @@ import es.upv.dsic.gti_ia.core.MessageFilter;
  * 
  */
 
-public abstract class SENDING_ERROR_PROTOCOL_Custom {
+public abstract class SENDING_ERROR_PROTOCOL_Default {
 
 	/**
 	 * Method executed at the beginning of the conversation
@@ -87,7 +87,6 @@ public abstract class SENDING_ERROR_PROTOCOL_Custom {
 	class FINAL_Method implements FinalStateMethod {
 		public void run(CProcessor myProcessor, ACLMessage messageToSend) {
 			doFinal(myProcessor, messageToSend);
-
 		}
 	}
 
@@ -131,22 +130,11 @@ public abstract class SENDING_ERROR_PROTOCOL_Custom {
 
 		CProcessor processor = theFactory.cProcessorTemplate();
 
+		processor.setMaxSendingTries(1);
 		// BEGIN State
 
 		BeginState BEGIN = (BeginState) processor.getState("BEGIN");
 		BEGIN.setMethod(new BEGIN_Method());
-
-		SendingErrorsState SENDING_ERRORS = (SendingErrorsState) processor
-				.getState("SENDING_ERRORS_STATE");
-
-		SENDING_ERRORS.setMethod(new SendingErrorsStateMethod() {
-
-			@Override
-			public String run(CProcessor myProcessor, ACLMessage errorMessage) {
-
-				return "FINAL";
-			}
-		});
 
 		// SOLICIT_PROPOSALS State
 
@@ -159,7 +147,7 @@ public abstract class SENDING_ERROR_PROTOCOL_Custom {
 		processor.registerState(SOLICIT_PROPOSALS);
 		processor.addTransition(BEGIN, SOLICIT_PROPOSALS);
 		processor.addTransition(SOLICIT_PROPOSALS, SOLICIT_PROPOSALS);
-		//processor.addTransition(SOLICIT_PROPOSALS, SOLICIT_PROPOSALS);
+
 		// FINAL State
 
 		FinalState FINAL = new FinalState("FINAL");
