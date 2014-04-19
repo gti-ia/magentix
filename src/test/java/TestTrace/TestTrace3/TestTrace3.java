@@ -1,8 +1,5 @@
 package TestTrace.TestTrace3;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
 import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 
@@ -103,7 +100,7 @@ public class TestTrace3 {
 		/**
 		 * Instantiating the coordinator agent
 		 */
-		coordinator = new Coordinator(new AgentID("qpid://coordinator@localhost:8080"), publisher.getAid(), observer.getAid());
+		coordinator = new Coordinator(new AgentID("qpid://coordinator@localhost:8080"), publisher.getAid());
 		
 		/**
 		 * Execute the agents
@@ -121,14 +118,6 @@ public class TestTrace3 {
 	public void testTrace3() {
 		//BEGIN
 		
-		int i = 0, j = 0;
-		ArrayList<ACLMessage> oMessages;
-		ArrayList<TraceEvent> oEvents;
-		ArrayList<String> controlOM = new ArrayList<String>();
-		ArrayList<String> controlOE = new ArrayList<String>();
-		ACLMessage msg;
-		TraceEvent tEvent;
-		
 		try {
 			//Wait to Agents finalize their initialization.
 			end.acquire(3);
@@ -136,371 +125,370 @@ public class TestTrace3 {
 			e.printStackTrace();
 		}
 		
-		oMessages = observer.getMessages();
-		oEvents = observer.getEvents();
+		int i = 0, j = 0;
+		boolean ok = true;
+		ArrayList<ACLMessage> oMessages;
+		ArrayList<TraceEvent> oEvents;
+		ArrayList<String> controlOM = new ArrayList<String>();
+		ArrayList<String> controlOE = new ArrayList<String>();
+		ACLMessage msg;
+		TraceEvent tEvent;
 		
-		while(j < oEvents.size()){
+		do {
+			i = 0; j = 0;
+			ok = true;
 			
-			tEvent = oEvents.get(j++);
+			oMessages = observer.getMessages();
+			oEvents = observer.getEvents();
+		
+			while(j < oEvents.size()){
 			
-			if (tEvent.getTracingService().contentEquals("MESSAGE_SENT_DETAIL") ||
-				tEvent.getTracingService().contentEquals("MESSAGE_RECEIVED_DETAIL")) {
-				msg = ACLMessage.fromString(tEvent.getContent());
-				controlOE.add(tEvent.getTracingService() + ":" + msg.getPerformative() + " from " + msg.getSender().toString() + " to " + msg.getReceiver() + ", " + msg.getContent());
-			} else if (tEvent.getTracingService().contentEquals("SUBSCRIBE") ||
-					tEvent.getTracingService().contentEquals("UNSUBSCRIBE") || tEvent.getTracingService().contentEquals("NEW_AGENT") ||
-					tEvent.getTracingService().contentEquals("PUBLISHED_TRACING_SERVICE") || tEvent.getTracingService().contentEquals("UNPUBLISHED_TRACING_SERVICE") ||
-					tEvent.getTracingService().contentEquals("UNAVAILABLE_TS")) {
-				controlOE.add(tEvent.getTracingService() + ": " + ((j-1 < TracingService.MAX_DI_TS) ? tEvent.getContent().substring(0, tEvent.getContent().indexOf('#')) : tEvent.getContent()));
+				tEvent = oEvents.get(j++);
+			
+				if (tEvent.getTracingService().contentEquals("MESSAGE_SENT_DETAIL") ||
+						tEvent.getTracingService().contentEquals("MESSAGE_RECEIVED_DETAIL")) {
+					msg = ACLMessage.fromString(tEvent.getContent());
+					controlOE.add(tEvent.getTracingService() + ":" + msg.getPerformative() + " from " + msg.getSender().toString() + " to " + msg.getReceiver() + ", " + msg.getContent());
+				} else if (tEvent.getTracingService().contentEquals("SUBSCRIBE") ||
+						tEvent.getTracingService().contentEquals("UNSUBSCRIBE") || tEvent.getTracingService().contentEquals("NEW_AGENT") ||
+						tEvent.getTracingService().contentEquals("PUBLISHED_TRACING_SERVICE") || tEvent.getTracingService().contentEquals("UNPUBLISHED_TRACING_SERVICE") ||
+						tEvent.getTracingService().contentEquals("UNAVAILABLE_TS")) {
+					controlOE.add(tEvent.getTracingService() + ": " + ((j-1 < TracingService.MAX_DI_TS) ? tEvent.getContent().substring(0, tEvent.getContent().indexOf('#')) : tEvent.getContent()));
+				}
+				if(i < oMessages.size()) {
+					msg = oMessages.get(i++);
+					controlOM.add("Msg from " + msg.getSender().toString() + ": " + msg.getPerformative() + " " + msg.getContent());
+				}
 			}
-			//if(j > 25 && j < 40) System.out.println(tEvent.getTracingService() + ": " + ((j-1 < TracingService.MAX_DI_TS) ? tEvent.getContent().substring(0, tEvent.getContent().indexOf('#')) : tEvent.getContent()));
-			if(i < oMessages.size()) {
-				msg = oMessages.get(i++);
-				controlOM.add("Msg from " + msg.getSender().toString() + ": " + msg.getPerformative() + " " + msg.getContent());
+		
+			//Check that Observer is subscribe to all services.
+			for (TracingService service : TracingService.DI_TracingServices)
+				if(!controlOE.contains("SUBSCRIBE: " + service.getName())) ok = false;
+			if(!controlOM.contains("Msg from " + tm.getAid() + ": AGREE subscribe#3#all")) ok = false;
+		
+			//Check that Observer cancel subscription to MESSAGE_SENT and MESSAGE_RECEIVED tracing service.
+			String cancelSubscriptions[] = {"MESSAGE_SENT", "MESSAGE_RECEIVED"};
+			for (String service : cancelSubscriptions) {
+				if(!controlOE.contains("UNSUBSCRIBE: " + service + "#any")) ok = false;
+				if(!controlOM.contains("Msg from " + tm.getAid() + ": AGREE unsubscribe#" + service.length() + "#" + service + "#any")) ok = false;
 			}
-		}
-		
-		//Check that Observer is subscribe to all services.
-		for (TracingService service : TracingService.DI_TracingServices)
-			assertTrue(controlOE.contains("SUBSCRIBE: " + service.getName()));
-		assertTrue(controlOM.contains("Msg from " + tm.getAid() + ": AGREE subscribe#3#all"));
-		
-		//Check that Observer cancel subscription to MESSAGE_SENT and MESSAGE_RECEIVED tracing service.
-		String cancelSubscriptions[] = {"MESSAGE_SENT", "MESSAGE_RECEIVED"};
-		for (String service : cancelSubscriptions) {
-			assertTrue(controlOE.contains("UNSUBSCRIBE: " + service + "#any"));
-			assertTrue(controlOM.contains("Msg from " + tm.getAid() + ": AGREE unsubscribe#" + service.length() + "#" + service + "#any"));
-		}
 		
 		
 		
-		/*
-		 * Check that Observer listen all Publisher initialization.
-		 */
-		//---------------------------------------------------------------------------------------------------------------------------------//
-		//Check that Observer listen the NEW_AGENT event produced by the creation of Publisher agent.
-		assertTrue(controlOE.contains("NEW_AGENT: " + publisher.getAid()));
+			/*
+			 * Check that Observer listen all Publisher initialization.
+			 */
+			//---------------------------------------------------------------------------------------------------------------------------------//
+			//Check that Observer listen the NEW_AGENT event produced by the creation of Publisher agent.
+			if(!controlOE.contains("NEW_AGENT: " + publisher.getAid())) ok = false;
 				
-		//Check that Observer listen Publisher agent request UpdateMask to TM.
-		assertTrue(controlOE.contains("MESSAGE_RECEIVED_DETAIL:REQUEST from " + publisher.getAid() + " to " + tm.getAid() + ", UpdateMask#any"));
-		assertTrue(controlOE.contains("MESSAGE_SENT_DETAIL:AGREE from " + tm.getAid() + " to " + publisher.getAid() + ", UpdateMask#" + mask));
-		assertTrue(controlOE.contains("MESSAGE_RECEIVED_DETAIL:AGREE from " + tm.getAid() + " to " + publisher.getAid() + ", UpdateMask#" + mask));
+			//Check that Observer listen Publisher agent request UpdateMask to TM.
+			if(!controlOE.contains("MESSAGE_RECEIVED_DETAIL:REQUEST from " + publisher.getAid() + " to " + tm.getAid() + ", UpdateMask#any")) ok = false;
+			if(!controlOE.contains("MESSAGE_SENT_DETAIL:AGREE from " + tm.getAid() + " to " + publisher.getAid() + ", UpdateMask#" + mask)) ok = false;
+			if(!controlOE.contains("MESSAGE_RECEIVED_DETAIL:AGREE from " + tm.getAid() + " to " + publisher.getAid() + ", UpdateMask#" + mask)) ok = false;
 				
-		//Publisher publish DD_Test_TS1.
-		assertTrue(controlOE.contains("MESSAGE_SENT_DETAIL:REQUEST from " + publisher.getAid() + " to " + tm.getAid() + ", publish#11#DD_Test_TS1Domain Dependent Test Tracing Service1"));
-		assertTrue(controlOE.contains("MESSAGE_RECEIVED_DETAIL:REQUEST from " + publisher.getAid() + " to " + tm.getAid() + ", publish#11#DD_Test_TS1Domain Dependent Test Tracing Service1"));
-		assertTrue(controlOE.contains("MESSAGE_SENT_DETAIL:AGREE from " + tm.getAid() + " to " + publisher.getAid() + ", publish#DD_Test_TS1"));
-		assertTrue(controlOE.contains("MESSAGE_RECEIVED_DETAIL:AGREE from " + tm.getAid() + " to " + publisher.getAid() + ", publish#DD_Test_TS1"));
-		assertTrue(controlOE.contains("PUBLISHED_TRACING_SERVICE: DD_Test_TS1"));
+			//Publisher publish DD_Test_TS1.
+			if(!controlOE.contains("MESSAGE_SENT_DETAIL:REQUEST from " + publisher.getAid() + " to " + tm.getAid() + ", publish#11#DD_Test_TS1Domain Dependent Test Tracing Service1")) ok = false;
+			if(!controlOE.contains("MESSAGE_RECEIVED_DETAIL:REQUEST from " + publisher.getAid() + " to " + tm.getAid() + ", publish#11#DD_Test_TS1Domain Dependent Test Tracing Service1")) ok = false;
+			if(!controlOE.contains("MESSAGE_SENT_DETAIL:AGREE from " + tm.getAid() + " to " + publisher.getAid() + ", publish#DD_Test_TS1")) ok = false;
+			if(!controlOE.contains("MESSAGE_RECEIVED_DETAIL:AGREE from " + tm.getAid() + " to " + publisher.getAid() + ", publish#DD_Test_TS1")) ok = false;
+			if(!controlOE.contains("PUBLISHED_TRACING_SERVICE: DD_Test_TS1")) ok = false;
 		
-		//Observer subscribe to DD_Test_TS1.
-		assertTrue(controlOE.contains("SUBSCRIBE: DD_Test_TS1#38#Domain Dependent Test Tracing Service1#any"));
-		assertTrue(controlOM.contains("Msg from " + tm.getAid() + ": AGREE subscribe#11#DD_Test_TS1#any"));
-		
-		//Publisher publish again DD_Test_TS1(THIS SHOULD FAIL).
-		assertTrue(controlOE.contains("MESSAGE_SENT_DETAIL:REQUEST from " + publisher.getAid() + " to " + tm.getAid() + ", publish#11#DD_Test_TS1Domain Dependent Test Tracing Service1"));
-		assertTrue(controlOE.contains("MESSAGE_RECEIVED_DETAIL:REQUEST from " + publisher.getAid() + " to " + tm.getAid() + ", publish#11#DD_Test_TS1Domain Dependent Test Tracing Service1"));
-		assertTrue(controlOE.contains("MESSAGE_SENT_DETAIL:REFUSE from " + tm.getAid() + " to " + publisher.getAid() + ", publish#11#DD_Test_TS16"));
-		assertTrue(controlOE.contains("MESSAGE_RECEIVED_DETAIL:REFUSE from " + tm.getAid() + " to " + publisher.getAid() + ", publish#11#DD_Test_TS16"));
-		
-		//Publisher cancel publication DD_Test_TS2(THIS SHOULD FAIL).
-		assertTrue(controlOE.contains("MESSAGE_SENT_DETAIL:REQUEST from " + publisher.getAid() + " to " + tm.getAid() + ", unpublish#DD_Test_TS2"));
-		assertTrue(controlOE.contains("MESSAGE_RECEIVED_DETAIL:REQUEST from " + publisher.getAid() + " to " + tm.getAid() + ", unpublish#DD_Test_TS2"));
-		assertTrue(controlOE.contains("MESSAGE_SENT_DETAIL:REFUSE from " + tm.getAid() + " to " + publisher.getAid() + ", unpublish#11#DD_Test_TS23"));
-		assertTrue(controlOE.contains("MESSAGE_RECEIVED_DETAIL:REFUSE from " + tm.getAid() + " to " + publisher.getAid() + ", unpublish#11#DD_Test_TS23"));
-		
-		//Publisher cancel publication DD_Test_TS1.
-		assertTrue(controlOE.contains("MESSAGE_SENT_DETAIL:REQUEST from " + publisher.getAid() + " to " + tm.getAid() + ", unpublish#DD_Test_TS1"));
-		assertTrue(controlOE.contains("MESSAGE_RECEIVED_DETAIL:REQUEST from " + publisher.getAid() + " to " + tm.getAid() + ", unpublish#DD_Test_TS1"));
-		assertTrue(controlOE.contains("MESSAGE_SENT_DETAIL:AGREE from " + tm.getAid() + " to " + publisher.getAid() + ", unpublish#DD_Test_TS1"));
-		assertTrue(controlOE.contains("MESSAGE_RECEIVED_DETAIL:AGREE from " + tm.getAid() + " to " + publisher.getAid() + ", unpublish#DD_Test_TS1"));
-		assertTrue(controlOE.contains("UNPUBLISHED_TRACING_SERVICE: DD_Test_TS1"));
-		assertTrue(controlOE.contains("UNAVAILABLE_TS: DD_Test_TS1#any"));
-		
-		//Publisher publish DD_Test_TS1, DD_Test_TS2, DD_Test_TS3, DD_Test_TS4 and DD_Test_TS5.
-		for (int n = 1; n < 6; n++) {
-			assertTrue(controlOE.contains("MESSAGE_SENT_DETAIL:REQUEST from " + publisher.getAid() + " to " + tm.getAid() + ", publish#11#DD_Test_TS" + n + "Domain Dependent Test Tracing Service" + n));
-			assertTrue(controlOE.contains("MESSAGE_RECEIVED_DETAIL:REQUEST from " + publisher.getAid() + " to " + tm.getAid() + ", publish#11#DD_Test_TS" + n + "Domain Dependent Test Tracing Service" + n));
-			assertTrue(controlOE.contains("MESSAGE_SENT_DETAIL:AGREE from " + tm.getAid() + " to " + publisher.getAid() + ", publish#DD_Test_TS" + n));
-			assertTrue(controlOE.contains("MESSAGE_RECEIVED_DETAIL:AGREE from " + tm.getAid() + " to " + publisher.getAid() + ", publish#DD_Test_TS" + n));
-			assertTrue(controlOE.contains("PUBLISHED_TRACING_SERVICE: DD_Test_TS" + n));
+			//Observer subscribe to DD_Test_TS1.
+			if(!controlOE.contains("SUBSCRIBE: DD_Test_TS1#38#Domain Dependent Test Tracing Service1#any")) ok = false;
+			if(!controlOM.contains("Msg from " + tm.getAid() + ": AGREE subscribe#11#DD_Test_TS1#any")) ok = false;
 			
-			//Observer subscribe to DD_Test_TS+'n'.
-			assertTrue(controlOE.contains("SUBSCRIBE: DD_Test_TS" + n + "#38#Domain Dependent Test Tracing Service" + n + "#any"));
-			assertTrue(controlOM.contains("Msg from " + tm.getAid() + ": AGREE subscribe#11#DD_Test_TS" + n + "#any"));
-		}
-		//---------------------------------------------------------------------------------------------------------------------------------//
+			//Publisher publish again DD_Test_TS1(THIS SHOULD FAIL).
+			if(!controlOE.contains("MESSAGE_SENT_DETAIL:REQUEST from " + publisher.getAid() + " to " + tm.getAid() + ", publish#11#DD_Test_TS1Domain Dependent Test Tracing Service1")) ok = false;
+			if(!controlOE.contains("MESSAGE_RECEIVED_DETAIL:REQUEST from " + publisher.getAid() + " to " + tm.getAid() + ", publish#11#DD_Test_TS1Domain Dependent Test Tracing Service1")) ok = false;
+			if(!controlOE.contains("MESSAGE_SENT_DETAIL:REFUSE from " + tm.getAid() + " to " + publisher.getAid() + ", publish#11#DD_Test_TS16")) ok = false;
+			if(!controlOE.contains("MESSAGE_RECEIVED_DETAIL:REFUSE from " + tm.getAid() + " to " + publisher.getAid() + ", publish#11#DD_Test_TS16")) ok = false;
 		
-		/*
-		 * Check that Observer listen all Subscriber initialization.
-		 */
-		//---------------------------------------------------------------------------------------------------------------------------------//
-		//Check that Observer listen the NEW_AGENT event produced by the creation of Subscriber agent.
-		assertTrue(controlOE.contains("NEW_AGENT: " + subscriber.getAid()));
+			//Publisher cancel publication DD_Test_TS2(THIS SHOULD FAIL).
+			if(!controlOE.contains("MESSAGE_SENT_DETAIL:REQUEST from " + publisher.getAid() + " to " + tm.getAid() + ", unpublish#DD_Test_TS2")) ok = false;
+			if(!controlOE.contains("MESSAGE_RECEIVED_DETAIL:REQUEST from " + publisher.getAid() + " to " + tm.getAid() + ", unpublish#DD_Test_TS2")) ok = false;
+			if(!controlOE.contains("MESSAGE_SENT_DETAIL:REFUSE from " + tm.getAid() + " to " + publisher.getAid() + ", unpublish#11#DD_Test_TS23")) ok = false;
+			if(!controlOE.contains("MESSAGE_RECEIVED_DETAIL:REFUSE from " + tm.getAid() + " to " + publisher.getAid() + ", unpublish#11#DD_Test_TS23")) ok = false;
+		
+			//Publisher cancel publication DD_Test_TS1.
+			if(!controlOE.contains("MESSAGE_SENT_DETAIL:REQUEST from " + publisher.getAid() + " to " + tm.getAid() + ", unpublish#DD_Test_TS1")) ok = false;
+			if(!controlOE.contains("MESSAGE_RECEIVED_DETAIL:REQUEST from " + publisher.getAid() + " to " + tm.getAid() + ", unpublish#DD_Test_TS1")) ok = false;
+			if(!controlOE.contains("MESSAGE_SENT_DETAIL:AGREE from " + tm.getAid() + " to " + publisher.getAid() + ", unpublish#DD_Test_TS1")) ok = false;
+			if(!controlOE.contains("MESSAGE_RECEIVED_DETAIL:AGREE from " + tm.getAid() + " to " + publisher.getAid() + ", unpublish#DD_Test_TS1")) ok = false;
+			if(!controlOE.contains("UNPUBLISHED_TRACING_SERVICE: DD_Test_TS1")) ok = false;
+			if(!controlOE.contains("UNAVAILABLE_TS: DD_Test_TS1#any")) ok = false;
+		
+			//Publisher publish DD_Test_TS1, DD_Test_TS2, DD_Test_TS3, DD_Test_TS4 and DD_Test_TS5.
+			for (int n = 1; n < 6; n++) {
+				if(!controlOE.contains("MESSAGE_SENT_DETAIL:REQUEST from " + publisher.getAid() + " to " + tm.getAid() + ", publish#11#DD_Test_TS" + n + "Domain Dependent Test Tracing Service" + n)) ok = false;
+				if(!controlOE.contains("MESSAGE_RECEIVED_DETAIL:REQUEST from " + publisher.getAid() + " to " + tm.getAid() + ", publish#11#DD_Test_TS" + n + "Domain Dependent Test Tracing Service" + n)) ok = false;
+				if(!controlOE.contains("MESSAGE_SENT_DETAIL:AGREE from " + tm.getAid() + " to " + publisher.getAid() + ", publish#DD_Test_TS" + n)) ok = false;
+				if(!controlOE.contains("MESSAGE_RECEIVED_DETAIL:AGREE from " + tm.getAid() + " to " + publisher.getAid() + ", publish#DD_Test_TS" + n)) ok = false;
+				if(!controlOE.contains("PUBLISHED_TRACING_SERVICE: DD_Test_TS" + n)) ok = false;
+			
+				//Observer subscribe to DD_Test_TS+'n'.
+				if(!controlOE.contains("SUBSCRIBE: DD_Test_TS" + n + "#38#Domain Dependent Test Tracing Service" + n + "#any")) ok = false;
+				if(!controlOM.contains("Msg from " + tm.getAid() + ": AGREE subscribe#11#DD_Test_TS" + n + "#any")) ok = false;
+			}
+			//---------------------------------------------------------------------------------------------------------------------------------//
+		
+			/*
+			 * Check that Observer listen all Subscriber initialization.
+			 */
+			//---------------------------------------------------------------------------------------------------------------------------------//
+			//Check that Observer listen the NEW_AGENT event produced by the creation of Subscriber agent.
+			if(!controlOE.contains("NEW_AGENT: " + subscriber.getAid())) ok = false;
 						
-		//Check that Observer listen Subscriber agent request UpdateMask to TM.
-		assertTrue(controlOE.contains("MESSAGE_RECEIVED_DETAIL:REQUEST from " + subscriber.getAid() + " to " + tm.getAid() + ", UpdateMask#any"));
-		assertTrue(controlOE.contains("MESSAGE_SENT_DETAIL:AGREE from " + tm.getAid() + " to " + subscriber.getAid() + ", UpdateMask#" + mask));
-		assertTrue(controlOE.contains("MESSAGE_RECEIVED_DETAIL:AGREE from " + tm.getAid() + " to " + subscriber.getAid() + ", UpdateMask#" + mask));
+			//Check that Observer listen Subscriber agent request UpdateMask to TM.
+			if(!controlOE.contains("MESSAGE_RECEIVED_DETAIL:REQUEST from " + subscriber.getAid() + " to " + tm.getAid() + ", UpdateMask#any")) ok = false;
+			if(!controlOE.contains("MESSAGE_SENT_DETAIL:AGREE from " + tm.getAid() + " to " + subscriber.getAid() + ", UpdateMask#" + mask)) ok = false;
+			if(!controlOE.contains("MESSAGE_RECEIVED_DETAIL:AGREE from " + tm.getAid() + " to " + subscriber.getAid() + ", UpdateMask#" + mask)) ok = false;
 				
-		//Subscriber subscribing to DD_Test_TSSS1 from any entity(THIS SHOULD FAIL).
-		assertTrue(controlOE.contains("MESSAGE_SENT_DETAIL:SUBSCRIBE from " + subscriber.getAid() + " to " + tm.getAid() + ", DD_Test_TSSS1#any"));
-		assertTrue(controlOE.contains("MESSAGE_RECEIVED_DETAIL:SUBSCRIBE from " + subscriber.getAid() + " to " + tm.getAid() + ", DD_Test_TSSS1#any"));
-		assertTrue(controlOE.contains("MESSAGE_SENT_DETAIL:REFUSE from " + tm.getAid() + " to " + subscriber.getAid() + ", subscribe#13#DD_Test_TSSS13#any3"));
-		assertTrue(controlOE.contains("MESSAGE_RECEIVED_DETAIL:REFUSE from " + tm.getAid() + " to " + subscriber.getAid() + ", subscribe#13#DD_Test_TSSS13#any3"));
+			//Subscriber subscribing to DD_Test_TSSS1 from any entity(THIS SHOULD FAIL).
+			if(!controlOE.contains("MESSAGE_SENT_DETAIL:SUBSCRIBE from " + subscriber.getAid() + " to " + tm.getAid() + ", DD_Test_TSSS1#any")) ok = false;
+			if(!controlOE.contains("MESSAGE_RECEIVED_DETAIL:SUBSCRIBE from " + subscriber.getAid() + " to " + tm.getAid() + ", DD_Test_TSSS1#any")) ok = false;
+			if(!controlOE.contains("MESSAGE_SENT_DETAIL:REFUSE from " + tm.getAid() + " to " + subscriber.getAid() + ", subscribe#13#DD_Test_TSSS13#any3")) ok = false;
+			if(!controlOE.contains("MESSAGE_RECEIVED_DETAIL:REFUSE from " + tm.getAid() + " to " + subscriber.getAid() + ", subscribe#13#DD_Test_TSSS13#any3")) ok = false;
 		
-		//Subscriber subscribing to DD_Test_TSSS1 from Publisher entity(THIS SHOULD FAIL).
-		assertTrue(controlOE.contains("MESSAGE_SENT_DETAIL:SUBSCRIBE from " + subscriber.getAid() + " to " + tm.getAid() + ", DD_Test_TSSS1#" + publisher.getAid()));
-		assertTrue(controlOE.contains("MESSAGE_RECEIVED_DETAIL:SUBSCRIBE from " + subscriber.getAid() + " to " + tm.getAid() + ", DD_Test_TSSS1#" + publisher.getAid()));
-		assertTrue(controlOE.contains("MESSAGE_SENT_DETAIL:REFUSE from " + tm.getAid() + " to " + subscriber.getAid() + ", subscribe#13#DD_Test_TSSS131#" + publisher.getAid() + "3"));
-		assertTrue(controlOE.contains("MESSAGE_RECEIVED_DETAIL:REFUSE from " + tm.getAid() + " to " + subscriber.getAid() + ", subscribe#13#DD_Test_TSSS131#" + publisher.getAid() + "3"));
+			//Subscriber subscribing to DD_Test_TSSS1 from Publisher entity(THIS SHOULD FAIL).
+			if(!controlOE.contains("MESSAGE_SENT_DETAIL:SUBSCRIBE from " + subscriber.getAid() + " to " + tm.getAid() + ", DD_Test_TSSS1#" + publisher.getAid())) ok = false;
+			if(!controlOE.contains("MESSAGE_RECEIVED_DETAIL:SUBSCRIBE from " + subscriber.getAid() + " to " + tm.getAid() + ", DD_Test_TSSS1#" + publisher.getAid())) ok = false;
+			if(!controlOE.contains("MESSAGE_SENT_DETAIL:REFUSE from " + tm.getAid() + " to " + subscriber.getAid() + ", subscribe#13#DD_Test_TSSS131#" + publisher.getAid() + "3")) ok = false;
+			if(!controlOE.contains("MESSAGE_RECEIVED_DETAIL:REFUSE from " + tm.getAid() + " to " + subscriber.getAid() + ", subscribe#13#DD_Test_TSSS131#" + publisher.getAid() + "3")) ok = false;
 			
-		//Subscriber subscribing to DD_Test_TS1 from any entity.
-		assertTrue(controlOE.contains("MESSAGE_SENT_DETAIL:SUBSCRIBE from " + subscriber.getAid() + " to " + tm.getAid() + ", DD_Test_TS1#any"));
-		assertTrue(controlOE.contains("MESSAGE_RECEIVED_DETAIL:SUBSCRIBE from " + subscriber.getAid() + " to " + tm.getAid() + ", DD_Test_TS1#any"));
-		assertTrue(controlOE.contains("MESSAGE_SENT_DETAIL:AGREE from " + tm.getAid() + " to " + subscriber.getAid() + ", subscribe#11#DD_Test_TS1#any"));
-		assertTrue(controlOE.contains("MESSAGE_RECEIVED_DETAIL:AGREE from " + tm.getAid() + " to " + subscriber.getAid() + ", subscribe#11#DD_Test_TS1#any"));
+			//Subscriber subscribing to DD_Test_TS1 from any entity.
+			if(!controlOE.contains("MESSAGE_SENT_DETAIL:SUBSCRIBE from " + subscriber.getAid() + " to " + tm.getAid() + ", DD_Test_TS1#any")) ok = false;
+			if(!controlOE.contains("MESSAGE_RECEIVED_DETAIL:SUBSCRIBE from " + subscriber.getAid() + " to " + tm.getAid() + ", DD_Test_TS1#any")) ok = false;
+			if(!controlOE.contains("MESSAGE_SENT_DETAIL:AGREE from " + tm.getAid() + " to " + subscriber.getAid() + ", subscribe#11#DD_Test_TS1#any")) ok = false;
+			if(!controlOE.contains("MESSAGE_RECEIVED_DETAIL:AGREE from " + tm.getAid() + " to " + subscriber.getAid() + ", subscribe#11#DD_Test_TS1#any")) ok = false;
 		
-		//Subscriber subscribing again to DD_Test_TS1 from any entity(THIS SHOULD FAIL).
-		assertTrue(controlOE.contains("MESSAGE_SENT_DETAIL:SUBSCRIBE from " + subscriber.getAid() + " to " + tm.getAid() + ", DD_Test_TS1#any"));
-		assertTrue(controlOE.contains("MESSAGE_RECEIVED_DETAIL:SUBSCRIBE from " + subscriber.getAid() + " to " + tm.getAid() + ", DD_Test_TS1#any"));
-		assertTrue(controlOE.contains("MESSAGE_SENT_DETAIL:REFUSE from " + tm.getAid() + " to " + subscriber.getAid() + ", subscribe#11#DD_Test_TS13#any7"));
-		assertTrue(controlOE.contains("MESSAGE_RECEIVED_DETAIL:REFUSE from " + tm.getAid() + " to " + subscriber.getAid() + ", subscribe#11#DD_Test_TS13#any7"));
+			//Subscriber subscribing again to DD_Test_TS1 from any entity(THIS SHOULD FAIL).
+			if(!controlOE.contains("MESSAGE_SENT_DETAIL:SUBSCRIBE from " + subscriber.getAid() + " to " + tm.getAid() + ", DD_Test_TS1#any")) ok = false;
+			if(!controlOE.contains("MESSAGE_RECEIVED_DETAIL:SUBSCRIBE from " + subscriber.getAid() + " to " + tm.getAid() + ", DD_Test_TS1#any")) ok = false;
+			if(!controlOE.contains("MESSAGE_SENT_DETAIL:REFUSE from " + tm.getAid() + " to " + subscriber.getAid() + ", subscribe#11#DD_Test_TS13#any7")) ok = false;
+			if(!controlOE.contains("MESSAGE_RECEIVED_DETAIL:REFUSE from " + tm.getAid() + " to " + subscriber.getAid() + ", subscribe#11#DD_Test_TS13#any7")) ok = false;
 				
-		//Subscriber subscribing to DD_Test_TS1 from Publisher entity.
-		assertTrue(controlOE.contains("MESSAGE_SENT_DETAIL:SUBSCRIBE from " + subscriber.getAid() + " to " + tm.getAid() + ", DD_Test_TS1#" + publisher.getAid()));
-		assertTrue(controlOE.contains("MESSAGE_RECEIVED_DETAIL:SUBSCRIBE from " + subscriber.getAid() + " to " + tm.getAid() + ", DD_Test_TS1#" + publisher.getAid()));
-		assertTrue(controlOE.contains("MESSAGE_SENT_DETAIL:AGREE from " + tm.getAid() + " to " + subscriber.getAid() + ", subscribe#11#DD_Test_TS1#" + publisher.getAid()));
-		assertTrue(controlOE.contains("MESSAGE_RECEIVED_DETAIL:AGREE from " + tm.getAid() + " to " + subscriber.getAid() + ", subscribe#11#DD_Test_TS1#" + publisher.getAid()));
-						
-		//Subscriber subscribing again to DD_Test_TS1 from Publisher entity(THIS SHOULD FAIL).
-		assertTrue(controlOE.contains("MESSAGE_SENT_DETAIL:SUBSCRIBE from " + subscriber.getAid() + " to " + tm.getAid() + ", DD_Test_TS1#" + publisher.getAid()));
-		assertTrue(controlOE.contains("MESSAGE_RECEIVED_DETAIL:SUBSCRIBE from " + subscriber.getAid() + " to " + tm.getAid() + ", DD_Test_TS1#" + publisher.getAid()));
-		assertTrue(controlOE.contains("MESSAGE_SENT_DETAIL:REFUSE from " + tm.getAid() + " to " + subscriber.getAid() + ", subscribe#11#DD_Test_TS131#" + publisher.getAid() + "7"));
-		assertTrue(controlOE.contains("MESSAGE_RECEIVED_DETAIL:REFUSE from " + tm.getAid() + " to " + subscriber.getAid() + ", subscribe#11#DD_Test_TS131#" + publisher.getAid() + "7"));
+			//Subscriber subscribing to DD_Test_TS1 from Publisher entity.
+			if(!controlOE.contains("MESSAGE_SENT_DETAIL:SUBSCRIBE from " + subscriber.getAid() + " to " + tm.getAid() + ", DD_Test_TS1#" + publisher.getAid())) ok = false;
+			if(!controlOE.contains("MESSAGE_RECEIVED_DETAIL:SUBSCRIBE from " + subscriber.getAid() + " to " + tm.getAid() + ", DD_Test_TS1#" + publisher.getAid())) ok = false;
+			if(!controlOE.contains("MESSAGE_SENT_DETAIL:AGREE from " + tm.getAid() + " to " + subscriber.getAid() + ", subscribe#11#DD_Test_TS1#" + publisher.getAid())) ok = false;
+			if(!controlOE.contains("MESSAGE_RECEIVED_DETAIL:AGREE from " + tm.getAid() + " to " + subscriber.getAid() + ", subscribe#11#DD_Test_TS1#" + publisher.getAid())) ok = false;
+			
+			//Subscriber subscribing again to DD_Test_TS1 from Publisher entity(THIS SHOULD FAIL).
+			if(!controlOE.contains("MESSAGE_SENT_DETAIL:SUBSCRIBE from " + subscriber.getAid() + " to " + tm.getAid() + ", DD_Test_TS1#" + publisher.getAid())) ok = false;
+			if(!controlOE.contains("MESSAGE_RECEIVED_DETAIL:SUBSCRIBE from " + subscriber.getAid() + " to " + tm.getAid() + ", DD_Test_TS1#" + publisher.getAid())) ok = false;
+			if(!controlOE.contains("MESSAGE_SENT_DETAIL:REFUSE from " + tm.getAid() + " to " + subscriber.getAid() + ", subscribe#11#DD_Test_TS131#" + publisher.getAid() + "7")) ok = false;
+			if(!controlOE.contains("MESSAGE_RECEIVED_DETAIL:REFUSE from " + tm.getAid() + " to " + subscriber.getAid() + ", subscribe#11#DD_Test_TS131#" + publisher.getAid() + "7")) ok = false;
 		
-		//Subscriber subscribing again to DD_Test_TS1 from myself entity(THIS SHOULD FAIL).
-		assertTrue(controlOE.contains("MESSAGE_SENT_DETAIL:SUBSCRIBE from " + subscriber.getAid() + " to " + tm.getAid() + ", DD_Test_TS1#" + subscriber.getAid()));
-		assertTrue(controlOE.contains("MESSAGE_RECEIVED_DETAIL:SUBSCRIBE from " + subscriber.getAid() + " to " + tm.getAid() + ", DD_Test_TS1#" + subscriber.getAid()));
-		assertTrue(controlOE.contains("MESSAGE_SENT_DETAIL:REFUSE from " + tm.getAid() + " to " + subscriber.getAid() + ", subscribe#11#DD_Test_TS132#" + subscriber.getAid() + "3"));
-		assertTrue(controlOE.contains("MESSAGE_RECEIVED_DETAIL:REFUSE from " + tm.getAid() + " to " + subscriber.getAid() + ", subscribe#11#DD_Test_TS132#" + subscriber.getAid() + "3"));
+			//Subscriber subscribing again to DD_Test_TS1 from myself entity(THIS SHOULD FAIL).
+			if(!controlOE.contains("MESSAGE_SENT_DETAIL:SUBSCRIBE from " + subscriber.getAid() + " to " + tm.getAid() + ", DD_Test_TS1#" + subscriber.getAid())) ok = false;
+			if(!controlOE.contains("MESSAGE_RECEIVED_DETAIL:SUBSCRIBE from " + subscriber.getAid() + " to " + tm.getAid() + ", DD_Test_TS1#" + subscriber.getAid())) ok = false;
+			if(!controlOE.contains("MESSAGE_SENT_DETAIL:REFUSE from " + tm.getAid() + " to " + subscriber.getAid() + ", subscribe#11#DD_Test_TS132#" + subscriber.getAid() + "3")) ok = false;
+			if(!controlOE.contains("MESSAGE_RECEIVED_DETAIL:REFUSE from " + tm.getAid() + " to " + subscriber.getAid() + ", subscribe#11#DD_Test_TS132#" + subscriber.getAid() + "3")) ok = false;
 		
-		//Subscriber cancel subscription to DD_Test_TS2(THIS SHOULD FAIL).
-		assertTrue(controlOE.contains("MESSAGE_SENT_DETAIL:CANCEL from " + subscriber.getAid() + " to " + tm.getAid() + ", DD_Test_TS2#any"));
-		assertTrue(controlOE.contains("MESSAGE_RECEIVED_DETAIL:CANCEL from " + subscriber.getAid() + " to " + tm.getAid() + ", DD_Test_TS2#any"));
-		assertTrue(controlOE.contains("MESSAGE_SENT_DETAIL:REFUSE from " + tm.getAid() + " to " + subscriber.getAid() + ", unsubscribe#11#DD_Test_TS23#any4"));
-		assertTrue(controlOE.contains("MESSAGE_RECEIVED_DETAIL:REFUSE from " + tm.getAid() + " to " + subscriber.getAid() + ", unsubscribe#11#DD_Test_TS23#any4"));
+			//Subscriber cancel subscription to DD_Test_TS2(THIS SHOULD FAIL).
+			if(!controlOE.contains("MESSAGE_SENT_DETAIL:CANCEL from " + subscriber.getAid() + " to " + tm.getAid() + ", DD_Test_TS2#any")) ok = false;
+			if(!controlOE.contains("MESSAGE_RECEIVED_DETAIL:CANCEL from " + subscriber.getAid() + " to " + tm.getAid() + ", DD_Test_TS2#any")) ok = false;
+			if(!controlOE.contains("MESSAGE_SENT_DETAIL:REFUSE from " + tm.getAid() + " to " + subscriber.getAid() + ", unsubscribe#11#DD_Test_TS23#any4")) ok = false;
+			if(!controlOE.contains("MESSAGE_RECEIVED_DETAIL:REFUSE from " + tm.getAid() + " to " + subscriber.getAid() + ", unsubscribe#11#DD_Test_TS23#any4")) ok = false;
 				
-		//Subscriber cancel subscription to DD_Test_TS1 from myself entity(THIS SHOULD FAIL).
-		assertTrue(controlOE.contains("MESSAGE_SENT_DETAIL:CANCEL from " + subscriber.getAid() + " to " + tm.getAid() + ", DD_Test_TS1#" + subscriber.getAid()));
-		assertTrue(controlOE.contains("MESSAGE_RECEIVED_DETAIL:CANCEL from " + subscriber.getAid() + " to " + tm.getAid() + ", DD_Test_TS1#" + subscriber.getAid()));
-		assertTrue(controlOE.contains("MESSAGE_SENT_DETAIL:REFUSE from " + tm.getAid() + " to " + subscriber.getAid() + ", unsubscribe#11#DD_Test_TS132#" + subscriber.getAid() + "4"));
-		assertTrue(controlOE.contains("MESSAGE_RECEIVED_DETAIL:REFUSE from " + tm.getAid() + " to " + subscriber.getAid() + ", unsubscribe#11#DD_Test_TS132#" + subscriber.getAid() + "4"));
+			//Subscriber cancel subscription to DD_Test_TS1 from myself entity(THIS SHOULD FAIL).
+			if(!controlOE.contains("MESSAGE_SENT_DETAIL:CANCEL from " + subscriber.getAid() + " to " + tm.getAid() + ", DD_Test_TS1#" + subscriber.getAid())) ok = false;
+			if(!controlOE.contains("MESSAGE_RECEIVED_DETAIL:CANCEL from " + subscriber.getAid() + " to " + tm.getAid() + ", DD_Test_TS1#" + subscriber.getAid())) ok = false;
+			if(!controlOE.contains("MESSAGE_SENT_DETAIL:REFUSE from " + tm.getAid() + " to " + subscriber.getAid() + ", unsubscribe#11#DD_Test_TS132#" + subscriber.getAid() + "4")) ok = false;
+			if(!controlOE.contains("MESSAGE_RECEIVED_DETAIL:REFUSE from " + tm.getAid() + " to " + subscriber.getAid() + ", unsubscribe#11#DD_Test_TS132#" + subscriber.getAid() + "4")) ok = false;
 			
-		//Subscriber cancel subscription to DD_Test_TS1 from Publisher entity.
-		assertTrue(controlOE.contains("MESSAGE_SENT_DETAIL:CANCEL from " + subscriber.getAid() + " to " + tm.getAid() + ", DD_Test_TS1#" + publisher.getAid()));
-		assertTrue(controlOE.contains("MESSAGE_RECEIVED_DETAIL:CANCEL from " + subscriber.getAid() + " to " + tm.getAid() + ", DD_Test_TS1#" + publisher.getAid()));
-		assertTrue(controlOE.contains("MESSAGE_SENT_DETAIL:AGREE from " + tm.getAid() + " to " + subscriber.getAid() + ", unsubscribe#11#DD_Test_TS1#" + publisher.getAid()));
-		assertTrue(controlOE.contains("MESSAGE_RECEIVED_DETAIL:AGREE from " + tm.getAid() + " to " + subscriber.getAid() + ", unsubscribe#11#DD_Test_TS1#" + publisher.getAid()));
+			//Subscriber cancel subscription to DD_Test_TS1 from Publisher entity.
+			if(!controlOE.contains("MESSAGE_SENT_DETAIL:CANCEL from " + subscriber.getAid() + " to " + tm.getAid() + ", DD_Test_TS1#" + publisher.getAid())) ok = false;
+			if(!controlOE.contains("MESSAGE_RECEIVED_DETAIL:CANCEL from " + subscriber.getAid() + " to " + tm.getAid() + ", DD_Test_TS1#" + publisher.getAid())) ok = false;
+			if(!controlOE.contains("MESSAGE_SENT_DETAIL:AGREE from " + tm.getAid() + " to " + subscriber.getAid() + ", unsubscribe#11#DD_Test_TS1#" + publisher.getAid())) ok = false;
+			if(!controlOE.contains("MESSAGE_RECEIVED_DETAIL:AGREE from " + tm.getAid() + " to " + subscriber.getAid() + ", unsubscribe#11#DD_Test_TS1#" + publisher.getAid())) ok = false;
 				
-		//Subscriber cancel subscription to DD_Test_TS1 from any entity.
-		assertTrue(controlOE.contains("MESSAGE_SENT_DETAIL:CANCEL from " + subscriber.getAid() + " to " + tm.getAid() + ", DD_Test_TS1#any"));
-		assertTrue(controlOE.contains("MESSAGE_RECEIVED_DETAIL:CANCEL from " + subscriber.getAid() + " to " + tm.getAid() + ", DD_Test_TS1#any"));
-		assertTrue(controlOE.contains("MESSAGE_SENT_DETAIL:AGREE from " + tm.getAid() + " to " + subscriber.getAid() + ", unsubscribe#11#DD_Test_TS1#any"));
-		assertTrue(controlOE.contains("MESSAGE_RECEIVED_DETAIL:AGREE from " + tm.getAid() + " to " + subscriber.getAid() + ", unsubscribe#11#DD_Test_TS1#any"));
+			//Subscriber cancel subscription to DD_Test_TS1 from any entity.
+			if(!controlOE.contains("MESSAGE_SENT_DETAIL:CANCEL from " + subscriber.getAid() + " to " + tm.getAid() + ", DD_Test_TS1#any")) ok = false;
+			if(!controlOE.contains("MESSAGE_RECEIVED_DETAIL:CANCEL from " + subscriber.getAid() + " to " + tm.getAid() + ", DD_Test_TS1#any")) ok = false;
+			if(!controlOE.contains("MESSAGE_SENT_DETAIL:AGREE from " + tm.getAid() + " to " + subscriber.getAid() + ", unsubscribe#11#DD_Test_TS1#any")) ok = false;
+			if(!controlOE.contains("MESSAGE_RECEIVED_DETAIL:AGREE from " + tm.getAid() + " to " + subscriber.getAid() + ", unsubscribe#11#DD_Test_TS1#any")) ok = false;
 			
-		//Subscriber try to cancel publication DD_Test_TS1.
-		assertTrue(controlOE.contains("MESSAGE_SENT_DETAIL:REQUEST from " + subscriber.getAid() + " to " + tm.getAid() + ", unpublish#DD_Test_TS1"));
-		assertTrue(controlOE.contains("MESSAGE_RECEIVED_DETAIL:REQUEST from " + subscriber.getAid() + " to " + tm.getAid() + ", unpublish#DD_Test_TS1"));
-		assertTrue(controlOE.contains("MESSAGE_SENT_DETAIL:REFUSE from " + tm.getAid() + " to " + subscriber.getAid() + ", unpublish#11#DD_Test_TS19"));
-		assertTrue(controlOE.contains("MESSAGE_RECEIVED_DETAIL:REFUSE from " + tm.getAid() + " to " + subscriber.getAid() + ", unpublish#11#DD_Test_TS19"));
-		//---------------------------------------------------------------------------------------------------------------------------------//
+			//Subscriber try to cancel publication DD_Test_TS1.
+			if(!controlOE.contains("MESSAGE_SENT_DETAIL:REQUEST from " + subscriber.getAid() + " to " + tm.getAid() + ", unpublish#DD_Test_TS1")) ok = false;
+			if(!controlOE.contains("MESSAGE_RECEIVED_DETAIL:REQUEST from " + subscriber.getAid() + " to " + tm.getAid() + ", unpublish#DD_Test_TS1")) ok = false;
+			if(!controlOE.contains("MESSAGE_SENT_DETAIL:REFUSE from " + tm.getAid() + " to " + subscriber.getAid() + ", unpublish#11#DD_Test_TS19")) ok = false;
+			if(!controlOE.contains("MESSAGE_RECEIVED_DETAIL:REFUSE from " + tm.getAid() + " to " + subscriber.getAid() + ", unpublish#11#DD_Test_TS19")) ok = false;
+			//---------------------------------------------------------------------------------------------------------------------------------//
 			
-		//Check that Observer listen the NEW_AGENT event produced by the creation of Coordinator agent.
-		assertTrue(controlOE.contains("NEW_AGENT: " + coordinator.getAid()));
+			//Check that Observer listen the NEW_AGENT event produced by the creation of Coordinator agent.
+			if(!controlOE.contains("NEW_AGENT: " + coordinator.getAid())) ok = false;
+			
+		} while(!ok);
 		
 		/*
 		 * Check that Observer listen all Subscriber and Publisher execution.
 		 */
 		//---------------------------------------------------------------------------------------------------------------------------------//
 		Publisher.contExec.release();
-				
+					
 		//Subscriber receives the traces of events that are subscribed while Publisher generates events.
 		//(k=0)Subscriber subscribes to DD_Test_TS1 Event.
 		//(k=1)Subscriber subscribes to DD_Test_TS2 Event.
 		//(k=2)Subscriber subscribes to DD_Test_TS3 Event.
 		//(k=3)Subscriber cancels the subscription to DD_Test_TS3 Event.
 		for(int k = 0; k < 4; k++){
-					
+				
 			observer.clearEvents();
 			Subscriber.contExec.release();
-				
-			while(observer.getEvents().size() < 9 + ((k == 3) ? 9 : 0)){
-				try {
-					Thread.sleep(1 * 50);
-				} catch (InterruptedException e) {
-					fail(e.getMessage());
-				}
-			}
-				
-			oEvents = observer.getEvents();
-			controlOE.clear();
 			
+			do {
+				ok = true;
 				
-			for(i = 0; i < 9 + ((k == 3) ? 9 : 0); i++){
+				oEvents = observer.getEvents();
+				controlOE.clear();
 				
-				tEvent = oEvents.get(i);
+				for(i = 0; i < oEvents.size(); i++){
 				
-				if (tEvent.getTracingService().contentEquals("MESSAGE_SENT_DETAIL") ||
-					tEvent.getTracingService().contentEquals("MESSAGE_RECEIVED_DETAIL")) {
+					tEvent = oEvents.get(i);
+				
+					if (tEvent.getTracingService().contentEquals("MESSAGE_SENT_DETAIL") ||
+							tEvent.getTracingService().contentEquals("MESSAGE_RECEIVED_DETAIL")) {
 						msg = ACLMessage.fromString(tEvent.getContent());
 						controlOE.add(tEvent.getTracingService() + ":" + msg.getPerformative() + " from " + msg.getSender().toString() + " to " + msg.getReceiver() + ", " + msg.getContent());
-				} else {
-					controlOE.add(tEvent.getTracingService() + ": " +  tEvent.getContent());
+					} else {
+						controlOE.add(tEvent.getTracingService() + ": " +  tEvent.getContent());
+					}
 				}
-			}
 			
-			if (k < 3) {
-				//Subscriber subscribing to DD_Test_TS'k' from any entity.
-				assertTrue(controlOE.contains("MESSAGE_SENT_DETAIL:SUBSCRIBE from " + subscriber.getAid() + " to " + tm.getAid() + ", DD_Test_TS" + (k+1) + "#any"));
-				assertTrue(controlOE.contains("MESSAGE_RECEIVED_DETAIL:SUBSCRIBE from " + subscriber.getAid() + " to " + tm.getAid() + ", DD_Test_TS" + (k+1) + "#any"));
-				assertTrue(controlOE.contains("MESSAGE_SENT_DETAIL:AGREE from " + tm.getAid() + " to " + subscriber.getAid() + ", subscribe#11#DD_Test_TS" + (k+1) + "#any"));
-				assertTrue(controlOE.contains("MESSAGE_RECEIVED_DETAIL:AGREE from " + tm.getAid() + " to " + subscriber.getAid() + ", subscribe#11#DD_Test_TS" + (k+1) + "#any"));
-			} else {
-				//Subscriber cancel subscription to DD_Test_TS3 from any entity.
-				assertTrue(controlOE.contains("MESSAGE_SENT_DETAIL:REQUEST from " + subscriber.getAid() + " to " + publisher.getAid() + ", unpublish#DD_Test_TS" + k));
-				assertTrue(controlOE.contains("MESSAGE_RECEIVED_DETAIL:REQUEST from " + subscriber.getAid() + " to " + publisher.getAid() + ", unpublish#DD_Test_TS" + k));
-				assertTrue(controlOE.contains("MESSAGE_SENT_DETAIL:REQUEST from " + publisher.getAid() + " to " + tm.getAid() + ", unpublish#DD_Test_TS" + k));
-				assertTrue(controlOE.contains("MESSAGE_RECEIVED_DETAIL:REQUEST from " + publisher.getAid() + " to " + tm.getAid() + ", unpublish#DD_Test_TS" + k));
-				assertTrue(controlOE.contains("MESSAGE_SENT_DETAIL:AGREE from " + tm.getAid() + " to " + publisher.getAid() + ", unpublish#DD_Test_TS" + k));
-				assertTrue(controlOE.contains("MESSAGE_RECEIVED_DETAIL:AGREE from " + tm.getAid() + " to " + publisher.getAid() + ", unpublish#DD_Test_TS" + k));
-				assertTrue(controlOE.contains("UNAVAILABLE_TS: DD_Test_TS" + k + "#any"));
-				assertTrue(controlOE.contains("UNPUBLISHED_TRACING_SERVICE: DD_Test_TS" + k));
-			}
+				if (k < 3) {
+					//Subscriber subscribing to DD_Test_TS'k' from any entity.
+					if(!controlOE.contains("MESSAGE_SENT_DETAIL:SUBSCRIBE from " + subscriber.getAid() + " to " + tm.getAid() + ", DD_Test_TS" + (k+1) + "#any")) ok = false;
+					if(!controlOE.contains("MESSAGE_RECEIVED_DETAIL:SUBSCRIBE from " + subscriber.getAid() + " to " + tm.getAid() + ", DD_Test_TS" + (k+1) + "#any")) ok = false;
+					if(!controlOE.contains("MESSAGE_SENT_DETAIL:AGREE from " + tm.getAid() + " to " + subscriber.getAid() + ", subscribe#11#DD_Test_TS" + (k+1) + "#any")) ok = false;
+					if(!controlOE.contains("MESSAGE_RECEIVED_DETAIL:AGREE from " + tm.getAid() + " to " + subscriber.getAid() + ", subscribe#11#DD_Test_TS" + (k+1) + "#any")) ok = false;
+				} else {
+					//Subscriber cancel subscription to DD_Test_TS3 from any entity.
+					if(!controlOE.contains("MESSAGE_SENT_DETAIL:REQUEST from " + subscriber.getAid() + " to " + publisher.getAid() + ", unpublish#DD_Test_TS" + k)) ok = false;
+					if(!controlOE.contains("MESSAGE_RECEIVED_DETAIL:REQUEST from " + subscriber.getAid() + " to " + publisher.getAid() + ", unpublish#DD_Test_TS" + k)) ok = false;
+					if(!controlOE.contains("MESSAGE_SENT_DETAIL:REQUEST from " + publisher.getAid() + " to " + tm.getAid() + ", unpublish#DD_Test_TS" + k)) ok = false;
+					if(!controlOE.contains("MESSAGE_RECEIVED_DETAIL:REQUEST from " + publisher.getAid() + " to " + tm.getAid() + ", unpublish#DD_Test_TS" + k)) ok = false;
+					if(!controlOE.contains("MESSAGE_SENT_DETAIL:AGREE from " + tm.getAid() + " to " + publisher.getAid() + ", unpublish#DD_Test_TS" + k)) ok = false;
+					if(!controlOE.contains("MESSAGE_RECEIVED_DETAIL:AGREE from " + tm.getAid() + " to " + publisher.getAid() + ", unpublish#DD_Test_TS" + k)) ok = false;
+					if(!controlOE.contains("UNAVAILABLE_TS: DD_Test_TS" + k + "#any")) ok = false;
+					if(!controlOE.contains("UNPUBLISHED_TRACING_SERVICE: DD_Test_TS" + k)) ok = false;
+				}
 			
-			for (int n = 1; n < 6; n++) {
-				if (k != 3 || (k == 3 && n != 3))
-					assertTrue(controlOE.contains("DD_Test_TS" + n + ": Test"));
-			}	
+				for (int n = 1; n < 6; n++) {
+					if (k != 3 || (k == 3 && n != 3))
+						if(!controlOE.contains("DD_Test_TS" + n + ": Test")) ok = false;
+				}	
+			} while(!ok);
 		}
 		
 		//Coordinator agent request Publisher stop to send events and finalize its execution.
 		observer.clearEvents();
 		Coordinator.contExec.release();
 		
-		while (observer.getEvents().size() < 3) {
-			try {
-				Thread.sleep(1 * 50);
-			} catch (InterruptedException e) {
-				fail(e.getMessage());
-			}
-		}
+		do {
+			ok = true;
+
+			oEvents = observer.getEvents();
+			controlOE.clear();
 		
-		oEvents = observer.getEvents();
-		controlOE.clear();
-		
-		for (i = 0; i < 3; i++) {
+			for (i = 0; i < oEvents.size(); i++) {
 			
-			tEvent = oEvents.get(i);
+				tEvent = oEvents.get(i);
 			
-			if (tEvent.getTracingService().contentEquals("MESSAGE_SENT_DETAIL") ||
-				tEvent.getTracingService().contentEquals("MESSAGE_RECEIVED_DETAIL")) {
+				if (tEvent.getTracingService().contentEquals("MESSAGE_SENT_DETAIL") ||
+						tEvent.getTracingService().contentEquals("MESSAGE_RECEIVED_DETAIL")) {
 					msg = ACLMessage.fromString(tEvent.getContent());
 					controlOE.add(tEvent.getTracingService() + ":" + msg.getPerformative() + " from " + msg.getSender().toString() + " to " + msg.getReceiver() + ", " + msg.getContent());
-			} else {
-				controlOE.add(tEvent.getTracingService() + ": " +  tEvent.getContent());
+				} else {
+					controlOE.add(tEvent.getTracingService() + ": " +  tEvent.getContent());
+				}
 			}
-		}
 		
-		assertTrue(controlOE.contains("MESSAGE_SENT_DETAIL:REQUEST from " + coordinator.getAid() + " to " + publisher.getAid() + ", STOP"));
-		assertTrue(controlOE.contains("MESSAGE_RECEIVED_DETAIL:REQUEST from " + coordinator.getAid() + " to " + publisher.getAid() + ", STOP"));
-		assertTrue(controlOE.contains("AGENT_DESTROYED: " + coordinator.getAid()));
+			if(!controlOE.contains("MESSAGE_SENT_DETAIL:REQUEST from " + coordinator.getAid() + " to " + publisher.getAid() + ", STOP")) ok = false;
+			if(!controlOE.contains("MESSAGE_RECEIVED_DETAIL:REQUEST from " + coordinator.getAid() + " to " + publisher.getAid() + ", STOP")) ok = false;
+			if(!controlOE.contains("AGENT_DESTROYED: " + coordinator.getAid())) ok = false;
 
+		} while(!ok);
 		
 		//Subscriber cancels the subscription to DD_Test_TS1 and DD_Test_TS2.
 		//Then, Subscriber finalize.
 		observer.clearEvents();
 		Subscriber.contExec.release();
 		
-		while (observer.getEvents().size() < 9) {
-			try {
-				Thread.sleep(1 * 50);
-			} catch (InterruptedException e) {
-				fail(e.getMessage());
-			}
-		}
+		do {
+			ok = true;
 		
-		oEvents = observer.getEvents();
-		controlOE.clear();
+			oEvents = observer.getEvents();
+			controlOE.clear();
 		
-		for (i = 0; i < 9; i++) {
+			for (i = 0; i < oEvents.size(); i++) {
 			
-			tEvent = oEvents.get(i);
+				tEvent = oEvents.get(i);
 			
-			if (tEvent.getTracingService().contentEquals("MESSAGE_SENT_DETAIL") ||
-				tEvent.getTracingService().contentEquals("MESSAGE_RECEIVED_DETAIL")) {
+				if (tEvent.getTracingService().contentEquals("MESSAGE_SENT_DETAIL") ||
+						tEvent.getTracingService().contentEquals("MESSAGE_RECEIVED_DETAIL")) {
 					msg = ACLMessage.fromString(tEvent.getContent());
 					controlOE.add(tEvent.getTracingService() + ":" + msg.getPerformative() + " from " + msg.getSender().toString() + " to " + msg.getReceiver() + ", " + msg.getContent());
-			} else {
-				controlOE.add(tEvent.getTracingService() + ": " +  tEvent.getContent());
+				} else {
+					controlOE.add(tEvent.getTracingService() + ": " +  tEvent.getContent());
+				}
 			}
-		}
 	
-		for (int n = 1; n < 3; n++) {
-			//Subscriber cancel subscription to DD_Test_TS'n' from any entity.
-			assertTrue(controlOE.contains("MESSAGE_SENT_DETAIL:CANCEL from " + subscriber.getAid() + " to " + tm.getAid() + ", DD_Test_TS" + n + "#any"));
-			assertTrue(controlOE.contains("MESSAGE_RECEIVED_DETAIL:CANCEL from " + subscriber.getAid() + " to " + tm.getAid() + ", DD_Test_TS" + n + "#any"));
-			assertTrue(controlOE.contains("MESSAGE_SENT_DETAIL:AGREE from " + tm.getAid() + " to " + subscriber.getAid() + ", unsubscribe#11#DD_Test_TS" + n + "#any"));
-			assertTrue(controlOE.contains("MESSAGE_RECEIVED_DETAIL:AGREE from " + tm.getAid() + " to " + subscriber.getAid() + ", unsubscribe#11#DD_Test_TS" + n + "#any"));
-		}		
+			for (int n = 1; n < 3; n++) {
+				//Subscriber cancel subscription to DD_Test_TS'n' from any entity.
+				if(!controlOE.contains("MESSAGE_SENT_DETAIL:CANCEL from " + subscriber.getAid() + " to " + tm.getAid() + ", DD_Test_TS" + n + "#any")) ok = false;
+				if(!controlOE.contains("MESSAGE_RECEIVED_DETAIL:CANCEL from " + subscriber.getAid() + " to " + tm.getAid() + ", DD_Test_TS" + n + "#any")) ok = false;
+				if(!controlOE.contains("MESSAGE_SENT_DETAIL:AGREE from " + tm.getAid() + " to " + subscriber.getAid() + ", unsubscribe#11#DD_Test_TS" + n + "#any")) ok = false;
+				if(!controlOE.contains("MESSAGE_RECEIVED_DETAIL:AGREE from " + tm.getAid() + " to " + subscriber.getAid() + ", unsubscribe#11#DD_Test_TS" + n + "#any")) ok = false;
+			}		
 		
-		assertTrue(controlOE.contains("AGENT_DESTROYED: " + subscriber.getAid()));
+			if(!controlOE.contains("AGENT_DESTROYED: " + subscriber.getAid())) ok = false;
+			
+		} while(!ok);
 		
 		//Publisher cancels the publications to DD_Test_TS1, DD_Test_TS2, DD_Test_TS3, DD_Test_TS4 and DD_Test_TS5.
 		//Then, Publisher finalize.
 		observer.clearEvents();
 		Publisher.contExec.release();
 				
-		while (observer.getEvents().size() < 29) {
-			try {
-				Thread.sleep(1 * 50);
-			} catch (InterruptedException e) {
-				fail(e.getMessage());
-			}
-		}
+		do {
+			ok = true;
 		
-		oEvents = observer.getEvents();
-		controlOE.clear();
+			oEvents = observer.getEvents();
+			controlOE.clear();
 		
-		for (i = 0; i < 29; i++) {
+			for (i = 0; i < oEvents.size(); i++) {
 			
-			tEvent = oEvents.get(i);
+				tEvent = oEvents.get(i);
 			
-			if (tEvent.getTracingService().contentEquals("MESSAGE_SENT_DETAIL") ||
-				tEvent.getTracingService().contentEquals("MESSAGE_RECEIVED_DETAIL")) {
+				if (tEvent.getTracingService().contentEquals("MESSAGE_SENT_DETAIL") ||
+						tEvent.getTracingService().contentEquals("MESSAGE_RECEIVED_DETAIL")) {
 					msg = ACLMessage.fromString(tEvent.getContent());
 					controlOE.add(tEvent.getTracingService() + ":" + msg.getPerformative() + " from " + msg.getSender().toString() + " to " + msg.getReceiver() + ", " + msg.getContent());
-			} else {
-				controlOE.add(tEvent.getTracingService() + ": " +  tEvent.getContent());
+				} else {
+					controlOE.add(tEvent.getTracingService() + ": " +  tEvent.getContent());
+				}
 			}
-		}
 		
-		for (int n = 1; n < 6; n++) {
-			//Publisher cancel publications to DD_Test_TS'n' from any entity.
-			assertTrue(controlOE.contains("MESSAGE_SENT_DETAIL:REQUEST from " + publisher.getAid() + " to " + tm.getAid() + ", unpublish#DD_Test_TS" + n));
-			assertTrue(controlOE.contains("MESSAGE_RECEIVED_DETAIL:REQUEST from " + publisher.getAid() + " to " + tm.getAid() + ", unpublish#DD_Test_TS" + n));
-			if (n != 3) {
-				assertTrue(controlOE.contains("MESSAGE_SENT_DETAIL:AGREE from " + tm.getAid() + " to " + publisher.getAid() + ", unpublish#DD_Test_TS" + n));
-				assertTrue(controlOE.contains("MESSAGE_RECEIVED_DETAIL:AGREE from " + tm.getAid() + " to " + publisher.getAid() + ", unpublish#DD_Test_TS" + n));
-				assertTrue(controlOE.contains("UNAVAILABLE_TS: DD_Test_TS" + n + "#any"));
-				assertTrue(controlOE.contains("UNPUBLISHED_TRACING_SERVICE: DD_Test_TS" + n));
-			} else {
-				assertTrue(controlOE.contains("MESSAGE_SENT_DETAIL:REFUSE from " + tm.getAid() + " to " + publisher.getAid() + ", unpublish#11#DD_Test_TS33"));
-				assertTrue(controlOE.contains("MESSAGE_RECEIVED_DETAIL:REFUSE from " + tm.getAid() + " to " + publisher.getAid() + ", unpublish#11#DD_Test_TS33"));
+			for (int n = 1; n < 6; n++) {
+				//Publisher cancel publications to DD_Test_TS'n' from any entity.
+				if(!controlOE.contains("MESSAGE_SENT_DETAIL:REQUEST from " + publisher.getAid() + " to " + tm.getAid() + ", unpublish#DD_Test_TS" + n)) ok = false;
+				if(!controlOE.contains("MESSAGE_RECEIVED_DETAIL:REQUEST from " + publisher.getAid() + " to " + tm.getAid() + ", unpublish#DD_Test_TS" + n)) ok = false;
+				if (n != 3) {
+					if(!controlOE.contains("MESSAGE_SENT_DETAIL:AGREE from " + tm.getAid() + " to " + publisher.getAid() + ", unpublish#DD_Test_TS" + n)) ok = false;
+					if(!controlOE.contains("MESSAGE_RECEIVED_DETAIL:AGREE from " + tm.getAid() + " to " + publisher.getAid() + ", unpublish#DD_Test_TS" + n)) ok = false;
+					if(!controlOE.contains("UNAVAILABLE_TS: DD_Test_TS" + n + "#any")) ok = false;
+					if(!controlOE.contains("UNPUBLISHED_TRACING_SERVICE: DD_Test_TS" + n)) ok = false;
+				} else {
+					if(!controlOE.contains("MESSAGE_SENT_DETAIL:REFUSE from " + tm.getAid() + " to " + publisher.getAid() + ", unpublish#11#DD_Test_TS33")) ok = false;
+					if(!controlOE.contains("MESSAGE_RECEIVED_DETAIL:REFUSE from " + tm.getAid() + " to " + publisher.getAid() + ", unpublish#11#DD_Test_TS33")) ok = false;
+				}
 			}
-		}
 		
-		assertTrue(controlOE.contains("AGENT_DESTROYED: " + publisher.getAid()));
+			if(!controlOE.contains("AGENT_DESTROYED: " + publisher.getAid())) ok = false;
+			
+		} while(!ok);
 		//---------------------------------------------------------------------------------------------------------------------------------//
 
 		//Observer finalize.

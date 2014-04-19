@@ -1,6 +1,5 @@
 package TestTrace.TestTrace3;
 
-import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.Semaphore;
 import java.lang.System;

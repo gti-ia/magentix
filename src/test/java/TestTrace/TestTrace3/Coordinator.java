@@ -15,15 +15,14 @@ import es.upv.dsic.gti_ia.core.BaseAgent;
 public class Coordinator extends BaseAgent {
 
 	static Semaphore contExec;
-	private AgentID publisherAid, observerAid;
+	private AgentID publisherAid;
 	private ACLMessage coordination_msg;
 	
-	public Coordinator(AgentID aid, AgentID publisherAid, AgentID observerAid) throws Exception {
+	public Coordinator(AgentID aid, AgentID publisherAid) throws Exception {
 		
 		super(aid);
 		contExec = new Semaphore(0);
 		this.publisherAid = publisherAid;
-		this.observerAid = observerAid;
 	
 	}
 

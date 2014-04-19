@@ -1165,31 +1165,6 @@ public class TestACLMessage extends TestCase {
 		ACLMessage msgFrom = ACLMessage.fromString(msgString);
 		msgFrom.setReplyByDate(msg.getReplyByDate());
 
-		/*
-		 * System.out.println(msgString);
-		 * System.out.println(msgFrom.toString());
-		 * 
-		 * System.out.println("MSG"); System.out.println(msg.getSender());
-		 * System.out.println(msg.getReceiver());
-		 * System.out.println(msg.getReplyTo());
-		 * System.out.println(msg.getContent());
-		 * System.out.println(msg.getEncoding());
-		 * System.out.println(msg.getOntology());
-		 * System.out.println(msg.getProtocol());
-		 * System.out.println(msg.getConversationId());
-		 * System.out.println(msg.getHeaders());
-		 * 
-		 * System.out.println("MSG2"); System.out.println(msgFrom.getSender());
-		 * System.out.println(msgFrom.getReceiver());
-		 * System.out.println(msgFrom.getReplyTo());
-		 * System.out.println(msgFrom.getContent());
-		 * System.out.println(msgFrom.getEncoding());
-		 * System.out.println(msgFrom.getOntology());
-		 * System.out.println(msgFrom.getProtocol());
-		 * System.out.println(msgFrom.getConversationId());
-		 * System.out.println(msgFrom.getHeaders());
-		 */
-
 		assertEquals(msgString, msgFrom.toString());
 		assertTrue(msg.equals(msgFrom));
 	}
