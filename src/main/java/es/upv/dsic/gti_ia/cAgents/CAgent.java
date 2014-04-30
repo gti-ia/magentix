@@ -346,10 +346,9 @@ public abstract class CAgent extends BaseAgent {
 					logger.info("Wake up after Welcome factory initialization, agent: "
 							+ myProcessor.getMyAgent().getName());
 				}
-				
-				me.execution(myProcessor, receivedMessage);
+
 				me.unlock();
-				
+				me.execution(myProcessor, receivedMessage);
 				return "WAIT2";
 			}
 		}
