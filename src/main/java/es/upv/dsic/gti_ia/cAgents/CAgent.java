@@ -337,15 +337,19 @@ public abstract class CAgent extends BaseAgent {
 			public String run(CProcessor myProcessor, ACLMessage receivedMessage) {
 				// myProcessor.getInternalData().put("AGENT_END_MSG",
 				// receivedMessage);
+
 				me.lock();
+
 				if (!ready) {
 					ready = true;
 					iAmReady.signal();
-					logger.info("Wake up after Welcome factory initialization"
+					logger.info("Wake up after Welcome factory initialization, agent: "
 							+ myProcessor.getMyAgent().getName());
 				}
-				me.unlock();
+				
 				me.execution(myProcessor, receivedMessage);
+				me.unlock();
+				
 				return "WAIT2";
 			}
 		}
@@ -715,9 +719,9 @@ public abstract class CAgent extends BaseAgent {
 	 */
 	protected void removeProcessor(String conversationID) {
 		this.lock();
-		
+
 		processors.remove(conversationID);
-		
+
 		if (inShutdown) {
 			if (processors.size() == 1) {
 				this.notifyLastProcessorRemoved();
