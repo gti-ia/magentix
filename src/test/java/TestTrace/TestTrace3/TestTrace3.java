@@ -153,7 +153,7 @@ public class TestTrace3 {
 						tEvent.getTracingService().contentEquals("UNSUBSCRIBE") || tEvent.getTracingService().contentEquals("NEW_AGENT") ||
 						tEvent.getTracingService().contentEquals("PUBLISHED_TRACING_SERVICE") || tEvent.getTracingService().contentEquals("UNPUBLISHED_TRACING_SERVICE") ||
 						tEvent.getTracingService().contentEquals("UNAVAILABLE_TS")) {
-					controlOE.add(tEvent.getTracingService() + ": " + ((j-1 < TracingService.MAX_DI_TS) ? tEvent.getContent().substring(0, tEvent.getContent().indexOf('#')) : tEvent.getContent()));
+					controlOE.add(tEvent.getTracingService() + ": " + tEvent.getContent());
 				}
 				if(i < oMessages.size()) {
 					msg = oMessages.get(i++);
@@ -163,7 +163,7 @@ public class TestTrace3 {
 		
 			//Check that Observer is subscribe to all services.
 			for (TracingService service : TracingService.DI_TracingServices)
-				if(!controlOE.contains("SUBSCRIBE: " + service.getName())) ok = false;
+				if(!controlOE.contains("SUBSCRIBE: " + service.getName() + "#" + service.getDescription().length() + " " + service.getDescription() + "#any")) ok = false;
 			if(!controlOM.contains("Msg from " + tm.getAid() + ": AGREE subscribe#3#all")) ok = false;
 		
 			//Check that Observer cancel subscription to MESSAGE_SENT and MESSAGE_RECEIVED tracing service.
