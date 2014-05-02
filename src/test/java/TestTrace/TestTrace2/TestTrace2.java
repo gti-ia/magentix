@@ -102,6 +102,7 @@ public class TestTrace2 {
 		System.out.println("\nEXECUTIZING...");
 		
 		int i = 0, j = 0;
+		boolean ok;
 		ArrayList<ACLMessage> pMessages;
 		ArrayList<String> controlPM = new ArrayList<String>();
 		//Save the Trace Events for each subscriber that is subscribed.
@@ -115,23 +116,28 @@ public class TestTrace2 {
 			fail(e.getMessage());
 		}
 		
-		//Check that Publisher[nP] has received the message for <DD_Test_TS_1> and <DD_Test_TS_2> publication in its initialization.
-		for (int nP = 0; nP < N_PUBLISHERS; nP++) {
+		do
+		{
+			ok = true;
 			
-			i = 0;
-			pMessages = publishers[nP].getMessages();
+			//Check that Publisher[nP] has received the message for <DD_Test_TS_1> and <DD_Test_TS_2> publication in its initialization.
+			for (int nP = 0; nP < N_PUBLISHERS; nP++) {
+			
+				i = 0;
+				pMessages = publishers[nP].getMessages();
 				
-			while (i < pMessages.size()) {
-				msg = pMessages.get(i++);
-				controlPM.add("Received from " + msg.getSender().toString() + ": " + msg.getPerformative() + " " + msg.getContent());
+				while (i < pMessages.size()) {
+					msg = pMessages.get(i++);
+					controlPM.add("Received from " + msg.getSender().toString() + ": " + msg.getPerformative() + " " + msg.getContent());
+				}
+				
+				if(!controlPM.contains("Received from "+ tm.getAid() +": AGREE publish#"+ publishers[nP].getName() +"<DD_Test_TS_1>")) ok = false;
+				if(!controlPM.contains("Received from "+ tm.getAid() +": AGREE publish#"+ publishers[nP].getName() +"<DD_Test_TS_2>")) ok = false;
+			
+				controlPM.clear();
 			}
-				
-			assertTrue(controlPM.contains("Received from "+ tm.getAid() +": AGREE publish#"+ publishers[nP].getName() +"<DD_Test_TS_1>"));
-			assertTrue(controlPM.contains("Received from "+ tm.getAid() +": AGREE publish#"+ publishers[nP].getName() +"<DD_Test_TS_2>"));
-			assertEquals(controlPM.size(), 2);
 			
-			controlPM.clear();
-		}
+		} while(!ok);
 		
 		ArrayList<ACLMessage> sMessages;
 		ArrayList<TraceEvent> sEvents;
@@ -139,34 +145,47 @@ public class TestTrace2 {
 		ArrayList<String> controlSE = new ArrayList<String>();
 		TraceEvent tEvent;
 		
-		//Check that Subscriber[nS] has received the message for its subscriptions in its initialization.
-		for (int nS = 0; nS < N_SUBSCRIBERS; nS++) {
+		do
+		{
+			ok = true;
 			
-			j = 0;
-			sMessages = subscribers[nS].getMessages();
-			sEvents = subscribers[nS].getEvents();
+			//Check that Subscriber[nS] has received the message for its subscriptions in its initialization.
+			for (int nS = 0; nS < N_SUBSCRIBERS; nS++) {
+			
+				j = 0;
+				sMessages = subscribers[nS].getMessages();
+				sEvents = subscribers[nS].getEvents();
 						
-			while (j < sMessages.size()) {
-				msg = sMessages.get(j);
-				tEvent = sEvents.get(j);
-				//We can not know which events have subscribed because it was random
-				controlSM.add("Received from " + msg.getSender().toString() + ": " + msg.getPerformative()/* + " " + msg.getContent()*/);
-				controlSE.add(tEvent.getTracingService()/*+ ": " + tEvent.getContent()*/);
-				tE[nS][j++] = tEvent.getContent().substring(0, tEvent.getContent().indexOf('#'));
-			}
+				while (j < sMessages.size()) {
+					msg = sMessages.get(j);
+					tEvent = sEvents.get(j);
+					//We can not know which events have subscribed because it was random
+					controlSM.add("Received from " + msg.getSender().toString() + ": " + msg.getPerformative()/* + " " + msg.getContent()*/);
+					controlSE.add(tEvent.getTracingService()/*+ ": " + tEvent.getContent()*/);
+					tE[nS][j++] = tEvent.getContent().substring(0, tEvent.getContent().indexOf('#'));
+				}
 				
-			assertEquals(Collections.frequency(controlSM, "Received from "+ tm.getAid() +": AGREE"), 2);
-			assertEquals(Collections.frequency(controlSE, "SUBSCRIBE"), 2);
-			assertEquals(controlSM.size(), 2);
-			assertEquals(controlSE.size(), 2);
+				if(Collections.frequency(controlSM, "Received from "+ tm.getAid() +": AGREE") != 2) ok = false;
+				if(Collections.frequency(controlSE, "SUBSCRIBE") != 2) ok = false;
 			
-			controlSM.clear();
-			controlSE.clear();
+				controlSM.clear();
+				controlSE.clear();
+			}
+			
+		} while(!ok);
+		
+		for (int nS = 0; nS < N_SUBSCRIBERS; nS++)
+		{
+			subscribers[nS].clearEvents();
+			subscribers[nS].clearMessages();
 		}
 		
-		
 		for (int nP = 0; nP < N_PUBLISHERS; nP++)
+		{
+			publishers[nP].clearEvents();
+			publishers[nP].clearMessages();
 			publishers[nP].contExec.release();
+		}
 		
 		try {
 			//Wait to Publisher generate all Trace Events.
@@ -175,67 +194,69 @@ public class TestTrace2 {
 			fail(e.getMessage());
 		}
 		
-		int jAux = j;
+		//int jAux = j;
 		
-		//Check that Subscriber[nS] has received all events.
-		for (int nS = 0; nS < N_SUBSCRIBERS; nS++) {
+		do
+		{
+			ok = true;
 			
-			j = jAux;
-			sEvents = subscribers[nS].getEvents();
-				
-			while (j < sEvents.size()) {
-				tEvent = sEvents.get(j++);
-				controlSE.add(tEvent.getTracingService() + ": " + tEvent.getContent());
-			}
-				
-			for (int k=1; k <= 10; k++) {
-				assertTrue(controlSE.contains(tE[nS][0] +": "+ tE[nS][0] +" "+ k +" of 10"));
-				assertTrue(controlSE.contains(tE[nS][1] +": "+ tE[nS][1] +" "+ k +" of 10"));
-			}
-			assertEquals(controlSE.size(), 20);
+			//Check that Subscriber[nS] has received all events.
+			for (int nS = 0; nS < N_SUBSCRIBERS; nS++) {
 			
-			controlSE.clear();
-		}
-		
+				j = 0;
+				sEvents = subscribers[nS].getEvents();
+				
+				while (j < sEvents.size()) {
+					tEvent = sEvents.get(j++);
+					controlSE.add(tEvent.getTracingService() + ": " + tEvent.getContent());
+				}
+				
+				for (int k=1; k <= 10; k++) {
+					if(!controlSE.contains(tE[nS][0] +": "+ tE[nS][0] +" "+ k +" of 10")) ok = false;
+					if(!controlSE.contains(tE[nS][1] +": "+ tE[nS][1] +" "+ k +" of 10")) ok = false;
+				}
+			
+				controlSE.clear();
+			}
+			
+		} while(!ok);
 
 		for (int nS = 0; nS < N_SUBSCRIBERS; nS++)
+		{
+			subscribers[nS].clearEvents();
 			subscribers[nS].contExec.release();
-		
-		jAux = j;
-		
-		//Check that Subscriber[nS] has cancel its subscriptions.
-		for (int nS = 0; nS < N_SUBSCRIBERS; nS++) {
-			
-			j = jAux;
-			
-			while(subscribers[nS].getEvents().size() <= j+1 || subscribers[nS].getMessages().size() <= j-20){
-				try {
-					Thread.sleep(1 * 50);
-				} catch (InterruptedException e) {
-					fail(e.getMessage());
-				}
-			}
-			
-			sMessages = subscribers[nS].getMessages();
-			sEvents = subscribers[nS].getEvents();
-				
-			while(j < sEvents.size()){
-				msg = sMessages.get(j-20);
-				tEvent = sEvents.get(j++);
-				controlSM.add("Received from " + msg.getSender().toString() + ": " + msg.getPerformative() + " " + msg.getContent());
-				controlSE.add(tEvent.getTracingService() + ": " + tEvent.getContent());
-			}
-				
-			assertTrue(controlSM.contains("Received from "+ tm.getAid() +": AGREE unsubscribe#"+ tE[nS][0].length() +"#"+ tE[nS][0] +"#any"));
-			assertTrue(controlSM.contains("Received from "+ tm.getAid() +": AGREE unsubscribe#"+ tE[nS][1].length() +"#"+ tE[nS][1] +"#any"));
-			assertTrue(controlSE.contains("UNSUBSCRIBE: "+ tE[nS][0] +"#any"));
-			assertTrue(controlSE.contains("UNSUBSCRIBE: "+ tE[nS][1] +"#any"));
-			assertEquals(controlSM.size(), 2);
-			assertEquals(controlSE.size(), 2);
-			
-			controlSM.clear();
-			controlSE.clear();
 		}
+		//jAux = j;
+		
+		do
+		{
+			ok = true;
+			
+			//Check that Subscriber[nS] has cancel its subscriptions.
+			for (int nS = 0; nS < N_SUBSCRIBERS; nS++) {
+			
+				j = 0;
+			
+				sMessages = subscribers[nS].getMessages();
+				sEvents = subscribers[nS].getEvents();
+				
+				while(j < sEvents.size() && j < sMessages.size()){
+					msg = sMessages.get(j);
+					tEvent = sEvents.get(j++);
+					controlSM.add("Received from " + msg.getSender().toString() + ": " + msg.getPerformative() + " " + msg.getContent());
+					controlSE.add(tEvent.getTracingService() + ": " + tEvent.getContent());
+				}
+				
+				if(!controlSM.contains("Received from "+ tm.getAid() +": AGREE unsubscribe#"+ tE[nS][0].length() +"#"+ tE[nS][0] +"#any")) ok = false;
+				if(!controlSM.contains("Received from "+ tm.getAid() +": AGREE unsubscribe#"+ tE[nS][1].length() +"#"+ tE[nS][1] +"#any")) ok = false;
+				if(!controlSE.contains("UNSUBSCRIBE: "+ tE[nS][0] +"#any")) ok = false;
+				if(!controlSE.contains("UNSUBSCRIBE: "+ tE[nS][1] +"#any")) ok = false;
+			
+				controlSM.clear();
+				controlSE.clear();
+			}
+			
+		} while(!ok);
 		
 		//Check that Publisher[nP] has cancel its publications.
 		for (int nP = 0; nP < N_PUBLISHERS; nP++)
@@ -248,33 +269,28 @@ public class TestTrace2 {
 			fail(e.getMessage());
 		}
 		
-		int iAux = i;
-		
-		for (int nP = 0; nP < N_PUBLISHERS; nP++) {
+		do
+		{
+			ok = true;
 			
-			i = iAux;
+			for (int nP = 0; nP < N_PUBLISHERS; nP++) {
 			
-			while (publishers[nP].getMessages().size() <= i+1) {
-				try {
-					Thread.sleep(1 * 50);
-				} catch (InterruptedException e) {
-					fail(e.getMessage());
+				i = 0;
+			
+				pMessages = publishers[nP].getMessages();
+				
+				while (i < pMessages.size()) {
+					msg = pMessages.get(i++);
+					controlPM.add("Received from " + msg.getSender().toString() + ": " + msg.getPerformative() + " " + msg.getContent());
 				}
-			}
 				
-			pMessages = publishers[nP].getMessages();
+				if(!controlPM.contains("Received from "+ tm.getAid() +": AGREE unpublish#"+ publishers[nP].getName() +"<DD_Test_TS_1>")) ok = false;
+				if(!controlPM.contains("Received from "+ tm.getAid() +": AGREE unpublish#"+ publishers[nP].getName() +"<DD_Test_TS_2>")) ok = false;
 				
-			while (i < pMessages.size()) {
-				msg = pMessages.get(i++);
-				controlPM.add("Received from " + msg.getSender().toString() + ": " + msg.getPerformative() + " " + msg.getContent());
+				controlPM.clear();
 			}
 			
-			assertTrue(controlPM.contains("Received from "+ tm.getAid() +": AGREE unpublish#"+ publishers[nP].getName() +"<DD_Test_TS_1>"));
-			assertTrue(controlPM.contains("Received from "+ tm.getAid() +": AGREE unpublish#"+ publishers[nP].getName() +"<DD_Test_TS_2>"));
-			assertEquals(controlPM.size(), 2);
-			
-			controlPM.clear();
-		}
+		} while(!ok);
 		
 		//END
 	}

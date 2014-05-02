@@ -137,7 +137,15 @@ public class Subscriber extends BaseAgent{
 		return this.messages;
 	}
 	
+	public void clearMessages() {
+		this.messages.clear();
+	}
+	
 	public ArrayList<TraceEvent> getEvents() {
 		return this.events;
+	}
+	
+	public void clearEvents() {
+		this.events.clear();
 	}
 }
