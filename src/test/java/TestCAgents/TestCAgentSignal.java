@@ -31,7 +31,11 @@ public class TestCAgentSignal {
 	HarrySignalTestClass Harry;
 	SallySignalTestClass Sally;
 	Process qpid_broker;
+
+	CountDownLatch ready = new CountDownLatch(2);
+	
 	CountDownLatch finished = new CountDownLatch(2);
+	
 	Logger logger = Logger.getLogger(TestCAgentSignal.class);
 
 	@Before
@@ -54,8 +58,8 @@ public class TestCAgentSignal {
 			/**
 			 * Instantiating the CAgents
 			 */
-			Harry = new HarrySignalTestClass(new AgentID("Harry"), finished);
-			Sally = new SallySignalTestClass(new AgentID("Sally"), finished);
+			Harry = new HarrySignalTestClass(new AgentID("Harry"), finished, ready);
+			Sally = new SallySignalTestClass(new AgentID("Sally"), finished, ready);
 
 		} catch (Exception e) {
 			e.printStackTrace();
