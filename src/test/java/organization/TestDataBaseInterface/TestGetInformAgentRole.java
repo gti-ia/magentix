@@ -3,10 +3,12 @@ package organization.TestDataBaseInterface;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collection;
 
 import org.junit.*;
 
 import organization.TestDataBaseInterface.DatabaseAccess;
+import edu.emory.mathcs.backport.java.util.Arrays;
 import es.upv.dsic.gti_ia.organization.DataBaseInterface;
 import junit.framework.TestCase;
 
@@ -150,8 +152,11 @@ public class TestGetInformAgentRole extends TestCase {
 			parameters[1] = agentName2;
 		    
 		    ArrayList<ArrayList<String>> result = (ArrayList<ArrayList<String>>) m.invoke(dbI, parameters);
-			assertEquals("The message should be:", "[["+ eRoleMember +", "+ eUnit +"], ["+ eRoleMember2 +", "+ eUnit2 +"], ["+ eRoleCreator +", "+ eUnit +"], ["+ eRoleCreator2 +", "+ eUnit2 +"]]", result.toString());
-
+		    assertTrue(result.contains(new ArrayList<String>(){{ add("exampleRoleMember"); add("exampleUnitTeam"); }}));
+		    assertTrue(result.contains(new ArrayList<String>(){{ add("exampleRoleMember2"); add("exampleUnitFlat"); }}));
+		    assertTrue(result.contains(new ArrayList<String>(){{ add("exampleRoleCreator"); add("exampleUnitTeam"); }}));
+		    assertTrue(result.contains(new ArrayList<String>(){{ add("exampleRoleCreator2"); add("exampleUnitFlat"); }}));
+		    
 		} catch(InvocationTargetException e) {
 			
 			fail(e.getTargetException().getMessage());
@@ -238,8 +243,9 @@ public class TestGetInformAgentRole extends TestCase {
 			parameters[1] = agentName2;
 		    
 		    ArrayList<ArrayList<String>> result = (ArrayList<ArrayList<String>>) m.invoke(dbI, parameters);
-			assertEquals("The message should be:", "[["+ eRoleMember +", "+ eUnit +"], ["+ eRoleMember2 +", "+ eUnit2 +"]]", result.toString());
-
+		    assertTrue(result.contains(new ArrayList<String>(){{ add("exampleRoleMember"); add("exampleUnitTeam"); }}));
+		    assertTrue(result.contains(new ArrayList<String>(){{ add("exampleRoleMember2"); add("exampleUnitFlat"); }}));
+		    
 		} catch(InvocationTargetException e) {
 			
 			fail(e.getTargetException().getMessage());
@@ -332,8 +338,9 @@ public class TestGetInformAgentRole extends TestCase {
 			parameters[1] = agentName2;
 		    
 		    ArrayList<ArrayList<String>> result = (ArrayList<ArrayList<String>>) m.invoke(dbI, parameters);
-			assertEquals("The message should be:", "[["+ eRoleMember +", "+ eUnit +"], ["+ eRoleMember2 +", "+ eUnit2 +"]]", result.toString());
-
+		    assertTrue(result.contains(new ArrayList<String>(){{ add("exampleRoleMember"); add("exampleUnitTeam"); }}));
+		    assertTrue(result.contains(new ArrayList<String>(){{ add("exampleRoleMember2"); add("exampleUnitFlat"); }}));
+		    
 		} catch(InvocationTargetException e) {
 			
 			fail(e.getTargetException().getMessage());
@@ -420,8 +427,9 @@ public class TestGetInformAgentRole extends TestCase {
 			parameters[1] = agentName2;
 		    
 		    ArrayList<ArrayList<String>> result = (ArrayList<ArrayList<String>>) m.invoke(dbI, parameters);
-			assertEquals("The message should be:", "[["+ eRoleCreator +", "+ eUnit +"], ["+ eRoleCreator2 +", "+ eUnit2 +"]]", result.toString());
-
+		    assertTrue(result.contains(new ArrayList<String>(){{ add("exampleRoleCreator"); add("exampleUnitTeam"); }}));
+		    assertTrue(result.contains(new ArrayList<String>(){{ add("exampleRoleCreator2"); add("exampleUnitFlat"); }}));
+		    
 		} catch(InvocationTargetException e) {
 			
 			fail(e.getTargetException().getMessage());
