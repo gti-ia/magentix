@@ -76,7 +76,7 @@ DOMConfigurator.configure("configuration/loggin.xml");
 Logger logger = Logger.getLogger(Run.class);
 \end{lstlisting}
  
-The file logging.xml \footnote{This file is located in directory bin/configuration of the Magentix2 installation.} is used to specify what level of log messages are written to the log files for each component. Moreover, Log4j allows logging requests to print to multiple destinations called appenders. 
+The file logging.xml \footnote{This file is located in the \texttt{configuration/} directory of the Magentix2 installation.} is used to specify what level of log messages are written to the log files for each component. Moreover, Log4j allows logging requests to print to multiple destinations called appenders. 
 
 
 Two appenders predefined for Magentix2 are showed in \ref{fig:Appender1} and \ref{fig:Appender2} figures. Specifically, the appender 1 (figure \ref{fig:Appender1}) indicates a file as the standard output. The appender 2 (figure \ref{fig:Appender2}) indicates the console as the standard output. Please, to learn more about appenders refer to: \url{http://logging.apache.org/log4j/1.2/index.html}
@@ -134,7 +134,7 @@ There are three different ways to establish a connection to the Qpid broker  usi
  
 
 \begin{itemize}
-\item Calling \lstinline|connect()| without parameters. In this case the parameters are gathered from the Settings.xml \footnote{This file is located in the directory bin/configuration of the Magentix2 installation.} file. For example:\\ 
+\item Calling \lstinline|connect()| without parameters. In this case the parameters are gathered from the Settings.xml \footnote{This file is located in the \texttt{configuration/} directory of the Magentix2 installation.} file. For example:\\ 
 \begin{center}
  \lstinline|AgentsConnection.connect();|
 \end{center}
@@ -289,8 +289,8 @@ An external agent is any agent not running over Magentix2  platform but communic
 %$ sh Launch-MagentixAgents.sh
 %\end{verbatim}
 
-It should be notice that the \textit{BridgeAgentInOut} and the \textit{BridgeAgentOutIn} agents must be launched and instantiate to allow external communication. This is made together with the rest of platform services and platforms agents by means of the \textit{Start-Magentix.sh} command (explained in section \ref{sec:InstallMagentix2DistDirectory}. %los agentes se lanzarán en localhost, y el agente pasarela OutIn escuchará por el puerto 8081 
-Thus, the \textit{BridgeAgentInOut} and the \textit{BridgeAgentOutIn} agents would be launched at localhost, and the agent \textit{BridgeAgentOutIn} would be listening in the 8081 port. For other configurations, please refer to section \ref{sec:AdminRunningBridgeAgents}
+Notice that the \textit{BridgeAgentInOut} and the \textit{BridgeAgentOutIn} agents must be launched and instantiated to allow external communication. This is made together with the rest of platform services and platforms agents by means of the \textit{Start-Magentix.sh} command (explained in section \ref{sec:InstallMagentix2DistDirectory}). %los agentes se lanzarán en localhost, y el agente pasarela OutIn escuchará por el puerto 8081 
+Thus, the \textit{BridgeAgentInOut} and the \textit{BridgeAgentOutIn} agents would be launched at localhost, and the agent \textit{BridgeAgentOutIn} will be listening in the 8081 port. For other configurations, please refer to section \ref{sec:AdminRunningBridgeAgents}
 
 
 
@@ -344,7 +344,7 @@ receiver.protocol = "http";
  send(msg); 																				
 \end{lstlisting}
 
-In a similar way, the following example shows how an external JADE agent sends a message to a MAgentix2 agent from the JADE platform (JADE source code):
+In a similar way, the following example shows how an external JADE agent sends a message to a Magentix2 agent from the JADE platform (JADE source code):
 
  
 \begin{lstlisting}
@@ -370,35 +370,87 @@ send(msg);
 %==================================================================
 %================== CUARTA SECCIÓN ================================
 %==================================================================
-\section{Basic conversational agents: QueueAgents}
+%%\section{Basic conversational agents: QueueAgents}
+
+
+
+%%\subsection{Running QueueAgents}
+%%Once defined the protocol, we have to create a new instance and add it to the agent tasks (method addTask). In the initiator role, it is necessay to create and fill in the appropriate message for the desired protocol. 
+
+%%For example,  for the protocol request: 
+%%\begin{lstlisting}   
+%%	ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
+%%	msg.setReceiver(new AgentID("HospitalAgent"));
+%%	msg.setProtocol(InteractionProtocol.FIPA_REQUEST);
+%%	msg.setContent("accident to " + "10" + " km");
+%%	msg.setSender(this.getAid());
+
+%%	this.addTask(new FIPARequestInitiator(this,msg));
+%%\end{lstlisting}
+%%For the responder, it is needed to create a template with the desired protocol: 
+%%\begin{lstlisting}   
+%%	MessageTemplate template = new MessageTemplate(
+%%				InteractionProtocol.FIPA_REQUEST);
+%%
+%%	this.addTask(new FIPARequestResponder(this,template));
+%%\end{lstlisting}
+%%When a task is added , a new thread is created for the agent. Therefore, it is necessary to be careful which the main thread of the agent is not finished. For instance,  a monitor can be used to wait for the completion of the roles: 
+%%\begin{lstlisting}   
+%%	import es.upv.dsic.gti_ia.architecture.Monitor;
+
+%%	private Monitor monitor = new Monitor();
+
+%%	protected void execute() {
+%%				.
+%%				.
+%%				.
+%%		this.addTask(new FIPARequestInitiator(this, msg));
+%%		monitor.waiting();
+%%	}
+%%\end{lstlisting}
+
+%%\subsection{Examples}
+
+%%In the examples folder of the Magentix2 packages there are some basic interaction protocols examples: 
+%%\begin{itemize}
+
+%%\item \textbf{Request:} this example follows the FIPA Request protocol. In this example two agents are created. One agent plays the responding role by simulating a hospital which listens emergency calls. The other agent simulates an accident witness. When the witness see an accident sends a help message to the hospital. The hospital checks if the accident is placed in the action area and if it could attend it.
+
+%%\item \textbf{ContractNet:} this is an example where the FIPA ContractNet protocol is followed. In this example, two types of agents are created. One type of agents plays the responding role (dealers). The other type, a single agent, plays the initiator role (buyer). The buyer sends a purchase request to each dealer agent. Each dealer agent answers the bid according her preferences and waits for the buyer decision. The buyer chooses one offer and informs the specific dealer and also sends a reject message to the rest of the dealers.
+%%\end{itemize}
+
+%==================================================================
+%================== QUINTA SECCIÓN ================================
+%==================================================================
+\chapter{Advanced conversational agents: CAgents}\label{sec:CAgents}
 
 Magentix2  supports the set of basic interaction protocols defined by FIPA. Thereby, agents can communicate to each other by means of different protocols explained in this section.
 
-Each implemented protocol provides the basic message exchange between two agents for a given type of conversation (a request, a query, etc.). In order to implement these protocols, a new agent template called \emph{QueueAgent} has been defined. This template extends \emph{BaseAgent} and can be found in the package  \lstinline|es.upv.dsic.gti_ia.architecture|. The figure  \ref{fig:Qarchitecture} shows a UML class diagram for the  QueueAgent class.
+Each implemented protocol provides the basic message exchange between two agents for a given type of conversation (a request, a query, etc.). %%In order to implement these protocols, a new agent template called \emph{QueueAgent} has been defined. This template extends \emph{BaseAgent} and can be found in the package  \lstinline|es.upv.dsic.gti_ia.architecture|. The figure  \ref{fig:Qarchitecture} shows a UML class diagram for the  QueueAgent class.
 
 
-\begin{figure}[!ht]
-	\centering
-	\includegraphics[width=\textwidth]{ProgrammingAgents/images/QueueAgentArchitecture}
-	\caption{Diagram for the  QueueAgent class}
-	\label{fig:Qarchitecture}
-\end{figure}
+%%\begin{figure}[!ht]
+%%	\centering
+%%	\includegraphics[width=\textwidth]{ProgrammingAgents/images/QueueAgentArchitecture}
+%%	\caption{Diagram for the  QueueAgent class}
+%%	\label{fig:Qarchitecture}
+%%\end{figure}
 
-In order to use protocols, agents must extend the QueueAgent class and redefine its constructor. For instance: 
+%%In order to use protocols, agents must extend the QueueAgent class and redefine its constructor. For instance: 
 
-\begin{lstlisting}
-	import es.upv.dsic.gti_ia.architecture.QueueAgent;
-	import es.upv.dsic.gti_ia.core.AgentID;
+%%\begin{lstlisting}
+%%	import es.upv.dsic.gti_ia.architecture.QueueAgent;
+%%	import es.upv.dsic.gti_ia.core.AgentID;
 
-	public class agent extends QueueAgent {
+%%	public class agent extends QueueAgent {
 
-	public agent(AgentID aid) throws Exception {
-		super(aid);
-	}
-\end{lstlisting}
+%%	public agent(AgentID aid) throws Exception {
+%%		super(aid);
+%%	}
+%%\end{lstlisting}
 
 
-\subsection{Communication Protocols on Magentix2 platform.}
+\section{Communication Protocols on Magentix2 platform.}
 Three interaction protocols specified by FIPA (Request, Query and the Contract-Net) have been implemented in the Magentix2 basic conversational protocol. For this purpose, a set of classes have been implemented, and they can be found into the \lstinline|es.upv.dsic.gti-ia.architecture package.|
 Within all of the protocols implemented, agents can play both initiator and responder role. These roles implement different behaviors. The initiators  are executed once, while responders are executed cyclically, so they will return to its initial state after reaching the final one.
 The set of classes in the \lstinline|es.upv.dsic.gti-ia.architecture| package have been designed so that programmers do not need to deal with neither message sending nor protocol status monitoring. Thus, programmers only have to define what should be done in each state of the protocol and prepare messages before sending. The actions performed in each state are defined by handlers for initiator roles and preparers for responder roles.
@@ -426,10 +478,10 @@ protected ACLMessage prepareResultNotification(ACLMessage inmsg,
 	}
 \end{lstlisting}
 \end{itemize}
-\subsection{How to implement a FIPA-Protocol}
+\section{How to implement a FIPA-Protocol}
 Following, some explanations of how  the  FIPA-Protocols proportionated by Magentix2 have been implemented are proportioned, in order to illustrate how new protocols could be implemented.
 
-\subsubsection{FIPA-Request}
+\subsection{FIPA-Request}
 This protocol allows agents to request other agents to perform an action and it is identified in the protocol parameter of the message with the FIPA-request value. The messages exchanged are: 
 \begin{enumerate}
 
@@ -447,40 +499,40 @@ The protocol early terminates if:
 \end{itemize}
 \end{enumerate}
 
-	The following code shows how to implement a responder rol:
+%%	The following code shows how to implement a responder rol:
 
- 	 \begin{lstlisting}   
-	public class Responder extends FIPARequestResponder {
+ %%	 \begin{lstlisting}   
+%%	public class Responder extends FIPARequestResponder {
 
-	public Responder(QueueAgent agent) {
-	super(agent,new MessageTemplate(InteractionProtocol.FIPA_REQUEST));
+%%	public Responder(QueueAgent agent) {
+%%	super(agent,new MessageTemplate(InteractionProtocol.FIPA_REQUEST));
 
-	}
+%%	}
 
-	protected ACLMessage prepareResponse(ACLMessage msg) {
-	protected ACLMessage prepareResultNotification
-					(ACLMessage inmsg, ACLMessage outmsg) 	{}
-\end{lstlisting}
-     	The following code shows how to implement an initiator rol:
-	 \begin{lstlisting} 
+%%	protected ACLMessage prepareResponse(ACLMessage msg) {
+%%	protected ACLMessage prepareResultNotification
+%%					(ACLMessage inmsg, ACLMessage outmsg) 	{}
+%%\end{lstlisting}
+  %%   	The following code shows how to implement an initiator rol:
+	%% \begin{lstlisting} 
 	
 
-	class Initiator extends FIPARequestInitiator {
+%%	class Initiator extends FIPARequestInitiator {
 
 
-	public Initiator(QueueAgent a, ACLMessage msg) {
-		super(a, msg);
-	}
+%%	public Initiator(QueueAgent a, ACLMessage msg) {
+%%		super(a, msg);
+%%	}
 
-	protected void handleAgree(ACLMessage agree) {
-	protected void handleRefuse(ACLMessage refuse) {
-	protected void handleNotUnderstood(ACLMessage notUnderstood) {
-	protected void handleInform(ACLMessage inform) {
-	protected void handleFailure(ACLMessage failure) {
-\end{lstlisting}
+%%	protected void handleAgree(ACLMessage agree) {
+%%	protected void handleRefuse(ACLMessage refuse) {
+%%	protected void handleNotUnderstood(ACLMessage notUnderstood) {
+%%	protected void handleInform(ACLMessage inform) {
+%%	protected void handleFailure(ACLMessage failure) {
+%%\end{lstlisting}
 
 
-\subsubsection{FIPA-Query}
+\subsection{FIPA-Query}
 This protocol allows agents to request other agents: to query whether a particular proposition is true or false (query-if) and to query for some identified objects (query-ref). Depending on the type of request, the messages can be:  
 
 \begin{enumerate}
@@ -494,7 +546,7 @@ This protocol allows agents to request other agents: to query whether a particul
 \end{enumerate}
 
 
- \subsubsection{FIPA-Contract-Net}
+ \subsection{FIPA-Contract-Net}
 The classes ContractNet implements the behaviour of the protocol of the same name, whose operation is: the initiator sends a proposal to several responders, then evaluates their answers and finally chooses the preferred one (or no one). The messages exchanged are: 
 \begin{enumerate}
 \item \textbf{CFP (Call For Proposal):} it specifyes  the action to carry out and, when it is appropriate, the conditions on the performance.
@@ -510,55 +562,10 @@ The classes ContractNet implements the behaviour of the protocol of the same nam
 The initiator (ContractNetInitiator) has two main methods: the handlePropose method, which is called each time a response is received and the handleAllResponses method, which is called when all responses are received or the timeout is exceeded.  The responder agent has the handleAcceptProposal and handleRejectProposal methods, which are called depending on whether the proposal was accepted or not, and their main characteristic is that both of them receive  as input parameters all the messages exchanged by both agents so far. 
 
 
-\subsection{Running QueueAgents}
-Once defined the protocol, we have to create a new instance and add it to the agent tasks (method addTask). In the initiator role, it is necessay to create and fill in the appropriate message for the desired protocol. 
+\section{Programming CAgents} % (fold)
+\label{sec:presenting_cagents}
 
-For example,  for the protocol request: 
-\begin{lstlisting}   
-	ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
-	msg.setReceiver(new AgentID("HospitalAgent"));
-	msg.setProtocol(InteractionProtocol.FIPA_REQUEST);
-	msg.setContent("accident to " + "10" + " km");
-	msg.setSender(this.getAid());
-
-	this.addTask(new FIPARequestInitiator(this,msg));
-\end{lstlisting}
-For the responder, it is needed to create a template with the desired protocol: 
-\begin{lstlisting}   
-	MessageTemplate template = new MessageTemplate(
-				InteractionProtocol.FIPA_REQUEST);
-
-	this.addTask(new FIPARequestResponder(this,template));
-\end{lstlisting}
-When a task is added , a new thread is created for the agent. Therefore, it is necessary to be careful which the main thread of the agent is not finished. For instance,  a monitor can be used to wait for the completion of the roles: 
-\begin{lstlisting}   
-	import es.upv.dsic.gti_ia.architecture.Monitor;
-
-	private Monitor monitor = new Monitor();
-
-	protected void execute() {
-				.
-				.
-				.
-		this.addTask(new FIPARequestInitiator(this, msg));
-		monitor.waiting();
-	}
-\end{lstlisting}
-
-\subsection{Examples}
-
-In the examples folder of the Magentix2 packages there are some basic interaction protocols examples: 
-\begin{itemize}
-
-\item \textbf{Request:} this example follows the FIPA Request protocol. In this example two agents are created. One agent plays the responding role by simulating a hospital which listens emergency calls. The other agent simulates an accident witness. When the witness see an accident sends a help message to the hospital. The hospital checks if the accident is placed in the action area and if it could attend it.
-
-\item \textbf{ContractNet:} this is an example where the FIPA ContractNet protocol is followed. In this example, two types of agents are created. One type of agents plays the responding role (dealers). The other type, a single agent, plays the initiator role (buyer). The buyer sends a purchase request to each dealer agent. Each dealer agent answers the bid according her preferences and waits for the buyer decision. The buyer chooses one offer and informs the specific dealer and also sends a reject message to the rest of the dealers.
-\end{itemize}
-
-%==================================================================
-%================== QUINTA SECCIÓN ================================
-%==================================================================
-\section{Advanced conversational agents: CAgents}\label{sec:CAgents}
+% section presenting_cagents (end)
 CAgents facilitate the use and management of conversations. CAgents use CFactories and CProcessors, these two components control ongoing conversation and create new ones. On the one hand, CFactories act as Interaction Protocols (IPs) and are in charge of creating new CProcessors. On the other hand, CProcessors act as instances of CFactories, that is conversations. CFactories have a graph made up of states and arcs. A graph specifies the sequence of actions that a conversation which is following that protocol has to take. Each state represents a specific action, and each arc represents a possible transition between two states. A collection of states (actions) has been defined:
 \begin{itemize}
 \item \emph{Begin}: This state represent that the agent starts the conversation. 
@@ -594,7 +601,7 @@ In figure \ref{img:global} a global view of a CAgent is shown. In this figure th
 
 In the next sections some examples of CAgents are explained. All the code of these examples are available in the examples directory of Magentix2 platform.
 
-\subsection{``Hello World'' CAgent}
+\section{``Hello World'' CAgent}
 The code shown in this section corresponds to the code located in examples/src/myFirstCAgent/HelloWorldAgent.java. In the code below, the method \texttt{execution} is where the user has to implement the main code of the agent. In this ``hello world'' agent the main behaviour of the agent is just to say ``hello world''. The method \texttt{finalize} is executed when the agent is just about to finish its execution, thus, here is where the user has to implement ending actions of the agent.
 \begin{lstlisting}[style=Java]
 class HelloWorldAgentClass extends CAgent {
@@ -630,7 +637,7 @@ class HelloWorldAgentClass extends CAgent {
 }  
 \end{lstlisting}
 
-\subsection{Creating a CFactory and its CProcessor}
+\section{Creating a CFactory and its CProcessor}
 \label{subsec:cprocessor}
 The code shown in this section corresponds to the code located in examples/src/myFirstCProcessorFactories/Harry.java. The CFactory shown here corresponds to the one shown in figure \ref{img:cfactory}.
 
@@ -721,7 +728,7 @@ System.out.println(this.getAid().name + " : Sally tell me "
 + response.getPerformative() + " " + response.getContent());
 \end{lstlisting}
 
-\subsection{Using a CFactory Template}
+\section{Using a CFactory Template}
 \label{subsec:usingATemplate}
 Defining a CFactory and its CProcessor template can be a laborious task. In order to facilitate this, a set of CFactories templates are provided in Magentix2. At the moment the templates are:
 \begin{itemize}
@@ -781,7 +788,7 @@ this.startSyncConversation("TALK");
 
 CFactory templates are useful for reusing code. It is possible to create templates of other IP or modify the existing ones in order to adapt them.
 
-\subsection{Creating a CFactory Template}
+\section{Creating a CFactory Template}
 This section explains how to implement a new CFactory template. In the following example we are going to implement a template for the CFactory shown in section \ref{subsec:cprocessor}.
 
 First the states are defined, it is in this moment when it is possible to define default methods and choose which methods are abstract and therefore, mandatory to implement for the user. The definition of the states is shown below.
@@ -883,8 +890,11 @@ How to use a CFactory template is shown in the previous section \ref{subsec:usin
 %==================================================================
 %================== SEXTA SECCIÓN =================================
 %==================================================================
-\section{BDI Agents: JasonAgents}
+\chapter{BDI Agents: JasonAgents}
 Jason\cite{bordini05} is an interpreter for an extended version of AgentSpeak(L)\cite{Rao96} and implements the operational semantics of that language. It has been developed by Jomi F. H\"ubner and Rafael H. Bordini. Jason has been integrated in Magentix2 platform, therefore we can program agents in AgentSpeak and run them on Magentix2 platform. For examples and demos of how to program in AgentSpeak(L), please refer to the webpage of the Jason project: \url{http://jason.sourceforge.net/Jason/Jason.html}.
+
+
+\section{Programming BDI Agents} % (fold)
 
 Magentix2 integrates Jason providing two classes: JasonAgent and MagentixAgArch. MagentixAgArch manages the AgentSpeak(L) interpreter, the reasoning cycle of the agent, and how the agent acts and perceives to/from the environment. The JasonAgent class acts as a link between the AgentSpeak(L) interpreter and the platform. Both classes can be modified and adapted to the desired needs, but usually, only MagentixAgArch would need to be modified in order to add external actions to the agent (external actions are actions which affect the agent environment).
 
@@ -950,17 +960,17 @@ vl(2).
 %==================================================================
 %%% Se crea como un fichero aparte y luego se copiarï¿½ el contenido en la secciï¿½n programming agents antes de luanching with security
 
-\section{Argumentative Agents}
+\chapter{Argumentative Agents}
 \label{sec:introductionArgAgents}
-This section describes the \emph{argumentative agents} API of Magentix2. This API allows agents to engage in argumentation dialogues to reach agreements about the best solution for a problem that must be solved.
+This chapter describes the \emph{argumentative agents} API of Magentix2. This API allows agents to engage in argumentation dialogues to reach agreements about the best solution for a problem that must be solved.
 
 First, we introduce the theory of the argumentation framework that Magentix2 argumentative agents implement. Then, the implementation details of the API are shown. Finally, a guide to run argumentative agents and an example of a call centre application are provided.
 
-\subsection{Argumentation Framework}
+\section{Argumentation Framework}
 
 Argumentative agents implement a case-based argumentation framework to generate arguments, to select the best argument to put forward taking into account their social context and to evaluate arguments in view of other arguments proposed in the dialogue. Also, they can use different dialogue strategies to exchange information and engage in the argumentation process. In this section we briefly introduce the framework and the dialogue strategies that Magentix2 argumentative agents use. For a more detailed explanation we refer the reader to \cite{Heras11}.
 
-\subsubsection{Framework Architecture}
+\subsection{Framework Architecture}
 \label{subsubsec:framework}
 Magentix2 argumentative agents can use a computational case-based argumentation framework to manage argumentation processes. This section outlines the main components of this framework. 
 
@@ -1051,7 +1061,7 @@ In addition, the conclusion part includes information about the possible \emph{a
 
 Finally, the justification part of an argument-case stores the information about the knowledge resources that were used to generate the argument represented by the argument-case (the set of domain-cases and argument-cases). In addition, the justification of each argument-case has a \emph{dialogue-graph} (or several) associated, which represents the sequence of arguments that form the dialogue where the argument was proposed. In this way, the complete conversation is stored as a directed graph that links argument-cases that represent the arguments of the dialogue. This graph can be used later to improve the efficiency in an argumentation dialogue in view of a similar dialogue that was held in the past.
 
-\subsubsection{Dialogue Strategies}
+\subsection{Dialogue Strategies}
 \label{subsubsec:strategies}
 
 In each step of an argumentation process, a Magentix2 argumentative agent can choose a specific locution to put forward and a content for it. The mechanism that agents follow to make such decisions is known as \emph{dialogue strategy}. 
@@ -1155,7 +1165,7 @@ Thus, an agent can use the following dialogue tactics depending on the weight th
 
 As pointed out before, the dialogue strategy that an agent follows determines the locution and content that it puts forward in each step of the dialogue. Thus, different strategies can be more or less suitable depending on the other agents that participate in the dialogue, the tactics that they follow and their available knowledge resources. 
 
-\subsection{Argumentation API}
+\section{Argumentation API}
 \label{subsec:implementation}
 In this section, we define the different modules that implement the argumentation API of the Magentix2 platform and their functionality. For a tutorial on how to use these modules for programming argumentative agents see Section \ref{subsec:howTo}.
 
@@ -1170,7 +1180,7 @@ In this section, we define the different modules that implement the argumentatio
 
 \end{itemize}
 
-\subsubsection{Argumentative Agents: ArgCAgent Class}
+\subsection{Argumentative Agents: ArgCAgent Class}
 \label{subsubsec:argCAgents}
 
 With the class \lstinline{ArgCAgent.java} Magentix2 distribution includes an implementation of an argumentative agent. This agent is an extension of the Magentix2 conversational agent (\texttt{CAgent}, see Section \ref{sec:CAgents}). Argumentative agents have two CBR modules: Domain CBR and Argumentation CBR. %These modules are shown in the Figure \ref{fig:infrastructure}. Argumentative agents have different parameters to configure in their constructor, as will be explained in Section \ref{subsec:howTo}. 
@@ -1264,7 +1274,7 @@ A list of possible support arguments is generated with the method \lstinline{gen
 
 To generate an attack argument, the premises that the argument to attack has and the social context between the agents that are arguing are taken into account. With this information, argumentative agents extract the argument-cases that match with the current position and have a similar social context. Then, if the dependency relation allows to attack the other agent, the agent generates the attack argument. The first type of attack that the agent will try to generate is a counter-example attack (with the method \lstinline{generateCEAttack}), and if it is not possible the agent will try to generate a distinguishing premise attack (with the method \lstinline{generateCEAttack}). The counter-example attack consists on an argument that includes a domain-case or an argument-case whose conclusion contradicts the conclusion of the attacked argument. A distinguishing premise attack consists on an argument that includes a premise (or a set) that describes the problem and that the attacked agent did not consider to generate its position (and its associated support argument) or a premise that both agents have, but with different data value. %In the current implementation of the Magentix2 argumentation API, an agent can extract these distinguishing premises by using the description of the knowledge resources that match the description of the problem at hand and that it has used to generate its position (see the \texttt{Argument.java} JavaDoc for more information).
 
-\subsubsection{Argumentation Protocol}
+\subsection{Argumentation Protocol}
 %\textbf{Argumentation protocol}:
 Argumentative agents need a protocol to exchange positions and arguments and engage in the argumentation dialogue. The protocol is represented by a set of locutions that the agents use to communicate with each other, and a state machine that defines the behaviour of an agent in the argumentation dialogue. The state machine has been implemented in the \lstinline{ArgCAgent.java} class by overwriting the states of the argumentation protocol of the API. This protocol has been implemented in the \lstinline{Argumentation_Participant.java} abstract class of the \lstinline{cAgents.protocols} package. In each state of the protocol, the different locutions that can be received and generated are taken into account to act in consequence and move to the next state. Inside each state, the corresponding actions are performed using the necessary calls to the different functions of the agent (shown in Table \ref{tab:ArgProtocolMethods} of Section \ref{subsubsec:howToCreate}). Also, argumentative agents can make queries to the commitment store and retrieve information about their argumentation dialogue. Recall that since argumentative agents are a special type of Magentix2 \texttt{cAgents}, agents queue messages and send or receive them in the corresponding \textit{send} and \textit{receive} states (see Section \ref{sec:CAgents}). The behaviour of the commitment store resource has been implemented by overwriting the abstract class \lstinline{CommitmentStore_Protocol.java} of the \lstinline{cAgents.protocols} package in the \lstinline{CommitmentStore.java} class.
 
@@ -1320,10 +1330,10 @@ Figure \ref{fig:protocol} shows the state machine that defines the behaviour of 
  \item \textbf{Die:} this is the final state of the argumentation protocol. Agents move to this state when they receive the locution \emph{DIE} and shutdown their execution.
 \end{enumerate}
 
-\subsection{Programming Argumentative Agents}
+\section{Programming Argumentative Agents}
 \label{subsec:howTo}
 
-\subsubsection{How to run Magentix2 Argumentative Agents}
+\subsection{How to run Magentix2 Argumentative Agents}
 \label{subsubsec:howToRun}
 
 Magentix2 provides a default implementation of an argumentative agent that can be run from the \textit{Magentix2/examples/bin} directory. Thus, the user can execute the \lstinline{Start-Argumentation} \lstinline{Example.sh} script that launches the default argumentation example:
@@ -1491,7 +1501,7 @@ where \emph{socialEntity} represents the social entity (name, role, preference v
 % where \emph{socialEntities} is an \texttt{ArrayList} with the \emph{social entities} of the dialogue, \emph{commitmentStoreID} is the identifier of the commitment store, \emph{resultsFileName} is the name of the file to save the results of the program execution, \emph{finishFileName} is the name of the file to write when the problem-solving process is finished, \emph{cases} is the number of domain-cases that each argumentative agent has (this number is used to compute performance results), \emph{repetition} is a variable to specify the number of runs of the problem-solvin process (each one trying to solve a different problem), \emph{domCasesVector} is a \texttt{Vector} with cases used as problems to solve (in the current implementation of the software, it only includes one problem to solve per run) and \emph{agents} is the \texttt{ArrayList} of \texttt{ArgCAgent}s participating in the argumentation dialogue to solve the problem.
 
 
-\subsubsection{How to create your own Magentix2 Argumentative Agent}
+\subsection{How to create your own Magentix2 Argumentative Agent}
 \label{subsubsec:howToCreate}
 
 Magentix2 provides the core of the argumentation protocol, the Domain CBR, the Argumentation CBR and the knowledge resources (see Table \ref{tab:argAgentsCore}) needed to crete your own argumentative agent (and not directly using the default argumentative agent provided in the \textit{Argumentation\_Example}).
@@ -1596,7 +1606,7 @@ doWhy & choose a position to send a \textit{WHY} message if it can \\ \hline
 \label{tab:ArgProtocolMethods}
 \end{table}
 
-\subsubsection{Example: Call Centre Application}
+\subsection{Example: Call Centre Application}
 \label{subsubsec:callCentre}
 
 To date, the system is implemented in the domain of a customer support application where several operators represented by software agents argue to provide the best solution for an incidence (also known as \emph{ticket}) received. Thus, we use this example domain to show how \texttt{ArgCAgent}s can be executed. Int the current version of the software, the example is implemented in the \texttt{Argumentation\_Example} package, which includes the java files for creating agents (\lstinline{AgentsCreation.java}), the template code of the argumentative agent (\lstinline{ArgCAgent.java}), a file to create case-bases with data about example domain-cases and argument-cases (\lstinline{CreatePartitions.java}), a \emph{test} file for executing the example (\lstinline{TestArgCAgent.java}) and a file with a template of the \emph{tester} agent (\lstinline{TesterArgCAgent.java}). In this section we provide a brief explanation of this example. Details of the implementation can be found in the JavaDoc of the files of the package.
@@ -1620,259 +1630,15 @@ In order to show how the developed system works, the data-flow for the problem-s
    
 
 
-%==================================================================
-%================== SEPTIMA SECCIÓN ===============================
-%==================================================================
-\section{Launching agents with security enabled}
-\label{sec:securityenable}
 
-
-In order to ensure the integrity, confidentiality, privacity, no repudiation and mutual authentication of the agent comunications, a security module for Magentix2 platform was implemented. 
-If the security module is enabled in the platform in which will connect, setting the public key infraestructure and configuring the security properties are necessary.
-
-The basic elements of this public key infrastructure are:
-
-\begin{itemize}
-
-\item \textbf{Asymetrical key-pair:} This is used to sign and encrypt information messages.
-\item \textbf{X.509 Certificate:} This is a self-signed certificate with the information of the user, which guarantees the user identity.
-\item \textbf{keystore:} It is a file that contains the X.509 User Certificates, which is needed to connect with the platform. The keystore is protected by a password, 
-hence this file must never be disclosed to others.
-\item \textbf{Trustore:} It is a file that contains a list of trusted parties. The trusted parties will be the Magentix2 platform to which the user connect.
-\end{itemize}
-
-
-
-\subsection{Creating key-pair}
-
-If a key-pair and a certificate issued by a public entity (must be trusted for the platform) is available, the explanation continues in the section \ref{sec:importingMMS}, if not, the next steps must be followed.
-
-For generating \footnote{For this purpose the command keytool included in Java Sun JDK is used
-.} the key pair, this command must be executed in a linux terminal:
-\begin{verbatim}
-$ keytool -genkey -alias alias_name -keyalg RSA \
-		-dname "CN=alias_name,O=Magentix" \
-		-storepass mysecretpassword \
-		-keypass mysecretpassword \
-		-keystore keystore.jks
-\end{verbatim}
-
-The result of this command is a new keystore with an  asymmetrical key-pair user and X.509 Certificate.
-
-\subsection{Exporting User Certificate}
-For one mutual authentication between the user and platform, a self-signed certificate that contains the user public key must be exported.
-
-\begin{verbatim}
-$ keytool -export -keystore keystore \
-   -storepass mysecretpassword \
-	 -alias alias_name -file user.crt
-\end{verbatim}
-
-%\begin{verbatim}
-%$ keytool -export -keystore keystore -storepass mysecretpassword  \
-%	 -alias alias_name -file user.crt
-%\end{verbatim}
-
-The file user.crt will be transfered to the Magentix2 platform administrator by http, ftp, e-mail, etc..., in order that he adds in it his trusted store. 
-
-
-\subsection{Importing MMS Certificate}
-\label{sec:importingMMS}
-
-This command append the Magentix Manager Service (MMS) trusted certificate in the keystore:
-\begin{verbatim}
-$ keytool -import -trustcacerts -noprompt -alias MMS \
-	-file mms.crt -storepass mysecretpassword  -keystore keystore
-\end{verbatim}
-
-The file mms.crt contains the MMS public key, to obtain this file, please contact with the Magentix2 administrator.
-
-
-\subsection{Creating and importing truststore}
-
-If the MagentixCA self-signed certificate is not included in the truststore, the connections with the platform will be rejected. 
-
-The following command creates a truststore and appends the MagentixCA trusted certificate:
-\begin{verbatim}
-$ keytool -import -trustcacerts -noprompt -alias MagentixCA \
-	-file rootca.crt -storepass mysecretpassword \
-	-keystore truststore.jks
-\end{verbatim}
-
-The root.crt file contains the MagentixCA public key, to obtain this file, please contact with the Magentix2 platform administrator.
-
-
-
-\subsection{Configuration}
-\label{sec:configuration}
-
-The security parameters must be indicated inside the securityUser.properties file and the configuration of the broker connection inside the Settings.xml. These files are inside the configuration directory.
-
-\begin{itemize}
- \item \textbf{securityUser.properties}
-
- 
-
-
-The securityUser.Properties is divided into four sections. In the first section, the keystore and truststore is configured, hence the path and password must be specified, as it can be shown in the following example (Figure \ref{fig:1stsecurityUserProp} ).
-
-\begin{figure}[h]
-\begin{codigo}
-    #<!-- User Security Properties -->
-    # set the base path for accessing keystore user
-    KeyStorePath=/full_path/keystore.jks
-
-    #set the password to keystore
-    KeyStorePassword=password
-
-    # set the base path for accessing truststore user
-    TrustStorePath=/full_path/truststore.jks
-
-    #set the password to truststore
-    TrustStorePassword=password
-\end{codigo}
-
-\caption{First section of the securityUser.properties file }
-\label{fig:1stsecurityUserProp}
-\end{figure}
-
-In the second section it is indicated if the user certificate used has been issued by a public certificate autorithy (in this case the parametre type is \textit{others}) or have been created by the user (the type is \textit{own}).
-
-If the type selected is \textit{others}, then it is required to configuring the parameters that will be find below the \textit{type} parameter. Again, an example is shown below (Figure \ref{fig:2ndsecurityUserProp}).
-
-\begin{figure}[h!]
-\begin{codigo}
-    #set the type of certificates (own or others (FNMT, ACCV,
-    # ...))
-    type=own
-    #set the base path for access to correct keystore
-    othersPath=/full_path/keystore_fnmt.p12
-    #set the pin of the smartcard or password of your keystore
-    othersPin=password
-    #set the type of the keystore
-    othersType=PKCS12
-\end{codigo}
-
-\caption{Second section of the securityUser.properties file }
-\label{fig:2ndsecurityUserProp}
-\end{figure}
-
-
-In the section three (Figure \ref{fig:3rdsecurityUserProp}), the MMS direction path is indicated. For this purpose it is necessary to consult with the Magentix2 administrator to provide the direction ([protocol] + [host] + [port] + [path]) where the MMS service is deployed. 
-
-\begin{figure}[h!]
-\begin{codigo}
-    # set the connection protocol to be used to access services
-    protocol=http
-    # set the name of the service host
-    host=localhost
-    # set the port for accessing the services
-    port=8080
-    # set the base path for accessing to services
-    path=/MMS/services/MMS
-\end{codigo}
-\caption{Third section of the securityUser.properties file }
-\label{fig:3rdsecurityUserProp}
-\end{figure}
-
-The purpose of last section is to indicate the user alias certificate (Figure \ref{fig:4thsecurityUserProp}).
-
-\begin{figure}[h!]
-\begin{codigo}
-#set the alias to user certificate. This alias is
-#a PrivateKeyEntry.
-alias=[User_alias]
-\end{codigo}
-\caption{Fourth section of the securityUser.properties file }
-\label{fig:4thsecurityUserProp}
-\end{figure}
-
-\newpage
-If the name of the alias certificate is not know, then it can be consulted with the following command:
-
-\begin{verbatim}
-$ keytool -list -keystore keystore.jks 
-\end{verbatim}
-In the case the certificate store is not a jks type: 
-\begin{verbatim}
-$ keytool -list -storetype pkcs12 -keystore keystore_fnmt.p12
-\end{verbatim}
-
-The alias will be displayed in the first place of line, for example in the following case the alias is \textit{alice} (Figure \ref{fig:keytoolRes}).
-
-\begin{figure}[h!]
-\begin{codigo}
-Keystore type: JKS
-Keystore provider: SUN
-
-Your keystore contains 5 entries
-
-alice, 27-sep-2010, PrivateKeyEntry, 
-Hash of certificate (MD5): 
- 13:D2:8F:3A:F3:2B:C9:D9:CC:6B:A8:C0:DB:7D:DA:FA
-\end{codigo}
-\caption{Result of the \textit{Keytool} command}
-\label{fig:keytoolRes}
-\end{figure}
-
-\newpage
-
-\item \textbf{Settings.xml}
-The connection parameters must be specified inside the Settings.xml file. The Figure \ref{fig:settingsxmlfile} shows an example of the content of this file. Note that the \textit{port} parameter is where the broker Qpid is listening to the ssl connections and EXTERNAL is the method by default.
-
-
-\begin{figure}
-\begin{codigo}
-    <!-- Properties qpid broker -->
-    <entry key="host">localhost</entry>
-    <entry key="port">5671</entry>
-    <entry key="vhost">test</entry>
-    <entry key="user">guest</entry>
-    <entry key="pass">guest</entry>
-    <entry key="ssl">true</entry>
-    <!-- Secure qpid properties -->
-    <entry key="secureMode">true</entry>
-    <entry key="saslMechs">EXTERNAL</entry>
-\end{codigo}
-\caption{An example of the Settings.xml file}
-\label{fig:settingsxmlfile}
-\end{figure}
-
-
-\end{itemize}
-
-\subsection{Running}
-
-In the secure mode, agent connection with the broker is formed automatically in the agent constructor. Therefore, in the main program, the 
-method connect (explained in section \ref{subsec:connecting}) is not necessary. Thus, it is only required to complete carefully the previous configurations
-and import the required libraries \footnote{The libraries are available in lib/security/ directory} in the Java project build path.
-
-
-(Please note that the platform do not allow agents with the same name and it is case sensitive.)
-
-\subsection{Problems}
-The following  exceptions can arise when security is used and correct configuration has not be done.
-\begin{enumerate}
-
-\item  \textbf{(WSSecurityEngine: Callback supplied no password for: mms).}
-The MMS self-signed certificate has not been imported correctly in keystore.
-\item  \textbf{org.apache.axis2.AxisFault: Error in signature with X509Token.}
-The alias parameter  of the  securityUser.properties file has not correctly specified.
-\item  \textbf{General security error (No certificates were found for decryption (KeyId)).}
-The MMS self-signed certificate has not been imported correctly in the keystore.
-\item  \textbf{org.apache.axis2.AxisFault: The certificate used for the signature is not trusted.}
-The User certificate with the user public key has not been added in the truststore of magentix administrator, it is necessary to check that 
-the user certificate have been exported and transfered correctly or contact with the magentix administrator.
-In administrator mode, section \ref{sec:AddthirdParty} explains how to import user certificate. 
-\end{enumerate}
 
 %==================================================================
 %================== OCTAVA SECCIÓN ================================
 %==================================================================
 
-\section{Tracing Service}
+\chapter{Tracing Service}
 \label{sec:tracingService}
-	This section describes the Tracing Service Support available in Magentix2.
+	This chapter describes the Tracing Service Support available in Magentix2.
 	This Tracing Service Support allows agents in a Multiagent System (MAS) share information in an
 	indirect way by means of trace events.
 	
@@ -1884,7 +1650,7 @@ In administrator mode, section \ref{sec:AddthirdParty} explains how to import us
 % \item \begin{verbatim}AquÃ­ si tenemos que poner cÃ³digo \end{verbatim}
 %\end{enumerate}
 
-\subsection{Trace Model and Features}
+\section{Trace Model and Features}
 
 	The trace event model incorporated to Magentix is described in detail in \cite{Burdalo10}.
 	This section will comment briefly the main characteristics of the model and those of its features which
@@ -1897,7 +1663,7 @@ In administrator mode, section \ref{sec:AddthirdParty} explains how to import us
 	offered by tracing entities as different \textit{tracing services}, which can be requested by interested
 	tracing entities when they want to receive these trace events.
 	
-	\subsubsection{Supported Features}
+	\subsection{Supported Features}
 	
 		The present version of Magentix2 does not support all of the tracing features considered in the
 		model. Those which are not yet supported will be incorporated in future versions of the platform.
@@ -1960,7 +1726,7 @@ In administrator mode, section \ref{sec:AddthirdParty} explains how to import us
 %			subscribed.
 %	\end{itemize}
 
-\subsection{Trace Event}\label{sec:tEvent}
+\section{Trace Event}\label{sec:tEvent}
 
 	Trace events are represented in the platform as instances of the class
 	\lstinline{es.upv.dsic.gti_ia.core.TraceEvent}:
@@ -2063,7 +1829,7 @@ send(tEvent);
 	The source code in Section \ref{sec:daddy} (lines 59 to 79) shows an example of trace event
 	handler. In this case, the received trace event is processed attending to its tracing service.
 
-\subsection{Tracing Services}\label{sec:tservices}
+\section{Tracing Services}\label{sec:tservices}
 	
 	Agents which are interested in sharing their trace events, offer them as \textit{tracing services}.
 	Agents publish their available tracing services and other agents can request those tracing services
@@ -2163,7 +1929,7 @@ TraceManager tm = new TraceManager(new AgentID("TM"));
 %		\item\textbf{\texttt{subscriptions}:}
 %	\end{itemize}
 
-		\subsubsection{Tracing service publication}\label{sec:publish}
+		\subsection{Tracing service publication}\label{sec:publish}
 		
 			In order to publish and unpublish tracing services, agents have to use respectively the
 			methods \lstinline{publishTracingService} and \lstinline{unpublishTracingService}. These
@@ -2212,7 +1978,7 @@ publishTracingService(this, "TracingService_1", "An example of tracing service")
 unpublishTracingService(this, "TracingService_1");
 		\end{lstlisting}
 		
-		\subsubsection{Tracing service subscription}\label{sec:subscription}
+		\subsection{Tracing service subscription}\label{sec:subscription}
 		
 			Before receiving any trace event, agents have to request the corresponding tracing service
 			by invoking \lstinline{requestTracingService}. This subscription can be cancelled later by
@@ -2298,7 +2064,7 @@ requestAllTracingServices(this);
 			code, in lines 74 and 75, it can be observed how the agent unsubscribes from these tracing
 			services.
 			
-		\subsubsection{Listing}\label{sec:listing}
+		\subsection{Listing}\label{sec:listing}
 		
 			The Trace Manager allows for listing tracing entities and tracing services available in the
 			system by invoking \lstinline{listTracingEntities} and \lstinline{listTracingServices}
@@ -2356,7 +2122,7 @@ requestAllTracingServices(this);
        		}
    		\end{table}
 
-	\subsection{Domain Independent Tracing Services}
+	\section{Domain Independent Tracing Services}
 	
 			The platform offers a set of \textit{domain independent} tracing services. Some of them can
 			be requested by agents in order to receive the corresponding trace events, while others are
@@ -2369,7 +2135,7 @@ requestAllTracingServices(this);
 			publication. These tracing services are included in the class
 			\lstinline{es.upv.dsic.gti_ia.coreTracingService}
 
-		\subsubsection{System domain independent tracing services}
+		\subsection{System domain independent tracing services}
 		
 			System domain independent tracing services provide information which may be necessary
 			for any tracing entity in order to understand the sequence of trace events which it has
@@ -2484,7 +2250,7 @@ requestAllTracingServices(this);
        		}
    		\end{table}
 		
-		\subsubsection{Agent's lifecycle domain independent tracing services}
+		\subsection{Agent's lifecycle domain independent tracing services}
 		
 			These domain independent tracing services provide tracing information related to agents
 			entering or leaving the system. These tracing services are requestable and thus, it is
@@ -2547,7 +2313,7 @@ requestAllTracingServices(this);
        		}
    		\end{table}
 		
-		\subsubsection{Messaging related domain independent tracing services}
+		\subsection{Messaging related domain independent tracing services}
 		
 			These domain independent tracing services provide information related to message based
 			agent communication. These tracing services are also requestable and thus, it is also
@@ -2646,7 +2412,7 @@ requestAllTracingServices(this);
        		}
    		\end{table}
 		
-		\subsubsection{Tracing service publication related domain independent tracing services}
+		\subsection{Tracing service publication related domain independent tracing services}
 		
 			These domain independent tracing services provide information related to tracing services
 			being published by tracing entities in the system. For instance, a generic agent may need to
@@ -2704,7 +2470,7 @@ requestAllTracingServices(this);
        		}
    		\end{table}
 	
-\subsection{Example: TraceDaddy}
+\section{Example: TraceDaddy}
 		
 	Simple example of how to use domain independent tracing services to follow other
 	agents' activities and to make decisions according to this activity.

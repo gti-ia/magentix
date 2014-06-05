@@ -17,9 +17,7 @@
 
 In order to install Magentix2,  the corresponded zipped package must be downloaded\footnote{The latest installable version is in: \url{http://gti-ia.upv.es/sma/tools/magentix2/downloads.php}}. Once Magentix2 is downloaded, you need to unzip the file. Just double-click the file or run the following command:
 
-\begin{verbatim}
-$ unzip magentix2-2.0.3.zip
-\end{verbatim}
+\texttt{\$ unzip magentix2-\MagentixVersion.zip}
 
 In the unzipped directory you have now the Magentix2 agent platform\texttrademark ready to be configured and started. Before running the Magentix2 platform you need to finish the installation by executing the setup script.
 \begin{itemize}
@@ -85,7 +83,7 @@ HearderValue
 
 
 \subsection{Magentix2 installation description}\label{sec:InstallMagentix2DistDirectory}
-Once Magentix2 has been installed in the system in the full installation mode, the following folders are created:
+Once Magentix2 has been installed, the following folders are created:
 \begin{itemize}
 \item \textbf{/} magentix root directory: 
  includes the executable files and folders required to launch and start the platform and services. The main ones are the following, which allows users to start and stop the Magentix2 platform:
@@ -140,7 +138,7 @@ $ ./Stop-Magentix.sh
 \section{Developing and executing a first agent}\label{sec:devel1stAgent}
 This section explains step by step how to program a Magentix2 agent. The images shown here correspond to the Eclipse IDE, but everything should be similar in any other IDE. Magentix2 library works with jdk1.7 which is available at: \url{http://www.oracle.com/technetwork/java/javase/downloads/index.html}
 
-The first step is to start Eclipse and create a new project (MyFirstAgent). The java library \texttt{magentix2-2.0.3-jar-with-dependencies.zip} has to be included in the project as a referenced library. Magentix2 platform and the agents running on it need a configuration folder with two files: \texttt{Settings.xml} and \texttt{loggin.xml}. \texttt{Settings.xml} configures all the parameters related to the platform functionality, like MySQL parameters or how agents connect to the QPid broker. \texttt{Loggin.xml} is the configuration file for the Magentix2 logger, where is specified how log messages are displayed. Magentix2 uses log4j as debugger, for more information about this software, please, refer to: \url{http://logging.apache.org/log4j/1.2/manual.html}. 
+The first step is to start Eclipse and create a new project (MyFirstAgent). The java library \texttt{magentix2-\MagentixVersion-jar-with-dependencies.zip} has to be included in the project as a referenced library. Magentix2 platform and the agents running on it need a configuration folder with two files: \texttt{Settings.xml} and \texttt{loggin.xml}. \texttt{Settings.xml} configures all the parameters related to the platform functionality, like MySQL parameters or how agents connect to the QPid broker. \texttt{Loggin.xml} is the configuration file for the Magentix2 logger, where is specified how log messages are displayed. Magentix2 uses log4j as debugger, for more information about this software, please, refer to: \url{http://logging.apache.org/log4j/1.2/manual.html}. 
 
 There is a valid configuration folder for any Magentix2 project in the Magentix2 installation folder. In this example project, this configuration folder will be used. Thus, it is only necessary to copy the folder \verb|configuration/| in the root folder of the project (in this case \verb|/workspace/MyFirstAgent/}|). Then, it is necessary to create a new package named \textit{agent} in the project. In figure \ref{img:develop1} it is shown how Eclipse looks like after taking these actions.
 \begin{figure}[!h]
@@ -152,7 +150,7 @@ There is a valid configuration folder for any Magentix2 project in the Magentix2
 
 The example shown here consists in two agents: \textit{Sender} and \textit{Consumer}. The agent \textit{Sender}  sends a message to agent \textit{Consumer}, who  writes the content of the received message on the console. In order to set this example, it is required to create three Java classes: Sender.java, Consumer.java and Main.java. Sender.java and Consumer.java will contain the code of the agents. Besides, Main.java will create the connexion to the broker for the agents and start them.
 
-Now, how to program the Sender.java class is shown. This class has to extend BaseAgent class \ref{sec:BaseAgent}. Therefore, it is necessary  to import some classes from magentix2-2.01-jar-with-dependencies.zip. Once the library is included, Eclipse suggests you to import the necessary classes that library. Figure \ref{img:develop2} shows Sender.java at that moment. As it can be seen in the figure, the code of the agent has an error because it lacks a constructor. So, a basic constructor which calls the constructor of the base class is created.
+Now, how to program the Sender.java class is shown. This class has to extend BaseAgent class (section~\ref{sec:BaseAgent}). Therefore, it is necessary  to import some classes from magentix2-\MagentixVersion-jar-with-dependencies.zip. Once the library is included, Eclipse suggests you to import the necessary classes that library. Figure \ref{img:develop2} shows Sender.java at that moment. As it can be seen in the figure, the code of the agent has an error because it lacks a constructor. So, a basic constructor which calls the constructor of the base class is created.
 
 \begin{figure}[!h]
 \centering

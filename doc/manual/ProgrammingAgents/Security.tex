@@ -1,0 +1,245 @@
+%==================================================================
+%================== SEPTIMA SECCIÓN ===============================
+%==================================================================
+\section{Launching agents with security enabled}
+\label{sec:securityenable}
+
+
+In order to ensure the integrity, confidentiality, privacity, no repudiation and mutual authentication of the agent comunications, a security module for Magentix2 platform was implemented. 
+If the security module is enabled in the platform in which will connect, setting the public key infraestructure and configuring the security properties are necessary.
+
+The basic elements of this public key infrastructure are:
+
+\begin{itemize}
+
+\item \textbf{Asymetrical key-pair:} This is used to sign and encrypt information messages.
+\item \textbf{X.509 Certificate:} This is a self-signed certificate with the information of the user, which guarantees the user identity.
+\item \textbf{keystore:} It is a file that contains the X.509 User Certificates, which is needed to connect with the platform. The keystore is protected by a password, 
+hence this file must never be disclosed to others.
+\item \textbf{Trustore:} It is a file that contains a list of trusted parties. The trusted parties will be the Magentix2 platform to which the user connect.
+\end{itemize}
+
+
+
+\subsection{Creating key-pair}
+
+If a key-pair and a certificate issued by a public entity (must be trusted for the platform) is available, the explanation continues in the section \ref{sec:importingMMS}, if not, the next steps must be followed.
+
+For generating \footnote{For this purpose the command keytool included in Java Sun JDK is used
+.} the key pair, this command must be executed in a linux terminal:
+\begin{verbatim}
+$ keytool -genkey -alias alias_name -keyalg RSA \
+		-dname "CN=alias_name,O=Magentix" \
+		-storepass mysecretpassword \
+		-keypass mysecretpassword \
+		-keystore keystore.jks
+\end{verbatim}
+
+The result of this command is a new keystore with an  asymmetrical key-pair user and X.509 Certificate.
+
+\subsection{Exporting User Certificate}
+For one mutual authentication between the user and platform, a self-signed certificate that contains the user public key must be exported.
+
+\begin{verbatim}
+$ keytool -export -keystore keystore \
+   -storepass mysecretpassword \
+	 -alias alias_name -file user.crt
+\end{verbatim}
+
+%\begin{verbatim}
+%$ keytool -export -keystore keystore -storepass mysecretpassword  \
+%	 -alias alias_name -file user.crt
+%\end{verbatim}
+
+The file user.crt will be transfered to the Magentix2 platform administrator by http, ftp, e-mail, etc..., in order that he adds in it his trusted store. 
+
+
+\subsection{Importing MMS Certificate}
+\label{sec:importingMMS}
+
+This command append the Magentix Manager Service (MMS) trusted certificate in the keystore:
+\begin{verbatim}
+$ keytool -import -trustcacerts -noprompt -alias MMS \
+	-file mms.crt -storepass mysecretpassword  -keystore keystore
+\end{verbatim}
+
+The file mms.crt contains the MMS public key, to obtain this file, please contact with the Magentix2 administrator.
+
+
+\subsection{Creating and importing truststore}
+
+If the MagentixCA self-signed certificate is not included in the truststore, the connections with the platform will be rejected. 
+
+The following command creates a truststore and appends the MagentixCA trusted certificate:
+\begin{verbatim}
+$ keytool -import -trustcacerts -noprompt -alias MagentixCA \
+	-file rootca.crt -storepass mysecretpassword \
+	-keystore truststore.jks
+\end{verbatim}
+
+The root.crt file contains the MagentixCA public key, to obtain this file, please contact with the Magentix2 platform administrator.
+
+
+
+\subsection{Configuration}
+\label{sec:configuration}
+
+The security parameters must be indicated inside the securityUser.properties file and the configuration of the broker connection inside the Settings.xml. These files are inside the configuration directory.
+
+\begin{itemize}
+ \item \textbf{securityUser.properties}
+
+ 
+
+
+The securityUser.Properties is divided into four sections. In the first section, the keystore and truststore is configured, hence the path and password must be specified, as it can be shown in the following example (Figure \ref{fig:1stsecurityUserProp} ).
+
+\begin{figure}[h]
+\begin{codigo}
+    #<!-- User Security Properties -->
+    # set the base path for accessing keystore user
+    KeyStorePath=/full_path/keystore.jks
+
+    #set the password to keystore
+    KeyStorePassword=password
+
+    # set the base path for accessing truststore user
+    TrustStorePath=/full_path/truststore.jks
+
+    #set the password to truststore
+    TrustStorePassword=password
+\end{codigo}
+
+\caption{First section of the securityUser.properties file }
+\label{fig:1stsecurityUserProp}
+\end{figure}
+
+In the second section it is indicated if the user certificate used has been issued by a public certificate autorithy (in this case the parametre type is \textit{others}) or have been created by the user (the type is \textit{own}).
+
+If the type selected is \textit{others}, then it is required to configuring the parameters that will be find below the \textit{type} parameter. Again, an example is shown below (Figure \ref{fig:2ndsecurityUserProp}).
+
+\begin{figure}[h!]
+\begin{codigo}
+    #set the type of certificates (own or others (FNMT, ACCV,
+    # ...))
+    type=own
+    #set the base path for access to correct keystore
+    othersPath=/full_path/keystore_fnmt.p12
+    #set the pin of the smartcard or password of your keystore
+    othersPin=password
+    #set the type of the keystore
+    othersType=PKCS12
+\end{codigo}
+
+\caption{Second section of the securityUser.properties file }
+\label{fig:2ndsecurityUserProp}
+\end{figure}
+
+
+In the section three (Figure \ref{fig:3rdsecurityUserProp}), the MMS direction path is indicated. For this purpose it is necessary to consult with the Magentix2 administrator to provide the direction ([protocol] + [host] + [port] + [path]) where the MMS service is deployed. 
+
+\begin{figure}[h!]
+\begin{codigo}
+    # set the connection protocol to be used to access services
+    protocol=http
+    # set the name of the service host
+    host=localhost
+    # set the port for accessing the services
+    port=8080
+    # set the base path for accessing to services
+    path=/MMS/services/MMS
+\end{codigo}
+\caption{Third section of the securityUser.properties file }
+\label{fig:3rdsecurityUserProp}
+\end{figure}
+
+The purpose of last section is to indicate the user alias certificate (Figure \ref{fig:4thsecurityUserProp}).
+
+\begin{figure}[h!]
+\begin{codigo}
+#set the alias to user certificate. This alias is
+#a PrivateKeyEntry.
+alias=[User_alias]
+\end{codigo}
+\caption{Fourth section of the securityUser.properties file }
+\label{fig:4thsecurityUserProp}
+\end{figure}
+
+\newpage
+If the name of the alias certificate is not know, then it can be consulted with the following command:
+
+\begin{verbatim}
+$ keytool -list -keystore keystore.jks 
+\end{verbatim}
+In the case the certificate store is not a jks type: 
+\begin{verbatim}
+$ keytool -list -storetype pkcs12 -keystore keystore_fnmt.p12
+\end{verbatim}
+
+The alias will be displayed in the first place of line, for example in the following case the alias is \textit{alice} (Figure \ref{fig:keytoolRes}).
+
+\begin{figure}[h!]
+\begin{codigo}
+Keystore type: JKS
+Keystore provider: SUN
+
+Your keystore contains 5 entries
+
+alice, 27-sep-2010, PrivateKeyEntry, 
+Hash of certificate (MD5): 
+ 13:D2:8F:3A:F3:2B:C9:D9:CC:6B:A8:C0:DB:7D:DA:FA
+\end{codigo}
+\caption{Result of the \textit{Keytool} command}
+\label{fig:keytoolRes}
+\end{figure}
+
+\newpage
+
+\item \textbf{Settings.xml}
+The connection parameters must be specified inside the Settings.xml file. The Figure \ref{fig:settingsxmlfile} shows an example of the content of this file. Note that the \textit{port} parameter is where the broker Qpid is listening to the ssl connections and EXTERNAL is the method by default.
+
+
+\begin{figure}
+\begin{codigo}
+    <!-- Properties qpid broker -->
+    <entry key="host">localhost</entry>
+    <entry key="port">5671</entry>
+    <entry key="vhost">test</entry>
+    <entry key="user">guest</entry>
+    <entry key="pass">guest</entry>
+    <entry key="ssl">true</entry>
+    <!-- Secure qpid properties -->
+    <entry key="secureMode">true</entry>
+    <entry key="saslMechs">EXTERNAL</entry>
+\end{codigo}
+\caption{An example of the Settings.xml file}
+\label{fig:settingsxmlfile}
+\end{figure}
+
+
+\end{itemize}
+
+\subsection{Running}
+
+In the secure mode, agent connection with the broker is formed automatically in the agent constructor. Therefore, in the main program, the 
+method connect (explained in section \ref{subsec:connecting}) is not necessary. Thus, it is only required to complete carefully the previous configurations
+and import the required libraries \footnote{The libraries are available in lib/security/ directory} in the Java project build path.
+
+
+(Please note that the platform do not allow agents with the same name and it is case sensitive.)
+
+\subsection{Problems}
+The following  exceptions can arise when security is used and correct configuration has not be done.
+\begin{enumerate}
+
+\item  \textbf{(WSSecurityEngine: Callback supplied no password for: mms).}
+The MMS self-signed certificate has not been imported correctly in keystore.
+\item  \textbf{org.apache.axis2.AxisFault: Error in signature with X509Token.}
+The alias parameter  of the  securityUser.properties file has not correctly specified.
+\item  \textbf{General security error (No certificates were found for decryption (KeyId)).}
+The MMS self-signed certificate has not been imported correctly in the keystore.
+\item  \textbf{org.apache.axis2.AxisFault: The certificate used for the signature is not trusted.}
+The User certificate with the user public key has not been added in the truststore of magentix administrator, it is necessary to check that 
+the user certificate have been exported and transfered correctly or contact with the magentix administrator.
+In administrator mode, section \ref{sec:AddthirdParty} explains how to import user certificate. 
+\end{enumerate}
