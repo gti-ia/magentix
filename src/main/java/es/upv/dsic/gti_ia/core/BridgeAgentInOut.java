@@ -4,14 +4,32 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.DatagramPacket;
-
 import java.net.InetAddress;
 import java.net.Socket;
-
 import java.net.UnknownHostException;
 import java.util.Calendar;
 import java.util.concurrent.LinkedBlockingQueue;
+
 import org.apache.qpid.transport.MessageTransfer;
+import org.openjena.atlas.logging.Log;
+
+/**
+ * 
+ * 
+ * VictorMMorant
+ * 
+ * Partes:
+ * 
+ * 1. Validar formato del texto.
+ * 
+ * De http a ACL y de ACL a http
+ * 
+ * 2. Simulación de JADE
+ * 
+ * Envio y recepción de mensajes desde una plataforma JADE externa a Magentix
+ * 
+ */
+
 
 /**
  * This agent routes messages from inside the platform to outside the platform.
@@ -54,8 +72,9 @@ public class BridgeAgentInOut extends BaseAgent {
 
 		String port = ACLsms.getReceiver().port;
 
-		// Comprovem si el port es d'un agent Jade, tipus 7778/acc, ens quedem
-		// només en la part numèrica
+		
+		// Check whether the port is a JADE agent, format 7778/acc.
+		//Take only the numeric part
 		if (ACLsms.getReceiver().port.indexOf('/') > -1)
 			port = ACLsms.getReceiver().port.substring(0,
 					ACLsms.getReceiver().port.indexOf('/'));
@@ -385,14 +404,18 @@ public class BridgeAgentInOut extends BaseAgent {
 			byte datos[] = message.getBytes();
 
 			InetAddress a = InetAddress.getByName(ACLsms.getReceiver().host);
-
+			
+			logger.info(""+ACLsms.getReceiver().host);
+			
 			socket = new Socket(a, 7778);
-
-			InputStream is = socket.getInputStream();
+			
+			//InputStream is = socket.getInputStream();
 			OutputStream os = socket.getOutputStream();
-
+			
 			os.write(datos);
-
+			os.flush();
+			os.close();
+			socket.close();
 			// DatagramPacket(datos,
 			// datos.length, InetAddress
 			// .getByName(ACLsms.getReceiver().host), Integer
@@ -404,7 +427,7 @@ public class BridgeAgentInOut extends BaseAgent {
 
 			return true;
 		} catch (IOException e) {
-			logger.error("Exception in ACLMessageToDatagramPacket");
+			logger.error("Exception in ACLMessageToDatagramPacket: "+e.getMessage());
 			return false;
 		}
 
@@ -479,7 +502,7 @@ public class BridgeAgentInOut extends BaseAgent {
 
 	}
 
-	public void finalize() {
+	public void exit() {
 		this.finalized = true;
 		System.out.println("Bridge Agent In Out leave the system");
 	}

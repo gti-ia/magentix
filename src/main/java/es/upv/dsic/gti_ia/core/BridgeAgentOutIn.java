@@ -25,22 +25,22 @@ public class BridgeAgentOutIn extends BaseAgent {
 	// private DatagramSocket socket;
 	private ServerSocket socket;
 	private Socket s;
-	
+
 	Configuration configuration = Configuration.getConfiguration();
 
 	/**
-	 * BridgeAgentOutIn runs on 8081 port
+	 * BridgeAgentOutIn runs on 8082 port
 	 */
 	static int http_port;
 
 	/**
 	 * Gets the HTTP port where agent is waiting
+	 * 
 	 * @return http port
 	 */
 	public static int getHttp_port() {
 		return http_port;
 	}
-
 
 	private boolean finalized = false;
 
@@ -55,13 +55,12 @@ public class BridgeAgentOutIn extends BaseAgent {
 
 		// crear objeto DatagramSocket para enviar y recibir paquetes
 		try {
-		//Sacamos el http port del properties.
+			// Sacamos el http port del properties.
 			BridgeAgentOutIn.http_port = configuration.getBridgeHttpPort();
-			
+
 			// socket = new DatagramSocket(5000);
 			socket = new ServerSocket(BridgeAgentOutIn.http_port);
-			
-		
+
 		}
 
 		// procesar los problemas que pueden ocurrir al crear el objeto
@@ -72,12 +71,13 @@ public class BridgeAgentOutIn extends BaseAgent {
 		}
 
 	}
-	
+
 	/**
 	 * Creates a new BrideAgentOutIn
 	 * 
 	 * @param aid
-	 * @param http port
+	 * @param http
+	 *            port
 	 * @throws Exception
 	 */
 	public BridgeAgentOutIn(AgentID aid, int http_port) throws Exception {
@@ -101,30 +101,31 @@ public class BridgeAgentOutIn extends BaseAgent {
 
 	/**
 	 * Waits for a message and processes it, in parallel.
+	 * 
 	 */
 	public void execute() {
+
 		while (!finalized) {
 			// Escuchar por protocolo http y enviar a quien corresponda
 			// recibir paquete, mostrar su contenido
 			try {
 
 				InputStream is;
-
-			
-				
 				logger.info("BridgeAgentOutIn waiting receive external FIPA-Messages");
-				s = socket.accept(); // Socket Cliente
 
+				s = socket.accept(); // Socket Cliente
 				// Monitor m = new Monitor();
 				// m.waiting(10);
 
 				is = s.getInputStream();
 				OutputStream os = s.getOutputStream();
 
-				/*
-				 * try { Thread.sleep(100); } catch (InterruptedException e) {
-				 * // TODO Auto-generated catch block e.printStackTrace(); }
-				 */
+				try {
+					Thread.sleep(10);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 
 				StringBuffer stb = new StringBuffer();
 				int i;
@@ -138,17 +139,16 @@ public class BridgeAgentOutIn extends BaseAgent {
 				boolean condicion = false;
 
 				/*
-				 * Parche: HTTP 1.1 no cierra la conexi�n, por lo que no
-				 * podemos leer hasta eof. La soluci�n adoptada es que al
-				 * final de la lectura, si los bytes leidos son menores que el
-				 * tama�o del buffer y adem�s al final se encuentra la
-				 * cadena "\r\n\r\n" se asume el final del mensaje. No
-				 * funcionar�a este parche, si y solo si: - El tama�o del
-				 * mensaje total coincide exactamente con el tama�o del
-				 * buffer, pues no cortariamos el mensaje. - El tama�o leido
-				 * es menor al del buffer y el final del paquete coincide con la
-				 * cadena \r\n\r\n, pero no es el final del mensaje sino un
-				 * trozo del mensaje total.
+				 * Parche: HTTP 1.1 no cierra la conexi�n, por lo que no podemos
+				 * leer hasta eof. La soluci�n adoptada es que al final de la
+				 * lectura, si los bytes leidos son menores que el tama�o del
+				 * buffer y adem�s al final se encuentra la cadena "\r\n\r\n" se
+				 * asume el final del mensaje. No funcionar�a este parche, si y
+				 * solo si: - El tama�o del mensaje total coincide exactamente
+				 * con el tama�o del buffer, pues no cortariamos el mensaje. -
+				 * El tama�o leido es menor al del buffer y el final del paquete
+				 * coincide con la cadena \r\n\r\n, pero no es el final del
+				 * mensaje sino un trozo del mensaje total.
 				 */
 
 				try {
@@ -170,7 +170,8 @@ public class BridgeAgentOutIn extends BaseAgent {
 
 					}
 				} catch (Exception e) {
-					logger.error(e.getMessage() + " - " + e.getStackTrace());
+					// logger.error(e.getMessage() + " - " + e.getStackTrace());
+					System.err.println(e.getMessage());
 				}
 
 				String texto = new String(stb);
@@ -186,7 +187,7 @@ public class BridgeAgentOutIn extends BaseAgent {
 				os.close();
 				is.close();
 
-				hilo.run();
+				hilo.start();
 
 				s.close();
 
@@ -244,6 +245,14 @@ public class BridgeAgentOutIn extends BaseAgent {
 		}
 
 		public void run() {
+
+			ACLMessage msg = createACLMessage();
+			send(msg);
+
+		}
+
+		public ACLMessage createACLMessage() {
+
 			ACLMessage msg = new ACLMessage(-1);
 			AgentID sender = new AgentID();
 			AgentID receiver = new AgentID();
@@ -259,39 +268,48 @@ public class BridgeAgentOutIn extends BaseAgent {
 
 				// leemos las cuatro primeras lineas que no nos interesan y nos
 				// quedamos con la quinta
-				String cadena = dis.readLine();
-
-				int cont = 0;
-				while (cadena != null && cont < 4) {
+				String cadena = "";
+				do {
+					cadena = dis.readLine();
 					// this statement reads the line from the file and print it
 					// to
 					// the console.
-					// System.out.println(cadena);
-					cadena = dis.readLine();
-					cont++;
-				}
+					System.out.println(cadena);
+				} while (cadena != null && cadena.indexOf("boundary") == -1);
 
+				/*
+				 * String line = ""; while((line = dis.readLine())!= null )
+				 * System.out.println(line);
+				 */
 				if (cadena == null) {
 					System.err.println("Error receiving JADE message");
 
 				} else {
+					System.out.println(cadena);
 					// buscamos el boundary
 					int indexboundary = cadena.indexOf("boundary=\"");
 					String boundary = cadena.substring(indexboundary + 10,
 							cadena.indexOf("\"", indexboundary + 10));
+					System.out.println("boundary:" + boundary
+							+ " index boundary: " + indexboundary);
 					// leemos hasta encontrar el boundary, donde empieza el
 					// envelope
-					do
+					do {
 						cadena = dis.readLine();
-					while (cadena != null && cadena.indexOf(boundary) == -1);
+						System.out.println(cadena);
+					} while (cadena != null && cadena.indexOf(boundary) == -1);
 					// la primera linea nos indica el content type
 					cadena = dis.readLine();
+					System.out.println(cadena);
+
 					// linea en blanco
 					cadena = dis.readLine();
+
 					// version xml
 					cadena = dis.readLine();
 					// envelope
 					cadena = dis.readLine();
+					System.out.println(cadena);
 					// logger.debug(cadena);
 					// parseamos contenido XML
 					Xml envelope = new Xml(stringToInputStream(cadena),
@@ -368,9 +386,13 @@ public class BridgeAgentOutIn extends BaseAgent {
 					// performativa
 					cadena = dis.readLine();
 
-					String performative = cadena.substring(1).trim();
+					String performative = cadena.substring(1).toUpperCase()
+							.trim();
+					System.out.println("P" + performative);
 					msg.setPerformative(performative);
 					logger.debug("Performative: " + msg.getPerformative());
+					System.out
+							.println("Performative: " + msg.getPerformative());
 					// agente remitente, ya tenemos sus datos
 					cadena = dis.readLine();
 					// agente receptor, ya tenemos sus datos
@@ -399,7 +421,7 @@ public class BridgeAgentOutIn extends BaseAgent {
 								&& cadena.charAt(pos - 2) != '\\')
 							seguir = false;
 					}
-					content = content.substring(0, content.length() - 2);
+					content = content.substring(0, content.length() - 1);
 
 					msg.setContent(content);
 					logger.debug("content " + content);
@@ -476,12 +498,11 @@ public class BridgeAgentOutIn extends BaseAgent {
 
 					msg.getReceiver().protocol = "qpid";
 
-					send(msg);
-
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+			return msg;
 		}
 	}
 
