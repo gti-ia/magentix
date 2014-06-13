@@ -6,6 +6,7 @@ import org.apache.log4j.xml.DOMConfigurator;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
 import es.upv.dsic.gti_ia.trace.TraceManager;
+import es.upv.dsic.gti_ia.trace.TraceMask;
 
 /*****************************************************************************************
 /*                                       TraceDaddy                                      *
@@ -76,6 +77,7 @@ public class Run {
 			 * Instantiating the Trace Manager
 			 */
 			TraceManager tm = new TraceManager(new AgentID("TM"));
+			tm.setTraceMask(new TraceMask("1001000100"));
 
 			System.out.println("INITIALIZING...");
 			

@@ -1,5 +1,5 @@
 \chapter{Programming Agents} \label{chap:programmingAgents}
-%MUY IMPORTANTE. Esta parte está destinada al programador de agentes que no tiene interés alguno acerca de cómo poner la plataforma en marcha y mucho menos sobre cómo están implementadas las cosas por dentro. En cada sección referencias con una breve descripción qué ejemplos están disponibles.
+%MUY IMPORTANTE. Esta parte estï¿½ destinada al programador de agentes que no tiene interï¿½s alguno acerca de cï¿½mo poner la plataforma en marcha y mucho menos sobre cï¿½mo estï¿½n implementadas las cosas por dentro. En cada secciï¿½n referencias con una breve descripciï¿½n quï¿½ ejemplos estï¿½n disponibles.
 %
 
 
@@ -8,7 +8,7 @@
 %Joan y Ricard consideran redundante su contenido
 
 %==================================================================
-%================== SEGUNDA SECCIÓN ===============================
+%================== SEGUNDA SECCIï¿½N ===============================
 %==================================================================
 \section{Basic classes for building agents: BaseAgent and SimpleAgent}
 
@@ -31,7 +31,7 @@ public class SenderAgent extends BaseAgent {
 
   public void execute() {
 	System.out.println("Executing, I'm " + getName());
-	
+
   }
 
 }
@@ -65,18 +65,18 @@ public void execute() {
 }
 
 \end{lstlisting}
-\subsection{Initialization Tasks} 
-Magentix2 platform uses log4j as a logging facility. It was developed by the  Apache's Jakarta Project\footnote{http://jakarta.apache.org/}. Its speed and flexibility allows log statements to remain in shipped code while giving the user the ability to enable logging at runtime without modifying any of the application binaries. 
+\subsection{Initialization Tasks}
+Magentix2 platform uses log4j as a logging facility. It was developed by the  Apache's Jakarta Project\footnote{http://jakarta.apache.org/}. Its speed and flexibility allows log statements to remain in shipped code while giving the user the ability to enable logging at runtime without modifying any of the application binaries.
 
 Log4j must be initialized inside the \lstinline|main()| method of each Java application as follows:
- 
+ï¿½
 \begin{lstlisting}
 DOMConfigurator.configure("configuration/loggin.xml");
 
 Logger logger = Logger.getLogger(Run.class);
 \end{lstlisting}
- 
-The file logging.xml \footnote{This file is located in the \texttt{configuration/} directory of the Magentix2 installation.} is used to specify what level of log messages are written to the log files for each component. Moreover, Log4j allows logging requests to print to multiple destinations called appenders. 
+ï¿½
+The file logging.xml \footnote{This file is located in the \texttt{configuration/} directory of the Magentix2 installation.} is used to specify what level of log messages are written to the log files for each component. Moreover, Log4j allows logging requests to print to multiple destinations called appenders.
 
 
 Two appenders predefined for Magentix2 are showed in \ref{fig:Appender1} and \ref{fig:Appender2} figures. Specifically, the appender 1 (figure \ref{fig:Appender1}) indicates a file as the standard output. The appender 2 (figure \ref{fig:Appender2}) indicates the console as the standard output. Please, to learn more about appenders refer to: \url{http://logging.apache.org/log4j/1.2/index.html}
@@ -87,12 +87,12 @@ Two appenders predefined for Magentix2 are showed in \ref{fig:Appender1} and \re
 <appender name="File" class="org.apache.log4j.FileAppender">
 	<param name="File" value="logs/Magentix2.log"/>
 	<layout class="org.apache.log4j.PatternLayout">
-	    <param name="ConversionPattern" value="%t %-5p %c{2} 
+	    <param name="ConversionPattern" value="%t %-5p %c{2}
 		   - %m%n"/>
 	</layout>
 </appender>
 \end{codigo}
-\caption{Appender 1} 
+\caption{Appender 1}
 \label{fig:Appender1}
 \end{figure}
 
@@ -106,7 +106,7 @@ Two appenders predefined for Magentix2 are showed in \ref{fig:Appender1} and \re
 	</layout>
 </appender>
 \end{codigo}
-\caption{Appender 2} 
+\caption{Appender 2}
 \label{fig:Appender2}
 \end{figure}
 
@@ -120,25 +120,25 @@ A connection to the Qpid broker must be established before launching any agent. 
 The following parameters must be specified in any connection to the broker:
 
 \begin{itemize}
-\item$<$QpidHost$>$ the host (or ip address) to connect to (defaults to 'localhost'). 
-\item$<$QpidPort$>$ refers to the port to connect to (defaults to 5672). 
-\item$<$QpidVhost$>$ allows an Qpid 'virtual host' to be specified for the connection (defaults to 'test'). 
+\item$<$QpidHost$>$ the host (or ip address) to connect to (defaults to 'localhost').
+\item$<$QpidPort$>$ refers to the port to connect to (defaults to 5672).
+\item$<$QpidVhost$>$ allows an Qpid 'virtual host' to be specified for the connection (defaults to 'test').
 \item$<$QpdidUser$>$ user name to access Qpid.
 \item$<$QpidPassword$>$  password to access Qpid.
 \item$<$QpidSSL$>$ indicates if  SSL is used during the connection (its value is always false when security is not enabled).
 \end{itemize}
 
 There are three different ways to establish a connection to the Qpid broker  using the \lstinline|connect()| method implemented in the  \lstinline|es.upv.dsic.gti_ia.core.AgentsConnection |class:
- 
+ï¿½
 
- 
+
 
 \begin{itemize}
-\item Calling \lstinline|connect()| without parameters. In this case the parameters are gathered from the Settings.xml \footnote{This file is located in the \texttt{configuration/} directory of the Magentix2 installation.} file. For example:\\ 
+\item Calling \lstinline|connect()| without parameters. In this case the parameters are gathered from the Settings.xml \footnote{This file is located in the \texttt{configuration/} directory of the Magentix2 installation.} file. For example:\\
 \begin{center}
  \lstinline|AgentsConnection.connect();|
 \end{center}
- 
+
 
 Thus, it is possible to specify the connection parameters inside the Settings.xml file. Note that if all the parameters are not specified in the Settings.xml file, it is not feasible to use the \lstinline|connect()| method without parameters.
 
@@ -160,7 +160,7 @@ An example of the Settings.xml  file could be:
 \end{center}
 
 \item Specifying only the $<$qpidhost$>$ parameter, leaving the rest as default parameters. In the current example case the default values will be  (5672,"test","guest","guest",false) respectively. Example:
-\begin{center} 	
+\begin{center}
 \lstinline|AgentsConnection.connect("host.domain");|
 \end{center}
 \end{itemize}
@@ -168,22 +168,22 @@ An example of the Settings.xml  file could be:
 \subsection{Running Agents}
 Once agents are implemented, they can be instantiated and launched. Please note that the platform do not allow different agents with the same name.
 
-In order to instantiate an agent, an agent ID must be also created as follows: 
+In order to instantiate an agent, an agent ID must be also created as follows:
 \begin{itemize}
- \item AgentID(String Identifier), where Identifier is the agent name. 
+ \item AgentID(String Identifier), where Identifier is the agent name.
 \end{itemize}
 
- 
+ï¿½
 Examples of creating a new instantiation:
 
 \begin{lstlisting}
 SenderAgent agent1 = new SenderAgent(new AgentID("sender"));
-		
+
 ConsumerAgent agent2 = new ConsumerAgent(new AgentID("consumer"));
 \end{lstlisting}
 
 
-Once instantiated, agents can be launched by calling to their \lstinline|start()| method. 
+Once instantiated, agents can be launched by calling to their \lstinline|start()| method.
 
 
 Examples:
@@ -193,27 +193,27 @@ Examples:
     agent2.start();
 \end{lstlisting}
 
-\subsection{Optional Methods} 
+\subsection{Optional Methods}
 The \lstinline|init()| and \lstinline|finalize()| methods are also defined in the  \lstinline|es.upv.dsic.gti_ia.core.BaseAgent| class. These methods are automatically executed before and after the \lstinline|execute()| method. The programmer can  overwrite  these methods in order to include initialization or termination tasks.
 
 
 \subsection{Running Examples}
 
-In the examples folder of the Magentix2 package there are some basic examples of Magentix agents: 
+In the examples folder of the Magentix2 package there are some basic examples of Magentix agents:
 \begin{itemize}
 
  \item BaseAgent\_Example: this is an example of sender/consumer agents. The sender agent sends an ACLMessage to the consumer agent. When the ACLMessage arrives to the consumer agents, a message is shown.
- 
+
  \item SingleAgent\_Example: this is an example of sender/consumer agents. The sender agent sends an ACLMessage to the consumer agent. When the ACLMessage arrives to the consumer agents, a message is shown.
 The consumer is in blocked state waiting the message.
 
 \end{itemize}
 
 %==================================================================
-%================== TERCERA SECCIÓN ===============================
+%================== TERCERA SECCIï¿½N ===============================
 %==================================================================
 \section{Agent Communication}
-%La clase ACLMessage. Envío y recepción de mensajes desde las clases básicas. Consideraciones sobre el envío/recepción con agentes externos %usando FIPA-ACL sobre http.
+%La clase ACLMessage. Envï¿½o y recepciï¿½n de mensajes desde las clases bï¿½sicas. Consideraciones sobre el envï¿½o/recepciï¿½n con agentes externos %usando FIPA-ACL sobre http.
 
 
 
@@ -222,41 +222,41 @@ The Figure \ref{fig:MessagesExchangeQpid} illustrates how a sender agent posts a
  \begin{figure}
  \centering
 \includegraphics[width=\textwidth]{ProgrammingAgents/images/MessagesExchangeQpid.png}
-\caption[Messages exchange thought QPID Broker in Magentix2]{Messages exchange thought QPID Broker in Magentix2 } \label{fig:MessagesExchangeQpid} 
+\caption[Messages exchange thought QPID Broker in Magentix2]{Messages exchange thought QPID Broker in Magentix2 } \label{fig:MessagesExchangeQpid}
 \end{figure}
 
 \subsection{{FIPA} {ACL} Language}
 Messages exchanged by Magentix2 agents have the format specified by the ACL language defined by the FIPA\footnote{\url{http://www.fipa.org}}  international standard for agent interoperability. This format comprises a number of fields, such as:
 \begin{itemize}
-	\item Sender of the message. 
+	\item Sender of the message.
 	\item A list of receivers.
 	\item Performative: REQUEST, INFORM, QUERY\_IF, CFP, PROPOSE, ACCEPT\_PROPOSAL, REJECT\_PROPOSAL, etc.
-	\item Content. 
-	\item Content Language. 
-	\item Content Ontology. 
+	\item Content.
+	\item Content Language.
+	\item Content Ontology.
 	\item Conversation-id, reply-with, in-reply-to, reply-by, etc.
-	
+
 \end{itemize}
 
-A message in Magentix2 is implemented as an instance of the \url{es.upv.dsic.gti_ia.core.ACLMessage} class that provides get and set methods for handling all the fields of a message. 
+A message in Magentix2 is implemented as an instance of the \url{es.upv.dsic.gti_ia.core.ACLMessage} class that provides get and set methods for handling all the fields of a message.
 
 \subsection{Sending Messages}
 
 To send a message to another agent the programmer must fill the fields of an ACLMessage object and then call the send() method of the \url{es.upv.dsic.gti_ia.core.BaseAgent} class.
- 
+ï¿½
 
 The code below informs an agent whose identifier is receiver with the text: "Hello I'm sender".
 \begin{lstlisting}[style=Java]
-	
-		// Building a ACLMessage 
+
+		// Building a ACLMessage
 		ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
 		msg.setReceiver(receiver);
 		msg.setSender(this.getAid());
 		msg.setLanguage("ACL");
 		msg.setContent("Hello, I'm " + getName());
 
-		
-		// Sending a ACLMessage	 
+
+		// Sending a ACLMessage
 		send(msg);
 
 \end{lstlisting}
@@ -268,35 +268,35 @@ Agent programmers must overwrite the  \textit{onMessage} method when  implementi
 
 \begin{lstlisting}[style=Java]
 public void onMessage(ACLMessage msg) {
-           
-     // When a message arrives, it is shown in the screen
-            
-     logger.info("Mensaje received in " + this.getName() + " agent, by onMessage: " + msg.getContent());
+ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+ï¿½ï¿½ï¿½ï¿½ï¿½// When a message arrives, it is shown in the screen
+ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+ï¿½ï¿½ï¿½ï¿½ï¿½logger.info("Mensaje received in " + this.getName() + " agent, by onMessage: " + msg.getContent());
 }
 \end{lstlisting}
 \subsection{External Communication}
 
 An external agent is any agent not running over Magentix2  platform but communicating to any of the agents running on Magentix2. In this sense, Magentix2 implements the FIPA-HTTP message transport protocol  by means of two special Magentix2 agents:
 \begin{itemize}
-\item \textit{BridgeAgentInOut}: this agent is implemented in the  \url{es.upv.dsic.gti_ia.core.BridgeAgentInOut} class. This agent is in charge of receiving all the messages sent by Magentix2 agents in which the recipient are agents running on another platform (that uses \textit{http} as communication protocol). Then, the \textit{BridgeAgentInOut} encapsulates the entire message and sends it via \textit{http}. 
+\item \textit{BridgeAgentInOut}: this agent is implemented in the  \url{es.upv.dsic.gti_ia.core.BridgeAgentInOut} class. This agent is in charge of receiving all the messages sent by Magentix2 agents in which the recipient are agents running on another platform (that uses \textit{http} as communication protocol). Then, the \textit{BridgeAgentInOut} encapsulates the entire message and sends it via \textit{http}.
 
-\item \textit{BridgeAgentOutIn}: the implementation of this agent can be found in the \url{es.upv.dsic.gti_ia.core.BridgeAgentOutIn} class. The  \textit{BridgeAgentOutIn} routes messages from external agents (received via \textit{http}) to Magentix2 agents. Therefore, BridgeAgentOutIn decodes the http message received and creates an ACLMessage message. After that, \textit{BridgeAgentOutIn} sends the new created message to the recipient's mailbox. 
+\item \textit{BridgeAgentOutIn}: the implementation of this agent can be found in the \url{es.upv.dsic.gti_ia.core.BridgeAgentOutIn} class. The  \textit{BridgeAgentOutIn} routes messages from external agents (received via \textit{http}) to Magentix2 agents. Therefore, BridgeAgentOutIn decodes the http message received and creates an ACLMessage message. After that, \textit{BridgeAgentOutIn} sends the new created message to the recipient's mailbox.
 \end{itemize}
 
 %It is necessary to instantiate and launch the \textit{BridgeAgentInOut} and the \textit{BridgeAgentOutIn} agents to allow external communication. It can be done by means of the script \textit{Launch-MagentixAgents.sh}, which can be found inside the Magentix2 installation directory in the path  magentix2/bin. Specifically, the commands needed are:
 %\begin{verbatim}
-%$ cd  bin 
+%$ cd  bin
 %$ sh Launch-MagentixAgents.sh
 %\end{verbatim}
 
-Notice that the \textit{BridgeAgentInOut} and the \textit{BridgeAgentOutIn} agents must be launched and instantiated to allow external communication. This is made together with the rest of platform services and platforms agents by means of the \textit{Start-Magentix.sh} command (explained in section \ref{sec:InstallMagentix2DistDirectory}). %los agentes se lanzarán en localhost, y el agente pasarela OutIn escuchará por el puerto 8081 
+Notice that the \textit{BridgeAgentInOut} and the \textit{BridgeAgentOutIn} agents must be launched and instantiated to allow external communication. This is made together with the rest of platform services and platforms agents by means of the \textit{Start-Magentix.sh} command (explained in section \ref{sec:InstallMagentix2DistDirectory}). %los agentes se lanzarï¿½n en localhost, y el agente pasarela OutIn escucharï¿½ por el puerto 8081
 Thus, the \textit{BridgeAgentInOut} and the \textit{BridgeAgentOutIn} agents would be launched at localhost, and the agent \textit{BridgeAgentOutIn} will be listening in the 8081 port. For other configurations, please refer to section \ref{sec:AdminRunningBridgeAgents}
 
 
 
 %Of course, it is also possible create and launch these agents separately, creating them and calling their execution methods inside the user source code ( for example, in the main function). The following code shows how it can be done:
 %
-%\begin{lstlisting} 
+%\begin{lstlisting}
 %/** * Instantiating a BridgeAgentInOut SingleAgent
 %/
 %BridgeAgentInOut agenteInOut = new BridgeAgentInOut(new AgentID(
@@ -315,70 +315,70 @@ Thus, the \textit{BridgeAgentInOut} and the \textit{BridgeAgentOutIn} agents wou
 
 
 
-Inside Magentix2, external agents are identified (to send messages to them) by means of an \textit{http} address that must be used when creating the corresponding AgentID. For instance, the following example shows the code which could be added into the \textit{execute} method of a Magentix2 agent to send a Request message to another agent running into a JADE platform. 
+Inside Magentix2, external agents are identified (to send messages to them) by means of an \textit{http} address that must be used when creating the corresponding AgentID. For instance, the following example shows the code which could be added into the \textit{execute} method of a Magentix2 agent to send a Request message to another agent running into a JADE platform.
 
 \begin{lstlisting}
-AgentID receiver = new AgentID(); 
+AgentID receiver = new AgentID();
 
-//JADE default parameters.       
+//JADE default parameters.
 receiver.name = "AgentName@hostname:1099/JADE";
 
-//Host in which the JADE agent is running  
-receiver.host = "hostname.domain";  
+//Host in which the JADE agent is running
+receiver.host = "hostname.domain";
 
-//JADE default port for ACC                    
-receiver.port = "7778"; 
+//JADE default port for ACC
+receiver.port = "7778";
 
-//Default protocol                             
-receiver.protocol = "http";                      
+//Default protocol
+receiver.protocol = "http";
 
 /**
- * Building a ACLMessage         */       
- 
+ * Building a ACLMessage         */
+
  //New Request message
- ACLMessage msg = new ACLMessage(ACLMessage.REQUEST); 
- //The JADE agent is added as a receiver of the message 
- msg.setReceiver(receiver); 
- 
- //The Magentix2 agent sends the message													       
- send(msg); 																				
+ ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
+ //The JADE agent is added as a receiver of the message
+ msg.setReceiver(receiver);
+
+ //The Magentix2 agent sends the message
+ send(msg);
 \end{lstlisting}
 
 In a similar way, the following example shows how an external JADE agent sends a message to a Magentix2 agent from the JADE platform (JADE source code):
 
- 
+
 \begin{lstlisting}
 AID receiver = new AID();
 
- //agentname@hotsname of the Magentix2 platform in which the agent is running      
+ //agentname@hotsname of the Magentix2 platform in which the agent is running
 receiver.setName("consumer@hostname");
 
-/Host in which the BridgeAgentOutIn agent is been executed and the port 
-//in which it is listened             
+/Host in which the BridgeAgentOutIn agent is been executed and the port
+//in which it is listened
 receiver.addAddresses("http://host.domain:8081"); /
 
 //Creation of a Request Message
-ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);   
+ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
 
- //Addition of the receiver of the message         
+ //Addition of the receiver of the message
 msg.addReceiver(receiver);
 
 //Sending the message
-send(msg);																						
+send(msg);
 \end{lstlisting}
 
 %==================================================================
-%================== CUARTA SECCIÓN ================================
+%================== CUARTA SECCIï¿½N ================================
 %==================================================================
 %%\section{Basic conversational agents: QueueAgents}
 
 
 
 %%\subsection{Running QueueAgents}
-%%Once defined the protocol, we have to create a new instance and add it to the agent tasks (method addTask). In the initiator role, it is necessay to create and fill in the appropriate message for the desired protocol. 
+%%Once defined the protocol, we have to create a new instance and add it to the agent tasks (method addTask). In the initiator role, it is necessay to create and fill in the appropriate message for the desired protocol.
 
-%%For example,  for the protocol request: 
-%%\begin{lstlisting}   
+%%For example,  for the protocol request:
+%%\begin{lstlisting}
 %%	ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
 %%	msg.setReceiver(new AgentID("HospitalAgent"));
 %%	msg.setProtocol(InteractionProtocol.FIPA_REQUEST);
@@ -387,15 +387,15 @@ send(msg);
 
 %%	this.addTask(new FIPARequestInitiator(this,msg));
 %%\end{lstlisting}
-%%For the responder, it is needed to create a template with the desired protocol: 
-%%\begin{lstlisting}   
+%%For the responder, it is needed to create a template with the desired protocol:
+%%\begin{lstlisting}
 %%	MessageTemplate template = new MessageTemplate(
 %%				InteractionProtocol.FIPA_REQUEST);
 %%
 %%	this.addTask(new FIPARequestResponder(this,template));
 %%\end{lstlisting}
-%%When a task is added , a new thread is created for the agent. Therefore, it is necessary to be careful which the main thread of the agent is not finished. For instance,  a monitor can be used to wait for the completion of the roles: 
-%%\begin{lstlisting}   
+%%When a task is added , a new thread is created for the agent. Therefore, it is necessary to be careful which the main thread of the agent is not finished. For instance,  a monitor can be used to wait for the completion of the roles:
+%%\begin{lstlisting}
 %%	import es.upv.dsic.gti_ia.architecture.Monitor;
 
 %%	private Monitor monitor = new Monitor();
@@ -411,7 +411,7 @@ send(msg);
 
 %%\subsection{Examples}
 
-%%In the examples folder of the Magentix2 packages there are some basic interaction protocols examples: 
+%%In the examples folder of the Magentix2 packages there are some basic interaction protocols examples:
 %%\begin{itemize}
 
 %%\item \textbf{Request:} this example follows the FIPA Request protocol. In this example two agents are created. One agent plays the responding role by simulating a hospital which listens emergency calls. The other agent simulates an accident witness. When the witness see an accident sends a help message to the hospital. The hospital checks if the accident is placed in the action area and if it could attend it.
@@ -420,7 +420,7 @@ send(msg);
 %%\end{itemize}
 
 %==================================================================
-%================== QUINTA SECCIÓN ================================
+%================== QUINTA SECCIï¿½N ================================
 %==================================================================
 \chapter{Advanced conversational agents: CAgents}\label{sec:CAgents}
 
@@ -436,7 +436,7 @@ Each implemented protocol provides the basic message exchange between two agents
 %%	\label{fig:Qarchitecture}
 %%\end{figure}
 
-%%In order to use protocols, agents must extend the QueueAgent class and redefine its constructor. For instance: 
+%%In order to use protocols, agents must extend the QueueAgent class and redefine its constructor. For instance:
 
 %%\begin{lstlisting}
 %%	import es.upv.dsic.gti_ia.architecture.QueueAgent;
@@ -456,7 +456,7 @@ Within all of the protocols implemented, agents can play both initiator and resp
 The set of classes in the \lstinline|es.upv.dsic.gti-ia.architecture| package have been designed so that programmers do not need to deal with neither message sending nor protocol status monitoring. Thus, programmers only have to define what should be done in each state of the protocol and prepare messages before sending. The actions performed in each state are defined by handlers for initiator roles and preparers for responder roles.
 
 \begin{itemize}
- 
+
 
 
  \item	Handlers:
@@ -467,10 +467,10 @@ A handler is a method which is executed when a specific protocol state is reache
 		}
 \end{lstlisting}
  \item	Preparers:
-Preparers are similar to handlers but are executed when the agent plays the responder role in the protocol. 
+Preparers are similar to handlers but are executed when the agent plays the responder role in the protocol.
 Messages must be filled carefully because leaving a field empty can interrupt the entire protocol.  Therefore, we encourage the use of the method \lstinline|createReply()| included in ACLMessage messages. This method produces a new answer to the original message with the required fields covered, so only required ones need to be modified.
 \begin{lstlisting}
-protected ACLMessage prepareResultNotification(ACLMessage inmsg, 
+protected ACLMessage prepareResultNotification(ACLMessage inmsg,
 					      ACLMessage outmsg) {
 
 	    ACLMessage msg = inmsg.createReply();
@@ -482,26 +482,26 @@ protected ACLMessage prepareResultNotification(ACLMessage inmsg,
 Following, some explanations of how  the  FIPA-Protocols proportionated by Magentix2 have been implemented are proportioned, in order to illustrate how new protocols could be implemented.
 
 \subsection{FIPA-Request}
-This protocol allows agents to request other agents to perform an action and it is identified in the protocol parameter of the message with the FIPA-request value. The messages exchanged are: 
+This protocol allows agents to request other agents to perform an action and it is identified in the protocol parameter of the message with the FIPA-request value. The messages exchanged are:
 \begin{enumerate}
 
 
-\item \textbf{Request:} which contents the request. 
+\item \textbf{Request:} which contents the request.
 \item \textbf{Agree or Refuse:} when the agent accepts the request or rejects it respectively.
 \item \textbf{Failure:} when the previous message was an Agree and an error happened during the process.
 \item \textbf{Inform-done:} when the previous message was an Agree and the process ends successfully.
 \item \textbf{Inform-result:} when the previous message was an Agree, the process ends successfully and there is also a result.
-	
+
 The protocol early terminates if:
 \begin{itemize}
-\item The initiator send  to the responder a message explicitly CANCEL  instead of the next initiator. 
+\item The initiator send  to the responder a message explicitly CANCEL  instead of the next initiator.
 \item The responder responds negatively to REFUSE, NOT\_UNDERSTOOD or FAILURE performative.
 \end{itemize}
 \end{enumerate}
 
 %%	The following code shows how to implement a responder rol:
 
- %%	 \begin{lstlisting}   
+ %%	 \begin{lstlisting}
 %%	public class Responder extends FIPARequestResponder {
 
 %%	public Responder(QueueAgent agent) {
@@ -514,8 +514,8 @@ The protocol early terminates if:
 %%					(ACLMessage inmsg, ACLMessage outmsg) 	{}
 %%\end{lstlisting}
   %%   	The following code shows how to implement an initiator rol:
-	%% \begin{lstlisting} 
-	
+	%% \begin{lstlisting}
+
 
 %%	class Initiator extends FIPARequestInitiator {
 
@@ -533,12 +533,12 @@ The protocol early terminates if:
 
 
 \subsection{FIPA-Query}
-This protocol allows agents to request other agents: to query whether a particular proposition is true or false (query-if) and to query for some identified objects (query-ref). Depending on the type of request, the messages can be:  
+This protocol allows agents to request other agents: to query whether a particular proposition is true or false (query-if) and to query for some identified objects (query-ref). Depending on the type of request, the messages can be:
 
 \begin{enumerate}
 
-\item  \textbf{Query-If or Query-Ref:} it contents the request. 
-\item  \textbf{Agree:} when the agent accepts the request. 
+\item  \textbf{Query-If or Query-Ref:} it contents the request.
+\item  \textbf{Agree:} when the agent accepts the request.
 \item  \textbf{Refuse:} in the case the agent rejects the request.
 \item  \textbf{Failure:} in the case an error occurred during the process
 \item  \textbf{Inform-T/F:} when the previous message was an Agree and the first message was a Query-If.
@@ -547,19 +547,19 @@ This protocol allows agents to request other agents: to query whether a particul
 
 
  \subsection{FIPA-Contract-Net}
-The classes ContractNet implements the behaviour of the protocol of the same name, whose operation is: the initiator sends a proposal to several responders, then evaluates their answers and finally chooses the preferred one (or no one). The messages exchanged are: 
+The classes ContractNet implements the behaviour of the protocol of the same name, whose operation is: the initiator sends a proposal to several responders, then evaluates their answers and finally chooses the preferred one (or no one). The messages exchanged are:
 \begin{enumerate}
 \item \textbf{CFP (Call For Proposal):} it specifyes  the action to carry out and, when it is appropriate, the conditions on the performance.
 \item \textbf{Refuse:} when responders reject their participation.
 \item \textbf{Not-Understood:} when there were failings in the communication.
-\item \textbf{Propose:} when a responder makes proposal to the initiator. 
-\item \textbf{Reject-Proposal:} in the case the initiator evaluates a proposal and reject it 
-\item \textbf{Accept-Proposal:} when the initiator evaluates a proposal and accepts it, sending this type of message to accept them. 
+\item \textbf{Propose:} when a responder makes proposal to the initiator.
+\item \textbf{Reject-Proposal:} in the case the initiator evaluates a proposal and reject it
+\item \textbf{Accept-Proposal:} when the initiator evaluates a proposal and accepts it, sending this type of message to accept them.
 \item \textbf{Failure:} responder send this type of message when their proposals were accepted and something wrong happened.
 \item \textbf{Inform-Done:} this messages is sended by responders when their proposals were accepted and the action was performed successfully.
-\item \textbf{Inform-Results:} this message is sended by responders when their proposals were accepted and they need to inform about the results of the operation performed. 
+\item \textbf{Inform-Results:} this message is sended by responders when their proposals were accepted and they need to inform about the results of the operation performed.
 \end{enumerate}
-The initiator (ContractNetInitiator) has two main methods: the handlePropose method, which is called each time a response is received and the handleAllResponses method, which is called when all responses are received or the timeout is exceeded.  The responder agent has the handleAcceptProposal and handleRejectProposal methods, which are called depending on whether the proposal was accepted or not, and their main characteristic is that both of them receive  as input parameters all the messages exchanged by both agents so far. 
+The initiator (ContractNetInitiator) has two main methods: the handlePropose method, which is called each time a response is received and the handleAllResponses method, which is called when all responses are received or the timeout is exceeded.  The responder agent has the handleAcceptProposal and handleRejectProposal methods, which are called depending on whether the proposal was accepted or not, and their main characteristic is that both of them receive  as input parameters all the messages exchanged by both agents so far.
 
 
 \section{Programming CAgents} % (fold)
@@ -568,11 +568,11 @@ The initiator (ContractNetInitiator) has two main methods: the handlePropose met
 % section presenting_cagents (end)
 CAgents facilitate the use and management of conversations. CAgents use CFactories and CProcessors, these two components control ongoing conversation and create new ones. On the one hand, CFactories act as Interaction Protocols (IPs) and are in charge of creating new CProcessors. On the other hand, CProcessors act as instances of CFactories, that is conversations. CFactories have a graph made up of states and arcs. A graph specifies the sequence of actions that a conversation which is following that protocol has to take. Each state represents a specific action, and each arc represents a possible transition between two states. A collection of states (actions) has been defined:
 \begin{itemize}
-\item \emph{Begin}: This state represent that the agent starts the conversation. 
+\item \emph{Begin}: This state represent that the agent starts the conversation.
 \item \emph{Final}: This state represent that the agent ends the conversation.
-\item \emph{Send}: In this state the agent sends a message. 
-\item \emph{Wait}: When a agent reaches this state, the conversation halts until a message is assigned to the conversation. 
-Then, according to the type of the arrived message, an specific subsequent \emph{Receive} state is executed. The type of the message is defined by its header. 
+\item \emph{Send}: In this state the agent sends a message.
+\item \emph{Wait}: When a agent reaches this state, the conversation halts until a message is assigned to the conversation.
+Then, according to the type of the arrived message, an specific subsequent \emph{Receive} state is executed. The type of the message is defined by its header.
 \item \emph{Receive}: This state must be preceded by a \emph{Wait} state. In this state the agent receives a message. Each \emph{Receive} state manages messages with a specific set of headers.
 \end{itemize}
 CFactories can be initiator or participant, the use of each type depends on the role the agent will play in the conversations. On the one hand, initiator CFactories start conversations when directed by agent's logic, i.e. they do not depend on external stimuli in order to start a new conversation. On the other hand, participant CFactories start a CProcessor when they receive a message with the appropriate message parameters. These parameters are specified using a message filter associated to the participant CFactory.
@@ -581,7 +581,7 @@ The transition between two states occurs when the agent receives or sends a mess
 
 When a CProcessor is created, it has a copy of the graph specified in the CFactory that created the CProcessor. During the conversation, the CProcessor will execute the actions of the state the conversation is currently at, and it will change the state of the conversation as new messages are sent and received. As each CProcessor has its own graph, an ongoing conversation can be dynamically modified without affecting the IP the conversation is following or other ongoing conversations which follows that IP.
 
-In figure \ref{img:requestIni} an example of an IP transformed into a graph associated to a CFactory is shown. This IP corresponds to the \textit{FIPA Request Interaction Protocol} \cite{fipa02} for the initiator role. 
+In figure \ref{img:requestIni} an example of an IP transformed into a graph associated to a CFactory is shown. This IP corresponds to the \textit{FIPA Request Interaction Protocol} \cite{fipa02} for the initiator role.
 
 \begin{figure}
 \centering
@@ -611,7 +611,7 @@ class HelloWorldAgentClass extends CAgent {
 
    // The platform starts a conversation with each agent that has been just created
    // by sending it a welcome message. This sending creates the first CProcessor
-   // of the agent. In order to manage this message the user must implement 
+   // of the agent. In order to manage this message the user must implement
    // the execution method defined by the class CAgent, this method will
    // be executed by the first CProcessor.
    // It is also in this method where all other actions and behaviours of the
@@ -634,7 +634,7 @@ class HelloWorldAgentClass extends CAgent {
       System.out.println(myProcessor.getMyAgent().getName()
 	 + ": the finalize message is " + finalizeMessage.getContent());
    }
-}  
+}
 \end{lstlisting}
 
 \section{Creating a CFactory and its CProcessor}
@@ -654,7 +654,7 @@ Starting at line 18, a new send \textit{state} is defined called ``PROPOSE''. On
 
 Once the state ``PROPOSE'' has been created, registered and all the transitions to it have been added. In line 31 a new \emph{wait} state called ``WAIT'' is created.  This type of states does not need a method to execute. During its creation, it is necessary to define the name of the state and the timeout, in this case 1000ms. It is possible to define a \textit{wait} state that will wait an unlimited amount of time until a message is received if the timeout is set to 0. A transition from ``PROPOSE'' state to this \emph{wait} state is added.
 
-After a \textit{wait} state it is mandatory to define one or more \textit{receive} states. In this example it is only defined one \textit{receive} state. A \textit{receive} state needs a method to execute and a message filter. This filter specifies which messages can be managed by this \textit{receive} state. In this example, the filter is set to null, therefore this \textit{receive} state accepts any message. The code defining the \textit{receive} state named ``RECEIVE'' starts at line 34. 
+After a \textit{wait} state it is mandatory to define one or more \textit{receive} states. In this example it is only defined one \textit{receive} state. A \textit{receive} state needs a method to execute and a message filter. This filter specifies which messages can be managed by this \textit{receive} state. In this example, the filter is set to null, therefore this \textit{receive} state accepts any message. The code defining the \textit{receive} state named ``RECEIVE'' starts at line 34.
 
 Finally it is defined the \textit{final} state of the protocol at line 46. Every protocol has to finish in a \textit{final} state. \textit{Final} states methods can use the \textit{responseMessage} variable passed as argument as a mean to return a value of the conversation. Once the method that will be executed by this state is defined, the transitions from other states to this one are added and the state registered in the CProcessor.
 
@@ -744,7 +744,7 @@ A CFactory template is a java class that has already defined the states and the 
 
 In this case it is necessary to create a new class that extends the template FIPA\_REQUEST\_Ini\-tia\-tor (lines 6-12). This class has an abstract method that is mandatory to implement, the \texttt{doInform} method (lines 7-11). This method is executed when the initiator receives the results of what it requested. All the other methods for the other states have a default behaviour that can be modified, in this example it is not necessary to do so.
 
-The message that contains the request is created (lines 17-21). Afterwards a CFactory from the template is created (line 29). During the creation, it is required to specify the name of the new CFactory, the request message, the agent owner of the CFactory and the time in milliseconds that the agent will wait for the inform or failure message. Once the CFactory template is defined, it is possible to create a new instance from it. 
+The message that contains the request is created (lines 17-21). Afterwards a CFactory from the template is created (line 29). During the creation, it is required to specify the name of the new CFactory, the request message, the agent owner of the CFactory and the time in milliseconds that the agent will wait for the inform or failure message. Once the CFactory template is defined, it is possible to create a new instance from it.
 
 Finally, the just created CFactory is added to the agent (line 30), and in the last line of the code, a synchronous conversation from this CFactory is started.
 
@@ -775,12 +775,12 @@ msg.setSender(getAid());
 // REQUEST protocol conversations. In this
 // example the CFactory gets the name "TALK", we don't add any
 // additional message acceptance criterion other than the required
-// by the REQUEST protocol 
+// by the REQUEST protocol
 
 CFactory talk = new myFIPA_REQUEST().newFactory("TALK", msg,1, this, 5000);
 this.addFactoryAsInitiator(talk);
 
-// finally the new conversation starts. Because it is synchronous, 
+// finally the new conversation starts. Because it is synchronous,
 // the current interaction halts until the new conversation ends.
 this.startSyncConversation("TALK");
 \end{lstlisting}
@@ -800,7 +800,7 @@ public abstract class MyTemplate {
    public static String WAIT = "WAIT";
    public static String RECEIVE = "RECEIVE";
    public static String RECEIVE = "FINAL";
-   
+
    protected void doBegin(CProcessor myProcessor, ACLMessage msg) {
       System.out.println("This is the begin state");
    }
@@ -811,7 +811,7 @@ public abstract class MyTemplate {
 	 return PROPOSE;
       };
    }
-   
+
    // We want the user to implement his/her method here
    protected abstract void doPropose(CProcessor myProcessor, ACLMessage messageToSend);
 
@@ -833,7 +833,7 @@ public abstract class MyTemplate {
 	 return FINAL;
       }
    }
-   
+
    protected void doFinal(CProcessor myProcessor, ACLMessage messageToSend) {
       messageToSend = myProcessor.getLastSentMessage();
    }
@@ -862,12 +862,12 @@ Once all the states are defined, the next step is to create a method that return
       PROPOSE.setMethod(new PROPOSE_Method());
       processor.registerState(PROPOSE);
       processor.addTransition(BEGIN, PROPOSE);
-      
+
       // WAIT State
       WaitState WAIT = new WaitState("WAIT", timeout);
       processor.registerState(WAIT);
       processor.addTransition(PROPOSE, WAIT);
-      
+
       // RECEIVE State
 
       ReceiveState RECEIVE = new ReceiveState("RECEIVE");
@@ -876,19 +876,19 @@ Once all the states are defined, the next step is to create a method that return
       RECEIVE.setAcceptFilter(filter);
       processor.registerState(RECEIVE);
       processor.addTransition(WAITE, RECEIVE);
-      
+
       FinalState FINAL = new FinalState("FINAL");
       FINAL.setMethod(new FINAL_Method());
       processor.registerState(FINAL);
       processor.addTransition(RECEIVE, FINAL);
-      
+
       return theFactory;
    }
 };
 \end{lstlisting}
 How to use a CFactory template is shown in the previous section \ref{subsec:usingATemplate}. For this specific template the instructions are the same.
 %==================================================================
-%================== SEXTA SECCIÓN =================================
+%================== SEXTA SECCIï¿½N =================================
 %==================================================================
 \chapter{BDI Agents: JasonAgents}
 Jason\cite{bordini05} is an interpreter for an extended version of AgentSpeak(L)\cite{Rao96} and implements the operational semantics of that language. It has been developed by Jomi F. H\"ubner and Rafael H. Bordini. Jason has been integrated in Magentix2 platform, therefore we can program agents in AgentSpeak and run them on Magentix2 platform. For examples and demos of how to program in AgentSpeak(L), please refer to the webpage of the Jason project: \url{http://jason.sourceforge.net/Jason/Jason.html}.
@@ -940,10 +940,10 @@ The code in AgentSpeak(L) is written in a different file, the path to the file i
 vl(1).
 vl(2).
 
-+vl(X)[source(Ag)] 
++vl(X)[source(Ag)]
    :  Ag \== self
    <- .print("Received tell ",vl(X)," from ", Ag).
-   
+
 +!goto(X,Y)[source(Ag)] : true
    <- .println("Received achieve ",goto(X,Y)," from ", Ag).
 
@@ -972,10 +972,10 @@ Argumentative agents implement a case-based argumentation framework to generate 
 
 \subsection{Framework Architecture}
 \label{subsubsec:framework}
-Magentix2 argumentative agents can use a computational case-based argumentation framework to manage argumentation processes. This section outlines the main components of this framework. 
+Magentix2 argumentative agents can use a computational case-based argumentation framework to manage argumentation processes. This section outlines the main components of this framework.
 
-% Thus, the framework consists of: 
-% 
+% Thus, the framework consists of:
+%
 % \begin{itemize}
 % 	\item A definition for the notion of arguments that agents use to justify their proposals.
 % 	\item The logical language that agents use to represent knowledge and engage in argumentation processes.
@@ -990,7 +990,7 @@ We have three types of knowledge resources that the agents can use to generate, 
 
 \begin{description}
  \item[A database of argumentation schemes] with a set of schemes with the structure proposed in \cite{Walton08}, which represent stereotyped patterns of common reasoning in the application domain where the framework is implemented. An argumentation scheme consists of a set of premises and a conclusion that is presumed to follow from them. Also, each argumentation scheme has associated a set of \emph{critical questions} that represent potential attacks to the conclusion supported by the scheme.
- \item[A case-base with domain-cases] that represent previous problems and their solutions. Agents can use this knowledge resource to generate their positions in a dialogue and arguments to support them. The \emph{position} of an agent represents the \emph{solution} that this agent proposes. Also, the acquisition of new domain-cases increases the knowledge of agents about the domain under discussion. 
+ \item[A case-base with domain-cases] that represent previous problems and their solutions. Agents can use this knowledge resource to generate their positions in a dialogue and arguments to support them. The \emph{position} of an agent represents the \emph{solution} that this agent proposes. Also, the acquisition of new domain-cases increases the knowledge of agents about the domain under discussion.
  \item[A case-base with argument-cases] that store previous argumentation experiences and their final outcome. Argument-cases have three main objectives: they can be used by agents 1) to generate new arguments; 2) to select the best position to put forward in view of past argumentation experiences; and 3) to store the new argumentation knowledge gained in each agreement process, improving the agents' argumentation skills.
 \end{description}
 
@@ -1019,25 +1019,25 @@ Arguments in Magentix2 are implemented as java classes, concretely, in the \lsti
 %\end{definition}
 
 \begin{lstlisting}
-public Argument(long id, Conclusion conclusion, 
-	int timesUsedConclusion, String promotedValue, 
-	SupportSet supportSet, 
+public Argument(long id, Conclusion conclusion,
+	int timesUsedConclusion, String promotedValue,
+	SupportSet supportSet,
 	DependencyRelation proponentDepenRelation)
 \end{lstlisting}
-where \texttt{conclusion} is the conclusion of the argument, \texttt{timesUsedConclusion} stores the number of times that this conclusion has been used, \texttt{promotedValue} is the value that the agent wants to promote with this argument, \texttt{supportSet} is a set of elements that justify the argument and \texttt{proponentDepenRelation} is the dependency relation (power, authorisation or charity) established between the proponent of the argument and the opponent that the argument is addressed. Thus, in our case-based argumentation framework arguments promote values. These values can be personal goods (e.g. efficiency, accuracy, etc.) or also social goods inherited from the agents' dependency relations. Preferences over values can determine the reasons that lead an agent to propose a specific argument or to accept or refuse an argument from another agent. 
+where \texttt{conclusion} is the conclusion of the argument, \texttt{timesUsedConclusion} stores the number of times that this conclusion has been used, \texttt{promotedValue} is the value that the agent wants to promote with this argument, \texttt{supportSet} is a set of elements that justify the argument and \texttt{proponentDepenRelation} is the dependency relation (power, authorisation or charity) established between the proponent of the argument and the opponent that the argument is addressed. Thus, in our case-based argumentation framework arguments promote values. These values can be personal goods (e.g. efficiency, accuracy, etc.) or also social goods inherited from the agents' dependency relations. Preferences over values can determine the reasons that lead an agent to propose a specific argument or to accept or refuse an argument from another agent.
 
-The support set is a knowledge resource of the Magentix2 \lstinline{argAgents.knowledgeResources} package, represented by the \lstinline{SupportSet.java} class, and can consist of different elements, depending on the argument purpose. On one hand, if the argument justifies a potential solution for a problem, the support set is the set of features (\emph{premises}) that represent the context of the domain where the argument has been put forward (those premises that match the problem to solve and other extra premises that do not appear in the description of this problem but that have been also considered to draw the conclusion of the argument) and optionally, any knowledge resource used by the proponent to generate the argument (\emph{domain-cases}, \emph{argument-cases} and \emph{argumentation schemes}). This type of argument is called a \emph{support argument}. On the other hand, if the argument attacks the argument of an opponent, the support set can also include any of the allowed attack elements of our framework. These are: \emph{distinguishing premises}, \emph{counter-examples} or \emph{critical questions}. This other type of argument is called an \emph{attack argument}. 
+The support set is a knowledge resource of the Magentix2 \lstinline{argAgents.knowledgeResources} package, represented by the \lstinline{SupportSet.java} class, and can consist of different elements, depending on the argument purpose. On one hand, if the argument justifies a potential solution for a problem, the support set is the set of features (\emph{premises}) that represent the context of the domain where the argument has been put forward (those premises that match the problem to solve and other extra premises that do not appear in the description of this problem but that have been also considered to draw the conclusion of the argument) and optionally, any knowledge resource used by the proponent to generate the argument (\emph{domain-cases}, \emph{argument-cases} and \emph{argumentation schemes}). This type of argument is called a \emph{support argument}. On the other hand, if the argument attacks the argument of an opponent, the support set can also include any of the allowed attack elements of our framework. These are: \emph{distinguishing premises}, \emph{counter-examples} or \emph{critical questions}. This other type of argument is called an \emph{attack argument}.
 
 \begin{definition}[Distinguishing Premise]
  A distinguishing premise is a premise that does not appear in the description of the problem to solve and has different values for two cases or a premise that appears in the problem description and does not appear in one of the cases. %For instance, the premise \emph{"P4"} would be a distinguishing premise between the domain-case shown in Figure \ref{fig:domCase} and another domain-case, say \emph{DC2}, that has exactly the same problem description than \emph{DC1}, but that stores different data for this premise.
 \end{definition}
 
 \begin{definition}[Counter-Example]
- A counter-example for a case is a previous case (i.e. a domain-case or an argument-case that was deemed acceptable), where the problem description of the counter-example matches the current problem to solve and also subsumes the problem description of the case, but proposing a different solution. %To illustrate this concept, let us assume that the domain-case \emph{DC2}, which has the same problem description than \emph{DC1}, proposes an alternative solution. Therefore, \emph{DC2} could be used to generate a counter-example attack to \emph{DC1} and vice-versa. 
+ A counter-example for a case is a previous case (i.e. a domain-case or an argument-case that was deemed acceptable), where the problem description of the counter-example matches the current problem to solve and also subsumes the problem description of the case, but proposing a different solution. %To illustrate this concept, let us assume that the domain-case \emph{DC2}, which has the same problem description than \emph{DC1}, proposes an alternative solution. Therefore, \emph{DC2} could be used to generate a counter-example attack to \emph{DC1} and vice-versa.
 \end{definition}
 
 \begin{definition}[Critical Question]
- A \emph{critical question} is a question associated to an argumentation scheme that represents a potential way in which the conclusion drawn from the scheme can be attacked. Therefore, if the opponent asks a critical question, the argument that supports this argumentation scheme remains temporally rebutted until the question is conveniently answered. %This characteristic of argumentation schemes makes them very suitable to devise ways of attack the conclusions drawn from other agents.	
+ A \emph{critical question} is a question associated to an argumentation scheme that represents a potential way in which the conclusion drawn from the scheme can be attacked. Therefore, if the opponent asks a critical question, the argument that supports this argumentation scheme remains temporally rebutted until the question is conveniently answered. %This characteristic of argumentation schemes makes them very suitable to devise ways of attack the conclusions drawn from other agents.
 \end{definition}
 
 \textit{Argument-Cases}
@@ -1056,23 +1056,23 @@ Argument-cases have the three possible types of components that usual cases of C
 
 The problem description has a \emph{domain context} that consists of the \emph{premises} that characterise the argument. In addition, if we want to store an argument and use it to generate a persuasive argument in the future, the features that characterise its \emph{social context} must also be kept. The social context of the argument-case includes information about the \emph{proponent} and the \emph{opponent} of the argument and about their \emph{group}. Moreover, we also store the preferences (\emph{ValPref}) of each agent or group over the set of possible \emph{values} that arguments can promote (pre-defined in the system). Finally, the \emph{dependency relation} between the proponent's and the opponent's roles is also stored. In our framework, we consider three types of dependency relations: \emph{power}, when an agent has to accept a request from another agent because of some pre-defined domination relationship between them; \emph{authorisation}, when an agent has signed a contract with another agent to provide it with a service and hence, the contractor agent is able to impose its authority over the contracted agent and \emph{charity}, when an agent is willing to answer a request from another agent without being obliged to do so.
 
-In the solution part, the \emph{conclusion} of the case, the \emph{value} promoted, and the \emph{acceptability status} of the argument at the end of the dialogue are stored. The acceptability status shows if the argument was deemed \emph{acceptable}, \emph{unacceptable} or \emph{undecided} in view of the other arguments that were put forward in the agreement process. Therefore, an argument is deemed acceptable if it remains undefeated at the end of the argumentation dialogue, unacceptable if it was defeated during the dialogue and undecided if its acceptability status cannot be determined with the current information about the dialogue. %In our framework, the acceptance of an argument is determined by the defeat relation defined in \cite[Chapter 3]{Heras11}, which determines which argument prevails when an argument attacks other argument, taking into account the agents that have proposed these arguments, their preferences over values and their dependency relation. 
-In addition, the conclusion part includes information about the possible \emph{attacks} that the argument received during the process. These attacks could represent the justification for an argument to be deemed unacceptable or else reinforce the persuasive power of an argument that, despite being attacked, was finally accepted. 
+In the solution part, the \emph{conclusion} of the case, the \emph{value} promoted, and the \emph{acceptability status} of the argument at the end of the dialogue are stored. The acceptability status shows if the argument was deemed \emph{acceptable}, \emph{unacceptable} or \emph{undecided} in view of the other arguments that were put forward in the agreement process. Therefore, an argument is deemed acceptable if it remains undefeated at the end of the argumentation dialogue, unacceptable if it was defeated during the dialogue and undecided if its acceptability status cannot be determined with the current information about the dialogue. %In our framework, the acceptance of an argument is determined by the defeat relation defined in \cite[Chapter 3]{Heras11}, which determines which argument prevails when an argument attacks other argument, taking into account the agents that have proposed these arguments, their preferences over values and their dependency relation.
+In addition, the conclusion part includes information about the possible \emph{attacks} that the argument received during the process. These attacks could represent the justification for an argument to be deemed unacceptable or else reinforce the persuasive power of an argument that, despite being attacked, was finally accepted.
 
 Finally, the justification part of an argument-case stores the information about the knowledge resources that were used to generate the argument represented by the argument-case (the set of domain-cases and argument-cases). In addition, the justification of each argument-case has a \emph{dialogue-graph} (or several) associated, which represents the sequence of arguments that form the dialogue where the argument was proposed. In this way, the complete conversation is stored as a directed graph that links argument-cases that represent the arguments of the dialogue. This graph can be used later to improve the efficiency in an argumentation dialogue in view of a similar dialogue that was held in the past.
 
 \subsection{Dialogue Strategies}
 \label{subsubsec:strategies}
 
-In each step of an argumentation process, a Magentix2 argumentative agent can choose a specific locution to put forward and a content for it. The mechanism that agents follow to make such decisions is known as \emph{dialogue strategy}. 
-%The specific locutions and dialogue rules that agents use can be found in \cite[Chapter 4]{Heras11} and will be briefly explained in Section \ref{subsec:argCBRAgents}. Also, the concrete reasoning process and algorithms that agents follow to generate, select and evaluate arguments from their knowledge resources are explained in \cite[Chapter 3]{Heras11}. Here, we focus on the case-based dialogue strategies that agents can follow during the argumentation process, which define the best locution to. 
-In our case-based argumentation framework, agents select the best locution to bring up depending on the \emph{dialogue protocol} that they are following and the content of this locution depending on the knowledge that they have in their knowledge resources and the \emph{tactic} that they follow to argue. 
+In each step of an argumentation process, a Magentix2 argumentative agent can choose a specific locution to put forward and a content for it. The mechanism that agents follow to make such decisions is known as \emph{dialogue strategy}.
+%The specific locutions and dialogue rules that agents use can be found in \cite[Chapter 4]{Heras11} and will be briefly explained in Section \ref{subsec:argCBRAgents}. Also, the concrete reasoning process and algorithms that agents follow to generate, select and evaluate arguments from their knowledge resources are explained in \cite[Chapter 3]{Heras11}. Here, we focus on the case-based dialogue strategies that agents can follow during the argumentation process, which define the best locution to.
+In our case-based argumentation framework, agents select the best locution to bring up depending on the \emph{dialogue protocol} that they are following and the content of this locution depending on the knowledge that they have in their knowledge resources and the \emph{tactic} that they follow to argue.
 %The profile of an agent defines its attitude towards the arguments put forward by itself and other different agents during the dialogue. Concretely, the Magentix2 argumentative agent implements an \emph{argumentative profile}.
 
-A Magentix2 argumentative agent will not initially accept any position from a peer. This agent will challenge positions of other peers when they are different from its position, even if they appear in its list of potential positions to propose. Also, it will try to generate an answer for any attack that it receives, but opposite to open-minded agents, argumentative agents do not accept the position of the peer that generated the attack if the last wins the debate. If an argumentative agent cannot generate positions, it will not participate in the dialogue. Finally, agents will accept arguments from other agents that have a power or authorisation dependency relation over them. %Recall that in any case the acceptance of an argument is subjected to the defeat relation defined in the argumentation framework proposed in \cite[Chapter 3]{Heras11}. 
+A Magentix2 argumentative agent will not initially accept any position from a peer. This agent will challenge positions of other peers when they are different from its position, even if they appear in its list of potential positions to propose. Also, it will try to generate an answer for any attack that it receives, but opposite to open-minded agents, argumentative agents do not accept the position of the peer that generated the attack if the last wins the debate. If an argumentative agent cannot generate positions, it will not participate in the dialogue. Finally, agents will accept arguments from other agents that have a power or authorisation dependency relation over them. %Recall that in any case the acceptance of an argument is subjected to the defeat relation defined in the argumentation framework proposed in \cite[Chapter 3]{Heras11}.
 
 Depending on its dialogue protocol, the agent will choose the next locution to put forward on the dialogue game. Then, among the potential arguments that the agent may generate, it has to select one to propose. This implies to select the content of the locution to assert the argument. To make this selection, Magentix2 argumentative agents can use different tactics. From our point of view, a tactic consist on assigning more or less weight to the elements of an argument \emph{support factor} used to select positions and arguments. The support factor estimates how suitable a current position or argument is in view of the suitability of similar arguments (to support or attack similar positions or arguments) put forward in previous argumentation dialogues, which are stored in the agent's case-base of argument-cases. In this way, the agent can select the most suitable position or argument to propose next. The support factor is computed by a linear combination of several parameters:
-%, which are calculated by using the following formulas. In them, $argC$ is the subset of argument-cases from the whole set $arg$ stored in the agent case-base with the same problem description and conclusion as the current argument; $argAccC$ are those in $argC$ that were deemed acceptable at the end of the dialogue; $argAccCAtt$ are those in $argAccC$ that were attacked; $minAtt$ and $maxAtt$ are the minimum and maximum number of attacks received by any argument-case in $argAccCAtt$; $minS$ and $maxS$ are the minimum and maximum number of steps from any argument-case in $argC$ to the last node of its dialogue graph and; $minKr$ and $maxKr$ are the minimum and maximum number of knowledge resources used to generate any argument-case in $argC$. Also, we assume that the modifier \# represents the number of elements of a set. 
+%, which are calculated by using the following formulas. In them, $argC$ is the subset of argument-cases from the whole set $arg$ stored in the agent case-base with the same problem description and conclusion as the current argument; $argAccC$ are those in $argC$ that were deemed acceptable at the end of the dialogue; $argAccCAtt$ are those in $argAccC$ that were attacked; $minAtt$ and $maxAtt$ are the minimum and maximum number of attacks received by any argument-case in $argAccCAtt$; $minS$ and $maxS$ are the minimum and maximum number of steps from any argument-case in $argC$ to the last node of its dialogue graph and; $minKr$ and $maxKr$ are the minimum and maximum number of knowledge resources used to generate any argument-case in $argC$. Also, we assume that the modifier \# represents the number of elements of a set.
 
 \begin{itemize}
  \item\textbf{Persuasiveness Degree ($PD$):} is a value that represents the expected persuasive power of an argument by checking how persuasive an argument-case with the same problem description and conclusion was in the past. %To compute this degree, the number $\#argAccC$ of argument-cases that were deemed acceptable out of the total number of retrieved argument-cases $\#argC$ with the same problem description and conclusion as the current argument is calculated:
@@ -1083,7 +1083,7 @@ Depending on its dialogue protocol, the agent will choose the next locution to p
 %  0, & if~\#argC = \emptyset\\
 %  \dfrac{\#argAccC}{\#argC},& otherwise \end{array}\right.
 %  \end{equation}
-%  with $\#argAccC$, $\#argC \in \mathbb{N}$ and $PD \in [0, 1]$, from less to more persuasive power. 
+%  with $\#argAccC$, $\#argC \in \mathbb{N}$ and $PD \in [0, 1]$, from less to more persuasive power.
 % \vspace{0.5cm}
 
  \item\textbf{Support Degree ($SD$):} is a value that provides an estimation of the probability that the conclusion of the current argument was acceptable at the end of the dialogue. %It is based on the number of argument-cases $\#argAccC$ with the same problem description and conclusion that where deemed acceptable out of the total number of argument-cases $arg$ retrieved.
@@ -1163,19 +1163,19 @@ Thus, an agent can use the following dialogue tactics depending on the weight th
  \item Explanatory Tactic: the agent selects such arguments that cover a bigger number of cases or argumentation schemes. That is, such arguments that are similar to argument-cases that have more justification elements (assigns more weight to the explanatory power).
 \end{itemize}
 
-As pointed out before, the dialogue strategy that an agent follows determines the locution and content that it puts forward in each step of the dialogue. Thus, different strategies can be more or less suitable depending on the other agents that participate in the dialogue, the tactics that they follow and their available knowledge resources. 
+As pointed out before, the dialogue strategy that an agent follows determines the locution and content that it puts forward in each step of the dialogue. Thus, different strategies can be more or less suitable depending on the other agents that participate in the dialogue, the tactics that they follow and their available knowledge resources.
 
 \section{Argumentation API}
 \label{subsec:implementation}
 In this section, we define the different modules that implement the argumentation API of the Magentix2 platform and their functionality. For a tutorial on how to use these modules for programming argumentative agents see Section \ref{subsec:howTo}.
 
 \begin{itemize}
- \item \textbf{Domain CBR module}: consists of a CBR module with domain-dependent data (previous problem-solving experiences stored in the form of domain-cases). This CBR has to be initialised with data of the application domain. 
- 
- \item \textbf{Argumentation CBR module}: consists of a CBR module with argumentation data (previous arguments stored in the form of argument-cases). Once an agent has a list of potential solutions for a current problem, it has to select the best position to put forward among them. Also, the agent can generate arguments to support its position and attack another agent's arguments and positions. Then, this module is used to look for previous argumentation experiences and use this knowledge to select the best positions and arguments to propose. 
+ \item \textbf{Domain CBR module}: consists of a CBR module with domain-dependent data (previous problem-solving experiences stored in the form of domain-cases). This CBR has to be initialised with data of the application domain.
 
- \item \textbf{Argumentative agent}: is an agent with a Domain CBR and an Argumentation CBR able to engage in an argumentation dialogue to solve a problem. This agent learns about the domain problem and the argumentation dialogue adding and updating cases into the domain and argumentation case-bases in each CBR run. %Moreover, the agent can play any role defined in the system. 
- 
+ \item \textbf{Argumentation CBR module}: consists of a CBR module with argumentation data (previous arguments stored in the form of argument-cases). Once an agent has a list of potential solutions for a current problem, it has to select the best position to put forward among them. Also, the agent can generate arguments to support its position and attack another agent's arguments and positions. Then, this module is used to look for previous argumentation experiences and use this knowledge to select the best positions and arguments to propose.
+
+ \item \textbf{Argumentative agent}: is an agent with a Domain CBR and an Argumentation CBR able to engage in an argumentation dialogue to solve a problem. This agent learns about the domain problem and the argumentation dialogue adding and updating cases into the domain and argumentation case-bases in each CBR run. %Moreover, the agent can play any role defined in the system.
+
  \item \textbf{Commitment Store}: is a resource of the argumentation framework that stores all the information about the agents participating in the problem solving process, argumentation dialogues between them, positions and arguments. By making queries to this resource, every agent of the framework can read the information of the dialogues that it is involved in. To facilitate the communication among argumentative agents and the commitment store, this resource has been implemented as a Magentix2 \texttt{CAgent}.
 
 \end{itemize}
@@ -1183,7 +1183,7 @@ In this section, we define the different modules that implement the argumentatio
 \subsection{Argumentative Agents: ArgCAgent Class}
 \label{subsubsec:argCAgents}
 
-With the class \lstinline{ArgCAgent.java} Magentix2 distribution includes an implementation of an argumentative agent. This agent is an extension of the Magentix2 conversational agent (\texttt{CAgent}, see Section \ref{sec:CAgents}). Argumentative agents have two CBR modules: Domain CBR and Argumentation CBR. %These modules are shown in the Figure \ref{fig:infrastructure}. Argumentative agents have different parameters to configure in their constructor, as will be explained in Section \ref{subsec:howTo}. 
+With the class \lstinline{ArgCAgent.java} Magentix2 distribution includes an implementation of an argumentative agent. This agent is an extension of the Magentix2 conversational agent (\texttt{CAgent}, see Section \ref{sec:CAgents}). Argumentative agents have two CBR modules: Domain CBR and Argumentation CBR. %These modules are shown in the Figure \ref{fig:infrastructure}. Argumentative agents have different parameters to configure in their constructor, as will be explained in Section \ref{subsec:howTo}.
 % \begin{figure}[h]
 %   \centering
 %     \includegraphics[width=.9\linewidth]{ProgrammingAgents/images/frameworkDiagram}
@@ -1195,7 +1195,7 @@ The main functionalities of the argumentative agents are the generation, selecti
 \begin{table}[h!t]
 \begin{tabulary}{1\linewidth}{|l|L|}
 \hline
-\textbf{Method} & \textbf{Description} \\ 
+\textbf{Method} & \textbf{Description} \\
 \hline
 addPosition & Returns an \texttt{ACLMessage} with the locution ADDPOSITION and a \texttt{Position} to send to the Commitment Store\\
 \hline
@@ -1237,7 +1237,7 @@ The argumentation API of Magentix2 includes several \emph{similarity algorithms}
 \begin{table}[h!t]
 \begin{tabulary}{1\linewidth}{|@{~}l|@{~}l|@{~}L|}
 \hline
-\textbf{Class} & \textbf{Method} & \textbf{Description} \\ 
+\textbf{Class} & \textbf{Method} & \textbf{Description} \\
 \hline
 Metrics.java & doDist & This method decides about which is the data type of its attributes, and return the distance between them\\
 \hline
@@ -1254,7 +1254,7 @@ SililarityAlgorithms.java & normalizedTverskySimilarity & Returns a list of the 
 \label{tab:algorithms}
 \end{table}
 
-The specific algorithm that an argumentative agents uses to compute the similarity degree between two cases can be set in the \lstinline{configuration.xml} file of the \texttt{configuration} package, shown below. 
+The specific algorithm that an argumentative agents uses to compute the similarity degree between two cases can be set in the \lstinline{configuration.xml} file of the \texttt{configuration} package, shown below.
 
 \begin{lstlisting}
 <root>
@@ -1280,16 +1280,16 @@ Argumentative agents need a protocol to exchange positions and arguments and eng
 
 The set of allowed locutions of our argumentation protocol are codified as constants in the \texttt{Argumentation\_Participant} protocol of the \lstinline{cAgents.protocols} package. These locutions are the following:
 \begin{itemize}
-	
+
 %% TODO REVISE LOCUTIONS IN THE IMPLEMENTATION
 %% REVISE GETALLPOSITIONS
 
  \item OPENDIALOGUE: with this locution an agent opens the argumentation dialogue, asking other agents to collaborate or negotiate to solve a problem that it has been presented with.
- \item ENTERDIALOGUE: with this locution an agent engages in the argumentation dialogue to solve the problem. 
- \item WITHDRAWDIALOGUE: with this locution an agent leaves the argumentation dialogue. 
+ \item ENTERDIALOGUE: with this locution an agent engages in the argumentation dialogue to solve the problem.
+ \item WITHDRAWDIALOGUE: with this locution an agent leaves the argumentation dialogue.
  \item ADDPOSITION: with this locution an agent puts forward its position as its proposed solution to solve the problem under discussion in the argumentation dialogue.
  \item WHY: with this locution an agent challenges the position or the argument of another agent, asking it for a support argument.
- \item NOCOMMIT: with this locution an agent withdraws its position as a solution for the problem under discussion in the argumentation dialogue. 
+ \item NOCOMMIT: with this locution an agent withdraws its position as a solution for the problem under discussion in the argumentation dialogue.
  \item ASSERT: with this locution an agent sends to another agent an argument that supports its position.
  \item ACCEPT: with this locution an agent accepts the argument or the position of another agent.
  \item ATTACK: with this locution an agent challenges the argument of another agent.
@@ -1304,7 +1304,7 @@ Also, there are other allowed locutions to manage the life cycle of argumentativ
 
 \begin{figure*}[ht]
   \centering
-    \includegraphics[width=.9\linewidth]{ProgrammingAgents/images/ArgCAgentGraph.pdf} 
+    \includegraphics[width=.9\linewidth]{ProgrammingAgents/images/ArgCAgentGraph.pdf}
   \caption{Argumentation Protocol}
 \label{fig:protocol}
 \end{figure*}
@@ -1348,10 +1348,10 @@ sh Start-ArgumentationExample.sh
 \begin{tabular}{|l|l|p{5cm}|}
 \hline
 \textbf{Package} & \textbf{Classes} & \textbf{Description} \\ \hline
-\multirow{5}{*}{Argumentation\_Example } & AgentsCreation.java & This class has different methods to create groups of agents and some of their parameters \\ 
- & ArgCAgent.java & This class implements the argumentative agent as a CAgent. It can engage in an argumentation dialogue to solve a problem.  \\ 
- & CreatePartitions.java & This class creates different partitions of domain-cases and argument-cases to make tests \\ 
- & TestArgCAgent.java &  This class launches a test with argumentative agents, including the commitment store and a tester agent that acts as initiator of the dialogue\\ 
+\multirow{5}{*}{Argumentation\_Example } & AgentsCreation.java & This class has different methods to create groups of agents and some of their parameters \\
+ & ArgCAgent.java & This class implements the argumentative agent as a CAgent. It can engage in an argumentation dialogue to solve a problem.  \\
+ & CreatePartitions.java & This class creates different partitions of domain-cases and argument-cases to make tests \\
+ & TestArgCAgent.java &  This class launches a test with argumentative agents, including the commitment store and a tester agent that acts as initiator of the dialogue\\
  & TesterArgCAgent.java & This class represents a tester agent in charge of sending the test domain-case to solve to a group of agents and acts as the initiator of the dialogue \\ \hline
 TestArgumentation (datafiles) & partitionsInc & Folder with the data files to perform tests \\ \hline
 
@@ -1379,59 +1379,59 @@ updateCBs & solution &  Stores generated data in the dialogue \\ \hline
 A standard argumentative agent can be created and executed by using these commands:
 
 \begin{lstlisting}
-ArgCAgent agent = 
-new ArgCAgent(new AgentID("qpid://agentName@localhost:8080"), 
-socialEntity, friendsList, depenRelsList, group, 
-"commitmentStoreID", iniDomainCasesFilePath, 
-finDomainCasesFilePath, domCBRindex, domCBRthreshold, 
-iniArgCasesFilePath, finArgCasesFilePath, 
-wPD, wSD, wRD, wAD, wED, wEP);  
+ArgCAgent agent =
+new ArgCAgent(new AgentID("qpid://agentName@localhost:8080"),
+socialEntity, friendsList, depenRelsList, group,
+"commitmentStoreID", iniDomainCasesFilePath,
+finDomainCasesFilePath, domCBRindex, domCBRthreshold,
+iniArgCasesFilePath, finArgCasesFilePath,
+wPD, wSD, wRD, wAD, wED, wEP);
 
-agent.start();	
+agent.start();
 \end{lstlisting}
 
 where \emph{socialEntity} represents the social entity (name, role, preference values...) created for this agent, \emph{friendsList} is an \lstinline{ArrayList} with the social entities that represent the friends of the agent (the agents that it knows), \emph{depenRelsList} is an \lstinline{ArrayList} that represents the dependency relations that the agent has with the rest of agents of the system, \emph{group} represents the group that the agent belongs and \emph{commitmentStoreID} represents the identifier of the commitment store resource. There are also two \lstinline{ArrayList} called \textit{iniDomainCasesFilePath} and \textit{finDomainCasesFilePath} with the file paths that store the initial and final domain-cases case-bases. In addition, \emph{domCBRindex} establishes an index (in the sense of a \lstinline{HashTable} index) to retrieve cases from the domain-cases case-base and \emph{domCBRthreshold} establishes a threshold over which two cases are considered as similar. The \textit{iniArgCasesFilePath} and \textit{finArgCasesFilePath} \lstinline{ArrayLists} represent the file paths that store the initial and final argument-cases case-bases. Finally, the \emph{wPD}, \emph{wSD}, \emph{wRD}, \emph{wAD}, \emph{wED} and \emph{wEP} are the weights assigned to the parameters to compute the \emph{supportFactor}. Different combinations of these weight allow argumentative agents to follow different argumentation strategies.
 
 % The fist step to run the application is to launch the Magentix2 platform. This can be done by executing with root permissions the following command in an ubuntu system:
-% 
+%
 % \begin{lstlisting}
 % root-user@host:~/MagentixRoute/bin\$sh Start-Magentix.sh
 % \end{lstlisting}
-% 
+%
 % Similarly, the platform can be shutdown by executing with root permissions the following command in an ubuntu system:
-% 
+%
 % \begin{lstlisting}
 % root-user@host:~/MagentixRoute/bin\$sh Stop-Magentix.sh
 % \end{lstlisting}
-% 
+%
 % Then, the easiest way of running the application is to create a \emph{test} java file with the code to execute the agents. In the Magentix2 argumentation API an example of such file is distributed with the java file \texttt{TestArgCAgent.java}. The main method of the \emph{test} file must set the information of the Magentix2 logger service with the agent class that we want to log:
-% 
+%
 % \begin{lstlisting}
 % DOMConfigurator.configure("configuration/loggin.xml");
 % Logger logger = Logger.getLogger(TestArgCAgent.class);
 % \end{lstlisting}
-% 
+%
 % Also, it must connect the \emph{QPid} broker
-% 
+%
 % \begin{lstlisting}
 % AgentsConnection.connect();
 % \end{lstlisting}
-% 
+%
 % In the \emph{test} file the identifier of the \emph{Tester} agent must be specified. Assuming that the identifier is \emph{testerAgent}, it is set as follows:
-% 
+%
 % \begin{lstlisting}
 % String testerAgentID = "testerAgent";
 % \end{lstlisting}
-% 
+%
 % In the current version of the software, when the problem-solving process finishes and the \emph{Tester} agent decides the best solution to apply from the list of candidates, it reports the end of the process by writing a message "test finished" in a \emph{finish file}. In this way, the execution of the program ends. This simple design decision allows us to be sure that all agents have died and the \emph{tester} agent has reported the final solution for the problem at hand. Therefore, the name of this file must be specified in the \emph{test} file as follows:
-% 
+%
 % \begin{lstlisting}
-% String finishFileName = 
+% String finishFileName =
 % "testArgumentation/testArgCAgentFinished";
 % \end{lstlisting}
-% 
+%
 % We are persisting the cases of the domain case-base and argumentation case-base as serialised objects. Thus, we must specify the route of these files in the agent's constructor (the original files to read and also the final files to persist the new data acquired):
-% 
+%
 % \begin{lstlisting}
 % ArrayList<String> iniDomainFiles=new ArrayList<String>();
 % ArrayList<String> finDomainFiles=new ArrayList<String>();
@@ -1439,7 +1439,7 @@ where \emph{socialEntity} represents the social entity (name, role, preference v
 % ArrayList<String> finArgFiles=new ArrayList<String>();
 % \end{lstlisting}
 % Then, for each agent to create, the route of the files must be specified:
-% 
+%
 % \begin{lstlisting}
 % iniDomainFiles.add("route/iniDomainFile.dat");
 % finDomainFiles.add("route/finDomainFile.dat");
@@ -1447,57 +1447,57 @@ where \emph{socialEntity} represents the social entity (name, role, preference v
 % finArgFiles.add("route/finArgFile.dat");
 % \end{lstlisting}
 % The original files to read and the final files to persist the new data acquired can be the same or different from the originals. By default, in the \texttt{TestArgCAgent.java} file we assume that they are the same.
-% 
+%
 % The social entities of the system, the argumentative agents and the commitment store must be also initialised in the \emph{test} file. The argumentation API of Magentix2 includes a template java file called \texttt{AgentsCreation.java} with several methods to create groups of agents and their parameters (see the JavaDoc for a detailed explanation of this class). Therefore, the social entities of the system can be initialised (one per each agent and each group) as follows:
-% 
+%
 % \begin{lstlisting}
 % ArrayList<SocialEntity> socialEntities=
 % 	new ArrayList<SocialEntity>();
 % SocialEntity socialEntity=
-% 	new SocialEntity(i, "entityName", norms, preferredValues); 
-% socialEntities.add(socialEntity);  
-% ...  
+% 	new SocialEntity(i, "entityName", norms, preferredValues);
+% socialEntities.add(socialEntity);
+% ...
 % Group group = new Group(ID, "GroupName", preferredValues, socialEntitiesAssociated)
 % \end{lstlisting}
-% 
+%
 % where \emph{norms} is an \emph{ArrayList} of the norms that the entity has to obey and \emph{preferredValues} is an object of the type \emph{ValPref} that establishes the preferences over values that the entity has.
-% 
+%
 % As explained, to facilitate the communication with the agents, the commitment store resource has to be created as a Magentix2 \texttt{CAgent}:
-% 
+%
 % \begin{lstlisting}
-% CommitmentStore commitmentStore =  
+% CommitmentStore commitmentStore =
 % new CommitmentStore(new AgentID("qpid://commitmentStore@
-% localhost:8080")); 
+% localhost:8080"));
 % commitmentStore.start();
 % \end{lstlisting}
-% 
+%
 % A standard argumentative agent can be created and executed by using these commands:
-% 
+%
 % \begin{lstlisting}
-% ArgCAgent agent = 
-% 	new ArgCAgent(new AgentID("qpid://agentName@localhost:8080"), 
-% 	socialEntity, friendsList, 
-% 	depenRelsList, group, "commitmentStoreID", 
-% 	testerAgentID, iniDomainCasesFilePath, 
-% 	finDomainCasesFilePath, domCBRindex, 
-% 	domCBRthreshold, iniArgCasesFilePath, 
-% 	finArgCasesFilePath, wPD, wSD, wRD, wAD, wED, wEP);  
-% agent.start();	
+% ArgCAgent agent =
+% 	new ArgCAgent(new AgentID("qpid://agentName@localhost:8080"),
+% 	socialEntity, friendsList,
+% 	depenRelsList, group, "commitmentStoreID",
+% 	testerAgentID, iniDomainCasesFilePath,
+% 	finDomainCasesFilePath, domCBRindex,
+% 	domCBRthreshold, iniArgCasesFilePath,
+% 	finArgCasesFilePath, wPD, wSD, wRD, wAD, wED, wEP);
+% agent.start();
 % \end{lstlisting}
-% 
+%
 % where \emph{socialEntity} represents the social entity created for this agent, \emph{friendsList} is an \texttt{ArrayList} with the social entities that represent the friends of the agent, \emph{depenRelsList} is an \texttt{ArrayList} that represents the dependency relations that the agent has with the rest of agents of the system, \emph{group} represents the group that the agent belongs, \emph{commitmentStoreID} represents the identifier of the commitment store resource, \emph{testerAgentID} allows the user to specify the identifier of this special agent that is implemented in the system to process and show data. In addition, \emph{domCBRindex} establishes an index to retrieve cases from the domain-cases case-base, \emph{domCBRthreshold} establishes a threshold over which two cases are considered as similar and \emph{wPD}, \emph{wSD}, \emph{wRD}, \emph{wAD}, \emph{wED} and \emph{wEP} are the weights of the elements to compute the \emph{supportFactor}. As explained before, the name of the files where domain-cases and argument-cases are persisted are also specified in the \texttt{ArgCAgent} constructor.
-% 
+%
 % Finally, the \emph{test} file must create and initialise the \emph{tester} agent and send to it the problem to solve. Magentix2 argumentation API includes a template of a \emph{tester} agent in the java file \texttt{TesterArgCAgent.java} (see the JavaDoc for a detailed explanation of this class).
-% 
+%
 % \begin{lstlisting}
-% TesterArgCAgent testerAgent = 
+% TesterArgCAgent testerAgent =
 % 	new TesterArgCAgent(new AgentID("qpid://agentName@
-% 	localhost:8080"), socialEntities, commitmentStoreID, 
-% 	resultsFileName, finishFileName, cases, repetition, 
+% 	localhost:8080"), socialEntities, commitmentStoreID,
+% 	resultsFileName, finishFileName, cases, repetition,
 % 	domCasesVector, agents);
-% testerAgent.start();	
+% testerAgent.start();
 % \end{lstlisting}
-% 
+%
 % where \emph{socialEntities} is an \texttt{ArrayList} with the \emph{social entities} of the dialogue, \emph{commitmentStoreID} is the identifier of the commitment store, \emph{resultsFileName} is the name of the file to save the results of the program execution, \emph{finishFileName} is the name of the file to write when the problem-solving process is finished, \emph{cases} is the number of domain-cases that each argumentative agent has (this number is used to compute performance results), \emph{repetition} is a variable to specify the number of runs of the problem-solvin process (each one trying to solve a different problem), \emph{domCasesVector} is a \texttt{Vector} with cases used as problems to solve (in the current implementation of the software, it only includes one problem to solve per run) and \emph{agents} is the \texttt{ArrayList} of \texttt{ArgCAgent}s participating in the argumentation dialogue to solve the problem.
 
 
@@ -1511,14 +1511,14 @@ Magentix2 provides the core of the argumentation protocol, the Domain CBR, the A
 \hline
 \textbf{Package} & \textbf{Classes} & \textbf{Description} \\ \hline
 
-\multirow{7}{*}{argAgents}  & argCBR.ArgCBR.java & This CBR stores argument-cases that represent past argumentation experiences and their final outcome \\ 
+\multirow{7}{*}{argAgents}  & argCBR.ArgCBR.java & This CBR stores argument-cases that represent past argumentation experiences and their final outcome \\
  & CommitmentStore.java & Agent that stores all the information about the argumentation dialogues \\
- & Configuration.java & Configuration parameters \\ 
- & domCBR.DomainCBR.java &  This CBR stores domain knowledge of previously solved problems \\ 
- & knowledgeResources &  Package that contains the classes needed to manage the data of the CBRs and arguments \\ 
- & Metrics.java & Used by the CBRs to measure the similarity between case attributes, based on their distance \\ 
+ & Configuration.java & Configuration parameters \\
+ & domCBR.DomainCBR.java &  This CBR stores domain knowledge of previously solved problems \\
+ & knowledgeResources &  Package that contains the classes needed to manage the data of the CBRs and arguments \\
+ & Metrics.java & Used by the CBRs to measure the similarity between case attributes, based on their distance \\
  & SimilarityAlgorithms.java & Contains algorithms to calculate similarity measures between cases \\ \hline
-\multirow{2}{*}{cAgents.protocols} & Argumentation\_Participant.java & Abstract class that defines the argumentation participant protocol to be followed by the CAgents \\ 
+\multirow{2}{*}{cAgents.protocols} & Argumentation\_Participant.java & Abstract class that defines the argumentation participant protocol to be followed by the CAgents \\
  & CommitmentStore\_Protocol.java & Abstract class that defines the protocol that the Commitment Store follows to attend the petitions of the agents \\ \hline
 
 \end{tabular}
@@ -1526,15 +1526,15 @@ Magentix2 provides the core of the argumentation protocol, the Domain CBR, the A
 \label{tab:argAgentsCore}
 \end{table}
 
-The main tasks to perform to create an argumentative agent are: 
+The main tasks to perform to create an argumentative agent are:
 \begin{itemize}
  \item To use the Domain CBR to store and retrieve domain knowledge.
  \item To use the Argumentation CBR to store and retrieve argumentation knowledge.
  \item To implement the argumentation protocol methods and thus, specify how to perform the actions of the argumentative agent in the states of the designed argumentation protocol.
 \end{itemize}
 
-The Domain CBR can be used to generate and select positions to defend in the argumentation dialogue. To make a query to the domain CBR, the user has to provide a problem (codified as a list of premises or a domain-case without solution) and a threshold of similarity. The domain CBR module searches the domain case-base and returns a list of similar domain-cases to the given problem. In addition, with every request attended and every CBR cycle performed, the module adds, modifies or deletes one or more domain-cases of the domain case-base. In the current version of the API, if the problem that has been solved is similar enough (over certain similarity threshold) to a case of the domain-cases case-base, the update algorithm updates this case with the new data acquired. Otherwise, a new domain-case is created and added to the case-base. 
-%Also, this CBR can be updated with the generated data during the argumentation process adding the learnt cases. 
+The Domain CBR can be used to generate and select positions to defend in the argumentation dialogue. To make a query to the domain CBR, the user has to provide a problem (codified as a list of premises or a domain-case without solution) and a threshold of similarity. The domain CBR module searches the domain case-base and returns a list of similar domain-cases to the given problem. In addition, with every request attended and every CBR cycle performed, the module adds, modifies or deletes one or more domain-cases of the domain case-base. In the current version of the API, if the problem that has been solved is similar enough (over certain similarity threshold) to a case of the domain-cases case-base, the update algorithm updates this case with the new data acquired. Otherwise, a new domain-case is created and added to the case-base.
+%Also, this CBR can be updated with the generated data during the argumentation process adding the learnt cases.
 The main methods of the Domain CBR are shown in Table \ref{tab:DomainCBRMethods} (for a detailed explanation of all Domain CBR methods, see the \lstinline{DomainCBR.java} associated JavaDoc).
 \begin{table}[h!t]
 \begin{tabular}{|l|l|p{6cm}|}
@@ -1549,7 +1549,7 @@ retrieve & premises, threshold & Retrieves the most similar domain-cases to the 
 \end{table}
 
 The Argumentation CBR can be used to look for previous argumentation experiences and use this knowledge to select the best positions and arguments to propose. Thus, argument-cases store information related to the domain and the social context where previous arguments (and their associated positions) were used. The information about the domain consists of a set of features (premises) to compare cases and information about the social context where the proposed solution was applied (e.g. the agents that participated in the dialogue to solve the problem, their roles or their value preferences). The latter information can determine if certain positions and arguments are more persuasive than others for a particular social context and hence, agents can select the best ones to propose in the current situation. As for the domain-cases case-base, if the argument-cases created during the problem solving process are similar enough to previous argument-cases stored in the argument-cases case-base, the update algorithm updates those cases with the new data acquired. Otherwise, new argument-cases are created and added to the case-base.
-%The Argumentation CBR has to be used to select the positions to defend (using also the Domain CBR) and to generate and select support and attack arguments in the argumentation dialogue. This CBR may be updated with the argumentation knowledge generated during the argumentation process to learn about how to argue. 
+%The Argumentation CBR has to be used to select the positions to defend (using also the Domain CBR) and to generate and select support and attack arguments in the argumentation dialogue. This CBR may be updated with the argumentation knowledge generated during the argumentation process to learn about how to argue.
 The main methods of the Argumentation CBR are shown in Table \ref{tab:ArgCBRMethods} (for a detailed explanation of all Argumentation CBR methods see the \lstinline{ArgCBR.java} associated JavaDoc).
 
 \begin{table}[h!t]
@@ -1577,7 +1577,7 @@ loadCaseBase &  Loads a case-base stored in a specified file path \\ \hline
 \label{tab:CBRPersistenceMethods}
 \end{table}
 
-The main functionalities of the argumentative agents (generation, selection and evaluation of positions and arguments) are specified as methods, to facilitate a better understanding of the code and to facilitate modifications and updates. The main method of the argumentative agents is the \lstinline{execution} method. This method overwrites the \lstinline{execution} method of the Magentix2 \texttt{CAgent}, implementing the argumentative functions of the agent. Inside the \lstinline{execution} method, the \lstinline{myArgumentation} class extends the argumentation protocol of Magentix2. Concretely, the argumentation API of Magentix2 includes two special protocols that allow agents to argue: the \texttt{Argumentation\_Participant} protocol and the \texttt{CommitmentStore\_Protocol}. Both are abstract classes of the \lstinline{cAgents.protocols} package that argumentative agents and the commitment store extend respectively. These classes provide a template for the behaviour of the argumentative agents and the commitment store. Each one implements a new \texttt{CFactory} (see \texttt{CAgent} JavaDoc for more information) with the graph that specifies the sequence of states and transitions among them that agents can pass through during the argumentation dialogue. 
+The main functionalities of the argumentative agents (generation, selection and evaluation of positions and arguments) are specified as methods, to facilitate a better understanding of the code and to facilitate modifications and updates. The main method of the argumentative agents is the \lstinline{execution} method. This method overwrites the \lstinline{execution} method of the Magentix2 \texttt{CAgent}, implementing the argumentative functions of the agent. Inside the \lstinline{execution} method, the \lstinline{myArgumentation} class extends the argumentation protocol of Magentix2. Concretely, the argumentation API of Magentix2 includes two special protocols that allow agents to argue: the \texttt{Argumentation\_Participant} protocol and the \texttt{CommitmentStore\_Protocol}. Both are abstract classes of the \lstinline{cAgents.protocols} package that argumentative agents and the commitment store extend respectively. These classes provide a template for the behaviour of the argumentative agents and the commitment store. Each one implements a new \texttt{CFactory} (see \texttt{CAgent} JavaDoc for more information) with the graph that specifies the sequence of states and transitions among them that agents can pass through during the argumentation dialogue.
 
 Therefore, to create a new argumentative agent, it is necessary to implement the abstract methods of the \texttt{Argumentation\_Participant} protocol. The decisions and the actions to perform in each state of the argumentation protocol are codified in these methods. The main methods to implement are shown in Table \ref{tab:ArgProtocolMethods}. Due to the complexity of defining a new argumentative agent, the user should consider to use the \textit{ArgCAgent.java} class of the example as a base to implement the behaviour of a new argumentative agent.
 
@@ -1622,18 +1622,18 @@ In order to show how the developed system works, the data-flow for the problem-s
 \begin{enumerate}
  \item First, we have some argumentation agents running in the platform and representing the technicians of the call centre. The \emph{tester} agent sends the problem to solve (also known as \emph{ticket} in the common call centre terminology) to the group of agents.
  \item Each agent evaluates individually if it can engage in the dialogue offering a solution. To do that, the agent makes a query to its domain CBR to obtain potential solutions to the ticket based on previous solutions applied to similar tickets. To compute such similarity, agents use a \emph{weighted Euclidean} algorithm that searches their domain-cases case-bases for previous problems that semantically match the category of the current ticket to solve. Thus, the algorithm retrieves all problems of the same category and of related categories and select those that syntactically match (assign the same values to the attributes that match the ticket attributes) and overpass a defined \emph{similarity threshold}. If one or more valid solutions can be generated from the selected domain-cases, the agent will be able to defend a position in the dialogue. We consider a valid solution any domain case from the domain CBR with one or more solutions and with a similarity degree greater than the given threshold. Moreover, the agent makes a query to its argumentation CBR for each possible position to defend. With these queries the \emph{suitability degree} of the positions is obtained. This degree represents if a position will be easy to defend based on past similar argumentation experiences. Then, all possible positions to defend are ordered from less to more suitability degree.
- \item When the agents have a position to defend (a proposed solution), these positions are stored by the commitment store, such that other agents can check the positions of all dialogue participants. Every agent tries to attack the positions that are different from its position. 
+ \item When the agents have a position to defend (a proposed solution), these positions are stored by the commitment store, such that other agents can check the positions of all dialogue participants. Every agent tries to attack the positions that are different from its position.
  \item The argumentation process consists on a series of steps by which agents try to defend its positions by generating counter-examples and distinguishing premises for the positions and arguments of other agents. A counter-example for a case is generated by retrieving from the domain case-base another case that matches the features of the former, but has a different conclusion. Similarly, distinguishing premises are computed by selecting such premises that the agent has taken into account to generate its positions, but that other agents did not considered. If different attacks can be generated, agents select the best attack to rebut the position of another agent by making a query to their argument-cases case-base, extending the characterisation of each case with the current social context. In this way, agents can gain knowledge about how each potential attack worked to rebut the position of an agent in a past argumentation experience with a similar social context. When an agent is able to rebut an attack, the opponent agent makes a vote for its position. Otherwise, the agent must withdraw its position and propose an alternative position, if possible.
  \item The dialogue finishes when no new positions or arguments are generated after a specific time. The \emph{tester} agent is in charge of making queries to the commitment store agent to determine if the dialogue must finish. Then, this agent retrieves the active positions of the participating agents. If all agents agree, the solution associated to the agreed position is selected. Otherwise, the most frequent position wins. In case of draw, the most voted position in selected. If even in this case the draw persists, a random choice is made. Finally, the \emph{tester} agent communicates the final solution (the outcome of the agreement process) to the participating agents.
  \end{enumerate}
 
-   
+
 
 
 
 
 %==================================================================
-%================== OCTAVA SECCIÓN ================================
+%================== OCTAVA SECCIï¿½N ================================
 %==================================================================
 
 \chapter{Tracing Service}
@@ -1641,11 +1641,11 @@ In order to show how the developed system works, the data-flow for the problem-s
 	This chapter describes the Tracing Service Support available in Magentix2.
 	This Tracing Service Support allows agents in a Multiagent System (MAS) share information in an
 	indirect way by means of trace events.
-	
+
 	Before describing the API provided by Magentix2 to share tracing information, the following sections
 	will present TRAMMAS, the trace model which was followed to incorporate event tracing facilities to
 	Magentix2.
-	
+
 %\begin{enumerate}
 % \item \begin{verbatim}AquÃ­ si tenemos que poner cÃ³digo \end{verbatim}
 %\end{enumerate}
@@ -1662,44 +1662,44 @@ In order to show how the developed system works, the data-flow for the problem-s
 	entities}; this is, entities which are able to generate and/or receive trace events. Trace events are
 	offered by tracing entities as different \textit{tracing services}, which can be requested by interested
 	tracing entities when they want to receive these trace events.
-	
+
 	\subsection{Supported Features}
-	
+
 		The present version of Magentix2 does not support all of the tracing features considered in the
 		model. Those which are not yet supported will be incorporated in future versions of the platform.
-		
+
 		\begin{itemize}
-		
+
 		\item{Tracing Entities}
-	
+
 			Although the model considers not only agents, but also non-agent entities or aggregations,
 			event tracing facilities incorporated to the present version of Magentix2 platform only
 			consider agents. Artifacts and aggregations will be included in future versions of the
 			platform.
-			
+
 		\item{Publication and Subscription}
-		
+
 			Publication and unpublication of trace events is completely supported in the present version
 			of the platform; so, tracing entities can dynamically (at run time) publish the event types
 			which they can throw and unpublish them when they do not want to share that information
 			anymore.
-			
+
 			In the same way, tracing entities can dynamically subscribe to trace events in which they are
 			interested and unsubscribe from them whenever they do not want to receive these trace
 			events anymore. However, although the model lets tracing entities filtering trace events
 			according to many parameters, the present version of Magentix2 only allows agents to filter
 			trace events according to the event type and the agent which threw the event.
-			
+
 			Tracing services composition has also been postponed for later platform releases and thus,
 			it is not supported in the present version of Magentix2.
-			
+
 		\item{Authorization}
-	
+
 			Security issues addressed by the model have also been postponed for future versions of the
 			platform and they are not considered in this version. Thus, any agent in the system can
 			request trace events from any other agent without needing any direct or indirect
 			authorization.
-			
+
 		\end{itemize}
 
 %\subsection{Tracing Entity}
@@ -1712,16 +1712,16 @@ In order to show how the developed system works, the data-flow for the problem-s
 %   private TracingServiceSubscriptionList subscribedToTS;
 %}
 %	\end{lstlisting}
-%	
+%
 %	\begin{itemize}
 %		\item\textbf{\texttt{type}:} Tracing entity type:  \texttt{TracingEntity.AGENT},
 %			\texttt{TracingEntity.ARTIFACT} or \texttt{TracingEntity.AGGREGATION}.
-%			
+%
 %		\item\textbf{\texttt{aid}:} AgentID of the tracing entity. This attribute only has sense when the
 %			tracing entity is an agent (\texttt{type == TracingEntity.AGENT}).
-%			
+%
 %		\item\textbf{\texttt{publishedTS}:} List of tracing services published by the tracing entity.
-%		
+%
 %		\item\textbf{\texttt{subscribedToTS}:} List of tracing services to which the tracing entity is
 %			subscribed.
 %	\end{itemize}
@@ -1730,7 +1730,7 @@ In order to show how the developed system works, the data-flow for the problem-s
 
 	Trace events are represented in the platform as instances of the class
 	\lstinline{es.upv.dsic.gti_ia.core.TraceEvent}:
-	
+
 	\begin{lstlisting}
 public class TraceEvent implements Serializable {
    private String tService;
@@ -1739,25 +1739,25 @@ public class TraceEvent implements Serializable {
    private String content;
 }
 	\end{lstlisting}
-	
+
 	The different attributes of this class indentify the \textit{tracing service} to which the trace event
 	belongs, the \textit{tracing entity} which originated the trace event and the time at which it was
 	produced, expressed as the amount of milliseconds from 1 Jan 1970 at 00:00:00 (\textit{Epoch}).
 	This information can be complemented when needed with extra data stored in the
 	\texttt{content} attribute.
-	
+
 	Trace event instances are created by invoking the constructor of the class. Details of the parameters
 	are explained in Table \ref{tab:TraceEvent}. As it can be seen, the \texttt{timestamp} attribute of the
 	trace event is not stablished by any parameter of the constructor. This is because the
 	\texttt{timestamp} of each trace event is internally set to the time at which the constructor of the class
 	was invoked.
-	
+
 %	\begin{table}
 %	\begin{tabular}
-%	
+%
 %	\end{tabular}
 %	\end{table}
-	
+
 	\begin{table}[ht]
        \caption{\texttt{TraceEvent} class constructor parameters}
        \label{tab:TraceEvent}
@@ -1773,24 +1773,24 @@ public class TraceEvent implements Serializable {
 %       }
        }
    \end{table}
-	
+
 %	\begin{itemize}
 %		\item \textbf{\texttt{public TraceEvent(String tService, AgentID originAid, String content)}}:
 %			Creation of a new instance of \texttt{TraceEvent}. The different attributes have to be specified
 %			when creating an instance of \texttt{TraceEvent}, except for the \texttt{timestamp}, which is
 %			internally set to the current time by an internal call to
 %			\\\texttt{java.lang.System.currentTimeMillis()}.
-%			
+%
 %			\begin{itemize}
 %				\item\textbf{\texttt{tService}:} String identifying the tracing service to which the trace event
 %					is associated.
-%			
+%
 %				\item\textbf{\texttt{timestamp}:} Time at which the trace event was generated. The time is
 %					expresed in milliseconds from 1 Jan 1970 at 00:00:00 (\textit{Epoch}).
-%			
+%
 %				\item\textbf{\texttt{originAid}:} \texttt{AgentID} of the agent which originated the trace
 %					event. Internally, the constructor converts \texttt{originAid} to a \texttt{TracingEntity}.
-%		
+%
 %				\item\textbf{\texttt{content}:} Any extra data which could be necessary to complement or
 %					understand the meaning of the trace event. This attribute can be empty.
 %			\end{itemize}
@@ -1802,7 +1802,7 @@ public class TraceEvent implements Serializable {
 	event and thus, it is necessary to invoke the \texttt{TraceEvent} constructor before sending it. For
 	instance, if an agent wants to create a trace event for a service called \lstinline{SIMPLE_SERVICE},
 	it could be made in this way:
-	
+
 	\begin{lstlisting}
 /* Creation of the trace event */
 TraceEvent tEvent = new TraceEvent("SIMPLE_SERVICE", this.getAid(), "This is a simple trace event, provided by a simple tracing service");
@@ -1810,12 +1810,12 @@ TraceEvent tEvent = new TraceEvent("SIMPLE_SERVICE", this.getAid(), "This is a s
 /* Sending the event */
 send(tEvent);
 	\end{lstlisting}
-	
+
 %	\begin{itemize}
 %		\item \textbf{\texttt{public void sendTraceEvent(TraceEvent tEvent)}}: Throw a trace Event. This
 %			method does not set the \texttt{timestamp} attribute of the trace event, which is internally set
 %			at creation time by the constructor method.
-%			
+%
 %			\begin{itemize}
 %				\item\textbf{\texttt{tEvent}:} Trace event which is to be thrown.
 %			\end{itemize}
@@ -1825,34 +1825,34 @@ send(tEvent);
 	similar to the ACL message handler: \lstinline{onTraceEvent(TraceEvent tEvent)}. This method
 	executes automatically each time a trace event is received by the agent; however, it is empty. This
 	means that the developer has to write the source code to process trace events.
-	
+
 	The source code in Section \ref{sec:daddy} (lines 59 to 79) shows an example of trace event
 	handler. In this case, the received trace event is processed attending to its tracing service.
 
 \section{Tracing Services}\label{sec:tservices}
-	
+
 	Agents which are interested in sharing their trace events, offer them as \textit{tracing services}.
 	Agents publish their available tracing services and other agents can request those tracing services
 	in which they are interested. As a consequence, only those trace events which have been
 	requested by an agent in the system are traced and agents only receive those trace events
 	which they have previously requested. In this way, trace event traffic is reduced and agents do
 	not have to process trace events which they are not interested in.
-	
+
 	In order to register available tracing entities and services, as well as to manage subscriptions to
 	tracing services, the platform must have a \textit{Trace Manager} running. In Magentix2, the Trace
 	Manager is a single agent (the \texttt{TraceManager} class inherits from \texttt{BaseAgent}), which
 	must be running in a host of the platform; however, the trace manager is intended to be a distributed
 	entity in future versions of the platform.
-	
+
 	The trace manager can be launched in any host where Magentix2 is running by invoking the
 	corresponding constructor method \lstinline{TraceManager(AgentID tmAid)}. An example of how to
 	launch the Trace Manager can be found in the source code of the example in
 	Section \ref{sec:mainapp}, in line number 29 of the main application source code:
-	
+
 	\begin{lstlisting}
 TraceManager tm = new TraceManager(new AgentID("TM"));
 	\end{lstlisting}
-	
+
 	Agents communicate with the Trace Manager using the methods available in the class
 	\lstinline{es.upv.dsic.gti_ia.trace.TraceInteract}. These methods internally send an ACL message to
 	the Trace Manager. This message will be processed by the Trace Manager, which responds to these
@@ -1860,7 +1860,7 @@ TraceManager tm = new TraceManager(new AgentID("TM"));
 	error ACL message is sent to the requester tracing entity with an error code, in order to let the tracing
 	entity know the reason why the request was rejected. These error codes are available in the class
 	\lstinline{es.upv.dsic.gti_ia.trace.TraceError} and their meaning is described in Table \ref{tab:error}.
-	
+
 	\begin{table}[ht]
      		\caption{Trace Manager error codes}
        		\label{tab:error}
@@ -1890,19 +1890,19 @@ TraceManager tm = new TraceManager(new AgentID("TM"));
 %       }
        		}
    	\end{table}
-		
+
 	Some of the methods available in \lstinline{es.upv.dsic.gti_ia.trace.TraceInteract} assume that a
 	default trace manager called \texttt{TM} is running,
 	while others allow specifying the Trace Manager to which requests are to be directed.
-	
+
 	Actions related to tracing services can be classified in three main groups, which are explained in
 	more detail in the following sections: Publication/Unpublication of tracing services (Section
 	\ref{sec:publish}), subscription/unsubscription to/from tracing services (Section
 	\ref{sec:subscription}) and listing of tracing entities or services (Section \ref{sec:listing}).
-	
+
 %	Tracing services are represented in the platform by the class
 %	\texttt{es.upv.dsic.gti\_ia.core.TracingService}:
-%	
+%
 %	\begin{lstlisting}
 %public class TracingService implements Serializable {
 %   private String name;
@@ -1913,28 +1913,28 @@ TraceManager tm = new TraceManager(new AgentID("TM"));
 %   private TracingServiceSubscriptionList subscriptions;
 %}
 %	\end{lstlisting}
-%	
+%
 %	\begin{itemize}
 %		\item\textbf{\texttt{name}:} String identifying the tracing service.
-%		
+%
 %		\item\textbf{\texttt{mandatory}:} Boolean which is set to \texttt{true} when the tracing service
 %			cannot be unpublished
-%		
+%
 %		\item\textbf{\texttt{requestable}:}
-%		
+%
 %		\item\textbf{\texttt{description}:}
-%		
+%
 %		\item\textbf{\texttt{providers}:}
-%		
+%
 %		\item\textbf{\texttt{subscriptions}:}
 %	\end{itemize}
 
 		\subsection{Tracing service publication}\label{sec:publish}
-		
+
 			In order to publish and unpublish tracing services, agents have to use respectively the
 			methods \lstinline{publishTracingService} and \lstinline{unpublishTracingService}. These
 			methods are described in more detail in Table \ref{tab:publish}.
-		
+
 		\begin{table}[ht]
      		\caption{Tracing service publication and unpublication methods}
        		\label{tab:publish}
@@ -1962,34 +1962,34 @@ TraceManager tm = new TraceManager(new AgentID("TM"));
 %       }
        		}
    		\end{table}
-		
+
 		An example of tracing service publication can be:
-		
+
 		\begin{lstlisting}
 publishTracingService(this, "TracingService_1", "An example of tracing service");
 		\end{lstlisting}
-		
+
 		where the running agent (\texttt{this}) publishes a tracing service called \textit{TracingService\_1}
 		which is described as \textit{An example of tracing service}. Once the running agent is done
 		sharing these trace events, it can unpublish the tracing service by invoking the corresponding
 		method referring to the already published tracing service:
-		
+
 		\begin{lstlisting}
 unpublishTracingService(this, "TracingService_1");
 		\end{lstlisting}
-		
+
 		\subsection{Tracing service subscription}\label{sec:subscription}
-		
+
 			Before receiving any trace event, agents have to request the corresponding tracing service
 			by invoking \lstinline{requestTracingService}. This subscription can be cancelled later by
 			invoking \lstinline{cancelTracingServiceSubscription}.
-			
+
 			It is also possible to subscribe to all available tracing services offered by any tracing entity in
 			the system by invoking the method \lstinline{requestAllTracingServices}. The Trace Manager
 			only alows for subcribing to all available has to be launched in monitorization mode. Thus,
 			the following code would not work and the requester agent would receive a \texttt{REFUSE}
 			ACL message with an \texttt{AUTHORIZATION\_ERROR} error code:
-			
+
 			\begin{lstlisting}
 TraceManager tm = new TraceManager(new AgentID("TM"));
 
@@ -1998,10 +1998,10 @@ TraceManager tm = new TraceManager(new AgentID("TM"));
 /* This will NOT work */
 requestAllTracingServices(this);
 			\end{lstlisting}
-			
+
 			Launching the Trace Manager with the monitorization flag set to true, like in the example,
 			would do the job:
-			
+
 			\begin{lstlisting}
 TraceManager tm = new TraceManager(new AgentID("TM"), true);
 
@@ -2010,10 +2010,10 @@ TraceManager tm = new TraceManager(new AgentID("TM"), true);
 /* This will work */
 requestAllTracingServices(this);
 			\end{lstlisting}
-			
+
 			All these methods related to the subscription and unsubscription processes are described in
 			more detail in Table \ref{tab:subscribe}.
-			
+
 		\begin{table}[ht]
      		\caption{Tracing service subscription and unsubscription methods}
        		\label{tab:subscribe}
@@ -2056,27 +2056,27 @@ requestAllTracingServices(this);
 %       }
        		}
    		\end{table}
-			
+
 			An example of tracing service subscription can be found in Section \ref{sec:daddy}, in line
 			number 20, where the agent subscribes to the \textit{NEW\_AGENT} tracing service. Line
 			number 68 also shows an example of subscription to a tracing service called
 			\textit{MESSAGE\_SENT\_DETAIL} offered by a specific origin entity. Later in that source
 			code, in lines 74 and 75, it can be observed how the agent unsubscribes from these tracing
 			services.
-			
+
 		\subsection{Listing}\label{sec:listing}
-		
+
 			The Trace Manager allows for listing tracing entities and tracing services available in the
 			system by invoking \lstinline{listTracingEntities} and \lstinline{listTracingServices}
 			respectively. These two methods are described in more detail in Table \ref{tab:listing}.
-		
+
 			In response to any of these requests, a list of available tracing entities or available tracing
 			services will be sent to the \texttt{applicantAgent} as an \texttt{AGREE} ACL message. The
 			requested list will be included in the \texttt{content} field of the ACL message.
-			
+
 			When a list of avalable tracing entities has been requested, the \texttt{content} of the reply
 			message will be structured as follows:
-			
+
 			\begin{itemize}
 				\item Message content:\\
 					$list\#entities\#<number\ of\ t\ entities>\#<t\ entity\ description\ list>$
@@ -2086,10 +2086,10 @@ requestAllTracingServices(this);
 				\item $<$\texttt{entity type}$>$: $\{0, 1, 2\}$ (meaning agent, artifact or
 					aggregation)
 			\end{itemize}
-			
+
 			When a list of tracing services has been requested, the \texttt{content} of the reply message
 			will be structured as follows:
-			
+
 			\begin{itemize}
 				\item Message content:\\
 					$list\#services\#<number\ of\ t\ services>\#<t\ service\ description\ list>$
@@ -2097,7 +2097,7 @@ requestAllTracingServices(this);
 					descriptions, each of which is structured as follows:\\
 					$\#<service\ name\ length>\#<service\ name>\#<service\ description\ \\length>\#<service\ description>$
 					\end{itemize}
-					
+
 		\begin{table}[ht]
      		\caption{Tracing services and tracing entities listing methods}
        		\label{tab:listing}
@@ -2123,7 +2123,7 @@ requestAllTracingServices(this);
    		\end{table}
 
 	\section{Domain Independent Tracing Services}
-	
+
 			The platform offers a set of \textit{domain independent} tracing services. Some of them can
 			be requested by agents in order to receive the corresponding trace events, while others are
 			not requestable and the corresponding trace events are received even without having
@@ -2136,7 +2136,7 @@ requestAllTracingServices(this);
 			\lstinline{es.upv.dsic.gti_ia.coreTracingService}
 
 		\subsection{System domain independent tracing services}
-		
+
 			System domain independent tracing services provide information which may be necessary
 			for any tracing entity in order to understand the sequence of trace events which it has
 			received. These tracing services are not requestable and thus, trace events are received by
@@ -2147,7 +2147,7 @@ requestAllTracingServices(this);
 			independent tracing services and on the information which their events provide are detailed
 			in Table \ref{tab:system}.
 
-%%%%%%%%%% ORIGINAL %%%%			
+%%%%%%%%%% ORIGINAL %%%%
 %%		\begin{table}[h!t]
 %%     		\caption{System related domain independent tracing services}
 %%       		\label{tab:system}
@@ -2249,9 +2249,9 @@ requestAllTracingServices(this);
 %       }
        		}
    		\end{table}
-		
+
 		\subsection{Agent's lifecycle domain independent tracing services}
-		
+
 			These domain independent tracing services provide tracing information related to agents
 			entering or leaving the system. These tracing services are requestable and thus, it is
 			necessary to subscribe to them before receiving any trace event they may provide. An
@@ -2259,10 +2259,10 @@ requestAllTracingServices(this);
 			number 20. The daddy agent requests the tracing service \lstinline{NEW_AGENT} in order to
 			receive a trace event each time a new agent enters the system. These events are later
 			processed in the event handler, in line number 67.
-			
+
 			More details on these tracing services and on how to understand the information provided by
 			these trace events are available in Table \ref{tab:lifecycle}.
-		
+
 		%%% ORIGINAL %%%%%
 %%		\begin{table}[h!t]
 %%     		\caption{Agent's lifecycle related domain independent tracing services}
@@ -2289,7 +2289,7 @@ requestAllTracingServices(this);
 %%%       }
 %%       		}
 %%   		\end{table}
-		
+
 		\begin{table}[h!t]
      		\caption{Agent's lifecycle related domain independent tracing services}
        		\label{tab:lifecycle}
@@ -2312,9 +2312,9 @@ requestAllTracingServices(this);
 %       }
        		}
    		\end{table}
-		
+
 		\subsection{Messaging related domain independent tracing services}
-		
+
 			These domain independent tracing services provide information related to message based
 			agent communication. These tracing services are also requestable and thus, it is also
 			necessary to subscribe to them before receiving any trace event they may provide. An
@@ -2322,11 +2322,11 @@ requestAllTracingServices(this);
 			number 68, where the daddy agent requests a tracing service called
 			\lstinline{MESSAGE_SENT_DETAIL} in order to inspect every message that his boy agents,
 			Bobby or Timmy, send.
-			
+
 			More details on these tracing services and on how to understand the information provided by
 			these trace events are available in Table \ref{tab:messaging}.
-	
-%%%%%%%% ORIGINAL %%%%%%%%%%%	
+
+%%%%%%%% ORIGINAL %%%%%%%%%%%
 %		\begin{table}[h!t]
 %     		\caption{Agent's messaging related domain independent tracing services}
 %       		\label{tab:messaging}
@@ -2371,7 +2371,7 @@ requestAllTracingServices(this);
 %%       }
 %       		}
 %   		\end{table}
-		
+
 		\begin{table}[h!t]
      		\caption{Agent's messaging related domain independent tracing services}
        		\label{tab:messaging}
@@ -2411,16 +2411,16 @@ requestAllTracingServices(this);
 %       }
        		}
    		\end{table}
-		
+
 		\subsection{Tracing service publication related domain independent tracing services}
-		
+
 			These domain independent tracing services provide information related to tracing services
 			being published by tracing entities in the system. For instance, a generic agent may need to
 			be noticed when a specific tracing service is being offered or when another agent is not
 			sharing certain tracing information anymore. These domain independent tracing services
 			and the information they provide are detailed in Table \ref{tab:pub}
-	
-%%%%%%%%%% ORIGINAL %%%%%%		
+
+%%%%%%%%%% ORIGINAL %%%%%%
 %%		\begin{table}[h!t]
 %%     		\caption{Tracing service publication related domain independent tracing services}
 %%       		\label{tab:pub}
@@ -2469,28 +2469,92 @@ requestAllTracingServices(this);
 %       }
        		}
    		\end{table}
-	
+
+\section{Customizable Trace Support}
+
+  In the trace system of Magentix2, the trace events are customizable. Platform administrators
+  can define the appropiate trace level of the platform. Thus, platform applications only use
+  the necessary trace support to avoid the application overload. Some platform applications may
+  not be interested in any events and in fact, trace support is not needed. However, other domains
+  might need a full trace support.
+
+  \begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.95\textwidth]{ProgrammingAgents/images/traceSupportMask}
+  \caption{Trace Support Mask}
+  \label{fig:traceMask}
+  \end{figure}
+
+  In the trace support, it is defined a mask which allows administrators to determinate the types
+  of events supported at the platform, by means of a bit position for each type of event (Figure
+  \ref{fig:traceMask}). The meaning of each bit position is are detailed in Tables \ref{tab:allowedTM}
+  and \ref{tab:reasonTM}.
+
+  \begin{table}[h!t]
+    \caption{Event's types allowed to customize}
+    \label{tab:allowedTM}
+    \centerline{
+      \begin{tabular}{|p{3cm}|p{10cm}|} \hline
+        \texttt{\textbf{LIFE\_CYCLE}}                  & Subscriptions to tracing services related to agents life cycle (Agent creation and destruction). \\ \hline
+        \texttt{\textbf{CUSTOM}}                       & Publication and subscription to tracing services defined by users. \\ \hline
+        \texttt{\textbf{MSG}}                          & Subscription to the sending and receiving of ACL messages. \\ \hline
+        \texttt{\textbf{MSG\_DTL}}                     & Subscription to the sending and receiving of ACL messages with the content included. \\ \hline
+        \texttt{\textbf{LIST\_ENTITIES}}               & List all the tracing entities. \\ \hline
+        \texttt{\textbf{LIST\_SERVICES}}               & List all the tracing services. \\ \hline
+        \texttt{\textbf{SUBSCRIBE\_TO}} \texttt{\textbf{ALL\_SERVICES}} & Subscription to all available tracing services. \\ \hline
+      \end{tabular}
+    }
+  \end{table}
+
+  \begin{table}[h!t]
+    \caption{Action information about the mask reception}
+    \label{tab:reasonTM}
+    \centerline{
+      \begin{tabular}{|r|p{10cm}|} \hline
+        \texttt{\textbf{WELCOME(W)}} & The mask is sent because the TM has just launched. Another possibility is to receive it as a response of a newAgent event.\\ \hline
+        \texttt{\textbf{UPDATE(U)}}  & The mask is sent because the tracing policy has changed, and the TM informs all the agents with a new mask event.\\ \hline
+        \texttt{\textbf{DIE(D)}}     & The TM informs agents about it is going to shut down. So the trace support will be not available.\\ \hline
+      \end{tabular}
+    }
+  \end{table}
+
+  This definition should be incorporated to the settings xml of the platform.
+  Thus, it could be possible to run the platform without trace support, even without an agent TM.
+  Notice that the events related with the agents life cycle will be always generated, but the mask
+  informs regarding if it is possible for agents to subscribe to these life cycle events or not.
+
+  Moreover, it would be possible to start the platform without trace support and then run it, launching
+  the agent TM and informing the existing agents about the new event mask.
+
+  This mask is going to be used both by the TM (which read it from the settings) and the agents registered
+  at the platform. The TM will use it to check if it is allowed to register new services or subscriptions.
+  The agent will check the current mask in order to generate or not events\footnote{except life cycle, that
+  will be always generated}. By default, agents will have a mask with no events allowed. When the agent TM
+  is created, it is activated the trace support and the agents receive the trace support mask with the
+  allowed events.
+
 \section{Example: TraceDaddy}
-		
-	Simple example of how to use domain independent tracing services to follow other
-	agents' activities and to make decisions according to this activity.
-    			
+
+	This simple example shows how to use domain independent tracing services to follow other
+	agents' activities and to make decisions according to that activity.
+
 	In this case, a Daddy agent listens to his sons (Boy agents) while they are playing and when
 	one of them starts crying, he proposes them to take them to the park. When both children
-	agree, daddy and his sons leave the building and the application finishes.
-    			
+	agree, daddy and his sons leave the building and the application finishes. As the agents use
+  only the trace events related with the agents life cycle and message detail, the optimal
+  trace level is defined with the mask value 1001000100 (see Figure \ref{fig:traceMask}).
+
 	\begin{itemize}
 		\item\textbf{Initialization:}
 			\begin{itemize}
 				\item DADDY:\\
 					Requests to the NEW\_AGENT tracing service in order to know when
-					children arrive.\\
-					Prints on screen that he intends to read the newspaper.
-							
+					children arrive. Prints on screen that he intends to read the newspaper.
+
 				\item BOYS (Bobby and Timmy):\\
 					Print on screen their name and age.
 			\end{itemize}
-					
+
 		\item\textbf{Execution:}
 			\begin{itemize}
 				\item DADDY:\\
@@ -2500,11 +2564,11 @@ requestAllTracingServices(this);
 					Each time a MESSAGE\_SENT\_DETAIL trace event is received, Daddy
 					prints its content on screen and checks if the content of the message is equal
 					to 'GUAAAAAA!'. If so, Daddy cancels the subscription to
-					MESSAGE\_SENT\_DETAIL tracing services and sends ACL request 
+					MESSAGE\_SENT\_DETAIL tracing services and sends ACL request
 					messages to both children to propose the go to the park.\\
 					When both childre have replied with an AGREE message, Daddy agent
 					prints it on screen and ends its execution.
-					
+
 				\item BOYS (Bobby and Timmy):\\
 					Bobby, which is only 5, sends each second an ACL request message to
 					Timmy (which is 7) to request him his toy (Give me your toy). After 5 denials,
@@ -2517,9 +2581,9 @@ requestAllTracingServices(this);
 					agree and end their execution.
 			\end{itemize}
 	\end{itemize}
-	
+
 	\subsection{\texttt{Daddy} class}\label{sec:daddy}
-			
+
 		\begin{lstlisting}
 package TraceDaddy;
 
@@ -2537,13 +2601,13 @@ public class Daddy extends BaseAgent{
    private boolean finish=false;
    private boolean Bobby_agree=false;
    private boolean Timmy_agree=false;
-	
+
    public Daddy(AgentID aid) throws Exception{
       super(aid);
       TraceInteract.requestTracingService(this, "NEW_AGENT");
       System.out.println("[Daddy " + this.getName() + "]: I want to read the newspaper...");
    }
-	
+
    public void execute(){
       ACLMessage msg;
       while(!finish){
@@ -2552,9 +2616,9 @@ public class Daddy extends BaseAgent{
          } catch (InterruptedException e) {
             e.printStackTrace();
          }
-         
+
          System.out.println("[Daddy " + this.getName() + "]: Ok! I give up... Shall we go to the park?");
-		
+
          msg = new ACLMessage(ACLMessage.REQUEST);
          msg.setSender(this.getAid());
          msg.setContent("GO TO THE PARK");
@@ -2569,24 +2633,24 @@ public class Daddy extends BaseAgent{
                e.printStackTrace();
             }
          }
-         
+
          try {
             Thread.sleep(1000);
          } catch (InterruptedException e) {
             e.printStackTrace();
          }
-         
+
          System.out.println("[Daddy " + this.getName() + "]: Ok! Let's go, children!");
       }
-      
+
       public void onTraceEvent(TraceEvent tEvent) {
          DateFormat formatter = new SimpleDateFormat("HH:mm:ss.SSS");
-         
+
          Calendar calendar = Calendar.getInstance();
          calendar.setTimeInMillis(tEvent.getTimestamp());
-         
+
          ACLMessage msg;
-         
+
          if (tEvent.getTracingService().contentEquals("NEW_AGENT")){
             TraceInteract.requestTracingService(this, "MESSAGE_SENT_DETAIL", new AgentID(tEvent.getContent()));
          }
@@ -2600,14 +2664,14 @@ public class Daddy extends BaseAgent{
             }
          }
       }
-      
+
       public void onMessage(ACLMessage msg){
          if((msg.getPerformativeInt() == ACLMessage.AGREE) && (msg.getContent().contentEquals("GO TO THE PARK"))){
             System.out.println("[Daddy " + this.getName() + "]: " + msg.getSender().name + " says: " + msg.getPerformative() + " " + msg.getContent());
             if (msg.getSender().getLocalName().contentEquals("Bobby")){
                Bobby_agree=true;
             }
-            
+
             if (msg.getSender().getLocalName().contentEquals("Timmy")){
                Timmy_agree=true;
             }
@@ -2615,9 +2679,9 @@ public class Daddy extends BaseAgent{
       }
    }
 		\end{lstlisting}
-		
+
 	\subsection{\texttt{Boy} class}\label{sec:boy}
-		
+
 		\begin{lstlisting}
 package TraceDaddy;
 
@@ -2636,7 +2700,7 @@ public class Boy extends BaseAgent {
       this.dad=dad;
       System.out.println("[" + this.getName() + "]: I'm " + this.getName() + " and I'm "+ this.age + " years old!");
    }
-	
+
    public void execute(){
       ACLMessage msg;
       int counter=5;
@@ -2651,7 +2715,7 @@ public class Boy extends BaseAgent {
                msg.setContent("GUAAAAAA..!");
             }
             counter--;
-            
+
             msg.setReceiver(new AgentID("qpid://Timmy@localhost:8080"));
             send(msg);
          }
@@ -2662,7 +2726,7 @@ public class Boy extends BaseAgent {
          }
       }
    }
-	
+
    public void onMessage(ACLMessage msg){
       if (msg.getSender().getLocalName().contentEquals(dad.getLocalName())){
          // Daddy!
@@ -2690,9 +2754,9 @@ public class Boy extends BaseAgent {
    }
 }
 		\end{lstlisting}
-		
+
 	\subsection{Main application source code}\label{sec:mainapp}
-		
+
 		\begin{lstlisting}
 package TraceDaddy;
 
@@ -2712,31 +2776,32 @@ public class Run {
        */
       DOMConfigurator.configure("configuration/loggin.xml");
       Logger logger = Logger.getLogger(Run.class);
-      
+
       /**
        * Connecting to Qpid Broker
        */
       AgentsConnection.connect();
-      
+
       try {
          /**
           * Instantiating the Trace Manager
           */
          TraceManager tm = new TraceManager(new AgentID("TM"));
-         
+         tm.setTraceMask(new TraceMask("1001000100"));
+
          System.out.println("INITIALIZING...");
-         
+
          /**
           * Instantiating Dad
           */
          dad = new Daddy(new AgentID("qpid://MrSmith@localhost:8080"));
-         
+
          /**
           * Instantiating sons
           */
          olderSon = new Boy(new AgentID("qpid://Timmy@localhost:8080"), 7, dad.getAid());
          youngerSon = new Boy(new AgentID("qpid://Bobby@localhost:8080"), 5, dad.getAid());
-         
+
          /**
           * Execute the agents
           */
@@ -2749,9 +2814,9 @@ public class Run {
    }
 }
 		\end{lstlisting}
-		
+
 	\subsection{Results}
-		
+
 %		\begin{lstlisting}
 		\begin{codigo}
 INITIALIZING...
@@ -2786,5 +2851,3 @@ INITIALIZING...
 [Daddy MrSmith]: Ok! Let's go, children!
 		\end{codigo}
 %		\end{lstlisting}
-
-

@@ -15,6 +15,7 @@ import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
 import es.upv.dsic.gti_ia.core.TraceEvent;
 import es.upv.dsic.gti_ia.trace.TraceManager;
+import es.upv.dsic.gti_ia.trace.TraceMask;
 
 /** 
  * @author Jose Alemany Bordera  -  jalemany1@dsic.upv.es
@@ -67,6 +68,7 @@ public class TestTraceDaddy {
 		 * Instantiating the Trace Manager
 		 */
 		tm = new TraceManager(new AgentID("TM"));
+		tm.setTraceMask(new TraceMask("1001000100"));
 
 		System.out.println("INITIALIZING...");
 			
