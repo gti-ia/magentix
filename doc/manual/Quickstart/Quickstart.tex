@@ -15,7 +15,7 @@
 
 \subsection{Installation of Magentix2}
 
-In order to install Magentix2,  the corresponded zipped package must be downloaded\footnote{The latest installable version is in: \url{http://gti-ia.upv.es/sma/tools/magentix2/downloads.php}}. Once Magentix2 is downloaded, you need to unzip the file. Just double-click the file or run the following command:
+In order to install Magentix2,  the corresponded zipped package has to be downloaded\footnote{The latest installable version is in: \url{http://gti-ia.upv.es/sma/tools/magentix2/downloads.php}}. Once Magentix2 is downloaded, you need to unzip the file. Just double-click the file or run the following command:
 
 \texttt{\$ unzip magentix2-\MagentixVersion.zip}
 
@@ -60,7 +60,7 @@ $ ./Start-Magentix.sh
 \end{itemize}
 
 To check that all is correctly configured and Magentix2 has been successfully installed and running, execute the example Start-BasicExample.sh.
-This script must be executed as follows:
+This script run a basic example:
 
 \begin{verbatim}
 $ cd  examples
@@ -120,15 +120,15 @@ $ ./Stop-Magentix.sh
 \end{itemize}
 
 
-\subsection{Unistalling Magentix2}
+\subsection{Uninstalling Magentix2}
 
 Magentix2 is very simple to remove from one system. The steps to uninstall are:
 \begin{enumerate}
-\item Stopping Magentix2 platform.
+\item Stop Magentix2 platform.
 \begin{verbatim}
 $ ./Stop-Magentix.sh
 \end{verbatim}
-\item Deleting Magentix2 installation directory.
+\item Delete Magentix2 installation directory.
 \end{enumerate}
 
 
@@ -138,7 +138,7 @@ $ ./Stop-Magentix.sh
 \section{Developing and executing a first agent}\label{sec:devel1stAgent}
 This section explains step by step how to program a Magentix2 agent. The images shown here correspond to the Eclipse IDE, but everything should be similar in any other IDE. Magentix2 library works with jdk1.7 which is available at: \url{http://www.oracle.com/technetwork/java/javase/downloads/index.html}
 
-The first step is to start Eclipse and create a new project (MyFirstAgent). The java library \texttt{magentix2-\MagentixVersion-jar-with-dependencies.zip} has to be included in the project as a referenced library. Magentix2 platform and the agents running on it need a configuration folder with two files: \texttt{Settings.xml} and \texttt{loggin.xml}. \texttt{Settings.xml} configures all the parameters related to the platform functionality, like MySQL parameters or how agents connect to the QPid broker. \texttt{Loggin.xml} is the configuration file for the Magentix2 logger, where is specified how log messages are displayed. Magentix2 uses log4j as debugger, for more information about this software, please, refer to: \url{http://logging.apache.org/log4j/1.2/manual.html}. 
+The first step is to start Eclipse and create a new project (MyFirstAgent). The java library \texttt{magentix2-\MagentixVersion-jar-with-dependencies.zip} (which can be found in the \texttt{lib/} directory) has to be included in the project as a referenced library. Magentix2 platform and the agents running on it need a configuration folder with two files: \texttt{Settings.xml} and \texttt{loggin.xml}. \texttt{Settings.xml} configures all the parameters related to the platform functionality, like MySQL parameters or how agents connect to the QPid broker. \texttt{Loggin.xml} is the configuration file for the Magentix2 logger, where is specified how log messages are displayed. Magentix2 uses log4j as debugger, for more information about this software, please, refer to: \url{http://logging.apache.org/log4j/1.2/manual.html}. 
 
 There is a valid configuration folder for any Magentix2 project in the Magentix2 installation folder. In this example project, this configuration folder will be used. Thus, it is only necessary to copy the folder \verb|configuration/| in the root folder of the project (in this case \verb|/workspace/MyFirstAgent/}|). Then, it is necessary to create a new package named \textit{agent} in the project. In figure \ref{img:develop1} it is shown how Eclipse looks like after taking these actions.
 \begin{figure}[!h]

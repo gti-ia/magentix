@@ -68,7 +68,7 @@ public void execute() {
 \subsection{Initialization Tasks}
 Magentix2 platform uses log4j as a logging facility. It was developed by the  Apache's Jakarta Project\footnote{http://jakarta.apache.org/}. Its speed and flexibility allows log statements to remain in shipped code while giving the user the ability to enable logging at runtime without modifying any of the application binaries.
 
-Log4j must be initialized inside the \lstinline|main()| method of each Java application as follows:
+Log4j can be initialized inside the \lstinline|main()| method of each Java application as follows:
 �
 \begin{lstlisting}
 DOMConfigurator.configure("configuration/loggin.xml");
@@ -76,7 +76,7 @@ DOMConfigurator.configure("configuration/loggin.xml");
 Logger logger = Logger.getLogger(Run.class);
 \end{lstlisting}
 �
-The file logging.xml \footnote{This file is located in the \texttt{configuration/} directory of the Magentix2 installation.} is used to specify what level of log messages are written to the log files for each component. Moreover, Log4j allows logging requests to print to multiple destinations called appenders.
+The file loggin.xml \footnote{This file is located in the \texttt{configuration/} directory of the Magentix2 installation.} is used to specify what level of log messages are written to the log files for each component. Moreover, Log4j allows logging requests to print to multiple destinations called appenders.
 
 
 Two appenders predefined for Magentix2 are showed in \ref{fig:Appender1} and \ref{fig:Appender2} figures. Specifically, the appender 1 (figure \ref{fig:Appender1}) indicates a file as the standard output. The appender 2 (figure \ref{fig:Appender2}) indicates the console as the standard output. Please, to learn more about appenders refer to: \url{http://logging.apache.org/log4j/1.2/index.html}
@@ -173,7 +173,7 @@ In order to instantiate an agent, an agent ID must be also created as follows:
  \item AgentID(String Identifier), where Identifier is the agent name.
 \end{itemize}
 
-�
+
 Examples of creating a new instantiation:
 
 \begin{lstlisting}
@@ -193,8 +193,12 @@ Examples:
     agent2.start();
 \end{lstlisting}
 
-\subsection{Optional Methods}
-The \lstinline|init()| and \lstinline|finalize()| methods are also defined in the  \lstinline|es.upv.dsic.gti_ia.core.BaseAgent| class. These methods are automatically executed before and after the \lstinline|execute()| method. The programmer can  overwrite  these methods in order to include initialization or termination tasks.
+\subsection{Agent life cycle}
+
+The agent life cycle for a BaseAgent is composed of the following steps:
+\lstinline|init() -> execute() -> finalize() -> terminate()|
+
+These methods are defined in the  \lstinline|es.upv.dsic.gti_ia.core.BaseAgent| class. The \lstinline|init()| and \lstinline|finalize()| methods are automatically executed before and after the \lstinline|execute()| method. The programmer can  override  them in order to include initialization or termination tasks. The \lstinline|terminate()| method \textbf{MUST NOT} be overriden! since it terminates the qpid conections with the broker. Otherwise the agent will not finalize correctly. All the user code designated to stop the agent must be placed in the \lstinline|finalize()| method.
 
 
 \subsection{Running Examples}
@@ -348,7 +352,7 @@ In a similar way, the following example shows how an external JADE agent sends a
 
 
 \begin{lstlisting}
-AID receiver = new AID();
+AgentID receiver = new AgentID();
 
  //agentname@hotsname of the Magentix2 platform in which the agent is running
 receiver.setName("consumer@hostname");
@@ -450,9 +454,9 @@ Each implemented protocol provides the basic message exchange between two agents
 %%\end{lstlisting}
 
 
-\section{Communication Protocols on Magentix2 platform.}
+\section{Interaction Protocols}
 Three interaction protocols specified by FIPA (Request, Query and the Contract-Net) have been implemented in the Magentix2 basic conversational protocol. For this purpose, a set of classes have been implemented, and they can be found into the \lstinline|es.upv.dsic.gti-ia.architecture package.|
-Within all of the protocols implemented, agents can play both initiator and responder role. These roles implement different behaviors. The initiators  are executed once, while responders are executed cyclically, so they will return to its initial state after reaching the final one.
+Within all of the protocols implemented, agents can play both initiator and responder role. These roles implement different behaviors. The initiators  are executed once per conversation, while responders are executed cyclically, so they will return to its initial state after reaching the final one.
 The set of classes in the \lstinline|es.upv.dsic.gti-ia.architecture| package have been designed so that programmers do not need to deal with neither message sending nor protocol status monitoring. Thus, programmers only have to define what should be done in each state of the protocol and prepare messages before sending. The actions performed in each state are defined by handlers for initiator roles and preparers for responder roles.
 
 \begin{itemize}
@@ -602,7 +606,10 @@ In figure \ref{img:global} a global view of a CAgent is shown. In this figure th
 In the next sections some examples of CAgents are explained. All the code of these examples are available in the examples directory of Magentix2 platform.
 
 \section{``Hello World'' CAgent}
-The code shown in this section corresponds to the code located in examples/src/myFirstCAgent/HelloWorldAgent.java. In the code below, the method \texttt{execution} is where the user has to implement the main code of the agent. In this ``hello world'' agent the main behaviour of the agent is just to say ``hello world''. The method \texttt{finalize} is executed when the agent is just about to finish its execution, thus, here is where the user has to implement ending actions of the agent.
+The code shown in this section corresponds to the code located in examples/src/myFirstCAgent/HelloWorldAgent.java. In the code below, the method \texttt{execution} is where the user has to implement the main code of the agent. In this ``hello world'' agent the main behaviour of the agent is just to say ``hello world''.
+
+The only way to terminate a cAgent is to call the \texttt{Shutdown()} method from the agent instance or the \texttt{ShutdownAgent()} method from a CProcessor instance of the CAgent. The method \texttt{finalize} is executed when the agent is just about to finish its execution, thus, this is where the user can introduce ending actions for the agent.
+
 \begin{lstlisting}[style=Java]
 class HelloWorldAgentClass extends CAgent {
    public HelloWorldAgentClass(AgentID aid) throws Exception {
@@ -727,6 +734,23 @@ ACLMessage response = this.startSyncConversation("TALK");
 System.out.println(this.getAid().name + " : Sally tell me "
 + response.getPerformative() + " " + response.getContent());
 \end{lstlisting}
+
+\section{Sending Errors} % (fold)
+\label{sec:sending_errors}
+
+It is possible that a CAgent is unable to send a message due an error in the transport layer. In this case the conversation will automatically jump to the SENDING\_ERRORS state, which is predefined to shutdown the agent. However, the agent programmer can override this state for their conversations to perform any other action and manage transport layer errors.
+
+\begin{lstlisting}[style=Java]
+class SENDING_ERRORS_Method implements SendingErrorsStateMethod {
+
+	@Override
+	public String run(CProcessor myProcessor, ACLMessage errorMessage) {
+
+		return "SHUTDOWN";
+	}
+\end{lstlisting}
+
+% section sending_errors (end)
 
 \section{Using a CFactory Template}
 \label{subsec:usingATemplate}
@@ -904,7 +928,7 @@ MagentixAgArch arch = new MagentixAgArch();
 JasonAgent agent = new JasonAgent(new AgentID("bob"), "./src/test/java/jasonTest_1/demo.asl", arch);
 agent.start();
 \end{lstlisting}
-In the code shown above, first an instance of MagentixAgArch class called ``arch'' is created, then a JasonAgent called ``agent'' is created, in order to create a JasonAgent it is necessary to specify its AgentID, the file with the AgentSpeak(L) program that the interpreter will execute and the agent architecture the agent will use, in this case, a standard MagentixAgArch. Finally, start the execution of the agent starts.
+In the code shown above, first an instance of MagentixAgArch class called ``arch'' is created, then a JasonAgent called ``agent'' is created, in order to create a JasonAgent it is necessary to specify its AgentID, the file with the AgentSpeak(L) program that the interpreter will execute and the agent architecture the agent will use, in this case, a standard MagentixAgArch. Finally, you need to start the execution of the agent using the \texttt{start()} method. To stop an agent just use the \texttt{Shutdown()} method.
 
 It is possible to modify the agent architecture, in the following example the MagentixAgArch default architecture will not be used, instead a new one is created, which extends from MagentixAgArch.
 \begin{lstlisting}[style=Java]
@@ -1666,7 +1690,7 @@ In order to show how the developed system works, the data-flow for the problem-s
 	\subsection{Supported Features}
 
 		The present version of Magentix2 does not support all of the tracing features considered in the
-		model. Those which are not yet supported will be incorporated in future versions of the platform.
+		model. However, those which are not yet supported will be incorporated in future versions of the platform.
 
 		\begin{itemize}
 
@@ -1690,8 +1714,8 @@ In order to show how the developed system works, the data-flow for the problem-s
 			according to many parameters, the present version of Magentix2 only allows agents to filter
 			trace events according to the event type and the agent which threw the event.
 
-			Tracing services composition has also been postponed for later platform releases and thus,
-			it is not supported in the present version of Magentix2.
+			%Tracing services composition has also been postponed for later platform releases and thus,
+			%it is not supported in the present version of Magentix2.
 
 		\item{Authorization}
 
@@ -1841,8 +1865,8 @@ send(tEvent);
 	In order to register available tracing entities and services, as well as to manage subscriptions to
 	tracing services, the platform must have a \textit{Trace Manager} running. In Magentix2, the Trace
 	Manager is a single agent (the \texttt{TraceManager} class inherits from \texttt{BaseAgent}), which
-	must be running in a host of the platform; however, the trace manager is intended to be a distributed
-	entity in future versions of the platform.
+	must be running in a host of the platform. %; however, the trace manager is intended to be a distributed
+	%entity in future versions of the platform.
 
 	The trace manager can be launched in any host where Magentix2 is running by invoking the
 	corresponding constructor method \lstinline{TraceManager(AgentID tmAid)}. An example of how to
@@ -1986,7 +2010,7 @@ unpublishTracingService(this, "TracingService_1");
 
 			It is also possible to subscribe to all available tracing services offered by any tracing entity in
 			the system by invoking the method \lstinline{requestAllTracingServices}. The Trace Manager
-			only alows for subcribing to all available has to be launched in monitorization mode. Thus,
+			only alows for subcribing to all available services if you have been launched in monitorization mode. Thus,
 			the following code would not work and the requester agent would receive a \texttt{REFUSE}
 			ACL message with an \texttt{AUTHORIZATION\_ERROR} error code:
 
@@ -2000,7 +2024,7 @@ requestAllTracingServices(this);
 			\end{lstlisting}
 
 			Launching the Trace Manager with the monitorization flag set to true, like in the example,
-			would do the job:
+			will just work:
 
 			\begin{lstlisting}
 TraceManager tm = new TraceManager(new AgentID("TM"), true);
