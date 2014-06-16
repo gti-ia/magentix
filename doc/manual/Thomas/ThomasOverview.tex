@@ -6,11 +6,11 @@ As it has been pointed out in the introduction, Magentix2 platform not only has 
 %==================================================================
 \section{Overview of \textsc{Thomas} framework}
 
-The \textsc{Thomas} framework tries to communicate agents and SOA-like services in a transparent, but independent way.  Agents can offer and invoke services in a transparent way to other agents or entities, as well as external entities can interact with our agents through the use of the offered services. 
+The \textsc{Thomas} framework tries to communicate agents and SOA-like services in a transparent, but independent way.  Agents can offer and invoke services in a transparent way to other agents or entities, as well as external entities can interact with our agents through the use of the offered services.
 
 %\textsc{Thomas} can coexist within different organizational unit, and each organizational unit is composed of agents or other units. In addition, \textsc{Thomas} framework gives us a new communication mechanism consisting of mass communication among agents of the unit taking into account the shipping and receiving of messages by the agents come restricted according to the position that the agent has in the unit. This position is given by the roles playing the agent in the unit.
 
-Different types of virtual organizations are supported by the \textsc{Thomas} framework. Each organization can contain others organizations. Furthermore, diverse roles can be assigned to each organization. These roles are characterized by some attributes which restrict its behavior regarding \textsc{Thomas} framework. Thus, agent must play those roles in order to belong to an organization.   
+Different types of virtual organizations are supported by the \textsc{Thomas} framework. Each organization can contain others organizations. Furthermore, diverse roles can be assigned to each organization. These roles are characterized by some attributes which restrict its behavior regarding \textsc{Thomas} framework. Thus, agent must play those roles in order to belong to an organization.
 
 In addition, Magentix2 offers a new communication mechanism based on the virtual organizations structure. Thus, this organizational messaging allows mass communication among agents of an organization, taking into account the type of roles agents play.
 
@@ -26,9 +26,9 @@ In addition, Magentix2 offers a new communication mechanism based on the virtual
 Roles  in \textsc{Thomas} are defined with a \textit{RoleName} that acts as an identifier. Furthermore, each role is always associated with a particular organizational unit. Also, each role has the following attributes: $<Position, Accessibility, Visibility>$.
 
 \begin{itemize}
-\item \textbf{Position}. The possible values that can take are: \textit{Member}, \textit{Supervisor}, \textit{subordinate} or \textit{Creator}. 
+\item \textbf{Position}. The possible values that can take are: \textit{Member}, \textit{Supervisor}, \textit{subordinate} or \textit{Creator}.
 \begin{itemize}
-\item This value must be assigned to roles when they are created. 
+\item This value must be assigned to roles when they are created.
 \item Not all the values are allowed to any type of organization (see section \ref{unitsinthomas}).
 \item Anytime an agent registers an organization, a new role with a creator position is automatically assigned him. This position gives permission to register and deregister organizations and roles. In addition, it is possible to assign a \textit{creator} role using the services offered by the \textsc{Thomas} API (see section \ref{thomasAPI}).
 \end{itemize}
@@ -38,14 +38,14 @@ In Table \ref{tab:Role_position} a summary of the role behavior taking into acco
 
 \item \textbf{Accessibility}. This attribute allows controlling who can acquire roles. Specifically, the permitted values are:
 \begin{itemize}
-	\item External: roles can be acquired by agents who do not play any role in the organization.   
+	\item External: roles can be acquired by agents who do not play any role in the organization.
 	\item Internal: in this case, it is necessary participate into the organization, that is, the requested agent should play some role  in the organization.
 \end{itemize}
 
 
-\item \textbf{Visibility}. By means of this attribute it is possible to control what information about roles is provided. Concretely, the allowed values for this attribute are: 
+\item \textbf{Visibility}. By means of this attribute it is possible to control what information about roles is provided. Concretely, the allowed values for this attribute are:
 \begin{itemize}
-\item Public: information services always provide the requested information. 
+\item Public: information services always provide the requested information.
 \item Private: the solicited information is provided only if the requested  agent belongs to the same organization where the role is registered.
 \end{itemize}
 
@@ -94,11 +94,11 @@ In Table \ref{tab:Role_position} a summary of the role behavior taking into acco
 \hline
 \textbf{Visibility} & \textbf{Accessibility} & \textbf{Behavior} \\ \hline
 
-\textit{Public} & \textit{External} & Role fully accessible and transparent. The role is visible throughout the system:\\ 
+\textit{Public} & \textit{External} & Role fully accessible and transparent. The role is visible throughout the system:\\
 & & -\textit{External}: any agent can acquire this role \\
 & & -\textit{Public}: any agent can request information about the role  \\ \hline
 
-\textit{Public} & \textit{Internal} & Role with restricted access, although visible throughout the system:\\ 
+\textit{Public} & \textit{Internal} & Role with restricted access, although visible throughout the system:\\
 & & -\textit{Internal}: in order to acquire this role, agents must participate in the organization in which the role was registered(or in its Parent Organization)\\
 & & -\textit{Public}: any agent can request information about the role \\ \hline
 
@@ -106,7 +106,7 @@ In Table \ref{tab:Role_position} a summary of the role behavior taking into acco
 & & -\textit{External}: any agent can acquire this role \\
 & & -\textit{Private}: information about the role is only provided if requested agents participate in the organization in which the role was registered(or in its Parent Organization). \\ \hline
 
-\textit{Private} & \textit{Internal} & Maximum protection of the role. The unit acts like a black box for these roles:\\  
+\textit{Private} & \textit{Internal} & Maximum protection of the role. The unit acts like a black box for these roles:\\
 & & -\textit{Internal}: agents must participate in the organization or in its parent organization to acquire the role \\
 & & -\textit{Private}: agents can request information about the role if they participate in the organization in which the role was registered(or in its Parent Organization). \\ \hline
 \end{tabular}
@@ -117,14 +117,14 @@ In Table \ref{tab:Role_position} a summary of the role behavior taking into acco
 
 \subsection{Units in \textsc{Thomas}} \label{unitsinthomas}
 
-\textsc{Thomas} framework gives support for three types of organizations or units: \textit{Flat}, \textit{Team} and \textit{Hierarchy}. Each type of organization is governed by different structural norms. In the Table \ref{tab:units} a comparative of these types of units is shown. 
+\textsc{Thomas} framework gives support for three types of organizations or units: \textit{Flat}, \textit{Team} and \textit{Hierarchy}. Each type of organization is governed by different structural norms. In the Table \ref{tab:units} a comparative of these types of units is shown.
 
 Furthermore, there is an organization created by default named \textit{Virtual}. This is a flat unit which represents the \textsc{Thomas} world, and it is the starting point to enter in the system. A role named \textit{Participant} is always available in the \textit{Virtual} organization. This role has the following attributes:
 
  $<RoleName = Participant, Position = Creator, Visibility = Public, Accessibility = External>$
- 
-Thus, an agent who wants to enter in Thomas world only needs to play the role \textit{Participant}. 
- 
+
+Thus, an agent who wants to enter in Thomas world only needs to play the role \textit{Participant}.
+
 
 
 %\begin{sidewaystable}
@@ -139,7 +139,7 @@ Thus, an agent who wants to enter in Thomas world only needs to play the role \t
 Allowed role  & \multicolumn{2}{|p{6cm}|}{Creator}  & Creator  \\
 positions     & \multicolumn{2}{|p{6cm}|}{Member} & Supervisor  \\
                   & \multicolumn{2}{|p{6cm}|}{}        & Subordinate     \\ \hline
-                  
+
 What agents can send organizational messages? &\multicolumn{3}{|p{11.5cm}|}{Any agent from this organization, except those who only play roles with \textit{Position = Creator}}. \\ \hline
 
 What agents can receive organizational messages? & \multicolumn{2}{|p{6cm}|}{Any agent from this  organization, except who what only play roles with Position = Creator} & \textit{Supervisors} receive all messages. \textit{Subordinates} only receive messages sent by \textit{Supervisors}. \textit{Creators} do not receive messages.  \\ \hline
@@ -173,12 +173,12 @@ The SF is a support mechanism  used by organizations and agents to offer and dis
 
 The SF acts as a gateway to access the \textsc{Thomas} framework. The SF can find services searching for a given service profile. This is done using matchmaking mechanisms over the inputs, outputs and keywords of the services to search.
 
-The SF also acts as a yellow pages manager and, in this way, it can also find which entities provide a given service. Services may have some pre-conditions that have to be true before the service can be executed. They exchange one or more input and output messages. A successful service execution has some effects on its environment. This parameters are called IOPE (input/output/preconditions/effects). Moreover, there could be additional parameters, which are independent of the service functionality (non-functional parameters), such as quality of service, deadlines, and security protocols among others. 
+The SF also acts as a yellow pages manager and, in this way, it can also find which entities provide a given service. Services may have some pre-conditions that have to be true before the service can be executed. They exchange one or more input and output messages. A successful service execution has some effects on its environment. This parameters are called IOPE (input/output/preconditions/effects). Moreover, there could be additional parameters, which are independent of the service functionality (non-functional parameters), such as quality of service, deadlines, and security protocols among others.
 
 
 A service represents an interaction between two entities, which are modelled as communications among independent processes. In our case, the Multi-agent Technology provides us with FIPA communication protocols.
 
-Taking into account that we are dealing with semantic services, another important data is the ontology used in the service. When the service description is accessed, any entity has all the needed information available to interact with the service. 
+Taking into account that we are dealing with semantic services, another important data is the ontology used in the service. When the service description is accessed, any entity has all the needed information available to interact with the service.
 
 Services registered and discovered by SF in \textsc{Thomas} are demanded or offered by some agent or organization (Figure \ref{fig:handledServices}). Demanded services are services which are wished by autonomous entities, but no agent or organization provides them. Offered services are provided and registered in the \textsc{Thomas} environment by agents or organizations. The final execution of this services will be finally made by a web service, an internal behavior of an agent or an agent internal call to a web service.
 
@@ -208,7 +208,7 @@ This component is in charge of organizations life cycle management, including sp
 
 By means of the publication of the structural services, OMS allows modifying, in execution time, some aspects related to the organization structure, functionality or normativity. Some of these services should be restricted to internal roles of the system, which have enough permission to do this kind of operations (i.e. a supervisor role). Dynamic services manage the creation/registration of new agents in the organization, entry or exit of unit members and role adoption. These services are always published in the SF.
 
-The OMS provides agents with a set of services for organization life-cycle management (\cite{DelVal09}), classified in: 
+The OMS provides agents with a set of services for organization life-cycle management (\cite{DelVal09}), classified in:
 
 \begin{itemize}
 	\item \textbf{Structural services:} which modify the structural organization specification, i.e. roles and organizational units (RegisterRole, DeregisterRole, RegisterUnit, DeregisterUnit, JointUnit).
@@ -230,7 +230,7 @@ The OMS provides agents with a set of services for organization life-cycle manag
 \section{Programming agents which use \textsc{Thomas}}
 
 \subsection{Magentix2 API for \textsc{Thomas}}\label{thomasAPI}
-SF and OMS have been defined as two types of intermediary agents in order to address the translation between Magentix2 agents (or any external agent), that implement FIPA communication,and the services they provide. Services requests through FIPA-request protocol were received by this type of agents. 
+SF and OMS have been defined as two types of intermediary agents in order to address the translation between Magentix2 agents (or any external agent), that implement FIPA communication,and the services they provide. Services requests through FIPA-request protocol were received by this type of agents.
 
 To ease the interaction among user agents and OMS and SF agents, two classes are provided (\lstinline|OMSProxy| and \lstinline|SFProxy|). They work as a proxy for OMS and SF respectively, encapsulating and hiding the details of the underlying communication protocol. By doing this, the developer can interact with OMS and SF using simple function calls.
 
@@ -245,7 +245,7 @@ On the contrary, in the second option, the url where OMS services are deployed (
 
 \begin{lstlisting}
 	private OMSProxy omsProxy = new OMSProxy(this, "url");
-\end{lstlisting} 
+\end{lstlisting}
 
 
 OMSProxy provides a developer with a set of methods to manage available services, this services are divided into different types and sub-types.
@@ -262,7 +262,7 @@ OMS-Service & Description & Parameters \\ \hline
 RegisterRole & Creates a new role within a unit &
 
 
-\textbf{RoleID: } Identifier of the new role. 
+\textbf{RoleID: } Identifier of the new role.
 
 \textbf{UnitID:} Identifier of the organizational unit.
 
@@ -275,9 +275,9 @@ RegisterRole & Creates a new role within a unit &
 \\  \hline
 
 DeregisterRole & Removes a specific role from a unit
-scription from a unit 
-& 
-\textbf{RoleID:} Identifier of the role. 
+scription from a unit
+&
+\textbf{RoleID:} Identifier of the role.
 
 \textbf{UnitID:} Identifier of the unit.
 
@@ -325,14 +325,14 @@ InformRole & Provides a role description of a specific unit
 &
 
 \textbf{RoleID:} Identifier of the role.
-\textbf{UnitID:} Identifier of the unit. 
+\textbf{UnitID:} Identifier of the unit.
 
 \\ \hline
 
-InformUnit & Provides unit description 
+InformUnit & Provides unit description
 &
 
-\textbf{UnitID:} Identifier of the unit. 
+\textbf{UnitID:} Identifier of the unit.
 
 \\ \hline
 
@@ -345,27 +345,27 @@ InformUnitRoles & Used for requesting the list of roles that have been registere
 
 
 InformAgentRole & Requesting the list of roles and units in which an agent is in a specific moment.
-& 
+&
 
 \textbf{RequestedAgentID: } Identifier of the agent requested.
 
 \\ \hline
 InformMembers & Indicates entities that are members of a specific unit. Optionally, it is possible to specify a role and position of this unit, so then only members playing this role or position are detailed.
- & 
+ &
 
 \textbf{UnitID:} Identifier of the unit.
 
-\textbf{RoleID:} Identifier of the role. 
+\textbf{RoleID:} Identifier of the role.
 
 \textbf{PositionID:} Identifier of the position inside the unit, such as member, supervisor or subordinate.
 
 \\ \hline
  QuantityMembers & Provides the number of current members of a specific unit. Optionally, if a role and position is indicated then only the quantity of members playing this roles or position is detailed.
- & 
+ &
 
 \textbf{UnitID:} Identifier of the unit.
 
-\textbf{RoleID:} Identifier of the role. 
+\textbf{RoleID:} Identifier of the role.
 
 \textbf{PositionID:} Identifier of the position inside the unit, such as member, supervisor or subordinate.
 
@@ -384,37 +384,37 @@ OMS-Service & Description & Parameters \\ \hline
 AcquireRole & Requests the adoption of a specific role within a unit.
  &
 
-\textbf{RoleID:} Identifier of the role. 
+\textbf{RoleID:} Identifier of the role.
 
 \textbf{
-UnitID:} Identifier of the unit. 
+UnitID:} Identifier of the unit.
 
 \\ \hline
 LeaveRole & Requests to leave a role.
 &
 
-\textbf{RoleID:} Identifier of the role. 
+\textbf{RoleID:} Identifier of the role.
 
-\textbf{UnitID:} Identifier of the unit. 
+\textbf{UnitID:} Identifier of the unit.
 
 \\ \hline
 
 AllocateRole & Forces an agent to acquire a specific role.
- & 
+ &
 
-\textbf{RoleID:} Identifier of the role. 
+\textbf{RoleID:} Identifier of the role.
 
-\textbf{UnitID:} Identifier of the unit. 
+\textbf{UnitID:} Identifier of the unit.
 
 \textbf{TargetAgentID:} Identifier of the agent.
  \\ \hline
 
 DeallocateRole & Forces an agent to leave a specific role.
- & 
+ &
 
-\textbf{RoleID:} Identifier of the role. 
+\textbf{RoleID:} Identifier of the role.
 
-\textbf{UnitID:} Identifier of the unit. 
+\textbf{UnitID:} Identifier of the unit.
 
 \textbf{TargetAgentID:} Identifier of the agent.
  \\ \hline
@@ -430,7 +430,7 @@ DeallocateRole & Forces an agent to leave a specific role.
 OMS-Service & Description & Parameters \\ \hline
 buildOrganizationalMessage & Builds a new organizational message.
  &
-\textbf{OrganizationID:} Identifier of the organization. 
+\textbf{OrganizationID:} Identifier of the organization.
  \\ \hline
 \end{tabular}
 \caption{OMS Proxy: Organizational messaging service API}
@@ -467,7 +467,7 @@ SFProxy provides a developer with a set of methods to manage available services,
 % Type & SF-Service & Description & Parameters \\ \hline
 % \multicolumn{ 1}{|c|}{Registration} & RegisterService & Registers a service or part of it &
 % service URL \\ \hline
-% \multicolumn{ 1}{|l|}{} & DeregisterService & Deregisters a complete service 
+% \multicolumn{ 1}{|l|}{} & DeregisterService & Deregisters a complete service
 % & service profile
 %  \\ \hline
 % \multicolumn{1}{|c|}{Affordb.} & RemoveProvider & Removes a provider (agent, organization or web service) of a service & (service profile, provider name or grounding ID)
@@ -476,7 +476,7 @@ SFProxy provides a developer with a set of methods to manage available services,
 % & (inputs, outputs, keywords)
 %  \\ \cline{ 2- 4}
 % \multicolumn{ 1}{|l|}{} & GetService & Gets the description of the service
-% & service profile 
+% & service profile
 %  \\ \hline
 % \end{tabular}
 % \caption{SF Proxy API}
@@ -514,7 +514,7 @@ SFProxy provides a developer with a set of methods to manage available services,
 
 
 \subsubsection{Basic Service Management}
-Services are composed by a profile, which is a semantic description of the  service, useful for customers to locate appropriate service, and a process, which details how to interact with the service. 
+Services are composed by a profile, which is a semantic description of the  service, useful for customers to locate appropriate service, and a process, which details how to interact with the service.
 
 Different agents can provide different processes (different implementations) to the same service profile (general description).
 
@@ -528,7 +528,7 @@ ArrayList<String> resultRegister= sfProxy.registerService("http://localhost:8080
 
 \vspace{1cm}
 
-The Register Service tries to register the service that is specified as parameter. The parameter is the original URL of the OWL-S specification of the service. The contents of the OWL-S specification of a service must have the profile that describes the service and the process that describes its implementation. If one or more providers (agents or organization) are specified in the \textit{profile:contactInformation} of the service, it means that the service is provided by agents or/and organizations. If there is one or more groundings, it means that the service is provided by a web service.  
+The Register Service tries to register the service that is specified as parameter. The parameter is the original URL of the OWL-S specification of the service. The contents of the OWL-S specification of a service must have the profile that describes the service and the process that describes its implementation. If one or more providers (agents or organization) are specified in the \textit{profile:contactInformation} of the service, it means that the service is provided by agents or/and organizations. If there is one or more groundings, it means that the service is provided by a web service.
 
 
 The Register Service returns a response describing if the service has been entirely registered or the number of providers and groundings added to an already registered service profile. In all cases, it returns a description of what is registered or not, and an OWL-S specification of the registered services or all data of the already registered service.
@@ -541,12 +541,12 @@ An agent can register its own implementation of an existing profile or create a 
 \subsubsection{Oracle: extracting information from OWL-S}
 The Oracle is a class that allows developers to parse the profile of a semantic service, specified in OWL-S, in order to extract the required information (such as service inputs, outputs, providers, list of roles or organizational units).
 
-Oracle needs just the OWL-S string containing the service specification to analyze it (as a parameter in the constructor of the class, see the example). This specification can be obtained with the method \lstinline|GetService| of the \lstinline|SFProxy| class. 
+Oracle needs just the OWL-S string containing the service specification to analyze it (as a parameter in the constructor of the class, see the example). This specification can be obtained with the method \lstinline|GetService| of the \lstinline|SFProxy| class.
 
 Once the service specification is obtained, the oracle can be asked about any field in the service specification. The available methods for the Oracle class can be found in the Javadoc documentation of the project.
 
 \begin{lstlisting}
-//obtain the the service OWL-S specification 
+//obtain the the service OWL-S specification
 String serviceOWLS = sfProxy.getService(ServiceProfile);
 
 //load in the oracle the service OWL-S specification and parse it
@@ -634,8 +634,8 @@ ArrayList<String> resultRegister = sfProxy.registerService("http://localhost:808
 \end{itemize}
 
 \subsection{Provide services}
-In \textsc{Thomas}, there are different ways of providing a service, as represented in Figure \ref{fig:handledServices}. On the one hand, in the cases that the providers are registered in the SF as agents or organizations, the requests to that services will be sent to the corresponding agent or organization as specified in the OWL-S registered in the SF. The agents or organizations can execute their service as an internal behaviour or as a web service, but this is not visible to the requester. 
- 
+In \textsc{Thomas}, there are different ways of providing a service, as represented in Figure \ref{fig:handledServices}. On the one hand, in the cases that the providers are registered in the SF as agents or organizations, the requests to that services will be sent to the corresponding agent or organization as specified in the OWL-S registered in the SF. The agents or organizations can execute their service as an internal behaviour or as a web service, but this is not visible to the requester.
+
 On the other hand, if the providers of a service are registered in the SF as web services (groundings), the requester of these services will have to execute the service by itself, using the class \textit{ServiceTools} of the package \textit{es.upv.dsic.gti\_ia.organization} (see Section \ref{sec:serviceRequestProcess}).
 
 
@@ -659,7 +659,7 @@ On the other hand, if the providers of a service are registered in the SF as web
 %searchKeywords.add("squares");
 %
 %//search the service with some inputs, outputs and keywords
-%ArrayList<ArrayList<String>> foundServices = 
+%ArrayList<ArrayList<String>> foundServices =
 %sfProxy.searchService(searchInputs, searchOutputs, searchKeywords);
 %//get the service OWL-S specification
 %String serviceOWLS = sfProxy.getService(foundServices.get(0).get(0));
@@ -711,7 +711,7 @@ omsProxy.acquireRole("participant", "virtual");
   \begin{itemize}
    \item List of inputs of the service to search. These inputs has to be specified as types of an ontology. In \textit{ServiceTools} class the main types (integer, float, double, string, boolean) are specified as constants to be easier to the developer.
    \item List of outputs of the service to search. These inputs has to be specified as types of an ontology, as the inputs explained before.
-   \item List of keywords of the text description of the service to search. Each \textit{String} added to this list will compute to find it in the text description of the service profiles registered in the SF. 
+   \item List of keywords of the text description of the service to search. Each \textit{String} added to this list will compute to find it in the text description of the service profiles registered in the SF.
   \end{itemize}
 
 \begin{figure}[h!t]
@@ -721,7 +721,7 @@ omsProxy.acquireRole("participant", "virtual");
 \end{figure}
 
 
-The following example shows how to search for a service. The desired service should have the word "addition" in its description, two double inputs an one double output.   
+The following example shows how to search for a service. The desired service should have the word "addition" in its description, two double inputs an one double output.
 
 \begin{lstlisting}
 
@@ -760,12 +760,12 @@ do {
 \label{sec:serviceRequestProcess}
 
 \begin{itemize}
-\item \textbf{Request a service.} After the agent has found the desired service, it has to get the main information of this service to make a request. So the agent has to use the \textit{GetService} to obtain the required data to specify the inputs of the service and to know the provider to ask and its parameters. In the obtained OWL-S specification with \textit{GetService} is specified the providers of the service and their parameters. To make a request of the service, the provider has to be an agent or organization. In case that the providers are web services (with a grounding in the specification), the service has to be executed by the requester agent. 
+\item \textbf{Request a service.} After the agent has found the desired service, it has to get the main information of this service to make a request. So the agent has to use the \textit{GetService} to obtain the required data to specify the inputs of the service and to know the provider to ask and its parameters. In the obtained OWL-S specification with \textit{GetService} is specified the providers of the service and their parameters. To make a request of the service, the provider has to be an agent or organization. In case that the providers are web services (with a grounding in the specification), the service has to be executed by the requester agent.
 
 Using the \textit{Oracle} class provided in the package \textit{es.upv.dsic.gti\_ia.organization} the OWL-S specification is parsed to obtain the information of the service, including its inputs and its providers. There are two different ways to request a service depending on the type of the providers:
 \begin{itemize}
  \item If the providers are \textbf{agents} or \textbf{organizations}, their parameters (entity ID, entity type, language and performative to make the request) are obtained from the OWL-S specification using the \textit{Oracle} class. Then, the requester agent should properly build the message to make the request and wait for the response of the provider to obtain the result. In \textit{ServiceTools} class it is possible to find the method \textit{buildServiceContent} which returns an XML description, receiving as parameters the inputs and the name of the requested service. This description is understood by all \textsc{Thomas} services and the services of the provided examples.
- 
+
  \item If the providers are \textbf{web services}, the URL of the WSDL documents are obtained from the OWL-S specification using the \textit{Oracle} class. Then, the requester agent has to execute the service by itself. To perform this task, the class \textit{ServiceTools} of the package \textit{es.upv.dsic.gti\_ia.organization} provides the method \textit{executeWebService} to facilitate the execution of web services to the developers. This method receives as parameters  the url of the service WSDL document to execute it, and the inputs of the service. The inputs can be specified in two ways: in a \textit{HashMap} giving the name of the input and its value, or with an XML string in the following form:
   \begin{lstlisting}
    <inputs>
@@ -818,7 +818,7 @@ if (!providers.isEmpty()) {
 	msg.setLanguage(providers.get(0).getLanguage());
 	msg.setPerformative(providers.get(0).getPerformative());
 	msg.setSender(getAid());
-  
+
   // Building the content of the message in XML
 	String content = st.buildServiceContent(oracle.getServiceName(), agentInputs);
 
@@ -950,7 +950,7 @@ The examples folder of the Magentix2 packages contains a basic \textsc{Thomas} e
  \item \textbf{James}. It represents an student which needs computing some operations and demand the other their services. This agent acquires the role \textit{Student} of the \textit{School} organizations. It looks for the different services it needs (Addition, Product and Square) to calculate a simple mathematical operation. Then either ask the service providers in carrying out such services, or run them directly if no provider.
 \end{itemize}
 
-Services in the \textsc{Thomas} example are deployed in the \textit{webapps} folder of the Apache Tomcat in Magentix2 installation folder. The OWL-S specifications are located in: 
+Services in the \textsc{Thomas} example are deployed in the \textit{webapps} folder of the Apache Tomcat in Magentix2 installation folder. The OWL-S specifications are located in:
 \begin{lstlisting}
 webapps/testSFservices/testSFservices/owl/owls/
 \end{lstlisting}
@@ -982,7 +982,7 @@ Following, we briefly explain the actions of the \textsc{Thomas} example shown i
 
  \item The Addition agent registers the Addition service in the SF. Also, the Product agent registers the Product and Square services in the SF.
 
- \item The James agent wants to calculate the equation $(5 (3 + 4))^2$. Firstly, it searches for a service to add two numbers and it finds the Addition service. It makes a \textit{GetService} of this service to obtain the required information to request it. It also searches for a service to make the product and another one to square. In these cases, it finds the Product service and the Square service. It makes a \textit{GetService} of the two services to obtain their information. 
+ \item The James agent wants to calculate the equation $(5 (3 + 4))^2$. Firstly, it searches for a service to add two numbers and it finds the Addition service. It makes a \textit{GetService} of this service to obtain the required information to request it. It also searches for a service to make the product and another one to square. In these cases, it finds the Product service and the Square service. It makes a \textit{GetService} of the two services to obtain their information.
 
  \item The James agent requests the Addition service to add 3 and 4. Then, with this result requests the Product service to multiply it by 5. Finally, the result of this operation is used to square it with the Square service, that is provided by a web service. This implies that the James agent has to execute it itself by using the Service Tools provided in the Magentix2 API. The James agent has obtained the final result of the equation that it wanted to solve. Then, it sends a message to the Initiator agent to inform that the example has ended.
 
@@ -990,7 +990,7 @@ Following, we briefly explain the actions of the \textsc{Thomas} example shown i
 
 \end{enumerate}
 
-To run the example the user has to enter in the Magentix2/examples folder where it has been installed. Then, the user has to execute the \textit{Start-ThomasExample.sh} script with administrator privileges: 
+To run the example the user has to enter in the Magentix2/examples folder where it has been installed. Then, the user has to execute the \textit{Start-ThomasExample.sh} script with administrator privileges:
 
 \begin{lstlisting}
 cd Magentix2/examples/bin/
@@ -1042,7 +1042,7 @@ omsProxy.acquireRole("member", "team");
 \end{itemize}
 \subsection{Message build process}
 \begin{itemize}
-\item \textbf{Build an organizational message.} Once the agent is inside the unit with an specific role, it has to use the \textit{buildOrganizationalMessage} to 
+\item \textbf{Build an organizational message.} Once the agent is inside the unit with an specific role, it has to use the \textit{buildOrganizationalMessage} to
 obtain the required organizational message specifying the identifier of the organization:
 \begin{lstlisting}
 ACLMessage msg = omsProxy.buildOrganizationalMessage("team");
@@ -1065,10 +1065,10 @@ msg.setLanguage("ACL");
 \begin{lstlisting}
 send(msg);
 \end{lstlisting}
-or it reached a state of type send in CFactories: 
+or it reached a state of type send in CFactories:
 \begin{lstlisting}
 class REQUEST_Method implements SendStateMethod {
-  
+
 
   public String run(CProcessor myProcessor, ACLMessage messageToSend) {
 
@@ -1092,6 +1092,89 @@ class REQUEST_Method implements SendStateMethod {
   }
 }
 \end{lstlisting}
-
 \end{itemize}
 
+\section{Organizational Messaging Example}
+
+The examples folder of the Magentix2 packages contains an Organizational Message example. This example
+shows an scenario with THOMAS organizations and CAgents that make use of organizational messaging. This
+case consists of the following two units:
+
+\begin{itemize}
+\item \textbf{Calculator:} \textit{Team} type organization where its agents send Organizational Messages to
+  calculate the sum of the transaction carried out by its agents.
+\item \textbf{External:} \textit{Flat} type organization whose unique purpose is that one of its agents
+  tries to send a Organizational Message to \textit{Calculator} organization.
+\end{itemize}
+
+The agents involved in this case and its features are described below:
+
+\begin{itemize}
+\item \textbf{Creator:} Agent who plays the \textit{Creator} role with \textit{creator} position within
+  \textit{Calculator} organization, whose purpose will be to create the entire organizational structure
+  (organization and roles). In addition, it tries to send an Organizational Message to the \textit{Calculator}
+  organization, requesting some calculation using two numbers.
+\item \textbf{Display:} Agent who plays the \textit{Manager} role with \textit{member} position within
+  \textit{Calculator} organization, whose unique purpose is sending console messages to inform about messages
+  sent by agents with \textit{Manager} role within \textit{Calculator} organization.
+\item \textbf{Summation:} Agent who plays the \textit{Manager} role with \textit{member} position within
+  \textit{Calculator} organization. It requests to each of its subordinates to do the operation for which
+  they are prepared. Then, it adds up all the responses and sends a message reporting the result.
+\item \textbf{Product:} Agent who plays the \textit{Operator} role with \textit{member} position within
+  \textit{Calculator} organization. It only provides the Product operation and informs of the result.
+\item \textbf{Addition:} Agent who plays the \textit{Operator} role with \textit{member} position within
+  \textit{Calculator} organization. It only provides the Addition operation and informs of the result.
+\item \textbf{Noisy:} Agent who plays two roles. The first, the \textit{Creator} role with \textit{creator}
+  position within \textit{External} organization as a result to create this organization. The second, the
+  \textit{Manager} role with \textit{member} position within \textit{External} organization. It tries to send
+  a Organizational Message to the \textit{Calculator} organization, requesting a calculation using two
+  numbers.
+\end{itemize}
+
+Following, we briefly explain the actions of the Organizational Message example shown in the diagram of Figure
+\ref{fig:OMessageDiagram}:
+
+\begin{figure}[h!t]
+	\centering
+	\includegraphics[width=\textwidth]{Thomas/images/organizationalMessageExample}
+	\caption{Organizational Message Example diagram}
+  \label{fig:OMessageDiagram}
+\end{figure}
+
+\begin{enumerate}
+\item Scenario creation is the first task to begin the example. The Creator agent creates \textit{Calculator}
+  organization and their roles (\textit{Creator},\textit{Manager} and \textit{Operator}). Simultaneously,
+  the Noisy agent creates \textit{External} organization and their roles (\textit{Creator} and \textit{Manager}).
+  All agents begin its execution in the scenario.
+\item The Creator and Noisy agents try to build an organizational message but their requests are rejected.
+  The Creator agent can not send an organizational message because it only plays the \textit{Creator}
+  role with \textit{creator} position within \textit{Calculator} organization. In the same way, the Noisy
+  agent can not send an organizational message because it doesn't belong to \textit{Calculator} organization.
+\item The Summation agent sends Formula(6,3) as an organizational message. This is received by the Product,
+  Addition and Display agents. The Display agent prints this message to standard output.
+\item The agents that play the \textit{Operator} role (Addition and Product agents) receive the numbers
+  (six and three) to calculate their calculations ($6+3=9$ and $6*3=18$, respectively) and communicate
+  the results as an organizational messages. These are received by the Summation agent. The Addition agent
+  leaves the \textit{Operator} role.
+\item The Summation agent sends the sum of all results received ($9+18=27$) as an organizational message.
+  This is received by the Display agent, which prints this value to standard output.
+\item The Summation agent sends Formula(5,3) as an organizational message. This is received by the Product
+  and Display agents. The Display agent prints this message to standard output.
+\item The agents that play the \textit{Operator} role (only Product agent) receive the numbers (five and three)
+  to calculate their calculations ($5*3=15$) and communicate the results as an organizational messages. These
+  are received by the Summation agent.
+\item The Summation agent sends the sum of all results received ($15=15$) as an organizational message. This
+  is received by the Display agent, which prints this value to standard output.
+\item To finalize this example, the scenary is disassembled. The Creator agent deallocates and deregisters
+  all the roles belonging to \textit{Calculator} organization and deregisters the organization. Simultaneously,
+  the Noisy agent deallocates and deregisters all the roles belonging to \textit{External} organization and
+  deregisters the organization. All agents finalize their executions.
+\end{enumerate}
+
+To run the example the user has to enter in the Magentix2/examples/bin folder where it has been installed. Then,
+the user has to execute the Start-OrganizationalExample.sh script with administrator privileges:
+
+\begin{lstlisting}
+cd Magentix2/examples/bin/
+sudo sh Start-OrganizationalExample.sh
+\end{lstlisting}

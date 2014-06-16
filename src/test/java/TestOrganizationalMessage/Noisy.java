@@ -35,17 +35,17 @@ public class Noisy extends CAgent {
 
 			this.initialize_scenario();
 
-			result = omsProxy.acquireRole("manager","externa");
+			result = omsProxy.acquireRole("Manager","External");
 			logger.info("["+this.getName()+"] Result acquire role manager: "+result);
 
 			this.send_request(1,7);
 			
-			omsProxy.allocateRole("creador", "externa", "agente_creador");
+			omsProxy.allocateRole("Creator", "External", "Creator");
 			
-			result = omsProxy.leaveRole("manager", "externa");
+			result = omsProxy.leaveRole("Manager", "External");
 			logger.info("["+this.getName()+"] Result leave role manager: "+result);
 			
-			result = omsProxy.leaveRole("creador", "externa");
+			result = omsProxy.leaveRole("Creator", "External");
 			logger.info("["+this.getName()+"] Result leave role manager: "+result);
 		
 			result = omsProxy.leaveRole("participant", "virtual");
@@ -68,9 +68,9 @@ public class Noisy extends CAgent {
 
 		try
 		{
-			String result = omsProxy.registerUnit("externa", "flat", "virtual", "creador");
+			String result = omsProxy.registerUnit("External", "flat", "virtual", "Creator");
 			logger.info("["+this.getName()+"] Result register unit externa: "+ result);
-			result = omsProxy.registerRole("manager", "externa", "internal", "private","member");
+			result = omsProxy.registerRole("Manager", "External", "internal", "private","member");
 			logger.info("["+this.getName()+"] Result register role manager: "+ result);
 
 		}catch(THOMASException e)
@@ -82,7 +82,7 @@ public class Noisy extends CAgent {
 	private void send_request(int n1, int n2)
 	{
 		try {
-			ACLMessage msg = omsProxy.buildOrganizationalMessage("calculin");
+			ACLMessage msg = omsProxy.buildOrganizationalMessage("Calculator");
 			msg.setPerformative(InteractionProtocol.FIPA_REQUEST);
 			msg.setProtocol(InteractionProtocol.FIPA_REQUEST);
 			msg.setLanguage("ACL");

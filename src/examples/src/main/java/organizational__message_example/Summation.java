@@ -235,7 +235,7 @@ public class Summation extends CAgent {
 			ACLMessage msg;
 			String state = "WAIT";
 			try {
-				msg = omsProxy.buildOrganizationalMessage("calculin");
+				msg = omsProxy.buildOrganizationalMessage("Calculator");
 				messageToSend.copyFromAsTemplate(msg);
 
 				messageToSend.setPerformative(ACLMessage.REQUEST);
@@ -301,7 +301,7 @@ public class Summation extends CAgent {
 			OMSProxy omsProxy = new OMSProxy(myProcessor);
 
 			try {
-				msg = omsProxy.buildOrganizationalMessage("calculin");
+				msg = omsProxy.buildOrganizationalMessage("Calculator");
 
 				messageToSend.copyFromAsTemplate(msg);
 				messageToSend.setPerformative(ACLMessage.INFORM);
@@ -338,7 +338,7 @@ public class Summation extends CAgent {
 			String state = "FINAL";
 			try {	
 
-				ACLMessage msg = omsProxy.buildOrganizationalMessage("calculin");
+				ACLMessage msg = omsProxy.buildOrganizationalMessage("Calculator");
 				messageToSend.copyFromAsTemplate(msg);
 
 				messageToSend.setPerformative(InteractionProtocol.FIPA_REQUEST);
@@ -366,7 +366,7 @@ public class Summation extends CAgent {
 
 			try {
 
-				omsProxy.leaveRole("manager", "calculin");
+				omsProxy.leaveRole("Manager", "Calculator");
 
 				omsProxy.leaveRole("participant", "virtual");
 

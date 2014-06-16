@@ -1,8 +1,5 @@
 package TestOrganizationalMessage;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-
 import junit.framework.TestCase;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;

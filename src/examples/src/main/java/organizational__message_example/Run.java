@@ -39,13 +39,13 @@ public class Run {
 			 * Instantiating agents
 			 */
 			
-			Creator iniAgent = new Creator(new AgentID("agente_creador"));
-			Noisy ruiAgent = new Noisy(new AgentID("agente_ruidoso"));
+			Creator iniAgent = new Creator(new AgentID("Creator"));
+			Noisy ruiAgent = new Noisy(new AgentID("Noisy"));
 			
-			Addition sumAgent = new Addition(new AgentID("agente_suma"));
-			Summation sumtAgent = new Summation(new AgentID("agente_sumatorio"));
-			Display visAgent = new Display(new AgentID("agente_visor"));
-			Product proAgent = new Product(new AgentID("agente_producto"));
+			Addition sumAgent = new Addition(new AgentID("Addition"));
+			Summation sumtAgent = new Summation(new AgentID("Summation"));
+			Display visAgent = new Display(new AgentID("Display"));
+			Product proAgent = new Product(new AgentID("Product"));
 			
 			iniAgent.start();
 			Monitor m = new Monitor();

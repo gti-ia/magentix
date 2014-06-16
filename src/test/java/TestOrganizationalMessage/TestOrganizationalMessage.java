@@ -1,9 +1,5 @@
 package TestOrganizationalMessage;
 
-//import omsTests.DatabaseAccess;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 
 import junit.framework.TestCase;
 import es.upv.dsic.gti_ia.architecture.Monitor;
@@ -69,13 +65,13 @@ public class TestOrganizationalMessage extends TestCase {
 		 * Instantiating agents
 		 */
 
-		iniAgent = new Creator(new AgentID("agente_creador"));
-		ruiAgent = new Noisy(new AgentID("agente_ruidoso"));
+		iniAgent = new Creator(new AgentID("Creator"));
+		ruiAgent = new Noisy(new AgentID("Noisy"));
 
-		sumAgent = new Addition(new AgentID("agente_suma"));
-		sumtAgent = new Summation(new AgentID("agente_sumatorio"));
-		visAgent = new Display(new AgentID("agente_visor"));
-		proAgent = new Product(new AgentID("agente_producto"));
+		sumAgent = new Addition(new AgentID("Addition"));
+		sumtAgent = new Summation(new AgentID("Summation"));
+		visAgent = new Display(new AgentID("Display"));
+		proAgent = new Product(new AgentID("Product"));
 
 		/**
 		 * Execute the agents

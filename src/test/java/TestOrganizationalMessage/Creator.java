@@ -42,7 +42,7 @@ public class Creator extends CAgent {
 
 			this.sendRequest(4, 6);
 
-			omsProxy.acquireRole("manager", "calculin");
+			omsProxy.acquireRole("Manager", "Calculator");
 			MessageFilter filter_shutdown = new MessageFilter("shutdown = true");
 
 
@@ -111,7 +111,7 @@ public class Creator extends CAgent {
 	private void sendRequest(int i, int j)
 	{
 		try {
-			ACLMessage msg = omsProxy.buildOrganizationalMessage("calculin");
+			ACLMessage msg = omsProxy.buildOrganizationalMessage("Calculator");
 
 			msg.setPerformative(InteractionProtocol.FIPA_REQUEST);
 			msg.setProtocol(InteractionProtocol.FIPA_REQUEST);
@@ -133,19 +133,19 @@ public class Creator extends CAgent {
 	{
 		try
 		{
-			omsProxy.registerUnit("calculin", "team", "virtual", "creador");
+			omsProxy.registerUnit("Calculator", "team", "virtual", "Creator");
 
 
-			omsProxy.registerRole("manager", "calculin",  "internal", "private","member");
+			omsProxy.registerRole("Manager", "Calculator",  "internal", "private","member");
 
 
-			omsProxy.registerRole("operador", "calculin", "external", "public","member");
+			omsProxy.registerRole("Operator", "Calculator", "external", "public","member");
 
 
-			omsProxy.allocateRole("manager", "calculin", "agente_visor");
+			omsProxy.allocateRole("Manager", "Calculator", "Display");
 
 
-			omsProxy.allocateRole("manager", "calculin", "agente_sumatorio");
+			omsProxy.allocateRole("Manager", "Calculator", "Summation");
 
 
 
@@ -222,18 +222,13 @@ public class Creator extends CAgent {
 	class FINAL_SHUTDOWN_Method implements FinalStateMethod {
 		public void run(CProcessor myProcessor, ACLMessage responseMessage) {
 
-
-
 			try{
 
-
-
-
-				omsProxy.joinUnit("externa", "calculin");
+				omsProxy.joinUnit("External", "Calculator");
 
 				boolean searching = true;
 				do{
-					int quantity = omsProxy.informQuantityMembers("calculin", "", "member");
+					int quantity = omsProxy.informQuantityMembers("Calculator", "", "member");
 
 					if (quantity > 2)
 						m.waiting(3 * 1000);
@@ -241,21 +236,21 @@ public class Creator extends CAgent {
 						searching = false;
 				}while(searching);
 
-				omsProxy.leaveRole("manager", "calculin");
+				omsProxy.leaveRole("Manager", "Calculator");
 
-				ArrayList<ArrayList<String>> members = omsProxy.informMembers("calculin", "", "member");
+				ArrayList<ArrayList<String>> members = omsProxy.informMembers("Calculator", "", "member");
 
 
 				for(ArrayList<String> member : members)
 				{
 
-					omsProxy.deallocateRole(member.get(1), "calculin", member.get(0));
+					omsProxy.deallocateRole(member.get(1), "Calculator", member.get(0));
 				}
 
-				omsProxy.deregisterRole("operador", "calculin");
+				omsProxy.deregisterRole("Operator", "Calculator");
 
 
-				omsProxy.deregisterRole("manager", "calculin");
+				omsProxy.deregisterRole("Manager", "Calculator");
 
 
 
@@ -264,14 +259,14 @@ public class Creator extends CAgent {
 				{
 					m.waiting(3 * 1000);
 
-					members = omsProxy.informMembers("externa", "manager", "");
-				}while(members.contains("agente_ruidoso"));
+					members = omsProxy.informMembers("External", "manager", "");
+				}while(members.contains("Noisy"));
 
 
-				omsProxy.deregisterUnit("externa");
+				omsProxy.deregisterUnit("External");
 
 
-				omsProxy.deregisterUnit("calculin");
+				omsProxy.deregisterUnit("Calculator");
 
 
 				omsProxy.leaveRole("participant", "virtual");

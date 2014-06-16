@@ -50,17 +50,17 @@ public class Product extends CAgent {
 
 			do
 			{
-				roles = omsProxy.informUnitRoles("calculin");
+				roles = omsProxy.informUnitRoles("Calculator");
 				for(ArrayList<String> role : roles)
 				{
-					if (role.get(0).equals("operador"))
+					if (role.get(0).equals("Operator"))
 						exists = true;
 				}
 			}while(!exists);
 
 
 
-			omsProxy.acquireRole("operador", "calculin");
+			omsProxy.acquireRole("Operator", "Calculator");
 
 			//------------------------------------------------------------------------
 			//-----------------------Participant CFactory definition------------------

@@ -146,7 +146,7 @@ public class Display extends CAgent {
 
 			ArrayList<ArrayList<String>> informMembers;
 			try {
-				informMembers = omsProxy.informMembers("calculin","manager","");
+				informMembers = omsProxy.informMembers("Calculator","Manager","");
 
 
 
@@ -189,7 +189,7 @@ public class Display extends CAgent {
 			try {
 
 
-				ArrayList<String> result = omsProxy.informUnit("externa");
+				ArrayList<String> result = omsProxy.informUnit("External");
 
 				System.out.println("---------------------");
 				System.out.println("unit external");
@@ -197,7 +197,7 @@ public class Display extends CAgent {
 				System.out.println("parent unit: "+ result.get(1));
 				System.out.println("---------------------");
 
-				ArrayList<ArrayList<String>> informUnitRoles = omsProxy.informUnitRoles("calculin");
+				ArrayList<ArrayList<String>> informUnitRoles = omsProxy.informUnitRoles("Calculator");
 
 				for(ArrayList<String> unitRole : informUnitRoles)
 				{
@@ -211,7 +211,7 @@ public class Display extends CAgent {
 					System.out.println("---------------------");
 				}
 
-				omsProxy.leaveRole("manager", "calculin");
+				omsProxy.leaveRole("Manager", "Calculator");
 
 				omsProxy.leaveRole("participant", "virtual");
 

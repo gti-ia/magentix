@@ -52,16 +52,16 @@ public class Addition extends CAgent {
 
 			do
 			{
-				roles = omsProxy.informUnitRoles("calculin");
+				roles = omsProxy.informUnitRoles("Calculator");
 
 				for(ArrayList<String> role : roles)
 				{
-					if (role.get(0).equals("operador"))
+					if (role.get(0).equals("Operator"))
 						exists = true;
 				}
 			}while(!exists);
 
-			omsProxy.acquireRole("operador", "calculin");
+			omsProxy.acquireRole("Operator", "Calculator");
 
 
 			//------------------------------------------------------------------------
@@ -247,7 +247,7 @@ public class Addition extends CAgent {
 				OMSProxy omsProxy = new OMSProxy(myProcessor);
 			
 				try {
-					omsProxy.leaveRole("operador", "calculin");
+					omsProxy.leaveRole("Operator", "Calculator");
 					omsProxy.leaveRole("participant", "virtual");
 				} catch (THOMASException e) {
 					// TODO Auto-generated catch block
