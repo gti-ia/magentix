@@ -1,0 +1,63 @@
+\chapter{THOMAS Exceptions}\label{app:Exceptions}
+
+The methods of the \lstinline|OMSProxy| and \lstinline|SFProxy| class can throw THOMAS exceptions. These exceptions inherit from \lstinline|THOMASException| class, which extends from the \lstinline|java.lang.Exception|. The exception classes can be found in the package \lstinline|es.upv.dsic.gti_ia.organization.exception|.
+
+
+The following table shows the name (indicates the kind of problem) of the exception class and its associated message.
+
+%\begin{longtable}[!ht]
+\begin{longtable}{|p{6.5cm}|p{7.2cm}|}
+\hline
+  \textbf{Exception name} & \textbf{Description} \\ \endhead \hline
+  \emph{AgentNotExistsException} & Not found. The agent + RequestedAgentName +  not exists. \\ \hline
+  \emph{AgentNotInUnitException} & Not allowed. The Agent + AgentName +  is not inside the unit +unitName. \\ \hline
+  \emph{AlreadyRegisteredException} & All information is already registered in service profile + service profile. \\ \hline
+  \emph{DBConnectionException} & Cannot connect to DataBase. \\ \hline
+  \emph{DeletingTableException} & Deleting value a table +tableName. \\ \hline
+  \emph{EmptyParametersException} & Invalid. Empty parameters. \\ \hline
+  \emph{ExchangeBindException} & Exchange bind error: + e. \\ \hline
+  \emph{ExchangeUnbindException} & Exchange unbind error: + e. \\ \hline
+  \emph{IDUnitTypeNotFoundException} & Error: idunitType +idunitType+ not found in database. \\ \hline
+  \emph{InsertingTableException} & Inserting new value at table +tableName. \\ \hline
+  \emph{InvalidAccesibilityException} & accessibility+ is not a valid accesibility value. \\ \hline
+  \emph{InvalidDataTypeException} & Invalid input or output data type. \\ \hline
+  \emph{InvalidPositionException} & position+ is not a valid position value for this Unit type. \\ \hline
+  \emph{InvalidRolePositionException} & Invalid. RoleName + 's position is not a valid value. \\ \hline
+  \emph{InvalidServiceURLException} &  Service URL + is not a valid OWL-S document.\\ \hline
+  \emph{InvalidUnitTypeException} & unitType is not a valid unitType value. \\ \hline
+  \emph{InvalidVisibilityException} & visibility+ is not a valid visibility value. \\ \hline
+  \emph{MySQLException} & Error: mysql error +result. \\ \hline
+  \emph{NotCreatorAgentInUnitException} & Not allowed. There are agents in unit playing roles with position different from creator. \\ \hline
+  \emph{NotCreatorException} & Not allowed. The Agent + AgentName + does not play any role with position creator +unitName. \\ \hline
+  \emph{NotCreatorInParentUnitException} & Not allowed. The Agent + AgentName + does not play any role with position creator inside the parent unit. \\ \hline
+  \emph{NotCreatorInUnitException} & Not allowed. The Agent + AgentName + does not play any role with position creator inside the unit. \\ \hline
+  \emph{NotCreatorInUnitOrParentUnitException} & Not allowed. The agent does not play any role with creator position in the unit or the parent unit. \\ \hline
+  \emph{NotInUnitAndNotCreatorException} & Not allowed. The Agent + AgentName +  is not inside the unit +unitName+ and does not play any role with position creator. \\ \hline
+  \emph{NotInUnitOrParentUnitException} & Not allowed. Agent + AgentName +  is not inside the unit or parent unit. \\ \hline
+  \emph{NotMemberOrCreatorInUnitException} & Not allowed. The Agent + AgentName + does not play any role with position member or creator in unit +unitName. \\ \hline
+  \emph{NotPlaysAnyRoleException} & The agent does not play any role. \\ \hline
+  \emph{NotPlaysRoleException} & Not allowed. The agent + AgentName + does not play the role +RoleName+ . \\ \hline
+  \emph{NotSupervisorOrCreatorInUnitException} & Not allowed. The Agent + AgentName + does not play any role with position supervisor or creator in unit +UnitName. \\ \hline
+  \emph{OnlyPlaysCreatorException} & Not allowed. The agent is only playing the role creator. \\ \hline
+  \emph{ParentUnitNotExistsException} & Parent unit +parentUnitName+ does not exist. \\ \hline
+  \emph{PlayingRoleException} & Not allowed. The agent + AgentName +  is already playing the role.  \\ \hline
+  \emph{RoleContainsNormsException} & Not allowed. The role contains associated norms. \\ \hline
+  \emph{RoleExistsInUnitException} & Not allowed. Role + RoleName +  is already registered in the unit. \\ \hline
+  \emph{RoleInUseException} & Not allowed. The role is played by some agents. \\ \hline
+  \emph{RoleNotExistsException} & roleName+ does not exist in unit +unitName. \\ \hline
+  \emph{SameAgentNameException} & Invalid. The TargetAgentName is the same than AgentName. \\ \hline
+  \emph{SameUnitException} & Invalid. The Parent Unit is the same than Unit. \\ \hline
+  \emph{ServiceProfileNotFoundException} & Service profile + not found in Jena DataBase. \\ \hline
+  \emph{ServiceURINotFoundException} & Service URI + not found in Jena DataBase. \\ \hline
+  \emph{ServicesNotFoundException} & Services not found. \\ \hline
+  \emph{SubunitsInUnitException} & Not allowed. There are subunits in unit + UnitName. \\ \hline
+  \emph{UnitExistsException} & Invalid. Unit + UnitName +  exists. \\ \hline
+  \emph{UnitNotExistsException} & Unit +unitName+ does not exist. \\ \hline
+  \emph{VirtualParentException} & Not allowed. The Parent Unit can not be changed. \\ \hline
+  \emph{VirtualUnitException} & Not allowed, this is the virtual unit. \\ \hline
+  \emph{VisibilityRoleException} & Not allowed. The visibility of the role is private and agent +AgentName+ does not play any role in the unit +unitName. \\ \hline
+  
+%\end{tabular}
+\caption{THOMAS Exceptions and associated messages.}
+\end{longtable}
+
