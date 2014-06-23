@@ -141,7 +141,9 @@ public class THOMASProxy {
 	 * @param ServiceDesciptionLocation The URL where the owl's document is located.
 	 *            
 	 */
-	THOMASProxy(BaseAgent agent, String thomasAgent,String ServiceDescriptionLocation) {
+	THOMASProxy(BaseAgent agent, String thomasAgent,String ServiceDescriptionLocation) throws Exception {
+		if (!(agent instanceof CAgent) && !(agent instanceof QueueAgent))
+			throw new Exception("Not allowed action: you should change BaseAgent by CAgent or QueueAgent.");
 		this.agent = agent;
 		this.ServiceDescriptionLocation = ServiceDescriptionLocation;
 	}
@@ -162,14 +164,14 @@ public class THOMASProxy {
 	 * @param thomasAgent, is a OMS or SF.
 	 * 
 	 */
-	THOMASProxy(BaseAgent agent, String thomasAgent) {
-
+	THOMASProxy(BaseAgent agent, String thomasAgent) throws Exception {
+		if (!(agent instanceof CAgent) && !(agent instanceof QueueAgent))
+			throw new Exception("Not allowed action: you should change BaseAgent by CAgent or QueueAgent.");
 		this.agent = agent;
 		this.thomasAgent = thomasAgent;
 		c = Configuration.getConfiguration();
 		l10n = new THOMASMessages();
 		this.initialize();
-
 	}
 	
 	THOMASProxy(CProcessor firstProcessor, String thomasAgent) {

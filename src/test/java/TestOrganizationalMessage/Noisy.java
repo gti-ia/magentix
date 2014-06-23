@@ -55,9 +55,10 @@ public class Noisy extends CAgent {
 			
 			firstProcessor.ShutdownAgent();
 
-		}catch(THOMASException e)
-		{
+		} catch(THOMASException e) {
 			e.printStackTrace();
+		} catch(Exception e1) {
+			e1.printStackTrace();
 		}
 
 	}

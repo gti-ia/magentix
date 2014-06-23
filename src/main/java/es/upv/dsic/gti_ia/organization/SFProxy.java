@@ -36,7 +36,7 @@ public class SFProxy extends THOMASProxy {
 	 * @param SFServiceDescriptionLocation
 	 *            The URL where the owl-s documents are located
 	 */
-	public SFProxy(BaseAgent agent, String SFServiceDescriptionLocation) {
+	public SFProxy(BaseAgent agent, String SFServiceDescriptionLocation) throws Exception {
 
 		super(agent, "SF", SFServiceDescriptionLocation);
 
@@ -53,7 +53,7 @@ public class SFProxy extends THOMASProxy {
 	 *            protocol
 	 * 
 	 */
-	public SFProxy(BaseAgent agent) {
+	public SFProxy(BaseAgent agent) throws Exception {
 
 		super(agent, "SF");
 		ServiceDescriptionLocation = c.getSFServiceDescriptionLocation();

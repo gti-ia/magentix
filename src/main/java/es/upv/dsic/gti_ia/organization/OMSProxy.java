@@ -84,7 +84,7 @@ public class OMSProxy extends THOMASProxy {
 	 * @param OMSServiceDesciptionLocation
 	 *            The URL where the owl's document is located.
 	 */
-	public OMSProxy(BaseAgent agent, String OMSServiceDescriptionLocation) {
+	public OMSProxy(BaseAgent agent, String OMSServiceDescriptionLocation) throws Exception {
 		super(agent, "OMS", OMSServiceDescriptionLocation);
 		l10n = new THOMASMessages();
 
@@ -107,7 +107,7 @@ public class OMSProxy extends THOMASProxy {
 	 * 
 	 * 
 	 */
-	public OMSProxy(BaseAgent agent) {
+	public OMSProxy(BaseAgent agent) throws Exception {
 
 		super(agent, "OMS");
 		ServiceDescriptionLocation = c.getOMSServiceDescriptionLocation();
