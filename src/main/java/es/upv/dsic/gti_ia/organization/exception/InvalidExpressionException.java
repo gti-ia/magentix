@@ -4,7 +4,7 @@
 package es.upv.dsic.gti_ia.organization.exception;
 
 /**
- * This class represents the exception that is launched when parameter is not valid.
+ * This class represents the exception that is launched when the input parameters to build a norm are not valid.
  * 
  * @author jbellver
  * 

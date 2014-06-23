@@ -2,23 +2,23 @@
 \pdfminorversion=3
 \usepackage[pdftex]{graphicx} %paquete para incluir imagenes
 %\usepackage{graphicx} %paquete para incluir imagenes
-\usepackage{anysize} %para especificar el tamaño del papel
-\usepackage{miapalike} %Formato bibliografía, adaptado del paquete apalike
+\usepackage{anysize} %para especificar el tamaï¿½o del papel
+\usepackage{miapalike} %Formato bibliografï¿½a, adaptado del paquete apalike
 \usepackage{setspace} %para especificar el interlineado
-\usepackage{fancyhdr} %Cabeceras y pies de páginas
-\usepackage{multirow} %Usado para las tablas. Permite que una celda cubra múltiples filas
+\usepackage{fancyhdr} %Cabeceras y pies de pï¿½ginas
+\usepackage{multirow} %Usado para las tablas. Permite que una celda cubra mï¿½ltiples filas
 \usepackage{enumerate} %The enumerate package adds an optional argument to the enumerate environment which determines the style in which the counter is printed.
 %%%\usepackage{stmaryrd} %para usar operadores binarios como el cuadradito vacio
 %\usepackage{amsmath}
 
-\usepackage[footnotesize,bf]{caption} %para cambiar el tamaño de letra de la leyenda de las figuras y tablas, con las opciones indicadas pongo el tamaño de letra al tamaño de las notas al pie y "`Figura x"' en negrita.
+\usepackage[footnotesize,bf]{caption} %para cambiar el tamaï¿½o de letra de la leyenda de las figuras y tablas, con las opciones indicadas pongo el tamaï¿½o de letra al tamaï¿½o de las notas al pie y "`Figura x"' en negrita.
 
-\usepackage[pdfborder={0 0 0},plainpages=false]{hyperref} %% para que las entradas de los indices se conviertan en vínculos
-%\usepackage[pdftex=true,pdfborder={0 0 0},plainpages=false]{hyperref} %% para que las entradas de los indices se conviertan en vínculos
-\usepackage{url}  % enter URLs like this: \url{http://www.stack.nl/~jwk/latex/}. 
-\usepackage{fancybox}%Variants of \fbox and other games with boxes. 
+\usepackage[pdfborder={0 0 0},plainpages=false]{hyperref} %% para que las entradas de los indices se conviertan en vï¿½nculos
+%\usepackage[pdftex=true,pdfborder={0 0 0},plainpages=false]{hyperref} %% para que las entradas de los indices se conviertan en vï¿½nculos
+\usepackage{url}  % enter URLs like this: \url{http://www.stack.nl/~jwk/latex/}.
+\usepackage{fancybox}%Variants of \fbox and other games with boxes.
 \usepackage{times} %A package to use PostScript Times Roman as the default font.
-\usepackage{color} %The color package provides both foreground (text, rules, etc.) and background colour management; it uses the device driver configuration mechanisms of the graphics package to determine how to control its ouptut. 
+\usepackage{color} %The color package provides both foreground (text, rules, etc.) and background colour management; it uses the device driver configuration mechanisms of the graphics package to determine how to control its ouptut.
 \usepackage{epstopdf} %Para transformaar los eps a pdf
 \usepackage{rotating} %Para rotar tablas y figuras
 \usepackage{amsmath, amssymb}
@@ -27,26 +27,26 @@
 
 \newtheorem{definition}{Definition}[section]
 
-    
+
 
 \usepackage{fancyvrb} % This package provides very sophisticated facilities for reading and writing verbatim TEX code
 
-\papersize{29.7cm}{21cm} \marginsize{3.5cm}{3cm}{3cm}{3cm} %%Se marca el tamaño del papel, usando el paquete anysize
-\newcommand{\clearemptydoublepage}{\newpage{\pagestyle{empty}\cleardoublepage}} %% Para asegurarse que siempre se comienza un capítulo en la siguiente página
+\papersize{29.7cm}{21cm} \marginsize{3.5cm}{3cm}{3cm}{3cm} %%Se marca el tamaï¿½o del papel, usando el paquete anysize
+\newcommand{\clearemptydoublepage}{\newpage{\pagestyle{empty}\cleardoublepage}} %% Para asegurarse que siempre se comienza un capï¿½tulo en la siguiente pï¿½gina
 
-%%%%% FORMATO Cabecera y pie de páginas
+%%%%% FORMATO Cabecera y pie de pï¿½ginas
 \pagestyle{fancy}
 \fancyhf{} % borrar todos los ajustes
 
-\fancyhead[LO]{\leftmark} % En las páginas impares, parte izquierda del encabezado, aparecerá el nombre de capítulo
-\fancyhead[RE]{\rightmark} % En las páginas pares, parte derecha del encabezado, aparecerá el nombre de sección
-\fancyhead[RO,LE]{\thepage} % Números de página en las esquinas de los encabezados
-%\fancyfoot[COE]{\thepage} %Números de página en el pie en el centro
+\fancyhead[LO]{\leftmark} % En las pï¿½ginas impares, parte izquierda del encabezado, aparecerï¿½ el nombre de capï¿½tulo
+\fancyhead[RE]{\rightmark} % En las pï¿½ginas pares, parte derecha del encabezado, aparecerï¿½ el nombre de secciï¿½n
+\fancyhead[RO,LE]{\thepage} % Nï¿½meros de pï¿½gina en las esquinas de los encabezados
+%\fancyfoot[COE]{\thepage} %Nï¿½meros de pï¿½gina en el pie en el centro
 
-\renewcommand{\chaptermark}[1]{\markboth{\textbf{\thechapter. #1}}{}} % Formato para el capítulo: N. Nombre
-\renewcommand{\sectionmark}[1]{\markright{\textbf{\thesection. #1}}} % Formato para la sección: N.M. Nombre
+\renewcommand{\chaptermark}[1]{\markboth{\textbf{\thechapter. #1}}{}} % Formato para el capï¿½tulo: N. Nombre
+\renewcommand{\sectionmark}[1]{\markright{\textbf{\thesection. #1}}} % Formato para la secciï¿½n: N.M. Nombre
 
-\renewcommand{\headrulewidth}{0.6pt} % Ancho de la línea horizontal bajo el encabezado
+\renewcommand{\headrulewidth}{0.6pt} % Ancho de la lï¿½nea horizontal bajo el encabezado
 
 \setlength{\headheight}{1.5\headheight} % Aumenta la altura del encabezado en una vez y media
 
@@ -57,18 +57,18 @@
 \newcommand{\MagentixVersion}{2.1}
 
 
-%%%%%%%%%%%%%%  FORMATO TÍTULO CAPÍTULOS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%  FORMATO Tï¿½TULO CAPï¿½TULOS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \usepackage[spanish]{minitoc} %Mini-TOC-> formato de los indices para cada capitulo
 \setcounter{minitocdepth}{1} %Profundidad al que llega el indice
 \tightmtctrue  %%% Minimum space between lines
 \mtcindent=2pt %
-\mtcsetformat{minitoc}{dotinterval}{3} %Separación entre puntos
+\mtcsetformat{minitoc}{dotinterval}{3} %Separaciï¿½n entre puntos
 \mtcsetformat{minitoc}{tocrightmargin}{2.55em plus 1fill}
 \mtcsetformat{minitoc}{pagenumwidth}{1.55em}
 \mtcsetrules{minitoc}{off} %sin lineas arriba y bajo del indice
 \makeatletter
 \def\thickhrulefill{\leavevmode \leaders \hrule height 1ex \hfill \kern \z@}
-\def\@makechapterhead#1{%% Para capítulos numerados
+\def\@makechapterhead#1{%% Para capï¿½tulos numerados
   \reset@font
   \parindent \z@
   \vspace*{10\p@}%
@@ -87,7 +87,7 @@
     \vbox{%
       \advance\hsize by -2cm
       \hrule\par
-      \vskip 6pt% 
+      \vskip 6pt%
       \hspace{1em}%
       \Huge \bfseries #1
       }%
@@ -106,7 +106,7 @@
 }%
   \vskip 15\p@
 }
-\def\@makeschapterhead#1{%% Para capítulos sin numero
+\def\@makeschapterhead#1{%% Para capï¿½tulos sin numero
   \reset@font
   \parindent \z@
   \vspace*{10\p@}%
@@ -135,13 +135,13 @@
 
  \vskip 15\p@
 }
-%%%%%%%%%%%%%%  FIN FORMATO CAPÍTULOS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%  FIN FORMATO CAPï¿½TULOS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 
 %%%%%%%%%%%%%%%%% FORMATO SECCIONES %%%%%%%%%%%%%%%%%%%%%%%%%%
 % Con las siguientes instrucciones cambiamos el formato a las secciones y subsecciones,
-% para que todas salgan numeradas. Además, añadimos más niveles de anidamiento
+% para que todas salgan numeradas. Ademï¿½s, aï¿½adimos mï¿½s niveles de anidamiento
 \renewcommand\section{\@startsection {section}{1}{\z@}%
                                    {-3.5ex \@plus -1ex \@minus -.2ex}%
                                    {2.3ex \@plus.2ex}%
@@ -152,7 +152,7 @@
                                      {\sffamily\large\bfseries}}
 
 %%% He cambiado startsection{subsection}{3} por startsection{subsection}{2} con lo que
-%%%  se consigue que salgan numerados los títulos
+%%%  se consigue que salgan numerados los tï¿½tulos
 \renewcommand\subsubsection{\@startsection{subsubsection}{2}{\z@}%
                                      {-3.25ex\@plus -1ex \@minus -.2ex}%
                                      {1.5ex \@plus .2ex}%
@@ -164,16 +164,16 @@
 
 
 %%%   Estas definiciones permiten crear subsubsubsection y subsubsubsubsection.
-%%%   Si se necesitasen más, se añade lo que se necesita tomando el nivel
-%%%     anterior de sub y añadir un "sub" en todas partes y cambiar el indicador
+%%%   Si se necesitasen mï¿½s, se aï¿½ade lo que se necesita tomando el nivel
+%%%     anterior de sub y aï¿½adir un "sub" en todas partes y cambiar el indicador
 %%%     de nivel de {5} a {6}.
 
 \newcounter{subsubsubsection}[subsubsection]
 \def\subsubsubsectionmark#1{}
 \def\thesubsubsubsection {\thesubsubsection
      .\arabic{subsubsubsection}}
-     
-    
+
+
     \newcommand\subsubsubsection{\@startsection
      {subsubsubsection}{2}{\z@}%
      {-3.25ex\@plus -1ex \@minus -.2ex}%
@@ -192,7 +192,7 @@
 \newenvironment{listaguion}{\renewcommand{\labelitemi}{-} \begin{itemize} \setlength{\leftmargin}{8cm} \addtolength{\itemsep}{-0.5\baselineskip}}{\end{itemize}}
 
 %%% Cambiamos la "`,"' decimal por un "`."'
-%\spanishdecimal{.} 
+%\spanishdecimal{.}
 
 %%%%%%%%%%%%%%% Para inclur cosas como el resumen, agradecimientos, etc sin que rompa los minitocs e incluyendo la entrada en el indice
 
@@ -200,7 +200,7 @@
 \newcommand{\prefacesection}[1]{ \chapter*{#1}\mtcaddchapter[#1]}
 
 
-%%%%%%%% PAra introducir código o salidas de mensajes por pantalla
+%%%%%%%% PAra introducir cï¿½digo o salidas de mensajes por pantalla
 \definecolor{grisfondo}{gray}{0.9}
 
 \DefineVerbatimEnvironment{VerbEj}{BVerbatim}{fontsize=\small,samepage=true}
@@ -211,20 +211,20 @@
 %%%% DEFICINIONES PARA INTRODUCIR CODIGO EN VENTADAS NUMERADAS %%%%%%%%%%%%%%%%
 
 
-\usepackage{listings} %%Para introducir código: commands  \lstinline \lstlisting
-														%\lstinline pretty-prints a line code:‘var i :integer;’ is typeset by ‘\lstinline!var i:integer;!’. 
+\usepackage{listings} %%Para introducir cï¿½digo: commands  \lstinline \lstlisting
+														%\lstinline pretty-prints a line code:ï¿½var i :integer;ï¿½ is typeset by ï¿½\lstinline!var i:integer;!ï¿½.
 														%The exclamation marks delimit the code and can be replaced by any character not in the code
 														%The lstlisting environment typesets the enclosed source code:
 														%\begin{lstlisting}[style=Java]
 														%Codigo
 														%\end{lstlisting}
-														
-														
-												
+
+
+
 \definecolor{gray97}{gray}{.97}
 \definecolor{gray75}{gray}{.75}
 \definecolor{gray45}{gray}{.45}
- 
+
 
 \lstset{ frame=Ltb,
      framerule=0pt,
@@ -249,16 +249,16 @@
      numberfirstline = false,
      breaklines=true,
    }
- 
+
 % minimizar fragmentado de listados
 %\lstnewenvironment{listing}[1][]
  %  {\lstset{#1}\pagebreak[0]}{\pagebreak[0]}
- 
+
 \lstdefinestyle{consola}
    {basicstyle=\scriptsize\bf\ttfamily,
     backgroundcolor=\color{gray75},
    }
- 
+
 \lstdefinestyle{Java}
    {language=Java,
 }
@@ -270,8 +270,8 @@
 
 
 
-%=================== BEGIN DOCUMENT 
- 
+%=================== BEGIN DOCUMENT
+
 \begin{document}
 
 %%%\include{InternalCover/InternalCover} %Nueva Portada
@@ -283,28 +283,28 @@
 
 \clearemptydoublepage %
 
-\pagestyle{plain}  
-\pagenumbering{Roman} 
+\pagestyle{plain}
+\pagenumbering{Roman}
 
 \tableofcontents
 
 \clearemptydoublepage
-%\renewcommand{\listfigurename}{Lista de Figuras} 
+%\renewcommand{\listfigurename}{Lista de Figuras}
 \listoffigures
-%\renewcommand{\listtablename}{Índice de tablas} 
-\listoftables 
+%\renewcommand{\listtablename}{ï¿½ndice de tablas}
+\listoftables
 
 
 
 
-%%%%%%%%    FORMATO PÁRRAFO %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
+%%%%%%%%    FORMATO Pï¿½RRAFO %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
 \renewcommand{\baselinestretch}{1.25} % Para ajustar el interlineado
 
 \addtolength{\parskip}{0.5\baselineskip}
-%\setlength{\parindent}{3em} %define que la indentación debe ser de 3 espacios 
-%\itemsep Separaci´on entre los diferentes elementos de la lista.
+%\setlength{\parindent}{3em} %define que la indentaciï¿½n debe ser de 3 espacios
+%\itemsep Separaciï¿½on entre los diferentes elementos de la lista.
 
-%\parsep Espacio vertical entre p´arrafos dentro de un elemento de la lista.
+%\parsep Espacio vertical entre pï¿½arrafos dentro de un elemento de la lista.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -312,37 +312,37 @@
 \include{Prefaces/Acknowledgments}
 
 \clearemptydoublepage
-\pagenumbering{arabic} 
-\pagestyle{fancy}  
+\pagenumbering{arabic}
+\pagestyle{fancy}
 
-\include{Introduction/Introduction} 
+\include{Introduction/Introduction}
 
-
-
-\clearemptydoublepage
-\include{Quickstart/Quickstart} 								  %Intro del capítulo, primera y segunda sección
 
 
 \clearemptydoublepage
-\include{ProgrammingAgents/ProgrammingAgents} 	%Intro del capítulo, primera, segunda,tercera,cuarta,quinta, sexta, septima y octava     sección 
+\include{Quickstart/Quickstart} 								  %Intro del capï¿½tulo, primera y segunda secciï¿½n
 
 
 \clearemptydoublepage
-\include{Thomas/ThomasOverview}									%Intro del capítulo y resto de secciones
+\include{ProgrammingAgents/ProgrammingAgents} 	%Intro del capï¿½tulo, primera, segunda,tercera,cuarta,quinta, sexta, septima y octava     secciï¿½n
+
 
 \clearemptydoublepage
-\include{HTTPInterface/HTTPInterface}									%Intro del capítulo y resto de secciones
+\include{Thomas/ThomasOverview}									%Intro del capï¿½tulo y resto de secciones
 
 \clearemptydoublepage
-\include{Administration/PlatformAdminIntro}			%Intro del capítulo, primera,  segunda,tercera,cuarta,quinta Y sexta
+\include{HTTPInterface/HTTPInterface}									%Intro del capï¿½tulo y resto de secciones
+
+\clearemptydoublepage
+\include{Administration/PlatformAdminIntro}			%Intro del capï¿½tulo, primera,  segunda,tercera,cuarta,quinta Y sexta
 
 \appendix
-\include{Thomas/appendixExceptions}
+\include{Exceptions/appendixExceptions}
 
 \clearemptydoublepage
-\fancyhead[LO,RE]{\textbf{Bibliography}} %pongo a mano el encabezado de esta sección
+\fancyhead[LO,RE]{\textbf{Bibliography}} %pongo a mano el encabezado de esta secciï¿½n
 
-\addcontentsline{toc}{chapter}{Bibliography} %%Añado la bibiografía al índice
+\addcontentsline{toc}{chapter}{Bibliography} %%Aï¿½ado la bibiografï¿½a al ï¿½ndice
 \bibliographystyle{apalike} %[Author, 1986][Author and Author, 1986][Author et al., 1986]. Multiple references  [Author1, 1986; Author2, 1987]
 \bibliography{Magentix2UM}
 

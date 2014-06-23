@@ -1,4 +1,24 @@
-\chapter{THOMAS Exceptions}\label{app:Exceptions}
+\chapter{Exceptions}\label{app:Exceptions}
+
+\section{Trace Exceptions}
+
+The methods of the \lstinline|TraceInteract| class can throw Trace exceptions. These exceptions extends from the \lstinline|java.lang.Exception|. The exception classes can be found in the package \lstinline|es.upv.dsic.gti_ia.trace.exception|.
+
+
+The following table shows the name (indicates the kind of problem) of the exception class and its associated message.
+
+%\begin{longtable}[!ht]
+\begin{longtable}{|p{6.5cm}|p{7.2cm}|}
+\hline
+  \textbf{Exception name} & \textbf{Description} \\ \endhead \hline
+  \emph{TraceServiceNotAllowedException} & Have been tried to execute an operation forbidden by the trace mask. \\ \hline
+  \emph{TraceSystemUnreachableException} & Trace Manager is unreachable. \\ \hline
+
+%\end{tabular}
+\caption{Trace Exceptions and associated messages.}
+\end{longtable}
+
+\section{THOMAS Exceptions}
 
 The methods of the \lstinline|OMSProxy| and \lstinline|SFProxy| class can throw THOMAS exceptions. These exceptions inherit from \lstinline|THOMASException| class, which extends from the \lstinline|java.lang.Exception|. The exception classes can be found in the package \lstinline|es.upv.dsic.gti_ia.organization.exception|.
 
@@ -17,16 +37,26 @@ The following table shows the name (indicates the kind of problem) of the except
   \emph{EmptyParametersException} & Invalid. Empty parameters. \\ \hline
   \emph{ExchangeBindException} & Exchange bind error: + e. \\ \hline
   \emph{ExchangeUnbindException} & Exchange unbind error: + e. \\ \hline
+  \emph{ForbiddenNormException} & A norm forbidden the service execution.\\ \hline
   \emph{IDUnitTypeNotFoundException} & Error: idunitType +idunitType+ not found in database. \\ \hline
   \emph{InsertingTableException} & Inserting new value at table +tableName. \\ \hline
   \emph{InvalidAccesibilityException} & accessibility+ is not a valid accesibility value. \\ \hline
   \emph{InvalidDataTypeException} & Invalid input or output data type. \\ \hline
+  \emph{InvalidDeonticException} & Deontic parameter is not valid. The deontic parameters allowed are \textit{f}, \textit{o} and \textit{p}. \\ \hline
+  \emph{InvalidExpressionException} & The input parameters to build a norm are not valid. \\ \hline
+  \emph{InvalidIDException} & ID parameter is not valid. \\ \hline
+  \emph{InvalidOMSActionException} & The action executed is not a valid OMS action. \\ \hline
+  \emph{InvalidParametersException} & The input parameter is not valid. \\ \hline
   \emph{InvalidPositionException} & position+ is not a valid position value for this Unit type. \\ \hline
   \emph{InvalidRolePositionException} & Invalid. RoleName + 's position is not a valid value. \\ \hline
-  \emph{InvalidServiceURLException} &  Service URL + is not a valid OWL-S document.\\ \hline
+  \emph{InvalidServiceURLException} & Service URL + is not a valid OWL-S document.\\ \hline
+  \emph{InvalidTargetTypeException} & Target type is not valid. The target types allowed are \textit{agentList}, \textit{roleList} and \textit{position}. \\ \hline
+  \emph{InvalidTargetValue} & Target value is not valid because not exists this ID in the target type associated. \\ \hline
   \emph{InvalidUnitTypeException} & unitType is not a valid unitType value. \\ \hline
   \emph{InvalidVisibilityException} & visibility+ is not a valid visibility value. \\ \hline
   \emph{MySQLException} & Error: mysql error +result. \\ \hline
+  \emph{NormExistsInUnitException} & Not allowed. The norm is already registered in the unit. \\ \hline
+  \emph{NormNotExistsException} & The norm not exists in the unit. \\ \hline
   \emph{NotCreatorAgentInUnitException} & Not allowed. There are agents in unit playing roles with position different from creator. \\ \hline
   \emph{NotCreatorException} & Not allowed. The Agent + AgentName + does not play any role with position creator +unitName. \\ \hline
   \emph{NotCreatorInParentUnitException} & Not allowed. The Agent + AgentName + does not play any role with position creator inside the parent unit. \\ \hline
@@ -38,6 +68,7 @@ The following table shows the name (indicates the kind of problem) of the except
   \emph{NotPlaysAnyRoleException} & The agent does not play any role. \\ \hline
   \emph{NotPlaysRoleException} & Not allowed. The agent + AgentName + does not play the role +RoleName+ . \\ \hline
   \emph{NotSupervisorOrCreatorInUnitException} & Not allowed. The Agent + AgentName + does not play any role with position supervisor or creator in unit +UnitName. \\ \hline
+  \emph{NotValidIdentifierException} & Identifier not allowed. It uses any reserved word or invalid character. \\ \hline
   \emph{OnlyPlaysCreatorException} & Not allowed. The agent is only playing the role creator. \\ \hline
   \emph{ParentUnitNotExistsException} & Parent unit +parentUnitName+ does not exist. \\ \hline
   \emph{PlayingRoleException} & Not allowed. The agent + AgentName +  is already playing the role.  \\ \hline
@@ -56,8 +87,7 @@ The following table shows the name (indicates the kind of problem) of the except
   \emph{VirtualParentException} & Not allowed. The Parent Unit can not be changed. \\ \hline
   \emph{VirtualUnitException} & Not allowed, this is the virtual unit. \\ \hline
   \emph{VisibilityRoleException} & Not allowed. The visibility of the role is private and agent +AgentName+ does not play any role in the unit +unitName. \\ \hline
-  
+
 %\end{tabular}
 \caption{THOMAS Exceptions and associated messages.}
 \end{longtable}
-
