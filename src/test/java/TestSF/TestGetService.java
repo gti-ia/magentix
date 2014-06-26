@@ -4,6 +4,10 @@ package TestSF;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
 import junit.framework.TestCase;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
@@ -22,6 +26,7 @@ public class TestGetService extends TestCase {
 	DatabaseAccess dbA = null;
 	Process qpid_broker;
 
+	@Before
 	protected void setUp() throws Exception {
 		super.setUp();
 		qpid_broker = qpidManager.UnixQpidManager.startQpid(Runtime.getRuntime(), qpid_broker);
@@ -47,6 +52,7 @@ public class TestGetService extends TestCase {
 		dbA.removeJenaTables();
 	}
 
+	@After
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		//------------------Clean Data Base -----------//
@@ -79,6 +85,7 @@ public class TestGetService extends TestCase {
 	 * Incorrect Service Profile. The getService method is called with a string which not represents a Service Profile.
 	 * @return
 	 */
+	@Test (timeout=5000)
 	public void testIncorrectParamTest1(){
 
 		try
@@ -103,6 +110,7 @@ public class TestGetService extends TestCase {
 	 * A URL of a service specification is provided instead a Service Profile.
 	 * @return
 	 */
+	@Test (timeout=5000)
 	public void testIncorrectParamTest2(){
 
 		try
@@ -128,6 +136,7 @@ public class TestGetService extends TestCase {
 	 * Correct service profile, but without a service previously registered in the system.
 	 * @return
 	 */
+	@Test (timeout=5000)
 	public void testIncorrectParamTest3(){
 
 		try
@@ -153,6 +162,7 @@ public class TestGetService extends TestCase {
 	 *   are properly retrieved.
 	 * @return
 	 */
+	@Test (timeout=5000)
 	public void testAppropiateParamsTest2(){
 
 		try
@@ -180,6 +190,7 @@ public class TestGetService extends TestCase {
 	 *  also the input and output parameters are properly retrieved.
 	 * @return
 	 */
+	@Test (timeout=5000)
 	public void testAppropiateParamsTest3(){
 		try
 		{
@@ -206,6 +217,7 @@ public class TestGetService extends TestCase {
 	 *  are properly retrieved.
 	 * @return
 	 */
+	@Test (timeout=5000)
 	public void testAppropiateParamsTest4(){
 		try
 		{
@@ -230,6 +242,7 @@ public class TestGetService extends TestCase {
 	 * checked in order to ensure that the input and output parameters are properly retrieved.
 	 * @return
 	 */
+	@Test (timeout=5000)
 	public void testAppropiateParamsTest5(){
 		try
 		{
@@ -255,6 +268,7 @@ public class TestGetService extends TestCase {
 	 * output parameters are properly retrieved.
 	 * @return
 	 */
+	@Test (timeout=5000)
 	public void testAppropiateParamsTest6(){
 		try
 		{
@@ -280,6 +294,7 @@ public class TestGetService extends TestCase {
 	 * retrieved.
 	 * @return
 	 */
+	@Test (timeout=5000)
 	public void testAppropiateParamsTest7(){
 		try
 		{
@@ -305,6 +320,7 @@ public class TestGetService extends TestCase {
 	 * provider data, grounding data and also the input and output parameters are properly retrieved.
 	 * @return
 	 */
+	@Test (timeout=5000)
 	public void testAppropiateParamsTest8(){
 
 		try
@@ -331,6 +347,7 @@ public class TestGetService extends TestCase {
 	 * ensure that providers data and also the input and output parameters are properly retrieved.
 	 * @return
 	 */
+	@Test (timeout=5000)
 	public void testAppropiateParamsTest9(){
 		try
 		{
