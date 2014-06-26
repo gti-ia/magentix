@@ -54,17 +54,17 @@ public class TestTracingEntity {
 	}
 	
 	/* Test methods */
-	@Test
+	@Test (timeout = 5000)
 	public void testGetType0(){ theTestOfGetType(0); }
-	@Test
+	@Test (timeout = 5000)
 	public void testGetType1(){ theTestOfGetType(1); }
-	@Test
+	@Test (timeout = 5000)
 	public void testGetType2(){ theTestOfGetType(2); }
-	@Test
+	@Test (timeout = 5000)
 	public void testGetType3(){ theTestOfGetType(3); }
-	@Test
+	@Test (timeout = 5000)
 	public void testGetType4(){ theTestOfGetType(4); }
-	@Test
+	@Test (timeout = 5000)
 	public void testGetType5(){ theTestOfGetType(5); }
 	public void theTestOfGetType(int d) {
 		if (d < validTEntities.length)
@@ -73,17 +73,17 @@ public class TestTracingEntity {
 			assertEquals(-1, invalidTEntities[d-validTEntities.length].getType());
 	}
 	
-	@Test
+	@Test (timeout = 5000)
 	public void testGetAid0(){ theTestOfGetAid(0); }
-	@Test
+	@Test (timeout = 5000)
 	public void testGetAid1(){ theTestOfGetAid(1); }
-	@Test
+	@Test (timeout = 5000)
 	public void testGetAid2(){ theTestOfGetAid(2); }
-	@Test
+	@Test (timeout = 5000)
 	public void testGetAid3(){ theTestOfGetAid(3); }
-	@Test
+	@Test (timeout = 5000)
 	public void testGetAid4(){ theTestOfGetAid(4); }
-	@Test
+	@Test (timeout = 5000)
 	public void testGetAid5(){ theTestOfGetAid(5); }
 	public void theTestOfGetAid(int d) {
 		if (d < validTEntities.length)
@@ -92,17 +92,17 @@ public class TestTracingEntity {
 			assertEquals(((INVALID_TYPES[d-validTEntities.length]==0) ? AID : null), invalidTEntities[d-validTEntities.length].getAid());
 	}
 	
-	@Test
+	@Test (timeout = 5000)
 	public void testSetType0(){ theTestOfSetType(0,TracingEntity.AGGREGATION); }
-	@Test
+	@Test (timeout = 5000)
 	public void testSetType1(){ theTestOfSetType(1,TracingEntity.AGENT); }
-	@Test
+	@Test (timeout = 5000)
 	public void testSetType2(){ theTestOfSetType(2,100); }
-	@Test
+	@Test (timeout = 5000)
 	public void testSetType3(){ theTestOfSetType(3,TracingEntity.AGENT); }
-	@Test
+	@Test (timeout = 5000)
 	public void testSetType4(){ theTestOfSetType(4,-100); }
-	@Test
+	@Test (timeout = 5000)
 	public void testSetType5(){ theTestOfSetType(5,TracingEntity.AGENT); }
 	public void theTestOfSetType(int d, int type) {
 		int res = (type < 0 || type > 2) ? -1 : 0;
@@ -114,17 +114,17 @@ public class TestTracingEntity {
 		}
 	}
 	
-	@Test
+	@Test (timeout = 5000)
 	public void testGetPublishedTS0(){ theTestOfGetPublishedTS(0); }
-	@Test
+	@Test (timeout = 5000)
 	public void testGetPublishedTS1(){ theTestOfGetPublishedTS(1); }
-	@Test
+	@Test (timeout = 5000)
 	public void testGetPublishedTS2(){ theTestOfGetPublishedTS(2); }
-	@Test
+	@Test (timeout = 5000)
 	public void testGetPublishedTS3(){ theTestOfGetPublishedTS(3); }
-	@Test
+	@Test (timeout = 5000)
 	public void testGetPublishedTS4(){ theTestOfGetPublishedTS(4); }
-	@Test
+	@Test (timeout = 5000)
 	public void testGetPublishedTS5(){ theTestOfGetPublishedTS(5); }
 	public void theTestOfGetPublishedTS(int d) {
 		if (d < validTEntities.length)
@@ -133,17 +133,17 @@ public class TestTracingEntity {
 			assertEquals("[]", invalidTEntities[d-validTEntities.length].getPublishedTS().toString());
 	}
 	
-	@Test
+	@Test (timeout = 5000)
 	public void testGetSubscribedToTS0(){ theTestOfGetSubscribedToTS(0); }
-	@Test
+	@Test (timeout = 5000)
 	public void testGetSubscribedToTS1(){ theTestOfGetSubscribedToTS(1); }
-	@Test
+	@Test (timeout = 5000)
 	public void testGetSubscribedToTS2(){ theTestOfGetSubscribedToTS(2); }
-	@Test
+	@Test (timeout = 5000)
 	public void testGetSubscribedToTS3(){ theTestOfGetSubscribedToTS(3); }
-	@Test
+	@Test (timeout = 5000)
 	public void testGetSubscribedToTS4(){ theTestOfGetSubscribedToTS(4); }
-	@Test
+	@Test (timeout = 5000)
 	public void testGetSubscribedToTS5(){ theTestOfGetSubscribedToTS(5); }
 	public void theTestOfGetSubscribedToTS(int d) {
 		if (d < validTEntities.length)
@@ -152,17 +152,17 @@ public class TestTracingEntity {
 			assertEquals("[]", invalidTEntities[d-validTEntities.length].getSubscribedToTS().toString());
 	}
 	
-	@Test
+	@Test (timeout = 5000)
 	public void testAddSubscription0(){ theTestOfAddSubscription(0); }
-	@Test
+	@Test (timeout = 5000)
 	public void testAddSubscription1(){ theTestOfAddSubscription(1); }
-	@Test
+	@Test (timeout = 5000)
 	public void testAddSubscription2(){ theTestOfAddSubscription(2); }
-	@Test
+	@Test (timeout = 5000)
 	public void testAddSubscription3(){ theTestOfAddSubscription(3); }
-	@Test
+	@Test (timeout = 5000)
 	public void testAddSubscription4(){ theTestOfAddSubscription(4); }
-	@Test
+	@Test (timeout = 5000)
 	public void testAddSubscription5(){ theTestOfAddSubscription(5); }
 	public void theTestOfAddSubscription(int d) {
 		TracingServiceSubscription aux = new TracingServiceSubscription();
@@ -179,17 +179,17 @@ public class TestTracingEntity {
 		}	
 	}
 	
-	@Test
+	@Test (timeout = 5000)
 	public void testRemoveSubscription0(){ theTestOfRemoveSubscription(0); }
-	@Test
+	@Test (timeout = 5000)
 	public void testRemoveSubscription1(){ theTestOfRemoveSubscription(1); }
-	@Test
+	@Test (timeout = 5000)
 	public void testRemoveSubscription2(){ theTestOfRemoveSubscription(2); }
-	@Test
+	@Test (timeout = 5000)
 	public void testRemoveSubscription3(){ theTestOfRemoveSubscription(3); }
-	@Test
+	@Test (timeout = 5000)
 	public void testRemoveSubscription4(){ theTestOfRemoveSubscription(4); }
-	@Test
+	@Test (timeout = 5000)
 	public void testRemoveSubscription5(){ theTestOfRemoveSubscription(5); }
 	public void theTestOfRemoveSubscription(int d) {
 		TracingServiceSubscription aux = new TracingServiceSubscription();
@@ -211,17 +211,17 @@ public class TestTracingEntity {
 		}	
 	}
 	
-	@Test
+	@Test (timeout = 5000)
 	public void testHasTheSameAidAs0(){ theTestOfHasTheSameAidAs(0, AID, true); }
-	@Test//(expected=NullPointerException.class)
+	@Test (timeout = 5000) //(expected=NullPointerException.class)
 	public void testHasTheSameAidAs1(){ theTestOfHasTheSameAidAs(0, null, false); }
-	@Test
+	@Test (timeout = 5000)
 	public void testHasTheSameAidAs2(){ theTestOfHasTheSameAidAs(0, new AgentID(), false); }
-	@Test//(expected=NullPointerException.class)
+	@Test (timeout = 5000) //(expected=NullPointerException.class)
 	public void testHasTheSameAidAs3(){ theTestOfHasTheSameAidAs(1, null, false); }
-	@Test//(expected=NullPointerException.class)
+	@Test (timeout = 5000) //(expected=NullPointerException.class)
 	public void testHasTheSameAidAs4(){ theTestOfHasTheSameAidAs(2, new AgentID(), false); }
-	@Test//(expected=NullPointerException.class)
+	@Test (timeout = 5000) //(expected=NullPointerException.class)
 	public void testHasTheSameAidAs5(){ theTestOfHasTheSameAidAs(4, AID, false); }
 	public void theTestOfHasTheSameAidAs(int d, AgentID aid, boolean res) {
 		if (d < validTEntities.length)
@@ -230,17 +230,17 @@ public class TestTracingEntity {
 			assertEquals(res, invalidTEntities[d-validTEntities.length].hasTheSameAidAs(aid));
 	}
 	
-	@Test
+	@Test (timeout = 5000)
 	public void testToReadableString0(){ theTestOfToReadableString(0); }
-	@Test
+	@Test (timeout = 5000)
 	public void testToReadableString1(){ theTestOfToReadableString(1); }
-	@Test
+	@Test (timeout = 5000)
 	public void testToReadableString2(){ theTestOfToReadableString(2); }
-	@Test
+	@Test (timeout = 5000)
 	public void testToReadableString3(){ theTestOfToReadableString(3); }
-	@Test
+	@Test (timeout = 5000)
 	public void testToReadableString4(){ theTestOfToReadableString(4); }
-	@Test
+	@Test (timeout = 5000)
 	public void testToReadableString5(){ theTestOfToReadableString(5); }
 	public void theTestOfToReadableString(int d) {
 		if (d < validTEntities.length)
@@ -250,17 +250,17 @@ public class TestTracingEntity {
 			assertEquals(null, invalidTEntities[d-validTEntities.length].toReadableString());
 	}
 	
-	@Test
+	@Test (timeout = 5000)
 	public void testToEquals0(){ theTestOfEquals(validTEntities[0],validTEntities[0], true); }
-	@Test
+	@Test (timeout = 5000)
 	public void testToEquals1(){ theTestOfEquals(validTEntities[0],new TracingEntity(TracingEntity.AGENT,null), false); }
-	@Test
+	@Test (timeout = 5000)
 	public void testToEquals2(){ TracingEntity t = new TracingEntity(TracingEntity.AGENT,AID); t.addSubscription(TSS); theTestOfEquals(validTEntities[0],t, false); }
-	@Test
+	@Test (timeout = 5000)
 	public void testToEquals3(){ theTestOfEquals(validTEntities[0],new TracingEntity(TracingEntity.AGENT,AID), true); }
-	@Test
+	@Test (timeout = 5000)
 	public void testToEquals4(){ theTestOfEquals(validTEntities[0],invalidTEntities[0], false); }
-	@Test
+	@Test (timeout = 5000)
 	public void testToEquals5(){ theTestOfEquals(validTEntities[0],validTEntities[3], false); }
 	public void theTestOfEquals(TracingEntity t1, TracingEntity t2, boolean res) {
 		assertEquals(res, t1.equals(t2));
