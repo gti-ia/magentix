@@ -4,16 +4,12 @@ import static org.junit.Assert.*;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import TestTrace.CommandedTraceManager;
 import es.upv.dsic.gti_ia.organization.Configuration;
-import es.upv.dsic.gti_ia.trace.TraceMask;
 
 
 /** 
@@ -41,7 +37,7 @@ public class TestConfiguration {
 	}
 	
 	/* Tests */
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testConstructor() throws Exception { 
 	    
 	    Constructor<Configuration> c = Configuration.class.getDeclaredConstructor();
@@ -60,124 +56,124 @@ public class TestConfiguration {
 	    assertNotSame(otherConfig, config);
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testSingleton() throws Exception {
 		
 		otherConfig = Configuration.getConfiguration();
 		assertSame(otherConfig, config);
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testGetOMSServiceDescriptionLocation() throws Exception {
 		assertEquals("http://localhost:8080/omsservices/services/", config.getOMSServiceDescriptionLocation());
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testGetSFServiceDescriptionLocation() throws Exception {
 		assertEquals("http://localhost:8080/sfservices/services/", config.getSFServiceDescriptionLocation());
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testGetBridgeHttpPort() throws Exception {
 		assertEquals(8082, config.getBridgeHttpPort());
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testGetHttpInterfacepPort() throws Exception {
 		assertEquals(8081, config.getHttpInterfacepPort());
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testGetIsTomcat() throws Exception {
 		assertEquals(false, config.getIsTomcat());
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testGetOS() throws Exception {
 		assertEquals("linux", config.getOS());
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testGetPathTomcat() throws Exception {
 		assertEquals("../apache-tomcat-6.0.20", config.getPathTomcat());
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testGetdatabaseServer() throws Exception {
 		assertEquals("localhost", config.getdatabaseServer());
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testGetdatabaseName() throws Exception {
 		assertEquals("thomas", config.getdatabaseName());
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testGetdatabaseUser() throws Exception {
 		assertEquals("thomas", config.getdatabaseUser());
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testGetdatabasePassword() throws Exception {
 		assertEquals("thomas", config.getdatabasePassword());
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testGetqpidHost() throws Exception {
 		assertEquals("localhost", config.getqpidHost());
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testGetqpidPort() throws Exception {
 		assertEquals(5672, config.getqpidPort());
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testGetqpidVhost() throws Exception {
 		assertEquals("test", config.getqpidVhost());
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testGetqpidUser() throws Exception {
 		assertEquals("guest", config.getqpidUser());
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testGetqpidPassword() throws Exception {
 		assertEquals("guest", config.getqpidPassword());
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testGetqpidSSL() throws Exception {
 		assertEquals(false, config.getqpidSSL());
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testIsSecureMode() throws Exception {
 		assertEquals(false, config.isSecureMode());
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testGetqpidsaslMechs() throws Exception {
 		assertEquals("EXTERNAL", config.getqpidsaslMechs());
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testGetjenadbURL() throws Exception {
 		assertEquals("jdbc:mysql://localhost/thomas", config.getjenadbURL());
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testGetjenadbType() throws Exception {
 		assertEquals("MySQL", config.getjenadbType());
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testGetjenadbDriver() throws Exception {
 		assertEquals("com.mysql.jdbc.Driver", config.getjenadbDriver());
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testGetTraceMask() throws Exception {
 		assertEquals("1111110100", config.getTraceMask());
 	}
