@@ -1,5 +1,7 @@
 package organization.TestDataBaseInterface;
 
+import static org.junit.Assert.*;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -16,7 +18,7 @@ import junit.framework.TestCase;
  * 
  */
 
-public class TestAcquireRole extends TestCase {
+public class TestAcquireRole{
 
 	DataBaseInterface dbI = null;
 	DatabaseAccess dbA = null;
@@ -24,9 +26,8 @@ public class TestAcquireRole extends TestCase {
 	
 	
 	@Before
-	protected void setUp() throws Exception {
-		super.setUp();
-		
+	public void setUp() throws Exception {
+			
 		Class[] parameterTypes = new Class[3];
 	    parameterTypes[0] = java.lang.String.class;
 	    parameterTypes[1] = java.lang.String.class;
@@ -49,7 +50,7 @@ public class TestAcquireRole extends TestCase {
 	}
 
 	@After
-	protected void tearDown() throws Exception {
+	public void tearDown() throws Exception {
 
 		//-------------  Clean Data Base  ------------//
 		dbA.executeSQL("DELETE FROM agentPlayList");
@@ -68,7 +69,7 @@ public class TestAcquireRole extends TestCase {
 		m = null;
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testAcquireRole1() {
 		
 		/**---------------------------------------------------------------------------------
@@ -139,7 +140,7 @@ public class TestAcquireRole extends TestCase {
 		}
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testAcquireRole2() {
 		
 		/**---------------------------------------------------------------------------------
@@ -206,7 +207,7 @@ public class TestAcquireRole extends TestCase {
 		}
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testAcquireRole3() {
 		
 		/**---------------------------------------------------------------------------------
@@ -267,7 +268,7 @@ public class TestAcquireRole extends TestCase {
 		}
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testAcquireRole4() {
 		
 		/**---------------------------------------------------------------------------------
@@ -323,7 +324,7 @@ public class TestAcquireRole extends TestCase {
 		}
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testAcquireRole5() {
 		
 		/**---------------------------------------------------------------------------------
@@ -390,7 +391,7 @@ public class TestAcquireRole extends TestCase {
 		}
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testAcquireRole6() {
 		
 		/**---------------------------------------------------------------------------------
