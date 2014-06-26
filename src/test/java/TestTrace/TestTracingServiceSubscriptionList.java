@@ -68,7 +68,7 @@ public class TestTracingServiceSubscriptionList {
 	}
 	
 	/* Test methods */
-	@Test
+	@Test (timeout = 5000)
 	public void testGetTSS0(){
 		
 		int n = 0;
@@ -77,7 +77,7 @@ public class TestTracingServiceSubscriptionList {
 				for(TracingService tS : tService)
 					assertEquals("Not found the "+(++n)+" TracingServiceSubscription when should have found.", true, tSSL.contains(tSSL.getTSS(tE1, tE2, tS)));
 	}
-	@Test
+	@Test (timeout = 5000)
 	public void testGetTSS1(){
 		
 		int n = 0;
@@ -87,7 +87,7 @@ public class TestTracingServiceSubscriptionList {
 				for(TracingService tS : tService)
 					assertEquals("Found the "+(++n)+" TracingServiceSubscription when shouldn't have found.", false, tSSL.contains(tSSL.getTSS(tE1, tE2, tS)));
 	}
-	@Test
+	@Test (timeout = 5000)
 	public void testGetTSS2(){
 		
 		int n = 0;
@@ -97,7 +97,7 @@ public class TestTracingServiceSubscriptionList {
 				for(TracingService tS : tService)
 					assertEquals("Found the "+(++n)+" TracingServiceSubscription when shouldn't have found.", false, tSSL.contains(tSSL.getTSS(tE1, tE2, tS)));
 	}
-	@Test
+	@Test (timeout = 5000)
 	public void testGetTSS3(){
 		
 		int n = 0;
