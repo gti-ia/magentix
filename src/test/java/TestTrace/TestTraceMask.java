@@ -56,23 +56,23 @@ public class TestTraceMask {
 	}
 	
 	/* Test methods */
-	@Test(expected=ParseException.class)
+	@Test (expected=ParseException.class, timeout = 5000)
 	public void testTraceMaskError0() throws Exception { theTestOfTraceMaskError(0); }
-	@Test(expected=ParseException.class)
+	@Test(expected=ParseException.class, timeout = 5000)
 	public void testTraceMaskError1() throws Exception { theTestOfTraceMaskError(1); }
 	public void theTestOfTraceMaskError(int d) throws Exception {
 		new TraceMask(INVALID_ENCODED_MASCKS[d]);
 	}
 	
-	@Test
+	@Test (timeout = 5000)
 	public void testGetBitIndex0(){ theTestOfGetName(0); }
-	@Test
+	@Test (timeout = 5000)
 	public void testGetBitIndex1(){ theTestOfGetName(1); }
-	@Test
+	@Test (timeout = 5000)
 	public void testGetBitIndex2(){ theTestOfGetName(2); }
-	@Test(expected=IndexOutOfBoundsException.class)
+	@Test(expected=IndexOutOfBoundsException.class, timeout = 5000)
 	public void testGetBitIndex3(){ masks[2].get(-11); }
-	@Test(expected=IndexOutOfBoundsException.class)
+	@Test(expected=IndexOutOfBoundsException.class, timeout = 5000)
 	public void testGetBitIndex4(){ masks[2].get(7); }
 	public void theTestOfGetName(int d) {
 		for(int i=0; i<VALID_INDEXES.length; i++){
@@ -80,15 +80,15 @@ public class TestTraceMask {
 		}
 	}
 	
-	@Test
+	@Test (timeout = 5000)
 	public void testSetBitIndex0() throws Exception { theTestOfSetBitIndex(0,3);  }
-	@Test
+	@Test (timeout = 5000)
 	public void testSetBitIndex1() throws Exception { theTestOfSetBitIndex(1,11); }
-	@Test
+	@Test (timeout = 5000)
 	public void testSetBitIndex2() throws Exception { theTestOfSetBitIndex(2,6); }
-	@Test(expected=IndexOutOfBoundsException.class)
+	@Test(expected=IndexOutOfBoundsException.class, timeout = 5000)
 	public void testSetBitIndex3() throws Exception { theTestOfSetBitIndex(0,-11); }
-	@Test(expected=IndexOutOfBoundsException.class)
+	@Test(expected=IndexOutOfBoundsException.class, timeout = 5000)
 	public void testSetBitIndex4() throws Exception { theTestOfSetBitIndex(1,7); }
 	public void theTestOfSetBitIndex(int d, int n) throws Exception {
 		Class[] parameterTypes = new Class[1];
@@ -109,15 +109,15 @@ public class TestTraceMask {
 		assertTrue(masks[d].get(n));
 	}
 	
-	@Test
+	@Test (timeout = 5000)
 	public void testSetBitIndexAndValue0() throws Exception { theTestOfSetBitIndexAndValue(0,3,false); assertFalse(masks[0].get(3)); }
-	@Test
+	@Test (timeout = 5000)
 	public void testSetBitIndexAndValue1() throws Exception { theTestOfSetBitIndexAndValue(1,11,false); assertFalse(masks[1].get(11)); }
-	@Test
+	@Test (timeout = 5000)
 	public void testSetBitIndexAndValue2() throws Exception { theTestOfSetBitIndexAndValue(2,6,false); assertFalse(masks[2].get(6)); }
-	@Test(expected=IndexOutOfBoundsException.class)
+	@Test(expected=IndexOutOfBoundsException.class, timeout = 5000)
 	public void testSetBitIndexAndValue3() throws Exception { theTestOfSetBitIndexAndValue(0,-11,false); }
-	@Test(expected=IndexOutOfBoundsException.class)
+	@Test(expected=IndexOutOfBoundsException.class, timeout = 5000)
 	public void testSetBitIndexAndValue4() throws Exception { theTestOfSetBitIndexAndValue(1,7,false); }
 	public void theTestOfSetBitIndexAndValue(int d, int n1, boolean n2) throws Exception {
 		Class[] parameterTypes = new Class[2];
@@ -138,51 +138,51 @@ public class TestTraceMask {
 	    }
 	}
 	
-	@Test
+	@Test (timeout = 5000)
 	public void testLength0() throws Exception { theTestOfLength(0); }
-	@Test
+	@Test (timeout = 5000)
 	public void testLength1() throws Exception { theTestOfLength(1); }
-	@Test
+	@Test (timeout = 5000)
 	public void testLength2() throws Exception { theTestOfLength(2); }
 	public void theTestOfLength(int d) throws Exception {
 		assertEquals(VALID_INDEXES.length, masks[d].length());
 	}
 	
-	@Test
+	@Test (timeout = 5000)
 	public void testIsTraceAvailable0() throws Exception { theTestOfIsTraceAvailable(0,false); }
-	@Test
+	@Test (timeout = 5000)
 	public void testIsTraceAvailable1() throws Exception { theTestOfIsTraceAvailable(1,true); }
-	@Test
+	@Test (timeout = 5000)
 	public void testIsTraceAvailable2() throws Exception { theTestOfIsTraceAvailable(2,true); }
 	public void theTestOfIsTraceAvailable(int d, boolean l) throws Exception {
 		assertEquals(l, masks[d].isTraceAvailable());
 	}
 	
-	@Test
+	@Test (timeout = 5000)
 	public void testToString0() throws Exception { theTestOfToString(0); }
-	@Test
+	@Test (timeout = 5000)
 	public void testToString1() throws Exception { theTestOfToString(1); }
-	@Test
+	@Test (timeout = 5000)
 	public void testToString2() throws Exception { theTestOfToString(2); }
 	public void theTestOfToString(int d) throws Exception {
 		assertEquals(VALID_ENCODED_MASCKS[d], masks[d].toString());
 	}
 	
-	@Test
+	@Test (timeout = 5000)
 	public void testEquals0() throws Exception { theTestOfEquals(0,new TraceMask("0000000100"),true); }
-	@Test
+	@Test (timeout = 5000)
 	public void testEquals1() throws Exception { theTestOfEquals(1,new TraceMask("0000000100"),false); }
-	@Test
+	@Test (timeout = 5000)
 	public void testEquals2() throws Exception { theTestOfEquals(2,new Object(),false); }
 	public void theTestOfEquals(int d, Object o, boolean res) throws Exception {
 		assertEquals(res, masks[d].equals(o));
 	}
 	
-	@Test
+	@Test (timeout = 5000)
 	public void testClone0() throws Exception { theTestOfClone(0); }
-	@Test
+	@Test (timeout = 5000)
 	public void testClone1() throws Exception { theTestOfClone(1); }
-	@Test
+	@Test (timeout = 5000)
 	public void testClone2() throws Exception { theTestOfClone(2); }
 	public void theTestOfClone(int d) throws Exception {
 		assertTrue(masks[d].equals(masks[d].clone()));
