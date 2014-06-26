@@ -48,14 +48,14 @@ public class TestTracingEntityList {
 	}
 	
 	/* Test methods */
-	@Test
+	@Test (timeout = 5000)
 	public void testGetTEByAid0(){ assertNotNull(tEL.getTEByAid(AIDs[0])); }
-	@Test
+	@Test (timeout = 5000)
 	public void testGetTEByAid1(){ assertNotNull(tEL.getTEByAid(AIDs[1])); }
-	@Test
+	@Test (timeout = 5000)
 	public void testGetTEByAid2(){ assertNotNull(tEL.getTEByAid(AIDs[2])); }
-	@Test
+	@Test (timeout = 5000)
 	public void testGetTEByAid3(){ assertNull(tEL.getTEByAid(new AgentID("Agent4"))); }
-	@Test
+	@Test (timeout = 5000)
 	public void testGetTEByAid4(){ assertNull(tEL.getTEByAid(null)); }
 }
