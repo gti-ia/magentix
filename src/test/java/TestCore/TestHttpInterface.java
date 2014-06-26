@@ -10,8 +10,11 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
@@ -24,17 +27,13 @@ import es.upv.dsic.gti_ia.core.AgentsConnection;
 import es.upv.dsic.gti_ia.core.HttpInterface;
 import es.upv.dsic.gti_ia.core.SingleAgent;
 
-public class TestHttpInterface extends TestCase {
+public class TestHttpInterface {
 	Process qpid_broker;
 	HttpInterfaceThread hiThread;
 
-	public TestHttpInterface(String name) {
-		super(name);
-	}
-
 	/** Test set up */
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 
 		qpid_broker = Runtime.getRuntime().exec(
 				"./installer/magentix2/bin/qpid-broker-0.20/bin/qpid-server");
@@ -60,6 +59,7 @@ public class TestHttpInterface extends TestCase {
 	 * Expected Behavour
 	 * 
 	 */
+	@Test(timeout = 8000)
 	public void testFunctionality() {
 
 		String jsonmessage = "{\"agent_name\": \"echoAgent\",\"conversation_id\": \"1\" ,\"content\": \"Hello World\"}";
@@ -97,6 +97,7 @@ public class TestHttpInterface extends TestCase {
 	 * MalformedURLException Expected
 	 * 
 	 */
+	@Test(timeout = 8000)
 	public void testAgentNameEmpty() {
 
 		String jsonmessage = "{\"agent_name\": \"\",\"conversation_id\": \"1\" ,\"content\": \"Hello World\"}";
@@ -133,6 +134,7 @@ public class TestHttpInterface extends TestCase {
 	 * MalformedURLException Expected
 	 * 
 	 */
+	@Test(timeout = 8000)
 	public void testAgentConversationIDEmpty() {
 
 		String jsonmessage = "{\"agent_name\": \"echoAgent\",\"conversation_id\": \"\" ,\"content\": \"Hello World\"}";
@@ -165,6 +167,7 @@ public class TestHttpInterface extends TestCase {
 	 * Test Agent Wrong Name
 	 * 
 	 */
+	@Test(timeout = 8000)
 	public void testAgentWrongName() {
 
 		String jsonmessage = "{\"agent_name\": \"wrongAgent\",\"conversation_id\": \"1\" ,\"content\": \"Hello World\"}";
@@ -203,6 +206,7 @@ public class TestHttpInterface extends TestCase {
 	 * 
 	 * 
 	 */
+	@Test(timeout = 8000)
 	public void testSimultaneousRequestsDifferentWorkerAgent() {
 		int requestsAmount = 7;
 		String[] jsonmessage = new String[requestsAmount];
@@ -245,10 +249,10 @@ public class TestHttpInterface extends TestCase {
 		}
 
 	}
-
+	
 	/** Ending the test properly */
-	protected void tearDown() throws Exception {
-		super.tearDown();
+	@After
+	public void tearDown() throws Exception {
 		hiThread.shutdown();
 		AgentsConnection.disconnect();
 		qpid_broker.destroy();
@@ -261,7 +265,7 @@ public class TestHttpInterface extends TestCase {
 	 * 
 	 * Auxiliar Methods
 	 */
-	public HttpURLConnection sendRequest(HttpURLConnection connection,
+	private HttpURLConnection sendRequest(HttpURLConnection connection,
 			String jsonmessage) throws IOException {
 		/*
 		 * Generates the request

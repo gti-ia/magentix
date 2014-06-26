@@ -1,28 +1,13 @@
 package TestCore;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.net.Socket;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
-import junit.framework.TestCase;
-
 import org.apache.log4j.xml.DOMConfigurator;
+import org.junit.Before;
+import org.junit.After;
 import org.junit.Test;
+import static org.junit.Assert.*;
 
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
-import es.upv.dsic.gti_ia.core.AgentsConnection;
-import es.upv.dsic.gti_ia.core.ISO8601;
 
 /**
  * Tests for AgentID class
@@ -30,18 +15,14 @@ import es.upv.dsic.gti_ia.core.ISO8601;
  * @author David Fernández - dfernandez@dsic.upv.es
  */
 
-public class TestAgentID extends TestCase {
+public class TestAgentID {
 
 	AgentID agent;
 	Process qpid_broker;
 
-	public TestAgentID(String name) {
-		super(name);
-	}
+	@Before
+	public void setUp() throws Exception {
 
-	protected void setUp() throws Exception {
-		super.setUp();
-		
 		/**
 		 * Setting the configuration
 		 */
@@ -51,8 +32,6 @@ public class TestAgentID extends TestCase {
 		 * Instantiating the AgentID
 		 */
 		agent = new AgentID();
-		
-		
 
 	}
 
@@ -60,6 +39,7 @@ public class TestAgentID extends TestCase {
 	 * Testing AgentID empty constructor
 	 * 
 	 */
+	@Test(timeout = 5000)
 	public void testEmptyConstructor() {
 		// agent is initialize in SetUp() with empty constructor by default
 
@@ -74,6 +54,7 @@ public class TestAgentID extends TestCase {
 	 * 
 	 * Constructor with all the atributes of the class
 	 */
+	@Test(timeout = 5000)
 	public void testFullConstructor() {
 		// agent is initialize in SetUp() with empty constructor by default
 
@@ -94,6 +75,7 @@ public class TestAgentID extends TestCase {
 	 * 
 	 * Constructor with the ID of the agent in a common name format
 	 */
+	@Test(timeout = 5000)
 	public void testIDNameConstructor() {
 		// agent is initialize in SetUp() with empty constructor by default
 
@@ -114,6 +96,7 @@ public class TestAgentID extends TestCase {
 	 * 
 	 * Constructor with the ID of the agent in an address format
 	 */
+	@Test(timeout = 5000)
 	public void testIDAddressConstructor() {
 		// agent is initialize in SetUp() with empty constructor by default
 
@@ -135,6 +118,7 @@ public class TestAgentID extends TestCase {
 	 * 
 	 * Tested with empty and full cosntructor
 	 */
+	@Test(timeout = 5000)
 	public void testToString() {
 		// agent is initialize in SetUp() with empty constructor by default
 		assertEquals(agent.toString(), "://@:");
@@ -157,6 +141,7 @@ public class TestAgentID extends TestCase {
 	 * 
 	 * Tested with empty and full cosntructor
 	 */
+	@Test(timeout = 5000)
 	public void testNameAll() {
 		// agent is initialize in SetUp() with empty constructor by default
 		assertEquals(agent.name_all(), "@:");
@@ -179,6 +164,7 @@ public class TestAgentID extends TestCase {
 	 * 
 	 * Tested with empty and full cosntructor
 	 */
+	@Test(timeout = 5000)
 	public void testAddressesAll() {
 		// agent is initialize in SetUp() with empty constructor by default
 		assertEquals(agent.addresses_all(), "://:");
@@ -198,6 +184,7 @@ public class TestAgentID extends TestCase {
 	 * Testing AgentID addresses_single()
 	 * 
 	 */
+	@Test(timeout = 5000)
 	public void testAddressesSingle() {
 		// agent is initialize in SetUp() with empty constructor by default
 		assertEquals(agent.addresses_single(), ":");
@@ -217,6 +204,7 @@ public class TestAgentID extends TestCase {
 	 * 
 	 * Tested with empty and full constructor
 	 */
+	@Test(timeout = 5000)
 	public void testGetLocalName() {
 		// agent is initialize in SetUp() with empty constructor by default
 		assertEquals(agent.getLocalName(), "");
@@ -236,6 +224,7 @@ public class TestAgentID extends TestCase {
 	 * 
 	 * Tested when the name given has an "@"
 	 */
+	@Test(timeout = 8000)
 	public void testGetLocalNameAddress() {
 		// agent is initialize in SetUp() with empty constructor by default
 
@@ -258,6 +247,7 @@ public class TestAgentID extends TestCase {
 	 * 
 	 * Tested when object parameters are not equals
 	 */
+	@Test(timeout = 5000)
 	public void testEqualsClassParameters() {
 		// agent is initialize in SetUp() with empty constructor by default
 
@@ -296,6 +286,7 @@ public class TestAgentID extends TestCase {
 	 * Tested when object is not an instance of the same class and when two
 	 * objects are the same instance
 	 */
+	@Test(timeout = 5000)
 	public void testEqualsExceptions() {
 		// agent is initialize in SetUp() with empty constructor by default
 
@@ -315,9 +306,9 @@ public class TestAgentID extends TestCase {
 		assertEquals(agent.equals(otherAgent), true);
 	}
 
+	@After
 	public void tearDown() throws Exception {
-		super.tearDown();
 		agent = null;
 
-		}
+	}
 }

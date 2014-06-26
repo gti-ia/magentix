@@ -1,11 +1,8 @@
 package TestCore;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.Socket;
@@ -14,14 +11,14 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import junit.framework.TestCase;
-
 import org.apache.log4j.xml.DOMConfigurator;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
+import static org.junit.Assert.*;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
-import es.upv.dsic.gti_ia.core.AgentsConnection;
 import es.upv.dsic.gti_ia.core.ISO8601;
 
 /**
@@ -29,18 +26,13 @@ import es.upv.dsic.gti_ia.core.ISO8601;
  * 
  * @author David Fernández - dfernandez@dsic.upv.es
  */
-
-public class TestACLMessage extends TestCase {
+public class TestACLMessage {
 
 	ACLMessage msg;
 	Process qpid_broker;
 
-	public TestACLMessage(String name) {
-		super(name);
-	}
-
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 		/**
 		 * Setting the configuration
 		 */
@@ -67,6 +59,7 @@ public class TestACLMessage extends TestCase {
 	 * 
 	 * More attributes of ALCMessage could be tested but these three are enough
 	 */
+	@Test(timeout = 7000)
 	public void testEmptyConstructor() {
 		// msg is initialize in SetUp() with empty constructor by default
 
@@ -79,6 +72,7 @@ public class TestACLMessage extends TestCase {
 	 * 
 	 * More attributes of ALCMessage could be tested but these three are enough
 	 */
+	@Test(timeout = 7000)
 	public void testPerformativeConstructor() {
 		// Set the message with the constructor
 		msg = new ACLMessage(ACLMessage.AGREE);
@@ -91,6 +85,7 @@ public class TestACLMessage extends TestCase {
 	 * Testing ACLMessage setPerformative(Int)
 	 * 
 	 */
+	@Test(timeout = 7000)
 	public void testSetPerformative() {
 		// Message with empty constructor by default performative = UNKNOWN
 		msg.setPerformative(ACLMessage.PROPAGATE);
@@ -103,6 +98,7 @@ public class TestACLMessage extends TestCase {
 	 * Testing ACLMessage setPerformative(String)
 	 * 
 	 */
+	@Test(timeout = 7000)
 	public void testSetPerformativeString() {
 		// Message with empty constructor by default performative = UNKNOWN
 		// Test with a not valid performative
@@ -119,6 +115,7 @@ public class TestACLMessage extends TestCase {
 	 * Testing ACLMessage getPerformative()
 	 * 
 	 */
+	@Test(timeout = 7000)
 	public void testGetPerformative() {
 		// Message with empty constructor by default performative = UNKNOWN
 
@@ -131,6 +128,7 @@ public class TestACLMessage extends TestCase {
 	 * If exception is thrown then returns "NOT-UNDERSTOOD"
 	 * 
 	 */
+	@Test(timeout = 7000)
 	public void testGetPerformativeException() {
 		msg.setPerformative(30);// Not valid int performative = NOT_UNDERSTOOD
 
@@ -141,6 +139,7 @@ public class TestACLMessage extends TestCase {
 	 * Testing ACLMessage getPerformativeInt()
 	 * 
 	 */
+	@Test(timeout = 7000)
 	public void testGetPerformativeInt() {
 		// Message with empty constructor by default performative = UNKNOWN = -1
 
@@ -151,6 +150,7 @@ public class TestACLMessage extends TestCase {
 	 * Testing ACLMessage setSender()
 	 * 
 	 */
+	@Test(timeout = 7000)
 	public void testSetSender() {
 		// Message with empty constructor by default sender = new AgentID()
 		AgentID id = new AgentID("Charles");
@@ -163,6 +163,7 @@ public class TestACLMessage extends TestCase {
 	 * Testing ACLMessage getSender()
 	 * 
 	 */
+	@Test(timeout = 7000)
 	public void testGetSender() {
 		// Message with empty constructor by default sender = new AgentID()
 
@@ -175,6 +176,7 @@ public class TestACLMessage extends TestCase {
 	 * Clears receiver list and add the receiver
 	 * 
 	 */
+	@Test(timeout = 7000)
 	public void testSetReceiver() {
 		// Message with empty constructor by default sender = new AgentID()
 		AgentID id = new AgentID("Agustin");
@@ -190,6 +192,7 @@ public class TestACLMessage extends TestCase {
 	 * 
 	 * Test gerReceiver() with more than one receiver and get the first one
 	 */
+	@Test(timeout = 7000)
 	public void testGetReceiver() {
 		// Message with empty constructor by default receivers = empty
 		AgentID id = new AgentID("Agustin");
@@ -206,6 +209,7 @@ public class TestACLMessage extends TestCase {
 	 * getReceiver() retruns null
 	 * 
 	 */
+	@Test(timeout = 7000)
 	public void testGetEmptyReceiver() {
 		// Message with empty constructor by default receivers = empty
 
@@ -216,6 +220,7 @@ public class TestACLMessage extends TestCase {
 	 * Testing ACLMessage addReceiver()
 	 * 
 	 */
+	@Test(timeout = 7000)
 	public void testAddReceiverI() {
 		// Message with empty constructor by default receivers = empty
 		AgentID id = new AgentID("Agustin");
@@ -234,6 +239,7 @@ public class TestACLMessage extends TestCase {
 	 * When adding an existing agent addReceiver returns -1, if not 1
 	 * 
 	 */
+	@Test(timeout = 7000)
 	public void testAddExistingReceiver() {
 		// Message with empty constructor by default receivers = empty
 		String agentName = "Agustin";
@@ -253,6 +259,7 @@ public class TestACLMessage extends TestCase {
 	 * 
 	 * Test get and agent order after been added
 	 */
+	@Test(timeout = 7000)
 	public void testGetReceiverInt() {
 		// Message with empty constructor by default receivers = empty
 		AgentID id = new AgentID("Agustin");
@@ -273,7 +280,8 @@ public class TestACLMessage extends TestCase {
 	 * Test getReceiver when index is out of the List
 	 */
 	// @Test(expected = IndexOutOfBoundsException.class)
-	public void testGetReceiverException() {
+	@Test
+	public void getReceiverException() {
 		// Message with empty constructor by default receivers = empty
 		AgentID id = new AgentID("Agustin");
 		AgentID id1 = new AgentID("Thomas");
@@ -297,6 +305,7 @@ public class TestACLMessage extends TestCase {
 	 * Testing ACLMessage setReplyTo()
 	 * 
 	 */
+	@Test(timeout = 7000)
 	public void testSetReplyTo() {
 		// Message with empty constructor by default reply_to = new AgentID();
 		AgentID id = new AgentID("Michael");
@@ -309,6 +318,7 @@ public class TestACLMessage extends TestCase {
 	 * Testing ACLMessage getReplyTo()
 	 * 
 	 */
+	@Test(timeout = 7000)
 	public void testGetReplyTo() {
 		// Message with empty constructor by default reply_to = new AgentID();
 
@@ -320,6 +330,7 @@ public class TestACLMessage extends TestCase {
 	 * 
 	 * 
 	 */
+	@Test(timeout = 7000)
 	public void testSetContent() {
 		// Message with empty constructor by default content = ""
 		// byteSequenceContent = null
@@ -334,6 +345,7 @@ public class TestACLMessage extends TestCase {
 	 * 
 	 * 
 	 */
+	@Test(timeout = 7000)
 	public void testGetContent() {
 		// Message with empty constructor by default content = ""
 		// byteSequenceContent = null
@@ -346,6 +358,7 @@ public class TestACLMessage extends TestCase {
 	 * 
 	 * 
 	 */
+	@Test(timeout = 7000)
 	public void testSetLanguage() {
 		// Message with empty constructor by default language = ""
 		String lang = "English";
@@ -359,6 +372,7 @@ public class TestACLMessage extends TestCase {
 	 * 
 	 * 
 	 */
+	@Test(timeout = 7000)
 	public void testGetLanguage() {
 		// Message with empty constructor by default language = ""
 
@@ -370,6 +384,7 @@ public class TestACLMessage extends TestCase {
 	 * 
 	 * 
 	 */
+	@Test(timeout = 7000)
 	public void testSetEncoding() {
 		// Message with empty constructor by default encoding = ""
 		String enc = "utf-8";
@@ -383,6 +398,7 @@ public class TestACLMessage extends TestCase {
 	 * 
 	 * 
 	 */
+	@Test(timeout = 7000)
 	public void testGetEncoding() {
 		// Message with empty constructor by default encoding = ""
 
@@ -393,6 +409,7 @@ public class TestACLMessage extends TestCase {
 	 * Testing ACLMessage setOntology()
 	 * 
 	 */
+	@Test(timeout = 7000)
 	public void testSetOntology() {
 		// Message with empty constructor by default ontology = ""
 		String ont = "House";
@@ -405,6 +422,7 @@ public class TestACLMessage extends TestCase {
 	 * Testing ACLMessage getOntology()
 	 * 
 	 */
+	@Test(timeout = 7000)
 	public void testGetOntology() {
 		// Message with empty constructor by default ontology = ""
 
@@ -415,6 +433,7 @@ public class TestACLMessage extends TestCase {
 	 * Testing ACLMessage setProtocol()
 	 * 
 	 */
+	@Test(timeout = 7000)
 	public void testSetProtocol() {
 		// Message with empty constructor by default protocol = ""
 		String prot = "Request";
@@ -427,6 +446,7 @@ public class TestACLMessage extends TestCase {
 	 * Testing ACLMessage getProtocol()
 	 * 
 	 */
+	@Test(timeout = 7000)
 	public void testGetProtocol() {
 		// Message with empty constructor by default protocol = ""
 
@@ -437,6 +457,7 @@ public class TestACLMessage extends TestCase {
 	 * Testing ACLMessage setConversationId()
 	 * 
 	 */
+	@Test(timeout = 7000)
 	public void testSetConversationId() {
 		// Message with empty constructor by default conversation_id = ""
 		String convID = "1234";
@@ -460,6 +481,7 @@ public class TestACLMessage extends TestCase {
 	 * Testing ACLMessage setReplyWith()
 	 * 
 	 */
+	@Test(timeout = 7000)
 	public void testSetReplyWith() {
 		// Message with empty constructor by default reply = ""
 		String rep = "reply";
@@ -472,6 +494,7 @@ public class TestACLMessage extends TestCase {
 	 * Testing ACLMessage getReplyWith()
 	 * 
 	 */
+	@Test(timeout = 7000)
 	public void testGetReplyWith() {
 		// Message with empty constructor by default reply_with = ""
 
@@ -482,6 +505,7 @@ public class TestACLMessage extends TestCase {
 	 * Testing ACLMessage setInReplyTo()
 	 * 
 	 */
+	@Test(timeout = 7000)
 	public void testSetInReplyTo() {
 		// Message with empty constructor by default in_reply_to = ""
 		String repTo = "James";
@@ -494,6 +518,7 @@ public class TestACLMessage extends TestCase {
 	 * Testing ACLMessage getInReplyTo()
 	 * 
 	 */
+	@Test(timeout = 7000)
 	public void testGetInReplyTo() {
 		// Message with empty constructor by default in_reply_to = ""
 
@@ -504,6 +529,7 @@ public class TestACLMessage extends TestCase {
 	 * Testing ACLMessage setReplyByDate()
 	 * 
 	 */
+	@Test(timeout = 7000)
 	public void testSetReplyByDate() {
 		// Message with empty constructor by default reply_byInMillisec = 0
 		Date date = new Date(1992, 04, 23);
@@ -516,6 +542,7 @@ public class TestACLMessage extends TestCase {
 	 * Testing ACLMessage getReplyByDate()
 	 * 
 	 */
+	@Test(timeout = 7000)
 	public void testGetReplyByDate() {
 		// Message with empty constructor by default reply_byInMillisec = 0
 
@@ -528,6 +555,7 @@ public class TestACLMessage extends TestCase {
 	 * ReplybyDate in string format
 	 * 
 	 */
+	@Test(timeout = 7000)
 	public void testGetReplyBy() {
 		// Message with empty constructor by default reply_byInMillisec = 0
 
@@ -542,6 +570,7 @@ public class TestACLMessage extends TestCase {
 	 * Testing ACLMessage clearAllReceiver()
 	 * 
 	 */
+	@Test(timeout = 7000)
 	public void testClearAllReceiver() {
 		// Message with empty constructor by default receivers = empty
 		AgentID id = new AgentID("Agustin");
@@ -562,6 +591,7 @@ public class TestACLMessage extends TestCase {
 	 * Testing ACLMessage getReceiverList()
 	 * 
 	 */
+	@Test(timeout = 7000)
 	public void testGetReceiverList() {
 		// Message with empty constructor by default receivers = empty
 		AgentID id = new AgentID("Agustin");
@@ -583,6 +613,7 @@ public class TestACLMessage extends TestCase {
 	 * Testing ACLMessage getTtoalReceivers()
 	 * 
 	 */
+	@Test(timeout = 7000)
 	public void testGetTotalReceivers() {
 		// Message with empty constructor by default receivers = empty
 
@@ -602,6 +633,7 @@ public class TestACLMessage extends TestCase {
 	 * Testing ACLMessage clone()
 	 * 
 	 */
+	@Test(timeout = 7000)
 	public void testClone() {
 		// Message with empty constructor by default receivers = empty
 
@@ -622,6 +654,7 @@ public class TestACLMessage extends TestCase {
 	 * Testing ACLMessage createReply(()
 	 * 
 	 */
+	@Test(timeout = 50000)
 	public void testCreateReply() {
 		msg.setPerformative(ACLMessage.AGREE);
 		msg.setSender(new AgentID("David"));
@@ -651,6 +684,7 @@ public class TestACLMessage extends TestCase {
 	 * Testing ACLMessage copyFromAsTemplate(()
 	 * 
 	 */
+	@Test(timeout = 50000)
 	public void testCopyFromAsTemplate() {
 		msg.setPerformative(ACLMessage.AGREE);
 		msg.setSender(new AgentID("David"));
@@ -696,6 +730,7 @@ public class TestACLMessage extends TestCase {
 	 * Testing ACLMessage setHeader()
 	 * 
 	 */
+	@Test(timeout = 7000)
 	public void testSetHeader() {
 		msg.setHeader("Topic", "PC");
 
@@ -707,6 +742,7 @@ public class TestACLMessage extends TestCase {
 	 * 
 	 * Test getHeader() with a not existing key
 	 */
+	@Test(timeout = 7000)
 	public void testGetHeader() {
 		// Message with empty constructor by default headers = empty
 
@@ -717,6 +753,7 @@ public class TestACLMessage extends TestCase {
 	 * Testing ACLMessage getHeaders()
 	 * 
 	 */
+	@Test(timeout = 7000)
 	public void testGetHeaders() {
 		msg.setHeader("Topic", "PC");
 		msg.setHeader("Error", "NotFound");
@@ -735,6 +772,7 @@ public class TestACLMessage extends TestCase {
 	 * The execution flow returns true Test created throw reflection due to it
 	 * is a private method
 	 */
+	@Test(timeout = 7000)
 	public void testHeadersAreEqualTrue() {
 		msg.setHeader("Topic", "PC");
 		msg.setHeader("ERROR", "NotFound");
@@ -793,6 +831,7 @@ public class TestACLMessage extends TestCase {
 	 * The execution flow returns false
 	 * 
 	 */
+	@Test(timeout = 7000)
 	public void testHeadersAreEqualFalse() {
 		msg.setHeader("Topic", "PC");
 		msg.setHeader("Color", "Red");
@@ -851,6 +890,7 @@ public class TestACLMessage extends TestCase {
 	 * Needs a serializable parameter
 	 * 
 	 */
+	@Test(timeout = 7000)
 	public void testSetContentObject() {
 		int num = 2;
 		try {
@@ -870,6 +910,7 @@ public class TestACLMessage extends TestCase {
 	 * Test serialializable exception
 	 * 
 	 */
+	@Test(timeout = 7000)
 	public void testSetContentObjectException() {
 		boolean thrownException = false;
 		// ArraList implements serializable
@@ -891,6 +932,7 @@ public class TestACLMessage extends TestCase {
 	 * 
 	 * Test method when content !=null & !content.equals("")
 	 */
+	@Test(timeout = 7000)
 	public void testGetContentObject() {
 		// When content !=null & !content.equals("")
 		String content = "hi everyone";
@@ -904,6 +946,7 @@ public class TestACLMessage extends TestCase {
 	 * 
 	 * Test method when content = null && ByteSequenceContent is not empty
 	 */
+	@Test(timeout = 7000)
 	public void testGetContentObjectByteSequence() {
 		int num = 2;
 		try {
@@ -926,6 +969,7 @@ public class TestACLMessage extends TestCase {
 	 * 
 	 * Test method when content = null && ByteSequenceContent is empty
 	 */
+	@Test(timeout = 7000)
 	public void testGetContentObjectByteSequenceEmpty() {
 		byte[] byteArray = new byte[0];
 		msg.setByteSequenceContent(byteArray);
@@ -938,6 +982,7 @@ public class TestACLMessage extends TestCase {
 	 * 
 	 * Test method when content = null && ByteSequenceContent = null
 	 */
+	@Test(timeout = 7000)
 	public void testGetContentObjectNull() {
 		msg.setContent(null);
 		Object content2 = msg.getContentObject();
@@ -950,6 +995,7 @@ public class TestACLMessage extends TestCase {
 	 * @throws IOException
 	 * 
 	 */
+	@Test(timeout = 7000)
 	public void testSetByteSequenceContent() throws IOException {
 		try {
 			int num = 2;
@@ -973,6 +1019,7 @@ public class TestACLMessage extends TestCase {
 	 * 
 	 * @throws IOException
 	 */
+	@Test(timeout = 7000)
 	public void testGetByteSequence() {
 		try {
 			String textContent = "Text content";
@@ -997,6 +1044,7 @@ public class TestACLMessage extends TestCase {
 	 * 
 	 * @throws IOException
 	 */
+	@Test(timeout = 7000)
 	public void testGetByteSequenceContent() {
 		// ACLMessage empty constructor content = ""
 
@@ -1028,6 +1076,7 @@ public class TestACLMessage extends TestCase {
 	 * Returns the integer of the Performative or -1 if it is not a valid
 	 * performative
 	 */
+	@Test(timeout = 7000)
 	public void testGetPerformativeFromString() {
 		// Valid performative
 		int perf = ACLMessage.getPerformative("AGREE");
@@ -1045,6 +1094,7 @@ public class TestACLMessage extends TestCase {
 	 * Returns the String of the Performative or perfomative "NOT UNDERSTOOD" if
 	 * it is not a valid performative
 	 */
+	@Test(timeout = 7000)
 	public void testGetPerformativeFromInt() {
 		// Valid performative
 		String perf = ACLMessage.getPerformative(11);
@@ -1059,6 +1109,7 @@ public class TestACLMessage extends TestCase {
 	 * Testing ACLMessage toString()
 	 * 
 	 */
+	@Test(timeout = 7000)
 	public void testToString() {
 		msg.setPerformative(ACLMessage.AGREE);
 		msg.setSender(new AgentID("David"));
@@ -1098,6 +1149,7 @@ public class TestACLMessage extends TestCase {
 	 * 
 	 * When parameters are null
 	 */
+	@Test(timeout = 7000)
 	public void testToStringNull() {
 		msg.setPerformative(ACLMessage.AGREE);
 		msg.setSender(null);
@@ -1124,6 +1176,7 @@ public class TestACLMessage extends TestCase {
 	 * Testing ACLMessage fromString()
 	 * 
 	 */
+	@Test(timeout = 7000)
 	public void testfromString() {
 		msg.setPerformative(ACLMessage.AGREE);
 		msg.setSender(new AgentID("David"));
@@ -1157,6 +1210,7 @@ public class TestACLMessage extends TestCase {
 	 * 
 	 * 
 	 */
+	@Test(timeout = 7000)
 	public void testfromStringEmptyMsg() {
 
 		// Message with empty constructor by default performative = UNKNOWN
@@ -1176,6 +1230,7 @@ public class TestACLMessage extends TestCase {
 	 * toString are equals but messages are different
 	 * 
 	 */
+	@Test(timeout = 7000)
 	public void testfromStringNullMsg() {
 
 		// Message with empty constructor by default performative = UNKNOWN
@@ -1205,6 +1260,7 @@ public class TestACLMessage extends TestCase {
 	 * Testing ACLMessage getExchangeHeader()
 	 * 
 	 */
+	@Test(timeout = 7000)
 	public void testGetExchangeHeader() {
 		// Message with empty constructor by default exchangeHeaders = empty
 
@@ -1217,6 +1273,7 @@ public class TestACLMessage extends TestCase {
 	 * Testing ACLMessage putExchangeHeader()
 	 * 
 	 */
+	@Test(timeout = 7000)
 	public void testPutExchangeHeader() {
 		// Message with empty constructor by default exchangeHeaders = empty
 
@@ -1229,6 +1286,7 @@ public class TestACLMessage extends TestCase {
 	 * Testing ACLMessage getExchangeHeaders()
 	 * 
 	 */
+	@Test(timeout = 7000)
 	public void testGetExchangeHeaders() {
 
 		msg.putExchangeHeader("Topic", "PC");
@@ -1245,6 +1303,7 @@ public class TestACLMessage extends TestCase {
 	 * Testing ACLMessage equals()
 	 * 
 	 */
+	@Test(timeout = 7000)
 	public void testEquals() {
 		msg.setPerformative(ACLMessage.AGREE);
 		msg.setSender(new AgentID("David"));
@@ -1292,6 +1351,7 @@ public class TestACLMessage extends TestCase {
 	 * 
 	 * Tested when messages are not equals
 	 */
+	@Test(timeout = 7000)
 	public void testNotEquals() {
 		ACLMessage msg2 = new ACLMessage();
 
@@ -1411,6 +1471,7 @@ public class TestACLMessage extends TestCase {
 	 * 
 	 * Equals tested when Object parameter is null
 	 */
+	@Test(timeout = 7000)
 	public void testEqualsNull() {
 		msg.setPerformative(ACLMessage.AGREE);
 		msg.setSender(new AgentID("David"));
@@ -1435,6 +1496,7 @@ public class TestACLMessage extends TestCase {
 	 * 
 	 * Equals tested when Object parameter is null
 	 */
+	@Test(timeout = 7000)
 	public void testEqualsSameObject() {
 		msg.setPerformative(ACLMessage.AGREE);
 		msg.setSender(new AgentID("David"));
@@ -1459,6 +1521,7 @@ public class TestACLMessage extends TestCase {
 	 * 
 	 * Equals tested when Object parameter is not an instance of ACLMessage
 	 */
+	@Test(timeout = 7000)
 	public void testEqualsNotIntanceOfACLMessage() {
 		msg.setPerformative(ACLMessage.AGREE);
 		msg.setSender(new AgentID("David"));
@@ -1480,8 +1543,8 @@ public class TestACLMessage extends TestCase {
 		assertFalse(msg.equals(num));
 	}
 
+	@After
 	public void tearDown() throws Exception {
-		super.tearDown();
 		msg = null;
 	}
 }

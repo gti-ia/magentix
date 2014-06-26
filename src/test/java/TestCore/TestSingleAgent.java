@@ -1,9 +1,10 @@
 package TestCore;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
 
 import org.apache.log4j.xml.DOMConfigurator;
 
@@ -16,18 +17,14 @@ import es.upv.dsic.gti_ia.core.AgentsConnection;
  * @author David Fernández - dfernandez@dsic.upv.es
  */
 
-public class TestSingleAgent extends TestCase {
+public class TestSingleAgent {
 
 	SenderAgent2 senderAgent2;
 	ConsumerAgent2 consumerAgent2;
 	Process qpid_broker;
 
-	public TestSingleAgent(String name) {
-		super(name);
-	}
-
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 		qpid_broker = qpidManager.UnixQpidManager.startQpid(Runtime.getRuntime(), qpid_broker);
 
 		/**
@@ -67,6 +64,7 @@ public class TestSingleAgent extends TestCase {
 	/**
 	 * Testing the message sent by senderAgent2
 	 */
+	@Test(timeout = 8000)
 	public void testSingleAgent() {
 
 		while (consumerAgent2.getMessage() == null) {
@@ -83,9 +81,8 @@ public class TestSingleAgent extends TestCase {
 				consumerAgent2.getMessage().getContent());
 
 	}
-
-	protected void tearDown() throws Exception {
-		super.tearDown();
+	@After
+	public void tearDown() throws Exception {
 		AgentsConnection.disconnect();
 		qpidManager.UnixQpidManager.stopQpid(qpid_broker);
 	}

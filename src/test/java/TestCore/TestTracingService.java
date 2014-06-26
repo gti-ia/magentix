@@ -1,7 +1,5 @@
 package TestCore;
 
-import java.awt.List;
-
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.TracingService;
 import es.upv.dsic.gti_ia.trace.TraceMask;
@@ -9,36 +7,31 @@ import es.upv.dsic.gti_ia.trace.TracingEntity;
 import es.upv.dsic.gti_ia.trace.TracingEntityList;
 import es.upv.dsic.gti_ia.trace.TracingServiceSubscription;
 import es.upv.dsic.gti_ia.trace.TracingServiceSubscriptionList;
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
+import static org.junit.Assert.*;
 /**
  * Tests for the TracingService class
  * 
  * @author David Fernández - dfernandez@dsic.upv.es
  */
 
-public class TestTracingService extends TestCase {
+public class TestTracingService {
 	
 	TracingService tracingService;
 	private Process qpid_broker;
 	
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 		tracingService = new TracingService();
-	}
-	
-	protected void tearown() throws Exception{
-		super.tearDown();
-	}
-	public TestTracingService(String name) {
-		super(name);
-	}
-	
+	} 
 	
 	/**
 	 * Testing empty constructor()
 	 * 
 	 */
+	@Test(timeout = 5000)
 	public void testEmptyConstructor(){
 		assertEquals(tracingService.getName(), null);
 		assertEquals(tracingService.getMandatory(), false);
@@ -53,6 +46,7 @@ public class TestTracingService extends TestCase {
 	 * Testing constructor(String, String)
 	 * 
 	 */
+	@Test(timeout = 5000)
 	public void test2ArgumentConstructor(){
 		String serviceName = "Food info";
 		String description = "Information about available food";
@@ -72,6 +66,7 @@ public class TestTracingService extends TestCase {
 	 * Testing method setName(String) and getName()
 	 * 
 	 */
+	@Test(timeout = 5000)
 	public void testSetGetName(){
 		String serviceName = "Food info";
 		
@@ -95,6 +90,7 @@ public class TestTracingService extends TestCase {
 	 * Testing method setDescription(String)
 	 * 
 	 */
+	@Test(timeout = 5000)
 	public void testSetGetDescription(){
 		String description = "Information about available food";
 		
@@ -117,6 +113,7 @@ public class TestTracingService extends TestCase {
 	 * Testing method getMandatory()
 	 * 
 	 */
+	@Test(timeout = 5000)
 	public void testGetMandatory(){
 		assertEquals(tracingService.getMandatory(), false);
 	}	
@@ -125,6 +122,7 @@ public class TestTracingService extends TestCase {
 	 * Testing method getRequestable()
 	 * 
 	 */
+	@Test(timeout = 5000)
 	public void testGetRequestable(){
 		assertEquals(tracingService.getRequestable(), true);
 	}
@@ -133,6 +131,7 @@ public class TestTracingService extends TestCase {
 	 * Testing method getMaskBitIndex()
 	 * 
 	 */
+	@Test(timeout = 5000)
 	public void testGetMaskBitIndex(){
 		assertEquals(tracingService.getMaskBitIndex(), null);
 	}
@@ -143,6 +142,7 @@ public class TestTracingService extends TestCase {
 	 * Tested when no providers has been added or removed
 	 * 
 	 */
+	@Test(timeout = 5000)
 	public void testGetProviders(){
 		assertEquals(tracingService.getProviders(), new TracingEntityList());
 	}
@@ -153,6 +153,7 @@ public class TestTracingService extends TestCase {
 	 * Tested when service is and is not found
 	 * 
 	 */
+	@Test(timeout = 5000)
 	public void testGetDITracingServiceByName(){			
 		//Test when tracing service is found
 		String tracingServiceName = "MESSAGE_SENT_DETAIL";
@@ -172,6 +173,7 @@ public class TestTracingService extends TestCase {
 	 * Also getProviders is tested when a provider is in the list
 	 * 
 	 */
+	@Test(timeout = 5000)
 	public void testAddServiceProvider(){		
 		TracingEntity provider = new TracingEntity();
 		TracingEntityList expectedProviders = new TracingEntityList();
@@ -194,6 +196,7 @@ public class TestTracingService extends TestCase {
 	 * Tested when the provider does and does not exist
 	 * 
 	 */
+	@Test(timeout = 5000)
 	public void testRemoveProvider(){		
 		AgentID agent = new AgentID("TestAgent");
 		TracingEntity provider = new TracingEntity(TracingEntity.AGENT, agent);
@@ -222,6 +225,7 @@ public class TestTracingService extends TestCase {
 	 * Tested when no subscriptions have been added or removed
 	 * 
 	 */
+	@Test(timeout = 5000)
 	public void testGetSubscriptions(){
 		assertEquals(tracingService.getSubscriptions(), new TracingServiceSubscriptionList());
 	}
@@ -231,7 +235,9 @@ public class TestTracingService extends TestCase {
 	 * 
 	 * Also getSubcriptions is tested when a subscription is in the list
 	 * 
+	 * 
 	 */
+	@Test(timeout = 5000)
 	public void testAddSubscription(){		
 		TracingServiceSubscription subscription = new TracingServiceSubscription();
 		TracingServiceSubscriptionList expectedSubscriptions = new TracingServiceSubscriptionList();

@@ -86,7 +86,7 @@ public class TestBridgeAgent {
 	 * it to a ACLMessage. Then, turn back the transformation and check whether
 	 * the new message is equal to the previous.
 	 */ 
-	 @Test
+	@Test(timeout = 10000)
 	public void testFormatHttp() {
 
 		String message = "POST http://foo.com:80/acc HTTP/1.1\r\n"
@@ -170,7 +170,7 @@ public class TestBridgeAgent {
 					+ "</agent-identifier>"
 					+ "</from>"
 					+ "<acl-representation>fipa.acl.rep.string.std</acl-representation>"
-					+ "<payload-length>321</payload-length>"
+					+ "<payload-length>281</payload-length>"
 					+ "<date></date>"
 					+ "<intended-receiver><agent-identifier><name>receiver</name><addresses><url>qpid://localhost:8081</url></addresses></agent-identifier></intended-receiver>"
 					+ "</params>"
@@ -237,7 +237,7 @@ public class TestBridgeAgent {
 	 * @throws UnknownHostException
 	 * 
 	 */
-	 @Test(timeout = 5000)
+	 @Test(timeout = 10000)
 	public void testSendOutIn() throws UnknownHostException {
 		String message = "This is not part of the MIME multipart encoded message.\r\n"
 				+ "--a36869921a26b9d812878a42b8fc2cd\r\n"

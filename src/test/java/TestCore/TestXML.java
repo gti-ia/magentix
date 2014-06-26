@@ -7,8 +7,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
 import es.upv.dsic.gti_ia.core.Xml;
 
 /**
@@ -17,17 +20,13 @@ import es.upv.dsic.gti_ia.core.Xml;
  * @author Victor Martinez Morant - vmartinez2@dsic.upv.es
  */
 
-public class TestXML extends TestCase {
+public class TestXML {
 
 	private Method[] m = new Method[2];
 
-	public TestXML(String name) {
-		super(name);
-	}
-
 	/** Test set up */
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 
 		/** Preparation to test private method addAttribute */
 		Class[] parametersAddAttributte = new Class[2];
@@ -54,6 +53,7 @@ public class TestXML extends TestCase {
 	 * rootName)
 	 * 
 	 */
+	@Test(timeout = 6000)
 	public void testRootElement() {
 		try {
 			new Xml("src/test/java/TestCore/catalog.xml", "catalog");
@@ -77,6 +77,7 @@ public class TestXML extends TestCase {
 	 * "+ rootName
 	 * 
 	 */
+	@Test(timeout = 6000)
 	public void testWrongRootNameRootElement() {
 		try {
 			new Xml("src/test/java/TestCore/catalog.xml", "wrongName");
@@ -97,6 +98,7 @@ public class TestXML extends TestCase {
 	 * Expected Exception = Runtime.class
 	 * 
 	 */
+	@Test(timeout = 6000)
 	public void testXMLNotFoundRootElement() {
 		try {
 			new Xml("notFoundFile.xml", "catalog");
@@ -115,6 +117,7 @@ public class TestXML extends TestCase {
 	 * rootName)
 	 * 
 	 */
+	@Test(timeout = 6000)
 	public void testISRootElement() {
 		try {
 			InputStream is = new FileInputStream(
@@ -142,6 +145,7 @@ public class TestXML extends TestCase {
 	 * "+ rootName
 	 * 
 	 */
+	@Test(timeout = 6000)
 	public void testISWrongRootNameRootElement() {
 		try {
 			InputStream is = new FileInputStream(
@@ -163,6 +167,7 @@ public class TestXML extends TestCase {
 	 * Trying to add null key
 	 * 
 	 */
+	@Test(timeout = 6000)
 	public void testAddAttributeNull() {
 		Xml myXml = new Xml("src/test/java/TestCore/catalog.xml", "catalog");
 		Object[] parameters = new Object[2];
@@ -194,6 +199,7 @@ public class TestXML extends TestCase {
 	 * Trying to add null key
 	 * 
 	 */
+	@Test(timeout = 6000)
 	public void testAddChildNull() {
 		Xml myXml = new Xml("src/test/java/TestCore/catalog.xml", "catalog");
 		Object[] parameters = new Object[2];
@@ -225,6 +231,7 @@ public class TestXML extends TestCase {
 	 * Trying to add Empty key
 	 * 
 	 */
+	@Test(timeout = 6000)
 	public void testAddAttributeEmpty() {
 		Xml myXml = new Xml("src/test/java/TestCore/catalog.xml", "catalog");
 		Object[] parameters = new Object[2];
@@ -253,6 +260,7 @@ public class TestXML extends TestCase {
 	 * Trying to add empty key
 	 * 
 	 */
+	@Test(timeout = 6000)
 	public void testAddChildEmpty() {
 		Xml myXml = new Xml("src/test/java/TestCore/catalog.xml", "catalog");
 		Object[] parameters = new Object[2];
@@ -284,6 +292,7 @@ public class TestXML extends TestCase {
 	 * Trying to add Empty keys
 	 * 
 	 */
+	@Test(timeout = 6000)
 	public void testAddAttribute() {
 		Xml myXml = new Xml("src/test/java/TestCore/catalog.xml", "catalog");
 		Object[] parameters = new Object[2];
@@ -315,6 +324,7 @@ public class TestXML extends TestCase {
 	 * Trying to add empty key
 	 * 
 	 */
+	@Test(timeout = 6000)
 	public void testAddChild() {
 		Xml myXml = new Xml("src/test/java/TestCore/catalog.xml", "catalog");
 		Object[] parameters = new Object[2];
@@ -344,7 +354,9 @@ public class TestXML extends TestCase {
 	 * Testing get method name()
 	 * 
 	 * 
+	 *
 	 */
+	@Test(timeout = 6000)
 	public void testName() {
 		Xml myXml = new Xml("src/test/java/TestCore/catalog.xml", "catalog");
 		assertEquals(myXml.name(), "catalog");
@@ -356,6 +368,7 @@ public class TestXML extends TestCase {
 	 * 
 	 * 
 	 */
+	@Test(timeout = 6000)
 	public void testContent() { // Content of this node and descendants
 		Xml myXml = new Xml("src/test/java/TestCore/catalog.xml", "catalog");
 		assertEquals(myXml.child("name").child("fullname").content(), "Victor");
@@ -372,6 +385,7 @@ public class TestXML extends TestCase {
 	 * 
 	 * 
 	 */
+	@Test(timeout = 6000)
 	public void testChild() {
 		Xml myXml = new Xml("src/test/java/TestCore/catalog.xml", "catalog");
 
@@ -403,6 +417,7 @@ public class TestXML extends TestCase {
 	 * 
 	 * 
 	 */
+	@Test(timeout = 6000)
 	public void testChildren() {
 		
 		Xml myXml = new Xml("src/test/java/TestCore/catalog.xml", "catalog");
@@ -431,6 +446,7 @@ public class TestXML extends TestCase {
 	 * 
 	 * 
 	 */
+	@Test(timeout = 6000)
 	public void testString() {
 		Xml myXml = new Xml("src/test/java/TestCore/catalog.xml", "catalog");
 
@@ -463,14 +479,15 @@ public class TestXML extends TestCase {
 	 * Testing method integer(String)
 	 * 
 	 */
+	@Test(timeout = 6000)
 	public void testInteger() {
 		Xml myXml = new Xml("src/test/java/TestCore/catalog.xml", "catalog");
 		assertEquals(1, myXml.integer("id"));
 	}
 
 	/** Ending the test properly */
-	protected void tearDown() throws Exception {
-		super.tearDown();
+	@After
+	public void tearDown() throws Exception {
 
 		m = null;
 	}

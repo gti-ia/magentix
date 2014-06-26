@@ -1,14 +1,11 @@
 package TestCore;
 
 import java.util.Date;
-import java.util.TimeZone;
-
-import org.apache.log4j.xml.DOMConfigurator;
 
 import com.ibm.icu.util.Calendar;
+import org.junit.Test;
 
-import junit.framework.TestCase;
-import es.upv.dsic.gti_ia.core.AgentsConnection;
+import static org.junit.Assert.*;
 import es.upv.dsic.gti_ia.core.ISO8601;
 
 /**
@@ -17,11 +14,7 @@ import es.upv.dsic.gti_ia.core.ISO8601;
  * @author David Fernández - dfernandez@dsic.upv.es
  */
 
-public class TestISO8601 extends TestCase {
-	
-	public TestISO8601(String name) {
-		super(name);
-	}
+public class TestISO8601{
 	
 	/**
 	 * Testing method toDate(String)
@@ -29,6 +22,7 @@ public class TestISO8601 extends TestCase {
 	 * With an UTC Date format
 	 * 
 	 */
+	@Test
 	public void testToDateUTC(){
 		String utcStringDate = "20130730T191940000Z"; //000 = milliseconds
 		
@@ -56,6 +50,7 @@ public class TestISO8601 extends TestCase {
 	 * With an local Date format
 	 * 
 	 */
+	@Test
 	public void testToDateLocal(){
 		String localStringDate = "20130730T191940000"; //000 = milliseconds
 		
@@ -81,6 +76,7 @@ public class TestISO8601 extends TestCase {
 	 * With a NULL date
 	 * 
 	 */
+	@Test
 	public void testToDateNULL(){
 		String utcStringDate = null; //000 = milliseconds
 		
@@ -106,6 +102,7 @@ public class TestISO8601 extends TestCase {
 	 * Test with negative and positive relative date
 	 * 
 	 */
+	@Test
 	public void testToDateRelative(){
 		//Test with positive relative date
 		String relativeStringDate = "+00000000T010000000"; //1 hour from now
@@ -147,6 +144,7 @@ public class TestISO8601 extends TestCase {
 	 * Date to UTC String
 	 * 
 	 */
+	@Test
 	public void testUTCToString(){
 		String utcStringDate = "20130730T191940000Z"; //000 = milliseconds
 		
@@ -175,6 +173,7 @@ public class TestISO8601 extends TestCase {
 	 * Date to local String
 	 * 
 	 */
+	@Test
 	public void testLocalToString(){
 		String localStringDate = "20130730T191940000"; //000 = milliseconds
 		
@@ -199,6 +198,7 @@ public class TestISO8601 extends TestCase {
 	 * date format can not be chosen, is always UTC
 	 * 
 	 */
+	@Test
 	public void testToString(){
 		String utcStringDate = "20130730T191940000Z"; //000 = milliseconds
 		
@@ -227,6 +227,7 @@ public class TestISO8601 extends TestCase {
 	 * Test with negative and positive milliseconds
 	 * 
 	 */
+	@Test
 	public void testToRelativeTimeString(){
 		//Test with positive milliseconds
 		String relativeStringDate = "+00000000T010000000"; //1 hour from now
