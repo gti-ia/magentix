@@ -33,25 +33,25 @@ public class TestTraceError {
 	}
 	
 	/* Test methods */
-	@Test
+	@Test (timeout=5000)
 	public void testTraceError0() { theTestOfTraceError(0); }
-	@Test
+	@Test (timeout=5000)
 	public void testTraceError1() { theTestOfTraceError(1); }
 	public void theTestOfTraceError(int d) {
 		assertNotNull(errors[d]);
 	}
 	
-	@Test
+	@Test (timeout=5000)
 	public void testGetName0(){ theTestOfGetName(0); }
-	@Test
+	@Test (timeout=5000)
 	public void testGetName1(){ theTestOfGetName(1); }
 	public void theTestOfGetName(int d) {
 		assertEquals(NAMES[d], errors[d].getName());
 	}
 
-	@Test
+	@Test (timeout=5000)
 	public void testGetDescription0(){ theTestOfGetDescription(0); }
-	@Test
+	@Test (timeout=5000)
 	public void testGetDescription1(){ theTestOfGetDescription(1); }
 	public void theTestOfGetDescription(int d){
 		assertEquals(DESCRIPTIONS[d], errors[d].getDescription());
