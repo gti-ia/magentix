@@ -38,9 +38,9 @@ public class TestTracingServiceList {
 	}
 	
 	/* Test methods */
-	@Test
+	@Test (timeout = 5000)
 	public void testGetTS0(){ theTestOfGetTS(0); }
-	@Test
+	@Test (timeout = 5000)
 	public void testGetTS1(){ theTestOfGetTS(1); }
 	public void theTestOfGetTS(int d) {
 		
