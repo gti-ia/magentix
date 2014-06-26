@@ -62,7 +62,7 @@ public class TestTracingServiceSubscription {
 	}
 	
 	/* Test methods */
-	@Test
+	@Test (timeout = 5000)
 	public void testGetSubscriptorEntity(){
 		
 		int i, n = tEntities.length*tService.length;
@@ -71,7 +71,7 @@ public class TestTracingServiceSubscription {
 		assertEquals("The Subscriptor Entity of TracingServiceSubscription "+(i+1)+" of "+tSS.length+" is not correct.", null, tSS[i].getSubscriptorEntity());
 	}
 	
-	@Test
+	@Test (timeout = 5000)
 	public void testGetAnyProvider(){
 		
 		int i, n = tService.length, m = tEntities.length;
@@ -80,7 +80,7 @@ public class TestTracingServiceSubscription {
 		assertEquals("The TracingServiceSubscription "+(i+1)+" of "+tSS.length+" does not return the expected value.", true, tSS[i].getAnyProvider());
 	}
 	
-	@Test
+	@Test (timeout = 5000)
 	public void testGetOriginEntity(){
 		
 		int i, n = tService.length, m = tEntities.length;
@@ -89,7 +89,7 @@ public class TestTracingServiceSubscription {
 		assertEquals("The Origin Entity of TracingServiceSubscription "+(i+1)+" of "+tSS.length+" is not correct.", null, tSS[i].getOriginEntity());
 	}
 	
-	@Test
+	@Test (timeout = 5000)
 	public void testGetTracingService(){
 		
 		int i, n = tService.length;
@@ -98,17 +98,17 @@ public class TestTracingServiceSubscription {
 		assertEquals("The TracingService of TracingServiceSubscription "+(i+1)+" of "+tSS.length+" is not correct.", null, tSS[i].getTracingService());
 	}
 	
-	@Test
+	@Test (timeout = 5000)
 	public void testToEquals0(){ theTestOfEquals(tSS[0], tSS[0], true); }
-	@Test
+	@Test (timeout = 5000)
 	public void testToEquals1(){ theTestOfEquals(tSS[0], new TracingServiceSubscription(tEntities[0], new TracingEntity(TracingEntity.AGENT, new AgentID("OtherAgent")), tService[0]), false); }
-	@Test
+	@Test (timeout = 5000)
 	public void testToEquals2(){ TracingEntity t = new TracingEntity(TracingEntity.AGENT, new AgentID("OtherAgent")); t.addSubscription(tSS[0]); theTestOfEquals(tSS[0], new TracingServiceSubscription(t,t,tService[2]), false); }
-	@Test
+	@Test (timeout = 5000)
 	public void testToEquals3(){ theTestOfEquals(tSS[1], new TracingServiceSubscription(tEntities[0], tEntities[0], tService[1]), true); }
-	@Test
+	@Test (timeout = 5000)
 	public void testToEquals4(){ theTestOfEquals(tSS[1], null, false); }
-	@Test
+	@Test (timeout = 5000)
 	public void testToEquals5(){ theTestOfEquals(tSS[0], tSS[3], false); }
 	public void theTestOfEquals(TracingServiceSubscription t1, TracingServiceSubscription t2, boolean res) {
 		assertEquals(res, t1.equals(t2));
