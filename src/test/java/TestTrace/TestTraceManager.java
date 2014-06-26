@@ -99,9 +99,9 @@ public class TestTraceManager {
 	/* Test methods */
 	
 	/* CONSTRUCTOR ---------------------------------- */
-	@Test
+	@Test (timeout=5000)
 	public void testTraceManagerMonitorizable0() throws Exception { theTestOfTraceManagerMonitorizable(1); }
-	@Test
+	@Test (timeout=5000)
 	public void testTraceManagerMonitorizable1() throws Exception { theTestOfTraceManagerMonitorizable(3); }
 	public void theTestOfTraceManagerMonitorizable (int d) throws Exception {
 		
@@ -138,9 +138,9 @@ public class TestTraceManager {
 	    }
 	}
 	
-	@Test
+	@Test (timeout=5000)
 	public void testTraceManagerNotMonitorizable0() throws Exception { theTestOfTraceManagerNotMonitorizable(0); }
-	@Test
+	@Test (timeout=5000)
 	public void testTraceManagerNotMonitorizable1() throws Exception { theTestOfTraceManagerNotMonitorizable(2); }
 	public void theTestOfTraceManagerNotMonitorizable (int d) throws Exception {
 		
@@ -178,7 +178,7 @@ public class TestTraceManager {
 	}
 	
 	/* GET_TRACE_MASK ---------------------------------- */
-	@Test
+	@Test (timeout=5000)
 	public void testGetTraceMask() throws Exception { 
 		
 		for(int i = 0; i < commTraceManagers.length; i++)
@@ -186,7 +186,7 @@ public class TestTraceManager {
 	}
 	
 	/* SET_TRACE_MASK ---------------------------------- */
-	@Test(timeout=20000)
+	@Test(timeout=5000) //it was 20000 before...
 	public void testSetTraceMask() throws Exception {
 		
 		for(int i = 0; i < commTraceManagers.length; i++) {
@@ -203,28 +203,28 @@ public class TestTraceManager {
 	}
 	
 	/* SEND_SYSTEM_TRACE_EVENT ---------------------------------- */
-	@Test(timeout=50000)
+	@Test(timeout=5000) //it was 50000 before...
 	public void testSendSystemTraceEvent0() throws Exception {
 		// Sent to one Agent.
 		callSendSystemTraceEvent(0, 0, 1);
 		checkSendSystemTraceEvent("DD_Test_TS: Test", 1);
 	}
 		
-	@Test(timeout=50000)
+	@Test(timeout=5000) //it was 50000 before...
 	public void testSendSystemTraceEvent1() throws Exception {
 		// Sent to all.
 		callSendSystemTraceEvent(0, 0, -1);
 		checkSendSystemTraceEvent("DD_Test_TS: Test", 0, 1, 2);
 	}
 	
-	//@Test(timeout=50000)	(INCOMPLETE)
+	@Test (timeout=5000) //@Test(timeout=50000)	(INCOMPLETE)
 	public void testSendSystemTraceEvent2() throws Exception {
 		//To Artifacts.
 		callSendSystemTraceEvent(1, 0, 1);
 		//checkSendSystemTraceEvent("DD_Test_TS: Test", 0, 1, 2);
 	}
 	
-	//@Test(timeout=50000)	(INCOMPLETE)
+	@Test (timeout=5000) //@Test(timeout=50000)	(INCOMPLETE)
 	public void testSendSystemTraceEvent3() throws Exception {
 		//To Aggregations.
 		callSendSystemTraceEvent(2, 0, -1);
@@ -269,7 +269,7 @@ public class TestTraceManager {
 	}
 	
 	/* ON_MESSAGE ---------------------------------- */
-	@Test(timeout=20000)
+	@Test(timeout=5000) //it was 20000 before...
 	public void testOnMessageRequestPublish0() throws Exception {
 		
 		//Return REFUSE because in TraceMask CUSTOM is false
@@ -286,7 +286,7 @@ public class TestTraceManager {
 		
 	}
 	
-	@Test(timeout=20000)
+	@Test(timeout=5000) //it was 20000 before...
 	public void testOnMessageRequestPublish1() throws Exception {
 		
 		//Return REFUSE because destination Agent is not in the TracingEntity system.
@@ -311,7 +311,7 @@ public class TestTraceManager {
 		
 	}
 	
-	@Test(timeout=20000)
+	@Test(timeout=5000) //it was 20000 before...
 	public void testOnMessageRequestPublish2() throws Exception {
 		
 		//Return AGREE
@@ -332,7 +332,7 @@ public class TestTraceManager {
 		
 	}
 	
-	@Test(timeout=20000)
+	@Test(timeout=5000) //it was 20000 before...
 	public void testOnMessageRequestUnpublish0() throws Exception {
 		
 		//Return REFUSE because in TraceMask CUSTOM is false
@@ -349,7 +349,7 @@ public class TestTraceManager {
 		
 	}
 	
-	@Test(timeout=20000)
+	@Test(timeout=5000) //it was 20000 before...
 	public void testOnMessageRequestUnpublish1() throws Exception {
 		
 		//Return REFUSE because TracingService does not exist.
@@ -364,7 +364,7 @@ public class TestTraceManager {
 		
 	}
 	
-	@Test(timeout=20000)
+	@Test(timeout=5000) //it was 20000 before...
 	public void testOnMessageRequestUnpublish2() throws Exception {
 		
 		//Return REFUSE because TracingService cannot be unpublished.
@@ -380,7 +380,7 @@ public class TestTraceManager {
 		
 	}
 	
-	@Test(timeout=20000)
+	@Test(timeout=5000) //it was 20000 before...
 	public void testOnMessageRequestUnpublish3() throws Exception {
 		
 		//Return AGREE
@@ -405,7 +405,7 @@ public class TestTraceManager {
 		
 	}
 	
-	@Test(timeout=20000)
+	@Test(timeout=5000) //it was 20000 before...
 	public void testOnMessageRequestUnpublish4() throws Exception {
 		
 		//Return REFUSE because Tracing service not published by the tracing entity.
@@ -432,7 +432,7 @@ public class TestTraceManager {
 		
 	}
 	
-	@Test(timeout=100000)
+	@Test(timeout=5000) //it was 100000 before...
 	public void testOnMessageRequestUnpublish5() throws Exception {
 		
 		//Return AGREE
@@ -467,7 +467,7 @@ public class TestTraceManager {
 		
 	}
 	
-	@Test(timeout=20000)
+	@Test(timeout=5000) //it was 20000 before...
 	public void testOnMessageRequestUnpublish6() throws Exception {
 		
 		ACLMessage msg;
@@ -514,7 +514,7 @@ public class TestTraceManager {
 		
 	}
 	
-	@Test(timeout=20000)
+	@Test(timeout=5000) //it was 20000 before...
 	public void testOnMessageRequestUnpublish7() throws Exception {
 		
 		//Return AGREE to publish Service
@@ -562,7 +562,7 @@ public class TestTraceManager {
 		
 	}
 	
-	@Test(timeout=20000)
+	@Test(timeout=5000) //it was 20000 before...
 	public void testOnMessageRequestList0() throws Exception {
 		
 		//Return REFUSE because in TraceMask LIST_ENTITIES is false
@@ -579,7 +579,7 @@ public class TestTraceManager {
 		
 	}
 	
-	@Test(timeout=20000)
+	@Test(timeout=5000) //it was 20000 before...
 	public void testOnMessageRequestList1() throws Exception {
 		
 		//Return AGREE LIST_ENTITIES
@@ -607,7 +607,7 @@ public class TestTraceManager {
 		}
 	}
 	
-	@Test(timeout=20000)
+	@Test(timeout=5000) //it was 20000 before...
 	public void testOnMessageRequestList2() throws Exception {
 		
 		//Return REFUSE because in TraceMask LIST_SERVICES is false
@@ -624,7 +624,7 @@ public class TestTraceManager {
 		
 	}
 	
-	@Test(timeout=20000)
+	@Test(timeout=5000) //it was 20000 before...
 	public void testOnMessageRequestList3() throws Exception {
 		
 		//Return AGREE LIST_SERVICES
@@ -650,7 +650,7 @@ public class TestTraceManager {
 		}
 	}
 	
-	@Test(timeout=20000)
+	@Test(timeout=5000) //it was 20000 before...
 	public void testOnMessageRequestList4() throws Exception {
 		
 		//Return REFUSE LIST_SERVICE because tracing service does not exist.
@@ -664,7 +664,7 @@ public class TestTraceManager {
 		checkOnMessage("REFUSE: list#service#10#DD_Test_TS" + TraceError.SERVICE_NOT_ALLOWED, 2);
 	}
 	
-	@Test(timeout=20000)
+	@Test(timeout=5000) //it was 20000 before...
 	public void testOnMessageRequestList5() throws Exception {
 		
 		//Return AGREE LIST_SERVICE NEW_AGENT.
@@ -678,7 +678,7 @@ public class TestTraceManager {
 		checkOnMessage("AGREE: list#service#9#NEW_AGENTA new agent was registered in the system.", 0);
 	}
 	
-	@Test(timeout=20000)
+	@Test(timeout=5000) //it was 20000 before...
 	public void testOnMessageRequestListUnknown0() throws Exception {
 		
 		//Return UNKNOWN listing.
@@ -692,7 +692,7 @@ public class TestTraceManager {
 		checkOnMessage("UNKNOWN: list#Unknown", 1);
 	}
 	
-	@Test(timeout=20000)
+	@Test(timeout=5000) //it was 20000 before...
 	public void testOnMessageRequestUpdateMask0() throws Exception {
 		
 		//Return AGREE
@@ -713,7 +713,7 @@ public class TestTraceManager {
 		
 	}
 	
-	@Test(timeout=20000)
+	@Test(timeout=5000) //it was 20000 before...
 	public void testOnMessageRequestUnknown0() throws Exception {
 		
 		//Return Unknown Request
@@ -728,7 +728,7 @@ public class TestTraceManager {
 		
 	}
 	
-	@Test(timeout=20000)
+	@Test(timeout=5000) //it was 20000 before...
 	public void testOnMessageSubscribeAll0() throws Exception {
 		
 		//Return REFUSE because destination Agent is not in the TracingEntity system.
@@ -753,7 +753,7 @@ public class TestTraceManager {
 		
 	}
 	
-	@Test(timeout=20000)
+	@Test(timeout=5000) //it was 20000 before...
 	public void testOnMessageSubscribeAll1() throws Exception {
 		
 		//Return AGREE		
@@ -768,7 +768,7 @@ public class TestTraceManager {
 		
 	}
 	
-	@Test(timeout=20000)
+	@Test(timeout=5000) //it was 20000 before...
 	public void testOnMessageSubscribeAll2() throws Exception {
 		
 		//Return REFUSE because TM is not monitorizable.		
@@ -783,7 +783,7 @@ public class TestTraceManager {
 		
 	}
 	
-	@Test(timeout=20000)
+	@Test(timeout=5000) //it was 20000 before...
 	public void testOnMessageSubscribe0() throws Exception {
 		
 		//Return REFUSE because destination Agent is not in the TracingEntity system.
@@ -809,7 +809,7 @@ public class TestTraceManager {
 		
 	}
 	
-	@Test(timeout=20000)
+	@Test(timeout=5000) //it was 20000 before...
 	public void testOnMessageSubscribe1() throws Exception {
 		
 		//Return REFUSE because Service does not exist.
@@ -824,7 +824,7 @@ public class TestTraceManager {
 		
 	}
 	
-	@Test(timeout=20000)
+	@Test(timeout=5000) //it was 20000 before...
 	public void testOnMessageSubscribe2() throws Exception {
 		
 		//Return REFUSE because Service does not requestable.
@@ -839,7 +839,7 @@ public class TestTraceManager {
 		
 	}
 	
-	@Test(timeout=20000)
+	@Test(timeout=5000) //it was 20000 before...
 	public void testOnMessageSubscribe3() throws Exception {
 		
 		//Return REFUSE because Tracing service not published by the origin tracing entity.
@@ -854,7 +854,7 @@ public class TestTraceManager {
 		
 	}
 	
-	@Test(timeout=20000)
+	@Test(timeout=5000) //it was 20000 before...
 	public void testOnMessageSubscribe4() throws Exception {
 		
 		//Return AGREE
@@ -875,7 +875,7 @@ public class TestTraceManager {
 		
 	}
 	
-	@Test(timeout=20000)
+	@Test(timeout=5000) //it was 20000 before...
 	public void testOnMessageSubscribe5() throws Exception {
 		
 		//Return REFUSE because Tracing service not allowed by the mask.
@@ -893,7 +893,7 @@ public class TestTraceManager {
 		
 	}
 	
-	@Test(timeout=20000)
+	@Test(timeout=5000) //it was 20000 before...
 	public void testOnMessageCancel0() throws Exception {
 		
 		//Return REFUSE because Service does not exist.
@@ -908,7 +908,7 @@ public class TestTraceManager {
 		
 	}
 	
-	@Test(timeout=20000)
+	@Test(timeout=5000) //it was 20000 before...
 	public void testOnMessageCancel1() throws Exception {
 		
 		//Return REFUSE because Subscription does not exist.
@@ -923,7 +923,7 @@ public class TestTraceManager {
 		
 	}
 	
-	@Test(timeout=20000)
+	@Test(timeout=5000) //it was 20000 before...
 	public void testOnMessageCancel2() throws Exception {
 		
 		//Return AGREE
@@ -951,7 +951,7 @@ public class TestTraceManager {
 		
 	}
 	
-	@Test(timeout=20000)
+	@Test(timeout=5000) //it was 20000 before...
 	public void testOnMessageUnknown0() throws Exception {
 		
 		//Return REFUSE because Subscription does not exist.
@@ -1010,7 +1010,7 @@ public class TestTraceManager {
 	
 	/* ON_TRACE_EVENT ---------------------------------- */
 	
-	@Test
+	@Test (timeout=5000)
 	public void testOnTraceEventNew_Agent0() throws Exception {
 		
 		// Check that all TraceManagers in the system receive NEW_AGENT Trace Event
@@ -1027,7 +1027,7 @@ public class TestTraceManager {
 		}
 	}
 	
-	@Test(timeout=20000)
+	@Test(timeout=5000) //it was 20000 before...
 	public void testOnTraceEventAgent_Destroy0() throws Exception {
 		
 		// Check that all TraceManagers in the system receive AGENT_DESTROYED and cancel her subscriptions.
@@ -1056,7 +1056,7 @@ public class TestTraceManager {
 		
 	}
 	
-	@Test(timeout=20000)
+	@Test(timeout=5000) //it was 20000 before...
 	public void testOnTraceEventAgent_Destroy1() throws Exception {
 		
 		//Check that, when the AGENT is DESTROYED, unpublish the service and remove subscribers.
@@ -1105,7 +1105,7 @@ public class TestTraceManager {
 		checkOnTraceEvent("UNAVAILABLE_TS: DD_Test_TS#any", 2);
 	}
 	
-	@Test(timeout=20000)
+	@Test(timeout=5000) //it was 20000 before...
 	public void testOnTraceEventAgent_Destroy2() throws Exception {
 		
 		//Check that, when the AGENT is DESTROYED, unpublish the service and remove subscribers.
