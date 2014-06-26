@@ -1,5 +1,7 @@
 package organization.TestDataBaseInterface;
 
+import static org.junit.Assert.*;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -7,7 +9,6 @@ import org.junit.*;
 
 import organization.TestDataBaseInterface.DatabaseAccess;
 import es.upv.dsic.gti_ia.organization.DataBaseInterface;
-import junit.framework.TestCase;
 
 
 /** 
@@ -15,7 +16,7 @@ import junit.framework.TestCase;
  * 
  */
 
-public class TestCheckAgentPlaysRole extends TestCase {
+public class TestCheckAgentPlaysRole {
 
 	DataBaseInterface dbI = null;
 	DatabaseAccess dbA = null;
@@ -23,8 +24,7 @@ public class TestCheckAgentPlaysRole extends TestCase {
 	
 	
 	@Before
-	protected void setUp() throws Exception {
-		super.setUp();
+	public void setUp() throws Exception {
 		
 		Class[] parameterTypes = new Class[3];
 	    parameterTypes[0] = java.lang.String.class;
@@ -48,7 +48,7 @@ public class TestCheckAgentPlaysRole extends TestCase {
 	}
 
 	@After
-	protected void tearDown() throws Exception {
+	public void tearDown() throws Exception {
 
 		//-------------  Clean Data Base  ------------//
 		dbA.executeSQL("DELETE FROM agentPlayList");
@@ -67,7 +67,7 @@ public class TestCheckAgentPlaysRole extends TestCase {
 		m = null;
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testCheckAgentPlaysRole1() {
 		
 		/**---------------------------------------------------------------------------------
@@ -127,7 +127,7 @@ public class TestCheckAgentPlaysRole extends TestCase {
 		}
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testCheckAgentPlaysRole() {
 		
 		/**---------------------------------------------------------------------------------
@@ -197,7 +197,7 @@ public class TestCheckAgentPlaysRole extends TestCase {
 		}
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testCheckAgentPlaysRole3() {
 		
 		/**---------------------------------------------------------------------------------
@@ -257,7 +257,7 @@ public class TestCheckAgentPlaysRole extends TestCase {
 		}
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testCheckAgentPlaysRole4() {
 		
 		/**---------------------------------------------------------------------------------
@@ -311,7 +311,7 @@ public class TestCheckAgentPlaysRole extends TestCase {
 		}
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testCheckAgentPlaysRole5() {
 		
 		/**---------------------------------------------------------------------------------
@@ -371,7 +371,7 @@ public class TestCheckAgentPlaysRole extends TestCase {
 		}
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testCheckAgentPlaysRole6() {
 		
 		/**---------------------------------------------------------------------------------

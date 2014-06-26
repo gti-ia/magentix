@@ -1,5 +1,7 @@
 package organization.TestDataBaseInterface;
 
+import static org.junit.Assert.*;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -7,7 +9,6 @@ import org.junit.*;
 
 import organization.TestDataBaseInterface.DatabaseAccess;
 import es.upv.dsic.gti_ia.organization.DataBaseInterface;
-import junit.framework.TestCase;
 
 
 /** 
@@ -15,7 +16,7 @@ import junit.framework.TestCase;
  * 
  */
 
-public class TestGetInformQuantityAgentsRolesInUnit extends TestCase {
+public class TestGetInformQuantityAgentsRolesInUnit {
 
 	DataBaseInterface dbI = null;
 	DatabaseAccess dbA = null;
@@ -23,8 +24,7 @@ public class TestGetInformQuantityAgentsRolesInUnit extends TestCase {
 	
 	
 	@Before
-	protected void setUp() throws Exception {
-		super.setUp();
+	public void setUp() throws Exception {
 		
 		Class[] parameterTypes = new Class[1];
 	    parameterTypes[0] = java.lang.String.class;
@@ -47,7 +47,7 @@ public class TestGetInformQuantityAgentsRolesInUnit extends TestCase {
 	}
 
 	@After
-	protected void tearDown() throws Exception {
+	public void tearDown() throws Exception {
 
 		//-------------  Clean Data Base  ------------//
 		dbA.executeSQL("DELETE FROM agentPlayList");
@@ -67,7 +67,7 @@ public class TestGetInformQuantityAgentsRolesInUnit extends TestCase {
 		m = null;
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testGetInformQuantityAgentsRolesInUnit1() {
 		
 		/**---------------------------------------------------------------------------------------------
@@ -133,7 +133,7 @@ public class TestGetInformQuantityAgentsRolesInUnit extends TestCase {
 		}
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testGetInformQuantityAgentsRolesInUnit2() {
 		
 		/**---------------------------------------------------------------------------------------------
@@ -185,7 +185,7 @@ public class TestGetInformQuantityAgentsRolesInUnit extends TestCase {
 		}
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testGetInformQuantityAgentsRolesInUnit3() {
 		
 		/**---------------------------------------------------------------------------------------------

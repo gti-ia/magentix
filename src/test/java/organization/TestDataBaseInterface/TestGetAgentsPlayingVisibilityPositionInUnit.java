@@ -1,5 +1,7 @@
 package organization.TestDataBaseInterface;
 
+import static org.junit.Assert.*;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -8,7 +10,6 @@ import org.junit.*;
 
 import organization.TestDataBaseInterface.DatabaseAccess;
 import es.upv.dsic.gti_ia.organization.DataBaseInterface;
-import junit.framework.TestCase;
 
 
 /** 
@@ -16,7 +17,7 @@ import junit.framework.TestCase;
  * 
  */
 
-public class TestGetAgentsPlayingVisibilityPositionInUnit extends TestCase {
+public class TestGetAgentsPlayingVisibilityPositionInUnit {
 
 	DataBaseInterface dbI = null;
 	DatabaseAccess dbA = null;
@@ -24,8 +25,7 @@ public class TestGetAgentsPlayingVisibilityPositionInUnit extends TestCase {
 	
 	
 	@Before
-	protected void setUp() throws Exception {
-		super.setUp();
+	public void setUp() throws Exception {
 		
 		Class[] parameterTypes = new Class[2];
 	    parameterTypes[0] = java.lang.String.class;
@@ -49,7 +49,7 @@ public class TestGetAgentsPlayingVisibilityPositionInUnit extends TestCase {
 	}
 
 	@After
-	protected void tearDown() throws Exception {
+	public void tearDown() throws Exception {
 
 		//-------------  Clean Data Base  ------------//
 		dbA.executeSQL("DELETE FROM agentPlayList");
@@ -69,7 +69,7 @@ public class TestGetAgentsPlayingVisibilityPositionInUnit extends TestCase {
 		m = null;
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testGetAgentsPlayingVisibilityPositionInUnit1() {
 		
 		/**---------------------------------------------------------------------------------
@@ -143,7 +143,7 @@ public class TestGetAgentsPlayingVisibilityPositionInUnit extends TestCase {
 		}
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testGetAgentsPlayingVisibilityPositionInUnit2() {
 		
 		/**---------------------------------------------------------------------------------
@@ -217,7 +217,7 @@ public class TestGetAgentsPlayingVisibilityPositionInUnit extends TestCase {
 		}
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testGetAgentsPlayingVisibilityPositionInUnit3() {
 		
 		/**---------------------------------------------------------------------------------
@@ -255,7 +255,7 @@ public class TestGetAgentsPlayingVisibilityPositionInUnit extends TestCase {
 		}
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testGetAgentsPlayingVisibilityPositionInUnitt4() {
 		
 		/**---------------------------------------------------------------------------------

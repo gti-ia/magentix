@@ -1,5 +1,7 @@
 package organization.TestDataBaseInterface;
 
+import static org.junit.Assert.*;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -7,7 +9,6 @@ import org.junit.*;
 
 import organization.TestDataBaseInterface.DatabaseAccess;
 import es.upv.dsic.gti_ia.organization.DataBaseInterface;
-import junit.framework.TestCase;
 
 
 /** 
@@ -15,7 +16,7 @@ import junit.framework.TestCase;
  * 
  */
 
-public class TestDeleteNorm extends TestCase {
+public class TestDeleteNorm {
 
 	DataBaseInterface dbI = null;
 	DatabaseAccess dbA = null;
@@ -23,8 +24,7 @@ public class TestDeleteNorm extends TestCase {
 	
 	
 	@Before
-	protected void setUp() throws Exception {
-		super.setUp();
+	public void setUp() throws Exception {
 		
 		Class[] parameterTypes = new Class[2];
 	    parameterTypes[0] = java.lang.String.class;
@@ -48,7 +48,7 @@ public class TestDeleteNorm extends TestCase {
 	}
 
 	@After
-	protected void tearDown() throws Exception {
+	public void tearDown() throws Exception {
 
 		//-------------  Clean Data Base  ------------//
 		dbA.executeSQL("DELETE FROM agentPlayList");
@@ -68,7 +68,7 @@ public class TestDeleteNorm extends TestCase {
 		m = null;
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testDeleteNorm1() {
 		
 		/**---------------------------------------------------------------------------------
@@ -136,7 +136,7 @@ public class TestDeleteNorm extends TestCase {
 		}
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testDeleteNorm2() {
 		
 		/**---------------------------------------------------------------------------------
@@ -209,7 +209,7 @@ public class TestDeleteNorm extends TestCase {
 		}
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testDeleteNorm3() {
 		
 		/**---------------------------------------------------------------------------------
@@ -296,7 +296,7 @@ public class TestDeleteNorm extends TestCase {
 		}
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testDeleteNorm4() {
 		
 		/**---------------------------------------------------------------------------------
@@ -374,7 +374,7 @@ public class TestDeleteNorm extends TestCase {
 		}
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testDeleteNorm5() {
 		
 		/**---------------------------------------------------------------------------------
@@ -442,7 +442,7 @@ public class TestDeleteNorm extends TestCase {
 		}
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testDeleteNorm6() {
 		
 		/**---------------------------------------------------------------------------------

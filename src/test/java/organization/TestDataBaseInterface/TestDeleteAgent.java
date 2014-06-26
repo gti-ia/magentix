@@ -1,5 +1,7 @@
 package organization.TestDataBaseInterface;
 
+import static org.junit.Assert.*;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -8,7 +10,6 @@ import org.junit.*;
 import organization.TestDataBaseInterface.DatabaseAccess;
 import es.upv.dsic.gti_ia.organization.DataBaseInterface;
 import es.upv.dsic.gti_ia.organization.exception.MySQLException;
-import junit.framework.TestCase;
 
 
 /** 
@@ -16,7 +17,7 @@ import junit.framework.TestCase;
  * 
  */
 
-public class TestDeleteAgent extends TestCase {
+public class TestDeleteAgent {
 
 	DataBaseInterface dbI = null;
 	DatabaseAccess dbA = null;
@@ -24,8 +25,7 @@ public class TestDeleteAgent extends TestCase {
 	
 	
 	@Before
-	protected void setUp() throws Exception {
-		super.setUp();
+	public void setUp() throws Exception {
 		
 		Class[] parameterTypes = new Class[1];
 	    parameterTypes[0] = java.lang.String.class;
@@ -48,7 +48,7 @@ public class TestDeleteAgent extends TestCase {
 	}
 
 	@After
-	protected void tearDown() throws Exception {
+	public void tearDown() throws Exception {
 
 		//-------------  Clean Data Base  ------------//
 		dbA.executeSQL("DELETE FROM agentPlayList");
@@ -68,7 +68,7 @@ public class TestDeleteAgent extends TestCase {
 		m = null;
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testDeleteAgent1() {
 		
 		/**---------------------------------------------------------------------------------
@@ -112,7 +112,7 @@ public class TestDeleteAgent extends TestCase {
 	}
 	
 
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testDeleteAgent2() {
 		
 		/**---------------------------------------------------------------------------------
@@ -164,7 +164,7 @@ public class TestDeleteAgent extends TestCase {
 		}
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testDeleteAgent3() {
 		
 		/**---------------------------------------------------------------------------------

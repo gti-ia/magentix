@@ -1,5 +1,7 @@
 package organization.TestDataBaseInterface;
 
+import static org.junit.Assert.*;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -7,7 +9,6 @@ import org.junit.*;
 
 import organization.TestDataBaseInterface.DatabaseAccess;
 import es.upv.dsic.gti_ia.organization.DataBaseInterface;
-import junit.framework.TestCase;
 
 
 /** 
@@ -15,7 +16,7 @@ import junit.framework.TestCase;
  * 
  */
 
-public class TestGetInformQuantityAgentsPlayingVisibilityPositionInUnit extends TestCase {
+public class TestGetInformQuantityAgentsPlayingVisibilityPositionInUnit {
 
 	DataBaseInterface dbI = null;
 	DatabaseAccess dbA = null;
@@ -23,8 +24,7 @@ public class TestGetInformQuantityAgentsPlayingVisibilityPositionInUnit extends 
 	
 	
 	@Before
-	protected void setUp() throws Exception {
-		super.setUp();
+	public void setUp() throws Exception {
 		
 		Class[] parameterTypes = new Class[2];
 	    parameterTypes[0] = java.lang.String.class;
@@ -48,7 +48,7 @@ public class TestGetInformQuantityAgentsPlayingVisibilityPositionInUnit extends 
 	}
 
 	@After
-	protected void tearDown() throws Exception {
+	public void tearDown() throws Exception {
 
 		//-------------  Clean Data Base  ------------//
 		dbA.executeSQL("DELETE FROM agentPlayList");
@@ -68,7 +68,7 @@ public class TestGetInformQuantityAgentsPlayingVisibilityPositionInUnit extends 
 		m = null;
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testGetInformQuantityAgentsPlayingVisibilityPositionInUnit1() {
 		
 		/**---------------------------------------------------------------------------------------------
@@ -143,7 +143,7 @@ public class TestGetInformQuantityAgentsPlayingVisibilityPositionInUnit extends 
 		}
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testGetInformQuantityAgentsPlayingVisibilityPositionInUnit2() {
 		
 		/**---------------------------------------------------------------------------------------------
@@ -216,7 +216,7 @@ public class TestGetInformQuantityAgentsPlayingVisibilityPositionInUnit extends 
 		}
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testGetInformQuantityAgentsPlayingVisibilityPositionInUnit3() {
 		
 		/**---------------------------------------------------------------------------------------------
@@ -276,7 +276,7 @@ public class TestGetInformQuantityAgentsPlayingVisibilityPositionInUnit extends 
 		}
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testGetInformQuantityAgentsPlayingVisibilityPositionInUnit4() {
 		
 		/**---------------------------------------------------------------------------------------------
@@ -347,7 +347,7 @@ public class TestGetInformQuantityAgentsPlayingVisibilityPositionInUnit extends 
 		}
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testGetInformQuantityAgentsPlayingVisibilityPositionInUnit5() {
 		
 		/**---------------------------------------------------------------------------------------------

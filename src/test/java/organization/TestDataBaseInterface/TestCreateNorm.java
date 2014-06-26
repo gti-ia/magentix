@@ -1,5 +1,7 @@
 package organization.TestDataBaseInterface;
 
+import static org.junit.Assert.*;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -11,7 +13,6 @@ import es.upv.dsic.gti_ia.norms.BeliefDataBaseInterface;
 import es.upv.dsic.gti_ia.norms.Norm;
 import es.upv.dsic.gti_ia.organization.DataBaseInterface;
 import es.upv.dsic.gti_ia.organization.exception.MySQLException;
-import junit.framework.TestCase;
 
 
 /** 
@@ -19,7 +20,7 @@ import junit.framework.TestCase;
  * 
  */
 
-public class TestCreateNorm extends TestCase {
+public class TestCreateNorm {
 
 	private DataBaseInterface dbI = null;
 	private DatabaseAccess dbA = null;
@@ -29,8 +30,7 @@ public class TestCreateNorm extends TestCase {
 	
 	
 	@Before
-	protected void setUp() throws Exception {
-		super.setUp();
+	public void setUp() throws Exception {
 		
 		Class[] parameterTypes = new Class[4];
 	    parameterTypes[0] = java.lang.String.class;
@@ -57,7 +57,7 @@ public class TestCreateNorm extends TestCase {
 	}
 
 	@After
-	protected void tearDown() throws Exception {
+	public void tearDown() throws Exception {
 
 		//-------------  Clean Data Base  ------------//
 		dbA.executeSQL("DELETE FROM agentPlayList");
@@ -77,7 +77,7 @@ public class TestCreateNorm extends TestCase {
 		m = null;
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testCreateNorm1() {
 		
 		/**---------------------------------------------------------------------------------
@@ -148,7 +148,7 @@ public class TestCreateNorm extends TestCase {
 		}
 	}	
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testCreateNorm2() {
 		
 		/**---------------------------------------------------------------------------------
@@ -222,7 +222,7 @@ public class TestCreateNorm extends TestCase {
 		}
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testCreateNorm3() {
 		
 		/**---------------------------------------------------------------------------------
@@ -296,7 +296,7 @@ public class TestCreateNorm extends TestCase {
 		}
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testCreateNorm4() {
 		
 		/**---------------------------------------------------------------------------------
@@ -368,7 +368,7 @@ public class TestCreateNorm extends TestCase {
 	}
 	
 
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testCreateNorm5() {
 		
 		/**---------------------------------------------------------------------------------
@@ -437,7 +437,7 @@ public class TestCreateNorm extends TestCase {
 		}
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testCreateNorm6() {
 		
 		/**---------------------------------------------------------------------------------
@@ -510,7 +510,7 @@ public class TestCreateNorm extends TestCase {
 		}
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testCreateNorm7() {
 		
 		/**---------------------------------------------------------------------------------
@@ -584,7 +584,7 @@ public class TestCreateNorm extends TestCase {
 		}
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testCreateNorm8() {
 		
 		/**---------------------------------------------------------------------------------
@@ -636,7 +636,7 @@ public class TestCreateNorm extends TestCase {
 		}
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testCreateNorm9() {
 		
 		/**---------------------------------------------------------------------------------
@@ -703,7 +703,7 @@ public class TestCreateNorm extends TestCase {
 		}
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testCreateNorm10() {
 		
 		/**---------------------------------------------------------------------------------
@@ -770,7 +770,7 @@ public class TestCreateNorm extends TestCase {
 		}
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testCreateNorm11() {
 		
 		/**---------------------------------------------------------------------------------
@@ -832,7 +832,7 @@ public class TestCreateNorm extends TestCase {
 		}
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testCreateNorm12() {
 		
 		/**---------------------------------------------------------------------------------
@@ -900,7 +900,7 @@ public class TestCreateNorm extends TestCase {
 		}
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testCreateNorm13() {
 		
 		/**---------------------------------------------------------------------------------

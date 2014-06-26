@@ -1,5 +1,7 @@
 package organization.TestDataBaseInterface;
 
+import static org.junit.Assert.*;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -7,7 +9,6 @@ import org.junit.*;
 
 import organization.TestDataBaseInterface.DatabaseAccess;
 import es.upv.dsic.gti_ia.organization.DataBaseInterface;
-import junit.framework.TestCase;
 
 
 /** 
@@ -15,7 +16,7 @@ import junit.framework.TestCase;
  * 
  */
 
-public class TestLeaveRole extends TestCase {
+public class TestLeaveRole {
 
 	DataBaseInterface dbI = null;
 	DatabaseAccess dbA = null;
@@ -23,8 +24,7 @@ public class TestLeaveRole extends TestCase {
 	
 	
 	@Before
-	protected void setUp() throws Exception {
-		super.setUp();
+	public void setUp() throws Exception {
 		
 		Class[] parameterTypes = new Class[3];
 	    parameterTypes[0] = java.lang.String.class;
@@ -48,7 +48,7 @@ public class TestLeaveRole extends TestCase {
 	}
 
 	@After
-	protected void tearDown() throws Exception {
+	public void tearDown() throws Exception {
 
 		//-------------  Clean Data Base  ------------//
 		dbA.executeSQL("DELETE FROM agentPlayList");
@@ -67,7 +67,7 @@ public class TestLeaveRole extends TestCase {
 		m = null;
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testLeaveRole1() {
 		
 		/**---------------------------------------------------------------------------------
@@ -126,7 +126,7 @@ public class TestLeaveRole extends TestCase {
 		}
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testLeaveRole2() {
 		
 		/**---------------------------------------------------------------------------------
@@ -198,7 +198,7 @@ public class TestLeaveRole extends TestCase {
 		}
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testLeaveRole3() {
 		
 		/**---------------------------------------------------------------------------------
@@ -273,7 +273,7 @@ public class TestLeaveRole extends TestCase {
 		}
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testLeaveRole4() {
 		
 		/**---------------------------------------------------------------------------------
@@ -332,7 +332,7 @@ public class TestLeaveRole extends TestCase {
 		}
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testLeaveRole5() {
 		
 		/**---------------------------------------------------------------------------------
@@ -391,7 +391,7 @@ public class TestLeaveRole extends TestCase {
 		}
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testLeaveRole6() {
 		
 		/**---------------------------------------------------------------------------------

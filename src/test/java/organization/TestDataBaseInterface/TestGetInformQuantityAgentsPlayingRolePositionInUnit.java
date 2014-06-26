@@ -1,5 +1,7 @@
 package organization.TestDataBaseInterface;
 
+import static org.junit.Assert.*;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -7,7 +9,6 @@ import org.junit.*;
 
 import organization.TestDataBaseInterface.DatabaseAccess;
 import es.upv.dsic.gti_ia.organization.DataBaseInterface;
-import junit.framework.TestCase;
 
 
 /** 
@@ -15,7 +16,7 @@ import junit.framework.TestCase;
  * 
  */
 
-public class TestGetInformQuantityAgentsPlayingRolePositionInUnit extends TestCase {
+public class TestGetInformQuantityAgentsPlayingRolePositionInUnit {
 
 	DataBaseInterface dbI = null;
 	DatabaseAccess dbA = null;
@@ -23,8 +24,7 @@ public class TestGetInformQuantityAgentsPlayingRolePositionInUnit extends TestCa
 	
 	
 	@Before
-	protected void setUp() throws Exception {
-		super.setUp();
+	public void setUp() throws Exception {
 		
 		Class[] parameterTypes = new Class[3];
 	    parameterTypes[0] = java.lang.String.class;
@@ -49,7 +49,7 @@ public class TestGetInformQuantityAgentsPlayingRolePositionInUnit extends TestCa
 	}
 
 	@After
-	protected void tearDown() throws Exception {
+	public void tearDown() throws Exception {
 
 		//-------------  Clean Data Base  ------------//
 		dbA.executeSQL("DELETE FROM agentPlayList");
@@ -69,7 +69,7 @@ public class TestGetInformQuantityAgentsPlayingRolePositionInUnit extends TestCa
 		m = null;
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testGetInformQuantityAgentsPlayingRolePositionInUnit1() {
 		
 		/**---------------------------------------------------------------------------------------------
@@ -139,7 +139,7 @@ public class TestGetInformQuantityAgentsPlayingRolePositionInUnit extends TestCa
 		}
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testGetInformQuantityAgentsPlayingRolePositionInUnit2() {
 		
 		/**---------------------------------------------------------------------------------------------
@@ -206,7 +206,7 @@ public class TestGetInformQuantityAgentsPlayingRolePositionInUnit extends TestCa
 		}
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testGetInformQuantityAgentsPlayingRolePositionInUnit3() {
 		
 		/**---------------------------------------------------------------------------------------------
@@ -272,7 +272,7 @@ public class TestGetInformQuantityAgentsPlayingRolePositionInUnit extends TestCa
 		}
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testGetInformQuantityAgentsPlayingRolePositionInUnit4() {
 		
 		/**---------------------------------------------------------------------------------------------
@@ -338,7 +338,7 @@ public class TestGetInformQuantityAgentsPlayingRolePositionInUnit extends TestCa
 		}
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testGetInformQuantityAgentsPlayingRolePositionInUnit5() {
 		
 		/**---------------------------------------------------------------------------------------------

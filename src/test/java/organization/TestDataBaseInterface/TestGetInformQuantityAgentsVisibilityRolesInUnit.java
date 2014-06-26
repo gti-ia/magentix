@@ -1,5 +1,7 @@
 package organization.TestDataBaseInterface;
 
+import static org.junit.Assert.*;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -7,7 +9,6 @@ import org.junit.*;
 
 import organization.TestDataBaseInterface.DatabaseAccess;
 import es.upv.dsic.gti_ia.organization.DataBaseInterface;
-import junit.framework.TestCase;
 
 
 /** 
@@ -15,7 +16,7 @@ import junit.framework.TestCase;
  * 
  */
 
-public class TestGetInformQuantityAgentsVisibilityRolesInUnit extends TestCase {
+public class TestGetInformQuantityAgentsVisibilityRolesInUnit {
 
 	DataBaseInterface dbI = null;
 	DatabaseAccess dbA = null;
@@ -23,8 +24,7 @@ public class TestGetInformQuantityAgentsVisibilityRolesInUnit extends TestCase {
 	
 	
 	@Before
-	protected void setUp() throws Exception {
-		super.setUp();
+	public void setUp() throws Exception {
 		
 		Class[] parameterTypes = new Class[1];
 	    parameterTypes[0] = java.lang.String.class;
@@ -47,7 +47,7 @@ public class TestGetInformQuantityAgentsVisibilityRolesInUnit extends TestCase {
 	}
 
 	@After
-	protected void tearDown() throws Exception {
+	public void tearDown() throws Exception {
 
 		//-------------  Clean Data Base  ------------//
 		dbA.executeSQL("DELETE FROM agentPlayList");
@@ -67,7 +67,7 @@ public class TestGetInformQuantityAgentsVisibilityRolesInUnit extends TestCase {
 		m = null;
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testGetInformQuantityAgentsVisibilityRolesInUnit1() {
 		
 		/**---------------------------------------------------------------------------------------------
@@ -131,11 +131,11 @@ public class TestGetInformQuantityAgentsVisibilityRolesInUnit extends TestCase {
 		}
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testGetInformQuantityAgentsVisibilityRolesInUnit2() {
 		
 		/**---------------------------------------------------------------------------------------------
-		 * --			1.	
+		 * --			2.	
 		 * --				- All parameters are correct
 		 * --				- Unit has several roles, 2 agent with visibility equal to public
 		 * --				  and the other agent with visibility equal to private
@@ -209,7 +209,7 @@ public class TestGetInformQuantityAgentsVisibilityRolesInUnit extends TestCase {
 		}
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testGetInformQuantityAgentsVisibilityRolesInUnit3() {
 		
 		/**---------------------------------------------------------------------------------------------
@@ -261,7 +261,7 @@ public class TestGetInformQuantityAgentsVisibilityRolesInUnit extends TestCase {
 		}
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testGetInformQuantityAgentsVisibilityRolesInUnit4() {
 		
 		/**---------------------------------------------------------------------------------------------

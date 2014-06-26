@@ -1,5 +1,7 @@
 package organization.TestDataBaseInterface;
 
+import static org.junit.Assert.*;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -8,9 +10,6 @@ import org.junit.*;
 
 import organization.TestDataBaseInterface.DatabaseAccess;
 import es.upv.dsic.gti_ia.organization.DataBaseInterface;
-import es.upv.dsic.gti_ia.organization.exception.RoleNotExistsException;
-import es.upv.dsic.gti_ia.organization.exception.UnitNotExistsException;
-import junit.framework.TestCase;
 
 
 /** 
@@ -18,7 +17,7 @@ import junit.framework.TestCase;
  * 
  */
 
-public class TestGetInformRole extends TestCase {
+public class TestGetInformRole {
 
 	DataBaseInterface dbI = null;
 	DatabaseAccess dbA = null;
@@ -26,8 +25,7 @@ public class TestGetInformRole extends TestCase {
 	
 	
 	@Before
-	protected void setUp() throws Exception {
-		super.setUp();
+	public void setUp() throws Exception {
 		
 		Class[] parameterTypes = new Class[2];
 	    parameterTypes[0] = java.lang.String.class;
@@ -51,7 +49,7 @@ public class TestGetInformRole extends TestCase {
 	}
 
 	@After
-	protected void tearDown() throws Exception {
+	public void tearDown() throws Exception {
 
 		//-------------  Clean Data Base  ------------//
 		dbA.executeSQL("DELETE FROM agentPlayList");
@@ -71,7 +69,7 @@ public class TestGetInformRole extends TestCase {
 		m = null;
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testGetInformRole1() {
 		
 		/**---------------------------------------------------------------------------------------------
@@ -124,7 +122,7 @@ public class TestGetInformRole extends TestCase {
 		}
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testGetInformRole2() {
 		
 		/**---------------------------------------------------------------------------------------------
@@ -177,7 +175,7 @@ public class TestGetInformRole extends TestCase {
 		}
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testGetInformRole3() {
 		
 		/**---------------------------------------------------------------------------------------------

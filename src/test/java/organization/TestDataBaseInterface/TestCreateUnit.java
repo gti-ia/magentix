@@ -1,5 +1,7 @@
 package organization.TestDataBaseInterface;
 
+import static org.junit.Assert.*;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -8,15 +10,13 @@ import org.junit.*;
 import organization.TestDataBaseInterface.DatabaseAccess;
 import es.upv.dsic.gti_ia.organization.DataBaseInterface;
 import es.upv.dsic.gti_ia.organization.exception.MySQLException;
-import junit.framework.TestCase;
-
 
 /** 
  * @author Jose Alemany Bordera  -  jalemany1@dsic.upv.es
  * 
  */
 
-public class TestCreateUnit extends TestCase {
+public class TestCreateUnit {
 
 	DataBaseInterface dbI = null;
 	DatabaseAccess dbA = null;
@@ -24,8 +24,7 @@ public class TestCreateUnit extends TestCase {
 	
 	
 	@Before
-	protected void setUp() throws Exception {
-		super.setUp();
+	public void setUp() throws Exception {
 		
 		Class[] parameterTypes = new Class[5];
 	    parameterTypes[0] = java.lang.String.class;
@@ -51,7 +50,7 @@ public class TestCreateUnit extends TestCase {
 	}
 
 	@After
-	protected void tearDown() throws Exception {
+	public void tearDown() throws Exception {
 
 		//-------------  Clean Data Base  ------------//
 		dbA.executeSQL("DELETE FROM agentPlayList");
@@ -70,7 +69,7 @@ public class TestCreateUnit extends TestCase {
 		m = null;
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testCreateUnit1() {
 		
 		/**---------------------------------------------------------------------------------
@@ -123,7 +122,7 @@ public class TestCreateUnit extends TestCase {
 		}
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testCreateUnit2() {
 		
 		/**---------------------------------------------------------------------------------
@@ -169,7 +168,7 @@ public class TestCreateUnit extends TestCase {
 		}
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testCreateUnit3() {
 		
 		/**---------------------------------------------------------------------------------
@@ -215,7 +214,7 @@ public class TestCreateUnit extends TestCase {
 		}
 	}
 	
-	@Test
+	@Test(timeout = 5 * 1000)
 	public void testCreateUnit4() {
 		
 		/**---------------------------------------------------------------------------------

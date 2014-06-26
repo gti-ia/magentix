@@ -10,7 +10,6 @@ import org.junit.*;
 import organization.TestDataBaseInterface.DatabaseAccess;
 import es.upv.dsic.gti_ia.organization.DataBaseInterface;
 import es.upv.dsic.gti_ia.organization.exception.MySQLException;
-import junit.framework.TestCase;
 
 
 /** 
