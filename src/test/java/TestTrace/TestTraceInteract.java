@@ -96,12 +96,12 @@ public class TestTraceInteract {
 	}
 
 	/* Test methods */
-	@Test
+	@Test (timeout=5000)
 	public void testPublishTracingServiceDefault0() {
 		theTestOfPublishTracingServiceDefault(0);
 	}
 
-	@Test
+	@Test (timeout=5000)
 	public void testPublishTracingServiceDefault1() {
 		theTestOfPublishTracingServiceDefault(1);
 	}
@@ -139,12 +139,12 @@ public class TestTraceInteract {
 		assertEquals(content, msg.getContent());
 	}
 
-	@Test
+	@Test (timeout=5000)
 	public void testPublishTracingServiceAlternative0() {
 		theTestOfPublishTracingServiceAlternative(0);
 	}
 
-	@Test
+	@Test (timeout=5000)
 	public void testPublishTracingServiceAlternative1() {
 		theTestOfPublishTracingServiceAlternative(1);
 	}
@@ -182,12 +182,12 @@ public class TestTraceInteract {
 		assertEquals(content, msg.getContent());
 	}
 
-	@Test
+	@Test (timeout=5000)
 	public void testUnpublishTracingServiceDefault0() {
 		theTestOfUnpublishTracingServiceDefault(0);
 	}
 
-	@Test
+	@Test (timeout=5000)
 	public void testUnpublishTracingServiceDefault1() {
 		theTestOfUnpublishTracingServiceDefault(1);
 	}
@@ -222,12 +222,12 @@ public class TestTraceInteract {
 		assertEquals(content, msg.getContent());
 	}
 
-	@Test
+	@Test (timeout=5000)
 	public void testUnpublishTracingServiceAlternative0() {
 		theTestOfUnpublishTracingServiceAlternative(0);
 	}
 
-	@Test
+	@Test (timeout=5000)
 	public void testUnpublishTracingServiceAlternative1() {
 		theTestOfUnpublishTracingServiceAlternative(1);
 	}
@@ -262,12 +262,12 @@ public class TestTraceInteract {
 		assertEquals(content, msg.getContent());
 	}
 
-	@Test
+	@Test (timeout=5000)
 	public void testRequestTracingServiceDefaultAny0() {
 		theTestOfRequestTracingServiceDefaultAny(0);
 	}
 
-	@Test
+	@Test (timeout=5000)
 	public void testRequestTracingServiceDefaultAny1() {
 		theTestOfRequestTracingServiceDefaultAny(1);
 	}
@@ -304,12 +304,12 @@ public class TestTraceInteract {
 		assertEquals(content, msg.getContent());
 	}
 
-	@Test
+	@Test (timeout=5000)
 	public void testRequestTracingServiceAlternativeAny0() {
 		theTestOfRequestTracingServiceAlternativeAny(0);
 	}
 
-	@Test
+	@Test (timeout=5000)
 	public void testRequestTracingServiceAlternativeAny1() {
 		theTestOfRequestTracingServiceAlternativeAny(1);
 	}
@@ -346,12 +346,12 @@ public class TestTraceInteract {
 		assertEquals(content, msg.getContent());
 	}
 
-	@Test
+	@Test (timeout=5000)
 	public void testRequestTracingServiceDefaultWithOrigin0() {
 		theTestOfRequestTracingServiceDefaultWithOrigin(0);
 	}
 
-	@Test
+	@Test (timeout=5000)
 	public void testRequestTracingServiceDefaultWithOrigin1() {
 		theTestOfRequestTracingServiceDefaultWithOrigin(1);
 	}
@@ -389,12 +389,12 @@ public class TestTraceInteract {
 		assertEquals(content, msg.getContent());
 	}
 
-	@Test
+	@Test (timeout=5000)
 	public void testRequestTracingServiceAlternativeWithOrigin0() {
 		theTestOfRequestTracingServiceAlternativeWithOrigin(0);
 	}
 
-	@Test
+	@Test (timeout=5000)
 	public void testRequestTracingServiceAlternativeWithOrigin1() {
 		theTestOfRequestTracingServiceAlternativeWithOrigin(1);
 	}
@@ -432,12 +432,12 @@ public class TestTraceInteract {
 		assertEquals(content, msg.getContent());
 	}
 
-	@Test
+	@Test (timeout=5000)
 	public void testRequestAllTracingServicesDefault0() {
 		theTestOfRequestAllTracingServicesDefault(0);
 	}
 
-	@Test
+	@Test (timeout=5000)
 	public void testRequestAllTracingServicesDefault1() {
 		theTestOfRequestAllTracingServicesDefault(1);
 	}
@@ -472,12 +472,12 @@ public class TestTraceInteract {
 		assertEquals(content, msg.getContent());
 	}
 
-	@Test
+	@Test (timeout=5000)
 	public void testRequestAllTracingServicesAlternative0() {
 		theTestOfRequestAllTracingServicesAlternative(0);
 	}
 
-	@Test
+	@Test (timeout=5000)
 	public void testRequestAllTracingServicesAlternative1() {
 		theTestOfRequestAllTracingServicesAlternative(1);
 	}
@@ -512,12 +512,12 @@ public class TestTraceInteract {
 		assertEquals(content, msg.getContent());
 	}
 
-	@Test
+	@Test (timeout=5000)
 	public void testCancelTracingServiceSubscriptionDefaultAny0() {
 		theTestOfCancelTracingServiceSubscriptionDefaultAny(0);
 	}
 
-	@Test
+	@Test (timeout=5000)
 	public void testCancelTracingServiceSubscriptionDefaultAny1() {
 		theTestOfCancelTracingServiceSubscriptionDefaultAny(1);
 	}
@@ -553,12 +553,12 @@ public class TestTraceInteract {
 		assertEquals(content, msg.getContent());
 	}
 
-	@Test
+	@Test (timeout=5000)
 	public void testCancelTracingServiceSubscriptionAlternativeAny0() {
 		theTestOfCancelTracingServiceSubscriptionAlternativeAny(0);
 	}
 
-	@Test
+	@Test (timeout=5000)
 	public void testCancelTracingServiceSubscriptionAlternativeAny1() {
 		theTestOfCancelTracingServiceSubscriptionAlternativeAny(1);
 	}
@@ -594,12 +594,12 @@ public class TestTraceInteract {
 		assertEquals(content, msg.getContent());
 	}
 
-	@Test
+	@Test (timeout=5000)
 	public void testCancelTracingServiceSubscriptionDefaultWithOrigin0() {
 		theTestOfCancelTracingServiceSubscriptionDefaultWithOrigin(0);
 	}
 
-	@Test
+	@Test (timeout=5000)
 	public void testCancelTracingServiceSubscriptionDefaultWithOrigin1() {
 		theTestOfCancelTracingServiceSubscriptionDefaultWithOrigin(1);
 	}
@@ -636,12 +636,12 @@ public class TestTraceInteract {
 		assertEquals(content, msg.getContent());
 	}
 
-	@Test
+	@Test (timeout=5000)
 	public void testCancelTracingServiceSubscriptionAlternativeWithOrigin0() {
 		theTestOfCancelTracingServiceSubscriptionAlternativeWithOrigin(0);
 	}
 
-	@Test
+	@Test (timeout=5000)
 	public void testCancelTracingServiceSubscriptionAlternativeWithOrigin1() {
 		theTestOfCancelTracingServiceSubscriptionAlternativeWithOrigin(1);
 	}
@@ -679,12 +679,12 @@ public class TestTraceInteract {
 		assertEquals(content, msg.getContent());
 	}
 
-	@Test
+	@Test (timeout=5000)
 	public void testListTracingEntitiesDefault0() {
 		theTestOfListTracingEntitiesDefault(0);
 	}
 
-	@Test
+	@Test (timeout=5000)
 	public void testListTracingEntitiesDefault1() {
 		theTestOfListTracingEntitiesDefault(1);
 	}
@@ -718,12 +718,12 @@ public class TestTraceInteract {
 		assertEquals(content, msg.getContent());
 	}
 
-	@Test
+	@Test (timeout=5000)
 	public void testListTracingEntitiesAlternative0() {
 		theTestOfListTracingEntitiesAlternative(0);
 	}
 
-	@Test
+	@Test (timeout=5000)
 	public void testListTracingEntitiesAlternative1() {
 		theTestOfListTracingEntitiesAlternative(1);
 	}
@@ -758,12 +758,12 @@ public class TestTraceInteract {
 		assertEquals(content, msg.getContent());
 	}
 
-	@Test
+	@Test (timeout=5000)
 	public void testListTracingServicesDefault0() {
 		theTestOfListTracingServicesDefault(0);
 	}
 
-	@Test
+	@Test (timeout=5000)
 	public void testListTracingServicesDefault1() {
 		theTestOfListTracingServicesDefault(1);
 	}
@@ -797,12 +797,12 @@ public class TestTraceInteract {
 		assertEquals(content, msg.getContent());
 	}
 
-	@Test
+	@Test (timeout=5000)
 	public void testListTracingServicesAlternative0() {
 		theTestOfListTracingServicesAlternative(0);
 	}
 
-	@Test
+	@Test (timeout=5000)
 	public void testListTracingServicesAlternative1() {
 		theTestOfListTracingServicesAlternative(1);
 	}
