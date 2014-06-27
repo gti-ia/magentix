@@ -1,6 +1,11 @@
 package TestOrganizationalMessage;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
 import es.upv.dsic.gti_ia.organization.OMS;
@@ -13,7 +18,7 @@ import es.upv.dsic.gti_ia.organization.exception.NotPlaysAnyRoleException;
 import es.upv.dsic.gti_ia.organization.exception.OnlyPlaysCreatorException;
 import es.upv.dsic.gti_ia.organization.exception.UnitNotExistsException;
 
-public class TestOrganizationalMessageIncorrectPermissions extends TestCase {
+public class TestOrganizationalMessageIncorrectPermissions {
 
 	OMSProxy omsProxy = null;
 	DatabaseAccess dbA = null;
@@ -22,9 +27,9 @@ public class TestOrganizationalMessageIncorrectPermissions extends TestCase {
 	OMS oms = null;
 	SF sf = null;
 	Process qpid_broker;
-
-	protected void setUp() throws Exception {
-		super.setUp();
+	
+	@Before
+	public void setUp() throws Exception {
 		qpid_broker = qpidManager.UnixQpidManager.startQpid(
 				Runtime.getRuntime(), qpid_broker);
 
@@ -110,8 +115,8 @@ public class TestOrganizationalMessageIncorrectPermissions extends TestCase {
 		dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
 
 	}
-
-	protected void tearDown() throws Exception {
+	@After
+	public void tearDown() throws Exception {
 
 		// ------------------Clean Data Base -----------//
 		dbA.executeSQL("DELETE FROM agentPlayList");
@@ -138,7 +143,7 @@ public class TestOrganizationalMessageIncorrectPermissions extends TestCase {
 		AgentsConnection.disconnect();
 		qpidManager.UnixQpidManager.stopQpid(qpid_broker);
 	}
-
+	@Test(timeout = 5 * 1000)
 	public void test1() {
 
 		String unit = "Equipo";
@@ -160,7 +165,7 @@ public class TestOrganizationalMessageIncorrectPermissions extends TestCase {
 		}
 
 	}
-
+	@Test(timeout = 5 * 1000)
 	public void test2() {
 
 		String unit = "Equipo2";
@@ -182,7 +187,7 @@ public class TestOrganizationalMessageIncorrectPermissions extends TestCase {
 		}
 
 	}
-
+	@Test(timeout = 5 * 1000)
 	public void test4() {
 
 		String unit = "Jerarquia";
@@ -204,7 +209,7 @@ public class TestOrganizationalMessageIncorrectPermissions extends TestCase {
 		}
 
 	}
-
+	@Test(timeout = 5 * 1000)
 	public void test5() {
 
 		String unit = "Inexistente";
@@ -224,7 +229,7 @@ public class TestOrganizationalMessageIncorrectPermissions extends TestCase {
 		}
 
 	}
-
+	@Test(timeout = 5 * 1000)
 	public void test6() {
 
 		String unit = "";
@@ -244,7 +249,7 @@ public class TestOrganizationalMessageIncorrectPermissions extends TestCase {
 		}
 
 	}
-
+	@Test(timeout = 5 * 1000)
 	public void test3() {
 
 		String unit = "Plana";

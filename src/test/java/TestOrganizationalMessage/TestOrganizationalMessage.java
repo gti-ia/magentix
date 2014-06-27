@@ -1,14 +1,19 @@
 package TestOrganizationalMessage;
 
 
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
 import es.upv.dsic.gti_ia.architecture.Monitor;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
 import es.upv.dsic.gti_ia.organization.OMS;
 import es.upv.dsic.gti_ia.organization.SF;
 
-public class TestOrganizationalMessage extends TestCase {
+public class TestOrganizationalMessage {
 
 	Creator iniAgent = null;
 	Noisy ruiAgent = null;
@@ -23,13 +28,15 @@ public class TestOrganizationalMessage extends TestCase {
 
 	DatabaseAccess dbA = null;
 	private Process qpid_broker;
-
-	public TestOrganizationalMessage(String name) {
-		super(name);
-	}
-
-	protected void setUp() throws Exception {
-		super.setUp();
+	
+	//Method before updating to junit4
+	//
+	//public TestOrganizationalMessage(String name) {
+	//	super(name);
+	//}
+	
+	@Before
+	public void setUp() throws Exception {
 		qpid_broker = qpidManager.UnixQpidManager.startQpid(Runtime.getRuntime(), qpid_broker);
 		/**
 		 * Setting the Logger
@@ -87,7 +94,8 @@ public class TestOrganizationalMessage extends TestCase {
 		sumtAgent.start();
 
 	}
-
+	
+	@Test(timeout = 26 * 1000)
 	public void testThomas() {
 
 		assertNotNull(iniAgent);
@@ -107,9 +115,9 @@ public class TestOrganizationalMessage extends TestCase {
 		assertEquals("15", visAgent.messages.get(3).getContent());
 
 	}
-
-	protected void tearDown() throws Exception {
-		super.tearDown();
+	
+	@After
+	public void tearDown() throws Exception {
 
 		// ------------------Clean Data Base -----------//
 		dbA.executeSQL("DELETE FROM agentPlayList");
