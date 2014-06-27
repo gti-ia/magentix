@@ -1,25 +1,29 @@
 package TestContractNetFactory;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import static org.junit.Assert.*;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
 
-public class TestContractNetFactory extends TestCase {
+public class TestContractNetFactory {
 
 	SallyClass Sally = null;
 	SallyClass Sally2 = null;
 	HarryClass Harry = null;
 	private Process qpid_broker;
 
-	public TestContractNetFactory(String name) {
-		super(name);
-	}
-
-	protected void setUp() throws Exception {
-		super.setUp();
+	//Method before updating to junit4
+	//
+	//public TestContractNetFactory(String name) {
+	//	super(name);
+	//}
+		
+	@Before
+	public void setUp() throws Exception {
 		qpid_broker = qpidManager.UnixQpidManager.startQpid(Runtime.getRuntime(), qpid_broker);
 
 		/**
@@ -45,7 +49,7 @@ public class TestContractNetFactory extends TestCase {
 		}
 
 	}
-
+	@Test(timeout = 5 * 1000)
 	public void testContractNet() {
 		Sally.start();
 		Sally2.start();
@@ -76,9 +80,8 @@ public class TestContractNetFactory extends TestCase {
 		}
 		
 	}
-
-	protected void tearDown() throws Exception {
-		super.tearDown();
+	@After
+	public void tearDown() throws Exception {
 
 		// Sally.finalize();
 		// Sally2.finalize();
