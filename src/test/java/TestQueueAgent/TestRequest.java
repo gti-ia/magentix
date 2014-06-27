@@ -1,5 +1,7 @@
 package TestQueueAgent;
 
+import static org.junit.Assert.*;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
@@ -7,6 +9,9 @@ import junit.framework.TestCase;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
@@ -17,19 +22,21 @@ import es.upv.dsic.gti_ia.core.AgentsConnection;
  * @author David Fernández - dfernandez@dsic.upv.es
  */
 
-public class TestRequest extends TestCase {
+public class TestRequest {
 
 	Hospital hos;
 	witness wit;
 	Logger logger;
 	Process qpid_broker;
-
-	public TestRequest(String name) {
-		super(name);
-	}
-
+	
+	//Method before updating to junit4
+	//
+	//public TestRequest(String name) {
+	//	super(name);
+	//}
+	
+	@Before
 	public void setUp() throws Exception {
-		super.setUp();
 		qpid_broker = qpidManager.UnixQpidManager.startQpid(Runtime.getRuntime(), qpid_broker);
 		
 		/**
@@ -62,6 +69,7 @@ public class TestRequest extends TestCase {
 	/**
 	 * Testing hospital agree answer
 	 */
+	@Test(timeout = 5 * 1000)
 	public void testAgreeAnswer() {
 		hos.DISTANCIA_MAX = wit.witnessDistance + 1;// The hospital should reach
 													// the accident
@@ -90,6 +98,7 @@ public class TestRequest extends TestCase {
 	/**
 	 * Testing hospital inform answer
 	 */
+	@Test(timeout = 5 * 1000)
 	public void testInformAnswer() {
 
 		hos.DISTANCIA_MAX = wit.witnessDistance + 1;// The hospital should reach
@@ -118,6 +127,7 @@ public class TestRequest extends TestCase {
 	/**
 	 * Testing hospital refuse answer
 	 */
+	@Test(timeout = 5 * 1000)
 	public void testRefuseAnswer() {
 		hos.DISTANCIA_MAX = wit.witnessDistance - 1;// The hospital should NOT
 													// reach the accident
@@ -145,6 +155,7 @@ public class TestRequest extends TestCase {
 	/**
 	 * Testing hospital NotUnderstood answer
 	 */
+	@Test(timeout = 5 * 1000)
 	public void testNotUnderstoodAnswer() {
 		wit.content = "donkey to " + "10" + " km";
 		// Now distance is indifferent
@@ -173,7 +184,7 @@ public class TestRequest extends TestCase {
 	 * making the failure appear
 	 */
 	/*
-	 * @Test
+	 * 	@Test(timeout = 5 * 1000)
 	 * 
 	 * @Ignore public void testNoHospitalFailure(){ //Now distance is
 	 * indifferent //Success probability is indifferent //hos.start(); There is
@@ -192,6 +203,7 @@ public class TestRequest extends TestCase {
 	/**
 	 * Testing not saving the user failure
 	 */
+	@Test(timeout = 5 * 1000)
 	public void testNotSavedFailure() {
 		hos.DISTANCIA_MAX = wit.witnessDistance + 1;// The hospital should reach
 													// the accident
@@ -212,9 +224,8 @@ public class TestRequest extends TestCase {
 		assertEquals(" I fail in the hospital " + hos.getName()
 				+ ": They have done everything possible", wit.petitionResult);
 	}
-	
-	protected void tearDown() throws Exception {
-        super.tearDown();
+	@After
+	public void tearDown() throws Exception {
 
         //otras cosas que hacer...
 

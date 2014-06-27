@@ -1,12 +1,12 @@
 package TestQueueAgent;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
@@ -17,19 +17,20 @@ import es.upv.dsic.gti_ia.core.AgentsConnection;
  * @author David Fernández - dfernandez@dsic.upv.es
  */
 
-public class TestQuery extends TestCase {
+public class TestQuery {
 
 	Airport airport;
 	Passenger passenger;
 	Logger logger;
 	Process qpid_broker;
-
-	public TestQuery(String name) {
-		super(name);
-	}
-
+	
+	//Method before updating to junit4
+	//
+	//public TestQuery(String name) {
+	//	super(name);
+	//}
+	@Before
 	public void setUp() throws Exception {
-		super.setUp();
 		qpid_broker = qpidManager.UnixQpidManager.startQpid(Runtime.getRuntime(), qpid_broker);
 		
 		try {
@@ -54,6 +55,7 @@ public class TestQuery extends TestCase {
 	 * 
 	 * /** Testing Airport agree answer
 	 */
+	@Test(timeout = 5 * 1000)
 	public void testAgreeAnswer() {
 		System.out.println("Agree test");
 
@@ -95,6 +97,7 @@ public class TestQuery extends TestCase {
 	/**
 	 * Testing Airport refuse answer
 	 */
+	@Test(timeout = 5 * 1000)
 	public void testRefuseAnswer() {
 		System.out.println("Comenzando Refuse test");
 		try {
@@ -135,6 +138,7 @@ public class TestQuery extends TestCase {
 	/**
 	 * Testing Airport successfull reservation
 	 */
+	@Test(timeout = 5 * 1000)
 	public void testSuccesfullReservation() {
 		try {
 			/**
@@ -175,6 +179,7 @@ public class TestQuery extends TestCase {
 	 * Testing Airport unsuccessfull reservation
 	 * 
 	 */
+	@Test(timeout = 5 * 1000)
 	public void testUnsuccesfullReservation() {
 		try {
 			/**
@@ -210,8 +215,8 @@ public class TestQuery extends TestCase {
 		assertEquals("The operator reports:You have no reserves",
 				passenger.informResult);
 	}
-	protected void tearDown() throws Exception {
-        super.tearDown();
+	@After
+	public void tearDown() throws Exception {
         AgentsConnection.disconnect();
 
         qpidManager.UnixQpidManager.stopQpid(qpid_broker);
