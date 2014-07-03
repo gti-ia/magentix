@@ -1,6 +1,9 @@
 package TestOMS;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
 import es.upv.dsic.gti_ia.organization.OMS;
@@ -11,7 +14,7 @@ import es.upv.dsic.gti_ia.organization.exception.RoleNotExistsException;
 import es.upv.dsic.gti_ia.organization.exception.UnitNotExistsException;
 
 
-public class TestInformRoleInCorrectParam extends TestCase {
+public class TestInformRoleInCorrectParam {
 
 	OMSProxy omsProxy = null;
 	DatabaseAccess dbA = null;
@@ -25,8 +28,8 @@ public class TestInformRoleInCorrectParam extends TestCase {
 	
 	Process qpid_broker;
 	
-
-	protected void tearDown() throws Exception {
+	@After
+	public void tearDown() throws Exception {
 
 		//------------------Clean Data Base -----------//
 		dbA.executeSQL("DELETE FROM agentPlayList");
@@ -55,8 +58,9 @@ public class TestInformRoleInCorrectParam extends TestCase {
 		AgentsConnection.disconnect();
 		qpidManager.UnixQpidManager.stopQpid(qpid_broker);
 	}
-	protected void setUp() throws Exception {
-		super.setUp();
+	
+	@Before
+	public void setUp() throws Exception {
 
 		qpid_broker = qpidManager.UnixQpidManager.startQpid(Runtime.getRuntime(), qpid_broker);
 		
@@ -94,139 +98,35 @@ public class TestInformRoleInCorrectParam extends TestCase {
 		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
 		"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
 
-		
-
 	}
 
-	public void testInformRole1()
-	{
-		try
-		{
-
-			omsProxy.informRole("participante","noexiste");
-
-			fail();
-
-		}catch(UnitNotExistsException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	@Test(timeout = 5 * 60 * 1000, expected = UnitNotExistsException.class)
+	public void testInformRole1() throws Exception {
+		omsProxy.informRole("participante","noexiste");
 	}
 	
-	public void testInformRole2()
-	{
-		try
-		{
-
-			omsProxy.informRole("participante","");
-
-			fail();
-
-		}catch(EmptyParametersException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	@Test(timeout = 5 * 60 * 1000, expected = EmptyParametersException.class)
+	public void testInformRole2() throws Exception {
+		omsProxy.informRole("participante","");
 	}
 	
-	public void testInformRole3()
-	{
-		try
-		{
-
-			omsProxy.informRole("participante",null);
-
-			fail();
-
-		}catch(EmptyParametersException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	@Test(timeout = 5 * 60 * 1000, expected = EmptyParametersException.class)
+	public void testInformRole3() throws Exception {
+		omsProxy.informRole("participante",null);
 	}
 	
-	public void testInformRole4()
-	{
-		try
-		{
-
-			omsProxy.informRole("noexiste","virtual");
-
-			fail();
-
-		}catch(RoleNotExistsException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	@Test(timeout = 5 * 60 * 1000, expected = RoleNotExistsException.class)
+	public void testInformRole4() throws Exception {
+		omsProxy.informRole("noexiste","virtual");
 	}
 	
-	public void testInformRole5()
-	{
-		try
-		{
-
-			omsProxy.informRole("","virtual");
-
-			fail();
-
-		}catch(EmptyParametersException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	@Test(timeout = 5 * 60 * 1000, expected = EmptyParametersException.class)
+	public void testInformRole5() throws Exception {
+		omsProxy.informRole("","virtual");
 	}
 	
-	public void testInformRole6()
-	{
-		try
-		{
-
-			omsProxy.informRole(null,"virtual");
-
-			fail();
-
-		}catch(EmptyParametersException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	@Test(timeout = 5 * 60 * 1000, expected = EmptyParametersException.class)
+	public void testInformRole6() throws Exception {
+		omsProxy.informRole(null,"virtual");
 	}
 }

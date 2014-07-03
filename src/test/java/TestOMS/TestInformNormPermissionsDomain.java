@@ -99,7 +99,7 @@ public class TestInformNormPermissionsDomain {
 		dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
 	}
 	
-	@Test
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformNormPermissionsDomain1() throws Exception {
 		
 		//------------------------------------------- Test Initialization  -----------------------------------------------//
@@ -146,7 +146,7 @@ public class TestInformNormPermissionsDomain {
 		
 	}
 	
-	@Test
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformNormPermissionsDomain2() throws Exception {
 		
 		//------------------------------------------- Test Initialization  -----------------------------------------------//
@@ -193,7 +193,7 @@ public class TestInformNormPermissionsDomain {
 		
 	}
 	
-	@Test
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformNormPermissionsDomain3() throws Exception {
 		
 		//------------------------------------------- Test Initialization  -----------------------------------------------//

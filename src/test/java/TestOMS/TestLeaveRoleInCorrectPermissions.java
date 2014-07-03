@@ -1,6 +1,9 @@
 package TestOMS;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
 import es.upv.dsic.gti_ia.organization.OMS;
@@ -9,7 +12,7 @@ import es.upv.dsic.gti_ia.organization.SF;
 import es.upv.dsic.gti_ia.organization.exception.NotPlaysRoleException;
 
 
-public class TestLeaveRoleInCorrectPermissions extends TestCase {
+public class TestLeaveRoleInCorrectPermissions {
 
 	OMSProxy omsProxy = null;
 	DatabaseAccess dbA = null;
@@ -22,8 +25,8 @@ public class TestLeaveRoleInCorrectPermissions extends TestCase {
 	
 	Process qpid_broker;
 	
-
-	protected void tearDown() throws Exception {
+	@After
+	public void tearDown() throws Exception {
 
 		//------------------Clean Data Base -----------//
 		dbA.executeSQL("DELETE FROM agentPlayList");
@@ -52,8 +55,9 @@ public class TestLeaveRoleInCorrectPermissions extends TestCase {
 		AgentsConnection.disconnect();
 		qpidManager.UnixQpidManager.stopQpid(qpid_broker);
 	}
-	protected void setUp() throws Exception {
-		super.setUp();
+	
+	@Before
+	public void setUp() throws Exception {
 
 		qpid_broker = qpidManager.UnixQpidManager.startQpid(Runtime.getRuntime(), qpid_broker);
 		
@@ -193,119 +197,43 @@ public class TestLeaveRoleInCorrectPermissions extends TestCase {
 
 	}
 	
-	
-	public void testAcquireRole1a()
-	{
-		try
-		{
+	@Test(timeout = 5 * 60 * 1000, expected = NotPlaysRoleException.class)
+	public void testAcquireRole1a() throws Exception {
+		// Database Initialization
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+				"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana'))))");
 
-
-						
-				
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana'))))");
-
-			
-			String result = omsProxy.leaveRole("rolNoJugado", "plana");
-
-			fail(result);
-
-		}catch(NotPlaysRoleException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+		// Method call	
+		omsProxy.leaveRole("rolNoJugado", "plana");
 	}
 	
-	public void testAcquireRole2a()
-	{
-		try
-		{
+	@Test(timeout = 5 * 60 * 1000, expected = NotPlaysRoleException.class)
+	public void testAcquireRole2a() throws Exception {
+		// Database Initialization
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+				"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participante' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
 
-
-						
-				
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participante' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
-
-			
-			String result = omsProxy.leaveRole("participante", "jerarquia2");
-
-			fail(result);
-
-		}catch(NotPlaysRoleException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+		// Method call	
+		omsProxy.leaveRole("participante", "jerarquia2");
 	}
 	
-	public void testAcquireRole2b()
-	{
-		try
-		{
+	@Test(timeout = 5 * 60 * 1000, expected = NotPlaysRoleException.class)
+	public void testAcquireRole2b() throws Exception {
+		// Database Initialization
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+				"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participante' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
 
-
-						
-				
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participante' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
-
-			
-			String result = omsProxy.leaveRole("participante", "equipo2");
-
-			fail(result);
-
-		}catch(NotPlaysRoleException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+		// Method call	
+		omsProxy.leaveRole("participante", "equipo2");
 	}
-	public void testAcquireRole2c()
-	{
-		try
-		{
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotPlaysRoleException.class)
+	public void testAcquireRole2c() throws Exception {
+		// Database Initialization
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+				"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participante' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana'))))");
 
-
-						
-				
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participante' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana'))))");
-
-			
-			String result = omsProxy.leaveRole("participante", "plana2");
-
-			fail(result);
-
-		}catch(NotPlaysRoleException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+		// Method call	
+		omsProxy.leaveRole("participante", "plana2");
 	}
 }

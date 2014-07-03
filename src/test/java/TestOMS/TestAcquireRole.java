@@ -1,6 +1,11 @@
 package TestOMS;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
 import es.upv.dsic.gti_ia.organization.OMS;
@@ -8,7 +13,7 @@ import es.upv.dsic.gti_ia.organization.OMSProxy;
 import es.upv.dsic.gti_ia.organization.SF;
 import es.upv.dsic.gti_ia.organization.exception.THOMASException;
 
-public class TestAcquireRole extends TestCase {
+public class TestAcquireRole {
 
 	OMSProxy omsProxy = null;
 	DatabaseAccess dbA = null;
@@ -19,8 +24,8 @@ public class TestAcquireRole extends TestCase {
 	
 	Process qpid_broker;
 	
-	
-	protected void tearDown() throws Exception {
+	@After
+	public void tearDown() throws Exception {
 
 		//------------------Clean Data Base -----------//
 		dbA.executeSQL("DELETE FROM agentPlayList");
@@ -50,8 +55,8 @@ public class TestAcquireRole extends TestCase {
 		qpidManager.UnixQpidManager.stopQpid(qpid_broker);
 	}
 	
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 
 		qpid_broker = qpidManager.UnixQpidManager.startQpid(Runtime.getRuntime(), qpid_broker);
 
@@ -80,6 +85,7 @@ public class TestAcquireRole extends TestCase {
 		//--------------------------------------------//
 	}
 
+	@Test(timeout = 5 * 60 * 1000)
 	public void testAcquireRoleFlat()
 	{
 		try
@@ -410,6 +416,7 @@ public class TestAcquireRole extends TestCase {
 		}
 	}
 
+	@Test(timeout = 5 * 60 * 1000)
 	public void testAcquireRoleTeam()
 	{
 
@@ -748,8 +755,8 @@ public class TestAcquireRole extends TestCase {
 	}
 
 
-
-	public void testAcquireRoleJerarquia()
+	@Test(timeout = 5 * 60 * 1000)
+	public void testAcquireRoleHierarchy()
 	{
 
 
@@ -1392,8 +1399,8 @@ public class TestAcquireRole extends TestCase {
 
 	}
 
-
-	public void testAcquireRolePlana2()
+	@Test(timeout = 5 * 60 * 1000)
+	public void testAcquireRoleFlat2()
 	{
 		try
 		{
@@ -1765,7 +1772,8 @@ public class TestAcquireRole extends TestCase {
 
 	}
 
-	public void testAcquireRoleEquipo2()
+	@Test(timeout = 5 * 60 * 1000)
+	public void testAcquireRoleTeam2()
 	{
 		try
 		{
@@ -2141,7 +2149,9 @@ public class TestAcquireRole extends TestCase {
 		}
 
 	}
-	public void testAcquireRoleJerarquia2()
+	
+	@Test(timeout = 5 * 60 * 1000)
+	public void testAcquireRoleHierarchy2()
 	{
 		try
 		{
@@ -2795,8 +2805,8 @@ public class TestAcquireRole extends TestCase {
 	}
 
 
-	//Test a partir de la 31
-	public void testAcquireRolePlana()
+	@Test(timeout = 5 * 60 * 1000)
+	public void testAcquireRoleFlat3()
 	{
 
 		try
@@ -3051,8 +3061,8 @@ public class TestAcquireRole extends TestCase {
 		}
 	}
 
-
-	public void testAcquireRoleEquipo()
+	@Test(timeout = 5 * 60 * 1000)
+	public void testAcquireRoleTeam3()
 	{
 		try
 		{
@@ -3309,7 +3319,8 @@ public class TestAcquireRole extends TestCase {
 		}
 	}
 	
-	public void testAcquireRoleJerarquia3()
+	@Test(timeout = 5 * 60 * 1000)
+	public void testAcquireRoleHierarchy3()
 	{
 		try
 		{

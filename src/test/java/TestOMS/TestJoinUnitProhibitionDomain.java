@@ -101,7 +101,7 @@ public class TestJoinUnitProhibitionDomain {
 		
 	}
 	
-	@Test(expected=ForbiddenNormException.class)
+	@Test(timeout = 5 * 60 * 1000, expected=ForbiddenNormException.class)
 	public void testJoinUnitProhibitionDomain1() throws Exception {
 		
 		//------------------------------------------- Test Initialization  -----------------------------------------------//

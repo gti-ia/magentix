@@ -108,7 +108,7 @@ public class TestInformRoleProhibitionDomain {
 
 	}
 	
-	@Test(expected=ForbiddenNormException.class)
+	@Test(timeout = 5 * 60 * 1000, expected=ForbiddenNormException.class)
 	public void testInformRoleProhibitionDomain1() throws Exception {
 		
 		//------------------------------------------- Test Initialization  -----------------------------------------------//

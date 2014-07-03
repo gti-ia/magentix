@@ -1,6 +1,9 @@
 package TestOMS;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
 import es.upv.dsic.gti_ia.organization.OMS;
@@ -10,7 +13,7 @@ import es.upv.dsic.gti_ia.organization.exception.EmptyParametersException;
 import es.upv.dsic.gti_ia.organization.exception.UnitNotExistsException;
 
 
-public class TestInformUnitRoleInCorrectParam extends TestCase {
+public class TestInformUnitRolesInCorrectParam {
 
 	OMSProxy omsProxy = null;
 	DatabaseAccess dbA = null;
@@ -23,8 +26,8 @@ public class TestInformUnitRoleInCorrectParam extends TestCase {
 
 	Process qpid_broker;
 	
-
-	protected void tearDown() throws Exception {
+	@After
+	public void tearDown() throws Exception {
 
 		//------------------Clean Data Base -----------//
 		dbA.executeSQL("DELETE FROM agentPlayList");
@@ -53,8 +56,9 @@ public class TestInformUnitRoleInCorrectParam extends TestCase {
 		AgentsConnection.disconnect();
 		qpidManager.UnixQpidManager.stopQpid(qpid_broker);
 	}
-	protected void setUp() throws Exception {
-		super.setUp();
+	
+	@Before
+	public void setUp() throws Exception {
 
 		qpid_broker = qpidManager.UnixQpidManager.startQpid(Runtime.getRuntime(), qpid_broker);
 		
@@ -95,69 +99,18 @@ public class TestInformUnitRoleInCorrectParam extends TestCase {
 
 	}
 
-	public void testInformUnitRoles1()
-	{
-		try
-		{
-
-			omsProxy.informUnitRoles("noexiste");
-
-			fail();
-
-		}catch(UnitNotExistsException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	@Test(timeout = 5 * 60 * 1000, expected = UnitNotExistsException.class)
+	public void testInformUnitRoles1() throws Exception {
+		omsProxy.informUnitRoles("noexiste");
 	}
 	
-	public void testInformUnitRoles2()
-	{
-		try
-		{
-
-			omsProxy.informUnitRoles("");
-
-			fail();
-
-		}catch(EmptyParametersException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	@Test(timeout = 5 * 60 * 1000, expected = EmptyParametersException.class)
+	public void testInformUnitRoles2() throws Exception {
+		omsProxy.informUnitRoles("");
 	}
 	
-	public void testInformUnitRoles3()
-	{
-		try
-		{
-
-			omsProxy.informUnitRoles(null);
-
-			fail();
-
-		}catch(EmptyParametersException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	@Test(timeout = 5 * 60 * 1000, expected = EmptyParametersException.class)
+	public void testInformUnitRoles3() throws Exception {
+		omsProxy.informUnitRoles(null);
 	}
 }

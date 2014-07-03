@@ -100,7 +100,7 @@ public class TestRegisterNormPermissionsDomain {
 		dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
 	}
 	
-	@Test
+	@Test(timeout = 5 * 60 * 1000)
 	public void testRegisterNormPermissionsDomain1() throws Exception {
 		
 		//------------------------------------------- Test Initialization  -----------------------------------------------//
@@ -158,7 +158,7 @@ public class TestRegisterNormPermissionsDomain {
 		
 	}
 	
-	@Test
+	@Test(timeout = 5 * 60 * 1000)
 	public void testRegisterNormPermissionsDomain2() throws Exception {
 		
 		//------------------------------------------- Test Initialization  -----------------------------------------------//
@@ -216,7 +216,7 @@ public class TestRegisterNormPermissionsDomain {
 		
 	}
 	
-	@Test
+	@Test(timeout = 5 * 60 * 1000)
 	public void testRegisterNormPermissionsDomain3() throws Exception {
 		
 		//------------------------------------------- Test Initialization  -----------------------------------------------//

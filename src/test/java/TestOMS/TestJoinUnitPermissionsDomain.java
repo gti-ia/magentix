@@ -100,7 +100,7 @@ public class TestJoinUnitPermissionsDomain {
 		
 	}
 	
-	@Test
+	@Test(timeout = 5 * 60 * 1000)
 	public void testJointUnitPermissionsDomain1() throws Exception {
 		
 		//------------------------------------------- Test Initialization  -----------------------------------------------//

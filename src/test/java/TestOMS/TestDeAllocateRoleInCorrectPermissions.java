@@ -1,6 +1,9 @@
 package TestOMS;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
 import es.upv.dsic.gti_ia.organization.OMS;
@@ -11,7 +14,7 @@ import es.upv.dsic.gti_ia.organization.exception.NotInUnitAndNotCreatorException
 import es.upv.dsic.gti_ia.organization.exception.NotSupervisorOrCreatorInUnitException;
 
 
-public class TestDeAllocateRoleInCorrectPermissions extends TestCase {
+public class TestDeAllocateRoleInCorrectPermissions {
 
 	OMSProxy omsProxy = null;
 	DatabaseAccess dbA = null;
@@ -24,9 +27,8 @@ public class TestDeAllocateRoleInCorrectPermissions extends TestCase {
 
 	Process qpid_broker;
 	
-
-	protected void tearDown() throws Exception {
-
+	@After
+	public void tearDown() throws Exception {
 
 		//------------------Clean Data Base -----------//
 		dbA.executeSQL("DELETE FROM agentPlayList");
@@ -55,8 +57,9 @@ public class TestDeAllocateRoleInCorrectPermissions extends TestCase {
 		qpidManager.UnixQpidManager.stopQpid(qpid_broker);
 	}
 	
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
+		
 		qpid_broker = qpidManager.UnixQpidManager.startQpid(Runtime.getRuntime(), qpid_broker);
 		
 
@@ -73,8 +76,6 @@ public class TestDeAllocateRoleInCorrectPermissions extends TestCase {
 
 		agent = new Agent(new AgentID("pruebas"));
 
-
-
 		omsProxy = new OMSProxy(agent);
 
 		dbA = new DatabaseAccess();
@@ -87,9 +88,6 @@ public class TestDeAllocateRoleInCorrectPermissions extends TestCase {
 		dbA.executeSQL("DELETE FROM unitList WHERE idunitList != 1");
 
 		//--------------------------------------------//
-		
-		
-	
 		
 		dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('Plana',(SELECT idunitType FROM unitType WHERE unitTypeName = 'flat'))");
 		dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'virtual'),(SELECT idunitList FROM unitList WHERE unitName = 'Plana'))");
@@ -153,111 +151,54 @@ public class TestDeAllocateRoleInCorrectPermissions extends TestCase {
 
 	}
 
-	
-	public void testDeAllocateRole1()
-	{
-		
-
-		
-		
-		try
-		{
-		
-			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
+	@Test(timeout = 5 * 60 * 1000, expected = NotInUnitAndNotCreatorException.class)
+	public void testDeAllocateRole1() throws Exception {
+		// Database Initialization
+		dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
 			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo'))))");
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+				"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo'))))");
 
-			String result = omsProxy.deallocateRole("miembro", "plana", "pruebas2");
-
-			fail(result);
-
-		}catch(NotInUnitAndNotCreatorException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+		// Method call	
+		omsProxy.deallocateRole("miembro", "plana", "pruebas2");
 	}		
 	
-	public void testDeRegisterRole2()
-	{
-		
-
-		
-		
-		try
-		{
-			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
+	@Test(timeout = 5 * 60 * 1000, expected = AgentNotInUnitException.class)
+	public void testDeRegisterRole2() throws Exception {
+		// Database Initialization
+		dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
 			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+				"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
 			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana'))))");
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+				"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana'))))");
 
-			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'subordinado' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+				"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'subordinado' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
 
-
-			String result = omsProxy.deallocateRole("miembro", "equipo", "pruebas2");
-
-			fail(result);
-
-		}catch(AgentNotInUnitException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+		// Method call	
+		omsProxy.deallocateRole("miembro", "equipo", "pruebas2");
 	}	
 	
-	public void testDeRegisterRole3()
-	{
-
-		try
-		{
-			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
+	@Test(timeout = 5 * 60 * 1000, expected = NotSupervisorOrCreatorInUnitException.class)
+	public void testDeRegisterRole3() throws Exception {
+		// Database Initialization
+		dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
 			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+				"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
 			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana'))))");
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+				"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana'))))");
 			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo'))))");
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+				"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo'))))");
 
-			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'subordinado' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+				"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'subordinado' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
 
-
-			String result = omsProxy.deallocateRole("subordinado", "jerarquia", "pruebas2");
-
-			fail(result);
-
-		}catch(NotSupervisorOrCreatorInUnitException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+		// Method call	
+		omsProxy.deallocateRole("subordinado", "jerarquia", "pruebas2");
 	}	
 }

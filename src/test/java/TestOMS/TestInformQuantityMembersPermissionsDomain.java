@@ -108,7 +108,7 @@ public class TestInformQuantityMembersPermissionsDomain {
 
 	}
 	
-	@Test
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformQuantityMembersPermissionsDomain1() throws Exception {
 		
 		//------------------------------------------- Test Initialization  -----------------------------------------------//

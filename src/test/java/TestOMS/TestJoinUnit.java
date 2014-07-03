@@ -1,6 +1,11 @@
 package TestOMS;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
 import es.upv.dsic.gti_ia.organization.OMS;
@@ -9,7 +14,7 @@ import es.upv.dsic.gti_ia.organization.SF;
 import es.upv.dsic.gti_ia.organization.exception.THOMASException;
 
 
-public class TestJoinUnit extends TestCase {
+public class TestJoinUnit {
 
 	OMSProxy omsProxy = null;
 	DatabaseAccess dbA = null;
@@ -23,8 +28,8 @@ public class TestJoinUnit extends TestCase {
 
 	Process qpid_broker;
 	
-
-	protected void tearDown() throws Exception {
+	@After
+	public void tearDown() throws Exception {
 
 		//------------------Clean Data Base -----------//
 		dbA.executeSQL("DELETE FROM agentPlayList");
@@ -56,8 +61,9 @@ public class TestJoinUnit extends TestCase {
 		AgentsConnection.disconnect();
 		qpidManager.UnixQpidManager.stopQpid(qpid_broker);
 	}
-	protected void setUp() throws Exception {
-		super.setUp();
+	
+	@Before
+	public void setUp() throws Exception {
 
 		qpid_broker = qpidManager.UnixQpidManager.startQpid(Runtime.getRuntime(), qpid_broker);
 		
@@ -95,6 +101,7 @@ public class TestJoinUnit extends TestCase {
 
 	}
 
+	@Test(timeout = 5 * 60 * 1000)
 	public void testJoinUnit1a()
 	{
 		try
@@ -183,6 +190,7 @@ public class TestJoinUnit extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testJoinUnit1b()
 	{
 		try
@@ -270,6 +278,8 @@ public class TestJoinUnit extends TestCase {
 			fail(e.getMessage());
 		}
 	}
+	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testJoinUnit1c()
 	{
 		try
@@ -358,7 +368,7 @@ public class TestJoinUnit extends TestCase {
 		}
 	}
 	
-	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testJoinUnit2()
 	{
 		try

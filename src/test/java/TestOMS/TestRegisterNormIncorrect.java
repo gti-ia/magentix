@@ -110,7 +110,7 @@ public class TestRegisterNormIncorrect {
 		//--------------------------------------------//
 	}
 	
-	@Test(expected=UnitNotExistsException.class)
+	@Test(timeout = 5 * 60 * 1000, expected=UnitNotExistsException.class)
 	public void testRegisterNormIncorrectParam1() throws Exception {
 		
 		String NormaPrueba = "@normaprueba[f,agentName:_,registerUnit(_,_,_,_,_),_,_]";
@@ -120,7 +120,7 @@ public class TestRegisterNormIncorrect {
 		fail(result);
 	}
 	
-	@Test
+	@Test(timeout = 5 * 60 * 1000)
 	public void testRegisterNormIncorrectParam2() throws Exception {
 		
 		//------------------------------------------- Test Initialization  -----------------------------------------------//
@@ -139,7 +139,7 @@ public class TestRegisterNormIncorrect {
 		
 	}
 	
-	@Test(expected=NormExistsInUnitException.class)
+	@Test(timeout = 5 * 60 * 1000, expected=NormExistsInUnitException.class)
 	public void testRegisterNormIncorrectParam3() throws Exception {
 			
 		//------------------------------------------- Test Initialization  -----------------------------------------------//
@@ -160,7 +160,7 @@ public class TestRegisterNormIncorrect {
 		
 	}
 	
-	@Test
+	@Test(timeout = 5 * 60 * 1000)
 	public void testRegisterNormIncorrectParam4() throws Exception {
 			
 		//------------------------------------------- Test Initialization  -----------------------------------------------//
@@ -185,7 +185,7 @@ public class TestRegisterNormIncorrect {
 		
 	}
 	
-	@Test
+	@Test(timeout = 5 * 60 * 1000)
 	public void testRegisterNormIncorrectParam5() throws Exception {
 		
 		//------------------------------------------- Test Initialization  -----------------------------------------------//
@@ -209,7 +209,7 @@ public class TestRegisterNormIncorrect {
 		assertTrue(dbA.executeQuery("SELECT * FROM normList WHERE normName = 'normapruebaRepetida'"));
 	}
 	
-	@Test(expected=InvalidIDException.class)
+	@Test(timeout = 5 * 60 * 1000, expected=InvalidIDException.class)
 	public void testRegisterNormIncorrectParam5a() throws Exception {
 			
 		//------------------------------------------- Test Initialization  -----------------------------------------------//
@@ -226,7 +226,7 @@ public class TestRegisterNormIncorrect {
 			
 	}
 	
-	@Test(expected=InvalidExpressionException.class)
+	@Test(timeout = 5 * 60 * 1000, expected=InvalidExpressionException.class)
 	public void testRegisterNormIncorrectParam5b() throws Exception {
 			
 		//------------------------------------------- Test Initialization  -----------------------------------------------//
@@ -243,7 +243,7 @@ public class TestRegisterNormIncorrect {
 		
 	}
 	
-	@Test(expected=InvalidDeonticException.class)
+	@Test(timeout = 5 * 60 * 1000, expected=InvalidDeonticException.class)
 	public void testRegisterNormIncorrectParam5c() throws Exception {
 	
 		//------------------------------------------- Test Initialization  -----------------------------------------------//
@@ -260,7 +260,7 @@ public class TestRegisterNormIncorrect {
 		
 	}
 	
-	@Test(expected=InvalidTargetTypeException.class)
+	@Test(timeout = 5 * 60 * 1000, expected=InvalidTargetTypeException.class)
 	public void testRegisterNormIncorrectParam5d() throws Exception {
 
 		//------------------------------------------- Test Initialization  -----------------------------------------------//
@@ -277,7 +277,7 @@ public class TestRegisterNormIncorrect {
 			
 	}
 	
-	@Test(expected=InvalidTargetValueException.class)
+	@Test(timeout = 5 * 60 * 1000, expected=InvalidTargetValueException.class)
 	public void testRegisterNormIncorrectParam5e() throws Exception {
 	
 		//------------------------------------------- Test Initialization  -----------------------------------------------//
@@ -297,7 +297,7 @@ public class TestRegisterNormIncorrect {
 	//------------------------------------------------------------
 	//-------Restricciones de consistencia o integridad-----------
 	
-	@Test(expected=RoleNotExistsException.class)
+	@Test(timeout = 5 * 60 * 1000, expected=RoleNotExistsException.class)
 	public void testRegisterNormIncorrect6() throws Exception {
 			
 		//------------------------------------------- Test Initialization  -----------------------------------------------//
@@ -314,7 +314,7 @@ public class TestRegisterNormIncorrect {
 		
 	}
 	
-	@Test(expected=InvalidPositionException.class)
+	@Test(timeout = 5 * 60 * 1000, expected=InvalidPositionException.class)
 	public void testRegisterNormIncorrect7a() throws Exception {
 			
 		//------------------------------------------- Test Initialization  -----------------------------------------------//
@@ -337,7 +337,7 @@ public class TestRegisterNormIncorrect {
 		
 	}
 	
-	@Test
+	@Test(timeout = 5 * 60 * 1000)
 	public void testRegisterNormIncorrect7b() throws Exception {
 	
 		//------------------------------------------- Test Initialization  -----------------------------------------------//
@@ -369,7 +369,7 @@ public class TestRegisterNormIncorrect {
 		
 	}
 	
-	@Test
+	@Test(timeout = 5 * 60 * 1000)
 	public void testRegisterNormIncorrect7c() throws Exception {
 			
 		//------------------------------------------- Test Initialization  -----------------------------------------------//
@@ -401,7 +401,7 @@ public class TestRegisterNormIncorrect {
 		
 	}
 	
-	@Test
+	@Test(timeout = 5 * 60 * 1000)
 	public void testRegisterNormIncorrect7d() throws Exception {
 	
 		//------------------------------------------- Test Initialization  -----------------------------------------------//
@@ -433,7 +433,7 @@ public class TestRegisterNormIncorrect {
 		
 	}
 	
-	@Test
+	@Test(timeout = 5 * 60 * 1000)
 	public void testRegisterNormIncorrect8a() throws Exception {
 			
 		//------------------------------------------- Test Initialization  -----------------------------------------------//
@@ -465,7 +465,7 @@ public class TestRegisterNormIncorrect {
 
 	}
 	
-	@Test
+	@Test(timeout = 5 * 60 * 1000)
 	public void testRegisterNormIncorrect8b() throws Exception {
 			
 		//------------------------------------------- Test Initialization  -----------------------------------------------//
@@ -497,7 +497,7 @@ public class TestRegisterNormIncorrect {
 		
 	}
 	
-	@Test(expected=InvalidPositionException.class)
+	@Test(timeout = 5 * 60 * 1000, expected=InvalidPositionException.class)
 	public void testRegisterNormIncorrect8c() throws Exception {
 	
 		//------------------------------------------- Test Initialization  -----------------------------------------------//
@@ -529,7 +529,7 @@ public class TestRegisterNormIncorrect {
 		
 	}
 	
-	@Test(expected=InvalidPositionException.class)
+	@Test(timeout = 5 * 60 * 1000, expected=InvalidPositionException.class)
 	public void testRegisterNormIncorrect8d() throws Exception {
 	
 		//------------------------------------------- Test Initialization  -----------------------------------------------//
@@ -561,7 +561,7 @@ public class TestRegisterNormIncorrect {
 		
 	}
 	
-	@Test
+	@Test(timeout = 5 * 60 * 1000)
 	public void testRegisterNormIncorrect9a() throws Exception {
 			
 		//------------------------------------------- Test Initialization  -----------------------------------------------//
@@ -593,7 +593,7 @@ public class TestRegisterNormIncorrect {
 		
 	}
 	
-	@Test
+	@Test(timeout = 5 * 60 * 1000)
 	public void testRegisterNormIncorrect9b() throws Exception {
 			
 		//------------------------------------------- Test Initialization  -----------------------------------------------//
@@ -625,7 +625,7 @@ public class TestRegisterNormIncorrect {
 		
 	}
 	
-	@Test(expected=InvalidPositionException.class)
+	@Test(timeout = 5 * 60 * 1000, expected=InvalidPositionException.class)
 	public void testRegisterNormIncorrect9c() throws Exception {
 	
 		//------------------------------------------- Test Initialization  -----------------------------------------------//
@@ -657,7 +657,7 @@ public class TestRegisterNormIncorrect {
 		
 	}
 	
-	@Test(expected=InvalidPositionException.class)
+	@Test(timeout = 5 * 60 * 1000, expected=InvalidPositionException.class)
 	public void testRegisterNormIncorrect9d() throws Exception {
 	
 		//------------------------------------------- Test Initialization  -----------------------------------------------//
@@ -689,7 +689,7 @@ public class TestRegisterNormIncorrect {
 		
 	}
 	
-	@Test
+	@Test(timeout = 5 * 60 * 1000)
 	public void testRegisterNormIncorrect10() throws Exception {
 	
 		//------------------------------------------- Test Initialization  -----------------------------------------------//
@@ -709,7 +709,7 @@ public class TestRegisterNormIncorrect {
 		
 	}
 	
-	@Test(expected=InvalidOMSActionException.class)
+	@Test(timeout = 5 * 60 * 1000, expected=InvalidOMSActionException.class)
 	public void testRegisterNormIncorrect11() throws Exception {
 	
 		//------------------------------------------- Test Initialization  -----------------------------------------------//
@@ -729,7 +729,7 @@ public class TestRegisterNormIncorrect {
 	
 	
 	// Comprobación de normas estructurales
-	@Test(expected=NotInUnitAndNotCreatorException.class)
+	@Test(timeout = 5 * 60 * 1000, expected=NotInUnitAndNotCreatorException.class)
 	public void testRegisterNormIncorrectPermissions12() throws Exception {
 	
 		//------------------------------------------- Test Initialization  -----------------------------------------------//
@@ -757,7 +757,7 @@ public class TestRegisterNormIncorrect {
 	
 	
 	
-	@Test
+	@Test(timeout = 5 * 60 * 1000)
 	public void testRegisterNormIncorrectPermissions13() throws Exception {
 	
 		//------------------------------------------- Test Initialization  -----------------------------------------------//
@@ -796,7 +796,7 @@ public class TestRegisterNormIncorrect {
 		
 	}
 	
-	@Test(expected=UnitNotExistsException.class)
+	@Test(timeout = 5 * 60 * 1000, expected=UnitNotExistsException.class)
 	public void testRegisterNormIncorrectPermissions14() throws Exception {
 	
 		String NormaPrueba = "@normaprueba[f,<agentName:_>,registerRole(_,_,_,_,_,_),_,_]";

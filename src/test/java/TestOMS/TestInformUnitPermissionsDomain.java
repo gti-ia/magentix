@@ -102,7 +102,7 @@ public class TestInformUnitPermissionsDomain {
 
 	}
 	
-	@Test
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformUnitPermissionsDomain1() throws Exception {
 		
 		//------------------------------------------- Test Initialization  -----------------------------------------------//
@@ -154,7 +154,7 @@ public class TestInformUnitPermissionsDomain {
 		
 	}
 	
-	@Test
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformUnitPermissionsDomain2() throws Exception {
 		
 		//------------------------------------------- Test Initialization  -----------------------------------------------//

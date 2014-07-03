@@ -100,7 +100,7 @@ public class TestInformTargetNormsProhibitionDomain {
 		dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
 	}
 	
-	@Test(expected=ForbiddenNormException.class)
+	@Test(timeout = 5 * 60 * 1000, expected=ForbiddenNormException.class)
 	public void testInformTargetNormsProhibitionDomain1() throws Exception {
 		
 		//------------------------------------------- Test Initialization  -----------------------------------------------//

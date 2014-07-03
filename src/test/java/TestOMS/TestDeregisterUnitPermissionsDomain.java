@@ -99,7 +99,7 @@ public class TestDeregisterUnitPermissionsDomain {
 		
 	}
 	
-	@Test
+	@Test(timeout = 5 * 60 * 1000)
 	public void testDeregisterUnitPermissionsDomain1() throws Exception {
 		
 		//------------------------------------------- Test Initialization  -----------------------------------------------//
@@ -150,7 +150,7 @@ public class TestDeregisterUnitPermissionsDomain {
 		
 	}
 	
-	@Test
+	@Test(timeout = 5 * 60 * 1000)
 	public void testDeregisterUnitPermissionsDomain2() throws Exception {
 		
 		//------------------------------------------- Test Initialization  -----------------------------------------------//
@@ -201,7 +201,7 @@ public class TestDeregisterUnitPermissionsDomain {
 		
 	}
 	
-	@Test
+	@Test(timeout = 5 * 60 * 1000)
 	public void testDeregisterUnitPermissionsDomain3() throws Exception {
 		
 		//------------------------------------------- Test Initialization  -----------------------------------------------//

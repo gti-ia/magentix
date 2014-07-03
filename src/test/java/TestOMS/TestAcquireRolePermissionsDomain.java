@@ -100,7 +100,7 @@ public class TestAcquireRolePermissionsDomain {
 		
 	}
 	
-	@Test
+	@Test(timeout = 5 * 60 * 1000)
 	public void testAcquireRolePermissionsDomain1() throws Exception {
 		
 		//------------------------------------------- Test Initialization  -----------------------------------------------//
@@ -149,7 +149,7 @@ public class TestAcquireRolePermissionsDomain {
 		
 	}
 	
-	@Test
+	@Test(timeout = 5 * 60 * 1000)
 	public void testAcquireRolePermissionsDomain2() throws Exception {
 		
 		//------------------------------------------- Test Initialization  -----------------------------------------------//
@@ -203,7 +203,7 @@ public class TestAcquireRolePermissionsDomain {
 		
 	}
 	
-	@Test
+	@Test(timeout = 5 * 60 * 1000)
 	public void testAcquireRolePermissionsDomain3() throws Exception {
 		
 		//------------------------------------------- Test Initialization  -----------------------------------------------//
@@ -277,7 +277,7 @@ public class TestAcquireRolePermissionsDomain {
 		
 	}
 	
-	@Test
+	@Test(timeout = 5 * 60 * 1000)
 	public void testAcquireRolePermissionsDomain4() throws Exception {
 		
 		//------------------------------------------- Test Initialization  -----------------------------------------------//

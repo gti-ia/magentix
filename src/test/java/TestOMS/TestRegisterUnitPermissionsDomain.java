@@ -100,7 +100,7 @@ public class TestRegisterUnitPermissionsDomain {
 		
 	}
 
-	@Test
+	@Test(timeout = 5 * 60 * 1000)
 	public void testRegisterUnitPermissionsDomain1() throws Exception {
 		
 		//------------------------------------------- Test Initialization  -----------------------------------------------//
@@ -158,7 +158,7 @@ public class TestRegisterUnitPermissionsDomain {
 		
 	}
 	
-	@Test
+	@Test(timeout = 5 * 60 * 1000)
 	public void testRegisterUnitPermissionsDomain2() throws Exception {
 		
 		//------------------------------------------- Test Initialization  -----------------------------------------------//
@@ -203,7 +203,7 @@ public class TestRegisterUnitPermissionsDomain {
 		
 	}
 	
-	@Test
+	@Test(timeout = 5 * 60 * 1000)
 	public void testRegisterUnitPermissionsDomain3() throws Exception {
 		
 		//------------------------------------------- Test Initialization  -----------------------------------------------//

@@ -1,6 +1,9 @@
 package TestOMS;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
 import es.upv.dsic.gti_ia.organization.OMS;
@@ -11,7 +14,7 @@ import es.upv.dsic.gti_ia.organization.exception.RoleNotExistsException;
 import es.upv.dsic.gti_ia.organization.exception.UnitNotExistsException;
 
 
-public class TestAcquireRoleInCorrectParam extends TestCase {
+public class TestAcquireRoleInCorrectParam {
 
 	OMSProxy omsProxy = null;
 	DatabaseAccess dbA = null;
@@ -24,7 +27,8 @@ public class TestAcquireRoleInCorrectParam extends TestCase {
 
 	Process qpid_broker;
 
-	protected void tearDown() throws Exception {
+	@After
+	public void tearDown() throws Exception {
 
 		//------------------Clean Data Base -----------//
 		dbA.executeSQL("DELETE FROM agentPlayList");
@@ -53,8 +57,8 @@ public class TestAcquireRoleInCorrectParam extends TestCase {
 		qpidManager.UnixQpidManager.stopQpid(qpid_broker);
 	}
 	
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 
 		qpid_broker = qpidManager.UnixQpidManager.startQpid(Runtime.getRuntime(), qpid_broker);
 		
@@ -88,135 +92,33 @@ public class TestAcquireRoleInCorrectParam extends TestCase {
 		"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
 	}
 
-	public void testAcquireRole1()
-	{
-		try
-		{
-
-			String result = omsProxy.acquireRole("participante", "noexiste");
-			
-			fail(result);
-
-		}catch(UnitNotExistsException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	@Test(timeout = 5 * 60 * 1000, expected = UnitNotExistsException.class)
+	public void testAcquireRole1() throws Exception {
+		omsProxy.acquireRole("participante", "noexiste");	
 	}
 	
-	public void testAcquireRole2()
-	{
-		try
-		{
-
-			String result = omsProxy.acquireRole("participante", "");
-
-			fail(result);
-
-		}catch(EmptyParametersException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	@Test(timeout = 5 * 60 * 1000, expected = EmptyParametersException.class)
+	public void testAcquireRole2() throws Exception {
+		omsProxy.acquireRole("participante", "");
 	}
 	
-	public void testAcquireRole3()
-	{
-		try
-		{
-
-			String result = omsProxy.acquireRole("participante", null);
-
-			fail(result);
-
-		}catch(EmptyParametersException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	@Test(timeout = 5 * 60 * 1000, expected = EmptyParametersException.class)
+	public void testAcquireRole3() throws Exception {
+		omsProxy.acquireRole("participante", null);
 	}
 	
-	public void testAcquireRole4()
-	{
-		try
-		{
-
-			String result = omsProxy.acquireRole("noexiste", "virtual");
-
-			fail(result);
-
-		}catch(RoleNotExistsException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	@Test(timeout = 5 * 60 * 1000, expected = RoleNotExistsException.class)
+	public void testAcquireRole4() throws Exception {
+		omsProxy.acquireRole("noexiste", "virtual");
 	}
 	
-	public void testAcquireRole5()
-	{
-		try
-		{
-
-			String result = omsProxy.acquireRole("", "virtual");
-
-			fail(result);
-
-		}catch(EmptyParametersException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	@Test(timeout = 5 * 60 * 1000, expected = EmptyParametersException.class)
+	public void testAcquireRole5() throws Exception {
+		omsProxy.acquireRole("", "virtual");
 	}
 	
-	public void testAcquireRole6()
-	{
-		try
-		{
-
-			String result = omsProxy.acquireRole(null, "virtual");
-
-			fail(result);
-
-		}catch(EmptyParametersException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	@Test(timeout = 5 * 60 * 1000, expected = EmptyParametersException.class)
+	public void testAcquireRole6() throws Exception {
+		omsProxy.acquireRole(null, "virtual");
 	}
 }

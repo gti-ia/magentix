@@ -109,7 +109,7 @@ public class TestDeallocateRoleProhibitionDomain {
 		
 	}
 	
-	@Test(expected=ForbiddenNormException.class)
+	@Test(timeout = 5 * 60 * 1000, expected=ForbiddenNormException.class)
 	public void testDeallocateRoleProhibitionDomain1() throws Exception {
 		
 		//------------------------------------------- Test Initialization  -----------------------------------------------//
@@ -155,7 +155,7 @@ public class TestDeallocateRoleProhibitionDomain {
 		
 	}
 	
-	@Test(expected=ForbiddenNormException.class)
+	@Test(timeout = 5 * 60 * 1000, expected=ForbiddenNormException.class)
 	public void testDeallocateRoleProhibitionDomain2() throws Exception {
 		
 		//------------------------------------------- Test Initialization  -----------------------------------------------//
@@ -205,7 +205,7 @@ public class TestDeallocateRoleProhibitionDomain {
 		
 	}
 	
-	@Test(expected=ForbiddenNormException.class)
+	@Test(timeout = 5 * 60 * 1000, expected=ForbiddenNormException.class)
 	public void testDeallocateRoleProhibitionDomain3() throws Exception {
 		
 		//------------------------------------------- Test Initialization  -----------------------------------------------//

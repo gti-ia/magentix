@@ -1,6 +1,11 @@
 package TestOMS;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
 import es.upv.dsic.gti_ia.organization.OMS;
@@ -9,7 +14,7 @@ import es.upv.dsic.gti_ia.organization.SF;
 import es.upv.dsic.gti_ia.organization.exception.THOMASException;
 
 
-public class TestAllocateRole extends TestCase {
+public class TestAllocateRole {
 
 	OMSProxy omsProxy = null;
 	DatabaseAccess dbA = null;
@@ -23,8 +28,8 @@ public class TestAllocateRole extends TestCase {
 
 	Process qpid_broker;
 	
-
-	protected void tearDown() throws Exception {
+	@After
+	public void tearDown() throws Exception {
 
 		//------------------Clean Data Base -----------//
 		dbA.executeSQL("DELETE FROM agentPlayList");
@@ -57,8 +62,8 @@ public class TestAllocateRole extends TestCase {
 		qpidManager.UnixQpidManager.stopQpid(qpid_broker);
 	}
 	
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 
 		qpid_broker = qpidManager.UnixQpidManager.startQpid(Runtime.getRuntime(), qpid_broker);
 		
@@ -89,12 +94,9 @@ public class TestAllocateRole extends TestCase {
 		dbA.executeSQL("DELETE FROM unitList WHERE idunitList != 1");
 
 		//--------------------------------------------//
-
-
-
-
 	}
 
+	@Test(timeout = 5 * 60 * 1000)
 	public void testAllocateRole1()
 	{
 		try
@@ -147,6 +149,7 @@ public class TestAllocateRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testAllocateRole2a()
 	{
 		try
@@ -226,6 +229,7 @@ public class TestAllocateRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testAllocateRole2b()
 	{
 		try
@@ -305,6 +309,7 @@ public class TestAllocateRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testAllocateRole2c()
 	{
 		try
@@ -385,6 +390,7 @@ public class TestAllocateRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testAllocateRole2d()
 	{
 		try
@@ -464,6 +470,7 @@ public class TestAllocateRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testAllocateRole3a()
 	{
 		try
@@ -534,6 +541,7 @@ public class TestAllocateRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testAllocateRole3b()
 	{
 		try
@@ -604,6 +612,7 @@ public class TestAllocateRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testAllocateRole4a()
 	{
 		try
@@ -686,6 +695,7 @@ public class TestAllocateRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testAllocateRole4b()
 	{
 		try
@@ -765,6 +775,7 @@ public class TestAllocateRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testAllocateRole5()
 	{
 		try
@@ -781,10 +792,6 @@ public class TestAllocateRole extends TestCase {
 			dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('"+unit2+"',(SELECT idunitType FROM unitType WHERE unitTypeName = 'hierarchy'))");
 			
 			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),(SELECT idunitList FROM unitList WHERE unitName = '"+unit2+"'))");
-
-			
-		
-	
 
 			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
 					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+

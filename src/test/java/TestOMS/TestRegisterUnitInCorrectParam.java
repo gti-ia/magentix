@@ -1,6 +1,11 @@
 package TestOMS;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
 import es.upv.dsic.gti_ia.organization.OMS;
@@ -12,7 +17,7 @@ import es.upv.dsic.gti_ia.organization.exception.NotValidIdentifierException;
 import es.upv.dsic.gti_ia.organization.exception.ParentUnitNotExistsException;
 
 
-public class TestRegisterUnitInCorrectParam extends TestCase {
+public class TestRegisterUnitInCorrectParam {
 
 	OMSProxy omsProxy = null;
 	DatabaseAccess dbA = null;
@@ -25,8 +30,8 @@ public class TestRegisterUnitInCorrectParam extends TestCase {
 	
 	Process qpid_broker;
 	
-
-	protected void tearDown() throws Exception {
+	@After
+	public void tearDown() throws Exception {
 
 		//------------------Clean Data Base -----------//
 		dbA.executeSQL("DELETE FROM agentPlayList");
@@ -55,8 +60,9 @@ public class TestRegisterUnitInCorrectParam extends TestCase {
 		AgentsConnection.disconnect();
 		qpidManager.UnixQpidManager.stopQpid(qpid_broker);
 	}
-	protected void setUp() throws Exception {
-		super.setUp();
+	
+	@Before
+	public void setUp() throws Exception {
 
 		qpid_broker = qpidManager.UnixQpidManager.startQpid(Runtime.getRuntime(), qpid_broker);
 		
@@ -99,1685 +105,501 @@ public class TestRegisterUnitInCorrectParam extends TestCase {
 
 	}
 
-	public void testRegisterUnit1()
-	{
-		try
-		{
-
-			String result = omsProxy.registerUnit("Plana", "hierarchy", "inexistente", "creador");
-
-			fail(result);
-
-		}catch(ParentUnitNotExistsException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-		try
-		{
-			String result = omsProxy.registerUnit("Equipo", "hierarchy", "inexistente", "creador");
-
-			fail(result);
-		}catch(ParentUnitNotExistsException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-		try
-		{
-			String result = omsProxy.registerUnit("Jerarquia", "hierarchy", "inexistente", "creador");
-
-			fail(result);
-		}catch(ParentUnitNotExistsException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-
-
-	public void testRegisterUnit2()
-	{
-		try
-		{
-
-			String result = omsProxy.registerUnit("Plana", "flat", "virtual", "");
-
-			fail(result);
-
-		}catch(EmptyParametersException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-		try
-		{
-			String result = omsProxy.registerUnit("Equipo", "team", "virtual", "");
-
-			fail(result);
-		}catch(EmptyParametersException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-		try
-		{
-			String result = omsProxy.registerUnit("Jerarquia", "hierarchy", "virtual", "");
-
-			fail(result);
-		}catch(EmptyParametersException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-
-
-		try
-		{
-
-			String result = omsProxy.registerUnit("Plana", "flat", "virtual", null);
-
-			fail(result);
-
-		}catch(EmptyParametersException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-		try
-		{
-			String result = omsProxy.registerUnit("Equipo", "team", "virtual", null);
-
-			fail(result);
-		}catch(EmptyParametersException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-		try
-		{
-			String result = omsProxy.registerUnit("Jerarquia", "hierarchy", "virtual", null);
-
-			fail(result);
-		}catch(EmptyParametersException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	@Test(timeout = 5 * 60 * 1000, expected = ParentUnitNotExistsException.class)
+	public void testRegisterUnit1() throws Exception {
+		String result = omsProxy.registerUnit("Plana", "hierarchy", "inexistente", "creador");
+		fail(result);
 	}
 	
-	public void testRegisterUnit3()
-	{
-		try
-		{
-
-			String result = omsProxy.registerUnit("Plana", "insexistente", "virtual","Creador");
-
-			fail(result);
-
-		}catch(MySQLException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-		try
-		{
-			String result = omsProxy.registerUnit("Equipo", "insexistente", "virtual","Creador");
-
-			fail(result);
-		}catch(MySQLException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-		try
-		{
-			String result = omsProxy.registerUnit("Jerarquia", "insexistente", "virtual","Creador");
-
-			fail(result);
-		}catch(MySQLException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-
-
-		try
-		{
-
-			String result = omsProxy.registerUnit("Plana", null, "virtual","Creador");
-
-			fail(result);
-
-		}catch(MySQLException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-		try
-		{
-			String result = omsProxy.registerUnit("Equipo", null, "virtual","Creador");
-
-			fail(result);
-		}catch(MySQLException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-		try
-		{
-			String result = omsProxy.registerUnit("Equipo", null, "virtual","Creador");
-
-			fail(result);
-		}catch(MySQLException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	@Test(timeout = 5 * 60 * 1000, expected = ParentUnitNotExistsException.class)
+	public void testRegisterUnit2() throws Exception {
+		String result = omsProxy.registerUnit("Equipo", "hierarchy", "inexistente", "creador");
+		fail(result);
 	}
 	
-	public void testRegisterUnit4()
-	{
-		try
-		{
+	@Test(timeout = 5 * 60 * 1000, expected = ParentUnitNotExistsException.class)
+	public void testRegisterUnit3() throws Exception {
+		String result = omsProxy.registerUnit("Jerarquia", "hierarchy", "inexistente", "creador");
+		fail(result);
+	}
 
-			String result = omsProxy.registerUnit("", "flat", "virtual","Creador");
-
-			fail(result);
-
-		}catch(EmptyParametersException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-		try
-		{
-			String result = omsProxy.registerUnit("", "team", "virtual","Creador");
-
-			fail(result);
-		}catch(EmptyParametersException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-		try
-		{
-			String result = omsProxy.registerUnit("", "hierarchy", "virtual","Creador");
-
-			fail(result);
-		}catch(EmptyParametersException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-
-
-		try
-		{
-
-			String result = omsProxy.registerUnit(null, "flat", "virtual","Creador");
-
-			fail(result);
-
-		}catch(EmptyParametersException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-		try
-		{
-			String result = omsProxy.registerUnit(null, "team", "virtual","Creador");
-
-			fail(result);
-		}catch(EmptyParametersException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-		try
-		{
-			String result = omsProxy.registerUnit(null, "hierarchy", "virtual","Creador");
-
-			fail(result);
-		}catch(EmptyParametersException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	@Test(timeout = 5 * 60 * 1000, expected = EmptyParametersException.class)
+	public void testRegisterUnit4() throws Exception {
+		String result = omsProxy.registerUnit("Plana", "flat", "virtual", "");
+		fail(result);
 	}
 	
-	public void testRegisterUnit5()
-	{
-		try
-		{
-
-			String result = omsProxy.registerUnit("**Miunidad", "flat", "virtual","Creador");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	@Test(timeout = 5 * 60 * 1000, expected = EmptyParametersException.class)
+	public void testRegisterUnit5() throws Exception {
+		String result = omsProxy.registerUnit("Equipo", "team", "virtual", "");
+		fail(result);
 	}
-	public void testRegisterUnit6()
-	{
-		try
-		{
-
-			String result = omsProxy.registerUnit("team", "flat", "virtual","Creador");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	
+	@Test(timeout = 5 * 60 * 1000, expected = EmptyParametersException.class)
+	public void testRegisterUnit6() throws Exception {
+		String result = omsProxy.registerUnit("Jerarquia", "hierarchy", "virtual", "");
+		fail(result);
 	}
-	public void testRegisterUnit7()
-	{
-		try
-		{
-
-			String result = omsProxy.registerUnit("flat", "flat", "virtual","Creador");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	
+	@Test(timeout = 5 * 60 * 1000, expected = EmptyParametersException.class)
+	public void testRegisterUnit7() throws Exception {
+		String result = omsProxy.registerUnit("Plana", "flat", "virtual", null);
+		fail(result);
 	}
-	public void testRegisterUnit8()
-	{
-		try
-		{
-
-			String result = omsProxy.registerUnit("hierarchy", "flat", "virtual","Creador");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	
+	@Test(timeout = 5 * 60 * 1000, expected = EmptyParametersException.class)
+	public void testRegisterUnit8() throws Exception {
+		String result = omsProxy.registerUnit("Equipo", "team", "virtual", null);
+		fail(result);
 	}
-	public void testRegisterUnit9()
-	{
-		try
-		{
-
-			String result = omsProxy.registerUnit("supervisor", "flat", "virtual","Creador");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+		
+	@Test(timeout = 5 * 60 * 1000, expected = EmptyParametersException.class)
+	public void testRegisterUnit9() throws Exception {
+		String result = omsProxy.registerUnit("Jerarquia", "hierarchy", "virtual", null);
+		fail(result);
 	}
-	public void testRegisterUnit10()
-	{
-		try
-		{
-
-			String result = omsProxy.registerUnit("subordinate", "flat", "virtual","Creador");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	
+	@Test(timeout = 5 * 60 * 1000, expected = MySQLException.class)
+	public void testRegisterUnit10() throws Exception {
+		String result = omsProxy.registerUnit("Plana", "insexistente", "virtual","Creador");
+		fail(result);
 	}
-	public void testRegisterUnit11()
-	{
-		try
-		{
-
-			String result = omsProxy.registerUnit("member", "flat", "virtual","Creador");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	
+	@Test(timeout = 5 * 60 * 1000, expected = MySQLException.class)
+	public void testRegisterUnit11() throws Exception {
+		String result = omsProxy.registerUnit("Equipo", "insexistente", "virtual","Creador");
+		fail(result);
 	}
-	public void testRegisterUnit12()
-	{
-		try
-		{
-
-			String result = omsProxy.registerUnit("creator", "flat", "virtual","Creador");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	
+	@Test(timeout = 5 * 60 * 1000, expected = MySQLException.class)
+	public void testRegisterUnit12() throws Exception {
+		String result = omsProxy.registerUnit("Jerarquia", "insexistente", "virtual","Creador");
+		fail(result);
 	}
-	public void testRegisterUnit13()
-	{
-		try
-		{
-
-			String result = omsProxy.registerUnit("private", "flat", "virtual","Creador");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	
+	@Test(timeout = 5 * 60 * 1000, expected = MySQLException.class)
+	public void testRegisterUnit13() throws Exception {
+		String result = omsProxy.registerUnit("Plana", null, "virtual","Creador");
+		fail(result);
 	}
-	public void testRegisterUnit14()
-	{
-		try
-		{
 
-			String result = omsProxy.registerUnit("public", "flat", "virtual","Creador");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testRegisterUnit15()
-	{
-		try
-		{
-
-			String result = omsProxy.registerUnit("external", "flat", "virtual","Creador");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testRegisterUnit16()
-	{
-		try
-		{
-
-			String result = omsProxy.registerUnit("internal", "flat", "virtual","Creador");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testRegisterUnit17()
-	{
-		try
-		{
-
-			String result = omsProxy.registerUnit("registerUnit", "flat", "virtual","Creador");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testRegisterUnit18()
-	{
-		try
-		{
-
-			String result = omsProxy.registerUnit("deregisterUnit", "flat", "virtual","Creador");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testRegisterUnit19()
-	{
-		try
-		{
-
-			String result = omsProxy.registerUnit("registerRole", "flat", "virtual","Creador");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testRegisterUnit20()
-	{
-		try
-		{
-
-			String result = omsProxy.registerUnit("deregisterRole", "flat", "virtual","Creador");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	@Test(timeout = 5 * 60 * 1000, expected = MySQLException.class)
+	public void testRegisterUnit14() throws Exception {
+		String result = omsProxy.registerUnit("Equipo", null, "virtual","Creador");
+		fail(result);
 	}	
 	
-	public void testRegisterUnit21()
-	{
-		try
-		{
-
-			String result = omsProxy.registerUnit("registerNorm", "flat", "virtual","Creador");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	@Test(timeout = 5 * 60 * 1000, expected = MySQLException.class)
+	public void testRegisterUnit15() throws Exception {
+		String result = omsProxy.registerUnit("Jerarquia", null, "virtual","Creador");
+		fail(result);
 	}
 	
-	public void testRegisterUnit22()
-	{
-		try
-		{
-
-			String result = omsProxy.registerUnit("deregisterNorm", "flat", "virtual","Creador");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-
-	public void testRegisterUnit23()
-	{
-		try
-		{
-
-			String result = omsProxy.registerUnit("allocateRole", "flat", "virtual","Creador");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testRegisterUnit24()
-	{
-		try
-		{
-
-			String result = omsProxy.registerUnit("deallocateRole", "flat", "virtual","Creador");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testRegisterUnit25()
-	{
-		try
-		{
-
-			String result = omsProxy.registerUnit("joinUnit", "flat", "virtual","Creador");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testRegisterUnit26()
-	{
-		try
-		{
-
-			String result = omsProxy.registerUnit("informAgentRole", "flat", "virtual","Creador");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	@Test(timeout = 5 * 60 * 1000, expected = EmptyParametersException.class)
+	public void testRegisterUnit16() throws Exception {
+		String result = omsProxy.registerUnit("", "flat", "virtual","Creador");
+		fail(result);
 	}
 	
-	public void testRegisterUnit27()
-	{
-		try
-		{
-
-			String result = omsProxy.registerUnit("informMembers", "flat", "virtual","Creador");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	@Test(timeout = 5 * 60 * 1000, expected = EmptyParametersException.class)
+	public void testRegisterUnit17() throws Exception {
+		String result = omsProxy.registerUnit("", "team", "virtual","Creador");
+		fail(result);
 	}
-	public void testRegisterUnit28()
-	{
-		try
-		{
 
-			String result = omsProxy.registerUnit("informQuantityMembers", "flat", "virtual","Creador");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testRegisterUnit29()
-	{
-		try
-		{
-
-			String result = omsProxy.registerUnit("informUnit", "flat", "virtual","Creador");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testRegisterUnit30()
-	{
-		try
-		{
-
-			String result = omsProxy.registerUnit("informUnitRoles", "flat", "virtual","Creador");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testRegisterUnit31()
-	{
-		try
-		{
-
-			String result = omsProxy.registerUnit("informTargetNorms", "flat", "virtual","Creador");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testRegisterUnit32()
-	{
-		try
-		{
-
-			String result = omsProxy.registerUnit("informRole", "flat", "virtual","Creador");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testRegisterUnit33()
-	{
-		try
-		{
-
-			String result = omsProxy.registerUnit("informNorm", "flat", "virtual","Creador");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testRegisterUnit34()
-	{
-		try
-		{
-
-			String result = omsProxy.registerUnit("acquireRole", "flat", "virtual","Creador");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testRegisterUnit35()
-	{
-		try
-		{
-
-			String result = omsProxy.registerUnit("leaveRole", "flat", "virtual","Creador");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testRegisterUnit36()
-	{
-		try
-		{
-
-			String result = omsProxy.registerUnit("isNorm", "flat", "virtual","Creador");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testRegisterUnit37()
-	{
-		try
-		{
-
-			String result = omsProxy.registerUnit("hasDeontic", "flat", "virtual","Creador");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testRegisterUnit38()
-	{
-		try
-		{
-
-			String result = omsProxy.registerUnit("hasTarget", "flat", "virtual","Creador");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testRegisterUnit39()
-	{
-		try
-		{
-
-			String result = omsProxy.registerUnit("hasAction", "flat", "virtual","Creador");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	@Test(timeout = 5 * 60 * 1000, expected = EmptyParametersException.class)
+	public void testRegisterUnit18() throws Exception {
+		String result = omsProxy.registerUnit("", "hierarchy", "virtual","Creador");
+		fail(result);
 	}
 	
-	public void testRegisterUnit40()
-	{
-		try
-		{
-
-			String result = omsProxy.registerUnit("isRole", "flat", "virtual","Creador");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	@Test(timeout = 5 * 60 * 1000, expected = EmptyParametersException.class)
+	public void testRegisterUnit19() throws Exception {
+		String result = omsProxy.registerUnit(null, "flat", "virtual","Creador");
+		fail(result);
 	}
-	public void testRegisterUnit41()
-	{
-		try
-		{
-
-			String result = omsProxy.registerUnit("hasAccessibility", "flat", "virtual","Creador");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	
+	@Test(timeout = 5 * 60 * 1000, expected = EmptyParametersException.class)
+	public void testRegisterUnit20() throws Exception {
+		String result = omsProxy.registerUnit(null, "team", "virtual","Creador");
+		fail(result);
 	}
-	public void testRegisterUnit42()
-	{
-		try
-		{
-
-			String result = omsProxy.registerUnit("hasVisibility", "flat", "virtual","Creador");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	
+	@Test(timeout = 5 * 60 * 1000, expected = EmptyParametersException.class)
+	public void testRegisterUnit21() throws Exception {
+		String result = omsProxy.registerUnit(null, "hierarchy", "virtual","Creador");
+		fail(result);
 	}
-	public void testRegisterUnit43()
-	{
-		try
-		{
-
-			String result = omsProxy.registerUnit("hasPosition", "flat", "virtual","Creador");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterUnit22() throws Exception {
+		String result = omsProxy.registerUnit("**Miunidad", "flat", "virtual","Creador");
+		fail(result);
 	}
-	public void testRegisterUnit44()
-	{
-		try
-		{
-
-			String result = omsProxy.registerUnit("isUnit", "flat", "virtual","Creador");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterUnit23() throws Exception {
+		String result = omsProxy.registerUnit("team", "flat", "virtual","Creador");
+		fail(result);
 	}
-	public void testRegisterUnit45()
-	{
-		try
-		{
-
-			String result = omsProxy.registerUnit("hasType", "flat", "virtual","Creador");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterUnit24() throws Exception {
+		String result = omsProxy.registerUnit("flat", "flat", "virtual","Creador");
+		fail(result);
 	}
-	public void testRegisterUnit46()
-	{
-		try
-		{
-
-			String result = omsProxy.registerUnit("hasParent", "flat", "virtual","Creador");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterUnit25() throws Exception {
+		String result = omsProxy.registerUnit("hierarchy", "flat", "virtual","Creador");
+		fail(result);
 	}
-	public void testRegisterUnit47()
-	{
-		try
-		{
-
-			String result = omsProxy.registerUnit("div", "flat", "virtual","Creador");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterUnit26() throws Exception {
+		String result = omsProxy.registerUnit("supervisor", "flat", "virtual","Creador");
+		fail(result);
 	}
-	public void testRegisterUnit48()
-	{
-		try
-		{
-
-			String result = omsProxy.registerUnit("mod", "flat", "virtual","Creador");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterUnit27() throws Exception {
+		String result = omsProxy.registerUnit("subordinate", "flat", "virtual","Creador");
+		fail(result);
 	}
-	public void testRegisterUnit49()
-	{
-		try
-		{
-
-			String result = omsProxy.registerUnit("not", "flat", "virtual","Creador");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterUnit28() throws Exception {
+		String result = omsProxy.registerUnit("member", "flat", "virtual","Creador");
+		fail(result);
 	}
-	public void testRegisterUnit50()
-	{
-		try
-		{
-
-			String result = omsProxy.registerUnit("_", "flat", "virtual","Creador");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterUnit29() throws Exception {
+		String result = omsProxy.registerUnit("creator", "flat", "virtual","Creador");
+		fail(result);
 	}
-	public void testRegisterUnit51()
-	{
-		try
-		{
-
-			String result = omsProxy.registerUnit("agentName", "flat", "virtual","Creador");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterUnit30() throws Exception {
+		String result = omsProxy.registerUnit("private", "flat", "virtual","Creador");
+		fail(result);
 	}
-	public void testRegisterUnit52()
-	{
-		try
-		{
-
-			String result = omsProxy.registerUnit("roleName", "flat", "virtual","Creador");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterUnit31() throws Exception {
+		String result = omsProxy.registerUnit("public", "flat", "virtual","Creador");
+		fail(result);
 	}
-	public void testRegisterUnit53()
-	{
-		try
-		{
-
-			String result = omsProxy.registerUnit("positionName", "flat", "virtual","Creador");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterUnit32() throws Exception {
+		String result = omsProxy.registerUnit("external", "flat", "virtual","Creador");
+		fail(result);
 	}
-	public void testRegisterUnit54()
-	{
-		try
-		{
-
-			String result = omsProxy.registerUnit("o", "flat", "virtual","Creador");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterUnit33() throws Exception {
+		String result = omsProxy.registerUnit("internal", "flat", "virtual","Creador");
+		fail(result);
 	}
-	public void testRegisterUnit55()
-	{
-		try
-		{
-
-			String result = omsProxy.registerUnit("f", "flat", "virtual","Creador");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterUnit34() throws Exception {
+		String result = omsProxy.registerUnit("registerUnit", "flat", "virtual","Creador");
+		fail(result);
 	}
-	public void testRegisterUnit56()
-	{
-		try
-		{
-
-			String result = omsProxy.registerUnit("p", "flat", "virtual","Creador");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterUnit35() throws Exception {
+		String result = omsProxy.registerUnit("deregisterUnit", "flat", "virtual","Creador");
+		fail(result);
 	}
-	public void testRegisterUnit57()
-	{
-		try
-		{
-
-			String result = omsProxy.registerUnit("*invalido", "flat", "virtual","Creador");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterUnit36() throws Exception {
+		String result = omsProxy.registerUnit("registerRole", "flat", "virtual","Creador");
+		fail(result);
 	}
-	public void testRegisterUnit58()
-	{
-		try
-		{
-
-			String result = omsProxy.registerUnit("+invalido", "flat", "virtual","Creador");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterUnit37() throws Exception {
+		String result = omsProxy.registerUnit("deregisterRole", "flat", "virtual","Creador");
+		fail(result);
+	}	
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterUnit38() throws Exception {
+		String result = omsProxy.registerUnit("registerNorm", "flat", "virtual","Creador");
+		fail(result);
 	}
-	public void testRegisterUnit59()
-	{
-		try
-		{
-
-			String result = omsProxy.registerUnit("?invalido", "flat", "virtual","Creador");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testRegisterUnit60()
-	{
-		try
-		{
-
-			String result = omsProxy.registerUnit("!invalido", "flat", "virtual","Creador");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testRegisterUnit61()
-	{
-		try
-		{
-
-			String result = omsProxy.registerUnit("invalido!", "flat", "virtual","Creador");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testRegisterUnit65()
-	{
-		try
-		{
-
-			String result = omsProxy.registerUnit("invalido?", "flat", "virtual","Creador");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testRegisterUnit66()
-	{
-		try
-		{
-
-			String result = omsProxy.registerUnit("invalido*", "flat", "virtual","Creador");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testRegisterUnit67()
-	{
-		try
-		{
-
-			String result = omsProxy.registerUnit("invalido+", "flat", "virtual","Creador");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testRegisterUnit68()
-	{
-		try
-		{
-
-			String result = omsProxy.registerUnit("!invalido", "flat", "virtual","Creador");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testRegisterUnit69()
-	{
-		try
-		{
-
-			String result = omsProxy.registerUnit("invalido-invalido", "flat", "virtual","Creador");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterUnit39() throws Exception {
+		String result = omsProxy.registerUnit("deregisterNorm", "flat", "virtual","Creador");
+		fail(result);
 	}
 
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterUnit40() throws Exception {
+		String result = omsProxy.registerUnit("allocateRole", "flat", "virtual","Creador");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterUnit41() throws Exception {
+		String result = omsProxy.registerUnit("deallocateRole", "flat", "virtual","Creador");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterUnit42() throws Exception {
+		String result = omsProxy.registerUnit("joinUnit", "flat", "virtual","Creador");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterUnit43() throws Exception {
+		String result = omsProxy.registerUnit("informAgentRole", "flat", "virtual","Creador");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterUnit44() throws Exception {
+		String result = omsProxy.registerUnit("informMembers", "flat", "virtual","Creador");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterUnit45() throws Exception {
+		String result = omsProxy.registerUnit("informQuantityMembers", "flat", "virtual","Creador");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterUnit46() throws Exception {
+		String result = omsProxy.registerUnit("informUnit", "flat", "virtual","Creador");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterUnit47() throws Exception {
+		String result = omsProxy.registerUnit("informUnitRoles", "flat", "virtual","Creador");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterUnit48() throws Exception {
+		String result = omsProxy.registerUnit("informTargetNorms", "flat", "virtual","Creador");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterUnit49() throws Exception {
+		String result = omsProxy.registerUnit("informRole", "flat", "virtual","Creador");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterUnit50() throws Exception {
+		String result = omsProxy.registerUnit("informNorm", "flat", "virtual","Creador");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterUnit51() throws Exception {
+		String result = omsProxy.registerUnit("acquireRole", "flat", "virtual","Creador");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterUnit52() throws Exception {
+		String result = omsProxy.registerUnit("leaveRole", "flat", "virtual","Creador");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterUnit53() throws Exception {
+		String result = omsProxy.registerUnit("isNorm", "flat", "virtual","Creador");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterUnit54() throws Exception {
+		String result = omsProxy.registerUnit("hasDeontic", "flat", "virtual","Creador");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterUnit55() throws Exception {
+		String result = omsProxy.registerUnit("hasTarget", "flat", "virtual","Creador");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterUnit56() throws Exception {
+		String result = omsProxy.registerUnit("hasAction", "flat", "virtual","Creador");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterUnit57() throws Exception {
+		String result = omsProxy.registerUnit("isRole", "flat", "virtual","Creador");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterUnit58() throws Exception {
+		String result = omsProxy.registerUnit("hasAccessibility", "flat", "virtual","Creador");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterUnit59() throws Exception {
+		String result = omsProxy.registerUnit("hasVisibility", "flat", "virtual","Creador");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterUnit60() throws Exception {
+		String result = omsProxy.registerUnit("hasPosition", "flat", "virtual","Creador");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterUnit61() throws Exception {
+		String result = omsProxy.registerUnit("isUnit", "flat", "virtual","Creador");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterUnit62() throws Exception {
+		String result = omsProxy.registerUnit("hasType", "flat", "virtual","Creador");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterUnit63() throws Exception {
+		String result = omsProxy.registerUnit("hasParent", "flat", "virtual","Creador");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterUnit64() throws Exception {
+		String result = omsProxy.registerUnit("div", "flat", "virtual","Creador");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterUnit65() throws Exception {
+		String result = omsProxy.registerUnit("mod", "flat", "virtual","Creador");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterUnit66() throws Exception {
+		String result = omsProxy.registerUnit("not", "flat", "virtual","Creador");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterUnit67() throws Exception {
+		String result = omsProxy.registerUnit("_", "flat", "virtual","Creador");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterUnit68() throws Exception {
+		String result = omsProxy.registerUnit("agentName", "flat", "virtual","Creador");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterUnit69() throws Exception {
+		String result = omsProxy.registerUnit("roleName", "flat", "virtual","Creador");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterUnit70() throws Exception {
+		String result = omsProxy.registerUnit("positionName", "flat", "virtual","Creador");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterUnit71() throws Exception {
+		String result = omsProxy.registerUnit("o", "flat", "virtual","Creador");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterUnit72() throws Exception {
+		String result = omsProxy.registerUnit("f", "flat", "virtual","Creador");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterUnit73() throws Exception {
+		String result = omsProxy.registerUnit("p", "flat", "virtual","Creador");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterUnit74() throws Exception {
+		String result = omsProxy.registerUnit("*invalido", "flat", "virtual","Creador");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterUnit75() throws Exception {
+		String result = omsProxy.registerUnit("+invalido", "flat", "virtual","Creador");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterUnit76() throws Exception {
+		String result = omsProxy.registerUnit("?invalido", "flat", "virtual","Creador");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterUnit77() throws Exception {
+		String result = omsProxy.registerUnit("!invalido", "flat", "virtual","Creador");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterUnit78() throws Exception {
+		String result = omsProxy.registerUnit("invalido!", "flat", "virtual","Creador");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterUnit79() throws Exception {
+		String result = omsProxy.registerUnit("invalido?", "flat", "virtual","Creador");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterUnit80() throws Exception {
+		String result = omsProxy.registerUnit("invalido*", "flat", "virtual","Creador");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterUnit81() throws Exception {
+		String result = omsProxy.registerUnit("invalido+", "flat", "virtual","Creador");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterUnit82() throws Exception {
+		String result = omsProxy.registerUnit("!invalido", "flat", "virtual","Creador");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterUnit83() throws Exception {
+		String result = omsProxy.registerUnit("invalido-invalido", "flat", "virtual","Creador");
+		fail(result);
+	}
 }

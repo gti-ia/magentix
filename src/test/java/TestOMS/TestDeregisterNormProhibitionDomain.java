@@ -15,7 +15,7 @@ import es.upv.dsic.gti_ia.organization.exception.ForbiddenNormException;
 
 /** 
  * @author Jose Alemany Bordera  -  jalemany1@dsic.upv.es
- * INCOMPLETTTTT
+ * 
  */
 
 public class TestDeregisterNormProhibitionDomain {
@@ -100,7 +100,7 @@ public class TestDeregisterNormProhibitionDomain {
 		dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
 	}
 	
-	@Test(expected=ForbiddenNormException.class)
+	@Test(timeout = 5 * 60 * 1000, expected=ForbiddenNormException.class)
 	public void testDeregisterNormProhibitionDomain1() throws Exception {
 		
 		//------------------------------------------- Test Initialization  -----------------------------------------------//
@@ -158,7 +158,7 @@ public class TestDeregisterNormProhibitionDomain {
 		
 	}
 	
-	@Test(expected=ForbiddenNormException.class)
+	@Test(timeout = 5 * 60 * 1000, expected=ForbiddenNormException.class)
 	public void testDeregisterNormProhibitionDomain2() throws Exception {
 		
 		//------------------------------------------- Test Initialization  -----------------------------------------------//
@@ -209,7 +209,7 @@ public class TestDeregisterNormProhibitionDomain {
 		
 	}
 	
-	@Test(expected=ForbiddenNormException.class)
+	@Test(timeout = 5 * 60 * 1000, expected=ForbiddenNormException.class)
 	public void testDeregisterNormProhibitionDomain3() throws Exception {
 		
 		//------------------------------------------- Test Initialization  -----------------------------------------------//

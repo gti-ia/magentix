@@ -101,7 +101,7 @@ public class TestInformUnitProhibitionDomain {
 
 	}
 	
-	@Test(expected=ForbiddenNormException.class)
+	@Test(timeout = 5 * 60 * 1000, expected=ForbiddenNormException.class)
 	public void testInformUnitProhibitionDomain1() throws Exception {
 		
 		//------------------------------------------- Test Initialization  -----------------------------------------------//
@@ -143,7 +143,7 @@ public class TestInformUnitProhibitionDomain {
 		
 	}
 	
-	@Test(expected=ForbiddenNormException.class)
+	@Test(timeout = 5 * 60 * 1000, expected=ForbiddenNormException.class)
 	public void testInformUnitProhibitionDomain2() throws Exception {
 		
 		//------------------------------------------- Test Initialization  -----------------------------------------------//

@@ -1,8 +1,13 @@
 package TestOMS;
 
+import static org.junit.Assert.*;
+
 import java.util.ArrayList;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
 import es.upv.dsic.gti_ia.organization.OMS;
@@ -12,7 +17,7 @@ import es.upv.dsic.gti_ia.organization.exception.InvalidTargetTypeException;
 import es.upv.dsic.gti_ia.organization.exception.UnitNotExistsException;
 
 
-public class TestInformTargetNorms extends TestCase {
+public class TestInformTargetNorms {
 
 	OMSProxy omsProxy = null;
 	DatabaseAccess dbA = null;
@@ -26,8 +31,8 @@ public class TestInformTargetNorms extends TestCase {
 
 	Process qpid_broker;
 	
-
-	protected void tearDown() throws Exception {
+	@After
+	public void tearDown() throws Exception {
 
 		//------------------Clean Data Base -----------//
 		dbA.executeSQL("DELETE FROM agentPlayList");
@@ -61,8 +66,9 @@ public class TestInformTargetNorms extends TestCase {
 		AgentsConnection.disconnect();
 		qpidManager.UnixQpidManager.stopQpid(qpid_broker);
 	}
-	protected void setUp() throws Exception {
-		super.setUp();
+	
+	@Before
+	public void setUp() throws Exception {
 
 		qpid_broker = qpidManager.UnixQpidManager.startQpid(Runtime.getRuntime(), qpid_broker);
 		
@@ -98,95 +104,43 @@ public class TestInformTargetNorms extends TestCase {
 		dbA.executeSQL("DELETE FROM unitList WHERE idunitList != 1");
 
 		//--------------------------------------------//
-
-
-
 	}
 
-	public void testInformTargetNorms1()
-	{
-		try
-		{
+	@Test(timeout = 5 * 60 * 1000, expected = UnitNotExistsException.class)
+	public void testInformTargetNorms1() throws Exception {
+		// Database Initialization
+		dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('jerarquia',(SELECT idunitType FROM unitType WHERE unitTypeName = 'hierarchy'))");
 			
-			String unit = "jerarquia";
-			
-			dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('"+unit+"',(SELECT idunitType FROM unitType WHERE unitTypeName = 'hierarchy'))");
-			
-			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'virtual'),(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'))");
-
-
+		dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'virtual'),(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))");
 		
-			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
+		dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");	
+
+		dbA.executeSQL("INSERT INTO normList (idunitList, normName, iddeontic, idtargetType, targetValue, idactionnorm, normContent, normRule )" +
+				" VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'), 'accesRegisternotUnit', 3,3, 3, 1,'normContent' ,'registerUnit(_,_,_,_,_,) := null')");
 			
-
-			dbA.executeSQL("INSERT INTO normList (idunitList, normName, iddeontic, idtargetType, targetValue, idactionnorm, normContent, normRule )" +
-					" VALUES ((SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'), 'accesRegisternotUnit', 3,3, 3, 1,'normContent' ,'registerUnit(_,_,_,_,_,) := null')");
-			
-			
-			ArrayList<ArrayList<String>> result = omsProxy.informTargetNorms("roleName", "pruebas", "inexistente");
-			
-			fail(result.toString());
-		
-
-			
-			//---------------------------------------------------------------------//
-
-
-		}catch(UnitNotExistsException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
+		// Method call	
+		omsProxy.informTargetNorms("roleName", "pruebas", "inexistente");
 	}
 	
-	public void testInformTargetNorms2()
-	{
-		try
-		{
+	@Test(timeout = 5 * 60 * 1000, expected = InvalidTargetTypeException.class)
+	public void testInformTargetNorms2() throws Exception {
+		// Database Initialization
+		dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('jerarquia',(SELECT idunitType FROM unitType WHERE unitTypeName = 'hierarchy'))");
 			
-			String unit = "jerarquia";
+		dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'virtual'),(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))");
+
+		dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
 			
-			dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('"+unit+"',(SELECT idunitType FROM unitType WHERE unitTypeName = 'hierarchy'))");
+		dbA.executeSQL("INSERT INTO normList (idunitList, normName, iddeontic, idtargetType, targetValue, idactionnorm, normContent, normRule )" +
+				" VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'), 'accesRegisternotUnit', 3,3, 3, 1,'normContent' ,'registerUnit(_,_,_,_,_,) := null')");
 			
-			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'virtual'),(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'))");
-
-
-		
-			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
-			
-
-			dbA.executeSQL("INSERT INTO normList (idunitList, normName, iddeontic, idtargetType, targetValue, idactionnorm, normContent, normRule )" +
-					" VALUES ((SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'), 'accesRegisternotUnit', 3,3, 3, 1,'normContent' ,'registerUnit(_,_,_,_,_,) := null')");
-			
-			
-			ArrayList<ArrayList<String>> result = omsProxy.informTargetNorms("invalidTargetValue", "targetValue", unit);
-			
-			fail(result.toString());
-		
-
-			
-			//---------------------------------------------------------------------//
-
-
-		}catch(InvalidTargetTypeException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
+		// Method call	
+		omsProxy.informTargetNorms("invalidTargetValue", "targetValue", "jerarquia");
 	}
 	
 	
 	// Pruebas para el funcionamiento correcto.
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformTargetNormsCorrect1()
 	{
 		try
@@ -224,6 +178,7 @@ public class TestInformTargetNorms extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformTargetNormsCorrect2()
 	{
 		try
@@ -261,6 +216,7 @@ public class TestInformTargetNorms extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformTargetNormsCorrect3()
 	{
 		try
@@ -309,7 +265,7 @@ public class TestInformTargetNorms extends TestCase {
 		}
 	}
 	
-	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformTargetNormsCorrect4()
 	{
 		try
@@ -353,6 +309,7 @@ public class TestInformTargetNorms extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformTargetNormsCorrect5()
 	{
 		try
@@ -396,7 +353,7 @@ public class TestInformTargetNorms extends TestCase {
 		}
 	}
 	
-	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformTargetNormsCorrect6()
 	{
 		try
@@ -451,6 +408,7 @@ public class TestInformTargetNorms extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformTargetNormsCorrect7()
 	{
 		try
@@ -500,6 +458,7 @@ public class TestInformTargetNorms extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformTargetNormsCorrect8()
 	{
 		try
@@ -549,6 +508,7 @@ public class TestInformTargetNorms extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformTargetNormsCorrect9()
 	{
 		try
@@ -603,7 +563,7 @@ public class TestInformTargetNorms extends TestCase {
 		}
 	}
 	
-	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformTargetNormsCorrect10()
 	{
 		try
@@ -665,7 +625,7 @@ public class TestInformTargetNorms extends TestCase {
 		}
 	}
 	
-	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformTargetNormsCorrect11()
 	{
 		try
@@ -722,6 +682,7 @@ public class TestInformTargetNorms extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformTargetNormsCorrect12()
 	{
 		try
@@ -792,7 +753,7 @@ public class TestInformTargetNorms extends TestCase {
 		}
 	}
 	
-	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformTargetNormsCorrect13()
 	{
 		try
@@ -848,14 +809,6 @@ public class TestInformTargetNorms extends TestCase {
 			ArrayList<ArrayList<String>> result = omsProxy.informTargetNorms("agentName", "Creador", unit);
 			
 			assertEquals(0, result.size());
-			
-			
-			
-			
-			
-			
-			
-
 
 		}
 		catch(Exception e)
@@ -864,6 +817,7 @@ public class TestInformTargetNorms extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformTargetNormsCorrect14()
 	{
 		try
@@ -905,14 +859,6 @@ public class TestInformTargetNorms extends TestCase {
 			ArrayList<ArrayList<String>> result = omsProxy.informTargetNorms("positionName", "", unit);
 			
 			assertEquals(0, result.size());
-			
-			
-			
-			
-			
-			
-			
-
 
 		}
 		catch(Exception e)

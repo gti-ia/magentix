@@ -1,8 +1,13 @@
 package TestOMS;
 
+import static org.junit.Assert.*;
+
 import java.util.ArrayList;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
 import es.upv.dsic.gti_ia.organization.OMS;
@@ -11,7 +16,7 @@ import es.upv.dsic.gti_ia.organization.SF;
 import es.upv.dsic.gti_ia.organization.exception.THOMASException;
 
 
-public class TestInformRole extends TestCase {
+public class TestInformRole {
 
 	OMSProxy omsProxy = null;
 	DatabaseAccess dbA = null;
@@ -26,8 +31,8 @@ public class TestInformRole extends TestCase {
 	
 	Process qpid_broker;
 	
-
-	protected void tearDown() throws Exception {
+	@After
+	public void tearDown() throws Exception {
 
 		//------------------Clean Data Base -----------//
 		dbA.executeSQL("DELETE FROM agentPlayList");
@@ -59,8 +64,9 @@ public class TestInformRole extends TestCase {
 		AgentsConnection.disconnect();
 		qpidManager.UnixQpidManager.stopQpid(qpid_broker);
 	}
-	protected void setUp() throws Exception {
-		super.setUp();
+	
+	@Before
+	public void setUp() throws Exception {
 
 		qpid_broker = qpidManager.UnixQpidManager.startQpid(Runtime.getRuntime(), qpid_broker);
 		
@@ -133,15 +139,9 @@ public class TestInformRole extends TestCase {
 		
 		dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
 
-
-
-
-
-
-
-
 	}
 
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole1a()
 	{
 		try
@@ -209,6 +209,7 @@ public class TestInformRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole1b()
 	{
 		try
@@ -271,6 +272,8 @@ public class TestInformRole extends TestCase {
 			fail(e.getMessage());
 		}
 	}	
+	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole1c()
 	{
 		try
@@ -334,6 +337,7 @@ public class TestInformRole extends TestCase {
 		}
 	}	
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole1d()
 	{
 		try
@@ -397,6 +401,7 @@ public class TestInformRole extends TestCase {
 		}
 	}	
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole2a()
 	{
 		try
@@ -458,6 +463,7 @@ public class TestInformRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole2b()
 	{
 		try
@@ -520,6 +526,8 @@ public class TestInformRole extends TestCase {
 			fail(e.getMessage());
 		}
 	}	
+	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole2c()
 	{
 		try
@@ -583,6 +591,7 @@ public class TestInformRole extends TestCase {
 		}
 	}	
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole2d()
 	{
 		try
@@ -646,6 +655,7 @@ public class TestInformRole extends TestCase {
 		}
 	}	
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole3a()
 	{
 		try
@@ -707,6 +717,7 @@ public class TestInformRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole3b()
 	{
 		try
@@ -769,6 +780,8 @@ public class TestInformRole extends TestCase {
 			fail(e.getMessage());
 		}
 	}	
+	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole3c()
 	{
 		try
@@ -832,6 +845,7 @@ public class TestInformRole extends TestCase {
 		}
 	}	
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole3d()
 	{
 		try
@@ -895,6 +909,7 @@ public class TestInformRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole4a()
 	{
 		try
@@ -956,6 +971,7 @@ public class TestInformRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole4b()
 	{
 		try
@@ -1018,6 +1034,8 @@ public class TestInformRole extends TestCase {
 			fail(e.getMessage());
 		}
 	}	
+	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole4c()
 	{
 		try
@@ -1081,6 +1099,7 @@ public class TestInformRole extends TestCase {
 		}
 	}	
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole4d()
 	{
 		try
@@ -1144,6 +1163,7 @@ public class TestInformRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole5a()
 	{
 		try
@@ -1211,6 +1231,7 @@ public class TestInformRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole5b()
 	{
 		try
@@ -1273,6 +1294,8 @@ public class TestInformRole extends TestCase {
 			fail(e.getMessage());
 		}
 	}	
+	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole5c()
 	{
 		try
@@ -1336,6 +1359,7 @@ public class TestInformRole extends TestCase {
 		}
 	}	
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole5d()
 	{
 		try
@@ -1399,6 +1423,7 @@ public class TestInformRole extends TestCase {
 		}
 	}	
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole6a()
 	{
 		try
@@ -1460,6 +1485,7 @@ public class TestInformRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole6b()
 	{
 		try
@@ -1522,6 +1548,8 @@ public class TestInformRole extends TestCase {
 			fail(e.getMessage());
 		}
 	}	
+	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole6c()
 	{
 		try
@@ -1585,6 +1613,7 @@ public class TestInformRole extends TestCase {
 		}
 	}	
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole6d()
 	{
 		try
@@ -1648,6 +1677,7 @@ public class TestInformRole extends TestCase {
 		}
 	}	
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole7a()
 	{
 		try
@@ -1709,6 +1739,7 @@ public class TestInformRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole7b()
 	{
 		try
@@ -1771,6 +1802,8 @@ public class TestInformRole extends TestCase {
 			fail(e.getMessage());
 		}
 	}	
+	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole7c()
 	{
 		try
@@ -1834,6 +1867,7 @@ public class TestInformRole extends TestCase {
 		}
 	}	
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole7d()
 	{
 		try
@@ -1897,6 +1931,7 @@ public class TestInformRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole8a()
 	{
 		try
@@ -1958,6 +1993,7 @@ public class TestInformRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole8b()
 	{
 		try
@@ -2020,6 +2056,8 @@ public class TestInformRole extends TestCase {
 			fail(e.getMessage());
 		}
 	}	
+	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole8c()
 	{
 		try
@@ -2083,6 +2121,7 @@ public class TestInformRole extends TestCase {
 		}
 	}	
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole8d()
 	{
 		try
@@ -2146,7 +2185,7 @@ public class TestInformRole extends TestCase {
 		}
 	}
 	
-	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole9a()
 	{
 		try
@@ -2213,6 +2252,8 @@ public class TestInformRole extends TestCase {
 			fail(e.getMessage());
 		}
 	}
+	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole9b()
 	{
 		try
@@ -2279,6 +2320,8 @@ public class TestInformRole extends TestCase {
 			fail(e.getMessage());
 		}
 	}
+	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole9c()
 	{
 		try
@@ -2345,6 +2388,8 @@ public class TestInformRole extends TestCase {
 			fail(e.getMessage());
 		}
 	}
+	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole9d()
 	{
 		try
@@ -2412,6 +2457,7 @@ public class TestInformRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole10a()
 	{
 		try
@@ -2478,6 +2524,8 @@ public class TestInformRole extends TestCase {
 			fail(e.getMessage());
 		}
 	}
+	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole10b()
 	{
 		try
@@ -2544,6 +2592,8 @@ public class TestInformRole extends TestCase {
 			fail(e.getMessage());
 		}
 	}
+	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole10c()
 	{
 		try
@@ -2610,6 +2660,8 @@ public class TestInformRole extends TestCase {
 			fail(e.getMessage());
 		}
 	}
+	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole10d()
 	{
 		try
@@ -2677,6 +2729,7 @@ public class TestInformRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole11a()
 	{
 		try
@@ -2743,6 +2796,8 @@ public class TestInformRole extends TestCase {
 			fail(e.getMessage());
 		}
 	}
+	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole11b()
 	{
 		try
@@ -2809,6 +2864,8 @@ public class TestInformRole extends TestCase {
 			fail(e.getMessage());
 		}
 	}
+	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole11c()
 	{
 		try
@@ -2875,6 +2932,8 @@ public class TestInformRole extends TestCase {
 			fail(e.getMessage());
 		}
 	}
+	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole11d()
 	{
 		try
@@ -2942,6 +3001,7 @@ public class TestInformRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole12a()
 	{
 		try
@@ -3008,6 +3068,8 @@ public class TestInformRole extends TestCase {
 			fail(e.getMessage());
 		}
 	}
+	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole12b()
 	{
 		try
@@ -3074,6 +3136,8 @@ public class TestInformRole extends TestCase {
 			fail(e.getMessage());
 		}
 	}
+	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole12c()
 	{
 		try
@@ -3140,6 +3204,8 @@ public class TestInformRole extends TestCase {
 			fail(e.getMessage());
 		}
 	}
+	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole12d()
 	{
 		try
@@ -3207,6 +3273,7 @@ public class TestInformRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole13a()
 	{
 		try
@@ -3273,6 +3340,8 @@ public class TestInformRole extends TestCase {
 			fail(e.getMessage());
 		}
 	}
+	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole13b()
 	{
 		try
@@ -3339,6 +3408,8 @@ public class TestInformRole extends TestCase {
 			fail(e.getMessage());
 		}
 	}
+	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole13c()
 	{
 		try
@@ -3405,6 +3476,8 @@ public class TestInformRole extends TestCase {
 			fail(e.getMessage());
 		}
 	}
+	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole13d()
 	{
 		try
@@ -3472,6 +3545,7 @@ public class TestInformRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole14a()
 	{
 		try
@@ -3538,6 +3612,8 @@ public class TestInformRole extends TestCase {
 			fail(e.getMessage());
 		}
 	}
+	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole14b()
 	{
 		try
@@ -3604,6 +3680,8 @@ public class TestInformRole extends TestCase {
 			fail(e.getMessage());
 		}
 	}
+	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole14c()
 	{
 		try
@@ -3670,6 +3748,8 @@ public class TestInformRole extends TestCase {
 			fail(e.getMessage());
 		}
 	}
+	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole14d()
 	{
 		try
@@ -3737,6 +3817,7 @@ public class TestInformRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole15a()
 	{
 		try
@@ -3869,6 +3950,8 @@ public class TestInformRole extends TestCase {
 			fail(e.getMessage());
 		}
 	}
+	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole15c()
 	{
 		try
@@ -3935,6 +4018,8 @@ public class TestInformRole extends TestCase {
 			fail(e.getMessage());
 		}
 	}
+	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole15d()
 	{
 		try
@@ -4002,6 +4087,7 @@ public class TestInformRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole16a()
 	{
 		try
@@ -4068,6 +4154,8 @@ public class TestInformRole extends TestCase {
 			fail(e.getMessage());
 		}
 	}
+	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole16b()
 	{
 		try
@@ -4134,6 +4222,8 @@ public class TestInformRole extends TestCase {
 			fail(e.getMessage());
 		}
 	}
+	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole16c()
 	{
 		try
@@ -4200,6 +4290,8 @@ public class TestInformRole extends TestCase {
 			fail(e.getMessage());
 		}
 	}
+	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole16d()
 	{
 		try
@@ -4266,6 +4358,8 @@ public class TestInformRole extends TestCase {
 			fail(e.getMessage());
 		}
 	}
+	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole17a()
 	{
 		try
@@ -4332,6 +4426,8 @@ public class TestInformRole extends TestCase {
 			fail(e.getMessage());
 		}
 	}
+	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole17b()
 	{
 		try
@@ -4398,6 +4494,8 @@ public class TestInformRole extends TestCase {
 			fail(e.getMessage());
 		}
 	}
+	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole17c()
 	{
 		try
@@ -4464,6 +4562,8 @@ public class TestInformRole extends TestCase {
 			fail(e.getMessage());
 		}
 	}
+	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole17d()
 	{
 		try
@@ -4531,6 +4631,7 @@ public class TestInformRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole18a()
 	{
 		try
@@ -4599,6 +4700,7 @@ public class TestInformRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole18b()
 	{
 		try
@@ -4667,6 +4769,7 @@ public class TestInformRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole19a()
 	{
 		try
@@ -4735,6 +4838,7 @@ public class TestInformRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole19b()
 	{
 		try
@@ -4803,6 +4907,7 @@ public class TestInformRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole20a()
 	{
 		try
@@ -4871,6 +4976,7 @@ public class TestInformRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole20b()
 	{
 		try
@@ -4939,6 +5045,7 @@ public class TestInformRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole21a()
 	{
 		try
@@ -5007,6 +5114,7 @@ public class TestInformRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole21b()
 	{
 		try
@@ -5075,6 +5183,7 @@ public class TestInformRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole22a()
 	{
 		try
@@ -5143,6 +5252,7 @@ public class TestInformRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole22b()
 	{
 		try
@@ -5211,6 +5321,7 @@ public class TestInformRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole23a()
 	{
 		try
@@ -5279,6 +5390,7 @@ public class TestInformRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole23b()
 	{
 		try
@@ -5347,6 +5459,7 @@ public class TestInformRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole24a()
 	{
 		try
@@ -5415,6 +5528,7 @@ public class TestInformRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole24b()
 	{
 		try
@@ -5483,6 +5597,7 @@ public class TestInformRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole25a()
 	{
 		try
@@ -5551,6 +5666,7 @@ public class TestInformRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole25b()
 	{
 		try
@@ -5619,6 +5735,7 @@ public class TestInformRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole26a()
 	{
 		try
@@ -5687,6 +5804,7 @@ public class TestInformRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole26b()
 	{
 		try
@@ -5755,6 +5873,7 @@ public class TestInformRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole27a()
 	{
 		try
@@ -5823,6 +5942,7 @@ public class TestInformRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole27b()
 	{
 		try
@@ -5891,6 +6011,7 @@ public class TestInformRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole28a()
 	{
 		try
@@ -5959,6 +6080,7 @@ public class TestInformRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole28b()
 	{
 		try
@@ -6027,6 +6149,7 @@ public class TestInformRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole29a()
 	{
 		try
@@ -6095,6 +6218,7 @@ public class TestInformRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole29b()
 	{
 		try
@@ -6163,6 +6287,7 @@ public class TestInformRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole30a()
 	{
 		try
@@ -6231,6 +6356,7 @@ public class TestInformRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole30b()
 	{
 		try
@@ -6299,6 +6425,7 @@ public class TestInformRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole31a()
 	{
 		try
@@ -6367,6 +6494,7 @@ public class TestInformRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole31b()
 	{
 		try
@@ -6435,6 +6563,7 @@ public class TestInformRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole32a()
 	{
 		try
@@ -6503,6 +6632,7 @@ public class TestInformRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole32b()
 	{
 		try
@@ -6571,6 +6701,7 @@ public class TestInformRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole33a()
 	{
 		try
@@ -6639,6 +6770,7 @@ public class TestInformRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole33b()
 	{
 		try
@@ -6707,6 +6839,7 @@ public class TestInformRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole34a()
 	{
 		try
@@ -6775,6 +6908,7 @@ public class TestInformRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformRole34b()
 	{
 		try

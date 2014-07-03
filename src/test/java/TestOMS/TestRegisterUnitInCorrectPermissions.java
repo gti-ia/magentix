@@ -1,6 +1,9 @@
 package TestOMS;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
 import es.upv.dsic.gti_ia.organization.OMS;
@@ -10,7 +13,7 @@ import es.upv.dsic.gti_ia.organization.exception.NotCreatorInParentUnitException
 import es.upv.dsic.gti_ia.organization.exception.UnitExistsException;
 
 
-public class TestRegisterUnitInCorrectPermissions extends TestCase {
+public class TestRegisterUnitInCorrectPermissions {
 
 	OMSProxy omsProxy = null;
 	DatabaseAccess dbA = null;
@@ -23,8 +26,8 @@ public class TestRegisterUnitInCorrectPermissions extends TestCase {
 	
 	Process qpid_broker;
 	
-
-	protected void tearDown() throws Exception {
+	@After
+	public void tearDown() throws Exception {
 
 		//------------------Clean Data Base -----------//
 		dbA.executeSQL("DELETE FROM agentPlayList");
@@ -53,8 +56,9 @@ public class TestRegisterUnitInCorrectPermissions extends TestCase {
 		AgentsConnection.disconnect();
 		qpidManager.UnixQpidManager.stopQpid(qpid_broker);
 	}
-	protected void setUp() throws Exception {
-		super.setUp();
+	
+	@Before
+	public void setUp() throws Exception {
 
 		qpid_broker = qpidManager.UnixQpidManager.startQpid(Runtime.getRuntime(), qpid_broker);
 		
@@ -143,660 +147,180 @@ public class TestRegisterUnitInCorrectPermissions extends TestCase {
 				"(SELECT idposition FROM position WHERE positionName = 'subordinate'), "+
 				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
 		"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
-
-
-	
-
-
-
-
 	}
 
-	public void testRegisterUnit1a()
-	{
-		
-		String unit = "jerarquia2";
-		String parentUnit = "jerarquia";
-		String unitType = "hierarchy";
-		
-		try
-		{
-			
-
-			String result = omsProxy.registerUnit(unit, unitType, parentUnit, "creador");
-
-			fail(result);
-
-		}catch(NotCreatorInParentUnitException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	@Test(timeout = 5 * 60 * 1000, expected = NotCreatorInParentUnitException.class)
+	public void testRegisterUnit1a() throws Exception {
+		omsProxy.registerUnit("jerarquia2", "hierarchy", "jerarquia", "creador");
 	}
 	
-	public void testRegisterUnit1b()
-	{
-		
-		String unit = "jerarquia2";
-		String parentUnit = "jerarquia";
-		String unitType = "hierarchy";
-		
-	
-		
-		try
-		{
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'subordinado' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
+	@Test(timeout = 5 * 60 * 1000, expected = NotCreatorInParentUnitException.class)
+	public void testRegisterUnit1b() throws Exception {
+		// Database Initialization
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+				"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'subordinado' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
 
-			
-
-			String result = omsProxy.registerUnit(unit, unitType, parentUnit, "creador");
-
-			fail(result);
-
-		}catch(NotCreatorInParentUnitException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+		// Method call	
+		omsProxy.registerUnit("jerarquia2", "hierarchy", "jerarquia", "creador");
 	}
 	
-	public void testRegisterUnit1c()
-	{
-		
-		String unit = "jerarquia2";
-		String parentUnit = "jerarquia";
-		String unitType = "hierarchy";
-		
-		try
-		{
-			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'supervisor' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
+	@Test(timeout = 5 * 60 * 1000, expected = NotCreatorInParentUnitException.class)
+	public void testRegisterUnit1c() throws Exception {
+		// Database Initialization
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+				"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'supervisor' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
 
-			String result = omsProxy.registerUnit(unit, unitType, parentUnit, "creador");
-
-			fail(result);
-
-		}catch(NotCreatorInParentUnitException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+		// Method call	
+		omsProxy.registerUnit("jerarquia2", "hierarchy", "jerarquia", "creador");
 	}
 
-	public void testRegisterUnit2a()
-	{
-		
-		String unit = "equipo2";
-		String parentUnit = "jerarquia";
-		String unitType = "team";
-		
-		try
-		{
-			
-
-			String result = omsProxy.registerUnit(unit, unitType, parentUnit, "creador");
-
-			fail(result);
-
-		}catch(NotCreatorInParentUnitException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	@Test(timeout = 5 * 60 * 1000, expected = NotCreatorInParentUnitException.class)
+	public void testRegisterUnit2a() throws Exception {
+		omsProxy.registerUnit("equipo2", "team", "jerarquia", "creador");
 	}
 	
-	public void testRegisterUnit2b()
-	{
-		String unit = "equipo2";
-		String parentUnit = "jerarquia";
-		String unitType = "team";
-	
-		
-		try
-		{
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'subordinado' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
+	@Test(timeout = 5 * 60 * 1000, expected = NotCreatorInParentUnitException.class)
+	public void testRegisterUnit2b() throws Exception {
+		// Database Initialization
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+				"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'subordinado' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
 
-			
-
-			String result = omsProxy.registerUnit(unit, unitType, parentUnit, "creador");
-
-			fail(result);
-
-		}catch(NotCreatorInParentUnitException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+		// Method call	
+		omsProxy.registerUnit("equipo2", "team", "jerarquia", "creador");
 	}
 	
-	public void testRegisterUnit2c()
-	{
-		
-		String unit = "equipo2";
-		String parentUnit = "jerarquia";
-		String unitType = "team";
-		
-		try
-		{
-			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'supervisor' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
+	@Test(timeout = 5 * 60 * 1000, expected = NotCreatorInParentUnitException.class)
+	public void testRegisterUnit2c() throws Exception {
+		// Database Initialization
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+				"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'supervisor' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
 
-			String result = omsProxy.registerUnit(unit, unitType, parentUnit, "creador");
-
-			fail(result);
-
-		}catch(NotCreatorInParentUnitException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+		// Method call	
+		omsProxy.registerUnit("equipo2", "team", "jerarquia", "creador");
 	}
 	
-	public void testRegisterUnit3a()
-	{
-		
-		String unit = "plana2";
-		String parentUnit = "jerarquia";
-		String unitType = "flat";
-		
-		try
-		{
-			
-
-			String result = omsProxy.registerUnit(unit, unitType, parentUnit, "creador");
-
-			fail(result);
-
-		}catch(NotCreatorInParentUnitException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	@Test(timeout = 5 * 60 * 1000, expected = NotCreatorInParentUnitException.class)
+	public void testRegisterUnit3a() throws Exception {
+		omsProxy.registerUnit("plana2", "flat", "jerarquia", "creador");
 	}
 	
-	public void testRegisterUnit3b()
-	{
-		String unit = "plana2";
-		String parentUnit = "jerarquia";
-		String unitType = "flat";
-	
-		
-		try
-		{
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'subordinado' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
+	@Test(timeout = 5 * 60 * 1000, expected = NotCreatorInParentUnitException.class)
+	public void testRegisterUnit3b() throws Exception {
+		// Database Initialization
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+				"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'subordinado' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
 
-			
-
-			String result = omsProxy.registerUnit(unit, unitType, parentUnit, "creador");
-
-			fail(result);
-
-		}catch(NotCreatorInParentUnitException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+		// Method call	
+		omsProxy.registerUnit("plana2", "flat", "jerarquia", "creador");
 	}
 	
-	public void testRegisterUnit3c()
-	{
-		
-		String unit = "plana2";
-		String parentUnit = "jerarquia";
-		String unitType = "flat";
-		
-		try
-		{
-			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'supervisor' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
+	@Test(timeout = 5 * 60 * 1000, expected = NotCreatorInParentUnitException.class)
+	public void testRegisterUnit3c() throws Exception {
+		// Database Initialization
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+				"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'supervisor' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
 
-			String result = omsProxy.registerUnit(unit, unitType, parentUnit, "creador");
-
-			fail(result);
-
-		}catch(NotCreatorInParentUnitException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+		// Method call	
+		omsProxy.registerUnit("plana2", "flat", "jerarquia", "creador");
 	}
 	
-	public void testRegisterUnit4a()
-	{
-		
-		String unit = "equipo2";
-		String parentUnit = "equipo";
-		String unitType = "team";
-		
-		try
-		{
-			
-
-			String result = omsProxy.registerUnit(unit, unitType, parentUnit, "creador");
-
-			fail(result);
-
-		}catch(NotCreatorInParentUnitException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	@Test(timeout = 5 * 60 * 1000, expected = NotCreatorInParentUnitException.class)
+	public void testRegisterUnit4a() throws Exception {
+		omsProxy.registerUnit("equipo2", "team", "equipo", "creador");
 	}
 	
-	public void testRegisterUnit4b()
-	{
-		String unit = "equipo2";
-		String parentUnit = "equipo";
-		String unitType = "team";
-	
-		
-		try
-		{
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo'))))");
+	@Test(timeout = 5 * 60 * 1000, expected = NotCreatorInParentUnitException.class)
+	public void testRegisterUnit4b() throws Exception {
+		// Database Initialization
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+				"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo'))))");
 
-			
-
-			String result = omsProxy.registerUnit(unit, unitType, parentUnit, "creador");
-
-			fail(result);
-
-		}catch(NotCreatorInParentUnitException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+		// Method call	
+		omsProxy.registerUnit("equipo2", "team", "equipo", "creador");
 	}
 	
-	public void testRegisterUnit5a()
-	{
-		
-		String unit = "jerarquia2";
-		String parentUnit = "equipo";
-		String unitType = "hierarchy";
-		
-		try
-		{
-			
-
-			String result = omsProxy.registerUnit(unit, unitType, parentUnit, "creador");
-
-			fail(result);
-
-		}catch(NotCreatorInParentUnitException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	@Test(timeout = 5 * 60 * 1000, expected = NotCreatorInParentUnitException.class)
+	public void testRegisterUnit5a() throws Exception {
+		omsProxy.registerUnit("jerarquia2", "hierarchy", "equipo", "creador");
 	}
 	
-	public void testRegisterUnit5b()
-	{
-		String unit = "jerarquia2";
-		String parentUnit = "equipo";
-		String unitType = "hierarchy";
-		
-		try
-		{
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo'))))");
+	@Test(timeout = 5 * 60 * 1000, expected = NotCreatorInParentUnitException.class)
+	public void testRegisterUnit5b() throws Exception {
+		// Database Initialization
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+				"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo'))))");
 
-			
-
-			String result = omsProxy.registerUnit(unit, unitType, parentUnit, "creador");
-
-			fail(result);
-
-		}catch(NotCreatorInParentUnitException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+		// Method call	
+		omsProxy.registerUnit("jerarquia2", "hierarchy", "equipo", "creador");
 	}
 	
-	public void testRegisterUnit6a()
-	{
-		
-		String unit = "plana2";
-		String parentUnit = "equipo";
-		String unitType = "flat";
-		
-		try
-		{
-			
-
-			String result = omsProxy.registerUnit(unit, unitType, parentUnit, "creador");
-
-			fail(result);
-
-		}catch(NotCreatorInParentUnitException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	@Test(timeout = 5 * 60 * 1000, expected = NotCreatorInParentUnitException.class)
+	public void testRegisterUnit6a() throws Exception {
+		omsProxy.registerUnit("plana2", "flat", "equipo", "creador");
 	}
 	
-	public void testRegisterUnit6b()
-	{
-		String unit = "plana2";
-		String parentUnit = "equipo";
-		String unitType = "flat";
-		
-		try
-		{
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo'))))");
+	@Test(timeout = 5 * 60 * 1000, expected = NotCreatorInParentUnitException.class)
+	public void testRegisterUnit6b() throws Exception {
+		// Database Initialization
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+				"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo'))))");
 
-			
-
-			String result = omsProxy.registerUnit(unit, unitType, parentUnit, "creador");
-
-			fail(result);
-
-		}catch(NotCreatorInParentUnitException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+		// Method call	
+		omsProxy.registerUnit("plana2", "flat", "equipo", "creador");
 	}
 	
-	public void testRegisterUnit7a()
-	{
-		
-		String unit = "plana2";
-		String parentUnit = "plana";
-		String unitType = "flat";
-		
-		try
-		{
-			
-
-			String result = omsProxy.registerUnit(unit, unitType, parentUnit, "creador");
-
-			fail(result);
-
-		}catch(NotCreatorInParentUnitException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	@Test(timeout = 5 * 60 * 1000, expected = NotCreatorInParentUnitException.class)
+	public void testRegisterUnit7a() throws Exception {
+		omsProxy.registerUnit("plana2", "flat", "plana", "creador");
 	}
 	
-	public void testRegisterUnit7b()
-	{
-		String unit = "plana2";
-		String parentUnit = "plana";
-		String unitType = "flat";
-		
-		try
-		{
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana'))))");
+	@Test(timeout = 5 * 60 * 1000, expected = NotCreatorInParentUnitException.class)
+	public void testRegisterUnit7b() throws Exception {
+		// Database Initialization
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+				"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana'))))");
 
-			
-
-			String result = omsProxy.registerUnit(unit, unitType, parentUnit, "creador");
-
-			fail(result);
-
-		}catch(NotCreatorInParentUnitException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+		// Method call	
+		omsProxy.registerUnit("plana2", "flat", "plana", "creador");
 	}
 	
-	public void testRegisterUnit8a()
-	{
-		
-		String unit = "jerarquia2";
-		String parentUnit = "plana";
-		String unitType = "hierarchy";
-		
-		try
-		{
-			
-
-			String result = omsProxy.registerUnit(unit, unitType, parentUnit, "creador");
-
-			fail(result);
-
-		}catch(NotCreatorInParentUnitException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	@Test(timeout = 5 * 60 * 1000, expected = NotCreatorInParentUnitException.class)
+	public void testRegisterUnit8a() throws Exception {
+		omsProxy.registerUnit("jerarquia2", "hierarchy", "plana", "creador");
 	}
 	
-	public void testRegisterUnit8b()
-	{
-		String unit = "jerarquia2";
-		String parentUnit = "plana";
-		String unitType = "hierarchy";
-		
-		try
-		{
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana'))))");
+	@Test(timeout = 5 * 60 * 1000, expected = NotCreatorInParentUnitException.class)
+	public void testRegisterUnit8b() throws Exception {
+		// Database Initialization
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+				"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana'))))");
 
-			
-
-			String result = omsProxy.registerUnit(unit, unitType, parentUnit, "creador");
-
-			fail(result);
-
-		}catch(NotCreatorInParentUnitException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+		// Method call	
+		omsProxy.registerUnit("jerarquia2", "hierarchy", "plana", "creador");
 	}
 	
-	public void testRegisterUnit9a()
-	{
-		
-		String unit = "equipo2";
-		String parentUnit = "plana";
-		String unitType = "team";
-		
-		try
-		{
-			
-
-			String result = omsProxy.registerUnit(unit, unitType, parentUnit, "creador");
-
-			fail(result);
-
-		}catch(NotCreatorInParentUnitException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	@Test(timeout = 5 * 60 * 1000, expected = NotCreatorInParentUnitException.class)
+	public void testRegisterUnit9a() throws Exception {
+		omsProxy.registerUnit("equipo2", "team", "plana", "creador");
 	}
 	
-	public void testRegisterUnit9b()
-	{
-		String unit = "equipo2";
-		String parentUnit = "plana";
-		String unitType = "team";
-		
-		try
-		{
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana'))))");
+	@Test(timeout = 5 * 60 * 1000, expected = NotCreatorInParentUnitException.class)
+	public void testRegisterUnit9b() throws Exception {
+		// Database Initialization
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+				"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana'))))");
 
-			
-
-			String result = omsProxy.registerUnit(unit, unitType, parentUnit, "creador");
-
-			fail(result);
-
-		}catch(NotCreatorInParentUnitException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+		// Method call	
+		omsProxy.registerUnit("equipo2", "team", "plana", "creador");
 	}
 	
-	public void testRegisterUnit10()
-	{
-		String unit = "Plana";
-		String parentUnit = "virtual";
-		String unitType = "flat";
-		
-		try
-		{
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana'))))");
+	@Test(timeout = 5 * 60 * 1000, expected = UnitExistsException.class)
+	public void testRegisterUnit10() throws Exception {
+		// Database Initialization
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+				"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana'))))");
 
-			
-
-			String result = omsProxy.registerUnit(unit, unitType, parentUnit, "creador");
-
-			fail(result);
-
-		}catch(UnitExistsException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+		// Method call	
+		omsProxy.registerUnit("Plana", "flat", "virtual", "creador");
 	}
 }

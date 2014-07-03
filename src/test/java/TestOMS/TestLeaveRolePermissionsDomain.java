@@ -99,7 +99,7 @@ public class TestLeaveRolePermissionsDomain {
 		
 	}
 	
-	@Test
+	@Test(timeout = 5 * 60 * 1000)
 	public void testLeaveRolePermissionsDomain1() throws Exception {
 		
 		//------------------------------------------- Test Initialization  -----------------------------------------------//
@@ -149,7 +149,7 @@ public class TestLeaveRolePermissionsDomain {
 		
 	}
 	
-	@Test(expected=NotPlaysRoleException.class)
+	@Test(timeout = 5 * 60 * 1000, expected=NotPlaysRoleException.class)
 	public void testLeaveRolePermissionsDomain2() throws Exception {
 		
 		//------------------------------------------- Test Initialization  -----------------------------------------------//

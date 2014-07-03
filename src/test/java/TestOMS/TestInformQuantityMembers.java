@@ -1,6 +1,11 @@
 package TestOMS;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
 import es.upv.dsic.gti_ia.organization.OMS;
@@ -9,7 +14,7 @@ import es.upv.dsic.gti_ia.organization.SF;
 import es.upv.dsic.gti_ia.organization.exception.THOMASException;
 
 
-public class TestInformQuantityMembers extends TestCase {
+public class TestInformQuantityMembers {
 
 	OMSProxy omsProxy = null;
 	DatabaseAccess dbA = null;
@@ -24,8 +29,8 @@ public class TestInformQuantityMembers extends TestCase {
 	
 	Process qpid_broker;
 	
-
-	protected void tearDown() throws Exception {
+	@After
+	public void tearDown() throws Exception {
 
 		//------------------Clean Data Base -----------//
 		dbA.executeSQL("DELETE FROM agentPlayList");
@@ -57,8 +62,9 @@ public class TestInformQuantityMembers extends TestCase {
 		AgentsConnection.disconnect();
 		qpidManager.UnixQpidManager.stopQpid(qpid_broker);
 	}
-	protected void setUp() throws Exception {
-		super.setUp();
+	
+	@Before
+	public void setUp() throws Exception {
 
 		qpid_broker = qpidManager.UnixQpidManager.startQpid(Runtime.getRuntime(), qpid_broker);
 		
@@ -201,18 +207,9 @@ public class TestInformQuantityMembers extends TestCase {
 
 		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
 		"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas2'),(SELECT idroleList FROM roleList WHERE (roleName = 'supervisor' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'))))");
-
-
-
-
-
-
-
-
-
-
 	}
 
+	@Test(timeout = 5 * 60 * 1000)
 	public void testQuantityMembers1a()
 	{
 		try
@@ -264,6 +261,7 @@ public class TestInformQuantityMembers extends TestCase {
 		}
 	}
 
+	@Test(timeout = 5 * 60 * 1000)
 	public void testQuantityMembers1b()
 	{
 		try
@@ -333,7 +331,7 @@ public class TestInformQuantityMembers extends TestCase {
 		}
 	}
 
-
+	@Test(timeout = 5 * 60 * 1000)
 	public void testQuantityMembers1c()
 	{
 		try
@@ -403,6 +401,7 @@ public class TestInformQuantityMembers extends TestCase {
 		}
 	}
 
+	@Test(timeout = 5 * 60 * 1000)
 	public void testQuantityMembers1d()
 	{
 		try
@@ -472,6 +471,7 @@ public class TestInformQuantityMembers extends TestCase {
 		}
 	}
 
+	@Test(timeout = 5 * 60 * 1000)
 	public void testQuantityMembers2a()
 	{
 		try
@@ -525,6 +525,7 @@ public class TestInformQuantityMembers extends TestCase {
 		}
 	}
 
+	@Test(timeout = 5 * 60 * 1000)
 	public void testQuantityMembers2b()
 	{
 		try
@@ -584,7 +585,7 @@ public class TestInformQuantityMembers extends TestCase {
 
 	}
 
-
+	@Test(timeout = 5 * 60 * 1000)
 	public void testQuantityMembers2c()
 	{
 		try
@@ -643,6 +644,7 @@ public class TestInformQuantityMembers extends TestCase {
 
 	}
 
+	@Test(timeout = 5 * 60 * 1000)
 	public void testQuantityMembers2d()
 	{
 		try
@@ -701,6 +703,7 @@ public class TestInformQuantityMembers extends TestCase {
 
 	}
 
+	@Test(timeout = 5 * 60 * 1000)
 	public void testQuantityMembers3a()
 	{
 		try
@@ -754,6 +757,7 @@ public class TestInformQuantityMembers extends TestCase {
 		}
 	}
 
+	@Test(timeout = 5 * 60 * 1000)
 	public void testQuantityMembers3b()
 	{
 		try
@@ -830,7 +834,7 @@ public class TestInformQuantityMembers extends TestCase {
 
 	}
 
-
+	@Test(timeout = 5 * 60 * 1000)
 	public void testQuantityMembers3c()
 	{
 		try
@@ -905,6 +909,7 @@ public class TestInformQuantityMembers extends TestCase {
 
 	}
 
+	@Test(timeout = 5 * 60 * 1000)
 	public void testQuantityMembers3d()
 	{
 		try
@@ -979,6 +984,7 @@ public class TestInformQuantityMembers extends TestCase {
 
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testQuantityMembers4a()
 	{
 		try
@@ -1032,6 +1038,7 @@ public class TestInformQuantityMembers extends TestCase {
 		}
 	}
 
+	@Test(timeout = 5 * 60 * 1000)
 	public void testQuantityMembers4b()
 	{
 		try
@@ -1108,7 +1115,7 @@ public class TestInformQuantityMembers extends TestCase {
 
 	}
 
-
+	@Test(timeout = 5 * 60 * 1000)
 	public void testQuantityMembers4c()
 	{
 		try
@@ -1183,6 +1190,7 @@ public class TestInformQuantityMembers extends TestCase {
 
 	}
 
+	@Test(timeout = 5 * 60 * 1000)
 	public void testQuantityMembers4d()
 	{
 		try
@@ -1256,6 +1264,8 @@ public class TestInformQuantityMembers extends TestCase {
 		}
 
 	}
+	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testQuantityMembers5a()
 	{
 		try
@@ -1311,6 +1321,7 @@ public class TestInformQuantityMembers extends TestCase {
 		}
 	}
 
+	@Test(timeout = 5 * 60 * 1000)
 	public void testQuantityMembers5b()
 	{
 		try
@@ -1373,7 +1384,7 @@ public class TestInformQuantityMembers extends TestCase {
 
 	}
 
-
+	@Test(timeout = 5 * 60 * 1000)
 	public void testQuantityMembers5c()
 	{
 		try
@@ -1435,6 +1446,7 @@ public class TestInformQuantityMembers extends TestCase {
 
 	}
 
+	@Test(timeout = 5 * 60 * 1000)
 	public void testQuantityMembers5d()
 	{
 		try
@@ -1495,7 +1507,7 @@ public class TestInformQuantityMembers extends TestCase {
 
 	}
 	
-	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testQuantityMembers6a()
 	{
 		try
@@ -1552,6 +1564,7 @@ public class TestInformQuantityMembers extends TestCase {
 		}
 	}
 
+	@Test(timeout = 5 * 60 * 1000)
 	public void testQuantityMembers6b()
 	{
 		try
@@ -1631,7 +1644,7 @@ public class TestInformQuantityMembers extends TestCase {
 
 	}
 
-
+	@Test(timeout = 5 * 60 * 1000)
 	public void testQuantityMembers6c()
 	{
 		try
@@ -1709,6 +1722,7 @@ public class TestInformQuantityMembers extends TestCase {
 
 	}
 
+	@Test(timeout = 5 * 60 * 1000)
 	public void testQuantityMembers6d()
 	{
 		try
@@ -1787,7 +1801,7 @@ public class TestInformQuantityMembers extends TestCase {
 
 	}
 	
-	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testQuantityMembers7a()
 	{
 		try
@@ -1845,6 +1859,7 @@ public class TestInformQuantityMembers extends TestCase {
 		}
 	}
 
+	@Test(timeout = 5 * 60 * 1000)
 	public void testQuantityMembers7b()
 	{
 		try
@@ -1910,7 +1925,7 @@ public class TestInformQuantityMembers extends TestCase {
 
 	}
 
-
+	@Test(timeout = 5 * 60 * 1000)
 	public void testQuantityMembers7c()
 	{
 		try
@@ -1974,6 +1989,7 @@ public class TestInformQuantityMembers extends TestCase {
 
 	}
 
+	@Test(timeout = 5 * 60 * 1000)
 	public void testQuantityMembers7d()
 	{
 		try

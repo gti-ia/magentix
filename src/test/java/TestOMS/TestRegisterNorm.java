@@ -101,7 +101,7 @@ public class TestRegisterNorm {
 		dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
 	}
 	
-	@Test
+	@Test(timeout = 5 * 60 * 1000)
 	public void testRegisterNorm1() throws Exception {
 		
 		//------------------------------------------- Test Initialization  -----------------------------------------------//
@@ -151,7 +151,7 @@ public class TestRegisterNorm {
 		
 	}
 	
-	@Test
+	@Test(timeout = 5 * 60 * 1000)
 	public void testRegisterNorm2() throws Exception {
 		
 		//------------------------------------------- Test Initialization  -----------------------------------------------//
@@ -199,7 +199,7 @@ public class TestRegisterNorm {
 		
 	}
 		
-	@Test
+	@Test(timeout = 5 * 60 * 1000)
 	public void testRegisterNorm3() throws Exception {
 		
 		//------------------------------------------- Test Initialization  -----------------------------------------------//
@@ -241,7 +241,7 @@ public class TestRegisterNorm {
 		
 	}
 	
-	@Test
+	@Test(timeout = 5 * 60 * 1000)
 	public void testRegisterNorm4() throws Exception {
 		
 		//------------------------------------------- Test Initialization  -----------------------------------------------//

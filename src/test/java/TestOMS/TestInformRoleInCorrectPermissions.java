@@ -1,6 +1,9 @@
 package TestOMS;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
 import es.upv.dsic.gti_ia.organization.OMS;
@@ -9,7 +12,7 @@ import es.upv.dsic.gti_ia.organization.SF;
 import es.upv.dsic.gti_ia.organization.exception.VisibilityRoleException;
 
 
-public class TestInformRoleInCorrectPermissions extends TestCase {
+public class TestInformRoleInCorrectPermissions {
 
 	OMSProxy omsProxy = null;
 	DatabaseAccess dbA = null;
@@ -22,9 +25,8 @@ public class TestInformRoleInCorrectPermissions extends TestCase {
 	
 	Process qpid_broker;
 	
-
-	protected void tearDown() throws Exception {
-
+	@After
+	public void tearDown() throws Exception {
 
 		//------------------Clean Data Base -----------//
 		dbA.executeSQL("DELETE FROM agentPlayList");
@@ -53,8 +55,9 @@ public class TestInformRoleInCorrectPermissions extends TestCase {
 		AgentsConnection.disconnect();
 		qpidManager.UnixQpidManager.stopQpid(qpid_broker);
 	}
-	protected void setUp() throws Exception {
-		super.setUp();
+	
+	@Before
+	public void setUp() throws Exception {
 
 		qpid_broker = qpidManager.UnixQpidManager.startQpid(Runtime.getRuntime(), qpid_broker);
 		
@@ -173,1128 +176,547 @@ public class TestInformRoleInCorrectPermissions extends TestCase {
 		
 	}
 	
-	
-	public void testInformRole1a()
-	{
-		try
-		{
+	@Test(timeout = 5 * 60 * 1000, expected = VisibilityRoleException.class)
+	public void testInformRole1a() throws Exception {
+		// Database Initialization
+		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
+				"('miembro2',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
+				"(SELECT idposition FROM position WHERE positionName = 'member'), "+
+				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
+				"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
-					"('miembro2',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
-					"(SELECT idposition FROM position WHERE positionName = 'member'), "+
-					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
-			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+				"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana2'))))");
 
-			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana2'))))");
-
-			
-			omsProxy.informRole("miembro2","plana");
-
-			fail();
-
-		}catch( VisibilityRoleException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+		// Method call	
+		omsProxy.informRole("miembro2","plana");
 	}
 	
-	public void testInformRole1b()
-	{
-		try
-		{
+	@Test(timeout = 5 * 60 * 1000, expected = VisibilityRoleException.class)
+	public void testInformRole1b() throws Exception {
+		// Database Initialization
+		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
+				"('miembro2',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
+				"(SELECT idposition FROM position WHERE positionName = 'member'), "+
+				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
+				"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
-					"('miembro2',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
-					"(SELECT idposition FROM position WHERE positionName = 'member'), "+
-					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
-			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+				"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana2'))))");
 
-			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana2'))))");
-
-			
-			omsProxy.informRole("miembro2","plana");
-
-			fail();
-
-		}catch( VisibilityRoleException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+		// Method call	
+		omsProxy.informRole("miembro2","plana");
 	}
 	
-	public void testInformRole2a()
-	{
-		try
-		{
+	@Test(timeout = 5 * 60 * 1000, expected = VisibilityRoleException.class)
+	public void testInformRole2a() throws Exception {
+		// Database Initialization
+		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
+				"('creador2',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
+				"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
+				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
+				"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
-					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
-					"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
-					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
-			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+				"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana2'))))");
 
-			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana2'))))");
-
-			
-			omsProxy.informRole("creador2","plana");
-
-			fail();
-
-		}catch( VisibilityRoleException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+		// Method call	
+		omsProxy.informRole("creador2","plana");
 	}
 	
-	public void testInformRole2b()
-	{
-		try
-		{
+	@Test(timeout = 5 * 60 * 1000, expected = VisibilityRoleException.class)
+	public void testInformRole2b() throws Exception {
+		// Database Initialization
+		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
+				"('creador2',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
+				"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
+				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
+				"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
-					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
-					"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
-					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
-			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+				"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana2'))))");
 
-			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana2'))))");
-
-			
-			omsProxy.informRole("creador2","plana");
-
-			fail();
-
-		}catch( VisibilityRoleException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+		// Method call	
+		omsProxy.informRole("creador2","plana");
 	}
 
-	
-	public void testInformRole3a()
-	{
-		try
-		{
+	@Test(timeout = 5 * 60 * 1000, expected = VisibilityRoleException.class)
+	public void testInformRole3a() throws Exception {
+		// Database Initialization
+		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
+				"('miembro',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
+				"(SELECT idposition FROM position WHERE positionName = 'member'), "+
+				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
+				"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
-					"('miembro',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
-					"(SELECT idposition FROM position WHERE positionName = 'member'), "+
-					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
-			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+				"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana2'))))");
 
-			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana2'))))");
-
-			
-			omsProxy.informRole("miembro","plana");
-
-			fail();
-
-		}catch( VisibilityRoleException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+		// Method call	
+		omsProxy.informRole("miembro","plana");
 	}
 	
-	public void testInformRole3b()
-	{
-		try
-		{
+	@Test(timeout = 5 * 60 * 1000, expected = VisibilityRoleException.class)
+	public void testInformRole3b() throws Exception {
+		// Database Initialization
+		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
+				"('miembro',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
+				"(SELECT idposition FROM position WHERE positionName = 'member'), "+
+				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
+				"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
-					"('miembro',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
-					"(SELECT idposition FROM position WHERE positionName = 'member'), "+
-					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
-			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+				"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana2'))))");
 
-			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana2'))))");
-
-			
-			omsProxy.informRole("miembro","plana");
-
-			fail();
-
-		}catch( VisibilityRoleException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+		// Method call	
+		omsProxy.informRole("miembro","plana");
 	}
 
-	public void testInformRole4a()
-	{
-		try
-		{
+	@Test(timeout = 5 * 60 * 1000, expected = VisibilityRoleException.class)
+	public void testInformRole4a() throws Exception {
+		// Database Initialization
+		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
+				"('creador3',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
+				"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
+				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
+				"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
-					"('creador3',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
-					"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
-					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
-			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+				"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana2'))))");
 
-			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana2'))))");
-
-			
-			omsProxy.informRole("creador3","plana");
-
-			fail();
-
-		}catch( VisibilityRoleException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+		// Method call	
+		omsProxy.informRole("creador3","plana");
 	}
 	
-	public void testInformRole4b()
-	{
-		try
-		{
+	@Test(timeout = 5 * 60 * 1000, expected = VisibilityRoleException.class)
+	public void testInformRole4b() throws Exception {
+		// Database Initialization
+		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
+				"('creador3',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
+				"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
+				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
+				"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
-					"('creador3',(SELECT idunitList FROM unitList WHERE unitName = 'plana'),"+
-					"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
-					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
-			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+				"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana2'))))");
 
-			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana2'))))");
-
-			
-			omsProxy.informRole("creador3","plana");
-
-			fail();
-
-		}catch( VisibilityRoleException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+		// Method call	
+		omsProxy.informRole("creador3","plana");
 	}
 	
-	public void testInformRole5a()
-	{
-		try
-		{
+	@Test(timeout = 5 * 60 * 1000, expected = VisibilityRoleException.class)
+	public void testInformRole5a() throws Exception {
+		// Database Initialization
+		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
+				"('miembro2',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
+				"(SELECT idposition FROM position WHERE positionName = 'member'), "+
+				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
+				"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
-					"('miembro2',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
-					"(SELECT idposition FROM position WHERE positionName = 'member'), "+
-					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
-			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+				"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo2'))))");
 
-			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo2'))))");
-
-			
-			omsProxy.informRole("miembro2","equipo");
-
-			fail();
-
-		}catch( VisibilityRoleException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+		// Method call	
+		omsProxy.informRole("miembro2","equipo");
 	}
 	
-	public void testInformRole5b()
-	{
-		try
-		{
+	@Test(timeout = 5 * 60 * 1000, expected = VisibilityRoleException.class)
+	public void testInformRole5b() throws Exception {
+		// Database Initialization
+		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
+				"('miembro2',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
+				"(SELECT idposition FROM position WHERE positionName = 'member'), "+
+				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
+				"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
+	
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+				"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo2'))))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
-					"('miembro2',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
-					"(SELECT idposition FROM position WHERE positionName = 'member'), "+
-					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
-			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
-
-			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo2'))))");
-
-			
-			omsProxy.informRole("miembro2","equipo");
-
-			fail();
-
-		}catch( VisibilityRoleException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+		// Method call	
+		omsProxy.informRole("miembro2","equipo");
 	}
 	
-	public void testInformRole6a()
-	{
-		try
-		{
+	@Test(timeout = 5 * 60 * 1000, expected = VisibilityRoleException.class)
+	public void testInformRole6a() throws Exception {
+		// Database Initialization
+		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
+				"('creador2',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
+				"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
+				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
+				"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
-					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
-					"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
-					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
-			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+				"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo2'))))");
 
-			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo2'))))");
-
-			
-			omsProxy.informRole("creador2","equipo");
-
-			fail();
-
-		}catch( VisibilityRoleException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+		// Method call	
+		omsProxy.informRole("creador2","equipo");
 	}
 	
-	public void testInformRole6b()
-	{
-		try
-		{
+	@Test(timeout = 5 * 60 * 1000, expected = VisibilityRoleException.class)
+	public void testInformRole6b() throws Exception {
+		// Database Initialization
+		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
+				"('creador2',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
+				"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
+				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
+				"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
-					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
-					"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
-					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
-			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+				"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo2'))))");
 
-			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'miembro' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo2'))))");
-
-			
-			omsProxy.informRole("creador2","equipo");
-
-			fail();
-
-		}catch( VisibilityRoleException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+		// Method call	
+		omsProxy.informRole("creador2","equipo");
 	}
 	
-	public void testInformRole7a()
-	{
-		try
-		{
+	@Test(timeout = 5 * 60 * 1000, expected = VisibilityRoleException.class)
+	public void testInformRole7a() throws Exception {
+		// Database Initialization
+		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
+				"('miembro',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
+				"(SELECT idposition FROM position WHERE positionName = 'member'), "+
+				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
+				"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
-					"('miembro',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
-					"(SELECT idposition FROM position WHERE positionName = 'member'), "+
-					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
-			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+				"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo2'))))");
 
-			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo2'))))");
-
-			
-			omsProxy.informRole("miembro","equipo");
-
-			fail();
-
-		}catch( VisibilityRoleException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+		// Method call	
+		omsProxy.informRole("miembro","equipo");
 	}
 	
-	public void testInformRole7b()
-	{
-		try
-		{
+	@Test(timeout = 5 * 60 * 1000, expected = VisibilityRoleException.class)
+	public void testInformRole7b() throws Exception {
+		// Database Initialization
+		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
+				"('miembro',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
+				"(SELECT idposition FROM position WHERE positionName = 'member'), "+
+				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
+				"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
-					"('miembro',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
-					"(SELECT idposition FROM position WHERE positionName = 'member'), "+
-					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
-			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+				"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo2'))))");
 
-			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo2'))))");
-
-			
-			omsProxy.informRole("miembro","equipo");
-
-			fail();
-
-		}catch( VisibilityRoleException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+		// Method call	
+		omsProxy.informRole("miembro","equipo");
 	}
 	
-	public void testInformRole8a()
-	{
-		try
-		{
+	@Test(timeout = 5 * 60 * 1000, expected = VisibilityRoleException.class)
+	public void testInformRole8a() throws Exception {
+		// Database Initialization
+		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
+				"('creador3',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
+				"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
+				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
+				"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
-					"('creador3',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
-					"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
-					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
-			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+				"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo2'))))");
 
-			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo2'))))");
-
-			
-			omsProxy.informRole("creador3","equipo");
-
-			fail();
-
-		}catch( VisibilityRoleException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+		// Method call	
+		omsProxy.informRole("creador3","equipo");
 	}
 	
-	public void testInformRole8b()
-	{
-		try
-		{
+	@Test(timeout = 5 * 60 * 1000, expected = VisibilityRoleException.class)
+	public void testInformRole8b() throws Exception {
+		// Database Initialization
+		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
+				"('creador3',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
+				"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
+				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
+				"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
-					"('creador3',(SELECT idunitList FROM unitList WHERE unitName = 'equipo'),"+
-					"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
-					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
-			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+				"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo2'))))");
 
-			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'equipo2'))))");
-
-			
-			omsProxy.informRole("creador3","equipo");
-
-			fail();
-
-		}catch( VisibilityRoleException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+		// Method call	
+		omsProxy.informRole("creador3","equipo");
 	}
 	
-	public void testInformRole9a()
-	{
-		try
-		{
+	@Test(timeout = 5 * 60 * 1000, expected = VisibilityRoleException.class)
+	public void testInformRole9a() throws Exception {
+		// Database Initialization
+		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
+				"('subordinado2',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
+				"(SELECT idposition FROM position WHERE positionName = 'subordinate'), "+
+				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
+				"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
-					"('subordinado2',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
-					"(SELECT idposition FROM position WHERE positionName = 'subordinate'), "+
-					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
-			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+				"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'subordinado' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
 
-			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'subordinado' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
-
-			
-			omsProxy.informRole("subordinado2","jerarquia");
-
-			fail();
-
-		}catch( VisibilityRoleException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+		// Method call	
+		omsProxy.informRole("subordinado2","jerarquia");
 	}
 	
-	public void testInformRole9b()
-	{
-		try
-		{
+	@Test(timeout = 5 * 60 * 1000, expected = VisibilityRoleException.class)
+	public void testInformRole9b() throws Exception {
+		// Database Initialization
+		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
+				"('subordinado2',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
+				"(SELECT idposition FROM position WHERE positionName = 'subordinate'), "+
+				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
+				"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
-					"('subordinado2',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
-					"(SELECT idposition FROM position WHERE positionName = 'subordinate'), "+
-					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
-			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+				"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'subordinado' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
 
-			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'subordinado' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
-
-			
-			omsProxy.informRole("subordinado2","jerarquia");
-
-			fail();
-
-		}catch( VisibilityRoleException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+		// Method call	
+		omsProxy.informRole("subordinado2","jerarquia");
 	}
 	
-	
-	public void testInformRole10a()
-	{
-		try
-		{
+	@Test(timeout = 5 * 60 * 1000, expected = VisibilityRoleException.class)
+	public void testInformRole10a() throws Exception {
+		// Database Initialization
+		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
+				"('subordinado',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
+				"(SELECT idposition FROM position WHERE positionName = 'subordinate'), "+
+				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
+				"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
-					"('subordinado',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
-					"(SELECT idposition FROM position WHERE positionName = 'subordinate'), "+
-					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
-			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+				"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'supervisor' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
 
-			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'supervisor' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
-
-			
-			omsProxy.informRole("subordinado","jerarquia");
-
-			fail();
-
-		}catch( VisibilityRoleException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+		// Method call	
+		omsProxy.informRole("subordinado","jerarquia");
 	}
 	
-	public void testInformRole10b()
-	{
-		try
-		{
+	@Test(timeout = 5 * 60 * 1000, expected = VisibilityRoleException.class)
+	public void testInformRole10b() throws Exception {
+		// Database Initialization
+		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
+				"('subordinado',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
+				"(SELECT idposition FROM position WHERE positionName = 'subordinate'), "+
+				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
+				"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
-					"('subordinado',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
-					"(SELECT idposition FROM position WHERE positionName = 'subordinate'), "+
-					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
-			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+				"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'supervisor' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
 
-			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'supervisor' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
-
-			
-			omsProxy.informRole("subordinado","jerarquia");
-
-			fail();
-
-		}catch( VisibilityRoleException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+		// Method call	
+		omsProxy.informRole("subordinado","jerarquia");
 	}
 	
-	public void testInformRole11a()
-	{
-		try
-		{
+	@Test(timeout = 5 * 60 * 1000, expected = VisibilityRoleException.class)
+	public void testInformRole11a() throws Exception {
+		// Database Initialization
+		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
+				"('subordinado',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
+				"(SELECT idposition FROM position WHERE positionName = 'subordinate'), "+
+				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
+				"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
-					"('subordinado',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
-					"(SELECT idposition FROM position WHERE positionName = 'subordinate'), "+
-					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
-			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+				"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
 
-			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
-
-			
-			omsProxy.informRole("subordinado","jerarquia");
-
-			fail();
-
-		}catch( VisibilityRoleException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+		// Method call	
+		omsProxy.informRole("subordinado","jerarquia");
 	}
 	
-	public void testInformRole11b()
-	{
-		try
-		{
+	@Test(timeout = 5 * 60 * 1000, expected = VisibilityRoleException.class)
+	public void testInformRole11b() throws Exception {
+		// Database Initialization
+		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
+				"('subordinado',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
+				"(SELECT idposition FROM position WHERE positionName = 'subordinate'), "+
+				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
+				"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
-					"('subordinado',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
-					"(SELECT idposition FROM position WHERE positionName = 'subordinate'), "+
-					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
-			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+				"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
 
-			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
-
-			
-			omsProxy.informRole("subordinado","jerarquia");
-
-			fail();
-
-		}catch( VisibilityRoleException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+		// Method call	
+		omsProxy.informRole("subordinado","jerarquia");
 	}
 	
-	public void testInformRole12a()
-	{
-		try
-		{
+	@Test(timeout = 5 * 60 * 1000, expected = VisibilityRoleException.class)
+	public void testInformRole12a() throws Exception {
+		// Database Initialization
+		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
+				"('supervisor',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
+				"(SELECT idposition FROM position WHERE positionName = 'supervisor'), "+
+				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
+				"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
-					"('supervisor',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
-					"(SELECT idposition FROM position WHERE positionName = 'supervisor'), "+
-					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
-			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+				"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'subordinado' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
 
-			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'subordinado' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
-
-			
-			omsProxy.informRole("supervisor","jerarquia");
-
-			fail();
-
-		}catch( VisibilityRoleException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+		// Method call	
+		omsProxy.informRole("supervisor","jerarquia");
 	}
 	
-	public void testInformRole12b()
-	{
-		try
-		{
-
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
-					"('supervisor',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
-					"(SELECT idposition FROM position WHERE positionName = 'supervisor'), "+
-					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
-			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
-
+	@Test(timeout = 5 * 60 * 1000, expected = VisibilityRoleException.class)
+	public void testInformRole12b() throws Exception {
+		// Database Initialization
+		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
+				"('supervisor',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
+				"(SELECT idposition FROM position WHERE positionName = 'supervisor'), "+
+				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
+				"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'subordinado' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+				"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'subordinado' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
 
-			
-			omsProxy.informRole("supervisor","jerarquia");
-
-			fail();
-
-		}catch( VisibilityRoleException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+		// Method call	
+		omsProxy.informRole("supervisor","jerarquia");
 	}
 	
-	public void testInformRole13a()
-	{
-		try
-		{
+	@Test(timeout = 5 * 60 * 1000, expected = VisibilityRoleException.class)
+	public void testInformRole13a() throws Exception {
+		// Database Initialization
+		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
+				"('supervisor2',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
+				"(SELECT idposition FROM position WHERE positionName = 'supervisor'), "+
+				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
+				"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
+		
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+				"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'supervisor' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
-					"('supervisor2',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
-					"(SELECT idposition FROM position WHERE positionName = 'supervisor'), "+
-					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
-			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
-
-			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'supervisor' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
-
-			
-			omsProxy.informRole("supervisor2","jerarquia");
-
-			fail();
-
-		}catch( VisibilityRoleException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+		// Method call	
+		omsProxy.informRole("supervisor2","jerarquia");
 	}
 	
-	public void testInformRole13b()
-	{
-		try
-		{
-
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
-					"('supervisor2',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
-					"(SELECT idposition FROM position WHERE positionName = 'supervisor'), "+
-					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
-			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
-
+	@Test(timeout = 5 * 60 * 1000, expected = VisibilityRoleException.class)
+	public void testInformRole13b() throws Exception {
+		// Database Initialization
+		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
+				"('supervisor2',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
+				"(SELECT idposition FROM position WHERE positionName = 'supervisor'), "+
+				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
+				"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'supervisor' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+				"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'supervisor' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
 
-			
-			omsProxy.informRole("supervisor2","jerarquia");
-
-			fail();
-
-		}catch( VisibilityRoleException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+		// Method call	
+		omsProxy.informRole("supervisor2","jerarquia");
 	}
 	
-	public void testInformRole14a()
-	{
-		try
-		{
+	@Test(timeout = 5 * 60 * 1000, expected = VisibilityRoleException.class)
+	public void testInformRole14a() throws Exception {
+		// Database Initialization
+		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
+				"('supervisor',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
+				"(SELECT idposition FROM position WHERE positionName = 'supervisor'), "+
+				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
+				"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
-					"('supervisor',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
-					"(SELECT idposition FROM position WHERE positionName = 'supervisor'), "+
-					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
-			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+				"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
 
-			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
-
-			
-			omsProxy.informRole("supervisor","jerarquia");
-
-			fail();
-
-		}catch( VisibilityRoleException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+		// Method call	
+		omsProxy.informRole("supervisor","jerarquia");
 	}
 	
-	public void testInformRole14b()
-	{
-		try
-		{
-
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
-					"('supervisor',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
-					"(SELECT idposition FROM position WHERE positionName = 'supervisor'), "+
-					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
-			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
-
+	@Test(timeout = 5 * 60 * 1000, expected = VisibilityRoleException.class)
+	public void testInformRole14b() throws Exception {
+		// Database Initialization
+		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
+				"('supervisor',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
+				"(SELECT idposition FROM position WHERE positionName = 'supervisor'), "+
+				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
+				"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+				"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
 
-			
-			omsProxy.informRole("supervisor","jerarquia");
-
-			fail();
-
-		}catch( VisibilityRoleException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+		// Method call	
+		omsProxy.informRole("supervisor","jerarquia");
 	}
 	
-	public void testInformRole15a()
-	{
-		try
-		{
+	@Test(timeout = 5 * 60 * 1000, expected = VisibilityRoleException.class)
+	public void testInformRole15a() throws Exception {
+		// Database Initialization
+		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
+				"('creador2',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
+				"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
+				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
+				"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
-					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
-					"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
-					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
-			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+				"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'subordinado' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
 
-			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'subordinado' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
-
-			
-			omsProxy.informRole("creador2","jerarquia");
-
-			fail();
-
-		}catch( VisibilityRoleException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+		// Method call	
+		omsProxy.informRole("creador2","jerarquia");
 	}
 	
-	public void testInformRole15b()
-	{
-		try
-		{
-
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
-					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
-					"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
-					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
-			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
-
+	@Test(timeout = 5 * 60 * 1000, expected = VisibilityRoleException.class)
+	public void testInformRole15b() throws Exception {
+		// Database Initialization
+		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
+				"('creador2',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
+				"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
+				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
+				"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'subordinado' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
-
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+				"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'subordinado' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
 			
-			omsProxy.informRole("creador2","jerarquia");
-
-			fail();
-
-		}catch( VisibilityRoleException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+		// Method call	
+		omsProxy.informRole("creador2","jerarquia");
 	}
 	
-	public void testInformRole16a()
-	{
-		try
-		{
-
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
-					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
-					"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
-					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
-			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
-
+	@Test(timeout = 5 * 60 * 1000, expected = VisibilityRoleException.class)
+	public void testInformRole16a() throws Exception {
+		// Database Initialization
+		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
+				"('creador2',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
+				"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
+				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
+				"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'supervisor' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+				"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'supervisor' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
 
-			
-			omsProxy.informRole("creador2","jerarquia");
-
-			fail();
-
-		}catch( VisibilityRoleException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+		// Method call	
+		omsProxy.informRole("creador2","jerarquia");
 	}
 	
-	public void testInformRole16b()
-	{
-		try
-		{
+	@Test(timeout = 5 * 60 * 1000, expected = VisibilityRoleException.class)
+	public void testInformRole16b() throws Exception {
+		// Database Initialization
+		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
+				"('creador2',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
+				"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
+				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
+				"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
-					"('creador2',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
-					"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
-					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
-			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+				"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'supervisor' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
 
-			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'supervisor' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
-
-			
-			omsProxy.informRole("creador2","jerarquia");
-
-			fail();
-
-		}catch( VisibilityRoleException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+		// Method call	
+		omsProxy.informRole("creador2","jerarquia");
 	}
 	
-	public void testInformRole17a()
-	{
-		try
-		{
+	@Test(timeout = 5 * 60 * 1000, expected = VisibilityRoleException.class)
+	public void testInformRole17a() throws Exception {
+		// Database Initialization
+		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
+				"('creador3',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
+				"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
+				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
+				"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
-					"('creador3',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
-					"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
-					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
-			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+				"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
 
-			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
-
-			
-			omsProxy.informRole("creador3","jerarquia");
-
-			fail();
-
-		}catch( VisibilityRoleException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+		// Method call	
+		omsProxy.informRole("creador3","jerarquia");
 	}
 	
-	public void testInformRole17b()
-	{
-		try
-		{
+	@Test(timeout = 5 * 60 * 1000, expected = VisibilityRoleException.class)
+	public void testInformRole17b() throws Exception {
+		// Database Initialization
+		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
+				"('creador3',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
+				"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
+				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
+				"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
-					"('creador3',(SELECT idunitList FROM unitList WHERE unitName = 'jerarquia'),"+
-					"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
-					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'internal'),"+ 
-			"(SELECT idvisibility FROM visibility WHERE visibility = 'private'))");
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+				"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
 
-			
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador2' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'jerarquia2'))))");
-
-			
-			omsProxy.informRole("creador3","jerarquia");
-
-			fail();
-
-		}catch( VisibilityRoleException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+		// Method call	
+		omsProxy.informRole("creador3","jerarquia");
 	}
 }

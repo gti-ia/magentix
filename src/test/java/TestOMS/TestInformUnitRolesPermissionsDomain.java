@@ -111,7 +111,7 @@ public class TestInformUnitRolesPermissionsDomain {
 
 	}
 	
-	@Test
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformUnitRolesPermissionsDomain1() throws Exception {
 		
 		//------------------------------------------- Test Initialization  -----------------------------------------------//

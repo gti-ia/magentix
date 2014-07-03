@@ -1,6 +1,9 @@
 package TestOMS;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
 import es.upv.dsic.gti_ia.organization.OMS;
@@ -13,7 +16,7 @@ import es.upv.dsic.gti_ia.organization.exception.UnitNotExistsException;
 import es.upv.dsic.gti_ia.organization.exception.VirtualParentException;
 
 
-public class TestJoinUnitInCorrectParam extends TestCase {
+public class TestJoinUnitInCorrectParam {
 
 	OMSProxy omsProxy = null;
 	DatabaseAccess dbA = null;
@@ -26,8 +29,8 @@ public class TestJoinUnitInCorrectParam extends TestCase {
 	
 	Process qpid_broker;
 	
-
-	protected void tearDown() throws Exception {
+	@After
+	public void tearDown() throws Exception {
 
 		//------------------Clean Data Base -----------//
 		dbA.executeSQL("DELETE FROM agentPlayList");
@@ -56,8 +59,9 @@ public class TestJoinUnitInCorrectParam extends TestCase {
 		AgentsConnection.disconnect();
 		qpidManager.UnixQpidManager.stopQpid(qpid_broker);
 	}
-	protected void setUp() throws Exception {
-		super.setUp();
+	
+	@Before
+	public void setUp() throws Exception {
 
 		qpid_broker = qpidManager.UnixQpidManager.startQpid(Runtime.getRuntime(), qpid_broker);
 		
@@ -142,214 +146,53 @@ public class TestJoinUnitInCorrectParam extends TestCase {
 
 	}
 
-	public void testJoinUnit2()
-	{
-		try
-		{
-
-			String result = omsProxy.joinUnit("jerarquia", "jerarquia");
-
-			fail(result);
-
-		}catch(SameUnitException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-		
-		try
-		{
-
-			String result = omsProxy.joinUnit("equipo", "equipo");
-
-			fail(result);
-
-		}catch(SameUnitException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-		
-		try
-		{
-
-			String result = omsProxy.joinUnit("plana", "plana");
-
-			fail(result);
-
-		}catch(SameUnitException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testJoinUnit3()
-	{
-		try
-		{
-
-			String result = omsProxy.joinUnit("virtual", "jerarquia");
-
-			fail(result);
-
-		}catch(VirtualParentException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	@Test(timeout = 5 * 60 * 1000, expected = SameUnitException.class)
+	public void testJoinUnit1() throws Exception {
+		omsProxy.joinUnit("jerarquia", "jerarquia");
 	}
 	
-	public void testjoinUnit4()
-	{
-		try
-		{
-
-			String result = omsProxy.joinUnit("inexistente", "jerarquia");
-
-			fail(result);
-
-		}catch(UnitNotExistsException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	@Test(timeout = 5 * 60 * 1000, expected = SameUnitException.class)
+	public void testJoinUnit2() throws Exception {
+		omsProxy.joinUnit("equipo", "equipo");
 	}
 	
-	public void testjoinUnit5()
-	{
-		try
-		{
-
-			String result = omsProxy.joinUnit("", "jerarquia");
-
-			fail(result);
-
-		}catch(EmptyParametersException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	@Test(timeout = 5 * 60 * 1000, expected = SameUnitException.class)
+	public void testJoinUnit3() throws Exception {
+		omsProxy.joinUnit("plana", "plana");
 	}
 	
-	public void testjoinUnit6()
-	{
-		try
-		{
-
-			String result = omsProxy.joinUnit(null, "jerarquia");
-
-			fail(result);
-
-		}catch(EmptyParametersException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	@Test(timeout = 5 * 60 * 1000, expected = VirtualParentException.class)
+	public void testJoinUnit4() throws Exception {
+		omsProxy.joinUnit("virtual", "jerarquia");
 	}
 	
-	public void testjoinUnit7()
-	{
-		try
-		{
-
-			String result = omsProxy.joinUnit("equipo", "noexiste");
-
-			fail(result);
-
-		}catch(ParentUnitNotExistsException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	@Test(timeout = 5 * 60 * 1000, expected = UnitNotExistsException.class)
+	public void testJoinUnit5() throws Exception {
+		omsProxy.joinUnit("inexistente", "jerarquia");
 	}
 	
-	public void testjoinUnit8()
-	{
-		try
-		{
-
-			String result = omsProxy.joinUnit("equipo", "");
-
-			fail(result);
-
-		}catch(EmptyParametersException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	@Test(timeout = 5 * 60 * 1000, expected = EmptyParametersException.class)
+	public void testJoinUnit6() throws Exception {
+		omsProxy.joinUnit("", "jerarquia");
 	}
 	
-	public void testjoinUnit9()
-	{
-		try
-		{
-
-			String result = omsProxy.joinUnit("equipo", null);
-
-			fail(result);
-
-		}catch(EmptyParametersException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	@Test(timeout = 5 * 60 * 1000, expected = EmptyParametersException.class)
+	public void testJoinUnit7() throws Exception {
+		omsProxy.joinUnit(null, "jerarquia");
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = ParentUnitNotExistsException.class)
+	public void testJoinUnit8() throws Exception {
+		omsProxy.joinUnit("equipo", "noexiste");
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = EmptyParametersException.class)
+	public void testJoinUnit9() throws Exception {
+		omsProxy.joinUnit("equipo", "");
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = EmptyParametersException.class)
+	public void testJoinUnit10() throws Exception {
+		omsProxy.joinUnit("equipo", null);
 	}
 }

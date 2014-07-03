@@ -101,7 +101,7 @@ public class TestRegisterUnitProhibitionDomain {
 		
 	}
 	
-	@Test(expected=ForbiddenNormException.class)
+	@Test(timeout = 5 * 60 * 1000, expected=ForbiddenNormException.class)
 	public void testRegisterUnitProhibitionDomain1() throws Exception {
 		
 		//------------------------------------------- Test Initialization  -----------------------------------------------//
@@ -157,7 +157,7 @@ public class TestRegisterUnitProhibitionDomain {
 		
 	}
 	
-	@Test(expected=ForbiddenNormException.class)
+	@Test(timeout = 5 * 60 * 1000, expected=ForbiddenNormException.class)
 	public void testRegisterUnitProhibitionDomain2() throws Exception {
 		
 		//------------------------------------------- Test Initialization  -----------------------------------------------//
@@ -200,7 +200,7 @@ public class TestRegisterUnitProhibitionDomain {
 		
 	}
 	
-	@Test
+	@Test(timeout = 5 * 60 * 1000)
 	public void testRegisterUnitProhibitionDomain3() throws Exception {
 		
 		//------------------------------------------- Test Initialization  -----------------------------------------------//
@@ -251,7 +251,7 @@ public class TestRegisterUnitProhibitionDomain {
 		
 	}
 
-	@Test(expected=ForbiddenNormException.class)
+	@Test(timeout = 5 * 60 * 1000, expected=ForbiddenNormException.class)
 	public void testRegisterUnitProhibitionDomain4() throws Exception {
 		
 		//------------------------------------------- Test Initialization  -----------------------------------------------//

@@ -1,8 +1,13 @@
 package TestOMS;
 
+import static org.junit.Assert.*;
+
 import java.util.ArrayList;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
 import es.upv.dsic.gti_ia.organization.OMS;
@@ -11,7 +16,7 @@ import es.upv.dsic.gti_ia.organization.SF;
 import es.upv.dsic.gti_ia.organization.exception.THOMASException;
 
 
-public class TestInformAgentRole extends TestCase {
+public class TestInformAgentRole {
 
 	OMSProxy omsProxy = null;
 	DatabaseAccess dbA = null;
@@ -25,9 +30,8 @@ public class TestInformAgentRole extends TestCase {
 	
 	Process qpid_broker;
 	
-
-	protected void tearDown() throws Exception {
-
+	@After
+	public void tearDown() throws Exception {
 
 		//------------------Clean Data Base -----------//
 		dbA.executeSQL("DELETE FROM agentPlayList");
@@ -59,8 +63,8 @@ public class TestInformAgentRole extends TestCase {
 		qpidManager.UnixQpidManager.stopQpid(qpid_broker);
 	}	
 	
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 
 		qpid_broker = qpidManager.UnixQpidManager.startQpid(Runtime.getRuntime(), qpid_broker);
 		
@@ -202,6 +206,7 @@ public class TestInformAgentRole extends TestCase {
 
 	}
 
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformAgentRole1() {
 		
 		try {
@@ -241,7 +246,7 @@ public class TestInformAgentRole extends TestCase {
 		}
 	}
 	
-	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformAgentRole2()
 	{
 		try
@@ -289,6 +294,7 @@ public class TestInformAgentRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformAgentRole3()
 	{
 		try
@@ -336,6 +342,7 @@ public class TestInformAgentRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformAgentRole4()
 	{
 		try
@@ -383,6 +390,7 @@ public class TestInformAgentRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformAgentRole5()
 	{
 		try
@@ -431,6 +439,7 @@ public class TestInformAgentRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformAgentRole6()
 	{
 		try
@@ -479,6 +488,7 @@ public class TestInformAgentRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformAgentRole7()
 	{
 		try

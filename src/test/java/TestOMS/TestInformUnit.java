@@ -1,8 +1,13 @@
 package TestOMS;
 
+import static org.junit.Assert.*;
+
 import java.util.ArrayList;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
 import es.upv.dsic.gti_ia.organization.OMS;
@@ -11,7 +16,7 @@ import es.upv.dsic.gti_ia.organization.SF;
 import es.upv.dsic.gti_ia.organization.exception.THOMASException;
 
 
-public class TestInformUnit extends TestCase {
+public class TestInformUnit {
 
 	OMSProxy omsProxy = null;
 	DatabaseAccess dbA = null;
@@ -25,8 +30,8 @@ public class TestInformUnit extends TestCase {
 
 	Process qpid_broker;
 	
-
-	protected void tearDown() throws Exception {
+	@After
+	public void tearDown() throws Exception {
 
 		//------------------Clean Data Base -----------//
 		dbA.executeSQL("DELETE FROM agentPlayList");
@@ -58,8 +63,9 @@ public class TestInformUnit extends TestCase {
 		AgentsConnection.disconnect();
 		qpidManager.UnixQpidManager.stopQpid(qpid_broker);
 	}
-	protected void setUp() throws Exception {
-		super.setUp();
+	
+	@Before
+	public void setUp() throws Exception {
 
 		qpid_broker = qpidManager.UnixQpidManager.startQpid(Runtime.getRuntime(), qpid_broker);
 		
@@ -103,6 +109,7 @@ public class TestInformUnit extends TestCase {
 
 	}
 
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformUnit1()
 	{
 		try
@@ -156,6 +163,7 @@ public class TestInformUnit extends TestCase {
 		}
 	}	
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformUnit2()
 	{
 		try
@@ -207,6 +215,7 @@ public class TestInformUnit extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformUnit3()
 	{
 		try
@@ -258,6 +267,7 @@ public class TestInformUnit extends TestCase {
 		}
 	}	
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformUnit4()
 	{
 		try
@@ -309,6 +319,7 @@ public class TestInformUnit extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformUnit5()
 	{
 		try
@@ -360,6 +371,7 @@ public class TestInformUnit extends TestCase {
 		}
 	}	
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformUnit6()
 	{
 		try
@@ -411,6 +423,7 @@ public class TestInformUnit extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformUnit7()
 	{
 		try
@@ -467,6 +480,7 @@ public class TestInformUnit extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformUnit8()
 	{
 		try
@@ -520,6 +534,8 @@ public class TestInformUnit extends TestCase {
 			fail(e.getMessage());
 		}
 	}	
+	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformUnit9()
 	{
 		try
@@ -574,6 +590,7 @@ public class TestInformUnit extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformUnit10()
 	{
 		try
@@ -627,6 +644,8 @@ public class TestInformUnit extends TestCase {
 			fail(e.getMessage());
 		}
 	}	
+	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformUnit11()
 	{
 		try
@@ -681,6 +700,7 @@ public class TestInformUnit extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformUnit12()
 	{
 		try
@@ -735,6 +755,7 @@ public class TestInformUnit extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformUnit13()
 	{
 		try
@@ -788,6 +809,8 @@ public class TestInformUnit extends TestCase {
 			fail(e.getMessage());
 		}
 	}
+	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformUnit14()
 	{
 		try

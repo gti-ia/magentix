@@ -111,7 +111,7 @@ public class TestInformAgentRolePermissionsDomain {
 
 	}
 	
-	@Test
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformAgentRolePermissionsDomain1() throws Exception {
 		
 		//------------------------------------------- Test Initialization  -----------------------------------------------//

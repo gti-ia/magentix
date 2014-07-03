@@ -1,6 +1,11 @@
 package TestOMS;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
 import es.upv.dsic.gti_ia.organization.OMS;
@@ -14,7 +19,7 @@ import es.upv.dsic.gti_ia.organization.exception.SameAgentNameException;
 import es.upv.dsic.gti_ia.organization.exception.UnitNotExistsException;
 
 
-public class TestAllocateRoleInCorrectParam extends TestCase {
+public class TestAllocateRoleInCorrectParam {
 
 	OMSProxy omsProxy = null;
 	DatabaseAccess dbA = null;
@@ -27,8 +32,8 @@ public class TestAllocateRoleInCorrectParam extends TestCase {
 
 	Process qpid_broker;
 	
-
-	protected void tearDown() throws Exception {
+	@After
+	public void tearDown() throws Exception {
 
 
 		//------------------Clean Data Base -----------//
@@ -58,8 +63,8 @@ public class TestAllocateRoleInCorrectParam extends TestCase {
 		qpidManager.UnixQpidManager.stopQpid(qpid_broker);
 	}
 	
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 
 		qpid_broker = qpidManager.UnixQpidManager.startQpid(Runtime.getRuntime(), qpid_broker);
 		
@@ -140,12 +145,9 @@ public class TestAllocateRoleInCorrectParam extends TestCase {
 		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
 		"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana'))))");
 
-
-
-
-
 	}
 
+	@Test(timeout = 5 * 60 * 1000)
 	public void testAllocateRole1()
 	{
 		try
@@ -215,6 +217,7 @@ public class TestAllocateRoleInCorrectParam extends TestCase {
 
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testAllocateRole2()
 	{
 		try
@@ -284,6 +287,7 @@ public class TestAllocateRoleInCorrectParam extends TestCase {
 
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testAllocateRole3()
 	{
 		try
@@ -352,6 +356,8 @@ public class TestAllocateRoleInCorrectParam extends TestCase {
 		}
 
 	}
+	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testAllocateRole4()
 	{
 		try
@@ -421,1315 +427,317 @@ public class TestAllocateRoleInCorrectParam extends TestCase {
 
 	}
 	
-	public void testallocateRole5()
-	{
-		try
-		{
-
-			String result = omsProxy.allocateRole("subordinado", "equipo","**Miunidad");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testallocateRole5() throws Exception {
+		omsProxy.allocateRole("subordinado", "equipo","**Miunidad");
 	}
-	public void testallocateRole6()
-	{
-		try
-		{
-
-			String result = omsProxy.allocateRole("subordinado", "equipo","team");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testallocateRole6() throws Exception {
+		omsProxy.allocateRole("subordinado", "equipo","team");
 	}
-	public void testallocateRole7()
-	{
-		try
-		{
-
-			String result = omsProxy.allocateRole("subordinado", "equipo","flat");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testallocateRole7() throws Exception {
+		omsProxy.allocateRole("subordinado", "equipo","flat");
 	}
-	public void testallocateRole8()
-	{
-		try
-		{
-
-			String result = omsProxy.allocateRole("subordinado", "equipo","hierarchy");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testallocateRole8() throws Exception {
+		omsProxy.allocateRole("subordinado", "equipo","hierarchy");
 	}
-	public void testallocateRole9()
-	{
-		try
-		{
-
-			String result = omsProxy.allocateRole("subordinado", "equipo","supervisor");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testallocateRole9() throws Exception {
+		omsProxy.allocateRole("subordinado", "equipo","supervisor");
 	}
-	public void testallocateRole10()
-	{
-		try
-		{
-
-			String result = omsProxy.allocateRole("subordinado", "equipo","subordinate");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testallocateRole10() throws Exception {
+		omsProxy.allocateRole("subordinado", "equipo","subordinate");
 	}
-	public void testallocateRole11()
-	{
-		try
-		{
-
-			String result = omsProxy.allocateRole("subordinado", "equipo","member");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testallocateRole11() throws Exception {
+		omsProxy.allocateRole("subordinado", "equipo","member");
 	}
-	public void testallocateRole12()
-	{
-		try
-		{
-
-			String result = omsProxy.allocateRole("subordinado", "equipo","creator");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testallocateRole12() throws Exception {
+		omsProxy.allocateRole("subordinado", "equipo","creator");
 	}
-	public void testallocateRole13()
-	{
-		try
-		{
-
-			String result = omsProxy.allocateRole("subordinado", "equipo","private");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testallocateRole13() throws Exception {
+		omsProxy.allocateRole("subordinado", "equipo","private");
 	}
-	public void testallocateRole14()
-	{
-		try
-		{
-
-			String result = omsProxy.allocateRole("subordinado", "equipo","public");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testallocateRole14() throws Exception {
+		omsProxy.allocateRole("subordinado", "equipo","public");
 	}
-	public void testallocateRole15()
-	{
-		try
-		{
-
-			String result = omsProxy.allocateRole("subordinado", "equipo","external");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testallocateRole15() throws Exception {
+		omsProxy.allocateRole("subordinado", "equipo","external");
 	}
-	public void testallocateRole16()
-	{
-		try
-		{
-
-			String result = omsProxy.allocateRole("subordinado", "equipo","internal");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testallocateRole16() throws Exception {
+		omsProxy.allocateRole("subordinado", "equipo","internal");
 	}
-	public void testallocateRole17()
-	{
-		try
-		{
-
-			String result = omsProxy.allocateRole("subordinado", "equipo","allocateRole");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testallocateRole17() throws Exception {
+		omsProxy.allocateRole("subordinado", "equipo","allocateRole");
 	}
-	public void testallocateRole18()
-	{
-		try
-		{
-
-			String result = omsProxy.allocateRole("subordinado", "equipo","deallocateRole");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testallocateRole18() throws Exception {
+		omsProxy.allocateRole("subordinado", "equipo","deallocateRole");
 	}
-	public void testallocateRole19()
-	{
-		try
-		{
-
-			String result = omsProxy.allocateRole("subordinado", "equipo","registerRole");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testallocateRole19() throws Exception {
+		omsProxy.allocateRole("subordinado", "equipo","registerRole");
 	}
-	public void testallocateRole20()
-	{
-		try
-		{
-
-			String result = omsProxy.allocateRole("subordinado", "equipo","deregisterRole");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testallocateRole20() throws Exception {
+		omsProxy.allocateRole("subordinado", "equipo","deregisterRole");
 	}	
 	
-	public void testallocateRole21()
-	{
-		try
-		{
-
-			String result = omsProxy.allocateRole("subordinado", "equipo","registerNorm");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testallocateRole21() throws Exception {
+		omsProxy.allocateRole("subordinado", "equipo","registerNorm");
 	}
 	
-	public void testallocateRole22()
-	{
-		try
-		{
-
-			String result = omsProxy.allocateRole("subordinado", "equipo","deregisterNorm");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testallocateRole22() throws Exception {
+		omsProxy.allocateRole("subordinado", "equipo","deregisterNorm");
 	}
 
-	public void testallocateRole23()
-	{
-		try
-		{
-
-			String result = omsProxy.allocateRole("subordinado", "equipo","allocateRole");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testallocateRole24()
-	{
-		try
-		{
-
-			String result = omsProxy.allocateRole("subordinado", "equipo","deallocateRole");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testallocateRole25()
-	{
-		try
-		{
-
-			String result = omsProxy.allocateRole("subordinado", "equipo","joinUnit");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testallocateRole26()
-	{
-		try
-		{
-
-			String result = omsProxy.allocateRole("subordinado", "equipo","informAgentRole");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testallocateRole23() throws Exception {
+		omsProxy.allocateRole("subordinado", "equipo","allocateRole");
 	}
 	
-	public void testallocateRole27()
-	{
-		try
-		{
-
-			String result = omsProxy.allocateRole("subordinado", "equipo","informMembers");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testallocateRole28()
-	{
-		try
-		{
-
-			String result = omsProxy.allocateRole("subordinado", "equipo","informQuantityMembers");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testallocateRole29()
-	{
-		try
-		{
-
-			String result = omsProxy.allocateRole("subordinado", "equipo","informUnit");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testallocateRole30()
-	{
-		try
-		{
-
-			String result = omsProxy.allocateRole("subordinado", "equipo","informUnitRoles");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testallocateRole31()
-	{
-		try
-		{
-
-			String result = omsProxy.allocateRole("subordinado", "equipo","informTargetNorms");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testallocateRole32()
-	{
-		try
-		{
-
-			String result = omsProxy.allocateRole("subordinado", "equipo","informRole");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testallocateRole33()
-	{
-		try
-		{
-
-			String result = omsProxy.allocateRole("subordinado", "equipo","informNorm");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testallocateRole34()
-	{
-		try
-		{
-
-			String result = omsProxy.allocateRole("subordinado", "equipo","acquireRole");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testallocateRole35()
-	{
-		try
-		{
-
-			String result = omsProxy.allocateRole("subordinado", "equipo","leaveRole");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testallocateRole36()
-	{
-		try
-		{
-
-			String result = omsProxy.allocateRole("subordinado", "equipo","isNorm");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testallocateRole37()
-	{
-		try
-		{
-
-			String result = omsProxy.allocateRole("subordinado", "equipo","hasDeontic");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testallocateRole38()
-	{
-		try
-		{
-
-			String result = omsProxy.allocateRole("subordinado", "equipo","hasTarget");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testallocateRole39()
-	{
-		try
-		{
-
-			String result = omsProxy.allocateRole("subordinado", "equipo","hasAction");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testallocateRole24() throws Exception {
+		omsProxy.allocateRole("subordinado", "equipo","deallocateRole");
 	}
 	
-	public void testallocateRole40()
-	{
-		try
-		{
-
-			String result = omsProxy.allocateRole("subordinado", "equipo","isRole");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testallocateRole25() throws Exception {
+		omsProxy.allocateRole("subordinado", "equipo","joinUnit");
 	}
-	public void testallocateRole41()
-	{
-		try
-		{
-
-			String result = omsProxy.allocateRole("subordinado", "equipo","hasAccessibility");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testallocateRole42()
-	{
-		try
-		{
-
-			String result = omsProxy.allocateRole("subordinado", "equipo","hasVisibility");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testallocateRole43()
-	{
-		try
-		{
-
-			String result = omsProxy.allocateRole("subordinado", "equipo","hasPosition");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testallocateRole44()
-	{
-		try
-		{
-
-			String result = omsProxy.allocateRole("subordinado", "equipo","isUnit");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testallocateRole45()
-	{
-		try
-		{
-
-			String result = omsProxy.allocateRole("subordinado", "equipo","hasType");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testallocateRole46()
-	{
-		try
-		{
-
-			String result = omsProxy.allocateRole("subordinado", "equipo","hasParent");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testallocateRole47()
-	{
-		try
-		{
-
-			String result = omsProxy.allocateRole("subordinado", "equipo","div");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testallocateRole48()
-	{
-		try
-		{
-
-			String result = omsProxy.allocateRole("subordinado", "equipo","mod");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testallocateRole49()
-	{
-		try
-		{
-
-			String result = omsProxy.allocateRole("subordinado", "equipo","not");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testallocateRole50()
-	{
-		try
-		{
-
-			String result = omsProxy.allocateRole("subordinado", "equipo","_");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testallocateRole51()
-	{
-		try
-		{
-
-			String result = omsProxy.allocateRole("subordinado", "equipo","agentName");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testallocateRole52()
-	{
-		try
-		{
-
-			String result = omsProxy.allocateRole("subordinado", "equipo","roleName");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testallocateRole53()
-	{
-		try
-		{
-
-			String result = omsProxy.allocateRole("subordinado", "equipo","positionName");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testallocateRole54()
-	{
-		try
-		{
-
-			String result = omsProxy.allocateRole("subordinado", "equipo","o");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testallocateRole55()
-	{
-		try
-		{
-
-			String result = omsProxy.allocateRole("subordinado", "equipo","f");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testallocateRole56()
-	{
-		try
-		{
-
-			String result = omsProxy.allocateRole("subordinado", "equipo","p");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testallocateRole57()
-	{
-		try
-		{
-
-			String result = omsProxy.allocateRole("subordinado", "equipo","*invalido");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testallocateRole58()
-	{
-		try
-		{
-
-			String result = omsProxy.allocateRole("subordinado", "equipo","+invalido");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testallocateRole59()
-	{
-		try
-		{
-
-			String result = omsProxy.allocateRole("subordinado", "equipo","?invalido");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testallocateRole60()
-	{
-		try
-		{
-
-			String result = omsProxy.allocateRole("subordinado", "equipo","!invalido");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testallocateRole61()
-	{
-		try
-		{
-
-			String result = omsProxy.allocateRole("subordinado", "equipo","invalido!");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testallocateRole65()
-	{
-		try
-		{
-
-			String result = omsProxy.allocateRole("subordinado", "equipo","invalido?");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testallocateRole66()
-	{
-		try
-		{
-
-			String result = omsProxy.allocateRole("subordinado", "equipo","invalido*");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testallocateRole67()
-	{
-		try
-		{
-
-			String result = omsProxy.allocateRole("subordinado", "equipo","invalido+");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testallocateRole68()
-	{
-		try
-		{
-
-			String result = omsProxy.allocateRole("subordinado", "equipo","!invalido");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testallocateRole69()
-	{
-		try
-		{
-
-			String result = omsProxy.allocateRole("subordinado", "equipo","invalido-invalido");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-
 	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testallocateRole26() throws Exception {
+		omsProxy.allocateRole("subordinado", "equipo","informAgentRole");
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testallocateRole27() throws Exception {
+		omsProxy.allocateRole("subordinado", "equipo","informMembers");
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testallocateRole28() throws Exception {
+		omsProxy.allocateRole("subordinado", "equipo","informQuantityMembers");
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testallocateRole29() throws Exception {
+		omsProxy.allocateRole("subordinado", "equipo","informUnit");
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testallocateRole30() throws Exception {
+		omsProxy.allocateRole("subordinado", "equipo","informUnitRoles");
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testallocateRole31() throws Exception {
+		omsProxy.allocateRole("subordinado", "equipo","informTargetNorms");
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testallocateRole32() throws Exception {
+		omsProxy.allocateRole("subordinado", "equipo","informRole");
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testallocateRole33() throws Exception {
+		omsProxy.allocateRole("subordinado", "equipo","informNorm");
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testallocateRole34() throws Exception {
+		omsProxy.allocateRole("subordinado", "equipo","acquireRole");
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testallocateRole35() throws Exception {
+		omsProxy.allocateRole("subordinado", "equipo","leaveRole");
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testallocateRole36() throws Exception {
+		omsProxy.allocateRole("subordinado", "equipo","isNorm");
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testallocateRole37() throws Exception {
+		omsProxy.allocateRole("subordinado", "equipo","hasDeontic");
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testallocateRole38() throws Exception {
+		omsProxy.allocateRole("subordinado", "equipo","hasTarget");
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testallocateRole39() throws Exception {
+		omsProxy.allocateRole("subordinado", "equipo","hasAction");
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testallocateRole40() throws Exception {
+		omsProxy.allocateRole("subordinado", "equipo","isRole");
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testallocateRole41() throws Exception {
+		omsProxy.allocateRole("subordinado", "equipo","hasAccessibility");
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testallocateRole42() throws Exception {
+		omsProxy.allocateRole("subordinado", "equipo","hasVisibility");
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testallocateRole43() throws Exception {
+		omsProxy.allocateRole("subordinado", "equipo","hasPosition");
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testallocateRole44() throws Exception {
+		omsProxy.allocateRole("subordinado", "equipo","isUnit");
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testallocateRole45() throws Exception {
+		omsProxy.allocateRole("subordinado", "equipo","hasType");
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testallocateRole46() throws Exception {
+		omsProxy.allocateRole("subordinado", "equipo","hasParent");
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testallocateRole47() throws Exception {
+		omsProxy.allocateRole("subordinado", "equipo","div");
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testallocateRole48() throws Exception {
+		omsProxy.allocateRole("subordinado", "equipo","mod");
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testallocateRole49() throws Exception {
+		omsProxy.allocateRole("subordinado", "equipo","not");
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testallocateRole50() throws Exception {
+		omsProxy.allocateRole("subordinado", "equipo","_");
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testallocateRole51() throws Exception {
+		omsProxy.allocateRole("subordinado", "equipo","agentName");
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testallocateRole52() throws Exception {
+		omsProxy.allocateRole("subordinado", "equipo","roleName");
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testallocateRole53() throws Exception {
+		omsProxy.allocateRole("subordinado", "equipo","positionName");
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testallocateRole54() throws Exception {
+		omsProxy.allocateRole("subordinado", "equipo","o");
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testallocateRole55() throws Exception {
+		omsProxy.allocateRole("subordinado", "equipo","f");
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testallocateRole56() throws Exception {
+		omsProxy.allocateRole("subordinado", "equipo","p");
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testallocateRole57() throws Exception {
+		omsProxy.allocateRole("subordinado", "equipo","*invalido");
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testallocateRole58() throws Exception {
+		omsProxy.allocateRole("subordinado", "equipo","+invalido");
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testallocateRole59() throws Exception {
+		omsProxy.allocateRole("subordinado", "equipo","?invalido");
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testallocateRole60() throws Exception {
+		omsProxy.allocateRole("subordinado", "equipo","!invalido");
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testallocateRole61() throws Exception {
+		omsProxy.allocateRole("subordinado", "equipo","invalido!");
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testallocateRole65() throws Exception {
+		omsProxy.allocateRole("subordinado", "equipo","invalido?");
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testallocateRole66() throws Exception {
+		omsProxy.allocateRole("subordinado", "equipo","invalido*");
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testallocateRole67() throws Exception {
+		omsProxy.allocateRole("subordinado", "equipo","invalido+");
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testallocateRole68() throws Exception {
+		omsProxy.allocateRole("subordinado", "equipo","!invalido");
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testallocateRole69() throws Exception {
+		omsProxy.allocateRole("subordinado", "equipo","invalido-invalido");
+	}
+
+	@Test(timeout = 5 * 60 * 1000)
 	public void testAllocateRole70()
 	{
 		try
@@ -1799,6 +807,7 @@ public class TestAllocateRoleInCorrectParam extends TestCase {
 
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testAllocateRole71()
 	{
 		try
@@ -1868,6 +877,7 @@ public class TestAllocateRoleInCorrectParam extends TestCase {
 
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testAllocateRole72()
 	{
 		try
@@ -1937,6 +947,7 @@ public class TestAllocateRoleInCorrectParam extends TestCase {
 
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testAllocateRole73()
 	{
 		try
@@ -2006,6 +1017,7 @@ public class TestAllocateRoleInCorrectParam extends TestCase {
 
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testAllocateRole74()
 	{
 		try
@@ -2088,6 +1100,7 @@ public class TestAllocateRoleInCorrectParam extends TestCase {
 
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testAllocateRole75()
 	{
 		try
@@ -2156,6 +1169,7 @@ public class TestAllocateRoleInCorrectParam extends TestCase {
 
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testAllocateRole76()
 	{
 		try

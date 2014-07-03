@@ -1,6 +1,11 @@
 package TestOMS;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
 import es.upv.dsic.gti_ia.organization.OMS;
@@ -9,7 +14,7 @@ import es.upv.dsic.gti_ia.organization.SF;
 import es.upv.dsic.gti_ia.organization.exception.THOMASException;
 
 
-public class TestDeRegisterRole extends TestCase {
+public class TestDeRegisterRole {
 
 	OMSProxy omsProxy = null;
 	DatabaseAccess dbA = null;
@@ -23,8 +28,8 @@ public class TestDeRegisterRole extends TestCase {
 	
 	Process qpid_broker;
 	
-
-	protected void tearDown() throws Exception {
+	@After
+	public void tearDown() throws Exception {
 
 		//------------------Clean Data Base -----------//
 		dbA.executeSQL("DELETE FROM agentPlayList");
@@ -54,12 +59,11 @@ public class TestDeRegisterRole extends TestCase {
 		qpidManager.UnixQpidManager.stopQpid(qpid_broker);
 	}
 	
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 
 		qpid_broker = qpidManager.UnixQpidManager.startQpid(Runtime.getRuntime(), qpid_broker);
 		
-
 		AgentsConnection.connect();
 
 
@@ -88,11 +92,9 @@ public class TestDeRegisterRole extends TestCase {
 
 		//--------------------------------------------//
 
-
-
-
 	}
 
+	@Test(timeout = 5 * 60 * 1000)
 	public void testDeRegisterRole1()
 	{
 		try
@@ -145,6 +147,7 @@ public class TestDeRegisterRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testDeRegisterRole2a()
 	{
 		try
@@ -223,6 +226,7 @@ public class TestDeRegisterRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testDeRegisterRole2b()
 	{
 		try
@@ -301,6 +305,7 @@ public class TestDeRegisterRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testDeRegisterRole2c()
 	{
 		try
@@ -379,6 +384,7 @@ public class TestDeRegisterRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testDeRegisterRole2d()
 	{
 		try
@@ -456,6 +462,8 @@ public class TestDeRegisterRole extends TestCase {
 			fail(e.getMessage());
 		}
 	}
+	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testDeRegisterRole3a()
 	{
 		try
@@ -525,6 +533,8 @@ public class TestDeRegisterRole extends TestCase {
 			fail(e.getMessage());
 		}
 	}
+	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testDeRegisterRole3b()
 	{
 		try
@@ -595,6 +605,7 @@ public class TestDeRegisterRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testDeRegisterRole4a()
 	{
 		try
@@ -665,6 +676,7 @@ public class TestDeRegisterRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testDeRegisterRole4b()
 	{
 		try
@@ -735,7 +747,7 @@ public class TestDeRegisterRole extends TestCase {
 		}
 	}
 	
-	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testDeRegisterRole5a()
 	{
 		try
@@ -811,6 +823,7 @@ public class TestDeRegisterRole extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testDeRegisterRole5b()
 	{
 		try

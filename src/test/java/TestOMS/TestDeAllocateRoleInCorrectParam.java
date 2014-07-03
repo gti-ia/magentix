@@ -1,6 +1,11 @@
 package TestOMS;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
 import es.upv.dsic.gti_ia.organization.OMS;
@@ -13,7 +18,7 @@ import es.upv.dsic.gti_ia.organization.exception.SameAgentNameException;
 import es.upv.dsic.gti_ia.organization.exception.UnitNotExistsException;
 
 
-public class TestDeAllocateRoleInCorrectParam extends TestCase {
+public class TestDeAllocateRoleInCorrectParam {
 
 	OMSProxy omsProxy = null;
 	DatabaseAccess dbA = null;
@@ -27,9 +32,8 @@ public class TestDeAllocateRoleInCorrectParam extends TestCase {
 	
 	Process qpid_broker;
 	
-
-	protected void tearDown() throws Exception {
-
+	@After
+	public void tearDown() throws Exception {
 
 		//------------------Clean Data Base -----------//
 		dbA.executeSQL("DELETE FROM agentPlayList");
@@ -58,8 +62,8 @@ public class TestDeAllocateRoleInCorrectParam extends TestCase {
 		qpidManager.UnixQpidManager.stopQpid(qpid_broker);
 	}
 	
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 
 		qpid_broker = qpidManager.UnixQpidManager.startQpid(Runtime.getRuntime(), qpid_broker);
 		
@@ -157,6 +161,7 @@ public class TestDeAllocateRoleInCorrectParam extends TestCase {
 
 	}
 
+	@Test(timeout = 5 * 60 * 1000)
 	public void testDeAllocateRole1()
 	{
 		try
@@ -226,6 +231,7 @@ public class TestDeAllocateRoleInCorrectParam extends TestCase {
 
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testDeAllocateRole2()
 	{
 		try
@@ -295,6 +301,7 @@ public class TestDeAllocateRoleInCorrectParam extends TestCase {
 
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testDeAllocateRole3()
 	{
 		try
@@ -363,6 +370,8 @@ public class TestDeAllocateRoleInCorrectParam extends TestCase {
 		}
 
 	}
+	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testDeAllocateRole4()
 	{
 		try
@@ -432,6 +441,7 @@ public class TestDeAllocateRoleInCorrectParam extends TestCase {
 
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testDeAllocateRole5()
 	{
 		try
@@ -501,6 +511,7 @@ public class TestDeAllocateRoleInCorrectParam extends TestCase {
 
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testDeAllocateRole6()
 	{
 		try
@@ -570,6 +581,7 @@ public class TestDeAllocateRoleInCorrectParam extends TestCase {
 
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testDeAllocateRole7()
 	{
 		try
@@ -639,6 +651,7 @@ public class TestDeAllocateRoleInCorrectParam extends TestCase {
 
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testDeAllocateRole8()
 	{
 		try
@@ -708,6 +721,7 @@ public class TestDeAllocateRoleInCorrectParam extends TestCase {
 
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testDeAllocateRole9()
 	{
 		try
@@ -786,6 +800,7 @@ public class TestDeAllocateRoleInCorrectParam extends TestCase {
 
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testAllocateRole10()
 	{
 		try

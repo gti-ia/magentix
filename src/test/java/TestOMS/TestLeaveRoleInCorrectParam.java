@@ -1,6 +1,9 @@
 package TestOMS;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
 import es.upv.dsic.gti_ia.organization.OMS;
@@ -11,7 +14,7 @@ import es.upv.dsic.gti_ia.organization.exception.RoleNotExistsException;
 import es.upv.dsic.gti_ia.organization.exception.UnitNotExistsException;
 
 
-public class TestLeaveRoleInCorrectParam extends TestCase {
+public class TestLeaveRoleInCorrectParam {
 
 	OMSProxy omsProxy = null;
 	DatabaseAccess dbA = null;
@@ -24,8 +27,8 @@ public class TestLeaveRoleInCorrectParam extends TestCase {
 
 	Process qpid_broker;
 	
-
-	protected void tearDown() throws Exception {
+	@After
+	public void tearDown() throws Exception {
 
 
 		//------------------Clean Data Base -----------//
@@ -54,8 +57,9 @@ public class TestLeaveRoleInCorrectParam extends TestCase {
 		AgentsConnection.disconnect();
 		qpidManager.UnixQpidManager.stopQpid(qpid_broker);
 	}
-	protected void setUp() throws Exception {
-		super.setUp();
+	
+	@Before
+	public void setUp() throws Exception {
 
 		qpid_broker = qpidManager.UnixQpidManager.startQpid(Runtime.getRuntime(), qpid_broker);
 		
@@ -93,139 +97,35 @@ public class TestLeaveRoleInCorrectParam extends TestCase {
 		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
 		"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
 
-		
-
 	}
 
-	public void testLeaveRole1()
-	{
-		try
-		{
-
-			String result = omsProxy.leaveRole("participante", "noexiste");
-
-			fail(result);
-
-		}catch(UnitNotExistsException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	@Test(timeout = 5 * 60 * 1000, expected = UnitNotExistsException.class)
+	public void testLeaveRole1() throws Exception {
+		omsProxy.leaveRole("participante", "noexiste");
 	}
 	
-	public void testLeaveRole2()
-	{
-		try
-		{
-
-			String result = omsProxy.leaveRole("participante", "");
-
-			fail(result);
-
-		}catch(EmptyParametersException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	@Test(timeout = 5 * 60 * 1000, expected = EmptyParametersException.class)
+	public void testLeaveRole2() throws Exception {
+		omsProxy.leaveRole("participante", "");
 	}
 	
-	public void testLeaveRole3()
-	{
-		try
-		{
-
-			String result = omsProxy.leaveRole("participante", null);
-
-			fail(result);
-
-		}catch(EmptyParametersException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	@Test(timeout = 5 * 60 * 1000, expected = EmptyParametersException.class)
+	public void testLeaveRole3() throws Exception {
+		omsProxy.leaveRole("participante", null);
 	}
 	
-	public void testLeaveRole4()
-	{
-		try
-		{
-
-			String result = omsProxy.leaveRole("noexiste", "virtual");
-
-			fail(result);
-
-		}catch(RoleNotExistsException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	@Test(timeout = 5 * 60 * 1000, expected = RoleNotExistsException.class)
+	public void testLeaveRole4() throws Exception {
+		omsProxy.leaveRole("noexiste", "virtual");
 	}
 	
-	public void testLeaveRole5()
-	{
-		try
-		{
-
-			String result = omsProxy.leaveRole("", "virtual");
-
-			fail(result);
-
-		}catch(EmptyParametersException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	@Test(timeout = 5 * 60 * 1000, expected = EmptyParametersException.class)
+	public void testLeaveRole5() throws Exception {
+		omsProxy.leaveRole("", "virtual");
 	}
 	
-	public void testLeaveRole6()
-	{
-		try
-		{
-
-			String result = omsProxy.leaveRole(null, "virtual");
-
-			fail(result);
-
-		}catch(EmptyParametersException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	@Test(timeout = 5 * 60 * 1000, expected = EmptyParametersException.class)
+	public void testLeaveRole6() throws Exception {
+		omsProxy.leaveRole(null, "virtual");
 	}
 }

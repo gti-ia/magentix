@@ -101,7 +101,7 @@ public class TestInformTargetNormsPermissionsDomain {
 		dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
 	}
 	
-	@Test
+	@Test(timeout = 5 * 60 * 1000)
 	public void testInformTargetNormsPermissionsDomain1() throws Exception {
 		
 		//------------------------------------------- Test Initialization  -----------------------------------------------//

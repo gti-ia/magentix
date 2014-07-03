@@ -100,7 +100,7 @@ public class TestLeaveRoleProhibitionDomain {
 		
 	}
 	
-	@Test(expected=ForbiddenNormException.class)
+	@Test(timeout = 5 * 60 * 1000, expected=ForbiddenNormException.class)
 	public void testLeaveRoleProhibitionDomain1() throws Exception {
 		
 		//------------------------------------------- Test Initialization  -----------------------------------------------//
@@ -153,7 +153,7 @@ public class TestLeaveRoleProhibitionDomain {
 		
 	}
 	
-	@Test(expected=NotPlaysRoleException.class)
+	@Test(timeout = 5 * 60 * 1000, expected=NotPlaysRoleException.class)
 	public void testLeaveRoleProhibitionDomain2() throws Exception {
 		
 		//------------------------------------------- Test Initialization  -----------------------------------------------//

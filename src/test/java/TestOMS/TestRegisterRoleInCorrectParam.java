@@ -1,6 +1,11 @@
 package TestOMS;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
 import es.upv.dsic.gti_ia.organization.OMS;
@@ -13,7 +18,7 @@ import es.upv.dsic.gti_ia.organization.exception.NotValidIdentifierException;
 import es.upv.dsic.gti_ia.organization.exception.UnitNotExistsException;
 
 
-public class TestRegisterRoleInCorrectParam extends TestCase {
+public class TestRegisterRoleInCorrectParam {
 
 	OMSProxy omsProxy = null;
 	DatabaseAccess dbA = null;
@@ -26,9 +31,8 @@ public class TestRegisterRoleInCorrectParam extends TestCase {
 	
 	Process qpid_broker;
 	
-
-	protected void tearDown() throws Exception {
-
+	@After
+	public void tearDown() throws Exception {
 
 		//------------------Clean Data Base -----------//
 		dbA.executeSQL("DELETE FROM agentPlayList");
@@ -56,8 +60,9 @@ public class TestRegisterRoleInCorrectParam extends TestCase {
 		AgentsConnection.disconnect();
 		qpidManager.UnixQpidManager.stopQpid(qpid_broker);
 	}
-	protected void setUp() throws Exception {
-		super.setUp();
+	
+	@Before
+	public void setUp() throws Exception {
 
 		qpid_broker = qpidManager.UnixQpidManager.startQpid(Runtime.getRuntime(), qpid_broker);
 		
@@ -136,220 +141,58 @@ public class TestRegisterRoleInCorrectParam extends TestCase {
 
 		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
 		"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'creador' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'plana'))))");
-
-
-
-
-
 	}
 
-	public void testRegisterRole1()
-	{
-		try
-		{
-
-			String result = omsProxy.registerRole("", "virtual", "external", "public", "member");
-
-			fail(result);
-
-		}catch(EmptyParametersException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-		try
-		{
-			String result = omsProxy.registerRole("", "equipo", "external", "public", "member");
-			fail(result);
-		}catch(EmptyParametersException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-		try
-		{
-			String result = omsProxy.registerRole("", "plana", "external", "public", "member");
-
-			fail(result);
-		}catch(EmptyParametersException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-		
-		try
-		{
-			String result = omsProxy.registerRole("", "jerarquia", "external", "public", "member");
-
-			fail(result);
-		}catch(EmptyParametersException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	@Test(timeout = 5 * 60 * 1000, expected = EmptyParametersException.class)
+	public void testRegisterRole1() throws Exception {
+		String result = omsProxy.registerRole("", "virtual", "external", "public", "member");
+		fail(result);
 	}
 	
-	public void testRegisterRole2()
-	{
-		try
-		{
-
-			String result = omsProxy.registerRole(null, "virtual", "external", "public", "member");
-
-			fail(result);
-
-		}catch(EmptyParametersException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-		try
-		{
-			String result = omsProxy.registerRole(null, "equipo", "external", "public", "member");
-			fail(result);
-		}catch(EmptyParametersException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-		try
-		{
-			String result = omsProxy.registerRole(null, "plana", "external", "public", "member");
-
-			fail(result);
-		}catch(EmptyParametersException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-		
-		try
-		{
-			String result = omsProxy.registerRole(null, "jerarquia", "external", "public", "member");
-
-			fail(result);
-		}catch(EmptyParametersException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	@Test(timeout = 5 * 60 * 1000, expected = EmptyParametersException.class)
+	public void testRegisterRole2() throws Exception {
+		String result = omsProxy.registerRole("", "equipo", "external", "public", "member");
+		fail(result);
 	}
-	//Esta prueba no tiene sentido, si que se puede registrar un rol con nombre inexistente.
-//	public void testRegisterRole3()
-//	{
-//		try
-//		{
-//
-//			String result = omsProxy.registerRole("inexistente", "virtual", "external", "public", "member");
-//
-//			fail(result);
-//
-//		}catch(RoleNotExistsException e)
-//		{
-//
-//			assertNotNull(e);
-//
-//		}
-//		catch(Exception e)
-//		{
-//			fail(e.getMessage());
-//		}
-//
-//		try
-//		{
-//			String result = omsProxy.registerRole("inexistente", "equipo", "external", "public", "member");
-//			fail(result);
-//		}catch(RoleNotExistsException e)
-//		{
-//
-//			assertNotNull(e);
-//
-//		}
-//		catch(Exception e)
-//		{
-//			fail(e.getMessage());
-//		}
-//
-//		try
-//		{
-//			String result = omsProxy.registerRole("inexistente", "plana", "external", "public", "member");
-//
-//			fail(result);
-//		}catch(RoleNotExistsException e)
-//		{
-//
-//			assertNotNull(e);
-//
-//		}
-//		catch(Exception e)
-//		{
-//			fail(e.getMessage());
-//		}
-//		
-//		try
-//		{
-//			String result = omsProxy.registerRole("inexistente", "jerarquia", "external", "public", "member");
-//
-//			fail(result);
-//		}catch(RoleNotExistsException e)
-//		{
-//
-//			assertNotNull(e);
-//
-//		}
-//		catch(Exception e)
-//		{
-//			fail(e.getMessage());
-//		}
-//
-//	}
-	public void testRegisterRole4()
+	
+	@Test(timeout = 5 * 60 * 1000, expected = EmptyParametersException.class)
+	public void testRegisterRole3() throws Exception {
+		String result = omsProxy.registerRole("", "plana", "external", "public", "member");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = EmptyParametersException.class)
+	public void testRegisterRole4() throws Exception {
+		String result = omsProxy.registerRole("", "jerarquia", "external", "public", "member");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = EmptyParametersException.class)
+	public void testRegisterRole5() throws Exception {
+		String result = omsProxy.registerRole(null, "virtual", "external", "public", "member");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = EmptyParametersException.class)
+	public void testRegisterRole6() throws Exception {
+		String result = omsProxy.registerRole(null, "equipo", "external", "public", "member");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = EmptyParametersException.class)
+	public void testRegisterRole7() throws Exception {
+		String result = omsProxy.registerRole(null, "plana", "external", "public", "member");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = EmptyParametersException.class)
+	public void testRegisterRole8() throws Exception {
+		String result = omsProxy.registerRole(null, "jerarquia", "external", "public", "member");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000)
+	public void testRegisterRole9()
 	{
 		try
 		{
@@ -418,1316 +261,380 @@ public class TestRegisterRoleInCorrectParam extends TestCase {
 
 	}
 	
-
-	public void testregisterRole5()
-	{
-		try
-		{
-
-			String result = omsProxy.registerRole("**Miunidad", "plana", "external", "public","member");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterRole10() throws Exception {
+		String result = omsProxy.registerRole("**Miunidad", "plana", "external", "public","member");
+		fail(result);
 	}
-	public void testregisterRole6()
-	{
-		try
-		{
-
-			String result = omsProxy.registerRole("team", "plana", "external", "public","member");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterRole11() throws Exception {
+		String result = omsProxy.registerRole("team", "plana", "external", "public","member");
+		fail(result);
 	}
-	public void testregisterRole7()
-	{
-		try
-		{
-
-			String result = omsProxy.registerRole("flat", "plana", "external", "public","member");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterRole12() throws Exception {
+		String result = omsProxy.registerRole("flat", "plana", "external", "public","member");
+		fail(result);
 	}
-	public void testregisterRole8()
-	{
-		try
-		{
-
-			String result = omsProxy.registerRole("hierarchy", "plana", "external", "public","member");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterRole13() throws Exception {
+		String result = omsProxy.registerRole("hierarchy", "plana", "external", "public","member");
+		fail(result);
 	}
-	public void testregisterRole9()
-	{
-		try
-		{
-
-			String result = omsProxy.registerRole("supervisor", "plana", "external", "public","member");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterRole14() throws Exception {
+		String result = omsProxy.registerRole("supervisor", "plana", "external", "public","member");
+		fail(result);
 	}
-	public void testregisterRole10()
-	{
-		try
-		{
-
-			String result = omsProxy.registerRole("subordinate", "plana", "external", "public","member");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterRole15() throws Exception {
+		String result = omsProxy.registerRole("subordinate", "plana", "external", "public","member");
+		fail(result);
 	}
-	public void testregisterRole11()
-	{
-		try
-		{
-
-			String result = omsProxy.registerRole("member", "plana", "external", "public","member");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterRole16() throws Exception {
+		String result = omsProxy.registerRole("member", "plana", "external", "public","member");
+		fail(result);
 	}
-	public void testregisterRole12()
-	{
-		try
-		{
-
-			String result = omsProxy.registerRole("creator", "plana", "external", "public","member");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterRole17() throws Exception {
+		String result = omsProxy.registerRole("creator", "plana", "external", "public","member");
+		fail(result);
 	}
-	public void testregisterRole13()
-	{
-		try
-		{
-
-			String result = omsProxy.registerRole("private", "plana", "external", "public","member");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterRole18() throws Exception {
+		String result = omsProxy.registerRole("private", "plana", "external", "public","member");
+		fail(result);
 	}
-	public void testregisterRole14()
-	{
-		try
-		{
-
-			String result = omsProxy.registerRole("public", "plana", "external", "public","member");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterRole19() throws Exception {
+		String result = omsProxy.registerRole("public", "plana", "external", "public","member");
+		fail(result);
 	}
-	public void testregisterRole15()
-	{
-		try
-		{
-
-			String result = omsProxy.registerRole("external", "plana", "external", "public","member");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterRole20() throws Exception {
+		String result = omsProxy.registerRole("external", "plana", "external", "public","member");
+		fail(result);
 	}
-	public void testregisterRole16()
-	{
-		try
-		{
-
-			String result = omsProxy.registerRole("internal", "plana", "external", "public","member");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterRole21() throws Exception {
+		String result = omsProxy.registerRole("internal", "plana", "external", "public","member");
+		fail(result);
 	}
-	public void testregisterRole17()
-	{
-		try
-		{
-
-			String result = omsProxy.registerRole("registerRole", "plana", "external", "public","member");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterRole22() throws Exception {
+		String result = omsProxy.registerRole("registerRole", "plana", "external", "public","member");
+		fail(result);
 	}
-	public void testregisterRole18()
-	{
-		try
-		{
-
-			String result = omsProxy.registerRole("deregisterRole", "plana", "external", "public","member");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterRole23() throws Exception {
+		String result = omsProxy.registerRole("deregisterRole", "plana", "external", "public","member");
+		fail(result);
 	}
-	public void testregisterRole19()
-	{
-		try
-		{
-
-			String result = omsProxy.registerRole("registerRole", "plana", "external", "public","member");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterRole24() throws Exception {
+		String result = omsProxy.registerRole("registerRole", "plana", "external", "public","member");
+		fail(result);
 	}
-	public void testregisterRole20()
-	{
-		try
-		{
-
-			String result = omsProxy.registerRole("deregisterRole", "plana", "external", "public","member");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterRole25() throws Exception {
+		String result = omsProxy.registerRole("deregisterRole", "plana", "external", "public","member");
+		fail(result);
 	}	
 	
-	public void testregisterRole21()
-	{
-		try
-		{
-
-			String result = omsProxy.registerRole("registerNorm", "plana", "external", "public","member");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterRole26() throws Exception {
+		String result = omsProxy.registerRole("registerNorm", "plana", "external", "public","member");
+		fail(result);
 	}
 	
-	public void testregisterRole22()
-	{
-		try
-		{
-
-			String result = omsProxy.registerRole("deregisterNorm", "plana", "external", "public","member");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterRole27() throws Exception {
+		String result = omsProxy.registerRole("deregisterNorm", "plana", "external", "public","member");
+		fail(result);
 	}
 
-	public void testregisterRole23()
-	{
-		try
-		{
-
-			String result = omsProxy.registerRole("allocateRole", "plana", "external", "public","member");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testregisterRole24()
-	{
-		try
-		{
-
-			String result = omsProxy.registerRole("deallocateRole", "plana", "external", "public","member");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testregisterRole25()
-	{
-		try
-		{
-
-			String result = omsProxy.registerRole("joinUnit", "plana", "external", "public","member");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testregisterRole26()
-	{
-		try
-		{
-
-			String result = omsProxy.registerRole("informAgentRole", "plana", "external", "public","member");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterRole28() throws Exception {
+		String result = omsProxy.registerRole("allocateRole", "plana", "external", "public","member");
+		fail(result);
 	}
 	
-	public void testregisterRole27()
-	{
-		try
-		{
-
-			String result = omsProxy.registerRole("informMembers", "plana", "external", "public","member");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testregisterRole28()
-	{
-		try
-		{
-
-			String result = omsProxy.registerRole("informQuantityMembers", "plana", "external", "public","member");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testregisterRole29()
-	{
-		try
-		{
-
-			String result = omsProxy.registerRole("informUnit", "plana", "external", "public","member");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testregisterRole30()
-	{
-		try
-		{
-
-			String result = omsProxy.registerRole("informUnitRoles", "plana", "external", "public","member");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testregisterRole31()
-	{
-		try
-		{
-
-			String result = omsProxy.registerRole("informTargetNorms", "plana", "external", "public","member");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testregisterRole32()
-	{
-		try
-		{
-
-			String result = omsProxy.registerRole("informRole", "plana", "external", "public","member");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testregisterRole33()
-	{
-		try
-		{
-
-			String result = omsProxy.registerRole("informNorm", "plana", "external", "public","member");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testregisterRole34()
-	{
-		try
-		{
-
-			String result = omsProxy.registerRole("acquireRole", "plana", "external", "public","member");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testregisterRole35()
-	{
-		try
-		{
-
-			String result = omsProxy.registerRole("leaveRole", "plana", "external", "public","member");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testregisterRole36()
-	{
-		try
-		{
-
-			String result = omsProxy.registerRole("isNorm", "plana", "external", "public","member");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testregisterRole37()
-	{
-		try
-		{
-
-			String result = omsProxy.registerRole("hasDeontic", "plana", "external", "public","member");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testregisterRole38()
-	{
-		try
-		{
-
-			String result = omsProxy.registerRole("hasTarget", "plana", "external", "public","member");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testregisterRole39()
-	{
-		try
-		{
-
-			String result = omsProxy.registerRole("hasAction", "plana", "external", "public","member");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterRole29() throws Exception {
+		String result = omsProxy.registerRole("deallocateRole", "plana", "external", "public","member");
+		fail(result);
 	}
 	
-	public void testregisterRole40()
-	{
-		try
-		{
-
-			String result = omsProxy.registerRole("isRole", "plana", "external", "public","member");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testregisterRole41()
-	{
-		try
-		{
-
-			String result = omsProxy.registerRole("hasAccessibility", "plana", "external", "public","member");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testregisterRole42()
-	{
-		try
-		{
-
-			String result = omsProxy.registerRole("hasVisibility", "plana", "external", "public","member");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testregisterRole43()
-	{
-		try
-		{
-
-			String result = omsProxy.registerRole("hasPosition", "plana", "external", "public","member");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testregisterRole44()
-	{
-		try
-		{
-
-			String result = omsProxy.registerRole("isUnit", "plana", "external", "public","member");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testregisterRole45()
-	{
-		try
-		{
-
-			String result = omsProxy.registerRole("hasType", "plana", "external", "public","member");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testregisterRole46()
-	{
-		try
-		{
-
-			String result = omsProxy.registerRole("hasParent", "plana", "external", "public","member");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testregisterRole47()
-	{
-		try
-		{
-
-			String result = omsProxy.registerRole("div", "plana", "external", "public","member");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testregisterRole48()
-	{
-		try
-		{
-
-			String result = omsProxy.registerRole("mod", "plana", "external", "public","member");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testregisterRole49()
-	{
-		try
-		{
-
-			String result = omsProxy.registerRole("not", "plana", "external", "public","member");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testregisterRole50()
-	{
-		try
-		{
-
-			String result = omsProxy.registerRole("_", "plana", "external", "public","member");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testregisterRole51()
-	{
-		try
-		{
-
-			String result = omsProxy.registerRole("agentName", "plana", "external", "public","member");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testregisterRole52()
-	{
-		try
-		{
-
-			String result = omsProxy.registerRole("roleName", "plana", "external", "public","member");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testregisterRole53()
-	{
-		try
-		{
-
-			String result = omsProxy.registerRole("positionName", "plana", "external", "public","member");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testregisterRole54()
-	{
-		try
-		{
-
-			String result = omsProxy.registerRole("o", "plana", "external", "public","member");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testregisterRole55()
-	{
-		try
-		{
-
-			String result = omsProxy.registerRole("f", "plana", "external", "public","member");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testregisterRole56()
-	{
-		try
-		{
-
-			String result = omsProxy.registerRole("p", "plana", "external", "public","member");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testregisterRole57()
-	{
-		try
-		{
-
-			String result = omsProxy.registerRole("*invalido", "plana", "external", "public","member");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testregisterRole58()
-	{
-		try
-		{
-
-			String result = omsProxy.registerRole("+invalido", "plana", "external", "public","member");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testregisterRole59()
-	{
-		try
-		{
-
-			String result = omsProxy.registerRole("?invalido", "plana", "external", "public","member");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testregisterRole60()
-	{
-		try
-		{
-
-			String result = omsProxy.registerRole("!invalido", "plana", "external", "public","member");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testregisterRole61()
-	{
-		try
-		{
-
-			String result = omsProxy.registerRole("invalido!", "plana", "external", "public","member");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testregisterRole65()
-	{
-		try
-		{
-
-			String result = omsProxy.registerRole("invalido?", "plana", "external", "public","member");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testregisterRole66()
-	{
-		try
-		{
-
-			String result = omsProxy.registerRole("invalido*", "plana", "external", "public","member");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testregisterRole67()
-	{
-		try
-		{
-
-			String result = omsProxy.registerRole("invalido+", "plana", "external", "public","member");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testregisterRole68()
-	{
-		try
-		{
-
-			String result = omsProxy.registerRole("!invalido", "plana", "external", "public","member");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-	}
-	public void testregisterRole69()
-	{
-		try
-		{
-
-			String result = omsProxy.registerRole("invalido-invalido", "plana", "external", "public","member");
-
-			fail(result);
-
-		}catch(NotValidIdentifierException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
-
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterRole30() throws Exception {
+		String result = omsProxy.registerRole("joinUnit", "plana", "external", "public","member");
+		fail(result);
 	}
 	
-	public void testRegisterRole70()
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterRole31() throws Exception {
+		String result = omsProxy.registerRole("informAgentRole", "plana", "external", "public","member");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterRole32() throws Exception {
+		String result = omsProxy.registerRole("informMembers", "plana", "external", "public","member");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterRole33() throws Exception {
+		String result = omsProxy.registerRole("informQuantityMembers", "plana", "external", "public","member");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterRole34() throws Exception {
+		String result = omsProxy.registerRole("informUnit", "plana", "external", "public","member");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterRole35() throws Exception {
+		String result = omsProxy.registerRole("informUnitRoles", "plana", "external", "public","member");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterRole36() throws Exception {
+		String result = omsProxy.registerRole("informTargetNorms", "plana", "external", "public","member");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterRole37() throws Exception {
+		String result = omsProxy.registerRole("informRole", "plana", "external", "public","member");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterRole38() throws Exception {
+		String result = omsProxy.registerRole("informNorm", "plana", "external", "public","member");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterRole39() throws Exception {
+		String result = omsProxy.registerRole("acquireRole", "plana", "external", "public","member");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterRole40() throws Exception {
+		String result = omsProxy.registerRole("leaveRole", "plana", "external", "public","member");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterRole41() throws Exception {
+		String result = omsProxy.registerRole("isNorm", "plana", "external", "public","member");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterRole42() throws Exception {
+		String result = omsProxy.registerRole("hasDeontic", "plana", "external", "public","member");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterRole43() throws Exception {
+		String result = omsProxy.registerRole("hasTarget", "plana", "external", "public","member");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterRole44() throws Exception {
+		String result = omsProxy.registerRole("hasAction", "plana", "external", "public","member");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterRole45() throws Exception {
+		String result = omsProxy.registerRole("isRole", "plana", "external", "public","member");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testregisterRole46() throws Exception {
+		String result = omsProxy.registerRole("hasAccessibility", "plana", "external", "public","member");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterRole47() throws Exception {
+		String result = omsProxy.registerRole("hasVisibility", "plana", "external", "public","member");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterRole48() throws Exception {
+		String result = omsProxy.registerRole("hasPosition", "plana", "external", "public","member");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterRole49() throws Exception {
+		String result = omsProxy.registerRole("isUnit", "plana", "external", "public","member");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterRole50() throws Exception {
+		String result = omsProxy.registerRole("hasType", "plana", "external", "public","member");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterRole51() throws Exception {
+		String result = omsProxy.registerRole("hasParent", "plana", "external", "public","member");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterRole52() throws Exception {
+		String result = omsProxy.registerRole("div", "plana", "external", "public","member");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterRole53() throws Exception {
+		String result = omsProxy.registerRole("mod", "plana", "external", "public","member");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testregisterRole54() throws Exception {
+		String result = omsProxy.registerRole("not", "plana", "external", "public","member");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterRole55() throws Exception {
+		String result = omsProxy.registerRole("_", "plana", "external", "public","member");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterRole56() throws Exception {
+		String result = omsProxy.registerRole("agentName", "plana", "external", "public","member");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterRole57() throws Exception {
+		String result = omsProxy.registerRole("roleName", "plana", "external", "public","member");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterRole58() throws Exception {
+		String result = omsProxy.registerRole("positionName", "plana", "external", "public","member");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterRole59() throws Exception {
+		String result = omsProxy.registerRole("o", "plana", "external", "public","member");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterRole60() throws Exception {
+		String result = omsProxy.registerRole("f", "plana", "external", "public","member");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterRole61() throws Exception {
+		String result = omsProxy.registerRole("p", "plana", "external", "public","member");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterRole62() throws Exception {
+		String result = omsProxy.registerRole("*invalido", "plana", "external", "public","member");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterRole63() throws Exception {
+		String result = omsProxy.registerRole("+invalido", "plana", "external", "public","member");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterRole64() throws Exception {
+		String result = omsProxy.registerRole("?invalido", "plana", "external", "public","member");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterRole65() throws Exception {
+		String result = omsProxy.registerRole("!invalido", "plana", "external", "public","member");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterRole66() throws Exception {
+		String result = omsProxy.registerRole("invalido!", "plana", "external", "public","member");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterRole67() throws Exception {
+		String result = omsProxy.registerRole("invalido?", "plana", "external", "public","member");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterRole68() throws Exception {
+		String result = omsProxy.registerRole("invalido*", "plana", "external", "public","member");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterRole69() throws Exception {
+		String result = omsProxy.registerRole("invalido+", "plana", "external", "public","member");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterRole70() throws Exception {
+		String result = omsProxy.registerRole("!invalido", "plana", "external", "public","member");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000, expected = NotValidIdentifierException.class)
+	public void testRegisterRole71() throws Exception {
+		String result = omsProxy.registerRole("invalido-invalido", "plana", "external", "public","member");
+		fail(result);
+	}
+	
+	@Test(timeout = 5 * 60 * 1000)
+	public void testRegisterRole72()
 	{
 		try
 		{
@@ -1796,7 +703,8 @@ public class TestRegisterRoleInCorrectParam extends TestCase {
 
 	}
 	
-	public void testRegisterRole71()
+	@Test(timeout = 5 * 60 * 1000)
+	public void testRegisterRole73()
 	{
 		try
 		{
@@ -1865,7 +773,8 @@ public class TestRegisterRoleInCorrectParam extends TestCase {
 
 	}
 	
-	public void testRegisterRole72()
+	@Test(timeout = 5 * 60 * 1000)
+	public void testRegisterRole74()
 	{
 		try
 		{
@@ -1934,7 +843,8 @@ public class TestRegisterRoleInCorrectParam extends TestCase {
 
 	}
 	
-	public void testRegisterRole73()
+	@Test(timeout = 5 * 60 * 1000)
+	public void testRegisterRole75()
 	{
 		try
 		{
@@ -2003,7 +913,8 @@ public class TestRegisterRoleInCorrectParam extends TestCase {
 
 	}
 	
-	public void testRegisterRole74()
+	@Test(timeout = 5 * 60 * 1000)
+	public void testRegisterRole76()
 	{
 		try
 		{
@@ -2072,7 +983,8 @@ public class TestRegisterRoleInCorrectParam extends TestCase {
 
 	}
 	
-	public void testRegisterRole75()
+	@Test(timeout = 5 * 60 * 1000)
+	public void testRegisterRole77()
 	{
 		try
 		{
@@ -2141,7 +1053,8 @@ public class TestRegisterRoleInCorrectParam extends TestCase {
 
 	}
 	
-	public void testRegisterRole76()
+	@Test(timeout = 5 * 60 * 1000)
+	public void testRegisterRole78()
 	{
 		try
 		{
@@ -2210,7 +1123,8 @@ public class TestRegisterRoleInCorrectParam extends TestCase {
 
 	}
 	
-	public void testRegisterRole77()
+	@Test(timeout = 5 * 60 * 1000)
+	public void testRegisterRole79()
 	{
 		try
 		{
@@ -2279,7 +1193,8 @@ public class TestRegisterRoleInCorrectParam extends TestCase {
 
 	}
 	
-	public void testRegisterRole78()
+	@Test(timeout = 5 * 60 * 1000)
+	public void testRegisterRole80()
 	{
 		try
 		{
@@ -2348,7 +1263,8 @@ public class TestRegisterRoleInCorrectParam extends TestCase {
 
 	}
 	
-	public void testRegisterRole79()
+	@Test(timeout = 5 * 60 * 1000)
+	public void testRegisterRole81()
 	{
 		try
 		{
@@ -2417,7 +1333,8 @@ public class TestRegisterRoleInCorrectParam extends TestCase {
 
 	}
 	
-	public void testRegisterRole80()
+	@Test(timeout = 5 * 60 * 1000)
+	public void testRegisterRole82()
 	{
 		try
 		{
@@ -2486,7 +1403,8 @@ public class TestRegisterRoleInCorrectParam extends TestCase {
 
 	}
 	
-	public void testRegisterRole81()
+	@Test(timeout = 5 * 60 * 1000)
+	public void testRegisterRole83()
 	{
 		try
 		{
@@ -2555,7 +1473,8 @@ public class TestRegisterRoleInCorrectParam extends TestCase {
 
 	}
 	
-	public void testRegisterRole82()
+	@Test(timeout = 5 * 60 * 1000)
+	public void testRegisterRole84()
 	{
 		try
 		{

@@ -1,12 +1,17 @@
 package TestOMS;
 
+import static org.junit.Assert.*;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
 import es.upv.dsic.gti_ia.organization.Configuration;
@@ -21,7 +26,7 @@ import es.upv.dsic.gti_ia.organization.exception.THOMASException;
 import es.upv.dsic.gti_ia.organization.exception.UnitNotExistsException;
 
 
-public class TestDeregisterNorm extends TestCase {
+public class TestDeregisterNorm {
 
 	OMSProxy omsProxy = null;
 	OMSProxy omsProxyCreator = null;
@@ -40,9 +45,8 @@ public class TestDeregisterNorm extends TestCase {
 
 	Process qpid_broker;
 	
-
-	protected void tearDown() throws Exception {
-
+	@After
+	public void tearDown() throws Exception {
 
 		//------------------Clean Data Base -----------//
 		dbA.executeSQL("DELETE FROM agentPlayList");
@@ -79,8 +83,8 @@ public class TestDeregisterNorm extends TestCase {
 		qpidManager.UnixQpidManager.stopQpid(qpid_broker);
 	}
 	
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 
 		qpid_broker = qpidManager.UnixQpidManager.startQpid(Runtime.getRuntime(), qpid_broker);
 		
@@ -117,9 +121,6 @@ public class TestDeregisterNorm extends TestCase {
 		dbA.executeSQL("DELETE FROM unitList WHERE idunitList != 1");
 
 		//--------------------------------------------//
-
-
-
 	}
 
 	/** 
@@ -160,76 +161,40 @@ public class TestDeregisterNorm extends TestCase {
 		}
 	}
 
-	public void testDeregisterNorm1()
-	{
-		try
-		{
+	@Test(timeout = 5 * 60 * 1000, expected = UnitNotExistsException.class)
+	public void testDeregisterNorm1() throws Exception {
+		// Database Initialization
+		dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
 
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+				"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
 
-			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
+		String NormaPrueba = "@normaprueba[f,<agentName:_>,registerRole(_,_,_,_,_,_),_,_]";
 
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
+		omsProxy.registerNorm("virtual", NormaPrueba);
 
-
-			String NormaPrueba = "@normaprueba[f,<agentName:_>,registerRole(_,_,_,_,_,_),_,_]";
-
-
-			omsProxy.registerNorm("virtual", NormaPrueba);
-
-			String result = omsProxy.deregisterNorm("normaPrueba","Invalida");
-
-			fail(result);
-
-
-
-		}catch(UnitNotExistsException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
+		// Method call	
+		omsProxy.deregisterNorm("normaPrueba","Invalida");
 	}
 
-	public void testDeregisterNorm2()
-	{
-		try
-		{
+	@Test(timeout = 5 * 60 * 1000, expected = NormNotExistsException.class)
+	public void testDeregisterNorm2() throws Exception {
+		// Database Initialization
+		dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
+
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+				"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
+
+		String NormaPrueba = "@normaprueba[f,<agentName:_>,registerRole(_,_,_,_,_,_),_,_]";
 
 
-			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
+		omsProxy.registerNorm("virtual", NormaPrueba);
 
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'pruebas'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
-
-
-			String NormaPrueba = "@normaprueba[f,<agentName:_>,registerRole(_,_,_,_,_,_),_,_]";
-
-
-			omsProxy.registerNorm("virtual", NormaPrueba);
-
-			String result = omsProxy.deregisterNorm("normaPruebaInexistente","virtual");
-
-			fail(result);
-
-
-
-		}catch(NormNotExistsException e)
-		{
-
-			assertNotNull(e);
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
+		// Method call	
+		omsProxy.deregisterNorm("normaPruebaInexistente","virtual");
 	}
 
+	@Test(timeout = 5 * 60 * 1000)
 	public void testDeregisterNorm3()
 	{
 		try
@@ -251,8 +216,6 @@ public class TestDeregisterNorm extends TestCase {
 
 			assertEquals("normaPrueba deleted", result);
 
-
-
 		}
 		catch(Exception e)
 		{
@@ -261,7 +224,7 @@ public class TestDeregisterNorm extends TestCase {
 	}
 
 	// Comprobación de normas estructurales.
-
+	@Test(timeout = 5 * 60 * 1000)
 	public void testDeregisterNorm4()
 	{
 		try
@@ -292,65 +255,39 @@ public class TestDeregisterNorm extends TestCase {
 		}
 	}
 
-	public void testDeregisterNorm5()
-	{
+	@Test(timeout = 5 * 60 * 1000, expected = NotInUnitAndNotCreatorException.class)
+	public void testDeregisterNorm5() throws Exception {
+		
+		String unit = "plana";
 
-		try
-		{
+		// Database Initialization
+		dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
 
-			String unit = "plana";
+		dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('creador')");
 
-			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('pruebas')");
+		dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('"+unit+"',(SELECT idunitType FROM unitType WHERE unitTypeName = 'flat'))");
 
-			dbA.executeSQL("INSERT INTO `agentList` (`agentName`) VALUES ('creador')");
+		dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'virtual'),(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'))");
 
-			dbA.executeSQL("INSERT INTO `unitList` (`unitName`,`idunitType`) VALUES ('"+unit+"',(SELECT idunitType FROM unitType WHERE unitTypeName = 'flat'))");
+		dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
+				"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
+				"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
+				"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
+				"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
 
-			dbA.executeSQL("INSERT INTO `unitHierarchy` (`idParentUnit`,`idChildUnit`) VALUES ((SELECT idunitList FROM unitList WHERE unitName = 'virtual'),(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'))");
+		dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
+				"((SELECT idagentList FROM agentList WHERE agentName = 'creador'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
 
-			dbA.executeSQL("INSERT INTO `roleList` (`roleName`,`idunitList`,`idposition`,`idaccessibility`,`idvisibility`) VALUES"+ 
-					"('creador',(SELECT idunitList FROM unitList WHERE unitName = '"+unit+"'),"+
-					"(SELECT idposition FROM position WHERE positionName = 'creator'), "+
-					"(SELECT idaccessibility FROM accessibility WHERE accessibility = 'external'),"+ 
-			"(SELECT idvisibility FROM visibility WHERE visibility = 'public'))");
+		String NormaPrueba = "@normaprueba[f,<positionName:member>,registerRole(_,_,_,_,_,_),_,_]";
+		String result = omsProxyCreator.registerNorm(unit, NormaPrueba);
 
+		assertEquals("normaprueba created", result);
 
-
-
-			dbA.executeSQL("INSERT INTO `agentPlayList` (`idagentList`, `idroleList`) VALUES"+
-			"((SELECT idagentList FROM agentList WHERE agentName = 'creador'),(SELECT idroleList FROM roleList WHERE (roleName = 'participant' AND idunitList = (SELECT idunitList FROM unitList WHERE unitName = 'virtual'))))");
-
-
-
-			String NormaPrueba = "@normaprueba[f,<positionName:member>,registerRole(_,_,_,_,_,_),_,_]";
-			String result = omsProxyCreator.registerNorm(unit, NormaPrueba);
-
-			assertEquals("normaprueba created", result);
-
-			result = omsProxy.deregisterNorm("normaprueba",unit);
-
-			fail(result);
-
-
-		}
-		catch(NotInUnitAndNotCreatorException e)
-		{
-
-			assertNotNull(e);
-
-
-		}catch(THOMASException e)
-		{
-
-			fail(e.getMessage());
-
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
+		// Method call
+		omsProxy.deregisterNorm("normaprueba",unit);
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testDeregisterNorm6()
 	{
 		Statement st = null;	
@@ -466,7 +403,7 @@ public class TestDeregisterNorm extends TestCase {
 		}
 	}
 	
-	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testDeregisterNorm7()
 	{
 
@@ -526,6 +463,7 @@ public class TestDeregisterNorm extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testDeregisterNorm8()
 	{
 		Statement st = null;	
@@ -627,6 +565,7 @@ public class TestDeregisterNorm extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testDeregisterNorm9()
 	{
 
@@ -731,6 +670,7 @@ public class TestDeregisterNorm extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testDeregisterNorm10()
 	{
 
@@ -830,6 +770,7 @@ public class TestDeregisterNorm extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testDeregisterNorm11()
 	{
 
@@ -901,6 +842,7 @@ public class TestDeregisterNorm extends TestCase {
 		}
 	}
 	
+	@Test(timeout = 5 * 60 * 1000)
 	public void testDeregisterNorm14()
 	{
 	
