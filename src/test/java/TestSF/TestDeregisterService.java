@@ -1,7 +1,15 @@
 package TestSF;
 
+import static org.junit.Assert.*;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import junit.framework.TestCase;
 import es.upv.dsic.gti_ia.core.AgentID;
@@ -13,7 +21,7 @@ import es.upv.dsic.gti_ia.organization.exception.ServiceProfileNotFoundException
 import es.upv.dsic.gti_ia.organization.exception.THOMASException;
 //import omsTests.DatabaseAccess;
 
-public class TestDeregisterService extends TestCase {
+public class TestDeregisterService {
 
 	Process qpid_broker;
 	SFProxy sfProxy = null;
@@ -22,8 +30,9 @@ public class TestDeregisterService extends TestCase {
 	SF sf = null;
 	DatabaseAccess dbA = null;
 
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
+		//super.setUp();
 		qpid_broker = qpidManager.UnixQpidManager.startQpid(Runtime.getRuntime(), qpid_broker);
 		
 		AgentsConnection.connect();
@@ -45,8 +54,9 @@ public class TestDeregisterService extends TestCase {
 
 	}
 
-	protected void tearDown() throws Exception {
-		super.tearDown();
+	@After
+	public void tearDown() throws Exception {
+		//super.tearDown();
 
 		// ------------------Clean Data Base -----------//
 		dbA.executeSQL("DELETE FROM agentPlayList");
@@ -80,6 +90,7 @@ public class TestDeregisterService extends TestCase {
 	 * 
 	 * @return
 	 */
+	@Test (timeout=60000)
 	public void testIncorrectParamTest1() {
 		try {
 			sfProxy.deregisterService("dsic-upv-es");
@@ -100,6 +111,7 @@ public class TestDeregisterService extends TestCase {
 	 * 
 	 * @return
 	 */
+	@Test (timeout=60000)
 	public void testIncorrectParamTest2() {
 		try {
 			sfProxy.deregisterService("http://localhost/services/1.1/calculateSunriseTime.owls");
@@ -121,6 +133,7 @@ public class TestDeregisterService extends TestCase {
 	 * 
 	 * @return
 	 */
+	@Test (timeout=60000)
 	public void testIncorrectParamTest3() {
 		try {
 			sfProxy.deregisterService("http://localhost/services/1.1/calculateSunriseTime.owls#CALCULATESUNRISETIME_PROFILE");
@@ -142,6 +155,7 @@ public class TestDeregisterService extends TestCase {
 	 * 
 	 * @return
 	 */
+	@Test (timeout=1000000)
 	public void testAppropiateParamsTest2() {
 		try {
 			sfProxy.registerService("http://localhost:8080/testSFservices/testSFservices/owl/owls/Product.owl");
@@ -167,6 +181,7 @@ public class TestDeregisterService extends TestCase {
 	 * 
 	 * @return
 	 */
+	@Test (timeout=600000)
 	public void testAppropiateParamsTest3() {
 		try {
 			sfProxy.registerService("http://localhost:8080/testSFservices/testSFservices/owl/owls/Addition.owl");
@@ -192,6 +207,7 @@ public class TestDeregisterService extends TestCase {
 	 * 
 	 * @return
 	 */
+	@Test (timeout=600000)
 	public void testAppropiateParamsTest4() {
 		try {
 			sfProxy.registerService("http://localhost:8080/testSFservices/testSFservices/owl/owls/Square.owl");
@@ -216,6 +232,7 @@ public class TestDeregisterService extends TestCase {
 	 * 
 	 * @return
 	 */
+	@Test (timeout=600000)
 	public void testAppropiateParamsTest5() {
 		try {
 			sfProxy.registerService("http://localhost:8080/testSFservices/testSFservices/owl/owls/Division.owl");
@@ -241,6 +258,7 @@ public class TestDeregisterService extends TestCase {
 	 * 
 	 * @return
 	 */
+	@Test (timeout=600000)
 	public void testAppropiateParamsTest6() {
 		try {
 			sfProxy.registerService("http://localhost:8080/testSFservices/testSFservices/owl/owls/Even.owl");
@@ -265,6 +283,7 @@ public class TestDeregisterService extends TestCase {
 	 * 
 	 * @return
 	 */
+	@Test (timeout=600000)
 	public void testAppropiateParamsTest7() {
 		try {
 			sfProxy.registerService("http://localhost:8080/testSFservices/testSFservices/owl/owls/Sign.owl");
@@ -290,6 +309,7 @@ public class TestDeregisterService extends TestCase {
 	 * 
 	 * @return
 	 */
+	@Test (timeout=600000)
 	public void testAppropiateParamsTest8() {
 
 		try {
