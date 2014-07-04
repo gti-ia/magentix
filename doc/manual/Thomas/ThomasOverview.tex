@@ -1,5 +1,5 @@
 \chapter{Virtual Organizations}\label{chap:VirtualOrganizations}
-As it has been pointed out in the introduction, Magentix2 platform not only has as aims to provide a guaranteed communication mechanism to the programmer, but also to provide a complete support for virtual organizations and SOA-like services. \textsc{THOMAS} (Methods, Techniques and Tools for Open Multi-Agent Systems) framework has been integrated with Magentx2 with this purpose.
+As it has been pointed out in the introduction, Magentix2 platform not only has as aims to provide a guaranteed communication mechanism to the programmer, but also to provide a complete support for virtual organizations and SOA-like services. \textsc{Thomas} (Methods, Techniques and Tools for Open Multi-Agent Systems) framework has been integrated with Magentx2 with this purpose \cite{Argente2011}.
 
 %==================================================================
 %================== PRIMERA SECCI�N ===============================
@@ -14,10 +14,10 @@ Different types of virtual organizations are supported by the \textsc{Thomas} fr
 
 In addition, Magentix2 offers a new communication mechanism based on the virtual organizations structure. Thus, this organizational messaging allows mass communication among agents of an organization, taking into account the type of roles agents play.
 
-\textsc{Thomas} framework consists of a set of modular services. Agents have access to the infrastructure offered by \textsc{Thomas} through a set of services including on two main components:
+\textsc{Thomas} framework consists of a set of modular services. Agents have access to the infrastructure offered by \textsc{Thomas} through a set of services provided by two main agents:
 
 \begin{description}
-	\item [Service Facilitator (SF)] This component offers a yellow page service and also a service descriptor in charge of providing a green page service.
+	\item [Service Facilitator (SF)] This agent offers a yellow page service and also a service descriptor in charge of providing a green page service.
 	\item [Organization Manager Service (OMS)] It is mainly responsible of the management of the organizations and their entities. Thus, it allows the creation and the management of any organization and the roles the agents play.
 \end{description}
 
@@ -123,7 +123,6 @@ Furthermore, there is an organization created by default named \textit{Virtual}.
 
  $<RoleName = Participant, Position = Creator, Visibility = Public, Accessibility = External>$
 
-Thus, an agent who wants to enter in Thomas world only needs to play the role \textit{Participant}.
 
 
 
@@ -199,14 +198,7 @@ The set of services provided by the SF to manage the services of the platform (m
 \end{itemize}
 
 \subsection{Organization Manager Service}
-This component is in charge of organizations life cycle management, including specification and administration of their structural components (roles, organizative and units) and their execution components (participant agents and the roles they play; and active units in each moment). OMS offers all services needed for a suitable organization performance. These services are classified as:
-
-\begin{itemize}
-	\item Structural services, that modify the structural organization specification.
-	\item Dynamical services, that allow agents to entry or leave the organization dynamically, as well as role adoption.
-\end{itemize}
-
-By means of the publication of the structural services, OMS allows modifying, in execution time, some aspects related to the organization structure, functionality or normativity. Some of these services should be restricted to internal roles of the system, which have enough permission to do this kind of operations (i.e. a supervisor role). Dynamic services manage the creation/registration of new agents in the organization, entry or exit of unit members and role adoption. These services are always published in the SF.
+This component is in charge of organizations life cycle management, including specification and administration of their structural components (roles, organizative and units) and their execution components (participant agents and the roles they play; and active units in each moment).
 
 The OMS provides agents with a set of services for organization life-cycle management (\cite{DelVal09}), classified in:
 
@@ -216,6 +208,7 @@ The OMS provides agents with a set of services for organization life-cycle manag
 	\item \textbf{Dynamic services:} that allow managing role enactment and dynamic entry/exit of agents (AcquireRole, LeaveRole, AllocateRole, DeallocateRole) .
 \end{itemize}
 
+These services are  published in the SF and also available thought the OMSproxy class (see section \ref{sec:programmingAgentsThomas}).
 
 % \begin{figure}[h!t]
 % 	\centering
@@ -227,7 +220,7 @@ The OMS provides agents with a set of services for organization life-cycle manag
 %================== SEGUNDA SECCI�N ===============================
 %==================================================================
 
-\section{Programming agents which use \textsc{Thomas}}
+\section{Programming agents which use \textsc{Thomas}}\label{sec:programmingAgentsThomas}
 
 \subsection{Magentix2 API for \textsc{Thomas}}\label{thomasAPI}
 SF and OMS have been defined as two types of intermediary agents in order to address the translation between Magentix2 agents (or any external agent), that implement FIPA communication,and the services they provide. Services requests through FIPA-request protocol were received by this type of agents.
@@ -235,6 +228,13 @@ SF and OMS have been defined as two types of intermediary agents in order to add
 To ease the interaction among user agents and OMS and SF agents, two classes are provided (\lstinline|OMSProxy| and \lstinline|SFProxy|). They work as a proxy for OMS and SF respectively, encapsulating and hiding the details of the underlying communication protocol. By doing this, the developer can interact with OMS and SF using simple function calls.
 
 \subsubsection{OMSProxy}
+
+\begin{figure}[h!t]
+	\centering
+	\includegraphics[width=1.0\textwidth]{Thomas/images/oms_omsProxy_interaction}
+	\caption{Interaction between user agent and OMS agent through the OMSProxy}
+\end{figure}
+
 The OMSProxy can be found in the package \lstinline|es.upv.dsic.gti_ia.organization|. To use its functionality, a new instance of the \lstinline|OMSProxy| class must be created to access the methods contained in the OMS. In the constructor, the agent who executes the service has to be specified. There are two options. In the first one, the url where OMS services are deployed is taken from the \textit{settings.xml} configuration file (please see section \ref{chap:PlatformAdministration}). Notice that this is the recommended option.
 
 \begin{lstlisting}
@@ -248,8 +248,11 @@ On the contrary, in the second option, the url where OMS services are deployed (
 \end{lstlisting}
 
 
-OMSProxy provides a developer with a set of methods to manage available services, this services are divided into different types and sub-types.
- Tables \ref{tab:thomas_OMSProxy_registration}, \ref{tab:thomas_OMSProxy_information}, \ref{tab:thomas_OMSProxy_compound} and \ref{tab:thomas_OMSProxy_messaging} show respectively these sub-types.
+OMSProxy provides a developer with a set of methods to manage available services. This services are classified into three different types: structural, dynamic and informative. Tables \ref{tab:thomas_OMSProxy_registration}, \ref{tab:thomas_OMSProxy_information}, \ref{tab:thomas_OMSProxy_compound} and \ref{tab:thomas_OMSProxy_messaging} show respectively these sub-types. 
+
+Some OMS services are only available if  agents which request the services play a role inside the organization with a determined position. Table a summarizes  the available access to the services taking into account the position of the role.
+
+
 
 
 
@@ -360,7 +363,7 @@ InformMembers & Indicates entities that are members of a specific unit. Optional
 \textbf{PositionID:} Identifier of the position inside the unit, such as member, supervisor or subordinate.
 
 \\ \hline
- QuantityMembers & Provides the number of current members of a specific unit. Optionally, if a role and position is indicated then only the quantity of members playing this roles or position is detailed.
+ InformQuantityMembers & Provides the number of current members of a specific unit. Optionally, if a role and position is indicated then only the quantity of members playing this roles or position is detailed.
  &
 
 \textbf{UnitID:} Identifier of the unit.
@@ -438,12 +441,44 @@ buildOrganizationalMessage & Builds a new organizational message.
 \end{table}
 
 
-\begin{figure}[h!t]
-	\centering
-	\includegraphics[width=1.0\textwidth]{Thomas/images/oms_omsProxy_interaction}
-	\caption{Interaction between user agent and OMS agent through the OMSProxy}
-\end{figure}
 
+
+
+\begin{table}[h!t]
+\centering
+\begin{tabular} {|l | c c c c | }
+\hline
+&\multicolumn{4}{c |}{Position}\\
+OMS Services & Creator & Member & Supervisor & Subordinate \\
+\hline
+RegisterUnit & x & - & - & -\\
+DeregisterUnit & x & - & - & -\\
+RegisterRole & x & x & x & -\\
+DeregisterRole & x & x & x & -\\
+RegisterNorm & x & x & x & -\\
+DeregisterNorm & x & x & x & -\\
+AquiereRole & x & x & x &x \scriptsize{(2)} \\
+LeaveRole & x & x & x &x  \\
+AllocateRole & x & x & x & -\\
+DeallocateRole & x & x & x & -\\
+JointUnit & x \scriptsize{(1)} & - &-&-\\
+InformAgentRole  & x & x & x &x  \\
+InformMembers & x & x & x &x  \\
+InformQuantityMembers & x & x & x &x  \\
+InformUnit & x & x & x &x  \\
+InformUnitRoles & x & x & x &x  \\
+InformTargetNorms & x & x & x &x  \\
+InformRole & x & x & x &x  \\
+InformNorm & x & x & x &x  \\
+\hline
+\multicolumn{5}{| l |}{\scriptsize{(1) The agent should also play another role with position=creator in the parent unit}}\\
+\multicolumn{5}{| l |}{\scriptsize{(2) The agent could acquire another role with posistio=creator or position=supervisor in its organization}}\\
+\hline
+
+\end{tabular}
+\caption{OMS Proxy: Service Acces taking into account the role position played by the requesting agent}
+\label{tab:rol_acces}
+\end{table}
 
 \subsubsection{SFProxy}
 We can find the SFProxy inside the package \lstinline|es.upv.dsic.gti_ia.organization|. To use its functionality, a new instance of the \lstinline|SFProxy| class must be created to access the methods contained in the SF. In the constructor, the agent who executes the service has to be specified. There are two options. In the first one, the url where SF services are deployed is taken from the \textit{settings.xml} configuration file (see section \ref{chap:PlatformAdministration}). Notice that this is the recommended option.
@@ -565,22 +600,22 @@ ArrayList<String> providersGroundingWSDL = oracle.getProvidersGroundingWSDL();
 \section{Programming Agents that Offer Services}
 This section describes how an agent that offers services to the other agents inside the organization can register, announce and provide its services.
 
-\subsection{Acquire Role}
-\begin{itemize}
-\item \textbf{Registration of an agent on the platform.} The agents request to be registered as a \textit{participant} of the \textsc{Thomas} platform using the \lstinline|AcquireRole| service:
-\begin{figure}[h!t]
-	\centering
-	\includegraphics[width=.8\textwidth]{Thomas/images/acquireRoleparticipant}
-	\caption{Agent interaction protocol to acquire a role.}
-\end{figure}
-\begin{lstlisting}
+%\subsection{Acquire Role}
+%\begin{itemize}
+%\item \textbf{Registration of an agent on the platform.} The agents request to be %registered as a \textit{participant} of the \textsc{Thomas} platform using the \lstinline|%AcquireRole| service:
+%\begin{figure}[h!t]
+%	\centering
+%	\includegraphics[width=.8\textwidth]{Thomas/images/acquireRoleparticipant}
+%	\caption{Agent interaction protocol to acquire a role.}
+%\end{figure}
+%\begin{lstlisting}
 
-omsProxy.acquireRole("participant", "virtual");
+%omsProxy.acquireRole("participant", "virtual");
 
-\end{lstlisting}
+%\end{lstlisting}
 
 
-\end{itemize}
+%\end{itemize}
 
 \subsection{Service Registration}
 
@@ -689,20 +724,20 @@ On the other hand, if the providers of a service are registered in the SF as web
 \section{Programming Agents that Request Services}
 This section describes how an agent that requires services from other agents can search and request services in \textsc{Thomas}.
 
-\subsection{Acquire Role}
-\begin{itemize}
-\item \textbf{Registration of an agent on the platform.} The agents request to be registered as a \textit{participant} of the \textsc{Thomas} platform using the \lstinline|AcquireRole| service:
-\begin{figure}[h!t]
-	\centering
-	\includegraphics[width=.8\textwidth]{Thomas/images/acquireRoleparticipant}
-	\caption{Agent interaction protocol to acquire role.}
-\end{figure}
-\begin{lstlisting}
-omsProxy.acquireRole("participant", "virtual");
-\end{lstlisting}
+%\subsection{Acquire Role}
+%\begin{itemize}
+%\item \textbf{Registration of an agent on the platform.} The agents request to be %registered as a \textit{participant} of the \textsc{Thomas} platform using the \lstinline|%AcquireRole| service:
+%\begin{figure}[h!t]
+%	\centering
+%	\includegraphics[width=.8\textwidth]{Thomas/images/acquireRoleparticipant}
+%	\caption{Agent interaction protocol to acquire role.}
+%\end{figure}
+%\begin{lstlisting}
+%omsProxy.acquireRole("participant", "virtual");
+%\end{lstlisting}
 
 
-\end{itemize}
+%\end{itemize}
 
 
 \subsection{Service Search Process}
@@ -1004,8 +1039,7 @@ sudo sh Start-ThomasExample.sh
 
 This section describes how an agent that wants to send a message to an organization
 can build, fill the fields of an ACLMessage and send the organizational message.
-The following example is used in order to illustrate this section. It is formed by: the sender agent that acquires role member in the unit team
-and two receivers agents with the role member in the unit team (Figure \ref{fig:org1}). The unit virtual is parent of the unit team.
+The following example is used in order to illustrate this section. It is formed by: the \textit{Sender Agent} that acquires role member in the unit \textit{team} and two \textit{Receivers Agents} with the role member in the unit team (Figure \ref{fig:org1}). The unit virtual is parent of the unit \textit{team}.
 
 \begin{figure}[h!t]
 	\centering
@@ -1015,22 +1049,19 @@ and two receivers agents with the role member in the unit team (Figure \ref{fig:
 \end{figure}
 
 
-\subsection{Acquire Role}
-\begin{itemize}
-\item \textbf{Registration of an agent on the platform.} The agents request to be registered as a \textit{participant} of the \textsc{Thomas} platform using the \lstinline|AcquireRole| service:
+\subsection{Registration into the organization}
+
+
 \begin{figure}[h!t]
 	\centering
 	\includegraphics[width=.8\textwidth]{Thomas/images/acquireRoleparticipant}
-	\caption{Agent interaction protocol to acquire role.}
+	\caption{Agent interaction protocol to acquire role.} \label{fig:agentAcquireRole}
 \end{figure}
 
-\begin{lstlisting}
-omsProxy.acquireRole("participant", "virtual");
+\begin{itemize}
+\item \textbf{Registration in the unit.} Agents need to be registered into the organizations by means of acquiring some available role before using organizational messaging. For example, in figure \ref{fig:org1}, an organization called \textit{team} is shown. In this organization the role \textit{member} is available. Thus, the\textit{ Sender Agent} should play the role member before sending an organizational message to the \textit{Receiver Agents A} and \textit{B}. If it does not play the required role, it should acquire it by means of the AcquireRole service (figure \ref(fig:agentAcquireRole)). 
 
-\end{lstlisting}
 
-\item \textbf{Registration of an agent inside the unit.}
-The agents request to be registered as a \textit{member} inside the unit \textit{team}.
 
 
 \begin{lstlisting}
