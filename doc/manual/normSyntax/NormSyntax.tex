@@ -1,0 +1,150 @@
+\chapter{BNF Syntax of the Normative \\ Language}
+\begin{description}
+	\item[\underline{norm}] ::=``@ ''\underline{id} ``['' \underline{deontic} ``,'' \underline{target} ``,'' \underline{action} ``,'' \underline{activation} ``,'' \underline{expiration} ``]''
+\item	[\underline{id}] ::=\underline{stringConstant}  
+
+\item[\underline{deontic}] ::= ``o'' \textbar  ``f'' \textbar ``p''
+
+%\item[\underline{target}] ::= ``$<$'' \underline{targetType} ``:'' \underline{value} ``$>$''
+\item[\underline{target}] ::= ``$<$'' (``agentName'' \textbar ``roleName'' ) ``:'' (\underline{•}ine{constant} \textbar ``\_'') ``$>$'' \textbar  ``$<$'' ``positionName''  ``:'' (\underline{OMSPositions} \textbar ``\_'') ``$>$''
+\item[\underline{activation}]:= \underline{expression}  \textbar ``\_''
+
+\item[\underline{expiration}]:= \underline{expression}  \textbar ``\_''
+
+\item[\underline{targetType}]:= ``agentName'' \textbar ``roleName'' \textbar ``positionName''
+
+%\item[\underline{value}] := \underline{stringConstant} \textbar ``\_''
+
+\item[\underline{genAtomicCondition}] ::= \underline{OMSCondition} \textbar \underline{genAtomicFormula}
+
+%\item[\underline{genAtomicFormula}]::= ( \underline{atom} \textbar \underline{variable} )$[$ ``('' \underline{listOfTerms} ``)''$]$
+\item[\underline{genAtomicFormula}]::= \underline{stringConstant}  $[$ ``('' \underline{listOfTerms} ``)''$]$   \textbar \underline{variable}  \textbar \underline{OMSConstants}
+
+
+\item[\underline{action}] := \underline{OMSAction} \textbar \underline{genActionFormula}
+
+\item[\underline{genActionFormula}] ::= 
+
+(*** genActionFormula : It is prepared to incorporate more actions in future versions - i.e: SFActions - ***)
+
+%\item[\underline{atom}] := \underline{OMSConstants} \textbar \underline{stringConstant}  
+
+\item[\underline{listOfTerms}] := \underline{term} $[$ ``,'' \underline{term} $]$ $^{*}$
+
+\item[\underline{term}] := \underline{constant}  \textbar \underline{variable} \textbar \underline{OMSConstants}
+
+\item[\underline{expression}] := \underline{simpleExpression} \textbar ``not'' \underline{expression} \textbar \underline{expression} ``\&'' \underline{expression} \textbar \underline{expression} ``\textbar''' \underline{expression} \textbar ``('' \underline{expression} ``)''
+
+\item[\underline{simpleExpression}] := \underline{genAtomicCondition} \textbar \underline{relExpression}    
+
+\item[\underline{relExpression}] := \underline{relTerm} $[$ ( `` $<$ '' \textbar `` $>$ '' \textbar ``$==$'' \textbar ``\textbackslash\textbackslash$==$'' `` $<=$ '' \textbar `` $>=$ '' ) \underline{relTerm} $]$+
+
+%\item[\underline{relTerm}] := \underline{genAtomicCondition} \textbar \underline{arithExpression}
+\item[\underline{relTerm}] := \underline{genAtomicFormula} \textbar \underline{arithExpression}
+
+
+\item[\underline{arithExpression}] := \underline{arithTerm} $[$ ( ``+''  \textbar  ``-''  \textbar  ``*''  \textbar  ``**''  \textbar ``/'' \textbar ``div'' \textbar ``mod'' ) \underline{artihTerm}$]$*
+
+\item[\underline{arithTerm}] := \underline{numericConstant} \textbar \underline{variable} \textbar ``-'' \underline{arithTerm} \textbar ``('' \underline{arithExpression} ``)''
+
+\item[\underline{variable}] := $\left[A-Z\right] (\left[0-Z\right])^{*}$ \textbar ``\_''
+\item[\underline{constant}] := \underline{numericConstant} \textbar \underline{stringConstant} 
+\item[\underline{numericConstant}] := $\left[0-9\right]^{+}$
+\item[\underline{stringConstant}] := $\left[a-z\right] (\left[0-Z\right])^{*}$
+
+%%\item[\underline{normContent}] ::=``['' (\underline{deontic} \textbar ``\_'')  ``,'' ( \underline{targetContent}  \textbar ``\_'') ``,''  (\underline{action}  \textbar ``\_'') ``,'' \underline{activation} ``,'' \underline{expiration} ``]''
+
+
+\item[\underline{OMSCondition}] ::= \underline{OMSUnitPred} \textbar \underline{OMSRolesPred} \textbar \underline{OMSNormsPred} \textbar \underline{OMSRoleEnactPred}
+
+\item[\underline{OMSUnitPred}] ::=  ``isUnit'' ``('' \underline{term} ``)'' \textbar 
+		``hasType'' ``('' \underline{term} ``,'' \underline{OMSUnitTypesPred} ``)'' \textbar
+		``hasParent'' ``('' \underline{term} ``,'' \underline{term} ``)''
+
+\item[\underline{OMSRolesPred}] ::= `` isRole'' ``('' \underline{term} ``,'' \underline{term} ``)'' \textbar 
+		``hasAccessibility'' ``('' \underline{term} ``,'' \underline{term} ``,'' \underline{OMSAccessibilityPred}``)'' \textbar
+		``hasVisibility'' ``('' \underline{term} ``,'' \underline{term} ``,'' \underline{OMSVisibilityPred} ``)'' \textbar 
+		``hasPosition'' ``('' \underline{term} ``,'' \underline{term} ``,'' \underline{OMSPositionsPred} ``)''
+
+%\item[\underline{OMSNormsPred}] ::= `` isNorm'' ``('' \underline{term} , \underline{term} ``)'' \textbar 
+%		``hasContent'' ``('' \underline{term} , \underline{term} , \underline{term} ``)''
+
+\item[\underline{OMSNormsPred}] ::= `` isNorm'' ``('' \underline{term} , \underline{term} ``)'' \textbar 
+		``hasDeontic'' ``('' \underline{term} , \underline{term} , \underline{deonticPred} ``)'' \textbar 
+                 ``hasTarget'' ``('' \underline{term} , \underline{term} , \underline{targetTypePred} , \underline{targetValuePred}``)'' \textbar 
+                 ``hasAction'' ``('' \underline{term} , \underline{term} , \underline{OMSActionNamePred} ``)''                  
+
+
+
+%\item[\underline{targetTypeName}]::= \underline{targetType} \textbar ``\_''
+
+\item[\underline{OMSActionName}] ::=  ``registerUnit''  \textbar ``deregisterUnit''  \textbar ``registerRole''  \textbar 
+		``deregisterRole'' \textbar ``registerNorm'' \textbar ``deregisterNorm'' \textbar ``allocateRole''  \textbar
+		``deallocateRole''  \textbar ``joinUnit'' \textbar ``informAgentRole''  \textbar ``informMembers'' \textbar
+		``informQuantityMembers''  \textbar ``informUnit''  \textbar ``informUnitRoles''  \textbar 
+		``informTargetNorms'' \textbar ``informRole''  \textbar ``informNorm''  \textbar ``acquireRole'' \textbar ``leaveRole'' 
+                
+
+\item[\underline{OMSRoleEnactPred}] ::= `` isAgent'' ``('' \underline{term} ``)'' \textbar 
+		``playsRole'' ``('' \underline{term} ``,'' \underline{term} ``,'' \underline{term} ``)'' \textbar
+		``roleCardinality'' ``('' \underline{term} ``,'' \underline{term} ``,'' \underline{numericConstantPred} ``)'' \textbar 
+		``positionCardinality'' ``('' \underline{OMSPositionsPred} ``,'' \underline{term} ``,'' \underline{numericConstantPred} ``)'' 
+
+
+
+
+\item[\underline{OMSAction}] ::= ``registerUnit'' ``('' \underline{term} ``,'' \underline{OMSUnitTypesPred}``,'' \underline{term} ``,'' \underline{term} ``,'' \underline{term} ``)'' \textbar\\
+ 		``deregisterUnit'' ``('' \underline{term} ``,'' \underline{term} ``)'' \textbar \\
+		``registerRole'' ``(''\underline{term} ``,'' \underline{term} ``,'' \underline{OMSAccessibilityPred} ``,'' \underline{OMSVisibilityPred} ``,'' \underline{OMSPositionsPred} ``,'' \underline{term} ``)'' \textbar \\
+		``deregisterRole'' ``('' \underline{term} ``,'' \underline{term} '','' \underline{term} ``)'' \textbar\\
+	%	``registerNorm'' ``('' \underline{term} ``,'' \underline{term} ``,' \underline{term} ``, '' \underline{term} ``)'' \textbar\\
+		``registerNorm'' ``('' \underline{term} ``,'' \underline{term} ``,'' \underline{deonticPred} ``, '' \underline{targetTypePred}``, '' \underline{targetValuePred} ``,'' \underline{OMSActionNamePred} ``,'' \underline{term} ``)'' \textbar\\
+		``deregisterNorm'' ``('' \underline{term} ``,'' \underline{term} ``,'' \underline{term} '')'' \textbar \\
+		``allocateRole'' ``('' \underline{term} ``,'' \underline{term} ``,'' \underline{term} ``,'' \underline{term} ``)'' \textbar \\
+		``deallocateRole'' ``('' \underline{term} ``,'' \underline{term} ``,'' \underline{term} ``,'' \underline{term} ``)'' \textbar \\
+		``joinUnit'' ``('' \underline{term} ``,'' \underline{term} ``,'' \underline{term} ``)'' \textbar \\
+		``informAgentRole'' ``('' \underline{term} ``,'' \underline{term} ``)'' \textbar \\
+		``informMembers'' ``('' \underline{term} ``,'' \underline{term} ``,'' \underline{OMSPositionsPred} ``,'' \underline{term} ``)'' \textbar\\
+		``informQuantityMembers'' ``('' \underline{term} ``,'' \underline{term} ``,'' \underline{OMSPositionsPred} ``,'' \underline{term} ``)'' \textbar \\
+		``informUnit'' ``('' \underline{term} ``,'' \underline{term} ``)'' \textbar \\
+		``informUnitRoles'' ``('' \underline{term} ``,'' \underline{term} ``)'' \textbar \\ 
+		``informTargetNorms'' ``('' \underline{targetTypePred} ``,'' \underline{targetValuePred} ``,'' \underline{term} ``,'' \underline{term} ``)'' \textbar\\
+		``informRole'' ``('' \underline{term} ``,'' \underline{term} ``,'' \underline{term} ``)'' \textbar\\
+		``informNorm'' ``('' \underline{term} ``,'' \underline{term} ``,'' \underline{term} ``)'' \textbar\\
+		``acquireRole'' ``('' \underline{term} ``,'' \underline{term} ``,'' \underline{term} ``)'' \textbar\\
+		``leaveRole'' ``('' \underline{term} ``,'' \underline{term} ``,'' \underline{term} ``)'' \textbar
+
+
+\item[\underline{deonticPred}]::= \underline{deontic} \textbar \underline{variable}
+
+\item[\underline{targetTypePred}]::=\underline{targetType} \textbar  \underline{variable}
+
+\item[\underline{targetValuePred}] ::= \underline{OMSPositions} \textbar \underline{constant} \textbar  \underline{variable}
+
+\item[\underline{OMSActionNamePred}] ::= \underline{OMSActionName} \textbar  \underline{variable}
+
+\item[\underline{numericConstantPred}] ::=\underline{numericConstant} \textbar  \underline{variable}
+
+\item[\underline{OMSConstants}] ::= \underline{OMSPositions} \textbar \underline{OMSAccessibility} \textbar \underline{OMSVisibility} \textbar 
+		\underline{OMSUnitTypes}    %%% \textbar ``virtual'' \textbar ``participant''   %% NOTA: Eliminamos virtual y participant de aqui, para evitar problemas. 
+
+\item[\underline{OMSPositionsPred}] ::= \underline{OMSPositions} \textbar \underline{variable}
+
+\item[\underline{OMSAccessibilityPred}] ::= \underline{OMSAccessibility}\textbar \underline{variable}
+
+\item[\underline{OMSVisibilityPred}] ::= \underline{OMSVisibility} \textbar  \underline{variable}
+
+\item[\underline{OMSUnitTypesPred}] ::= \underline{OMSUnitTypes} \textbar  \underline{variable}
+
+
+\item[\underline{OMSPositions}] ::= ``creator'' \textbar ``member'' \textbar ``supervisor'' \textbar ``subordinate'' 
+
+\item[\underline{OMSAccessibility}] ::= ``external'' \textbar ``internal''
+
+\item[\underline{OMSVisibility}] ::= ``public'' \textbar ``private''
+
+\item[\underline{OMSUnitTypes}] ::= ``flat'' \textbar ``team'' \textbar ``hierarchy''
+
+\end{description}
+
+

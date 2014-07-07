@@ -216,6 +216,68 @@ These services are  published in the SF and also available thought the OMSproxy 
 % 	\caption{\textsc{Thomas} architecture}
 % \end{figure}
 
+\subsection{Normative Context}
+
+
+
+There are some predefined norms(called structural norms) which control the access to OMS services. Thus, some OMS services are only available if  agents which request them play a role inside the organization with a determined position (table \ref{tab:rol_acces}). It is possible to avoid these structural norms or make them more restrictive by means of defining new norms using the \textit{registerNorm} service of the OMS. In this way, users can add \textsc{Permitted} or \textsc{Forbidden}  norms to relax or restrict  the access control to the OMS services in a organization. 
+
+
+
+\subsubsection{Norm Description}
+Norms are registered into a organizational unit with a unique name inside that organization. They should be written following the syntax of the \textsc{Thomas} normative language (see appendix ): \\
+$@normName[Deontic, Target, Action, Activation, Expiration]$ where:
+\begin{itemize}
+ \item $Deontic \in \lbrace f,o,p \rbrace$ , where $f$ is used for norms forbidden norms, which restrict more the access; $o$ is used for obligation norms; and $p$ is used for permitted norms, which relax the access.
+ \item $Target=<type,id>$ where $type \in   \lbrace agentName, roleName, positionName \rbrace $, whereas $id$ is the associated value (for example, the position value \textit{creator}) or the anonymous variable $\_$, if it is desired that any value could be accepted.  By means of this field \textit{target} it is possible to determine which agents will be affected by a norm. For example, taking into account an scenario in which a norm was registered in a unit with the target $<agentName, consumer>$, this norm only affects the agent which name is \textit{consumer}. 
+ 
+ \item $Action$ is a OMS service
+ \item \textit{Activation}:
+ \item \textit{Expiration}:
+ 
+\end{itemize}
+
+\subsubsection{Norm Checking}
+
+
+
+
+\begin{table}[h!t]
+\centering
+\begin{tabular} {|l | c c c c | }
+\hline
+&\multicolumn{4}{c |}{Position}\\
+OMS Services & Creator & Member & Supervisor & Subordinate \\
+\hline
+RegisterUnit & x & - & - & -\\
+DeregisterUnit & x & - & - & -\\
+RegisterRole & x & x & x & -\\
+DeregisterRole & x & x & x & -\\
+RegisterNorm & x & x & x & -\\
+DeregisterNorm & x & x & x & -\\
+AquiereRole & x & x & x &x \scriptsize{(2)} \\
+LeaveRole & x & x & x &x  \\
+AllocateRole & x & x & x & -\\
+DeallocateRole & x & x & x & -\\
+JointUnit & x \scriptsize{(1)} & - &-&-\\
+InformAgentRole  & x & x & x &x  \\
+InformMembers & x & x & x &x  \\
+InformQuantityMembers & x & x & x &x  \\
+InformUnit & x & x & x &x  \\
+InformUnitRoles & x & x & x &x  \\
+InformTargetNorms & x & x & x &x  \\
+InformRole & x & x & x &x  \\
+InformNorm & x & x & x &x  \\
+\hline
+\multicolumn{5}{| l |}{\scriptsize{(1) The agent should also play another role with position=creator in the parent unit}}\\
+\multicolumn{5}{| l |}{\scriptsize{(2) The agent could acquire another role with posistio=creator or position=supervisor in its organization}}\\
+\hline
+
+\end{tabular}
+\caption{OMS Proxy: Service Access taking into account the role position played by the requesting agent}
+\label{tab:rol_acces}
+\end{table}
+
 %==================================================================
 %================== SEGUNDA SECCI�N ===============================
 %==================================================================
@@ -250,7 +312,7 @@ On the contrary, in the second option, the url where OMS services are deployed (
 
 OMSProxy provides a developer with a set of methods to manage available services. This services are classified into three different types: structural, dynamic and informative. Tables \ref{tab:thomas_OMSProxy_registration}, \ref{tab:thomas_OMSProxy_information}, \ref{tab:thomas_OMSProxy_compound} and \ref{tab:thomas_OMSProxy_messaging} show respectively these sub-types. 
 
-Some OMS services are only available if  agents which request the services play a role inside the organization with a determined position. Table a summarizes  the available access to the services taking into account the position of the role.
+Some OMS services are only available if  agents which request them play a role inside the organization with a determined position. Table \ref{tab:rol_acces} summarizes  the available access to the services taking into account the position of the role.
 
 
 
@@ -443,42 +505,6 @@ buildOrganizationalMessage & Builds a new organizational message.
 
 
 
-
-\begin{table}[h!t]
-\centering
-\begin{tabular} {|l | c c c c | }
-\hline
-&\multicolumn{4}{c |}{Position}\\
-OMS Services & Creator & Member & Supervisor & Subordinate \\
-\hline
-RegisterUnit & x & - & - & -\\
-DeregisterUnit & x & - & - & -\\
-RegisterRole & x & x & x & -\\
-DeregisterRole & x & x & x & -\\
-RegisterNorm & x & x & x & -\\
-DeregisterNorm & x & x & x & -\\
-AquiereRole & x & x & x &x \scriptsize{(2)} \\
-LeaveRole & x & x & x &x  \\
-AllocateRole & x & x & x & -\\
-DeallocateRole & x & x & x & -\\
-JointUnit & x \scriptsize{(1)} & - &-&-\\
-InformAgentRole  & x & x & x &x  \\
-InformMembers & x & x & x &x  \\
-InformQuantityMembers & x & x & x &x  \\
-InformUnit & x & x & x &x  \\
-InformUnitRoles & x & x & x &x  \\
-InformTargetNorms & x & x & x &x  \\
-InformRole & x & x & x &x  \\
-InformNorm & x & x & x &x  \\
-\hline
-\multicolumn{5}{| l |}{\scriptsize{(1) The agent should also play another role with position=creator in the parent unit}}\\
-\multicolumn{5}{| l |}{\scriptsize{(2) The agent could acquire another role with posistio=creator or position=supervisor in its organization}}\\
-\hline
-
-\end{tabular}
-\caption{OMS Proxy: Service Acces taking into account the role position played by the requesting agent}
-\label{tab:rol_acces}
-\end{table}
 
 \subsubsection{SFProxy}
 We can find the SFProxy inside the package \lstinline|es.upv.dsic.gti_ia.organization|. To use its functionality, a new instance of the \lstinline|SFProxy| class must be created to access the methods contained in the SF. In the constructor, the agent who executes the service has to be specified. There are two options. In the first one, the url where SF services are deployed is taken from the \textit{settings.xml} configuration file (see section \ref{chap:PlatformAdministration}). Notice that this is the recommended option.
@@ -1054,12 +1080,12 @@ The following example is used in order to illustrate this section. It is formed 
 
 \begin{figure}[h!t]
 	\centering
-	\includegraphics[width=.8\textwidth]{Thomas/images/acquireRoleparticipant}
+	\includegraphics[width=.8\textwidth]{Thomas/images/acquireRoleMember}
 	\caption{Agent interaction protocol to acquire role.} \label{fig:agentAcquireRole}
 \end{figure}
 
 \begin{itemize}
-\item \textbf{Registration in the unit.} Agents need to be registered into the organizations by means of acquiring some available role before using organizational messaging. For example, in figure \ref{fig:org1}, an organization called \textit{team} is shown. In this organization the role \textit{member} is available. Thus, the\textit{ Sender Agent} should play the role member before sending an organizational message to the \textit{Receiver Agents A} and \textit{B}. If it does not play the required role, it should acquire it by means of the AcquireRole service (figure \ref(fig:agentAcquireRole)). 
+\item \textbf{Registration in the unit.} Agents need to be registered into the organizations by means of acquiring some available role before using organizational messaging. For example, in figure \ref{fig:org1}, an organization called \textit{team} is shown. In this organization the role \textit{member} is available. Thus, the\textit{ Sender Agent} should play the role member before sending an organizational message to the \textit{Receiver Agents A} and \textit{B}. If it does not play the required role, it should acquire it by means of the AcquireRole service (figure \ref{fig:agentAcquireRole}). 
 
 
 
