@@ -110,7 +110,7 @@ public class Daddy extends BaseAgent{
 		ACLMessage msg;
 		
 		if (tEvent.getTracingService().contentEquals("NEW_AGENT")){
-			try {
+			try {
 				TraceInteract.requestTracingService(this, "MESSAGE_SENT_DETAIL", new AgentID(tEvent.getContent()));
 			} catch (TraceServiceNotAllowedException e) {
 				e.printStackTrace();
@@ -120,7 +120,7 @@ public class Daddy extends BaseAgent{
 			msg = ACLMessage.fromString(tEvent.getContent());
 			System.out.println("[" + this.getName() + " " + formatter.format(calendar.getTime()) + "]: " + msg.getSender().toString() + " said: " + msg.getPerformative() + ": " + msg.getContent());
 			if (msg.getContent().contentEquals("GUAAAAAA..!")){
-				try {
+				try {
 					TraceInteract.cancelTracingServiceSubscription(this, "MESSAGE_SENT_DETAIL",new AgentID("Timmy"));
 					TraceInteract.cancelTracingServiceSubscription(this, "MESSAGE_SENT_DETAIL",new AgentID("Bobby"));
 					finish=true;
