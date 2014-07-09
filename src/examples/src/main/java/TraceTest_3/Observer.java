@@ -4,9 +4,9 @@ import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.BaseAgent;
 import es.upv.dsic.gti_ia.core.TraceEvent;
-//import es.upv.dsic.gti_ia.core.TracingService;
 
 import es.upv.dsic.gti_ia.trace.*;
+import es.upv.dsic.gti_ia.trace.exception.TraceServiceNotAllowedException;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -81,7 +81,11 @@ public class Observer extends BaseAgent {
 		else{
 			System.out.println("[OBSERVER " + formatter.format(calendar.getTime()) + "]: Event from " + tEvent.getOriginEntity().getAid().toString() + ": " + tEvent.getTracingService() + ": " + tEvent.getContent());
 			if (tEvent.getTracingService().contentEquals("PUBLISHED_TRACING_SERVICE")){
-				TraceInteract.requestTracingService(this, tEvent.getContent());
+				try {
+					TraceInteract.requestTracingService(this, tEvent.getContent());
+				} catch (TraceServiceNotAllowedException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}

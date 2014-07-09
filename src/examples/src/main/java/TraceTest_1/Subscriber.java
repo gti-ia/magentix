@@ -4,8 +4,8 @@ import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.BaseAgent;
 import es.upv.dsic.gti_ia.core.TraceEvent;
-
 import es.upv.dsic.gti_ia.trace.*;
+import es.upv.dsic.gti_ia.trace.exception.TraceServiceNotAllowedException;
 
 /*****************************************************************************************
 /*                                      TraceTest_1                                      *
@@ -48,9 +48,13 @@ public class Subscriber extends BaseAgent{
 			e.printStackTrace();
 		}
 		
-    	System.out.println("[SUBSCRIBER]: Now unsubscribing from tracing services...");
-		TraceInteract.cancelTracingServiceSubscription(this, "DD_Test_TS");
-		
+		try {
+			System.out.println("[SUBSCRIBER]: Now unsubscribing from tracing services...");
+			TraceInteract.cancelTracingServiceSubscription(this, "DD_Test_TS");
+		} catch (TraceServiceNotAllowedException e) {
+			e.printStackTrace();
+		}
+			
 		try {
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {

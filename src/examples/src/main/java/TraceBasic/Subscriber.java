@@ -1,8 +1,5 @@
 package TraceBasic;
 
-//import java.util.concurrent.LinkedBlockingQueue;
-//import org.apache.qpid.transport.MessageTransfer;
-
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.BaseAgent;
@@ -10,6 +7,7 @@ import es.upv.dsic.gti_ia.core.TraceEvent;
 //import es.upv.dsic.gti_ia.core.TracingService;
 
 import es.upv.dsic.gti_ia.trace.*;
+import es.upv.dsic.gti_ia.trace.exception.TraceServiceNotAllowedException;
 
 /*****************************************************************************************/
 /*                                      Trace_Basic                                      */
@@ -181,26 +179,24 @@ public class Subscriber extends BaseAgent{
 			send(msg);
 			System.out.println("\n[SUBSCRIBER " + this.getName() + "]: Message sent...\n\tReceiving [ DD_Test_TS1 DD_Test_TS2 ]\n");
 			Thread.sleep(3000);
+			
+			System.out.println("[SUBSCRIBER " + this.getName() + "]: Done!");
+			
+	    	System.out.println("[SUBSCRIBER " + this.getName() + "]: Now unsubscribing from tracing services...");
+			TraceInteract.cancelTracingServiceSubscription(this, "DD_Test_TS1");
+			TraceInteract.cancelTracingServiceSubscription(this, "DD_Test_TS2");
+			
+			Thread.sleep(3000);
+			
+			System.out.println("[SUBSCRIBER " + this.getName() + "]: Done!");
+			System.out.println("[SUBSCRIBER " + this.getName() + "]: Bye!");
+			
 		} catch (InterruptedException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
-		}
-		
-		System.out.println("[SUBSCRIBER " + this.getName() + "]: Done!");
-		
-    	System.out.println("[SUBSCRIBER " + this.getName() + "]: Now unsubscribing from tracing services...");
-		TraceInteract.cancelTracingServiceSubscription(this, "DD_Test_TS1");
-		TraceInteract.cancelTracingServiceSubscription(this, "DD_Test_TS2");
-		try {
-			Thread.sleep(3000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
+		} catch (TraceServiceNotAllowedException e) {
 			e.printStackTrace();
 		}
-    	System.out.println("[SUBSCRIBER " + this.getName() + "]: Done!");
-		
-		System.out.println("[SUBSCRIBER " + this.getName() + "]: Bye!");
-		
 	}
 
 	public void onTraceEvent(TraceEvent tEvent) {

@@ -40,7 +40,7 @@ public class Noisy extends CAgent {
 
 			this.send_request(1,7);
 			
-			omsProxy.allocateRole("Creator", "Externa", "Creator");
+			omsProxy.allocateRole("Creator", "External", "Creator");
 			
 			result = omsProxy.leaveRole("Manager", "External");
 			logger.info("["+this.getName()+"] Result leave role manager: "+result);
@@ -56,6 +56,9 @@ public class Noisy extends CAgent {
 			firstProcessor.ShutdownAgent();
 
 		}catch(THOMASException e)
+		{
+			e.printStackTrace();
+		}catch(Exception e)
 		{
 			e.printStackTrace();
 		}

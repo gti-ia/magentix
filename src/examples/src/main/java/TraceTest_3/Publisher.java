@@ -8,6 +8,7 @@ import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.BaseAgent;
 import es.upv.dsic.gti_ia.core.TraceEvent;
 import es.upv.dsic.gti_ia.trace.TraceInteract;
+import es.upv.dsic.gti_ia.trace.exception.TraceServiceNotAllowedException;
 
 /*****************************************************************************************/
 /*                                      TraceTest3                                       */
@@ -109,8 +110,10 @@ private boolean finish=false;
 		
 		System.err.println("[PUBLISHER " + this.getName() + "]: Sending trace events");
 		
-		while(!finish){
-			try {
+		try {
+			
+			while(!finish){
+			
 				tEvent = new TraceEvent("DD_Test_TS1", this.getAid(), "Test");
 				sendTraceEvent(tEvent);
 				tEvent = new TraceEvent("DD_Test_TS2", this.getAid(), "Test");
@@ -122,29 +125,23 @@ private boolean finish=false;
 				tEvent = new TraceEvent("DD_Test_TS5", this.getAid(), "Test");
 				sendTraceEvent(tEvent);
 				Thread.sleep(generator.nextInt(1000));
-			} catch (InterruptedException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
 			}
-		}
 
-		System.err.println("[PUBLISHER " + this.getName() + "]: Now unpublishing tracing services\n\t(one of them will probably fail because it was already unpublished)...");
-		TraceInteract.unpublishTracingService(this, "DD_Test_TS1");
-		TraceInteract.unpublishTracingService(this, "DD_Test_TS2");
-		// This one has probably been already unpublished in the onMessage method
-		TraceInteract.unpublishTracingService(this, "DD_Test_TS3");
-		TraceInteract.unpublishTracingService(this, "DD_Test_TS4");
-		TraceInteract.unpublishTracingService(this, "DD_Test_TS5");
-		try
-		{
+			System.err.println("[PUBLISHER " + this.getName() + "]: Now unpublishing tracing services\n\t(one of them will probably fail because it was already unpublished)...");
+			TraceInteract.unpublishTracingService(this, "DD_Test_TS1");
+			TraceInteract.unpublishTracingService(this, "DD_Test_TS2");
+			// This one has probably been already unpublished in the onMessage method
+			TraceInteract.unpublishTracingService(this, "DD_Test_TS3");
+			TraceInteract.unpublishTracingService(this, "DD_Test_TS4");
+			TraceInteract.unpublishTracingService(this, "DD_Test_TS5");
+
 			Thread.sleep(2000);
-		}
-		catch (InterruptedException e)
-		{
-			System.err.println("Error while waiting for services to be unpublished.");
+		} catch (InterruptedException e) {
 			e.printStackTrace();
-			System.exit(-1);
+		} catch (TraceServiceNotAllowedException e) {
+			e.printStackTrace();
 		}
+		
 		System.err.println("[PUBLISHER " + this.getName() + "]: Bye!");
 	}
 	
@@ -159,8 +156,12 @@ private boolean finish=false;
 		if (msg.getPerformativeInt() == ACLMessage.REQUEST){
 			if ((index=msg.getContent().indexOf("#")) >= 0){
 				serviceName=msg.getContent().substring(index+1);
-				System.err.println("[PUBLISHER " + this.getName() + "]: Now unpublishing tracing service " + serviceName);
-				TraceInteract.unpublishTracingService(this, serviceName);
+				try {
+					System.err.println("[PUBLISHER " + this.getName() + "]: Now unpublishing tracing service " + serviceName);
+					TraceInteract.unpublishTracingService(this, serviceName);
+				} catch (TraceServiceNotAllowedException e) {
+					e.printStackTrace();
+				}
 			}
 			else if (msg.getContent().contentEquals("STOP")){
 				finish=true;

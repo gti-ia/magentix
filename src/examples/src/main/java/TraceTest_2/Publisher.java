@@ -5,6 +5,7 @@ import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.BaseAgent;
 import es.upv.dsic.gti_ia.core.TraceEvent;
 import es.upv.dsic.gti_ia.trace.TraceInteract;
+import es.upv.dsic.gti_ia.trace.exception.TraceServiceNotAllowedException;
 
 /*****************************************************************************************/
 /*                                      TraceTest_2                                      */
@@ -44,34 +45,27 @@ public class Publisher extends BaseAgent {
 		TraceEvent tEvent;
 		int i;
 		
-//		System.out.println("[PUBLISHER "+ this.getName() + "]: Sending trace events");
-		for (i=0; i < N_EVENTS; i++) {
-			try {
+		try {
+
+			for (i=0; i < N_EVENTS; i++) {
 				tEvent = new TraceEvent(this.getName()+"<DD_Test_TS_1>", this.getAid(), this.getName()+"<DD_Test_TS_1> " + (i+1) + " of " + N_EVENTS);
 				// Generating trace events
 				sendTraceEvent(tEvent);
 				tEvent = new TraceEvent(this.getName()+"<DD_Test_TS_2>", this.getAid(), this.getName()+"<DD_Test_TS_2> " + (i+1) + " of " + N_EVENTS);
 				sendTraceEvent(tEvent);
 				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
 			}
-			
-		}
 
-		try {
 			Thread.sleep(5000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
 		
-		System.out.println("[PUBLISHER "+ this.getName() + "]: Now unpublishing tracing services...");
-		TraceInteract.unpublishTracingService(this, this.getName()+"<DD_Test_TS_1>");
-		TraceInteract.unpublishTracingService(this, this.getName()+"<DD_Test_TS_2>");
+			System.out.println("[PUBLISHER "+ this.getName() + "]: Now unpublishing tracing services...");
+			TraceInteract.unpublishTracingService(this, this.getName()+"<DD_Test_TS_1>");
+			TraceInteract.unpublishTracingService(this, this.getName()+"<DD_Test_TS_2>");
 
-		try {
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} catch (TraceServiceNotAllowedException e) {
 			e.printStackTrace();
 		}
 		

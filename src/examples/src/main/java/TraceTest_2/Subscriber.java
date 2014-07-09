@@ -6,8 +6,8 @@ import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.BaseAgent;
 import es.upv.dsic.gti_ia.core.TraceEvent;
-
 import es.upv.dsic.gti_ia.trace.*;
+import es.upv.dsic.gti_ia.trace.exception.TraceServiceNotAllowedException;
 
 /*****************************************************************************************/
 /*                                      TraceTest_2                                      */
@@ -67,18 +67,15 @@ public class Subscriber extends BaseAgent{
 		 */
 		try {
 			Thread.sleep(12000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 
-//		System.out.println("[SUBSCRIBER " + this.getName() + "]: Now unsubscribing from tracing services publisher"+publisher_number1+"<DD_Test_TS_"+service1+"> and publisher"+publisher_number2+"<DD_Test_TS_"+service2+">...");
-		TraceInteract.cancelTracingServiceSubscription(this, "publisher"+publisher_number1+"<DD_Test_TS_"+service1+">");
-		TraceInteract.cancelTracingServiceSubscription(this, "publisher"+publisher_number2+"<DD_Test_TS_"+service2+">");
-    	
-		try {
+//			System.out.println("[SUBSCRIBER " + this.getName() + "]: Now unsubscribing from tracing services publisher"+publisher_number1+"<DD_Test_TS_"+service1+"> and publisher"+publisher_number2+"<DD_Test_TS_"+service2+">...");
+			TraceInteract.cancelTracingServiceSubscription(this, "publisher"+publisher_number1+"<DD_Test_TS_"+service1+">");
+			TraceInteract.cancelTracingServiceSubscription(this, "publisher"+publisher_number2+"<DD_Test_TS_"+service2+">");
+
 			Thread.sleep(3000);
 		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} catch (TraceServiceNotAllowedException e) {
 			e.printStackTrace();
 		}
 		

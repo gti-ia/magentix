@@ -9,6 +9,7 @@ import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.BaseAgent;
 import es.upv.dsic.gti_ia.core.TraceEvent;
 import es.upv.dsic.gti_ia.trace.TraceInteract;
+import es.upv.dsic.gti_ia.trace.exception.TraceServiceNotAllowedException;
 
 /*****************************************************************************************
 /*                                       TraceDaddy                                      *
@@ -52,7 +53,7 @@ public class Daddy extends BaseAgent{
 	private boolean Bobby_agree=false;
 	private boolean Timmy_agree=false;
 	
-	public Daddy(AgentID aid) throws Exception{
+	public Daddy(AgentID aid) throws Exception {
 		super(aid);
 		TraceInteract.requestTracingService(this, "NEW_AGENT");
 		System.out.println("[Daddy " + this.getName() + "]: I want to read the newspaper...");
@@ -109,16 +110,23 @@ public class Daddy extends BaseAgent{
 		ACLMessage msg;
 		
 		if (tEvent.getTracingService().contentEquals("NEW_AGENT")){
-			TraceInteract.requestTracingService(this, "MESSAGE_SENT_DETAIL", new AgentID(tEvent.getContent()));
-			
+			try {
+				TraceInteract.requestTracingService(this, "MESSAGE_SENT_DETAIL", new AgentID(tEvent.getContent()));
+			} catch (TraceServiceNotAllowedException e) {
+				e.printStackTrace();
+			}
 		}
 		else if (tEvent.getTracingService().contentEquals("MESSAGE_SENT_DETAIL")){
 			msg = ACLMessage.fromString(tEvent.getContent());
 			System.out.println("[" + this.getName() + " " + formatter.format(calendar.getTime()) + "]: " + msg.getSender().toString() + " said: " + msg.getPerformative() + ": " + msg.getContent());
 			if (msg.getContent().contentEquals("GUAAAAAA..!")){
-				TraceInteract.cancelTracingServiceSubscription(this, "MESSAGE_SENT_DETAIL",new AgentID("Timmy"));
-				TraceInteract.cancelTracingServiceSubscription(this, "MESSAGE_SENT_DETAIL",new AgentID("Bobby"));
-				finish=true;
+				try {
+					TraceInteract.cancelTracingServiceSubscription(this, "MESSAGE_SENT_DETAIL",new AgentID("Timmy"));
+					TraceInteract.cancelTracingServiceSubscription(this, "MESSAGE_SENT_DETAIL",new AgentID("Bobby"));
+					finish=true;
+				} catch (TraceServiceNotAllowedException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}

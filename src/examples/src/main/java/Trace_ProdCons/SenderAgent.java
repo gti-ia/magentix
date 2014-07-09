@@ -5,6 +5,7 @@ import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.BaseAgent;
 import es.upv.dsic.gti_ia.core.TraceEvent;
 import es.upv.dsic.gti_ia.trace.TraceInteract;
+import es.upv.dsic.gti_ia.trace.exception.TraceServiceNotAllowedException;
 
 /**
  * SenderAgent class defines the structure of a sender BaseAgent
@@ -39,23 +40,20 @@ public class SenderAgent extends BaseAgent {
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+			} catch (TraceServiceNotAllowedException e) {
+				e.printStackTrace();
 			}
 		}
 		
 		try {
 			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		System.out.println("[SENDER " + getName() + "]: Unpublishing tracing service TRACE TEST");
-		TraceInteract.unpublishTracingService(this, "TRACE_TEST");
-		
-		try {
+			System.out.println("[SENDER " + getName() + "]: Unpublishing tracing service TRACE TEST");
+			TraceInteract.unpublishTracingService(this, "TRACE_TEST");
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (TraceServiceNotAllowedException e) {
 			e.printStackTrace();
 		}
 		

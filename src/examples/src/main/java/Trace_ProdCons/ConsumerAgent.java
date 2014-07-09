@@ -1,14 +1,15 @@
 package Trace_ProdCons;
 
 import java.util.concurrent.LinkedBlockingQueue;
+
 import org.apache.qpid.transport.MessageTransfer;
 
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.BaseAgent;
 import es.upv.dsic.gti_ia.core.TraceEvent;
-
 import es.upv.dsic.gti_ia.trace.*;
+import es.upv.dsic.gti_ia.trace.exception.TraceServiceNotAllowedException;
 
 /**
  * ConsumerAgent class defines the structure of a consumer BaseAgent
@@ -34,27 +35,23 @@ public class ConsumerAgent extends BaseAgent {
 		 * messages.
 		 */
 		
-		// Subscribe to trace events of the type "TRACE_TEST", coming from any tracing entity
-		TraceInteract.requestTracingService(this, "TRACE_TEST");
+		try {
+			// Subscribe to trace events of the type "TRACE_TEST", coming from any tracing entity
+			TraceInteract.requestTracingService(this, "TRACE_TEST");
     	
-    	for (int i=0; i < 10; i++) {
-			try {
+			for (int i=0; i < 10; i++) {
 				System.out.println("[CONSUMER " + getName() + "]: Waiting (" + (i+1) + ")...");
 				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			}
-		}
     	
-    	// Unsubscribe to trace events of the type "TRACE_TEST", coming from any tracing entity
-    	System.out.println("[CONSUMER " + getName() + "]: Unsubscribing from the tracing service TRACE TEST");
-    	TraceInteract.cancelTracingServiceSubscription(this, "TRACE_TEST");
+			// Unsubscribe to trace events of the type "TRACE_TEST", coming from any tracing entity
+			System.out.println("[CONSUMER " + getName() + "]: Unsubscribing from the tracing service TRACE TEST");
+			TraceInteract.cancelTracingServiceSubscription(this, "TRACE_TEST");
 		
-    	try {
 			Thread.sleep(3000);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (TraceServiceNotAllowedException e) {
 			e.printStackTrace();
 		}
 		
