@@ -1,11 +1,21 @@
 package TestNormsModule;
 
+import static org.junit.Assert.*;
 import jason.asSyntax.Literal;
+
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 
 //import TestOMS.DatabaseAccess;
+
+
+
+
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import junit.framework.TestCase;
 import es.upv.dsic.gti_ia.norms.*;
@@ -20,14 +30,15 @@ import es.upv.dsic.gti_ia.norms.*;
  * @author root
  *
  */
-public class TestModulePred extends TestCase {
+public class TestModulePred {
 
 
 
 	private BeliefDataBaseInterface bdbi = null;
 	DatabaseAccess dbA = null;
 
-	protected void tearDown() throws Exception {
+	@After
+	public void tearDown() throws Exception {
 
 		//------------------Clean Data Base -----------//
 		dbA.executeSQL("DELETE FROM normList");
@@ -43,8 +54,9 @@ public class TestModulePred extends TestCase {
 
 
 	}
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
+		//super.setUp();
 		
 		bdbi = new BeliefDataBaseInterface();
 		dbA = new DatabaseAccess();
@@ -168,6 +180,7 @@ public class TestModulePred extends TestCase {
 	}
 
 	//
+	@Test (timeout=5000)
 	public void testIsUnit()
 	{
 		try
@@ -196,7 +209,7 @@ public class TestModulePred extends TestCase {
 		}
 	}
 	
-	
+	@Test (timeout=5000)
 	public void testHasType()
 	{
 		try
@@ -227,6 +240,7 @@ public class TestModulePred extends TestCase {
 		}
 	}
 	
+	@Test (timeout=5000)
 	public void testHasParent()
 	{
 		try
@@ -257,6 +271,7 @@ public class TestModulePred extends TestCase {
 		}
 	}
 	
+	@Test (timeout=5000)
 	public void testIsRole()
 	{
 		try
@@ -292,6 +307,7 @@ public class TestModulePred extends TestCase {
 		}
 	}
 	
+	@Test (timeout=5000)
 	public void testHasAccessibility()
 	{
 		try
@@ -325,6 +341,7 @@ public class TestModulePred extends TestCase {
 		}
 	}
 	
+	@Test (timeout=5000)
 	public void testHasVisibility()
 	{
 		try
@@ -361,6 +378,7 @@ public class TestModulePred extends TestCase {
 		}
 	}
 	
+	@Test (timeout=5000)
 	public void testHasPosition()
 	{
 		try
@@ -395,6 +413,7 @@ public class TestModulePred extends TestCase {
 		}
 	}
 	
+	@Test (timeout=5000)
 	public void testIsAgent()
 	{
 		try
@@ -425,6 +444,7 @@ public class TestModulePred extends TestCase {
 		}
 	}
 	
+	@Test (timeout=5000)
 	public void testPlaysRole()
 	{
 		try
@@ -468,7 +488,7 @@ public class TestModulePred extends TestCase {
 
 	
 	
-	
+	@Test (timeout=5000)
 	public void testRoleCardinality()
 	{
 		try
@@ -503,6 +523,7 @@ public class TestModulePred extends TestCase {
 		}
 	}
 	
+	@Test (timeout=5000)
 	public void testPositionCardinality()
 	{
 		try
@@ -537,6 +558,7 @@ public class TestModulePred extends TestCase {
 		}
 	}
 	
+	@Test (timeout=5000)
 	public void testIsNorm()
 	{
 		try
@@ -564,6 +586,7 @@ public class TestModulePred extends TestCase {
 		}
 	}
 	
+	@Test (timeout=5000)
 	public void testHasDeontic()
 	{
 		try
@@ -591,6 +614,7 @@ public class TestModulePred extends TestCase {
 		}
 	}
 	
+	@Test (timeout=5000)
 	public void testHasTarget()
 	{
 		try
@@ -618,6 +642,7 @@ public class TestModulePred extends TestCase {
 		}
 	}
 	
+	@Test (timeout=5000)
 	public void testHasAction()
 	{
 		try
@@ -645,6 +670,7 @@ public class TestModulePred extends TestCase {
 		}
 	}
 	
+	@Test (timeout=5000)
 	public void testNormRule()
 	{
 		try
@@ -672,6 +698,7 @@ public class TestModulePred extends TestCase {
 		}
 	}
 	
+	@Test (timeout=5000)
 	public void testBuilNormRule()
 	{
 		try
@@ -705,7 +732,7 @@ public class TestModulePred extends TestCase {
 		}
 	}
 	
-	
+	@Test (timeout=5000)
 	public void testBuilNormRule2()
 	{
 		try
@@ -737,6 +764,7 @@ public class TestModulePred extends TestCase {
 	}
 	
 	
+	@Test (timeout=5000)
 	public void testBuilNormRule3()
 	{
 		try
