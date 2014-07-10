@@ -1,6 +1,8 @@
 package TestSF;
 
 //import omsTests.DatabaseAccess;
+import static org.junit.Assert.*;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
@@ -17,7 +19,7 @@ import es.upv.dsic.gti_ia.organization.SFProxy;
 import es.upv.dsic.gti_ia.organization.exception.ServiceProfileNotFoundException;
 import es.upv.dsic.gti_ia.organization.exception.THOMASException;
 
-public class TestGetService extends TestCase {
+public class TestGetService {
 
 	SFProxy sfProxy = null;
 	Agent agent = null;
@@ -27,8 +29,8 @@ public class TestGetService extends TestCase {
 	Process qpid_broker;
 
 	@Before
-	protected void setUp() throws Exception {
-		super.setUp();
+	public void setUp() throws Exception {
+		//super.setUp();
 		qpid_broker = qpidManager.UnixQpidManager.startQpid(Runtime.getRuntime(), qpid_broker);
 		AgentsConnection.connect();
 
@@ -53,8 +55,8 @@ public class TestGetService extends TestCase {
 	}
 
 	@After
-	protected void tearDown() throws Exception {
-		super.tearDown();
+	public void tearDown() throws Exception {
+		//super.tearDown();
 		//------------------Clean Data Base -----------//
 		dbA.executeSQL("DELETE FROM agentPlayList");
 		dbA.executeSQL("DELETE FROM roleList WHERE idroleList != 1");
@@ -110,7 +112,7 @@ public class TestGetService extends TestCase {
 	 * A URL of a service specification is provided instead a Service Profile.
 	 * @return
 	 */
-	@Test (timeout=5000)
+	@Test (timeout=50000)
 	public void testIncorrectParamTest2(){
 
 		try
@@ -136,7 +138,7 @@ public class TestGetService extends TestCase {
 	 * Correct service profile, but without a service previously registered in the system.
 	 * @return
 	 */
-	@Test (timeout=5000)
+	@Test (timeout=50000)
 	public void testIncorrectParamTest3(){
 
 		try
@@ -162,7 +164,7 @@ public class TestGetService extends TestCase {
 	 *   are properly retrieved.
 	 * @return
 	 */
-	@Test (timeout=5000)
+	@Test (timeout=600000)
 	public void testAppropiateParamsTest2(){
 
 		try
@@ -190,7 +192,7 @@ public class TestGetService extends TestCase {
 	 *  also the input and output parameters are properly retrieved.
 	 * @return
 	 */
-	@Test (timeout=5000)
+	@Test (timeout=600000)
 	public void testAppropiateParamsTest3(){
 		try
 		{
@@ -217,7 +219,7 @@ public class TestGetService extends TestCase {
 	 *  are properly retrieved.
 	 * @return
 	 */
-	@Test (timeout=5000)
+	@Test (timeout=600000)
 	public void testAppropiateParamsTest4(){
 		try
 		{
@@ -242,7 +244,7 @@ public class TestGetService extends TestCase {
 	 * checked in order to ensure that the input and output parameters are properly retrieved.
 	 * @return
 	 */
-	@Test (timeout=5000)
+	@Test (timeout=600000)
 	public void testAppropiateParamsTest5(){
 		try
 		{
@@ -268,7 +270,7 @@ public class TestGetService extends TestCase {
 	 * output parameters are properly retrieved.
 	 * @return
 	 */
-	@Test (timeout=5000)
+	@Test (timeout=600000)
 	public void testAppropiateParamsTest6(){
 		try
 		{
@@ -294,7 +296,7 @@ public class TestGetService extends TestCase {
 	 * retrieved.
 	 * @return
 	 */
-	@Test (timeout=5000)
+	@Test (timeout=600000)
 	public void testAppropiateParamsTest7(){
 		try
 		{
@@ -320,7 +322,7 @@ public class TestGetService extends TestCase {
 	 * provider data, grounding data and also the input and output parameters are properly retrieved.
 	 * @return
 	 */
-	@Test (timeout=5000)
+	@Test (timeout=600000)
 	public void testAppropiateParamsTest8(){
 
 		try
@@ -347,7 +349,7 @@ public class TestGetService extends TestCase {
 	 * ensure that providers data and also the input and output parameters are properly retrieved.
 	 * @return
 	 */
-	@Test (timeout=5000)
+	@Test (timeout=600000)
 	public void testAppropiateParamsTest9(){
 		try
 		{
