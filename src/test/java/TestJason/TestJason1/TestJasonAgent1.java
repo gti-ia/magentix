@@ -3,6 +3,8 @@
  */
 package TestJason.TestJason1;
 
+import static org.junit.Assert.*;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,7 +19,7 @@ import es.upv.dsic.gti_ia.jason.MagentixAgArch;
  * @author Javier Jorge Cano
  * 
  */
-public class TestJasonAgent1 extends TestCase {
+public class TestJasonAgent1 {
 
 	SimpleArchitecture arch = null;
 	JasonAgent agent = null;
@@ -26,9 +28,9 @@ public class TestJasonAgent1 extends TestCase {
 	/**
 	 * @param name
 	 */
-	public TestJasonAgent1(String name) {
-		super(name);
-	}
+	//public TestJasonAgent1(String name) {
+	//	super(name);
+	//}
 
 	/*
 	 * (non-Javadoc)
@@ -36,8 +38,8 @@ public class TestJasonAgent1 extends TestCase {
 	 * @see junit.framework.TestCase#setUp()
 	 */
 	@Before
-	protected void setUp() throws Exception {
-		super.setUp();
+	public void setUp() throws Exception {
+		//super.setUp();
 		/**
 		 * Setting the Logger
 		 */
@@ -61,8 +63,8 @@ public class TestJasonAgent1 extends TestCase {
 	 * @see junit.framework.TestCase#tearDown()
 	 */
 	@After
-	protected void tearDown() throws Exception {
-		super.tearDown();
+	public void tearDown() throws Exception {
+		//super.tearDown();
 		agent.Shutdown();
 
 		qpidManager.UnixQpidManager.stopQpid(qpid_broker);
