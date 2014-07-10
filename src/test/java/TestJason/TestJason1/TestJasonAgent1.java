@@ -3,6 +3,10 @@
  */
 package TestJason.TestJason1;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
 import junit.framework.TestCase;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
@@ -31,6 +35,7 @@ public class TestJasonAgent1 extends TestCase {
 	 * 
 	 * @see junit.framework.TestCase#setUp()
 	 */
+	@Before
 	protected void setUp() throws Exception {
 		super.setUp();
 		/**
@@ -55,6 +60,7 @@ public class TestJasonAgent1 extends TestCase {
 	 * 
 	 * @see junit.framework.TestCase#tearDown()
 	 */
+	@After
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		agent.Shutdown();
@@ -67,6 +73,7 @@ public class TestJasonAgent1 extends TestCase {
 	 * {@link es.upv.dsic.gti_ia.jason.JasonAgent#JasonAgent(es.upv.dsic.gti_ia.core.AgentID, java.lang.String, es.upv.dsic.gti_ia.jason.MagentixAgArch)}
 	 * .
 	 */
+	@Test (timeout=5000)
 	public void testJasonAgent() {
 
 		try {
