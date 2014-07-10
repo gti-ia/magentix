@@ -1,5 +1,6 @@
 package TestJason;
 
+import static org.junit.Assert.*;
 import junit.framework.TestCase;
 
 import org.apache.log4j.xml.DOMConfigurator;
@@ -12,19 +13,19 @@ import es.upv.dsic.gti_ia.core.AgentsConnection;
 import es.upv.dsic.gti_ia.jason.JasonAgent;
 import es.upv.dsic.gti_ia.jason.MagentixAgArch;
 
-public class TestJason extends TestCase {
+public class TestJason {
 
 	MagentixAgArch arch;
 	JasonAgent agent;
 	Process qpid_broker;
 
-	public TestJason(String name) {
-		super(name);
-	}
+	//public TestJason(String name) {
+	//	super(name);
+	//}
 
 	@Before
-	protected void setUp() throws Exception {
-		super.setUp();
+	public void setUp() throws Exception {
+		//super.setUp();
 		qpid_broker = qpidManager.UnixQpidManager.startQpid(
 				Runtime.getRuntime(), qpid_broker);
 		/**
@@ -42,8 +43,8 @@ public class TestJason extends TestCase {
 	}
 
 	@After
-	protected void tearDown() throws Exception {
-		super.tearDown();
+	public void tearDown() throws Exception {
+		//super.tearDown();
 
 		AgentsConnection.disconnect();
 
@@ -380,7 +381,7 @@ public class TestJason extends TestCase {
 
 	}
 
-	@Test (timeout=5000)
+	@Test (timeout=10000)
 	public void testJasonAgentRepeat() {
 
 		try {
