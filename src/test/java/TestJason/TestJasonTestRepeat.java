@@ -1,5 +1,9 @@
 package TestJason;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
 import junit.framework.TestCase;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
@@ -17,6 +21,7 @@ public class TestJasonTestRepeat extends TestCase {
 		super(name);
 	}
 
+	@Before
 	protected void setUp() throws Exception {
 		super.setUp();
 		/**
@@ -33,6 +38,7 @@ public class TestJasonTestRepeat extends TestCase {
 
 	}
 
+	@Test (timeout=5000)
 	public void testJasonAgentRepeat() {
 
 		try {
@@ -87,6 +93,7 @@ public class TestJasonTestRepeat extends TestCase {
 
 	}
 
+	@After
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		AgentsConnection.disconnect();
