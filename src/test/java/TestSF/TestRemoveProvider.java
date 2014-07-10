@@ -1,6 +1,8 @@
 package TestSF;
 
 //import omsTests.DatabaseAccess;
+import static org.junit.Assert.*;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
@@ -19,7 +21,7 @@ import es.upv.dsic.gti_ia.organization.SFProxy;
 import es.upv.dsic.gti_ia.organization.exception.ServiceProfileNotFoundException;
 import es.upv.dsic.gti_ia.organization.exception.THOMASException;
 
-public class TestRemoveProvider extends TestCase {
+public class TestRemoveProvider {
 
 	SFProxy sfProxy = null;
 	Agent agent = null;
@@ -30,8 +32,8 @@ public class TestRemoveProvider extends TestCase {
 	Process qpid_broker;
 
 	@Before
-	protected void setUp() throws Exception {
-		super.setUp();
+	public void setUp() throws Exception {
+		//super.setUp();
 		qpid_broker = qpidManager.UnixQpidManager.startQpid(Runtime.getRuntime(), qpid_broker);
 		AgentsConnection.connect();
 
@@ -57,8 +59,8 @@ public class TestRemoveProvider extends TestCase {
 	}
 
 	@After
-	protected void tearDown() throws Exception {
-		super.tearDown();
+	public void tearDown() throws Exception {
+		//super.tearDown();
 
 		//------------------Clean Data Base -----------//
 		dbA.executeSQL("DELETE FROM agentPlayList");
@@ -91,7 +93,7 @@ public class TestRemoveProvider extends TestCase {
 	 * 
 	 * @return
 	 */
-	@Test(timeout = 5000)
+	@Test(timeout = 10000)
 	public void testIncorrectParamTest1() {
 
 		try
@@ -117,7 +119,7 @@ public class TestRemoveProvider extends TestCase {
 	 * 
 	 * @return
 	 */
-	@Test(timeout = 5000)
+	@Test(timeout = 10000)
 	public void testIncorrectParamTest2() {
 
 		try
@@ -143,7 +145,7 @@ public class TestRemoveProvider extends TestCase {
 	 * 
 	 * @return
 	 */
-	@Test(timeout = 5000)
+	@Test(timeout = 10000)
 	public void testIncorrectParamTest3() {
 
 		try
@@ -226,7 +228,7 @@ public class TestRemoveProvider extends TestCase {
 	 * 
 	 * @return
 	 */
-	@Test(timeout = 5000)
+	@Test(timeout = 600000)
 	public void testAppropiateParamsTest1() {
 		try
 		{
@@ -257,7 +259,7 @@ public class TestRemoveProvider extends TestCase {
 	 * 
 	 * @return
 	 */
-	@Test(timeout = 5000)
+	@Test(timeout = 600000)
 	public void testAppropiateParamsTest2() {
 		try
 		{
@@ -287,7 +289,7 @@ public class TestRemoveProvider extends TestCase {
 	 * 
 	 * @return
 	 */
-	@Test(timeout = 5000)
+	@Test(timeout = 600000)
 	public void testAppropiateParamsTest3() {
 		try
 		{
@@ -318,7 +320,7 @@ public class TestRemoveProvider extends TestCase {
 	 * 
 	 * @return
 	 */
-	@Test(timeout = 5000)
+	@Test(timeout = 600000)
 	public void testAppropiateParamsTest4() {
 		try
 		{
@@ -348,7 +350,7 @@ public class TestRemoveProvider extends TestCase {
 	 * 
 	 * @return
 	 */
-	@Test(timeout = 5000)
+	@Test(timeout = 600000)
 	public void testAppropiateParamsTest5() {
 		try
 		{
@@ -378,7 +380,7 @@ public class TestRemoveProvider extends TestCase {
 	 * 
 	 * @return
 	 */
-	@Test(timeout = 5000)
+	@Test(timeout = 60000)
 	public void testAppropiateParamsTest6() {
 		try
 		{
