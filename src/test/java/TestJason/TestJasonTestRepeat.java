@@ -1,5 +1,7 @@
 package TestJason;
 
+import static org.junit.Assert.*;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,7 +11,7 @@ import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
 import es.upv.dsic.gti_ia.jason.JasonAgent;
 
-public class TestJasonTestRepeat extends TestCase {
+public class TestJasonTestRepeat{
 
 	SimpleArchitecture arch = null;
 
@@ -17,13 +19,13 @@ public class TestJasonTestRepeat extends TestCase {
 
 	Process qpid_broker;
 
-	public TestJasonTestRepeat(String name) {
-		super(name);
-	}
+	//public TestJasonTestRepeat(String name) {
+	//	super(name);
+	//}
 
 	@Before
-	protected void setUp() throws Exception {
-		super.setUp();
+	public void setUp() throws Exception {
+		//super.setUp();
 		/**
 		 * Setting the Logger
 		 */
@@ -38,7 +40,7 @@ public class TestJasonTestRepeat extends TestCase {
 
 	}
 
-	@Test (timeout=5000)
+	@Test (timeout=60000)
 	public void testJasonAgentRepeat() {
 
 		try {
@@ -94,8 +96,8 @@ public class TestJasonTestRepeat extends TestCase {
 	}
 
 	@After
-	protected void tearDown() throws Exception {
-		super.tearDown();
+	public void tearDown() throws Exception {
+		//super.tearDown();
 		AgentsConnection.disconnect();
 		qpidManager.UnixQpidManager.stopQpid(qpid_broker);
 
