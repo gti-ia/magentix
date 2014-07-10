@@ -9,6 +9,9 @@ import java.util.Iterator;
 import junit.framework.TestCase;
 
 import org.apache.log4j.xml.DOMConfigurator;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
@@ -41,6 +44,7 @@ public class TestJasonAgent2 extends TestCase {
 	 * 
 	 * @see junit.framework.TestCase#setUp()
 	 */
+	@Before
 	protected void setUp() throws Exception {
 		super.setUp();
 		/**
@@ -93,6 +97,7 @@ public class TestJasonAgent2 extends TestCase {
 	 * 
 	 * @see junit.framework.TestCase#tearDown()
 	 */
+	@After
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		bob.Shutdown();
@@ -106,6 +111,7 @@ public class TestJasonAgent2 extends TestCase {
 	 * {@link es.upv.dsic.gti_ia.jason.JasonAgent#JasonAgent(es.upv.dsic.gti_ia.core.AgentID, java.lang.String, es.upv.dsic.gti_ia.jason.MagentixAgArch)}
 	 * .
 	 */
+	@Test (timeout=5000)
 	public void testJasonAgent() {
 
 		try {
