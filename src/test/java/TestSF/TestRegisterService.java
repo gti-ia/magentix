@@ -1,5 +1,7 @@
 package TestSF;
 
+import static org.junit.Assert.*;
+
 import java.util.ArrayList;
 
 import org.junit.After;
@@ -18,7 +20,7 @@ import es.upv.dsic.gti_ia.organization.exception.InvalidServiceURLException;
 import es.upv.dsic.gti_ia.organization.exception.THOMASException;
 //import omsTests.DatabaseAccess;
 
-public class TestRegisterService extends TestCase {
+public class TestRegisterService{
 
 	SFProxy sfProxy = null;
 	Agent agent = null;
@@ -28,8 +30,8 @@ public class TestRegisterService extends TestCase {
 	Process qpid_broker;
 
 	@Before
-	protected void setUp() throws Exception {
-		super.setUp();
+	public void setUp() throws Exception {
+		//super.setUp();
 		qpid_broker = qpidManager.UnixQpidManager.startQpid(Runtime.getRuntime(), qpid_broker);
 
 		AgentsConnection.connect();
@@ -60,8 +62,8 @@ public class TestRegisterService extends TestCase {
 	}
 
 	@After
-	protected void tearDown() throws Exception {
-		super.tearDown();
+	public void tearDown() throws Exception {
+		//super.tearDown();
 
 		//------------------Clean Data Base -----------//
 		dbA.executeSQL("DELETE FROM agentPlayList");
@@ -186,7 +188,7 @@ public class TestRegisterService extends TestCase {
 	 * 
 	 * @return
 	 */
-	@Test(timeout =5000)
+	@Test(timeout =60000)
 	public void testAppropiateParamsTest2() {
 
 		try {
@@ -212,7 +214,7 @@ public class TestRegisterService extends TestCase {
 	 * 
 	 * @return
 	 */
-	@Test(timeout =5000)
+	@Test(timeout =10000)
 	public void testAppropiateParamsTest3() {
 		try {
 			ArrayList<String> result = sfProxy
@@ -237,7 +239,7 @@ public class TestRegisterService extends TestCase {
 	 * 
 	 * @return
 	 */
-	@Test(timeout =5000)
+	@Test(timeout =60000)
 	public void testAppropiateParamsTest4() {
 		try {
 			ArrayList<String> result = sfProxy
@@ -261,7 +263,7 @@ public class TestRegisterService extends TestCase {
 	 * 
 	 * @return
 	 */
-	@Test(timeout =5000)
+	@Test(timeout =60000)
 	public void testAppropiateParamsTest5() {
 		try {
 			ArrayList<String> result = sfProxy
@@ -286,7 +288,7 @@ public class TestRegisterService extends TestCase {
 	 * 
 	 * @return
 	 */
-	@Test(timeout =5000)
+	@Test(timeout =10000)
 	public void testAppropiateParamsTest6() {
 		try {
 			ArrayList<String> result = sfProxy
@@ -311,7 +313,7 @@ public class TestRegisterService extends TestCase {
 	 * 
 	 * @return
 	 */
-	@Test(timeout =5000)
+	@Test(timeout =60000)
 	public void testAppropiateParamsTest7() {
 		try {
 			ArrayList<String> result = sfProxy
@@ -337,7 +339,7 @@ public class TestRegisterService extends TestCase {
 	 * 
 	 * @return
 	 */
-	@Test(timeout =5000)
+	@Test(timeout =600000)
 	public void testAppropiateParamsTest8() {
 
 		String res = "";
