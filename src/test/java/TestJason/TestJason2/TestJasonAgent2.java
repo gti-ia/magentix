@@ -1,5 +1,6 @@
 package TestJason.TestJason2;
 
+import static org.junit.Assert.*;
 import jason.asSyntax.Literal;
 import jason.bb.BeliefBase;
 
@@ -22,7 +23,7 @@ import es.upv.dsic.gti_ia.jason.MagentixAgArch;
  * @author Javier Jorge Cano
  * 
  */
-public class TestJasonAgent2 extends TestCase {
+public class TestJasonAgent2 {
 
 	JasonAgent bob = null;
 	JasonAgent maria = null;
@@ -35,9 +36,9 @@ public class TestJasonAgent2 extends TestCase {
 	/**
 	 * @param name
 	 */
-	public TestJasonAgent2(String name) {
-		super(name);
-	}
+	//public TestJasonAgent2(String name) {
+	//	super();
+	//}
 
 	/*
 	 * (non-Javadoc)
@@ -45,8 +46,8 @@ public class TestJasonAgent2 extends TestCase {
 	 * @see junit.framework.TestCase#setUp()
 	 */
 	@Before
-	protected void setUp() throws Exception {
-		super.setUp();
+	public void setUp() throws Exception {
+		//super.setUp();
 		/**
 		 * Setting the Logger
 		 */
@@ -98,8 +99,8 @@ public class TestJasonAgent2 extends TestCase {
 	 * @see junit.framework.TestCase#tearDown()
 	 */
 	@After
-	protected void tearDown() throws Exception {
-		super.tearDown();
+	public void tearDown() throws Exception {
+		//super.tearDown();
 		bob.Shutdown();
 		maria.Shutdown();
 
@@ -111,7 +112,7 @@ public class TestJasonAgent2 extends TestCase {
 	 * {@link es.upv.dsic.gti_ia.jason.JasonAgent#JasonAgent(es.upv.dsic.gti_ia.core.AgentID, java.lang.String, es.upv.dsic.gti_ia.jason.MagentixAgArch)}
 	 * .
 	 */
-	@Test (timeout=5000)
+	@Test (timeout=10000)
 	public void testJasonAgent() {
 
 		try {
