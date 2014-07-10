@@ -8,6 +8,9 @@ import java.util.Queue;
 import junit.framework.TestCase;
 
 import org.apache.log4j.xml.DOMConfigurator;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
@@ -28,6 +31,7 @@ public class TestMagentixAgArch extends TestCase {
 		super(name);
 	}
 
+	@Before
 	protected void setUp() throws Exception {
 		super.setUp();
 		/**
@@ -50,6 +54,7 @@ public class TestMagentixAgArch extends TestCase {
 
 	}
 
+	@After
 	protected void tearDown() throws Exception {
 		super.tearDown();
 
@@ -59,6 +64,7 @@ public class TestMagentixAgArch extends TestCase {
 
 	}
 
+	@Test (timeout=5000)
 	public void testStopAg() {
 
 		arch = new SimpleArchitecture();
@@ -96,6 +102,7 @@ public class TestMagentixAgArch extends TestCase {
 
 	}
 
+	@Test (timeout=5000)
 	public void testCanSleep() {
 
 		arch = new SimpleArchitecture();
@@ -122,6 +129,7 @@ public class TestMagentixAgArch extends TestCase {
 
 	}
 
+	@Test (timeout=5000)
 	public void testIsRunning() {
 
 		arch = new SimpleArchitecture();
@@ -159,6 +167,7 @@ public class TestMagentixAgArch extends TestCase {
 
 	}
 
+	@Test (timeout=5000)
 	public void testGetAgName() {
 		arch = new SimpleArchitecture();
 
@@ -184,6 +193,7 @@ public class TestMagentixAgArch extends TestCase {
 
 	}
 
+	@Test (timeout=5000)
 	public void testSendMsgMessage() {
 		MagentixAgArch arch = null;
 		MagentixAgArch arch2 = null;
@@ -258,6 +268,7 @@ public class TestMagentixAgArch extends TestCase {
 
 	}
 
+	@Test (timeout=5000)
 	public void testPerceive() {
 		arch = new SimpleArchitecture();
 
@@ -305,6 +316,7 @@ public class TestMagentixAgArch extends TestCase {
 
 	}
 
+	@Test (timeout=5000)
 	public void testRun() {
 		arch = new SimpleArchitecture();
 
@@ -345,6 +357,7 @@ public class TestMagentixAgArch extends TestCase {
 
 	}
 
+	@Test (timeout=5000)
 	public void testInit() {
 		@SuppressWarnings("unused")
 		JasonAgent agentNoArch = null;
@@ -428,6 +441,7 @@ public class TestMagentixAgArch extends TestCase {
 
 	}
 
+	@Test (timeout=5000)
 	public void testTranslateContentToJason() {
 		MagentixAgArch arch = null;
 		MagentixAgArch arch2 = null;
@@ -499,6 +513,7 @@ public class TestMagentixAgArch extends TestCase {
 
 	}
 
+	@Test (timeout=5000)
 	public void testAddMessage() {
 		MagentixAgArch arch = null;
 		MagentixAgArch arch2 = null;
