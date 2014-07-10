@@ -1,7 +1,13 @@
 package TestNormsModule;
 
+import static org.junit.Assert.*;
+
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import junit.framework.TestCase;
 import es.upv.dsic.gti_ia.norms.NormParser;
@@ -13,22 +19,24 @@ import es.upv.dsic.gti_ia.organization.exception.InvalidTargetTypeException;
 import es.upv.dsic.gti_ia.organization.exception.InvalidTargetValueException;
 
 
-public class TestParser extends TestCase {
+public class TestParser  {
 
 
 
 	NormParser parser = null;
 
-	protected void tearDown() throws Exception {
-		super.tearDown();
+	@After
+	public void tearDown() throws Exception {
+		//super.tearDown();
 
 		parser = null;
 
 
 
 	}
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
+		//super.setUp();
 
 		
 
@@ -38,6 +46,7 @@ public class TestParser extends TestCase {
 
 	//A partir de la prueba 13 es donde se realizán las pruebas del documento.
 
+	@Test (timeout=5000)
 	public void testNormForo1()
 	{
 		try
@@ -63,6 +72,7 @@ public class TestParser extends TestCase {
 		}
 	}
 
+	@Test (timeout=5000)
 	public void testNorm1()
 	{
 		try
@@ -90,6 +100,7 @@ public class TestParser extends TestCase {
 		}
 	}
 
+	@Test (timeout=5000)
 	public void testNorm2()
 	{
 		try
@@ -115,6 +126,7 @@ public class TestParser extends TestCase {
 		}
 	}
 
+	@Test (timeout=5000)
 	public void testNorm3()
 	{
 		try
@@ -140,6 +152,7 @@ public class TestParser extends TestCase {
 		}
 	}
 
+	@Test (timeout=5000)
 	public void testNorm4()
 	{
 		try
@@ -165,6 +178,7 @@ public class TestParser extends TestCase {
 		}
 	}
 
+	@Test (timeout=5000)
 	public void testNorm5()
 	{
 		try
@@ -190,6 +204,7 @@ public class TestParser extends TestCase {
 		}
 	}
 
+	@Test (timeout=5000)
 	public void testNorm6()
 	{
 		try
@@ -215,6 +230,7 @@ public class TestParser extends TestCase {
 		}
 	}
 
+	@Test (timeout=5000)
 	public void testNorm7()
 	{
 		try
@@ -243,6 +259,7 @@ public class TestParser extends TestCase {
 		}
 	}
 
+	@Test (timeout=5000)
 	public void testNorm8()
 	{
 		try
@@ -268,6 +285,7 @@ public class TestParser extends TestCase {
 		}
 	}
 
+	@Test (timeout=5000)
 	public void testNorm9()
 	{
 		try
@@ -293,6 +311,7 @@ public class TestParser extends TestCase {
 		}
 	}
 
+	@Test (timeout=5000)
 	public void testNorm10()
 	{
 		try
@@ -318,6 +337,7 @@ public class TestParser extends TestCase {
 		}
 	}
 
+	@Test (timeout=5000)
 	public void testNorm11()
 	{
 		try
@@ -343,6 +363,7 @@ public class TestParser extends TestCase {
 		}
 	}
 
+	@Test (timeout=5000)
 	public void testNorm12()
 	{
 		try
@@ -368,6 +389,7 @@ public class TestParser extends TestCase {
 		}
 	}
 	//Descritas en el documento de pruebas.
+	@Test (timeout=5000)
 	public void testNorm1a()
 	{
 		try
@@ -393,6 +415,7 @@ public class TestParser extends TestCase {
 		}
 	}
 
+	@Test (timeout=5000)
 	public void testNorm2a()
 	{
 		try
@@ -418,6 +441,7 @@ public class TestParser extends TestCase {
 		}
 	}
 
+	@Test (timeout=5000)
 	public void testNorm3a()
 	{
 		try
@@ -443,6 +467,7 @@ public class TestParser extends TestCase {
 		}
 	}
 
+	@Test (timeout=5000)
 	public void testNorm4a()
 	{
 		try
@@ -467,6 +492,8 @@ public class TestParser extends TestCase {
 			fail(e.getMessage());
 		}
 	}
+	
+	@Test (timeout=5000)
 	public void testNorm5a()
 	{
 		try
@@ -492,6 +519,7 @@ public class TestParser extends TestCase {
 		}
 	}
 
+	@Test (timeout=5000)
 	public void testNorm6a()
 	{
 		try
@@ -517,6 +545,7 @@ public class TestParser extends TestCase {
 		}
 	}
 
+	@Test (timeout=5000)
 	public void testNorm7a()
 	{
 		try
@@ -542,6 +571,7 @@ public class TestParser extends TestCase {
 		}
 	}
 
+	@Test (timeout=5000)
 	public void testNorm8a()
 	{
 		try
@@ -567,6 +597,7 @@ public class TestParser extends TestCase {
 		}
 	}
 
+	@Test (timeout=5000)
 	public void testNorm9a()
 	{
 		try
@@ -592,6 +623,7 @@ public class TestParser extends TestCase {
 		}
 	}
 
+	@Test (timeout=5000)
 	public void testNorm10a()
 	{
 		try
@@ -617,6 +649,7 @@ public class TestParser extends TestCase {
 		}
 	}
 
+	@Test (timeout=5000)
 	public void testNorm11a()
 	{
 		try
@@ -642,6 +675,7 @@ public class TestParser extends TestCase {
 		}
 	}
 
+	@Test (timeout=5000)
 	public void testNorm12a()
 	{
 		try
@@ -667,6 +701,7 @@ public class TestParser extends TestCase {
 		}
 	}
 
+	@Test (timeout=5000)
 	public void testNorm13a()
 	{
 		try
@@ -692,6 +727,7 @@ public class TestParser extends TestCase {
 		}
 	}
 
+	@Test (timeout=5000)
 	public void testNorm14a()
 	{
 		try
@@ -717,6 +753,7 @@ public class TestParser extends TestCase {
 		}
 	}
 
+	@Test (timeout=5000)
 	public void testNorm15a()
 	{
 		try
@@ -742,6 +779,7 @@ public class TestParser extends TestCase {
 		}
 	}
 
+	@Test (timeout=5000)
 	public void testNorm16a()
 	{
 		try
@@ -767,6 +805,7 @@ public class TestParser extends TestCase {
 		}
 	}
 
+	@Test (timeout=5000)
 	public void testNorm17a()
 	{
 		try
@@ -792,6 +831,7 @@ public class TestParser extends TestCase {
 		}
 	}
 
+	@Test (timeout=5000)
 	public void testNorm18a()
 	{
 		try
@@ -817,6 +857,7 @@ public class TestParser extends TestCase {
 		}
 	}
 
+	@Test (timeout=5000)
 	public void testNorm19a()
 	{
 		try
@@ -843,6 +884,7 @@ public class TestParser extends TestCase {
 		}
 	}
 
+	@Test (timeout=5000)
 	public void testNorm20a()
 	{
 		try
@@ -868,6 +910,7 @@ public class TestParser extends TestCase {
 		}
 	}
 
+	@Test (timeout=5000)
 	public void testNorm21a()
 	{
 		try
@@ -893,6 +936,7 @@ public class TestParser extends TestCase {
 		}
 	}
 
+	@Test (timeout=5000)
 	public void testNorm22a()
 	{
 		try
@@ -919,7 +963,7 @@ public class TestParser extends TestCase {
 	}
 
 
-
+	@Test (timeout=5000)
 	public void testNorm23a()
 	{
 		try
@@ -947,7 +991,7 @@ public class TestParser extends TestCase {
 
 
 	// Pruebas del manual
-
+	@Test (timeout=5000)
 	public void testIncorrectNorm1a()
 	{
 		try
@@ -976,6 +1020,7 @@ public class TestParser extends TestCase {
 
 	}
 
+	@Test (timeout=5000)
 	public void testIncorrectNorm2a()
 	{
 		try
@@ -1006,6 +1051,7 @@ public class TestParser extends TestCase {
 
 	}
 
+	@Test (timeout=5000)
 	public void testIncorrectNorm3a()
 	{
 		try
@@ -1034,6 +1080,7 @@ public class TestParser extends TestCase {
 
 	}
 
+	@Test (timeout=5000)
 	public void testIncorrectNorm4a()
 	{
 		try
@@ -1062,6 +1109,7 @@ public class TestParser extends TestCase {
 
 	}
 
+	@Test (timeout=5000)
 	public void testIncorrectNorm4b()
 	{
 		try
@@ -1090,6 +1138,7 @@ public class TestParser extends TestCase {
 
 	}
 
+	@Test (timeout=5000)
 	public void testIncorrectNorm5a()
 	{
 		try
@@ -1118,6 +1167,7 @@ public class TestParser extends TestCase {
 
 	}
 
+	@Test (timeout=5000)
 	public void testIncorrectNorm6a()
 	{
 		try
@@ -1146,6 +1196,7 @@ public class TestParser extends TestCase {
 
 	}
 
+	@Test (timeout=5000)
 	public void testIncorrectNorm7a()
 	{
 		try
@@ -1174,6 +1225,7 @@ public class TestParser extends TestCase {
 
 	}
 
+	@Test (timeout=5000)
 	public void testIncorrectNorm8a()
 	{
 		try
@@ -1208,6 +1260,7 @@ public class TestParser extends TestCase {
 
 	}
 
+	@Test (timeout=5000)
 	public void testIncorrectNorm9a()
 	{
 		try
@@ -1236,6 +1289,7 @@ public class TestParser extends TestCase {
 
 	}
 
+	@Test (timeout=5000)
 	public void testIncorrectNorm10a()
 	{
 		try
@@ -1264,6 +1318,7 @@ public class TestParser extends TestCase {
 
 	}
 
+	@Test (timeout=5000)
 	public void testIncorrectNorm11a()
 	{
 		try
@@ -1298,6 +1353,7 @@ public class TestParser extends TestCase {
 
 	}
 
+	@Test (timeout=5000)
 	public void testIncorrectNorm12a()
 	{
 		try
@@ -1326,6 +1382,7 @@ public class TestParser extends TestCase {
 
 	}
 
+	@Test (timeout=5000)
 	public void testIncorrectNorm13a()
 	{
 		try
@@ -1354,6 +1411,7 @@ public class TestParser extends TestCase {
 
 	}
 
+	@Test (timeout=5000)
 	public void testIncorrectNorm14a()
 	{
 		try
@@ -1387,6 +1445,7 @@ public class TestParser extends TestCase {
 		}
 	}
 
+	@Test (timeout=5000)
 	public void testIncorrectNorm15a()
 	{
 		try
@@ -1415,6 +1474,7 @@ public class TestParser extends TestCase {
 
 	}
 
+	@Test (timeout=5000)
 	public void testIncorrectNorm16a()
 	{
 		try
@@ -1453,6 +1513,7 @@ public class TestParser extends TestCase {
 
 	}
 
+	@Test (timeout=5000)
 	public void testIncorrectNorm17a()
 	{
 		try
@@ -1481,6 +1542,7 @@ public class TestParser extends TestCase {
 
 	}
 
+	@Test (timeout=5000)
 	public void testIncorrectNorm18a()
 	{
 		try
@@ -1514,6 +1576,7 @@ public class TestParser extends TestCase {
 
 	}
 
+	@Test (timeout=5000)
 	public void testIncorrectNorm19a()
 	{
 		try
@@ -1548,6 +1611,7 @@ public class TestParser extends TestCase {
 		}
 	}
 
+	@Test (timeout=5000)
 	public void testIncorrectNorm20a()
 	{
 		try
@@ -1583,6 +1647,7 @@ public class TestParser extends TestCase {
 
 	}
 
+	@Test (timeout=5000)
 	public void testIncorrectNorm21a()
 	{
 		try
@@ -1617,6 +1682,7 @@ public class TestParser extends TestCase {
 
 	}
 
+	@Test (timeout=5000)
 	public void testIncorrectNorm22a()
 	{
 		try
@@ -1653,6 +1719,7 @@ public class TestParser extends TestCase {
 	/**
 	 * The action is not a valid oms action.
 	 */
+	@Test (timeout=5000)
 	public void testIncorrectNorm23a()
 	{
 		try
