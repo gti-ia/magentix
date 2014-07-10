@@ -3,6 +3,9 @@ package TestJason;
 import junit.framework.TestCase;
 
 import org.apache.log4j.xml.DOMConfigurator;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
@@ -19,6 +22,7 @@ public class TestJason extends TestCase {
 		super(name);
 	}
 
+	@Before
 	protected void setUp() throws Exception {
 		super.setUp();
 		qpid_broker = qpidManager.UnixQpidManager.startQpid(
@@ -37,6 +41,7 @@ public class TestJason extends TestCase {
 
 	}
 
+	@After
 	protected void tearDown() throws Exception {
 		super.tearDown();
 
@@ -45,6 +50,7 @@ public class TestJason extends TestCase {
 		qpidManager.UnixQpidManager.stopQpid(qpid_broker);
 	}
 
+	@Test (timeout=5000)
 	public void testArch() {
 
 		SimpleArchitecture archR = new SimpleArchitecture();
@@ -110,6 +116,7 @@ public class TestJason extends TestCase {
 
 	}
 
+	@Test (timeout=5000)
 	public void testCreateDefaultFactory() {
 
 		arch = new SimpleArchitecture();
@@ -163,6 +170,7 @@ public class TestJason extends TestCase {
 		agent2.Shutdown();
 	}
 
+	@Test (timeout=5000)
 	public void testExecution() {
 
 		try {
@@ -198,6 +206,7 @@ public class TestJason extends TestCase {
 
 	}
 
+	@Test (timeout=5000)
 	public void testJasonAgent() {
 
 		arch = new SimpleArchitecture();
@@ -236,6 +245,7 @@ public class TestJason extends TestCase {
 		agent.Shutdown();
 	}
 
+	@Test (timeout=5000)
 	public void testGetAgArch() {
 
 		arch = new SimpleArchitecture();
@@ -285,6 +295,7 @@ public class TestJason extends TestCase {
 
 	}
 
+	@Test (timeout=5000)
 	public void testWrongConst() {
 
 		@SuppressWarnings("unused")
@@ -369,6 +380,7 @@ public class TestJason extends TestCase {
 
 	}
 
+	@Test (timeout=5000)
 	public void testJasonAgentRepeat() {
 
 		try {
