@@ -1,5 +1,7 @@
 package TestJason;
 
+import static org.junit.Assert.*;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -18,7 +20,7 @@ import es.upv.dsic.gti_ia.core.AgentsConnection;
 import es.upv.dsic.gti_ia.jason.JasonAgent;
 import es.upv.dsic.gti_ia.jason.MagentixAgArch;
 
-public class TestMagentixAgArch extends TestCase {
+public class TestMagentixAgArch {
 
 	private SimpleArchitecture arch;
 	private JasonAgent agent;
@@ -27,13 +29,13 @@ public class TestMagentixAgArch extends TestCase {
 	private JasonAgent senderJ;
 	Process qpid_broker;
 
-	public TestMagentixAgArch(String name) {
-		super(name);
-	}
+	//public TestMagentixAgArch(String name) {
+	//	super(name);
+	//}
 
 	@Before
-	protected void setUp() throws Exception {
-		super.setUp();
+	public void setUp() throws Exception {
+		//super.setUp();
 		/**
 		 * Setting the Logger
 		 */
@@ -55,8 +57,8 @@ public class TestMagentixAgArch extends TestCase {
 	}
 
 	@After
-	protected void tearDown() throws Exception {
-		super.tearDown();
+	public void tearDown() throws Exception {
+		//super.tearDown();
 
 		AgentsConnection.disconnect();
 
@@ -193,7 +195,7 @@ public class TestMagentixAgArch extends TestCase {
 
 	}
 
-	@Test (timeout=5000)
+	@Test (timeout=10000)
 	public void testSendMsgMessage() {
 		MagentixAgArch arch = null;
 		MagentixAgArch arch2 = null;
@@ -441,7 +443,7 @@ public class TestMagentixAgArch extends TestCase {
 
 	}
 
-	@Test (timeout=5000)
+	@Test (timeout=10000)
 	public void testTranslateContentToJason() {
 		MagentixAgArch arch = null;
 		MagentixAgArch arch2 = null;
@@ -513,7 +515,7 @@ public class TestMagentixAgArch extends TestCase {
 
 	}
 
-	@Test (timeout=5000)
+	@Test (timeout=10000)
 	public void testAddMessage() {
 		MagentixAgArch arch = null;
 		MagentixAgArch arch2 = null;
