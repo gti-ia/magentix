@@ -1,4 +1,5 @@
-\chapter{BNF Syntax of the Normative \\ Language}
+\chapter{BNF Syntax of the Normative \\ Language} \label{app:BNFSyntax}
+\section{Grammar}
 \begin{description}
 	\item[\underline{norm}] ::=``@ ''\underline{id} ``['' \underline{deontic} ``,'' \underline{target} ``,'' \underline{action} ``,'' \underline{activation} ``,'' \underline{expiration} ``]''
 \item	[\underline{id}] ::=\underline{stringConstant}  
@@ -146,5 +147,289 @@
 \item[\underline{OMSUnitTypes}] ::= ``flat'' \textbar ``team'' \textbar ``hierarchy''
 
 \end{description}
+\section{Predicates Summary}
 
+\begin{itemize}
+
+
+\item \textbf{Unit Predicates}\\
+isUnit(UnitName)\\
+hasType(UnitName,Type)\\
+hasParent(UnitName,ParentName)\\
+
+\item \textbf{Role Predicates}
+isRole(RoleName,UnitName)\\
+hasAccessibility(RoleName,UnitName,Accessibility)\\
+hasVisibility(RoleName,UnitName,Visibility)\\
+hasPosition(RoleName,UnitName,Posision)
+
+\item\textbf{Norm Predicates}
+% isNorm(NormName,UnitName, NormContent)\\
+isNorm(NormName,UnitName)\\
+hasDeontic(NormName,UnitName,Deontic)\\
+hasTarget(NormName,UnitName,TargetType, TargetValue)\\
+hasAction(NormName, UnitName, OMSActionName)
+
+\item\textbf{ Role Enactment Predicates}
+isAgent(AgentName)\\
+playsRole(AgentName,RoleName,UnitName)\\
+
+\item\textbf{Derived Predicates}
+roleCardinality(RoleName, UnitName, Cardinality)\\
+positionCardinality(PositionValue,UnitName, Cardinality)\\
+
+\item\textbf{Predicates of Services}
+registerUnit(UnitName,UnitType,ParentUnitName,AgentName,CreatorName)\\
+deregisterUnit (UnitName, AgentName)  \\
+registerRole (RoleName, UnitName, Accessibility,Visibility,Position, AgentName)\\
+deregisterRole (RoleName, UnitName, AgentName)\\
+registerNorm(NormName, UnitName, Deontic,TargetType,TargetValue,OMSActionName, AgentName) \\
+deregisterNorm(NormName, UnitName, AgentName) \\
+allocateRole(RoleName,UnitName,TargetAgentName,AgentName)\\
+deallocateRole(RoleName,UnitName,TargetAgentName,AgentName)\\
+joinUnit(UnitName,ParentName,AgentName)\\
+informAgentRole(RequestedAgentName, AgentName)\\
+informMembers(UnitName, RoleName, PositionValue, AgentName)\\
+informQuantityMembers(UnitName, RoleName, PositionValue, AgentName)\\
+informUnit(UnitName, AgentName)\\
+informUnitRoles(UnitName, AgentName)\\
+informTargetNorms(TargetType,TargetName, UnitName, AgentName)\\
+informRole(RoleName, UnitName, AgentName)\\
+informNorm(NormName, UnitName, AgentName)\\
+acquireRole(RoleName, UnitName, AgentName)\\
+leaveRole(RoleName, UnitName, AgentName)\\
+\end{itemize}
+%
+%\subsection{Operators}\label{sec:Operadores}
+%\begin{small}
+%\centering
+%\begin{tabular}{ p{10cm} p{10cm}}
+%\begin{description}
+%\item[``not''] not
+%\item[``\&''] and
+%\item[``\textbar''] or
+%\item[``\textbackslash\textbackslash==''] Different
+%\item[``==''] Equal
+%\item[``\textless''] Less
+%\item[``\textless=''] Less or equal
+%\item[``\textgreater''] Greater
+%\item[``\textgreater=''] Greater or equal
+%\end{description}
+%& 
+%\begin{description}
+%\item[``+'']  addition
+%\item[``-'']   subtraction
+%\item[``*'']  multiplication
+%\item[``**''] power
+%\item[``/']  division
+%\item[``div'] integer division 
+%\item[``mod''] modular division
+%\end{description}
+%\end{tabular}
+%\end{small}
+
+\subsection{Operators}\label{sec:Operadores}
+\begin{small}
+\centering
+\begin{tabular}{ l l p{2cm} l l}
+
+\textbf{``not''} & not & & \textbf{``+''} & addition\\
+\textbf{``\&'' }&and && \textbf{``-''}   &subtraction \\
+\textbf{``\textbar''}& or& &\textbf{ ``*'' }& multiplication\\
+\textbf{``\textbackslash\textbackslash==''}& Different & & \textbf{``**''}& power \\
+\textbf{``=='' }&Equal && \textbf{``/'' } &division\\
+\textbf{``\textless''} &Less && \textbf{``div''}& integer division \\
+\textbf{``\textless='' }&Less or equal && \textbf{``mod''}& modular division \\
+\textbf{``\textgreater''}& Greater && &\\
+\textbf{``\textgreater=''}& Greater or equal& && \\
+
+\end{tabular}
+\end{small}
+
+\section{Predicates of the forum example} \label{sec:forumpredicates}
+\subsection*{Units descriptions}
+\begin{verbatim}
+isUnit(virtual)
+hasType(virtual, flat)
+hasParent(virtual,virtual)
+
+isUnit(forum)
+hasType(forum, hierarchy)
+hasParent(forum, virtual)
+
+isUnit(fraternity)
+hasType(fraternity, team)
+hasParent(fraternity, forum)
+
+isUnit(panel)
+hasType(panel, flat)
+hasParent(panel, forum)
+\end{verbatim}
+
+
+\subsection*{Roles descriptions}
+\begin{verbatim}
+isRole(participant, virtual)
+hasAccessibility(participant, virtual,external)
+hasVisibility(participant, virtual, public)
+hasPosition(participant, virtual,creator)
+
+isRole(moderator, forum)
+hasAccessibility(moderator,forum,internal)
+hasVisibility(moderator,forum, private)
+hasPosition(moderator,forum,supervisor)
+
+isRole(participant, forum)
+hasAccessibility(participant,forum,internal)
+hasVisibility(participant,forum, public)
+hasPosition(participant,forum,subordinate)
+
+isRole(brother, fraternity)
+hasAccessibility(brother, fraternity,external)
+hasVisibility(brother, fraternity, public)
+hasPosition(brother, fraternity,member)
+
+isRole(president, fraternity)
+hasAccessibility(president, fraternity,internal)
+hasVisibility(president, fraternity, private)
+hasPosition(president, fraternity,creator)
+
+isRole(reporter, panel)
+hasAccessibility(reporter, panel,external)
+hasVisibility(reporter, panel, private)
+hasPosition(reporter, panel,member)
+
+isRole(follower, panel)
+hasAccessibility(follower, panel, external)
+hasVisibility(follower, panel, public)
+hasPosition(follower, panel,member)
+
+isRole(moderator, panel)
+hasAccessibility(moderator, panel, internal)
+hasVisibility(moderator, panel, private)
+hasPosition(moderator, panel,creator)
+\end{verbatim}
+
+\subsection*{Agent Descriptions }
+\begin{verbatim}
+isAgent(vb)
+isAgent(bigBrother)
+isAgent(ea)
+isAgent(sv)
+
+playsRole(vb,participant,virtual)
+playsRole(bigBrother,participant,virtual)
+playsRole(ea,participant,virtual)
+playsRole(sv,participant,virtual)
+
+playsRole(vb,participant,forum)
+playsRole(bigBrother,moderator,forum)
+playsRole(bigBrother,moderator,panel)
+playsRole(ea,president,fraternity)
+playsRole(sv,brother,fraternity)
+playsRole(ea,participant,forum)
+playsRole(ea,follower,panel)
+playsRole(sv,reporter,panel)
+
+\end{verbatim}
+
+
+\subsubsection*{Derivation Predicates}
+\begin{verbatim}
+roleCardinality(participant, virtual, 4)
+
+roleCardinality(moderator, forum, 1)
+roleCardinality(participant, forum, 2)
+roleCardinality(brother, fraternity, 1)
+roleCardinality(president, fraternity, 1)
+roleCardinality(reporter, panel, 1)
+roleCardinality(follower, panel, 1)
+roleCardinality(moderator, panel, 1)
+
+positionCardinality(creator,virtual, 4)
+positionCardinality(member,virtual, 0)
+positionCardinality(supervisor,forum, 1)
+positionCardinality(subordinate,forum, 2)
+positionCardinality(creator,fraternity, 1)
+positionCardinality(member, fraternity, 1)
+positionCardinality(creator,panel, 1)
+positionCardinality(member, panel, 2)
+
+\end{verbatim}
+
+\subsubsection*{Norms descriptions}
+
+
+\begin{verbatim}
+/*Forum: It is not allowed to register new roles with the position \textit{creator}*/
+isNorm(noRegRole, forum)
+hasDeontic(noRegRole, forum, f)
+hasTarget(noRegRole, forum, positionName, creator)
+hasAction(noRegRole, forum, registerRole)
+\end{verbatim}
+
+\begin{verbatim}
+/*Forum: Changing the parent unit of the organization is prohibit*/
+isNorm(noRegRole, forum)
+hasDeontic(noJoinUnit, forum, f)
+hasTarget(noJoinUnit, forum, positionName, _)
+hasAction(noJoinUnit, forum, joinUnit)
+\end{verbatim}
+
+\begin{verbatim}
+/*Fraternity: Only one agent can play the role \textit{president}*/
+isNorm(noAcRolePresident, fraternity)
+hasDeontic(noAcRolePresident, fraternity, f)
+hasTarget(noAcRolePresident, fraternity, agentName, _)
+hasAction(noAcRolePresident, fraternity, acquireRole)
+\end{verbatim}
+
+\begin{verbatim}
+/*Fraternity: Only the role \textit{president} can add new norms*/
+isNorm(noRegNorm, fraternity)
+hasDeontic(noRegNorm, fraternity, f)
+hasTarget(noRegNorm, fraternity, positionName,member)
+hasAction(noRegNorm, fraternity, registerNorm)
+\end{verbatim}
+
+\begin{verbatim}
+/*Fraternity: Only the role \textit{president} can delete norms*/
+isNorm(noDeregNorm, fraternity)
+hasDeontic(noDeregNorm, fraternity, f)
+hasTarget(noDeregNorm, fraternity, positionName,member)
+hasAction(noDeregNorm, fraternity, deregisterNorm)
+\end{verbatim}
+
+\begin{verbatim}
+/*Fraternity: Only the role \textit{president} can add roles*/
+isNorm(noRegRole, fraternity)
+hasDeontic(noRegRole, fraternity, f)
+hasTarget(noRegRole, fraternity, positionName,member)
+hasAction(noRegRole, fraternity, registerRole)
+\end{verbatim}
+
+\begin{verbatim}
+/*Fraternity: Only the role \textit{president} can delete roles*/
+isNorm(noDeRegRole, fraternity)
+hasDeontic(noDeRegRole, fraternity, f)
+hasTarget(noDeRegRole, fraternity, positionName,member)
+hasAction(noDeRegRole, fraternity, deregisterRole)
+\end{verbatim}
+
+
+\begin{verbatim}
+/*Fraternity: It is not allowed to register new roles with the position \textit{creator}*/
+isNorm(noRegRoleCreator, fraternity)
+hasDeontic(noRegRoleCreator, fraternity, f)
+hasTarget(noRegRoleCreator, fraternity, agentName,_)
+hasAction(noRegRoleCreator, fraternity, registerRole)
+\end{verbatim}
+
+\begin{verbatim}
+/*Fraternity: Changing the parent unit of the organization is prohibit*/
+isNorm(noRegRole, fraternity)
+hasDeontic(noJoinUnit, fraternity, f)
+hasTarget(noJoinUnit, fraternity, positionName, _)
+hasAction(noJoinUnit, fraternity, joinUnit)
+\end{verbatim}
 

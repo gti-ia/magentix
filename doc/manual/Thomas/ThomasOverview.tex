@@ -26,11 +26,11 @@ In addition, Magentix2 offers a new communication mechanism based on the virtual
 Roles  in \textsc{Thomas} are defined with a \textit{RoleName} that acts as an identifier. Furthermore, each role is always associated with a particular organizational unit. Also, each role has the following attributes: $<Position, Accessibility, Visibility>$.
 
 \begin{itemize}
-\item \textbf{Position}. The possible values that can take are: \textit{Member}, \textit{Supervisor}, \textit{subordinate} or \textit{Creator}.
+\item \textbf{Position}. The possible values that this field can take are: \textit{Member}, \textit{Supervisor}, \textit{subordinate} or \textit{Creator}.
 \begin{itemize}
 \item This value must be assigned to roles when they are created.
-\item Not all the values are allowed to any type of organization (see section \ref{unitsinthomas}).
-\item Anytime an agent registers an organization, a new role with a creator position is automatically assigned him. This position gives permission to register and deregister organizations and roles. In addition, it is possible to assign a \textit{creator} role using the services offered by the \textsc{Thomas} API (see section \ref{thomasAPI}).
+\item Not all the values are allowed to any type of organization (see section \ref{sec:unitsinthomas}).
+\item Anytime an agent registers an organization, it is automatically assigned a new role with a creator position to him. This position gives permission to register and deregister organizations and roles. In addition, it is possible to assign a \textit{creator} role using the services offered by the \textsc{Thomas} API (see section \ref{thomasAPI}).
 \end{itemize}
 
 In Table \ref{tab:Role_position} a summary of the role behavior taking into account its position is shown.
@@ -115,7 +115,7 @@ In Table \ref{tab:Role_position} a summary of the role behavior taking into acco
 \end{table}
 
 
-\subsection{Units in \textsc{Thomas}} \label{unitsinthomas}
+\subsection{Units in \textsc{Thomas}} \label{sec:unitsinthomas}
 
 \textsc{Thomas} framework gives support for three types of organizations or units: \textit{Flat}, \textit{Team} and \textit{Hierarchy}. Each type of organization is governed by different structural norms. In the Table \ref{tab:units} a comparative of these types of units is shown.
 
@@ -204,7 +204,7 @@ The OMS provides agents with a set of services for organization life-cycle manag
 
 \begin{itemize}
 	\item \textbf{Structural services:} which modify the structural organization specification, i.e. roles and organizational units (RegisterRole, DeregisterRole, RegisterUnit, DeregisterUnit, JointUnit).
-	\item \textbf{Informative services:} that give information of the current state of the organization (InformRole, InformUnit, InformUnitRoles, InformAgentRole, InformMembers, QuantityMembers).
+	\item \textbf{Informative services:} that give information of the current state of the organization (InformRole, InformUnit, InformUnitRoles, InformAgentRole, InformMembers, InformQuantityMembers).
 	\item \textbf{Dynamic services:} that allow managing role enactment and dynamic entry/exit of agents (AcquireRole, LeaveRole, AllocateRole, DeallocateRole) .
 \end{itemize}
 
@@ -220,26 +220,7 @@ These services are  published in the SF and also available thought the OMSproxy 
 
 
 
-There are some predefined norms(called structural norms) which control the access to OMS services. Thus, some OMS services are only available if  agents which request them play a role inside the organization with a determined position (table \ref{tab:rol_acces}). It is possible to avoid these structural norms or make them more restrictive by means of defining new norms using the \textit{registerNorm} service of the OMS. In this way, users can add \textsc{Permitted} or \textsc{Forbidden}  norms to relax or restrict  the access control to the OMS services in a organization. 
-
-
-
-\subsubsection{Norm Description}
-Norms are registered into a organizational unit with a unique name inside that organization. They should be written following the syntax of the \textsc{Thomas} normative language (see appendix ): \\
-$@normName[Deontic, Target, Action, Activation, Expiration]$ where:
-\begin{itemize}
- \item $Deontic \in \lbrace f,o,p \rbrace$ , where $f$ is used for norms forbidden norms, which restrict more the access; $o$ is used for obligation norms; and $p$ is used for permitted norms, which relax the access.
- \item $Target=<type,id>$ where $type \in   \lbrace agentName, roleName, positionName \rbrace $, whereas $id$ is the associated value (for example, the position value \textit{creator}) or the anonymous variable $\_$, if it is desired that any value could be accepted.  By means of this field \textit{target} it is possible to determine which agents will be affected by a norm. For example, taking into account an scenario in which a norm was registered in a unit with the target $<agentName, consumer>$, this norm only affects the agent which name is \textit{consumer}. 
- 
- \item $Action$ is a OMS service
- \item \textit{Activation}:
- \item \textit{Expiration}:
- 
-\end{itemize}
-
-\subsubsection{Norm Checking}
-
-
+There are some predefined norms(called structural norms) which control the access to OMS services. Thus, some OMS services are only available if  agents which request them play a role inside the organization with a concrete position (table \ref{tab:rol_acces}). It is possible to avoid these structural norms or make them more restrictive by means of defining new norms using the \textit{registerNorm} service of the OMS. In this way, users can add \textsc{Permitted} or \textsc{Forbidden}  norms to relax or restrict  the access control to the OMS services in an organization. 
 
 
 \begin{table}[h!t]
@@ -278,6 +259,222 @@ InformNorm & x & x & x &x  \\
 \label{tab:rol_acces}
 \end{table}
 
+\subsubsection{Norm Description}
+Norms are registered into a organizational unit with a unique name inside that organization. They should be written following the syntax of the \textsc{Thomas} normative language (see appendix \ref{app:BNFSyntax} for a detailed explanation). Concretely, a appearance of a norm is as follows : \\
+$@normName[Deontic, Target, Action, Activation, Expiration]$ where:
+\begin{itemize}
+ \item $Deontic \in \lbrace f,o,p \rbrace$ , where $f$ is used for norms forbidden norms, which restrict the access to services; $o$ is used for obligation norms; and $p$ is used for permitted norms, which relax the access to services. Although a norm can be registered with a deontic value  of obligation, the OMS only manage forbidden or permitted norms. 	
+ \item $Target=<type,id>$ where $type \in   \lbrace agentName, roleName, positionName \rbrace $, whereas $id$ is the associated value (for example, the position value \textit{creator}) or the anonymous variable $\_$ (when any value is accepted).  The field \textit{target} allows users to determine which agents will be affected by a norm. For example, taking into account an scenario in which a norm was registered in a unit with the target $<agentName, consumer>$, this norm only affects the agent which name is \textit{consumer}. 
+ 
+ \item $Action$ is the name of the service. \textsc{Thomas} only manage norms which action correspond with an OMS service.
+ 
+ \item $Activation$ is a well-formed formula expressed by means of first-order predicates which indicates the conditions to fulfil a norm. Until a service is provided, the OMS agent checks if some norm is satisfied, in which case that norm is applied. Users should add predicates related with data known in the \textsc{Thomas} world, such as roles details, roles played, organization structure, agent names, etc (see \ref{app:BNFSyntax} for further explanation). This field could be empty, in that case the norm is always fulfilled.
+ 
+ \item  $Expiration$ is a well-formed formula expressed by means of first-order predicates which indicates when a norm expires. So, if the expiration of a norm is satisfied, the norm is not applied although the activation is fulfilled. Users should add predicates related with data known in the \textsc{Thomas} world, such as roles details, roles played, organization structure, agent names, etc (see \ref{app:BNFSyntax} for further explanation). This field could be empty, in that case the norm never expires.
+ 
+\end{itemize}
+
+\subsubsection{Norm Checking}
+
+The OMS agent is the responsible of verify if some norm applies before provide a service. Thus, users can add forbidden or permitted norms to restrict or relax the predefined rules of access to services,  respectively. In particular, the order in which the restrictions and norms are checked before provide a service of the OMS is as follows: 
+\begin{enumerate}
+\item \textit{Checking of the input parameters}. The consistency of the given data (existing roles, valid organizations, etc.) is checked.
+
+\item \textit{Consistency constraints.} As a result of providing a service some consistency constraint can be  violated, the service is not provided and the requester agent is informed about it. For example, it is not allowed to delete a role which is currently played by an agent.
+
+\item \textit{\textsc{Permitted} norms.} It is checked if there are some permitted norms registered which action correspond with the requested service. In that case, it is also checked if those norms are fulfilled, that is, their target and activations are satisfied whereas their expiration are not. In case a permitted norm is satisfied, the service is provided with no restrictions and  no structural norm related with unit types or role properties are considered. Concretely, the properties of the roles (accessibility, visibility, position) are not taking into account in the execution of the services (such as informative services).
+
+\item \textit{\textsc{Forbidden} norms.}  It is checked if there are some forbidden norms registered which action correspond with the requested service. In that case, it is also checked if those norms are fulfilled, that is, their target and activations are satisfied whereas their expiration are not. If a forbidden norm is satisfied, the service is not provided , the applicant is informed and no more checkings are made. 
+
+\item \textit{Structural norms.} All predefined norms of the service are checked before provide the service. If no one is satisfied, the service is provided as usual.
+
+\subsubsection{Normative Example: Forum}
+
+
+\begin{figure}[hbtp]
+\includegraphics[width=1\textwidth]{Thomas/images/ejemploNormas.jpg}
+\caption{Organizational view of the form example: organizations, roles and agents}
+\label{fig:normExample}
+\end{figure}
+
+In this section,  an example of how to use the normative context provided by \textsc{Thomas} is explained. Concretely,  the Figure \ref{fig:normExample} shows the scenario, where there are three units:  an organization named \textit{forum} (which type is \textit{hierarchy}) and its two descendent organizations \textit{fraternity} (which type is \textit{team}) and \textit{panel} (which type is \textit{flat}). Furthermore, there is the \textit{virtual} unit, which represents the \textsc{Thomas} world  and acts as the starting point to enter in the system, as mentioned before (see section \label{sec:unitsinthomas}). In the \textit{forum} unit there are the following roles:
+\begin{itemize}
+\item \textit{moderator}: it acts as supervisor and moderator of the forum. Its role attributes are: position=supervisor; accessibility=internal; visibility=private.
+\item participant: it participates in the forum.  Its role attributes are: position=subordinate; accessibility=internal; visibility=public.
+\end{itemize}
+
+The \textit{fraternity} unit has two roles:
+
+\begin{enumerate}
+\item president: It acts as a president of the \textit{fraternity} and it is in  charge of adding/deleting norms and roles.  Only one agent can play this role. Its role attributes are: position=creator; accessibility=internal; visibility=private.
+\item brother: It represents a member of the \textit{fraternity}, in fact, all the participants of the \textit{fraternity} should play this role.  Its role attributes are: position=member; accessibility=external; visibility=public.
+\end{enumerate}
+
+The \textit{panel} unit has three different roles:
+\begin{enumerate}
+\item \textit{moderator}: it should be played by an unique agent which also plays the role \textit{moderator} in the \textit{forum} unit. It is in charge of add new norms to the unit. It can not add new roles. Its role attributes are: position=creator; accessibility=internal; visibility=private.
+\item \textit{reporter}: it should be played by agents which add news to the panel. They are not allowed to add norms/roles in the unit. Its role attributes are: position=member; accessibility=external; visibility=private.
+\item \textit{follower}: it should be played by agents which read news from the panel.  They are not allowed to add norms/roles in the unit. Its role attributes are: position=member; accessibility=external; visibility=public.
+\end{enumerate}
+
+Regarding the \textit{forum} unit, it is not allowed create new roles with  position \textit{creator}.  Respecting the fraternity unit, it is prohibit to create new roles with position \textit{creator}. Concerning   the \textit{panel} organization, it is prohibit that agents known which roles are played by other agents. Also,  changing the parent unit of the organizations is prohibit.   
+
+Following,  some of the norms needed to obey the specification of the forum scenario are described using the \textsc{Thomas} syntax (see appendix \ref{app:BNFSyntax}, section sec:forumpredicates in order to known for the predicates  the OMS uses for reasoning):
+\begin{itemize}
+\item \textbf{Unit \textit{forum}}
+\begin{itemize}
+\item It is not allowed to register new roles with the position \textit{creator}:
+\begin{verbatim}
+@noRegRole[ f, <positionName:supervisor>, 
+registerRole(_,forum, _, _, creator,_), _ , _ ] 
+\end{verbatim}
+
+\item Changing the parent unit of the organization is prohibit.  
+\begin{verbatim}
+@noJoinUnit[ f, <positionName:_>, 
+joinUnit(forum,_,_), _ , _ ] 
+\end{verbatim}
+
+\end{itemize}
+
+\item \textbf{Unit \textit{fraternity}}
+\begin{itemize}
+\item Only one agent can play the role \textit{president}:
+\begin{verbatim}
+@noAcRolePresident[ f, <agentName:_>, 
+acquireRole(president, fraternity, _),
+roleCardinality(president,fraternity,1),  _ ] 
+\end{verbatim}
+
+\item Only the role \textit{president} can add new norms:
+\begin{verbatim}
+@noRegNorm[ f, <positionName:member>, 
+registerNorm(_, fraternity, _, _),_ ,_ ] 
+\end{verbatim}
+
+\item Only the role \textit{president} can delete norms:
+\begin{verbatim}
+@noDelNorm[ f, <positionName:member>, 
+deregisterNorm(_, fraternity, _, _),_ ,_ ] 
+\end{verbatim}
+
+\item Only the  \textit{president} can add new roles:
+\begin{verbatim}
+@noRegRole[ f, < positionName:member>, 
+registerRole(_,fraternity, _, _, _,_), _ , _ ] 
+\end{verbatim}
+
+\item Only the  \textit{president} can delete roles:
+\begin{verbatim}
+@noDeRegRole[ f, <positionName:member>,
+ deregisterRole(_,fraternity, _), _ , _ ] 
+\end{verbatim}
+
+\item It is not allowed to register new roles with the position \textit{creator}:
+\begin{verbatim}
+@noRegRole[ f, <agentName:_>, 
+registerRole(_,fraternity, _, _, creator,_), _ , _ ] 
+\end{verbatim}
+
+
+\item Changing the parent unit of the organization is prohibit.  
+\begin{verbatim}
+@noJoinUnit[ f, <positionName:_>, 
+joinUnit(fraternity,_,_), _ , _ ] 
+\end{verbatim}
+
+
+\end{itemize}
+
+\item \textbf{Unit \textit{panel}}
+\begin{itemize}
+
+\item  Only one agent can play the role \textit{moderator}:
+\begin{verbatim}
+@noAcRoleModerator[ f, <agentName:_>, 
+acquireRole(moderator, panel, _),  
+roleCardinality(moderator,panel,1),   _ ]
+\end{verbatim}
+
+\item The agent which plays the role \textit{moderator} should play the role \textit{moderator} in the \textit{forum} unit
+
+\begin{verbatim} 
+@controlAcRoleModerator[ f, <agentName:_>, 
+acquireRole(moderator, panel,  Ag), 
+not(playsRole(Ag, moderator, forum)), _ ]
+\end{verbatim}
+
+\item Only the role \textit{moderator} can add norms
+\begin{verbatim}
+@noRegNorm[ f, <agentName:Ag>, 
+registerNorm(_, panel, _, Ag),
+not playsRole(Ag,moderator, plana),_  ] 
+\end{verbatim}
+
+\item Only the role \textit{moderator} can delete norms
+\begin{verbatim}
+@noDeregNorm[ f, <agentName:Ag>, 
+deregisterNorm(_, panel, Ag),
+not playsRole(Ag,moderator, plana),_  ] 
+\end{verbatim}
+
+\item No one can add roles
+\begin{verbatim}
+@noRegRole[ f, < positionName:_>, 
+registerRole(_,panel, _, _, _,_), _ , _ ] 
+
+@noDeRegNormRegRole[ f, <roleName:moderator>, 
+deregisterNorm(NormX, panel, _),
+hasAction(NormX,panel, registerRole), _ ] 
+\end{verbatim}
+
+
+\item No one can delete roles
+\begin{verbatim}
+@noDeRegRole[ f, <positionName:_>, 
+deregisterRole(_, panel, _),_, _ ] 
+
+@noDeRegNormDeregRole[ f, <roleName:moderator>, 
+deregisterNorm(NormX, panel, _),
+hasAction(NormX,panel, deregisterRole), _ ] 
+\end{verbatim}
+
+\item Knowing which roles are played by other agents is prohibit
+\begin{verbatim}
+@noSupInfAgRole[ f, <agentName:Ag>, informAgentRole(Ag,_), _ , _ ] 
+
+@noDeRegNormnoSupInfAgRole[ f, <roleName:moderator>,
+ deregisterNorm(NormX, panel, _),
+hasAction(NormX,panel, informAgentRole), _ ] 
+
+\end{verbatim}
+
+\item Changing the parent unit of the organization is prohibit.   
+\begin{verbatim}
+@noJoinUnit[ f, <positionName:_>, 
+joinUnit(panel,_,_), _ , _ ] 
+\end{verbatim}
+
+\end{itemize}
+
+
+\end{itemize}
+
+
+
+
+
+
+
+
+
+
+
+
+\end{enumerate}
+
+
+
 %==================================================================
 %================== SEGUNDA SECCI�N ===============================
 %==================================================================
@@ -287,7 +484,7 @@ InformNorm & x & x & x &x  \\
 \subsection{Magentix2 API for \textsc{Thomas}}\label{thomasAPI}
 SF and OMS have been defined as two types of intermediary agents in order to address the translation between Magentix2 agents (or any external agent), that implement FIPA communication,and the services they provide. Services requests through FIPA-request protocol were received by this type of agents.
 
-To ease the interaction among user agents and OMS and SF agents, two classes are provided (\lstinline|OMSProxy| and \lstinline|SFProxy|). They work as a proxy for OMS and SF respectively, encapsulating and hiding the details of the underlying communication protocol. By doing this, the developer can interact with OMS and SF using simple function calls.
+In order to ease the interaction among user agents and OMS and SF agents, two classes are provided (\lstinline|OMSProxy| and \lstinline|SFProxy|). They work as a proxy for OMS and SF respectively, encapsulating and hiding the details of the underlying communication protocol. By doing this, the developer can interact with OMS and SF using simple function calls.
 
 \subsubsection{OMSProxy}
 
@@ -310,7 +507,7 @@ On the contrary, in the second option, the url where OMS services are deployed (
 \end{lstlisting}
 
 
-OMSProxy provides a developer with a set of methods to manage available services. This services are classified into three different types: structural, dynamic and informative. Tables \ref{tab:thomas_OMSProxy_registration}, \ref{tab:thomas_OMSProxy_information}, \ref{tab:thomas_OMSProxy_compound} and \ref{tab:thomas_OMSProxy_messaging} show respectively these sub-types. 
+OMSProxy provides a developer with a set of methods to manage available services. This services are classified into three different types: structural, dynamic and informative. Tables \ref{tab:thomas_OMSProxy_registration}, \ref{tab:thomas_OMSProxy_information}, \ref{tab:thomas_OMSProxy_compound} and \ref{tab:thomas_OMSProxy_messaging} show respectively these sub-types. These methods return the string ``ok'' if are succesfully provided. If not, they through a \textsc{Thomas} exception (see appendix \ref{app:Exceptions} for further details). 
 
 Some OMS services are only available if  agents which request them play a role inside the organization with a determined position. Table \ref{tab:rol_acces} summarizes  the available access to the services taking into account the position of the role.
 
@@ -768,7 +965,7 @@ This section describes how an agent that requires services from other agents can
 
 \subsection{Service Search Process}
 \begin{itemize}
-\item \textbf{Search of a service.} Once the agent is registered, it can use the \lstinline|SearchService| service to find required services. The method \textit{SearchService} of the SFproxy makes a request to this service with the following parameters:
+\item \textbf{Search of a service.} Agents can use the \lstinline|SearchService| service to find required services. The method \textit{SearchService} of the SFproxy makes a request to this service with the following parameters:
   \begin{itemize}
    \item List of inputs of the service to search. These inputs has to be specified as types of an ontology. In \textit{ServiceTools} class the main types (integer, float, double, string, boolean) are specified as constants to be easier to the developer.
    \item List of outputs of the service to search. These inputs has to be specified as types of an ontology, as the inputs explained before.
@@ -1065,7 +1262,7 @@ sudo sh Start-ThomasExample.sh
 
 This section describes how an agent that wants to send a message to an organization
 can build, fill the fields of an ACLMessage and send the organizational message.
-The following example is used in order to illustrate this section. It is formed by: the \textit{Sender Agent} that acquires role member in the unit \textit{team} and two \textit{Receivers Agents} with the role member in the unit team (Figure \ref{fig:org1}). The unit virtual is parent of the unit \textit{team}.
+The example shown in Figure \ref{fig:org1}  is used to illustrate this section. It is formed by: the \textit{Sender Agent} that acquires role member in the unit \textit{team} and two \textit{Receivers Agents} with the role member in the unit team ). The unit virtual is parent of the unit \textit{team}.
 
 \begin{figure}[h!t]
 	\centering
@@ -1097,7 +1294,7 @@ omsProxy.acquireRole("member", "team");
 \end{lstlisting}
 
 \end{itemize}
-\subsection{Message build process}
+\subsection{Building the Message}
 \begin{itemize}
 \item \textbf{Build an organizational message.} Once the agent is inside the unit with an specific role, it has to use the \textit{buildOrganizationalMessage} to
 obtain the required organizational message specifying the identifier of the organization:
@@ -1106,7 +1303,7 @@ ACLMessage msg = omsProxy.buildOrganizationalMessage("team");
 \end{lstlisting}
 \end{itemize}
 
-\subsection{Message complete process}
+\subsection{Completing Message}
 \begin{itemize}
 \item \textbf{Add ACL message fields.} After the message is built, it can add the fields of an ACLMessage, such as content, performative or language:
 \begin{lstlisting}
@@ -1115,9 +1312,9 @@ msg.setPerformative(ACLMessage.REQUEST);
 msg.setLanguage("ACL");
 \end{lstlisting}
 \end{itemize}
-\subsection{Message send process}
+\subsection{Sending the Message}
 \begin{itemize}
-\item \textbf{Send an organizational message.} When a message is formed, it can send the message using the \textit{send()} method:
+\item \textbf{Send an organizational message.} When a message is formed,the message can be sent  using the \textit{send()} method:
 
 \begin{lstlisting}
 send(msg);
@@ -1153,9 +1350,7 @@ class REQUEST_Method implements SendStateMethod {
 
 \section{Organizational Messaging Example}
 
-The examples folder of the Magentix2 packages contains an Organizational Message example. This example
-shows an scenario with THOMAS organizations and CAgents that make use of organizational messaging. This
-case consists of the following two units:
+The examples folder of the Magentix2 packages contains an Organizational Message example. This example shows an scenario with THOMAS organizations and CAgents that make use of organizational messaging. This case consists of the following two units:
 
 \begin{itemize}
 \item \textbf{Calculator:} \textit{Team} type organization where its agents send Organizational Messages to
@@ -1188,8 +1383,7 @@ The agents involved in this case and its features are described below:
   numbers.
 \end{itemize}
 
-Following, we briefly explain the actions of the Organizational Message example shown in the diagram of Figure
-\ref{fig:OMessageDiagram}:
+Following, we briefly explain the actions of the Organizational Message example shown in the diagram of Figure \ref{fig:OMessageDiagram}:
 
 \begin{figure}[h!t]
 	\centering
@@ -1199,12 +1393,8 @@ Following, we briefly explain the actions of the Organizational Message example 
 \end{figure}
 
 \begin{enumerate}
-\item Scenario creation is the first task to begin the example. The Creator agent creates \textit{Calculator}
-  organization and their roles (\textit{Creator},\textit{Manager} and \textit{Operator}). Simultaneously,
-  the Noisy agent creates \textit{External} organization and their roles (\textit{Creator} and \textit{Manager}).
-  All agents begin its execution in the scenario.
-\item The Creator and Noisy agents try to build an organizational message but their requests are rejected.
-  The Creator agent can not send an organizational message because it only plays the \textit{Creator}
+\item Scenario creation is the first task to begin the example. The Creator agent creates the \textit{Calculator}   organization and their roles (\textit{Creator},\textit{Manager} and \textit{Operator}). Simultaneously,   the Noisy agent creates the \textit{External} organization and their roles (\textit{Creator} and \textit{Manager}). All agents begin its execution in the scenario.
+\item The Creator and Noisy agents try to build an organizational message but their requests are rejected.   The Creator agent can not send an organizational message because it only plays the \textit{Creator}
   role with \textit{creator} position within \textit{Calculator} organization. In the same way, the Noisy
   agent can not send an organizational message because it doesn't belong to \textit{Calculator} organization.
 \item The Summation agent sends Formula(6,3) as an organizational message. This is received by the Product,
@@ -1224,7 +1414,7 @@ Following, we briefly explain the actions of the Organizational Message example 
   is received by the Display agent, which prints this value to standard output.
 \item To finalize this example, the scenary is disassembled. The Creator agent deallocates and deregisters
   all the roles belonging to \textit{Calculator} organization and deregisters the organization. Simultaneously,
-  the Noisy agent deallocates and deregisters all the roles belonging to \textit{External} organization and
+  the Noisy agent deallocates and deregisters all the roles belonging to the \textit{External} organization and
   deregisters the organization. All agents finalize their executions.
 \end{enumerate}
 
