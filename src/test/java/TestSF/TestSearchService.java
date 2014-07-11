@@ -1,5 +1,7 @@
 package TestSF;
 
+import static org.junit.Assert.*;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -20,7 +22,7 @@ import es.upv.dsic.gti_ia.organization.exception.InvalidDataTypeException;
 import es.upv.dsic.gti_ia.organization.exception.THOMASException;
 //import omsTests.DatabaseAccess;
 
-public class TestSearchService extends TestCase {
+public class TestSearchService {
 
 	SFProxy sfProxy = null;
 	Agent agent = null;
@@ -31,8 +33,8 @@ public class TestSearchService extends TestCase {
 	private Process qpid_broker;
 
 	@Before
-	protected void setUp() throws Exception {
-		super.setUp();
+	public void setUp() throws Exception {
+		//super.setUp();
 		qpid_broker = qpidManager.UnixQpidManager.startQpid(Runtime.getRuntime(), qpid_broker);
 		AgentsConnection.connect();
 
@@ -53,8 +55,8 @@ public class TestSearchService extends TestCase {
 
 	}
 	@After
-	protected void tearDown() throws Exception {
-		super.tearDown();
+	public void tearDown() throws Exception {
+		//super.tearDown();
 
 		// ------------------Clean Data Base -----------//
 		dbA.executeSQL("DELETE FROM agentPlayList");
@@ -87,7 +89,7 @@ public class TestSearchService extends TestCase {
 	 * 
 	 * @return
 	 */
-	@Test(timeout = 10000)
+	@Test(timeout = 100000)
 	public void testIncorrectParamTest1() {
 		ArrayList<String> inputs = new ArrayList<String>();
 		ArrayList<String> outputs = new ArrayList<String>();
@@ -115,7 +117,7 @@ public class TestSearchService extends TestCase {
 	 * 
 	 * @return
 	 */
-	@Test(timeout = 10000)
+	@Test(timeout = 100000)
 	public void testIncorrectParamTest2() {
 		ArrayList<String> inputs = new ArrayList<String>();
 		ArrayList<String> outputs = new ArrayList<String>();
@@ -142,7 +144,7 @@ public class TestSearchService extends TestCase {
 	 * 
 	 * @return
 	 */
-	@Test(timeout = 10000)
+	@Test(timeout = 600000)
 	public void testAppropiateParamsTest1() {
 		ArrayList<String> inputs = new ArrayList<String>();
 		ArrayList<String> outputs = new ArrayList<String>();
@@ -206,7 +208,7 @@ public class TestSearchService extends TestCase {
 	 * 
 	 * @return
 	 */
-	@Test(timeout = 10000)
+	@Test(timeout = 600000)
 	public void testAppropiateParamsTest2() {
 		ArrayList<String> inputs = new ArrayList<String>();
 		ArrayList<String> outputs = new ArrayList<String>();
@@ -271,7 +273,7 @@ public class TestSearchService extends TestCase {
 	 * 
 	 * @return
 	 */
-	@Test(timeout = 10000)
+	@Test(timeout = 600000)
 	public void testAppropiateParamsTest3() {
 		ArrayList<String> inputs = new ArrayList<String>();
 		ArrayList<String> outputs = new ArrayList<String>();
@@ -336,7 +338,7 @@ public class TestSearchService extends TestCase {
 	 * 
 	 * @return
 	 */
-	@Test(timeout = 10000)
+	@Test(timeout = 600000)
 	public void testAppropiateParamsTest4() {
 		ArrayList<String> inputs = new ArrayList<String>();
 		ArrayList<String> outputs = new ArrayList<String>();
@@ -388,7 +390,7 @@ public class TestSearchService extends TestCase {
 	 * 
 	 * @return
 	 */
-	@Test(timeout = 10000)
+	@Test(timeout = 600000)
 	public void testAppropiateParamsTest5() {
 		ArrayList<String> inputs = new ArrayList<String>();
 		ArrayList<String> outputs = new ArrayList<String>();
@@ -440,7 +442,7 @@ public class TestSearchService extends TestCase {
 	 * 
 	 * @return
 	 */
-	@Test(timeout = 10000)
+	@Test(timeout = 600000)
 	public void testAppropiateParamsTest6() {
 		ArrayList<String> inputs = new ArrayList<String>();
 		ArrayList<String> outputs = new ArrayList<String>();
@@ -472,7 +474,7 @@ public class TestSearchService extends TestCase {
 	 * 
 	 * @return
 	 */
-	@Test(timeout = 10000)
+	@Test(timeout = 600000)
 	public void testAppropiateParamsTest7() {
 		ArrayList<String> inputs = new ArrayList<String>();
 		ArrayList<String> outputs = new ArrayList<String>();
@@ -503,7 +505,7 @@ public class TestSearchService extends TestCase {
 	 * 
 	 * @return
 	 */
-	@Test(timeout = 10000)
+	@Test(timeout = 600000)
 	public void testAppropiateParamsTest8() {
 		ArrayList<String> inputs = new ArrayList<String>();
 		ArrayList<String> outputs = new ArrayList<String>();
@@ -536,7 +538,7 @@ public class TestSearchService extends TestCase {
 	 * 
 	 * @return
 	 */
-	@Test(timeout = 10000)
+	@Test(timeout = 600000)
 	public void testAppropiateParamsTest9() {
 		ArrayList<String> inputs = new ArrayList<String>();
 		ArrayList<String> outputs = new ArrayList<String>();
@@ -569,7 +571,7 @@ public class TestSearchService extends TestCase {
 	 * 
 	 * @return
 	 */
-	@Test(timeout = 10000)
+	@Test(timeout = 600000)
 	public void testAppropiateParamsTest10() {
 		ArrayList<String> inputs = new ArrayList<String>();
 		ArrayList<String> outputs = new ArrayList<String>();
@@ -615,7 +617,7 @@ public class TestSearchService extends TestCase {
 	 * 
 	 * @return
 	 */
-	@Test(timeout = 10000)
+	@Test(timeout = 600000)
 	public void testAppropiateParamsTest11() {
 		ArrayList<String> inputs = new ArrayList<String>();
 		ArrayList<String> outputs = new ArrayList<String>();
@@ -680,7 +682,7 @@ public class TestSearchService extends TestCase {
 	 * 
 	 * @return
 	 */
-	@Test(timeout = 10000)
+	@Test(timeout = 600000)
 	public void testAppropiateParamsTest12() {
 		ArrayList<String> inputs = new ArrayList<String>();
 		ArrayList<String> outputs = new ArrayList<String>();
@@ -744,7 +746,7 @@ public class TestSearchService extends TestCase {
 	 * Search for a service providing two input parameters of type double, one
 	 * output parameter of type double and phrase as keyword.
 	 */
-	@Test(timeout = 10000)
+	@Test(timeout = 600000)
 	public void testAppropiateParamsTest13() {
 		ArrayList<String> inputs = new ArrayList<String>();
 		ArrayList<String> outputs = new ArrayList<String>();
